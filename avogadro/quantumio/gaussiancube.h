@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Barry E. Moore II
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QUANTUMIO_GAUSSIANCUBE_H
@@ -37,7 +26,7 @@ public:
   }
 
   FileFormat* newInstance() const override { return new GaussianCube; }
-  std::string identifier() const override { return "Avogadro: GaussianCube"; }
+  std::string identifier() const override { return "Avogadro: Gaussian Cube"; }
   std::string name() const override { return "Gaussian"; }
   std::string description() const override
   {
@@ -46,7 +35,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://www.gaussian.com/g_tech/g_ur/u_cubegen.htm";
+    return "https://gaussian.com/cubegen/";
   }
 
   std::vector<std::string> fileExtensions() const override;
@@ -59,7 +48,7 @@ private:
   void outputAll();
 }; // End GaussianCube
 
-} // End QuantumIO namespace
-} // End Avogadro namespace
+} // namespace QuantumIO
+} // namespace Avogadro
 
 #endif

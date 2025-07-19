@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_SCENEPLUGINMODEL_H
@@ -58,6 +47,9 @@ public:
   QList<ScenePlugin*> scenePlugins() const;
   QList<ScenePlugin*> activeScenePlugins() const;
 
+  ScenePlugin* scenePlugin(const QModelIndex& index) const;
+  ScenePlugin* scenePlugin(int row) const;
+
 signals:
   void pluginStateChanged(Avogadro::QtGui::ScenePlugin*);
   void pluginConfigChanged();
@@ -71,7 +63,7 @@ private:
   QList<ScenePlugin*> m_scenePlugins;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_SCENEPLUGINMODEL_H

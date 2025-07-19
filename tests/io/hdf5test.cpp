@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "iotests.h"
@@ -35,7 +24,7 @@ bool fileExists(const char* filename)
   }
   return false;
 }
-}
+} // namespace
 
 TEST(Hdf5Test, openCloseReadOnly)
 {
@@ -62,8 +51,8 @@ TEST(Hdf5Test, openCloseReadOnly)
     }
   }
 
-  ASSERT_TRUE(hdf5.closeFile()) << "Failed to close read-only file " << testfile
-                                << ".";
+  ASSERT_TRUE(hdf5.closeFile())
+    << "Failed to close read-only file " << testfile << ".";
 }
 
 TEST(Hdf5Test, openCloseReadWriteAppend)
@@ -91,8 +80,8 @@ TEST(Hdf5Test, openCloseReadWriteAppend)
     }
   }
 
-  ASSERT_TRUE(hdf5.closeFile()) << "Failed to close read-only file " << testfile
-                                << ".";
+  ASSERT_TRUE(hdf5.closeFile())
+    << "Failed to close read-only file " << testfile << ".";
 }
 
 TEST(Hdf5Test, readWriteEigenMatrixXd)
@@ -121,8 +110,8 @@ TEST(Hdf5Test, readWriteEigenMatrixXd)
     << mat << "\nRead:\n"
     << matRead;
 
-  ASSERT_TRUE(hdf5.closeFile()) << "Closing test file '" << tmpFileName
-                                << "' failed.";
+  ASSERT_TRUE(hdf5.closeFile())
+    << "Closing test file '" << tmpFileName << "' failed.";
 
   remove(tmpFileName.c_str());
 }
@@ -156,8 +145,8 @@ TEST(Hdf5Test, readWriteDoubleVector)
       << "std::vector<double> read/write mismatch at index " << i << ".";
   }
 
-  ASSERT_TRUE(hdf5.closeFile()) << "Closing test file '" << tmpFileName
-                                << "' failed.";
+  ASSERT_TRUE(hdf5.closeFile())
+    << "Closing test file '" << tmpFileName << "' failed.";
 
   remove(tmpFileName.c_str());
 }
@@ -266,12 +255,12 @@ TEST(Hdf5Test, datasetInteraction)
     EXPECT_TRUE(hdf5.datasetExists(str))
       << "Data set should exist, but isn't found: " << str;
     EXPECT_TRUE(hdf5.removeDataset(str)) << "Error removing dataset " << str;
-    EXPECT_FALSE(hdf5.datasetExists(str)) << "Removed dataset still exists: "
-                                          << str;
+    EXPECT_FALSE(hdf5.datasetExists(str))
+      << "Removed dataset still exists: " << str;
   }
 
-  ASSERT_TRUE(hdf5.closeFile()) << "Closing test file '" << tmpFileName
-                                << "' failed.";
+  ASSERT_TRUE(hdf5.closeFile())
+    << "Closing test file '" << tmpFileName << "' failed.";
 
   remove(tmpFileName.c_str());
 }

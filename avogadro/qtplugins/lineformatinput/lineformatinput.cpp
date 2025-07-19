@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "lineformatinput.h"
@@ -25,27 +14,28 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressDialog>
+#include <QAction>
+#include <QMessageBox>
+#include <QProgressDialog>
 
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::FileFormatDialog;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_reader(nullptr),
-    m_molecule(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_reader(nullptr)
 {
-  QAction* action = new QAction(tr("SMILES…"), this);
+  auto* action = new QAction(tr("SMILES…"), this);
+  action->setProperty("menu priority", 800);
   action->setData("SMILES");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(tr("InChI…"), this);
+  action->setProperty("menu priority", 810);
   action->setData("InChI");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
@@ -82,7 +72,7 @@ void LineFormatInput::showDialog()
     return;
 
   QWidget* parentAsWidget = qobject_cast<QWidget*>(parent());
-  QAction* theSender = qobject_cast<QAction*>(sender());
+  auto* theSender = qobject_cast<QAction*>(sender());
 
   // Create a list of file formats that we can read:
   QStringList availableFormats;
@@ -108,7 +98,8 @@ void LineFormatInput::showDialog()
   dlg.exec();
 
   // check if the reply is empty
-  if (dlg.descriptor().isEmpty())
+  if (dlg.result() != LineFormatInputDialog::Accepted ||
+      dlg.descriptor().isEmpty())
     return; // nothing to do
 
   // Resolve any format conflicts:
@@ -137,7 +128,7 @@ void LineFormatInput::showDialog()
   progDlg.show();
 
   QtGui::Molecule newMol;
-  bool success = m_reader->readString(m_descriptor, newMol);
+  m_reader->readString(m_descriptor, newMol);
   m_molecule->undoMolecule()->appendMolecule(newMol, "Insert Molecule");
   emit requestActiveTool("Manipulator");
   dlg.hide();
@@ -147,5 +138,4 @@ void LineFormatInput::showDialog()
   m_reader = nullptr;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -1,34 +1,20 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "generichighlighter.h"
 
 #include <cassert>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 GenericHighlighter::GenericHighlighter(QObject* parent_)
   : QSyntaxHighlighter(parent_)
 {
 }
 
-GenericHighlighter::~GenericHighlighter()
-{
-}
+GenericHighlighter::~GenericHighlighter() {}
 
 GenericHighlighter::GenericHighlighter(const GenericHighlighter& other)
   : QSyntaxHighlighter(static_cast<QTextDocument*>(nullptr))
@@ -79,43 +65,46 @@ QList<GenericHighlighter::Rule> GenericHighlighter::rules() const
 
 void GenericHighlighter::highlightBlock(const QString& text)
 {
-  typedef QList<Rule>::iterator RuleIter;
-  for (RuleIter it = m_rules.begin(), end = m_rules.end(); it != end; ++it)
-    it->apply(text, *this);
+  for (auto& m_rule : m_rules)
+    m_rule.apply(text, *this);
 }
 
 void GenericHighlighter::Rule::apply(const QString& text,
                                      GenericHighlighter& highlighter)
 {
-  typedef QList<QRegExp>::iterator PatternIter;
-  for (PatternIter it = m_patterns.begin(), end = m_patterns.end(); it != end;
-       ++it) {
-    int index = it->indexIn(text);
-    while (index >= 0) {
-      // If using a regex with capture groups defined, only highlight the
-      // capture groups.
-      if (it->captureCount() > 0) {
-        QStringList capturedTexts(it->capturedTexts());
-        QString match(capturedTexts.takeFirst());
-        foreach (const QString& capture, capturedTexts) {
-          int capOffset(match.indexOf(capture));
-          while (capOffset > 0) {
-            int capLength(capture.size());
-            highlighter.setFormat(index + capOffset, capLength, m_format);
-            capOffset = match.indexOf(capture, capOffset + capLength);
+  for (auto& m_pattern : m_patterns) {
+    // each m_pattern is a QRegularExpression
+    // We want to highlight every occurrence of m_pattern
+    QRegularExpressionMatchIterator iterator = m_pattern.globalMatch(text);
+    while (iterator.hasNext()) {
+      QRegularExpressionMatch match = iterator.next();
+      // If using a regex with capture groups defined, we explicitly don't want
+      // to highlight the whole expression, only the capture groups
+      if (m_pattern.captureCount() > 0) {
+        // Iterate over capture groups, skipping the implicit group 0
+        for (int i = 1; i <= match.lastCapturedIndex(); ++i) {
+          QString captured = match.captured(i);
+          if (!captured.isNull()) {
+            // According to StackOverflow user "peppe", who claims to have
+            // written the whole QRegularExpression class, the index returned is
+            // relative to the whole string, not to the current match
+            // https://stackoverflow.com/questions/28725588/qregularexpression-match-position-in-the-source-string
+            int index = match.capturedStart(i);
+            int length = match.capturedLength(i);
+            highlighter.setFormat(index, length, m_format);
           }
         }
-        index = it->indexIn(text, index + match.size());
       } else {
-        int length(it->matchedLength());
+        // Straightforward regex with no capture groups, highlight whole match
+        int index = match.capturedStart(0);
+        int length = match.capturedLength(0);
         highlighter.setFormat(index, length, m_format);
-        index = it->indexIn(text, index + length);
       }
     }
   }
 }
 
-void GenericHighlighter::Rule::addPattern(const QRegExp& regexp)
+void GenericHighlighter::Rule::addPattern(const QRegularExpression& regexp)
 {
   m_patterns.append(regexp);
 }
@@ -125,5 +114,4 @@ void GenericHighlighter::Rule::setFormat(const QTextCharFormat& format)
   m_format = format;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

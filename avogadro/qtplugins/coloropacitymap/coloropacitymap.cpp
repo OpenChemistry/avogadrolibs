@@ -8,6 +8,7 @@
 #include "histogramwidget.h"
 
 #include <QAction>
+#include <QDebug>
 #include <QDialog>
 #include <QMessageBox>
 #include <QString>
@@ -19,7 +20,6 @@
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/vtk/vtkglwidget.h>
-#include <avogadro/vtk/vtkplot.h>
 
 #include <vtkColorTransferFunction.h>
 #include <vtkPiecewiseFunction.h>
@@ -29,12 +29,7 @@
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtOpenGL::ActiveObjects;
 
-using std::map;
-
-namespace Avogadro {
-namespace QtPlugins {
-
-using Core::Array;
+namespace Avogadro::QtPlugins {
 
 vtkImageData* cubeImageData(Core::Cube* cube)
 {
@@ -46,10 +41,10 @@ vtkImageData* cubeImageData(Core::Cube* cube)
   // Translate origin, spacing, and types from Avogadro to VTK.
   data->SetOrigin(cube->min().x(), cube->min().y(), cube->min().z());
   data->SetSpacing(cube->spacing().data());
-  data->AllocateScalars(VTK_DOUBLE, 1);
+  data->AllocateScalars(VTK_FLOAT, 1);
 
-  double* dataPtr = static_cast<double*>(data->GetScalarPointer());
-  std::vector<double>* cubePtr = cube->data();
+  auto* dataPtr = static_cast<float*>(data->GetScalarPointer());
+  std::vector<float>* cubePtr = cube->data();
 
   // Reorder our cube for VTK's Fortran ordering in vtkImageData.
   for (int i = 0; i < dim.x(); ++i) {
@@ -89,6 +84,18 @@ QStringList ColorOpacityMap::menuPath(QAction*) const
   return QStringList() << tr("&Extensions");
 }
 
+void ColorOpacityMap::setActiveWidget(QWidget* widget)
+{
+  auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
+  if (vtkWidget) {
+    m_vtkWidget = true;
+    updateActions();
+  } else {
+    m_vtkWidget = false;
+    updateActions();
+  }
+}
+
 void ColorOpacityMap::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule == mol)
@@ -108,28 +115,19 @@ void ColorOpacityMap::setMolecule(QtGui::Molecule* mol)
 void ColorOpacityMap::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
-  // Don't attempt to update anything if there is no dialog to update!
-  if (!m_comDialog)
-    return;
-
   // I think we need to look at adding cubes to changes, flaky right now.
   auto changes = static_cast<Molecule::MoleculeChanges>(c);
   if (changes & Molecule::Added || changes & Molecule::Removed) {
     updateActions();
-    updateHistogram();
+    if (m_comDialog)
+      updateHistogram();
   }
 }
 
 void ColorOpacityMap::updateActions()
 {
-  // Disable everything for nullptr molecules.
-  if (!m_molecule) {
-    foreach (QAction* action, m_actions)
-      action->setEnabled(false);
-    return;
-  }
   foreach (QAction* action, m_actions)
-    action->setEnabled(true);
+    action->setEnabled(m_vtkWidget);
 }
 
 void ColorOpacityMap::updateHistogram()
@@ -137,14 +135,18 @@ void ColorOpacityMap::updateHistogram()
   auto widget = ActiveObjects::instance().activeWidget();
   auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
 
+  if (vtkWidget == nullptr)
+    m_vtkWidget = false;
+
   if (widget && vtkWidget && widget != m_activeWidget) {
     if (m_activeWidget)
-      disconnect(widget, 0, this, 0);
+      disconnect(widget, nullptr, this, nullptr);
     connect(widget, SIGNAL(imageDataUpdated()), SLOT(updateHistogram()));
     m_activeWidget = widget;
   }
 
   if (vtkWidget && m_molecule && m_molecule->cubeCount()) {
+    m_vtkWidget = true;
     vtkNew<vtkTable> table;
     auto imageData = vtkWidget->imageData();
     auto lut = vtkWidget->lut();
@@ -180,10 +182,9 @@ void ColorOpacityMap::render()
   auto widget = ActiveObjects::instance().activeWidget();
   auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
   if (vtkWidget) {
-    vtkWidget->GetRenderWindow()->Render();
+    vtkWidget->renderWindow()->Render();
     vtkWidget->update();
   }
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -1,8 +1,8 @@
 /**
- * pugixml parser - version 1.2
+ * pugixml parser - version 1.15
  * --------------------------------------------------------
- * Copyright (C) 2006-2012, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)
- * Report bugs and download new versions at http://pugixml.org/
+ * Copyright (C) 2006-2025, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)
+ * Report bugs and download new versions at https://pugixml.org/
  *
  * This library is distributed under the MIT License. See notice at the end
  * of this file.
@@ -16,6 +16,9 @@
 
 // Uncomment this to enable wchar_t mode
 // #define PUGIXML_WCHAR_MODE
+
+// Uncomment this to enable compact mode
+// #define PUGIXML_COMPACT
 
 // Uncomment this to disable XPath
 // #define PUGIXML_NO_XPATH
@@ -32,19 +35,27 @@
 // #define PUGIXML_FUNCTION __fastcall // to set calling conventions to all public functions to fastcall
 // In absence of PUGIXML_CLASS/PUGIXML_FUNCTION definitions PUGIXML_API is used instead
 
-// Uncomment this to switch to header-only version
-// #define PUGIXML_HEADER_ONLY
-// #include "pugixml.cpp"
-
 // Tune these constants to adjust memory-related behavior
 // #define PUGIXML_MEMORY_PAGE_SIZE 32768
 // #define PUGIXML_MEMORY_OUTPUT_STACK 10240
 // #define PUGIXML_MEMORY_XPATH_PAGE_SIZE 4096
 
+// Tune this constant to adjust max nesting for XPath queries
+// #define PUGIXML_XPATH_DEPTH_LIMIT 1024
+
+// Uncomment this to switch to header-only version
+// #define PUGIXML_HEADER_ONLY
+
+// Uncomment this to enable long long support (usually enabled automatically)
+// #define PUGIXML_HAS_LONG_LONG
+
+// Uncomment this to enable support for std::string_view (usually enabled automatically)
+// #define PUGIXML_HAS_STRING_VIEW
+
 #endif
 
 /**
- * Copyright (c) 2006-2012 Arseny Kapoulkine
+ * Copyright (c) 2006-2025 Arseny Kapoulkine
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation

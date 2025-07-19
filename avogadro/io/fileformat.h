@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_IO_FILEFORMAT_H
@@ -69,12 +58,24 @@ public:
 
     All = ReadWrite | MultiMolecule | Stream | String | File
   };
-  typedef int Operations;
+  using Operations = int;
 
   /**
    * @return Operation flags defining the capabilities of this format.
    */
   virtual Operations supportedOperations() const = 0;
+
+  /**
+   * @brief Validates the given file name.
+   *
+   * Checks if the filename contains any invalid characters (e.g. ..)
+   * Also checks if the filename contains a restricted name on Windows.
+   * e.g., CON, PRN, AUX, NUL, COM1, COM2, COM3, COM4, COM5, etc.
+   *
+   * @param fileName The name of the file to be validated.
+   * @return true if the file name is valid, false otherwise.
+   */
+  static bool validateFileName(const std::string& fileName);
 
   /**
    * @brief Open the specified file in Read or Write mode.
@@ -202,7 +203,7 @@ public:
   virtual FileFormat* newInstance() const = 0;
 
   /**
-   * @brief A unique identifier, used to retrieve formats programatically.
+   * @brief A unique identifier, used to retrieve formats programmatically.
    * CML, XYZ, PDB etc. A runtime warning will be generated if the identifier
    * is not unique.
    */
@@ -263,7 +264,7 @@ inline FileFormat::Operation operator|(FileFormat::Operation a,
                                             static_cast<int>(b));
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
 
 #endif // AVOGADRO_IO_FILEFORMAT_H

@@ -82,8 +82,9 @@ protected:
   void buildOptionGui();
   void combinedOptionRow(const QString& label1, const QString& label2,
                          const QString& tr1, const QString& tr2,
-                         QJsonObject& options);
-  void addOptionRow(const QString& label, const QJsonValue& option);
+                         QJsonObject& options, bool bothLabels = false);
+  void addOptionRow(const QString& key, const QString& label,
+                    const QJsonValue& option);
 
   QWidget* createOptionWidget(const QJsonValue& option);
   QWidget* createStringListWidget(const QJsonObject& obj);
@@ -92,6 +93,7 @@ protected:
   QWidget* createIntegerWidget(const QJsonObject& obj);
   QWidget* createFloatWidget(const QJsonObject& obj);
   QWidget* createBooleanWidget(const QJsonObject& obj);
+  QWidget* createTextWidget(const QJsonObject& obj);
   /**@}*/
 
   /**
@@ -106,6 +108,7 @@ protected:
   void setIntegerOption(const QString& name, const QJsonValue& value);
   void setFloatOption(const QString& name, const QJsonValue& value);
   void setBooleanOption(const QString& name, const QJsonValue& value);
+  void setTextOption(const QString& name, const QJsonValue& value);
   /**@}*/
 
   /**

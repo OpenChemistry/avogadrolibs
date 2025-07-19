@@ -6,13 +6,16 @@
 #ifndef PROPMODEL_H
 #define PROPMODEL_H
 
+#include <QtCore/QAbstractTableModel>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QAbstractTableModel>
 
 #include <avogadro/core/angleiterator.h>
 #include <avogadro/core/dihedraliterator.h>
+#include <avogadro/qtgui/rwmolecule.h>
+
+#include <Eigen/Geometry>
 
 namespace Avogadro {
 
@@ -42,14 +45,14 @@ public slots:
 public:
   explicit PropertyModel(PropertyType type, QObject* parent = 0);
 
-  int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  QVariant data(const QModelIndex& index, int role) const;
-  Qt::ItemFlags flags(const QModelIndex& index) const;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex& index, int role) const override;
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
   bool setData(const QModelIndex& index, const QVariant& value,
-               int role = Qt::EditRole);
+               int role = Qt::EditRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,
-                      int role = Qt::DisplayRole) const;
+                      int role = Qt::DisplayRole) const override;
 
   void setMolecule(QtGui::Molecule* molecule);
 
@@ -68,12 +71,31 @@ public:
 private:
   PropertyType m_type;
   QtGui::Molecule* m_molecule;
-  
+
   mutable bool m_validCache;
   mutable std::vector<Core::Angle> m_angles;
   mutable std::vector<Core::Dihedral> m_torsions;
 
   QString secStructure(unsigned int type) const;
+
+  std::vector<int> m_fragment;
+  Eigen::Affine3d m_transform;
+  bool fragmentHasAtom(int uid) const;
+  void buildFragment(const QtGui::RWBond& bond, const QtGui::RWAtom& startAtom);
+  bool fragmentRecurse(const QtGui::RWBond& bond,
+                       const QtGui::RWAtom& startAtom,
+                       const QtGui::RWAtom& currentAtom);
+
+  void setBondLength(unsigned int index, double value);
+  void setAngle(unsigned int index, double newValue);
+  void setTorsion(unsigned int index, double newValue);
+  void transformFragment() const;
+
+  inline QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
+                                       const QtGui::RWAtom& atom) const
+  {
+    return bond.atom1() == atom ? bond.atom2() : bond.atom1();
+  }
 
   /*
    * For each category (atom, bond etc), an enum specifies which columns hold
@@ -85,9 +107,12 @@ private:
   {
     AtomDataElement = 0,
     AtomDataValence,
+    AtomDataFormalCharge,
+    AtomDataPartialCharge,
     AtomDataX,
     AtomDataY,
     AtomDataZ,
+    AtomDataLabel,
     AtomDataColor,
     AtomDataCharge,
     AtomDataCustom,
@@ -100,7 +125,8 @@ private:
     BondDataAtom1,
     BondDataAtom2,
     BondDataOrder,
-    BondDataLength
+    BondDataLength,
+    BondDataLabel
   };
 
   // Angle Data
@@ -127,7 +153,7 @@ private:
   // Conformer Data
   enum ConformerColumn
   {
-    ConformerDataType = 0,
+    ConformerDataRMSD = 0,
     ConformerDataEnergy
   };
 
@@ -138,10 +164,9 @@ private:
     ResidueDataID,
     ResidueDataChain,
     ResidueDataSecStructure,
-    ResidueDataHeterogen,
-    ResidueDataColor
+    ResidueDataColor,
+    ResidueDataHeterogen
   };
-
 };
 
 } // end namespace Avogadro

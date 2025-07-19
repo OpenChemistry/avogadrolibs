@@ -9,8 +9,7 @@
 
 #include <limits>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 namespace {
 // Internal id used for queue model indices
@@ -21,14 +20,10 @@ static const quint32 InvalidInternalId(std::numeric_limits<quint32>::max() - 1);
 
 // Maximum assignable internal id. Must be last:
 static const quint32 MaxInternalId(std::numeric_limits<quint32>::max() - 2);
-}
+} // namespace
 
 MoleQueueQueueListModel::MoleQueueQueueListModel(QObject* parent_)
   : QAbstractItemModel(parent_), m_uidCounter(0)
-{
-}
-
-MoleQueueQueueListModel::~MoleQueueQueueListModel()
 {
 }
 
@@ -196,7 +191,7 @@ QModelIndex MoleQueueQueueListModel::index(int row, int column,
 QModelIndex MoleQueueQueueListModel::parent(const QModelIndex& child) const
 {
   if (child.isValid()) {
-    const quint32 childId = static_cast<quint32>(child.internalId());
+    const auto childId = static_cast<quint32>(child.internalId());
 
     // Child is queue -- return invalid parent.
     if (childId == QueueInternalId)
@@ -292,8 +287,8 @@ void MoleQueueQueueListModel::insertProgram(int queueRow, int progRow,
 {
   beginInsertRows(createIndex(queueRow, 0, QueueInternalId), progRow, progRow);
   m_programList[queueRow].insert(progRow, progName);
-  m_uidLookup.insert(nextUid(), QStringList() << m_queueList[queueRow]
-                                              << progName);
+  m_uidLookup.insert(nextUid(), QStringList()
+                                  << m_queueList[queueRow] << progName);
   endInsertRows();
 }
 
@@ -307,11 +302,9 @@ void MoleQueueQueueListModel::removeProgram(int queueRow, int progRow)
 
 bool MoleQueueQueueListModel::isQueueIndex(const QModelIndex& i) const
 {
-  if (i.isValid() && static_cast<quint32>(i.internalId()) == QueueInternalId &&
-      i.row() < m_queueList.size() && i.column() == 0) {
-    return true;
-  }
-  return false;
+  return i.isValid() &&
+         static_cast<quint32>(i.internalId()) == QueueInternalId &&
+         i.row() < m_queueList.size() && i.column() == 0;
 }
 
 bool MoleQueueQueueListModel::isProgramIndex(const QModelIndex& i) const
@@ -356,5 +349,4 @@ quint32 MoleQueueQueueListModel::nextUid()
   return m_uidCounter;
 }
 
-} // namespace MoleQueue
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

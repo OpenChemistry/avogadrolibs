@@ -1,25 +1,18 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2009 Marcus D. Hanwell
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_COLOR3F_H
 #define AVOGADRO_CORE_COLOR3F_H
 
-namespace Avogadro {
-namespace Core {
+#include <array>
+
+namespace Avogadro::Core {
+namespace detail {
+/** Used to represent Maximum RGB value as a float. */
+constexpr float k_MaxRGBColorValue = 255.0f;
+} // namespace detail
 
 /**
  * @class Color3f color3f.h <avogadro/core/color3f.h>
@@ -93,22 +86,19 @@ public:
   const float* data() const;
 
 protected:
-  float m_data[3];
+  std::array<float, 3> m_data;
 };
 
-inline Color3f::Color3f(float r, float g, float b)
-{
-  m_data[0] = r;
-  m_data[1] = g;
-  m_data[2] = b;
-}
+inline Color3f::Color3f(float r, float g, float b) : m_data({ r, g, b }) {}
 
+// clang-format off
 inline Color3f::Color3f(int r, int g, int b)
+: m_data({static_cast<float>(r) / detail::k_MaxRGBColorValue,
+          static_cast<float>(g) / detail::k_MaxRGBColorValue,
+          static_cast<float>(b) / detail::k_MaxRGBColorValue})
 {
-  m_data[0] = static_cast<float>(r) / 255.0f;
-  m_data[1] = static_cast<float>(g) / 255.0f;
-  m_data[2] = static_cast<float>(b) / 255.0f;
 }
+// clang-format on
 
 inline void Color3f::set(float r, float g, float b)
 {
@@ -119,15 +109,14 @@ inline void Color3f::set(float r, float g, float b)
 
 inline float* Color3f::data()
 {
-  return &(m_data[0]);
+  return m_data.data();
 }
 
 inline const float* Color3f::data() const
 {
-  return &(m_data[0]);
+  return m_data.data();
 }
 
-} // End namespace Core
-} // End namespace Avogadro
+} // End namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_COLOR3F_H

@@ -1,55 +1,43 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2020 Geoffrey Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "insertfragment.h"
-#include "insertfragmentdialog.h"
 
 #include <avogadro/qtgui/fileformatdialog.h>
+#include <avogadro/qtgui/insertfragmentdialog.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
-using Avogadro::QtGui::FileFormatDialog;
+using Avogadro::QtGui::InsertFragmentDialog;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 InsertFragment::InsertFragment(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_crystalDialog(nullptr),
-    m_moleculeDialog(nullptr), m_reader(nullptr), m_molecule(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_moleculeDialog(nullptr),
+    m_crystalDialog(nullptr), m_molecule(nullptr), m_reader(nullptr)
 {
-  QAction* action = new QAction(tr("Fragment…"), this);
+  auto* action = new QAction(tr("Molecule…"), this);
+  action->setProperty("menu priority", 890);
   action->setData("molecules"); // will also work for crystals
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(tr("Crystal…"), this);
   action->setData("crystals"); // will also work for crystals
+  action->setProperty("menu priority", 170);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 }
@@ -83,7 +71,7 @@ void InsertFragment::showDialog()
     return;
 
   QWidget* parentAsWidget = qobject_cast<QWidget*>(parent());
-  QAction* theSender = qobject_cast<QAction*>(sender());
+  auto* theSender = qobject_cast<QAction*>(sender());
 
   // Prompt user for input:
   bool crystal = theSender->data().toString() == "crystals";
@@ -124,6 +112,7 @@ void InsertFragment::performInsert(const QString& fileName, bool crystal)
   if (crystal) {
     Molecule::MoleculeChanges changes =
       (Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed);
+
     m_molecule->undoMolecule()->modifyMolecule(newMol, changes,
                                                tr("Import Crystal"));
     emit requestActiveTool("Navigator");
@@ -134,5 +123,4 @@ void InsertFragment::performInsert(const QString& fileName, bool crystal)
   }
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

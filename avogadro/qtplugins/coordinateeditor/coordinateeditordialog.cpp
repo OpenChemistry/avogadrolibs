@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "coordinateeditordialog.h"
@@ -30,7 +19,7 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QFont>
 #include <QtGui/QIcon>
-#include <QtGui/QRegExpValidator>
+#include <QtGui/QRegularExpressionValidator>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocument>
 #include <QtWidgets/QApplication>
@@ -40,7 +29,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMimeData>
 #include <QtCore/QMutableListIterator>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
@@ -53,10 +42,9 @@
 #define FORMAT_DEBUG(x)
 #endif // ENABLE_FORMAT_DEBUG
 
-using Avogadro::QtGui::Molecule;
-using Avogadro::Core::Atom;
-using Avogadro::Core::Elements;
 using Avogadro::Vector3;
+using Avogadro::Core::Elements;
+using Avogadro::QtGui::Molecule;
 
 namespace {
 
@@ -89,18 +77,22 @@ enum TokenType
 };
 
 // Some frequently used regexes:
-static const QRegExp TOKEN_SEPARATOR("[\\s,;]+");
-static const QRegExp VALID_TOKEN("[^\\s,;]+");
-static const QRegExp INT_CHECKER("(:?[+-])?\\d+");
-static const QRegExp DOUBLE_CHECKER("(:?[+-])?" // Leading sign
-                                    "(:?" // Must match one of the following:
-                                    "\\d*\\.\\d*"           // Fractional part
-                                    "|"                     // or
-                                    "\\d+[Ee](:?[+-])?\\d+" // Exponential part
-                                    "|"                     // or
-                                    "\\d*\\.\\d*"       // Fractional part and
-                                    "[Ee](:?[+-])?\\d+" // Exponential part
-                                    ")");
+static const QRegularExpression TOKEN_SEPARATOR("[\\s,;]+");
+static const QRegularExpression VALID_TOKEN("[^\\s,;]+");
+// These two need to be exact
+static const QRegularExpression INT_CHECKER(
+  QRegularExpression::anchoredPattern("(:?[+-])?\\d+"));
+static const QRegularExpression DOUBLE_CHECKER(
+  QRegularExpression::anchoredPattern(
+    "(:?[+-])?"             // Leading sign
+    "(:?"                   // Must match one of the following:
+    "\\d*\\.\\d*"           // Fractional part
+    "|"                     // or
+    "\\d+[Ee](:?[+-])?\\d+" // Exponential part
+    "|"                     // or
+    "\\d*\\.\\d*"           // Fractional part and
+    "[Ee](:?[+-])?\\d+"     // Exponential part
+    ")"));
 
 struct AtomStruct
 {
@@ -108,10 +100,9 @@ struct AtomStruct
   Vector3 pos;
 };
 
-} // end anon namespace
+} // namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 // Storage class used to hold state while validating input.
 class CoordinateEditorDialog::ValidateStorage
@@ -153,8 +144,8 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget* parent_)
           SLOT(textModified(bool)));
 
   // Setup spec edit
-  QRegExp specRegExp("[#ZGSNabcxyz01_]*");
-  QRegExpValidator* specValidator = new QRegExpValidator(specRegExp, this);
+  QRegularExpression specRegExp("[#ZGSLNabcxyz01_]*");
+  auto* specValidator = new QRegularExpressionValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
           SLOT(presetChanged(int)));
@@ -398,6 +389,40 @@ void CoordinateEditorDialog::validateInputWorker()
           break;
         }
 
+        case 'L': {
+          // Validate label (symbol + number)
+          QString cleanToken(tokenCursor.selectedText().toLower());
+          if (!cleanToken.isEmpty())
+            cleanToken.replace(0, 1, cleanToken[0].toUpper());
+
+          // Split the label into symbol and number
+          QRegularExpression labelSplitter("([A-Z][a-z]?)(\\d+)");
+          QRegularExpressionMatch match = labelSplitter.match(cleanToken);
+          if (match.hasMatch()) {
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid atom label."));
+            break;
+          }
+          // check the symbol
+          std::string tokenStd(match.captured(1).toStdString());
+          atom.atomicNumber = Elements::atomicNumberFromSymbol(tokenStd);
+          if (atom.atomicNumber == Avogadro::InvalidElement)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid element symbol."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Element symbol."));
+          break;
+        }
+
+        case '#': {
+          // Validate integer:
+          bool isInt;
+          [[maybe_unused]] int index = tokenCursor.selectedText().toInt(&isInt);
+          if (!isInt)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid atomic index."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Atomic index."));
+          break;
+        }
+
         case 'Z': {
           // Validate integer:
           bool isInt;
@@ -472,7 +497,7 @@ void CoordinateEditorDialog::validateInputWorker()
           if (!isReal)
             m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
           else
-            m_ui->text->markValid(tokenCursor, tr("'c' coordinate."));
+            m_ui->text->markValid(tokenCursor, tr("'c' lattice coordinate."));
           break;
         }
 
@@ -577,6 +602,7 @@ void CoordinateEditorDialog::applyFinish(bool valid)
                                                  newMolecule.atomPositions3d());
   } else {
     newMolecule.perceiveBondsSimple();
+    newMolecule.perceiveBondOrders();
   }
 
   m_ui->text->document()->setModified(false);
@@ -638,6 +664,9 @@ QString CoordinateEditorDialog::detectInputFormat() const
   if (m_ui->text->document()->isEmpty())
     return QString();
 
+  if (!m_ui->spec->text().isEmpty())
+    return m_ui->spec->text();
+
   // Extract the first non-empty line of text from the document.
   QTextCursor cur(m_ui->text->document());
   QString sample;
@@ -651,16 +680,16 @@ QString CoordinateEditorDialog::detectInputFormat() const
   FORMAT_DEBUG(qDebug() << "\n\nExamining sample:" << sample;)
 
   // Split the string into tokens, and identify the type of each.
-  QList<QString> tokens(sample.split(TOKEN_SEPARATOR, QString::SkipEmptyParts));
+  QList<QString> tokens(sample.split(TOKEN_SEPARATOR, Qt::SkipEmptyParts));
   QList<TokenType> tokenTypes;
   tokenTypes.reserve(tokens.size());
   size_t tokenTypeCounts[3] = { 0, 0, 0 };
 
   foreach (const QString& token, tokens) {
     TokenType tokenType = String;
-    if (INT_CHECKER.exactMatch(token))
+    if (INT_CHECKER.match(token).hasMatch())
       tokenType = Integer;
-    else if (DOUBLE_CHECKER.exactMatch(token))
+    else if (DOUBLE_CHECKER.match(token).hasMatch())
       tokenType = Double;
     ++tokenTypeCounts[tokenType];
     tokenTypes << tokenType;
@@ -773,8 +802,8 @@ QString CoordinateEditorDialog::detectInputFormat() const
 
   // Check the current specification -- if a|b|c appears before x|y|z, assume
   // that the specified coordinates are lattice coords
-  static QRegExp cartesianSniffer("x|y|z");
-  static QRegExp fractionalSniffer("a|b|c");
+  static QRegularExpression cartesianSniffer("x|y|z");
+  static QRegularExpression fractionalSniffer("a|b|c");
   const QString currentSpec(m_ui->spec->text());
   int cartesianIndex = currentSpec.indexOf(cartesianSniffer);
   int fractionalIndex = currentSpec.indexOf(fractionalSniffer);
@@ -819,5 +848,4 @@ void CoordinateEditorDialog::clearClicked()
   m_ui->text->document()->clear();
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

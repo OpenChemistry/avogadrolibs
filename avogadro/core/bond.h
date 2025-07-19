@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_BOND_H
@@ -21,8 +10,7 @@
 
 #include "atom.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class Bond bond.h <avogadro/core/bond.h>
@@ -34,11 +22,11 @@ template <class Molecule_T>
 class BondTemplate
 {
 public:
-  typedef Molecule_T MoleculeType;
-  typedef typename Molecule_T::AtomType AtomType;
+  using MoleculeType = Molecule_T;
+  using AtomType = typename Molecule_T::AtomType;
 
   /** Creates a new, invalid bond object. */
-  BondTemplate();
+  BondTemplate() = default;
 
   /**
    * Creates a bond object representing a bond at index @p i in molecule @p m.
@@ -105,6 +93,16 @@ public:
   /** @} */
 
   /**
+   * @return The atom in the bond such that returned.index() != index.
+   */
+  AtomType getOtherAtom(Index index) const;
+
+  /**
+   * @return The atom in the bond such that returned.index() != atom.index().
+   */
+  AtomType getOtherAtom(AtomType atom) const;
+
+  /**
    * The bond's order (single = 1, double = 2, etc.)
    * @{
    */
@@ -112,16 +110,20 @@ public:
   unsigned char order() const;
   /** @} */
 
-private:
-  MoleculeType* m_molecule;
-  Index m_index;
-};
+  /**
+   * The length of the bond or 0.0 if the bond is invalid.
+   */
+  Real length() const;
 
-template <class Molecule_T>
-BondTemplate<Molecule_T>::BondTemplate()
-  : m_molecule(nullptr), m_index(MaxIndex)
-{
-}
+  /**
+   * A label for the bond (if any)
+   */
+  std::string label() const;
+
+private:
+  MoleculeType* m_molecule = nullptr;
+  Index m_index = MaxIndex;
+};
 
 template <class Molecule_T>
 BondTemplate<Molecule_T>::BondTemplate(MoleculeType* m, Index i)
@@ -205,6 +207,24 @@ typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom2()
 }
 
 template <class Molecule_T>
+typename BondTemplate<Molecule_T>::AtomType
+BondTemplate<Molecule_T>::getOtherAtom(Index index) const
+{
+  if (atom1().index() == index)
+    return atom2();
+  else
+    return atom1();
+}
+
+template <class Molecule_T>
+typename BondTemplate<Molecule_T>::AtomType
+BondTemplate<Molecule_T>::getOtherAtom(
+  BondTemplate<Molecule_T>::AtomType atom) const
+{
+  return getOtherAtom(atom.index());
+}
+
+template <class Molecule_T>
 void BondTemplate<Molecule_T>::setOrder(unsigned char o)
 {
   m_molecule->setBondOrder(m_index, o);
@@ -216,7 +236,21 @@ unsigned char BondTemplate<Molecule_T>::order() const
   return m_molecule->bondOrders()[m_index];
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+template <class Molecule_T>
+Real BondTemplate<Molecule_T>::length() const
+{
+  if (!isValid())
+    return 0.0;
+
+  return (atom1().position3d() - atom2().position3d()).norm();
+}
+
+template <class Molecule_T>
+std::string BondTemplate<Molecule_T>::label() const
+{
+  return m_molecule->bondLabel(m_index);
+}
+
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_BOND_H

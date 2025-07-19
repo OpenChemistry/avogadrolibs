@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_RENDERING_ARROWGEOMETRY_H
@@ -37,7 +26,7 @@ public:
 
   ArrowGeometry();
   ArrowGeometry(const ArrowGeometry& other);
-  ~ArrowGeometry();
+  ~ArrowGeometry() override;
 
   ArrowGeometry& operator=(ArrowGeometry);
   friend void swap(ArrowGeometry& lhs, ArrowGeometry& rhs);
@@ -51,12 +40,12 @@ public:
    * @brief Render the arrows.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera& camera);
+  void render(const Camera& camera) override;
 
   /**
    * Clear the contents of the node.
    */
-  void clear();
+  void clear() override;
 
   void drawLine(const Vector3f& start, const Vector3f& end, double lineWidth);
   void drawCone(const Vector3f& base, const Vector3f& cap, double baseRadius,
@@ -77,6 +66,9 @@ public:
     return m_vertices;
   }
 
+  /** Set the color of the arrow */
+  void setColor(const Vector3ub& c) { m_color = c; }
+
 private:
   /**
    * @brief Update the shaders ready for rendering.
@@ -85,6 +77,7 @@ private:
 
   Core::Array<std::pair<Vector3f, Vector3f>> m_vertices;
   Core::Array<unsigned int> m_lineStarts;
+  Vector3ub m_color;
 
   bool m_dirty;
 

@@ -19,8 +19,7 @@
 
 using namespace Avogadro::QtPlugins::SymmetryUtil;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 OperationsTableModel::OperationsTableModel(QObject* parent)
   : QAbstractTableModel(parent)
@@ -29,9 +28,7 @@ OperationsTableModel::OperationsTableModel(QObject* parent)
   m_operations_size = 0;
 }
 
-OperationsTableModel::~OperationsTableModel()
-{
-}
+OperationsTableModel::~OperationsTableModel() {}
 
 void OperationsTableModel::setOperations(
   int operations_size, const msym::msym_symmetry_operation_t* operations)
@@ -88,5 +85,4 @@ QVariant OperationsTableModel::data(const QModelIndex& index, int role) const
       return QVariant();
   }
 }
-}
-}
+} // namespace Avogadro::QtPlugins

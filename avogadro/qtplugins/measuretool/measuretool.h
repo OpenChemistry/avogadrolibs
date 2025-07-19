@@ -1,21 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  Adapted from Avogadro 1.x with the following authors' permission:
-  Copyright 2007 Donald Ephraim Curtis
-  Copyright 2008 Marcus D. Hanwell
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_MEASURETOOL_H
@@ -50,6 +35,7 @@ public:
   unsigned char priority() const override { return 60; }
   QAction* activateAction() const override { return m_activateAction; }
   QWidget* toolWidget() const override;
+  void setIcon(bool darkTheme = false) override;
 
   void setMolecule(QtGui::Molecule*) override;
   void setEditMolecule(QtGui::RWMolecule*) override;
@@ -62,9 +48,8 @@ public:
   void draw(Rendering::GroupNode& node) override;
 
 private:
-  Vector3ub contrastingColor(const Vector3ub& rgb) const;
   bool toggleAtom(const Rendering::Identifier& atom);
-  template<typename T>
+  template <typename T>
   void createLabels(T* mol, Rendering::GeometryNode* geo,
                     QVector<Vector3>& positions);
 

@@ -6,9 +6,11 @@
 #ifndef AVOGADRO_QTPLUGINS_OPENBABEL_H
 #define AVOGADRO_QTPLUGINS_OPENBABEL_H
 
+#include "conformersearchdialog.h"
+
 #include <avogadro/qtgui/extensionplugin.h>
 
-#include <QtCore/QMap>
+#include <QtCore/QMultiMap>
 
 class QAction;
 class QProgressDialog;
@@ -55,23 +57,29 @@ public slots:
 
 private slots:
   void refreshReadFormats();
-  void handleReadFormatUpdate(const QMap<QString, QString>& fmts);
+  void handleReadFormatUpdate(const QMultiMap<QString, QString>& fmts);
 
   void refreshWriteFormats();
-  void handleWriteFormatUpdate(const QMap<QString, QString>& fmts);
+  void handleWriteFormatUpdate(const QMultiMap<QString, QString>& fmts);
 
   void refreshForceFields();
-  void handleForceFieldsUpdate(const QMap<QString, QString>& ffMap);
+  void handleForceFieldsUpdate(const QMultiMap<QString, QString>& ffMap);
 
   void refreshCharges();
-  void handleChargesUpdate(const QMap<QString, QString>& chargeMap);
+  void handleChargesUpdate(const QMultiMap<QString, QString>& chargeMap);
 
   void onConfigureGeometryOptimization();
+  void onConfigureConformerSearch();
 
   void onOptimizeGeometry();
   void onOptimizeGeometryStatusUpdate(int step, int numSteps, double energy,
                                       double lastEnergy);
   void onOptimizeGeometryFinished(const QByteArray& output);
+
+  void onGenerateConformers();
+  void onConformerStatusUpdate(int step, int numSteps, double energy,
+                               double lastEnergy);
+  void onGenerateConformersFinished(const QByteArray& output);
 
   void onPerceiveBonds();
   void onPerceiveBondsFinished(const QByteArray& output);
@@ -94,13 +102,17 @@ private:
   QList<QByteArray> m_moleculeQueue;
   bool m_readFormatsPending;
   bool m_writeFormatsPending;
-  QMap<QString, QString> m_readFormats;
-  QMap<QString, QString> m_writeFormats;
-  QMap<QString, QString> m_forceFields;
-  QMap<QString, QString> m_charges;
+  QMultiMap<QString, QString> m_readFormats;
+  QMultiMap<QString, QString> m_writeFormats;
+  QMultiMap<QString, QString> m_forceFields;
+  QMultiMap<QString, QString> m_charges;
+  std::string m_defaultFormat;
   QProgressDialog* m_progress;
+
+  ConformerSearchDialog* m_conformerSearchDialog;
 };
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_OPENBABEL_H

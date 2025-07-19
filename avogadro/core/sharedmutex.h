@@ -6,10 +6,9 @@
 #ifndef AVOGADRO_CORE_SHAREDMUTEX_H
 #define AVOGADRO_CORE_SHAREDMUTEX_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class SharedMutex sharedmutex.h <avogadro/core/sharedmutex.h>
@@ -63,7 +62,6 @@ private:
   class PIMPL;
   PIMPL* d;
 };
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_SHAREDMUTEX_H

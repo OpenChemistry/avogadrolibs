@@ -1,18 +1,10 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2017 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
+
+#ifndef AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
+#define AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
 
 #include "archive.h"
 #include "archive_entry.h"
@@ -33,5 +25,8 @@ public:
   QList<QString> extract(std::string extractdir, std::string absolutepath);
   QList<QString> listFiles(const std::string absolutepath);
 };
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro
+
+#endif

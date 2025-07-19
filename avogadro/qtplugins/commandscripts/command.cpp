@@ -1,6 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "command.h"
@@ -14,7 +14,7 @@
 #include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QLabel>
@@ -30,8 +30,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QtPlugin>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::QtGui::InterfaceScript;
 using Avogadro::QtGui::InterfaceWidget;
@@ -66,6 +65,17 @@ QStringList Command::menuPath(QAction* action) const
     return path;
   }
 
+  // cache the menu paths
+  QSettings settings;
+  QFileInfo info(scriptFileName); // check if the script matches the hash
+  QString hash =
+    settings.value("scripts/" + scriptFileName + "/hash").toString();
+  if (hash == QString::number(info.size()) + info.lastModified().toString()) {
+    path = settings.value("scripts/" + scriptFileName + "/menu").toStringList();
+    if (!path.isEmpty())
+      return path;
+  }
+
   // otherwise, we have a script name, so ask it
   InterfaceScript gen(scriptFileName);
   path = gen.menuPath().split('|');
@@ -76,7 +86,38 @@ QStringList Command::menuPath(QAction* action) const
                << scriptFileName << "." << gen.errorList().join("\n\n");
     return path;
   }
-  return path;
+
+  // look for {number} in the last part of the path
+  // (this is a priority integer)
+  QString lastPart = path.takeLast();
+  int priority = 0;
+  int braceIndex = lastPart.indexOf('{');
+  int endBraceIndex = lastPart.indexOf('}');
+  if (braceIndex >= 0 && endBraceIndex >= 0 && endBraceIndex > braceIndex) {
+    bool ok = false;
+    size_t len = endBraceIndex - braceIndex - 1;
+    priority = lastPart.mid(braceIndex + 1, len).toInt(&ok);
+    if (ok) {
+      lastPart = lastPart.left(braceIndex);
+    }
+  }
+  // add it back to the path
+  path << lastPart;
+
+  // cache the path
+  settings.setValue("scripts/" + scriptFileName + "/menu", path);
+
+  if (priority != 0) {
+    action->setProperty("menu priority", priority);
+  }
+
+  // try to translate each part of the path
+  // not ideal, but most menus should already be in the translation file
+  QStringList translatedPath;
+  foreach (QString part, path)
+    translatedPath << tr(part.toUtf8());
+
+  return translatedPath;
 }
 
 void Command::setMolecule(QtGui::Molecule* mol)
@@ -115,7 +156,7 @@ void Command::refreshScripts()
 
 void Command::menuActivated()
 {
-  QAction* theSender = qobject_cast<QAction*>(sender());
+  auto* theSender = qobject_cast<QAction*>(sender());
   if (!theSender)
     return;
 
@@ -147,10 +188,10 @@ void Command::menuActivated()
   QtGui::ScriptLoader::queryProgramName(scriptFileName, title);
   m_currentDialog->setWindowTitle(title);
 
-  QVBoxLayout* vbox = new QVBoxLayout();
+  auto* vbox = new QVBoxLayout();
   widget->show();
   vbox->addWidget(widget);
-  QDialogButtonBox* buttonBox =
+  auto* buttonBox =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
   connect(buttonBox, SIGNAL(accepted()), this, SLOT(run()));
@@ -170,7 +211,7 @@ void Command::run()
 
   if (m_currentScript) {
     disconnect(m_currentScript, SIGNAL(finished()), this,
-                SLOT(processFinished()));
+               SLOT(processFinished()));
     m_currentScript->deleteLater();
   }
 
@@ -180,13 +221,14 @@ void Command::run()
     // @todo - need a cleaner way to get a script pointer from the widget
     QString scriptFilePath =
       m_currentInterface->interfaceScript().scriptFilePath();
- 
+
     m_currentScript = new InterfaceScript(scriptFilePath, parent());
     connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
 
     // no cancel button - just an indication we're waiting...
     QString title = tr("Processing %1").arg(m_currentScript->displayName());
-    m_progress = new QProgressDialog(title, QString(), 0, 0, qobject_cast<QWidget*>(parent()));
+    m_progress = new QProgressDialog(title, QString(), 0, 0,
+                                     qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
 
     m_currentScript->runCommand(options, m_molecule);
@@ -217,10 +259,10 @@ void Command::configurePython()
   // Create objects
   QSettings settings;
   QDialog dlg(qobject_cast<QWidget*>(parent()));
-  QLabel* label = new QLabel;
-  QVBoxLayout* layout = new QVBoxLayout;
-  QtGui::FileBrowseWidget* browser = new QtGui::FileBrowseWidget;
-  QDialogButtonBox* buttonBox = new QDialogButtonBox;
+  auto* label = new QLabel;
+  auto* layout = new QVBoxLayout;
+  auto* browser = new QtGui::FileBrowseWidget;
+  auto* buttonBox = new QDialogButtonBox;
 
   // Configure objects
   // Check for python interpreter in env var
@@ -255,7 +297,7 @@ void Command::configurePython()
   connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
 
   // Show dialog
-  QDialog::DialogCode response = static_cast<QDialog::DialogCode>(dlg.exec());
+  auto response = static_cast<QDialog::DialogCode>(dlg.exec());
   if (response != QDialog::Accepted)
     return;
 
@@ -292,12 +334,11 @@ void Command::updateActions()
 
 void Command::addAction(const QString& label, const QString& scriptFilePath)
 {
-  QAction* action = new QAction(label, this);
+  auto* action = new QAction(tr(label.toUtf8()), this);
   action->setData(scriptFilePath);
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

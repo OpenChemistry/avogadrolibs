@@ -12,8 +12,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
-    <height>337</height>
+    <width>443</width>
+    <height>354</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -30,7 +30,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -108,10 +108,15 @@
            <string>None</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Electrostatic Potential</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="chargeCombo">
+        <widget class="QComboBox" name="modelCombo">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -133,6 +138,65 @@
       </layout>
      </item>
      <item row="2" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Colormap:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <item>
+        <widget class="QComboBox" name="colormapCombo">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string comment="colormap">Balance</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string comment="colormap">Blue-DarkRed</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string comment="colormap">Coolwarm</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string comment="colormap">Spectral</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string comment="colormap">Turbo</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Resolution:</string>
@@ -142,7 +206,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QComboBox" name="resolutionCombo">
@@ -150,10 +214,10 @@
           <bool>true</bool>
          </property>
          <property name="currentText">
-          <string>Medium</string>
+          <string>Automatic</string>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>5</number>
          </property>
          <item>
           <property name="text">
@@ -182,6 +246,11 @@
          </item>
          <item>
           <property name="text">
+           <string>Automatic</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Custom</string>
           </property>
          </item>
@@ -190,7 +259,7 @@
        <item>
         <widget class="QDoubleSpinBox" name="resolutionDoubleSpinBox">
          <property name="enabled">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="suffix">
           <string> Å</string>
@@ -224,7 +293,7 @@
        </item>
       </layout>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Isosurface Value:</string>
@@ -234,10 +303,13 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QDoubleSpinBox" name="isosurfaceDoubleSpinBox">
+         <property name="prefix">
+          <string> </string>
+         </property>
          <property name="decimals">
           <number>4</number>
          </property>
@@ -270,8 +342,92 @@
        </item>
       </layout>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_5">
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Smoothing:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QComboBox" name="smoothingCombo">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="currentText">
+          <string>Light</string>
+         </property>
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>None</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Light</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Medium</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Strong</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Custom</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="smoothingPassesSpinBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>19</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="frameLabel">
        <property name="text">
         <string>Frame:</string>
        </property>
@@ -280,7 +436,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="6" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
         <widget class="QSpinBox" name="stepValue">
@@ -298,7 +454,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="media-seek-backward"/>
+          <iconset theme="media-seek-backward">
+           <normaloff>.</normaloff>.</iconset>
          </property>
         </widget>
        </item>
@@ -311,7 +468,8 @@
           <string/>
          </property>
          <property name="icon">
-           <iconset theme="media-playback-start"/>
+          <iconset theme="media-playback-start">
+           <normaloff>.</normaloff>.</iconset>
          </property>
         </widget>
        </item>
@@ -324,7 +482,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="media-seek-forward"/>
+          <iconset theme="media-seek-forward">
+           <normaloff>.</normaloff>.</iconset>
          </property>
         </widget>
        </item>
@@ -344,19 +503,6 @@
       </layout>
      </item>
     </layout>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -379,7 +525,7 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Record Movie...</string>
+        <string>Record Movie…</string>
        </property>
        <property name="default">
         <bool>true</bool>
@@ -394,6 +540,19 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

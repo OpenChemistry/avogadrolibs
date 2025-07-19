@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "spacegroup.h"
@@ -24,8 +13,9 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QAction>
+#include <QDebug>
 #include <QtWidgets/QAbstractItemView>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QInputDialog>
@@ -42,12 +32,9 @@
 #include <sstream>
 
 using Avogadro::Core::AvoSpglib;
-using Avogadro::Core::CrystalTools;
-using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SpaceGroup::SpaceGroup(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
@@ -86,7 +73,8 @@ SpaceGroup::SpaceGroup(QObject* parent_)
   m_fillUnitCellAction->setText(tr("Fill Unit Cell…"));
   connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
   m_actions.push_back(m_fillUnitCellAction);
-  m_fillUnitCellAction->setProperty("menu priority", 50);
+  // should fall next to the "Wrap Atoms to Unit Cell" action
+  m_fillUnitCellAction->setProperty("menu priority", 185);
 
   m_reduceToAsymmetricUnitAction->setText(tr("Reduce to Asymmetric Unit"));
   connect(m_reduceToAsymmetricUnitAction, SIGNAL(triggered()),
@@ -113,9 +101,32 @@ QList<QAction*> SpaceGroup::actions() const
   return m_actions;
 }
 
-QStringList SpaceGroup::menuPath(QAction*) const
+QStringList SpaceGroup::menuPath(QAction* action) const
 {
+  if (action == m_fillUnitCellAction)
+    return QStringList() << tr("&Crystal");
+
   return QStringList() << tr("&Crystal") << tr("Space Group");
+}
+
+void SpaceGroup::registerCommands()
+{
+  emit registerCommand(
+    "fillUnitCell",
+    tr("Fill symmetric atoms based on the crystal space group."));
+}
+
+bool SpaceGroup::handleCommand(const QString& command,
+                               [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command.
+
+  if (command == "fillUnitCell") {
+    fillUnitCell();
+    return true;
+  }
+  return false;
 }
 
 void SpaceGroup::setMolecule(QtGui::Molecule* mol)
@@ -138,7 +149,7 @@ void SpaceGroup::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -167,6 +178,25 @@ void SpaceGroup::updateActions()
 
 void SpaceGroup::perceiveSpaceGroup()
 {
+  // only do this if we don't have a Hall number set
+  if (m_molecule == nullptr)
+    return;
+
+  if (m_molecule->hallNumber() != 0) {
+    // Ask if the user wants to overwrite the current space group
+    std::string hallSymbol =
+      Core::SpaceGroups::hallSymbol(m_molecule->hallNumber());
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(nullptr, tr("Perceive Space Group"),
+                                  tr("The space group is already set to: %1.\n"
+                                     "Would you like to overwrite it?")
+                                    .arg(hallSymbol.c_str()),
+                                  QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No)
+      return;
+  }
+
   unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
   unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);
   std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
@@ -277,8 +307,11 @@ void SpaceGroup::symmetrize()
 
 void SpaceGroup::fillUnitCell()
 {
-  // Ask the user to select a space group
-  unsigned short hallNumber = selectSpaceGroup();
+  unsigned short hallNumber = m_molecule->hallNumber();
+
+  // If it's not set, ask the user to select a space group
+  if (hallNumber == 0)
+    hallNumber = selectSpaceGroup();
   // If the hall number is zero, the user canceled
   if (hallNumber == 0)
     return;
@@ -354,7 +387,7 @@ unsigned short SpaceGroup::selectSpaceGroup()
   QDialog dialog;
   dialog.setLayout(new QVBoxLayout);
   dialog.setWindowTitle(tr("Select Space Group"));
-  QTableView* view = new QTableView;
+  auto* view = new QTableView;
   view->setSelectionBehavior(QAbstractItemView::SelectRows);
   view->setSelectionMode(QAbstractItemView::SingleSelection);
   view->setCornerButtonEnabled(false);
@@ -369,7 +402,7 @@ unsigned short SpaceGroup::selectSpaceGroup()
   view->setMinimumWidth(view->horizontalHeader()->length() +
                         view->verticalScrollBar()->sizeHint().width());
   connect(view, SIGNAL(activated(QModelIndex)), &dialog, SLOT(accept()));
-  QDialogButtonBox* buttons =
+  auto* buttons =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
   connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
@@ -381,5 +414,4 @@ unsigned short SpaceGroup::selectSpaceGroup()
   return view->currentIndex().row() + 1;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

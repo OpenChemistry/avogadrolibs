@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "unitcelldialog.h"
@@ -23,11 +12,11 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/unitcell.h>
 
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPlainTextEdit>
 
-#include <QtCore/QRegExp>
+#include <QRegularExpression>
 
-using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
 namespace {
@@ -37,12 +26,11 @@ const int MATRIX_PREC = 5;
 const char MATRIX_FMT = 'f';
 
 // Valid value separators in matrix editors:
-const static QRegExp MATRIX_SEP(
-  "\\s|,|;|\\||\\[|\\]|\\{|\\}|\\(|\\)|\\&|/|<|>");
-}
+const static QRegularExpression MATRIX_SEP(
+  R"(\s|,|;|\||\[|\]|\{|\}|\(|\)|\&|/|<|>)");
+} // namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 UnitCellDialog::UnitCellDialog(QWidget* p)
   : QDialog(p), m_ui(new Ui::UnitCellDialog), m_molecule(nullptr),
@@ -279,23 +267,56 @@ void UnitCellDialog::revertFractionalMatrix()
 
 void UnitCellDialog::updateParameters()
 {
-  m_tempCell.setCellParameters(
-    static_cast<Real>(m_ui->a->value()), static_cast<Real>(m_ui->b->value()),
-    static_cast<Real>(m_ui->c->value()),
-    static_cast<Real>(m_ui->alpha->value()) * DEG_TO_RAD,
-    static_cast<Real>(m_ui->beta->value()) * DEG_TO_RAD,
-    static_cast<Real>(m_ui->gamma->value()) * DEG_TO_RAD);
+  constexpr double tiny = 1e-6;
+  const auto a = static_cast<Real>(m_ui->a->value());
+  const auto b = static_cast<Real>(m_ui->b->value());
+  const auto c = static_cast<Real>(m_ui->c->value());
+  assert(a > 0.0 && b > 0.0 && c > 0.0);
+  const auto w = a * b * c;
+  Core::UnitCell tmp;
+  tmp.setCellParameters(a, b, c,
+                        static_cast<Real>(m_ui->alpha->value()) * DEG_TO_RAD,
+                        static_cast<Real>(m_ui->beta->value()) * DEG_TO_RAD,
+                        static_cast<Real>(m_ui->gamma->value()) * DEG_TO_RAD);
+  const auto vol = tmp.volume();
+  if (std::isnan(vol) || vol < tiny * w) {
+    QMessageBox::warning(nullptr, tr("Unit Cell Editor"),
+                         tr("Ignoring singular cell matrix"));
+    return;
+  }
+  m_tempCell = tmp;
 }
 
 void UnitCellDialog::updateCellMatrix()
 {
-  m_tempCell.setCellMatrix(stringToMatrix(m_ui->cellMatrix->toPlainText()));
+  constexpr double tiny = 1e-6;
+  const Matrix3 tmp = stringToMatrix(m_ui->cellMatrix->toPlainText());
+  const Real a = tmp.col(0).norm();
+  const Real b = tmp.col(1).norm();
+  const Real c = tmp.col(2).norm();
+  const Real w = a * b * c;
+  if (w <= 0.0 || std::fabs(tmp.determinant()) < w * tiny) {
+    QMessageBox::warning(nullptr, tr("Unit Cell Editor"),
+                         tr("Ignoring singular cell matrix"));
+    return;
+  }
+  m_tempCell.setCellMatrix(tmp);
 }
 
 void UnitCellDialog::updateFractionalMatrix()
 {
-  m_tempCell.setFractionalMatrix(
-    stringToMatrix(m_ui->fractionalMatrix->toPlainText()));
+  constexpr double tiny = 1e-6;
+  const Matrix3 tmp = stringToMatrix(m_ui->fractionalMatrix->toPlainText());
+  const Real a = tmp.col(0).norm();
+  const Real b = tmp.col(1).norm();
+  const Real c = tmp.col(2).norm();
+  const Real w = a * b * c;
+  if (w <= 0.0 || std::fabs(tmp.determinant()) < w * tiny) {
+    QMessageBox::warning(nullptr, tr("Unit Cell Editor"),
+                         tr("Ignoring singular fractional cell matrix"));
+    return;
+  }
+  m_tempCell.setFractionalMatrix(tmp);
 }
 
 bool UnitCellDialog::validateCellMatrix()
@@ -318,7 +339,7 @@ void UnitCellDialog::initializeMatrixEditor(QPlainTextEdit* edit)
   edit->setFont(font);
 
   QFontMetrics metrics(font);
-  int minWidth = 3 * metrics.width('0') * (MATRIX_WIDTH + 1);
+  int minWidth = 3 * metrics.horizontalAdvance('0') * (MATRIX_WIDTH + 1);
   int minHeight = metrics.lineSpacing() * 3;
 
   edit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -360,7 +381,7 @@ Matrix3 UnitCellDialog::stringToMatrix(const QString& str)
   int row = 0;
   int col = 0;
   foreach (const QString& line, lines) {
-    QStringList values = line.split(MATRIX_SEP, QString::SkipEmptyParts);
+    QStringList values = line.split(MATRIX_SEP, Qt::SkipEmptyParts);
     if (values.size() != 3)
       return Matrix3::Zero();
 
@@ -379,5 +400,4 @@ Matrix3 UnitCellDialog::stringToMatrix(const QString& str)
   return result;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

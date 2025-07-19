@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Avogadro::QtPlugins::TemplateToolWidget</class>
+ <widget class="QWidget" name="Avogadro::QtPlugins::TemplateToolWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>361</width>
+    <height>318</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="minimumSize">
+      <size>
+       <width>326</width>
+       <height>285</height>
+      </size>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="centersTab">
+      <property name="minimumSize">
+       <size>
+        <width>320</width>
+        <height>256</height>
+       </size>
+      </property>
+      <attribute name="title">
+       <string>Centers</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_4">
+       <item row="0" column="0">
+        <widget class="QLabel" name="elementLabel">
+         <property name="text">
+          <string>Element:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QComboBox" name="elementComboBox">
+           <property name="currentIndex">
+            <number>2</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>Hydrogen</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Carbon</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Iron</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Cobalt</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="formalChargeLabel">
+         <property name="text">
+          <string>Formal Charge:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <item>
+          <widget class="QSpinBox" name="chargeSpinBox">
+           <property name="minimum">
+            <number>-7</number>
+           </property>
+           <property name="maximum">
+            <number>7</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_8">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="coordinationLabel">
+         <property name="text">
+          <string>Coordination:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QComboBox" name="coordinationComboBox">
+           <property name="maximumSize">
+            <size>
+             <width>184</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="currentText">
+            <string>6: Octahedral</string>
+           </property>
+           <property name="currentIndex">
+            <number>7</number>
+           </property>
+           <property name="maxCount">
+            <number>2147483646</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>1: Linear</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2: Linear</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3: Trigonal Planar</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>4: Tetrahedral</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>4: Square Planar</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>5: Trigonal Bipyramidal</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>5: Square Pyramidal</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6: Octahedral</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6: Trigonal Prism</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>7: Pentagonal Bipyramidal</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>8: Square Antiprism</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="4" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_1">
+         <item>
+          <widget class="QToolButton" name="centerPreview">
+           <property name="text">
+            <string notr="true"/>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>64</width>
+             <height>64</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="5" column="1">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="ligandTab">
+      <property name="minimumSize">
+       <size>
+        <width>320</width>
+        <height>254</height>
+       </size>
+      </property>
+      <attribute name="title">
+       <string>Ligands</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="typeLabel">
+         <property name="text">
+          <string>Type:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QComboBox" name="typeComboBox">
+           <item>
+            <property name="text">
+             <string>Monodentate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Bidentate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tridentate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tetradentate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Hexadentate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Haptic</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>From Clipboard</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="ligandLabel">
+         <property name="text">
+          <string>Ligand:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QComboBox" name="ligandComboBox"/>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <item>
+          <widget class="QToolButton" name="ligandPreview">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>96</width>
+             <height>96</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_10">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="1">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Groups</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Group:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QComboBox" name="groupComboBox">
+           <item>
+            <property name="text">
+             <string>amide</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>carboxylate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ester</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ethylene</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ethyne</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>nitro</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>phenyl</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>phosphate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>sulfonate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Other…</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QToolButton" name="groupPreview">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>96</width>
+             <height>96</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="1">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="template.qrc"/>
+ </resources>
+ <connections/>
+</ui>

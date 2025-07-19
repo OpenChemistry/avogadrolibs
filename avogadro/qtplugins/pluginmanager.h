@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_PLUGINMANAGER_H
@@ -74,7 +63,7 @@ public:
    * pluginManager->pluginFactories<Avogadro::QtGui::ScenePluginFactory>();
    * @endcode
    */
-  template<typename T>
+  template <typename T>
   QList<T*> pluginFactories() const;
 
   /**
@@ -89,7 +78,7 @@ public:
    * @param id The identifier of the plugin factory.
    * @return The plugin factory if the plugin was found, nullptr otherwise.
    */
-  template<typename T>
+  template <typename T>
   T* pluginFactory(const QString& id) const;
 
 private:
@@ -108,7 +97,7 @@ private:
   QList<QObject*> m_plugins;
 };
 
-template<typename T>
+template <typename T>
 QList<T*> PluginManager::pluginFactories() const
 {
   QList<T*> factories;
@@ -120,7 +109,7 @@ QList<T*> PluginManager::pluginFactories() const
   return factories;
 }
 
-template<typename T>
+template <typename T>
 T* PluginManager::pluginFactory(const QString& id) const
 {
   T* factory;
@@ -132,7 +121,7 @@ T* PluginManager::pluginFactory(const QString& id) const
   return factory;
 }
 
-} // End QtPlugins namespace
-} // End Avogadro namespace
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_PLUGINMANAGER_H

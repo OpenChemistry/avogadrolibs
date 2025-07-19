@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_HDF5DATAFORMAT_H
@@ -39,7 +28,7 @@ namespace Io {
  *
  * This class is intended to supplement an existing format reader/writer by
  * providing the option to write large data to an HDF5 file store. The purpose
- * is to keep text format files at a managable size.
+ * is to keep text format files at a manageable size.
  *
  * To use this class, open or create an HDF5 file with the openFile method,
  * using the appropriate OpenMode for the intended operation. Data can be

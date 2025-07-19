@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -293,8 +282,8 @@ TEST(RWMoleculeTest, clearAtoms)
   EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind));            \
   EXPECT_EQ(uid, mol.bondUniqueId(ind))
 
-// This is disabled because the pair may come in any order
-//   EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));
+  // This is disabled because the pair may come in any order
+  //   EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));
 
   VALIDATE_BOND(0, 0, 1, 0, 0);
   VALIDATE_BOND(1, 1, 2, 1, 1);

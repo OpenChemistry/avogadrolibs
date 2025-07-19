@@ -5,8 +5,7 @@
 
 #include "bsplinegeometry.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 BSplineGeometry::BSplineGeometry() : CurveGeometry() {}
 BSplineGeometry::BSplineGeometry(bool flat) : CurveGeometry(flat) {}
@@ -37,19 +36,33 @@ float B(float i, float k, float t, float knot)
 Vector3f BSplineGeometry::computeCurvePoint(
   float t, const std::list<Point*>& points) const
 {
-  // degree: line = 1, cuadratic = 2, cube = 3
+  // degree: linear = 1, quadratic = 2, cubic = 3
   float k = 3.0f;
+  // how many points in either way for approximation
+  const int lookahead = 10;
   // #knot segments = #control points + #degree + 1
-  float m = points.size() + k + 1.0f;
+  float m = 2 * lookahead + k + 1.0f;
   float knot = 1.0f / m;
   Vector3f Q = Vector3f::Zero();
   float i = 0.0f;
-  for (const auto& p : points) {
-    Q += p->pos * B(i, k, t, knot);
+  auto it = points.begin();
+  const auto end = points.end();
+  int size = static_cast<int>(points.size());
+  // start from a lookbehind distance rather than at the beginning
+  int startIndex = (size * t) - lookahead;
+  if (startIndex < 0)
+    startIndex = 0;
+  else if (startIndex > size - 2 * lookahead)
+    startIndex = size - 2 * lookahead;
+  float t2 = (t - startIndex / (float)size) * size / (2 * lookahead);
+  for (; startIndex > 0 && it != end; --startIndex, ++it) {}
+  // only read a certain number of elements from here
+  size_t count = 2 * lookahead;
+  for (; count && it != end; --count, ++it) {
+    Q += (*it)->pos * B(i, k, t2, knot);
     i += 1.0f;
   }
   return Q;
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

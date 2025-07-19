@@ -5,6 +5,7 @@ set(tests
   FileFormatManager
   Lammps
   Mdl
+  Pdb
   Vasp
   Xyz
   )
@@ -41,7 +42,7 @@ message(STATUS "Test source files: ${testSrcs}")
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroIOTests ${testSrcs})
-target_link_libraries(AvogadroIOTests AvogadroIO
+target_link_libraries(AvogadroIOTests Avogadro::IO
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
@@ -50,3 +51,27 @@ foreach(TestName ${tests})
   add_test(NAME "Io-${TestName}"
     COMMAND AvogadroIOTests "--gtest_filter=${TestName}Test.*")
 endforeach()
+
+if (DEFINED ENV{LIB_FUZZING_ENGINE})
+  option(ENABLE_FUZZ "Enable fuzz testing." ON)
+else()
+  option(ENABLE_FUZZ "Enable fuzz testing." OFF)
+endif()
+
+if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
+  # todo - make this into a loop for multiple formats
+  set(fuzz
+    cjson
+    cml
+    sdf
+    pdb
+    xyz
+  )
+  foreach(fuzzName ${fuzz})
+    add_executable(fuzz_${fuzzName} fuzztest.cpp)
+    target_compile_definitions(fuzz_${fuzzName} PRIVATE -DFUZZ_INPUT_FORMAT="${fuzzName}")
+    target_compile_options(fuzz_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
+    target_link_options(fuzz_${fuzzName} PRIVATE -fsanitize=fuzzer)
+    target_link_libraries(fuzz_${fuzzName} PRIVATE Avogadro::IO $ENV{LIB_FUZZING_ENGINE})
+  endforeach()
+endif()

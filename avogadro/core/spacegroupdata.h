@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_SPACE_GROUP_DATA
@@ -21,8 +10,7 @@
 // For example, [3] accesses data for hall number 3.
 // [0] is a dummy in every case. There are 530 entries in each one.
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 const unsigned short space_group_international_number[] = {
   0,   1,   2,   3,   3,   3,   4,   4,   4,   5,   5,   5,   5,   5,   5,
@@ -1893,9 +1881,16 @@ const char* space_group_setting[] = {
 };
 
 const char* space_group_transforms[] = {
-  "", "x,y,z", "x,y,z -x,-y,-z", "x,y,z -x,y,-z", "x,y,z -x,-y,z",
-  "x,y,z x,-y,-z", "x,y,z -x,1/2+y,-z", "x,y,z -x,-y,1/2+z",
-  "x,y,z 1/2+x,-y,-z", "x,y,z -x,y,-z 1/2+x,1/2+y,z 1/2-x,1/2+y,-z",
+  "",
+  "x,y,z",
+  "x,y,z -x,-y,-z",
+  "x,y,z -x,y,-z",
+  "x,y,z -x,-y,z",
+  "x,y,z x,-y,-z",
+  "x,y,z -x,1/2+y,-z",
+  "x,y,z -x,-y,1/2+z",
+  "x,y,z 1/2+x,-y,-z",
+  "x,y,z -x,y,-z 1/2+x,1/2+y,z 1/2-x,1/2+y,-z",
   "x,y,z -x,y,-z x,1/2+y,1/2+z -x,1/2+y,1/2-z",
   "x,y,z -x,y,-z 1/2+x,1/2+y,1/2+z 1/2-x,1/2+y,1/2-z",
   "x,y,z -x,-y,z x,1/2+y,1/2+z -x,1/2-y,1/2+z",
@@ -1903,11 +1898,20 @@ const char* space_group_transforms[] = {
   "x,y,z -x,-y,z 1/2+x,1/2+y,1/2+z 1/2-x,1/2-y,1/2+z",
   "x,y,z x,-y,-z 1/2+x,y,1/2+z 1/2+x,-y,1/2-z",
   "x,y,z x,-y,-z 1/2+x,1/2+y,z 1/2+x,1/2-y,-z",
-  "x,y,z x,-y,-z 1/2+x,1/2+y,1/2+z 1/2+x,1/2-y,1/2-z", "x,y,z x,-y,z",
-  "x,y,z x,y,-z", "x,y,z -x,y,z", "x,y,z x,-y,1/2+z", "x,y,z 1/2+x,-y,1/2+z",
-  "x,y,z 1/2+x,-y,z", "x,y,z 1/2+x,y,-z", "x,y,z 1/2+x,1/2+y,-z",
-  "x,y,z x,1/2+y,-z", "x,y,z -x,1/2+y,z", "x,y,z -x,1/2+y,1/2+z",
-  "x,y,z -x,y,1/2+z", "x,y,z x,-y,z 1/2+x,1/2+y,z 1/2+x,1/2-y,z",
+  "x,y,z x,-y,-z 1/2+x,1/2+y,1/2+z 1/2+x,1/2-y,1/2-z",
+  "x,y,z x,-y,z",
+  "x,y,z x,y,-z",
+  "x,y,z -x,y,z",
+  "x,y,z x,-y,1/2+z",
+  "x,y,z 1/2+x,-y,1/2+z",
+  "x,y,z 1/2+x,-y,z",
+  "x,y,z 1/2+x,y,-z",
+  "x,y,z 1/2+x,1/2+y,-z",
+  "x,y,z x,1/2+y,-z",
+  "x,y,z -x,1/2+y,z",
+  "x,y,z -x,1/2+y,1/2+z",
+  "x,y,z -x,y,1/2+z",
+  "x,y,z x,-y,z 1/2+x,1/2+y,z 1/2+x,1/2-y,z",
   "x,y,z x,-y,z x,1/2+y,1/2+z x,1/2-y,1/2+z",
   "x,y,z x,-y,z 1/2+x,1/2+y,1/2+z 1/2+x,1/2-y,1/2+z",
   "x,y,z x,y,-z x,1/2+y,1/2+z x,1/2+y,1/2-z",
@@ -1934,12 +1938,15 @@ const char* space_group_transforms[] = {
   "x,y,z -x,y,1/2+z 1/2+x,1/2+y,z 1/2-x,1/2+y,1/2+z",
   "x,y,z -x,1/2+y,1/2+z 1/2+x,y,1/2+z 1/2-x,1/2+y,z",
   "x,y,z -x,1/2+y,z 1/2+x,1/2+y,1/2+z 1/2-x,y,1/2+z",
-  "x,y,z -x,y,-z -x,-y,-z x,-y,z", "x,y,z -x,-y,z -x,-y,-z x,y,-z",
-  "x,y,z x,-y,-z -x,-y,-z -x,y,z", "x,y,z -x,1/2+y,-z -x,-y,-z x,1/2-y,z",
+  "x,y,z -x,y,-z -x,-y,-z x,-y,z",
+  "x,y,z -x,-y,z -x,-y,-z x,y,-z",
+  "x,y,z x,-y,-z -x,-y,-z -x,y,z",
+  "x,y,z -x,1/2+y,-z -x,-y,-z x,1/2-y,z",
   "x,y,z -x,-y,1/2+z -x,-y,-z x,y,1/2-z",
-  "x,y,z 1/2+x,-y,-z -x,-y,-z 1/2-x,y,z", "x,y,z -x,y,-z -x,-y,-z x,-y,z "
-                                          "1/2+x,1/2+y,z 1/2-x,1/2+y,-z "
-                                          "1/2-x,1/2-y,-z 1/2+x,1/2-y,z",
+  "x,y,z 1/2+x,-y,-z -x,-y,-z 1/2-x,y,z",
+  "x,y,z -x,y,-z -x,-y,-z x,-y,z "
+  "1/2+x,1/2+y,z 1/2-x,1/2+y,-z "
+  "1/2-x,1/2-y,-z 1/2+x,1/2-y,z",
   "x,y,z -x,y,-z -x,-y,-z x,-y,z x,1/2+y,1/2+z -x,1/2+y,1/2-z -x,1/2-y,1/2-z "
   "x,1/2-y,1/2+z",
   "x,y,z -x,y,-z -x,-y,-z x,-y,z 1/2+x,1/2+y,1/2+z 1/2+x,1/2-y,1/2+z "
@@ -2010,7 +2017,8 @@ const char* space_group_transforms[] = {
   "1/2-x,-y,1/2-z 1/2-x,1/2+y,z",
   "x,y,z x,1/2-y,-z -x,-y,-z -x,1/2+y,z 1/2+x,1/2+y,1/2+z 1/2+x,-y,1/2-z "
   "1/2-x,1/2-y,1/2-z 1/2-x,y,1/2+z",
-  "x,y,z -x,-y,z -x,y,-z x,-y,-z", "x,y,z -x,-y,1/2+z -x,y,1/2-z x,-y,-z",
+  "x,y,z -x,-y,z -x,y,-z x,-y,-z",
+  "x,y,z -x,-y,1/2+z -x,y,1/2-z x,-y,-z",
   "x,y,z 1/2+x,-y,-z 1/2-x,-y,z -x,y,-z",
   "x,y,z -x,1/2+y,-z x,1/2-y,-z -x,-y,z",
   "x,y,z -x,-y,z 1/2-x,1/2+y,-z 1/2+x,1/2-y,-z",
@@ -2036,15 +2044,24 @@ const char* space_group_transforms[] = {
   "1/2-x,1/2+y,1/2-z 1/2+x,1/2-y,1/2-z",
   "x,y,z 1/2-x,-y,1/2+z -x,1/2+y,1/2-z 1/2+x,1/2-y,-z 1/2+x,1/2+y,1/2+z "
   "-x,1/2-y,z 1/2-x,y,-z x,-y,1/2-z",
-  "x,y,z -x,-y,z x,-y,z -x,y,z", "x,y,z x,-y,-z x,y,-z x,-y,z",
-  "x,y,z -x,y,-z -x,y,z x,y,-z", "x,y,z -x,-y,1/2+z x,-y,1/2+z -x,y,z",
-  "x,y,z -x,-y,1/2+z -x,y,1/2+z x,-y,z", "x,y,z 1/2+x,-y,-z 1/2+x,y,-z x,-y,z",
-  "x,y,z 1/2+x,-y,-z x,y,-z 1/2+x,-y,z", "x,y,z -x,1/2+y,-z x,y,-z -x,1/2+y,z",
-  "x,y,z -x,1/2+y,-z x,1/2+y,-z -x,y,z", "x,y,z -x,-y,z x,-y,1/2+z -x,y,1/2+z",
-  "x,y,z x,-y,-z 1/2+x,y,-z 1/2+x,-y,z", "x,y,z -x,y,-z -x,1/2+y,z x,1/2+y,-z",
-  "x,y,z -x,-y,z 1/2+x,-y,z 1/2-x,y,z", "x,y,z -x,-y,z -x,1/2+y,z x,1/2-y,z",
-  "x,y,z x,-y,-z x,1/2+y,-z x,1/2-y,z", "x,y,z x,-y,-z x,-y,1/2+z x,y,1/2-z",
-  "x,y,z -x,y,-z -x,y,1/2+z x,y,1/2-z", "x,y,z -x,y,-z 1/2+x,y,-z 1/2-x,y,z",
+  "x,y,z -x,-y,z x,-y,z -x,y,z",
+  "x,y,z x,-y,-z x,y,-z x,-y,z",
+  "x,y,z -x,y,-z -x,y,z x,y,-z",
+  "x,y,z -x,-y,1/2+z x,-y,1/2+z -x,y,z",
+  "x,y,z -x,-y,1/2+z -x,y,1/2+z x,-y,z",
+  "x,y,z 1/2+x,-y,-z 1/2+x,y,-z x,-y,z",
+  "x,y,z 1/2+x,-y,-z x,y,-z 1/2+x,-y,z",
+  "x,y,z -x,1/2+y,-z x,y,-z -x,1/2+y,z",
+  "x,y,z -x,1/2+y,-z x,1/2+y,-z -x,y,z",
+  "x,y,z -x,-y,z x,-y,1/2+z -x,y,1/2+z",
+  "x,y,z x,-y,-z 1/2+x,y,-z 1/2+x,-y,z",
+  "x,y,z -x,y,-z -x,1/2+y,z x,1/2+y,-z",
+  "x,y,z -x,-y,z 1/2+x,-y,z 1/2-x,y,z",
+  "x,y,z -x,-y,z -x,1/2+y,z x,1/2-y,z",
+  "x,y,z x,-y,-z x,1/2+y,-z x,1/2-y,z",
+  "x,y,z x,-y,-z x,-y,1/2+z x,y,1/2-z",
+  "x,y,z -x,y,-z -x,y,1/2+z x,y,1/2-z",
+  "x,y,z -x,y,-z 1/2+x,y,-z 1/2-x,y,z",
   "x,y,z -x,-y,1/2+z 1/2+x,-y,z 1/2-x,y,1/2+z",
   "x,y,z -x,-y,1/2+z -x,1/2+y,z x,1/2-y,1/2+z",
   "x,y,z 1/2+x,-y,-z x,1/2+y,-z 1/2+x,1/2-y,z",
@@ -2491,16 +2508,18 @@ const char* space_group_transforms[] = {
   "x,y,z -x,-y,1/2+z x,-y,-z -x,y,1/2-z -x,-y,-z x,y,1/2-z -x,y,z x,-y,1/2+z "
   "1/2+x,1/2+y,1/2+z 1/2-x,1/2-y,z 1/2+x,1/2-y,1/2-z 1/2-x,1/2+y,-z "
   "1/2-x,1/2-y,1/2-z 1/2+x,1/2+y,-z 1/2-x,1/2+y,1/2+z 1/2+x,1/2-y,z",
-  "x,y,z -x,-y,z -y,x,z y,-x,z", "x,y,z -x,-y,1/2+z -y,x,1/4+z y,-x,3/4+z",
+  "x,y,z -x,-y,z -y,x,z y,-x,z",
+  "x,y,z -x,-y,1/2+z -y,x,1/4+z y,-x,3/4+z",
   "x,y,z -x,-y,z -y,x,1/2+z y,-x,1/2+z",
   "x,y,z -x,-y,1/2+z -y,x,3/4+z y,-x,1/4+z",
   "x,y,z -x,-y,z -y,x,z y,-x,z 1/2+x,1/2+y,1/2+z 1/2-x,1/2-y,1/2+z "
   "1/2-y,1/2+x,1/2+z 1/2+y,1/2-x,1/2+z",
   "x,y,z 1/2-x,1/2-y,1/2+z -y,1/2+x,1/4+z 1/2+y,-x,3/4+z 1/2+x,1/2+y,1/2+z "
   "-x,-y,z 1/2-y,x,3/4+z y,1/2-x,1/4+z",
-  "x,y,z -x,-y,z y,-x,-z -y,x,-z", "x,y,z -x,-y,z y,-x,-z -y,x,-z "
-                                   "1/2+x,1/2+y,1/2+z 1/2-x,1/2-y,1/2+z "
-                                   "1/2+y,1/2-x,1/2-z 1/2-y,1/2+x,1/2-z",
+  "x,y,z -x,-y,z y,-x,-z -y,x,-z",
+  "x,y,z -x,-y,z y,-x,-z -y,x,-z "
+  "1/2+x,1/2+y,1/2+z 1/2-x,1/2-y,1/2+z "
+  "1/2+y,1/2-x,1/2-z 1/2-y,1/2+x,1/2-z",
   "x,y,z -x,-y,z -y,x,z y,-x,z -x,-y,-z x,y,-z y,-x,-z -y,x,-z",
   "x,y,z -x,-y,z -y,x,1/2+z y,-x,1/2+z -x,-y,-z x,y,-z y,-x,1/2-z -y,x,1/2-z",
   "x,y,z -x,-y,z 1/2-y,1/2+x,z 1/2+y,1/2-x,z 1/2-x,1/2-y,-z 1/2+x,1/2+y,-z "
@@ -2704,12 +2723,15 @@ const char* space_group_transforms[] = {
   "3/4-y,3/4-x,3/4-z 1/2-x,1/2-y,1/2-z x,1/2+y,-z 1/4+y,3/4-x,1/4-z "
   "1/4-y,1/4+x,3/4-z x,1/2-y,1/2+z 1/2-x,1/2+y,z 1/4-y,3/4-x,3/4+z "
   "1/4+y,1/4+x,1/4+z",
-  "x,y,z -y,x-y,z y-x,-x,z", "x,y,z -y,x-y,1/3+z y-x,-x,2/3+z",
-  "x,y,z -y,x-y,2/3+z y-x,-x,1/3+z", "x,y,z -y,x-y,z y-x,-x,z "
-                                     "2/3+x,1/3+y,1/3+z 2/3-y,1/3+x-y,1/3+z "
-                                     "2/3+y-x,1/3-x,1/3+z 1/3+x,2/3+y,2/3+z "
-                                     "1/3-y,2/3+x-y,2/3+z 1/3+y-x,2/3-x,2/3+z",
-  "x,y,z z,x,y y,z,x", "x,y,z -y,x-y,z y-x,-x,z -x,-y,-z y,y-x,-z x-y,x,-z",
+  "x,y,z -y,x-y,z y-x,-x,z",
+  "x,y,z -y,x-y,1/3+z y-x,-x,2/3+z",
+  "x,y,z -y,x-y,2/3+z y-x,-x,1/3+z",
+  "x,y,z -y,x-y,z y-x,-x,z "
+  "2/3+x,1/3+y,1/3+z 2/3-y,1/3+x-y,1/3+z "
+  "2/3+y-x,1/3-x,1/3+z 1/3+x,2/3+y,2/3+z "
+  "1/3-y,2/3+x-y,2/3+z 1/3+y-x,2/3-x,2/3+z",
+  "x,y,z z,x,y y,z,x",
+  "x,y,z -y,x-y,z y-x,-x,z -x,-y,-z y,y-x,-z x-y,x,-z",
   "x,y,z -y,x-y,z y-x,-x,z -x,-y,-z y,y-x,-z x-y,x,-z 2/3+x,1/3+y,1/3+z "
   "2/3-y,1/3+x-y,1/3+z 2/3+y-x,1/3-x,1/3+z 2/3-x,1/3-y,1/3-z "
   "2/3+y,1/3+y-x,1/3-z 2/3+x-y,1/3+x,1/3-z 1/3+x,2/3+y,2/3+z "
@@ -3430,7 +3452,6 @@ const char* space_group_transforms[] = {
   "1/2-x,1/2-y,1/2-z z,x,y 1/2+z,1/2+x,1/2+y -y,-z,-x 1/2-y,1/2-z,1/2-x"
 };
 
-} // Core
-} // Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_SPACE_GROUP_DATA

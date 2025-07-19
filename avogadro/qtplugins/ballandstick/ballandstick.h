@@ -8,8 +8,7 @@
 
 #include <avogadro/qtgui/sceneplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Render a molecule in the ball and stick style.
@@ -34,6 +33,7 @@ public:
   }
 
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
 
   DefaultBehavior defaultBehavior() const override
   {
@@ -45,15 +45,16 @@ public slots:
   void bondRadiusChanged(int value);
   void multiBonds(bool show);
   void showHydrogens(bool show);
+  void opacityChanged(int value);
 
 private:
   Rendering::GroupNode* m_group;
   std::string m_name = "Ball and Stick";
   float m_atomScale = 0.3f;
   float m_bondRadius = 0.1f;
+  float m_opacity = 1.0f;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // end namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_BALLANDSTICK_H

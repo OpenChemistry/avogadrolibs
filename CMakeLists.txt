@@ -1,18 +1,13 @@
-cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
 project(AvogadroLibs)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-# Request C++11 standard when building Python wheels due to old compiler/glibc.
-# Use C++17 otherwise, and hopefully globally once the pip infra is updated.
+# Use C++17 when possible
 option(PYTHON_WHEEL_BUILD "Is this a Python wheel build?" OFF)
 mark_as_advanced(PYTHON_WHEEL_BUILD)
-if(PYTHON_WHEEL_BUILD)
-  set(CMAKE_CXX_STANDARD 11)
-else()
-  set(CMAKE_CXX_STANDARD 17)
-endif()
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS False)
 # Set symbol visibility defaults for all targets.
@@ -27,12 +22,17 @@ include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "1")
-set(AvogadroLibs_VERSION_MINOR   "95")
-set(AvogadroLibs_VERSION_PATCH   "1")
+set(AvogadroLibs_VERSION_MINOR   "100")
+set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
 find_package(Git)
 determine_version(${AvogadroLibs_SOURCE_DIR} ${GIT_EXECUTABLE} "AvogadroLibs")
+
+# path for data / fragment files which could be overriden by package maintainers
+# by default we assume we're using the openchemistry superbuild layout
+# .. this is used by the fragment library, molecules, crystals, etc.
+set(AvogadroLibs_SOURCEDATA_DIR "${AvogadroLibs_SOURCE_DIR}/..")
 
 option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
 
@@ -42,27 +42,42 @@ set_property(GLOBAL PROPERTY AvogadroLibs_STATIC_PLUGINS)
 
 if(MSVC)
   add_definitions("-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX -D_USE_MATH_DEFINES")
-endif()
+  # Ensure __cplusplus is correct, otherwise it defaults to 199711L which isn't true
+  # https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
 
-include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR})
+  message(STATUS "Setting MSVC debug information format to 'Embedded'")
+  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
+
+  set(CMAKE_VS_GLOBALS
+    "UseMultiToolTask=true"
+    "DebugInformationFormat=OldStyle"
+  )
+endif()
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
 option(TEST_QTGL "Build the Qt OpenGL test application" OFF)
-option(ENABLE_TRANSLATIONS "Enable building translations with Qt5 Linguist" OFF)
 option(USE_OPENGL "Enable libraries that use OpenGL" ON)
 option(USE_HDF5 "Enable optional HDF5 features" OFF)
-option(USE_QT "Enable libraries that use Qt 5" ON)
+option(USE_QT "Enable libraries that use Qt 5 or 6" ON)
 option(USE_VTK "Enable libraries that use VTK" OFF)
 option(USE_LIBARCHIVE "Enable optional Libarchive features" ON)
 option(USE_LIBMSYM "Enable optional features using libmsym" ON)
 option(USE_SPGLIB "Enable optional features using spglib" ON)
-option(USE_MMTF "Enable optional features using mmtf" ON)
-option(USE_PROTOCALL "Enable libraries that use ProtoCall" OFF)
+option(USE_MMTF "Enable optional features using mmtf" OFF) # MMTF is no longer maintained
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
+option(USE_EXTERNAL_NLOHMANN "Use an externally-provided version of the nlohmann JSON library" OFF)
+option(USE_EXTERNAL_PUGIXML "Use an externally-provided version of pugixml" OFF)
+option(USE_EXTERNAL_STRUCT "Use an externally-provided version of the struct binary data formatting library" OFF)
+set(QT_VERSION "5" CACHE STRING "What major version of Qt")
+set(QT_VERSIONS_SUPPORTED 5 6)
+set_property(CACHE QT_VERSION PROPERTY STRINGS 5 6)
+if(NOT QT_VERSION IN_LIST QT_VERSIONS_SUPPORTED)
+  message(FATAL_ERROR "Qt version must be one of ${QT_VERSIONS_SUPPORTED}")
+endif()
 
-add_subdirectory(utilities)
 add_subdirectory(thirdparty)
+add_subdirectory(utilities)
 add_subdirectory(avogadro)
 
 if(ENABLE_TESTING)
@@ -79,10 +94,6 @@ endif()
 
 if(USE_PYTHON)
   add_subdirectory(python)
-endif()
-
-if(ENABLE_TRANSLATIONS)
-  find_package(Qt5LinguistTools)
 endif()
 
 # SKBUILD is set for binary wheel
@@ -113,11 +124,9 @@ if (NOT SKBUILD)
   install(FILES
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibArchive.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
     DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
   install(EXPORT "AvogadroLibsTargets"
+    NAMESPACE Avogadro::
     DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
 endif()

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "vaspformat.h"
@@ -27,13 +16,11 @@
 #include <iomanip>
 #include <iostream>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using std::getline;
 using std::map;
 using std::string;
-using std::vector;
 
 using Core::Array;
 using Core::Atom;
@@ -43,10 +30,6 @@ using Core::Molecule;
 using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
-
-PoscarFormat::PoscarFormat() {}
-
-PoscarFormat::~PoscarFormat() {}
 
 bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -67,7 +50,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   // We'll use these throughout
   bool ok;
   string line;
-  vector<string> stringSplit;
+  std::vector<string> stringSplit;
 
   // First line is comment line
   getline(inStream, line);
@@ -78,7 +61,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Next line is scaling factor
   getline(inStream, line);
-  double scalingFactor = lexicalCast<double>(line, ok);
+  auto scalingFactor = lexicalCast<double>(line, ok);
 
   if (!ok) {
     appendError("Error: Could not convert scaling factor to double in POSCAR");
@@ -113,15 +96,15 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Try a lexical cast here. If it fails, assume we have an atomic symbols list
   lexicalCast<unsigned int>(trimmed(stringSplit.at(0)), ok);
-  vector<string> symbolsList;
-  vector<unsigned char> atomicNumbers;
+  std::vector<string> symbolsList;
+  std::vector<unsigned char> atomicNumbers;
 
   if (!ok) {
     // Assume atomic symbols are here and store them
     symbolsList = split(line, ' ');
     // Store atomic nums
-    for (size_t i = 0; i < symbolsList.size(); ++i)
-      atomicNumbers.push_back(Elements::atomicNumberFromSymbol(symbolsList[i]));
+    for (auto& i : symbolsList)
+      atomicNumbers.push_back(Elements::atomicNumberFromSymbol(i));
     // This next one should be atom types
     getline(inStream, line);
   }
@@ -132,22 +115,21 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
     if (stringSplit.size() != 0) {
       string trimmedFormula = trimmed(stringSplit.at(0));
       // Let's replace all numbers with spaces
-      for (size_t i = 0; i < trimmedFormula.size(); ++i) {
-        if (isdigit(trimmedFormula.at(i)))
-          trimmedFormula[i] = ' ';
+      for (char& i : trimmedFormula) {
+        if (isdigit(i))
+          i = ' ';
       }
       // Now get the symbols with a simple space split
       symbolsList = split(trimmedFormula, ' ');
-      for (size_t i = 0; i < symbolsList.size(); ++i)
-        atomicNumbers.push_back(
-          Elements::atomicNumberFromSymbol(symbolsList.at(i)));
+      for (auto& i : symbolsList)
+        atomicNumbers.push_back(Elements::atomicNumberFromSymbol(i));
     }
   }
 
   stringSplit = split(line, ' ');
-  vector<unsigned int> atomCounts;
-  for (size_t i = 0; i < stringSplit.size(); ++i) {
-    unsigned int atomCount = lexicalCast<unsigned int>(stringSplit.at(i));
+  std::vector<unsigned int> atomCounts;
+  for (auto& i : stringSplit) {
+    auto atomCount = lexicalCast<unsigned int>(i);
     atomCounts.push_back(atomCount);
   }
 
@@ -188,9 +170,9 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
     cart = false;
   }
 
-  vector<Vector3> atoms;
-  for (size_t i = 0; i < atomCounts.size(); ++i) {
-    for (size_t j = 0; j < atomCounts.at(i); ++j) {
+  std::vector<Vector3> atoms;
+  for (unsigned int atomCount : atomCounts) {
+    for (size_t j = 0; j < atomCount; ++j) {
       getline(inStream, line);
       stringSplit = split(line, ' ');
       // This may be greater than 3 with selective dynamics
@@ -206,17 +188,17 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Let's make a unit cell
-  UnitCell* cell = new UnitCell(cellMat);
+  auto* cell = new UnitCell(cellMat);
 
   // If our atomic coordinates are fractional, convert them to Cartesian
   if (!cart) {
-    for (size_t i = 0; i < atoms.size(); ++i)
-      atoms[i] = cell->toCartesian(atoms.at(i));
+    for (auto& atom : atoms)
+      atom = cell->toCartesian(atom);
   }
   // If they're cartesian, we just need to apply the scaling factor
   else {
-    for (size_t i = 0; i < atoms.size(); ++i)
-      atoms[i] *= scalingFactor;
+    for (auto& atom : atoms)
+      atom *= scalingFactor;
   }
 
   // If we made it this far, the read was a success!
@@ -264,14 +246,12 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   // A map of atomic symbols to their quantity.
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   std::map<unsigned char, size_t> composition;
-  for (Array<unsigned char>::const_iterator it = atomicNumbers.begin(),
-                                            itEnd = atomicNumbers.end();
-       it != itEnd; ++it) {
-    composition[*it]++;
+  for (unsigned char& atomicNumber : atomicNumbers) {
+    composition[atomicNumber]++;
   }
 
   // Atom symbols
-  std::map<unsigned char, size_t>::iterator iter = composition.begin();
+  auto iter = composition.begin();
   while (iter != composition.end()) {
     outStream << "   " << Elements::symbol(iter->first);
     ++iter;
@@ -324,20 +304,16 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> PoscarFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("POSCAR");
+  ext.emplace_back("POSCAR");
   return ext;
 }
 
 std::vector<std::string> PoscarFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("N/A");
+  mime.emplace_back("N/A");
   return mime;
 }
-
-OutcarFormat::OutcarFormat() {}
-
-OutcarFormat::~OutcarFormat() {}
 
 bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -449,10 +425,9 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Set the custom element map if needed:
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                     itEnd = atomTypes.end();
-         it != itEnd; ++it) {
-      elementMap.insert(std::make_pair(it->second, "Atom " + it->first));
+    for (const auto& atomType : atomTypes) {
+      elementMap.insert(
+        std::make_pair(atomType.second, "Atom " + atomType.first));
     }
     mol.setCustomElementMap(elementMap);
   }
@@ -460,7 +435,7 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
   return true;
 }
 
-bool OutcarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
+bool OutcarFormat::write(std::ostream&, const Core::Molecule&)
 {
   return false;
 }
@@ -468,16 +443,15 @@ bool OutcarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> OutcarFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("OUTCAR");
+  ext.emplace_back("OUTCAR");
   return ext;
 }
 
 std::vector<std::string> OutcarFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("N/A");
+  mime.emplace_back("N/A");
   return mime;
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io

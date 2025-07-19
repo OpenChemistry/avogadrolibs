@@ -1,42 +1,36 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "molecularproperties.h"
+#include "molecularview.h"
 
-#include "molecularpropertiesdialog.h"
+#include <avogadro/qtgui/richtextdelegate.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
+#include <QStringList>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QScrollBar>
+#include <QtWidgets/QVBoxLayout>
 
-#include <QtCore/QStringList>
+using Avogadro::QtGui::RichTextDelegate;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 MolecularProperties::MolecularProperties(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
-    m_dialog(nullptr), m_molecule(nullptr)
+    m_molecule(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText("&Molecular…");
+  m_action->setText(tr("&Molecular…"));
+  m_action->setProperty("menu priority", 990);
+
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
-MolecularProperties::~MolecularProperties()
-{
-}
+MolecularProperties::~MolecularProperties() {}
 
 QString MolecularProperties::description() const
 {
@@ -50,7 +44,7 @@ QList<QAction*> MolecularProperties::actions() const
 
 QStringList MolecularProperties::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Analysis") << tr("&Properties");
+  return QStringList() << tr("&Analyze") << tr("&Properties");
 }
 
 void MolecularProperties::setMolecule(QtGui::Molecule* mol)
@@ -59,18 +53,42 @@ void MolecularProperties::setMolecule(QtGui::Molecule* mol)
     return;
 
   m_molecule = mol;
-  if (m_dialog)
-    m_dialog->setMolecule(m_molecule);
 }
 
 void MolecularProperties::showDialog()
 {
-  if (!m_dialog) {
-    m_dialog = new MolecularPropertiesDialog(
-      m_molecule, qobject_cast<QWidget*>(this->parent()));
-  }
-  m_dialog->show();
+  // copied from the propeties dialog
+  auto* dialog = new QDialog(qobject_cast<QWidget*>(parent()));
+  auto* layout = new QVBoxLayout(dialog);
+  dialog->setLayout(layout);
+  // Don't show whitespace around the table view
+  layout->setSpacing(0);
+  layout->setContentsMargins(0, 0, 0, 0);
+
+  auto* model = new MolecularModel();
+  model->setMolecule(m_molecule);
+  // view will delete itself & model using deleteLater()
+  auto* view = new MolecularView(dialog);
+  view->setMolecule(m_molecule);
+  view->setSourceModel(model);
+  view->setModel(model);
+
+  // set the headers to true
+  QFont font = view->horizontalHeader()->font();
+  font.setBold(true);
+  view->horizontalHeader()->setFont(font);
+  view->verticalHeader()->setFont(font);
+
+  view->setItemDelegateForColumn(0, new RichTextDelegate(view));
+
+  view->horizontalHeader()->setStretchLastSection(true);
+  view->resizeColumnsToContents();
+
+  layout->addWidget(view);
+
+  dialog->setWindowTitle(view->windowTitle());
+  dialog->setWindowFlags(Qt::Window);
+  dialog->show();
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

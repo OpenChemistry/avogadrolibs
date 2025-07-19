@@ -1,19 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2008 Albert De Fusco
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "slatersettools.h"
@@ -21,24 +8,12 @@
 #include "molecule.h"
 #include "slaterset.h"
 
-#include <iostream>
-
-using std::cout;
-using std::endl;
-
-using std::vector;
-
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 SlaterSetTools::SlaterSetTools(Molecule* mol) : m_molecule(mol)
 {
   if (m_molecule)
     m_basis = dynamic_cast<SlaterSet*>(m_molecule->basisSet());
-}
-
-SlaterSetTools::~SlaterSetTools()
-{
 }
 
 double SlaterSetTools::calculateMolecularOrbital(const Vector3& position,
@@ -47,7 +22,7 @@ double SlaterSetTools::calculateMolecularOrbital(const Vector3& position,
   if (mo > static_cast<int>(m_basis->molecularOrbitalCount()))
     return 0.0;
 
-  vector<double> values(calculateValues(position));
+  std::vector<double> values(calculateValues(position));
 
   const MatrixX& matrix = m_basis->normalizedMatrix();
   int matrixSize(static_cast<int>(matrix.rows()));
@@ -68,7 +43,7 @@ double SlaterSetTools::calculateElectronDensity(const Vector3& position) const
   if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
     return 0.0;
 
-  vector<double> values(calculateValues(position));
+  std::vector<double> values(calculateValues(position));
 
   // Now calculate the value of the density at this point in space
   double rho(0.0);
@@ -90,46 +65,42 @@ double SlaterSetTools::calculateSpinDensity(const Vector3&) const
 
 bool SlaterSetTools::isValid() const
 {
-  if (m_molecule && dynamic_cast<SlaterSet*>(m_molecule->basisSet()))
-    return true;
-  else
-    return false;
+  return (m_molecule != nullptr) &&
+         (dynamic_cast<SlaterSet*>(m_molecule->basisSet()) != nullptr);
 }
 
 inline bool SlaterSetTools::isSmall(double val) const
 {
-  if (val > -1e-20 && val < 1e-20)
-    return true;
-  else
-    return false;
+  return std::abs(val) < 1e-20;
 }
 
-vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
+std::vector<double> SlaterSetTools::calculateValues(
+  const Vector3& position) const
 {
   m_basis->initCalculation();
 
   Index atomsSize = m_molecule->atomCount();
   size_t basisSize = m_basis->zetas().size();
 
-  const vector<int>& slaterIndices = m_basis->slaterIndices();
-  const vector<int>& slaterTypes = m_basis->slaterTypes();
-  const vector<int>& PQNs = m_basis->PQNs();
-  const vector<double>& factors = m_basis->factors();
-  const vector<double>& zetas = m_basis->zetas();
+  const std::vector<int>& slaterIndices = m_basis->slaterIndices();
+  const std::vector<int>& slaterTypes = m_basis->slaterTypes();
+  const std::vector<int>& PQNs = m_basis->PQNs();
+  const std::vector<double>& factors = m_basis->factors();
+  const std::vector<double>& zetas = m_basis->zetas();
 
-  vector<Vector3> deltas;
-  vector<double> dr2;
+  std::vector<Vector3> deltas;
+  std::vector<double> dr2;
   deltas.reserve(atomsSize);
   dr2.reserve(atomsSize);
 
   // Calculate the deltas for the position
   for (Index i = 0; i < atomsSize; ++i) {
-    deltas.push_back(position - m_molecule->atom(i).position3d());
+    deltas.emplace_back(position - m_molecule->atom(i).position3d());
     dr2.push_back(deltas[i].squaredNorm());
   }
 
   // Allocate space for the values to be calculated.
-  vector<double> values;
+  std::vector<double> values;
   values.resize(basisSize);
 
   // Now calculate the values at this point in space
@@ -176,5 +147,4 @@ vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
   return values;
 }
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Avogadro::Core

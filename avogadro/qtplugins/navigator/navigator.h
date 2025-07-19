@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_NAVIGATOR_H
@@ -44,6 +33,7 @@ public:
   unsigned char priority() const override { return 10; }
   QAction* activateAction() const override { return m_activateAction; }
   QWidget* toolWidget() const override;
+  void setIcon(bool darkTheme = false) override;
 
   void setMolecule(QtGui::Molecule* mol) override { m_molecule = mol; }
   void setGLWidget(QtOpenGL::GLWidget* widget) override { m_glWidget = widget; }
@@ -59,6 +49,11 @@ public:
   QUndoCommand* wheelEvent(QWheelEvent* e) override;
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
   QUndoCommand* keyReleaseEvent(QKeyEvent* e) override;
+
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+  void registerCommands() override;
 
 protected slots:
   void swapZoomDirection(bool checked);

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef LAMMPSINPUTDIALOG_H
@@ -37,8 +26,8 @@ class LammpsInputDialog : public QDialog
 
 public:
   explicit LammpsInputDialog(QWidget* parent = nullptr,
-                             Qt::WindowFlags flag = 0);
-  ~LammpsInputDialog();
+                             Qt::WindowFlags flag = Qt::WindowFlags());
+  ~LammpsInputDialog() override;
 
   void readSettings(QSettings&);
   void writeSettings(QSettings&) const;
@@ -111,7 +100,7 @@ protected:
   /**
    * Reimplemented to update the dialog when it is shown
    */
-  void showEvent(QShowEvent* event);
+  void showEvent(QShowEvent* event) override;
 
 private:
   Ui::LammpsInputDialog ui;
@@ -228,7 +217,7 @@ private Q_SLOTS:
   void setThermoStyle(int);
   void setThermoInterval(int);
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif

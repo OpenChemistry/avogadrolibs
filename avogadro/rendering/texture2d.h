@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_RENDERING_TEXTURE2D_H
@@ -155,7 +144,7 @@ public:
    * use std::vector or Avogadro::Core::Array):
    * - ContainerT must have tightly packed values of ContainerT::value_type
    * - elements must be accessible by reference via ContainerT::operator[].
-   * - ContainterT::size() must return the number of elements in the container
+   * - ContainerT::size() must return the number of elements in the container
    *   as integral type ContainerT::size_type.
    */
   template <class ContainerT>

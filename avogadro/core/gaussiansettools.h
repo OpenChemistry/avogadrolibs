@@ -1,33 +1,19 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2008 Albert De Fusco
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_GAUSSIANSETTOOLS_H
 #define AVOGADRO_CORE_GAUSSIANSETTOOLS_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include "basisset.h"
 #include "vector.h"
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Cube;
 class GaussianSet;
@@ -44,7 +30,7 @@ class AVOGADROCORE_EXPORT GaussianSetTools
 {
 public:
   explicit GaussianSetTools(Molecule* mol = nullptr);
-  ~GaussianSetTools();
+  ~GaussianSetTools() = default;
 
   /**
    * @brief Set the electron type, must be called once MOs are available
@@ -110,8 +96,13 @@ private:
   Molecule* m_molecule;
   GaussianSet* m_basis;
   BasisSet::ElectronType m_type = BasisSet::Paired;
+  std::vector<double> m_cutoffDistances;
 
   bool isSmall(double value) const;
+
+  // get the cutoff distance for the given angular momentum
+  // .. and the current basis set (exponents)
+  void calculateCutoffs();
 
   /**
    * @brief Calculate the values at this position in space. The public calculate
@@ -133,9 +124,16 @@ private:
               std::vector<double>& values) const;
   void pointF7(unsigned int index, const Vector3& delta, double dr2,
                std::vector<double>& values) const;
+  void pointG(unsigned int index, const Vector3& delta, double dr2,
+              std::vector<double>& values) const;
+  void pointG9(unsigned int index, const Vector3& delta, double dr2,
+               std::vector<double>& values) const;
+
+  // map from symmetry to angular momentum
+  // S, SP, P, D, D5, F, F7, G, G9, etc.
+  const int symToL[13] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 };
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_GAUSSIANSETTOOLS_H

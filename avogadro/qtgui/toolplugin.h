@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_TOOLPLUGIN_H
@@ -32,7 +21,7 @@ namespace Avogadro {
 namespace Rendering {
 class GroupNode;
 class GLRenderer;
-}
+} // namespace Rendering
 
 namespace QtOpenGL {
 class GLWidget;
@@ -76,6 +65,11 @@ public:
   virtual QAction* activateAction() const = 0;
 
   /**
+   * Set the tool icon (based on dark / light theme).
+   */
+  virtual void setIcon(bool darkTheme = false) = 0;
+
+  /**
    * @return A QWidget that will be displayed to the user while this tool is
    * active.
    */
@@ -102,6 +96,24 @@ public:
    */
   virtual void draw(Rendering::GroupNode& node);
 
+  /**
+   * Called by the app to handle a command registered by the plugin.
+   * (e.g., "renderMovie" or "drawAtom", etc.)
+   *
+   * The app will turn the command into a string and pass it to the tool.
+   * and any options will go from a JSON dictionary to a QVariantMap.
+   *
+   * @return true if the command was handled, false otherwise.
+   */
+  virtual bool handleCommand(const QString& command,
+                             const QVariantMap& options);
+
+  /**
+   * Called by the app to tell the tool to register commands.
+   * If the tool has commands, it should emit the registerCommand signals.
+   */
+  virtual void registerCommands() {}
+
 signals:
   /**
    * Emitted when draw() needs to be called again due to updates.
@@ -113,6 +125,24 @@ signals:
    * redrawn.
    */
   void updateRequested();
+
+  /**
+   * Register a new command with the application. The command will be available
+   * through scripting (e.g., "renderMovie" or "generateSurface", etc.)
+   *
+   * @param command The name of the command to register.
+   * @param description A description of the command.
+   *
+   * @sa handleCommand
+   */
+  void registerCommand(QString command, QString description);
+
+  /**
+   * Request a specific display type (or types) are made active.
+   * This can be useful when loading a specific type of data that
+   * would be most readily viewed with a specialized view.
+   */
+  void requestActiveDisplayTypes(QStringList displayTypes);
 
 public slots:
   /**
@@ -148,12 +178,13 @@ class AVOGADROQTGUI_EXPORT ToolPluginFactory
 public:
   virtual ~ToolPluginFactory();
 
-  virtual ToolPlugin* createInstance(QObject *parent = nullptr) = 0;
+  virtual ToolPlugin* createInstance(QObject* parent = nullptr) = 0;
   virtual QString identifier() const = 0;
+  virtual QString description() const = 0;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 Q_DECLARE_INTERFACE(Avogadro::QtGui::ToolPluginFactory,
                     "org.openchemistry.avogadro.ToolPluginFactory")

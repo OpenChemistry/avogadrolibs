@@ -1,29 +1,18 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "scenepluginmodel.h"
 
 #include "sceneplugin.h"
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ScenePluginModel::ScenePluginModel(QObject* parent_)
   : QAbstractItemModel(parent_)
-{}
+{
+}
 
 QModelIndex ScenePluginModel::parent(const QModelIndex&) const
 {
@@ -40,15 +29,24 @@ int ScenePluginModel::rowCount(const QModelIndex& parent_) const
 
 int ScenePluginModel::columnCount(const QModelIndex&) const
 {
-  return 1;
+  return 2;
 }
 
 Qt::ItemFlags ScenePluginModel::flags(const QModelIndex& index_) const
 {
+  auto* item =
+    qobject_cast<ScenePlugin*>(static_cast<QObject*>(index_.internalPointer()));
+  if (!item)
+    return Qt::NoItemFlags;
+
+  Qt::ItemFlags flags = Qt::ItemIsEnabled;
+  if (!item->isApplicable())
+    flags = Qt::NoItemFlags;
+
   if (index_.column() == 0)
-    return Qt::ItemIsEditable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled;
+    return flags | Qt::ItemIsEditable | Qt::ItemIsUserCheckable;
   else
-    return Qt::ItemIsEnabled;
+    return flags;
 }
 
 bool ScenePluginModel::setData(const QModelIndex& index_, const QVariant& value,
@@ -57,7 +55,7 @@ bool ScenePluginModel::setData(const QModelIndex& index_, const QVariant& value,
   if (!index_.isValid() || index_.column() > 1)
     return false;
 
-  ScenePlugin* item =
+  auto* item =
     qobject_cast<ScenePlugin*>(static_cast<QObject*>(index_.internalPointer()));
   if (!item)
     return false;
@@ -79,13 +77,34 @@ bool ScenePluginModel::setData(const QModelIndex& index_, const QVariant& value,
 
 QVariant ScenePluginModel::data(const QModelIndex& index_, int role) const
 {
-  if (!index_.isValid() || index_.column() > 1)
+  if (!index_.isValid() || index_.column() > 2)
     return QVariant();
 
-  QObject* object = static_cast<QObject*>(index_.internalPointer());
-  ScenePlugin* item = qobject_cast<ScenePlugin*>(object);
+  auto* object = static_cast<QObject*>(index_.internalPointer());
+  auto* item = qobject_cast<ScenePlugin*>(object);
   if (!item)
     return QVariant();
+
+  // Simple lambda to convert QFlags to variant as in Qt 6 this needs help.
+  auto toVariant = [&](auto flags) {
+    return static_cast<Qt::Alignment::Int>(flags);
+  };
+
+  // check if setupWidget() returns something
+  if (index_.column() == 1) {
+    switch (role) {
+      case Qt::DisplayRole:
+      case Qt::EditRole:
+        return (item->hasSetupWidget()) ? "•••" : " ";
+      case Qt::ToolTipRole:
+      case Qt::WhatsThisRole:
+        return tr("Settings");
+      case Qt::TextAlignmentRole:
+        return toVariant(Qt::AlignLeft | Qt::AlignVCenter);
+      default:
+        return QVariant();
+    }
+  }
 
   if (index_.column() == 0) {
     switch (role) {
@@ -100,6 +119,8 @@ QVariant ScenePluginModel::data(const QModelIndex& index_, int role) const
       case Qt::ToolTipRole:
       case Qt::WhatsThisRole:
         return item->description();
+      case Qt::TextAlignmentRole:
+        return toVariant(Qt::AlignLeft);
       default:
         return QVariant();
     }
@@ -119,6 +140,22 @@ QModelIndex ScenePluginModel::index(int row, int column,
 void ScenePluginModel::clear()
 {
   m_scenePlugins.clear();
+}
+
+ScenePlugin* ScenePluginModel::scenePlugin(const QModelIndex& index) const
+{
+  if (!index.isValid() || index.column() != 0)
+    return nullptr;
+
+  return m_scenePlugins[index.row()];
+}
+
+ScenePlugin* ScenePluginModel::scenePlugin(int row) const
+{
+  if (row < 0 || row >= m_scenePlugins.size())
+    return nullptr;
+
+  return m_scenePlugins[row];
 }
 
 QList<ScenePlugin*> ScenePluginModel::scenePlugins() const
@@ -152,7 +189,7 @@ void ScenePluginModel::removeItem(ScenePlugin* item)
 
 void ScenePluginModel::itemChanged()
 {
-  ScenePlugin* item = qobject_cast<ScenePlugin*>(sender());
+  auto* item = qobject_cast<ScenePlugin*>(sender());
   if (item) {
     int row = m_scenePlugins.indexOf(item);
     if (row >= 0)
@@ -160,5 +197,4 @@ void ScenePluginModel::itemChanged()
   }
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

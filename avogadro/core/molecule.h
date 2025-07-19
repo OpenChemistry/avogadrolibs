@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_MOLECULE_H
 #define AVOGADRO_CORE_MOLECULE_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include "array.h"
@@ -16,12 +18,13 @@
 #include "variantmap.h"
 #include "vector.h"
 
+#include <bitset>
+#include <cstddef>
 #include <list>
 #include <map>
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class BasisSet;
 class Cube;
 class Mesh;
@@ -41,12 +44,16 @@ class AVOGADROCORE_EXPORT Molecule
 {
 public:
   /** Typedef for Atom class. */
-  typedef Atom AtomType;
+  using AtomType = Atom;
 
   /** Typedef for Bond class. */
-  typedef Bond BondType;
+  using BondType = Bond;
   /** Type for custom element map. */
-  typedef std::map<unsigned char, std::string> CustomElementMap;
+  using CustomElementMap = std::map<unsigned char, std::string>;
+
+  /** Type for element masks (e.g., does this molecule contain certain elements)
+   */
+  using ElementMask = std::bitset<element_count>;
 
   /** Creates a new, empty molecule. */
   Molecule();
@@ -66,27 +73,53 @@ public:
   /** Destroys the molecule object. */
   virtual ~Molecule();
 
+  /**
+   * Adds the properties from the supplied
+   * molecule to this molecule. Does not otherwise
+   * modify atoms / bonds / residues, etc.
+   */
+  void readProperties(const Molecule& other);
+
   /** Sets the data value with @p name to @p value. */
   void setData(const std::string& name, const Variant& value);
 
-  /** Returns the data value for @p name. */
+  /** @return the data value for @p name. */
   Variant data(const std::string& name) const;
 
   /**
-   * Returns true if the molecule has data with the given key, false otherwise.
+   * @return true if the molecule has data with the given key, false otherwise.
    */
   bool hasData(const std::string& name) const;
 
   /** Set the molecule's variant data to the entries in map. */
   void setDataMap(const VariantMap& map);
 
-  /** Return the molecule's variant data. */
+  /** @return the molecule's variant data. */
   const VariantMap& dataMap() const;
 
   /** \overload */
   VariantMap& dataMap();
 
-  /** Returns a vector of hybridizations for the atoms in the molecule. */
+  /** @return a specific spectra entry */
+  MatrixX spectra(const std::string& name) const;
+
+  /** Sets the spectra value with @p name to @p value. */
+  void setSpectra(const std::string& name, const MatrixX& value);
+
+  /** @return the list of available spectra */
+  std::set<std::string> spectraTypes() const;
+
+  /** Sets atomic partial charges with @p type to @p value. */
+  void setPartialCharges(const std::string& type, const MatrixX& value);
+
+  /** @return the atomic partial charges of type @p type */
+  MatrixX partialCharges(const std::string& type) const;
+
+  /** @return the types of partial charges available stored with this molecule.
+   */
+  std::set<std::string> partialChargeTypes() const;
+
+  /** @return a vector of hybridizations for the atoms in the molecule. */
   Array<AtomHybridization>& hybridizations();
 
   /** \overload */
@@ -115,11 +148,29 @@ public:
    */
   bool setHybridization(Index atomId, AtomHybridization hybridization);
 
-  /** Returns a vector of formal charges for the atoms in the molecule. */
+  /** @return a vector of formal charges for the atoms in the molecule. */
   Array<signed char>& formalCharges();
 
   /** \overload */
   const Array<signed char>& formalCharges() const;
+
+  /**
+   * Get the total charge on the molecule.
+   * The method will first check to see if a total charge has been set. If not,
+   * it will calculate the total charge from the formal charges (if set).
+   * If neither has been set, it will assume the total charge is zero.
+   * @return The total charge of the molecule.
+   */
+  signed char totalCharge() const;
+
+  /**
+   * Get the total spin multiplicity of the molecule.
+   * The method will first check to see if a total spin has been set. If not,
+   * it will either suggest a singlet if an even number of electrons are
+   * present, or a doublet if an odd number of electrons are present.
+   * @return The total spin multiplicity of the molecule.
+   */
+  char totalSpinMultiplicity() const;
 
   /**
    * Get the formal charge for the requested atom.
@@ -144,7 +195,7 @@ public:
    */
   bool setFormalCharge(Index atomId, signed char charge);
 
-  /** Returns a vector of colors for the atoms in the moleucle. */
+  /** \returns a vector of colors for the atoms in the moleucle. */
   Array<Vector3ub>& colors();
 
   /** \overload */
@@ -178,7 +229,7 @@ public:
   bool setLayer(Index atomId, size_t layer);
   size_t layer(Index atomId) const;
 
-  /** Returns a vector of 2d atom positions for the atoms in the molecule. */
+  /** @return a vector of 2d atom positions for the atoms in the molecule. */
   const Array<Vector2>& atomPositions2d() const;
 
   /** \overload */
@@ -207,7 +258,7 @@ public:
    */
   bool setAtomPosition2d(Index atomId, const Vector2& pos);
 
-  /** Returns a vector of 2d atom positions for the atoms in the molecule. */
+  /** @return a vector of 3d atom positions for the atoms in the molecule. */
   const Array<Vector3>& atomPositions3d() const;
 
   /** \overload */
@@ -236,9 +287,27 @@ public:
    */
   bool setAtomPosition3d(Index atomId, const Vector3& pos);
 
-  std::string label(Index atomId) const;
-  bool setLabel(const Core::Array<std::string>& label);
-  bool setLabel(Index atomId, const std::string& label);
+  /**
+   * @return Any custom label for the requested atom.
+   * @param atomId The index of the atom.
+   */
+  std::string atomLabel(Index atomId) const;
+  /**
+   * Set the custom label of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param label The new label of the atom.
+   * @return True on success, false otherwise.
+   */
+  bool setAtomLabel(Index atomId, const std::string& label);
+
+  const Core::Array<std::string> atomLabels() const { return m_atomLabels; }
+
+  /**
+   * Set all the atom labels in the molecule.
+   * @param label The new label array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setAtomLabels(const Core::Array<std::string>& label);
 
   /**
    * Set whether the specified atom is selected or not.
@@ -250,7 +319,7 @@ public:
    */
   bool atomSelected(Index atomId) const;
 
-  /** Returns whether the selection is empty or not */
+  /** @return whether the selection is empty or not */
   bool isSelectionEmpty() const;
 
   /** A map of custom element atomic numbers to string identifiers. These ids
@@ -265,6 +334,9 @@ public:
   const CustomElementMap& customElementMap() const;
   void setCustomElementMap(const CustomElementMap& map);
   /** @} */
+
+  /** @return the elements currently in this molecule */
+  const ElementMask elements() const;
 
   /**  Adds an atom to the molecule. */
   virtual AtomType addAtom(unsigned char atomicNumber);
@@ -341,14 +413,36 @@ public:
    */
   virtual void clearBonds();
 
-  /** Returns the bond at @p index in the molecule. */
+  /** @return the bond at @p index in the molecule. */
   BondType bond(Index index) const;
 
-  /** Returns the bond between atoms @p a and @p b. */
+  /** @return the bond between atoms @p a and @p b. */
   BondType bond(const AtomType& a, const AtomType& b) const;
 
-  /** Returns the bond between atomId1 and atomId2. */
+  /** @return the bond between atomId1 and atomId2. */
   BondType bond(Index atomId1, Index atomId2) const;
+
+  /**
+   * @return Any custom label for the requested bond.
+   * @param bondIndex The index of the bond.
+   */
+  std::string bondLabel(Index bondIndex) const;
+  /**
+   * Set the custom label of a single bond.
+   * @param bondIndex The index of the bond to modify.
+   * @param label The new label of the bond.
+   * @return True on success, false otherwise.
+   */
+  bool setBondLabel(Index bondIndex, const std::string& label);
+
+  const Core::Array<std::string> bondLabels() const { return m_bondLabels; }
+
+  /**
+   * Set all the atom labels in the molecule.
+   * @param label The new label array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setBondLabels(const Core::Array<std::string>& label);
 
   /**
    * @brief Get all bonds to @p a.
@@ -394,7 +488,7 @@ public:
   const std::vector<Cube*> cubes() const { return m_cubes; }
 
   /**
-   * Returns the chemical formula of the molecule.
+   * @return the chemical formula of the molecule.
    * @param delimiter Delimiter to insert between tokens, defaults to none.
    * @param showCountsOver Show atom counts above this (defaults to 1).
    */
@@ -443,7 +537,7 @@ public:
   void setBasisSet(BasisSet* basis) { m_basisSet = basis; }
 
   /**
-   * Get the basis set (if present) for the molecule.
+   * @return the basis set (if present) for the molecule.
    */
   BasisSet* basisSet() { return m_basisSet; }
   const BasisSet* basisSet() const { return m_basisSet; }
@@ -469,8 +563,10 @@ public:
 
   Array<double> vibrationFrequencies() const;
   void setVibrationFrequencies(const Array<double>& freq);
-  Array<double> vibrationIntensities() const;
-  void setVibrationIntensities(const Array<double>& intensities);
+  Array<double> vibrationIRIntensities() const;
+  void setVibrationIRIntensities(const Array<double>& intensities);
+  Array<double> vibrationRamanIntensities() const;
+  void setVibrationRamanIntensities(const Array<double>& intensities);
   Array<Vector3> vibrationLx(int mode) const;
   void setVibrationLx(const Array<Array<Vector3>>& lx);
 
@@ -486,13 +582,30 @@ public:
 
   /**
    * Perceives bonds in the molecule based on preset residue data.
+   *
+   * Use this if you have residue data available (e.g., reading PDB or MMTF
+   * files) Otherwise consider @sa perceiveBondsSimple and @sa
+   * perceiveBondOrders
    */
   void perceiveBondsFromResidueData();
 
-  int coordinate3dCount();
+  void perceiveBondOrders();
+
+  /**
+   * Perceives all-carbon-substituted onium ions of nitrogen, oxygen,
+   * phosphorus, sulfur, arsenic and selenium.
+   */
+  void perceiveSubstitutedCations();
+
+  size_t coordinate3dCount() const;
   bool setCoordinate3d(int coord);
-  Array<Vector3> coordinate3d(int index) const;
-  bool setCoordinate3d(const Array<Vector3>& coords, int index);
+  Array<Vector3> coordinate3d(size_t index) const;
+  bool setCoordinate3d(const Array<Vector3>& coords, size_t index);
+
+  /**
+   * Clear coordinate sets (except the default set)
+   */
+  void clearCoordinate3d();
 
   /**
    * Timestep property is used when molecular dynamics trajectories are read
@@ -548,7 +661,7 @@ public:
    * @return The number of atoms with the supplied atomic number.
    */
   Index atomCount(unsigned char atomicNumber) const;
-  /** Returns the number of bonds in the molecule. */
+  /** @return the number of bonds in the molecule. */
   inline Index bondCount() const;
 
   // getters and setters
@@ -642,15 +755,47 @@ public:
   bool setAtomicNumber(Index atomId, unsigned char atomicNumber);
 
   /**
+   * Freeze or unfreeze an atom for optimization
+   */
+  void setFrozenAtom(Index atomId, bool frozen);
+
+  /**
+   * Get the frozen status of an atom
+   */
+  bool frozenAtom(Index atomId) const;
+
+  /**
+   * Freeze or unfreeze X, Y, or Z coordinate of an atom for optimization
+   * @param atomId The index of the atom to modify.
+   * @param axis The axis to freeze (0, 1, or 2 for X, Y, or Z)
+   * @param frozen True to freeze, false to unfreeze
+   */
+  void setFrozenAtomAxis(Index atomId, int axis, bool frozen);
+
+  /**
+   * @return the frozen status of atoms (i.e., 3*N array of 1.0 or 0.0)
+   * 0.0 means the atom is frozen, 1.0 means the atom is not frozen.
+   * (i.e., multiply this mask with gradients to freeze atoms)
+   */
+  Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }
+
+  /**
    * @return a map of components and count.
    */
   std::map<unsigned char, size_t> composition() const;
 
+  /**
+   * @return the atom pairs for all bonds to the atom indexed at @a index.
+   */
   Array<std::pair<Index, Index>> getAtomBonds(Index index) const;
+  /**
+   * @return the bond orders for all bonds to the atom indexed at @a index.
+   */
   Array<unsigned char> getAtomOrders(Index index) const;
 
   inline static std::pair<Index, Index> makeBondPair(const Index& a,
                                                      const Index& b);
+  /** Remove bonds to @a atom */
   bool removeBonds(Index atom);
 
   void addBonds(const Array<std::pair<Index, Index>>& bonds,
@@ -666,13 +811,30 @@ public:
   Layer& layer();
   const Layer& layer() const;
 
+  /**
+   * Calculte and return bounding box of the whole molecule or selected atoms
+   * only.
+   * @param boxMin [out] the minimum corner (first end of the box diagonal)
+   * @param boxMax [out] the maximum corner (second end of the box diagonal)
+   * @param radius [in] radius of a single sphere
+   */
+  void boundingBox(Vector3& boxMin, Vector3& boxMax,
+                   const double radius = 1.0) const;
+
 protected:
   VariantMap m_data;
+  std::map<std::string, MatrixX>
+    m_partialCharges; //!< Sets of atomic partial charges
+
+  std::map<std::string, MatrixX> m_spectra; //!< Sets of spectra
   CustomElementMap m_customElementMap;
+  ElementMask m_elements; //!< Which elements this molecule contains (e.g., for
+                          //!< force fields)
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
-  Array<std::string> m_label;
-  Array<Array<Vector3>> m_coordinates3d; // Used for conformers/trajectories.
+  Array<std::string> m_atomLabels;
+  Array<std::string> m_bondLabels;
+  Array<Array<Vector3>> m_coordinates3d; //!< Store conformers/trajectories.
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
@@ -680,7 +842,8 @@ protected:
   Array<Vector3ub> m_colors;
   // Vibration data if available.
   Array<double> m_vibrationFrequencies;
-  Array<double> m_vibrationIntensities;
+  Array<double> m_vibrationIRIntensities;
+  Array<double> m_vibrationRamanIntensities;
   Array<Array<Vector3>> m_vibrationLx;
 
   // Array declaring whether atoms are selected or not.
@@ -696,16 +859,11 @@ protected:
   // This will be stored from the last space group operation
   unsigned short m_hallNumber = 0;
 
-private:
-  /** Update the graph to correspond to the current molecule. */
-  void updateGraph() const;
-  // the old atom is dirty and needs a update
-  void rebondBond(Index newIndex, Index oldIndex);
+  Eigen::VectorXd m_frozenAtomMask;
 
-  mutable Graph m_graph;     // A transformation of the molecule to a graph.
-  mutable bool m_graphDirty; // Should the graph be rebuilt?
+private:
+  mutable Graph m_graph; // A transformation of the molecule to a graph.
   // edge information
-  Array<std::pair<Index, Index>> m_bondPairs;
   Array<unsigned char> m_bondOrders;
   // vertex information
   Array<unsigned char> m_atomicNumbers;
@@ -715,14 +873,14 @@ private:
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
 {
 public:
-  Atom() : AtomTemplate<Molecule>() {}
+  Atom() = default;
   Atom(Molecule* m, Index i) : AtomTemplate<Molecule>(m, i) {}
 };
 
 class AVOGADROCORE_EXPORT Bond : public BondTemplate<Molecule>
 {
 public:
-  Bond() : BondTemplate<Molecule>() {}
+  Bond() = default;
   Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
 };
 
@@ -779,6 +937,11 @@ inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
     return true;
   }
   return false;
+}
+
+inline const Molecule::ElementMask Molecule::elements() const
+{
+  return m_elements;
 }
 
 inline Vector3ub Molecule::color(Index atomId) const
@@ -879,26 +1042,26 @@ inline bool Molecule::setAtomPosition3d(Index atomId, const Vector3& pos)
   return false;
 }
 
-inline std::string Molecule::label(Index atomId) const
+inline std::string Molecule::atomLabel(Index atomId) const
 {
-  return atomId < m_label.size() ? m_label[atomId] : "";
+  return atomId < m_atomLabels.size() ? m_atomLabels[atomId] : "";
 }
 
-inline bool Molecule::setLabel(const Core::Array<std::string>& label)
+inline bool Molecule::setAtomLabels(const Core::Array<std::string>& labels)
 {
-  if (label.size() == atomCount() || label.size() == 0) {
-    m_label = label;
+  if (labels.size() == atomCount() || labels.size() == 0) {
+    m_atomLabels = labels;
     return true;
   }
   return false;
 }
 
-inline bool Molecule::setLabel(Index atomId, const std::string& label)
+inline bool Molecule::setAtomLabel(Index atomId, const std::string& label)
 {
   if (atomId < atomCount()) {
-    if (atomId >= m_label.size())
-      m_label.resize(atomCount(), "");
-    m_label[atomId] = label;
+    if (atomId >= m_atomLabels.size())
+      m_atomLabels.resize(atomCount(), "");
+    m_atomLabels[atomId] = label;
     return true;
   }
   return false;
@@ -962,13 +1125,13 @@ std::pair<Index, Index> Molecule::makeBondPair(const Index& a, const Index& b)
 
 inline Index Molecule::bondCount() const
 {
-  assert(m_bondPairs.size() == m_bondOrders.size());
-  return m_bondPairs.size();
+  assert(m_graph.edgeCount() == m_bondOrders.size());
+  return m_graph.edgeCount();
 }
 
 inline const Array<std::pair<Index, Index>>& Molecule::bondPairs() const
 {
-  return m_bondPairs;
+  return m_graph.edgePairs();
 }
 
 inline const Array<unsigned char>& Molecule::bondOrders() const
@@ -976,9 +1139,32 @@ inline const Array<unsigned char>& Molecule::bondOrders() const
   return m_bondOrders;
 }
 
+inline std::string Molecule::bondLabel(Index bondId) const
+{
+  return bondId < m_bondLabels.size() ? m_bondLabels[bondId] : "";
+}
+
+inline bool Molecule::setBondLabels(const Core::Array<std::string>& labels)
+{
+  if (labels.size() == atomCount() || labels.size() == 0) {
+    m_bondLabels = labels;
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setBondLabel(Index bondId, const std::string& label)
+{
+  if (bondId < bondCount()) {
+    if (bondId >= m_bondLabels.size())
+      m_bondLabels.resize(bondCount(), "");
+    m_bondLabels[bondId] = label;
+    return true;
+  }
+  return false;
+}
 inline const Graph& Molecule::graph() const
 {
-  updateGraph();
   return m_graph;
 }
 
@@ -989,7 +1175,7 @@ inline const Array<unsigned char>& Molecule::atomicNumbers() const
 
 inline std::pair<Index, Index> Molecule::bondPair(Index bondId) const
 {
-  return bondId < bondCount() ? m_bondPairs[bondId]
+  return bondId < bondCount() ? m_graph.endpoints(bondId)
                               : std::make_pair(MaxIndex, MaxIndex);
 }
 
@@ -1004,7 +1190,6 @@ inline unsigned char Molecule::atomicNumber(Index atomId) const
                                          : InvalidElement;
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_MOLECULE_H

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef CP2KINPUTDIALOG_H
@@ -42,9 +31,31 @@ class Cp2kInputDialog : public QDialog
 {
   Q_OBJECT
 
+  enum CalculateOption
+  {
+    CalculateEnergy = 0,
+    CalculateEnergyAndForces,
+    CalculateMolecularDynamics,
+    CalculateGeometryOptimization,
+
+    CalculateCount
+  };
+
+  enum BasisOption
+  {
+    BasisSZVGTH = 0,
+    BasisDZVGTH,
+    BasisDZVPGTH,
+    BasisTZVPGTH,
+    BasisTZV2PGTH,
+
+    BasisCount
+  };
+
 public:
-  explicit Cp2kInputDialog(QWidget* parent_ = nullptr, Qt::WindowFlags f = 0);
-  ~Cp2kInputDialog();
+  explicit Cp2kInputDialog(QWidget* parent_ = nullptr,
+                           Qt::WindowFlags f = Qt::WindowFlags());
+  ~Cp2kInputDialog() override;
 
   void setMolecule(QtGui::Molecule* mol);
 
@@ -55,7 +66,7 @@ signals:
   void openJobOutput(const Avogadro::MoleQueue::JobObject& job);
 
 protected:
-  void showEvent(QShowEvent* e);
+  void showEvent(QShowEvent* e) override;
 
 private slots:
   void updatePreviewText();
@@ -91,6 +102,8 @@ private:
 
   void setBasicDefaults();
 
+  /// @return valid values for CP2K RUN_TYPE
+  static QString fromCalcEnum(CalculateOption option);
   QString generateJobTitle() const;
 
   Ui::Cp2kInputDialog ui;

@@ -1,17 +1,6 @@
 /*******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 *******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_PLOTRMSD_H
@@ -21,15 +10,12 @@
 
 #include <memory>
 
-// Forward declarations
-class QByteArray;
-class QStringList;
+namespace Avogadro {
 
 namespace VTK {
-class VtkPlot;
+class ChartDialog;
 }
 
-namespace Avogadro {
 namespace QtPlugins {
 
 // First item in the pair is the frame number. Second is the RMSD value.
@@ -43,15 +29,15 @@ class PlotRmsd : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit PlotRmsd(QObject* parent_ = nullptr);
-  ~PlotRmsd();
+  ~PlotRmsd() override;
 
-  QString name() const { return tr("PlotRmsd"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("PlotRmsd"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
   void moleculeChanged(unsigned int changes);
 
@@ -70,7 +56,7 @@ private:
   QtGui::Molecule* m_molecule;
 
   std::unique_ptr<QAction> m_displayDialogAction;
-  QScopedPointer<VTK::VtkPlot> m_plot;
+  QScopedPointer<VTK::ChartDialog> m_chartDialog;
 };
 
 inline QString PlotRmsd::description() const

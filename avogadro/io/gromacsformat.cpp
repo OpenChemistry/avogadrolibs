@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "gromacsformat.h"
@@ -29,10 +18,8 @@
 #include <iostream>
 
 #include <string>
-#include <utility>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using Core::Atom;
 using Core::Elements;
@@ -42,15 +29,6 @@ using Core::Residue;
 using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
-
-using std::getline;
-using std::map;
-using std::string;
-using std::vector;
-
-GromacsFormat::GromacsFormat() {}
-
-GromacsFormat::~GromacsFormat() {}
 
 std::vector<std::string> GromacsFormat::fileExtensions() const
 {
@@ -64,33 +42,36 @@ std::vector<std::string> GromacsFormat::mimeTypes() const
 
 bool GromacsFormat::read(std::istream& in, Molecule& molecule)
 {
+  // Allow ADL ofr string
+  using std::string;
+
   string buffer;
   string value;
-  Residue* r;
+  Residue* r = nullptr;
   size_t currentResidueId = 0;
 
   // Title
-  getline(in, buffer);
+  std::getline(in, buffer);
   if (!buffer.empty())
     molecule.setData("name", trimmed(buffer));
 
   // Atom count
-  getline(in, buffer);
+  std::getline(in, buffer);
   buffer = trimmed(buffer);
   bool ok;
-  size_t numAtoms = lexicalCast<size_t>(buffer, ok);
+  auto numAtoms = lexicalCast<size_t>(buffer, ok);
   if (buffer.empty() || !ok) {
     appendError("Number of atoms (line 2) invalid.");
     return false;
   }
 
   // read atom info:
-  typedef map<string, unsigned char> AtomTypeMap;
+  using AtomTypeMap = std::map<string, unsigned char>;
   AtomTypeMap atomTypes;
   unsigned char customElementCounter = CustomElementMin;
   Vector3 pos;
   while (numAtoms-- > 0) {
-    getline(in, buffer);
+    std::getline(in, buffer);
     // Figure out the distance between decimal points, implement support for
     // variable precision as specified:
     // "any number of decimal places, the format will then be n+5 positions with
@@ -126,7 +107,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     // Offset: 52 format: %8.4f value: y velocity (nm/ps, a.k.a. km/s)
     // Offset: 60 format: %8.4f value: z velocity (nm/ps, a.k.a. km/s)
 
-    size_t residueId = lexicalCast<size_t>(buffer.substr(0, 5), ok);
+    auto residueId = lexicalCast<size_t>(buffer.substr(0, 5), ok);
     if (!ok) {
       appendError("Failed to parse residue sequence number: " +
                   buffer.substr(0, 5));
@@ -136,7 +117,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     if (residueId != currentResidueId) {
       currentResidueId = residueId;
 
-      string residueName = lexicalCast<string>(buffer.substr(5, 5), ok);
+      auto residueName = lexicalCast<string>(buffer.substr(5, 5), ok);
       if (!ok) {
         appendError("Failed to parse residue name: " + buffer.substr(5, 5));
         return false;
@@ -150,7 +131,9 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     // Atom name:
     value = trimmed(buffer.substr(10, 5));
     Atom atom;
-    int atomicNum = r->getAtomicNumber(value);
+    int atomicNum = 0;
+    if (r != nullptr)
+      r->getAtomicNumber(value);
     if (atomicNum) {
       atom = molecule.addAtom(atomicNum);
     } else {
@@ -159,7 +142,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
       if (atomicNumFromSymbol != 255) {
         atom = molecule.addAtom(atomicNumFromSymbol);
       } else {
-        AtomTypeMap::const_iterator it = atomTypes.find(value);
+        auto it = atomTypes.find(value);
         if (it == atomTypes.end()) {
           atomTypes.insert(std::make_pair(value, customElementCounter++));
           it = atomTypes.find(value);
@@ -192,10 +175,8 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   // Set the custom element map if needed:
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                     itEnd = atomTypes.end();
-         it != itEnd; ++it) {
-      elementMap.insert(std::make_pair(it->second, it->first));
+    for (const auto& atomType : atomTypes) {
+      elementMap.insert(std::make_pair(atomType.second, atomType.first));
     }
     molecule.setCustomElementMap(elementMap);
   }
@@ -204,8 +185,8 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   // v1(x) v2(y) v3(z) [v1(y) v1(z) v2(x) v2(z) v3(x) v3(y)]
   // The last six values may be omitted, set all non-specified values to 0.
   // v1(y) == v1(z) == v2(z) == 0 always.
-  getline(in, buffer);
-  vector<string> tokens(split(buffer, ' ', true));
+  std::getline(in, buffer);
+  std::vector<string> tokens(split(buffer, ' ', true));
   if (tokens.size() > 0) {
     if (tokens.size() != 3 && tokens.size() != 9) {
       appendError("Invalid box specification -- need either 3 or 9 values: '" +
@@ -227,7 +208,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
       }
     }
 
-    UnitCell* cell = new UnitCell;
+    auto* cell = new UnitCell;
     cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
     molecule.setUnitCell(cell);
   }
@@ -240,5 +221,4 @@ bool GromacsFormat::write(std::ostream&, const Core::Molecule&)
   return false;
 }
 
-} // namespace Io
-} // namespace Avogadro
+} // namespace Avogadro::Io

@@ -1,6 +1,6 @@
-include_directories("${AvogadroLibs_SOURCE_DIR}/thirdparty")
-
 set(openbabel_srcs
+  conformersearchdialog.cpp
+  obcharges.cpp
   obfileformat.cpp
   obforcefielddialog.cpp
   obprocess.cpp
@@ -8,6 +8,7 @@ set(openbabel_srcs
 )
 
 set(openbabel_uis
+  conformersearchdialog.ui
   obforcefielddialog.ui
 )
 
@@ -20,4 +21,4 @@ avogadro_plugin(OpenBabel
   "${openbabel_uis}"
 )
 
-target_link_libraries(OpenBabel PRIVATE AvogadroIO)
+target_link_libraries(OpenBabel PRIVATE Avogadro::IO Avogadro::Calc nlohmann_json::nlohmann_json)

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_ATOMTYPER_INLINE_H
@@ -22,8 +11,7 @@
 #include "atom.h"
 #include "molecule.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 template <typename OutputType>
 AtomTyper<OutputType>::AtomTyper(const Molecule* mol) : m_molecule(mol)
@@ -90,7 +78,6 @@ void AtomTyper<OutputType>::initialize()
   m_types.reserve(m_molecule ? m_molecule->atomCount() : 0);
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_ATOMTYPER_INLINE_H

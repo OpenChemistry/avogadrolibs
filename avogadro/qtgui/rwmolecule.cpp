@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013-2015 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "rwmolecule.h"
@@ -26,8 +15,7 @@
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/qtgui/hydrogentools.h>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Array;
 using Core::AtomHybridization;
@@ -35,18 +23,19 @@ using Core::CrystalTools;
 using Core::UnitCell;
 using std::swap;
 
-RWMolecule::RWMolecule(Molecule& mol, QObject* p) : QObject(p), m_molecule(mol)
-{}
+RWMolecule::RWMolecule(Molecule& mol, QObject* p)
+  : QObject(p), m_molecule(mol), m_interactive(false)
+{
+}
 
 RWMolecule::~RWMolecule() {}
 
 RWMolecule::AtomType RWMolecule::addAtom(unsigned char num, bool usingPositions)
 {
-  Index atomId = static_cast<Index>(m_molecule.atomCount());
-  Index atomUid = static_cast<Index>(m_molecule.m_atomUniqueIds.size());
+  auto atomId = static_cast<Index>(m_molecule.atomCount());
+  auto atomUid = static_cast<Index>(m_molecule.m_atomUniqueIds.size());
 
-  AddAtomCommand* comm =
-    new AddAtomCommand(*this, num, usingPositions, atomId, atomUid);
+  auto* comm = new AddAtomCommand(*this, num, usingPositions, atomId, atomUid);
   comm->setText(tr("Add Atom"));
   m_undoStack.push(comm);
   return AtomType(this, atomId);
@@ -91,7 +80,7 @@ bool RWMolecule::removeAtom(Index atomId)
     atomBonds.pop_back();
   }
 
-  RemoveAtomCommand* comm = new RemoveAtomCommand(
+  auto* comm = new RemoveAtomCommand(
     *this, atomId, uniqueId, atomicNumber(atomId), atomPosition3d(atomId));
   comm->setText(tr("Remove Atom"));
 
@@ -124,8 +113,22 @@ void RWMolecule::adjustHydrogens(Index atomId)
 void RWMolecule::adjustHydrogens(const Core::Array<Index>& atomIds)
 {
   m_undoStack.beginMacro(tr("Adjust Hydrogens"));
-  for (Index i = 0; i < atomIds.size(); ++i) {
-    adjustHydrogens(atomIds[i]);
+
+  // convert the indexes to unique ids
+  // since we're adding and removing atoms
+  // (so the index will change)
+  Core::Array<Index> uniqueIds;
+  for (auto id : atomIds) {
+    Index uniqueId = findAtomUniqueId(id);
+    if (uniqueId != MaxIndex)
+      uniqueIds.push_back(uniqueId);
+  }
+
+  for (auto uniqueId : uniqueIds) {
+    RWAtom atom = this->atomByUniqueId(uniqueId);
+    if (atom.isValid()) {
+      QtGui::HydrogenTools::adjustHydrogens(atom);
+    }
   }
   m_undoStack.endMacro();
 }
@@ -135,7 +138,7 @@ bool RWMolecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
   if (nums.size() != m_molecule.atomCount())
     return false;
 
-  SetAtomicNumbersCommand* comm =
+  auto* comm =
     new SetAtomicNumbersCommand(*this, m_molecule.atomicNumbers(), nums);
   comm->setText(tr("Change Elements"));
   m_undoStack.push(comm);
@@ -147,8 +150,8 @@ bool RWMolecule::setAtomicNumber(Index atomId, unsigned char num)
   if (atomId >= atomCount())
     return false;
 
-  SetAtomicNumberCommand* comm = new SetAtomicNumberCommand(
-    *this, atomId, m_molecule.atomicNumber(atomId), num);
+  auto* comm = new SetAtomicNumberCommand(*this, atomId,
+                                          m_molecule.atomicNumber(atomId), num);
   comm->setText(tr("Change Element"));
   m_undoStack.push(comm);
   return true;
@@ -160,18 +163,32 @@ bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3>& pos,
   if (pos.size() != m_molecule.atomCount())
     return false;
 
-  SetPositions3dCommand* comm =
-    new SetPositions3dCommand(*this, m_molecule.m_positions3d, pos);
+  auto* comm = new SetPositions3dCommand(*this, m_molecule.m_positions3d, pos);
   comm->setText(undoText);
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);
   return true;
 }
 
-bool RWMolecule::setLabel(Index atomId, const std::string& label,
-                          const QString& undoText)
+bool RWMolecule::setAtomLabel(Index atomId, const std::string& label,
+                              const QString& undoText)
 {
-  ModifyLabelCommand* comm = new ModifyLabelCommand(*this, atomId, label);
+  if (atomId >= atomCount())
+    return false;
+
+  auto* comm = new ModifyAtomLabelCommand(*this, atomId, label);
+  comm->setText(undoText);
+  m_undoStack.push(comm);
+  return true;
+}
+
+bool RWMolecule::setBondLabel(Index bondId, const std::string& label,
+                              const QString& undoText)
+{
+  if (bondId >= bondCount())
+    return false;
+
+  auto* comm = new ModifyBondLabelCommand(*this, bondId, label);
   comm->setText(undoText);
   m_undoStack.push(comm);
   return true;
@@ -186,18 +203,22 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
   if (m_molecule.m_positions3d.size() != m_molecule.atomCount())
     m_molecule.m_positions3d.resize(m_molecule.atomCount(), Vector3::Zero());
 
-  SetPosition3dCommand* comm = new SetPosition3dCommand(
-    *this, atomId, m_molecule.m_positions3d[atomId], pos);
+  auto* comm = new SetPosition3dCommand(*this, atomId,
+                                        m_molecule.m_positions3d[atomId], pos);
   comm->setText(undoText);
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);
   return true;
 }
 
-void RWMolecule::setAtomSelected(Index atomId, bool selected)
+void RWMolecule::setAtomSelected(Index atomId, bool selected,
+                                 const QString& undoText)
 {
-  // FIXME: Add in an implementation (and use it from the selection tool).
-  m_molecule.setAtomSelected(atomId, selected);
+  auto* comm = new ModifySelectionCommand(*this, atomId, selected);
+  comm->setText(undoText);
+  comm->setCanMerge(true);
+  m_undoStack.push(comm);
+  //  m_molecule.setAtomSelected(atomId, selected);
 }
 
 bool RWMolecule::atomSelected(Index atomId) const
@@ -210,7 +231,7 @@ bool RWMolecule::setHybridization(Index atomId, Core::AtomHybridization hyb)
   if (atomId >= atomCount())
     return false;
 
-  SetAtomicNumberCommand* comm = new SetAtomicNumberCommand(
+  auto* comm = new SetAtomicNumberCommand(
     *this, atomId, m_molecule.hybridization(atomId), hyb);
   comm->setText(tr("Change Atom Hybridization"));
   m_undoStack.push(comm);
@@ -222,7 +243,7 @@ bool RWMolecule::setFormalCharge(Index atomId, signed char charge)
   if (atomId >= atomCount())
     return false;
 
-  SetAtomFormalChargeCommand* comm = new SetAtomFormalChargeCommand(
+  auto* comm = new SetAtomFormalChargeCommand(
     *this, atomId, m_molecule.formalCharge(atomId), charge);
   comm->setText(tr("Change Atom Formal Charge"));
   m_undoStack.push(comm);
@@ -234,7 +255,7 @@ bool RWMolecule::setColor(Index atomId, Vector3ub color)
   if (atomId >= atomCount())
     return false;
 
-  SetAtomColorCommand* comm =
+  auto* comm =
     new SetAtomColorCommand(*this, atomId, m_molecule.color(atomId), color);
   comm->setText(tr("Change Atom Color"));
   m_undoStack.push(comm);
@@ -246,7 +267,7 @@ bool RWMolecule::setLayer(Index atomId, size_t layer)
   if (atomId >= atomCount())
     return false;
 
-  SetLayerCommand* comm =
+  auto* comm =
     new SetLayerCommand(*this, atomId, m_molecule.layer(atomId), layer);
   comm->setText(tr("Change Atom Layer"));
   m_undoStack.push(comm);
@@ -260,9 +281,9 @@ RWMolecule::BondType RWMolecule::addBond(Index atom1, Index atom2,
     return BondType();
 
   Index bondId = bondCount();
-  Index bondUid = static_cast<Index>(m_molecule.m_bondUniqueIds.size());
+  auto bondUid = static_cast<Index>(m_molecule.m_bondUniqueIds.size());
 
-  AddBondCommand* comm = new AddBondCommand(
+  auto* comm = new AddBondCommand(
     *this, order, Molecule::makeBondPair(atom1, atom2), bondId, bondUid);
   comm->setText(tr("Add Bond"));
   m_undoStack.push(comm);
@@ -287,7 +308,7 @@ bool RWMolecule::removeBond(Index bondId)
   if (bondUid == MaxIndex)
     return false;
 
-  RemoveBondCommand* comm =
+  auto* comm =
     new RemoveBondCommand(*this, bondId, bondUid, m_molecule.bondPair(bondId),
                           m_molecule.bondOrder(bondId));
   comm->setText(tr("Removed Bond"));
@@ -310,8 +331,7 @@ bool RWMolecule::setBondOrders(const Core::Array<unsigned char>& orders)
   if (orders.size() != m_molecule.bondCount())
     return false;
 
-  SetBondOrdersCommand* comm =
-    new SetBondOrdersCommand(*this, m_molecule.bondOrders(), orders);
+  auto* comm = new SetBondOrdersCommand(*this, m_molecule.bondOrders(), orders);
   comm->setText(tr("Set Bond Orders"));
   m_undoStack.push(comm);
   return true;
@@ -322,7 +342,7 @@ bool RWMolecule::setBondOrder(Index bondId, unsigned char order)
   if (bondId >= bondCount())
     return false;
 
-  SetBondOrderCommand* comm =
+  auto* comm =
     new SetBondOrderCommand(*this, bondId, m_molecule.bondOrder(bondId), order);
   comm->setText(tr("Change Bond Order"));
   // Always allow merging, but only if bondId is the same.
@@ -345,8 +365,7 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
     if (p_const[i].first > p_const[i].second)
       swap(p[i].first, p[i].second);
 
-  SetBondPairsCommand* comm =
-    new SetBondPairsCommand(*this, m_molecule.bondPairs(), p);
+  auto* comm = new SetBondPairsCommand(*this, m_molecule.bondPairs(), p);
   comm->setText(tr("Update Bonds"));
   m_undoStack.push(comm);
   return true;
@@ -377,16 +396,15 @@ void RWMolecule::addUnitCell()
   if (m_molecule.unitCell())
     return;
 
-  UnitCell* cell = new UnitCell;
+  auto* cell = new UnitCell;
   cell->setCellParameters(
     static_cast<Real>(3.0), static_cast<Real>(3.0), static_cast<Real>(3.0),
     static_cast<Real>(90.0) * DEG_TO_RAD, static_cast<Real>(90.0) * DEG_TO_RAD,
     static_cast<Real>(90.0) * DEG_TO_RAD);
   m_molecule.setUnitCell(cell);
 
-  AddUnitCellCommand* comm =
-    new AddUnitCellCommand(*this, *m_molecule.unitCell());
-  comm->setText(tr("Add Unit Cell"));
+  auto* comm = new AddUnitCellCommand(*this, *m_molecule.unitCell());
+  comm->setText(tr("Add Unit Cell…"));
   m_undoStack.push(comm);
   emitChanged(Molecule::UnitCell | Molecule::Added);
 }
@@ -397,8 +415,7 @@ void RWMolecule::removeUnitCell()
   if (!m_molecule.unitCell())
     return;
 
-  RemoveUnitCellCommand* comm =
-    new RemoveUnitCellCommand(*this, *m_molecule.unitCell());
+  auto* comm = new RemoveUnitCellCommand(*this, *m_molecule.unitCell());
   comm->setText(tr("Remove Unit Cell"));
   m_undoStack.push(comm);
 
@@ -410,8 +427,7 @@ void RWMolecule::modifyMolecule(const Molecule& newMolecule,
                                 Molecule::MoleculeChanges changes,
                                 const QString& undoText)
 {
-  ModifyMoleculeCommand* comm =
-    new ModifyMoleculeCommand(*this, m_molecule, newMolecule);
+  auto* comm = new ModifyMoleculeCommand(*this, m_molecule, newMolecule);
 
   comm->setText(undoText);
   m_undoStack.push(comm);
@@ -431,7 +447,9 @@ void RWMolecule::appendMolecule(const Molecule& mol, const QString& undoText)
   Index offset = atomCount();
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Core::Atom atom = mol.atom(i);
-    addAtom(atom.atomicNumber(), atom.position3d());
+    AtomType new_atom = addAtom(atom.atomicNumber(), atom.position3d());
+    new_atom.setFormalCharge(atom.formalCharge());
+
     setAtomSelected(atomCount() - 1, true);
   }
   // now loop through and add the bonds
@@ -477,8 +495,7 @@ void RWMolecule::wrapAtomsToCell()
   CrystalTools::wrapAtomsToUnitCell(m_molecule);
   Core::Array<Vector3> newPos = m_molecule.atomPositions3d();
 
-  SetPositions3dCommand* comm =
-    new SetPositions3dCommand(*this, oldPos, newPos);
+  auto* comm = new SetPositions3dCommand(*this, oldPos, newPos);
   comm->setText(tr("Wrap Atoms to Cell"));
   m_undoStack.push(comm);
 
@@ -712,7 +729,7 @@ bool RWMolecule::setForceVector(Index atomId, const Vector3& forces,
   if (m_molecule.m_positions3d.size() != m_molecule.atomCount())
     m_molecule.m_positions3d.resize(m_molecule.atomCount(), Vector3::Zero());
 
-  SetForceVectorCommand* comm = new SetForceVectorCommand(
+  auto* comm = new SetForceVectorCommand(
     *this, atomId, m_molecule.m_positions3d[atomId], forces);
   comm->setText(undoText);
   comm->setCanMerge(m_interactive);
@@ -720,5 +737,4 @@ bool RWMolecule::setForceVector(Index atomId, const Vector3& forces,
   return true;
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

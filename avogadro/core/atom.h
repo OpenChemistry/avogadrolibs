@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_ATOM_H
@@ -20,8 +9,7 @@
 #include "avogadrocore.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 enum AtomHybridization
 {
@@ -58,7 +46,7 @@ template <class Molecule_T>
 class AtomTemplate
 {
 public:
-  typedef Molecule_T MoleculeType;
+  using MoleculeType = Molecule_T;
 
   /** Creates a new, invalid atom object. */
   AtomTemplate();
@@ -206,12 +194,14 @@ private:
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate()
   : m_molecule(nullptr), m_index(MaxIndex)
-{}
+{
+}
 
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate(MoleculeType* m, Index i)
   : m_molecule(m), m_index(i)
-{}
+{
+}
 
 template <class Molecule_T>
 bool AtomTemplate<Molecule_T>::operator==(
@@ -391,16 +381,15 @@ Vector3 AtomTemplate<Molecule_T>::forceVector() const
 template <class Molecule_T>
 void AtomTemplate<Molecule_T>::setLabel(const std::string& label)
 {
-  m_molecule->setLabel(m_index, label);
+  m_molecule->setAtomLabel(m_index, label);
 }
 
 template <class Molecule_T>
 std::string AtomTemplate<Molecule_T>::label() const
 {
-  return m_molecule->label(m_index);
+  return m_molecule->atomLabel(m_index);
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_ATOM_H

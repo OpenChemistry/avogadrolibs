@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_COORDINATESET_H
@@ -22,8 +11,7 @@
 #include <typeinfo>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class ArraySet coordinateset.h <avogadro/core/coordinateset.h>
@@ -37,7 +25,7 @@ class ArraySet
 {
 public:
   ArraySet() : m_content(nullptr), m_data(nullptr) {}
-  ~ArraySet() { delete m_content; }
+  virtual ~ArraySet() { delete m_content; }
 
   /** @return true if the type of the array matches the input type. */
   template <typename T>
@@ -72,9 +60,9 @@ protected:
   public:
     Holder(const ValueType& value) : m_content(value) {}
 
-    const std::type_info& type() const { return typeid(ValueType); }
+    const std::type_info& type() const override { return typeid(ValueType); }
 
-    PlaceHolder* clone() const { return new Holder(m_content); }
+    PlaceHolder* clone() const override { return new Holder(m_content); }
 
     ValueType m_content;
   };
@@ -97,7 +85,7 @@ class CoordinateSet : public ArraySet
 public:
   CoordinateSet() { m_content = new Holder<T>(T()); }
 
-  ~CoordinateSet() {}
+  ~CoordinateSet() override = default;
 
   // Properties
   void resize(Index _size) { m_coordinates.resize(_size); }
@@ -115,7 +103,6 @@ private:
   std::vector<T> m_coordinates;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_COORDINATESET_H

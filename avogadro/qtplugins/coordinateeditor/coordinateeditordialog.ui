@@ -68,14 +68,14 @@
        <item>
         <widget class="QLineEdit" name="spec">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specification of format. Each character indicates a value to write per atom:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;#&lt;/span&gt; - Atom index (1, 2, ..., numAtoms)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z&lt;/span&gt; - Atomic number (e.g. &amp;quot;6&amp;quot; for carbon)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt; - GAMESS-style atomic number (e.g. &amp;quot;6.0&amp;quot; for carbon)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;N&lt;/span&gt; - Element name (e.g. &amp;quot;Carbon&amp;quot;)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt; - Element symbol (e.g. &amp;quot;C&amp;quot; for carbon)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;x&lt;/span&gt; - X position coordinate&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;y&lt;/span&gt; - Y position coordinate&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;z&lt;/span&gt; - Z position coordinate&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;a&lt;/span&gt; - 'a' lattice coordinate (crystals only)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;b&lt;/span&gt; - 'b' lattice coordinate (crystals only)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;c&lt;/span&gt; - 'c' lattice coordinate (crystals only)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;_&lt;/span&gt; - A literal space (&amp;quot; &amp;quot;), useful for alignment&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; - A literal 0 (&amp;quot;0&amp;quot;), useful for optimization flags&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;1&lt;/span&gt; - A literal 1 (&amp;quot;1&amp;quot;), useful for optimization flags&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specification of format. Each character indicates a value to write per atom:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;#&lt;/span&gt; - Atom index (1, 2, ..., numAtoms)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z&lt;/span&gt; - Atomic number (e.g. &amp;quot;6&amp;quot; for carbon)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt; - GAMESS-style atomic number (e.g. &amp;quot;6.0&amp;quot; for carbon)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;N&lt;/span&gt; - Element name (e.g. &amp;quot;Carbon&amp;quot;)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt; - Element symbol (e.g. &amp;quot;C&amp;quot; for carbon)&lt;br/&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;L&lt;/span&gt; - Atom label (e.g., &amp;quot;C2&amp;quot; for second carbon atom, &amp;quot;H1&amp;quot; for first hydrogen) &lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;x&lt;/span&gt; - X position coordinate&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;y&lt;/span&gt; - Y position coordinate&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;z&lt;/span&gt; - Z position coordinate&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;a&lt;/span&gt; - 'a' lattice coordinate (crystals only)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;b&lt;/span&gt; - 'b' lattice coordinate (crystals only)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;c&lt;/span&gt; - 'c' lattice coordinate (crystals only)&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;_&lt;/span&gt; - A literal space (&amp;quot; &amp;quot;), useful for alignment&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; - A literal 0 (&amp;quot;0&amp;quot;), useful for optimization flags&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;1&lt;/span&gt; - A literal 1 (&amp;quot;1&amp;quot;), useful for optimization flags&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QToolButton" name="help">
          <property name="text">
-          <string>Help...</string>
+          <string>Help…</string>
          </property>
         </widget>
        </item>
@@ -87,7 +87,11 @@
     </layout>
    </item>
    <item>
-    <widget class="Avogadro::QtPlugins::CoordinateTextEdit" name="text"/>
+    <widget class="Avogadro::QtPlugins::CoordinateTextEdit" name="text">
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">

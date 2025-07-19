@@ -1,5 +1,4 @@
-clang-format
-------------
+# clang-format
 
 We use [clang-format][clang-format] to keep formatting in the code base
 consistent. Please run clang-format on your patches before submitting.
@@ -22,7 +21,7 @@ git clang-format HEAD~1
 
 ```
 
-### clang-format-diff locations by platform
+## clang-format-diff locations by platform
 
 The exact location of the Python script varies by platform/distro. The table
 below provides the location on some common platform/distro's
@@ -34,8 +33,7 @@ below provides the location on some common platform/distro's
 
 The script can also be downloaded [here][clang-format-diff].
 
-Code style
-----------
+## Code style
 
 This project is developed primarily in C++ and Python. Please follow these code
 style guidelines when contributing code to our project.
@@ -64,23 +62,26 @@ style guidelines when contributing code to our project.
 
 * For comments, add a space between // and the beginning of the comment, e.g.,
 
-    * // A comment
-    * \# Python comment
+  * // A comment
+  * \# Python comment
 
 * Use 2 spaces when indenting C++ code, 4 spaces for Python code.
 
 * Do not indent inside namespaces, e.g.,
 
+```c++
         namespace Avogadro {
         namespace Core {
         void foo();
         }
         }
+```
 
 * Curly braces marking the start and end of a code block should be on
   separate lines and aligned vertically with the statement preceding
   the block, e.g.,
 
+```c++
         if (condition) {
           statement;
         }
@@ -88,13 +89,14 @@ style guidelines when contributing code to our project.
         for (int i = 0; i < n; ++i) {
           statement;
         }
+```
 
 * Assume that C++11 features are available, and prefer them over legacy macros,
   defines, etc. A few examples follow, but are not exhaustive.
 
-    * Use override to specify member overrides in derived classes.
-    * Set default values of member variables directly in definitions.
-    * Use nullptr instead of NULL.
+  * Use override to specify member overrides in derived classes.
+  * Set default values of member variables directly in definitions.
+  * Use nullptr instead of NULL.
 
 ### C++ Features
 
@@ -111,21 +113,27 @@ style guidelines when contributing code to our project.
 * Prefer declaration of types in public headers over including headers for the
   type
 
+```c++
         namespace Avogadro {
         class MyClass;
         }
+```
 
 * In source files include specialized headers first, then dependency headers,
   then generic headers
 
+```c++
         #include "myapiheader.h" // Our header
         #include <avogadro/core/molecule.h> // Avogadro header from a different module
         #include <QtCore/QString> // Qt header
         #include <vector> // STL
+```
 
 * If you need to include the export header for the module do it as the first include
 
+```c++
         #include "avogadrorenderingexport.h"
+```
 
 * Private headers are denoted by _p.h endings, and should not be included in
   public headers
@@ -133,8 +141,10 @@ style guidelines when contributing code to our project.
 * Never include Qt module headers such as QtGui, instead include the header for
   the class being used
 
+```c++
         #include <QtGui> // WRONG (module header)!
         #include <QtGui/QDialog> // Correct
+```
 
 ### Namespaces
 

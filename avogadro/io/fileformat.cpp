@@ -1,40 +1,61 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "fileformat.h"
 
+#include <algorithm>
 #include <fstream>
 #include <locale>
 #include <sstream>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using std::ifstream;
 using std::locale;
 using std::ofstream;
 
-FileFormat::FileFormat() : m_mode(None), m_in(nullptr), m_out(nullptr)
-{
-}
+FileFormat::FileFormat() : m_mode(None), m_in(nullptr), m_out(nullptr) {}
 
 FileFormat::~FileFormat()
 {
   delete m_in;
   delete m_out;
+}
+
+bool FileFormat::validateFileName(const std::string& fileName)
+{
+  bool valid = !fileName.empty();
+
+  if (valid) {
+    // check if the filename contains invalid characters
+    static std::string forbiddenChars(",^@={}[]~!?:&*\"|#%<>$\"'();`'");
+    valid = fileName.find_first_of(forbiddenChars) == std::string::npos;
+
+    // check if the filename contains ".." which we should not allow
+    valid = valid && fileName.find("..") == std::string::npos;
+  }
+
+  // Finally check against Windows names
+  // .. we do this on all platforms because CON.cif, for example
+  // is problematic to send to a Windows user.
+  if (valid) {
+    static std::string forbiddenNames(
+      "CON PRN AUX NUL COM1 COM2 COM3 COM4 COM5 "
+      "COM6 COM7 COM8 COM9 LPT1 LPT2 LPT3 LPT4 "
+      "LPT5 LPT6 LPT7 LPT8 LPT9");
+    // case insensitive search, since con.txt is also a problem
+    // https://stackoverflow.com/a/19839371/131896
+    auto it = std::search(fileName.begin(), fileName.end(),
+                          forbiddenNames.begin(), forbiddenNames.end(),
+                          [](unsigned char ch1, unsigned char ch2) {
+                            return std::toupper(ch1) == std::toupper(ch2);
+                          });
+    valid = (it == fileName.end());
+  }
+
+  return valid;
 }
 
 bool FileFormat::open(const std::string& fileName_, Operation mode_)
@@ -46,7 +67,7 @@ bool FileFormat::open(const std::string& fileName_, Operation mode_)
     // Imbue the standard C locale.
     locale cLocale("C");
     if (m_mode & Read) {
-      ifstream* file = new ifstream(m_fileName.c_str(), std::ifstream::binary);
+      auto* file = new ifstream(m_fileName.c_str(), std::ifstream::binary);
       m_in = file;
       if (file->is_open()) {
         m_in->imbue(cLocale);
@@ -56,7 +77,7 @@ bool FileFormat::open(const std::string& fileName_, Operation mode_)
         return false;
       }
     } else if (m_mode & Write) {
-      ofstream* file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
+      auto* file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
       m_out = file;
       if (file->is_open()) {
         m_out->imbue(cLocale);
@@ -155,5 +176,4 @@ void FileFormat::appendError(const std::string& errorString, bool newLine)
     m_error += "\n";
 }
 
-} // namespace Io
-} // namespace Avogadro
+} // namespace Avogadro::Io

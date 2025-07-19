@@ -19,11 +19,10 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
-using QtGui::PythonScript;
 using QtGui::GenericHighlighter;
+using QtGui::PythonScript;
 
 InputGenerator::InputGenerator(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
@@ -34,10 +33,6 @@ InputGenerator::InputGenerator(const QString& scriptFilePath_, QObject* parent_)
 InputGenerator::InputGenerator(QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(this)),
     m_moleculeExtension("Unknown")
-{
-}
-
-InputGenerator::~InputGenerator()
 {
 }
 
@@ -119,7 +114,7 @@ void InputGenerator::setScriptFilePath(const QString& scriptFile)
 
 void InputGenerator::reset()
 {
-  m_interpreter->setDefaultPythonInterpretor();
+  m_interpreter->setDefaultPythonInterpreter();
   m_interpreter->setScriptFilePath(QString());
   m_moleculeExtension = "Unknown";
   m_displayName = QString();
@@ -214,7 +209,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
 
               // Concatenate the requested styles for this input file.
               if (fileObj["highlightStyles"].isArray()) {
-                GenericHighlighter* highlighter(new GenericHighlighter(this));
+                auto* highlighter(new GenericHighlighter(this));
                 foreach (const QJsonValue& styleVal,
                          fileObj["highlightStyles"].toArray()) {
                   if (styleVal.isString()) {
@@ -243,7 +238,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                           .arg(m_filenames.size());
           } // end if/else file is JSON object
-        }   // end foreach file
+        } // end foreach file
       } else {
         result = false;
         m_errors << tr("'files' member not an array.");
@@ -280,7 +275,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
     m_errors << tr("Response must be a JSON object at top-level.");
   }
 
-  if (result == false)
+  if (!result)
     m_errors << tr("Script output:\n%1").arg(QString(json));
 
   return result;
@@ -356,7 +351,8 @@ bool InputGenerator::insertMolecule(QJsonObject& json,
 
   std::string str;
   if (!format->writeString(str, mol)) {
-    m_errors << tr("Error saving molecule representation to string: %1", "%1 = error message")
+    m_errors << tr("Error saving molecule representation to string: %1",
+                   "%1 = error message")
                   .arg(QString::fromStdString(format->error()));
     return false;
   }
@@ -410,12 +406,15 @@ void InputGenerator::replaceKeywords(QString& str,
 
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
-  QRegExp coordParser("\\$\\$coords:([^\\$]*)\\$\\$");
+  QRegularExpression coordParser(R"(\$\$coords:([^\$]*)\$\$)");
+  QRegularExpressionMatch match;
   int ind = 0;
-  while ((ind = coordParser.indexIn(str, ind)) != -1) {
+  // Not sure while this needs to be a while statement since we replace all in
+  // one go? We never iterate ind...
+  while ((match = coordParser.match(str, ind)).hasMatch()) {
     // Extract spec and prepare the replacement
-    const QString keyword = coordParser.cap(0);
-    const QString spec = coordParser.cap(1);
+    const QString keyword = match.captured(0);
+    const QString spec = match.captured(1);
 
     // Replace all blocks with this signature
     str.replace(keyword, generateCoordinateBlock(spec, mol));
@@ -465,10 +464,10 @@ bool InputGenerator::parseHighlightStyles(const QJsonArray& json) const
     }
     QJsonArray rulesArray(styleObj.value("rules").toArray());
 
-    GenericHighlighter* highlighter(
+    auto* highlighter(
       new GenericHighlighter(const_cast<InputGenerator*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
-      qDebug() << "Error parsing style" << styleName << endl
+      qDebug() << "Error parsing style" << styleName << '\n'
                << QString(QJsonDocument(styleObj).toJson());
       highlighter->deleteLater();
       result = false;
@@ -493,13 +492,13 @@ bool InputGenerator::parseRules(const QJsonArray& json,
     QJsonObject ruleObj(ruleVal.toObject());
 
     if (!ruleObj.contains("patterns")) {
-      qDebug() << "Rule missing 'patterns' array:" << endl
+      qDebug() << "Rule missing 'patterns' array:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value("patterns").isArray()) {
-      qDebug() << "Rule 'patterns' member is not an array:" << endl
+      qDebug() << "Rule 'patterns' member is not an array:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -507,13 +506,13 @@ bool InputGenerator::parseRules(const QJsonArray& json,
     QJsonArray patternsArray(ruleObj.value("patterns").toArray());
 
     if (!ruleObj.contains("format")) {
-      qDebug() << "Rule missing 'format' object:" << endl
+      qDebug() << "Rule missing 'format' object:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value("format").isObject()) {
-      qDebug() << "Rule 'format' member is not an object:" << endl
+      qDebug() << "Rule 'format' member is not an object:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -523,9 +522,9 @@ bool InputGenerator::parseRules(const QJsonArray& json,
     GenericHighlighter::Rule& rule = highligher.addRule();
 
     foreach (QJsonValue patternVal, patternsArray) {
-      QRegExp pattern;
+      QRegularExpression pattern;
       if (!parsePattern(patternVal, pattern)) {
-        qDebug() << "Error while parsing pattern:" << endl
+        qDebug() << "Error while parsing pattern:" << '\n'
                  << QString(QJsonDocument(patternVal.toObject()).toJson());
         result = false;
         continue;
@@ -535,7 +534,7 @@ bool InputGenerator::parseRules(const QJsonArray& json,
 
     QTextCharFormat format;
     if (!parseFormat(formatObj, format)) {
-      qDebug() << "Error while parsing format:" << endl
+      qDebug() << "Error while parsing format:" << '\n'
                << QString(QJsonDocument(formatObj).toJson());
       result = false;
     }
@@ -645,36 +644,49 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
 }
 
 bool InputGenerator::parsePattern(const QJsonValue& json,
-                                  QRegExp& pattern) const
+                                  QRegularExpression& pattern) const
 {
   if (!json.isObject())
     return false;
 
   QJsonObject patternObj(json.toObject());
+  QString regexPattern;
+  QRegularExpression::PatternOptions patternOptions =
+    QRegularExpression::NoPatternOption;
 
-  if (patternObj.contains("regexp") && patternObj.value("regexp").isString()) {
-    pattern.setPatternSyntax(QRegExp::RegExp2);
-    pattern.setPattern(patternObj.value("regexp").toString());
-  } else if (patternObj.contains("wildcard") &&
-             patternObj.value("wildcard").isString()) {
-    pattern.setPatternSyntax(QRegExp::WildcardUnix);
-    pattern.setPattern(patternObj.value("wildcard").toString());
-  } else if (patternObj.contains("string") &&
-             patternObj.value("string").isString()) {
-    pattern.setPatternSyntax(QRegExp::FixedString);
-    pattern.setPattern(patternObj.value("string").toString());
+  if (patternObj.contains(QStringLiteral("regexp")) &&
+      patternObj.value(QStringLiteral("regexp")).isString()) {
+    // Use the provided regular expression as-is
+    regexPattern = patternObj.value(QStringLiteral("regexp")).toString();
+  } else if (patternObj.contains(QStringLiteral("wildcard")) &&
+             patternObj.value(QStringLiteral("wildcard")).isString()) {
+    // Convert wildcard pattern (* -> .* and ? -> .)
+    QString wildcard = patternObj.value(QStringLiteral("wildcard")).toString();
+    regexPattern = QRegularExpression::escape(wildcard)
+                     .replace("\\*", ".*")
+                     .replace("\\?", ".");
+  } else if (patternObj.contains(QStringLiteral("string")) &&
+             patternObj.value(QStringLiteral("string")).isString()) {
+    // Escape the string so it is treated literally in the regex
+    regexPattern = QRegularExpression::escape(
+      patternObj.value(QStringLiteral("string")).toString());
   } else {
     return false;
   }
 
-  if (patternObj.contains("caseSensitive")) {
-    pattern.setCaseSensitivity(patternObj.value("caseSensitive").toBool(true)
-                                 ? Qt::CaseSensitive
-                                 : Qt::CaseInsensitive);
+  // Set case sensitivity if specified
+  if (patternObj.contains(QStringLiteral("caseSensitive"))) {
+    bool caseSensitive =
+      patternObj.value(QStringLiteral("caseSensitive")).toBool(true);
+    if (!caseSensitive) {
+      patternOptions |= QRegularExpression::CaseInsensitiveOption;
+    }
   }
 
-  return true;
+  // Set the final pattern with options
+  pattern = QRegularExpression(regexPattern, patternOptions);
+
+  return pattern.isValid();
 }
 
-} // namespace MoleQueue
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

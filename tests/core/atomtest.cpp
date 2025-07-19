@@ -1,27 +1,16 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
 
 #include <avogadro/core/molecule.h>
 
-using Avogadro::Core::Molecule;
-using Avogadro::Core::Atom;
 using Avogadro::Vector2;
 using Avogadro::Vector3;
+using Avogadro::Core::Atom;
+using Avogadro::Core::Molecule;
 
 TEST(AtomTest, setAtomicNumber)
 {

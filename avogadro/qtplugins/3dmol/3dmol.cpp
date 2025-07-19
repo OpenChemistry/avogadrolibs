@@ -18,12 +18,10 @@
 
 #include "3dmoldialog.h"
 
-#include <QtWidgets/QAction>
+#include <QAction>
+#include <QStringList>
 
-#include <QtCore/QStringList>
-
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ThreeDMol::ThreeDMol(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
@@ -32,10 +30,6 @@ ThreeDMol::ThreeDMol(QObject* parent_)
   m_action->setEnabled(true);
   m_action->setText("&3DMol HTML Snippet…");
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
-}
-
-ThreeDMol::~ThreeDMol()
-{
 }
 
 QString ThreeDMol::description() const
@@ -72,5 +66,4 @@ void ThreeDMol::showDialog()
   m_dialog->show();
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -17,6 +17,8 @@
 #ifndef QTAIMWAVEFUNCTION_H
 #define QTAIMWAVEFUNCTION_H
 
+#include <avogadro/qtgui/molecule.h>
+
 #include <QList>
 #include <QObject>
 #include <QString>
@@ -29,12 +31,7 @@
 #include <QVariant>
 #include <QVariantList>
 
-#include <avogadro/qtgui/molecule.h>
-
-namespace Avogadro {
-namespace QtPlugins {
-
-class QTAIMWavefunctionEvaluator;
+namespace Avogadro::QtPlugins {
 
 class QTAIMWavefunction
 {
@@ -277,7 +274,6 @@ private:
   qreal m_virialRatio;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // QTAIMWAVEFUNCTION_H

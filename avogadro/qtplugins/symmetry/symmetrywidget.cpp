@@ -4,23 +4,23 @@
 ******************************************************************************/
 
 #include "symmetrywidget.h"
-#include "richtextdelegate.h"
 #include "symmetryutil.h"
 #include "ui_symmetrywidget.h"
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/richtextdelegate.h>
 
 #include <QtCore/QDebug>
-#include <QtCore/QRegExp>
+
 #include <QtWidgets/QPlainTextEdit>
 
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::RichTextDelegate;
 
 using namespace msym;
 using namespace Avogadro::QtPlugins::SymmetryUtil;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 msym_thresholds_t tight_thresholds = { // all defaults
   /*.zero =*/1.0e-3,
@@ -63,18 +63,12 @@ msym_thresholds_t sloppy_thresholds = {
 };
 
 SymmetryWidget::SymmetryWidget(QWidget* parent_)
-  : QWidget(parent_)
-  , m_ui(new Ui::SymmetryWidget)
-  , m_molecule(nullptr)
-  , m_equivalenceTreeModel(new QStandardItemModel(this))
-  , m_operationsTableModel(new OperationsTableModel(this))
-  , m_subgroupsTreeModel(new QStandardItemModel(this))
-  , m_es(nullptr)
-  , m_sops(nullptr)
-  , m_sg(nullptr)
-  , m_sopsl(0)
-  , m_sgl(0)
-  , m_radius(0.0)
+  : QWidget(parent_), m_ui(new Ui::SymmetryWidget),
+    m_equivalenceTreeModel(new QStandardItemModel(this)),
+    m_operationsTableModel(new OperationsTableModel(this)),
+    m_subgroupsTreeModel(new QStandardItemModel(this)), m_molecule(nullptr),
+    m_es(nullptr), m_sops(nullptr), m_sg(nullptr), m_sopsl(0), m_sgl(0),
+    m_radius(0.0)
 {
   setWindowFlags(Qt::Dialog);
   m_ui->setupUi(this);
@@ -88,10 +82,9 @@ SymmetryWidget::SymmetryWidget(QWidget* parent_)
   m_ui->subgroupsTree->setModel(m_subgroupsTreeModel);
   m_ui->subgroupsTree->setItemDelegateForColumn(0, new RichTextDelegate(this));
 
-  connect(
-    m_ui->detectSymmetryButton, SIGNAL(clicked()), SIGNAL(detectSymmetry()));
-  connect(m_ui->symmetrizeMoleculeButton,
-          SIGNAL(clicked()),
+  connect(m_ui->detectSymmetryButton, SIGNAL(clicked()),
+          SIGNAL(detectSymmetry()));
+  connect(m_ui->symmetrizeMoleculeButton, SIGNAL(clicked()),
           SIGNAL(symmetrizeMolecule()));
 
   connect(
@@ -131,7 +124,7 @@ void SymmetryWidget::setMolecule(QtGui::Molecule* molecule)
   }
 }
 
-void SymmetryWidget::moleculeChanged(unsigned int changes)
+void SymmetryWidget::moleculeChanged([[maybe_unused]] unsigned int changes)
 {
   /*
   if (changes & Molecule::UnitCell)
@@ -139,8 +132,8 @@ void SymmetryWidget::moleculeChanged(unsigned int changes)
 }
 
 void SymmetryWidget::operationsSelectionChanged(
-  const QItemSelection& selected,
-  const QItemSelection& deselected)
+  [[maybe_unused]] const QItemSelection& selected,
+  [[maybe_unused]] const QItemSelection& deselected)
 {
 
   if (!m_molecule)
@@ -176,7 +169,7 @@ void SymmetryWidget::operationsSelectionChanged(
   }
 
   foreach (QModelIndex i, selection) {
-    unsigned int row = i.row();
+    int row = i.row();
     if (!i.isValid() || row >= m_sopsl)
       continue;
     float x = m_sops[row].v[0], y = m_sops[row].v[1], z = m_sops[row].v[2];
@@ -213,8 +206,9 @@ void SymmetryWidget::operationsSelectionChanged(
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
-void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection& selected,
-                                               const QItemSelection& deselected)
+void SymmetryWidget::subgroupsSelectionChanged(
+  [[maybe_unused]] const QItemSelection& selected,
+  [[maybe_unused]] const QItemSelection& deselected)
 {
   // QModelIndexList selection =
   // m_ui->subgroupsTree->selectionModel()->selectedIndexes();
@@ -241,24 +235,24 @@ void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection& selected,
     QModelIndex left = m_operationsTableModel->index(row, 0);
     QModelIndex right = m_operationsTableModel->index(
       row, m_operationsTableModel->columnCount(left) - 1);
-    //if (!left.isValid() || !right.isValid())
-    //  qDebug() << "invalid index " << j;
+    // if (!left.isValid() || !right.isValid())
+    //   qDebug() << "invalid index " << j;
     QItemSelection sel(left, right);
 
     selection.merge(sel, QItemSelectionModel::Select);
   }
 
   QModelIndexList tmp = selection.indexes();
-  //foreach (QModelIndex j, tmp) {
-  //  qDebug() << "selecting " << j.row() << " " << j.column();
-  //}
+  // foreach (QModelIndex j, tmp) {
+  //   qDebug() << "selecting " << j.row() << " " << j.column();
+  // }
 
   selectionModel->select(selection, QItemSelectionModel::ClearAndSelect);
 }
 
 void SymmetryWidget::equivalenceSelectionChanged(
-  const QItemSelection& selected,
-  const QItemSelection& deselected)
+  [[maybe_unused]] const QItemSelection& selected,
+  [[maybe_unused]] const QItemSelection& deselected)
 {
   QModelIndex i =
     m_ui->equivalenceTree->selectionModel()->selectedIndexes().first();
@@ -286,13 +280,13 @@ void SymmetryWidget::equivalenceSelectionChanged(
   if (a == nullptr)
     return;
 
-  unsigned int length = m_molecule->atomCount();
+  Index length = m_molecule->atomCount();
   // unselect all the atoms
-  for (Index i = 0; i < length; ++i) {
-    m_molecule->setAtomSelected(i, false);
+  for (Index iat = 0; iat < length; ++iat) {
+    m_molecule->setAtomSelected(iat, false);
   }
   // this is yucky, but libmsym uses <void*> for id
-  Index selectedAtom = reinterpret_cast<Index>(a->id);
+  auto selectedAtom = reinterpret_cast<Index>(a->id);
   m_molecule->setAtomSelected(selectedAtom, true);
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -311,11 +305,11 @@ void SymmetryWidget::setCenterOfMass(double cm[3])
 void SymmetryWidget::setPointGroupSymbol(QString pg)
 {
   m_ui->pointGroupLabel->setText(pg);
+  m_molecule->setData("pointgroup", pg.toStdString());
 }
 
 void SymmetryWidget::setSymmetryOperations(
-  int sopsl,
-  const msym::msym_symmetry_operation_t* sops)
+  int sopsl, const msym::msym_symmetry_operation_t* sops)
 {
   m_sops = sops;
   m_sopsl = sopsl;
@@ -337,14 +331,14 @@ void SymmetryWidget::setEquivalenceSets(int esl,
   m_es = es;
   m_equivalenceTreeModel->clear();
   for (int i = 0; i < esl; i++) {
-    QStandardItem* const parent = new QStandardItem;
+    auto* const parent = new QStandardItem;
     QString label = tr("Group %1").arg(QString::number(i + 1));
     parent->setText(label);
     parent->setData(i, Qt::UserRole);
     m_equivalenceTreeModel->appendRow(parent);
     const msym_equivalence_set_t* smes = &es[i];
     for (int j = 0; j < smes->length; j++) {
-      QStandardItem* const child = new QStandardItem;
+      auto* const child = new QStandardItem;
       label =
         tr("%1 %2").arg(smes->elements[j]->name).arg(QString::number(j + 1));
       child->setText(label);
@@ -362,20 +356,19 @@ void SymmetryWidget::setSubgroups(int sgl, const msym::msym_subgroup_t* sg)
   for (int i = 0; i < sgl; i++) {
     if (sg[i].order <= 2)
       continue;
-    QStandardItem* const parent = new QStandardItem;
+    auto* const parent = new QStandardItem;
     parent->setText(pointGroupSymbol(sg[i].name));
     parent->setData(i, Qt::UserRole);
     m_subgroupsTreeModel->appendRow(parent);
-    for (int j = 0; j < 2; j++) {
-      if (sg[i].generators[j] == nullptr)
+    for (auto generator : sg[i].generators) {
+      if (generator == nullptr)
         continue;
       // qDebug() << "child " << sg[i].generators[j] - m_sg << " "
       //         << sg[i].generators[j] << " " << m_sg;
-      QStandardItem* const child = new QStandardItem;
-      child->setText(pointGroupSymbol(sg[i].generators[j]->name));
+      auto* const child = new QStandardItem;
+      child->setText(pointGroupSymbol(generator->name));
 
-      child->setData(static_cast<int>(sg[i].generators[j] - m_sg),
-                     Qt::UserRole);
+      child->setData(static_cast<int>(generator - m_sg), Qt::UserRole);
       parent->appendRow(child);
     }
   }
@@ -401,5 +394,4 @@ msym_thresholds_t* SymmetryWidget::getThresholds() const
   return thresholds;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

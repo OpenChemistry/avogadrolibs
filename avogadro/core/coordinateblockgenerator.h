@@ -1,29 +1,17 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_COORDINATEBLOCKGENERATOR_H
 #define AVOGADRO_CORE_COORDINATEBLOCKGENERATOR_H
 
-#include <avogadrocoreexport.h>
+#include "avogadrocoreexport.h"
 
 #include <sstream>
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class Molecule;
 
 /**
@@ -42,7 +30,7 @@ public:
    * Construct the default CoordinateBlockGenerator with an empty specification
    * and Angstrom distance units.
    */
-  CoordinateBlockGenerator();
+  CoordinateBlockGenerator() = default;
 
   /**
    * The molecule used as input.
@@ -58,6 +46,7 @@ public:
    * about each atom in the coordinate block.
    * - @c #: Atom index (one-based index)
    * - @c Z: Atomic number (e.g. "6" for carbon)
+   * - @c L: Atomic label (e.g., "C1" for first carbon)")
    * - @c G: GAMESS-styled Atomic number (e.g. "6.0" for carbon)
    * - @c S: Element symbol (e.g. "C" for carbon)
    * - @c N: Element name (e.g. "Carbon")
@@ -109,13 +98,12 @@ __SZxyz110
   std::string generateCoordinateBlock();
 
 private:
-  const Molecule* m_molecule;
+  const Molecule* m_molecule = nullptr;
   std::string m_specification;
-  DistanceUnit m_distanceUnit;
+  DistanceUnit m_distanceUnit = Angstrom;
   std::stringstream m_stream;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_COORDINATEBLOCKGENERATOR_H

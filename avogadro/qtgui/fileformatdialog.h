@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_FILEFORMATDIALOG_H
@@ -122,7 +111,7 @@ private:
    * "catch-all" entry with all known formats, and an "All files (*)" entry.
    * Only formats registered with (Read | File) will be used.
    */
-  static const QString readFileFilter();
+  static QString readFileFilter();
 
   /**
    * @return A filter string for use with a QFileDialog, containing entries
@@ -130,7 +119,7 @@ private:
    * "All files (*)" entry is added as well.
    * Only formats registered with (Write | File) will be used.
    */
-  static const QString writeFileFilter();
+  static QString writeFileFilter();
 
   /**
    * Used internally by readFileFilter() and writeFileFilter().
@@ -141,7 +130,8 @@ public: // Must be public for operator declarations
   {
     NoFilterStringOption = 0x0,
     AllFormats = 0x1,
-    AllFiles = 0x2
+    AllFiles = 0x2,
+    WriteFormats = 0x4,
   };
   Q_DECLARE_FLAGS(FilterStringOptions, FilterStringOption)
 

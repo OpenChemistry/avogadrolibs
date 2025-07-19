@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "hydrogens.h"
@@ -20,37 +9,38 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtGui/QKeySequence>
-#include <QtWidgets/QAction>
+#include <QAction>
 
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Hydrogens::Hydrogens(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr)
 {
-  QAction* action = new QAction(tr("&Adjust Hydrogens"), this);
+  auto* action = new QAction(tr("&Adjust Hydrogens"), this);
   action->setShortcut(QKeySequence("Ctrl+Alt+H"));
+  action->setProperty("menu priority", 760);
   connect(action, SIGNAL(triggered()), SLOT(adjustHydrogens()));
   m_actions.append(action);
 
   action = new QAction(tr("Add Hydrogens"), this);
+  action->setProperty("menu priority", 750);
   connect(action, SIGNAL(triggered()), SLOT(addHydrogens()));
   m_actions.append(action);
 
   action = new QAction(tr("Remove E&xtra Hydrogens"), this);
+  action->setProperty("menu priority", 740);
   connect(action, SIGNAL(triggered()), SLOT(removeHydrogens()));
   m_actions.append(action);
 
   action = new QAction(tr("&Remove All Hydrogens"), this);
+  action->setProperty("menu priority", 730);
   connect(action, SIGNAL(triggered()), SLOT(removeAllHydrogens()));
   m_actions.append(action);
 }
 
-Hydrogens::~Hydrogens()
-{
-}
+Hydrogens::~Hydrogens() {}
 
 QString Hydrogens::description() const
 {
@@ -115,5 +105,4 @@ void Hydrogens::removeAllHydrogens()
   }
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

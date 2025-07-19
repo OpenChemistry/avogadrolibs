@@ -1,31 +1,19 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_CUBE_H
 #define AVOGADRO_CORE_CUBE_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include "vector.h"
 
 #include <vector>
+#include <array>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 class Mutex;
@@ -34,6 +22,7 @@ class Mutex;
  * @class Cube cube.h <avogadro/core/cube.h>
  * @brief Provide a data structure for regularly spaced 3D grids.
  * @author Marcus D. Hanwell
+ * @author Perminder Singh
  */
 
 class AVOGADROCORE_EXPORT Cube
@@ -49,8 +38,11 @@ public:
   enum Type
   {
     VdW,
+    SolventAccessible,
+    SolventExcluded,
     ESP,
     ElectronDensity,
+    SpinDensity,
     MO,
     FromFile,
     None
@@ -91,7 +83,7 @@ public:
    * @param max The maximum point in the cube.
    * @param spacing The interval between points in the cube.
    */
-  bool setLimits(const Vector3& min, const Vector3& max, double spacing);
+  bool setLimits(const Vector3& min, const Vector3& max, float spacing);
 
   /**
    * Set the limits of the cube.
@@ -99,7 +91,7 @@ public:
    * @param dim The integer dimensions of the cube in x, y and z.
    * @param spacing The interval between points in the cube.
    */
-  bool setLimits(const Vector3& min, const Vector3i& dim, double spacing);
+  bool setLimits(const Vector3& min, const Vector3i& dim, float spacing);
 
   /**
    * Set the limits of the cube.
@@ -122,23 +114,29 @@ public:
    * @param spacing The spacing of the regular grid
    * @param padding Padding around the molecule
    */
-  bool setLimits(const Molecule& mol, double spacing, double padding);
+  bool setLimits(const Molecule& mol, float spacing, float padding);
 
   /**
-   * @return Vector containing all the data in a one-dimensional array.
+   * @return Pointer to the vector containing all the data in a one-dimensional
+   * array.
    */
-  std::vector<double>* data();
-  const std::vector<double>* data() const;
+  std::vector<float>* data();
+  const std::vector<float>* data() const;
 
   /**
    * Set the values in the cube to those passed in the vector.
    */
-  bool setData(const std::vector<double>& values);
+  bool setData(const std::vector<float>& values);
 
   /**
    * Adds the values in the cube to those passed in the vector.
    */
-  bool addData(const std::vector<double>& values);
+  bool addData(const std::vector<float>& values);
+
+  /**
+   * @return Const iterator to the beginning of a specific row in the cube data.
+   */
+  std::vector<float>::const_iterator getRowIter(int j, int k) const;
 
   /**
    * @return Index of the point closest to the position supplied.
@@ -162,13 +160,13 @@ public:
    * This function is very quick as it just returns the value at the point.
    * @return Cube value at the integer point i, j, k.
    */
-  double value(int i, int j, int k) const;
+  float value(int i, int j, int k) const;
 
   /**
    * This function is very quick as it just returns the value at the point.
    * @return Cube value at the integer point pos.
    */
-  double value(const Vector3i& pos) const;
+  float value(const Vector3i& pos) const;
 
   /**
    * This function uses trilinear interpolation to find the value at points
@@ -186,7 +184,7 @@ public:
    * @warning This function is quite computationally expensive and should be
    * avoided where possible.
    */
-  double value(const Vector3& pos) const;
+  float value(const Vector3& pos) const;
 
   /**
    * Sets the value at the specified point in the cube.
@@ -195,23 +193,40 @@ public:
    * @param k z component of the position.
    * @param value Value at the specified position.
    */
-  bool setValue(int i, int j, int k, double value);
+  bool setValue(unsigned int i, unsigned int j, unsigned int k, float value);
 
   /**
    * Sets the value at the specified index in the cube.
    * @param i 1-dimensional index of the point to set in the cube.
    */
-  bool setValue(unsigned int i, double value);
+  bool setValue(unsigned int i, float value);
 
   /**
-   * @return The minimum  value at any point in the Cube.
+   * Sets all indices in the cube to the specified value.
+   * @param value Value to fill the cube with.
    */
-  double minValue() const { return m_minValue; }
+  void fill(float value);
 
   /**
-   * @return The maximum  value at any point in the Cube.
+   * Sets all indices in a Z stripe of the cube to the specified value.
+   * @param i x component of the position.
+   * @param j y component of the position.
+   * @param kfirst first z position to fill.
+   * @param klast last z position to fill.
+   * @param value Value to fill the stripe with.
    */
-  double maxValue() const { return m_maxValue; }
+  bool fillStripe(unsigned int i, unsigned int j, unsigned int kfirst,
+                  unsigned int klast, float value);
+
+  /**
+   * @return The minimum value at any point in the Cube.
+   */
+  float minValue() const { return m_minValue; }
+
+  /**
+   * @return The maximum value at any point in the Cube.
+   */
+  float maxValue() const { return m_maxValue; }
 
   void setName(const std::string& name_) { m_name = name_; }
   std::string name() const { return m_name; }
@@ -224,17 +239,74 @@ public:
    */
   Mutex* lock() const { return m_lock; }
 
+  /**
+   * Compute the gradient at a specific point in the cube.
+   * @param i x index
+   * @param j y index
+   * @param k z index
+   * @return Gradient vector at the specified point.
+   */
+  std::array<float, 3> computeGradient(int i, int j, int k) const;
+
+  /**
+   * Get the values of the eight corners of a cube defined by the indices
+   * (i, j, k).
+   * @param i x index
+   * @param j y index
+   * @param k z index
+   * @return Array of values at the eight corners.
+   */
+  std::array<float, 8> getValsCube(int i, int j, int k) const;
+
+  /**
+   * Get the gradients at the eight corners of the cube defined by the indices
+   * (i, j, k).
+   * @param i x index
+   * @param j y index
+   * @param k z index
+   * @return Array of gradients at the eight corners. Each gradient is a 3D
+   * vector.
+   */
+  std::array<std::array<float, 3>, 8> getGradCube(int i, int j, int k) const;
+
+  /**
+   * Get the data value at the specified indices.
+   * @param i x index
+   * @param j y index
+   * @param k z index
+   * @return Value at the specified indices.
+   */
+  float getData(int i, int j, int k) const;
+
+  /**
+   * Retrieves the positions of the eight corners of a cube at grid indices
+   * (i, j, k).
+   *
+   * The indices (i, j, k) are converted to real-space positions (xpos, ypos,
+   * zpos), mapping grid indices to physical coordinates. The method returns a
+   * cube that spans one step in each of the x, y, and z directions, with step
+   * sizes defined by `m_spacing`.
+   *
+   * @param i X-index.
+   * @param j Y-index.
+   * @param k Z-index.
+   * @return A `std::array` of eight `(x, y, z)` coordinates representing the
+   * cube's corners.
+   */
+
+  std::array<std::array<float, 3>, 8> getPosCube(int i, int j, int k) const;
+
 protected:
-  std::vector<double> m_data;
+  std::vector<float> m_data;
   Vector3 m_min, m_max, m_spacing;
   Vector3i m_points;
-  double m_minValue, m_maxValue;
+  float m_minValue, m_maxValue;
   std::string m_name;
   Type m_cubeType;
   Mutex* m_lock;
 };
 
-inline bool Cube::setValue(unsigned int i, double value_)
+inline bool Cube::setValue(unsigned int i, float value_)
 {
   if (i < m_data.size()) {
     m_data[i] = value_;
@@ -247,7 +319,6 @@ inline bool Cube::setValue(unsigned int i, double value_)
     return false;
 }
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_CUBE_H

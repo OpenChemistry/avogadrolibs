@@ -17,6 +17,8 @@
 #ifndef QTAIMODEINTEGRATOR_H
 #define QTAIMODEINTEGRATOR_H
 
+#include "qtaimwavefunctionevaluator.h"
+
 #include <QDebug>
 #include <QList>
 #include <QPair>
@@ -24,12 +26,7 @@
 
 #include <Eigen/Core>
 
-#include "qtaimmathutilities.h"
-#include "qtaimwavefunction.h"
-#include "qtaimwavefunctionevaluator.h"
-
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class QTAIMODEIntegrator
 {
@@ -96,7 +93,6 @@ private:
   qreal remin;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // QTAIMODEINTEGRATOR_H

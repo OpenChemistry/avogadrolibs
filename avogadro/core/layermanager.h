@@ -6,7 +6,7 @@
 #ifndef AVOGADRO_CORE_LAYERMANAGER_H
 #define AVOGADRO_CORE_LAYERMANAGER_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include "array.h"
 #include "layer.h"
@@ -14,11 +14,11 @@
 #include <cassert>
 #include <map>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 
@@ -39,6 +39,8 @@ struct LayerData
 
   virtual ~LayerData() = default;
 
+  virtual LayerData* clone() { return new LayerData(serialize()); };
+
   /** get the saved data */
   std::string getSave() const { return m_save; }
 
@@ -51,7 +53,7 @@ protected:
 /**
  * @class MoleculeInfo layermanager.h <avogadro/core/layermanager.h>
  * @brief All layer dependent data. Original molecule @p mol, is layer hidden
- * @p visible, accepts eddits @p locked, and key-value data like @p enable,
+ * @p visible, accepts edits @p locked, and key-value data like @p enable,
  * and custom data @p settings.
  */
 struct MoleculeInfo
@@ -113,7 +115,6 @@ protected:
   static std::map<const Molecule*, std::shared_ptr<MoleculeInfo>> m_molToInfo;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif

@@ -26,7 +26,10 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr(m_name.c_str()); }
+  QString name() const override
+  {
+    return tr("Licorice", "stick / licorice rendering");
+  }
 
   QString description() const override
   {
@@ -38,8 +41,16 @@ public:
     return DefaultBehavior::False;
   }
 
+  QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
+
+public slots:
+  void setOpacity(int opacity);
+
 private:
   std::string m_name = "Licorice";
+  QWidget* m_setupWidget = nullptr;
+  float m_opacity = 1.0;
 };
 
 } // end namespace QtPlugins

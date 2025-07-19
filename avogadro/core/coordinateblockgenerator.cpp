@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "coordinateblockgenerator.h"
@@ -24,18 +13,12 @@
 
 #include <iomanip>
 
-namespace Avogadro {
-namespace Core {
-
-CoordinateBlockGenerator::CoordinateBlockGenerator()
-  : m_molecule(nullptr), m_distanceUnit(Angstrom)
-{
-}
+namespace Avogadro::Core {
 
 std::string CoordinateBlockGenerator::generateCoordinateBlock()
 {
   if (!m_molecule)
-    return "";
+    return {};
 
   // Reset stream.
   m_stream.str("");
@@ -54,6 +37,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   for (it = begin; it != end; ++it) {
     switch (*it) {
       case 'S':
+      case 'L':
         needElementSymbol = true;
         break;
       case 'N':
@@ -76,8 +60,8 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   const Index numAtoms = m_molecule->atomCount();
   Atom atom;
   unsigned char atomicNumber;
-  const char* symbol;
-  const char* name;
+  const char* symbol = "\0";
+  const char* name = "\0";
   Vector3 pos3d;
   Vector3 fpos3d;
   const UnitCell* cell =
@@ -88,6 +72,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   {
     atomicNumberPrecision = 0,
     atomicNumberWidth = 3,
+    atomicLabelWidth = 8, // 3 element symbol + 5 index
     coordinatePrecision = 6,
     coordinateWidth = 11,
     elementNameWidth = 13, // Currently the longest element name
@@ -101,10 +86,14 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   // Use fixed number format.
   m_stream << std::fixed;
 
+  // Count the number for each element
+  std::vector<unsigned int> elementCounts(Elements::elementCount(), 0);
+
   // Iterate through the atoms
   for (Index atomI = 0; atomI < numAtoms; ++atomI) {
     atom = m_molecule->atom(atomI);
     atomicNumber = atom.atomicNumber();
+    elementCounts[atomicNumber]++;
     if (needElementSymbol)
       symbol = Core::Elements::symbol(atomicNumber);
     if (needElementName)
@@ -148,6 +137,9 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
           break;
         case 'S':
           m_stream << std::left << std::setw(elementSymbolWidth) << symbol;
+          break;
+        case 'L':
+          m_stream << std::left << symbol << elementCounts[atomicNumber] << " ";
           break;
         case 'N':
           m_stream << std::left << std::setw(elementNameWidth) << name;
@@ -200,10 +192,9 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
       // not at the end of the line, or a newline if we are.
       m_stream << std::setw(1) << (it + 1 != end ? ' ' : '\n');
     } // end spec char
-  }   // end for atom
+  } // end for atom
 
   return m_stream.str();
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core

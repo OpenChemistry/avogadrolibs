@@ -1,48 +1,30 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2010 Eric C. Brown
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "qtaimextension.h"
 
+#include "qtaimcriticalpointlocator.h"
+#include "qtaimcubature.h"
+#include "qtaimwavefunctionevaluator.h"
+
 #include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
-
 #include <QDebug>
 #include <QDir>
 #include <QFileDialog>
 #include <QList>
 #include <QPair>
 #include <QString>
+#include <QThread>
+#include <QTime>
 #include <QVector3D>
 
-#include <QThread>
-
-#include "qtaimcriticalpointlocator.h"
-#include "qtaimcubature.h"
-#include "qtaimwavefunction.h"
-#include "qtaimwavefunctionevaluator.h"
-
-#include <QTime>
-
-using namespace std;
 using namespace Eigen;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 enum QTAIMExtensionIndex
 {
@@ -55,7 +37,7 @@ QTAIMExtension::QTAIMExtension(QObject* aParent)
   : QtGui::ExtensionPlugin(aParent)
 {
   // create an action for our first action
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setText(tr("Molecular Graph…"));
   m_actions.append(action);
   action->setData(FirstAction);
@@ -76,10 +58,6 @@ QTAIMExtension::QTAIMExtension(QObject* aParent)
   connect(action, SIGNAL(triggered()), SLOT(triggered()));
 }
 
-QTAIMExtension::~QTAIMExtension()
-{
-}
-
 QList<QAction*> QTAIMExtension::actions() const
 {
   return m_actions;
@@ -87,7 +65,7 @@ QList<QAction*> QTAIMExtension::actions() const
 
 QStringList QTAIMExtension::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Analysis") << tr("QTAIM");
+  return QStringList() << tr("&Analyze") << tr("QTAIM");
 }
 
 void QTAIMExtension::setMolecule(QtGui::Molecule* molecule)
@@ -97,27 +75,17 @@ void QTAIMExtension::setMolecule(QtGui::Molecule* molecule)
 
 void QTAIMExtension::triggered()
 {
-  QAction* action = qobject_cast<QAction*>(sender());
+  auto* action = qobject_cast<QAction*>(sender());
   if (!action)
     return;
 
-  bool wavefunctionAlreadyLoaded;
-
-  if (m_molecule->property("QTAIMComment").isValid()) {
-    wavefunctionAlreadyLoaded = true;
-  } else {
-    wavefunctionAlreadyLoaded = false;
-  }
+  bool wavefunctionAlreadyLoaded =
+    m_molecule->property("QTAIMComment").isValid();
 
   int i = action->data().toInt();
 
-  QTime timer;
-  timer.start();
-
   QString fileName;
-  if (wavefunctionAlreadyLoaded) {
-    // do nothing
-  } else {
+  if (!wavefunctionAlreadyLoaded) {
     fileName = QFileDialog::getOpenFileName(
       new QWidget, tr("Open WFN File"), QDir::homePath(),
       tr("WFN files (*.wfn);;All files (*.*)"));
@@ -129,7 +97,7 @@ void QTAIMExtension::triggered()
   }
 
   // Instantiate a Wavefunction
-  bool success;
+  bool success = false;
   QTAIMWavefunction wfn;
   if (wavefunctionAlreadyLoaded) {
     success = wfn.initializeWithMoleculeProperties(m_molecule);
@@ -244,7 +212,7 @@ void QTAIMExtension::triggered()
       // Connectivity stored as Bonds
 
       qint64 bpCtr = 0;
-      qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+      auto numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
       for (qint64 atom0 = 0; atom0 < numAtoms - 1; ++atom0) {
         for (qint64 atom1 = atom0 + 1; atom1 < numAtoms; ++atom1) {
@@ -288,14 +256,10 @@ void QTAIMExtension::triggered()
                   ellipticityAtBondCriticalPoints.at(bondPair));
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
-                for (qint64 j = 0; j < bondPathList.at(bondPair).length();
-                     ++j) {
-                  x =
-                    bondPathList.at(bondPair).at(j).x() * convertBohrToAngstrom;
-                  y =
-                    bondPathList.at(bondPair).at(j).y() * convertBohrToAngstrom;
-                  z =
-                    bondPathList.at(bondPair).at(j).z() * convertBohrToAngstrom;
+                for (auto j : bondPathList.at(bondPair)) {
+                  x = j.x() * convertBohrToAngstrom;
+                  y = j.y() * convertBohrToAngstrom;
+                  z = j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -307,8 +271,8 @@ void QTAIMExtension::triggered()
               }
             }
           } // bond pairs
-        }   // atom1
-      }     // atom 0
+        } // atom1
+      } // atom 0
 
       m_molecule->setProperty("QTAIMXBondCriticalPoints", xBCPsVariantList);
       m_molecule->setProperty("QTAIMYBondCriticalPoints", yBCPsVariantList);
@@ -420,7 +384,7 @@ void QTAIMExtension::triggered()
       // Connectivity stored as Bonds
 
       qint64 bpCtr = 0;
-      qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+      auto numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
       for (qint64 atom0 = 0; atom0 < numAtoms - 1; ++atom0) {
         for (qint64 atom1 = atom0 + 1; atom1 < numAtoms; ++atom1) {
@@ -464,14 +428,10 @@ void QTAIMExtension::triggered()
                   ellipticityAtBondCriticalPoints.at(bondPair));
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
-                for (qint64 j = 0; j < bondPathList.at(bondPair).length();
-                     ++j) {
-                  x =
-                    bondPathList.at(bondPair).at(j).x() * convertBohrToAngstrom;
-                  y =
-                    bondPathList.at(bondPair).at(j).y() * convertBohrToAngstrom;
-                  z =
-                    bondPathList.at(bondPair).at(j).z() * convertBohrToAngstrom;
+                for (auto j : bondPathList.at(bondPair)) {
+                  x = j.x() * convertBohrToAngstrom;
+                  y = j.y() * convertBohrToAngstrom;
+                  z = j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -483,8 +443,8 @@ void QTAIMExtension::triggered()
               }
             }
           } // bond pairs
-        }   // atom1
-      }     // atom 0
+        } // atom1
+      } // atom 0
 
       m_molecule->setProperty("QTAIMXBondCriticalPoints", xBCPsVariantList);
       m_molecule->setProperty("QTAIMYBondCriticalPoints", yBCPsVariantList);
@@ -521,9 +481,7 @@ void QTAIMExtension::triggered()
       QVariantList yElectronDensitySourcesVariantList;
       QVariantList zElectronDensitySourcesVariantList;
 
-      for (qint64 n = 0; n < electronDensitySourcesList.length(); ++n) {
-        QVector3D thisCriticalPoint = electronDensitySourcesList.at(n);
-
+      for (auto thisCriticalPoint : electronDensitySourcesList) {
         qreal x = thisCriticalPoint.x() * convertBohrToAngstrom;
         qreal y = thisCriticalPoint.y() * convertBohrToAngstrom;
         qreal z = thisCriticalPoint.z() * convertBohrToAngstrom;
@@ -634,7 +592,7 @@ void QTAIMExtension::triggered()
         // Connectivity stored as Bonds
 
         qint64 bpCtr = 0;
-        qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+        auto numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
         for (qint64 atom0 = 0; atom0 < numAtoms - 1; ++atom0) {
           for (qint64 atom1 = atom0 + 1; atom1 < numAtoms; ++atom1) {
@@ -678,14 +636,10 @@ void QTAIMExtension::triggered()
                     ellipticityAtBondCriticalPoints.at(bondPair));
 
                   bondPathSegmentStartIndexVariantList.append(bpCtr);
-                  for (qint64 j = 0; j < bondPathList.at(bondPair).length();
-                       ++j) {
-                    x = bondPathList.at(bondPair).at(j).x() *
-                        convertBohrToAngstrom;
-                    y = bondPathList.at(bondPair).at(j).y() *
-                        convertBohrToAngstrom;
-                    z = bondPathList.at(bondPair).at(j).z() *
-                        convertBohrToAngstrom;
+                  for (auto j : bondPathList.at(bondPair)) {
+                    x = j.x() * convertBohrToAngstrom;
+                    y = j.y() * convertBohrToAngstrom;
+                    z = j.z() * convertBohrToAngstrom;
 
                     xBondPathsVariantList.append(x);
                     yBondPathsVariantList.append(y);
@@ -697,8 +651,8 @@ void QTAIMExtension::triggered()
                 }
               }
             } // bond pairs
-          }   // atom1
-        }     // atom 0
+          } // atom1
+        } // atom 0
 
         m_molecule->setProperty("QTAIMXBondCriticalPoints", xBCPsVariantList);
         m_molecule->setProperty("QTAIMYBondCriticalPoints", yBCPsVariantList);
@@ -759,9 +713,6 @@ void QTAIMExtension::triggered()
 
   emit requestActiveTool("Navigator");
   emit requestActiveDisplayTypes(QStringList() << "QTAIMScenePlugin");
-
-  return;
 }
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

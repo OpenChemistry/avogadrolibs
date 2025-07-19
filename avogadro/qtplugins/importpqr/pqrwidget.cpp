@@ -3,8 +3,7 @@
 #include "pqrrequest.h"
 #include "ui_pqrwidget.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 PQRWidget::PQRWidget(QWidget* parent, ImportPQR* p)
   : QDialog(parent), ui(new Ui::PQRWidget)
@@ -36,8 +35,8 @@ PQRWidget::~PQRWidget()
 }
 
 /**
-* @brief Called when the search button is clicked to send a query to PQR
-*/
+ * @brief Called when the search button is clicked to send a query to PQR
+ */
 void PQRWidget::searchAction()
 {
   ui->downloadButton->setEnabled(false);
@@ -47,13 +46,12 @@ void PQRWidget::searchAction()
 }
 
 /**
-* @brief Called when a table result is double clicked to display preview
-* information
-* about the result before downloading.
-* @param row The row of the result selected.
-* @param col The column of the result selected.
-*/
-void PQRWidget::molSelected(int row, int col)
+ * @brief Called when a table result is double clicked to display preview
+ * information about the result before downloading.
+ * @param row The row of the result selected.
+ * @param col The column of the result selected.
+ */
+void PQRWidget::molSelected(int row, int)
 {
   currentlySelectedMol = request->molSelected(row);
   if (currentlySelectedMol == "N/A")
@@ -63,22 +61,21 @@ void PQRWidget::molSelected(int row, int col)
 }
 
 /**
-* @brief Called when PNG data is ready to be loaded
-*/
-void PQRWidget::loadPNG(QByteArray& data)
+ * @brief Called when PNG data is ready to be loaded
+ */
+void PQRWidget::loadPNG(QByteArray& pngData)
 {
   QPixmap pixmap;
-  pixmap.loadFromData(data, "PNG");
+  pixmap.loadFromData(pngData, "PNG");
   pixmap = pixmap.scaled(300, 300);
   ui->pngPreview->setPixmap(pixmap);
   ui->pngPreview->show();
 }
 
 /**
-* @brief Called when the download button is clicked to send a request to
-* download
-* molecule information from PQR.
-*/
+ * @brief Called when the download button is clicked to send a request to
+ * download molecule information from PQR.
+ */
 void PQRWidget::downloadMol()
 {
   QString mol2url = currentlySelectedMol;
@@ -94,5 +91,4 @@ void PQRWidget::loadMolecule(QByteArray& molData, QString name)
   plugin->setMoleculeData(molData, name);
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

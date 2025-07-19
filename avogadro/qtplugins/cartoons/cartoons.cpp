@@ -24,12 +24,10 @@
 #include <utility>
 #include <vector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Atom;
 using Core::AtomicNumber;
-using Core::Elements;
 using Core::Residue;
 using QtGui::Molecule;
 using QtGui::PluginLayerManager;
@@ -38,11 +36,9 @@ using Rendering::BSplineGeometry;
 using Rendering::Cartoon;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
-using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 using std::list;
 using std::map;
-using std::pair;
 using std::reference_wrapper;
 using std::vector;
 
@@ -57,17 +53,17 @@ struct LayerCartoon : Core::LayerData
   bool showCartoon;
   bool showRope;
 
-  typedef void (Cartoons::*JumpTable)(bool);
+  using JumpTable = void (Cartoons::*)(bool);
   JumpTable jumpTable[7];
 
-  std::string serialize() override final
+  std::string serialize() final
   {
     return boolToString(showBackbone) + " " + boolToString(showTrace) + " " +
            boolToString(showTube) + " " + boolToString(showRibbon) + " " +
            boolToString(showSimpleCartoon) + " " + boolToString(showCartoon) +
            " " + boolToString(showRope);
   }
-  void deserialize(std::string text) override final
+  void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
@@ -91,7 +87,7 @@ struct LayerCartoon : Core::LayerData
   {
     if (!widget) {
       widget = new QWidget(qobject_cast<QWidget*>(slot->parent()));
-      QVBoxLayout* v = new QVBoxLayout;
+      auto* v = new QVBoxLayout;
       QStringList boxesText;
       boxesText << QObject::tr("Backbone", "protein rendering style")
                 << QObject::tr("Trace", "protein rendering style")
@@ -111,8 +107,8 @@ struct LayerCartoon : Core::LayerData
       jumpTable[4] = &Cartoons::showSimpleCartoon;
       jumpTable[5] = &Cartoons::showCartoon;
       jumpTable[6] = &Cartoons::showRope;
-      for (size_t i = 0; i < boxesText.size(); ++i) {
-        QCheckBox* check = new QCheckBox(boxesText[i]);
+      for (int i = 0; i < boxesText.size(); ++i) {
+        auto* check = new QCheckBox(boxesText[i]);
         check->setChecked(boxesBools[i]);
         QObject::connect(check, &QCheckBox::clicked, slot, jumpTable[i]);
         v->addWidget(check);
@@ -123,36 +119,44 @@ struct LayerCartoon : Core::LayerData
     }
   }
 
-  LayerCartoon()
+  LayerCartoon() : widget(nullptr)
   {
-    widget = nullptr;
     QSettings settings;
-    showBackbone = settings.value("cartoon/backbone", true).toBool();
+    showBackbone = settings.value("cartoon/backbone", false).toBool();
     showCartoon = settings.value("cartoon/cartoon", true).toBool();
     showTrace = settings.value("cartoon/trace", false).toBool();
     showTube = settings.value("cartoon/tube", false).toBool();
     showRibbon = settings.value("cartoon/ribbon", false).toBool();
     showRope = settings.value("cartoon/rope", false).toBool();
-    showSimpleCartoon = settings.value("cartoon/simplecartoon", true).toBool();
+    showSimpleCartoon = settings.value("cartoon/simplecartoon", false).toBool();
   }
 
-  ~LayerCartoon()
+  LayerCartoon(std::string settings)
+  {
+    widget = nullptr;
+    deserialize(settings);
+  }
+
+  ~LayerCartoon() override
   {
     if (widget)
       widget->deleteLater();
   }
+
+  LayerData* clone() final { return new LayerCartoon(serialize()); }
 };
 
 struct BackboneResidue
 {
-  BackboneResidue() {}
+  BackboneResidue() = default;
   BackboneResidue(const Vector3f p, const Vector3ub& c1, const Vector3ub& c2,
                   const size_t& g, size_t id, bool sel,
                   Residue::SecondaryStructure sec)
     : pos(p), color1(c1), color2(c2), group(g), residueID(id), selected(sel),
       secondaryStructure(sec)
 
-  {}
+  {
+  }
   Vector3f pos;
   Vector3ub color1;
   Vector3ub color2;
@@ -162,14 +166,12 @@ struct BackboneResidue
   Residue::SecondaryStructure secondaryStructure;
 };
 
-typedef list<BackboneResidue> AtomsPairList;
+using AtomsPairList = list<BackboneResidue>;
 
 Cartoons::Cartoons(QObject* parent) : ScenePlugin(parent), m_group(nullptr)
 {
   m_layerManager = PluginLayerManager(m_name);
 }
-
-Cartoons::~Cartoons() {}
 
 void addBackBone(map<size_t, AtomsPairList>& result,
                  map<size_t, BackboneResidue>& previousCA, const Atom& caAtom,
@@ -200,7 +202,7 @@ map<size_t, AtomsPairList> Cartoons::getBackboneByResidues(
 {
   const auto& graph = molecule.graph();
   map<size_t, AtomsPairList> result;
-  map<size_t, BackboneResidue> previousCA;
+  map<size_t, BackboneResidue> previousAtom;
   for (const auto& residue : molecule.residues()) {
     if (!residue.isHeterogen()) {
       Atom caAtom = residue.getAtomByName("CA");
@@ -210,8 +212,18 @@ map<size_t, AtomsPairList> Cartoons::getBackboneByResidues(
           m_layerManager.atomEnabled(layer, oAtom.index())) {
         // get the group ID and check if it's initialized in the map
         size_t group = graph.getConnectedID(caAtom.index());
-        addBackBone(result, previousCA, caAtom, residue.color(), group,
+        addBackBone(result, previousAtom, caAtom, residue.color(), group,
                     residue.secondaryStructure());
+      } else { // maybe DNA
+        Atom c3Atom = residue.getAtomByName("C3'");
+        Atom o3Atom = residue.getAtomByName("O3'");
+        if (c3Atom.isValid() && o3Atom.isValid() &&
+            m_layerManager.atomEnabled(layer, c3Atom.index()) &&
+            m_layerManager.atomEnabled(layer, o3Atom.index())) {
+          size_t group = graph.getConnectedID(c3Atom.index());
+          addBackBone(result, previousAtom, c3Atom, residue.color(), group,
+                      residue.secondaryStructure());
+        }
       }
     }
   }
@@ -241,22 +253,21 @@ map<size_t, AtomsPairList> Cartoons::getBackboneManually(
 void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
                     Rendering::GroupNode& node, float radius)
 {
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  SphereGeometry* spheres = new SphereGeometry;
+  auto* spheres = new SphereGeometry;
   spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
 
-  CylinderGeometry* cylinders = new CylinderGeometry;
+  auto* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::AtomType;
   geometry->addDrawable(cylinders);
 
   Index i = 0;
-  for (AtomsPairList::const_iterator it = backbone.begin();
-       it != backbone.end(); ++it) {
+  for (auto it = backbone.begin(); it != backbone.end(); ++it) {
     const auto& bone = *it;
     auto color1 = bone.color1;
     auto color2 = bone.color2;
@@ -278,10 +289,10 @@ void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
 void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
                 Rendering::GroupNode& node, float radius)
 {
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  BezierGeometry* bezier = new BezierGeometry;
+  auto* bezier = new BezierGeometry;
   bezier->identifier().molecule = &molecule;
   bezier->identifier().type = Rendering::AtomType;
   geometry->addDrawable(bezier);
@@ -297,10 +308,10 @@ void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
 void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
                 Rendering::GroupNode& node, float radius)
 {
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  BSplineGeometry* bezier = new BSplineGeometry;
+  auto* bezier = new BSplineGeometry;
   bezier->identifier().molecule = &molecule;
   bezier->identifier().type = Rendering::AtomType;
   geometry->addDrawable(bezier);
@@ -317,10 +328,10 @@ void renderSimpleCartoon(const AtomsPairList& backbone,
                          const Molecule& molecule, Rendering::GroupNode& node,
                          float radius)
 {
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  Cartoon* cartoon = new Cartoon;
+  auto* cartoon = new Cartoon;
   cartoon->identifier().molecule = &molecule;
   cartoon->identifier().type = Rendering::AtomType;
   geometry->addDrawable(cartoon);
@@ -335,10 +346,10 @@ void renderSimpleCartoon(const AtomsPairList& backbone,
 void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
                    Rendering::GroupNode& node, float radius)
 {
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  Cartoon* cartoon = new Cartoon(radius * 0.2f, radius * 1.5f);
+  auto* cartoon = new Cartoon(radius * 0.2f, radius * 1.5f);
   cartoon->identifier().molecule = &molecule;
   cartoon->identifier().type = Rendering::AtomType;
   geometry->addDrawable(cartoon);
@@ -355,10 +366,11 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
   m_layerManager.load<LayerCartoon>();
   m_group = &node;
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
-    LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>(layer);
-    if (interface.showBackbone || interface.showTrace || interface.showTube ||
-        interface.showRibbon || interface.showSimpleCartoon ||
-        interface.showCartoon || interface.showRope) {
+    auto* interface = m_layerManager.getSetting<LayerCartoon>(layer);
+    if (interface->showBackbone || interface->showTrace ||
+        interface->showTube || interface->showRibbon ||
+        interface->showSimpleCartoon || interface->showCartoon ||
+        interface->showRope) {
       map<size_t, AtomsPairList> backbones;
       if (molecule.residues().size() > 0) {
         backbones = getBackboneByResidues(molecule, layer);
@@ -369,26 +381,26 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
       size_t i = 0;
       for (const auto& group : backbones) {
         const auto& backbone = group.second;
-        if (interface.showBackbone) {
+        if (interface->showBackbone) {
           renderBackbone(backbone, molecule, node, 0.1f);
         }
-        if (interface.showTrace) {
+        if (interface->showTrace) {
           renderTube(backbone, molecule, node, -0.15f);
         }
-        if (interface.showTube) {
+        if (interface->showTube) {
           renderTube(backbone, molecule, node, 0.15f);
         }
-        if (interface.showRibbon) {
+        if (interface->showRibbon) {
           renderCartoon(backbone, molecule, node,
                         -1.0f * Cartoon::ELIPSE_RATIO);
         }
-        if (interface.showSimpleCartoon) {
+        if (interface->showSimpleCartoon) {
           renderSimpleCartoon(backbone, molecule, node, 1.0f);
         }
-        if (interface.showCartoon) {
+        if (interface->showCartoon) {
           renderCartoon(backbone, molecule, node, 1.0f);
         }
-        if (interface.showRope) {
+        if (interface->showRope) {
           renderRope(backbone, molecule, node, 1.0f);
         }
         ++i;
@@ -399,16 +411,16 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
 
 QWidget* Cartoons::setupWidget()
 {
-  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
-  interface.setupWidget(this);
-  return interface.widget;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  interface->setupWidget(this);
+  return interface->widget;
 }
 
 void Cartoons::showBackbone(bool show)
 {
-  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showBackbone) {
-    interface.showBackbone = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showBackbone) {
+    interface->showBackbone = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -417,9 +429,9 @@ void Cartoons::showBackbone(bool show)
 
 void Cartoons::showTrace(bool show)
 {
-  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showTrace) {
-    interface.showTrace = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showTrace) {
+    interface->showTrace = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -428,9 +440,9 @@ void Cartoons::showTrace(bool show)
 
 void Cartoons::showTube(bool show)
 {
-  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showTube) {
-    interface.showTube = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showTube) {
+    interface->showTube = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -439,9 +451,9 @@ void Cartoons::showTube(bool show)
 
 void Cartoons::showRibbon(bool show)
 {
-  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showRibbon) {
-    interface.showRibbon = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showRibbon) {
+    interface->showRibbon = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -450,9 +462,9 @@ void Cartoons::showRibbon(bool show)
 
 void Cartoons::showSimpleCartoon(bool show)
 {
-  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showSimpleCartoon) {
-    interface.showSimpleCartoon = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showSimpleCartoon) {
+    interface->showSimpleCartoon = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -461,9 +473,9 @@ void Cartoons::showSimpleCartoon(bool show)
 
 void Cartoons::showCartoon(bool show)
 {
-  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showCartoon) {
-    interface.showCartoon = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showCartoon) {
+    interface->showCartoon = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -472,14 +484,13 @@ void Cartoons::showCartoon(bool show)
 
 void Cartoons::showRope(bool show)
 {
-  LayerCartoon& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showRope) {
-    interface.showRope = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showRope) {
+    interface->showRope = show;
     emit drawablesChanged();
   }
   QSettings settings;
   settings.setValue("cartoon/rope", show);
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

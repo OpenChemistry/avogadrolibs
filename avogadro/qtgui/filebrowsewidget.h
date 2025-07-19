@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_FILEBROWSEWIDGET_H
@@ -52,6 +41,24 @@ public:
   void setMode(Mode m);
   Mode mode() const;
 
+  /**
+   * @brief Search the environment variable PATH for a file with the specified
+   * name.
+   * @param exec The name of the file.
+   * @return The absolute path to the file on the system, or a null QString if
+   * not found.
+   */
+  static QString searchSystemPathForFile(const QString& exec);
+
+  /**
+   * @brief Search the environment variable PATH for files with the specified
+   * names.
+   * @param execs The names of the files.
+   * @return The absolute paths to the files on the system, or an empty list if
+   * not found.
+   */
+  static QStringList searchSystemPathForFiles(const QStringList& execs);
+
 signals:
   void fileNameChanged(const QString& filename);
 
@@ -65,15 +72,6 @@ private slots:
   void fileNameNoMatch();
 
 private:
-  /**
-   * @brief Search the environment variable PATH for a file with the specified
-   * name.
-   * @param exec The name of the file.
-   * @return The absolute path to the file on the system, or a null QString if
-   * not found.
-   */
-  static QString searchSystemPathForFile(const QString& exec);
-
   Mode m_mode;
   bool m_valid;
   QFileSystemModel* m_fileSystemModel;

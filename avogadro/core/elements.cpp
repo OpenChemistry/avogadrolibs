@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "elements.h"
@@ -26,8 +15,7 @@
 
 using Avogadro::Core::isCustomElement;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 // Handle custom element identifiers:
 namespace {
@@ -124,15 +112,7 @@ public:
   }
 } CustomElementTableInitializer;
 
-} // end anon namespace
-
-Elements::Elements()
-{
-}
-
-Elements::~Elements()
-{
-}
+} // namespace
 
 unsigned char Elements::elementCount()
 {
@@ -208,7 +188,7 @@ unsigned char Elements::guessAtomicNumber(const std::string& inputStr)
   str[0] = static_cast<char>(toupper(static_cast<int>(str[0])));
 
   int length = str.size();
-  unsigned char atomicNumber;
+  unsigned char atomicNumber = InvalidElement;
   while (length > 0) {
     if (length > 3)
       atomicNumber = atomicNumberFromName(str.substr(0, length));
@@ -280,5 +260,12 @@ const unsigned char* Elements::color(unsigned char atomicNumber)
     return element_color[0];
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+unsigned char Elements::valenceElectrons(unsigned char atomicNumber)
+{
+  if (atomicNumber < element_count)
+    return valence_electrons[atomicNumber];
+  else
+    return valence_electrons[0];
+}
+
+} // namespace Avogadro::Core

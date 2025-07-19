@@ -1,5 +1,3 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 avogadro_plugin(PropertyTables
   "Atom, Bond, Angle, Dihedral property tables."
   ExtensionPlugin
@@ -7,3 +5,5 @@ avogadro_plugin(PropertyTables
   PropertyTables
   "propertytables.cpp;propertymodel.cpp;propertyview.cpp"
 )
+
+target_link_libraries(PropertyTables PRIVATE Avogadro::Calc)

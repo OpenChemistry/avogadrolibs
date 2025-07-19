@@ -11,4 +11,4 @@ avogadro_plugin(PlotRmsd
   ""
 )
 
-target_link_libraries(PlotRmsd PRIVATE AvogadroVtk)
+target_link_libraries(PlotRmsd PRIVATE Avogadro::Vtk)

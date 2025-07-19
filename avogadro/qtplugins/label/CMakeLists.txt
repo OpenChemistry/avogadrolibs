@@ -1,4 +1,3 @@
-
 avogadro_plugin(Label
   "Labels rendering scheme"
   ScenePlugin
@@ -25,5 +24,15 @@ avogadro_plugin(LabelEditor
   "${label_rcs}"
 )
 
-target_link_libraries(Label LINK_PRIVATE AvogadroRendering)
-target_link_libraries(LabelEditor LINK_PRIVATE AvogadroRendering)
+target_link_libraries(Label LINK_PRIVATE Avogadro::Rendering)
+target_link_libraries(Label PRIVATE Avogadro::Calc)
+
+target_link_libraries(LabelEditor
+  LINK_PRIVATE
+    Avogadro::Rendering
+    Avogadro::QtOpenGL)
+
+target_include_directories(LabelEditor
+  PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
+    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_RENDERING_CAMERA_H
@@ -133,6 +122,19 @@ public:
   void calculatePerspective(float fieldOfView, float zNear, float zFar);
 
   /**
+   * Calculate the perspective projection matrix using frustum planes
+   * coordinates.
+   * @param left left vertical clipping plane.
+   * @param right right vertical clipping plane.
+   * @param bottom bottom horizontal clipping plane.
+   * @param top top horizontal clipping plane.
+   * @param zNear distance to the near clipping plane.
+   * @param zFar distance to the far clipping plane.
+   */
+  void calculatePerspective(float left, float right, float bottom, float top,
+                            float zNear, float zFar);
+
+  /**
    * Calculate the orthographic projection matrix.
    * @param left left vertical clipping plane.
    * @param right right vertical clipping plane.
@@ -208,12 +210,24 @@ public:
    */
   float orthographicScale() const { return m_orthographicScale; }
 
+  /**
+   * Set focused point. Navigation actions shall occur relative to it.
+   * Note that this method does not cause any change in camera matrices.
+   */
+  void setFocus(const Eigen::Vector3f& newFocus) { m_focus = newFocus; }
+
+  /**
+   * Get focused point. Navigation actions shall occur relative to it.
+   */
+  Vector3f focus() const { return m_focus; }
+
 private:
   int m_width;
   int m_height;
   Projection m_projectionType;
   float m_orthographicScale;
   std::unique_ptr<EigenData> m_data;
+  Eigen::Vector3f m_focus;
 };
 
 inline const Eigen::Affine3f& Camera::projection() const

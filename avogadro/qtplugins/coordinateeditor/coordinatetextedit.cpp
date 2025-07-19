@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "coordinatetextedit.h"
@@ -23,8 +12,7 @@
 
 #include <QtCore/QListIterator>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 CoordinateTextEdit::CoordinateTextEdit(QWidget* p)
   : QTextEdit(p), m_hasInvalidMarks(false)
@@ -32,8 +20,8 @@ CoordinateTextEdit::CoordinateTextEdit(QWidget* p)
   setMouseTracking(true);
 
   m_unmarkedFormat.setUnderlineStyle(QTextCharFormat::NoUnderline);
-  m_unmarkedFormat.setForeground(qApp->palette().foreground().color());
-  m_unmarkedFormat.setBackground(qApp->palette().base().color());
+  m_unmarkedFormat.setForeground(qApp->palette().color(QPalette::WindowText));
+  m_unmarkedFormat.setBackground(qApp->palette().color(QPalette::Base));
 
   m_invalidFormat.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
   m_invalidFormat.setForeground(Qt::darkRed);
@@ -70,7 +58,7 @@ void CoordinateTextEdit::markValid(QTextCursor& cur, const QString& tooltip)
 bool CoordinateTextEdit::event(QEvent* e)
 {
   if (e->type() == QEvent::ToolTip) {
-    QHelpEvent* helpEvent = static_cast<QHelpEvent*>(e);
+    auto* helpEvent = static_cast<QHelpEvent*>(e);
     showToolTip(helpEvent);
     return true;
   }
@@ -103,5 +91,4 @@ void CoordinateTextEdit::showToolTip(QHelpEvent* e) const
   }
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

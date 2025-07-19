@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <QAction>
@@ -22,7 +11,8 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/vtkplot.h>
+#include <avogadro/vtk/chartdialog.h>
+#include <avogadro/vtk/chartwidget.h>
 
 #include "pdfoptionsdialog.h"
 #include "plotpdf.h"
@@ -33,17 +23,15 @@ using Avogadro::QtGui::Molecule;
 
 using std::map;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 
 PlotPdf::PlotPdf(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_)
-  , m_actions(QList<QAction*>())
-  , m_molecule(nullptr)
-  , m_pdfOptionsDialog(new PdfOptionsDialog(qobject_cast<QWidget*>(parent())))
-  , m_displayDialogAction(new QAction(this))
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
+    m_molecule(nullptr),
+    m_pdfOptionsDialog(new PdfOptionsDialog(qobject_cast<QWidget*>(parent()))),
+    m_displayDialogAction(new QAction(this))
 {
   m_displayDialogAction->setText(tr("Plot Pair Distribution Function…"));
   connect(m_displayDialogAction.data(), &QAction::triggered, this,
@@ -86,7 +74,7 @@ void PlotPdf::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -135,33 +123,28 @@ void PlotPdf::displayDialog()
   }
 
   // Now generate a plot with the data
-  std::vector<double> xData;
-  std::vector<double> yData;
+  std::vector<float> xData;
+  std::vector<float> yData;
   for (const auto& item : results) {
     xData.push_back(item.first);
     yData.push_back(item.second);
   }
-  std::vector<std::vector<double>> data{ xData, yData };
-
-  std::vector<std::string> lineLabels{ "PdfData" };
-
-  std::array<double, 4> color = { 255, 0, 0, 255 };
-  std::vector<std::array<double, 4>> lineColors{ color };
 
   const char* xTitle = "r (Å)";
   const char* yTitle = "g(r)";
   const char* windowName = "Pair Distribution Function";
 
-  if (!m_plot)
-    m_plot.reset(new VTK::VtkPlot);
+  if (!m_chartDialog)
+    m_chartDialog.reset(
+      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
 
-  m_plot->setData(data);
-  m_plot->setWindowName(windowName);
-  m_plot->setXTitle(xTitle);
-  m_plot->setYTitle(yTitle);
-  m_plot->setLineLabels(lineLabels);
-  m_plot->setLineColors(lineColors);
-  m_plot->show();
+  m_chartDialog->setWindowTitle(windowName);
+  auto* chart = m_chartDialog->chartWidget();
+  chart->clearPlots();
+  chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->setXAxisTitle(xTitle);
+  chart->setYAxisTitle(yTitle);
+  m_chartDialog->show();
 }
 
 bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,
@@ -221,5 +204,4 @@ bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,
   return true;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

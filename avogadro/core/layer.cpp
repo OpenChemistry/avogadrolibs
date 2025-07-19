@@ -6,12 +6,7 @@
 #include "layer.h"
 #include <cassert>
 
-namespace Avogadro {
-namespace Core {
-
-using std::swap;
-
-Layer::Layer() : m_activeLayer(0), m_maxLayer(0) {}
+namespace Avogadro::Core {
 
 void Layer::addAtom(size_t layer)
 {
@@ -113,6 +108,9 @@ void Layer::removeLayer(size_t layer)
 
 void Layer::swapLayer(Index a, Index b)
 {
+  // Allow Argument Dependent Lookup for swap
+  using std::swap;
+
   swap(m_atomAndLayers[a], m_atomAndLayers[b]);
 }
 
@@ -121,5 +119,4 @@ size_t Layer::layerCount() const
   return m_maxLayer + 1;
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core

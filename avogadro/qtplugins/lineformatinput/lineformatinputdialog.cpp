@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "lineformatinputdialog.h"
@@ -19,13 +8,18 @@
 
 #include <QtCore/QSettings>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 LineFormatInputDialog::LineFormatInputDialog(QWidget* aParent)
   : QDialog(aParent), m_ui(new Ui::LineFormatInputDialog)
 {
   m_ui->setupUi(this);
+
+  QSettings settings;
+  // set the last used descriptor
+  QString lastDescriptor =
+    settings.value("lineformatinput/lastDescriptor").toString();
+  setDescriptor(lastDescriptor);
 }
 
 LineFormatInputDialog::~LineFormatInputDialog()
@@ -57,6 +51,11 @@ void LineFormatInputDialog::setCurrentFormat(const QString& format)
     m_ui->formats->setCurrentIndex(index);
 }
 
+void LineFormatInputDialog::setDescriptor(const QString& descriptor)
+{
+  m_ui->descriptor->setText(descriptor);
+}
+
 QString LineFormatInputDialog::descriptor() const
 {
   return m_ui->descriptor->text();
@@ -66,8 +65,8 @@ void LineFormatInputDialog::accept()
 {
   QSettings settings;
   settings.setValue("lineformatinput/lastUsed", format());
+  settings.setValue("lineformatinput/lastDescriptor", descriptor());
   QDialog::accept();
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

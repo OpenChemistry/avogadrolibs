@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "importpqr.h"
@@ -22,28 +11,39 @@
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtCore/QDebug>
+#include <QAction>
+#include <QMessageBox>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMessageBox>
-
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ImportPQR::ImportPQR(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
-    m_dialog(nullptr), m_outputFormat(nullptr)
+    m_dialog(nullptr), m_outputFormat(nullptr),
+    m_manager(new QNetworkAccessManager(this))
 {
-  m_action->setEnabled(true);
+  m_action->setEnabled(false);
   m_action->setText(tr("&Search PQR…"));
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
+
+  // check if PQR is up
+  connect(m_manager, SIGNAL(finished(QNetworkReply*)),
+          SLOT(checkAccess(QNetworkReply*)));
+  m_manager->get(QNetworkRequest(QUrl("https://pqr.pitt.edu")));
 }
 
 ImportPQR::~ImportPQR()
 {
-  delete (m_outputFormat);
-  delete (m_molecule);
-  delete (m_action);
+  delete m_outputFormat;
+  m_manager->deleteLater();
+}
+
+void ImportPQR::checkAccess(QNetworkReply* reply)
+{
+  // only enable if we can access the site
+  if (reply->error() == QNetworkReply::NoError) {
+    m_action->setEnabled(true);
+  }
+  reply->deleteLater();
 }
 
 QList<QAction*> ImportPQR::actions() const
@@ -93,5 +93,4 @@ void ImportPQR::setMoleculeData(QByteArray& molData, QString name)
   m_dialog->hide();
   emit moleculeReady(1);
 }
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

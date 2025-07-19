@@ -1,25 +1,13 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2010 Jens Thomas
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "gamessukout.h"
 #include <fstream>
 #include <iostream>
 
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -29,11 +17,11 @@ using std::vector;
 namespace Avogadro {
 namespace QuantumIO {
 
-using Quantum::S;
-using Quantum::SP;
-using Quantum::P;
 using Quantum::D;
 using Quantum::F;
+using Quantum::P;
+using Quantum::S;
+using Quantum::SP;
 using Quantum::UU;
 
 using Quantum::orbital;
@@ -54,8 +42,8 @@ bool tokenize(std::vector<std::string>& vcr, const char* buf,
   QString splitString("[");
   splitString += QString(delimstr);
   splitString += QString("]");
-  QRegExp splitter(splitString);
-  foreach (const QString& str, tmp.split(splitter, QString::SkipEmptyParts))
+  QRegularExpression splitter(splitString);
+  foreach (const QString& str, tmp.split(splitter, Qt::SkipEmptyParts))
     vcr.push_back(str.toStdString());
 
   return true;
@@ -182,9 +170,7 @@ GamessukOut::GamessukOut(const QString& qtfilename, GaussianSet* basis)
   GamessukOutNoQt(filename, basis);
 } // end GamessukOut
 
-GamessukOut::~GamessukOut()
-{
-} // end ~GamessukOut
+GamessukOut::~GamessukOut() {} // end ~GamessukOut
 
 void GamessukOut::GamessukOutNoQt(const std::string& filename,
                                   GaussianSet* basis)
@@ -796,5 +782,5 @@ void GamessukOut::load(GaussianSet* basis)
 
 } // end load
 
-} // End Namespace
-}
+} // namespace QuantumIO
+} // namespace Avogadro

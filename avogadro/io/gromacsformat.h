@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_IO_GROMACSFORMAT_H
@@ -22,8 +11,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class GromacsFormat gromacsformat.h <avogadro/io/gromacsformat.h>
@@ -32,8 +20,8 @@ namespace Io {
 class AVOGADROIO_EXPORT GromacsFormat : public FileFormat
 {
 public:
-  GromacsFormat();
-  ~GromacsFormat() override;
+  GromacsFormat() = default;
+  ~GromacsFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -57,10 +45,11 @@ public:
   std::vector<std::string> mimeTypes() const override;
 
   bool read(std::istream& in, Core::Molecule& molecule) override;
+
+  // Unimplemented
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
-} // namespace Io
-} // namespace Avogadro
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_GROMACSFORMAT_H

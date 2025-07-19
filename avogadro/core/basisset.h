@@ -1,29 +1,18 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_BASISSET_H
 #define AVOGADRO_CORE_BASISSET_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
+#include "core/variant.h"
 
+#include <array>
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 
@@ -43,12 +32,12 @@ public:
   /**
    * Constructor.
    */
-  BasisSet() {}
+  BasisSet() = default;
 
   /**
    * Destructor.
    */
-  virtual ~BasisSet() {}
+  virtual ~BasisSet() = default;
 
   /**
    * Clone.
@@ -114,30 +103,18 @@ public:
   /**
    * @return The number of molecular orbitals in the BasisSet.
    */
-  virtual unsigned int molecularOrbitalCount(ElectronType type = Paired) = 0;
-
-  /**
-   * Check if the given MO number is the HOMO or not.
-   * @param n The MO number.
-   * @return True if the given MO number is the HOMO.
-   */
-  bool homo(unsigned int n) { return n == homo(); }
+  virtual unsigned int molecularOrbitalCount(
+    ElectronType type = Paired) const = 0;
 
   /**
    * @return The molecular orbital number corresponding to the HOMO orbital.
    */
-  unsigned int homo() const { return m_electrons[0] / 2; }
+  unsigned int homo(ElectronType type = Paired) const { return lumo(type) - 1; }
 
-  /**
-   * Check if the given MO number is the LUMO or not.
-   * @param n The MO number.
-   * @return True if the given MO number is the LUMO.
-   */
-  bool lumo(unsigned int n) { return n == lumo(); }
   /**
    * @return The molecular orbital number corresponding to the LUMO orbital.
    */
-  unsigned int lumo() const { return m_electrons[0] / 2 + 1; }
+  unsigned int lumo(ElectronType type = Paired) const;
 
   /**
    * @return True of the basis set is valid, false otherwise.
@@ -145,20 +122,86 @@ public:
    */
   virtual bool isValid() = 0;
 
+  /**
+   * @return the orbital symmetry labels (if they exist) for the MOs
+   */
+  std::vector<std::string> symmetryLabels(ElectronType type = Paired) const
+  {
+    if (type == Paired || type == Alpha)
+      return m_symmetryLabels[0];
+    else
+      return m_symmetryLabels[1];
+  }
+
+  /**
+   * Set the orbital symmetry labels (a1, t2g, etc.) for the molecular
+   * orbitals
+   */
+  void setSymmetryLabels(const std::vector<std::string>& labels,
+                         ElectronType type = Paired);
+
+  /**
+   * @brief Set the molecular orbital energies, expected in Hartrees.
+   * @param energies The vector containing energies for the MOs of type
+   * @param type The type of the electrons being set.
+   */
+  void setMolecularOrbitalEnergy(const std::vector<double>& energies,
+                                 ElectronType type = Paired);
+
+  /**
+   * @brief Set the molecular orbital occupancies.
+   * @param occ The occupancies for the MOs of type.
+   * @param type The type of the electrons being set.
+   */
+  void setMolecularOrbitalOccupancy(const std::vector<unsigned char>& occ,
+                                    ElectronType type = Paired);
+
+  std::vector<double>& moEnergy(ElectronType type = Paired)
+  {
+    if (type == Paired || type == Alpha)
+      return m_moEnergy[0];
+    else
+      return m_moEnergy[1];
+  }
+
+  std::vector<double> moEnergy(ElectronType type = Paired) const
+  {
+    if (type == Paired || type == Alpha)
+      return m_moEnergy[0];
+    else
+      return m_moEnergy[1];
+  }
+
+  std::vector<unsigned char>& moOccupancy(ElectronType type = Paired)
+  {
+    if (type == Paired || type == Alpha)
+      return m_moOccupancy[0];
+    else
+      return m_moOccupancy[1];
+  }
+
+  std::vector<unsigned char> moOccupancy(ElectronType type = Paired) const
+  {
+    if (type == Paired || type == Alpha)
+      return m_moOccupancy[0];
+    else
+      return m_moOccupancy[1];
+  }
+
 protected:
   /**
    * Total number of electrons, 0 is alpha electrons and 1 is beta electrons.
    * For closed shell calculations alpha is doubly occupied and there are no
    * beta electrons.
    */
-  unsigned int m_electrons[2];
+  std::array<unsigned int, 2> m_electrons = {};
 
   /**
    * The Molecule holds the atoms (and possibly bonds) read in from the output
    * file. Most basis sets have orbitals around these atoms, but this is not
    * necessarily the case.
    */
-  Molecule* m_molecule;
+  Molecule* m_molecule = nullptr;
 
   /**
    * The name of the basis set, this is usually a string identifier referencing
@@ -170,7 +213,47 @@ protected:
    * The name of the theory used for the calculation.
    */
   std::string m_theoryName;
+
+  /**
+   * The orbital symmetry labels (if they exist) for the MOs
+   */
+  std::vector<std::string> m_symmetryLabels[2];
+
+  /**
+   * @brief This block stores energies for the molecular orbitals (same
+   * convention as the molecular orbital coefficients).
+   */
+  std::vector<double> m_moEnergy[2];
+
+  /**
+   * @brief The occupancy of the molecular orbitals.
+   */
+  std::vector<unsigned char> m_moOccupancy[2];
 };
+
+inline unsigned int BasisSet::lumo(ElectronType type) const
+{
+  if (type == Beta) {
+    // check if we have occupancy data
+    if (m_moOccupancy[1].size() > 0) {
+      for (unsigned int i = 0; i < m_moOccupancy[1].size(); ++i) {
+        if (m_moOccupancy[1][i] == 0)
+          return i;
+      }
+    }
+  } else {
+    // alpha or paired
+    // check if we have occupancy data - more accurate
+    if (m_moOccupancy[0].size() > 0) {
+      for (unsigned int i = 0; i < m_moOccupancy[0].size(); ++i) {
+        if (m_moOccupancy[0][i] == 0)
+          return i;
+      }
+    }
+  }
+  // fall back to electron count
+  return m_electrons[0] / 2 + 1;
+}
 
 inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
 {
@@ -205,7 +288,33 @@ inline unsigned int BasisSet::electronCount(ElectronType type) const
   }
 }
 
-} // End namesapce Core
-} // End namespace Avogadro
+inline void BasisSet::setSymmetryLabels(const std::vector<std::string>& labels,
+                                        ElectronType type)
+{
+  if (type == Paired || type == Alpha)
+    m_symmetryLabels[0] = labels;
+  else
+    m_symmetryLabels[1] = labels;
+}
+
+inline void BasisSet::setMolecularOrbitalEnergy(
+  const std::vector<double>& energies, ElectronType type)
+{
+  if (type == Beta)
+    m_moEnergy[1] = energies;
+  else
+    m_moEnergy[0] = energies;
+}
+
+inline void BasisSet::setMolecularOrbitalOccupancy(
+  const std::vector<unsigned char>& occ, ElectronType type)
+{
+  if (type == Beta)
+    m_moOccupancy[1] = occ;
+  else
+    m_moOccupancy[0] = occ;
+}
+
+} // namespace Avogadro::Core
 
 #endif

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_IO_CMLFORMAT_H
@@ -19,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class CmlFormat cmlformat.h <avogadro/io/cmlformat.h>
@@ -31,8 +19,8 @@ namespace Io {
 class AVOGADROIO_EXPORT CmlFormat : public FileFormat
 {
 public:
-  CmlFormat();
-  ~CmlFormat() override;
+  CmlFormat() = default;
+  ~CmlFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -59,7 +47,6 @@ public:
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io
 
 #endif // CMLFORMAT_H

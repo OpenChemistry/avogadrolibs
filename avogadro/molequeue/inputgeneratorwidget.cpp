@@ -30,8 +30,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
   : QtGui::JsonWidget(parent_), m_ui(new Ui::InputGeneratorWidget),
@@ -65,8 +64,10 @@ void InputGeneratorWidget::setMolecule(QtGui::Molecule* mol)
     m_molecule->disconnect(this);
 
   m_molecule = mol;
-
   if (mol) {
+    // make sure to call the base class method
+    QtGui::JsonWidget::setMolecule(mol);
+
     connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
     connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
   }
@@ -120,6 +121,13 @@ void InputGeneratorWidget::setBatchMode(bool m)
 void InputGeneratorWidget::showEvent(QShowEvent* e)
 {
   QWidget::showEvent(e);
+
+  if (m_molecule != nullptr) {
+    int charge = static_cast<int>(m_molecule->totalCharge());
+    int multiplicity = static_cast<int>(m_molecule->totalSpinMultiplicity());
+    setOption("Charge", charge);
+    setOption("Multiplicity", multiplicity);
+  }
 
   // Update the preview text if an update was requested while hidden. Use a
   // single shot to allow the dialog to show before popping up any warnings.
@@ -223,7 +231,7 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   foreach (const QString& fileName, fileNames) {
     if (m_textEdits.contains(fileName))
       continue;
-    QTextEdit* edit = new QTextEdit(this);
+    auto* edit = new QTextEdit(this);
     edit->setObjectName(fileName);
     edit->setFontFamily("monospace");
     connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
@@ -307,7 +315,7 @@ void InputGeneratorWidget::computeClicked()
   for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
                                                  itEnd = m_textEdits.constEnd();
        it != itEnd; ++it) {
-    QString fileName = it.key();
+    const QString& fileName = it.key();
     if (fileName != mainFileName)
       job.appendAdditionalInputFile(fileName, it.value()->toPlainText());
     else
@@ -341,7 +349,7 @@ void InputGeneratorWidget::computeClicked()
       // overwritten with the final job details.
       emit openJobOutput(job);
       // Hide the parent if it's a dialog:
-      if (QDialog* dlg = qobject_cast<QDialog*>(parent()))
+      if (auto* dlg = qobject_cast<QDialog*>(parent()))
         dlg->hide();
       break;
   }
@@ -388,15 +396,15 @@ void InputGeneratorWidget::showError(const QString& err)
   QWidget* theParent =
     this->isVisible() ? this : qobject_cast<QWidget*>(parent());
   QDialog dlg(theParent);
-  QVBoxLayout* vbox = new QVBoxLayout();
-  QLabel* label = new QLabel(tr("An error has occurred:"));
+  auto* vbox = new QVBoxLayout();
+  auto* label = new QLabel(tr("An error has occurred:"));
   vbox->addWidget(label);
-  QTextBrowser* textBrowser = new QTextBrowser();
+  auto* textBrowser = new QTextBrowser();
 
   // adjust the size of the text browser to ~80 char wide, ~20 lines high
   QSize theSize = textBrowser->sizeHint();
   QFontMetrics metrics(textBrowser->currentFont());
-  int charWidth = metrics.width("i7OPlmWn9/") / 10;
+  int charWidth = metrics.horizontalAdvance("i7OPlmWn9/") / 10;
   int charHeight = metrics.lineSpacing();
   theSize.setWidth(80 * charWidth);
   theSize.setHeight(20 * charHeight);
@@ -410,7 +418,7 @@ void InputGeneratorWidget::showError(const QString& err)
 
 void InputGeneratorWidget::textEditModified()
 {
-  if (QTextEdit* edit = qobject_cast<QTextEdit*>(sender())) {
+  if (auto* edit = qobject_cast<QTextEdit*>(sender())) {
     if (edit->document()->isModified()) {
       if (!m_dirtyTextEdits.contains(edit))
         m_dirtyTextEdits << edit;
@@ -422,7 +430,7 @@ void InputGeneratorWidget::textEditModified()
 
 void InputGeneratorWidget::updateTitlePlaceholder()
 {
-  if (QLineEdit* titleEdit =
+  if (auto* titleEdit =
         qobject_cast<QLineEdit*>(m_widgets.value("Title", nullptr))) {
     titleEdit->setPlaceholderText(generateJobTitle());
   }
@@ -449,15 +457,6 @@ void InputGeneratorWidget::saveSingleFile(const QString& fileName)
 
   settings.setValue(settingsKey("outputDirectory"),
                     QFileInfo(filePath).absoluteDir().absolutePath());
-
-  QFileInfo info(filePath);
-
-  // Don't check for overwrite: the file save dialog takes care of this.
-  // Attempt to open the file for writing
-  if (!QFile(fileName).open(QFile::WriteOnly)) {
-    showError(tr("%1: File exists and is not writable.").arg(fileName));
-    return;
-  }
 
   QTextEdit* edit = m_textEdits.value(fileName, nullptr);
   if (!edit) {
@@ -630,10 +629,17 @@ void InputGeneratorWidget::connectButtons()
           SLOT(updatePreviewText()));
   connect(m_ui->defaultsButton, SIGNAL(clicked()), SLOT(defaultsClicked()));
   connect(m_ui->generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
-  connect(m_ui->computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
   connect(m_ui->closeButton, SIGNAL(clicked()), SIGNAL(closeClicked()));
   connect(m_ui->warningTextButton, SIGNAL(clicked()),
           SLOT(toggleWarningText()));
+
+  // disable the compute button if Molequeue is not running
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
+  if (!mqManager.connectIfNeeded()) {
+    m_ui->computeButton->setEnabled(false);
+  } else {
+    connect(m_ui->computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
+  }
 }
 
 void InputGeneratorWidget::updateOptions()
@@ -652,5 +658,4 @@ void InputGeneratorWidget::updateOptions()
   setOptionDefaults();
 }
 
-} // namespace MoleQueue
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

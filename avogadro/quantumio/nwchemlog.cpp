@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "nwchemlog.h"
@@ -22,32 +11,21 @@
 
 #include <iostream>
 
-using std::vector;
 using std::string;
-using std::cout;
-using std::endl;
+using std::vector;
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using Core::Atom;
-using Core::BasisSet;
-using Core::GaussianSet;
 
-NWChemLog::NWChemLog()
-{
-}
+NWChemLog::NWChemLog() {}
 
-NWChemLog::~NWChemLog()
-{
-}
+NWChemLog::~NWChemLog() {}
 
 std::vector<std::string> NWChemLog::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("log");
-  extensions.push_back("out");
-  extensions.push_back("nwchem");
+  extensions.emplace_back("nwchem");
   return extensions;
 }
 
@@ -62,11 +40,16 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
   // line, so they should be retained.
   while (!in.eof())
     processLine(in, molecule);
+  if (0 == molecule.atomCount()) {
+    appendError("Could not find any atomic coordinates! Are you sure this is "
+                "an NWChem output file?");
+    return false;
+  }
 
   if (m_frequencies.size() > 0 && m_frequencies.size() == m_Lx.size() &&
       m_frequencies.size() == m_intensities.size()) {
     molecule.setVibrationFrequencies(m_frequencies);
-    molecule.setVibrationIntensities(m_intensities);
+    molecule.setVibrationIRIntensities(m_intensities);
     molecule.setVibrationLx(m_Lx);
   }
 
@@ -74,6 +57,7 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
 
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
 
   return true;
 }
@@ -187,7 +171,7 @@ void NWChemLog::readFrequencies(const std::string& firstLine, std::istream& in,
   }
 }
 
-void NWChemLog::readIntensities(std::istream& in, Core::Molecule& mol)
+void NWChemLog::readIntensities(std::istream& in, Core::Molecule&)
 {
   string line;
   bool ok = false;
@@ -210,5 +194,4 @@ void NWChemLog::readIntensities(std::istream& in, Core::Molecule& mol)
     }
   }
 }
-}
-}
+} // namespace Avogadro::QuantumIO

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2017 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_PLUGINDOWNLOADER_H
@@ -53,25 +42,24 @@ public:
   }
 
   QList<QAction*> actions() const override;
-
   QStringList menuPath(QAction*) const override;
 
-public slots:
-  void setMolecule(QtGui::Molecule* mol) override;
-  bool readMolecule(QtGui::Molecule& mol) override;
+  void setMolecule(QtGui::Molecule*) override {}
 
 private slots:
   void showDialog();
   void replyFinished(QNetworkReply*);
 
 private:
-  QAction* m_action;
+  QAction* m_downloadAction;
+
   QtGui::Molecule* m_molecule;
   QNetworkAccessManager* m_network;
   QString m_moleculeName;
   DownloaderWidget* m_widget;
 };
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_PLUGINDOWNLOADER_H

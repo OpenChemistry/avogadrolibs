@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_RENDERING_SCENE_H
@@ -59,7 +48,8 @@ struct ColorTextureVertex
   ColorTextureVertex(const Vector3f& p, const Vector3ub& c, const Vector2f& t,
                      const Vector2f& t2 = Vector2f::Zero())
     : vertex(p), color(c), textureCoord(t), textureCoord2(t2)
-  {}
+  {
+  }
 
   static int vertexOffset() { return 0; }
   static int colorOffset() { return static_cast<int>(sizeof(Vector3f)); }
@@ -85,7 +75,8 @@ struct ColorNormalVertex
   ColorNormalVertex() {}
   ColorNormalVertex(const Vector3ub& c, const Vector3f& n, const Vector3f& v)
     : color(c), normal(n), vertex(v)
-  {}
+  {
+  }
 
   static int colorOffset() { return 0; }
   static int normalOffset()

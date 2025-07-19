@@ -1,23 +1,12 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_VARIANTMAP_H
 #define AVOGADRO_CORE_VARIANTMAP_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include "variant.h"
 
@@ -25,8 +14,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class VariantMap variantmap.h <avogadro/core/variantmap.h>
@@ -37,14 +25,14 @@ namespace Core {
 class AVOGADROCORE_EXPORT VariantMap
 {
 public:
-  typedef std::map<std::string, Variant>::iterator iterator;
-  typedef std::map<std::string, Variant>::const_iterator const_iterator;
+  using iterator = std::map<std::string, Variant>::iterator;
+  using const_iterator = std::map<std::string, Variant>::const_iterator;
 
   /** Creates a new variant map object. */
-  VariantMap();
+  VariantMap() = default;
 
   /** Destroys the variant map. */
-  ~VariantMap();
+  ~VariantMap() = default;
 
   /** Returns the size of the variant map. */
   size_t size() const;
@@ -69,6 +57,11 @@ public:
    */
   bool hasValue(const std::string& name) const;
 
+  /**
+   * Clears the map.
+   */
+  void clear() { m_map.clear(); }
+
   /** Return an iterator pointing to the beginning of the map. */
   iterator begin();
 
@@ -91,7 +84,6 @@ private:
   std::map<std::string, Variant> m_map;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_VARIANTMAP_H

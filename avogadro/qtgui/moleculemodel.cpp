@@ -1,32 +1,22 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013-2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "molecule.h"
 #include "moleculemodel.h"
+#include "molecule.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
+#include <QtGui/QPalette>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
-{}
+{
+}
 
 QModelIndex MoleculeModel::parent(const QModelIndex&) const
 {
@@ -60,8 +50,8 @@ bool MoleculeModel::setData(const QModelIndex& idx, const QVariant& value,
   if (!idx.isValid() || idx.column() > 2)
     return false;
 
-  QObject* object = static_cast<QObject*>(idx.internalPointer());
-  Molecule* mol = qobject_cast<Molecule*>(object);
+  auto* object = static_cast<QObject*>(idx.internalPointer());
+  auto* mol = qobject_cast<Molecule*>(object);
   if (!mol)
     return false;
 
@@ -93,8 +83,8 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
   if (!idx.isValid() || idx.column() > 2)
     return QVariant();
 
-  QObject* object = static_cast<QObject*>(idx.internalPointer());
-  Molecule* mol = qobject_cast<Molecule*>(object);
+  auto* object = static_cast<QObject*>(idx.internalPointer());
+  auto* mol = qobject_cast<Molecule*>(object);
   if (!mol)
     return QVariant();
 
@@ -112,29 +102,33 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
                    .toStdString();
         }
         if (mol)
-          return (name + " (" + mol->formula() + ")").c_str();
+          return QString("%1 (%2)")
+            .arg(QString::fromStdString(name))
+            .arg(mol->formattedFormula());
         else
-          return "Edit molecule";
+          return tr("Edit molecule");
       }
       case Qt::EditRole:
         return mol->data("name").toString().c_str();
       case Qt::ToolTipRole:
         if (mol->hasData("fileName"))
           return mol->data("fileName").toString().c_str();
-        return "Not saved";
+        return tr("Not saved");
       case Qt::WhatsThisRole:
         return mol->formula().c_str();
       case Qt::ForegroundRole:
         if (mol == m_activeMolecule)
           return QVariant(QColor(Qt::red));
-        else
-          return QVariant(QColor(Qt::black));
+        else {
+          const QPalette defaultPalette;
+          return QVariant(defaultPalette.color(QPalette::WindowText));
+        }
       default:
         return QVariant();
     }
   } else if (idx.column() == 1) {
     if (role == Qt::DecorationRole)
-      return QIcon(":/icons/fallback/32x32/edit-delete.png");
+      return QIcon::fromTheme("document-close");
   }
   return QVariant();
 }
@@ -201,7 +195,7 @@ void MoleculeModel::removeItem(Molecule* item)
 
 void MoleculeModel::itemChanged()
 {
-  Molecule* item = qobject_cast<Molecule*>(sender());
+  auto* item = qobject_cast<Molecule*>(sender());
   if (item) {
     int row = m_molecules.indexOf(item);
     if (row >= 0)
@@ -209,5 +203,4 @@ void MoleculeModel::itemChanged()
   }
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

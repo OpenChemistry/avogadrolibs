@@ -1,31 +1,18 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008 Marcus D. Hanwell
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_MESH_H
 #define AVOGADRO_CORE_MESH_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include "array.h"
 #include "color3f.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 class Mutex;
@@ -132,6 +119,9 @@ public:
    */
   const Vector3f* vertex(int n) const;
 
+  bool setTriangles(const Core::Array<Vector3f>& values);
+  const Core::Array<Vector3f>& triangles() const;
+
   /**
    * Clear the vertices vector and assign new values.
    */
@@ -226,12 +216,19 @@ public:
    */
   Mutex* lock() const { return m_lock; }
 
+  /**
+   * Applies Laplacian smoothing.
+   * @param iterationCount number of smoothing passes to make.
+   */
+  void smooth(int iterationCount = 6);
+
   friend class Molecule;
 
 private:
   Core::Array<Vector3f> m_vertices;
   Core::Array<Vector3f> m_normals;
   Core::Array<Color3f> m_colors;
+  Core::Array<Vector3f> m_triangles;
   std::string m_name;
   bool m_stable;
   float m_isoValue;
@@ -240,7 +237,6 @@ private:
   Mutex* m_lock;
 };
 
-} // End namespace Core
-} // End namespace Avogadro
+} // End namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_MESH_H

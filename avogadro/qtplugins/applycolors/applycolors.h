@@ -8,11 +8,13 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <tinycolormap.hpp>
+
 #include <QtGui/QColor>
 
 class QColorDialog;
-namespace Avogadro {
-namespace QtPlugins {
+
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The ApplyColors class is an extension to modify apply custom colors.
@@ -37,6 +39,9 @@ private slots:
   void applyCustomColor(const QColor& color);
   void applyDistanceColors();
   void applyIndexColors();
+
+  void applyChargeColors();
+
   void resetColors();
 
   void openColorDialogResidue();
@@ -50,9 +55,10 @@ private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   QColorDialog* m_dialog;
+
+  tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_APPLYCOLORS_H

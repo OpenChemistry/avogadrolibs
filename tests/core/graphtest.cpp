@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -53,9 +42,7 @@ TEST(GraphTest, isEmpty)
   EXPECT_EQ(graph.isEmpty(), true);
 }
 
-TEST(GraphTest, clear)
-{
-}
+TEST(GraphTest, clear) {}
 
 TEST(GraphTest, addVertex)
 {
@@ -158,4 +145,13 @@ TEST(GraphTest, connectedComponents)
 
   graph.addEdge(3, 2);
   EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(1));
+
+  graph.addEdge(1, 4);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(1));
+
+  graph.removeEdge(2, 3);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(1));
+
+  graph.removeEdges(4);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(4));
 }

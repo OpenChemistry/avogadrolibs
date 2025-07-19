@@ -13,8 +13,7 @@
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 MoleQueueDialog::MoleQueueDialog(QWidget* parent_)
   : QDialog(parent_), m_ui(new Ui::MoleQueueDialog)
@@ -81,7 +80,8 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
           return SubmissionSuccessful;
 
         // Update progress dialog
-        progress.setLabelText(tr("Waiting for job %1 “%2” to finish…", "%1 = job ID, %2 = description")
+        progress.setLabelText(tr("Waiting for job %1 “%2” to finish…",
+                                 "%1 = job ID, %2 = description")
                                 .arg(dlg.widget().moleQueueId())
                                 .arg(jobTemplate.description()));
         progress.setCancelButtonText(tr("Stop waiting"));
@@ -125,9 +125,10 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
         return JobFinished;
       } else {
         progress.hide();
-        QMessageBox::warning(&dlg, tr("Error Submitting Job"),
-                             tr("The job has been rejected by MoleQueue: %1", "%1 = error")
-                               .arg(dlg.widget().submissionError()));
+        QMessageBox::warning(
+          &dlg, tr("Error Submitting Job"),
+          tr("The job has been rejected by MoleQueue: %1", "%1 = error")
+            .arg(dlg.widget().submissionError()));
         continue;
       }
     } else {
@@ -201,5 +202,4 @@ void MoleQueueDialog::done(int r)
   }
 }
 
-} // namespace MoleQueue
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -59,7 +48,7 @@ bool checkParams(const UnitCell& cell, Real a, Real b, Real c, Real alpha,
   }
   return true;
 }
-}
+} // namespace
 
 TEST(UnitCellTest, cellParameters)
 {
@@ -261,11 +250,20 @@ TEST(UnitCellTest, wrapAtomsToUnitCell)
   for (std::vector<Vector3>::const_iterator it = fcoords.begin(),
                                             itEnd = fcoords.end();
        it != itEnd; ++it) {
-    EXPECT_GT(it->x(), static_cast<Real>(-std::numeric_limits<Real>::epsilon())); // x >= 0, "mostly" zero
+    EXPECT_GT(
+      it->x(),
+      static_cast<Real>(
+        -std::numeric_limits<Real>::epsilon())); // x >= 0, "mostly" zero
     EXPECT_LE(it->x(), static_cast<Real>(1.0));
-    EXPECT_GT(it->y(), static_cast<Real>(-std::numeric_limits<Real>::epsilon())); // y >= 0, "mostly" zero
+    EXPECT_GT(
+      it->y(),
+      static_cast<Real>(
+        -std::numeric_limits<Real>::epsilon())); // y >= 0, "mostly" zero
     EXPECT_LE(it->y(), static_cast<Real>(1.0));
-    EXPECT_GT(it->z(), static_cast<Real>(-std::numeric_limits<Real>::epsilon())); // z >= 0, "mostly" zero
+    EXPECT_GT(
+      it->z(),
+      static_cast<Real>(
+        -std::numeric_limits<Real>::epsilon())); // z >= 0, "mostly" zero
     EXPECT_LE(it->z(), static_cast<Real>(1.0));
   }
 }

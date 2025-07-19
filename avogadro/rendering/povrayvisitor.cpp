@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "povrayvisitor.h"
@@ -25,15 +14,12 @@
 #include <iostream>
 #include <ostream>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
-using std::cout;
-using std::string;
-using std::endl;
-using std::ostringstream;
-using std::ostream;
 using std::ofstream;
+using std::ostream;
+using std::ostringstream;
+using std::string;
 
 namespace {
 ostream& operator<<(ostream& os, const Vector3f& v)
@@ -48,7 +34,7 @@ ostream& operator<<(ostream& os, const Vector3ub& color)
      << color[2] / 255.0f;
   return os;
 }
-}
+} // namespace
 
 POVRayVisitor::POVRayVisitor(const Camera& c)
   : m_camera(c), m_backgroundColor(255, 255, 255),
@@ -56,9 +42,7 @@ POVRayVisitor::POVRayVisitor(const Camera& c)
 {
 }
 
-POVRayVisitor::~POVRayVisitor()
-{
-}
+POVRayVisitor::~POVRayVisitor() {}
 
 void POVRayVisitor::begin()
 {
@@ -120,32 +104,27 @@ string POVRayVisitor::end()
   return m_sceneData;
 }
 
-void POVRayVisitor::visit(Drawable& geometry)
+void POVRayVisitor::visit(Drawable&)
 {
-  // geometry.render(m_camera);
+  return;
 }
 
 void POVRayVisitor::visit(SphereGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.spheres().size(); ++i) {
-    Rendering::SphereColor s = geometry.spheres()[i];
+  for (const auto& s : geometry.spheres()) {
     str << "sphere {\n\t<" << s.center << ">, " << s.radius
         << "\n\tpigment { rgbt <" << s.color << ", 0.0> }\n}\n";
   }
   m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
-{
-  // geometry.render(m_camera);
-}
+void POVRayVisitor::visit(AmbientOcclusionSphereGeometry&) {}
 
 void POVRayVisitor::visit(CylinderGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.cylinders().size(); ++i) {
-    Rendering::CylinderColor c = geometry.cylinders()[i];
+  for (const auto& c : geometry.cylinders()) {
     str << "cylinder {\n"
         << "\t<" << c.end1 << ">,\n"
         << "\t<" << c.end2 << ">, " << c.radius << "\n\tpigment { rgbt <"
@@ -175,26 +154,37 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   }
   str << "\n}\n";
   str << "texture_list{" << v.size() << ",\n";
-  for (size_t i = 0; i < v.size(); ++i)
-    str << "texture{pigment{rgb<" << v[i].normal << ">}\n";
+  float r = 0.0;
+  float g = 0.0;
+  float b = 0.0;
+  float t = 1.0 - geometry.opacity() / 255.0;
+
+  for (auto& i : v) {
+    r = i.color[0] / 255.0;
+    g = i.color[1] / 255.0;
+    b = i.color[2] / 255.0;
+    str << "texture{pigment{rgbt<" << r << ", " << g << ", " << b << "," << t
+        << ">}}\n";
+  }
   str << "\n}\n";
   str << "face_indices{" << tris.size() / 3 << ",\n";
   for (size_t i = 0; i < tris.size(); i += 3) {
     str << "<" << tris[i] << "," << tris[i + 1] << "," << tris[i + 2] << ">";
+    // this represents the texture color from the vertex
+    str << ", " << (i / 3);
     if (i != tris.size() - 3)
       str << ", ";
     if (i != 0 && ((i + 1) / 3) % 3 == 0)
       str << '\n';
   }
   str << "\n}\n";
-  str << "\tpigment { rgbt <1.0, 0.0, 0.0, 1.0> }\n"
+  str << "\tpigment { rgbt <" << r << ", " << g << "," << b << "," << t
+      << "> }\n"
       << "}\n\n";
+
+  m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(LineStripGeometry& geometry)
-{
-  // geometry.render(m_camera);
-}
+void POVRayVisitor::visit(LineStripGeometry&) {}
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

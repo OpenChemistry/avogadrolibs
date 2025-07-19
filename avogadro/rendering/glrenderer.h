@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_RENDERING_GLRENDERER_H
@@ -25,6 +14,7 @@
 #include "scene.h"
 #include "shader.h"
 #include "shaderprogram.h"
+#include "solidpipeline.h"
 
 #include <avogadro/core/array.h>
 
@@ -55,6 +45,9 @@ public:
   /** Resize the context in response to window management events. */
   void resize(int width, int height);
 
+  /** Set the ratio of physical to logical pixels. */
+  void setPixelRatio(float ratio);
+
   /** Take care of rendering the scene, requires that the context is current. */
   void render();
 
@@ -74,6 +67,11 @@ public:
   /** Return the top primitive under the display coordinate (x,y).
    */
   Identifier hit(int x, int y) const;
+
+  /** Return the depth of provided ray - geometry hit test.
+   */
+  float hit(const Vector3f& rayOrigin, const Vector3f& rayEnd,
+            const Vector3f& rayDirection) const;
 
   /** Return the primitives in the rectangular area provided. */
   Core::Array<Identifier> hits(int x1, int y1, int x2, int y2) const;
@@ -98,6 +96,10 @@ public:
   const Scene& scene() const { return m_scene; }
   Scene& scene() { return m_scene; }
 
+  /** Get the solid pipeline for this renderer. */
+  const SolidPipeline& solidPipeline() const { return m_solidPipeline; }
+  SolidPipeline& solidPipeline() { return m_solidPipeline; }
+
   /**
    * Get/set the text rendering strategy for this object. The renderer takes
    * ownership of the strategy object. @{
@@ -106,6 +108,16 @@ public:
   TextRenderStrategy* textRenderStrategy();
   void setTextRenderStrategy(TextRenderStrategy* tren);
   /** @} */
+
+  std::array<float, 6> m_perspectiveFrustum;  // L, R, B, T, N, F (planes order)
+  std::array<float, 6> m_orthographicFrustum; // L, R, B, T, N, F (planes order)
+#ifdef _3DCONNEXION
+  bool m_drawIcon;
+  void* m_iconData;
+  uint32_t m_iconWidth;
+  uint32_t m_iconHeight;
+  Eigen::Vector3f m_iconPosition;
+#endif
 
 private:
   /**
@@ -138,6 +150,7 @@ private:
   Camera m_overlayCamera;
   Scene m_scene;
   TextRenderStrategy* m_textRenderStrategy;
+  SolidPipeline m_solidPipeline;
 
   Vector3f m_center;
   float m_radius;
@@ -181,7 +194,7 @@ inline Identifier GLRenderer::hit(int x, int y) const
   return Identifier();
 }
 
-} // End Rendering namespace
-} // End Avogadro namespace
+} // namespace Rendering
+} // namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_GLRENDERER_H

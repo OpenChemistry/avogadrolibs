@@ -1,24 +1,13 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QUANTUMIO_MOPACAUX_H
 #define AVOGADRO_QUANTUMIO_MOPACAUX_H
 
 #include "avogadroquantumioexport.h"
+#include <avogadro/core/array.h>
 #include <avogadro/core/slaterset.h>
 #include <avogadro/io/fileformat.h>
 
@@ -70,8 +59,19 @@ private:
   bool readOverlapMatrix(std::istream& in, unsigned int n);
   bool readEigenVectors(std::istream& in, unsigned int n);
   bool readDensityMatrix(std::istream& in, unsigned int n);
+  bool readVibrationFrequencies(std::istream& in, unsigned int n);
+  bool readVibrationIntensities(std::istream& in, unsigned int n);
+  bool readNormalModes(std::istream& in, unsigned int n);
 
   int m_electrons;
+  int m_charge = 0;
+  int m_spin = 1;
+  Vector3 m_dipoleMoment;
+  std::vector<double> m_partialCharges;
+  double m_heatOfFormation;
+  double m_area;
+  double m_volume;
+
   std::vector<int> m_shellTypes;
   std::vector<int> m_shellNums;
   std::vector<int> m_shelltoAtom;
@@ -86,6 +86,11 @@ private:
   std::vector<double> m_zeta;
   std::vector<int> m_pqn;
   std::vector<Eigen::Vector3d> m_atomPos;
+  std::vector<std::vector<Eigen::Vector3d>> m_coordSets;
+
+  std::vector<double> m_frequencies;
+  std::vector<double> m_irIntensities;
+  std::vector<Eigen::Vector3d> m_normalModes;
 
   Eigen::MatrixXd m_overlap; /// Overlap matrix
   Eigen::MatrixXd m_eigenVectors;

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_IMPORTPQR_H
@@ -21,6 +10,7 @@
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
 #include <QtCore/QString>
@@ -61,6 +51,7 @@ public slots:
 
 private slots:
   void menuActivated();
+  void checkAccess(QNetworkReply* reply);
 
 private:
   QAction* m_action;
@@ -70,8 +61,9 @@ private:
   QString m_moleculeName;
   QString m_moleculePath;
   QByteArray m_moleculeData;
+  QNetworkAccessManager* m_manager;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_IMPORTPQR_H

@@ -1,21 +1,10 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_WIREFRAME_H
-#define AVOGADRO_QTPLUGINS_WIREFRAME_H
+#ifndef AVOGADRO_QTPLUGINS_FORCE_H
+#define AVOGADRO_QTPLUGINS_FORCE_H
 
 #include <avogadro/qtgui/sceneplugin.h>
 
@@ -33,7 +22,7 @@ public:
   explicit Force(QObject* parent = nullptr);
   ~Force() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Force"); }
@@ -44,17 +33,16 @@ public:
       "Render the force field visualizations for the atoms of the molecule.");
   }
 
-  bool isEnabled() const override;
-
-  bool isActiveLayerEnabled() const override;
-
-  void setEnabled(bool enable) override;
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
+  }
 
 private:
-  bool m_enabled;
+  std::string m_name = "Force";
 };
 
 } // end namespace QtPlugins
 } // end namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_WIREFRAME_H
+#endif // AVOGADRO_QTPLUGINS_FORCE_H

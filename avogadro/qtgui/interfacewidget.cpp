@@ -27,8 +27,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 InterfaceWidget::InterfaceWidget(const QString& scriptFilePath,
                                  QWidget* parent_)
@@ -68,15 +67,15 @@ void InterfaceWidget::showError(const QString& err)
   QWidget* theParent =
     this->isVisible() ? this : qobject_cast<QWidget*>(parent());
   QDialog dlg(theParent);
-  QVBoxLayout* vbox = new QVBoxLayout();
-  QLabel* label = new QLabel(tr("An error has occurred:"));
+  auto* vbox = new QVBoxLayout();
+  auto* label = new QLabel(tr("An error has occurred:"));
   vbox->addWidget(label);
-  QTextBrowser* textBrowser = new QTextBrowser();
+  auto* textBrowser = new QTextBrowser();
 
   // adjust the size of the text browser to ~80 char wide, ~20 lines high
   QSize theSize = textBrowser->sizeHint();
   QFontMetrics metrics(textBrowser->currentFont());
-  int charWidth = metrics.width(QStringLiteral("i7OPlmWn9/")) / 10;
+  int charWidth = metrics.horizontalAdvance(QStringLiteral("i7OPlmWn9/")) / 10;
   int charHeight = metrics.lineSpacing();
   theSize.setWidth(80 * charWidth);
   theSize.setHeight(20 * charHeight);
@@ -94,5 +93,4 @@ QString InterfaceWidget::settingsKey(const QString& identifier) const
     .arg(m_interfaceScript.displayName(), identifier);
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

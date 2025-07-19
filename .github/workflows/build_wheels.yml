@@ -2,23 +2,32 @@ name: Build Wheels
 
 on: [push, pull_request]
 
-env:
-  # Don't build python 2.7, pypy, or 32-bit wheels
-  CIBW_SKIP: "cp27-* pp* *-manylinux_i686 *-win32"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
-  # This has some of the software we need pre-installed on it
-  CIBW_MANYLINUX_X86_64_IMAGE: openchemistry/avogadro_manylinux2010_x86_64
+env:
+  # builds to skip (e.g. skip 32-bit windows)
+  CIBW_SKIP: "cp38-macosx_arm64 *-manylinux_i686 *-win32"
 
   # Need to do some setup before repairing the wheel on linux...
   CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
 
+  CIBW_BEFORE_ALL_LINUX: bash scripts/github-actions/repair-linux.sh
+
   # Specify eigen location for windows
   CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
+
+  # On Mac build both x64 and arm64
+  CIBW_ARCHS_MACOS: "x86_64 arm64"
 
   CIBW_TEST_REQUIRES: pytest
 
   # Run a very simple test to make sure the wheels are working
   CIBW_TEST_COMMAND: pytest {project}/scripts/github-actions/simple_test.py
+
+  # We can't currently test Mac arm64 builds on x64
+  CIBW_TEST_SKIP: "*_arm64"
 
 
 # Use bash by default for the run command
@@ -33,29 +42,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # For Windows, we have to use visual studio 2017, which is on windows-2016
-        os: [ubuntu-20.04, macos-latest, windows-2016]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-13, macos-14]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           # Grab the whole history so that setuptools-scm can see the tags and
           # give it a correct version even on non-tag push.
           fetch-depth: 0
 
-      - uses: actions/setup-python@v2
-        name: Install Python
-        with:
-          python-version: '3.7'
-
       - name: Install dependencies
         run: . ./scripts/github-actions/install.sh
 
       - name: Build wheels
-        run:  cibuildwheel --output-dir wheelhouse
+        uses: pypa/cibuildwheel@v3.0.1
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
 
   upload_pypi:
@@ -65,10 +69,12 @@ jobs:
     # upload to PyPI on every tag push
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
-          name: artifact
+          # unpacks all CIBW artifacts into dist/
+          pattern: cibw-*
           path: dist
+          merge-multiple: true
 
       - uses: pypa/gh-action-pypi-publish@master
         with:

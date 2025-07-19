@@ -1,47 +1,35 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "spectra.h"
-#include "vibrationdialog.h"
+#include "spectradialog.h"
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/variant.h>
 #include <avogadro/core/vector.h>
-
-#include <QtCore/QTimer>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QFileDialog>
 #include <avogadro/qtgui/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+#include <avogadro/vtk/chartdialog.h>
+#include <avogadro/vtk/chartwidget.h>
+
+#include <QAction>
+#include <QDebug>
+#include <QtCore/QTimer>
+#include <QtWidgets/QFileDialog>
+
+namespace Avogadro::QtPlugins {
 
 Spectra::Spectra(QObject* p)
-  : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr),
-    m_timer(nullptr), m_mode(0), m_amplitude(20)
+  : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr)
 {
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setEnabled(false);
-  action->setText(tr("Vibrational Modes…"));
+  action->setText(tr("Plot Spectra…"));
+  action->setProperty("menu priority", -900);
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
   m_actions.push_back(action);
-}
-
-Spectra::~Spectra()
-{
 }
 
 QList<QAction*> Spectra::actions() const
@@ -52,134 +40,115 @@ QList<QAction*> Spectra::actions() const
 QStringList Spectra::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Analysis");
+  path << tr("&Analyze");
   return path;
 }
 
 void Spectra::setMolecule(QtGui::Molecule* mol)
 {
-  bool isVibrational(false);
-  if (mol->vibrationFrequencies().size())
-    isVibrational = true;
+  if (m_molecule != nullptr)
+    m_molecule->disconnect(this);
 
-  m_actions[0]->setEnabled(isVibrational);
+  // extract vibrational and other spectra
   m_molecule = mol;
-  if (m_dialog)
-    m_dialog->setMolecule(mol);
-}
 
-void Spectra::setMode(int mode)
-{
-  if (mode >= 0 &&
-      mode < static_cast<int>(m_molecule->vibrationFrequencies().size())) {
-    m_mode = mode;
+  if (m_molecule == nullptr) {
+    return;
+  }
 
-    // Now calculate the frames and set them on the molecule.
-    m_molecule->setCoordinate3d(0);
-    Core::Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    Core::Array<Vector3> atomDisplacements = m_molecule->vibrationLx(mode);
+  bool enableAction = false;
+  // check to see if it has IR or Raman data
+  if (!m_molecule->vibrationFrequencies().empty())
+    enableAction = true;
+  // check if there are other spectra
+  if (!m_molecule->spectraTypes().empty())
+    enableAction = true;
 
-    int frames = 5;
-    int frameCounter = 0;
-    m_molecule->setCoordinate3d(atomPositions, frameCounter++);
+  foreach (auto action, m_actions)
+    action->setEnabled(enableAction);
 
-    double factor = 0.01 * m_amplitude;
+  connect(m_molecule, SIGNAL(changed(unsigned int)),
+          SLOT(moleculeChanged(unsigned int)));
 
-    // Current coords + displacement.
-    for (int i = 1; i <= frames; ++i) {
-      Core::Array<Vector3> framePositions;
-      for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
-        framePositions.push_back(atomPositions[atom] +
-                                 atomDisplacements[atom] * factor *
-                                   (double(i) / frames));
-      }
-      m_molecule->setCoordinate3d(framePositions, frameCounter++);
-    }
-    // + displacement back to original.
-    for (int i = frames - 1; i >= 0; --i) {
-      Core::Array<Vector3> framePositions;
-      for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
-        framePositions.push_back(atomPositions[atom] +
-                                 atomDisplacements[atom] * factor *
-                                   (double(i) / frames));
-      }
-      m_molecule->setCoordinate3d(framePositions, frameCounter++);
-    }
-    // Current coords - displacement.
-    for (int i = 1; i <= frames; ++i) {
-      Core::Array<Vector3> framePositions;
-      for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
-        framePositions.push_back(atomPositions[atom] -
-                                 atomDisplacements[atom] * factor *
-                                   (double(i) / frames));
-      }
-      m_molecule->setCoordinate3d(framePositions, frameCounter++);
-    }
-    // - displacement back to original.
-    for (int i = frames - 1; i >= 0; --i) {
-      Core::Array<Vector3> framePositions;
-      for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
-        framePositions.push_back(atomPositions[atom] -
-                                 atomDisplacements[atom] * factor *
-                                   (double(i) / frames));
-      }
-      m_molecule->setCoordinate3d(framePositions, frameCounter++);
-    }
+  if (enableAction && m_dialog != nullptr) {
+    gatherSpectra();
   }
 }
 
-void Spectra::setAmplitude(int amplitude)
+void Spectra::moleculeChanged(unsigned int changes)
 {
-  m_amplitude = amplitude;
-  setMode(m_mode);
-}
+  if (m_molecule == nullptr)
+    return;
 
-void Spectra::startVibrationAnimation()
-{
-  // First calculate our frames, and then start our timer.
-  m_totalFrames = m_molecule->coordinate3dCount();
-  m_currentFrame = 0;
+  bool enableAction = false;
+  // check to see if it has IR or Raman data
+  if (!m_molecule->vibrationFrequencies().empty())
+    enableAction = true;
+  // check if there are other spectra
+  if (!m_molecule->spectraTypes().empty())
+    enableAction = true;
 
-  if (!m_timer) {
-    m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), SLOT(advanceFrame()));
-  }
-  if (!m_timer->isActive()) {
-    m_timer->start(50);
-  }
-}
+  foreach (auto action, m_actions)
+    action->setEnabled(enableAction);
 
-void Spectra::stopVibrationAnimation()
-{
-  if (m_timer && m_timer->isActive()) {
-    m_timer->stop();
-    m_molecule->setCoordinate3d(0);
-    m_currentFrame = 0;
-    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+  if (enableAction && m_dialog != nullptr) {
+    gatherSpectra();
   }
 }
 
 void Spectra::openDialog()
 {
-  if (!m_dialog) {
-    m_dialog = new VibrationDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(modeChanged(int)), SLOT(setMode(int)));
-    connect(m_dialog, SIGNAL(amplitudeChanged(int)), SLOT(setAmplitude(int)));
-    connect(m_dialog, SIGNAL(startAnimation()),
-            SLOT(startVibrationAnimation()));
-    connect(m_dialog, SIGNAL(stopAnimation()), SLOT(stopVibrationAnimation()));
+  if (m_molecule == nullptr)
+    return;
+
+  if (m_dialog == nullptr) {
+    m_dialog = new SpectraDialog(qobject_cast<QWidget*>(this->parent()));
   }
-  if (m_molecule)
-    m_dialog->setMolecule(m_molecule);
+
+  gatherSpectra();
+  // update the elements
+  auto elements = m_molecule->atomicNumbers();
+  std::vector<unsigned char> atomicNumbers(elements.begin(), elements.end());
+  m_dialog->setElements(atomicNumbers);
   m_dialog->show();
 }
 
-void Spectra::advanceFrame()
+void Spectra::gatherSpectra()
 {
-  if (++m_currentFrame >= m_totalFrames)
-    m_currentFrame = 0;
-  m_molecule->setCoordinate3d(m_currentFrame);
-  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+  if (m_molecule == nullptr || m_dialog == nullptr)
+    return;
+
+  std::map<std::string, MatrixX> spectra;
+  // copy any spectra from the molecule
+  for (const auto& type : m_molecule->spectraTypes()) {
+    spectra[type] = m_molecule->spectra(type);
+  }
+
+  // check to see if it has IR or Raman data
+  if (!m_molecule->vibrationFrequencies().empty()) {
+    const unsigned int n = m_molecule->vibrationFrequencies().size();
+
+    MatrixX ir(n, 2);
+    // check max intensity
+    for (unsigned int i = 0; i < n; ++i) {
+      ir(i, 0) = m_molecule->vibrationFrequencies()[i];
+      ir(i, 1) = m_molecule->vibrationIRIntensities()[i];
+    }
+
+    spectra["IR"] = ir;
+
+    if (m_molecule->vibrationRamanIntensities().size() ==
+        m_molecule->vibrationFrequencies().size()) {
+      MatrixX raman(n, 2);
+      for (unsigned int i = 0; i < n; ++i) {
+        raman(i, 0) = m_molecule->vibrationFrequencies()[i];
+        raman(i, 1) = m_molecule->vibrationRamanIntensities()[i];
+      }
+      spectra["Raman"] = raman;
+    }
+  }
+
+  m_dialog->setSpectra(spectra);
 }
-}
-}
+
+} // namespace Avogadro::QtPlugins

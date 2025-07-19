@@ -10,11 +10,10 @@
 #include <list>
 #include <map>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 struct BackboneResidue;
-typedef std::list<BackboneResidue> AtomsPairList;
+using AtomsPairList = std::list<BackboneResidue>;
 
 class Cartoons : public QtGui::ScenePlugin
 {
@@ -22,19 +21,23 @@ class Cartoons : public QtGui::ScenePlugin
 
 public:
   explicit Cartoons(QObject* parent = 0);
-  ~Cartoons() override;
+  ~Cartoons() override = default;
 
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr(m_name.c_str()); }
+  QString name() const override
+  {
+    return tr("Cartoons", "protein ribbon / cartoon rendering");
+  }
 
   QString description() const override
   {
-    return tr("Simple display of Cartoons family.");
+    return tr("Display of biomolecule ribbons / cartoons.");
   }
 
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
 
   DefaultBehavior defaultBehavior() const override
   {
@@ -67,7 +70,6 @@ private:
   std::map<size_t, AtomsPairList> getBackboneManually(
     const QtGui::Molecule& molecule, size_t layer);
 };
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_CARTOONS_H

@@ -15,10 +15,10 @@
 ******************************************************************************/
 
 #include "qtaimcriticalpointlocator.h"
+
 #include "qtaimlsodaintegrator.h"
 #include "qtaimmathutilities.h"
-#include "qtaimodeintegrator.h"
-#include "qtaimwavefunction.h"
+#include "qtaimwavefunctionevaluator.h"
 
 #include <Eigen/Core>
 
@@ -37,14 +37,78 @@
 #include <QFutureWatcher>
 #include <QProgressDialog>
 
-using namespace std;
 using namespace Eigen;
 
 #define HUGE_REAL_NUMBER 1.e20
 #define SMALL_GRADIENT_NORM 1.e-4
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
+
+namespace helper {
+template <qint64 ExpectedSignatureV>
+QList<QVariant> QTAIMLocateElectronDensityHelper(QList<QVariant> input)
+{
+  qint64 counter = 0;
+  const QString fileName = input.at(counter).toString();
+  counter++;
+  //    const qint64 nucleus=input.at(counter).toInt(); counter++
+  qreal x0 = input.at(counter).toReal();
+  counter++;
+  qreal y0 = input.at(counter).toReal();
+  counter++;
+  qreal z0 = input.at(counter).toReal();
+  counter++;
+
+  const QVector3D x0y0z0(x0, y0, z0);
+
+  QTAIMWavefunction wfn;
+  wfn.loadFromBinaryFile(fileName);
+
+  QTAIMWavefunctionEvaluator eval(wfn);
+
+  /**
+    The following logic chain was concatenated into a single statement to remove
+    redundant branching, for readability the following table has been included.
+    If any of the logic checks do not meet the expected result, the return value
+    will be `false`, else it will be `true`.
+
+    logic chain breakdown:
+    | Statement | Expected |
+    |-----------|----------|
+    | eval.electronDensity(x0y0z0) < 1.e-1 | false |
+    | eval.electronDensity(xyz) > 1.e-1 | true |
+    | eval.gradientOfElectronDensityLaplacian(xyz).norm() < 1.e-3 | true |
+    |
+    QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(xyz))
+    == ExpectedSignatureV | true |
+  */
+
+  // Validate initial input to avoid needless costly calculations
+  if (eval.electronDensity(Matrix<qreal, 3, 1>(x0, y0, z0)) < 1.e-1) {
+    return { false };
+  }
+
+  //      QTAIMODEIntegrator
+  //      ode(eval,QTAIMODEIntegrator::CMBPMinusThreeGradientInElectronDensityLaplacian);
+  QTAIMLSODAIntegrator ode(
+    eval,
+    QTAIMLSODAIntegrator::CMBPMinusThreeGradientInElectronDensityLaplacian);
+  QVector3D result = ode.integrate(x0y0z0);
+
+  Matrix<qreal, 3, 1> xyz(result.x(), result.y(), result.z());
+
+  // since we are using `&&` operator, lazy evaluation will be used
+  if (eval.electronDensity(xyz) > 1.e-1 &&
+      eval.gradientOfElectronDensityLaplacian(xyz).norm() < 1.e-3 &&
+      QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
+        eval.hessianOfElectronDensityLaplacian(xyz)) == ExpectedSignatureV) {
+    return { true, result.x(), result.y(), result.z() };
+  }
+
+  return { false };
+}
+
+} // namespace helper
 
 QList<QVariant> QTAIMLocateNuclearCriticalPoint(QList<QVariant> input)
 {
@@ -70,37 +134,17 @@ QList<QVariant> QTAIMLocateNuclearCriticalPoint(QList<QVariant> input)
     result = x0y0z0;
   }
 
-  bool correctSignature;
-  Matrix<qreal, 3, 1> xyz;
-  xyz << result.x(), result.y(), result.z();
-
   if (QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
-        eval.hessianOfElectronDensity(xyz)) == -3) {
-    correctSignature = true;
-  } else {
-    correctSignature = false;
+        eval.hessianOfElectronDensity(
+          Matrix<qreal, 3, 1>(result.x(), result.y(), result.z()))) == -3) {
+    return { true, result.x(), result.y(), result.z() };
   }
 
-  QList<QVariant> value;
-
-  if (correctSignature) {
-    value.append(correctSignature);
-    value.append(result.x());
-    value.append(result.y());
-    value.append(result.z());
-  } else {
-    value.append(false);
-  }
-
-  return value;
+  return { false };
 }
 
 QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
 {
-
-  QList<QVariant> value;
-  value.clear();
-
   const QString wfnFileName = input.at(0).toString();
   const QString nuclearCriticalPointsFileName = input.at(1).toString();
   const qint64 nucleusA = input.at(2).toInt();
@@ -119,9 +163,9 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
   nuclearCriticalPointsFile.close();
 
   QList<QPair<QVector3D, qreal>> betaSpheres;
-  for (qint64 i = 0; i < nuclearCriticalPoints.length(); ++i) {
+  for (auto nuclearCriticalPoint : nuclearCriticalPoints) {
     QPair<QVector3D, qreal> thisBetaSphere;
-    thisBetaSphere.first = nuclearCriticalPoints.at(i);
+    thisBetaSphere.first = nuclearCriticalPoint;
     thisBetaSphere.second = 0.1;
     betaSpheres.append(thisBetaSphere);
   }
@@ -130,32 +174,25 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
 
   QList<QVector3D> ncpList;
 
-  QVector3D result;
   //    QTAIMODEIntegrator
   //    ode(eval,QTAIMODEIntegrator::CMBPMinusOneGradientInElectronDensity);
   QTAIMLSODAIntegrator ode(
     eval, QTAIMLSODAIntegrator::CMBPMinusOneGradientInElectronDensity);
-  result = ode.integrate(x0y0z0);
-  Matrix<qreal, 3, 1> xyz;
-  xyz << result.x(), result.y(), result.z();
+  QVector3D result = ode.integrate(x0y0z0);
+  Matrix<qreal, 3, 1> xyz(result.x(), result.y(), result.z());
 
   if (!(QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
           eval.hessianOfElectronDensity(xyz)) == -1) ||
       (eval.gradientOfElectronDensity(xyz)).norm() > SMALL_GRADIENT_NORM) {
-    value.append(false);
-    value.append(result.x());
-    value.append(result.y());
-    value.append(result.z());
-    return value;
+    return { false, result.x(), result.y(), result.z() };
   }
 
-  Matrix<qreal, 3, 3> eigenvectorsOfHessian;
-  eigenvectorsOfHessian =
+  Matrix<qreal, 3, 3> eigenvectorsOfHessian =
     QTAIMMathUtilities::eigenvectorsOfASymmetricThreeByThreeMatrix(
       eval.hessianOfElectronDensity(xyz));
-  Matrix<qreal, 3, 1> highestEigenvectorOfHessian;
-  highestEigenvectorOfHessian << eigenvectorsOfHessian(0, 2),
-    eigenvectorsOfHessian(1, 2), eigenvectorsOfHessian(2, 2);
+  Matrix<qreal, 3, 1> highestEigenvectorOfHessian(eigenvectorsOfHessian(0, 2),
+                                                  eigenvectorsOfHessian(1, 2),
+                                                  eigenvectorsOfHessian(2, 2));
 
   const qreal smallStep = 0.01;
 
@@ -174,6 +211,7 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
   QTAIMLSODAIntegrator forwardODE(
     eval, QTAIMLSODAIntegrator::SteepestAscentPathInElectronDensity);
   forwardODE.setBetaSpheres(betaSpheres);
+
   QVector3D forwardEndpoint = forwardODE.integrate(forwardStartingPoint);
   QList<QVector3D> forwardPath = forwardODE.path();
 
@@ -182,73 +220,65 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
   QTAIMLSODAIntegrator backwardODE(
     eval, QTAIMLSODAIntegrator::SteepestAscentPathInElectronDensity);
   backwardODE.setBetaSpheres(betaSpheres);
+
   QVector3D backwardEndpoint = backwardODE.integrate(backwardStartingPoint);
   QList<QVector3D> backwardPath = backwardODE.path();
 
-  qreal smallestDistance = HUGE_REAL_NUMBER;
-  qint64 smallestDistanceIndex = 0;
+  // Find and store the forward and backward nucleus index for pair connection
+  // check
+  qreal minForwardDistance = HUGE_REAL_NUMBER;
+  qreal minBackwardDistance = HUGE_REAL_NUMBER;
+  qint64 backwardNucleusIndex = 0;
+  qint64 forwardNucleusIndex = 0;
+
+  // cache unchanged points
+  const Matrix<qreal, 3, 1> forwardPoint(
+    forwardEndpoint.x(), forwardEndpoint.y(), forwardEndpoint.z());
+  const Matrix<qreal, 3, 1> backwardPoint(
+    backwardEndpoint.x(), backwardEndpoint.y(), backwardEndpoint.z());
 
   for (qint64 n = 0; n < wfn.numberOfNuclei(); ++n) {
-    Matrix<qreal, 3, 1> a(forwardEndpoint.x(), forwardEndpoint.y(),
-                          forwardEndpoint.z());
-    Matrix<qreal, 3, 1> b(wfn.xNuclearCoordinate(n), wfn.yNuclearCoordinate(n),
-                          wfn.zNuclearCoordinate(n));
+    const Matrix<qreal, 3, 1> wavePoint(wfn.xNuclearCoordinate(n),
+                                        wfn.yNuclearCoordinate(n),
+                                        wfn.zNuclearCoordinate(n));
 
-    qreal distance = QTAIMMathUtilities::distance(a, b);
+    qreal fDistance = QTAIMMathUtilities::distance(forwardPoint, wavePoint);
+    qreal bDistance = QTAIMMathUtilities::distance(backwardPoint, wavePoint);
 
-    if (distance < smallestDistance) {
-      smallestDistance = distance;
-      smallestDistanceIndex = n;
+    if (fDistance < minForwardDistance) {
+      minForwardDistance = fDistance;
+      forwardNucleusIndex = n;
+    }
+    if (bDistance < minBackwardDistance) {
+      minBackwardDistance = bDistance;
+      backwardNucleusIndex = n;
     }
   }
-  qint64 forwardNucleusIndex = smallestDistanceIndex;
 
-  smallestDistance = HUGE_REAL_NUMBER;
-  smallestDistanceIndex = 0;
-
-  for (qint64 n = 0; n < wfn.numberOfNuclei(); ++n) {
-    Matrix<qreal, 3, 1> a(backwardEndpoint.x(), backwardEndpoint.y(),
-                          backwardEndpoint.z());
-    Matrix<qreal, 3, 1> b(wfn.xNuclearCoordinate(n), wfn.yNuclearCoordinate(n),
-                          wfn.zNuclearCoordinate(n));
-
-    qreal distance = QTAIMMathUtilities::distance(a, b);
-
-    if (distance < smallestDistance) {
-      smallestDistance = distance;
-      smallestDistanceIndex = n;
-    }
-  }
-  qint64 backwardNucleusIndex = smallestDistanceIndex;
-
-  bool bondPathConnectsPair;
+  QList<QVariant> value;
+  // if statement checks if bond path connects pair
   if ((forwardNucleusIndex == nucleusA && backwardNucleusIndex == nucleusB) ||
       (forwardNucleusIndex == nucleusB && backwardNucleusIndex == nucleusA)) {
-    bondPathConnectsPair = true;
-  } else {
-    bondPathConnectsPair = false;
-  }
-
-  if (bondPathConnectsPair) {
     value.append(true);
     value.append(nucleusA);
     value.append(nucleusB);
     value.append(result.x());
     value.append(result.y());
     value.append(result.z());
-    Matrix<qreal, 3, 1> xyz_;
-    xyz_ << result.x(), result.y(), result.z();
+
+    const Matrix<qreal, 3, 1> xyz_(result.x(), result.y(), result.z());
     value.append(eval.laplacianOfElectronDensity(xyz_));
     value.append(QTAIMMathUtilities::ellipticityOfASymmetricThreeByThreeMatrix(
       eval.hessianOfElectronDensity(xyz_)));
+
     value.append(1 + forwardPath.length() + 1 + backwardPath.length() + 1);
     value.append(forwardEndpoint.x());
     for (qint64 i = forwardPath.length() - 1; i >= 0; --i) {
       value.append(forwardPath.at(i).x());
     }
     value.append(result.x());
-    for (qint64 i = 0; i < backwardPath.length(); ++i) {
-      value.append(backwardPath.at(i).x());
+    for (auto i : backwardPath) {
+      value.append(i.x());
     }
     value.append(backwardEndpoint.x());
     value.append(forwardEndpoint.y());
@@ -256,8 +286,8 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
       value.append(forwardPath.at(i).y());
     }
     value.append(result.y());
-    for (qint64 i = 0; i < backwardPath.length(); ++i) {
-      value.append(backwardPath.at(i).y());
+    for (auto i : backwardPath) {
+      value.append(i.y());
     }
     value.append(backwardEndpoint.y());
     value.append(forwardEndpoint.z());
@@ -265,8 +295,8 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
       value.append(forwardPath.at(i).z());
     }
     value.append(result.z());
-    for (qint64 i = 0; i < backwardPath.length(); ++i) {
-      value.append(backwardPath.at(i).z());
+    for (auto i : backwardPath) {
+      value.append(i.z());
     }
     value.append(backwardEndpoint.z());
 
@@ -283,130 +313,36 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
 
 QList<QVariant> QTAIMLocateElectronDensitySink(QList<QVariant> input)
 {
-  qint64 counter = 0;
-  const QString fileName = input.at(counter).toString();
-  counter++;
-  //    const qint64 nucleus=input.at(counter).toInt(); counter++
-  qreal x0 = input.at(counter).toReal();
-  counter++;
-  qreal y0 = input.at(counter).toReal();
-  counter++;
-  qreal z0 = input.at(counter).toReal();
-  counter++;
+  /**
+    This function acts as a wrapper to consolidate code
+    The primary functionality only deviates from other functions in its
+    expected value for
 
-  const QVector3D x0y0z0(x0, y0, z0);
+    QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(**Integrated
+    Point**))
 
-  QTAIMWavefunction wfn;
-  wfn.loadFromBinaryFile(fileName);
+    which is passed in as a template parameter to the helper function.
 
-  QTAIMWavefunctionEvaluator eval(wfn);
-
-  bool correctSignature;
-  QVector3D result;
-
-  Matrix<qreal, 3, 1> xyz;
-  xyz << x0, y0, z0;
-  if (eval.electronDensity(xyz) < 1.e-1) {
-    correctSignature = false;
-  } else {
-    //      QTAIMODEIntegrator
-    //      ode(eval,QTAIMODEIntegrator::CMBPMinusThreeGradientInElectronDensityLaplacian);
-    QTAIMLSODAIntegrator ode(
-      eval,
-      QTAIMLSODAIntegrator::CMBPMinusThreeGradientInElectronDensityLaplacian);
-    result = ode.integrate(x0y0z0);
-
-    Matrix<qreal, 3, 1> xyz_;
-    xyz_ << result.x(), result.y(), result.z();
-
-    if (eval.electronDensity(xyz_) > 1.e-1 &&
-        eval.gradientOfElectronDensityLaplacian(xyz_).norm() < 1.e-3) {
-      if (QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
-            eval.hessianOfElectronDensityLaplacian(xyz_)) == -3) {
-        correctSignature = true;
-      } else {
-        correctSignature = false;
-      }
-    } else {
-      correctSignature = false;
-    }
-  }
-
-  QList<QVariant> value;
-  if (correctSignature) {
-    value.append(correctSignature);
-    value.append(result.x());
-    value.append(result.y());
-    value.append(result.z());
-  } else {
-    value.append(false);
-  }
-
-  return value;
+    At the time of writing this value is -3.
+  */
+  return helper::QTAIMLocateElectronDensityHelper<-3>(input);
 }
 
 QList<QVariant> QTAIMLocateElectronDensitySource(QList<QVariant> input)
 {
-  qint64 counter = 0;
-  const QString fileName = input.at(counter).toString();
-  counter++;
-  //    const qint64 nucleus=input.at(counter).toInt(); counter++
-  qreal x0 = input.at(counter).toReal();
-  counter++;
-  qreal y0 = input.at(counter).toReal();
-  counter++;
-  qreal z0 = input.at(counter).toReal();
-  counter++;
+  /**
+    This function acts as a wrapper to consolidate code
+    The primary functionality only deviates from other functions in its
+    expected value for
 
-  const QVector3D x0y0z0(x0, y0, z0);
+    QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(**Integrated
+    Point**))
 
-  QTAIMWavefunction wfn;
-  wfn.loadFromBinaryFile(fileName);
+    which is passed in as a template parameter to the helper function.
 
-  QTAIMWavefunctionEvaluator eval(wfn);
-
-  bool correctSignature;
-  QVector3D result;
-
-  Matrix<qreal, 3, 1> xyz;
-  xyz << x0, y0, z0;
-  if (eval.electronDensity(xyz) < 1.e-1) {
-    correctSignature = false;
-  } else {
-    //      QTAIMODEIntegrator
-    //      ode(eval,QTAIMODEIntegrator::CMBPPlusThreeGradientInElectronDensityLaplacian);
-    QTAIMLSODAIntegrator ode(
-      eval,
-      QTAIMLSODAIntegrator::CMBPPlusThreeGradientInElectronDensityLaplacian);
-    result = ode.integrate(x0y0z0);
-
-    Matrix<qreal, 3, 1> xyz_;
-    xyz_ << result.x(), result.y(), result.z();
-
-    if (eval.electronDensity(xyz_) > 1.e-1 &&
-        eval.gradientOfElectronDensityLaplacian(xyz_).norm() < 1.e-3) {
-      if (QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
-            eval.hessianOfElectronDensityLaplacian(xyz_)) == 3) {
-        correctSignature = true;
-      } else {
-        correctSignature = false;
-      }
-    } else {
-      correctSignature = false;
-    }
-  }
-
-  QList<QVariant> value;
-  if (correctSignature) {
-    value.append(correctSignature);
-    value.append(result.x());
-    value.append(result.y());
-    value.append(result.z());
-  } else {
-    value.append(false);
-  }
-
-  return value;
+    At the time of writing this value is 3.
+  */
+  return helper::QTAIMLocateElectronDensityHelper<3>(input);
 }
 
 QTAIMCriticalPointLocator::QTAIMCriticalPointLocator(QTAIMWavefunction& wfn)
@@ -454,7 +390,7 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Nuclear Critical Points Search"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -478,15 +414,9 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
   QFile file;
   file.remove(tempFileName);
 
-  for (qint64 n = 0; n < results.length(); ++n) {
-
-    bool correctSignature = results.at(n).at(0).toBool();
-
-    if (correctSignature) {
-
-      QVector3D result(results.at(n).at(1).toReal(),
-                       results.at(n).at(2).toReal(),
-                       results.at(n).at(3).toReal());
+  for (const auto& n : results) {
+    if (n.at(0).toBool()) {
+      QVector3D result(n.at(1).toReal(), n.at(2).toReal(), n.at(3).toReal());
 
       m_nuclearCriticalPoints.append(result);
     }
@@ -549,7 +479,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
         inputList.append(input);
       }
     } // end N
-  }   // end M
+  } // end M
 
   m_wfn->saveToBinaryFile(tempFileName);
 
@@ -557,7 +487,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Bond Critical Points Search"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -583,9 +513,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
   file.remove(tempFileName);
   file.remove(nuclearCriticalPointsFileName);
 
-  for (qint64 i = 0; i < results.length(); ++i) {
-    QList<QVariant> thisCriticalPoint = results.at(i);
-
+  for (const auto& thisCriticalPoint : results) {
     bool success = thisCriticalPoint.at(0).toBool();
 
     if (success) {
@@ -706,7 +634,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Electron Density Sources Search"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -730,19 +658,11 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
   QFile file;
   file.remove(tempFileName);
 
-  for (qint64 n = 0; n < results.length(); ++n) {
-
-    qint64 counter = 0;
-    bool correctSignature = results.at(n).at(counter).toBool();
-    counter++;
-
-    if (correctSignature) {
-      qreal x = results.at(n).at(counter).toReal();
-      counter++;
-      qreal y = results.at(n).at(counter).toReal();
-      counter++;
-      qreal z = results.at(n).at(counter).toReal();
-      counter++;
+  for (const auto& n : results) {
+    if (n.at(0).toBool()) {
+      qreal x = n.at(1).toReal();
+      qreal y = n.at(2).toReal();
+      qreal z = n.at(3).toReal();
 
       if ((xmin < x && x < xmax) && (ymin < y && y < ymax) &&
           (zmin < z && z < zmax)) {
@@ -750,12 +670,12 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
 
         qreal smallestDistance = HUGE_REAL_NUMBER;
 
-        for (qint64 i = 0; i < m_electronDensitySources.length(); ++i) {
+        for (auto m_electronDensitySource : m_electronDensitySources) {
 
           Matrix<qreal, 3, 1> a(x, y, z);
-          Matrix<qreal, 3, 1> b(m_electronDensitySources.at(i).x(),
-                                m_electronDensitySources.at(i).y(),
-                                m_electronDensitySources.at(i).z());
+          Matrix<qreal, 3, 1> b(m_electronDensitySource.x(),
+                                m_electronDensitySource.y(),
+                                m_electronDensitySource.z());
 
           qreal distance = QTAIMMathUtilities::distance(a, b);
 
@@ -859,7 +779,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Electron Density Sinks Search"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -883,19 +803,11 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
   QFile file;
   file.remove(tempFileName);
 
-  for (qint64 n = 0; n < results.length(); ++n) {
-
-    qint64 counter = 0;
-    bool correctSignature = results.at(n).at(counter).toBool();
-    counter++;
-
-    if (correctSignature) {
-      qreal x = results.at(n).at(counter).toReal();
-      counter++;
-      qreal y = results.at(n).at(counter).toReal();
-      counter++;
-      qreal z = results.at(n).at(counter).toReal();
-      counter++;
+  for (const auto& n : results) {
+    if (n.at(0).toBool()) {
+      qreal x = n.at(1).toReal();
+      qreal y = n.at(2).toReal();
+      qreal z = n.at(3).toReal();
 
       if ((xmin < x && x < xmax) && (ymin < y && y < ymax) &&
           (zmin < z && z < zmax)) {
@@ -903,12 +815,12 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
 
         qreal smallestDistance = HUGE_REAL_NUMBER;
 
-        for (qint64 i = 0; i < m_electronDensitySinks.length(); ++i) {
+        for (auto m_electronDensitySink : m_electronDensitySinks) {
 
           Matrix<qreal, 3, 1> a(x, y, z);
-          Matrix<qreal, 3, 1> b(m_electronDensitySinks.at(i).x(),
-                                m_electronDensitySinks.at(i).y(),
-                                m_electronDensitySinks.at(i).z());
+          Matrix<qreal, 3, 1> b(m_electronDensitySink.x(),
+                                m_electronDensitySink.y(),
+                                m_electronDensitySink.z());
 
           qreal distance = QTAIMMathUtilities::distance(a, b);
 
@@ -943,5 +855,4 @@ QString QTAIMCriticalPointLocator::temporaryFileName()
   return tempFileName;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -1,19 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2008 Albert De Fusco
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "gaussianset.h"
@@ -28,17 +15,9 @@ using std::endl;
 
 using std::vector;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
-GaussianSet::GaussianSet() : m_numMOs(0), m_init(false)
-{
-  m_scfType = Rhf;
-}
-
-GaussianSet::~GaussianSet()
-{
-}
+GaussianSet::GaussianSet() : m_numMOs(0), m_init(false), m_scfType(Rhf) {}
 
 unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
 {
@@ -64,6 +43,24 @@ unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
       break;
     case F7:
       m_numMOs += 7;
+      break;
+    case G:
+      m_numMOs += 15;
+      break;
+    case G9:
+      m_numMOs += 9;
+      break;
+    case H:
+      m_numMOs += 21;
+      break;
+    case H11:
+      m_numMOs += 11;
+      break;
+    case I:
+      m_numMOs += 28;
+      break;
+    case I13:
+      m_numMOs += 13;
       break;
     default:
       // Should never hit here
@@ -157,24 +154,6 @@ bool GaussianSet::setActiveSetStep(int index)
   return true;
 }
 
-void GaussianSet::setMolecularOrbitalEnergy(const vector<double>& energies,
-                                            ElectronType type)
-{
-  if (type == Beta)
-    m_moEnergy[1] = energies;
-  else
-    m_moEnergy[0] = energies;
-}
-
-void GaussianSet::setMolecularOrbitalOccupancy(const vector<unsigned char>& occ,
-                                               ElectronType type)
-{
-  if (type == Beta)
-    m_moOccupancy[1] = occ;
-  else
-    m_moOccupancy[0] = occ;
-}
-
 void GaussianSet::setMolecularOrbitalNumber(const vector<unsigned int>& nums,
                                             ElectronType type)
 {
@@ -198,13 +177,7 @@ bool GaussianSet::setSpinDensityMatrix(const MatrixX& m)
   return true;
 }
 
-bool GaussianSet::generateDensityMatrix()
-{
-  // FIXME: Finish me!
-  return true;
-}
-
-unsigned int GaussianSet::molecularOrbitalCount(ElectronType type)
+unsigned int GaussianSet::molecularOrbitalCount(ElectronType type) const
 {
   size_t index(0);
   if (type == Beta)
@@ -219,7 +192,7 @@ void GaussianSet::outputAll(ElectronType type)
     index = 1;
 
   // Can be called to print out a summary of the basis set as read in
-  unsigned int numAtoms = static_cast<unsigned int>(m_molecule->atomCount());
+  auto numAtoms = static_cast<unsigned int>(m_molecule->atomCount());
   cout << "\nGaussian Basis Set\nNumber of atoms:" << numAtoms << endl;
   switch (m_scfType) {
     case Rhf:
@@ -461,12 +434,54 @@ void GaussianSet::initCalculation()
           m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm); //-3
         }
       } break;
-      case G:
-        skip = 15;
-        break;
-      case G9:
-        skip = 9;
-        break;
+      case G: {
+        // 16 * (2.0/pi)^0.75
+        double norm = 11.403287525679843;
+        double norm1 = norm / sqrt(7.0);
+        double norm2 = norm / sqrt(35.0 / 3.0);
+        double norm3 = norm / sqrt(35.0);
+        m_moIndices[i] = indexMO;
+        indexMO += 15;
+        m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
+        for (unsigned j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
+          // molden order
+          // xxxx yyyy zzzz xxxy xxxz yyyx yyyz zzzx zzzy,
+          // xxyy xxzz yyzz xxyz yyxz zzxy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm);  // xxxx
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm);  // yyyy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm);  // zzzz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // xxxy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // xxxz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // yyyx
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // yyyz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // zzzx
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // zzzy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm2); // xxyy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm2); // xxzz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm2); // yyzz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm3); // xxyz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm3); // yyxz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm3); // zzxy
+        }
+      } break;
+      case G9: {
+        // 16 * (2.0/pi)^0.75
+        double norm = 11.403287525679843;
+        m_moIndices[i] = indexMO;
+        indexMO += 9;
+        m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
+        for (unsigned j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); // 0
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+1
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-1
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+2
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-2
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+3
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-3
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+4
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-4
+        }
+      } break;
       case H:
         skip = 21;
         break;
@@ -493,7 +508,7 @@ void GaussianSet::initCalculation()
   m_init = true;
 }
 
-bool GaussianSet::generateDensity()
+bool GaussianSet::generateDensityMatrix()
 {
   if (m_scfType == Unknown)
     return false;
@@ -510,9 +525,11 @@ bool GaussianSet::generateDensity()
             m_density(jBasis, iBasis) += 2.0 * icoeff * jcoeff;
             m_density(iBasis, jBasis) = m_density(jBasis, iBasis);
           }
-          cout << iBasis << ", " << jBasis << ": " << m_density(iBasis, jBasis)
-               << endl;
+          //          cout << iBasis << ", " << jBasis << ": " <<
+          //          m_density(iBasis, jBasis)
+          //               << endl;
           break;
+        case Rohf: // ROHF is handled similarly to UHF
         case Uhf:
           for (unsigned int iaMO = 0; iaMO < m_electrons[0]; ++iaMO) {
             double icoeff = m_moMatrix[0](iBasis, iaMO);
@@ -526,8 +543,9 @@ bool GaussianSet::generateDensity()
             m_density(jBasis, iBasis) += icoeff * jcoeff;
             m_density(iBasis, jBasis) = m_density(jBasis, iBasis);
           }
-          cout << iBasis << ", " << jBasis << ": " << m_density(iBasis, jBasis)
-               << endl;
+          //          cout << iBasis << ", " << jBasis << ": " <<
+          //          m_density(iBasis, jBasis)
+          //               << endl;
           break;
         default:
           cout << "Unhandled scf type:" << m_scfType << endl;
@@ -537,7 +555,7 @@ bool GaussianSet::generateDensity()
   return true;
 }
 
-bool GaussianSet::generateSpinDensity()
+bool GaussianSet::generateSpinDensityMatrix()
 {
   if (m_scfType != Uhf)
     return false;
@@ -565,5 +583,4 @@ bool GaussianSet::generateSpinDensity()
   return true;
 }
 
-} // End namespace Core
-} // End namespace Avogadro
+} // namespace Avogadro::Core

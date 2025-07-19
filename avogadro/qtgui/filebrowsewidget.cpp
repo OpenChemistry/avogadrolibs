@@ -1,45 +1,28 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "filebrowsewidget.h"
 
+#include <QFileSystemModel>
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QFileSystemModel>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QProcessEnvironment>
-#include <QtCore/QRegExp>
+#include <QFileInfo>
+#include <QProcessEnvironment>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
-  : QWidget(theParent)
-  , m_mode()
-  , // use the setter to initialize filters.
-  m_valid(false)
-  , m_fileSystemModel(new QFileSystemModel(this))
-  , m_button(new QPushButton(tr("Browse")))
-  , m_edit(new QLineEdit)
+  : QWidget(theParent), m_mode(), // use the setter to initialize filters.
+    m_valid(false), m_fileSystemModel(new QFileSystemModel(this)),
+    m_button(new QPushButton(tr("Browse"))), m_edit(new QLineEdit)
 {
-  QHBoxLayout* hbox = new QHBoxLayout;
+  auto* hbox = new QHBoxLayout;
   hbox->addWidget(m_edit);
   hbox->addWidget(m_button);
   setLayout(hbox);
@@ -51,7 +34,7 @@ FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
 
   // Setup completion
   m_fileSystemModel->setRootPath(QDir::rootPath());
-  QCompleter* fsCompleter = new QCompleter(m_fileSystemModel, this);
+  auto* fsCompleter = new QCompleter(m_fileSystemModel, this);
   m_edit->setCompleter(fsCompleter);
 
   // Connections:
@@ -164,6 +147,37 @@ void FileBrowseWidget::fileNameNoMatch()
   m_valid = false;
 }
 
+QStringList FileBrowseWidget::searchSystemPathForFiles(const QStringList& execs)
+{
+  QStringList result;
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  if (!env.contains(QStringLiteral("PATH")))
+    return result;
+
+  static QString pathSplitter =
+#ifdef Q_OS_WIN32
+    ";"
+#else  // WIN32
+    ":"
+#endif // WIN32
+    ;
+  QStringList paths =
+    env.value(QStringLiteral("PATH")).split(pathSplitter, Qt::SkipEmptyParts);
+
+  foreach (const QString& exec, execs) {
+    foreach (const QString& path, paths) {
+      QFileInfo info(path + "/" + exec);
+      if (!info.exists() || !info.isFile()) {
+        continue;
+      }
+      result << info.absoluteFilePath();
+      break;
+    }
+  }
+
+  return result;
+}
+
 QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
 {
   QString result;
@@ -171,15 +185,15 @@ QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
   if (!env.contains(QStringLiteral("PATH")))
     return result;
 
-  static QRegExp pathSplitter = QRegExp(
+  static QString pathSplitter =
 #ifdef Q_OS_WIN32
     ";"
 #else  // WIN32
     ":"
 #endif // WIN32
-  );
-  QStringList paths = env.value(QStringLiteral("PATH"))
-                        .split(pathSplitter, QString::SkipEmptyParts);
+    ;
+  QStringList paths =
+    env.value(QStringLiteral("PATH")).split(pathSplitter, Qt::SkipEmptyParts);
 
   foreach (const QString& path, paths) {
     QFileInfo info(path + "/" + exec);
@@ -213,5 +227,4 @@ FileBrowseWidget::Mode FileBrowseWidget::mode() const
   return m_mode;
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

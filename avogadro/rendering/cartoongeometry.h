@@ -18,8 +18,8 @@ enum CartoonType
   Undefined = -1, // constant small radius
   Body = 0,       // constant big radius
   Arrow = 3,      // arrow head
-  Head = 2,       // decreassing
-  Tail = 1        // increassing
+  Head = 2,       // decreasing
+  Tail = 1        // increasing
 };
 
 class AVOGADRORENDERING_EXPORT Cartoon : public BSplineGeometry
@@ -33,7 +33,7 @@ public:
                 size_t id, Core::Residue::SecondaryStructure sec);
 
 protected:
-  // create an elipse and adapt it to the affine A
+  // create an ellipsis and adapt it to the affine A
   std::vector<ColorNormalVertex> computeCirclePoints(const Eigen::Affine3f& a,
                                                      const Eigen::Affine3f& b,
                                                      bool flat) const override;

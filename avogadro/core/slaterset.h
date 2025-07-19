@@ -1,18 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_SLATERSET_H
@@ -25,8 +13,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class SlaterSet slaterset.h
@@ -54,12 +41,12 @@ public:
   /**
    * Constructor.
    */
-  SlaterSet();
+  SlaterSet() = default;
 
   /**
    * Destructor.
    */
-  ~SlaterSet() override;
+  ~SlaterSet() override = default;
 
   /**
    * Clone.
@@ -129,7 +116,7 @@ public:
   /**
    * @return The number of molecular orbitals in the BasisSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = Paired) override;
+  unsigned int molecularOrbitalCount(ElectronType type = Paired) const override;
 
   /**
    * @return True of the basis set is valid, false otherwise.
@@ -153,6 +140,7 @@ public:
   MatrixX& normalizedMatrix() { return m_normalized; }
   MatrixX& densityMatrix() { return m_density; }
 
+  // Nonfunctional - Included for backwards compatibility
   void outputAll();
 
 private:
@@ -166,12 +154,11 @@ private:
   MatrixX m_eigenVectors;
   MatrixX m_density;
   MatrixX m_normalized;
-  bool m_initialized;
+  bool m_initialized = false;
 
   unsigned int factorial(unsigned int n);
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif

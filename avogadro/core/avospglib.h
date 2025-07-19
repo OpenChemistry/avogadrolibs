@@ -1,27 +1,16 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_AVO_SPGLIB_H
 #define AVOGADRO_CORE_AVO_SPGLIB_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
+
 #include "molecule.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class AvoSpglib avospglib.h <avogadro/core/avospglib.h>
@@ -44,8 +33,7 @@ public:
    * @param cartTol The cartesian tolerance for spglib.
    * @return The Hall number for the crystal.
    */
-  static unsigned short getHallNumber(Molecule& mol,
-                                      double cartTol = 1e-5);
+  static unsigned short getHallNumber(Molecule& mol, double cartTol = 1e-5);
 
   /**
    * Use spglib to reduce the crystal to a primitive cell. Unless the molecule
@@ -96,7 +84,6 @@ private:
                               bool idealize);
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_AVO_SPGLIB_H

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_RENDERING_MESHGEOMETRY_H
@@ -41,10 +30,9 @@ public:
     unsigned char padding[4]; //  4 bytes
 
     PackedVertex(const Vector4ub& c, const Vector3f& n, const Vector3f& v)
-      : color(c)
-      , normal(n)
-      , vertex(v)
-    {}
+      : color(c), normal(n), vertex(v)
+    {
+    }
 
     static int colorOffset() { return 0; }
     static int normalOffset() { return static_cast<int>(sizeof(Vector4ub)); }
@@ -103,8 +91,7 @@ public:
    * the valid index range.
    * @{
    */
-  void addTriangle(unsigned int index1, unsigned int index2,
-                   unsigned int index3);
+  void addTriangle(size_t index1, size_t index2, size_t index3);
   void addTriangles(const Core::Array<unsigned int>& indices);
   /** @} */
 

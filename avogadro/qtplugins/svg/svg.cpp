@@ -9,15 +9,14 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QSvgGenerator>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/scene.h>
 #include <iostream>
 #include <string>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 const float SVG::DEFAULT_RADIUS = 35.0f;
 const float SVG::DEFAULT_PEN_WIDTH_MOL = 1.0f;
@@ -28,7 +27,8 @@ const Vector3ub SVG::DEFAULT_BOND_COLOR = Vector3ub(125, 125, 125);
 
 SVG::SVG(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
-    m_scene(nullptr), m_camera(nullptr), m_action(new QAction(tr("&SVG…"), this))
+    m_scene(nullptr), m_camera(nullptr),
+    m_action(new QAction(tr("&SVG…"), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(render()));
 }
@@ -186,10 +186,10 @@ void SVG::paintBonds(QPainter& painter, const SVGAtom& atom, unsigned int i,
 {
   painter.setPen(QPen(QColor(m_BondColor[0], m_BondColor[1], m_BondColor[2]),
                       m_penWidthBond));
-  for (auto it = bonds.begin(); it != bonds.end(); ++it) {
-    unsigned int j = it->atom2().index();
+  for (auto bond : bonds) {
+    unsigned int j = bond.atom2().index();
     if (m_idToindex[j] == i) {
-      j = it->atom1().index();
+      j = bond.atom1().index();
     }
     if (m_idToindex[j] <= i) {
       continue;
@@ -206,7 +206,7 @@ void SVG::paintBonds(QPainter& painter, const SVGAtom& atom, unsigned int i,
                         (from[1] - to[1]) * (from[1] - to[1]));
     float offsetX = (to[1] - from[1]) / L;
     float offsetY = (from[0] - to[0]) / L;
-    unsigned int order = int(it->order());
+    unsigned int order = int(bond.order());
     // for each bound offset it following the orthogonal direction
     for (unsigned int o = 0; o < order; ++o) {
       // if there is only one bond, don't displace
@@ -278,5 +278,4 @@ void SVG::render()
   painter.end();
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

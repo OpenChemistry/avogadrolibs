@@ -38,18 +38,15 @@ tam@wri.com
 */
 
 #include "qtaimlsodaintegrator.h"
+#include "qtaimmathutilities.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMLSODAIntegrator::QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator& eval,
                                            const qint64 mode)
+  : m_eval(&eval), m_mode(mode), m_associatedSphere(0)
 {
-  m_eval = &eval;
-  m_mode = mode;
-
   m_betaSpheres.empty();
-  m_associatedSphere = 0;
 }
 
 QVector3D QTAIMLSODAIntegrator::integrate(QVector3D x0y0z0)
@@ -322,7 +319,6 @@ defined in a similar way using incy.
 
   for (i = 1; i <= n_ * incx; i = i + incx)
     dy[i] = da * dx[i] + dy[i];
-  return;
 }
 
 double QTAIMLSODAIntegrator::ddot(int n_, double* dx, int incx, double* dy,
@@ -647,7 +643,6 @@ da * dx[1+i*incx].
     dx[i + 3] = da * dx[i + 3];
     dx[i + 4] = da * dx[i + 4];
   }
-  return;
 }
 
 int QTAIMLSODAIntegrator::idamax(int n_, double* dx, int incx)
@@ -790,7 +785,6 @@ void QTAIMLSODAIntegrator::terminate2(double* y, double* t)
   *t = tn;
   illin = 0;
   freevectors();
-  return;
 
 } /*   end terminate2   */
 
@@ -1027,7 +1021,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
         return;
       }
     } /*   end else   */ /*   end iopt = 1   */
-  }                      /*   end if ( *istate == 1 || *istate == 3 )   */
+  } /*   end if ( *istate == 1 || *istate == 3 )   */
   /*
    If *istate = 1, meth is initialized to 1.
 
@@ -1131,7 +1125,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
         return;
       }
     } /*   end for   */
-  }   /*   end if ( *istate == 1 || *istate == 3 )   */
+  } /*   end if ( *istate == 1 || *istate == 3 )   */
   /*
    If *istate = 3, set flag to signal parameter changes to stoda.
 */
@@ -1361,7 +1355,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
           jstart = -2;
         break;
     } /*   end switch   */
-  }   /*   end if ( *istate == 2 || *istate == 3 )   */
+  } /*   end if ( *istate == 2 || *istate == 3 )   */
 
   /*
    Block e.
@@ -1374,7 +1368,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
    start of problem).  Check for too much accuracy being requested, and
    check for h below the roundoff level in *t.
 */
-  while (1) {
+  while (true) {
     if (*istate != 1 || nst != 0) {
       if ((nst - nslast) >= mxstep) {
         //              qDebug( "lsoda -- %d steps taken before reaching tout",
@@ -1563,7 +1557,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
       terminate2(y, t);
       return;
     } /*   end if ( kflag == -1 || kflag == -2 )   */
-  }   /*   end while   */
+  } /*   end while   */
 
 } /*   end lsoda   */
 
@@ -1696,8 +1690,8 @@ void QTAIMLSODAIntegrator::stoda(int neq, double* y)
    In any case, prja is called at least every msbp steps.
 */
 
-  while (1) {
-    while (1) {
+  while (true) {
+    while (true) {
       if (fabs(rc - 1.) > ccmax)
         ipup = miter;
       if (nst >= nslp + msbp)
@@ -1905,8 +1899,8 @@ void QTAIMLSODAIntegrator::stoda(int neq, double* y)
           continue;
         }
       } /*   end else -- kflag <= -3 */
-    }   /*   end error failure handling   */
-  }     /*   end outer while   */
+    } /*   end error failure handling   */
+  } /*   end outer while   */
 
 } /*   end stoda   */
 
@@ -2130,8 +2124,6 @@ void QTAIMLSODAIntegrator::cfode(int meth_)
     tesco[nq_][3] = ((double)(nq_ + 2)) / elco[nq_][1];
     rq1fac /= fnq;
   }
-  return;
-
 } /*   end cfode   */
 
 void QTAIMLSODAIntegrator::scaleh(double* rh, double* pdh)
@@ -2319,7 +2311,7 @@ void QTAIMLSODAIntegrator::correction(int neq, double* y, int* corflag,
    preprocessed before starting the corrector iteration.  ipup is set
    to 0 as an indicator that this has been done.
 */
-  while (1) {
+  while (true) {
     if (*m == 0) {
       if (ipup > 0) {
         prja(neq, y);
@@ -2480,7 +2472,6 @@ y = the right-hand side vector on input, and the solution vector
 
   if (miter == 2)
     dgesl(wm, n, ipvt, y, 0);
-  return;
 
 } /*   end solsy   */
 
@@ -2762,5 +2753,4 @@ void QTAIMLSODAIntegrator::freevectors()
   free(ipvt);
 } /*   end freevectors   */
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

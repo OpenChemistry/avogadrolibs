@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_VARIANT_INLINE_H
@@ -19,13 +8,17 @@
 
 #include "variant.h"
 
+#include <iostream>
 #include <sstream>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
-inline Variant::Variant() : m_type(Null)
+inline Variant::Variant() : m_type(Null) {}
+
+inline Variant::Variant(double x, double y, double z) : m_type(Vector)
 {
+  Vector3* v = new Vector3(x, y, z);
+  m_value.vector = v;
 }
 
 template <typename T>
@@ -34,12 +27,51 @@ inline Variant::Variant(T v) : m_type(Null)
   setValue(v);
 }
 
+template <>
+inline Variant::Variant(const char* v) : m_type(String)
+{
+  m_value.string = new std::string(v);
+}
+
+template <>
+inline Variant::Variant(const MatrixXf& v) : m_type(Matrix)
+{
+  MatrixX* m = new MatrixX(v.rows(), v.cols());
+  *m = v.cast<double>();
+  m_value.matrix = m;
+}
+
+template <>
+inline Variant::Variant(const Vector3& v) : m_type(Vector)
+{
+  Vector3* _v = new Vector3(v);
+  m_value.vector = _v;
+}
+
+template <>
+inline Variant::Variant(const Vector3f& v) : m_type(Vector)
+{
+  Vector3* _v = new Vector3(v.x(), v.y(), v.z());
+  m_value.vector = _v;
+}
+
+template <>
+inline Variant::Variant(const std::vector<double>& v) : m_type(Matrix)
+{
+  MatrixX* m = new MatrixX(v.size(), 1);
+  for (size_t i = 0; i < v.size(); ++i)
+    m->coeffRef(i, 0) = v[i];
+  m_value.matrix = m;
+}
+
 inline Variant::Variant(const Variant& variant) : m_type(variant.type())
 {
   if (m_type == String)
     m_value.string = new std::string(variant.toString());
   else if (m_type == Matrix)
     m_value.matrix = new MatrixX(*variant.m_value.matrix);
+  else if (m_type == Vector)
+    m_value.vector = new Vector3(*variant.m_value.vector);
   else if (m_type != Null)
     m_value = variant.m_value;
 }
@@ -59,10 +91,42 @@ inline bool Variant::isNull() const
   return m_type == Null;
 }
 
+inline bool Variant::setValue(double x, double y, double z)
+{
+  clear();
+
+  m_type = Vector;
+  m_value.vector = new Vector3(x, y, z);
+
+  return true;
+}
+
+inline bool Variant::setValue(const std::vector<double>& v)
+{
+  clear();
+
+  m_type = Matrix;
+  m_value.matrix = new MatrixX(v.size(), 1);
+  for (size_t i = 0; i < v.size(); ++i)
+    m_value.matrix->coeffRef(i, 0) = v[i];
+
+  return true;
+}
+
 template <typename T>
 inline bool Variant::setValue(T v)
 {
   AVO_UNUSED(v);
+
+#ifndef NDEBUG
+#if defined(_MSC_VER)
+  std::cerr << " Variant::setValue() not implemented for " << __FUNCSIG__
+            << std::endl;
+#else
+  std::cerr << " Variant::setValue() not implemented for "
+            << __PRETTY_FUNCTION__ << std::endl;
+#endif
+#endif
 
   clear();
 
@@ -181,6 +245,28 @@ inline bool Variant::setValue(MatrixX matrix)
 
   m_type = Matrix;
   m_value.matrix = new MatrixX(matrix);
+
+  return true;
+}
+
+template <>
+inline bool Variant::setValue(Vector3 vector)
+{
+  clear();
+
+  m_type = Vector;
+  m_value.vector = new Vector3(vector);
+
+  return true;
+}
+
+template <>
+inline bool Variant::setValue(Vector3f vector)
+{
+  clear();
+
+  m_type = Vector;
+  m_value.vector = new Vector3(vector.x(), vector.y(), vector.z());
 
   return true;
 }
@@ -331,6 +417,38 @@ inline const MatrixX& Variant::value() const
   return nullMatrix;
 }
 
+template <>
+inline Vector3 Variant::value() const
+{
+  if (m_type == Vector)
+    return *m_value.vector;
+
+  return Vector3();
+}
+
+template <>
+inline const Vector3& Variant::value() const
+{
+  if (m_type == Vector)
+    return *m_value.vector;
+
+  static Vector3 nullVector(0, 0, 0);
+  return nullVector;
+}
+
+template <>
+inline std::vector<double> Variant::value() const
+{
+  if (m_type == Matrix && m_value.matrix->cols() == 1) {
+    std::vector<double> list(m_value.matrix->rows());
+    for (int i = 0; i < m_value.matrix->rows(); ++i)
+      list[i] = m_value.matrix->coeff(i, 0);
+    return list;
+  }
+
+  return std::vector<double>();
+}
+
 inline void Variant::clear()
 {
   if (m_type == String) {
@@ -339,6 +457,9 @@ inline void Variant::clear()
   } else if (m_type == Matrix) {
     delete m_value.matrix;
     m_value.matrix = 0;
+  } else if (m_type == Vector) {
+    delete m_value.vector;
+    m_value.vector = 0;
   }
 
   m_type = Null;
@@ -424,6 +545,16 @@ inline const MatrixX& Variant::toMatrixRef() const
   return value<const MatrixX&>();
 }
 
+inline Vector3 Variant::toVector3() const
+{
+  return value<Vector3>();
+}
+
+inline std::vector<double> Variant::toList() const
+{
+  return value<std::vector<double>>();
+}
+
 // --- Operators ----------------------------------------------------------- //
 inline Variant& Variant::operator=(const Variant& variant)
 {
@@ -439,6 +570,8 @@ inline Variant& Variant::operator=(const Variant& variant)
       m_value.string = new std::string(variant.toString());
     else if (m_type == Matrix)
       m_value.matrix = new MatrixX(*variant.m_value.matrix);
+    else if (m_type == Vector)
+      m_value.vector = new Vector3(*variant.m_value.vector);
     else if (m_type != Null)
       m_value = variant.m_value;
   }
@@ -455,7 +588,6 @@ inline T Variant::lexical_cast(const std::string& str)
   return value;
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_VARIANT_INLINE_H

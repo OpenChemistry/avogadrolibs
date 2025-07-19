@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "glwidget.h"
@@ -26,25 +15,25 @@
 
 #include <avogadro/rendering/camera.h>
 
+#include <QAction>
 #include <QtCore/QTimer>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
+#include <QtGui/QWindow>
 #include <QtWidgets/QApplication>
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 GLWidget::GLWidget(QWidget* p)
   : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
     m_renderTimer(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
-  connect(&m_scenePlugins,
-          SIGNAL(pluginStateChanged(Avogadro::QtGui::ScenePlugin*)),
-          SLOT(updateScene()));
-  connect(&m_scenePlugins, SIGNAL(pluginConfigChanged()), SLOT(updateScene()));
+  connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginStateChanged, this,
+          &GLWidget::updateScene);
+  connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginConfigChanged, this,
+          &GLWidget::updateScene);
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
 }
 
@@ -58,7 +47,13 @@ void GLWidget::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
   foreach (QtGui::ToolPlugin* tool, m_tools)
     tool->setMolecule(m_molecule);
-  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateScene()));
+
+  if (m_molecule != nullptr) {
+    // update properties like dipole rendering
+    QTimer::singleShot(500, m_molecule, &QtGui::Molecule::update);
+  }
+
+  connect(m_molecule, &QtGui::Molecule::changed, this, &GLWidget::updateScene);
 }
 
 QtGui::Molecule* GLWidget::molecule()
@@ -71,6 +66,14 @@ const QtGui::Molecule* GLWidget::molecule() const
   return m_molecule;
 }
 
+void GLWidget::updateMolecule()
+{
+  if (m_molecule != nullptr) {
+    // update properties like dipole rendering
+    QTimer::singleShot(500, m_molecule, &QtGui::Molecule::update);
+  }
+}
+
 void GLWidget::updateScene()
 {
   // Build up the scene with the scene plugins, creating the appropriate nodes.
@@ -80,25 +83,24 @@ void GLWidget::updateScene()
   if (mol) {
     Rendering::GroupNode& node = m_renderer.scene().rootNode();
     node.clear();
-    Rendering::GroupNode* moleculeNode = new Rendering::GroupNode(&node);
-    QtGui::RWMolecule* rwmol = new QtGui::RWMolecule(*mol, this);
+    auto* moleculeNode = new Rendering::GroupNode(&node);
+    QtGui::RWMolecule* rwmol = mol->undoMolecule();
 
     foreach (QtGui::ScenePlugin* scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
-      Rendering::GroupNode* engineNode = new Rendering::GroupNode(moleculeNode);
-      scenePlugin->process(static_cast<Core::Molecule>(*mol), *engineNode);
+      auto* engineNode = new Rendering::GroupNode(moleculeNode);
       scenePlugin->process(*mol, *engineNode);
       scenePlugin->processEditable(*rwmol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
     if (m_activeTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_activeTool->draw(*toolNode);
     }
 
     if (m_defaultTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_defaultTool->draw(*toolNode);
     }
 
@@ -136,7 +138,8 @@ void GLWidget::addTool(QtGui::ToolPlugin* tool)
   if (m_tools.contains(tool))
     return;
 
-  connect(tool, SIGNAL(updateRequested()), SLOT(requestUpdate()));
+  connect(tool, &QtGui::ToolPlugin::updateRequested, this,
+          &GLWidget::requestUpdate);
   tool->setParent(this);
   tool->setGLWidget(this);
   tool->setActiveWidget(this);
@@ -163,8 +166,8 @@ void GLWidget::setActiveTool(QtGui::ToolPlugin* tool)
     return;
 
   if (m_activeTool && m_activeTool != m_defaultTool) {
-    disconnect(m_activeTool, SIGNAL(drawablesChanged()), this,
-               SLOT(updateScene()));
+    disconnect(m_activeTool, &QtGui::ToolPlugin::drawablesChanged, this,
+               &GLWidget::updateScene);
   }
 
   if (tool)
@@ -172,8 +175,8 @@ void GLWidget::setActiveTool(QtGui::ToolPlugin* tool)
   m_activeTool = tool;
 
   if (m_activeTool && m_activeTool != m_defaultTool) {
-    connect(m_activeTool, SIGNAL(drawablesChanged()), this,
-            SLOT(updateScene()));
+    connect(m_activeTool, &QtGui::ToolPlugin::drawablesChanged, this,
+            &GLWidget::updateScene);
   }
 }
 
@@ -181,7 +184,9 @@ void GLWidget::setDefaultTool(const QString& name)
 {
   foreach (QtGui::ToolPlugin* tool, m_tools) {
     QAction* toolAction = tool->activateAction();
-    if (tool->name() == name || (toolAction && toolAction->text() == name)) {
+
+    if (tool->objectName() == name || tool->name() == name ||
+        (toolAction && toolAction->text() == name)) {
       setDefaultTool(tool);
       return;
     }
@@ -194,8 +199,8 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin* tool)
     return;
 
   if (m_defaultTool && m_activeTool != m_defaultTool) {
-    disconnect(m_defaultTool, SIGNAL(drawablesChanged()), this,
-               SLOT(updateScene()));
+    disconnect(m_defaultTool, &QtGui::ToolPlugin::drawablesChanged, this,
+               &GLWidget::updateScene);
   }
 
   if (tool)
@@ -203,8 +208,8 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin* tool)
   m_defaultTool = tool;
 
   if (m_defaultTool && m_activeTool != m_defaultTool) {
-    connect(m_defaultTool, SIGNAL(drawablesChanged()), this,
-            SLOT(updateScene()));
+    connect(m_defaultTool, &QtGui::ToolPlugin::drawablesChanged, this,
+            &GLWidget::updateScene);
   }
 }
 
@@ -212,8 +217,8 @@ void GLWidget::requestUpdate()
 {
   if (!m_renderTimer) {
     m_renderTimer = new QTimer(this);
-    connect(m_renderTimer, SIGNAL(timeout()), SLOT(updateTimeout()));
-    m_renderTimer->setSingleShot(1000 / 30);
+    connect(m_renderTimer, &QTimer::timeout, this, &GLWidget::updateTimeout);
+    m_renderTimer->setSingleShot(1000 / 30); // 30 fps
     m_renderTimer->start();
   }
 }
@@ -236,6 +241,8 @@ void GLWidget::initializeGL()
 
 void GLWidget::resizeGL(int width_, int height_)
 {
+  float pixelRatio = window()->windowHandle()->devicePixelRatio();
+  m_renderer.setPixelRatio(pixelRatio);
   m_renderer.resize(width_, height_);
 }
 
@@ -342,5 +349,4 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
     QOpenGLWidget::keyReleaseEvent(e);
 }
 
-} // namespace QtOpenGL
-} // namespace Avogadro
+} // namespace Avogadro::QtOpenGL

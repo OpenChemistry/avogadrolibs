@@ -1,25 +1,13 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "texture2d.h"
 
 #include "avogadrogl.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 namespace {
 GLint convertFilterOptionToGL(Texture2D::FilterOption opt)
@@ -142,7 +130,7 @@ GLenum convertTypeToGL(Type type)
   }
 }
 
-} // end anon namespace
+} // namespace
 
 class Texture2D::Private
 {
@@ -157,9 +145,7 @@ public:
   mutable GLuint textureId;
 };
 
-Texture2D::Texture2D() : d(new Private)
-{
-}
+Texture2D::Texture2D() : d(new Private) {}
 
 Texture2D::~Texture2D()
 {
@@ -312,5 +298,4 @@ bool Texture2D::generateTextureHandle()
   return true;
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

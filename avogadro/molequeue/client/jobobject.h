@@ -37,18 +37,18 @@ public:
   ~JobObject();
 
   /** Set the @p value of the specified @p key. */
-  void setValue(const QString &key, const QVariant &value);
+  void setValue(const QString& key, const QVariant& value);
 
   /** Get the value of the specified @p key. If the key is not set, return
    * @p defaultValue. */
-  QVariant value(const QString &key,
-                 const QVariant &defaultValue = QVariant()) const;
+  QVariant value(const QString& key,
+                 const QVariant& defaultValue = QVariant()) const;
 
   /**
    * Set the job up using the supplied JSON object. This replaces all previous
    * settings that may have been applied.
    */
-  void fromJson(const QJsonObject &jsonObject) { m_value = jsonObject; }
+  void fromJson(const QJsonObject& jsonObject) { m_value = jsonObject; }
 
   /** Get the JSON object with the current job settings in it. */
   QJsonObject json() const { return m_value; }
@@ -57,7 +57,7 @@ public:
    * Set the queue that the job should be submitted to. This must be a valid
    * queue name discovered using the client API.
    */
-  void setQueue(const QString &queueName);
+  void setQueue(const QString& queueName);
 
   /**
    * Get the name of the queue that the job will be submitted to. An empty
@@ -69,7 +69,7 @@ public:
    * Set the program that the job should be submitted to. This must be a valid
    * program in a valid queue as discovered using the client API.
    */
-  void setProgram(const QString &programName);
+  void setProgram(const QString& programName);
 
   /**
    * Get the name of the program that the job will be submitted to. An empty
@@ -80,7 +80,7 @@ public:
   /**
    * Set the description of the job, this is free text.
    */
-  void setDescription(const QString &descriptionText);
+  void setDescription(const QString& descriptionText);
 
   /**
    * Get the description of the job.
@@ -92,21 +92,21 @@ public:
    * @param fileName The file name as it will appear in the working directory.
    * @param contents The contents of the file specified.
    */
-  void setInputFile(const QString &fileName, const QString &contents);
+  void setInputFile(const QString& fileName, const QString& contents);
 
   /**
    * Set the input file for the job, the file will be copied and the file name
    * used in the working directory of the job submission.
    * \param path The full path to the input file.
    */
-  void setInputFile(const QString &path);
+  void setInputFile(const QString& path);
 
   /**
    * Set the input file using a JSON object. This must conform to the file
    * specification.
    * @param file A JSON object employing file specification to specify input.
    */
-  void setInputFile(const QJsonObject &file);
+  void setInputFile(const QJsonObject& file);
 
   /**
    * Get the input file for the job. This is a JSON object using the file spec.
@@ -118,22 +118,22 @@ public:
    * @param fileName The file name as it will appear in the working directory.
    * @param contents The contents of the file specified.
    */
-  void appendAdditionalInputFile(const QString &fileName,
-                                 const QString &contents);
+  void appendAdditionalInputFile(const QString& fileName,
+                                 const QString& contents);
 
   /**
    * Append an additional input file for the job, the file will be copied and
    * the file name used in the working directory of the job submission.
    * @param path The full path to the input file.
    */
-  void appendAdditionalInputFile(const QString &path);
+  void appendAdditionalInputFile(const QString& path);
 
   /**
    * Set the additional input file using a JSON object. This must conform to the
    * file specification.
    * @param files A JSON array employing file specification to specify input.
    */
-  void setAdditionalInputFiles(const QJsonArray &files);
+  void setAdditionalInputFiles(const QJsonArray& files);
 
   /** Clear additional input files. */
   void clearAdditionalInputFiles();
@@ -150,12 +150,12 @@ protected:
   /**
    * Generate a filespec JSON object form the supplied file name and contents.
    */
-  QJsonObject fileSpec(const QString &fileName, const QString &contents);
+  QJsonObject fileSpec(const QString& fileName, const QString& contents);
 
   /**
    * Generate a filespec JSON object form the supplied file path (must exist).
    */
-  QJsonObject fileSpec(const QString &path);
+  QJsonObject fileSpec(const QString& path);
 };
 
 } // End namespace MoleQueue

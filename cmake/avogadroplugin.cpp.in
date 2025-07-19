@@ -1,25 +1,13 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <QtCore/QtPlugin>
 
 @PluginIncludes@
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class @PluginName@Factory : public QObject, public QtGui::@PluginType@Factory
 {
@@ -28,22 +16,21 @@ class @PluginName@Factory : public QObject, public QtGui::@PluginType@Factory
   Q_INTERFACES(Avogadro::QtGui::@PluginType@Factory)
 
 public:
-  explicit @PluginName@Factory(QObject *parent_ = nullptr) : QObject(parent_) {}
+  explicit @PluginName@Factory(QObject* parent_ = nullptr) : QObject(parent_) {}
 
-  QtGui::@PluginType@ * createInstance(QObject *parent_ = nullptr)
+  QtGui::@PluginType@* createInstance(QObject* parent_ = nullptr) override
   {
-    @PluginClass@ *object = new @PluginClass@(parent_);
+    auto* object = new @PluginClass@(parent_);
     object->setObjectName("@PluginName@");
     return object;
   }
 
-  QString identifier() const { return "@PluginName@"; }
+  QString identifier() const override { return "@PluginName@"; }
 
-  QString description() const { return "@PluginDescription@"; }
+  QString description() const override { return "@PluginDescription@"; }
 
 };
 
-}
-}
+} // namespace Avogadro::QtPlugins
 
 #include "@PluginName@Plugin.moc"

@@ -1,32 +1,18 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2008 Albert De Fusco
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_SLATERSETTOOLS_H
 #define AVOGADRO_CORE_SLATERSETTOOLS_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include "vector.h"
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 class SlaterSet;
@@ -42,7 +28,7 @@ class AVOGADROCORE_EXPORT SlaterSetTools
 {
 public:
   explicit SlaterSetTools(Molecule* mol = nullptr);
-  ~SlaterSetTools();
+  ~SlaterSetTools() = default;
 
   /**
    * @brief Calculate the value of the specified molecular orbital at the
@@ -91,7 +77,6 @@ private:
   std::vector<double> calculateValues(const Vector3& position) const;
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_SlaterSetTools_H

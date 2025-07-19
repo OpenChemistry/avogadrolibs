@@ -12,12 +12,8 @@
 #include <cassert>
 #include <vector>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
-using Core::LayerData;
-using QtPlugins::BallAndStick;
-using QtPlugins::Cartoons;
 using std::string;
 using std::vector;
 
@@ -40,7 +36,7 @@ PluginLayerManager::~PluginLayerManager()
 
 bool PluginLayerManager::isEnabled() const
 {
-  if (m_activeMolecule == nullptr ||
+  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr ||
       m_molToInfo[m_activeMolecule]->enable.find(m_name) ==
         m_molToInfo[m_activeMolecule]->enable.end()) {
     return false;
@@ -55,7 +51,7 @@ bool PluginLayerManager::isEnabled() const
 
 bool PluginLayerManager::isActiveLayerEnabled() const
 {
-  if (m_activeMolecule == nullptr ||
+  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr ||
       m_molToInfo[m_activeMolecule]->enable.find(m_name) ==
         m_molToInfo[m_activeMolecule]->enable.end()) {
     return false;
@@ -70,7 +66,7 @@ bool PluginLayerManager::isActiveLayerEnabled() const
 
 void PluginLayerManager::setEnabled(bool enable)
 {
-  if (m_activeMolecule == nullptr) {
+  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr) {
     return;
   }
   auto& molecule = m_molToInfo[m_activeMolecule];
@@ -88,7 +84,7 @@ void PluginLayerManager::setEnabled(bool enable)
 
 bool PluginLayerManager::atomEnabled(Index atom) const
 {
-  if (m_activeMolecule == nullptr ||
+  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr ||
       m_molToInfo[m_activeMolecule]->enable.find(m_name) ==
         m_molToInfo[m_activeMolecule]->enable.end()) {
     return false;
@@ -146,5 +142,4 @@ size_t PluginLayerManager::layerCount() const
 {
   return LayerManager::layerCount();
 }
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

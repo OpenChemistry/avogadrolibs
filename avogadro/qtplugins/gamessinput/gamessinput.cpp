@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "gamessinput.h"
@@ -26,7 +15,7 @@
 
 #include <QtCore/QDebug>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 
 namespace Avogadro {
@@ -46,9 +35,7 @@ GamessInput::GamessInput(QObject* parent_)
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
 }
 
-GamessInput::~GamessInput()
-{
-}
+GamessInput::~GamessInput() {}
 
 QList<QAction*> GamessInput::actions() const
 {
@@ -112,11 +99,11 @@ void GamessInput::menuActivated()
 {
   if (!m_dialog) {
     m_dialog = new GamessInputDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(openJobOutput(Avogadro::MoleQueue::JobObject)), this,
-            SLOT(openJobOutput(Avogadro::MoleQueue::JobObject)));
+    connect(m_dialog, SIGNAL(openJobOutput(Avogadro::MoleQueue::JobObject)),
+            this, SLOT(openJobOutput(Avogadro::MoleQueue::JobObject)));
   }
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

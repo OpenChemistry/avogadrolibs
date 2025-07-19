@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "selectiontoolwidget.h"
@@ -19,17 +8,15 @@
 
 #include <QtWidgets/QColorDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SelectionToolWidget::SelectionToolWidget(QWidget* parent)
   : QWidget(parent), m_ui(new Ui::SelectionToolWidget)
 {
   m_ui->setupUi(this);
+  setDropDown(0, 1);
   connect(m_ui->applyColorButton, SIGNAL(clicked()), this,
           SLOT(userClickedColor()));
-  connect(m_ui->changeLayerDropDown, SIGNAL(currentIndexChanged(int)), this,
-          SIGNAL(changeLayer(int)));
 }
 
 SelectionToolWidget::~SelectionToolWidget()
@@ -39,11 +26,19 @@ SelectionToolWidget::~SelectionToolWidget()
 
 void SelectionToolWidget::setDropDown(size_t current, size_t max)
 {
+  // disconnect the signal so we don't send it accidentally
+  disconnect(m_ui->changeLayerDropDown, nullptr, nullptr, nullptr);
   m_ui->changeLayerDropDown->clear();
   for (size_t i = 0; i < max; ++i) {
     m_ui->changeLayerDropDown->addItem(QString::number(i + 1));
   }
-  m_ui->changeLayerDropDown->setCurrentIndex(current);
+  m_ui->changeLayerDropDown->addItem(tr("New Layer"));
+  if (current != static_cast<size_t>(m_ui->changeLayerDropDown->currentIndex()))
+    m_ui->changeLayerDropDown->setCurrentIndex(static_cast<int>(current));
+
+  // reconnect the signal
+  connect(m_ui->changeLayerDropDown, SIGNAL(currentIndexChanged(int)), this,
+          SIGNAL(changeLayer(int)));
 }
 
 void SelectionToolWidget::userClickedColor()
@@ -68,5 +63,4 @@ void SelectionToolWidget::userClickedColor()
   }
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

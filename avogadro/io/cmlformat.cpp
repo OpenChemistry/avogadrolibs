@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "cmlformat.h"
@@ -24,35 +13,34 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
-#include <pugixml.cpp>
+#include <pugixml.hpp>
 
 #include <bitset>
 #include <cmath>
 #include <locale>
 #include <map>
 #include <sstream>
-#include <streambuf>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 namespace {
 const Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
 const Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
-}
+} // namespace
 
 using std::string;
 
+using pugi::xml_attribute;
 using pugi::xml_document;
 using pugi::xml_node;
-using pugi::xml_attribute;
 
 using namespace Core;
 
@@ -153,9 +141,24 @@ public:
         error += "Incomplete unit cell description.";
         return false;
       }
-      UnitCell* cell = new UnitCell;
+
+      // look for space group, e.g.
+      // <symmetry spaceGroup="F -4 2 3">
+      xml_node symmetry = node.child("symmetry");
+      unsigned short hall = 0;
+      if (symmetry) {
+        xml_attribute spaceGroup = symmetry.attribute("spaceGroup");
+        if (spaceGroup) {
+          // look for space group in the space group table
+          hall = Core::SpaceGroups::hallNumber(std::string(spaceGroup.value()));
+        }
+      }
+
+      auto* cell = new UnitCell;
       cell->setCellParameters(a, b, c, alpha, beta, gamma);
       molecule->setUnitCell(cell);
+      if (hall != 0)
+        molecule->setHallNumber(hall);
     }
     return true;
   }
@@ -170,70 +173,92 @@ public:
     Atom atom;
     while (node) {
       // Step through all of the atom attributes and store them.
-      xml_attribute attribute = node.attribute("elementType");
-      if (attribute) {
-        unsigned char atomicNumber =
-          Elements::atomicNumberFromSymbol(attribute.value());
-        atom = molecule->addAtom(atomicNumber);
-      } else {
-        // There is no element data, this atom node is corrupt.
-        error += "Warning, corrupt element node found.";
-        return false;
+      {
+        /* Element Attribute Check */
+        xml_attribute elementAtt = node.attribute("elementType");
+        if (elementAtt) {
+          unsigned char atomicNumber =
+            Elements::atomicNumberFromSymbol(elementAtt.value());
+          atom = molecule->addAtom(atomicNumber);
+        } else {
+          // There is no element data, this atom node is corrupt.
+          error += "Warning, corrupt element node found.";
+          return false;
+        }
       }
 
-      attribute = node.attribute("id");
-      if (attribute)
-        atomIds[std::string(attribute.value())] = atom.index();
-      else // Atom nodes must have IDs - bail.
-        return false;
+      {
+        /* ID Attribute Check */
+        xml_attribute idAtt = node.attribute("id");
+        if (idAtt)
+          atomIds[std::string(idAtt.value())] = atom.index();
+        else // Atom nodes must have IDs - bail.
+          return false;
+      }
 
       // Check for 3D geometry.
-      attribute = node.attribute("x3");
-      if (attribute) {
-        xml_attribute y3 = node.attribute("y3");
-        xml_attribute z3 = node.attribute("z3");
-        if (y3 && z3) {
-          // It looks like we have a valid 3D position.
-          Vector3 position(lexicalCast<double>(attribute.value()),
-                           lexicalCast<double>(y3.value()),
-                           lexicalCast<double>(z3.value()));
-          atom.setPosition3d(position);
-        } else {
-          // Corrupt 3D position supplied for atom.
-          return false;
-        }
-      } else if ((attribute = node.attribute("xFract"))) {
-        if (!molecule->unitCell()) {
-          error += "No unit cell defined. "
-                   "Cannot interpret fractional coordinates.";
-          return false;
-        }
-        xml_attribute& xF = attribute;
-        xml_attribute yF = node.attribute("yFract");
-        xml_attribute zF = node.attribute("zFract");
-        if (yF && zF) {
-          Vector3 coord(static_cast<Real>(xF.as_float()),
-                        static_cast<Real>(yF.as_float()),
-                        static_cast<Real>(zF.as_float()));
-          molecule->unitCell()->toCartesian(coord, coord);
-          atom.setPosition3d(coord);
-        } else {
-          error += "Missing y or z fractional coordinate on atom.";
-          return false;
+      {
+        /* XYZ3 and Fract Attribute Check */
+        xml_attribute x3Att = node.attribute("x3");
+        xml_attribute xFractAtt = node.attribute("xFract");
+        if (x3Att) {
+          xml_attribute y3 = node.attribute("y3");
+          xml_attribute z3 = node.attribute("z3");
+          if (y3 && z3) {
+            // It looks like we have a valid 3D position.
+            Vector3 position(lexicalCast<double>(x3Att.value()),
+                             lexicalCast<double>(y3.value()),
+                             lexicalCast<double>(z3.value()));
+            atom.setPosition3d(position);
+          } else {
+            // Corrupt 3D position supplied for atom.
+            return false;
+          }
+        } else if (xFractAtt) {
+          if (!molecule->unitCell()) {
+            error += "No unit cell defined. "
+                     "Cannot interpret fractional coordinates.";
+            return false;
+          }
+          xml_attribute yF = node.attribute("yFract");
+          xml_attribute zF = node.attribute("zFract");
+          if (yF && zF) {
+            Vector3 coord(static_cast<Real>(xFractAtt.as_float()),
+                          static_cast<Real>(yF.as_float()),
+                          static_cast<Real>(zF.as_float()));
+            molecule->unitCell()->toCartesian(coord, coord);
+            atom.setPosition3d(coord);
+          } else {
+            error += "Missing y or z fractional coordinate on atom.";
+            return false;
+          }
         }
       }
 
       // Check for 2D geometry.
-      attribute = node.attribute("x2");
-      if (attribute) {
-        xml_attribute y2 = node.attribute("y2");
-        if (y2) {
-          Vector2 position(lexicalCast<double>(attribute.value()),
-                           lexicalCast<double>(y2.value()));
-          atom.setPosition2d(position);
-        } else {
-          // Corrupt 2D position supplied for atom.
-          return false;
+      {
+        /* XY2 Attribute Check */
+        xml_attribute x2Att = node.attribute("x2");
+        if (x2Att) {
+          xml_attribute y2 = node.attribute("y2");
+          if (y2) {
+            Vector2 position(lexicalCast<double>(x2Att.value()),
+                             lexicalCast<double>(y2.value()));
+            atom.setPosition2d(position);
+          } else {
+            // Corrupt 2D position supplied for atom.
+            return false;
+          }
+        }
+      }
+
+      // Check formal charge.
+      {
+        /* Formal Charge Attribute Check */
+        xml_attribute formalChargeAtt = node.attribute("formalCharge");
+        if (formalChargeAtt) {
+          auto formalCharge = lexicalCast<signed int>(formalChargeAtt.value());
+          atom.setFormalCharge(formalCharge);
         }
       }
 
@@ -271,6 +296,11 @@ public:
         } else { // Couldn't parse the bond begin and end.
           return false;
         }
+      }
+
+      if (!bond.isValid()) {
+        // Couldn't create the bond.
+        return false;
       }
 
       attribute = node.attribute("order");
@@ -404,15 +434,7 @@ public:
   string filename;
   string error;
 };
-}
-
-CmlFormat::CmlFormat()
-{
-}
-
-CmlFormat::~CmlFormat()
-{
-}
+} // namespace
 
 bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
 {
@@ -430,10 +452,17 @@ bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
   return parser.success;
 }
 
-std::string formatNumber(std::stringstream &s, double n)
+std::string formatNumber(std::stringstream& s, double n)
 {
   s.str(""); // clear it
   s.precision(6);
+  s << n;
+  return s.str();
+}
+
+std::string formatNumber(std::stringstream& s, int n)
+{
+  s.str(""); // clear it
   s << n;
   return s.str();
 }
@@ -446,11 +475,12 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
   //   i.e. modify current stream locale with "C" numeric
   std::locale currentLocale("");
   std::locale numLocale(out.getloc(), "C", std::locale::numeric);
-  out.imbue(numLocale);  // imbue modified locale
+  out.imbue(numLocale); // imbue modified locale
 
   // We also need to set the locale temporarily for XML string formatting
-  std::stringstream floatStream; // use this to format floats as C-format strings
-  floatStream.imbue(numLocale);
+  std::stringstream
+    numberStream; // use this to format floats as C-format strings
+  numberStream.imbue(numLocale);
 
   // Add a custom declaration node.
   xml_node declaration = document.prepend_child(pugi::node_declaration);
@@ -486,6 +516,7 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
   if (cell) {
     xml_node crystalNode = moleculeNode.append_child("crystal");
 
+    // Add the unit cell parameters.
     xml_node crystalANode = crystalNode.append_child("scalar");
     xml_node crystalBNode = crystalNode.append_child("scalar");
     xml_node crystalCNode = crystalNode.append_child("scalar");
@@ -507,12 +538,23 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
     crystalBetaNode.append_attribute("units") = "units:degree";
     crystalGammaNode.append_attribute("units") = "units:degree";
 
-    crystalANode.text() = formatNumber(floatStream, cell->a()).c_str();
-    crystalBNode.text() = formatNumber(floatStream, cell->b()).c_str();
-    crystalCNode.text() = formatNumber(floatStream, cell->c()).c_str();
-    crystalAlphaNode.text() = formatNumber(floatStream, cell->alpha() * RAD_TO_DEG).c_str();
-    crystalBetaNode.text() = formatNumber(floatStream, cell->beta() * RAD_TO_DEG).c_str();
-    crystalGammaNode.text() = formatNumber(floatStream, cell->gamma() * RAD_TO_DEG).c_str();
+    crystalANode.text() = formatNumber(numberStream, cell->a()).c_str();
+    crystalBNode.text() = formatNumber(numberStream, cell->b()).c_str();
+    crystalCNode.text() = formatNumber(numberStream, cell->c()).c_str();
+    crystalAlphaNode.text() =
+      formatNumber(numberStream, cell->alpha() * RAD_TO_DEG).c_str();
+    crystalBetaNode.text() =
+      formatNumber(numberStream, cell->beta() * RAD_TO_DEG).c_str();
+    crystalGammaNode.text() =
+      formatNumber(numberStream, cell->gamma() * RAD_TO_DEG).c_str();
+
+    // add the space group
+    unsigned short hall = mol.hallNumber();
+    if (hall != 0) {
+      xml_node spaceGroupNode = crystalNode.append_child("symmetry");
+      spaceGroupNode.append_attribute("spaceGroup") =
+        Core::SpaceGroups::international(hall);
+    }
   }
 
   xml_node atomArrayNode = moleculeNode.append_child("atomArray");
@@ -526,13 +568,23 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
       Elements::symbol(a.atomicNumber());
     if (cell) {
       Vector3 fracPos = cell->toFractional(a.position3d());
-      atomNode.append_attribute("xFract") = formatNumber(floatStream,fracPos.x()).c_str();
-      atomNode.append_attribute("yFract") = formatNumber(floatStream,fracPos.y()).c_str();
-      atomNode.append_attribute("zFract") = formatNumber(floatStream,fracPos.z()).c_str();
+      atomNode.append_attribute("xFract") =
+        formatNumber(numberStream, fracPos.x()).c_str();
+      atomNode.append_attribute("yFract") =
+        formatNumber(numberStream, fracPos.y()).c_str();
+      atomNode.append_attribute("zFract") =
+        formatNumber(numberStream, fracPos.z()).c_str();
     } else {
-      atomNode.append_attribute("x3") = formatNumber(floatStream,a.position3d().x()).c_str();
-      atomNode.append_attribute("y3") = formatNumber(floatStream,a.position3d().y()).c_str();
-      atomNode.append_attribute("z3") = formatNumber(floatStream,a.position3d().z()).c_str();
+      atomNode.append_attribute("x3") =
+        formatNumber(numberStream, a.position3d().x()).c_str();
+      atomNode.append_attribute("y3") =
+        formatNumber(numberStream, a.position3d().y()).c_str();
+      atomNode.append_attribute("z3") =
+        formatNumber(numberStream, a.position3d().z()).c_str();
+    }
+    if (a.formalCharge() != 0) {
+      atomNode.append_attribute("formalCharge") =
+        formatNumber(numberStream, a.formalCharge()).c_str();
     }
   }
 
@@ -614,8 +666,8 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
         if (openFile) {
           if (!hdf5.openFile(fileName() + ".h5",
                              Hdf5DataFormat::ReadWriteAppend)) {
-            appendError("CmlFormat::writeFile: Cannot open file: " +
-                        fileName() + ".h5");
+            appendError(
+              "CmlFormat::writeFile: Cannot open file: " + fileName() + ".h5");
           }
           openFile = false;
         }
@@ -649,16 +701,15 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
 std::vector<std::string> CmlFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("cml");
+  ext.emplace_back("cml");
   return ext;
 }
 
 std::vector<std::string> CmlFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("chemical/x-cml");
+  mime.emplace_back("chemical/x-cml");
   return mime;
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io

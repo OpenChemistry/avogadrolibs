@@ -7,22 +7,22 @@
 
 #include <cmath>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Residue;
-using std::make_pair;
 using std::vector;
 
 const float Cartoon::ELIPSE_RATIO = 0.75f;
 
 Cartoon::Cartoon()
   : BSplineGeometry(false), m_minRadius(-1.0f), m_maxRadius(-1.0f)
-{}
+{
+}
 
 Cartoon::Cartoon(float minRadius, float maxRadius)
   : BSplineGeometry(false), m_minRadius(minRadius), m_maxRadius(maxRadius)
-{}
+{
+}
 
 vector<ColorNormalVertex> Cartoon::computeCirclePoints(const Eigen::Affine3f& a,
                                                        const Eigen::Affine3f& b,
@@ -61,7 +61,7 @@ float arrowFunction(float t)
   const float maxPoint = 0.7f;
   if (t < maxPoint) {
     // normalize t using max point and scale it so that adding will be between
-    // [minimunRadius, 1]
+    // [minimumRadius, 1]
     result = t / maxPoint;
   } else {
     // starting with 1 and go decreassing
@@ -104,6 +104,10 @@ CartoonType secondaryToCartoonType(Residue::SecondaryStructure sec)
       return Arrow;
     case Residue::SecondaryStructure::alphaHelix:
       return Tail;
+    case Residue::SecondaryStructure::helix310:
+      return Tail;
+    case Residue::SecondaryStructure::piHelix:
+      return Tail;
     default:
       return Body;
   }
@@ -130,9 +134,8 @@ void Cartoon::addPoint(const Vector3f& pos, const Vector3ub& color,
       idCartoon = 0;
     }
   }
-  m_type.push_back(make_pair(ct, idCartoon));
+  m_type.emplace_back(ct, idCartoon);
   BSplineGeometry::addPoint(pos, color, m_minRadius, group, id);
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
