@@ -41,7 +41,7 @@ void EnergyCalculator::cleanGradients(TVector& grad)
 }
 
 void EnergyCalculator::setConstraints(
-  const Core::Array<Core::Constraint>& constraints)
+  const std::vector<Core::Constraint>& constraints)
 {
   m_distanceConstraints.clear();
   m_angleConstraints.clear();
@@ -69,12 +69,12 @@ void EnergyCalculator::setConstraints(
   }
 }
 
-Core::Array<Core::Constraint> EnergyCalculator::constraints() const
+std::vector<Core::Constraint> EnergyCalculator::constraints() const
 {
   Index totalSize = m_distanceConstraints.size() + m_angleConstraints.size() +
                     m_torsionConstraints.size() +
                     m_outOfPlaneConstraints.size();
-  Core::Array<Core::Constraint> allConstraints;
+  std::vector<Core::Constraint> allConstraints;
   allConstraints.reserve(totalSize);
 
   for (const auto& constraint : m_distanceConstraints)

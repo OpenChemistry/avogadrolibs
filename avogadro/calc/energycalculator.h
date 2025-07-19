@@ -116,10 +116,10 @@ public:
    * Called to get the constraints for this method.
    * @return the constraints for this method
    */
-  Core::Array<Core::Constraint> constraints() const;
+  std::vector<Core::Constraint> constraints() const;
 
   // Set the constraints for this method
-  void setConstraints(const Core::Array<Core::Constraint>& constraints);
+  void setConstraints(const std::vector<Core::Constraint>& constraints);
 
   /**
    * Called to update the "frozen" mask (e.g., during editing)
@@ -147,10 +147,10 @@ protected:
   TVector m_mask; // optimize or frozen atom mask
   // Separate the constraints into different types
   // for speed and convenience.
-  Core::Array<Core::Constraint> m_distanceConstraints;
-  Core::Array<Core::Constraint> m_angleConstraints;
-  Core::Array<Core::Constraint> m_torsionConstraints;
-  Core::Array<Core::Constraint> m_outOfPlaneConstraints;
+  std::vector<Core::Constraint> m_distanceConstraints;
+  std::vector<Core::Constraint> m_angleConstraints;
+  std::vector<Core::Constraint> m_torsionConstraints;
+  std::vector<Core::Constraint> m_outOfPlaneConstraints;
 
 private:
   mutable std::string m_error;

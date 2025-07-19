@@ -108,6 +108,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setEnabled(true);
   action->setText(tr("Freeze Selected Atoms"));
   action->setData(freezeAction);
+  action->setProperty("menu priority", 790);
   connect(action, SIGNAL(triggered()), SLOT(freezeSelected()));
   m_actions.push_back(action);
 
@@ -115,6 +116,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setEnabled(true);
   action->setText(tr("Unfreeze Selected Atoms"));
   action->setData(unfreezeAction);
+  action->setProperty("menu priority", 780);
   connect(action, SIGNAL(triggered()), SLOT(unfreezeSelected()));
   m_actions.push_back(action);
 
@@ -123,6 +125,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(
     tr("Fuse Atoms", "freeze atomic distances / glue atoms together"));
   action->setData(fuseAction);
+  action->setProperty("menu priority", 770);
   connect(action, SIGNAL(triggered()), SLOT(fuseSelected()));
   m_actions.push_back(action);
 
@@ -246,6 +249,26 @@ void Forcefield::setupMethod()
     m_method->setMolecule(m_molecule);
 }
 
+void Forcefield::setupConstraints()
+{
+  if (m_molecule == nullptr || m_method == nullptr)
+    return; // nothing to do
+
+  auto n = m_molecule->atomCount();
+
+  // first set the frozen coordinate mask
+  auto mask = m_molecule->frozenAtomMask();
+  if (mask.rows() != static_cast<Eigen::Index>(3 * n)) {
+    // set the mask to all ones
+    mask = Eigen::VectorXd::Ones(static_cast<Eigen::Index>(3 * n));
+  }
+  m_method->setMolecule(m_molecule);
+  m_method->setMask(mask);
+
+  // now set the constraints
+  m_method->setConstraints(m_molecule->constraints());
+}
+
 void Forcefield::optimize()
 {
   if (m_molecule == nullptr)
@@ -266,18 +289,11 @@ void Forcefield::optimize()
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
 
+  // TODO - use different solvers
   cppoptlib::LbfgsSolver<EnergyCalculator> solver;
 
   auto n = m_molecule->atomCount();
-
-  // double-check the mask
-  auto mask = m_molecule->frozenAtomMask();
-  if (mask.rows() != static_cast<Eigen::Index>(3 * n)) {
-    // set the mask to all ones
-    mask = Eigen::VectorXd::Ones(static_cast<Eigen::Index>(3 * n));
-  }
-  m_method->setMolecule(m_molecule);
-  m_method->setMask(mask);
+  setupConstraints();
 
   // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
@@ -546,7 +562,28 @@ void Forcefield::unfreezeSelected()
 
 void Forcefield::fuseSelected()
 {
-  // loop through all atom pairs and set distance constraints
+  if (m_molecule == nullptr || m_molecule->isSelectionEmpty())
+    return; // nothing to do until there's a valid selection
+
+  // loop through all selected atom pairs
+  auto numAtoms = m_molecule->atomCount();
+  for (Index i = 0; i < numAtoms; ++i) {
+    if (m_molecule->atomSelected(i)) {
+      Vector3 iPos = m_molecule->atomPosition3d(i);
+
+      for (Index j = i + 1; j < numAtoms; ++j) {
+        if (m_molecule->atomSelected(j)) {
+          // both selected, set the constraint
+          Vector3 jPos = m_molecule->atomPosition3d(j);
+          Real distance = (iPos - jPos).norm();
+          Core::Constraint constraint(i, j);
+          constraint.setValue(distance);
+
+          m_molecule->addConstraint(constraint);
+        }
+      }
+    }
+  }
 }
 
 void Forcefield::refreshScripts()

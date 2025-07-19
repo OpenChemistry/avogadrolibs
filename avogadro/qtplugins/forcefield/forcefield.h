@@ -77,6 +77,8 @@ private slots:
   void freezeSelected();
   void unfreezeSelected();
 
+  void setupConstraints();
+
   // fuse adds all pairwise distance constraints
   void fuseSelected();
   // todo add constraints dialog
