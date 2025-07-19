@@ -22,7 +22,7 @@ inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
   cGrad = bGrad = aGrad = { 0.0, 0.0, 0.0 };
 
   const Vector3 ab = a - b;
-  const Vector3 cb = a - b;
+  const Vector3 cb = c - b;
   const Real rab = ab.norm();
   const Real rcb = cb.norm();
   const Real dot = ab.dot(cb);
@@ -61,15 +61,75 @@ inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
 }
 
 /**
- * Calculate the components of the gradient for the dihedral a-b-c-d
- * @return the torsion angle around a-b-c-d in radians
+ * Calculate the components of the gradient for the dihedral i-j-k-;
+ * @return the torsion angle around i-j-k-l in radians
  */
-inline Real dihedralGradient(const Vector3& a, const Vector3& b,
-                             const Vector3& c, const Vector3& d, Vector3& aGrad,
-                             Vector3& bGrad, Vector3& cGrad, Vector3& dGrad)
+inline Real dihedralGradient(const Vector3& i, const Vector3& j,
+                             const Vector3& k, const Vector3& l, Vector3& iGrad,
+                             Vector3& jGrad, Vector3& kGrad, Vector3& lGrad)
 {
-  dGrad = cGrad = bGrad = aGrad = { 0.0, 0.0, 0.0 };
-  return 0.0;
+  lGrad = kGrad = jGrad = iGrad = { 0.0, 0.0, 0.0 };
+
+  // get the bond vectors
+  Vector3 ij = j - i;
+  Vector3 jk = k - j;
+  Vector3 kl = l - k;
+
+  Real rij = ij.norm();
+  Real rjk = jk.norm();
+  Real rkl = kl.norm();
+
+  Real phi = calculateDihedral(i, j, k, l) * DEG_TO_RAD;
+
+  // check if the bond vectors are near zero
+  if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3)
+    return phi; // skip this torsion
+
+  Real sinPhi = sin(phi);
+  Real cosPhi = cos(phi);
+
+  // skip this torsion
+  if (std::abs(sinPhi) < 1e-6)
+    return phi;
+
+  // Using the BallView / Open Babel formula
+  // http://dx.doi.org/10.22028/D291-25896 (Appendix A)
+  // Thanks to Andreas Moll
+  // for the derivation of the gradients
+
+  // get the unit vectors
+  Vector3 n1 = ij / rij;
+  Vector3 n2 = jk / rjk;
+  Vector3 n3 = kl / rkl;
+
+  // get the angles between ijk and jkl
+  Vector3 n1_cross_n2 = n1.cross(n2);
+  Vector3 n2_cross_n3 = n2.cross(n3);
+
+  // check for near-zero cross products
+  if (n1_cross_n2.norm() < 1e-6 || n2_cross_n3.norm() < 1e-6)
+    return phi; // skip this torsion
+
+  Real sinAngleIJK = n1_cross_n2.norm();
+  Real sinAngleJKL = n2_cross_n3.norm();
+  Real cosAngleIJK = n1.dot(n2);
+  Real cosAngleJKL = n2.dot(n3);
+
+  // get the gradient components
+  iGrad = -n1_cross_n2 / (rij * sinAngleIJK * sinAngleIJK);
+  lGrad = n2_cross_n3 / (rkl * sinAngleJKL * sinAngleJKL);
+
+  // grad_j and grad_k are a bit more complicated
+  // clamp the cosines to -1 to 1
+  cosAngleIJK = std::max(-1.0, std::min(1.0, cosAngleIJK));
+  cosAngleJKL = std::max(-1.0, std::min(1.0, cosAngleJKL));
+
+  Real fraction1 = (rij / rjk) * (-cosAngleIJK);
+  Real fraction2 = (rkl / rjk) * (-cosAngleJKL);
+  jGrad = iGrad * (fraction1 - 1) - lGrad * (fraction2);
+  kGrad = -(iGrad + lGrad + jGrad);
+
+  return phi;
 }
 
 inline Real outOfPlaneGradient(const Vector3& point, const Vector3& b,
