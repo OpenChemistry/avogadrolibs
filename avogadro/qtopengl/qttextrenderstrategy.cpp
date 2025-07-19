@@ -10,7 +10,7 @@
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
 #include <QtGui/QImage>
-#include <QtGui/QMatrix>
+#include <QTransform>
 #include <QtGui/QPainter>
 #include <QtGui/QPolygonF>
 
@@ -29,7 +29,8 @@ namespace {
 
 inline Qt::Alignment textPropertiesToAlignment(const TextProperties& prop)
 {
-  Qt::Alignment result = nullptr;
+  // This is initialized with no flags set as we want, no need to initialize.
+  Qt::Alignment result;
 
   switch (prop.hAlign()) {
     default:
@@ -141,7 +142,7 @@ void QtTextRenderStrategy::boundingBox(const std::string& string,
   // Rotate if needed
   if (tprop.rotationDegreesCW() != 0.f) {
     // Build transformation
-    QMatrix transform;
+    QTransform transform;
     transform.rotate(static_cast<qreal>(-tprop.rotationDegreesCW()));
 
     // Transform a floating point representation of the bbox
@@ -259,4 +260,4 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtOpenGL

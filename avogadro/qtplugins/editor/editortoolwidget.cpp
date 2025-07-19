@@ -14,6 +14,8 @@
 #include <QtCore/QList>
 #include <QtCore/QSettings>
 
+#include <algorithm>
+
 namespace {
 // The ItemData of the "Other" entry in the combo box
 const int ELEMENT_SELECTOR_TAG = 255;
@@ -108,7 +110,7 @@ void EditorToolWidget::updateElementCombo()
   QList<unsigned char> allElements;
   allElements << m_defaultElements;
   allElements << m_userElements;
-  qSort(allElements);
+  std::sort(allElements.begin(), allElements.end());
 
   // Cache selected atomic number for later
   QVariant selectedData;
@@ -119,9 +121,10 @@ void EditorToolWidget::updateElementCombo()
   // Clear and repopulate combo
   m_ui->element->clear();
   foreach (unsigned char atomicNum, allElements) {
-    m_ui->element->addItem(
-      QString("%1 (%2)").arg(QtGui::ElementTranslator::name(atomicNum)).arg(atomicNum),
-      atomicNum);
+    m_ui->element->addItem(QString("%1 (%2)")
+                             .arg(QtGui::ElementTranslator::name(atomicNum))
+                             .arg(atomicNum),
+                           atomicNum);
   }
   m_ui->element->insertSeparator(m_ui->element->count());
   m_ui->element->addItem(tr("Other…"), ELEMENT_SELECTOR_TAG);
@@ -168,7 +171,7 @@ void EditorToolWidget::selectElement(unsigned char element)
     m_ui->element->setCurrentIndex(curIndex);
   else {
     addUserElement(element);
-    int curIndex = m_ui->element->findData(element);
+    curIndex = m_ui->element->findData(element);
     if (curIndex >= 0)
       m_ui->element->setCurrentIndex(curIndex);
     // if we can't find it after adding it, something is very wrong!
@@ -218,4 +221,4 @@ void EditorToolWidget::saveElements()
   QSettings().setValue("editortool/userElements", atomicNums);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

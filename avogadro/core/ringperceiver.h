@@ -6,13 +6,12 @@
 #ifndef AVOGADRO_CORE_RINGPERCEIVER_H
 #define AVOGADRO_CORE_RINGPERCEIVER_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include <cstddef>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 
@@ -21,7 +20,7 @@ class AVOGADROCORE_EXPORT RingPerceiver
 public:
   // construction and destruction
   explicit RingPerceiver(const Molecule* m = nullptr);
-  ~RingPerceiver();
+  ~RingPerceiver() = default;
 
   // properties
   void setMolecule(const Molecule* m);
@@ -36,7 +35,6 @@ private:
   std::vector<std::vector<size_t>> m_rings;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_RINGPERCEIVER_H

@@ -17,6 +17,8 @@
 #ifndef QTAIMLSODAINTEGRATOR_H
 #define QTAIMLSODAINTEGRATOR_H
 
+#include "qtaimwavefunctionevaluator.h"
+
 #include <QDebug>
 #include <QList>
 #include <QPair>
@@ -24,15 +26,10 @@
 
 #include <Eigen/Core>
 
-#include "qtaimmathutilities.h"
-#include "qtaimwavefunction.h"
-#include "qtaimwavefunctionevaluator.h"
-
 #include <cmath>
 #include <cstdio>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class QTAIMLSODAIntegrator
 {
@@ -152,7 +149,6 @@ private:
   int m_nyh;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // QTAIMLSODAINTEGRATOR_H

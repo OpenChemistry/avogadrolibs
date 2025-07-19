@@ -9,9 +9,9 @@ using json = nlohmann::json;
 
 namespace Avogadro::QtPlugins {
 /**
-* @brief Constructor to initialize the NetworkAcessManager and set pointers to
-* the widget's ui elements.
-*/
+ * @brief Constructor to initialize the NetworkAccessManager and set pointers to
+ * the widget's ui elements.
+ */
 PQRRequest::PQRRequest(QTableWidget* tw, QLabel* gv, QLineEdit* nd, QLabel* fd,
                        PQRWidget* w)
 {
@@ -27,17 +27,17 @@ PQRRequest::PQRRequest(QTableWidget* tw, QLabel* gv, QLineEdit* nd, QLabel* fd,
 }
 
 /**
-* @brief Free the ui pointers
-*/
+ * @brief Free the ui pointers
+ */
 PQRRequest::~PQRRequest()
 {
   delete oNetworkAccessManager;
 }
 
 /**
-* @brief Sends a network request to search for molecules from PQR;
-* @param url The url to query
-*/
+ * @brief Sends a network request to search for molecules from PQR;
+ * @param url The url to query
+ */
 void PQRRequest::sendRequest(QString url)
 {
   reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
@@ -45,11 +45,11 @@ void PQRRequest::sendRequest(QString url)
 }
 
 /**
-* @brief Sends a network request to download a file from PQR
-* @param url The url to send the request to
-* @param mol2 The mol2 representation of the molecule to download
-*/
-void PQRRequest::sendRequest(QString url, QString mol2)
+ * @brief Sends a network request to download a file from PQR
+ * @param url The url to send the request to
+ * @param mol2 The mol2 representation of the molecule to download
+ */
+void PQRRequest::sendRequest(QString url, QString)
 {
   reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
   currentMolName = nameDisplay->text(); // needed to load mol into Avogadro
@@ -57,9 +57,9 @@ void PQRRequest::sendRequest(QString url, QString mol2)
 }
 
 /**
-* @brief Sends a network request to download a png form PQR
-* @param url The url to send the request to
-*/
+ * @brief Sends a network request to download a png form PQR
+ * @param url The url to send the request to
+ */
 void PQRRequest::sendPNGRequest(QString url)
 {
   reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
@@ -67,14 +67,14 @@ void PQRRequest::sendPNGRequest(QString url)
 }
 
 /**
-* @brief Called when a molecule is selected to display information about the
-* molecule and start grabbing the SVG preview.
-* @param num The row number of the table result selected
-* @returns The mol2 of the result for the widget to reference
-*/
+ * @brief Called when a molecule is selected to display information about the
+ * molecule and start grabbing the SVG preview.
+ * @param num The row number of the table result selected
+ * @returns The mol2 of the result for the widget to reference
+ */
 QString PQRRequest::molSelected(int num)
 {
-  if (results.empty() || num > results.size())
+  if (results.empty() || num > static_cast<int>(results.size()))
     return QString("N/A");
 
   QString mol2 = results[num].mol2url;
@@ -88,8 +88,8 @@ QString PQRRequest::molSelected(int num)
 }
 
 /**
-* @brief Parses the JSON response from querying PQR
-*/
+ * @brief Parses the JSON response from querying PQR
+ */
 void PQRRequest::parseJson()
 {
   if (reply->error() == QNetworkReply::NoError) {
@@ -152,8 +152,8 @@ void PQRRequest::parseJson()
 }
 
 /**
-* @brief Creates a file after requesting a file from PQR
-*/
+ * @brief Creates a file after requesting a file from PQR
+ */
 void PQRRequest::getFile()
 {
   QByteArray molData = reply->readAll();
@@ -162,8 +162,8 @@ void PQRRequest::getFile()
 }
 
 /**
-* @brief Loads PNG data after sending a request
-*/
+ * @brief Loads PNG data after sending a request
+ */
 void PQRRequest::SetPNG()
 {
   QByteArray pngData = reply->readAll();
@@ -172,9 +172,9 @@ void PQRRequest::SetPNG()
 }
 
 /**
-* @brief Takes a formula string and returns a QString with subscript tags
-* @param formula The formula string
-*/
+ * @brief Takes a formula string and returns a QString with subscript tags
+ * @param formula The formula string
+ */
 QString PQRRequest::parseSubscripts(QString formula)
 {
   std::string str = formula.toStdString();
@@ -192,9 +192,9 @@ QString PQRRequest::parseSubscripts(QString formula)
 }
 
 /**
-* @brief Takes a formula string and returns the molecular mass of the molecule
-* @param formula The formula string
-*/
+ * @brief Takes a formula string and returns the molecular mass of the molecule
+ * @param formula The formula string
+ */
 float PQRRequest::getMolMass(QString formula)
 {
   std::string str = formula.toStdString();
@@ -202,7 +202,7 @@ float PQRRequest::getMolMass(QString formula)
   int subscript = 1;
   std::string element;
   unsigned char atomicNum;
-  for (int i = 0; i < str.length(); i++) {
+  for (size_t i = 0; i < str.length(); i++) {
     // each element will start with a capital letter
     if (isupper(str[i])) {
       // if next letter is a lower case then we know the whole element
@@ -244,4 +244,4 @@ float PQRRequest::getMolMass(QString formula)
   }
   return totalMass;
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

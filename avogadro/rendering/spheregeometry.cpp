@@ -39,20 +39,25 @@ public:
   BufferObject vbo;
   BufferObject ibo;
 
-  Shader vertexShader;
-  Shader fragmentShader;
-  ShaderProgram program;
+  inline static Shader* vertexShader = nullptr;
+  inline static Shader* fragmentShader = nullptr;
+  inline static ShaderProgram* program = nullptr;
 
   size_t numberOfVertices;
   size_t numberOfIndices;
 };
 
-SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private) {}
+SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private)
+{
+  setRenderPass(SolidPass);
+}
 
 SphereGeometry::SphereGeometry(const SphereGeometry& other)
   : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
     m_dirty(true), d(new Private)
-{}
+{
+  setRenderPass(SolidPass);
+}
 
 SphereGeometry::~SphereGeometry()
 {
@@ -119,24 +124,32 @@ void SphereGeometry::update()
   }
 
   // Build and link the shader if it has not been used yet.
-  if (d->vertexShader.type() == Shader::Unknown) {
-    d->vertexShader.setType(Shader::Vertex);
-    d->vertexShader.setSource(spheres_vs);
-    d->fragmentShader.setType(Shader::Fragment);
-    d->fragmentShader.setSource(spheres_fs);
-    if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << endl;
-    if (!d->fragmentShader.compile())
-      cout << d->fragmentShader.error() << endl;
-    d->program.attachShader(d->vertexShader);
-    d->program.attachShader(d->fragmentShader);
-    if (!d->program.link())
-      cout << d->program.error() << endl;
+  if (d->vertexShader == nullptr) {
+    d->vertexShader = new Shader;
+    d->vertexShader->setType(Shader::Vertex);
+    d->vertexShader->setSource(spheres_vs);
+    d->fragmentShader = new Shader;
+    d->fragmentShader->setType(Shader::Fragment);
+    d->fragmentShader->setSource(spheres_fs);
+    if (!d->vertexShader->compile())
+      cout << d->vertexShader->error() << endl;
+    if (!d->fragmentShader->compile())
+      cout << d->fragmentShader->error() << endl;
 
-    d->program.detachShader(d->vertexShader);
-    d->program.detachShader(d->fragmentShader);
-    d->vertexShader.cleanup();
-    d->fragmentShader.cleanup();
+    if (d->program == nullptr)
+      d->program = new ShaderProgram;
+
+    d->program->attachShader(*d->vertexShader);
+    d->program->attachShader(*d->fragmentShader);
+    if (!d->program->link())
+      cout << d->program->error() << endl;
+
+    /*
+        d->program.detachShader(d->vertexShader);
+        d->program.detachShader(d->fragmentShader);
+        d->vertexShader.cleanup();
+        d->fragmentShader.cleanup();
+        */
   }
 }
 
@@ -148,59 +161,60 @@ void SphereGeometry::render(const Camera& camera)
   // Prepare the VBOs, IBOs and shader program if necessary.
   update();
 
-  if (!d->program.bind())
-    cout << d->program.error() << endl;
+  if (!d->program->bind())
+    cout << d->program->error() << endl;
 
   d->vbo.bind();
   d->ibo.bind();
 
   // Set up our attribute arrays.
-  if (!d->program.enableAttributeArray("vertex"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray(
+  if (!d->program->enableAttributeArray("vertex"))
+    cout << d->program->error() << endl;
+  if (!d->program->useAttributeArray(
         "vertex", ColorTextureVertex::vertexOffset(),
         sizeof(ColorTextureVertex), FloatType, 3, ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
+    cout << d->program->error() << endl;
   }
-  if (!d->program.enableAttributeArray("color"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("color", ColorTextureVertex::colorOffset(),
-                                    sizeof(ColorTextureVertex), UCharType, 3,
-                                    ShaderProgram::Normalize)) {
-    cout << d->program.error() << endl;
+  if (!d->program->enableAttributeArray("color"))
+    cout << d->program->error() << endl;
+  if (!d->program->useAttributeArray("color", ColorTextureVertex::colorOffset(),
+                                     sizeof(ColorTextureVertex), UCharType, 3,
+                                     ShaderProgram::Normalize)) {
+    cout << d->program->error() << endl;
   }
-  if (!d->program.enableAttributeArray("texCoordinate"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray(
+  if (!d->program->enableAttributeArray("texCoordinate"))
+    cout << d->program->error() << endl;
+  if (!d->program->useAttributeArray(
         "texCoordinate", ColorTextureVertex::textureCoordOffset(),
         sizeof(ColorTextureVertex), FloatType, 2, ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
+    cout << d->program->error() << endl;
   }
 
   // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program.error() << endl;
+  if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
+    cout << d->program->error() << endl;
   }
-  if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
-    cout << d->program.error() << endl;
+  if (!d->program->setUniformValue("projection",
+                                   camera.projection().matrix())) {
+    cout << d->program->error() << endl;
   }
-  if (!d->program.setUniformValue("opacity", m_opacity)) {
-    cout << d->program.error() << endl;
+  if (!d->program->setUniformValue("opacity", m_opacity)) {
+    cout << d->program->error() << endl;
   }
 
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
                       static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid*>(NULL));
+                      (const GLvoid*)nullptr);
 
   d->vbo.release();
   d->ibo.release();
 
-  d->program.disableAttributeArray("vector");
-  d->program.disableAttributeArray("color");
-  d->program.disableAttributeArray("texCoordinates");
+  d->program->disableAttributeArray("vector");
+  d->program->disableAttributeArray("color");
+  d->program->disableAttributeArray("texCoordinates");
 
-  d->program.release();
+  d->program->release();
 }
 
 std::multimap<float, Identifier> SphereGeometry::hits(
@@ -280,4 +294,4 @@ void SphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

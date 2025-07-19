@@ -13,7 +13,7 @@
 
 #include <QtCore/QDebug>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 
 namespace Avogadro {
@@ -31,9 +31,7 @@ LammpsInput::LammpsInput(QObject* parent_)
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
 }
 
-LammpsInput::~LammpsInput()
-{
-}
+LammpsInput::~LammpsInput() {}
 
 QList<QAction*> LammpsInput::actions() const
 {
@@ -81,5 +79,5 @@ void LammpsInput::menuActivated()
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

@@ -6,8 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_YAEHMOP_SPECIALKPOINTSDATA_H
 #define AVOGADRO_QTPLUGINS_YAEHMOP_SPECIALKPOINTSDATA_H
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 // There are 230 of these (not including the first value, which is null)
 // One point for each space group.
@@ -392,7 +391,6 @@ const char* special_k_points[] = {
   "GM 0 0 0,H 0.5 -0.5 0.5,P 0.25 0.25 0.25,N 0 0 0.5"  // 230
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif

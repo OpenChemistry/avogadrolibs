@@ -26,8 +26,8 @@ class LammpsInputDialog : public QDialog
 
 public:
   explicit LammpsInputDialog(QWidget* parent = nullptr,
-                             Qt::WindowFlags flag = 0);
-  ~LammpsInputDialog();
+                             Qt::WindowFlags flag = Qt::WindowFlags());
+  ~LammpsInputDialog() override;
 
   void readSettings(QSettings&);
   void writeSettings(QSettings&) const;
@@ -100,7 +100,7 @@ protected:
   /**
    * Reimplemented to update the dialog when it is shown
    */
-  void showEvent(QShowEvent* event);
+  void showEvent(QShowEvent* event) override;
 
 private:
   Ui::LammpsInputDialog ui;
@@ -217,7 +217,7 @@ private Q_SLOTS:
   void setThermoStyle(int);
   void setThermoInterval(int);
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif

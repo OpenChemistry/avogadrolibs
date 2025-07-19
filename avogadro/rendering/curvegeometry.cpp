@@ -28,8 +28,15 @@ using Core::Array;
 
 const size_t CurveGeometry::SKIPPED = 1;
 
-CurveGeometry::CurveGeometry() : m_dirty(true), m_canBeFlat(true) {}
-CurveGeometry::CurveGeometry(bool flat) : m_dirty(true), m_canBeFlat(flat) {}
+CurveGeometry::CurveGeometry() : m_dirty(true), m_canBeFlat(true)
+{
+  setRenderPass(SolidPass);
+}
+
+CurveGeometry::CurveGeometry(bool flat) : m_dirty(true), m_canBeFlat(flat)
+{
+  setRenderPass(SolidPass);
+}
 
 CurveGeometry::~CurveGeometry()
 {
@@ -306,4 +313,4 @@ Array<Identifier> CurveGeometry::areaHits(const Frustrum& f) const
   return result;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

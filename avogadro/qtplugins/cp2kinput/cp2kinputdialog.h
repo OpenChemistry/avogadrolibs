@@ -31,9 +31,31 @@ class Cp2kInputDialog : public QDialog
 {
   Q_OBJECT
 
+  enum CalculateOption
+  {
+    CalculateEnergy = 0,
+    CalculateEnergyAndForces,
+    CalculateMolecularDynamics,
+    CalculateGeometryOptimization,
+
+    CalculateCount
+  };
+
+  enum BasisOption
+  {
+    BasisSZVGTH = 0,
+    BasisDZVGTH,
+    BasisDZVPGTH,
+    BasisTZVPGTH,
+    BasisTZV2PGTH,
+
+    BasisCount
+  };
+
 public:
-  explicit Cp2kInputDialog(QWidget* parent_ = nullptr, Qt::WindowFlags f = 0);
-  ~Cp2kInputDialog();
+  explicit Cp2kInputDialog(QWidget* parent_ = nullptr,
+                           Qt::WindowFlags f = Qt::WindowFlags());
+  ~Cp2kInputDialog() override;
 
   void setMolecule(QtGui::Molecule* mol);
 
@@ -44,7 +66,7 @@ signals:
   void openJobOutput(const Avogadro::MoleQueue::JobObject& job);
 
 protected:
-  void showEvent(QShowEvent* e);
+  void showEvent(QShowEvent* e) override;
 
 private slots:
   void updatePreviewText();
@@ -80,6 +102,8 @@ private:
 
   void setBasicDefaults();
 
+  /// @return valid values for CP2K RUN_TYPE
+  static QString fromCalcEnum(CalculateOption option);
   QString generateJobTitle() const;
 
   Ui::Cp2kInputDialog ui;

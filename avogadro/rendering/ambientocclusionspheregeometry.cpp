@@ -910,7 +910,7 @@ public:
     // draw
     glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(m_numVertices),
                         static_cast<GLsizei>(m_numIndices), GL_UNSIGNED_INT,
-                        reinterpret_cast<const GLvoid*>(NULL));
+                        (const GLvoid*)nullptr);
 
     m_vbo.release();
     m_ibo.release();
@@ -984,7 +984,7 @@ public:
     // draw
     glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(m_numVertices),
                         static_cast<GLsizei>(m_numIndices), GL_UNSIGNED_INT,
-                        reinterpret_cast<const GLvoid*>(NULL));
+                        (const GLvoid*)nullptr);
 
     m_vbo.release();
     m_ibo.release();
@@ -1081,13 +1081,15 @@ public:
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry()
   : m_dirty(false), d(new Private)
-{}
+{
+}
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry(
   const AmbientOcclusionSphereGeometry& other)
   : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
     m_dirty(true), d(new Private)
-{}
+{
+}
 
 AmbientOcclusionSphereGeometry::~AmbientOcclusionSphereGeometry()
 {
@@ -1124,7 +1126,7 @@ void AmbientOcclusionSphereGeometry::update()
 
     // calculate center
     Vector3f center(Vector3f::Zero());
-    for (auto & m_sphere : m_spheres)
+    for (auto& m_sphere : m_spheres)
       center += m_sphere.center;
     center /= static_cast<float>(nSpheres);
 
@@ -1137,7 +1139,7 @@ void AmbientOcclusionSphereGeometry::update()
 
     // calculate radius
     float radius = 0.0f;
-    for (auto & m_sphere : m_spheres)
+    for (auto& m_sphere : m_spheres)
       if ((m_sphere.center - center).norm() > radius)
         radius = (m_sphere.center - center).norm();
 
@@ -1298,7 +1300,7 @@ void AmbientOcclusionSphereGeometry::render(const Camera& camera)
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
                       static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid*>(NULL));
+                      (const GLvoid*)nullptr);
 
   d->vbo.release();
   d->ibo.release();
@@ -1362,4 +1364,4 @@ void AmbientOcclusionSphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

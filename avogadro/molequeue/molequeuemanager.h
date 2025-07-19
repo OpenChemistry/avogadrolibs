@@ -14,8 +14,7 @@
 
 #include "client/client.h"
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 /**
  * @class MoleQueueManager molequeuemanager.h
@@ -33,7 +32,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueManager : public QObject
   Q_OBJECT
 public:
   explicit MoleQueueManager(QObject* parent_ = nullptr);
-  ~MoleQueueManager() override;
+  ~MoleQueueManager() override = default;
 
   /**
    * @return The singleton instance.
@@ -82,7 +81,6 @@ private:
   MoleQueueQueueListModel m_queueModel;
 };
 
-} // namespace MoleQueue
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue
 
 #endif // AVOGADRO_MOLEQUEUE_MOLEQUEUEMANAGER_H

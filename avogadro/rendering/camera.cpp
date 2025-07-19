@@ -13,8 +13,7 @@ namespace Avogadro::Rendering {
 
 Camera::Camera()
   : m_width(0), m_height(0), m_projectionType(Perspective),
-    m_orthographicScale(1.0), m_data(new EigenData),
-    m_focus(NAN, NAN, NAN)
+    m_orthographicScale(1.0), m_data(new EigenData), m_focus(NAN, NAN, NAN)
 {
   m_data->projection.setIdentity();
   m_data->modelView.setIdentity();
@@ -24,7 +23,8 @@ Camera::Camera(const Camera& o)
   : m_width(o.m_width), m_height(o.m_height),
     m_projectionType(o.m_projectionType),
     m_orthographicScale(o.m_orthographicScale), m_data(new EigenData(*o.m_data))
-{}
+{
+}
 
 Camera& Camera::operator=(const Camera& o)
 {
@@ -114,12 +114,11 @@ Vector3f Camera::unProject(const Vector3f& point) const
 {
   Eigen::Matrix4f mvp =
     m_data->projection.matrix() * m_data->modelView.matrix();
-  Vector4f result(
-    2.0f * point.x() / static_cast<float>(m_width) - 1.0f,
-    2.0f * (static_cast<float>(m_height) - point.y()) /
-        static_cast<float>(m_height) -
-      1.0f,
-    2.0f * point.z() - 1.0f, 1.0f);
+  Vector4f result(2.0f * point.x() / static_cast<float>(m_width) - 1.0f,
+                  2.0f * (static_cast<float>(m_height) - point.y()) /
+                      static_cast<float>(m_height) -
+                    1.0f,
+                  2.0f * point.z() - 1.0f, 1.0f);
   result = mvp.matrix().inverse() * result;
   return Vector3f(result.x() / result.w(), result.y() / result.w(),
                   result.z() / result.w());
@@ -184,4 +183,19 @@ void Camera::setModelView(const Eigen::Affine3f& transform)
   m_data->modelView = transform;
 }
 
-} // namespace Avogadro
+void Camera::calculatePerspective(float left, float right, float bottom,
+                                  float top, float zNear, float zFar)
+{
+  m_data->projection.setIdentity();
+
+  m_data->projection(0, 0) = (2.0f * zNear) / (right - left);
+  m_data->projection(1, 1) = (2.0f * zNear) / (top - bottom);
+  m_data->projection(0, 2) = (right + left) / (right - left);
+  m_data->projection(1, 2) = (top + bottom) / (top - bottom);
+  m_data->projection(2, 2) = -(zFar + zNear) / (zFar - zNear);
+  m_data->projection(3, 2) = -1.0f;
+  m_data->projection(2, 3) = -(2.0f * zFar * zNear) / (zFar - zNear);
+  m_data->projection(3, 3) = 0.0f;
+}
+
+} // namespace Avogadro::Rendering

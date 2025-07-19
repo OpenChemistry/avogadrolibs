@@ -26,11 +26,15 @@ public:
 
   void process(const QtGui::Molecule& mol, Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Meshes"); }
+  QString name() const override { return tr("Surfaces"); }
 
-  QString description() const override { return tr("Render polygon meshes."); }
+  QString description() const override
+  {
+    return tr("Render molecular surfaces.");
+  }
 
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
 
   DefaultBehavior defaultBehavior() const override
   {
@@ -43,7 +47,7 @@ private slots:
   void setOpacity(int opacity);
 
 private:
-  std::string m_name = "Meshes";
+  std::string m_name = "Surfaces";
 
   QWidget* m_setupWidget;
   unsigned char m_opacity;

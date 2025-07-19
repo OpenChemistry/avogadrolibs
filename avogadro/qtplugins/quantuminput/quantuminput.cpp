@@ -17,7 +17,7 @@
 
 #include <avogadro/molequeue/client/jobobject.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QLabel>
@@ -38,12 +38,8 @@ using MoleQueue::InputGenerator;
 using MoleQueue::InputGeneratorDialog;
 using MoleQueue::JobObject;
 
-const int ConfigureAction = -1; // to find the configuration action
-
 QuantumInput::QuantumInput(QObject* parent_)
-  : ExtensionPlugin(parent_)
-  , m_molecule(nullptr)
-  , m_outputFormat(nullptr)
+  : ExtensionPlugin(parent_), m_molecule(nullptr), m_outputFormat(nullptr)
 {
   refreshGenerators();
 }
@@ -59,16 +55,13 @@ QList<QAction*> QuantumInput::actions() const
   return m_actions;
 }
 
-QStringList QuantumInput::menuPath(QAction*action) const
+QStringList QuantumInput::menuPath(QAction* action) const
 {
   QStringList path;
   if (action == nullptr)
     return path;
-    
-  if (action->data() == ConfigureAction)
-    path << tr("&Extensions");
-  else
-    path << tr("&Input");
+
+  path << tr("&Input");
   return path;
 }
 
@@ -138,65 +131,13 @@ void QuantumInput::menuActivated()
 
   if (!dlg) {
     dlg = new InputGeneratorDialog(scriptFileName, theParent);
-    connect(&dlg->widget(),
-            SIGNAL(openJobOutput(const MoleQueue::JobObject&)), this,
-            SLOT(openJobOutput(const MoleQueue::JobObject&)));
+    connect(&dlg->widget(), SIGNAL(openJobOutput(const MoleQueue::JobObject&)),
+            this, SLOT(openJobOutput(const MoleQueue::JobObject&)));
     m_dialogs.insert(scriptFileName, dlg);
   }
   dlg->setMolecule(m_molecule);
   dlg->show();
   dlg->raise();
-}
-
-void QuantumInput::configurePython()
-{
-  // Create objects
-  QSettings settings;
-  QDialog dlg(qobject_cast<QWidget*>(parent()));
-  auto* label = new QLabel;
-  auto* layout = new QVBoxLayout;
-  auto* browser = new QtGui::FileBrowseWidget;
-  auto* buttonBox = new QDialogButtonBox;
-
-  // Configure objects
-  // Check for python interpreter in env var
-  QString pythonInterp =
-    QString::fromLocal8Bit(qgetenv("AVO_PYTHON_INTERPRETER"));
-  if (pythonInterp.isEmpty()) {
-    // Check settings
-    pythonInterp = settings.value("interpreters/python", QString()).toString();
-  }
-  // Use compile-time default if still not found.
-  if (pythonInterp.isEmpty())
-    pythonInterp = QString(pythonInterpreterPath);
-  browser->setMode(QtGui::FileBrowseWidget::ExecutableFile);
-  browser->setFileName(pythonInterp);
-
-  buttonBox->setStandardButtons(QDialogButtonBox::Ok |
-                                QDialogButtonBox::Cancel);
-
-  dlg.setWindowTitle(tr("Set path to Python interpreter:"));
-  label->setText(tr("Select the python interpreter used to run input generator "
-                    "scripts.\nAvogadro must be restarted for any changes to "
-                    "take effect."));
-
-  // Build layout
-  layout->addWidget(label);
-  layout->addWidget(browser);
-  layout->addWidget(buttonBox);
-  dlg.setLayout(layout);
-
-  // Connect
-  connect(buttonBox, SIGNAL(accepted()), &dlg, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
-
-  // Show dialog
-  auto response = static_cast<QDialog::DialogCode>(dlg.exec());
-  if (response != QDialog::Accepted)
-    return;
-
-  // Handle response
-  settings.setValue("interpreters/python", browser->fileName());
 }
 
 void QuantumInput::updateInputGeneratorScripts()
@@ -213,7 +154,7 @@ void QuantumInput::updateActions()
     // Include the full path if there are multiple generators with the same
     // name.
     QString label = programName;
-    if (!label.endsWith("…") && !label.endsWith("…"))
+    if (!label.endsWith("…") && !label.endsWith("..."))
       label.append("…");
 
     if (scripts.size() == 1) {
@@ -224,13 +165,6 @@ void QuantumInput::updateActions()
       }
     }
   }
-
-  // Last one is the configuration action
-  // TODO: set this globally via the app
-  auto* action = new QAction(tr("Set Python Path…"), this);
-  action->setData(ConfigureAction);
-  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
-  m_actions << action;
 }
 
 void QuantumInput::addAction(const QString& label,
@@ -257,4 +191,4 @@ bool QuantumInput::queryProgramName(const QString& scriptFilePath,
   }
   return true;
 }
-}
+} // namespace Avogadro::QtPlugins

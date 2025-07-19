@@ -6,8 +6,6 @@
 #ifndef AVOGADRO_CORE_TYPES_H
 #define AVOGADRO_CORE_TYPES_H
 
-#include "avogadrocoreexport.h"
-
 namespace Avogadro {
 
 /** Symbolic constants representing various built-in C++ types. */
@@ -123,6 +121,6 @@ public:
   static const char* name() { return "double"; }
 };
 
-} // end Avogadro namespace
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_H

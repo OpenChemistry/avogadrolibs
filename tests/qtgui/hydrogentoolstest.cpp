@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -19,9 +8,9 @@
 #include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-using Avogadro::QtGui::RWAtom;
 using Avogadro::QtGui::HydrogenTools;
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::RWAtom;
 using Avogadro::QtGui::RWMolecule;
 
 TEST(HydrogenToolsTest, removeAllHydrogens)
@@ -173,9 +162,10 @@ TEST(HydrogenToolsTest, valencyAdjustment_N)
   RWAtom N = mol.addAtom(7);
   int expectedAdjustment = 3;
   for (int i = 0; i < 8; ++i, --expectedAdjustment) {
-    if (i == 4) // neutral N can have 3 or 5 bonds in our valence model.
-      expectedAdjustment += 2;
-    EXPECT_EQ(expectedAdjustment, HydrogenTools::valencyAdjustment(N));
+    if (i == 5) // neutral N can have 3 or 5 bonds in our valence model.
+      EXPECT_EQ(0, HydrogenTools::valencyAdjustment(N));
+    else
+      EXPECT_EQ(expectedAdjustment, HydrogenTools::valencyAdjustment(N));
     mol.addBond(mol.addAtom(1), N, 1);
   }
 }

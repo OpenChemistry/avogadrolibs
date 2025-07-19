@@ -205,7 +205,7 @@ inline double QuantizeArgument(double x, unsigned int num_levels) {
   const double interval_length = 255.0 / num_levels;
 
   // Calculate index of the interval to which the given x belongs to.
-  // Substracting eps prevents getting out of bounds index.
+  // Subtracting eps prevents getting out of bounds index.
   constexpr double eps = 0.0005;
   const unsigned int index =
       static_cast<unsigned int>((x * 255.0 - eps) / interval_length);

@@ -13,10 +13,8 @@
 #include <avogadro/core/vector.h>
 
 #include <cmath>
-#include <iomanip>
 #include <istream>
 #include <ostream>
-#include <sstream>
 #include <string>
 
 using std::map;
@@ -34,11 +32,11 @@ using Core::UnitCell;
 #ifndef _WIN32
 #endif
 
-#define DCD_EOF -1
-#define DCD_MAGIC 84
-#define DCD_IS_CHARMM 0x01
-#define DCD_HAS_4DIMS 0x02
-#define DCD_HAS_EXTRA_BLOCK 0x04
+#define DCD_EOF (-1)
+constexpr int DCD_MAGIC = 84;
+constexpr int DCD_IS_CHARMM = 0x01;
+constexpr int DCD_HAS_4DIMS = 0x02;
+constexpr int DCD_HAS_EXTRA_BLOCK = 0x04;
 
 int swap_integer(int inp)
 {
@@ -53,10 +51,6 @@ char swap_endian(char endian)
   else
     return '>';
 }
-
-DcdFormat::DcdFormat() {}
-
-DcdFormat::~DcdFormat() {}
 
 bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -223,7 +217,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     if (leadingNum == 48) {
       double unitcell[6];
-      for (double & aa : unitcell) {
+      for (double& aa : unitcell) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, 1);
         inStream.read(buff, struct_calcsize(fmt));
         struct_unpack(buff, fmt, &aa);
@@ -326,8 +320,9 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Set the custom element map if needed
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (const auto & atomType : atomTypes) {
-      elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
+    for (const auto& atomType : atomTypes) {
+      elementMap.insert(
+        std::make_pair(atomType.second, "Atom " + atomType.first));
     }
     mol.setCustomElementMap(elementMap);
   }
@@ -404,7 +399,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   return true;
 }
 
-bool DcdFormat::write(std::ostream& outStream, const Core::Molecule& mol)
+bool DcdFormat::write(std::ostream&, const Core::Molecule&)
 {
   return false;
 }
@@ -423,4 +418,4 @@ std::vector<std::string> DcdFormat::mimeTypes() const
   return mime;
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Io

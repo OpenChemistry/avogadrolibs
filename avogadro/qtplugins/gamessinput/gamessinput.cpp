@@ -15,7 +15,7 @@
 
 #include <QtCore/QDebug>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 
 namespace Avogadro {
@@ -35,9 +35,7 @@ GamessInput::GamessInput(QObject* parent_)
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
 }
 
-GamessInput::~GamessInput()
-{
-}
+GamessInput::~GamessInput() {}
 
 QList<QAction*> GamessInput::actions() const
 {
@@ -101,11 +99,11 @@ void GamessInput::menuActivated()
 {
   if (!m_dialog) {
     m_dialog = new GamessInputDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(openJobOutput(Avogadro::MoleQueue::JobObject)), this,
-            SLOT(openJobOutput(Avogadro::MoleQueue::JobObject)));
+    connect(m_dialog, SIGNAL(openJobOutput(Avogadro::MoleQueue::JobObject)),
+            this, SLOT(openJobOutput(Avogadro::MoleQueue::JobObject)));
   }
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

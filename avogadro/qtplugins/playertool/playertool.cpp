@@ -4,20 +4,21 @@
 ******************************************************************************/
 
 #include "playertool.h"
-#include "gif.h"
 
-#include "gwavi.h"
+#include <gif.h>
+#include <gwavi.h>
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QAction>
+#include <QOpenGLFramebufferObject>
+#include <QOpenGLWidget>
 #include <QtCore/QBuffer>
 #include <QtCore/QProcess>
 #include <QtGui/QIcon>
-#include <QtGui/QOpenGLFramebufferObject>
 #include <QtGui/QScreen>
 #include <QtGui/QWindow>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
@@ -25,13 +26,12 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QOpenGLWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
 
-#include <QDebug>
+#include <QScreen>
 
 #include <cmath>
 
@@ -40,21 +40,26 @@ namespace Avogadro::QtPlugins {
 using QtGui::Molecule;
 
 PlayerTool::PlayerTool(QObject* parent_)
-  : QtGui::ToolPlugin(parent_)
-  , m_activateAction(new QAction(this))
-  , m_molecule(nullptr)
-  , m_renderer(nullptr)
-  , m_currentFrame(0)
-  , m_toolWidget(nullptr)
-  , m_frameIdx(nullptr)
-  , m_slider(nullptr)
+  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
+    m_molecule(nullptr), m_renderer(nullptr), m_currentFrame(0),
+    m_toolWidget(nullptr), m_frameIdx(nullptr), m_slider(nullptr)
 {
+  QString shortcut = tr("Ctrl+9", "control-key 9");
   m_activateAction->setText(tr("Player"));
-  m_activateAction->setIcon(QIcon(":/icons/player.png"));
-  m_activateAction->setToolTip(tr("Animation Tool"));
+  m_activateAction->setToolTip(tr("Animation Tool \t(%1)").arg(shortcut));
+  setIcon();
 }
 
 PlayerTool::~PlayerTool() {}
+
+void PlayerTool::setIcon(bool darkTheme)
+{
+  if (darkTheme) {
+    m_activateAction->setIcon(QIcon(":/icons/player_dark.svg"));
+  } else {
+    m_activateAction->setIcon(QIcon(":/icons/player_light.svg"));
+  }
+}
 
 QWidget* PlayerTool::toolWidget() const
 {
@@ -228,7 +233,7 @@ void PlayerTool::recordMovie()
 #else
   qreal scaling = qApp->devicePixelRatio();
 #endif
-  int EXPORT_WIDTH = m_glWidget->width() * scaling; 
+  int EXPORT_WIDTH = m_glWidget->width() * scaling;
   int EXPORT_HEIGHT = m_glWidget->height() * scaling;
 
   if (m_timer.isActive())
@@ -255,7 +260,7 @@ void PlayerTool::recordMovie()
   bool bonding = m_dynamicBonding->isChecked();
   int numberLength = static_cast<int>(
     ceil(log10(static_cast<float>(m_molecule->coordinate3dCount()) + 1)));
-  //m_glWidget->resize(EXPORT_WIDTH, EXPORT_HEIGHT);
+  // m_glWidget->resize(EXPORT_WIDTH, EXPORT_HEIGHT);
 
   if (selfFilter == tr("GIF (*.gif)")) {
     GifWriter writer;
@@ -269,6 +274,7 @@ void PlayerTool::recordMovie()
     GifBegin(&writer, (baseName + ".gif").toLatin1().data(), EXPORT_WIDTH,
              EXPORT_HEIGHT, 100 / std::min(m_animationFPS->value(), 100));
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -282,7 +288,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
 
@@ -312,6 +319,7 @@ void PlayerTool::recordMovie()
     gwavi = gwavi_open((baseName + ".avi").toLatin1().data(), EXPORT_WIDTH,
                        EXPORT_HEIGHT, "MJPG", m_animationFPS->value(), nullptr);
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -325,7 +333,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
       QByteArray ba;
@@ -343,6 +352,7 @@ void PlayerTool::recordMovie()
     gwavi_close(gwavi);
   } else if (selfFilter == tr("Movie (*.mp4)")) {
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -361,7 +371,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
 
@@ -406,4 +417,4 @@ void PlayerTool::setSliderLimit()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

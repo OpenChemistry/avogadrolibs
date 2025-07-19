@@ -17,9 +17,7 @@ Scene::Scene()
 {
 }
 
-Scene::~Scene()
-{
-}
+Scene::~Scene() {}
 
 Vector3f Scene::center()
 {
@@ -53,4 +51,4 @@ void Scene::clear()
   m_dirty = true;
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Rendering

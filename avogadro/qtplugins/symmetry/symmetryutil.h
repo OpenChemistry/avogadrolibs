@@ -20,10 +20,11 @@
 #include <QtCore/QObject>
 
 namespace msym {
-extern "C" {
+extern "C"
+{
 #include <libmsym/msym.h>
 }
-}
+} // namespace msym
 
 #ifndef IDENTITY
 #define IDENTITY                                                               \
@@ -52,7 +53,7 @@ namespace QtPlugins {
 namespace SymmetryUtil {
 QString pointGroupSymbol(const char* point_group);
 QString operationSymbol(const msym::msym_symmetry_operation_t* operation);
-}
-}
-}
+} // namespace SymmetryUtil
+} // namespace QtPlugins
+} // namespace Avogadro
 #endif // AVOGADRO_QTPLUGINS_SYMMETRYUTIL_H

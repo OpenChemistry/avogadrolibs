@@ -6,13 +6,13 @@
 #ifndef AVOGADRO_QTGUI_ATOMUTILITIES_H
 #define AVOGADRO_QTGUI_ATOMUTILITIES_H
 
-#include <avogadro/core/vector.h>
+#include "avogadrocoreexport.h"
+
 #include <avogadro/core/molecule.h>
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class Atom;
 class Molecule;
 
@@ -29,16 +29,15 @@ public:
   /**
    * Generate a new bond vector (unit length)
    */
-  static Vector3 generateNewBondVector(const Atom& atom,
-                                       const std::vector<Vector3>& currentVectors,
-                                       AtomHybridization hybridization);
+  static Vector3 generateNewBondVector(
+    const Atom& atom, const std::vector<Vector3>& currentVectors,
+    AtomHybridization hybridization);
 
 private:
   AtomUtilities();  // Not implemented
   ~AtomUtilities(); // Not implemented
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_QTGUI_ATOMUTILITIES_H

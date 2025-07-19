@@ -8,7 +8,7 @@
 #include <avogadro/qtgui/customelementdialog.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 
 using Avogadro::QtGui::Molecule;
 
@@ -23,9 +23,7 @@ CustomElements::CustomElements(QObject* parent_)
   updateReassignAction();
 }
 
-CustomElements::~CustomElements()
-{
-}
+CustomElements::~CustomElements() {}
 
 QString CustomElements::description() const
 {
@@ -79,4 +77,4 @@ void CustomElements::updateReassignAction()
   m_reassignAction->setEnabled(m_molecule && m_molecule->hasCustomElements());
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

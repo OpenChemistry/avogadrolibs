@@ -10,7 +10,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
-#include <QtCore/QRegExp>
+
+#include <QRegularExpression>
 
 namespace Avogadro::QtPlugins {
 
@@ -142,17 +143,18 @@ void OBProcess::queryReadFormatsPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
+  QRegularExpression parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
+  QRegularExpressionMatch match;
   int pos = 0;
-  while ((pos = parser.indexIn(output, pos)) != -1) {
-    QString extension = parser.cap(1);
-    QString description = parser.cap(2);
+  while ((match = parser.match(output, pos)).hasMatch()) {
+    QString extension = match.captured(1);
+    QString description = match.captured(2);
     result.insertMulti(description, extension);
-    pos += parser.matchedLength();
+    pos = match.capturedEnd(0);
   }
 
   releaseProcess();
@@ -167,17 +169,18 @@ void OBProcess::queryWriteFormatsPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
+  QRegularExpression parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
+  QRegularExpressionMatch match;
   int pos = 0;
-  while ((pos = parser.indexIn(output, pos)) != -1) {
-    QString extension = parser.cap(1);
-    QString description = parser.cap(2);
+  while ((match = parser.match(output, pos)).hasMatch()) {
+    QString extension = match.captured(1);
+    QString description = match.captured(2);
     result.insertMulti(description, extension);
-    pos += parser.matchedLength();
+    pos = match.capturedEnd(0);
   }
 
   releaseProcess();
@@ -229,9 +232,9 @@ void OBProcess::convertPrepareOutput()
 
   // Check for errors.
   QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
-  QRegExp errorChecker("\\b0 molecules converted\\b"
-                       "|"
-                       "obabel: cannot read input format!");
+  QRegularExpression errorChecker("\\b0 molecules converted\\b"
+                                  "|"
+                                  "obabel: cannot read input format!");
   if (!errorOutput.contains(errorChecker)) {
     if (m_process->exitStatus() == QProcess::NormalExit)
       output = m_process->readAllStandardOutput();
@@ -267,17 +270,18 @@ void OBProcess::queryForceFieldsPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
+  QRegularExpression parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
+  QRegularExpressionMatch match;
   int pos = 0;
-  while ((pos = parser.indexIn(output, pos)) != -1) {
-    QString key = parser.cap(1);
-    QString desc = parser.cap(2);
+  while ((match = parser.match(output, pos)).hasMatch()) {
+    QString key = match.captured(1);
+    QString desc = match.captured(2);
     result.insertMulti(key, desc);
-    pos += parser.matchedLength();
+    pos = match.capturedEnd(0);
   }
 
   releaseProcess();
@@ -306,17 +310,18 @@ void OBProcess::queryChargesPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
+  QRegularExpression parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
+  QRegularExpressionMatch match;
   int pos = 0;
-  while ((pos = parser.indexIn(output, pos)) != -1) {
-    QString key = parser.cap(1);
-    QString desc = parser.cap(2);
+  while ((match = parser.match(output, pos)).hasMatch()) {
+    QString key = match.captured(1);
+    QString desc = match.captured(2);
     result.insertMulti(key, desc);
-    pos += parser.matchedLength();
+    pos = match.capturedEnd(0);
   }
 
   releaseProcess();
@@ -340,9 +345,7 @@ bool OBProcess::calculateCharges(const QByteArray& mol,
     realOptions << "-icml";
   }
   realOptions << "-onul" // ignore the output
-              << "--partialcharge"
-              << type.c_str()
-              << "--print";
+              << "--partialcharge" << type.c_str() << "--print";
 
   // Start the optimization
   executeObabel(realOptions, this, SLOT(chargesPrepareOutput()), mol);
@@ -361,9 +364,9 @@ void OBProcess::chargesPrepareOutput()
 
   // Check for errors.
   QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
-  QRegExp errorChecker("\\b0 molecules converted\\b"
-                       "|"
-                       "obabel: cannot read input format!");
+  QRegularExpression errorChecker("\\b0 molecules converted\\b"
+                                  "|"
+                                  "obabel: cannot read input format!");
   if (!errorOutput.contains(errorChecker)) {
     if (m_process->exitStatus() == QProcess::NormalExit)
       output = m_process->readAllStandardOutput();
@@ -382,7 +385,7 @@ void OBProcess::chargesPrepareOutput()
     double charge = line.toDouble(&ok);
     if (!ok)
       break;
-    
+
     charges.push_back(charge);
   }
 
@@ -424,6 +427,40 @@ bool OBProcess::optimizeGeometry(const QByteArray& mol,
   return true;
 }
 
+bool OBProcess::generateConformers(const QByteArray& mol,
+                                   const QStringList& options,
+                                   const std::string format)
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::generateConformers(): process already in use.";
+    return false;
+  }
+
+  QStringList realOptions;
+  if (format == "cjson") {
+    realOptions << "-icjson"
+                << "-ocjson";
+  } else {
+    realOptions << "-icml"
+                << "-ocml";
+  }
+  realOptions << "--conformer"
+              << "--noh" // new in OB 3.0.1
+              << "--log" << options;
+
+  // We'll need to read the log (printed to stderr) to update progress
+  connect(m_process, SIGNAL(readyReadStandardError()),
+          SLOT(conformerReadLog()));
+
+  // Initialize the log reader ivars
+  m_optimizeGeometryLog.clear();
+  m_maxConformers = -1;
+
+  // Start the optimization
+  executeObabel(realOptions, this, SLOT(conformerPrepare()), mol);
+  return true;
+}
+
 void OBProcess::optimizeGeometryPrepare()
 {
   if (m_aborted) {
@@ -437,6 +474,19 @@ void OBProcess::optimizeGeometryPrepare()
   emit optimizeGeometryFinished(result);
 }
 
+void OBProcess::conformerPrepare()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  QByteArray result = m_process->readAllStandardOutput();
+
+  releaseProcess();
+  emit generateConformersFinished(result);
+}
+
 void OBProcess::optimizeGeometryReadLog()
 {
   // Append the current stderr to the log
@@ -445,9 +495,10 @@ void OBProcess::optimizeGeometryReadLog()
 
   // Search for the maximum number of steps if we haven't found it yet
   if (m_optimizeGeometryMaxSteps < 0) {
-    QRegExp maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
-    if (maxStepsParser.indexIn(m_optimizeGeometryLog) != -1) {
-      m_optimizeGeometryMaxSteps = maxStepsParser.cap(1).toInt();
+    QRegularExpression maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
+    QRegularExpressionMatch match;
+    if ((match = maxStepsParser.match(m_optimizeGeometryLog)).hasMatch()) {
+      m_optimizeGeometryMaxSteps = match.captured(1).toInt();
       emit optimizeGeometryStatusUpdate(0, m_optimizeGeometryMaxSteps, 0.0,
                                         0.0);
     }
@@ -455,11 +506,51 @@ void OBProcess::optimizeGeometryReadLog()
 
   // Emit the last printed step
   if (m_optimizeGeometryMaxSteps >= 0) {
-    QRegExp lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
-    if (lastStepParser.lastIndexIn(m_optimizeGeometryLog) != -1) {
-      int step = lastStepParser.cap(1).toInt();
-      double energy = lastStepParser.cap(2).toDouble();
-      double lastEnergy = lastStepParser.cap(3).toDouble();
+    QRegularExpression lastStepParser(
+      R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
+    QRegularExpressionMatchIterator matchIterator =
+      lastStepParser.globalMatch(m_optimizeGeometryLog);
+    QRegularExpressionMatch lastMatch;
+    while (matchIterator.hasNext()) {
+      lastMatch = matchIterator.next(); // Capture the last match
+    }
+    if (lastMatch.hasMatch()) {
+      int step = lastMatch.captured(1).toInt();
+      double energy = lastMatch.captured(2).toDouble();
+      double lastEnergy = lastMatch.captured(3).toDouble();
+      emit optimizeGeometryStatusUpdate(step, m_optimizeGeometryMaxSteps,
+                                        energy, lastEnergy);
+    }
+  }
+}
+
+void OBProcess::conformerReadLog()
+{
+  // Append the current stderr to the log
+  // (we're grabbing the log from the geometry optimization)
+  m_optimizeGeometryLog +=
+    QString::fromLatin1(m_process->readAllStandardError());
+
+  // Search for the maximum number of steps if we haven't found it yet
+  if (m_optimizeGeometryMaxSteps < 0) {
+    QRegularExpression maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
+    QRegularExpressionMatch match;
+    if ((match = maxStepsParser.match(m_optimizeGeometryLog)).hasMatch()) {
+      m_optimizeGeometryMaxSteps = match.captured(1).toInt();
+      emit optimizeGeometryStatusUpdate(0, m_optimizeGeometryMaxSteps, 0.0,
+                                        0.0);
+    }
+  }
+
+  // Emit the last printed step
+  if (m_optimizeGeometryMaxSteps >= 0) {
+    QRegularExpression lastStepParser(
+      R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
+    QRegularExpressionMatch match;
+    if ((match = lastStepParser.match(m_optimizeGeometryLog)).hasMatch()) {
+      int step = match.captured(1).toInt();
+      double energy = match.captured(2).toDouble();
+      double lastEnergy = match.captured(3).toDouble();
       emit optimizeGeometryStatusUpdate(step, m_optimizeGeometryMaxSteps,
                                         energy, lastEnergy);
     }
@@ -472,15 +563,18 @@ void OBProcess::executeObabel(const QStringList& options, QObject* receiver,
   // Setup exit handler
   if (receiver) {
     connect(m_process, SIGNAL(finished(int)), receiver, slot);
-    connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
-    connect(m_process, SIGNAL(error(QProcess::ProcessError)), this,
+    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), receiver,
+            slot);
+    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), this,
             SLOT(obError()));
   }
 
   // Start process
+#ifndef NDEBUG
   qDebug() << "OBProcess::executeObabel: "
               "Running"
            << m_obabelExecutable << options.join(" ");
+#endif
   m_process->start(m_obabelExecutable, options);
   if (!obabelStdin.isNull()) {
     m_process->write(obabelStdin);
@@ -496,4 +590,4 @@ void OBProcess::resetState()
   connect(this, SIGNAL(aborted()), m_process, SLOT(kill()));
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

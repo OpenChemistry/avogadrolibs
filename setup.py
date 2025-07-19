@@ -28,6 +28,9 @@ cmake_args = [
     '-DUSE_HDF5:BOOL=FALSE',
     '-DUSE_LIBARCHIVE:BOOL=FALSE',
     '-DUSE_LIBMSYM:BOOL=FALSE',
+    '-DINSTALL_RUNTIME_DIR:PATH=avogadro',
+    '-DINSTALL_LIBRARY_DIR:PATH=avogadro',
+    '-DINSTALL_ARCHIVE_DIR:PATH=avogadro',
 ] + extra_cmake_args() + wheel_args()
 
 # Add pybind11 if it is installed

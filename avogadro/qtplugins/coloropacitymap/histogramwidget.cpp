@@ -3,10 +3,9 @@
 
 #include "histogramwidget.h"
 
-#include "qvtkwidget.h"
-
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
+#include <avogadro/vtk/qvtkwidget.h>
 #include <avogadro/vtk/vtkglwidget.h>
 
 #include "vtkChartHistogramColorOpacityEditor.h"
@@ -36,9 +35,8 @@
 
 namespace Avogadro {
 
-
 HistogramWidget::HistogramWidget(QWidget* parent)
-  : QWidget(parent), m_qvtk(new QVTKGLWidget(this))
+  : QWidget(parent), m_qvtk(new VTK::QVTKWidget(this))
 {
   // Set up our little chart.
   m_histogramView->SetRenderWindow(m_qvtk->renderWindow());

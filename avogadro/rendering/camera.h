@@ -122,6 +122,19 @@ public:
   void calculatePerspective(float fieldOfView, float zNear, float zFar);
 
   /**
+   * Calculate the perspective projection matrix using frustum planes
+   * coordinates.
+   * @param left left vertical clipping plane.
+   * @param right right vertical clipping plane.
+   * @param bottom bottom horizontal clipping plane.
+   * @param top top horizontal clipping plane.
+   * @param zNear distance to the near clipping plane.
+   * @param zFar distance to the far clipping plane.
+   */
+  void calculatePerspective(float left, float right, float bottom, float top,
+                            float zNear, float zFar);
+
+  /**
    * Calculate the orthographic projection matrix.
    * @param left left vertical clipping plane.
    * @param right right vertical clipping plane.
@@ -201,7 +214,7 @@ public:
    * Set focused point. Navigation actions shall occur relative to it.
    * Note that this method does not cause any change in camera matrices.
    */
-  void setFocus(const Eigen::Vector3f &newFocus) { m_focus = newFocus; }
+  void setFocus(const Eigen::Vector3f& newFocus) { m_focus = newFocus; }
 
   /**
    * Get focused point. Navigation actions shall occur relative to it.

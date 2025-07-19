@@ -3,6 +3,7 @@ set(manipulator_srcs
 )
 
 set(manipulator_uis
+  manipulatewidget.ui
 )
 
 set(manipulator_rcs
@@ -19,4 +20,4 @@ avogadro_plugin(Manipulator
   "${manipulator_rcs}"
 )
 
-target_link_libraries(Manipulator PRIVATE AvogadroQtOpenGL)
+target_link_libraries(Manipulator PRIVATE Avogadro::QtOpenGL)

@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "apbs.h"
+
 #include "apbsdialog.h"
 #include "opendxreader.h"
 
@@ -71,8 +72,7 @@ void Apbs::onOpenOutputFile()
 
 void Apbs::meshGeneratorFinished()
 {
-  auto* generator =
-    qobject_cast<QtGui::MeshGenerator*>(sender());
+  auto* generator = qobject_cast<QtGui::MeshGenerator*>(sender());
   if (!generator) {
     return;
   }
@@ -154,8 +154,7 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
       qApp->processEvents();
 
       Mesh* mesh = molecule.addMesh();
-      auto* meshGenerator =
-        new QtGui::MeshGenerator(cube, mesh, 0.1f);
+      auto* meshGenerator = new QtGui::MeshGenerator(cube, mesh, 0.1f);
       connect(meshGenerator, SIGNAL(finished()), this,
               SLOT(meshGeneratorFinished()));
       connect(meshGenerator, SIGNAL(progressValueChanged(int)), this,
@@ -183,4 +182,4 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
 
   return true;
 }
-}
+} // namespace Avogadro::QtPlugins

@@ -112,15 +112,7 @@ public:
   }
 } CustomElementTableInitializer;
 
-} // end anon namespace
-
-Elements::Elements()
-{
-}
-
-Elements::~Elements()
-{
-}
+} // namespace
 
 unsigned char Elements::elementCount()
 {
@@ -196,7 +188,7 @@ unsigned char Elements::guessAtomicNumber(const std::string& inputStr)
   str[0] = static_cast<char>(toupper(static_cast<int>(str[0])));
 
   int length = str.size();
-  unsigned char atomicNumber;
+  unsigned char atomicNumber = InvalidElement;
   while (length > 0) {
     if (length > 3)
       atomicNumber = atomicNumberFromName(str.substr(0, length));
@@ -268,4 +260,12 @@ const unsigned char* Elements::color(unsigned char atomicNumber)
     return element_color[0];
 }
 
-} // end Avogadro namespace
+unsigned char Elements::valenceElectrons(unsigned char atomicNumber)
+{
+  if (atomicNumber < element_count)
+    return valence_electrons[atomicNumber];
+  else
+    return valence_electrons[0];
+}
+
+} // namespace Avogadro::Core

@@ -10,9 +10,10 @@
 #include <avogadro/rendering/primitive.h>
 #include <avogadro/rendering/textlabel3d.h>
 
-#include <QRegExp>
-#include <QtGui/QKeyEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
+#include <QKeyEvent>
+
+#include <QDebug>
 
 namespace Avogadro::QtPlugins {
 
@@ -27,22 +28,34 @@ LabelEditor::LabelEditor(QObject* parent_)
     m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
     m_selected(false), m_text("")
 {
+  QString shortcut = tr("Ctrl+4", "control-key 4");
   m_activateAction->setText(tr("Edit Labels"));
-  m_activateAction->setIcon(QIcon(":/icons/labeltool.png"));
   m_activateAction->setToolTip(
-    tr("Atom Label Tool\n\n"
-       "Left Mouse: \tClick on Atoms to add Custom Labels"));
+    tr("Atom Label Tool \t(%1)\n\n"
+       "Left Mouse: \tClick on Atoms to add Custom Labels")
+      .arg(shortcut));
+  setIcon();
 }
 
 LabelEditor::~LabelEditor() {}
 
+void LabelEditor::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/label_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/label_light.svg"));
+}
+
 QUndoCommand* LabelEditor::mouseReleaseEvent(QMouseEvent* e)
 {
+  e->ignore();
   return nullptr;
 }
 
 QUndoCommand* LabelEditor::mouseMoveEvent(QMouseEvent* e)
 {
+  e->ignore();
   return nullptr;
 }
 
@@ -50,7 +63,7 @@ QUndoCommand* LabelEditor::keyPressEvent(QKeyEvent* e)
 {
   if (m_selected && !e->text().isEmpty()) {
     e->accept();
-    auto text = e->text()[0];
+    const QChar text = e->text()[0];
     if (text.isPrint()) {
       m_text.append(text);
     } else if (e->key() == Qt::Key_Backspace) {
@@ -70,6 +83,9 @@ void LabelEditor::save()
   m_molecule->endMergeMode();
   m_text.clear();
   m_selectedAtom = RWAtom();
+
+  // make sure the label display is made active
+  emit requestActiveDisplayTypes(QStringList() << "Labels");
 }
 
 QUndoCommand* LabelEditor::mousePressEvent(QMouseEvent* e)
@@ -78,18 +94,25 @@ QUndoCommand* LabelEditor::mousePressEvent(QMouseEvent* e)
     return nullptr;
 
   if (e->buttons() & Qt::LeftButton) {
-    e->accept();
     if (m_selectedAtom.isValid()) {
+      e->accept();
       save();
+      emit drawablesChanged();
     }
 
     Identifier clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
     m_selected = (clickedObject.type == Rendering::AtomType);
     if (m_selected) {
+      e->accept();
       m_selectedAtom = m_molecule->atom(clickedObject.index);
       m_text = QString::fromStdString(m_selectedAtom.label());
+      emit drawablesChanged();
+    } else {
+      // clicked on empty space
+      e->ignore();
     }
-    emit drawablesChanged();
+  } else {
+    e->ignore();
   }
 
   return nullptr;
@@ -131,4 +154,4 @@ void LabelEditor::draw(Rendering::GroupNode& node)
   TextLabel3D* atomLabel = createLabel(m_text.toStdString(), pos, radius);
   geometry->addDrawable(atomLabel);
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

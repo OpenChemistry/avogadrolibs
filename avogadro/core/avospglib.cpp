@@ -13,7 +13,8 @@
 
 #include <iostream>
 
-extern "C" {
+extern "C"
+{
 #include "spglib.h"
 }
 
@@ -36,7 +37,7 @@ unsigned short AvoSpglib::getHallNumber(Molecule& mol, double cartTol)
   }
 
   Index numAtoms = mol.atomCount();
-  auto positions = new double[numAtoms][3];
+  auto* positions = new double[numAtoms][3];
   int* types = new int[numAtoms];
 
   const Array<unsigned char>& atomicNums = mol.atomicNumbers();
@@ -111,7 +112,7 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
   // If toPrimitive is true, then we will just use the number of atoms.
   // See http://atztogo.github.io/spglib/api.html#spg-standardize-cell
   int numAtomsMultiplier = toPrimitive ? 1 : 4;
-  auto positions = new double[numAtoms * numAtomsMultiplier][3];
+  auto* positions = new double[numAtoms * numAtomsMultiplier][3];
   int* types = new int[numAtoms * numAtomsMultiplier];
 
   const Array<unsigned char>& atomicNums = mol.atomicNumbers();
@@ -170,4 +171,4 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
   return true;
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Core

@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_RESETVIEW_H
-#define AVOGADRO_QTPLUGINS_RESETVIEW_H
+#ifndef AVOGADRO_QTPLUGINS_FOCUS_H
+#define AVOGADRO_QTPLUGINS_FOCUS_H
 
 #include <Eigen/Geometry>
 #include <avogadro/qtgui/extensionplugin.h>
@@ -14,7 +14,7 @@ namespace Avogadro {
 namespace QtPlugins {
 
 /**
- * @brief The ResetView class is an extension to center the camera in the best
+ * @brief The Focus class is an extension to center the camera in the best
  * fit panel or the default camera position
  */
 class Focus : public Avogadro::QtGui::ExtensionPlugin

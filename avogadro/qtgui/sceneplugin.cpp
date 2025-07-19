@@ -11,9 +11,7 @@ ScenePlugin::ScenePlugin(QObject* parent_) : QObject(parent_) {}
 
 ScenePlugin::~ScenePlugin() {}
 
-void ScenePlugin::process(const QtGui::Molecule& molecule,
-                          Rendering::GroupNode& node)
-{}
+void ScenePlugin::process(const QtGui::Molecule&, Rendering::GroupNode&) {}
 
 void ScenePlugin::processEditable(const RWMolecule&, Rendering::GroupNode&) {}
 
@@ -37,4 +35,4 @@ void ScenePlugin::setEnabled(bool enable)
   m_layerManager.setEnabled(enable);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

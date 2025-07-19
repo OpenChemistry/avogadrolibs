@@ -13,11 +13,13 @@
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/scene.h>
 
+#include <QAction>
+#include <QDebug>
 #include <QtCore/QSettings>
+#include <QtGui/QGuiApplication>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QVBoxLayout>
 
@@ -34,16 +36,63 @@ Navigator::Navigator(QObject* parent_)
     m_renderer(nullptr), m_pressedButtons(Qt::NoButton),
     m_currentAction(Nothing)
 {
+  QString shortcut = tr("Ctrl+1", "control-key 1");
   m_activateAction->setText(tr("Navigate"));
-  m_activateAction->setIcon(QIcon(":/icons/navigator.png"));
   m_activateAction->setToolTip(
-    tr("Navigation Tool\n\n"
+    tr("Navigation Tool \t(%1)\n\n"
        "Left Mouse: \tClick and drag to rotate the view.\n"
        "Middle Mouse: \tClick and drag to zoom in or out.\n"
-       "Right Mouse: \tClick and drag to move the view.\n"));
-      
+       "Right Mouse: \tClick and drag to move the view.\n")
+      .arg(shortcut));
+  setIcon();
   QSettings settings;
   m_zoomDirection = settings.value("navigator/zoom", 1).toInt();
+}
+
+void Navigator::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/navigator_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/navigator_light.svg"));
+}
+
+void Navigator::registerCommands()
+{
+  emit registerCommand("rotateScene",
+                       tr("Rotate the scene along the x, y, or z axes."));
+  emit registerCommand("zoomScene", tr("Zoom the scene."));
+  emit registerCommand("translateScene", tr("Translate the scene."));
+}
+
+bool Navigator::handleCommand(const QString& command,
+                              const QVariantMap& options)
+{
+  if (m_renderer == nullptr)
+    return false; // No camera
+
+  if (command == "rotateScene") {
+    float x = options.value("x").toFloat();
+    float y = options.value("y").toFloat();
+    float z = options.value("z").toFloat();
+    rotate(m_renderer->camera().focus(), x, y, z);
+
+    m_glWidget->requestUpdate();
+  } else if (command == "zoomScene") {
+    float d = options.value("delta").toFloat();
+    zoom(m_renderer->camera().focus(), d);
+    m_glWidget->requestUpdate();
+  } else if (command == "translateScene") {
+    float x = options.value("x").toFloat();
+    float y = options.value("y").toFloat();
+    translate(m_renderer->camera().focus(), x, y);
+    m_glWidget->requestUpdate();
+  } else {
+    qDebug() << "Unknown command: " << command;
+    return false;
+  }
+
+  return true;
 }
 
 Navigator::~Navigator() {}
@@ -54,8 +103,7 @@ QWidget* Navigator::toolWidget() const
     m_toolWidget = new QWidget(qobject_cast<QWidget*>(parent()));
     auto* layout = new QVBoxLayout;
 
-    auto* swapZoom =
-      new QCheckBox(tr("Reverse Direction of Zoom on Scroll"));
+    auto* swapZoom = new QCheckBox(tr("Reverse Direction of Zoom on Scroll"));
     swapZoom->setToolTip(
       tr("Default:\t Scroll down to shrink, scroll up to zoom\n"
          "Reversed:\t Scroll up to shrink, scroll down to zoom"));
@@ -86,7 +134,7 @@ QUndoCommand* Navigator::mousePressEvent(QMouseEvent* e)
   // Figure out what type of navigation has been requested.
   if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::NoModifier) {
     m_currentAction = Rotation;
-  } else if (e->buttons() & Qt::MidButton ||
+  } else if (e->buttons() & Qt::MiddleButton ||
              (e->buttons() & Qt::LeftButton &&
               e->modifiers() == Qt::ShiftModifier)) {
     m_currentAction = ZoomTilt;
@@ -167,10 +215,12 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
   QPoint numPixels = e->pixelDelta();
   QPoint numDegrees = e->angleDelta() * 0.125;
 
-  if (!numPixels.isNull())
-    d = numPixels.y();
+  // see https://doc.qt.io/qt-5/qwheelevent.html#pixelDelta
+  if (!numPixels.isNull() &&
+      QGuiApplication::platformName().toStdString().compare("xcb"))
+    d = numPixels.y(); // use pixelDelta() when available, except on X11
   else if (!numDegrees.isNull())
-    d = numDegrees.y();
+    d = numDegrees.y(); // fall back to angleDelta()
 
   zoom(m_renderer->camera().focus(), m_zoomDirection * d);
 
@@ -297,4 +347,4 @@ inline void Navigator::translate(const Vector3f& ref, const Vector2f& fromScr,
   m_renderer->camera().translate(to - from);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -12,10 +12,8 @@
 
 namespace Avogadro::MoleQueue {
 
-JsonRpcClient::JsonRpcClient(QObject *parent_) :
-  QObject(parent_),
-  m_packetCounter(0),
-  m_socket(nullptr)
+JsonRpcClient::JsonRpcClient(QObject* parent_)
+  : QObject(parent_), m_packetCounter(0), m_socket(nullptr)
 {
   connect(this, SIGNAL(newPacket(QByteArray)), SLOT(readPacket(QByteArray)),
           Qt::QueuedConnection);
@@ -34,13 +32,12 @@ bool JsonRpcClient::isConnected() const
     return m_socket->isOpen();
 }
 
-bool JsonRpcClient::connectToServer(const QString &serverName_)
+bool JsonRpcClient::connectToServer(const QString& serverName_)
 {
   if (m_socket && m_socket->isOpen()) {
     if (m_socket->serverName() == serverName_) {
       return false;
-    }
-    else {
+    } else {
       m_socket->close();
       delete m_socket;
       m_socket = nullptr;
@@ -55,8 +52,7 @@ bool JsonRpcClient::connectToServer(const QString &serverName_)
 
   if (serverName_.isEmpty()) {
     return false;
-  }
-  else {
+  } else {
     m_socket->connectToServer(serverName_);
     return isConnected();
   }
@@ -84,7 +80,7 @@ QJsonObject JsonRpcClient::emptyRequest()
   return request;
 }
 
-bool JsonRpcClient::sendRequest(const QJsonObject &request)
+bool JsonRpcClient::sendRequest(const QJsonObject& request)
 {
   if (!m_socket)
     return false;
@@ -103,16 +99,14 @@ void JsonRpcClient::readPacket(const QByteArray message)
   QJsonDocument reader = QJsonDocument::fromJson(message, &error);
 
   if (error.error != QJsonParseError::NoError) {
-    emit badPacketReceived("Unparseable message received\n:"
-                           + error.errorString() + "\nContent: " + message);
+    emit badPacketReceived("Unparsable message received\n:" +
+                           error.errorString() + "\nContent: " + message);
     return;
-  }
-  else if (!reader.isObject()) {
+  } else if (!reader.isObject()) {
     // We need a valid object, something bad happened.
     emit badPacketReceived("Packet did not contain a valid JSON object.");
     return;
-  }
-  else {
+  } else {
     QJsonObject root = reader.object();
     if (root["method"] != QJsonValue::Null) {
       if (root["id"] != QJsonValue::Null)
@@ -123,8 +117,7 @@ void JsonRpcClient::readPacket(const QByteArray message)
     if (root["result"] != QJsonValue::Null) {
       // This is a result packet, and should emit a signal.
       emit resultReceived(root);
-    }
-    else if (root["error"] != QJsonValue::Null) {
+    } else if (root["error"] != QJsonValue::Null) {
       emit errorReceived(root);
     }
   }
@@ -142,4 +135,4 @@ void JsonRpcClient::readSocket()
   }
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::MoleQueue

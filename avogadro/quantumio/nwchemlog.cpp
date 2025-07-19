@@ -11,26 +11,20 @@
 
 #include <iostream>
 
-using std::vector;
 using std::string;
+using std::vector;
 
 namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 
-NWChemLog::NWChemLog()
-{
-}
+NWChemLog::NWChemLog() {}
 
-NWChemLog::~NWChemLog()
-{
-}
+NWChemLog::~NWChemLog() {}
 
 std::vector<std::string> NWChemLog::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.emplace_back("log");
-  extensions.emplace_back("out");
   extensions.emplace_back("nwchem");
   return extensions;
 }
@@ -46,8 +40,9 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
   // line, so they should be retained.
   while (!in.eof())
     processLine(in, molecule);
-  if (0 == molecule.atomCount()){
-    appendError("Could not find any atomic coordinates! Are you sure this is an NWChem output file?");
+  if (0 == molecule.atomCount()) {
+    appendError("Could not find any atomic coordinates! Are you sure this is "
+                "an NWChem output file?");
     return false;
   }
 
@@ -62,6 +57,7 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
 
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
 
   return true;
 }
@@ -175,7 +171,7 @@ void NWChemLog::readFrequencies(const std::string& firstLine, std::istream& in,
   }
 }
 
-void NWChemLog::readIntensities(std::istream& in, Core::Molecule& mol)
+void NWChemLog::readIntensities(std::istream& in, Core::Molecule&)
 {
   string line;
   bool ok = false;
@@ -198,4 +194,4 @@ void NWChemLog::readIntensities(std::istream& in, Core::Molecule& mol)
     }
   }
 }
-}
+} // namespace Avogadro::QuantumIO

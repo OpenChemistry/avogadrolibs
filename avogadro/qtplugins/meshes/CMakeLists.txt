@@ -1,9 +1,9 @@
 avogadro_plugin(Meshes
-  "Mesh rendering"
+  "Surface and mesh rendering"
   ScenePlugin
   meshes.h
   Meshes
   meshes.cpp
   "")
 
-target_link_libraries(Meshes PRIVATE AvogadroRendering)
+target_link_libraries(Meshes PRIVATE Avogadro::Rendering)

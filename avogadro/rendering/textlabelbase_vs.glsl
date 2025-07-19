@@ -41,7 +41,7 @@ void main(void)
   // Apply radius;
   eyeAnchor += vec4(0., 0., radius, 0.);
 
-  // Tranform to clip coordinates
+  // Transform to clip coordinates
   vec4 clipAnchor = proj * eyeAnchor;
 
   // Move the anchor to a pixel center:

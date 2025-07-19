@@ -75,7 +75,7 @@ void InterfaceWidget::showError(const QString& err)
   // adjust the size of the text browser to ~80 char wide, ~20 lines high
   QSize theSize = textBrowser->sizeHint();
   QFontMetrics metrics(textBrowser->currentFont());
-  int charWidth = metrics.width(QStringLiteral("i7OPlmWn9/")) / 10;
+  int charWidth = metrics.horizontalAdvance(QStringLiteral("i7OPlmWn9/")) / 10;
   int charHeight = metrics.lineSpacing();
   theSize.setWidth(80 * charWidth);
   theSize.setHeight(20 * charHeight);
@@ -93,4 +93,4 @@ QString InterfaceWidget::settingsKey(const QString& identifier) const
     .arg(m_interfaceScript.displayName(), identifier);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

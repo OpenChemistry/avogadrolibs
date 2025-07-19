@@ -23,10 +23,8 @@
 
 using namespace Eigen;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins::QTAIMMathUtilities {
 
-namespace QTAIMMathUtilities {
 Matrix<qreal, 3, 1> eigenvaluesOfASymmetricThreeByThreeMatrix(
   const Matrix<qreal, 3, 3>& A);
 Matrix<qreal, 3, 3> eigenvectorsOfASymmetricThreeByThreeMatrix(
@@ -63,9 +61,7 @@ Matrix<qreal, 3, 1> plusOneSignatureLocatorGradient(
   const Matrix<qreal, 3, 1>& g, const Matrix<qreal, 3, 3>& H);
 Matrix<qreal, 3, 1> plusThreeSignatureLocatorGradient(
   const Matrix<qreal, 3, 1>& g, const Matrix<qreal, 3, 3>& H);
-}
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins::QTAIMMathUtilities
 
 #endif // QTAIMMATHUTILITIES_H

@@ -13,8 +13,8 @@
 #include <avogadro/rendering/spheregeometry.h>
 
 #include <QDebug>
+#include <QtCore/QVariant>
 
-using namespace std;
 using namespace Avogadro;
 using namespace Avogadro::Rendering;
 
@@ -23,10 +23,7 @@ namespace Avogadro::QtPlugins {
 QTAIMEngine::QTAIMEngine(QObject* aParent)
   : QtGui::ScenePlugin(aParent), m_enabled(false)
 {
-}
-
-QTAIMEngine::~QTAIMEngine()
-{
+  m_layerManager = QtGui::PluginLayerManager(m_name);
 }
 
 void QTAIMEngine::process(const QtGui::Molecule& molecule,
@@ -226,4 +223,4 @@ void QTAIMEngine::process(const QtGui::Molecule& molecule,
   }
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

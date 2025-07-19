@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -29,8 +18,8 @@
 #include <qjsonarray.h>
 #include <qjsonobject.h>
 
-using Avogadro::QtGui::GenericHighlighter;
 using Avogadro::MoleQueue::InputGenerator;
+using Avogadro::QtGui::GenericHighlighter;
 
 TEST(InputGeneratorTest, exercise)
 {
@@ -51,7 +40,7 @@ TEST(InputGeneratorTest, exercise)
   // Create a set of input options by setting defaults
   QJsonObject inputOptions;
   QJsonObject options;
-  foreach (const QString& optionName, userOptions.keys()) {
+  for (const QString& optionName : userOptions.keys()) {
     EXPECT_TRUE(userOptions[optionName].isObject());
     QJsonObject option(userOptions[optionName].toObject());
     QString optionType(option["type"].toString());

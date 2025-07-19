@@ -18,6 +18,7 @@
 
 #include <Eigen/Eigenvalues>
 #include <Eigen/QR>
+
 #include <cmath>
 
 namespace Avogadro::QtPlugins::QTAIMMathUtilities {
@@ -304,4 +305,4 @@ Matrix<qreal, 3, 1> plusThreeSignatureLocatorGradient(
   return value;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins::QTAIMMathUtilities

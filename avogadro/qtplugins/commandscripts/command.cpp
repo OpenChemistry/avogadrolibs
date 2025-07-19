@@ -1,6 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "command.h"
@@ -14,7 +14,7 @@
 #include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QLabel>
@@ -65,6 +65,17 @@ QStringList Command::menuPath(QAction* action) const
     return path;
   }
 
+  // cache the menu paths
+  QSettings settings;
+  QFileInfo info(scriptFileName); // check if the script matches the hash
+  QString hash =
+    settings.value("scripts/" + scriptFileName + "/hash").toString();
+  if (hash == QString::number(info.size()) + info.lastModified().toString()) {
+    path = settings.value("scripts/" + scriptFileName + "/menu").toStringList();
+    if (!path.isEmpty())
+      return path;
+  }
+
   // otherwise, we have a script name, so ask it
   InterfaceScript gen(scriptFileName);
   path = gen.menuPath().split('|');
@@ -76,8 +87,32 @@ QStringList Command::menuPath(QAction* action) const
     return path;
   }
 
+  // look for {number} in the last part of the path
+  // (this is a priority integer)
+  QString lastPart = path.takeLast();
+  int priority = 0;
+  int braceIndex = lastPart.indexOf('{');
+  int endBraceIndex = lastPart.indexOf('}');
+  if (braceIndex >= 0 && endBraceIndex >= 0 && endBraceIndex > braceIndex) {
+    bool ok = false;
+    size_t len = endBraceIndex - braceIndex - 1;
+    priority = lastPart.mid(braceIndex + 1, len).toInt(&ok);
+    if (ok) {
+      lastPart = lastPart.left(braceIndex);
+    }
+  }
+  // add it back to the path
+  path << lastPart;
+
+  // cache the path
+  settings.setValue("scripts/" + scriptFileName + "/menu", path);
+
+  if (priority != 0) {
+    action->setProperty("menu priority", priority);
+  }
+
   // try to translate each part of the path
-  // not ideal, but menus should already be in the translation file
+  // not ideal, but most menus should already be in the translation file
   QStringList translatedPath;
   foreach (QString part, path)
     translatedPath << tr(part.toUtf8());
@@ -306,4 +341,4 @@ void Command::addAction(const QString& label, const QString& scriptFilePath)
   m_actions << action;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

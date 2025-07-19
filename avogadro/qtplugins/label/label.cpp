@@ -5,6 +5,14 @@
 
 #include "label.h"
 
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+
+// for partial charges
+#include <avogadro/calc/chargemanager.h>
+
+#include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/colorbutton.h>
@@ -26,6 +34,7 @@ namespace Avogadro::QtPlugins {
 using Avogadro::Rendering::TextLabel3D;
 using Core::Array;
 using Core::Atom;
+using Core::contrastColor;
 using Core::Elements;
 using Core::Molecule;
 using QtGui::PluginLayerManager;
@@ -57,16 +66,20 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
 
 struct LayerLabel : Core::LayerData
 {
-  enum LabelOptions : char
+  enum LabelOptions
   {
-    None = 0x00,
-    Index = 0x01,
-    Name = 0x02,
-    Custom = 0x04,
-    Ordinal = 0x08
+    None = 0,
+    Index = 1,
+    Name = 2,
+    Custom = 4,
+    Ordinal = 8,
+    UniqueID = 16,
+    PartialCharge = 32,
+    Length = 64 // for bonds obviously
   };
-  char atomOptions;
-  char residueOptions;
+  unsigned short atomOptions;
+  unsigned short residueOptions;
+  unsigned short bondOptions;
 
   QWidget* widget;
   float radiusScalar;
@@ -76,8 +89,12 @@ struct LayerLabel : Core::LayerData
   {
     widget = nullptr;
     QSettings settings;
-    atomOptions = char(settings.value("label/atomoptions", 0x02).toInt());
-    residueOptions = char(settings.value("label/residueoptions", 0x00).toInt());
+    atomOptions =
+      settings.value("label/atomoptions", LabelOptions::Name).toInt();
+    residueOptions =
+      settings.value("label/residueoptions", LabelOptions::None).toInt();
+    bondOptions =
+      settings.value("label/bondoptions", LabelOptions::None).toInt();
     radiusScalar = settings.value("label/radiusscalar", 0.5).toDouble();
 
     auto q_color =
@@ -87,6 +104,14 @@ struct LayerLabel : Core::LayerData
     color[2] = static_cast<unsigned char>(q_color.blue());
   }
 
+  LayerLabel(std::string settings)
+  {
+    widget = nullptr;
+    deserialize(settings);
+  }
+
+  LayerData* clone() final { return new LayerLabel(serialize()); }
+
   ~LayerLabel() override
   {
     if (widget)
@@ -95,20 +120,21 @@ struct LayerLabel : Core::LayerData
 
   std::string serialize() final
   {
-    std::string aux = (const char*)atomOptions;
-    std::string aux2 = (const char*)residueOptions;
-    return aux + " " + aux2 + " " + std::to_string(radiusScalar) + " " +
-           std::to_string(color[0]) + " " + std::to_string(color[1]) + " " +
-           std::to_string(color[2]);
+    std::stringstream output;
+    output << atomOptions << " " << residueOptions << " " << radiusScalar << " "
+           << (int)color[0] << " " << (int)color[1] << " " << (int)color[2]
+           << " " << bondOptions;
+    return output.str();
   }
+
   void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
     ss >> aux;
-    atomOptions = aux[0];
+    atomOptions = std::stoi(aux);
     ss >> aux;
-    residueOptions = aux[0];
+    residueOptions = std::stoi(aux);
     ss >> aux;
     radiusScalar = std::stof(aux);
     ss >> aux;
@@ -117,6 +143,9 @@ struct LayerLabel : Core::LayerData
     color[1] = std::stoi(aux);
     ss >> aux;
     color[2] = std::stoi(aux);
+    ss >> aux;
+    if (!aux.empty())
+      bondOptions = std::stoi(aux); // backwards compatibility
   }
 
   void setupWidget(Label* slot)
@@ -144,44 +173,50 @@ struct LayerLabel : Core::LayerData
 
       auto* atom = new QComboBox;
       atom->setObjectName("atom");
-      char elements[] = { None, Index, Name, Custom, Ordinal };
-      for (char option : elements) {
-        if (option == 0) {
-          atom->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
-        } else {
-          char val = LabelOptions::None;
-          QStringList text;
-          if (option & LabelOptions::Custom) {
-            text << QObject::tr("Custom");
-            val = LabelOptions::Custom;
-          }
-          if (option & LabelOptions::Index) {
-            text << ((text.size() == 0) ? QObject::tr("Index")
-                                        : QObject::tr("In."));
-            val |= LabelOptions::Index;
-          }
-          if (option & LabelOptions::Name) {
-            text << ((text.size() == 0) ? QObject::tr("Element")
-                                        : QObject::tr("El."));
-            val |= LabelOptions::Name;
-          }
-          if (option & LabelOptions::Ordinal) {
-            text << ((text.size() == 0) ? QObject::tr("Element & Ordinal")
-                                        : QObject::tr("El.&Or."));
-            val |= LabelOptions::Ordinal;
-          }
-          QString join = QObject::tr(", ");
-          atom->addItem(text.join(join), QVariant(val));
-          if (val == atomOptions) {
-            atom->setCurrentText(text.join(join));
-          }
+
+      // set up the various atom options
+      [[maybe_unused]] char val = LabelOptions::None;
+      QStringList text;
+
+      // first add the individual options
+      atom->addItem(QObject::tr("None"), int(LabelOptions::None));
+      atom->addItem(QObject::tr("Index"), int(LabelOptions::Index));
+      atom->addItem(QObject::tr("Unique ID"), int(LabelOptions::UniqueID));
+      atom->addItem(QObject::tr("Element"), int(LabelOptions::Name));
+      atom->addItem(QObject::tr("Element & Number"),
+                    int(LabelOptions::Ordinal));
+      atom->addItem(QObject::tr("Element & ID"),
+                    int(LabelOptions::Name | LabelOptions::UniqueID));
+      atom->addItem(QObject::tr("Partial Charge", "atomic partial charge"),
+                    int(LabelOptions::PartialCharge));
+      atom->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
+
+      // check for current option based on item data
+      for (int i = 0; i < atom->count(); ++i) {
+        if (atom->itemData(i).toInt() == atomOptions) {
+          atom->setCurrentIndex(i);
+          break;
         }
       }
+
       QObject::connect(atom, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(atomLabelType(int)));
-      int index = atom->findData(int(atomOptions));
-      atom->model()->sort(0, Qt::AscendingOrder);
+
       form->addRow(QObject::tr("Atom Label:"), atom);
+
+      // bond label
+      auto* bond = new QComboBox;
+      bond->setObjectName("bond");
+
+      // set up the various bond options
+      bond->addItem(QObject::tr("None"), int(LabelOptions::None));
+      bond->addItem(QObject::tr("Length"), int(LabelOptions::Length));
+      bond->addItem(QObject::tr("Index"), int(LabelOptions::Index));
+      bond->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
+
+      QObject::connect(bond, SIGNAL(currentIndexChanged(int)), slot,
+                       SLOT(bondLabelType(int)));
+      form->addRow(QObject::tr("Bond Label:"), bond);
 
       auto* residue = new QComboBox;
       residue->setObjectName("residue");
@@ -189,29 +224,29 @@ struct LayerLabel : Core::LayerData
         if (i == 0) {
           residue->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
         } else {
-          char val = 0x00;
-          QStringList text;
+          char optval = 0x00;
+          QStringList opttext;
           if (i & LabelOptions::Index) {
-            text << QObject::tr("ID");
-            val |= LabelOptions::Index;
+            opttext << QObject::tr("ID");
+            optval |= LabelOptions::Index;
           }
           if (i & LabelOptions::Name) {
-            text << QObject::tr("Name");
-            val |= LabelOptions::Name;
+            opttext << QObject::tr("Name");
+            optval |= LabelOptions::Name;
           }
-          if (val != 0x00) {
+          if (optval != 0x00) {
             QString join = QObject::tr(" & ");
-            residue->addItem(text.join(join), QVariant(val));
-            if (val == residueOptions) {
-              residue->setCurrentText(text.join(join));
+            residue->addItem(opttext.join(join), QVariant(optval));
+            if (optval == residueOptions) {
+              residue->setCurrentText(opttext.join(join));
             }
           }
         }
       }
       QObject::connect(residue, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(residueLabelType(int)));
-      index = residue->findData(int(residueOptions));
-      residue->model()->sort(0, Qt::AscendingOrder);
+
+      // residue->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Residue Label:"), residue);
 
       v->addLayout(form);
@@ -232,12 +267,15 @@ void Label::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
 {
   m_layerManager.load<LayerLabel>();
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
-    auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
-    if (interface.residueOptions) {
+    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
+    if (interface->residueOptions) {
       processResidue(molecule, node, layer);
     }
-    if (interface.atomOptions) {
+    if (interface->atomOptions) {
       processAtom(molecule, node, layer);
+    }
+    if (interface->bondOptions) {
+      processBond(molecule, node, layer);
     }
   }
 }
@@ -272,13 +310,13 @@ void Label::processResidue(const Core::Molecule& molecule,
       }
     }
 
-    auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
-    Vector3ub color = interface.color;
+    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
+    Vector3ub color = interface->color;
     std::string text = "";
-    if (interface.residueOptions & LayerLabel::LabelOptions::Index) {
+    if (interface->residueOptions & LayerLabel::LabelOptions::Index) {
       text = std::to_string(residue.residueId());
     }
-    if (interface.residueOptions & LayerLabel::LabelOptions::Name) {
+    if (interface->residueOptions & LayerLabel::LabelOptions::Name) {
       text += (text == "" ? "" : " / ") + name;
     }
     TextLabel3D* residueLabel = createLabel(text, pos, radius, color);
@@ -286,12 +324,47 @@ void Label::processResidue(const Core::Molecule& molecule,
   }
 }
 
+QString partialCharge(Molecule* molecule, int atom)
+{
+  // TODO: we need to track type and/or calling the charge calculator
+  float charge = 0.0;
+  std::set<std::string> types = molecule->partialChargeTypes();
+  if (types.size() > 0) {
+    auto first = types.cbegin();
+    MatrixX charges = molecule->partialCharges((*first));
+    charge = charges(atom, 0);
+  } else {
+    // find something
+    const auto options =
+      Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
+    if (options.size() > 0) {
+      // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
+      std::string type;
+      if (options.find("GFN2") != options.end())
+        type = "GFN2";
+      else if (options.find("am1bcc") != options.end())
+        type = "am1bcc";
+      else if (options.find("mmff94") != options.end())
+        type = "mmff94";
+      else if (options.find("gasteiger") != options.end())
+        type = "gasteiger";
+      else
+        type = *options.begin();
+
+      MatrixX charges =
+        Calc::ChargeManager::instance().partialCharges(type, *molecule);
+      charge = charges(atom, 0);
+    }
+  }
+  // e.g. '-0.12' => 5 characters
+  return QString("%L1").arg(charge, 5, 'f', 2);
+}
+
 void Label::processAtom(const Core::Molecule& molecule,
                         Rendering::GroupNode& node, size_t layer)
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
-
   std::map<unsigned char, size_t> atomCount;
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
@@ -307,42 +380,106 @@ void Label::processAtom(const Core::Molecule& molecule,
       continue;
     }
 
-    auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
-    std::string text = "";
-    if (interface.atomOptions & LayerLabel::LabelOptions::Custom) {
-      text += (text == "" ? "" : " / ") + atom.label();
+    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
+    std::string text = atom.label();
+
+    if (interface->atomOptions & LayerLabel::LabelOptions::PartialCharge) {
+      QString charge = partialCharge(const_cast<Molecule*>(&molecule), i);
+      text += charge.toStdString();
     }
-    if (interface.atomOptions & LayerLabel::LabelOptions::Index) {
-      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
+    if (interface->atomOptions & LayerLabel::LabelOptions::Custom) {
+      // already set
     }
-    if (interface.atomOptions & LayerLabel::LabelOptions::Name) {
+    if (interface->atomOptions & LayerLabel::LabelOptions::Index) {
+      text += (text == "" ? "" : " / ") + std::to_string(atom.index() + 1);
+    }
+    if (interface->atomOptions & LayerLabel::LabelOptions::Name) {
       text +=
         (text == "" ? "" : " / ") + std::string(Elements::symbol(atomicNumber));
     }
-    if (interface.atomOptions & LayerLabel::LabelOptions::Ordinal) {
+    if (interface->atomOptions & LayerLabel::LabelOptions::Ordinal) {
       text += (text == "" ? "" : " / ") +
               std::string(Elements::symbol(atomicNumber) +
                           std::to_string(atomCount[atomicNumber]));
     }
+    if (interface->atomOptions & LayerLabel::LabelOptions::UniqueID) {
+      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
+    }
     if (text != "") {
       const Vector3f pos(atom.position3d().cast<float>());
-      Vector3ub color = interface.color;
+      Vector3ub color = atom.color();
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *
-                     interface.radiusScalar;
+                     interface->radiusScalar;
 
-      TextLabel3D* atomLabel = createLabel(text, pos, radius, color);
+      TextLabel3D* atomLabel =
+        createLabel(text, pos, radius, contrastColor(color));
       geometry->addDrawable(atomLabel);
     }
   }
 }
 
+void Label::processBond(const Core::Molecule& molecule,
+                        Rendering::GroupNode& node,
+                        [[maybe_unused]] size_t layer)
+{
+  auto* geometry = new GeometryNode;
+  node.addChild(geometry);
+  std::map<unsigned char, size_t> bondCount;
+  for (Index i = 0; i < molecule.bondCount(); ++i) {
+    Core::Bond bond = molecule.bond(i);
+
+    // check if the bond is enabled in this layer
+    if (!m_layerManager.bondEnabled(bond.atom1().index(),
+                                    bond.atom2().index())) {
+      continue;
+    }
+
+    // get the options for this bond
+    Core::Atom atom1 = bond.atom1();
+    Core::Atom atom2 = bond.atom2();
+    auto* interface1 = m_layerManager.getSetting<LayerLabel>(
+      m_layerManager.getLayerID(atom1.index()));
+    auto* interface2 = m_layerManager.getSetting<LayerLabel>(
+      m_layerManager.getLayerID(atom2.index()));
+
+    // get the union of the options
+    char options = interface1->bondOptions | interface2->bondOptions;
+    Vector3ub color = interface1->color;
+    unsigned char atomicNumber1 = atom1.atomicNumber();
+    unsigned char atomicNumber2 = atom2.atomicNumber();
+    float radiusVDW1 = static_cast<float>(Elements::radiusVDW(atomicNumber1));
+    float radiusVDW2 = static_cast<float>(Elements::radiusVDW(atomicNumber2));
+    float radius = (radiusVDW1 + radiusVDW2) * interface1->radiusScalar / 2.0f;
+
+    std::stringstream text;
+    // hopefully not all at once
+    if (options & LayerLabel::LabelOptions::Index) {
+      text << bond.index();
+    }
+    if (options & LayerLabel::LabelOptions::Custom) {
+      text << bond.label();
+    }
+    if (options & LayerLabel::LabelOptions::Length) {
+      text << std::fixed << std::setprecision(2) << bond.length();
+    }
+
+    // position will be between the two atoms
+    Vector3f pos =
+      (atom1.position3d().cast<float>() + atom2.position3d().cast<float>()) /
+      2.0f;
+
+    TextLabel3D* bondLabel = createLabel(text.str(), pos, radius, color);
+    geometry->addDrawable(bondLabel);
+  }
+}
+
 void Label::setColor(const QColor& color)
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
 
-  interface.color[0] = static_cast<unsigned char>(color.red());
-  interface.color[1] = static_cast<unsigned char>(color.green());
-  interface.color[2] = static_cast<unsigned char>(color.blue());
+  interface->color[0] = static_cast<unsigned char>(color.red());
+  interface->color[1] = static_cast<unsigned char>(color.green());
+  interface->color[2] = static_cast<unsigned char>(color.blue());
 
   emit drawablesChanged();
 
@@ -352,39 +489,58 @@ void Label::setColor(const QColor& color)
 
 void Label::atomLabelType(int index)
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
-  interface.atomOptions = char(setupWidget()
-                                 ->findChildren<QComboBox*>("atom")[0]
-                                 ->itemData(index)
-                                 .toInt());
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->atomOptions = char(setupWidget()
+                                  ->findChildren<QComboBox*>("atom")[0]
+                                  ->itemData(index)
+                                  .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/atomoptions", interface->atomOptions);
+}
+
+void Label::bondLabelType(int index)
+{
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->bondOptions = char(setupWidget()
+                                  ->findChildren<QComboBox*>("bond")[0]
+                                  ->itemData(index)
+                                  .toInt());
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/bondoptions", interface->bondOptions);
 }
 
 void Label::residueLabelType(int index)
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
-  interface.residueOptions = char(setupWidget()
-                                    ->findChildren<QComboBox*>("residue")[0]
-                                    ->itemData(index)
-                                    .toInt());
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->residueOptions = char(setupWidget()
+                                     ->findChildren<QComboBox*>("residue")[0]
+                                     ->itemData(index)
+                                     .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/residueoptions", interface->residueOptions);
 }
 
 void Label::setRadiusScalar(double radius)
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
-  interface.radiusScalar = float(radius);
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->radiusScalar = float(radius);
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/radiusScalar", interface.radiusScalar);
+  settings.setValue("label/radiusscalar", interface->radiusScalar);
 }
 
 QWidget* Label::setupWidget()
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
-  interface.setupWidget(this);
-  return interface.widget;
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->setupWidget(this);
+  return interface->widget;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

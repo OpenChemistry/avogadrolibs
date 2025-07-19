@@ -12,6 +12,7 @@
 #include <avogadro/io/cmlformat.h>
 #include <avogadro/io/mdlformat.h>
 #include <avogadro/io/pdbformat.h>
+#include <avogadro/io/sdfformat.h>
 #include <avogadro/io/xyzformat.h>
 
 #include <QtCore/QDebug>
@@ -85,6 +86,7 @@ bool FileFormatScript::read(std::istream& in, Core::Molecule& molecule)
 
   if (m_bondOnRead) {
     molecule.perceiveBondsSimple();
+    molecule.perceiveBondOrders();
   }
 
   return true;
@@ -129,10 +131,12 @@ FileFormatScript::Format FileFormatScript::stringToFormat(
     return Cjson;
   else if (str == "cml")
     return Cml;
-  else if (str == "mdl" || str == "mol" || str == "sdf" || str == "sd")
+  else if (str == "mdl" || str == "mol")
     return Mdl;
   else if (str == "pdb")
     return Pdb;
+  else if (str == "sdf")
+    return Sdf;
   else if (str == "xyz")
     return Xyz;
   return NotUsed;
@@ -149,6 +153,8 @@ Io::FileFormat* FileFormatScript::createFileFormat(FileFormatScript::Format fmt)
       return new Io::MdlFormat;
     case Pdb:
       return new Io::PdbFormat;
+    case Sdf:
+      return new Io::SdfFormat;
     case Xyz:
       return new Io::XyzFormat;
     default:
@@ -216,8 +222,7 @@ void FileFormatScript::readMetaData()
 
   // validate operations:
   Operations operationsTmp = Io::FileFormat::None;
-  typedef std::vector<std::string>::const_iterator StringVectorIter;
-  for (auto & it : opStringsTmp) {
+  for (auto& it : opStringsTmp) {
     if (it == "read")
       operationsTmp |= Io::FileFormat::Read;
     else if (it == "write")
@@ -357,4 +362,4 @@ bool FileFormatScript::parseStringArray(const QJsonObject& ob,
   return !array.empty();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

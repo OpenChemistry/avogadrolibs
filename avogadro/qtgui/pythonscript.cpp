@@ -20,14 +20,14 @@ PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
     m_scriptFilePath(scriptFilePath_), m_process(nullptr)
 {
-  setDefaultPythonInterpretor();
+  setDefaultPythonInterpreter();
 }
 
 PythonScript::PythonScript(QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
     m_process(nullptr)
 {
-  setDefaultPythonInterpretor();
+  setDefaultPythonInterpreter();
 }
 
 PythonScript::~PythonScript() {}
@@ -37,7 +37,7 @@ void PythonScript::setScriptFilePath(const QString& scriptFile)
   m_scriptFilePath = scriptFile;
 }
 
-void PythonScript::setDefaultPythonInterpretor()
+void PythonScript::setDefaultPythonInterpreter()
 {
   if (m_pythonInterpreter.isEmpty()) {
     m_pythonInterpreter =
@@ -100,7 +100,7 @@ QByteArray PythonScript::execute(const QStringList& args,
 
   // Write scriptStdin to the process's stdin
   if (!scriptStdin.isNull()) {
-    if (!proc.waitForStarted(5000)) {
+    if (!proc.waitForStarted(5000) && m_debug) {
       m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                      "start (%3).")
                     .arg(m_pythonInterpreter,
@@ -110,7 +110,7 @@ QByteArray PythonScript::execute(const QStringList& args,
     }
 
     qint64 len = proc.write(scriptStdin);
-    if (len != static_cast<qint64>(scriptStdin.size())) {
+    if (len != static_cast<qint64>(scriptStdin.size()) && m_debug) {
       m_errors << tr("Error running script '%1 %2': failed to write to stdin "
                      "(len=%3, wrote %4 bytes, QProcess error: %5).")
                     .arg(m_pythonInterpreter)
@@ -123,7 +123,7 @@ QByteArray PythonScript::execute(const QStringList& args,
     proc.closeWriteChannel();
   }
 
-  if (!proc.waitForFinished(5000)) {
+  if (!proc.waitForFinished(5000) && m_debug) {
     m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                    "finish (%3).")
                   .arg(m_pythonInterpreter, realArgs.join(QStringLiteral(" ")),
@@ -132,14 +132,17 @@ QByteArray PythonScript::execute(const QStringList& args,
   }
 
   if (proc.exitStatus() != QProcess::NormalExit || proc.exitCode() != 0) {
-    m_errors << tr("Error running script '%1 %2': Abnormal exit status %3 "
-                   "(%4: %5)\n\nOutput:\n%6")
-                  .arg(m_pythonInterpreter)
-                  .arg(realArgs.join(QStringLiteral(" ")))
-                  .arg(proc.exitCode())
-                  .arg(processErrorString(proc))
-                  .arg(proc.errorString())
-                  .arg(QString(proc.readAll()));
+    if (m_debug)
+      m_errors << tr("Error running script '%1 %2': Abnormal exit status %3 "
+                     "(%4: %5)\n\nOutput:\n%6")
+                    .arg(m_pythonInterpreter)
+                    .arg(realArgs.join(QStringLiteral(" ")))
+                    .arg(proc.exitCode())
+                    .arg(processErrorString(proc))
+                    .arg(proc.errorString())
+                    .arg(QString(proc.readAll()));
+    else
+      m_errors << tr("Warning '%1'").arg(proc.errorString());
     return QByteArray();
   }
 
@@ -213,10 +216,38 @@ void PythonScript::asyncExecute(const QStringList& args,
           SLOT(processFinished(int, QProcess::ExitStatus)));
 }
 
-void PythonScript::processFinished(int exitCode,
-                                   QProcess::ExitStatus exitStatus)
+void PythonScript::processFinished(int, QProcess::ExitStatus)
 {
   emit finished();
+}
+
+void PythonScript::asyncTerminate()
+{
+  if (m_process != nullptr) {
+    disconnect(m_process, nullptr, nullptr, nullptr);
+    m_process->kill();
+    m_process->deleteLater();
+    m_process = nullptr;
+  }
+}
+
+QByteArray PythonScript::asyncWriteAndResponse(QByteArray input)
+{
+  if (m_process == nullptr) {
+    return QByteArray(); // wait
+  }
+
+  m_process->write(input);
+  QByteArray buffer;
+
+  bool ready = m_process->waitForReadyRead();
+  if (ready) {
+    while (m_process->canReadLine()) {
+      buffer += m_process->readLine();
+    }
+  }
+
+  return buffer;
 }
 
 QByteArray PythonScript::asyncResponse()
@@ -255,4 +286,4 @@ QString PythonScript::processErrorString(const QProcess& proc) const
   return result;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

@@ -41,12 +41,17 @@ public:
   ShaderProgram program;
 };
 
-ArrowGeometry::ArrowGeometry() : m_dirty(false), d(new Private) {}
+ArrowGeometry::ArrowGeometry()
+  : m_color(0, 255, 0), m_dirty(false), d(new Private)
+{
+}
 
 ArrowGeometry::ArrowGeometry(const ArrowGeometry& other)
   : Drawable(other), m_vertices(other.m_vertices),
-    m_lineStarts(other.m_lineStarts), m_dirty(true), d(new Private)
-{}
+    m_lineStarts(other.m_lineStarts), m_color(other.m_color), m_dirty(true),
+    d(new Private)
+{
+}
 
 ArrowGeometry::~ArrowGeometry()
 {
@@ -95,10 +100,8 @@ void ArrowGeometry::render(const Camera& camera)
   }
 
   // Render the arrows using the shader.
-  for (auto & m_vertice : m_vertices) {
-    Vector3f v3 =
-      m_vertice.first +
-      0.8 * (m_vertice.second - m_vertice.first);
+  for (auto& m_vertice : m_vertices) {
+    Vector3f v3 = m_vertice.first + 0.8 * (m_vertice.second - m_vertice.first);
     drawLine(m_vertice.first, v3, 2);
     drawCone(v3, m_vertice.second, 0.05, 1.0);
   }
@@ -117,7 +120,6 @@ void ArrowGeometry::drawLine(const Vector3f& start, const Vector3f& end,
                              double lineWidth)
 {
   // Draw a line between two points of the specified thickness
-
   glPushAttrib(GL_LIGHTING_BIT);
   glDisable(GL_LIGHTING);
 
@@ -158,7 +160,7 @@ void ArrowGeometry::drawCone(const Vector3f& base, const Vector3f& cap,
     Vector3f n = (cap - v).cross(v - vPrec).normalized();
     Vector3f nNext = (cap - vNext).cross(vNext - v).normalized();
     glBegin(GL_TRIANGLES);
-    glColor3ub(0, 255, 0);
+    glColor3ub(m_color[0], m_color[1], m_color[2]);
     glNormal3fv((n + nNext).normalized().data());
     glVertex3fv(cap.data());
     glNormal3fv(nNext.data());
@@ -188,4 +190,4 @@ void ArrowGeometry::addSingleArrow(const Vector3f& pos1, const Vector3f& pos2)
   m_dirty = true;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

@@ -1,6 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_RENDERING_DASHEDLINEGEOMETRY_H
@@ -27,9 +27,7 @@ public:
     Vector3f vertex; // 12 bytes
     Vector4ub color; //  4 bytes
 
-    PackedVertex(const Vector3f &v, const Vector4ub &c)
-      : vertex(v), color(c)
-    {}
+    PackedVertex(const Vector3f& v, const Vector4ub& c) : vertex(v), color(c) {}
     static int vertexOffset() { return 0; }
     static int colorOffset() { return static_cast<int>(sizeof(Vector3f)); }
   };
@@ -69,12 +67,12 @@ public:
    * @return The index of the first vertex added by this call.
    * @{
    */
-  size_t addDashedLine(const Vector3f &start, const Vector3f &end,
-                      const Vector4ub& color, int dashCount);
-  size_t addDashedLine(const Vector3f &start, const Vector3f &end,
-                      const Vector3ub& color, int dashCount);
-  size_t addDashedLine(const Vector3f &start, const Vector3f &end,
-                      int dashCount);
+  size_t addDashedLine(const Vector3f& start, const Vector3f& end,
+                       const Vector4ub& color, int dashCount);
+  size_t addDashedLine(const Vector3f& start, const Vector3f& end,
+                       const Vector3ub& color, int dashCount);
+  size_t addDashedLine(const Vector3f& start, const Vector3f& end,
+                       int dashCount);
   /** @} */
 
   /**
@@ -112,7 +110,7 @@ private:
   Core::Array<PackedVertex> m_vertices;
   float m_lineWidth;
   int m_lineCount;
-  
+
   Vector3ub m_color;
   unsigned char m_opacity;
 
@@ -122,7 +120,8 @@ private:
   Private* d;
 };
 
-inline DashedLineGeometry& DashedLineGeometry::operator=(DashedLineGeometry other)
+inline DashedLineGeometry& DashedLineGeometry::operator=(
+  DashedLineGeometry other)
 {
   using std::swap;
   swap(*this, other);

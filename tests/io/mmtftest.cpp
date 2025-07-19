@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "iotests.h"
@@ -135,4 +124,25 @@ TEST(MMTFTest, residues)
   EXPECT_EQ(res3.residueId(), static_cast<size_t>(143));
   EXPECT_EQ(res3.residueName(), "HOH");
   EXPECT_EQ(res3.residueAtoms().size(), static_cast<size_t>(1));
+}
+
+TEST(MMTFTest, AltLoc)
+{
+  MMTFFormat mmtf;
+  Molecule molecule;
+  mmtf.readFile(std::string(AVOGADRO_DATA) + "/data/1FDT.mmtf", molecule);
+
+  EXPECT_EQ(molecule.coordinate3dCount(), 2);
+
+  EXPECT_FLOAT_EQ(molecule.atomPosition3d(270).x(),
+                  molecule.coordinate3d(1)[270].x());
+  EXPECT_FLOAT_EQ(molecule.atomPosition3d(270).y(),
+                  molecule.coordinate3d(1)[270].y());
+  EXPECT_FLOAT_EQ(molecule.atomPosition3d(270).z(),
+                  molecule.coordinate3d(1)[270].z());
+
+  EXPECT_TRUE(
+    molecule.atomPosition3d(271).x() != molecule.coordinate3d(1)[271].x() ||
+    molecule.atomPosition3d(271).y() != molecule.coordinate3d(1)[271].y() ||
+    molecule.atomPosition3d(271).z() != molecule.coordinate3d(1)[271].z());
 }

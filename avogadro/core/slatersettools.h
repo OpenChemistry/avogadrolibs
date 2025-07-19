@@ -6,14 +6,13 @@
 #ifndef AVOGADRO_CORE_SLATERSETTOOLS_H
 #define AVOGADRO_CORE_SLATERSETTOOLS_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include "vector.h"
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 class SlaterSet;
@@ -29,7 +28,7 @@ class AVOGADROCORE_EXPORT SlaterSetTools
 {
 public:
   explicit SlaterSetTools(Molecule* mol = nullptr);
-  ~SlaterSetTools();
+  ~SlaterSetTools() = default;
 
   /**
    * @brief Calculate the value of the specified molecular orbital at the
@@ -78,7 +77,6 @@ private:
   std::vector<double> calculateValues(const Vector3& position) const;
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_SlaterSetTools_H

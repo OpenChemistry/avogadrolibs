@@ -53,7 +53,7 @@ public:
 
   /**
    * @brief Register a new charge model with the manager.
-   * @param format An instance of the format to manage, the manager assumes
+   * @param model An instance of the model to manage, the manager assumes
    * ownership of the object passed in.
    * @return True on success, false on failure.
    */
@@ -81,16 +81,6 @@ public:
   bool removeModel(const std::string& identifier);
 
   /**
-   * New instance of the model for the specified @p identifier. Ownership
-   * is passed to the caller.
-   * @param identifier The unique identifier of the format.
-   * @return Instance of the format, nullptr if not found. Ownership passes to
-   * the
-   * caller.
-   */
-  ChargeModel* newModelFromIdentifier(const std::string& identifier) const;
-
-  /**
    * Get a list of all loaded identifiers
    */
   std::set<std::string> identifiers() const;
@@ -107,11 +97,28 @@ public:
   std::string nameForModel(const std::string& identifier) const;
 
   /**
+   * This method will calculate atomic partial charges and save them,
+   * if the model is available (i.e., the molecule will change)
    * Note that some models do not have well-defined atomic partial charges
    * @return atomic partial charges for the molecule, or 0.0 if undefined
    */
   MatrixX partialCharges(const std::string& identifier,
-                               Core::Molecule& mol) const;
+                         Core::Molecule& mol) const;
+
+  /**
+   * Calculate the atomic partial charges and leave the molecule unchanged.
+   * Note that some models do not have well-defined atomic partial charges
+   * @return the dipole moment for the molecule, or 0.0 if undefined
+   */
+  MatrixX partialCharges(const std::string& identifier,
+                         const Core::Molecule& mol) const;
+
+  /**
+   * @return the dipole moment for the molecule, or 0.0 if the model is not
+   * available
+   */
+  Vector3 dipoleMoment(const std::string& identifier,
+                       const Core::Molecule& mol) const;
 
   /**
    * @return the potential at the point for the molecule, or 0.0 if the model is
@@ -134,7 +141,7 @@ public:
   std::string error() const;
 
 private:
-  typedef std::map<std::string, size_t> ChargeIdMap;
+  using ChargeIdMap = std::map<std::string, size_t>;
 
   ChargeManager();
   ~ChargeManager();

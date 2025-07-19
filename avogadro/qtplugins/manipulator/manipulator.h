@@ -13,9 +13,12 @@
 
 #include <QtCore/QPoint>
 #include <QtCore/Qt> // for Qt:: namespace
+#include <QtWidgets/QAbstractButton>
 
 namespace Avogadro {
 namespace QtPlugins {
+
+class ManipulateWidget;
 
 /**
  * @class Manipulator manipulator.h
@@ -36,6 +39,8 @@ public:
   QAction* activateAction() const override { return m_activateAction; }
   QWidget* toolWidget() const override;
 
+  void setIcon(bool darkTheme = false) override;
+
   void setMolecule(QtGui::Molecule* mol) override
   {
     if (mol)
@@ -52,6 +57,10 @@ public:
   QUndoCommand* mousePressEvent(QMouseEvent* e) override;
   QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
   QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
+  QUndoCommand* keyPressEvent(QKeyEvent* e) override;
+
+public slots:
+  void buttonClicked(QAbstractButton* button);
 
 private:
   /**
@@ -61,8 +70,9 @@ private:
   void updatePressedButtons(QMouseEvent*, bool release);
 
   void resetObject() { m_object = Rendering::Identifier(); }
-  void translate(Vector3 delta);
-  void rotate(Vector3 delta, Vector3 centroid);
+  void translate(Vector3 delta, bool moveSelected = true);
+  void rotate(Vector3 delta, Vector3 centroid, bool moveSelected = true);
+  void axisRotate(Vector3 delta, Vector3 centroid, bool moveSelected = true);
   void tilt(Vector3 delta, Vector3 centroid);
 
   QAction* m_activateAction;
@@ -72,6 +82,7 @@ private:
   QPoint m_lastMousePosition;
   Vector3f m_lastMouse3D;
   Qt::MouseButtons m_pressedButtons;
+  ManipulateWidget* m_toolWidget;
 
   enum ToolAction
   {
@@ -84,7 +95,7 @@ private:
   ToolAction m_currentAction;
 };
 
-} // namespace QtOpenGL
+} // namespace QtPlugins
 } // namespace Avogadro
 
 #endif // AVOGADRO_QTOPENGL_MANIPULATOR_H

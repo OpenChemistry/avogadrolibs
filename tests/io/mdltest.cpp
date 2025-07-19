@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "iotests.h"
@@ -22,9 +11,9 @@
 
 #include <avogadro/io/mdlformat.h>
 
-using Avogadro::Core::Molecule;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
+using Avogadro::Core::Molecule;
 using Avogadro::Core::Variant;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::MdlFormat;
@@ -34,7 +23,7 @@ TEST(MdlTest, readFile)
   MdlFormat mdl;
   Molecule molecule;
   bool success =
-    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.mol", molecule);
+    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/sdf/ethane.mol", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(mdl.error(), "");
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
@@ -46,7 +35,7 @@ TEST(MdlTest, atoms)
   MdlFormat mdl;
   Molecule molecule;
   bool success =
-    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.mol", molecule);
+    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/sdf/ethane.mol", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(mdl.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -71,7 +60,7 @@ TEST(MdlTest, bonds)
   MdlFormat mdl;
   Molecule molecule;
   bool success =
-    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.mol", molecule);
+    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/sdf/ethane.mol", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(mdl.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -92,8 +81,8 @@ TEST(MdlTest, saveFile)
 {
   MdlFormat mdl;
   Molecule savedMolecule, molecule;
-  bool success = mdl.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.mol",
-                              savedMolecule);
+  bool success = mdl.readFile(
+    std::string(AVOGADRO_DATA) + "/data/sdf/ethane.mol", savedMolecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(mdl.error(), "");
 
@@ -122,7 +111,7 @@ TEST(MdlTest, saveFile)
 TEST(MdlTest, readMulti)
 {
   MdlFormat multi;
-  multi.open(AVOGADRO_DATA "/data/multi.sdf",
+  multi.open(AVOGADRO_DATA "/data/sdf/multi.sdf",
              FileFormat::Read | FileFormat::MultiMolecule);
   Molecule molecule;
 
@@ -159,7 +148,7 @@ TEST(MdlTest, readMulti)
 TEST(MdlTest, writeMulti)
 {
   MdlFormat multi;
-  multi.open(AVOGADRO_DATA "/data/multi.sdf",
+  multi.open(AVOGADRO_DATA "/data/sdf/multi.sdf",
              FileFormat::Read | FileFormat::MultiMolecule);
   Molecule mol[2];
 
@@ -192,7 +181,7 @@ TEST(MdlTest, writeMulti)
 TEST(MdlTest, readSdfData)
 {
   MdlFormat multi;
-  multi.open(AVOGADRO_DATA "/data/pubchem3.sdf",
+  multi.open(AVOGADRO_DATA "/data/sdf/pubchem3.sdf",
              FileFormat::Read | FileFormat::MultiMolecule);
   Molecule mol[2];
   EXPECT_TRUE(multi.readMolecule(mol[0]));

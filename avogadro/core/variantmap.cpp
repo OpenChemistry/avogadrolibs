@@ -7,14 +7,6 @@
 
 namespace Avogadro::Core {
 
-VariantMap::VariantMap()
-{
-}
-
-VariantMap::~VariantMap()
-{
-}
-
 size_t VariantMap::size() const
 {
   return m_map.size();
@@ -83,4 +75,4 @@ VariantMap::const_iterator VariantMap::constEnd() const
   return m_map.end();
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Core

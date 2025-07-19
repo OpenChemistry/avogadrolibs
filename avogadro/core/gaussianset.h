@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_GAUSSIANSET_H
 #define AVOGADRO_CORE_GAUSSIANSET_H
 
+#include "avogadrocoreexport.h"
+
 #include "basisset.h"
 
 #include <avogadro/core/matrix.h>
@@ -13,8 +15,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * Enumeration of the SCF type.
@@ -56,7 +57,7 @@ public:
   /**
    * Destructor.
    */
-  ~GaussianSet() override;
+  ~GaussianSet() override = default;
 
   /**
    * Clone.
@@ -131,22 +132,6 @@ public:
   bool setActiveSetStep(int index);
 
   /**
-   * @brief Set the molecular orbital energies, expected in Hartrees.
-   * @param energies The vector containing energies for the MOs of type
-   * @param type The type of the electrons being set.
-   */
-  void setMolecularOrbitalEnergy(const std::vector<double>& energies,
-                                 ElectronType type = Paired);
-
-  /**
-   * @brief Set the molecular orbital occupancies.
-   * @param occ The occupancies for the MOs of type.
-   * @param type The type of the electrons being set.
-   */
-  void setMolecularOrbitalOccupancy(const std::vector<unsigned char>& occ,
-                                    ElectronType type = Paired);
-
-  /**
    * @brief This enables support of sparse orbital sets, and provides a mapping
    * from the index in memory to the actual molecular orbital number.
    * @param nums The MO numbers (starting with an index of 1 for the first one).
@@ -172,9 +157,16 @@ public:
   bool generateDensityMatrix();
 
   /**
+   * @brief Generate the spin density matrix if we have the required
+   * information.
+   * @return True on success, false on failure.
+   */
+  bool generateSpinDensityMatrix();
+
+  /**
    * @return The number of molecular orbitals in the GaussianSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = Paired) override;
+  unsigned int molecularOrbitalCount(ElectronType type = Paired) const override;
 
   /**
    * Debug routine, outputs all of the data in the GaussianSet.
@@ -252,38 +244,6 @@ public:
       return m_moMatrix[1];
   }
 
-  std::vector<double>& moEnergy(ElectronType type = Paired)
-  {
-    if (type == Paired || type == Alpha)
-      return m_moEnergy[0];
-    else
-      return m_moEnergy[1];
-  }
-
-  std::vector<double> moEnergy(ElectronType type = Paired) const
-  {
-    if (type == Paired || type == Alpha)
-      return m_moEnergy[0];
-    else
-      return m_moEnergy[1];
-  }
-
-  std::vector<unsigned char>& moOccupancy(ElectronType type = Paired)
-  {
-    if (type == Paired || type == Alpha)
-      return m_moOccupancy[0];
-    else
-      return m_moOccupancy[1];
-  }
-
-  std::vector<unsigned char> moOccupancy(ElectronType type = Paired) const
-  {
-    if (type == Paired || type == Alpha)
-      return m_moOccupancy[0];
-    else
-      return m_moOccupancy[1];
-  }
-
   std::vector<unsigned int>& moNumber(ElectronType type = Paired)
   {
     if (type == Paired || type == Alpha)
@@ -330,17 +290,6 @@ private:
   std::vector<MatrixX> m_moMatrixSet[2];
 
   /**
-   * @brief This block stores energies for the molecular orbitals (same
-   * convention as the molecular orbital coefficients).
-   */
-  std::vector<double> m_moEnergy[2];
-
-  /**
-   * @brief The occupancy of the molecular orbitals.
-   */
-  std::vector<unsigned char> m_moOccupancy[2];
-
-  /**
    * @brief This stores the molecular orbital number (when they are sparse). It
    * is used to lookup the actual index of the molecular orbital data.
    */
@@ -355,22 +304,8 @@ private:
   ScfType m_scfType;
 
   std::string m_functionalName;
-
-  /**
-   * @brief Generate the density matrix if we have the required information.
-   * @return True on success, false on failure.
-   */
-  bool generateDensity();
-
-  /**
-   * @brief Generate the spin density matrix if we have the required
-   * information.
-   * @return True on success, false on failure.
-   */
-  bool generateSpinDensity();
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif

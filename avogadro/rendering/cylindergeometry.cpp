@@ -17,7 +17,7 @@
 namespace {
 #include "cylinders_fs.h"
 #include "cylinders_vs.h"
-}
+} // namespace
 
 #include "avogadrogl.h"
 
@@ -38,9 +38,9 @@ public:
   BufferObject vbo;
   BufferObject ibo;
 
-  Shader vertexShader;
-  Shader fragmentShader;
-  ShaderProgram program;
+  inline static Shader* vertexShader = nullptr;
+  inline static Shader* fragmentShader = nullptr;
+  inline static ShaderProgram* program = nullptr;
 
   size_t numberOfVertices;
   size_t numberOfIndices;
@@ -48,12 +48,14 @@ public:
 
 CylinderGeometry::CylinderGeometry() : m_dirty(false), d(new Private)
 {
+  setRenderPass(SolidPass);
 }
 
 CylinderGeometry::CylinderGeometry(const CylinderGeometry& other)
   : Drawable(other), m_cylinders(other.m_cylinders), m_indices(other.m_indices),
     m_indexMap(other.m_indexMap), m_dirty(true), d(new Private)
 {
+  setRenderPass(SolidPass);
 }
 
 CylinderGeometry::~CylinderGeometry()
@@ -74,7 +76,7 @@ void CylinderGeometry::update()
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
     // Set some defaults for our cylinders.
-    const unsigned int resolution = 12; // points per circle
+    const unsigned int resolution = 8; // points per circle
     const float resolutionRadians =
       2.0f * static_cast<float>(M_PI) / static_cast<float>(resolution);
     std::vector<Vector3f> radials;
@@ -98,20 +100,19 @@ void CylinderGeometry::update()
       float radius = itCylinder->radius;
 
       // Generate the radial vectors
-      Vector3f radial = direction.unitOrthogonal() * radius;
+      Vector3f radialVec = direction.unitOrthogonal() * radius;
       Eigen::AngleAxisf transform(resolutionRadians, direction);
       radials.clear();
       for (unsigned int j = 0; j < resolution; ++j) {
-        radials.push_back(radial);
-        radial = transform * radial;
+        radials.push_back(radialVec);
+        radialVec = transform * radialVec;
       }
 
       // Cylinder
       ColorNormalVertex vert(itCylinder->color, -direction, position1);
       ColorNormalVertex vert2(itCylinder->color2, -direction, position1);
-      const auto tubeStart =
-        static_cast<unsigned int>(cylinderVertices.size());
-      for (auto & radial : radials) {
+      const auto tubeStart = static_cast<unsigned int>(cylinderVertices.size());
+      for (auto& radial : radials) {
         vert.normal = radial;
         vert.vertex = position1 + radial;
         cylinderVertices.push_back(vert);
@@ -142,24 +143,25 @@ void CylinderGeometry::update()
   }
 
   // Build and link the shader if it has not been used yet.
-  if (d->vertexShader.type() == Shader::Unknown) {
-    d->vertexShader.setType(Shader::Vertex);
-    d->vertexShader.setSource(cylinders_vs);
-    d->fragmentShader.setType(Shader::Fragment);
-    d->fragmentShader.setSource(cylinders_fs);
-    if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << endl;
-    if (!d->fragmentShader.compile())
-      cout << d->fragmentShader.error() << endl;
-    d->program.attachShader(d->vertexShader);
-    d->program.attachShader(d->fragmentShader);
-    if (!d->program.link())
-      cout << d->program.error() << endl;
+  if (d->vertexShader == nullptr) {
+    d->vertexShader = new Shader;
+    d->vertexShader->setType(Shader::Vertex);
+    d->vertexShader->setSource(cylinders_vs);
+    d->fragmentShader = new Shader;
+    d->fragmentShader->setType(Shader::Fragment);
+    d->fragmentShader->setSource(cylinders_fs);
+    if (!d->vertexShader->compile())
+      cout << d->vertexShader->error() << endl;
+    if (!d->fragmentShader->compile())
+      cout << d->fragmentShader->error() << endl;
 
-    d->program.detachShader(d->vertexShader);
-    d->program.detachShader(d->fragmentShader);
-    d->vertexShader.cleanup();
-    d->fragmentShader.cleanup();
+    if (d->program == nullptr)
+      d->program = new ShaderProgram;
+
+    d->program->attachShader(*d->vertexShader);
+    d->program->attachShader(*d->fragmentShader);
+    if (!d->program->link())
+      cout << d->program->error() << endl;
   }
 }
 
@@ -171,45 +173,49 @@ void CylinderGeometry::render(const Camera& camera)
   // Prepare the VBOs, IBOs and shader program if necessary.
   update();
 
-  if (!d->program.bind())
-    cout << d->program.error() << endl;
+  if (!d->program->bind())
+    cout << d->program->error() << endl;
 
   d->vbo.bind();
   d->ibo.bind();
 
   // Set up our attribute arrays.
-  if (!d->program.enableAttributeArray("vertex"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("vertex", ColorNormalVertex::vertexOffset(),
-                                    sizeof(ColorNormalVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
+  if (!d->program->enableAttributeArray("vertex"))
+    cout << d->program->error() << endl;
+  if (!d->program->useAttributeArray(
+        "vertex", ColorNormalVertex::vertexOffset(), sizeof(ColorNormalVertex),
+        FloatType, 3, ShaderProgram::NoNormalize)) {
+    cout << d->program->error() << endl;
   }
-  if (!d->program.enableAttributeArray("color"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("color", ColorNormalVertex::colorOffset(),
-                                    sizeof(ColorNormalVertex), UCharType, 3,
-                                    ShaderProgram::Normalize)) {
-    cout << d->program.error() << endl;
+  if (!d->program->enableAttributeArray("color"))
+    cout << d->program->error() << endl;
+  if (!d->program->useAttributeArray("color", ColorNormalVertex::colorOffset(),
+                                     sizeof(ColorNormalVertex), UCharType, 3,
+                                     ShaderProgram::Normalize)) {
+    cout << d->program->error() << endl;
   }
-  if (!d->program.enableAttributeArray("normal"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("normal", ColorNormalVertex::normalOffset(),
-                                    sizeof(ColorNormalVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
+  if (!d->program->enableAttributeArray("normal"))
+    cout << d->program->error() << endl;
+  if (!d->program->useAttributeArray(
+        "normal", ColorNormalVertex::normalOffset(), sizeof(ColorNormalVertex),
+        FloatType, 3, ShaderProgram::NoNormalize)) {
+    cout << d->program->error() << endl;
   }
 
   // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program.error() << endl;
+  if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
+    cout << d->program->error() << endl;
   }
-  if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
-    cout << d->program.error() << endl;
+  if (!d->program->setUniformValue("projection",
+                                   camera.projection().matrix())) {
+    cout << d->program->error() << endl;
+  }
+  if (!d->program->setUniformValue("opacity", m_opacity)) {
+    cout << d->program->error() << endl;
   }
   Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
-  if (!d->program.setUniformValue("normalMatrix", normalMatrix))
-    std::cout << d->program.error() << std::endl;
+  if (!d->program->setUniformValue("normalMatrix", normalMatrix))
+    std::cout << d->program->error() << std::endl;
 
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
@@ -219,11 +225,11 @@ void CylinderGeometry::render(const Camera& camera)
   d->vbo.release();
   d->ibo.release();
 
-  d->program.disableAttributeArray("vector");
-  d->program.disableAttributeArray("color");
-  d->program.disableAttributeArray("normal");
+  d->program->disableAttributeArray("vector");
+  d->program->disableAttributeArray("color");
+  d->program->disableAttributeArray("normal");
 
-  d->program.release();
+  d->program->release();
 }
 
 std::multimap<float, Identifier> CylinderGeometry::hits(
@@ -321,4 +327,4 @@ void CylinderGeometry::clear()
   m_indexMap.clear();
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

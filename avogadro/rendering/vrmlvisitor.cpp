@@ -16,10 +16,10 @@
 
 namespace Avogadro::Rendering {
 
-using std::string;
-using std::ostringstream;
-using std::ostream;
 using std::ofstream;
+using std::ostream;
+using std::ostringstream;
+using std::string;
 
 namespace {
 ostream& operator<<(ostream& os, const Vector3f& v)
@@ -41,7 +41,7 @@ ostream& operator<<(ostream& os, const Vector4ub& color)
      << color[2] / 255.0f << color[3] / 255.0f;
   return os;
 }
-}
+} // namespace
 
 VRMLVisitor::VRMLVisitor(const Camera& c)
   : m_camera(c), m_backgroundColor(255, 255, 255),
@@ -49,9 +49,7 @@ VRMLVisitor::VRMLVisitor(const Camera& c)
 {
 }
 
-VRMLVisitor::~VRMLVisitor()
-{
-}
+VRMLVisitor::~VRMLVisitor() {}
 
 void VRMLVisitor::begin()
 {
@@ -59,17 +57,6 @@ void VRMLVisitor::begin()
   // Initialise the VRML scene
   Vector3f cameraT = -(m_camera.modelView().linear().adjoint() *
                        m_camera.modelView().translation());
-  Vector3f cameraX =
-    m_camera.modelView().linear().row(0).transpose().normalized();
-  Vector3f cameraY =
-    m_camera.modelView().linear().row(1).transpose().normalized();
-  Vector3f cameraZ =
-    -m_camera.modelView().linear().row(2).transpose().normalized();
-
-  double huge = 100;
-
-  Vector3f light0pos =
-    huge * (m_camera.modelView().linear().adjoint() * Vector3f(0, 1, 0));
 
   // Output the POV-Ray initialisation code
   // orientation should be set
@@ -88,10 +75,7 @@ string VRMLVisitor::end()
   return m_sceneData;
 }
 
-void VRMLVisitor::visit(Drawable& geometry)
-{
-  // geometry.render(m_camera);
-}
+void VRMLVisitor::visit(Drawable&) {}
 
 void VRMLVisitor::visit(SphereGeometry& geometry)
 {
@@ -108,10 +92,7 @@ void VRMLVisitor::visit(SphereGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void VRMLVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
-{
-  // geometry.render(m_camera);
-}
+void VRMLVisitor::visit(AmbientOcclusionSphereGeometry&) {}
 
 void VRMLVisitor::visit(CylinderGeometry& geometry)
 {
@@ -208,9 +189,6 @@ void VRMLVisitor::visit(MeshGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void VRMLVisitor::visit(LineStripGeometry& geometry)
-{
-  // geometry.render(m_camera);
-}
+void VRMLVisitor::visit(LineStripGeometry&) {}
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

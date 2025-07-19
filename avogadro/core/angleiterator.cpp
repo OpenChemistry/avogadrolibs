@@ -8,15 +8,12 @@
 #include <avogadro/core/graph.h>
 #include <avogadro/core/molecule.h>
 
-#include <iostream>
-
 namespace Avogadro::Core {
 
-using namespace std;
-
 AngleIterator::AngleIterator(const Molecule* mol)
-  : m_current(0, 0, 0), m_mol(mol)
-{}
+  : m_a(MaxIndex), m_b(0), m_c(MaxIndex), m_mol(mol)
+{
+}
 
 Angle AngleIterator::begin()
 {
@@ -25,63 +22,76 @@ Angle AngleIterator::begin()
 
 Angle AngleIterator::operator++()
 {
-  if (m_mol == nullptr)
-    return make_tuple(MaxIndex, MaxIndex, MaxIndex);
-
-  Index a, b, c;
-  std::tie(a, b, c) = m_current;
+  // never any angles
+  if (m_mol == nullptr || m_mol->atomCount() < 3 || m_mol->bondCount() < 2)
+    return std::make_tuple(MaxIndex, MaxIndex, MaxIndex);
 
   Graph graph = m_mol->graph();
   Index count = m_mol->atomCount();
 
   // true if we have a valid current state
   // (i.e. false at the start since a == b == c)
-  bool valid = (b != a);
+  bool valid = (m_a != MaxIndex && m_c != MaxIndex);
+  Index aIndex = MaxIndex;
+  Index cIndex = MaxIndex;
 
-  do {   // vertex
-    do { // find good edges
+  // if we don't have a valid state, try to find an initial angle
+  if (!valid) {
+    for (Index i = 0; i < count; ++i) {
+      const auto& neighbors = graph.neighbors(i);
+      if (neighbors.size() < 2)
+        continue;
 
-      if (valid) {
-        // we have a valid current angle, try to find a new edge
-        for (const auto maybeC : graph.neighbors(b)) {
-          if (maybeC != a 
-            && (!valid || maybeC > c)) {
-            m_current = make_tuple(a, b, maybeC);
-            return m_current;
-          }
+      m_b = i;
+      m_a = 0;
+      m_c = 1;
+      aIndex = neighbors[m_a];
+      cIndex = neighbors[m_c];
+      valid = true;
+      break;
+    }
+  } else {
+    // we have a valid state, try to find the next angle
+    const auto& neighbors = graph.neighbors(m_b);
+    // first check if we can increment m_c
+    if (m_c + 1 < neighbors.size()) {
+      ++m_c;
+      aIndex = neighbors[m_a];
+      cIndex = neighbors[m_c];
+    } else {
+      // we can't increment m_c, try to increment m_a
+      if (m_a < neighbors.size() - 2) {
+        ++m_a;
+        m_c = m_a + 1;
+        aIndex = neighbors[m_a];
+        cIndex = neighbors[m_c];
+      } else {
+        // we can't increment m_a, try to increment m_b
+        // and reset m_a and m_c
+        valid = false;
+        for (Index i = m_b + 1; i < count; ++i) {
+          const auto& newNeighbors = graph.neighbors(i);
+          if (newNeighbors.size() < 2)
+            continue;
 
-        }               // end "c" loop
-        valid = false; // we couldn't find a "c", so find a new "a"
-      }               // end if()
-
-      // can we find a new edge?
-      for (const auto maybeA : graph.neighbors(b)) {
-        if (maybeA > a && maybeA != c) {
-          a = maybeA;
-          c = a;
+          m_b = i;
+          m_a = 0;
+          m_c = 1;
+          aIndex = newNeighbors[m_a];
+          cIndex = newNeighbors[m_c];
           valid = true;
           break;
         }
-      } // end "a" loop
-
-      // if we don't have a valid "a", move out to find a new "b"
-    } while (valid);
-
-    while(!valid && b + 1 < count) {
-      ++b; // try going to the next atom
-
-      const auto neighbors = graph.neighbors(b);
-      if (neighbors.size() < 2)
-        continue;
-      
-      a = neighbors[0];
-      c = neighbors[0]; // we'll move to the next one in the loop
-      valid = true;
+      }
     }
-  } while (valid && b < count);
+  }
 
-  // can't find anything
-  return make_tuple(MaxIndex, MaxIndex, MaxIndex);
+  if (valid) {
+    m_current = std::make_tuple(aIndex, m_b, cIndex);
+  } else // no more valid angles
+    m_current = std::make_tuple(MaxIndex, MaxIndex, MaxIndex);
+
+  return m_current;
 } // end ++ operator
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

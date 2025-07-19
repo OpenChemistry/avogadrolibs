@@ -47,12 +47,14 @@ Vector3f BSplineGeometry::computeCurvePoint(
   float i = 0.0f;
   auto it = points.begin();
   const auto end = points.end();
-  size_t size = points.size();
+  int size = static_cast<int>(points.size());
   // start from a lookbehind distance rather than at the beginning
   int startIndex = (size * t) - lookahead;
-  if (startIndex < 0) startIndex = 0;
-  else if (startIndex > size - 2 * lookahead) startIndex = size - 2 * lookahead;
-  float t2 = (t - startIndex / (float) size) * size / (2 * lookahead);
+  if (startIndex < 0)
+    startIndex = 0;
+  else if (startIndex > size - 2 * lookahead)
+    startIndex = size - 2 * lookahead;
+  float t2 = (t - startIndex / (float)size) * size / (2 * lookahead);
   for (; startIndex > 0 && it != end; --startIndex, ++it) {}
   // only read a certain number of elements from here
   size_t count = 2 * lookahead;
@@ -63,4 +65,4 @@ Vector3f BSplineGeometry::computeCurvePoint(
   return Q;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

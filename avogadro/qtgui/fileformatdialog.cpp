@@ -8,6 +8,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/io/fileformatmanager.h>
 
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 
@@ -97,7 +98,7 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
           parentWidget, caption,
           tr(
             "The file extension is missing, so the format cannot be determined."
-            "Do you want to add it?"),
+            " Do you want to add it?"),
           QMessageBox::Abort | QMessageBox::Retry, QMessageBox::Retry);
         switch (reply) {
           default:
@@ -218,11 +219,11 @@ QString FileFormatDialog::generateFilterString(
 {
   QString filterString;
   // Create a map that groups the file extensions by name:
-  QMap<QString, QString> formatMap;
+  QMultiMap<QString, QString> formatMap;
   for (auto ff : ffs) {
     QString name(QString::fromStdString(ff->name()));
     std::vector<std::string> exts = ff->fileExtensions();
-    for (auto & eit : exts) {
+    for (auto& eit : exts) {
       QString ext(QString::fromStdString(eit));
       if (!formatMap.values(name).contains(ext)) {
         formatMap.insertMulti(name, ext);
@@ -275,10 +276,10 @@ QString FileFormatDialog::generateFilterString(
   }
 
   if (options & AllFiles)
-    filterString.prepend(tr("All files (*);;"));
+    filterString.prepend(tr("All files") + " (*);;");
 
   if (options & AllFormats) {
-    filterString.prepend(tr("All supported formats (%1);;")
+    filterString.prepend((tr("All supported formats") + " (%1);;")
                            .arg(allExtensions.join(QStringLiteral(" "))));
   }
 
@@ -309,12 +310,34 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
   if (preferred.size() == 1)
     return ffs[idents.indexOf(preferred.first())];
 
+  // We will only show the dialog if the user is pressing
+  //  the shift, control or meta keys.
+  if (!(QApplication::keyboardModifiers() &
+        (Qt::ShiftModifier | Qt::ControlModifier | Qt::MetaModifier))) {
+    // use a script format if set (i.e., these override internal)
+    // otherwise use internal over Open Babel
+    for (int i = 0; i < static_cast<int>(ffs.size()); ++i) {
+      if (idents[i].startsWith("User")) {
+        return ffs[i];
+      } else if (idents[i].startsWith("Avogadro")) {
+        return ffs[i];
+      } else if (idents[i].startsWith("OpenBabel")) {
+        return ffs[i];
+      }
+    }
+    // if we get here, we should show the user the dialog
+    //  .. but it should never happen
+  }
+
   // See if they used one before:
   QString lastIdent = settingsKey.isNull()
                         ? QString()
                         : QSettings().value(settingsKey).toString();
 
   int lastIdentIndex = idents.indexOf(lastIdent);
+
+  // we're going to show the dialog - if there wasn't a choice
+  // the default should be the first one
   if (lastIdentIndex < 0)
     lastIdentIndex = 0;
 
@@ -334,4 +357,4 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
   return ffs[index];
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

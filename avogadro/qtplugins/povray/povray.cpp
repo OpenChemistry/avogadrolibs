@@ -14,7 +14,7 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -31,9 +31,7 @@ POVRay::POVRay(QObject* p)
   connect(m_action, SIGNAL(triggered()), SLOT(render()));
 }
 
-POVRay::~POVRay()
-{
-}
+POVRay::~POVRay() {}
 
 QList<QAction*> POVRay::actions() const
 {
@@ -82,4 +80,4 @@ void POVRay::render()
   file.close();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

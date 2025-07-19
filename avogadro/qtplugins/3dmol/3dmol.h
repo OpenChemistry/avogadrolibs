@@ -37,7 +37,7 @@ class ThreeDMol : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit ThreeDMol(QObject* parent_ = nullptr);
-  ~ThreeDMol() override;
+  ~ThreeDMol() override = default;
 
   QString name() const override { return tr("ThreeDMol"); }
   QString description() const override;

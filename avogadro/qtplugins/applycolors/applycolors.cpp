@@ -6,18 +6,18 @@
 #include "applycolors.h"
 #include "ui_chargedialog.h"
 
-#include "tinycolormap.hpp"
-
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/residuecolors.h>
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtCore/QDebug>
-#include <QtCore/QStringList>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QColorDialog>
-#include <QtWidgets/QInputDialog>
+#include <QAction>
+#include <QColorDialog>
+#include <QInputDialog>
+#include <QStringList>
+
+#include <QDebug>
 
 using namespace tinycolormap;
 
@@ -48,12 +48,12 @@ ApplyColors::ApplyColors(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(openColorDialog()));
   m_actions.append(action);
 
-  action = new QAction(tr("By Atomic Index"), this);
+  action = new QAction(tr("By Atomic Index…"), this);
   action->setData(atomColors);
   connect(action, SIGNAL(triggered()), SLOT(applyIndexColors()));
   m_actions.append(action);
 
-  action = new QAction(tr("By Distance"), this);
+  action = new QAction(tr("By Distance…"), this);
   action->setData(atomColors);
   connect(action, SIGNAL(triggered()), SLOT(applyDistanceColors()));
   m_actions.append(action);
@@ -250,14 +250,14 @@ void ApplyColors::applyChargeColors()
 
   // populate the dialog to choose the model and colormap
   ChargeColorDialog dialog;
-  for (const auto &model : identifiers) {
+  for (const auto& model : identifiers) {
     auto name = Calc::ChargeManager::instance().nameForModel(model);
     dialog.modelCombo->addItem(name.c_str(), model.c_str());
   }
   dialog.exec();
   if (dialog.result() != QDialog::Accepted)
     return;
-  
+
   // get the model and colormap
   const auto model = dialog.modelCombo->currentData().toString().toStdString();
   const auto colormapName = dialog.colorMapCombo->currentText();
@@ -269,6 +269,12 @@ void ApplyColors::applyChargeColors()
   float maxCharge = 0.0f;
   auto charges =
     Calc::ChargeManager::instance().partialCharges(model, *m_molecule);
+  // check if the model string is already a partial charge type
+  if (m_molecule->partialChargeTypes().find(model) !=
+      m_molecule->partialChargeTypes().end()) {
+    charges = m_molecule->partialCharges(model);
+  }
+
   for (Index i = 0; i < numAtoms; ++i) {
     float charge = charges(i, 0);
     minCharge = std::min(minCharge, charge);
@@ -570,4 +576,4 @@ void ApplyColors::applyShapelyColors()
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

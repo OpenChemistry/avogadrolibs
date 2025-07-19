@@ -9,6 +9,8 @@
 #include <QtCore/QStringList>
 #include <QtWidgets/QDialog>
 
+#include <set>
+
 #include "surfaces.h"
 // for the enum
 
@@ -29,16 +31,23 @@ class SurfaceDialog : public QDialog
   Q_OBJECT
 
 public:
-  SurfaceDialog(QWidget* parent = nullptr, Qt::WindowFlags f = 0);
+  explicit SurfaceDialog(QWidget* parent = nullptr,
+                         Qt::WindowFlags f = Qt::WindowFlags());
   ~SurfaceDialog() override;
 
   void setupBasis(int numElectrons, int numMOs, bool beta);
   void setupCubes(QStringList cubeNames);
   void setupSteps(int stepCount);
+  void setupModels(
+    const std::set<std::pair<std::string, std::string>>& chargeModels);
   void reenableCalculateButton();
   void enableRecord();
 
   Surfaces::Type surfaceType();
+
+  Surfaces::ColorProperty colorProperty();
+  QString colorModel();
+  QString colormapName();
 
   /**
    * This holds the value of the molecular orbital at present.
@@ -65,6 +74,7 @@ public slots:
 
 protected slots:
   void surfaceComboChanged(int n);
+  void propertyComboChanged(int n);
   void resolutionComboChanged(int n);
   void smoothingComboChanged(int n);
   void calculateClicked();
@@ -78,6 +88,7 @@ signals:
 private:
   Ui::SurfaceDialog* m_ui;
   bool m_automaticResolution;
+  std::set<std::pair<std::string, std::string>> m_chargeModels;
 };
 
 } // End namespace QtPlugins

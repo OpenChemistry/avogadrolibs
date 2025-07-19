@@ -8,10 +8,9 @@
 
 #include <avogadro/core/molecule.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QDebug>
-#include <QtWidgets/QUndoCommand>
-#include <QtWidgets/QUndoStack>
+#include <QObject>
+#include <QUndoCommand>
+#include <QUndoStack>
 #include <cassert>
 
 namespace Avogadro::QtGui {
@@ -46,7 +45,6 @@ public:
       auto value = names.second[activeLayer];
       m_settings[names.first] = value;
     }
-
   }
 
   void redo() override
@@ -60,7 +58,9 @@ public:
       m_moleculeInfo->enable[enable.first].push_back(enable.second);
     }
     for (const auto& settings : m_settings) {
-      m_moleculeInfo->settings[settings.first].push_back(settings.second);
+      // create newSettings pointer with the same type as settings.second
+      auto* newSettings = settings.second->clone();
+      m_moleculeInfo->settings[settings.first].push_back(newSettings);
     }
 
     m_moleculeInfo->layer.addLayer();
@@ -131,7 +131,8 @@ public:
   RemoveLayerCommand(shared_ptr<MoleculeInfo> mol, size_t layer)
     : QUndoCommand(QObject::tr("Modify Layers")), m_moleculeInfo(mol),
       m_layer(layer)
-  {}
+  {
+  }
 
   void redo() override
   {
@@ -286,4 +287,4 @@ Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
   return result;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

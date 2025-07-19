@@ -4,38 +4,40 @@
 ******************************************************************************/
 
 #include "insertfragment.h"
-#include "insertfragmentdialog.h"
 
 #include <avogadro/qtgui/fileformatdialog.h>
+#include <avogadro/qtgui/insertfragmentdialog.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
 using Avogadro::Io::FileFormatManager;
+using Avogadro::QtGui::InsertFragmentDialog;
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
 InsertFragment::InsertFragment(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_crystalDialog(nullptr),
-    m_moleculeDialog(nullptr), m_reader(nullptr), m_molecule(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_moleculeDialog(nullptr),
+    m_crystalDialog(nullptr), m_molecule(nullptr), m_reader(nullptr)
 {
-  auto* action = new QAction(tr("Fragment…"), this);
+  auto* action = new QAction(tr("Molecule…"), this);
+  action->setProperty("menu priority", 890);
   action->setData("molecules"); // will also work for crystals
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(tr("Crystal…"), this);
   action->setData("crystals"); // will also work for crystals
+  action->setProperty("menu priority", 170);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 }
@@ -121,4 +123,4 @@ void InsertFragment::performInsert(const QString& fileName, bool crystal)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

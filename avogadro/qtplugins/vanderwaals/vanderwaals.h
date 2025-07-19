@@ -38,8 +38,16 @@ public:
     return DefaultBehavior::False;
   }
 
+  QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
+
+public slots:
+  void setOpacity(int opacity);
+
 private:
   std::string m_name = "Van der Waals";
+  QWidget* m_setupWidget = nullptr;
+  float m_opacity = 1.0;
 };
 } // namespace QtPlugins
 } // namespace Avogadro

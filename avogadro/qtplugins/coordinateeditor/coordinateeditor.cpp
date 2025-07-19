@@ -7,7 +7,7 @@
 
 #include "coordinateeditordialog.h"
 
-#include <QtWidgets/QAction>
+#include <QAction>
 
 namespace Avogadro::QtPlugins {
 
@@ -16,12 +16,11 @@ CoordinateEditor::CoordinateEditor(QObject* parent_)
     m_molecule(nullptr),
     m_action(new QAction(tr("Atomic &Coordinate Editor…"), this))
 {
+  m_action->setProperty("menu priority", 900);
   connect(m_action, SIGNAL(triggered()), SLOT(triggered()));
 }
 
-CoordinateEditor::~CoordinateEditor()
-{
-}
+CoordinateEditor::~CoordinateEditor() {}
 
 QList<QAction*> CoordinateEditor::actions() const
 {
@@ -58,4 +57,4 @@ void CoordinateEditor::pastedMolecule()
   requestActiveTool("Navigator");
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -16,8 +16,8 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
-#include <QtCore/QSettings>
-#include <QtWidgets/QAction>
+#include <QSettings>
+#include <QAction>
 
 #include <Eigen/Geometry>
 
@@ -231,10 +231,10 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
   mesh->addTriangles(triangles);
 }
 
-OverlayAxes::OverlayAxes(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_render(new RenderImpl),
-    m_axesAction(new QAction(tr("Reference Axes"), this)), m_initialized(false),
-    m_glWidget(nullptr)
+OverlayAxes::OverlayAxes(QObject* p)
+  : Avogadro::QtGui::ExtensionPlugin(p), m_initialized(false),
+    m_render(new RenderImpl), m_glWidget(nullptr),
+    m_axesAction(new QAction(tr("Reference Axes"), this))
 {
   connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxes()));
 
@@ -300,7 +300,7 @@ void OverlayAxes::setActiveWidget(QWidget* widget)
   }
 }
 
-void OverlayAxes::process(const Core::Molecule& mol, Rendering::GroupNode& node)
+void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
 {
   auto* geo = new GeometryNode;
   // Since our geometry doesn't change, we just make a copy of the pre-built
@@ -325,4 +325,4 @@ void OverlayAxes::setScene(Rendering::Scene* scene)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

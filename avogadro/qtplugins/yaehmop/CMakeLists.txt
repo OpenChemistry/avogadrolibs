@@ -19,4 +19,4 @@ avogadro_plugin(Yaehmop
   "${yaehmop_uis}"
 )
 
-target_link_libraries(Yaehmop PRIVATE AvogadroVtk)
+target_link_libraries(Yaehmop PRIVATE Avogadro::Vtk)

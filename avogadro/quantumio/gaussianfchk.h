@@ -7,6 +7,8 @@
 #define AVOGADRO_QUANTUMIO_GAUSSIANFCHK_H
 
 #include "avogadroquantumioexport.h"
+
+#include <avogadro/core/array.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/io/fileformat.h>
 
@@ -31,7 +33,7 @@ public:
   std::string name() const override { return "Gaussian FCHK"; }
   std::string description() const override
   {
-    return "Guassian formatted checkpoint reader.";
+    return "Gaussian formatted checkpoint reader.";
   }
 
   std::string specificationUrl() const override
@@ -56,7 +58,7 @@ private:
   void load(Core::GaussianSet* basis);
   std::vector<int> readArrayI(std::istream& in, unsigned int n);
   std::vector<double> readArrayD(std::istream& in, unsigned int n,
-                                 int width = 0);
+                                 int width = 0, double factor = 1.0);
   bool readDensityMatrix(std::istream& in, unsigned int n, int width = 0);
   bool readSpinDensityMatrix(std::istream& in, unsigned int n, int width = 0);
 
@@ -67,6 +69,10 @@ private:
   int m_electrons;
   int m_electronsAlpha;
   int m_electronsBeta;
+  int m_normalModes;
+  int m_numAtoms;
+  int m_spin;
+  int m_charge;
   unsigned int m_numBasisFunctions;
   std::vector<int> m_aNums;
   std::vector<double> m_aPos;
@@ -84,9 +90,16 @@ private:
   std::vector<double> m_betaMOcoeffs;
   MatrixX m_density;     /// Total density matrix
   MatrixX m_spinDensity; /// Spin density matrix
+  Vector3 m_dipoleMoment;
   Core::ScfType m_scftype;
+
+  Core::Array<double> m_frequencies;
+  Core::Array<double> m_IRintensities;
+  Core::Array<double> m_RamanIntensities;
+  Core::Array<Core::Array<Vector3>> m_vibDisplacements;
 };
-}
-}
+
+} // namespace QuantumIO
+} // namespace Avogadro
 
 #endif

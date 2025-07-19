@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_WIREFRAME_H
-#define AVOGADRO_QTPLUGINS_WIREFRAME_H
+#ifndef AVOGADRO_QTPLUGINS_FORCE_H
+#define AVOGADRO_QTPLUGINS_FORCE_H
 
 #include <avogadro/qtgui/sceneplugin.h>
 
@@ -45,4 +45,4 @@ private:
 } // end namespace QtPlugins
 } // end namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_WIREFRAME_H
+#endif // AVOGADRO_QTPLUGINS_FORCE_H

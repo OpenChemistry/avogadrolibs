@@ -10,15 +10,14 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class QTAIMEngine : public QtGui::ScenePlugin
 {
   Q_OBJECT
 public:
   explicit QTAIMEngine(QObject* parent = nullptr);
-  virtual ~QTAIMEngine() override;
+  virtual ~QTAIMEngine() override = default;
 
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
@@ -30,15 +29,11 @@ public:
     return tr("Renders primitives using QTAIM properties");
   }
 
-  bool isEnabled() const override { return m_enabled; }
-
-  void setEnabled(bool enable) override { m_enabled = enable; }
-
 private:
   bool m_enabled;
+  std::string m_name = "QTAIM";
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // end namespace Avogadro::QtPlugins
 
 #endif

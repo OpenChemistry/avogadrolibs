@@ -45,14 +45,14 @@ public slots:
 public:
   explicit PropertyModel(PropertyType type, QObject* parent = 0);
 
-  int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  QVariant data(const QModelIndex& index, int role) const;
-  Qt::ItemFlags flags(const QModelIndex& index) const;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex& index, int role) const override;
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
   bool setData(const QModelIndex& index, const QVariant& value,
-               int role = Qt::EditRole);
+               int role = Qt::EditRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,
-                      int role = Qt::DisplayRole) const;
+                      int role = Qt::DisplayRole) const override;
 
   void setMolecule(QtGui::Molecule* molecule);
 
@@ -81,8 +81,7 @@ private:
   std::vector<int> m_fragment;
   Eigen::Affine3d m_transform;
   bool fragmentHasAtom(int uid) const;
-  void buildFragment(const QtGui::RWBond& bond,
-                      const QtGui::RWAtom& startAtom);
+  void buildFragment(const QtGui::RWBond& bond, const QtGui::RWAtom& startAtom);
   bool fragmentRecurse(const QtGui::RWBond& bond,
                        const QtGui::RWAtom& startAtom,
                        const QtGui::RWAtom& currentAtom);
@@ -113,6 +112,7 @@ private:
     AtomDataX,
     AtomDataY,
     AtomDataZ,
+    AtomDataLabel,
     AtomDataColor,
     AtomDataCharge,
     AtomDataCustom,
@@ -125,7 +125,8 @@ private:
     BondDataAtom1,
     BondDataAtom2,
     BondDataOrder,
-    BondDataLength
+    BondDataLength,
+    BondDataLabel
   };
 
   // Angle Data
@@ -152,7 +153,7 @@ private:
   // Conformer Data
   enum ConformerColumn
   {
-    ConformerDataType = 0,
+    ConformerDataRMSD = 0,
     ConformerDataEnergy
   };
 

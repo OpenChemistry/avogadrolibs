@@ -16,10 +16,9 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMessageBox>
-
-#include <QtCore/QStringList>
+#include <QAction>
+#include <QMessageBox>
+#include <QStringList>
 
 using Avogadro::Core::CrystalTools;
 using Avogadro::QtGui::Molecule;
@@ -171,6 +170,29 @@ void Crystal::importCrystalClipboard()
   }
 }
 
+void Crystal::registerCommands()
+{
+  emit registerCommand("wrapUnitCell", tr("Wrap atoms into the unit cell."));
+  emit registerCommand("standardCrystalOrientation",
+                       tr("Rotate the unit cell to the standard orientation."));
+}
+
+bool Crystal::handleCommand(const QString& command,
+                            [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command.
+
+  if (command == "wrapUnitCell") {
+    wrapAtomsToCell();
+    return true;
+  } else if (command == "standardCrystalOrientation") {
+    standardOrientation();
+    return true;
+  }
+  return false;
+}
+
 void Crystal::editUnitCell()
 {
   if (!m_unitCellDialog) {
@@ -234,4 +256,4 @@ void Crystal::wrapAtomsToCell()
   m_molecule->undoMolecule()->wrapAtomsToCell();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

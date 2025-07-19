@@ -9,11 +9,14 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QProcess>
 #include <QtCore/QRegularExpression>
+#include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 
 #include <QtWidgets/QGraphicsRectItem>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTableWidgetItem>
@@ -43,7 +46,7 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
   : QDialog(parent), m_ui(new Ui::DownloaderWidget)
 {
   m_filePath =
-    QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
   m_NetworkAccessManager = new QNetworkAccessManager(this);
   m_ui->setupUi(this);
   // enable links in the readme to open an external browser
@@ -90,6 +93,18 @@ void DownloaderWidget::updateRepoData()
   if (m_reply->error() == QNetworkReply::NoError) {
     // Reading the data from the response
     QByteArray bytes = m_reply->readAll();
+
+    // quick check that it's not empty
+    if (bytes.isEmpty()) {
+      QMessageBox::warning(this, tr("Error"),
+                           tr("Error downloading plugin data."));
+      return;
+    }
+    // does it parse as JSON cleanly?
+    if (!json::accept(bytes.data())) {
+      QMessageBox::warning(this, tr("Error"), tr("Error parsing plugin data."));
+      return;
+    }
 
     // parse the json
     m_root = json::parse(bytes.data());
@@ -164,14 +179,13 @@ void DownloaderWidget::updateRepoData()
 }
 
 // Grab README data from Github
-void DownloaderWidget::downloadREADME(int row, int col)
+void DownloaderWidget::downloadREADME(int row, [[maybe_unused]] int col)
 {
   m_ui->readmeBrowser->clear();
   QString url = m_repoList[row].readmeUrl;
   QNetworkRequest request;
   setRawHeaders(&request);
   request.setUrl(url); // Set the url
-
   m_reply = m_NetworkAccessManager->get(request);
   connect(m_reply, SIGNAL(finished()), this, SLOT(showREADME()));
 }
@@ -267,31 +281,96 @@ void DownloaderWidget::downloadNext()
     QNetworkRequest request;
     setRawHeaders(&request);
     request.setUrl(url); // Set the url
-
     m_reply = m_NetworkAccessManager->get(request);
     connect(m_reply, SIGNAL(finished()), this, SLOT(handleRedirect()));
   }
 }
 
+bool DownloaderWidget::checkToInstall()
+{
+  QSettings settings;
+
+  // check if we've asked the user before
+  bool neverInstall =
+    settings.value("neverInstallRequirements", false).toBool();
+  if (neverInstall)
+    return false;
+
+  bool alwaysInstall =
+    settings.value("alwaysInstallRequirements", false).toBool();
+  if (alwaysInstall)
+    return true;
+
+  // okay, ask the user before installing
+  QMessageBox msgBox;
+  msgBox.setText(tr("This plugin requires certain packages to be installed.\n"
+                    "Do you want to install them?"));
+  msgBox.setIcon(QMessageBox::Question);
+  msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+  msgBox.setDefaultButton(QMessageBox::Yes);
+
+  // add buttons for "Yes Always" and "No, Never"
+  QPushButton* yesAlwaysButton =
+    msgBox.addButton(tr("Always"), QMessageBox::YesRole);
+  QPushButton* neverButton = msgBox.addButton(tr("Never"), QMessageBox::NoRole);
+  msgBox.exec();
+
+  if (msgBox.clickedButton() == yesAlwaysButton) {
+    settings.setValue("alwaysInstallRequirements", true);
+    return true;
+  } else if (msgBox.clickedButton() == neverButton) {
+    settings.setValue("neverInstallRequirements", true);
+    return false;
+  } else if (msgBox.clickedButton() == msgBox.button(QMessageBox::Yes)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 // The download url for Github is always a redirect to the actual zip
+// Using Qt 6 the redirect gets taken care of automatically, but on Qt 5 we
+// have to do it manually
+// m_reply is a QNetworkReply
 void DownloaderWidget::handleRedirect()
 {
+  int statusCode =
+    m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
   if (m_reply->error() == QNetworkReply::NoError) {
-    QVariant statusCode =
-      m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-    if (statusCode.toInt() == 302) {
+    if (statusCode == 302) {
+      // Redirected, have to manually redirect
       QVariant possibleRedirectUrl =
         m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-
       QUrl _urlRedirectedTo = possibleRedirectUrl.toUrl();
-
       QNetworkRequest request;
       setRawHeaders(&request);
       request.setUrl(_urlRedirectedTo); // Set the url
       m_reply = m_NetworkAccessManager->get(request);
+      // Now we have the actual zip and can extract it
       connect(m_reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
+    } else if (statusCode == 200) {
+      // Normal success response
+      unzipPlugin();
+    } else {
+      // Something went wrong
+      QString errorString = m_reply->errorString();
+      m_ui->readmeBrowser->append(
+        tr("Failed to download from %1: status code %2, %3\n",
+           "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 "
+           "is the error message (if any)")
+          .arg(m_reply->url().toString())
+          .arg(statusCode)
+          .arg(errorString));
     }
   } else {
+    QString errorString = m_reply->errorString();
+    m_ui->readmeBrowser->append(
+      tr("Failed to download from %1: status code %2, %3\n",
+         "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 "
+         "is the error message (if any)")
+        .arg(m_reply->url().toString())
+        .arg(statusCode)
+        .arg(errorString));
     m_reply->deleteLater();
     m_downloadList.removeLast();
     downloadNext();
@@ -364,6 +443,52 @@ void DownloaderWidget::unzipPlugin()
           // and move the directory into place, e.g.
           // OpenChemistry-crystals-a7c672d
           QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+
+          // check if there's a requirements.txt file
+          // .. if so, install with conda or pip
+          QString requirementsFile(destination + "/requirements.txt");
+          if (QFile::exists(requirementsFile) && checkToInstall()) {
+            // use conda if available
+            QSettings settings;
+            QString condaEnv = settings.value("condaEnvironment").toString();
+            QString condaPath = settings.value("condaPath").toString();
+            if (!condaEnv.isEmpty() && !condaPath.isEmpty()) {
+              // install with conda
+              QStringList arguments;
+              arguments << "install"
+                        << "-y"
+                        << "-c"
+                        << "conda-forge"
+                        << "--file" << requirementsFile << "-n" << condaEnv;
+              QProcess* process = new QProcess(this);
+              process->start(condaPath, arguments);
+              process->waitForFinished();
+              QString output(process->readAllStandardOutput());
+              QString error(process->readAllStandardError());
+              if (!output.isEmpty())
+                m_ui->readmeBrowser->append(output);
+              if (!error.isEmpty())
+                m_ui->readmeBrowser->append(error);
+            } else {
+              // use pip
+              QStringList arguments;
+              arguments << "-m"
+                        << "pip"
+                        << "install"
+                        << "-r" << requirementsFile;
+              QProcess* process = new QProcess(this);
+              QString pythonPath =
+                settings.value("interpreters/python", "python").toString();
+              process->start(pythonPath, arguments);
+              process->waitForFinished();
+              QString output(process->readAllStandardOutput());
+              QString error(process->readAllStandardError());
+              if (!output.isEmpty())
+                m_ui->readmeBrowser->append(output);
+              if (!error.isEmpty())
+                m_ui->readmeBrowser->append(error);
+            }
+          }
         }
       }
     } else {
@@ -378,4 +503,4 @@ void DownloaderWidget::unzipPlugin()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

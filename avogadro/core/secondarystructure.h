@@ -6,13 +6,13 @@
 #ifndef AVOGADRO_CORE_SECONDARYSTRUCTURE_H
 #define AVOGADRO_CORE_SECONDARYSTRUCTURE_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
-#include <tuple>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 
@@ -47,7 +47,6 @@ private:
   std::vector<hBondRecord*> m_hBonds;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_ANGLEITERATOR_H

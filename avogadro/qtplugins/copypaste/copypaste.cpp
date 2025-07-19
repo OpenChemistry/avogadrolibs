@@ -13,12 +13,10 @@
 
 #include <QtCore/QMimeData>
 
+#include <QAction>
 #include <QtGui/QClipboard>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
-
-#include <QDebug>
 
 #include <string>
 #include <vector>
@@ -30,24 +28,36 @@ using namespace Avogadro::QtGui;
 CopyPaste::CopyPaste(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_pastedFormat(nullptr),
     m_copyAction(new QAction(tr("Copy"), this)),
+    m_copySMILES(new QAction(tr("SMILES"), this)),
+    m_copyInChI(new QAction(tr("InChI"), this)),
     m_cutAction(new QAction(tr("Cut"), this)),
     m_clearAction(new QAction(tr("Clear"), this)),
-    m_pasteAction(new QAction(tr("Paste"), this))
+    m_pasteAction(new QAction(tr("&Paste"), this))
 {
-  m_copyAction->setShortcut(QKeySequence::Copy);
-  m_copyAction->setIcon(QIcon::fromTheme("edit-copy"));
-  connect(m_copyAction, SIGNAL(triggered()), SLOT(copy()));
-
   m_cutAction->setShortcut(QKeySequence::Cut);
   m_cutAction->setIcon(QIcon::fromTheme("edit-cut"));
+  m_cutAction->setProperty("menu priority", 560);
   connect(m_cutAction, SIGNAL(triggered()), SLOT(cut()));
+
+  m_copyAction->setShortcut(QKeySequence::Copy);
+  m_copyAction->setIcon(QIcon::fromTheme("edit-copy"));
+  m_copyAction->setProperty("menu priority", 550);
+  connect(m_copyAction, SIGNAL(triggered()), SLOT(copyCJSON()));
+
+  m_copySMILES->setProperty("menu priority", 540);
+  connect(m_copySMILES, SIGNAL(triggered()), SLOT(copySMILES()));
+
+  m_copyInChI->setProperty("menu priority", 530);
+  connect(m_copyInChI, SIGNAL(triggered()), SLOT(copyInChI()));
 
   m_pasteAction->setShortcut(QKeySequence::Paste);
   m_pasteAction->setIcon(QIcon::fromTheme("edit-paste"));
+  m_pasteAction->setProperty("menu priority", 510);
   connect(m_pasteAction, SIGNAL(triggered()), SLOT(paste()));
 
   m_clearAction->setShortcut(QKeySequence::Delete);
   m_clearAction->setIcon(QIcon::fromTheme("edit-clear"));
+  m_clearAction->setProperty("menu priority", 500);
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clear()));
 }
 
@@ -59,13 +69,16 @@ CopyPaste::~CopyPaste()
 QList<QAction*> CopyPaste::actions() const
 {
   QList<QAction*> result;
-  return result << m_copyAction << m_cutAction << m_pasteAction
-                << m_clearAction;
+  return result << m_copyAction << m_copySMILES << m_copyInChI << m_cutAction
+                << m_pasteAction << m_clearAction;
 }
 
-QStringList CopyPaste::menuPath(QAction*) const
+QStringList CopyPaste::menuPath(QAction* action) const
 {
-  return QStringList() << tr("&Edit");
+  if (action->text() != tr("SMILES") && action->text() != tr("InChI"))
+    return QStringList() << tr("&Edit");
+  else
+    return QStringList() << tr("&Edit") << tr("Copy As");
 }
 
 void CopyPaste::setMolecule(QtGui::Molecule* mol)
@@ -73,9 +86,34 @@ void CopyPaste::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
 }
 
-bool CopyPaste::copy()
+bool CopyPaste::copyCJSON()
 {
-  if (!m_molecule)
+  Io::CjsonFormat cjson;
+  return copy(&cjson);
+}
+
+void CopyPaste::copySMILES()
+{
+  Io::FileFormatManager& formats = Io::FileFormatManager::instance();
+  Io::FileFormat* format(formats.newFormatFromFileExtension("smi"));
+
+  copy(format);
+  delete format;
+}
+
+void CopyPaste::copyInChI()
+{
+  Io::FileFormatManager& formats = Io::FileFormatManager::instance();
+  Io::FileFormat* format(formats.newFormatFromFileExtension("inchi"));
+
+  copy(format);
+  delete format;
+}
+
+bool CopyPaste::copy(Io::FileFormat* format)
+{
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
+      format == nullptr)
     return false;
 
   std::string output;
@@ -107,8 +145,7 @@ bool CopyPaste::copy()
     }
   }
 
-  Io::CjsonFormat cjson;
-  if (!cjson.writeString(output, *copy)) {
+  if (!format->writeString(output, *copy)) {
     QMessageBox::warning(
       qobject_cast<QWidget*>(this->parent()), tr("Error Clipping Molecule"),
       tr("Error generating clipboard data.") + "\n" +
@@ -125,8 +162,8 @@ bool CopyPaste::copy()
 
   auto* mimeData(new QMimeData);
 
-  std::vector<std::string> mimeTypes(cjson.mimeTypes());
-  for (auto & mimeType : mimeTypes)
+  std::vector<std::string> mimeTypes(format->mimeTypes());
+  for (auto& mimeType : mimeTypes)
     mimeData->setData(QString::fromStdString(mimeType), outputBA);
 
   mimeData->setData("text/plain", outputBA);
@@ -140,7 +177,7 @@ bool CopyPaste::copy()
 
 void CopyPaste::cut()
 {
-  if (!copy())
+  if (!copyCJSON())
     return;
 
   if (m_molecule->isSelectionEmpty())
@@ -160,6 +197,9 @@ void CopyPaste::cut()
 
 void CopyPaste::clear()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   if (m_molecule->isSelectionEmpty())
     m_molecule->undoMolecule()->clearAtoms();
   else {
@@ -247,4 +287,4 @@ void CopyPaste::paste()
   m_pastedData.clear();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

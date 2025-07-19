@@ -10,6 +10,7 @@
 
 #include <avogadro/core/layermanager.h>
 #include <cassert>
+#include <iostream>
 
 namespace Avogadro {
 namespace QtGui {
@@ -62,10 +63,10 @@ public:
   /** set active layer @p enable */
   void setEnabled(bool enable);
 
-  /** @return @p atom layer enabled globaly and in plugin */
+  /** @return @p atom layer enabled globally and in plugin */
   bool atomEnabled(Index atom) const;
 
-  /** @return @p atom layer enabled globaly, in plugin and in @p layer */
+  /** @return @p atom layer enabled globally, in plugin and in @p layer */
   bool atomEnabled(size_t layer, Index atom) const;
 
   /** @return if @p atom1 or @p atom2 is enabled */
@@ -79,22 +80,25 @@ public:
   /** @return custom data T derived from LayerData. if @p layer is equal to
    * MaxIndex returns activeLayer */
   template <typename T>
-  T& getSetting(size_t layer = MaxIndex)
+  T* getSetting(size_t layer = MaxIndex)
   {
     auto info = m_molToInfo[m_activeMolecule];
+
     if (layer == MaxIndex) {
       layer = info->layer.activeLayer();
     }
+
     assert(layer <= info->layer.maxLayer());
     if (info->settings.find(m_name) == info->settings.end()) {
       info->settings[m_name] = Core::Array<Core::LayerData*>();
     }
 
+    // do we need to create new layers in the array?
     while (info->settings[m_name].size() < layer + 1) {
       info->settings[m_name].push_back(new T());
     }
-    auto result = static_cast<T*>(info->settings[m_name][layer]);
-    return *result;
+    auto* result = static_cast<T*>(info->settings[m_name][layer]);
+    return result;
   }
 
 private:

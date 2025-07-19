@@ -45,7 +45,7 @@ create_test_sourcelist(testDriver qtopengltests.cpp ${testSrcs})
 add_executable(AvogadroQtOpenGLTests ${testDriver})
 
 target_link_libraries(AvogadroQtOpenGLTests
-  AvogadroQtOpenGL
+  Avogadro::QtOpenGL
   vtkImagingCore
   vtkIOImage
   vtkRenderingQt)

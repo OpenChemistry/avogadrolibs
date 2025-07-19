@@ -19,10 +19,9 @@ namespace Avogadro::QtGui {
 using Core::Elements;
 
 ElementDetail::ElementDetail(int elementNumber)
-  : m_width(100)
-  , m_height(70)
-  , m_element(elementNumber)
-{}
+  : m_width(100), m_height(70), m_element(elementNumber)
+{
+}
 
 QRectF ElementDetail::boundingRect() const
 {
@@ -69,7 +68,7 @@ void ElementDetail::paint(QPainter* painter, const QStyleOptionGraphicsItem*,
   font.setPixelSize(24);
   QFontMetrics fm2(font);
   pixelHeight = fm2.height();
-  int pixelWidth = fm2.width(symbol);
+  int pixelWidth = fm2.horizontalAdvance(symbol);
   painter->setFont(font);
   QRectF symbolRect(-10, -m_height / 2 + 8, pixelWidth, pixelHeight);
   painter->drawText(symbolRect, Qt::AlignCenter, symbol);
@@ -126,4 +125,4 @@ void ElementDetail::setElement(int element)
   }
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::QtGui

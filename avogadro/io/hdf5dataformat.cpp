@@ -20,7 +20,7 @@ namespace Io {
 class Hdf5DataFormat::ResizeContainer
 {
 public:
-  virtual ~ResizeContainer(){};
+  virtual ~ResizeContainer() {};
   virtual bool resize(const std::vector<int>& dims) = 0;
   virtual void* dataPointer() = 0;
 
@@ -118,9 +118,7 @@ public:
 // end doxygen exclude:
 /// @endcond
 
-Hdf5DataFormat::Hdf5DataFormat() : d(new Private())
-{
-}
+Hdf5DataFormat::Hdf5DataFormat() : d(new Private()) {}
 
 Hdf5DataFormat::~Hdf5DataFormat()
 {

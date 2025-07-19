@@ -141,6 +141,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   }
   // Perceive bonds for the molecule.
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
 
   // Add in the electronic structure information if available.
   if (molecularOrbitals.is_object() &&
@@ -153,7 +154,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     // Figure out the mapping of basis set to molecular orbitals.
     Array<int> atomNumber;
     Array<string> atomSymbol;
-    for (auto & i : orbDesc) {
+    for (auto& i : orbDesc) {
       string desc = i;
       vector<string> parts = split(desc, ' ');
       assert(parts.size() == 3);
@@ -172,7 +173,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
       string symbol = atomSymbol[i];
       json basisFunctions = basisSet.value("basisFunctions", json());
       json currentFunction;
-      for (auto & basisFunction : basisFunctions) {
+      for (auto& basisFunction : basisFunctions) {
         currentFunction = basisFunction;
 
         string elementType;
@@ -242,7 +243,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     vector<unsigned int> numArray;
     for (auto currentMO : moCoeffs) {
       json coeff = currentMO.value("moCoefficients", json());
-      for (auto & j : coeff)
+      for (auto& j : coeff)
         coeffArray.push_back(j);
       if (currentMO.count("orbitalEnergy")) {
         energyArray.push_back(currentMO["orbitalEnergy"].value("value", 0.0));
@@ -318,4 +319,4 @@ vector<std::string> NWChemJson::mimeTypes() const
   return mime;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO

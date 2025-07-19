@@ -27,7 +27,8 @@ class AVOGADROQTGUI_EXPORT ContainerWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit ContainerWidget(QWidget* parent = nullptr, Qt::WindowFlags f = 0);
+  explicit ContainerWidget(QWidget* parent = nullptr,
+                           Qt::WindowFlags f = Qt::WindowFlags());
   ~ContainerWidget() override;
 
   void setViewWidget(QWidget* widget);
@@ -47,7 +48,7 @@ private:
   bool m_active;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_CONTAINERWIDGET_H

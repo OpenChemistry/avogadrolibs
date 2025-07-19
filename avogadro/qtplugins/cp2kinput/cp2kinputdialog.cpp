@@ -31,21 +31,11 @@
 #include <map>
 #include <vector>
 
+using Avogadro::MoleQueue::JobObject;
 using Avogadro::MoleQueue::MoleQueueDialog;
 using Avogadro::MoleQueue::MoleQueueManager;
-using Avogadro::MoleQueue::JobObject;
 
 namespace Avogadro::QtPlugins {
-
-enum CalculateOption
-{
-  CalculateEnergy = 0,
-  CalculateEnergyAndForces,
-  CalculateMolecularDynamics,
-  CalculateGeometryOptimization,
-
-  CalculateCount
-};
 
 enum FunctionalOption
 {
@@ -56,17 +46,6 @@ enum FunctionalOption
   FunctionalPBE,
 
   FunctionalCount
-};
-
-enum BasisOption
-{
-  BasisSZVGTH = 0,
-  BasisDZVGTH,
-  BasisDZVPGTH,
-  BasisTZVPGTH,
-  BasisTZV2PGTH,
-
-  BasisCount
 };
 
 enum MethodOption
@@ -248,6 +227,22 @@ void Cp2kInputDialog::restoreOptionCache()
     combo->blockSignals(true);
     combo->setCurrentIndex(m_optionCache.value(combo, 0));
     combo->blockSignals(false);
+  }
+}
+
+QString Cp2kInputDialog::fromCalcEnum(CalculateOption option)
+{
+  switch (option) {
+    case CalculateEnergy:
+      return "ENERGY";
+    case CalculateEnergyAndForces:
+      return "ENERGY_FORCE";
+    case CalculateMolecularDynamics:
+      return "MOLECULAR_DYNAMICS";
+    case CalculateGeometryOptimization:
+      return "GEO_OPT";
+    default:
+      throw std::invalid_argument{ __func__ }; // unreachable
   }
 }
 
@@ -449,7 +444,8 @@ void Cp2kInputDialog::setBasicDefaults()
 
 QString Cp2kInputDialog::generateJobTitle() const
 {
-  QString calculation(ui.calculateCombo->currentText());
+  QString calculation(fromCalcEnum(
+    static_cast<CalculateOption>(ui.calculateCombo->currentIndex())));
   QString basis(ui.basisCombo->currentText());
   QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
                              : tr("[no molecule]"));
@@ -457,7 +453,7 @@ QString Cp2kInputDialog::generateJobTitle() const
   // Merge theory/basis into theory
   //  replace(QRegExp("\\s+"), "");
 
-  return QString("%1 | %2 | %3").arg(formula, calculation, basis);
+  return QString("%1_%2_%3").arg(formula, calculation, basis);
 }
 
 void Cp2kInputDialog::updatePreviewText()
@@ -465,7 +461,7 @@ void Cp2kInputDialog::updatePreviewText()
   std::map<QString, int> valencee;
 
   valencee["H"] = 1;
-  valencee["He"] = 2;
+  valencee["He"] = 2; // Z=2
   valencee["Li"] = 3;
   valencee["Be"] = 4;
   valencee["B"] = 3;
@@ -473,7 +469,7 @@ void Cp2kInputDialog::updatePreviewText()
   valencee["N"] = 5;
   valencee["O"] = 6;
   valencee["F"] = 7;
-  valencee["Ne"] = 8;
+  valencee["Ne"] = 8; // Z=10
   valencee["Na"] = 9;
   valencee["Mg"] = 10;
   valencee["Al"] = 3;
@@ -481,7 +477,7 @@ void Cp2kInputDialog::updatePreviewText()
   valencee["P"] = 5;
   valencee["S"] = 6;
   valencee["Cl"] = 7;
-  valencee["Ar"] = 8;
+  valencee["Ar"] = 8; // Z=18
   valencee["K"] = 9;
   valencee["Ca"] = 10;
   valencee["Sc"] = 11;
@@ -499,24 +495,34 @@ void Cp2kInputDialog::updatePreviewText()
   valencee["As"] = 5;
   valencee["Se"] = 6;
   valencee["Br"] = 7;
-  valencee["Kr"] = 8;
-  valencee["As"] = 5;
+  valencee["Kr"] = 8; // Z=36
+  valencee["Rb"] = 9;
   valencee["Sr"] = 10;
   valencee["Y"] = 11;
   valencee["Zr"] = 12;
+  valencee["Nb"] = 13;
   valencee["Mo"] = 14;
+  valencee["Tc"] = 15;
   valencee["Ru"] = 16;
   valencee["Rh"] = 17;
   valencee["Pd"] = 18;
   valencee["Ag"] = 11;
+  valencee["Cd"] = 12;
   valencee["In"] = 13;
+  valencee["Sn"] = 4;
   valencee["Sb"] = 5;
   valencee["Te"] = 6;
   valencee["I"] = 7;
+  valencee["Xe"] = 8; // Z=54
+  valencee["Cs"] = 9;
   valencee["Ba"] = 10;
   valencee["W"] = 14;
+  valencee["Pt"] = 10;
   valencee["Au"] = 11;
+  valencee["Hg"] = 12;
+  valencee["Pb"] = 14;
   valencee["Bi"] = 15;
+  valencee["Rn"] = 8; // Z=86
 
   // If the dialog is not shown, delay the update in case we need to prompt the
   // user to overwrite changes. Set the m_updatePending flag to true so we'll
@@ -553,8 +559,7 @@ void Cp2kInputDialog::updatePreviewText()
   auto functional(
     static_cast<FunctionalOption>(ui.functionalCombo->currentIndex()));
   auto basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
-  auto method(
-    static_cast<MethodOption>(ui.methodCombo->currentIndex()));
+  auto method(static_cast<MethodOption>(ui.methodCombo->currentIndex()));
   auto EWALDType(
     static_cast<EWALDTypeOption>(ui.ewaldtypeCombo->currentIndex()));
   auto SCFGuess(
@@ -595,22 +600,7 @@ void Cp2kInputDialog::updatePreviewText()
   QString force;
   QString pcm;
 
-  switch (calculate) {
-    case CalculateEnergy:
-      runTyp = "ENERGY";
-      break;
-    case CalculateEnergyAndForces:
-      runTyp = "ENERGY_FORCE";
-      break;
-    case CalculateMolecularDynamics:
-      runTyp = "MOLECULAR_DYNAMICS";
-      break;
-    case CalculateGeometryOptimization:
-      runTyp = "GEO_OPT";
-      break;
-    default:
-      break;
-  }
+  runTyp = fromCalcEnum(calculate);
 
   switch (functional) {
     case FunctionalBLYP:
@@ -654,7 +644,7 @@ void Cp2kInputDialog::updatePreviewText()
 
   switch (method) {
     case DFT:
-      gmethod = "DFT";
+      gmethod = "QS";
       break;
     case MolecularMechanics:
       gmethod = "FIST";
@@ -756,16 +746,17 @@ void Cp2kInputDialog::updatePreviewText()
   file += "&FORCE_EVAL\n";
 
   file += QString("  METHOD %1\n").arg(gmethod);
-  file += "&END FORCE_EVAL\n";
+
+  file += "  &SUBSYS\n";
 
   if (m_molecule) {
-    std::vector<int> atomList;
+    std::vector<unsigned int> atomList;
     bool inlist = true;
 
     for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
       Core::Atom atom = m_molecule->atom(i);
-      for (int i : atomList) {
-        if (i == atom.atomicNumber()) {
+      for (unsigned iat : atomList) {
+        if (iat == atom.atomicNumber()) {
           inlist = false;
           break;
         } else {
@@ -779,9 +770,14 @@ void Cp2kInputDialog::updatePreviewText()
         file += QString("        ELEMENT %1\n")
                   .arg(Core::Elements::symbol(atom.atomicNumber()));
         file += QString("        BASIS_SET %1\n").arg(gbasis);
-        file += QString("        POTENTIAL GTH-%1-q%2\n")
-                  .arg(gfunc)
-                  .arg(valencee[symbol]);
+        const auto e = valencee.find(symbol);
+        const auto suffix =
+          e != valencee.cend() ? QString("-q%1").arg(e->second) : "";
+        file += QString(
+          "        ! XXX you may have to manually modify/append '-qn' suffix, "
+          "where n is the number of valence electrons\n");
+        file += QString("        POTENTIAL GTH-%1%2\n").arg(gfunc).arg(suffix);
+        file += QString("    &END KIND\n");
       }
     }
   }
@@ -807,14 +803,16 @@ void Cp2kInputDialog::updatePreviewText()
               .arg(c.z(), 16, 'f', 7);
 
   } else {
-    // @todo - this should look at the dimensions of the Molecule
+    file += "    ! XXX please manually adjust cell size\n";
     file += "    A     10.00000000    0.000000000    0.000000000\n";
     file += "    B     0.000000000    10.00000000    0.000000000\n";
     file += "    C     0.000000000    0.000000000    10.00000000\n";
+    file += "    PERIODIC NONE\n";
   }
-  file += "    &END CELL \n";
+  file += "    &END CELL\n";
 
   if (m_molecule) {
+    file += "    &COORD\n";
     for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
       Core::Atom atom = m_molecule->atom(i);
       file += QString("    %1    %2    %3    %4\n")
@@ -823,9 +821,15 @@ void Cp2kInputDialog::updatePreviewText()
                 .arg(atom.position3d().y(), 9, 'f', 5)
                 .arg(atom.position3d().z(), 9, 'f', 5);
     }
+    file += "    &END COORD\n";
   }
-  if (gmethod == "DFT") {
+
+  file += "  &END SUBSYS\n";
+
+  if (gmethod == "QS") {
     file += "  &DFT\n";
+    file += "    ! XXX: you may have to manually modify the file names, "
+            "depending on the system and calculation level\n";
     file += "    BASIS_SET_FILE_NAME  BASIS_SET\n";
     file += "    POTENTIAL_FILE_NAME  GTH_POTENTIALS\n";
     if (ui.lsdcheckBox->isChecked())
@@ -857,7 +861,7 @@ void Cp2kInputDialog::updatePreviewText()
     file += "    &END SCF\n";
 
     file += "    &XC\n";
-    file += QString("      &XC_FUNCTIONAL %1\n").arg(functional);
+    file += QString("      &XC_FUNCTIONAL %1\n").arg(gfunc);
     file += "      &END XC_FUNCTIONAL\n";
     file += "    &END XC\n";
 
@@ -913,7 +917,7 @@ void Cp2kInputDialog::updatePreviewText()
     file += "  &END MM\n";
   }
 
-  file += " $END\n";
+  file += "&END FORCE_EVAL\n";
 
   ui.previewText->setText(file);
   ui.previewText->document()->setModified(false);
@@ -1029,4 +1033,4 @@ void Cp2kInputDialog::updateTitlePlaceholder()
   ui.titleEdit->setPlaceholderText(generateJobTitle());
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

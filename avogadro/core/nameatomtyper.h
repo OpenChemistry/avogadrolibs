@@ -6,14 +6,13 @@
 #ifndef AVOGADRO_CORE_NAMEATOMTYPER_H
 #define AVOGADRO_CORE_NAMEATOMTYPER_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include <avogadro/core/atomtyper.h>
 
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class NameAtomTyper nameatomtyper.h <avogadro/core/nameatomtyper.h>
@@ -24,13 +23,12 @@ class AVOGADROCORE_EXPORT NameAtomTyper : public AtomTyper<std::string>
 {
 public:
   explicit NameAtomTyper(const Molecule* mol = nullptr);
-  ~NameAtomTyper() override;
+  ~NameAtomTyper() override = default;
 
 protected:
   std::string type(const Atom& atom) override;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_NAMEATOMTYPER_H

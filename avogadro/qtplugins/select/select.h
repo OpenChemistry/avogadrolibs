@@ -6,6 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_SELECT_H
 #define AVOGADRO_QTPLUGINS_SELECT_H
 
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/qtgui/pluginlayermanager.h>
 
@@ -42,6 +43,16 @@ private slots:
   void selectAtomIndex();
   void selectElement(int element);
   void selectResidue();
+
+  void selectBackboneAtoms();
+  void selectSidechainAtoms();
+
+  void selectWater();
+  bool isWaterOxygen(Index i);
+
+  void enlargeSelection();
+  void shrinkSelection();
+  Vector3 getSelectionCenter();
 
   void createLayerFromSelection();
 

@@ -12,7 +12,6 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-
 namespace Avogadro::QtPlugins {
 
 SupercellDialog::SupercellDialog(QWidget* p)
@@ -46,4 +45,4 @@ bool SupercellDialog::buildSupercell(Avogadro::QtGui::Molecule& mol)
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

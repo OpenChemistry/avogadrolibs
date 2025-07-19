@@ -8,6 +8,7 @@
 #include "histogramwidget.h"
 
 #include <QAction>
+#include <QDebug>
 #include <QDialog>
 #include <QMessageBox>
 #include <QString>
@@ -19,7 +20,6 @@
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/vtk/vtkglwidget.h>
-#include <avogadro/vtk/vtkplot.h>
 
 #include <vtkColorTransferFunction.h>
 #include <vtkPiecewiseFunction.h>
@@ -29,9 +29,7 @@
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtOpenGL::ActiveObjects;
 
-
 namespace Avogadro::QtPlugins {
-
 
 vtkImageData* cubeImageData(Core::Cube* cube)
 {
@@ -86,6 +84,18 @@ QStringList ColorOpacityMap::menuPath(QAction*) const
   return QStringList() << tr("&Extensions");
 }
 
+void ColorOpacityMap::setActiveWidget(QWidget* widget)
+{
+  auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
+  if (vtkWidget) {
+    m_vtkWidget = true;
+    updateActions();
+  } else {
+    m_vtkWidget = false;
+    updateActions();
+  }
+}
+
 void ColorOpacityMap::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule == mol)
@@ -105,34 +115,28 @@ void ColorOpacityMap::setMolecule(QtGui::Molecule* mol)
 void ColorOpacityMap::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
-  // Don't attempt to update anything if there is no dialog to update!
-  if (!m_comDialog)
-    return;
-
   // I think we need to look at adding cubes to changes, flaky right now.
   auto changes = static_cast<Molecule::MoleculeChanges>(c);
   if (changes & Molecule::Added || changes & Molecule::Removed) {
     updateActions();
-    updateHistogram();
+    if (m_comDialog)
+      updateHistogram();
   }
 }
 
 void ColorOpacityMap::updateActions()
 {
-  // Disable everything for nullptr molecules.
-  if (!m_molecule) {
-    foreach (QAction* action, m_actions)
-      action->setEnabled(false);
-    return;
-  }
   foreach (QAction* action, m_actions)
-    action->setEnabled(true);
+    action->setEnabled(m_vtkWidget);
 }
 
 void ColorOpacityMap::updateHistogram()
 {
   auto widget = ActiveObjects::instance().activeWidget();
   auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
+
+  if (vtkWidget == nullptr)
+    m_vtkWidget = false;
 
   if (widget && vtkWidget && widget != m_activeWidget) {
     if (m_activeWidget)
@@ -142,6 +146,7 @@ void ColorOpacityMap::updateHistogram()
   }
 
   if (vtkWidget && m_molecule && m_molecule->cubeCount()) {
+    m_vtkWidget = true;
     vtkNew<vtkTable> table;
     auto imageData = vtkWidget->imageData();
     auto lut = vtkWidget->lut();
@@ -182,4 +187,4 @@ void ColorOpacityMap::render()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -14,52 +14,45 @@
 
 ******************************************************************************/
 
-#include <cmath>
-
 #include "qtaimwavefunctionevaluator.h"
+
+#include <cmath>
 
 namespace Avogadro::QtPlugins {
 
 QTAIMWavefunctionEvaluator::QTAIMWavefunctionEvaluator(QTAIMWavefunction& wfn)
+  : m_nmo(wfn.numberOfMolecularOrbitals()),
+    m_nprim(wfn.numberOfGaussianPrimitives()), m_nnuc(wfn.numberOfNuclei()),
+    m_nucxcoord(
+      Map<const Matrix<qreal, Dynamic, 1>>(wfn.xNuclearCoordinates(), m_nnuc)),
+    m_nucycoord(
+      Map<const Matrix<qreal, Dynamic, 1>>(wfn.yNuclearCoordinates(), m_nnuc)),
+    m_nuczcoord(
+      Map<const Matrix<qreal, Dynamic, 1>>(wfn.zNuclearCoordinates(), m_nnuc)),
+    m_nucz(Map<const Matrix<qint64, Dynamic, 1>>(wfn.nuclearCharges(), m_nnuc)),
+    m_X0(Map<const Matrix<qreal, Dynamic, 1>>(
+      wfn.xGaussianPrimitiveCenterCoordinates(), m_nprim, 1)),
+    m_Y0(Map<const Matrix<qreal, Dynamic, 1>>(
+      wfn.yGaussianPrimitiveCenterCoordinates(), m_nprim, 1)),
+    m_Z0(Map<const Matrix<qreal, Dynamic, 1>>(
+      wfn.zGaussianPrimitiveCenterCoordinates(), m_nprim, 1)),
+    m_xamom(Map<const Matrix<qint64, Dynamic, 1>>(
+      wfn.xGaussianPrimitiveAngularMomenta(), m_nprim, 1)),
+    m_yamom(Map<const Matrix<qint64, Dynamic, 1>>(
+      wfn.yGaussianPrimitiveAngularMomenta(), m_nprim, 1)),
+    m_zamom(Map<const Matrix<qint64, Dynamic, 1>>(
+      wfn.zGaussianPrimitiveAngularMomenta(), m_nprim, 1)),
+    m_alpha(Map<const Matrix<qreal, Dynamic, 1>>(
+      wfn.gaussianPrimitiveExponentCoefficients(), m_nprim, 1)),
+    m_occno(Map<const Matrix<qreal, Dynamic, 1>>(
+      wfn.molecularOrbitalOccupationNumbers(), m_nmo, 1)),
+    m_orbe(Map<const Matrix<qreal, Dynamic, 1>>(
+      wfn.molecularOrbitalEigenvalues(), m_nmo, 1)),
+    m_coef(Map<const Matrix<qreal, Dynamic, Dynamic, RowMajor>>(
+      wfn.molecularOrbitalCoefficients(), m_nmo, m_nprim)),
+    m_totalEnergy(wfn.totalEnergy()), m_virialRatio(wfn.virialRatio()),
+    m_cutoff(log(1.e-15))
 {
-
-  m_nmo = wfn.numberOfMolecularOrbitals();
-  m_nprim = wfn.numberOfGaussianPrimitives();
-  m_nnuc = wfn.numberOfNuclei();
-
-  m_nucxcoord =
-    Map<const Matrix<qreal, Dynamic, 1>>(wfn.xNuclearCoordinates(), m_nnuc);
-  m_nucycoord =
-    Map<const Matrix<qreal, Dynamic, 1>>(wfn.yNuclearCoordinates(), m_nnuc);
-  m_nuczcoord =
-    Map<const Matrix<qreal, Dynamic, 1>>(wfn.zNuclearCoordinates(), m_nnuc);
-  m_nucz = Map<const Matrix<qint64, Dynamic, 1>>(wfn.nuclearCharges(), m_nnuc);
-  m_X0 = Map<const Matrix<qreal, Dynamic, 1>>(
-    wfn.xGaussianPrimitiveCenterCoordinates(), m_nprim, 1);
-  m_Y0 = Map<const Matrix<qreal, Dynamic, 1>>(
-    wfn.yGaussianPrimitiveCenterCoordinates(), m_nprim, 1);
-  m_Z0 = Map<const Matrix<qreal, Dynamic, 1>>(
-    wfn.zGaussianPrimitiveCenterCoordinates(), m_nprim, 1);
-  m_xamom = Map<const Matrix<qint64, Dynamic, 1>>(
-    wfn.xGaussianPrimitiveAngularMomenta(), m_nprim, 1);
-  m_yamom = Map<const Matrix<qint64, Dynamic, 1>>(
-    wfn.yGaussianPrimitiveAngularMomenta(), m_nprim, 1);
-  m_zamom = Map<const Matrix<qint64, Dynamic, 1>>(
-    wfn.zGaussianPrimitiveAngularMomenta(), m_nprim, 1);
-  m_alpha = Map<const Matrix<qreal, Dynamic, 1>>(
-    wfn.gaussianPrimitiveExponentCoefficients(), m_nprim, 1);
-  // TODO Implement screening for unoccupied molecular orbitals.
-  m_occno = Map<const Matrix<qreal, Dynamic, 1>>(
-    wfn.molecularOrbitalOccupationNumbers(), m_nmo, 1);
-  m_orbe = Map<const Matrix<qreal, Dynamic, 1>>(
-    wfn.molecularOrbitalEigenvalues(), m_nmo, 1);
-  m_coef = Map<const Matrix<qreal, Dynamic, Dynamic, RowMajor>>(
-    wfn.molecularOrbitalCoefficients(), m_nmo, m_nprim);
-  m_totalEnergy = wfn.totalEnergy();
-  m_virialRatio = wfn.virialRatio();
-
-  m_cutoff = log(1.e-15);
-
   m_cdg000.resize(m_nmo);
   m_cdg100.resize(m_nmo);
   m_cdg010.resize(m_nmo);
@@ -1202,12 +1195,15 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
         ax0 * b0 * (ay1 + ay0 * by1) * (az2 + 2 * az1 * bz1 + az0 * bz2);
       qreal dg111 =
         b0 * (ax1 + ax0 * bx1) * (ay1 + ay0 * by1) * (az1 + az0 * bz1);
-      qreal dg400 = ay0 * az0 * b0 * (ax4 + 4 * ax3 * bx1 + 6 * ax2 * bx2 +
-                                      4 * ax1 * bx3 + ax0 * bx4);
-      qreal dg040 = ax0 * az0 * b0 * (ay4 + 4 * ay3 * by1 + 6 * ay2 * by2 +
-                                      4 * ay1 * by3 + ay0 * by4);
-      qreal dg004 = ax0 * ay0 * b0 * (az4 + 4 * az3 * bz1 + 6 * az2 * bz2 +
-                                      4 * az1 * bz3 + az0 * bz4);
+      qreal dg400 =
+        ay0 * az0 * b0 *
+        (ax4 + 4 * ax3 * bx1 + 6 * ax2 * bx2 + 4 * ax1 * bx3 + ax0 * bx4);
+      qreal dg040 =
+        ax0 * az0 * b0 *
+        (ay4 + 4 * ay3 * by1 + 6 * ay2 * by2 + 4 * ay1 * by3 + ay0 * by4);
+      qreal dg004 =
+        ax0 * ay0 * b0 *
+        (az4 + 4 * az3 * bz1 + 6 * az2 * bz2 + 4 * az1 * bz3 + az0 * bz4);
       qreal dg310 = az0 * b0 *
                     (ax3 + 3 * ax2 * bx1 + 3 * ax1 * bx2 + ax0 * bx3) *
                     (ay1 + ay0 * by1);
@@ -1611,12 +1607,15 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
         ax0 * b0 * (ay1 + ay0 * by1) * (az2 + 2 * az1 * bz1 + az0 * bz2);
       qreal dg111 =
         b0 * (ax1 + ax0 * bx1) * (ay1 + ay0 * by1) * (az1 + az0 * bz1);
-      qreal dg400 = ay0 * az0 * b0 * (ax4 + 4 * ax3 * bx1 + 6 * ax2 * bx2 +
-                                      4 * ax1 * bx3 + ax0 * bx4);
-      qreal dg040 = ax0 * az0 * b0 * (ay4 + 4 * ay3 * by1 + 6 * ay2 * by2 +
-                                      4 * ay1 * by3 + ay0 * by4);
-      qreal dg004 = ax0 * ay0 * b0 * (az4 + 4 * az3 * bz1 + 6 * az2 * bz2 +
-                                      4 * az1 * bz3 + az0 * bz4);
+      qreal dg400 =
+        ay0 * az0 * b0 *
+        (ax4 + 4 * ax3 * bx1 + 6 * ax2 * bx2 + 4 * ax1 * bx3 + ax0 * bx4);
+      qreal dg040 =
+        ax0 * az0 * b0 *
+        (ay4 + 4 * ay3 * by1 + 6 * ay2 * by2 + 4 * ay1 * by3 + ay0 * by4);
+      qreal dg004 =
+        ax0 * ay0 * b0 *
+        (az4 + 4 * az3 * bz1 + 6 * az2 * bz2 + 4 * az1 * bz3 + az0 * bz4);
       qreal dg310 = az0 * b0 *
                     (ax3 + 3 * ax2 * bx1 + 3 * ax1 * bx2 + ax0 * bx3) *
                     (ay1 + ay0 * by1);
@@ -2194,4 +2193,4 @@ Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::quantumStressTensor(
   return 0.25 * value;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

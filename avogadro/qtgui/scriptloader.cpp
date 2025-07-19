@@ -1,15 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "scriptloader.h"
@@ -23,13 +14,12 @@
 #include <QtCore/QDir>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 
 namespace Avogadro::QtGui {
 
-ScriptLoader::ScriptLoader(QObject* parent_)
-  : QObject(parent_)
-{}
+ScriptLoader::ScriptLoader(QObject* parent_) : QObject(parent_) {}
 
 ScriptLoader::~ScriptLoader() {}
 
@@ -40,20 +30,26 @@ bool ScriptLoader::queryProgramName(const QString& scriptFilePath,
   displayName = gen.displayName();
   if (gen.hasErrors()) {
     displayName.clear();
-    qWarning() << "ScriptLoader::queryProgramName: Unable to retrieve program "
-                  "name for"
-               << scriptFilePath << ";" << gen.errorList().join("\n\n");
+    qWarning() << tr("Cannot load script %1").arg(scriptFilePath);
     return false;
   }
   return true;
 }
 
-QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
+QMultiMap<QString, QString> ScriptLoader::scriptList(const QString& type)
 {
   // List of directories to check.
   /// @todo Custom script locations
   QStringList dirs;
-  QMap<QString, QString> scriptList;
+  QMultiMap<QString, QString> scriptList;
+
+  QSettings settings; // to cache the names of scripts
+  QStringList scriptFiles = settings.value("scripts/" + type).toStringList();
+  QStringList scriptNames =
+    settings.value("scripts/" + type + "/names").toStringList();
+  // hash from the last modified time and size of the scripts
+  QStringList scriptHashes =
+    settings.value("scripts/" + type + "/hashes").toStringList();
 
   // add the default paths
   QStringList stdPaths =
@@ -69,7 +65,9 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
   // build up a list of possible files, then we check if they're real scripts
   QStringList fileList;
   foreach (const QString& dirStr, dirs) {
-    qDebug() << "Checking for " << type << " scripts in" << dirStr;
+#ifndef NDEBUG
+    qDebug() << tr("Checking for %1 scripts in path %2").arg(type).arg(dirStr);
+#endif
     QDir dir(dirStr);
     if (dir.exists() && dir.isReadable()) {
       foreach (
@@ -97,7 +95,7 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
               if (commands.type() == QJsonValue::Array) {
                 // check if "command.*" exists as a file
                 QJsonArray list = commands.toArray();
-                for (auto && i : list) {
+                for (auto&& i : list) {
                   QJsonValue command = i.toObject()["command"];
                   QString name = command.toString();
                   if (name.isEmpty() || name.isNull())
@@ -117,8 +115,8 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
                   }
                 }
               } // "commands" JSON is array
-            }   // document is json
-          }     // plugin.json file exists
+            } // document is json
+          } // plugin.json file exists
 
           continue;
         } // end reading subdirectories with plugin.json
@@ -127,10 +125,25 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
           fileList << filePath;
       }
     } // end dir.exists()
-  }   // end for directory list
+  } // end for directory list
 
   // go through the list of files to see if they're actually scripts
   foreach (const QString& filePath, fileList) {
+    QFileInfo file(filePath);
+    // check if we have this from the last time
+    if (scriptFiles.contains(filePath)) {
+      int index = scriptFiles.indexOf(filePath);
+      if (index != -1) {
+        QString hash = scriptHashes.at(index);
+        // got a match?
+        if (hash ==
+            QString::number(file.size()) + file.lastModified().toString()) {
+          scriptList.insert(scriptNames.at(index), filePath);
+          continue;
+        }
+      }
+    }
+
     QString displayName;
     if (queryProgramName(filePath, displayName)) {
       if (displayName.isEmpty())
@@ -139,18 +152,31 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
       // Might be another script with the same name
       if (scriptList.contains(displayName)) {
         // check the last-modified-time of the existing case
-        QFileInfo file(filePath);
-        QFileInfo existingFile(scriptList[displayName]);
+        QFileInfo existingFile(scriptList.value(displayName));
         if (file.lastModified() > existingFile.lastModified()) {
           // replace existing with this new entry
-          scriptList.insert(displayName, filePath);
+          scriptList.replace(displayName, filePath);
+          // update the cache
+          int index = scriptFiles.indexOf(filePath);
+          if (index != -1) {
+            scriptFiles.replace(index, filePath);
+            scriptNames.replace(index, displayName);
+            scriptHashes.replace(index, QString::number(file.size()) +
+                                          file.lastModified().toString());
+          }
         }
-      } else // new entry
+      } else { // new entry
         scriptList.insert(displayName, filePath);
+        // update the cache
+        scriptFiles << filePath;
+        scriptNames << displayName;
+        scriptHashes << QString::number(file.size()) +
+                          file.lastModified().toString(Qt::ISODate);
+      }
     } // run queryProgramName
-  }   // foreach files
+  } // foreach files
 
   return scriptList;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

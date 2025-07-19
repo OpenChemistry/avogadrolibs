@@ -11,8 +11,7 @@
 namespace Avogadro::QtPlugins {
 
 PdfOptionsDialog::PdfOptionsDialog(QWidget* aParent)
-  : QDialog(aParent)
-  , m_ui(new Ui::PdfOptionsDialog)
+  : QDialog(aParent), m_ui(new Ui::PdfOptionsDialog)
 {
   m_ui->setupUi(this);
 
@@ -44,4 +43,4 @@ void PdfOptionsDialog::accept()
   QDialog::accept();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

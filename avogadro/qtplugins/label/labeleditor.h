@@ -22,8 +22,9 @@ public:
 
   QString name() const override { return tr("Label editor tool"); }
   QString description() const override { return tr("Label editor tool"); }
-  unsigned char priority() const override { return 20; }
+  unsigned char priority() const override { return 25; }
   QAction* activateAction() const override { return m_activateAction; }
+  void setIcon(bool darkTheme = false) override;
 
   void setMolecule(QtGui::Molecule* mol) override
   {

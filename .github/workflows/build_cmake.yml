@@ -1,4 +1,4 @@
-name: CMake Build Matrix
+name: Qt5 Build Matrix
 # Many thanks to Cristian Adam for examples
 # e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
@@ -11,7 +11,13 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON -DQT_VERSION=5
+  CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+  SCCACHE_GHA_ENABLED: "true"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -22,27 +28,11 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu 20.04 GCC", artifact: "Ubuntu-2004.tar.gz",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=Release",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu 18.04 AppImage", artifact: "Avogadro2.AppImage",
-            os: ubuntu-18.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -DCMAKE_BUILD_TYPE=Release",
-            cpack: "",
-          }
-        - {
-            name: "macOS Latest Clang", artifact: "macOS.dmg",
-            os: macos-latest,
+            name: "macOS Clang", artifact: "macOS.dmg",
+            os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF",
             cpack_flags: "-G DragNDrop",
           }
         - {
@@ -50,50 +40,30 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: " ",
+            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
+            ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
           }
         - {
             name: "Ubuntu Address Sanitizer", artifact: "",
-            os: ubuntu-20.04,
+            os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "asan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Leak Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "lsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Thread Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "tsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
             name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
-            os: ubuntu-20.04,
+            os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
 
     steps:
 
-    - name: Install Dependencies (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -102,40 +72,81 @@ jobs:
         else # not self-hosted runner
           brew install ninja eigen glew
         fi
+
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
 
+    - name: Install Dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo add-apt-repository -y universe
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
+        sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
+        sudo apt-get -qq install libgcc-10-dev libgcc-9-dev
+        sudo apt-get -qq install libfuse2
+
     - name: Checkout openchemistry
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: molecules
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: fragments
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: crystals
+
+    - name: Checkout i18n
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadro-i18n
+        path: avogadro-i18n
+
     - name: Checkout avogadroapp
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
+        fetch-depth: 0
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         path: avogadrolibs
-
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v2
-      with:
-        path: ../Qt
-        key: ${{ runner.os }}-QtCache
+        fetch-depth: 0
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        aqtversion: '==3.1.*'
+        cache: true
         version: ${{ env.QT_VERSION }}
-        setup-python: 'false'
+
+    - name: Install OpenSSL (Win64)
+      if: runner.os == 'Windows'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        cache: true
+        host: 'windows'
+        target: 'desktop'
+        tools-only: 'true'
+        tools: 'tools_opensslv3_x64'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
@@ -144,13 +155,15 @@ jobs:
         arch: x64
 
     - name: Grab cache files
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       if: runner.os != 'Windows'
       with:
         path: |
-          ${{ runner.workspace }}/build/thirdparty
           ${{ runner.workspace }}/build/Downloads
-        key: ${{ matrix.config.name }}-thirdparty
+        key: ${{ matrix.config.name }}-downloads
+
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@main
 
     - name: Configure
       run: |
@@ -158,39 +171,17 @@ jobs:
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} ${{env.CACHE}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
-    - name: Fix Mac plugins
-      if: runner.os == 'macOS'
-      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel 
-      run: |
-        for plugin in *.so; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
-            export lib=`echo $libpath | cut -d '/' -f 9`;
-            echo "Fixing $plugin $lib $libpath"
-            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
-          done
-        done
-        cd .. # build/prefix/lib
-        for plugin in libinchi.?.?.?.dylib; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
-            export lib=`echo $libpath | cut -d '/' -f 9`;
-            echo "Fixing $plugin $lib $libpath"
-            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
-          done
-        done
-        otool -L libinchi.?.?.?.dylib
-        cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
-
     - name: Run tests
-      if: matrix.config.os == 'ubuntu-20.04'
+      if: (matrix.config.build_type == 'asan') || (matrix.config.build_type == 'ubsan')
       shell: cmake -P {0}
       run: |
         include(ProcessorCount)
@@ -206,6 +197,39 @@ jobs:
           message(FATAL_ERROR "Running tests failed!")
         endif()
 
+    - name: Fix Mac plugins
+      if: runner.os == 'macOS'
+      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
+      run: |
+        for plugin in *.so; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        cd .. # build/prefix/lib
+        for plugin in libinchi.?.?.?.dylib libopenbabel.?.?.?.dylib; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        otool -L libinchi.?.?.?.dylib
+        otool -L libopenbabel.?.?.?.dylib
+        cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
+        cp -p libopenbabel* ../Avogadro2.app/Contents/Frameworks/
+        # finally, fixup the binaries
+        cd ../bin
+        for exe in obabel obmm eht_bind genXrdPattern; do
+          for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $exe $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
+          done
+        done
+
     - name: Install the Apple certificate
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
       if: runner.os == 'macOS'
@@ -219,13 +243,18 @@ jobs:
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
       run: |
+        # be sure the DMG can be created easily
+        # https://github.com/actions/runner-images/issues/7522#issuecomment-1556766641
+        echo killing...; sudo pkill -9 XProtect >/dev/null || true;
+        echo waiting...; while pgrep XProtect; do sleep 3; done;
+
         # create variables
         if [ -n "${P12_PASSWORD}" ]; then
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 -d -o $CERTIFICATE_PATH
 
           # create temporary keychain if the cert is non-zero
           if [ -s $CERTIFICATE_PATH ]; then
@@ -241,38 +270,24 @@ jobs:
           fi # certificate exists
         fi # password exists
 
-    - name: Pack
-      if: matrix.config.artifact != 0
+    - name: Create Mac and Windows Packages
+      if: runner.os == 'Windows' || runner.os == 'macOS'
       shell: bash
       run: |
         if [ -z "${P12_PASSWORD}" ]; then
           unset CODESIGN_IDENTITY # to prevent cpack failing when trying to sign
         fi
+        if [ -z "${OPENSSL_ROOT_DIR}" ]; then
+          unset OPENSSL_ROOT_DIR
+        fi
+        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date "+%d-%m-%y"`
         cpack ${{ matrix.config.cpack_flags }}
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
+      continue-on-error: true
       env:
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
-      working-directory: ${{ runner.workspace }}/build/avogadroapp
-
-    - name: AppImage
-      if: matrix.config.os == 'ubuntu-18.04'
-      shell: bash
-      run: |
-        mkdir appdir
-        mv prefix appdir/usr
-        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-        wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
-        chmod a+x *.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -extra-plugins=iconengines
-        # add the custom AppRun
-        rm appdir/AppRun
-        cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
-        chmod a+x appdir/AppRun
-        ./appimagetool-x86_64.AppImage appdir
-        mv Avogadro2*.AppImage avogadroapp # for upload
-        # remove the cpack files
-        rm avogadroapp/Avogadro2*Linux.*
-      working-directory: ${{ runner.workspace }}/build
+        OPENSSL_ROOT_DIR: ${{ matrix.config.ssl_env }}
 
     - name: Notarize Mac DMG
       if: runner.os == 'macOS'
@@ -283,24 +298,24 @@ jobs:
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
           codesign -s "$CODESIGN_IDENTITY" --timestamp Avogadro2*.dmg
-          npx notarize-cli --file Avogadro2*.dmg
+          xcrun notarytool submit Avogadro2*.dmg --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
+          xcrun stapler staple -v Avogadro2*.dmg
         fi
       working-directory: ${{ runner.workspace }}/build/avogadroapp
       env:
+        NOTARIZE_TEAM: ${{ secrets.AC_TEAM }}
         NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
         NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
-
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
+      continue-on-error: true
 
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@v2
+      id: upload-artifact
+      uses: actions/upload-artifact@v4
       with:
-        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
+        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro*.*
         name: ${{ matrix.config.artifact }}
 
     - name: Cleanup
@@ -311,4 +326,3 @@ jobs:
         rm -rf ./* || true
         rm -rf ./.??* || true
         ls -la ./
- 

@@ -22,7 +22,7 @@ class FileFormat;
 namespace MoleQueue {
 class InputGeneratorDialog;
 class JobObject;
-}
+} // namespace MoleQueue
 
 namespace QtPlugins {
 
@@ -67,7 +67,6 @@ public slots:
 
 private slots:
   void menuActivated();
-  void configurePython();
 
 private:
   void updateInputGeneratorScripts();
@@ -81,12 +80,12 @@ private:
   QMap<QString, MoleQueue::InputGeneratorDialog*> m_dialogs;
 
   // maps program name --> script file path
-  QMap<QString, QString> m_inputGeneratorScripts;
+  QMultiMap<QString, QString> m_inputGeneratorScripts;
 
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_QUANTUMINPUT_H

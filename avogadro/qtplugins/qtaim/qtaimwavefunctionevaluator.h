@@ -23,10 +23,7 @@
 
 using namespace Eigen;
 
-namespace Avogadro {
-namespace QtPlugins {
-
-class QTAIMWavefunction;
+namespace Avogadro::QtPlugins {
 
 class QTAIMWavefunctionEvaluator
 {
@@ -37,10 +34,8 @@ public:
 
   qreal molecularOrbital(const qint64 mo, const Matrix<qreal, 3, 1> xyz);
   qreal electronDensity(const Matrix<qreal, 3, 1> xyz);
-  Matrix<qreal, 3, 1> gradientOfElectronDensity(
-    const Matrix<qreal, 3, 1> xyz);
-  Matrix<qreal, 3, 3> hessianOfElectronDensity(
-    const Matrix<qreal, 3, 1> xyz);
+  Matrix<qreal, 3, 1> gradientOfElectronDensity(const Matrix<qreal, 3, 1> xyz);
+  Matrix<qreal, 3, 3> hessianOfElectronDensity(const Matrix<qreal, 3, 1> xyz);
   Matrix<qreal, 3, 4> gradientAndHessianOfElectronDensity(
     const Matrix<qreal, 3, 1> xyz);
   qreal laplacianOfElectronDensity(const Matrix<qreal, 3, 1> xyz);
@@ -122,7 +117,6 @@ private:
   static inline qreal ipow(qreal a, qint64 n) { return (qreal)pow(a, (int)n); }
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // QTAIMWAVEFUNCTIONEVALUATOR_H

@@ -310,8 +310,8 @@ void LammpsInputDialog::generateClicked()
           tr("The input files cannot be written:\n\n%1").arg(errors.first());
         break;
       default: {
-        // If a fatal error occurred, it will be last one in the list. Pop it off
-        // and tell the user that it was the reason we had to stop.
+        // If a fatal error occurred, it will be last one in the list. Pop it
+        // off and tell the user that it was the reason we had to stop.
         QString fatal = errors.last();
         QStringList tmp(errors);
         tmp.pop_back();
@@ -625,15 +625,15 @@ QString LammpsInputDialog::generateInputDeck()
   mol << "\n" << getWaterPotential(m_waterPotential) << "\n";
 
   mol << "# Settings\n";
-  mol << "velocity       all create " << fixed << qSetRealNumberPrecision(2)
+  mol << "velocity       all create " << Qt::fixed << qSetRealNumberPrecision(2)
       << m_velocityTemp << " "
       << "4928459 "
       << "rot " << getZeroL() << " "
       << "mom " << getZeroMOM() << " "
       << "dist " << getVelocityDist(m_velocityDist) << "\n";
   mol << getEnsemble(m_ensemble) << "\n";
-  mol << "timestep       " << fixed << qSetRealNumberPrecision(1) << m_timeStep
-      << "\n";
+  mol << "timestep       " << Qt::fixed << qSetRealNumberPrecision(1)
+      << m_timeStep << "\n";
   mol << "\n";
 
   mol << "# Output\n";
@@ -853,9 +853,9 @@ QString LammpsInputDialog::getEnsemble(ensemble t)
       QString ensembleInput;
       QTextStream fix(&ensembleInput);
       fix << "fix            ensemble all nvt"
-          << " temp " << fixed << qSetRealNumberPrecision(2) << m_temperature
-          << " " << fixed << qSetRealNumberPrecision(2) << m_temperature
-          << " 100 "
+          << " temp " << Qt::fixed << qSetRealNumberPrecision(2)
+          << m_temperature << " " << Qt::fixed << qSetRealNumberPrecision(2)
+          << m_temperature << " 100 "
           << "tchain " << m_nhChain << "\n";
       return ensembleInput;
     }
@@ -869,9 +869,9 @@ QString LammpsInputDialog::getEnsemble(ensemble t)
       QString ensembleInput;
       QTextStream fix(&ensembleInput);
       fix << "fix            ensemble all nvt"
-          << " temp " << fixed << qSetRealNumberPrecision(2) << m_temperature
-          << " " << fixed << qSetRealNumberPrecision(2) << m_temperature
-          << " 100 "
+          << " temp " << Qt::fixed << qSetRealNumberPrecision(2)
+          << m_temperature << " " << Qt::fixed << qSetRealNumberPrecision(2)
+          << m_temperature << " 100 "
           << "tchain " << m_nhChain << "\n";
       return ensembleInput;
     }
@@ -964,4 +964,4 @@ void LammpsInputDialog::determineAtomTypesSPC(int& hyd, int& oxy)
   hyd = AtomType.value("O");
   oxy = AtomType.value("H");
 }
-}
+} // namespace Avogadro::QtPlugins

@@ -19,4 +19,4 @@ avogadro_plugin(Selection
   "${tool_rcs}"
 )
 
-target_link_libraries(Selection PRIVATE AvogadroQtOpenGL)
+target_link_libraries(Selection PRIVATE Avogadro::QtOpenGL)

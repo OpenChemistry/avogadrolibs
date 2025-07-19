@@ -49,6 +49,12 @@
  *
  */
 
+#include "qtaimcubature.h"
+
+#include "qtaimcriticalpointlocator.h"
+#include "qtaimlsodaintegrator.h"
+#include "qtaimmathutilities.h"
+
 #include <QDataStream>
 #include <QDebug>
 #include <QDir>
@@ -60,14 +66,10 @@
 #include <QVariantList>
 #include <QVector3D>
 
-#include <QDataStream>
-#include <QDir>
-#include <QFile>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QList>
 #include <QProgressDialog>
-#include <QTemporaryFile>
 #include <QVariant>
 #include <QtConcurrent/QtConcurrentMap>
 
@@ -122,7 +124,7 @@
  scratch as part of a larger code-cleanup, and in order to have
  a single code path for the vectorized and non-vectorized APIs.  I
  subsequently implemented the algorithm by Gladwell to extract
- even more parallelism by evalutating many hypercubes at once.)
+ even more parallelism by evaluating many hypercubes at once.)
 
  TODO:
 
@@ -148,8 +150,6 @@
     To compile a test program, compile cubature.c with
     -DTEST_INTEGRATOR as described at the end. */
 
-#include "qtaimcubature.h"
-
 using namespace Avogadro::QtPlugins;
 
 /* error return codes */
@@ -159,10 +159,10 @@ using namespace Avogadro::QtPlugins;
 /***************************************************************************/
 /* Basic datatypes */
 
-typedef struct
+using esterr = struct
 {
   double val, err;
-} esterr;
+};
 
 static double relError(esterr ee)
 {
@@ -179,12 +179,12 @@ static double errMax(unsigned int fdim, const esterr* ee)
   return errmax;
 }
 
-typedef struct
+using hypercube = struct
 {
   unsigned int dim;
   double* data; /* length 2*dim = center followed by half-widths */
   double vol;   /* cache volume = product of widths */
-} hypercube;
+};
 
 static double compute_vol(const hypercube* h)
 {
@@ -234,14 +234,14 @@ static void destroy_hypercube(hypercube* h)
   h->dim = 0;
 }
 
-typedef struct
+using region = struct
 {
   hypercube h;
   unsigned int splitDim;
   unsigned int fdim; /* dimensionality of vector integrand */
   esterr* ee;        /* array of length fdim */
   double errmax;     /* max ee[k].err */
-} region;
+};
 
 static region make_region(const hypercube* h, unsigned int fdim)
 {
@@ -277,12 +277,11 @@ static int cut_region(region* R, region* R2)
 
 struct rule_s; /* forward declaration */
 
-typedef int (*evalError_func)(struct rule_s* r, unsigned int fdim,
-                              integrand_v f, void* fdata, unsigned int nR,
-                              region* R);
-typedef void (*destroy_func)(struct rule_s* r);
+using evalError_func = int (*)(struct rule_s*, unsigned int, integrand_v, void*,
+                               unsigned int, region*);
+using destroy_func = void (*)(struct rule_s*);
 
-typedef struct rule_s
+using rule = struct rule_s
 {
   unsigned int dim, fdim;   /* the dimensionality & number of functions */
   unsigned int num_points;  /* number of evaluation points */
@@ -291,7 +290,7 @@ typedef struct rule_s
   double* vals;             /* num_regions * num_points * fdim */
   evalError_func evalError;
   destroy_func destroy;
-} rule;
+};
 
 static void destroy_rule(rule* r)
 {
@@ -501,7 +500,7 @@ static void evalR0_0fs4d(double* pts, unsigned int dim, double* p,
          J. Numer. Anal. 20 (3), 580-588 (1983).
 */
 
-typedef struct
+using rule75genzmalik = struct
 {
   rule parent;
 
@@ -511,7 +510,7 @@ typedef struct
   /* dimension-dependent constants */
   double weight1, weight3, weight5;
   double weightE1, weightE3;
-} rule75genzmalik;
+};
 
 #define real(x) ((double)(x))
 #define to_int(n) ((int)(n))
@@ -706,10 +705,14 @@ static int rule15gauss_evalError(rule* r, unsigned int fdim, integrand_v f,
   const unsigned int n = 8;
   const double xgk[8] = {
     /* abscissae of the 15-point kronrod rule */
-    0.991455371120812639206854697526329, 0.949107912342758524526189684047851,
-    0.864864423359769072789712788640926, 0.741531185599394439863864773280788,
-    0.586087235467691130294144838258730, 0.405845151377397166906606412076961,
-    0.207784955007898467600689403773245, 0.000000000000000000000000000000000
+    0.991455371120812639206854697526329,
+    0.949107912342758524526189684047851,
+    0.864864423359769072789712788640926,
+    0.741531185599394439863864773280788,
+    0.586087235467691130294144838258730,
+    0.405845151377397166906606412076961,
+    0.207784955007898467600689403773245,
+    0.000000000000000000000000000000000
     /* xgk[1], xgk[3], ... abscissae of the 7-point gauss rule.
        xgk[0], xgk[2], ... to optimally extend the 7-point gauss rule */
   };
@@ -838,16 +841,16 @@ static rule* make_rule15gauss(unsigned int dim, unsigned int fdim)
    Cormen, Leiserson, and Rivest), for use as a priority queue of
    regions to integrate. */
 
-typedef region heap_item;
+using heap_item = region;
 #define KEY(hi) ((hi).errmax)
 
-typedef struct
+using heap = struct
 {
   unsigned int n, nalloc;
   heap_item* items;
   unsigned int fdim;
   esterr* ee; /* array of length fdim of the total integrand & error */
-} heap;
+};
 
 static void heap_resize(heap* h, unsigned int nalloc)
 {
@@ -1131,12 +1134,12 @@ int adapt_integrate_v(unsigned int fdim, integrand_v f, void* fdata,
 }
 
 /* wrapper around non-vectorized integrand */
-typedef struct fv_data_s
+using fv_data = struct fv_data_s
 {
   integrand f;
   void* fdata;
   double* fval1;
-} fv_data;
+};
 static void fv(unsigned int ndim, unsigned int npt, const double* x, void* d_,
                unsigned int fdim, double* fval)
 {
@@ -1246,7 +1249,7 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
     counter++;
     basinList.append(basin);
   }
-  QSet<qint64> basinSet = basinList.toSet();
+  QSet<qint64> basinSet(basinList.begin(), basinList.end());
 
   QTAIMWavefunction wfn;
   wfn.loadFromBinaryFile(wfnFileName);
@@ -1280,7 +1283,7 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
     ode.setBetaSpheres(betaSpheres);
 
     QVector3D endpoint = ode.integrate(QVector3D(x0, y0, z0));
-// QList<QVector3D> path=ode.path();
+    // QList<QVector3D> path=ode.path();
 
 #define HUGE_REAL_NUMBER 1.e20
     qreal smallestDistance = HUGE_REAL_NUMBER;
@@ -1408,7 +1411,7 @@ void property_v(unsigned int /* ndim */, unsigned int npts, const double* xyz,
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Atomic Basin Integration"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -1506,7 +1509,7 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
     counter++;
     basinList.append(basin);
   }
-  QSet<qint64> basinSet = basinList.toSet();
+  QSet<qint64> basinSet(basinList.begin(), basinList.end());
 
   Matrix<qreal, 3, 1> r0t0p0;
   r0t0p0 << r0, t0, p0;
@@ -1553,7 +1556,7 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
     ode.setBetaSpheres(betaSpheres);
 
     QVector3D endpoint = ode.integrate(QVector3D(x0, y0, z0));
-// QList<QVector3D> path=ode.path();
+    // QList<QVector3D> path=ode.path();
 
 #define HUGE_REAL_NUMBER 1.e20
     qreal smallestDistance = HUGE_REAL_NUMBER;
@@ -1591,7 +1594,7 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
             r0 * r0 * sin(t0) *
             eval.electronDensity(Eigen::Vector3d(x0, y0, z0))
 
-              );
+          );
         } else {
           qDebug() << "mode not defined";
           qreal zero = 0.0;
@@ -1688,7 +1691,7 @@ void property_v_rtp(unsigned int /* ndim */, unsigned int npts,
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Atomic Basin Integration"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -1850,7 +1853,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
     counter++;
     basinList.append(basin);
   }
-  QSet<qint64> basinSet = basinList.toSet();
+  QSet<qint64> basinSet(basinList.begin(), basinList.end());
 
   QTAIMWavefunction wfn;
   wfn.loadFromBinaryFile(wfnFileName);
@@ -1872,7 +1875,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
   ode.setBetaSpheres(betaSpheres);
 
   // Determine radial basin limit via bisection
-  // Bisection Algorithm courtesey of Wikipedia
+  // Bisection Algorithm courtesy of Wikipedia
 
   qint64 thisBasin = basinList.at(0);
   Matrix<qreal, 3, 1> origin;
@@ -2168,7 +2171,7 @@ void property_v_tp(unsigned int /* ndim */, unsigned int npts,
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Atomic Basin Integration"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -2387,4 +2390,4 @@ QString QTAIMCubature::temporaryFileName()
   return tempFileName;
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

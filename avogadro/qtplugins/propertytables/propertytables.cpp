@@ -7,7 +7,7 @@
 #include "propertymodel.h"
 #include "propertyview.h"
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QScrollBar>
@@ -26,30 +26,43 @@ PropertyTables::PropertyTables(QObject* parent_)
   auto* action = new QAction(this);
   action->setText(tr("Atom Properties…"));
   action->setData(PropertyType::AtomType);
+  action->setProperty("menu priority", 880);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Bond Properties…"));
   action->setData(PropertyType::BondType);
+  action->setProperty("menu priority", 870);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Angle Properties…"));
   action->setData(PropertyType::AngleType);
+  action->setProperty("menu priority", 860);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Torsion Properties…"));
   action->setData(PropertyType::TorsionType);
+  action->setProperty("menu priority", 850);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Residue Properties…"));
   action->setData(PropertyType::ResidueType);
+  action->setProperty("menu priority", 840);
+  action->setEnabled(false); // changed by molecule
+  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  m_actions.append(action);
+
+  action = new QAction(this);
+  action->setText(tr("Conformer Properties…"));
+  action->setData(PropertyType::ConformerType);
+  action->setProperty("menu priority", 830);
   action->setEnabled(false); // changed by molecule
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
@@ -70,7 +83,7 @@ QList<QAction*> PropertyTables::actions() const
 
 QStringList PropertyTables::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Analysis") << tr("&Properties");
+  return QStringList() << tr("&Analyze") << tr("&Properties");
 }
 
 void PropertyTables::setMolecule(QtGui::Molecule* mol)
@@ -80,12 +93,26 @@ void PropertyTables::setMolecule(QtGui::Molecule* mol)
 
   m_molecule = mol;
 
-  // check if there are residues
-  if (m_molecule->residueCount() > 0) {
-    for (const auto& action : m_actions) {
-      if (action->data().toInt() == PropertyType::ResidueType)
-        action->setEnabled(true);
-    }
+  updateActions();
+
+  // update if the molecule changes
+  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
+}
+
+void PropertyTables::updateActions()
+{
+  if (m_molecule == nullptr)
+    return;
+
+  // check if we enable / disable the residue and conformer actions
+  bool haveResidues = (m_molecule->residueCount() > 0);
+  // technically coordinate sets
+  bool haveConformers = (m_molecule->coordinate3dCount() > 1);
+  for (const auto& action : m_actions) {
+    if (action->data().toInt() == PropertyType::ResidueType)
+      action->setEnabled(haveResidues);
+    else if (action->data().toInt() == PropertyType::ConformerType)
+      action->setEnabled(haveConformers);
   }
 }
 
@@ -97,6 +124,10 @@ void PropertyTables::showDialog()
 
   if (action->data().toInt() == PropertyType::ResidueType &&
       m_molecule->residueCount() == 0)
+    return;
+
+  if (action->data().toInt() == PropertyType::ConformerType &&
+      m_molecule->coordinate3dCount() < 2)
     return;
 
   auto* dialog = new QDialog(qobject_cast<QWidget*>(parent()));
@@ -125,6 +156,7 @@ void PropertyTables::showDialog()
   view->setSourceModel(model);
 
   view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  view->horizontalHeader()->setStretchLastSection(true);
   view->resizeColumnsToContents();
   layout->addWidget(view);
   dialog->setWindowTitle(view->windowTitle());
@@ -144,4 +176,4 @@ void PropertyTables::showDialog()
   dialog->show();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

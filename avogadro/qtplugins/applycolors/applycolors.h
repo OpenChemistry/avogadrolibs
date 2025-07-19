@@ -8,13 +8,13 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-#include "tinycolormap.hpp"
+#include <tinycolormap.hpp>
 
 #include <QtGui/QColor>
 
 class QColorDialog;
-namespace Avogadro {
-namespace QtPlugins {
+
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The ApplyColors class is an extension to modify apply custom colors.
@@ -57,10 +57,8 @@ private:
   QColorDialog* m_dialog;
 
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
-
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_APPLYCOLORS_H
