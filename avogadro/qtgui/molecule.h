@@ -18,6 +18,7 @@
 #include <list>
 
 namespace Avogadro {
+
 namespace QtGui {
 
 class Mesh;
