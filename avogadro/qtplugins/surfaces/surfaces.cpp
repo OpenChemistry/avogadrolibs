@@ -343,7 +343,7 @@ float Surfaces::resolution(float specified)
     }
   }
 
-  r = std::max(minimum, std::min(maximum, r));
+  r = std::clamp(r, minimum, maximum);
   return r;
 }
 

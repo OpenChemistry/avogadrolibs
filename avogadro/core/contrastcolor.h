@@ -28,7 +28,7 @@ inline Vector3ub contrastColor(const Vector3ub& rgb)
       result[i] = static_cast<unsigned char>(255 - (input / 4));
 
     // Clamp to 32-->223 to prevent pure black/white
-    result[i] = std::min(maxVal, std::max(minVal, result[i]));
+    result[i] = std::clamp(result[i], minVal, maxVal);
   }
 
   return result;

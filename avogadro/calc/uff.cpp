@@ -1015,7 +1015,7 @@ public:
       // we also need the angle between the bonds (i.e., j-i-k)
       Real cosTheta = ij.dot(ik) / (rij * rik);
       // clamp the cosTheta to -1 to 1
-      cosTheta = std::max(-1.0, std::min(1.0, cosTheta));
+      cosTheta = std::clamp(cosTheta, -1.0, 1.0);
       Real theta = acos(cosTheta);
       Real sinTheta = sin(theta);
 
@@ -1145,8 +1145,8 @@ public:
       // grad_j and grad_k are a bit more complicated
 
       // clamp the cosines to -1 to 1
-      cosAngleIJK = std::max(-1.0, std::min(1.0, cosAngleIJK));
-      cosAngleJKL = std::max(-1.0, std::min(1.0, cosAngleJKL));
+      cosAngleIJK = std::clamp(cosAngleIJK, -1.0, 1.0);
+      cosAngleJKL = std::clamp(cosAngleJKL, -1.0, 1.0);
 
       Real fraction1 = (rij / rjk) * (-cosAngleIJK);
       Real fraction2 = (rkl / rjk) * (-cosAngleJKL);
