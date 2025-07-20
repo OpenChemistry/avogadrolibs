@@ -5,13 +5,14 @@
 # Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2014.
 # Michalis <michalisntovas@yahoo.gr>, 2021.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
 "PO-Revision-Date: 2025-07-20 17:30+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/el/>\n"
 "Language: el\n"
@@ -4807,7 +4808,7 @@ msgstr "&Επιλογή"
 #, fuzzy
 #| msgid "Color by Element"
 msgid "Select Element"
-msgstr ""
+msgstr "Επιλέξτε στοιχείο"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
