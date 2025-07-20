@@ -7,6 +7,7 @@
 #define AVOGADRO_CALC_GRADIENTS_H
 
 #include <avogadro/core/vector.h>
+#include <avogadro/core/angletools.h>
 
 #include <cmath>
 
