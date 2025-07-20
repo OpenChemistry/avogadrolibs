@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-23 19:17+0000\n"
+"PO-Revision-Date: 2025-07-20 17:30+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/el/>\n"
@@ -4807,7 +4807,7 @@ msgstr "&Επιλογή"
 #, fuzzy
 #| msgid "Color by Element"
 msgid "Select Element"
-msgstr "Χρώμα κατά στοιχείο"
+msgstr ""
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
