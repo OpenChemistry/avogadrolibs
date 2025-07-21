@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-23 19:17+0000\n"
+"PO-Revision-Date: 2025-07-21 20:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -1419,9 +1419,8 @@ msgid "Scale Cell Volume"
 msgstr "Změnit velikost objemu jednotkové buňky"
 
 #: qtgui/rwmolecule.cpp:542
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Superbuňka"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:566
 msgid "Niggli Reduction"
@@ -2727,9 +2726,8 @@ msgid "Scale Cell &Volume…"
 msgstr "Změnit velikost buňky k &objemu…"
 
 #: qtplugins/crystal/crystal.cpp:74
-#, fuzzy
 msgid "Build &Supercell…"
-msgstr "&Superbuňka"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -3733,7 +3731,7 @@ msgstr "Soubory CSV (*.csv);;Všechny soubory (*)"
 #, fuzzy
 #| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
-msgstr "Nepodařilo se otevřít soubor '%1' pro zápis."
+msgstr "Nepodařilo se otevřít soubor pro zápis."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:293
