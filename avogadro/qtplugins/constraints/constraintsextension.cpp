@@ -8,6 +8,7 @@
 #include "constraintsmodel.h"
 
 #include <QAction>
+#include <QDebug>
 
 // #include <QTextStream>
 // #include <QString>
@@ -42,6 +43,12 @@ QStringList ConstraintsExtension::menuPath(QAction*) const
 
 void ConstraintsExtension::openDialog()
 {
+  // update the constraints before we show the dialog
+  if (m_molecule != nullptr)
+    m_dialog->setMolecule(m_molecule);
+
+  m_dialog->updateConstraints();
+
   m_dialog->show();
   m_dialog->raise();
 }

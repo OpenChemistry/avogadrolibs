@@ -23,9 +23,9 @@ void ConstraintsModel::emitDataChanged()
 void ConstraintsModel::setConstraints(
   const std::vector<Core::Constraint>& constraints)
 {
+  beginResetModel();
   m_constraints = constraints;
-  // update everything
-  emitDataChanged();
+  endResetModel();
 }
 
 int ConstraintsModel::rowCount(const QModelIndex&) const
@@ -57,26 +57,33 @@ QVariant ConstraintsModel::data(const QModelIndex& index, int role) const
     switch (index.column()) {
       case 0:
         if (currentConstraint.type() == 1)
-          return tr("Freeze Atom", "fix / remain constant");
-        else if (currentConstraint.type() == 2)
-          return tr("Freeze X Axis", "fix / remain constant");
-        else if (currentConstraint.type() == 3)
-          return tr("Freeze Y Axis", "fix / remain constant");
-        else if (currentConstraint.type() == 4)
-          return tr("Freeze Z Axis", "fix / remain constant");
-        else if (currentConstraint.type() == 5)
           return tr("Distance");
-        else if (currentConstraint.type() == 6)
+        else if (currentConstraint.type() == 2)
           return tr("Angle");
-        else if (currentConstraint.type() == 7)
+        else if (currentConstraint.type() == 3)
           return tr("Torsion Angle");
+        // these aren't really implemented in the UI yet
+        // but we're saving the strings for translation
+        else if (currentConstraint.type() == 4)
+          return tr("Freeze Atom", "fix / remain constant");
+        else if (currentConstraint.type() == 5)
+          return tr("Freeze X Axis", "fix / remain constant");
+        else if (currentConstraint.type() == 6)
+          return tr("Freeze Y Axis", "fix / remain constant");
+        else if (currentConstraint.type() == 7)
+          return tr("Freeze Z Axis", "fix / remain constant");
         break;
       case 1:
         // TODO handle fixed-length number and sorting
-        return currentConstraint.value();
+        if (currentConstraint.type() == 1)
+          return QString("%1 Å").arg(currentConstraint.value(), 0, 'f', 3);
+        else if (currentConstraint.type() == 2 || currentConstraint.type() == 3)
+          return QString("%1 °").arg(currentConstraint.value(), 0, 'f', 3);
+        else
+          return "--";
         break;
       case 2:
-        if (aIndex != 0 && aIndex != MaxIndex)
+        if (aIndex != MaxIndex)
           return QVariant(static_cast<qulonglong>(aIndex));
         else
           return "--";
@@ -135,7 +142,7 @@ QVariant ConstraintsModel::headerData(int section, Qt::Orientation orientation,
     }
   }
 
-  return tr("Constraint %1").arg(section + 1);
+  return section + 1;
 }
 
 void ConstraintsModel::addConstraint(int type, int a, int b, int c, int d,

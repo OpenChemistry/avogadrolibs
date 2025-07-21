@@ -28,15 +28,24 @@ ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f)
           SLOT(deleteConstraint()));
   connect(ui->deleteAllConstraints, SIGNAL(clicked()), this,
           SLOT(deleteAllConstraints()));
-  //      connect( ui->HighlightButton, SIGNAL( clicked() ), this, SLOT(
-  //      highlightSelected()));
-  connect(ui->highlightCheckBox, SIGNAL(stateChanged(int)), this,
-          SLOT(connectHighlight(int)));
 
   changeType(0);
 
   // TODO use sort model
-  ui->constraintsTableView->setModel(m_model);
+  auto* proxyModel = new QSortFilterProxyModel(this);
+  proxyModel->setSourceModel(m_model);
+  proxyModel->setDynamicSortFilter(true);
+  proxyModel->setSortLocaleAware(true);
+  // this role will received direct floating-point numbers from the model
+  proxyModel->setSortRole(Qt::UserRole);
+
+  auto* view = ui->constraintsTableView;
+  view->setModel(m_model);
+  view->resizeColumnsToContents();
+  // Alternating row colors
+  view->setAlternatingRowColors(true);
+  // Allow sorting the table
+  view->setSortingEnabled(true);
 }
 
 ConstraintsDialog::~ConstraintsDialog()
@@ -54,12 +63,18 @@ void ConstraintsDialog::setMolecule(QtGui::Molecule* molecule)
           SLOT(updateConstraints()));
 }
 
-void ConstraintsDialog::highlightSelected() {}
+void ConstraintsDialog::highlightSelected()
+{
+  // TODO: select the constraint atoms in the molecule
+}
 
 void ConstraintsDialog::updateConstraints()
 {
   if (m_molecule == nullptr || m_model == nullptr)
-    m_model->setConstraints(m_molecule->constraints());
+    return;
+
+  m_model->setConstraints(m_molecule->constraints());
+  ui->constraintsTableView->resizeColumnsToContents();
 
   // update the maximum atoms on the spin boxes
   Index maxAtom = m_molecule->atomCount() - 1;
@@ -76,13 +91,20 @@ void ConstraintsDialog::changeType(int newType)
   ui->editC->setEnabled(false);
   ui->editD->setEnabled(false);
 
+  ui->editB->setMinimum(0);
+  ui->editC->setMinimum(0);
+  ui->editD->setMinimum(0);
+
   switch (newType) {
     case 2: // torsion
       ui->editD->setEnabled(true);
+      ui->editD->setMinimum(1);
     case 1: // angle
       ui->editC->setEnabled(true);
+      ui->editC->setMinimum(1);
     case 0: // distance
       ui->editB->setEnabled(true);
+      ui->editB->setMinimum(1);
   }
 
   if (newType == 0)
@@ -98,8 +120,10 @@ void ConstraintsDialog::acceptConstraints()
 
 void ConstraintsDialog::deleteConstraint()
 {
-  // TODO:
-  //  ui->ConstraintsTableView->currentIndex().row();
+  if (m_molecule == nullptr)
+    return;
+
+  auto row = ui->constraintsTableView->currentIndex().row();
 }
 
 void ConstraintsDialog::addConstraint()

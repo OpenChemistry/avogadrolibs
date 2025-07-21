@@ -544,6 +544,8 @@ void Forcefield::freezeSelected()
       m_molecule->setFrozenAtom(i, true);
     }
   }
+
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
 }
 
 void Forcefield::unfreezeSelected()
@@ -558,6 +560,8 @@ void Forcefield::unfreezeSelected()
       m_molecule->setFrozenAtom(i, false);
     }
   }
+
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
 }
 
 void Forcefield::fuseSelected()
@@ -584,6 +588,8 @@ void Forcefield::fuseSelected()
       }
     }
   }
+
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
 }
 
 void Forcefield::refreshScripts()
