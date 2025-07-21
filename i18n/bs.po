@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-07-01 18:01+0000\n"
+"PO-Revision-Date: 2025-07-21 20:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
@@ -1408,9 +1408,8 @@ msgid "Scale Cell Volume"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:542
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Super ćelija"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:566
 msgid "Niggli Reduction"
@@ -2695,9 +2694,8 @@ msgid "Scale Cell &Volume…"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:74
-#, fuzzy
 msgid "Build &Supercell…"
-msgstr "&Super ćelija"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -3680,7 +3678,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
-msgstr "Ne može se otvoriti datoteka '%1' za pisanje."
+msgstr "Ne može se otvoriti datoteka za pisanje."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:293
