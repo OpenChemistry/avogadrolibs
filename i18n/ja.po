@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-23 19:17+0000\n"
+"PO-Revision-Date: 2025-07-21 20:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -452,10 +452,10 @@ msgid "Error Submitting Job"
 msgstr "ジョブの投入でエラー"
 
 #: molequeue/molequeuedialog.cpp:128
-#, qt-format
+#, fuzzy, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "MoleQueueにジョブは拒否されました: %1"
 
 #: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
@@ -510,7 +510,7 @@ msgstr "ヘリウム (Helium)"
 
 #: qtgui/elementtranslator.cpp:25
 msgid "Lithium"
-msgstr "リチウム (Lithium）"
+msgstr "リチウム (Lithium)"
 
 #: qtgui/elementtranslator.cpp:28
 msgid "Beryllium"
@@ -2059,12 +2059,10 @@ msgid "Bond"
 msgstr "結合"
 
 #: qtplugins/bonding/bonding.cpp:73
-#, fuzzy
 msgid "Remove bonds from all or selected atoms."
 msgstr "すべて、あるいは選択した原子から結合を削除。"
 
 #: qtplugins/bonding/bonding.cpp:75
-#, fuzzy
 msgid "Create bonds between all or selected atoms."
 msgstr "すべて、または選択した原子の間に結合を作成。"
 
@@ -2192,8 +2190,9 @@ msgid "Render close contacts between atoms."
 msgstr "原子間の接触を表示。"
 
 #: qtplugins/closecontacts/closecontacts.h:54
+#, fuzzy
 msgid "Contact"
-msgstr ""
+msgstr "接触"
 
 #: qtplugins/closecontacts/closecontacts.h:55
 msgid "Salt Bridge"
@@ -2722,7 +2721,6 @@ msgid "Scale Cell &Volume…"
 msgstr "セル体積を拡大縮小 (&V)…"
 
 #: qtplugins/crystal/crystal.cpp:74
-#, fuzzy
 msgid "Build &Supercell…"
 msgstr "スーパーセルを構築 (&S)…"
 
@@ -3278,7 +3276,7 @@ msgstr "DNAを挿入"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
-msgstr ""
+msgstr "ダイアログでDNA/RNAフラグメントを挿入"
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
 msgid "Molecule…"
@@ -3334,12 +3332,10 @@ msgid "Element"
 msgstr "元素"
 
 #: qtplugins/label/label.cpp:184
-#, fuzzy
 msgid "Element & Number"
 msgstr "元素と番号"
 
 #: qtplugins/label/label.cpp:186
-#, fuzzy
 msgid "Element & ID"
 msgstr "元素とID"
 
@@ -3704,7 +3700,7 @@ msgid "Navigate"
 msgstr "ナビゲーション"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool \t(%1)\n"
 "\n"
@@ -3712,6 +3708,11 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"ナビゲーションツール \t(%1)\n"
+"\n"
+"左クリック: \tクリックしたままドラッグしてビューを回転\n"
+"ミドルクリック: \tクリックしたままドラッグして拡大または縮小\n"
+"右クリック: \tクリックしたままドラッグしてビューを移動\n"
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3760,8 +3761,9 @@ msgid "Angle tolerance:"
 msgstr "角度の許容値:"
 
 #: qtplugins/noncovalent/noncovalent.h:34
+#, fuzzy
 msgid "Render a few non-covalent interactions."
-msgstr ""
+msgstr "非共有な相互作用を描画"
 
 #: qtplugins/noncovalent/noncovalent.h:54
 msgid "Halogen"
@@ -3856,10 +3858,10 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
-#, qt-format
+#, fuzzy, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
-msgstr ""
+msgstr "%1を開始中…"
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
 #: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
@@ -3876,8 +3878,9 @@ msgstr "分子を更新中…"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
+#, fuzzy
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Open Babel出力の解釈でエラー"
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
 #: qtplugins/openbabel/openbabel.cpp:790
@@ -3905,7 +3908,7 @@ msgstr "配座異性体の生成"
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Open Babelでファイルを開けません。"
 
 #: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -3946,7 +3949,7 @@ msgstr "Open Babelインプットを生成中…"
 
 #: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Open Babelインプットの生成でエラー"
 
 #: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
 #: qtplugins/openbabel/openbabel.cpp:941
@@ -4003,11 +4006,12 @@ msgstr "&OpenMMスクリプト…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
-msgstr ""
+msgstr "OpenMMインプット"
 
 #: qtplugins/openmminput/openmminput.h:35
+#, fuzzy
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "OpenMMインプットを生成"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
 msgid ""
@@ -4038,12 +4042,14 @@ msgstr "gro"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:497:1280
+#, fuzzy
 msgid "input.prmtop"
-msgstr ""
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:499
+#, fuzzy
 msgid "input.top"
-msgstr ""
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:502
 #: qtplugins/openmminput/openmminputdialog.cpp:926
@@ -4071,9 +4077,8 @@ msgstr "top"
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
 #: qtplugins/openmminput/openmminputdialog.cpp:1069:1397 rc.cpp:1412
-#, fuzzy
 msgid "True"
-msgstr "True"
+msgstr "真"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
@@ -4142,8 +4147,9 @@ msgstr "動的結合？"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
 #: qtplugins/playertool/playertool.cpp:144:1899
+#, fuzzy
 msgid "Record Movie…"
-msgstr ""
+msgstr "ムービーを録画…"
 
 #: qtplugins/playertool/playertool.cpp:248
 #: qtplugins/playertool/playertool.cpp:353
@@ -4197,11 +4203,11 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
-msgstr ""
+msgstr "PDFパターンの生成に失敗"
 
 #: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:121
 msgid "Error message: "
-msgstr "エラーメッセージ： "
+msgstr "エラーメッセージ: "
 
 #: qtplugins/plotpdf/plotpdf.h:33
 msgid "PlotPdf"
@@ -4220,8 +4226,9 @@ msgid "PlotRmsd"
 msgstr ""
 
 #: qtplugins/plotrmsd/plotrmsd.h:64
+#, fuzzy
 msgid "Generate and plot an RMSD curve."
-msgstr ""
+msgstr "RMSD曲線を作成してプロット"
 
 #: qtplugins/plotxrd/plotxrd.cpp:35
 msgid "Plot Theoretical XRD Pattern…"
@@ -4266,9 +4273,8 @@ msgid "Version"
 msgstr "バージョン"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:64
-#, fuzzy
 msgid "Description"
-msgstr "記述"
+msgstr "説明"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:100
 msgid "Error downloading plugin data."
@@ -4369,7 +4375,7 @@ msgstr "PLYによりシーンを描画"
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-RAY描画…"
+msgstr "POV-Ray描画…"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4661,8 +4667,6 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge:"
 msgid "Script Charge Models"
 msgstr "電荷モデルのスクリプト"
 
@@ -4727,7 +4731,7 @@ msgstr "選択を縮小"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "選択から新しいレイヤーを作成"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
@@ -4790,7 +4794,7 @@ msgid "Selection"
 msgstr "選択"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool \t(%1)\n"
 "\n"
@@ -4800,6 +4804,13 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
+"選択ツール (%1)\n"
+"\n"
+"左クリック: \t個別の原子、残基、またはフラグメントを選択\n"
+"\tドラッグして複数の原子を選択\n"
+"右クリック: \t分子でないところをクリックして選択解除\n"
+"Ctrlで選択を反転、shiftで選択を追加\n"
+"ダブルクリック: \tフラグメント全体をクリック"
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
 #, fuzzy
@@ -4826,8 +4837,9 @@ msgid "Symmetrize"
 msgstr "対称化"
 
 #: qtplugins/spacegroup/spacegroup.cpp:73
+#, fuzzy
 msgid "Fill Unit Cell…"
-msgstr ""
+msgstr "ユニットセルを埋める…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:79
 #: qtplugins/spacegroup/spacegroup.cpp:338
@@ -4843,7 +4855,6 @@ msgid "Space Group"
 msgstr "空間群"
 
 #: qtplugins/spacegroup/spacegroup.cpp:116
-#, fuzzy
 msgid "Fill symmetric atoms based on the crystal space group."
 msgstr "結晶の空間群に基づいて対称な原子を追加。"
 
@@ -5198,7 +5209,7 @@ msgstr "動画のエクスポート"
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "MP4動画 (*.mp4);;AVI動画 (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
@@ -5256,7 +5267,7 @@ msgid "Template"
 msgstr "テンプレート"
 
 #: qtplugins/templatetool/templatetool.cpp:84
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Template Tool \t(%1)\n"
 "\n"
@@ -5266,6 +5277,12 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
+"テンプレートツール \t(%1)\n"
+"\n"
+"金属中心を含むフラグメントを挿入\n"
+"元素と座標を選択し、フラグメントの挿入をクリック\n"
+"\n"
+"リガンドまたは官能基を選択して付加する水素をクリック"
 
 #: qtplugins/templatetool/templatetool.cpp:316
 #: qtplugins/templatetool/templatetool.cpp:484
@@ -5435,8 +5452,9 @@ msgstr "計算設定"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
+#, fuzzy
 msgid "Placeholder text…"
-msgstr ""
+msgstr "仮のテキスト…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
@@ -5449,8 +5467,9 @@ msgstr "リセット"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:93
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
+#, fuzzy
 msgid "Debug Script…"
-msgstr ""
+msgstr "スクリプトをデバッグ…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -5713,8 +5732,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Enable surface rendering"
-msgstr ""
+msgstr "表面を描画"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5953,9 +5973,8 @@ msgstr "LSD"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:449
 #. i18n: ectx: property (text), widget (QCheckBox, lsdcheckBox)
-#, fuzzy
 msgid "TRUE"
-msgstr "TRUE"
+msgstr "真"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:471
 #. i18n: ectx: property (text), widget (QLabel, label_12)
@@ -6230,8 +6249,9 @@ msgstr "状態:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:107
 #. i18n: ectx: property (text), widget (QLabel, label_13)
+#, fuzzy
 msgid "CONV THRESH"
-msgstr ""
+msgstr "収束の閾値"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -7259,7 +7279,7 @@ msgstr "AMBER10"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_waterModel)
 msgid "Water Model:"
-msgstr ""
+msgstr "水のモデル:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:145
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
@@ -7402,9 +7422,8 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, initVelCombo)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:813
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
-#, fuzzy
 msgid "False"
-msgstr "False"
+msgstr "偽"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:415
 #. i18n: ectx: property (text), widget (QLabel, label_nonBondedCutoff)
@@ -7617,8 +7636,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Maximum Radius:"
-msgstr ""
+msgstr "最大半径:"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label2)
@@ -8144,8 +8164,6 @@ msgstr "+7"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
-#| msgid "Coordinate editor"
 msgid "Coordination:"
 msgstr "配位:"
 
@@ -8384,8 +8402,9 @@ msgstr "Fermiを0にしますか？"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "# of k-points connecting special k-points:"
-msgstr ""
+msgstr "特殊なk点につながっているk点の数:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8497,7 +8516,7 @@ msgstr "次元数:"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
 msgid "Display Yaehmop Input?"
-msgstr ""
+msgstr "Yaehmopのインプットを表示しますか？"
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
