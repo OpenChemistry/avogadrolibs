@@ -1,187 +1,169 @@
-#include "constraintsmodel.h"
-#include <QtCore/QMutexLocker>
-#include <QtCore/QDebug>
-#include <QString>
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
 
+#include "constraintsmodel.h"
+
+#include <QtCore/QDebug>
+#include <QtCore/QString>
 
 using namespace std;
 
-namespace Avogadro
+namespace Avogadro {
+using Core::Constraint;
+
+namespace QtPlugins {
+
+void ConstraintsModel::emitDataChanged()
 {
-  namespace QtPlugins{
+  emit dataChanged(QModelIndex(), QModelIndex());
+}
 
-    void ConstraintsModel::emitDataChanged()
-    {
-      emit dataChanged(QModelIndex(), QModelIndex());
-    }
-    
-    int ConstraintsModel::rowCount(const QModelIndex &) const
-    {
-      return ConstraintsList.size();
-    }
+void ConstraintsModel::setConstraints(
+  const std::vector<Core::Constraint>& constraints)
+{
+  m_constraints = constraints;
+  // update everything
+  emitDataChanged();
+}
 
-    int ConstraintsModel::columnCount(const QModelIndex &) const
-    {
-      return 6;
-    }
+int ConstraintsModel::rowCount(const QModelIndex&) const
+{
+  return m_constraints.size();
+}
 
-    QVariant ConstraintsModel::data(const QModelIndex &index, int role) const
-    {
-      if (!index.isValid())
-        return QVariant();
+int ConstraintsModel::columnCount(const QModelIndex&) const
+{
+  // Type, value, atom 1, 2, 3, 4
+  return 6;
+}
 
-      if (index.row() >= ConstraintsList.size())
-        return QVariant();
+QVariant ConstraintsModel::data(const QModelIndex& index, int role) const
+{
+  if (!index.isValid())
+    return QVariant();
 
-      if (role == Qt::DisplayRole)
-        switch (index.column()) {
-        case 0:
-          if (ConstraintsList[index.row()].GetConstraintType() == 0)
-            return QString("Ignore Atom");
-          else if (ConstraintsList[index.row()].GetConstraintType() == 1)
-            return QString("Fix Atom");
-          else if (ConstraintsList[index.row()].GetConstraintType() == 2)
-            return QString("Fix Atom X");
-          else if (ConstraintsList[index.row()].GetConstraintType() == 3)
-            return QString("Fix Atom Y");
-          else if (ConstraintsList[index.row()].GetConstraintType() == 4)
-            return QString("Fix Atom Z");
-          else if (ConstraintsList[index.row()].GetConstraintType() == 5)
-            return QString("Distance");
-          else if (ConstraintsList[index.row()].GetConstraintType() == 6)
-            return QString("Angle");
-          else if (ConstraintsList[index.row()].GetConstraintType() == 7)
-            return QString("Torsion angle");
-          break;
-        case 1:
-          return ConstraintsList[index.row()].GetConstraintValue();
-          break;
-        case 2:
-          if (ConstraintsList[index.row()].GetConstraintAtomA())
-            {
-              QVariant v;
-              v.setValue(static_cast<int>(ConstraintsList[index.row()].GetConstraintAtomA()));
-              return v;
-            }
-          else
-            {
-              return "NA";
-            }
-          break;
-        case 3:
-          if (ConstraintsList[index.row()].GetConstraintAtomB())
-            {
-              QVariant v;
-              v.setValue(static_cast<int>(ConstraintsList[index.row()].GetConstraintAtomB()));
-              return v;
-            }
-          else
-            {
-              return "NA";
-            }
-          break;
-        case 4:
-          if (ConstraintsList[index.row()].GetConstraintAtomC())
-            {
-              QVariant v;
-              v.setValue(static_cast<int>(ConstraintsList[index.row()].GetConstraintAtomC()));
-              return v;
-            }
-          else
-            {
-              return "NA";
-                }
-          break;
-        case 5:
-          if (ConstraintsList[index.row()].GetConstraintAtomD())
-            {
-              QVariant v;
-              v.setValue(static_cast<int>(ConstraintsList[index.row()].GetConstraintAtomD()));
-              return v;
-            }
-          else
-            {
-              return "NA";
-                }
-          break;
+  if (index.row() >= m_constraints.size())
+    return QVariant();
+
+  Constraint currentConstraint = m_constraints[index.row()];
+  Index aIndex = currentConstraint.aIndex();
+  Index bIndex = currentConstraint.bIndex();
+  Index cIndex = currentConstraint.cIndex();
+  Index dIndex = currentConstraint.dIndex();
+
+  if (role == Qt::DisplayRole)
+    switch (index.column()) {
+      case 0:
+        if (currentConstraint.type() == 1)
+          return tr("Freeze Atom", "fix / remain constant");
+        else if (currentConstraint.type() == 2)
+          return tr("Freeze X Axis", "fix / remain constant");
+        else if (currentConstraint.type() == 3)
+          return tr("Freeze Y Axis", "fix / remain constant");
+        else if (currentConstraint.type() == 4)
+          return tr("Freeze Z Axis", "fix / remain constant");
+        else if (currentConstraint.type() == 5)
+          return tr("Distance");
+        else if (currentConstraint.type() == 6)
+          return tr("Angle");
+        else if (currentConstraint.type() == 7)
+          return tr("Torsion Angle");
+        break;
+      case 1:
+        // TODO handle fixed-length number and sorting
+        return currentConstraint.value();
+        break;
+      case 2:
+        if (aIndex != 0 && aIndex != MaxIndex)
+          return QVariant(static_cast<qulonglong>(aIndex));
+        else
+          return "--";
+        break;
+      case 3:
+        if (bIndex != MaxIndex)
+          return QVariant(static_cast<qulonglong>(bIndex));
+        else
+          return "--";
+        break;
+      case 4:
+        if (cIndex != MaxIndex)
+          return QVariant(static_cast<qulonglong>(cIndex));
+        else
+          return "--";
+        break;
+      case 5:
+        Index dIndex = currentConstraint.dIndex();
+        if (dIndex != MaxIndex) {
+          return QVariant(static_cast<qulonglong>(dIndex));
+        } else {
+          return "--";
         }
-
-      return QVariant();
-    }
-  
-    QVariant ConstraintsModel::headerData(int section, Qt::Orientation orientation, int role) const
-    {
-      if (role != Qt::DisplayRole)
-        return QVariant();
-
-      if (orientation == Qt::Horizontal) {
-        switch (section) {
-        case 0:
-          return QString("Type");
-          break;
-        case 1:
-          return QString("Value");
-          break;
-        case 2:
-          return QString("Atom idx 1");
-          break;
-        case 3:
-          return QString("Atom idx 2");
-          break;
-        case 4:
-          return QString("Atom idx 3");
-          break;
-        case 5:
-          return QString("Atom idx 4");
-          break;
-        }
-      }
-    
-      return QString("Constraint %1").arg(section + 1);
+        break;
     }
 
-    void ConstraintsModel::addConstraint(int type, int a, int b, int c, int d, double value)
-    {
-      beginInsertRows(QModelIndex(), ConstraintsList.size(), ConstraintsList.size());
-      ConstraintsList << Constraint(type, a, b, c, d, value, this);
-      endInsertRows();
-    }
- 
-    void ConstraintsModel::clear()
-    {
-      qDebug() << "ConstraintsModel::clear()" << endl;
-      if (ConstraintsList.size()) {
-        beginRemoveRows(QModelIndex(), 0, ConstraintsList.size() - 1); 
-        ConstraintsList.clear();
-        endRemoveRows();
-      }
-    }
-  
-    void ConstraintsModel::deleteConstraint(int index)
-    { 
-      qDebug() << "ConstraintsModel::deleteConstraint(" << index << ")" << endl;
-      if (ConstraintsList.size() && (index >= 0)) {
-        beginRemoveRows(QModelIndex(), index, index); 
-        ConstraintsList.removeAt(index);
-        endRemoveRows();
-      }
-    }
+  return QVariant();
+}
 
-    QJsonObject ConstraintsModel::toJson()
-    {
-      QJsonObject ConstraintsMJ;
-      ConstraintsMJ["total"] = ConstraintsList.size();
+QVariant ConstraintsModel::headerData(int section, Qt::Orientation orientation,
+                                      int role) const
+{
+  if (role != Qt::DisplayRole)
+    return QVariant();
 
-      if(ConstraintsList.size())
-        {
-        for(int i = 0; i < ConstraintsList.size(); i++)
-          {
-            ConstraintsMJ.insert(QString::number(i), ConstraintsList[i].toJson());
-          }
-        }
-
-      return ConstraintsMJ;
+  if (orientation == Qt::Horizontal) {
+    switch (section) {
+      case 0:
+        return tr("Type");
+        break;
+      case 1:
+        return tr("Value");
+        break;
+      case 2:
+        return tr("Atom 1");
+        break;
+      case 3:
+        return tr("Atom 2");
+        break;
+      case 4:
+        return tr("Atom 3");
+        break;
+      case 5:
+        return tr("Atom 4");
+        break;
     }
   }
-} // end namespace Avogadro
 
+  return tr("Constraint %1").arg(section + 1);
+}
+
+void ConstraintsModel::addConstraint(int type, int a, int b, int c, int d,
+                                     double value)
+{
+  beginInsertRows(QModelIndex(), m_constraints.size(), m_constraints.size());
+  m_constraints.push_back(Constraint(a, b, c, d, value));
+  endInsertRows();
+}
+
+void ConstraintsModel::clear()
+{
+  if (m_constraints.size()) {
+    beginRemoveRows(QModelIndex(), 0, m_constraints.size() - 1);
+    m_constraints.clear();
+    endRemoveRows();
+  }
+}
+
+void ConstraintsModel::deleteConstraint(int index)
+{
+  if (m_constraints.size() && (index >= 0)) {
+    beginRemoveRows(QModelIndex(), index, index);
+    auto position = m_constraints.begin() + index;
+    m_constraints.erase(position);
+    endRemoveRows();
+  }
+}
+
+} // namespace QtPlugins
+} // end namespace Avogadro

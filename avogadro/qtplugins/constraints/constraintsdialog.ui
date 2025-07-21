@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QTableView" name="ConstraintsTableView">
+    <widget class="QTableView" name="constraintsTableView">
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
@@ -44,31 +44,9 @@
         </item>
         <item>
          <widget class="QComboBox" name="comboType">
-          <item>
-           <property name="text">
-            <string>Ignore Atom</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Fix Atom</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Fix Atom X</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Fix Atom Y</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Fix Atom Z</string>
-           </property>
-          </item>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
           <item>
            <property name="text">
             <string>Distance</string>
@@ -81,7 +59,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Torsion angle</string>
+            <string>Torsion Angle</string>
            </property>
           </item>
          </widget>
@@ -94,7 +72,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="editValue"/>
+         <widget class="QDoubleSpinBox" name="editValue">
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="maximum">
+           <double>105.989999999999995</double>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QLabel" name="label_3">
@@ -116,7 +101,7 @@
          <widget class="QSpinBox" name="editD"/>
         </item>
         <item>
-         <widget class="QPushButton" name="ConstraintsAdd">
+         <widget class="QPushButton" name="addConstraint">
           <property name="text">
            <string>Add</string>
           </property>
@@ -136,26 +121,6 @@
       <item>
        <layout class="QHBoxLayout">
         <item>
-         <widget class="QPushButton" name="ConstraintsSave">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Save</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="ConstraintsLoad">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Load</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -169,14 +134,14 @@
          </spacer>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkHighlight">
+         <widget class="QCheckBox" name="highlightCheckBox">
           <property name="text">
            <string>Highlight selected Constraint</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="ConstraintsDelete">
+         <widget class="QPushButton" name="deleteConstraint">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -195,14 +160,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="ConstraintsDeleteAll">
+         <widget class="QPushButton" name="deleteAllConstraints">
           <property name="text">
            <string>Delete All</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="ConstraintsOK">
+         <widget class="QPushButton" name="okButton">
           <property name="text">
            <string>OK</string>
           </property>

@@ -1,65 +1,60 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
 #include "constraintsextension.h"
 #include "constraintsdialog.h"
 #include "constraintsmodel.h"
 
 #include <QAction>
 
-//#include <QTextStream>
-//#include <QString>
+// #include <QTextStream>
+// #include <QString>
 
 #include <string>
 #include <iostream>
 
 namespace Avogadro {
-  namespace QtPlugins {
-    ConstraintsExtension::ConstraintsExtension(QObject* p) : ExtensionPlugin(p)
-    {
-      QAction* action = new QAction(this);
-      action->setEnabled(true);
-      action->setText(tr("Constraints"));
-      connect(action, SIGNAL(triggered()), SLOT(onDialog()));
-      m_actions.push_back(action);
+namespace QtPlugins {
+ConstraintsExtension::ConstraintsExtension(QObject* p) : ExtensionPlugin(p)
+{
+  QAction* action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Constraints…"));
+  connect(action, SIGNAL(triggered()), SLOT(openDialog()));
+  m_actions.push_back(action);
 
-      dialog = new ConstraintsDialog(this,
-                                     qobject_cast<QWidget*>(parent()));
-
-    }
-
-    ConstraintsExtension::~ConstraintsExtension(){}
-
-    QList<QAction*> ConstraintsExtension::actions() const{
-      return m_actions;
-      }
-
-    QStringList ConstraintsExtension::menuPath(QAction*) const{
-      return QStringList() << tr("&Extensions");
-    }
-
-    
-    void ConstraintsExtension::onDialog()
-    {
-      dialog->show();
-      
-    }
-    
-
-    void ConstraintsExtension::setMolecule(QtGui::Molecule* mol)
-    {
-      if (mol != m_molecule)
-        {
-          m_molecule = mol;
-          //          dialog->connectHighlight(0);
-        }
-
-      if (!m_molecule->constraints)
-        {
-          m_molecule->constraints = new ConstraintsModel(m_molecule);
-        }
-      dialog->setModel();
-    }
-
-    bool ConstraintsExtension::readMolecule(QtGui::Molecule& mol){
-      return true;
-    }
-  }
+  m_dialog = new ConstraintsDialog(qobject_cast<QWidget*>(parent()));
 }
+
+ConstraintsExtension::~ConstraintsExtension() {}
+
+QList<QAction*> ConstraintsExtension::actions() const
+{
+  return m_actions;
+}
+
+QStringList ConstraintsExtension::menuPath(QAction*) const
+{
+  return QStringList() << tr("&Extensions") << tr("&Calculate");
+}
+
+void ConstraintsExtension::openDialog()
+{
+  m_dialog->show();
+  m_dialog->raise();
+}
+
+void ConstraintsExtension::setMolecule(QtGui::Molecule* mol)
+{
+  if (mol != m_molecule) {
+    m_molecule = mol;
+  }
+
+  if (m_dialog != nullptr)
+    m_dialog->setMolecule(mol);
+}
+
+} // namespace QtPlugins
+} // namespace Avogadro

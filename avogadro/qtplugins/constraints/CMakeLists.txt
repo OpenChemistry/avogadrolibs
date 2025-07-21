@@ -1,10 +1,8 @@
-include_directories("${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
 set(constraints
   constraintsextension.cpp
   constraintsdialog.cpp
   constraintsmodel.cpp
-  constraint.cpp
 )
 
 set(constraints_uis

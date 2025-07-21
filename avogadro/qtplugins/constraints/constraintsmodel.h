@@ -1,3 +1,8 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
 #ifndef CONSTRAINTSMODEL_H
 #define CONSTRAINTSMODEL_H
 
@@ -5,52 +10,42 @@
 #include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtCore/QAbstractTableModel>
-#include <QJsonObject>
-#include <QJsonDocument>
 
 #include <avogadro/qtgui/molecule.h>
-#include "constraint.h"
-
+#include <avogadro/core/constraint.h>
 
 namespace Avogadro {
-  namespace QtPlugins {
-    class ConstraintsModel : public QAbstractTableModel
+namespace QtPlugins {
 
-    {
-      Q_OBJECT
-      /* 
-    public slots:
-      void primitiveRemoved(Primitive *primitive);
-      */
-    public:
-      ConstraintsModel(QtGui::Molecule* molecule)
-        : QAbstractTableModel()
-        , c_molecule(molecule)
-      {}
+class ConstraintsModel : public QAbstractTableModel
 
-      int rowCount(const QModelIndex &parent = QModelIndex()) const;
-      int columnCount(const QModelIndex &parent = QModelIndex()) const;
-      QVariant data(const QModelIndex &index, int role) const;
-      QVariant headerData(int section, Qt::Orientation orientation,
-                          int role = Qt::DisplayRole) const;
-       
-      void clear();
-      void addConstraint(int type, int a, int b, int c, int d, double value);
-      void deleteConstraint(int index);
+{
+  Q_OBJECT
 
-      QJsonObject toJson();
+public:
+  ConstraintsModel() : QAbstractTableModel() {}
 
+  int rowCount(const QModelIndex& parent = QModelIndex()) const;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const;
+  QVariant data(const QModelIndex& index, int role) const;
+  QVariant headerData(int section, Qt::Orientation orientation,
+                      int role = Qt::DisplayRole) const;
 
-      QList<Constraint> ConstraintsList;
+  void clear();
+  void addConstraint(int type, int a, int b, int c, int d, double value);
+  void deleteConstraint(int index);
+  std::vector<Core::Constraint> constraints();
+  void setConstraints(const std::vector<Core::Constraint>& constraints);
 
-      // pointer to the associated molecule
-      QtGui::Molecule* c_molecule = nullptr;
+public slots:
+  void emitDataChanged();
 
-    public slots:
-      void emitDataChanged();
+private:
+  std::vector<Core::Constraint> m_constraints;
 
-    }; //ConstraintsModel
-  } // QtPlugins
+}; // ConstraintsModel
+
+} // namespace QtPlugins
 } // end namespace Avogadro
 
 #endif
