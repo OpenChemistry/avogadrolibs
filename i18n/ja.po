@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-07-21 20:09+0000\n"
+"PO-Revision-Date: 2025-07-22 21:07+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -2102,9 +2102,10 @@ msgid "Ribbon"
 msgstr "リボン"
 
 #: qtplugins/cartoons/cartoons.cpp:96
+#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr ""
+msgstr "簡単なカートゥーン"
 
 #: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
@@ -2123,7 +2124,7 @@ msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Centroid"
-msgstr "中心を追加"
+msgstr "幾何中心を追加"
 
 #: qtplugins/centroid/centroid.cpp:22
 msgid "Add Center of Mass"
@@ -2132,11 +2133,11 @@ msgstr "重心を追加"
 #: qtplugins/centroid/centroid.cpp:24
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr ""
+msgstr "法線上の点を追加"
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
-msgstr "中心"
+msgstr "幾何中心 (centroid)"
 
 #: qtplugins/centroid/centroid.h:28
 msgid "Add centroids and center-of-mass."
@@ -4692,7 +4693,6 @@ msgid "Select None"
 msgstr "選択の解除"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
-#, fuzzy
 msgid "Invert Selection"
 msgstr "選択/非選択を反転"
 
@@ -4735,7 +4735,7 @@ msgstr "選択から新しいレイヤーを作成"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
-msgstr ""
+msgstr "選択を変更"
 
 #: qtplugins/select/select.cpp:127
 msgid "&Select"
@@ -4909,10 +4909,13 @@ msgid ""
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:301
+#, fuzzy
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"対象化に失敗。\n"
+"結晶をチェックして異なる閾値を試してください。"
 
 #: qtplugins/spacegroup/spacegroup.cpp:359 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
@@ -4930,7 +4933,7 @@ msgstr "国際記号"
 
 #: qtplugins/spacegroup/spacegroup.cpp:376
 msgid "Hall"
-msgstr "Hall記号"
+msgstr "ホール記号"
 
 #: qtplugins/spacegroup/spacegroup.cpp:376
 msgid "Hermann-Mauguin"
@@ -5353,8 +5356,9 @@ msgid "VRML"
 msgstr "VRML"
 
 #: qtplugins/vrml/vrml.h:29
+#, fuzzy
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "VRMLでシーンを描画"
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
@@ -6026,17 +6030,17 @@ msgstr "スーパーセルのオプション"
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A repeat:"
-msgstr "A 繰り返し:"
+msgstr "Aの繰り返し:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B repeat:"
-msgstr "B 繰り返し:"
+msgstr "Bの繰り返し:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
-msgstr "C 繰り返し:"
+msgstr "Cの繰り返し:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
@@ -6188,8 +6192,9 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, gradConv)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
+#, fuzzy
 msgid " units"
-msgstr ""
+msgstr " 単位"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:62
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
@@ -6290,8 +6295,9 @@ msgstr "タグ"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
+#, fuzzy
 msgid "synonym"
-msgstr ""
+msgstr "シノニム"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
@@ -6305,8 +6311,9 @@ msgstr "inchi"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:85
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Search By: "
-msgstr ""
+msgstr "探索: "
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -7208,8 +7215,9 @@ msgstr "Å"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "\"Energy\" 収束:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
