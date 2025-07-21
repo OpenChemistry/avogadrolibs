@@ -73,9 +73,9 @@ Editor::Editor(QObject* parent_)
   QString shortcut = tr("Ctrl+2", "control-key 2");
   m_activateAction->setText(tr("Draw"));
   m_activateAction->setToolTip(
-    tr("Draw Tool \t(%1)\n\n"
-       "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
-       "Right Mouse: \tDelete Atom")
+    tr("Draw Tool\t(%1)\n\n"
+       "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
+       "Right Mouse:\tDelete Atom")
       .arg(shortcut));
   setIcon();
   reset();

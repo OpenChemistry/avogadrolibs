@@ -51,11 +51,11 @@ AlignTool::AlignTool(QObject* parent_)
   m_activateAction->setText(tr("Align"));
   m_activateAction->setToolTip(
     tr("Align Molecules\n\n"
-       "Left Mouse: \tSelect up to two atoms.\n"
+       "Left Mouse:\tSelect up to two atoms.\n"
        "\tThe first atom is centered at the origin.\n"
        "\tThe second atom is aligned to the selected axis.\n"
-       "Right Mouse: \tReset alignment.\n"
-       "Double-Click: \tCenter the atom at the origin."));
+       "Right Mouse:\tReset alignment.\n"
+       "Double-Click:\tCenter the atom at the origin."));
   setIcon();
 }
 

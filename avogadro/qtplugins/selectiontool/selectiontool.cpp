@@ -50,12 +50,12 @@ SelectionTool::SelectionTool(QObject* parent_)
   QString shortcut = tr("Ctrl+5", "control-key 5");
   m_activateAction->setText(tr("Selection"));
   m_activateAction->setToolTip(
-    tr("Selection Tool \t(%1)\n\n"
-       "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+    tr("Selection Tool\t(%1)\n\n"
+       "Left Mouse:\tClick to pick individual atoms, residues, or fragments\n"
        "\tDrag to select a range of atoms\n"
-       "Right Mouse: \tClick outside the molecule to clear selection\n"
+       "Right Mouse:\tClick outside the molecule to clear selection\n"
        "Use Ctrl to toggle the selection and shift to add to the selection.\n"
-       "Double-Click: \tSelect an entire fragment.")
+       "Double-Click:\tSelect an entire fragment.")
       .arg(shortcut));
   setIcon();
 }
