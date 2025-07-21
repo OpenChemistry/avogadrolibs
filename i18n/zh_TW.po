@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-23 19:17+0000\n"
+"PO-Revision-Date: 2025-07-21 20:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hant/>\n"
@@ -3376,9 +3376,8 @@ msgid " & "
 msgstr ""
 
 #: qtplugins/label/label.cpp:248
-#, fuzzy
 msgid "Residue Label:"
-msgstr "殘基名稱"
+msgstr ""
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3689,7 +3688,7 @@ msgstr "CSV 檔 (*.csv);;所有檔案 (*)"
 #, fuzzy
 #| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
-msgstr "無法開啟檔案 '%1' 以進行寫入"
+msgstr "無法開啟檔案以進行寫入"
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:293
