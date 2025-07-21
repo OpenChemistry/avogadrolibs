@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-07-20 17:30+0000\n"
+"PO-Revision-Date: 2025-07-21 20:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Valencian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca@valencia/>\n"
@@ -1416,9 +1416,8 @@ msgid "Scale Cell Volume"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:542
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Super cel·la"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:566
 msgid "Niggli Reduction"
@@ -2715,9 +2714,8 @@ msgid "Scale Cell &Volume…"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:74
-#, fuzzy
 msgid "Build &Supercell…"
-msgstr "&Super cel·la"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2987,10 +2985,8 @@ msgid "Freeze Selected Atoms"
 msgstr "Fixa els àtoms seleccionats"
 
 #: qtplugins/forcefield/forcefield.cpp:115
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Fixa els àtoms seleccionats"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:152
 #, fuzzy
@@ -3396,9 +3392,8 @@ msgid " & "
 msgstr ""
 
 #: qtplugins/label/label.cpp:248
-#, fuzzy
 msgid "Residue Label:"
-msgstr "Nom del residu:"
+msgstr ""
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3708,7 +3703,7 @@ msgstr "Fitxers CSV (*.csv);;Tots els fitxers (*)"
 #, fuzzy
 #| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
-msgstr "No és pot obrir el fitxer «%1» per escriptura."
+msgstr "No és pot obrir el fitxer per escriptura."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:293
