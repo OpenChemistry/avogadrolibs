@@ -32,7 +32,8 @@ public slots:
   void addConstraint();
   void deleteConstraint();
   void deleteAllConstraints();
-  void highlightSelected();
+  void highlightSelected(const QModelIndex& newIndex,
+                         const QModelIndex& oldIndex);
 
   void changeType(int type);
 
@@ -43,6 +44,7 @@ private:
   ConstraintsModel* m_model;
   QtGui::Molecule* m_molecule = nullptr;
 };
+
 } // namespace QtPlugins
 } // namespace Avogadro
 #endif // AVOGADRO_QTPLUGINS_CONSTRAINTSDIALOG_H

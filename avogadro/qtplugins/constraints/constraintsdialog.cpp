@@ -9,6 +9,9 @@
 #include <QDebug>
 #include <QtCore/QSortFilterProxyModel>
 
+#include <avogadro/qtgui/rwmolecule.h>
+
+using Avogadro::Core::Constraint;
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro {
@@ -40,12 +43,18 @@ ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f)
   proxyModel->setSortRole(Qt::UserRole);
 
   auto* view = ui->constraintsTableView;
-  view->setModel(m_model);
-  view->resizeColumnsToContents();
+  view->setModel(proxyModel);
+  // view->resizeColumnsToContents();
+  view->setSelectionBehavior(QAbstractItemView::SelectRows);
   // Alternating row colors
   view->setAlternatingRowColors(true);
-  // Allow sorting the table
-  view->setSortingEnabled(true);
+  // TODO: Allow sorting the table
+  // requires remapping
+  // view->setSortingEnabled(true);
+
+  connect(view->selectionModel(),
+          SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), this,
+          SLOT(highlightSelected(const QModelIndex&, const QModelIndex&)));
 }
 
 ConstraintsDialog::~ConstraintsDialog()
@@ -63,9 +72,31 @@ void ConstraintsDialog::setMolecule(QtGui::Molecule* molecule)
           SLOT(updateConstraints()));
 }
 
-void ConstraintsDialog::highlightSelected()
+void ConstraintsDialog::highlightSelected(const QModelIndex& newIndex,
+                                          const QModelIndex& oldIndex)
 {
-  // TODO: select the constraint atoms in the molecule
+  // get the selected row in the table
+  auto row = ui->constraintsTableView->currentIndex().row();
+  if (row < 0 || row >= m_model->rowCount())
+    return;
+  // get the constraint
+  auto constraint = m_model->constraint(row);
+  if (constraint.type() == Constraint::None)
+    return;
+
+  // unselect everything else in the molecule
+  for (Index i = 0; i < m_molecule->atomCount(); ++i)
+    m_molecule->undoMolecule()->setAtomSelected(i, false);
+
+  // select the atoms in the constraint
+  m_molecule->undoMolecule()->setAtomSelected(constraint.aIndex(), true);
+  m_molecule->undoMolecule()->setAtomSelected(constraint.bIndex(), true);
+  if (constraint.cIndex() != MaxIndex)
+    m_molecule->undoMolecule()->setAtomSelected(constraint.cIndex(), true);
+  if (constraint.dIndex() != MaxIndex)
+    m_molecule->undoMolecule()->setAtomSelected(constraint.dIndex(), true);
+
+  m_molecule->emitChanged(Molecule::Selection);
 }
 
 void ConstraintsDialog::updateConstraints()
@@ -120,10 +151,14 @@ void ConstraintsDialog::acceptConstraints()
 
 void ConstraintsDialog::deleteConstraint()
 {
-  if (m_molecule == nullptr)
+  if (m_molecule == nullptr || m_molecule == nullptr)
     return;
 
   auto row = ui->constraintsTableView->currentIndex().row();
+  m_model->deleteConstraint(row);
+  // get the new constraints
+  m_molecule->setConstraints(m_model->constraints());
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void ConstraintsDialog::addConstraint()
@@ -132,22 +167,72 @@ void ConstraintsDialog::addConstraint()
     return;
 
   // TODO: Check user input for sanity
-  int type = ui->comboType->currentIndex();
+  Constraint::Type type;
+  switch (ui->comboType->currentIndex()) {
+    case 1:
+      type = Constraint::AngleConstraint;
+      break;
+    case 2:
+      type = Constraint::TorsionConstraint;
+      break;
+    case 0:
+    default:
+      type = Constraint::DistanceConstraint;
+      break;
+  }
   double value = ui->editValue->value();
-  int AtomIdA = ui->editA->value();
-  int AtomIdB = ui->editB->value();
-  int AtomIdC = ui->editC->value();
-  int AtomIdD = ui->editD->value();
+  int atomIdA = ui->editA->value();
+  int atomIdB = ui->editB->value();
+  int atomIdC = ui->editC->value();
+  int atomIdD = ui->editD->value();
 
-  // adding the constraint to the molecule's CosntraintsModel
-  // m_molecule->addConstraint(type, AtomIdA, AtomIdB, AtomIdC, AtomIdD,
-  //                                      value);
+  Index a, b, c, d;
+  if (atomIdA < 1 || atomIdA > m_molecule->atomCount())
+    return;
+  else
+    a = atomIdA - 1;
+
+  if (atomIdB < 1 || atomIdB > m_molecule->atomCount())
+    return;
+  else
+    b = atomIdB - 1;
+
+  if (atomIdC < 1 || atomIdC > m_molecule->atomCount())
+    c = MaxIndex;
+  else
+    c = atomIdC - 1;
+
+  if (atomIdD < 1 || atomIdD > m_molecule->atomCount())
+    d = MaxIndex;
+  else
+    d = atomIdD - 1;
+
+  if (type == Constraint::DistanceConstraint) {
+    if (a == b || value == 0.0)
+      return;
+  } else if (type == Constraint::AngleConstraint) {
+    if (a == b || b == c)
+      return;
+  } else if (type == Constraint::TorsionConstraint)
+    if (a == b || a == c || a == d || b == c || b == d || c == d)
+      return;
+
+  Constraint newConstraint(a, b, c, d, value);
+  newConstraint.setType(type);
+  m_molecule->addConstraint(newConstraint);
+  m_model->addConstraint(type, a, b, c, d, value);
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void ConstraintsDialog::deleteAllConstraints()
 {
-  if (m_molecule != nullptr)
-    m_molecule->clearConstraints();
+  if (m_molecule == nullptr)
+    return;
+
+  m_molecule->clearConstraints();
+  m_molecule->emitChanged(Molecule::Constraints);
+  // update the model
+  m_model->clear();
 }
 
 } // namespace QtPlugins

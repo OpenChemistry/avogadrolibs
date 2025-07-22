@@ -53,7 +53,7 @@ QVariant ConstraintsModel::data(const QModelIndex& index, int role) const
   Index cIndex = currentConstraint.cIndex();
   Index dIndex = currentConstraint.dIndex();
 
-  if (role == Qt::DisplayRole)
+  if (role == Qt::DisplayRole || role == Qt::UserRole)
     switch (index.column()) {
       case 0:
         if (currentConstraint.type() == 1)
@@ -75,6 +75,9 @@ QVariant ConstraintsModel::data(const QModelIndex& index, int role) const
         break;
       case 1:
         // TODO handle fixed-length number and sorting
+        if (role == Qt::UserRole)
+          return currentConstraint.value();
+
         if (currentConstraint.type() == 1)
           return QString("%1 Å").arg(currentConstraint.value(), 0, 'f', 3);
         else if (currentConstraint.type() == 2 || currentConstraint.type() == 3)
@@ -170,6 +173,14 @@ void ConstraintsModel::deleteConstraint(int index)
     m_constraints.erase(position);
     endRemoveRows();
   }
+}
+
+Core::Constraint ConstraintsModel::constraint(int index)
+{
+  if (index < 0 || index >= m_constraints.size())
+    return Constraint(MaxIndex, MaxIndex, MaxIndex, MaxIndex, 0.0);
+  else
+    return m_constraints[index];
 }
 
 } // namespace QtPlugins

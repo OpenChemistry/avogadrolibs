@@ -32,9 +32,10 @@ public:
                       int role = Qt::DisplayRole) const;
 
   void clear();
+  Core::Constraint constraint(int index);
+  std::vector<Core::Constraint> constraints() { return m_constraints; }
   void addConstraint(int type, int a, int b, int c, int d, double value);
   void deleteConstraint(int index);
-  std::vector<Core::Constraint> constraints();
   void setConstraints(const std::vector<Core::Constraint>& constraints);
 
 public slots:

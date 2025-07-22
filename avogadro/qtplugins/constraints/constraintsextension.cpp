@@ -26,6 +26,8 @@ ConstraintsExtension::ConstraintsExtension(QObject* p) : ExtensionPlugin(p)
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
   m_actions.push_back(action);
 
+  qDebug() << " parent name : " << parent()->objectName();
+
   m_dialog = new ConstraintsDialog(qobject_cast<QWidget*>(parent()));
 }
 
