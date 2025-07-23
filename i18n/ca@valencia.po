@@ -2978,10 +2978,6 @@ msgid "Freeze Selected Atoms"
 msgstr "Fixa els àtoms seleccionats"
 
 #: qtplugins/forcefield/forcefield.cpp:115
-<<<<<<< HEAD
-#, fuzzy
-=======
->>>>>>> weblate/master
 msgid "Unfreeze Selected Atoms"
 msgstr ""
 
@@ -3379,12 +3375,7 @@ msgstr ""
 msgid " & "
 msgstr ""
 
-<<<<<<< HEAD
 #: qtplugins/label/label.cpp:250
-#, fuzzy
-=======
-#: qtplugins/label/label.cpp:248
->>>>>>> weblate/master
 msgid "Residue Label:"
 msgstr ""
 
