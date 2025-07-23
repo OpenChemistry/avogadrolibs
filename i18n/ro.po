@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-21 21:51+0000\n"
+"POT-Creation-Date: 2025-07-23 21:27+0000\n"
 "PO-Revision-Date: 2025-07-23 22:01+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -557,7 +557,7 @@ msgstr "Bor"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:32:1965
+#: qtgui/elementtranslator.cpp:32:2007
 msgid "Carbon"
 msgstr "Carbon"
 
@@ -639,13 +639,13 @@ msgstr "Mangan"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:92:1968
+#: qtgui/elementtranslator.cpp:92:2010
 msgid "Iron"
 msgstr "Fier"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:95:1971
+#: qtgui/elementtranslator.cpp:95:2013
 msgid "Cobalt"
 msgstr "Cobalt"
 
@@ -1137,7 +1137,7 @@ msgstr "Fila %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:209:697
+#: qtgui/jsonwidget.cpp:209:739
 msgid "Title"
 msgstr "Titlu"
 
@@ -1393,7 +1393,7 @@ msgstr "Adăugare informații despre strat"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
-#: qtplugins/selectiontool/selectiontool.cpp:264:1646
+#: qtplugins/selectiontool/selectiontool.cpp:264:1688
 msgid "Change Layer"
 msgstr "Schimbare strat"
 
@@ -1412,7 +1412,7 @@ msgstr "Curățare atomi"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:484
+#: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:526
 msgid "Adjust Hydrogens"
 msgstr "Ajustează hidrogenii"
 
@@ -1600,7 +1600,7 @@ msgstr "&Construire"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, elementLabel)
-#: qtplugins/alchemy/alchemy.cpp:74:478 rc.cpp:1959
+#: qtplugins/alchemy/alchemy.cpp:74:520 rc.cpp:2001
 msgid "Element:"
 msgstr "Element:"
 
@@ -1636,7 +1636,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:81:1697
+#: qtplugins/aligntool/aligntool.cpp:81:1739
 msgid "Axis:"
 msgstr "Axa:"
 
@@ -1909,7 +1909,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:795:183 rc.cpp:1830
+#: qtplugins/surfaces/surfaces.cpp:795:183 rc.cpp:1872
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Spectral"
@@ -1919,7 +1919,7 @@ msgstr "Spectral"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:797:180 rc.cpp:1827
+#: qtplugins/surfaces/surfaces.cpp:797:180 rc.cpp:1869
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Coolwarm"
@@ -1929,7 +1929,7 @@ msgstr "Coolwarm"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:799:174 rc.cpp:1821
+#: qtplugins/surfaces/surfaces.cpp:799:174 rc.cpp:1863
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Balance"
@@ -1939,7 +1939,7 @@ msgstr "Balance"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:801:177 rc.cpp:1824
+#: qtplugins/surfaces/surfaces.cpp:801:177 rc.cpp:1866
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Blue-DarkRed"
@@ -1951,7 +1951,7 @@ msgstr "Blue-DarkRed"
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:803:186 rc.cpp:1833
+#: qtplugins/surfaces/surfaces.cpp:803:186 rc.cpp:1875
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbo"
@@ -1985,7 +1985,7 @@ msgstr "Selectați schema de culori"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1818
+#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1860
 msgid "Colormap:"
 msgstr "Schema de culori:"
 
@@ -2219,7 +2219,7 @@ msgstr "Adaugă centroizi și centre de masă."
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:265
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:233
-#: qtplugins/noncovalent/noncovalent.cpp:383:201 rc.cpp:204 rc.cpp:406
+#: qtplugins/noncovalent/noncovalent.cpp:383:201 rc.cpp:204 rc.cpp:448
 msgid " Å"
 msgstr " Å"
 
@@ -2259,8 +2259,9 @@ msgstr "Editează paleta de opacitate a culorilor…"
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
 #: qtplugins/configurepython/configurepython.cpp:101
-#: qtplugins/forcefield/forcefield.cpp:150
-#: qtplugins/forcefield/forcefield.cpp:152
+#: qtplugins/constraints/constraintsextension.cpp:39
+#: qtplugins/forcefield/forcefield.cpp:172
+#: qtplugins/forcefield/forcefield.cpp:174
 #: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2359,9 +2360,100 @@ msgstr "Configurează mediile Python."
 #: qtplugins/templatetool/templatetoolwidget.cpp:369
 #: qtplugins/templatetool/templatetoolwidget.cpp:377
 #: qtplugins/templatetool/templatetoolwidget.cpp:385
-#: qtplugins/templatetool/templatetoolwidget.cpp:448:2079
+#: qtplugins/templatetool/templatetoolwidget.cpp:448:2121
 msgid "Other…"
 msgstr "Altul…"
+
+#: qtplugins/constraints/constraintsextension.cpp:22
+msgid "Constraints…"
+msgstr ""
+
+#: qtplugins/constraints/constraintsextension.cpp:39
+#: qtplugins/forcefield/forcefield.cpp:174
+msgid "&Calculate"
+msgstr "&Calculează"
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
+#: qtplugins/constraints/constraintsextension.h:27:250
+msgid "Constraints"
+msgstr ""
+
+#: qtplugins/constraints/constraintsextension.h:31
+msgid "Set constraints for geometry optimizations"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:56
+#. i18n: ectx: property (text), item, widget (QComboBox, comboType)
+#: qtplugins/constraints/constraintsmodel.cpp:60:259
+msgid "Distance"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
+#. i18n: ectx: property (text), item, widget (QComboBox, comboType)
+#: qtplugins/constraints/constraintsmodel.cpp:62:262
+msgid "Angle"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
+#. i18n: ectx: property (text), item, widget (QComboBox, comboType)
+#: qtplugins/constraints/constraintsmodel.cpp:64:265
+msgid "Torsion Angle"
+msgstr ""
+
+#: qtplugins/constraints/constraintsmodel.cpp:68
+msgctxt "fix / remain constant"
+msgid "Freeze Atom"
+msgstr ""
+
+#: qtplugins/constraints/constraintsmodel.cpp:70
+msgctxt "fix / remain constant"
+msgid "Freeze X Axis"
+msgstr ""
+
+#: qtplugins/constraints/constraintsmodel.cpp:72
+msgctxt "fix / remain constant"
+msgid "Freeze Y Axis"
+msgstr ""
+
+#: qtplugins/constraints/constraintsmodel.cpp:74
+msgctxt "fix / remain constant"
+msgid "Freeze Z Axis"
+msgstr ""
+
+#: qtplugins/constraints/constraintsmodel.cpp:126
+#: qtplugins/propertytables/propertymodel.cpp:561
+#: qtplugins/propertytables/propertymodel.cpp:602
+#: qtplugins/propertytables/propertymodel.cpp:619
+#: qtplugins/symmetry/operationstablemodel.cpp:57
+msgid "Type"
+msgstr "Tip"
+
+#: qtplugins/constraints/constraintsmodel.cpp:129
+msgid "Value"
+msgstr ""
+
+#: qtplugins/constraints/constraintsmodel.cpp:132
+#: qtplugins/propertytables/propertymodel.cpp:604
+#: qtplugins/propertytables/propertymodel.cpp:621
+msgid "Atom 1"
+msgstr "Atom 1"
+
+#: qtplugins/constraints/constraintsmodel.cpp:135
+#: qtplugins/propertytables/propertymodel.cpp:623
+msgid "Atom 2"
+msgstr "Atom 2"
+
+#: qtplugins/constraints/constraintsmodel.cpp:138
+#: qtplugins/propertytables/propertymodel.cpp:608
+#: qtplugins/propertytables/propertymodel.cpp:625
+msgid "Atom 3"
+msgstr "Atom 3"
+
+#: qtplugins/constraints/constraintsmodel.cpp:141
+#: qtplugins/propertytables/propertymodel.cpp:627
+msgid "Atom 4"
+msgstr "Atom 4"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
@@ -2488,7 +2580,7 @@ msgstr "Editarea coordonatelor atomice"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:192 qtplugins/label/label.cpp:215:1860
+#: qtplugins/label/label.cpp:192 qtplugins/label/label.cpp:215:1902
 msgid "Custom"
 msgstr "Personalizat"
 
@@ -2532,7 +2624,7 @@ msgstr "Formatul Turbomole"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:301:277
+#: qtplugins/propertytables/propertyview.cpp:301:319
 msgid "Copy"
 msgstr "Copiază"
 
@@ -2548,13 +2640,13 @@ msgstr "InChI"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:33:274
+#: qtplugins/copypaste/copypaste.cpp:33:316
 msgid "Cut"
 msgstr "Taie"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:34:286
+#: qtplugins/copypaste/copypaste.cpp:34:328
 msgid "Clear"
 msgstr "Șterge"
 
@@ -2642,7 +2734,7 @@ msgstr "Generează date de intrare pentru CP2K."
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:80:1190
+#: qtplugins/forcefield/forcefield.cpp:82:1232
 msgid "Energy"
 msgstr "Energie"
 
@@ -2677,13 +2769,13 @@ msgstr "EWALD"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:357
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:750
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:792
 msgid "NONE"
 msgstr "NICIUNUL"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:360:1370
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:360:1412
 msgid "PME"
 msgstr "PME"
 
@@ -2865,7 +2957,7 @@ msgstr "Nu este prezentă nicio celulă unitară."
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
 #: qtplugins/crystal/unitcelldialog.cpp:283
 #: qtplugins/crystal/unitcelldialog.cpp:299
-#: qtplugins/crystal/unitcelldialog.cpp:315:400
+#: qtplugins/crystal/unitcelldialog.cpp:315:442
 msgid "Unit Cell Editor"
 msgstr "Editor de celulă unitară"
 
@@ -2947,7 +3039,7 @@ msgstr "Instrument de editare"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:209:1839 rc.cpp:1857
+#: qtplugins/editor/editortoolwidget.cpp:209:1881 rc.cpp:1899
 msgid "Automatic"
 msgstr "Automat"
 
@@ -3052,37 +3144,43 @@ msgstr "Focalizează vizualizarea pe anumite caracteristici."
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Realizează vizualizările câmpului de forțe pentru atomii moleculei."
 
-#: qtplugins/forcefield/forcefield.cpp:71
-#: qtplugins/forcefield/forcefield.cpp:310
-#: qtplugins/forcefield/forcefield.cpp:365 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:73
+#: qtplugins/forcefield/forcefield.cpp:368
+#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Optimizează geometria"
 
-#: qtplugins/forcefield/forcefield.cpp:88
+#: qtplugins/forcefield/forcefield.cpp:90
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 msgid "Forces"
 msgstr "Forțe"
 
-#: qtplugins/forcefield/forcefield.cpp:96
+#: qtplugins/forcefield/forcefield.cpp:98
 msgid "Configure…"
 msgstr "Configurează…"
 
-#: qtplugins/forcefield/forcefield.cpp:108
+#: qtplugins/forcefield/forcefield.cpp:110
 msgid "Freeze Selected Atoms"
 msgstr "Îngheață atomii selectați"
 
-#: qtplugins/forcefield/forcefield.cpp:115
+#: qtplugins/forcefield/forcefield.cpp:118
 msgid "Unfreeze Selected Atoms"
 msgstr "Dezgheață atomii selectați"
 
-#: qtplugins/forcefield/forcefield.cpp:152
-msgid "&Calculate"
-msgstr "&Calculează"
+#: qtplugins/forcefield/forcefield.cpp:127
+msgctxt "freeze atomic distances / glue atoms together"
+msgid "Fuse Selected Atoms"
+msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:251
-#: qtplugins/forcefield/forcefield.cpp:409
-#: qtplugins/forcefield/forcefield.cpp:479
+#: qtplugins/forcefield/forcefield.cpp:135
+msgctxt "freeze atomic distances / glue atoms together"
+msgid "Unfuse Selected Atoms"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:316
+#: qtplugins/forcefield/forcefield.cpp:467
+#: qtplugins/forcefield/forcefield.cpp:537
 #: qtplugins/playertool/playertool.cpp:348
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:931
 #: qtplugins/surfaces/surfaces.cpp:975 qtplugins/surfaces/surfaces.cpp:987
@@ -3090,31 +3188,31 @@ msgstr "&Calculează"
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:252
+#: qtplugins/forcefield/forcefield.cpp:317
 msgid "No atoms provided for optimization"
 msgstr "Nu au fost furnizați atomi pentru optimizare"
 
-#: qtplugins/forcefield/forcefield.cpp:327
+#: qtplugins/forcefield/forcefield.cpp:385
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "Energie: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:408
+#: qtplugins/forcefield/forcefield.cpp:466
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Energie = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:478
+#: qtplugins/forcefield/forcefield.cpp:536
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Normă de forță = %L2"
 
-#: qtplugins/forcefield/forcefield.h:46
+#: qtplugins/forcefield/forcefield.h:47
 msgid "Forcefield optimization"
 msgstr "Optimizarea câmpului de forță"
 
-#: qtplugins/forcefield/forcefield.h:50
+#: qtplugins/forcefield/forcefield.h:51
 msgid "Forcefield minimization, including scripts"
 msgstr "Minimizarea câmpului de forță, inclusiv scripturi"
 
@@ -3136,17 +3234,17 @@ msgstr "Câmp de forță AMBER generalizat"
 msgid "Merck Molecular Force Field 94"
 msgstr "Câmpul de forță moleculară Merck 94"
 
-#: qtplugins/forcefield/scriptenergy.cpp:251
+#: qtplugins/forcefield/scriptenergy.cpp:253
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
 msgstr "Eroare la preluarea metadatelor pentru scriptul de energie: %1"
 
-#: qtplugins/forcefield/scriptenergy.cpp:261
+#: qtplugins/forcefield/scriptenergy.cpp:263
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
 msgstr "Eroare la analizarea metadatelor pentru scriptul de energie: %1"
 
-#: qtplugins/forcefield/scriptenergy.cpp:269
+#: qtplugins/forcefield/scriptenergy.cpp:271
 #, qt-format
 msgid ""
 "Error parsing metadata for energy script: %1\n"
@@ -3201,7 +3299,7 @@ msgstr "Potențialul nucleului"
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/gamessinput/gamessinputdialog.cpp:419
 #: qtplugins/label/label.cpp:182 qtplugins/label/label.cpp:212
-#: qtplugins/label/label.cpp:225:1379 rc.cpp:1472 rc.cpp:1812
+#: qtplugins/label/label.cpp:225:1421 rc.cpp:1514 rc.cpp:1854
 msgid "None"
 msgstr "Nimic"
 
@@ -3339,7 +3437,7 @@ msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
-#: qtplugins/insertdna/insertdna.cpp:167:643
+#: qtplugins/insertdna/insertdna.cpp:167:685
 msgid "Thymine"
 msgstr "Timină"
 
@@ -3347,7 +3445,7 @@ msgstr "Timină"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
 #: qtplugins/lineformatinput/lineformatinput.cpp:109
-#: qtplugins/lineformatinput/lineformatinput.cpp:124:1052
+#: qtplugins/lineformatinput/lineformatinput.cpp:124:1094
 msgid "Insert Molecule…"
 msgstr "Inserare moleculă…"
 
@@ -3379,7 +3477,7 @@ msgstr "Eroare la citirea fișierului (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-#: qtplugins/insertfragment/insertfragment.cpp:117:379
+#: qtplugins/insertfragment/insertfragment.cpp:117:421
 msgid "Import Crystal"
 msgstr "Importă cristal"
 
@@ -3516,7 +3614,7 @@ msgstr ""
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:174
-#: qtplugins/vanderwaals/vanderwaals.cpp:75:1637
+#: qtplugins/vanderwaals/vanderwaals.cpp:75:1679
 msgid "Opacity:"
 msgstr "Opacitate:"
 
@@ -4152,7 +4250,7 @@ msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:497:1280
+#: qtplugins/openmminput/openmminputdialog.cpp:497:1322
 msgid "input.prmtop"
 msgstr "input.prmtop"
 
@@ -4182,7 +4280,7 @@ msgstr "top"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1061
-#: qtplugins/openmminput/openmminputdialog.cpp:1070:1397 rc.cpp:1412
+#: qtplugins/openmminput/openmminputdialog.cpp:1070:1439 rc.cpp:1454
 msgid "True"
 msgstr "Adevărat"
 
@@ -4231,7 +4329,7 @@ msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:118:1893
+#: qtplugins/playertool/playertool.cpp:118:1935
 msgid "Frame:"
 msgstr "Cadrul:"
 
@@ -4248,7 +4346,7 @@ msgstr "Legături dinamice?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:144:1899
+#: qtplugins/playertool/playertool.cpp:144:1941
 msgid "Record Movie…"
 msgstr "Înregistrare videoclip…"
 
@@ -4436,7 +4534,7 @@ msgstr "Eroare în timp ce se extrăgea: %1"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.cpp:27:1619
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1661
 msgid "Download Plugins…"
 msgstr "Descarcă module…"
 
@@ -4525,13 +4623,6 @@ msgstr "Culoare"
 msgid "Atom"
 msgstr "Atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:561
-#: qtplugins/propertytables/propertymodel.cpp:602
-#: qtplugins/propertytables/propertymodel.cpp:619
-#: qtplugins/symmetry/operationstablemodel.cpp:57
-msgid "Type"
-msgstr "Tip"
-
 #: qtplugins/propertytables/propertymodel.cpp:563
 msgid "Start Atom"
 msgstr "Atom inițial"
@@ -4561,32 +4652,14 @@ msgstr "Structura secundară"
 msgid "Heterogen"
 msgstr "Eterogen"
 
-#: qtplugins/propertytables/propertymodel.cpp:604
-#: qtplugins/propertytables/propertymodel.cpp:621
-msgid "Atom 1"
-msgstr "Atom 1"
-
 #: qtplugins/propertytables/propertymodel.cpp:606
 msgid "Vertex"
 msgstr "Vertex"
-
-#: qtplugins/propertytables/propertymodel.cpp:608
-#: qtplugins/propertytables/propertymodel.cpp:625
-msgid "Atom 3"
-msgstr "Atom 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:610
 #: qtplugins/propertytables/propertymodel.cpp:629
 msgid "Angle (°)"
 msgstr "Unghi (°)"
-
-#: qtplugins/propertytables/propertymodel.cpp:623
-msgid "Atom 2"
-msgstr "Atom 2"
-
-#: qtplugins/propertytables/propertymodel.cpp:627
-msgid "Atom 4"
-msgstr "Atom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:640
 msgctxt "root mean squared displacement in Angstrom"
@@ -4871,7 +4944,7 @@ msgstr "Selectare reziduu"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1932
+#: qtplugins/select/select.h:30:1974
 msgid "Select"
 msgstr "Selectează"
 
@@ -4925,7 +4998,7 @@ msgstr "Detectează grupul spațial…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1917
+#: qtplugins/spacegroup/spacegroup.cpp:68:1959
 msgid "Symmetrize"
 msgstr "Simetrizare"
 
@@ -5057,7 +5130,7 @@ msgstr "Trasează spectre…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:36:1652
+#: qtplugins/spectra/spectra.h:36:1694
 msgid "Spectra"
 msgstr "Spectru"
 
@@ -5159,7 +5232,7 @@ msgstr "Spectre de dicroism circular"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-#: qtplugins/spectra/spectradialog.cpp:655:1550
+#: qtplugins/spectra/spectradialog.cpp:655:1592
 msgid "Density"
 msgstr "Densitate"
 
@@ -5186,7 +5259,7 @@ msgstr "Orbital"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/surfaces/orbitaltablemodel.cpp:110
-#: qtplugins/symmetry/symmetry.h:34:1902
+#: qtplugins/symmetry/symmetry.h:34:1944
 msgid "Symmetry"
 msgstr "Simetrie"
 
@@ -5892,6 +5965,62 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment:"
 msgstr "Mediu:"
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:33
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+msgid "Add Constraints"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
+#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:287
+#. i18n: ectx: property (text), widget (QLabel, typeLabel)
+msgid "Type:"
+msgstr "Tip:"
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:74
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Atom Indices:"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:113
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Value:"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:125
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, editValue)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
+#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
+msgid "Å"
+msgstr "Å"
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:142
+#. i18n: ectx: property (text), widget (QPushButton, addConstraint)
+msgid "Add"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:167
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+msgid "Options"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
+#. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
+msgid "Delete Selected"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:207
+#. i18n: ectx: property (text), widget (QPushButton, deleteAllConstraints)
+msgid "Delete All"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:214
+#. i18n: ectx: property (text), widget (QPushButton, okButton)
+msgid "OK"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
@@ -7340,13 +7469,6 @@ msgstr "Frecvența de actualizare a perechilor:"
 msgid "electrostatic cutoff distance:"
 msgstr "distanța de separare electrostatică:"
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
-msgid "Å"
-msgstr "Å"
-
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "\"Energy\" convergence:"
@@ -8332,11 +8454,6 @@ msgstr "8: Antiprismă pătrată"
 #. i18n: ectx: attribute (title), widget (QWidget, ligandTab)
 msgid "Ligands"
 msgstr "Liganzi"
-
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:287
-#. i18n: ectx: property (text), widget (QLabel, typeLabel)
-msgid "Type:"
-msgstr "Tip:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:297
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
