@@ -22,7 +22,8 @@ class ConstraintsDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit ConstraintsDialog(QWidget* parent_ = 0, Qt::WindowFlags f = 0);
+  explicit ConstraintsDialog(QWidget* parent_ = 0,
+                             Qt::WindowFlags f = Qt::WindowFlags());
   ~ConstraintsDialog() override;
 
   void setMolecule(QtGui::Molecule* molecule);
