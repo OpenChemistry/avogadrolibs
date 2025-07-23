@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-21 21:51+0000\n"
-"PO-Revision-Date: 2025-07-01 18:01+0000\n"
+"PO-Revision-Date: 2025-07-23 22:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ar/>\n"
@@ -4418,9 +4418,8 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:604
 #: qtplugins/propertytables/propertymodel.cpp:621
-#, fuzzy
 msgid "Atom 1"
-msgstr "ذرة %1"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:606
 msgid "Vertex"
@@ -4428,9 +4427,8 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:608
 #: qtplugins/propertytables/propertymodel.cpp:625
-#, fuzzy
 msgid "Atom 3"
-msgstr "ذرة"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:610
 #: qtplugins/propertytables/propertymodel.cpp:629
@@ -4439,14 +4437,12 @@ msgid "Angle (°)"
 msgstr "زاوية"
 
 #: qtplugins/propertytables/propertymodel.cpp:623
-#, fuzzy
 msgid "Atom 2"
-msgstr "ذرة"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:627
-#, fuzzy
 msgid "Atom 4"
-msgstr "ذرة"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:640
 msgctxt "root mean squared displacement in Angstrom"
