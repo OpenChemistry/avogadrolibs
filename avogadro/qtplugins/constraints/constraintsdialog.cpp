@@ -44,13 +44,12 @@ ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f)
 
   auto* view = ui->constraintsTableView;
   view->setModel(proxyModel);
-  // view->resizeColumnsToContents();
+  view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  view->resizeColumnsToContents();
   view->setSelectionBehavior(QAbstractItemView::SelectRows);
-  // Alternating row colors
   view->setAlternatingRowColors(true);
   // TODO: Allow sorting the table
   // requires remapping
-  // view->setSortingEnabled(true);
 
   connect(view->selectionModel(),
           SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), this,

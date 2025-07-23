@@ -104,12 +104,10 @@ QVariant ConstraintsModel::data(const QModelIndex& index, int role) const
           return "--";
         break;
       case 5:
-        Index dIndex = currentConstraint.dIndex();
-        if (dIndex != MaxIndex) {
+        if (dIndex != MaxIndex)
           return QVariant(static_cast<qulonglong>(dIndex));
-        } else {
+        else
           return "--";
-        }
         break;
     }
 

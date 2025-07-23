@@ -10,9 +10,6 @@
 #include <QAction>
 #include <QDebug>
 
-// #include <QTextStream>
-// #include <QString>
-
 #include <string>
 #include <iostream>
 
