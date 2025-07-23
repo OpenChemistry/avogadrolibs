@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-07-22 21:07+0000\n"
+"PO-Revision-Date: 2025-07-23 16:17+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -2128,7 +2128,7 @@ msgstr "幾何中心を追加"
 
 #: qtplugins/centroid/centroid.cpp:22
 msgid "Add Center of Mass"
-msgstr "重心を追加"
+msgstr "質量中心を追加"
 
 #: qtplugins/centroid/centroid.cpp:24
 msgctxt "add a point normal to the plane of the molecule"
@@ -4648,8 +4648,9 @@ msgid "Generate input for quantum codes."
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:38
+#, fuzzy
 msgid "Center"
-msgstr ""
+msgstr "中心"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
@@ -4895,6 +4896,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"現在の許容値: %1\n"
+"この値で続行しますか？"
 
 #: qtplugins/spacegroup/spacegroup.cpp:252
 msgid ""
@@ -4909,13 +4912,12 @@ msgid ""
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:301
-#, fuzzy
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 "対象化に失敗。\n"
-"結晶をチェックして異なる閾値を試してください。"
+"結晶をチェックして異なる許容値を試してください。"
 
 #: qtplugins/spacegroup/spacegroup.cpp:359 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
@@ -7503,7 +7505,7 @@ msgstr " fs"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
 msgid "Error tolerance:"
-msgstr ""
+msgstr "誤差の許容値:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:586
 #. i18n: ectx: property (text), widget (QLabel, label_collisionRate)
@@ -7825,8 +7827,9 @@ msgstr "インポート (&I)…"
 #. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
 #. i18n: file: qtplugins/spectra/spectradialog.ui:369
 #. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
+#, fuzzy
 msgid "Set Color…"
-msgstr ""
+msgstr "色の設定…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:269
 #. i18n: ectx: property (text), widget (QLabel, label_4)
