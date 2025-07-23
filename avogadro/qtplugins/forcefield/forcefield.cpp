@@ -53,6 +53,7 @@ const int unfreezeAction = 4;
 const int constraintAction = 5;
 const int forcesAction = 6;
 const int fuseAction = 7;
+const int unfuseAction = 8;
 
 Forcefield::Forcefield(QObject* parent_)
   : ExtensionPlugin(parent_), m_method(nullptr)
@@ -123,10 +124,19 @@ Forcefield::Forcefield(QObject* parent_)
   action = new QAction(this);
   action->setEnabled(true);
   action->setText(
-    tr("Fuse Atoms", "freeze atomic distances / glue atoms together"));
+    tr("Fuse Selected Atoms", "freeze atomic distances / glue atoms together"));
   action->setData(fuseAction);
   action->setProperty("menu priority", 770);
   connect(action, SIGNAL(triggered()), SLOT(fuseSelected()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Unfuse Selected Atoms",
+                     "freeze atomic distances / glue atoms together"));
+  action->setData(unfuseAction);
+  action->setProperty("menu priority", 760);
+  connect(action, SIGNAL(triggered()), SLOT(unfuseSelected()));
   m_actions.push_back(action);
 
   // initialize the calculators
@@ -213,6 +223,29 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
 
   m_molecule = mol;
   setupMethod();
+
+  // TODO: connect to molecule changes, e.g. selection
+  // connect(m_molecule, SIGNAL(changed(uint)), SLOT(updateActions()));
+}
+
+void Forcefield::updateActions()
+{
+  if (m_molecule == nullptr)
+    return;
+
+  bool noSelection = m_molecule->isSelectionEmpty();
+  foreach (QAction* action, m_actions) {
+    switch (action->data().toInt()) {
+      case freezeAction:
+      case unfreezeAction:
+      case fuseAction:
+      case unfuseAction:
+        action->setEnabled(!noSelection);
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 void Forcefield::setupMethod()
@@ -534,8 +567,8 @@ std::string Forcefield::recommendedForceField() const
 
 void Forcefield::freezeSelected()
 {
-  if (!m_molecule)
-    return;
+  if (m_molecule == nullptr || m_molecule->isSelectionEmpty())
+    return; // nothing to do until there's a valid selection
 
   auto numAtoms = m_molecule->atomCount();
   // now freeze the specified atoms
@@ -550,14 +583,34 @@ void Forcefield::freezeSelected()
 
 void Forcefield::unfreezeSelected()
 {
-  if (!m_molecule)
-    return;
+  if (m_molecule == nullptr || m_molecule->isSelectionEmpty())
+    return; // nothing to do until there's a valid selection
 
   auto numAtoms = m_molecule->atomCount();
   // now freeze the specified atoms
   for (Index i = 0; i < numAtoms; ++i) {
     if (m_molecule->atomSelected(i)) {
       m_molecule->setFrozenAtom(i, false);
+    }
+  }
+
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
+}
+
+void Forcefield::unfuseSelected()
+{
+  if (m_molecule == nullptr || m_molecule->isSelectionEmpty())
+    return; // nothing to do until there's a valid selection
+
+  auto numAtoms = m_molecule->atomCount();
+  // now remove constraints between the specified atoms
+  for (Index i = 0; i < numAtoms; ++i) {
+    if (m_molecule->atomSelected(i)) {
+      for (Index j = i + 1; j < numAtoms; ++j) {
+        if (m_molecule->atomSelected(j)) {
+          m_molecule->removeConstraint(i, j);
+        }
+      }
     }
   }
 

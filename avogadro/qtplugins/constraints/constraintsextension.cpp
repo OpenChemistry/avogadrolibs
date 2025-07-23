@@ -25,10 +25,6 @@ ConstraintsExtension::ConstraintsExtension(QObject* p) : ExtensionPlugin(p)
   action->setText(tr("Constraints…"));
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
   m_actions.push_back(action);
-
-  qDebug() << " parent name : " << parent()->objectName();
-
-  m_dialog = new ConstraintsDialog(qobject_cast<QWidget*>(parent()));
 }
 
 ConstraintsExtension::~ConstraintsExtension() {}
@@ -45,6 +41,10 @@ QStringList ConstraintsExtension::menuPath(QAction*) const
 
 void ConstraintsExtension::openDialog()
 {
+  if (m_dialog == nullptr) {
+    m_dialog = new ConstraintsDialog(qobject_cast<QWidget*>(parent()));
+  }
+
   // update the constraints before we show the dialog
   if (m_molecule != nullptr)
     m_dialog->setMolecule(m_molecule);
