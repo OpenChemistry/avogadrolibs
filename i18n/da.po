@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-21 21:51+0000\n"
-"PO-Revision-Date: 2025-07-21 20:09+0000\n"
+"PO-Revision-Date: 2025-07-23 22:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/da/>\n"
@@ -4535,10 +4535,9 @@ msgid "α Helix"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:971
-#, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr "Ark"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:973
 msgctxt "3-10 helix"
@@ -4601,7 +4600,7 @@ msgstr "Egenskaber"
 
 #: qtplugins/propertytables/propertyview.cpp:45
 msgid "Atom Properties"
-msgstr "Atom Egenskaber..."
+msgstr "Atom Egenskaber"
 
 #: qtplugins/propertytables/propertyview.cpp:48
 msgid "Bond Properties"
