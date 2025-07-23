@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-06 03:06+0000\n"
+"POT-Creation-Date: 2025-07-21 21:51+0000\n"
 "PO-Revision-Date: 2025-06-20 11:02+0000\n"
 "Last-Translator: Максим Горпиніч <maksimgorpinic4@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
@@ -192,7 +192,7 @@ msgstr "Продовжити"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:66
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:377
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:380
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:955
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -1618,19 +1618,12 @@ msgstr "Вирівняти"
 msgid ""
 "Align Molecules\n"
 "\n"
-"Left Mouse: \tSelect up to two atoms.\n"
+"Left Mouse:\tSelect up to two atoms.\n"
 "\tThe first atom is centered at the origin.\n"
 "\tThe second atom is aligned to the selected axis.\n"
-"Right Mouse: \tReset alignment.\n"
-"Double-Click: \tCenter the atom at the origin."
+"Right Mouse:\tReset alignment.\n"
+"Double-Click:\tCenter the atom at the origin."
 msgstr ""
-"Вирівнювання молекул\n"
-"\n"
-"Ліва кнопка миші: \tвибір до двох атомів.\n"
-"\tПерший атом центрується за початком координат.\n"
-"\tДругий атом вирівнюється за вибраною віссю.\n"
-"Права кнопка миші: \tскасувати вирівнювання.\n"
-"Подвійне клацання: \tцентрувати атом за початком координат."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2031,30 +2024,17 @@ msgstr "Бонд-центрична маніпуляція"
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
 #, qt-format
 msgid ""
-"Bond Centric Manipulation Tool \t(%1)\n"
+"Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick and drag to rotate the view.\n"
-"Middle Mouse: \tClick and drag to zoom in or out.\n"
-"Right Mouse: \tClick and drag to move the view.\n"
-"Double-Click: \tReset the view.\n"
+"Left Mouse:\tClick and drag to rotate the view.\n"
+"Middle Mouse:\tClick and drag to zoom in or out.\n"
+"Right Mouse:\tClick and drag to move the view.\n"
+"Double-Click:\tReset the view.\n"
 "\n"
 "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
-"Інструмент маніпуляції, орієнтований на Bond (%1) \n"
-"\n"
-"Ліва миша: клацніть і перетягніть, щоб повернути перегляд. \n"
-"Середня миша: натисніть і перетягніть, щоб збільшити або зменшити масштаб. \n"
-"Права кнопка миші: натисніть і перетягніть, щоб перемістити перегляд. \n"
-"Подвійне клацання: скидання перегляду. \n"
-"\n"
-"Клацніть лівою кнопкою миші та перетягніть зв’язок, щоб встановити площину "
-"маніпуляції: \n"
-"Клацніть лівою кнопкою миші та перетягніть один із атомів у зв’язку, щоб "
-"змінити кут \n"
-"Клацніть правою кнопкою миші та перетягніть один із атомів у зв’язку, щоб "
-"змінити довжину"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2105,7 +2085,7 @@ msgid "Bond Selected Atoms"
 msgstr "З’єднайте вибрані атоми"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:544
+#: qtplugins/propertytables/propertymodel.cpp:575
 msgid "Bond"
 msgstr "Зв’язок"
 
@@ -2849,10 +2829,27 @@ msgstr "Не вдалося обробити текст"
 msgid "Failed to read the data with the supplied format."
 msgstr "Не вдалося прочитати дані у наданому форматі."
 
-#: qtplugins/crystal/unitcelldialog.cpp:249
-#: qtplugins/crystal/unitcelldialog.cpp:262
+#: qtplugins/crystal/unitcelldialog.cpp:250
+#: qtplugins/crystal/unitcelldialog.cpp:263
 msgid "No unit cell present."
 msgstr "Немає елементарної комірки."
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
+#: qtplugins/crystal/unitcelldialog.cpp:283
+#: qtplugins/crystal/unitcelldialog.cpp:299
+#: qtplugins/crystal/unitcelldialog.cpp:315:400
+msgid "Unit Cell Editor"
+msgstr "Редактор елементарної комірки"
+
+#: qtplugins/crystal/unitcelldialog.cpp:284
+#: qtplugins/crystal/unitcelldialog.cpp:300
+msgid "Ignoring singular cell matrix"
+msgstr ""
+
+#: qtplugins/crystal/unitcelldialog.cpp:316
+msgid "Ignoring singular fractional cell matrix"
+msgstr ""
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -2882,15 +2879,11 @@ msgstr "Малювати"
 #: qtplugins/editor/editor.cpp:76
 #, qt-format
 msgid ""
-"Draw Tool \t(%1)\n"
+"Draw Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick and Drag to create Atoms and Bond\n"
-"Right Mouse: \tDelete Atom"
+"Left Mouse:\tClick and Drag to create Atoms and Bond\n"
+"Right Mouse:\tDelete Atom"
 msgstr ""
-"Інструмент малювання (%1)\n"
-"\n"
-"Ліва миша: клацніть і перетягніть, щоб створити атоми та зв’язок\n"
-"Права кнопка миші: Видалити атом"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3055,7 +3048,7 @@ msgstr "&Обчислити"
 
 #: qtplugins/forcefield/forcefield.cpp:251
 #: qtplugins/forcefield/forcefield.cpp:409
-#: qtplugins/forcefield/forcefield.cpp:460
+#: qtplugins/forcefield/forcefield.cpp:479
 #: qtplugins/playertool/playertool.cpp:348
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:931
 #: qtplugins/surfaces/surfaces.cpp:975 qtplugins/surfaces/surfaces.cpp:987
@@ -3078,7 +3071,7 @@ msgstr "Енергія: %L1"
 msgid "%1 Energy = %L2"
 msgstr "%1 Енергія = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:459
+#: qtplugins/forcefield/forcefield.cpp:478
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Норма сили = %L2"
@@ -3385,7 +3378,7 @@ msgstr "Індекс"
 msgid "Unique ID"
 msgstr "Унікальний ідентифікатор"
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:500
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:531
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "Елемент"
@@ -3415,13 +3408,13 @@ msgstr "Довжина"
 msgid "Bond Label:"
 msgstr "Мітка облігації:"
 
-#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:553
+#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:584
 msgid "ID"
 msgstr "ID"
 
 #: qtplugins/label/label.cpp:234
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:551
+#: qtplugins/propertytables/propertymodel.cpp:582
 msgid "Name"
 msgstr "Ім'я"
 
@@ -3449,13 +3442,10 @@ msgstr "Редагувати мітки"
 #: qtplugins/label/labeleditor.cpp:34
 #, qt-format
 msgid ""
-"Atom Label Tool \t(%1)\n"
+"Atom Label Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick on Atoms to add Custom Labels"
+"Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
-"Інструмент Atom Label (%1)\n"
-"\n"
-"Ліва миша: клацніть на Atoms, щоб додати власні мітки"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3538,15 +3528,11 @@ msgstr "Керування"
 #: qtplugins/manipulator/manipulator.cpp:52
 #, qt-format
 msgid ""
-"Manipulation Tool \t(%1)\n"
+"Manipulation Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick and drag to move atoms\n"
-"Right Mouse: \tClick and drag to rotate atoms.\n"
+"Left Mouse:\tClick and drag to move atoms\n"
+"Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
-"Інструмент маніпуляції (%1)\n"
-"\n"
-"Ліва миша: натисніть і перетягніть, щоб перемістити атоми\n"
-"Права миша: клацніть і перетягніть, щоб обертати атоми.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3565,21 +3551,14 @@ msgstr "Вимірювання"
 #: qtplugins/measuretool/measuretool.cpp:54
 #, qt-format
 msgid ""
-"Measure Tool \t(%1)\n"
+"Measure Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tSelect up to four Atoms.\n"
+"Left Mouse:\tSelect up to four Atoms.\n"
 "\tDistances are measured between 1-2 and 2-3\n"
 "\tAngle is measured between 1-3 using 2 as the common point\n"
 "\tDihedral is measured between 1-2-3-4\n"
-"Right Mouse: \tReset the measurements."
+"Right Mouse:\tReset the measurements."
 msgstr ""
-"Інструмент вимірювання (%1)\n"
-"\n"
-"Ліва миша: виберіть до чотирьох атомів.\n"
-"\tВідстані вимірюються від 1-2 до 2-3\n"
-"\tКут вимірюється між 1-3, використовуючи 2 як спільну точку\n"
-"\tДвогранник вимірюється між 1-2-3-4\n"
-"Права кнопка миші: скинути вимірювання."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -3615,7 +3594,7 @@ msgid "unknown molecule"
 msgstr "невідома молекула"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:260
-#: qtplugins/propertytables/propertymodel.cpp:612
+#: qtplugins/propertytables/propertymodel.cpp:643
 msgid "Property"
 msgstr "Власність"
 
@@ -3773,17 +3752,12 @@ msgstr "Навігація"
 #: qtplugins/navigator/navigator.cpp:42
 #, qt-format
 msgid ""
-"Navigation Tool \t(%1)\n"
+"Navigation Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick and drag to rotate the view.\n"
-"Middle Mouse: \tClick and drag to zoom in or out.\n"
-"Right Mouse: \tClick and drag to move the view.\n"
+"Left Mouse:\tClick and drag to rotate the view.\n"
+"Middle Mouse:\tClick and drag to zoom in or out.\n"
+"Right Mouse:\tClick and drag to move the view."
 msgstr ""
-"Інструмент навігації (%1)\n"
-"\n"
-"Ліва миша: клацніть і перетягніть, щоб повернути перегляд.\n"
-"Середня миша: натисніть і перетягніть, щоб збільшити або зменшити масштаб.\n"
-"Права кнопка миші: натисніть і перетягніть, щоб перемістити перегляд.\n"
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3803,12 +3777,9 @@ msgstr "Зворотний напрямок масштабування під ч
 
 #: qtplugins/navigator/navigator.cpp:108
 msgid ""
-"Default:\t Scroll down to shrink, scroll up to zoom\n"
-"Reversed:\t Scroll up to shrink, scroll down to zoom"
+"Default:\tScroll down to shrink, scroll up to zoom\n"
+"Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
-"За замовчуванням: прокрутіть вниз, щоб зменшити, прокрутіть вгору, щоб "
-"збільшити\n"
-"Перевернуто: прокрутіть вгору, щоб зменшити, прокрутіть вниз, щоб збільшити"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -4177,8 +4148,8 @@ msgstr "гравець"
 
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
-msgid "Animation Tool \t(%1)"
-msgstr "Інструмент анімації (%1)"
+msgid "Animation Tool\t(%1)"
+msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4452,158 +4423,158 @@ msgstr "POV Ray"
 msgid "Render the scene using POV-Ray."
 msgstr "Візуалізуйте сцену за допомогою POV-Ray."
 
-#: qtplugins/propertytables/propertymodel.cpp:502
+#: qtplugins/propertytables/propertymodel.cpp:533
 msgid "Valence"
 msgstr "Валентність"
 
-#: qtplugins/propertytables/propertymodel.cpp:504
+#: qtplugins/propertytables/propertymodel.cpp:535
 msgid "Formal Charge"
 msgstr "Офіційне звинувачення"
 
-#: qtplugins/propertytables/propertymodel.cpp:507
+#: qtplugins/propertytables/propertymodel.cpp:538
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1 Часткова зарядка"
 
-#: qtplugins/propertytables/propertymodel.cpp:512
+#: qtplugins/propertytables/propertymodel.cpp:543
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:514
+#: qtplugins/propertytables/propertymodel.cpp:545
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:516
+#: qtplugins/propertytables/propertymodel.cpp:547
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:518
-#: qtplugins/propertytables/propertymodel.cpp:538
+#: qtplugins/propertytables/propertymodel.cpp:549
+#: qtplugins/propertytables/propertymodel.cpp:569
 msgid "Label"
 msgstr "Мітка"
 
-#: qtplugins/propertytables/propertymodel.cpp:520
-#: qtplugins/propertytables/propertymodel.cpp:561
+#: qtplugins/propertytables/propertymodel.cpp:551
+#: qtplugins/propertytables/propertymodel.cpp:592
 msgid "Color"
 msgstr "Колір"
 
-#: qtplugins/propertytables/propertymodel.cpp:523
+#: qtplugins/propertytables/propertymodel.cpp:554
 msgid "Atom"
 msgstr "Атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:530
-#: qtplugins/propertytables/propertymodel.cpp:571
-#: qtplugins/propertytables/propertymodel.cpp:588
+#: qtplugins/propertytables/propertymodel.cpp:561
+#: qtplugins/propertytables/propertymodel.cpp:602
+#: qtplugins/propertytables/propertymodel.cpp:619
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "Тип"
 
-#: qtplugins/propertytables/propertymodel.cpp:532
+#: qtplugins/propertytables/propertymodel.cpp:563
 msgid "Start Atom"
 msgstr "Початковий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:534
+#: qtplugins/propertytables/propertymodel.cpp:565
 msgid "End Atom"
 msgstr "Кінцевий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:536
+#: qtplugins/propertytables/propertymodel.cpp:567
 msgid "Bond Order"
 msgstr "Порядок облігацій"
 
-#: qtplugins/propertytables/propertymodel.cpp:540
+#: qtplugins/propertytables/propertymodel.cpp:571
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Довжина (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:555
+#: qtplugins/propertytables/propertymodel.cpp:586
 msgid "Chain"
 msgstr "Ланцюг"
 
-#: qtplugins/propertytables/propertymodel.cpp:557
+#: qtplugins/propertytables/propertymodel.cpp:588
 msgid "Secondary Structure"
 msgstr "Вторинна структура"
 
-#: qtplugins/propertytables/propertymodel.cpp:559
+#: qtplugins/propertytables/propertymodel.cpp:590
 msgid "Heterogen"
 msgstr "Гетероген"
 
-#: qtplugins/propertytables/propertymodel.cpp:573
-#: qtplugins/propertytables/propertymodel.cpp:590
+#: qtplugins/propertytables/propertymodel.cpp:604
+#: qtplugins/propertytables/propertymodel.cpp:621
 msgid "Atom 1"
 msgstr "Атом 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:575
+#: qtplugins/propertytables/propertymodel.cpp:606
 msgid "Vertex"
 msgstr "Вершина"
 
-#: qtplugins/propertytables/propertymodel.cpp:577
-#: qtplugins/propertytables/propertymodel.cpp:594
+#: qtplugins/propertytables/propertymodel.cpp:608
+#: qtplugins/propertytables/propertymodel.cpp:625
 msgid "Atom 3"
 msgstr "Атом 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:579
-#: qtplugins/propertytables/propertymodel.cpp:598
+#: qtplugins/propertytables/propertymodel.cpp:610
+#: qtplugins/propertytables/propertymodel.cpp:629
 msgid "Angle (°)"
 msgstr "Кут (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:592
+#: qtplugins/propertytables/propertymodel.cpp:623
 msgid "Atom 2"
 msgstr "Атом 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:596
+#: qtplugins/propertytables/propertymodel.cpp:627
 msgid "Atom 4"
 msgstr "Атом 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:609
+#: qtplugins/propertytables/propertymodel.cpp:640
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "RMSD (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:612
+#: qtplugins/propertytables/propertymodel.cpp:643
 msgid "Energy (kcal/mol)"
 msgstr "Енергія (ккал/моль)"
 
-#: qtplugins/propertytables/propertymodel.cpp:808
+#: qtplugins/propertytables/propertymodel.cpp:839
 msgid "Adjust Fragment"
 msgstr "Налаштувати фрагмент"
 
-#: qtplugins/propertytables/propertymodel.cpp:934
+#: qtplugins/propertytables/propertymodel.cpp:965
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:936
+#: qtplugins/propertytables/propertymodel.cpp:967
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "Вигин"
 
-#: qtplugins/propertytables/propertymodel.cpp:938
+#: qtplugins/propertytables/propertymodel.cpp:969
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:940
+#: qtplugins/propertytables/propertymodel.cpp:971
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β Аркуш"
 
-#: qtplugins/propertytables/propertymodel.cpp:942
+#: qtplugins/propertytables/propertymodel.cpp:973
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:944
+#: qtplugins/propertytables/propertymodel.cpp:975
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "β Міст"
 
-#: qtplugins/propertytables/propertymodel.cpp:946
+#: qtplugins/propertytables/propertymodel.cpp:977
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "Поворот"
 
-#: qtplugins/propertytables/propertymodel.cpp:948
+#: qtplugins/propertytables/propertymodel.cpp:979
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "Котушка"
@@ -4854,22 +4825,14 @@ msgstr "Позначене"
 #: qtplugins/selectiontool/selectiontool.cpp:53
 #, qt-format
 msgid ""
-"Selection Tool \t(%1)\n"
+"Selection Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+"Left Mouse:\tClick to pick individual atoms, residues, or fragments\n"
 "\tDrag to select a range of atoms\n"
-"Right Mouse: \tClick outside the molecule to clear selection\n"
+"Right Mouse:\tClick outside the molecule to clear selection\n"
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
-"Double-Click: \tSelect an entire fragment."
+"Double-Click:\tSelect an entire fragment."
 msgstr ""
-"Інструмент виділення (%1) \n"
-"\n"
-"Ліва миша: клацніть, щоб вибрати окремі атоми, залишки або фрагменти \n"
-"\tПеретягніть, щоб вибрати діапазон атомів \n"
-"Права кнопка миші: клацніть за межами молекули, щоб очистити вибір \n"
-"Використовуйте Ctrl, щоб перемкнути виділення, і Shift, щоб додати до "
-"виділення. \n"
-"Подвійне клацання: виділення цілого фрагмента."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -5337,22 +5300,15 @@ msgstr "Шаблон"
 #: qtplugins/templatetool/templatetool.cpp:84
 #, qt-format
 msgid ""
-"Template Tool \t(%1)\n"
+"Template Tool\t(%1)\n"
 "\n"
 "Insert fragments, including metal centers.\n"
-"Select an element and coordination geometry,then click to insert a "
+"Select an element and coordination geometry, then click to insert a "
 "fragment.\n"
 "\n"
-"Select a ligand or functional group and clickon a hydrogen atom to attach it."
+"Select a ligand or functional group and click on a hydrogen atom to attach "
+"it."
 msgstr ""
-"Інструмент шаблону (%1) \n"
-"\n"
-"Вставні фрагменти, в тому числі металеві центри. \n"
-"Виберіть елемент і координаційну геометрію, а потім натисніть, щоб вставити "
-"фрагмент. \n"
-"\n"
-"Виберіть ліганд або функціональну групу та натисніть на атом водню, щоб "
-"приєднати його."
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
@@ -5545,7 +5501,7 @@ msgstr "Сценарій налагодження…"
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:363
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:366
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
 msgstr "Надіслати розрахунок…"
@@ -5959,21 +5915,21 @@ msgstr "вхід CP2K"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:333
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:336
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 msgid "Reset All"
 msgstr "Скинути все"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:29
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:340
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:343
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
 msgstr "Типові значення"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:370
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:373
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save File…"
 msgstr "Зберегти файл…"
@@ -5987,7 +5943,7 @@ msgstr "&Просте налаштування"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:101
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:167
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:170
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -5996,7 +5952,7 @@ msgstr "Заголовок:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:310
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:313
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_12)
@@ -6005,7 +5961,7 @@ msgstr "База імен файлів:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:320
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:323
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:70
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -6014,7 +5970,7 @@ msgstr "робота"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:284
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:287
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
 msgstr "Обчислення:"
@@ -6091,22 +6047,22 @@ msgstr "MAX SCF"
 msgid "EPS SCF"
 msgstr "EPS SCF"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:539
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:542
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "SCF GUESS"
 msgstr "SCF GUESS"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:566
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:569
 #. i18n: ectx: property (text), widget (QLabel, label_24)
 msgid "OUTER MAX SCF"
 msgstr "ЗОВНІШНІЙ МАКС. SCF"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:600
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:603
 #. i18n: ectx: property (text), widget (QLabel, label_25)
 msgid "OUTER EPS SCF"
 msgstr "ЗОВНІШНІЙ EPS SCF"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:634
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:640
 #. i18n: ectx: property (text), widget (QLabel, label_26)
 msgid "OT T MINIMIZER"
 msgstr "ОТ Т МІНІМІЗЕР"
@@ -6142,11 +6098,6 @@ msgstr "Повторень за B:"
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
 msgstr "Повторень за C:"
-
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
-msgid "Unit Cell Editor"
-msgstr "Редактор елементарної комірки"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6355,17 +6306,17 @@ msgstr "У:"
 msgid "CONV THRESH"
 msgstr "ПОРІГ КОНВ"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:141
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Multiplicity:"
 msgstr "Мультиплетність:"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:154
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
 msgstr "На основі:"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:251
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:254
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
 msgstr "Заряд:"
@@ -8610,6 +8561,170 @@ msgstr "Ваші імена"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Ваші електронні листи"
+
+#~ msgid ""
+#~ "Align Molecules\n"
+#~ "\n"
+#~ "Left Mouse: \tSelect up to two atoms.\n"
+#~ "\tThe first atom is centered at the origin.\n"
+#~ "\tThe second atom is aligned to the selected axis.\n"
+#~ "Right Mouse: \tReset alignment.\n"
+#~ "Double-Click: \tCenter the atom at the origin."
+#~ msgstr ""
+#~ "Вирівнювання молекул\n"
+#~ "\n"
+#~ "Ліва кнопка миші: \tвибір до двох атомів.\n"
+#~ "\tПерший атом центрується за початком координат.\n"
+#~ "\tДругий атом вирівнюється за вибраною віссю.\n"
+#~ "Права кнопка миші: \tскасувати вирівнювання.\n"
+#~ "Подвійне клацання: \tцентрувати атом за початком координат."
+
+#, qt-format
+#~ msgid ""
+#~ "Bond Centric Manipulation Tool \t(%1)\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and drag to rotate the view.\n"
+#~ "Middle Mouse: \tClick and drag to zoom in or out.\n"
+#~ "Right Mouse: \tClick and drag to move the view.\n"
+#~ "Double-Click: \tReset the view.\n"
+#~ "\n"
+#~ "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+#~ "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
+#~ "Right Click & Drag one of the Atoms in the Bond to change the length"
+#~ msgstr ""
+#~ "Інструмент маніпуляції, орієнтований на Bond (%1) \n"
+#~ "\n"
+#~ "Ліва миша: клацніть і перетягніть, щоб повернути перегляд. \n"
+#~ "Середня миша: натисніть і перетягніть, щоб збільшити або зменшити "
+#~ "масштаб. \n"
+#~ "Права кнопка миші: натисніть і перетягніть, щоб перемістити перегляд. \n"
+#~ "Подвійне клацання: скидання перегляду. \n"
+#~ "\n"
+#~ "Клацніть лівою кнопкою миші та перетягніть зв’язок, щоб встановити "
+#~ "площину маніпуляції: \n"
+#~ "Клацніть лівою кнопкою миші та перетягніть один із атомів у зв’язку, щоб "
+#~ "змінити кут \n"
+#~ "Клацніть правою кнопкою миші та перетягніть один із атомів у зв’язку, щоб "
+#~ "змінити довжину"
+
+#, qt-format
+#~ msgid ""
+#~ "Draw Tool \t(%1)\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
+#~ "Right Mouse: \tDelete Atom"
+#~ msgstr ""
+#~ "Інструмент малювання (%1)\n"
+#~ "\n"
+#~ "Ліва миша: клацніть і перетягніть, щоб створити атоми та зв’язок\n"
+#~ "Права кнопка миші: Видалити атом"
+
+#, qt-format
+#~ msgid ""
+#~ "Atom Label Tool \t(%1)\n"
+#~ "\n"
+#~ "Left Mouse: \tClick on Atoms to add Custom Labels"
+#~ msgstr ""
+#~ "Інструмент Atom Label (%1)\n"
+#~ "\n"
+#~ "Ліва миша: клацніть на Atoms, щоб додати власні мітки"
+
+#, qt-format
+#~ msgid ""
+#~ "Manipulation Tool \t(%1)\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and drag to move atoms\n"
+#~ "Right Mouse: \tClick and drag to rotate atoms.\n"
+#~ msgstr ""
+#~ "Інструмент маніпуляції (%1)\n"
+#~ "\n"
+#~ "Ліва миша: натисніть і перетягніть, щоб перемістити атоми\n"
+#~ "Права миша: клацніть і перетягніть, щоб обертати атоми.\n"
+
+#, qt-format
+#~ msgid ""
+#~ "Measure Tool \t(%1)\n"
+#~ "\n"
+#~ "Left Mouse: \tSelect up to four Atoms.\n"
+#~ "\tDistances are measured between 1-2 and 2-3\n"
+#~ "\tAngle is measured between 1-3 using 2 as the common point\n"
+#~ "\tDihedral is measured between 1-2-3-4\n"
+#~ "Right Mouse: \tReset the measurements."
+#~ msgstr ""
+#~ "Інструмент вимірювання (%1)\n"
+#~ "\n"
+#~ "Ліва миша: виберіть до чотирьох атомів.\n"
+#~ "\tВідстані вимірюються від 1-2 до 2-3\n"
+#~ "\tКут вимірюється між 1-3, використовуючи 2 як спільну точку\n"
+#~ "\tДвогранник вимірюється між 1-2-3-4\n"
+#~ "Права кнопка миші: скинути вимірювання."
+
+#, qt-format
+#~ msgid ""
+#~ "Navigation Tool \t(%1)\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and drag to rotate the view.\n"
+#~ "Middle Mouse: \tClick and drag to zoom in or out.\n"
+#~ "Right Mouse: \tClick and drag to move the view.\n"
+#~ msgstr ""
+#~ "Інструмент навігації (%1)\n"
+#~ "\n"
+#~ "Ліва миша: клацніть і перетягніть, щоб повернути перегляд.\n"
+#~ "Середня миша: натисніть і перетягніть, щоб збільшити або зменшити "
+#~ "масштаб.\n"
+#~ "Права кнопка миші: натисніть і перетягніть, щоб перемістити перегляд.\n"
+
+#~ msgid ""
+#~ "Default:\t Scroll down to shrink, scroll up to zoom\n"
+#~ "Reversed:\t Scroll up to shrink, scroll down to zoom"
+#~ msgstr ""
+#~ "За замовчуванням: прокрутіть вниз, щоб зменшити, прокрутіть вгору, щоб "
+#~ "збільшити\n"
+#~ "Перевернуто: прокрутіть вгору, щоб зменшити, прокрутіть вниз, щоб "
+#~ "збільшити"
+
+#, qt-format
+#~ msgid "Animation Tool \t(%1)"
+#~ msgstr "Інструмент анімації (%1)"
+
+#, qt-format
+#~ msgid ""
+#~ "Selection Tool \t(%1)\n"
+#~ "\n"
+#~ "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+#~ "\tDrag to select a range of atoms\n"
+#~ "Right Mouse: \tClick outside the molecule to clear selection\n"
+#~ "Use Ctrl to toggle the selection and shift to add to the selection.\n"
+#~ "Double-Click: \tSelect an entire fragment."
+#~ msgstr ""
+#~ "Інструмент виділення (%1) \n"
+#~ "\n"
+#~ "Ліва миша: клацніть, щоб вибрати окремі атоми, залишки або фрагменти \n"
+#~ "\tПеретягніть, щоб вибрати діапазон атомів \n"
+#~ "Права кнопка миші: клацніть за межами молекули, щоб очистити вибір \n"
+#~ "Використовуйте Ctrl, щоб перемкнути виділення, і Shift, щоб додати до "
+#~ "виділення. \n"
+#~ "Подвійне клацання: виділення цілого фрагмента."
+
+#, qt-format
+#~ msgid ""
+#~ "Template Tool \t(%1)\n"
+#~ "\n"
+#~ "Insert fragments, including metal centers.\n"
+#~ "Select an element and coordination geometry,then click to insert a "
+#~ "fragment.\n"
+#~ "\n"
+#~ "Select a ligand or functional group and clickon a hydrogen atom to attach "
+#~ "it."
+#~ msgstr ""
+#~ "Інструмент шаблону (%1) \n"
+#~ "\n"
+#~ "Вставні фрагменти, в тому числі металеві центри. \n"
+#~ "Виберіть елемент і координаційну геометрію, а потім натисніть, щоб "
+#~ "вставити фрагмент. \n"
+#~ "\n"
+#~ "Виберіть ліганд або функціональну групу та натисніть на атом водню, щоб "
+#~ "приєднати його."
 
 #~ msgid "0"
 #~ msgstr "0"
