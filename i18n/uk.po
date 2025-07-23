@@ -12,13 +12,14 @@
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
 # Максим Горпиніч <maksimgorpinic4@gmail.com>, 2025.
+# Максим Горпиніч <gorpinicmaksim5@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-21 21:51+0000\n"
-"PO-Revision-Date: 2025-06-20 11:02+0000\n"
-"Last-Translator: Максим Горпиніч <maksimgorpinic4@gmail.com>\n"
+"PO-Revision-Date: 2025-07-23 22:01+0000\n"
+"Last-Translator: Максим Горпиніч <gorpinicmaksim5@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
 "Language: uk\n"
@@ -1624,6 +1625,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Вирівнювання молекул\n"
+"\n"
+"Ліва кнопка миші: Вибрати до двох атомів.\n"
+"Перший атом центрується в початку координат.\n"
+"Другий атом вирівнюється по вибраній осі.\n"
+"Права кнопка миші: Скинути вирівнювання.\n"
+"Подвійне клацання: Центрувати атом у початку координат."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2035,6 +2043,20 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Інструмент маніпуляції центрами зв'язку (%1)\n"
+"\n"
+"Ліва кнопка миші:\t\tНатисніть і перетягніть, щоб повернути вигляд.\n"
+"Середня кнопка миші:\t Натисніть і перетягніть, щоб збільшити або зменшити "
+"масштаб.\n"
+"Права кнопка миші: \tНатисніть і перетягніть, щоб перемістити вигляд.\n"
+"Подвійне клацання: \tСкинути вигляд.\n"
+"\n"
+"Клацніть лівою кнопкою миші та перетягніть на зв'язку, щоб встановити "
+"площину маніпуляції:\n"
+"Клацніть лівою кнопкою миші та перетягніть один з атомів у зв'язку, щоб "
+"змінити кут.\n"
+"Клацніть правою кнопкою миші та перетягніть один з атомів у зв'язку, щоб "
+"змінити довжину"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2845,11 +2867,11 @@ msgstr "Редактор елементарної комірки"
 #: qtplugins/crystal/unitcelldialog.cpp:284
 #: qtplugins/crystal/unitcelldialog.cpp:300
 msgid "Ignoring singular cell matrix"
-msgstr ""
+msgstr "Ігнорування матриці сингулярних комірок"
 
 #: qtplugins/crystal/unitcelldialog.cpp:316
 msgid "Ignoring singular fractional cell matrix"
-msgstr ""
+msgstr "Ігнорування дробової матриці сингулярних клітин"
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -2884,6 +2906,10 @@ msgid ""
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Інструмент малювання (%1)\n"
+"\n"
+"Ліва кнопка миші: Клацніть та перетягніть, щоб створити атоми та зв'язки\n"
+"Права кнопка миші: Видалити атом"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3446,6 +3472,9 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Інструмент «Мітки атомів» (%1)\n"
+"\n"
+"Ліва кнопка миші: Натисніть на атоми, щоб додати власні мітки"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3533,6 +3562,10 @@ msgid ""
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Інструмент маніпулювання (%1)\n"
+"\n"
+"Ліва кнопка миші: Натисніть і перетягніть, щоб перемістити атоми\n"
+"Права кнопка миші: Натисніть і перетягніть, щоб повернути атоми."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3559,6 +3592,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"Інструмент вимірювання (%1)\n"
+"\n"
+"Ліва кнопка миші: Виберіть до чотирьох атомів.\n"
+"Відстані вимірюються між 1-2 та 2-3\n"
+"Кут вимірюється між 1-3, використовуючи 2 як спільну точку\n"
+"Двогранник вимірюється між 1-2-3-4\n"
+"Права кнопка миші: Скинути вимірювання."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -3758,6 +3798,12 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Інструмент навігації (%1)\n"
+"\n"
+"Ліва кнопка миші: Натисніть і перетягніть, щоб повернути зображення.\n"
+"Середня кнопка миші: Натисніть і перетягніть, щоб збільшити або зменшити "
+"масштаб.\n"
+"Права кнопка миші: Натисніть і перетягніть, щоб перемістити зображення."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3780,6 +3826,9 @@ msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
+"За замовчуванням: Прокрутіть униз, щоб зменшити, прокрутіть угору, щоб "
+"збільшити\n"
+"Зворотне: Прокрутіть угору, щоб зменшити, прокрутіть униз, щоб збільшити"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -4149,7 +4198,7 @@ msgstr "гравець"
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr ""
+msgstr "Інструмент анімації (%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4833,6 +4882,14 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Інструмент виділення (%1)\n"
+"\n"
+"Ліва кнопка миші: Клацніть, щоб вибрати окремі атоми, залишки або фрагменти\n"
+"Перетягніть, щоб вибрати діапазон атомів\n"
+"Права кнопка миші: Клацніть поза молекулою, щоб очистити виділення\n"
+"Використовуйте Ctrl, щоб перемикати виділення, та Shift, щоб додати до "
+"виділення.\n"
+"Подвійне клацання: Виберіть весь фрагмент."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -5215,7 +5272,7 @@ msgstr "Виконайте візуалізацію куба, що надаєт�
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
-msgstr ""
+msgstr "Куб %1"
 
 #: qtplugins/surfaces/surfaces.cpp:601
 msgid "Calculating electron density"
@@ -5309,6 +5366,14 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"Інструмент шаблонів (%1)\n"
+"\n"
+"Вставити фрагменти, включаючи металеві центри.\n"
+"Виберіть елемент та координаційну геометрію, потім клацніть, щоб вставити "
+"фрагмент.\n"
+"\n"
+"Виберіть ліганд або функціональну групу та клацніть на атомі водню, щоб "
+"приєднати його."
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
