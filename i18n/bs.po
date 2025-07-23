@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-21 21:51+0000\n"
-"PO-Revision-Date: 2025-07-21 20:09+0000\n"
+"PO-Revision-Date: 2025-07-23 22:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
@@ -3777,7 +3777,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:53
 #, fuzzy
 msgid "Configure Force Field…"
-msgstr "Podesi polje sile..."
+msgstr "Podesi polje sile…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 #, fuzzy
@@ -4593,8 +4593,9 @@ msgid "Atom Properties"
 msgstr "Postavke atoma"
 
 #: qtplugins/propertytables/propertyview.cpp:48
+#, fuzzy
 msgid "Bond Properties"
-msgstr "Postavke spoja..."
+msgstr "Postavke spoja…"
 
 #: qtplugins/propertytables/propertyview.cpp:51
 msgid "Angle Properties"
@@ -4713,7 +4714,7 @@ msgstr ""
 #: qtplugins/select/select.cpp:63
 #, fuzzy
 msgid "Select by Residue…"
-msgstr "Odabir po ostatku..."
+msgstr "Odabir po ostatku…"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
