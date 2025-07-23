@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-21 21:51+0000\n"
-"PO-Revision-Date: 2025-06-20 11:02+0000\n"
+"PO-Revision-Date: 2025-07-23 22:01+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -1626,6 +1626,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Aliniere molecule\n"
+"\n"
+"Butonul stâng al mouse-ului: \tSelectează până la doi atomi.\n"
+"\tPrimul atom este centrat la origine.\n"
+"\tAl doilea atom este aliniat la axa selectată.\n"
+"Butonul drept al mouse-ului: \tRestabilește alinierea.\n"
+"Dublu clic: \tCentrează atomul la origine."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2037,6 +2044,22 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Instrument de manipulare centrat pe legături\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tApăsați-l și trageți pentru a roti "
+"vizualizarea.\n"
+"Butonul din mijloc al mouse-ului:\tApăsați-l și trageți pentru a mări sau "
+"micșora vizualizarea.\n"
+"Butonul drept al mouse-ului:\tApăsați-l clic și trageți pentru a muta "
+"vizualizarea.\n"
+"Dublu clic:\tReinițializează vizualizarea.\n"
+"\n"
+"Faceți clic cu butonul stâng și trageți pe o legătură pentru a defini planul "
+"de manipulare:\n"
+"Faceți clic cu butonul stâng și trageți unul dintre atomii din legătură "
+"pentru a modifica unghiul\n"
+"Faceți clic cu butonul din dreapta și trageți unul dintre atomii din "
+"legătură pentru a modifica lungimea"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2849,11 +2872,11 @@ msgstr "Editor de celulă unitară"
 #: qtplugins/crystal/unitcelldialog.cpp:284
 #: qtplugins/crystal/unitcelldialog.cpp:300
 msgid "Ignoring singular cell matrix"
-msgstr ""
+msgstr "Se ignoră matricea de celule unitare"
 
 #: qtplugins/crystal/unitcelldialog.cpp:316
 msgid "Ignoring singular fractional cell matrix"
-msgstr ""
+msgstr "Se ignoră matricea de celule fracționare unitare"
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -2888,6 +2911,11 @@ msgid ""
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Instrument de desen\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tApăsați-l și trageți pentru a crea atomi și "
+"legături\n"
+"Butonul drept al mouse-ului:\tȘterge atomul"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3452,6 +3480,10 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Instrument de etichetare a atomilor\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tApăsați-l pe atomi pentru a adăuga etichete "
+"personalizate"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3540,6 +3572,10 @@ msgid ""
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Instrument de manipulare\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tApăsați-l și trageți pentru a muta atomii\n"
+"Butonul drept al mouse-ului:\tApăsați-l și trageți pentru a roti atomii."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3566,6 +3602,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"Instrument de măsurare\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tSelectați până la patru atomi.\n"
+"\tDistanțele sunt măsurate între 1-2 și 2-3\n"
+"\tUnghiul este măsurat între 1-3 folosind 2 ca punct comun\n"
+"\tDiedrul este măsurat între 1-2-3-4\n"
+"Butonul drept al mouse-ului:\tReinițializează măsurătorile."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -3765,6 +3808,14 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Instrument de navigare\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tApăsați-l și trageți pentru a roti "
+"vizualizarea.\n"
+"Butonul din mijloc al mouse-ului:\tApăsați-l și trageți pentru a mări sau "
+"micșora imaginea.\n"
+"Butonul drept al mouse-ului:\tApăsați-l și trageți pentru a muta "
+"vizualizarea."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3787,6 +3838,8 @@ msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
+"Implicit:\t Derulați în jos pentru a micșora, derulați în sus pentru a mări\n"
+"Inversată:\t Derulați în sus pentru a micșora, derulați în jos pentru a mări"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -4157,7 +4210,7 @@ msgstr "Dispozitiv redare"
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr ""
+msgstr "Instrument de animație\t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4842,6 +4895,16 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Instrument de selecție\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tApăsați-l pentru a selecta atomi, reziduuri "
+"sau fragmente individuale\n"
+"\tTrageți pentru a selecta un interval de atomi\n"
+"Butonul drept al mouse-ului:\tApăsați-l în afara moleculei pentru a șterge "
+"selecția\n"
+"Utilizați Ctrl pentru a activa/dezactiva selecția și Shift pentru a adăuga "
+"la selecție.\n"
+"Dublu clic:\tSelectează un fragment întreg."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -5227,7 +5290,7 @@ msgstr "Afișează un cub furnizat cu fișierul."
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
-msgstr ""
+msgstr "Cubul %1"
 
 #: qtplugins/surfaces/surfaces.cpp:601
 msgid "Calculating electron density"
@@ -5321,6 +5384,14 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"instrument de șablon\t(%1)\n"
+"\n"
+"Inserează fragmente, inclusiv centre metalice.\n"
+"Selectați un element și o geometrie de coordonare, apoi faceți clic pentru a "
+"insera un fragment.\n"
+"\n"
+"Selectați un ligand sau un grup funcțional și faceți clic pe un atom de "
+"hidrogen pentru a-l atașa."
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
