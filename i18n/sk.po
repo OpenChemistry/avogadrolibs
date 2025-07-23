@@ -3344,12 +3344,7 @@ msgstr ""
 msgid " & "
 msgstr ""
 
-<<<<<<< HEAD
 #: qtplugins/label/label.cpp:250
-#, fuzzy
-=======
-#: qtplugins/label/label.cpp:248
->>>>>>> weblate/master
 msgid "Residue Label:"
 msgstr ""
 

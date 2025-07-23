@@ -452,13 +452,8 @@ msgstr ""
 msgid "Error Submitting Job"
 msgstr "ジョブの投入でエラー"
 
-<<<<<<< HEAD
 #: molequeue/molequeuedialog.cpp:130
 #, qt-format
-=======
-#: molequeue/molequeuedialog.cpp:128
-#, fuzzy, qt-format
->>>>>>> weblate/master
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
 msgstr "MoleQueueにジョブは拒否されました: %1"
@@ -3336,21 +3331,11 @@ msgstr "ユニークID"
 msgid "Element"
 msgstr "元素"
 
-<<<<<<< HEAD
 #: qtplugins/label/label.cpp:186
-#, fuzzy
-msgid "Element & Number"
-msgstr "元素と番号"
-
-#: qtplugins/label/label.cpp:188
-#, fuzzy
-=======
-#: qtplugins/label/label.cpp:184
 msgid "Element & Number"
 msgstr "元素と番号"
 
 #: qtplugins/label/label.cpp:186
->>>>>>> weblate/master
 msgid "Element & ID"
 msgstr "元素とID"
 
@@ -4090,14 +4075,8 @@ msgstr "top"
 #. i18n: ectx: property (text), item, widget (QComboBox, initVelCombo)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
-<<<<<<< HEAD
-#: qtplugins/openmminput/openmminputdialog.cpp:1061
-#: qtplugins/openmminput/openmminputdialog.cpp:1070:1397 rc.cpp:1412
-#, fuzzy
-=======
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
 #: qtplugins/openmminput/openmminputdialog.cpp:1069:1397 rc.cpp:1412
->>>>>>> weblate/master
 msgid "True"
 msgstr "真"
 
@@ -4688,10 +4667,6 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-<<<<<<< HEAD
-#, fuzzy
-=======
->>>>>>> weblate/master
 msgid "Script Charge Models"
 msgstr "電荷モデルのスクリプト"
 
@@ -8163,10 +8138,6 @@ msgstr "形式電荷:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:133
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-<<<<<<< HEAD
-#, fuzzy
-=======
->>>>>>> weblate/master
 msgid "Coordination:"
 msgstr "配位:"
 
