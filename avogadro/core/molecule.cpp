@@ -48,6 +48,7 @@ Molecule::Molecule(const Molecule& other)
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(&other, this))
@@ -140,6 +141,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
@@ -187,6 +189,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_constraints = other.m_constraints;
     m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
@@ -250,6 +253,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_constraints = other.m_constraints;
     m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
@@ -349,6 +353,26 @@ MatrixX Molecule::spectra(const std::string& type) const
 
   return value;
 }
+
+void Molecule::addConstraint(Index a, Index b, Index c, Index d, Real value)
+{
+  Constraint newConstraint(a, b, c, d, value);
+  m_constraints.push_back(newConstraint);
+}
+
+void Molecule::removeConstraint(Index a, Index b, Index c, Index d)
+{
+  // loop through and remove if the constraint matches all atom indexes
+  for (auto it = m_constraints.begin(); it != m_constraints.end();) {
+    if (it->aIndex() == a && it->bIndex() == b && it->cIndex() == c &&
+        it->dIndex() == d) {
+      it = m_constraints.erase(it);
+      return;
+    } else
+      ++it;
+  }
+}
+
 void Molecule::setFrozenAtom(Index atomId, bool frozen)
 {
   if (atomId >= m_atomicNumbers.size())
