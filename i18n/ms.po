@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-06 03:06+0000\n"
-"PO-Revision-Date: 2025-06-23 19:17+0000\n"
+"POT-Creation-Date: 2025-06-15 03:04+0000\n"
+"PO-Revision-Date: 2025-07-21 20:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Malay <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ms/>\n"
@@ -3699,7 +3699,7 @@ msgstr "Fail CSV (*.csv);;Semua fail (*)"
 #: qtplugins/propertytables/propertyview.cpp:262
 #, fuzzy
 msgid "Could not open the file for writing."
-msgstr "Tidak dapat buka fail '%1' untuk penulisan."
+msgstr "Tidak dapat buka fail untuk penulisan."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:294

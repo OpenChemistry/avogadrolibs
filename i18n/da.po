@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-06 03:06+0000\n"
-"PO-Revision-Date: 2025-06-23 19:17+0000\n"
+"POT-Creation-Date: 2025-06-15 03:04+0000\n"
+"PO-Revision-Date: 2025-07-21 20:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/da/>\n"
@@ -2696,9 +2696,8 @@ msgid "Scale Cell &Volume…"
 msgstr "Skalér celle til &volumen…"
 
 #: qtplugins/crystal/crystal.cpp:74
-#, fuzzy
 msgid "Build &Supercell…"
-msgstr "&Supercelle…"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -3369,10 +3368,9 @@ msgstr ""
 msgid " & "
 msgstr ""
 
-#: qtplugins/label/label.cpp:250
-#, fuzzy
+#: qtplugins/label/label.cpp:248
 msgid "Residue Label:"
-msgstr "Restnavn"
+msgstr ""
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3684,7 +3682,7 @@ msgstr "CSV-filer (*.csv);;Alle filer (*)"
 #: qtplugins/propertytables/propertyview.cpp:262
 #, fuzzy
 msgid "Could not open the file for writing."
-msgstr "Kunne ikke åbne fil '%1' for at skrive til den."
+msgstr "Kunne ikke åbne fil for at skrive til den."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:294

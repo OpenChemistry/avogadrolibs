@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-06 03:06+0000\n"
-"PO-Revision-Date: 2025-07-01 18:01+0000\n"
+"POT-Creation-Date: 2025-06-15 03:04+0000\n"
+"PO-Revision-Date: 2025-07-21 20:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Valencian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca@valencia/>\n"
@@ -1414,9 +1414,8 @@ msgid "Scale Cell Volume"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:542
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Super cel·la"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:566
 msgid "Niggli Reduction"
@@ -1737,9 +1736,8 @@ msgid "By Distance…"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:61
-#, fuzzy
 msgid "By Element"
-msgstr "Element"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:72
 msgid "By Chain"
@@ -2710,9 +2708,8 @@ msgid "Scale Cell &Volume…"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:74
-#, fuzzy
 msgid "Build &Supercell…"
-msgstr "&Super cel·la"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2981,9 +2978,12 @@ msgid "Freeze Selected Atoms"
 msgstr "Fixa els àtoms seleccionats"
 
 #: qtplugins/forcefield/forcefield.cpp:115
+<<<<<<< HEAD
 #, fuzzy
+=======
+>>>>>>> weblate/master
 msgid "Unfreeze Selected Atoms"
-msgstr "Fixa els àtoms seleccionats"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:152
 #, fuzzy
@@ -3379,10 +3379,14 @@ msgstr ""
 msgid " & "
 msgstr ""
 
+<<<<<<< HEAD
 #: qtplugins/label/label.cpp:250
 #, fuzzy
+=======
+#: qtplugins/label/label.cpp:248
+>>>>>>> weblate/master
 msgid "Residue Label:"
-msgstr "Nom del residu:"
+msgstr ""
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3690,7 +3694,7 @@ msgstr "Fitxers CSV (*.csv);;Tots els fitxers (*)"
 #: qtplugins/propertytables/propertyview.cpp:262
 #, fuzzy
 msgid "Could not open the file for writing."
-msgstr "No és pot obrir el fitxer «%1» per escriptura."
+msgstr "No és pot obrir el fitxer per escriptura."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:294
