@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-21 21:51+0000\n"
-"PO-Revision-Date: 2025-07-21 20:09+0000\n"
+"PO-Revision-Date: 2025-07-23 22:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -3729,7 +3729,7 @@ msgstr ""
 #: qtplugins/propertytables/propertyview.cpp:250
 #, fuzzy
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "CSV fitxategiak (.*csv);;Fitxategi guztiak (*)"
+msgstr "CSV fitxategiak (*.csv);;Fitxategi guztiak (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:262
@@ -4563,7 +4563,7 @@ msgstr ""
 #, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "Helizea"
+msgstr "π Helizea"
 
 #: qtplugins/propertytables/propertymodel.cpp:967
 msgctxt "protein bend secondary structure"
@@ -4574,13 +4574,13 @@ msgstr ""
 #, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr "Helizea"
+msgstr "α Helizea"
 
 #: qtplugins/propertytables/propertymodel.cpp:971
 #, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr "Orria"
+msgstr "β Orria"
 
 #: qtplugins/propertytables/propertymodel.cpp:973
 #, fuzzy
@@ -4696,7 +4696,7 @@ msgstr "Open WFN Fitxategia"
 
 #: qtplugins/qtaim/qtaimextension.cpp:91
 msgid "WFN files (*.wfn);;All files (*.*)"
-msgstr "WFN fitxategiak (.*wfn);;Fitxategi guztiak (*.*)"
+msgstr "WFN fitxategiak (*.wfn);;Fitxategi guztiak (*.*)"
 
 #: qtplugins/qtaim/qtaimextension.h:23
 msgid "QTAIM extension"
