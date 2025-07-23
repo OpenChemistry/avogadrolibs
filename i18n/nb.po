@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-06 03:06+0000\n"
+"POT-Creation-Date: 2025-07-21 21:51+0000\n"
 "PO-Revision-Date: 2025-06-20 11:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
@@ -164,7 +164,7 @@ msgstr "Fortsett"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:66
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:377
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:380
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:955
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -1542,11 +1542,11 @@ msgstr ""
 msgid ""
 "Align Molecules\n"
 "\n"
-"Left Mouse: \tSelect up to two atoms.\n"
+"Left Mouse:\tSelect up to two atoms.\n"
 "\tThe first atom is centered at the origin.\n"
 "\tThe second atom is aligned to the selected axis.\n"
-"Right Mouse: \tReset alignment.\n"
-"Double-Click: \tCenter the atom at the origin."
+"Right Mouse:\tReset alignment.\n"
+"Double-Click:\tCenter the atom at the origin."
 msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
@@ -1956,12 +1956,12 @@ msgstr ""
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
 #, qt-format
 msgid ""
-"Bond Centric Manipulation Tool \t(%1)\n"
+"Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick and drag to rotate the view.\n"
-"Middle Mouse: \tClick and drag to zoom in or out.\n"
-"Right Mouse: \tClick and drag to move the view.\n"
-"Double-Click: \tReset the view.\n"
+"Left Mouse:\tClick and drag to rotate the view.\n"
+"Middle Mouse:\tClick and drag to zoom in or out.\n"
+"Right Mouse:\tClick and drag to move the view.\n"
+"Double-Click:\tReset the view.\n"
 "\n"
 "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
@@ -2016,7 +2016,7 @@ msgid "Bond Selected Atoms"
 msgstr "Bind valgte atomer"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:544
+#: qtplugins/propertytables/propertymodel.cpp:575
 #, fuzzy
 msgid "Bond"
 msgstr "Liaison"
@@ -2749,9 +2749,26 @@ msgstr ""
 msgid "Failed to read the data with the supplied format."
 msgstr ""
 
-#: qtplugins/crystal/unitcelldialog.cpp:249
-#: qtplugins/crystal/unitcelldialog.cpp:262
+#: qtplugins/crystal/unitcelldialog.cpp:250
+#: qtplugins/crystal/unitcelldialog.cpp:263
 msgid "No unit cell present."
+msgstr ""
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
+#: qtplugins/crystal/unitcelldialog.cpp:283
+#: qtplugins/crystal/unitcelldialog.cpp:299
+#: qtplugins/crystal/unitcelldialog.cpp:315:400
+msgid "Unit Cell Editor"
+msgstr ""
+
+#: qtplugins/crystal/unitcelldialog.cpp:284
+#: qtplugins/crystal/unitcelldialog.cpp:300
+msgid "Ignoring singular cell matrix"
+msgstr ""
+
+#: qtplugins/crystal/unitcelldialog.cpp:316
+msgid "Ignoring singular fractional cell matrix"
 msgstr ""
 
 #: qtplugins/customelements/customelements.cpp:19
@@ -2782,10 +2799,10 @@ msgstr "Tegn"
 #: qtplugins/editor/editor.cpp:76
 #, qt-format
 msgid ""
-"Draw Tool \t(%1)\n"
+"Draw Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick and Drag to create Atoms and Bond\n"
-"Right Mouse: \tDelete Atom"
+"Left Mouse:\tClick and Drag to create Atoms and Bond\n"
+"Right Mouse:\tDelete Atom"
 msgstr ""
 
 #: qtplugins/editor/editor.cpp:116
@@ -2952,7 +2969,7 @@ msgstr "Beregn"
 
 #: qtplugins/forcefield/forcefield.cpp:251
 #: qtplugins/forcefield/forcefield.cpp:409
-#: qtplugins/forcefield/forcefield.cpp:460
+#: qtplugins/forcefield/forcefield.cpp:479
 #: qtplugins/playertool/playertool.cpp:348
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:931
 #: qtplugins/surfaces/surfaces.cpp:975 qtplugins/surfaces/surfaces.cpp:987
@@ -2975,7 +2992,7 @@ msgstr ""
 msgid "%1 Energy = %L2"
 msgstr "Energi = %L1 %2"
 
-#: qtplugins/forcefield/forcefield.cpp:459
+#: qtplugins/forcefield/forcefield.cpp:478
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr ""
@@ -3290,7 +3307,7 @@ msgstr ""
 msgid "Unique ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:500
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:531
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "Grunnstoff"
@@ -3320,13 +3337,13 @@ msgstr ""
 msgid "Bond Label:"
 msgstr ""
 
-#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:553
+#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:584
 msgid "ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:234
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:551
+#: qtplugins/propertytables/propertymodel.cpp:582
 msgid "Name"
 msgstr ""
 
@@ -3354,9 +3371,9 @@ msgstr ""
 #: qtplugins/label/labeleditor.cpp:34
 #, qt-format
 msgid ""
-"Atom Label Tool \t(%1)\n"
+"Atom Label Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick on Atoms to add Custom Labels"
+"Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:81
@@ -3440,10 +3457,10 @@ msgstr "Manipuler"
 #: qtplugins/manipulator/manipulator.cpp:52
 #, qt-format
 msgid ""
-"Manipulation Tool \t(%1)\n"
+"Manipulation Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick and drag to move atoms\n"
-"Right Mouse: \tClick and drag to rotate atoms.\n"
+"Left Mouse:\tClick and drag to move atoms\n"
+"Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
 
 #: qtplugins/manipulator/manipulator.h:36
@@ -3463,13 +3480,13 @@ msgstr "Mål"
 #: qtplugins/measuretool/measuretool.cpp:54
 #, qt-format
 msgid ""
-"Measure Tool \t(%1)\n"
+"Measure Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tSelect up to four Atoms.\n"
+"Left Mouse:\tSelect up to four Atoms.\n"
 "\tDistances are measured between 1-2 and 2-3\n"
 "\tAngle is measured between 1-3 using 2 as the common point\n"
 "\tDihedral is measured between 1-2-3-4\n"
-"Right Mouse: \tReset the measurements."
+"Right Mouse:\tReset the measurements."
 msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:198
@@ -3507,7 +3524,7 @@ msgid "unknown molecule"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:260
-#: qtplugins/propertytables/propertymodel.cpp:612
+#: qtplugins/propertytables/propertymodel.cpp:643
 msgid "Property"
 msgstr ""
 
@@ -3669,11 +3686,11 @@ msgstr "Naviger"
 #: qtplugins/navigator/navigator.cpp:42
 #, qt-format
 msgid ""
-"Navigation Tool \t(%1)\n"
+"Navigation Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick and drag to rotate the view.\n"
-"Middle Mouse: \tClick and drag to zoom in or out.\n"
-"Right Mouse: \tClick and drag to move the view.\n"
+"Left Mouse:\tClick and drag to rotate the view.\n"
+"Middle Mouse:\tClick and drag to zoom in or out.\n"
+"Right Mouse:\tClick and drag to move the view."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:63
@@ -3694,8 +3711,8 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:108
 msgid ""
-"Default:\t Scroll down to shrink, scroll up to zoom\n"
-"Reversed:\t Scroll up to shrink, scroll down to zoom"
+"Default:\tScroll down to shrink, scroll up to zoom\n"
+"Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
@@ -4059,7 +4076,7 @@ msgstr "Spiller"
 
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
-msgid "Animation Tool \t(%1)"
+msgid "Animation Tool\t(%1)"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:74
@@ -4340,169 +4357,169 @@ msgstr ""
 msgid "Render the scene using POV-Ray."
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:502
+#: qtplugins/propertytables/propertymodel.cpp:533
 msgid "Valence"
 msgstr "Valens"
 
-#: qtplugins/propertytables/propertymodel.cpp:504
+#: qtplugins/propertytables/propertymodel.cpp:535
 msgid "Formal Charge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:507
+#: qtplugins/propertytables/propertymodel.cpp:538
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:512
+#: qtplugins/propertytables/propertymodel.cpp:543
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:514
+#: qtplugins/propertytables/propertymodel.cpp:545
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:516
+#: qtplugins/propertytables/propertymodel.cpp:547
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:518
-#: qtplugins/propertytables/propertymodel.cpp:538
+#: qtplugins/propertytables/propertymodel.cpp:549
+#: qtplugins/propertytables/propertymodel.cpp:569
 msgid "Label"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:520
-#: qtplugins/propertytables/propertymodel.cpp:561
+#: qtplugins/propertytables/propertymodel.cpp:551
+#: qtplugins/propertytables/propertymodel.cpp:592
 #, fuzzy
 msgid "Color"
 msgstr "Farger:"
 
-#: qtplugins/propertytables/propertymodel.cpp:523
+#: qtplugins/propertytables/propertymodel.cpp:554
 msgid "Atom"
 msgstr "Atome"
 
-#: qtplugins/propertytables/propertymodel.cpp:530
-#: qtplugins/propertytables/propertymodel.cpp:571
-#: qtplugins/propertytables/propertymodel.cpp:588
+#: qtplugins/propertytables/propertymodel.cpp:561
+#: qtplugins/propertytables/propertymodel.cpp:602
+#: qtplugins/propertytables/propertymodel.cpp:619
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:532
+#: qtplugins/propertytables/propertymodel.cpp:563
 msgid "Start Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:534
+#: qtplugins/propertytables/propertymodel.cpp:565
 #, fuzzy
 msgid "End Atom"
 msgstr "Sluttatom"
 
-#: qtplugins/propertytables/propertymodel.cpp:536
+#: qtplugins/propertytables/propertymodel.cpp:567
 #, fuzzy
 msgid "Bond Order"
 msgstr "Bindingsegenskaper"
 
-#: qtplugins/propertytables/propertymodel.cpp:540
+#: qtplugins/propertytables/propertymodel.cpp:571
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Lengde (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:555
+#: qtplugins/propertytables/propertymodel.cpp:586
 msgid "Chain"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:557
+#: qtplugins/propertytables/propertymodel.cpp:588
 msgid "Secondary Structure"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:559
+#: qtplugins/propertytables/propertymodel.cpp:590
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:573
-#: qtplugins/propertytables/propertymodel.cpp:590
+#: qtplugins/propertytables/propertymodel.cpp:604
+#: qtplugins/propertytables/propertymodel.cpp:621
 #, fuzzy
 msgid "Atom 1"
 msgstr "Atom 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:575
+#: qtplugins/propertytables/propertymodel.cpp:606
 msgid "Vertex"
 msgstr "Hjørne"
 
-#: qtplugins/propertytables/propertymodel.cpp:577
-#: qtplugins/propertytables/propertymodel.cpp:594
+#: qtplugins/propertytables/propertymodel.cpp:608
+#: qtplugins/propertytables/propertymodel.cpp:625
 #, fuzzy
 msgid "Atom 3"
 msgstr "Atom 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:579
-#: qtplugins/propertytables/propertymodel.cpp:598
+#: qtplugins/propertytables/propertymodel.cpp:610
+#: qtplugins/propertytables/propertymodel.cpp:629
 #, fuzzy
 msgid "Angle (°)"
 msgstr "Vinkel (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:592
+#: qtplugins/propertytables/propertymodel.cpp:623
 #, fuzzy
 msgid "Atom 2"
 msgstr "Atom 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:596
+#: qtplugins/propertytables/propertymodel.cpp:627
 #, fuzzy
 msgid "Atom 4"
 msgstr "Atom 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:609
+#: qtplugins/propertytables/propertymodel.cpp:640
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:612
+#: qtplugins/propertytables/propertymodel.cpp:643
 msgid "Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:808
+#: qtplugins/propertytables/propertymodel.cpp:839
 msgid "Adjust Fragment"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:934
+#: qtplugins/propertytables/propertymodel.cpp:965
 #, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "Heliks"
 
-#: qtplugins/propertytables/propertymodel.cpp:936
+#: qtplugins/propertytables/propertymodel.cpp:967
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:938
+#: qtplugins/propertytables/propertymodel.cpp:969
 #, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "Heliks"
 
-#: qtplugins/propertytables/propertymodel.cpp:940
+#: qtplugins/propertytables/propertymodel.cpp:971
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:942
+#: qtplugins/propertytables/propertymodel.cpp:973
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:944
+#: qtplugins/propertytables/propertymodel.cpp:975
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:946
+#: qtplugins/propertytables/propertymodel.cpp:977
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:948
+#: qtplugins/propertytables/propertymodel.cpp:979
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -4757,13 +4774,13 @@ msgstr "Utvalg"
 #: qtplugins/selectiontool/selectiontool.cpp:53
 #, qt-format
 msgid ""
-"Selection Tool \t(%1)\n"
+"Selection Tool\t(%1)\n"
 "\n"
-"Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+"Left Mouse:\tClick to pick individual atoms, residues, or fragments\n"
 "\tDrag to select a range of atoms\n"
-"Right Mouse: \tClick outside the molecule to clear selection\n"
+"Right Mouse:\tClick outside the molecule to clear selection\n"
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
-"Double-Click: \tSelect an entire fragment."
+"Double-Click:\tSelect an entire fragment."
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
@@ -5228,13 +5245,14 @@ msgstr ""
 #: qtplugins/templatetool/templatetool.cpp:84
 #, qt-format
 msgid ""
-"Template Tool \t(%1)\n"
+"Template Tool\t(%1)\n"
 "\n"
 "Insert fragments, including metal centers.\n"
-"Select an element and coordination geometry,then click to insert a "
+"Select an element and coordination geometry, then click to insert a "
 "fragment.\n"
 "\n"
-"Select a ligand or functional group and clickon a hydrogen atom to attach it."
+"Select a ligand or functional group and click on a hydrogen atom to attach "
+"it."
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:404
@@ -5428,7 +5446,7 @@ msgstr "Avlus skript …"
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:363
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:366
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #, fuzzy
 msgid "Submit Calculation…"
@@ -5809,21 +5827,21 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:333
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:336
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 msgid "Reset All"
 msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:29
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:340
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:343
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
 msgstr "Standardverdier"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:370
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:373
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
@@ -5838,7 +5856,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:101
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:167
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:170
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -5847,7 +5865,7 @@ msgstr "Tittel:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:310
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:313
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_12)
@@ -5856,7 +5874,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:320
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:323
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:70
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -5865,7 +5883,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:284
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:287
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
 msgstr ""
@@ -5942,22 +5960,22 @@ msgstr ""
 msgid "EPS SCF"
 msgstr ""
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:539
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:542
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "SCF GUESS"
 msgstr ""
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:566
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:569
 #. i18n: ectx: property (text), widget (QLabel, label_24)
 msgid "OUTER MAX SCF"
 msgstr ""
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:600
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:603
 #. i18n: ectx: property (text), widget (QLabel, label_25)
 msgid "OUTER EPS SCF"
 msgstr ""
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:634
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:640
 #. i18n: ectx: property (text), widget (QLabel, label_26)
 msgid "OT T MINIMIZER"
 msgstr ""
@@ -5991,11 +6009,6 @@ msgstr "B-gjentagelse:"
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
 msgstr "C-gjentagelse:"
-
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
-msgid "Unit Cell Editor"
-msgstr ""
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6204,17 +6217,17 @@ msgstr "Inn:"
 msgid "CONV THRESH"
 msgstr ""
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:141
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Multiplicity:"
 msgstr "Multiplisitet:"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:154
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
 msgstr "Med:"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:251
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:254
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
 msgstr "Ladning:"
