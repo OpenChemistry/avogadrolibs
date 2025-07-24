@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-24 08:38+0000\n"
+"PO-Revision-Date: 2025-07-25 01:11+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1720,7 +1720,7 @@ msgstr "PDBファイルを指定してください"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
-msgstr ""
+msgstr "APBSインプットファイルを保存"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
@@ -3097,12 +3097,12 @@ msgstr "選択した原子の固定を解除"
 #: qtplugins/forcefield/forcefield.cpp:127
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
-msgstr ""
+msgstr "原子間の距離を固定"
 
 #: qtplugins/forcefield/forcefield.cpp:135
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
-msgstr ""
+msgstr "原子間の距離の固定を解除"
 
 #: qtplugins/forcefield/forcefield.cpp:316
 #: qtplugins/forcefield/forcefield.cpp:467
@@ -3127,7 +3127,7 @@ msgstr "エネルギー: %L1"
 #: qtplugins/forcefield/forcefield.cpp:466
 #, qt-format
 msgid "%1 Energy = %L2"
-msgstr "%1 エネルギー= %L2"
+msgstr "%1 エネルギー = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:536
 #, qt-format
@@ -3290,7 +3290,7 @@ msgstr "GAMESSインプットファイルの保存"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:938
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "GAMESS計算を投入"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 #, fuzzy
@@ -3311,7 +3311,7 @@ msgstr "全ての水素を削除 (&R)"
 
 #: qtplugins/hydrogens/hydrogens.cpp:47
 msgid "Add/remove hydrogens from the current molecule."
-msgstr ""
+msgstr "現在の分子から水素を追加/削除"
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
 msgid "&Hydrogens"
@@ -3327,11 +3327,11 @@ msgstr "PQRを検索 (&S)…"
 
 #: qtplugins/importpqr/importpqr.h:35
 msgid "Import From PQR"
-msgstr ""
+msgstr "PQRからインポート"
 
 #: qtplugins/importpqr/importpqr.h:39
 msgid "Download a molecule from PQR."
-msgstr ""
+msgstr "PQRから分子をダウンロード"
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
@@ -3527,7 +3527,7 @@ msgstr "LAMMPSインプット"
 
 #: qtplugins/lammpsinput/lammpsinput.h:35
 msgid "Generate input for LAMMPS."
-msgstr ""
+msgstr "LAMMPSインプットを生成"
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
 msgid ""
@@ -4626,7 +4626,7 @@ msgstr "βシート"
 #: qtplugins/propertytables/propertymodel.cpp:973
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr "3-10 ヘリックス"
+msgstr "3-10ヘリックス"
 
 #: qtplugins/propertytables/propertymodel.cpp:975
 msgctxt "beta bridge"
@@ -5825,8 +5825,9 @@ msgstr "最小距離:"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ComDialog)
+#, fuzzy
 msgid "Volume Rendering"
-msgstr ""
+msgstr "体積の描画"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5835,14 +5836,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, label_4)
+#, fuzzy
 msgid "Enable volume rendering"
-msgstr ""
+msgstr "体積の描画を有効化"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #, fuzzy
 msgid "Enable surface rendering"
-msgstr "表面を描画"
+msgstr "表面の描画を有効化"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
