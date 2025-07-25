@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-25 01:18+0000\n"
+"PO-Revision-Date: 2025-07-26 02:04+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -2006,7 +2006,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "化学键操纵"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2019,6 +2019,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"化学键操作工具\t(%1)\n"
+"\n"
+"鼠标左键：按下并拖动以旋转视图。\n"
+"鼠标中键：按下并拖动以缩放。\n"
+"鼠标右键：按下并拖动以移动视图。\n"
+"双击：重设视图。\n"
+"\n"
+"鼠标左键 & 在化学键上拖动以设置操作平面：\n"
+"鼠标左键 & 在成键原子上拖动以改变键角\n"
+"鼠标右键 & 在成键原子上拖动以改变键长"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2955,13 +2965,17 @@ msgid "Draw"
 msgstr "绘制"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"绘制工具\t(%1)\n"
+"\n"
+"鼠标左键：按下并拖动以创建原子和化学键\n"
+"鼠标右键：删除原子"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3533,12 +3547,15 @@ msgid "Edit Labels"
 msgstr "编辑标签"
 
 #: qtplugins/label/labeleditor.cpp:34
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Atom Label Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"原子标签工具\t(%1)\n"
+"\n"
+"鼠标左键：在原子上点击以添加自定义标签"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3617,13 +3634,17 @@ msgid "Manipulate"
 msgstr "操纵"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"操作工具\t(%1)\n"
+"\n"
+"鼠标左键：点击并拖动以移动原子\n"
+"鼠标右键：点击并拖动以旋转选中的原子。"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3674,8 +3695,9 @@ msgstr "角度："
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
+#, fuzzy
 msgid "Measure tool"
-msgstr ""
+msgstr "测量工具"
 
 #: qtplugins/meshes/meshes.h:33
 msgid "Render molecular surfaces."
@@ -3851,7 +3873,7 @@ msgid "Navigate"
 msgstr "导航"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3859,6 +3881,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"导航工具\t(%1)\n"
+"\n"
+"鼠标左键：点击并拖动以旋转视角。\n"
+"鼠标中键：点击并拖动以缩放。\n"
+"鼠标右键：点击并拖动以移动视角。"
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4911,7 +4938,7 @@ msgid "Selection"
 msgstr "选择"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -4921,6 +4948,13 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"选择工具\t(%1)\n"
+"\n"
+"鼠标左键：单击以选中单个原子、残基或片段\n"
+"\t拖动以选择一定范围内的原子\n"
+"鼠标右键：分子外单击以清除选中内容\n"
+"使用 Ctrl 选中/取消选中，使用 Shift 添加到选区。\n"
+"双击：选择整个片段。"
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -5401,7 +5435,7 @@ msgid "Template"
 msgstr "模板"
 
 #: qtplugins/templatetool/templatetool.cpp:84
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Template Tool\t(%1)\n"
 "\n"
@@ -5412,6 +5446,12 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"模板工具\t(%1)\n"
+"\n"
+"插入片段，包括金属中心。\n"
+"选择元素和配位结构，然后点击以插入一个片段。\n"
+"\n"
+"选择一个配体或官能团，然后在氢原子上点击以附加。"
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
@@ -5428,8 +5468,9 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
+#, fuzzy
 msgid "Template tool"
-msgstr ""
+msgstr "模板工具"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
