@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-25 01:11+0000\n"
+"PO-Revision-Date: 2025-07-25 01:18+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -3640,7 +3640,7 @@ msgid "Measure"
 msgstr "测量"
 
 #: qtplugins/measuretool/measuretool.cpp:54
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Measure Tool\t(%1)\n"
 "\n"
@@ -3650,6 +3650,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"测量工具\t(%1)\n"
+"\n"
+"鼠标左键：选择至多四个原子。\n"
+"\t将测量原子1-2和原子2-3之间的距离\n"
+"\t将角度原子1-3的角度，以2号原子为顶点\n"
+"\t将按1-2-3-4的顺序测定二面角\n"
+"鼠标右键：重置测量。"
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
