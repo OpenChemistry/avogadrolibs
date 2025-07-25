@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-21 20:10+0000\n"
+"PO-Revision-Date: 2025-07-25 01:11+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -1588,6 +1588,7 @@ msgid "Align"
 msgstr "对齐"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1597,6 +1598,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"对齐分子\n"
+"\n"
+"鼠标左键：选择至多两个原子。\n"
+"\t第一个原子将被放置于原点。\n"
+"\t第二个原子将被对齐到选定的坐标轴。\n"
+"鼠标右键：重置对齐。\n"
+"鼠标双击：将原子放置在原点。"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
