@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-21 20:09+0000\n"
+"PO-Revision-Date: 2025-07-25 01:11+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -1548,6 +1548,7 @@ msgid "Align"
 msgstr "Zarovnání"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1557,6 +1558,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Zarovnat molekuly\n"
+"\n"
+"Levé tlačítko myši:\tVybrat až dva atomy.\n"
+"\tPrvní atom je vystředěn při původním.\n"
+"\tDruhý atom je zarovnán vůči vybrané ose.\n"
+"Pravé tlačítko myši:\tNastavit zarovnání znovu.\n"
+"Dvojité klepnutí:\tVystředit atom  při původním."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1967,7 +1975,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Úpravy zaměřené na vazbu"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -1980,6 +1988,11 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Nástroj pro zacházení s vazbami\t(%1)\n"
+"\n"
+"Levé tlačítko myši:\tKlepněte a táhněte pro otočení pohledu\n"
+"Prostřední tlačítko myši: Klepněte a táhněte pro přiblížení nebo oddálení\n"
+"Pravé tlačítko myši: \\tKlepněte a táhněte pro posunutí pohledu"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2934,13 +2947,17 @@ msgid "Draw"
 msgstr "Nakreslit"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Nástroj na kreslení\t(%1)\n"
+"\n"
+"Levé tlačítko myši:\tKlepnout a táhnout pro vytvoření atomů a vazeb\n"
+"Pravé tlačítko myši:\tSmazat atom"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
