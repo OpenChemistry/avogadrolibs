@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-26 14:06+0000\n"
+"PO-Revision-Date: 2025-07-26 14:24+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -1625,6 +1625,7 @@ msgid "Align"
 msgstr "Alinhar"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1634,6 +1635,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Alinhar Moléculas\n"
+"\n"
+"Botão Esquerdo do Mouse: \tSelecionar até dois átomos.\n"
+"\tO primeiro átomo se centraliza na origem.\n"
+"\tO segundo átomo está alinhado com o eixo selecionado.\n"
+"Botão Direito do Mouse: \tMudar o alinhamento.\n"
+"Duplo clique: \tCentralizar o átomo na origem."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -3024,13 +3032,17 @@ msgid "Draw"
 msgstr "Desenho"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Ferramenta Desenhar\t(%1)\n"
+"\n"
+"Botão esquerdo do mouse:\tClique e arraste para criar átomos e ligações\n"
+"Botão direito do mouse:\tExclua átomo"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3930,7 +3942,7 @@ msgid "Navigate"
 msgstr "Navegação"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3938,6 +3950,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Ferramenta de Navegação\t(%1)\n"
+"\n"
+"Mouse Esquerdo:\tClique e arraste para girar a visualização.\n"
+"Mouse do Meio:\tClique e arraste para ampliar ou reduzir.\n"
+"Mouse Direito:\tClique e arraste para mover a visualização."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
