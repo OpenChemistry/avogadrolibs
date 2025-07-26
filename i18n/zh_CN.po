@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-26 02:04+0000\n"
+"PO-Revision-Date: 2025-07-26 14:33+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -3904,10 +3904,13 @@ msgid "Reverse Direction of Zoom on Scroll"
 msgstr "滚动时反向缩放"
 
 #: qtplugins/navigator/navigator.cpp:108
+#, fuzzy
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
+"默认：向下滚动以缩小，向上滚动以放大\n"
+"反向：向上滚动以缩小，向下滚动以放大"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
