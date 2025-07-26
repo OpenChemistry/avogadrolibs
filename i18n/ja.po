@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-25 01:11+0000\n"
+"PO-Revision-Date: 2025-07-27 15:33+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1497,7 +1497,7 @@ msgstr "設定"
 #: qtgui/scriptloader.cpp:33
 #, qt-format
 msgid "Cannot load script %1"
-msgstr "スクリプト%1をロードできません"
+msgstr "スクリプト %1 をロードできません"
 
 #: qtgui/scriptloader.cpp:69
 #, qt-format
@@ -1643,7 +1643,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
-msgstr "OpenDX エラー"
+msgstr "OpenDXエラー"
 
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
@@ -2555,7 +2555,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:648
 msgid "Turbomole format"
-msgstr "Turbomole 形式"
+msgstr "Turbomole形式"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
@@ -3184,7 +3184,7 @@ msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 msgid "GAMESS input"
-msgstr "GAMESS インプット"
+msgstr "GAMESSインプット"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
@@ -3831,8 +3831,8 @@ msgstr ""
 "ナビゲーションツール\t(%1)\n"
 "\n"
 "左クリック:\tクリックしたままドラッグしてビューを回転\n"
-"ミドルクリック: \tクリックしたままドラッグして拡大または縮小\n"
-"右クリック: \tクリックしたままドラッグしてビューを移動"
+"ミドルクリック:\tクリックしたままドラッグして拡大または縮小\n"
+"右クリック:\tクリックしたままドラッグしてビューを移動"
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3855,7 +3855,7 @@ msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
-"デフォルト: \tスクロールダウンして縮小、スクロールアップして拡大\n"
+"デフォルト:\tスクロールダウンして縮小、スクロールアップして拡大\n"
 "反転時:\tスクロールアップして縮小、スクロールダウンして拡大"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
@@ -4902,11 +4902,11 @@ msgid ""
 msgstr ""
 "選択ツール\t(%1)\n"
 "\n"
-"左クリック: \tクリックして個別の原子、残基、またはフラグメントを選択\n"
+"左クリック:\tクリックして個別の原子、残基、またはフラグメントを選択\n"
 "\tドラッグして複数の原子を選択\n"
-"右クリック: \t分子でないところをクリックして選択を解除\n"
+"右クリック:\t分子でないところをクリックして選択を解除\n"
 "Ctrlで選択を反転、Shiftで選択を追加\n"
-"ダブルクリック: \tフラグメント全体を選択"
+"ダブルクリック:\tフラグメント全体を選択"
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 #, fuzzy
@@ -5517,7 +5517,7 @@ msgstr "エラー: %1 の開始に失敗"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
-msgstr "Yaehmop インプット"
+msgstr "Yaehmopインプット"
 
 #: qtplugins/yaehmop/yaehmop.h:35
 msgid "Yaehmop"
@@ -5525,7 +5525,7 @@ msgstr "Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.h:84
 msgid "Perform extended Hückel calculations with yaehmop."
-msgstr "yaehmop で拡張ヒュッケル計算を行う"
+msgstr "yaehmopで拡張ヒュッケル計算を行う"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -5714,7 +5714,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
 msgid "PDB File:"
-msgstr "PDB ファイル:"
+msgstr "PDBファイル:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:50
 #. i18n: ectx: property (text), widget (QPushButton, openPdbFileButton)
@@ -5761,7 +5761,7 @@ msgstr "SWANSON"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:114
 #. i18n: ectx: property (text), widget (QPushButton, runPdb2PqrButton)
 msgid "Run PDB2PQR"
-msgstr "PDB2PQR を実行"
+msgstr "PDB2PQRを実行"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:123
 #. i18n: ectx: property (text), widget (QRadioButton, loadFromPqrButton)
@@ -5771,12 +5771,12 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, pqrFileLabel)
 msgid "PQR File:"
-msgstr "PQR ファイル:"
+msgstr "PQRファイル:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:156
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "APBS Input File"
-msgstr "APBS インプットファイル"
+msgstr "APBSインプットファイル"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
@@ -6021,7 +6021,7 @@ msgstr "適用"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Cp2kInputDialog)
 msgid "CP2K Input"
-msgstr "CP2K インプット"
+msgstr "CP2Kインプット"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
@@ -6405,7 +6405,7 @@ msgstr "自動検出"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
 msgid "GAMESS Input"
-msgstr "GAMESS インプット"
+msgstr "GAMESSインプット"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -6613,7 +6613,7 @@ msgstr "二本鎖"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
 msgid "LAMMPS Input"
-msgstr "LAMMPS インプット"
+msgstr "LAMMPSインプット"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:37
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
@@ -6873,7 +6873,7 @@ msgstr "NVTアンサンブルで能勢-フーバーチェインの数を選択"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "NH Chains"
-msgstr "NH チェーン"
+msgstr "NHチェーン"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:393
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -6885,7 +6885,7 @@ msgstr "NH チェーン"
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, stepSpin)
 msgid ""
 "Time step for the simulation in units according to \"Units\" specification."
-msgstr "シミュレーションの 1ステップ時間 (「単位」で指定した単位)"
+msgstr "シミュレーションの1ステップ時間 （「単位」で指定した単位）"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6902,7 +6902,7 @@ msgstr "シミュレーション中の書き込みに使用する XYZ ファイ�
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:419
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Dump XYZ"
-msgstr "XYZ をダンプ"
+msgstr "XYZをダンプ"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:433
 #. i18n: ectx: property (toolTip), widget (QLabel, label_dimension)
