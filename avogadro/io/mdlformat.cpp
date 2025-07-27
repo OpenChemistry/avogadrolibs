@@ -21,6 +21,7 @@
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
+using Avogadro::Core::endsWith;
 using Avogadro::Core::lexicalCast;
 using Avogadro::Core::split;
 using Avogadro::Core::startsWith;
@@ -39,7 +40,8 @@ namespace {
 
 // Helper function to handle partial charge property blocks
 // e.g. PUBCHEM_MMFF94_PARTIAL_CHARGES
-void handlePartialCharges(Core::Molecule& mol, std::string data)
+void handlePartialCharges(Core::Molecule& mol, std::string data,
+                          std::string name = "MMFF94")
 {
   // the string starts with the number of charges
   // then atom index  charge
@@ -72,7 +74,15 @@ void handlePartialCharges(Core::Molecule& mol, std::string data)
     charges(index - 1, 0) = charge;
   }
 
-  mol.setPartialCharges("MMFF94", charges);
+  // if present, remove atom.dpos and CHARGES from the string
+  if (startsWith(name, "atom.dpos")) {
+    name = name.substr(9, name.size() - 16);
+  }
+  if (endsWith(name, "CHARGES")) {
+    name = name.substr(0, name.size() - 7);
+  }
+
+  mol.setPartialCharges(name, charges);
 }
 } // namespace
 
@@ -354,8 +364,13 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         // check for partial charges
         if (dataName == "PUBCHEM_MMFF94_PARTIAL_CHARGES")
           handlePartialCharges(mol, dataValue);
+        else if (startsWith(dataName, "atom.dpos") &&
+                 endsWith(dataName, "CHARGES"))
+          // remove the "CHARGES" from the end of the string
+          handlePartialCharges(mol, dataValue, dataName);
         else
           mol.setData(dataName, dataValue);
+
         dataName.clear();
         dataValue.clear();
         inValue = false;
