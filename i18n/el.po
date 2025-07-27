@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-21 20:09+0000\n"
+"PO-Revision-Date: 2025-07-27 15:33+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/el/>\n"
@@ -1548,6 +1548,7 @@ msgid "Align"
 msgstr "Στοίχιση"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1557,6 +1558,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Στοίχιση μορίων\n"
+"\n"
+"Αριστερό πλήκτρο: Επιλέξτε μέχρι δύο άτομα.\n"
+"\tΤο πρώτο άτομο κεντράρεται στο αρχικό.\n"
+"\tΤο δεύτερο άτομο στοιχίζεται στον επιλεγμένο άξονα.\n"
+"Δεξιό πλήκτρο: Επαναφορά στοίχισης.\n"
+"Διπλό πάτημα: Κεντράρισμα του ατόμου στο αρχικό."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2929,13 +2937,17 @@ msgid "Draw"
 msgstr "Σχεδίαση"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Εργαλείο σχεδίασης\t(%1)\n"
+"\n"
+"Αριστερό πλήκτρο: Πάτημα και μετακίνηση για τη δημιουργία ατόμων και δεσμών\n"
+"Δεξί πλήκτρο: Διαγραφή ατόμου"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3608,13 +3620,17 @@ msgid "Manipulate"
 msgstr "Χειρισμός"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Εργαλείο χειρισμού\t(%1)\n"
+"\n"
+"Αριστερό πλήκτρο: Πάτημα και σύρσιμο για τη μετακίνηση ατόμων\n"
+"Δεξί πλήκτρο: Πάτημα και σύρσιμο για την περιστροφή των επιλεγμένων ατόμων."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3838,7 +3854,7 @@ msgid "Navigate"
 msgstr "Περιήγηση"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3846,6 +3862,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Εργαλείο περιήγησης\t(%1)\n"
+"\n"
+"Αριστερό πλήκτρο:\tΠάτημα και σύρσιμο για την περιστροφή προβολής.\n"
+"Μεσαίο πλήκτρο:\tΠάτημα και σύρσιμο για μεγέθυνση ή σμίκρυνση.\n"
+"Δεξί πλήκτρο:\tΠάτημα και σύρσιμο για τη μετακίνηση της προβολής."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4911,7 +4932,7 @@ msgid "Selection"
 msgstr "Επιλογή"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -4921,6 +4942,15 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Εργαλείο επιλογής\t(%1)\n"
+"\n"
+"Αριστερό πλήκτρο: Πάτημα για επιλογή μεμονωμένων ατόμων, υπολοίπων ή "
+"τμημάτων\n"
+"\tΣύρτε για να επιλέξετε μια περιοχή ατόμων\n"
+"Δεξιό πλήκτρο: Πάτημα έξω από το μόριο για καθαρισμό της επιλογής\n"
+"Χρησιμοποιήστε Ctrl για εναλλαγή της επιλογής και Shift για προσθήκη στην "
+"επιλογή.\n"
+"Διπλό πάτημα: Επιλογή ενός ολόκληρου τμήματος."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 #, fuzzy
@@ -4929,8 +4959,9 @@ msgstr "Έναρξη ατόμου"
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
+#, fuzzy
 msgid "Selection tool"
-msgstr ""
+msgstr "Εργαλείο επιλογής"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
