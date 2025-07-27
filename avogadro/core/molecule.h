@@ -759,8 +759,8 @@ public:
    * Methods for distance, angle, torsion, etc. constraints
    */
   ///@{
-  void addConstraint(Index a, Index b, Index c = MaxIndex, Index d = MaxIndex,
-                     Real value = 0.0);
+  void addConstraint(Real Value, Index a, Index b, Index c = MaxIndex,
+                     Index d = MaxIndex);
   void addConstraint(Constraint& c) { m_constraints.push_back(c); }
 
   void removeConstraint(Index a, Index b, Index c = MaxIndex,
@@ -771,6 +771,10 @@ public:
     m_constraints = constraints;
   }
   std::vector<Core::Constraint>& constraints() { return m_constraints; };
+  const std::vector<Core::Constraint>& constraints() const
+  {
+    return m_constraints;
+  }
 
   /**
    * Freeze or unfreeze an atom for optimization

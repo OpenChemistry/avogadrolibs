@@ -64,9 +64,11 @@ public:
 
   // Get the angle for a given index
   Core::Angle getAngle(unsigned int angle) const;
+  Real getAngleValue(unsigned int angle) const;
 
   // Get the torson for a given index
   Core::Dihedral getTorsion(unsigned int torsion) const;
+  Real getTorsionValue(unsigned int torsion) const;
 
 private:
   PropertyType m_type;
