@@ -1031,12 +1031,44 @@ Core::Angle PropertyModel::getAngle(unsigned int angle) const
   return m_angles[angle];
 }
 
+Real PropertyModel::getAngleValue(unsigned int angle) const
+{
+  if (angle >= m_angles.size())
+    return 0.0;
+
+  auto a = m_angles[angle];
+  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(a));
+  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(a));
+  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(a));
+  Vector3 a1 = atom1.position3d();
+  Vector3 a2 = atom2.position3d();
+  Vector3 a3 = atom3.position3d();
+  return calculateAngle(a1, a2, a3);
+}
+
 Core::Dihedral PropertyModel::getTorsion(unsigned int torsion) const
 {
   if (torsion >= m_torsions.size())
     return Core::Dihedral();
 
   return m_torsions[torsion];
+}
+
+Real PropertyModel::getTorsionValue(unsigned int torsion) const
+{
+  if (torsion >= m_torsions.size())
+    return 0.0;
+
+  auto t = m_torsions[torsion];
+  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(t));
+  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(t));
+  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(t));
+  auto atom4 = m_molecule->undoMolecule()->atom(std::get<3>(t));
+  Vector3 a1 = atom1.position3d();
+  Vector3 a2 = atom2.position3d();
+  Vector3 a3 = atom3.position3d();
+  Vector3 a4 = atom4.position3d();
+  return calculateDihedral(a1, a2, a3, a4);
 }
 
 } // end namespace Avogadro

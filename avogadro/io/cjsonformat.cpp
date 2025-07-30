@@ -255,6 +255,17 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  if (atoms.contains("properties")) {
+    json atomProperties = atoms["properties"];
+    if (atomProperties.is_object()) {
+      for (auto& property : atomProperties.items()) {
+        if (property.value().is_array()) {
+          // TODO: handle atom properties
+        }
+      }
+    }
+  }
+
   // Selection is optional, but if present should be loaded.
   if (atoms.contains("selected")) {
     json selection = atoms["selected"];
@@ -264,16 +275,32 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     else if (isNumericArray(selection) && selection.size() == atomCount)
       for (Index i = 0; i < atomCount; ++i)
         molecule.setAtomSelected(i, selection[i] != 0);
-    if (atoms.find("layer") != atoms.end()) {
-      json layerJson = atoms["layer"];
-      if (isNumericArray(layerJson)) {
-        auto& layer = LayerManager::getMoleculeInfo(&molecule)->layer;
-        for (Index i = 0; i < atomCount && i < layerJson.size(); ++i) {
-          while (layerJson[i] > layer.maxLayer()) {
-            layer.addLayer();
-          }
-          layer.addAtom(layerJson[i], i);
+  }
+
+  if (atoms.contains("frozen")) {
+    json frozen = atoms["frozen"];
+    if (isBooleanArray(frozen) && frozen.size() == atomCount) {
+      for (Index i = 0; i < atomCount; ++i)
+        molecule.setFrozenAtom(i, frozen[i]);
+    } // might also be a 3xN array for per-axis freezing
+    else if (isNumericArray(frozen) && frozen.size() == 3 * atomCount) {
+      for (Index i = 0; i < atomCount; ++i) {
+        molecule.setFrozenAtomAxis(i, 0, frozen[3 * i] != 0);
+        molecule.setFrozenAtomAxis(i, 1, frozen[3 * i + 1] != 0);
+        molecule.setFrozenAtomAxis(i, 2, frozen[3 * i + 2] != 0);
+      }
+    }
+  }
+
+  if (atoms.find("layer") != atoms.end()) {
+    json layerJson = atoms["layer"];
+    if (isNumericArray(layerJson)) {
+      auto& layer = LayerManager::getMoleculeInfo(&molecule)->layer;
+      for (Index i = 0; i < atomCount && i < layerJson.size(); ++i) {
+        while (layerJson[i] > layer.maxLayer()) {
+          layer.addLayer();
         }
+        layer.addAtom(layerJson[i], i);
       }
     }
   }
@@ -308,6 +335,17 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
           for (unsigned int i = 0;
                i < molecule.bondCount() && i < bondLabels.size(); ++i) {
             molecule.setBondLabel(i, bondLabels[i]);
+          }
+        }
+      }
+
+      if (bonds.contains("properties")) {
+        json bondProperties = bonds["properties"];
+        if (bondProperties.is_object()) {
+          for (auto& property : bondProperties.items()) {
+            if (property.value().is_array()) {
+              // TODO: handle bond properties
+            }
           }
         }
       }
@@ -447,6 +485,18 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
             break;
           case -2:
             type = GaussianSet::D5;
+            break;
+          case 3:
+            type = GaussianSet::F;
+            break;
+          case -3:
+            type = GaussianSet::F7;
+            break;
+          case 4:
+            type = GaussianSet::G;
+            break;
+          case -4:
+            type = GaussianSet::G9;
             break;
           default:
             // If we encounter GTOs we do not understand, the basis is likely
@@ -680,6 +730,27 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  // constraints
+  if (jsonRoot.find("constraints") != jsonRoot.end()) {
+    json constraints = jsonRoot["constraints"];
+    if (constraints.is_array()) {
+      for (auto& constraint : constraints) {
+        if (isNumericArray(constraint)) {
+          // value, atom1, atom2, atom3, atom4
+          if (constraint.size() == 3) { // bond
+            molecule.addConstraint(constraint[0], constraint[1], constraint[2]);
+          } else if (constraint.size() == 4) { // angle
+            molecule.addConstraint(constraint[0], constraint[1], constraint[2],
+                                   constraint[3]);
+          } else if (constraint.size() == 5) { // torsion
+            molecule.addConstraint(constraint[0], constraint[1], constraint[2],
+                                   constraint[3], constraint[4]);
+          }
+        }
+      }
+    }
+  }
+
   // properties
   if (jsonRoot.find("properties") != jsonRoot.end()) {
     json properties = jsonRoot["properties"];
@@ -874,6 +945,12 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       continue;
     }
 
+    // check if the key is atom.* or bond.* and handle it separately
+    if (element.first.find("atom.") == 0 || element.first.find("bond.") == 0 ||
+        element.first.find("residue.") == 0) {
+      continue;
+    }
+
     if (element.second.type() == Variant::String)
       properties[element.first] = element.second.toString().c_str();
     else if (element.second.type() == Variant::Double)
@@ -984,6 +1061,18 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
           break;
         case GaussianSet::D5:
           shellTypes.push_back(-2);
+          break;
+        case GaussianSet::F:
+          shellTypes.push_back(3);
+          break;
+        case GaussianSet::F7:
+          shellTypes.push_back(-3);
+          break;
+        case GaussianSet::G:
+          shellTypes.push_back(4);
+          break;
+        case GaussianSet::G9:
+          shellTypes.push_back(-4);
           break;
         default:
           // Something bad, put in a silly number...
@@ -1120,6 +1209,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
 
   // Create and populate the atom arrays.
   if (molecule.atomCount()) {
+    json atoms;
     json elements;
     json selected;
     json colors;
@@ -1135,11 +1225,51 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       colors.push_back(color.y());
       colors.push_back(color.z());
     }
-    root["atoms"]["elements"]["number"] = elements;
+    atoms["elements"]["number"] = elements;
     if (!molecule.isSelectionEmpty())
-      root["atoms"]["selected"] = selected;
+      atoms["selected"] = selected;
     if (hasCustomColors)
-      root["atoms"]["colors"] = colors;
+      atoms["colors"] = colors;
+
+    // check for frozen atoms
+    json frozen;
+    // any atoms frozen?
+    bool anyFrozen = false;
+    // any atoms with custom axis?
+    // (i.e., we need to save the matrix)
+    bool axisFrozen = false;
+    Eigen::VectorXd frozenAtomMask = molecule.frozenAtomMask();
+    for (Index i = 0; i < molecule.atomCount(); ++i) {
+      if (molecule.frozenAtom(i)) {
+        anyFrozen = true;
+        frozen.push_back(1);
+      } else {
+        frozen.push_back(0);
+      }
+
+      // check for custom axis
+      if (i * 3 + 2 < frozenAtomMask.size()) {
+        Real sum = frozenAtomMask[3 * i] + frozenAtomMask[3 * i + 1] +
+                   frozenAtomMask[3 * i + 2];
+        // check if it's not all frozen or all unfrozen
+        if (sum != 3.0 && sum != 0.0) {
+          axisFrozen = true;
+        }
+      }
+    }
+
+    if (anyFrozen) {
+      if (axisFrozen) {
+        // iterate through the mask as an array
+        json frozenAtomMaskArray;
+        for (Index i = 0; i < frozenAtomMask.size(); ++i) {
+          frozenAtomMaskArray.push_back(frozenAtomMask[i]);
+        }
+        atoms["frozen"] = frozenAtomMaskArray;
+      } else {
+        atoms["frozen"] = frozen;
+      }
+    }
 
     // check for partial charges
     auto partialCharges = molecule.partialChargeTypes();
@@ -1151,10 +1281,11 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
         for (Index i = 0; i < molecule.atomCount(); ++i) {
           charges.push_back(chargesMatrix(i, 0));
         }
-        root["atoms"]["partialCharges"][type] = charges;
+        atoms["partialCharges"][type] = charges;
       }
     }
 
+    json coords;
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
       // everything gets real-space Cartesians
@@ -1164,7 +1295,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
         coords3d.push_back(it.y());
         coords3d.push_back(it.z());
       }
-      root["atoms"]["coords"]["3d"] = coords3d;
+      coords["3d"] = coords3d;
 
       // if the unit cell exists, also write fractional coords
       if (molecule.unitCell()) {
@@ -1177,7 +1308,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
           coordsFractional.push_back(fcoord.y());
           coordsFractional.push_back(fcoord.z());
         }
-        root["atoms"]["coords"]["3dFractional"] = coordsFractional;
+        coords["3dFractional"] = coordsFractional;
       }
 
       // if the molecule has multiple coordinate sets, write them out
@@ -1193,7 +1324,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
           }
           coords3dSets.push_back(coordsSet);
         }
-        root["atoms"]["coords"]["3dSets"] = coords3dSets;
+        coords["3dSets"] = coords3dSets;
       }
     }
 
@@ -1204,8 +1335,9 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
         coords2d.push_back(it.x());
         coords2d.push_back(it.y());
       }
-      root["atoms"]["coords"]["2d"] = coords2d;
+      coords["2d"] = coords2d;
     }
+    atoms["coords"] = coords;
 
     // forces if present
     const auto forceVectors = molecule.forceVectors();
@@ -1216,38 +1348,46 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
         forces.push_back(force.y());
         forces.push_back(force.z());
       }
-      root["atoms"]["forces"] = forces;
+      atoms["forces"] = forces;
     }
-  }
 
-  // check for atom labels
-  Array atomLabels = molecule.atomLabels();
-  if (atomLabels.size() == molecule.atomCount()) {
-    json labels;
-    for (Index i = 0; i < molecule.atomCount(); ++i) {
-      labels.push_back(atomLabels[i]);
+    // check for atom labels
+    Array atomLabels = molecule.atomLabels();
+    if (atomLabels.size() == molecule.atomCount()) {
+      json labels;
+      for (Index i = 0; i < molecule.atomCount(); ++i) {
+        labels.push_back(atomLabels[i]);
+      }
+      atoms["labels"] = labels;
     }
-    root["atoms"]["labels"] = labels;
-  }
 
-  // formal charges
-  json formalCharges;
-  for (size_t i = 0; i < molecule.atomCount(); ++i) {
-    formalCharges.push_back(molecule.formalCharge(i));
-  }
-  root["atoms"]["formalCharges"] = formalCharges;
-
-  auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;
-  if (layer.atomCount()) {
-    json atomLayer;
-    for (Index i = 0; i < layer.atomCount(); ++i) {
-      atomLayer.push_back(layer.getLayerID(i));
+    // formal charges
+    json formalCharges;
+    bool hasFormalCharges = false;
+    for (size_t i = 0; i < molecule.atomCount(); ++i) {
+      formalCharges.push_back(molecule.formalCharge(i));
+      if (molecule.formalCharge(i) != 0)
+        hasFormalCharges = true;
     }
-    root["atoms"]["layer"] = atomLayer;
+    if (hasFormalCharges)
+      atoms["formalCharges"] = formalCharges;
+
+    auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;
+    if (layer.atomCount()) {
+      json atomLayer;
+      for (Index i = 0; i < layer.atomCount(); ++i) {
+        atomLayer.push_back(layer.getLayerID(i));
+      }
+      atoms["layer"] = atomLayer;
+    }
+
+    // TODO check for atom properties
+    root["atoms"] = atoms; // end atoms
   }
 
   // Create and populate the bond arrays.
   if (molecule.bondCount()) {
+    json bonds;
     json connections;
     json order;
     for (Index i = 0; i < molecule.bondCount(); ++i) {
@@ -1256,8 +1396,8 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       connections.push_back(bond.atom2().index());
       order.push_back(bond.order());
     }
-    root["bonds"]["connections"]["index"] = connections;
-    root["bonds"]["order"] = order;
+    bonds["connections"]["index"] = connections;
+    bonds["order"] = order;
 
     // check if there are bond labels
     Array bondLabels = molecule.bondLabels();
@@ -1266,8 +1406,11 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       for (Index i = 0; i < molecule.bondCount(); ++i) {
         labels.push_back(bondLabels[i]);
       }
-      root["bonds"]["labels"] = labels;
+      bonds["labels"] = labels;
     }
+
+    // TODO check for bond properties
+    root["bonds"] = bonds;
   }
 
   // Create and populate any residue arrays
@@ -1297,13 +1440,35 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       residues.push_back(entry);
     }
     root["residues"] = residues;
+
+    // TODO check for residue properties
+  }
+
+  // any constraints?
+  auto constraintList = molecule.constraints();
+  if (!constraintList.empty()) {
+    json constraints;
+    for (auto& constraint : constraintList) {
+      json constraintEntry;
+      constraintEntry.push_back(constraint.value());
+      constraintEntry.push_back(constraint.aIndex());
+      constraintEntry.push_back(constraint.bIndex());
+      if (constraint.cIndex() != MaxIndex) {
+        constraintEntry.push_back(constraint.cIndex());
+      }
+      if (constraint.dIndex() != MaxIndex) {
+        constraintEntry.push_back(constraint.dIndex());
+      }
+      constraints.push_back(constraintEntry);
+    }
+    root["constraints"] = constraints;
   }
 
   // If there is vibrational data write this out too.
-  if (molecule.vibrationFrequencies().size() > 0) {
-    // A few sanity checks before we begin.
-    assert(molecule.vibrationFrequencies().size() ==
-           molecule.vibrationIRIntensities().size());
+  if (molecule.vibrationFrequencies().size() > 0 &&
+      (molecule.vibrationFrequencies().size() ==
+       molecule.vibrationIRIntensities().size())) {
+    json vibrations;
     json modes;
     json freqs;
     json inten;
@@ -1324,31 +1489,33 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       }
       eigenVectors.push_back(eigenVector);
     }
-    root["vibrations"]["modes"] = modes;
-    root["vibrations"]["frequencies"] = freqs;
-    root["vibrations"]["intensities"] = inten;
+    vibrations["modes"] = modes;
+    vibrations["frequencies"] = freqs;
+    vibrations["intensities"] = inten;
     if (molecule.vibrationRamanIntensities().size() > 0)
-      root["vibrations"]["ramanIntensities"] = raman;
-    root["vibrations"]["eigenVectors"] = eigenVectors;
+      vibrations["ramanIntensities"] = raman;
+    vibrations["eigenVectors"] = eigenVectors;
+    root["vibrations"] = vibrations;
   }
 
   auto names = LayerManager::getMoleculeInfo(&molecule);
+  json layer;
   json visible;
   for (const bool v : names->visible) {
     visible.push_back(v);
   }
-  root["layer"]["visible"] = visible;
+  layer["visible"] = visible;
   json locked;
   for (const bool l : names->locked) {
     locked.push_back(l);
   }
-  root["layer"]["locked"] = locked;
+  layer["locked"] = locked;
   for (const auto& enables : names->enable) {
     json enable;
     for (const bool e : enables.second) {
       enable.push_back(e);
     }
-    root["layer"]["enable"][enables.first] = enable;
+    layer["enable"][enables.first] = enable;
   }
 
   for (const auto& settings : names->settings) {
@@ -1356,8 +1523,9 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     for (const auto& e : settings.second) {
       setting.push_back(e->serialize());
     }
-    root["layer"]["settings"][settings.first] = setting;
+    layer["settings"][settings.first] = setting;
   }
+  root["layer"] = layer;
 
   if (isJson)
     file << std::setw(2) << root;

@@ -40,6 +40,8 @@ private:
   PropertyModel* m_model;
   void copySelectedRowsToClipboard();
   void openExportDialogBox();
+  void constrainSelectedRows();
+  void freezeAtom();
 };
 
 } // end namespace Avogadro
