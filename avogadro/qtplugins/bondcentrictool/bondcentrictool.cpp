@@ -122,7 +122,7 @@ BondCentricTool::BondCentricTool(QObject* parent_)
        "Middle Mouse:\tClick and drag to zoom in or out.\n"
        "Right Mouse:\tClick and drag to move the view.\n"
        "Double-Click:\tReset the view.\n\n"
-       "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+       "Left Click & Drag on a Bond to set the Manipulation Plane\n"
        "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
        "Right Click & Drag one of the Atoms in the Bond to change the length")
       .arg(shortcut));
