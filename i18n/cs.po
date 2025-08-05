@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-23 21:27+0000\n"
+"POT-Creation-Date: 2025-08-03 03:22+0000\n"
 "PO-Revision-Date: 2025-07-25 01:11+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
@@ -1975,7 +1975,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Úpravy zaměřené na vazbu"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -1984,15 +1984,10 @@ msgid ""
 "Right Mouse:\tClick and drag to move the view.\n"
 "Double-Click:\tReset the view.\n"
 "\n"
-"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
-"Nástroj pro zacházení s vazbami\t(%1)\n"
-"\n"
-"Levé tlačítko myši:\tKlepněte a táhněte pro otočení pohledu\n"
-"Prostřední tlačítko myši: Klepněte a táhněte pro přiblížení nebo oddálení\n"
-"Pravé tlačítko myši: \\tKlepněte a táhněte pro posunutí pohledu"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -4705,10 +4700,9 @@ msgid "Conformer Properties…"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:75
-#, fuzzy
 msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr "Okna pro zobrazení vlastností atomů, vazeb, úhlů a zkroucení."
+"Tables for displaying and editing atom, bond, angle and torsion properties."
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -8707,6 +8701,31 @@ msgstr ""
 "pavelfric@seznam.cz,,,avogadro-devel@lists.sourceforge.net,,,,,,"
 "pavelfric@seznam.cz,,,avogadro-devel@lists.sourceforge.net,,,,,,,"
 "pavelfric@seznam.cz"
+
+#, fuzzy, qt-format
+#~ msgid ""
+#~ "Bond Centric Manipulation Tool\t(%1)\n"
+#~ "\n"
+#~ "Left Mouse:\tClick and drag to rotate the view.\n"
+#~ "Middle Mouse:\tClick and drag to zoom in or out.\n"
+#~ "Right Mouse:\tClick and drag to move the view.\n"
+#~ "Double-Click:\tReset the view.\n"
+#~ "\n"
+#~ "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+#~ "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
+#~ "Right Click & Drag one of the Atoms in the Bond to change the length"
+#~ msgstr ""
+#~ "Nástroj pro zacházení s vazbami\t(%1)\n"
+#~ "\n"
+#~ "Levé tlačítko myši:\tKlepněte a táhněte pro otočení pohledu\n"
+#~ "Prostřední tlačítko myši: Klepněte a táhněte pro přiblížení nebo "
+#~ "oddálení\n"
+#~ "Pravé tlačítko myši: \\tKlepněte a táhněte pro posunutí pohledu"
+
+#, fuzzy
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr "Okna pro zobrazení vlastností atomů, vazeb, úhlů a zkroucení."
 
 #~ msgid ""
 #~ "Align Molecules\n"

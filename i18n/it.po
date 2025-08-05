@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-23 21:27+0000\n"
+"POT-Creation-Date: 2025-08-03 03:22+0000\n"
 "PO-Revision-Date: 2025-07-21 20:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
@@ -1984,7 +1984,7 @@ msgid ""
 "Right Mouse:\tClick and drag to move the view.\n"
 "Double-Click:\tReset the view.\n"
 "\n"
-"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
@@ -4689,12 +4689,9 @@ msgid "Conformer Properties…"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:75
-#, fuzzy
 msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
+"Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr ""
-"Finestre per la visualizzazione dell'atomo, del legame, dell'angolo e delle "
-"proprietà di torsione."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -8703,6 +8700,13 @@ msgstr ""
 "michel_gatti@yahoo.it,aegnor_isilra@hotmail.com,hattory@ubuntu.com,,"
 "primes2h@ubuntu.com,vito.fasano@gmail.com,mcarlo.95@gmail.com,,,"
 "lexluxsox@hotmail.it"
+
+#, fuzzy
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr ""
+#~ "Finestre per la visualizzazione dell'atomo, del legame, dell'angolo e "
+#~ "delle proprietà di torsione."
 
 #, fuzzy
 #~ msgid "&Analysis"

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-23 21:27+0000\n"
+"POT-Creation-Date: 2025-08-03 03:22+0000\n"
 "PO-Revision-Date: 2025-07-26 14:33+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -2006,7 +2006,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "化学键操纵"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2015,20 +2015,10 @@ msgid ""
 "Right Mouse:\tClick and drag to move the view.\n"
 "Double-Click:\tReset the view.\n"
 "\n"
-"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
-"化学键操作工具\t(%1)\n"
-"\n"
-"鼠标左键：按下并拖动以旋转视图。\n"
-"鼠标中键：按下并拖动以缩放。\n"
-"鼠标右键：按下并拖动以移动视图。\n"
-"双击：重设视图。\n"
-"\n"
-"鼠标左键 & 在化学键上拖动以设置操作平面：\n"
-"鼠标左键 & 在成键原子上拖动以改变键角\n"
-"鼠标右键 & 在成键原子上拖动以改变键长"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -4719,10 +4709,9 @@ msgid "Conformer Properties…"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:75
-#, fuzzy
 msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr "用于显示原子、化学键、键角和扭矩属性的窗口。"
+"Tables for displaying and editing atom, bond, angle and torsion properties."
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -8677,6 +8666,35 @@ msgstr ""
 "devel@lists.sourceforge.net,chensiqiong@126.com,frankensteinyang@gmail.com,"
 "chaofeng111@gmail.com,allen19920930@gmail.com,skyxxzc@gmail.com,"
 "sihanzheng@gmail.com,cyliang532@gmail.com,zhangtengshuo@gmail.com"
+
+#, fuzzy, qt-format
+#~ msgid ""
+#~ "Bond Centric Manipulation Tool\t(%1)\n"
+#~ "\n"
+#~ "Left Mouse:\tClick and drag to rotate the view.\n"
+#~ "Middle Mouse:\tClick and drag to zoom in or out.\n"
+#~ "Right Mouse:\tClick and drag to move the view.\n"
+#~ "Double-Click:\tReset the view.\n"
+#~ "\n"
+#~ "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+#~ "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
+#~ "Right Click & Drag one of the Atoms in the Bond to change the length"
+#~ msgstr ""
+#~ "化学键操作工具\t(%1)\n"
+#~ "\n"
+#~ "鼠标左键：按下并拖动以旋转视图。\n"
+#~ "鼠标中键：按下并拖动以缩放。\n"
+#~ "鼠标右键：按下并拖动以移动视图。\n"
+#~ "双击：重设视图。\n"
+#~ "\n"
+#~ "鼠标左键 & 在化学键上拖动以设置操作平面：\n"
+#~ "鼠标左键 & 在成键原子上拖动以改变键角\n"
+#~ "鼠标右键 & 在成键原子上拖动以改变键长"
+
+#, fuzzy
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr "用于显示原子、化学键、键角和扭矩属性的窗口。"
 
 #~ msgid ""
 #~ "Align Molecules\n"
