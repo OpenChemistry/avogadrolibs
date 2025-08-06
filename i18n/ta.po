@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the Avogadro package.
 # தமிழ்நேரம் <anishprabu.t@gmail.com>, 2024, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-03 03:22+0000\n"
-"PO-Revision-Date: 2025-05-31 19:02+0000\n"
-"Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
+"PO-Revision-Date: 2025-08-06 08:52+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
 "Language: ta\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -4647,9 +4648,12 @@ msgid "Conformer Properties…"
 msgstr "கன்ஃபார்மர் பண்புகள்…"
 
 #: qtplugins/propertytables/propertytables.cpp:75
+#, fuzzy
 msgid ""
 "Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr ""
+"அணு, பிணைப்பு, கோணம் மற்றும் முறுக்கு பண்புகளைக் காண்பிப்பதற்கும் திருத்துவதற்கும் "
+"அட்டவணைகள்."
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
