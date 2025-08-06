@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-03 03:22+0000\n"
-"PO-Revision-Date: 2025-07-21 20:10+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
@@ -2989,13 +2989,17 @@ msgid "Draw"
 msgstr "Рисовать"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Инструмент построение молекулы\t(%1)\n"
+"\n"
+"Нажатием и зажатием левой кнопки мыши можно создавать атомы и связи\n"
+"Нажатием правой кнопки мыши можно удалить атом"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3582,12 +3586,16 @@ msgid "Edit Labels"
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:34
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Atom Label Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Инструмент для пометки атомов\t(%1)\n"
+"\n"
+"Нажатием левой кнопки мыши на определенном атоме можно инициировать\n"
+"текстовое поле для создания текстовой метки на атоме"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3692,7 +3700,7 @@ msgid "Measure"
 msgstr "Измерение"
 
 #: qtplugins/measuretool/measuretool.cpp:54
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Measure Tool\t(%1)\n"
 "\n"
@@ -3702,6 +3710,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"Линейка\t(%1)\n"
+"\n"
+"Левой кнопкой мыши:\tВыберите до 4 атомов.\n"
+"\tДлины связей измеряются между 1-2 и 2-3 атомами\n"
+"\tУгол связи измеряется между атомами 1-2-3, где 2 - центр угла\n"
+"\tДвугранный угол измеряется между 1-2-3-4\n"
+"Правой кнопкой мыши:\tОбнулить измерения."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -4741,9 +4756,11 @@ msgid "Conformer Properties…"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:75
+#, fuzzy
 msgid ""
 "Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr ""
+"Окна, отображающие свойства атомов, связей, валентных и двугранных углов."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
