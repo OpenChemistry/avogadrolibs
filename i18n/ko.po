@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-03 03:22+0000\n"
-"PO-Revision-Date: 2025-07-27 15:33+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
@@ -1996,7 +1996,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "결합 중심 조작"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2009,6 +2009,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Bond Centric Manipulation 도구\t(%1)\n"
+"\n"
+"왼쪽 마우스:\t클릭하고 드래그하여 보기를 회전합니다.\n"
+"중간 마우스 :\t클릭하고 줌을 켜거나 밖으로 드래그하십시오.\n"
+"마우스 오른쪽:\t클릭하고 보기를 이동합니다.\n"
+"더블 클릭:\t보기를 재설정.\n"
+"\n"
+"왼쪽 클릭 & 채권을 설정하려면 드래그:\n"
+"왼쪽 클릭 & 본드의 원자 중 하나를 드래그하여 각도를 변경\n"
+"오른쪽 클릭 & 채권의 원자 중 하나를 드래그하여 길이를 변경합니다"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -4671,7 +4681,7 @@ msgstr ""
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
 "Tables for displaying and editing atom, bond, angle and torsion properties."
-msgstr ""
+msgstr "원자, 결합, 각도 및 비틀림 속성을 표시하고 편집하기 위한 표입니다."
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
