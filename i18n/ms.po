@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-03 03:22+0000\n"
-"PO-Revision-Date: 2025-07-21 20:09+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Malay <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ms/>\n"
@@ -1543,6 +1543,7 @@ msgid "Align"
 msgstr "Jajar"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1552,6 +1553,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Jajar Molekul\n"
+"\n"
+"Butang Kiri Tetikus:\tPilih sehingga dua atom.\n"
+"\tAtom pertama berada dipusat.\n"
+"\tAtom kedua dijajar mengikut paksi yang dipilih.\n"
+"Butang Kanan Tetikus:\tTetap semula jajaran.\n"
+"Dwi-Klik:\tTengah atom dipusat."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1963,7 +1971,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Manipulasi Di Pusat Ikatan"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -1976,6 +1984,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Alat Manipulasi Pusat Ikatan\t(%1)\n"
+"\n"
+"Butang Kiri Tetikus:\tKlik dan seret untuk putar pandangan.\n"
+"Butang Tengah Tetikus:\tKlik dan seret untuk zum masuk dan keluar.\n"
+"Butang Kanan Tetikus:\tKlik dan seret untuk alih pandangan.\n"
+"Dwi-Klik:\tTetap semula pandangan.\n"
+"\n"
+"Klik Kiri & Seret pada Ikatan untuk tetapkan Satah Manipulasi:\n"
+"Klik Kiri & Seret pada salah satu Atom dalam Ikatan untuk mengubah sudut\n"
+"Klik Kanan & Seret pada salah satu Atom dalam Ikatan untuk mengubah panjang"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2925,13 +2943,17 @@ msgid "Draw"
 msgstr "Lukis"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Alat Lukis\t(%1)\n"
+"\n"
+"Butang Kiri Tetikus:\tKlik dan Seret untuk cipta Atom dan Ikatan\n"
+"Butang Kanan Tetikus:\tPadam Atom"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3604,13 +3626,17 @@ msgid "Manipulate"
 msgstr "Manipulasi"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Alat Manipulasi\t(%1)\n"
+"\n"
+"Butang Kiri Tetikus:\tKlik dan seret untuk alih atom\n"
+"Butang Kanan Tetikus:\tKlik dan seret untuk putar atom terpilih."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3834,7 +3860,7 @@ msgid "Navigate"
 msgstr "Navigasi"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3842,6 +3868,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Alat Navigasi\t(%1)\n"
+"\n"
+"Butang Kiri Tetikus:\tKlik dan seret untuk putar pandangan.\n"
+"Butang Tengah Tetikus:\tKlik dan seret untuk zum masuk atau keluar.\n"
+"Butang Kanan Tetikus:\tKlik dan seret untuk alih pandangan."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4680,9 +4711,10 @@ msgid "Conformer Properties…"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:75
+#, fuzzy
 msgid ""
 "Tables for displaying and editing atom, bond, angle and torsion properties."
-msgstr ""
+msgstr "Tetingkap untuk memaparkan sifat atom, ikatan, sudut dan kilasan."
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
@@ -4904,7 +4936,7 @@ msgid "Selection"
 msgstr "Pemilihan"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -4914,6 +4946,14 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Alat Pemilihan\t(%1)\n"
+"\n"
+"Butang Kiri Tetikus:\tKlik untuk ambil atom, baki, atau cebisan secara "
+"individu\n"
+"\tSeret untuk pilih julat atom\n"
+"Butang Kanan Tetikus:\tKlik diluar molekul untuk batalkan pemilihan\n"
+"Guna Ctrl untuk togol pemilihan dan shift untuk tambah pemilihan.\n"
+"Dwi-Klik:\tPilih keseluruhan cebisan."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 #, fuzzy
