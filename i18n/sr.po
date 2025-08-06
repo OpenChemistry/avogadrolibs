@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-03 03:22+0000\n"
-"PO-Revision-Date: 2025-07-23 22:01+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -1620,6 +1620,7 @@ msgid "Align"
 msgstr "Поравнај"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1629,6 +1630,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Поравнајте молекуле\n"
+"\n"
+"Лево дугме миша:\tИзаберите до два атома.\n"
+"\tПрви атом је усредиштен на првобитан положај.\n"
+"\tДруги атом је поравнат на изабране осе.\n"
+"Десно дугме миша:\tПоништите поравнање.\n"
+"Двоструки клик:\tУсредиштите атом на првобитан положај."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2039,7 +2047,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Upravljanje središnjom vezom"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2052,6 +2060,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Алат за управљање средишњом везом\t(%1)\n"
+"\n"
+"Леви тастер:\tПритисните и превуците да заокренете преглед.\n"
+"Средњи тастер:\tПритисните и превуците да приближите или удаљите.\n"
+"Десни тастер:\tПритисните и превуците да преместите преглед.\n"
+"Двоструки:\tВраћа преглед.\n"
+"\n"
+"Леви притисак и превлачење на вези за подешавање равни управљања\n"
+"Леви притисак и превлачење једног атома у вези за промену угла\n"
+"Десни притисак и превлачење једног атома у вези за промену дужине"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -3007,13 +3025,17 @@ msgid "Draw"
 msgstr "Iscrtaj"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Алат за цртање\t(%1)\n"
+"\n"
+"Леви тастер:\tПритисните и превуците да направите атоме и везе\n"
+"Десни тастер:\tОбришите атом"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3677,13 +3699,17 @@ msgid "Manipulate"
 msgstr "Upravljaj"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Алат управљања\t(%1)\n"
+"\n"
+"Леви тастер:\tПритисните и превуците да преместите атоме\n"
+"Десни тастер:\tПритисните и превуците да заокренете изабране атоме."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3906,7 +3932,7 @@ msgid "Navigate"
 msgstr "Navigacija"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3914,6 +3940,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Алат кретања\t(%1)\n"
+"\n"
+"Леви тастер:\tПритисните и превуците да заокренете преглед\n"
+"Средњи тастер:\tПритисните и превуците да увећате или да умањите\n"
+"Десни тастер:\tПритисните и превуците да преместите преглед."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4771,9 +4802,10 @@ msgid "Conformer Properties…"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:75
+#, fuzzy
 msgid ""
 "Tables for displaying and editing atom, bond, angle and torsion properties."
-msgstr ""
+msgstr "Прозори за приказивање својстава атома, везе, угла и увијања."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
