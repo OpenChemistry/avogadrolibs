@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-03 03:22+0000\n"
-"PO-Revision-Date: 2025-07-23 22:01+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Valencian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca@valencia/>\n"
@@ -4669,9 +4669,10 @@ msgid "Conformer Properties…"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:75
+#, fuzzy
 msgid ""
 "Tables for displaying and editing atom, bond, angle and torsion properties."
-msgstr ""
+msgstr "Finestra per mostrar l'àtom, enllaços, angles i propietats de torsió."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
