@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-03 03:22+0000\n"
-"PO-Revision-Date: 2025-07-27 15:32+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -2024,7 +2024,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Bindungsorientierte Bearbeitung"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2037,6 +2037,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Werkzeug zum Bearbeitung von Bindungen\t(%1)\n"
+"\n"
+"Linke Maustaste:\tDrehen der Ansicht.\n"
+"Mittlere Maustaste:\tSkalieren der Ansicht.\n"
+"Rechte Maustaste:\tVerschieben der Ansicht.\n"
+"Doppelklick:\tZurücksetzen der Ansicht.\n"
+"\n"
+"Linksklick & Gleiten auf einer Bindung definiert die Arbeitsebene\n"
+"Linksklick & Verschieben eines gebundenen Atoms ändert den Bindungswinkel.\n"
+"Rechtsklick & Verschieben eines gebundenen Atoms ändert die Bindungslänge"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -4740,6 +4750,8 @@ msgstr "Konformereneigenschaften …"
 msgid ""
 "Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr ""
+"Tabellen zur Darstellung und Änderung der Atom-, Bindungs-, Winkel- und "
+"Torsionseigenschaften."
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
