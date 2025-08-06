@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-03 03:22+0000\n"
-"PO-Revision-Date: 2025-07-23 22:01+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -2954,13 +2954,17 @@ msgid "Draw"
 msgstr "Marraztu"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Marrazketa Tresna\t(%1)\n"
+"\n"
+"Saguko ezker botoia:\tKlikatu eta tiratu Atomoak eta Loturak sortzeko\n"
+"Saguko eskuin botoia:\tAtomoa ezabatu"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -4705,9 +4709,10 @@ msgid "Conformer Properties…"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:75
+#, fuzzy
 msgid ""
 "Tables for displaying and editing atom, bond, angle and torsion properties."
-msgstr ""
+msgstr "Atomo-, lotura-, angelu- eta tortsio-propietateak ikusteko leihoa."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
