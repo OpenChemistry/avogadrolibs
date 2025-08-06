@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-03 03:22+0000\n"
-"PO-Revision-Date: 2025-01-15 13:00+0000\n"
+"PO-Revision-Date: 2025-08-06 08:52+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -4737,6 +4737,7 @@ msgstr ""
 msgid ""
 "Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr ""
+"Tabeloj por montri kaj redakti atributojn pri atomo, ligo, angulo kaj tordo."
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
