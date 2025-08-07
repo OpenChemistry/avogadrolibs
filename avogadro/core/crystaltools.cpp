@@ -772,7 +772,7 @@ public:
 
   void insert(const Vector3& pos, Index index)
   {
-    m_bins[key(pos)].push_back(std::make_pair(pos, index));
+    m_bins[key(pos)].emplace_back(pos, index);
   }
 
   // Returns true and sets @a index if an atom already sits at @a pos.

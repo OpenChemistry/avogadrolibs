@@ -451,17 +451,17 @@ extern "C" __attribute__((visibility("default"))) int LLVMFuzzerTestOneInput(
       if (!violations.isEmpty())
         fail(trace, QtPluginsTests::describe(outcome), violations);
     } else if (kind == 12) {
-      trace.push_back("undo");
+      trace.emplace_back("undo");
       const QStringList v = harness.undo();
       if (!v.isEmpty())
         fail(trace, "after undo", v);
     } else if (kind == 13) {
-      trace.push_back("redo");
+      trace.emplace_back("redo");
       const QStringList v = harness.redo();
       if (!v.isEmpty())
         fail(trace, "after redo", v);
     } else if (kind == 14) {
-      trace.push_back("undo, redo");
+      trace.emplace_back("undo, redo");
       const bool canUndo =
         harness.molecule()->undoMolecule()->undoStack().canUndo();
       const MoleculeSnapshot before = harness.snapshot();
@@ -490,7 +490,7 @@ extern "C" __attribute__((visibility("default"))) int LLVMFuzzerTestOneInput(
       }
     } else {
       attached = !attached;
-      trace.push_back(attached ? "attach molecule" : "detach molecule");
+      trace.emplace_back(attached ? "attach molecule" : "detach molecule");
       harness.setPluginMolecule(attached ? harness.molecule() : nullptr);
     }
   }

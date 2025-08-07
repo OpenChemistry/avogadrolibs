@@ -468,11 +468,11 @@ TEST_P(ScenePluginSerializeTest, embeddedNulAndNewlineLeaveSaneData)
       inputs.push_back(replaced);
     }
   }
-  inputs.push_back(std::string("\0", 1));
-  inputs.push_back(std::string("\0\0\0", 3));
-  inputs.push_back("\n");
+  inputs.emplace_back("\0", 1);
+  inputs.emplace_back("\0\0\0", 3);
+  inputs.emplace_back("\n");
   inputs.push_back("\n\n" + good + "\n\n");
-  inputs.push_back(std::string("\n\0\n", 3));
+  inputs.emplace_back("\n\0\n", 3);
 
   for (const auto& input : inputs) {
     const std::string out = restore(input);

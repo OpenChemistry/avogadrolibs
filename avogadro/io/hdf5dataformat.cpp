@@ -64,7 +64,7 @@ public:
       return 0;
 
     ListDatasetsVisitor* self = reinterpret_cast<ListDatasetsVisitor*>(op_data);
-    self->datasets.push_back(std::string(name));
+    self->datasets.emplace_back(name);
     return 0;
   }
 };

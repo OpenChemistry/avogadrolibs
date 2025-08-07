@@ -220,13 +220,13 @@ public:
   std::vector<std::string> fileExtensions() const override
   {
     std::vector<std::string> result;
-    result.push_back("asdfjkl;");
+    result.emplace_back("asdfjkl;");
     return result;
   }
   std::vector<std::string> mimeTypes() const override
   {
     std::vector<std::string> result;
-    result.push_back("chemical/x-doodie");
+    result.emplace_back("chemical/x-doodie");
     return result;
   }
 };

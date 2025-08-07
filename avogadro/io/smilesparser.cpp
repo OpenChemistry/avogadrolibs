@@ -894,7 +894,7 @@ bool Parser::run(Molecule& molecule, std::string& error, size_t& errorPosition,
   }
 
   if (m_sawStereo) {
-    warnings.push_back(
+    warnings.emplace_back(
       "Stereochemistry (chirality and bond direction markers) was "
       "discarded: a freshly parsed molecule has no coordinates for it to "
       "describe.");
