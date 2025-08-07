@@ -20,21 +20,11 @@
 #include <pugixml.hpp>
 
 #include <bitset>
-#include <cmath>
 #include <locale>
 #include <map>
 #include <sstream>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
 namespace Avogadro::Io {
-
-namespace {
-const Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
-const Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
-} // namespace
 
 using std::string;
 using namespace std::string_literals;
@@ -114,7 +104,6 @@ public:
       for (pugi::xml_node scalar = node.child("scalar"); scalar;
            scalar = scalar.next_sibling("scalar")) {
         pugi::xml_attribute title = scalar.attribute("title");
-        const float degToRad(static_cast<float>(M_PI) / 180.0f);
         if (title) {
           std::string titleStr(title.value());
           if (titleStr == "a") {
@@ -127,13 +116,13 @@ public:
             c = scalar.text().as_float();
             parsedValues.set(CellC);
           } else if (titleStr == "alpha") {
-            alpha = scalar.text().as_float() * degToRad;
+            alpha = scalar.text().as_float() * DEG_TO_RAD_F;
             parsedValues.set(CellAlpha);
           } else if (titleStr == "beta") {
-            beta = scalar.text().as_float() * degToRad;
+            beta = scalar.text().as_float() * DEG_TO_RAD_F;
             parsedValues.set(CellBeta);
           } else if (titleStr == "gamma") {
-            gamma = scalar.text().as_float() * degToRad;
+            gamma = scalar.text().as_float() * DEG_TO_RAD_F;
             parsedValues.set(CellGamma);
           }
         }
