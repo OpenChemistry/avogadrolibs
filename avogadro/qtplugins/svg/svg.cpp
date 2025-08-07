@@ -202,8 +202,7 @@ void SVG::paintBonds(QPainter& painter, const SVGAtom& atom, unsigned int i,
     Eigen::Vector2f to(mol_to[0] - (m_penWidthBond / 2.0f),
                        mol_to[1] - (m_penWidthBond / 2.0f));
 
-    float L = std::sqrt((from[0] - to[0]) * (from[0] - to[0]) +
-                        (from[1] - to[1]) * (from[1] - to[1]));
+    float L = std::hypot(from[0] - to[0], from[1] - to[1]);
     float offsetX = (to[1] - from[1]) / L;
     float offsetY = (from[0] - to[0]) / L;
     unsigned int order = int(bond.order());

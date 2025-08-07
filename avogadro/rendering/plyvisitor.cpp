@@ -178,7 +178,7 @@ void PLYVisitor::visitSphereIcosphereRecursionMethod(const SphereColor& sphere,
     float x = vertices.at(i)[0];
     float y = vertices.at(i)[1];
     float z = vertices.at(i)[2];
-    float distance = sqrt(pow(x, 2.0f) + pow(y, 2.0f) + pow(z, 2.0f));
+    float distance = std::hypot(x, y, z);
     vertices.at(i)[0] = (x / distance) * radius;
     vertices.at(i)[1] = (y / distance) * radius;
     vertices.at(i)[2] = (z / distance) * radius;
@@ -233,8 +233,7 @@ void PLYVisitor::visitCylinderLateralMethod(const CylinderColor& geometry,
   // Radius and the length vector of cylinder
   float radius = geometry.radius;
   float length =
-    sqrt(pow(end1[0] - end2[0], 2.0f) + pow(end1[1] - end2[1], 2.0f) +
-         pow(end1[2] - end2[2], 2.0f));
+    std::hypot(end1[0] - end2[0], end1[1] - end2[1], end1[2] - end2[2]);
 
   // Normalize the plane vector of the cylinder
   Vector3f normalVector((end1[0] - end2[0]) / length,
@@ -261,7 +260,7 @@ void PLYVisitor::visitCylinderLateralMethod(const CylinderColor& geometry,
   }
 
   // Length of u vector
-  float uLength = sqrt(pow(u[0], 2.0f) + pow(u[1], 2.0f) + pow(u[2], 2.0f));
+  float uLength = std::hypot(u[0], u[1], u[2]);
 
   // Normalize the vector
   u[0] /= uLength;
