@@ -609,6 +609,10 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
   if (m_writeProperties) {
     const auto dataMap = mol.dataMap();
     for (const auto& key : dataMap.names()) {
+      // skip some keys
+      if (key == "modelView" || key == "projection")
+        continue;
+
       out << "> <" << key << ">\n";
       out << dataMap.value(key).toString() << "\n";
       out << "\n"; // empty line between data blocks
@@ -624,7 +628,25 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
 bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
 {
   // Header lines.
-  out << mol.data("name").toString() << "\n  Avogadro\n\n";
+  out << mol.data("name").toString() << "\n";
+
+  // Mol block header - need to indicate 3D coords
+  // e.g.   Avogadro08072512293D
+  // name of program MMDDYYHM3D
+  auto now = std::chrono::system_clock::now();
+  // Convert to time_t for use with ctime functions
+  std::time_t time_t_now = std::chrono::system_clock::to_time_t(now);
+  // Convert to a local time structure (tm)
+  std::tm* local_time = std::localtime(&time_t_now);
+
+  // Format the time using std::put_time
+  // %m: Month as decimal number (01-12)
+  // %d: Day of the month as decimal number (01-31)
+  // %y: Year without century (00-99)
+  // %H: Hour in 24-hour format (00-23)
+  // %M: Minute as decimal number (00-59)
+  out << "  Avogadro" << std::put_time(local_time, "%m%d%y%H%M") << "3D\n\n";
+
   // Counts line.
   if (mol.atomCount() > 999 || mol.bondCount() > 999) {
     // we need V3000 support for big molecules
@@ -670,6 +692,10 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   if (m_writeProperties) {
     const auto dataMap = mol.dataMap();
     for (const auto& key : dataMap.names()) {
+      // skip some keys
+      if (key == "modelView" || key == "projection")
+        continue;
+
       out << "> <" << key << ">\n";
       out << dataMap.value(key).toString() << "\n";
       out << "\n"; // empty line between data blocks
