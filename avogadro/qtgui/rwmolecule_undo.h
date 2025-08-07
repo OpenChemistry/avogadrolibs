@@ -173,9 +173,9 @@ class RemoveAtomCommand : public RWMolecule::UndoCommand
 
 public:
   RemoveAtomCommand(RWMolecule& m, Index atomId, Index uid, unsigned char aN,
-                    const Vector3& pos)
+                    Vector3 pos)
     : UndoCommand(m), m_atomId(atomId), m_atomUid(uid), m_atomicNumber(aN),
-      m_position3d(pos)
+      m_position3d(std::move(pos))
   {
   }
 
@@ -917,8 +917,8 @@ class ModifyAtomLabelCommand : public RWMolecule::UndoCommand
   std::string m_oldLabel;
 
 public:
-  ModifyAtomLabelCommand(RWMolecule& m, Index atomId, const std::string& label)
-    : UndoCommand(m), m_atomId(atomId), m_newLabel(label)
+  ModifyAtomLabelCommand(RWMolecule& m, Index atomId, std::string label)
+    : UndoCommand(m), m_atomId(atomId), m_newLabel(std::move(label))
   {
     m_oldLabel = m_mol.molecule().atomLabel(m_atomId);
   }
@@ -937,8 +937,8 @@ class ModifyBondLabelCommand : public RWMolecule::UndoCommand
   std::string m_oldLabel;
 
 public:
-  ModifyBondLabelCommand(RWMolecule& m, Index bondId, const std::string& label)
-    : UndoCommand(m), m_bondId(bondId), m_newLabel(label)
+  ModifyBondLabelCommand(RWMolecule& m, Index bondId, std::string label)
+    : UndoCommand(m), m_bondId(bondId), m_newLabel(std::move(label))
   {
     m_oldLabel = m_mol.molecule().bondLabel(m_bondId);
   }
