@@ -207,12 +207,10 @@ struct LayerCartoon : Core::LayerData
 struct BackboneResidue
 {
   BackboneResidue() = default;
-  BackboneResidue(const Vector3f p, const Vector3ub& c1, const Vector3ub& c2,
-                  const size_t& g, size_t id, bool sel,
-                  Residue::SecondaryStructure sec)
-    : pos(p), color1(c1), color2(c2), group(g), residueID(id), selected(sel),
-      secondaryStructure(sec)
-
+  BackboneResidue(const Vector3f p, Vector3ub c1, Vector3ub c2, const size_t& g,
+                  size_t id, bool sel, Residue::SecondaryStructure sec)
+    : pos(p), color1(std::move(c1)), color2(std::move(c2)), group(g),
+      residueID(id), selected(sel), secondaryStructure(sec)
   {
   }
   Vector3f pos;

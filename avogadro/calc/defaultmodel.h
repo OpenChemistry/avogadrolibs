@@ -32,7 +32,7 @@ namespace Calc {
 class AVOGADROCALC_EXPORT DefaultModel : public ChargeModel
 {
 public:
-  DefaultModel(const std::string& identifier = "");
+  DefaultModel(std::string identifier = "");
   ~DefaultModel() override = default;
 
   /**

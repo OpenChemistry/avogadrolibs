@@ -10,6 +10,7 @@
 
 #include <avogadro/core/array.h>
 
+#include <utility>
 #include <vector>
 
 namespace Avogadro {
@@ -42,9 +43,10 @@ public:
     float lineParam;   //  4 bytes - dash parameter (0 = solid)
 
     PackedVertex() = default;
-    PackedVertex(const Vector3f& pos, const Vector3f& other, const Vector4ub& c,
-                 float ws, float lp = 0.0f)
-      : position(pos), otherEnd(other), color(c), widthSide(ws), lineParam(lp)
+    PackedVertex(Vector3f pos, Vector3f other, Vector4ub c, float ws,
+                 float lp = 0.0f)
+      : position(std::move(pos)), otherEnd(std::move(other)),
+        color(std::move(c)), widthSide(ws), lineParam(lp)
     {
     }
 
