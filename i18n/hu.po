@@ -8,13 +8,14 @@
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # Mirkó Attila <kisatti007hun@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2024-11-25 20:00+0000\n"
-"Last-Translator: ovari <ovari123@zoho.com>\n"
+"POT-Creation-Date: 2025-08-03 03:22+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
 "Language: hu\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1622,6 +1623,7 @@ msgid "Align"
 msgstr "Rendezés"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1631,6 +1633,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Molekulák igazítása\n"
+"\n"
+"Bal egér:\tVálasszon ki legfeljebb két atomot.\n"
+"\tAz első atom középpontjában az origó található.\n"
+"\tA második atom a kiválasztott tengelyhez igazodik.\n"
+"Jobb egér:\tÁllítsa vissza az igazítást.\n"
+"Dupla kattintás:\tAz atom középpontba állítása az origóban."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2031,7 +2040,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Kötésközpontú kezelése"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2040,10 +2049,23 @@ msgid ""
 "Right Mouse:\tClick and drag to move the view.\n"
 "Double-Click:\tReset the view.\n"
 "\n"
-"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Kötésközpontú-művelőeszköz\t(%1)\n"
+"\n"
+"Bal egérgomb:\tKattintson és húzza a nézet elforgatásához.\n"
+"Középső egérgomb:\tKattintson és húzza a nagyításhoz vagy kicsinyítéshez.\n"
+"Jobb egérgomb:\tKattintson és húzza a nézet mozgatásához.\n"
+"Dupla kattintás:\tA nézet visszaállítása.\n"
+"\n"
+"Kattintson a bal egérgombbal, és húzza a kötvényt a műveletsík beállításához."
+"\n"
+"Kattintson a bal egérgombbal, és húzza az egyik atomot a kötésben a szög "
+"megváltoztatásához.\n"
+"Kattintson a jobb egérgombbal, és húzza az egyik atomot a kötésben a hossz "
+"megváltoztatásához."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2982,13 +3004,17 @@ msgid "Draw"
 msgstr "Rajzolás"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Rajzeszköz\t(%1)\n"
+"\n"
+"Bal egérgomb:\tKattintson és húzza az atomok és a kötés létrehozásához\n"
+"Jobb egérgomb:\tAtom törlése"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3551,12 +3577,15 @@ msgid "Edit Labels"
 msgstr "Címkék szerkesztése"
 
 #: qtplugins/label/labeleditor.cpp:34
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Atom Label Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Atom címkeeszköz\t(%1)\n"
+"\n"
+"Bal egérgomb:\tEgyedi címkék hozzáadásához kattintson az atomokra"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3639,13 +3668,17 @@ msgid "Manipulate"
 msgstr "Manipulálás"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Művelőeszköz\t(%1)\n"
+"\n"
+"Bal egérgomb:\tKattintson és húzza az atomok mozgatásához.\n"
+"Jobb egérgomb:\tKattintson és húzza a kijelölt atomok elforgatásához."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3662,7 +3695,7 @@ msgid "Measure"
 msgstr "Mérés"
 
 #: qtplugins/measuretool/measuretool.cpp:54
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Measure Tool\t(%1)\n"
 "\n"
@@ -3672,6 +3705,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"Méretezőeszköz\t(%1)\n"
+"\n"
+"Bal egérgomb:\tJelölés ki legfeljebb négy atomot.\n"
+"\tA távolságokat 1-2 és 2-3 között mérik\n"
+"\tA szöget 1-3 között mérik, 2-vel közös pontként\n"
+"\tA diéderest 1-2-3-4 között mérik\n"
+"Jobb egérgomb:\tÁllítsa vissza a méréseket."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -3863,7 +3903,7 @@ msgid "Navigate"
 msgstr "Navigálás"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3871,6 +3911,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Navigációs eszköz\t(%1)\n"
+"\n"
+"Bal egérgomb:\tKattintson és húzza a nézet elforgatásához.\n"
+"Középső egérgomb:\tKattintson és húzza a nagyításhoz vagy kicsinyítéshez.\n"
+"Jobb egérgomb:\tKattintson és húzza a nézet mozgatásához."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3889,10 +3934,15 @@ msgid "Reverse Direction of Zoom on Scroll"
 msgstr "A nagyítás fordított iránya a görgetésen"
 
 #: qtplugins/navigator/navigator.cpp:108
+#, fuzzy
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
+"Alapértelmezett:\tLefelé görgetés a kicsinyítéséhez, felfelé görgetés a "
+"nagyításához\n"
+"Fordított:\tFelfelé görgetés a kicsinyítéséhez, lefelé görgetés a "
+"nagyításához"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -4709,7 +4759,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
+"Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr ""
 "Táblázatok az atom-, kötés-, szög- és csavarodás tulajdonságok "
 "megjelenítésére és szerkesztésére."
@@ -8710,6 +8760,12 @@ msgstr "Óvári"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr ""
+#~ "Táblázatok az atom-, kötés-, szög- és csavarodás tulajdonságok "
+#~ "megjelenítésére és szerkesztésére."
 
 #~ msgid ""
 #~ "Align Molecules\n"

@@ -9,14 +9,14 @@
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
 # Eric Remy <eric.remy3@free.fr>, 2025.
 # Hēphaïstos <hephaistos@users.noreply.hosted.weblate.org>, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-06-03 11:59+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"POT-Creation-Date: 2025-08-03 03:22+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1626,6 +1626,7 @@ msgid "Align"
 msgstr "Aligner"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1635,6 +1636,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Aligner les molécules\n"
+"\n"
+"Bouton gauche :\tsélectionner jusqu'à deux atomes,\n"
+"\tLe premier atome est centré à l'origine,\n"
+"\tLe deuxième est aligné selon l'axe sélectionné.\n"
+"Bouton droit :\tréinitialiser l'alignement.\n"
+"Double clic :\tcentrer l'atome à l'origine."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2043,7 +2051,7 @@ msgid ""
 "Right Mouse:\tClick and drag to move the view.\n"
 "Double-Click:\tReset the view.\n"
 "\n"
-"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
@@ -2983,13 +2991,18 @@ msgid "Draw"
 msgstr "Dessiner"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Outil de dessin\t(%1)\n"
+"\n"
+"Clic gauche : \tCliquer et faire glisser pour créer des atomes et des "
+"liaisons\n"
+"Clic droit : \tEffacer un atome"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -4706,7 +4719,7 @@ msgstr "Propriétés des conformères …"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
+"Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr ""
 "Tableaux pour afficher et modifier des propriétés des atomes, des liaisons, "
 "des angles et des angles de torsion."
@@ -8724,6 +8737,12 @@ msgstr ""
 "psycojoker@gmail.com, louis.ricard@polytechnique.edu nizar.kerkeni@gmail."
 "com, jacob.benoit.1@gmail.com, nizarus@nizarus.org, nizarus@nizarus.tn, "
 "pierre.slamich@gmail.com, etc"
+
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr ""
+#~ "Tableaux pour afficher et modifier des propriétés des atomes, des "
+#~ "liaisons, des angles et des angles de torsion."
 
 #~ msgid ""
 #~ "Align Molecules\n"

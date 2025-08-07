@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-06-25 17:01+0000\n"
-"Last-Translator: Joona Nousiainen <nousiainej@proton.me>\n"
+"POT-Creation-Date: 2025-08-03 03:22+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
 "Language: fi\n"
@@ -1603,6 +1603,7 @@ msgid "Align"
 msgstr "Kohdista"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1612,6 +1613,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Kohdista molekyylit\t(%1)\n"
+"\n"
+"Hiiren vasen painike:\tValitse enintään kaksi atomia.\n"
+"\tEnsimmäinen atomi on keskitetty alkupisteeseen.\n"
+"\tToinen atomi on kohdistettu valitulle akselille.\n"
+"Hiiren oikea painike:\tNollaa kohdistus.\n"
+"Kaksoisnapsautus:\tKeskitä atomi alkupisteeseen."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2010,7 +2018,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Sidoskeskeinen käsittely"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2019,10 +2027,21 @@ msgid ""
 "Right Mouse:\tClick and drag to move the view.\n"
 "Double-Click:\tReset the view.\n"
 "\n"
-"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Sidoskeskeinen käsittelytyökalu\t(%1)\n"
+"\n"
+"Hiiren vasen painike:\tKierrä näkymää napsauttamalla ja vetämällä.\n"
+"Keskihiiri:\tLähennä tai loitonna napsauttamalla ja vetämällä.\n"
+"Hiiren oikea painike:\tSiirrä näkymää napsauttamalla ja vetämällä.\n"
+"Kaksoisnapsautus:\tNollaa näkymä.\n"
+"\n"
+"Napsauta vasenta painiketta ja vedä sidosta asettaaksesi manipulointitason:\n"
+"Napsauta vasenta nappia ja vedä yhtä sidoksen atomeista muuttaaksesi kulmaa\n"
+"Napsauta hiiren kakkospainikkeella ja vedä yhtä sidoksen atomeista "
+"muuttaaksesi pituus"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2957,13 +2976,17 @@ msgid "Draw"
 msgstr "Piirrä"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Piirustustyökalu\t(%1)\n"
+"\n"
+"Vasen-hiiri:\tNapsauta ja vedä luodaksesi atomeja ja sidos\n"
+"Oikea-hiiri:\tPoista atomi"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3526,12 +3549,15 @@ msgid "Edit Labels"
 msgstr "Muokkaa nimiöitä"
 
 #: qtplugins/label/labeleditor.cpp:34
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Atom Label Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Atominimiötyökalu\t(%1)\n"
+"\n"
+"Vasen-hiiri:\tNapsauta atomit lisätäksesi mukautettuja nimiöitä"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3611,13 +3637,17 @@ msgid "Manipulate"
 msgstr "Manipuloi"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Manipulointityökalu\t(%1)\n"
+"\n"
+"Vasen-hiiri:\tNapsauta ja vedä siirtääksesi atomeja\n"
+"Oikea-hiiri:\tKierrä atomeja napsauttamalla ja vetämällä."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3634,7 +3664,7 @@ msgid "Measure"
 msgstr "Mittaa"
 
 #: qtplugins/measuretool/measuretool.cpp:54
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Measure Tool\t(%1)\n"
 "\n"
@@ -3644,6 +3674,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"Mittaustyökalu\t(%1)\n"
+"\n"
+"Vasen.hiiri:\tValitse enintään neljä atomia.\n"
+"\tEtäisyydet mitataan välillä 1-2 ja 2-3\n"
+"\tKulma mitataan välillä 1-3 käyttämällä 2:ta yhteisenä pisteenä\n"
+"\tDihedral mitataan välillä 1-2-3-4\n"
+"Oikea-hiiri:\tNollaa mittaukset."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -3835,7 +3872,7 @@ msgid "Navigate"
 msgstr "Navigoi"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3843,6 +3880,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Navigointityökalu\t(%1)\n"
+"\n"
+"Vasen-hiiri:\tKierrä näkymää napsauttamalla ja vetämällä.\n"
+"Keskihiiri:\tLähennä tai loitonna napsauttamalla ja vetämällä.\n"
+"Oikea-hiiri:\tSiirrä näkymää napsauttamalla ja vetämällä."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3861,10 +3903,13 @@ msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Käännä zoomaussuunta vierittämisen yhteydessä"
 
 #: qtplugins/navigator/navigator.cpp:108
+#, fuzzy
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
+"Oletus:\tVieritä alas loitontaaksesi ja vieritä ylös lähentääksesi\n"
+"Käänteinen:\tVieritä ylös loitontaaksesi ja vieritä alas lähentääksesi"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -4234,9 +4279,9 @@ msgid "Player"
 msgstr "Toistin"
 
 #: qtplugins/playertool/playertool.cpp:49
-#, qt-format
+#, fuzzy, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr ""
+msgstr "Animaatiotyökalu\t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4668,7 +4713,7 @@ msgstr "Konformeerin ominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
+"Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr ""
 "Taulukot atomin, sidoksen, kulman ja vääntöominaisuuksien näyttämiseen ja "
 "muokkaamiseen."
@@ -4886,7 +4931,7 @@ msgid "Selection"
 msgstr "Valinta"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -4896,6 +4941,14 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Valintatyökalu\t(%1)\n"
+"\n"
+"Vasen-hiiri:\tNapsauta valitaksesi yksittäiset atomit, jäännökset tai "
+"palaset\n"
+"\tValitse atomialue vetämällä\n"
+"Oikea-hiiri:\tNapsauta molekyylin ulkopuolella poistaaksesi valinnan\n"
+"\tKäytä Ctrl vaihtaaksesi valintaa ja siirrä lisätäksesi valintaan.\n"
+"Kaksoisnapsautus:\tValitse koko palanen."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -8580,6 +8633,12 @@ msgstr "Ricky Tigg,"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Sähköpostisi"
+
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr ""
+#~ "Taulukot atomin, sidoksen, kulman ja vääntöominaisuuksien näyttämiseen ja "
+#~ "muokkaamiseen."
 
 #~ msgid ""
 #~ "Align Molecules\n"

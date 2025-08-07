@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-23 22:01+0000\n"
+"POT-Creation-Date: 2025-08-03 03:22+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovenian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sl/>\n"
@@ -1549,6 +1549,7 @@ msgid "Align"
 msgstr "Poravnava"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1558,6 +1559,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Poravnava molekul\n"
+"\n"
+"Levi gumb miške:\tIzbor do dveh atomov.\n"
+"\tPrvi izbran atom je postavljen v izhodiščno točko.\n"
+"\tDrugi izbran atom je poravnan na izbrano os.\n"
+"Desni klik miške:\tPočisti poravnavo.\n"
+"Dvojni klik:\tPostavi atom v izhodiščno točko."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1968,7 +1976,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Premeščanje in spreminjanje vezi"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -1977,10 +1985,20 @@ msgid ""
 "Right Mouse:\tClick and drag to move the view.\n"
 "Double-Click:\tReset the view.\n"
 "\n"
-"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Orodje za spreminjanje atomov in vezi\t(%1)\n"
+"\n"
+"Levi gumb miške:\tS klikom in vlečenjem se zavrti pogled.\n"
+"Srednji gumb miške:\tS klikom in vlečenjem se predmet približa ali oddalji.\n"
+"Desni gumb miške:\tS klikom in vlečenjem se pogled premakne.\n"
+"Dvojni klik:\tPočisti pogled.\n"
+"\n"
+"Levi klik in poteg na vezi nastavi ravnino\n"
+"Levi klik in poteg atoma na vezi spremeni kot\n"
+"Desni klik in poteg atoma na vezi spremeni dolžino"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2936,13 +2954,17 @@ msgid "Draw"
 msgstr "Nariši"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Orodje risanja\t(%1)\n"
+"\n"
+"Levi gumb miške:\tS klikom in vlečenjem se izrišejo atomi in vezi\n"
+"Desni klik miške:\tIzbriše atom"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3614,13 +3636,17 @@ msgid "Manipulate"
 msgstr "Premeščanje in spreminjanje"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Orodje za premeščanje in spreminjanje\t(%1)\n"
+"\n"
+"Levi gumb miške:\tS klikom in vlečenjem je mogoče premikati atome\n"
+"Desni gumb miške:\tS klikom in vlečenjem je mogoče vrteti izbrane atome."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3843,7 +3869,7 @@ msgid "Navigate"
 msgstr "KrmarjenjeSkok navzgor"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3851,6 +3877,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Orodje za krmarjenje\t(%1)\n"
+"\n"
+"Levi gumb miške:\tS klikom in vlečenjem se pogled zavrti.\n"
+"Srednji gumb miške:\tS klikom in vlečenjem se predmet približa ali oddalji.\n"
+"Desni gumb miške:\tS klikom je mogoče povleči in premakniti pogled."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4024,12 +4055,13 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
 #: qtplugins/openbabel/openbabel.cpp:790
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
-"Datoteka trajektorij %1 ni skladna s številom atomov v trenutni molekuli."
+"Datoteka trajektorij %1 ni skladna s številom atomov v trenutni molekuli "
+"(%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
@@ -4689,7 +4721,7 @@ msgstr ""
 #: qtplugins/propertytables/propertytables.cpp:75
 #, fuzzy
 msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
+"Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr "Okna za prikaz lastnosti atomov, vezi, kotov in drugih podatkov."
 
 #: qtplugins/propertytables/propertytables.h:29
@@ -4913,7 +4945,7 @@ msgid "Selection"
 msgstr "Izbor"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -4923,6 +4955,15 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Orodje za izbiranje\t(%1)\n"
+"\n"
+"Levi gumb miške:\tS klikom se izbere posamezne atome, preostanke ali "
+"molekulske delce\n"
+"\tS sočasnim potegom se izbere polje predmetov.\n"
+"Desni gumb miške:\tS klikom izven področja predmeta se izbor počisti\n"
+"Z uporabo Ctrl je mogoče preklopiti izbor, s tipko Shift pa dodati k izbiri."
+"\n"
+"Dvojni klik:\tIzbor celotnega molekulskega delca."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 #, fuzzy
@@ -8628,6 +8669,11 @@ msgid "Your emails"
 msgstr ""
 ",,,mateju@svn.gnome.org,,,,mateju@svn.gnome.org,,,,mateju@svn.gnome.org,,,,"
 "mateju@svn.gnome.org"
+
+#, fuzzy
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr "Okna za prikaz lastnosti atomov, vezi, kotov in drugih podatkov."
 
 #~ msgid ""
 #~ "Align Molecules\n"

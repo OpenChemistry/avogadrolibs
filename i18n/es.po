@@ -14,14 +14,14 @@
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2025.
 # Adrian Lopez <adrlop1012@gmail.com>, 2025.
 # Armando Castro <darkarr2d2@gmail.com>, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-06-20 11:01+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"POT-Creation-Date: 2025-08-03 03:22+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -1629,6 +1629,7 @@ msgid "Align"
 msgstr "Alinear"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1638,6 +1639,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Alinear Moléculas\n"
+"\n"
+"Botón Izquierdo del Ratón:\tSeleccionar hasta dos átomos.\n"
+"\tEl primer átomo se centra en el origen.\n"
+"\tEl segundo átomo está alineado con el eje seleccionado.\n"
+"Botón Derecho del Ratón:\tCambiar la alineación.\n"
+"Doble clic:\tCentrar el átomo en el origen."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2036,7 +2044,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Manipulación Centrada en Enlaces"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2045,10 +2053,24 @@ msgid ""
 "Right Mouse:\tClick and drag to move the view.\n"
 "Double-Click:\tReset the view.\n"
 "\n"
-"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Herramienta de manipulación Bond Centric\t(%1)\n"
+"\n"
+"Botón izquierdo del ratón:\tHaga clic y arrastre para rotar la vista.\n"
+"Botón central del ratón:\tHaga clic y arrastre para acercar o alejar la "
+"vista.\n"
+"Botón derecho ratón:\tHaga clic y arrastre para mover la vista.\n"
+"Doble clic:\tReinicia la vista.\n"
+"\n"
+"Haga clic y arrastre con el botón izquierdo en un enlace para establecer el "
+"plano de manipulación\n"
+"Haga clic con el botón izquierdo\n"
+"y arrastre uno de los átomos del enlace para cambiar el ángulo Haga clic con "
+"el botón derecho y arrastre uno de los átomos del enlace para cambiar la "
+"longitud"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2985,13 +3007,17 @@ msgid "Draw"
 msgstr "Dibujar"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Herramienta Dibujar\t(%1)\n"
+"\n"
+"Botón izquierdo ratón:\tClic y Arrastrar para crear Átomos y Enlace\n"
+"Botón derecho ratón:\tBorrar Átomo"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3559,12 +3585,16 @@ msgid "Edit Labels"
 msgstr "Editar Etiquetas"
 
 #: qtplugins/label/labeleditor.cpp:34
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Atom Label Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Herramienta de etiquetas de átomos\t(%1)\n"
+"\n"
+"Botón izquierdo del ratón:\tHaga clic en los átomos para añadir etiquetas "
+"personalizadas"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3645,13 +3675,17 @@ msgid "Manipulate"
 msgstr "Manipular"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Herramienta de manipulación\t(%1)\n"
+"\n"
+"Botón izquierdo del ratón:\tClic y arrastrar para mover átomos\n"
+"Botón derecho del ratón:\tClic y arrastrar para rotar átomos."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3668,7 +3702,7 @@ msgid "Measure"
 msgstr "Medir"
 
 #: qtplugins/measuretool/measuretool.cpp:54
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Measure Tool\t(%1)\n"
 "\n"
@@ -3678,6 +3712,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"Herramienta de medición\t(%1)\n"
+"\n"
+"Botón izquierdo ratón: Seleccione hasta cuatro átomos.\n"
+"\tLas distancias se miden entre 1-2 y 2-3\n"
+"\tEl ángulo se mide entre 1-3 usando 2 como punto común\n"
+"\tDihedral se mide entre 1-2-3-4\n"
+"Botón derecho ratón: Reiniciar las mediciones."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -3869,7 +3910,7 @@ msgid "Navigate"
 msgstr "Navegar"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3877,6 +3918,12 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Herramienta de navegación\t(%1)\n"
+"\n"
+"Botón izquierdo ratón:\tHaga clic y arrastre para girar la vista.\n"
+"Botón central del ratón:\tHaga clic y arrastre para acercar o alejar la "
+"vista.\n"
+"Botón derecho del ratón:\tHaga clic y arrastre para mover la vista."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3895,10 +3942,13 @@ msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Invertir el Sentido al Acercar/Alejar"
 
 #: qtplugins/navigator/navigator.cpp:108
+#, fuzzy
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
+"Por defecto:\tBaje para alejar, suba para aumentar\n"
+"Invertido:\tSuba para alejar, baje para aumentar"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -4268,9 +4318,9 @@ msgid "Player"
 msgstr "Reproductor"
 
 #: qtplugins/playertool/playertool.cpp:49
-#, qt-format
+#, fuzzy, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr ""
+msgstr "Herramienta de animación\t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4701,7 +4751,7 @@ msgstr "Propiedades Heteromorfismo…"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
+"Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr ""
 "Tablas para visualizar y editar propiedades de átomos, enlaces, ángulos y "
 "torsiones."
@@ -4919,7 +4969,7 @@ msgid "Selection"
 msgstr "Selección"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -4929,6 +4979,16 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Herramienta de Selección\t(%1)\n"
+"\n"
+"Botón Izquierdo del Ratón:\tPresionar para seleccionar átomos individuales, "
+"residuos, o fragmentos\n"
+"\tArrastrar para seleccionar un grupo de átomos\n"
+"Botón Derecho del ratón:\tPresionar fuera de la molécula para limpiar la "
+"selección\n"
+"Utilizar «Ctrl» para alternar a la selección y «shift» para añadir a la "
+"selección.\n"
+"Doble Clic:\tSeleccionar un fragmento completo."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -5397,7 +5457,7 @@ msgid "Template"
 msgstr "Plantilla"
 
 #: qtplugins/templatetool/templatetool.cpp:84
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Template Tool\t(%1)\n"
 "\n"
@@ -5408,6 +5468,14 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"Herramienta de la Plantilla\t(%1)\n"
+"\n"
+"Insertar fragmentos, incluyendo centros metálicos.\n"
+"Seleccionar un elemento y una geometría de coordinación y presionar para "
+"insertar un fragmento.\n"
+"\n"
+"Seleccionar un ligando o grupo funcional y presionar sobe un átomo de "
+"hidrógeno para unirlo."
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
@@ -8837,6 +8905,12 @@ msgstr ""
 "grovertapia@hotmail.com,,joseb.gutierrez@gmail.com,,,,meilan@adinet.com.uy,"
 "tres.14159@gmail.com,monkey.libre@gmail.com,nzahlut@live.com,,paco@byasl."
 "com,,victorhera@gmail.com,memaljo@yahoo.com,"
+
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr ""
+#~ "Tablas para visualizar y editar propiedades de átomos, enlaces, ángulos y "
+#~ "torsiones."
 
 #~ msgid ""
 #~ "Align Molecules\n"

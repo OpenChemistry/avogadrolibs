@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-23 21:27+0000\n"
-"PO-Revision-Date: 2025-07-23 22:01+0000\n"
+"POT-Creation-Date: 2025-08-03 03:22+0000\n"
+"PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -2000,7 +2000,7 @@ msgid ""
 "Right Mouse:\tClick and drag to move the view.\n"
 "Double-Click:\tReset the view.\n"
 "\n"
-"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane\n"
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
@@ -2954,13 +2954,17 @@ msgid "Draw"
 msgstr "Marraztu"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Marrazketa Tresna\t(%1)\n"
+"\n"
+"Saguko ezker botoia:\tKlikatu eta tiratu Atomoak eta Loturak sortzeko\n"
+"Saguko eskuin botoia:\tAtomoa ezabatu"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -4707,7 +4711,7 @@ msgstr ""
 #: qtplugins/propertytables/propertytables.cpp:75
 #, fuzzy
 msgid ""
-"Tables for displaying and editng atom, bond, angle and torsion properties."
+"Tables for displaying and editing atom, bond, angle and torsion properties."
 msgstr "Atomo-, lotura-, angelu- eta tortsio-propietateak ikusteko leihoa."
 
 #: qtplugins/propertytables/propertytables.h:29
@@ -8689,6 +8693,11 @@ msgstr ""
 "sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-"
 "devel@lists.sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,"
 "avogadro-devel@lists.sourceforge.net,julenl@gmail.com"
+
+#, fuzzy
+#~ msgid ""
+#~ "Tables for displaying and editng atom, bond, angle and torsion properties."
+#~ msgstr "Atomo-, lotura-, angelu- eta tortsio-propietateak ikusteko leihoa."
 
 #, fuzzy
 #~ msgid "&Analysis"
