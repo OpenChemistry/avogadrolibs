@@ -9,6 +9,7 @@
 
 #include <QUndoCommand>
 #include <cassert>
+#include <utility>
 
 namespace Avogadro {
 namespace QtGui {
@@ -531,8 +532,8 @@ class SetAtomColorCommand : public RWMolecule::UndoCommand
 public:
   SetAtomColorCommand(RWMolecule& m, Index atomId, Vector3ub oldColor,
                       Vector3ub newColor)
-    : UndoCommand(m), m_atomId(atomId), m_oldColor(oldColor),
-      m_newColor(newColor)
+    : UndoCommand(m), m_atomId(atomId), m_oldColor(std::move(oldColor)),
+      m_newColor(std::move(newColor))
   {
   }
 
@@ -550,8 +551,8 @@ class SetResidueColorCommand : public RWMolecule::UndoCommand
 public:
   SetResidueColorCommand(RWMolecule& m, Index residueId, Vector3ub oldColor,
                          Vector3ub newColor)
-    : UndoCommand(m), m_residueId(residueId), m_oldColor(oldColor),
-      m_newColor(newColor)
+    : UndoCommand(m), m_residueId(residueId), m_oldColor(std::move(oldColor)),
+      m_newColor(std::move(newColor))
   {
   }
 
