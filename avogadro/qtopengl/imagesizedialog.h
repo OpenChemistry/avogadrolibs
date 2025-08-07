@@ -45,9 +45,9 @@ public:
    * @param defaultTransparent Whether the transparent check box starts
    * checked when no earlier choice is remembered.
    */
-  ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
-                  bool showTransparent, bool evenDimensions,
-                  QWidget* parent = nullptr, bool defaultTransparent = false);
+  ImageSizeDialog(GLWidget* glWidget, QString settingsKey, bool showTransparent,
+                  bool evenDimensions, QWidget* parent = nullptr,
+                  bool defaultTransparent = false);
 
   /** The chosen size in pixels. */
   QSize imageSize() const;
