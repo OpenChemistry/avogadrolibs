@@ -10,6 +10,7 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <istream>
