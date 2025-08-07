@@ -18,6 +18,7 @@
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
+#include <utility>
 
 namespace Avogadro::QtGui {
 
@@ -44,9 +45,9 @@ static bool hasDefaultPixiManifest(const QString& pluginDir)
   return python.exists() && python.isExecutable();
 }
 
-PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
+PythonScript::PythonScript(QString scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
-    m_scriptFilePath(scriptFilePath_), m_process(nullptr)
+    m_scriptFilePath(std::move(scriptFilePath_)), m_process(nullptr)
 {
   setDefaultPythonInterpreter();
 }

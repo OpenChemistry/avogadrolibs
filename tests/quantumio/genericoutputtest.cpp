@@ -18,6 +18,7 @@
 #include <fstream>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 using Avogadro::Core::Molecule;
@@ -33,8 +34,8 @@ namespace {
 class TemporaryFile
 {
 public:
-  TemporaryFile(const std::string& name, const std::string& contents)
-    : m_name(name)
+  TemporaryFile(std::string name, const std::string& contents)
+    : m_name(std::move(name))
   {
     std::ofstream file(m_name.c_str());
     file << contents;
@@ -53,9 +54,10 @@ private:
 class PatternFormat : public FileFormat
 {
 public:
-  PatternFormat(const std::string& id, const std::vector<std::string>& patterns,
+  PatternFormat(std::string id, const std::vector<std::string>& patterns,
                 std::shared_ptr<int> readCount)
-    : m_id(id), m_patterns(patterns), m_readCount(readCount)
+    : m_id(std::move(id)), m_patterns(patterns),
+      m_readCount(std::move(readCount))
   {
   }
 

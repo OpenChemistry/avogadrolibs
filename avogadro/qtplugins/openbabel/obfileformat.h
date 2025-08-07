@@ -22,12 +22,11 @@ namespace QtPlugins {
 class OBFileFormat : public Avogadro::Io::FileFormat
 {
 public:
-  OBFileFormat(const std::string& name_, const std::string& identifier_,
-               const std::string& description_,
-               const std::string& specificationUrl_,
+  OBFileFormat(std::string name_, std::string identifier_,
+               std::string description_, std::string specificationUrl_,
                const std::vector<std::string> fileExtensions_,
                const std::vector<std::string> mimeTypes_,
-               const std::string& defaultFormat_, bool fileOnly_ = false);
+               std::string defaultFormat_, bool fileOnly_ = false);
   ~OBFileFormat() override;
 
   Operations supportedOperations() const override
