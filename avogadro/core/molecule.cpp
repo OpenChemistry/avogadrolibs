@@ -349,7 +349,7 @@ MatrixX Molecule::spectra(const std::string& type) const
   return value;
 }
 
-void Molecule::addConstraint(Index a, Index b, Index c, Index d, Real value)
+void Molecule::addConstraint(Real value, Index a, Index b, Index c, Index d)
 {
   Constraint newConstraint(a, b, c, d, value);
   m_constraints.push_back(newConstraint);
