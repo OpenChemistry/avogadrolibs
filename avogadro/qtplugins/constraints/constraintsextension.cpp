@@ -26,7 +26,8 @@ ConstraintsExtension::ConstraintsExtension(QObject* p) : ExtensionPlugin(p)
 
 ConstraintsExtension::~ConstraintsExtension()
 {
-  m_dialog->deleteLater();
+  if (m_dialog)
+    m_dialog->deleteLater();
 }
 
 QList<QAction*> ConstraintsExtension::actions() const
