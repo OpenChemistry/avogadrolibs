@@ -19,6 +19,8 @@
 
 #include <string>
 
+using namespace std::string_literals;
+
 namespace Avogadro::Io {
 
 using Core::Atom;
@@ -32,12 +34,12 @@ using Core::UnitCell;
 
 std::vector<std::string> GromacsFormat::fileExtensions() const
 {
-  return std::vector<std::string>(1, std::string("gro"));
+  return std::vector<std::string>(1, "gro"s);
 }
 
 std::vector<std::string> GromacsFormat::mimeTypes() const
 {
-  return std::vector<std::string>(1, std::string("chemical/x-gro"));
+  return std::vector<std::string>(1, "chemical/x-gro"s);
 }
 
 bool GromacsFormat::read(std::istream& in, Molecule& molecule)

@@ -21,6 +21,7 @@
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::FileFormatDialog;
+using namespace std::string_literals;
 
 namespace Avogadro::QtPlugins {
 
@@ -42,8 +43,8 @@ LineFormatInput::LineFormatInput(QObject* parent_)
 
   // These are the line formats that we can load -- key is a user-friendly name,
   // value is the file extension used to identify the file format.
-  m_formats.insert(tr("InChI"), std::string("inchi"));
-  m_formats.insert(tr("SMILES"), std::string("smi"));
+  m_formats.insert(tr("InChI"), "inchi"s);
+  m_formats.insert(tr("SMILES"), "smi"s);
 }
 
 LineFormatInput::~LineFormatInput()
