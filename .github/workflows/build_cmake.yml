@@ -88,44 +88,44 @@ jobs:
         sudo apt-get -qq install libfuse2
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout molecules
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/molecules
         path: molecules
 
     - name: Checkout fragments
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/fragments
         path: fragments
 
     - name: Checkout crystals
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/crystals
         path: crystals
 
     - name: Checkout i18n
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
         fetch-depth: 0
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         path: avogadrolibs
         fetch-depth: 0
