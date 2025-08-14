@@ -48,19 +48,19 @@ jobs:
 
     steps:
     - name: Checkout openchemistry
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         path: avogadrolibs
 
