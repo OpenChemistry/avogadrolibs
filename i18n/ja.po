@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-03 03:22+0000\n"
+"POT-Creation-Date: 2025-08-10 03:16+0000\n"
 "PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
@@ -1703,8 +1703,8 @@ msgstr "PQRファイル(*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:261
-#: qtplugins/propertytables/propertyview.cpp:294
+#: qtplugins/propertytables/propertyview.cpp:357
+#: qtplugins/propertytables/propertyview.cpp:390
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "エラー"
@@ -2206,7 +2206,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
 #: qtplugins/configurepython/configurepython.cpp:101
-#: qtplugins/constraints/constraintsextension.cpp:39
+#: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:172
 #: qtplugins/forcefield/forcefield.cpp:174
 #: qtplugins/openbabel/openbabel.cpp:112
@@ -2308,7 +2308,7 @@ msgstr "その他…"
 msgid "Constraints…"
 msgstr "拘束条件…"
 
-#: qtplugins/constraints/constraintsextension.cpp:39
+#: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:174
 msgid "&Calculate"
 msgstr "計算 (&C)"
@@ -2561,7 +2561,7 @@ msgstr "Turbomole形式"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:301:319
+#: qtplugins/propertytables/propertyview.cpp:397:319
 msgid "Copy"
 msgstr "コピー"
 
@@ -3786,27 +3786,27 @@ msgid "Molecule Properties"
 msgstr "分子の性質"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:249
+#: qtplugins/propertytables/propertyview.cpp:345
 msgid "Export CSV"
 msgstr "CSVをエクスポート"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:250
+#: qtplugins/propertytables/propertyview.cpp:346
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "CSVファイル (*.csv);;全てのファイル (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:262
+#: qtplugins/propertytables/propertyview.cpp:358
 msgid "Could not open the file for writing."
 msgstr "ファイルを書き込みモードで開けません。"
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:294
+#: qtplugins/propertytables/propertyview.cpp:390
 msgid "Error writing to the file."
 msgstr "ファイルの書き込みでエラー"
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:306
+#: qtplugins/propertytables/propertyview.cpp:402
 msgid "Export…"
 msgstr "エクスポート…"
 
@@ -4477,7 +4477,7 @@ msgid "PLY Render…"
 msgstr "PLY描画…"
 
 #: qtplugins/ply/ply.cpp:68 qtplugins/povray/povray.cpp:68
-#: qtplugins/svg/svg.cpp:258 qtplugins/vrml/vrml.cpp:68
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:68
 msgid "Save File"
 msgstr "ファイルを保存"
 
@@ -4700,6 +4700,22 @@ msgstr "配座異性体のプロパティ"
 #: qtplugins/propertytables/propertyview.cpp:60
 msgid "Residue Properties"
 msgstr "残基のプロパティ"
+
+#: qtplugins/propertytables/propertyview.cpp:409
+msgid "Freeze Atom"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:417
+msgid "Constrain Bond"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:419
+msgid "Constrain Angle"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:421
+msgid "Constrain Torsion"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5325,7 +5341,7 @@ msgstr ""
 msgid "&SVG…"
 msgstr "&SVG…"
 
-#: qtplugins/svg/svg.cpp:259
+#: qtplugins/svg/svg.cpp:258
 msgid "SVG (*.svg)"
 msgstr "SVG (*.svg)"
 
@@ -8569,10 +8585,10 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
-"\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -8593,8 +8609,9 @@ msgstr ""
 msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
-msgstr "<html><head/><body><p>y軸の範囲を制限しますか？</p><p>デフォルト: "
-"なし</p></body></html>"
+msgstr ""
+"<html><head/><body><p>y軸の範囲を制限しますか？</p><p>デフォルト: なし</p></"
+"body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
