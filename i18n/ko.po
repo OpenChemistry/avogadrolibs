@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-03 03:22+0000\n"
+"POT-Creation-Date: 2025-08-10 03:16+0000\n"
 "PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -1730,8 +1730,8 @@ msgstr "PQR 파일 (*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:261
-#: qtplugins/propertytables/propertyview.cpp:294
+#: qtplugins/propertytables/propertyview.cpp:357
+#: qtplugins/propertytables/propertyview.cpp:390
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "오류"
@@ -2217,7 +2217,7 @@ msgstr "색상 불투명도 지도 편집…"
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
 #: qtplugins/configurepython/configurepython.cpp:101
-#: qtplugins/constraints/constraintsextension.cpp:39
+#: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:172
 #: qtplugins/forcefield/forcefield.cpp:174
 #: qtplugins/openbabel/openbabel.cpp:112
@@ -2321,7 +2321,7 @@ msgstr "기타…"
 msgid "Constraints…"
 msgstr ""
 
-#: qtplugins/constraints/constraintsextension.cpp:39
+#: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:174
 msgid "&Calculate"
 msgstr "&계산"
@@ -2578,7 +2578,7 @@ msgstr "터보몰 형식"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:301:319
+#: qtplugins/propertytables/propertyview.cpp:397:319
 msgid "Copy"
 msgstr "복사"
 
@@ -3812,27 +3812,27 @@ msgid "Molecule Properties"
 msgstr "분자 정보"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:249
+#: qtplugins/propertytables/propertyview.cpp:345
 msgid "Export CSV"
 msgstr "CSV 내보내기"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:250
+#: qtplugins/propertytables/propertyview.cpp:346
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "CSV 파일 (*.csv);;모든 파일 (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:262
+#: qtplugins/propertytables/propertyview.cpp:358
 msgid "Could not open the file for writing."
 msgstr "쓰기 위한 파일을 열 수 없습니다."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:294
+#: qtplugins/propertytables/propertyview.cpp:390
 msgid "Error writing to the file."
 msgstr "파일에 오류 쓰기."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:306
+#: qtplugins/propertytables/propertyview.cpp:402
 msgid "Export…"
 msgstr "내보내기…"
 
@@ -4491,7 +4491,7 @@ msgid "PLY Render…"
 msgstr "PLY 렌더…"
 
 #: qtplugins/ply/ply.cpp:68 qtplugins/povray/povray.cpp:68
-#: qtplugins/svg/svg.cpp:258 qtplugins/vrml/vrml.cpp:68
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:68
 msgid "Save File"
 msgstr "파일 저장"
 
@@ -4710,6 +4710,22 @@ msgstr "이형태체 정보"
 #: qtplugins/propertytables/propertyview.cpp:60
 msgid "Residue Properties"
 msgstr "잔류물 속성"
+
+#: qtplugins/propertytables/propertyview.cpp:409
+msgid "Freeze Atom"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:417
+msgid "Constrain Bond"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:419
+msgid "Constrain Angle"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:421
+msgid "Constrain Torsion"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5330,7 +5346,7 @@ msgstr "표면을 읽고 렌더링합니다."
 msgid "&SVG…"
 msgstr "SVG(&S)…"
 
-#: qtplugins/svg/svg.cpp:259
+#: qtplugins/svg/svg.cpp:258
 msgid "SVG (*.svg)"
 msgstr "SVG (*.svg)"
 

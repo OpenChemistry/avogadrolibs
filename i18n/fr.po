@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-03 03:22+0000\n"
+"POT-Creation-Date: 2025-08-10 03:16+0000\n"
 "PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
@@ -1775,8 +1775,8 @@ msgstr "Fichiers PQR (*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:261
-#: qtplugins/propertytables/propertyview.cpp:294
+#: qtplugins/propertytables/propertyview.cpp:357
+#: qtplugins/propertytables/propertyview.cpp:390
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "Erreur"
@@ -2254,7 +2254,7 @@ msgstr "Modifier la palette d'opacité des couleurs…"
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
 #: qtplugins/configurepython/configurepython.cpp:101
-#: qtplugins/constraints/constraintsextension.cpp:39
+#: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:172
 #: qtplugins/forcefield/forcefield.cpp:174
 #: qtplugins/openbabel/openbabel.cpp:112
@@ -2362,7 +2362,7 @@ msgstr "Autres…"
 msgid "Constraints…"
 msgstr ""
 
-#: qtplugins/constraints/constraintsextension.cpp:39
+#: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:174
 msgid "&Calculate"
 msgstr "&Calculer"
@@ -2618,7 +2618,7 @@ msgstr "Format Turbomole"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:301:319
+#: qtplugins/propertytables/propertyview.cpp:397:319
 msgid "Copy"
 msgstr "Copier"
 
@@ -3846,27 +3846,27 @@ msgid "Molecule Properties"
 msgstr "Propriétés de la molécule"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:249
+#: qtplugins/propertytables/propertyview.cpp:345
 msgid "Export CSV"
 msgstr "Export en format CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:250
+#: qtplugins/propertytables/propertyview.cpp:346
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Fichiers CSV (*.csv) ;; Tous les fichiers (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:262
+#: qtplugins/propertytables/propertyview.cpp:358
 msgid "Could not open the file for writing."
 msgstr "Impossible d'ouvrir le fichier pour l'écriture."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:294
+#: qtplugins/propertytables/propertyview.cpp:390
 msgid "Error writing to the file."
 msgstr "Erreur lors de l'écriture au fichier."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:306
+#: qtplugins/propertytables/propertyview.cpp:402
 msgid "Export…"
 msgstr "Exporter…"
 
@@ -4530,7 +4530,7 @@ msgid "PLY Render…"
 msgstr "Rendu PLY…"
 
 #: qtplugins/ply/ply.cpp:68 qtplugins/povray/povray.cpp:68
-#: qtplugins/svg/svg.cpp:258 qtplugins/vrml/vrml.cpp:68
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:68
 msgid "Save File"
 msgstr "Enregistrer le fichier"
 
@@ -4751,6 +4751,22 @@ msgstr "Propriétés des conformères"
 #: qtplugins/propertytables/propertyview.cpp:60
 msgid "Residue Properties"
 msgstr "Propriétés des résidus"
+
+#: qtplugins/propertytables/propertyview.cpp:409
+msgid "Freeze Atom"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:417
+msgid "Constrain Bond"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:419
+msgid "Constrain Angle"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:421
+msgid "Constrain Torsion"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5368,7 +5384,7 @@ msgstr "Lire et faire un rendu des surfaces."
 msgid "&SVG…"
 msgstr "&SVG…"
 
-#: qtplugins/svg/svg.cpp:259
+#: qtplugins/svg/svg.cpp:258
 msgid "SVG (*.svg)"
 msgstr "SVG (*.svg)"
 
