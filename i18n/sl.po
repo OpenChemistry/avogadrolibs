@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"PO-Revision-Date: 2025-08-15 14:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovenian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sl/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.13\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
@@ -3175,9 +3175,8 @@ msgid "Forcefield optimization"
 msgstr "Prilagajanje polja sil"
 
 #: qtplugins/forcefield/forcefield.h:51
-#, fuzzy
 msgid "Forcefield minimization, including scripts"
-msgstr "Prilagajanje polja sil"
+msgstr ""
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
