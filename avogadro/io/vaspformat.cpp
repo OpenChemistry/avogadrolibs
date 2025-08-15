@@ -333,7 +333,7 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   while (getline(inStream, buffer)) {
     // Checks whether the buffer object contains the lattice vectors keyword
-    if (strncmp(buffer.c_str(), latticeStr.c_str(), latticeStr.size()) == 0) {
+    if (buffer.substr(0, latticeStr.size()) == latticeStr) {
       // Checks whether lattice vectors have been already set. Reason being that
       // only the first occurrence denotes the true lattice vectors, and the
       // ones following these are vectors of the primitive cell.
@@ -376,18 +376,16 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     // Checks whether the buffer object contains the POSITION keyword
-    else if (strncmp(buffer.c_str(), positionStr.c_str(), positionStr.size()) ==
-             0) {
+    else if (buffer.substr(0, positionStr.size()) == positionStr) {
       getline(inStream, buffer);
       // Double checks whether the succeeding line is a sequence of dashes
-      if (strncmp(buffer.c_str(), dashedStr.c_str(), dashedStr.size()) == 0) {
+      if (buffer.substr(0, dashedStr.size()) == dashedStr) {
         // natoms is not known, so the loop proceeds till the bottom dashed line
         // is encountered
         while (true) {
           getline(inStream, buffer);
           // Condition for encountering dashed line
-          if (strncmp(buffer.c_str(), dashedStr.c_str(), dashedStr.size()) ==
-              0) {
+          if (buffer.substr(0, dashedStr.size()) == dashedStr) {
             if (coordSet == 0) {
               mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
               positions.reserve(natoms);
