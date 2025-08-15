@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"PO-Revision-Date: 2025-08-15 14:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Valencian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca@valencia/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.13\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2788,7 +2788,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:52
 #, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Omple la cel·la unitat"
+msgstr "Omple la cel·la unitat…"
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
@@ -3139,9 +3139,8 @@ msgid "Forcefield optimization"
 msgstr "Optimització del camp de forces"
 
 #: qtplugins/forcefield/forcefield.h:51
-#, fuzzy
 msgid "Forcefield minimization, including scripts"
-msgstr "Optimització del camp de forces"
+msgstr ""
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -3181,7 +3180,7 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinput.cpp:34
 #, fuzzy
 msgid "&GAMESS…"
-msgstr "&GAMESS"
+msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 #, fuzzy
@@ -3398,7 +3397,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:32
 #, fuzzy
 msgid "Molecule…"
-msgstr "Molècula"
+msgstr "Molècula…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3757,7 +3756,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 #, fuzzy
 msgid "&Molecular…"
-msgstr "&molecular"
+msgstr "&Molecular…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -3813,7 +3812,7 @@ msgstr ""
 #: qtplugins/propertytables/propertyview.cpp:402
 #, fuzzy
 msgid "Export…"
-msgstr "Exporta"
+msgstr "Exporta…"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
@@ -3911,7 +3910,7 @@ msgstr "Voleu detectar els enllaços?"
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "Afig hidrògens per al pH"
+msgstr "Afig hidrògens per al pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:83
 #, fuzzy
@@ -4643,22 +4642,22 @@ msgstr ""
 #: qtplugins/propertytables/propertytables.cpp:27
 #, fuzzy
 msgid "Atom Properties…"
-msgstr "Propietats d'Àtom"
+msgstr "Propietats d'Àtom…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
 #, fuzzy
 msgid "Bond Properties…"
-msgstr "Propietats d'enllaç"
+msgstr "Propietats d'enllaç…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 #, fuzzy
 msgid "Angle Properties…"
-msgstr "Propietats d'angle"
+msgstr "Propietats d'angle…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
 #, fuzzy
 msgid "Torsion Properties…"
-msgstr "Propietats de la torsió"
+msgstr "Propietats de la torsió…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
@@ -4946,7 +4945,7 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:73
 #, fuzzy
 msgid "Fill Unit Cell…"
-msgstr "Omple la cel·la unitat"
+msgstr "Omple la cel·la unitat…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:79
 #: qtplugins/spacegroup/spacegroup.cpp:338
@@ -5671,7 +5670,7 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
 #, fuzzy
 msgid "Insert Fragment…"
-msgstr "Insereix un fragment"
+msgstr "Insereix un fragment…"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)

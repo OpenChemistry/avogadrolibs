@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"PO-Revision-Date: 2025-08-15 14:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.13\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2330,7 +2330,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:448:2121
 #, fuzzy
 msgid "Other…"
-msgstr "Lainnya"
+msgstr "Lainnya…"
 
 #: qtplugins/constraints/constraintsextension.cpp:22
 msgid "Constraints…"
@@ -2837,7 +2837,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:52
 #, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Tambahkan Unit Sel"
+msgstr "Tambahkan Unit Sel…"
 
 #: qtplugins/crystal/crystal.cpp:57
 #, fuzzy
@@ -3195,9 +3195,8 @@ msgid "Forcefield optimization"
 msgstr "Optimisasi Bidang Gaya"
 
 #: qtplugins/forcefield/forcefield.h:51
-#, fuzzy
 msgid "Forcefield minimization, including scripts"
-msgstr "Optimisasi Bidang Gaya"
+msgstr ""
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -3237,7 +3236,7 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinput.cpp:34
 #, fuzzy
 msgid "&GAMESS…"
-msgstr "&GAMESS"
+msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 #, fuzzy
@@ -3397,7 +3396,7 @@ msgstr ""
 #: qtplugins/insertdna/insertdna.cpp:43
 #, fuzzy
 msgid "DNA/RNA…"
-msgstr "DNA/RNA"
+msgstr "DNA/RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
@@ -3408,7 +3407,7 @@ msgstr "S&isipan"
 #: qtplugins/insertdna/insertdna.cpp:79
 #, fuzzy
 msgid "Insert DNA/RNA…"
-msgstr "Masukkan DNA/RNA"
+msgstr "Masukkan DNA/RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
@@ -3623,7 +3622,7 @@ msgstr ""
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 #, fuzzy
 msgid "InChI…"
-msgstr "InChI"
+msgstr "InChI…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:113
@@ -3875,7 +3874,7 @@ msgstr ""
 #: qtplugins/propertytables/propertyview.cpp:402
 #, fuzzy
 msgid "Export…"
-msgstr "Ekspor"
+msgstr "Ekspor…"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
@@ -3972,7 +3971,7 @@ msgstr "Melihat ikatan?"
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "Tambah Hidrogen untuk pH"
+msgstr "Tambah Hidrogen untuk pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:83
 #, fuzzy
@@ -4035,7 +4034,7 @@ msgstr "Optimisasi Geometri (Open Babel)"
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 #, fuzzy
 msgid "Generating…"
-msgstr "Generasi"
+msgstr "Generasi…"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
@@ -5729,7 +5728,7 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
 #, fuzzy
 msgid "Insert Fragment…"
-msgstr "Sisipkan Fragmen"
+msgstr "Sisipkan Fragmen…"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7177,7 +7176,7 @@ msgstr "Gunakan Bentuk"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Generate…"
-msgstr "Generasi"
+msgstr "Generasi…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)

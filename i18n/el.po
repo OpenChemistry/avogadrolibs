@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"PO-Revision-Date: 2025-08-15 14:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/el/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.13\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3157,9 +3157,8 @@ msgid "Forcefield optimization"
 msgstr "Βελτιστοποίηση δυναμικού πεδίου"
 
 #: qtplugins/forcefield/forcefield.h:51
-#, fuzzy
 msgid "Forcefield minimization, including scripts"
-msgstr "Βελτιστοποίηση δυναμικού πεδίου"
+msgstr ""
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -4678,22 +4677,22 @@ msgstr ""
 #: qtplugins/propertytables/propertytables.cpp:27
 #, fuzzy
 msgid "Atom Properties…"
-msgstr "Ιδιότητες ατόμου"
+msgstr "Ιδιότητες ατόμου…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
 #, fuzzy
 msgid "Bond Properties…"
-msgstr "Ιδιότητες δεσμού"
+msgstr "Ιδιότητες δεσμού…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 #, fuzzy
 msgid "Angle Properties…"
-msgstr "Ιδιότητες γωνίας"
+msgstr "Ιδιότητες γωνίας…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
 #, fuzzy
 msgid "Torsion Properties…"
-msgstr "Ιδιότητες στρέψης"
+msgstr "Ιδιότητες στρέψης…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"

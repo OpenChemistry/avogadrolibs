@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"PO-Revision-Date: 2025-08-15 14:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.13\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1609,6 +1609,7 @@ msgid "Align"
 msgstr "Hizala"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1618,6 +1619,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Molekülleri Hizala\n"
+"\n"
+"Sol Fare: En fazla iki atom seçin.\n"
+"\tİlk atom orijinde ortalanır.\n"
+"\tİkinci atom seçilen eksene hizalanır.\n"
+"Sağ Fare:\tHizalamayı sıfırlayın.\n"
+"Çift Tıklama:\tAtomu orijinde ortalar."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2017,7 +2025,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Bağ Merkezli Yönlendirme"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2030,6 +2038,17 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Tahvil Merkezli Manipülasyon Aracı\t(%1)\n"
+"\n"
+"Sol Fare:\tGörünümü döndürmek için tıklayın ve sürükleyin.\n"
+"Orta Fare:\tYakınlaştırmak veya uzaklaştırmak için tıklayın ve sürükleyin.\n"
+"Sağ Fare:\tGörünümü taşımak için tıklayın ve sürükleyin.\n"
+"Çift Tıklama:\tGörünümü sıfırlayın.\n"
+"\n"
+"Manipülasyon Düzlemini ayarlamak için bir Bağın üzerine Sol Tıklayıp "
+"Sürükleyin:\n"
+"Açıyı değiştirmek için Bağdaki Atomlardan birini Sol Tıklayıp Sürükleyin\n"
+"Uzunluğu değiştirmek için Bağdaki Atomlardan birine Sağ Tıklayıp Sürükleyin"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -3183,9 +3202,8 @@ msgid "Forcefield optimization"
 msgstr "Kuvvet Alanı Optimizasyonu"
 
 #: qtplugins/forcefield/forcefield.h:51
-#, fuzzy
 msgid "Forcefield minimization, including scripts"
-msgstr "Kuvvet Alanı Optimizasyonu"
+msgstr ""
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
