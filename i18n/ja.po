@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-06 08:51+0000\n"
+"PO-Revision-Date: 2025-08-15 14:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.13\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4702,20 +4702,23 @@ msgid "Residue Properties"
 msgstr "残基のプロパティ"
 
 #: qtplugins/propertytables/propertyview.cpp:409
+#, fuzzy
 msgid "Freeze Atom"
-msgstr ""
+msgstr "原子を凍結"
 
 #: qtplugins/propertytables/propertyview.cpp:417
+#, fuzzy
 msgid "Constrain Bond"
-msgstr ""
+msgstr "結合を制限"
 
 #: qtplugins/propertytables/propertyview.cpp:419
 msgid "Constrain Angle"
-msgstr ""
+msgstr "角度を制限"
 
 #: qtplugins/propertytables/propertyview.cpp:421
+#, fuzzy
 msgid "Constrain Torsion"
-msgstr ""
+msgstr "ねじれを制限"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
