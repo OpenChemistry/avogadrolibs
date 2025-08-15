@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-06 08:52+0000\n"
+"PO-Revision-Date: 2025-08-15 14:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.13\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1602,6 +1602,7 @@ msgid "Align"
 msgstr "Poravnaj"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1611,6 +1612,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Poravnaj molekule\n"
+"\n"
+"Lijeva tipka miša:\tOdaberi do dva atoma.\n"
+"\tPrvi atom je centriran pri izvoru.\n"
+"\tDrugi atom je poravnat na odabranu os.\n"
+"Desna tipka miša:\tPoništi poravnanje.\n"
+"Dvostruki klik:\tCentriraj atom pri izvoru."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2009,7 +2017,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Upravljanje vezama"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2022,6 +2030,19 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Alat za upravljanje vezama\t(%1)\n"
+"\n"
+"Lijeva tipka miša:\tKlikni i povuci za okretanje prikaza.\n"
+"Srednja tipka miša:\tKlikni i povuci za povećanje ili smanjenje prikaza.\n"
+"Desna tipka miša:\tKlikni i povuci za pomicanje prikaza.\n"
+"Dvostruki klik:\tResetiraj prikaz.\n"
+"\n"
+"Klikni lijevom tipkom miša i povuci na vezu za postavljanje ravnine "
+"upravljanja\n"
+"Klikni lijevom tipkom miša i povuci jedan od atoma u vezi za mijenjanje "
+"kuta\n"
+"Klikni desnom tipkom miša i povuci jedan od atoma u vezi zs mijenjanje "
+"duljine"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2953,13 +2974,17 @@ msgid "Draw"
 msgstr "Crtaj"
 
 #: qtplugins/editor/editor.cpp:76
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"Alat za crtanje (%1)\n"
+"\n"
+"Lijeva tipka miša:\tKlikni i povuci za stvaranje atoma i veza\n"
+"Desna tipka miša:\tIzbriši atom"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3522,12 +3547,15 @@ msgid "Edit Labels"
 msgstr "Uredi oznake"
 
 #: qtplugins/label/labeleditor.cpp:34
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Atom Label Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Alat za oznake atoma\t(%1)\n"
+"\n"
+"Lijeva tipka miša:\tKlikni na atome za dodavanje prilagođenih oznaka"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3607,13 +3635,17 @@ msgid "Manipulate"
 msgstr "Upravljaj"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Alat za upravljanje\t(%1)\n"
+"\n"
+"Lijeva tipka miša:\tKlikni i povuci za pomicanje atoma\n"
+"Desna tipka miša:\tKlikni i povuci za oretanje atoma."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3630,7 +3662,7 @@ msgid "Measure"
 msgstr "Izmjeri"
 
 #: qtplugins/measuretool/measuretool.cpp:54
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Measure Tool\t(%1)\n"
 "\n"
@@ -3640,6 +3672,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"Alat za mjerenje\t(%1)\n"
+"\n"
+"Lijeva tipka miša:\tOdaberi do četiri atoma.\n"
+"\tUdaljenosti se mjere između 1-2 i 2-3\n"
+"\tKut se mjeri između 1-3 koristeći 2 kao zajedničku točku\n"
+"\tDiedar se mjeri između 1-2-3-4\n"
+"Desna tipka miša:\tResetiraj mjerenja."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -3831,7 +3870,7 @@ msgid "Navigate"
 msgstr "Navigacija"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3839,6 +3878,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Alat za navigaciju\t(%1)\n"
+"\n"
+"Lijeva tipka miša:\tKlikni i povuci za okretanje prikaza.\n"
+"Srednja tipka miša:\tKlikni i povuci za povećanje ili smanjenje prikaza.\n"
+"Desna tipka miša:\tKlikni i povuci za pomicanje prikaza."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3857,10 +3901,14 @@ msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Obrni smjer zumiranja pri povlačenju"
 
 #: qtplugins/navigator/navigator.cpp:108
+#, fuzzy
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
+"Standardno:\tPovuci prema dolje za smanjivanje, povuci prema gore za "
+"zumiranje\n"
+"Obrnuto:\tPovuci prema gore za smanjivanje, povuci prema dolje za zumiranje"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -4226,9 +4274,9 @@ msgid "Player"
 msgstr "Player"
 
 #: qtplugins/playertool/playertool.cpp:49
-#, qt-format
+#, fuzzy, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr ""
+msgstr "Alat za animaciju\t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4891,7 +4939,7 @@ msgid "Selection"
 msgstr "Odabir"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -4901,6 +4949,15 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Alat za biranje\t(%1)\n"
+"\n"
+"Lijeva tipka miša:\tKlikni za biranje pojedinačnih atoma, ostataka ili "
+"fragmenata\n"
+"\tPovuci za biranje niza atoma\n"
+"Desna tipka miša:\tKlikni izvan molekule za poništavanje odabira\n"
+"Koristi tipku Ctrl za mijenjanje odabira i tipku shift za dodavanje odabiru."
+"\n"
+"Dvostruki klik:\tOdaberi cijeli fragment."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -5366,7 +5423,7 @@ msgid "Template"
 msgstr "Predložak"
 
 #: qtplugins/templatetool/templatetool.cpp:84
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Template Tool\t(%1)\n"
 "\n"
@@ -5377,6 +5434,13 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"Alat za predloške\t(%1)\n"
+"\n"
+"Umetni fragmente, uključujući središta metala.\n"
+"Odaberi element i geometriju koordinacije, zatim klikni za umetanje "
+"fragmenta.\n"
+"\n"
+"Odaberi ligand ili funkcionalnu grupu i klikni na atom vodika za spajanje."
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
