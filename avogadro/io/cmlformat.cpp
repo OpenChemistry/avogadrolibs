@@ -37,6 +37,7 @@ const Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
 } // namespace
 
 using std::string;
+using namespace std::string_literals;
 
 using pugi::xml_attribute;
 using pugi::xml_document;
@@ -679,7 +680,7 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
         std::stringstream stream;
         stream << matrix.rows() << " " << matrix.cols();
         dataNode.append_attribute("dims") = stream.str().c_str();
-        std::string h5Path = std::string("molecule/dataMap/") + name_;
+        std::string h5Path = "molecule/dataMap/"s + name_;
         dataNode.text() = h5Path.c_str();
         hdf5.writeDataset(h5Path, matrix);
       } break;

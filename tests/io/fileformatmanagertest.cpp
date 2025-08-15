@@ -17,6 +17,7 @@ using Avogadro::Core::Molecule;
 using Avogadro::Core::Variant;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
+using namespace std::string_literals;
 
 TEST(FileFormatManagerTest, readFile)
 {
@@ -220,23 +221,23 @@ TEST(FileFormatManagerTest, filtering)
   FileFormat* format = nullptr;
 
   format = manager.newFormatFromFileExtension("asdfjkl;", Format::Read);
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("readOnly"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "readOnly"s);
   delete format;
 
   format = manager.newFormatFromFileExtension("asdfjkl;", Format::Write);
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("writeOnly"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "writeOnly"s);
   delete format;
 
   format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Write);
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("writeOnly"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "writeOnly"s);
   delete format;
 
   format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Read);
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("readOnly"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "readOnly"s);
   delete format;
 }
 
@@ -247,8 +248,8 @@ TEST(FileFormatManagerTest, unregister)
 
   FileFormatManager& manager = FileFormatManager::instance();
   FileFormat* format = manager.newFormatFromIdentifier("testingFormat");
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("testingFormat"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "testingFormat"s);
   delete format;
 
   EXPECT_TRUE(FileFormatManager::unregisterFormat("testingFormat"));
