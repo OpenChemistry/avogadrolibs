@@ -1,7 +1,5 @@
 if(QT_VERSION EQUAL 6)
   find_package(Qt6 COMPONENTS Widgets Concurrent REQUIRED)
-else()
-  find_package(Qt5 COMPONENTS Widgets Concurrent REQUIRED)
 endif()
 
 # Provide some simple API to find the plugins, scripts, etc.
