@@ -5,13 +5,13 @@
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021, 2022, 2023, 2024, 2025.
 # Chiyu Liang <532117255@qq.com>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-17 22:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1562,6 +1562,7 @@ msgid "Align"
 msgstr "アラインメント"
 
 #: qtplugins/aligntool/aligntool.cpp:53
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1571,6 +1572,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"分子のアラインメント\n"
+"\n"
+"左クリック: \t二つまでの分子を選択\n"
+"\t最初の原子が座標の原点\n"
+"\t次の原子が選択した座標軸上にアラインメントされる\n"
+"右クリック: \tアラインメントをリセット\n"
+"ダブルクリック: \t原子を原点に"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2935,6 +2943,10 @@ msgid ""
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
+"ドローツール\t(%1)\n"
+"\n"
+"左クリック:\tクリック＆ドラッグで原子と結合を作成\n"
+"右クリック:\t原子を削除"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3587,13 +3599,17 @@ msgid "Manipulate"
 msgstr "操作"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"操作ツール\t(%1)\n"
+"\n"
+"左クリック:\tクリック＆ドラッグして原子を動かす\n"
+"右クリック:\tクリック＆ドラッグして原子を回転させる"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -4280,7 +4296,7 @@ msgstr "動画 (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:250
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "ビットマップ画像のエクスポート"
 
 #: qtplugins/playertool/playertool.cpp:251
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -5406,9 +5422,9 @@ msgstr ""
 "テンプレートツール\t(%1)\n"
 "\n"
 "金属中心を含むフラグメントを挿入\n"
-"元素と座標を選択し、クリックしてフラグメントの挿入\n"
+"元素と座標を選択し、クリックしてフラグメントを挿入\n"
 "\n"
-"リガンドまたは官能基を選択して付加する水素をクリック"
+"リガンドまたは官能基を選択して、付加する水素をクリック"
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
@@ -8486,7 +8502,6 @@ msgstr "アニメーションを停止"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
-#, fuzzy
 msgid "Yaehmop Band"
 msgstr "Yaehmopバンド"
 
