@@ -28,8 +28,10 @@ using namespace Avogadro::QtGui;
 CopyPaste::CopyPaste(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_pastedFormat(nullptr),
     m_copyAction(new QAction(tr("Copy"), this)),
-    m_copySMILES(new QAction(tr("SMILES"), this)),
-    m_copyInChI(new QAction(tr("InChI"), this)),
+    // don't translate SMILES, InChI, or XYZ
+    m_copySMILES(new QAction("SMILES", this)),
+    m_copyInChI(new QAction("InChI", this)),
+    m_copyXYZ(new QAction("XYZ", this)),
     m_cutAction(new QAction(tr("Cut"), this)),
     m_clearAction(new QAction(tr("Clear"), this)),
     m_pasteAction(new QAction(tr("&Paste"), this))
@@ -50,13 +52,20 @@ CopyPaste::CopyPaste(QObject* parent_)
   m_copyInChI->setProperty("menu priority", 530);
   connect(m_copyInChI, SIGNAL(triggered()), SLOT(copyInChI()));
 
+  m_copyXYZ->setProperty("menu priority", 520);
+  connect(m_copyXYZ, SIGNAL(triggered()), SLOT(copyXYZ()));
+
   m_pasteAction->setShortcut(QKeySequence::Paste);
   m_pasteAction->setIcon(QIcon::fromTheme("edit-paste"));
   m_pasteAction->setProperty("menu priority", 510);
   connect(m_pasteAction, SIGNAL(triggered()), SLOT(paste()));
 
   m_clearAction->setShortcut(QKeySequence::Delete);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+  m_clearAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditClear));
+#else
   m_clearAction->setIcon(QIcon::fromTheme("edit-clear"));
+#endif
   m_clearAction->setProperty("menu priority", 500);
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clear()));
 }
@@ -69,13 +78,14 @@ CopyPaste::~CopyPaste()
 QList<QAction*> CopyPaste::actions() const
 {
   QList<QAction*> result;
-  return result << m_copyAction << m_copySMILES << m_copyInChI << m_cutAction
-                << m_pasteAction << m_clearAction;
+  return result << m_copyAction << m_copySMILES << m_copyInChI << m_copyXYZ
+                << m_cutAction << m_pasteAction << m_clearAction;
 }
 
 QStringList CopyPaste::menuPath(QAction* action) const
 {
-  if (action->text() != tr("SMILES") && action->text() != tr("InChI"))
+  if (action->text() != tr("SMILES") && action->text() != tr("InChI") &&
+      action->text() != tr("XYZ"))
     return QStringList() << tr("&Edit");
   else
     return QStringList() << tr("&Edit") << tr("Copy As");
@@ -105,6 +115,15 @@ void CopyPaste::copyInChI()
 {
   Io::FileFormatManager& formats = Io::FileFormatManager::instance();
   Io::FileFormat* format(formats.newFormatFromFileExtension("inchi"));
+
+  copy(format);
+  delete format;
+}
+
+void CopyPaste::copyXYZ()
+{
+  Io::FileFormatManager& formats = Io::FileFormatManager::instance();
+  Io::FileFormat* format(formats.newFormatFromFileExtension("xyz"));
 
   copy(format);
   delete format;
