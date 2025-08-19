@@ -263,12 +263,12 @@ TEST_F(PluginLayerManagerTest, SettingsClonedNotSharedThroughMoleculeInfoCopy)
   LayerDataPtr copyPtr = copy.settings["Plugin"][0];
   ASSERT_NE(copyPtr, nullptr);
   EXPECT_NE(originalPtr.get(), copyPtr.get()); // distinct objects
-  EXPECT_EQ(static_cast<TestLayerData*>(copyPtr.get())->value(), 42);
+  EXPECT_EQ(dynamic_cast<TestLayerData*>(copyPtr.get())->value(), 42);
 
   // Mutating the original after the copy must not reach the clone.
   plugin.getSetting<TestLayerData>(0)->setValue(99);
-  EXPECT_EQ(static_cast<TestLayerData*>(copyPtr.get())->value(), 42);
-  EXPECT_EQ(static_cast<TestLayerData*>(originalPtr.get())->value(), 99);
+  EXPECT_EQ(dynamic_cast<TestLayerData*>(copyPtr.get())->value(), 42);
+  EXPECT_EQ(dynamic_cast<TestLayerData*>(originalPtr.get())->value(), 99);
 }
 
 // The Snapshot must answer exactly what the per-call API answers, including

@@ -58,7 +58,7 @@ void CoordinateTextEdit::markValid(QTextCursor& cur, const QString& tooltip)
 bool CoordinateTextEdit::event(QEvent* e)
 {
   if (e->type() == QEvent::ToolTip) {
-    auto* helpEvent = static_cast<QHelpEvent*>(e);
+    auto* helpEvent = dynamic_cast<QHelpEvent*>(e);
     showToolTip(helpEvent);
     return true;
   }

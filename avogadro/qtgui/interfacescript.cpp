@@ -349,7 +349,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       moleculeString = obj[m_moleculeExtension].toString();
     }
 
-    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
+    auto* guiMol = dynamic_cast<QtGui::Molecule*>(mol);
 
     if (!moleculeString.isEmpty()) {
       Io::FileFormatManager& formats = Io::FileFormatManager::instance();
