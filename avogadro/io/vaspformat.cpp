@@ -305,6 +305,8 @@ std::vector<std::string> PoscarFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("POSCAR");
+  ext.emplace_back("CONTCAR");
+  ext.emplace_back("vasp");
   return ext;
 }
 
