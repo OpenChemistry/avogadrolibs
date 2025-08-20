@@ -22,6 +22,7 @@ using Avogadro::Core::Molecule;
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::Variant;
 using Avogadro::Io::CjsonFormat;
+using namespace std::string_literals;
 
 TEST(CjsonTest, readFile)
 {
@@ -36,6 +37,100 @@ TEST(CjsonTest, readFile)
 
   EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
+}
+
+TEST(CjsonTest, readInvalidPeriodicFile)
+{
+  for (const auto& str : {
+
+         R"({
+  "chemicalJson": 1,
+  "name": "a lattice constant is zero",
+  "atoms": {
+    "coords": { "3dFractional": [ 0.5, 0.5, 0.5 ] },
+    "elements": { "number": [ 0 ] }
+  },
+  "unitCell": {
+    "a": 0.0,
+    "b": 4.0,
+    "c": 4.0,
+    "alpha": 90.0,
+    "beta": 90.0,
+    "gamma": 90.0
+  }
+})"s,
+
+         R"({
+  "chemicalJson": 1,
+  "name": "a lattice constant is zero",
+  "atoms": {
+    "coords": { "3dFractional": [ 0.5, 0.5, 0.5 ] },
+    "elements": { "number": [ 0 ] }
+  },
+  "unitCell": {
+    "cellVectors": [
+      4.0, 0.0, 0.0,
+      0.0, 4.0, 0.0,
+      0.0, 0.0, 0.0
+    ]
+  }
+})"s,
+
+         R"({
+  "chemicalJson": 1,
+  "name": "angle is zero",
+  "atoms": {
+    "coords": { "3dFractional": [ 0.5, 0.5, 0.5 ] },
+    "elements": { "number": [ 0 ] }
+  },
+  "unitCell": {
+    "a": 4.0,
+    "b": 4.0,
+    "c": 4.0,
+    "alpha": 90.0,
+    "beta": 0.0,
+    "gamma": 90.0
+  }
+})"s,
+
+         R"({
+  "chemicalJson": 1,
+  "name": "the vectors are linear dependent",
+  "atoms": {
+    "coords": { "3dFractional": [ 0.5, 0.5, 0.5 ] },
+    "elements": { "number": [ 0 ] }
+  },
+  "unitCell": {
+    "a": 4.0,
+    "b": 4.0,
+    "c": 4.0,
+    "alpha": 120.0,
+    "beta": 120.0,
+    "gamma": 120.0
+  }
+})"s,
+
+         R"({
+  "chemicalJson": 1,
+  "name": "the vectors are linear dependent",
+  "atoms": {
+    "coords": { "3dFractional": [ 0.5, 0.5, 0.5 ] },
+    "elements": { "number": [ 0 ] }
+  },
+  "unitCell": {
+    "cellVectors": [
+      4.0, 0.0, 1.0,
+      0.0, 2.0, 1.5,
+      2.0, 2.0, 2.0
+    ]
+  }
+})"s,
+
+       }) {
+    CjsonFormat cjson;
+    Molecule molecule;
+    EXPECT_FALSE(cjson.readString(str, molecule));
+  }
 }
 
 TEST(CjsonTest, atoms)
