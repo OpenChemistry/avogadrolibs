@@ -492,9 +492,9 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
   // Standard XML namespaces for CML.
   moleculeNode.append_attribute("xmlns") = "http://www.xml-cml.org/schema";
   moleculeNode.append_attribute("xmlns:cml") =
-    "http://www.xml-cml.org/dict/cml";
+    "http://www.xml-cml.org/dictionary/cml";
   moleculeNode.append_attribute("xmlns:units") =
-    "http://www.xml-cml.org/units/units";
+    "http://www.xml-cml.org/unit/nonSi";
   moleculeNode.append_attribute("xmlns:xsd") =
     "http://www.w3c.org/2001/XMLSchema";
   moleculeNode.append_attribute("xmlns:iupac") = "http://www.iupac.org";
