@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:01+0000\n"
+"PO-Revision-Date: 2025-08-27 08:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -523,7 +523,7 @@ msgstr "Sodík"
 
 #: qtgui/elementtranslator.cpp:50
 msgid "Magnesium"
-msgstr "Hořčík"
+msgstr ""
 
 #: qtgui/elementtranslator.cpp:53
 msgid "Aluminum"
@@ -575,7 +575,7 @@ msgstr "Chrom"
 
 #: qtgui/elementtranslator.cpp:89
 msgid "Manganese"
-msgstr "Hořčík"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
@@ -1170,7 +1170,7 @@ msgstr ""
 
 #: qtgui/layermodel.cpp:178 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
-msgstr "Dipólový moment:"
+msgstr "Dipólový moment"
 
 #: qtgui/layermodel.cpp:180 qtplugins/force/force.h:28
 msgid "Force"
@@ -1564,7 +1564,7 @@ msgstr ""
 "\tPrvní atom je vystředěn při původním.\n"
 "\tDruhý atom je zarovnán vůči vybrané ose.\n"
 "Pravé tlačítko myši:\tNastavit zarovnání znovu.\n"
-"Dvojité klepnutí:\tVystředit atom  při původním."
+"Dvojité klepnutí:\tVystředit atom při původním."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2021,7 +2021,7 @@ msgstr ""
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 #, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Úpravy zaměřené na vazbu"
+msgstr "Úpravy zaměřené na vazbu."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
@@ -2864,9 +2864,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Zachovat atomy v jednotkové buňce."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Otočit do obvyklého natočení"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -3161,9 +3160,9 @@ msgid "Energy: %L1"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:466
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Energie = %L1 %2"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:536
 #, qt-format
@@ -3589,7 +3588,7 @@ msgstr ""
 #: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:174
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1679
 msgid "Opacity:"
-msgstr "Průhlednost"
+msgstr "Průhlednost:"
 
 #: qtplugins/licorice/licorice.h:36
 msgid "Render atoms as licorice / sticks."
@@ -3645,7 +3644,7 @@ msgstr ""
 "Nástroj pro úpravy\t(%1)\n"
 "\n"
 "Levé tlačítko myši:\tKlepněte a táhněte pro přesunutí atomů\n"
-"Pravé tlačítko myši:\tKlepněte a táhněte pro otočení vybraných atomů"
+"Pravé tlačítko myši:\tKlepněte a táhněte pro otočení vybraných atomů."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3877,12 +3876,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
-"Nástroj pro pohyb       (%1)\n"
+"Nástroj pro pohyb\t(%1)\n"
 "\n"
-"Levé tlačítko myši:     Klepněte a táhněte pro otočení pohledu\n"
-"Prostřední tlačítko myši:       Klepněte a táhněte pro přiblížení nebo "
-"oddálení\n"
-"Pravé tlačítko myši:    Klepněte a táhněte pro posunutí pohledu"
+"Levé tlačítko myši:\tKlepněte a táhněte pro otočení pohledu\n"
+"Prostřední tlačítko myši:\tKlepněte a táhněte pro přiblížení nebo oddálení\n"
+"Pravé tlačítko myši:\tKlepněte a táhněte pro posunutí pohledu."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -8633,7 +8631,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
-#, fuzzy
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
@@ -8646,16 +8643,6 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
-"REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
-"css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Monospace'; font-size:12pt; font-"
-"weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-"
-"family:'Courier New,courier'; font-size:10pt;\"></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
