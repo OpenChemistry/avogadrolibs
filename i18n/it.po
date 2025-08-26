@@ -12,7 +12,7 @@
 # nicola zanna <zanna.nicola1@gmail.com>, 2023.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Giggino Bibitaro <pietr007@hotmail.it>, 2024.
-# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 # Daniel Colciaghi <danielcolciaghi@gmail.com>, 2025.
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
-"Last-Translator: Daniel Colciaghi <danielcolciaghi@gmail.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -83,8 +83,8 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
-"Formato del file inserito invalido: Il nome del file/contenuto manca o non è "
-"una stringa di caratteri:"
+"Ingresso file malformato: nome file/contenuti mancanti o non stringhe:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
