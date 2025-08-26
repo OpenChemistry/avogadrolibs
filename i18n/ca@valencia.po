@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:01+0000\n"
+"PO-Revision-Date: 2025-08-27 08:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Valencian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca@valencia/>\n"
@@ -147,9 +147,9 @@ msgid "Input Generator (error)"
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:43
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Input Generator"
-msgstr "Entrada del generador"
+msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:116
 msgid "Continue"
@@ -170,6 +170,7 @@ msgstr "Continua"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
+#, fuzzy
 msgid "Close"
 msgstr "Tanca"
 
@@ -1231,7 +1232,7 @@ msgstr ""
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
-msgstr "Taula periòdica."
+msgstr "Taula periòdica"
 
 #: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:192
 #, qt-format
@@ -1725,7 +1726,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:67
 #, fuzzy
 msgid "By Custom Color…"
-msgstr "Color personalitzat"
+msgstr "Color personalitzat…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
@@ -1746,7 +1747,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:77
 #, fuzzy
 msgid "By Partial Charge…"
-msgstr "Carrega parcial"
+msgstr "Carrega parcial…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 #, fuzzy
@@ -1996,7 +1997,7 @@ msgstr ""
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 #, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Manipulació de l'enllaç central"
+msgstr "Manipulació de l'enllaç central."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
@@ -2311,7 +2312,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
 #, fuzzy
 msgid "Angle"
-msgstr "Angle:"
+msgstr "Angle"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2416,9 +2417,8 @@ msgstr "Nom d'element."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
-#, fuzzy
 msgid "Invalid element symbol."
-msgstr "Símbol d'element"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
@@ -3124,9 +3124,9 @@ msgid "Energy: %L1"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:466
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Energia = %L1 %2"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:536
 #, qt-format
@@ -3427,7 +3427,7 @@ msgstr "Insereix un fragment"
 #, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
 msgstr ""
-"Insereix un fragment molecular per la construcció de molècules llargues"
+"Insereix un fragment molecular per la construcció de molècules llargues."
 
 #: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
 #: qtplugins/meshes/meshes.cpp:186
@@ -4006,13 +4006,13 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
 #: qtplugins/openbabel/openbabel.cpp:790
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
 "El fitxer trajectòria %1 no concorda amb el nombre d'àtoms de l'actual "
-"molècula"
+"molècula (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
@@ -4274,7 +4274,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:250
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Exporta el gràfic de mapa de bits"
 
 #: qtplugins/playertool/playertool.cpp:251
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -4304,7 +4304,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:988
 #, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "No es pot alçar el fitxer %1."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -4813,9 +4813,8 @@ msgid "Select by Element…"
 msgstr ""
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Atom Index…"
-msgstr "Index d'àtoms"
+msgstr ""
 
 #: qtplugins/select/select.cpp:63
 #, fuzzy
@@ -6080,8 +6079,9 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:287
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Calculate:"
-msgstr "Calcula"
+msgstr "Calcula:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
