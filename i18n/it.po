@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Last-Translator: Daniel Colciaghi <danielcolciaghi@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -83,33 +83,34 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
-"Ingresso file malformato: nome file/contenuti mancanti o non stringhe:\n"
+"Inserimento file malformato: nome file/contenuti mancanti o non stringhe:\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "File malformato all'indice %1: Non è un oggetto."
 
 #: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
-msgstr ""
+msgstr "L'elemento di \"files\" non è un array."
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
-msgstr ""
+msgstr "Elemento di \"files\" mancante."
 
 #: molequeue/inputgenerator.cpp:259 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr ""
+"Una elemento di \"mainFile\" non fa riferimento ad alcuna voce in \"files\"."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "L'elemento di \"mainFile\" deve essere una stringa."
 
 #: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:448
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "La risposta deve essere un oggetto JSON alla radice."
 
 #: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:452
 #, qt-format
@@ -117,6 +118,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Output dello script:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:322 qtgui/interfacescript.cpp:496
 #, qt-format
@@ -126,18 +129,25 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Errore di parsificazione alla posizione %L1: \"%2\"\n"
+"Raw JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:346
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Errore nel salvataggio della rappresentazione della molecola come stringa: "
+"Formato del file non riconosciuto:%1"
 
 #: molequeue/inputgenerator.cpp:354
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr ""
+"Errore nel salvataggio della rappresentazione della molecola come stringa:%1"
 
 #: molequeue/inputgenerator.cpp:367 qtgui/interfacescript.cpp:563
 #, qt-format
@@ -1203,7 +1213,7 @@ msgstr "Superfici"
 
 #: qtgui/layermodel.cpp:188 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr ""
+msgstr "Non covalente"
 
 #: qtgui/layermodel.cpp:190
 #, fuzzy
@@ -1463,15 +1473,15 @@ msgstr ""
 
 #: qtgui/rwmolecule.h:214
 msgid "Change Atom Positions"
-msgstr ""
+msgstr "Cambiare la Posizione degli Atomi"
 
 #: qtgui/rwmolecule.h:224
 msgid "Change Atom Position"
-msgstr ""
+msgstr "Cambiare la Posizione dell'Atomo"
 
 #: qtgui/rwmolecule.h:242
 msgid "Change Atom Label"
-msgstr ""
+msgstr "Cambiare l'Etichetta dell'Atomo"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
@@ -1494,7 +1504,7 @@ msgstr "Impostazioni"
 #: qtgui/scriptloader.cpp:33
 #, qt-format
 msgid "Cannot load script %1"
-msgstr ""
+msgstr "Lo script non può essere caricato%1"
 
 #: qtgui/scriptloader.cpp:69
 #, qt-format
@@ -1577,7 +1587,7 @@ msgstr "Asse:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
-msgstr ""
+msgstr "Allineare all'Origine"
 
 #: qtplugins/aligntool/aligntool.cpp:193
 msgid "Align to Axis"
@@ -1585,7 +1595,7 @@ msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:287
 msgid "Center the atom at the origin."
-msgstr ""
+msgstr "Centrare l'atomo all'origine."
 
 #: qtplugins/aligntool/aligntool.cpp:290
 msgid "Rotate the molecule to align the atom to the specified axis."
