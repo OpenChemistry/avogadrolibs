@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hant/>\n"
@@ -4801,7 +4801,7 @@ msgstr ""
 #: qtplugins/select/select.cpp:63
 #, fuzzy
 msgid "Select by Residue…"
-msgstr "依照殘基來選擇"
+msgstr "依照殘基來選擇…"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
@@ -4928,7 +4928,7 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:73
 #, fuzzy
 msgid "Fill Unit Cell…"
-msgstr "填入單位晶胞"
+msgstr "填入單位晶胞…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:79
 #: qtplugins/spacegroup/spacegroup.cpp:338
@@ -5249,7 +5249,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:84
 #, fuzzy
 msgid "Create Surfaces…"
-msgstr "產生外觀"
+msgstr "產生外觀…"
 
 #: qtplugins/surfaces/surfaces.cpp:112
 msgid "Render the van der Waals surface."
@@ -6027,7 +6027,7 @@ msgstr "預設值"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "儲存影片檔"
+msgstr "儲存影片檔…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
