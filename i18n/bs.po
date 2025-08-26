@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:01+0000\n"
+"PO-Revision-Date: 2025-08-27 08:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
@@ -1495,9 +1495,8 @@ msgstr "&Datoteka"
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:44
 #: qtplugins/povray/povray.cpp:44 qtplugins/svg/svg.cpp:46
 #: qtplugins/vrml/vrml.cpp:44
-#, fuzzy
 msgid "&Export"
-msgstr "Izvezi"
+msgstr ""
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1989,7 +1988,7 @@ msgstr ""
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 #, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Manipulacija centralnom vezom"
+msgstr "Manipulacija centralnom vezom."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
@@ -2301,7 +2300,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
 #, fuzzy
 msgid "Angle"
-msgstr "Ugao:"
+msgstr "Ugao"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2447,17 +2446,17 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:445
 #, fuzzy
 msgid "X coordinate."
-msgstr "X koordinate"
+msgstr "X koordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:456
 #, fuzzy
 msgid "Y coordinate."
-msgstr "Y koordinate"
+msgstr "Y koordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:467
 #, fuzzy
 msgid "Z coordinate."
-msgstr "Z koordinate"
+msgstr "Z koordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:478
 msgid "'a' lattice coordinate."
@@ -3408,7 +3407,7 @@ msgstr "Ubaci fragment"
 #: qtplugins/insertfragment/insertfragment.h:60
 #, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
-msgstr "Ubaci molekularne fragmente za pravljenje većih molekula"
+msgstr "Ubaci molekularne fragmente za pravljenje većih molekula."
 
 #: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
 #: qtplugins/meshes/meshes.cpp:186
@@ -3426,7 +3425,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:184
 msgid "Unique ID"
-msgstr "Jedinstveni id."
+msgstr "Jedinstveni id"
 
 #: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:531
 #: qtplugins/symmetry/operationstablemodel.cpp:61
@@ -3894,7 +3893,7 @@ msgstr "Opažene veze"
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "Dodaj vodike za pH"
+msgstr "Dodaj vodike za pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:83
 #, fuzzy
@@ -4668,7 +4667,7 @@ msgstr "Postavke atoma"
 #: qtplugins/propertytables/propertyview.cpp:48
 #, fuzzy
 msgid "Bond Properties"
-msgstr "Postavke spoja…"
+msgstr "Postavke spoja"
 
 #: qtplugins/propertytables/propertyview.cpp:51
 msgid "Angle Properties"
@@ -8029,7 +8028,7 @@ msgid ""
 msgstr ""
 "Kontrole:\n"
 "Dvostruki lijevi klik: Vrati zadane limite ose\n"
-"Desni klik  + povlačenje: Pomakni crtež\n"
+"Desni klik + povlačenje: Pomakni crtež\n"
 "Srednji klik + povlačenje: Uvećaj područje\n"
 "Skrol točkić: Povećaj na kursor"
 
