@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-27 08:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -175,6 +175,7 @@ msgstr "Jarraitu"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
+#, fuzzy
 msgid "Close"
 msgstr "Itxi"
 
@@ -1600,7 +1601,7 @@ msgstr ""
 #: qtplugins/aligntool/aligntool.cpp:287
 #, fuzzy
 msgid "Center the atom at the origin."
-msgstr "atomoen jatorria aukeratua"
+msgstr "atomoen jatorria aukeratua."
 
 #: qtplugins/aligntool/aligntool.cpp:290
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -1776,7 +1777,7 @@ msgstr "Kateak"
 #: qtplugins/applycolors/applycolors.cpp:77
 #, fuzzy
 msgid "By Partial Charge…"
-msgstr "Karga Partziala"
+msgstr "Karga Partziala…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 #, fuzzy
@@ -2025,7 +2026,7 @@ msgstr ""
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 #, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Loturetan Oinarritutako Manipulazioa"
+msgstr "Loturetan Oinarritutako Manipulazioa."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
@@ -2070,7 +2071,7 @@ msgstr ""
 #: qtplugins/bonding/bonding.cpp:76
 #, fuzzy
 msgid "Perceive bond orders."
-msgstr "Loturak hauteman"
+msgstr "Loturak hauteman."
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2832,7 +2833,7 @@ msgstr "Gelaxka &Bolumenera Eskalatu…"
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 msgid "Build &Supercell…"
-msgstr "&Super Gelatxoa"
+msgstr "&Super Gelatxoa…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2864,9 +2865,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Atomoak gelaxka unitatean mantendu."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Orientazio Estandarderaino Errotatu"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -3037,7 +3037,7 @@ msgstr ""
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:74
 msgid "Chemical structure to download."
-msgstr "Deskargatzeko estruktura kimikoa"
+msgstr "Deskargatzeko estruktura kimikoa."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
@@ -3465,7 +3465,7 @@ msgstr "Txertatu zatia"
 #: qtplugins/insertfragment/insertfragment.h:60
 #, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
-msgstr "Txertatu zati molekularrak molekula handiagoak bihur daitezen"
+msgstr "Txertatu zati molekularrak molekula handiagoak bihur daitezen."
 
 #: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
 #: qtplugins/meshes/meshes.cpp:186
@@ -4044,13 +4044,13 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
 #: qtplugins/openbabel/openbabel.cpp:790
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
-"%1 ibilbide-artxiboa ez da bat etortzen atomoen kantitatearekin molekula "
-"honetan"
+"%1 ibilbide-artxiboa ez da bat etortzen atomoen kantitatearekin molekula (%2)"
+" honetan."
 
 #: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
@@ -6094,7 +6094,7 @@ msgstr "Lehenespenak"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Gorde Artxiboa"
+msgstr "Gorde Artxiboa…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6891,7 +6891,7 @@ msgstr "Koordenatu fitxategiarentzako izena zehaztu."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:292
 #. i18n: ectx: property (text), widget (QLabel, label_readdata)
 msgid "Coordinate Data File"
-msgstr "Koordenatuen datu fitxategia."
+msgstr "Koordenatuen datu fitxategia"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:306
 #. i18n: ectx: property (text), widget (QLabel, label_therm)
@@ -6922,7 +6922,7 @@ msgstr "Tenperatura"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:357
 #. i18n: ectx: property (toolTip), widget (QSpinBox, nhChainSpin)
 msgid "Select the number of Nosé-Hoover chains in the NVT ensemble."
-msgstr "Nosé-Hoover kateen kopuru bat zehaztu  NVT multzoan."
+msgstr "Nosé-Hoover kateen kopuru bat zehaztu NVT multzoan."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7107,7 +7107,7 @@ msgstr "Hasierako Azkartasunak"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:725
 #. i18n: ectx: property (toolTip), widget (QComboBox, velocityDistCombo)
 msgid "Select the distribution of initial atom velocities."
-msgstr "Aukeratu atomoentzako hasierako azkartasun banaketa"
+msgstr "Aukeratu atomoentzako hasierako azkartasun banaketa."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:729
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
@@ -7328,7 +7328,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #, fuzzy
 msgid "Children:"
-msgstr "Semeak"
+msgstr "Semeak:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7341,7 +7341,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #, fuzzy
 msgid "Mutability:"
-msgstr "Mutagarritasuna"
+msgstr "Mutagarritasuna:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -7610,7 +7610,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
 #, fuzzy
 msgid "Constraints:"
-msgstr "Mugak"
+msgstr "Mugak:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -7963,7 +7963,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 #, fuzzy
 msgid "Scale Factor:"
-msgstr "Eskalatze Faktorea"
+msgstr "Eskalatze Faktorea:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -8345,7 +8345,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
 #, fuzzy
 msgid "Formal Charge:"
-msgstr "Karga Formala"
+msgstr "Karga Formala:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:133
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
@@ -8553,7 +8553,7 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
 #, fuzzy
 msgid " eV"
-msgstr "eV"
+msgstr " eV"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
@@ -8624,7 +8624,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
-#, fuzzy
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
@@ -8637,16 +8636,6 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
-"REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
-"css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Monospace'; font-size:12pt; font-"
-"weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-"
-"family:'Courier New,courier'; font-size:10pt;\"></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
