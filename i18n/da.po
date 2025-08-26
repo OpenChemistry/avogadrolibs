@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:01+0000\n"
+"PO-Revision-Date: 2025-08-27 08:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/da/>\n"
@@ -167,8 +167,9 @@ msgstr "Fortsæt"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
+#, fuzzy
 msgid "Close"
-msgstr ""
+msgstr "Luk"
 
 #: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:372
 #: qtplugins/configurepython/configurepythondialog.cpp:188
@@ -1994,7 +1995,7 @@ msgstr ""
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 #, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Bindingscentreret manipulation"
+msgstr "Bindingscentreret manipulation."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
@@ -2305,7 +2306,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
 #, fuzzy
 msgid "Angle"
-msgstr "Vinkel:"
+msgstr "Vinkel"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2372,9 +2373,8 @@ msgid "Atom 4"
 msgstr "Atom 4"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
-#, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "koordinat-editor"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
@@ -2828,9 +2828,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Fold atomer til celle."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Roter til standardorientering"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -3421,7 +3420,7 @@ msgstr "Indsæt fragment"
 #: qtplugins/insertfragment/insertfragment.h:60
 #, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
-msgstr "Indsæt molekylærfragmenter for at bygge størrer molekyler"
+msgstr "Indsæt molekylærfragmenter for at bygge størrer molekyler."
 
 #: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
 #: qtplugins/meshes/meshes.cpp:186
@@ -3461,9 +3460,8 @@ msgid "Partial Charge"
 msgstr ""
 
 #: qtplugins/label/label.cpp:205
-#, fuzzy
 msgid "Atom Label:"
-msgstr "Etiket"
+msgstr ""
 
 #: qtplugins/label/label.cpp:213
 msgid "Length"
