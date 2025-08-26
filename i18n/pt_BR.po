@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -199,7 +199,7 @@ msgstr "Continuar"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
 msgid "Close"
-msgstr "Fe&char"
+msgstr "Fechar"
 
 #: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:372
 #: qtplugins/configurepython/configurepythondialog.cpp:188
@@ -1842,8 +1842,9 @@ msgid "By Secondary Structure"
 msgstr "Por Estrutura Secundária"
 
 #: qtplugins/applycolors/applycolors.cpp:87
+#, fuzzy
 msgid "By Amino Acid"
-msgstr "Por Aminoácidos:"
+msgstr "Por Aminoácidos"
 
 #: qtplugins/applycolors/applycolors.cpp:92
 msgid "By Shapely Scheme"
@@ -2413,7 +2414,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
 #, fuzzy
 msgid "Angle"
-msgstr "Ângulo:"
+msgstr "Ângulo"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2945,7 +2946,7 @@ msgstr "Envolver Átomos na Célula Unitária."
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Girar para Orientação Padrão"
+msgstr "Girar para Orientação Padrão."
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -3235,9 +3236,9 @@ msgid "Energy: %L1"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:466
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Energia = %L1 %2"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:536
 #, qt-format
@@ -4918,7 +4919,7 @@ msgstr "Alinhar Visão aos Eixos"
 #: qtplugins/resetview/resetview.cpp:52
 #, fuzzy
 msgid "Align view to axes."
-msgstr "Alinhar Visão aos Eixos"
+msgstr "Alinhar Visão aos Eixos."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
