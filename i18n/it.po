@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -54,7 +54,7 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
 msgid "Non-string warning returned."
-msgstr "Nessuna stringa di errore"
+msgstr "Nessuna stringa di errore."
 
 #: molequeue/inputgenerator.cpp:174 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
@@ -2056,7 +2056,7 @@ msgstr ""
 #: qtplugins/bonding/bonding.cpp:76
 #, fuzzy
 msgid "Perceive bond orders."
-msgstr "Percepire i legami"
+msgstr "Percepire i legami."
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2448,7 +2448,7 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
 msgid "Atomic index."
-msgstr "Indici Atomici"
+msgstr "Indici Atomici."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
@@ -2851,9 +2851,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Mantieni gli atomi in una cellula unitaria."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Ruota nell'orientamento standard"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -3450,7 +3449,7 @@ msgstr "Inserisci frammenti molecolari per costruire molecole più grandi."
 #: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
 #: qtplugins/meshes/meshes.cpp:186
 msgid "Color:"
-msgstr "Colore"
+msgstr "Colore:"
 
 #: qtplugins/label/label.cpp:172
 msgid "Distance from center:"
@@ -3823,7 +3822,7 @@ msgstr "File CSV (*.csv);;Tutti i file (*)"
 #: qtplugins/propertytables/propertyview.cpp:358
 #, fuzzy
 msgid "Could not open the file for writing."
-msgstr "Non è stato possibile aprire il file in scrittura"
+msgstr "Non è stato possibile aprire il file in scrittura."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:390
@@ -4839,9 +4838,8 @@ msgid "Select by Element…"
 msgstr ""
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Atom Index…"
-msgstr "Indici Atomici"
+msgstr ""
 
 #: qtplugins/select/select.cpp:63
 #, fuzzy
@@ -5318,12 +5316,12 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
 #, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Renderizza Orbitale Molecolare"
+msgstr "Renderizza Orbitale Molecolare."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 #, fuzzy
 msgid "Render the electron density."
-msgstr "Renderizza la densità elettronica"
+msgstr "Renderizza la densità elettronica."
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -6692,7 +6690,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
 msgid "Units"
-msgstr "Unità:"
+msgstr "Unità"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:111
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
