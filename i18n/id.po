@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -154,7 +154,7 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
-"Gagal menghasilkan benda cjson: gagal mengurai di ofset  %1: %2\n"
+"Gagal menghasilkan benda cjson: gagal mengurai di ofset %1: %2\n"
 "JSON Baku:\n"
 "\n"
 "%3"
@@ -1218,7 +1218,7 @@ msgstr ""
 
 #: qtgui/layermodel.cpp:178 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
-msgstr "Momen Duakutub:"
+msgstr "Momen Duakutub"
 
 #: qtgui/layermodel.cpp:180 qtplugins/force/force.h:28
 msgid "Force"
@@ -1642,9 +1642,8 @@ msgid "Run APBS…"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:37
-#, fuzzy
 msgid "Open Output File…"
-msgstr "Buka berkas"
+msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:50
@@ -1779,7 +1778,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:67
 #, fuzzy
 msgid "By Custom Color…"
-msgstr "Warna Atur Sendiri"
+msgstr "Warna Atur Sendiri…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
@@ -1801,7 +1800,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:77
 #, fuzzy
 msgid "By Partial Charge…"
-msgstr "Muatan parsial"
+msgstr "Muatan parsial…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 #, fuzzy
@@ -1811,7 +1810,7 @@ msgstr "struktur sekunder"
 #: qtplugins/applycolors/applycolors.cpp:87
 #, fuzzy
 msgid "By Amino Acid"
-msgstr "Asam Amino:"
+msgstr "Asam Amino"
 
 #: qtplugins/applycolors/applycolors.cpp:92
 msgid "By Shapely Scheme"
@@ -2363,7 +2362,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
 #, fuzzy
 msgid "Angle"
-msgstr "Sudut:"
+msgstr "Sudut"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2426,9 +2425,8 @@ msgid "Atom 4"
 msgstr "Atom 4"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
-#, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Penyunting Koordinat"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
@@ -3003,7 +3001,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:225
 #, fuzzy
 msgid "Distance:"
-msgstr "Jarak"
+msgstr "Jarak:"
 
 #: qtplugins/editor/editor.cpp:248
 #, qt-format
@@ -3043,7 +3041,7 @@ msgstr "&Impor"
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
 msgid "Fetch PDB"
-msgstr "Mengambil dari PDB…"
+msgstr "Mengambil dari PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
@@ -3081,7 +3079,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:97
 #: qtplugins/networkdatabases/networkdatabases.cpp:108
 msgid "Network Download Failed"
-msgstr "Muaturun Jaringan Gagal"
+msgstr "Proses unduhan telah gagal"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:98
@@ -3180,9 +3178,9 @@ msgid "Energy: %L1"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:466
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Energi = %L1 %2"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:536
 #, qt-format
@@ -4068,13 +4066,13 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
 #: qtplugins/openbabel/openbabel.cpp:790
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
 "Berkas trayektori %1 mempunyai jumlah atom yang tidak sesuai dengan molekul "
-"yang ada"
+"(%2) yang ada."
 
 #: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
@@ -6099,7 +6097,7 @@ msgstr "Bawaan"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Simpan Berkas"
+msgstr "Simpan Berkas…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
