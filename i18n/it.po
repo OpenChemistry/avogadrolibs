@@ -21,8 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -1487,9 +1486,8 @@ msgid "Change Bond Label"
 msgstr ""
 
 #: qtgui/rwmolecule.h:266
-#, fuzzy
 msgid "Change Selection"
-msgstr "Cambia selezioni"
+msgstr "Cambia la selezione"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1589,7 +1587,7 @@ msgstr "Allineare all'Origine"
 
 #: qtplugins/aligntool/aligntool.cpp:193
 msgid "Align to Axis"
-msgstr ""
+msgstr "Allineare a Axis"
 
 #: qtplugins/aligntool/aligntool.cpp:287
 msgid "Center the atom at the origin."
@@ -1601,7 +1599,7 @@ msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
 msgid "Align tool"
-msgstr ""
+msgstr "Strumento di allineamento"
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1767,9 +1765,8 @@ msgid "By Chain"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:77
-#, fuzzy
 msgid "By Partial Charge…"
-msgstr "Per la Carica Parziale…"
+msgstr "Per la carica parziale.."
 
 #: qtplugins/applycolors/applycolors.cpp:82
 #, fuzzy
