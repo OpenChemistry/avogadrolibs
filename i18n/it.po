@@ -14,13 +14,15 @@
 # Giggino Bibitaro <pietr007@hotmail.it>, 2024.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 # Daniel Colciaghi <danielcolciaghi@gmail.com>, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
-"Last-Translator: Daniel Colciaghi <danielcolciaghi@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -1035,9 +1037,8 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:279
-#, fuzzy
 msgid "All files"
-msgstr "Tutti I FIle"
+msgstr "Tutti i file"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
@@ -1174,10 +1175,9 @@ msgid "Ball and Stick"
 msgstr "Sfera e bastoncino"
 
 #: qtgui/layermodel.cpp:172 qtplugins/cartoons/cartoons.h:31
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Fumetto"
+msgstr "Cartone"
 
 #: qtgui/layermodel.cpp:174 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
@@ -1216,7 +1216,6 @@ msgid "Non-Covalent"
 msgstr "Non covalente"
 
 #: qtgui/layermodel.cpp:190
-#, fuzzy
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM"
@@ -1497,7 +1496,6 @@ msgid "Modify Molecule"
 msgstr ""
 
 #: qtgui/scenepluginmodel.cpp:101
-#, fuzzy
 msgid "Settings"
 msgstr "Impostazioni"
 
