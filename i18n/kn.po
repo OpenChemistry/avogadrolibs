@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-01-13 03:00+0000\n"
+"PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Kannada <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/kn/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1709,7 +1709,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:67
 #, fuzzy
 msgid "By Custom Color…"
-msgstr "ನನ್ನಿಚ್ಛೆಯ ಬಣ್ಣ:"
+msgstr "ನನ್ನಿಚ್ಛೆಯ ಬಣ್ಣ"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
@@ -5231,9 +5231,9 @@ msgid "Render symmetry elements."
 msgstr ""
 
 #: qtplugins/symmetry/symmetrywidget.cpp:335
-#, fuzzy, qt-format
+#, qt-format
 msgid "Group %1"
-msgstr "ಗುಂಪಿನ ಹೆಸರು"
+msgstr ""
 
 #: qtplugins/symmetry/symmetrywidget.cpp:343
 #, qt-format
