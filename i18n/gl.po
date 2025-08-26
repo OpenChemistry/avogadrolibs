@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.1.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-27 08:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Galician <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/gl/>\n"
@@ -168,6 +168,7 @@ msgstr "Continuar"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
+#, fuzzy
 msgid "Close"
 msgstr "Pechar"
 
@@ -1571,7 +1572,7 @@ msgstr ""
 #: qtplugins/aligntool/aligntool.cpp:287
 #, fuzzy
 msgid "Center the atom at the origin."
-msgstr "do atomo seleccionado na orixe"
+msgstr "do atomo seleccionado na orixe."
 
 #: qtplugins/aligntool/aligntool.cpp:290
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -1996,7 +1997,7 @@ msgstr ""
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 #, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Manipulación centrada nos enlaces"
+msgstr "Manipulación centrada nos enlaces."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
@@ -2310,7 +2311,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
 #, fuzzy
 msgid "Angle"
-msgstr "Ángulo:"
+msgstr "Ángulo"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2838,9 +2839,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Envolver os átomos da cela."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Rotar á orientación estándar"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -4015,13 +4015,13 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
 #: qtplugins/openbabel/openbabel.cpp:790
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
 "O ficheiro de traxectoria %1 non se corresponde co número de átomos nesta "
-"molécula"
+"molécula (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
@@ -5000,7 +5000,6 @@ msgid ""
 "Would you like to try again with a different tolerance?"
 msgstr ""
 "Produciuse un fallo na percepción do espazo de grupo.\n"
-"\n"
 "Gustaríalle tentalo de novo cunha tolerancia diferente?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:238
