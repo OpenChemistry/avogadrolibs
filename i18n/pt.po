@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
@@ -88,7 +88,7 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr "Entrada de ficheiro malformada no índice % 1: não é um objeto"
+msgstr "Entrada de ficheiro malformada no índice %1: não é um objeto."
 
 #: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
@@ -127,7 +127,7 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
-"Erro de análise no deslocamento % L1: '% 2'\n"
+"Erro de análise no deslocamento %L1: '%2'\n"
 "JSON bruto:\n"
 "\n"
 "%3"
@@ -2385,7 +2385,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
 #, fuzzy
 msgid "Angle"
-msgstr "Ângulo:"
+msgstr "Ângulo"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2915,9 +2915,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Envolver Átomos na Célula Unitária."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Rodar para Orientação Padrão"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -4877,7 +4876,7 @@ msgstr "Alinhar Visão aos Eixos"
 #: qtplugins/resetview/resetview.cpp:52
 #, fuzzy
 msgid "Align view to axes."
-msgstr "Alinhar Visão aos Eixos"
+msgstr "Alinhar Visão aos Eixos."
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/nl/>\n"
@@ -123,10 +123,6 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
-"Parse fout bij offset 22X:\n"
-"Raw JSON:\n"
-"\n"
-"43X"
 
 #: molequeue/inputgenerator.cpp:346
 #, qt-format
@@ -150,10 +146,6 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
-"Error generating cjson object: Parse fout bij offset 53X:\n"
-"Raw JSON:\n"
-"\n"
-"_"
 
 #: molequeue/inputgenerator.cpp:376 qtgui/interfacescript.cpp:572
 #, qt-format
@@ -2322,7 +2314,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
 #, fuzzy
 msgid "Angle"
-msgstr "Hoek:"
+msgstr "Hoek"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2391,7 +2383,7 @@ msgstr "Atoom 4"
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 #, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "&coördinaten editor"
+msgstr "&coördinaten editor…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
@@ -2809,7 +2801,7 @@ msgstr "Schaal Celeenheids&volume…"
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 msgid "Build &Supercell…"
-msgstr "Bouw &Super Cel"
+msgstr "Bouw &Super Cel…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -3128,9 +3120,9 @@ msgid "Energy: %L1"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:466
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Energie = %L1 %2"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:536
 #, qt-format
@@ -3897,7 +3889,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:53
 #, fuzzy
 msgid "Configure Force Field…"
-msgstr "Stel Krachtveld op"
+msgstr "Stel Krachtveld op…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 msgid "Conformer Search…"
@@ -4932,7 +4924,7 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:50
 #, fuzzy
 msgid "Perceive Space Group…"
-msgstr "Ruimtegroep Waarnemen"
+msgstr "Ruimtegroep Waarnemen…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
@@ -5728,8 +5720,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Force Field:"
-msgstr "Krachtveld"
+msgstr "Krachtveld:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
@@ -6041,7 +6034,7 @@ msgstr "Standaarden"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Bestand Opslaan"
+msgstr "Bestand Opslaan…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6057,7 +6050,7 @@ msgstr "&Basis Setup"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Title:"
-msgstr "Titel"
+msgstr "Titel:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -6421,7 +6414,7 @@ msgstr "Multipliciteit:"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
-msgstr "Breedte"
+msgstr "Breedte:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:254
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -7961,7 +7954,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:269
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Imported Spectra:"
-msgstr "Geïmorteerde Spectra"
+msgstr "Geïmorteerde Spectra:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:317
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
@@ -8151,9 +8144,8 @@ msgstr "Resolutie:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:299
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Isosurface Value:"
-msgstr "Isooppervlakte cutoff waarde"
+msgstr "Isooppervlakte cutoff waarde:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)

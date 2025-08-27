@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -1655,7 +1655,7 @@ msgstr ""
 #: qtplugins/aligntool/aligntool.cpp:287
 #, fuzzy
 msgid "Center the atom at the origin."
-msgstr "изабрани атом на порекло"
+msgstr "изабрани атом на порекло."
 
 #: qtplugins/aligntool/aligntool.cpp:290
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -2531,7 +2531,7 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
 msgid "Atomic index."
-msgstr "Pokazatelj atoma"
+msgstr "Pokazatelj atoma."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
@@ -2936,9 +2936,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Задржи атоме у јединичној ћелији."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Zaokreni na uobičajeno usmerenje"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -3227,9 +3226,9 @@ msgid "Energy: %L1"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:466
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Енергија = %L1 %2"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:536
 #, qt-format
@@ -4254,7 +4253,7 @@ msgstr "Interakcija sa uslužnim programima OpenBabel."
 #: qtplugins/openmminput/openmminput.cpp:30
 #, fuzzy
 msgid "&OpenMM Script…"
-msgstr "&OpenMM Izgrađivač Skripte"
+msgstr "&OpenMM Izgrađivač Skripte…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
@@ -4906,7 +4905,7 @@ msgstr "Poravnajte pogled prema osama"
 #: qtplugins/resetview/resetview.cpp:52
 #, fuzzy
 msgid "Align view to axes."
-msgstr "Poravnajte pogled prema osama"
+msgstr "Poravnajte pogled prema osama."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -5646,7 +5645,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
-msgstr "Očitavanje izlaza strukture opsega sa  Yaehmop-a nije uspelo!"
+msgstr "Očitavanje izlaza strukture opsega sa Yaehmop-a nije uspelo!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:321
 msgid ""

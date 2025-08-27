@@ -12,14 +12,16 @@
 # nicola zanna <zanna.nicola1@gmail.com>, 2023.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Giggino Bibitaro <pietr007@hotmail.it>, 2024.
-# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
+# Daniel Colciaghi <danielcolciaghi@gmail.com>, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-08-27 08:02+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -53,12 +55,12 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
 msgid "Non-string warning returned."
-msgstr "Nessuna stringa di errore"
+msgstr "Nessuna stringa di errore."
 
 #: molequeue/inputgenerator.cpp:174 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "L'elemento di \"warnings\" non è un array."
 
 #: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:366
 #, qt-format
@@ -82,31 +84,34 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Inserimento file malformato: nome file/contenuti mancanti o non stringhe:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "File malformato all'indice %1: Non è un oggetto."
 
 #: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
-msgstr ""
+msgstr "L'elemento di \"files\" non è un array."
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
-msgstr ""
+msgstr "Elemento di \"files\" mancante."
 
 #: molequeue/inputgenerator.cpp:259 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr ""
+"Una elemento di \"mainFile\" non fa riferimento ad alcuna voce in \"files\"."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "L'elemento di \"mainFile\" deve essere una stringa."
 
 #: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:448
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "La risposta deve essere un oggetto JSON alla radice."
 
 #: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:452
 #, qt-format
@@ -114,6 +119,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Output dello script:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:322 qtgui/interfacescript.cpp:496
 #, qt-format
@@ -123,18 +130,25 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Errore di parsificazione alla posizione %L1: \"%2\"\n"
+"Raw JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:346
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Errore nel salvataggio della rappresentazione della molecola come stringa: "
+"Formato del file non riconosciuto:%1"
 
 #: molequeue/inputgenerator.cpp:354
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr ""
+"Errore nel salvataggio della rappresentazione della molecola come stringa:%1"
 
 #: molequeue/inputgenerator.cpp:367 qtgui/interfacescript.cpp:563
 #, qt-format
@@ -1022,9 +1036,8 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:279
-#, fuzzy
 msgid "All files"
-msgstr "Tutti I FIle"
+msgstr "Tutti i file"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
@@ -1161,10 +1174,9 @@ msgid "Ball and Stick"
 msgstr "Sfera e bastoncino"
 
 #: qtgui/layermodel.cpp:172 qtplugins/cartoons/cartoons.h:31
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Fumetto"
+msgstr "Cartone"
 
 #: qtgui/layermodel.cpp:174 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
@@ -1200,10 +1212,9 @@ msgstr "Superfici"
 
 #: qtgui/layermodel.cpp:188 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr ""
+msgstr "Non covalente"
 
 #: qtgui/layermodel.cpp:190
-#, fuzzy
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM"
@@ -1460,38 +1471,36 @@ msgstr ""
 
 #: qtgui/rwmolecule.h:214
 msgid "Change Atom Positions"
-msgstr ""
+msgstr "Cambiare la Posizione degli Atomi"
 
 #: qtgui/rwmolecule.h:224
 msgid "Change Atom Position"
-msgstr ""
+msgstr "Cambiare la Posizione dell'Atomo"
 
 #: qtgui/rwmolecule.h:242
 msgid "Change Atom Label"
-msgstr ""
+msgstr "Cambiare l'Etichetta dell'Atomo"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
 msgstr ""
 
 #: qtgui/rwmolecule.h:266
-#, fuzzy
 msgid "Change Selection"
-msgstr "Cambia selezioni"
+msgstr "Cambia la selezione"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr ""
 
 #: qtgui/scenepluginmodel.cpp:101
-#, fuzzy
 msgid "Settings"
 msgstr "Impostazioni"
 
 #: qtgui/scriptloader.cpp:33
 #, qt-format
 msgid "Cannot load script %1"
-msgstr ""
+msgstr "Lo script non può essere caricato%1"
 
 #: qtgui/scriptloader.cpp:69
 #, qt-format
@@ -1574,15 +1583,15 @@ msgstr "Asse:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
-msgstr ""
+msgstr "Allineare all'Origine"
 
 #: qtplugins/aligntool/aligntool.cpp:193
 msgid "Align to Axis"
-msgstr ""
+msgstr "Allineare a Axis"
 
 #: qtplugins/aligntool/aligntool.cpp:287
 msgid "Center the atom at the origin."
-msgstr ""
+msgstr "Centrare l'atomo all'origine."
 
 #: qtplugins/aligntool/aligntool.cpp:290
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -1590,7 +1599,7 @@ msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
 msgid "Align tool"
-msgstr ""
+msgstr "Strumento di allineamento"
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1756,9 +1765,8 @@ msgid "By Chain"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:77
-#, fuzzy
 msgid "By Partial Charge…"
-msgstr "Per la Carica Parziale…"
+msgstr "Per la carica parziale.."
 
 #: qtplugins/applycolors/applycolors.cpp:82
 #, fuzzy
@@ -2053,7 +2061,7 @@ msgstr ""
 #: qtplugins/bonding/bonding.cpp:76
 #, fuzzy
 msgid "Perceive bond orders."
-msgstr "Percepire i legami"
+msgstr "Percepire i legami."
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2445,7 +2453,7 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
 msgid "Atomic index."
-msgstr "Indici Atomici"
+msgstr "Indici Atomici."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
@@ -2848,9 +2856,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Mantieni gli atomi in una cellula unitaria."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Ruota nell'orientamento standard"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -3447,7 +3454,7 @@ msgstr "Inserisci frammenti molecolari per costruire molecole più grandi."
 #: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
 #: qtplugins/meshes/meshes.cpp:186
 msgid "Color:"
-msgstr "Colore"
+msgstr "Colore:"
 
 #: qtplugins/label/label.cpp:172
 msgid "Distance from center:"
@@ -3820,7 +3827,7 @@ msgstr "File CSV (*.csv);;Tutti i file (*)"
 #: qtplugins/propertytables/propertyview.cpp:358
 #, fuzzy
 msgid "Could not open the file for writing."
-msgstr "Non è stato possibile aprire il file in scrittura"
+msgstr "Non è stato possibile aprire il file in scrittura."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:390
@@ -4836,9 +4843,8 @@ msgid "Select by Element…"
 msgstr ""
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Atom Index…"
-msgstr "Indici Atomici"
+msgstr ""
 
 #: qtplugins/select/select.cpp:63
 #, fuzzy
@@ -5315,12 +5321,12 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
 #, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Renderizza Orbitale Molecolare"
+msgstr "Renderizza Orbitale Molecolare."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 #, fuzzy
 msgid "Render the electron density."
-msgstr "Renderizza la densità elettronica"
+msgstr "Renderizza la densità elettronica."
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -6689,7 +6695,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
 msgid "Units"
-msgstr "Unità:"
+msgstr "Unità"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:111
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)

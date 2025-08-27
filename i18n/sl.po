@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovenian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sl/>\n"
@@ -172,6 +172,7 @@ msgstr "Nadaljuj"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
+#, fuzzy
 msgid "Close"
 msgstr "Zapri"
 
@@ -1584,7 +1585,7 @@ msgstr ""
 #: qtplugins/aligntool/aligntool.cpp:287
 #, fuzzy
 msgid "Center the atom at the origin."
-msgstr "izbrani atomi v središče osnovne celice"
+msgstr "izbrani atomi v središče osnovne celice."
 
 #: qtplugins/aligntool/aligntool.cpp:290
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -2020,7 +2021,7 @@ msgstr ""
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 #, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Premeščanje in spreminjanje vezi"
+msgstr "Premeščanje in spreminjanje vezi."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
@@ -2402,7 +2403,7 @@ msgstr "Atom 4"
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 #, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Urejevalnik koordinat"
+msgstr "Urejevalnik koordinat…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
@@ -2864,9 +2865,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Združi atome v osnovno celico."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Zavrti na običajno usmerjenost"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -3160,9 +3160,9 @@ msgid "Energy: %L1"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:466
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Energija = %L1 %2"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:536
 #, qt-format
@@ -3464,7 +3464,7 @@ msgstr "Vstavi molekulski delec"
 #: qtplugins/insertfragment/insertfragment.h:60
 #, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
-msgstr "Vstavljanje molekulskih delcev za izgradnjo večjih molekul"
+msgstr "Vstavljanje molekulskih delcev za izgradnjo večjih molekul."
 
 #: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
 #: qtplugins/meshes/meshes.cpp:186
@@ -6578,7 +6578,7 @@ msgstr "RNA"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Nucleic Acids:"
-msgstr "Nukleinske kisline"
+msgstr "Nukleinske kisline:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
@@ -7055,18 +7055,21 @@ msgstr "Podvoji"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:612
 #. i18n: ectx: property (toolTip), widget (QSpinBox, xReplicateSpin)
+#, fuzzy
 msgid "Replicate the X direction."
-msgstr "Podvoji v osi X"
+msgstr "Podvoji v osi X."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:622
 #. i18n: ectx: property (toolTip), widget (QSpinBox, yReplicateSpin)
+#, fuzzy
 msgid "Replicate the Y direction."
-msgstr "Podvoji v osi Y"
+msgstr "Podvoji v osi Y."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:632
 #. i18n: ectx: property (toolTip), widget (QSpinBox, zReplicateSpin)
+#, fuzzy
 msgid "Replicate the Z direction."
-msgstr "Podvoji v osi Z"
+msgstr "Podvoji v osi Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:649
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
