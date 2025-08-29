@@ -73,6 +73,16 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
             << "7-pbp"
             << "8-sqa";
 
+  m_groups << "amide"
+           << "carboxylate"
+           << "ester"
+           << "ethylene"
+           << "ethyne"
+           << "nitro"
+           << "phenyl"
+           << "phosphate"
+           << "sulfonate" << tr("Other…");
+
   connect(m_ui->elementComboBox, SIGNAL(currentIndexChanged(int)), this,
           SLOT(elementChanged(int)));
 
@@ -191,11 +201,12 @@ QString TemplateToolWidget::ligandString() const
   int tabIndex = m_ui->tabWidget->currentIndex();
 
   if (tabIndex == TabType::FunctionalGroups) {
+    int index = m_ui->groupComboBox->currentIndex();
     // check if it's "other"
-    if (m_ui->groupComboBox->currentText() == "Other…")
+    if (index == m_ui->groupComboBox->count() - 1)
       return m_ligandPath;
     else
-      return m_ui->groupComboBox->currentText();
+      return m_groups[index];
   }
 
   // tell us if we are using the clipboard
@@ -224,8 +235,9 @@ void TemplateToolWidget::coordinationChanged(int index)
 void TemplateToolWidget::groupChanged(int index)
 {
   // get the current name from the text
-  QString groupName = m_ui->groupComboBox->currentText();
-  QString iconName = groupName;
+  int i = m_ui->groupComboBox->currentIndex();
+  const QString& groupName = m_groups[i];
+  const QString& iconName = groupName;
   m_denticity = 1;
 
   // check if it's "other"
