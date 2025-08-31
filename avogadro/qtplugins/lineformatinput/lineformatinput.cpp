@@ -29,13 +29,13 @@ LineFormatInput::LineFormatInput(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
     m_reader(nullptr)
 {
-  auto* action = new QAction(tr("SMILES…"), this);
+  auto* action = new QAction("SMILES…", this);
   action->setProperty("menu priority", 800);
   action->setData("SMILES");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
-  action = new QAction(tr("InChI…"), this);
+  action = new QAction("InChI…", this);
   action->setProperty("menu priority", 810);
   action->setData("InChI");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
@@ -43,8 +43,8 @@ LineFormatInput::LineFormatInput(QObject* parent_)
 
   // These are the line formats that we can load -- key is a user-friendly name,
   // value is the file extension used to identify the file format.
-  m_formats.insert(tr("InChI"), "inchi"s);
-  m_formats.insert(tr("SMILES"), "smi"s);
+  m_formats.insert("InChI", "inchi"s);
+  m_formats.insert("SMILES", "smi"s);
 }
 
 LineFormatInput::~LineFormatInput()

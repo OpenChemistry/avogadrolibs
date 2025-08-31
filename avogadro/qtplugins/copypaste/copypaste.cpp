@@ -84,8 +84,8 @@ QList<QAction*> CopyPaste::actions() const
 
 QStringList CopyPaste::menuPath(QAction* action) const
 {
-  if (action->text() != tr("SMILES") && action->text() != tr("InChI") &&
-      action->text() != tr("XYZ"))
+  if (action->text() != "SMILES" && action->text() != "InChI" &&
+      action->text() != "XYZ")
     return QStringList() << tr("&Edit");
   else
     return QStringList() << tr("&Edit") << tr("Copy As");
