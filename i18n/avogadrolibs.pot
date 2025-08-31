@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.100.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-10 03:16+0000\n"
+"POT-Creation-Date: 2025-08-31 02:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1500,7 +1500,7 @@ msgstr ""
 #: qtplugins/customelements/customelements.cpp:40
 #: qtplugins/hydrogens/hydrogens.cpp:57 qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
-#: qtplugins/lineformatinput/lineformatinput.cpp:61
+#: qtplugins/lineformatinput/lineformatinput.cpp:62
 msgid "&Build"
 msgstr ""
 
@@ -1651,18 +1651,18 @@ msgstr ""
 #: qtplugins/lammpsinput/lammpsinput.cpp:62
 #: qtplugins/molecularproperties/molecularview.cpp:158
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/openbabel/openbabel.cpp:208 qtplugins/openbabel/openbabel.cpp:217
-#: qtplugins/openbabel/openbabel.cpp:227 qtplugins/openbabel/openbabel.cpp:369
-#: qtplugins/openbabel/openbabel.cpp:397 qtplugins/openbabel/openbabel.cpp:422
-#: qtplugins/openbabel/openbabel.cpp:431 qtplugins/openbabel/openbabel.cpp:485
-#: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
-#: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
-#: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
-#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:734
-#: qtplugins/openbabel/openbabel.cpp:748 qtplugins/openbabel/openbabel.cpp:777
-#: qtplugins/openbabel/openbabel.cpp:789 qtplugins/openbabel/openbabel.cpp:835
-#: qtplugins/openbabel/openbabel.cpp:885 qtplugins/openbabel/openbabel.cpp:927
-#: qtplugins/openbabel/openbabel.cpp:959
+#: qtplugins/openbabel/openbabel.cpp:209 qtplugins/openbabel/openbabel.cpp:218
+#: qtplugins/openbabel/openbabel.cpp:228 qtplugins/openbabel/openbabel.cpp:370
+#: qtplugins/openbabel/openbabel.cpp:398 qtplugins/openbabel/openbabel.cpp:423
+#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:486
+#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:549
+#: qtplugins/openbabel/openbabel.cpp:568 qtplugins/openbabel/openbabel.cpp:577
+#: qtplugins/openbabel/openbabel.cpp:637 qtplugins/openbabel/openbabel.cpp:687
+#: qtplugins/openbabel/openbabel.cpp:700 qtplugins/openbabel/openbabel.cpp:735
+#: qtplugins/openbabel/openbabel.cpp:749 qtplugins/openbabel/openbabel.cpp:778
+#: qtplugins/openbabel/openbabel.cpp:790 qtplugins/openbabel/openbabel.cpp:836
+#: qtplugins/openbabel/openbabel.cpp:886 qtplugins/openbabel/openbabel.cpp:928
+#: qtplugins/openbabel/openbabel.cpp:960
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
@@ -2145,7 +2145,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:172
 #: qtplugins/forcefield/forcefield.cpp:174
-#: qtplugins/openbabel/openbabel.cpp:112
+#: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Extensions"
@@ -2495,49 +2495,53 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
-#: qtplugins/lineformatinput/lineformatinput.cpp:46
-msgid "SMILES"
-msgstr ""
-
-#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
-#: qtplugins/lineformatinput/lineformatinput.cpp:45
-msgid "InChI"
-msgstr ""
-
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:33 :316
+#: qtplugins/copypaste/copypaste.cpp:35 :316
 msgid "Cut"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:34 :328
+#: qtplugins/copypaste/copypaste.cpp:36 :328
 msgid "Clear"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:35
+#: qtplugins/copypaste/copypaste.cpp:37
 msgid "&Paste"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
+#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/lineformatinput/lineformatinput.cpp:47
+msgid "SMILES"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/lineformatinput/lineformatinput.cpp:46
+msgid "InChI"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:88
+msgid "XYZ"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:89 qtplugins/copypaste/copypaste.cpp:91
 msgid "&Edit"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:81
+#: qtplugins/copypaste/copypaste.cpp:91
 msgid "Copy As"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:150
+#: qtplugins/copypaste/copypaste.cpp:169
 msgid "Error Clipping Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:151
+#: qtplugins/copypaste/copypaste.cpp:170
 msgid "Error generating clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:152
+#: qtplugins/copypaste/copypaste.cpp:171
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2545,26 +2549,26 @@ msgid ""
 "%2"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:277
+#: qtplugins/copypaste/copypaste.cpp:175 qtplugins/copypaste/copypaste.cpp:296
 #, qt-format
 msgid ""
 "Reader error:\n"
 "%1"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
+#: qtplugins/copypaste/copypaste.cpp:257 qtplugins/copypaste/copypaste.cpp:290
 msgid "Error Pasting Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:239
+#: qtplugins/copypaste/copypaste.cpp:258
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:272
+#: qtplugins/copypaste/copypaste.cpp:291
 msgid "Error reading clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:273
+#: qtplugins/copypaste/copypaste.cpp:292
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -2998,8 +3002,8 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:73
 #: qtplugins/forcefield/forcefield.cpp:368
-#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:47
-#: qtplugins/openbabel/openbabel.cpp:559
+#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:560
 msgid "Optimize Geometry"
 msgstr ""
 
@@ -3221,7 +3225,7 @@ msgstr ""
 msgid "&Adjust Hydrogens"
 msgstr ""
 
-#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:71
+#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:72
 msgid "Add Hydrogens"
 msgstr ""
 
@@ -3263,7 +3267,7 @@ msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
-#: qtplugins/lineformatinput/lineformatinput.cpp:61
+#: qtplugins/lineformatinput/lineformatinput.cpp:62
 msgid "&Insert"
 msgstr ""
 
@@ -3294,13 +3298,13 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
-#: qtplugins/lineformatinput/lineformatinput.cpp:109
-#: qtplugins/lineformatinput/lineformatinput.cpp:124 :1094
+#: qtplugins/lineformatinput/lineformatinput.cpp:110
+#: qtplugins/lineformatinput/lineformatinput.cpp:125 :1094
 msgid "Insert Molecule…"
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:201
-#: qtplugins/lineformatinput/lineformatinput.cpp:125
+#: qtplugins/lineformatinput/lineformatinput.cpp:126
 msgid "Generating 3D molecule…"
 msgstr ""
 
@@ -3466,24 +3470,24 @@ msgstr ""
 msgid "Render atoms as licorice / sticks."
 msgstr ""
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:31
+#: qtplugins/lineformatinput/lineformatinput.cpp:32
 msgid "SMILES…"
 msgstr ""
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:37
+#: qtplugins/lineformatinput/lineformatinput.cpp:38
 msgid "InChI…"
 msgstr ""
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:88
-#: qtplugins/lineformatinput/lineformatinput.cpp:113
+#: qtplugins/lineformatinput/lineformatinput.cpp:89
+#: qtplugins/lineformatinput/lineformatinput.cpp:114
 msgid "No descriptors found!"
 msgstr ""
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:89
+#: qtplugins/lineformatinput/lineformatinput.cpp:90
 msgid "No line format readers found!"
 msgstr ""
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:114
+#: qtplugins/lineformatinput/lineformatinput.cpp:115
 msgid "Unable to load requested format reader."
 msgstr ""
 
@@ -3796,96 +3800,96 @@ msgstr ""
 msgid "Chalcogen"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:53
+#: qtplugins/openbabel/openbabel.cpp:54
 msgid "Configure Force Field…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:59
+#: qtplugins/openbabel/openbabel.cpp:60
 msgid "Conformer Search…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:65
+#: qtplugins/openbabel/openbabel.cpp:66
 msgid "Perceive Bonds"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:77
+#: qtplugins/openbabel/openbabel.cpp:78
 msgid "Add Hydrogens for pH…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:83
+#: qtplugins/openbabel/openbabel.cpp:84
 msgid "Remove Hydrogens"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:94
+#: qtplugins/openbabel/openbabel.cpp:95
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:112
+#: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:119
+#: qtplugins/openbabel/openbabel.cpp:120
 msgid "The Open Babel file formats are not ready to be added."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:203
+#: qtplugins/openbabel/openbabel.cpp:204
 msgid "Loading molecule from Open Babel…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:209
+#: qtplugins/openbabel/openbabel.cpp:210
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:218
+#: qtplugins/openbabel/openbabel.cpp:219
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:228
+#: qtplugins/openbabel/openbabel.cpp:229
 msgid "Error parsing openbabel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:370 qtplugins/openbabel/openbabel.cpp:398
-#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
+#: qtplugins/openbabel/openbabel.cpp:371 qtplugins/openbabel/openbabel.cpp:399
+#: qtplugins/openbabel/openbabel.cpp:433 qtplugins/openbabel/openbabel.cpp:578
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:423
+#: qtplugins/openbabel/openbabel.cpp:424
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:441
+#: qtplugins/openbabel/openbabel.cpp:442
 msgid "Cannot optimize geometry with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:466
+#: qtplugins/openbabel/openbabel.cpp:467
 msgid "Optimizing Geometry (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
+#: qtplugins/openbabel/openbabel.cpp:468 qtplugins/openbabel/openbabel.cpp:621
 msgid "Generating…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
+#: qtplugins/openbabel/openbabel.cpp:487 qtplugins/openbabel/openbabel.cpp:638
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
+#: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:644
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
-#: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
+#: qtplugins/openbabel/openbabel.cpp:507 qtplugins/openbabel/openbabel.cpp:515
+#: qtplugins/openbabel/openbabel.cpp:658 qtplugins/openbabel/openbabel.cpp:666
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -3893,119 +3897,119 @@ msgid ""
 "dE: %4"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
+#: qtplugins/openbabel/openbabel.cpp:529 qtplugins/openbabel/openbabel.cpp:680
 msgid "Updating molecule…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
-#: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
+#: qtplugins/openbabel/openbabel.cpp:537 qtplugins/openbabel/openbabel.cpp:688
+#: qtplugins/openbabel/openbabel.cpp:779 qtplugins/openbabel/openbabel.cpp:961
 msgid "Error interpreting Open Babel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
-#: qtplugins/openbabel/openbabel.cpp:790
+#: qtplugins/openbabel/openbabel.cpp:550 qtplugins/openbabel/openbabel.cpp:701
+#: qtplugins/openbabel/openbabel.cpp:791
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:568
+#: qtplugins/openbabel/openbabel.cpp:569
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:586
+#: qtplugins/openbabel/openbabel.cpp:587
 msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:619
+#: qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:710
+#: qtplugins/openbabel/openbabel.cpp:711
 msgid "Generate Conformers"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:729
+#: qtplugins/openbabel/openbabel.cpp:730
 msgid "Cannot open file with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:735
+#: qtplugins/openbabel/openbabel.cpp:736
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:741
+#: qtplugins/openbabel/openbabel.cpp:742
 msgid "Perceiving Bonds (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:742
+#: qtplugins/openbabel/openbabel.cpp:743
 msgid "Generating XYZ representation…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:749
+#: qtplugins/openbabel/openbabel.cpp:750
 msgid "Error generating XYZ string."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:760
+#: qtplugins/openbabel/openbabel.cpp:761
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:770
+#: qtplugins/openbabel/openbabel.cpp:771
 msgid "Updating molecule from Open Babel…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
+#: qtplugins/openbabel/openbabel.cpp:823 qtplugins/openbabel/openbabel.cpp:865
 msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
+#: qtplugins/openbabel/openbabel.cpp:828 qtplugins/openbabel/openbabel.cpp:878
 msgid "Adding Hydrogens (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:828
+#: qtplugins/openbabel/openbabel.cpp:829
 msgid "Generating Open Babel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
+#: qtplugins/openbabel/openbabel.cpp:837 qtplugins/openbabel/openbabel.cpp:887
 msgid "Error generating Open Babel input."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
-#: qtplugins/openbabel/openbabel.cpp:941
+#: qtplugins/openbabel/openbabel.cpp:850 qtplugins/openbabel/openbabel.cpp:900
+#: qtplugins/openbabel/openbabel.cpp:942
 #, qt-format
 msgid "Running %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:871
+#: qtplugins/openbabel/openbabel.cpp:872
 msgid "Add hydrogens for pH"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:871
+#: qtplugins/openbabel/openbabel.cpp:872
 msgid "pH:"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
+#: qtplugins/openbabel/openbabel.cpp:879 qtplugins/openbabel/openbabel.cpp:921
 msgid "Generating obabel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:914
+#: qtplugins/openbabel/openbabel.cpp:915
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:919
+#: qtplugins/openbabel/openbabel.cpp:920
 msgid "Removing Hydrogens (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:928
+#: qtplugins/openbabel/openbabel.cpp:929
 msgid "Error generating Open Babel data."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:951
+#: qtplugins/openbabel/openbabel.cpp:952
 msgid "Reading obabel output…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:1014
+#: qtplugins/openbabel/openbabel.cpp:1015
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
