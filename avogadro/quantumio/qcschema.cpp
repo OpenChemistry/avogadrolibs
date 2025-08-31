@@ -123,7 +123,7 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
 
   // check for optional comment / name
   if (root.find("comment") != root.end())
-    mol.setData("name", root["comment"].get<std::string>());
+    molecule.setData("name", root["comment"].get<std::string>());
 
   // check for molecular_charge and molecular_multiplicity
   if (root.find("molecular_charge") != root.end()) {
