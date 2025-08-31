@@ -354,6 +354,18 @@ void JsonWidget::addOptionRow(const QString& key, const QString& name,
     label = obj[QStringLiteral("label")].toString();
   }
 
+  // also check for "User Name" or "Password" for translation
+  // with case-insensitive comparison
+  if (label.toLower() == "user name" || label.toLower() == "username")
+    label = tr("User Name");
+  else if (label.toLower() == "password") {
+    label = tr("Password");
+    // make sure the widget has the right echo
+    if (auto* lineEdit = qobject_cast<QLineEdit*>(widget)) {
+      lineEdit->setEchoMode(QLineEdit::PasswordEchoOnEdit);
+    }
+  }
+
   form->addRow(label + ":", widget);
   m_widgets.insert(key, widget);
 
@@ -445,6 +457,16 @@ QWidget* JsonWidget::createStringWidget(const QJsonObject& obj)
   if (obj.contains(QStringLiteral("toolTip")) &&
       obj.value(QStringLiteral("toolTip")).isString()) {
     edit->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  }
+  if (obj.contains(QStringLiteral("placeholderText")) &&
+      obj.value(QStringLiteral("placeholderText")).isString()) {
+    edit->setPlaceholderText(obj[QStringLiteral("placeholderText")].toString());
+  }
+  // don't echo password fields
+  if (obj.contains(QStringLiteral("password")) &&
+      obj.value(QStringLiteral("password")).isBool() &&
+      obj[QStringLiteral("password")].toBool()) {
+    edit->setEchoMode(QLineEdit::PasswordEchoOnEdit);
   }
 
   return edit;
