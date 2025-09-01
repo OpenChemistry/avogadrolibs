@@ -25,6 +25,32 @@ using Core::Array;
 using Core::Atom;
 using Core::Elements;
 
+bool isNumericArray(json& j)
+{
+  if (j.is_array() && j.size() > 0) {
+    for (const auto& v : j) {
+      if (!v.is_number()) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
+bool isBooleanArray(json& j)
+{
+  if (j.is_array() && j.size() > 0) {
+    for (const auto& v : j) {
+      if (!v.is_boolean()) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
 QCSchema::QCSchema() {}
 
 QCSchema::~QCSchema() {}
@@ -79,6 +105,11 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
 
     molecule.addAtom(atomicNum);
   }
+  Index atomCount = molecule.atomCount();
+  if (atomCount == 0) {
+    appendError("Error: no atoms found.");
+    return false;
+  }
 
   // look for geometry for coordinates
   // stored as a numeric array of all coordinates
@@ -101,11 +132,8 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
   }
 
   // check for (optional) connectivity
-  bool hasConnectivity = false;
   if (root.find("connectivity") != root.end() &&
       root["connectivity"].is_array()) {
-    hasConnectivity = true;
-
     // read the bonds and orders
     json connectivity = root["connectivity"];
     // stored as an array of 3-value arrays start, end, order
@@ -142,16 +170,114 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
       // read the numeric array
       json dipole = properties["dipole_moment"];
       if (dipole.size() == 3) {
-        Core::Variant dipoleMoment(dipole[0], dipole[1], dipole[2]);
+        Core::Variant dipoleMoment(dipole[0].get<float>(),
+                                   dipole[1].get<float>(),
+                                   dipole[2].get<float>());
         molecule.setData("dipoleMoment", dipoleMoment);
       }
     }
+    if (properties.find("partial_charges") != properties.end() &&
+        properties["partial_charges"].is_object()) {
+      // keys are types, values are arrays of charges
+      json partialCharges = properties["partial_charges"];
+      for (auto& kv : partialCharges.items()) {
+        MatrixX charges(atomCount, 1);
+        if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
+          for (size_t i = 0; i < kv.value().size(); ++i) {
+            charges(i, 0) = kv.value()[i];
+          }
+          molecule.setPartialCharges(kv.key(), charges);
+        }
+      }
+    }
+    // energy
+    // e.g. total_energy": {
+    //         "units": "Hartree",
+    //        "value": -26.173033542939
+    if (properties.find("total_energy") != properties.end() &&
+        properties["total_energy"].is_object()) {
+      json totalEnergy = properties["total_energy"];
+      if (totalEnergy.find("value") != totalEnergy.end())
+        molecule.setData("totalEnergy", totalEnergy["value"].get<float>());
+    }
+
+    // trajectory or geometry optimization
+    if (properties.find("geometry_sequence") != properties.end() &&
+        properties["geometry_sequence"].is_object()) {
+      // energies and geometries
+    }
+
+    // vibrations
+    if (properties.find("vibrations") != properties.end() &&
+        properties["vibrations"].is_object()) {
+      json vib = properties["vibrations"];
+
+      Array<double> freqs, irIntens, ramanIntens;
+      Array<Array<Vector3>> disps;
+
+      // frequencies
+      if (vib.find("frequencies") != vib.end() &&
+          vib["frequencies"].is_array()) {
+        json frequencies = vib["frequencies"];
+        if (isNumericArray(frequencies)) {
+          for (auto& frequency : frequencies) {
+            freqs.push_back(static_cast<double>(frequency));
+          }
+        }
+      }
+      if (vib.find("intensities") != vib.end() &&
+          vib["intensities"].is_object()) {
+        json ir = vib["intensities"]["IR"];
+        if (isNumericArray(ir)) {
+          for (auto& i : ir) {
+            irIntens.push_back(static_cast<double>(i));
+          }
+        }
+        json raman = vib["intensities"]["raman"];
+        if (isNumericArray(raman)) {
+          for (auto& i : raman) {
+            ramanIntens.push_back(static_cast<double>(i));
+          }
+        }
+      }
+
+      json displacements = vib["displacement"];
+      if (displacements.is_array()) {
+        for (auto arr : displacements) {
+          if (isNumericArray(arr)) {
+            Array<Vector3> mode;
+            mode.resize(arr.size() / 3);
+            double* ptr = &mode[0][0];
+            for (auto& j : arr) {
+              *(ptr++) = static_cast<double>(j);
+            }
+            disps.push_back(mode);
+          }
+        }
+      }
+
+      // sanity check
+      // make sure these all have the same length
+      Index size = freqs.size();
+      if (size > 0 && irIntens.size() == size && disps.size() == size) {
+        molecule.setVibrationFrequencies(freqs);
+        molecule.setVibrationIRIntensities(irIntens);
+        molecule.setVibrationLx(disps);
+      }
+      // check to make sure raman intensities are not all zero
+      bool allZero = true;
+      for (auto& i : ramanIntens) {
+        if (i != 0.0) {
+          allZero = false;
+          break;
+        }
+      }
+      if (ramanIntens.size() == size && !allZero)
+        molecule.setVibrationRamanIntensities(ramanIntens);
+    }
 
     // todo
-    // - partial charges
-    // - energies
     // - orbital energies
-    // - vibrations
     // - other properties
   }
 
