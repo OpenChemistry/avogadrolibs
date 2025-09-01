@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
 "PO-Revision-Date: 2025-09-02 16:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
 "Language: uk\n"
@@ -559,7 +559,7 @@ msgstr "Берилій"
 
 #: qtgui/elementtranslator.cpp:29
 msgid "Boron"
-msgstr "Бор"
+msgstr "Бор'"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
@@ -2627,7 +2627,7 @@ msgstr "Копіювати"
 #: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "SMILES"
-msgstr ""
+msgstr "SMILES"
 
 #: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
@@ -3616,7 +3616,7 @@ msgstr "Візуалізуйте атоми як солодку/палички."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 msgid "SMILES…"
-msgstr ""
+msgstr "SMILES…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 msgid "InChI…"
