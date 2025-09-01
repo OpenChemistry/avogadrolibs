@@ -204,7 +204,35 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     // trajectory or geometry optimization
     if (properties.find("geometry_sequence") != properties.end() &&
         properties["geometry_sequence"].is_object()) {
+      json sequence = properties["geometry_sequence"];
       // energies and geometries
+
+      // energies should be a numeric array
+      if (sequence.find("energies") != sequence.end() &&
+          sequence["energies"].is_array()) {
+        std::vector<double> energies;
+        for (unsigned int i = 0; i < sequence["energies"].size(); ++i) {
+          energies.push_back(sequence["energies"][i].get<float>());
+        }
+        molecule.setData("energies", energies);
+      }
+
+      json coordSets = properties["geometry_sequence"]["geometries"];
+      if (coordSets.is_array() && coordSets.size()) {
+        for (unsigned int i = 0; i < coordSets.size(); ++i) {
+          Array<Vector3> setArray;
+          json set = coordSets[i];
+          if (isNumericArray(set)) {
+            for (unsigned int j = 0; j < set.size() / 3; ++j) {
+              setArray.push_back(
+                Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
+            }
+            molecule.setCoordinate3d(setArray, i);
+          }
+        }
+        // Make sure the first step is active once we are done loading the sets.
+        molecule.setCoordinate3d(0);
+      }
     }
 
     // vibrations
