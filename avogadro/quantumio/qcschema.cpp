@@ -304,6 +304,82 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
         molecule.setVibrationRamanIntensities(ramanIntens);
     }
 
+    // excitation energies
+    if (properties.find("excited_states") != properties.end() &&
+        properties["excited_states"].is_object()) {
+      json excitedStates = properties["excited_states"];
+      // check units (defaults to nm)
+      std::string units = "nm";
+      if (excitedStates.find("units") != excitedStates.end()) {
+        units = excitedStates["units"].get<std::string>();
+      }
+      std::vector<double> energies;
+      std::vector<double> intensities;
+      // transition_energies
+      if (excitedStates.find("transition_energies") != excitedStates.end() &&
+          excitedStates["transition_energies"].is_array()) {
+        json transition_energies = excitedStates["transition_energies"];
+        if (isNumericArray(transition_energies)) {
+          for (auto& i : transition_energies) {
+            if (units == "nm")
+              // convert to eV, i.e. eV = 1239.8 / wavelength
+              energies.push_back(1239.841984 / static_cast<double>(i));
+            else if (units == "cm^-1")
+              energies.push_back(static_cast<double>(i) / 8065.544);
+            else if (units == "eV")
+              energies.push_back(static_cast<double>(i));
+          }
+        }
+      }
+      if (excitedStates.find("intensities") != excitedStates.end() &&
+          excitedStates["intensities"].is_array()) {
+        json intensities = excitedStates["intensities"];
+        if (isNumericArray(intensities)) {
+          for (auto& i : intensities) {
+            intensities.push_back(static_cast<double>(i));
+          }
+        }
+      }
+
+      // sanity check
+      // make sure these all have the same length
+      Index size = energies.size();
+      if (size > 0 && intensities.size() == size) {
+        // create the matrix
+        MatrixX electronicData(energies.size(), 2);
+        // copy the data
+        for (std::size_t i = 0; i < energies.size(); ++i) {
+          electronicData(i, 0) = energies[i];
+          electronicData(i, 1) = intensities[i];
+        }
+        // set the data
+        molecule.setSpectra("Electronic", electronicData);
+      }
+    }
+
+    // NMR spectra
+    if (properties.find("nmr_shifts") != properties.end() &&
+        properties["nmr_shifts"].is_object()) {
+      json nmrShifts = properties["nmr_shifts"];
+      // get the isotropic shifts as an array
+      std::vector<double> nmrShiftsIsotropic;
+      if (nmrShifts.find("isotropic") != nmrShifts.end() &&
+          nmrShifts["isotropic"].is_array()) {
+        json isotropic = nmrShifts["isotropic"];
+        if (isNumericArray(isotropic)) {
+          for (auto& i : isotropic) {
+            nmrShiftsIsotropic.push_back(static_cast<double>(i));
+          }
+        }
+      }
+
+      MatrixX nmrData(nmrShiftsIsotropic.size(), 1);
+      for (std::size_t i = 0; i < nmrShiftsIsotropic.size(); ++i) {
+        nmrData(i, 0) = nmrShiftsIsotropic[i];
+      }
+      molecule.setSpectra("NMR", nmrData);
+    }
+
     // todo
     // - orbital energies
     // - other properties
