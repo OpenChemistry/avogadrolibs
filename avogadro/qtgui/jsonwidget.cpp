@@ -16,6 +16,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QSpinBox>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QTextEdit>
 
@@ -411,6 +412,8 @@ QWidget* JsonWidget::createOptionWidget(const QJsonValue& option)
     return createBooleanWidget(obj);
   else if (type == QLatin1String("text"))
     return createTextWidget(obj);
+  else if (type == QLatin1String("table"))
+    return createTableWidget(obj);
 
   qDebug() << "Unrecognized option type:" << type;
   return nullptr;
@@ -571,6 +574,20 @@ QWidget* JsonWidget::createBooleanWidget(const QJsonObject& obj)
   return checkBox;
 }
 
+QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
+{
+  auto* tableWidget = new QTableWidget(this);
+  // todo: connect
+
+  if (obj.contains(QStringLiteral("toolTip")) &&
+      obj.value(QStringLiteral("toolTip")).isString()) {
+    tableWidget->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  }
+
+  // todo: look for headers -- should be an array of strings
+  // todo: track an optional delimiter
+}
+
 void JsonWidget::setOptionDefaults()
 {
   if (!m_options.contains(QStringLiteral("userOptions"))) {
@@ -640,6 +657,8 @@ void JsonWidget::setOption(const QString& name, const QJsonValue& defaultValue)
     return setBooleanOption(name, defaultValue);
   else if (type == QLatin1String("text"))
     return setTextOption(name, defaultValue);
+  else if (type == QLatin1String("table"))
+    return setTableOption(name, defaultValue);
 
   qWarning()
     << tr("Unrecognized option type '%1' for option '%2'.").arg(type).arg(name);
@@ -722,6 +741,17 @@ void JsonWidget::setTextOption(const QString& name, const QJsonValue& value)
   }
 
   text->setText(value.toString());
+}
+
+void JsonWidget::setTableOption(const QString& name, const QJsonValue& value)
+{
+  auto* table = qobject_cast<QTableWidget*>(m_widgets.value(name, nullptr));
+  if (table == nullptr) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                    .arg(name);
+    return;
+  }
 }
 
 void JsonWidget::setFilePathOption(const QString& name, const QJsonValue& value)
