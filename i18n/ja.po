@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-27 08:02+0000\n"
+"PO-Revision-Date: 2025-09-02 16:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.13.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -118,6 +118,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"オフセット %L1 で解析エラー: '%2'\n"
+"生のJSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:346
 #, qt-format
@@ -140,6 +144,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"cjsonオブジェクトの生成でエラー: オフセット %1 で解析エラー: %2\n"
+"生のJSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:376 qtgui/interfacescript.cpp:572
 #, qt-format
@@ -279,9 +287,10 @@ msgid "Select output filename"
 msgstr "出力ファイル名を選択"
 
 #: molequeue/inputgeneratorwidget.cpp:463
-#, qt-format
+#, fuzzy, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
-msgstr ""
+msgstr "内部エラー: ファイル名 '%1' "
+"のためのテキストウィジェットを見つけられませんでした。"
 
 #: molequeue/inputgeneratorwidget.cpp:479
 #: molequeue/inputgeneratorwidget.cpp:590
@@ -406,7 +415,6 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
-#, fuzzy
 msgid "Write input files"
 msgstr "入力ファイルの書き込み"
 
@@ -427,10 +435,10 @@ msgid "Avogadro timed out waiting for a reply from MoleQueue."
 msgstr "MoleQueueからの応答を待っている間にAvogadroはタイムアウトしました。"
 
 #: molequeue/molequeuedialog.cpp:83
-#, qt-format
+#, fuzzy, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "ジョブ %1 “%2” が完了するのを待機中…"
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
@@ -1130,9 +1138,9 @@ msgid "Multiplicity"
 msgstr "多重度"
 
 #: qtgui/jsonwidget.cpp:590
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error: value must be object for key '%1'."
-msgstr ""
+msgstr "エラー: 値はキー '%1' のオブジェクトでなければなりません。"
 
 #: qtgui/jsonwidget.cpp:623
 #, qt-format
@@ -1574,10 +1582,10 @@ msgid ""
 msgstr ""
 "分子のアラインメント\n"
 "\n"
-"左クリック: \t二つまでの分子を選択\n"
+"左ボタン:\t最大二つの原子を選択\n"
 "\t最初の原子が座標の原点\n"
 "\t次の原子が選択した座標軸上にアラインメントされる\n"
-"右クリック: \tアラインメントをリセット\n"
+"右ボタン:\tアラインメントをリセット\n"
 "ダブルクリック: \t原子を原点に"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
@@ -1994,7 +2002,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "結合中心操作"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2007,6 +2015,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"結合中心操作ツール\t(%1)\n"
+"\n"
+"左ボタン:\tクリック&ドラッグでビューを回転\n"
+"中ボタン:\tクリック&ドラッグで拡大・縮小\n"
+"右ボタン:\tクリック&ドラッグでビューを移動\n"
+"ダブルクリック:\t表示をリセット\n"
+"\n"
+"結合を左クリック&ドラッグで操作平面を設定:\n"
+"結合している原子を左クリック&ドラッグで結合角を変更\n"
+"結合している原子を右クリック&ドラッグで結合長を変更"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2945,8 +2963,8 @@ msgid ""
 msgstr ""
 "ドローツール\t(%1)\n"
 "\n"
-"左クリック:\tクリック＆ドラッグで原子と結合を作成\n"
-"右クリック:\t原子を削除"
+"左ボタン:\tクリック＆ドラッグで原子と結合を作成\n"
+"右ボタン:\t原子を削除"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
@@ -3519,7 +3537,7 @@ msgid ""
 msgstr ""
 "原子ラベルツール\t(%1)\n"
 "\n"
-"左クリック:\t原子をクリックしてラベルをカスタム"
+"左ボタン:\t原子をクリックしてラベルをカスタム"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3599,7 +3617,7 @@ msgid "Manipulate"
 msgstr "操作"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
@@ -3608,8 +3626,8 @@ msgid ""
 msgstr ""
 "操作ツール\t(%1)\n"
 "\n"
-"左クリック:\tクリック＆ドラッグして原子を動かす\n"
-"右クリック:\tクリック＆ドラッグして原子を回転させる"
+"左ボタン:\tクリック＆ドラッグして原子を動かす\n"
+"右ボタン:\tクリック＆ドラッグして原子を回転させる"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3639,11 +3657,11 @@ msgid ""
 msgstr ""
 "測定ツール\t(%1)\n"
 "\n"
-"左クリック:\t最大4原子を選択\n"
+"左ボタン:\t最大4原子を選択\n"
 "\t距離は1-2および2-3を測定\n"
 "\t角度は2を共有点として1-3を測定\n"
 "\t二面角は1-2-3-4の間を測定\n"
-"右クリック:\t測定をリセット"
+"右ボタン:\t測定をリセット"
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -3775,8 +3793,9 @@ msgid "&Molecular…"
 msgstr "分子 (&M)…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
+#, fuzzy
 msgid "View general properties of a molecule."
-msgstr ""
+msgstr "分子の一般的な性質を見る。"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
@@ -3836,7 +3855,7 @@ msgid "Navigate"
 msgstr "ナビゲーション"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3846,9 +3865,9 @@ msgid ""
 msgstr ""
 "ナビゲーションツール\t(%1)\n"
 "\n"
-"左クリック:\tクリックしたままドラッグしてビューを回転\n"
-"ミドルクリック:\tクリックしたままドラッグして拡大または縮小\n"
-"右クリック:\tクリックしたままドラッグしてビューを移動"
+"左ボタン:\tクリック＆ドラッグでビューを回転\n"
+"中ボタン:\tクリック＆ドラッグで拡大または縮小\n"
+"右ボタン:\tクリック＆ドラッグでビューを移動"
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3957,13 +3976,14 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:218
-#, qt-format
+#, fuzzy, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr ""
+msgstr "Open Babel実行中にエラー (%1)"
 
 #: qtplugins/openbabel/openbabel.cpp:228
+#, fuzzy
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "openbabel出力の解析でエラー"
 
 #: qtplugins/openbabel/openbabel.cpp:370 qtplugins/openbabel/openbabel.cpp:398
 #: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
@@ -3975,11 +3995,11 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
-msgstr ""
+msgstr "不正な分子。構造最適化できません。"
 
 #: qtplugins/openbabel/openbabel.cpp:441
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Open Babelで構造最適化できません。"
 
 #: qtplugins/openbabel/openbabel.cpp:466
 msgid "Optimizing Geometry (Open Babel)"
@@ -4110,11 +4130,11 @@ msgstr "obabelインプットを生成中…"
 
 #: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Open Babelで水素を除去できません。"
 
 #: qtplugins/openbabel/openbabel.cpp:919
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "水素を取り除く (Open Babel)"
+msgstr "水素を削除中 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
@@ -4320,7 +4340,7 @@ msgstr "動画 (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:976
 msgid "Error: cannot add frame to video."
-msgstr ""
+msgstr "エラー：フレームをビデオに追加できません。"
 
 #: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:988
 #, qt-format
@@ -4374,11 +4394,11 @@ msgstr "理論的なXRDパターンをプロット…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
 msgid "Failed to generate XRD pattern"
-msgstr ""
+msgstr "XRDパターンの生成に失敗"
 
 #: qtplugins/plotxrd/plotxrd.cpp:158
 msgid "Failed to convert molecule to CIF format."
-msgstr ""
+msgstr "分子をCIF形式に変換するのに失敗しました。"
 
 #: qtplugins/plotxrd/plotxrd.cpp:193
 msgid "Data read from genXrdPattern appears to be corrupt!"
@@ -4457,7 +4477,7 @@ msgstr "%1を%2にダウンロード中\n"
 #: qtplugins/plugindownloader/downloaderwidget.cpp:413
 #, qt-format
 msgid "Extracting %1 to %2\n"
-msgstr ""
+msgstr "%1 を %2 に伸長中\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:416
 #, qt-format
@@ -4523,8 +4543,9 @@ msgid "POVRay"
 msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:29
+#, fuzzy
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "POV-Rayでシーンを描画"
 
 #: qtplugins/propertytables/propertymodel.cpp:533
 msgid "Valence"
@@ -4730,7 +4751,6 @@ msgid "Constrain Angle"
 msgstr "角度を制限"
 
 #: qtplugins/propertytables/propertyview.cpp:421
-#, fuzzy
 msgid "Constrain Torsion"
 msgstr "ねじれを制限"
 
@@ -4935,9 +4955,9 @@ msgid ""
 msgstr ""
 "選択ツール\t(%1)\n"
 "\n"
-"左クリック:\tクリックして個別の原子、残基、またはフラグメントを選択\n"
+"左ボタン:\tクリックして個別の原子、残基、またはフラグメントを選択\n"
 "\tドラッグして複数の原子を選択\n"
-"右クリック:\t分子でないところをクリックして選択を解除\n"
+"右ボタン:\t分子でないところをクリックして選択を解除\n"
 "Ctrlで選択を反転、Shiftで選択を追加\n"
 "ダブルクリック:\tフラグメント全体を選択"
 
