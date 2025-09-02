@@ -577,15 +577,28 @@ QWidget* JsonWidget::createBooleanWidget(const QJsonObject& obj)
 QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
 {
   auto* tableWidget = new QTableWidget(this);
-  // todo: connect
+  connect(tableWidget, SIGNAL(cellChanged(int, int)),
+          SLOT(updatePreviewText()));
 
   if (obj.contains(QStringLiteral("toolTip")) &&
       obj.value(QStringLiteral("toolTip")).isString()) {
     tableWidget->setToolTip(obj[QStringLiteral("toolTip")].toString());
   }
+  if (obj.contains(QStringLiteral("headers")) &&
+      obj.value("headers").isArray()) {
+    QJsonArray headers = obj["headers"].toArray();
+    tableWidget->setColumnCount(headers.size());
+    for (int i = 0; i < headers.size(); ++i) {
+      tableWidget->setHorizontalHeaderItem(
+        i, new QTableWidgetItem(headers[i].toString()));
+    }
+  }
+  if (obj.contains(QStringLiteral("delimiter")) &&
+      obj.value("delimiter").isString()) {
+    tableWidget->setProperty("delimiter", obj["delimiter"].toString());
+  }
 
-  // todo: look for headers -- should be an array of strings
-  // todo: track an optional delimiter
+  return tableWidget;
 }
 
 void JsonWidget::setOptionDefaults()
@@ -751,6 +764,31 @@ void JsonWidget::setTableOption(const QString& name, const QJsonValue& value)
                      "Bad widget type.")
                     .arg(name);
     return;
+  }
+
+  if (!value.isString()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                    .arg(name)
+               << value;
+    return;
+  }
+
+  // parse the table (default delimiter is tab)
+  QString delimiter;
+  if (table->property("delimiter").isValid())
+    delimiter = table->property("delimiter").toString();
+  else
+    delimiter = "\t";
+
+  // parse the table
+  QStringList tableLines = value.toString().split("\n");
+  table->setRowCount(tableLines.size());
+  for (int i = 0; i < tableLines.size(); ++i) {
+    QStringList entry = tableLines[i].split(delimiter);
+    for (int j = 0; j < entry.size(); ++j) {
+      table->setItem(i, j, new QTableWidgetItem(entry[j]));
+    }
   }
 }
 
