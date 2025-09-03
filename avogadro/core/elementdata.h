@@ -1,9 +1,11 @@
 #ifndef AVOGADRO_CORE_ELEMENTS_DATA
 #define AVOGADRO_CORE_ELEMENTS_DATA
 
+#include "elements.h"
+
 namespace Avogadro::Core {
 
-const char* element_symbols[] = {
+const char* const element_symbols[element_count] = {
   "Xx", "H",  "He", "Li", "Be", "B",  "C",  "N",  "O",  "F",  "Ne", "Na",
   "Mg", "Al", "Si", "P",  "S",  "Cl", "Ar", "K",  "Ca", "Sc", "Ti", "V",
   "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br",
@@ -16,7 +18,7 @@ const char* element_symbols[] = {
   "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"
 };
 
-const char* element_names[] = {
+const char* const element_names[element_count] = {
   "Dummy",        "Hydrogen",     "Helium",      "Lithium",     "Beryllium",
   "Boron",        "Carbon",       "Nitrogen",    "Oxygen",      "Fluorine",
   "Neon",         "Sodium",       "Magnesium",   "Aluminium",   "Silicon",
@@ -43,7 +45,7 @@ const char* element_names[] = {
   "Moscovium",    "Livermorium",  "Tennessine",  "Oganesson"
 };
 
-double element_masses[] = {
+const double element_masses[element_count] = {
   // from IUPAC  (2021 set) https://doi.org/10.1515/pac-2019-0603
   //    https://iupac.org/what-we-do/periodic-table-of-elements/
   //    https://iupac.qmul.ac.uk/AtWt/
@@ -67,7 +69,7 @@ double element_masses[] = {
   285,       286,       289,        289,       293,       293,       294
 };
 
-unsigned char valence_electrons[] = {
+const unsigned char valence_electrons[element_count] = {
   // some of these are debatable, but are intended as a reasonable start
   0, 1, 0,                                              // He
   1, 2, 3, 4, 5, 6, 7, 8,                               // Ne
@@ -79,7 +81,7 @@ unsigned char valence_electrons[] = {
   2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
 };
 
-double element_VDW[] = {
+const double element_VDW[element_count] = {
   // From Alvarez doi: 10.1039/C3DT50599E
   // Dalton Trans., 2013,42, 8617-8636
   // Dummy, 1st row
@@ -223,7 +225,7 @@ double element_VDW[] = {
   3.,
 };
 
-double element_covalent[] = {
+const double element_covalent[element_count] = {
   // From Pyykko doi: 10.1002/chem.200800987
   // Dummy, 1st row
   0.18, 0.32, 0.46,
@@ -264,7 +266,7 @@ double element_covalent[] = {
   1.75, 1.65, 1.57
 };
 
-unsigned char element_color[][3] = {
+const unsigned char element_color[element_count][3] = {
   // See, for example http://jmol.sourceforge.net/jscolors/index.en.html
   // Changes - H is not completely white to add contrast on light backgrounds
   //         - C is slightly darker (i.e. 50% gray - consistent with Avo1)
