@@ -598,6 +598,35 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
     tableWidget->setProperty("delimiter", obj["delimiter"].toString());
   }
 
+  // data might be supplied as columns or rows
+  if (obj.contains(QStringLiteral("columns")) &&
+      obj.value("columns").isArray()) {
+    QJsonArray columns = obj["columns"].toArray();
+    // get the row count from the first column
+    tableWidget->setRowCount(columns[0].toArray().size());
+    for (int i = 0; i < columns.size(); ++i) {
+      int j = 0;
+      for (QJsonArray::const_iterator it = columns[i].toArray().constBegin(),
+                                      itEnd = columns[i].toArray().constEnd();
+           it != itEnd; ++it) {
+        tableWidget->setItem(i, j++, new QTableWidgetItem(it->toString()));
+      }
+    }
+  }
+  if (obj.contains(QStringLiteral("rows")) && obj.value("rows").isArray()) {
+    QJsonArray rows = obj["rows"].toArray();
+    // get the column count from the first row
+    tableWidget->setColumnCount(rows[0].toArray().size());
+    for (int j = 0; j < rows.size(); ++j) {
+      int i = 0;
+      for (QJsonArray::const_iterator it = rows[i].toArray().constBegin(),
+                                      itEnd = rows[i].toArray().constEnd();
+           it != itEnd; ++it) {
+        tableWidget->setItem(i++, j, new QTableWidgetItem(it->toString()));
+      }
+    }
+  }
+
   return tableWidget;
 }
 
@@ -782,6 +811,7 @@ void JsonWidget::setTableOption(const QString& name, const QJsonValue& value)
     delimiter = "\t";
 
   // parse the table
+  table->clearContents();
   QStringList tableLines = value.toString().split("\n");
   table->setRowCount(tableLines.size());
   for (int i = 0; i < tableLines.size(); ++i) {
