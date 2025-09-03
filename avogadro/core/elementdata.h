@@ -220,6 +220,7 @@ double element_VDW[] = {
   3.,
   3.,
   3.,
+  3.,
 };
 
 double element_covalent[] = {
