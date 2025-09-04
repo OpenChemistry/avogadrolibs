@@ -22,6 +22,7 @@
 #include <bitset>
 #include <locale>
 #include <map>
+#include <memory>
 #include <sstream>
 
 namespace Avogadro::Io {
@@ -144,9 +145,12 @@ public:
         }
       }
 
-      auto* cell = new UnitCell;
-      cell->setCellParameters(a, b, c, alpha, beta, gamma);
-      molecule->setUnitCell(cell);
+      auto cell = std::make_unique<UnitCell>(a, b, c, alpha, beta, gamma);
+      if (!cell->isRegular()) {
+        error += "<crystal> does not give linear independent lattice vectors";
+        return false;
+      }
+      molecule->setUnitCell(cell.release());
       if (hall != 0)
         molecule->setHallNumber(hall);
     }

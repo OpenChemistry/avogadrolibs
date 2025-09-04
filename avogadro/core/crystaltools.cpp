@@ -633,6 +633,11 @@ bool CrystalTools::setCellMatrix(Molecule& molecule,
   if (!molecule.unitCell())
     molecule.setUnitCell(new UnitCell);
 
+  if (!UnitCell::isRegular(newCellColMatrix)) {
+    std::cerr << __FUNCTION__ << " cell matrix is singular\n";
+    return false;
+  }
+
   molecule.unitCell()->setCellMatrix(newCellColMatrix);
 
   return true;

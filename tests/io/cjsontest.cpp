@@ -22,6 +22,7 @@ using Avogadro::Core::Molecule;
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::Variant;
 using Avogadro::Io::CjsonFormat;
+using namespace std::string_literals;
 
 TEST(CjsonTest, readFile)
 {
@@ -36,6 +37,33 @@ TEST(CjsonTest, readFile)
 
   EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
+}
+
+TEST(CjsonTest, readInvalidPeriodicFile)
+{
+  const auto error_cell_params =
+    "cell parameters do not give linear-independent lattice vectors\n"s;
+  const auto error_cellVectors = "cellVectors are not linear independent\n"s;
+  for (const auto& [file, err] : {
+         std::make_pair("impossible.cjson"s, error_cell_params),
+         std::make_pair("lin-dep-cellVectors.cjson"s, error_cellVectors),
+         std::make_pair("lin-dep2.cjson"s, error_cell_params),
+         std::make_pair("zero-a-cellVectors.cjson"s, error_cellVectors),
+         std::make_pair("zero-a.cjson"s, error_cell_params),
+         std::make_pair("zero-alpha.cjson"s, error_cell_params),
+         std::make_pair("zero-b-cellVectors.cjson"s, error_cellVectors),
+         std::make_pair("zero-b.cjson"s, error_cell_params),
+         std::make_pair("zero-beta.cjson"s, error_cell_params),
+         std::make_pair("zero-c-cellVectors.cjson"s, error_cellVectors),
+         std::make_pair("zero-c.cjson"s, error_cell_params),
+         std::make_pair("zero-gamma.cjson"s, error_cell_params),
+       }) {
+    CjsonFormat cjson;
+    Molecule molecule;
+    auto f = std::string(AVOGADRO_DATA) + "/data/cjson/singular/" + file;
+    EXPECT_FALSE(cjson.readFile(f, molecule)) << f;
+    EXPECT_EQ(cjson.error(), err) << f;
+  }
 }
 
 TEST(CjsonTest, atoms)

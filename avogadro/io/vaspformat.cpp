@@ -15,6 +15,7 @@
 #include <algorithm> // for std::count()
 #include <iomanip>
 #include <iostream>
+#include <memory>
 
 namespace Avogadro::Io {
 
@@ -188,7 +189,12 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Let's make a unit cell
-  auto* cell = new UnitCell(cellMat);
+  auto cell = std::make_unique<UnitCell>(cellMat);
+
+  if (!cell->isRegular()) {
+    appendError("cell vectors are not linear independent");
+    return false;
+  }
 
   // If our atomic coordinates are fractional, convert them to Cartesian
   if (!cart) {
@@ -205,7 +211,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Delete the current molecule. Add the new title and unit cell
   mol.clearAtoms();
   mol.setData("name", title);
-  mol.setUnitCell(cell);
+  mol.setUnitCell(cell.release());
 
   // Now add the atoms
   size_t k = 0;
@@ -372,7 +378,12 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
         }
         // Checks whether all the three axis vectors have been read
         if (ax1Set && ax2Set && ax3Set) {
-          mol.setUnitCell(new UnitCell(ax1, ax2, ax3));
+          auto cell = std::make_unique<UnitCell>(ax1, ax2, ax3);
+          if (!cell->isRegular()) {
+            appendError("cell vectors are not linear independent");
+            return false;
+          }
+          mol.setUnitCell(cell.release());
         }
       }
     }
