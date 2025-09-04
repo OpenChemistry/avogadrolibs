@@ -11,7 +11,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON -DQT_VERSION=5
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON -DQT_VERSION=5
   CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   SCCACHE_GHA_ENABLED: "true"
 
@@ -32,7 +32,7 @@ jobs:
             os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF",
+            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF -DUSE_VTK=ON",
             cpack_flags: "-G DragNDrop",
           }
         - {
@@ -50,7 +50,7 @@ jobs:
             os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "asan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DUSE_VTK=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -58,7 +58,7 @@ jobs:
             os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DUSE_VTK=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
 
