@@ -165,7 +165,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   if (isNumericArray(atomicNumbers) && atomicNumbers.size() > 0) {
     for (auto& atomicNumber : atomicNumbers) {
       if (!atomicNumber.is_number_integer() || atomicNumber < 0 ||
-          atomicNumber > Core::element_count) {
+          atomicNumber >= Core::element_count) {
         appendError("Error: atomic number is invalid.");
         return false;
       }

@@ -38,6 +38,36 @@ TEST(CjsonTest, readFile)
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 
+TEST(CjsonTest, atomicNumberEdgeCase)
+{
+  for (const auto* s : {
+         R"({"chemicalJson": 0, "name": "negative Z",
+  "atoms": {"coords": {"3d": [1.0, 2.0, 3.0]}, "elements": {"number": [-1]}}})",
+
+         R"({"chemicalJson": 1, "name": "ununennium",
+  "atoms": {"coords": {"3d": [1.0, 2.0, 3.0]}, "elements": {"number": [119]}},
+  "properties": {"totalCharge": 1, "totalSpinMultiplicity": 1}})",
+       }) {
+    CjsonFormat cjson;
+    Molecule molecule;
+    EXPECT_FALSE(cjson.readString(s, molecule)) << s;
+    EXPECT_EQ(cjson.error(), "Error: atomic number is invalid.\n");
+  }
+
+  for (const auto* s : {
+         R"({"chemicalJson": 0, "name": "ghost",
+  "atoms": {"coords": {"3d": [1.0, 2.0, 3.0]}, "elements": {"number": [0]}}})",
+
+         R"({"chemicalJson": 1, "name": "oganesson",
+  "atoms": {"coords": {"3d": [1.0, 2.0, 3.0]}, "elements": {"number": [118]}},
+  "properties": {"totalCharge": 0, "totalSpinMultiplicity": 1}})",
+       }) {
+    CjsonFormat cjson;
+    Molecule molecule;
+    EXPECT_TRUE(cjson.readString(s, molecule)) << s;
+  }
+}
+
 TEST(CjsonTest, atoms)
 {
   CjsonFormat cjson;

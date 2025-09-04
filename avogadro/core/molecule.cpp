@@ -561,7 +561,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   m_graph.addVertex();
   m_atomicNumbers.push_back(number);
   // we're not going to easily handle custom elements
-  if (number <= element_count)
+  if (number < element_count)
     m_elements.set(number);
   else
     m_elements.set(element_count - 1); // custom element
