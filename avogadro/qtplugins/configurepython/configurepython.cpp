@@ -13,6 +13,7 @@
 
 #include <QAction>
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
