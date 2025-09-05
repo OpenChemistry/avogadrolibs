@@ -13,6 +13,7 @@
 
 #include <QAction>
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
@@ -156,6 +157,36 @@ QStringList ConfigurePython::pythonPaths() const
     paths.prepend(pythonInterp);
   }
 
+#ifdef Q_OS_WIN
+  // on Windows, check for a few possible locations
+  // if they exist, add them to the list
+  // e.g. C:\Program Files\Python*
+  //      C:\Program Files (x86)\Python*
+  QStringList programDirs;
+  programDirs << "C:/Program Files"
+              << "C:/Program Files (x86)";
+  // might also be in the APPDATA folder
+  QString homePath = QDir::homePath();
+  if (!homePath.isEmpty()) {
+    programDirs << homePath + "/AppData/Local/Programs";
+    programDirs << homePath + "/AppData/Local/Programs/Python";
+  }
+
+  foreach (const QString& dir, programDirs) {
+    QDir programFiles(dir);
+    QStringList pythonDirs = programFiles.entryList(
+      QStringList() << "Python*", QDir::Dirs | QDir::NoDotAndDotDot);
+    // check if there's a python3.exe or python.exe
+    foreach (const QString& pythonDir, pythonDirs) {
+      QDir pythonDirInfo(dir + "/" + pythonDir);
+      if (pythonDirInfo.exists("python3.exe"))
+        paths << pythonDirInfo.absolutePath() + "/python3.exe";
+      else if (pythonDirInfo.exists("python.exe"))
+        paths << pythonDirInfo.absolutePath() + "/python.exe";
+    }
+  }
+#endif
+
   // check to make sure each of the items are valid or remove them
   // (i.e., the python should return a version flag)
   QStringList validPaths;
@@ -197,6 +228,7 @@ void ConfigurePython::showDialog()
 
   m_dialog->setOptions(pythonInterps);
   m_dialog->show();
+  m_dialog->raise();
 }
 
 } // namespace Avogadro::QtPlugins
