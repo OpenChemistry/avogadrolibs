@@ -69,6 +69,10 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
     }
   }
 
+  // If there are less than 3 residues, don't do anything
+  if (residueCount < 3)
+    return;
+
   // Plug gaps in the helix
   for (size_t i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
@@ -273,7 +277,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
         recordJ->residuePair = recordI->residue;
       }
     } // end for(j)
-  } // end for(i)
+  }   // end for(i)
 }
 
 } // namespace Avogadro::Core

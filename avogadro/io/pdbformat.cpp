@@ -285,8 +285,12 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
   perceiveSubstitutedCations(mol);
-  SecondaryStructureAssigner ssa;
-  ssa.assign(&mol);
+
+  // if there are residue data, assign secondary structure
+  if (mol.residueCount() != 0) {
+    SecondaryStructureAssigner ssa;
+    ssa.assign(&mol);
+  }
 
   return true;
 } // End read
