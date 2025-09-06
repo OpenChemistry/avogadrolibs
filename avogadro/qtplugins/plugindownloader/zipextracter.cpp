@@ -53,10 +53,10 @@ QList<QString> ZipExtracter::listFiles(const std::string absolutepath)
   QList<QString> toReturn;
 
   if ((r = archive_read_open_filename(a, convert(absolutepath), 512))) {
-    toReturn.append("ERROR - archive_read_open_filename == true");
-    toReturn.append(QString::number(r));
-    QString errorMsg = archive_error_string(a);
-    toReturn.append(errorMsg);
+    toReturn
+      .append(tr("ERROR: could not open zip file to list contents.\n(%1)",
+                 "%1 is the error message from libarchive"))
+      .arg(archive_error_string(a));
     return toReturn;
   }
 
@@ -101,10 +101,10 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   archive_write_disk_set_options(ext, flags);
   archive_write_disk_set_standard_lookup(ext);
   if ((r = archive_read_open_filename(a, convert(absolutepath), 10240))) {
-    toReturn.append("ERROR - archive_read_open_filename == true");
-    toReturn.append(QString::number(r));
-    QString errorMsg = archive_error_string(a);
-    toReturn.append(errorMsg);
+    toReturn
+      .append(tr("ERROR: could not open zip file to extract files.\n(%1)",
+                 "%1 is the error message from libarchive"))
+      .arg(archive_error_string(a));
     return toReturn;
   }
   [[maybe_unused]] long itrCount = 0;
@@ -118,7 +118,8 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(a));
     if (r < ARCHIVE_WARN) {
-      toReturn.append("ERROR - r < ARCHIVE_WARN");
+      toReturn.append(tr("Warning: (%1)", "%1 is the message from libarchive"))
+        .arg(archive_error_string(a));
       return toReturn;
     }
 
@@ -135,7 +136,9 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
       if (r < ARCHIVE_OK)
         fprintf(stderr, "%s\n", archive_error_string(ext));
       if (r < ARCHIVE_WARN) {
-        toReturn.append("ERROR - r < ARCHIVE_WARN");
+        toReturn
+          .append(tr("Warning: (%1)", "%1 is the message from libarchive"))
+          .arg(archive_error_string(a));
         return toReturn;
       }
     }
@@ -143,7 +146,8 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(ext));
     if (r < ARCHIVE_WARN) {
-      toReturn.append("ERROR - r < ARCHIVE_WARN");
+      toReturn.append(tr("Warning: (%1)", "%1 is the message from libarchive"))
+        .arg(archive_error_string(a));
       return toReturn;
     }
   }
