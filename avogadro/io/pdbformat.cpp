@@ -287,9 +287,10 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   perceiveSubstitutedCations(mol);
 
   // if there are residue data, assign secondary structure
-  if (mol.residueCount() != 0)
+  if (mol.residueCount() != 0) {
     SecondaryStructureAssigner ssa;
-  ssa.assign(&mol);
+    ssa.assign(&mol);
+  }
 }
 
 return true;
