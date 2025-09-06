@@ -291,9 +291,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     SecondaryStructureAssigner ssa;
     ssa.assign(&mol);
   }
-}
 
-return true;
+  return true;
 } // End read
 
 std::vector<std::string> PdbFormat::fileExtensions() const
