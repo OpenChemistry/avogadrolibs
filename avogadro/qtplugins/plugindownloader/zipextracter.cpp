@@ -12,6 +12,16 @@ ZipExtracter::ZipExtracter() {}
 
 ZipExtracter::~ZipExtracter() {}
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Copies data from one archive to another.
+ *
+ * This is a convenience function to copy data from one archive to another.
+ * It will copy the data block by block until it reaches the end of the
+ * input archive. If there is an error reading or writing the data, it
+ * will return the error code directly.
+ */
+/*******  e529b3ce-4242-4d08-ab60-874f0aa6fefc  *******/
 int ZipExtracter::copyData(struct archive* ar, struct archive* aw)
 {
   int r;
@@ -53,10 +63,10 @@ QList<QString> ZipExtracter::listFiles(const std::string absolutepath)
   QList<QString> toReturn;
 
   if ((r = archive_read_open_filename(a, convert(absolutepath), 512))) {
-    toReturn
-      .append(tr("ERROR: could not open zip file to list contents.\n(%1)",
+    toReturn.append(
+      QString(tr("ERROR: could not open zip file to list contents.\n(%1)",
                  "%1 is the error message from libarchive"))
-      .arg(archive_error_string(a));
+        .arg(archive_error_string(a)));
     return toReturn;
   }
 
@@ -101,10 +111,10 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   archive_write_disk_set_options(ext, flags);
   archive_write_disk_set_standard_lookup(ext);
   if ((r = archive_read_open_filename(a, convert(absolutepath), 10240))) {
-    toReturn
-      .append(tr("ERROR: could not open zip file to extract files.\n(%1)",
+    toReturn.append(
+      QString(tr("ERROR: could not open zip file to extract files.\n(%1)",
                  "%1 is the error message from libarchive"))
-      .arg(archive_error_string(a));
+        .arg(archive_error_string(a)));
     return toReturn;
   }
   [[maybe_unused]] long itrCount = 0;
@@ -118,8 +128,9 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(a));
     if (r < ARCHIVE_WARN) {
-      toReturn.append(tr("Warning: (%1)", "%1 is the message from libarchive"))
-        .arg(archive_error_string(a));
+      toReturn.append(
+        QString(tr("Warning: (%1)", "%1 is the message from libarchive"))
+          .arg(archive_error_string(a)));
       return toReturn;
     }
 
@@ -136,9 +147,9 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
       if (r < ARCHIVE_OK)
         fprintf(stderr, "%s\n", archive_error_string(ext));
       if (r < ARCHIVE_WARN) {
-        toReturn
-          .append(tr("Warning: (%1)", "%1 is the message from libarchive"))
-          .arg(archive_error_string(a));
+        toReturn.append(
+          QString(tr("Warning: (%1)", "%1 is the message from libarchive"))
+            .arg(archive_error_string(a)));
         return toReturn;
       }
     }
@@ -146,8 +157,9 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
     if (r < ARCHIVE_OK)
       fprintf(stderr, "%s\n", archive_error_string(ext));
     if (r < ARCHIVE_WARN) {
-      toReturn.append(tr("Warning: (%1)", "%1 is the message from libarchive"))
-        .arg(archive_error_string(a));
+      toReturn.append(
+        QString(tr("Warning: (%1)", "%1 is the message from libarchive"))
+          .arg(archive_error_string(a)));
       return toReturn;
     }
   }
