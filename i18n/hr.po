@@ -2366,13 +2366,13 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:60:259
 msgid "Distance"
-msgstr ""
+msgstr "Udaljenost"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
 msgid "Angle"
-msgstr ""
+msgstr "Kut"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2974,7 +2974,7 @@ msgid "Draw"
 msgstr "Crtaj"
 
 #: qtplugins/editor/editor.cpp:76
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
@@ -2983,8 +2983,8 @@ msgid ""
 msgstr ""
 "Alat za crtanje (%1)\n"
 "\n"
-"Lijeva tipka miša:\tKlikni i povuci za stvaranje atoma i veza\n"
-"Desna tipka miša:\tIzbriši atom"
+"Lijeva tipka miša: Klikni i povuci za stvaranje atoma i veza\n"
+"Desna tipka miša: Izbriši atom"
 
 #: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
