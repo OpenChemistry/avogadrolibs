@@ -3870,7 +3870,7 @@ msgid "Navigate"
 msgstr "Navigacija"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -3878,11 +3878,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
-"Alat za navigaciju\t(%1)\n"
+"Alat za navigaciju \t(%1)\n"
 "\n"
-"Lijeva tipka miša:\tKlikni i povuci za okretanje prikaza.\n"
-"Srednja tipka miša:\tKlikni i povuci za povećanje ili smanjenje prikaza.\n"
-"Desna tipka miša:\tKlikni i povuci za pomicanje prikaza."
+"Lijeva tipka miša: \tKlikni i povuci za okretanje prikaza.\n"
+"Srednja tipka miša: \tKlikni i povuci za povećanje ili smanjenje prikaza.\n"
+"Desna tipka miša: \tKlikni i povuci za pomicanje prikaza."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3901,7 +3901,6 @@ msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Obrni smjer zumiranja pri povlačenju"
 
 #: qtplugins/navigator/navigator.cpp:108
-#, fuzzy
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
@@ -4274,9 +4273,9 @@ msgid "Player"
 msgstr "Player"
 
 #: qtplugins/playertool/playertool.cpp:49
-#, fuzzy, qt-format
+#, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr "Alat za animaciju\t(%1)"
+msgstr "Alat za animaciju \t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4939,7 +4938,7 @@ msgid "Selection"
 msgstr "Odabir"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -4949,15 +4948,15 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
-"Alat za biranje\t(%1)\n"
+"Alat za biranje \t(%1)\n"
 "\n"
-"Lijeva tipka miša:\tKlikni za biranje pojedinačnih atoma, ostataka ili "
+"Lijeva tipka miša: \tKlikni za biranje pojedinačnih atoma, ostataka ili "
 "fragmenata\n"
 "\tPovuci za biranje niza atoma\n"
-"Desna tipka miša:\tKlikni izvan molekule za poništavanje odabira\n"
+"Desna tipka miša: \tKlikni izvan molekule za poništavanje odabira\n"
 "Koristi tipku Ctrl za mijenjanje odabira i tipku shift za dodavanje odabiru."
 "\n"
-"Dvostruki klik:\tOdaberi cijeli fragment."
+"Dvostruki klik: \tOdaberi cijeli fragment."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -5423,7 +5422,7 @@ msgid "Template"
 msgstr "Predložak"
 
 #: qtplugins/templatetool/templatetool.cpp:84
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Template Tool\t(%1)\n"
 "\n"
@@ -5434,7 +5433,7 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
-"Alat za predloške\t(%1)\n"
+"Alat za predloške (%1)\n"
 "\n"
 "Umetni fragmente, uključujući središta metala.\n"
 "Odaberi element i geometriju koordinacije, zatim klikni za umetanje "
@@ -5940,7 +5939,7 @@ msgstr "Okruženje:"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:33
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Add Constraints"
-msgstr ""
+msgstr "Ograničenja:"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
