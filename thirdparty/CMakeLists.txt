@@ -1,3 +1,5 @@
+include(FetchContent)
+
 if(NOT TARGET gif-h)
   add_library(gif-h INTERFACE IMPORTED GLOBAL)
   target_include_directories(gif-h INTERFACE
@@ -7,6 +9,25 @@ endif(NOT TARGET gif-h)
 # Only used by Qt plugin
 if (USE_QT)
   add_subdirectory(libgwavi)
+
+  if (USE_EXTERNAL_JKQTPLOTTER)
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui Widgets PrintSupport Svg Xml OpenGl REQUIRED)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets PrintSupport Svg Xml OpenGL REQUIRED)
+    find_package(JKQTPlotter${QT_VERSION_MAJOR} REQUIRED)
+  else()
+    # add some defines to turn off some features
+    set(JKQtPlotter_BUILD_TESTS OFF)
+    set(JKQtPlotter_BUILD_EXAMPLES OFF)
+    set(JKQtPlotter_BUILD_LIB_JKQTFASTPLOTTER OFF)
+    set(CMAKE_CXX_VISIBILITY_PRESET "default")
+    set(CMAKE_POLICY_VERSION_MINIMUM 3.10)
+    add_subdirectory(JKQtPlotter)
+    #FetchContent_Declare(JKQTPlotter${QT_VERSION_MAJOR}
+    #                 GIT_REPOSITORY https://github.com/jkriege2/JKQtPlotter.git
+    #                 GIT_TAG        v4.0.3)
+    # ... finally make JKQTPlotter5/6 available
+    #FetchContent_MakeAvailable(JKQTPlotter${QT_VERSION_MAJOR})
+  endif(USE_EXTERNAL_JKQTPLOTTER)
 endif()
 
 if(USE_EXTERNAL_NLOHMANN)

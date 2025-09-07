@@ -1,0 +1,196 @@
+/*!
+
+\page page_whatsnew What's New (Release Notes/Versions)
+This page lists release notes for the diferent version of JKQTPlotter
+
+\tableofcontents
+
+
+
+
+
+\section page_whatsnew_TRUNK trunk/master
+
+\subsection page_whatsnew_TRUNK_OVERVIEW trunk: Overview
+Changes, compared to  \ref page_whatsnew_V4_0_0 "v4.0.0" include:
+<ul>
+   <li></li>
+</ul>
+
+\subsection page_whatsnew_TRUNK_DOWNLOAD trunk: Download
+
+This release is available from:
+  - Source code branch: <a href="https://github.com/jkriege2/JKQtPlotter">https://github.com/jkriege2/JKQtPlotter</a>
+  - Source Code download (ZIP): <a href="https://github.com/jkriege2/JKQtPlotter/archive/master.zip">https://github.com/jkriege2/JKQtPlotter/archive/master.zip</a>
+  - Git-Link: <a href="https://github.com/jkriege2/JKQtPlotter.git">https://github.com/jkriege2/JKQtPlotter.git</a>
+.
+
+
+
+
+\section page_whatsnew_V4_0_0 V4.0.0: Qt6 compatibility & diverse improvements + bugfixes
+
+\subsection page_whatsnew_V4_0_0_OVERVIEW V4.0.0: Overview
+Changes, compared to  \ref page_whatsnew_V2019_11 "v2019.11" include:
+<ul>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/pull/34">#34: Skip drawing the line for negative values in log plots</a>, thanks to <a href="https://github.com/certik">user:certik</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/pull/38">#38: Buffer overflow</a>, thanks to <a href="https://github.com/zertyz">user:zertyz</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/pull/43">#43: jkqtp_format() had undefined behaviour</a>, thanks to <a href="https://github.com/Makis42">user:Makis42</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/pull/41">#41: Build error when JKQtPlotter_BUILD_INCLUDE_XITS_FONTS set to OFF </a>, thanks to <a href="https://github.com/smistad">user:smistad</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/pull/37">#37: CMake installs things into $PREFIX/doc/*.txt </a>, thanks to <a href="https://github.com/certik">user:certik</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/pull/45">#45: Build error on mac jkqtfastplotter.cpp:342:28: Variable has incomplete type 'QPainterPath'</a>, thanks to <a href="https://github.com/abdedixit">user:abdedixit</a></li>
+  <li> merged PR <a href="https://github.com/jkriege2/JKQtPlotter/pull/47">#47: Some minor build fixes</a>, thanks to <a href="https://github.com/patstew">user:patstew</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/issues/48">#48: Cannot #include QPrintPreviewWidget</a>, thanks to <a href="https://github.com/schlenger">user:schlenger</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/issues/49">#49: Incorrect tag in style .ini-files</a>, thanks to <a href="https://github.com/smistad">user:smistad</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/issues/50">#50: Double-Click Zoom Issue</a>, thanks to <a href="https://github.com/Delfinos">user:Delfinos</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/issues/52">#52: 'runtime_error': is not a member of 'std'</a>, thanks to <a href="https://github.com/gomgomi">user:gomgomi</a></li>
+  <li> fixed issue <a href="https://github.com/jkriege2/JKQtPlotter/issues/56">#56: Logscale zoom multiple zeros? </a>, thanks to <a href="https://github.com/sufuk">user:sufuk</a></li>
+  <li> merged PR <a href="https://github.com/jkriege2/JKQtPlotter/pull/51">#51: Bug: JKMathParser exception return local variable </a>, thanks to <a href="https://github.com/StephanOostveen">user:StephanOostveen</a></li>
+  <li>renamed/breaking change: renamed JKQTPPlotObject->JKQTPGeometricPlotElement and added new base class JKQTPPlotAnnotationElement</li>
+  <li>renamed/breaking change: renamed JKQTPColorPaletteStyleAndToolsMixin::setPalette() -> JKQTPColorPaletteStyleAndToolsMixin::setColorPalette()</li>
+  <li>removed/breaking change: removed the usage of some deprecated functions and objects (e.g. QMatrix)</li>
+  <li>removed/breaking change: removed the overlay elements (derived from JKQTPOverlayElement), which were not very well set up and are more confusing than useful.</li>
+  <li>improved/breaking change: geometric objects now use an adaptive drawing algorithm to represent curves (before e.g. ellipses were always separated into a fixed number of line-segments)</li>
+  <li>improved/breaking change: geometric elements constructor: removed all styling properties, added setStyle()-functions to replace them. This is necessary to better work with the extended Styling system</li>
+  <li>improved: constructors and access functions for several geometric objects (e.g. more constructors, additional functions to retrieve parameters in diferent forms, iterators for polygons, ...)</li>
+  <li>improved/breaking change: reworked class hierarchy of parsed function plots and declared several setters as slots.</li>
+  <li>improved/breaking change: reworked class hierarchy of bar & impulse charts.</li>
+  <li>improved/breaking change: reworked class hierarchy of range charts.</li>
+  <li>improved/breaking change: reworked class hierarchy of special line (step) graphs.</li>
+  <li>improved/breaking change: reworked class hierarchy of filled line graphs.</li>
+  <li>improved/breaking change: reworked class hierarchy of range plot elements (JKQTPVerticalRange and JKQTPHorizontalRange).</li>
+  <li>improved/breaking change: reworked class hierarchy of boxplots.</li>
+  <li>improved/breaking change: reworked class hierarchy of violin plots.</li>
+  <li>improved/breaking change: extended styling system for graphs.</li>
+  <li>improved/breaking change: reworked graph Base-Classes (promoted several setters to slots, added Q_PROPERTY- and Q_ENUM-declarations...)</li>
+  <li>improved/breaking change: made more functions and function parameters const</li>
+  <li>improved/breaking change: image plots now manage CONST-data, not plain pointer arrays... This is OK, since the raw data is never owned nor modified by the plot, only referenced!.</li>
+  <li>bugfixed/improved: aspect ratio handling in JKQTPlotter.</li>
+  <li>new: switching to semantic versioning ... starting with v4.0.0</li>
+  <li>new: Compatibility with Qt 5.15 and Qt6</li>
+  <li>new: added support for high-dpi devices (thanks for <a href="https://github.com/jkriege2/JKQtPlotter/pull/55">PR #55: Enable high-dpi support for plots </a> by <a href="https://github.com/akenmorris">user:akenmorris</a>.</li>
+  <li>new: added geometric plot objects JKQTPGeoArrow to draw arrows (aka lines with added line-end decorators, also extended JKQTPGeoLine, JKQTPGeoInfiniteLine, JKQTPGeoPolyLines to draw line-end decorator (aka arrows)</li>
+  <li>new: all geometric objects can either be drawn as graphic element (i.e. lines are straight line, even on non-linear axes), or as mathematical curve (i.e. on non-linear axes, lines become the appropriate curve representing the linear function, connecting the given start/end-points). The only exceptions are ellipses (and the derived arcs,pies,chords), which are always drawn as mathematical curves</li>
+  <li>new: a new graph class JKQTPXYFunctionLineGraph draws parametric 2D curves ( \f$ [x,y] = f(t) \f$ ), see \ref JKQTPlotterEvalCurves for an example</li>
+  <li>new: added several new copy/set-functions to JKQTPDatastore</li>
+  <li>new: added JKQTPlotter signal, when widget was resized</li>
+  <li>new: added JKQTPFilledHorizontalRangeGraph, complementing JKQTPFilledVerticalRangeGraph</li>
+</ul>
+
+\subsection page_whatsnew_V4_0_0_DOWNLOAD V4.0.0: Download
+
+This release is available from:
+  - Source code branch: <a href="https://github.com/jkriege2/JKQtPlotter/tree/v4.0.0">https://github.com/jkriege2/JKQtPlotter/tree/v4.0.0</a>
+  - Latest Release/Tag: <a href="https://github.com/jkriege2/JKQtPlotter/releases/tag/v4.0.0">https://github.com/jkriege2/JKQtPlotter/releases/tag/v4.0.0</a> (2021-April-xx)
+.
+
+
+
+
+
+\section page_whatsnew_V2019_11 v2019.11: Major rework of the library
+Starting in summer 2018, JKQTPlotter received some major workover. During this, it lost compatibility to the <a href="https://github.com/jkriege2/QuickFit3">QuickFit 3.0</a> code base.
+
+\subsection page_whatsnew_V2019_11_OVERVIEW v2019.11: Overview
+Changes, compared to  \ref page_whatsnew_V2018_08 "v2018.08" include:
+<ul>
+  <li> new: CMake-base build, which deprecated the QMake-build</li>
+  <li> new: added QMake-Projects for static and for shared library builds </li>
+  <li> new: \ref exampleTutorialProjects "extensive set of Examples and Tutorials" </li>
+  <li> new: checked builds with continuous integration from AppVeyor: <a href="https://ci.appveyor.com/project/jkriege2/jkqtplotter/branch/master">https://ci.appveyor.com/project/jkriege2/jkqtplotter/branch/master</a> </li>
+  <li> new/update: support for building with Microsoft Visual Studio (Win), MinGW (Win), GCC (Linux/MacOS) </li>
+  <li> update: massively improved (doxygen-generated) <a href="http://jkriege2.github.io/JKQtPlotter/index.html">Online-Documentation (http://jkriege2.github.io/JKQtPlotter/index.html)</a> (automatically generated after each commit using ravis CI) </li>
+  <li> update: refactoring of the library's directory structure </li>
+  <li> update: refactoring/renaming of API, including the function anming scheme and class names </li>
+  <li> changed: using static const variables instead of <code>#define</code> for fixed default values (e.g. JKQTPImageTools::LUTSIZE, JKQTPImageTools::PALETTE_ICON_WIDTH, JKQTPlotterDrawinTools::ABS_MIN_LINEWIDTH, JKQTMathText::ABS_MIN_LINEWIDTH ...)</li>
+  <li> Updates to JKQTPlotter:
+    <ul>
+	  <li> new: added JKQTPSingleColumnSymbolsGraph for single-column data, e.g. drawn as (random) scatter or bee-swarm or rug plots </li>
+	  <li> new: stacked barcharts with JKQTPBarVerticalStackableGraph, JKQTPBarHorizontalStackableGraph </li>
+	  <li> new: use/support of C++11 features (e.g. \c std::function<> and lambda functions in JKQTPXFunctionLineGraph / JKQTPYFunctionLineGraph )</li>
+	  <li> new: \ref jkqtpinterfaceopencv  "optional OpenCV interface" </li>
+	  <li> new: \ref jkqtpinterfacecimg  "optional CImg interface" </li>
+	  <li> new: \ref jkqtpplotter_styling  "Styling System for JKQTPlotter" </li>
+	  <li> new: added debugging option, which surrounds different regions with visible rectangles (JKQTBasePlotter::enableDebugShowRegionBoxes() ) </li>
+	  <li> new: frames (plot viewport, key/legend ...) may be rounded off at the corners</li>
+	  <li> new: diverse new styling options (default font name/size ...)</li>
+	  <li> new: additionl options for styling coordinate axes</li>
+      <li> new: Mix-In classes to unify plot styleing functions (setters/getters) in all graphs </li>
+      <li> new: additional options for graph filling (color gradients, textures, ...) as provided by QBrush </li>
+      <li> new: added a general feature to JKQTPPlotElement which allows to show a graph in a highlighted state (if supported by the derived graph class!) </li>
+      <li> new: JKQTPXYParametrizedScatterGraph: added functors to transform column values into symbol type+size and line-width to give even more control </li>
+      <li> new: user-interaction tool that shows coordinates of data points near the current mouse position (when mouse is dragged, while mouse button is pressed), see: jkqtpmdaToolTipForClosestDataPoint </li>
+      <li> new: user-interaction tool that measures distances and angles when mouse is dragged, while mouse button is pressed), see: jkqtpmdaRuler </li>
+      <li> new: advanced styling options for boxplots + example for the styling: \ref JKQTPlotterBoxplotStyling </li>
+      <li> new: notched boxplots, see: \ref JKQTPlotterBoxplotStyling </li>
+      <li> new: several new plot symbols, see: JKQTPGraphSymbols </li>
+      <li> new: Statistics library with functions to calculate histograms, regression, kernel density estimates, ... see: \ref jkqtptools_math_statistics </li>
+      <li> new: iterator interface and improved documentation for JKQTPDatastore </li>
+      <li> new: violin plots (see \ref JKQTPlotterViolinplotGraphs ) </li>
+      <li> changed: removed old selection-code and replaced by general highlighting feature </li>
+      <li> changed: JKQTPStepHorizontalGraph has been renamed to JKQTPSpecialLineHorizontalGraph (vertical variants also) and have gained additional features (baseline for filling and drawing of symbols) </li>
+      <li> changed: filled curve graphs (e.g. JKQTPSpecialLineHorizontalGraph) are now merely a specializedly initialized JKQTPSpecialLineHorizontalGraph </li>
+      <li> removed: Removed datarange-feature </li>
+      <li> update: \ref JKQTPLOTTER_USERINTERACTION "reworked user interactions API" </li>
+      <li> update: \ref jkqtplotter_basegraphserrors "reworked error indicator base classes" </li>
+      <li> update: improvements to contour plots (e.g. highlighting single contour levels, split into a class for simple C-arrays [JKQTPContourPlot] and one for image data in a JKQTPDatastore column [JKQTPColumnContourPlot]) + added example, see JKQTPColumnContourPlot and \ref JKQTPlotterContourPlot </li>
+	  <li> fixed: colorbars at top were positioned over the plot label </li>
+	  <li> fixed: RGB-image plots now work properly with inverted axes (image is inverted, befor image was not shown at all) </li>
+	</ul></li>
+ <li> Updates to JKQTMathText:
+    <ul>
+	  <li> new: slanted fractions (<code>\\sfrac{}{}</code>, <code>\\stfrac{}{}</code>) </li>
+      <li> update/fix: several general improvements and bugfixes </li>
+	  <li> update/fix: improved error handling </li>
+	  <li> update: updated contained version of STIX fonts, better handling of different STIX versions </li>
+	  <li> update: improved documentation</li>
+	</ul></li>
+ </ul>
+
+\subsection page_whatsnew_V2019_11_DOWNLOAD v2019.11: Download
+
+This release is available from:
+  - Source code branch: <a href="https://github.com/jkriege2/JKQtPlotter/tree/v2019.11">https://github.com/jkriege2/JKQtPlotter/tree/v2019.11</a>
+  - Latest Release/Tag: <a href="https://github.com/jkriege2/JKQtPlotter/releases/tag/v2019.11.1">https://github.com/jkriege2/JKQtPlotter/releases/tag/v2019.11.1</a> (2019-Dec-05)
+.
+
+
+
+
+
+\section page_whatsnew_V2018_08 v2018.08: Minor Modifications (Final QuickFit3-compatible Version)
+
+\subsection page_whatsnew_V2018_08_OVERVIEW v2018.08: Overview
+This is the final version of JKQTPlotter, which is still compatible with the <a href="https://github.com/jkriege2/QuickFit3">QuickFit 3.0</a> code base. It contains minor changes as compared to \ref page_whatsnew_V2015_10 "v2015.10":
+  - new: added Qt data model to switch graphs on/off
+  - update: some improvements to test programs
+.
+
+\subsection page_whatsnew_V2018_08_DOWNLOAD v2018.08: Download
+
+This release is available from:
+  - Source code branch: <a href="https://github.com/jkriege2/JKQtPlotter/tree/v2018.08">https://github.com/jkriege2/JKQtPlotter/tree/v2018.08</a>
+  - Latest Release/Tag: <a href="https://github.com/jkriege2/JKQtPlotter/releases/tag/v2018.08">https://github.com/jkriege2/JKQtPlotter/releases/tag/v2018.08</a> (2018-Aug-19)
+.
+
+
+
+
+
+
+
+
+\section page_whatsnew_V2015_10 v2015.10: Initial Release
+
+\subsection page_whatsnew_V2015_10_OVERVIEW v2015.10: Overview
+This is the initial release of the library. It was developed initially as part of <a href="https://github.com/jkriege2/QuickFit3">QuickFit 3.0</a> and then separated out into a separate repository.
+
+\subsection page_whatsnew_V2015_10_DOWNLOAD v2015.10: Download
+
+This release is available from:
+  - Source code branch: <a href="https://github.com/jkriege2/JKQtPlotter/tree/v2015.10">https://github.com/jkriege2/JKQtPlotter/tree/v2015.10</a>
+  - Latest Release/Tag: <a href="https://github.com/jkriege2/JKQtPlotter/releases/tag/v2015.10">https://github.com/jkriege2/JKQtPlotter/releases/tag/v2015.10</a> (2015-Oct-20)
+.
+
+
+*/
