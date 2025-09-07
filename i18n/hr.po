@@ -2,15 +2,16 @@
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Milo Ivir <mail@milotype.de>, 2021, 2022, 2023, 2024, 2025.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-08-10 03:16+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-09-07 23:27+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1602,7 +1603,6 @@ msgid "Align"
 msgstr "Poravnaj"
 
 #: qtplugins/aligntool/aligntool.cpp:53
-#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1614,11 +1614,11 @@ msgid ""
 msgstr ""
 "Poravnaj molekule\n"
 "\n"
-"Lijeva tipka miša:\tOdaberi do dva atoma.\n"
+"Lijeva tipka miša: Odaberi do dva atoma.\n"
 "\tPrvi atom je centriran pri izvoru.\n"
 "\tDrugi atom je poravnat na odabranu os.\n"
-"Desna tipka miša:\tPoništi poravnanje.\n"
-"Dvostruki klik:\tCentriraj atom pri izvoru."
+"Desna tipka miša: Poništi poravnanje.\n"
+"Dvostruki klik: Centriraj atom pri izvoru."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2345,7 +2345,7 @@ msgstr "Drugo …"
 
 #: qtplugins/constraints/constraintsextension.cpp:22
 msgid "Constraints…"
-msgstr ""
+msgstr "Ograničenja:"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:174
