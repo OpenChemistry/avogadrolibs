@@ -8018,7 +8018,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:233
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
 msgid "&Import…"
-msgstr ""
+msgstr "&Uvezi"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
