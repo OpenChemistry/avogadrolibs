@@ -225,6 +225,7 @@ std::vector<std::string> TurbomoleFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("coord");
+  ext.emplace_back("tmol");
   return ext;
 }
 
