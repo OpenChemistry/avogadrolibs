@@ -3547,15 +3547,15 @@ msgid "Edit Labels"
 msgstr "Uredi oznake"
 
 #: qtplugins/label/labeleditor.cpp:34
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Atom Label Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
-"Alat za oznake atoma\t(%1)\n"
+"Alat za oznake atoma \t(%1)\n"
 "\n"
-"Lijeva tipka miša:\tKlikni na atome za dodavanje prilagođenih oznaka"
+"Lijeva tipka miša: \tKlikni na atome za dodavanje prilagođenih oznaka"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3635,17 +3635,17 @@ msgid "Manipulate"
 msgstr "Upravljaj"
 
 #: qtplugins/manipulator/manipulator.cpp:52
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Manipulation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
-"Alat za upravljanje\t(%1)\n"
+"Alat za manipulaciju \t(%1)\n"
 "\n"
-"Lijeva tipka miša:\tKlikni i povuci za pomicanje atoma\n"
-"Desna tipka miša:\tKlikni i povuci za oretanje atoma."
+"Lijeva tipka miša: \tKlikni i povuci za pomicanje atoma\n"
+"Desna tipka miša: \tKlikni i povuci za oretanje atoma."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
