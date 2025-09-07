@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-10 03:16+0000\n"
+"POT-Creation-Date: 2025-09-07 02:42+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
@@ -1108,92 +1108,100 @@ msgstr ""
 msgid "Error writing molecule representation to string: %1"
 msgstr "Greška pri pisanju prikaza molekula u niz: %1"
 
-#: qtgui/jsonwidget.cpp:87
+#: qtgui/jsonwidget.cpp:88
 #, fuzzy
 msgid "'userOptions' missing."
 msgstr "'userOptions' nedostaje."
 
-#: qtgui/jsonwidget.cpp:118
+#: qtgui/jsonwidget.cpp:119
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr "Opcija '%1' se ne odnosi na objekat."
 
-#: qtgui/jsonwidget.cpp:125
+#: qtgui/jsonwidget.cpp:126
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "'tzpe' nije niz za opciju '%1'."
 
-#: qtgui/jsonwidget.cpp:132
+#: qtgui/jsonwidget.cpp:133
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:186
+#: qtgui/jsonwidget.cpp:187
 #, qt-format
 msgid "Tab %1"
 msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:209:739
+#: qtgui/jsonwidget.cpp:210:739
 msgid "Title"
 msgstr "Naslov"
 
-#: qtgui/jsonwidget.cpp:213
+#: qtgui/jsonwidget.cpp:214
 msgid "Filename Base"
 msgstr "Baza imena datoteka"
 
-#: qtgui/jsonwidget.cpp:218
+#: qtgui/jsonwidget.cpp:219
 msgid "Processor Cores"
 msgstr "Jezgra Procesora"
 
-#: qtgui/jsonwidget.cpp:223
+#: qtgui/jsonwidget.cpp:224
 msgid "Calculation Type"
 msgstr "Vrsta proračuna"
 
-#: qtgui/jsonwidget.cpp:227
+#: qtgui/jsonwidget.cpp:228
 msgid "Theory"
 msgstr "Теорија"
 
-#: qtgui/jsonwidget.cpp:227
+#: qtgui/jsonwidget.cpp:228
 msgid "Basis"
 msgstr "Osnovno"
 
-#: qtgui/jsonwidget.cpp:232 qtgui/jsonwidget.cpp:236
+#: qtgui/jsonwidget.cpp:233 qtgui/jsonwidget.cpp:237
 msgid "Charge"
 msgstr "Naelektrisanje"
 
-#: qtgui/jsonwidget.cpp:233 qtgui/jsonwidget.cpp:238
+#: qtgui/jsonwidget.cpp:234 qtgui/jsonwidget.cpp:239
 msgid "Multiplicity"
 msgstr "Višestrukost"
 
-#: qtgui/jsonwidget.cpp:590
+#: qtgui/jsonwidget.cpp:361
+msgid "User Name"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:363
+msgid "Password"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:671
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "Greška: vrednost mora biti objekat za ključ '%1'."
 
-#: qtgui/jsonwidget.cpp:623
+#: qtgui/jsonwidget.cpp:706
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Neprepoznat tip opcije „%1“ za opciju „%2“."
 
-#: qtgui/jsonwidget.cpp:632 qtgui/jsonwidget.cpp:667 qtgui/jsonwidget.cpp:688
-#: qtgui/jsonwidget.cpp:710 qtgui/jsonwidget.cpp:731 qtgui/jsonwidget.cpp:753
-#: qtgui/jsonwidget.cpp:774
+#: qtgui/jsonwidget.cpp:715 qtgui/jsonwidget.cpp:750 qtgui/jsonwidget.cpp:771
+#: qtgui/jsonwidget.cpp:792 qtgui/jsonwidget.cpp:830 qtgui/jsonwidget.cpp:851
+#: qtgui/jsonwidget.cpp:873 qtgui/jsonwidget.cpp:894
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr "Greška pri podešavanju podrazumevane opcije „%1“. Loš tip vidžeta."
 
-#: qtgui/jsonwidget.cpp:639 qtgui/jsonwidget.cpp:674 qtgui/jsonwidget.cpp:695
-#: qtgui/jsonwidget.cpp:717 qtgui/jsonwidget.cpp:738 qtgui/jsonwidget.cpp:760
-#: qtgui/jsonwidget.cpp:781
+#: qtgui/jsonwidget.cpp:722 qtgui/jsonwidget.cpp:757 qtgui/jsonwidget.cpp:778
+#: qtgui/jsonwidget.cpp:799 qtgui/jsonwidget.cpp:837 qtgui/jsonwidget.cpp:858
+#: qtgui/jsonwidget.cpp:880 qtgui/jsonwidget.cpp:901
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Greška pri podešavanju podrazumevane opcije „%1“. Loša podrazumevana "
 "vrednost:"
 
-#: qtgui/jsonwidget.cpp:653
+#: qtgui/jsonwidget.cpp:736
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1202,12 +1210,12 @@ msgstr ""
 "Greška pri podešavanju podrazumevane opcije „%1“. Nije moguće pronaći važeći "
 "indeks kombinovanog unosa iz vrednosti:"
 
-#: qtgui/jsonwidget.cpp:842
+#: qtgui/jsonwidget.cpp:962
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "Nedozvoljeni vidžet u collectOptions za opciju '%1'."
 
-#: qtgui/jsonwidget.cpp:887 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1007 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr "Nije podešen molekul"
@@ -1595,7 +1603,7 @@ msgstr ""
 #: qtplugins/customelements/customelements.cpp:40
 #: qtplugins/hydrogens/hydrogens.cpp:57 qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
-#: qtplugins/lineformatinput/lineformatinput.cpp:61
+#: qtplugins/lineformatinput/lineformatinput.cpp:62
 msgid "&Build"
 msgstr "&Izgradi"
 
@@ -1757,18 +1765,18 @@ msgstr "PQR Datoteke (*.pqr)"
 #: qtplugins/lammpsinput/lammpsinput.cpp:62
 #: qtplugins/molecularproperties/molecularview.cpp:158
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/openbabel/openbabel.cpp:208 qtplugins/openbabel/openbabel.cpp:217
-#: qtplugins/openbabel/openbabel.cpp:227 qtplugins/openbabel/openbabel.cpp:369
-#: qtplugins/openbabel/openbabel.cpp:397 qtplugins/openbabel/openbabel.cpp:422
-#: qtplugins/openbabel/openbabel.cpp:431 qtplugins/openbabel/openbabel.cpp:485
-#: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
-#: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
-#: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
-#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:734
-#: qtplugins/openbabel/openbabel.cpp:748 qtplugins/openbabel/openbabel.cpp:777
-#: qtplugins/openbabel/openbabel.cpp:789 qtplugins/openbabel/openbabel.cpp:835
-#: qtplugins/openbabel/openbabel.cpp:885 qtplugins/openbabel/openbabel.cpp:927
-#: qtplugins/openbabel/openbabel.cpp:959
+#: qtplugins/openbabel/openbabel.cpp:209 qtplugins/openbabel/openbabel.cpp:218
+#: qtplugins/openbabel/openbabel.cpp:228 qtplugins/openbabel/openbabel.cpp:370
+#: qtplugins/openbabel/openbabel.cpp:398 qtplugins/openbabel/openbabel.cpp:423
+#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:486
+#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:549
+#: qtplugins/openbabel/openbabel.cpp:568 qtplugins/openbabel/openbabel.cpp:577
+#: qtplugins/openbabel/openbabel.cpp:637 qtplugins/openbabel/openbabel.cpp:687
+#: qtplugins/openbabel/openbabel.cpp:700 qtplugins/openbabel/openbabel.cpp:735
+#: qtplugins/openbabel/openbabel.cpp:749 qtplugins/openbabel/openbabel.cpp:778
+#: qtplugins/openbabel/openbabel.cpp:790 qtplugins/openbabel/openbabel.cpp:836
+#: qtplugins/openbabel/openbabel.cpp:886 qtplugins/openbabel/openbabel.cpp:928
+#: qtplugins/openbabel/openbabel.cpp:960
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
@@ -1850,25 +1858,25 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:777
+#: qtplugins/surfaces/surfaces.cpp:781
 msgctxt "colormap"
 msgid "Parula"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:779
+#: qtplugins/surfaces/surfaces.cpp:783
 msgctxt "colormap"
 msgid "Heat"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:781
+#: qtplugins/surfaces/surfaces.cpp:785
 msgctxt "colormap"
 msgid "Hot"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:783
+#: qtplugins/surfaces/surfaces.cpp:787
 msgctxt "colormap"
 msgid "Gray"
 msgstr ""
@@ -1876,7 +1884,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:785
+#: qtplugins/surfaces/surfaces.cpp:789
 msgctxt "colormap"
 msgid "Magma"
 msgstr ""
@@ -1884,7 +1892,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:787
+#: qtplugins/surfaces/surfaces.cpp:791
 msgctxt "colormap"
 msgid "Inferno"
 msgstr ""
@@ -1892,7 +1900,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:789
+#: qtplugins/surfaces/surfaces.cpp:793
 msgctxt "colormap"
 msgid "Plasma"
 msgstr ""
@@ -1900,7 +1908,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:791
+#: qtplugins/surfaces/surfaces.cpp:795
 msgctxt "colormap"
 msgid "Viridis"
 msgstr ""
@@ -1908,7 +1916,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:793
+#: qtplugins/surfaces/surfaces.cpp:797
 msgctxt "colormap"
 msgid "Cividis"
 msgstr ""
@@ -1920,7 +1928,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:795:183 rc.cpp:1872
+#: qtplugins/surfaces/surfaces.cpp:799:183 rc.cpp:1872
 #, fuzzy
 msgctxt "colormap"
 msgid "Spectral"
@@ -1931,7 +1939,7 @@ msgstr "Спектар"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:797:180 rc.cpp:1869
+#: qtplugins/surfaces/surfaces.cpp:801:180 rc.cpp:1869
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr ""
@@ -1941,7 +1949,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:799:174 rc.cpp:1863
+#: qtplugins/surfaces/surfaces.cpp:803:174 rc.cpp:1863
 msgctxt "colormap"
 msgid "Balance"
 msgstr ""
@@ -1951,7 +1959,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:801:177 rc.cpp:1866
+#: qtplugins/surfaces/surfaces.cpp:805:177 rc.cpp:1866
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr ""
@@ -1963,7 +1971,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:803:186 rc.cpp:1875
+#: qtplugins/surfaces/surfaces.cpp:807:186 rc.cpp:1875
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -2275,11 +2283,11 @@ msgstr "Izmeni boju mape neprozirnosti…"
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:101
+#: qtplugins/configurepython/configurepython.cpp:102
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:172
 #: qtplugins/forcefield/forcefield.cpp:174
-#: qtplugins/openbabel/openbabel.cpp:112
+#: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Extensions"
@@ -2341,15 +2349,15 @@ msgstr "Pokrenite spoljne komande skripti"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
-#: qtplugins/configurepython/configurepython.cpp:34:225 rc.cpp:240
+#: qtplugins/configurepython/configurepython.cpp:35:225 rc.cpp:240
 msgid "Python Settings…"
 msgstr ""
 
-#: qtplugins/configurepython/configurepython.cpp:48
+#: qtplugins/configurepython/configurepython.cpp:49
 msgid "Install Python"
 msgstr ""
 
-#: qtplugins/configurepython/configurepython.cpp:49
+#: qtplugins/configurepython/configurepython.cpp:50
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
@@ -2366,13 +2374,14 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 #: qtplugins/configurepython/configurepythondialog.cpp:203
 #: qtplugins/editor/editortoolwidget.cpp:130
-#: qtplugins/templatetool/templatetoolwidget.cpp:340
-#: qtplugins/templatetool/templatetoolwidget.cpp:353
-#: qtplugins/templatetool/templatetoolwidget.cpp:361
-#: qtplugins/templatetool/templatetoolwidget.cpp:369
-#: qtplugins/templatetool/templatetoolwidget.cpp:377
-#: qtplugins/templatetool/templatetoolwidget.cpp:385
-#: qtplugins/templatetool/templatetoolwidget.cpp:448:2121
+#: qtplugins/templatetool/templatetoolwidget.cpp:84
+#: qtplugins/templatetool/templatetoolwidget.cpp:352
+#: qtplugins/templatetool/templatetoolwidget.cpp:365
+#: qtplugins/templatetool/templatetoolwidget.cpp:373
+#: qtplugins/templatetool/templatetoolwidget.cpp:381
+#: qtplugins/templatetool/templatetoolwidget.cpp:389
+#: qtplugins/templatetool/templatetoolwidget.cpp:397
+#: qtplugins/templatetool/templatetoolwidget.cpp:460:2121
 #, fuzzy
 msgid "Other…"
 msgstr "Друго…"
@@ -2647,50 +2656,54 @@ msgstr "Ulaz turbomola"
 msgid "Copy"
 msgstr "Kopiraj"
 
-#: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
-#: qtplugins/lineformatinput/lineformatinput.cpp:46
-msgid "SMILES"
-msgstr "SMILES"
-
-#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
-#: qtplugins/lineformatinput/lineformatinput.cpp:45
-msgid "InChI"
-msgstr "InChI"
-
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:33:316
+#: qtplugins/copypaste/copypaste.cpp:35:316
 msgid "Cut"
 msgstr "Iseci"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:34:328
+#: qtplugins/copypaste/copypaste.cpp:36:328
 msgid "Clear"
 msgstr "Očisti"
 
-#: qtplugins/copypaste/copypaste.cpp:35
+#: qtplugins/copypaste/copypaste.cpp:37
 #, fuzzy
 msgid "&Paste"
 msgstr "Nalepi"
 
-#: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
+#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/lineformatinput/lineformatinput.cpp:47
+msgid "SMILES"
+msgstr "SMILES"
+
+#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/lineformatinput/lineformatinput.cpp:46
+msgid "InChI"
+msgstr "InChI"
+
+#: qtplugins/copypaste/copypaste.cpp:88
+msgid "XYZ"
+msgstr "XYZ"
+
+#: qtplugins/copypaste/copypaste.cpp:89 qtplugins/copypaste/copypaste.cpp:91
 msgid "&Edit"
 msgstr "&Uredi"
 
-#: qtplugins/copypaste/copypaste.cpp:81
+#: qtplugins/copypaste/copypaste.cpp:91
 msgid "Copy As"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:150
+#: qtplugins/copypaste/copypaste.cpp:169
 msgid "Error Clipping Molecule"
 msgstr "Greška pri isecanju molekula"
 
-#: qtplugins/copypaste/copypaste.cpp:151
+#: qtplugins/copypaste/copypaste.cpp:170
 msgid "Error generating clipboard data."
 msgstr "Greška pri generisanju podataka međuspremnika."
 
-#: qtplugins/copypaste/copypaste.cpp:152
+#: qtplugins/copypaste/copypaste.cpp:171
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2700,7 +2713,7 @@ msgstr ""
 "Izlazni format: %1\n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:277
+#: qtplugins/copypaste/copypaste.cpp:175 qtplugins/copypaste/copypaste.cpp:296
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2709,19 +2722,19 @@ msgstr ""
 "Greška čitača:\n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
+#: qtplugins/copypaste/copypaste.cpp:257 qtplugins/copypaste/copypaste.cpp:290
 msgid "Error Pasting Molecule"
 msgstr "Greška pri lepljenju molekula"
 
-#: qtplugins/copypaste/copypaste.cpp:239
+#: qtplugins/copypaste/copypaste.cpp:258
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "Ne može se nalepiti molekul: Međuspremnik prazan!"
 
-#: qtplugins/copypaste/copypaste.cpp:272
+#: qtplugins/copypaste/copypaste.cpp:291
 msgid "Error reading clipboard data."
 msgstr "Greška pri čitanju podataka međuspremnika."
 
-#: qtplugins/copypaste/copypaste.cpp:273
+#: qtplugins/copypaste/copypaste.cpp:292
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -3171,8 +3184,8 @@ msgstr "Omogućite vizuelizaciju polja sila za atome molekula."
 
 #: qtplugins/forcefield/forcefield.cpp:73
 #: qtplugins/forcefield/forcefield.cpp:368
-#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:47
-#: qtplugins/openbabel/openbabel.cpp:559
+#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:560
 msgid "Optimize Geometry"
 msgstr "&Prilagodi Geometriju"
 
@@ -3209,8 +3222,8 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:467
 #: qtplugins/forcefield/forcefield.cpp:537
 #: qtplugins/playertool/playertool.cpp:348
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:931
-#: qtplugins/surfaces/surfaces.cpp:975 qtplugins/surfaces/surfaces.cpp:987
+#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:935
+#: qtplugins/surfaces/surfaces.cpp:979 qtplugins/surfaces/surfaces.cpp:991
 #: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Avogadro"
 msgstr "Avogadro"
@@ -3398,7 +3411,7 @@ msgstr "Predložite proračun GAMESS -a"
 msgid "&Adjust Hydrogens"
 msgstr "&Doteraj vodonike"
 
-#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:71
+#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:72
 msgid "Add Hydrogens"
 msgstr "Dodaj vodonike"
 
@@ -3441,7 +3454,7 @@ msgstr "ДНА/РНА…"
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
-#: qtplugins/lineformatinput/lineformatinput.cpp:61
+#: qtplugins/lineformatinput/lineformatinput.cpp:62
 msgid "&Insert"
 msgstr "&Umetni"
 
@@ -3473,14 +3486,14 @@ msgstr "Тимин"
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
-#: qtplugins/lineformatinput/lineformatinput.cpp:109
-#: qtplugins/lineformatinput/lineformatinput.cpp:124:1094
+#: qtplugins/lineformatinput/lineformatinput.cpp:110
+#: qtplugins/lineformatinput/lineformatinput.cpp:125:1094
 #, fuzzy
 msgid "Insert Molecule…"
 msgstr "Umetni molekul …"
 
 #: qtplugins/insertdna/insertdna.cpp:201
-#: qtplugins/lineformatinput/lineformatinput.cpp:125
+#: qtplugins/lineformatinput/lineformatinput.cpp:126
 #, fuzzy
 msgid "Generating 3D molecule…"
 msgstr "Generiše se 3D molekul …"
@@ -3656,26 +3669,26 @@ msgstr "Neprovidnost:"
 msgid "Render atoms as licorice / sticks."
 msgstr "Atome pretvoriti u likoriš."
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:31
+#: qtplugins/lineformatinput/lineformatinput.cpp:32
 #, fuzzy
 msgid "SMILES…"
 msgstr "SMILES…"
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:37
+#: qtplugins/lineformatinput/lineformatinput.cpp:38
 #, fuzzy
 msgid "InChI…"
 msgstr "InChI…"
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:88
-#: qtplugins/lineformatinput/lineformatinput.cpp:113
+#: qtplugins/lineformatinput/lineformatinput.cpp:89
+#: qtplugins/lineformatinput/lineformatinput.cpp:114
 msgid "No descriptors found!"
 msgstr "Nema opisa!"
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:89
+#: qtplugins/lineformatinput/lineformatinput.cpp:90
 msgid "No line format readers found!"
 msgstr "Čitači formata linije nisu pronađeni!"
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:114
+#: qtplugins/lineformatinput/lineformatinput.cpp:115
 msgid "Unable to load requested format reader."
 msgstr "Nije moguće učitati čitač traženog formata."
 
@@ -3871,7 +3884,7 @@ msgstr "Pogledajte opšta svojstva molekula."
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:267
+#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:271
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analyze"
 msgstr ""
@@ -4002,48 +4015,48 @@ msgstr ""
 msgid "Chalcogen"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:53
+#: qtplugins/openbabel/openbabel.cpp:54
 #, fuzzy
 msgid "Configure Force Field…"
 msgstr "Podesi polje sile…"
 
-#: qtplugins/openbabel/openbabel.cpp:59
+#: qtplugins/openbabel/openbabel.cpp:60
 #, fuzzy
 msgid "Conformer Search…"
 msgstr "Претрага саобразника…"
 
-#: qtplugins/openbabel/openbabel.cpp:65
+#: qtplugins/openbabel/openbabel.cpp:66
 msgid "Perceive Bonds"
 msgstr "Spoznaj veze"
 
-#: qtplugins/openbabel/openbabel.cpp:77
+#: qtplugins/openbabel/openbabel.cpp:78
 #, fuzzy
 msgid "Add Hydrogens for pH…"
 msgstr "Dodaj vodonike za pH…"
 
-#: qtplugins/openbabel/openbabel.cpp:83
+#: qtplugins/openbabel/openbabel.cpp:84
 msgid "Remove Hydrogens"
 msgstr "Ukloni vodonike"
 
-#: qtplugins/openbabel/openbabel.cpp:94
+#: qtplugins/openbabel/openbabel.cpp:95
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:112
+#: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
 msgstr "&Otvori Babel"
 
-#: qtplugins/openbabel/openbabel.cpp:119
+#: qtplugins/openbabel/openbabel.cpp:120
 msgid "The Open Babel file formats are not ready to be added."
 msgstr "Formati datoteka Open Babel nisu spremni za dodavanje."
 
-#: qtplugins/openbabel/openbabel.cpp:203
+#: qtplugins/openbabel/openbabel.cpp:204
 #, fuzzy
 msgid "Loading molecule from Open Babel…"
 msgstr "Učitavanje molekula iz Open Babel -a …"
 
-#: qtplugins/openbabel/openbabel.cpp:209
+#: qtplugins/openbabel/openbabel.cpp:210
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
@@ -4051,17 +4064,17 @@ msgstr ""
 "Došlo je do interne greške: OpenBabel :: readMolecule je pozvan, ali nijedan "
 "obabel izlaz nije dostupan za raščlanjivanje!"
 
-#: qtplugins/openbabel/openbabel.cpp:218
+#: qtplugins/openbabel/openbabel.cpp:219
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr "Došlo je do greške pri pokretanju programa Open Babel (%1)."
 
-#: qtplugins/openbabel/openbabel.cpp:228
+#: qtplugins/openbabel/openbabel.cpp:229
 msgid "Error parsing openbabel output."
 msgstr "Greška pri raščlanjivanju openbabel izlaza."
 
-#: qtplugins/openbabel/openbabel.cpp:370 qtplugins/openbabel/openbabel.cpp:398
-#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
+#: qtplugins/openbabel/openbabel.cpp:371 qtplugins/openbabel/openbabel.cpp:399
+#: qtplugins/openbabel/openbabel.cpp:433 qtplugins/openbabel/openbabel.cpp:578
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
@@ -4070,24 +4083,24 @@ msgstr ""
 "Došlo je do greške pri preuzimanju liste podržanih polja sile. (koristeći "
 "„%1“)."
 
-#: qtplugins/openbabel/openbabel.cpp:423
+#: qtplugins/openbabel/openbabel.cpp:424
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr "Molekul nije važeć. Ne može se optimizirati geometrija."
 
-#: qtplugins/openbabel/openbabel.cpp:441
+#: qtplugins/openbabel/openbabel.cpp:442
 msgid "Cannot optimize geometry with Open Babel."
 msgstr "Ne možete optimizovati geometriju pomoću Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:466
+#: qtplugins/openbabel/openbabel.cpp:467
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "&Prilagodi Geometriju (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
+#: qtplugins/openbabel/openbabel.cpp:468 qtplugins/openbabel/openbabel.cpp:621
 #, fuzzy
 msgid "Generating…"
 msgstr "Generiranje …"
 
-#: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
+#: qtplugins/openbabel/openbabel.cpp:487 qtplugins/openbabel/openbabel.cpp:638
 #, fuzzy
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
@@ -4096,14 +4109,14 @@ msgstr ""
 "Došlo je do unutrašnje greške pri generisanju Open Babel prikaza trenutnog "
 "molekula."
 
-#: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
+#: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:644
 #, fuzzy, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr "Pokretanje %1 …"
 
-#: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
-#: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
+#: qtplugins/openbabel/openbabel.cpp:507 qtplugins/openbabel/openbabel.cpp:515
+#: qtplugins/openbabel/openbabel.cpp:658 qtplugins/openbabel/openbabel.cpp:666
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -4114,18 +4127,18 @@ msgstr ""
 "Trenutna energija: %3\n"
 "dE: %4"
 
-#: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
+#: qtplugins/openbabel/openbabel.cpp:529 qtplugins/openbabel/openbabel.cpp:680
 #, fuzzy
 msgid "Updating molecule…"
 msgstr "Ažuriranje molekula …"
 
-#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
-#: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
+#: qtplugins/openbabel/openbabel.cpp:537 qtplugins/openbabel/openbabel.cpp:688
+#: qtplugins/openbabel/openbabel.cpp:779 qtplugins/openbabel/openbabel.cpp:961
 msgid "Error interpreting Open Babel output."
 msgstr "Greška pri tumačenju izlaza Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
-#: qtplugins/openbabel/openbabel.cpp:790
+#: qtplugins/openbabel/openbabel.cpp:550 qtplugins/openbabel/openbabel.cpp:701
+#: qtplugins/openbabel/openbabel.cpp:791
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -4134,107 +4147,107 @@ msgstr ""
 "Broj atoma u izlazu obabela (%1) ne odgovara broju atoma u originalnom "
 "molekulu (%2)."
 
-#: qtplugins/openbabel/openbabel.cpp:568
+#: qtplugins/openbabel/openbabel.cpp:569
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:586
+#: qtplugins/openbabel/openbabel.cpp:587
 msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:619
+#: qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:710
+#: qtplugins/openbabel/openbabel.cpp:711
 msgid "Generate Conformers"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:729
+#: qtplugins/openbabel/openbabel.cpp:730
 msgid "Cannot open file with Open Babel."
 msgstr "Nije moguće otvoriti datoteku sa Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:735
+#: qtplugins/openbabel/openbabel.cpp:736
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr "Nevažeći molekul: Ne može da opazi veze."
 
-#: qtplugins/openbabel/openbabel.cpp:741
+#: qtplugins/openbabel/openbabel.cpp:742
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "Opazivanje Veza (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:742
+#: qtplugins/openbabel/openbabel.cpp:743
 #, fuzzy
 msgid "Generating XYZ representation…"
 msgstr "Generisanje XYZ predstavljanja …"
 
-#: qtplugins/openbabel/openbabel.cpp:749
+#: qtplugins/openbabel/openbabel.cpp:750
 msgid "Error generating XYZ string."
 msgstr "Greška pri generisanju XYZ niza."
 
-#: qtplugins/openbabel/openbabel.cpp:760
+#: qtplugins/openbabel/openbabel.cpp:761
 #, fuzzy, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr "Pretvaranje XYZ u Open Babel sa %1 …"
 
-#: qtplugins/openbabel/openbabel.cpp:770
+#: qtplugins/openbabel/openbabel.cpp:771
 #, fuzzy
 msgid "Updating molecule from Open Babel…"
 msgstr "Ažuriranje molekula iz Open Babel -a …"
 
-#: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
+#: qtplugins/openbabel/openbabel.cpp:823 qtplugins/openbabel/openbabel.cpp:865
 msgid "Cannot add hydrogens with Open Babel."
 msgstr "Ne možete dodati vodonike sa Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
+#: qtplugins/openbabel/openbabel.cpp:828 qtplugins/openbabel/openbabel.cpp:878
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "Dodaj Vodonike (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:828
+#: qtplugins/openbabel/openbabel.cpp:829
 #, fuzzy
 msgid "Generating Open Babel input…"
 msgstr "Generisanje unosa Open Babel …"
 
-#: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
+#: qtplugins/openbabel/openbabel.cpp:837 qtplugins/openbabel/openbabel.cpp:887
 msgid "Error generating Open Babel input."
 msgstr "Greška pri generisanju unosa Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
-#: qtplugins/openbabel/openbabel.cpp:941
+#: qtplugins/openbabel/openbabel.cpp:850 qtplugins/openbabel/openbabel.cpp:900
+#: qtplugins/openbabel/openbabel.cpp:942
 #, fuzzy, qt-format
 msgid "Running %1…"
 msgstr "Pokreće se %1 …"
 
-#: qtplugins/openbabel/openbabel.cpp:871
+#: qtplugins/openbabel/openbabel.cpp:872
 msgid "Add hydrogens for pH"
 msgstr "Dodaj vodonike za pH"
 
-#: qtplugins/openbabel/openbabel.cpp:871
+#: qtplugins/openbabel/openbabel.cpp:872
 msgid "pH:"
 msgstr "pH:"
 
-#: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
+#: qtplugins/openbabel/openbabel.cpp:879 qtplugins/openbabel/openbabel.cpp:921
 #, fuzzy
 msgid "Generating obabel input…"
 msgstr "Generiranje obabel unosa …"
 
-#: qtplugins/openbabel/openbabel.cpp:914
+#: qtplugins/openbabel/openbabel.cpp:915
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr "Ne možete ukloniti vodonike sa Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:919
+#: qtplugins/openbabel/openbabel.cpp:920
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "Ukloni Vodonike (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:928
+#: qtplugins/openbabel/openbabel.cpp:929
 msgid "Error generating Open Babel data."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:951
+#: qtplugins/openbabel/openbabel.cpp:952
 #, fuzzy
 msgid "Reading obabel output…"
 msgstr "Čitanje Obabel izlaza …"
 
-#: qtplugins/openbabel/openbabel.cpp:1014
+#: qtplugins/openbabel/openbabel.cpp:1015
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -4403,7 +4416,7 @@ msgstr "Izvezi Bitmap Grafiku"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Film (*.mp4);;Film (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:903
+#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:907
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -4419,11 +4432,11 @@ msgstr "GIF format datoteke ne podržava brzine kadrova veće od 100 FPS."
 msgid "Movie (*.avi)"
 msgstr "Film (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:976
+#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:980
 msgid "Error: cannot add frame to video."
 msgstr "Greška: nije moguće dodati okvir u video zapis."
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:988
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:992
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Ne mogu da sačuvam datoteku „%1“."
@@ -4586,6 +4599,30 @@ msgstr "Preuzmite dodatke"
 #: qtplugins/plugindownloader/plugindownloader.h:41
 msgid "Download plugins from GitHub repositories."
 msgstr "Preuzmite dodatke iz spremišta GitHub."
+
+#: qtplugins/plugindownloader/zipextracter.cpp:67
+#, qt-format
+msgctxt "%1 is the error message from libarchive"
+msgid ""
+"ERROR: could not open zip file to list contents.\n"
+"(%1)"
+msgstr ""
+
+#: qtplugins/plugindownloader/zipextracter.cpp:115
+#, qt-format
+msgctxt "%1 is the error message from libarchive"
+msgid ""
+"ERROR: could not open zip file to extract files.\n"
+"(%1)"
+msgstr ""
+
+#: qtplugins/plugindownloader/zipextracter.cpp:132
+#: qtplugins/plugindownloader/zipextracter.cpp:151
+#: qtplugins/plugindownloader/zipextracter.cpp:161
+#, qt-format
+msgctxt "%1 is the message from libarchive"
+msgid "Warning: (%1)"
+msgstr ""
 
 #: qtplugins/ply/ply.cpp:29
 #, fuzzy
@@ -5323,7 +5360,7 @@ msgstr "Gustina"
 msgid "Molecular Orbitals…"
 msgstr ""
 
-#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:857
+#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:861
 msgid "Meshes"
 msgstr "Mreže"
 
@@ -5406,71 +5443,71 @@ msgstr "(LUMO)"
 msgid "From File"
 msgstr "Iz Datoteke"
 
-#: qtplugins/surfaces/surfaces.cpp:84
+#: qtplugins/surfaces/surfaces.cpp:86
 #, fuzzy
 msgid "Create Surfaces…"
 msgstr "Napravi Površine…"
 
-#: qtplugins/surfaces/surfaces.cpp:112
+#: qtplugins/surfaces/surfaces.cpp:116
 msgid "Render the van der Waals surface."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:114
+#: qtplugins/surfaces/surfaces.cpp:118
 msgid "Render the van der Waals molecular surface."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:116
+#: qtplugins/surfaces/surfaces.cpp:120
 msgid "Render the solvent-accessible molecular surface."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:118
+#: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
+#: qtplugins/surfaces/surfaces.cpp:123 qtplugins/surfaces/surfaces.cpp:124
 msgid "Render a molecular orbital."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:122
+#: qtplugins/surfaces/surfaces.cpp:126
 msgid "Render the electron density."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:123
+#: qtplugins/surfaces/surfaces.cpp:127
 msgid "Render the spin density."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:125
+#: qtplugins/surfaces/surfaces.cpp:129
 msgid "Render a cube supplied with the file."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:303
+#: qtplugins/surfaces/surfaces.cpp:307
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:601
+#: qtplugins/surfaces/surfaces.cpp:605
 msgid "Calculating electron density"
 msgstr "Izračunaj Gustinu Elektrona"
 
-#: qtplugins/surfaces/surfaces.cpp:610
+#: qtplugins/surfaces/surfaces.cpp:614
 msgid "Calculating spin density"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:619
+#: qtplugins/surfaces/surfaces.cpp:623
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Izračunavanje molekulske orbite %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:880 qtplugins/surfaces/surfaces.cpp:908
+#: qtplugins/surfaces/surfaces.cpp:884 qtplugins/surfaces/surfaces.cpp:912
 msgid "Movie AVI (*.avi)"
 msgstr "Film AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:882
+#: qtplugins/surfaces/surfaces.cpp:886
 msgid "Export Movie"
 msgstr "Izvezi Film"
 
-#: qtplugins/surfaces/surfaces.cpp:883
+#: qtplugins/surfaces/surfaces.cpp:887
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Film MP4 (*.mp4);;Film AVI (*.avi);;GIF (*.gif)"
 
@@ -11627,9 +11664,6 @@ msgstr ""
 
 #~ msgid "Fractional"
 #~ msgstr "Разломачки"
-
-#~ msgid "XYZ"
-#~ msgstr "XYZ"
 
 #~ msgid "XYZ, coords only"
 #~ msgstr "XYZ, само координате"
