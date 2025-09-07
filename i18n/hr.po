@@ -5956,7 +5956,7 @@ msgstr ""
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:113
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Value:"
-msgstr ""
+msgstr "Vrijednost:"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:125
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, editValue)
@@ -5970,17 +5970,17 @@ msgstr "Å"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, addConstraint)
 msgid "Add"
-msgstr ""
+msgstr "Dodaj"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:167
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "Options"
-msgstr ""
+msgstr "Opcije"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
 msgid "Delete Selected"
-msgstr ""
+msgstr "Ukloni odabrane"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:207
 #. i18n: ectx: property (text), widget (QPushButton, deleteAllConstraints)
