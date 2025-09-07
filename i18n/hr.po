@@ -5985,7 +5985,7 @@ msgstr "Ukloni odabrane"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:207
 #. i18n: ectx: property (text), widget (QPushButton, deleteAllConstraints)
 msgid "Delete All"
-msgstr ""
+msgstr "Ukloni sve"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:214
 #. i18n: ectx: property (text), widget (QPushButton, okButton)
