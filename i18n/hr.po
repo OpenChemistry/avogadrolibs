@@ -5990,7 +5990,7 @@ msgstr "Ukloni sve"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:214
 #. i18n: ectx: property (text), widget (QPushButton, okButton)
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
