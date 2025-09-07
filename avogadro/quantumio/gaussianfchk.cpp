@@ -160,7 +160,7 @@ void GaussianFchk::processLine(std::istream& in)
     m_c = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
   } else if (key == "P(S=P) Contraction coefficients" && list.size() > 2) {
     m_csp = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-  } else if (key == "Alpha Orbital Energies") {
+  } else if (key == "Alpha Orbital Energies" || key == "orbital energies") {
     if (m_scftype == Rhf) {
       m_orbitalEnergy =
         readArrayD(in, Core::lexicalCast<int>(list[2]), 16, hartreeToEV);
@@ -180,7 +180,8 @@ void GaussianFchk::processLine(std::istream& in)
 
     m_betaOrbitalEnergy =
       readArrayD(in, Core::lexicalCast<int>(list[2]), 16, hartreeToEV);
-  } else if (key == "Alpha MO coefficients" && list.size() > 2) {
+  } else if ((key == "Alpha MO coefficients" || key == "MO coefficients (C)") &&
+             list.size() > 2) {
     if (m_scftype == Rhf) {
       m_MOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
     } else if (m_scftype == Uhf) {
