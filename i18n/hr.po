@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-07 02:42+0000\n"
-"PO-Revision-Date: 2025-09-07 23:28+0000\n"
+"PO-Revision-Date: 2025-09-10 22:02+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -1162,11 +1162,11 @@ msgstr "Višekratnost"
 
 #: qtgui/jsonwidget.cpp:361
 msgid "User Name"
-msgstr ""
+msgstr "Korisničko ime"
 
 #: qtgui/jsonwidget.cpp:363
 msgid "Password"
-msgstr ""
+msgstr "Lozinka"
 
 #: qtgui/jsonwidget.cpp:671
 #, qt-format
@@ -3159,7 +3159,7 @@ msgstr "Odmrzni odabrane atome"
 #: qtplugins/forcefield/forcefield.cpp:127
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
-msgstr ""
+msgstr "Odabrane atome"
 
 #: qtplugins/forcefield/forcefield.cpp:135
 msgctxt "freeze atomic distances / glue atoms together"
