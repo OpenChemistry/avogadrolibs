@@ -48,9 +48,10 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
   bool fractionalCoords = false;
 
   // possible lattice constants
-  Real a, b, c, alpha, beta, gamma;
-  a = b = c = 100.0;
-  alpha = beta = gamma = 90.0;
+  // if periodic is either one or two, the values are used for "vacuum"
+  Real a = 100.0, b = 100.0, c = 100.0;
+  Real alpha = 90.0 * DEG_TO_RAD, beta = 90.0 * DEG_TO_RAD,
+       gamma = 90.0 * DEG_TO_RAD;
   // defaults if periodicity is not 3
   Vector3 v1(100.0, 0.0, 0.0);
   Vector3 v2(0.0, 100.0, 0.0);
