@@ -315,6 +315,14 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
     getline(inStream, buffer);
   } // done reading the file
 
+  if (periodic_parsed && periodic_guessed &&
+      *periodic_parsed != *periodic_guessed) {
+    appendError("Dimensionality guessed from $lattice/$cell is " +
+                std::to_string(*periodic_guessed) +
+                " but $periodic specifies " + std::to_string(*periodic_parsed));
+    return false;
+  }
+
   Core::UnitCell* cell = nullptr;
   std::string tmp;
   if (hasLattice) {
