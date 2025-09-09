@@ -7415,7 +7415,7 @@ msgstr "Gradijentni spust"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Conjugate Gradient"
-msgstr ""
+msgstr "Poveži gradijente"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
