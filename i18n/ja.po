@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-07 02:42+0000\n"
-"PO-Revision-Date: 2025-09-02 16:02+0000\n"
+"PO-Revision-Date: 2025-09-10 22:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.13.1-dev\n"
+"X-Generator: Weblate 5.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1140,11 +1140,11 @@ msgstr "多重度"
 
 #: qtgui/jsonwidget.cpp:361
 msgid "User Name"
-msgstr ""
+msgstr "ユーザ名"
 
 #: qtgui/jsonwidget.cpp:363
 msgid "Password"
-msgstr ""
+msgstr "パスワード"
 
 #: qtgui/jsonwidget.cpp:671
 #, fuzzy, qt-format
@@ -4528,6 +4528,8 @@ msgid ""
 "ERROR: could not open zip file to list contents.\n"
 "(%1)"
 msgstr ""
+"エラー: zipファイルを開いて中身の一覧を表示できませんでした。\n"
+"(%1)"
 
 #: qtplugins/plugindownloader/zipextracter.cpp:115
 #, qt-format
@@ -4536,6 +4538,8 @@ msgid ""
 "ERROR: could not open zip file to extract files.\n"
 "(%1)"
 msgstr ""
+"エラー: zipファイルを開いてファイルを展開できませんでした。\n"
+"(%1)"
 
 #: qtplugins/plugindownloader/zipextracter.cpp:132
 #: qtplugins/plugindownloader/zipextracter.cpp:151
@@ -4543,7 +4547,7 @@ msgstr ""
 #, qt-format
 msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
-msgstr ""
+msgstr "警告: (%1)"
 
 #: qtplugins/ply/ply.cpp:29
 #, fuzzy
