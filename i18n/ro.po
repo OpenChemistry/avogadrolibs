@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-07 02:42+0000\n"
-"PO-Revision-Date: 2025-09-02 16:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-09-10 22:02+0000\n"
+"Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
 "Language: ro\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.13.1-dev\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1172,11 +1172,11 @@ msgstr "Multiplicitate"
 
 #: qtgui/jsonwidget.cpp:361
 msgid "User Name"
-msgstr ""
+msgstr "Numele utilizatorului"
 
 #: qtgui/jsonwidget.cpp:363
 msgid "Password"
-msgstr ""
+msgstr "Parola"
 
 #: qtgui/jsonwidget.cpp:671
 #, qt-format
@@ -2666,7 +2666,7 @@ msgstr "InChI"
 
 #: qtplugins/copypaste/copypaste.cpp:88
 msgid "XYZ"
-msgstr ""
+msgstr "XYZ"
 
 #: qtplugins/copypaste/copypaste.cpp:89 qtplugins/copypaste/copypaste.cpp:91
 msgid "&Edit"
@@ -4567,6 +4567,8 @@ msgid ""
 "ERROR: could not open zip file to list contents.\n"
 "(%1)"
 msgstr ""
+"EROARE: nu s-a putut deschide fișierul zip pentru a afișa conținutul.\n"
+"(%1)"
 
 #: qtplugins/plugindownloader/zipextracter.cpp:115
 #, qt-format
@@ -4575,6 +4577,8 @@ msgid ""
 "ERROR: could not open zip file to extract files.\n"
 "(%1)"
 msgstr ""
+"EROARE: nu s-a putut deschide fișierul zip pentru a extrage fișierele.\n"
+"(%1)"
 
 #: qtplugins/plugindownloader/zipextracter.cpp:132
 #: qtplugins/plugindownloader/zipextracter.cpp:151
@@ -4582,7 +4586,7 @@ msgstr ""
 #, qt-format
 msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
-msgstr ""
+msgstr "Avertisment: (%1)"
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"

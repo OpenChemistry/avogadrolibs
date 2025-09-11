@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-07 02:42+0000\n"
-"PO-Revision-Date: 2025-09-07 23:28+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2025-09-10 22:02+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1162,11 +1161,11 @@ msgstr "Višekratnost"
 
 #: qtgui/jsonwidget.cpp:361
 msgid "User Name"
-msgstr ""
+msgstr "Korisničko ime"
 
 #: qtgui/jsonwidget.cpp:363
 msgid "Password"
-msgstr ""
+msgstr "Lozinka"
 
 #: qtgui/jsonwidget.cpp:671
 #, qt-format
@@ -1288,11 +1287,11 @@ msgstr "Bez naslova"
 
 #: qtgui/moleculemodel.cpp:109
 msgid "Edit molecule"
-msgstr ""
+msgstr "Uredi molekulu"
 
 #: qtgui/moleculemodel.cpp:116
 msgid "Not saved"
-msgstr ""
+msgstr "Nije spremljeno"
 
 #: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
@@ -2369,7 +2368,7 @@ msgstr "Ograničenja"
 
 #: qtplugins/constraints/constraintsextension.h:31
 msgid "Set constraints for geometry optimizations"
-msgstr ""
+msgstr "Postavi ograničenja za optimizacije geometrije"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2387,27 +2386,27 @@ msgstr "Kut"
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:64:265
 msgid "Torsion Angle"
-msgstr ""
+msgstr "Kut torzije"
 
 #: qtplugins/constraints/constraintsmodel.cpp:68
 msgctxt "fix / remain constant"
 msgid "Freeze Atom"
-msgstr ""
+msgstr "Zamrzni atom"
 
 #: qtplugins/constraints/constraintsmodel.cpp:70
 msgctxt "fix / remain constant"
 msgid "Freeze X Axis"
-msgstr ""
+msgstr "Zamrzni os x"
 
 #: qtplugins/constraints/constraintsmodel.cpp:72
 msgctxt "fix / remain constant"
 msgid "Freeze Y Axis"
-msgstr ""
+msgstr "Zamrzni os y"
 
 #: qtplugins/constraints/constraintsmodel.cpp:74
 msgctxt "fix / remain constant"
 msgid "Freeze Z Axis"
-msgstr ""
+msgstr "Zamrzni os z"
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
 #: qtplugins/propertytables/propertymodel.cpp:561
@@ -2643,7 +2642,7 @@ msgstr "InChI"
 
 #: qtplugins/copypaste/copypaste.cpp:88
 msgid "XYZ"
-msgstr ""
+msgstr "xyz"
 
 #: qtplugins/copypaste/copypaste.cpp:89 qtplugins/copypaste/copypaste.cpp:91
 msgid "&Edit"
@@ -2788,7 +2787,7 @@ msgstr "GUSTOĆE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:386
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "PONOVNO_POKRETANJE_POVIJESTI"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:389
 msgid "MOPAC"
@@ -2800,7 +2799,7 @@ msgstr "NASUMICE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:398
 msgid "RESTART"
-msgstr ""
+msgstr "PONOVNO_POKRETANJE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:401
 msgid "SPARSE"
@@ -2955,11 +2954,11 @@ msgstr "Uređivač jedinične ćelije"
 #: qtplugins/crystal/unitcelldialog.cpp:284
 #: qtplugins/crystal/unitcelldialog.cpp:300
 msgid "Ignoring singular cell matrix"
-msgstr ""
+msgstr "Zanemaruje se singularna matrica ćelije"
 
 #: qtplugins/crystal/unitcelldialog.cpp:316
 msgid "Ignoring singular fractional cell matrix"
-msgstr ""
+msgstr "Zanemaruje se singularna matrica frakcijske ćelije"
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -3159,12 +3158,12 @@ msgstr "Odmrzni odabrane atome"
 #: qtplugins/forcefield/forcefield.cpp:127
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
-msgstr ""
+msgstr "Spoji odabrane atome"
 
 #: qtplugins/forcefield/forcefield.cpp:135
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
-msgstr ""
+msgstr "Odspoji odabrane atome"
 
 #: qtplugins/forcefield/forcefield.cpp:316
 #: qtplugins/forcefield/forcefield.cpp:467
@@ -3271,7 +3270,7 @@ msgstr "Frekvencije"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:278
 msgid "Make EFP"
-msgstr ""
+msgstr "Izradi EFP"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:404
 msgid "Core Potential"
@@ -3293,19 +3292,19 @@ msgstr "Ništa"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
 msgid "D1"
-msgstr ""
+msgstr "D1"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:425
 msgid "D2"
-msgstr ""
+msgstr "D2"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:428
 msgid "D3"
-msgstr ""
+msgstr "D3"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:431
 msgid "D4"
-msgstr ""
+msgstr "D4"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:446
 msgid "Gas"
@@ -3713,7 +3712,7 @@ msgstr "Alat za mjerenje"
 
 #: qtplugins/meshes/meshes.h:33
 msgid "Render molecular surfaces."
-msgstr ""
+msgstr "Iscrtaj molekularne površine."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
@@ -4532,6 +4531,8 @@ msgid ""
 "ERROR: could not open zip file to list contents.\n"
 "(%1)"
 msgstr ""
+"GREŠKA: nije moguće otvoriti zip datoteku za prikaz popisa sadržaja.\n"
+"(%1)"
 
 #: qtplugins/plugindownloader/zipextracter.cpp:115
 #, qt-format
@@ -4540,6 +4541,8 @@ msgid ""
 "ERROR: could not open zip file to extract files.\n"
 "(%1)"
 msgstr ""
+"POGREŠKA: nije moguće otvoriti zip datoteku za raspakiranje datoteka.\n"
+"(%1)"
 
 #: qtplugins/plugindownloader/zipextracter.cpp:132
 #: qtplugins/plugindownloader/zipextracter.cpp:151
@@ -4547,7 +4550,7 @@ msgstr ""
 #, qt-format
 msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
-msgstr ""
+msgstr "Upozorenje: (%1)"
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"
@@ -4776,19 +4779,19 @@ msgstr "Svojstva ostatka"
 
 #: qtplugins/propertytables/propertyview.cpp:409
 msgid "Freeze Atom"
-msgstr ""
+msgstr "Zamrzni atom"
 
 #: qtplugins/propertytables/propertyview.cpp:417
 msgid "Constrain Bond"
-msgstr ""
+msgstr "Ograniči vezu"
 
 #: qtplugins/propertytables/propertyview.cpp:419
 msgid "Constrain Angle"
-msgstr ""
+msgstr "Ograniči kut"
 
 #: qtplugins/propertytables/propertyview.cpp:421
 msgid "Constrain Torsion"
-msgstr ""
+msgstr "Ograniči torziju"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5376,7 +5379,7 @@ msgstr "Iscrtaj kocku isporučenu s datotekom."
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
-msgstr ""
+msgstr "Kocka %1"
 
 #: qtplugins/surfaces/surfaces.cpp:605
 msgid "Calculating electron density"
@@ -5814,7 +5817,7 @@ msgstr "PDB Datoteka:"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5939,7 +5942,7 @@ msgstr "Aktiviraj iscrtavanje površine"
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Isovalue"
-msgstr ""
+msgstr "Izovrijednost"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:29
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -5988,7 +5991,7 @@ msgstr "Vrsta:"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:74
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Atom Indices:"
-msgstr ""
+msgstr "Indeksi atoma:"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:113
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6248,22 +6251,22 @@ msgstr "EPS SCF"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:542
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "SCF GUESS"
-msgstr ""
+msgstr "SCF PRETPOSTAVKA"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:569
 #. i18n: ectx: property (text), widget (QLabel, label_24)
 msgid "OUTER MAX SCF"
-msgstr ""
+msgstr "VANJSKI MAX SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:603
 #. i18n: ectx: property (text), widget (QLabel, label_25)
 msgid "OUTER EPS SCF"
-msgstr ""
+msgstr "VANJSKI EPS SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:640
 #. i18n: ectx: property (text), widget (QLabel, label_26)
 msgid "OT T MINIMIZER"
-msgstr ""
+msgstr "OT T MINIMIZATOR"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6501,7 +6504,7 @@ msgstr "U:"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:107
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "CONV THRESH"
-msgstr ""
+msgstr "CONV THRESH"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -6783,7 +6786,7 @@ msgstr "elektron"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_waterPotential)
 msgid "Water Potential"
-msgstr "Vodni potencijal"
+msgstr "Potencijal vode"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:157
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -7315,17 +7318,17 @@ msgstr "Broj konformera:"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
 msgid "Systematic rotor search"
-msgstr ""
+msgstr "Sistematsko pretraživanje rotacijskih veza"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:47
 #. i18n: ectx: property (text), widget (QRadioButton, randomRadio)
 msgid "Random rotor search"
-msgstr ""
+msgstr "Slučajno pretraživanje rotacijskih veza"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:54
 #. i18n: ectx: property (text), widget (QRadioButton, weightedRadio)
 msgid "Weighted rotor search"
-msgstr ""
+msgstr "Ponderirano pretraživanje rotacijskih veza"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:61
 #. i18n: ectx: property (text), widget (QRadioButton, geneticRadio)
@@ -7415,7 +7418,7 @@ msgstr "Gradijentni spust"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Conjugate Gradient"
-msgstr ""
+msgstr "Konjugirani gradijent"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -7435,7 +7438,7 @@ msgstr "Ograniči nevezane interakcije"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Van der Waals cutoff distance:"
-msgstr ""
+msgstr "Granična udaljenost Van der Waalsovih sila:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -7445,7 +7448,7 @@ msgstr "Učestalost aktualiziranja para:"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "electrostatic cutoff distance:"
-msgstr ""
+msgstr "Granična udaljenost elektrostatskih sila:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7600,22 +7603,22 @@ msgstr "Indeks OpenCL platforme:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:275
 #. i18n: ectx: property (text), widget (QLabel, label_nonbondedMethod)
 msgid "Nonbonded method:"
-msgstr ""
+msgstr "Nepovezana metoda:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:283
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "NoCutoff"
-msgstr ""
+msgstr "Bez ograničenja"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:288
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "CutoffNonPeriodic"
-msgstr ""
+msgstr "Neperiodično ograničenje"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:293
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "CutoffPeriodic"
-msgstr ""
+msgstr "Periodično ograničenje"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:298
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
@@ -7669,7 +7672,7 @@ msgstr "Krivo"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:415
 #. i18n: ectx: property (text), widget (QLabel, label_nonBondedCutoff)
 msgid "Nonbonded cutoff:"
-msgstr ""
+msgstr "Nepovezano ograničenje:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:437
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, nonBondedCutoffSpin)
