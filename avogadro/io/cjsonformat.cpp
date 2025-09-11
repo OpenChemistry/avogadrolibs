@@ -429,6 +429,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
         if (!unitCellObject->isRegular()) {
           appendError(
             "cell parameters do not give linear-independent lattice vectors");
+          delete unitCellObject;
           return false;
         }
       }

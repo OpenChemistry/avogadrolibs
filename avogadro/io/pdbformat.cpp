@@ -79,6 +79,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       auto* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
       if (!cell->isRegular()) {
         appendError("CRYST1 does not give linear independent lattice vectors");
+        delete cell;
         return false;
       }
       mol.setUnitCell(cell);

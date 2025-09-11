@@ -192,6 +192,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   if (!cell->isRegular()) {
     appendError("cell vectors are not linear independent");
+    delete cell;
     return false;
   }
 

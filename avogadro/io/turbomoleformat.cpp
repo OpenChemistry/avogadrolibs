@@ -162,6 +162,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (cell) {
     if (!cell->isRegular()) {
       appendError(tmp + " does not give linear independent lattice vectors");
+      delete cell;
       return false;
     }
     mol.setUnitCell(cell);

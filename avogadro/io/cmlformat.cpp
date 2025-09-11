@@ -148,6 +148,7 @@ public:
       cell->setCellParameters(a, b, c, alpha, beta, gamma);
       if (!cell->isRegular()) {
         error += "<crystal> does not give linear independent lattice vectors";
+        delete cell;
         return false;
       }
       molecule->setUnitCell(cell);

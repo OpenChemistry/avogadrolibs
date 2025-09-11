@@ -236,6 +236,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
                                 unitcell[4], unitcell[3], unitcell[1]);
       if (!cell->isRegular()) {
         appendError("cell matrix is singular");
+        delete cell;
         return false;
       }
       mol.setUnitCell(cell);

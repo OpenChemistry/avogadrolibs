@@ -219,6 +219,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (!uc->isRegular()) {
     appendError(
       "'ITEM: BOX BOUNDS' does not give linear-independent lattive vectors");
+    delete uc;
     return false;
   }
   mol.setUnitCell(uc);
