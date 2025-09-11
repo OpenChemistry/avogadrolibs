@@ -5,6 +5,7 @@
 
 #include "utilities.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QStringList>
@@ -36,6 +37,9 @@ QString findExecutablePath(QString program)
   paths.prepend("/usr/local/bin");
 #endif
 
+  // check the current application directory too
+  paths.prepend(QCoreApplication::applicationDirPath());
+
   // check to see if we find the program in that path
   for (const auto& dir : paths) {
     QFileInfo test(dir + '/' + program);
@@ -64,6 +68,9 @@ QStringList findExecutablePaths(QStringList programs)
   paths.prepend("/usr/bin");
   paths.prepend("/usr/local/bin");
 #endif
+
+  // check the current application directory too
+  paths.prepend(QCoreApplication::applicationDirPath());
 
   // loop through all programs and all possible paths
   for (const auto& program : programs) {

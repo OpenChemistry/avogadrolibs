@@ -7,6 +7,8 @@
 #include "ui_downloaderwidget.h"
 #include "zipextracter.h"
 
+#include <avogadro/qtgui/utilities.h>
+
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QProcess>
@@ -438,25 +440,37 @@ void DownloaderWidget::unzipPlugin()
         if (namePieces.length() >= 3) {
           namePieces.removeLast();  // drop the hash
           namePieces.removeFirst(); // drop the org
+        }
 
-          QString component = namePieces.join('-');
+        QString component = namePieces.join('-');
 
-          // Check if there's a previous install
-          QString destination(extractDirectory + '/' + component);
-          QDir previousInstall(destination);
-          if (previousInstall.exists())
-            previousInstall.removeRecursively();
+        // Check if there's a previous install
+        QString destination(extractDirectory + '/' + component);
+        QDir previousInstall(destination);
+        if (previousInstall.exists())
+          previousInstall.removeRecursively();
 
-          // and move the directory into place, e.g.
-          // OpenChemistry-crystals-a7c672d
-          QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+        // and move the directory into place, e.g.
+        // OpenChemistry-crystals-a7c672d
+        QDir().rename(extractDirectory + '/' + newFiles[0], destination);
 
-          // check if there's a requirements.txt file
-          // .. if so, install with conda or pip
-          QString requirementsFile(destination + "/requirements.txt");
-          if (QFile::exists(requirementsFile) && checkToInstall()) {
-            // use conda if available
-            QSettings settings;
+        // check for any requirements or environment files
+        QString pixiPath = QtGui::Utilities::findExecutablePath("pixi");
+        qDebug() << "pixi path: " << pixiPath;
+
+        // check if there's a requirements.txt file
+        // .. if so, install with conda or pip
+        QString requirementsFile(destination + "/requirements.txt");
+        if (QFile::exists(requirementsFile) && checkToInstall()) {
+          QSettings settings;
+
+          // use pixi if available
+          // TODO: does this need to be pixi.exe on windows?
+          if (!pixiPath.isEmpty()) {
+            QStringList arguments;
+            arguments << "install";
+          } else {
+            // otherwise try conda / mamba
             QString condaEnv = settings.value("condaEnvironment").toString();
             QString condaPath = settings.value("condaPath").toString();
             if (!condaEnv.isEmpty() && !condaPath.isEmpty()) {
@@ -495,19 +509,20 @@ void DownloaderWidget::unzipPlugin()
               if (!error.isEmpty())
                 m_ui->readmeBrowser->append(error);
             }
-          }
-        }
+          } // end of check for pixi
+        }   // end of check for requirements
       }
-    } else {
-      m_ui->readmeBrowser->append(
-        tr("Error while extracting: %1").arg(ret.first()));
     }
-
-    out.remove(); // remove the ZIP file
-    m_reply->deleteLater();
-    m_downloadList.removeLast();
-    downloadNext();
+  } else {
+    m_ui->readmeBrowser->append(
+      tr("Error while extracting: %1").arg(ret.first()));
   }
+
+  out.remove(); // remove the ZIP file
+  m_reply->deleteLater();
+  m_downloadList.removeLast();
+  downloadNext();
+}
 }
 
 } // namespace Avogadro::QtPlugins
