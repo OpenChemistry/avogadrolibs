@@ -127,7 +127,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       auto* cell = new Core::UnitCell(v1, v2, v3);
       std::cout << " Lattice: " << cell->aVector() << " " << cell->bVector()
                 << " " << cell->cVector() << std::endl;
-      mol.setUnitCell(cell);
+      if (!cell->isRegular()) {
+        std::cerr << "lattice vectors are not linear independent\n";
+      } else {
+        mol.setUnitCell(cell);
+      }
     }
   }
   // check to see if there's an extended XYZ Properties= line
