@@ -413,6 +413,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
         unitCellObject = new Core::UnitCell(aVector, bVector, cVector);
         if (!unitCellObject->isRegular()) {
           appendError("cellVectors are not linear independent");
+          delete unitCellObject;
           return false;
         }
       } else if (unitCell["a"].is_number() && unitCell["b"].is_number() &&
