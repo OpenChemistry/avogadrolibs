@@ -28,6 +28,7 @@ namespace Avogadro::Io {
 using Core::Atom;
 using Core::Elements;
 using Core::lexicalCast;
+using Core::rstrip;
 using Core::split;
 
 #ifndef _WIN32
@@ -59,23 +60,34 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
   string buffer;
   getline(inStream, buffer);
   while (inStream.good() && !buffer.empty()) {
-    if (buffer.find("$end") != std::string::npos)
+    std::vector<string> tokens = split(rstrip(buffer, '#'), ' ');
+    if (tokens.empty()) { // "# comment line"
+      getline(inStream, buffer);
+      continue;
+    }
+
+    if (tokens[0] == "$end")
       break;
-    else if (buffer.find("$coord") != std::string::npos) {
+
+    if (tokens[0] == "$coord") {
       // check if there's a conversion to be done
       Real coordConversion = BOHR_TO_ANGSTROM; // default is Bohr
-      if (buffer.find("ang") != std::string::npos)
+      if (std::find(tokens.begin(), tokens.end(), "ang") != tokens.end())
         coordConversion = 1.0; // leave as Angstrom
-      else if (buffer.find("frac") != std::string::npos) {
+      else if (std::find(tokens.begin(), tokens.end(), "frac") !=
+               tokens.end()) {
         fractionalCoords = true;
         coordConversion = 1.0; // we may not know the lattice constants yet
+      } else if (tokens.size() > 1u && tokens[1][0] != '#') {
+        std::cerr << "Ignore unknown trailing token and assume bohr: " << buffer
+                  << '\n';
       }
 
       getline(inStream, buffer);
-      while (buffer.find("$") == std::string::npos) {
+      tokens = split(rstrip(buffer, '#'), ' ');
+      while (!tokens.empty() && tokens[0][0] != '$') {
         // parse atoms until we see another '$' section
         // e.g. 0.0000      0.000000     -0.73578      o
-        std::vector<string> tokens(split(buffer, ' '));
 
         if (tokens.size() < 4) {
           appendError("Not enough tokens in this line: " + buffer);
@@ -99,15 +111,16 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
 
         // next line
         getline(inStream, buffer);
+        tokens = split(rstrip(buffer, '#'), ' ');
       }
-    } else if (buffer.find("$cell") != std::string::npos) {
+    } else if (tokens[0] == "$cell") {
       hasCell = true;
       Real cellConversion = BOHR_TO_ANGSTROM;
-      if (buffer.find("angs") != std::string::npos)
+      if (std::find(tokens.begin(), tokens.end(), "angs") != tokens.end())
         cellConversion = 1.0; // leave as Angstrom
 
       getline(inStream, buffer);
-      std::vector<string> tokens(split(buffer, ' '));
+      tokens = split(rstrip(buffer, '#'), ' ');
       if (tokens.size() < 6) {
         appendError("Not enough tokens in this line: " + buffer);
         return false;
@@ -119,15 +132,15 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
       beta = lexicalCast<double>(tokens[4]) * DEG_TO_RAD;
       gamma = lexicalCast<double>(tokens[5]) * DEG_TO_RAD;
 
-    } else if (buffer.find("$lattice") != std::string::npos) {
+    } else if (tokens[0] == "$lattice") {
       hasLattice = true;
       Real latticeConversion = BOHR_TO_ANGSTROM; // default
-      if (buffer.find("angs") != std::string::npos)
+      if (std::find(tokens.begin(), tokens.end(), "angs") != tokens.end())
         latticeConversion = 1.0; // leave as Angstrom
 
       for (int line = 0; line < 3; ++line) {
         getline(inStream, buffer);
-        std::vector<string> tokens(split(buffer, ' '));
+        tokens = split(rstrip(buffer, '#'), ' ');
         if (tokens.size() < 3)
           break;
 
@@ -145,6 +158,8 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
           v3.z() = lexicalCast<double>(tokens[2]) * latticeConversion;
         }
       }
+    } else if (tokens[0][0] != '#') {
+      std::cerr << "Ignore unknown token: " << buffer << '\n';
     }
 
     getline(inStream, buffer);
