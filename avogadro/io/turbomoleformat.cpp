@@ -103,7 +103,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
     } else if (buffer.find("$cell") != std::string::npos) {
       hasCell = true;
       Real cellConversion = BOHR_TO_ANGSTROM;
-      if (buffer.find("ang") != std::string::npos)
+      if (buffer.find("angs") != std::string::npos)
         cellConversion = 1.0; // leave as Angstrom
 
       getline(inStream, buffer);
@@ -122,7 +122,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
     } else if (buffer.find("$lattice") != std::string::npos) {
       hasLattice = true;
       Real latticeConversion = BOHR_TO_ANGSTROM; // default
-      if (buffer.find("ang") != std::string::npos)
+      if (buffer.find("angs") != std::string::npos)
         latticeConversion = 1.0; // leave as Angstrom
 
       for (int line = 0; line < 3; ++line) {
