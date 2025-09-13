@@ -150,11 +150,21 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
     getline(inStream, buffer);
   } // done reading the file
 
+  Core::UnitCell* cell = nullptr;
+  std::string tmp;
   if (hasLattice) {
-    auto* cell = new Core::UnitCell(v1, v2, v3);
-    mol.setUnitCell(cell);
+    cell = new Core::UnitCell(v1, v2, v3);
+    tmp = "$lattice";
   } else if (hasCell) {
-    auto* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+    cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+    tmp = "$cell";
+  }
+  if (cell) {
+    if (!cell->isRegular()) {
+      appendError(tmp + " does not give linear independent lattice vectors");
+      delete cell;
+      return false;
+    }
     mol.setUnitCell(cell);
   }
 

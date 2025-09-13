@@ -77,6 +77,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       Real gamma = lexicalCast<Real>(buffer.substr(47, 8), ok) * DEG_TO_RAD;
 
       auto* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+      if (!cell->isRegular()) {
+        appendError("CRYST1 does not give linear independent lattice vectors");
+        delete cell;
+        return false;
+      }
       mol.setUnitCell(cell);
     }
 

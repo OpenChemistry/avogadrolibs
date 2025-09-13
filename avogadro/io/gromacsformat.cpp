@@ -212,6 +212,11 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
 
     auto* cell = new UnitCell;
     cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
+    if (!cell->isRegular()) {
+      appendError("box vectors are not linear independent");
+      delete cell;
+      return false;
+    }
     molecule.setUnitCell(cell);
   }
 

@@ -630,6 +630,12 @@ bool CrystalTools::setCellMatrix(Molecule& molecule,
                   TransformAtomsFunctor(xform));
   }
 
+  if (!UnitCell::isRegular(newCellColMatrix)) {
+    std::cerr << __FUNCTION__ << " cell matrix is singular\n";
+    return false;
+  }
+
+  // only create a new unit cell if it doesn't exist
   if (!molecule.unitCell())
     molecule.setUnitCell(new UnitCell);
 

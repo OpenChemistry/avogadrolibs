@@ -79,6 +79,28 @@ TEST(CmlTest, bonds)
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
 }
 
+TEST(CmlTest, readInvalidPeriodicFile)
+{
+  for (const auto& file : {
+         "impossible.cml"s,
+         "lin-dep2.cml"s,
+         "zero-a.cml"s,
+         "zero-alpha.cml"s,
+         "zero-b.cml"s,
+         "zero-beta.cml"s,
+         "zero-c.cml"s,
+         "zero-gamma.cml"s,
+       }) {
+    CmlFormat cml;
+    Molecule molecule;
+    auto f = std::string(AVOGADRO_DATA) + "/data/cml/singular/" + file;
+    EXPECT_FALSE(cml.readFile(f, molecule)) << f;
+    EXPECT_EQ(cml.error(),
+              "<crystal> does not give linear independent lattice vectors\n"s)
+      << f;
+  }
+}
+
 TEST(CmlTest, fractionalCoords)
 {
   std::string cmlStr(
