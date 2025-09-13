@@ -225,8 +225,6 @@ TEST(CjsonTest, saveFile)
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
 }
 
-/*
-// For now, disable this test until we can find the leak
 TEST(CjsonTest, conformers)
 {
   CjsonFormat cjson;
@@ -252,4 +250,3 @@ TEST(CjsonTest, conformers)
   EXPECT_EQ(otherMolecule.bondCount(), static_cast<size_t>(13));
   EXPECT_EQ(otherMolecule.coordinate3dCount(), static_cast<size_t>(3));
 }
-*/
