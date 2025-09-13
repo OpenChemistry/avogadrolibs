@@ -9,9 +9,9 @@ patches for widely used long-term-support OS.
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 1.101.x | :white_check_mark: |
 | 1.100.x | :white_check_mark: |
-| 1.99.x  | :white_check_mark: |
-| < 1.99  | :x:                |
+| < 1.100 | :x:                |
 
 ## Reporting a Vulnerability
 
