@@ -33,13 +33,14 @@ jobs:
             cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
             build_flags: "",
             cpack_flags: "-G NSIS",
+            ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
           }
 
     steps:
 
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
-      run: choco install ninja
+      run: choco install ninja nsis
 
     - name: Checkout openchemistry
       uses: actions/checkout@v5
@@ -94,6 +95,17 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
+
+    - name: Install OpenSSL (Win64)
+      if: runner.os == 'Windows'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        cache: true
+        host: 'windows'
+        target: 'desktop'
+        tools-only: 'true'
+        tools: 'tools_opensslv3_x64'
 
     - name: Grab cache files
       uses: actions/cache@v4
