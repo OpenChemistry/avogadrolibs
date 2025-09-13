@@ -48,7 +48,8 @@ ConfigurePython::ConfigurePython(QObject* parent_)
     auto option = QMessageBox::information(
       qobject_cast<QWidget*>(parent()), tr("Install Python"),
       tr("Python is used for many Avogadro "
-         "features. Do you want to download Python?"));
+         "features. Do you want to download Python?"),
+      QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
     if (option == QMessageBox::Yes) {
       //
       QUrl miniforge;
