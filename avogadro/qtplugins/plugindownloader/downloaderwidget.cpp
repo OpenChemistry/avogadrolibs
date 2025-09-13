@@ -278,6 +278,13 @@ void DownloaderWidget::downloadNext()
 {
   if (!m_downloadList.isEmpty()) {
     QString url = m_downloadList.last().url;
+
+    // use the .tar.gz instead of .zip
+    if (url.endsWith(".zip")) {
+      url.chop(4); // remove the last 4 characters ".zip"
+      url += ".tar.gz";
+    }
+
     QNetworkRequest request;
     setRawHeaders(&request);
     request.setUrl(url); // Set the url
@@ -385,7 +392,7 @@ void DownloaderWidget::unzipPlugin()
     QByteArray fileData = m_reply->readAll();
     QDir().mkpath(m_filePath); // create any needed directories for the download
     QString repoName = m_downloadList.last().name;
-    QString filename = repoName + ".zip";
+    QString filename = repoName + ".tar.gz";
 
     QString absolutePath = m_filePath + "/" + filename;
     QString extractDirectory;
