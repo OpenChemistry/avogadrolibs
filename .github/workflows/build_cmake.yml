@@ -40,7 +40,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DBUILD_MOLEQUEUE=OFF -DUSE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
             ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
