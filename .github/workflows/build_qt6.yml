@@ -29,15 +29,16 @@ jobs:
             cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'",
             cpack_flags: "-G DragNDrop",
           }
-        - {
-            name: "Windows Qt6", artifact: "",
-            os: windows-latest,
-            cc: "cl", cxx: "cl",
-            build_type: "Release",
-            cmake_flags: "",
-            build_flags: "-j 2",
-            cpack_flags: "-G NSIS",
-          }
+# for now disable Windows for Qt6 builds
+#        - {
+#            name: "Windows Qt6", artifact: "",
+#            os: windows-latest,
+#            cc: "cl", cxx: "cl",
+#            build_type: "Release",
+#            cmake_flags: "",
+#            build_flags: "-j 2",
+#            cpack_flags: "-G NSIS",
+#          }
 
     steps:
 

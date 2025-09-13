@@ -40,7 +40,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
+            cmake_flags: "-DBUILD_MOLEQUEUE=OFF -DUSE_SYSTEM_ZLIB=ON",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
             ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
@@ -75,7 +75,9 @@ jobs:
 
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
-      run: choco install ninja nsis
+      run: |
+        choco install ninja nsis
+        vcpkg install zlib
 
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
