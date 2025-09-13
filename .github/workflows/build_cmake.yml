@@ -75,7 +75,9 @@ jobs:
 
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
-      run: choco install ninja
+      run: |
+        choco install ninja nsis
+        vcpkg install zlib
 
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
