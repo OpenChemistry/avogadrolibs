@@ -16,13 +16,13 @@ namespace QtPlugins {
  * @brief Render one or more triangular meshes.
  * @author Marcus D. Hanwell
  */
-class Meshes : public QtGui::ScenePlugin
+class SurfaceRender : public QtGui::ScenePlugin
 {
   Q_OBJECT
 
 public:
-  explicit Meshes(QObject* parent = nullptr);
-  ~Meshes() override;
+  explicit SurfaceRender(QObject* parent = nullptr);
+  ~SurfaceRender() override;
 
   void process(const QtGui::Molecule& mol, Rendering::GroupNode& node) override;
 
@@ -41,10 +41,18 @@ public:
     return DefaultBehavior::False;
   }
 
+  enum Style
+  {
+    Surface = 0,
+    Wireframe = 1,
+    Volume = 2
+  };
+
 private slots:
   void setColor1(const QColor& color);
   void setColor2(const QColor& color);
   void setOpacity(int opacity);
+  void setStyle(int style);
 
 private:
   std::string m_name = "Surfaces";
@@ -53,6 +61,7 @@ private:
   unsigned char m_opacity;
   Vector3ub m_color1;
   Vector3ub m_color2;
+  unsigned char m_style;
 };
 
 } // end namespace QtPlugins
