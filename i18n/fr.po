@@ -11,13 +11,14 @@
 # Hēphaïstos <hephaistos@users.noreply.hosted.weblate.org>, 2025.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
 # Maetnicio <mxtt.tlc@gmail.com>, 2025.
+# "David D." <dadu042@users.noreply.hosted.weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-07 02:42+0000\n"
-"PO-Revision-Date: 2025-09-02 16:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-09-16 17:01+0000\n"
+"Last-Translator: \"David D.\" <dadu042@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13.1-dev\n"
+"X-Generator: Weblate 5.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1179,11 +1180,11 @@ msgstr "Multiplicité"
 
 #: qtgui/jsonwidget.cpp:361
 msgid "User Name"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: qtgui/jsonwidget.cpp:363
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 #: qtgui/jsonwidget.cpp:671
 #, qt-format
@@ -1309,7 +1310,7 @@ msgstr "Modifier la molécule"
 
 #: qtgui/moleculemodel.cpp:116
 msgid "Not saved"
-msgstr ""
+msgstr "Non enregistré"
 
 #: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
@@ -2064,6 +2065,19 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Outil de manipulation centré sur le lien (%1)\n"
+"\n"
+"Souris gauche : cliquez et faites glisser pour faire pivoter la vue.\n"
+"Souris du milieu : cliquez et faites glisser pour zoomer ou dézoomer.\n"
+"Souris droite : cliquez et faites glisser pour déplacer la vue.\n"
+"Double-clic: réinitialiser la vue.\n"
+"\n"
+"Cliquez et faites glisser sur une liaison pour définir le plan de "
+"manipulation\n"
+"Clic gauche et faites glisser l’un des atomes dans la liaison pour changer l’"
+"angle\n"
+"Cliquez avec le bouton droit et faites glisser l’un des atomes dans la "
+"liaison pour changer la longueur"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:782
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:870
@@ -2370,7 +2384,7 @@ msgstr "Autres…"
 
 #: qtplugins/constraints/constraintsextension.cpp:22
 msgid "Constraints…"
-msgstr ""
+msgstr "Contraintes…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:174
@@ -2381,17 +2395,17 @@ msgstr "&Calculer"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
 #: qtplugins/constraints/constraintsextension.h:27:250
 msgid "Constraints"
-msgstr ""
+msgstr "Contraintes"
 
 #: qtplugins/constraints/constraintsextension.h:31
 msgid "Set constraints for geometry optimizations"
-msgstr ""
+msgstr "Définir des contraintes pour les optimisations géométriques"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:60:259
 msgid "Distance"
-msgstr ""
+msgstr "Distance"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -3188,7 +3202,7 @@ msgstr "Fusionner les atomes sélectionnés"
 #: qtplugins/forcefield/forcefield.cpp:135
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
-msgstr ""
+msgstr "Défusionner atomes sélectionnés"
 
 #: qtplugins/forcefield/forcefield.cpp:316
 #: qtplugins/forcefield/forcefield.cpp:467
@@ -3592,6 +3606,9 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Outil d’étiquetage Atom (%1)\n"
+"\n"
+"Souris gauche : cliquez sur Atomes pour ajouter des étiquettes personnalisées"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3681,6 +3698,10 @@ msgid ""
 "Left Mouse:\tClick and drag to move atoms\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Outil de manipulation\t (%1)\n"
+"\n"
+"Souris gauche : cliquez et faites glisser pour déplacer les atomes\n"
+"Souris droite : cliquez et faites glisser pour faire pivoter les atomes."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3728,7 +3749,7 @@ msgstr "Outil de mesure"
 
 #: qtplugins/meshes/meshes.h:33
 msgid "Render molecular surfaces."
-msgstr ""
+msgstr "Rendu surfaces moléculaires."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
@@ -3846,7 +3867,7 @@ msgstr "Voir les propriétés générales d'une molécule."
 #: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:271
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analyze"
-msgstr ""
+msgstr "&Analyser"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
@@ -4550,6 +4571,8 @@ msgid ""
 "ERROR: could not open zip file to list contents.\n"
 "(%1)"
 msgstr ""
+"ERREUR : impossible d’ouvrir le fichier zip pour lister le contenu.\n"
+"(%1)"
 
 #: qtplugins/plugindownloader/zipextracter.cpp:115
 #, qt-format
@@ -4558,6 +4581,8 @@ msgid ""
 "ERROR: could not open zip file to extract files.\n"
 "(%1)"
 msgstr ""
+"ERREUR : impossible d’ouvrir le fichier zip pour extraire les fichiers.\n"
+"(%1)"
 
 #: qtplugins/plugindownloader/zipextracter.cpp:132
 #: qtplugins/plugindownloader/zipextracter.cpp:151
@@ -4565,7 +4590,7 @@ msgstr ""
 #, qt-format
 msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
-msgstr ""
+msgstr "Avertissement : (%1)"
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"
@@ -4804,11 +4829,11 @@ msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:419
 msgid "Constrain Angle"
-msgstr ""
+msgstr "Angle de contrainte"
 
 #: qtplugins/propertytables/propertyview.cpp:421
 msgid "Constrain Torsion"
-msgstr ""
+msgstr "Contrainte de torsion"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5391,7 +5416,7 @@ msgstr "Rends un cube fourni avec le fichier."
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
-msgstr ""
+msgstr "Cube %1"
 
 #: qtplugins/surfaces/surfaces.cpp:605
 msgid "Calculating electron density"
@@ -5824,7 +5849,7 @@ msgstr "Fichier PDB :"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6002,12 +6027,12 @@ msgstr "Type :"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:74
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Atom Indices:"
-msgstr ""
+msgstr "Indices d’atome :"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:113
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Value:"
-msgstr ""
+msgstr "Valeur :"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:125
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, editValue)
@@ -6026,17 +6051,17 @@ msgstr "Ajouter"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:167
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
 msgid "Delete Selected"
-msgstr ""
+msgstr "Supprimer sélection"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:207
 #. i18n: ectx: property (text), widget (QPushButton, deleteAllConstraints)
 msgid "Delete All"
-msgstr ""
+msgstr "Supprimer tout"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:214
 #. i18n: ectx: property (text), widget (QPushButton, okButton)
@@ -8097,7 +8122,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:233
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
 msgid "&Import…"
-msgstr ""
+msgstr "&Importer…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
@@ -8108,7 +8133,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:369
 #. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
 msgid "Set Color…"
-msgstr ""
+msgstr "Définir couleur…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:269
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -8118,7 +8143,7 @@ msgstr "Spectres importés :"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:317
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
 msgid "&Export…"
-msgstr ""
+msgstr "&Exporter…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:343
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8209,7 +8234,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:588
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
 msgid "&Load data…"
-msgstr ""
+msgstr "&Charger données…"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
 #. i18n: ectx: property (text), widget (QLabel, label)
