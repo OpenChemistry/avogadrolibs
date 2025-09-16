@@ -56,10 +56,10 @@ constexpr unsigned char CustomElementMax = 254;
 inline constexpr unsigned char CustomElementCount =
   CustomElementMax - CustomElementMin + 1;
 
+namespace Core {
 /**
  * @return True if @a atomicNumber denotes a custom element type.
  */
-namespace Core {
 constexpr bool isCustomElement(unsigned char atomicNumber)
 {
   return atomicNumber >= CustomElementMin && atomicNumber <= CustomElementMax;

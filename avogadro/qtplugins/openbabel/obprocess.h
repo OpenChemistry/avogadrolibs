@@ -382,7 +382,7 @@ private slots:
 signals:
   /**
    * Emitted after a call to calculateCharges() finishes.
-   * @param output the set of partial charges
+   * @param charges the set of partial charges
    */
   void chargesFinished(const Core::Array<double>& charges);
   // end Charge Models doxygen group
