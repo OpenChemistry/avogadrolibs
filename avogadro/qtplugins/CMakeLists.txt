@@ -102,9 +102,9 @@ add_subdirectory(apbs)
 add_subdirectory(applycolors)
 add_subdirectory(bondcentrictool)
 add_subdirectory(bonding)
-add_subdirectory(cartoons)
 add_subdirectory(centroid)
 add_subdirectory(configurepython)
+add_subdirectory(constraints)
 add_subdirectory(coordinateeditor)
 add_subdirectory(copypaste)
 add_subdirectory(cp2kinput)
@@ -146,7 +146,7 @@ add_subdirectory(templatetool)
 add_subdirectory(vibrations)
 add_subdirectory(vrml)
 
-# Plugins that require VTK
+# Plugins that require plotting
 if(USE_VTK)
   add_subdirectory(coloropacitymap)
   add_subdirectory(spectra)
@@ -174,10 +174,11 @@ endif()
 
 # The scene plugins
 add_subdirectory(ballandstick)
+add_subdirectory(cartoons)
 add_subdirectory(closecontacts)
 add_subdirectory(force)
 add_subdirectory(licorice)
-add_subdirectory(meshes)
+add_subdirectory(surfacerender)
 add_subdirectory(noncovalent)
 add_subdirectory(vanderwaals)
 add_subdirectory(wireframe)
@@ -191,9 +192,6 @@ if(BUILD_GPL_PLUGINS)
   # qtaimcurvature.h/cpp contains GPL licensed code:
   add_subdirectory(qtaim)
 endif()
-
-#kantundpeterpan
-add_subdirectory(constraints)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${original_library_output_dir}")
 
