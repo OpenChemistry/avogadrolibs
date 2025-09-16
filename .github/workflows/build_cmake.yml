@@ -199,6 +199,10 @@ jobs:
           message(FATAL_ERROR "Running tests failed!")
         endif()
 
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
+
     - name: Fix Mac plugins
       if: runner.os == 'macOS'
       working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
