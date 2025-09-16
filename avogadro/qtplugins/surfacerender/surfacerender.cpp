@@ -17,6 +17,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QVBoxLayout>
@@ -52,6 +53,8 @@ SurfaceRender::SurfaceRender(QObject* p)
 
   auto style = settings.value("meshes/style", 0).toInt();
   m_style = static_cast<Style>(style);
+
+  m_lineWidth = settings.value("meshes/lineWidth", 1.0).toFloat();
 }
 
 SurfaceRender::~SurfaceRender() {}
@@ -130,15 +133,6 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
                                               : Rendering::TranslucentPass);
       }
     } else if (m_style == SurfaceRender::Wireframe) {
-      auto* geometry = new GeometryNode;
-      node.addChild(geometry);
-
-      // Handle the first mesh
-      const Mesh* mesh = mol.mesh(0);
-      Core::Array<Vector3f> triangles = mesh->triangles();
-
-      bool hasColors = (mesh->colors().size() != 0);
-
       auto* ls1 = new LineStripGeometry;
       geometry->addDrawable(ls1);
 
@@ -150,7 +144,7 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
             Vector3ub(static_cast<unsigned char>(colors[i].red() * 255),
                       static_cast<unsigned char>(colors[i].green() * 255),
                       static_cast<unsigned char>(colors[i].blue() * 255));
-        ls1->addLineStrip(mesh->vertices(), colorsRGB, 1.0f);
+        ls1->addLineStrip(mesh->vertices(), colorsRGB, m_lineWidth);
       } else {
         auto vertices = mesh->vertices();
         for (size_t i = 0; i < triangles.size(); ++i) {
@@ -159,8 +153,9 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
           triangle[1] = vertices[triangles[i][1]];
           triangle[2] = vertices[triangles[i][2]];
 
-          ls1->addLineStrip(
-            triangle, Vector3ub(m_color1[0], m_color1[1], m_color1[2]), 1.0f);
+          ls1->addLineStrip(triangle,
+                            Vector3ub(m_color1[0], m_color1[1], m_color1[2]),
+                            m_lineWidth);
         }
       }
 
@@ -179,8 +174,9 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
           triangle[1] = vertices2[triangles[i][1]];
           triangle[2] = vertices2[triangles[i][2]];
 
-          ls1->addLineStrip(
-            triangle, Vector3ub(m_color2[0], m_color2[1], m_color2[2]), 1.0f);
+          ls1->addLineStrip(triangle,
+                            Vector3ub(m_color2[0], m_color2[1], m_color2[2]),
+                            m_lineWidth);
         }
       }
     } // if style == Wireframe
@@ -194,6 +190,15 @@ void SurfaceRender::setOpacity(int opacity)
 
   QSettings settings;
   settings.setValue("meshes/opacity", m_opacity);
+}
+
+void SurfaceRender::setLineWidth(double width)
+{
+  m_lineWidth = width;
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("meshes/lineWidth", m_lineWidth);
 }
 
 void SurfaceRender::setColor1(const QColor& color)
@@ -225,6 +230,23 @@ void SurfaceRender::setStyle(int style)
   m_style = static_cast<Style>(style);
   emit drawablesChanged();
 
+  // get the form layout
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+  auto* form = qobject_cast<QFormLayout*>(m_setupWidget->layout());
+  auto* slide = m_setupWidget->findChild<QSlider*>("opacitySlider");
+  auto* spin = m_setupWidget->findChild<QDoubleSpinBox*>("lineWidthSpin");
+
+  if (form && slide && spin) {
+    if (m_style == Surface) {
+      form->setRowVisible(slide, true);
+      form->setRowVisible(spin, false);
+    } else if (m_style == Wireframe) {
+      form->setRowVisible(slide, false);
+      form->setRowVisible(spin, true);
+    }
+  }
+#endif
+
   QSettings settings;
   settings.setValue("meshes/style", m_style);
 }
@@ -233,7 +255,7 @@ QWidget* SurfaceRender::setupWidget()
 {
   if (!m_setupWidget) {
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    auto* v = new QVBoxLayout;
+    // auto* v = new QVBoxLayout;
     auto* form = new QFormLayout;
 
     // Style
@@ -249,8 +271,30 @@ QWidget* SurfaceRender::setupWidget()
     slide->setRange(0, 255);
     slide->setTickInterval(5);
     slide->setValue(m_opacity);
+    slide->setObjectName("opacitySlider");
     connect(slide, SIGNAL(valueChanged(int)), SLOT(setOpacity(int)));
     form->addRow(tr("Opacity:"), slide);
+
+    // Line Width
+    auto* spin = new QDoubleSpinBox;
+    spin->setRange(0.5, 5.0);
+    spin->setSingleStep(0.25);
+    spin->setDecimals(2);
+    spin->setValue(m_lineWidth);
+    spin->setObjectName("lineWidthSpin");
+    QObject::connect(spin, SIGNAL(valueChanged(double)),
+                     SLOT(setLineWidth(double)));
+    form->addRow(QObject::tr("Line width:"), spin);
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+    if (m_style == Surface) {
+      form->setRowVisible(slide, true);
+      form->setRowVisible(spin, false);
+    } else if (m_style == Wireframe) {
+      form->setRowVisible(slide, false);
+      form->setRowVisible(spin, true);
+    }
+#endif
 
     auto* color1 = new QtGui::ColorButton;
     color1->setColor(QColor(m_color1[0], m_color1[1], m_color1[2]));
@@ -264,10 +308,7 @@ QWidget* SurfaceRender::setupWidget()
             SLOT(setColor2(const QColor&)));
     form->addRow(tr("Color:"), color2);
 
-    v->addLayout(form);
-
-    v->addStretch(1);
-    m_setupWidget->setLayout(v);
+    m_setupWidget->setLayout(form);
   }
   return m_setupWidget;
 }

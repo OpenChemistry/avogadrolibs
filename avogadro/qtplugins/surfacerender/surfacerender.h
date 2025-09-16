@@ -53,6 +53,7 @@ private slots:
   void setColor2(const QColor& color);
   void setOpacity(int opacity);
   void setStyle(int style);
+  void setLineWidth(double width);
 
 private:
   std::string m_name = "Surfaces";
@@ -62,6 +63,7 @@ private:
   Vector3ub m_color1;
   Vector3ub m_color2;
   unsigned char m_style;
+  float m_lineWidth;
 };
 
 } // end namespace QtPlugins
