@@ -40,7 +40,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
+            cmake_flags: "-DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DBUILD_MOLEQUEUE=OFF -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
             ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
@@ -72,12 +72,6 @@ jobs:
         else # not self-hosted runner
           brew install ninja eigen glew
         fi
-
-    - name: Install Dependencies (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        choco install ninja nsis
-        vcpkg install zlib
 
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
@@ -156,6 +150,12 @@ jobs:
       with:
         arch: x64
 
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        choco install ninja nsis
+        vcpkg install libarchive eigen3 libxml2 zlib
+
     - name: Grab cache files
       uses: actions/cache@v4
       if: runner.os != 'Windows'
@@ -198,6 +198,10 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
+
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
 
     - name: Fix Mac plugins
       if: runner.os == 'macOS'
