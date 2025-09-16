@@ -73,12 +73,6 @@ jobs:
           brew install ninja eigen glew
         fi
 
-    - name: Install Dependencies (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        choco install ninja nsis
-        vcpkg install libarchive eigen3 libxml2 zlib
-
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -155,6 +149,12 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
+
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        choco install ninja nsis
+        vcpkg install libarchive eigen3 libxml2 zlib
 
     - name: Grab cache files
       uses: actions/cache@v4
