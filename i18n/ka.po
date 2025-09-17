@@ -9,8 +9,9 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-07 02:42+0000\n"
-"PO-Revision-Date: 2025-08-06 08:52+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"PO-Revision-Date: 2025-09-18 00:20+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1099,7 +1100,7 @@ msgstr "გამრავლებადობა"
 
 #: qtgui/jsonwidget.cpp:361
 msgid "User Name"
-msgstr ""
+msgstr "მომხმარებლის სახელი"
 
 #: qtgui/jsonwidget.cpp:363
 msgid "Password"
