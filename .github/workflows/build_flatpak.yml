@@ -23,55 +23,55 @@ jobs:
       # See https://github.com/flatpak/flatpak-builder/issues/495
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: false
         path: openchemistry
         
     - name: Checkout avogadroapp
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: openchemistry/avogadroapp
         
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         path: openchemistry/avogadrolibs
 
     - name: Checkout i18n
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadro-i18n
         path: openchemistry/avogadro-i18n
     
     - name: Checkout avogadrogenerators
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogenerators
         path: openchemistry/avogadrogenerators
 
     - name: Checkout crystals
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/crystals
         path: openchemistry/crystals
 
     - name: Checkout fragments
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/fragments
         path: openchemistry/fragments
 
     - name: Checkout molecules
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/molecules
         path: openchemistry/molecules
 
     - name: Checkout Flathub shared-modules
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: flathub/shared-modules
         path: shared-modules
