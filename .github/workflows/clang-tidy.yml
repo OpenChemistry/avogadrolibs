@@ -41,19 +41,19 @@ jobs:
         version: ${{ env.QT_VERSION }}
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v5
+      uses: actions/checkout@v5.0.0
       with:
         path: avogadrolibs
         fetch-depth: 2
