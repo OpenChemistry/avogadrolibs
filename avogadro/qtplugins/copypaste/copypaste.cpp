@@ -61,7 +61,7 @@ CopyPaste::CopyPaste(QObject* parent_)
   connect(m_pasteAction, SIGNAL(triggered()), SLOT(paste()));
 
   m_clearAction->setShortcut(QKeySequence::Delete);
-  m_clearAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditDelete));
+  m_clearAction->setIcon(QIcon::fromTheme("edit-delete"));
   m_clearAction->setProperty("menu priority", 500);
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clear()));
 }
