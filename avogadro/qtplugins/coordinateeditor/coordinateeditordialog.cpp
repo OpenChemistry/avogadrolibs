@@ -49,7 +49,7 @@ using Avogadro::QtGui::Molecule;
 namespace {
 
 // Ensure a cross-platform monospaced font
-#if defined(Q_OS_WIN) || defined(Q_OS_OSX)
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
 static const QString EDITOR_FONT = "Courier";
 #else // Linux and other OSes
 static const QString EDITOR_FONT = "Monospace";
