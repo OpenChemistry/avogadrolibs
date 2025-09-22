@@ -318,7 +318,7 @@ bool UnitCellDialog::validateFractionalMatrix()
 
 void UnitCellDialog::initializeMatrixEditor(QPlainTextEdit* edit)
 {
-#if defined(Q_OS_WIN) || defined(Q_OS_OSX)
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
   QFont font("Courier");
 #else
   QFont font("Monospace");
