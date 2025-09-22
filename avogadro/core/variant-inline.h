@@ -28,6 +28,12 @@ inline Variant::Variant(T v) : m_type(Null)
 }
 
 template <>
+inline Variant::Variant(char v) : m_type(Int)
+{
+  m_value._int = static_cast<unsigned char>(v);
+}
+
+template <>
 inline Variant::Variant(const char* v) : m_type(String)
 {
   m_value.string = new std::string(v);
@@ -150,7 +156,7 @@ inline bool Variant::setValue(char v)
   clear();
 
   m_type = Int;
-  m_value._int = v;
+  m_value._int = static_cast<unsigned char>(v);
 
   return true;
 }
