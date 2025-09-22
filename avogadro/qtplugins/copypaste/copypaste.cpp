@@ -33,7 +33,7 @@ CopyPaste::CopyPaste(QObject* parent_)
     m_copyInChI(new QAction("InChI", this)),
     m_copyXYZ(new QAction("XYZ", this)),
     m_cutAction(new QAction(tr("Cut"), this)),
-    m_clearAction(new QAction(tr("Clear"), this)),
+    m_clearAction(new QAction(tr("Delete"), this)),
     m_pasteAction(new QAction(tr("&Paste"), this))
 {
   m_cutAction->setShortcut(QKeySequence::Cut);
@@ -61,11 +61,7 @@ CopyPaste::CopyPaste(QObject* parent_)
   connect(m_pasteAction, SIGNAL(triggered()), SLOT(paste()));
 
   m_clearAction->setShortcut(QKeySequence::Delete);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
-  m_clearAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditClear));
-#else
-  m_clearAction->setIcon(QIcon::fromTheme("edit-clear"));
-#endif
+  m_clearAction->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditDelete));
   m_clearAction->setProperty("menu priority", 500);
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clear()));
 }
