@@ -94,6 +94,14 @@ inline std::string trimmed(const std::string& input)
 }
 
 /**
+ * @brief Remove trailing part of `str` after `c`
+ */
+inline std::string rstrip(const std::string& str, char c)
+{
+  return str.substr(0, str.find_first_of(c));
+}
+
+/**
  * @brief Cast the inputString to the specified type.
  * @param inputString String to cast to the specified type.
  */
