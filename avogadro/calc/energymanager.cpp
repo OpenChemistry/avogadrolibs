@@ -137,4 +137,28 @@ std::set<std::string> EnergyManager::identifiersForMolecule(
   return identifiers;
 }
 
+std::string EnergyManager::recommendedModel(
+  const Core::Molecule& molecule) const
+{
+  auto identifiers = identifiersForMolecule(molecule);
+  if (identifiers.empty())
+    return "LJ"; // shouldn't really ever happen
+
+  // iterate to see what we have
+  std::string bestOption;
+  for (auto option : identifiers) {
+    // GAFF is better than MMFF94 which is better than UFF
+    if (option == "UFF" && bestOption != "GAFF" && bestOption != "MMFF94")
+      bestOption = option;
+    if (option == "MMFF94" && bestOption != "GAFF")
+      bestOption = option;
+    // feel free to add other methods, e.g. GFN-FF, AIMNET, etc.
+    // these may not be available though
+  }
+  if (!bestOption.empty())
+    return bestOption;
+  else
+    return "LJ"; // this will always work
+}
+
 } // namespace Avogadro::Calc
