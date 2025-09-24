@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-07 02:42+0000\n"
+"POT-Creation-Date: 2025-09-21 02:47+0000\n"
 "PO-Revision-Date: 2025-09-09 07:01+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
@@ -1264,7 +1264,7 @@ msgctxt "stick / licorice rendering"
 msgid "Licorice"
 msgstr "Солодка"
 
-#: qtgui/layermodel.cpp:186 qtplugins/meshes/meshes.h:29
+#: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "Поверхні"
@@ -1287,7 +1287,8 @@ msgstr "Елементи симетрії"
 msgid "Van der Waals"
 msgstr "Ван-дер-Ваальса"
 
-#: qtgui/layermodel.cpp:196 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:196 qtplugins/surfacerender/surfacerender.cpp:264
+#: qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "Каркас"
 
@@ -1405,127 +1406,127 @@ msgstr "Додати інформацію про шар"
 msgid "Change Layer"
 msgstr "Змінити шар"
 
-#: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
+#: qtgui/rwmolecule.cpp:41 qtgui/rwmolecule.cpp:50
 msgid "Add Atom"
 msgstr "Додати атом"
 
-#: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
+#: qtgui/rwmolecule.cpp:72 qtgui/rwmolecule.cpp:87
 #: qtplugins/editor/editor.cpp:135
 msgid "Remove Atom"
 msgstr "Вилучити атом"
 
-#: qtgui/rwmolecule.cpp:95
+#: qtgui/rwmolecule.cpp:97
 msgid "Clear Atoms"
 msgstr "Очистити атоми"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:526
+#: qtgui/rwmolecule.cpp:109 qtgui/rwmolecule.cpp:117:526
 msgid "Adjust Hydrogens"
 msgstr "Вирівняти атоми водню"
 
-#: qtgui/rwmolecule.cpp:143 qtplugins/alchemy/alchemy.cpp:74
+#: qtgui/rwmolecule.cpp:145 qtplugins/alchemy/alchemy.cpp:74
 msgid "Change Elements"
 msgstr "Зміна елементів"
 
-#: qtgui/rwmolecule.cpp:155
+#: qtgui/rwmolecule.cpp:157
 msgid "Change Element"
 msgstr "Змінити елемент"
 
-#: qtgui/rwmolecule.cpp:236
+#: qtgui/rwmolecule.cpp:238
 msgid "Change Atom Hybridization"
 msgstr "Гібридизація змінного атома"
 
-#: qtgui/rwmolecule.cpp:248
+#: qtgui/rwmolecule.cpp:250
 msgid "Change Atom Formal Charge"
 msgstr "Змінити офіційне звинувачення Atom"
 
-#: qtgui/rwmolecule.cpp:260
+#: qtgui/rwmolecule.cpp:262
 msgid "Change Atom Color"
 msgstr "Змінити колір атома"
 
-#: qtgui/rwmolecule.cpp:272
+#: qtgui/rwmolecule.cpp:274
 msgid "Change Atom Layer"
 msgstr "Змінити шар Atom"
 
-#: qtgui/rwmolecule.cpp:288
+#: qtgui/rwmolecule.cpp:290
 msgid "Add Bond"
 msgstr "Додати зв’язок"
 
-#: qtgui/rwmolecule.cpp:314
+#: qtgui/rwmolecule.cpp:316
 msgid "Removed Bond"
 msgstr "Видалено Бонда"
 
-#: qtgui/rwmolecule.cpp:321
+#: qtgui/rwmolecule.cpp:323
 msgid "Clear Bonds"
 msgstr "Очистити облігації"
 
-#: qtgui/rwmolecule.cpp:335
+#: qtgui/rwmolecule.cpp:337
 msgid "Set Bond Orders"
 msgstr "Встановіть замовлення на облігації"
 
-#: qtgui/rwmolecule.cpp:347
+#: qtgui/rwmolecule.cpp:349
 msgid "Change Bond Order"
 msgstr "Змінити порядок зв’язку"
 
-#: qtgui/rwmolecule.cpp:369
+#: qtgui/rwmolecule.cpp:371
 msgid "Update Bonds"
 msgstr "Оновити облігації"
 
-#: qtgui/rwmolecule.cpp:388
+#: qtgui/rwmolecule.cpp:390
 msgid "Update Bond"
 msgstr "Оновити Бонд"
 
-#: qtgui/rwmolecule.cpp:407
+#: qtgui/rwmolecule.cpp:409
 msgid "Add Unit Cell…"
 msgstr "Додати елементарну комірку…"
 
-#: qtgui/rwmolecule.cpp:419
+#: qtgui/rwmolecule.cpp:421
 msgid "Remove Unit Cell"
 msgstr "Вилучити елементарну комірку"
 
-#: qtgui/rwmolecule.cpp:483
+#: qtgui/rwmolecule.cpp:490
 msgid "Edit Unit Cell"
 msgstr "Редагувати елементарну комірку"
 
-#: qtgui/rwmolecule.cpp:499
+#: qtgui/rwmolecule.cpp:506
 msgid "Wrap Atoms to Cell"
 msgstr "Оберніть атоми в клітинку"
 
-#: qtgui/rwmolecule.cpp:522
+#: qtgui/rwmolecule.cpp:529
 msgid "Scale Cell Volume"
 msgstr "Масштаб об'єму комірки"
 
-#: qtgui/rwmolecule.cpp:542
+#: qtgui/rwmolecule.cpp:549
 msgid "Build Super Cell"
 msgstr "Створіть Super Cell"
 
-#: qtgui/rwmolecule.cpp:566
+#: qtgui/rwmolecule.cpp:573
 msgid "Niggli Reduction"
 msgstr "Скорочення Niggli"
 
-#: qtgui/rwmolecule.cpp:588
+#: qtgui/rwmolecule.cpp:595
 msgid "Rotate to Standard Orientation"
 msgstr "Обернути до стандартної орієнтації"
 
-#: qtgui/rwmolecule.cpp:613 qtplugins/spacegroup/spacegroup.cpp:56
+#: qtgui/rwmolecule.cpp:620 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
 msgstr "Зменшити до примітиву"
 
-#: qtgui/rwmolecule.cpp:638 qtplugins/spacegroup/spacegroup.cpp:62
+#: qtgui/rwmolecule.cpp:645 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:263
 msgid "Conventionalize Cell"
 msgstr "Консультація Клітка"
 
-#: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:288
+#: qtgui/rwmolecule.cpp:670 qtplugins/spacegroup/spacegroup.cpp:288
 msgid "Symmetrize Cell"
 msgstr "Симетризуйте клітинку"
 
-#: qtgui/rwmolecule.cpp:682
+#: qtgui/rwmolecule.cpp:689
 msgid "Fill Unit Cell"
 msgstr "Заповнити елементарну комірку"
 
-#: qtgui/rwmolecule.cpp:702
+#: qtgui/rwmolecule.cpp:709
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Зменшити клітинку до асиметричної одиниці"
 
@@ -2237,6 +2238,7 @@ msgstr "Максимальна відстань:"
 #: qtplugins/closecontacts/closecontacts.cpp:251
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:402
+#: qtplugins/surfacerender/surfacerender.cpp:287
 #: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
 msgstr "Ширина лінії:"
@@ -2264,7 +2266,7 @@ msgstr "Редагувати карту непрозорості кольорі�
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:102
+#: qtplugins/configurepython/configurepython.cpp:103
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:172
 #: qtplugins/forcefield/forcefield.cpp:174
@@ -2357,6 +2359,7 @@ msgstr "Налаштувати середовища Python."
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:482
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 #: qtplugins/configurepython/configurepythondialog.cpp:203
+#: qtplugins/configurepython/configurepythondialog.cpp:215
 #: qtplugins/editor/editortoolwidget.cpp:130
 #: qtplugins/templatetool/templatetoolwidget.cpp:84
 #: qtplugins/templatetool/templatetoolwidget.cpp:352
@@ -2964,18 +2967,18 @@ msgstr "Немає елементарної комірки."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
-#: qtplugins/crystal/unitcelldialog.cpp:283
-#: qtplugins/crystal/unitcelldialog.cpp:299
-#: qtplugins/crystal/unitcelldialog.cpp:315:442
+#: qtplugins/crystal/unitcelldialog.cpp:280
+#: qtplugins/crystal/unitcelldialog.cpp:291
+#: qtplugins/crystal/unitcelldialog.cpp:302:442
 msgid "Unit Cell Editor"
 msgstr "Редактор елементарної комірки"
 
-#: qtplugins/crystal/unitcelldialog.cpp:284
-#: qtplugins/crystal/unitcelldialog.cpp:300
+#: qtplugins/crystal/unitcelldialog.cpp:281
+#: qtplugins/crystal/unitcelldialog.cpp:292
 msgid "Ignoring singular cell matrix"
 msgstr "Ігнорування матриці сингулярних комірок"
 
-#: qtplugins/crystal/unitcelldialog.cpp:316
+#: qtplugins/crystal/unitcelldialog.cpp:303
 msgid "Ignoring singular fractional cell matrix"
 msgstr "Ігнорування дробової матриці сингулярних клітин"
 
@@ -3499,8 +3502,8 @@ msgstr "Вставити Фрагмент"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Вставте молекулярні фрагменти для створення більших молекул."
 
-#: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
-#: qtplugins/meshes/meshes.cpp:186
+#: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:303
+#: qtplugins/surfacerender/surfacerender.cpp:309
 msgid "Color:"
 msgstr "Колір:"
 
@@ -3618,7 +3621,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:174
+#: qtplugins/licorice/licorice.cpp:78
+#: qtplugins/surfacerender/surfacerender.cpp:276
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1679
 msgid "Opacity:"
 msgstr "Непрозорість:"
@@ -3647,6 +3651,14 @@ msgstr "Не знайдено зчитувачів рядкового форма
 #: qtplugins/lineformatinput/lineformatinput.cpp:115
 msgid "Unable to load requested format reader."
 msgstr "Неможливо завантажити запитаний зчитувач формату."
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:145
+msgid "No coordinates found!"
+msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:146
+msgid "Unable to generate 3D coordinates."
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3729,10 +3741,6 @@ msgstr "Кути:"
 #: qtplugins/measuretool/measuretool.h:34
 msgid "Measure tool"
 msgstr "Інструмент для вимірювання"
-
-#: qtplugins/meshes/meshes.h:33
-msgid "Render molecular surfaces."
-msgstr "Рендеринг молекулярних поверхонь."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
@@ -4484,7 +4492,7 @@ msgstr "Помилка завантаження даних плагіна."
 msgid "Error parsing plugin data."
 msgstr "Помилка аналізу даних плагіна."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:306
+#: qtplugins/plugindownloader/downloaderwidget.cpp:313
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4492,16 +4500,16 @@ msgstr ""
 "Цей плагін вимагає встановлення певних пакетів.\n"
 "Ви хочете їх встановити?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:314
+#: qtplugins/plugindownloader/downloaderwidget.cpp:321
 msgid "Always"
 msgstr "Завжди"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:315
+#: qtplugins/plugindownloader/downloaderwidget.cpp:322
 msgid "Never"
 msgstr "Ніколи"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:358
-#: qtplugins/plugindownloader/downloaderwidget.cpp:368
+#: qtplugins/plugindownloader/downloaderwidget.cpp:365
+#: qtplugins/plugindownloader/downloaderwidget.cpp:375
 #, qt-format
 msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
@@ -4509,26 +4517,26 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr "Не вдалося завантажити з %1: код стану %2, %3\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:400
+#: qtplugins/plugindownloader/downloaderwidget.cpp:407
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Завантаження %1 до %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:413
+#: qtplugins/plugindownloader/downloaderwidget.cpp:420
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Видобування %1 до %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:416
+#: qtplugins/plugindownloader/downloaderwidget.cpp:423
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "Завершено %1 файлів\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:427
 msgid "Extraction successful\n"
 msgstr "Видобуток успішний\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:496
+#: qtplugins/plugindownloader/downloaderwidget.cpp:503
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Помилка під час видобування: %1"
@@ -5275,6 +5283,18 @@ msgstr "Спектри кругового дихроїзму"
 #: qtplugins/spectra/spectradialog.cpp:655:1592
 msgid "Density"
 msgstr "Щільність"
+
+#: qtplugins/surfacerender/surfacerender.cpp:263
+msgid "Surface"
+msgstr ""
+
+#: qtplugins/surfacerender/surfacerender.cpp:267
+msgid "Style:"
+msgstr "Стиль:"
+
+#: qtplugins/surfacerender/surfacerender.h:33
+msgid "Render molecular surfaces."
+msgstr "Рендеринг молекулярних поверхонь."
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
@@ -11483,9 +11503,6 @@ msgstr "Ваші електронні листи"
 
 #~ msgid "Draw Box:"
 #~ msgstr "Малювати рамку:"
-
-#~ msgid "Style:"
-#~ msgstr "Стиль:"
 
 #~ msgid "Mapped Colors"
 #~ msgstr "Відображені кольори"

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-07 02:42+0000\n"
+"POT-Creation-Date: 2025-09-21 02:47+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -1263,7 +1263,7 @@ msgctxt "stick / licorice rendering"
 msgid "Licorice"
 msgstr "Bastão"
 
-#: qtgui/layermodel.cpp:186 qtplugins/meshes/meshes.h:29
+#: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "Superfícies"
@@ -1287,7 +1287,8 @@ msgstr "Elementos de Simetria"
 msgid "Van der Waals"
 msgstr "Van der Waals"
 
-#: qtgui/layermodel.cpp:196 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:196 qtplugins/surfacerender/surfacerender.cpp:264
+#: qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "Estrutura de Arame"
 
@@ -1405,130 +1406,130 @@ msgstr "Adicionar camada de informação"
 msgid "Change Layer"
 msgstr "Trocar Camada"
 
-#: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
+#: qtgui/rwmolecule.cpp:41 qtgui/rwmolecule.cpp:50
 msgid "Add Atom"
 msgstr "Adicionar Átomo"
 
-#: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
+#: qtgui/rwmolecule.cpp:72 qtgui/rwmolecule.cpp:87
 #: qtplugins/editor/editor.cpp:135
 msgid "Remove Atom"
 msgstr "Remover Átomo"
 
-#: qtgui/rwmolecule.cpp:95
+#: qtgui/rwmolecule.cpp:97
 msgid "Clear Atoms"
 msgstr "Limpar Átomos"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:526
+#: qtgui/rwmolecule.cpp:109 qtgui/rwmolecule.cpp:117:526
 msgid "Adjust Hydrogens"
 msgstr "Ajustar Hidrogênios"
 
-#: qtgui/rwmolecule.cpp:143 qtplugins/alchemy/alchemy.cpp:74
+#: qtgui/rwmolecule.cpp:145 qtplugins/alchemy/alchemy.cpp:74
 msgid "Change Elements"
 msgstr "Trocar Elementos"
 
-#: qtgui/rwmolecule.cpp:155
+#: qtgui/rwmolecule.cpp:157
 msgid "Change Element"
 msgstr "Trocar Elemento"
 
-#: qtgui/rwmolecule.cpp:236
+#: qtgui/rwmolecule.cpp:238
 msgid "Change Atom Hybridization"
 msgstr "Alterar Hibridização do Átomo"
 
-#: qtgui/rwmolecule.cpp:248
+#: qtgui/rwmolecule.cpp:250
 msgid "Change Atom Formal Charge"
 msgstr "Mudar Carga Formal do Átomo"
 
-#: qtgui/rwmolecule.cpp:260
+#: qtgui/rwmolecule.cpp:262
 msgid "Change Atom Color"
 msgstr "Mudar Cor do Átomo"
 
-#: qtgui/rwmolecule.cpp:272
+#: qtgui/rwmolecule.cpp:274
 #, fuzzy
 msgid "Change Atom Layer"
 msgstr "Mudar Cor do Átomo"
 
-#: qtgui/rwmolecule.cpp:288
+#: qtgui/rwmolecule.cpp:290
 msgid "Add Bond"
 msgstr "Adicionar Ligação"
 
-#: qtgui/rwmolecule.cpp:314
+#: qtgui/rwmolecule.cpp:316
 msgid "Removed Bond"
 msgstr "Ligação Removida"
 
-#: qtgui/rwmolecule.cpp:321
+#: qtgui/rwmolecule.cpp:323
 msgid "Clear Bonds"
 msgstr "Apagar Ligações"
 
-#: qtgui/rwmolecule.cpp:335
+#: qtgui/rwmolecule.cpp:337
 msgid "Set Bond Orders"
 msgstr "Definir Ordens de Ligação"
 
-#: qtgui/rwmolecule.cpp:347
+#: qtgui/rwmolecule.cpp:349
 msgid "Change Bond Order"
 msgstr "Trocar Ordem da Ligação"
 
-#: qtgui/rwmolecule.cpp:369
+#: qtgui/rwmolecule.cpp:371
 msgid "Update Bonds"
 msgstr "Atualizar Ligações"
 
-#: qtgui/rwmolecule.cpp:388
+#: qtgui/rwmolecule.cpp:390
 msgid "Update Bond"
 msgstr "Atualizar Ligação"
 
-#: qtgui/rwmolecule.cpp:407
+#: qtgui/rwmolecule.cpp:409
 #, fuzzy
 msgid "Add Unit Cell…"
 msgstr "Adicionar Célula Unitária…"
 
-#: qtgui/rwmolecule.cpp:419
+#: qtgui/rwmolecule.cpp:421
 msgid "Remove Unit Cell"
 msgstr "Remover Célula Unitária"
 
-#: qtgui/rwmolecule.cpp:483
+#: qtgui/rwmolecule.cpp:490
 msgid "Edit Unit Cell"
 msgstr "Editar Célula Unitária"
 
-#: qtgui/rwmolecule.cpp:499
+#: qtgui/rwmolecule.cpp:506
 msgid "Wrap Atoms to Cell"
 msgstr "Envolver Átomos na Célula"
 
-#: qtgui/rwmolecule.cpp:522
+#: qtgui/rwmolecule.cpp:529
 msgid "Scale Cell Volume"
 msgstr "Redimensionar Volume da Célula"
 
-#: qtgui/rwmolecule.cpp:542
+#: qtgui/rwmolecule.cpp:549
 msgid "Build Super Cell"
 msgstr "Construir Supercélula"
 
-#: qtgui/rwmolecule.cpp:566
+#: qtgui/rwmolecule.cpp:573
 msgid "Niggli Reduction"
 msgstr "Redução Niggli"
 
-#: qtgui/rwmolecule.cpp:588
+#: qtgui/rwmolecule.cpp:595
 msgid "Rotate to Standard Orientation"
 msgstr "Girar para Orientação Padrão"
 
-#: qtgui/rwmolecule.cpp:613 qtplugins/spacegroup/spacegroup.cpp:56
+#: qtgui/rwmolecule.cpp:620 qtplugins/spacegroup/spacegroup.cpp:56
 #, fuzzy
 msgid "Reduce to Primitive"
 msgstr "Reduzir para Célula Primitiva"
 
-#: qtgui/rwmolecule.cpp:638 qtplugins/spacegroup/spacegroup.cpp:62
+#: qtgui/rwmolecule.cpp:645 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:263
 msgid "Conventionalize Cell"
 msgstr "Convencionalizar Célula"
 
-#: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:288
+#: qtgui/rwmolecule.cpp:670 qtplugins/spacegroup/spacegroup.cpp:288
 msgid "Symmetrize Cell"
 msgstr "Simetrizar Célula"
 
-#: qtgui/rwmolecule.cpp:682
+#: qtgui/rwmolecule.cpp:689
 msgid "Fill Unit Cell"
 msgstr "Completar Célula Unitária"
 
-#: qtgui/rwmolecule.cpp:702
+#: qtgui/rwmolecule.cpp:709
 #, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Reduzir para Unidade Assimétrica"
@@ -2255,6 +2256,7 @@ msgstr "Distância Máxima:"
 #: qtplugins/closecontacts/closecontacts.cpp:251
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:402
+#: qtplugins/surfacerender/surfacerender.cpp:287
 #: qtplugins/wireframe/wireframe.cpp:96
 #, fuzzy
 msgid "Line width:"
@@ -2284,7 +2286,7 @@ msgstr "Editar Mapa de Opacidade de Cor …"
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:102
+#: qtplugins/configurepython/configurepython.cpp:103
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:172
 #: qtplugins/forcefield/forcefield.cpp:174
@@ -2379,6 +2381,7 @@ msgstr "Configurar ambientes do Python."
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:482
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 #: qtplugins/configurepython/configurepythondialog.cpp:203
+#: qtplugins/configurepython/configurepythondialog.cpp:215
 #: qtplugins/editor/editortoolwidget.cpp:130
 #: qtplugins/templatetool/templatetoolwidget.cpp:84
 #: qtplugins/templatetool/templatetoolwidget.cpp:352
@@ -3004,18 +3007,18 @@ msgstr "Nenhuma célula unitária presente."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
-#: qtplugins/crystal/unitcelldialog.cpp:283
-#: qtplugins/crystal/unitcelldialog.cpp:299
-#: qtplugins/crystal/unitcelldialog.cpp:315:442
+#: qtplugins/crystal/unitcelldialog.cpp:280
+#: qtplugins/crystal/unitcelldialog.cpp:291
+#: qtplugins/crystal/unitcelldialog.cpp:302:442
 msgid "Unit Cell Editor"
 msgstr "Editor de Célula Unitária"
 
-#: qtplugins/crystal/unitcelldialog.cpp:284
-#: qtplugins/crystal/unitcelldialog.cpp:300
+#: qtplugins/crystal/unitcelldialog.cpp:281
+#: qtplugins/crystal/unitcelldialog.cpp:292
 msgid "Ignoring singular cell matrix"
 msgstr ""
 
-#: qtplugins/crystal/unitcelldialog.cpp:316
+#: qtplugins/crystal/unitcelldialog.cpp:303
 msgid "Ignoring singular fractional cell matrix"
 msgstr ""
 
@@ -3551,8 +3554,8 @@ msgstr "InsertFragment"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Insere fragmentos moleculares para construir moléculas maiores."
 
-#: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
-#: qtplugins/meshes/meshes.cpp:186
+#: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:303
+#: qtplugins/surfacerender/surfacerender.cpp:309
 #, fuzzy
 msgid "Color:"
 msgstr "Cores:"
@@ -3672,7 +3675,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:174
+#: qtplugins/licorice/licorice.cpp:78
+#: qtplugins/surfacerender/surfacerender.cpp:276
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1679
 msgid "Opacity:"
 msgstr "Opacidade:"
@@ -3704,6 +3708,14 @@ msgstr "Nenhum leitor de formato de linha encontrado!"
 #: qtplugins/lineformatinput/lineformatinput.cpp:115
 msgid "Unable to load requested format reader."
 msgstr "Não foi possível carregar o leitor de formato solicitado."
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:145
+msgid "No coordinates found!"
+msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:146
+msgid "Unable to generate 3D coordinates."
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3777,10 +3789,6 @@ msgstr "Ângulos:"
 #, fuzzy
 msgid "Measure tool"
 msgstr "Ferramenta de Medida"
-
-#: qtplugins/meshes/meshes.h:33
-msgid "Render molecular surfaces."
-msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
@@ -4556,22 +4564,22 @@ msgstr ""
 msgid "Error parsing plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:306
+#: qtplugins/plugindownloader/downloaderwidget.cpp:313
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:314
+#: qtplugins/plugindownloader/downloaderwidget.cpp:321
 msgid "Always"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:315
+#: qtplugins/plugindownloader/downloaderwidget.cpp:322
 msgid "Never"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:358
-#: qtplugins/plugindownloader/downloaderwidget.cpp:368
+#: qtplugins/plugindownloader/downloaderwidget.cpp:365
+#: qtplugins/plugindownloader/downloaderwidget.cpp:375
 #, qt-format
 msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
@@ -4579,26 +4587,26 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:400
+#: qtplugins/plugindownloader/downloaderwidget.cpp:407
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:413
+#: qtplugins/plugindownloader/downloaderwidget.cpp:420
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:416
+#: qtplugins/plugindownloader/downloaderwidget.cpp:423
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:427
 msgid "Extraction successful\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:496
+#: qtplugins/plugindownloader/downloaderwidget.cpp:503
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr ""
@@ -5368,6 +5376,18 @@ msgstr ""
 #: qtplugins/spectra/spectradialog.cpp:655:1592
 msgid "Density"
 msgstr "Densidade"
+
+#: qtplugins/surfacerender/surfacerender.cpp:263
+msgid "Surface"
+msgstr ""
+
+#: qtplugins/surfacerender/surfacerender.cpp:267
+msgid "Style:"
+msgstr ""
+
+#: qtplugins/surfacerender/surfacerender.h:33
+msgid "Render molecular surfaces."
+msgstr ""
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
