@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-07 02:42+0000\n"
+"POT-Creation-Date: 2025-09-21 02:47+0000\n"
 "PO-Revision-Date: 2025-09-02 16:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -1240,7 +1240,7 @@ msgctxt "stick / licorice rendering"
 msgid "Licorice"
 msgstr "லைகோரைச்"
 
-#: qtgui/layermodel.cpp:186 qtplugins/meshes/meshes.h:29
+#: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "மேற்பரப்புகள்"
@@ -1263,7 +1263,8 @@ msgstr "சமச்சீர் கூறுகள்"
 msgid "Van der Waals"
 msgstr "வான் டெர் வால்ச்"
 
-#: qtgui/layermodel.cpp:196 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:196 qtplugins/surfacerender/surfacerender.cpp:264
+#: qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "வயர்ஃப்ரேம்"
 
@@ -1377,127 +1378,127 @@ msgstr "அடுக்கு தகவலைச் சேர்க்கவு�
 msgid "Change Layer"
 msgstr "அடுக்கை மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
+#: qtgui/rwmolecule.cpp:41 qtgui/rwmolecule.cpp:50
 msgid "Add Atom"
 msgstr "அணுவைச் சேர்க்கவும்"
 
-#: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
+#: qtgui/rwmolecule.cpp:72 qtgui/rwmolecule.cpp:87
 #: qtplugins/editor/editor.cpp:135
 msgid "Remove Atom"
 msgstr "அணுவை அகற்று"
 
-#: qtgui/rwmolecule.cpp:95
+#: qtgui/rwmolecule.cpp:97
 msgid "Clear Atoms"
 msgstr "அணுகுமுறைகளை அழிக்கவும்"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:526
+#: qtgui/rwmolecule.cpp:109 qtgui/rwmolecule.cpp:117:526
 msgid "Adjust Hydrogens"
 msgstr "ஐட்ரசன்களை சரிசெய்யவும்"
 
-#: qtgui/rwmolecule.cpp:143 qtplugins/alchemy/alchemy.cpp:74
+#: qtgui/rwmolecule.cpp:145 qtplugins/alchemy/alchemy.cpp:74
 msgid "Change Elements"
 msgstr "கூறுகளை மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:155
+#: qtgui/rwmolecule.cpp:157
 msgid "Change Element"
 msgstr "உறுப்பு மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:236
+#: qtgui/rwmolecule.cpp:238
 msgid "Change Atom Hybridization"
 msgstr "அணு கலப்பினத்தை மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:248
+#: qtgui/rwmolecule.cpp:250
 msgid "Change Atom Formal Charge"
 msgstr "அணு முறையான கட்டணத்தை மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:260
+#: qtgui/rwmolecule.cpp:262
 msgid "Change Atom Color"
 msgstr "அணு நிறத்தை மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:272
+#: qtgui/rwmolecule.cpp:274
 msgid "Change Atom Layer"
 msgstr "அணு அடுக்கை மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:288
+#: qtgui/rwmolecule.cpp:290
 msgid "Add Bond"
 msgstr "பிணைப்பைச் சேர்க்கவும்"
 
-#: qtgui/rwmolecule.cpp:314
+#: qtgui/rwmolecule.cpp:316
 msgid "Removed Bond"
 msgstr "அகற்றப்பட்ட பிணைப்பு"
 
-#: qtgui/rwmolecule.cpp:321
+#: qtgui/rwmolecule.cpp:323
 msgid "Clear Bonds"
 msgstr "தெளிவான பிணைப்புகள்"
 
-#: qtgui/rwmolecule.cpp:335
+#: qtgui/rwmolecule.cpp:337
 msgid "Set Bond Orders"
 msgstr "பத்திர ஆர்டர்களை அமைக்கவும்"
 
-#: qtgui/rwmolecule.cpp:347
+#: qtgui/rwmolecule.cpp:349
 msgid "Change Bond Order"
 msgstr "பத்திர வரிசையை மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:369
+#: qtgui/rwmolecule.cpp:371
 msgid "Update Bonds"
 msgstr "பத்திரங்களை புதுப்பிக்கவும்"
 
-#: qtgui/rwmolecule.cpp:388
+#: qtgui/rwmolecule.cpp:390
 msgid "Update Bond"
 msgstr "பத்திரத்தைப் புதுப்பிக்கவும்"
 
-#: qtgui/rwmolecule.cpp:407
+#: qtgui/rwmolecule.cpp:409
 msgid "Add Unit Cell…"
 msgstr "அலகு கலத்தைச் சேர்க்கவும்…"
 
-#: qtgui/rwmolecule.cpp:419
+#: qtgui/rwmolecule.cpp:421
 msgid "Remove Unit Cell"
 msgstr "அலகு கலத்தை அகற்று"
 
-#: qtgui/rwmolecule.cpp:483
+#: qtgui/rwmolecule.cpp:490
 msgid "Edit Unit Cell"
 msgstr "அலகு கலத்தைத் திருத்து"
 
-#: qtgui/rwmolecule.cpp:499
+#: qtgui/rwmolecule.cpp:506
 msgid "Wrap Atoms to Cell"
 msgstr "அணுக்களை கலத்திற்கு மடிக்கவும்"
 
-#: qtgui/rwmolecule.cpp:522
+#: qtgui/rwmolecule.cpp:529
 msgid "Scale Cell Volume"
 msgstr "அளவிலான செல் தொகுதி"
 
-#: qtgui/rwmolecule.cpp:542
+#: qtgui/rwmolecule.cpp:549
 msgid "Build Super Cell"
 msgstr "சூப்பர் கலத்தை உருவாக்குங்கள்"
 
-#: qtgui/rwmolecule.cpp:566
+#: qtgui/rwmolecule.cpp:573
 msgid "Niggli Reduction"
 msgstr "நிக்லி குறைப்பு"
 
-#: qtgui/rwmolecule.cpp:588
+#: qtgui/rwmolecule.cpp:595
 msgid "Rotate to Standard Orientation"
 msgstr "நிலையான நோக்குநிலைக்கு சுழற்றுங்கள்"
 
-#: qtgui/rwmolecule.cpp:613 qtplugins/spacegroup/spacegroup.cpp:56
+#: qtgui/rwmolecule.cpp:620 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
 msgstr "பழமையானதாகக் குறைக்கவும்"
 
-#: qtgui/rwmolecule.cpp:638 qtplugins/spacegroup/spacegroup.cpp:62
+#: qtgui/rwmolecule.cpp:645 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:263
 msgid "Conventionalize Cell"
 msgstr "வழக்கமான செல்"
 
-#: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:288
+#: qtgui/rwmolecule.cpp:670 qtplugins/spacegroup/spacegroup.cpp:288
 msgid "Symmetrize Cell"
 msgstr "செல் சமச்சீர்"
 
-#: qtgui/rwmolecule.cpp:682
+#: qtgui/rwmolecule.cpp:689
 msgid "Fill Unit Cell"
 msgstr "அலகு கலத்தை நிரப்பவும்"
 
-#: qtgui/rwmolecule.cpp:702
+#: qtgui/rwmolecule.cpp:709
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "கலத்தை சமச்சீரற்ற அலகுக்கு குறைக்கவும்"
 
@@ -2188,6 +2189,7 @@ msgstr "அதிகபட்ச தூரம்:"
 #: qtplugins/closecontacts/closecontacts.cpp:251
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:402
+#: qtplugins/surfacerender/surfacerender.cpp:287
 #: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
 msgstr "வரி அகலம்:"
@@ -2215,7 +2217,7 @@ msgstr "வண்ண ஒளிபுகா வரைபடத்தைத் த
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:102
+#: qtplugins/configurepython/configurepython.cpp:103
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:172
 #: qtplugins/forcefield/forcefield.cpp:174
@@ -2307,6 +2309,7 @@ msgstr "பைதான் சூழல்களை உள்ளமைக்க�
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:482
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 #: qtplugins/configurepython/configurepythondialog.cpp:203
+#: qtplugins/configurepython/configurepythondialog.cpp:215
 #: qtplugins/editor/editortoolwidget.cpp:130
 #: qtplugins/templatetool/templatetoolwidget.cpp:84
 #: qtplugins/templatetool/templatetoolwidget.cpp:352
@@ -2913,18 +2916,18 @@ msgstr "யூனிட் செல் இல்லை."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
-#: qtplugins/crystal/unitcelldialog.cpp:283
-#: qtplugins/crystal/unitcelldialog.cpp:299
-#: qtplugins/crystal/unitcelldialog.cpp:315:442
+#: qtplugins/crystal/unitcelldialog.cpp:280
+#: qtplugins/crystal/unitcelldialog.cpp:291
+#: qtplugins/crystal/unitcelldialog.cpp:302:442
 msgid "Unit Cell Editor"
 msgstr "யூனிட் செல் எடிட்டர்"
 
-#: qtplugins/crystal/unitcelldialog.cpp:284
-#: qtplugins/crystal/unitcelldialog.cpp:300
+#: qtplugins/crystal/unitcelldialog.cpp:281
+#: qtplugins/crystal/unitcelldialog.cpp:292
 msgid "Ignoring singular cell matrix"
 msgstr ""
 
-#: qtplugins/crystal/unitcelldialog.cpp:316
+#: qtplugins/crystal/unitcelldialog.cpp:303
 msgid "Ignoring singular fractional cell matrix"
 msgstr ""
 
@@ -3444,8 +3447,8 @@ msgstr "இன்செர்ட்ஃப்ராக்மென்ட்"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "பெரிய மூலக்கூறுகளை உருவாக்குவதற்கு மூலக்கூறு துண்டுகளை செருகவும்."
 
-#: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
-#: qtplugins/meshes/meshes.cpp:186
+#: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:303
+#: qtplugins/surfacerender/surfacerender.cpp:309
 msgid "Color:"
 msgstr "வண்ணம்:"
 
@@ -3560,7 +3563,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:174
+#: qtplugins/licorice/licorice.cpp:78
+#: qtplugins/surfacerender/surfacerender.cpp:276
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1679
 msgid "Opacity:"
 msgstr "ஒளிபுகாநிலை:"
@@ -3589,6 +3593,14 @@ msgstr "வரி வடிவமைப்பு வாசகர்கள் எ
 #: qtplugins/lineformatinput/lineformatinput.cpp:115
 msgid "Unable to load requested format reader."
 msgstr "கோரப்பட்ட வடிவமைப்பு வாசகரை ஏற்ற முடியவில்லை."
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:145
+msgid "No coordinates found!"
+msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:146
+msgid "Unable to generate 3D coordinates."
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3659,10 +3671,6 @@ msgstr "கோணங்கள்:"
 #: qtplugins/measuretool/measuretool.h:34
 msgid "Measure tool"
 msgstr "அளவீட்டு கருவி"
-
-#: qtplugins/meshes/meshes.h:33
-msgid "Render molecular surfaces."
-msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
@@ -4405,7 +4413,7 @@ msgstr "சொருகி தரவை பதிவிறக்குவதி�
 msgid "Error parsing plugin data."
 msgstr "சொருகி தரவை பாகுபடுத்துவதில் பிழை."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:306
+#: qtplugins/plugindownloader/downloaderwidget.cpp:313
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4413,16 +4421,16 @@ msgstr ""
 "இந்த சொருகி சில தொகுப்புகளை நிறுவ வேண்டும்.\n"
 " அவற்றை நிறுவ விரும்புகிறீர்களா?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:314
+#: qtplugins/plugindownloader/downloaderwidget.cpp:321
 msgid "Always"
 msgstr "எப்போதும்"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:315
+#: qtplugins/plugindownloader/downloaderwidget.cpp:322
 msgid "Never"
 msgstr "ஒருபோதும்"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:358
-#: qtplugins/plugindownloader/downloaderwidget.cpp:368
+#: qtplugins/plugindownloader/downloaderwidget.cpp:365
+#: qtplugins/plugindownloader/downloaderwidget.cpp:375
 #, qt-format
 msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
@@ -4430,26 +4438,26 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr "%1 இலிருந்து பதிவிறக்கம் செய்யத் தவறிவிட்டது: நிலை குறியீடு %2, %3\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:400
+#: qtplugins/plugindownloader/downloaderwidget.cpp:407
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "%1 முதல் %2 வரை பதிவிறக்குகிறது\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:413
+#: qtplugins/plugindownloader/downloaderwidget.cpp:420
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "%1 முதல் %2 வரை பிரித்தெடுக்கிறது\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:416
+#: qtplugins/plugindownloader/downloaderwidget.cpp:423
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "%1 கோப்புகள் முடிந்தது\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:427
 msgid "Extraction successful\n"
 msgstr "பிரித்தெடுத்தல் வெற்றிகரமாக\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:496
+#: qtplugins/plugindownloader/downloaderwidget.cpp:503
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "பிரித்தெடுக்கும் போது பிழை: %1"
@@ -5185,6 +5193,18 @@ msgstr "வட்ட டைக்ரோயிசம் ச்பெக்ட்�
 #: qtplugins/spectra/spectradialog.cpp:655:1592
 msgid "Density"
 msgstr "அடர்த்தி"
+
+#: qtplugins/surfacerender/surfacerender.cpp:263
+msgid "Surface"
+msgstr ""
+
+#: qtplugins/surfacerender/surfacerender.cpp:267
+msgid "Style:"
+msgstr ""
+
+#: qtplugins/surfacerender/surfacerender.h:33
+msgid "Render molecular surfaces."
+msgstr ""
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
