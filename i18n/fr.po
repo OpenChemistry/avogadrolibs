@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-21 02:47+0000\n"
-"PO-Revision-Date: 2025-09-16 17:01+0000\n"
+"PO-Revision-Date: 2025-09-25 18:01+0000\n"
 "Last-Translator: \"David D.\" <dadu042@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -2071,12 +2071,12 @@ msgstr ""
 "Souris gauche : cliquez et faites glisser pour faire pivoter la vue.\n"
 "Souris du milieu : cliquez et faites glisser pour zoomer ou dézoomer.\n"
 "Souris droite : cliquez et faites glisser pour déplacer la vue.\n"
-"Double-clic: réinitialiser la vue.\n"
+"Double-clic : réinitialiser la vue.\n"
 "\n"
 "Cliquez et faites glisser sur une liaison pour définir le plan de "
 "manipulation\n"
-"Clic gauche et faites glisser l’un des atomes dans la liaison pour changer "
-"l’angle\n"
+"Clic gauche et faites glisser l’un des atomes dans la liaison pour changer l’"
+"angle\n"
 "Cliquez avec le bouton droit et faites glisser l’un des atomes dans la "
 "liaison pour changer la longueur"
 
@@ -3677,11 +3677,11 @@ msgstr "Impossible de charger le lecteur de format demandé."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
-msgstr ""
+msgstr "Pas de coordonnées trouvées !"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:146
 msgid "Unable to generate 3D coordinates."
-msgstr ""
+msgstr "Impossible de générer des coordonnées 3D."
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3740,6 +3740,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"Outil de mesure\t (%1)\n"
+"\n"
+"Souris gauche : Sélectionnez jusqu’à quatre atomes.\n"
+"\tLes distances sont mesurées entre 1-2 et 2-3\n"
+"\tL’angle est mesuré entre 1-3 en utilisant 2 comme point commun\n"
+"\tDihedral est mesuré entre 1-2-3-4\n"
+"Souris droite : Réinitialiser les mesures."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:209
@@ -3935,6 +3942,11 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
+"Outil de navigation (%1)\n"
+"\n"
+"Souris gauche : cliquez et faites glisser pour faire pivoter la vue.\n"
+"Souris du milieu : cliquez et faites glisser pour zoomer ou dézoomer.\n"
+"Souris droite : cliquez et faites glisser pour déplacer la vue."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3957,6 +3969,10 @@ msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
+"Par défaut : faites défiler vers le bas pour réduire, faites défiler vers le "
+"haut pour zoomer\n"
+"Inversé : faites défiler vers le haut pour réduire, faites défiler vers le "
+"bas pour zoomer"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -4329,7 +4345,7 @@ msgid "Player"
 msgstr "Lecteur"
 
 #: qtplugins/playertool/playertool.cpp:49
-#, fuzzy, qt-format
+#, qt-format
 msgid "Animation Tool\t(%1)"
 msgstr "Outil d'animation\t(%1)"
 
@@ -4833,7 +4849,7 @@ msgstr "Geler l'atome"
 
 #: qtplugins/propertytables/propertyview.cpp:417
 msgid "Constrain Bond"
-msgstr ""
+msgstr "Contraindre l’obligation"
 
 #: qtplugins/propertytables/propertyview.cpp:419
 msgid "Constrain Angle"
@@ -5039,6 +5055,16 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Outil de sélection (%1)\n"
+"\n"
+"Souris gauche : cliquez pour choisir des atomes, des résidus ou des "
+"fragments individuels\n"
+"\tFaites glisser pour sélectionner une plage d’atomes\n"
+"Souris droite : cliquez à l’extérieur de la molécule pour effacer la "
+"sélection\n"
+"Utilisez Ctrl pour basculer la sélection et décaler pour ajouter à la "
+"sélection.\n"
+"Double-clic : sélectionnez un fragment entier."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -5299,7 +5325,7 @@ msgstr "Densité"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
-msgstr ""
+msgstr "Surface"
 
 #: qtplugins/surfacerender/surfacerender.cpp:267
 msgid "Style:"
@@ -5530,6 +5556,14 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"Outil de modèle (%1)\n"
+"\n"
+"Insérez des fragments, y compris des centres métalliques.\n"
+"Sélectionnez une géométrie d’élément et de coordination, puis cliquez pour "
+"insérer un fragment.\n"
+"\n"
+"Sélectionnez un ligand ou un groupe fonctionnel et cliquez sur un atome d’"
+"hydrogène pour l’attacher."
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
