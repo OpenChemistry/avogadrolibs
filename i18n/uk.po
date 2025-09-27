@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-21 02:47+0000\n"
-"PO-Revision-Date: 2025-09-09 07:01+0000\n"
+"PO-Revision-Date: 2025-09-25 18:02+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -3654,11 +3654,11 @@ msgstr "Неможливо завантажити запитаний зчиту�
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
-msgstr ""
+msgstr "Координати не знайдено!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:146
 msgid "Unable to generate 3D coordinates."
-msgstr ""
+msgstr "Не вдається згенерувати 3D-координати."
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -5286,7 +5286,7 @@ msgstr "Щільність"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
-msgstr ""
+msgstr "Поверхня"
 
 #: qtplugins/surfacerender/surfacerender.cpp:267
 msgid "Style:"

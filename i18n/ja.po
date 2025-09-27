@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-21 02:47+0000\n"
-"PO-Revision-Date: 2025-09-10 22:02+0000\n"
+"PO-Revision-Date: 2025-09-26 16:17+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -3619,11 +3619,11 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
-msgstr ""
+msgstr "座標がみつかりません！"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:146
 msgid "Unable to generate 3D coordinates."
-msgstr ""
+msgstr "3次元座標を生成できません。"
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -5266,7 +5266,7 @@ msgstr "密度"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
-msgstr ""
+msgstr "表面"
 
 #: qtplugins/surfacerender/surfacerender.cpp:267
 msgid "Style:"
@@ -8615,7 +8615,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
 msgid "Plot Fermi?"
-msgstr ""
+msgstr "フェルミをプロットしますか？"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_zeroFermi)
