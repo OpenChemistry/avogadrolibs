@@ -96,6 +96,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       electronicData(i, 1) = m_electronicIntensities[i];
     }
     molecule.setSpectra("Electronic", electronicData);
+
     if (m_electronicRotations.size() == m_electronicTransitions.size()) {
       MatrixX electronicRotations(m_electronicTransitions.size(), 2);
       for (size_t i = 0; i < m_electronicTransitions.size(); ++i) {
@@ -669,17 +670,26 @@ void ORCAOutput::processLine(std::istream& in,
         double wavenumbers;
         while (!key.empty()) {
           // should have 8 columns
-          if (list.size() != 8) {
+          if (list.size() < 8) {
             getline(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
             continue; // skip any spin-forbidden transitions
           }
 
-          wavenumbers = Core::lexicalCast<double>(list[1]);
-          // convert to eV
-          m_electronicTransitions.push_back(wavenumbers / 8065.544);
-          m_electronicIntensities.push_back(Core::lexicalCast<double>(list[3]));
+          if (list.size() == 8) {
+            wavenumbers = Core::lexicalCast<double>(list[1]);
+            // convert to eV
+            m_electronicTransitions.push_back(wavenumbers / 8065.544);
+            m_electronicIntensities.push_back(
+              Core::lexicalCast<double>(list[3]));
+          } else if (list.size() == 11) {
+            // directly use the eV
+            m_electronicTransitions.push_back(
+              Core::lexicalCast<double>(list[3]));
+            m_electronicIntensities.push_back(
+              Core::lexicalCast<double>(list[6]));
+          }
 
           getline(in, key);
           key = Core::trimmed(key);
@@ -695,20 +705,19 @@ void ORCAOutput::processLine(std::istream& in,
           break;
         list = Core::split(key, ' ');
 
-        [[maybe_unused]] double wavenumbers;
         while (!key.empty()) {
           // should have 7 columns
-          if (list.size() != 7) {
+          if (list.size() < 7) {
             getline(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
             continue; // skip any spin-forbidden transitions
           }
 
-          wavenumbers = Core::lexicalCast<double>(list[1]);
-          // convert to eV
-          // m_electronicTransitions.push_back(wavenumbers / 8065.544);
-          m_electronicRotations.push_back(Core::lexicalCast<double>(list[3]));
+          if (list.size() == 7)
+            m_electronicRotations.push_back(Core::lexicalCast<double>(list[3]));
+          else if (list.size() == 10)
+            m_electronicRotations.push_back(Core::lexicalCast<double>(list[6]));
 
           getline(in, key);
           key = Core::trimmed(key);
@@ -1027,7 +1036,7 @@ void ORCAOutput::processLine(std::istream& in,
 
             if (Core::trimmed(key).empty())
               getline(in, key); // skip the blank line after the MOs
-          } // finished parsing 2nd. MOs
+          }                     // finished parsing 2nd. MOs
           if (m_MOcoeffs.size() != numRows * numRows) {
             m_orcaSuccess = false;
           }
@@ -1039,7 +1048,7 @@ void ORCAOutput::processLine(std::istream& in,
       }
       default:;
     } // end switch
-  } // end if (mode)
+  }   // end if (mode)
 }
 
 void ORCAOutput::load(GaussianSet* basis)
