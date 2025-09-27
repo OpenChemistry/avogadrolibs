@@ -16,7 +16,27 @@ namespace Avogadro::QtGui {
 class ChartWidget::ChartWidgetImpl
 {
 public:
-  ChartWidgetImpl() { plot = new JKQTPlotter; }
+  ChartWidgetImpl()
+  {
+    plot = new JKQTPlotter;
+    // set the default text color for dark and light mode
+    const QPalette defaultPalette;
+    // is the text lighter than the window color?
+    bool darkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
+                     defaultPalette.color(QPalette::Window).lightness());
+
+    if (darkMode) {
+      plot->getXAxis()->setTickLabelColor(Qt::white);
+      plot->getYAxis()->setTickLabelColor(Qt::white);
+      plot->getXAxis()->setLabelColor(Qt::white);
+      plot->getYAxis()->setLabelColor(Qt::white);
+    } else {
+      plot->getXAxis()->setTickLabelColor(Qt::black);
+      plot->getYAxis()->setTickLabelColor(Qt::black);
+      plot->getXAxis()->setLabelColor(Qt::black);
+      plot->getYAxis()->setLabelColor(Qt::black);
+    }
+  }
   ~ChartWidgetImpl() { delete plot; }
 
   // copy constructor
@@ -177,22 +197,25 @@ void ChartWidget::clearPlots()
 
 void ChartWidget::setXAxisTitle(const QString& title)
 {
-  m_impl->plot->getXAxis()->setAxisLabel(title);
+  QString label = QString("{\\bf %1 }").arg(title);
+  m_impl->plot->getXAxis()->setAxisLabel(label);
 }
 
 void ChartWidget::setYAxisTitle(const QString& title)
 {
-  m_impl->plot->getYAxis()->setAxisLabel(title);
+  QString label = QString("{\\bf %1 }").arg(title);
+  m_impl->plot->getYAxis()->setAxisLabel(label);
 }
 
 void ChartWidget::setFontSize(int size)
 {
-  m_impl->plot->getXAxis()->setTickLabelFontSize(size);
-  m_impl->plot->getYAxis()->setTickLabelFontSize(size);
+  auto* plot = m_impl->plot;
+  plot->getXAxis()->setTickLabelFontSize(size);
+  plot->getYAxis()->setTickLabelFontSize(size);
 
   int titleSize = round(size * 1.25);
-  m_impl->plot->getXAxis()->setLabelFontSize(titleSize);
-  m_impl->plot->getYAxis()->setLabelFontSize(titleSize);
+  plot->getXAxis()->setLabelFontSize(titleSize);
+  plot->getYAxis()->setLabelFontSize(titleSize);
 }
 
 void ChartWidget::setLineWidth(float width)
