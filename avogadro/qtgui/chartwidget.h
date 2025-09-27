@@ -31,6 +31,15 @@ public:
     y
   };
 
+  enum class LegendLocation
+  {
+    None,
+    TopLeft,
+    TopRight,
+    BottomLeft,
+    BottomRight
+  };
+
   bool addPlot(const std::vector<float>& x, const std::vector<float>& y,
                const color4ub& color = color4ub{ 0, 0, 0, 255 },
                const QString& xName = "x", const QString& yName = "y");
@@ -65,6 +74,11 @@ public:
   void labelPeaks(int yColumn = 1, float threshold = 1.0, int windowSize = 5);
 
   void resetZoom();
+
+  void setAxisColor(Axis a, const color4ub& color);
+  void setBackgroundColor(const color4ub& color);
+
+  void setLegendLocation(LegendLocation location);
 
 private:
   void renderViews();

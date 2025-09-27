@@ -230,6 +230,45 @@ void ChartWidget::setLineWidth(float width)
   m_impl->plot->update();
 }
 
+void ChartWidget::setAxisColor(Axis a, const color4ub& color)
+{
+  QColor c(color[0], color[1], color[2], color[3]);
+  if (a == Axis::x) {
+    m_impl->plot->getXAxis()->setAxisColor(c);
+  } else {
+    m_impl->plot->getYAxis()->setAxisColor(c);
+  }
+}
+
+void ChartWidget::setBackgroundColor(const color4ub& color)
+{
+  QColor c(color[0], color[1], color[2], color[3]);
+  m_impl->plot->getPlotter()->setPlotBackgroundColor(c);
+}
+
+void ChartWidget::setLegendLocation(LegendLocation location)
+{
+
+  m_impl->plot->getPlotter()->setShowKey(true);
+  switch (location) {
+    case LegendLocation::TopLeft:
+      m_impl->plot->getPlotter()->setKeyPosition(JKQTPKeyInsideTopLeft);
+      break;
+    case LegendLocation::TopRight:
+      m_impl->plot->getPlotter()->setKeyPosition(JKQTPKeyInsideTopRight);
+      break;
+    case LegendLocation::BottomLeft:
+      m_impl->plot->getPlotter()->setKeyPosition(JKQTPKeyInsideBottomLeft);
+      break;
+    case LegendLocation::BottomRight:
+      m_impl->plot->getPlotter()->setKeyPosition(JKQTPKeyInsideBottomRight);
+      break;
+    default:
+      m_impl->plot->getPlotter()->setShowKey(false);
+      break;
+  }
+}
+
 void ChartWidget::setTickLabels(Axis a, const std::vector<float>& tickPositions,
                                 const QStringList& tickLabels)
 {

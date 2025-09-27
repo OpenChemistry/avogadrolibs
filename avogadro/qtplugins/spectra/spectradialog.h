@@ -56,7 +56,7 @@ public:
   void disconnectOptions();
   void connectOptions();
 
-  void mouseDoubleClickEvent(QMouseEvent* e);
+  void mouseDoubleClickEvent(QMouseEvent* e) override;
 
 private slots:
   void changeBackgroundColor();
@@ -66,6 +66,8 @@ private slots:
   void changeFontSize();
   void changeLineWidth();
   void changeSpectra();
+
+  void exportData();
 
   void updateElementCombo();
   void updatePlot();
@@ -78,6 +80,9 @@ private:
   // current spectra data
   std::vector<double> m_transitions;
   std::vector<double> m_intensities;
+  // imported spectra (if available)
+  std::vector<double> m_importedTransitions;
+  std::vector<double> m_importedIntensities;
 
   QString m_currentSpectraType;
   Ui::SpectraDialog* m_ui;
