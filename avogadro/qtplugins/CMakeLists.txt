@@ -148,11 +148,11 @@ add_subdirectory(vrml)
 
 # Plugins that require plotting
 add_subdirectory(spectra)
-#add_subdirectory(plotpdf)
-#add_subdirectory(plotrmsd)
-#add_subdirectory(plotxrd)
+add_subdirectory(plotpdf)
+add_subdirectory(plotrmsd)
+add_subdirectory(plotxrd)
 if(USE_SPGLIB)
-#  add_subdirectory(yaehmop)
+  add_subdirectory(yaehmop)
 endif()
 
 # script plugins (input generators, etc.)
