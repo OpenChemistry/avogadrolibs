@@ -31,8 +31,12 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 
 add_library(QtGui)
 
+find_package(JKQTPlotter${QT_VERSION} REQUIRED)
+
 avogadro_headers(QtGui
   backgroundfileformat.h
+  chartdialog.h
+  chartwidget.h
   colorbutton.h
   containerwidget.h
   customelementdialog.h
@@ -72,6 +76,8 @@ avogadro_headers(QtGui
 
 target_sources(QtGui PRIVATE
   backgroundfileformat.cpp
+  chartdialog.cpp
+  chartwidget.cpp
   colorbutton.cpp
   containerwidget.cpp
   customelementdialog.cpp
@@ -125,3 +131,4 @@ target_sources(QtGui PRIVATE ${RC_SOURCES})
 
 avogadro_add_library(QtGui)
 target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets Qt::Concurrent)
+target_link_libraries(QtGui PUBLIC JKQTPlotter${QT_VERSION}::JKQTPlotter${QT_VERSION})

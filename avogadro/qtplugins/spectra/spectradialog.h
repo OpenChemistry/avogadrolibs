@@ -17,7 +17,7 @@ class SpectraDialog;
 
 namespace Avogadro {
 
-namespace VTK {
+namespace QtGui {
 class ChartWidget;
 }
 
@@ -51,10 +51,12 @@ public:
     updateElementCombo();
   }
 
-  VTK::ChartWidget* chartWidget();
+  QtGui::ChartWidget* chartWidget();
 
   void disconnectOptions();
   void connectOptions();
+
+  void mouseDoubleClickEvent(QMouseEvent* e);
 
 private slots:
   void changeBackgroundColor();

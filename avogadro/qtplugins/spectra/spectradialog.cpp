@@ -15,7 +15,7 @@
 #include <QtCore/QDebug>
 
 #include <avogadro/core/molecule.h>
-#include <avogadro/vtk/chartwidget.h>
+#include <avogadro/qtgui/chartwidget.h>
 
 using Avogadro::Core::Molecule;
 
@@ -141,6 +141,13 @@ void SpectraDialog::disconnectOptions()
              SLOT(updatePlot()));
   disconnect(m_ui->peakWidth, SIGNAL(valueChanged(double)), this,
              SLOT(updatePlot()));
+}
+
+void SpectraDialog::mouseDoubleClickEvent(QMouseEvent* e)
+{
+  auto* chart = chartWidget();
+  if (chart)
+    chart->resetZoom();
 }
 
 void SpectraDialog::updateElementCombo()
@@ -414,6 +421,9 @@ void SpectraDialog::changeSpectra()
   if (type == SpectraType::CircularDichroism) {
     m_ui->yAxisMinimum->setMinimum(-maxIntensity * 2.0);
     m_ui->yAxisMinimum->setValue(-maxIntensity);
+  }
+  if (type == SpectraType::Infrared) {
+    m_ui->yAxisMaximum->setValue(102.0); // transmission
   }
 
   updatePlot();
@@ -729,8 +739,8 @@ void SpectraDialog::updatePlot()
 
   auto* chart = chartWidget();
   chart->clearPlots();
-  chart->setXAxisTitle(xTitle.toStdString());
-  chart->setYAxisTitle(yTitle.toStdString());
+  chart->setXAxisTitle(xTitle);
+  chart->setYAxisTitle(yTitle);
   unsigned int fontSize = m_ui->fontSizeCombo->currentText().toInt();
   chart->setFontSize(fontSize);
   float lineWidth = m_ui->lineWidthSpinBox->value();
@@ -739,15 +749,15 @@ void SpectraDialog::updatePlot()
   // get the spectra color
   QColor spectraColor =
     settings.value("spectra/calculatedColor", black).value<QColor>();
-  VTK::color4ub calculatedColor = {
+  QtGui::color4ub calculatedColor = {
     static_cast<unsigned char>(spectraColor.red()),
     static_cast<unsigned char>(spectraColor.green()),
     static_cast<unsigned char>(spectraColor.blue()),
     static_cast<unsigned char>(spectraColor.alpha())
   };
-  chart->addPlot(xData, yData, calculatedColor);
-  VTK::color4ub importedColor = { 255, 0, 0, 255 };
-  chart->addSeries(yStick, importedColor);
+  chart->addPlot(xData, yData, calculatedColor, xTitle, tr("Smoothed"));
+  QtGui::color4ub importedColor = { 255, 0, 0, 255 };
+  chart->addSeries(yStick, importedColor, tr("Raw"));
 
   // axis limits
   float xAxisMin = m_ui->xAxisMinimum->value();
@@ -758,11 +768,13 @@ void SpectraDialog::updatePlot()
   chart->setXAxisLimits(xAxisMin, xAxisMax);
   chart->setYAxisLimits(yAxisMin, yAxisMax);
 
+  chart->setAxisDigits(QtGui::ChartWidget::Axis::x, 4);
+
   // re-enable the options
   connectOptions();
 }
 
-VTK::ChartWidget* SpectraDialog::chartWidget()
+QtGui::ChartWidget* SpectraDialog::chartWidget()
 {
   return m_ui->plot;
 }
