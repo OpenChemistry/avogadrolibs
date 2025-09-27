@@ -9,8 +9,9 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-21 02:47+0000\n"
-"PO-Revision-Date: 2025-09-18 00:20+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"PO-Revision-Date: 2025-09-28 02:01+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -5086,11 +5087,11 @@ msgstr "სიმკვრივე"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
-msgstr ""
+msgstr "ზედაპირი"
 
 #: qtplugins/surfacerender/surfacerender.cpp:267
 msgid "Style:"
-msgstr ""
+msgstr "სტილი:"
 
 #: qtplugins/surfacerender/surfacerender.h:33
 msgid "Render molecular surfaces."
