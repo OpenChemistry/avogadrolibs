@@ -14,6 +14,13 @@ namespace Avogadro::QtGui {
 
 class ChartWidget;
 
+/**
+ * @brief The ChartDialog class provides a dialog window for
+ * displaying a chart via ChartWidget.
+ *
+ * If you wish to have more control over the chart, use ChartWidget directly
+ * in your dialog.
+ */
 class AVOGADROQTGUI_EXPORT ChartDialog : public QDialog
 {
   Q_OBJECT
@@ -24,7 +31,14 @@ public:
 
   ChartWidget* chartWidget();
 
+  /**
+   * @return the current size hint for the dialog
+   */
   QSize sizeHint() const override;
+
+  /**
+   * @return the minimum size for the dialog
+   */
   QSize minimumSizeHint() const override;
 
 private:

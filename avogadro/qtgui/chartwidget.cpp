@@ -65,6 +65,13 @@ ChartWidget::ChartWidget(QWidget* p) : QWidget(p), m_impl(new ChartWidgetImpl)
 {
   auto hLayout = new QHBoxLayout(this);
   auto* plot = m_impl->plot;
+
+  // connect the single-click and double-click signals
+  connect(plot, &JKQTPlotter::plotMouseClicked, this,
+          &ChartWidget::plotClicked);
+  connect(plot, &JKQTPlotter::plotMouseDoubleClicked, this,
+          &ChartWidget::resetZoom);
+
   hLayout->setContentsMargins(0, 0, 0, 0);
   hLayout->addWidget(plot);
   setLayout(hLayout);
@@ -187,6 +194,13 @@ bool ChartWidget::addPlots(const std::vector<std::vector<float>>& plotData,
 void ChartWidget::resetZoom()
 {
   m_impl->plot->zoomToFit();
+}
+
+void ChartWidget::plotClicked(double x, double y,
+                              Qt::KeyboardModifiers modifiers,
+                              Qt::MouseButton button)
+{
+  emit clicked(x, y, modifiers);
 }
 
 void ChartWidget::clearPlots()
