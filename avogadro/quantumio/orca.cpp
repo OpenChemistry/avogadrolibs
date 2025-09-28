@@ -28,6 +28,9 @@ ORCAOutput::ORCAOutput() {}
 
 ORCAOutput::~ORCAOutput() {}
 
+constexpr double BOHR_TO_ANGSTROM = 0.529177210544;
+constexpr double HARTREE_TO_EV = 27.211386245981;
+
 std::vector<std::string> ORCAOutput::fileExtensions() const
 {
   std::vector<std::string> extensions;
@@ -856,7 +859,7 @@ void ORCAOutput::processLine(std::istream& in,
           for (unsigned int i = 0; i < list.size(); i++) {
             // convert from Hartree to eV
             m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[i]) *
-                                      27.2114);
+                                      HARTREE_TO_EV);
           }
 
           getline(in, key); // occupations
@@ -946,12 +949,13 @@ void ORCAOutput::processLine(std::istream& in,
           while (!Core::trimmed(key).empty()) {
             // currently reading the sequence number
             getline(in, key); // energies
+
             list = Core::split(key, ' ');
             // convert these all to double and add to m_orbitalEnergy
             for (unsigned int i = 0; i < list.size(); i++) {
               // convert from Hartree to eV
               m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[i]) *
-                                        27.2114);
+                                        HARTREE_TO_EV);
             }
 
             getline(in, key); // symmetries
@@ -974,11 +978,11 @@ void ORCAOutput::processLine(std::istream& in,
               std::vector<std::string> pieces = Core::split(key, ' ');
               orcaOrbitals.push_back(pieces[1]);
 
-              //                    columns.resize(numColumns);
               for (unsigned int i = 0; i < numColumns; ++i) {
                 columns[i].push_back(Core::lexicalCast<double>(list[i]));
               }
 
+              getline(in, key);
               auto inner_key_begin =
                 std::sregex_iterator(key.begin(), key.end(), rx);
               auto inner_key_end = std::sregex_iterator();
@@ -987,12 +991,14 @@ void ORCAOutput::processLine(std::istream& in,
                    ++i) {
                 list.push_back(i->str());
               }
+
               if (list.size() != numColumns)
                 break;
 
             } // ok, we've finished one batch of MO coeffs
             // now reorder the p orbitals from "orcaStyle" (pz, px,py) to
             // expected Avogadro (px,py,pz)
+
             std::size_t idx = 0;
             while (idx < orcaOrbitals.size()) {
               if (Core::contains(orcaOrbitals.at(idx), "pz")) {
@@ -1027,7 +1033,7 @@ void ORCAOutput::processLine(std::istream& in,
 
             if (Core::trimmed(key).empty())
               getline(in, key); // skip the blank line after the MOs
-          } // finished parsing 2nd. MOs
+          }                     // finished parsing 2nd. MOs
           if (m_MOcoeffs.size() != numRows * numRows) {
             m_orcaSuccess = false;
           }
@@ -1039,7 +1045,7 @@ void ORCAOutput::processLine(std::istream& in,
       }
       default:;
     } // end switch
-  } // end if (mode)
+  }   // end if (mode)
 }
 
 void ORCAOutput::load(GaussianSet* basis)
