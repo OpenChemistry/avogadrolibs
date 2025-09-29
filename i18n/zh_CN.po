@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-21 02:47+0000\n"
+"POT-Creation-Date: 2025-09-28 02:48+0000\n"
 "PO-Revision-Date: 2025-08-15 14:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -2615,47 +2615,45 @@ msgstr "复制"
 msgid "Cut"
 msgstr "剪切"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
-#. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:36:328
-msgid "Clear"
-msgstr "清除"
+#: qtplugins/copypaste/copypaste.cpp:36
+msgid "Delete"
+msgstr "删除"
 
 #: qtplugins/copypaste/copypaste.cpp:37
 msgid "&Paste"
 msgstr "粘贴(&P)"
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:47
 msgid "SMILES"
 msgstr "SMILES"
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "InChI"
 msgstr "国际化合物标识"
 
-#: qtplugins/copypaste/copypaste.cpp:88
+#: qtplugins/copypaste/copypaste.cpp:84
 msgid "XYZ"
 msgstr "XYZ"
 
-#: qtplugins/copypaste/copypaste.cpp:89 qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
 msgid "&Edit"
 msgstr "编辑(&E)"
 
-#: qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:87
 msgid "Copy As"
 msgstr "复制为"
 
-#: qtplugins/copypaste/copypaste.cpp:169
+#: qtplugins/copypaste/copypaste.cpp:165
 msgid "Error Clipping Molecule"
 msgstr "错误剪切分子"
 
-#: qtplugins/copypaste/copypaste.cpp:170
+#: qtplugins/copypaste/copypaste.cpp:166
 msgid "Error generating clipboard data."
 msgstr "生成剪贴板数据时出错。"
 
-#: qtplugins/copypaste/copypaste.cpp:171
+#: qtplugins/copypaste/copypaste.cpp:167
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2665,7 +2663,7 @@ msgstr ""
 "输出格式： %1\n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:175 qtplugins/copypaste/copypaste.cpp:296
+#: qtplugins/copypaste/copypaste.cpp:171 qtplugins/copypaste/copypaste.cpp:292
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2674,19 +2672,19 @@ msgstr ""
 "读取器错误：\n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:257 qtplugins/copypaste/copypaste.cpp:290
+#: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
 msgid "Error Pasting Molecule"
 msgstr "错误粘贴分子"
 
-#: qtplugins/copypaste/copypaste.cpp:258
+#: qtplugins/copypaste/copypaste.cpp:254
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "无法粘贴分子。剪贴板为空！"
 
-#: qtplugins/copypaste/copypaste.cpp:291
+#: qtplugins/copypaste/copypaste.cpp:287
 msgid "Error reading clipboard data."
 msgstr "读取剪贴板数据错误。"
 
-#: qtplugins/copypaste/copypaste.cpp:292
+#: qtplugins/copypaste/copypaste.cpp:288
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -6154,6 +6152,11 @@ msgstr "粘贴"
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "Revert"
 msgstr "撤销"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
+#. i18n: ectx: property (text), widget (QPushButton, clear)
+msgid "Clear"
+msgstr "清除"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:149
 #. i18n: ectx: property (text), widget (QPushButton, apply)
@@ -9658,9 +9661,6 @@ msgstr ""
 
 #~ msgid "QM Matches"
 #~ msgstr "量子力学匹配"
-
-#~ msgid "Delete"
-#~ msgstr "删除"
 
 #~ msgid "You must make a selection!"
 #~ msgstr "您必须进行选择"

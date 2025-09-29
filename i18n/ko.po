@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-21 02:47+0000\n"
+"POT-Creation-Date: 2025-09-28 02:48+0000\n"
 "PO-Revision-Date: 2025-08-15 14:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -2600,47 +2600,45 @@ msgstr "복사"
 msgid "Cut"
 msgstr "잘라내기"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
-#. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:36:328
-msgid "Clear"
+#: qtplugins/copypaste/copypaste.cpp:36
+msgid "Delete"
 msgstr "지우기"
 
 #: qtplugins/copypaste/copypaste.cpp:37
 msgid "&Paste"
 msgstr "붙여넣기(&P)"
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:47
 msgid "SMILES"
 msgstr "SMILES"
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "InChI"
 msgstr "국제 화학 식별자"
 
-#: qtplugins/copypaste/copypaste.cpp:88
+#: qtplugins/copypaste/copypaste.cpp:84
 msgid "XYZ"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:89 qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
 msgid "&Edit"
 msgstr "편집(&E)"
 
-#: qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:87
 msgid "Copy As"
 msgstr "다른 이름으로 복사"
 
-#: qtplugins/copypaste/copypaste.cpp:169
+#: qtplugins/copypaste/copypaste.cpp:165
 msgid "Error Clipping Molecule"
 msgstr "분자 클리핑 오류"
 
-#: qtplugins/copypaste/copypaste.cpp:170
+#: qtplugins/copypaste/copypaste.cpp:166
 msgid "Error generating clipboard data."
 msgstr "클립보드 데이터를 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/copypaste/copypaste.cpp:171
+#: qtplugins/copypaste/copypaste.cpp:167
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2650,7 +2648,7 @@ msgstr ""
 "출력 형식: %1 \n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:175 qtplugins/copypaste/copypaste.cpp:296
+#: qtplugins/copypaste/copypaste.cpp:171 qtplugins/copypaste/copypaste.cpp:292
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2659,19 +2657,19 @@ msgstr ""
 "리더 오류: \n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:257 qtplugins/copypaste/copypaste.cpp:290
+#: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
 msgid "Error Pasting Molecule"
 msgstr "분자 붙여넣기 오류"
 
-#: qtplugins/copypaste/copypaste.cpp:258
+#: qtplugins/copypaste/copypaste.cpp:254
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "분자를 붙여넣을 수 없음: 클립보드가 비어 있습니다!"
 
-#: qtplugins/copypaste/copypaste.cpp:291
+#: qtplugins/copypaste/copypaste.cpp:287
 msgid "Error reading clipboard data."
 msgstr "클립보드 데이터를 읽는 동안 오류가 발생했습니다."
 
-#: qtplugins/copypaste/copypaste.cpp:292
+#: qtplugins/copypaste/copypaste.cpp:288
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -6109,6 +6107,11 @@ msgstr "붙여넣기"
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "Revert"
 msgstr "되돌림"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
+#. i18n: ectx: property (text), widget (QPushButton, clear)
+msgid "Clear"
+msgstr "지우기"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:149
 #. i18n: ectx: property (text), widget (QPushButton, apply)
@@ -9773,9 +9776,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com, simmon@nplob.com"
 #~ msgctxt "Selection to be used for Quantum Mechanical calculations"
 #~ msgid "QM Selection..."
 #~ msgstr "QM 선택..."
-
-#~ msgid "Delete"
-#~ msgstr "지우기"
 
 #~ msgid "You must make a selection!"
 #~ msgstr "선택을 하여야 합니다"

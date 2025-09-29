@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-21 02:47+0000\n"
+"POT-Creation-Date: 2025-09-28 02:48+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/avogadro/"
@@ -2550,48 +2550,46 @@ msgstr ""
 msgid "Cut"
 msgstr ""
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
-#. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:36:328
-msgid "Clear"
-msgstr ""
+#: qtplugins/copypaste/copypaste.cpp:36
+msgid "Delete"
+msgstr "Zmazať"
 
 #: qtplugins/copypaste/copypaste.cpp:37
 msgid "&Paste"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:47
 #, fuzzy
 msgid "SMILES"
 msgstr "SMILES"
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "InChI"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:88
+#: qtplugins/copypaste/copypaste.cpp:84
 msgid "XYZ"
 msgstr "XYZ"
 
-#: qtplugins/copypaste/copypaste.cpp:89 qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
 msgid "&Edit"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:87
 msgid "Copy As"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:169
+#: qtplugins/copypaste/copypaste.cpp:165
 msgid "Error Clipping Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:170
+#: qtplugins/copypaste/copypaste.cpp:166
 msgid "Error generating clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:171
+#: qtplugins/copypaste/copypaste.cpp:167
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2599,26 +2597,26 @@ msgid ""
 "%2"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:175 qtplugins/copypaste/copypaste.cpp:296
+#: qtplugins/copypaste/copypaste.cpp:171 qtplugins/copypaste/copypaste.cpp:292
 #, qt-format
 msgid ""
 "Reader error:\n"
 "%1"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:257 qtplugins/copypaste/copypaste.cpp:290
+#: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
 msgid "Error Pasting Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:258
+#: qtplugins/copypaste/copypaste.cpp:254
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:291
+#: qtplugins/copypaste/copypaste.cpp:287
 msgid "Error reading clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:292
+#: qtplugins/copypaste/copypaste.cpp:288
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -6018,6 +6016,11 @@ msgstr ""
 msgid "Revert"
 msgstr ""
 
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
+#. i18n: ectx: property (text), widget (QPushButton, clear)
+msgid "Clear"
+msgstr ""
+
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:149
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "Apply"
@@ -9058,9 +9061,6 @@ msgstr ""
 
 #~ msgid "QM Matches"
 #~ msgstr "QM Zhoda"
-
-#~ msgid "Delete"
-#~ msgstr "Zmazať"
 
 #~ msgid "You must make a selection!"
 #~ msgstr "Musíte vybrať!"

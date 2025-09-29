@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-21 02:47+0000\n"
+"POT-Creation-Date: 2025-09-28 02:48+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
@@ -2625,49 +2625,47 @@ msgstr "Kopii"
 msgid "Cut"
 msgstr "Eltondi"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
-#. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:36:328
-msgid "Clear"
-msgstr "Forviŝi"
+#: qtplugins/copypaste/copypaste.cpp:36
+msgid "Delete"
+msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:37
 #, fuzzy
 msgid "&Paste"
 msgstr "Alglui"
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:47
 msgid "SMILES"
 msgstr "SMILES"
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "InChI"
 msgstr "InChI"
 
-#: qtplugins/copypaste/copypaste.cpp:88
+#: qtplugins/copypaste/copypaste.cpp:84
 msgid "XYZ"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:89 qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
 msgid "&Edit"
 msgstr "R&edakti"
 
-#: qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:87
 #, fuzzy
 msgid "Copy As"
 msgstr "Kopii kiel"
 
-#: qtplugins/copypaste/copypaste.cpp:169
+#: qtplugins/copypaste/copypaste.cpp:165
 msgid "Error Clipping Molecule"
 msgstr "Eraro pri Tondado de Molekulo"
 
-#: qtplugins/copypaste/copypaste.cpp:170
+#: qtplugins/copypaste/copypaste.cpp:166
 msgid "Error generating clipboard data."
 msgstr "Eraro pri generado de tonduja dateno."
 
-#: qtplugins/copypaste/copypaste.cpp:171
+#: qtplugins/copypaste/copypaste.cpp:167
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2677,7 +2675,7 @@ msgstr ""
 "Eliga dosierformo: %1\n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:175 qtplugins/copypaste/copypaste.cpp:296
+#: qtplugins/copypaste/copypaste.cpp:171 qtplugins/copypaste/copypaste.cpp:292
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2686,19 +2684,19 @@ msgstr ""
 "Eraro de legilo:\n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:257 qtplugins/copypaste/copypaste.cpp:290
+#: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
 msgid "Error Pasting Molecule"
 msgstr "Eraro pri Algluado de Molekulo"
 
-#: qtplugins/copypaste/copypaste.cpp:258
+#: qtplugins/copypaste/copypaste.cpp:254
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "Ne eblas alglui molekulon: Tondujo malplena!"
 
-#: qtplugins/copypaste/copypaste.cpp:291
+#: qtplugins/copypaste/copypaste.cpp:287
 msgid "Error reading clipboard data."
 msgstr "Eraro pri legado de tonduja dateno."
 
-#: qtplugins/copypaste/copypaste.cpp:292
+#: qtplugins/copypaste/copypaste.cpp:288
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -6182,6 +6180,11 @@ msgstr "Alglui"
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "Revert"
 msgstr "Malfari"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
+#. i18n: ectx: property (text), widget (QPushButton, clear)
+msgid "Clear"
+msgstr "Forviŝi"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:149
 #. i18n: ectx: property (text), widget (QPushButton, apply)

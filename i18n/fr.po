@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-21 02:47+0000\n"
+"POT-Creation-Date: 2025-09-28 02:48+0000\n"
 "PO-Revision-Date: 2025-09-25 18:01+0000\n"
 "Last-Translator: \"David D.\" <dadu042@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
@@ -2075,8 +2075,8 @@ msgstr ""
 "\n"
 "Cliquez et faites glisser sur une liaison pour définir le plan de "
 "manipulation\n"
-"Clic gauche et faites glisser l’un des atomes dans la liaison pour changer l’"
-"angle\n"
+"Clic gauche et faites glisser l’un des atomes dans la liaison pour changer "
+"l’angle\n"
 "Cliquez avec le bouton droit et faites glisser l’un des atomes dans la "
 "liaison pour changer la longueur"
 
@@ -2659,47 +2659,45 @@ msgstr "Copier"
 msgid "Cut"
 msgstr "Couper"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
-#. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:36:328
-msgid "Clear"
-msgstr "&Effacer"
+#: qtplugins/copypaste/copypaste.cpp:36
+msgid "Delete"
+msgstr "Supprimer"
 
 #: qtplugins/copypaste/copypaste.cpp:37
 msgid "&Paste"
 msgstr "&Coller"
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:47
 msgid "SMILES"
 msgstr "SMILES"
 
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "InChI"
 msgstr "InChI"
 
-#: qtplugins/copypaste/copypaste.cpp:88
+#: qtplugins/copypaste/copypaste.cpp:84
 msgid "XYZ"
 msgstr "XYZ"
 
-#: qtplugins/copypaste/copypaste.cpp:89 qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
 msgid "&Edit"
 msgstr "&Éditer"
 
-#: qtplugins/copypaste/copypaste.cpp:91
+#: qtplugins/copypaste/copypaste.cpp:87
 msgid "Copy As"
 msgstr "Copier comme"
 
-#: qtplugins/copypaste/copypaste.cpp:169
+#: qtplugins/copypaste/copypaste.cpp:165
 msgid "Error Clipping Molecule"
 msgstr "Erreur lors de tailler la molécule"
 
-#: qtplugins/copypaste/copypaste.cpp:170
+#: qtplugins/copypaste/copypaste.cpp:166
 msgid "Error generating clipboard data."
 msgstr "Erreur de la génération des données du presse-papier."
 
-#: qtplugins/copypaste/copypaste.cpp:171
+#: qtplugins/copypaste/copypaste.cpp:167
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2709,7 +2707,7 @@ msgstr ""
 "Format de sortie : %1\n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:175 qtplugins/copypaste/copypaste.cpp:296
+#: qtplugins/copypaste/copypaste.cpp:171 qtplugins/copypaste/copypaste.cpp:292
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2718,19 +2716,19 @@ msgstr ""
 "Erreur du lecteur :\n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:257 qtplugins/copypaste/copypaste.cpp:290
+#: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
 msgid "Error Pasting Molecule"
 msgstr "Erreur pour coller la molécule"
 
-#: qtplugins/copypaste/copypaste.cpp:258
+#: qtplugins/copypaste/copypaste.cpp:254
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "Impossible de coller la molécule : presse-papier vide !"
 
-#: qtplugins/copypaste/copypaste.cpp:291
+#: qtplugins/copypaste/copypaste.cpp:287
 msgid "Error reading clipboard data."
 msgstr "Erreur de lecture des données du presse-papiers."
 
-#: qtplugins/copypaste/copypaste.cpp:292
+#: qtplugins/copypaste/copypaste.cpp:288
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -5562,8 +5560,8 @@ msgstr ""
 "Sélectionnez une géométrie d’élément et de coordination, puis cliquez pour "
 "insérer un fragment.\n"
 "\n"
-"Sélectionnez un ligand ou un groupe fonctionnel et cliquez sur un atome d’"
-"hydrogène pour l’attacher."
+"Sélectionnez un ligand ou un groupe fonctionnel et cliquez sur un atome "
+"d’hydrogène pour l’attacher."
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
@@ -6216,6 +6214,11 @@ msgstr "Coller"
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "Revert"
 msgstr "Rétablir"
+
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
+#. i18n: ectx: property (text), widget (QPushButton, clear)
+msgid "Clear"
+msgstr "&Effacer"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:149
 #. i18n: ectx: property (text), widget (QPushButton, apply)
@@ -10476,9 +10479,6 @@ msgstr ""
 #~ msgctxt "Selection to be used for Quantum Mechanical calculations"
 #~ msgid "QM Selection..."
 #~ msgstr "Sélection MQ..."
-
-#~ msgid "Delete"
-#~ msgstr "Supprimer"
 
 #~ msgid "You must make a selection!"
 #~ msgstr "Vous devez effectuer une sélection !"
