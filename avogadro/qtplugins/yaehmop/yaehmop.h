@@ -13,7 +13,7 @@
 
 #include <avogadro/core/vector.h>
 
-#include <avogadro/vtk/chartdialog.h>
+#include <avogadro/qtgui/chartdialog.h>
 
 #include <memory>
 
@@ -76,7 +76,7 @@ private:
 
   std::unique_ptr<BandDialog> m_bandDialog;
   std::unique_ptr<QAction> m_displayBandDialogAction;
-  QScopedPointer<VTK::ChartDialog> m_chartDialog;
+  QScopedPointer<QtGui::ChartDialog> m_chartDialog;
 };
 
 inline QString Yaehmop::description() const

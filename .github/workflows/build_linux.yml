@@ -7,7 +7,7 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   QT_VERSION: 6.8.1
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -189,3 +189,4 @@ jobs:
     - name: Setup tmate session
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@v3
+      timeout-minutes: 60

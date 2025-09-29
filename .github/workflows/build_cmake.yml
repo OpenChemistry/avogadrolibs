@@ -32,7 +32,7 @@ jobs:
             os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF -DUSE_VTK=ON",
+            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF",
             cpack_flags: "-G DragNDrop",
           }
         - {
@@ -50,7 +50,7 @@ jobs:
             os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "asan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DUSE_VTK=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -58,7 +58,7 @@ jobs:
             os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DUSE_VTK=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
 
@@ -202,6 +202,7 @@ jobs:
     - name: Setup tmate session
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@v3
+      timeout-minutes: 60
 
     - name: Fix Mac plugins
       if: runner.os == 'macOS'
