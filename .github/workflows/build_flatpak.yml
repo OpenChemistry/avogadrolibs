@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: Install dependencies
       run: sudo apt update -qq && sudo apt install -y -qq flatpak
-    
+
     - name: Configure flatpak
       run: flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
@@ -28,13 +28,13 @@ jobs:
         repository: openchemistry/openchemistry
         submodules: false
         path: openchemistry
-        
+
     - name: Checkout avogadroapp
       uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: openchemistry/avogadroapp
-        
+
     - name: Checkout avogadrolibs
       uses: actions/checkout@v5.0.0
       with:
@@ -45,7 +45,7 @@ jobs:
       with:
         repository: openchemistry/avogadro-i18n
         path: openchemistry/avogadro-i18n
-    
+
     - name: Checkout avogadrogenerators
       uses: actions/checkout@v5.0.0
       with:
@@ -79,6 +79,7 @@ jobs:
     - name: Set up tmate session
       if: failure()
       uses: mxschmitt/action-tmate@v3
+      timeout-minutes: 60
 
     - name: Move manifest
       run: mv openchemistry/avogadroapp/flatpak/org.openchemistry.Avogadro2.yaml ./
@@ -93,7 +94,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         path: Avogadro2.flatpak
-    
+
     - name: Cleanup
       if: ${{ always() }} # To ensure this step runs even when earlier steps fail
       shell: bash

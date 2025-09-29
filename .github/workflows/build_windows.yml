@@ -11,7 +11,7 @@ on: [push, workflow_dispatch]
 
 env:
   QT_VERSION: 5.15.2
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
