@@ -97,6 +97,7 @@ target_sources(Rendering PRIVATE
 
 set(shader_files
   "arrow_vs.glsl"
+  "arrow_fs.glsl"
   "cylinders_fs.glsl"
   "cylinders_vs.glsl"
   "dashedline_fs.glsl"

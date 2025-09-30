@@ -17,11 +17,12 @@
 #include <avogadro/core/vector.h>
 
 #include <iostream>
-#include <limits>
+#include <cmath>
 
 namespace {
 #include "arrow_vs.h"
-}
+#include "arrow_fs.h"
+} // namespace
 
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
@@ -37,24 +38,49 @@ class ArrowGeometry::Private
 public:
   Private() {}
 
-  Shader vertexShader;
-  ShaderProgram program;
+  inline static Shader* cylinderVertexShader = nullptr;
+  inline static Shader* cylinderFragmentShader = nullptr;
+  inline static ShaderProgram* cylinderProgram = nullptr;
+
+  inline static Shader* coneVertexShader = nullptr;
+  inline static Shader* coneFragmentShader = nullptr;
+  inline static ShaderProgram* coneProgram = nullptr;
 };
 
 ArrowGeometry::ArrowGeometry()
-  : m_color(0, 255, 0), m_dirty(false), d(new Private)
+  : m_color(0, 255, 0), m_dirty(false), m_geometryDirty(true), m_cylinderVAO(0),
+    m_cylinderVBO(0), m_cylinderEBO(0), m_coneVAO(0), m_coneVBO(0),
+    m_coneEBO(0), m_cylinderIndexCount(0), m_coneIndexCount(0),
+    m_cylinderRadius(0.02f), m_coneRadius(0.05f), m_coneFraction(0.2f),
+    d(new Private)
 {
 }
 
 ArrowGeometry::ArrowGeometry(const ArrowGeometry& other)
   : Drawable(other), m_vertices(other.m_vertices),
     m_lineStarts(other.m_lineStarts), m_color(other.m_color), m_dirty(true),
+    m_geometryDirty(true), m_cylinderVAO(0), m_cylinderVBO(0), m_cylinderEBO(0),
+    m_coneVAO(0), m_coneVBO(0), m_coneEBO(0), m_cylinderIndexCount(0),
+    m_coneIndexCount(0), m_cylinderRadius(other.m_cylinderRadius),
+    m_coneRadius(other.m_coneRadius), m_coneFraction(other.m_coneFraction),
     d(new Private)
 {
 }
 
 ArrowGeometry::~ArrowGeometry()
 {
+  if (m_cylinderVAO)
+    glDeleteVertexArrays(1, &m_cylinderVAO);
+  if (m_cylinderVBO)
+    glDeleteBuffers(1, &m_cylinderVBO);
+  if (m_cylinderEBO)
+    glDeleteBuffers(1, &m_cylinderEBO);
+  if (m_coneVAO)
+    glDeleteVertexArrays(1, &m_coneVAO);
+  if (m_coneVBO)
+    glDeleteBuffers(1, &m_coneVBO);
+  if (m_coneEBO)
+    glDeleteBuffers(1, &m_coneEBO);
   delete d;
 }
 
@@ -63,21 +89,214 @@ void ArrowGeometry::accept(Visitor& visitor)
   visitor.visit(*this);
 }
 
+void ArrowGeometry::generateCylinderGeometry(std::vector<float>& vertices,
+                                             std::vector<unsigned int>& indices,
+                                             int segments)
+{
+  vertices.clear();
+  indices.clear();
+
+  // Generate vertices (position + normal)
+  for (int i = 0; i <= segments; ++i) {
+    float theta = 2.0f * M_PI * i / segments;
+    float x = m_cylinderRadius * cos(theta);
+    float z = m_cylinderRadius * sin(theta);
+
+    // Bottom circle
+    vertices.push_back(x);
+    vertices.push_back(0.0f);
+    vertices.push_back(z);
+    vertices.push_back(x / m_cylinderRadius); // Normal
+    vertices.push_back(0.0f);
+    vertices.push_back(z / m_cylinderRadius);
+
+    // Top circle
+    vertices.push_back(x);
+    vertices.push_back(1.0f);
+    vertices.push_back(z);
+    vertices.push_back(x / m_cylinderRadius); // Normal
+    vertices.push_back(0.0f);
+    vertices.push_back(z / m_cylinderRadius);
+  }
+
+  // Generate indices
+  for (int i = 0; i < segments; ++i) {
+    int bottom1 = i * 2;
+    int top1 = i * 2 + 1;
+    int bottom2 = (i + 1) * 2;
+    int top2 = (i + 1) * 2 + 1;
+
+    indices.push_back(bottom1);
+    indices.push_back(top1);
+    indices.push_back(bottom2);
+
+    indices.push_back(bottom2);
+    indices.push_back(top1);
+    indices.push_back(top2);
+  }
+}
+
+void ArrowGeometry::generateConeGeometry(std::vector<float>& vertices,
+                                         std::vector<unsigned int>& indices,
+                                         int segments)
+{
+  vertices.clear();
+  indices.clear();
+
+  // Apex
+  vertices.push_back(0.0f);
+  vertices.push_back(1.0f);
+  vertices.push_back(0.0f);
+  vertices.push_back(0.0f);
+  vertices.push_back(1.0f);
+  vertices.push_back(0.0f);
+
+  // Base circle
+  for (int i = 0; i <= segments; ++i) {
+    float theta = 2.0f * M_PI * i / segments;
+    float x = m_coneRadius * cos(theta);
+    float z = m_coneRadius * sin(theta);
+
+    vertices.push_back(x);
+    vertices.push_back(0.0f);
+    vertices.push_back(z);
+
+    // Normal (approximate for cone)
+    Vector3f toApex(-x, 1.0f, -z);
+    toApex.normalize();
+    Vector3f tangent(-sin(theta), 0.0f, cos(theta));
+    Vector3f normal = toApex.cross(tangent);
+    normal.normalize();
+
+    vertices.push_back(normal.x());
+    vertices.push_back(normal.y());
+    vertices.push_back(normal.z());
+  }
+
+  // Generate indices
+  for (int i = 1; i <= segments; ++i) {
+    indices.push_back(0);
+    indices.push_back(i);
+    indices.push_back(i + 1);
+  }
+}
+
+void ArrowGeometry::updateGeometry()
+{
+  if (!m_geometryDirty)
+    return;
+
+  std::vector<float> vertices;
+  std::vector<unsigned int> indices;
+
+  // Setup cylinder
+  generateCylinderGeometry(vertices, indices);
+  m_cylinderIndexCount = indices.size();
+
+  if (!m_cylinderVAO)
+    glGenVertexArrays(1, &m_cylinderVAO);
+  if (!m_cylinderVBO)
+    glGenBuffers(1, &m_cylinderVBO);
+  if (!m_cylinderEBO)
+    glGenBuffers(1, &m_cylinderEBO);
+
+  glBindVertexArray(m_cylinderVAO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, m_cylinderVBO);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float),
+               vertices.data(), GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_cylinderEBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+               indices.data(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                        (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+
+  // Setup cone
+  generateConeGeometry(vertices, indices);
+  m_coneIndexCount = indices.size();
+
+  if (!m_coneVAO)
+    glGenVertexArrays(1, &m_coneVAO);
+  if (!m_coneVBO)
+    glGenBuffers(1, &m_coneVBO);
+  if (!m_coneEBO)
+    glGenBuffers(1, &m_coneEBO);
+
+  glBindVertexArray(m_coneVAO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, m_coneVBO);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float),
+               vertices.data(), GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_coneEBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+               indices.data(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                        (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+
+  glBindVertexArray(0);
+  m_geometryDirty = false;
+}
+
 void ArrowGeometry::update()
 {
   if (m_vertices.empty())
     return;
 
-  // Build and link the shader if it has not been used yet.
-  if (d->vertexShader.type() == Shader::Unknown) {
-    d->vertexShader.setType(Shader::Vertex);
-    d->vertexShader.setSource(arrow_vs);
-    if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << endl;
-    d->program.attachShader(d->vertexShader);
-    if (!d->program.link())
-      cout << d->program.error() << endl;
+  // Build shaders if not already done
+  if (d->cylinderProgram == nullptr) {
+    d->cylinderProgram = new ShaderProgram;
+    d->cylinderVertexShader = new Shader;
+    d->cylinderVertexShader->setType(Shader::Vertex);
+    d->cylinderVertexShader->setSource(arrow_vs);
+    if (!d->cylinderVertexShader->compile())
+      cout << "Cylinder vertex shader: " << d->cylinderVertexShader->error()
+           << endl;
+
+    d->cylinderFragmentShader = new Shader;
+    d->cylinderFragmentShader->setType(Shader::Fragment);
+    d->cylinderFragmentShader->setSource(arrow_fs);
+    if (!d->cylinderFragmentShader->compile())
+      cout << "Cylinder fragment shader: " << d->cylinderFragmentShader->error()
+           << endl;
+
+    d->cylinderProgram->attachShader(*d->cylinderVertexShader);
+    d->cylinderProgram->attachShader(*d->cylinderFragmentShader);
+    if (!d->cylinderProgram->link())
+      cout << "Cylinder program: " << d->cylinderProgram->error() << endl;
   }
+
+  if (d->coneProgram == nullptr) {
+    d->coneProgram = new ShaderProgram;
+    d->coneVertexShader = new Shader;
+    d->coneVertexShader->setType(Shader::Vertex);
+    d->coneVertexShader->setSource(arrow_vs);
+    if (!d->coneVertexShader->compile())
+      cout << "Cone vertex shader: " << d->coneVertexShader->error() << endl;
+
+    d->coneFragmentShader = new Shader;
+    d->coneFragmentShader->setType(Shader::Fragment);
+    d->coneFragmentShader->setSource(arrow_fs);
+    if (!d->coneFragmentShader->compile())
+      cout << "Cone fragment shader: " << d->coneFragmentShader->error()
+           << endl;
+
+    d->coneProgram->attachShader(*d->coneVertexShader);
+    d->coneProgram->attachShader(*d->coneFragmentShader);
+    if (!d->coneProgram->link())
+      cout << "Cone program: " << d->coneProgram->error() << endl;
+  }
+
+  updateGeometry();
 }
 
 void ArrowGeometry::render(const Camera& camera)
@@ -88,25 +307,101 @@ void ArrowGeometry::render(const Camera& camera)
   // Prepare the shader program if necessary.
   update();
 
-  if (!d->program.bind())
-    cout << d->program.error() << endl;
+  Vector3f floatColor(m_color[0] / 255.0f, m_color[1] / 255.0f,
+                      m_color[2] / 255.0f);
 
-  // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program.error() << endl;
-  }
-  if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
-    cout << d->program.error() << endl;
+  // Render each arrow
+  for (const auto& arrow : m_vertices) {
+    Vector3f direction = arrow.second - arrow.first;
+    float length = direction.norm();
+
+    if (length < 0.001f)
+      continue;
+
+    direction.normalize();
+    float coneLength = length * m_coneFraction;
+    float cylinderLength = length - coneLength;
+
+    // Calculate rotation to align with direction
+    Vector3f up(0.0f, 1.0f, 0.0f);
+    Vector3f axis = up.cross(direction);
+    float axisLength = axis.norm();
+
+    Eigen::Matrix4f rotation = Eigen::Matrix4f::Identity();
+    if (axisLength > 0.001f) {
+      axis.normalize();
+      float angle = acos(up.dot(direction));
+
+      // Rodrigues' rotation formula
+      float c = cos(angle);
+      float s = sin(angle);
+      float t = 1.0f - c;
+
+      rotation(0, 0) = t * axis.x() * axis.x() + c;
+      rotation(0, 1) = t * axis.x() * axis.y() - s * axis.z();
+      rotation(0, 2) = t * axis.x() * axis.z() + s * axis.y();
+      rotation(1, 0) = t * axis.x() * axis.y() + s * axis.z();
+      rotation(1, 1) = t * axis.y() * axis.y() + c;
+      rotation(1, 2) = t * axis.y() * axis.z() - s * axis.x();
+      rotation(2, 0) = t * axis.x() * axis.z() - s * axis.y();
+      rotation(2, 1) = t * axis.y() * axis.z() + s * axis.x();
+      rotation(2, 2) = t * axis.z() * axis.z() + c;
+    } else if (direction.y() < 0) {
+      rotation(1, 1) = -1.0f;
+      rotation(2, 2) = -1.0f;
+    }
+
+    // Render cylinder
+    if (d->cylinderProgram->bind()) {
+      Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
+      model.block<3, 1>(0, 3) = arrow.first;
+      model.block<3, 3>(0, 0) = rotation.block<3, 3>(0, 0);
+
+      // Scale
+      Eigen::Matrix4f scale = Eigen::Matrix4f::Identity();
+      scale(1, 1) = cylinderLength;
+      model = model * scale;
+
+      d->cylinderProgram->setUniformValue("modelView",
+                                          camera.modelView().matrix());
+      d->cylinderProgram->setUniformValue("projection",
+                                          camera.projection().matrix());
+      d->cylinderProgram->setUniformValue("model", model);
+      d->cylinderProgram->setUniformValue("color", floatColor);
+
+      glBindVertexArray(m_cylinderVAO);
+      glDrawElements(GL_TRIANGLES, m_cylinderIndexCount, GL_UNSIGNED_INT, 0);
+
+      d->cylinderProgram->release();
+    }
+
+    // Render cone
+    if (d->coneProgram->bind()) {
+      Vector3f coneBase = arrow.first + direction * cylinderLength;
+
+      Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
+      model.block<3, 1>(0, 3) = coneBase;
+      model.block<3, 3>(0, 0) = rotation.block<3, 3>(0, 0);
+
+      // Scale
+      Eigen::Matrix4f scale = Eigen::Matrix4f::Identity();
+      scale(1, 1) = coneLength;
+      model = model * scale;
+
+      d->coneProgram->setUniformValue("modelView", camera.modelView().matrix());
+      d->coneProgram->setUniformValue("projection",
+                                      camera.projection().matrix());
+      d->coneProgram->setUniformValue("model", model);
+      d->coneProgram->setUniformValue("color", floatColor);
+
+      glBindVertexArray(m_coneVAO);
+      glDrawElements(GL_TRIANGLES, m_coneIndexCount, GL_UNSIGNED_INT, 0);
+
+      d->coneProgram->release();
+    }
   }
 
-  // Render the arrows using the shader.
-  for (auto& m_vertice : m_vertices) {
-    Vector3f v3 = m_vertice.first + 0.8 * (m_vertice.second - m_vertice.first);
-    drawLine(m_vertice.first, v3, 2);
-    drawCone(v3, m_vertice.second, 0.05, 1.0);
-  }
-
-  d->program.release();
+  glBindVertexArray(0);
 }
 
 void ArrowGeometry::clear()
@@ -116,77 +411,10 @@ void ArrowGeometry::clear()
   m_dirty = true;
 }
 
-void ArrowGeometry::drawLine(const Vector3f& start, const Vector3f& end,
-                             double lineWidth)
-{
-  // Draw a line between two points of the specified thickness
-  glPushAttrib(GL_LIGHTING_BIT);
-  glDisable(GL_LIGHTING);
-
-  glLineWidth(lineWidth);
-
-  // Draw the line
-  glBegin(GL_LINE_STRIP);
-  glVertex3fv(start.data());
-  glVertex3fv(end.data());
-  glEnd();
-
-  glPopAttrib();
-}
-
-void ArrowGeometry::drawCone(const Vector3f& base, const Vector3f& cap,
-                             double baseRadius, double)
-{
-  const int CONE_TESS_LEVEL = 30;
-  // This draws a cone which will be most useful for drawing arrows etc.
-  Vector3f axis = cap - base;
-  Vector3f axisNormalized = axis.normalized();
-  Vector3f ortho1, ortho2;
-  ortho1 = axisNormalized.unitOrthogonal();
-  ortho1 *= baseRadius;
-  ortho2 = axisNormalized.cross(ortho1);
-
-  // Draw the cone
-  // unfortunately we can't use a GL_TRIANGLE_FAN because this would force
-  // having a common normal vector at the tip.
-  for (int j = 0; j < CONE_TESS_LEVEL; j++) {
-    const double alphaStep = 2.0 * M_PI / CONE_TESS_LEVEL;
-    double alpha = j * alphaStep;
-    double alphaNext = alpha + alphaStep;
-    double alphaPrec = alpha - alphaStep;
-    Vector3f v = sin(alpha) * ortho1 + cos(alpha) * ortho2 + base;
-    Vector3f vNext = sin(alphaNext) * ortho1 + cos(alphaNext) * ortho2 + base;
-    Vector3f vPrec = sin(alphaPrec) * ortho1 + cos(alphaPrec) * ortho2 + base;
-    Vector3f n = (cap - v).cross(v - vPrec).normalized();
-    Vector3f nNext = (cap - vNext).cross(vNext - v).normalized();
-    glBegin(GL_TRIANGLES);
-    glColor3ub(m_color[0], m_color[1], m_color[2]);
-    glNormal3fv((n + nNext).normalized().data());
-    glVertex3fv(cap.data());
-    glNormal3fv(nNext.data());
-    glVertex3fv(vNext.data());
-    glNormal3fv(n.data());
-    glVertex3fv(v.data());
-    glEnd();
-  }
-
-  // Now to draw the base
-  glBegin(GL_TRIANGLE_FAN);
-  glNormal3fv((-axisNormalized).eval().data());
-  glVertex3fv(base.data());
-  for (int j = 0; j <= CONE_TESS_LEVEL; j++) {
-    double alpha = -j * M_PI / (CONE_TESS_LEVEL / 2.0);
-    Vector3f v = cos(alpha) * ortho1 + sin(alpha) * ortho2 + base;
-    glVertex3fv(v.data());
-  }
-  glEnd();
-}
-
 void ArrowGeometry::addSingleArrow(const Vector3f& pos1, const Vector3f& pos2)
 {
   m_vertices.reserve(m_vertices.size() + 1);
   m_vertices.push_back(std::pair<Vector3f, Vector3f>(pos1, pos2));
-
   m_dirty = true;
 }
 

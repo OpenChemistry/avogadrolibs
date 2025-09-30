@@ -9,6 +9,9 @@
 #include "drawable.h"
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/vector.h>
+#include <vector>
+#include <utility>
 
 namespace Avogadro {
 namespace Rendering {
@@ -16,7 +19,8 @@ namespace Rendering {
 /**
  * @class ArrowGeometry arrowgeometry.h
  * <avogadro/rendering/arrowgeometry.h>
- * @brief The ArrowGeometry class is used to store sets of line strips.
+ * @brief The ArrowGeometry class is used to store sets of cylinders and cones
+ * representing arrows.
  */
 
 class AVOGADRORENDERING_EXPORT ArrowGeometry : public Drawable
@@ -47,10 +51,6 @@ public:
    */
   void clear() override;
 
-  void drawLine(const Vector3f& start, const Vector3f& end, double lineWidth);
-  void drawCone(const Vector3f& base, const Vector3f& cap, double baseRadius,
-                double);
-
   /**
    * Add a single arrow object.
    * @param pos1 The start coordinate of the arrow.
@@ -60,14 +60,28 @@ public:
   void addSingleArrow(const Vector3f& pos1, const Vector3f& pos2);
   /** @} */
 
-  /** The vertex array. */
-  Core::Array<std::pair<Vector3f, Vector3f>> vertices() const
+  void setCylinderRadius(float radius)
   {
-    return m_vertices;
+    m_cylinderRadius = radius;
+    m_geometryDirty = true;
   }
+  void setConeRadius(float radius)
+  {
+    m_coneRadius = radius;
+    m_geometryDirty = true;
+  }
+  void setConeFraction(float fraction)
+  {
+    m_coneFraction = std::clamp(fraction, 0.0f, 1.0f);
+  }
+
+  float cylinderRadius() const { return m_cylinderRadius; }
+  float coneRadius() const { return m_coneRadius; }
+  float coneFraction() const { return m_coneFraction; }
 
   /** Set the color of the arrow */
   void setColor(const Vector3ub& c) { m_color = c; }
+  const Vector3ub& color() const { return m_color; }
 
 private:
   /**
@@ -75,11 +89,31 @@ private:
    */
   void update();
 
+  void updateGeometry();
+  void generateCylinderGeometry(std::vector<float>& vertices,
+                                std::vector<unsigned int>& indices,
+                                int segments = 16);
+  void generateConeGeometry(std::vector<float>& vertices,
+                            std::vector<unsigned int>& indices,
+                            int segments = 16);
+
   Core::Array<std::pair<Vector3f, Vector3f>> m_vertices;
   Core::Array<unsigned int> m_lineStarts;
   Vector3ub m_color;
 
   bool m_dirty;
+  bool m_geometryDirty;
+
+  // OpenGL buffers
+  unsigned int m_cylinderVAO, m_cylinderVBO, m_cylinderEBO;
+  unsigned int m_coneVAO, m_coneVBO, m_coneEBO;
+  unsigned int m_cylinderIndexCount;
+  unsigned int m_coneIndexCount;
+
+  // Customization parameters
+  float m_cylinderRadius;
+  float m_coneRadius;
+  float m_coneFraction;
 
   class Private;
   Private* d;
