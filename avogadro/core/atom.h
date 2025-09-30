@@ -9,8 +9,7 @@
 #include "avogadrocore.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 enum AtomHybridization
 {
@@ -47,7 +46,7 @@ template <class Molecule_T>
 class AtomTemplate
 {
 public:
-  typedef Molecule_T MoleculeType;
+  using MoleculeType = Molecule_T;
 
   /** Creates a new, invalid atom object. */
   AtomTemplate();
@@ -195,12 +194,14 @@ private:
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate()
   : m_molecule(nullptr), m_index(MaxIndex)
-{}
+{
+}
 
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate(MoleculeType* m, Index i)
   : m_molecule(m), m_index(i)
-{}
+{
+}
 
 template <class Molecule_T>
 bool AtomTemplate<Molecule_T>::operator==(
@@ -389,7 +390,6 @@ std::string AtomTemplate<Molecule_T>::label() const
   return m_molecule->atomLabel(m_index);
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_ATOM_H

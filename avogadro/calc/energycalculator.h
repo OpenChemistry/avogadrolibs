@@ -8,6 +8,7 @@
 
 #include "avogadrocalcexport.h"
 
+#include <avogadro/core/constraint.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/variantmap.h>
 #include <avogadro/core/vector.h>
@@ -24,8 +25,8 @@ namespace Calc {
 class AVOGADROCALC_EXPORT EnergyCalculator : public cppoptlib::Problem<Real>
 {
 public:
-  EnergyCalculator() {}
-  ~EnergyCalculator() {}
+  EnergyCalculator() = default;
+  ~EnergyCalculator() override = default;
 
   /**
    * Create a new instance of the model. Ownership passes to the
@@ -51,7 +52,10 @@ public:
   /**
    * Called to set the configuration (e.g., for a GUI options dialog)
    */
-  virtual bool setConfiguration(Core::VariantMap& config) { return true; }
+  virtual bool setConfiguration([[maybe_unused]] Core::VariantMap& config)
+  {
+    return true;
+  }
 
   /**
    * @brief Indicate if your method only treats a subset of elements
@@ -85,12 +89,37 @@ public:
    * Calculate the gradients for this method, defaulting to numerical
    * finite-difference methods
    */
-  virtual void gradient(const TVector& x, TVector& grad) override;
+  void gradient(const TVector& x, TVector& grad) override;
 
   /**
    * Called to 'clean' gradients @param grad (e.g., for constraints)
    */
   void cleanGradients(TVector& grad);
+
+  /**
+   * Called to get the energies for the current set of constraints.
+   * which should be added to the value() method for real energies
+   * in derived classes
+   * @return the sum of the constraint energies
+   */
+  Real constraintEnergies(const TVector& x);
+
+  /**
+   * Called to get the gradients for the current set of constraints.
+   * which should be added to the gradient() method in derived classes.
+   * @param x the current coordinates
+   * @param grad the gradient vector to be updated with constraint gradients
+   */
+  void constraintGradients(const TVector& x, TVector& grad);
+
+  /**
+   * Called to get the constraints for this method.
+   * @return the constraints for this method
+   */
+  std::vector<Core::Constraint> constraints() const;
+
+  // Set the constraints for this method
+  void setConstraints(const std::vector<Core::Constraint>& constraints);
 
   /**
    * Called to update the "frozen" mask (e.g., during editing)
@@ -116,6 +145,12 @@ protected:
   void appendError(const std::string& errorString, bool newLine = true) const;
 
   TVector m_mask; // optimize or frozen atom mask
+  // Separate the constraints into different types
+  // for speed and convenience.
+  std::vector<Core::Constraint> m_distanceConstraints;
+  std::vector<Core::Constraint> m_angleConstraints;
+  std::vector<Core::Constraint> m_torsionConstraints;
+  std::vector<Core::Constraint> m_outOfPlaneConstraints;
 
 private:
   mutable std::string m_error;

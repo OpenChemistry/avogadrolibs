@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -59,7 +48,7 @@ bool checkParams(const UnitCell& cell, Real a, Real b, Real c, Real alpha,
   }
   return true;
 }
-}
+} // namespace
 
 TEST(UnitCellTest, cellParameters)
 {
@@ -69,6 +58,32 @@ TEST(UnitCellTest, cellParameters)
   Real alpha = static_cast<Real>(70 * DEG_TO_RAD);
   Real beta = static_cast<Real>(120 * DEG_TO_RAD);
   Real gamma = static_cast<Real>(85 * DEG_TO_RAD);
+
+  const Vector3 ux{ 1.0, 0.0, 0.0 }, uy{ 0.0, 1.0, 0.0 }, uz{ 0.0, 0.0, 1.0 },
+    zero{ 0.0, 0.0, 0.0 };
+
+  EXPECT_TRUE(UnitCell(a, b, c, alpha, beta, gamma).isRegular());
+  EXPECT_FALSE(UnitCell(a, b, 0.0, alpha, beta, gamma).isRegular());
+  EXPECT_FALSE(UnitCell(a, b, c, 0.0, beta, gamma).isRegular());
+  EXPECT_FALSE(UnitCell(a, b, c, alpha, beta, 360 * DEG_TO_RAD).isRegular());
+  EXPECT_FALSE(UnitCell(zero, uy, uz).isRegular());
+  EXPECT_FALSE(UnitCell(ux, -2.0 * ux, uz).isRegular());
+
+  Matrix3 m;
+  m.col(0) = ux;
+  m.col(1) = uy;
+  m.col(2) = uz;
+  EXPECT_TRUE(UnitCell{ m }.isRegular());
+
+  m.col(0) = ux;
+  m.col(1) = zero;
+  m.col(2) = uz;
+  EXPECT_FALSE(UnitCell{ m }.isRegular());
+
+  m.col(0) = 2 * ux + uy + uz;
+  m.col(1) = ux + uy;
+  m.col(2) = 0.5 * (ux + uz);
+  EXPECT_FALSE(UnitCell{ m }.isRegular());
 
   UnitCell unitCell;
   unitCell.setCellParameters(a, b, c, alpha, beta, gamma);
@@ -261,11 +276,20 @@ TEST(UnitCellTest, wrapAtomsToUnitCell)
   for (std::vector<Vector3>::const_iterator it = fcoords.begin(),
                                             itEnd = fcoords.end();
        it != itEnd; ++it) {
-    EXPECT_GT(it->x(), static_cast<Real>(-std::numeric_limits<Real>::epsilon())); // x >= 0, "mostly" zero
+    EXPECT_GT(
+      it->x(),
+      static_cast<Real>(
+        -std::numeric_limits<Real>::epsilon())); // x >= 0, "mostly" zero
     EXPECT_LE(it->x(), static_cast<Real>(1.0));
-    EXPECT_GT(it->y(), static_cast<Real>(-std::numeric_limits<Real>::epsilon())); // y >= 0, "mostly" zero
+    EXPECT_GT(
+      it->y(),
+      static_cast<Real>(
+        -std::numeric_limits<Real>::epsilon())); // y >= 0, "mostly" zero
     EXPECT_LE(it->y(), static_cast<Real>(1.0));
-    EXPECT_GT(it->z(), static_cast<Real>(-std::numeric_limits<Real>::epsilon())); // z >= 0, "mostly" zero
+    EXPECT_GT(
+      it->z(),
+      static_cast<Real>(
+        -std::numeric_limits<Real>::epsilon())); // z >= 0, "mostly" zero
     EXPECT_LE(it->z(), static_cast<Real>(1.0));
   }
 }

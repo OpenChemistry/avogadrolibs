@@ -10,22 +10,17 @@
 #include <cassert>
 #include <set>
 #include <stack>
+#include <utility>
 
 namespace Avogadro::Core {
 
-Graph::Graph() {}
-
-Graph::Graph(size_t n)
-  : m_adjacencyList(n), m_edgeMap(n), m_edgePairs(), m_vertexToSubgraph(n),
-    m_subgraphToVertices(), m_subgraphDirty()
+Graph::Graph(size_t n) : m_adjacencyList(n), m_edgeMap(n), m_vertexToSubgraph(n)
 {
   for (size_t i = 0; i < n; i++) {
     m_vertexToSubgraph[i] = -1;
     m_loneVertices.insert(i);
   }
 }
-
-Graph::~Graph() {}
 
 void Graph::setSize(size_t n)
 {
@@ -224,7 +219,10 @@ size_t Graph::addEdge(size_t a, size_t b)
       m_subgraphDirty[subgraphA] || m_subgraphDirty[subgraphB];
     for (size_t i : m_subgraphToVertices[subgraphB]) {
       m_subgraphToVertices[subgraphA].insert(i);
-      m_vertexToSubgraph[i] = subgraphA;
+      if (i < m_vertexToSubgraph.size())
+        m_vertexToSubgraph[i] = subgraphA;
+      else
+        m_vertexToSubgraph.push_back(subgraphA);
     }
     // Just leave it empty, it could be reused
     m_subgraphToVertices[subgraphB].clear();
@@ -284,8 +282,7 @@ void Graph::removeEdge(size_t a, size_t b)
   std::vector<size_t>& neighborsA = m_adjacencyList[a];
   std::vector<size_t>& neighborsB = m_adjacencyList[b];
 
-  std::vector<size_t>::iterator iter =
-    std::find(neighborsA.begin(), neighborsA.end(), b);
+  auto iter = std::find(neighborsA.begin(), neighborsA.end(), b);
 
   if (iter == neighborsA.end())
     return;
@@ -433,8 +430,7 @@ size_t Graph::edgeCount() const
 
 std::vector<size_t> Graph::neighbors(size_t index) const
 {
-  if(index==size())
-  {
+  if (index == size()) {
     std::vector<size_t> emptyVector;
     return std::vector<size_t>(emptyVector);
   }
@@ -543,7 +539,7 @@ std::vector<std::set<size_t>> Graph::connectedComponents() const
 {
   updateSubgraphs();
   std::vector<std::set<size_t>> r;
-  for (std::set<size_t> s : m_subgraphToVertices) {
+  for (const std::set<size_t>& s : m_subgraphToVertices) {
     if (!s.empty())
       r.push_back(s);
   }
@@ -560,7 +556,7 @@ size_t Graph::subgraphsCount() const
 {
   updateSubgraphs();
   size_t r = 0;
-  for (std::set<size_t> s : m_subgraphToVertices) {
+  for (const std::set<size_t>& s : m_subgraphToVertices) {
     if (!s.empty())
       r++;
   }

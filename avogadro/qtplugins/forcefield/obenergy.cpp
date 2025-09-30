@@ -35,8 +35,8 @@ public:
 
   ~Private()
   {
-    delete m_obmol;
-    delete m_forceField;
+    if (m_obmol != nullptr)
+      delete m_obmol;
   }
 };
 
@@ -50,6 +50,40 @@ OBEnergy::OBEnergy(const std::string& method)
   QByteArray dataDir =
     QString(QCoreApplication::applicationDirPath() + "/data").toLocal8Bit();
   qputenv("BABEL_DATADIR", dataDir);
+#else
+  // check if BABEL_DATADIR is set in the environment
+  QStringList filters;
+  filters << "3.*"
+          << "2.*";
+  if (qgetenv("BABEL_DATADIR").isEmpty()) {
+    QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
+    QStringList dirs = dir.entryList(filters);
+    if (dirs.size() == 1) {
+      // versioned data directory
+      QString dataDir = QCoreApplication::applicationDirPath() +
+                        "/../share/openbabel/" + dirs[0];
+      qputenv("BABEL_DATADIR", dataDir.toLocal8Bit());
+    } else {
+      qDebug() << "Error, Open Babel data directory not found.";
+    }
+  }
+
+  // Check if BABEL_LIBDIR is set
+  if (qgetenv("BABEL_LIBDIR").isEmpty()) {
+    QDir dir(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
+    QStringList dirs = dir.entryList(filters);
+    if (dirs.size() == 0) {
+      QString libDir =
+        QCoreApplication::applicationDirPath() + "/../lib/openbabel/";
+      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
+    } else if (dirs.size() == 1) {
+      QString libDir =
+        QCoreApplication::applicationDirPath() + "/../lib/openbabel/" + dirs[0];
+      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
+    } else {
+      qDebug() << "Error, Open Babel plugins directory not found.";
+    }
+  }
 #endif
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
@@ -102,6 +136,14 @@ OBEnergy::OBEnergy(const std::string& method)
 }
 
 OBEnergy::~OBEnergy() {}
+
+bool OBEnergy::acceptsRadicals() const
+{
+  if (m_identifier == "UFF")
+    return true;
+
+  return false;
+}
 
 Calc::EnergyCalculator* OBEnergy::newInstance() const
 {
@@ -162,6 +204,10 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
     d->m_forceField->SetCoordinates(*d->m_obmol);
     energy = d->m_forceField->Energy(false);
   }
+
+  // make sure to add in any constraint penalties
+  energy += constraintEnergies(x);
+
   return energy;
 }
 
@@ -191,6 +237,8 @@ void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
     grad *= -1; // OpenBabel outputs forces, not grads
     cleanGradients(grad);
+    // add in any constraints
+    constraintGradients(x, grad);
   }
 }
 

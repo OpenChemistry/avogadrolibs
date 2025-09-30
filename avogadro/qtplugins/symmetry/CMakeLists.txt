@@ -8,7 +8,6 @@ set(symmetry_srcs
   symmetry.cpp
   symmetrywidget.cpp
   operationstablemodel.cpp
-  richtextdelegate.cpp
   symmetryutil.cpp
 )
 
@@ -35,4 +34,3 @@ avogadro_plugin(SymmetryScene
 
 target_link_libraries(Symmetry PRIVATE ${LIBMSYM_LIBRARIES})
 target_link_libraries(SymmetryScene PRIVATE Avogadro::Rendering)
-

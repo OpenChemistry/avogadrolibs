@@ -21,12 +21,13 @@
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::FileFormatDialog;
+using namespace std::string_literals;
 
 namespace Avogadro::QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_),
-    m_molecule(nullptr), m_reader(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_reader(nullptr)
 {
   auto* action = new QAction(tr("SMILES…"), this);
   action->setProperty("menu priority", 800);
@@ -42,8 +43,8 @@ LineFormatInput::LineFormatInput(QObject* parent_)
 
   // These are the line formats that we can load -- key is a user-friendly name,
   // value is the file extension used to identify the file format.
-  m_formats.insert(tr("InChI"), std::string("inchi"));
-  m_formats.insert(tr("SMILES"), std::string("smi"));
+  m_formats.insert(tr("InChI"), "inchi"s);
+  m_formats.insert(tr("SMILES"), "smi"s);
 }
 
 LineFormatInput::~LineFormatInput()
@@ -98,7 +99,8 @@ void LineFormatInput::showDialog()
   dlg.exec();
 
   // check if the reply is empty
-  if (dlg.descriptor().isEmpty())
+  if (dlg.result() != LineFormatInputDialog::Accepted ||
+      dlg.descriptor().isEmpty())
     return; // nothing to do
 
   // Resolve any format conflicts:
@@ -128,6 +130,25 @@ void LineFormatInput::showDialog()
 
   QtGui::Molecule newMol;
   m_reader->readString(m_descriptor, newMol);
+
+  // check to make sure the coordinates of newMol are non-zero
+  bool allZero = true;
+  for (Index i = 0; i < newMol.atomCount(); i++) {
+    auto vector = newMol.atomPosition3d(i);
+    if (vector.x() != 0.0 || vector.y() != 0.0 || vector.z() != 0.0) {
+      allZero = false;
+      break;
+    }
+  }
+
+  if (allZero) {
+    QMessageBox::warning(parentAsWidget, tr("No coordinates found!"),
+                         tr("Unable to generate 3D coordinates."),
+                         QMessageBox::Ok);
+    delete m_reader;
+    return;
+  }
+
   m_molecule->undoMolecule()->appendMolecule(newMol, "Insert Molecule");
   emit requestActiveTool("Manipulator");
   dlg.hide();
@@ -137,4 +158,4 @@ void LineFormatInput::showDialog()
   m_reader = nullptr;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

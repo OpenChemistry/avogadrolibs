@@ -42,7 +42,7 @@ void ScriptCharges::refreshModels()
   qDeleteAll(m_models);
   m_models.clear();
 
-  QMap<QString, QString> scriptPaths =
+  QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("charges");
   foreach (const QString& filePath, scriptPaths) {
     auto* model = new ScriptChargeModel(filePath);
@@ -69,11 +69,11 @@ void ScriptCharges::registerModels()
   for (QList<Calc::ChargeModel*>::const_iterator it = m_models.constBegin(),
                                                  itEnd = m_models.constEnd();
        it != itEnd; ++it) {
-    if (!Calc::ChargeManager::registerModel((*it)->newInstance()) ) {
+    if (!Calc::ChargeManager::registerModel((*it)->newInstance())) {
       qDebug() << "Could not register model" << (*it)->identifier().c_str()
                << "due to name conflict.";
     }
   }
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

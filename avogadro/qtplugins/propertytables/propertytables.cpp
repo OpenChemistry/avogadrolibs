@@ -58,13 +58,21 @@ PropertyTables::PropertyTables(QObject* parent_)
   action->setEnabled(false); // changed by molecule
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
+
+  action = new QAction(this);
+  action->setText(tr("Conformer Properties…"));
+  action->setData(PropertyType::ConformerType);
+  action->setProperty("menu priority", 830);
+  action->setEnabled(false); // changed by molecule
+  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  m_actions.append(action);
 }
 
 PropertyTables::~PropertyTables() {}
 
 QString PropertyTables::description() const
 {
-  return tr("Tables for displaying and editng atom, bond, angle and torsion "
+  return tr("Tables for displaying and editing atom, bond, angle and torsion "
             "properties.");
 }
 
@@ -75,7 +83,7 @@ QList<QAction*> PropertyTables::actions() const
 
 QStringList PropertyTables::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Analysis") << tr("&Properties");
+  return QStringList() << tr("&Analyze") << tr("&Properties");
 }
 
 void PropertyTables::setMolecule(QtGui::Molecule* mol)
@@ -85,12 +93,26 @@ void PropertyTables::setMolecule(QtGui::Molecule* mol)
 
   m_molecule = mol;
 
-  // check if there are residues
-  if (m_molecule->residueCount() > 0) {
-    for (const auto& action : m_actions) {
-      if (action->data().toInt() == PropertyType::ResidueType)
-        action->setEnabled(true);
-    }
+  updateActions();
+
+  // update if the molecule changes
+  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
+}
+
+void PropertyTables::updateActions()
+{
+  if (m_molecule == nullptr)
+    return;
+
+  // check if we enable / disable the residue and conformer actions
+  bool haveResidues = (m_molecule->residueCount() > 0);
+  // technically coordinate sets
+  bool haveConformers = (m_molecule->coordinate3dCount() > 1);
+  for (const auto& action : m_actions) {
+    if (action->data().toInt() == PropertyType::ResidueType)
+      action->setEnabled(haveResidues);
+    else if (action->data().toInt() == PropertyType::ConformerType)
+      action->setEnabled(haveConformers);
   }
 }
 
@@ -102,6 +124,10 @@ void PropertyTables::showDialog()
 
   if (action->data().toInt() == PropertyType::ResidueType &&
       m_molecule->residueCount() == 0)
+    return;
+
+  if (action->data().toInt() == PropertyType::ConformerType &&
+      m_molecule->coordinate3dCount() < 2)
     return;
 
   auto* dialog = new QDialog(qobject_cast<QWidget*>(parent()));
@@ -130,6 +156,7 @@ void PropertyTables::showDialog()
   view->setSourceModel(model);
 
   view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  view->horizontalHeader()->setStretchLastSection(true);
   view->resizeColumnsToContents();
   layout->addWidget(view);
   dialog->setWindowTitle(view->windowTitle());
@@ -149,4 +176,4 @@ void PropertyTables::showDialog()
   dialog->show();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

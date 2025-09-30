@@ -13,8 +13,7 @@
 #include "matrix.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class UnitCell unitcell.h <avogadro/core/unitcell.h>
@@ -28,7 +27,7 @@ public:
   UnitCell(const Vector3& a, const Vector3& b, const Vector3& c);
   explicit UnitCell(const Matrix3& cellMatrix);
   UnitCell(const UnitCell& other);
-  ~UnitCell();
+  ~UnitCell() = default;
   UnitCell& operator=(UnitCell other);
   friend void swap(UnitCell& lhs, UnitCell& rhs);
 
@@ -135,6 +134,12 @@ public:
    */
   Real distance(const Vector3& v1, const Vector3& v2) const;
 
+  /**
+   * @return if @a m is regular, i.e. its determinant is nonzero
+   */
+  static bool isRegular(const Matrix3& m);
+  bool isRegular() const { return isRegular(m_cellMatrix); }
+
 private:
   static Real signedAngleRadians(const Vector3& v1, const Vector3& v2,
                                  const Vector3& axis);
@@ -169,18 +174,14 @@ inline UnitCell::UnitCell(const Vector3& a_, const Vector3& b_,
 }
 
 inline UnitCell::UnitCell(const Matrix3& cellMatrix_)
+  : m_cellMatrix(cellMatrix_)
 {
-  m_cellMatrix = cellMatrix_;
   computeFractionalMatrix();
 }
 
 inline UnitCell::UnitCell(const UnitCell& other)
   : m_cellMatrix(other.m_cellMatrix),
     m_fractionalMatrix(other.m_fractionalMatrix)
-{
-}
-
-inline UnitCell::~UnitCell()
 {
 }
 
@@ -296,6 +297,14 @@ inline Vector3 UnitCell::wrapFractional(const Vector3& f) const
     ++result[1];
   if (result[2] < static_cast<Real>(0.0))
     ++result[2];
+  // set anything at 1.0 to 0.0
+  if (result[0] >= static_cast<Real>(0.999999))
+    result[0] = static_cast<Real>(0.0);
+  if (result[1] >= static_cast<Real>(0.999999))
+    result[1] = static_cast<Real>(0.0);
+  if (result[2] >= static_cast<Real>(0.999999))
+    result[2] = static_cast<Real>(0.0);
+
   return result;
 }
 
@@ -310,6 +319,14 @@ inline void UnitCell::wrapFractional(const Vector3& f, Vector3& wrapped) const
     ++wrapped[1];
   if (wrapped[2] < static_cast<Real>(0.0))
     ++wrapped[2];
+
+  // set anything at 1.0 to 0.0
+  if (wrapped[0] >= static_cast<Real>(0.999999))
+    wrapped[0] = static_cast<Real>(0.0);
+  if (wrapped[1] >= static_cast<Real>(0.999999))
+    wrapped[1] = static_cast<Real>(0.0);
+  if (wrapped[2] >= static_cast<Real>(0.999999))
+    wrapped[2] = static_cast<Real>(0.0);
 }
 
 inline Vector3 UnitCell::wrapCartesian(const Vector3& cart) const
@@ -345,7 +362,6 @@ inline Real UnitCell::distance(const Vector3& v1, const Vector3& v2) const
   return minimumImage(v1 - v2).norm();
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_UNITCELL_H

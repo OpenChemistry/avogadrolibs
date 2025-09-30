@@ -5,20 +5,16 @@
 
 #include "client.h"
 
-#include "jsonrpcclient.h"
 #include "jobobject.h"
+#include "jsonrpcclient.h"
 
 #include <QtCore/QJsonDocument>
 
 namespace Avogadro::MoleQueue {
 
-Client::Client(QObject *parent_) : QObject(parent_), m_jsonRpcClient(nullptr)
-{
-}
+Client::Client(QObject* parent_) : QObject(parent_), m_jsonRpcClient(nullptr) {}
 
-Client::~Client()
-{
-}
+Client::~Client() {}
 
 bool Client::isConnected() const
 {
@@ -28,7 +24,7 @@ bool Client::isConnected() const
     return m_jsonRpcClient->isConnected();
 }
 
-bool Client::connectToServer(const QString &serverName)
+bool Client::connectToServer(const QString& serverName)
 {
   if (!m_jsonRpcClient) {
     m_jsonRpcClient = new JsonRpcClient(this);
@@ -60,7 +56,7 @@ int Client::requestQueueList()
   return localId;
 }
 
-int Client::submitJob(const JobObject &job)
+int Client::submitJob(const JobObject& job)
 {
   if (!m_jsonRpcClient)
     return -1;
@@ -112,8 +108,8 @@ int Client::cancelJob(unsigned int moleQueueId)
   return localId;
 }
 
-int Client::registerOpenWith(const QString &name, const QString &executable,
-                             const QList<QRegExp> &filePatterns)
+int Client::registerOpenWith(const QString& name, const QString& executable,
+                             const QList<QRegularExpression>& filePatterns)
 {
   if (!m_jsonRpcClient)
     return -1;
@@ -131,9 +127,9 @@ int Client::registerOpenWith(const QString &name, const QString &executable,
   return localId;
 }
 
-int Client::registerOpenWith(const QString &name,
-                             const QString &rpcServer, const QString &rpcMethod,
-                             const QList<QRegExp> &filePatterns)
+int Client::registerOpenWith(const QString& name, const QString& rpcServer,
+                             const QString& rpcMethod,
+                             const QList<QRegularExpression>& filePatterns)
 {
   if (!m_jsonRpcClient)
     return -1;
@@ -167,7 +163,7 @@ int Client::listOpenWithNames()
   return localId;
 }
 
-int Client::unregisterOpenWith(const QString &handlerName)
+int Client::unregisterOpenWith(const QString& handlerName)
 {
   if (!m_jsonRpcClient)
     return -1;
@@ -191,60 +187,60 @@ void Client::flush()
     m_jsonRpcClient->flush();
 }
 
-void Client::processResult(const QJsonObject &response)
+void Client::processResult(const QJsonObject& response)
 {
-  if (response["id"] != QJsonValue::Null
-      && m_requests.contains(static_cast<int>(response["id"].toDouble()))) {
+  if (response["id"] != QJsonValue::Null &&
+      m_requests.contains(static_cast<int>(response["id"].toDouble()))) {
     int localId = static_cast<int>(response["id"].toDouble());
     switch (m_requests[localId]) {
-    case ListQueues:
-      emit queueListReceived(response["result"].toObject());
-      break;
-    case SubmitJob:
-      emit submitJobResponse(localId,
-                             static_cast<unsigned int>(response["result"]
-                             .toObject()["moleQueueId"].toDouble()));
-      break;
-    case LookupJob:
-      emit lookupJobResponse(localId, response["result"].toObject());
-      break;
-    case CancelJob:
-      emit cancelJobResponse(static_cast<unsigned int>(response["result"]
-                             .toObject()["moleQueueId"].toDouble()));
-      break;
-    case RegisterOpenWith:
-      emit registerOpenWithResponse(localId);
-      break;
-    case ListOpenWithNames:
-      emit listOpenWithNamesResponse(localId, response["result"].toArray());
-      break;
-    case UnregisterOpenWith:
-      emit unregisterOpenWithResponse(localId);
-      break;
-    default:
-      break;
+      case ListQueues:
+        emit queueListReceived(response["result"].toObject());
+        break;
+      case SubmitJob:
+        emit submitJobResponse(
+          localId, static_cast<unsigned int>(
+                     response["result"].toObject()["moleQueueId"].toDouble()));
+        break;
+      case LookupJob:
+        emit lookupJobResponse(localId, response["result"].toObject());
+        break;
+      case CancelJob:
+        emit cancelJobResponse(static_cast<unsigned int>(
+          response["result"].toObject()["moleQueueId"].toDouble()));
+        break;
+      case RegisterOpenWith:
+        emit registerOpenWithResponse(localId);
+        break;
+      case ListOpenWithNames:
+        emit listOpenWithNamesResponse(localId, response["result"].toArray());
+        break;
+      case UnregisterOpenWith:
+        emit unregisterOpenWithResponse(localId);
+        break;
+      default:
+        break;
     }
   }
 }
 
-void Client::processNotification(const QJsonObject &notification)
+void Client::processNotification(const QJsonObject& notification)
 {
   if (notification["method"].toString() == "jobStateChanged") {
     QJsonObject params = notification["params"].toObject();
     emit jobStateChanged(
-          static_cast<unsigned int>(params["moleQueueId"].toDouble()),
-          params["oldState"].toString(), params["newState"].toString());
+      static_cast<unsigned int>(params["moleQueueId"].toDouble()),
+      params["oldState"].toString(), params["newState"].toString());
   }
 }
 
-void Client::processError(const QJsonObject &error)
+void Client::processError(const QJsonObject& error)
 {
   int localId = static_cast<int>(error["id"].toDouble());
   int errorCode = -1;
   QString errorMessage = tr("No message specified.");
   QJsonValue errorData;
 
-  const QJsonValue &errorValue = error.value(QLatin1String("error"));
+  const QJsonValue& errorValue = error.value(QLatin1String("error"));
   if (errorValue.isObject()) {
     const QJsonObject errorObject = errorValue.toObject();
     if (errorObject.value("code").isDouble())
@@ -258,41 +254,28 @@ void Client::processError(const QJsonObject &error)
 }
 
 QJsonObject Client::buildRegisterOpenWithRequest(
-    const QString &name, const QList<QRegExp> &filePatterns,
-    const QJsonObject &handlerMethod)
+  const QString& name, const QList<QRegularExpression>& filePatterns,
+  const QJsonObject& handlerMethod)
 {
-   QJsonArray patterns;
-   foreach (const QRegExp &regex, filePatterns) {
-     QJsonObject pattern;
-     switch (regex.patternSyntax()) {
-     case QRegExp::RegExp:
-     case QRegExp::RegExp2:
-       pattern["regexp"] = regex.pattern();
-       break;
-     case QRegExp::Wildcard:
-     case QRegExp::WildcardUnix:
-       pattern["wildcard"] = regex.pattern();
-       break;
-     default:
-     case QRegExp::FixedString:
-     case QRegExp::W3CXmlSchema11:
-       continue;
-     }
+  QJsonArray patterns;
+  foreach (const QRegularExpression& regex, filePatterns) {
+    QJsonObject pattern;
+    pattern["regex"] = regex.pattern();
+    pattern["caseSensitive"] = regex.patternOptions().testFlag(
+      QRegularExpression::CaseInsensitiveOption);
+    patterns.append(pattern);
+  }
 
-     pattern["caseSensitive"] = regex.caseSensitivity() == Qt::CaseSensitive;
-     patterns.append(pattern);
-   }
+  QJsonObject params;
+  params["name"] = name;
+  params["method"] = handlerMethod;
+  params["patterns"] = patterns;
 
-   QJsonObject params;
-   params["name"] = name;
-   params["method"] = handlerMethod;
-   params["patterns"] = patterns;
+  QJsonObject packet = m_jsonRpcClient->emptyRequest();
+  packet["method"] = QLatin1String("registerOpenWith");
+  packet["params"] = params;
 
-   QJsonObject packet = m_jsonRpcClient->emptyRequest();
-   packet["method"] = QLatin1String("registerOpenWith");
-   packet["params"] = params;
-
-   return packet;
+  return packet;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::MoleQueue

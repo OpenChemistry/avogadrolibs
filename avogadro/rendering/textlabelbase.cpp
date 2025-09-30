@@ -21,7 +21,7 @@
 namespace {
 #include "textlabelbase_fs.h"
 #include "textlabelbase_vs.h"
-} // end anon namespace
+} // namespace
 
 #include <iostream>
 
@@ -80,8 +80,8 @@ TextLabelBase::RenderImpl::RenderImpl()
   : vertices(4), shadersInvalid(true), textureInvalid(true), vboInvalid(true),
     radius(0.0)
 {
-  texture.setMinFilter(Texture2D::Nearest);
-  texture.setMagFilter(Texture2D::Nearest);
+  texture.setMinFilter(Texture2D::Linear);
+  texture.setMagFilter(Texture2D::Linear);
   texture.setWrappingS(Texture2D::ClampToEdge);
   texture.setWrappingT(Texture2D::ClampToEdge);
 }
@@ -187,13 +187,13 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
 
       !shaderProgram->enableAttributeArray("offset") ||
       !shaderProgram->useAttributeArray("offset", PackedVertex::offsetOffset(),
-                                       sizeof(PackedVertex), IntType, 2,
-                                       ShaderProgram::NoNormalize) ||
+                                        sizeof(PackedVertex), IntType, 2,
+                                        ShaderProgram::NoNormalize) ||
 
       !shaderProgram->enableAttributeArray("texCoord") ||
-      !shaderProgram->useAttributeArray("texCoord", PackedVertex::tcoordOffset(),
-                                       sizeof(PackedVertex), FloatType, 2,
-                                       ShaderProgram::NoNormalize)) {
+      !shaderProgram->useAttributeArray(
+        "texCoord", PackedVertex::tcoordOffset(), sizeof(PackedVertex),
+        FloatType, 2, ShaderProgram::NoNormalize)) {
     std::cerr << "Error setting up TextLabelBase shader program: "
               << shaderProgram->error() << std::endl;
     vbo.release();
@@ -213,7 +213,8 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
 
 void TextLabelBase::RenderImpl::compileShaders()
 {
-  if (vertexShader != nullptr && fragmentShader != nullptr && shaderProgram != nullptr)
+  if (vertexShader != nullptr && fragmentShader != nullptr &&
+      shaderProgram != nullptr)
     return;
 
   if (vertexShader == nullptr)
@@ -242,11 +243,11 @@ void TextLabelBase::RenderImpl::compileShaders()
     std::cerr << shaderProgram->error() << std::endl;
     return;
   }
-/*  shaderProgram->detachShader(vertexShader);
-  shaderProgram->detachShader(fragmentShader);
-  vertexShader->cleanup();
-  fragmentShader->cleanup();
-  */
+  /*  shaderProgram->detachShader(vertexShader);
+    shaderProgram->detachShader(fragmentShader);
+    vertexShader->cleanup();
+    fragmentShader->cleanup();
+    */
 
   shadersInvalid = false;
 }
@@ -259,9 +260,7 @@ void TextLabelBase::RenderImpl::uploadVbo()
     vboInvalid = false;
 }
 
-TextLabelBase::TextLabelBase() : m_render(new RenderImpl)
-{
-}
+TextLabelBase::TextLabelBase() : m_render(new RenderImpl) {}
 
 TextLabelBase::TextLabelBase(const TextLabelBase& other)
   : Drawable(other), m_text(other.m_text),
@@ -368,4 +367,4 @@ void TextLabelBase::markDirty()
   m_render->vboInvalid = true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

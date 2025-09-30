@@ -77,13 +77,34 @@ public:
    */
   virtual void setEnabled(bool enable);
 
-  virtual QWidget* setupWidget();
+  /**
+   * @return whether this plugin works with the current molecule.
+   * This is used to determine if the plugin should be enabled in the UI.
+   * For example, a plugin that only works with unit cells would return
+   * false if the current molecule does not include a unit cell.
+   */
+  virtual bool isApplicable() const { return true; }
 
   /**
-  * Returns if this plugin should be considered in the default behavior,
-  * or it should reset to true or false.
-  */
-  enum DefaultBehavior { Ignore, False, True };
+   * @return the widget for plugin settings (e.g., colors, widths, etc.)
+   */
+  virtual QWidget* setupWidget();
+  /**
+   * This method exists to query without creating the widget.
+   * @return true if the plugin has a setup widget
+   */
+  virtual bool hasSetupWidget() const { return false; }
+
+  /**
+   * Returns if this plugin should be considered in the default behavior,
+   * or it should reset to true or false.
+   */
+  enum DefaultBehavior
+  {
+    Ignore,
+    False,
+    True
+  };
   virtual DefaultBehavior defaultBehavior() const { return Ignore; }
 
 signals:

@@ -20,7 +20,7 @@ namespace Rendering {
  *  disk (e.g., part of a circle) from a MeshGeometry.
  * @see ArcStrip for the edge of a circle.
  */
-class AVOGADRORENDERING_EXPORT  ArcSector : public MeshGeometry
+class AVOGADRORENDERING_EXPORT ArcSector : public MeshGeometry
 {
 public:
   ArcSector() {}
@@ -44,7 +44,6 @@ public:
                     const Vector3f& normal, float degreesCCW,
                     float resolutionDeg);
 };
-
 
 } // End namespace Rendering
 } // End namespace Avogadro

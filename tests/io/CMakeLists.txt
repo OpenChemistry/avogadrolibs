@@ -6,16 +6,13 @@ set(tests
   Lammps
   Mdl
   Pdb
+  Turbomole
   Vasp
   Xyz
   )
 
 if(USE_HDF5)
   list(APPEND tests Hdf5)
-endif()
-
-if(USE_MMTF)
-  list(APPEND tests MMTF)
 endif()
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
@@ -51,3 +48,27 @@ foreach(TestName ${tests})
   add_test(NAME "Io-${TestName}"
     COMMAND AvogadroIOTests "--gtest_filter=${TestName}Test.*")
 endforeach()
+
+if (DEFINED ENV{LIB_FUZZING_ENGINE})
+  option(ENABLE_FUZZ "Enable fuzz testing." ON)
+else()
+  option(ENABLE_FUZZ "Enable fuzz testing." OFF)
+endif()
+
+if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
+  # todo - make this into a loop for multiple formats
+  set(fuzz
+    cjson
+    cml
+    sdf
+    pdb
+    xyz
+  )
+  foreach(fuzzName ${fuzz})
+    add_executable(fuzz_${fuzzName} fuzztest.cpp)
+    target_compile_definitions(fuzz_${fuzzName} PRIVATE -DFUZZ_INPUT_FORMAT="${fuzzName}")
+    target_compile_options(fuzz_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
+    target_link_options(fuzz_${fuzzName} PRIVATE -fsanitize=fuzzer)
+    target_link_libraries(fuzz_${fuzzName} PRIVATE Avogadro::IO $ENV{LIB_FUZZING_ENGINE})
+  endforeach()
+endif()

@@ -58,7 +58,7 @@ private:
   void load(Core::GaussianSet* basis);
   std::vector<int> readArrayI(std::istream& in, unsigned int n);
   std::vector<double> readArrayD(std::istream& in, unsigned int n,
-                                 int width = 0);
+                                 int width = 0, double factor = 1.0);
   bool readDensityMatrix(std::istream& in, unsigned int n, int width = 0);
   bool readSpinDensityMatrix(std::istream& in, unsigned int n, int width = 0);
 
@@ -71,8 +71,8 @@ private:
   int m_electronsBeta;
   int m_normalModes;
   int m_numAtoms;
-  unsigned char m_spin;
-  signed char m_charge;
+  int m_spin;
+  int m_charge;
   unsigned int m_numBasisFunctions;
   std::vector<int> m_aNums;
   std::vector<double> m_aPos;
@@ -90,6 +90,7 @@ private:
   std::vector<double> m_betaMOcoeffs;
   MatrixX m_density;     /// Total density matrix
   MatrixX m_spinDensity; /// Spin density matrix
+  Vector3 m_dipoleMoment;
   Core::ScfType m_scftype;
 
   Core::Array<double> m_frequencies;

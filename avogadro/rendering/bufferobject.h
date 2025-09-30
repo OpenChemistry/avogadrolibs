@@ -93,7 +93,7 @@ inline bool BufferObject::upload(const ContainerT& array,
                         objectType);
 }
 
-} // End Rendering namespace
-} // End Avogadro namespace
+} // namespace Rendering
+} // namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_BUFFEROBJECT_H

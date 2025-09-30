@@ -14,9 +14,7 @@ namespace Avogadro::Rendering {
 
 using Core::Array;
 
-GeometryNode::GeometryNode()
-{
-}
+GeometryNode::GeometryNode() {}
 
 GeometryNode::~GeometryNode()
 {
@@ -26,14 +24,14 @@ GeometryNode::~GeometryNode()
 void GeometryNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (auto & m_drawable : m_drawables) {
+  for (auto& m_drawable : m_drawables) {
     m_drawable->accept(visitor);
   }
 }
 
 void GeometryNode::addDrawable(Drawable* object)
 {
-  for (auto & m_drawable : m_drawables) {
+  for (auto& m_drawable : m_drawables) {
     if (m_drawable == object)
       return;
   }
@@ -45,8 +43,7 @@ bool GeometryNode::removeDrawable(Drawable* object)
 {
   if (!object)
     return false;
-  for (auto it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
+  for (auto it = m_drawables.begin(); it != m_drawables.end(); ++it) {
     if (*it == object) {
       (*it)->setParent(nullptr);
       m_drawables.erase(it);
@@ -67,7 +64,7 @@ Drawable* GeometryNode::drawable(size_t index)
 void GeometryNode::clearDrawables()
 {
   // Like all good parents, we destroy our children before we go...
-  for (auto & m_drawable : m_drawables) {
+  for (auto& m_drawable : m_drawables) {
     delete m_drawable;
   }
   m_drawables.clear();
@@ -75,7 +72,7 @@ void GeometryNode::clearDrawables()
 
 void GeometryNode::render(const Camera& camera)
 {
-  for (auto & m_drawable : m_drawables) {
+  for (auto& m_drawable : m_drawables) {
     if (m_drawable->isVisible())
       m_drawable->render(camera);
   }
@@ -109,4 +106,4 @@ Array<Identifier> GeometryNode::areaHits(const Frustrum& f) const
   return result;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

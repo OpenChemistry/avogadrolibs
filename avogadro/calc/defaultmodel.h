@@ -33,21 +33,18 @@ class AVOGADROCALC_EXPORT DefaultModel : public ChargeModel
 {
 public:
   DefaultModel(const std::string& identifier = "");
-  virtual ~DefaultModel();
+  ~DefaultModel() override = default;
 
   /**
    * Create a new instance of the file format class. Ownership passes to the
    * caller.
    */
-  virtual DefaultModel* newInstance() const override
-  {
-    return new DefaultModel;
-  }
+  DefaultModel* newInstance() const override { return new DefaultModel; }
 
   /**
    * @brief A unique identifier defined by the file
    */
-  virtual std::string identifier() const override { return m_identifier; }
+  std::string identifier() const override { return m_identifier; }
 
   /**
    * @brief Set the identifier
@@ -60,21 +57,20 @@ public:
   /**
    * @brief We don't have any other name beyond the identifier in the file
    */
-  virtual std::string name() const override { return m_identifier; }
+  std::string name() const override { return m_identifier; }
 
   /**
    * @brief This default method is defined for whatever is in a molecule
    * @return all elements - technically not true, but we don't have the mol
    */
-  virtual Core::Molecule::ElementMask elements() const override
-  {
-    return (m_elements);
-  }
+  Core::Molecule::ElementMask elements() const override { return (m_elements); }
 
   /**
    * @brief Retrieve the relevant charges from the molecule for our defined type
    */
-  virtual MatrixX partialCharges(Core::Molecule& mol) const override;
+  MatrixX partialCharges(Core::Molecule& mol) const override;
+
+  MatrixX partialCharges(const Core::Molecule& mol) const override;
 
 protected:
   std::string m_identifier;

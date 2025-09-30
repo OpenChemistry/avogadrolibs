@@ -35,8 +35,9 @@ public:
     NotUsed,
     Cjson,
     Cml,
-    Mdl, // sdf
+    Mdl,
     Pdb,
+    Sdf,
     Xyz
   };
 
@@ -58,6 +59,7 @@ public:
   Core::Molecule::ElementMask elements() const override { return m_elements; }
 
   MatrixX partialCharges(Core::Molecule& mol) const override;
+  MatrixX partialCharges(const Core::Molecule& mol) const override;
 
   double potential(Core::Molecule& mol, const Vector3& point) const override;
 

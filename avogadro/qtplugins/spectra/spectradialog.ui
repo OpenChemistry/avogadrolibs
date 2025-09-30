@@ -23,43 +23,7 @@
    <bool>true</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="5" column="1">
-    <widget class="QPushButton" name="push_loadSpectra">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>&amp;Load data...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="7">
-    <widget class="QPushButton" name="push_exportData">
-     <property name="text">
-      <string>Export Data</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="3">
-    <widget class="QPushButton" name="pushButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>&amp;Close</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0" rowspan="2" colspan="4">
+   <item row="8" column="0" rowspan="2" colspan="5">
     <widget class="QTabWidget" name="tab_widget">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -79,6 +43,9 @@
         <widget class="QDoubleSpinBox" name="yAxisMinimum">
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="minimum">
+          <double>-4000.000000000000000</double>
          </property>
          <property name="maximum">
           <double>4000.000000000000000</double>
@@ -196,7 +163,7 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="minimum">
-          <double>1.000000000000000</double>
+          <double>0.010000000000000</double>
          </property>
         </widget>
        </item>
@@ -214,6 +181,20 @@
         <widget class="QLabel" name="label_27">
          <property name="text">
           <string>Peak Threshold:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="unitsLabel">
+         <property name="text">
+          <string>Units:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="unitsCombo">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -249,7 +230,7 @@
           <string>Imports a tsv of experimental spectra to overlay on the plot.</string>
          </property>
          <property name="text">
-          <string>&amp;Import...</string>
+          <string>&amp;Import…</string>
          </property>
         </widget>
        </item>
@@ -265,7 +246,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -317,7 +298,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -333,7 +314,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>&amp;Export...</string>
+          <string>&amp;Export…</string>
          </property>
         </widget>
        </item>
@@ -346,7 +327,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -385,7 +366,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -430,8 +411,11 @@
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="label_5">
+         <property name="toolTip">
+          <string extracomment="Size in pixels of the line drawing the spectra"/>
+         </property>
          <property name="text">
-          <string>Line Size:</string>
+          <string comment="Size in pixels of the line drawing the spectra">Line Width:</string>
          </property>
         </widget>
        </item>
@@ -458,7 +442,50 @@
      </widget>
     </widget>
    </item>
-   <item row="0" column="7" rowspan="9">
+   <item row="5" column="0">
+    <widget class="QComboBox" name="combo_spectra">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="8">
+    <widget class="QPushButton" name="push_exportData">
+     <property name="text">
+      <string>Export Data</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <widget class="QPushButton" name="pushButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>&amp;Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="QPushButton" name="push_options">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>&amp;Options…</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="8" rowspan="9">
     <widget class="QTableWidget" name="dataTable">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -514,31 +541,8 @@
      </column>
     </widget>
    </item>
-   <item row="5" column="2">
-    <widget class="QPushButton" name="push_options">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>&amp;Options…</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QComboBox" name="combo_spectra">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="4">
-    <widget class="Avogadro::VTK::ChartWidget" name="plot" native="true">
+   <item row="0" column="0" colspan="5">
+    <widget class="Avogadro::QtGui::ChartWidget" name="plot" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -569,13 +573,43 @@ Scroll wheel: Zoom to cursor</string>
      </property>
     </widget>
    </item>
+   <item row="5" column="2">
+    <widget class="QPushButton" name="push_loadSpectra">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>&amp;Load data…</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QComboBox" name="elementCombo">
+     <item>
+      <property name="text">
+       <string notr="true">¹H</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string notr="true">¹³C</string>
+      </property>
+     </item>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Avogadro::VTK::ChartWidget</class>
+   <class>Avogadro::QtGui::ChartWidget</class>
    <extends>QWidget</extends>
-   <header location="global">avogadro/vtk/chartwidget.h</header>
+   <header location="global">avogadro/qtgui/chartwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

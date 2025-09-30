@@ -9,6 +9,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
+#include <cstddef>
 #include <iostream>
 
 using std::cout;
@@ -24,6 +25,9 @@ using Core::GaussianSet;
 using Core::Rhf;
 using Core::Rohf;
 using Core::Uhf;
+
+// https://physics.nist.gov/cgi-bin/cuu/Value?hrev
+const double hartreeToEV = 27.211386245981;
 
 GaussianFchk::GaussianFchk() : m_scftype(Rhf) {}
 
@@ -68,6 +72,16 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
+  // set the total charge
+  molecule.setData("totalCharge", m_charge);
+  // set the spin multiplicity
+  molecule.setData("totalSpinMultiplicity", m_spin);
+  // dipole moment
+  // TODO: This should be a Vector3d
+  Core::Variant dipole(m_dipoleMoment.x(), m_dipoleMoment.y(),
+                       m_dipoleMoment.z());
+  molecule.setData("dipoleMoment", dipole);
+
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
@@ -105,9 +119,14 @@ void GaussianFchk::processLine(std::istream& in)
   } else if (key == "Number of atoms" && list.size() > 1) {
     m_numAtoms = Core::lexicalCast<int>(list[1]);
   } else if (key == "Charge" && list.size() > 1) {
-    m_charge = Core::lexicalCast<signed char>(list[1]);
+    m_charge = Core::lexicalCast<int>(list[1]);
   } else if (key == "Multiplicity" && list.size() > 1) {
-    m_spin = Core::lexicalCast<char>(list[1]);
+    m_spin = Core::lexicalCast<int>(list[1]);
+  } else if (key == "Dipole Moment" && list.size() > 2) {
+    vector<double> dipole = readArrayD(in, Core::lexicalCast<int>(list[2]));
+    m_dipoleMoment = Vector3(dipole[0], dipole[1], dipole[2]);
+    // convert from au
+    m_dipoleMoment *= 2.541746;
   } else if (key == "Number of electrons" && list.size() > 1) {
     m_electrons = Core::lexicalCast<int>(list[1]);
   } else if (key == "Number of alpha electrons" && list.size() > 1) {
@@ -141,19 +160,16 @@ void GaussianFchk::processLine(std::istream& in)
     m_c = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
   } else if (key == "P(S=P) Contraction coefficients" && list.size() > 2) {
     m_csp = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-  } else if (key == "Alpha Orbital Energies") {
+  } else if (key == "Alpha Orbital Energies" || key == "orbital energies") {
     if (m_scftype == Rhf) {
-      m_orbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      // cout << "MO energies, n = " << m_orbitalEnergy.size() << endl;
+      m_orbitalEnergy =
+        readArrayD(in, Core::lexicalCast<int>(list[2]), 16, hartreeToEV);
     } else if (m_scftype == Uhf) {
       m_alphaOrbitalEnergy =
-        readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      // cout << "Alpha MO energies, n = " << m_alphaOrbitalEnergy.size() <<
-      // endl;
+        readArrayD(in, Core::lexicalCast<int>(list[2]), 16, hartreeToEV);
     }
   } else if (key == "Beta Orbital Energies") {
     if (m_scftype != Uhf) {
-      // cout << "UHF detected. Reassigning Alpha properties." << endl;
       m_scftype = Uhf;
       m_alphaOrbitalEnergy = m_orbitalEnergy;
       m_orbitalEnergy = vector<double>();
@@ -162,9 +178,10 @@ void GaussianFchk::processLine(std::istream& in)
       m_MOcoeffs = vector<double>();
     }
 
-    m_betaOrbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-    // cout << "Beta MO energies, n = " << m_betaOrbitalEnergy.size() << endl;
-  } else if (key == "Alpha MO coefficients" && list.size() > 2) {
+    m_betaOrbitalEnergy =
+      readArrayD(in, Core::lexicalCast<int>(list[2]), 16, hartreeToEV);
+  } else if ((key == "Alpha MO coefficients" || key == "MO coefficients (C)") &&
+             list.size() > 2) {
     if (m_scftype == Rhf) {
       m_MOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
     } else if (m_scftype == Uhf) {
@@ -191,27 +208,32 @@ void GaussianFchk::processLine(std::istream& in)
     tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
 
     // read in the first 3N-6 elements as frequencies
-    for (unsigned int i = 0; i < m_normalModes; ++i) {
+    for (unsigned int i = 0; i < static_cast<unsigned int>(m_normalModes);
+         ++i) {
       m_frequencies.push_back(tmpVec[i]);
     }
     // skip to after threeN elements then read IR intensities
-    for (unsigned int i = threeN; i < threeN + m_normalModes; ++i) {
+    for (unsigned int i = threeN;
+         i < threeN + static_cast<unsigned int>(m_normalModes); ++i) {
       m_IRintensities.push_back(tmpVec[i]);
     }
     // now check if we have Raman intensities
     if (tmpVec[threeN + m_normalModes] != 0.0) {
       for (unsigned int i = threeN + m_normalModes;
-           i < threeN + 2 * m_normalModes; ++i) {
+           i < threeN + 2 * static_cast<unsigned int>(m_normalModes); ++i) {
         m_RamanIntensities.push_back(tmpVec[i]);
       }
     }
   } else if (key == "Vib-Modes" && list.size() > 2) {
     tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
     m_vibDisplacements.clear();
-    if (tmpVec.size() == m_numAtoms * 3 * m_normalModes) {
-      for (unsigned int i = 0; i < m_normalModes; ++i) {
+    if (tmpVec.size() == static_cast<size_t>(m_numAtoms) * 3 *
+                           static_cast<size_t>(m_normalModes)) {
+      for (unsigned int i = 0; i < static_cast<unsigned int>(m_normalModes);
+           ++i) {
         Core::Array<Vector3> mode;
-        for (unsigned int j = 0; j < m_numAtoms; ++j) {
+        for (unsigned int j = 0; j < static_cast<unsigned int>(m_numAtoms);
+             ++j) {
           Vector3 v(tmpVec[i * m_numAtoms * 3 + j * 3],
                     tmpVec[i * m_numAtoms * 3 + j * 3 + 1],
                     tmpVec[i * m_numAtoms * 3 + j * 3 + 2]);
@@ -238,12 +260,14 @@ void GaussianFchk::load(GaussianSet* basis)
       // SP orbital type - actually have to add two shells
       int s = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::S);
       int tmpGTO = nGTO;
-      for (int j = 0; j < m_shellNums[i]; ++j) {
+      for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
+           ++j) {
         basis->addGto(s, m_c[nGTO], m_a[nGTO]);
         ++nGTO;
       }
       int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
-      for (int j = 0; j < m_shellNums[i]; ++j) {
+      for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
+           ++j) {
         basis->addGto(p, m_csp[tmpGTO], m_a[tmpGTO]);
         ++tmpGTO;
       }
@@ -294,7 +318,8 @@ void GaussianFchk::load(GaussianSet* basis)
       }
       if (type != GaussianSet::UU) {
         int b = basis->addBasis(m_shelltoAtom[i] - 1, type);
-        for (int j = 0; j < m_shellNums[i]; ++j) {
+        for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
+             ++j) {
           basis->addGto(b, m_c[nGTO], m_a[nGTO]);
           ++nGTO;
         }
@@ -364,7 +389,7 @@ vector<int> GaussianFchk::readArrayI(std::istream& in, unsigned int n)
 }
 
 vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
-                                        int width)
+                                        int width, double factor)
 {
   vector<double> tmp;
   tmp.reserve(n);
@@ -387,7 +412,7 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
                << tmp.size() << " of " << n << endl;
           return tmp;
         }
-        tmp.push_back(Core::lexicalCast<double>(i, ok));
+        tmp.push_back(Core::lexicalCast<double>(i, ok) * factor);
         if (!ok) {
           cout << "Warning: problem converting string to integer: " << i
                << " in GaussianFchk::readArrayD.\n";
@@ -395,8 +420,8 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
         }
       }
     } else { // Q-Chem files use 16 character fields
-      int maxColumns = 80 / width;
-      for (int i = 0; i < maxColumns; ++i) {
+      size_t maxColumns = 80 / width;
+      for (size_t i = 0; i < maxColumns; ++i) {
         string substring = line.substr(i * width, width);
         if (static_cast<int>(substring.length()) != width)
           break;
@@ -405,7 +430,7 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
                << tmp.size() << " of " << n << endl;
           return tmp;
         }
-        tmp.push_back(Core::lexicalCast<double>(substring, ok));
+        tmp.push_back(Core::lexicalCast<double>(substring, ok) * factor);
         if (!ok) {
           cout << "Warning: problem converting string to double: " << substring
                << " in GaussianFchk::readArrayD.\n";
@@ -462,8 +487,8 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
         }
       }
     } else { // Q-Chem files use 16-character fields
-      int maxColumns = 80 / width;
-      for (int c = 0; c < maxColumns; ++c) {
+      size_t maxColumns = 80 / width;
+      for (size_t c = 0; c < maxColumns; ++c) {
         string substring = line.substr(c * width, width);
         if (static_cast<int>(substring.length()) != width) {
           break;
@@ -538,8 +563,8 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
         }
       }
     } else { // Q-Chem files use 16-character fields
-      int maxColumns = 80 / width;
-      for (int c = 0; c < maxColumns; ++c) {
+      size_t maxColumns = 80 / width;
+      for (size_t c = 0; c < maxColumns; ++c) {
         string substring = line.substr(c * width, width);
         if (static_cast<int>(substring.length()) != width) {
           break;

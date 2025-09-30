@@ -15,7 +15,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 
-#include <QRegExp>
+#include <QRegularExpression>
 
 class QJsonDocument;
 class QProcess;
@@ -30,7 +30,7 @@ class Molecule;
 namespace QtGui {
 class GenericHighlighter;
 class PythonScript;
-}
+} // namespace QtGui
 
 namespace MoleQueue {
 /**
@@ -280,13 +280,13 @@ or "Equilibrium Geometry". |
 ~~~
  *
  * The `patterns` array contains a collection of fixed strings, wildcard
- * expressions, and regular expressions (using the QRegExp syntax flavor, see
- * the QRegExp documentation) that are used to identify strings that should be
- * formatted.
+ * expressions, and regular expressions (using the QRegularExpression syntax
+ * flavor, see the QRegularExpression documentation) that are used to identify
+ * strings that should be formatted.
  * There must be one of the following members present in each pattern object:
- * - `regexp` A QRegExp-style regular expression. If no capture groups ("(...)")
- *   are defined, the entire match is formatted. If one or more capture groups,
- *   only the captured texts will be marked.
+ * - `regexp` A QRegularExpresion-style regular expression. If no capture groups
+ *   ("(...)") are defined, the entire match is formatted. If one or more
+ *   capture groups, only the captured texts will be marked.
  * - `wildcard` A wildcard expression
  * - `string` An exact string to match.
  *
@@ -457,7 +457,7 @@ public:
   explicit InputGenerator(const QString& scriptFilePath_,
                           QObject* parent_ = nullptr);
   explicit InputGenerator(QObject* parent_ = nullptr);
-  ~InputGenerator() override;
+  ~InputGenerator() override = default;
 
   /**
    * @return True if debugging is enabled.
@@ -605,7 +605,7 @@ private:
   bool parseRules(const QJsonArray& json,
                   QtGui::GenericHighlighter& highligher) const;
   bool parseFormat(const QJsonObject& json, QTextCharFormat& format) const;
-  bool parsePattern(const QJsonValue& json, QRegExp& pattern) const;
+  bool parsePattern(const QJsonValue& json, QRegularExpression& pattern) const;
 
   // File extension of requested molecule format
   mutable QString m_moleculeExtension;

@@ -7,11 +7,11 @@ name: Qt6 Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.5.3
+  QT_VERSION: 6.8.3
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
-  MACOS_TARGET: 10.15
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DQT_VERSION=6
+  MACOS_TARGET: 12
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
 
 jobs:
   build:
@@ -22,81 +22,55 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu Qt6", artifact: "",
-            os: ubuntu-latest,
-            cc: "gcc", cxx: "g++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Qt6 AppImage", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
-            cpack: "",
-          }
-        - {
             name: "macOS Qt6", artifact: "",
             os: macos-latest,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'",
             cpack_flags: "-G DragNDrop",
           }
-        - {
-            name: "Windows Qt6", artifact: "",
-            os: windows-latest,
-            cc: "cl", cxx: "cl",
-            build_type: "Release",
-            cmake_flags: "",
-            build_flags: "-j 2",
-            cpack_flags: "-G NSIS",
-          }
+# for now disable Windows for Qt6 builds
+#        - {
+#            name: "Windows Qt6", artifact: "",
+#            os: windows-latest,
+#            cc: "cl", cxx: "cl",
+#            build_type: "Release",
+#            cmake_flags: "",
+#            build_flags: "-j 2",
+#            cpack_flags: "-G NSIS",
+#          }
 
     steps:
 
-    - name: Install Dependencies (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        if uname -p | grep -q "arm" ; then
-           export PATH=/opt/homebrew/bin:$PATH
-        else # not self-hosted runner
-          brew install ninja eigen glew
-        fi
+        brew install ninja eigen glew
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         path: avogadrolibs
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{ env.QT_VERSION }}
-        aqtversion: '==3.1.*'
-        modules: 'qt5compat'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
@@ -119,23 +93,14 @@ jobs:
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
-    - name: Run tests
-      if: matrix.config.os == 'ubuntu-latest'
-      shell: cmake -P {0}
-      run: |
-        include(ProcessorCount)
-        ProcessorCount(N)
-        set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
-        set(ENV{ASAN_OPTIONS} "new_delete_type_mismatch=0")
-        execute_process(
-          COMMAND ctest -j ${N}
-          WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs
-          RESULT_VARIABLE result
-        )
-        if (NOT result EQUAL 0)
-          message(FATAL_ERROR "Running tests failed!")
-        endif()
+    - name: Upload
+      if: matrix.config.artifact != 0
+      uses: actions/upload-artifact@v4
+      with:
+        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
+        name: ${{ matrix.config.artifact }}
 
     - name: Setup tmate session
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@v3
+      timeout-minutes: 60

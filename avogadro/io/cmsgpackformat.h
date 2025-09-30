@@ -23,8 +23,9 @@ namespace Io {
 class AVOGADROIO_EXPORT CMsgPackFormat : public CjsonFormat
 {
 public:
-  CMsgPackFormat();
-  ~CMsgPackFormat() override;
+  // Base class constructors are called automatically
+  CMsgPackFormat() = default;
+  ~CMsgPackFormat() override = default;
 
   Operations supportedOperations() const override
   {

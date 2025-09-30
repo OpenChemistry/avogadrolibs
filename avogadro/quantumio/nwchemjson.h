@@ -46,7 +46,7 @@ public:
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
-} // end QuantumIO namespace
-} // end Avogadro namespace
+} // namespace QuantumIO
+} // namespace Avogadro
 
 #endif // AVOGADRO_IO_NWCHEMJSON_H

@@ -9,9 +9,7 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
-
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The Centroid class adds centroids and center-of-mass
@@ -21,7 +19,7 @@ class Centroid : public QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit Centroid(QObject* parent_ = nullptr);
-  ~Centroid() override;
+  ~Centroid() override = default;
 
   QString name() const override { return tr("Centroid"); }
 
@@ -50,7 +48,6 @@ private:
   QAction* m_normalAction;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_BONDING_H

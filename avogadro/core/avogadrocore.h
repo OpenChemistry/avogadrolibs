@@ -31,11 +31,11 @@
 namespace Avogadro {
 
 /** Typedef for a real number. */
-typedef double Real;
+using Real = double;
 
 /** Typedef for indices and sizes. */
-typedef size_t Index;
-constexpr Index MaxIndex = std::numeric_limits<Index>::max();
+using Index = size_t;
+inline constexpr Index MaxIndex = std::numeric_limits<Index>::max();
 
 /** Used to represent an invalid atomic number. */
 constexpr unsigned char InvalidElement = 255;
@@ -53,18 +53,18 @@ constexpr unsigned char CustomElementMax = 254;
 /**
  * Count of atomic number values that are used to represent custom,
  * non-elemental particles. */
-constexpr unsigned char CustomElementCount =
+inline constexpr unsigned char CustomElementCount =
   CustomElementMax - CustomElementMin + 1;
 
+namespace Core {
 /**
  * @return True if @a atomicNumber denotes a custom element type.
  */
-namespace Core {
-inline constexpr bool isCustomElement(unsigned char atomicNumber)
+constexpr bool isCustomElement(unsigned char atomicNumber)
 {
   return atomicNumber >= CustomElementMin && atomicNumber <= CustomElementMax;
 }
-}
+} // namespace Core
 
 /** Unit conversion factors. @{ */
 constexpr double PI_D = 3.141592653589793238462643;
@@ -88,6 +88,6 @@ constexpr float ANGSTROM_TO_BOHR_F = static_cast<float>(ANGSTROM_TO_BOHR_D);
 constexpr Real ANGSTROM_TO_BOHR = static_cast<Real>(ANGSTROM_TO_BOHR_D);
 /** @} */
 
-} // end Avogadro namespace
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_H

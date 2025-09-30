@@ -15,6 +15,7 @@
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTimer>
 
+using namespace std::string_literals;
 using json = nlohmann::json;
 
 namespace Avogadro::QtPlugins {
@@ -187,31 +188,30 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 
   QByteArray output;
   if (!listener.waitForOutput(output)) {
-    appendError(std::string("Conversion timed out."));
+    appendError("Conversion timed out."s);
     return false;
   }
 
   if (output.isEmpty()) {
-    appendError(std::string("OpenBabel error: conversion failed."));
+    appendError("OpenBabel error: conversion failed."s);
     return false;
   }
 
   if (format == "cml") {
     if (!m_cmlFormat.readString(std::string(output.constData()), molecule)) {
-      appendError(std::string("Error while reading OpenBabel-generated CML:"));
+      appendError("Error while reading OpenBabel-generated CML:"s);
       appendError(m_cmlFormat.error());
       return false;
     }
   } else if (format == "cjson") {
     if (!m_cjsonFormat.readString(std::string(output.constData()), molecule)) {
-      appendError(
-        std::string("Error while reading OpenBabel-generated CJSON:"));
+      appendError("Error while reading OpenBabel-generated CJSON:"s);
       appendError(m_cjsonFormat.error());
       return false;
     }
   } else if (format == "pdb") {
     if (!m_pdbFormat.readString(std::string(output.constData()), molecule)) {
-      appendError(std::string("Error while reading OpenBabel-generated PDB:"));
+      appendError("Error while reading OpenBabel-generated PDB:"s);
       appendError(m_pdbFormat.error());
       return false;
     }
@@ -240,19 +240,21 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
     }
   }
 
+#ifndef NDEBUG
   qDebug() << " writing to " << m_defaultFormat.c_str();
+#endif
 
   // Generate CML or CJSON to give to OpenBabel
   std::string outputString;
   if (m_defaultFormat == "cml") {
     if (!m_cmlFormat.writeString(outputString, molecule)) {
-      appendError(std::string("Error while writing CML:"));
+      appendError("Error while writing CML:"s);
       appendError(m_cmlFormat.error());
       return false;
     }
   } else if (m_defaultFormat == "cjson") {
     if (!m_cjsonFormat.writeString(outputString, molecule)) {
-      appendError(std::string("Error while writing CJSON:"));
+      appendError("Error while writing CJSON:"s);
       appendError(m_cjsonFormat.error());
       return false;
     }
@@ -276,12 +278,12 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
 
   QByteArray output;
   if (!listener.waitForOutput(output)) {
-    appendError(std::string("Conversion timed out."));
+    appendError("Conversion timed out."s);
     return false;
   }
 
   if (output.isEmpty()) {
-    appendError(std::string("OpenBabel error: conversion failed."));
+    appendError("OpenBabel error: conversion failed."s);
     return false;
   }
 

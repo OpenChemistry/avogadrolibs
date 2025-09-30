@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2020 Geoffrey R. Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "insertfragmentdialog.h"
@@ -92,9 +81,9 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory)
 
   foreach (const QString& dirStr, dirs) {
     qDebug() << "Checking for " << directory << " data in" << dirStr;
-    QDir dir(dirStr + '/' + directory);
-    if (dir.exists() && dir.isReadable()) {
-      m_directory = dir.absolutePath();
+    QDir testdir(dirStr + '/' + directory);
+    if (testdir.exists() && testdir.isReadable()) {
+      m_directory = testdir.absolutePath();
       break;
     }
   }
@@ -192,10 +181,15 @@ void InsertFragmentDialog::currentChanged(const QModelIndex& selected,
   QString fileName = selected.data(QFileSystemModel::FilePathRole).toString();
   QFileInfo info(fileName);
   if (!info.isDir()) {
-    // get the PNG name
-    QString pngName = info.absolutePath() + '/' + info.baseName() + ".png";
+    // get the image name -- default to svg
+    QString imgName = info.absolutePath() + '/' + info.baseName() + ".svg";
 
-    m_ui->preview->setIcon(QIcon(pngName));
+    // check if the svg exists, if not try png
+    if (!QFile::exists(imgName)) {
+      imgName = info.absolutePath() + '/' + info.baseName() + ".png";
+    }
+
+    m_ui->preview->setIcon(QIcon(imgName));
     m_ui->preview->show();
   } else
     m_ui->preview->hide();

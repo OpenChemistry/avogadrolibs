@@ -5,6 +5,7 @@
 
 #include "pdbformat.h"
 
+#include "avogadro/core/avogadrocore.h"
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
@@ -22,23 +23,16 @@ using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
 using Avogadro::Core::lexicalCast;
-using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
 using Avogadro::Core::SecondaryStructureAssigner;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
-using Avogadro::Core::UnitCell;
 
 using std::getline;
 using std::istringstream;
 using std::string;
-using std::vector;
 
 namespace Avogadro::Io {
-
-PdbFormat::PdbFormat() {}
-
-PdbFormat::~PdbFormat() {}
 
 bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 {
@@ -57,6 +51,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   Array<Vector3> altAtomPositions;
 
   while (getline(in, buffer)) { // Read Each line one by one
+    if (!in.good())
+      break;
 
     if (startsWith(buffer, "ENDMDL")) {
       if (coordSet == 0) {
@@ -70,7 +66,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
     // e.g.   CRYST1    4.912    4.912    6.696  90.00  90.00 120.00 P1 1
     // https://www.wwpdb.org/documentation/file-format-content/format33/sect8.html
-    else if (startsWith(buffer, "CRYST1")) {
+    else if (startsWith(buffer, "CRYST1") && buffer.length() >= 55) {
       // PDB reports in degrees and Angstroms
       //   Avogadro uses radians internally
       Real a = lexicalCast<Real>(buffer.substr(6, 9), ok);
@@ -81,10 +77,20 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       Real gamma = lexicalCast<Real>(buffer.substr(47, 8), ok) * DEG_TO_RAD;
 
       auto* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+      if (!cell->isRegular()) {
+        appendError("CRYST1 does not give linear independent lattice vectors");
+        delete cell;
+        return false;
+      }
       mol.setUnitCell(cell);
     }
 
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
+      if (buffer.length() < 54) {
+        appendError("Error reading line.");
+        return false;
+      }
+
       // First we initialize the residue instance
       auto residueId = lexicalCast<size_t>(buffer.substr(22, 4), ok);
       if (!ok) {
@@ -144,8 +150,6 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       if (buffer.size() >= 78) {
         element = buffer.substr(76, 2);
         element = trimmed(element);
-        if (element == "SE") // For Sulphur
-          element = 'S';
         if (element.length() == 2)
           element[1] = std::tolower(element[1]);
 
@@ -160,6 +164,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         // remove any trailing digits
         while (element.size() && std::isdigit(element.back()))
           element.pop_back();
+
+        if (element == "SE") // For Sulphur
+          element = 'S';
 
         atomicNum = Elements::atomicNumberFromSymbol(element);
         if (atomicNum == 255) {
@@ -191,8 +198,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
 
-    else if (startsWith(buffer, "TER")) { //  This is very important, each TER
-                                          //  record also counts in the serial.
+    else if (startsWith(buffer, "TER") &&
+             buffer.length() >= 11) { //  This is very important, each TER
+                                      //  record also counts in the serial.
       // Need to account for that when comparing with CONECT
       terList.push_back(lexicalCast<int>(buffer.substr(6, 5), ok));
 
@@ -203,6 +211,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     else if (startsWith(buffer, "CONECT")) {
+      if (buffer.length() < 16) {
+        appendError("Error reading line.");
+        return false;
+      }
+
       int a = lexicalCast<int>(buffer.substr(6, 5), ok);
       if (!ok) {
         appendError("Failed to parse bond connection a " + buffer.substr(6, 5));
@@ -236,13 +249,25 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           b = b - terCount;
           b = rawToAtomId[b];
 
-          if (a < b && a >= 0 && b >= 0) {
-            mol.Avogadro::Core::Molecule::addBond(a, b, 1);
+          if (a >= 0 && b >= 0) {
+            auto aIndex = static_cast<Avogadro::Index>(a);
+            auto bIndex = static_cast<Avogadro::Index>(b);
+            if (aIndex < mol.atomCount() && bIndex < mol.atomCount()) {
+              mol.Avogadro::Core::Molecule::addBond(aIndex, bIndex, 1);
+            } else {
+              appendError("Invalid bond connection: " + std::to_string(a) +
+                          " - " + std::to_string(b));
+            }
           }
         }
       }
     }
   } // End while loop
+
+  if (mol.atomCount() == 0) {
+    appendError("No atoms found in this file.");
+    return false;
+  }
 
   int count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;
   for (int c = 0; c < count; ++c) {
@@ -265,8 +290,12 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
   perceiveSubstitutedCations(mol);
-  SecondaryStructureAssigner ssa;
-  ssa.assign(&mol);
+
+  // if there are residue data, assign secondary structure
+  if (mol.residueCount() != 0) {
+    SecondaryStructureAssigner ssa;
+    ssa.assign(&mol);
+  }
 
   return true;
 } // End read

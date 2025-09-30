@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "iotests.h"
@@ -24,6 +13,7 @@
 
 #include <avogadro/io/cjsonformat.h>
 
+using Avogadro::MatrixX;
 using Avogadro::PI_F;
 using Avogadro::Real;
 using Avogadro::Core::Atom;
@@ -32,14 +22,14 @@ using Avogadro::Core::Molecule;
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::Variant;
 using Avogadro::Io::CjsonFormat;
-using Avogadro::MatrixX;
+using namespace std::string_literals;
 
 TEST(CjsonTest, readFile)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success =
-    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
@@ -49,12 +39,69 @@ TEST(CjsonTest, readFile)
   EXPECT_EQ(molecule.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 
+TEST(CjsonTest, atomicNumberEdgeCase)
+{
+  for (const auto* s : {
+         R"({"chemicalJson": 0, "name": "negative Z",
+  "atoms": {"coords": {"3d": [1.0, 2.0, 3.0]}, "elements": {"number": [-1]}}})",
+
+         R"({"chemicalJson": 1, "name": "ununennium",
+  "atoms": {"coords": {"3d": [1.0, 2.0, 3.0]}, "elements": {"number": [119]}},
+  "properties": {"totalCharge": 1, "totalSpinMultiplicity": 1}})",
+       }) {
+    CjsonFormat cjson;
+    Molecule molecule;
+    EXPECT_FALSE(cjson.readString(s, molecule)) << s;
+    EXPECT_EQ(cjson.error(), "Error: atomic number is invalid.\n");
+  }
+
+  for (const auto* s : {
+         R"({"chemicalJson": 0, "name": "ghost",
+  "atoms": {"coords": {"3d": [1.0, 2.0, 3.0]}, "elements": {"number": [0]}}})",
+
+         R"({"chemicalJson": 1, "name": "oganesson",
+  "atoms": {"coords": {"3d": [1.0, 2.0, 3.0]}, "elements": {"number": [118]}},
+  "properties": {"totalCharge": 0, "totalSpinMultiplicity": 1}})",
+       }) {
+    CjsonFormat cjson;
+    Molecule molecule;
+    EXPECT_TRUE(cjson.readString(s, molecule)) << s;
+  }
+}
+
+TEST(CjsonTest, readInvalidPeriodicFile)
+{
+  const auto error_cell_params =
+    "cell parameters do not give linear-independent lattice vectors\n"s;
+  const auto error_cellVectors = "cellVectors are not linear independent\n"s;
+  for (const auto& [file, err] : {
+         std::make_pair("impossible.cjson"s, error_cell_params),
+         std::make_pair("lin-dep-cellVectors.cjson"s, error_cellVectors),
+         std::make_pair("lin-dep2.cjson"s, error_cell_params),
+         std::make_pair("zero-a-cellVectors.cjson"s, error_cellVectors),
+         std::make_pair("zero-a.cjson"s, error_cell_params),
+         std::make_pair("zero-alpha.cjson"s, error_cell_params),
+         std::make_pair("zero-b-cellVectors.cjson"s, error_cellVectors),
+         std::make_pair("zero-b.cjson"s, error_cell_params),
+         std::make_pair("zero-beta.cjson"s, error_cell_params),
+         std::make_pair("zero-c-cellVectors.cjson"s, error_cellVectors),
+         std::make_pair("zero-c.cjson"s, error_cell_params),
+         std::make_pair("zero-gamma.cjson"s, error_cell_params),
+       }) {
+    CjsonFormat cjson;
+    Molecule molecule;
+    auto f = std::string(AVOGADRO_DATA) + "/data/cjson/singular/" + file;
+    EXPECT_FALSE(cjson.readFile(f, molecule)) << f;
+    EXPECT_EQ(cjson.error(), err) << f;
+  }
+}
+
 TEST(CjsonTest, atoms)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success =
-    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -78,8 +125,8 @@ TEST(CjsonTest, bonds)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success =
-    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -100,8 +147,8 @@ TEST(CjsonTest, crystal)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success =
-    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/rutile.cjson", molecule);
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/rutile.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "TiO2 rutile");
@@ -152,7 +199,7 @@ TEST(CjsonTest, saveFile)
   CjsonFormat cjson;
   Molecule savedMolecule, molecule;
   bool success = cjson.readFile(
-    std::string(AVOGADRO_DATA) + "/data/ethane.cjson", savedMolecule);
+    std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson", savedMolecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
 
@@ -176,4 +223,30 @@ TEST(CjsonTest, saveFile)
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
+}
+
+TEST(CjsonTest, conformers)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/conformers.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(14));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(13));
+  EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(3));
+
+  // okay now save it and make sure we still have the same number
+  success = cjson.writeFile("conformertmp.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+
+  Molecule otherMolecule;
+  success = cjson.readFile("conformertmp.cjson", otherMolecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+  EXPECT_EQ(otherMolecule.atomCount(), static_cast<size_t>(14));
+  EXPECT_EQ(otherMolecule.bondCount(), static_cast<size_t>(13));
+  EXPECT_EQ(otherMolecule.coordinate3dCount(), static_cast<size_t>(3));
 }

@@ -94,6 +94,18 @@ void DownloaderWidget::updateRepoData()
     // Reading the data from the response
     QByteArray bytes = m_reply->readAll();
 
+    // quick check that it's not empty
+    if (bytes.isEmpty()) {
+      QMessageBox::warning(this, tr("Error"),
+                           tr("Error downloading plugin data."));
+      return;
+    }
+    // does it parse as JSON cleanly?
+    if (!json::accept(bytes.data())) {
+      QMessageBox::warning(this, tr("Error"), tr("Error parsing plugin data."));
+      return;
+    }
+
     // parse the json
     m_root = json::parse(bytes.data());
     int numRepos = m_root.size();
@@ -167,14 +179,13 @@ void DownloaderWidget::updateRepoData()
 }
 
 // Grab README data from Github
-void DownloaderWidget::downloadREADME(int row, int col)
+void DownloaderWidget::downloadREADME(int row, [[maybe_unused]] int col)
 {
   m_ui->readmeBrowser->clear();
   QString url = m_repoList[row].readmeUrl;
   QNetworkRequest request;
   setRawHeaders(&request);
   request.setUrl(url); // Set the url
-
   m_reply = m_NetworkAccessManager->get(request);
   connect(m_reply, SIGNAL(finished()), this, SLOT(showREADME()));
 }
@@ -267,10 +278,16 @@ void DownloaderWidget::downloadNext()
 {
   if (!m_downloadList.isEmpty()) {
     QString url = m_downloadList.last().url;
+
+    // use the .tar.gz instead of .zip
+    if (url.endsWith(".zip")) {
+      url.chop(4); // remove the last 4 characters ".zip"
+      url += ".tar.gz";
+    }
+
     QNetworkRequest request;
     setRawHeaders(&request);
     request.setUrl(url); // Set the url
-
     m_reply = m_NetworkAccessManager->get(request);
     connect(m_reply, SIGNAL(finished()), this, SLOT(handleRedirect()));
   }
@@ -319,24 +336,48 @@ bool DownloaderWidget::checkToInstall()
 }
 
 // The download url for Github is always a redirect to the actual zip
+// Using Qt 6 the redirect gets taken care of automatically, but on Qt 5 we
+// have to do it manually
+// m_reply is a QNetworkReply
 void DownloaderWidget::handleRedirect()
 {
+  int statusCode =
+    m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
   if (m_reply->error() == QNetworkReply::NoError) {
-    QVariant statusCode =
-      m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-    if (statusCode.toInt() == 302) {
+    if (statusCode == 302) {
+      // Redirected, have to manually redirect
       QVariant possibleRedirectUrl =
         m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-
       QUrl _urlRedirectedTo = possibleRedirectUrl.toUrl();
-
       QNetworkRequest request;
       setRawHeaders(&request);
       request.setUrl(_urlRedirectedTo); // Set the url
       m_reply = m_NetworkAccessManager->get(request);
+      // Now we have the actual zip and can extract it
       connect(m_reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
+    } else if (statusCode == 200) {
+      // Normal success response
+      unzipPlugin();
+    } else {
+      // Something went wrong
+      QString errorString = m_reply->errorString();
+      m_ui->readmeBrowser->append(
+        tr("Failed to download from %1: status code %2, %3\n",
+           "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 "
+           "is the error message (if any)")
+          .arg(m_reply->url().toString())
+          .arg(statusCode)
+          .arg(errorString));
     }
   } else {
+    QString errorString = m_reply->errorString();
+    m_ui->readmeBrowser->append(
+      tr("Failed to download from %1: status code %2, %3\n",
+         "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 "
+         "is the error message (if any)")
+        .arg(m_reply->url().toString())
+        .arg(statusCode)
+        .arg(errorString));
     m_reply->deleteLater();
     m_downloadList.removeLast();
     downloadNext();
@@ -351,7 +392,7 @@ void DownloaderWidget::unzipPlugin()
     QByteArray fileData = m_reply->readAll();
     QDir().mkpath(m_filePath); // create any needed directories for the download
     QString repoName = m_downloadList.last().name;
-    QString filename = repoName + ".zip";
+    QString filename = repoName + ".tar.gz";
 
     QString absolutePath = m_filePath + "/" + filename;
     QString extractDirectory;

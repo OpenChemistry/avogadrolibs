@@ -1,7 +1,7 @@
 if(QT_VERSION EQUAL 6)
-  find_package(Qt6 COMPONENTS Widgets Core5Compat REQUIRED)
+  find_package(Qt6 COMPONENTS Widgets Concurrent REQUIRED)
 else()
-  find_package(Qt5 COMPONENTS Widgets REQUIRED)
+  find_package(Qt5 COMPONENTS Widgets Concurrent REQUIRED)
 endif()
 
 # Provide some simple API to find the plugins, scripts, etc.
@@ -19,11 +19,11 @@ if(USE_SPGLIB)
 endif()
 
 # Find python for input generator scripts:
-find_package(PythonInterp 3)
+find_package(Python3 COMPONENTS Interpreter)
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 "namespace Avogadro {
-static const char *pythonInterpreterPath = \"${PYTHON_EXECUTABLE}\";
+static const char *pythonInterpreterPath = \"${Python3_EXECUTABLE}\";
 }
 ")
 configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
@@ -31,8 +31,12 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 
 add_library(QtGui)
 
+find_package(JKQTPlotter${QT_VERSION} REQUIRED)
+
 avogadro_headers(QtGui
   backgroundfileformat.h
+  chartdialog.h
+  chartwidget.h
   colorbutton.h
   containerwidget.h
   customelementdialog.h
@@ -40,6 +44,7 @@ avogadro_headers(QtGui
   extensionplugin.h
   filebrowsewidget.h
   fileformatdialog.h
+  gaussiansetconcurrent.h
   generichighlighter.h
   hydrogentools.h
   insertfragmentdialog.h
@@ -57,10 +62,12 @@ avogadro_headers(QtGui
   persistentbond.h
   pluginlayermanager.h
   pythonscript.h
+  richtextdelegate.h
   rwmolecule.h
   sceneplugin.h
   scenepluginmodel.h
   scriptloader.h
+  slatersetconcurrent.h
   sortfiltertreeproxymodel.h
   toolplugin.h
   utilities.h
@@ -69,6 +76,8 @@ avogadro_headers(QtGui
 
 target_sources(QtGui PRIVATE
   backgroundfileformat.cpp
+  chartdialog.cpp
+  chartwidget.cpp
   colorbutton.cpp
   containerwidget.cpp
   customelementdialog.cpp
@@ -78,6 +87,7 @@ target_sources(QtGui PRIVATE
   extensionplugin.cpp
   filebrowsewidget.cpp
   fileformatdialog.cpp
+  gaussiansetconcurrent.cpp
   generichighlighter.cpp
   hydrogentools.cpp
   insertfragmentdialog.cpp
@@ -85,6 +95,7 @@ target_sources(QtGui PRIVATE
   interfacewidget.cpp
   jsonwidget.cpp
   layermodel.cpp
+  richtextdelegate.cpp
   rwlayermanager.cpp
   meshgenerator.cpp
   molecule.cpp
@@ -98,6 +109,7 @@ target_sources(QtGui PRIVATE
   sceneplugin.cpp
   scenepluginmodel.cpp
   scriptloader.cpp
+  slatersetconcurrent.cpp
   sortfiltertreeproxymodel.cpp
   toolplugin.cpp
   utilities.cpp
@@ -118,7 +130,5 @@ qt_add_resources(RC_SOURCES ${RCS})
 target_sources(QtGui PRIVATE ${RC_SOURCES})
 
 avogadro_add_library(QtGui)
-target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets)
-if(QT_VERSION EQUAL 6)
-  target_link_libraries(QtGui PRIVATE Qt6::Core5Compat)
-endif()
+target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets Qt::Concurrent)
+target_link_libraries(QtGui PUBLIC JKQTPlotter${QT_VERSION}::JKQTPlotter${QT_VERSION})

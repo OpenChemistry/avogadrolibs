@@ -16,10 +16,6 @@ MoleQueueManager::MoleQueueManager(QObject* parent_)
           SLOT(updateQueueModel(QJsonObject)));
 }
 
-MoleQueueManager::~MoleQueueManager()
-{
-}
-
 MoleQueueManager& MoleQueueManager::instance()
 {
   return m_instance ? *m_instance : *(m_instance = new MoleQueueManager());
@@ -67,4 +63,4 @@ void MoleQueueManager::updateQueueModel(const QJsonObject& json)
   emit queueListUpdated();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

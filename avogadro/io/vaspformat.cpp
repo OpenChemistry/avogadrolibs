@@ -21,7 +21,6 @@ namespace Avogadro::Io {
 using std::getline;
 using std::map;
 using std::string;
-using std::vector;
 
 using Core::Array;
 using Core::Atom;
@@ -31,10 +30,6 @@ using Core::Molecule;
 using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
-
-PoscarFormat::PoscarFormat() {}
-
-PoscarFormat::~PoscarFormat() {}
 
 bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -55,7 +50,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   // We'll use these throughout
   bool ok;
   string line;
-  vector<string> stringSplit;
+  std::vector<string> stringSplit;
 
   // First line is comment line
   getline(inStream, line);
@@ -101,14 +96,14 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Try a lexical cast here. If it fails, assume we have an atomic symbols list
   lexicalCast<unsigned int>(trimmed(stringSplit.at(0)), ok);
-  vector<string> symbolsList;
-  vector<unsigned char> atomicNumbers;
+  std::vector<string> symbolsList;
+  std::vector<unsigned char> atomicNumbers;
 
   if (!ok) {
     // Assume atomic symbols are here and store them
     symbolsList = split(line, ' ');
     // Store atomic nums
-    for (auto & i : symbolsList)
+    for (auto& i : symbolsList)
       atomicNumbers.push_back(Elements::atomicNumberFromSymbol(i));
     // This next one should be atom types
     getline(inStream, line);
@@ -120,21 +115,20 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
     if (stringSplit.size() != 0) {
       string trimmedFormula = trimmed(stringSplit.at(0));
       // Let's replace all numbers with spaces
-      for (char & i : trimmedFormula) {
+      for (char& i : trimmedFormula) {
         if (isdigit(i))
           i = ' ';
       }
       // Now get the symbols with a simple space split
       symbolsList = split(trimmedFormula, ' ');
-      for (auto & i : symbolsList)
-        atomicNumbers.push_back(
-          Elements::atomicNumberFromSymbol(i));
+      for (auto& i : symbolsList)
+        atomicNumbers.push_back(Elements::atomicNumberFromSymbol(i));
     }
   }
 
   stringSplit = split(line, ' ');
-  vector<unsigned int> atomCounts;
-  for (auto & i : stringSplit) {
+  std::vector<unsigned int> atomCounts;
+  for (auto& i : stringSplit) {
     auto atomCount = lexicalCast<unsigned int>(i);
     atomCounts.push_back(atomCount);
   }
@@ -176,7 +170,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
     cart = false;
   }
 
-  vector<Vector3> atoms;
+  std::vector<Vector3> atoms;
   for (unsigned int atomCount : atomCounts) {
     for (size_t j = 0; j < atomCount; ++j) {
       getline(inStream, line);
@@ -196,14 +190,20 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Let's make a unit cell
   auto* cell = new UnitCell(cellMat);
 
+  if (!cell->isRegular()) {
+    appendError("cell vectors are not linear independent");
+    delete cell;
+    return false;
+  }
+
   // If our atomic coordinates are fractional, convert them to Cartesian
   if (!cart) {
-    for (auto & atom : atoms)
+    for (auto& atom : atoms)
       atom = cell->toCartesian(atom);
   }
   // If they're cartesian, we just need to apply the scaling factor
   else {
-    for (auto & atom : atoms)
+    for (auto& atom : atoms)
       atom *= scalingFactor;
   }
 
@@ -252,7 +252,7 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   // A map of atomic symbols to their quantity.
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   std::map<unsigned char, size_t> composition;
-  for (unsigned char & atomicNumber : atomicNumbers) {
+  for (unsigned char& atomicNumber : atomicNumbers) {
     composition[atomicNumber]++;
   }
 
@@ -311,6 +311,8 @@ std::vector<std::string> PoscarFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("POSCAR");
+  ext.emplace_back("CONTCAR");
+  ext.emplace_back("vasp");
   return ext;
 }
 
@@ -320,10 +322,6 @@ std::vector<std::string> PoscarFormat::mimeTypes() const
   mime.emplace_back("N/A");
   return mime;
 }
-
-OutcarFormat::OutcarFormat() {}
-
-OutcarFormat::~OutcarFormat() {}
 
 bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -343,7 +341,7 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   while (getline(inStream, buffer)) {
     // Checks whether the buffer object contains the lattice vectors keyword
-    if (strncmp(buffer.c_str(), latticeStr.c_str(), latticeStr.size()) == 0) {
+    if (buffer.substr(0, latticeStr.size()) == latticeStr) {
       // Checks whether lattice vectors have been already set. Reason being that
       // only the first occurrence denotes the true lattice vectors, and the
       // ones following these are vectors of the primitive cell.
@@ -380,24 +378,27 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
         }
         // Checks whether all the three axis vectors have been read
         if (ax1Set && ax2Set && ax3Set) {
-          mol.setUnitCell(new UnitCell(ax1, ax2, ax3));
+          auto* cell = new UnitCell(ax1, ax2, ax3);
+          if (!cell->isRegular()) {
+            appendError("cell vectors are not linear independent");
+            return false;
+          }
+          mol.setUnitCell(cell);
         }
       }
     }
 
     // Checks whether the buffer object contains the POSITION keyword
-    else if (strncmp(buffer.c_str(), positionStr.c_str(), positionStr.size()) ==
-             0) {
+    else if (buffer.substr(0, positionStr.size()) == positionStr) {
       getline(inStream, buffer);
       // Double checks whether the succeeding line is a sequence of dashes
-      if (strncmp(buffer.c_str(), dashedStr.c_str(), dashedStr.size()) == 0) {
+      if (buffer.substr(0, dashedStr.size()) == dashedStr) {
         // natoms is not known, so the loop proceeds till the bottom dashed line
         // is encountered
         while (true) {
           getline(inStream, buffer);
           // Condition for encountering dashed line
-          if (strncmp(buffer.c_str(), dashedStr.c_str(), dashedStr.size()) ==
-              0) {
+          if (buffer.substr(0, dashedStr.size()) == dashedStr) {
             if (coordSet == 0) {
               mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
               positions.reserve(natoms);
@@ -435,8 +436,9 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Set the custom element map if needed:
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (const auto & atomType : atomTypes) {
-      elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
+    for (const auto& atomType : atomTypes) {
+      elementMap.insert(
+        std::make_pair(atomType.second, "Atom " + atomType.first));
     }
     mol.setCustomElementMap(elementMap);
   }
@@ -463,4 +465,4 @@ std::vector<std::string> OutcarFormat::mimeTypes() const
   return mime;
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Io

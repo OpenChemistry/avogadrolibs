@@ -11,8 +11,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/primitive.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @class AlignTool aligntool.h
@@ -56,8 +55,6 @@ public:
 
   void draw(Rendering::GroupNode& node) override;
 
-  Vector3ub contrastingColor(const Vector3ub& rgb) const;
-
   void shiftAtomToOrigin(Index atomIndex);
   void alignAtomToAxis(Index atomIndex, int axis);
 
@@ -92,7 +89,6 @@ private Q_SLOTS:
   void toolWidgetDestroyed();
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTOPENGL_ALIGNTOOL_H

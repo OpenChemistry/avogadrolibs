@@ -9,6 +9,7 @@
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
+#include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
@@ -53,6 +54,7 @@ using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
 
+using Avogadro::Core::contrastColor;
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
@@ -68,11 +70,13 @@ Editor::Editor(QObject* parent_)
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
     m_fixValenceLater(false), m_layerManager("Editor")
 {
+  QString shortcut = tr("Ctrl+2", "control-key 2");
   m_activateAction->setText(tr("Draw"));
   m_activateAction->setToolTip(
-    tr("Draw Tool\n\n"
-       "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
-       "Right Mouse: \tDelete Atom"));
+    tr("Draw Tool\t(%1)\n\n"
+       "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
+       "Right Mouse:\tDelete Atom")
+      .arg(shortcut));
   setIcon();
   reset();
 }
@@ -229,28 +233,6 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
   return nullptr;
 }
 
-inline Vector3ub contrastingColor(const Vector3ub& rgb)
-{
-  // If we're far 'enough' (+/-32) away from 128, just invert the component.
-  // If we're close to 128, inverting the color will end up too close to the
-  // input -- adjust the component before inverting.
-  const unsigned char minVal = 32;
-  const unsigned char maxVal = 223;
-  Vector3ub result;
-  for (size_t i = 0; i < 3; ++i) {
-    unsigned char input = rgb[i];
-    if (input > 160 || input < 96)
-      result[i] = static_cast<unsigned char>(255 - input);
-    else
-      result[i] = static_cast<unsigned char>(255 - (input / 4));
-
-    // Clamp to 32-->223 to prevent pure black/white
-    result[i] = std::min(maxVal, std::max(minVal, result[i]));
-  }
-
-  return result;
-}
-
 void Editor::draw(Rendering::GroupNode& node)
 {
   if (fabs(m_bondDistance) < 0.3)
@@ -270,7 +252,7 @@ void Editor::draw(Rendering::GroupNode& node)
   Vector3ub color(64, 255, 220);
   if (m_renderer) {
     auto backgroundColor = m_renderer->scene().backgroundColor();
-    color = contrastingColor(
+    color = contrastColor(
       Vector3ub(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
   }
 
@@ -378,8 +360,52 @@ void Editor::atomLeftClick(QMouseEvent* e)
     // Store the original atomic number of the clicked atom before updating it.
     unsigned char atomicNumber = m_toolWidget->atomicNumber();
     if (atom.atomicNumber() != atomicNumber) {
+      // Okay, we're changing this element
       m_clickedAtomicNumber = atom.atomicNumber();
       atom.setAtomicNumber(atomicNumber);
+
+      const auto& atomBonds = m_molecule->bonds(atom);
+      RWBond bond;
+      if (atomBonds.size() == 1) {
+        // If the clicked atom only has one bond, we can adjust the bond length
+        bond = atomBonds[0];
+      } else if (atomBonds.size() > 1 && m_toolWidget->adjustHydrogens()) {
+        // loop through to see if there's one bond and *only* one bond
+        // that's not a hydrogen
+        for (const RWBond& b : atomBonds) {
+          RWAtom otherAtom = b.getOtherAtom(atom);
+          if (otherAtom.atomicNumber() != Core::Hydrogen) {
+            if (bond.isValid()) {
+              // More than one non-H bond, so we can't adjust the bond length
+              bond = RWBond();
+              break;
+            }
+            bond = b;
+          }
+        }
+      }
+
+      // If we found a valid bond, adjust the bond distance
+      if (bond.isValid()) {
+        RWAtom atom2 = bond.getOtherAtom(atom);
+
+        m_bondDistance = Elements::radiusCovalent(atomicNumber) +
+                         Elements::radiusCovalent(atom2.atomicNumber());
+
+        // tweak the bond distance if we have a double or triple bond
+        if (bond.order() == 2) {
+          m_bondDistance *= 0.87; // e.g. C=C vs C-C
+        } else if (bond.order() == 3) {
+          m_bondDistance *= 0.78; // e.g. C#C vs C-C
+        }
+
+        Vector3 bondVector = atom.position3d() - atom2.position3d();
+        bondVector.normalize();
+        bondVector *= m_bondDistance;
+        // okay set my new position
+        Vector3 newPos = atom2.position3d() + bondVector;
+        atom.setPosition3d(newPos);
+      }
 
       Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
 
@@ -399,10 +425,76 @@ void Editor::bondLeftClick(QMouseEvent* e)
 
   Molecule::MoleculeChanges changes = Molecule::Bonds | Molecule::Modified;
 
+  // see if we should adjust the bond length
+  bool adjustBondLength = false;
+  RWAtom atom1 = bond.atom1();
+  RWAtom atom2 = bond.atom2();
+
+  // Estimate the adjusted bond length
+  Real distance = Elements::radiusCovalent(atom1.atomicNumber()) +
+                  Elements::radiusCovalent(atom2.atomicNumber());
+
+  // tweak the bond distance if we have a double or triple bond
+  if (bond.order() == 2) {
+    distance *= 0.87; // e.g. C=C vs C-C
+  } else if (bond.order() == 3) {
+    distance *= 0.78; // e.g. C#C vs C-C
+  }
+
+  // check if at least one of the atoms either has only one bond
+  // or all the other bonds are hydrogens
+  const Core::Array<RWBond>& atom1Bonds = m_molecule->bonds(atom1);
+  const Core::Array<RWBond>& atom2Bonds = m_molecule->bonds(atom2);
+  // if both atoms have only one bond, we're set
+  if (atom1Bonds.size() == 1 && atom2Bonds.size() == 1) {
+    adjustBondLength = true;
+  } else if (atom1Bonds.size() > 1) {
+    // check to see if all the other bonds are hydrogens
+    for (const RWBond& b : atom1Bonds) {
+      RWAtom bondedAtom = b.getOtherAtom(atom1);
+      if (bondedAtom == atom2)
+        continue; // skip the bond we're changing
+      if (bondedAtom.atomicNumber() != Core::Hydrogen) {
+        adjustBondLength = false;
+        break;
+      }
+      adjustBondLength = true;
+    }
+  }
+
+  // can we move atom1?
+  if (adjustBondLength) {
+    Vector3 bondVector = atom1.position3d() - atom2.position3d();
+    bondVector.normalize();
+    bondVector *= distance;
+    // okay move the atom
+    Vector3 newPos = atom2.position3d() + bondVector;
+    m_molecule->setAtomPosition3d(atom1.index(), newPos);
+    changes |= Molecule::Atoms;
+  } else { // instead, check if we can move atom2
+    for (const RWBond& b : atom2Bonds) {
+      RWAtom bondedAtom = b.getOtherAtom(atom2);
+      if (bondedAtom == atom1)
+        continue; // skip the bond we're changing
+      if (bondedAtom.atomicNumber() != Core::Hydrogen) {
+        adjustBondLength = false;
+        break;
+      }
+      adjustBondLength = true;
+    }
+    if (adjustBondLength) {
+      Vector3 bondVector = atom2.position3d() - atom1.position3d();
+      bondVector.normalize();
+      bondVector *= distance;
+      // okay move the atom
+      Vector3 newPos = atom1.position3d() + bondVector;
+      m_molecule->setAtomPosition3d(atom2.index(), newPos);
+      changes |= Molecule::Atoms;
+    }
+  }
+
   if (m_toolWidget->adjustHydrogens()) {
     // change for the new bond order
-    RWAtom atom1 = bond.atom1();
-    RWAtom atom2 = bond.atom2();
     QtGui::HydrogenTools::adjustHydrogens(atom1);
     QtGui::HydrogenTools::adjustHydrogens(atom2);
 
@@ -416,20 +508,22 @@ void Editor::bondLeftClick(QMouseEvent* e)
 void Editor::atomRightClick(QMouseEvent* e)
 {
   e->accept();
+
   // check to see if we need to adjust hydrogens
   Core::Array<Index> bondedAtoms;
+  Core::Array<Index> hToRemove; // atoms to remove
+  RWAtom atom = m_molecule->atom(m_clickedObject.index);
   if (m_toolWidget->adjustHydrogens()) {
     // before we remove the atom, we need to delete any H atoms
-    // that are bonded to it
-    RWAtom atom = m_molecule->atom(m_clickedObject.index);
-    if (atom.isValid()) {
+    // that are bonded to it -- unless it's a hydrogen atom itself
+    if (atom.isValid() && atom.atomicNumber() != Core::Hydrogen) {
       // get the list of bonded atoms
       Core::Array<RWBond> atomBonds = m_molecule->bonds(atom);
       for (const RWBond& bond : atomBonds) {
         RWAtom bondedAtom = bond.getOtherAtom(atom);
         if (bondedAtom.atomicNumber() == Core::Hydrogen) {
           // remove the H atom
-          m_molecule->removeAtom(bondedAtom.index());
+          hToRemove.push_back(m_molecule->atomUniqueId(bondedAtom));
         } else {
           // save the atom to adjust after we remove the target
           bondedAtoms.push_back(m_molecule->atomUniqueId(bondedAtom));
@@ -437,13 +531,23 @@ void Editor::atomRightClick(QMouseEvent* e)
       }
     }
   }
-  m_molecule->removeAtom(m_clickedObject.index);
+  if (atom.isValid())
+    m_molecule->removeAtom(atom);
 
-  // okay, now adjust the valence on the bonded atoms
+  // remove the hydrogens
+  for (Index hIndex : hToRemove) {
+    RWAtom hAtom = m_molecule->atomByUniqueId(hIndex);
+    if (hAtom.isValid()) {
+      m_molecule->removeAtom(hAtom);
+    }
+  }
+
+  // okay, now adjust any valence on the bonded atoms
   // (e.g., add back some hydrogens)
   for (Index atomIndex : bondedAtoms) {
     RWAtom atom = m_molecule->atomByUniqueId(atomIndex);
-    QtGui::HydrogenTools::adjustHydrogens(atom);
+    if (atom.isValid())
+      QtGui::HydrogenTools::adjustHydrogens(atom, QtGui::HydrogenTools::Add);
   }
 
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
@@ -452,8 +556,18 @@ void Editor::atomRightClick(QMouseEvent* e)
 void Editor::bondRightClick(QMouseEvent* e)
 {
   e->accept();
+  // see if we need to adjust hydrogens
+  RWBond bond = m_molecule->bond(m_clickedObject.index);
+  RWAtom atom1 = bond.atom1();
+  RWAtom atom2 = bond.atom2();
   m_molecule->removeBond(m_clickedObject.index);
-  m_molecule->emitChanged(Molecule::Bonds | Molecule::Removed);
+
+  if (m_toolWidget->adjustHydrogens()) {
+    QtGui::HydrogenTools::adjustHydrogens(atom1);
+    QtGui::HydrogenTools::adjustHydrogens(atom2);
+  }
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
+                          Molecule::Removed);
 }
 
 int expectedBondOrder(RWAtom atom1, RWAtom atom2)

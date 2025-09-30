@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -21,6 +10,7 @@
 #include <QtCore/QListIterator>
 
 using Avogadro::MoleQueue::MoleQueueQueueListModel;
+using namespace std::string_literals;
 
 // Allow access to protected members (like ctor, setQueueList)
 class MoleQueueQueueListModelTestBridge
@@ -60,7 +50,7 @@ void populateModel(MoleQueueQueueListModelTestBridge& model, int numQueues,
   model.setQueueList(queues, programs);
 }
 
-} // end anon namespace
+} // namespace
 
 TEST(MoleQueueQueueListModelTest, setQueues)
 {
@@ -93,7 +83,7 @@ TEST(MoleQueueQueueListModelTest, findQueueIndices)
   EXPECT_EQ(1, matches.size());
   EXPECT_EQ(
     model.data(matches.front(), Qt::DisplayRole).toString().toStdString(),
-    std::string("Queue 7"));
+    "Queue 7"s);
 }
 
 TEST(MoleQueueQueueListModelTest, findProgramIndices)
@@ -108,7 +98,7 @@ TEST(MoleQueueQueueListModelTest, findProgramIndices)
   EXPECT_EQ(1, matches.size());
   EXPECT_EQ(
     model.data(matches.front(), Qt::DisplayRole).toString().toStdString(),
-    std::string("Q7P2"));
+    "Q7P2"s);
 
   // All 10 queues should have a program #2:
   matches = model.findProgramIndices("P2");
@@ -136,6 +126,6 @@ TEST(MoleQueueQueueListModelTest, lookupProgram)
   QString queue;
   QString program;
   EXPECT_TRUE(model.lookupProgram(matches.front(), queue, program));
-  EXPECT_EQ(std::string("Queue 7"), queue.toStdString());
-  EXPECT_EQ(std::string("Q7P2"), program.toStdString());
+  EXPECT_EQ("Queue 7"s, queue.toStdString());
+  EXPECT_EQ("Q7P2"s, program.toStdString());
 }

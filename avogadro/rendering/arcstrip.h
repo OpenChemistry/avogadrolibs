@@ -19,7 +19,7 @@ namespace Rendering {
  * @brief The ArcStrip class is a convenience class for creating an arc
  *  line (e.g., the edge of a circle).
  */
-class AVOGADRORENDERING_EXPORT  ArcStrip : public LineStripGeometry
+class AVOGADRORENDERING_EXPORT ArcStrip : public LineStripGeometry
 {
 public:
   ArcStrip() {}

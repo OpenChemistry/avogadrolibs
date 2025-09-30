@@ -6,7 +6,6 @@
 #include "molecule.h"
 
 #include "basisset.h"
-#include "color3f.h"
 #include "cube.h"
 #include "elements.h"
 #include "gaussianset.h"
@@ -19,13 +18,12 @@
 #include "unitcell.h"
 
 #include <algorithm>
-#include <array>
 #include <cassert>
+#include <cstddef>
 #include <iostream>
+#include <utility>
 
 namespace Avogadro::Core {
-
-using std::swap;
 
 Molecule::Molecule()
   : m_basisSet(nullptr), m_unitCell(nullptr),
@@ -41,19 +39,20 @@ Molecule::Molecule(const Molecule& other)
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
     m_bondLabels(other.m_bondLabels), m_coordinates3d(other.m_coordinates3d),
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
+    m_formalCharges(other.m_formalCharges),
+    m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
     m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
     m_vibrationLx(other.m_vibrationLx), m_selectedAtoms(other.m_selectedAtoms),
-    m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
+    m_meshes(), m_cubes(),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
-    m_atomicNumbers(other.m_atomicNumbers),
-    m_frozenAtomMask(other.m_frozenAtomMask),
-    m_layers(LayerManager::getMoleculeLayer(this))
+    m_constraints(other.m_constraints),
+    m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
+    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
+    m_layers(LayerManager::getMoleculeLayer(&other, this))
 {
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
@@ -67,11 +66,8 @@ Molecule::Molecule(const Molecule& other)
     *c = *other.cube(i);
   }
 
-  // Copy layers, if they exist
-  if (other.m_layers.maxLayer() > 0)
-    m_layers = LayerManager::getMoleculeLayer(&other, this);
-  else {
-    // make sure all the atoms are in the active layer
+  // Make sure all the atoms are in the active layer
+  if (other.m_layers.maxLayer() == 0) {
     for (Index i = 0; i < atomCount(); ++i)
       m_layers.addAtomToActiveLayer(i);
   }
@@ -145,18 +141,14 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_vibrationLx(other.m_vibrationLx),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
+    m_basisSet(std::exchange(other.m_basisSet, nullptr)),
+    m_unitCell(std::exchange(other.m_unitCell, nullptr)),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
-    m_atomicNumbers(other.m_atomicNumbers),
-    m_frozenAtomMask(other.m_frozenAtomMask),
+    m_constraints(other.m_constraints),
+    m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
+    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
-  m_basisSet = other.m_basisSet;
-  other.m_basisSet = nullptr;
-
-  m_unitCell = other.m_unitCell;
-  other.m_unitCell = nullptr;
-
   // Copy the layers, only if they exist
   if (other.m_layers.maxLayer() > 0)
     m_layers = LayerManager::getMoleculeLayer(&other, this);
@@ -194,6 +186,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_constraints = other.m_constraints;
     m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
@@ -257,6 +250,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_constraints = other.m_constraints;
     m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
@@ -266,12 +260,10 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_cubes = std::move(other.m_cubes);
 
     delete m_basisSet;
-    m_basisSet = other.m_basisSet;
-    other.m_basisSet = nullptr;
+    m_basisSet = std::exchange(other.m_basisSet, nullptr);
 
     delete m_unitCell;
-    m_unitCell = other.m_unitCell;
-    other.m_unitCell = nullptr;
+    m_unitCell = std::exchange(other.m_unitCell, nullptr);
 
     // Copy the layers, if they exist
     if (other.m_layers.maxLayer() > 0)
@@ -357,55 +349,76 @@ MatrixX Molecule::spectra(const std::string& type) const
   return value;
 }
 
+void Molecule::addConstraint(Real value, Index a, Index b, Index c, Index d)
+{
+  Constraint newConstraint(a, b, c, d, value);
+  m_constraints.push_back(newConstraint);
+}
+
+void Molecule::removeConstraint(Index a, Index b, Index c, Index d)
+{
+  // loop through and remove if the constraint matches all atom indexes
+  for (auto it = m_constraints.begin(); it != m_constraints.end();) {
+    if (it->aIndex() == a && it->bIndex() == b && it->cIndex() == c &&
+        it->dIndex() == d) {
+      it = m_constraints.erase(it);
+      return;
+    } else
+      ++it;
+  }
+}
+
 void Molecule::setFrozenAtom(Index atomId, bool frozen)
 {
   if (atomId >= m_atomicNumbers.size())
     return;
 
-  // check if we need to resize
-  unsigned int size = m_frozenAtomMask.rows();
-  if (m_frozenAtomMask.rows() != 3 * m_atomicNumbers.size())
-    m_frozenAtomMask.conservativeResize(3 * m_atomicNumbers.size());
+  Eigen::Index size = m_frozenAtomMask.rows();
+  auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());
 
-  // do we need to initialize new values?
+  if (m_frozenAtomMask.rows() != newSize)
+    m_frozenAtomMask.conservativeResize(newSize);
+
   if (m_frozenAtomMask.rows() > size)
-    for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
-      m_frozenAtomMask[i] = 1.0;
+    for (Eigen::Index i = size; i < m_frozenAtomMask.rows(); ++i)
+      m_frozenAtomMask[i] = 1.0f;
 
-  float value = frozen ? 0.0 : 1.0;
-  if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[atomId * 3] = value;
-    m_frozenAtomMask[atomId * 3 + 1] = value;
-    m_frozenAtomMask[atomId * 3 + 2] = value;
+  float value = frozen ? 0.0f : 1.0f;
+  auto base = static_cast<Eigen::Index>(atomId * 3);
+  if (base <= m_frozenAtomMask.rows() - 3) {
+    m_frozenAtomMask[base] = value;
+    m_frozenAtomMask[base + 1] = value;
+    m_frozenAtomMask[base + 2] = value;
   }
 }
 
 bool Molecule::frozenAtom(Index atomId) const
 {
-  bool frozen = false;
-  if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
-    frozen = (m_frozenAtomMask[atomId * 3] == 0.0 &&
-              m_frozenAtomMask[atomId * 3 + 1] == 0.0 &&
-              m_frozenAtomMask[atomId * 3 + 2] == 0.0);
+  auto base = static_cast<Eigen::Index>(atomId * 3);
+  if (base <= m_frozenAtomMask.rows() - 3) {
+    return (m_frozenAtomMask[base] == 0.0 &&
+            m_frozenAtomMask[base + 1] == 0.0 &&
+            m_frozenAtomMask[base + 2] == 0.0);
   }
-  return frozen;
+  return false;
 }
 
 void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 {
-  // check if we need to resize
-  unsigned int size = m_frozenAtomMask.rows();
-  if (m_frozenAtomMask.rows() != 3 * m_atomicNumbers.size())
-    m_frozenAtomMask.conservativeResize(3 * m_atomicNumbers.size());
+  Eigen::Index size = m_frozenAtomMask.rows();
+  auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());
 
-  // do we need to initialize new values?
+  if (m_frozenAtomMask.rows() != newSize)
+    m_frozenAtomMask.conservativeResize(newSize);
+
   if (m_frozenAtomMask.rows() > size)
-    for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
-      m_frozenAtomMask[i] = 1.0;
+    for (Eigen::Index i = size; i < m_frozenAtomMask.rows(); ++i)
+      m_frozenAtomMask[i] = 1.0f;
 
-  float value = frozen ? 0.0 : 1.0;
-  if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[atomId * 3 + axis] = value;
+  float value = frozen ? 0.0f : 1.0f;
+  auto base = static_cast<Eigen::Index>(atomId * 3);
+  if (axis >= 0 && axis < 3 && base <= m_frozenAtomMask.rows() - 3) {
+    m_frozenAtomMask[base + axis] = value;
   }
 }
 
@@ -548,7 +561,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   m_graph.addVertex();
   m_atomicNumbers.push_back(number);
   // we're not going to easily handle custom elements
-  if (number <= element_count)
+  if (number < element_count)
     m_elements.set(number);
   else
     m_elements.set(element_count - 1); // custom element
@@ -568,11 +581,17 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
 
 void Molecule::swapBond(Index a, Index b)
 {
+  // Allow Argument Dependent Lookup for swap
+  using std::swap;
+
   m_graph.swapEdgeIndices(a, b);
   swap(m_bondOrders[a], m_bondOrders[b]);
 }
 void Molecule::swapAtom(Index a, Index b)
 {
+  // Allow Argument Dependent Lookup for swap
+  using std::swap;
+
   Index max = a > b ? a : b;
   if (m_positions2d.size() >= max)
     swap(m_positions2d[a], m_positions2d[b]);
@@ -697,7 +716,7 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
 size_t calcNlogN(size_t n)
 {
   size_t aproxLog = 1;
-  float aux = static_cast<float>(n);
+  auto aux = static_cast<float>(n);
   while (aux > 2.0f) {
     aux /= 2.0f;
     ++aproxLog;
@@ -1241,9 +1260,9 @@ void Molecule::perceiveBondsFromResidueData()
   }
 }
 
-int Molecule::coordinate3dCount()
+size_t Molecule::coordinate3dCount() const
 {
-  return static_cast<int>(m_coordinates3d.size());
+  return m_coordinates3d.size();
 }
 
 bool Molecule::setCoordinate3d(int coord)
@@ -1260,14 +1279,14 @@ void Molecule::clearCoordinate3d()
   m_coordinates3d.clear();
 }
 
-Array<Vector3> Molecule::coordinate3d(int index) const
+Array<Vector3> Molecule::coordinate3d(size_t index) const
 {
   return m_coordinates3d[index];
 }
 
-bool Molecule::setCoordinate3d(const Array<Vector3>& coords, int index)
+bool Molecule::setCoordinate3d(const Array<Vector3>& coords, size_t index)
 {
-  if (static_cast<int>(m_coordinates3d.size()) <= index)
+  if (m_coordinates3d.size() <= index)
     m_coordinates3d.resize(index + 1);
   m_coordinates3d[index] = coords;
   return true;

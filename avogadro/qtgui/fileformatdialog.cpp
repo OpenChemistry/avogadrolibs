@@ -98,7 +98,7 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
           parentWidget, caption,
           tr(
             "The file extension is missing, so the format cannot be determined."
-            "Do you want to add it?"),
+            " Do you want to add it?"),
           QMessageBox::Abort | QMessageBox::Retry, QMessageBox::Retry);
         switch (reply) {
           default:

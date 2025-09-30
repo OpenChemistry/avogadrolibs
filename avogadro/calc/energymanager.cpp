@@ -6,9 +6,7 @@
 #include "energymanager.h"
 #include "energycalculator.h"
 #include "lennardjones.h"
-
-#include <algorithm>
-#include <memory>
+#include "uff.h"
 
 namespace Avogadro::Calc {
 
@@ -95,6 +93,8 @@ EnergyManager::EnergyManager()
   // LJ is the fallback, since it can handle anything
   // (maybe not well, but it can handle it)
   addModel(new LennardJones);
+  // UFF is good for a wide range of molecules
+  addModel(new UFF);
 }
 
 EnergyManager::~EnergyManager()
@@ -112,7 +112,7 @@ std::set<std::string> EnergyManager::identifiersForMolecule(
   std::set<std::string> identifiers;
 
   // check our models for compatibility
-  for (auto m_model : m_models) {
+  for (auto* m_model : m_models) {
     if (m_model == nullptr)
       continue;
 

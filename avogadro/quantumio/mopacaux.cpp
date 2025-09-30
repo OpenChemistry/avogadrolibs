@@ -87,6 +87,33 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
     molecule.setVibrationLx(normalModes);
   }
 
+  // add charges and properties
+  molecule.setData("totalCharge", m_charge);
+  molecule.setData("totalSpinMultiplicity", m_spin);
+  molecule.setData("dipoleMoment", m_dipoleMoment);
+  molecule.setData("DeltaH", m_heatOfFormation);
+  molecule.setData("Area", m_area);
+  molecule.setData("Volume", m_volume);
+
+  if (m_partialCharges.size() > 0) {
+    MatrixX charges(m_partialCharges.size(), 1);
+    for (size_t i = 0; i < m_partialCharges.size(); ++i)
+      charges(i, 0) = m_partialCharges[i];
+    molecule.setPartialCharges("MOPAC", charges);
+  }
+
+  // if we have more than one coordinate set
+  if (m_coordSets.size() > 1) {
+    for (unsigned int i = 0; i < m_coordSets.size(); ++i) {
+      Core::Array<Vector3> positions;
+      positions.reserve(molecule.atomCount());
+      for (size_t j = 0; j < molecule.atomCount(); ++j) {
+        positions.push_back(m_coordSets[i][j]);
+      }
+      molecule.setCoordinate3d(positions, i);
+    }
+  }
+
   return true;
 }
 
@@ -104,6 +131,65 @@ void MopacAux::processLine(std::istream& in)
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atoms = " << tmp << endl;
     m_atomNums = readArrayElements(in, tmp);
+  } else if (Core::contains(key, "HEAT_OF_FORMATION:KCAL/MOL")) {
+    vector<string> list = Core::split(line, '=');
+    if (list.size() > 1) {
+      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
+      m_heatOfFormation = Core::lexicalCast<double>(list[1]);
+      cout << "Heat of formation = " << m_heatOfFormation << " kcal/mol"
+           << endl;
+    }
+  } else if (Core::contains(key, "AREA:SQUARE ANGSTROMS")) {
+    vector<string> list = Core::split(line, '=');
+    if (list.size() > 1) {
+      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
+      m_area = Core::lexicalCast<double>(list[1]);
+      cout << "Area = " << m_area << " square Angstroms" << endl;
+    }
+  } else if (Core::contains(key, "VOLUME:CUBIC ANGSTROMS")) {
+    vector<string> list = Core::split(line, '=');
+    if (list.size() > 1) {
+      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
+      m_volume = Core::lexicalCast<double>(list[1]);
+      cout << "Volume = " << m_volume << " cubic Angstroms" << endl;
+    }
+  } else if (Core::contains(key, "KEYWORDS=")) {
+    // parse for charge and spin
+    std::vector<std::string> list = Core::split(key, ' ');
+    for (size_t i = 0; i < list.size(); ++i) {
+      if (Core::contains(list[i], "CHARGE=")) {
+        m_charge = Core::lexicalCast<int>(list[i].substr(7));
+      } else if (Core::contains(list[i], "DOUBLET")) {
+        m_spin = 2;
+      } else if (Core::contains(list[i], "TRIPLET")) {
+        m_spin = 3;
+      } else if (Core::contains(list[i], "QUARTET")) {
+        m_spin = 4;
+      } else if (Core::contains(list[i], "QUINTET")) {
+        m_spin = 5;
+      } else if (Core::contains(list[i], "SEXTET")) {
+        m_spin = 6;
+      } else if (Core::contains(list[i], "SEPTET")) {
+        m_spin = 7;
+      } else if (Core::contains(list[i], "OCTET")) {
+        m_spin = 8;
+      } else if (Core::contains(list[i], "NONET")) {
+        m_spin = 9;
+      }
+    }
+  } else if (Core::contains(key, "DIP_VEC:DEBYE")) {
+    vector<string> list = Core::split(line, '=');
+    if (list.size() > 1) {
+      // split based on spaces
+      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
+      vector<string> dipole = Core::split(list[1], ' ');
+      if (dipole.size() == 3) {
+        m_dipoleMoment = Vector3(Core::lexicalCast<double>(dipole[0]),
+                                 Core::lexicalCast<double>(dipole[1]),
+                                 Core::lexicalCast<double>(dipole[2]));
+      }
+    }
+    cout << "Dipole moment " << m_dipoleMoment.norm() << " Debye" << endl;
   } else if (Core::contains(key, "AO_ATOMINDEX")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atomic orbitals = " << tmp << endl;
@@ -118,6 +204,10 @@ void MopacAux::processLine(std::istream& in)
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of zeta values = " << tmp << endl;
     m_zeta = readArrayD(in, tmp);
+  } else if (Core::contains(key, "ATOM_CHARGES")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    cout << "Number of atomic charges = " << tmp << endl;
+    m_partialCharges = readArrayD(in, tmp);
   } else if (Core::contains(key, "ATOM_PQN")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of PQN values =" << tmp << endl;
@@ -128,10 +218,11 @@ void MopacAux::processLine(std::istream& in)
       m_electrons = Core::lexicalCast<int>(list[1]);
       cout << "Number of electrons = " << m_electrons << endl;
     }
-  } else if (Core::contains(key, "ATOM_X_OPT:ANGSTROMS")) {
+  } else if (Core::contains(key, "ATOM_X")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atomic coordinates = " << tmp << endl;
     m_atomPos = readArrayVec(in, tmp);
+    m_coordSets.push_back(m_atomPos);
   } else if (Core::contains(key, "OVERLAP_MATRIX")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
     cout << "Size of lower half triangle of overlap matrix = " << tmp << endl;

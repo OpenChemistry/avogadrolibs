@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -19,10 +8,11 @@
 #include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-using Avogadro::QtGui::RWAtom;
 using Avogadro::QtGui::HydrogenTools;
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::RWAtom;
 using Avogadro::QtGui::RWMolecule;
+using namespace std::string_literals;
 
 TEST(HydrogenToolsTest, removeAllHydrogens)
 {
@@ -59,7 +49,7 @@ TEST(HydrogenToolsTest, removeAllHydrogens)
   mol.addBond(C3, H);
 
   HydrogenTools::removeAllHydrogens(mol);
-  EXPECT_EQ(std::string("C3"), mol.molecule().formula());
+  EXPECT_EQ("C3"s, mol.molecule().formula());
 }
 
 TEST(HydrogenToolsTest, adjustHydrogens_C3H8)
@@ -75,7 +65,7 @@ TEST(HydrogenToolsTest, adjustHydrogens_C3H8)
   HydrogenTools::adjustHydrogens(mol);
   EXPECT_EQ(11, mol.atomCount());
   EXPECT_EQ(10, mol.bondCount());
-  EXPECT_EQ(std::string("C3H8"), mol.molecule().formula());
+  EXPECT_EQ("C3H8"s, mol.molecule().formula());
 }
 
 TEST(HydrogenToolsTest, adjustHydrogens_C2H7NO)
@@ -93,7 +83,7 @@ TEST(HydrogenToolsTest, adjustHydrogens_C2H7NO)
   HydrogenTools::adjustHydrogens(mol);
   EXPECT_EQ(11, mol.atomCount());
   EXPECT_EQ(10, mol.bondCount());
-  EXPECT_EQ(std::string("C2H7NO"), mol.molecule().formula());
+  EXPECT_EQ("C2H7NO"s, mol.molecule().formula());
 }
 
 TEST(HydrogenToolsTest, adjustHydrogens_C2H4O)
@@ -109,7 +99,7 @@ TEST(HydrogenToolsTest, adjustHydrogens_C2H4O)
   HydrogenTools::adjustHydrogens(mol);
   EXPECT_EQ(7, mol.atomCount());
   EXPECT_EQ(6, mol.bondCount());
-  EXPECT_EQ(std::string("C2H4O"), mol.molecule().formula());
+  EXPECT_EQ("C2H4O"s, mol.molecule().formula());
 }
 
 TEST(HydrogenToolsTest, adjustHydrogens_adjustments)
@@ -148,7 +138,7 @@ TEST(HydrogenToolsTest, adjustHydrogens_adjustments)
     RWAtom C2 = mol.addAtom(6); // Underbond this atom
     mol.addBond(C2, mol.addAtom(1));
 
-    EXPECT_EQ(std::string("C2H11"), mol.molecule().formula());
+    EXPECT_EQ("C2H11"s, mol.molecule().formula());
     HydrogenTools::adjustHydrogens(mol, adjustment);
     EXPECT_EQ(expectedFormula, mol.molecule().formula());
   }

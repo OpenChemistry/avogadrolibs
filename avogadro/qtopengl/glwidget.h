@@ -13,7 +13,12 @@
 #include <avogadro/rendering/glrenderer.h>
 
 #include <QPointer>
+
+#if QT_VERSION >= 0x060000
+#include <QtOpenGLWidgets/QOpenGLWidget>
+#else
 #include <QOpenGLWidget>
+#endif
 
 class QTimer;
 
@@ -112,6 +117,11 @@ public slots:
   void updateScene();
 
   /**
+   * Request update of molecule properties (e.g., dipole moment)
+   */
+  void updateMolecule();
+
+  /**
    * Clear the contents of the scene.
    */
   void clearScene();
@@ -196,7 +206,7 @@ private:
   QTimer* m_renderTimer;
 };
 
-} // End QtOpenGL namespace
-} // End Avogadro namespace
+} // namespace QtOpenGL
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTOPENGL_GLWIDGET_H

@@ -12,6 +12,7 @@
 
 #include "array.h"
 #include "bond.h"
+#include "constraint.h"
 #include "elements.h"
 #include "graph.h"
 #include "layer.h"
@@ -19,12 +20,12 @@
 #include "vector.h"
 
 #include <bitset>
+#include <cstddef>
 #include <list>
 #include <map>
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class BasisSet;
 class Cube;
 class Mesh;
@@ -44,16 +45,16 @@ class AVOGADROCORE_EXPORT Molecule
 {
 public:
   /** Typedef for Atom class. */
-  typedef Atom AtomType;
+  using AtomType = Atom;
 
   /** Typedef for Bond class. */
-  typedef Bond BondType;
+  using BondType = Bond;
   /** Type for custom element map. */
-  typedef std::map<unsigned char, std::string> CustomElementMap;
+  using CustomElementMap = std::map<unsigned char, std::string>;
 
   /** Type for element masks (e.g., does this molecule contain certain elements)
    */
-  typedef std::bitset<element_count> ElementMask;
+  using ElementMask = std::bitset<element_count>;
 
   /** Creates a new, empty molecule. */
   Molecule();
@@ -597,10 +598,10 @@ public:
    */
   void perceiveSubstitutedCations();
 
-  int coordinate3dCount();
+  size_t coordinate3dCount() const;
   bool setCoordinate3d(int coord);
-  Array<Vector3> coordinate3d(int index) const;
-  bool setCoordinate3d(const Array<Vector3>& coords, int index);
+  Array<Vector3> coordinate3d(size_t index) const;
+  bool setCoordinate3d(const Array<Vector3>& coords, size_t index);
 
   /**
    * Clear coordinate sets (except the default set)
@@ -754,6 +755,27 @@ public:
    */
   bool setAtomicNumber(Index atomId, unsigned char atomicNumber);
 
+  /** @name Constraints
+   * Methods for distance, angle, torsion, etc. constraints
+   */
+  ///@{
+  void addConstraint(Real Value, Index a, Index b, Index c = MaxIndex,
+                     Index d = MaxIndex);
+  void addConstraint(Constraint& c) { m_constraints.push_back(c); }
+
+  void removeConstraint(Index a, Index b, Index c = MaxIndex,
+                        Index d = MaxIndex);
+  void clearConstraints() { m_constraints.clear(); }
+  void setConstraints(const std::vector<Core::Constraint>& constraints)
+  {
+    m_constraints = constraints;
+  }
+  std::vector<Core::Constraint>& constraints() { return m_constraints; };
+  const std::vector<Core::Constraint>& constraints() const
+  {
+    return m_constraints;
+  }
+
   /**
    * Freeze or unfreeze an atom for optimization
    */
@@ -772,18 +794,31 @@ public:
    */
   void setFrozenAtomAxis(Index atomId, int axis, bool frozen);
 
+  /**
+   * @return the frozen status of atoms (i.e., 3*N array of 1.0 or 0.0)
+   * 0.0 means the atom is frozen, 1.0 means the atom is not frozen.
+   * (i.e., multiply this mask with gradients to freeze atoms)
+   */
   Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }
+  ///@} end of constraint methods
 
   /**
    * @return a map of components and count.
    */
   std::map<unsigned char, size_t> composition() const;
 
+  /**
+   * @return the atom pairs for all bonds to the atom indexed at @a index.
+   */
   Array<std::pair<Index, Index>> getAtomBonds(Index index) const;
+  /**
+   * @return the bond orders for all bonds to the atom indexed at @a index.
+   */
   Array<unsigned char> getAtomOrders(Index index) const;
 
   inline static std::pair<Index, Index> makeBondPair(const Index& a,
                                                      const Index& b);
+  /** Remove bonds to @a atom */
   bool removeBonds(Index atom);
 
   void addBonds(const Array<std::pair<Index, Index>>& bonds,
@@ -847,6 +882,7 @@ protected:
   // This will be stored from the last space group operation
   unsigned short m_hallNumber = 0;
 
+  std::vector<Core::Constraint> m_constraints;
   Eigen::VectorXd m_frozenAtomMask;
 
 private:
@@ -861,14 +897,14 @@ private:
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
 {
 public:
-  Atom() : AtomTemplate<Molecule>() {}
+  Atom() = default;
   Atom(Molecule* m, Index i) : AtomTemplate<Molecule>(m, i) {}
 };
 
 class AVOGADROCORE_EXPORT Bond : public BondTemplate<Molecule>
 {
 public:
-  Bond() : BondTemplate<Molecule>() {}
+  Bond() = default;
   Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
 };
 
@@ -1178,7 +1214,6 @@ inline unsigned char Molecule::atomicNumber(Index atomId) const
                                          : InvalidElement;
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_MOLECULE_H

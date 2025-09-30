@@ -29,10 +29,6 @@ BatchJob::BatchJob(const QString& scriptFilePath, QObject* par)
   setup();
 }
 
-BatchJob::~BatchJob()
-{
-}
-
 BatchJob::BatchId BatchJob::submitNextJob(const Core::Molecule& mol)
 {
   // Is everything configured?
@@ -220,4 +216,4 @@ void BatchJob::setup()
           SLOT(handleErrorResponse(int, int, QString, QJsonValue)));
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

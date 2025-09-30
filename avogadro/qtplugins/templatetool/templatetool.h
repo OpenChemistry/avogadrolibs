@@ -30,7 +30,7 @@ class TemplateTool : public QtGui::ToolPlugin
   Q_OBJECT
 public:
   explicit TemplateTool(QObject* parent_ = NULL);
-  ~TemplateTool();
+  ~TemplateTool() override;
 
   QString name() const override { return tr("Template tool"); }
   QString description() const override { return tr("Template tool"); }

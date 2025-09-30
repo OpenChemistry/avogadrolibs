@@ -6,15 +6,12 @@
 #include "secondarystructure.h"
 
 #include <cstdlib>
-#include <iostream>
 #include <limits>
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 
 namespace Avogadro::Core {
-
-using namespace std;
 
 SecondaryStructureAssigner::SecondaryStructureAssigner(Molecule* mol)
   : m_molecule(mol)
@@ -23,7 +20,7 @@ SecondaryStructureAssigner::SecondaryStructureAssigner(Molecule* mol)
 
 SecondaryStructureAssigner::~SecondaryStructureAssigner()
 {
-  for (auto hBond : m_hBonds)
+  for (auto* hBond : m_hBonds)
     delete hBond;
   m_hBonds.clear();
 }
@@ -44,21 +41,37 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
 
   float infinity = std::numeric_limits<float>::max();
   // Then assign the alpha helix by going through the hBond records
-  for (auto hBond : m_hBonds) {
+  for (auto* hBond : m_hBonds) {
     if (hBond->distSquared < infinity) {
       // check to see how far apart the residues are
       int separation = std::abs(int(hBond->residue - hBond->residuePair));
 
-      // just alpha for now
-      if (separation == 4) {
-        m_molecule->residue(hBond->residue)
-          .setSecondaryStructure(Residue::SecondaryStructure::alphaHelix);
+      switch (separation) {
+        case 3: { // 3-10
+          m_molecule->residue(hBond->residue)
+            .setSecondaryStructure(Residue::SecondaryStructure::helix310);
+          break;
+        }
+        case 4: { // alpha
+          m_molecule->residue(hBond->residue)
+            .setSecondaryStructure(Residue::SecondaryStructure::alphaHelix);
+          break;
+        }
+        case 5: { // pi
+          m_molecule->residue(hBond->residue)
+            .setSecondaryStructure(Residue::SecondaryStructure::piHelix);
+          break;
+        }
+        default: {
+          break;
+        }
       }
-      // TODO
-      // 3-10 helix
-      // pi-helix
     }
   }
+
+  // If there are less than 3 residues, don't do anything
+  if (residueCount < 3)
+    return;
 
   // Plug gaps in the helix
   for (size_t i = 1; i < residueCount - 1; ++i) {
@@ -79,7 +92,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Then assign the beta sheet - but only if a residue isn't assigned
-  for (auto hBond : m_hBonds) {
+  for (auto* hBond : m_hBonds) {
     if (hBond->distSquared < infinity) {
       if (m_molecule->residue(hBond->residue).secondaryStructure() ==
           Residue::SecondaryStructure::undefined)
@@ -89,7 +102,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Check that sheets bond to other sheets
-  for (auto hBond : m_hBonds) {
+  for (auto* hBond : m_hBonds) {
     if (hBond->distSquared < infinity) {
       // find the match
       auto current = m_molecule->residue(hBond->residue);
@@ -169,7 +182,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
   const float maxDistSq = maxDist * maxDist; // 10.24
 
   // delete any previous records
-  for (auto hBond : m_hBonds)
+  for (auto* hBond : m_hBonds)
     delete hBond;
   m_hBonds.clear();
 
@@ -217,11 +230,11 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
   // now loop through the sorted list (so we can exit quickly)
   int n = m_hBonds.size();
   for (int i = 0; i < n; ++i) {
-    auto recordI = m_hBonds[i];
+    auto* recordI = m_hBonds[i];
     const Residue& residueI = m_molecule->residue(recordI->residue);
 
     for (int j = i + 1; j < n; ++j) {
-      auto recordJ = m_hBonds[j];
+      auto* recordJ = m_hBonds[j];
       const Residue& residueJ = m_molecule->residue(recordJ->residue);
 
       // skip if we're not on the same chain

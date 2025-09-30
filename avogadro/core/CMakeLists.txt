@@ -20,6 +20,8 @@ target_sources(Headers PUBLIC
     array.h
     avogadrocore.h
     color3f.h
+    constraint.h
+    contrastcolor.h
     coordinateset.h
     matrix.h
     types.h
@@ -108,10 +110,10 @@ if(NOT PYTHON_WHEEL_BUILD)
 endif()
 
 if(USE_SPGLIB)
-  find_package(SPGLIB REQUIRED)
+  find_package(Spglib REQUIRED)
   avogadro_headers(Core avospglib.h)
   target_sources(Core PRIVATE avospglib.cpp)
-  target_link_libraries(Core PRIVATE spglib::spglib)
+  target_link_libraries(Core PRIVATE Spglib::symspg)
 endif()
 
 # The std::shared_mutex class needs pthreads on Linux.

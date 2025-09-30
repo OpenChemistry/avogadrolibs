@@ -10,15 +10,14 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class QTAIMExtension : public QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
   explicit QTAIMExtension(QObject* parent = nullptr);
-  ~QTAIMExtension() override;
+  ~QTAIMExtension() override = default;
 
   QString name() const override { return tr("QTAIM"); }
   QString description() const override { return tr("QTAIM extension"); }
@@ -36,7 +35,6 @@ private:
   QtGui::Molecule* m_molecule;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // end namespace Avogadro::QtPlugins
 
 #endif // QTAIMEXTENSION_H

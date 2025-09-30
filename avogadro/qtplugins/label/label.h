@@ -30,6 +30,8 @@ public:
   }
 
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
+
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
@@ -39,12 +41,15 @@ public:
   }
 public slots:
   void atomLabelType(int index);
+  void bondLabelType(int index);
   void residueLabelType(int index);
   void setRadiusScalar(double radius);
   void setColor(const QColor& color);
 
 private:
   void processAtom(const Core::Molecule& molecule, Rendering::GroupNode& node,
+                   size_t layer);
+  void processBond(const Core::Molecule& molecule, Rendering::GroupNode& node,
                    size_t layer);
   void processResidue(const Core::Molecule& molecule,
                       Rendering::GroupNode& node, size_t layer);

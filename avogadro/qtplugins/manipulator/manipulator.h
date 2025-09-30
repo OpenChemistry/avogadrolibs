@@ -70,8 +70,9 @@ private:
   void updatePressedButtons(QMouseEvent*, bool release);
 
   void resetObject() { m_object = Rendering::Identifier(); }
-  void translate(Vector3 delta);
-  void rotate(Vector3 delta, Vector3 centroid);
+  void translate(Vector3 delta, bool moveSelected = true);
+  void rotate(Vector3 delta, Vector3 centroid, bool moveSelected = true);
+  void axisRotate(Vector3 delta, Vector3 centroid, bool moveSelected = true);
   void tilt(Vector3 delta, Vector3 centroid);
 
   QAction* m_activateAction;

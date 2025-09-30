@@ -9,6 +9,16 @@
 
 namespace Avogadro::Core {
 
+bool UnitCell::isRegular(const Matrix3& m)
+{
+  constexpr double tiny = 1e-6;
+  const auto a = m.col(0).norm();
+  const auto b = m.col(1).norm();
+  const auto c = m.col(2).norm();
+  const auto w = a * b * c;
+  return w > 0.0 && std::fabs(m.determinant()) > tiny * w;
+}
+
 void UnitCell::setCellParameters(Real a_, Real b_, Real c_, Real al, Real be,
                                  Real ga)
 {
@@ -50,4 +60,4 @@ Real UnitCell::signedAngleRadians(const Vector3& v1, const Vector3& v2,
   return signDet > 0.f ? angle : -angle;
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::Core

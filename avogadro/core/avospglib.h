@@ -8,11 +8,9 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
 #include "molecule.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class AvoSpglib avospglib.h <avogadro/core/avospglib.h>
@@ -35,8 +33,7 @@ public:
    * @param cartTol The cartesian tolerance for spglib.
    * @return The Hall number for the crystal.
    */
-  static unsigned short getHallNumber(Molecule& mol,
-                                      double cartTol = 1e-5);
+  static unsigned short getHallNumber(Molecule& mol, double cartTol = 1e-5);
 
   /**
    * Use spglib to reduce the crystal to a primitive cell. Unless the molecule
@@ -87,7 +84,6 @@ private:
                               bool idealize);
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_AVO_SPGLIB_H

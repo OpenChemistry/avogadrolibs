@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class CmlFormat cmlformat.h <avogadro/io/cmlformat.h>
@@ -20,8 +19,8 @@ namespace Io {
 class AVOGADROIO_EXPORT CmlFormat : public FileFormat
 {
 public:
-  CmlFormat();
-  ~CmlFormat() override;
+  CmlFormat() = default;
+  ~CmlFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -48,7 +47,6 @@ public:
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io
 
 #endif // CMLFORMAT_H

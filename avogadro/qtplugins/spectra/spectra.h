@@ -13,10 +13,6 @@ class QDialog;
 
 namespace Avogadro {
 
-namespace VTK {
-class ChartDialog;
-}
-
 namespace QtPlugins {
 
 class SpectraDialog;
@@ -31,7 +27,7 @@ class Spectra : public QtGui::ExtensionPlugin
 
 public:
   explicit Spectra(QObject* parent = nullptr);
-  ~Spectra() override;
+  ~Spectra() override = default;
 
   QString name() const override { return tr("Spectra"); }
 

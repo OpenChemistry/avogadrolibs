@@ -121,9 +121,10 @@ void EditorToolWidget::updateElementCombo()
   // Clear and repopulate combo
   m_ui->element->clear();
   foreach (unsigned char atomicNum, allElements) {
-    m_ui->element->addItem(
-      QString("%1 (%2)").arg(QtGui::ElementTranslator::name(atomicNum)).arg(atomicNum),
-      atomicNum);
+    m_ui->element->addItem(QString("%1 (%2)")
+                             .arg(QtGui::ElementTranslator::name(atomicNum))
+                             .arg(atomicNum),
+                           atomicNum);
   }
   m_ui->element->insertSeparator(m_ui->element->count());
   m_ui->element->addItem(tr("Other…"), ELEMENT_SELECTOR_TAG);
@@ -220,4 +221,4 @@ void EditorToolWidget::saveElements()
   QSettings().setValue("editortool/userElements", atomicNums);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

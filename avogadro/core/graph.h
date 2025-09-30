@@ -8,15 +8,12 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
 #include "array.h"
 
-#include <cstddef>
 #include <set>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class Graph graph.h <avogadro/core/graph.h>
@@ -30,13 +27,13 @@ class AVOGADROCORE_EXPORT Graph
 {
 public:
   /** Creates a new, empty graph. */
-  Graph();
+  Graph() = default;
 
   /** Creates a new graph containing size @p n vertices. */
   explicit Graph(size_t n);
 
   /** Destroys the graph. */
-  ~Graph();
+  ~Graph() = default;
 
   /**
    * Sets the number of vertices in the graph to size @p n.
@@ -162,7 +159,8 @@ public:
 
   /**
    * @return an array with all edges, where every element contains the indices
-   * of both endpoints of the edge with index equal to the element's array index.
+   * of both endpoints of the edge with index equal to the element's array
+   * index.
    */
   const Array<std::pair<size_t, size_t>>& edgePairs() const;
 
@@ -200,7 +198,7 @@ private:
   std::vector<std::vector<size_t>> m_adjacencyList;
   std::vector<std::vector<size_t>> m_edgeMap;
   Array<std::pair<size_t, size_t>> m_edgePairs;
-  
+
   /** @return the (new or reused) index of a newly created empty subgraph. */
   int createNewSubgraph() const;
 
@@ -224,7 +222,6 @@ private:
   mutable std::set<size_t> m_loneVertices;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_GRAPH_H

@@ -75,7 +75,7 @@ Select::Select(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(selectSidechainAtoms()));
   m_actions.append(action);
 
-  action = new QAction(tr("Select Water…"), this);
+  action = new QAction(tr("Select Water"), this);
   action->setProperty("menu priority", 850);
   connect(action, SIGNAL(triggered()), SLOT(selectWater()));
   m_actions.append(action);
@@ -450,21 +450,25 @@ void Select::selectAtomIndex()
     // check if it's a range
     if (item.contains('-')) {
       auto range = item.split('-');
-      if (range.size() >= 2) {
+      if (range.size() == 2) {
         bool ok1, ok2;
+        int k = m_molecule->atomCount();
         int start = range.first().toInt(&ok1);
         int last = range.back().toInt(&ok2);
         if (ok1 && ok2) {
-          for (int i = start; i <= last; ++i)
-            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
-                                                        undoText);
+          if (start < k)
+            for (int i = start; i <= last; ++i)
+              m_molecule->undoMolecule()->setAtomSelected(
+                i, evalSelect(true, i), undoText);
         }
       }
     } else {
       int i = item.toInt(&ok);
+      int k = m_molecule->atomCount();
       if (ok)
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
-                                                    undoText);
+        if (i < k)
+          m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                      undoText);
     }
   }
 
@@ -521,7 +525,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // check if name matches specified (e.g. HIS57 is really a HIS)
-      }   // index makes sense
+      } // index makes sense
     } else {
       // standard residue name
       for (const auto& residue : m_molecule->residues()) {
@@ -533,7 +537,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // residue matches label
-      }   // for(residues)
+      } // for(residues)
       continue;
     } // 3-character labels
   }

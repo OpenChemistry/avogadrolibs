@@ -17,7 +17,7 @@ VibrationDialog::VibrationDialog(QWidget* parent_, Qt::WindowFlags f)
 {
   m_ui->setupUi(this);
 
-  m_ui->tableView->verticalHeader()->setVisible(false);
+  m_ui->tableView->verticalHeader()->setVisible(true);
   m_ui->tableView->horizontalHeader()->setSectionResizeMode(
     QHeaderView::Stretch);
   m_ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);

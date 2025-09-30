@@ -5,6 +5,8 @@
 
 #include "extensionplugin.h"
 
+#include <QWidget>
+
 namespace Avogadro::QtGui {
 
 ExtensionPlugin::ExtensionPlugin(QObject* parent_) : QObject(parent_) {}
@@ -25,9 +27,12 @@ bool ExtensionPlugin::readMolecule(Molecule&)
 
 void ExtensionPlugin::setScene(Rendering::Scene*) {}
 
-void ExtensionPlugin::setCamera(Rendering::Camera* camera) {}
+void ExtensionPlugin::setCamera([[maybe_unused]] Rendering::Camera* camera) {}
 
-void ExtensionPlugin::setActiveWidget(QWidget* widget) {}
+void ExtensionPlugin::setActiveWidget(QWidget* widget)
+{
+  setParent(widget);
+}
 
 bool ExtensionPlugin::handleCommand(const QString& command,
                                     const QVariantMap& options)

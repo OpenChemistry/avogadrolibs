@@ -15,6 +15,8 @@
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/qtgui/hydrogentools.h>
 
+#include <QtCore/QDebug>
+
 namespace Avogadro::QtGui {
 
 using Core::Array;
@@ -173,7 +175,22 @@ bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3>& pos,
 bool RWMolecule::setAtomLabel(Index atomId, const std::string& label,
                               const QString& undoText)
 {
+  if (atomId >= atomCount())
+    return false;
+
   auto* comm = new ModifyAtomLabelCommand(*this, atomId, label);
+  comm->setText(undoText);
+  m_undoStack.push(comm);
+  return true;
+}
+
+bool RWMolecule::setBondLabel(Index bondId, const std::string& label,
+                              const QString& undoText)
+{
+  if (bondId >= bondCount())
+    return false;
+
+  auto* comm = new ModifyBondLabelCommand(*this, bondId, label);
   comm->setText(undoText);
   m_undoStack.push(comm);
   return true;
@@ -389,7 +406,7 @@ void RWMolecule::addUnitCell()
   m_molecule.setUnitCell(cell);
 
   auto* comm = new AddUnitCellCommand(*this, *m_molecule.unitCell());
-  comm->setText(tr("Add Unit Cell"));
+  comm->setText(tr("Add Unit Cell…"));
   m_undoStack.push(comm);
   emitChanged(Molecule::UnitCell | Molecule::Added);
 }
@@ -452,6 +469,11 @@ void RWMolecule::editUnitCell(Matrix3 cellMatrix, CrystalTools::Options options)
   // If there is no unit cell, there is nothing to do
   if (!m_molecule.unitCell())
     return;
+
+  if (!UnitCell::isRegular(cellMatrix)) {
+    qWarning() << "cell matrix is singular";
+    return;
+  }
 
   // Make a copy of the molecule to edit so we can store the old one
   // If the user has "TransformAtoms" set in the options, then

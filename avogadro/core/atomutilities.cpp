@@ -5,7 +5,6 @@
 
 #include "atomutilities.h"
 
-#include <algorithm>
 #include <cmath>
 #include <vector>
 
@@ -52,8 +51,28 @@ AtomHybridization AtomUtilities::perceiveHybridization(const Atom& atom)
       hybridization = SP; // sp
     else if (numDoubleBonds > 0)
       hybridization = SP2; // sp2
-  }
 
+    // special case for nitrogen in an amide
+    if (atom.atomicNumber() == 7 && hybridization == SP3) {
+      // look through the neighbors for a C=O
+      for (auto bond : bonds) {
+        Atom a1 = bond.getOtherAtom(atom);
+        if (a1.atomicNumber() == 6 && bond.order() == 1) {
+          const NeighborListType nbrBonds(atom.molecule()->bonds(a1));
+          for (auto nbrBond : nbrBonds) {
+            Atom a2 = nbrBond.getOtherAtom(a1);
+            if (a2.index() == atom.index())
+              continue; // we want a *new* atom, not the nitrogen
+
+            if (a2.atomicNumber() == 8 && nbrBond.order() == 2) {
+              hybridization = SP2;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
   return hybridization;
 }
 
@@ -162,7 +181,7 @@ Vector3 AtomUtilities::generateNewBondVector(
       default:
         Vector3 v2 = bond1.cross(bond2); // find the perpendicular
         v2.normalize();
-        //newPos = bond1 - v2 * tan(DEG_TO_RAD * (M_TETRAHED));
+        // newPos = bond1 - v2 * tan(DEG_TO_RAD * (M_TETRAHED));
         newPos = v2 + v1 * (sqrt(2.0) / 2.0);
     }
 
@@ -196,8 +215,7 @@ Vector3 AtomUtilities::generateNewBondVector(
   for (int attempt = 0; !success && attempt < 10; ++attempt) {
     newPos = Vector3::Random().normalized();
     success = true;
-    for (auto it = allVectors.begin(),
-                                              itEnd = allVectors.end();
+    for (auto it = allVectors.begin(), itEnd = allVectors.end();
          success && it != itEnd; ++it) {
       success = newPos.dot(*it) < cosRadTol;
     }
@@ -205,4 +223,4 @@ Vector3 AtomUtilities::generateNewBondVector(
   return newPos;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

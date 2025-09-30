@@ -6,7 +6,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -41,30 +41,42 @@ jobs:
         fi
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout molecules
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/molecules
         path: molecules
 
+    - name: Checkout fragments
+      uses: actions/checkout@v5.0.0
+      with:
+        repository: openchemistry/fragments
+        path: fragments
+
+    - name: Checkout crystals
+      uses: actions/checkout@v5.0.0
+      with:
+        repository: openchemistry/crystals
+        path: crystals
+
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         path: avogadrolibs
 
     - name: Checkout i18n
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
@@ -85,10 +97,10 @@ jobs:
 
     - name: Fix Mac plugins
       if: runner.os == 'macOS'
-      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel 
+      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
       run: |
         for plugin in *.so; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner' | awk '{print $1}'`; do 
+          for libpath in `otool -L ${plugin} | grep '/Users/runner' | awk '{print $1}'`; do
             export lib=`echo $libpath | cut -d '/' -f 10`;
             echo "Fixing $plugin $lib $libpath"
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
@@ -96,7 +108,7 @@ jobs:
         done
         cd .. # build/prefix/lib
         for plugin in libinchi.?.?.?.dylib; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner' | awk '{print $1}'`; do 
+          for libpath in `otool -L ${plugin} | grep '/Users/runner' | awk '{print $1}'`; do
             export lib=`echo $libpath | cut -d '/' -f 10`;
             echo "Fixing $plugin $lib $libpath"
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
@@ -107,7 +119,7 @@ jobs:
         # finally, fixup the binaries
         #cd ../bin
         #for exe in obabel obmm eht_bind genXrdPattern; do
-        #  for libpath in `otool -L ${exe} | grep '/Users/runner' | awk '{print $1}'`; do 
+        #  for libpath in `otool -L ${exe} | grep '/Users/runner' | awk '{print $1}'`; do
         #    export lib=`echo $libpath | cut -d '/' -f 10`;
         #    echo "Fixing $exe $lib $libpath"
         #    install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe

@@ -4,7 +4,9 @@
 ******************************************************************************/
 
 #include "propertyview.h"
+#include "core/avogadrocore.h"
 
+#include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
@@ -35,7 +37,7 @@ namespace Avogadro {
 using QtGui::Molecule;
 
 PropertyView::PropertyView(PropertyType type, QWidget* parent)
-  : QTableView(parent), m_molecule(nullptr), m_type(type), m_model(nullptr)
+  : QTableView(parent), m_type(type), m_molecule(nullptr), m_model(nullptr)
 {
   QString title;
   switch (type) {
@@ -74,7 +76,10 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
   // You can select everything (e.g., to copy, select all, etc.)
   setCornerButtonEnabled(true);
   setSelectionBehavior(QAbstractItemView::SelectRows);
-  setSelectionMode(QAbstractItemView::ExtendedSelection);
+  if (type == ConformerType)
+    setSelectionMode(QAbstractItemView::SingleSelection);
+  else
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
   // Alternating row colors
   setAlternatingRowColors(true);
   // Allow sorting the table
@@ -109,12 +114,12 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
       return;
 
     if (m_type == PropertyType::AtomType) {
-      if (rowNum >= m_molecule->atomCount())
+      if (static_cast<Index>(rowNum) >= m_molecule->atomCount())
         return;
 
       m_molecule->setAtomSelected(rowNum, true);
     } else if (m_type == PropertyType::BondType) {
-      if (rowNum >= m_molecule->bondCount())
+      if (static_cast<Index>(rowNum) >= m_molecule->bondCount())
         return;
 
       auto bondPair = m_molecule->bondPair(rowNum);
@@ -137,6 +142,19 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
         m_molecule->undoMolecule()->setAtomSelected(std::get<2>(torsion), true);
         m_molecule->undoMolecule()->setAtomSelected(std::get<3>(torsion), true);
       }
+    } else if (m_type == PropertyType::ResidueType) {
+      // select all the atoms in the residue
+      if (m_model != nullptr) {
+        const auto residue = m_molecule->residue(rowNum);
+        auto atoms = residue.residueAtoms();
+        for (Index i = 0; i < atoms.size(); ++i) {
+          const auto atom = atoms[i];
+          m_molecule->undoMolecule()->setAtomSelected(atom.index(), true);
+        }
+      }
+    } else if (m_type == PropertyType::ConformerType) {
+      // selecting a row means switching to that conformer
+      m_molecule->setCoordinate3d(rowNum);
     }
   } // end loop through selected
 
@@ -224,6 +242,102 @@ void PropertyView::copySelectedRowsToClipboard()
   QApplication::clipboard()->setText(text);
 }
 
+void PropertyView::constrainSelectedRows()
+{
+  // get the selected rows (if any)
+  QModelIndexList selectedRows = selectionModel()->selectedRows();
+
+  // if nothing is selected, we're done
+  if (selectedRows.isEmpty())
+    return;
+
+  if (m_molecule == nullptr)
+    return;
+
+  // loop through the selected rows
+  for (const auto& index : selectedRows) {
+    if (!index.isValid())
+      continue;
+
+    // get the row number
+    bool ok;
+    int rowNum = model()
+                   ->headerData(index.row(), Qt::Vertical)
+                   .toString()
+                   .split(" ")
+                   .last()
+                   .toLong(&ok) -
+                 1;
+    if (!ok)
+      continue;
+
+    if (m_type == PropertyType::BondType) {
+      // get the start and end atoms and the distance from the table data
+      auto bond = m_molecule->bond(rowNum);
+      auto atom1 = bond.atom1();
+      auto atom2 = bond.atom2();
+      Real distance = bond.length();
+      m_molecule->addConstraint(distance, atom1.index(), atom2.index());
+    } else if (m_type == PropertyType::AngleType) {
+      if (m_model != nullptr) {
+        auto angle = m_model->getAngle(rowNum);
+        auto atom1 = m_molecule->atom(std::get<0>(angle));
+        auto atom2 = m_molecule->atom(std::get<1>(angle));
+        auto atom3 = m_molecule->atom(std::get<2>(angle));
+        Real angleValue = m_model->getAngleValue(rowNum);
+        m_molecule->addConstraint(angleValue, atom1.index(), atom2.index(),
+                                  atom3.index());
+      }
+    } else if (m_type == PropertyType::TorsionType) {
+      if (m_model != nullptr) {
+        auto torsion = m_model->getTorsion(rowNum);
+        auto atom1 = m_molecule->atom(std::get<0>(torsion));
+        auto atom2 = m_molecule->atom(std::get<1>(torsion));
+        auto atom3 = m_molecule->atom(std::get<2>(torsion));
+        auto atom4 = m_molecule->atom(std::get<3>(torsion));
+        Real torsionValue = m_model->getTorsionValue(rowNum);
+        m_molecule->addConstraint(torsionValue, atom1.index(), atom2.index(),
+                                  atom3.index(), atom4.index());
+      }
+    }
+  }
+}
+
+void PropertyView::freezeAtom()
+{
+  // get the selected rows (if any)
+  QModelIndexList selectedRows = selectionModel()->selectedRows();
+
+  // if nothing is selected, we're done
+  if (selectedRows.isEmpty())
+    return;
+
+  if (m_molecule == nullptr)
+    return;
+
+  // loop through the selected rows
+  for (const auto& index : selectedRows) {
+    if (!index.isValid())
+      continue;
+
+    // get the row number
+    bool ok;
+    int rowNum = model()
+                   ->headerData(index.row(), Qt::Vertical)
+                   .toString()
+                   .split(" ")
+                   .last()
+                   .toLong(&ok) -
+                 1;
+    if (!ok)
+      continue;
+
+    m_molecule->setFrozenAtom(rowNum, true);
+  }
+
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
 void PropertyView::openExportDialogBox()
 {
   // Create a file dialog for selecting the export location and file name
@@ -289,6 +403,28 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
   menu.addAction(exportAction);
   connect(exportAction, &QAction::triggered, this,
           &PropertyView::openExportDialogBox);
+
+  if (m_type == PropertyType::AtomType) {
+    // freeze atom
+    QAction* freezeAtomAction = menu.addAction(tr("Freeze Atom"));
+    menu.addAction(freezeAtomAction);
+    connect(freezeAtomAction, &QAction::triggered, this,
+            &PropertyView::freezeAtom);
+  } else {
+    // bond angle torsion are similar
+    QString name;
+    if (m_type == PropertyType::BondType)
+      name = tr("Constrain Bond");
+    else if (m_type == PropertyType::AngleType)
+      name = tr("Constrain Angle");
+    else if (m_type == PropertyType::TorsionType)
+      name = tr("Constrain Torsion");
+
+    QAction* constrainAction = menu.addAction(name);
+    menu.addAction(constrainAction);
+    connect(constrainAction, &QAction::triggered, this,
+            &PropertyView::constrainSelectedRows);
+  }
 
   menu.exec(event->globalPos());
 }
