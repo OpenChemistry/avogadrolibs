@@ -54,13 +54,11 @@ bool findEnergy(const std::string& buffer, double& energyValue)
   }
 
   if (energyStart != std::string::npos) {
-    // find the next whitespace or end of the string
-    std::size_t energyEnd = buffer.find_first_of(" \t", energyStart + offset);
-    if (energyEnd == std::string::npos)
-      energyEnd = buffer.size();
-    std::string energy = buffer.substr(energyStart + offset, energyEnd);
-    energyValue = lexicalCast<double>(energy);
-    return true;
+    // pick the next token
+    std::string energy = buffer.substr(energyStart + offset);
+    bool ok;
+    energyValue = lexicalCast<double>(energy, ok);
+    return ok;
   }
   return false;
 }
