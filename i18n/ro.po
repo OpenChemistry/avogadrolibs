@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-28 02:48+0000\n"
-"PO-Revision-Date: 2025-09-26 16:17+0000\n"
+"PO-Revision-Date: 2025-09-30 19:25+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -2649,7 +2649,7 @@ msgstr "Taie"
 
 #: qtplugins/copypaste/copypaste.cpp:36
 msgid "Delete"
-msgstr ""
+msgstr "Șterge"
 
 #: qtplugins/copypaste/copypaste.cpp:37
 msgid "&Paste"
