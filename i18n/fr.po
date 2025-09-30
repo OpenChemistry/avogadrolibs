@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-28 02:48+0000\n"
-"PO-Revision-Date: 2025-09-25 18:01+0000\n"
+"PO-Revision-Date: 2025-09-30 19:25+0000\n"
 "Last-Translator: \"David D.\" <dadu042@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -2423,10 +2423,9 @@ msgid "Torsion Angle"
 msgstr "Angle de torsion"
 
 #: qtplugins/constraints/constraintsmodel.cpp:68
-#, fuzzy
 msgctxt "fix / remain constant"
 msgid "Freeze Atom"
-msgstr "Geler l'atome"
+msgstr "Geler atome"
 
 #: qtplugins/constraints/constraintsmodel.cpp:70
 #, fuzzy
