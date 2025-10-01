@@ -7,6 +7,7 @@
 #define AVOGADRO_CORE_UTILITIES_H
 
 #include <algorithm>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -127,6 +128,29 @@ T lexicalCast(const std::string& inputString, bool& ok)
   stream >> value;
   ok = !stream.fail();
   return value;
+}
+
+/**
+ * @brief Cast the range to the specified type.
+ * @param first Start of the range
+ * @param last End of the range
+ * @retval converted values if cast of ALL the elements are successful
+ * @retval std::nullopt otherwise
+ */
+template <typename T, typename Iterator>
+std::optional<std::vector<T>> lexicalCast(Iterator first, Iterator last)
+{
+  std::vector<T> values;
+  for (; first != last; ++first) {
+    bool ok;
+    auto value = lexicalCast<T>(*first, ok);
+    if (ok) {
+      values.emplace_back(value);
+    } else {
+      return std::nullopt;
+    }
+  }
+  return values;
 }
 
 } // namespace Avogadro::Core

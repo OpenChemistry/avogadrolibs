@@ -115,21 +115,20 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     std::cout << "Lattice size: " << tokens.size() << std::endl;
 
     if (tokens.size() >= 9) {
-      Vector3 v1(lexicalCast<double>(tokens[0]), lexicalCast<double>(tokens[1]),
-                 lexicalCast<double>(tokens[2]));
-      Vector3 v2(lexicalCast<double>(tokens[3]), lexicalCast<double>(tokens[4]),
-                 lexicalCast<double>(tokens[5]));
-      Vector3 v3(lexicalCast<double>(tokens[6]), lexicalCast<double>(tokens[7]),
-                 lexicalCast<double>(tokens[8]));
+      if (auto tmp = lexicalCast<double>(tokens.begin(), tokens.begin() + 9)) {
+        Vector3 v1(tmp->at(0), tmp->at(1), tmp->at(2));
+        Vector3 v2(tmp->at(3), tmp->at(4), tmp->at(5));
+        Vector3 v3(tmp->at(6), tmp->at(7), tmp->at(8));
 
-      auto* cell = new Core::UnitCell(v1, v2, v3);
-      std::cout << " Lattice: " << cell->aVector() << " " << cell->bVector()
-                << " " << cell->cVector() << std::endl;
-      if (!cell->isRegular()) {
-        appendError("Lattice vectors are not linear independent");
-        delete cell;
-      } else {
-        mol.setUnitCell(cell);
+        auto* cell = new Core::UnitCell(v1, v2, v3);
+        std::cout << " Lattice: " << cell->aVector() << " " << cell->bVector()
+                  << " " << cell->cVector() << std::endl;
+        if (!cell->isRegular()) {
+          appendError("Lattice vectors are not linear independent");
+          delete cell;
+        } else {
+          mol.setUnitCell(cell);
+        }
       }
     }
   }
@@ -195,8 +194,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     else
       atomicNum = static_cast<unsigned char>(lexicalCast<short int>(tokens[0]));
 
-    Vector3 pos(lexicalCast<double>(tokens[1]), lexicalCast<double>(tokens[2]),
-                lexicalCast<double>(tokens[3]));
+    Vector3 pos;
+    if (auto tmp =
+          lexicalCast<double>(tokens.begin() + 1, tokens.begin() + 4)) {
+      pos << tmp->at(0), tmp->at(1), tmp->at(2);
+    }
 
     Atom newAtom = mol.addAtom(atomicNum);
     newAtom.setPosition3d(pos);
@@ -207,10 +209,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       // we set the charges after all atoms are added
     }
     if (forceColumn > 0 && forceColumn < tokens.size()) {
-      Vector3 force(lexicalCast<double>(tokens[forceColumn]),
-                    lexicalCast<double>(tokens[forceColumn + 1]),
-                    lexicalCast<double>(tokens[forceColumn + 2]));
-      newAtom.setForceVector(force);
+      if (auto tmp = lexicalCast<double>(tokens.begin() + forceColumn,
+                                         tokens.begin() + forceColumn + 3)) {
+        Vector3 force(tmp->at(0), tmp->at(1), tmp->at(2));
+        newAtom.setForceVector(force);
+      }
     }
   }
 
@@ -259,10 +262,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
           appendError("Not enough tokens in this line: " + buffer);
           return false;
         }
-        Vector3 pos(lexicalCast<double>(tokens[1]),
-                    lexicalCast<double>(tokens[2]),
-                    lexicalCast<double>(tokens[3]));
-        positions.push_back(pos);
+        if (auto tmp =
+              lexicalCast<double>(tokens.begin() + 1, tokens.begin() + 4)) {
+          Vector3 pos(tmp->at(0), tmp->at(1), tmp->at(2));
+          positions.push_back(pos);
+        }
       }
 
       if (!done)

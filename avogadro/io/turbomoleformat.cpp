@@ -102,9 +102,11 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
           atomicNum =
             static_cast<unsigned char>(lexicalCast<short int>(tokens[3]));
 
-        Vector3 pos(lexicalCast<double>(tokens[0]),
-                    lexicalCast<double>(tokens[1]),
-                    lexicalCast<double>(tokens[2]));
+        Vector3 pos;
+        if (auto tmp =
+              lexicalCast<double>(tokens.begin(), tokens.begin() + 3)) {
+          pos << tmp->at(0), tmp->at(1), tmp->at(2);
+        }
 
         Atom newAtom = mol.addAtom(atomicNum);
         newAtom.setPosition3d(pos * coordConversion);
@@ -125,12 +127,14 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
         appendError("Not enough tokens in this line: " + buffer);
         return false;
       }
-      a = lexicalCast<double>(tokens[0]) * cellConversion;
-      b = lexicalCast<double>(tokens[1]) * cellConversion;
-      c = lexicalCast<double>(tokens[2]) * cellConversion;
-      alpha = lexicalCast<double>(tokens[3]) * DEG_TO_RAD;
-      beta = lexicalCast<double>(tokens[4]) * DEG_TO_RAD;
-      gamma = lexicalCast<double>(tokens[5]) * DEG_TO_RAD;
+      if (auto tmp = lexicalCast<double>(tokens.begin(), tokens.begin() + 6)) {
+        a = tmp->at(0) * cellConversion;
+        b = tmp->at(1) * cellConversion;
+        c = tmp->at(2) * cellConversion;
+        alpha = tmp->at(3) * DEG_TO_RAD;
+        beta = tmp->at(4) * DEG_TO_RAD;
+        gamma = tmp->at(5) * DEG_TO_RAD;
+      }
 
     } else if (tokens[0] == "$lattice") {
       hasLattice = true;
@@ -144,18 +148,21 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
         if (tokens.size() < 3)
           break;
 
-        if (line == 0) {
-          v1.x() = lexicalCast<double>(tokens[0]) * latticeConversion;
-          v1.y() = lexicalCast<double>(tokens[1]) * latticeConversion;
-          v1.z() = lexicalCast<double>(tokens[2]) * latticeConversion;
-        } else if (line == 1) {
-          v2.x() = lexicalCast<double>(tokens[0]) * latticeConversion;
-          v2.y() = lexicalCast<double>(tokens[1]) * latticeConversion;
-          v2.z() = lexicalCast<double>(tokens[2]) * latticeConversion;
-        } else if (line == 2) {
-          v3.x() = lexicalCast<double>(tokens[0]) * latticeConversion;
-          v3.y() = lexicalCast<double>(tokens[1]) * latticeConversion;
-          v3.z() = lexicalCast<double>(tokens[2]) * latticeConversion;
+        if (auto tmp =
+              lexicalCast<double>(tokens.begin(), tokens.begin() + 3)) {
+          if (line == 0) {
+            v1.x() = tmp->at(0) * latticeConversion;
+            v1.y() = tmp->at(1) * latticeConversion;
+            v1.z() = tmp->at(2) * latticeConversion;
+          } else if (line == 1) {
+            v2.x() = tmp->at(0) * latticeConversion;
+            v2.y() = tmp->at(1) * latticeConversion;
+            v2.z() = tmp->at(2) * latticeConversion;
+          } else if (line == 2) {
+            v3.x() = tmp->at(0) * latticeConversion;
+            v3.y() = tmp->at(1) * latticeConversion;
+            v3.z() = tmp->at(2) * latticeConversion;
+          }
         }
       }
     } else if (tokens[0][0] != '#') {
