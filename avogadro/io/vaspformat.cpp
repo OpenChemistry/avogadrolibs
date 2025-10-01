@@ -80,9 +80,12 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
       return false;
     }
     // UnitCell expects a matrix of this form
-    cellMat(0, i) = lexicalCast<double>(stringSplit.at(0)) * scalingFactor;
-    cellMat(1, i) = lexicalCast<double>(stringSplit.at(1)) * scalingFactor;
-    cellMat(2, i) = lexicalCast<double>(stringSplit.at(2)) * scalingFactor;
+    if (auto tmp =
+          lexicalCast<double>(stringSplit.begin(), stringSplit.end())) {
+      cellMat(0, i) = tmp->at(0) * scalingFactor;
+      cellMat(1, i) = tmp->at(1) * scalingFactor;
+      cellMat(2, i) = tmp->at(2) * scalingFactor;
+    }
   }
 
   // Sometimes, atomic symbols go here.
@@ -128,9 +131,9 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   stringSplit = split(line, ' ');
   std::vector<unsigned int> atomCounts;
-  for (auto& i : stringSplit) {
-    auto atomCount = lexicalCast<unsigned int>(i);
-    atomCounts.push_back(atomCount);
+  if (auto tmp =
+        lexicalCast<unsigned int>(stringSplit.begin(), stringSplit.end())) {
+    atomCounts = *tmp;
   }
 
   // If we never filled up the atomic numbers, fill them up
@@ -180,10 +183,10 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
         appendError("Error reading atomic coordinates in POSCAR");
         return false;
       }
-      Vector3 tmpAtom(lexicalCast<double>(stringSplit.at(0)),
-                      lexicalCast<double>(stringSplit.at(1)),
-                      lexicalCast<double>(stringSplit.at(2)));
-      atoms.push_back(tmpAtom);
+      if (auto tmp =
+            lexicalCast<double>(stringSplit.begin(), stringSplit.begin() + 3)) {
+        atoms.emplace_back(tmp->at(0), tmp->at(1), tmp->at(2));
+      }
     }
   }
 
@@ -401,9 +404,11 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
           }
           // Parsing the coordinates
           stringSplit = split(buffer, ' ');
-          Vector3 tmpAtom(lexicalCast<double>(stringSplit.at(0)),
-                          lexicalCast<double>(stringSplit.at(1)),
-                          lexicalCast<double>(stringSplit.at(2)));
+          Vector3 tmpAtom;
+          if (auto tmp = lexicalCast<double>(stringSplit.begin(),
+                                             stringSplit.begin() + 3)) {
+            tmpAtom << tmp->at(0), tmp->at(1), tmp->at(2);
+          }
           if (coordSet == 0) {
             AtomTypeMap::const_iterator it;
             atomTypes.insert(
