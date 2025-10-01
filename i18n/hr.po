@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-28 02:48+0000\n"
 "PO-Revision-Date: 2025-10-02 12:26+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1314,6 +1313,8 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Greška pri pokretanju skripte '%1 %2': neuspelo pisanje u stdin (len=%3, "
+"zapisano %4 bajta, QProcess greška: %5)."
 
 #: qtgui/pythonscript.cpp:127
 #, qt-format
@@ -3632,11 +3633,11 @@ msgstr "Nije moguće učitati zatraženi čitač formata."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
-msgstr ""
+msgstr "Nije pronađena nijedna koordinat!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:146
 msgid "Unable to generate 3D coordinates."
-msgstr ""
+msgstr "Nije moguće generirati 3D koordinate."
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -5261,7 +5262,7 @@ msgstr "Gustoća"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
-msgstr "Surface"
+msgstr "Površina"
 
 #: qtplugins/surfacerender/surfacerender.cpp:267
 msgid "Style:"
