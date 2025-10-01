@@ -870,6 +870,20 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  // look for possible cube data
+  if (jsonRoot.find("cube") != jsonRoot.end()) {
+    Cube* cube = new Cube();
+    json cubeObj = jsonRoot["cube"];
+    // TODO add error checking
+    cube->setMin(cubeObj["origin"][0], cubeObj["origin"][1],
+                 cubeObj["origin"][2]);
+    cube->setSpacing(cubeObj["spacing"][0], cubeObj["spacing"][1],
+                     cubeObj["spacing"][2]);
+    cube->setDimensions(cubeObj["dimensions"][0], cubeObj["dimensions"][1],
+                        cubeObj["dimensions"][2]);
+    cube->setData(cubeObj["scalars"]);
+  }
+
   if (jsonRoot.find("layer") != jsonRoot.end()) {
     auto names = LayerManager::getMoleculeInfo(&molecule);
     json visible = jsonRoot["layer"]["visible"];
@@ -1192,13 +1206,9 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
 
   // Write out any cubes that are present in the molecule.
   if (molecule.cubeCount() > 0) {
-    const Cube* cube = molecule.cube(0);
-    json cubeData;
-    for (float it : *cube->data()) {
-      cubeData.push_back(it);
-    }
-    // Get the origin, max, spacing, and dimensions to place in the object.
     json cubeObj;
+    const Cube* cube = molecule.cube(0);
+    // Get the origin, max, spacing, and dimensions to place in the object.
     json cubeMin;
     cubeMin.push_back(cube->min().x());
     cubeMin.push_back(cube->min().y());
@@ -1214,6 +1224,11 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     cubeDims.push_back(cube->dimensions().y());
     cubeDims.push_back(cube->dimensions().z());
     cubeObj["dimensions"] = cubeDims;
+
+    json cubeData;
+    for (float it : *cube->data()) {
+      cubeData.push_back(it);
+    }
     cubeObj["scalars"] = cubeData;
     root["cube"] = cubeObj;
   }
