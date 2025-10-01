@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-28 02:48+0000\n"
 "PO-Revision-Date: 2025-10-02 12:26+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -5266,7 +5267,7 @@ msgstr "Površina"
 
 #: qtplugins/surfacerender/surfacerender.cpp:267
 msgid "Style:"
-msgstr ""
+msgstr "Stil:"
 
 #: qtplugins/surfacerender/surfacerender.h:33
 msgid "Render molecular surfaces."
