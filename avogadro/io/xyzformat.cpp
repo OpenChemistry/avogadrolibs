@@ -37,7 +37,7 @@ using Core::trimmed;
 using std::isalpha;
 #endif
 
-bool findEnergy(const std::string& buffer, double& energyValue)
+std::optional<double> findEnergy(const std::string& buffer)
 {
   // Check for energy in the comment line
   // orca uses  E -680.044112849966 (with spaces)
@@ -56,11 +56,9 @@ bool findEnergy(const std::string& buffer, double& energyValue)
   if (energyStart != std::string::npos) {
     // pick the next token
     std::string energy = buffer.substr(energyStart + offset);
-    bool ok;
-    energyValue = lexicalCast<double>(energy, ok);
-    return ok;
+    return lexicalCast<double>(energy);
   }
-  return false;
+  return std::nullopt;
 }
 
 bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
@@ -87,11 +85,10 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (!buffer.empty())
     mol.setData("name", trimmed(buffer));
 
-  double energy = 0.0;
   std::vector<double> energies;
-  if (findEnergy(buffer, energy)) {
-    mol.setData("totalEnergy", energy);
-    energies.push_back(energy);
+  if (auto energy = findEnergy(buffer)) {
+    mol.setData("totalEnergy", *energy);
+    energies.push_back(*energy);
   }
 
   // check for Lattice= in an extended XYZ from ASE and company
@@ -254,8 +251,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (numAtoms2 && numAtoms == *numAtoms2) {
     getline(inStream, buffer); // comment line
     // check for properties in the comment line
-    if (findEnergy(buffer, energy)) {
-      energies.push_back(energy);
+    if (auto energy = findEnergy(buffer)) {
+      energies.push_back(*energy);
     }
 
     mol.setCoordinate3d(mol.atomPositions3d(), 0);
@@ -311,8 +308,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
       std::getline(inStream, buffer); // Skip the blank
       // check for energies
-      if (findEnergy(buffer, energy)) {
-        energies.push_back(energy);
+      if (auto energy = findEnergy(buffer)) {
+        energies.push_back(*energy);
       }
       positions.clear();
     }
