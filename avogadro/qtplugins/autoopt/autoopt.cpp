@@ -25,6 +25,8 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
 
+#include <QDebug>
+
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
