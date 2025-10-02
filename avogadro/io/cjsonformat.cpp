@@ -854,18 +854,23 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   }
 
   // Partial charges are optional, but if present should be loaded.
+  json partialCharges;
   if (atoms.contains("partialCharges")) {
-    json partialCharges = atoms["partialCharges"];
-    if (partialCharges.is_object()) {
-      // keys are types, values are arrays of charges
-      for (auto& kv : partialCharges.items()) {
-        MatrixX charges(atomCount, 1);
-        if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
-          for (size_t i = 0; i < kv.value().size(); ++i) {
-            charges(i, 0) = kv.value()[i];
-          }
-          molecule.setPartialCharges(kv.key(), charges);
+    partialCharges = atoms["partialCharges"];
+  }
+  // some inconsistent files have it as part of the root
+  if (jsonRoot.contains("partialCharges")) {
+    partialCharges = jsonRoot["partialCharges"];
+  }
+  if (partialCharges.is_object()) {
+    // keys are types, values are arrays of charges
+    for (auto& kv : partialCharges.items()) {
+      MatrixX charges(atomCount, 1);
+      if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
+        for (size_t i = 0; i < kv.value().size(); ++i) {
+          charges(i, 0) = kv.value()[i];
         }
+        molecule.setPartialCharges(kv.key(), charges);
       }
     }
   }
