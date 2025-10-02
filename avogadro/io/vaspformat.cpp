@@ -350,29 +350,20 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
         for (int i = 0; i < 3; ++i) {
           getline(inStream, buffer);
           stringSplit = split(buffer, ' ');
+          Vector3 tmp(lexicalCast<double>(stringSplit.at(3).substr(
+                        0, stringSplit.at(3).size() - 1)),
+                      lexicalCast<double>(stringSplit.at(4).substr(
+                        0, stringSplit.at(4).size() - 1)),
+                      lexicalCast<double>(stringSplit.at(5).substr(
+                        0, stringSplit.at(5).size() - 1)));
           if (stringSplit[0] == "A1") {
-            ax1 = Vector3(lexicalCast<double>(stringSplit.at(3).substr(
-                            0, stringSplit.at(3).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(4).substr(
-                            0, stringSplit.at(4).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(5).substr(
-                            0, stringSplit.at(5).size() - 1)));
+            ax1 = std::move(tmp);
             ax1Set = true;
           } else if (stringSplit[0] == "A2") {
-            ax2 = Vector3(lexicalCast<double>(stringSplit.at(3).substr(
-                            0, stringSplit.at(3).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(4).substr(
-                            0, stringSplit.at(4).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(5).substr(
-                            0, stringSplit.at(5).size() - 1)));
+            ax2 = std::move(tmp);
             ax2Set = true;
           } else if (stringSplit[0] == "A3") {
-            ax3 = Vector3(lexicalCast<double>(stringSplit.at(3).substr(
-                            0, stringSplit.at(3).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(4).substr(
-                            0, stringSplit.at(4).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(5).substr(
-                            0, stringSplit.at(5).size() - 1)));
+            ax3 = std::move(tmp);
             ax3Set = true;
           }
         }
