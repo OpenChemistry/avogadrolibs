@@ -875,6 +875,60 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  // look for possible cube data
+  if (jsonRoot.find("cube") != jsonRoot.end()) {
+    json cubeObj = jsonRoot["cube"];
+    // get the limits
+    Vector3 min, max, delta;
+    Vector3i points;
+    json origin = cubeObj["origin"];
+    json spacing = cubeObj["spacing"];
+    json dimensions = cubeObj["dimensions"];
+    json type = cubeObj["type"];
+
+    if (isNumericArray(origin) && origin.size() == 3 &&
+        isNumericArray(spacing) && spacing.size() == 3 &&
+        isNumericArray(dimensions) && dimensions.size() == 3) {
+      Cube* cube = molecule.addCube();
+
+      // types
+      if (type == "vdw")
+        cube->setCubeType(Cube::VdW);
+      else if (type == "solventAccessible")
+        cube->setCubeType(Cube::SolventAccessible);
+      else if (type == "solventExcluded")
+        cube->setCubeType(Cube::SolventExcluded);
+      else if (type == "esp")
+        cube->setCubeType(Cube::ESP);
+      else if (type == "electronDensity")
+        cube->setCubeType(Cube::ElectronDensity);
+      else if (type == "spinDensity")
+        cube->setCubeType(Cube::SpinDensity);
+      else if (type == "mo")
+        cube->setCubeType(Cube::MO);
+      else
+        cube->setCubeType(Cube::FromFile);
+
+      if (cubeObj.find("name") != cubeObj.end())
+        cube->setName(cubeObj["name"]);
+
+      min = Vector3(origin[0], origin[1], origin[2]);
+      points = Vector3i(dimensions[0], dimensions[1], dimensions[2]);
+      delta = Vector3(spacing[0], spacing[1], spacing[2]);
+      max = Vector3(min[0] + (points[0] - 1) * delta[0],
+                    min[1] + (points[1] - 1) * delta[1],
+                    min[2] + (points[2] - 1) * delta[2]);
+
+      cube->setLimits(min, max, points);
+      // check the length of the scalar array
+      unsigned int expectedSize = points[0] * points[1] * points[2];
+      if (isNumericArray(cubeObj["scalars"]) &&
+          cubeObj["scalars"].size() == expectedSize) {
+        cube->setData(cubeObj["scalars"]);
+      }
+    }
+  }
+
   if (jsonRoot.find("layer") != jsonRoot.end()) {
     auto names = LayerManager::getMoleculeInfo(&molecule);
     json visible = jsonRoot["layer"]["visible"];
@@ -1197,13 +1251,9 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
 
   // Write out any cubes that are present in the molecule.
   if (molecule.cubeCount() > 0) {
-    const Cube* cube = molecule.cube(0);
-    json cubeData;
-    for (float it : *cube->data()) {
-      cubeData.push_back(it);
-    }
-    // Get the origin, max, spacing, and dimensions to place in the object.
     json cubeObj;
+    const Cube* cube = molecule.cube(0);
+    // Get the origin, max, spacing, and dimensions to place in the object.
     json cubeMin;
     cubeMin.push_back(cube->min().x());
     cubeMin.push_back(cube->min().y());
@@ -1219,6 +1269,43 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     cubeDims.push_back(cube->dimensions().y());
     cubeDims.push_back(cube->dimensions().z());
     cubeObj["dimensions"] = cubeDims;
+
+    // type
+    switch (cube->cubeType()) {
+      case Cube::VdW:
+        cubeObj["type"] = "vdw";
+        break;
+      case Cube::SolventAccessible:
+        cubeObj["type"] = "solventAccessible";
+        break;
+      case Cube::SolventExcluded:
+        cubeObj["type"] = "solventExcluded";
+        break;
+      case Cube::ESP:
+        cubeObj["type"] = "esp";
+        break;
+      case Cube::ElectronDensity:
+        cubeObj["type"] = "electronDensity";
+        break;
+      case Cube::SpinDensity:
+        cubeObj["type"] = "spinDensity";
+        break;
+      case Cube::MO:
+        cubeObj["type"] = "mo";
+        break;
+      case Cube::FromFile:
+      default:
+        cubeObj["type"] = "fromFile";
+        break;
+    }
+
+    // name
+    cubeObj["name"] = cube->name();
+
+    json cubeData;
+    for (float it : *cube->data()) {
+      cubeData.push_back(it);
+    }
     cubeObj["scalars"] = cubeData;
     root["cube"] = cubeObj;
   }
