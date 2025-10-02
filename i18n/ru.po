@@ -16,13 +16,14 @@
 # Sergey Ponomarev <stokito@gmail.com>, 2025.
 # Илья Рябов <ilyarya131@gmail.com>, 2025.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2025.
+# Otto Myers <iamottomyers@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-09-28 02:48+0000\n"
 "PO-Revision-Date: 2025-10-02 21:35+0000\n"
-"Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
+"Last-Translator: Otto Myers <iamottomyers@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -1033,11 +1034,11 @@ msgstr "Обзор"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
-msgstr ""
+msgstr "Выберите файл:"
 
 #: qtgui/filebrowsewidget.cpp:99
 msgid "Select executable:"
-msgstr ""
+msgstr "Выберите исполняемый файл:"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1048,6 +1049,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr ""
+"Файл не имеет расширения, поэтому его формат нельзя определить. Вы хотите "
+"его добавить?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1061,7 +1064,7 @@ msgstr ""
 #: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "обработать"
 
 #: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
@@ -1100,7 +1103,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:227
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
-msgstr ""
+msgstr "Ошибка чтения представления молекулы: Нераспознанный формат файла: %1"
 
 #: qtgui/interfacescript.cpp:295
 #, qt-format
@@ -1170,7 +1173,7 @@ msgstr "Базис"
 
 #: qtgui/jsonwidget.cpp:233 qtgui/jsonwidget.cpp:237
 msgid "Charge"
-msgstr ""
+msgstr "Заряд"
 
 #: qtgui/jsonwidget.cpp:234 qtgui/jsonwidget.cpp:239
 msgid "Multiplicity"
@@ -1192,7 +1195,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:706
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
+msgstr "Нераспознанный тип поля '%1' для параметра '%2'."
 
 #: qtgui/jsonwidget.cpp:715 qtgui/jsonwidget.cpp:750 qtgui/jsonwidget.cpp:771
 #: qtgui/jsonwidget.cpp:792 qtgui/jsonwidget.cpp:830 qtgui/jsonwidget.cpp:851
@@ -1200,6 +1203,8 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
+"Ошибка установки значения по умолчанию для поля '%1'. Неподходящий тип "
+"виджета."
 
 #: qtgui/jsonwidget.cpp:722 qtgui/jsonwidget.cpp:757 qtgui/jsonwidget.cpp:778
 #: qtgui/jsonwidget.cpp:799 qtgui/jsonwidget.cpp:837 qtgui/jsonwidget.cpp:858
@@ -1349,11 +1354,11 @@ msgstr ""
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
-msgstr ""
+msgstr "Скрипт не удалось запустить."
 
 #: qtgui/pythonscript.cpp:270
 msgid "Script crashed."
-msgstr ""
+msgstr "Скрипт вызвал критическую ошибку."
 
 #: qtgui/pythonscript.cpp:273
 msgid "Script timed out."
@@ -1456,7 +1461,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:323
 msgid "Clear Bonds"
-msgstr "Четкие Облигации"
+msgstr "Очистить связи"
 
 #: qtgui/rwmolecule.cpp:337
 msgid "Set Bond Orders"
