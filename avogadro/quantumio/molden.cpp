@@ -127,7 +127,7 @@ void MoldenFile::processLine(std::istream& in)
         break;
       case GTO: {
         // TODO: detect dead files and make bullet-proof
-        int atom = Core::lexicalCast<int>(list[0]);
+        int atom = Core::lexicalCast<int>(list[0]).value_or(0);
 
         getline(in, line);
         line = Core::trimmed(line);
@@ -157,7 +157,7 @@ void MoldenFile::processLine(std::istream& in)
             return;
           }
 
-          int numGTOs = Core::lexicalCast<int>(list[1]);
+          int numGTOs = Core::lexicalCast<int>(list[1]).value_or(0);
           m_shellNums.push_back(numGTOs);
 
           // Now read all the exponents and contraction coefficients.
@@ -166,11 +166,11 @@ void MoldenFile::processLine(std::istream& in)
             line = Core::trimmed(line);
             list = Core::split(line, ' ');
             if (list.size() > 1) {
-              m_a.push_back(Core::lexicalCast<double>(list[0]));
-              m_c.push_back(Core::lexicalCast<double>(list[1]));
+              m_a.push_back(Core::lexicalCast<double>(list[0]).value_or(0.0));
+              m_c.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
             }
             if (shellType == GaussianSet::SP && list.size() > 2)
-              m_csp.push_back(Core::lexicalCast<double>(list[2]));
+              m_csp.push_back(Core::lexicalCast<double>(list[2]).value_or(0.0));
           }
           // Start reading the next shell.
           getline(in, line);
@@ -185,9 +185,10 @@ void MoldenFile::processLine(std::istream& in)
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
           if (Core::contains(line, "Occup"))
-            m_electrons += Core::lexicalCast<int>(list[1]);
+            m_electrons += Core::lexicalCast<int>(list[1]).value_or(0);
           else if (Core::contains(line, "Ene"))
-            m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[1]));
+            m_orbitalEnergy.push_back(
+              Core::lexicalCast<double>(list[1]).value_or(0.0));
           // TODO: track alpha beta spin
         }
 
@@ -198,7 +199,8 @@ void MoldenFile::processLine(std::istream& in)
           if (list.size() < 2)
             break;
 
-          m_MOcoeffs.push_back(Core::lexicalCast<double>(list[1]));
+          m_MOcoeffs.push_back(
+            Core::lexicalCast<double>(list[1]).value_or(0.0));
 
           getline(in, line);
           line = Core::trimmed(line);
@@ -213,7 +215,8 @@ void MoldenFile::processLine(std::istream& in)
         m_frequencies.clear();
         while (!line.empty() && !Core::contains(line, "[")) {
           line = Core::trimmed(line);
-          m_frequencies.push_back(Core::lexicalCast<double>(line));
+          m_frequencies.push_back(
+            Core::lexicalCast<double>(line).value_or(0.0));
           currentPos = in.tellg();
           getline(in, line);
         }
@@ -238,10 +241,13 @@ void MoldenFile::processLine(std::istream& in)
               if (list.size() < 3)
                 break;
 
-              m_vibDisplacements.back().push_back(Vector3(
-                Core::lexicalCast<double>(list[0]) * BOHR_TO_ANGSTROM_D,
-                Core::lexicalCast<double>(list[1]) * BOHR_TO_ANGSTROM_D,
-                Core::lexicalCast<double>(list[2]) * BOHR_TO_ANGSTROM_D));
+              m_vibDisplacements.back().push_back(
+                Vector3(Core::lexicalCast<double>(list[0]).value_or(0.0) *
+                          BOHR_TO_ANGSTROM_D,
+                        Core::lexicalCast<double>(list[1]).value_or(0.0) *
+                          BOHR_TO_ANGSTROM_D,
+                        Core::lexicalCast<double>(list[2]).value_or(0.0) *
+                          BOHR_TO_ANGSTROM_D));
 
               currentPos = in.tellg();
               getline(in, line);
@@ -267,9 +273,11 @@ void MoldenFile::processLine(std::istream& in)
         // could be just IR or two pieces including Raman
         while (!line.empty() && !Core::contains(line, "[")) {
           list = Core::split(line, ' ');
-          m_IRintensities.push_back(Core::lexicalCast<double>(list[0]));
+          m_IRintensities.push_back(
+            Core::lexicalCast<double>(list[0]).value_or(0.0));
           if (list.size() == 2)
-            m_RamanIntensities.push_back(Core::lexicalCast<double>(list[1]));
+            m_RamanIntensities.push_back(
+              Core::lexicalCast<double>(list[1]).value_or(0.0));
 
           if (m_IRintensities.size() == m_frequencies.size()) {
             // we're done
@@ -292,10 +300,13 @@ void MoldenFile::readAtom(const vector<string>& list)
   // element_name number atomic_number x y z
   if (list.size() < 6)
     return;
-  m_aNums.push_back(Core::lexicalCast<int>(list[2]));
-  m_aPos.push_back(Core::lexicalCast<double>(list[3]) * m_coordFactor);
-  m_aPos.push_back(Core::lexicalCast<double>(list[4]) * m_coordFactor);
-  m_aPos.push_back(Core::lexicalCast<double>(list[5]) * m_coordFactor);
+  m_aNums.push_back(Core::lexicalCast<int>(list[2]).value_or(0));
+  m_aPos.push_back(Core::lexicalCast<double>(list[3]).value_or(0.0) *
+                   m_coordFactor);
+  m_aPos.push_back(Core::lexicalCast<double>(list[4]).value_or(0.0) *
+                   m_coordFactor);
+  m_aPos.push_back(Core::lexicalCast<double>(list[5]).value_or(0.0) *
+                   m_coordFactor);
 }
 
 void MoldenFile::load(GaussianSet* basis)
