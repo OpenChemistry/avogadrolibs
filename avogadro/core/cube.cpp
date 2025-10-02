@@ -19,7 +19,7 @@ Cube::Cube()
 
 Cube::~Cube()
 {
-  delete m_lock;
+  // delete m_lock;
   m_lock = nullptr;
 }
 
