@@ -77,7 +77,6 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
   // set the spin multiplicity
   molecule.setData("totalSpinMultiplicity", m_spin);
   // dipole moment
-  // TODO: This should be a Vector3d
   Core::Variant dipole(m_dipoleMoment.x(), m_dipoleMoment.y(),
                        m_dipoleMoment.z());
   molecule.setData("dipoleMoment", dipole);
@@ -88,6 +87,19 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
   load(basis);
+
+  // partial charges
+  if (m_mullikenCharges.size() == m_aNums.size()) {
+    Eigen::MatrixXd charges(m_aNums.size(), 1);
+    charges.setZero();
+
+    for (unsigned int i = 0; i < m_aNums.size(); ++i) {
+      charges(i, 0) = m_mullikenCharges[i];
+      std::cout << " mulliken " << m_mullikenCharges[i] << std::endl;
+    }
+    molecule.setPartialCharges("Mulliken", charges);
+  }
+
   return true;
 }
 
@@ -144,6 +156,8 @@ void GaussianFchk::processLine(std::istream& in)
   // Now we get to the meat of it - coordinates of the atoms
   else if (key == "Current cartesian coordinates" && list.size() > 2) {
     m_aPos = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+  } else if (key == "Mulliken Charges" && list.size() > 2) {
+    m_mullikenCharges = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
   }
   // The real meat is here - basis sets etc!
   else if (key == "Shell types" && list.size() > 2) {

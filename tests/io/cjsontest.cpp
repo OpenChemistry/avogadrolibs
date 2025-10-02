@@ -250,3 +250,63 @@ TEST(CjsonTest, conformers)
   EXPECT_EQ(otherMolecule.bondCount(), static_cast<size_t>(13));
   EXPECT_EQ(otherMolecule.coordinate3dCount(), static_cast<size_t>(3));
 }
+
+TEST(CjsonTest, partialCharges)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/formaldehyde.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(4));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(3));
+  EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(7));
+
+  // check partial charges
+  auto types = molecule.partialChargeTypes();
+  // should be Loewdin and Mulliken
+  EXPECT_EQ(types.size(), static_cast<size_t>(2));
+  MatrixX loewdinCharges = molecule.partialCharges("Loewdin");
+  // should be 4 atoms
+  EXPECT_EQ(loewdinCharges.rows(), static_cast<size_t>(4));
+  // check the charges on atoms
+  EXPECT_EQ(loewdinCharges(0, 0), 0.133356);
+  EXPECT_EQ(loewdinCharges(1, 0), -0.112557);
+
+  MatrixX mullikenCharges = molecule.partialCharges("Mulliken");
+  // should be 4 atoms
+  EXPECT_EQ(mullikenCharges.rows(), static_cast<size_t>(4));
+  // check the charges on atoms
+  EXPECT_EQ(mullikenCharges(0, 0), 0.16726);
+  EXPECT_EQ(mullikenCharges(1, 0), -0.201292);
+
+  // okay now save it and make sure we still have the same number
+  success = cjson.writeFile("formaldehysetmp.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+
+  Molecule otherMolecule;
+  success = cjson.readFile("formaldehysetmp.cjson", otherMolecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+  EXPECT_EQ(otherMolecule.atomCount(), static_cast<size_t>(4));
+  EXPECT_EQ(otherMolecule.bondCount(), static_cast<size_t>(3));
+  EXPECT_EQ(otherMolecule.coordinate3dCount(), static_cast<size_t>(7));
+  // check partial charges
+  types = otherMolecule.partialChargeTypes();
+  // should be Loewdin and Mulliken
+  EXPECT_EQ(types.size(), static_cast<size_t>(2));
+  loewdinCharges = otherMolecule.partialCharges("Loewdin");
+  // should be 4 atoms
+  EXPECT_EQ(loewdinCharges.rows(), static_cast<size_t>(4));
+  // check the charges on atoms
+  EXPECT_EQ(loewdinCharges(0, 0), 0.133356);
+  EXPECT_EQ(loewdinCharges(1, 0), -0.112557);
+  mullikenCharges = otherMolecule.partialCharges("Mulliken");
+  // should be 4 atoms
+  EXPECT_EQ(mullikenCharges.rows(), static_cast<size_t>(4));
+  // check the charges on atoms
+  EXPECT_EQ(mullikenCharges(0, 0), 0.16726);
+  EXPECT_EQ(mullikenCharges(1, 0), -0.201292);
+}
