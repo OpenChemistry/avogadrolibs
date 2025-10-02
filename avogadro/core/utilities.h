@@ -105,12 +105,17 @@ inline std::string rstrip(const std::string& str, char c)
 /**
  * @brief Cast the inputString to the specified type.
  * @param inputString String to cast to the specified type.
+ * @retval converted value if cast is successful
+ * @retval std::nullopt otherwise
  */
 template <typename T>
-T lexicalCast(const std::string& inputString)
+std::optional<T> lexicalCast(const std::string& inputString)
 {
   T value;
-  std::istringstream(inputString) >> value;
+  std::istringstream stream(inputString);
+  stream >> value;
+  if (stream.fail())
+    return std::nullopt;
   return value;
 }
 
@@ -123,11 +128,12 @@ T lexicalCast(const std::string& inputString)
 template <typename T>
 T lexicalCast(const std::string& inputString, bool& ok)
 {
-  T value;
-  std::istringstream stream(inputString);
-  stream >> value;
-  ok = !stream.fail();
-  return value;
+  if (auto value = lexicalCast<T>(inputString)) {
+    ok = true;
+    return *value;
+  }
+  ok = false;
+  return {};
 }
 
 /**
@@ -142,10 +148,8 @@ std::optional<std::vector<T>> lexicalCast(Iterator first, Iterator last)
 {
   std::vector<T> values;
   for (; first != last; ++first) {
-    bool ok;
-    auto value = lexicalCast<T>(*first, ok);
-    if (ok) {
-      values.emplace_back(value);
+    if (auto value = lexicalCast<T>(*first)) {
+      values.emplace_back(*value);
     } else {
       return std::nullopt;
     }

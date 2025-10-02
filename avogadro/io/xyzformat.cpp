@@ -129,6 +129,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         } else {
           mol.setUnitCell(cell);
         }
+      } else {
+        appendError("Lattice vectors are malformed");
       }
     }
   }
@@ -158,7 +160,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
       // increment column based on the count of the property
       if (i + 2 < tokens.size()) {
-        column += lexicalCast<unsigned int>(tokens[i + 2]);
+        if (auto c = lexicalCast<unsigned int>(tokens[i + 2])) {
+          column += *c;
+        } else {
+          appendError("Error reading property column: " + tokens[i + 2]);
+        }
       }
     }
   }
@@ -192,12 +198,16 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     if (isalpha(tokens[0][0]))
       atomicNum = Elements::atomicNumberFromSymbol(tokens[0]);
     else
-      atomicNum = static_cast<unsigned char>(lexicalCast<short int>(tokens[0]));
+      atomicNum = static_cast<unsigned char>(
+        lexicalCast<short int>(tokens[0]).value_or(0));
 
     Vector3 pos;
     if (auto tmp =
           lexicalCast<double>(tokens.begin() + 1, tokens.begin() + 4)) {
       pos << tmp->at(0), tmp->at(1), tmp->at(2);
+    } else {
+      appendError("Error reading atom position");
+      return false;
     }
 
     Atom newAtom = mol.addAtom(atomicNum);
@@ -205,7 +215,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     // check for charge and force columns
     if (chargeColumn > 0 && chargeColumn < tokens.size()) {
-      charges.push_back(lexicalCast<double>(tokens[chargeColumn]));
+      if (auto c = lexicalCast<double>(tokens[chargeColumn])) {
+        charges.push_back(*c);
+      } else {
+        appendError("Error reading charge");
+      }
       // we set the charges after all atoms are added
     }
     if (forceColumn > 0 && forceColumn < tokens.size()) {
@@ -213,6 +227,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
                                          tokens.begin() + forceColumn + 3)) {
         Vector3 force(tmp->at(0), tmp->at(1), tmp->at(2));
         newAtom.setForceVector(force);
+      } else {
+        appendError("Error reading force");
       }
     }
   }
@@ -228,14 +244,14 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Do we have an animation?
-  size_t numAtoms2;
   // check if the next frame has the same number of atoms
   getline(inStream, buffer); // should be the number of atoms
   if (buffer.size() == 0 || buffer[0] == '>') {
     getline(inStream, buffer); // Orca 6 prints ">" separators
   }
 
-  if ((numAtoms2 = lexicalCast<int>(buffer)) && numAtoms == numAtoms2) {
+  auto numAtoms2 = lexicalCast<int>(buffer);
+  if (numAtoms2 && numAtoms == *numAtoms2) {
     getline(inStream, buffer); // comment line
     // check for properties in the comment line
     if (findEnergy(buffer, energy)) {
@@ -266,6 +282,9 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
               lexicalCast<double>(tokens.begin() + 1, tokens.begin() + 4)) {
           Vector3 pos(tmp->at(0), tmp->at(1), tmp->at(2));
           positions.push_back(pos);
+        } else {
+          appendError("Error reading position");
+          return false;
         }
       }
 

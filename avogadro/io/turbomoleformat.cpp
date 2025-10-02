@@ -99,13 +99,16 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
           tokens[3][0] = toupper(tokens[3][0]);
           atomicNum = Elements::atomicNumberFromSymbol(tokens[3]);
         } else
-          atomicNum =
-            static_cast<unsigned char>(lexicalCast<short int>(tokens[3]));
+          atomicNum = static_cast<unsigned char>(
+            lexicalCast<short int>(tokens[3]).value_or(0));
 
         Vector3 pos;
         if (auto tmp =
               lexicalCast<double>(tokens.begin(), tokens.begin() + 3)) {
           pos << tmp->at(0), tmp->at(1), tmp->at(2);
+        } else {
+          appendError("Failed to parse this line following $coord: " + buffer);
+          return false;
         }
 
         Atom newAtom = mol.addAtom(atomicNum);
@@ -134,6 +137,9 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
         alpha = tmp->at(3) * DEG_TO_RAD;
         beta = tmp->at(4) * DEG_TO_RAD;
         gamma = tmp->at(5) * DEG_TO_RAD;
+      } else {
+        appendError("Failed to parse this line: " + buffer);
+        return false;
       }
 
     } else if (tokens[0] == "$lattice") {
@@ -163,6 +169,10 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
             v3.y() = tmp->at(1) * latticeConversion;
             v3.z() = tmp->at(2) * latticeConversion;
           }
+        } else {
+          appendError("Failed to parse this line following $lattice: " +
+                      buffer);
+          return false;
         }
       }
     } else if (tokens[0][0] != '#') {

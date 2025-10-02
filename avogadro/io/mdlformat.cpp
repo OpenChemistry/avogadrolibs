@@ -172,7 +172,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     string element(trimmed(buffer.substr(31, 3)));
-    auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))));
+    auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))).value_or(0));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       Atom newAtom = mol.addAtom(atomicNum);
@@ -409,7 +409,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     // convert the idx to an atom index
     // and set the label
     std::string idx = mol.data("idx").toString();
-    size_t atomIdx = lexicalCast<size_t>(idx);
+    size_t atomIdx = lexicalCast<size_t>(idx).value_or(0);
     mol.setAtomLabel(atomIdx, pka);
   }
 

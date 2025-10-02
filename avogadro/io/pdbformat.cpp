@@ -69,14 +69,20 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     else if (startsWith(buffer, "CRYST1") && buffer.length() >= 55) {
       // PDB reports in degrees and Angstroms
       //   Avogadro uses radians internally
-      Real a = lexicalCast<Real>(buffer.substr(6, 9), ok);
-      Real b = lexicalCast<Real>(buffer.substr(15, 9), ok);
-      Real c = lexicalCast<Real>(buffer.substr(24, 9), ok);
-      Real alpha = lexicalCast<Real>(buffer.substr(33, 7), ok) * DEG_TO_RAD;
-      Real beta = lexicalCast<Real>(buffer.substr(40, 7), ok) * DEG_TO_RAD;
-      Real gamma = lexicalCast<Real>(buffer.substr(47, 8), ok) * DEG_TO_RAD;
+      auto a = lexicalCast<Real>(buffer.substr(6, 9));
+      auto b = lexicalCast<Real>(buffer.substr(15, 9));
+      auto c = lexicalCast<Real>(buffer.substr(24, 9));
+      auto alpha = lexicalCast<Real>(buffer.substr(33, 7));
+      auto beta = lexicalCast<Real>(buffer.substr(40, 7));
+      auto gamma = lexicalCast<Real>(buffer.substr(47, 8));
 
-      auto* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+      if (!a || !b || !c || !alpha || !beta || !gamma) {
+        appendError("Failed to parse CRYST1 :" + buffer);
+        return false;
+      }
+
+      auto* cell = new Core::UnitCell(*a, *b, *c, *alpha * DEG_TO_RAD,
+                                      *beta * DEG_TO_RAD, *gamma * DEG_TO_RAD);
       if (!cell->isRegular()) {
         appendError("CRYST1 does not give linear independent lattice vectors");
         delete cell;
