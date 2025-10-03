@@ -239,8 +239,8 @@ jobs:
       if: runner.os == 'Windows'
       shell: bash
       run: |
-        gh release download -R prefix.dev/pixi -p "pixi-x86_64-pc-windows-msvc.exe"
-        # curl -O https://github.com/prefix.dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
+        gh release download -R prefix-dev/pixi -p "pixi-x86_64-pc-windows-msvc.exe"
+        # wget https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
         # move pixi to prefix/bin
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
         mv prefix avogadro2
