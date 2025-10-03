@@ -29,15 +29,13 @@ jobs:
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
-            cpack_flags: "-G DragNDrop",
           }
         - {
             name: "macOS Qt6 Intel", artifact: "macOS.zip",
-            os: macos-14-large,
+            os: macos-15-intel,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja",
-            cpack_flags: "-G DragNDrop",
           }
         - {
             name: "Windows Qt6", artifact: "",
@@ -46,7 +44,6 @@ jobs:
             build_type: "Release",
             cmake_flags: "",
             build_flags: "-j 2",
-            cpack_flags: "-G NSIS",
           }
 
     steps:
@@ -158,8 +155,8 @@ jobs:
         done
         otool -L libinchi.?.?.?.dylib
         otool -L libopenbabel.?.?.?.dylib
-        cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
-        cp -p libopenbabel* ../Avogadro2.app/Contents/Frameworks/
+        # cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
+        # cp -p libopenbabel* ../Avogadro2.app/Contents/Frameworks/
         # finally, fixup the binaries
         cd ../bin
         for exe in obabel obmm eht_bind genXrdPattern; do
@@ -169,6 +166,7 @@ jobs:
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
           done
         done
+        ls .. # build/prefix
 
     - name: Install the Apple certificate
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
@@ -232,6 +230,14 @@ jobs:
       env:
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+
+    - name: Create Mac Packages
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        zip -r Avogadro2-windows.zip prefix
+      working-directory: ${{ runner.workspace }}/build/
+
 
     - name: Upload
       if: matrix.config.artifact != 0
