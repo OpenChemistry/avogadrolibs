@@ -52,9 +52,6 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew install ninja eigen glew pixi
-    - name: Install Dependencies (Windows)
-      if: runner.os == 'Windows'
-      run: choco install ninja zip
 
     - name: Checkout openchemistry
       uses: actions/checkout@v5
@@ -241,7 +238,7 @@ jobs:
         # move pixi to prefix/bin
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
         mv prefix avogadro2
-        zip -r Avogadro2-windows.zip avogadro2
+        7z a Avogadro2-windows.zip avogadro2
       working-directory: ${{ runner.workspace }}/build/
 
     - name: Upload
