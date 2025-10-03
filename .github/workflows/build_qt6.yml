@@ -108,7 +108,7 @@ jobs:
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
-        vcpkg install libarchive eigen3 libxml2 zlib
+        vcpkg install libarchive eigen3 libxml2 zlib curl
 
     - name: Grab cache files
       uses: actions/cache@v4
@@ -239,12 +239,15 @@ jobs:
       if: runner.os == 'Windows'
       shell: bash
       run: |
-        wget https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
+        gh release download -R prefix.dev/pixi -p "pixi-x86_64-pc-windows-msvc.exe"
+        # curl -O https://github.com/prefix.dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
         # move pixi to prefix/bin
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
         mv prefix avogadro2
         7z a Avogadro2-windows.zip avogadro2
       working-directory: ${{ runner.workspace }}/build/
+      env:
+        GH_TOKEN: ${{ github.token }}
 
     - name: Upload
       if: matrix.config.artifact != 0
