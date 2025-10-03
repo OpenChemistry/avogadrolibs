@@ -219,10 +219,12 @@ jobs:
         exe_path=prefix/Avogadro2.app/Contents/MacOS/
         cp -p `which pixi` ${exe_path}
         for exe in ${exe_path}*; do
-          args=“${args} -executable=${exe_path}/${exe}”
+          args="${args} -executable=${exe}"
         done;
         macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
-        /usr/bin/codesign -s ${CODESIGN_IDENTITY} -f --timestamp --deep --options runtime --entitlements ../avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
+        if [ ! -z "${P12_PASSWORD}" ]; then
+          /usr/bin/codesign -s ${CODESIGN_IDENTITY} -f --timestamp --deep --options runtime --entitlements ../../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
+        fi
         cd prefix
         /usr/bin/ditto -c -k --keepParent Avogadro2.app Avogadro2.zip
         mv Avogadro2.zip ../Avogadro2-macOS.zip
@@ -231,13 +233,12 @@ jobs:
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
 
-    - name: Create Mac Packages
+    - name: Create Windows Packages
       if: runner.os == 'Windows'
       shell: bash
       run: |
         zip -r Avogadro2-windows.zip prefix
       working-directory: ${{ runner.workspace }}/build/
-
 
     - name: Upload
       if: matrix.config.artifact != 0
