@@ -38,11 +38,11 @@ jobs:
             cmake_flags: "-G Ninja",
           }
         - {
-            name: "Windows Qt6", artifact: "",
+            name: "Windows Qt6", artifact: "win64.zip",
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "",
+            cmake_flags: "-DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DBUILD_MOLEQUEUE=OFF -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
             build_flags: "-j 2",
           }
 
@@ -51,7 +51,7 @@ jobs:
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install ninja eigen glew pixi
+        brew install eigen glew pixi
 
     - name: Checkout openchemistry
       uses: actions/checkout@v5
@@ -104,6 +104,11 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
+
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        vcpkg install libarchive eigen3 libxml2 zlib
 
     - name: Grab cache files
       uses: actions/cache@v4
