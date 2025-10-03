@@ -13,7 +13,7 @@ namespace Avogadro::Core {
 Cube::Cube()
   : m_data(0), m_min(0.0, 0.0, 0.0), m_max(0.0, 0.0, 0.0),
     m_spacing(0.0, 0.0, 0.0), m_points(0, 0, 0), m_minValue(0.0),
-    m_maxValue(0.0), m_cubeType(None), m_lock(new Mutex)
+    m_maxValue(0.0), m_cubeType(None), m_lock(nullptr)
 {
 }
 
