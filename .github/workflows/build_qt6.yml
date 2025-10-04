@@ -225,7 +225,7 @@ jobs:
         done;
         macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
         if [ ! -z "${P12_PASSWORD}" ]; then
-          /usr/bin/codesign -s ${CODESIGN_IDENTITY} -f --timestamp --deep --options runtime --entitlements ../../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
+          /usr/bin/codesign -s ${CODESIGN_IDENTITY} -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
         fi
         cd prefix
         /usr/bin/ditto -c -k --keepParent Avogadro2.app Avogadro2.zip
