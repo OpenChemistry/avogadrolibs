@@ -79,13 +79,18 @@ constexpr double RAD_TO_DEG_D = 180.0 / PI_D;
 constexpr float RAD_TO_DEG_F = static_cast<float>(RAD_TO_DEG_D);
 constexpr Real RAD_TO_DEG = static_cast<Real>(RAD_TO_DEG_D);
 
-constexpr double BOHR_TO_ANGSTROM_D = 0.52917721092;
+// from NIST
+constexpr double BOHR_TO_ANGSTROM_D = 0.529177210544;
 constexpr float BOHR_TO_ANGSTROM_F = static_cast<float>(BOHR_TO_ANGSTROM_D);
 constexpr Real BOHR_TO_ANGSTROM = static_cast<Real>(BOHR_TO_ANGSTROM_D);
 
 constexpr double ANGSTROM_TO_BOHR_D = 1.0 / BOHR_TO_ANGSTROM_D;
 constexpr float ANGSTROM_TO_BOHR_F = static_cast<float>(ANGSTROM_TO_BOHR_D);
 constexpr Real ANGSTROM_TO_BOHR = static_cast<Real>(ANGSTROM_TO_BOHR_D);
+
+constexpr double HARTREE_TO_EV_D = 27.211386245981;
+constexpr float HARTREE_TO_EV_F = static_cast<float>(HARTREE_TO_EV_D);
+constexpr Real HARTREE_TO_EV = static_cast<Real>(HARTREE_TO_EV_D);
 /** @} */
 
 } // namespace Avogadro
