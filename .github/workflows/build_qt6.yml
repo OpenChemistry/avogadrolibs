@@ -243,6 +243,8 @@ jobs:
         # wget https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
         # move pixi to prefix/bin
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
+        # run windeployqt
+        windeployqt --release prefix/bin/avogadro2.exe
         mv prefix avogadro2
         7z a Avogadro2-windows.zip avogadro2
       working-directory: ${{ runner.workspace }}/build/
