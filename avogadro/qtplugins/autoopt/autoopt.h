@@ -15,6 +15,11 @@
 #include <QtWidgets/QAbstractButton>
 
 namespace Avogadro {
+
+namespace Calc {
+class EnergyCalculator;
+}
+
 namespace QtPlugins {
 
 class AutoOptWidget;
@@ -58,6 +63,8 @@ public:
   QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
+  void draw(Rendering::GroupNode& node) override;
+
 public slots:
   void startStop();
   void start();
@@ -72,6 +79,9 @@ private:
    */
   void updatePressedButtons(QMouseEvent*, bool release);
 
+  void optimizeStep();
+  Real calculateEnergy();
+
   void resetObject() { m_object = Rendering::Identifier(); }
   void translate(Vector3 delta, bool moveSelected = true);
   void rotate(Vector3 delta, Vector3 centroid, bool moveSelected = true);
@@ -85,6 +95,10 @@ private:
   QPoint m_lastMousePosition;
   Vector3f m_lastMouse3D;
   Qt::MouseButtons m_pressedButtons;
+
+  Calc::EnergyCalculator* m_method = nullptr;
+  Real m_energy;
+  Real m_deltaE;
 
   mutable QWidget* m_toolWidget;
   bool m_running = false;

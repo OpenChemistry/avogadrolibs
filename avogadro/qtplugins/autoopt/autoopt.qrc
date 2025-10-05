@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>autoopt_light.svg</file>
-        <file>autoopt_dark.svg</file>
+        <file>autoopt.svg</file>
         <file>autoopt_light.png</file>
         <file>autoopt_dark.png</file>
     </qresource>
