@@ -225,7 +225,7 @@ jobs:
         done;
         macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
         if [ ! -z "${P12_PASSWORD}" ]; then
-          /usr/bin/codesign -s ${CODESIGN_IDENTITY} -f --timestamp --deep --options runtime --entitlements ../../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
+          /usr/bin/codesign -s ${CODESIGN_IDENTITY} -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
         fi
         cd prefix
         /usr/bin/ditto -c -k --keepParent Avogadro2.app Avogadro2.zip
@@ -243,6 +243,8 @@ jobs:
         # wget https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
         # move pixi to prefix/bin
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
+        # run windeployqt
+        windeployqt --release prefix/bin/avogadro2.exe
         mv prefix avogadro2
         7z a Avogadro2-windows.zip avogadro2
       working-directory: ${{ runner.workspace }}/build/
