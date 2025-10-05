@@ -51,7 +51,7 @@ Manipulator::Manipulator(QObject* parent_)
   m_activateAction->setToolTip(
     tr("Manipulation Tool \t(%1)\n\n"
        "Left Mouse: \tClick and drag to move atoms\n"
-       "Right Mouse: \tClick and drag to rotate atoms.\n")
+       "Right Mouse: \tClick and drag to rotate atoms.")
       .arg(shortcut));
   setIcon();
   connect(m_toolWidget->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
