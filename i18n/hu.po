@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-28 02:48+0000\n"
+"POT-Creation-Date: 2025-10-05 02:47+0000\n"
 "PO-Revision-Date: 2025-08-27 08:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -3203,7 +3203,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:348
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:935
 #: qtplugins/surfaces/surfaces.cpp:979 qtplugins/surfaces/surfaces.cpp:991
-#: qtplugins/yaehmop/yaehmop.cpp:533
+#: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
@@ -4442,11 +4442,11 @@ msgstr "Nem sikerült létrehozni a pár eloszlásfüggvény (PDF) mintát"
 msgid "Error message: "
 msgstr "Hibaüzenet: "
 
-#: qtplugins/plotpdf/plotpdf.h:33
+#: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
 msgstr "Pár eloszlásfüggvény ábrázolása"
 
-#: qtplugins/plotpdf/plotpdf.h:68
+#: qtplugins/plotpdf/plotpdf.h:69
 msgid "Generate and plot a Pair Distribution Function curve."
 msgstr "Pár elosztásfüggvény létrehozása és ábrázolása."
 
@@ -4486,15 +4486,15 @@ msgstr "Hiba történt: nem található genXrdPattern végrehajtható fájl!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:241 qtplugins/plotxrd/plotxrd.cpp:253
 #: qtplugins/plotxrd/plotxrd.cpp:264 qtplugins/plotxrd/plotxrd.cpp:271
-#: qtplugins/yaehmop/yaehmop.cpp:555
+#: qtplugins/yaehmop/yaehmop.cpp:556
 msgid "Error: "
 msgstr "Hiba történt: "
 
-#: qtplugins/plotxrd/plotxrd.h:38
+#: qtplugins/plotxrd/plotxrd.h:39
 msgid "PlotXrd"
 msgstr "Röntgendiffrakciós minta ábrázolása"
 
-#: qtplugins/plotxrd/plotxrd.h:86
+#: qtplugins/plotxrd/plotxrd.h:87
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr ""
 "Elméleti röntgendiffrakciós minta létrehozása és ábrázolása ObjCryst ++ "
@@ -5158,7 +5158,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:359 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
-#: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:432
+#: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
 msgstr "Avogadro2"
 
@@ -5196,111 +5196,123 @@ msgstr "Spektrumok ábrázolása…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:36:1694
+#: qtplugins/spectra/spectra.h:32:1694
 msgid "Spectra"
 msgstr "Spektrumok"
 
-#: qtplugins/spectra/spectra.h:38
+#: qtplugins/spectra/spectra.h:34
 msgid "Display spectra plots."
 msgstr "Spektrábrák megjelenítése."
 
-#: qtplugins/spectra/spectradialog.cpp:436
+#: qtplugins/spectra/spectradialog.cpp:448
 msgid "Infrared"
 msgstr "Infravörös"
 
-#: qtplugins/spectra/spectradialog.cpp:440
+#: qtplugins/spectra/spectradialog.cpp:452
 msgid "Raman"
 msgstr "Raman"
 
-#: qtplugins/spectra/spectradialog.cpp:443
+#: qtplugins/spectra/spectradialog.cpp:455
 msgid "NMR"
 msgstr "NMR"
 
-#: qtplugins/spectra/spectradialog.cpp:446
+#: qtplugins/spectra/spectradialog.cpp:458
 msgid "Electronic"
 msgstr "Elektronikus"
 
-#: qtplugins/spectra/spectradialog.cpp:450
+#: qtplugins/spectra/spectradialog.cpp:462
 msgid "Circular Dichroism"
 msgstr "Körforgásos dikroizmus"
 
-#: qtplugins/spectra/spectradialog.cpp:454
-#: qtplugins/spectra/spectradialog.cpp:653
+#: qtplugins/spectra/spectradialog.cpp:466
+#: qtplugins/spectra/spectradialog.cpp:678
 msgid "Density of States"
 msgstr "Állapotok sűrűsége"
 
-#: qtplugins/spectra/spectradialog.cpp:496
+#: qtplugins/spectra/spectradialog.cpp:509
 msgid "Select Background Color"
 msgstr "Háttérszín kijelölése"
 
-#: qtplugins/spectra/spectradialog.cpp:509
+#: qtplugins/spectra/spectradialog.cpp:533
 msgid "Select Foreground Color"
 msgstr "Előtérszín kijelölése"
 
-#: qtplugins/spectra/spectradialog.cpp:522
+#: qtplugins/spectra/spectradialog.cpp:546
 msgid "Select Calculated Spectra Color"
 msgstr "Számított spektrum színének kijelölése"
 
-#: qtplugins/spectra/spectradialog.cpp:534
+#: qtplugins/spectra/spectradialog.cpp:558
 msgid "Select Imported Spectra Color"
 msgstr "Importált spektrum színének kijelölése"
 
-#: qtplugins/spectra/spectradialog.cpp:580
+#: qtplugins/spectra/spectradialog.cpp:604
 msgid "Wavelength (nm)"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:586
+#: qtplugins/spectra/spectradialog.cpp:605
+msgid "Frequency (Hz)"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:611
 msgid "Vibrational Spectra"
 msgstr "Rezgési spektrumok"
 
-#: qtplugins/spectra/spectradialog.cpp:587
-#: qtplugins/spectra/spectradialog.cpp:601
+#: qtplugins/spectra/spectradialog.cpp:612
+#: qtplugins/spectra/spectradialog.cpp:626
 msgid "Wavenumbers (cm⁻¹)"
 msgstr "Hullámszám (cm⁻¹)"
 
-#: qtplugins/spectra/spectradialog.cpp:588
+#: qtplugins/spectra/spectradialog.cpp:613
 msgid "Transmission"
 msgstr "Átvitel"
 
-#: qtplugins/spectra/spectradialog.cpp:600
+#: qtplugins/spectra/spectradialog.cpp:625
 msgid "Raman Spectra"
 msgstr "Raman-spektrum"
 
-#: qtplugins/spectra/spectradialog.cpp:602
-#: qtplugins/spectra/spectradialog.cpp:615
-#: qtplugins/spectra/spectradialog.cpp:629
-#: qtplugins/spectra/spectradialog.cpp:642
+#: qtplugins/spectra/spectradialog.cpp:627
+#: qtplugins/spectra/spectradialog.cpp:640
+#: qtplugins/spectra/spectradialog.cpp:654
+#: qtplugins/spectra/spectradialog.cpp:667
 msgid "Intensity"
 msgstr "Erősség"
 
-#: qtplugins/spectra/spectradialog.cpp:613
+#: qtplugins/spectra/spectradialog.cpp:638
 msgid "NMR Spectra"
 msgstr "NMR-spektrum"
 
-#: qtplugins/spectra/spectradialog.cpp:614
+#: qtplugins/spectra/spectradialog.cpp:639
 msgid "Chemical Shift (ppm)"
 msgstr "Kémiai eltolódás (millió rész)"
 
-#: qtplugins/spectra/spectradialog.cpp:627
+#: qtplugins/spectra/spectradialog.cpp:652
 msgid "Electronic Spectra"
 msgstr "Elektronikus spektrum"
 
-#: qtplugins/spectra/spectradialog.cpp:628
-#: qtplugins/spectra/spectradialog.cpp:641
-#: qtplugins/spectra/spectradialog.cpp:654
+#: qtplugins/spectra/spectradialog.cpp:653
+#: qtplugins/spectra/spectradialog.cpp:666
+#: qtplugins/spectra/spectradialog.cpp:679
 #: qtplugins/surfaces/orbitaltablemodel.cpp:108
 msgid "Energy (eV)"
 msgstr "Energia (eV)"
 
-#: qtplugins/spectra/spectradialog.cpp:640
+#: qtplugins/spectra/spectradialog.cpp:665
 msgid "Circular Dichroism Spectra"
 msgstr "Körforgásos dikroizmus spektruma"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-#: qtplugins/spectra/spectradialog.cpp:655:1592
+#: qtplugins/spectra/spectradialog.cpp:680:1592
 msgid "Density"
 msgstr "Sűrűség"
+
+#: qtplugins/spectra/spectradialog.cpp:794
+msgid "Smoothed"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:797
+msgid "Raw"
+msgstr ""
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
@@ -5618,7 +5630,7 @@ msgstr "Sávszerkezet kiszámítása…"
 msgid "&Yaehmop"
 msgstr "&YAeHMOP"
 
-#: qtplugins/yaehmop/yaehmop.cpp:209 qtplugins/yaehmop/yaehmop.cpp:433
+#: qtplugins/yaehmop/yaehmop.cpp:209 qtplugins/yaehmop/yaehmop.cpp:434
 msgid "Cannot calculate band structure: no unit cell!"
 msgstr "Sávstruktúra kiszámítása nem sikerült: nincs egységsejt!"
 
@@ -5645,6 +5657,10 @@ msgstr ""
 "Csak egy különleges k-pont található a YAeHMOP kimenetben! Kettő vagy több "
 "szükséges!"
 
+#: qtplugins/yaehmop/yaehmop.cpp:357
+msgid "k-space"
+msgstr ""
+
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
 msgid "Band %1"
@@ -5654,16 +5670,16 @@ msgstr "Sáv: %1"
 msgid "Fermi Level"
 msgstr "Fermi-szint"
 
-#: qtplugins/yaehmop/yaehmop.cpp:533
+#: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Cannot find Yaehmop"
 msgstr "Yaehmop nem található"
 
-#: qtplugins/yaehmop/yaehmop.cpp:544
+#: qtplugins/yaehmop/yaehmop.cpp:545
 #, qt-format
 msgid "Error: %1 failed to start"
 msgstr "Hiba: %1 indítása nem sikerült"
 
-#: qtplugins/yaehmop/yaehmop.cpp:595
+#: qtplugins/yaehmop/yaehmop.cpp:596
 msgid "Yaehmop Input"
 msgstr "YAeHMOP bemenet"
 
@@ -8043,8 +8059,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-msgid "Max 2*theta:"
-msgstr "Legnagyobb 2θ:"
+msgid "Max 2θ:"
+msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -8242,7 +8258,7 @@ msgid "y"
 msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:572
-#. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
+#. i18n: ectx: property (toolTip), widget (Avogadro::QtGui::ChartWidget, plot)
 msgid ""
 "Controls:\n"
 "Double left click: Restore default axis limits\n"
@@ -8837,6 +8853,9 @@ msgstr "Óvári"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid "Max 2*theta:"
+#~ msgstr "Legnagyobb 2θ:"
 
 #~ msgid ""
 #~ "Tables for displaying and editng atom, bond, angle and torsion properties."

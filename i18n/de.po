@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-09-28 02:48+0000\n"
+"POT-Creation-Date: 2025-10-05 02:47+0000\n"
 "PO-Revision-Date: 2025-08-06 08:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
@@ -3187,7 +3187,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:348
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:935
 #: qtplugins/surfaces/surfaces.cpp:979 qtplugins/surfaces/surfaces.cpp:991
-#: qtplugins/yaehmop/yaehmop.cpp:533
+#: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
@@ -4427,11 +4427,11 @@ msgstr ""
 msgid "Error message: "
 msgstr "Fehlermeldung: "
 
-#: qtplugins/plotpdf/plotpdf.h:33
+#: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.h:68
+#: qtplugins/plotpdf/plotpdf.h:69
 msgid "Generate and plot a Pair Distribution Function curve."
 msgstr "Einen Graphen einer Paarverteilungsfunktion berechnen und zeichnen."
 
@@ -4471,15 +4471,15 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:241 qtplugins/plotxrd/plotxrd.cpp:253
 #: qtplugins/plotxrd/plotxrd.cpp:264 qtplugins/plotxrd/plotxrd.cpp:271
-#: qtplugins/yaehmop/yaehmop.cpp:555
+#: qtplugins/yaehmop/yaehmop.cpp:556
 msgid "Error: "
 msgstr "Fehler: "
 
-#: qtplugins/plotxrd/plotxrd.h:38
+#: qtplugins/plotxrd/plotxrd.h:39
 msgid "PlotXrd"
 msgstr ""
 
-#: qtplugins/plotxrd/plotxrd.h:86
+#: qtplugins/plotxrd/plotxrd.h:87
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr ""
 "Berechnung und Zeichnen eines theoretischen XRD-Musters mit ObjCryst++."
@@ -5154,7 +5154,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:359 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
-#: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:432
+#: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
 msgstr "Avogadro2"
 
@@ -5192,112 +5192,124 @@ msgstr "Spektren zeichnen …"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:36:1694
+#: qtplugins/spectra/spectra.h:32:1694
 msgid "Spectra"
 msgstr "Spektren"
 
-#: qtplugins/spectra/spectra.h:38
+#: qtplugins/spectra/spectra.h:34
 #, fuzzy
 msgid "Display spectra plots."
 msgstr "Spektren anzeigen."
 
-#: qtplugins/spectra/spectradialog.cpp:436
+#: qtplugins/spectra/spectradialog.cpp:448
 msgid "Infrared"
 msgstr "Infrarot"
 
-#: qtplugins/spectra/spectradialog.cpp:440
+#: qtplugins/spectra/spectradialog.cpp:452
 msgid "Raman"
 msgstr "Raman"
 
-#: qtplugins/spectra/spectradialog.cpp:443
+#: qtplugins/spectra/spectradialog.cpp:455
 msgid "NMR"
 msgstr "NMR"
 
-#: qtplugins/spectra/spectradialog.cpp:446
+#: qtplugins/spectra/spectradialog.cpp:458
 msgid "Electronic"
 msgstr "Elektronisch"
 
-#: qtplugins/spectra/spectradialog.cpp:450
+#: qtplugins/spectra/spectradialog.cpp:462
 msgid "Circular Dichroism"
 msgstr "Circulardichroismus"
 
-#: qtplugins/spectra/spectradialog.cpp:454
-#: qtplugins/spectra/spectradialog.cpp:653
+#: qtplugins/spectra/spectradialog.cpp:466
+#: qtplugins/spectra/spectradialog.cpp:678
 msgid "Density of States"
 msgstr "Zustandsdichte"
 
-#: qtplugins/spectra/spectradialog.cpp:496
+#: qtplugins/spectra/spectradialog.cpp:509
 msgid "Select Background Color"
 msgstr "Hintergrundfarbe auswählen"
 
-#: qtplugins/spectra/spectradialog.cpp:509
+#: qtplugins/spectra/spectradialog.cpp:533
 msgid "Select Foreground Color"
 msgstr "Vordergrundfarbe auswählen"
 
-#: qtplugins/spectra/spectradialog.cpp:522
+#: qtplugins/spectra/spectradialog.cpp:546
 msgid "Select Calculated Spectra Color"
 msgstr "Farbe des berechneten Spektrums wählen"
 
-#: qtplugins/spectra/spectradialog.cpp:534
+#: qtplugins/spectra/spectradialog.cpp:558
 msgid "Select Imported Spectra Color"
 msgstr "Farbe des importierten Spektrums wählen"
 
-#: qtplugins/spectra/spectradialog.cpp:580
+#: qtplugins/spectra/spectradialog.cpp:604
 msgid "Wavelength (nm)"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:586
+#: qtplugins/spectra/spectradialog.cpp:605
+msgid "Frequency (Hz)"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:611
 msgid "Vibrational Spectra"
 msgstr "Schwingungsspektren"
 
-#: qtplugins/spectra/spectradialog.cpp:587
-#: qtplugins/spectra/spectradialog.cpp:601
+#: qtplugins/spectra/spectradialog.cpp:612
+#: qtplugins/spectra/spectradialog.cpp:626
 msgid "Wavenumbers (cm⁻¹)"
 msgstr "Wellenzahlen (cm-1)"
 
-#: qtplugins/spectra/spectradialog.cpp:588
+#: qtplugins/spectra/spectradialog.cpp:613
 msgid "Transmission"
 msgstr "Transmission"
 
-#: qtplugins/spectra/spectradialog.cpp:600
+#: qtplugins/spectra/spectradialog.cpp:625
 msgid "Raman Spectra"
 msgstr "Raman-Spektren"
 
-#: qtplugins/spectra/spectradialog.cpp:602
-#: qtplugins/spectra/spectradialog.cpp:615
-#: qtplugins/spectra/spectradialog.cpp:629
-#: qtplugins/spectra/spectradialog.cpp:642
+#: qtplugins/spectra/spectradialog.cpp:627
+#: qtplugins/spectra/spectradialog.cpp:640
+#: qtplugins/spectra/spectradialog.cpp:654
+#: qtplugins/spectra/spectradialog.cpp:667
 msgid "Intensity"
 msgstr "Intensität"
 
-#: qtplugins/spectra/spectradialog.cpp:613
+#: qtplugins/spectra/spectradialog.cpp:638
 msgid "NMR Spectra"
 msgstr "NMR-Spektren"
 
-#: qtplugins/spectra/spectradialog.cpp:614
+#: qtplugins/spectra/spectradialog.cpp:639
 msgid "Chemical Shift (ppm)"
 msgstr "chemische Verschiebung (ppm)"
 
-#: qtplugins/spectra/spectradialog.cpp:627
+#: qtplugins/spectra/spectradialog.cpp:652
 msgid "Electronic Spectra"
 msgstr "Elektronische Spektren"
 
-#: qtplugins/spectra/spectradialog.cpp:628
-#: qtplugins/spectra/spectradialog.cpp:641
-#: qtplugins/spectra/spectradialog.cpp:654
+#: qtplugins/spectra/spectradialog.cpp:653
+#: qtplugins/spectra/spectradialog.cpp:666
+#: qtplugins/spectra/spectradialog.cpp:679
 #: qtplugins/surfaces/orbitaltablemodel.cpp:108
 msgid "Energy (eV)"
 msgstr "Energie (eV)"
 
-#: qtplugins/spectra/spectradialog.cpp:640
+#: qtplugins/spectra/spectradialog.cpp:665
 msgid "Circular Dichroism Spectra"
 msgstr "CD-Spektren"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-#: qtplugins/spectra/spectradialog.cpp:655:1592
+#: qtplugins/spectra/spectradialog.cpp:680:1592
 msgid "Density"
 msgstr "Dichte"
+
+#: qtplugins/spectra/spectradialog.cpp:794
+msgid "Smoothed"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:797
+msgid "Raw"
+msgstr ""
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
@@ -5621,7 +5633,7 @@ msgstr "Bandstruktur berechnen …"
 msgid "&Yaehmop"
 msgstr "&Yaehmop"
 
-#: qtplugins/yaehmop/yaehmop.cpp:209 qtplugins/yaehmop/yaehmop.cpp:433
+#: qtplugins/yaehmop/yaehmop.cpp:209 qtplugins/yaehmop/yaehmop.cpp:434
 msgid "Cannot calculate band structure: no unit cell!"
 msgstr ""
 "Die elektronische Bandstruktur kann nicht berechnet werden: keine "
@@ -5646,6 +5658,10 @@ msgstr ""
 "Nur ein besonderer k-Punkt wurde in Yaehmop-Ausgang gefunden! Zwei oder mehr "
 "sind erforderlich!"
 
+#: qtplugins/yaehmop/yaehmop.cpp:357
+msgid "k-space"
+msgstr ""
+
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
 msgid "Band %1"
@@ -5655,16 +5671,16 @@ msgstr "Band %1"
 msgid "Fermi Level"
 msgstr "Fermi-Niveau"
 
-#: qtplugins/yaehmop/yaehmop.cpp:533
+#: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Cannot find Yaehmop"
 msgstr "Yaehmop kann nicht gefunden werden"
 
-#: qtplugins/yaehmop/yaehmop.cpp:544
+#: qtplugins/yaehmop/yaehmop.cpp:545
 #, qt-format
 msgid "Error: %1 failed to start"
 msgstr "Fehler: %1 konnte nicht gestartet werden"
 
-#: qtplugins/yaehmop/yaehmop.cpp:595
+#: qtplugins/yaehmop/yaehmop.cpp:596
 msgid "Yaehmop Input"
 msgstr ""
 
@@ -7993,8 +8009,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-msgid "Max 2*theta:"
-msgstr "Max 2*theta:"
+msgid "Max 2θ:"
+msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -8198,7 +8214,7 @@ msgid "y"
 msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:572
-#. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
+#. i18n: ectx: property (toolTip), widget (Avogadro::QtGui::ChartWidget, plot)
 msgid ""
 "Controls:\n"
 "Double left click: Restore default axis limits\n"
@@ -8803,6 +8819,9 @@ msgstr ""
 "de,,,,coolx67@gmx.at,,,,,,,,simon@ochsenreither.de,,,aleixosk@gmail.com,,"
 "avogadro-devel@lists.sourceforge.net,,,,,,,,,armin_mohring@web.de,,,,"
 "coolx67@gmx.at,,,,tobannert@gmail.com,,,,simon@ochsenreither.de"
+
+#~ msgid "Max 2*theta:"
+#~ msgstr "Max 2*theta:"
 
 #~ msgid ""
 #~ "Tables for displaying and editng atom, bond, angle and torsion properties."
