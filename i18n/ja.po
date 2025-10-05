@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-05 02:47+0000\n"
-"PO-Revision-Date: 2025-09-26 16:17+0000\n"
+"PO-Revision-Date: 2025-10-06 04:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -5211,7 +5211,7 @@ msgstr "波長 (nm)"
 
 #: qtplugins/spectra/spectradialog.cpp:605
 msgid "Frequency (Hz)"
-msgstr ""
+msgstr "周波数 (Hz)"
 
 #: qtplugins/spectra/spectradialog.cpp:611
 msgid "Vibrational Spectra"
@@ -5267,12 +5267,14 @@ msgid "Density"
 msgstr "密度"
 
 #: qtplugins/spectra/spectradialog.cpp:794
+#, fuzzy
 msgid "Smoothed"
-msgstr ""
+msgstr "平滑化"
 
 #: qtplugins/spectra/spectradialog.cpp:797
+#, fuzzy
 msgid "Raw"
-msgstr ""
+msgstr "無加工"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
@@ -5624,7 +5626,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:357
 msgid "k-space"
-msgstr ""
+msgstr "k空間"
 
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
