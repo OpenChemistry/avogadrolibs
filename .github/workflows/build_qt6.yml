@@ -7,11 +7,13 @@ name: Qt6 Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.8.3
+  QT_VERSION: 6.9.3
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
-  MACOS_TARGET: 12
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DQT_VERSION=6
+  MACOS_TARGET: 13
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
+  CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+  SCCACHE_GHA_ENABLED: "true"
 
 jobs:
   build:
@@ -22,21 +24,26 @@ jobs:
       matrix:
         config:
         - {
-            name: "macOS Qt6", artifact: "",
-            os: macos-latest,
+            name: "macOS Qt6 ARM", artifact: "macOS-arm64.zip",
+            os: macos-15,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'",
-            cpack_flags: "-G DragNDrop",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
           }
         - {
-            name: "Windows Qt6", artifact: "",
+            name: "macOS Qt6 Intel", artifact: "macOS.zip",
+            os: macos-15-intel,
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja",
+          }
+        - {
+            name: "Windows Qt6", artifact: "win64.zip",
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "",
+            cmake_flags: "-DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DBUILD_MOLEQUEUE=OFF -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
             build_flags: "-j 2",
-            cpack_flags: "-G NSIS",
           }
 
     steps:
@@ -44,27 +51,48 @@ jobs:
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install ninja eigen glew
-    - name: Install Dependencies (Windows)
-      if: runner.os == 'Windows'
-      run: choco install ninja
+        brew install eigen glew pixi
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v5
+      with:
+        path: avogadrolibs
+
     - name: Checkout avogadroapp
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
-    - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
+    - name: Checkout molecules
+      uses: actions/checkout@v5
       with:
-        path: avogadrolibs
+        repository: openchemistry/molecules
+        path: molecules
+
+    - name: Checkout fragments
+      uses: actions/checkout@v5
+      with:
+        repository: openchemistry/fragments
+        path: fragments
+
+    - name: Checkout crystals
+      uses: actions/checkout@v5
+      with:
+        repository: openchemistry/crystals
+        path: crystals
+
+    - name: Checkout i18n
+      uses: actions/checkout@v5
+      with:
+        repository: openchemistry/avogadro-i18n
+        path: avogadro-i18n
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -77,26 +105,157 @@ jobs:
       with:
         arch: x64
 
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        vcpkg install libarchive eigen3 libxml2 zlib curl
+
+    - name: Grab cache files
+      uses: actions/cache@v4
+      if: runner.os != 'Windows'
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: ${{ matrix.config.name }}-downloads
+
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@main
+
     - name: Configure
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} ${{env.CACHE}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
+
+    - name: Fix Mac plugins
+      if: runner.os == 'macOS'
+      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
+      run: |
+        for plugin in *.so; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        cd .. # build/prefix/lib
+        for plugin in libinchi.?.?.?.dylib libopenbabel.?.?.?.dylib; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        otool -L libinchi.?.?.?.dylib
+        otool -L libopenbabel.?.?.?.dylib
+        # cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
+        # cp -p libopenbabel* ../Avogadro2.app/Contents/Frameworks/
+        # finally, fixup the binaries
+        cd ../bin
+        for exe in obabel obmm eht_bind genXrdPattern; do
+          for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $exe $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
+          done
+        done
+        ls .. # build/prefix
+
+    - name: Install the Apple certificate
+      # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
+      if: runner.os == 'macOS'
+      working-directory: ${{ runner.workspace }}/build
+      env:
+        BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
+        NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
+        CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+        PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
+      run: |
+        # be sure the DMG can be created easily
+        # https://github.com/actions/runner-images/issues/7522#issuecomment-1556766641
+        echo killing...; sudo pkill -9 XProtect >/dev/null || true;
+        echo waiting...; while pgrep XProtect; do sleep 3; done;
+
+        # create variables
+        if [ -n "${P12_PASSWORD}" ]; then
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 -d -o $CERTIFICATE_PATH
+
+          # create temporary keychain if the cert is non-zero
+          if [ -s $CERTIFICATE_PATH ]; then
+            security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+            security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+            # import certificate to keychain
+            security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+            security list-keychain -d user -s $KEYCHAIN_PATH
+
+            # signing occurs via avogadroapp cpack instructions
+          fi # certificate exists
+        fi # password exists
+
+    - name: Create Mac Packages
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        if [ -z "${P12_PASSWORD}" ]; then
+          unset CODESIGN_IDENTITY # to prevent cpack failing when trying to sign
+        fi
+        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date "+%d-%m-%y"`
+        exe_path=prefix/Avogadro2.app/Contents/MacOS/
+        cp -p `which pixi` ${exe_path}
+        for exe in ${exe_path}*; do
+          args="${args} -executable=${exe}"
+        done;
+        macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
+        if [ ! -z "${P12_PASSWORD}" ]; then
+          /usr/bin/codesign -s ${CODESIGN_IDENTITY} -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
+        fi
+        cd prefix
+        /usr/bin/ditto -c -k --keepParent Avogadro2.app Avogadro2.zip
+        mv Avogadro2.zip ../Avogadro2-macOS.zip
+      working-directory: ${{ runner.workspace }}/build/
+      env:
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+
+    - name: Create Windows Packages
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        gh release download -R prefix-dev/pixi -p "pixi-x86_64-pc-windows-msvc.exe"
+        # wget https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
+        # move pixi to prefix/bin
+        mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
+        # run windeployqt
+        windeployqt --release prefix/bin/avogadro2.exe
+        mv prefix avogadro2
+        7z a Avogadro2-windows.zip avogadro2
+      working-directory: ${{ runner.workspace }}/build/
+      env:
+        GH_TOKEN: ${{ github.token }}
 
     - name: Upload
       if: matrix.config.artifact != 0
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
+        path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
 
     - name: Setup tmate session

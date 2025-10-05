@@ -12,7 +12,7 @@
 
 namespace Avogadro {
 
-namespace VTK {
+namespace QtGui {
 class ChartDialog;
 }
 
@@ -56,7 +56,7 @@ private:
   QtGui::Molecule* m_molecule;
 
   std::unique_ptr<QAction> m_displayDialogAction;
-  QScopedPointer<VTK::ChartDialog> m_chartDialog;
+  QScopedPointer<QtGui::ChartDialog> m_chartDialog;
 };
 
 inline QString PlotRmsd::description() const

@@ -151,7 +151,6 @@ private:
   union
   {
     bool _bool;
-    char _char;
     int _int;
     long _long;
     float _float;

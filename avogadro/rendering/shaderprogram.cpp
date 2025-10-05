@@ -434,7 +434,7 @@ void ShaderProgram::initializeTextureUnits()
   // This seems to be about the maximum available on current hardware.
   // If increasing this limit, modify the lookupTextureUnit method
   // appropriately.
-  numTextureUnits = std::min(std::max(numTextureUnits, 0), 32);
+  numTextureUnits = std::clamp(numTextureUnits, 0, 32);
 
   m_boundTextureUnits.clear();
   m_boundTextureUnits.resize(numTextureUnits, false);

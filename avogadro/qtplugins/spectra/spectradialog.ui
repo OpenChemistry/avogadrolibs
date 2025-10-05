@@ -542,7 +542,7 @@
     </widget>
    </item>
    <item row="0" column="0" colspan="5">
-    <widget class="Avogadro::VTK::ChartWidget" name="plot" native="true">
+    <widget class="Avogadro::QtGui::ChartWidget" name="plot" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -607,9 +607,9 @@ Scroll wheel: Zoom to cursor</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Avogadro::VTK::ChartWidget</class>
+   <class>Avogadro::QtGui::ChartWidget</class>
    <extends>QWidget</extends>
-   <header location="global">avogadro/vtk/chartwidget.h</header>
+   <header location="global">avogadro/qtgui/chartwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -117,12 +117,12 @@ BondCentricTool::BondCentricTool(QObject* parent_)
   QString shortcut = tr("Ctrl+6", "control-key 6");
   m_activateAction->setText(tr("Bond-Centric Manipulation"));
   m_activateAction->setToolTip(
-    tr("Bond Centric Manipulation Tool \t(%1)\n\n"
-       "Left Mouse: \tClick and drag to rotate the view.\n"
-       "Middle Mouse: \tClick and drag to zoom in or out.\n"
-       "Right Mouse: \tClick and drag to move the view.\n"
-       "Double-Click: \tReset the view.\n\n"
-       "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+    tr("Bond Centric Manipulation Tool\t(%1)\n\n"
+       "Left Mouse:\tClick and drag to rotate the view.\n"
+       "Middle Mouse:\tClick and drag to zoom in or out.\n"
+       "Right Mouse:\tClick and drag to move the view.\n"
+       "Double-Click:\tReset the view.\n\n"
+       "Left Click & Drag on a Bond to set the Manipulation Plane\n"
        "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
        "Right Click & Drag one of the Atoms in the Bond to change the length")
       .arg(shortcut));

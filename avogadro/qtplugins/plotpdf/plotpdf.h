@@ -8,11 +8,12 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-namespace VTK {
+namespace Avogadro {
+
+namespace QtGui {
 class ChartDialog;
 }
 
-namespace Avogadro {
 namespace QtPlugins {
 
 class PdfOptionsDialog;
@@ -60,7 +61,7 @@ private:
 
   QScopedPointer<PdfOptionsDialog> m_pdfOptionsDialog;
   QScopedPointer<QAction> m_displayDialogAction;
-  QScopedPointer<VTK::ChartDialog> m_chartDialog;
+  QScopedPointer<QtGui::ChartDialog> m_chartDialog;
 };
 
 inline QString PlotPdf::description() const

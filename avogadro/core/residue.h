@@ -60,24 +60,21 @@ public:
 
   virtual ~Residue() = default;
 
-  inline std::string residueName() const { return m_residueName; }
+  std::string residueName() const { return m_residueName; }
 
-  inline void setResidueName(std::string& name) { m_residueName = name; }
+  void setResidueName(std::string& name) { m_residueName = name; }
 
-  inline Index residueId() const { return m_residueId; }
+  Index residueId() const { return m_residueId; }
 
-  inline void setResidueId(Index& number) { m_residueId = number; }
+  void setResidueId(Index& number) { m_residueId = number; }
 
-  inline char chainId() const { return m_chainId; }
+  char chainId() const { return m_chainId; }
 
-  inline void setChainId(const char& id) { m_chainId = id; }
+  void setChainId(const char& id) { m_chainId = id; }
 
-  inline SecondaryStructure secondaryStructure() const
-  {
-    return m_secondaryStructure;
-  }
+  SecondaryStructure secondaryStructure() const { return m_secondaryStructure; }
 
-  inline void setSecondaryStructure(const SecondaryStructure& ss)
+  void setSecondaryStructure(const SecondaryStructure& ss)
   {
     m_secondaryStructure = ss;
   }

@@ -48,6 +48,7 @@ private slots:
   bool copyCJSON();
   void copySMILES();
   void copyInChI();
+  void copyXYZ();
   void cut();
   void paste();
   void clear();
@@ -62,6 +63,7 @@ private:
   QAction* m_copyAction;
   QAction* m_copySMILES;
   QAction* m_copyInChI;
+  QAction* m_copyXYZ;
   QAction* m_cutAction;
   QAction* m_clearAction;
   QAction* m_pasteAction;

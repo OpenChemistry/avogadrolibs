@@ -16,6 +16,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QSpinBox>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QTextEdit>
 
@@ -354,6 +355,18 @@ void JsonWidget::addOptionRow(const QString& key, const QString& name,
     label = obj[QStringLiteral("label")].toString();
   }
 
+  // also check for "User Name" or "Password" for translation
+  // with case-insensitive comparison
+  if (label.toLower() == "user name" || label.toLower() == "username")
+    label = tr("User Name");
+  else if (label.toLower() == "password") {
+    label = tr("Password");
+    // make sure the widget has the right echo
+    if (auto* lineEdit = qobject_cast<QLineEdit*>(widget)) {
+      lineEdit->setEchoMode(QLineEdit::PasswordEchoOnEdit);
+    }
+  }
+
   form->addRow(label + ":", widget);
   m_widgets.insert(key, widget);
 
@@ -399,6 +412,8 @@ QWidget* JsonWidget::createOptionWidget(const QJsonValue& option)
     return createBooleanWidget(obj);
   else if (type == QLatin1String("text"))
     return createTextWidget(obj);
+  else if (type == QLatin1String("table"))
+    return createTableWidget(obj);
 
   qDebug() << "Unrecognized option type:" << type;
   return nullptr;
@@ -445,6 +460,16 @@ QWidget* JsonWidget::createStringWidget(const QJsonObject& obj)
   if (obj.contains(QStringLiteral("toolTip")) &&
       obj.value(QStringLiteral("toolTip")).isString()) {
     edit->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  }
+  if (obj.contains(QStringLiteral("placeholderText")) &&
+      obj.value(QStringLiteral("placeholderText")).isString()) {
+    edit->setPlaceholderText(obj[QStringLiteral("placeholderText")].toString());
+  }
+  // don't echo password fields
+  if (obj.contains(QStringLiteral("password")) &&
+      obj.value(QStringLiteral("password")).isBool() &&
+      obj[QStringLiteral("password")].toBool()) {
+    edit->setEchoMode(QLineEdit::PasswordEchoOnEdit);
   }
 
   return edit;
@@ -549,6 +574,62 @@ QWidget* JsonWidget::createBooleanWidget(const QJsonObject& obj)
   return checkBox;
 }
 
+QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
+{
+  auto* tableWidget = new QTableWidget(this);
+  connect(tableWidget, SIGNAL(cellChanged(int, int)),
+          SLOT(updatePreviewText()));
+
+  if (obj.contains(QStringLiteral("toolTip")) &&
+      obj.value(QStringLiteral("toolTip")).isString()) {
+    tableWidget->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  }
+  if (obj.contains(QStringLiteral("headers")) &&
+      obj.value("headers").isArray()) {
+    QJsonArray headers = obj["headers"].toArray();
+    tableWidget->setColumnCount(headers.size());
+    for (int i = 0; i < headers.size(); ++i) {
+      tableWidget->setHorizontalHeaderItem(
+        i, new QTableWidgetItem(headers[i].toString()));
+    }
+  }
+  if (obj.contains(QStringLiteral("delimiter")) &&
+      obj.value("delimiter").isString()) {
+    tableWidget->setProperty("delimiter", obj["delimiter"].toString());
+  }
+
+  // data might be supplied as columns or rows
+  if (obj.contains(QStringLiteral("columns")) &&
+      obj.value("columns").isArray()) {
+    QJsonArray columns = obj["columns"].toArray();
+    // get the row count from the first column
+    tableWidget->setRowCount(columns[0].toArray().size());
+    for (int i = 0; i < columns.size(); ++i) {
+      int j = 0;
+      for (QJsonArray::const_iterator it = columns[i].toArray().constBegin(),
+                                      itEnd = columns[i].toArray().constEnd();
+           it != itEnd; ++it) {
+        tableWidget->setItem(i, j++, new QTableWidgetItem(it->toString()));
+      }
+    }
+  }
+  if (obj.contains(QStringLiteral("rows")) && obj.value("rows").isArray()) {
+    QJsonArray rows = obj["rows"].toArray();
+    // get the column count from the first row
+    tableWidget->setColumnCount(rows[0].toArray().size());
+    for (int j = 0; j < rows.size(); ++j) {
+      int i = 0;
+      for (QJsonArray::const_iterator it = rows[i].toArray().constBegin(),
+                                      itEnd = rows[i].toArray().constEnd();
+           it != itEnd; ++it) {
+        tableWidget->setItem(i++, j, new QTableWidgetItem(it->toString()));
+      }
+    }
+  }
+
+  return tableWidget;
+}
+
 void JsonWidget::setOptionDefaults()
 {
   if (!m_options.contains(QStringLiteral("userOptions"))) {
@@ -618,6 +699,8 @@ void JsonWidget::setOption(const QString& name, const QJsonValue& defaultValue)
     return setBooleanOption(name, defaultValue);
   else if (type == QLatin1String("text"))
     return setTextOption(name, defaultValue);
+  else if (type == QLatin1String("table"))
+    return setTableOption(name, defaultValue);
 
   qWarning()
     << tr("Unrecognized option type '%1' for option '%2'.").arg(type).arg(name);
@@ -700,6 +783,43 @@ void JsonWidget::setTextOption(const QString& name, const QJsonValue& value)
   }
 
   text->setText(value.toString());
+}
+
+void JsonWidget::setTableOption(const QString& name, const QJsonValue& value)
+{
+  auto* table = qobject_cast<QTableWidget*>(m_widgets.value(name, nullptr));
+  if (table == nullptr) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                    .arg(name);
+    return;
+  }
+
+  if (!value.isString()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                    .arg(name)
+               << value;
+    return;
+  }
+
+  // parse the table (default delimiter is tab)
+  QString delimiter;
+  if (table->property("delimiter").isValid())
+    delimiter = table->property("delimiter").toString();
+  else
+    delimiter = "\t";
+
+  // parse the table
+  table->clearContents();
+  QStringList tableLines = value.toString().split("\n");
+  table->setRowCount(tableLines.size());
+  for (int i = 0; i < tableLines.size(); ++i) {
+    QStringList entry = tableLines[i].split(delimiter);
+    for (int j = 0; j < entry.size(); ++j) {
+      table->setItem(i, j, new QTableWidgetItem(entry[j]));
+    }
+  }
 }
 
 void JsonWidget::setFilePathOption(const QString& name, const QJsonValue& value)

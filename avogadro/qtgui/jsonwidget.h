@@ -94,6 +94,7 @@ protected:
   QWidget* createFloatWidget(const QJsonObject& obj);
   QWidget* createBooleanWidget(const QJsonObject& obj);
   QWidget* createTextWidget(const QJsonObject& obj);
+  QWidget* createTableWidget(const QJsonObject& obj);
   /**@}*/
 
   /**
@@ -109,6 +110,7 @@ protected:
   void setFloatOption(const QString& name, const QJsonValue& value);
   void setBooleanOption(const QString& name, const QJsonValue& value);
   void setTextOption(const QString& name, const QJsonValue& value);
+  void setTableOption(const QString& name, const QJsonValue& value);
   /**@}*/
 
   /**

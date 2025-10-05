@@ -21,6 +21,7 @@
 #include <cassert>
 #include <cstddef>
 #include <iostream>
+#include <utility>
 
 namespace Avogadro::Core {
 
@@ -48,6 +49,7 @@ Molecule::Molecule(const Molecule& other)
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(&other, this))
@@ -139,17 +141,14 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_vibrationLx(other.m_vibrationLx),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
+    m_basisSet(std::exchange(other.m_basisSet, nullptr)),
+    m_unitCell(std::exchange(other.m_unitCell, nullptr)),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
-  m_basisSet = other.m_basisSet;
-  other.m_basisSet = nullptr;
-
-  m_unitCell = other.m_unitCell;
-  other.m_unitCell = nullptr;
-
   // Copy the layers, only if they exist
   if (other.m_layers.maxLayer() > 0)
     m_layers = LayerManager::getMoleculeLayer(&other, this);
@@ -187,6 +186,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_constraints = other.m_constraints;
     m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
@@ -250,6 +250,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_constraints = other.m_constraints;
     m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
@@ -259,12 +260,10 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_cubes = std::move(other.m_cubes);
 
     delete m_basisSet;
-    m_basisSet = other.m_basisSet;
-    other.m_basisSet = nullptr;
+    m_basisSet = std::exchange(other.m_basisSet, nullptr);
 
     delete m_unitCell;
-    m_unitCell = other.m_unitCell;
-    other.m_unitCell = nullptr;
+    m_unitCell = std::exchange(other.m_unitCell, nullptr);
 
     // Copy the layers, if they exist
     if (other.m_layers.maxLayer() > 0)
@@ -349,6 +348,26 @@ MatrixX Molecule::spectra(const std::string& type) const
 
   return value;
 }
+
+void Molecule::addConstraint(Real value, Index a, Index b, Index c, Index d)
+{
+  Constraint newConstraint(a, b, c, d, value);
+  m_constraints.push_back(newConstraint);
+}
+
+void Molecule::removeConstraint(Index a, Index b, Index c, Index d)
+{
+  // loop through and remove if the constraint matches all atom indexes
+  for (auto it = m_constraints.begin(); it != m_constraints.end();) {
+    if (it->aIndex() == a && it->bIndex() == b && it->cIndex() == c &&
+        it->dIndex() == d) {
+      it = m_constraints.erase(it);
+      return;
+    } else
+      ++it;
+  }
+}
+
 void Molecule::setFrozenAtom(Index atomId, bool frozen)
 {
   if (atomId >= m_atomicNumbers.size())
@@ -542,7 +561,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   m_graph.addVertex();
   m_atomicNumbers.push_back(number);
   // we're not going to easily handle custom elements
-  if (number <= element_count)
+  if (number < element_count)
     m_elements.set(number);
   else
     m_elements.set(element_count - 1); // custom element

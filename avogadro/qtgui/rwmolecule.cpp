@@ -15,6 +15,8 @@
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/qtgui/hydrogentools.h>
 
+#include <QtCore/QDebug>
+
 namespace Avogadro::QtGui {
 
 using Core::Array;
@@ -467,6 +469,11 @@ void RWMolecule::editUnitCell(Matrix3 cellMatrix, CrystalTools::Options options)
   // If there is no unit cell, there is nothing to do
   if (!m_molecule.unitCell())
     return;
+
+  if (!UnitCell::isRegular(cellMatrix)) {
+    qWarning() << "cell matrix is singular";
+    return;
+  }
 
   // Make a copy of the molecule to edit so we can store the old one
   // If the user has "TransformAtoms" set in the options, then

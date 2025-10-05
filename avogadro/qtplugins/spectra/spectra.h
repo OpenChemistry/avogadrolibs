@@ -13,10 +13,6 @@ class QDialog;
 
 namespace Avogadro {
 
-namespace VTK {
-class ChartDialog;
-}
-
 namespace QtPlugins {
 
 class SpectraDialog;

@@ -69,6 +69,19 @@ inline bool startsWith(const std::string& input, const std::string& search)
 }
 
 /**
+ * @brief Efficient method to confirm input ends with the ending string.
+ * @param input String to be examined.
+ * @param ending String that will be searched for.
+ * @return True if the string ends with ending, false otherwise.
+ */
+inline bool endsWith(std::string const& input, std::string const& ending)
+{
+  if (ending.size() > input.size())
+    return false;
+  return std::equal(ending.rbegin(), ending.rend(), input.rbegin());
+}
+
+/**
  * @brief Trim a string of whitespace from the left and right.
  */
 inline std::string trimmed(const std::string& input)
@@ -78,6 +91,14 @@ inline std::string trimmed(const std::string& input)
   if (start == std::string::npos && end == std::string::npos)
     return "";
   return input.substr(start, end - start + 1);
+}
+
+/**
+ * @brief Remove trailing part of `str` after `c`
+ */
+inline std::string rstrip(const std::string& str, char c)
+{
+  return str.substr(0, str.find_first_of(c));
 }
 
 /**
