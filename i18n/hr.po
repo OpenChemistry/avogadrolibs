@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-05 02:47+0000\n"
 "PO-Revision-Date: 2025-10-06 04:02+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -5211,7 +5210,7 @@ msgstr "Valna duljina (nm)"
 
 #: qtplugins/spectra/spectradialog.cpp:605
 msgid "Frequency (Hz)"
-msgstr "Frekvencija:"
+msgstr "Frekvencija (Hz)"
 
 #: qtplugins/spectra/spectradialog.cpp:611
 msgid "Vibrational Spectra"
@@ -5268,7 +5267,7 @@ msgstr "Gustoća"
 
 #: qtplugins/spectra/spectradialog.cpp:794
 msgid "Smoothed"
-msgstr ""
+msgstr "Zaglađeno"
 
 #: qtplugins/spectra/spectradialog.cpp:797
 msgid "Raw"
@@ -5624,7 +5623,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:357
 msgid "k-space"
-msgstr "spacija"
+msgstr "k-prostor"
 
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
@@ -7997,7 +7996,7 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Max 2θ:"
-msgstr ""
+msgstr "Maks. 2θ:"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
