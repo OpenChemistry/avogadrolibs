@@ -5624,7 +5624,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:357
 msgid "k-space"
-msgstr ""
+msgstr "spacija"
 
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
