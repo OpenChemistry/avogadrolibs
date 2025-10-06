@@ -12,4 +12,4 @@ avogadro_plugin(Spectra
   "spectradialog.ui"
 )
 
-target_link_libraries(Spectra PRIVATE Avogadro::Vtk)
+# target_link_libraries(Spectra PRIVATE JKQtPlotter6::JKQtPlotter6)

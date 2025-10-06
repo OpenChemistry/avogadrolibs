@@ -48,7 +48,7 @@ public:
   void setColor(const QColor& color);
 
   /**
-   * @param custom title for color choice dialog
+   * @param title custom title for color choice dialog
    */
   void setDialogTitle(const QString title = "");
 

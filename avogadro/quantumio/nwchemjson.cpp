@@ -307,7 +307,6 @@ bool NWChemJson::write(std::ostream&, const Molecule&)
 vector<std::string> NWChemJson::fileExtensions() const
 {
   vector<std::string> ext;
-  ext.emplace_back("json");
   ext.emplace_back("nwjson");
   return ext;
 }

@@ -204,6 +204,10 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
     d->m_forceField->SetCoordinates(*d->m_obmol);
     energy = d->m_forceField->Energy(false);
   }
+
+  // make sure to add in any constraint penalties
+  energy += constraintEnergies(x);
+
   return energy;
 }
 
@@ -233,6 +237,8 @@ void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
     grad *= -1; // OpenBabel outputs forces, not grads
     cleanGradients(grad);
+    // add in any constraints
+    constraintGradients(x, grad);
   }
 }
 

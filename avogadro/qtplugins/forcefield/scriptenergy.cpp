@@ -139,6 +139,7 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
     }
   }
 
+  energy += constraintEnergies(x);
   return energy; // if conversion fails, returns 0.0
 }
 
@@ -186,6 +187,7 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   }
 
   cleanGradients(grad);
+  constraintGradients(x, grad);
 }
 
 ScriptEnergy::Format ScriptEnergy::stringToFormat(const std::string& str)

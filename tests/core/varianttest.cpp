@@ -9,6 +9,7 @@
 
 using Avogadro::MatrixX;
 using Avogadro::Core::Variant;
+using namespace std::string_literals;
 
 TEST(VariantTest, isNull)
 {
@@ -120,13 +121,13 @@ TEST(VariantTest, toPointer)
 TEST(VariantTest, toString)
 {
   Variant variant("hello");
-  EXPECT_EQ(variant.toString(), std::string("hello"));
+  EXPECT_EQ(variant.toString(), "hello"s);
 
   variant.setValue(12);
-  EXPECT_EQ(variant.toString(), std::string("12"));
+  EXPECT_EQ(variant.toString(), "12"s);
 
-  variant.setValue(std::string("hello2"));
-  EXPECT_EQ(variant.toString(), std::string("hello2"));
+  variant.setValue("hello2"s);
+  EXPECT_EQ(variant.toString(), "hello2"s);
 }
 
 TEST(VariantTest, toMatrix)

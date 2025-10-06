@@ -181,14 +181,16 @@ void MoldenFile::processLine(std::istream& in)
       case MO:
         // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
         while (!line.empty() && Core::contains(line, "=")) {
-          getline(in, line);
-          line = Core::trimmed(line);
-          list = Core::split(line, ' ');
           if (Core::contains(line, "Occup"))
             m_electrons += Core::lexicalCast<int>(list[1]);
           else if (Core::contains(line, "Ene"))
-            m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[1]));
-          // TODO: track alpha beta spin
+            m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[1]) *
+                                      HARTREE_TO_EV_D);
+          else if (Core::contains(line, "Sym"))
+            m_symmetryLabels.push_back(list[1]);
+          getline(in, line);
+          line = Core::trimmed(line);
+          list = Core::split(line, ' ');
         }
 
         // Parse the molecular orbital coefficients.
@@ -200,11 +202,13 @@ void MoldenFile::processLine(std::istream& in)
 
           m_MOcoeffs.push_back(Core::lexicalCast<double>(list[1]));
 
+          // we might go too far ahead
+          currentPos = in.tellg();
           getline(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
         }
-        // go back to previous line
+        // go back one line
         in.seekg(currentPos);
         break;
 

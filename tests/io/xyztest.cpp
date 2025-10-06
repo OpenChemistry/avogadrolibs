@@ -47,6 +47,36 @@ TEST(XyzTest, readAtomicSymbols)
   EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
 }
 
+TEST(XyzTest, readTotalEnergy)
+{
+  {
+    // Open Babel
+    XyzFormat xyz;
+    Molecule molecule;
+    std::string str = "1\nEnergy: NaN\nAr 0.0 0.0 0.0\n";
+    ASSERT_TRUE(xyz.readString(str, molecule));
+    EXPECT_FALSE(molecule.hasData("totalEnergy")) << str;
+  }
+  {
+    // xtb
+    XyzFormat xyz;
+    Molecule molecule;
+    std::string str = "1\nenergy: -123.456\nAr 0.0 0.0 0.0\n";
+    ASSERT_TRUE(xyz.readString(str, molecule));
+    ASSERT_TRUE(molecule.hasData("totalEnergy")) << str;
+    EXPECT_EQ(molecule.data("totalEnergy").toDouble(), -123.456) << str;
+  }
+  {
+    // orca
+    XyzFormat xyz;
+    Molecule molecule;
+    std::string str = "1\n E -1.23456E+2\nAr 0.0 0.0 0.0\n";
+    ASSERT_TRUE(xyz.readString(str, molecule));
+    ASSERT_TRUE(molecule.hasData("totalEnergy")) << str;
+    EXPECT_EQ(molecule.data("totalEnergy").toDouble(), -123.456) << str;
+  }
+}
+
 // Turn off the option to perceive bonds
 TEST(XyzTest, readAtomicSymbolsNoBonds)
 {

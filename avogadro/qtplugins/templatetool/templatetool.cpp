@@ -81,11 +81,11 @@ TemplateTool::TemplateTool(QObject* parent_)
   QString shortcut = tr("Ctrl+3", "control-key 3");
   m_activateAction->setText(tr("Template"));
   m_activateAction->setToolTip(
-    tr("Template Tool \t(%1)\n\n"
+    tr("Template Tool\t(%1)\n\n"
        "Insert fragments, including metal centers.\n"
-       "Select an element and coordination geometry,"
+       "Select an element and coordination geometry, "
        "then click to insert a fragment.\n\n"
-       "Select a ligand or functional group and click"
+       "Select a ligand or functional group and click "
        "on a hydrogen atom to attach it.")
       .arg(shortcut));
   setIcon();

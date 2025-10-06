@@ -55,7 +55,6 @@ public:
    * @param mesh The Mesh that will hold the isosurface.
    * @param iso The iso value of the surface.
    * @param passes Number of smoothing passes to perform.
-   * @return True if the MeshGenerator was successfully initialized.
    */
   MeshGenerator(const Core::Cube* cube, Core::Mesh* mesh, float iso,
                 int passes = 6, bool reverse = false,

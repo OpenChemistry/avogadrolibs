@@ -231,9 +231,7 @@ void QTAIMLSODAIntegrator::f(int neq, double t, double* y, double* ydot)
       break;
   }
 
-  qreal normGradient =
-    sqrt(gradient(0) * gradient(0) + gradient(1) * gradient(1) +
-         gradient(2) * gradient(2));
+  qreal normGradient = std::hypot(gradient(0), gradient(1), gradient(2));
 
   ydot[1] = gradient(0) / normGradient;
   ydot[2] = gradient(1) / normGradient;

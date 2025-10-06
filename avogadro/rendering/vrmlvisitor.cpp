@@ -111,7 +111,7 @@ void VRMLVisitor::visit(CylinderGeometry& geometry)
     double dy = y2 - y1;
     double dz = z2 - z1;
 
-    double length = sqrt(dx * dx + dy * dy + dz * dz);
+    double length = std::hypot(dx, dy, dz);
     double tx = dx / 2 + x1;
     double ty = dy / 2 + y1;
     double tz = dz / 2 + z1;

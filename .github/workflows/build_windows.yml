@@ -11,7 +11,7 @@ on: [push, workflow_dispatch]
 
 env:
   QT_VERSION: 5.15.2
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -33,52 +33,53 @@ jobs:
             cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
             build_flags: "",
             cpack_flags: "-G NSIS",
+            ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
           }
 
     steps:
 
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
-      run: choco install ninja
+      run: choco install ninja nsis
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout molecules
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/molecules
         path: molecules
 
     - name: Checkout fragments
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/fragments
         path: fragments
 
     - name: Checkout crystals
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/crystals
         path: crystals
 
     - name: Checkout i18n
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         path: avogadrolibs
 
@@ -94,6 +95,17 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
+
+    - name: Install OpenSSL (Win64)
+      if: runner.os == 'Windows'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        cache: true
+        host: 'windows'
+        target: 'desktop'
+        tools-only: 'true'
+        tools: 'tools_opensslv3_x64'
 
     - name: Grab cache files
       uses: actions/cache@v4

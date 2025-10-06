@@ -644,7 +644,7 @@ public:
       Real dx = x[3 * i] - x[3 * j];
       Real dy = x[3 * i + 1] - x[3 * j + 1];
       Real dz = x[3 * i + 2] - x[3 * j + 2];
-      Real r = sqrt(dx * dx + dy * dy + dz * dz);
+      Real r = std::hypot(dx, dy, dz);
       Real dr = r - r0;
 
       /*
@@ -674,8 +674,8 @@ public:
       Real dx2 = x[3 * k] - x[3 * j];
       Real dy2 = x[3 * k + 1] - x[3 * j + 1];
       Real dz2 = x[3 * k + 2] - x[3 * j + 2];
-      Real r1 = sqrt(dx1 * dx1 + dy1 * dy1 + dz1 * dz1);
-      Real r2 = sqrt(dx2 * dx2 + dy2 * dy2 + dz2 * dz2);
+      Real r1 = std::hypot(dx1, dy1, dz1);
+      Real r2 = std::hypot(dx2, dy2, dz2);
       Real dot = dx1 * dx2 + dy1 * dy2 + dz1 * dz2;
       Real theta = acos(dot / (r1 * r2));
 
@@ -819,7 +819,7 @@ public:
       Real dy = x[3 * i + 1] - x[3 * j + 1];
       Real dz = x[3 * i + 2] - x[3 * j + 2];
 
-      Real r = sqrt(dx * dx + dy * dy + dz * dz);
+      Real r = std::hypot(dx, dy, dz);
       Real dr = r - r0;
       Real f = 2.0 * kb * dr / r;
       grad[3 * i] += f * dx;
@@ -1015,7 +1015,7 @@ public:
       // we also need the angle between the bonds (i.e., j-i-k)
       Real cosTheta = ij.dot(ik) / (rij * rik);
       // clamp the cosTheta to -1 to 1
-      cosTheta = std::max(-1.0, std::min(1.0, cosTheta));
+      cosTheta = std::clamp(cosTheta, -1.0, 1.0);
       Real theta = acos(cosTheta);
       Real sinTheta = sin(theta);
 
@@ -1145,8 +1145,8 @@ public:
       // grad_j and grad_k are a bit more complicated
 
       // clamp the cosines to -1 to 1
-      cosAngleIJK = std::max(-1.0, std::min(1.0, cosAngleIJK));
-      cosAngleJKL = std::max(-1.0, std::min(1.0, cosAngleJKL));
+      cosAngleIJK = std::clamp(cosAngleIJK, -1.0, 1.0);
+      cosAngleJKL = std::clamp(cosAngleJKL, -1.0, 1.0);
 
       Real fraction1 = (rij / rjk) * (-cosAngleIJK);
       Real fraction2 = (rkl / rjk) * (-cosAngleJKL);
@@ -1257,6 +1257,10 @@ Real UFF::value(const Eigen::VectorXd& x)
   // van der Waals component
   energy += d->vdwEnergies(x);
   // UFF doesn't have electrostatics
+
+  // Add constraint energies
+  energy += constraintEnergies(x);
+
   return energy;
 }
 
@@ -1354,6 +1358,7 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // handle any constraints
   cleanGradients(grad);
+  constraintGradients(x, grad);
 }
 
 void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)

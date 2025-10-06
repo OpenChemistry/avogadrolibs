@@ -72,7 +72,7 @@ PropertyTables::~PropertyTables() {}
 
 QString PropertyTables::description() const
 {
-  return tr("Tables for displaying and editng atom, bond, angle and torsion "
+  return tr("Tables for displaying and editing atom, bond, angle and torsion "
             "properties.");
 }
 

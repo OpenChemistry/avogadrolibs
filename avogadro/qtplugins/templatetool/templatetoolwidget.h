@@ -75,6 +75,7 @@ private:
   unsigned char m_currentElement;
   QStringList m_centers;
   QStringList m_ligands;
+  QStringList m_groups;
   QString m_ligandPath;
 
   int m_denticity;

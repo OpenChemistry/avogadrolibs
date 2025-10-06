@@ -18,6 +18,7 @@ using Avogadro::Core::AvoSpglib;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::SpaceGroups;
 using Avogadro::Core::UnitCell;
+using namespace std::string_literals;
 
 TEST(SpaceGroupTest, getSpaceGroup)
 {
@@ -54,9 +55,9 @@ TEST(SpaceGroupTest, getSpaceGroup)
   std::string intSymbol = SpaceGroups::internationalFull(hallNumber);
 
   EXPECT_EQ(intNumber, 136);
-  EXPECT_EQ(schoenflies, std::string("D4h^14"));
-  EXPECT_EQ(hallSymbol, std::string("-P 4n 2n"));
-  EXPECT_EQ(intSymbol, std::string("P 4_2/m 2_1/n 2/m"));
+  EXPECT_EQ(schoenflies, "D4h^14"s);
+  EXPECT_EQ(hallSymbol, "-P 4n 2n"s);
+  EXPECT_EQ(intSymbol, "P 4_2/m 2_1/n 2/m"s);
 }
 
 // We're going to take a conventional cell, reduce it to the primitive form,

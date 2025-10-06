@@ -28,6 +28,9 @@ ORCAOutput::ORCAOutput() {}
 
 ORCAOutput::~ORCAOutput() {}
 
+constexpr double BOHR_TO_ANGSTROM = 0.529177210544;
+constexpr double HARTREE_TO_EV = 27.211386245981;
+
 std::vector<std::string> ORCAOutput::fileExtensions() const
 {
   std::vector<std::string> extensions;
@@ -96,6 +99,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       electronicData(i, 1) = m_electronicIntensities[i];
     }
     molecule.setSpectra("Electronic", electronicData);
+
     if (m_electronicRotations.size() == m_electronicTransitions.size()) {
       MatrixX electronicRotations(m_electronicTransitions.size(), 2);
       for (size_t i = 0; i < m_electronicTransitions.size(); ++i) {
@@ -296,6 +300,10 @@ void ORCAOutput::processLine(std::istream& in,
     // similar to standard charges
     m_currentMode = Charges;
     m_chargeType = "CHELPG";
+    getline(in, key); // skip ------------
+  } else if (Core::contains(key, "RESP Charges")) {
+    m_currentMode = Charges;
+    m_chargeType = "RESP";
     getline(in, key); // skip ------------
   } else if (Core::contains(key, "ATOMIC CHARGES")) {
     m_currentMode = Charges;
@@ -665,17 +673,26 @@ void ORCAOutput::processLine(std::istream& in,
         double wavenumbers;
         while (!key.empty()) {
           // should have 8 columns
-          if (list.size() != 8) {
+          if (list.size() < 8) {
             getline(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
             continue; // skip any spin-forbidden transitions
           }
 
-          wavenumbers = Core::lexicalCast<double>(list[1]);
-          // convert to eV
-          m_electronicTransitions.push_back(wavenumbers / 8065.544);
-          m_electronicIntensities.push_back(Core::lexicalCast<double>(list[3]));
+          if (list.size() == 8) {
+            wavenumbers = Core::lexicalCast<double>(list[1]);
+            // convert to eV
+            m_electronicTransitions.push_back(wavenumbers / 8065.544);
+            m_electronicIntensities.push_back(
+              Core::lexicalCast<double>(list[3]));
+          } else if (list.size() == 11) {
+            // directly use the eV
+            m_electronicTransitions.push_back(
+              Core::lexicalCast<double>(list[3]));
+            m_electronicIntensities.push_back(
+              Core::lexicalCast<double>(list[6]));
+          }
 
           getline(in, key);
           key = Core::trimmed(key);
@@ -691,20 +708,19 @@ void ORCAOutput::processLine(std::istream& in,
           break;
         list = Core::split(key, ' ');
 
-        [[maybe_unused]] double wavenumbers;
         while (!key.empty()) {
           // should have 7 columns
-          if (list.size() != 7) {
+          if (list.size() < 7) {
             getline(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
             continue; // skip any spin-forbidden transitions
           }
 
-          wavenumbers = Core::lexicalCast<double>(list[1]);
-          // convert to eV
-          // m_electronicTransitions.push_back(wavenumbers / 8065.544);
-          m_electronicRotations.push_back(Core::lexicalCast<double>(list[3]));
+          if (list.size() == 7)
+            m_electronicRotations.push_back(Core::lexicalCast<double>(list[3]));
+          else if (list.size() == 10)
+            m_electronicRotations.push_back(Core::lexicalCast<double>(list[6]));
 
           getline(in, key);
           key = Core::trimmed(key);
@@ -852,7 +868,7 @@ void ORCAOutput::processLine(std::istream& in,
           for (unsigned int i = 0; i < list.size(); i++) {
             // convert from Hartree to eV
             m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[i]) *
-                                      27.2114);
+                                      HARTREE_TO_EV);
           }
 
           getline(in, key); // occupations
@@ -942,12 +958,13 @@ void ORCAOutput::processLine(std::istream& in,
           while (!Core::trimmed(key).empty()) {
             // currently reading the sequence number
             getline(in, key); // energies
+
             list = Core::split(key, ' ');
             // convert these all to double and add to m_orbitalEnergy
             for (unsigned int i = 0; i < list.size(); i++) {
               // convert from Hartree to eV
               m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[i]) *
-                                        27.2114);
+                                        HARTREE_TO_EV);
             }
 
             getline(in, key); // symmetries
@@ -970,11 +987,11 @@ void ORCAOutput::processLine(std::istream& in,
               std::vector<std::string> pieces = Core::split(key, ' ');
               orcaOrbitals.push_back(pieces[1]);
 
-              //                    columns.resize(numColumns);
               for (unsigned int i = 0; i < numColumns; ++i) {
                 columns[i].push_back(Core::lexicalCast<double>(list[i]));
               }
 
+              getline(in, key);
               auto inner_key_begin =
                 std::sregex_iterator(key.begin(), key.end(), rx);
               auto inner_key_end = std::sregex_iterator();
@@ -983,12 +1000,14 @@ void ORCAOutput::processLine(std::istream& in,
                    ++i) {
                 list.push_back(i->str());
               }
+
               if (list.size() != numColumns)
                 break;
 
             } // ok, we've finished one batch of MO coeffs
             // now reorder the p orbitals from "orcaStyle" (pz, px,py) to
             // expected Avogadro (px,py,pz)
+
             std::size_t idx = 0;
             while (idx < orcaOrbitals.size()) {
               if (Core::contains(orcaOrbitals.at(idx), "pz")) {
@@ -1023,7 +1042,7 @@ void ORCAOutput::processLine(std::istream& in,
 
             if (Core::trimmed(key).empty())
               getline(in, key); // skip the blank line after the MOs
-          } // finished parsing 2nd. MOs
+          }                     // finished parsing 2nd. MOs
           if (m_MOcoeffs.size() != numRows * numRows) {
             m_orcaSuccess = false;
           }
@@ -1035,7 +1054,7 @@ void ORCAOutput::processLine(std::istream& in,
       }
       default:;
     } // end switch
-  } // end if (mode)
+  }   // end if (mode)
 }
 
 void ORCAOutput::load(GaussianSet* basis)
