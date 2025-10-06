@@ -133,6 +133,7 @@ public:
    * Find the shortest distance between vectors @a v1 and @a v2.
    */
   Real distance(const Vector3& v1, const Vector3& v2) const;
+  Real distanceSquared(const Vector3& v1, const Vector3& v2) const;
 
   /**
    * @return if @a m is regular, i.e. its determinant is nonzero
@@ -360,6 +361,12 @@ inline Vector3 UnitCell::minimumImage(const Vector3& v) const
 inline Real UnitCell::distance(const Vector3& v1, const Vector3& v2) const
 {
   return minimumImage(v1 - v2).norm();
+}
+
+inline Real UnitCell::distanceSquared(const Vector3& v1,
+                                      const Vector3& v2) const
+{
+  return minimumImage(v1 - v2).squaredNorm();
 }
 
 } // namespace Avogadro::Core

@@ -38,9 +38,10 @@ public:
   void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
 
   // handle both ions and radicals
+  // (at least we will do what we can)
   bool acceptsIons() const override { return true; }
   bool acceptsRadicals() const override { return true; }
-  // TODO: handle unit cells
+  bool acceptsUnitCell() const override { return true; }
 
   // components
   Real bondEnergy(const Eigen::VectorXd& x);

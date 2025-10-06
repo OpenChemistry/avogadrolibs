@@ -13,6 +13,7 @@
 #include <avogadro/core/dihedraliterator.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/unitcell.h>
 
 namespace Avogadro::Calc {
 
@@ -794,12 +795,17 @@ public:
       Real x6 = xij * xij * xij * xij * xij * xij;
       Real x12 = x6 * x6;
 
-      // TODO: use the unit cell if available
-      Real dx = x[3 * i] - x[3 * j];
-      Real dy = x[3 * i + 1] - x[3 * j + 1];
-      Real dz = x[3 * i + 2] - x[3 * j + 2];
+      Vector3 atom_i(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Vector3 atom_j(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      // if the cell is nullptr, we can't do periodic boundary conditions
+      Real r2;
+      if (m_cell == nullptr) {
+        r2 = (atom_i - atom_j).squaredNorm();
+      } else {
+        r2 = m_cell->distanceSquared(atom_i, atom_j);
+      }
+
       // we don't need a square root since 6 and 12 are even powers
-      Real r2 = (dx * dx + dy * dy + dz * dz);
       Real r6 = r2 * r2 * r2;
       Real r12 = r6 * r6;
       energy += depth * (x12 / r12 - 2 * x6 / r6);
@@ -1186,11 +1192,18 @@ public:
       //         = -12 * depth * x^6 / r^7 * (x^6 / r^6 - 1)
 
       // TODO: handle unit cells and periodic boundary conditions
-      Real dx = x[3 * i] - x[3 * j];
-      Real dy = x[3 * i + 1] - x[3 * j + 1];
-      Real dz = x[3 * i + 2] - x[3 * j + 2];
+      Vector3 atom_i(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Vector3 atom_j(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      Vector3 r = atom_i - atom_j;
+      if (m_cell != nullptr) {
+        r = m_cell->minimumImage(r);
+      }
+      Real r2 = r.squaredNorm();
 
-      Real r2 = dx * dx + dy * dy + dz * dz;
+      Real dx = r[0];
+      Real dy = r[1];
+      Real dz = r[2];
+
       Real r6 = r2 * r2 * r2;
       Real r7 = r6 * sqrt(r2);
       Real x6 = xij * xij * xij * xij * xij * xij;
