@@ -197,7 +197,7 @@ void AutoOpt::start()
   timer.start();
   optimizeStep();
   qint64 minimumStep = 100; // 10 fps
-  m_oneStepTime = std::max(timer.elapsed() + 20, minimumStep);
+  m_oneStepTime = std::max(timer.elapsed() + 10, minimumStep);
 
 #ifndef NDEBUG
   qDebug() << QString("Finished in %L1 ms").arg(m_oneStepTime);
