@@ -33,6 +33,9 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QSettings>
+#include <QElapsedTimer>
+#include <QTimer>
+
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
@@ -74,6 +77,9 @@ AutoOpt::AutoOpt(QObject* parent_)
        "Right Mouse: \tClick and drag to rotate atoms.")
       .arg(shortcut));
   setIcon();
+
+  // used to run the optimization step
+  connect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
 }
 
 AutoOpt::~AutoOpt() {}
@@ -100,7 +106,7 @@ void AutoOpt::moleculeChanged(unsigned int changes)
 {
   // qDebug() << "molecule changed" << changes;
   if (m_running && (changes != (Molecule::Atoms | Molecule::Moved))) {
-    stop();
+    // restart
     start();
   }
 }
@@ -181,12 +187,22 @@ void AutoOpt::start()
     m_method->setMolecule(&m_molecule->molecule());
     m_energy = calculateEnergy();
     m_deltaE = 0.0;
-
+#ifndef NDEBUG
     qDebug() << "Initial energy:" << m_energy;
+#endif
   }
 
   // start the optimization
+  QElapsedTimer timer;
+  timer.start();
   optimizeStep();
+  qint64 minimumStep = 100; // 10 fps
+  m_oneStepTime = std::max(timer.elapsed() + 20, minimumStep);
+
+#ifndef NDEBUG
+  qDebug() << QString("Finished in %L1 ms").arg(m_oneStepTime);
+#endif
+  m_timer.start(m_oneStepTime);
 
   emit drawablesChanged();
 }
@@ -213,7 +229,6 @@ void AutoOpt::methodChanged(const QString& method)
   // need to stop the current optimization,
   // then restart after a brief pause
   if (m_running) {
-    stop();
     start();
   }
 }
@@ -233,6 +248,11 @@ Real AutoOpt::calculateEnergy()
 
 void AutoOpt::optimizeStep()
 {
+  if (!m_running) {
+    m_timer.stop();
+    return;
+  }
+
   int n = m_molecule->atomCount();
   // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
@@ -253,9 +273,6 @@ void AutoOpt::optimizeStep()
 
   // optimize one step
   cppoptlib::LbfgsSolver<Calc::EnergyCalculator> solver;
-  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
-
-  // Create a Criteria class so we can update coords every N steps
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
   // e.g., every N steps, update coordinates
   crit.iterations = 2;

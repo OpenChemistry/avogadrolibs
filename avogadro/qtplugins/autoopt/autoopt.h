@@ -12,6 +12,7 @@
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QPoint>
+#include <QtCore/QTimer>
 #include <QtWidgets/QAbstractButton>
 
 namespace Avogadro {
@@ -72,6 +73,8 @@ public slots:
   void methodChanged(const QString& method);
   void moleculeChanged(unsigned int changes);
 
+  void optimizeStep();
+
 private:
   /**
    * Update the currently pressed buttons, accounting for modifier keys.
@@ -79,7 +82,6 @@ private:
    */
   void updatePressedButtons(QMouseEvent*, bool release);
 
-  void optimizeStep();
   Real calculateEnergy();
 
   void resetObject() { m_object = Rendering::Identifier(); }
@@ -101,7 +103,10 @@ private:
   Real m_deltaE;
 
   mutable QWidget* m_toolWidget;
+
   bool m_running = false;
+  qint64 m_oneStepTime = 0;
+  QTimer m_timer;
 
   enum ToolAction
   {
