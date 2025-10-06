@@ -154,6 +154,8 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         choco install ninja nsis
+        cd /c/vcpkg
+        git pull origin master
         vcpkg install libarchive eigen3 libxml2 zlib
 
     - name: Grab cache files
