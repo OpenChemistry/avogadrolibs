@@ -137,6 +137,10 @@ std::set<std::string> EnergyManager::identifiersForMolecule(
   return identifiers;
 }
 
+// order of preference for the built-in methods
+const std::vector<std::string> METHOD_TIER_LIST = { "GAFF", "MMFF94", "UFF",
+                                                    "LJ" };
+
 std::string EnergyManager::recommendedModel(
   const Core::Molecule& molecule) const
 {
@@ -144,16 +148,24 @@ std::string EnergyManager::recommendedModel(
   if (identifiers.empty())
     return "LJ"; // shouldn't really ever happen
 
-  // iterate to see what we have
   std::string bestOption;
+
+  // first, we look through the identifiers to see if there's
+  // something not in the built-in list
+  // i.e., installed by the user = try that first
   for (auto option : identifiers) {
-    // GAFF is better than MMFF94 which is better than UFF
-    if (option == "UFF" && bestOption != "GAFF" && bestOption != "MMFF94")
+    if (std::find(METHOD_TIER_LIST.begin(), METHOD_TIER_LIST.end(), option) ==
+        METHOD_TIER_LIST.end())
+      return option;
+  }
+
+  // if not, we look through the built-in list in order
+  // of preference (e.g., GAFF > MMFF94 > UFF > LJ)
+  for (auto option : METHOD_TIER_LIST) {
+    if (identifiers.find(option) != identifiers.end()) {
       bestOption = option;
-    if (option == "MMFF94" && bestOption != "GAFF")
-      bestOption = option;
-    // feel free to add other methods, e.g. GFN-FF, AIMNET, etc.
-    // these may not be available though
+      break;
+    }
   }
   if (!bestOption.empty())
     return bestOption;
