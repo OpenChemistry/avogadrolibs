@@ -91,15 +91,18 @@ void AutoOpt::setMolecule(QtGui::Molecule* mol)
   if (mol != nullptr) {
     m_molecule = mol->undoMolecule();
     // connect to any molecule changes
-    connect(m_molecule, SIGNAL(changed(unsigned int)),
+    connect(mol, SIGNAL(changed(unsigned int)),
             SLOT(moleculeChanged(unsigned int)));
   }
 }
 
-void AutoOpt::moleculeChanged(unsigned int)
+void AutoOpt::moleculeChanged(unsigned int changes)
 {
-  stop();
-  // should also restart
+  // qDebug() << "molecule changed" << changes;
+  if (m_running && (changes != (Molecule::Atoms | Molecule::Moved))) {
+    stop();
+    start();
+  }
 }
 
 QWidget* AutoOpt::toolWidget() const
@@ -166,10 +169,11 @@ void AutoOpt::start()
   m_running = true;
 
   // make sure method is set
-  if (m_toolWidget)
-    m_currentMethod = m_toolWidget->findChild<QComboBox*>("methodComboBox")
-                        ->currentText()
-                        .toUtf8();
+  if (m_toolWidget) {
+    auto comboBox = m_toolWidget->findChild<QComboBox*>("methodComboBox");
+    QString currentMethod = comboBox->currentText();
+    m_currentMethod = currentMethod.toStdString();
+  }
 
   m_method = Calc::EnergyManager::instance().model(m_currentMethod);
 
@@ -262,9 +266,7 @@ void AutoOpt::optimizeStep()
 
   bool isFinite = std::isfinite(currentEnergy);
   if (isFinite) {
-    m_deltaE = m_energy - currentEnergy;
-    qDebug() << " initial energy:" << m_energy
-             << " current energy:" << currentEnergy << " deltaE:" << m_deltaE;
+    m_deltaE = currentEnergy - m_energy; // should be negative = lower E
 
     const double* d = positions.data();
     [[maybe_unused]] bool allFinite = true;
@@ -283,9 +285,8 @@ void AutoOpt::optimizeStep()
     // todo - merge these into one undo step
     if (allFinite) {
       m_molecule->setAtomPositions3d(pos, tr("Optimize Geometry"));
-      Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+      Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
       m_molecule->emitChanged(changes);
-      // should also call for a redraw
     }
   }
 }
