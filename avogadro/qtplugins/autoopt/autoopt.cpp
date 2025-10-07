@@ -66,15 +66,15 @@ AutoOpt::AutoOpt(QObject* parent_)
   QString shortcut = tr("Ctrl+7", "control-key 7");
   m_activateAction->setText(tr("Auto Optimize"));
   m_activateAction->setToolTip(
-    tr("Auto Optimize Tool \t(%1)\n\n"
+    tr("Auto Optimize Tool\t(%1)\n\n"
        "Navigation Functions when clicking in empty space.\n"
-       "Left Mouse: \tRotate Space\n"
-       "Middle Mouse: \tZoom Space\n"
-       "Right Mouse: \tMove Space\n"
-       "Double-Click: \tReset View\n\n"
+       "Left Mouse:\tRotate Space\n"
+       "Middle Mouse:\tZoom Space\n"
+       "Right Mouse:\tMove Space\n"
+       "Double-Click:\tReset View\n\n"
        "When running:\n"
-       "Left Mouse: \tClick and drag atoms to move them.\n"
-       "Right Mouse: \tClick and drag to rotate atoms.")
+       "Left Mouse:\tClick and drag atoms to move them.\n"
+       "Right Mouse:\tClick and drag to rotate atoms.")
       .arg(shortcut));
   setIcon();
 

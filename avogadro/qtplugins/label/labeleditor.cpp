@@ -31,7 +31,7 @@ LabelEditor::LabelEditor(QObject* parent_)
   m_activateAction->setText(tr("Edit Labels"));
   m_activateAction->setToolTip(
     tr("Atom Label Tool\n\n"
-       "Left Mouse: \tClick on Atoms to add Custom Labels"));
+       "Left Mouse:\tClick on Atoms to add Custom Labels"));
   setIcon();
 }
 
