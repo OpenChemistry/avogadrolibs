@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-05 02:47+0000\n"
+"POT-Creation-Date: 2025-10-07 17:58+0000\n"
 "PO-Revision-Date: 2025-10-06 04:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
@@ -1971,6 +1971,66 @@ msgstr "カラーマップ:"
 msgid "ApplyColors"
 msgstr ""
 
+#: qtplugins/autoopt/autoopt.cpp:66
+msgctxt "control-key 7"
+msgid "Ctrl+7"
+msgstr "Ctrl+7"
+
+#: qtplugins/autoopt/autoopt.cpp:67
+msgid "Auto Optimize"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:69
+#, qt-format
+msgid ""
+"Auto Optimize Tool\t(%1)\n"
+"\n"
+"Navigation Functions when clicking in empty space.\n"
+"Left Mouse:\tRotate Space\n"
+"Middle Mouse:\tZoom Space\n"
+"Right Mouse:\tMove Space\n"
+"Double-Click:\tReset View\n"
+"\n"
+"When running:\n"
+"Left Mouse:\tClick and drag atoms to move them.\n"
+"Right Mouse:\tClick and drag to rotate atoms."
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: qtplugins/autoopt/autoopt.cpp:146:367
+msgid "Method:"
+msgstr "手法:"
+
+#: qtplugins/autoopt/autoopt.cpp:149 qtplugins/autoopt/autoopt.cpp:215
+msgid "Start"
+msgstr "スタート"
+
+#: qtplugins/autoopt/autoopt.cpp:173 qtplugins/playertool/playertool.cpp:77
+#, fuzzy
+msgid "Stop"
+msgstr "停止"
+
+#: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
+#: qtplugins/forcefield/forcefield.cpp:368
+#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:560
+msgid "Optimize Geometry"
+msgstr "構造最適化"
+
+#: qtplugins/autoopt/autoopt.cpp:317
+#, qt-format
+msgid "%1 ΔE = %L2 kcal/mol"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.h:42
+msgid "Auto Optimize tool"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.h:45
+msgid "Interactive optimization of molecular geometry"
+msgstr ""
+
 #: qtplugins/ballandstick/ballandstick.cpp:107
 #, fuzzy
 msgid "Atom scale"
@@ -2003,9 +2063,9 @@ msgid "Render atoms as spheres and bonds as cylinders."
 msgstr "原子を球、結合を筒として表示する。"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
-msgctxt "control-key 7"
-msgid "Ctrl+7"
-msgstr "Ctrl+7"
+msgctxt "control-key 6"
+msgid "Ctrl+6"
+msgstr "Ctrl+6"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
@@ -3115,13 +3175,6 @@ msgstr ""
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:368
-#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
-#: qtplugins/openbabel/openbabel.cpp:560
-msgid "Optimize Geometry"
-msgstr "構造最適化"
-
 #: qtplugins/forcefield/forcefield.cpp:90
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 msgid "Forces"
@@ -3194,15 +3247,15 @@ msgstr "力場による最適化、スクリプトふくむ"
 msgid "Autodetect (%1)"
 msgstr "自動検出 (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:103 qtplugins/forcefield/obmmenergy.cpp:34
 msgid "Universal Force Field"
 msgstr "Universal Force Field"
 
-#: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:108 qtplugins/forcefield/obmmenergy.cpp:39
 msgid "Generalized Amber Force Field"
 msgstr "Generalized Amber Force Field"
 
-#: qtplugins/forcefield/obenergy.cpp:120 qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:122 qtplugins/forcefield/obmmenergy.cpp:53
 msgid "Merck Molecular Force Field 94"
 msgstr "Merck Molecular Force Field 94"
 
@@ -3535,26 +3588,17 @@ msgid "Display labels on ball and stick style."
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:31
-msgctxt "control-key 4"
-msgid "Ctrl+4"
-msgstr "Ctrl+4"
-
-#: qtplugins/label/labeleditor.cpp:32
 msgid "Edit Labels"
 msgstr "ラベルの編集"
 
-#: qtplugins/label/labeleditor.cpp:34
-#, qt-format
+#: qtplugins/label/labeleditor.cpp:33
 msgid ""
-"Atom Label Tool\t(%1)\n"
+"Atom Label Tool\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
-"原子ラベルツール\t(%1)\n"
-"\n"
-"左ボタン:\t原子をクリックしてラベルをカスタム"
 
-#: qtplugins/label/labeleditor.cpp:81
+#: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
 msgstr "ラベルを作成"
 
@@ -3632,9 +3676,9 @@ msgid "Load single-line molecule descriptors through an input dialog."
 msgstr ""
 
 #: qtplugins/manipulator/manipulator.cpp:49
-msgctxt "control-key 6"
-msgid "Ctrl+6"
-msgstr "Ctrl+6"
+msgctxt "control-key 5"
+msgid "Ctrl+5"
+msgstr "Ctrl+5"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
@@ -4289,11 +4333,6 @@ msgstr "アニメーションツール\t(%1)"
 #, fuzzy
 msgid "Play"
 msgstr "再生"
-
-#: qtplugins/playertool/playertool.cpp:77
-#, fuzzy
-msgid "Stop"
-msgstr "停止"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgid "Frame rate:"
@@ -4982,9 +5021,9 @@ msgid "Select"
 msgstr "選択"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
-msgctxt "control-key 5"
-msgid "Ctrl+5"
-msgstr "Ctrl+5"
+msgctxt "control-key 4"
+msgid "Ctrl+4"
+msgstr "Ctrl+4"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -6220,11 +6259,6 @@ msgstr "ジョブ"
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
 msgstr "計算:"
-
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Method:"
-msgstr "手法:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8793,6 +8827,16 @@ msgstr ""
 "com,,,,,avogadro-devel@lists.sourceforge.net,,ktns.87@gmail.com,ken."
 "i54k@gmail.com,,iwao.aoyama@gmail.com,,"
 
+#, qt-format
+#~ msgid ""
+#~ "Atom Label Tool\t(%1)\n"
+#~ "\n"
+#~ "Left Mouse:\tClick on Atoms to add Custom Labels"
+#~ msgstr ""
+#~ "原子ラベルツール\t(%1)\n"
+#~ "\n"
+#~ "左ボタン:\t原子をクリックしてラベルをカスタム"
+
 #~ msgid ""
 #~ "Tables for displaying and editng atom, bond, angle and torsion properties."
 #~ msgstr "原子、結合、角度、二面角のプロパティを表示・編集する表"
@@ -10998,9 +11042,6 @@ msgstr ""
 
 #~ msgid "Molecular Dynamics (900K)"
 #~ msgstr "分子動力学法 (900K)"
-
-#~ msgid "Start"
-#~ msgstr "スタート"
 
 #~ msgid "Fixed atoms are movable"
 #~ msgstr "固定された原子を移動可能にする"

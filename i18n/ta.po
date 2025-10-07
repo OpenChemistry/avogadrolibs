@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-05 02:47+0000\n"
+"POT-Creation-Date: 2025-10-07 17:58+0000\n"
 "PO-Revision-Date: 2025-09-02 16:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -1967,6 +1967,65 @@ msgstr "COLORMAP:"
 msgid "ApplyColors"
 msgstr "விண்ணப்பிப்பொருட்களைப் பயன்படுத்துங்கள்"
 
+#: qtplugins/autoopt/autoopt.cpp:66
+msgctxt "control-key 7"
+msgid "Ctrl+7"
+msgstr "Ctrl+7"
+
+#: qtplugins/autoopt/autoopt.cpp:67
+msgid "Auto Optimize"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:69
+#, qt-format
+msgid ""
+"Auto Optimize Tool\t(%1)\n"
+"\n"
+"Navigation Functions when clicking in empty space.\n"
+"Left Mouse:\tRotate Space\n"
+"Middle Mouse:\tZoom Space\n"
+"Right Mouse:\tMove Space\n"
+"Double-Click:\tReset View\n"
+"\n"
+"When running:\n"
+"Left Mouse:\tClick and drag atoms to move them.\n"
+"Right Mouse:\tClick and drag to rotate atoms."
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: qtplugins/autoopt/autoopt.cpp:146:367
+msgid "Method:"
+msgstr "முறை:"
+
+#: qtplugins/autoopt/autoopt.cpp:149 qtplugins/autoopt/autoopt.cpp:215
+msgid "Start"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:173 qtplugins/playertool/playertool.cpp:77
+msgid "Stop"
+msgstr "நிறுத்து"
+
+#: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
+#: qtplugins/forcefield/forcefield.cpp:368
+#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:560
+msgid "Optimize Geometry"
+msgstr "வடிவவியலை மேம்படுத்தவும்"
+
+#: qtplugins/autoopt/autoopt.cpp:317
+#, qt-format
+msgid "%1 ΔE = %L2 kcal/mol"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.h:42
+msgid "Auto Optimize tool"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.h:45
+msgid "Interactive optimization of molecular geometry"
+msgstr ""
+
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
 msgstr "அணு அளவு"
@@ -1996,9 +2055,9 @@ msgid "Render atoms as spheres and bonds as cylinders."
 msgstr "அணுக்களை கோளங்களாகவும் பிணைப்புகளாகவும் சிலிண்டர்களாக வழங்கவும்."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
-msgctxt "control-key 7"
-msgid "Ctrl+7"
-msgstr "Ctrl+7"
+msgctxt "control-key 6"
+msgid "Ctrl+6"
+msgstr "Ctrl+6"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
@@ -3096,13 +3155,6 @@ msgstr "குறிப்பிட்ட அம்சங்களில் ப�
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "மூலக்கூறின் அணுக்களுக்கான படை புலம் காட்சிப்படுத்தல்களை வழங்கவும்."
 
-#: qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:368
-#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
-#: qtplugins/openbabel/openbabel.cpp:560
-msgid "Optimize Geometry"
-msgstr "வடிவவியலை மேம்படுத்தவும்"
-
 #: qtplugins/forcefield/forcefield.cpp:90
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 msgid "Forces"
@@ -3174,15 +3226,15 @@ msgstr "ஃபோர்ச்ஃபீல்ட் குறைத்தல், 
 msgid "Autodetect (%1)"
 msgstr "தன்னியக்க (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:103 qtplugins/forcefield/obmmenergy.cpp:34
 msgid "Universal Force Field"
 msgstr "யுனிவர்சல் ஃபோர்ச் புலம்"
 
-#: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:108 qtplugins/forcefield/obmmenergy.cpp:39
 msgid "Generalized Amber Force Field"
 msgstr "பொதுவான அம்பர் படை புலம்"
 
-#: qtplugins/forcefield/obenergy.cpp:120 qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:122 qtplugins/forcefield/obmmenergy.cpp:53
 msgid "Merck Molecular Force Field 94"
 msgstr "மெர்க் மூலக்கூறு படை புலம் 94"
 
@@ -3515,23 +3567,17 @@ msgid "Display labels on ball and stick style."
 msgstr "பந்து மற்றும் குச்சி பாணியில் லேபிள்களைக் காண்பி."
 
 #: qtplugins/label/labeleditor.cpp:31
-msgctxt "control-key 4"
-msgid "Ctrl+4"
-msgstr "Ctrl+4"
-
-#: qtplugins/label/labeleditor.cpp:32
 msgid "Edit Labels"
 msgstr "லேபிள்களைத் திருத்து"
 
-#: qtplugins/label/labeleditor.cpp:34
-#, qt-format
+#: qtplugins/label/labeleditor.cpp:33
 msgid ""
-"Atom Label Tool\t(%1)\n"
+"Atom Label Tool\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
 
-#: qtplugins/label/labeleditor.cpp:81
+#: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
 msgstr "லேபிளை உருவாக்கவும்"
 
@@ -3609,9 +3655,9 @@ msgid "Load single-line molecule descriptors through an input dialog."
 msgstr "உள்ளீட்டு உரையாடல் மூலம் ஒற்றை வரி மூலக்கூறு விளக்கங்களை ஏற்றவும்."
 
 #: qtplugins/manipulator/manipulator.cpp:49
-msgctxt "control-key 6"
-msgid "Ctrl+6"
-msgstr "Ctrl+6"
+msgctxt "control-key 5"
+msgid "Ctrl+5"
+msgstr "Ctrl+5"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
@@ -4241,10 +4287,6 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
 msgstr "விளையாடுங்கள்"
-
-#: qtplugins/playertool/playertool.cpp:77
-msgid "Stop"
-msgstr "நிறுத்து"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgid "Frame rate:"
@@ -4918,9 +4960,9 @@ msgid "Select"
 msgstr "தேர்ந்தெடு"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
-msgctxt "control-key 5"
-msgid "Ctrl+5"
-msgstr "Ctrl+5"
+msgctxt "control-key 4"
+msgid "Ctrl+4"
+msgstr "Ctrl+4"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -6164,11 +6206,6 @@ msgstr "பணி"
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
 msgstr "கணக்கிடுங்கள்:"
-
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Method:"
-msgstr "முறை:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)

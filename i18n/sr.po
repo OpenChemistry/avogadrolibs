@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-05 02:47+0000\n"
+"POT-Creation-Date: 2025-10-07 17:58+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
@@ -2015,6 +2015,65 @@ msgstr ""
 msgid "ApplyColors"
 msgstr "Primenite Boje"
 
+#: qtplugins/autoopt/autoopt.cpp:66
+msgctxt "control-key 7"
+msgid "Ctrl+7"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:67
+msgid "Auto Optimize"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:69
+#, qt-format
+msgid ""
+"Auto Optimize Tool\t(%1)\n"
+"\n"
+"Navigation Functions when clicking in empty space.\n"
+"Left Mouse:\tRotate Space\n"
+"Middle Mouse:\tZoom Space\n"
+"Right Mouse:\tMove Space\n"
+"Double-Click:\tReset View\n"
+"\n"
+"When running:\n"
+"Left Mouse:\tClick and drag atoms to move them.\n"
+"Right Mouse:\tClick and drag to rotate atoms."
+msgstr ""
+
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: qtplugins/autoopt/autoopt.cpp:146:367
+msgid "Method:"
+msgstr "Metod:"
+
+#: qtplugins/autoopt/autoopt.cpp:149 qtplugins/autoopt/autoopt.cpp:215
+msgid "Start"
+msgstr "Покрени"
+
+#: qtplugins/autoopt/autoopt.cpp:173 qtplugins/playertool/playertool.cpp:77
+msgid "Stop"
+msgstr "Zaustavi"
+
+#: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
+#: qtplugins/forcefield/forcefield.cpp:368
+#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:560
+msgid "Optimize Geometry"
+msgstr "&Prilagodi Geometriju"
+
+#: qtplugins/autoopt/autoopt.cpp:317
+#, qt-format
+msgid "%1 ΔE = %L2 kcal/mol"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.h:42
+msgid "Auto Optimize tool"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.h:45
+msgid "Interactive optimization of molecular geometry"
+msgstr ""
+
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
 msgstr ""
@@ -2046,8 +2105,8 @@ msgid "Render atoms as spheres and bonds as cylinders."
 msgstr "Atome predstavite kao sfere, a veze kao cilindre."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
-msgctxt "control-key 7"
-msgid "Ctrl+7"
+msgctxt "control-key 6"
+msgid "Ctrl+6"
 msgstr ""
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
@@ -3183,13 +3242,6 @@ msgstr ""
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Omogućite vizuelizaciju polja sila za atome molekula."
 
-#: qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:368
-#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
-#: qtplugins/openbabel/openbabel.cpp:560
-msgid "Optimize Geometry"
-msgstr "&Prilagodi Geometriju"
-
 #: qtplugins/forcefield/forcefield.cpp:90
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 msgid "Forces"
@@ -3264,15 +3316,15 @@ msgstr ""
 msgid "Autodetect (%1)"
 msgstr "Automatsko otkrivanje (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:103 qtplugins/forcefield/obmmenergy.cpp:34
 msgid "Universal Force Field"
 msgstr ""
 
-#: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:108 qtplugins/forcefield/obmmenergy.cpp:39
 msgid "Generalized Amber Force Field"
 msgstr ""
 
-#: qtplugins/forcefield/obenergy.cpp:120 qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:122 qtplugins/forcefield/obmmenergy.cpp:53
 msgid "Merck Molecular Force Field 94"
 msgstr ""
 
@@ -3612,23 +3664,17 @@ msgid "Display labels on ball and stick style."
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:31
-msgctxt "control-key 4"
-msgid "Ctrl+4"
-msgstr ""
-
-#: qtplugins/label/labeleditor.cpp:32
 msgid "Edit Labels"
 msgstr ""
 
-#: qtplugins/label/labeleditor.cpp:34
-#, qt-format
+#: qtplugins/label/labeleditor.cpp:33
 msgid ""
-"Atom Label Tool\t(%1)\n"
+"Atom Label Tool\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
 
-#: qtplugins/label/labeleditor.cpp:81
+#: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
 msgstr ""
 
@@ -3711,8 +3757,8 @@ msgid "Load single-line molecule descriptors through an input dialog."
 msgstr "Učitajte deskriptore jednorednih molekula kroz dijalog za unos."
 
 #: qtplugins/manipulator/manipulator.cpp:49
-msgctxt "control-key 6"
-msgid "Ctrl+6"
+msgctxt "control-key 5"
+msgid "Ctrl+5"
 msgstr ""
 
 #: qtplugins/manipulator/manipulator.cpp:50
@@ -4371,10 +4417,6 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
 msgstr "Pusti"
-
-#: qtplugins/playertool/playertool.cpp:77
-msgid "Stop"
-msgstr "Zaustavi"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgid "Frame rate:"
@@ -5078,8 +5120,8 @@ msgid "Select"
 msgstr "&Izaberi"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
-msgctxt "control-key 5"
-msgid "Ctrl+5"
+msgctxt "control-key 4"
+msgid "Ctrl+4"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
@@ -6346,11 +6388,6 @@ msgstr "Posao"
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
 msgstr "Izračunaj:"
-
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Method:"
-msgstr "Metod:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -11346,9 +11383,6 @@ msgstr ""
 
 #~ msgid "Molecular Dynamics (900K)"
 #~ msgstr "Молекуларна динамика (900K)"
-
-#~ msgid "Start"
-#~ msgstr "Покрени"
 
 #~ msgid "Fixed atoms are movable"
 #~ msgstr "Учвршћени атоми се могу померати"
