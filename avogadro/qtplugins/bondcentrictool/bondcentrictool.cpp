@@ -114,7 +114,7 @@ BondCentricTool::BondCentricTool(QObject* parent_)
     m_molecule(nullptr), m_renderer(nullptr), m_moveState(IgnoreMove),
     m_planeSnapIncr(10.f), m_snapPlaneToBonds(true)
 {
-  QString shortcut = tr("Ctrl+7", "control-key 7");
+  QString shortcut = tr("Ctrl+6", "control-key 6");
   m_activateAction->setText(tr("Bond-Centric Manipulation"));
   m_activateAction->setToolTip(
     tr("Bond Centric Manipulation Tool\t(%1)\n\n"
@@ -1032,7 +1032,7 @@ bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
         return false;
       }
     } // *it != bond
-  } // foreach bond
+  }   // foreach bond
   return true;
 }
 

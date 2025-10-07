@@ -102,6 +102,15 @@ public:
     const Core::Molecule& molecule) const;
 
   /**
+   * @brief Get a recommended model for this molecule.
+   *
+   * This returns the identifier for a model that works,
+   * given the charge, unit cell, spin states, etc.
+   * @return The recommended model identifier
+   */
+  std::string recommendedModel(const Core::Molecule& molecule) const;
+
+  /**
    * @brief Get the name of the model for the specified identifier.
    *
    * The name is a user-visible string, and may be translated.

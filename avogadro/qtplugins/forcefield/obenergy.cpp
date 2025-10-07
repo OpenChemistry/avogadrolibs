@@ -91,11 +91,13 @@ OBEnergy::OBEnergy(const std::string& method)
   d->m_forceField = static_cast<OBForceField*>(
     OBPlugin::GetPlugin("forcefields", method.c_str()));
 
+#ifndef NDEBUG
   qDebug() << "OBEnergy: method: " << method.c_str();
   if (d->m_forceField == nullptr) {
     qDebug() << "OBEnergy: method not found: " << method.c_str();
     qDebug() << OBPlugin::ListAsString("forcefields").c_str();
   }
+#endif
 
   if (method == "UFF") {
     m_description = tr("Universal Force Field");

@@ -108,7 +108,10 @@ jobs:
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
+        cd /c/vcpkg
+        git pull origin master
         vcpkg install libarchive eigen3 libxml2 zlib curl
+      shell: bash
 
     - name: Grab cache files
       uses: actions/cache@v4
@@ -183,11 +186,6 @@ jobs:
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
       run: |
-        # be sure the DMG can be created easily
-        # https://github.com/actions/runner-images/issues/7522#issuecomment-1556766641
-        echo killing...; sudo pkill -9 XProtect >/dev/null || true;
-        echo waiting...; while pgrep XProtect; do sleep 3; done;
-
         # create variables
         if [ -n "${P12_PASSWORD}" ]; then
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
@@ -214,9 +212,6 @@ jobs:
       if: runner.os == 'macOS'
       shell: bash
       run: |
-        if [ -z "${P12_PASSWORD}" ]; then
-          unset CODESIGN_IDENTITY # to prevent cpack failing when trying to sign
-        fi
         [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date "+%d-%m-%y"`
         exe_path=prefix/Avogadro2.app/Contents/MacOS/
         cp -p `which pixi` ${exe_path}
@@ -224,7 +219,8 @@ jobs:
           args="${args} -executable=${exe}"
         done;
         macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
-        if [ ! -z "${P12_PASSWORD}" ]; then
+        if [ -n "${P12_PASSWORD}" ]; then
+          echo "Signing Avogadro2.app with ${CODESIGN_IDENTITY}"
           /usr/bin/codesign -s ${CODESIGN_IDENTITY} -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
         fi
         cd prefix
@@ -261,3 +257,4 @@ jobs:
     - name: Setup tmate session
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@v3
+      timeout-minutes: 60

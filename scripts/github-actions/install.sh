@@ -2,6 +2,7 @@
 set -ev
 
 if [[ $RUNNER_OS == "Windows" ]]; then
+    (cd /c/vcpkg && git pull origin master)
     vcpkg install eigen3
     #git clone --recursive -b 3.4.0 --depth 1 https://gitlab.com/libeigen/eigen /c/eigen-34
     #cd /c/eigen

@@ -79,7 +79,8 @@ public:
     /** Operations that can affect the above types. */
     Added = 1024,
     Removed = 2048,
-    Modified = 4096
+    Modified = 4096,
+    Moved = 8192
   };
   Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
 

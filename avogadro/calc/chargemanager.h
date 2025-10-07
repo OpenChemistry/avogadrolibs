@@ -94,6 +94,19 @@ public:
   std::set<std::string> identifiersForMolecule(
     const Core::Molecule& molecule) const;
 
+  /**
+   * @brief Get a recommended model for this molecule.
+   *
+   * This returns the identifier for a model that works,
+   * given the charge, unit cell, spin states, etc.
+   * @return The recommended model identifier
+   */
+  std::string recommendedModel(const Core::Molecule& molecule) const;
+
+  /**
+   * @return the user-visible name of the model with the identifier @a
+   * identifier
+   */
   std::string nameForModel(const std::string& identifier) const;
 
   /**
