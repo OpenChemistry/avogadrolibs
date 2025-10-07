@@ -51,7 +51,7 @@ jobs:
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install eigen glew pixi
+        brew install eigen glew pixi create-dmg
 
     - name: Checkout openchemistry
       uses: actions/checkout@v5
@@ -220,16 +220,23 @@ jobs:
         done;
         macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
         if [ -n "${P12_PASSWORD}" ]; then
-          echo "Signing Avogadro2.app with ${CODESIGN_IDENTITY}"
-          /usr/bin/codesign -s ${CODESIGN_IDENTITY} -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
+          /usr/bin/codesign -s "${CODESIGN_IDENTITY}"" -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
         fi
         cd prefix
         /usr/bin/ditto -c -k --keepParent Avogadro2.app Avogadro2.zip
         mv Avogadro2.zip ../Avogadro2-macOS.zip
+        cd ..
+        xcrun notarytool submit Avogadro2*.zip --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
+        xcrun stapler staple -v Avogadro2*.zip
       working-directory: ${{ runner.workspace }}/build/
+      continue-on-error: true
       env:
-        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        NOTARIZE_TEAM: ${{ secrets.AC_TEAM }}
+        NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
+        NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+        PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
 
     - name: Create Windows Packages
       if: runner.os == 'Windows'
