@@ -62,8 +62,8 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
-    dim(i) = Core::lexicalCast<int>(list[0]);
-    spacing(i) = Core::lexicalCast<double>(list[i + 1]);
+    dim(i) = Core::lexicalCast<int>(list[0]).value_or(0);
+    spacing(i) = Core::lexicalCast<double>(list[i + 1]).value_or(0.0);
   }
 
   // Geometry block
@@ -72,10 +72,10 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
-    auto atomNum = Core::lexicalCast<short int>(list[0]);
+    auto atomNum = Core::lexicalCast<short int>(list[0]).value_or(0);
     Core::Atom a = molecule.addAtom(static_cast<unsigned char>(atomNum));
     for (unsigned int j = 2; j < 5; ++j)
-      pos(j - 2) = Core::lexicalCast<double>(list[j]);
+      pos(j - 2) = Core::lexicalCast<double>(list[j]).value_or(0.0);
     pos = pos * BOHR_TO_ANGSTROM;
     a.setPosition3d(pos);
   }

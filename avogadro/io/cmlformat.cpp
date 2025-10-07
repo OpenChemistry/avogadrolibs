@@ -200,11 +200,19 @@ public:
           xml_attribute y3 = node.attribute("y3");
           xml_attribute z3 = node.attribute("z3");
           if (y3 && z3) {
-            // It looks like we have a valid 3D position.
-            Vector3 position(lexicalCast<double>(x3Att.value()),
-                             lexicalCast<double>(y3.value()),
-                             lexicalCast<double>(z3.value()));
-            atom.setPosition3d(position);
+            auto x = lexicalCast<double>(x3Att.value());
+            auto y = lexicalCast<double>(y3.value());
+            auto z = lexicalCast<double>(z3.value());
+            if (x && y && z) {
+              // It looks like we have a valid 3D position.
+              Vector3 position(*x, *y, *z);
+              atom.setPosition3d(position);
+            } else {
+              error += "x3, y3 or z3 attribute is malformed: ["s +
+                       x3Att.value() + ", "s + y3.value() + ", "s + z3.value() +
+                       "]."s;
+              return false;
+            }
           } else {
             // Corrupt 3D position supplied for atom.
             return false;
@@ -237,9 +245,16 @@ public:
         if (x2Att) {
           xml_attribute y2 = node.attribute("y2");
           if (y2) {
-            Vector2 position(lexicalCast<double>(x2Att.value()),
-                             lexicalCast<double>(y2.value()));
-            atom.setPosition2d(position);
+            auto x = lexicalCast<double>(x2Att.value());
+            auto y = lexicalCast<double>(y2.value());
+            if (x && y) {
+              Vector2 position(*x, *y);
+              atom.setPosition2d(position);
+            } else {
+              error += "x2 or y2 attribute is malformed: ["s + x2Att.value() +
+                       ", "s + y2.value() + "]."s;
+              return false;
+            }
           } else {
             // Corrupt 2D position supplied for atom.
             return false;
@@ -252,8 +267,14 @@ public:
         /* Formal Charge Attribute Check */
         xml_attribute formalChargeAtt = node.attribute("formalCharge");
         if (formalChargeAtt) {
-          auto formalCharge = lexicalCast<signed int>(formalChargeAtt.value());
-          atom.setFormalCharge(formalCharge);
+          if (auto formalCharge =
+                lexicalCast<signed int>(formalChargeAtt.value())) {
+            atom.setFormalCharge(*formalCharge);
+          } else {
+            error += "formalCharge attribute is malformed: "s +
+                     formalChargeAtt.value();
+            return false;
+          }
         }
       }
 
