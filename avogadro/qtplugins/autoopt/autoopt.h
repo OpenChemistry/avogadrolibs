@@ -74,6 +74,11 @@ public slots:
   void moleculeChanged(unsigned int changes);
 
   void optimizeStep();
+  void dynamicsStep();
+
+  void taskChanged(int task);
+  void temperatureChanged(double temperature);
+  void timeStepChanged(double timeStep);
 
 private:
   /**
@@ -101,6 +106,12 @@ private:
   Calc::EnergyCalculator* m_method = nullptr;
   Real m_energy;
   Real m_deltaE;
+
+  Real m_temperature = 300.0; // Kelvin
+  Real m_timeStep = 1.0;      // fs
+  int m_task = 0;             // default to optimization
+  Eigen::VectorXd m_velocities;
+  Eigen::ArrayXd m_masses;
 
   mutable QWidget* m_toolWidget;
 

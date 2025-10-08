@@ -31,6 +31,7 @@
 #include <QAction>
 #include <QFormLayout>
 #include <QComboBox>
+#include <QDoubleSpinBox>
 #include <QPushButton>
 #include <QSettings>
 #include <QElapsedTimer>
@@ -99,6 +100,13 @@ void AutoOpt::setMolecule(QtGui::Molecule* mol)
     // connect to any molecule changes
     connect(mol, SIGNAL(changed(unsigned int)),
             SLOT(moleculeChanged(unsigned int)));
+
+    m_masses.resize(mol->atomCount() * 3); // 3N to match coordinates
+    for (unsigned int i = 0; i < mol->atomCount(); i++) {
+      m_masses[i * 3] = mol->atom(i).mass();
+      m_masses[i * 3 + 1] = mol->atom(i).mass();
+      m_masses[i * 3 + 2] = mol->atom(i).mass();
+    }
   }
 }
 
@@ -120,6 +128,16 @@ QWidget* AutoOpt::toolWidget() const
 
     // set up a form layout
     QFormLayout* form = new QFormLayout(m_toolWidget);
+
+    QComboBox* taskComboBox = new QComboBox();
+    taskComboBox->setObjectName("taskComboBox");
+    taskComboBox->addItem(tr("Optimize"));
+    taskComboBox->addItem(tr("Dynamics"));
+    taskComboBox->setCurrentIndex(0);
+    connect(taskComboBox, &QComboBox::currentIndexChanged, this,
+            &AutoOpt::taskChanged);
+    form->addRow(tr("Task:"), taskComboBox);
+
     // method combo box
     QComboBox* methodComboBox = new QComboBox();
     methodComboBox->setObjectName("methodComboBox");
@@ -145,6 +163,34 @@ QWidget* AutoOpt::toolWidget() const
             &AutoOpt::methodChanged);
     form->addRow(tr("Method:"), methodComboBox);
 
+    // add a temperature double spin box for dynamics
+    QDoubleSpinBox* temperatureSpinBox = new QDoubleSpinBox();
+    temperatureSpinBox->setObjectName("temperatureSpinBox");
+    temperatureSpinBox->setRange(0.0, 1000.0);
+    temperatureSpinBox->setSingleStep(1.0);
+    temperatureSpinBox->setDecimals(1);
+    temperatureSpinBox->setSuffix(tr(" K"));
+    temperatureSpinBox->setValue(300.0);
+    connect(temperatureSpinBox, &QDoubleSpinBox::valueChanged, this,
+            &AutoOpt::temperatureChanged);
+    form->addRow(tr("Temperature:"), temperatureSpinBox);
+
+    // add a timestep double spin box for dynamics
+    QDoubleSpinBox* timeStepSpinBox = new QDoubleSpinBox();
+    timeStepSpinBox->setObjectName("timeStepSpinBox");
+    timeStepSpinBox->setRange(0.0, 1000.0);
+    timeStepSpinBox->setSingleStep(1.0);
+    timeStepSpinBox->setDecimals(1);
+    timeStepSpinBox->setSuffix(tr(" fs"));
+    timeStepSpinBox->setValue(1.0);
+    connect(timeStepSpinBox, &QDoubleSpinBox::valueChanged, this,
+            &AutoOpt::timeStepChanged);
+    form->addRow(tr("Timestep:"), timeStepSpinBox);
+
+    // disable the temperature and timestep for now
+    temperatureSpinBox->setEnabled(false);
+    timeStepSpinBox->setEnabled(false);
+
     // start stop button
     QPushButton* startStopButton = new QPushButton(tr("Start"));
     startStopButton->setObjectName("startStopButton");
@@ -155,6 +201,40 @@ QWidget* AutoOpt::toolWidget() const
     m_toolWidget->setLayout(form);
   }
   return m_toolWidget;
+}
+
+void AutoOpt::taskChanged(int index)
+{
+  m_task = index;
+
+  auto temperatureSpinBox =
+    m_toolWidget->findChild<QDoubleSpinBox*>("temperatureSpinBox");
+  auto timeStepSpinBox =
+    m_toolWidget->findChild<QDoubleSpinBox*>("timeStepSpinBox");
+
+  bool enabled = (index == 1);
+  temperatureSpinBox->setEnabled(enabled);
+  timeStepSpinBox->setEnabled(enabled);
+
+  if (index == 1) { // dynamics
+    // enable the temperature and timestep
+    disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
+    connect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
+  } else {
+    // disable the temperature and timestep
+    disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
+    connect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
+  }
+}
+
+void AutoOpt::temperatureChanged(double temp)
+{
+  m_temperature = temp;
+}
+
+void AutoOpt::timeStepChanged(double timeStep)
+{
+  m_timeStep = timeStep;
 }
 
 void AutoOpt::startStop()
@@ -191,12 +271,19 @@ void AutoOpt::start()
     qDebug() << "Initial energy:" << m_energy;
 #endif
   }
+  // set the initial velocities
+  m_velocities.resize(m_molecule->atomCount() * 3);
+  m_velocities.setZero();
 
   // start the optimization
   QElapsedTimer timer;
-  timer.start();
-  optimizeStep();
   qint64 minimumStep = 33; // 30 fps
+  timer.start();
+  if (m_task == 0) {
+    optimizeStep();
+  } else {
+    dynamicsStep();
+  }
   m_oneStepTime = std::max(timer.elapsed() + 5, minimumStep);
 
 #ifndef NDEBUG
@@ -305,6 +392,53 @@ void AutoOpt::optimizeStep()
       Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
       m_molecule->emitChanged(changes);
     }
+  }
+}
+
+void AutoOpt::dynamicsStep()
+{
+  if (!m_running) {
+    m_timer.stop();
+    return;
+  }
+
+  // Velocity Verlet - get the forces
+  if (m_method != nullptr) {
+    int n = m_molecule->atomCount();
+    // we have to cast the current 3d positions into a VectorXd
+    Core::Array<Vector3> pos = m_molecule->atomPositions3d();
+    double* p = pos[0].data();
+    Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
+    Eigen::VectorXd positions = map;
+    Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
+
+    // get the frozen atoms to ensure these are zero gradients
+    auto mask = m_molecule->molecule().frozenAtomMask();
+    if (mask.rows() != 3 * n) {
+      mask = Eigen::VectorXd::Zero(3 * n);
+      // set to 1.0
+      for (Eigen::Index i = 0; i < 3 * n; ++i) {
+        mask[i] = 1.0;
+      }
+    }
+    m_method->setMask(mask);
+
+    m_method->gradient(positions, gradient);
+    // calculate the acceleration from F = ma
+    Eigen::VectorXd a = -gradient.array() / m_masses;
+
+    // update the velocity
+    // TODO: rescale the velocity using a thermostat
+    m_velocities += a * m_timeStep;
+    Eigen::VectorXd x = positions + m_velocities * m_timeStep;
+
+    // update the positions
+    for (Eigen::Index i = 0; i < 3 * n; ++i) {
+      pos[i] = Vector3(x[i], x[i + n], x[i + 2 * n]);
+    }
+    m_molecule->setAtomPositions3d(pos, tr("Molecular Dynamics"));
+    Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
+    m_molecule->emitChanged(changes);
   }
 }
 
