@@ -8,15 +8,15 @@
 # matterhorn103 <milner94@live.co.uk>, 2023.
 # "Carson Geller (Cart)" <cartrigger@gmail.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
-# btbt_bt <belegdal@yahoo.ca>, 2024.
+# btbt_bt <belegdal@yahoo.ca>, 2024, 2025.
 # Distant Prince <distantprinceca@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-07 17:58+0000\n"
-"PO-Revision-Date: 2024-12-16 11:14+0000\n"
-"Last-Translator: Distant Prince <distantprinceca@gmail.com>\n"
+"PO-Revision-Date: 2025-10-09 02:07+0000\n"
+"Last-Translator: btbt_bt <belegdal@yahoo.ca>\n"
 "Language-Team: English (Canada) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_CA/>\n"
 "Language: en_CA\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-rc\n"
+"X-Generator: Weblate 5.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1156,11 +1156,11 @@ msgstr "Multiplicity"
 
 #: qtgui/jsonwidget.cpp:361
 msgid "User Name"
-msgstr ""
+msgstr "User Name"
 
 #: qtgui/jsonwidget.cpp:363
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
 #: qtgui/jsonwidget.cpp:671
 #, qt-format
@@ -1279,11 +1279,11 @@ msgstr "Untitled"
 
 #: qtgui/moleculemodel.cpp:109
 msgid "Edit molecule"
-msgstr ""
+msgstr "Edit molecule"
 
 #: qtgui/moleculemodel.cpp:116
 msgid "Not saved"
-msgstr ""
+msgstr "Not saved"
 
 #: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
@@ -1521,7 +1521,7 @@ msgstr "Change Atom Label"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Change Bond Label"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -1570,7 +1570,7 @@ msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "Change Elements…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:62
 #: qtplugins/centroid/centroid.cpp:45
@@ -1592,11 +1592,11 @@ msgstr "Element:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "Alchemy"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Change elements of atoms."
 
 #: qtplugins/aligntool/aligntool.cpp:51 qtplugins/aligntool/aligntool.cpp:94
 msgid "Align"
@@ -1612,6 +1612,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
+"Align Molecules\n"
+"\n"
+"Left Mouse:\tSelect up to two atoms.\n"
+"\tThe first atom is centred at the origin.\n"
+"\tThe second atom is aligned to the selected axis.\n"
+"Right Mouse:\tReset alignment.\n"
+"Double-Click:\tCentre the atom at the origin."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1979,7 +1986,7 @@ msgstr "Ctrl+7"
 
 #: qtplugins/autoopt/autoopt.cpp:67
 msgid "Auto Optimize"
-msgstr ""
+msgstr "Auto Optimize"
 
 #: qtplugins/autoopt/autoopt.cpp:69
 #, qt-format
@@ -1996,6 +2003,17 @@ msgid ""
 "Left Mouse:\tClick and drag atoms to move them.\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Auto Optimize Tool\t(%1)\n"
+"\n"
+"Navigation Functions when clicking in empty space.\n"
+"Left Mouse:\tRotate Space\n"
+"Middle Mouse:\tZoom Space\n"
+"Right Mouse:\tMove Space\n"
+"Double-Click:\tReset View\n"
+"\n"
+"When running:\n"
+"Left Mouse:\tClick and drag atoms to move them.\n"
+"Right Mouse:\tClick and drag to rotate atoms."
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2021,15 +2039,15 @@ msgstr "Optimize Geometry"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kcal/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 kcal/mol"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
-msgstr ""
+msgstr "Auto Optimize tool"
 
 #: qtplugins/autoopt/autoopt.h:45
 msgid "Interactive optimization of molecular geometry"
-msgstr ""
+msgstr "Interactive optimization of molecular geometry"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
