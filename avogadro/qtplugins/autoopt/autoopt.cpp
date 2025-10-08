@@ -271,6 +271,8 @@ void AutoOpt::start()
 
   m_method = Calc::EnergyManager::instance().model(m_currentMethod);
 
+  m_molecule->beginMergeMode("AutoOpt");
+
   if (m_method != nullptr) {
     m_method->setMolecule(&m_molecule->molecule());
     m_energy = calculateEnergy();
@@ -317,6 +319,8 @@ void AutoOpt::stop()
   startStopButton->setText(tr("Start"));
   startStopButton->setIcon(QIcon::fromTheme("go-down"));
   m_running = false;
+
+  m_molecule->endMergeMode();
 
   emit drawablesChanged();
 }
@@ -464,6 +468,8 @@ void AutoOpt::dynamicsStep()
     // rescale by the thermostat
     m_thermostat->apply(m_velocities, m_masses);
     qDebug() << " velocity norm after thermostat " << m_velocities.norm();
+    qDebug() << " temperature "
+             << m_thermostat->compute_temperature(m_velocities, m_masses);
     Eigen::VectorXd x = positions + m_velocities * m_timeStep;
 
     // update the positions
