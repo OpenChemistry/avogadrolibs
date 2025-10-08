@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "autoopt.h"
+#include "csvrthermostat.h"
 
 #include <avogadro/calc/energymanager.h>
 #include <avogadro/calc/lennardjones.h>
@@ -81,9 +82,16 @@ AutoOpt::AutoOpt(QObject* parent_)
 
   // used to run the optimization step
   connect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
+
+  // set up the the thermostat
+  m_thermostat =
+    new CSVRThermostat(m_temperature, m_timeStep, m_timeStep * 200.0);
 }
 
-AutoOpt::~AutoOpt() {}
+AutoOpt::~AutoOpt()
+{
+  delete m_thermostat;
+}
 
 void AutoOpt::setIcon(bool darkTheme)
 {
@@ -219,10 +227,10 @@ void AutoOpt::taskChanged(int index)
   if (index == 1) { // dynamics
     // enable the temperature and timestep
     disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
-    connect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
+    // connect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
   } else {
     // disable the temperature and timestep
-    disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
+    // disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
     connect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
   }
 }
@@ -274,6 +282,13 @@ void AutoOpt::start()
   // set the initial velocities
   m_velocities.resize(m_molecule->atomCount() * 3);
   m_velocities.setZero();
+  // masses
+  m_masses.resize(m_molecule->atomCount() * 3); // 3N to match coordinates
+  for (unsigned int i = 0; i < m_molecule->atomCount(); i++) {
+    m_masses[i * 3] = m_molecule->atom(i).mass();
+    m_masses[i * 3 + 1] = m_molecule->atom(i).mass();
+    m_masses[i * 3 + 2] = m_molecule->atom(i).mass();
+  }
 
   // start the optimization
   QElapsedTimer timer;
@@ -405,6 +420,12 @@ void AutoOpt::dynamicsStep()
   // Velocity Verlet - get the forces
   if (m_method != nullptr) {
     int n = m_molecule->atomCount();
+
+    // update the thermostat
+    m_thermostat->setTargetTemperature(m_temperature);
+    m_thermostat->setTimeStep(m_timeStep);
+    m_thermostat->setDegreesOfFreedom(3 * n - 3);
+
     // we have to cast the current 3d positions into a VectorXd
     Core::Array<Vector3> pos = m_molecule->atomPositions3d();
     double* p = pos[0].data();
@@ -423,18 +444,31 @@ void AutoOpt::dynamicsStep()
     }
     m_method->setMask(mask);
 
+    // check m_masses
+    if (m_masses.rows() != 3 * n) {
+      m_masses = Eigen::VectorXd::Zero(3 * n);
+      for (unsigned int i = 0; i < n; i++) {
+        m_masses[i * 3] = m_molecule->atom(i).mass();
+        m_masses[i * 3 + 1] = m_molecule->atom(i).mass();
+        m_masses[i * 3 + 2] = m_molecule->atom(i).mass();
+      }
+    }
+
     m_method->gradient(positions, gradient);
     // calculate the acceleration from F = ma
     Eigen::VectorXd a = -gradient.array() / m_masses;
 
     // update the velocity
-    // TODO: rescale the velocity using a thermostat
     m_velocities += a * m_timeStep;
+    qDebug() << " velocity norm " << m_velocities.norm();
+    // rescale by the thermostat
+    m_thermostat->apply(m_velocities, m_masses);
+    qDebug() << " velocity norm after thermostat " << m_velocities.norm();
     Eigen::VectorXd x = positions + m_velocities * m_timeStep;
 
     // update the positions
-    for (Eigen::Index i = 0; i < 3 * n; ++i) {
-      pos[i] = Vector3(x[i], x[i + n], x[i + 2 * n]);
+    for (Eigen::Index i = 0; i < n; ++i) {
+      pos[i] = Vector3(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
     }
     m_molecule->setAtomPositions3d(pos, tr("Molecular Dynamics"));
     Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;

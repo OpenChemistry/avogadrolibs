@@ -24,6 +24,7 @@ class EnergyCalculator;
 namespace QtPlugins {
 
 class AutoOptWidget;
+class CSVRThermostat;
 
 /**
  * @class AutoOpt autoopt.h
@@ -112,6 +113,7 @@ private:
   int m_task = 0;             // default to optimization
   Eigen::VectorXd m_velocities;
   Eigen::ArrayXd m_masses;
+  CSVRThermostat* m_thermostat = nullptr;
 
   mutable QWidget* m_toolWidget;
 
