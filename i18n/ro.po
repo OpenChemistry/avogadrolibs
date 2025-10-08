@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-07 17:58+0000\n"
-"PO-Revision-Date: 2025-10-07 08:02+0000\n"
+"PO-Revision-Date: 2025-10-09 02:07+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
-"20)) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : "
+"(n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
 "X-Generator: Weblate 5.14-dev\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2010,7 +2010,7 @@ msgstr "Ctrl+7"
 
 #: qtplugins/autoopt/autoopt.cpp:67
 msgid "Auto Optimize"
-msgstr ""
+msgstr "Optimizare automată"
 
 #: qtplugins/autoopt/autoopt.cpp:69
 #, qt-format
@@ -2027,6 +2027,19 @@ msgid ""
 "Left Mouse:\tClick and drag atoms to move them.\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Instrument de optimizare automată\t(%1)\n"
+"\n"
+"Funcții de navigare la clic pe spațiul gol.\n"
+"Butonul stâng al mouse-ului:\t    Rotește spațiul\n"
+"Butonul din mijloc al mouse-ului:\tMărește spațiul\n"
+"Butonul drept al mouse-ului:\t    Mută spațiul\n"
+"Dublu clic:\t                        Reinițializează vizualizarea\n"
+"\n"
+"Când rulează:\n"
+"Butonul stâng al mouse-ului:\t    Faceți clic și trageți atomii pentru a-i "
+"muta.\n"
+"Butonul drept al mouse-ului:\t    Faceți clic și trageți pentru a roti "
+"atomii."
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2036,7 +2049,7 @@ msgstr "Metoda:"
 
 #: qtplugins/autoopt/autoopt.cpp:149 qtplugins/autoopt/autoopt.cpp:215
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: qtplugins/autoopt/autoopt.cpp:173 qtplugins/playertool/playertool.cpp:77
 msgid "Stop"
@@ -2052,15 +2065,15 @@ msgstr "Optimizează geometria"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kcal/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 kcal/mol"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
-msgstr ""
+msgstr "Instrument de optimizare automată"
 
 #: qtplugins/autoopt/autoopt.h:45
 msgid "Interactive optimization of molecular geometry"
-msgstr ""
+msgstr "Optimizarea interactivă a geometriei moleculare"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
@@ -3639,6 +3652,10 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Instrument de etichetare a atomilor\n"
+"\n"
+"Butonul stâng al mouse-ului: \tFaceți clic pe atomi pentru a adăuga etichete "
+"personalizate"
 
 #: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
