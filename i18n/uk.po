@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-07 17:58+0000\n"
-"PO-Revision-Date: 2025-10-06 04:02+0000\n"
+"PO-Revision-Date: 2025-10-09 02:07+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -27,8 +27,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural="
+"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? "
+"1 : 2);\n"
 "X-Generator: Weblate 5.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
@@ -2009,7 +2010,7 @@ msgstr "Ctrl+7"
 
 #: qtplugins/autoopt/autoopt.cpp:67
 msgid "Auto Optimize"
-msgstr ""
+msgstr "Автоматична оптимізація"
 
 #: qtplugins/autoopt/autoopt.cpp:69
 #, qt-format
@@ -2026,6 +2027,17 @@ msgid ""
 "Left Mouse:\tClick and drag atoms to move them.\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Інструмент автоматичної оптимізації (%1)\n"
+"\n"
+"Функції навігації при натисканні на порожнє місце.\n"
+"Ліва кнопка миші: Повернути простір\n"
+"Середня кнопка миші: Збільшити простір\n"
+"Права кнопка миші: Перемістити простір\n"
+"Подвійне натискання: Скинути вигляд\n"
+"\n"
+"Під час роботи:\n"
+"Ліва кнопка миші: Натисніть і перетягніть атоми, щоб перемістити їх.\n"
+"Права кнопка миші: Натисніть і перетягніть, щоб повернути атоми."
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2051,15 +2063,15 @@ msgstr "Оптимізації геометрії"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kcal/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 ккал/моль"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
-msgstr ""
+msgstr "Інструмент автоматичної оптимізації"
 
 #: qtplugins/autoopt/autoopt.h:45
 msgid "Interactive optimization of molecular geometry"
-msgstr ""
+msgstr "Інтерактивна оптимізація молекулярної геометрії"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
@@ -3631,6 +3643,9 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Інструмент «Мітки атомів»\n"
+"\n"
+"Ліва кнопка миші: Натисніть на атоми, щоб додати власні мітки"
 
 #: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
