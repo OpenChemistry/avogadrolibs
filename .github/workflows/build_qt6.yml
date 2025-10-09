@@ -221,15 +221,8 @@ jobs:
         if [ -n "${P12_PASSWORD}" ]; then
           /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
         fi
+        # create the DMG
         cd prefix
-        /usr/bin/ditto -c -k --keepParent Avogadro2.app Avogadro2.zip
-        mv Avogadro2.zip ../Avogadro2-macOS.zip
-        cd ..
-        xcrun notarytool submit Avogadro2*.zip --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
-        rm -rf Avogadro2*.zip
-        xcrun stapler staple -v prefix/Avogadro2.app
-        # create the dmg
-
         if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
           # This is a tag - extract version
           VERSION="${GITHUB_REF#refs/tags/}"
@@ -259,11 +252,13 @@ jobs:
             DMG_NAME="Avogadro2-${VERSION}.dmg"
           fi
         fi
-        cd prefix
+        echo "Building DMG: ${DMG_NAME}"
         create-dmg --volname "${VOLNAME}" --icon-size 64 --filesystem "APFS" --format "ULMO" --no-internet-enable --icon "Avogadro2.app" 20 64 --app-drop-link 200 64 ${DMG_NAME} Avogadro2.app
         mv ${DMG_NAME} ../${DMG_NAME}
         cd ..
+        echo "Submitting DMG: ${DMG_NAME}"
         xcrun notarytool submit ${DMG_NAME} --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
+        echo "Stapling notarized DMG: ${DMG_NAME}"
         xcrun stapler staple -v ${DMG_NAME}
       working-directory: ${{ runner.workspace }}/build/
       continue-on-error: true
