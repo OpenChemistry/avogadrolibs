@@ -212,7 +212,6 @@ jobs:
       if: runner.os == 'macOS'
       shell: bash
       run: |
-        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date "+%d-%m-%y"`
         exe_path=prefix/Avogadro2.app/Contents/MacOS/
         cp -p `which pixi` ${exe_path}
         for exe in ${exe_path}*; do
@@ -227,7 +226,45 @@ jobs:
         mv Avogadro2.zip ../Avogadro2-macOS.zip
         cd ..
         xcrun notarytool submit Avogadro2*.zip --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
-        xcrun stapler staple -v Avogadro2*.zip
+        rm -rf Avogadro2*.zip
+        xcrun stapler staple -v prefix/Avogadro2.app
+        # create the dmg
+
+        if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          # This is a tag - extract version
+          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${VERSION#v}"  # Remove 'v' prefix if present
+          IS_RELEASE=true
+        else
+          # This is a nightly build - use current date
+          VERSION=$(date +%Y-%m-%d)
+          IS_RELEASE=false
+        fi
+        VOLNAME="Avogadro2 ${VERSION}"
+
+        # Determine architecture
+        ARCH=$(uname -m)
+
+        # Build DMG filename
+        if [[ "$IS_RELEASE" == true ]]; then
+          if [[ "$ARCH" == "arm64" ]]; then
+            DMG_NAME="Avogadro2-${VERSION}-Darwin-arm64.dmg"
+          else
+            DMG_NAME="Avogadro2-${VERSION}-Darwin.dmg"
+          fi
+        else
+          if [[ "$ARCH" == "arm64" ]]; then
+            DMG_NAME="Avogadro2-${VERSION}-arm64.dmg"
+          else
+            DMG_NAME="Avogadro2-${VERSION}.dmg"
+          fi
+        fi
+        cd prefix
+        create-dmg --volname "${VOLNAME}" --icon-size 64 --filesystem "APFS" --format "ULMO" --no-internet-enable --icon "Avogadro2.app" 20 64 --app-drop-link 200 64 ${DMG_NAME} Avogadro2.app
+        mv ${DMG_NAME} ../${DMG_NAME}
+        cd ..
+        xcrun notarytool submit ${DMG_NAME} --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
+        xcrun stapler staple -v ${DMG_NAME}
       working-directory: ${{ runner.workspace }}/build/
       continue-on-error: true
       env:
