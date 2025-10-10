@@ -222,7 +222,6 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
     return;
 
   m_molecule = mol;
-  setupMethod();
 
   // TODO: connect to molecule changes, e.g. selection
   // connect(m_molecule, SIGNAL(changed(uint)), SLOT(updateActions()));
