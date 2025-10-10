@@ -219,6 +219,8 @@ jobs:
         done;
         macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
         if [ -n "${P12_PASSWORD}" ]; then
+          # codesign the Open Babel modules, then the app
+          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app/Contents/lib/openbabel/*.so
           /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
         fi
         # create the DMG
