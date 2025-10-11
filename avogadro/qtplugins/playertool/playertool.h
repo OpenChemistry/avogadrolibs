@@ -60,7 +60,7 @@ protected slots:
   void spinnerPositionChanged(int k);
   void firstFramePositionChanged(int k);
   void lastFramePositionChanged(int k);
-  void setSliderLimit();
+  void updateLimits();
 
 private:
   QAction* m_activateAction;
@@ -77,7 +77,6 @@ private:
   mutable QOpenGLWidget* m_glWidget;
   mutable QSlider* m_slider;
   mutable QPushButton* playButton;
-  mutable QPushButton* stopButton;
 };
 
 inline void PlayerTool::setMolecule(QtGui::Molecule* mol)
@@ -85,7 +84,7 @@ inline void PlayerTool::setMolecule(QtGui::Molecule* mol)
   if (m_molecule != mol) {
     m_molecule = mol;
     m_currentFrame = 0;
-    setSliderLimit();
+    updateLimits();
   }
 }
 
