@@ -24,4 +24,4 @@ avogadro_plugin(PlotXrd
   "${plotxrd_uis}"
 )
 
-target_link_libraries(PlotXrd PRIVATE Avogadro::Vtk)
+# target_link_libraries(PlotXrd PRIVATE Avogadro::Vtk)

@@ -22,7 +22,7 @@ include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "1")
-set(AvogadroLibs_VERSION_MINOR   "100")
+set(AvogadroLibs_VERSION_MINOR   "101")
 set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
@@ -57,7 +57,6 @@ endif()
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
 option(TEST_QTGL "Build the Qt OpenGL test application" OFF)
-option(ENABLE_TRANSLATIONS "Enable building translations with Qt5 Linguist" OFF)
 option(USE_OPENGL "Enable libraries that use OpenGL" ON)
 option(USE_HDF5 "Enable optional HDF5 features" OFF)
 option(USE_QT "Enable libraries that use Qt 5 or 6" ON)

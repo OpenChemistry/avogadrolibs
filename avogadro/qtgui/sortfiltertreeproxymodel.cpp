@@ -25,7 +25,10 @@ bool SortFilterTreeProxyModel::filterAcceptsRow(
 
   QString data = sourceModel()->data(sourceIndex).toString();
   // ignore any image files
-  if (data.endsWith(".png"))
+  if (data.endsWith(".png") || data.endsWith(".svg"))
+    return false;
+  // ignore any .smi files
+  if (data.endsWith(".smi"))
     return false;
 
   // Now we see if we're a child of the root

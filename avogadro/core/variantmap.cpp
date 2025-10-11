@@ -75,4 +75,4 @@ VariantMap::const_iterator VariantMap::constEnd() const
   return m_map.end();
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Core

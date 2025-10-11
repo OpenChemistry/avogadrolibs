@@ -50,7 +50,7 @@ PlayerTool::PlayerTool(QObject* parent_)
 {
   QString shortcut = tr("Ctrl+9", "control-key 9");
   m_activateAction->setText(tr("Player"));
-  m_activateAction->setToolTip(tr("Animation Tool \t(%1)").arg(shortcut));
+  m_activateAction->setToolTip(tr("Animation Tool\t(%1)").arg(shortcut));
   setIcon();
 }
 

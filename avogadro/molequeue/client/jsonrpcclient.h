@@ -45,8 +45,8 @@ class AVOGADROMOLEQUEUE_EXPORT JsonRpcClient : public QObject
   Q_OBJECT
 
 public:
-  explicit JsonRpcClient(QObject *parent_ = nullptr);
-  ~JsonRpcClient();
+  explicit JsonRpcClient(QObject* parent_ = nullptr);
+  ~JsonRpcClient() override;
 
   /**
    * Query if the client is connected to a server.
@@ -64,7 +64,7 @@ public slots:
    * Connect to the server.
    * @param serverName Name of the socket to connect to.
    */
-  bool connectToServer(const QString &serverName);
+  bool connectToServer(const QString& serverName);
 
   /**
    * @brief flush Flush all pending messages to the server.
@@ -86,7 +86,7 @@ public slots:
    * @param request The JSON-RPC 2.0 request object.
    * @return True on success, false on failure.
    */
-  bool sendRequest(const QJsonObject &request);
+  bool sendRequest(const QJsonObject& request);
 
 protected slots:
   /**
@@ -130,11 +130,11 @@ signals:
    * other classes should listen to resultReceived, notificationReceived,
    * errorReceived, and badPacketReceived.
    */
-  void newPacket(const QByteArray &packet);
+  void newPacket(const QByteArray& packet);
 
 protected:
   unsigned int m_packetCounter;
-  QLocalSocket *m_socket;
+  QLocalSocket* m_socket;
 };
 
 } // End namespace MoleQueue

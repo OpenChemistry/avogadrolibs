@@ -59,7 +59,7 @@ private:
   QByteArray m_moleculeData;
   QProgressDialog* m_progressDialog;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_NETWORKDATABASES_H

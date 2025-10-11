@@ -17,6 +17,7 @@ using Avogadro::Core::Molecule;
 using Avogadro::Core::Variant;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
+using namespace std::string_literals;
 
 TEST(FileFormatManagerTest, readFile)
 {
@@ -26,7 +27,8 @@ TEST(FileFormatManagerTest, readFile)
   if (!format)
     return;
   Molecule molecule;
-  format->readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
+  format->readFile(std::string(AVOGADRO_DATA) + "/data/cml/ethane.cml",
+                   molecule);
   delete format;
   format = nullptr;
 
@@ -79,7 +81,7 @@ TEST(FileFormatManagerTest, readFileGuessCml)
 {
   Molecule molecule;
   FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
-                                                     "/data/ethane.cml");
+                                                     "/data/cml/ethane.cml");
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
@@ -90,7 +92,7 @@ TEST(FileFormatManagerTest, readFileGuessCjson)
 {
   Molecule molecule;
   FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
-                                                     "/data/ethane.cjson");
+                                                     "/data/cjson/ethane.cjson");
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
@@ -101,7 +103,7 @@ TEST(FileFormatManagerTest, writeFileGuessCml)
 {
   Molecule readMol, writeMol;
   FileFormatManager::instance().readFile(readMol, std::string(AVOGADRO_DATA) +
-                                                    "/data/ethane.cml");
+                                                    "/data/cml/ethane.cml");
   FileFormatManager::instance().writeFile(readMol, "ethanemanagertmp.cml");
 
   // Now read the file back in and check a few key values are still present.
@@ -124,7 +126,7 @@ TEST(FileFormatManagerTest, writeStringCjson)
 {
   Molecule molecule;
   FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
-                                                     "/data/ethane.cjson");
+                                                     "/data/cjson/ethane.cjson");
   std::string cjson;
   FileFormatManager::instance().writeString(molecule, cjson, "cjson");
   std::string cml;
@@ -154,7 +156,7 @@ TEST(FileFormatManagerTest, writeStringCjsonOptions)
   Molecule molecule;
   std::string options = "{ \"properties\": false }";
   FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
-                                                     "/data/ethane.cjson");
+                                                     "/data/cjson/ethane.cjson");
   std::string cjson;
   FileFormatManager::instance().writeString(molecule, cjson, "cjson", options);
 
@@ -219,23 +221,23 @@ TEST(FileFormatManagerTest, filtering)
   FileFormat* format = nullptr;
 
   format = manager.newFormatFromFileExtension("asdfjkl;", Format::Read);
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("readOnly"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "readOnly"s);
   delete format;
 
   format = manager.newFormatFromFileExtension("asdfjkl;", Format::Write);
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("writeOnly"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "writeOnly"s);
   delete format;
 
   format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Write);
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("writeOnly"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "writeOnly"s);
   delete format;
 
   format = manager.newFormatFromMimeType("chemical/x-doodie", Format::Read);
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("readOnly"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "readOnly"s);
   delete format;
 }
 
@@ -246,8 +248,8 @@ TEST(FileFormatManagerTest, unregister)
 
   FileFormatManager& manager = FileFormatManager::instance();
   FileFormat* format = manager.newFormatFromIdentifier("testingFormat");
-  ASSERT_TRUE(format != nullptr);
-  EXPECT_EQ(format->identifier(), std::string("testingFormat"));
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "testingFormat"s);
   delete format;
 
   EXPECT_TRUE(FileFormatManager::unregisterFormat("testingFormat"));

@@ -27,7 +27,7 @@ class OpenMMInputDialog : public QDialog
 public:
   explicit OpenMMInputDialog(QWidget* parent = nullptr,
                              Qt::WindowFlags flag = Qt::WindowFlags());
-  ~OpenMMInputDialog();
+  ~OpenMMInputDialog() override;
 
   void readSettings(QSettings&);
   void writeSettings(QSettings&) const;
@@ -96,7 +96,7 @@ protected:
   /**
    * Reimplemented to update the dialog when it is shown
    */
-  void showEvent(QShowEvent* event);
+  void showEvent(QShowEvent* event) override;
 
 private:
   Ui::OpenMMInputDialog ui;

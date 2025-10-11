@@ -320,7 +320,7 @@ private:
    * Use FileFormat::newInstance to clone each format before use.
    * @param filter Bitwise combination of FileFormat::Operation values that
    * represents the minimum required capabilities.
-   * @param fmap The FormatIdVector to operate on.
+   * @param fvec The FormatIdVector to operate on.
    */
   FileFormat* filteredFormatFromFormatVector(FileFormat::Operations filter,
                                              const FormatIdVector& fvec) const;

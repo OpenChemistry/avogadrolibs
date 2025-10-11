@@ -27,7 +27,8 @@ const Vector3ub SVG::DEFAULT_BOND_COLOR = Vector3ub(125, 125, 125);
 
 SVG::SVG(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
-    m_scene(nullptr), m_camera(nullptr), m_action(new QAction(tr("&SVG…"), this))
+    m_scene(nullptr), m_camera(nullptr),
+    m_action(new QAction(tr("&SVG…"), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(render()));
 }
@@ -201,8 +202,7 @@ void SVG::paintBonds(QPainter& painter, const SVGAtom& atom, unsigned int i,
     Eigen::Vector2f to(mol_to[0] - (m_penWidthBond / 2.0f),
                        mol_to[1] - (m_penWidthBond / 2.0f));
 
-    float L = std::sqrt((from[0] - to[0]) * (from[0] - to[0]) +
-                        (from[1] - to[1]) * (from[1] - to[1]));
+    float L = std::hypot(from[0] - to[0], from[1] - to[1]);
     float offsetX = (to[1] - from[1]) / L;
     float offsetY = (from[0] - to[0]) / L;
     unsigned int order = int(bond.order());
@@ -277,4 +277,4 @@ void SVG::render()
   painter.end();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

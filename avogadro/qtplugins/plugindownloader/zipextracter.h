@@ -8,6 +8,7 @@
 
 #include "archive.h"
 #include "archive_entry.h"
+#include <QtCore/QObject>
 #include <QtCore/QList>
 #include <string>
 
@@ -15,8 +16,10 @@ namespace Avogadro {
 
 namespace QtPlugins {
 
-class ZipExtracter
+class ZipExtracter : public QObject
 {
+  Q_OBJECT
+
 public:
   ZipExtracter();
   ~ZipExtracter();

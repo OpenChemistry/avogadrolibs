@@ -45,7 +45,6 @@ GLRenderer::GLRenderer()
   m_orthographicFrustum = {
     -5.0f * aspectRatio, 5.0f * aspectRatio, -5.0f, 5.0f, -offset, offset
   };
-
 }
 
 GLRenderer::~GLRenderer()
@@ -167,7 +166,8 @@ void GLRenderer::resetCamera()
 void GLRenderer::resetGeometry()
 {
   m_scene.setDirty(true);
-  if (m_camera.focus()(0) != m_camera.focus()(0) || m_camera.focus() == m_center)
+  if (m_camera.focus()(0) != m_camera.focus()(0) ||
+      m_camera.focus() == m_center)
     m_camera.setFocus(m_scene.center());
   m_center = m_scene.center();
   m_radius = m_scene.radius();
@@ -346,4 +346,4 @@ Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
   return hits(&m_scene.rootNode(), f);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

@@ -11,7 +11,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON -DQT_VERSION=5
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON -DQT_VERSION=5
   CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   SCCACHE_GHA_ENABLED: "true"
 
@@ -37,10 +37,10 @@ jobs:
           }
         - {
             name: "Windows Latest MSVC", artifact: "Win64.exe",
-            os: windows-2019,
+            os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
+            cmake_flags: "-DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DBUILD_MOLEQUEUE=OFF -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
             ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
@@ -72,11 +72,7 @@ jobs:
         else # not self-hosted runner
           brew install ninja eigen glew
         fi
-    
-    - name: Install Dependencies (Windows)
-      if: runner.os == 'Windows'
-      run: choco install ninja
-    
+
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -85,47 +81,47 @@ jobs:
         sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
         sudo apt-get -qq install libgcc-10-dev libgcc-9-dev
-        sudo apt install libfuse2
+        sudo apt-get -qq install libfuse2
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout molecules
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/molecules
         path: molecules
 
     - name: Checkout fragments
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/fragments
         path: fragments
 
     - name: Checkout crystals
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/crystals
         path: crystals
 
     - name: Checkout i18n
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
         fetch-depth: 0
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         path: avogadrolibs
         fetch-depth: 0
@@ -153,6 +149,15 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
+
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        choco install ninja nsis
+        cd /c/vcpkg
+        git pull origin master
+        vcpkg install libarchive eigen3 libxml2 zlib
+      shell: bash
 
     - name: Grab cache files
       uses: actions/cache@v4
@@ -196,6 +201,11 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
+
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
+      timeout-minutes: 60
 
     - name: Fix Mac plugins
       if: runner.os == 'macOS'

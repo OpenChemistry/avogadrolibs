@@ -52,6 +52,8 @@ const int freezeAction = 3;
 const int unfreezeAction = 4;
 const int constraintAction = 5;
 const int forcesAction = 6;
+const int fuseAction = 7;
+const int unfuseAction = 8;
 
 Forcefield::Forcefield(QObject* parent_)
   : ExtensionPlugin(parent_), m_method(nullptr)
@@ -107,6 +109,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setEnabled(true);
   action->setText(tr("Freeze Selected Atoms"));
   action->setData(freezeAction);
+  action->setProperty("menu priority", 790);
   connect(action, SIGNAL(triggered()), SLOT(freezeSelected()));
   m_actions.push_back(action);
 
@@ -114,7 +117,26 @@ Forcefield::Forcefield(QObject* parent_)
   action->setEnabled(true);
   action->setText(tr("Unfreeze Selected Atoms"));
   action->setData(unfreezeAction);
+  action->setProperty("menu priority", 780);
   connect(action, SIGNAL(triggered()), SLOT(unfreezeSelected()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(
+    tr("Fuse Selected Atoms", "freeze atomic distances / glue atoms together"));
+  action->setData(fuseAction);
+  action->setProperty("menu priority", 770);
+  connect(action, SIGNAL(triggered()), SLOT(fuseSelected()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Unfuse Selected Atoms",
+                     "freeze atomic distances / glue atoms together"));
+  action->setData(unfuseAction);
+  action->setProperty("menu priority", 760);
+  connect(action, SIGNAL(triggered()), SLOT(unfuseSelected()));
   m_actions.push_back(action);
 
   // initialize the calculators
@@ -200,7 +222,29 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
     return;
 
   m_molecule = mol;
-  setupMethod();
+
+  // TODO: connect to molecule changes, e.g. selection
+  // connect(m_molecule, SIGNAL(changed(uint)), SLOT(updateActions()));
+}
+
+void Forcefield::updateActions()
+{
+  if (m_molecule == nullptr)
+    return;
+
+  bool noSelection = m_molecule->isSelectionEmpty();
+  foreach (QAction* action, m_actions) {
+    switch (action->data().toInt()) {
+      case freezeAction:
+      case unfreezeAction:
+      case fuseAction:
+      case unfuseAction:
+        action->setEnabled(!noSelection);
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 void Forcefield::setupMethod()
@@ -237,6 +281,26 @@ void Forcefield::setupMethod()
     m_method->setMolecule(m_molecule);
 }
 
+void Forcefield::setupConstraints()
+{
+  if (m_molecule == nullptr || m_method == nullptr)
+    return; // nothing to do
+
+  auto n = m_molecule->atomCount();
+
+  // first set the frozen coordinate mask
+  auto mask = m_molecule->frozenAtomMask();
+  if (mask.rows() != static_cast<Eigen::Index>(3 * n)) {
+    // set the mask to all ones
+    mask = Eigen::VectorXd::Ones(static_cast<Eigen::Index>(3 * n));
+  }
+  m_method->setMolecule(m_molecule);
+  m_method->setMask(mask);
+
+  // now set the constraints
+  m_method->setConstraints(m_molecule->constraints());
+}
+
 void Forcefield::optimize()
 {
   if (m_molecule == nullptr)
@@ -257,18 +321,11 @@ void Forcefield::optimize()
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
 
+  // TODO - use different solvers
   cppoptlib::LbfgsSolver<EnergyCalculator> solver;
 
   auto n = m_molecule->atomCount();
-
-  // double-check the mask
-  auto mask = m_molecule->frozenAtomMask();
-  if (mask.rows() != static_cast<Eigen::Index>(3 * n)) {
-    // set the mask to all ones
-    mask = Eigen::VectorXd::Ones(static_cast<Eigen::Index>(3 * n));
-  }
-  m_method->setMolecule(m_molecule);
-  m_method->setMask(mask);
+  setupConstraints();
 
   // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
@@ -286,7 +343,7 @@ void Forcefield::optimize()
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
   // e.g., every N steps, update coordinates
-  crit.iterations = 2;
+  crit.iterations = 5;
   // we don't set function or gradient criteria
   // .. these seem to be broken in the solver code
   // .. so we handle ourselves
@@ -446,6 +503,25 @@ void Forcefield::forces()
 
   m_method->gradient(positions, gradient);
 
+#ifndef NDEBUG
+  qDebug() << " current gradient ";
+  for (Index i = 0; i < n; ++i) {
+    qDebug() << " atom " << i << " element "
+             << m_molecule->atom(i).atomicNumber()
+             << " grad: " << gradient[3 * i] << ", " << gradient[3 * i + 1]
+             << ", " << gradient[3 * i + 2];
+  }
+
+  qDebug() << " numeric gradient ";
+  m_method->finiteGradient(positions, gradient);
+  for (Index i = 0; i < n; ++i) {
+    qDebug() << " atom " << i << " element "
+             << m_molecule->atom(i).atomicNumber()
+             << " grad: " << gradient[3 * i] << ", " << gradient[3 * i + 1]
+             << ", " << gradient[3 * i + 2];
+  }
+#endif
+
   for (Index i = 0; i < n; ++i) {
     forces[i] =
       -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1], gradient[3 * i + 2]);
@@ -490,8 +566,8 @@ std::string Forcefield::recommendedForceField() const
 
 void Forcefield::freezeSelected()
 {
-  if (!m_molecule)
-    return;
+  if (m_molecule == nullptr || m_molecule->isSelectionEmpty())
+    return; // nothing to do until there's a valid selection
 
   auto numAtoms = m_molecule->atomCount();
   // now freeze the specified atoms
@@ -500,12 +576,14 @@ void Forcefield::freezeSelected()
       m_molecule->setFrozenAtom(i, true);
     }
   }
+
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
 }
 
 void Forcefield::unfreezeSelected()
 {
-  if (!m_molecule)
-    return;
+  if (m_molecule == nullptr || m_molecule->isSelectionEmpty())
+    return; // nothing to do until there's a valid selection
 
   auto numAtoms = m_molecule->atomCount();
   // now freeze the specified atoms
@@ -514,6 +592,56 @@ void Forcefield::unfreezeSelected()
       m_molecule->setFrozenAtom(i, false);
     }
   }
+
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
+}
+
+void Forcefield::unfuseSelected()
+{
+  if (m_molecule == nullptr || m_molecule->isSelectionEmpty())
+    return; // nothing to do until there's a valid selection
+
+  auto numAtoms = m_molecule->atomCount();
+  // now remove constraints between the specified atoms
+  for (Index i = 0; i < numAtoms; ++i) {
+    if (m_molecule->atomSelected(i)) {
+      for (Index j = i + 1; j < numAtoms; ++j) {
+        if (m_molecule->atomSelected(j)) {
+          m_molecule->removeConstraint(i, j);
+        }
+      }
+    }
+  }
+
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
+}
+
+void Forcefield::fuseSelected()
+{
+  if (m_molecule == nullptr || m_molecule->isSelectionEmpty())
+    return; // nothing to do until there's a valid selection
+
+  // loop through all selected atom pairs
+  auto numAtoms = m_molecule->atomCount();
+  for (Index i = 0; i < numAtoms; ++i) {
+    if (m_molecule->atomSelected(i)) {
+      Vector3 iPos = m_molecule->atomPosition3d(i);
+
+      for (Index j = i + 1; j < numAtoms; ++j) {
+        if (m_molecule->atomSelected(j)) {
+          // both selected, set the constraint
+          Vector3 jPos = m_molecule->atomPosition3d(j);
+          Real distance = (iPos - jPos).norm();
+          Core::Constraint constraint(i, j);
+          constraint.setValue(distance);
+
+          m_molecule->addConstraint(constraint);
+        }
+      }
+    }
+  }
+
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
 }
 
 void Forcefield::refreshScripts()

@@ -130,7 +130,7 @@ GLenum convertTypeToGL(Type type)
   }
 }
 
-} // end anon namespace
+} // namespace
 
 class Texture2D::Private
 {
@@ -145,9 +145,7 @@ public:
   mutable GLuint textureId;
 };
 
-Texture2D::Texture2D() : d(new Private)
-{
-}
+Texture2D::Texture2D() : d(new Private) {}
 
 Texture2D::~Texture2D()
 {
@@ -300,4 +298,4 @@ bool Texture2D::generateTextureHandle()
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

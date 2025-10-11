@@ -159,7 +159,8 @@ public:
 
   /**
    * @return an array with all edges, where every element contains the indices
-   * of both endpoints of the edge with index equal to the element's array index.
+   * of both endpoints of the edge with index equal to the element's array
+   * index.
    */
   const Array<std::pair<size_t, size_t>>& edgePairs() const;
 
@@ -197,7 +198,7 @@ private:
   std::vector<std::vector<size_t>> m_adjacencyList;
   std::vector<std::vector<size_t>> m_edgeMap;
   Array<std::pair<size_t, size_t>> m_edgePairs;
-  
+
   /** @return the (new or reused) index of a newly created empty subgraph. */
   int createNewSubgraph() const;
 

@@ -59,7 +59,7 @@ private:
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_LAMMPSINPUT_H

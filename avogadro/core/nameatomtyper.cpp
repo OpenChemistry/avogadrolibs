@@ -18,4 +18,4 @@ std::string NameAtomTyper::type(const Atom& atom)
   return std::string(Elements::name(atom.atomicNumber()));
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

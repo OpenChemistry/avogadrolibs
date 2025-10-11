@@ -93,4 +93,4 @@ QString InterfaceWidget::settingsKey(const QString& identifier) const
     .arg(m_interfaceScript.displayName(), identifier);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

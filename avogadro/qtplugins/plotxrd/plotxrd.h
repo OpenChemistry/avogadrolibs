@@ -13,11 +13,12 @@
 // Forward declarations
 class QByteArray;
 
-namespace VTK {
+namespace Avogadro {
+
+namespace QtGui {
 class ChartDialog;
 }
 
-namespace Avogadro {
 namespace QtPlugins {
 
 class XrdOptionsDialog;
@@ -33,15 +34,15 @@ class PlotXrd : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit PlotXrd(QObject* parent_ = nullptr);
-  ~PlotXrd();
+  ~PlotXrd() override;
 
-  QString name() const { return tr("PlotXrd"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("PlotXrd"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
   void moleculeChanged(unsigned int changes);
 
@@ -78,7 +79,7 @@ private:
 
   std::unique_ptr<XrdOptionsDialog> m_xrdOptionsDialog;
   std::unique_ptr<QAction> m_displayDialogAction;
-  QScopedPointer<VTK::ChartDialog> m_chartDialog;
+  QScopedPointer<QtGui::ChartDialog> m_chartDialog;
 };
 
 inline QString PlotXrd::description() const

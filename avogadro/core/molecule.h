@@ -12,6 +12,7 @@
 
 #include "array.h"
 #include "bond.h"
+#include "constraint.h"
 #include "elements.h"
 #include "graph.h"
 #include "layer.h"
@@ -597,7 +598,7 @@ public:
    */
   void perceiveSubstitutedCations();
 
-  size_t coordinate3dCount();
+  size_t coordinate3dCount() const;
   bool setCoordinate3d(int coord);
   Array<Vector3> coordinate3d(size_t index) const;
   bool setCoordinate3d(const Array<Vector3>& coords, size_t index);
@@ -754,6 +755,27 @@ public:
    */
   bool setAtomicNumber(Index atomId, unsigned char atomicNumber);
 
+  /** @name Constraints
+   * Methods for distance, angle, torsion, etc. constraints
+   */
+  ///@{
+  void addConstraint(Real Value, Index a, Index b, Index c = MaxIndex,
+                     Index d = MaxIndex);
+  void addConstraint(Constraint& c) { m_constraints.push_back(c); }
+
+  void removeConstraint(Index a, Index b, Index c = MaxIndex,
+                        Index d = MaxIndex);
+  void clearConstraints() { m_constraints.clear(); }
+  void setConstraints(const std::vector<Core::Constraint>& constraints)
+  {
+    m_constraints = constraints;
+  }
+  std::vector<Core::Constraint>& constraints() { return m_constraints; };
+  const std::vector<Core::Constraint>& constraints() const
+  {
+    return m_constraints;
+  }
+
   /**
    * Freeze or unfreeze an atom for optimization
    */
@@ -778,6 +800,7 @@ public:
    * (i.e., multiply this mask with gradients to freeze atoms)
    */
   Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }
+  ///@} end of constraint methods
 
   /**
    * @return a map of components and count.
@@ -859,6 +882,7 @@ protected:
   // This will be stored from the last space group operation
   unsigned short m_hallNumber = 0;
 
+  std::vector<Core::Constraint> m_constraints;
   Eigen::VectorXd m_frozenAtomMask;
 
 private:

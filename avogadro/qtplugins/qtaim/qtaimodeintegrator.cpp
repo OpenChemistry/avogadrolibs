@@ -257,9 +257,7 @@ void QTAIMODEIntegrator::r8_f(qreal t, qreal y[], qreal yp[])
       break;
   }
 
-  qreal normGradient =
-    sqrt(gradient(0) * gradient(0) + gradient(1) * gradient(1) +
-         gradient(2) * gradient(2));
+  qreal normGradient = std::hypot(gradient(0), gradient(1), gradient(2));
 
   yp[0] = gradient(0) / normGradient;
   yp[1] = gradient(1) / normGradient;
@@ -1175,4 +1173,4 @@ qreal QTAIMODEIntegrator::r8_sign(qreal x)
 }
 //****************************************************************************80
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

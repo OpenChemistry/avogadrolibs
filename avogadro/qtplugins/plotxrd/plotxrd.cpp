@@ -16,8 +16,8 @@
 
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/chartdialog.h>
-#include <avogadro/vtk/chartwidget.h>
+#include <avogadro/qtgui/chartdialog.h>
+#include <avogadro/qtgui/chartwidget.h>
 
 #include "plotxrd.h"
 #include "xrdoptionsdialog.h"
@@ -135,12 +135,13 @@ void PlotXrd::displayDialog()
   const char* windowName = "Theoretical XRD Pattern";
 
   if (!m_chartDialog)
-    m_chartDialog.reset(new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+    m_chartDialog.reset(
+      new QtGui::ChartDialog(qobject_cast<QWidget*>(this->parent())));
 
   m_chartDialog->setWindowTitle(windowName);
   auto* chart = m_chartDialog->chartWidget();
   chart->clearPlots();
-  chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->addPlot(xData, yData, QtGui::color4ub{ 255, 0, 0, 255 });
   chart->setXAxisTitle(xTitle);
   chart->setYAxisTitle(yTitle);
   m_chartDialog->show();
@@ -279,4 +280,4 @@ bool PlotXrd::executeGenXrdPattern(const QStringList& args,
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

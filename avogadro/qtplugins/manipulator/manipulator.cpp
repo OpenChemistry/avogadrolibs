@@ -46,12 +46,12 @@ Manipulator::Manipulator(QObject* parent_)
     m_toolWidget(new ManipulateWidget(dynamic_cast<QWidget*>(parent_))),
     m_currentAction(Nothing)
 {
-  QString shortcut = tr("Ctrl+6", "control-key 6");
+  QString shortcut = tr("Ctrl+5", "control-key 5");
   m_activateAction->setText(tr("Manipulate"));
   m_activateAction->setToolTip(
-    tr("Manipulation Tool \t(%1)\n\n"
-       "Left Mouse: \tClick and drag to move atoms\n"
-       "Right Mouse: \tClick and drag to rotate atoms.\n")
+    tr("Manipulation Tool\t(%1)\n\n"
+       "Left Mouse:\tClick and drag to move atoms\n"
+       "Right Mouse:\tClick and drag to rotate atoms.")
       .arg(shortcut));
   setIcon();
   connect(m_toolWidget->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,

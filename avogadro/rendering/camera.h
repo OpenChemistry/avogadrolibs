@@ -214,7 +214,7 @@ public:
    * Set focused point. Navigation actions shall occur relative to it.
    * Note that this method does not cause any change in camera matrices.
    */
-  void setFocus(const Eigen::Vector3f &newFocus) { m_focus = newFocus; }
+  void setFocus(const Eigen::Vector3f& newFocus) { m_focus = newFocus; }
 
   /**
    * Get focused point. Navigation actions shall occur relative to it.

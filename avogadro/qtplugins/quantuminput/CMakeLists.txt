@@ -13,8 +13,8 @@ avogadro_plugin(QuantumInput
 
 target_link_libraries(QuantumInput PRIVATE Avogadro::IO Avogadro::MoleQueue)
 
-set(_prefix "${AvogadroLibs_SOURCE_DIR}/../avogadrogenerators")
-# Look in parallel directory for the avogadrogenerators repository.
+set(_prefix "${AvogadroLibs_SOURCE_DIR}/../avogenerators")
+# Look in parallel directory for the avogenerators repository.
 if(EXISTS "${_prefix}/generators.cmake")
   # Bundled generator scripts,
   include("${_prefix}/generators.cmake")

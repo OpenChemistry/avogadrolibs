@@ -94,14 +94,9 @@ void GLWidget::updateScene()
     }
 
     // Let the tools perform any drawing they need to do.
-    if (m_activeTool) {
+    foreach (QtGui::ToolPlugin* tool, m_tools) {
       auto* toolNode = new Rendering::GroupNode(moleculeNode);
-      m_activeTool->draw(*toolNode);
-    }
-
-    if (m_defaultTool) {
-      auto* toolNode = new Rendering::GroupNode(moleculeNode);
-      m_defaultTool->draw(*toolNode);
+      tool->draw(*toolNode);
     }
 
     m_renderer.resetGeometry();

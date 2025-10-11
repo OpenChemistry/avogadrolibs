@@ -33,6 +33,7 @@
 #include <string>
 
 using Avogadro::QtGui::Molecule;
+using namespace std::string_literals;
 
 namespace Avogadro::QtPlugins {
 
@@ -149,7 +150,7 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   foreach (const QString& qdesc, formatDescriptions) {
     mapDesc = qdesc.toStdString();
     fname = mapDesc;
-    fidentifier = std::string("OpenBabel: ") + mapDesc;
+    fidentifier = "OpenBabel: "s + mapDesc;
     fdescription = mapDesc;
     fexts.clear();
     fmime.clear();

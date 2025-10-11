@@ -109,6 +109,7 @@ Real LennardJones::value(const Eigen::VectorXd& x)
   }
 
   // qDebug() << " lj: " << energy;
+  energy += constraintEnergies(x);
   return energy;
 }
 
@@ -178,6 +179,7 @@ void LennardJones::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // handle any constraints
   cleanGradients(grad);
+  constraintGradients(x, grad);
 }
 
 } // namespace Avogadro::Calc

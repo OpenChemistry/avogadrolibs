@@ -20,9 +20,7 @@ CoordinateEditor::CoordinateEditor(QObject* parent_)
   connect(m_action, SIGNAL(triggered()), SLOT(triggered()));
 }
 
-CoordinateEditor::~CoordinateEditor()
-{
-}
+CoordinateEditor::~CoordinateEditor() {}
 
 QList<QAction*> CoordinateEditor::actions() const
 {
@@ -59,4 +57,4 @@ void CoordinateEditor::pastedMolecule()
   requestActiveTool("Navigator");
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

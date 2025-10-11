@@ -20,23 +20,14 @@
 #include <pugixml.hpp>
 
 #include <bitset>
-#include <cmath>
 #include <locale>
 #include <map>
 #include <sstream>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
 namespace Avogadro::Io {
 
-namespace {
-const Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
-const Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
-} // namespace
-
 using std::string;
+using namespace std::string_literals;
 
 using pugi::xml_attribute;
 using pugi::xml_document;
@@ -113,7 +104,6 @@ public:
       for (pugi::xml_node scalar = node.child("scalar"); scalar;
            scalar = scalar.next_sibling("scalar")) {
         pugi::xml_attribute title = scalar.attribute("title");
-        const float degToRad(static_cast<float>(M_PI) / 180.0f);
         if (title) {
           std::string titleStr(title.value());
           if (titleStr == "a") {
@@ -126,13 +116,13 @@ public:
             c = scalar.text().as_float();
             parsedValues.set(CellC);
           } else if (titleStr == "alpha") {
-            alpha = scalar.text().as_float() * degToRad;
+            alpha = scalar.text().as_float() * DEG_TO_RAD_F;
             parsedValues.set(CellAlpha);
           } else if (titleStr == "beta") {
-            beta = scalar.text().as_float() * degToRad;
+            beta = scalar.text().as_float() * DEG_TO_RAD_F;
             parsedValues.set(CellBeta);
           } else if (titleStr == "gamma") {
-            gamma = scalar.text().as_float() * degToRad;
+            gamma = scalar.text().as_float() * DEG_TO_RAD_F;
             parsedValues.set(CellGamma);
           }
         }
@@ -156,6 +146,11 @@ public:
 
       auto* cell = new UnitCell;
       cell->setCellParameters(a, b, c, alpha, beta, gamma);
+      if (!cell->isRegular()) {
+        error += "<crystal> does not give linear independent lattice vectors";
+        delete cell;
+        return false;
+      }
       molecule->setUnitCell(cell);
       if (hall != 0)
         molecule->setHallNumber(hall);
@@ -205,11 +200,19 @@ public:
           xml_attribute y3 = node.attribute("y3");
           xml_attribute z3 = node.attribute("z3");
           if (y3 && z3) {
-            // It looks like we have a valid 3D position.
-            Vector3 position(lexicalCast<double>(x3Att.value()),
-                             lexicalCast<double>(y3.value()),
-                             lexicalCast<double>(z3.value()));
-            atom.setPosition3d(position);
+            auto x = lexicalCast<double>(x3Att.value());
+            auto y = lexicalCast<double>(y3.value());
+            auto z = lexicalCast<double>(z3.value());
+            if (x && y && z) {
+              // It looks like we have a valid 3D position.
+              Vector3 position(*x, *y, *z);
+              atom.setPosition3d(position);
+            } else {
+              error += "x3, y3 or z3 attribute is malformed: ["s +
+                       x3Att.value() + ", "s + y3.value() + ", "s + z3.value() +
+                       "]."s;
+              return false;
+            }
           } else {
             // Corrupt 3D position supplied for atom.
             return false;
@@ -242,9 +245,16 @@ public:
         if (x2Att) {
           xml_attribute y2 = node.attribute("y2");
           if (y2) {
-            Vector2 position(lexicalCast<double>(x2Att.value()),
-                             lexicalCast<double>(y2.value()));
-            atom.setPosition2d(position);
+            auto x = lexicalCast<double>(x2Att.value());
+            auto y = lexicalCast<double>(y2.value());
+            if (x && y) {
+              Vector2 position(*x, *y);
+              atom.setPosition2d(position);
+            } else {
+              error += "x2 or y2 attribute is malformed: ["s + x2Att.value() +
+                       ", "s + y2.value() + "]."s;
+              return false;
+            }
           } else {
             // Corrupt 2D position supplied for atom.
             return false;
@@ -257,8 +267,14 @@ public:
         /* Formal Charge Attribute Check */
         xml_attribute formalChargeAtt = node.attribute("formalCharge");
         if (formalChargeAtt) {
-          auto formalCharge = lexicalCast<signed int>(formalChargeAtt.value());
-          atom.setFormalCharge(formalCharge);
+          if (auto formalCharge =
+                lexicalCast<signed int>(formalChargeAtt.value())) {
+            atom.setFormalCharge(*formalCharge);
+          } else {
+            error += "formalCharge attribute is malformed: "s +
+                     formalChargeAtt.value();
+            return false;
+          }
         }
       }
 
@@ -491,9 +507,9 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
   // Standard XML namespaces for CML.
   moleculeNode.append_attribute("xmlns") = "http://www.xml-cml.org/schema";
   moleculeNode.append_attribute("xmlns:cml") =
-    "http://www.xml-cml.org/dict/cml";
+    "http://www.xml-cml.org/dictionary/cml";
   moleculeNode.append_attribute("xmlns:units") =
-    "http://www.xml-cml.org/units/units";
+    "http://www.xml-cml.org/unit/nonSi";
   moleculeNode.append_attribute("xmlns:xsd") =
     "http://www.w3c.org/2001/XMLSchema";
   moleculeNode.append_attribute("xmlns:iupac") = "http://www.iupac.org";
@@ -679,7 +695,7 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
         std::stringstream stream;
         stream << matrix.rows() << " " << matrix.cols();
         dataNode.append_attribute("dims") = stream.str().c_str();
-        std::string h5Path = std::string("molecule/dataMap/") + name_;
+        std::string h5Path = "molecule/dataMap/"s + name_;
         dataNode.text() = h5Path.c_str();
         hdf5.writeDataset(h5Path, matrix);
       } break;

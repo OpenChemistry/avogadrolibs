@@ -12,11 +12,11 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "master" ]
+  #push:
+  #  branches: [ "master" ]
+  #pull_request:
+  #  # The branches below must be a subset of the branches above
+  #  branches: [ "master" ]
   schedule:
     - cron: '42 6 * * 6'
 
@@ -48,19 +48,19 @@ jobs:
 
     steps:
     - name: Checkout openchemistry
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5.0.0
       with:
         path: avogadrolibs
 
@@ -68,7 +68,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
 
     - name: Install Qt
@@ -92,7 +92,7 @@ jobs:
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         source-root: ${{ github.workspace }}/avogadrolibs
@@ -105,7 +105,7 @@ jobs:
       shell: bash
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{matrix.language}}"
         checkout_path: ${{ github.workspace }}/avogadrolibs

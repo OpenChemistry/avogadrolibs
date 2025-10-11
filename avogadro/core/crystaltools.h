@@ -140,7 +140,6 @@ public:
    * Set the atomic positions of @a molecule to the fractional coordinates in
    * @a coords, using the unit cell of @a molecule to perform the coordinate
    * transformation.
-   * @return
    */
   static bool setFractionalCoordinates(Molecule& molecule,
                                        const Array<Vector3>& coords);

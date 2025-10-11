@@ -26,7 +26,7 @@ public:
 
   ArrowGeometry();
   ArrowGeometry(const ArrowGeometry& other);
-  ~ArrowGeometry();
+  ~ArrowGeometry() override;
 
   ArrowGeometry& operator=(ArrowGeometry);
   friend void swap(ArrowGeometry& lhs, ArrowGeometry& rhs);

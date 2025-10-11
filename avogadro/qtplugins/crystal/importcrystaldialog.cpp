@@ -71,4 +71,4 @@ void ImportCrystalDialog::displayInvalidFormatMessage()
   close();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

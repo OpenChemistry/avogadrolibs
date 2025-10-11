@@ -133,6 +133,13 @@ public:
    * Find the shortest distance between vectors @a v1 and @a v2.
    */
   Real distance(const Vector3& v1, const Vector3& v2) const;
+  Real distanceSquared(const Vector3& v1, const Vector3& v2) const;
+
+  /**
+   * @return if @a m is regular, i.e. its determinant is nonzero
+   */
+  static bool isRegular(const Matrix3& m);
+  bool isRegular() const { return isRegular(m_cellMatrix); }
 
 private:
   static Real signedAngleRadians(const Vector3& v1, const Vector3& v2,
@@ -294,9 +301,9 @@ inline Vector3 UnitCell::wrapFractional(const Vector3& f) const
   // set anything at 1.0 to 0.0
   if (result[0] >= static_cast<Real>(0.999999))
     result[0] = static_cast<Real>(0.0);
-  if (result[1] == static_cast<Real>(0.999999))
+  if (result[1] >= static_cast<Real>(0.999999))
     result[1] = static_cast<Real>(0.0);
-  if (result[2] == static_cast<Real>(0.999999))
+  if (result[2] >= static_cast<Real>(0.999999))
     result[2] = static_cast<Real>(0.0);
 
   return result;
@@ -354,6 +361,12 @@ inline Vector3 UnitCell::minimumImage(const Vector3& v) const
 inline Real UnitCell::distance(const Vector3& v1, const Vector3& v2) const
 {
   return minimumImage(v1 - v2).norm();
+}
+
+inline Real UnitCell::distanceSquared(const Vector3& v1,
+                                      const Vector3& v2) const
+{
+  return minimumImage(v1 - v2).squaredNorm();
 }
 
 } // namespace Avogadro::Core

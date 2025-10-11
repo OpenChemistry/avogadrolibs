@@ -1,4 +1,4 @@
-name: add artifact links to pull request and related issues
+name: add artifact links to pull request
 on:
   workflow_run:
     workflows: ['Qt5 Build Matrix']
@@ -6,10 +6,10 @@ on:
 
 jobs:
   artifacts-url-comments:
-    name: add artifact links to pull request and related issues job
-    runs-on: windows-2019
+    name: add artifact links to pull request job
+    runs-on: windows-latest
     steps:
-      - name: add artifact links to pull request and related issues step
+      - name: add artifact links to pull request step
         uses: tonyhallett/artifacts-url-comments@v1.1.0
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -17,5 +17,5 @@ jobs:
             prefix: Here are the build results
             suffix: Artifacts will only be retained for 90 days.
             format: name
-            addTo: pullandissues
+            addTo: pull
         continue-on-error: true

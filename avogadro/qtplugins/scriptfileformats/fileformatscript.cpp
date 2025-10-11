@@ -23,6 +23,8 @@
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 
+using namespace std::string_literals;
+
 namespace Avogadro::QtPlugins {
 
 FileFormatScript::FileFormatScript(const QString& scriptFileName_)
@@ -313,7 +315,7 @@ void FileFormatScript::readMetaData()
                  Io::FileFormat::String;
   m_inputFormat = inputFormatTmp;
   m_outputFormat = outputFormatTmp;
-  m_identifier = std::string("User Script: ") + identifierTmp;
+  m_identifier = "User Script: "s + identifierTmp;
   m_name = nameTmp;
 
   // check if we should bond on read:

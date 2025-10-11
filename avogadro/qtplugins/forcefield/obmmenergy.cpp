@@ -257,6 +257,7 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
     }
   }
 
+  energy += constraintEnergies(x);
   return energy; // if conversion fails, returns 0.0
 }
 
@@ -303,6 +304,7 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   grad *= -1; // OpenBabel outputs forces, not grads
 
   cleanGradients(grad);
+  constraintGradients(x, grad);
 }
 
 } // namespace Avogadro::QtPlugins

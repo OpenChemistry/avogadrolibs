@@ -45,7 +45,7 @@ jobs:
         os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-13, macos-14]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5.0.0
         with:
           # Grab the whole history so that setuptools-scm can see the tags and
           # give it a correct version even on non-tag push.
@@ -55,7 +55,7 @@ jobs:
         run: . ./scripts/github-actions/install.sh
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.0.0
+        uses: pypa/cibuildwheel@v3.2.0
 
       - uses: actions/upload-artifact@v4
         with:
@@ -69,7 +69,7 @@ jobs:
     # upload to PyPI on every tag push
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           # unpacks all CIBW artifacts into dist/
           pattern: cibw-*
