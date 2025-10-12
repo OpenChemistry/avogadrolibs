@@ -108,6 +108,7 @@ jobs:
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
+        choco install nsis
         cd /c/vcpkg
         git pull origin master
         vcpkg install libarchive eigen3 libxml2 zlib curl
