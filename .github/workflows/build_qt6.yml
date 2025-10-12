@@ -286,8 +286,6 @@ jobs:
         mv prefix avogadro2
         # 7z a Avogadro2-windows.zip avogadro2
         cd avogadro2
-        # create MSIX
-        MakeAppx /d . /p ../Avogadro2.msix
         # create NSIS
         /c/Program\ Files\ \(x86\)/NSIS/bin/makensis /DOUTFILE=../Avogadro2.exe avogadro2.nsi
       working-directory: ${{ runner.workspace }}/build/
@@ -300,6 +298,23 @@ jobs:
       with:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
+
+    - name: Create MSIX
+      if: runner.os == 'Windows'
+      shell: poweshell
+      run:
+        # create MSIX
+        makeappx pack /v /d . /p ../Avogadro2.msix
+      working-directory: ${{ runner.workspace }}/build/avogadro2
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+    - name: Upload
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        path: ${{ runner.workspace }}/build/Avogadro2.msix
+        name: Avogadro2.msix
 
     - name: Setup tmate session
       if: ${{ failure() }}
