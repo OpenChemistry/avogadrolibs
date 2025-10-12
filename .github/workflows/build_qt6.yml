@@ -287,7 +287,17 @@ jobs:
         # 7z a Avogadro2-windows.zip avogadro2
         cd avogadro2
         # create NSIS
-        /c/Program\ Files\ \(x86\)/NSIS/bin/makensis /DOUTFILE=../Avogadro2.exe avogadro2.nsi
+        /c/Program\ Files\ \(x86\)/NSIS/bin/makensis avogadro2.nsi
+        if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          # This is a tag - extract version
+          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${VERSION#v}"  # Remove 'v' prefix if present
+        else
+          # This is a nightly build - use current date
+          VERSION=$(date +%Y-%m-%d)
+        fi
+
+        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}.exe
       working-directory: ${{ runner.workspace }}/build/
       env:
         GH_TOKEN: ${{ github.token }}
@@ -301,7 +311,7 @@ jobs:
 
     - name: Create MSIX
       if: runner.os == 'Windows'
-      shell: poweshell
+      shell: powershell
       run:
         # create MSIX
         makeappx pack /v /d . /p ../Avogadro2.msix
