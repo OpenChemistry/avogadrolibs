@@ -15,6 +15,9 @@ env:
 
   CIBW_BEFORE_ALL_LINUX: bash scripts/github-actions/repair-linux.sh
 
+  # Set wheel build flag for all platforms
+  CIBW_ENVIRONMENT: "PYTHON_WHEEL_BUILD=TRUE"
+
   # Specify eigen location for windows
   CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
 
