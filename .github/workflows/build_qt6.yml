@@ -283,7 +283,12 @@ jobs:
         # run windeployqt
         windeployqt --release prefix/bin/avogadro2.exe
         mv prefix avogadro2
-        7z a Avogadro2-windows.zip avogadro2
+        # 7z a Avogadro2-windows.zip avogadro2
+        cd avogadro2
+        # create NSIS
+        makensis /DOUTFILE=../Avogadro2.exe avogadro2.nsi
+        # create MSIX
+        MakeAppx /d . /p ../Avogadro2.msix
       working-directory: ${{ runner.workspace }}/build/
       env:
         GH_TOKEN: ${{ github.token }}
