@@ -108,6 +108,7 @@ jobs:
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
+        choco install nsis
         cd /c/vcpkg
         git pull origin master
         vcpkg install libarchive eigen3 libxml2 zlib curl
@@ -283,7 +284,20 @@ jobs:
         # run windeployqt
         windeployqt --release prefix/bin/avogadro2.exe
         mv prefix avogadro2
-        7z a Avogadro2-windows.zip avogadro2
+        # 7z a Avogadro2-windows.zip avogadro2
+        cd avogadro2
+        # create NSIS
+        /c/Program\ Files\ \(x86\)/NSIS/bin/makensis avogadro2.nsi
+        if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          # This is a tag - extract version
+          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${VERSION#v}"  # Remove 'v' prefix if present
+        else
+          # This is a nightly build - use current date
+          VERSION=$(date +%Y-%m-%d)
+        fi
+
+        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}.exe
       working-directory: ${{ runner.workspace }}/build/
       env:
         GH_TOKEN: ${{ github.token }}
@@ -294,6 +308,23 @@ jobs:
       with:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
+
+    - name: Create MSIX
+      if: runner.os == 'Windows'
+      shell: powershell
+      run:
+        # create MSIX
+        makeappx pack /v /d . /p ../Avogadro2.msix
+      working-directory: ${{ runner.workspace }}/build/avogadro2
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+    - name: Upload
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        path: ${{ runner.workspace }}/build/Avogadro2.msix
+        name: Avogadro2.msix
 
     - name: Setup tmate session
       if: ${{ failure() }}
