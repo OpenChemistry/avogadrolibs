@@ -117,7 +117,6 @@ jobs:
 
     - name: Grab cache files
       uses: actions/cache@v4
-      if: runner.os != 'Windows'
       with:
         path: |
           ${{ runner.workspace }}/build/Downloads
