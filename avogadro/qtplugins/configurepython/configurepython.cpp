@@ -17,6 +17,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
+#include <QtCore/QStandardPaths>
 #include <QtCore/QSysInfo>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
@@ -36,14 +37,20 @@ ConfigurePython::ConfigurePython(QObject* parent_)
   m_action->setProperty("menu priority", 510);
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 
+  // check if the default pyproject.toml is installed for plugins
+  QString pluginPath =
+    QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+  if (!QDir(pluginPath).exists()) {
+    QDir().mkpath(pluginPath);
+  }
+  QFileInfo info(pluginPath + "/pyproject.toml");
+  QFile::copy(":/files/pyproject.toml", pluginPath + "/pyproject.toml");
+
   // check for Python on first launch
-  QStringList paths = pythonPaths();
+  QStringList paths = {}; // pythonPaths();
   QSettings settings;
 
   if (paths.isEmpty()) { // show a warning
-    if (settings.contains("interpreters/firstlaunch"))
-      return; // the user ignored the warning
-
     // suggest the user install Python
     auto option = QMessageBox::information(
       qobject_cast<QWidget*>(parent()), tr("Install Python"),
@@ -51,37 +58,53 @@ ConfigurePython::ConfigurePython(QObject* parent_)
          "features. Do you want to download Python?"),
       QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
     if (option == QMessageBox::Yes) {
-      //
-      QUrl miniforge;
-#ifdef Q_OS_WIN
-      // TODO: ARM or Intel? .. but conda-forge doesn't have ARM builds yet
-      miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                       "latest/download/Miniforge3-Windows-x86_64.exe");
-#elif defined(Q_OS_MACOS)
-      // ARM or Intel?
-      if (QSysInfo::currentCpuArchitecture().contains("arm"))
-        miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                         "latest/download/Miniforge3-MacOSX-arm64.sh");
-      else
-        miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                         "latest/download/Miniforge3-MacOSX-x86_64.sh");
-#else
-      QString arch = QSysInfo::currentCpuArchitecture();
-      if (arch.contains("arm"))
-        miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                         "latest/download/Miniforge3-Linux-aarch64.sh");
-      else if (arch.contains("ppc"))
-        miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                         "latest/download/Miniforge3-Linux-ppc64le.sh");
-      else
-        miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                         "latest/download/Miniforge3-Linux-x86_64.sh");
+      // check if we have pixi
+      // should be true for Mac and Windows because we bundle it
+      QString pixiPath = QtGui::Utilities::findExecutablePath("pixi");
+      if (!pixiPath.isEmpty()) {
+        // use pixi
+        QProcess pixi;
+        pixi.setWorkingDirectory(pluginPath);
+        pixi.start(pixiPath + "/pixi", { "install" });
+        pixi.waitForFinished();
+#ifndef NDEBUG
+        qDebug() << "pixi output is " << pixi.readAllStandardOutput();
+        qDebug() << "pixi exit code is " << pixi.readAllStandardError();
 #endif
-      if (miniforge.isValid()) {
-        QDesktopServices::openUrl(miniforge);
-        // open install instructions
-        QDesktopServices::openUrl(QUrl("https://github.com/conda-forge/"
-                                       "miniforge?tab=readme-ov-file#install"));
+      } else {
+        // no pixi, suggest installing miniforge
+        QUrl miniforge;
+#ifdef Q_OS_WIN
+        // TODO: ARM or Intel? .. but conda-forge doesn't have ARM builds yet
+        miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
+                         "latest/download/Miniforge3-Windows-x86_64.exe");
+#elif defined(Q_OS_MACOS)
+        // ARM or Intel?
+        if (QSysInfo::currentCpuArchitecture().contains("arm"))
+          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
+                           "latest/download/Miniforge3-MacOSX-arm64.sh");
+        else
+          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
+                           "latest/download/Miniforge3-MacOSX-x86_64.sh");
+#else
+        QString arch = QSysInfo::currentCpuArchitecture();
+        if (arch.contains("arm"))
+          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
+                           "latest/download/Miniforge3-Linux-aarch64.sh");
+        else if (arch.contains("ppc"))
+          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
+                           "latest/download/Miniforge3-Linux-ppc64le.sh");
+        else
+          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
+                           "latest/download/Miniforge3-Linux-x86_64.sh");
+#endif
+        if (miniforge.isValid()) {
+          QDesktopServices::openUrl(miniforge);
+          // open install instructions
+          QDesktopServices::openUrl(
+            QUrl("https://github.com/conda-forge/"
+                 "miniforge?tab=readme-ov-file#install"));
+        }
       }
     }
     settings.setValue("interpreters/firstlaunch", true);

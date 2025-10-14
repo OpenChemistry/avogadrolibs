@@ -512,17 +512,16 @@ void DownloaderWidget::unzipPlugin()
           } // end of check for pixi
         }   // end of check for requirements
       }
+    } else {
+      m_ui->readmeBrowser->append(
+        tr("Error while extracting: %1").arg(ret.first()));
     }
-  } else {
-    m_ui->readmeBrowser->append(
-      tr("Error while extracting: %1").arg(ret.first()));
-  }
 
-  out.remove(); // remove the ZIP file
-  m_reply->deleteLater();
-  m_downloadList.removeLast();
-  downloadNext();
-}
+    out.remove(); // remove the ZIP file
+    m_reply->deleteLater();
+    m_downloadList.removeLast();
+    downloadNext();
+  }
 }
 
 } // namespace Avogadro::QtPlugins
