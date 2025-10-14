@@ -92,7 +92,7 @@ bool GaussianSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 
 void GaussianSetConcurrent::calculationComplete()
 {
-  (*m_gaussianShells)[0].tCube->lock()->unlock();
+  // (*m_gaussianShells)[0].tCube->lock()->unlock();
   delete m_gaussianShells;
   m_gaussianShells = nullptr;
   emit finished();
@@ -119,7 +119,7 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
   }
 
   // Lock the cube until we are done.
-  cube->lock()->lock();
+  // cube->lock()->lock();
 
   // The main part of the mapped reduced function...
   m_future = QtConcurrent::map(*m_gaussianShells, func);
