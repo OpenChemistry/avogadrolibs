@@ -68,7 +68,7 @@ bool SlaterSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 
 void SlaterSetConcurrent::calculationComplete()
 {
-  (*m_shells)[0].tCube->lock()->unlock();
+  // (*m_shells)[0].tCube->lock()->unlock();
   delete m_shells;
   m_shells = nullptr;
   emit finished();
@@ -93,7 +93,7 @@ bool SlaterSetConcurrent::setUpCalculation(Core::Cube* cube, unsigned int state,
   }
 
   // Lock the cube until we are done.
-  cube->lock()->lock();
+  // cube->lock()->lock();
 
   // The main part of the mapped reduced function...
   m_future = QtConcurrent::map(*m_shells, func);
