@@ -1,11 +1,10 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   # ChargeManager
-  # EnergyManager
+  EnergyManager
   EnergyCalculator
   Gradient
-  # LJ
-  # UFF
+  UFF
 )
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
@@ -33,7 +32,7 @@ message(STATUS "Test source files: ${testSrcs}")
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroCalcTests ${testSrcs})
-target_link_libraries(AvogadroCalcTests Avogadro::Calc
+target_link_libraries(AvogadroCalcTests Avogadro::Calc Avogadro::IO
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those

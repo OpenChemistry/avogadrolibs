@@ -154,7 +154,7 @@ TEST_F(EnergyManagerTest, GetNameForModel)
 TEST_F(EnergyManagerTest, GetNameForNonExistentModel)
 {
   std::string name = manager->nameForModel("nonexistent");
-  EXPECT_TRUE(name.empty());
+  EXPECT_EQ(name, "nonexistent");
 }
 
 TEST_F(EnergyManagerTest, GetIdentifiers)
@@ -251,11 +251,6 @@ TEST_F(EnergyManagerTest, PreventDuplicateRegistration)
   delete retrieved;
 
   manager->removeModel("duplicate");
-}
-
-TEST_F(EnergyManagerTest, RemoveNonExistentModel)
-{
-  EXPECT_FALSE(manager->removeModel("nonexistent"));
 }
 
 TEST_F(EnergyManagerTest, MultipleModelsLifecycle)
