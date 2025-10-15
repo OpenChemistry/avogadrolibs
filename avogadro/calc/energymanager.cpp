@@ -106,6 +106,15 @@ EnergyManager::~EnergyManager()
   m_models.clear();
 }
 
+std::set<std::string> EnergyManager::identifiers() const
+{
+  std::set<std::string> identifiers;
+  for (auto& it : m_identifiers) {
+    identifiers.insert(it.first);
+  }
+  return identifiers;
+}
+
 std::set<std::string> EnergyManager::identifiersForMolecule(
   const Core::Molecule& molecule) const
 {

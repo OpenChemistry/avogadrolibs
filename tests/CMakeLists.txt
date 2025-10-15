@@ -34,6 +34,7 @@ find_path(AVOGADRO_DATA_ROOT .avogadro.data
 mark_as_advanced(AVOGADRO_DATA_ROOT)
 
 # Add the tests for each module.
+add_subdirectory(calc)
 add_subdirectory(core)
 add_subdirectory(io)
 if(USE_QT)

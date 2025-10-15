@@ -122,7 +122,7 @@ public:
   /**
    * Get any errors that have been logged when loading models.
    */
-  std::string error() const;
+  std::string error() const { return m_error; }
 
 private:
   using ModelIdMap = std::map<std::string, size_t>;
