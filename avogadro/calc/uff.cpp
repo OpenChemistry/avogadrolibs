@@ -870,7 +870,7 @@ public:
       Real crossNorm = ij_cross_kj.norm();
 
       // check for near-zero cross product
-      if (!isfinite(crossNorm) || crossNorm < 1e-6)
+      if (!std::isfinite(crossNorm) || crossNorm < 1e-6)
         continue; // skip this angle
 
       Real theta = atan2(crossNorm, dot);
