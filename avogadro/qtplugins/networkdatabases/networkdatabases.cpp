@@ -64,9 +64,6 @@ void NetworkDatabases::showDialog()
     connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
             SLOT(replyFinished(QNetworkReply*)));
   }
-  if (!m_progressDialog) {
-    m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
-  }
   // Prompt for a chemical structure name
   bool ok;
   QString structureName = QInputDialog::getText(
@@ -83,6 +80,9 @@ void NetworkDatabases::showDialog()
                          structureName + "/file?format=sdf&get3d=true")));
 
   m_moleculeName = structureName;
+  if (!m_progressDialog) {
+    m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
+  }
   m_progressDialog->setLabelText(tr("Querying for %1").arg(structureName));
   m_progressDialog->setRange(0, 0);
   m_progressDialog->show();
