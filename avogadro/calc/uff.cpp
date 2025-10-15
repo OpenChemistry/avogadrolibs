@@ -361,7 +361,8 @@ public:
       a._c0 = 0.0;
       a._c1 = 0.0;
       a._c2 = 0.0;
-      if (label.size() < 3 || neighbors.size() == 1) {
+
+      if (label.size() < 3 || neighbors.size() == 1 || label[2] == '1') {
         // linear
         a.coordination = Linear;
         a._c0 = 1.0;
@@ -681,10 +682,12 @@ public:
       Real theta = acos(dot / (r1 * r2));
 
       /*
-      std::cout << " Angle " << i << " " << j << " " << k << " " << r1 << " "
-                << r2 << " " << theta * RAD_TO_DEG << " " << theta0 * RAD_TO_DEG
-                << std::endl;
-  */
+            std::cout << " Angle " << angle.coordination << " " << i << " " << j
+         << " " << k << " " << r1 << " "
+                      << r2 << " " << theta * RAD_TO_DEG << " " << theta0 *
+         RAD_TO_DEG
+                      << std::endl;
+      */
 
       // TODO - migrate special cases from Open Babel
       Coordination coord = angle.coordination;
@@ -867,7 +870,7 @@ public:
       Real crossNorm = ij_cross_kj.norm();
 
       // check for near-zero cross product
-      if (crossNorm < 1e-6)
+      if (!isfinite(crossNorm) || crossNorm < 1e-6)
         continue; // skip this angle
 
       Real theta = atan2(crossNorm, dot);
@@ -895,7 +898,7 @@ public:
         case Linear:
           // fixed typo in UFF paper (it's 1+ cos(theta) not 1 - cos(theta))
           // energy += kijk * (1 + cos(c0 * theta));
-          f = kijk * c0 * sin(c0 * theta);
+          f = -kijk * c0 * sin(c0 * theta);
           break;
         case Trigonal:
         case Resonant:
@@ -908,8 +911,8 @@ public:
           // energy +=
           // kijk * (1 - cos(c0 * theta)) + exp(-20.0 * (theta - theta0 +
           // 0.25));
-          f = kijk * c0 * sin(c0 * theta) +
-              20.0 * exp(-20.0 * (theta - theta0 + 0.25)) * sin(theta);
+          f = kijk * c0 * sin(c0 * theta) -
+              20.0 * exp(-20.0 * (theta - theta0 + 0.25));
 
           break;
         case Tetrahedral: {
