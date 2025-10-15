@@ -593,15 +593,15 @@ void Molecule::swapAtom(Index a, Index b)
   using std::swap;
 
   Index max = a > b ? a : b;
-  if (m_positions2d.size() >= max)
+  if (m_positions2d.size() > max)
     swap(m_positions2d[a], m_positions2d[b]);
-  if (m_positions3d.size() >= max)
+  if (m_positions3d.size() > max)
     swap(m_positions3d[a], m_positions3d[b]);
-  if (m_hybridizations.size() >= max)
+  if (m_hybridizations.size() > max)
     swap(m_hybridizations[a], m_hybridizations[b]);
-  if (m_formalCharges.size() >= max)
+  if (m_formalCharges.size() > max)
     swap(m_formalCharges[a], m_formalCharges[b]);
-  if (m_colors.size() >= max)
+  if (m_colors.size() > max)
     swap(m_colors[a], m_colors[b]);
 
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
