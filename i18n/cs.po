@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-07 17:58+0000\n"
-"PO-Revision-Date: 2025-08-27 08:01+0000\n"
+"PO-Revision-Date: 2025-10-16 00:27+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -5047,7 +5047,7 @@ msgid "Selection"
 msgstr "Výběr"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -5057,6 +5057,13 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Nástroj pro výběr\t(%1)\n"
+"\n"
+"Levé tlačítko myši:\tKlepněte pro výběr jednotlivých atomů, zbytků nebo "
+"fragmentů\n"
+"\tTáhněte pro výběr rozsahu atomů\n"
+"Pravé tlačítko myši:\tKlepněte vně molekuly pro zbavení se výběru\n"
+"Dvojité klepnutí:\tVyberte celý fragment."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 #, fuzzy
