@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-07 17:58+0000\n"
-"PO-Revision-Date: 2025-10-06 04:02+0000\n"
+"PO-Revision-Date: 2025-10-16 00:27+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1978,7 +1978,7 @@ msgstr "Ctrl+7"
 
 #: qtplugins/autoopt/autoopt.cpp:67
 msgid "Auto Optimize"
-msgstr ""
+msgstr "自動最適化"
 
 #: qtplugins/autoopt/autoopt.cpp:69
 #, qt-format
@@ -2004,10 +2004,9 @@ msgstr "手法:"
 
 #: qtplugins/autoopt/autoopt.cpp:149 qtplugins/autoopt/autoopt.cpp:215
 msgid "Start"
-msgstr "スタート"
+msgstr "開始"
 
 #: qtplugins/autoopt/autoopt.cpp:173 qtplugins/playertool/playertool.cpp:77
-#, fuzzy
 msgid "Stop"
 msgstr "停止"
 
@@ -2021,15 +2020,16 @@ msgstr "構造最適化"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kcal/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 kcal/mol"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
-msgstr ""
+msgstr "自動最適化ツール"
 
 #: qtplugins/autoopt/autoopt.h:45
+#, fuzzy
 msgid "Interactive optimization of molecular geometry"
-msgstr ""
+msgstr "分子構造の対話的最適化"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 #, fuzzy
@@ -3597,6 +3597,9 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"原子ラベルツール\n"
+"\n"
+"左マウス:\t原子をクリックしてラベルをカスタム"
 
 #: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
@@ -7055,7 +7058,7 @@ msgstr "NHチェーン"
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, stepSpin)
 msgid ""
 "Time step for the simulation in units according to \"Units\" specification."
-msgstr "シミュレーションの1ステップ時間 （「単位」で指定した単位）"
+msgstr "シミュレーションの1ステップ時間（「単位」で指定した単位）"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8679,12 +8682,14 @@ msgid ""
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
+"<html><head/><body><p>フェルミが0になるようにエネルギーを調整しますか? フェル"
+"ミ準位をプロットするときのみ有効です。</p><p><br/></p><p>デフォルト: 無効</p>"
+"</body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
-#, fuzzy
 msgid "Zero Fermi?"
-msgstr "Fermiを0にしますか？"
+msgstr "フェルミを0にしますか？"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
