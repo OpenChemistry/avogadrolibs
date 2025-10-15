@@ -115,6 +115,30 @@ Forcefield::Forcefield(QObject* parent_)
 
   action = new QAction(this);
   action->setEnabled(true);
+  action->setText(tr("Freeze X", "freeze x-axis of selected atoms"));
+  action->setData(unfreezeAction);
+  action->setProperty("menu priority", 788);
+  connect(action, SIGNAL(triggered()), SLOT(freezeX()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Freeze Y", "freeze y-axis of selected atoms"));
+  action->setData(unfreezeAction);
+  action->setProperty("menu priority", 787);
+  connect(action, SIGNAL(triggered()), SLOT(freezeY()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Freeze Z", "freeze z-axis of selected atoms"));
+  action->setData(unfreezeAction);
+  action->setProperty("menu priority", 786);
+  connect(action, SIGNAL(triggered()), SLOT(freezeZ()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
   action->setText(tr("Unfreeze Selected Atoms"));
   action->setData(unfreezeAction);
   action->setProperty("menu priority", 780);
@@ -578,6 +602,35 @@ void Forcefield::freezeSelected()
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Constraints);
+}
+
+void Forcefield::freezeAxis(int axis)
+{
+  if (m_molecule == nullptr || m_molecule->isSelectionEmpty())
+    return; // nothing to do until there's a valid selection
+
+  auto numAtoms = m_molecule->atomCount();
+  // now freeze the specified atoms
+  for (Index i = 0; i < numAtoms; ++i) {
+    if (m_molecule->atomSelected(i)) {
+      m_molecule->setFrozenAtomAxis(i, axis, true);
+    }
+  }
+
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
+}
+
+void Forcefield::freezeX()
+{
+  freezeAxis(0);
+}
+void Forcefield::freezeY()
+{
+  freezeAxis(1);
+}
+void Forcefield::freezeZ()
+{
+  freezeAxis(2);
 }
 
 void Forcefield::unfreezeSelected()

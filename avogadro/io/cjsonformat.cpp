@@ -279,15 +279,36 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
 
   if (atoms.contains("frozen")) {
     json frozen = atoms["frozen"];
-    if (isBooleanArray(frozen) && frozen.size() == atomCount) {
-      for (Index i = 0; i < atomCount; ++i)
-        molecule.setFrozenAtom(i, frozen[i]);
-    } // might also be a 3xN array for per-axis freezing
-    else if (isNumericArray(frozen) && frozen.size() == 3 * atomCount) {
+    if (frozen.is_array() && frozen.size() == atomCount) {
       for (Index i = 0; i < atomCount; ++i) {
-        molecule.setFrozenAtomAxis(i, 0, frozen[3 * i] != 0);
-        molecule.setFrozenAtomAxis(i, 1, frozen[3 * i + 1] != 0);
-        molecule.setFrozenAtomAxis(i, 2, frozen[3 * i + 2] != 0);
+        bool freeze = false;
+        if (frozen[i].is_number())
+          freeze = (frozen[i] != 0);
+        else if (frozen[i].is_boolean())
+          freeze = frozen[i];
+        molecule.setFrozenAtom(i, freeze);
+      }
+    } // might also be a 3xN array for per-axis freezing
+    else if (frozen.is_array() && frozen.size() == 3 * atomCount) {
+      for (Index i = 0; i < atomCount; ++i) {
+        bool freeze;
+        if (frozen[3 * i].is_number())
+          freeze = (frozen[3 * i] != 0);
+        else if (frozen[3 * i].is_boolean())
+          freeze = frozen[3 * i];
+        molecule.setFrozenAtomAxis(i, 0, freeze);
+
+        if (frozen[3 * i + 1].is_number())
+          freeze = (frozen[3 * i + 1] != 0);
+        else if (frozen[3 * i + 1].is_boolean())
+          freeze = frozen[3 * i + 1];
+        molecule.setFrozenAtomAxis(i, 1, freeze);
+
+        if (frozen[3 * i + 2].is_number())
+          freeze = (frozen[3 * i + 2] != 0);
+        else if (frozen[3 * i + 2].is_boolean())
+          freeze = frozen[3 * i + 2];
+        molecule.setFrozenAtomAxis(i, 2, freeze);
       }
     }
   }
@@ -1362,16 +1383,15 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
 
     if (anyFrozen) {
-      if (axisFrozen) {
-        // iterate through the mask as an array
-        json frozenAtomMaskArray;
-        for (Index i = 0; i < frozenAtomMask.size(); ++i) {
-          frozenAtomMaskArray.push_back(frozenAtomMask[i]);
-        }
-        atoms["frozen"] = frozenAtomMaskArray;
-      } else {
-        atoms["frozen"] = frozen;
+      atoms["frozen"] = frozen;
+    }
+    if (axisFrozen) {
+      // iterate through the mask as an array
+      json frozenAtomMaskArray;
+      for (Index i = 0; i < frozenAtomMask.size(); ++i) {
+        frozenAtomMaskArray.push_back(frozenAtomMask[i]);
       }
+      atoms["frozen"] = frozenAtomMaskArray;
     }
 
     // check for partial charges

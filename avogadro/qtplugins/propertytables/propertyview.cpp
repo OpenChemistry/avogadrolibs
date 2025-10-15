@@ -338,6 +338,56 @@ void PropertyView::freezeAtom()
   m_molecule->emitChanged(Molecule::Atoms);
 }
 
+void PropertyView::freezeX()
+{
+  freezeAxis(0);
+}
+
+void PropertyView::freezeY()
+{
+  freezeAxis(1);
+}
+
+void PropertyView::freezeZ()
+{
+  freezeAxis(2);
+}
+
+void PropertyView::freezeAxis(int axis)
+{
+  // get the selected rows (if any)
+  QModelIndexList selectedRows = selectionModel()->selectedRows();
+
+  // if nothing is selected, we're done
+  if (selectedRows.isEmpty())
+    return;
+
+  if (m_molecule == nullptr)
+    return;
+
+  // loop through the selected rows
+  for (const auto& index : selectedRows) {
+    if (!index.isValid())
+      continue;
+
+    // get the row number
+    bool ok;
+    int rowNum = model()
+                   ->headerData(index.row(), Qt::Vertical)
+                   .toString()
+                   .split(" ")
+                   .last()
+                   .toLong(&ok) -
+                 1;
+    if (!ok)
+      continue;
+
+    m_molecule->setFrozenAtomAxis(rowNum, axis, true);
+  }
+
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
 void PropertyView::openExportDialogBox()
 {
   // Create a file dialog for selecting the export location and file name
@@ -410,6 +460,15 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
     menu.addAction(freezeAtomAction);
     connect(freezeAtomAction, &QAction::triggered, this,
             &PropertyView::freezeAtom);
+    QAction* freezeX = menu.addAction(tr("Freeze X"));
+    menu.addAction(freezeX);
+    connect(freezeX, &QAction::triggered, this, &PropertyView::freezeX);
+    QAction* freezeY = menu.addAction(tr("Freeze Y"));
+    menu.addAction(freezeY);
+    connect(freezeY, &QAction::triggered, this, &PropertyView::freezeY);
+    QAction* freezeZ = menu.addAction(tr("Freeze Z"));
+    menu.addAction(freezeZ);
+    connect(freezeZ, &QAction::triggered, this, &PropertyView::freezeZ);
   } else {
     // bond angle torsion are similar
     QString name;
