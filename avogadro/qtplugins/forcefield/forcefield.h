@@ -76,8 +76,12 @@ private slots:
   void optimize();
   void freezeSelected();
   void unfreezeSelected();
-
   void setupConstraints();
+
+  void freezeAxis(int axis);
+  void freezeX();
+  void freezeY();
+  void freezeZ();
 
   // fuse adds all pairwise distance constraints
   void fuseSelected();

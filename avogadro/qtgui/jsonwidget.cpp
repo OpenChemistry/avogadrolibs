@@ -214,10 +214,19 @@ void JsonWidget::buildOptionGui()
       addOptionRow("Filename Base", tr("Filename Base"),
                    userOptions.take("Filename Base"));
 
-    // Number of cores next:
-    if (userOptions.contains("Processor Cores"))
-      addOptionRow("Processor Cores", tr("Processor Cores"),
-                   userOptions.take("Processor Cores"));
+    // Number of cores and memory next:
+    if (userOptions.contains("Processor Cores") &&
+        userOptions.contains("Memory")) {
+      combinedOptionRow("Processor Cores", "Memory", tr("Processor Cores"),
+                        tr("Memory"), userOptions, true); // both labels
+    } else {
+      // do them separately
+      if (userOptions.contains("Processor Cores"))
+        addOptionRow("Processor Cores", tr("Processor Cores"),
+                     userOptions.take("Processor Cores"));
+      if (userOptions.contains("Memory"))
+        addOptionRow("Memory", tr("Memory"), userOptions.take("Memory"));
+    }
 
     // Calculation Type next:
     if (userOptions.contains("Calculation Type"))
@@ -238,6 +247,14 @@ void JsonWidget::buildOptionGui()
       if (userOptions.contains("Multiplicity"))
         addOptionRow("Multiplicity", tr("Multiplicity"),
                      userOptions.take("Multiplicity"));
+    }
+
+    // solvation / model
+    if (userOptions.contains("Solvent") &&
+        userOptions.contains("Solvation Model")) {
+      combinedOptionRow("Solvent", "Solvation Model", tr("Solvent"),
+                        tr("Model", "solvation method / model"), userOptions,
+                        true); // both labels
     }
 
     // Add remaining keys at bottom.

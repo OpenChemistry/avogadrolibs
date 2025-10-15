@@ -42,6 +42,10 @@ private:
   void openExportDialogBox();
   void constrainSelectedRows();
   void freezeAtom();
+  void freezeX();
+  void freezeY();
+  void freezeZ();
+  void freezeAxis(int axis);
 };
 
 } // end namespace Avogadro
