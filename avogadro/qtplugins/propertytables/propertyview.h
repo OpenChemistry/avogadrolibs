@@ -41,7 +41,11 @@ private:
   void copySelectedRowsToClipboard();
   void openExportDialogBox();
   void constrainSelectedRows();
+  void unconstrainSelectedRows();
+
+  void setFrozen(bool frozen);
   void freezeAtom();
+  void unfreezeAtom();
   void freezeX();
   void freezeY();
   void freezeZ();
