@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/PLY.a CMakeFiles/PLY.dir/PLY_autogen/mocs_compilation.cpp.o CMakeFiles/PLY.dir/ply.cpp.o CMakeFiles/PLY.dir/PLYPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/PLY.a

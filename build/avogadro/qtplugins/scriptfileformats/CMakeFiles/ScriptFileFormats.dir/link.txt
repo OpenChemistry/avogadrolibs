@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/ScriptFileFormats.a CMakeFiles/ScriptFileFormats.dir/ScriptFileFormats_autogen/mocs_compilation.cpp.o CMakeFiles/ScriptFileFormats.dir/scriptfileformats.cpp.o CMakeFiles/ScriptFileFormats.dir/fileformatscript.cpp.o CMakeFiles/ScriptFileFormats.dir/ScriptFileFormatsPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/ScriptFileFormats.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/OpenMMInput.a CMakeFiles/OpenMMInput.dir/OpenMMInput_autogen/mocs_compilation.cpp.o CMakeFiles/OpenMMInput.dir/openmminputdialog.cpp.o CMakeFiles/OpenMMInput.dir/openmminput.cpp.o CMakeFiles/OpenMMInput.dir/OpenMMInputPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/OpenMMInput.a

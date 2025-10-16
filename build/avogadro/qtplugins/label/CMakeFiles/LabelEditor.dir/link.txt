@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/LabelEditor.a CMakeFiles/LabelEditor.dir/LabelEditor_autogen/mocs_compilation.cpp.o CMakeFiles/LabelEditor.dir/labeleditor.cpp.o CMakeFiles/LabelEditor.dir/qrc_label.cpp.o CMakeFiles/LabelEditor.dir/LabelEditorPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/LabelEditor.a

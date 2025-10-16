@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Manipulator.a CMakeFiles/Manipulator.dir/Manipulator_autogen/mocs_compilation.cpp.o CMakeFiles/Manipulator.dir/manipulator.cpp.o CMakeFiles/Manipulator.dir/qrc_manipulator.cpp.o CMakeFiles/Manipulator.dir/ManipulatorPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Manipulator.a

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>player_light.svg</file>
+        <file>player_dark.svg</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/QuantumInput.a CMakeFiles/QuantumInput.dir/QuantumInput_autogen/mocs_compilation.cpp.o CMakeFiles/QuantumInput.dir/quantuminput.cpp.o CMakeFiles/QuantumInput.dir/QuantumInputPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/QuantumInput.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/LammpsInput.a CMakeFiles/LammpsInput.dir/LammpsInput_autogen/mocs_compilation.cpp.o CMakeFiles/LammpsInput.dir/lammpsinputdialog.cpp.o CMakeFiles/LammpsInput.dir/lammpsinput.cpp.o CMakeFiles/LammpsInput.dir/LammpsInputPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/LammpsInput.a

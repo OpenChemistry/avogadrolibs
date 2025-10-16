@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/AlignTool.a CMakeFiles/AlignTool.dir/AlignTool_autogen/mocs_compilation.cpp.o CMakeFiles/AlignTool.dir/aligntool.cpp.o CMakeFiles/AlignTool.dir/qrc_aligntool.cpp.o CMakeFiles/AlignTool.dir/AlignToolPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/AlignTool.a

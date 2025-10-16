@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/OpenBabel.a CMakeFiles/OpenBabel.dir/OpenBabel_autogen/mocs_compilation.cpp.o CMakeFiles/OpenBabel.dir/conformersearchdialog.cpp.o CMakeFiles/OpenBabel.dir/obcharges.cpp.o CMakeFiles/OpenBabel.dir/obfileformat.cpp.o CMakeFiles/OpenBabel.dir/obforcefielddialog.cpp.o CMakeFiles/OpenBabel.dir/obprocess.cpp.o CMakeFiles/OpenBabel.dir/openbabel.cpp.o CMakeFiles/OpenBabel.dir/OpenBabelPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/OpenBabel.a

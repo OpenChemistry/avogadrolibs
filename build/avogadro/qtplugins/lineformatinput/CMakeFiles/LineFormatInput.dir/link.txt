@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/LineFormatInput.a CMakeFiles/LineFormatInput.dir/LineFormatInput_autogen/mocs_compilation.cpp.o CMakeFiles/LineFormatInput.dir/lineformatinput.cpp.o CMakeFiles/LineFormatInput.dir/lineformatinputdialog.cpp.o CMakeFiles/LineFormatInput.dir/LineFormatInputPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/LineFormatInput.a

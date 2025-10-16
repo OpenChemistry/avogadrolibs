@@ -1,0 +1,135 @@
+{
+	"BUILD_DIR" : "/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste/CopyPaste_autogen",
+	"CMAKE_BINARY_DIR" : "/Users/daguila/OSS/avogadrolibs/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/Users/daguila/OSS/avogadrolibs/avogadro/qtplugins/copypaste",
+	"CMAKE_EXECUTABLE" : "/opt/homebrew/bin/cmake",
+	"CMAKE_LIST_FILES" : 
+	[
+		"/Users/daguila/OSS/avogadrolibs/avogadro/qtplugins/copypaste/CMakeLists.txt",
+		"/Users/daguila/OSS/avogadrolibs/cmake/avogadroplugin.cpp.in"
+	],
+	"CMAKE_SOURCE_DIR" : "/Users/daguila/OSS/avogadrolibs",
+	"CROSS_CONFIG" : false,
+	"DEP_FILE" : "/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste/CopyPaste_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "CopyPaste_autogen/timestamp",
+	"HEADERS" : 
+	[
+		[
+			"/Users/daguila/OSS/avogadrolibs/avogadro/qtplugins/copypaste/copypaste.h",
+			"Mu",
+			"EWIEGA46WW/moc_copypaste.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste/CopyPaste_autogen/include",
+	"MOC_COMPILATION_FILE" : "/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste/CopyPaste_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"JKQTCOMMON_LIB_IN_DLL",
+		"JKQTMATHTEXT_COMPILED_WITH_FIRAMATH",
+		"JKQTMATHTEXT_COMPILED_WITH_XITS",
+		"JKQTMATHTEXT_LIB_IN_DLL",
+		"JKQTMATH_LIB_IN_DLL",
+		"JKQTPLOTTER_HAS_PRINTSUPPORT",
+		"JKQTPLOTTER_LIB_IN_DLL",
+		"JKQtPlotter_HAS_j0",
+		"JKQtPlotter_HAS_jn",
+		"JKQtPlotter_HAS_y0",
+		"JKQtPlotter_HAS_yn",
+		"QT_CONCURRENT_LIB",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_PRINTSUPPORT_LIB",
+		"QT_STATICPLUGIN",
+		"QT_SVG_LIB",
+		"QT_WIDGETS_LIB",
+		"QT_XML_LIB"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste",
+		"/Users/daguila/OSS/avogadrolibs/avogadro/qtplugins/copypaste",
+		"/Users/daguila/OSS/avogadrolibs/avogadro",
+		"/Users/daguila/OSS/avogadrolibs/build/avogadro",
+		"/Users/daguila/OSS/avogadrolibs",
+		"/Users/daguila/OSS/avogadrolibs/build",
+		"/Users/daguila/OSS/avogadrolibs/build/avogadro/qtgui",
+		"/Users/daguila/OSS/avogadrolibs/build/avogadro/io",
+		"/Users/daguila/OSS/avogadrolibs/build/avogadro/core",
+		"/opt/homebrew/include/eigen3",
+		"/opt/homebrew/opt/qt@5/lib/QtWidgets.framework",
+		"/opt/homebrew/opt/qt@5/lib/QtWidgets.framework/Headers",
+		"/opt/homebrew/opt/qt@5/lib/QtGui.framework",
+		"/opt/homebrew/opt/qt@5/lib/QtGui.framework/Headers",
+		"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Headers",
+		"/opt/homebrew/opt/qt@5/lib/QtCore.framework",
+		"/opt/homebrew/opt/qt@5/lib/QtCore.framework/Headers",
+		"/opt/homebrew/opt/qt@5/mkspecs/macx-clang",
+		"/opt/homebrew/opt/qt@5/lib/QtConcurrent.framework",
+		"/opt/homebrew/opt/qt@5/lib/QtConcurrent.framework/Headers",
+		"/Users/daguila/avogadro/prefix/include",
+		"/Users/daguila/avogadro/prefix/include/jkqtplotter",
+		"/Users/daguila/avogadro/prefix/include/jkqtcommon",
+		"/opt/homebrew/opt/qt@5/lib/QtXml.framework",
+		"/opt/homebrew/opt/qt@5/lib/QtXml.framework/Headers",
+		"/Users/daguila/avogadro/prefix/include/jkqtmath",
+		"/Users/daguila/avogadro/prefix/include/jkqtmathtext",
+		"/opt/homebrew/opt/qt@5/lib/QtSvg.framework",
+		"/opt/homebrew/opt/qt@5/lib/QtSvg.framework/Headers",
+		"/opt/homebrew/opt/qt@5/lib/QtPrintSupport.framework",
+		"/opt/homebrew/opt/qt@5/lib/QtPrintSupport.framework/Headers",
+		"/usr/local/include",
+		"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1",
+		"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include",
+		"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+		"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/usr/bin/c++",
+		"-std=c++17",
+		"-w",
+		"-dM",
+		"-E",
+		"/opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste/CopyPaste_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste/CMakeFiles/CopyPaste_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/opt/homebrew/opt/qt@5/bin/moc",
+	"QT_UIC_EXECUTABLE" : "",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 15,
+	"SETTINGS_FILE" : "/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste/CMakeFiles/CopyPaste_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"/Users/daguila/OSS/avogadrolibs/avogadro/qtplugins/copypaste/copypaste.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/Users/daguila/OSS/avogadrolibs/build/avogadro/qtplugins/copypaste/CopyPastePlugin.cpp",
+			"Mu",
+			null
+		]
+	],
+	"USE_BETTER_GRAPH" : false,
+	"VERBOSITY" : 0
+}

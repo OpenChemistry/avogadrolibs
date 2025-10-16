@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>manipulator_light.svg</file>
+        <file>manipulator_dark.svg</file>
+    </qresource>
+</RCC>

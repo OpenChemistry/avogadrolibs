@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/NetworkDatabases.a CMakeFiles/NetworkDatabases.dir/NetworkDatabases_autogen/mocs_compilation.cpp.o CMakeFiles/NetworkDatabases.dir/networkdatabases.cpp.o CMakeFiles/NetworkDatabases.dir/NetworkDatabasesPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/NetworkDatabases.a

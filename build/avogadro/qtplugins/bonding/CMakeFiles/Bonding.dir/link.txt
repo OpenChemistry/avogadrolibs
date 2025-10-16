@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Bonding.a CMakeFiles/Bonding.dir/Bonding_autogen/mocs_compilation.cpp.o CMakeFiles/Bonding.dir/bonding.cpp.o CMakeFiles/Bonding.dir/BondingPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Bonding.a

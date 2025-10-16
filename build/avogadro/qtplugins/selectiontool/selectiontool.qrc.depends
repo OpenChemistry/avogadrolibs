@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>selection_light.svg</file>
+        <file>selection_dark.svg</file>
+    </qresource>
+</RCC>

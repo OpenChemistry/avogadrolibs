@@ -1,0 +1,2 @@
+/usr/bin/ar qc libgwavi.a CMakeFiles/gwavi.dir/gwavi.c.o CMakeFiles/gwavi.dir/fileio.c.o "CMakeFiles/gwavi.dir/avi-utils.c.o"
+/usr/bin/ranlib libgwavi.a

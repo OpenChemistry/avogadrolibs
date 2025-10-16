@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Surfaces.a CMakeFiles/Surfaces.dir/Surfaces_autogen/mocs_compilation.cpp.o CMakeFiles/Surfaces.dir/surfacedialog.cpp.o CMakeFiles/Surfaces.dir/surfaces.cpp.o CMakeFiles/Surfaces.dir/SurfacesPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Surfaces.a
