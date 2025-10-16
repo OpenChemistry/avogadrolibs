@@ -159,4 +159,9 @@ cython_debug/
 .idea/
 
 # Local doc builds
-build-docs/
+build-docs//build/
+/build-*/
+/build-docs/
+/build-install/
+/cmake-build-debug/
+/.idea/
