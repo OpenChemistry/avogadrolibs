@@ -505,7 +505,9 @@ QString DownloaderWidget::findRequirementFile(const QString& destination)
 void DownloaderWidget::installWithPixi(const QString& requirementFile)
 {
   m_progressDialog = new QProgressDialog(
-    tr("Installing dependencies with pixi..."), tr("Cancel"), 0, 0, this);
+    tr("Installing dependencies with %1…", "argument is program name")
+      .arg("pixi"),
+    tr("Cancel"), 0, 0, this);
   m_progressDialog->setWindowModality(Qt::WindowModal);
 
   connect(m_progressDialog, SIGNAL(canceled()), this,
@@ -566,7 +568,9 @@ void DownloaderWidget::installWithConda(const QString& requirementFile)
   }
 
   m_progressDialog = new QProgressDialog(
-    tr("Installing dependencies with conda..."), tr("Cancel"), 0, 0, this);
+    tr("Installing dependencies with %1…", "argument is program name")
+      .arg("conda"),
+    tr("Cancel"), 0, 0, this);
   m_progressDialog->setWindowModality(Qt::WindowModal);
 
   connect(m_progressDialog, SIGNAL(canceled()), this,
@@ -601,7 +605,9 @@ void DownloaderWidget::installWithPip(const QString& requirementFile)
   }
 
   m_progressDialog = new QProgressDialog(
-    tr("Installing dependencies with pip..."), tr("Cancel"), 0, 0, this);
+    tr("Installing dependencies with %1…", "argument is program name")
+      .arg("pip"),
+    tr("Cancel"), 0, 0, this);
   m_progressDialog->setWindowModality(Qt::WindowModal);
 
   connect(m_progressDialog, SIGNAL(canceled()), this,
