@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-16 00:25+0000\n"
+"POT-Creation-Date: 2025-10-16 11:42+0000\n"
 "PO-Revision-Date: 2025-09-02 16:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -1752,8 +1752,8 @@ msgstr "PQR கோப்புகள் (*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:407
-#: qtplugins/propertytables/propertyview.cpp:440
+#: qtplugins/propertytables/propertyview.cpp:475
+#: qtplugins/propertytables/propertyview.cpp:508
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "பிழை"
@@ -2140,7 +2140,7 @@ msgid "Bond Selected Atoms"
 msgstr "பிணைப்பு தேர்ந்தெடுக்கப்பட்ட அணுக்கள்"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:575
+#: qtplugins/propertytables/propertymodel.cpp:640
 msgid "Bond"
 msgstr "கடனீடு"
 
@@ -2452,9 +2452,9 @@ msgid "Freeze Z Axis"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
-#: qtplugins/propertytables/propertymodel.cpp:561
-#: qtplugins/propertytables/propertymodel.cpp:602
-#: qtplugins/propertytables/propertymodel.cpp:619
+#: qtplugins/propertytables/propertymodel.cpp:626
+#: qtplugins/propertytables/propertymodel.cpp:667
+#: qtplugins/propertytables/propertymodel.cpp:684
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "வகை"
@@ -2464,24 +2464,24 @@ msgid "Value"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
-#: qtplugins/propertytables/propertymodel.cpp:604
-#: qtplugins/propertytables/propertymodel.cpp:621
+#: qtplugins/propertytables/propertymodel.cpp:669
+#: qtplugins/propertytables/propertymodel.cpp:686
 msgid "Atom 1"
 msgstr "அணு 1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
-#: qtplugins/propertytables/propertymodel.cpp:623
+#: qtplugins/propertytables/propertymodel.cpp:688
 msgid "Atom 2"
 msgstr "அணு 2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
-#: qtplugins/propertytables/propertymodel.cpp:608
-#: qtplugins/propertytables/propertymodel.cpp:625
+#: qtplugins/propertytables/propertymodel.cpp:673
+#: qtplugins/propertytables/propertymodel.cpp:690
 msgid "Atom 3"
 msgstr "அணு 3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
-#: qtplugins/propertytables/propertymodel.cpp:627
+#: qtplugins/propertytables/propertymodel.cpp:692
 msgid "Atom 4"
 msgstr "அணு 4"
 
@@ -2653,7 +2653,7 @@ msgstr "டர்போமோல் வடிவம்"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:447:319
+#: qtplugins/propertytables/propertyview.cpp:515:319
 msgid "Copy"
 msgstr "நகலெடு"
 
@@ -3542,7 +3542,7 @@ msgstr "குறியெண்"
 msgid "Unique ID"
 msgstr "தனித்துவமான ஐடி"
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:531
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:596
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "தனிமம்"
@@ -3572,13 +3572,13 @@ msgstr "நீளம்"
 msgid "Bond Label:"
 msgstr "பிணைப்பு லேபிள்:"
 
-#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:584
+#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:649
 msgid "ID"
 msgstr "ஐடி"
 
 #: qtplugins/label/label.cpp:234
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:582
+#: qtplugins/propertytables/propertymodel.cpp:647
 msgid "Name"
 msgstr "பெயர்"
 
@@ -3756,7 +3756,7 @@ msgid "unknown molecule"
 msgstr "அறியப்படாத மூலக்கூறு"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:260
-#: qtplugins/propertytables/propertymodel.cpp:643
+#: qtplugins/propertytables/propertymodel.cpp:708
 msgid "Property"
 msgstr "சொத்து"
 
@@ -3878,27 +3878,27 @@ msgid "Molecule Properties"
 msgstr "மூலக்கூறு பண்புகள்"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:395
+#: qtplugins/propertytables/propertyview.cpp:463
 msgid "Export CSV"
 msgstr "காபிம ஏற்றுமதி"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:396
+#: qtplugins/propertytables/propertyview.cpp:464
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "காபிம கோப்புகள் (*.csv) ;; அனைத்து கோப்புகளும் (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:408
+#: qtplugins/propertytables/propertyview.cpp:476
 msgid "Could not open the file for writing."
 msgstr "எழுதுவதற்கு கோப்பைத் திறக்க முடியவில்லை."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:440
+#: qtplugins/propertytables/propertyview.cpp:508
 msgid "Error writing to the file."
 msgstr "கோப்பில் எழுதுவதில் பிழை."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:452
+#: qtplugins/propertytables/propertyview.cpp:520
 msgid "Export…"
 msgstr "ஏற்றுமதி…"
 
@@ -4611,133 +4611,133 @@ msgstr "போவ்ரே"
 msgid "Render the scene using POV-Ray."
 msgstr "POV-RAY ஐப் பயன்படுத்தி காட்சியை வழங்கவும்."
 
-#: qtplugins/propertytables/propertymodel.cpp:533
+#: qtplugins/propertytables/propertymodel.cpp:598
 msgid "Valence"
 msgstr "இணைதிறன்"
 
-#: qtplugins/propertytables/propertymodel.cpp:535
+#: qtplugins/propertytables/propertymodel.cpp:600
 msgid "Formal Charge"
 msgstr "முறையான கட்டணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:538
+#: qtplugins/propertytables/propertymodel.cpp:603
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1 பகுதி கட்டணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:543
+#: qtplugins/propertytables/propertymodel.cpp:608
 msgid "X (Å)"
 msgstr "ஃச் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:545
+#: qtplugins/propertytables/propertymodel.cpp:610
 msgid "Y (Å)"
 msgstr "ஒய் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:547
+#: qtplugins/propertytables/propertymodel.cpp:612
 msgid "Z (Å)"
 msgstr "சட் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:549
-#: qtplugins/propertytables/propertymodel.cpp:569
+#: qtplugins/propertytables/propertymodel.cpp:614
+#: qtplugins/propertytables/propertymodel.cpp:634
 msgid "Label"
 msgstr "சிட்டை"
 
-#: qtplugins/propertytables/propertymodel.cpp:551
-#: qtplugins/propertytables/propertymodel.cpp:592
+#: qtplugins/propertytables/propertymodel.cpp:616
+#: qtplugins/propertytables/propertymodel.cpp:657
 msgid "Color"
 msgstr "நிறம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:554
+#: qtplugins/propertytables/propertymodel.cpp:619
 msgid "Atom"
 msgstr "அணு"
 
-#: qtplugins/propertytables/propertymodel.cpp:563
+#: qtplugins/propertytables/propertymodel.cpp:628
 msgid "Start Atom"
 msgstr "அணுவைத் தொடங்கவும்"
 
-#: qtplugins/propertytables/propertymodel.cpp:565
+#: qtplugins/propertytables/propertymodel.cpp:630
 msgid "End Atom"
 msgstr "இறுதி அணு"
 
-#: qtplugins/propertytables/propertymodel.cpp:567
+#: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Bond Order"
 msgstr "பாண்ட் ஆணை"
 
-#: qtplugins/propertytables/propertymodel.cpp:571
+#: qtplugins/propertytables/propertymodel.cpp:636
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "நீளம் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:586
+#: qtplugins/propertytables/propertymodel.cpp:651
 msgid "Chain"
 msgstr "சங்கிலி"
 
-#: qtplugins/propertytables/propertymodel.cpp:588
+#: qtplugins/propertytables/propertymodel.cpp:653
 msgid "Secondary Structure"
 msgstr "இரண்டாம் நிலை அமைப்பு"
 
-#: qtplugins/propertytables/propertymodel.cpp:590
+#: qtplugins/propertytables/propertymodel.cpp:655
 msgid "Heterogen"
 msgstr "பன்முகத்தன்மை வாய்ந்த"
 
-#: qtplugins/propertytables/propertymodel.cpp:606
+#: qtplugins/propertytables/propertymodel.cpp:671
 msgid "Vertex"
 msgstr "வெர்டெக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:610
-#: qtplugins/propertytables/propertymodel.cpp:629
+#: qtplugins/propertytables/propertymodel.cpp:675
+#: qtplugins/propertytables/propertymodel.cpp:694
 msgid "Angle (°)"
 msgstr "(°) கோணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:640
+#: qtplugins/propertytables/propertymodel.cpp:705
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "Rmsd (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:643
+#: qtplugins/propertytables/propertymodel.cpp:708
 msgid "Energy (kcal/mol)"
 msgstr "ஆற்றல் (கிலோகலோரி/மோல்)"
 
-#: qtplugins/propertytables/propertymodel.cpp:839
+#: qtplugins/propertytables/propertymodel.cpp:904
 msgid "Adjust Fragment"
 msgstr "துண்டு சரிசெய்யவும்"
 
-#: qtplugins/propertytables/propertymodel.cpp:965
+#: qtplugins/propertytables/propertymodel.cpp:1030
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:967
+#: qtplugins/propertytables/propertymodel.cpp:1032
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "வளைவு"
 
-#: qtplugins/propertytables/propertymodel.cpp:969
+#: qtplugins/propertytables/propertymodel.cpp:1034
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:971
+#: qtplugins/propertytables/propertymodel.cpp:1036
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β தாள்"
 
-#: qtplugins/propertytables/propertymodel.cpp:973
+#: qtplugins/propertytables/propertymodel.cpp:1038
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:975
+#: qtplugins/propertytables/propertymodel.cpp:1040
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "பி பாலம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:977
+#: qtplugins/propertytables/propertymodel.cpp:1042
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "திருப்பம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:979
+#: qtplugins/propertytables/propertymodel.cpp:1044
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "சுருள்"
@@ -4802,32 +4802,40 @@ msgstr "இணங்குபவர் பண்புகள்"
 msgid "Residue Properties"
 msgstr "எச்ச பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:459
+#: qtplugins/propertytables/propertyview.cpp:527
 msgid "Freeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:463
+#: qtplugins/propertytables/propertyview.cpp:531
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:466
+#: qtplugins/propertytables/propertyview.cpp:534
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:469
+#: qtplugins/propertytables/propertyview.cpp:537
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:476
+#: qtplugins/propertytables/propertyview.cpp:540
+msgid "Unfreeze Atom"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:548
 msgid "Constrain Bond"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:478
+#: qtplugins/propertytables/propertyview.cpp:550
 msgid "Constrain Angle"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:480
+#: qtplugins/propertytables/propertyview.cpp:552
 msgid "Constrain Torsion"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:559
+msgid "Remove Constraint"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
