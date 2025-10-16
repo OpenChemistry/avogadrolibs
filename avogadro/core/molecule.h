@@ -782,9 +782,15 @@ public:
   void setFrozenAtom(Index atomId, bool frozen);
 
   /**
-   * Get the frozen status of an atom
+   * @return whether the specified atom is frozen
    */
   bool frozenAtom(Index atomId) const;
+  /**
+   * @param atomId The index of the atom to check
+   * @param axis The axis to check (0 = x, 1 = y, 2 = z)
+   * @return whether the specified axis of the specified atom is frozen
+   */
+  bool frozenAtomAxis(Index atomId, int axis) const;
 
   /**
    * Freeze or unfreeze X, Y, or Z coordinate of an atom for optimization

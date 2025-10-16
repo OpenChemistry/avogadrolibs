@@ -303,7 +303,7 @@ void PropertyView::constrainSelectedRows()
   }
 }
 
-void PropertyView::freezeAtom()
+void PropertyView::unconstrainSelectedRows()
 {
   // get the selected rows (if any)
   QModelIndexList selectedRows = selectionModel()->selectedRows();
@@ -332,7 +332,75 @@ void PropertyView::freezeAtom()
     if (!ok)
       continue;
 
-    m_molecule->setFrozenAtom(rowNum, true);
+    if (m_type == PropertyType::BondType) {
+      // get the start and end atoms and the distance from the table data
+      auto bond = m_molecule->bond(rowNum);
+      auto atom1 = bond.atom1();
+      auto atom2 = bond.atom2();
+      m_molecule->removeConstraint(atom1.index(), atom2.index());
+    } else if (m_type == PropertyType::AngleType) {
+      if (m_model != nullptr) {
+        auto angle = m_model->getAngle(rowNum);
+        auto atom1 = m_molecule->atom(std::get<0>(angle));
+        auto atom2 = m_molecule->atom(std::get<1>(angle));
+        auto atom3 = m_molecule->atom(std::get<2>(angle));
+        m_molecule->removeConstraint(atom1.index(), atom2.index(),
+                                     atom3.index());
+      }
+    } else if (m_type == PropertyType::TorsionType) {
+      if (m_model != nullptr) {
+        auto torsion = m_model->getTorsion(rowNum);
+        auto atom1 = m_molecule->atom(std::get<0>(torsion));
+        auto atom2 = m_molecule->atom(std::get<1>(torsion));
+        auto atom3 = m_molecule->atom(std::get<2>(torsion));
+        auto atom4 = m_molecule->atom(std::get<3>(torsion));
+        m_molecule->removeConstraint(atom1.index(), atom2.index(),
+                                     atom3.index(), atom4.index());
+      }
+    }
+  }
+}
+
+void PropertyView::freezeAtom()
+{
+  setFrozen(true);
+}
+
+void PropertyView::unfreezeAtom()
+{
+  setFrozen(false);
+}
+
+void PropertyView::setFrozen(bool freeze)
+{
+  // get the selected rows (if any)
+  QModelIndexList selectedRows = selectionModel()->selectedRows();
+
+  // if nothing is selected, we're done
+  if (selectedRows.isEmpty())
+    return;
+
+  if (m_molecule == nullptr)
+    return;
+
+  // loop through the selected rows
+  for (const auto& index : selectedRows) {
+    if (!index.isValid())
+      continue;
+
+    // get the row number
+    bool ok;
+    int rowNum = model()
+                   ->headerData(index.row(), Qt::Vertical)
+                   .toString()
+                   .split(" ")
+                   .last()
+                   .toLong(&ok) -
+                 1;
+    if (!ok)
+      continue;
+
+    m_molecule->setFrozenAtom(rowNum, freeze);
   }
 
   m_molecule->emitChanged(Molecule::Atoms);
@@ -469,8 +537,12 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
     QAction* freezeZ = menu.addAction(tr("Freeze Z"));
     menu.addAction(freezeZ);
     connect(freezeZ, &QAction::triggered, this, &PropertyView::freezeZ);
+    QAction* unfreezeAtomAction = menu.addAction(tr("Unfreeze Atom"));
+    menu.addAction(unfreezeAtomAction);
+    connect(unfreezeAtomAction, &QAction::triggered, this,
+            &PropertyView::unfreezeAtom);
   } else {
-    // bond angle torsion are similar
+    // bond angle & torsion are similar
     QString name;
     if (m_type == PropertyType::BondType)
       name = tr("Constrain Bond");
@@ -483,6 +555,11 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
     menu.addAction(constrainAction);
     connect(constrainAction, &QAction::triggered, this,
             &PropertyView::constrainSelectedRows);
+
+    QAction* unconstrainAction = menu.addAction(tr("Remove Constraint"));
+    menu.addAction(unconstrainAction);
+    connect(unconstrainAction, &QAction::triggered, this,
+            &PropertyView::unconstrainSelectedRows);
   }
 
   menu.exec(event->globalPos());

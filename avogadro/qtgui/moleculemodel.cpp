@@ -128,8 +128,7 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
     }
   } else if (idx.column() == 1) {
     if (role == Qt::DecorationRole)
-      return QIcon::fromTheme(
-        "window-close", QIcon(":/icons/fallback/32x32/document-close.png"));
+      return QIcon(":/icons/fallback/32x32/document-close.png");
   }
   return QVariant();
 }
