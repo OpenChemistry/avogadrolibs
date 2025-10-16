@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Licorice.a CMakeFiles/Licorice.dir/Licorice_autogen/mocs_compilation.cpp.o CMakeFiles/Licorice.dir/licorice.cpp.o CMakeFiles/Licorice.dir/LicoricePlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Licorice.a

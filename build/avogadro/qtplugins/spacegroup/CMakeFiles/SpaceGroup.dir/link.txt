@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/SpaceGroup.a CMakeFiles/SpaceGroup.dir/SpaceGroup_autogen/mocs_compilation.cpp.o CMakeFiles/SpaceGroup.dir/spacegroup.cpp.o CMakeFiles/SpaceGroup.dir/SpaceGroupPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/SpaceGroup.a

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>bondcentric_light.svg</file>
+        <file>bondcentric_dark.svg</file>
+    </qresource>
+</RCC>

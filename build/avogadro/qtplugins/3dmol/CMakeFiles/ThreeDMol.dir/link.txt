@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/ThreeDMol.a CMakeFiles/ThreeDMol.dir/ThreeDMol_autogen/mocs_compilation.cpp.o CMakeFiles/ThreeDMol.dir/3dmol.cpp.o CMakeFiles/ThreeDMol.dir/3dmoldialog.cpp.o CMakeFiles/ThreeDMol.dir/ThreeDMolPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/ThreeDMol.a

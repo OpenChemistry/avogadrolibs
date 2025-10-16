@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/NucleicInput.a CMakeFiles/NucleicInput.dir/NucleicInput_autogen/mocs_compilation.cpp.o CMakeFiles/NucleicInput.dir/insertdna.cpp.o CMakeFiles/NucleicInput.dir/NucleicInputPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/NucleicInput.a

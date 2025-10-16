@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/PlotPdf.a CMakeFiles/PlotPdf.dir/PlotPdf_autogen/mocs_compilation.cpp.o CMakeFiles/PlotPdf.dir/plotpdf.cpp.o CMakeFiles/PlotPdf.dir/pdfoptionsdialog.cpp.o CMakeFiles/PlotPdf.dir/PlotPdfPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/PlotPdf.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Alchemy.a CMakeFiles/Alchemy.dir/Alchemy_autogen/mocs_compilation.cpp.o CMakeFiles/Alchemy.dir/alchemy.cpp.o CMakeFiles/Alchemy.dir/AlchemyPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Alchemy.a

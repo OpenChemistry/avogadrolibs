@@ -1,0 +1,42 @@
+file(REMOVE_RECURSE
+  "../../lib/libAvogadroIO.1.101.0.dylib"
+  "../../lib/libAvogadroIO.1.dylib"
+  "../../lib/libAvogadroIO.dylib"
+  "../../lib/libAvogadroIO.pdb"
+  ".1"
+  "CMakeFiles/IO.dir/cjsonformat.cpp.o"
+  "CMakeFiles/IO.dir/cjsonformat.cpp.o.d"
+  "CMakeFiles/IO.dir/cmlformat.cpp.o"
+  "CMakeFiles/IO.dir/cmlformat.cpp.o.d"
+  "CMakeFiles/IO.dir/cmsgpackformat.cpp.o"
+  "CMakeFiles/IO.dir/cmsgpackformat.cpp.o.d"
+  "CMakeFiles/IO.dir/dcdformat.cpp.o"
+  "CMakeFiles/IO.dir/dcdformat.cpp.o.d"
+  "CMakeFiles/IO.dir/fileformat.cpp.o"
+  "CMakeFiles/IO.dir/fileformat.cpp.o.d"
+  "CMakeFiles/IO.dir/fileformatmanager.cpp.o"
+  "CMakeFiles/IO.dir/fileformatmanager.cpp.o.d"
+  "CMakeFiles/IO.dir/gromacsformat.cpp.o"
+  "CMakeFiles/IO.dir/gromacsformat.cpp.o.d"
+  "CMakeFiles/IO.dir/lammpsformat.cpp.o"
+  "CMakeFiles/IO.dir/lammpsformat.cpp.o.d"
+  "CMakeFiles/IO.dir/mdlformat.cpp.o"
+  "CMakeFiles/IO.dir/mdlformat.cpp.o.d"
+  "CMakeFiles/IO.dir/pdbformat.cpp.o"
+  "CMakeFiles/IO.dir/pdbformat.cpp.o.d"
+  "CMakeFiles/IO.dir/sdfformat.cpp.o"
+  "CMakeFiles/IO.dir/sdfformat.cpp.o.d"
+  "CMakeFiles/IO.dir/trrformat.cpp.o"
+  "CMakeFiles/IO.dir/trrformat.cpp.o.d"
+  "CMakeFiles/IO.dir/turbomoleformat.cpp.o"
+  "CMakeFiles/IO.dir/turbomoleformat.cpp.o.d"
+  "CMakeFiles/IO.dir/vaspformat.cpp.o"
+  "CMakeFiles/IO.dir/vaspformat.cpp.o.d"
+  "CMakeFiles/IO.dir/xyzformat.cpp.o"
+  "CMakeFiles/IO.dir/xyzformat.cpp.o.d"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/IO.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

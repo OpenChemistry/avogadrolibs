@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/qube.dir/qube.cpp.o -o ../../bin/qube  -Wl,-rpath,/Users/daguila/OSS/avogadrolibs/build/lib ../../lib/libAvogadroQuantumIO.1.101.0.dylib ../../lib/libAvogadroIO.1.101.0.dylib ../../lib/libAvogadroCore.1.101.0.dylib

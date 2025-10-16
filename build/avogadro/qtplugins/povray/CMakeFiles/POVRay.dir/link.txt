@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/POVRay.a CMakeFiles/POVRay.dir/POVRay_autogen/mocs_compilation.cpp.o CMakeFiles/POVRay.dir/povray.cpp.o CMakeFiles/POVRay.dir/POVRayPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/POVRay.a

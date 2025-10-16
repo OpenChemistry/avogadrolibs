@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Yaehmop.a CMakeFiles/Yaehmop.dir/Yaehmop_autogen/mocs_compilation.cpp.o CMakeFiles/Yaehmop.dir/banddialog.cpp.o CMakeFiles/Yaehmop.dir/specialkpoints.cpp.o CMakeFiles/Yaehmop.dir/yaehmop.cpp.o CMakeFiles/Yaehmop.dir/yaehmopout.cpp.o CMakeFiles/Yaehmop.dir/YaehmopPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Yaehmop.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/ImportPQR.a CMakeFiles/ImportPQR.dir/ImportPQR_autogen/mocs_compilation.cpp.o CMakeFiles/ImportPQR.dir/importpqr.cpp.o CMakeFiles/ImportPQR.dir/pqrwidget.cpp.o CMakeFiles/ImportPQR.dir/pqrrequest.cpp.o CMakeFiles/ImportPQR.dir/ImportPQRPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/ImportPQR.a

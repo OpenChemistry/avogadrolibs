@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Select.a CMakeFiles/Select.dir/Select_autogen/mocs_compilation.cpp.o CMakeFiles/Select.dir/select.cpp.o CMakeFiles/Select.dir/SelectPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Select.a

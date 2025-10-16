@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/AutoOpt.a CMakeFiles/AutoOpt.dir/AutoOpt_autogen/mocs_compilation.cpp.o CMakeFiles/AutoOpt.dir/autoopt.cpp.o CMakeFiles/AutoOpt.dir/qrc_autoopt.cpp.o CMakeFiles/AutoOpt.dir/AutoOptPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/AutoOpt.a

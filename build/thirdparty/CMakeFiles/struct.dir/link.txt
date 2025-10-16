@@ -1,0 +1,2 @@
+/usr/bin/ar qc libstruct.a CMakeFiles/struct.dir/struct/struct.c.o CMakeFiles/struct.dir/struct/struct_endian.c.o
+/usr/bin/ranlib libstruct.a

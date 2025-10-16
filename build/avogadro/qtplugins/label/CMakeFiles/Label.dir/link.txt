@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Label.a CMakeFiles/Label.dir/Label_autogen/mocs_compilation.cpp.o CMakeFiles/Label.dir/label.cpp.o CMakeFiles/Label.dir/LabelPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Label.a

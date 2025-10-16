@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/TemplateTool.a CMakeFiles/TemplateTool.dir/TemplateTool_autogen/mocs_compilation.cpp.o CMakeFiles/TemplateTool.dir/templatetool.cpp.o CMakeFiles/TemplateTool.dir/templatetoolwidget.cpp.o CMakeFiles/TemplateTool.dir/qrc_template.cpp.o CMakeFiles/TemplateTool.dir/TemplateToolPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/TemplateTool.a

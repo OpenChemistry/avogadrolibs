@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Spectra.a CMakeFiles/Spectra.dir/Spectra_autogen/mocs_compilation.cpp.o CMakeFiles/Spectra.dir/spectradialog.cpp.o CMakeFiles/Spectra.dir/spectra.cpp.o CMakeFiles/Spectra.dir/SpectraPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Spectra.a

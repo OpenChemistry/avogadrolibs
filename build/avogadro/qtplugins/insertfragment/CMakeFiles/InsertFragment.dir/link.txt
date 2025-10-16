@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/InsertFragment.a CMakeFiles/InsertFragment.dir/InsertFragment_autogen/mocs_compilation.cpp.o CMakeFiles/InsertFragment.dir/insertfragment.cpp.o CMakeFiles/InsertFragment.dir/InsertFragmentPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/InsertFragment.a

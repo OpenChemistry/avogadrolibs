@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/ConstraintsExtension.a CMakeFiles/ConstraintsExtension.dir/ConstraintsExtension_autogen/mocs_compilation.cpp.o CMakeFiles/ConstraintsExtension.dir/constraintsextension.cpp.o CMakeFiles/ConstraintsExtension.dir/constraintsdialog.cpp.o CMakeFiles/ConstraintsExtension.dir/constraintsmodel.cpp.o CMakeFiles/ConstraintsExtension.dir/ConstraintsExtensionPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/ConstraintsExtension.a

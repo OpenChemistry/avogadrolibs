@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/PluginDownloader.a CMakeFiles/PluginDownloader.dir/PluginDownloader_autogen/mocs_compilation.cpp.o CMakeFiles/PluginDownloader.dir/plugindownloader.cpp.o CMakeFiles/PluginDownloader.dir/downloaderwidget.cpp.o CMakeFiles/PluginDownloader.dir/zipextracter.cpp.o CMakeFiles/PluginDownloader.dir/PluginDownloaderPlugin.cpp.o
+/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/PluginDownloader.a
