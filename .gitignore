@@ -165,3 +165,9 @@ build-docs//build/
 /build-install/
 /cmake-build-debug/
 /.idea/
+/build/
+/build-*/
+/build-docs/
+/build-install/
+/cmake-build-debug/
+/.idea/
