@@ -13,6 +13,7 @@
 #include <QtCore/QLocale>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
+#include <QtCore/QStandardPaths>
 
 namespace Avogadro::QtGui {
 
@@ -70,6 +71,12 @@ void PythonScript::setDefaultPythonInterpreter()
     }
     m_pythonInterpreter = path + python;
   }
+
+  // check if we have pixi
+  m_pixi = Utilities::findExecutablePath("pixi");
+  if (m_pixi.isEmpty()) {
+    qWarning() << "Can't find pixi in your path";
+  }
 }
 
 QByteArray PythonScript::execute(const QStringList& args,
@@ -92,11 +99,38 @@ QByteArray PythonScript::execute(const QStringList& args,
 
   // Start script
   realArgs.prepend(m_scriptFilePath);
-  if (m_debug) {
-    qDebug() << "Executing" << m_pythonInterpreter
-             << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+
+  if (!m_pixi.isEmpty()) {
+    // pixi run script
+    if (m_scriptFilePath.contains(".py")) {
+      // python script
+      realArgs.prepend("python");
+    } // otherwise hope pixi knows how to run this
+    realArgs.prepend("run");
+
+    // check if the script is in the plugin directory
+    QString pluginDir =
+      QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    if (pluginDir.isEmpty() || !m_scriptFilePath.startsWith(pluginDir)) {
+      // use the manifest installed in the plugin directory
+      qDebug() << "Using manifest in" << pluginDir;
+      realArgs.append("--manifest-path");
+      realArgs.append(pluginDir);
+    }
+
+    if (m_debug) {
+      qDebug() << "Executing" << m_pixi << realArgs.join(QStringLiteral(" "))
+               << "<" << scriptStdin;
+    }
+    proc.start(m_pixi, realArgs);
+  } else {
+    // plain python
+    if (m_debug) {
+      qDebug() << "Executing" << m_pythonInterpreter
+               << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+    }
+    proc.start(m_pythonInterpreter, realArgs);
   }
-  proc.start(m_pythonInterpreter, realArgs);
 
   // Write scriptStdin to the process's stdin
   if (!scriptStdin.isNull()) {
