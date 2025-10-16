@@ -233,9 +233,6 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (!in.good() || buffer.size() < 6) {
       break;
     }
-#ifndef NDEBUG
-    std::cout << " prefix " << buffer.substr(0, 6) << std::endl;
-#endif
 
     string prefix = buffer.substr(0, 6);
     if (prefix == "M  END") {
@@ -323,6 +320,11 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         // TODO: Implement isotope setting
         // mol.atom(index).setIsotope(isotope);
       }
+    } // isotope
+    else {
+#ifndef NDEBUG
+      std::cout << " prefix " << buffer.substr(0, 6) << std::endl;
+#endif
     }
   }
 
@@ -519,6 +521,10 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
           }
           // TODO: handle isotopes
           // mol.atom(i).setIsotope(isotope);
+        } else {
+#ifndef NDEBUG
+          std::cerr << "Unknown key: " << key << std::endl;
+#endif
         }
       } // end of key-value loop
     }
