@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Hydrogens.a CMakeFiles/Hydrogens.dir/Hydrogens_autogen/mocs_compilation.cpp.o CMakeFiles/Hydrogens.dir/hydrogens.cpp.o CMakeFiles/Hydrogens.dir/HydrogensPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Hydrogens.a

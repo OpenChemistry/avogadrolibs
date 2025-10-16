@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/SVG.a CMakeFiles/SVG.dir/SVG_autogen/mocs_compilation.cpp.o CMakeFiles/SVG.dir/svg.cpp.o CMakeFiles/SVG.dir/SVGPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/SVG.a

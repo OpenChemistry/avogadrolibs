@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Focus.a CMakeFiles/Focus.dir/Focus_autogen/mocs_compilation.cpp.o CMakeFiles/Focus.dir/focus.cpp.o CMakeFiles/Focus.dir/FocusPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Focus.a

@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/PlotXrd.a CMakeFiles/PlotXrd.dir/PlotXrd_autogen/mocs_compilation.cpp.o CMakeFiles/PlotXrd.dir/plotxrd.cpp.o CMakeFiles/PlotXrd.dir/xrdoptionsdialog.cpp.o CMakeFiles/PlotXrd.dir/PlotXrdPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/PlotXrd.a

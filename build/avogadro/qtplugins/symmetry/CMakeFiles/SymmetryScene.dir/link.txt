@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/SymmetryScene.a CMakeFiles/SymmetryScene.dir/SymmetryScene_autogen/mocs_compilation.cpp.o CMakeFiles/SymmetryScene.dir/symmetryscene.cpp.o CMakeFiles/SymmetryScene.dir/SymmetryScenePlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/SymmetryScene.a

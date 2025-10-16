@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Crystal.a CMakeFiles/Crystal.dir/Crystal_autogen/mocs_compilation.cpp.o CMakeFiles/Crystal.dir/crystal.cpp.o CMakeFiles/Crystal.dir/importcrystaldialog.cpp.o CMakeFiles/Crystal.dir/supercelldialog.cpp.o CMakeFiles/Crystal.dir/unitcelldialog.cpp.o CMakeFiles/Crystal.dir/volumescalingdialog.cpp.o CMakeFiles/Crystal.dir/CrystalPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Crystal.a

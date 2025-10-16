@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Force.a CMakeFiles/Force.dir/Force_autogen/mocs_compilation.cpp.o CMakeFiles/Force.dir/force.cpp.o CMakeFiles/Force.dir/ForcePlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Force.a

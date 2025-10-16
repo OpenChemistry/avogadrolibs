@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Cartoons.a CMakeFiles/Cartoons.dir/Cartoons_autogen/mocs_compilation.cpp.o CMakeFiles/Cartoons.dir/cartoons.cpp.o CMakeFiles/Cartoons.dir/CartoonsPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Cartoons.a

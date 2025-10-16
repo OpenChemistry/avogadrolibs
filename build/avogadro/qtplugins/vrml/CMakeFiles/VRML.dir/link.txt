@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/VRML.a CMakeFiles/VRML.dir/VRML_autogen/mocs_compilation.cpp.o CMakeFiles/VRML.dir/vrml.cpp.o CMakeFiles/VRML.dir/VRMLPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/VRML.a

@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/commands.a CMakeFiles/commands.dir/commands_autogen/mocs_compilation.cpp.o CMakeFiles/commands.dir/command.cpp.o CMakeFiles/commands.dir/commandsPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/commands.a

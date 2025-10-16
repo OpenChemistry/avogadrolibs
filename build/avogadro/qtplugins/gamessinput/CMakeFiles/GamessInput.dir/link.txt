@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/GamessInput.a CMakeFiles/GamessInput.dir/GamessInput_autogen/mocs_compilation.cpp.o CMakeFiles/GamessInput.dir/gamessinputdialog.cpp.o CMakeFiles/GamessInput.dir/gamesshighlighter.cpp.o CMakeFiles/GamessInput.dir/gamessinput.cpp.o CMakeFiles/GamessInput.dir/GamessInputPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/GamessInput.a

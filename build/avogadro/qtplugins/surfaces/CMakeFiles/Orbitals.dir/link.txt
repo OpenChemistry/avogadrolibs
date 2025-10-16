@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Orbitals.a CMakeFiles/Orbitals.dir/Orbitals_autogen/mocs_compilation.cpp.o CMakeFiles/Orbitals.dir/orbitaltablemodel.cpp.o CMakeFiles/Orbitals.dir/orbitalwidget.cpp.o CMakeFiles/Orbitals.dir/orbitals.cpp.o CMakeFiles/Orbitals.dir/OrbitalsPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Orbitals.a

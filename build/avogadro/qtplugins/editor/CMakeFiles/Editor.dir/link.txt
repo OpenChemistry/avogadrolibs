@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Editor.a CMakeFiles/Editor.dir/Editor_autogen/mocs_compilation.cpp.o CMakeFiles/Editor.dir/editor.cpp.o CMakeFiles/Editor.dir/editortoolwidget.cpp.o CMakeFiles/Editor.dir/qrc_editor.cpp.o CMakeFiles/Editor.dir/EditorPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Editor.a

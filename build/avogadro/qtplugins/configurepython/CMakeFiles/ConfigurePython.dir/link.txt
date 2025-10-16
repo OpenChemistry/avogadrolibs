@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/ConfigurePython.a CMakeFiles/ConfigurePython.dir/ConfigurePython_autogen/mocs_compilation.cpp.o CMakeFiles/ConfigurePython.dir/condadialog.cpp.o CMakeFiles/ConfigurePython.dir/configurepython.cpp.o CMakeFiles/ConfigurePython.dir/configurepythondialog.cpp.o CMakeFiles/ConfigurePython.dir/ConfigurePythonPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/ConfigurePython.a

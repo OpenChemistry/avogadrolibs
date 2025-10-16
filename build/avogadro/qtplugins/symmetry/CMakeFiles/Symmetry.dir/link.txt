@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Symmetry.a CMakeFiles/Symmetry.dir/Symmetry_autogen/mocs_compilation.cpp.o CMakeFiles/Symmetry.dir/symmetry.cpp.o CMakeFiles/Symmetry.dir/symmetrywidget.cpp.o CMakeFiles/Symmetry.dir/operationstablemodel.cpp.o CMakeFiles/Symmetry.dir/symmetryutil.cpp.o CMakeFiles/Symmetry.dir/SymmetryPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Symmetry.a

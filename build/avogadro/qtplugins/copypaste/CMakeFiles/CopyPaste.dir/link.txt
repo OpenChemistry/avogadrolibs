@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/CopyPaste.a CMakeFiles/CopyPaste.dir/CopyPaste_autogen/mocs_compilation.cpp.o CMakeFiles/CopyPaste.dir/copypaste.cpp.o CMakeFiles/CopyPaste.dir/CopyPastePlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/CopyPaste.a

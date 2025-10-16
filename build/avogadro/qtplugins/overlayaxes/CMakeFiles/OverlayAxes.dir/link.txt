@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/OverlayAxes.a CMakeFiles/OverlayAxes.dir/OverlayAxes_autogen/mocs_compilation.cpp.o CMakeFiles/OverlayAxes.dir/overlayaxes.cpp.o CMakeFiles/OverlayAxes.dir/OverlayAxesPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/OverlayAxes.a

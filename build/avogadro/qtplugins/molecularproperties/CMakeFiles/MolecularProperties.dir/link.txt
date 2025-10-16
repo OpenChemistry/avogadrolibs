@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/MolecularProperties.a CMakeFiles/MolecularProperties.dir/MolecularProperties_autogen/mocs_compilation.cpp.o CMakeFiles/MolecularProperties.dir/molecularproperties.cpp.o CMakeFiles/MolecularProperties.dir/molecularmodel.cpp.o CMakeFiles/MolecularProperties.dir/molecularview.cpp.o CMakeFiles/MolecularProperties.dir/MolecularPropertiesPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/MolecularProperties.a

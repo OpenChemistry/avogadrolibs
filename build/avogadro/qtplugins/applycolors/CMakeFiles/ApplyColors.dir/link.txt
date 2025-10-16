@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/ApplyColors.a CMakeFiles/ApplyColors.dir/ApplyColors_autogen/mocs_compilation.cpp.o CMakeFiles/ApplyColors.dir/applycolors.cpp.o CMakeFiles/ApplyColors.dir/ApplyColorsPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/ApplyColors.a

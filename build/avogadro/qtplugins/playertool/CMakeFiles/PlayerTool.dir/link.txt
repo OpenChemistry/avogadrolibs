@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/PlayerTool.a CMakeFiles/PlayerTool.dir/PlayerTool_autogen/mocs_compilation.cpp.o CMakeFiles/PlayerTool.dir/playertool.cpp.o CMakeFiles/PlayerTool.dir/qrc_playertool.cpp.o CMakeFiles/PlayerTool.dir/PlayerToolPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/PlayerTool.a

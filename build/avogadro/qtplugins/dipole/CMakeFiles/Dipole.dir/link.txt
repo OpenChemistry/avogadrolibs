@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Dipole.a CMakeFiles/Dipole.dir/Dipole_autogen/mocs_compilation.cpp.o CMakeFiles/Dipole.dir/dipole.cpp.o CMakeFiles/Dipole.dir/DipolePlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Dipole.a

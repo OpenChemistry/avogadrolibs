@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/BallStick.a CMakeFiles/BallStick.dir/BallStick_autogen/mocs_compilation.cpp.o CMakeFiles/BallStick.dir/ballandstick.cpp.o CMakeFiles/BallStick.dir/BallStickPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/BallStick.a

@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/avobabel.dir/avobabel.cpp.o -o ../../bin/avobabel  -Wl,-rpath,/Users/daguila/OSS/avogadrolibs/build/lib ../../lib/libAvogadroIO.1.101.0.dylib ../../lib/libAvogadroCore.1.101.0.dylib

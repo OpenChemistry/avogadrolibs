@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/PropertyTables.a CMakeFiles/PropertyTables.dir/PropertyTables_autogen/mocs_compilation.cpp.o CMakeFiles/PropertyTables.dir/propertytables.cpp.o CMakeFiles/PropertyTables.dir/propertymodel.cpp.o CMakeFiles/PropertyTables.dir/propertyview.cpp.o CMakeFiles/PropertyTables.dir/PropertyTablesPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/PropertyTables.a

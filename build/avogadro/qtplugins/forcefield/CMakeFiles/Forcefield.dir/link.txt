@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/Forcefield.a CMakeFiles/Forcefield.dir/Forcefield_autogen/mocs_compilation.cpp.o CMakeFiles/Forcefield.dir/forcefield.cpp.o CMakeFiles/Forcefield.dir/forcefielddialog.cpp.o CMakeFiles/Forcefield.dir/obmmenergy.cpp.o CMakeFiles/Forcefield.dir/scriptenergy.cpp.o CMakeFiles/Forcefield.dir/ForcefieldPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/Forcefield.a

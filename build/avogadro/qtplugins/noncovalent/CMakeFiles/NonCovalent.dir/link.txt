@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/NonCovalent.a CMakeFiles/NonCovalent.dir/NonCovalent_autogen/mocs_compilation.cpp.o CMakeFiles/NonCovalent.dir/noncovalent.cpp.o CMakeFiles/NonCovalent.dir/NonCovalentPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/NonCovalent.a

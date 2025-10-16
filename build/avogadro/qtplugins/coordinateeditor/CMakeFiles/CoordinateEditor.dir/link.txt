@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../lib/avogadro2/staticplugins/CoordinateEditor.a CMakeFiles/CoordinateEditor.dir/CoordinateEditor_autogen/mocs_compilation.cpp.o CMakeFiles/CoordinateEditor.dir/coordinateeditor.cpp.o CMakeFiles/CoordinateEditor.dir/coordinateeditordialog.cpp.o CMakeFiles/CoordinateEditor.dir/coordinatetextedit.cpp.o CMakeFiles/CoordinateEditor.dir/CoordinateEditorPlugin.cpp.o
-/usr/bin/ranlib ../../../lib/avogadro2/staticplugins/CoordinateEditor.a
