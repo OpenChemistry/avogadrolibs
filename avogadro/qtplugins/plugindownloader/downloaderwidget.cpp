@@ -7,6 +7,8 @@
 #include "ui_downloaderwidget.h"
 #include "zipextracter.h"
 
+#include <avogadro/qtgui/utilities.h>
+
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QProcess>
@@ -279,12 +281,6 @@ void DownloaderWidget::downloadNext()
   if (!m_downloadList.isEmpty()) {
     QString url = m_downloadList.last().url;
 
-    // use the .tar.gz instead of .zip
-    if (url.endsWith(".zip")) {
-      url.chop(4); // remove the last 4 characters ".zip"
-      url += ".tar.gz";
-    }
-
     QNetworkRequest request;
     setRawHeaders(&request);
     request.setUrl(url); // Set the url
@@ -387,127 +383,280 @@ void DownloaderWidget::handleRedirect()
 // Save and unzip the plugin zipball
 void DownloaderWidget::unzipPlugin()
 {
-  if (m_reply->error() == QNetworkReply::NoError) {
-    // done with redirect
-    QByteArray fileData = m_reply->readAll();
-    QDir().mkpath(m_filePath); // create any needed directories for the download
-    QString repoName = m_downloadList.last().name;
-    QString filename = repoName + ".tar.gz";
+  if (m_reply->error() != QNetworkReply::NoError) {
+    return;
+  }
 
-    QString absolutePath = m_filePath + "/" + filename;
-    QString extractDirectory;
-    QString subdir = m_downloadList.last().type;
+  // get the downloaded file
+  QByteArray fileData = m_reply->readAll();
+  QDir().mkpath(m_filePath);
 
-    extractDirectory = m_filePath + "/" + subdir + "/";
+  QString repoName = m_downloadList.last().name;
+  QString filename = repoName + ".zip";
+  QString absolutePath = m_filePath + "/" + filename;
+  // something like /path/to/avogadro/commands or formats/ etc.
+  QString extractDirectory =
+    m_filePath + "/" + m_downloadList.last().type + "/";
 
-    // create the destination directory if it doesn't exist
-    QDir().mkpath(extractDirectory);
+  QDir().mkpath(extractDirectory);
 
-    m_ui->readmeBrowser->append(
-      tr("Downloading %1 to %2\n").arg(filename).arg(m_filePath));
+  m_ui->readmeBrowser->append(
+    tr("Downloading %1 to %2\n").arg(filename).arg(m_filePath));
 
-    QFile out(absolutePath);
-    out.open(QIODevice::WriteOnly);
-    out.write(fileData);
-    out.close();
+  QFile out(absolutePath);
+  out.open(QIODevice::WriteOnly);
+  out.write(fileData);
+  out.close();
 
-    std::string extractdir = extractDirectory.toStdString();
-    std::string absolutep = absolutePath.toStdString();
+  std::string extractdir = extractDirectory.toStdString();
+  std::string absolutep = absolutePath.toStdString();
 
-    ZipExtracter unzip;
+  ZipExtracter unzip;
 
-    m_ui->readmeBrowser->append(
-      tr("Extracting %1 to %2\n").arg(absolutePath).arg(extractDirectory));
-    QList<QString> newFiles = unzip.listFiles(absolutep);
-    m_ui->readmeBrowser->append(
-      tr("Finished %1 files\n").arg(newFiles.length()));
+  m_ui->readmeBrowser->append(
+    tr("Extracting %1 to %2\n").arg(absolutePath).arg(extractDirectory));
 
-    QList<QString> ret = unzip.extract(extractdir, absolutep);
-    if (ret.empty()) {
-      m_ui->readmeBrowser->append(tr("Extraction successful\n"));
+  QList<QString> newFiles = unzip.listFiles(absolutep);
+  m_ui->readmeBrowser->append(tr("Finished %1 files\n").arg(newFiles.length()));
 
-      // get the list of files / directories we unzipped
-      // the first one is the main directory name
-      if (newFiles.length() > 0) // got an empty archive
-      {
-        // check for a previous version of this plugin and remove it
-        // e.g. we extracted to a path like User-Repo-GitHash
-        //     OpenChemistry-crystals-a7c672d
-        // we want to check for OpenChemistry-crystals
-        QStringList namePieces = newFiles[0].split('-');
-        if (namePieces.length() >= 3) {
-          namePieces.removeLast();  // drop the hash
-          namePieces.removeFirst(); // drop the org
+  QList<QString> ret = unzip.extract(extractdir, absolutep);
+  if (ret.empty()) {
+    m_ui->readmeBrowser->append(tr("Extraction successful\n"));
 
-          QString component = namePieces.join('-');
+    // we should have multiple files or we grabbed an empty zip
+    if (newFiles.length() > 0) {
+      // Extract component name and handle previous version
+      // e.g. we extracted to a path like User-Repo-GitHash
+      //     OpenChemistry-crystals-a7c672d
+      // we want to check for OpenChemistry-crystals
+      QStringList namePieces = newFiles[0].split('-');
+      if (namePieces.length() >= 3) {
+        namePieces.removeLast();
+        namePieces.removeFirst();
+      } else if (namePieces.length() == 2) {
+        // remove the organization
+        namePieces.removeFirst();
+      }
 
-          // Check if there's a previous install
-          QString destination(extractDirectory + '/' + component);
-          QDir previousInstall(destination);
-          if (previousInstall.exists())
-            previousInstall.removeRecursively();
+      QString component = namePieces.join('-');
+      QString destination(extractDirectory + '/' + component);
 
-          // and move the directory into place, e.g.
-          // OpenChemistry-crystals-a7c672d
-          QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+      // Remove previous version if it's present
+      QDir previousInstall(destination);
+      if (previousInstall.exists())
+        previousInstall.removeRecursively();
 
-          // check if there's a requirements.txt file
-          // .. if so, install with conda or pip
-          QString requirementsFile(destination + "/requirements.txt");
-          if (QFile::exists(requirementsFile) && checkToInstall()) {
-            // use conda if available
-            QSettings settings;
-            QString condaEnv = settings.value("condaEnvironment").toString();
-            QString condaPath = settings.value("condaPath").toString();
-            if (!condaEnv.isEmpty() && !condaPath.isEmpty()) {
-              // install with conda
-              QStringList arguments;
-              arguments << "install"
-                        << "-y"
-                        << "-c"
-                        << "conda-forge"
-                        << "--file" << requirementsFile << "-n" << condaEnv;
-              QProcess* process = new QProcess(this);
-              process->start(condaPath, arguments);
-              process->waitForFinished();
-              QString output(process->readAllStandardOutput());
-              QString error(process->readAllStandardError());
-              if (!output.isEmpty())
-                m_ui->readmeBrowser->append(output);
-              if (!error.isEmpty())
-                m_ui->readmeBrowser->append(error);
-            } else {
-              // use pip
-              QStringList arguments;
-              arguments << "-m"
-                        << "pip"
-                        << "install"
-                        << "-r" << requirementsFile;
-              QProcess* process = new QProcess(this);
-              QString pythonPath =
-                settings.value("interpreters/python", "python").toString();
-              process->start(pythonPath, arguments);
-              process->waitForFinished();
-              QString output(process->readAllStandardOutput());
-              QString error(process->readAllStandardError());
-              if (!output.isEmpty())
-                m_ui->readmeBrowser->append(output);
-              if (!error.isEmpty())
-                m_ui->readmeBrowser->append(error);
-            }
+      // move our new directory in place
+      QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+
+      // Handle dependency installation
+      // look for requirements.txt or environment.yml or pyproject.toml
+      // and use pixi, conda or pip to install
+      QString requirementFile = findRequirementFile(destination);
+      if (!requirementFile.isEmpty() && checkToInstall()) {
+        QString pixiPath = QtGui::Utilities::findExecutablePath("pixi");
+
+        if (!pixiPath.isEmpty()) {
+          installWithPixi(requirementFile);
+        } else {
+          QSettings settings;
+          QString condaEnv = settings.value("condaEnvironment").toString();
+          QString condaPath = settings.value("condaPath").toString();
+
+          if (!condaEnv.isEmpty() && !condaPath.isEmpty()) {
+            installWithConda(requirementFile);
+          } else {
+            installWithPip(requirementFile);
           }
         }
-      }
-    } else {
-      m_ui->readmeBrowser->append(
-        tr("Error while extracting: %1").arg(ret.first()));
-    }
-
-    out.remove(); // remove the ZIP file
-    m_reply->deleteLater();
-    m_downloadList.removeLast();
-    downloadNext();
+      } // end install requirements
+    }   // we have new files
+  } else {
+    m_ui->readmeBrowser->append(
+      tr("Error while extracting: %1").arg(ret.first()));
   }
+
+  out.remove();
+  m_reply->deleteLater();
+  m_downloadList.removeLast();
+  downloadNext();
+}
+
+// Find the first requirement file that exists
+// prefer pyproject.toml over other options
+QString DownloaderWidget::findRequirementFile(const QString& destination)
+{
+  QStringList requirementFiles = {
+    destination + "/pyproject.toml",
+    destination + "/requirements.txt",
+    destination + "/environment.yml",
+  };
+
+  for (const QString& file : requirementFiles) {
+    if (QFile::exists(file)) {
+      return file;
+    }
+  }
+
+  return QString(); // Return empty string if no requirement file found
+}
+
+// Install dependencies using pixi
+void DownloaderWidget::installWithPixi(const QString& requirementFile)
+{
+  m_progressDialog = new QProgressDialog(
+    tr("Installing dependencies with pixi..."), tr("Cancel"), 0, 0, this);
+  m_progressDialog->setWindowModality(Qt::WindowModal);
+
+  connect(m_progressDialog, SIGNAL(canceled()), this,
+          SLOT(cancelInstallation()));
+
+  QStringList arguments;
+  m_installerProcess = new QProcess(this);
+  m_installerProcess->setWorkingDirectory(m_filePath);
+  QString pixiPath = QtGui::Utilities::findExecutablePath("pixi");
+  m_progressDialog->show();
+
+  // first check if there's already a pyproject.toml
+  if (!requirementFile.contains("pyproject.toml")) {
+    // we have to pixi init first to create a pyproject.toml
+    arguments << "init"
+              << "."
+              << "--format"
+              << "pyproject";
+    m_installerProcess->start(pixiPath, arguments);
+    m_installerProcess->waitForFinished();
+
+    if (requirementFile.contains("requirements.txt")) {
+      // pixi import --format=pypi-txt --feature=default requirements.txt
+      arguments.clear();
+      arguments << "import"
+                << "--format=pypi-txt"
+                << "--feature=default"
+                << "requirements.txt";
+      m_installerProcess->start(pixiPath, arguments);
+      m_installerProcess->waitForFinished();
+    } else if (requirementFile.contains("environment.yml")) {
+      // pixi import --format=conda environment.yml
+      arguments.clear();
+      arguments << "import"
+                << "--format=conda-env"
+                << "environment.yml";
+      m_installerProcess->start(pixiPath, arguments);
+      m_installerProcess->waitForFinished();
+    }
+  }
+
+  // install everything
+  arguments.clear();
+  arguments << "install";
+
+  connect(m_installerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this,
+          SLOT(installationFinished()));
+
+  m_installerProcess->start(pixiPath, arguments);
+}
+
+// Install dependencies using conda
+void DownloaderWidget::installWithConda(const QString& requirementFile)
+{
+  if (requirementFile.isEmpty() || requirementFile.contains("pyproject.toml")) {
+    installWithPip(requirementFile);
+    return; // pyproject.toml not supported by conda
+  }
+
+  m_progressDialog = new QProgressDialog(
+    tr("Installing dependencies with conda..."), tr("Cancel"), 0, 0, this);
+  m_progressDialog->setWindowModality(Qt::WindowModal);
+
+  connect(m_progressDialog, SIGNAL(canceled()), this,
+          SLOT(cancelInstallation()));
+
+  QSettings settings;
+  QString condaPath = settings.value("condaPath").toString();
+  QString condaEnv = settings.value("condaEnvironment").toString();
+
+  QStringList arguments;
+  arguments << "install"
+            << "-y"
+            << "-c"
+            << "conda-forge"
+            << "--file" << requirementFile << "-n" << condaEnv;
+
+  m_installerProcess = new QProcess(this);
+
+  connect(m_installerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this,
+          SLOT(installationFinished()));
+
+  m_progressDialog->show();
+  m_installerProcess->start(condaPath, arguments);
+}
+
+// Install dependencies using pip
+void DownloaderWidget::installWithPip(const QString& requirementFile)
+{
+  if (requirementFile.isEmpty() ||
+      requirementFile.contains("environment.yml")) {
+    return; // nothing to do, please migrate to pyproject.toml
+  }
+
+  m_progressDialog = new QProgressDialog(
+    tr("Installing dependencies with pip..."), tr("Cancel"), 0, 0, this);
+  m_progressDialog->setWindowModality(Qt::WindowModal);
+
+  connect(m_progressDialog, SIGNAL(canceled()), this,
+          SLOT(cancelInstallation()));
+
+  QSettings settings;
+  QString pythonPath =
+    settings.value("interpreters/python", "python").toString();
+
+  QStringList arguments;
+  arguments << "-m"
+            << "pip"
+            << "install"
+            << ".";
+
+  m_installerProcess = new QProcess(this);
+  m_installerProcess->setWorkingDirectory(m_filePath);
+
+  connect(m_installerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this,
+          SLOT(installationFinished()));
+
+  m_progressDialog->show();
+  m_installerProcess->start(pythonPath, arguments);
+}
+
+// Called when installation process finishes
+void DownloaderWidget::installationFinished()
+{
+  m_progressDialog->close();
+  m_progressDialog->deleteLater();
+
+  QString output(m_installerProcess->readAllStandardOutput());
+  QString error(m_installerProcess->readAllStandardError());
+
+  if (!output.isEmpty())
+    m_ui->readmeBrowser->append(output);
+  if (!error.isEmpty())
+    m_ui->readmeBrowser->append(error);
+
+  m_installerProcess->deleteLater();
+  m_installerProcess = nullptr;
+}
+
+// Called when user clicks Cancel on the progress dialog
+void DownloaderWidget::cancelInstallation()
+{
+  if (m_installerProcess && m_installerProcess->state() == QProcess::Running) {
+    m_ui->readmeBrowser->append(tr("Installation canceled\n"));
+    m_installerProcess->kill();
+    m_installerProcess->deleteLater();
+    m_installerProcess = nullptr;
+  }
+
+  m_progressDialog->close();
+  m_progressDialog->deleteLater();
 }
 
 } // namespace Avogadro::QtPlugins

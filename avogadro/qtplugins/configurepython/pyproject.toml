@@ -1,0 +1,8 @@
+[project]
+name = "avogadro-plugins"
+requires-python = ">= 3.11"
+version = "1.102.0"
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
