@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-16 11:42+0000\n"
-"PO-Revision-Date: 2025-06-04 14:01+0000\n"
+"PO-Revision-Date: 2025-10-16 20:38+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"X-Generator: Weblate 5.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1134,7 +1134,7 @@ msgstr "Processor Cores"
 
 #: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
 msgid "Memory"
-msgstr ""
+msgstr "Memory"
 
 #: qtgui/jsonwidget.cpp:233
 msgid "Calculation Type"
@@ -1158,16 +1158,16 @@ msgstr "Multiplicity"
 
 #: qtgui/jsonwidget.cpp:255
 msgid "Solvent"
-msgstr ""
+msgstr "Solvent"
 
 #: qtgui/jsonwidget.cpp:256
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #: qtgui/jsonwidget.cpp:378
 msgid "User Name"
-msgstr ""
+msgstr "User Name"
 
 #: qtgui/jsonwidget.cpp:380
 msgid "Password"
