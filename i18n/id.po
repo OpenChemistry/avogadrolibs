@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-07 17:58+0000\n"
+"POT-Creation-Date: 2025-10-16 00:25+0000\n"
 "PO-Revision-Date: 2025-10-10 20:43+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
@@ -1136,67 +1136,80 @@ msgstr "Judul"
 msgid "Filename Base"
 msgstr "Nama File Dasar"
 
-#: qtgui/jsonwidget.cpp:219
+#: qtgui/jsonwidget.cpp:220 qtgui/jsonwidget.cpp:225
 msgid "Processor Cores"
 msgstr "Inti Prosesor"
 
-#: qtgui/jsonwidget.cpp:224
+#: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
+msgid "Memory"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:233
 msgid "Calculation Type"
 msgstr "Jenis Perhitungan"
 
-#: qtgui/jsonwidget.cpp:228
+#: qtgui/jsonwidget.cpp:237
 msgid "Theory"
 msgstr "Teori"
 
-#: qtgui/jsonwidget.cpp:228
+#: qtgui/jsonwidget.cpp:237
 msgid "Basis"
 msgstr "Dasar"
 
-#: qtgui/jsonwidget.cpp:233 qtgui/jsonwidget.cpp:237
+#: qtgui/jsonwidget.cpp:242 qtgui/jsonwidget.cpp:246
 msgid "Charge"
 msgstr "Muatan"
 
-#: qtgui/jsonwidget.cpp:234 qtgui/jsonwidget.cpp:239
+#: qtgui/jsonwidget.cpp:243 qtgui/jsonwidget.cpp:248
 msgid "Multiplicity"
 msgstr "Keragaman"
 
-#: qtgui/jsonwidget.cpp:361
+#: qtgui/jsonwidget.cpp:255
+msgid "Solvent"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:256
+msgctxt "solvation method / model"
+msgid "Model"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:378
 msgid "User Name"
 msgstr "Nama Pengguna"
 
-#: qtgui/jsonwidget.cpp:363
+#: qtgui/jsonwidget.cpp:380
 msgid "Password"
 msgstr "Kata sandi"
 
-#: qtgui/jsonwidget.cpp:671
+#: qtgui/jsonwidget.cpp:688
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "Kesalahan: Nilai harus berupa objek untuk kunci ‘%1’."
 
-#: qtgui/jsonwidget.cpp:706
+#: qtgui/jsonwidget.cpp:723
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Jenis opsi yang tidak dikenali ‘%1’ untuk opsi ‘%2’."
 
-#: qtgui/jsonwidget.cpp:715 qtgui/jsonwidget.cpp:750 qtgui/jsonwidget.cpp:771
-#: qtgui/jsonwidget.cpp:792 qtgui/jsonwidget.cpp:830 qtgui/jsonwidget.cpp:851
-#: qtgui/jsonwidget.cpp:873 qtgui/jsonwidget.cpp:894
+#: qtgui/jsonwidget.cpp:732 qtgui/jsonwidget.cpp:767 qtgui/jsonwidget.cpp:788
+#: qtgui/jsonwidget.cpp:809 qtgui/jsonwidget.cpp:847 qtgui/jsonwidget.cpp:868
+#: qtgui/jsonwidget.cpp:890 qtgui/jsonwidget.cpp:911
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "Kesalahan saat menetapkan nilai default untuk opsi ‘%1’. Tipe widget tidak "
 "valid."
 
-#: qtgui/jsonwidget.cpp:722 qtgui/jsonwidget.cpp:757 qtgui/jsonwidget.cpp:778
-#: qtgui/jsonwidget.cpp:799 qtgui/jsonwidget.cpp:837 qtgui/jsonwidget.cpp:858
-#: qtgui/jsonwidget.cpp:880 qtgui/jsonwidget.cpp:901
+#: qtgui/jsonwidget.cpp:739 qtgui/jsonwidget.cpp:774 qtgui/jsonwidget.cpp:795
+#: qtgui/jsonwidget.cpp:816 qtgui/jsonwidget.cpp:854 qtgui/jsonwidget.cpp:875
+#: qtgui/jsonwidget.cpp:897 qtgui/jsonwidget.cpp:918
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Kesalahan saat menetapkan nilai default untuk opsi ‘%1’. Nilai default yang "
 "tidak valid:"
 
-#: qtgui/jsonwidget.cpp:736
+#: qtgui/jsonwidget.cpp:753
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1205,12 +1218,12 @@ msgstr ""
 "Kesalahan saat menetapkan nilai default untuk opsi ‘%1’. Tidak dapat "
 "menemukan indeks entri combo yang valid dari nilai:"
 
-#: qtgui/jsonwidget.cpp:962
+#: qtgui/jsonwidget.cpp:979
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "Widget yang tidak ditangani dalam collectOptions untuk opsi ‘%1’."
 
-#: qtgui/jsonwidget.cpp:1007 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1024 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr "[tidak ada molekul]"
@@ -1334,8 +1347,8 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
-"Kesalahan saat menjalankan skrip ‘%1 %2’: Status keluar abnormal %3 (%4: %5)"
-"\n"
+"Kesalahan saat menjalankan skrip ‘%1 %2’: Status keluar abnormal %3 (%4: "
+"%5)\n"
 "\n"
 "Output:\n"
 "%6"
@@ -1766,8 +1779,8 @@ msgstr "Berkas PQR (*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:357
-#: qtplugins/propertytables/propertyview.cpp:390
+#: qtplugins/propertytables/propertyview.cpp:407
+#: qtplugins/propertytables/propertyview.cpp:440
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "Kesalahan"
@@ -2040,13 +2053,13 @@ msgstr "Metode:"
 msgid "Start"
 msgstr "Mulai"
 
-#: qtplugins/autoopt/autoopt.cpp:173 qtplugins/playertool/playertool.cpp:77
+#: qtplugins/autoopt/autoopt.cpp:173
 msgid "Stop"
 msgstr "Berhenti"
 
 #: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:368
-#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/forcefield/forcefield.cpp:391
+#: qtplugins/forcefield/forcefield.cpp:446 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:560
 msgid "Optimize Geometry"
 msgstr "Optimalkan Geometri"
@@ -2327,8 +2340,8 @@ msgstr "Edit Peta Opasitas Warna…"
 #: qtplugins/commandscripts/command.cpp:83
 #: qtplugins/configurepython/configurepython.cpp:103
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:172
-#: qtplugins/forcefield/forcefield.cpp:174
+#: qtplugins/forcefield/forcefield.cpp:196
+#: qtplugins/forcefield/forcefield.cpp:198
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2435,7 +2448,7 @@ msgid "Constraints…"
 msgstr "Batasan…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:174
+#: qtplugins/forcefield/forcefield.cpp:198
 msgid "&Calculate"
 msgstr "&Hitung"
 
@@ -2690,7 +2703,7 @@ msgstr "Format Turbomole"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:397:319
+#: qtplugins/propertytables/propertyview.cpp:447:319
 msgid "Copy"
 msgstr "Salin"
 
@@ -3142,7 +3155,7 @@ msgid "PDB Code"
 msgstr "Kode PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
-#: qtplugins/networkdatabases/networkdatabases.cpp:74
+#: qtplugins/networkdatabases/networkdatabases.cpp:71
 msgid "Chemical structure to download."
 msgstr "Struktur kimia untuk diunduh."
 
@@ -3223,45 +3236,60 @@ msgid "Freeze Selected Atoms"
 msgstr "Bekukan Atom yang Terpilih"
 
 #: qtplugins/forcefield/forcefield.cpp:118
+msgctxt "freeze x-axis of selected atoms"
+msgid "Freeze X"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:126
+msgctxt "freeze y-axis of selected atoms"
+msgid "Freeze Y"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:134
+msgctxt "freeze z-axis of selected atoms"
+msgid "Freeze Z"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:142
 msgid "Unfreeze Selected Atoms"
 msgstr "Buka Beku Atom yang Terpilih"
 
-#: qtplugins/forcefield/forcefield.cpp:127
+#: qtplugins/forcefield/forcefield.cpp:151
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr "Pilih Atom yang Dipilih"
 
-#: qtplugins/forcefield/forcefield.cpp:135
+#: qtplugins/forcefield/forcefield.cpp:159
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr "Lepaskan atom yang dipilih"
 
-#: qtplugins/forcefield/forcefield.cpp:316
-#: qtplugins/forcefield/forcefield.cpp:467
-#: qtplugins/forcefield/forcefield.cpp:537
-#: qtplugins/playertool/playertool.cpp:348
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:935
+#: qtplugins/forcefield/forcefield.cpp:339
+#: qtplugins/forcefield/forcefield.cpp:490
+#: qtplugins/forcefield/forcefield.cpp:560
+#: qtplugins/playertool/playertool.cpp:386
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:935
 #: qtplugins/surfaces/surfaces.cpp:979 qtplugins/surfaces/surfaces.cpp:991
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:317
+#: qtplugins/forcefield/forcefield.cpp:340
 msgid "No atoms provided for optimization"
 msgstr "Tidak ada atom yang disediakan untuk optimasi"
 
-#: qtplugins/forcefield/forcefield.cpp:385
+#: qtplugins/forcefield/forcefield.cpp:408
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "Energi: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:466
+#: qtplugins/forcefield/forcefield.cpp:489
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Energi = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:536
+#: qtplugins/forcefield/forcefield.cpp:559
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Norma Kekuatan = %L2"
@@ -3918,27 +3946,27 @@ msgid "Molecule Properties"
 msgstr "Sifat Molekul"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:345
+#: qtplugins/propertytables/propertyview.cpp:395
 msgid "Export CSV"
 msgstr "Ekspor CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:346
+#: qtplugins/propertytables/propertyview.cpp:396
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Berkas CSV (*.csv);;Semua Berkas (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:358
+#: qtplugins/propertytables/propertyview.cpp:408
 msgid "Could not open the file for writing."
 msgstr "Tidak dapat membuka berkas untuk ditulis."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:390
+#: qtplugins/propertytables/propertyview.cpp:440
 msgid "Error writing to the file."
 msgstr "Kesalahan saat menulis ke berkas."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:402
+#: qtplugins/propertytables/propertyview.cpp:452
 msgid "Export…"
 msgstr "Ekspor…"
 
@@ -3997,7 +4025,7 @@ msgstr ""
 msgid "Navigate tool"
 msgstr "Alat navigasi"
 
-#: qtplugins/networkdatabases/networkdatabases.cpp:73
+#: qtplugins/networkdatabases/networkdatabases.cpp:70
 msgid "Chemical Name"
 msgstr "Nama Kimia"
 
@@ -4349,90 +4377,96 @@ msgstr "Overlay Sumbu Acuan"
 msgid "Render reference axes in the corner of the display."
 msgstr "Tampilkan sumbu referensi di sudut layar."
 
-#: qtplugins/playertool/playertool.cpp:47
+#: qtplugins/playertool/playertool.cpp:51
 msgctxt "control-key 9"
 msgid "Ctrl+9"
 msgstr "Ctrl+9"
 
-#: qtplugins/playertool/playertool.cpp:48
+#: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
 msgstr "Pemain"
 
-#: qtplugins/playertool/playertool.cpp:49
+#: qtplugins/playertool/playertool.cpp:53
 #, qt-format
 msgid "Animation Tool\t(%1)"
 msgstr "Alat Animasi    (%1)"
 
-#: qtplugins/playertool/playertool.cpp:74
-msgid "Play"
-msgstr "Mainkan"
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
+#. i18n: ectx: property (text), widget (QLabel, frameLabel)
+#: qtplugins/playertool/playertool.cpp:83:1935
+msgid "Frame:"
+msgstr "Bingkai:"
 
-#: qtplugins/playertool/playertool.cpp:88
+#: qtplugins/playertool/playertool.cpp:113
+msgctxt "start or first frame index"
+msgid "Start:"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:124
+msgctxt "end or last frame index"
+msgid "End:"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:138
+msgid "Dynamic bonding?"
+msgstr "Ikatan dinamis?"
+
+#: qtplugins/playertool/playertool.cpp:146
 msgid "Frame rate:"
 msgstr "Kecepatan bingkai:"
 
-#: qtplugins/playertool/playertool.cpp:94
+#: qtplugins/playertool/playertool.cpp:152
 msgctxt "frames per second"
 msgid " FPS"
 msgstr " FPS"
 
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
-#. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:118:1935
-msgid "Frame:"
-msgstr "Bingkai:"
+#: qtplugins/playertool/playertool.cpp:160
+#: qtplugins/playertool/playertool.cpp:234
+msgid "Play"
+msgstr "Mainkan"
 
-#: qtplugins/playertool/playertool.cpp:125
-#: qtplugins/playertool/playertool.cpp:416
-#: qtplugins/surfaces/surfacedialog.cpp:230
-#, qt-format
-msgid " of %0"
-msgstr " dari %0"
+#: qtplugins/playertool/playertool.cpp:165
+msgid "Record…"
+msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:136
-msgid "Dynamic bonding?"
-msgstr "Ikatan dinamis?"
+#: qtplugins/playertool/playertool.cpp:216
+msgid "Pause"
+msgstr "Jeda"
 
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
-#. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:144:1941
-msgid "Record Movie…"
-msgstr "Rekam Film…"
-
-#: qtplugins/playertool/playertool.cpp:248
-#: qtplugins/playertool/playertool.cpp:353
+#: qtplugins/playertool/playertool.cpp:286
+#: qtplugins/playertool/playertool.cpp:391
 msgid "Movie (*.mp4)"
 msgstr "Film (*.mp4)"
 
-#: qtplugins/playertool/playertool.cpp:250
+#: qtplugins/playertool/playertool.cpp:288
 msgid "Export Bitmap Graphics"
 msgstr "Ekspor Grafik Bitmap"
 
-#: qtplugins/playertool/playertool.cpp:251
+#: qtplugins/playertool/playertool.cpp:289
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Film (*.mp4);;Film (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:907
+#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:907
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:271
+#: qtplugins/playertool/playertool.cpp:309
 msgid "GIF FPS support warning"
 msgstr "Peringatan dukungan GIF FPS"
 
-#: qtplugins/playertool/playertool.cpp:272
+#: qtplugins/playertool/playertool.cpp:310
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr "Format berkas GIF tidak mendukung kecepatan bingkai di atas 100 FPS."
 
-#: qtplugins/playertool/playertool.cpp:317
+#: qtplugins/playertool/playertool.cpp:355
 msgid "Movie (*.avi)"
 msgstr "Film (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:980
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:980
 msgid "Error: cannot add frame to video."
 msgstr "Kesalahan: Tidak dapat menambahkan bingkai ke video."
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:992
+#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:992
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Tidak dapat menyimpan berkas %1."
@@ -4848,19 +4882,31 @@ msgstr "Sifat-sifat Conformer"
 msgid "Residue Properties"
 msgstr "Sifat Sisa"
 
-#: qtplugins/propertytables/propertyview.cpp:409
+#: qtplugins/propertytables/propertyview.cpp:459
 msgid "Freeze Atom"
 msgstr "Bekukan Atom"
 
-#: qtplugins/propertytables/propertyview.cpp:417
+#: qtplugins/propertytables/propertyview.cpp:463
+msgid "Freeze X"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:466
+msgid "Freeze Y"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:469
+msgid "Freeze Z"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:476
 msgid "Constrain Bond"
 msgstr "Pembatasan Ikatan"
 
-#: qtplugins/propertytables/propertyview.cpp:419
+#: qtplugins/propertytables/propertyview.cpp:478
 msgid "Constrain Angle"
 msgstr "Batas Sudut"
 
-#: qtplugins/propertytables/propertyview.cpp:421
+#: qtplugins/propertytables/propertyview.cpp:480
 msgid "Constrain Torsion"
 msgstr "Membatasi Torsi"
 
@@ -5433,6 +5479,11 @@ msgstr "(LUMO)"
 #: qtplugins/surfaces/surfacedialog.cpp:204
 msgid "From File"
 msgstr "Dari Berkas"
+
+#: qtplugins/surfaces/surfacedialog.cpp:230
+#, qt-format
+msgid " of %0"
+msgstr " dari %0"
 
 #: qtplugins/surfaces/surfaces.cpp:86
 msgid "Create Surfaces…"
@@ -6194,25 +6245,24 @@ msgstr ""
 "<html><head/><body><p>Spesifikasi format. Setiap karakter menunjukkan nilai "
 "yang akan ditulis per atom:</p><p><span style=\" font-weight:600;\">#</span> "
 "- Indeks atom (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;\">Z</"
-"span> - Nomor atom (misalnya “6” untuk karbon)<br/><span style="
-"\" font-weight:600;\">G</span> - Nomor atom gaya GAMESS "
-"(misalnya “6.0” untuk karbon)<br/><span style=\" font-weight:600;\">N</span> "
-"- Nama unsur (misalnya “Karbon”)<br/><span style=\" font-weight:600;\">S</"
-"span> - Simbol unsur (misalnya “C” untuk karbon)<br/><span style="
-"\" font-weight:700;\">L</span> - Label atom "
-"(misalnya ‘C2’ untuk atom karbon kedua, “H1” untuk atom hidrogen pertama) <"
-"br/><span style=\" font-weight:600;\">x</span> - Koordinat posisi X<br/"
-"><span style=\" font-weight:600;\">y</span> - Koordinat posisi Y<br/><span "
-"style=\" font-weight:600;\">z</span> - Koordinat posisi z<br/><span style="
-"\" font-weight:600;\">a</span> - Koordinat kisi ‘a’ (hanya untuk kristal)<br/"
-"><span style=\" font-weight:600;\">b</span> - Koordinat kisi ‘b’ "
-"(hanya untuk kristal)<br/><span style=\" font-weight:600;\">c</span> - "
-"Koordinat kisi ‘c’ (hanya untuk kristal)<br/><span style="
-"\" font-weight:600;\">_</span> - Spasi literal (“ ”), berguna untuk "
-"penyelarasan<br/><span style=\" font-weight:600;\">0</span> - Angka 0 "
-"literal (“0”), berguna untuk bendera optimasi<br/><span style="
-"\" font-weight:600;\">1</span> - Angka 1 literal (“1”), berguna untuk "
-"bendera optimasi<br/></p></body></html>"
+"span> - Nomor atom (misalnya “6” untuk karbon)<br/><span style=\" font-"
+"weight:600;\">G</span> - Nomor atom gaya GAMESS (misalnya “6.0” untuk "
+"karbon)<br/><span style=\" font-weight:600;\">N</span> - Nama unsur "
+"(misalnya “Karbon”)<br/><span style=\" font-weight:600;\">S</span> - Simbol "
+"unsur (misalnya “C” untuk karbon)<br/><span style=\" font-weight:700;\">L</"
+"span> - Label atom (misalnya ‘C2’ untuk atom karbon kedua, “H1” untuk atom "
+"hidrogen pertama) <br/><span style=\" font-weight:600;\">x</span> - "
+"Koordinat posisi X<br/><span style=\" font-weight:600;\">y</span> - "
+"Koordinat posisi Y<br/><span style=\" font-weight:600;\">z</span> - "
+"Koordinat posisi z<br/><span style=\" font-weight:600;\">a</span> - "
+"Koordinat kisi ‘a’ (hanya untuk kristal)<br/><span style=\" font-weight:600;"
+"\">b</span> - Koordinat kisi ‘b’ (hanya untuk kristal)<br/><span style=\" "
+"font-weight:600;\">c</span> - Koordinat kisi ‘c’ (hanya untuk kristal)<br/"
+"><span style=\" font-weight:600;\">_</span> - Spasi literal (“ ”), berguna "
+"untuk penyelarasan<br/><span style=\" font-weight:600;\">0</span> - Angka 0 "
+"literal (“0”), berguna untuk bendera optimasi<br/><span style=\" font-"
+"weight:600;\">1</span> - Angka 1 literal (“1”), berguna untuk bendera "
+"optimasi<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -6396,7 +6446,8 @@ msgstr "OT T Pengurangan"
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
-msgstr "Ekstensi berkas untuk konversi Open Babel (default - Avogadro::POSCAR):"
+msgstr ""
+"Ekstensi berkas untuk konversi Open Babel (default - Avogadro::POSCAR):"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
@@ -6857,18 +6908,18 @@ msgid ""
 "#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
 "html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
-"\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://"
-"lammps.sandia.gov/doc/units.html\"><span style="
-"\" text-decoration: underline; color:#0057ae;\">http://lammps.sandia.gov/doc/"
-"units.html</span></a></p></body></html>"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6949,18 +7000,18 @@ msgid ""
 "color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
 "p></body></html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
-"\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://"
-"lammps.sandia.gov/doc/atom_style.html\"><span style="
-"\" text-decoration: underline; color:#0057ae;\">http://lammps.sandia.gov/doc/"
-"atom_style.html</span></a></p></body></html>"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -7516,8 +7567,8 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
-"metode penilaian untuk algoritma genetika "
-"(RMSD = jarak geometris, energi = energi terendah)"
+"metode penilaian untuk algoritma genetika (RMSD = jarak geometris, energi = "
+"energi terendah)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -8021,8 +8072,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>Perkembangan puncak di dasar (dalam derajat)"
-".</p></body></html>"
+"<html><head/><body><p>Perkembangan puncak di dasar (dalam derajat).</p></"
+"body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -8039,8 +8090,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Perkembangan puncak di dasar dalam "
-"derajat.</p><p>Default: 0,52958°</p></body></html>"
+"<html><head/><body><p>Perkembangan puncak di dasar dalam derajat.</"
+"p><p>Default: 0,52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8072,8 +8123,8 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Jumlah titik 2theta yang akan "
-"dihasilkan.</p><p>Default: 1000</p></body></html>"
+"<html><head/><body><p>Jumlah titik 2theta yang akan dihasilkan.</"
+"p><p>Default: 1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -8414,6 +8465,11 @@ msgstr "Kuat"
 msgid "Calculate"
 msgstr "Menghitung"
 
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
+#. i18n: ectx: property (text), widget (QPushButton, recordButton)
+msgid "Record Movie…"
+msgstr "Rekam Film…"
+
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
 msgid "C<sub>1"
@@ -8709,13 +8765,12 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>Tingkat Fermi harus diketahui sebelum mencentang kotak "
 "ini. Anda dapat menentukan tingkat Fermi dengan melakukan perhitungan "
-"densitas negara dan menampilkan data "
-"(data tersebut akan berada di bagian atas data). Selain itu, jika "
-"perhitungan densitas negara dilakukan, tingkat Fermi di sini akan secara "
-"otomatis disetel ke nilai yang terdeteksi selama perhitungan densitas "
-"negara. </p><p>Jika kotak ini dicentang, pastikan tingkat Fermi yang benar "
-"telah diatur di kotak putar di sebelah kanan.</p><p>Default: "
-"mati</p></body></html>"
+"densitas negara dan menampilkan data (data tersebut akan berada di bagian "
+"atas data). Selain itu, jika perhitungan densitas negara dilakukan, tingkat "
+"Fermi di sini akan secara otomatis disetel ke nilai yang terdeteksi selama "
+"perhitungan densitas negara. </p><p>Jika kotak ini dicentang, pastikan "
+"tingkat Fermi yang benar telah diatur di kotak putar di sebelah kanan.</"
+"p><p>Default: mati</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -8730,8 +8785,8 @@ msgid ""
 "p><p>Default: off</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Sesuaikan energi sehingga nol adalah tingkat Fermi? "
-"Hanya tersedia jika kita menggambar tingkat Fermi.</p><p><br/></p><p>Default:"
-" mati</p></body></html>"
+"Hanya tersedia jika kita menggambar tingkat Fermi.</p><p><br/></"
+"p><p>Default: mati</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -8774,17 +8829,17 @@ msgid ""
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Masukkan titik k khusus sebagai berikut:</p><p>L 0.5 "
-"0.5 0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>Artinya, &lt;symbol&gt;"
-" &lt;x&gt; &lt;y&gt; &lt;z&gt; di mana x, y, dan z adalah koordinat ruang "
-"balik fraksional. Garis akan digambar menghubungkan titik-titik k ini pada "
-"grafik sesuai urutan yang Anda masukkan. Perlu diperhatikan bahwa orientasi "
-"sel Anda dapat memengaruhi lokasi titik-titik ruang balik ini. </p><p>Jika "
-"grup ruang kristal telah ditentukan atau disetel, titik-titik k khusus akan "
-"secara otomatis diisi dengan titik-titik simetri tinggi sel primitif untuk "
-"grup ruang tersebut. Ada beberapa grup ruang yang memiliki titik simetri "
-"tinggi yang berbeda tergantung pada kisi "
-"(seperti jika a &gt; b atau a &lt; b) - hal ini diperhitungkan secara "
-"otomatis.</p></body></html>"
+"0.5 0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>Artinya, &lt;"
+"symbol&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt; di mana x, y, dan z adalah "
+"koordinat ruang balik fraksional. Garis akan digambar menghubungkan titik-"
+"titik k ini pada grafik sesuai urutan yang Anda masukkan. Perlu diperhatikan "
+"bahwa orientasi sel Anda dapat memengaruhi lokasi titik-titik ruang balik "
+"ini. </p><p>Jika grup ruang kristal telah ditentukan atau disetel, titik-"
+"titik k khusus akan secara otomatis diisi dengan titik-titik simetri tinggi "
+"sel primitif untuk grup ruang tersebut. Ada beberapa grup ruang yang "
+"memiliki titik simetri tinggi yang berbeda tergantung pada kisi (seperti "
+"jika a &gt; b atau a &lt; b) - hal ini diperhitungkan secara otomatis.</p></"
+"body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -8800,10 +8855,10 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
-"\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -8820,8 +8875,8 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>Masukkan jumlah titik k yang akan menghubungkan titik "
 "k khusus. Semakin banyak titik k ini, grafik akan semakin halus, tetapi "
-"perhitungan mungkin memakan waktu lebih lama.</p><p>Default: "
-"40</p></body></html>"
+"perhitungan mungkin memakan waktu lebih lama.</p><p>Default: 40</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -8829,8 +8884,8 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>Batasi rentang y pada grafik?</p><p>Default: "
-"mati</p></body></html>"
+"<html><head/><body><p>Batasi rentang y pada grafik?</p><p>Default: mati</p></"
+"body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
@@ -10396,9 +10451,6 @@ msgstr "Email anda"
 
 #~ msgid "Sorting %1 vibrations by frequency..."
 #~ msgstr "Mengurutkan getaran %1 berdasarkan frekuensi..."
-
-#~ msgid "Pause"
-#~ msgstr "Jeda"
 
 #~ msgid "Super Cell Builder..."
 #~ msgstr "Pembangun Super Sel..."

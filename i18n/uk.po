@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-07 17:58+0000\n"
-"PO-Revision-Date: 2025-10-09 02:07+0000\n"
+"POT-Creation-Date: 2025-10-16 00:25+0000\n"
+"PO-Revision-Date: 2025-10-16 11:40+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -1147,66 +1147,79 @@ msgstr "Назва"
 msgid "Filename Base"
 msgstr "База імен файлів"
 
-#: qtgui/jsonwidget.cpp:219
+#: qtgui/jsonwidget.cpp:220 qtgui/jsonwidget.cpp:225
 msgid "Processor Cores"
 msgstr "Ядра процесора"
 
-#: qtgui/jsonwidget.cpp:224
+#: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
+msgid "Memory"
+msgstr "Пам'ять"
+
+#: qtgui/jsonwidget.cpp:233
 msgid "Calculation Type"
 msgstr "Тип розрахунку"
 
-#: qtgui/jsonwidget.cpp:228
+#: qtgui/jsonwidget.cpp:237
 msgid "Theory"
 msgstr "Теорія"
 
-#: qtgui/jsonwidget.cpp:228
+#: qtgui/jsonwidget.cpp:237
 msgid "Basis"
 msgstr "Основа"
 
-#: qtgui/jsonwidget.cpp:233 qtgui/jsonwidget.cpp:237
+#: qtgui/jsonwidget.cpp:242 qtgui/jsonwidget.cpp:246
 msgid "Charge"
 msgstr "Заряд"
 
-#: qtgui/jsonwidget.cpp:234 qtgui/jsonwidget.cpp:239
+#: qtgui/jsonwidget.cpp:243 qtgui/jsonwidget.cpp:248
 msgid "Multiplicity"
 msgstr "Кратність"
 
-#: qtgui/jsonwidget.cpp:361
+#: qtgui/jsonwidget.cpp:255
+msgid "Solvent"
+msgstr "Розчинник"
+
+#: qtgui/jsonwidget.cpp:256
+msgctxt "solvation method / model"
+msgid "Model"
+msgstr "Модель"
+
+#: qtgui/jsonwidget.cpp:378
 msgid "User Name"
 msgstr "Ім'я користувача"
 
-#: qtgui/jsonwidget.cpp:363
+#: qtgui/jsonwidget.cpp:380
 msgid "Password"
 msgstr "Пароль"
 
-#: qtgui/jsonwidget.cpp:671
+#: qtgui/jsonwidget.cpp:688
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "Помилка: значення має бути об’єктом для ключа «%1»."
 
-#: qtgui/jsonwidget.cpp:706
+#: qtgui/jsonwidget.cpp:723
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Нерозпізнаний тип опції \"%1\" для опції \"%2\"."
 
-#: qtgui/jsonwidget.cpp:715 qtgui/jsonwidget.cpp:750 qtgui/jsonwidget.cpp:771
-#: qtgui/jsonwidget.cpp:792 qtgui/jsonwidget.cpp:830 qtgui/jsonwidget.cpp:851
-#: qtgui/jsonwidget.cpp:873 qtgui/jsonwidget.cpp:894
+#: qtgui/jsonwidget.cpp:732 qtgui/jsonwidget.cpp:767 qtgui/jsonwidget.cpp:788
+#: qtgui/jsonwidget.cpp:809 qtgui/jsonwidget.cpp:847 qtgui/jsonwidget.cpp:868
+#: qtgui/jsonwidget.cpp:890 qtgui/jsonwidget.cpp:911
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "Помилка налаштування параметра \"%1\" за умовчанням. Поганий тип віджета."
 
-#: qtgui/jsonwidget.cpp:722 qtgui/jsonwidget.cpp:757 qtgui/jsonwidget.cpp:778
-#: qtgui/jsonwidget.cpp:799 qtgui/jsonwidget.cpp:837 qtgui/jsonwidget.cpp:858
-#: qtgui/jsonwidget.cpp:880 qtgui/jsonwidget.cpp:901
+#: qtgui/jsonwidget.cpp:739 qtgui/jsonwidget.cpp:774 qtgui/jsonwidget.cpp:795
+#: qtgui/jsonwidget.cpp:816 qtgui/jsonwidget.cpp:854 qtgui/jsonwidget.cpp:875
+#: qtgui/jsonwidget.cpp:897 qtgui/jsonwidget.cpp:918
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Помилка налаштування параметра \"%1\" за умовчанням. Неправильне значення за "
 "умовчанням:"
 
-#: qtgui/jsonwidget.cpp:736
+#: qtgui/jsonwidget.cpp:753
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1215,12 +1228,12 @@ msgstr ""
 "Помилка налаштування параметра \"%1\" за умовчанням. Не вдалося знайти "
 "дійсний індекс комбінованого запису зі значення:"
 
-#: qtgui/jsonwidget.cpp:962
+#: qtgui/jsonwidget.cpp:979
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "Необроблений віджет у collectOptions для опції «%1»."
 
-#: qtgui/jsonwidget.cpp:1007 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1024 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr "[жодної молекули]"
@@ -1775,8 +1788,8 @@ msgstr "Файли PQR (*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:357
-#: qtplugins/propertytables/propertyview.cpp:390
+#: qtplugins/propertytables/propertyview.cpp:407
+#: qtplugins/propertytables/propertyview.cpp:440
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "Помилка"
@@ -2049,13 +2062,13 @@ msgstr "Метод:"
 msgid "Start"
 msgstr "Почати"
 
-#: qtplugins/autoopt/autoopt.cpp:173 qtplugins/playertool/playertool.cpp:77
+#: qtplugins/autoopt/autoopt.cpp:173
 msgid "Stop"
 msgstr "Зупинити"
 
 #: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:368
-#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/forcefield/forcefield.cpp:391
+#: qtplugins/forcefield/forcefield.cpp:446 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:560
 msgid "Optimize Geometry"
 msgstr "Оптимізації геометрії"
@@ -2339,8 +2352,8 @@ msgstr "Редагувати карту непрозорості кольорі�
 #: qtplugins/commandscripts/command.cpp:83
 #: qtplugins/configurepython/configurepython.cpp:103
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:172
-#: qtplugins/forcefield/forcefield.cpp:174
+#: qtplugins/forcefield/forcefield.cpp:196
+#: qtplugins/forcefield/forcefield.cpp:198
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2448,7 +2461,7 @@ msgid "Constraints…"
 msgstr "Обмеження…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:174
+#: qtplugins/forcefield/forcefield.cpp:198
 msgid "&Calculate"
 msgstr "&Обчислити"
 
@@ -2703,7 +2716,7 @@ msgstr "Турбомольний формат"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:397:319
+#: qtplugins/propertytables/propertyview.cpp:447:319
 msgid "Copy"
 msgstr "Копіювати"
 
@@ -3155,7 +3168,7 @@ msgid "PDB Code"
 msgstr "PDB Код"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
-#: qtplugins/networkdatabases/networkdatabases.cpp:74
+#: qtplugins/networkdatabases/networkdatabases.cpp:71
 msgid "Chemical structure to download."
 msgstr "Хімічна структура для звантаження."
 
@@ -3236,45 +3249,60 @@ msgid "Freeze Selected Atoms"
 msgstr "Заморозити вибрані атоми"
 
 #: qtplugins/forcefield/forcefield.cpp:118
+msgctxt "freeze x-axis of selected atoms"
+msgid "Freeze X"
+msgstr "Заморозити X"
+
+#: qtplugins/forcefield/forcefield.cpp:126
+msgctxt "freeze y-axis of selected atoms"
+msgid "Freeze Y"
+msgstr "Заморозити Y"
+
+#: qtplugins/forcefield/forcefield.cpp:134
+msgctxt "freeze z-axis of selected atoms"
+msgid "Freeze Z"
+msgstr "Заморозити Z"
+
+#: qtplugins/forcefield/forcefield.cpp:142
 msgid "Unfreeze Selected Atoms"
 msgstr "Розморозити вибрані атоми"
 
-#: qtplugins/forcefield/forcefield.cpp:127
+#: qtplugins/forcefield/forcefield.cpp:151
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr "Злиття вибраних атомів"
 
-#: qtplugins/forcefield/forcefield.cpp:135
+#: qtplugins/forcefield/forcefield.cpp:159
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr "Роз'єднання вибраних атомів"
 
-#: qtplugins/forcefield/forcefield.cpp:316
-#: qtplugins/forcefield/forcefield.cpp:467
-#: qtplugins/forcefield/forcefield.cpp:537
-#: qtplugins/playertool/playertool.cpp:348
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:935
+#: qtplugins/forcefield/forcefield.cpp:339
+#: qtplugins/forcefield/forcefield.cpp:490
+#: qtplugins/forcefield/forcefield.cpp:560
+#: qtplugins/playertool/playertool.cpp:386
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:935
 #: qtplugins/surfaces/surfaces.cpp:979 qtplugins/surfaces/surfaces.cpp:991
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:317
+#: qtplugins/forcefield/forcefield.cpp:340
 msgid "No atoms provided for optimization"
 msgstr "Немає атомів для оптимізації"
 
-#: qtplugins/forcefield/forcefield.cpp:385
+#: qtplugins/forcefield/forcefield.cpp:408
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "Енергія: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:466
+#: qtplugins/forcefield/forcefield.cpp:489
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Енергія = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:536
+#: qtplugins/forcefield/forcefield.cpp:559
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Норма сили = %L2"
@@ -3932,27 +3960,27 @@ msgid "Molecule Properties"
 msgstr "Властивості молекули"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:345
+#: qtplugins/propertytables/propertyview.cpp:395
 msgid "Export CSV"
 msgstr "Експорт CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:346
+#: qtplugins/propertytables/propertyview.cpp:396
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Файли CSV (*.csv);;Усі файли (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:358
+#: qtplugins/propertytables/propertyview.cpp:408
 msgid "Could not open the file for writing."
 msgstr "Не вдалося відкрити файл для запису."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:390
+#: qtplugins/propertytables/propertyview.cpp:440
 msgid "Error writing to the file."
 msgstr "Помилка запису у файл."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:402
+#: qtplugins/propertytables/propertyview.cpp:452
 msgid "Export…"
 msgstr "Експорт…"
 
@@ -4010,7 +4038,7 @@ msgstr ""
 msgid "Navigate tool"
 msgstr "Знаряддя навігації"
 
-#: qtplugins/networkdatabases/networkdatabases.cpp:73
+#: qtplugins/networkdatabases/networkdatabases.cpp:70
 msgid "Chemical Name"
 msgstr "Назва речовини"
 
@@ -4362,90 +4390,96 @@ msgstr "Накладання опорних осей"
 msgid "Render reference axes in the corner of the display."
 msgstr "Візуалізуйте опорні осі в кутку дисплея."
 
-#: qtplugins/playertool/playertool.cpp:47
+#: qtplugins/playertool/playertool.cpp:51
 msgctxt "control-key 9"
 msgid "Ctrl+9"
 msgstr "Ctrl+9"
 
-#: qtplugins/playertool/playertool.cpp:48
+#: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
 msgstr "гравець"
 
-#: qtplugins/playertool/playertool.cpp:49
+#: qtplugins/playertool/playertool.cpp:53
 #, qt-format
 msgid "Animation Tool\t(%1)"
 msgstr "Інструмент анімації (%1)"
 
-#: qtplugins/playertool/playertool.cpp:74
-msgid "Play"
-msgstr "Грати"
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
+#. i18n: ectx: property (text), widget (QLabel, frameLabel)
+#: qtplugins/playertool/playertool.cpp:83:1935
+msgid "Frame:"
+msgstr "Кадр:"
 
-#: qtplugins/playertool/playertool.cpp:88
+#: qtplugins/playertool/playertool.cpp:113
+msgctxt "start or first frame index"
+msgid "Start:"
+msgstr "Початок:"
+
+#: qtplugins/playertool/playertool.cpp:124
+msgctxt "end or last frame index"
+msgid "End:"
+msgstr "Кінець:"
+
+#: qtplugins/playertool/playertool.cpp:138
+msgid "Dynamic bonding?"
+msgstr "Динамічне склеювання?"
+
+#: qtplugins/playertool/playertool.cpp:146
 msgid "Frame rate:"
 msgstr "Частота кадрів:"
 
-#: qtplugins/playertool/playertool.cpp:94
+#: qtplugins/playertool/playertool.cpp:152
 msgctxt "frames per second"
 msgid " FPS"
 msgstr " FPS"
 
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
-#. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:118:1935
-msgid "Frame:"
-msgstr "Кадр:"
+#: qtplugins/playertool/playertool.cpp:160
+#: qtplugins/playertool/playertool.cpp:234
+msgid "Play"
+msgstr "Грати"
 
-#: qtplugins/playertool/playertool.cpp:125
-#: qtplugins/playertool/playertool.cpp:416
-#: qtplugins/surfaces/surfacedialog.cpp:230
-#, qt-format
-msgid " of %0"
-msgstr " від %0"
+#: qtplugins/playertool/playertool.cpp:165
+msgid "Record…"
+msgstr "Запис…"
 
-#: qtplugins/playertool/playertool.cpp:136
-msgid "Dynamic bonding?"
-msgstr "Динамічне склеювання?"
+#: qtplugins/playertool/playertool.cpp:216
+msgid "Pause"
+msgstr "Призупинити"
 
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
-#. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:144:1941
-msgid "Record Movie…"
-msgstr "Записати фільм…"
-
-#: qtplugins/playertool/playertool.cpp:248
-#: qtplugins/playertool/playertool.cpp:353
+#: qtplugins/playertool/playertool.cpp:286
+#: qtplugins/playertool/playertool.cpp:391
 msgid "Movie (*.mp4)"
 msgstr "Фільм (*.mp4)"
 
-#: qtplugins/playertool/playertool.cpp:250
+#: qtplugins/playertool/playertool.cpp:288
 msgid "Export Bitmap Graphics"
 msgstr "Експорт растрової графіки"
 
-#: qtplugins/playertool/playertool.cpp:251
+#: qtplugins/playertool/playertool.cpp:289
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Фільм (*.mp4);;Фільм (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:907
+#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:907
 msgid "GIF (*.gif)"
 msgstr "GIF i(*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:271
+#: qtplugins/playertool/playertool.cpp:309
 msgid "GIF FPS support warning"
 msgstr "Попередження про підтримку GIF FPS"
 
-#: qtplugins/playertool/playertool.cpp:272
+#: qtplugins/playertool/playertool.cpp:310
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr "Формат файлу GIF не підтримує частоту кадрів понад 100 FPS."
 
-#: qtplugins/playertool/playertool.cpp:317
+#: qtplugins/playertool/playertool.cpp:355
 msgid "Movie (*.avi)"
 msgstr "Фільм (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:980
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:980
 msgid "Error: cannot add frame to video."
 msgstr "Помилка: неможливо додати кадр до відео."
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:992
+#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:992
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Не вдається зберегти файл %1."
@@ -4862,19 +4896,31 @@ msgstr "Властивості конформерів"
 msgid "Residue Properties"
 msgstr "Властивості залишку"
 
-#: qtplugins/propertytables/propertyview.cpp:409
+#: qtplugins/propertytables/propertyview.cpp:459
 msgid "Freeze Atom"
 msgstr "Заморозити атом"
 
-#: qtplugins/propertytables/propertyview.cpp:417
+#: qtplugins/propertytables/propertyview.cpp:463
+msgid "Freeze X"
+msgstr "Заморозити X"
+
+#: qtplugins/propertytables/propertyview.cpp:466
+msgid "Freeze Y"
+msgstr "Заморозити Y"
+
+#: qtplugins/propertytables/propertyview.cpp:469
+msgid "Freeze Z"
+msgstr "Заморозити Z"
+
+#: qtplugins/propertytables/propertyview.cpp:476
 msgid "Constrain Bond"
 msgstr "Обмежити облігацію"
 
-#: qtplugins/propertytables/propertyview.cpp:419
+#: qtplugins/propertytables/propertyview.cpp:478
 msgid "Constrain Angle"
 msgstr "Обмежити кут"
 
-#: qtplugins/propertytables/propertyview.cpp:421
+#: qtplugins/propertytables/propertyview.cpp:480
 msgid "Constrain Torsion"
 msgstr "Обмежити кручення"
 
@@ -5446,6 +5492,11 @@ msgstr "(LUMO)"
 #: qtplugins/surfaces/surfacedialog.cpp:204
 msgid "From File"
 msgstr "З файлу"
+
+#: qtplugins/surfaces/surfacedialog.cpp:230
+#, qt-format
+msgid " of %0"
+msgstr " від %0"
 
 #: qtplugins/surfaces/surfaces.cpp:86
 msgid "Create Surfaces…"
@@ -8433,6 +8484,11 @@ msgstr "Сильний"
 msgid "Calculate"
 msgstr "Обчислити"
 
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
+#. i18n: ectx: property (text), widget (QPushButton, recordButton)
+msgid "Record Movie…"
+msgstr "Записати фільм…"
+
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
 msgid "C<sub>1"
@@ -10931,9 +10987,6 @@ msgstr "Ваші електронні листи"
 
 #~ msgid "Sorting %1 vibrations by frequency..."
 #~ msgstr "Впорядкування %1 коливань за частотою…"
-
-#~ msgid "Pause"
-#~ msgstr "Призупинити"
 
 #~ msgid "Super Cell Builder..."
 #~ msgstr "Побудова надкомірки…"

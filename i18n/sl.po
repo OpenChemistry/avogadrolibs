@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-07 17:58+0000\n"
+"POT-Creation-Date: 2025-10-16 00:25+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovenian <https://hosted.weblate.org/projects/avogadro/"
@@ -1079,76 +1079,89 @@ msgstr "Naslov"
 msgid "Filename Base"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:219
+#: qtgui/jsonwidget.cpp:220 qtgui/jsonwidget.cpp:225
 msgid "Processor Cores"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:224
+#: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
+msgid "Memory"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:233
 msgid "Calculation Type"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:228
+#: qtgui/jsonwidget.cpp:237
 #, fuzzy
 msgid "Theory"
 msgstr "Teorija"
 
-#: qtgui/jsonwidget.cpp:228
+#: qtgui/jsonwidget.cpp:237
 msgid "Basis"
 msgstr "Osnova"
 
-#: qtgui/jsonwidget.cpp:233 qtgui/jsonwidget.cpp:237
+#: qtgui/jsonwidget.cpp:242 qtgui/jsonwidget.cpp:246
 msgid "Charge"
 msgstr "Naboj"
 
-#: qtgui/jsonwidget.cpp:234 qtgui/jsonwidget.cpp:239
+#: qtgui/jsonwidget.cpp:243 qtgui/jsonwidget.cpp:248
 msgid "Multiplicity"
 msgstr "Mnogokratnik"
 
-#: qtgui/jsonwidget.cpp:361
+#: qtgui/jsonwidget.cpp:255
+msgid "Solvent"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:256
+msgctxt "solvation method / model"
+msgid "Model"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:378
 msgid "User Name"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:363
+#: qtgui/jsonwidget.cpp:380
 msgid "Password"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:671
+#: qtgui/jsonwidget.cpp:688
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:706
+#: qtgui/jsonwidget.cpp:723
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:715 qtgui/jsonwidget.cpp:750 qtgui/jsonwidget.cpp:771
-#: qtgui/jsonwidget.cpp:792 qtgui/jsonwidget.cpp:830 qtgui/jsonwidget.cpp:851
-#: qtgui/jsonwidget.cpp:873 qtgui/jsonwidget.cpp:894
+#: qtgui/jsonwidget.cpp:732 qtgui/jsonwidget.cpp:767 qtgui/jsonwidget.cpp:788
+#: qtgui/jsonwidget.cpp:809 qtgui/jsonwidget.cpp:847 qtgui/jsonwidget.cpp:868
+#: qtgui/jsonwidget.cpp:890 qtgui/jsonwidget.cpp:911
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:722 qtgui/jsonwidget.cpp:757 qtgui/jsonwidget.cpp:778
-#: qtgui/jsonwidget.cpp:799 qtgui/jsonwidget.cpp:837 qtgui/jsonwidget.cpp:858
-#: qtgui/jsonwidget.cpp:880 qtgui/jsonwidget.cpp:901
+#: qtgui/jsonwidget.cpp:739 qtgui/jsonwidget.cpp:774 qtgui/jsonwidget.cpp:795
+#: qtgui/jsonwidget.cpp:816 qtgui/jsonwidget.cpp:854 qtgui/jsonwidget.cpp:875
+#: qtgui/jsonwidget.cpp:897 qtgui/jsonwidget.cpp:918
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:736
+#: qtgui/jsonwidget.cpp:753
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:962
+#: qtgui/jsonwidget.cpp:979
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:1007 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1024 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 #, fuzzy
 msgid "[no molecule]"
@@ -1711,8 +1724,8 @@ msgstr ""
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:357
-#: qtplugins/propertytables/propertyview.cpp:390
+#: qtplugins/propertytables/propertyview.cpp:407
+#: qtplugins/propertytables/propertyview.cpp:440
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "Napaka"
@@ -1981,13 +1994,13 @@ msgstr "Način:"
 msgid "Start"
 msgstr "Začni"
 
-#: qtplugins/autoopt/autoopt.cpp:173 qtplugins/playertool/playertool.cpp:77
+#: qtplugins/autoopt/autoopt.cpp:173
 msgid "Stop"
 msgstr "Zaustavi"
 
 #: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:368
-#: qtplugins/forcefield/forcefield.cpp:423 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/forcefield/forcefield.cpp:391
+#: qtplugins/forcefield/forcefield.cpp:446 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:560
 #, fuzzy
 msgid "Optimize Geometry"
@@ -2276,8 +2289,8 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:83
 #: qtplugins/configurepython/configurepython.cpp:103
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:172
-#: qtplugins/forcefield/forcefield.cpp:174
+#: qtplugins/forcefield/forcefield.cpp:196
+#: qtplugins/forcefield/forcefield.cpp:198
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2381,7 +2394,7 @@ msgid "Constraints…"
 msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:174
+#: qtplugins/forcefield/forcefield.cpp:198
 #, fuzzy
 msgid "&Calculate"
 msgstr "Izračunaj"
@@ -2644,7 +2657,7 @@ msgstr "Skript Turbomole"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:397:319
+#: qtplugins/propertytables/propertyview.cpp:447:319
 #, fuzzy
 msgid "Copy"
 msgstr "Kopiraj"
@@ -3108,7 +3121,7 @@ msgid "PDB Code"
 msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
-#: qtplugins/networkdatabases/networkdatabases.cpp:74
+#: qtplugins/networkdatabases/networkdatabases.cpp:71
 msgid "Chemical structure to download."
 msgstr "Kemijska strukture za prejem s strežnika."
 
@@ -3191,45 +3204,60 @@ msgid "Freeze Selected Atoms"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:118
+msgctxt "freeze x-axis of selected atoms"
+msgid "Freeze X"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:126
+msgctxt "freeze y-axis of selected atoms"
+msgid "Freeze Y"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:134
+msgctxt "freeze z-axis of selected atoms"
+msgid "Freeze Z"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:142
 msgid "Unfreeze Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:127
+#: qtplugins/forcefield/forcefield.cpp:151
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:135
+#: qtplugins/forcefield/forcefield.cpp:159
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:316
-#: qtplugins/forcefield/forcefield.cpp:467
-#: qtplugins/forcefield/forcefield.cpp:537
-#: qtplugins/playertool/playertool.cpp:348
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:935
+#: qtplugins/forcefield/forcefield.cpp:339
+#: qtplugins/forcefield/forcefield.cpp:490
+#: qtplugins/forcefield/forcefield.cpp:560
+#: qtplugins/playertool/playertool.cpp:386
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:935
 #: qtplugins/surfaces/surfaces.cpp:979 qtplugins/surfaces/surfaces.cpp:991
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:317
+#: qtplugins/forcefield/forcefield.cpp:340
 msgid "No atoms provided for optimization"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:385
+#: qtplugins/forcefield/forcefield.cpp:408
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:466
+#: qtplugins/forcefield/forcefield.cpp:489
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:536
+#: qtplugins/forcefield/forcefield.cpp:559
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr ""
@@ -3895,29 +3923,29 @@ msgid "Molecule Properties"
 msgstr "Lastnosti molekule"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:345
+#: qtplugins/propertytables/propertyview.cpp:395
 msgid "Export CSV"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:346
+#: qtplugins/propertytables/propertyview.cpp:396
 #, fuzzy
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Datoteke CSV (*.csv);;Vse datoteke (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:358
+#: qtplugins/propertytables/propertyview.cpp:408
 #, fuzzy
 msgid "Could not open the file for writing."
 msgstr "Datoteke ni mogoče odpreti za pisanje."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:390
+#: qtplugins/propertytables/propertyview.cpp:440
 msgid "Error writing to the file."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:402
+#: qtplugins/propertytables/propertyview.cpp:452
 #, fuzzy
 msgid "Export…"
 msgstr "Izvozi…"
@@ -3972,7 +4000,7 @@ msgstr ""
 msgid "Navigate tool"
 msgstr ""
 
-#: qtplugins/networkdatabases/networkdatabases.cpp:73
+#: qtplugins/networkdatabases/networkdatabases.cpp:70
 msgid "Chemical Name"
 msgstr "Ime kemijske strukture"
 
@@ -4324,93 +4352,99 @@ msgstr ""
 msgid "Render reference axes in the corner of the display."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:47
+#: qtplugins/playertool/playertool.cpp:51
 msgctxt "control-key 9"
 msgid "Ctrl+9"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:48
+#: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:49
+#: qtplugins/playertool/playertool.cpp:53
 #, qt-format
 msgid "Animation Tool\t(%1)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:74
-msgid "Play"
-msgstr ""
-
-#: qtplugins/playertool/playertool.cpp:88
-msgid "Frame rate:"
-msgstr ""
-
-#: qtplugins/playertool/playertool.cpp:94
-msgctxt "frames per second"
-msgid " FPS"
-msgstr ""
-
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:118:1935
+#: qtplugins/playertool/playertool.cpp:83:1935
 #, fuzzy
 msgid "Frame:"
 msgstr "Sličice:"
 
-#: qtplugins/playertool/playertool.cpp:125
-#: qtplugins/playertool/playertool.cpp:416
-#: qtplugins/surfaces/surfacedialog.cpp:230
-#, qt-format
-msgid " of %0"
+#: qtplugins/playertool/playertool.cpp:113
+msgctxt "start or first frame index"
+msgid "Start:"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:136
+#: qtplugins/playertool/playertool.cpp:124
+msgctxt "end or last frame index"
+msgid "End:"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:138
 #, fuzzy
 msgid "Dynamic bonding?"
 msgstr "Dinamične vezi"
 
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
-#. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:144:1941
-msgid "Record Movie…"
+#: qtplugins/playertool/playertool.cpp:146
+msgid "Frame rate:"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:248
-#: qtplugins/playertool/playertool.cpp:353
+#: qtplugins/playertool/playertool.cpp:152
+msgctxt "frames per second"
+msgid " FPS"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:160
+#: qtplugins/playertool/playertool.cpp:234
+msgid "Play"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:165
+msgid "Record…"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:216
+msgid "Pause"
+msgstr "Premor"
+
+#: qtplugins/playertool/playertool.cpp:286
+#: qtplugins/playertool/playertool.cpp:391
 msgid "Movie (*.mp4)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:250
+#: qtplugins/playertool/playertool.cpp:288
 msgid "Export Bitmap Graphics"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:251
+#: qtplugins/playertool/playertool.cpp:289
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:907
+#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:907
 msgid "GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:271
+#: qtplugins/playertool/playertool.cpp:309
 msgid "GIF FPS support warning"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:272
+#: qtplugins/playertool/playertool.cpp:310
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:317
+#: qtplugins/playertool/playertool.cpp:355
 #, fuzzy
 msgid "Movie (*.avi)"
 msgstr "datoteke posnetkov (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:980
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:980
 msgid "Error: cannot add frame to video."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:992
+#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:992
 #, qt-format
 msgid "Cannot save file %1."
 msgstr ""
@@ -4836,19 +4870,31 @@ msgstr "Lastnosti konformere"
 msgid "Residue Properties"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:409
+#: qtplugins/propertytables/propertyview.cpp:459
 msgid "Freeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:417
+#: qtplugins/propertytables/propertyview.cpp:463
+msgid "Freeze X"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:466
+msgid "Freeze Y"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:469
+msgid "Freeze Z"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:476
 msgid "Constrain Bond"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:419
+#: qtplugins/propertytables/propertyview.cpp:478
 msgid "Constrain Angle"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:421
+#: qtplugins/propertytables/propertyview.cpp:480
 msgid "Constrain Torsion"
 msgstr ""
 
@@ -5439,6 +5485,11 @@ msgstr "(LUMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:204
 msgid "From File"
+msgstr ""
+
+#: qtplugins/surfaces/surfacedialog.cpp:230
+#, qt-format
+msgid " of %0"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:86
@@ -8373,6 +8424,11 @@ msgstr ""
 msgid "Calculate"
 msgstr "Izračunaj"
 
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
+#. i18n: ectx: property (text), widget (QPushButton, recordButton)
+msgid "Record Movie…"
+msgstr ""
+
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
 msgid "C<sub>1"
@@ -10528,9 +10584,6 @@ msgstr ""
 
 #~ msgid "Sorting %1 vibrations by frequency..."
 #~ msgstr "Razvrščanje %1 vibracij po frekvenci ..."
-
-#~ msgid "Pause"
-#~ msgstr "Premor"
 
 #~ msgid "Super Cell Builder..."
 #~ msgstr "Izgrajevalnik supercelice ..."
