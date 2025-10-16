@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-16 11:42+0000\n"
+"POT-Creation-Date: 2025-10-16 20:55+0000\n"
 "PO-Revision-Date: 2025-09-30 19:25+0000\n"
 "Last-Translator: \"David D.\" <dadu042@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
@@ -1334,14 +1334,14 @@ msgstr "Créer une nouvelle vue"
 msgid "Periodic Table"
 msgstr "Tableau périodique"
 
-#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:192
+#: qtgui/pythonscript.cpp:138 qtgui/pythonscript.cpp:226
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Erreur lors de l'exécution du programme « %1 %2 » : Délai d'attente pour le "
 "démarrer est écoulé (%3)."
 
-#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
+#: qtgui/pythonscript.cpp:148 qtgui/pythonscript.cpp:236
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1350,14 +1350,14 @@ msgstr ""
 "Erreur lors de l'exécution du programme « %1 %2 » : la modification de stdin "
 "a échoué (longueur=%3, %4 bytes modifié, erreur QProcess : %5)."
 
-#: qtgui/pythonscript.cpp:127
+#: qtgui/pythonscript.cpp:161
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Erreur lors de l'exécution du programme « %1 %2 » : Délai d'attente pour le "
 "finir est écoulé (%3)."
 
-#: qtgui/pythonscript.cpp:136
+#: qtgui/pythonscript.cpp:170
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1371,32 +1371,32 @@ msgstr ""
 "Sortie :\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:145
+#: qtgui/pythonscript.cpp:179
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Avertissement '%1'"
 
-#: qtgui/pythonscript.cpp:267
+#: qtgui/pythonscript.cpp:301
 msgid "Script failed to start."
 msgstr "Le démarrage du script a échoué."
 
-#: qtgui/pythonscript.cpp:270
+#: qtgui/pythonscript.cpp:304
 msgid "Script crashed."
 msgstr "Le script s'est écrasé."
 
-#: qtgui/pythonscript.cpp:273
+#: qtgui/pythonscript.cpp:307
 msgid "Script timed out."
 msgstr "Délai d'attente du programme est écoulé."
 
-#: qtgui/pythonscript.cpp:276
+#: qtgui/pythonscript.cpp:310
 msgid "Read error."
 msgstr "Erreur de lecture."
 
-#: qtgui/pythonscript.cpp:279
+#: qtgui/pythonscript.cpp:313
 msgid "Write error."
 msgstr "Erreur d'écriture."
 
-#: qtgui/pythonscript.cpp:283
+#: qtgui/pythonscript.cpp:317
 msgid "Unknown error."
 msgstr "Erreur inconnue."
 
@@ -1797,8 +1797,8 @@ msgstr "Fichiers PQR (*.pqr)"
 #: qtplugins/openbabel/openbabel.cpp:886 qtplugins/openbabel/openbabel.cpp:928
 #: qtplugins/openbabel/openbabel.cpp:960
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/plugindownloader/downloaderwidget.cpp:99
-#: qtplugins/plugindownloader/downloaderwidget.cpp:105
+#: qtplugins/plugindownloader/downloaderwidget.cpp:101
+#: qtplugins/plugindownloader/downloaderwidget.cpp:107
 #: qtplugins/propertytables/propertyview.cpp:475
 #: qtplugins/propertytables/propertyview.cpp:508
 #: qtplugins/quantuminput/quantuminput.cpp:104
@@ -2350,7 +2350,7 @@ msgstr "Modifier la palette d'opacité des couleurs…"
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:103
+#: qtplugins/configurepython/configurepython.cpp:126
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:196
 #: qtplugins/forcefield/forcefield.cpp:198
@@ -2418,15 +2418,15 @@ msgstr "Exécuter des scripts de commande externes"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
-#: qtplugins/configurepython/configurepython.cpp:35:225 rc.cpp:240
+#: qtplugins/configurepython/configurepython.cpp:36:225 rc.cpp:240
 msgid "Python Settings…"
 msgstr "Paramètres Python…"
 
-#: qtplugins/configurepython/configurepython.cpp:49
+#: qtplugins/configurepython/configurepython.cpp:56
 msgid "Install Python"
 msgstr "Installer Python"
 
-#: qtplugins/configurepython/configurepython.cpp:50
+#: qtplugins/configurepython/configurepython.cpp:57
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
@@ -3653,7 +3653,7 @@ msgid "ID"
 msgstr "ID"
 
 #: qtplugins/label/label.cpp:234
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 #: qtplugins/propertytables/propertymodel.cpp:647
 msgid "Name"
 msgstr "Nom"
@@ -4575,27 +4575,27 @@ msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr ""
 "Générer et tracer un diffractogramme XRD théorique en utilisant ObjCryst++."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 msgid "Update"
 msgstr "Mise à jour"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 msgid "Version"
 msgstr "Version"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:64
+#: qtplugins/plugindownloader/downloaderwidget.cpp:66
 msgid "Description"
 msgstr "Description"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:100
+#: qtplugins/plugindownloader/downloaderwidget.cpp:102
 msgid "Error downloading plugin data."
 msgstr "Erreur lors du téléchargement des données du plugin."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:105
+#: qtplugins/plugindownloader/downloaderwidget.cpp:107
 msgid "Error parsing plugin data."
 msgstr "Erreur lors de l'analyse des données du plugin."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:313
+#: qtplugins/plugindownloader/downloaderwidget.cpp:309
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4603,16 +4603,16 @@ msgstr ""
 "Ce greffon nécessite certains paquets à installer.\n"
 "Vous voulez les installer ?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:321
+#: qtplugins/plugindownloader/downloaderwidget.cpp:317
 msgid "Always"
 msgstr "Toujours"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:322
+#: qtplugins/plugindownloader/downloaderwidget.cpp:318
 msgid "Never"
 msgstr "Jamais"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:365
-#: qtplugins/plugindownloader/downloaderwidget.cpp:375
+#: qtplugins/plugindownloader/downloaderwidget.cpp:361
+#: qtplugins/plugindownloader/downloaderwidget.cpp:371
 #, qt-format
 msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
@@ -4620,29 +4620,47 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr "Échec de télécharger depuis %1 : code d'état %2, %3\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:407
+#: qtplugins/plugindownloader/downloaderwidget.cpp:404
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Téléchargement de %1 vers %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Extraction de %1 vers %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:423
+#: qtplugins/plugindownloader/downloaderwidget.cpp:420
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "%1 fichiers traités\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:427
+#: qtplugins/plugindownloader/downloaderwidget.cpp:424
 msgid "Extraction successful\n"
 msgstr "Extraction réussie\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:503
+#: qtplugins/plugindownloader/downloaderwidget.cpp:476
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Erreur lors de l'extraction : %1"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:508
+#: qtplugins/plugindownloader/downloaderwidget.cpp:571
+#: qtplugins/plugindownloader/downloaderwidget.cpp:608
+#, qt-format
+msgctxt "argument is program name"
+msgid "Installing dependencies with %1…"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:510
+#: qtplugins/plugindownloader/downloaderwidget.cpp:573
+#: qtplugins/plugindownloader/downloaderwidget.cpp:610
+msgid "Cancel"
+msgstr "Annuler"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:658
+msgid "Installation canceled\n"
+msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -9509,9 +9527,6 @@ msgstr ""
 
 #~ msgid "File name:"
 #~ msgstr "Nom de fichier :"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuler"
 
 #~ msgid "http://localhost:8080/api/v1"
 #~ msgstr "http://localhost:8080/api/v1"

@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-16 11:42+0000\n"
+"POT-Creation-Date: 2025-10-16 20:55+0000\n"
 "PO-Revision-Date: 2025-10-12 16:07+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
@@ -1315,14 +1315,14 @@ msgstr "Yeni bir görünüm oluştur"
 msgid "Periodic Table"
 msgstr "Periyodik Cetvel"
 
-#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:192
+#: qtgui/pythonscript.cpp:138 qtgui/pythonscript.cpp:226
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "'%1 %2' komut dosyası çalıştırılırken hata oluştu: Başlatma için bekleme "
 "süresi doldu (%3)."
 
-#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
+#: qtgui/pythonscript.cpp:148 qtgui/pythonscript.cpp:236
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1331,14 +1331,14 @@ msgstr ""
 "'%1 %2' komut dosyası çalıştırılırken hata: stdin'e yazılamadı (len = %3, %4 "
 "bayt yazdı, QProcess hatası: %5)."
 
-#: qtgui/pythonscript.cpp:127
+#: qtgui/pythonscript.cpp:161
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "'%1 %2' komut dosyası çalıştırılırken hata oluştu: Bitiş için bekleme süresi "
 "doldu (%3)."
 
-#: qtgui/pythonscript.cpp:136
+#: qtgui/pythonscript.cpp:170
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1352,32 +1352,32 @@ msgstr ""
 "Çıktı:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:145
+#: qtgui/pythonscript.cpp:179
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Uyarı '%1'"
 
-#: qtgui/pythonscript.cpp:267
+#: qtgui/pythonscript.cpp:301
 msgid "Script failed to start."
 msgstr "Betik başlatılamadı."
 
-#: qtgui/pythonscript.cpp:270
+#: qtgui/pythonscript.cpp:304
 msgid "Script crashed."
 msgstr "Komut dosyası çöktü."
 
-#: qtgui/pythonscript.cpp:273
+#: qtgui/pythonscript.cpp:307
 msgid "Script timed out."
 msgstr "Komut dosyası zaman aşımına uğradı."
 
-#: qtgui/pythonscript.cpp:276
+#: qtgui/pythonscript.cpp:310
 msgid "Read error."
 msgstr "Okuma hatası."
 
-#: qtgui/pythonscript.cpp:279
+#: qtgui/pythonscript.cpp:313
 msgid "Write error."
 msgstr "Yazma hatası."
 
-#: qtgui/pythonscript.cpp:283
+#: qtgui/pythonscript.cpp:317
 msgid "Unknown error."
 msgstr "Bilinmeyen hata."
 
@@ -1778,8 +1778,8 @@ msgstr "PQR Dosyaları (* .pqr)"
 #: qtplugins/openbabel/openbabel.cpp:886 qtplugins/openbabel/openbabel.cpp:928
 #: qtplugins/openbabel/openbabel.cpp:960
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/plugindownloader/downloaderwidget.cpp:99
-#: qtplugins/plugindownloader/downloaderwidget.cpp:105
+#: qtplugins/plugindownloader/downloaderwidget.cpp:101
+#: qtplugins/plugindownloader/downloaderwidget.cpp:107
 #: qtplugins/propertytables/propertyview.cpp:475
 #: qtplugins/propertytables/propertyview.cpp:508
 #: qtplugins/quantuminput/quantuminput.cpp:104
@@ -2329,7 +2329,7 @@ msgstr "Renk Opaklığı Haritasını Düzenle…"
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:103
+#: qtplugins/configurepython/configurepython.cpp:126
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:196
 #: qtplugins/forcefield/forcefield.cpp:198
@@ -2397,15 +2397,15 @@ msgstr "Harici komut dosyası komutlarını çalıştırın"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
-#: qtplugins/configurepython/configurepython.cpp:35:225 rc.cpp:240
+#: qtplugins/configurepython/configurepython.cpp:36:225 rc.cpp:240
 msgid "Python Settings…"
 msgstr "Python Ayarları…"
 
-#: qtplugins/configurepython/configurepython.cpp:49
+#: qtplugins/configurepython/configurepython.cpp:56
 msgid "Install Python"
 msgstr "Python İndir"
 
-#: qtplugins/configurepython/configurepython.cpp:50
+#: qtplugins/configurepython/configurepython.cpp:57
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
@@ -3620,7 +3620,7 @@ msgid "ID"
 msgstr "Kimlik"
 
 #: qtplugins/label/label.cpp:234
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 #: qtplugins/propertytables/propertymodel.cpp:647
 msgid "Name"
 msgstr "Ad"
@@ -4515,27 +4515,27 @@ msgstr ""
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr "ObjCryst++ kullanarak teorik bir XRD deseni oluşturun ve çizin."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 msgid "Update"
 msgstr "Güncelle"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 msgid "Version"
 msgstr "Sürüm"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:64
+#: qtplugins/plugindownloader/downloaderwidget.cpp:66
 msgid "Description"
 msgstr "Açıklama"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:100
+#: qtplugins/plugindownloader/downloaderwidget.cpp:102
 msgid "Error downloading plugin data."
 msgstr "Eklenti verileri indirilirken hata oluştu."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:105
+#: qtplugins/plugindownloader/downloaderwidget.cpp:107
 msgid "Error parsing plugin data."
 msgstr "Eklenti verileri ayrıştırılırken hata oluştu."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:313
+#: qtplugins/plugindownloader/downloaderwidget.cpp:309
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4543,16 +4543,16 @@ msgstr ""
 "Bu eklenti belirli paketlerin kurulmasını gerektirir.\n"
 "Onları kurmak ister misiniz?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:321
+#: qtplugins/plugindownloader/downloaderwidget.cpp:317
 msgid "Always"
 msgstr "Her zaman"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:322
+#: qtplugins/plugindownloader/downloaderwidget.cpp:318
 msgid "Never"
 msgstr "Hiçbir zaman"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:365
-#: qtplugins/plugindownloader/downloaderwidget.cpp:375
+#: qtplugins/plugindownloader/downloaderwidget.cpp:361
+#: qtplugins/plugindownloader/downloaderwidget.cpp:371
 #, qt-format
 msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
@@ -4560,29 +4560,47 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:407
+#: qtplugins/plugindownloader/downloaderwidget.cpp:404
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "%1, %2 konumuna indiriliyor\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "%1, %2 konumuna çıkarılıyor\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:423
+#: qtplugins/plugindownloader/downloaderwidget.cpp:420
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "%1 dosya tamamlandı\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:427
+#: qtplugins/plugindownloader/downloaderwidget.cpp:424
 msgid "Extraction successful\n"
 msgstr "Çıkarma başarılı\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:503
+#: qtplugins/plugindownloader/downloaderwidget.cpp:476
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Çıkarırken hata oluştu: %1"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:508
+#: qtplugins/plugindownloader/downloaderwidget.cpp:571
+#: qtplugins/plugindownloader/downloaderwidget.cpp:608
+#, qt-format
+msgctxt "argument is program name"
+msgid "Installing dependencies with %1…"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:510
+#: qtplugins/plugindownloader/downloaderwidget.cpp:573
+#: qtplugins/plugindownloader/downloaderwidget.cpp:610
+msgid "Cancel"
+msgstr "İptal"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:658
+msgid "Installation canceled\n"
+msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -9029,9 +9047,6 @@ msgstr ""
 
 #~ msgid "Files of type:"
 #~ msgstr "Dosya türü:"
-
-#~ msgid "Cancel"
-#~ msgstr "İptal"
 
 #~ msgid "Element & Ordinal"
 #~ msgstr "Element ve Sıra"
