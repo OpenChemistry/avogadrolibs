@@ -47,10 +47,12 @@ ConfigurePython::ConfigurePython(QObject* parent_)
   QFile::copy(":/files/pyproject.toml", pluginPath + "/pyproject.toml");
 
   // check for Python on first launch
-  QStringList paths = {}; // pythonPaths();
+  QStringList paths = pythonPaths();
   QSettings settings;
+  // check if we used pixi to install
+  bool installedWithPixi = settings.value("installedWithPixi", false).toBool();
 
-  if (paths.isEmpty()) { // show a warning
+  if (paths.isEmpty() && !installedWithPixi) { // show a warning
     // suggest the user install Python
     auto option = QMessageBox::information(
       qobject_cast<QWidget*>(parent()), tr("Install Python"),
@@ -69,8 +71,16 @@ ConfigurePython::ConfigurePython(QObject* parent_)
         pixi.waitForFinished();
 #ifndef NDEBUG
         qDebug() << "pixi output is " << pixi.readAllStandardOutput();
-        qDebug() << "pixi exit code is " << pixi.readAllStandardError();
+        qDebug() << "pixi error output is " << pixi.readAllStandardError();
 #endif
+        if (pixi.exitCode() != 0) {
+          qWarning() << "Error installing dependencies with pixi";
+        } else {
+          installedWithPixi = true;
+          settings.setValue("installedWithPixi", true);
+          // don't need to do it again
+        }
+
       } else {
         // no pixi, suggest installing miniforge
         QUrl miniforge;
