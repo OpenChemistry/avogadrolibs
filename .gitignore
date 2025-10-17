@@ -154,3 +154,20 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# CLion / JetBrains project files
+.idea/
+
+# Local doc builds
+build-docs//build/
+/build-*/
+/build-docs/
+/build-install/
+/cmake-build-debug/
+/.idea/
+/build/
+/build-*/
+/build-docs/
+/build-install/
+/cmake-build-debug/
+/.idea/
