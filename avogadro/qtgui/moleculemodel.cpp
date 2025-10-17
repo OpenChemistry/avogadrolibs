@@ -32,7 +32,7 @@ void MoleculeModel::loadIcons(bool darkMode)
   QString iconPath = ":icons/fallback/32x32/";
   QString plusIconPath = iconPath + (darkMode ? "plus-dark.png" : "plus-light.png");
 
-  m_plusIcon = QIcon::fromTheme("file-add", QIcon(plusIconPath));
+  m_plusIcon = QIcon(plusIconPath);
 }
 
 int MoleculeModel::rowCount(const QModelIndex& p) const
