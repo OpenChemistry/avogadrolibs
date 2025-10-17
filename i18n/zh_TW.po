@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-16 20:55+0000\n"
-"PO-Revision-Date: 2025-08-27 08:02+0000\n"
+"PO-Revision-Date: 2025-10-20 04:50+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hant/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1434,9 +1434,8 @@ msgid "Scale Cell Volume"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:549
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "超級晶格"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Niggli Reduction"
@@ -2392,9 +2391,8 @@ msgstr ""
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
-#, fuzzy
 msgid "Angle"
-msgstr "角度："
+msgstr "角度"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -4168,7 +4166,7 @@ msgstr "依照 pH 加上氫"
 #: qtplugins/openbabel/openbabel.cpp:872
 #, fuzzy
 msgid "pH:"
-msgstr "pH"
+msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:879 qtplugins/openbabel/openbabel.cpp:921
 msgid "Generating obabel input…"
@@ -7645,9 +7643,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
-#, fuzzy
 msgid "single"
-msgstr "單鍵"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
@@ -7656,9 +7653,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:217
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
-#, fuzzy
 msgid "double"
-msgstr "雙鍵"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:225
 #. i18n: ectx: property (text), widget (QLabel, label_deviceIndex)
