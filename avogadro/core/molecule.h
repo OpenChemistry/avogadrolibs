@@ -20,6 +20,7 @@
 #include "vector.h"
 
 #include <bitset>
+#include <cassert>
 #include <cstddef>
 #include <list>
 #include <map>
