@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>icons/fallback/32x32/cross.png</file>
+        <file>icons/fallback/32x32/cross-light.png</file>
+        <file>icons/fallback/32x32/cross-dark.png</file>
         <file>icons/fallback/32x32/dashed-preview-light.png</file>
         <file>icons/fallback/32x32/dashed-preview-dark.png</file>
         <file>icons/fallback/32x32/document-close.png</file>
