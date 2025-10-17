@@ -30,9 +30,13 @@ QModelIndex MoleculeModel::parent(const QModelIndex&) const
 void MoleculeModel::loadIcons(bool darkMode)
 {
   QString iconPath = ":icons/fallback/32x32/";
-  QString plusIconPath = iconPath + (darkMode ? "plus-dark.png" : "plus-light.png");
+  QString plusIconPath =
+    iconPath + (darkMode ? "plus-dark.png" : "plus-light.png");
+  QString closeIconPath =
+    iconPath + (darkMode ? "cross-dark.png" : "cross-light.png");
 
   m_plusIcon = QIcon(plusIconPath);
+  m_closeIcon = QIcon(closeIconPath);
 }
 
 int MoleculeModel::rowCount(const QModelIndex& p) const
@@ -100,8 +104,8 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
   auto* object = static_cast<QObject*>(idx.internalPointer());
   auto* mol = qobject_cast<Molecule*>(object);
 
-  if (idx.row() == m_molecules.size()){
-    if (idx.column() == 0 && role==Qt::DecorationRole) {
+  if (idx.row() == m_molecules.size()) {
+    if (idx.column() == 0 && role == Qt::DecorationRole) {
       return m_plusIcon;
     }
     return QVariant();
@@ -150,7 +154,7 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
     }
   } else if (idx.column() == 1) {
     if (role == Qt::DecorationRole)
-      return QIcon(":/icons/fallback/32x32/document-close.png");
+      return m_closeIcon;
   }
   return QVariant();
 }
@@ -162,9 +166,9 @@ QModelIndex MoleculeModel::index(int row, int column,
     if (row >= 0 && row < m_molecules.size()) {
       return createIndex(row, column, m_molecules[row]);
     }
-    if (row == m_molecules.size()) {
-      return createIndex(row, column, nullptr);
-    }
+  if (row == m_molecules.size()) {
+    return createIndex(row, column, nullptr);
+  }
   return QModelIndex();
 }
 
