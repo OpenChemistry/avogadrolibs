@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-16 20:55+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
+"PO-Revision-Date: 2025-10-20 04:50+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2443,9 +2443,8 @@ msgstr ""
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:62:262
-#, fuzzy
 msgid "Angle"
-msgstr "角度："
+msgstr "角度"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -7740,9 +7739,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
-#, fuzzy
 msgid "single"
-msgstr "单键"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
@@ -7751,9 +7749,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:217
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
-#, fuzzy
 msgid "double"
-msgstr "双键"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:225
 #. i18n: ectx: property (text), widget (QLabel, label_deviceIndex)
