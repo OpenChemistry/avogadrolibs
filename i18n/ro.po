@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-16 20:55+0000\n"
-"PO-Revision-Date: 2025-10-16 11:40+0000\n"
+"PO-Revision-Date: 2025-10-17 13:22+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
-"20)) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : "
+"(n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
 "X-Generator: Weblate 5.14-dev\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4647,17 +4647,17 @@ msgstr "Eroare în timp ce se extrăgea: %1"
 #, qt-format
 msgctxt "argument is program name"
 msgid "Installing dependencies with %1…"
-msgstr ""
+msgstr "Se instalează dependențele pentru %1…"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:510
 #: qtplugins/plugindownloader/downloaderwidget.cpp:573
 #: qtplugins/plugindownloader/downloaderwidget.cpp:610
 msgid "Cancel"
-msgstr ""
+msgstr "Anulează"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:658
 msgid "Installation canceled\n"
-msgstr ""
+msgstr "Instalare anulată\n"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -4946,7 +4946,7 @@ msgstr "Înghețare pe axa Z"
 
 #: qtplugins/propertytables/propertyview.cpp:540
 msgid "Unfreeze Atom"
-msgstr ""
+msgstr "Dezgheață atomul"
 
 #: qtplugins/propertytables/propertyview.cpp:548
 msgid "Constrain Bond"
@@ -4962,7 +4962,7 @@ msgstr "Constrângere(limitare) torsiune"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Remove Constraint"
-msgstr ""
+msgstr "Elimină constrângerea"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
