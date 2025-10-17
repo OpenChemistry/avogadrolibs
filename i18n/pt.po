@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-16 00:25+0000\n"
+"POT-Creation-Date: 2025-10-16 20:55+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
@@ -1322,14 +1322,14 @@ msgstr "Criar uma nova visão"
 msgid "Periodic Table"
 msgstr "Tabela Periódica"
 
-#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:192
+#: qtgui/pythonscript.cpp:138 qtgui/pythonscript.cpp:226
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Erro ao executar o script '%1 %2': Tempo limite esgotado ao aguardar o "
 "início (%3)."
 
-#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
+#: qtgui/pythonscript.cpp:148 qtgui/pythonscript.cpp:236
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1338,14 +1338,14 @@ msgstr ""
 "Erro ao executar o script '%1 %2': falha ao gravar em stdin (len= %3, gravou "
 "%4 bytes, erro QProcess: %5)."
 
-#: qtgui/pythonscript.cpp:127
+#: qtgui/pythonscript.cpp:161
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Erro ao executar o script '%1 %2': Tempo limite esgotado ao aguardar "
 "conclusão (%3)."
 
-#: qtgui/pythonscript.cpp:136
+#: qtgui/pythonscript.cpp:170
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1358,32 +1358,32 @@ msgstr ""
 "Resultado:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:145
+#: qtgui/pythonscript.cpp:179
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Alerta '%1'"
 
-#: qtgui/pythonscript.cpp:267
+#: qtgui/pythonscript.cpp:301
 msgid "Script failed to start."
 msgstr "Script falhou ao iniciar."
 
-#: qtgui/pythonscript.cpp:270
+#: qtgui/pythonscript.cpp:304
 msgid "Script crashed."
 msgstr "O código falhou."
 
-#: qtgui/pythonscript.cpp:273
+#: qtgui/pythonscript.cpp:307
 msgid "Script timed out."
 msgstr "O script expirou."
 
-#: qtgui/pythonscript.cpp:276
+#: qtgui/pythonscript.cpp:310
 msgid "Read error."
 msgstr "Erro de leitura."
 
-#: qtgui/pythonscript.cpp:279
+#: qtgui/pythonscript.cpp:313
 msgid "Write error."
 msgstr "Erro de escrita."
 
-#: qtgui/pythonscript.cpp:283
+#: qtgui/pythonscript.cpp:317
 msgid "Unknown error."
 msgstr "Erro desconhecido."
 
@@ -1780,10 +1780,10 @@ msgstr "Ficheiros PQR (*.pqr)"
 #: qtplugins/openbabel/openbabel.cpp:886 qtplugins/openbabel/openbabel.cpp:928
 #: qtplugins/openbabel/openbabel.cpp:960
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/plugindownloader/downloaderwidget.cpp:99
-#: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:407
-#: qtplugins/propertytables/propertyview.cpp:440
+#: qtplugins/plugindownloader/downloaderwidget.cpp:101
+#: qtplugins/plugindownloader/downloaderwidget.cpp:107
+#: qtplugins/propertytables/propertyview.cpp:475
+#: qtplugins/propertytables/propertyview.cpp:508
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "Erro"
@@ -2177,7 +2177,7 @@ msgid "Bond Selected Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:575
+#: qtplugins/propertytables/propertymodel.cpp:640
 #, fuzzy
 msgid "Bond"
 msgstr "Ligação"
@@ -2331,7 +2331,7 @@ msgstr "Editar Mapa de Opacidade de Cor …"
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:103
+#: qtplugins/configurepython/configurepython.cpp:126
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:196
 #: qtplugins/forcefield/forcefield.cpp:198
@@ -2399,15 +2399,15 @@ msgstr "Executar comandos de script externos"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
-#: qtplugins/configurepython/configurepython.cpp:35:225 rc.cpp:240
+#: qtplugins/configurepython/configurepython.cpp:36:225 rc.cpp:240
 msgid "Python Settings…"
 msgstr "Configurações Python…"
 
-#: qtplugins/configurepython/configurepython.cpp:49
+#: qtplugins/configurepython/configurepython.cpp:56
 msgid "Install Python"
 msgstr "Instalar Python"
 
-#: qtplugins/configurepython/configurepython.cpp:50
+#: qtplugins/configurepython/configurepython.cpp:57
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
@@ -2498,9 +2498,9 @@ msgid "Freeze Z Axis"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
-#: qtplugins/propertytables/propertymodel.cpp:561
-#: qtplugins/propertytables/propertymodel.cpp:602
-#: qtplugins/propertytables/propertymodel.cpp:619
+#: qtplugins/propertytables/propertymodel.cpp:626
+#: qtplugins/propertytables/propertymodel.cpp:667
+#: qtplugins/propertytables/propertymodel.cpp:684
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "Tipo"
@@ -2510,27 +2510,27 @@ msgid "Value"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
-#: qtplugins/propertytables/propertymodel.cpp:604
-#: qtplugins/propertytables/propertymodel.cpp:621
+#: qtplugins/propertytables/propertymodel.cpp:669
+#: qtplugins/propertytables/propertymodel.cpp:686
 #, fuzzy
 msgid "Atom 1"
 msgstr "Átomo 1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
-#: qtplugins/propertytables/propertymodel.cpp:623
+#: qtplugins/propertytables/propertymodel.cpp:688
 #, fuzzy
 msgid "Atom 2"
 msgstr "Átomo 2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
-#: qtplugins/propertytables/propertymodel.cpp:608
-#: qtplugins/propertytables/propertymodel.cpp:625
+#: qtplugins/propertytables/propertymodel.cpp:673
+#: qtplugins/propertytables/propertymodel.cpp:690
 #, fuzzy
 msgid "Atom 3"
 msgstr "Átomo 3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
-#: qtplugins/propertytables/propertymodel.cpp:627
+#: qtplugins/propertytables/propertymodel.cpp:692
 #, fuzzy
 msgid "Atom 4"
 msgstr "Átomo 4"
@@ -2705,7 +2705,7 @@ msgstr "Formato Turbomole"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:447:319
+#: qtplugins/propertytables/propertyview.cpp:515:319
 msgid "Copy"
 msgstr "Copiar"
 
@@ -3615,7 +3615,7 @@ msgstr ""
 msgid "Unique ID"
 msgstr "ID único"
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:531
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:596
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "Elemento"
@@ -3646,13 +3646,13 @@ msgstr ""
 msgid "Bond Label:"
 msgstr ""
 
-#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:584
+#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:649
 msgid "ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:234
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:582
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
+#: qtplugins/propertytables/propertymodel.cpp:647
 msgid "Name"
 msgstr ""
 
@@ -3837,7 +3837,7 @@ msgid "unknown molecule"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:260
-#: qtplugins/propertytables/propertymodel.cpp:643
+#: qtplugins/propertytables/propertymodel.cpp:708
 msgid "Property"
 msgstr ""
 
@@ -3960,29 +3960,29 @@ msgid "Molecule Properties"
 msgstr "Propriedades da Molécula"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:395
+#: qtplugins/propertytables/propertyview.cpp:463
 #, fuzzy
 msgid "Export CSV"
 msgstr "Exportar CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:396
+#: qtplugins/propertytables/propertyview.cpp:464
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Ficheiros CSV (*.csv);;Todos os ficheiros (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:408
+#: qtplugins/propertytables/propertyview.cpp:476
 #, fuzzy
 msgid "Could not open the file for writing."
 msgstr "Não é possível abrir o ficheiro para escrever."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:440
+#: qtplugins/propertytables/propertyview.cpp:508
 msgid "Error writing to the file."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:452
+#: qtplugins/propertytables/propertyview.cpp:520
 #, fuzzy
 msgid "Export…"
 msgstr "Exportar…"
@@ -4575,42 +4575,42 @@ msgstr "TraceDrx"
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr "Criar e desenhar um modelo de DRX teórico usando ObjCryst ++."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 msgid "Update"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 msgid "Version"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:64
+#: qtplugins/plugindownloader/downloaderwidget.cpp:66
 msgid "Description"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:100
+#: qtplugins/plugindownloader/downloaderwidget.cpp:102
 msgid "Error downloading plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:105
+#: qtplugins/plugindownloader/downloaderwidget.cpp:107
 msgid "Error parsing plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:313
+#: qtplugins/plugindownloader/downloaderwidget.cpp:309
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:321
+#: qtplugins/plugindownloader/downloaderwidget.cpp:317
 msgid "Always"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:322
+#: qtplugins/plugindownloader/downloaderwidget.cpp:318
 msgid "Never"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:365
-#: qtplugins/plugindownloader/downloaderwidget.cpp:375
+#: qtplugins/plugindownloader/downloaderwidget.cpp:361
+#: qtplugins/plugindownloader/downloaderwidget.cpp:371
 #, qt-format
 msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
@@ -4618,28 +4618,46 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:407
+#: qtplugins/plugindownloader/downloaderwidget.cpp:404
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:423
+#: qtplugins/plugindownloader/downloaderwidget.cpp:420
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:427
+#: qtplugins/plugindownloader/downloaderwidget.cpp:424
 msgid "Extraction successful\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:503
+#: qtplugins/plugindownloader/downloaderwidget.cpp:476
 #, qt-format
 msgid "Error while extracting: %1"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:508
+#: qtplugins/plugindownloader/downloaderwidget.cpp:571
+#: qtplugins/plugindownloader/downloaderwidget.cpp:608
+#, qt-format
+msgctxt "argument is program name"
+msgid "Installing dependencies with %1…"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:510
+#: qtplugins/plugindownloader/downloaderwidget.cpp:573
+#: qtplugins/plugindownloader/downloaderwidget.cpp:610
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:658
+msgid "Installation canceled\n"
 msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
@@ -4719,140 +4737,140 @@ msgstr ""
 msgid "Render the scene using POV-Ray."
 msgstr "Renderizar a cena usando o POV-Ray."
 
-#: qtplugins/propertytables/propertymodel.cpp:533
+#: qtplugins/propertytables/propertymodel.cpp:598
 msgid "Valence"
 msgstr "Valência"
 
-#: qtplugins/propertytables/propertymodel.cpp:535
+#: qtplugins/propertytables/propertymodel.cpp:600
 #, fuzzy
 msgid "Formal Charge"
 msgstr "Carga Formal"
 
-#: qtplugins/propertytables/propertymodel.cpp:538
+#: qtplugins/propertytables/propertymodel.cpp:603
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "Carga Parcial %1"
 
-#: qtplugins/propertytables/propertymodel.cpp:543
+#: qtplugins/propertytables/propertymodel.cpp:608
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:545
+#: qtplugins/propertytables/propertymodel.cpp:610
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:547
+#: qtplugins/propertytables/propertymodel.cpp:612
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:549
-#: qtplugins/propertytables/propertymodel.cpp:569
+#: qtplugins/propertytables/propertymodel.cpp:614
+#: qtplugins/propertytables/propertymodel.cpp:634
 msgid "Label"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:551
-#: qtplugins/propertytables/propertymodel.cpp:592
+#: qtplugins/propertytables/propertymodel.cpp:616
+#: qtplugins/propertytables/propertymodel.cpp:657
 #, fuzzy
 msgid "Color"
 msgstr "Cores"
 
-#: qtplugins/propertytables/propertymodel.cpp:554
+#: qtplugins/propertytables/propertymodel.cpp:619
 msgid "Atom"
 msgstr "Átomo"
 
-#: qtplugins/propertytables/propertymodel.cpp:563
+#: qtplugins/propertytables/propertymodel.cpp:628
 msgid "Start Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:565
+#: qtplugins/propertytables/propertymodel.cpp:630
 #, fuzzy
 msgid "End Atom"
 msgstr "Terminar Átomo"
 
-#: qtplugins/propertytables/propertymodel.cpp:567
+#: qtplugins/propertytables/propertymodel.cpp:632
 #, fuzzy
 msgid "Bond Order"
 msgstr "Ordem de Ligação"
 
-#: qtplugins/propertytables/propertymodel.cpp:571
+#: qtplugins/propertytables/propertymodel.cpp:636
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Comprimento (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:586
+#: qtplugins/propertytables/propertymodel.cpp:651
 msgid "Chain"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:588
+#: qtplugins/propertytables/propertymodel.cpp:653
 #, fuzzy
 msgid "Secondary Structure"
 msgstr "Estrutura Secundária"
 
-#: qtplugins/propertytables/propertymodel.cpp:590
+#: qtplugins/propertytables/propertymodel.cpp:655
 msgid "Heterogen"
 msgstr "Heterogênea"
 
-#: qtplugins/propertytables/propertymodel.cpp:606
+#: qtplugins/propertytables/propertymodel.cpp:671
 msgid "Vertex"
 msgstr "Vertex"
 
-#: qtplugins/propertytables/propertymodel.cpp:610
-#: qtplugins/propertytables/propertymodel.cpp:629
+#: qtplugins/propertytables/propertymodel.cpp:675
+#: qtplugins/propertytables/propertymodel.cpp:694
 #, fuzzy
 msgid "Angle (°)"
 msgstr "Ângulo (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:640
+#: qtplugins/propertytables/propertymodel.cpp:705
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:643
+#: qtplugins/propertytables/propertymodel.cpp:708
 msgid "Energy (kcal/mol)"
 msgstr "Energia (kcal/mol)"
 
-#: qtplugins/propertytables/propertymodel.cpp:839
+#: qtplugins/propertytables/propertymodel.cpp:904
 msgid "Adjust Fragment"
 msgstr "Ajustar Fragmento"
 
-#: qtplugins/propertytables/propertymodel.cpp:965
+#: qtplugins/propertytables/propertymodel.cpp:1030
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π-Hélice"
 
-#: qtplugins/propertytables/propertymodel.cpp:967
+#: qtplugins/propertytables/propertymodel.cpp:1032
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:969
+#: qtplugins/propertytables/propertymodel.cpp:1034
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α-Hélice"
 
-#: qtplugins/propertytables/propertymodel.cpp:971
+#: qtplugins/propertytables/propertymodel.cpp:1036
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "Folha-beta"
 
-#: qtplugins/propertytables/propertymodel.cpp:973
+#: qtplugins/propertytables/propertymodel.cpp:1038
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:975
+#: qtplugins/propertytables/propertymodel.cpp:1040
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:977
+#: qtplugins/propertytables/propertymodel.cpp:1042
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:979
+#: qtplugins/propertytables/propertymodel.cpp:1044
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -4923,32 +4941,40 @@ msgstr "Propriedades da conformação"
 msgid "Residue Properties"
 msgstr "Propriedades de Residência"
 
-#: qtplugins/propertytables/propertyview.cpp:459
+#: qtplugins/propertytables/propertyview.cpp:527
 msgid "Freeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:463
+#: qtplugins/propertytables/propertyview.cpp:531
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:466
+#: qtplugins/propertytables/propertyview.cpp:534
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:469
+#: qtplugins/propertytables/propertyview.cpp:537
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:476
+#: qtplugins/propertytables/propertyview.cpp:540
+msgid "Unfreeze Atom"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:548
 msgid "Constrain Bond"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:478
+#: qtplugins/propertytables/propertyview.cpp:550
 msgid "Constrain Angle"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:480
+#: qtplugins/propertytables/propertyview.cpp:552
 msgid "Constrain Torsion"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:559
+msgid "Remove Constraint"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
@@ -9204,9 +9230,6 @@ msgstr ""
 
 #~ msgid "Files of type:"
 #~ msgstr "Ficheiros do tipo:"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
 
 #~ msgid "MongoChem Config"
 #~ msgstr "Config MongoChem"

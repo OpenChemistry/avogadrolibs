@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-16 00:25+0000\n"
-"PO-Revision-Date: 2025-10-16 11:40+0000\n"
+"POT-Creation-Date: 2025-10-16 20:55+0000\n"
+"PO-Revision-Date: 2025-10-17 13:22+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -1326,14 +1326,14 @@ msgstr "Створіть новий перегляд"
 msgid "Periodic Table"
 msgstr "Періодична таблиця"
 
-#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:192
+#: qtgui/pythonscript.cpp:138 qtgui/pythonscript.cpp:226
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Помилка під час виконання сценарію \"%1 %2\": минув час очікування запуску "
 "(%3)."
 
-#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
+#: qtgui/pythonscript.cpp:148 qtgui/pythonscript.cpp:236
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1342,13 +1342,13 @@ msgstr ""
 "Помилка під час виконання сценарію \"%1 %2\": не вдалося записати в "
 "стандартний вхід (len=%3, записав %4 байти, помилка QProcess: %5)."
 
-#: qtgui/pythonscript.cpp:127
+#: qtgui/pythonscript.cpp:161
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Помилка виконання сценарію \"%1 %2\": минув час очікування завершення (%3)."
 
-#: qtgui/pythonscript.cpp:136
+#: qtgui/pythonscript.cpp:170
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1362,32 +1362,32 @@ msgstr ""
 "Вихід:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:145
+#: qtgui/pythonscript.cpp:179
 #, qt-format
 msgid "Warning '%1'"
 msgstr "УВАГА '%1'"
 
-#: qtgui/pythonscript.cpp:267
+#: qtgui/pythonscript.cpp:301
 msgid "Script failed to start."
 msgstr "Не вдалося запустити сценарій."
 
-#: qtgui/pythonscript.cpp:270
+#: qtgui/pythonscript.cpp:304
 msgid "Script crashed."
 msgstr "Збій сценарію."
 
-#: qtgui/pythonscript.cpp:273
+#: qtgui/pythonscript.cpp:307
 msgid "Script timed out."
 msgstr "Сценарій минув."
 
-#: qtgui/pythonscript.cpp:276
+#: qtgui/pythonscript.cpp:310
 msgid "Read error."
 msgstr "Помилка читання."
 
-#: qtgui/pythonscript.cpp:279
+#: qtgui/pythonscript.cpp:313
 msgid "Write error."
 msgstr "Помилка запису."
 
-#: qtgui/pythonscript.cpp:283
+#: qtgui/pythonscript.cpp:317
 msgid "Unknown error."
 msgstr "Невідома помилка."
 
@@ -1786,10 +1786,10 @@ msgstr "Файли PQR (*.pqr)"
 #: qtplugins/openbabel/openbabel.cpp:886 qtplugins/openbabel/openbabel.cpp:928
 #: qtplugins/openbabel/openbabel.cpp:960
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/plugindownloader/downloaderwidget.cpp:99
-#: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:407
-#: qtplugins/propertytables/propertyview.cpp:440
+#: qtplugins/plugindownloader/downloaderwidget.cpp:101
+#: qtplugins/plugindownloader/downloaderwidget.cpp:107
+#: qtplugins/propertytables/propertyview.cpp:475
+#: qtplugins/propertytables/propertyview.cpp:508
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "Помилка"
@@ -2201,7 +2201,7 @@ msgid "Bond Selected Atoms"
 msgstr "З’єднайте вибрані атоми"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:575
+#: qtplugins/propertytables/propertymodel.cpp:640
 msgid "Bond"
 msgstr "Зв’язок"
 
@@ -2350,7 +2350,7 @@ msgstr "Редагувати карту непрозорості кольорі�
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:103
+#: qtplugins/configurepython/configurepython.cpp:126
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:196
 #: qtplugins/forcefield/forcefield.cpp:198
@@ -2417,15 +2417,15 @@ msgstr "Виконайте команди зовнішнього сценарі�
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
-#: qtplugins/configurepython/configurepython.cpp:35:225 rc.cpp:240
+#: qtplugins/configurepython/configurepython.cpp:36:225 rc.cpp:240
 msgid "Python Settings…"
 msgstr "Налаштування Python…"
 
-#: qtplugins/configurepython/configurepython.cpp:49
+#: qtplugins/configurepython/configurepython.cpp:56
 msgid "Install Python"
 msgstr "Встановіть Python"
 
-#: qtplugins/configurepython/configurepython.cpp:50
+#: qtplugins/configurepython/configurepython.cpp:57
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
@@ -2514,9 +2514,9 @@ msgid "Freeze Z Axis"
 msgstr "Зафіксувати вісь Z"
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
-#: qtplugins/propertytables/propertymodel.cpp:561
-#: qtplugins/propertytables/propertymodel.cpp:602
-#: qtplugins/propertytables/propertymodel.cpp:619
+#: qtplugins/propertytables/propertymodel.cpp:626
+#: qtplugins/propertytables/propertymodel.cpp:667
+#: qtplugins/propertytables/propertymodel.cpp:684
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "Тип"
@@ -2526,24 +2526,24 @@ msgid "Value"
 msgstr "Значення"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
-#: qtplugins/propertytables/propertymodel.cpp:604
-#: qtplugins/propertytables/propertymodel.cpp:621
+#: qtplugins/propertytables/propertymodel.cpp:669
+#: qtplugins/propertytables/propertymodel.cpp:686
 msgid "Atom 1"
 msgstr "Атом 1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
-#: qtplugins/propertytables/propertymodel.cpp:623
+#: qtplugins/propertytables/propertymodel.cpp:688
 msgid "Atom 2"
 msgstr "Атом 2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
-#: qtplugins/propertytables/propertymodel.cpp:608
-#: qtplugins/propertytables/propertymodel.cpp:625
+#: qtplugins/propertytables/propertymodel.cpp:673
+#: qtplugins/propertytables/propertymodel.cpp:690
 msgid "Atom 3"
 msgstr "Атом 3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
-#: qtplugins/propertytables/propertymodel.cpp:627
+#: qtplugins/propertytables/propertymodel.cpp:692
 msgid "Atom 4"
 msgstr "Атом 4"
 
@@ -2716,7 +2716,7 @@ msgstr "Турбомольний формат"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:447:319
+#: qtplugins/propertytables/propertyview.cpp:515:319
 msgid "Copy"
 msgstr "Копіювати"
 
@@ -3609,7 +3609,7 @@ msgstr "Індекс"
 msgid "Unique ID"
 msgstr "Унікальний ідентифікатор"
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:531
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:596
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "Елемент"
@@ -3639,13 +3639,13 @@ msgstr "Довжина"
 msgid "Bond Label:"
 msgstr "Мітка облігації:"
 
-#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:584
+#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:649
 msgid "ID"
 msgstr "ID"
 
 #: qtplugins/label/label.cpp:234
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:582
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
+#: qtplugins/propertytables/propertymodel.cpp:647
 msgid "Name"
 msgstr "Ім'я"
 
@@ -3838,7 +3838,7 @@ msgid "unknown molecule"
 msgstr "невідома молекула"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:260
-#: qtplugins/propertytables/propertymodel.cpp:643
+#: qtplugins/propertytables/propertymodel.cpp:708
 msgid "Property"
 msgstr "Власність"
 
@@ -3960,27 +3960,27 @@ msgid "Molecule Properties"
 msgstr "Властивості молекули"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:395
+#: qtplugins/propertytables/propertyview.cpp:463
 msgid "Export CSV"
 msgstr "Експорт CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:396
+#: qtplugins/propertytables/propertyview.cpp:464
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Файли CSV (*.csv);;Усі файли (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:408
+#: qtplugins/propertytables/propertyview.cpp:476
 msgid "Could not open the file for writing."
 msgstr "Не вдалося відкрити файл для запису."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:440
+#: qtplugins/propertytables/propertyview.cpp:508
 msgid "Error writing to the file."
 msgstr "Помилка запису у файл."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:452
+#: qtplugins/propertytables/propertyview.cpp:520
 msgid "Export…"
 msgstr "Експорт…"
 
@@ -4558,27 +4558,27 @@ msgstr "Plot Xrd"
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr "Створіть і побудуйте теоретичну модель XRD за допомогою ObjCryst++."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 msgid "Update"
 msgstr "Оновлення"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:63
+#: qtplugins/plugindownloader/downloaderwidget.cpp:65
 msgid "Version"
 msgstr "Версія"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:64
+#: qtplugins/plugindownloader/downloaderwidget.cpp:66
 msgid "Description"
 msgstr "Опис"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:100
+#: qtplugins/plugindownloader/downloaderwidget.cpp:102
 msgid "Error downloading plugin data."
 msgstr "Помилка завантаження даних плагіна."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:105
+#: qtplugins/plugindownloader/downloaderwidget.cpp:107
 msgid "Error parsing plugin data."
 msgstr "Помилка аналізу даних плагіна."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:313
+#: qtplugins/plugindownloader/downloaderwidget.cpp:309
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4586,16 +4586,16 @@ msgstr ""
 "Цей плагін вимагає встановлення певних пакетів.\n"
 "Ви хочете їх встановити?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:321
+#: qtplugins/plugindownloader/downloaderwidget.cpp:317
 msgid "Always"
 msgstr "Завжди"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:322
+#: qtplugins/plugindownloader/downloaderwidget.cpp:318
 msgid "Never"
 msgstr "Ніколи"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:365
-#: qtplugins/plugindownloader/downloaderwidget.cpp:375
+#: qtplugins/plugindownloader/downloaderwidget.cpp:361
+#: qtplugins/plugindownloader/downloaderwidget.cpp:371
 #, qt-format
 msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
@@ -4603,29 +4603,47 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr "Не вдалося завантажити з %1: код стану %2, %3\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:407
+#: qtplugins/plugindownloader/downloaderwidget.cpp:404
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Завантаження %1 до %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Видобування %1 до %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:423
+#: qtplugins/plugindownloader/downloaderwidget.cpp:420
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "Завершено %1 файлів\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:427
+#: qtplugins/plugindownloader/downloaderwidget.cpp:424
 msgid "Extraction successful\n"
 msgstr "Видобуток успішний\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:503
+#: qtplugins/plugindownloader/downloaderwidget.cpp:476
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Помилка під час видобування: %1"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:508
+#: qtplugins/plugindownloader/downloaderwidget.cpp:571
+#: qtplugins/plugindownloader/downloaderwidget.cpp:608
+#, qt-format
+msgctxt "argument is program name"
+msgid "Installing dependencies with %1…"
+msgstr "Встановлення залежностей за допомогою %1…"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:510
+#: qtplugins/plugindownloader/downloaderwidget.cpp:573
+#: qtplugins/plugindownloader/downloaderwidget.cpp:610
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:658
+msgid "Installation canceled\n"
+msgstr "Встановлення скасовано\n"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -4706,133 +4724,133 @@ msgstr "POV Ray"
 msgid "Render the scene using POV-Ray."
 msgstr "Візуалізуйте сцену за допомогою POV-Ray."
 
-#: qtplugins/propertytables/propertymodel.cpp:533
+#: qtplugins/propertytables/propertymodel.cpp:598
 msgid "Valence"
 msgstr "Валентність"
 
-#: qtplugins/propertytables/propertymodel.cpp:535
+#: qtplugins/propertytables/propertymodel.cpp:600
 msgid "Formal Charge"
 msgstr "Офіційне звинувачення"
 
-#: qtplugins/propertytables/propertymodel.cpp:538
+#: qtplugins/propertytables/propertymodel.cpp:603
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1 Часткова зарядка"
 
-#: qtplugins/propertytables/propertymodel.cpp:543
+#: qtplugins/propertytables/propertymodel.cpp:608
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:545
+#: qtplugins/propertytables/propertymodel.cpp:610
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:547
+#: qtplugins/propertytables/propertymodel.cpp:612
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:549
-#: qtplugins/propertytables/propertymodel.cpp:569
+#: qtplugins/propertytables/propertymodel.cpp:614
+#: qtplugins/propertytables/propertymodel.cpp:634
 msgid "Label"
 msgstr "Мітка"
 
-#: qtplugins/propertytables/propertymodel.cpp:551
-#: qtplugins/propertytables/propertymodel.cpp:592
+#: qtplugins/propertytables/propertymodel.cpp:616
+#: qtplugins/propertytables/propertymodel.cpp:657
 msgid "Color"
 msgstr "Колір"
 
-#: qtplugins/propertytables/propertymodel.cpp:554
+#: qtplugins/propertytables/propertymodel.cpp:619
 msgid "Atom"
 msgstr "Атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:563
+#: qtplugins/propertytables/propertymodel.cpp:628
 msgid "Start Atom"
 msgstr "Початковий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:565
+#: qtplugins/propertytables/propertymodel.cpp:630
 msgid "End Atom"
 msgstr "Кінцевий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:567
+#: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Bond Order"
 msgstr "Порядок облігацій"
 
-#: qtplugins/propertytables/propertymodel.cpp:571
+#: qtplugins/propertytables/propertymodel.cpp:636
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Довжина (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:586
+#: qtplugins/propertytables/propertymodel.cpp:651
 msgid "Chain"
 msgstr "Ланцюг"
 
-#: qtplugins/propertytables/propertymodel.cpp:588
+#: qtplugins/propertytables/propertymodel.cpp:653
 msgid "Secondary Structure"
 msgstr "Вторинна структура"
 
-#: qtplugins/propertytables/propertymodel.cpp:590
+#: qtplugins/propertytables/propertymodel.cpp:655
 msgid "Heterogen"
 msgstr "Гетероген"
 
-#: qtplugins/propertytables/propertymodel.cpp:606
+#: qtplugins/propertytables/propertymodel.cpp:671
 msgid "Vertex"
 msgstr "Вершина"
 
-#: qtplugins/propertytables/propertymodel.cpp:610
-#: qtplugins/propertytables/propertymodel.cpp:629
+#: qtplugins/propertytables/propertymodel.cpp:675
+#: qtplugins/propertytables/propertymodel.cpp:694
 msgid "Angle (°)"
 msgstr "Кут (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:640
+#: qtplugins/propertytables/propertymodel.cpp:705
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "RMSD (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:643
+#: qtplugins/propertytables/propertymodel.cpp:708
 msgid "Energy (kcal/mol)"
 msgstr "Енергія (ккал/моль)"
 
-#: qtplugins/propertytables/propertymodel.cpp:839
+#: qtplugins/propertytables/propertymodel.cpp:904
 msgid "Adjust Fragment"
 msgstr "Налаштувати фрагмент"
 
-#: qtplugins/propertytables/propertymodel.cpp:965
+#: qtplugins/propertytables/propertymodel.cpp:1030
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:967
+#: qtplugins/propertytables/propertymodel.cpp:1032
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "Вигин"
 
-#: qtplugins/propertytables/propertymodel.cpp:969
+#: qtplugins/propertytables/propertymodel.cpp:1034
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:971
+#: qtplugins/propertytables/propertymodel.cpp:1036
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β Аркуш"
 
-#: qtplugins/propertytables/propertymodel.cpp:973
+#: qtplugins/propertytables/propertymodel.cpp:1038
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:975
+#: qtplugins/propertytables/propertymodel.cpp:1040
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "β Міст"
 
-#: qtplugins/propertytables/propertymodel.cpp:977
+#: qtplugins/propertytables/propertymodel.cpp:1042
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "Поворот"
 
-#: qtplugins/propertytables/propertymodel.cpp:979
+#: qtplugins/propertytables/propertymodel.cpp:1044
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "Котушка"
@@ -4896,33 +4914,41 @@ msgstr "Властивості конформерів"
 msgid "Residue Properties"
 msgstr "Властивості залишку"
 
-#: qtplugins/propertytables/propertyview.cpp:459
+#: qtplugins/propertytables/propertyview.cpp:527
 msgid "Freeze Atom"
 msgstr "Заморозити атом"
 
-#: qtplugins/propertytables/propertyview.cpp:463
+#: qtplugins/propertytables/propertyview.cpp:531
 msgid "Freeze X"
 msgstr "Заморозити X"
 
-#: qtplugins/propertytables/propertyview.cpp:466
+#: qtplugins/propertytables/propertyview.cpp:534
 msgid "Freeze Y"
 msgstr "Заморозити Y"
 
-#: qtplugins/propertytables/propertyview.cpp:469
+#: qtplugins/propertytables/propertyview.cpp:537
 msgid "Freeze Z"
 msgstr "Заморозити Z"
 
-#: qtplugins/propertytables/propertyview.cpp:476
+#: qtplugins/propertytables/propertyview.cpp:540
+msgid "Unfreeze Atom"
+msgstr "Розморозити атом"
+
+#: qtplugins/propertytables/propertyview.cpp:548
 msgid "Constrain Bond"
 msgstr "Обмежити облігацію"
 
-#: qtplugins/propertytables/propertyview.cpp:478
+#: qtplugins/propertytables/propertyview.cpp:550
 msgid "Constrain Angle"
 msgstr "Обмежити кут"
 
-#: qtplugins/propertytables/propertyview.cpp:480
+#: qtplugins/propertytables/propertyview.cpp:552
 msgid "Constrain Torsion"
 msgstr "Обмежити кручення"
+
+#: qtplugins/propertytables/propertyview.cpp:559
+msgid "Remove Constraint"
+msgstr "Вилучити обмеження"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -9462,9 +9488,6 @@ msgstr "Ваші електронні листи"
 #, fuzzy
 #~ msgid "Navigate Forward"
 #~ msgstr "Навігація"
-
-#~ msgid "Cancel"
-#~ msgstr "Скасувати"
 
 #, fuzzy
 #~ msgid "Element & Ordinal"
