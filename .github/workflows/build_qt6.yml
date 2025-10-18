@@ -24,21 +24,21 @@ jobs:
       matrix:
         config:
         - {
-            name: "macOS Qt6 ARM", artifact: "macOS-arm64.zip",
+            name: "macOS Qt6 ARM", artifact: "macOS-arm64",
             os: macos-15,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
           }
         - {
-            name: "macOS Qt6 Intel", artifact: "macOS.zip",
+            name: "macOS Qt6 Intel", artifact: "macOS-intel",
             os: macos-15-intel,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja",
           }
         - {
-            name: "Windows Qt6", artifact: "win64.zip",
+            name: "Windows Qt6", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
