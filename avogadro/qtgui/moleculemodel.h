@@ -74,6 +74,7 @@ private:
   QList<Molecule*> m_molecules;
   QObject* m_activeMolecule;
   QIcon m_plusIcon;
+  QIcon m_closeIcon;
 };
 
 } // namespace QtGui
