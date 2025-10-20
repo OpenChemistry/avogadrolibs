@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-16 20:55+0000\n"
-"PO-Revision-Date: 2025-10-16 00:27+0000\n"
+"PO-Revision-Date: 2025-10-20 04:50+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1120,7 +1120,7 @@ msgstr "プロセッサコア"
 
 #: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
 msgid "Memory"
-msgstr ""
+msgstr "メモリ"
 
 #: qtgui/jsonwidget.cpp:233
 msgid "Calculation Type"
@@ -1144,12 +1144,12 @@ msgstr "多重度"
 
 #: qtgui/jsonwidget.cpp:255
 msgid "Solvent"
-msgstr ""
+msgstr "溶媒"
 
 #: qtgui/jsonwidget.cpp:256
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "模型"
 
 #: qtgui/jsonwidget.cpp:378
 msgid "User Name"
@@ -2131,7 +2131,6 @@ msgid "Bond centric manipulation tool."
 msgstr "結合中心操作ツール"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
-#, fuzzy
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr "結合長や結合角を変えて分子構造を編集するツールです。"
@@ -4367,14 +4366,16 @@ msgid "Frame:"
 msgstr "フレーム:"
 
 #: qtplugins/playertool/playertool.cpp:113
+#, fuzzy
 msgctxt "start or first frame index"
 msgid "Start:"
-msgstr ""
+msgstr "最初:"
 
 #: qtplugins/playertool/playertool.cpp:124
+#, fuzzy
 msgctxt "end or last frame index"
 msgid "End:"
-msgstr ""
+msgstr "最後:"
 
 #: qtplugins/playertool/playertool.cpp:138
 #, fuzzy
@@ -4397,8 +4398,9 @@ msgid "Play"
 msgstr "再生"
 
 #: qtplugins/playertool/playertool.cpp:165
+#, fuzzy
 msgid "Record…"
-msgstr ""
+msgstr "録画…"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
@@ -4603,8 +4605,9 @@ msgid "Cancel"
 msgstr "キャンセル"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:658
+#, fuzzy
 msgid "Installation canceled\n"
-msgstr ""
+msgstr "インストールはキャンセルされました\n"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -4881,7 +4884,7 @@ msgstr "残基のプロパティ"
 
 #: qtplugins/propertytables/propertyview.cpp:527
 msgid "Freeze Atom"
-msgstr "原子を凍結"
+msgstr "原子を固定"
 
 #: qtplugins/propertytables/propertyview.cpp:531
 msgid "Freeze X"
@@ -4897,7 +4900,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:540
 msgid "Unfreeze Atom"
-msgstr ""
+msgstr "原子の固定を解除"
 
 #: qtplugins/propertytables/propertyview.cpp:548
 msgid "Constrain Bond"
@@ -4912,8 +4915,9 @@ msgid "Constrain Torsion"
 msgstr "ねじれを制限"
 
 #: qtplugins/propertytables/propertyview.cpp:559
+#, fuzzy
 msgid "Remove Constraint"
-msgstr ""
+msgstr "制限を解除"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
