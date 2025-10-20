@@ -349,19 +349,19 @@ QTAIMCriticalPointLocator::QTAIMCriticalPointLocator(QTAIMWavefunction& wfn)
 {
   m_wfn = &wfn;
 
-  m_nuclearCriticalPoints.empty();
-  m_bondCriticalPoints.empty();
-  m_ringCriticalPoints.empty();
-  m_cageCriticalPoints.empty();
+  m_nuclearCriticalPoints.clear();
+  m_bondCriticalPoints.clear();
+  m_ringCriticalPoints.clear();
+  m_cageCriticalPoints.clear();
 
-  m_laplacianAtBondCriticalPoints.empty();
-  m_ellipticityAtBondCriticalPoints.empty();
+  m_laplacianAtBondCriticalPoints.clear();
+  m_ellipticityAtBondCriticalPoints.clear();
 
-  m_bondPaths.empty();
-  m_bondedAtoms.empty();
+  m_bondPaths.clear();
+  m_bondedAtoms.clear();
 
-  m_electronDensitySources.empty();
-  m_electronDensitySinks.empty();
+  m_electronDensitySources.clear();
+  m_electronDensitySinks.clear();
 }
 
 void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
@@ -479,7 +479,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
         inputList.append(input);
       }
     } // end N
-  } // end M
+  }   // end M
 
   m_wfn->saveToBinaryFile(tempFileName);
 

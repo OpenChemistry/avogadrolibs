@@ -46,7 +46,7 @@ QTAIMLSODAIntegrator::QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator& eval,
                                            const qint64 mode)
   : m_eval(&eval), m_mode(mode), m_associatedSphere(0)
 {
-  m_betaSpheres.empty();
+  m_betaSpheres.clear();
 }
 
 QVector3D QTAIMLSODAIntegrator::integrate(QVector3D x0y0z0)
@@ -1019,7 +1019,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
         return;
       }
     } /*   end else   */ /*   end iopt = 1   */
-  } /*   end if ( *istate == 1 || *istate == 3 )   */
+  }                      /*   end if ( *istate == 1 || *istate == 3 )   */
   /*
    If *istate = 1, meth is initialized to 1.
 
@@ -1123,7 +1123,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
         return;
       }
     } /*   end for   */
-  } /*   end if ( *istate == 1 || *istate == 3 )   */
+  }   /*   end if ( *istate == 1 || *istate == 3 )   */
   /*
    If *istate = 3, set flag to signal parameter changes to stoda.
 */
@@ -1353,7 +1353,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
           jstart = -2;
         break;
     } /*   end switch   */
-  } /*   end if ( *istate == 2 || *istate == 3 )   */
+  }   /*   end if ( *istate == 2 || *istate == 3 )   */
 
   /*
    Block e.
@@ -1555,7 +1555,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
       terminate2(y, t);
       return;
     } /*   end if ( kflag == -1 || kflag == -2 )   */
-  } /*   end while   */
+  }   /*   end while   */
 
 } /*   end lsoda   */
 
@@ -1897,8 +1897,8 @@ void QTAIMLSODAIntegrator::stoda(int neq, double* y)
           continue;
         }
       } /*   end else -- kflag <= -3 */
-    } /*   end error failure handling   */
-  } /*   end outer while   */
+    }   /*   end error failure handling   */
+  }     /*   end outer while   */
 
 } /*   end stoda   */
 
