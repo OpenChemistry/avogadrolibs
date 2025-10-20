@@ -57,7 +57,9 @@ namespace {
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
-
+#include<QJsonObject>
+#include<QJsonDocument>
+#include<QObject>
 #include <QGuiApplication>
 #include <QScreen>
 
@@ -78,6 +80,8 @@ class Surfaces::PIMPL
 public:
   GifWriter* gifWriter = nullptr;
   gwavi_t* gwaviWriter = nullptr;
+  signals:
+    void sendMessage(const QJsonObject& message);
 };
 
 Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
@@ -386,7 +390,10 @@ float inline square(float x)
 {
   return x * x;
 }
-
+void sendMessage(QString& message)
+{
+  qDebug() << "Message received:" << message;
+}
 void Surfaces::calculateEDT(Type type, float defaultResolution)
 {
   if (type == Unknown && m_dialog != nullptr)
@@ -466,7 +473,14 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
           }
         }
       });
+    QJsonObject jsonMessage;
+    jsonMessage["status"] = "finished";
+    jsonMessage["message"] = "Surface calculation completed successfully.";
+    QJsonDocument doc(jsonMessage);
+    QString jsonString = doc.toJson(QJsonDocument::Compact);
 
+    // Emitting the signal to notify the plugin that the calculation is finished
+    emit sendMessage(jsonString);
     innerFuture.waitForFinished();
   });
 
@@ -533,8 +547,7 @@ void Surfaces::performEDTStep()
         }
       }
     });
-
-    innerFuture.waitForFinished();
+    
   });
 
   m_displayMeshWatcher.setFuture(future);
