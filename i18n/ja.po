@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-16 20:55+0000\n"
-"PO-Revision-Date: 2025-10-20 04:50+0000\n"
+"PO-Revision-Date: 2025-10-21 07:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -3203,17 +3203,17 @@ msgstr "選択した原子を固定"
 #: qtplugins/forcefield/forcefield.cpp:118
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
-msgstr ""
+msgstr "X軸を固定"
 
 #: qtplugins/forcefield/forcefield.cpp:126
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
-msgstr ""
+msgstr "Y軸を固定"
 
 #: qtplugins/forcefield/forcefield.cpp:134
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
-msgstr ""
+msgstr "Z軸を固定"
 
 #: qtplugins/forcefield/forcefield.cpp:142
 msgid "Unfreeze Selected Atoms"
@@ -4429,7 +4429,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:310
 msgid "The GIF file format does not support frame rates over 100 FPS."
-msgstr ""
+msgstr "GIFファイルフォーマットは100FPS以上のフレームレートをサポートしていません。"
 
 #: qtplugins/playertool/playertool.cpp:355
 msgid "Movie (*.avi)"
@@ -4888,15 +4888,15 @@ msgstr "原子を固定"
 
 #: qtplugins/propertytables/propertyview.cpp:531
 msgid "Freeze X"
-msgstr ""
+msgstr "X座標を固定"
 
 #: qtplugins/propertytables/propertyview.cpp:534
 msgid "Freeze Y"
-msgstr ""
+msgstr "Y座標を固定"
 
 #: qtplugins/propertytables/propertyview.cpp:537
 msgid "Freeze Z"
-msgstr ""
+msgstr "Z座標を固定"
 
 #: qtplugins/propertytables/propertyview.cpp:540
 msgid "Unfreeze Atom"
@@ -4915,7 +4915,6 @@ msgid "Constrain Torsion"
 msgstr "ねじれを制限"
 
 #: qtplugins/propertytables/propertyview.cpp:559
-#, fuzzy
 msgid "Remove Constraint"
 msgstr "制限を解除"
 
@@ -4978,8 +4977,9 @@ msgid "Reset view"
 msgstr "ビューのリセット"
 
 #: qtplugins/resetview/resetview.h:29
+#, fuzzy
 msgid "Manipulate the view camera."
-msgstr ""
+msgstr "ビューカメラを操作"
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
 msgid "Script Charge Models"
@@ -4988,7 +4988,7 @@ msgstr "電荷モデルのスクリプト"
 #: qtplugins/scriptcharges/scriptcharges.h:36
 #, fuzzy
 msgid "Load electrostatic models from external scripts."
-msgstr "外部スクリプトから静電モデルを読み込み"
+msgstr "外部スクリプトから静電モデルを読み込む"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
@@ -8787,7 +8787,7 @@ msgstr "特殊なk点につながっているk点の数:"
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #, fuzzy
 msgid "Special k-points"
-msgstr "特別なk点"
+msgstr "特殊なk点"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:98
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_maxY)
