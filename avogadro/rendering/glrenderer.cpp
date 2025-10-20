@@ -320,6 +320,7 @@ Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
 {
   // Figure out where the corners of our rectangle are.
   Frustrum f;
+
   f.points[0] = m_camera.unProject(
     Vector3f(static_cast<float>(x1), static_cast<float>(y1), 0.f));
   f.points[1] = m_camera.unProject(
@@ -337,11 +338,18 @@ Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
   f.points[7] = m_camera.unProject(
     Vector3f(static_cast<float>(x2), static_cast<float>(y1), 1.f));
 
-  // Define a frustrum for testing if things are within it.
-  f.planes[0] = (f.points[0] - f.points[1]).cross(f.points[2] - f.points[3]);
-  f.planes[1] = (f.points[2] - f.points[3]).cross(f.points[4] - f.points[5]);
-  f.planes[2] = (f.points[4] - f.points[5]).cross(f.points[6] - f.points[7]);
-  f.planes[3] = (f.points[6] - f.points[7]).cross(f.points[0] - f.points[1]);
+  if (m_camera.projectionType() == Perspective) {
+    f.planes[0] = (f.points[0] - f.points[1]).cross(f.points[2] - f.points[3]);
+    f.planes[1] = (f.points[2] - f.points[3]).cross(f.points[4] - f.points[5]);
+    f.planes[2] = (f.points[4] - f.points[5]).cross(f.points[6] - f.points[7]);
+    f.planes[3] = (f.points[6] - f.points[7]).cross(f.points[0] - f.points[1]);
+  } else {
+    // For orthographic, just set planes to zero - we'll use points instead
+    f.planes[0] = Vector3f::Zero();
+    f.planes[1] = Vector3f::Zero();
+    f.planes[2] = Vector3f::Zero();
+    f.planes[3] = Vector3f::Zero();
+  }
 
   return hits(&m_scene.rootNode(), f);
 }
