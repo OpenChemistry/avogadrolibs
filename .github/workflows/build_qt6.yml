@@ -11,7 +11,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 13
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_YAEHMOP=ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
   CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   SCCACHE_GHA_ENABLED: "true"
 
@@ -28,14 +28,14 @@ jobs:
             os: macos-15,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64 -DUSE_YAEHMOP=ON",
           }
         - {
             name: "macOS Qt6 Intel", artifact: "macOS-intel",
             os: macos-15-intel,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64 -DUSE_YAEHMOP=ON",
           }
         - {
             name: "Windows Qt6", artifact: "Win64.exe",
