@@ -7,7 +7,7 @@ name: Qt6 Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.9.3
+  QT_VERSION: 6.10.0
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 13
@@ -24,21 +24,21 @@ jobs:
       matrix:
         config:
         - {
-            name: "macOS Qt6 ARM", artifact: "macOS-arm64.zip",
+            name: "macOS Qt6 ARM", artifact: "macOS-arm64",
             os: macos-15,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64 -DUSE_YAEHMOP=ON",
           }
         - {
-            name: "macOS Qt6 Intel", artifact: "macOS.zip",
+            name: "macOS Qt6 Intel", artifact: "macOS-intel",
             os: macos-15-intel,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64 -DUSE_YAEHMOP=ON",
           }
         - {
-            name: "Windows Qt6", artifact: "win64.zip",
+            name: "Windows Qt6", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
