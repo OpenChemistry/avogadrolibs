@@ -6,7 +6,7 @@ name: Linux Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.8.1
+  QT_VERSION: 6.8.3
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
 
 concurrency:
@@ -40,7 +40,7 @@ jobs:
             os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DINSTALL_BUNDLE_FILES=ON",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DINSTALL_BUNDLE_FILES=ON -DUSE_YAEHMOP=ON",
           }
         #- {
         #    name: "AppImage ARM", artifact: "Avogadro2-arm64.AppImage",
@@ -61,6 +61,20 @@ jobs:
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+          }
+        - {
+            name: "Ubuntu Leak Sanitizer", artifact: "",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++",
+            build_type: "lsan",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+          }
+        - {
+            name: "Ubuntu Thread Sanitizer", artifact: "",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++",
+            build_type: "tsan",
             cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
           }
 
@@ -139,7 +153,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/build
 
     - name: Run tests
-      if: (matrix.config.build_type == 'asan') || (matrix.config.build_type == 'ubsan')
+      if: (matrix.config.build_type != 'Release')
       shell: cmake -P {0}
       run: |
         include(ProcessorCount)
@@ -168,6 +182,10 @@ jobs:
         wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
         wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
         chmod a+x *.AppImage
+
+        # get pixi
+        wget -c -nv "https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-unknown-linux-musl"
+        mv pixi-x86_64-unknown-linux-musl appdir/usr/bin/pixi
 
         # Though it is not great security practice, bundle libssl and libcrypto
         ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --library /lib/x86_64-linux-gnu/libssl.so.3 --library /lib/x86_64-linux-gnu/libcrypto.so.3 --appdir appdir
