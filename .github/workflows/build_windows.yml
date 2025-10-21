@@ -1,17 +1,19 @@
-name: CMake Windows Build
+name: Windows Build
 # Many thanks to Cristian Adam for examples
 # e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
 
-# This workflow will build and sign on Windows
+# This workflow will build and (optionally) sign releases for Windows
 # .. since SignPath requires only a Windows build in the action
 # .. to successfully sign
 
-on: [push, workflow_dispatch]
+on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 5.15.2
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON
+  QT_VERSION: 6.10.0
+  # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
+  # we set MACOSX_DEPLOYMENT_TARGET later
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -26,21 +28,15 @@ jobs:
       matrix:
         config:
         - {
-            name: "Windows Latest MSVC", artifact: "Win64.exe",
+            name: "Windows Qt6", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
-            build_flags: "",
-            cpack_flags: "-G NSIS",
-            ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
+            cmake_flags: "-DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
+            build_flags: "-j 2",
           }
 
     steps:
-
-    - name: Install Dependencies (Windows)
-      if: runner.os == 'Windows'
-      run: choco install ninja nsis
 
     - name: Checkout openchemistry
       uses: actions/checkout@v5.0.0
@@ -84,10 +80,8 @@ jobs:
         path: avogadrolibs
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
-        aqtversion: '==3.1.*'
-        cache: true
         version: ${{ env.QT_VERSION }}
 
     - name: Configure MSVC Command Prompt
@@ -96,24 +90,14 @@ jobs:
       with:
         arch: x64
 
-    - name: Install OpenSSL (Win64)
+    - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
-      uses: jurplel/install-qt-action@v3
-      with:
-        aqtversion: '==3.1.*'
-        cache: true
-        host: 'windows'
-        target: 'desktop'
-        tools-only: 'true'
-        tools: 'tools_opensslv3_x64'
-
-    - name: Grab cache files
-      uses: actions/cache@v4
-      if: runner.os != 'Windows'
-      with:
-        path: |
-          ${{ runner.workspace }}/build/Downloads
-        key: ${{ matrix.config.name }}-downloads
+      run: |
+        choco install nsis
+        cd /c/vcpkg
+        git pull origin master
+        vcpkg install libarchive eigen3 libxml2 zlib
+      shell: bash
 
     - name: Configure
       run: |
@@ -128,23 +112,40 @@ jobs:
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
-    - name: Create Windows Package
-      if: matrix.config.os == 'windows-latest'
+    - name: Create Windows Packages
+      if: runner.os == 'Windows'
       shell: bash
       run: |
-        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date -j "+%d-%m-%y"`
-        cpack ${{ matrix.config.cpack_flags }}
-      working-directory: ${{ runner.workspace }}/build/avogadroapp
-      continue-on-error: true
+        gh release download -R prefix-dev/pixi -p "pixi-x86_64-pc-windows-msvc.exe"
+        # wget https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
+        # move pixi to prefix/bin
+        mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
+        # run windeployqt
+        windeployqt --release prefix/bin/avogadro2.exe
+        mv prefix avogadro2
+        # 7z a Avogadro2-windows.zip avogadro2
+        cd avogadro2
+        # create NSIS
+        /c/Program\ Files\ \(x86\)/NSIS/bin/makensis avogadro2.nsi
+        if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          # This is a tag - extract version
+          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${VERSION#v}"  # Remove 'v' prefix if present
+        else
+          # This is a nightly build - use current date
+          VERSION=$(date +%Y-%m-%d)
+        fi
+
+        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}.exe
+      working-directory: ${{ runner.workspace }}/build/
       env:
-        OPENSSL_ROOT_DIR: ${{ matrix.config.ssl_env }}
+        GH_TOKEN: ${{ github.token }}
 
     - name: Upload
       if: matrix.config.artifact != 0
-      id: upload-artifact
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro*.*
+        path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
 
     - name: Sign Windows release
@@ -156,26 +157,26 @@ jobs:
         project-slug: 'avogadrolibs'
         signing-policy-slug: 'release-signing'
         github-artifact-id: '${{ steps.upload-artifact.outputs.artifact-id }}'
-        wait-for-completion: true
+        wait-for-completion: false
         output-artifact-directory: '../build/'
 
-    - name: Upload
-      if: matrix.config.artifact != 0
-      id: upload-signed-artifact
+    - name: Create MSIX
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
+      shell: powershell
+      run:
+        # create MSIX
+        makeappx pack /v /d . /p ../Avogadro2.msix
+      working-directory: ${{ runner.workspace }}/build/avogadro2
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+    - name: Upload MSIX
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ runner.workspace }}/build/Avogadro2*.*
-        name: 'Win64-signed.exe'
+        path: ${{ runner.workspace }}/build/Avogadro2.msix
+        name: Avogadro2.msix
 
     - name: Setup tmate session
       if: failure()
       uses: mxschmitt/action-tmate@v3
-
-    - name: Cleanup
-      if: ${{ always() }} # To ensure this step runs even when earlier steps fail
-      shell: bash
-      run: |
-        ls -la ./
-        rm -rf ./* || true
-        rm -rf ./.??* || true
-        ls -la ./
+      timeout-minutes: 60
