@@ -1,8 +1,7 @@
-name: Qt6 Build Matrix
+name: Mac Build Matrix
 # Many thanks to Cristian Adam for examples
 # e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
-
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -11,7 +10,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 13
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_YAEHMOP=ON
   CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   SCCACHE_GHA_ENABLED: "true"
 
@@ -28,14 +27,14 @@ jobs:
             os: macos-15,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64 -DUSE_YAEHMOP=ON",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
           }
         - {
             name: "macOS Qt6 Intel", artifact: "macOS-intel",
             os: macos-15-intel,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64 -DUSE_YAEHMOP=ON",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64",
           }
         - {
             name: "Windows Qt6", artifact: "Win64.exe",
@@ -99,24 +98,8 @@ jobs:
       with:
         version: ${{ env.QT_VERSION }}
 
-    - name: Configure MSVC Command Prompt
-      if: runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x64
-
-    - name: Install Dependencies (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        choco install nsis
-        cd /c/vcpkg
-        git pull origin master
-        vcpkg install libarchive eigen3 libxml2 zlib curl
-      shell: bash
-
     - name: Grab cache files
       uses: actions/cache@v4
-      if: runner.os != 'Windows'
       with:
         path: |
           ${{ runner.workspace }}/build/Downloads
@@ -273,58 +256,12 @@ jobs:
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
 
-    - name: Create Windows Packages
-      if: runner.os == 'Windows'
-      shell: bash
-      run: |
-        gh release download -R prefix-dev/pixi -p "pixi-x86_64-pc-windows-msvc.exe"
-        # wget https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
-        # move pixi to prefix/bin
-        mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
-        # run windeployqt
-        windeployqt --release prefix/bin/avogadro2.exe
-        mv prefix avogadro2
-        # 7z a Avogadro2-windows.zip avogadro2
-        cd avogadro2
-        # create NSIS
-        /c/Program\ Files\ \(x86\)/NSIS/bin/makensis avogadro2.nsi
-        if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-          # This is a tag - extract version
-          VERSION="${GITHUB_REF#refs/tags/}"
-          VERSION="${VERSION#v}"  # Remove 'v' prefix if present
-        else
-          # This is a nightly build - use current date
-          VERSION=$(date +%Y-%m-%d)
-        fi
-
-        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}.exe
-      working-directory: ${{ runner.workspace }}/build/
-      env:
-        GH_TOKEN: ${{ github.token }}
-
     - name: Upload
       if: matrix.config.artifact != 0
       uses: actions/upload-artifact@v4
       with:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
-
-    - name: Create MSIX
-      if: runner.os == 'Windows'
-      shell: powershell
-      run:
-        # create MSIX
-        makeappx pack /v /d . /p ../Avogadro2.msix
-      working-directory: ${{ runner.workspace }}/build/avogadro2
-      env:
-        GH_TOKEN: ${{ github.token }}
-
-    - name: Upload
-      if: runner.os == 'Windows'
-      uses: actions/upload-artifact@v4
-      with:
-        path: ${{ runner.workspace }}/build/Avogadro2.msix
-        name: Avogadro2.msix
 
     - name: Setup tmate session
       if: ${{ failure() }}
