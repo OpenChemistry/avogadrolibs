@@ -13,7 +13,7 @@ env:
   QT_VERSION: 6.10.0
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_YAEHMOP=ON -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -103,12 +103,12 @@ jobs:
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} ${{env.CACHE}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
