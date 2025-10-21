@@ -25,9 +25,7 @@ env:
   # Specify eigen location for windows
   CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
 
-  # On Mac build both x64 and arm64
-  CIBW_ARCHS_MACOS: "x86_64 arm64"
-
+  # Run tests
   CIBW_TEST_REQUIRES: pytest
 
   # Run a very simple test to make sure the wheels are working
@@ -123,6 +121,9 @@ jobs:
     needs: [build_wheels, build_sdist]
     name: Upload wheels to PyPI
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/avogadro
     permissions:
       id-token: write
     # upload to PyPI on every tag push
@@ -138,6 +139,5 @@ jobs:
 
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          user: __token__
           password: ${{ secrets.pypi_api_token }}
           repository-url: https://test.pypi.org/legacy/
