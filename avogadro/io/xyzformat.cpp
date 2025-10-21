@@ -43,6 +43,7 @@ std::optional<double> findEnergy(const std::string& buffer)
   // orca uses  E -680.044112849966 (with spaces)
   // xtb uses energy: -680.044112849966
   // Open Babel uses Energy: -680.044112849966
+  // crest uses Epot = -680.044112849966
   std::size_t energyStart = buffer.find("energy:");
   std::size_t offset = 7;
   if (energyStart == std::string::npos) {
@@ -51,6 +52,10 @@ std::optional<double> findEnergy(const std::string& buffer)
   if (energyStart == std::string::npos) {
     energyStart = buffer.find(" E ");
     offset = 3;
+  }
+  if (energyStart == std::string::npos) {
+    energyStart = buffer.find("Epot = ");
+    offset = 6;
   }
 
   if (energyStart != std::string::npos) {
