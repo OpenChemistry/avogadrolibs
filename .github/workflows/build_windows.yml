@@ -1,4 +1,4 @@
-name: CMake Windows Build
+name: Windows Build
 # Many thanks to Cristian Adam for examples
 # e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
@@ -7,7 +7,7 @@ name: CMake Windows Build
 # .. since SignPath requires only a Windows build in the action
 # .. to successfully sign
 
-on: [push, workflow_dispatch]
+on: [push, pull_request, workflow_dispatch]
 
 env:
   QT_VERSION: 6.10.0

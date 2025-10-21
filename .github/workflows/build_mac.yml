@@ -36,17 +36,8 @@ jobs:
             build_type: "Release",
             cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64",
           }
-        - {
-            name: "Windows Qt6", artifact: "Win64.exe",
-            os: windows-latest,
-            cc: "cl", cxx: "cl",
-            build_type: "Release",
-            cmake_flags: "-DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DBUILD_MOLEQUEUE=OFF -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
-            build_flags: "-j 2",
-          }
 
     steps:
-
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
