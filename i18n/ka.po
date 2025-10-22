@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-16 20:55+0000\n"
 "PO-Revision-Date: 2025-10-23 06:02+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -1226,7 +1225,7 @@ msgstr "ვან დერ ვაალსი"
 #: qtgui/layermodel.cpp:196 qtplugins/surfacerender/surfacerender.cpp:264
 #: qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
-msgstr "მოდელი"
+msgstr "ჩონჩხი"
 
 #: qtgui/moleculemodel.cpp:94
 msgid "Untitled"
@@ -1958,7 +1957,7 @@ msgstr "დაწყება"
 
 #: qtplugins/autoopt/autoopt.cpp:173
 msgid "Stop"
-msgstr "შეჩერება"
+msgstr "გაჩერება"
 
 #: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
 #: qtplugins/forcefield/forcefield.cpp:391
@@ -4230,7 +4229,7 @@ msgstr "ჩარჩო:"
 #: qtplugins/playertool/playertool.cpp:113
 msgctxt "start or first frame index"
 msgid "Start:"
-msgstr "დაწყება"
+msgstr "დაწყება:"
 
 #: qtplugins/playertool/playertool.cpp:124
 msgctxt "end or last frame index"
@@ -4257,7 +4256,7 @@ msgstr "დაკვრა"
 
 #: qtplugins/playertool/playertool.cpp:165
 msgid "Record…"
-msgstr "ჩაწერა"
+msgstr "ჩაწერა…"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
