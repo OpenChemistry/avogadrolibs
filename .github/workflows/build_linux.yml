@@ -87,55 +87,55 @@ jobs:
         sudo apt-get -qq install libfuse2
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
         path: openchemistry
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: openchemistry/avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         path: openchemistry/avogadrolibs
 
     - name: Checkout i18n
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/avogadro-i18n
         path: openchemistry/avogadro-i18n
 
     - name: Checkout avogadrogenerators
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/avogenerators
         path: openchemistry/avogadrogenerators
 
     - name: Checkout crystals
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/crystals
         path: openchemistry/crystals
 
     - name: Checkout fragments
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/fragments
         path: openchemistry/fragments
 
     - name: Checkout molecules
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/molecules
         path: openchemistry/molecules
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v4
+      uses: jurplel/install-qt-action@d325aaf2a8baeeda41ad0b5d39f84a6af9bcf005 # v4
       with:
         version: ${{ env.QT_VERSION }}
 
@@ -199,12 +199,12 @@ jobs:
 
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
       with:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
 
     - name: Setup tmate session
       if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
+      uses: mxschmitt/action-tmate@a283f9441d2d96eb62436dc46d7014f5d357ac22 # v3
       timeout-minutes: 60

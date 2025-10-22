@@ -39,54 +39,54 @@ jobs:
     steps:
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout molecules
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/molecules
         path: molecules
 
     - name: Checkout fragments
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/fragments
         path: fragments
 
     - name: Checkout crystals
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/crystals
         path: crystals
 
     - name: Checkout i18n
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
       with:
         path: avogadrolibs
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v4
+      uses: jurplel/install-qt-action@d325aaf2a8baeeda41ad0b5d39f84a6af9bcf005 # v4
       with:
         version: ${{ env.QT_VERSION }}
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1
+      uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
       with:
         arch: x64
 
@@ -143,7 +143,7 @@ jobs:
 
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
       with:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
