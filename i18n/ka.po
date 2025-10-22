@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-16 20:55+0000\n"
 "PO-Revision-Date: 2025-10-23 06:02+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -4260,7 +4261,7 @@ msgstr "ჩაწერა…"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
-msgstr ""
+msgstr "შეჩერება"
 
 #: qtplugins/playertool/playertool.cpp:286
 #: qtplugins/playertool/playertool.cpp:391
