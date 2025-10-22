@@ -79,7 +79,7 @@ jobs:
           #  platform: pyodide
 
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
         with:
           # Grab the whole history so that setuptools-scm can see the tags and
           # give it a correct version even on non-tag push.
@@ -89,12 +89,12 @@ jobs:
         run: . ./scripts/github-actions/install.sh
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@f1859528322d7b29d4493ee241a167807661dfb4 # v3.2.1
         env:
           CIBW_PLATFORM: ${{ matrix.platform || 'auto' }}
           CIBW_ARCHS: ${{ matrix.archs || 'auto' }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
@@ -103,7 +103,7 @@ jobs:
     name: Build source distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5
         with:
           # Grab the whole history so that setuptools-scm can see the tags and
           # give it a correct version even on non-tag push.
@@ -112,7 +112,7 @@ jobs:
       - name: Build sdist
         run: pipx run build --sdist
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
         with:
           name: cibw-sdist
           path: dist/*.tar.gz
@@ -130,13 +130,13 @@ jobs:
     # for now, we're testing
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
     steps:
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v5
         with:
           # unpacks all CIBW artifacts into dist/
           pattern: cibw-*
           path: dist
           merge-multiple: true
 
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: pypa/gh-action-pypi-publish@f7600683efdcb7656dec5b29656edb7bc586e597 # release/v1
         with:
           password: ${{ secrets.pypi_api_token }}

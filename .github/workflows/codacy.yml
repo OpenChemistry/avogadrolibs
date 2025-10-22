@@ -39,11 +39,11 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
 
       # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
       - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@master
+        uses: codacy/codacy-analysis-cli-action@e52d1b30d1b797b061c343be0a88eff25a8bc37f # master
         with:
           # Check https://github.com/codacy/codacy-analysis-cli#project-token to get your project token from your Codacy repository
           # You can also omit the token and run the tools that support default configurations
@@ -64,6 +64,6 @@ jobs:
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@df409f7d9260372bd5f19e5b04e83cb3c43714ae # v4
         with:
           sarif_file: filtered.sarif

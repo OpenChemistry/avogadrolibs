@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: add artifact links to pull request step
-        uses: tonyhallett/artifacts-url-comments@v1.1.0
+        uses: tonyhallett/artifacts-url-comments@65d67ea19293bf61dc25e7129b14f7a7ff5e36dc # v1.1.0
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
