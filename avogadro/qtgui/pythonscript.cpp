@@ -115,6 +115,9 @@ QByteArray PythonScript::execute(const QStringList& args,
       qDebug() << "Using manifest in" << pluginDir;
       realArgs.prepend(pluginDir);
       realArgs.prepend("--manifest-path");
+    } else if (m_scriptFilePath.startsWith(pluginDir)) {
+      // change the working directory to the script's directory
+      proc.setWorkingDirectory(QFileInfo(m_scriptFilePath).absolutePath());
     }
 
     realArgs.prepend("run");
