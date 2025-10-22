@@ -100,29 +100,32 @@ QByteArray PythonScript::execute(const QStringList& args,
   // Start script
   realArgs.prepend(m_scriptFilePath);
 
-  if (!m_pixi.isEmpty()) {
-    // pixi run script
-    if (m_scriptFilePath.contains(".py")) {
-      // python script
-      realArgs.prepend("python");
-    } // otherwise hope pixi knows how to run this
-    realArgs.prepend("run");
+  // pixi run script
+  if (m_scriptFilePath.contains(".py")) {
+    // python script
+    realArgs.prepend("python");
+  } // otherwise hope pixi knows how to run this
 
+  if (!m_pixi.isEmpty()) {
     // check if the script is in the plugin directory
     QString pluginDir =
       QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     if (pluginDir.isEmpty() || !m_scriptFilePath.startsWith(pluginDir)) {
       // use the manifest installed in the plugin directory
       qDebug() << "Using manifest in" << pluginDir;
-      realArgs.append("--manifest-path");
-      realArgs.append(pluginDir);
+      realArgs.prepend(pluginDir);
+      realArgs.prepend("--manifest-path");
     }
 
+    realArgs.prepend("run");
+
+    QString pixi = m_pixi + "/pixi";
+
     if (m_debug) {
-      qDebug() << "Executing" << m_pixi << realArgs.join(QStringLiteral(" "))
+      qDebug() << "Executing" << pixi << realArgs.join(QStringLiteral(" "))
                << "<" << scriptStdin;
     }
-    proc.start(m_pixi, realArgs);
+    proc.start(pixi, realArgs);
   } else {
     // plain python
     if (m_debug) {
