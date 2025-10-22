@@ -9,8 +9,9 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-16 20:55+0000\n"
-"PO-Revision-Date: 2025-10-10 03:07+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"PO-Revision-Date: 2025-10-23 06:02+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -1079,7 +1080,7 @@ msgstr "პროცესორის ბირთვები"
 
 #: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
 msgid "Memory"
-msgstr ""
+msgstr "მეხსიერება"
 
 #: qtgui/jsonwidget.cpp:233
 msgid "Calculation Type"
@@ -1108,7 +1109,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:256
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "მოდელი"
 
 #: qtgui/jsonwidget.cpp:378
 msgid "User Name"
@@ -4229,7 +4230,7 @@ msgstr "ჩარჩო:"
 #: qtplugins/playertool/playertool.cpp:113
 msgctxt "start or first frame index"
 msgid "Start:"
-msgstr ""
+msgstr "დაწყება"
 
 #: qtplugins/playertool/playertool.cpp:124
 msgctxt "end or last frame index"
