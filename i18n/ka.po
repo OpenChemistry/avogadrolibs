@@ -4257,7 +4257,7 @@ msgstr "დაკვრა"
 
 #: qtplugins/playertool/playertool.cpp:165
 msgid "Record…"
-msgstr ""
+msgstr "ჩაწერა"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
