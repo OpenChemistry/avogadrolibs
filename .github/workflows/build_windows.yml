@@ -150,7 +150,6 @@ jobs:
         name: ${{ matrix.config.artifact }}
 
     - name: Sign Windows release
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
       uses: signpath/github-action-submit-signing-request@v1
       continue-on-error: true
       with:
@@ -163,7 +162,6 @@ jobs:
         output-artifact-directory: '../build/'
 
     - name: Create MSIX
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
       shell: powershell
       run:
         # create MSIX
