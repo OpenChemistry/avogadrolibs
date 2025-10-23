@@ -73,7 +73,13 @@ void PythonScript::setDefaultPythonInterpreter()
   }
 
   // check if we have pixi
-  m_pixi = Utilities::findExecutablePath("pixi");
+#ifdef Q_OS_WIN
+  QString pixi("pixi.exe");
+#else
+  QString pixi("pixi");
+#endif
+
+  m_pixi = Utilities::findExecutablePath(pixi);
   if (m_pixi.isEmpty()) {
     qWarning() << "Can't find pixi in your path";
   }
@@ -122,7 +128,11 @@ QByteArray PythonScript::execute(const QStringList& args,
 
     realArgs.prepend("run");
 
-    QString pixi = m_pixi + "/pixi";
+#ifdef Q_OS_WIN
+    QString pixi(m_pixi + "/pixi.exe");
+#else
+    QString pixi(m_pixi + "/pixi");
+#endif
 
     if (m_debug) {
       qDebug() << "Executing" << pixi << realArgs.join(QStringLiteral(" "))
