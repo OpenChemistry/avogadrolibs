@@ -12,6 +12,7 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/unitcell.h>
 
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPlainTextEdit>
 
@@ -337,7 +338,10 @@ bool UnitCellDialog::validateMatrixEditor(QPlainTextEdit* edit)
 {
   bool valid = stringToMatrix(edit->toPlainText()) != Matrix3::Zero();
   QPalette pal = edit->palette();
-  pal.setColor(QPalette::Text, valid ? Qt::black : Qt::red);
+  // get the window text color
+  // works for both dark theme and light theme
+  QColor text = qApp->palette().color(QPalette::WindowText);
+  pal.setColor(QPalette::Text, valid ? text : Qt::red);
   edit->setPalette(pal);
   return valid;
 }

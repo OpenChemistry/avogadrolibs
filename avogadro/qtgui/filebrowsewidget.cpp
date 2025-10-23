@@ -6,6 +6,7 @@
 #include "filebrowsewidget.h"
 
 #include <QFileSystemModel>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QHBoxLayout>
@@ -134,7 +135,10 @@ void FileBrowseWidget::testFileName()
 void FileBrowseWidget::fileNameMatch()
 {
   QPalette pal;
-  pal.setColor(QPalette::Text, Qt::black);
+  // get the default window text color
+  // works for both dark theme and light theme
+  QColor text = qApp->palette().color(QPalette::WindowText);
+  pal.setColor(QPalette::Text, text);
   m_edit->setPalette(pal);
   m_valid = true;
 }
