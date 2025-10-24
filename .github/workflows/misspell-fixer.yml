@@ -6,7 +6,7 @@ jobs:
     name: Spelling Check
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
     - name: misspell-fixer check for code and comments
       uses: sobolevn/misspell-fixer-action@7f96ed2c214e5c8160d61ddbbb56be8df0e76929 # master
       with:

@@ -39,43 +39,43 @@ jobs:
     steps:
 
     - name: Checkout openchemistry
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout molecules
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/molecules
         path: molecules
 
     - name: Checkout fragments
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/fragments
         path: fragments
 
     - name: Checkout crystals
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/crystals
         path: crystals
 
     - name: Checkout i18n
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         path: avogadrolibs
 
@@ -143,8 +143,12 @@ jobs:
 
     - name: Upload
       if: matrix.config.artifact != 0
+<<<<<<< HEAD
       id: upload-artifact
       uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+=======
+      uses: actions/upload-artifact@e9fad966ccdffceea5de0445882c9455934bcf8e # v4
+>>>>>>> 739d4d4c (chore: update GitHub Actions SHA revisions to latest versions)
       with:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}

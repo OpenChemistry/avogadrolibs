@@ -41,19 +41,19 @@ jobs:
         version: ${{ env.QT_VERSION }}
 
     - name: Checkout openchemistry
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         path: avogadrolibs
         fetch-depth: 2
@@ -103,11 +103,11 @@ jobs:
         echo ${{ github.event.pull_request.head.repo.full_name }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-repo.txt
         echo ${{ github.event.pull_request.head.ref }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-ref.txt
 
-    - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+    - uses: actions/upload-artifact@e9fad966ccdffceea5de0445882c9455934bcf8e # v4
       with:
         name: clang-tidy-result
         path: ${{ runner.workspace }}/clang-tidy-result/
         
     - name: Setup tmate session
       if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@a283f9441d2d96eb62436dc46d7014f5d357ac22 # v3
+      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3
