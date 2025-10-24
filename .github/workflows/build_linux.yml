@@ -184,8 +184,8 @@ jobs:
         chmod a+x *.AppImage
 
         # get pixi
-        wget -c -nv "https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-unknown-linux-musl"
-        mv pixi-x86_64-unknown-linux-musl appdir/usr/bin/pixi
+        # wget -c -nv "https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-unknown-linux-musl"
+        # mv pixi-x86_64-unknown-linux-musl appdir/usr/bin/pixi
 
         # Though it is not great security practice, bundle libssl and libcrypto
         ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --library /lib/x86_64-linux-gnu/libssl.so.3 --library /lib/x86_64-linux-gnu/libcrypto.so.3 --appdir appdir
