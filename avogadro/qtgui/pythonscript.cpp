@@ -80,9 +80,11 @@ void PythonScript::setDefaultPythonInterpreter()
 #endif
 
   m_pixi = Utilities::findExecutablePath(pixi);
+#ifndef NDEBUG
   if (m_pixi.isEmpty()) {
     qWarning() << "Can't find pixi in your path";
   }
+#endif
 }
 
 QByteArray PythonScript::execute(const QStringList& args,
@@ -107,12 +109,15 @@ QByteArray PythonScript::execute(const QStringList& args,
   realArgs.prepend(m_scriptFilePath);
 
   // pixi run script
-  if (m_scriptFilePath.contains(".py")) {
-    // python script
-    realArgs.prepend("python");
-  } // otherwise hope pixi knows how to run this
-
   if (!m_pixi.isEmpty()) {
+
+    // check if the script is a python script
+    // should eventually allow other pixi run options
+    if (m_scriptFilePath.contains(".py")) {
+      // python script
+      realArgs.prepend("python");
+    } // otherwise hope pixi knows how to run this
+
     // check if the script is in the plugin directory
     QString pluginDir =
       QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
