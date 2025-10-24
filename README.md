@@ -1,8 +1,9 @@
 # ![Avogadro 2][Avogadro2Logo] Avogadro 2
 
-[![Latest Release](https://img.shields.io/github/v/release/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/releases) [![BSD License](https://img.shields.io/github/license/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE) [![Build Status](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_cmake.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/44bb12662c564ed8a27ee8a7fd89ed50)](https://app.codacy.com/gh/OpenChemistry/avogadrolibs/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)  
-[![Download Count](https://avogadro.cc/downloads.svg?readme)](https://github.com/OpenChemistry/avogadrolibs/releases) [![Citation Count](https://avogadro.cc/citations.svg?readme)](http://doi.org/10.1186/1758-2946-4-17)  
+[![Latest Release](https://img.shields.io/github/v/release/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/releases) [![BSD License](https://img.shields.io/github/license/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/44bb12662c564ed8a27ee8a7fd89ed50)](https://app.codacy.com/gh/OpenChemistry/avogadrolibs/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Download Count](https://avogadro.cc/downloads.svg?readme)](https://github.com/OpenChemistry/avogadrolibs/releases) [![Citation Count](https://avogadro.cc/citations.svg?readme)](http://doi.org/10.1186/1758-2946-4-17)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![GitHub contributors](https://img.shields.io/github/contributors/openchemistry/avogadrolibs.svg?style=flat&color=0bf)](https://github.com/OpenChemistry/avogadrolibs/graphs/contributors)  [![OpenCollective Backers](https://img.shields.io/opencollective/all/open-chemistry)](https://opencollective.com/open-chemistry)
+[![Linux Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_linux.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![Windows Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_windows.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![macOS Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_mac.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions)
 
 ## Introduction
 
@@ -43,9 +44,9 @@ For the most up-to-date experience use the nightly builds prepared by GitHub
 actions for:
 
 * [Linux (AppImage)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_linux/master/Avogadro2-x86_64.AppImage.zip)
-* [macOS (Apple Silicon)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_m1/master/macOS-arm64.dmg.zip)
-* [macOS (Intel)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_cmake/master/macOS.dmg.zip)
-* [Windows](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_cmake/master/Win64.exe.zip)
+* [macOS (Apple Silicon)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_mac/master/macOS-arm64.zip)
+* [macOS (Intel)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_mac/master/macOS-intel.zip)
+* [Windows](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_windows/master/Win64.exe.zip)
 
 We also maintain a
 [`beta` Flatpak](https://two.avogadro.cc/install/flatpak.html#install-flatpak-beta)
@@ -92,7 +93,7 @@ Contributors Hall of Fame:
   [OpenChemistryLogo]: https://raw.githubusercontent.com/OpenChemistry/avogadrolibs/master/docs/OpenChemistry128.png "Open Chemistry"
   [Kitware]: https://kitware.com/ "Kitware, Inc."
   [Avogadro1]: https://avogadro.cc/ "Avogadro 1"
-  [Build]: https://two.avogadro.cc/develop/build "Building Avogadro"
+  [Build]: https://two.avogadro.cc/develop/build/ "Building Avogadro"
   [Install]: https://two.avogadro.cc/install/ "Installing Avogadro"
   [Contribution]: https://two.avogadro.cc/contrib/ "Contribution guide"
   [API]: https://two.avogadro.cc/develop/classlist/ "API documentation"
