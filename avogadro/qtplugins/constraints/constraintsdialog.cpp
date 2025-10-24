@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QtCore/QSortFilterProxyModel>
 
+#include <avogadro/core/angletools.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
 using Avogadro::Core::Constraint;
@@ -112,6 +113,54 @@ void ConstraintsDialog::updateConstraints()
   ui->editB->setMaximum(maxAtom);
   ui->editC->setMaximum(maxAtom);
   ui->editD->setMaximum(maxAtom);
+
+  // get the list of selected atoms (if any)
+  std::vector<Index> selectedAtoms;
+  for (Index i = 0; i < m_molecule->atomCount(); ++i)
+    if (m_molecule->atomSelected(i))
+      selectedAtoms.push_back(i);
+
+  // change the type
+  if (selectedAtoms.size() == 2)
+    changeType(0);
+  else if (selectedAtoms.size() == 3)
+    changeType(1);
+  else if (selectedAtoms.size() == 4)
+    changeType(2);
+
+  // now set the edit boxes to the selected atoms
+  if (selectedAtoms.size() >= 2) {
+    ui->editA->setValue(selectedAtoms[0] + 1);
+    ui->editB->setValue(selectedAtoms[1] + 1);
+  }
+  if (selectedAtoms.size() >= 3) {
+    ui->editC->setValue(selectedAtoms[2] + 1);
+  }
+  if (selectedAtoms.size() == 4) {
+    ui->editD->setValue(selectedAtoms[3] + 1);
+  }
+
+  // finally set the default value in editValue
+  if (selectedAtoms.size() == 2) {
+    Vector3 a = m_molecule->atomPosition3d(selectedAtoms[0]);
+    Vector3 b = m_molecule->atomPosition3d(selectedAtoms[1]);
+    double distance = (a - b).norm();
+    ui->editValue->setValue(distance);
+  } else if (selectedAtoms.size() == 3) {
+    Vector3 a = m_molecule->atomPosition3d(selectedAtoms[0]);
+    Vector3 b = m_molecule->atomPosition3d(selectedAtoms[1]);
+    Vector3 c = m_molecule->atomPosition3d(selectedAtoms[2]);
+    double angle = calculateAngle(a, b, c);
+    ui->editValue->setValue(angle);
+  } else if (selectedAtoms.size() == 4) {
+    // todo detect if torsion or out-of-plane bending
+    Vector3 a = m_molecule->atomPosition3d(selectedAtoms[0]);
+    Vector3 b = m_molecule->atomPosition3d(selectedAtoms[1]);
+    Vector3 c = m_molecule->atomPosition3d(selectedAtoms[2]);
+    Vector3 d = m_molecule->atomPosition3d(selectedAtoms[3]);
+    double dihedral = calculateDihedral(a, b, c, d);
+    ui->editValue->setValue(dihedral);
+  }
 }
 
 void ConstraintsDialog::changeType(int newType)

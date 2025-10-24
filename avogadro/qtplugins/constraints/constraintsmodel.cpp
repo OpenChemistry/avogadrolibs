@@ -87,25 +87,25 @@ QVariant ConstraintsModel::data(const QModelIndex& index, int role) const
         break;
       case 2:
         if (aIndex != MaxIndex)
-          return QVariant(static_cast<qulonglong>(aIndex));
+          return QVariant(static_cast<qulonglong>(aIndex) + 1);
         else
           return "--";
         break;
       case 3:
         if (bIndex != MaxIndex)
-          return QVariant(static_cast<qulonglong>(bIndex));
+          return QVariant(static_cast<qulonglong>(bIndex) + 1);
         else
           return "--";
         break;
       case 4:
         if (cIndex != MaxIndex)
-          return QVariant(static_cast<qulonglong>(cIndex));
+          return QVariant(static_cast<qulonglong>(cIndex) + 1);
         else
           return "--";
         break;
       case 5:
         if (dIndex != MaxIndex)
-          return QVariant(static_cast<qulonglong>(dIndex));
+          return QVariant(static_cast<qulonglong>(dIndex) + 1);
         else
           return "--";
         break;
