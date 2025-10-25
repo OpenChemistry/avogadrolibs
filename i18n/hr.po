@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-16 20:55+0000\n"
+"POT-Creation-Date: 2025-10-25 16:46+0000\n"
 "PO-Revision-Date: 2025-10-06 04:02+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -189,7 +189,7 @@ msgstr "Nastavi"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
+#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:35
 msgid "Close"
 msgstr "Zatvori"
 
@@ -522,7 +522,7 @@ msgstr "U BackgroundFileFormat nije postavljeno nijedno ime datoteke!"
 msgid "Split Horizontal"
 msgstr "Rastavi vodoravno"
 
-#: qtgui/containerwidget.cpp:30
+#: qtgui/containerwidget.cpp:31
 msgid "Split Vertical"
 msgstr "Rastavi okomito"
 
@@ -1006,15 +1006,15 @@ msgstr "Tenesin"
 msgid "Oganesson"
 msgstr "Oganeson"
 
-#: qtgui/filebrowsewidget.cpp:23
+#: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
 msgstr "Pregledaj"
 
-#: qtgui/filebrowsewidget.cpp:96
+#: qtgui/filebrowsewidget.cpp:97
 msgid "Select file:"
 msgstr "Odaberi datoteku:"
 
-#: qtgui/filebrowsewidget.cpp:99
+#: qtgui/filebrowsewidget.cpp:100
 msgid "Select executable:"
 msgstr "Odaberi izvršnu datoteku:"
 
@@ -1295,15 +1295,15 @@ msgstr "Van der Waals"
 msgid "Wireframe"
 msgstr "Žičani model"
 
-#: qtgui/moleculemodel.cpp:94
+#: qtgui/moleculemodel.cpp:120
 msgid "Untitled"
 msgstr "Bez naslova"
 
-#: qtgui/moleculemodel.cpp:109
+#: qtgui/moleculemodel.cpp:135
 msgid "Edit molecule"
 msgstr "Uredi molekulu"
 
-#: qtgui/moleculemodel.cpp:116
+#: qtgui/moleculemodel.cpp:142
 msgid "Not saved"
 msgstr "Nije spremljeno"
 
@@ -1315,12 +1315,12 @@ msgstr "Stvori novi prikaz"
 msgid "Periodic Table"
 msgstr "Periodni sustav elemenata"
 
-#: qtgui/pythonscript.cpp:138 qtgui/pythonscript.cpp:226
+#: qtgui/pythonscript.cpp:161 qtgui/pythonscript.cpp:249
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:148 qtgui/pythonscript.cpp:236
+#: qtgui/pythonscript.cpp:171 qtgui/pythonscript.cpp:259
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1329,12 +1329,12 @@ msgstr ""
 "Greška pri pokretanju skripte '%1 %2': neuspelo pisanje u stdin (len=%3, "
 "zapisano %4 bajta, QProcess greška: %5)."
 
-#: qtgui/pythonscript.cpp:161
+#: qtgui/pythonscript.cpp:184
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:170
+#: qtgui/pythonscript.cpp:193
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1348,32 +1348,32 @@ msgstr ""
 "Rezultat:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:179
+#: qtgui/pythonscript.cpp:202
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Upozorenje „%1”"
 
-#: qtgui/pythonscript.cpp:301
+#: qtgui/pythonscript.cpp:324
 msgid "Script failed to start."
 msgstr "Pokretanje skripta nije uspelo."
 
-#: qtgui/pythonscript.cpp:304
+#: qtgui/pythonscript.cpp:327
 msgid "Script crashed."
 msgstr "Neočekivan prekid skripta."
 
-#: qtgui/pythonscript.cpp:307
+#: qtgui/pythonscript.cpp:330
 msgid "Script timed out."
 msgstr "Vrijeme izvršavanja skripta je isteklo."
 
-#: qtgui/pythonscript.cpp:310
+#: qtgui/pythonscript.cpp:333
 msgid "Read error."
 msgstr "Greška pri čitanju."
 
-#: qtgui/pythonscript.cpp:313
+#: qtgui/pythonscript.cpp:336
 msgid "Write error."
 msgstr "Greška pri pisanju."
 
-#: qtgui/pythonscript.cpp:317
+#: qtgui/pythonscript.cpp:340
 msgid "Unknown error."
 msgstr "Nepoznata greška."
 
@@ -1567,6 +1567,41 @@ msgstr "Skripta %1 se ne može učitati"
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
 msgstr "Provjeranje %1 skripta u stazi %2"
+
+#: qtgui/timedprogressdialog.cpp:75
+msgid "Calculating…"
+msgstr ""
+
+#: qtgui/timedprogressdialog.cpp:79
+msgid "Less than a second remaining"
+msgstr ""
+
+#: qtgui/timedprogressdialog.cpp:82
+#, qt-plural-format
+msgctxt ""
+msgid "%n second(s) remaining"
+msgid_plural "%n second(s) remaining"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: qtgui/timedprogressdialog.cpp:85
+#, qt-plural-format
+msgctxt ""
+msgid "%n minute(s) remaining"
+msgid_plural "%n minute(s) remaining"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: qtgui/timedprogressdialog.cpp:89
+#, qt-plural-format
+msgctxt ""
+msgid "%n hour(s) remaining"
+msgid_plural "%n hour(s) remaining"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -1848,25 +1883,25 @@ msgstr "Prema Shapely shemi"
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:781
+#: qtplugins/surfaces/surfaces.cpp:784
 msgctxt "colormap"
 msgid "Parula"
 msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:783
+#: qtplugins/surfaces/surfaces.cpp:786
 msgctxt "colormap"
 msgid "Heat"
 msgstr "Vrućina"
 
 #: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:785
+#: qtplugins/surfaces/surfaces.cpp:788
 msgctxt "colormap"
 msgid "Hot"
 msgstr "Vruće"
 
 #: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:787
+#: qtplugins/surfaces/surfaces.cpp:790
 msgctxt "colormap"
 msgid "Gray"
 msgstr "Siva"
@@ -1874,7 +1909,7 @@ msgstr "Siva"
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:789
+#: qtplugins/surfaces/surfaces.cpp:792
 msgctxt "colormap"
 msgid "Magma"
 msgstr "Magma"
@@ -1882,7 +1917,7 @@ msgstr "Magma"
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:791
+#: qtplugins/surfaces/surfaces.cpp:794
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "Inferno"
@@ -1890,7 +1925,7 @@ msgstr "Inferno"
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:793
+#: qtplugins/surfaces/surfaces.cpp:796
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "Plazma"
@@ -1898,7 +1933,7 @@ msgstr "Plazma"
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:795
+#: qtplugins/surfaces/surfaces.cpp:798
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "Viridis"
@@ -1906,7 +1941,7 @@ msgstr "Viridis"
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:797
+#: qtplugins/surfaces/surfaces.cpp:800
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "Cividis"
@@ -1918,7 +1953,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:799:183 rc.cpp:1872
+#: qtplugins/surfaces/surfaces.cpp:802:183 rc.cpp:1872
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Spektralno"
@@ -1928,7 +1963,7 @@ msgstr "Spektralno"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:801:180 rc.cpp:1869
+#: qtplugins/surfaces/surfaces.cpp:804:180 rc.cpp:1869
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Hladno-toplo"
@@ -1938,7 +1973,7 @@ msgstr "Hladno-toplo"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:803:174 rc.cpp:1863
+#: qtplugins/surfaces/surfaces.cpp:806:174 rc.cpp:1863
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Uravnoteženo"
@@ -1948,7 +1983,7 @@ msgstr "Uravnoteženo"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:805:177 rc.cpp:1866
+#: qtplugins/surfaces/surfaces.cpp:808:177 rc.cpp:1866
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Plava-tamnocrvena"
@@ -1960,7 +1995,7 @@ msgstr "Plava-tamnocrvena"
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:807:186 rc.cpp:1875
+#: qtplugins/surfaces/surfaces.cpp:810:186 rc.cpp:1875
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbo"
@@ -2042,8 +2077,8 @@ msgid "Stop"
 msgstr "Prekini"
 
 #: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:391
-#: qtplugins/forcefield/forcefield.cpp:446 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/forcefield/forcefield.cpp:418
+#: qtplugins/forcefield/forcefield.cpp:473 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:560
 msgid "Optimize Geometry"
 msgstr "Optimiraj geometriju"
@@ -2324,10 +2359,10 @@ msgstr "Uredi kartu neprozirnosti boja …"
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:126
+#: qtplugins/configurepython/configurepython.cpp:136
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:196
-#: qtplugins/forcefield/forcefield.cpp:198
+#: qtplugins/forcefield/forcefield.cpp:223
+#: qtplugins/forcefield/forcefield.cpp:225
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2394,11 +2429,11 @@ msgstr "Pokreni eksterna skripta naredbi"
 msgid "Python Settings…"
 msgstr "Python postavke …"
 
-#: qtplugins/configurepython/configurepython.cpp:56
+#: qtplugins/configurepython/configurepython.cpp:58
 msgid "Install Python"
 msgstr "Instaliraj Python"
 
-#: qtplugins/configurepython/configurepython.cpp:57
+#: qtplugins/configurepython/configurepython.cpp:59
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
@@ -2433,7 +2468,7 @@ msgid "Constraints…"
 msgstr "Ograničenja …"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:198
+#: qtplugins/forcefield/forcefield.cpp:225
 msgid "&Calculate"
 msgstr "&Izračunaj"
 
@@ -3013,25 +3048,25 @@ msgstr "Nije moguće raščlaniti tekst"
 msgid "Failed to read the data with the supplied format."
 msgstr "Neuspjelo čitanje podataka u isporučenom formatu."
 
-#: qtplugins/crystal/unitcelldialog.cpp:250
-#: qtplugins/crystal/unitcelldialog.cpp:263
+#: qtplugins/crystal/unitcelldialog.cpp:251
+#: qtplugins/crystal/unitcelldialog.cpp:264
 msgid "No unit cell present."
 msgstr "Nema jedinične ćelije."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
-#: qtplugins/crystal/unitcelldialog.cpp:280
-#: qtplugins/crystal/unitcelldialog.cpp:291
-#: qtplugins/crystal/unitcelldialog.cpp:302:442
+#: qtplugins/crystal/unitcelldialog.cpp:281
+#: qtplugins/crystal/unitcelldialog.cpp:292
+#: qtplugins/crystal/unitcelldialog.cpp:303:442
 msgid "Unit Cell Editor"
 msgstr "Uređivač jedinične ćelije"
 
-#: qtplugins/crystal/unitcelldialog.cpp:281
-#: qtplugins/crystal/unitcelldialog.cpp:292
+#: qtplugins/crystal/unitcelldialog.cpp:282
+#: qtplugins/crystal/unitcelldialog.cpp:293
 msgid "Ignoring singular cell matrix"
 msgstr "Zanemaruje se singularna matrica ćelije"
 
-#: qtplugins/crystal/unitcelldialog.cpp:303
+#: qtplugins/crystal/unitcelldialog.cpp:304
 msgid "Ignoring singular fractional cell matrix"
 msgstr "Zanemaruje se singularna matrica frakcijske ćelije"
 
@@ -3248,32 +3283,32 @@ msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr "Odspoji odabrane atome"
 
-#: qtplugins/forcefield/forcefield.cpp:339
-#: qtplugins/forcefield/forcefield.cpp:490
-#: qtplugins/forcefield/forcefield.cpp:560
+#: qtplugins/forcefield/forcefield.cpp:366
+#: qtplugins/forcefield/forcefield.cpp:517
+#: qtplugins/forcefield/forcefield.cpp:587
 #: qtplugins/playertool/playertool.cpp:386
-#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:935
-#: qtplugins/surfaces/surfaces.cpp:979 qtplugins/surfaces/surfaces.cpp:991
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:938
+#: qtplugins/surfaces/surfaces.cpp:982 qtplugins/surfaces/surfaces.cpp:994
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:340
+#: qtplugins/forcefield/forcefield.cpp:367
 msgid "No atoms provided for optimization"
 msgstr "Nema atoma za optimizaciju"
 
-#: qtplugins/forcefield/forcefield.cpp:408
+#: qtplugins/forcefield/forcefield.cpp:435
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "Energija: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:489
+#: qtplugins/forcefield/forcefield.cpp:516
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 energija = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:559
+#: qtplugins/forcefield/forcefield.cpp:586
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 norma sile = %L2"
@@ -3292,15 +3327,15 @@ msgstr "Minimiziranje polja sile, uključujući skripta"
 msgid "Autodetect (%1)"
 msgstr "Automatsko otkrivanje (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:103 qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:34
 msgid "Universal Force Field"
 msgstr "Univerzalno polje sile"
 
-#: qtplugins/forcefield/obenergy.cpp:108 qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:109 qtplugins/forcefield/obmmenergy.cpp:39
 msgid "Generalized Amber Force Field"
 msgstr "Generalizirano Amber polje sile"
 
-#: qtplugins/forcefield/obenergy.cpp:122 qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:123 qtplugins/forcefield/obmmenergy.cpp:53
 msgid "Merck Molecular Force Field 94"
 msgstr "Merck molekularno polje sile 94"
 
@@ -3906,7 +3941,7 @@ msgstr "Pogedaj opća svojstva molekule."
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:271
+#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:273
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analyze"
 msgstr "&Analiziraj"
@@ -4423,7 +4458,7 @@ msgstr "Izvezi bitmap slike"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Video (*.mp4);;Video (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:907
+#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:910
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -4439,11 +4474,11 @@ msgstr "GIF format ne podržava broj sličica u sekundi iznad 100 FPS."
 msgid "Movie (*.avi)"
 msgstr "Video (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:980
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:983
 msgid "Error: cannot add frame to video."
 msgstr "Greška: nije moguće dodati kadar u video."
 
-#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:992
+#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:995
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Nije moguće spremiti datoteku %1."
@@ -5399,7 +5434,7 @@ msgstr "Iscrtaj molekularne površine."
 msgid "Molecular Orbitals…"
 msgstr "Molekulske orbitale …"
 
-#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:861
+#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:864
 msgid "Meshes"
 msgstr "Mreže"
 
@@ -5487,70 +5522,70 @@ msgstr "Iz datoteke"
 msgid " of %0"
 msgstr " od %0"
 
-#: qtplugins/surfaces/surfaces.cpp:86
+#: qtplugins/surfaces/surfaces.cpp:88
 msgid "Create Surfaces…"
 msgstr "Stvori površine …"
 
-#: qtplugins/surfaces/surfaces.cpp:116
+#: qtplugins/surfaces/surfaces.cpp:118
 msgid "Render the van der Waals surface."
 msgstr "Iscrtaj van der Waals površinu."
 
-#: qtplugins/surfaces/surfaces.cpp:118
+#: qtplugins/surfaces/surfaces.cpp:120
 msgid "Render the van der Waals molecular surface."
 msgstr "Iscrtaj van der Waals molekulsku površinu."
 
-#: qtplugins/surfaces/surfaces.cpp:120
+#: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the solvent-accessible molecular surface."
 msgstr "Iscrtaj molekulsku površinu dostupnog otapala."
 
-#: qtplugins/surfaces/surfaces.cpp:122
+#: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render the solvent-excluded molecular surface."
 msgstr "Iscrtaj molekulsku površinu isključenog otapala."
 
-#: qtplugins/surfaces/surfaces.cpp:123 qtplugins/surfaces/surfaces.cpp:124
+#: qtplugins/surfaces/surfaces.cpp:125 qtplugins/surfaces/surfaces.cpp:126
 msgid "Render a molecular orbital."
 msgstr "Iscrtaj molekulsku orbitalu."
 
-#: qtplugins/surfaces/surfaces.cpp:126
+#: qtplugins/surfaces/surfaces.cpp:128
 msgid "Render the electron density."
 msgstr "Iscrtaj gustoću elektrona."
 
-#: qtplugins/surfaces/surfaces.cpp:127
+#: qtplugins/surfaces/surfaces.cpp:129
 msgid "Render the spin density."
 msgstr "Iscrtaj gustoću spina."
 
-#: qtplugins/surfaces/surfaces.cpp:129
+#: qtplugins/surfaces/surfaces.cpp:131
 msgid "Render a cube supplied with the file."
 msgstr "Iscrtaj kocku isporučenu s datotekom."
 
-#: qtplugins/surfaces/surfaces.cpp:307
+#: qtplugins/surfaces/surfaces.cpp:309
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
 msgstr "Kocka %1"
 
-#: qtplugins/surfaces/surfaces.cpp:605
+#: qtplugins/surfaces/surfaces.cpp:608
 msgid "Calculating electron density"
 msgstr "Izračunavanje gustoće elektrona"
 
-#: qtplugins/surfaces/surfaces.cpp:614
+#: qtplugins/surfaces/surfaces.cpp:617
 msgid "Calculating spin density"
 msgstr "Izračunavanje gustoće spina"
 
-#: qtplugins/surfaces/surfaces.cpp:623
+#: qtplugins/surfaces/surfaces.cpp:626
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Izračunavanje molekulske orbitale %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:884 qtplugins/surfaces/surfaces.cpp:912
+#: qtplugins/surfaces/surfaces.cpp:887 qtplugins/surfaces/surfaces.cpp:915
 msgid "Movie AVI (*.avi)"
 msgstr "Video AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:886
+#: qtplugins/surfaces/surfaces.cpp:889
 msgid "Export Movie"
 msgstr "Izvezi video"
 
-#: qtplugins/surfaces/surfaces.cpp:887
+#: qtplugins/surfaces/surfaces.cpp:890
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Video MP4 (*.mp4);;Video AVI (*.avi);;GIF (*.gif)"
 

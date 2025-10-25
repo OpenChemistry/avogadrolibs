@@ -11,10 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-16 20:55+0000\n"
+"POT-Creation-Date: 2025-10-25 16:46+0000\n"
 "PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
-"Language-Team: English (Australia) <https://hosted.weblate.org/projects/avogadro/avogadrolibs/en_AU/>\n"
+"Language-Team: English (Australia) <https://hosted.weblate.org/projects/"
+"avogadro/avogadrolibs/en_AU/>\n"
 "Language: en_AU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,10 +36,12 @@ msgstr "No message specified."
 #: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:72
 #, qt-format
 msgid ""
-"script --print-options output must be an JSON object at top level. Received:\n"
+"script --print-options output must be an JSON object at top level. "
+"Received:\n"
 "%1"
 msgstr ""
-"script --print-options output must be an JSON object at top level. Received:\n"
+"script --print-options output must be an JSON object at top level. "
+"Received:\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
@@ -186,7 +189,7 @@ msgstr "Continue"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
+#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:35
 msgid "Close"
 msgstr "Close"
 
@@ -204,25 +207,29 @@ msgid ""
 "\n"
 "%1\n"
 "\n"
-"Would you like to overwrite your changes to reflect the new geometry or job options?"
+"Would you like to overwrite your changes to reflect the new geometry or job "
+"options?"
 msgid_plural ""
 "The following file(s) have been modified:\n"
 "\n"
 "%1\n"
 "\n"
-"Would you like to overwrite your changes to reflect the new geometry or job options?"
+"Would you like to overwrite your changes to reflect the new geometry or job "
+"options?"
 msgstr[0] ""
 "The following file(s) have been modified:\n"
 "\n"
 "%1\n"
 "\n"
-"Would you like to overwrite your changes to reflect the new geometry or job options?"
+"Would you like to overwrite your changes to reflect the new geometry or job "
+"options?"
 msgstr[1] ""
 "The following file(s) have been modified:\n"
 "\n"
 "%1\n"
 "\n"
-"Would you like to overwrite your changes to reflect the new geometry or job options?"
+"Would you like to overwrite your changes to reflect the new geometry or job "
+"options?"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
@@ -250,11 +257,11 @@ msgstr "Cannot connect to MoleQueue"
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:981
 #: qtplugins/gamessinput/gamessinputdialog.cpp:918
 msgid ""
-"Cannot connect to MoleQueue server. Please ensure that it is running and try"
-" again."
+"Cannot connect to MoleQueue server. Please ensure that it is running and try "
+"again."
 msgstr ""
-"Cannot connect to MoleQueue server. Please ensure that it is running and try"
-" again."
+"Cannot connect to MoleQueue server. Please ensure that it is running and try "
+"again."
 
 #: molequeue/inputgeneratorwidget.cpp:326
 #, qt-format
@@ -459,8 +466,7 @@ msgid "Job Retrieval Timeout"
 msgstr "Job Retrieval Timeout"
 
 #: molequeue/molequeuedialog.cpp:119
-msgid ""
-"Avogadro timed out waiting for the finished job details from MoleQueue."
+msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
 "Avogadro timed out waiting for the finished job details from MoleQueue."
 
@@ -510,7 +516,7 @@ msgstr "No file name set in BackgroundFileFormat!"
 msgid "Split Horizontal"
 msgstr "Split Horizontal"
 
-#: qtgui/containerwidget.cpp:30
+#: qtgui/containerwidget.cpp:31
 msgid "Split Vertical"
 msgstr "Split Vertical"
 
@@ -994,15 +1000,15 @@ msgstr "Tennessine"
 msgid "Oganesson"
 msgstr "Oganesson"
 
-#: qtgui/filebrowsewidget.cpp:23
+#: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
 msgstr "Browse"
 
-#: qtgui/filebrowsewidget.cpp:96
+#: qtgui/filebrowsewidget.cpp:97
 msgid "Select file:"
 msgstr "Select file:"
 
-#: qtgui/filebrowsewidget.cpp:99
+#: qtgui/filebrowsewidget.cpp:100
 msgid "Select executable:"
 msgstr "Select executable:"
 
@@ -1078,11 +1084,9 @@ msgstr "%1 Message"
 #: qtgui/interfacescript.cpp:538
 #, qt-format
 msgid ""
-"Error writing molecule representation to string: Unrecognized file format: "
-"%1"
+"Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Error writing molecule representation to string: Unrecognized file format: "
-"%1"
+"Error writing molecule representation to string: Unrecognized file format: %1"
 
 #: qtgui/interfacescript.cpp:546
 #, qt-format
@@ -1279,15 +1283,15 @@ msgstr "Van der Waals"
 msgid "Wireframe"
 msgstr "Wireframe"
 
-#: qtgui/moleculemodel.cpp:94
+#: qtgui/moleculemodel.cpp:120
 msgid "Untitled"
 msgstr "Untitled"
 
-#: qtgui/moleculemodel.cpp:109
+#: qtgui/moleculemodel.cpp:135
 msgid "Edit molecule"
 msgstr "Edit molecule"
 
-#: qtgui/moleculemodel.cpp:116
+#: qtgui/moleculemodel.cpp:142
 msgid "Not saved"
 msgstr "Not saved"
 
@@ -1299,12 +1303,12 @@ msgstr "Create a new view"
 msgid "Periodic Table"
 msgstr "Periodic Table"
 
-#: qtgui/pythonscript.cpp:138 qtgui/pythonscript.cpp:226
+#: qtgui/pythonscript.cpp:161 qtgui/pythonscript.cpp:249
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr "Error running script '%1 %2': Timed out waiting for start (%3)."
 
-#: qtgui/pythonscript.cpp:148 qtgui/pythonscript.cpp:236
+#: qtgui/pythonscript.cpp:171 qtgui/pythonscript.cpp:259
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1313,12 +1317,12 @@ msgstr ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 
-#: qtgui/pythonscript.cpp:161
+#: qtgui/pythonscript.cpp:184
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr "Error running script '%1 %2': Timed out waiting for finish (%3)."
 
-#: qtgui/pythonscript.cpp:170
+#: qtgui/pythonscript.cpp:193
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1331,32 +1335,32 @@ msgstr ""
 "Output:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:179
+#: qtgui/pythonscript.cpp:202
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Warning '%1'"
 
-#: qtgui/pythonscript.cpp:301
+#: qtgui/pythonscript.cpp:324
 msgid "Script failed to start."
 msgstr "Script failed to start."
 
-#: qtgui/pythonscript.cpp:304
+#: qtgui/pythonscript.cpp:327
 msgid "Script crashed."
 msgstr "Script crashed."
 
-#: qtgui/pythonscript.cpp:307
+#: qtgui/pythonscript.cpp:330
 msgid "Script timed out."
 msgstr "Script timed out."
 
-#: qtgui/pythonscript.cpp:310
+#: qtgui/pythonscript.cpp:333
 msgid "Read error."
 msgstr "Read error."
 
-#: qtgui/pythonscript.cpp:313
+#: qtgui/pythonscript.cpp:336
 msgid "Write error."
 msgstr "Write error."
 
-#: qtgui/pythonscript.cpp:317
+#: qtgui/pythonscript.cpp:340
 msgid "Unknown error."
 msgstr "Unknown error."
 
@@ -1550,6 +1554,38 @@ msgstr "Cannot load script %1"
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
 msgstr "Checking for %1 scripts in path %2"
+
+#: qtgui/timedprogressdialog.cpp:75
+msgid "Calculating…"
+msgstr ""
+
+#: qtgui/timedprogressdialog.cpp:79
+msgid "Less than a second remaining"
+msgstr ""
+
+#: qtgui/timedprogressdialog.cpp:82
+#, qt-plural-format
+msgctxt ""
+msgid "%n second(s) remaining"
+msgid_plural "%n second(s) remaining"
+msgstr[0] ""
+msgstr[1] ""
+
+#: qtgui/timedprogressdialog.cpp:85
+#, qt-plural-format
+msgctxt ""
+msgid "%n minute(s) remaining"
+msgid_plural "%n minute(s) remaining"
+msgstr[0] ""
+msgstr[1] ""
+
+#: qtgui/timedprogressdialog.cpp:89
+#, qt-plural-format
+msgctxt ""
+msgid "%n hour(s) remaining"
+msgid_plural "%n hour(s) remaining"
+msgstr[0] ""
+msgstr[1] ""
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -1831,25 +1867,25 @@ msgstr "By Shapely Scheme"
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:781
+#: qtplugins/surfaces/surfaces.cpp:784
 msgctxt "colormap"
 msgid "Parula"
 msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:783
+#: qtplugins/surfaces/surfaces.cpp:786
 msgctxt "colormap"
 msgid "Heat"
 msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:785
+#: qtplugins/surfaces/surfaces.cpp:788
 msgctxt "colormap"
 msgid "Hot"
 msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:787
+#: qtplugins/surfaces/surfaces.cpp:790
 msgctxt "colormap"
 msgid "Gray"
 msgstr "Grey"
@@ -1857,7 +1893,7 @@ msgstr "Grey"
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:789
+#: qtplugins/surfaces/surfaces.cpp:792
 msgctxt "colormap"
 msgid "Magma"
 msgstr "Magma"
@@ -1865,7 +1901,7 @@ msgstr "Magma"
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:791
+#: qtplugins/surfaces/surfaces.cpp:794
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "Inferno"
@@ -1873,7 +1909,7 @@ msgstr "Inferno"
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:793
+#: qtplugins/surfaces/surfaces.cpp:796
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "Plasma"
@@ -1881,7 +1917,7 @@ msgstr "Plasma"
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:795
+#: qtplugins/surfaces/surfaces.cpp:798
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "Viridis"
@@ -1889,7 +1925,7 @@ msgstr "Viridis"
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:797
+#: qtplugins/surfaces/surfaces.cpp:800
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "Cividis"
@@ -1901,7 +1937,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:799:183 rc.cpp:1872
+#: qtplugins/surfaces/surfaces.cpp:802:183 rc.cpp:1872
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Spectral"
@@ -1911,7 +1947,7 @@ msgstr "Spectral"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:801:180 rc.cpp:1869
+#: qtplugins/surfaces/surfaces.cpp:804:180 rc.cpp:1869
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Coolwarm"
@@ -1921,7 +1957,7 @@ msgstr "Coolwarm"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:803:174 rc.cpp:1863
+#: qtplugins/surfaces/surfaces.cpp:806:174 rc.cpp:1863
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Balance"
@@ -1931,7 +1967,7 @@ msgstr "Balance"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:805:177 rc.cpp:1866
+#: qtplugins/surfaces/surfaces.cpp:808:177 rc.cpp:1866
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Blue-DarkRed"
@@ -1943,7 +1979,7 @@ msgstr "Blue-DarkRed"
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:807:186 rc.cpp:1875
+#: qtplugins/surfaces/surfaces.cpp:810:186 rc.cpp:1875
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbo"
@@ -2036,9 +2072,9 @@ msgid "Stop"
 msgstr "Stop"
 
 #: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:391
-#: qtplugins/forcefield/forcefield.cpp:446
-#: qtplugins/openbabel/openbabel.cpp:48 qtplugins/openbabel/openbabel.cpp:560
+#: qtplugins/forcefield/forcefield.cpp:418
+#: qtplugins/forcefield/forcefield.cpp:473 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:560
 msgid "Optimize Geometry"
 msgstr "Optimize Geometry"
 
@@ -2272,8 +2308,7 @@ msgstr "Add centroids and centre-of-mass."
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:100
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:265
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox,
-#. resolutionDoubleSpinBox)
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:233
 #: qtplugins/noncovalent/noncovalent.cpp:383:201 rc.cpp:204 rc.cpp:448
 msgid " Å"
@@ -2315,10 +2350,10 @@ msgstr "Edit Colour Opacity Map…"
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:126
+#: qtplugins/configurepython/configurepython.cpp:136
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:196
-#: qtplugins/forcefield/forcefield.cpp:198
+#: qtplugins/forcefield/forcefield.cpp:223
+#: qtplugins/forcefield/forcefield.cpp:225
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2378,20 +2413,18 @@ msgid "Run external script commands"
 msgstr "Run external script commands"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::CondaDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::ConfigurePythonDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:36:225 rc.cpp:240
 msgid "Python Settings…"
 msgstr "Python Settings…"
 
-#: qtplugins/configurepython/configurepython.cpp:56
+#: qtplugins/configurepython/configurepython.cpp:58
 msgid "Install Python"
 msgstr "Install Python"
 
-#: qtplugins/configurepython/configurepython.cpp:57
+#: qtplugins/configurepython/configurepython.cpp:59
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
@@ -2426,13 +2459,12 @@ msgid "Constraints…"
 msgstr "Constraints…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:198
+#: qtplugins/forcefield/forcefield.cpp:225
 msgid "&Calculate"
 msgstr "&Calculate"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::ConstraintsDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
 #: qtplugins/constraints/constraintsextension.h:27:250
 msgid "Constraints"
 msgstr "Constraints"
@@ -2618,11 +2650,13 @@ msgstr "Error applying geometry"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:585
 msgid ""
-"Could not parse geometry specification. Fix the highlighted errors and try again.\n"
+"Could not parse geometry specification. Fix the highlighted errors and try "
+"again.\n"
 "\n"
 "(Hint: Hold the mouse over red text for a description of the error.)"
 msgstr ""
-"Could not parse geometry specification. Fix the highlighted errors and try again.\n"
+"Could not parse geometry specification. Fix the highlighted errors and try "
+"again.\n"
 "\n"
 "(Hint: Hold the mouse over red text for a description of the error.)"
 
@@ -3006,26 +3040,25 @@ msgstr "Cannot Parse Text"
 msgid "Failed to read the data with the supplied format."
 msgstr "Failed to read the data with the supplied format."
 
-#: qtplugins/crystal/unitcelldialog.cpp:250
-#: qtplugins/crystal/unitcelldialog.cpp:263
+#: qtplugins/crystal/unitcelldialog.cpp:251
+#: qtplugins/crystal/unitcelldialog.cpp:264
 msgid "No unit cell present."
 msgstr "No unit cell present."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::UnitCellDialog)
-#: qtplugins/crystal/unitcelldialog.cpp:280
-#: qtplugins/crystal/unitcelldialog.cpp:291
-#: qtplugins/crystal/unitcelldialog.cpp:302:442
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
+#: qtplugins/crystal/unitcelldialog.cpp:281
+#: qtplugins/crystal/unitcelldialog.cpp:292
+#: qtplugins/crystal/unitcelldialog.cpp:303:442
 msgid "Unit Cell Editor"
 msgstr "Unit Cell Editor"
 
-#: qtplugins/crystal/unitcelldialog.cpp:281
-#: qtplugins/crystal/unitcelldialog.cpp:292
+#: qtplugins/crystal/unitcelldialog.cpp:282
+#: qtplugins/crystal/unitcelldialog.cpp:293
 msgid "Ignoring singular cell matrix"
 msgstr "Ignoring singular cell matrix"
 
-#: qtplugins/crystal/unitcelldialog.cpp:303
+#: qtplugins/crystal/unitcelldialog.cpp:304
 msgid "Ignoring singular fractional cell matrix"
 msgstr "Ignoring singular fractional cell matrix"
 
@@ -3242,32 +3275,32 @@ msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr "Unfuse Selected Atoms"
 
-#: qtplugins/forcefield/forcefield.cpp:339
-#: qtplugins/forcefield/forcefield.cpp:490
-#: qtplugins/forcefield/forcefield.cpp:560
+#: qtplugins/forcefield/forcefield.cpp:366
+#: qtplugins/forcefield/forcefield.cpp:517
+#: qtplugins/forcefield/forcefield.cpp:587
 #: qtplugins/playertool/playertool.cpp:386
-#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:935
-#: qtplugins/surfaces/surfaces.cpp:979 qtplugins/surfaces/surfaces.cpp:991
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:938
+#: qtplugins/surfaces/surfaces.cpp:982 qtplugins/surfaces/surfaces.cpp:994
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:340
+#: qtplugins/forcefield/forcefield.cpp:367
 msgid "No atoms provided for optimization"
 msgstr "No atoms provided for optimization"
 
-#: qtplugins/forcefield/forcefield.cpp:408
+#: qtplugins/forcefield/forcefield.cpp:435
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "Energy: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:489
+#: qtplugins/forcefield/forcefield.cpp:516
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Energy = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:559
+#: qtplugins/forcefield/forcefield.cpp:586
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Force Norm = %L2"
@@ -3286,18 +3319,15 @@ msgstr "Force field minimization, including scripts"
 msgid "Autodetect (%1)"
 msgstr "Autodetect (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:103
-#: qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:34
 msgid "Universal Force Field"
 msgstr "Universal Force Field"
 
-#: qtplugins/forcefield/obenergy.cpp:108
-#: qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:109 qtplugins/forcefield/obmmenergy.cpp:39
 msgid "Generalized Amber Force Field"
 msgstr "Generalized Amber Force Field"
 
-#: qtplugins/forcefield/obenergy.cpp:122
-#: qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:123 qtplugins/forcefield/obmmenergy.cpp:53
 msgid "Merck Molecular Force Field 94"
 msgstr "Merck Molecular Force Field 94"
 
@@ -3509,8 +3539,7 @@ msgid "Thymine"
 msgstr "Thymine"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::LineFormatInputDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
 #: qtplugins/lineformatinput/lineformatinput.cpp:110
 #: qtplugins/lineformatinput/lineformatinput.cpp:125:1094
@@ -3544,8 +3573,7 @@ msgid "Error reading file (%1)."
 msgstr "Error reading file (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::ImportCrystalDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
 #: qtplugins/insertfragment/insertfragment.cpp:117:421
 msgid "Import Crystal"
 msgstr "Import Crystal"
@@ -3579,8 +3607,7 @@ msgstr "Index"
 msgid "Unique ID"
 msgstr "Unique ID"
 
-#: qtplugins/label/label.cpp:185
-#: qtplugins/propertytables/propertymodel.cpp:596
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:596
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "Element"
@@ -3610,8 +3637,7 @@ msgstr "Length"
 msgid "Bond Label:"
 msgstr "Bond Label:"
 
-#: qtplugins/label/label.cpp:230
-#: qtplugins/propertytables/propertymodel.cpp:649
+#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:649
 msgid "ID"
 msgstr "ID"
 
@@ -3910,7 +3936,7 @@ msgstr "View general properties of a molecule."
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:271
+#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:273
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analyze"
 msgstr "&Analyze"
@@ -4097,8 +4123,8 @@ msgstr "Error parsing openbabel output."
 #: qtplugins/openbabel/openbabel.cpp:433 qtplugins/openbabel/openbabel.cpp:578
 #, qt-format
 msgid ""
-"An error occurred while retrieving the list of supported forcefields. (using"
-" '%1')."
+"An error occurred while retrieving the list of supported forcefields. (using "
+"'%1')."
 msgstr ""
 "An error occurred while retrieving the list of supported force fields. "
 "(using '%1')."
@@ -4261,11 +4287,11 @@ msgstr "Reading obabel output…"
 
 #: qtplugins/openbabel/openbabel.cpp:1015
 msgid ""
-"Already running Open Babel. Wait for the other operation to complete and try"
-" again."
+"Already running Open Babel. Wait for the other operation to complete and try "
+"again."
 msgstr ""
-"Already running Open Babel. Wait for the other operation to complete and try"
-" again."
+"Already running Open Babel. Wait for the other operation to complete and try "
+"again."
 
 #: qtplugins/openbabel/openbabel.h:38
 msgid "OpenBabel"
@@ -4428,7 +4454,7 @@ msgstr "Export Bitmap Graphics"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:907
+#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:910
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -4444,11 +4470,11 @@ msgstr "The GIF file format does not support frame rates over 100 FPS."
 msgid "Movie (*.avi)"
 msgstr "Movie (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:980
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:983
 msgid "Error: cannot add frame to video."
 msgstr "Error: cannot add frame to video."
 
-#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:992
+#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:995
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Cannot save file %1."
@@ -5410,7 +5436,7 @@ msgstr "Render molecular surfaces."
 msgid "Molecular Orbitals…"
 msgstr "Molecular Orbitals…"
 
-#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:861
+#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:864
 msgid "Meshes"
 msgstr "Meshes"
 
@@ -5427,8 +5453,7 @@ msgid "Orbital"
 msgstr "Orbital"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget,
-#. Avogadro::QtPlugins::SymmetryWidget)
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/surfaces/orbitaltablemodel.cpp:110
 #: qtplugins/symmetry/symmetry.h:34:1944
 msgid "Symmetry"
@@ -5499,70 +5524,70 @@ msgstr "From File"
 msgid " of %0"
 msgstr " of %0"
 
-#: qtplugins/surfaces/surfaces.cpp:86
+#: qtplugins/surfaces/surfaces.cpp:88
 msgid "Create Surfaces…"
 msgstr "Create Surfaces…"
 
-#: qtplugins/surfaces/surfaces.cpp:116
+#: qtplugins/surfaces/surfaces.cpp:118
 msgid "Render the van der Waals surface."
 msgstr "Render the van der Waals surface."
 
-#: qtplugins/surfaces/surfaces.cpp:118
+#: qtplugins/surfaces/surfaces.cpp:120
 msgid "Render the van der Waals molecular surface."
 msgstr "Render the van der Waals molecular surface."
 
-#: qtplugins/surfaces/surfaces.cpp:120
+#: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the solvent-accessible molecular surface."
 msgstr "Render the solvent-accessible molecular surface."
 
-#: qtplugins/surfaces/surfaces.cpp:122
+#: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render the solvent-excluded molecular surface."
 msgstr "Render the solvent-excluded molecular surface."
 
-#: qtplugins/surfaces/surfaces.cpp:123 qtplugins/surfaces/surfaces.cpp:124
+#: qtplugins/surfaces/surfaces.cpp:125 qtplugins/surfaces/surfaces.cpp:126
 msgid "Render a molecular orbital."
 msgstr "Render a molecular orbital."
 
-#: qtplugins/surfaces/surfaces.cpp:126
+#: qtplugins/surfaces/surfaces.cpp:128
 msgid "Render the electron density."
 msgstr "Render the electron density."
 
-#: qtplugins/surfaces/surfaces.cpp:127
+#: qtplugins/surfaces/surfaces.cpp:129
 msgid "Render the spin density."
 msgstr "Render the spin density."
 
-#: qtplugins/surfaces/surfaces.cpp:129
+#: qtplugins/surfaces/surfaces.cpp:131
 msgid "Render a cube supplied with the file."
 msgstr "Render a cube supplied with the file."
 
-#: qtplugins/surfaces/surfaces.cpp:307
+#: qtplugins/surfaces/surfaces.cpp:309
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
 msgstr "Cube %1"
 
-#: qtplugins/surfaces/surfaces.cpp:605
+#: qtplugins/surfaces/surfaces.cpp:608
 msgid "Calculating electron density"
 msgstr "Calculating electron density"
 
-#: qtplugins/surfaces/surfaces.cpp:614
+#: qtplugins/surfaces/surfaces.cpp:617
 msgid "Calculating spin density"
 msgstr "Calculating spin density"
 
-#: qtplugins/surfaces/surfaces.cpp:623
+#: qtplugins/surfaces/surfaces.cpp:626
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Calculating molecular orbital %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:884 qtplugins/surfaces/surfaces.cpp:912
+#: qtplugins/surfaces/surfaces.cpp:887 qtplugins/surfaces/surfaces.cpp:915
 msgid "Movie AVI (*.avi)"
 msgstr "Movie AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:886
+#: qtplugins/surfaces/surfaces.cpp:889
 msgid "Export Movie"
 msgstr "Export Movie"
 
-#: qtplugins/surfaces/surfaces.cpp:887
+#: qtplugins/surfaces/surfaces.cpp:890
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 
@@ -5627,16 +5652,20 @@ msgid ""
 "Template Tool\t(%1)\n"
 "\n"
 "Insert fragments, including metal centers.\n"
-"Select an element and coordination geometry, then click to insert a fragment.\n"
+"Select an element and coordination geometry, then click to insert a "
+"fragment.\n"
 "\n"
-"Select a ligand or functional group and click on a hydrogen atom to attach it."
+"Select a ligand or functional group and click on a hydrogen atom to attach "
+"it."
 msgstr ""
 "Template Tool\t(%1)\n"
 "\n"
 "Insert fragments, including metal centers.\n"
-"Select an element and coordination geometry, then click to insert a fragment.\n"
+"Select an element and coordination geometry, then click to insert a "
+"fragment.\n"
 "\n"
-"Select a ligand or functional group and click on a hydrogen atom to attach it."
+"Select a ligand or functional group and click on a hydrogen atom to attach "
+"it."
 
 #: qtplugins/templatetool/templatetool.cpp:404
 #: qtplugins/templatetool/templatetool.cpp:572
@@ -5780,35 +5809,28 @@ msgid "Perform extended Hückel calculations with yaehmop."
 msgstr "Perform extended Hückel calculations with yaehmop."
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::MoleQueue::InputGeneratorDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
 #. i18n: file: molequeue/molequeuedialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::MoleQueue::MoleQueueDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::MoleQueueDialog)
 msgid "Dialog"
 msgstr "Dialogue"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget,
-#. Avogadro::MoleQueue::InputGeneratorWidget)
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::MoleQueue::InputGeneratorWidget)
 #. i18n: file: molequeue/molequeuewidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget,
-#. Avogadro::MoleQueue::MoleQueueWidget)
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::MoleQueue::MoleQueueWidget)
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, BondingDialog)
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget,
-#. Avogadro::QtPlugins::EditorToolWidget)
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::EditorToolWidget)
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, ManipulateWidget)
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget,
-#. Avogadro::QtPlugins::SelectionToolWidget)
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SelectionToolWidget)
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, OrbitalWidget)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:20
-#. i18n: ectx: property (windowTitle), widget (QWidget,
-#. Avogadro::QtPlugins::TemplateToolWidget)
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::TemplateToolWidget)
 msgid "Form"
 msgstr "Form"
 
@@ -5863,11 +5885,11 @@ msgstr "Refresh"
 #. i18n: file: molequeue/molequeuewidget.ui:85
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
 msgid ""
-"<html><head/><body><p>Number of processor cores to reserve for this "
-"job.</p></body></html>"
+"<html><head/><body><p>Number of processor cores to reserve for this job.</"
+"p></body></html>"
 msgstr ""
-"<html><head/><body><p>Number of processor cores to reserve for this "
-"job.</p></body></html>"
+"<html><head/><body><p>Number of processor cores to reserve for this job.</"
+"p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -5878,12 +5900,12 @@ msgstr "Processor cores:"
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
 msgid ""
 "<html><head/><body><p>Delete remote working files upon job completion. "
-"Results will still be copied to the local MoleQueue job cache "
-"first.</p></body></html>"
+"Results will still be copied to the local MoleQueue job cache first.</p></"
+"body></html>"
 msgstr ""
 "<html><head/><body><p>Delete remote working files upon job completion. "
-"Results will still be copied to the local MoleQueue job cache "
-"first.</p></body></html>"
+"Results will still be copied to the local MoleQueue job cache first.</p></"
+"body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5907,11 +5929,11 @@ msgstr "Hide job in MoleQueue:"
 #. i18n: file: molequeue/molequeuewidget.ui:158
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
 msgid ""
-"<html><head/><body><p>Show a system popup notification when the job's status"
-" changes.</p></body></html>"
+"<html><head/><body><p>Show a system popup notification when the job's status "
+"changes.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Show a system popup notification when the job's status"
-" changes.</p></body></html>"
+"<html><head/><body><p>Show a system popup notification when the job's status "
+"changes.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -5924,14 +5946,12 @@ msgid "Open output when finished:"
 msgstr "Open output when finished:"
 
 #. i18n: file: qtgui/customelementdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtGui::CustomElementDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
 msgid "Rename Elements"
 msgstr "Rename Elements"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtGui::InsertFragmentDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
 msgid "Insert Fragment…"
 msgstr "Insert Fragment…"
 
@@ -5953,8 +5973,7 @@ msgid "Insert"
 msgstr "Insert"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::ThreeDMolDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
 msgid "3DMol HTML Snippet"
 msgstr "3DMol HTML Snippet"
 
@@ -6207,8 +6226,7 @@ msgid "OK"
 msgstr "OK"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::CoordinateEditorDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
 msgid "Coordinate Editor"
 msgstr "Coordinate Editor"
 
@@ -6244,47 +6262,45 @@ msgstr "Format:"
 msgid ""
 "<html><head/><body><p>Specification of format. Each character indicates a "
 "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> - "
-"Atom index (1, 2, ..., numAtoms)<br/><span style=\" font-"
-"weight:600;\">Z</span> - Atomic number (e.g. \"6\" for carbon)<br/><span "
-"style=\" font-weight:600;\">G</span> - GAMESS-style atomic number (e.g. "
-"\"6.0\" for carbon)<br/><span style=\" font-weight:600;\">N</span> - Element"
-" name (e.g. \"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - "
-"Element symbol (e.g. \"C\" for carbon)<br/><span style=\" font-"
-"weight:700;\">L</span> - Atom label (e.g., \"C2\" for second carbon atom, "
-"\"H1\" for first hydrogen) <br/><span style=\" font-weight:600;\">x</span> -"
-" X position coordinate<br/><span style=\" font-weight:600;\">y</span> - Y "
-"position coordinate<br/><span style=\" font-weight:600;\">z</span> - Z "
-"position coordinate<br/><span style=\" font-weight:600;\">a</span> - 'a' "
-"lattice coordinate (crystals only)<br/><span style=\" font-"
-"weight:600;\">b</span> - 'b' lattice coordinate (crystals only)<br/><span "
-"style=\" font-weight:600;\">c</span> - 'c' lattice coordinate (crystals "
-"only)<br/><span style=\" font-weight:600;\">_</span> - A literal space (\" "
-"\"), useful for alignment<br/><span style=\" font-weight:600;\">0</span> - A"
-" literal 0 (\"0\"), useful for optimization flags<br/><span style=\" font-"
-"weight:600;\">1</span> - A literal 1 (\"1\"), useful for optimization "
-"flags<br/></p></body></html>"
+"Atom index (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;\">Z</"
+"span> - Atomic number (e.g. \"6\" for carbon)<br/><span style=\" font-"
+"weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" for "
+"carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name (e.g. "
+"\"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - Element symbol "
+"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:700;\">L</span> - "
+"Atom label (e.g., \"C2\" for second carbon atom, \"H1\" for first hydrogen) "
+"<br/><span style=\" font-weight:600;\">x</span> - X position coordinate<br/"
+"><span style=\" font-weight:600;\">y</span> - Y position coordinate<br/"
+"><span style=\" font-weight:600;\">z</span> - Z position coordinate<br/"
+"><span style=\" font-weight:600;\">a</span> - 'a' lattice coordinate "
+"(crystals only)<br/><span style=\" font-weight:600;\">b</span> - 'b' lattice "
+"coordinate (crystals only)<br/><span style=\" font-weight:600;\">c</span> - "
+"'c' lattice coordinate (crystals only)<br/><span style=\" font-weight:600;"
+"\">_</span> - A literal space (\" \"), useful for alignment<br/><span "
+"style=\" font-weight:600;\">0</span> - A literal 0 (\"0\"), useful for "
+"optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
+"literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
 "<html><head/><body><p>Specification of format. Each character indicates a "
 "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> - "
-"Atom index (1, 2, ..., numAtoms)<br/><span style=\" font-"
-"weight:600;\">Z</span> - Atomic number (e.g. \"6\" for carbon)<br/><span "
-"style=\" font-weight:600;\">G</span> - GAMESS-style atomic number (e.g. "
-"\"6.0\" for carbon)<br/><span style=\" font-weight:600;\">N</span> - Element"
-" name (e.g. \"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - "
-"Element symbol (e.g. \"C\" for carbon)<br/><span style=\" font-"
-"weight:700;\">L</span> - Atom label (e.g., \"C2\" for second carbon atom, "
-"\"H1\" for first hydrogen) <br/><span style=\" font-weight:600;\">x</span> -"
-" X position coordinate<br/><span style=\" font-weight:600;\">y</span> - Y "
-"position coordinate<br/><span style=\" font-weight:600;\">z</span> - Z "
-"position coordinate<br/><span style=\" font-weight:600;\">a</span> - 'a' "
-"lattice coordinate (crystals only)<br/><span style=\" font-"
-"weight:600;\">b</span> - 'b' lattice coordinate (crystals only)<br/><span "
-"style=\" font-weight:600;\">c</span> - 'c' lattice coordinate (crystals "
-"only)<br/><span style=\" font-weight:600;\">_</span> - A literal space (\" "
-"\"), useful for alignment<br/><span style=\" font-weight:600;\">0</span> - A"
-" literal 0 (\"0\"), useful for optimization flags<br/><span style=\" font-"
-"weight:600;\">1</span> - A literal 1 (\"1\"), useful for optimization "
-"flags<br/></p></body></html>"
+"Atom index (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;\">Z</"
+"span> - Atomic number (e.g. \"6\" for carbon)<br/><span style=\" font-"
+"weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" for "
+"carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name (e.g. "
+"\"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - Element symbol "
+"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:700;\">L</span> - "
+"Atom label (e.g., \"C2\" for second carbon atom, \"H1\" for first hydrogen) "
+"<br/><span style=\" font-weight:600;\">x</span> - X position coordinate<br/"
+"><span style=\" font-weight:600;\">y</span> - Y position coordinate<br/"
+"><span style=\" font-weight:600;\">z</span> - Z position coordinate<br/"
+"><span style=\" font-weight:600;\">a</span> - 'a' lattice coordinate "
+"(crystals only)<br/><span style=\" font-weight:600;\">b</span> - 'b' lattice "
+"coordinate (crystals only)<br/><span style=\" font-weight:600;\">c</span> - "
+"'c' lattice coordinate (crystals only)<br/><span style=\" font-weight:600;"
+"\">_</span> - A literal space (\" \"), useful for alignment<br/><span "
+"style=\" font-weight:600;\">0</span> - A literal 0 (\"0\"), useful for "
+"optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
+"literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -6468,12 +6484,10 @@ msgstr "OT T MINIMIZER"
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
-msgstr ""
-"File extension for Open Babel conversion (default - Avogadro::POSCAR):"
+msgstr "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::SupercellDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
 msgid "Supercell Parameters"
 msgstr "Supercell Parameters"
 
@@ -6579,8 +6593,7 @@ msgid "&Hide"
 msgstr "&Hide"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::VolumeScalingDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::VolumeScalingDialog)
 msgid "Scale Unit Cell Volume"
 msgstr "Scale Unit Cell Volume"
 
@@ -6610,11 +6623,9 @@ msgid "Bond Order:"
 msgstr "Bond Order:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::ForceFieldDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::OBForceFieldDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
 msgid "Geometry Optimization Parameters"
 msgstr "Geometry Optimization Parameters"
 
@@ -6921,17 +6932,31 @@ msgstr "Select the unit style to be used during the simulation."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:104
 #. i18n: ectx: property (whatsThis), widget (QComboBox, unitsCombo)
 msgid ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps.sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></html>"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps.sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></html>"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6999,17 +7024,31 @@ msgstr "Select atom_style used by the data file."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:204
 #. i18n: ectx: property (whatsThis), widget (QComboBox, atomStyleCombo)
 msgid ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps.sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></p></body></html>"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps.sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></p></body></html>"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -7864,8 +7903,7 @@ msgid "Generation Temp:"
 msgstr "Generation Temp.:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox,
-#. generationTemperatureSpin)
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:625
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, temperatureSpin)
 msgid " K"
@@ -8047,8 +8085,7 @@ msgid "Volume"
 msgstr "Volume"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::PdfOptionsDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
 msgstr "PDF Plot Options"
 
@@ -8063,20 +8100,18 @@ msgid "Step (dr):"
 msgstr "Step (dr):"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::XrdOptionsDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
 msgid "Theoretical XRD Pattern Options"
 msgstr "Theoretical XRD Pattern Options"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:17
-#. i18n: ectx: property (toolTip), widget (QDialog,
-#. Avogadro::QtPlugins::XrdOptionsDialog)
+#. i18n: ectx: property (toolTip), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
 msgid ""
-"<html><head/><body><p>The broadening of the peak at the base (in "
-"degrees).</p></body></html>"
+"<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
+"p></body></html>"
 msgstr ""
-"<html><head/><body><p>The broadening of the peak at the base (in "
-"degrees).</p></body></html>"
+"<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
+"p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -8090,11 +8125,11 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
 msgid ""
-"<html><head/><body><p>The broadening of the peaks at the base in "
-"degrees.</p><p>Default: 0.52958°</p></body></html>"
+"<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
+"p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>The broadening of the peaks at the base in "
-"degrees.</p><p>Default: 0.52958°</p></body></html>"
+"<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
+"p><p>Default: 0.52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8114,20 +8149,20 @@ msgstr "Wavelength:"
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)
 msgid ""
-"<html><head/><body><p>The wavelength of the x-ray in Angstroms. "
-"</p><p>Default: 1.50560 Å</p></body></html>"
+"<html><head/><body><p>The wavelength of the x-ray in Angstroms. </"
+"p><p>Default: 1.50560 Å</p></body></html>"
 msgstr ""
-"<html><head/><body><p>The wavelength of the x-ray in Ångstroms. "
-"</p><p>Default: 1.50560 Å</p></body></html>"
+"<html><head/><body><p>The wavelength of the x-ray in Ångstroms. </"
+"p><p>Default: 1.50560 Å</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:122
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDataPoints)
 msgid ""
-"<html><head/><body><p>The number of 2theta points to "
-"generate.</p><p>Default: 1000</p></body></html>"
+"<html><head/><body><p>The number of 2theta points to generate.</"
+"p><p>Default: 1000</p></body></html>"
 msgstr ""
-"<html><head/><body><p>The number of 2theta points to "
-"generate.</p><p>Default: 1000</p></body></html>"
+"<html><head/><body><p>The number of 2theta points to generate.</"
+"p><p>Default: 1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -8444,8 +8479,7 @@ msgid "Isosurface Value:"
 msgstr "Isosurface Value:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
-#. i18n: ectx: property (prefix), widget (QDoubleSpinBox,
-#. isosurfaceDoubleSpinBox)
+#. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
 msgid " "
 msgstr " "
 
@@ -8562,8 +8596,7 @@ msgid "Coordination:"
 msgstr "Coordination:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:148
-#. i18n: ectx: property (currentText), widget (QComboBox,
-#. coordinationComboBox)
+#. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:193
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Octahedral"
@@ -8740,8 +8773,7 @@ msgid "Stop Animation"
 msgstr "Stop Animation"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog,
-#. Avogadro::QtPlugins::BandDialog)
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
 msgstr "Yaehmop Band"
 
@@ -8768,8 +8800,8 @@ msgid ""
 "addition, if a density of states calculation is performed, the Fermi level "
 "here will automatically be set to what was detected during the density of "
 "states calculation.</p><p>If this box is checked, be sure the correct Fermi "
-"level is set in the spinbox on the right.</p><p>Default: "
-"off</p></body></html>"
+"level is set in the spinbox on the right.</p><p>Default: off</p></body></"
+"html>"
 msgstr ""
 "<html><head/><body><p>The Fermi level should be known before checking this "
 "box. You can discover the Fermi level by performing a density-of-states "
@@ -8777,8 +8809,8 @@ msgstr ""
 "addition, if a density-of-states calculation is performed, the Fermi level "
 "here will automatically be set to what was detected during the density-of-"
 "states calculation.</p><p>If this box is checked, be sure the correct Fermi "
-"level is set in the spinbox on the right.</p><p>Default: "
-"off</p></body></html>"
+"level is set in the spinbox on the right.</p><p>Default: off</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -8789,12 +8821,12 @@ msgstr "Plot Fermi?"
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_zeroFermi)
 msgid ""
 "<html><head/><body><p>Adjust the energies so that the zero is the Fermi? "
-"Only available if we are plotting the Fermi "
-"level.</p><p><br/></p><p>Default: off</p></body></html>"
+"Only available if we are plotting the Fermi level.</p><p><br/></"
+"p><p>Default: off</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Adjust the energies so that the zero is the Fermi? "
-"Only available if we are plotting the Fermi "
-"level.</p><p><br/></p><p>Default: off</p></body></html>"
+"Only available if we are plotting the Fermi level.</p><p><br/></"
+"p><p>Default: off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -8824,46 +8856,54 @@ msgstr "<html><head/><body><p>The Fermi Level</p></body></html>"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:142
 #. i18n: ectx: property (toolTip), widget (QTextEdit, edit_specialKPoints)
 msgid ""
-"<html><head/><body><p>Enter special k-points as such:</p><p>L 0.5 0.5 "
-"0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>That is, &lt;symbol&gt; "
-"&lt;x&gt; &lt;y&gt; &lt;z&gt; where x, y, and z are fractional reciprocal "
-"space coordinates. Lines will be drawn connecting these k-points on the "
-"graph in the order you put them in. Please note that the orientation of your"
-" cell may have an effect on the locations of these reciprocal space "
-"points.</p><p>If the space group of the crystal has been perceived or set, "
-"the special k points will be automatically filled up with the primitive cell"
-" high symmetry points for that space group. There are a few space groups "
-"will different high symmetry points depending on the lattice (such as if a "
-"&gt; b or a &lt; b) - that is taken into account "
-"automatically.</p></body></html>"
+"<html><head/><body><p>Enter special k-points as such:</p><p>L 0.5 0.5 0.5</"
+"p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>That is, &lt;symbol&gt; &lt;"
+"x&gt; &lt;y&gt; &lt;z&gt; where x, y, and z are fractional reciprocal space "
+"coordinates. Lines will be drawn connecting these k-points on the graph in "
+"the order you put them in. Please note that the orientation of your cell may "
+"have an effect on the locations of these reciprocal space points.</p><p>If "
+"the space group of the crystal has been perceived or set, the special k "
+"points will be automatically filled up with the primitive cell high symmetry "
+"points for that space group. There are a few space groups will different "
+"high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
+"b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Enter special k-points as such:</p><p>L 0.5 0.5 "
-"0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>That is, &lt;symbol&gt; "
-"&lt;x&gt; &lt;y&gt; &lt;z&gt; where x, y, and z are fractional reciprocal "
-"space coordinates. Lines will be drawn connecting these k-points on the "
-"graph in the order you put them in. Please note that the orientation of your"
-" cell may have an effect on the locations of these reciprocal space "
-"points.</p><p>If the space group of the crystal has been perceived or set, "
-"the special k points will be automatically filled up with the primitive cell"
-" high symmetry points for that space group. There are a few space groups "
-"will different high symmetry points depending on the lattice (such as if a "
-"&gt; b or a &lt; b) - that is taken into account "
-"automatically.</p></body></html>"
+"<html><head/><body><p>Enter special k-points as such:</p><p>L 0.5 0.5 0.5</"
+"p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>That is, &lt;symbol&gt; &lt;"
+"x&gt; &lt;y&gt; &lt;z&gt; where x, y, and z are fractional reciprocal space "
+"coordinates. Lines will be drawn connecting these k-points on the graph in "
+"the order you put them in. Please note that the orientation of your cell may "
+"have an effect on the locations of these reciprocal space points.</p><p>If "
+"the space group of the crystal has been perceived or set, the special k "
+"points will be automatically filled up with the primitive cell high symmetry "
+"points for that space group. There are a few space groups will different "
+"high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
+"b) - that is taken into account automatically.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
 msgid ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
+"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
+"size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
+"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
+"size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
@@ -8879,11 +8919,11 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
 msgid ""
-"<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: "
-"off</p></body></html>"
+"<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
+"body></html>"
 msgstr ""
-"<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: "
-"off</p></body></html>"
+"<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
+"body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
@@ -8895,21 +8935,19 @@ msgstr "Limit y-range?"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:204
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDim)
 msgid ""
-"<html><head/><body><p>The number of periodic "
-"dimensions.</p><p><br/></p><p>If this is set to 1, the material will be "
-"periodic only along the A vector of the crystal.</p><p><br/></p><p>If this "
-"is set to 2, the material will be periodic along both the A and B vectors of"
-" the crystal.</p><p><br/></p><p>If this is set to 3, the material will be "
-"periodic along the A, B, and C vectors of the "
-"crystal.</p><p><br/></p></body></html>"
+"<html><head/><body><p>The number of periodic dimensions.</p><p><br/></"
+"p><p>If this is set to 1, the material will be periodic only along the A "
+"vector of the crystal.</p><p><br/></p><p>If this is set to 2, the material "
+"will be periodic along both the A and B vectors of the crystal.</p><p><br/></"
+"p><p>If this is set to 3, the material will be periodic along the A, B, and "
+"C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
-"<html><head/><body><p>The number of periodic "
-"dimensions.</p><p><br/></p><p>If this is set to 1, the material will be "
-"periodic only along the A vector of the crystal.</p><p><br/></p><p>If this "
-"is set to 2, the material will be periodic along both the A and B vectors of"
-" the crystal.</p><p><br/></p><p>If this is set to 3, the material will be "
-"periodic along the A, B, and C vectors of the "
-"crystal.</p><p><br/></p></body></html>"
+"<html><head/><body><p>The number of periodic dimensions.</p><p><br/></"
+"p><p>If this is set to 1, the material will be periodic only along the A "
+"vector of the crystal.</p><p><br/></p><p>If this is set to 2, the material "
+"will be periodic along both the A and B vectors of the crystal.</p><p><br/></"
+"p><p>If this is set to 3, the material will be periodic along the A, B, and "
+"C vectors of the crystal.</p><p><br/></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8924,47 +8962,52 @@ msgstr "Display Yaehmop Input?"
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-",Launchpad Contributions:,Andres Montejo Martinez,DiegoJ,Edgardo "
-"Fredz,Enterhase,Feder Sáiz,Federico Vera,Gabriel Ruiz,Geoff "
-"Hutchison,Gothmog,Javier García Díaz,Luis J. Claros,Pablo Catarecha,Rogelio "
-"Castillo A.,cocoloco, ,Launchpad Contributions:,Gabriel Ruiz,Geoff "
-"Hutchison,Jen Ockwell,Marcus D. Hanwell,kuede, ,Launchpad "
-"Contributions:,Avogadro Team, ,Launchpad Contributions:,Avogadro Team,Brian "
-"Burns,Geoff Hutchison,Marcus D. Hanwell, ,Launchpad Contributions:,Avogadro "
+",Launchpad Contributions:,Andres Montejo Martinez,DiegoJ,Edgardo Fredz,"
+"Enterhase,Feder Sáiz,Federico Vera,Gabriel Ruiz,Geoff Hutchison,Gothmog,"
+"Javier García Díaz,Luis J. Claros,Pablo Catarecha,Rogelio Castillo A.,"
+"cocoloco, ,Launchpad Contributions:,Gabriel Ruiz,Geoff Hutchison,Jen Ockwell,"
+"Marcus D. Hanwell,kuede, ,Launchpad Contributions:,Avogadro Team, ,Launchpad "
+"Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Marcus D. Hanwell, ,"
+"Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Marcus D. "
+"Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff "
+"Hutchison,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro "
 "Team,Brian Burns,Geoff Hutchison,Marcus D. Hanwell,ascenseur, ,Launchpad "
-"Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Marcus D. "
-"Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff"
-" Hutchison,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro "
-"Team,Brian Burns,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, "
-",Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Ken "
-"Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro "
-"Team,Brian Burns,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, "
-",Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Ken "
-"Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,Andi "
-"Chandler,Anthony Harrington,Avogadro Team,Brian Burns,Chris Woollard,Geoff "
-"Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad "
-"Contributions:,Andi Chandler,Anthony Harrington,Avogadro Team,Brian "
-"Burns,Chris Woollard,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, "
-",Launchpad Contributions:,Andi Chandler,Anthony Harrington,Avogadro "
-"Team,Brian Burns,Chris Woollard,Geoff Hutchison,Ken Sharp,Marcus D. "
-"Hanwell,ascenseur"
+"Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Ken Sharp,Marcus D. "
+"Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff "
+"Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,"
+"Avogadro Team,Brian Burns,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,"
+"ascenseur, ,Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff "
+"Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,"
+"Andi Chandler,Anthony Harrington,Avogadro Team,Brian Burns,Chris Woollard,"
+"Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad "
+"Contributions:,Andi Chandler,Anthony Harrington,Avogadro Team,Brian Burns,"
+"Chris Woollard,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,"
+"Launchpad Contributions:,Andi Chandler,Anthony Harrington,Avogadro Team,"
+"Brian Burns,Chris Woollard,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,"
+"ascenseur"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-",,Nathan_chud@hotmail.com,diegojromerolopez@gmail.com,medeshago@gmail.com,patricio.oshee@gmail.com,federsaiz@googlemail.com,,debianmaster@gmail.com,,,,,pczoido@gmail.com,,jalvarezrom@gmail.com,,,debianmaster@gmail.com,,jenfraggleubuntu@googlemail.com,,,,,avogadro-"
-"devel@lists.sourceforge.net,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,,,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,,,joseph.odell@googlemail.com,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,,,joseph.odell@googlemail.com,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,,,joseph.odell@googlemail.com,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,,,,joseph.odell@googlemail.com,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,,,,joseph.odell@googlemail.com,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,,,,joseph.odell@googlemail.com,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,,,,joseph.odell@googlemail.com,,,,untaintableangel@ubuntu.com,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,cwoollard@gmail.com,,,,joseph.odell@googlemail.com,,,,untaintableangel@ubuntu.com,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,cwoollard@gmail.com,,,,joseph.odell@googlemail.com,,,,,avogadro-"
-"devel@lists.sourceforge.net,bburns@aundae.com,cwoollard@gmail.com,,,,joseph.odell@googlemail.com"
+",,Nathan_chud@hotmail.com,diegojromerolopez@gmail.com,medeshago@gmail.com,"
+"patricio.oshee@gmail.com,federsaiz@googlemail.com,,debianmaster@gmail."
+"com,,,,,pczoido@gmail.com,,jalvarezrom@gmail.com,,,debianmaster@gmail.com,,"
+"jenfraggleubuntu@googlemail.com,,,,,avogadro-devel@lists.sourceforge.net,,,"
+"avogadro-devel@lists.sourceforge.net,bburns@aundae.com,,,,,avogadro-"
+"devel@lists.sourceforge.net,bburns@aundae.com,,,joseph.odell@googlemail."
+"com,,,avogadro-devel@lists.sourceforge.net,bburns@aundae.com,,,joseph."
+"odell@googlemail.com,,,avogadro-devel@lists.sourceforge.net,bburns@aundae."
+"com,,,joseph.odell@googlemail.com,,,avogadro-devel@lists.sourceforge.net,"
+"bburns@aundae.com,,,,joseph.odell@googlemail.com,,,avogadro-devel@lists."
+"sourceforge.net,bburns@aundae.com,,,,joseph.odell@googlemail.com,,,avogadro-"
+"devel@lists.sourceforge.net,bburns@aundae.com,,,,joseph.odell@googlemail."
+"com,,,avogadro-devel@lists.sourceforge.net,bburns@aundae.com,,,,joseph."
+"odell@googlemail.com,,,,untaintableangel@ubuntu.com,avogadro-devel@lists."
+"sourceforge.net,bburns@aundae.com,cwoollard@gmail.com,,,,joseph."
+"odell@googlemail.com,,,,untaintableangel@ubuntu.com,avogadro-devel@lists."
+"sourceforge.net,bburns@aundae.com,cwoollard@gmail.com,,,,joseph."
+"odell@googlemail.com,,,,,avogadro-devel@lists.sourceforge.net,bburns@aundae."
+"com,cwoollard@gmail.com,,,,joseph.odell@googlemail.com"
 
 #~ msgid "Max 2*theta:"
 #~ msgstr "Max 2*theta:"
@@ -8972,7 +9015,8 @@ msgstr ""
 #~ msgid ""
 #~ "Tables for displaying and editng atom, bond, angle and torsion properties."
 #~ msgstr ""
-#~ "Tables for displaying and editng atom, bond, angle, and torsion properties."
+#~ "Tables for displaying and editng atom, bond, angle, and torsion "
+#~ "properties."
 
 #~ msgid ""
 #~ "Align Molecules\n"
@@ -9256,9 +9300,11 @@ msgstr ""
 #~ msgstr "Record Movie..."
 
 #~ msgid ""
-#~ "The file name contains invalid characters. Please choose another file name."
+#~ "The file name contains invalid characters. Please choose another file "
+#~ "name."
 #~ msgstr ""
-#~ "The file name contains invalid characters. Please choose another file name."
+#~ "The file name contains invalid characters. Please choose another file "
+#~ "name."
 
 #~ msgid "Other..."
 #~ msgstr "Other..."
@@ -9605,11 +9651,11 @@ msgstr ""
 #~ msgstr "Invalid video filename.  Must include full directory path"
 
 #~ msgid ""
-#~ "Invalid video filename.  Must include full directory path and name, ending "
-#~ "with .avi"
+#~ "Invalid video filename.  Must include full directory path and name, "
+#~ "ending with .avi"
 #~ msgstr ""
-#~ "Invalid video filename.  Must include full directory path and name, ending "
-#~ "with .avi"
+#~ "Invalid video filename.  Must include full directory path and name, "
+#~ "ending with .avi"
 
 #~ msgid "Could not determine format from filename: %1"
 #~ msgstr "Could not determine format from filename: %1"
@@ -9643,7 +9689,8 @@ msgstr ""
 #~ msgid "Your molecule must contain at least one atom to add a constraint"
 #~ msgstr "Your molecule must contain at least one atom to add a constraint"
 
-#~ msgid "Your molecule must contain at least two atoms to add a bond constraint"
+#~ msgid ""
+#~ "Your molecule must contain at least two atoms to add a bond constraint"
 #~ msgstr ""
 #~ "Your molecule must contain at least two atoms to add a bond constraint"
 
@@ -9731,10 +9778,10 @@ msgstr ""
 #~ msgstr "Paste Crystal"
 
 #~ msgid ""
-#~ "Niggli-reduction failed. The input structure's lattice that is confusing the"
-#~ " Niggli-reduction algorithm. Try making a small perturbation (approx. 2 "
-#~ "orders of magnitude smaller than the tolerance) to the input lattices and "
-#~ "try again."
+#~ "Niggli-reduction failed. The input structure's lattice that is confusing "
+#~ "the Niggli-reduction algorithm. Try making a small perturbation (approx. "
+#~ "2 orders of magnitude smaller than the tolerance) to the input lattices "
+#~ "and try again."
 #~ msgstr ""
 #~ "Niggli-reduction failed. The input structure's lattice is confusing the "
 #~ "Niggli-reduction algorithm. Try making a small perturbation (approx. 2 "
@@ -9818,14 +9865,14 @@ msgstr ""
 #~ msgstr "&Crystal View Options..."
 
 #~ msgid ""
-#~ "<p>Perceived spacegroup %1, Hall symbol %2, Hermann-Mauguin symbol "
-#~ "%3.<p><p>Cell can be symmetrized into a conventional setting, do you wish to"
-#~ " do so? Actions that make use of symmetry (e.g. supercell builder) require "
+#~ "<p>Perceived spacegroup %1, Hall symbol %2, Hermann-Mauguin symbol %3."
+#~ "<p><p>Cell can be symmetrized into a conventional setting, do you wish to "
+#~ "do so? Actions that make use of symmetry (e.g. supercell builder) require "
 #~ "this.<p>"
 #~ msgstr ""
-#~ "<p>Perceived spacegroup %1, Hall symbol %2, Hermann-Mauguin symbol "
-#~ "%3.<p><p>Cell can be symmetrised into a conventional setting, do you wish to"
-#~ " do so? Actions that make use of symmetry (e.g. supercell builder) require "
+#~ "<p>Perceived spacegroup %1, Hall symbol %2, Hermann-Mauguin symbol %3."
+#~ "<p><p>Cell can be symmetrised into a conventional setting, do you wish to "
+#~ "do so? Actions that make use of symmetry (e.g. supercell builder) require "
 #~ "this.<p>"
 
 #~ msgid "Set Spacegroup"
@@ -9883,11 +9930,11 @@ msgstr ""
 #~ msgstr "Bad Compostion"
 
 #~ msgid ""
-#~ "The identities field must contain the same number of space delimited entries"
-#~ " as line 6 of the POSCAR."
+#~ "The identities field must contain the same number of space delimited "
+#~ "entries as line 6 of the POSCAR."
 #~ msgstr ""
-#~ "The identities field must contain the same number of space delimited entries"
-#~ " as line 6 of the POSCAR."
+#~ "The identities field must contain the same number of space delimited "
+#~ "entries as line 6 of the POSCAR."
 
 #~ msgid "Cartesian Coordinates"
 #~ msgstr "Cartesian Coordinates"
@@ -9976,11 +10023,11 @@ msgstr ""
 #~ msgstr "ForceField"
 
 #~ msgid ""
-#~ "Optimize molecules and generate conformers using molecular mechanics force "
-#~ "fields"
+#~ "Optimize molecules and generate conformers using molecular mechanics "
+#~ "force fields"
 #~ msgstr ""
-#~ "Optimise molecules and generate conformers using molecular mechanics force "
-#~ "fields"
+#~ "Optimise molecules and generate conformers using molecular mechanics "
+#~ "force fields"
 
 #~ msgid "&Vector Graphics..."
 #~ msgstr "&Vector Graphics..."
@@ -10175,18 +10222,20 @@ msgstr ""
 #~ msgstr "Does not compute."
 
 #~ msgid ""
-#~ "You requested no direct rendering using POV-Ray and not to keep the POV-Ray "
-#~ "file. This will result in no output being saved. Are you sure that is what "
-#~ "you want?"
+#~ "You requested no direct rendering using POV-Ray and not to keep the POV-"
+#~ "Ray file. This will result in no output being saved. Are you sure that is "
+#~ "what you want?"
 #~ msgstr ""
-#~ "You requested no direct rendering using POV-Ray and not to keep the POV-Ray "
-#~ "file. This will result in no output being saved. Are you sure that is what "
-#~ "you want?"
+#~ "You requested no direct rendering using POV-Ray and not to keep the POV-"
+#~ "Ray file. This will result in no output being saved. Are you sure that is "
+#~ "what you want?"
 
 #~ msgid ""
-#~ "Cannot write to file %1. Do you have permissions to write to that location?"
+#~ "Cannot write to file %1. Do you have permissions to write to that "
+#~ "location?"
 #~ msgstr ""
-#~ "Cannot write to file %1. Do you have permissions to write to that location?"
+#~ "Cannot write to file %1. Do you have permissions to write to that "
+#~ "location?"
 
 #~ msgid "POV-Ray failed to start."
 #~ msgstr "POV-Ray failed to start."
@@ -10199,9 +10248,11 @@ msgstr ""
 #~ "correctly."
 
 #~ msgid ""
-#~ "Create POV-Ray files and render them using the command line POV-Ray program."
+#~ "Create POV-Ray files and render them using the command line POV-Ray "
+#~ "program."
 #~ msgstr ""
-#~ "Create POV-Ray files and render them using the command line POV-Ray program."
+#~ "Create POV-Ray files and render them using the command line POV-Ray "
+#~ "program."
 
 #~ msgid "Conformer Properties..."
 #~ msgstr "Conformer Properties..."
@@ -10256,7 +10307,8 @@ msgstr ""
 #~ msgstr "Running Abinit calculation..."
 
 #~ msgid "Abinit did not run correctly. Perhaps it is not installed correctly."
-#~ msgstr "Abinit did not run correctly. Perhaps it is not installed correctly."
+#~ msgstr ""
+#~ "Abinit did not run correctly. Perhaps it is not installed correctly."
 
 #~ msgid "Dalton Input File Generator Warning"
 #~ msgstr "Dalton Input File Generator Warning"
@@ -10388,7 +10440,8 @@ msgstr ""
 #~ msgid "G03 Crashed."
 #~ msgstr "G03 Crashed."
 
-#~ msgid "Gaussian did not run correctly. Perhaps it is not installed correctly."
+#~ msgid ""
+#~ "Gaussian did not run correctly. Perhaps it is not installed correctly."
 #~ msgstr ""
 #~ "Gaussian did not run correctly. Perhaps it is not correctly installed."
 
@@ -10444,7 +10497,8 @@ msgstr ""
 #~ msgid ""
 #~ "MOPAC is already running. Wait until the previous calculation is finished."
 #~ msgstr ""
-#~ "MOPAC is already running. Wait until the previous calculation has finished."
+#~ "MOPAC is already running. Wait until the previous calculation has "
+#~ "finished."
 
 #~ msgid "MOPAC Not Installed."
 #~ msgstr "MOPAC Not Installed."
@@ -10774,11 +10828,11 @@ msgstr ""
 #~ msgstr "Super Cell Builder..."
 
 #~ msgid ""
-#~ "This document is currently an isolated molecule. You need to create a unit "
-#~ "cell."
+#~ "This document is currently an isolated molecule. You need to create a "
+#~ "unit cell."
 #~ msgstr ""
-#~ "This document is currently an isolated molecule. You need to create a unit "
-#~ "cell."
+#~ "This document is currently an isolated molecule. You need to create a "
+#~ "unit cell."
 
 #~ msgid "Build and display crystallographic super cells"
 #~ msgstr "Build and display crystallographic super cells"
@@ -10870,15 +10924,21 @@ msgstr ""
 #~ msgstr "Set Aspect Ratio"
 
 #~ msgid ""
-#~ "The current Avogadro scene is %1x%2 pixels large, and therefore has aspect ratio %3.\n"
+#~ "The current Avogadro scene is %1x%2 pixels large, and therefore has "
+#~ "aspect ratio %3.\n"
 #~ "You may keep this value, for example if you intend to use POV-Ray\n"
-#~ "to produce an image of %4x1000 pixels, or you may enter any other positive value,\n"
-#~ "for example 1 if you intend to use POV-Ray to produce a square image, like 1000x1000 pixels."
+#~ "to produce an image of %4x1000 pixels, or you may enter any other "
+#~ "positive value,\n"
+#~ "for example 1 if you intend to use POV-Ray to produce a square image, "
+#~ "like 1000x1000 pixels."
 #~ msgstr ""
-#~ "The current Avogadro scene is %1x%2 pixels large, and therefore has aspect ratio %3.\n"
+#~ "The current Avogadro scene is %1x%2 pixels large, and therefore has "
+#~ "aspect ratio %3.\n"
 #~ "You may keep this value, for example if you intend to use POV-Ray\n"
-#~ "to produce an image of %4x1000 pixels, or you may enter any other positive value,\n"
-#~ "for example 1 if you intend to use POV-Ray to produce a square image, like 1000x1000 pixels."
+#~ "to produce an image of %4x1000 pixels, or you may enter any other "
+#~ "positive value,\n"
+#~ "for example 1 if you intend to use POV-Ray to produce a square image, "
+#~ "like 1000x1000 pixels."
 
 #~ msgid "Save VRML rendered files"
 #~ msgstr "Save VRML rendered files"
@@ -10903,10 +10963,12 @@ msgstr ""
 
 #~ msgid ""
 #~ "Invalid OpenGL context.\n"
-#~ "Either something is completely broken in your OpenGL setup (can you run any OpenGL application?), or you found a bug."
+#~ "Either something is completely broken in your OpenGL setup (can you run "
+#~ "any OpenGL application?), or you found a bug."
 #~ msgstr ""
 #~ "Invalid OpenGL context.\n"
-#~ "Either something is completely broken in your OpenGL setup (can you run any OpenGL application?), or you found a bug."
+#~ "Either something is completely broken in your OpenGL setup (can you run "
+#~ "any OpenGL application?), or you found a bug."
 
 #~ msgid "Debug Information"
 #~ msgstr "Debug Information"
@@ -11452,17 +11514,29 @@ msgstr ""
 #~ msgstr "Paste to the End"
 
 #~ msgid ""
-#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
 #~ "p, li { white-space: pre-wrap; }\n"
-#~ "</style></head><body style=\" font-family:'Monospace'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Paste or edit atomic coordinates here. You may paste almost any fragment of text, containing coordinates</p></body></html>"
+#~ "</style></head><body style=\" font-family:'Monospace'; font-size:9pt; "
+#~ "font-weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Paste or edit atomic "
+#~ "coordinates here. You may paste almost any fragment of text, containing "
+#~ "coordinates</p></body></html>"
 #~ msgstr ""
-#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
 #~ "p, li { white-space: pre-wrap; }\n"
-#~ "</style></head><body style=\" font-family:'Monospace'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Paste or edit atomic coordinates here. You may paste almost any fragment of text, containing coordinates</p></body></html>"
+#~ "</style></head><body style=\" font-family:'Monospace'; font-size:9pt; "
+#~ "font-weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Paste or edit atomic "
+#~ "coordinates here. You may paste almost any fragment of text, containing "
+#~ "coordinates</p></body></html>"
 
 #~ msgid "(None)"
 #~ msgstr "(None)"
@@ -11903,13 +11977,11 @@ msgstr ""
 #~ msgstr "Factor"
 
 #~ msgid ""
-#~ "<html><head/><body><p><span style=\" font-size:10pt; font-"
-#~ "style:italic;\">select only if no defaults are "
-#~ "wanted</span></p></body></html>"
+#~ "<html><head/><body><p><span style=\" font-size:10pt; font-style:italic;"
+#~ "\">select only if no defaults are wanted</span></p></body></html>"
 #~ msgstr ""
-#~ "<html><head/><body><p><span style=\" font-size:10pt; font-"
-#~ "style:italic;\">select only if no defaults are "
-#~ "wanted</span></p></body></html>"
+#~ "<html><head/><body><p><span style=\" font-size:10pt; font-style:italic;"
+#~ "\">select only if no defaults are wanted</span></p></body></html>"
 
 #~ msgid "Accuracy"
 #~ msgstr "Accuracy"
@@ -12330,12 +12402,14 @@ msgstr ""
 #~ "Run in parallel where possible. This is only possible for SCF\n"
 #~ "wavefunctions and DFT calculations. Dalton only supports MPI\n"
 #~ "in the current release and must be compiled and installed\n"
-#~ "correctly. The number of nodes are set by using the \"-N #\" option when executing the \"dalton\" script."
+#~ "correctly. The number of nodes are set by using the \"-N #\" option when "
+#~ "executing the \"dalton\" script."
 #~ msgstr ""
 #~ "Run in parallel where possible. This is only possible for SCF\n"
 #~ "wavefunctions and DFT calculations. Dalton only supports MPI\n"
 #~ "in the current release and must be compiled and installed\n"
-#~ "correctly. The number of nodes are set by using the \"-N #\" option when executing the \"dalton\" script."
+#~ "correctly. The number of nodes are set by using the \"-N #\" option when "
+#~ "executing the \"dalton\" script."
 
 #~ msgid "Parallel"
 #~ msgstr "Parallel"
@@ -13273,11 +13347,15 @@ msgstr ""
 #~ msgstr "Z-matrix"
 
 #~ msgid ""
-#~ "In direct mode, integrals are not stored on disk, but recalculated as needed.\n"
-#~ "On modern systems with fast processors and slow disks, direct is often faster."
+#~ "In direct mode, integrals are not stored on disk, but recalculated as "
+#~ "needed.\n"
+#~ "On modern systems with fast processors and slow disks, direct is often "
+#~ "faster."
 #~ msgstr ""
-#~ "In direct mode, integrals are not stored on disk, but recalculated as needed.\n"
-#~ "On modern systems with fast processors and slow disks, direct is often faster."
+#~ "In direct mode, integrals are not stored on disk, but recalculated as "
+#~ "needed.\n"
+#~ "On modern systems with fast processors and slow disks, direct is often "
+#~ "faster."
 
 #~ msgid "Run in direct mode:"
 #~ msgstr "Run in direct mode:"
