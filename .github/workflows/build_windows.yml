@@ -39,54 +39,54 @@ jobs:
     steps:
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout molecules
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/molecules
         path: molecules
 
     - name: Checkout fragments
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/fragments
         path: fragments
 
     - name: Checkout crystals
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/crystals
         path: crystals
 
     - name: Checkout i18n
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v5.0.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         path: avogadrolibs
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v4
+      uses: jurplel/install-qt-action@d325aaf2a8baeeda41ad0b5d39f84a6af9bcf005 # v4.3.0
       with:
         version: ${{ env.QT_VERSION }}
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1
+      uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
       with:
         arch: x64
 
@@ -144,14 +144,14 @@ jobs:
     - name: Upload
       if: matrix.config.artifact != 0
       id: upload-artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
       with:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
 
     - name: Sign Windows release
       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
-      uses: signpath/github-action-submit-signing-request@v1
+      uses: signpath/github-action-submit-signing-request@ced31329c0317e779dad2eec2a7c3bb46ea1343e # v1.3
       continue-on-error: true
       with:
         api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
@@ -173,12 +173,12 @@ jobs:
         GH_TOKEN: ${{ github.token }}
 
     - name: Upload MSIX
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
       with:
         path: ${{ runner.workspace }}/build/Avogadro2.msix
         name: Avogadro2.msix
 
     - name: Setup tmate session
       if: failure()
-      uses: mxschmitt/action-tmate@v3
+      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
       timeout-minutes: 60

@@ -2,7 +2,7 @@ name: update-i18n-templates
 
 on:
   workflow_dispatch:
-    
+
   schedule:
     # * is a special character in YAML so you have to quote this string
     # run weekly, every Sunday at 01:23
@@ -13,7 +13,7 @@ jobs:
     name: Update translation templates
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5.0.0
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
     - name: Install packages
       run: |
@@ -25,7 +25,7 @@ jobs:
         sh scripts/extract-messages.sh
 
     - name: Create pull request
-      uses: peter-evans/create-pull-request@v7
+      uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
       with:
         commit-message: "Automated translation updates"
         signoff: true
