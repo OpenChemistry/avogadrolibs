@@ -145,7 +145,7 @@ jobs:
         # wget -c -nv "https://github.com/prefix-dev/pixi/releases/latest/download/pixi-aarch64-unknown-linux-musl"
         # mv pixi-aarch64-unknown-linux-musl appdir/usr/bin/pixi
 
-        ./linuxdeploy-aarch64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --appdir appdir
+        ./linuxdeploy-aarch64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --library /usr/lib/aarch64-linux-gnu/libssl.so.3 --library /usr/lib/aarch64-linux-gnu/libcrypto.so.3 --appdir appdir
         # add the custom AppRun
         rm appdir/AppRun
         cp ../avogadrolibs/openchemistry/avogadrolibs/scripts/AppImage.sh appdir/AppRun
