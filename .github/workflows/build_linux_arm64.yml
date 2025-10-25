@@ -1,4 +1,4 @@
-name: Linux Build Matrix
+name: Linux ARM64 Build Matrix
 # Many thanks to Cristian Adam for examples
 # e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
@@ -22,46 +22,18 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu x86", artifact: "",
-            os: ubuntu-latest,
+            name: "Ubuntu ARM", artifact: "",
+            os: ubuntu-24.04-arm,
             cc: "gcc", cxx: "g++",
-            build_type: "Release",
+            build_type: "Debug",
             cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE",
           }
         - {
-            name: "AppImage x86", artifact: "Avogadro2-x86_64.AppImage",
-            os: ubuntu-22.04,
+            name: "AppImage ARM", artifact: "Avogadro2-arm64.AppImage",
+            os: ubuntu-24.04-arm,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DINSTALL_BUNDLE_FILES=ON -DUSE_YAEHMOP=ON",
-          }
-        - {
-            name: "Ubuntu Address Sanitizer", artifact: "",
-            os: ubuntu-latest,
-            cc: "gcc", cxx: "g++",
-            build_type: "asan",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
-          }
-        - {
-            name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
-            os: ubuntu-latest,
-            cc: "gcc", cxx: "g++",
-            build_type: "ubsan",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
-          }
-        - {
-            name: "Ubuntu Leak Sanitizer", artifact: "",
-            os: ubuntu-latest,
-            cc: "gcc", cxx: "g++",
-            build_type: "lsan",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
-          }
-        - {
-            name: "Ubuntu Thread Sanitizer", artifact: "",
-            os: ubuntu-latest,
-            cc: "gcc", cxx: "g++",
-            build_type: "tsan",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
           }
 
     steps:
@@ -156,7 +128,7 @@ jobs:
         endif()
 
     - name: Package AppImage
-      if: matrix.config.name == 'AppImage x86'
+      if: matrix.config.name == 'AppImage ARM'
       shell: bash
       run: |
         mkdir appdir
@@ -164,23 +136,22 @@ jobs:
 
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:appdir/usr/lib
 
-        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
-        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
-        wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-aarch64.AppImage"
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-aarch64.AppImage"
+        wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-aarch64.AppImage"
         chmod a+x *.AppImage
 
         # get pixi
-        # wget -c -nv "https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-unknown-linux-musl"
-        # mv pixi-x86_64-unknown-linux-musl appdir/usr/bin/pixi
+        # wget -c -nv "https://github.com/prefix-dev/pixi/releases/latest/download/pixi-aarch64-unknown-linux-musl"
+        # mv pixi-aarch64-unknown-linux-musl appdir/usr/bin/pixi
 
-        # Though it is not great security practice, bundle libssl and libcrypto
-        ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --library /lib/x86_64-linux-gnu/libssl.so.3 --library /lib/x86_64-linux-gnu/libcrypto.so.3 --appdir appdir
+        ./linuxdeploy-aarch64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --appdir appdir
         # add the custom AppRun
         rm appdir/AppRun
         cp ../avogadrolibs/openchemistry/avogadrolibs/scripts/AppImage.sh appdir/AppRun
         chmod a+x appdir/AppRun
-        ./appimagetool-x86_64.AppImage appdir
-        mv Avogadro*.AppImage avogadroapp/Avogadro2-x86_64.AppImage # for upload
+        ./appimagetool-aarch64.AppImage appdir
+        mv Avogadro*.AppImage avogadroapp/Avogadro2-aarch64.AppImage # for upload
       working-directory: ${{ runner.workspace }}/build
 
     - name: Upload
