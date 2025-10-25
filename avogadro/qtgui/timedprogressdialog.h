@@ -25,7 +25,7 @@ class AVOGADROQTGUI_EXPORT TimedProgressDialog : public QProgressDialog
   Q_OBJECT
 
 public:
-  TimedProgressDialog(QWidget* parent = nullptr);
+  TimedProgressDialog(QWidget* parent);
   TimedProgressDialog(const QString& labelText = QString(),
                       const QString& cancelButtonText = QString(),
                       int minimum = 0, int maximum = 100,
