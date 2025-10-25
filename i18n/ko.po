@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-16 20:55+0000\n"
+"POT-Creation-Date: 2025-10-25 16:46+0000\n"
 "PO-Revision-Date: 2025-10-20 04:50+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -189,7 +189,7 @@ msgstr "계속"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
+#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:35
 msgid "Close"
 msgstr "닫기"
 
@@ -506,7 +506,7 @@ msgstr "BackgroundFileFormat에 설정된 파일 이름이 없습니다!"
 msgid "Split Horizontal"
 msgstr "수평 분할"
 
-#: qtgui/containerwidget.cpp:30
+#: qtgui/containerwidget.cpp:31
 msgid "Split Vertical"
 msgstr "수직 분할"
 
@@ -990,15 +990,15 @@ msgstr "테네신"
 msgid "Oganesson"
 msgstr "오가네손"
 
-#: qtgui/filebrowsewidget.cpp:23
+#: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
 msgstr "찾아보기"
 
-#: qtgui/filebrowsewidget.cpp:96
+#: qtgui/filebrowsewidget.cpp:97
 msgid "Select file:"
 msgstr "파일 선택:"
 
-#: qtgui/filebrowsewidget.cpp:99
+#: qtgui/filebrowsewidget.cpp:100
 msgid "Select executable:"
 msgstr "실행 파일 선택:"
 
@@ -1273,15 +1273,15 @@ msgstr "판 데르 발스"
 msgid "Wireframe"
 msgstr "와이어프레임"
 
-#: qtgui/moleculemodel.cpp:94
+#: qtgui/moleculemodel.cpp:120
 msgid "Untitled"
 msgstr "제목 없음"
 
-#: qtgui/moleculemodel.cpp:109
+#: qtgui/moleculemodel.cpp:135
 msgid "Edit molecule"
 msgstr ""
 
-#: qtgui/moleculemodel.cpp:116
+#: qtgui/moleculemodel.cpp:142
 msgid "Not saved"
 msgstr ""
 
@@ -1293,12 +1293,12 @@ msgstr "새로운 보기 만들기"
 msgid "Periodic Table"
 msgstr "주기율표"
 
-#: qtgui/pythonscript.cpp:138 qtgui/pythonscript.cpp:226
+#: qtgui/pythonscript.cpp:161 qtgui/pythonscript.cpp:249
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr "스크립트 '%1 %2' 실행 중 오류: 시작(%3) 대기 시간이 초과되었습니다."
 
-#: qtgui/pythonscript.cpp:148 qtgui/pythonscript.cpp:236
+#: qtgui/pythonscript.cpp:171 qtgui/pythonscript.cpp:259
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1307,12 +1307,12 @@ msgstr ""
 "스크립트 '%1 %2' 실행 중 오류: 표준 입력(len=%3, %4바이트 쓰기, QProcess 오"
 "류: %5)에 쓰지 못했습니다."
 
-#: qtgui/pythonscript.cpp:161
+#: qtgui/pythonscript.cpp:184
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr "스크립트 '%1 %2' 실행 오류: 완료 (%3) 대기 시간이 초과되었습니다."
 
-#: qtgui/pythonscript.cpp:170
+#: qtgui/pythonscript.cpp:193
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1325,32 +1325,32 @@ msgstr ""
 "출력: \n"
 "%6"
 
-#: qtgui/pythonscript.cpp:179
+#: qtgui/pythonscript.cpp:202
 #, qt-format
 msgid "Warning '%1'"
 msgstr "경고 '%1'"
 
-#: qtgui/pythonscript.cpp:301
+#: qtgui/pythonscript.cpp:324
 msgid "Script failed to start."
 msgstr "스크립트를 시작하지 못했습니다."
 
-#: qtgui/pythonscript.cpp:304
+#: qtgui/pythonscript.cpp:327
 msgid "Script crashed."
 msgstr "스크립트가 충돌했습니다."
 
-#: qtgui/pythonscript.cpp:307
+#: qtgui/pythonscript.cpp:330
 msgid "Script timed out."
 msgstr "스크립트 시간이 초과되었습니다."
 
-#: qtgui/pythonscript.cpp:310
+#: qtgui/pythonscript.cpp:333
 msgid "Read error."
 msgstr "읽기 오류입니다."
 
-#: qtgui/pythonscript.cpp:313
+#: qtgui/pythonscript.cpp:336
 msgid "Write error."
 msgstr "쓰기 오류입니다."
 
-#: qtgui/pythonscript.cpp:317
+#: qtgui/pythonscript.cpp:340
 msgid "Unknown error."
 msgstr "알 수 없는 오류입니다."
 
@@ -1544,6 +1544,35 @@ msgstr "스크립트%1을(를)불러올수없음"
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
 msgstr "경로 %2에서 %1 스크립트를 확인하는 중"
+
+#: qtgui/timedprogressdialog.cpp:75
+msgid "Calculating…"
+msgstr ""
+
+#: qtgui/timedprogressdialog.cpp:79
+msgid "Less than a second remaining"
+msgstr ""
+
+#: qtgui/timedprogressdialog.cpp:82
+#, qt-plural-format
+msgctxt ""
+msgid "%n second(s) remaining"
+msgid_plural "%n second(s) remaining"
+msgstr[0] ""
+
+#: qtgui/timedprogressdialog.cpp:85
+#, qt-plural-format
+msgctxt ""
+msgid "%n minute(s) remaining"
+msgid_plural "%n minute(s) remaining"
+msgstr[0] ""
+
+#: qtgui/timedprogressdialog.cpp:89
+#, qt-plural-format
+msgctxt ""
+msgid "%n hour(s) remaining"
+msgid_plural "%n hour(s) remaining"
+msgstr[0] ""
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -1826,25 +1855,25 @@ msgstr "균형잡힌 스키마별"
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:781
+#: qtplugins/surfaces/surfaces.cpp:784
 msgctxt "colormap"
 msgid "Parula"
 msgstr "파룰라"
 
 #: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:783
+#: qtplugins/surfaces/surfaces.cpp:786
 msgctxt "colormap"
 msgid "Heat"
 msgstr "열"
 
 #: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:785
+#: qtplugins/surfaces/surfaces.cpp:788
 msgctxt "colormap"
 msgid "Hot"
 msgstr "뜨거운"
 
 #: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:787
+#: qtplugins/surfaces/surfaces.cpp:790
 msgctxt "colormap"
 msgid "Gray"
 msgstr "회색"
@@ -1852,7 +1881,7 @@ msgstr "회색"
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:789
+#: qtplugins/surfaces/surfaces.cpp:792
 msgctxt "colormap"
 msgid "Magma"
 msgstr "마그마"
@@ -1860,7 +1889,7 @@ msgstr "마그마"
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:791
+#: qtplugins/surfaces/surfaces.cpp:794
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "불"
@@ -1868,7 +1897,7 @@ msgstr "불"
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:793
+#: qtplugins/surfaces/surfaces.cpp:796
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "플라즈마"
@@ -1876,7 +1905,7 @@ msgstr "플라즈마"
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:795
+#: qtplugins/surfaces/surfaces.cpp:798
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "비리디스"
@@ -1884,7 +1913,7 @@ msgstr "비리디스"
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:797
+#: qtplugins/surfaces/surfaces.cpp:800
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "시비디스"
@@ -1896,7 +1925,7 @@ msgstr "시비디스"
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:799:183 rc.cpp:1872
+#: qtplugins/surfaces/surfaces.cpp:802:183 rc.cpp:1872
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "스펙트럼"
@@ -1906,7 +1935,7 @@ msgstr "스펙트럼"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:801:180 rc.cpp:1869
+#: qtplugins/surfaces/surfaces.cpp:804:180 rc.cpp:1869
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "냉온"
@@ -1916,7 +1945,7 @@ msgstr "냉온"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:803:174 rc.cpp:1863
+#: qtplugins/surfaces/surfaces.cpp:806:174 rc.cpp:1863
 msgctxt "colormap"
 msgid "Balance"
 msgstr "균형"
@@ -1926,7 +1955,7 @@ msgstr "균형"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:805:177 rc.cpp:1866
+#: qtplugins/surfaces/surfaces.cpp:808:177 rc.cpp:1866
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "파란-어두운 빨강"
@@ -1938,7 +1967,7 @@ msgstr "파란-어두운 빨강"
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:807:186 rc.cpp:1875
+#: qtplugins/surfaces/surfaces.cpp:810:186 rc.cpp:1875
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "터보"
@@ -2020,8 +2049,8 @@ msgid "Stop"
 msgstr "중지"
 
 #: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:391
-#: qtplugins/forcefield/forcefield.cpp:446 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/forcefield/forcefield.cpp:418
+#: qtplugins/forcefield/forcefield.cpp:473 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:560
 msgid "Optimize Geometry"
 msgstr "기하학 최적화"
@@ -2298,10 +2327,10 @@ msgstr "색상 불투명도 지도 편집…"
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:126
+#: qtplugins/configurepython/configurepython.cpp:136
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:196
-#: qtplugins/forcefield/forcefield.cpp:198
+#: qtplugins/forcefield/forcefield.cpp:223
+#: qtplugins/forcefield/forcefield.cpp:225
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2368,11 +2397,11 @@ msgstr "외부 스크립트 명령어 실행"
 msgid "Python Settings…"
 msgstr "파이썬 설정…"
 
-#: qtplugins/configurepython/configurepython.cpp:56
+#: qtplugins/configurepython/configurepython.cpp:58
 msgid "Install Python"
 msgstr "파이썬 설치"
 
-#: qtplugins/configurepython/configurepython.cpp:57
+#: qtplugins/configurepython/configurepython.cpp:59
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr "파이썬은 많은 Avogadro 기능에 사용됩니다. 파이썬을 내려받을까요?"
@@ -2406,7 +2435,7 @@ msgid "Constraints…"
 msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:198
+#: qtplugins/forcefield/forcefield.cpp:225
 msgid "&Calculate"
 msgstr "&계산"
 
@@ -2986,25 +3015,25 @@ msgstr "텍스트를 구문 분석할 수 없음"
 msgid "Failed to read the data with the supplied format."
 msgstr "제공된 형식으로 데이터를 읽지 못했습니다."
 
-#: qtplugins/crystal/unitcelldialog.cpp:250
-#: qtplugins/crystal/unitcelldialog.cpp:263
+#: qtplugins/crystal/unitcelldialog.cpp:251
+#: qtplugins/crystal/unitcelldialog.cpp:264
 msgid "No unit cell present."
 msgstr "단위 격자가 없습니다."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
-#: qtplugins/crystal/unitcelldialog.cpp:280
-#: qtplugins/crystal/unitcelldialog.cpp:291
-#: qtplugins/crystal/unitcelldialog.cpp:302:442
+#: qtplugins/crystal/unitcelldialog.cpp:281
+#: qtplugins/crystal/unitcelldialog.cpp:292
+#: qtplugins/crystal/unitcelldialog.cpp:303:442
 msgid "Unit Cell Editor"
 msgstr "단위 격자 편집기"
 
-#: qtplugins/crystal/unitcelldialog.cpp:281
-#: qtplugins/crystal/unitcelldialog.cpp:292
+#: qtplugins/crystal/unitcelldialog.cpp:282
+#: qtplugins/crystal/unitcelldialog.cpp:293
 msgid "Ignoring singular cell matrix"
 msgstr ""
 
-#: qtplugins/crystal/unitcelldialog.cpp:303
+#: qtplugins/crystal/unitcelldialog.cpp:304
 msgid "Ignoring singular fractional cell matrix"
 msgstr ""
 
@@ -3221,32 +3250,32 @@ msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:339
-#: qtplugins/forcefield/forcefield.cpp:490
-#: qtplugins/forcefield/forcefield.cpp:560
+#: qtplugins/forcefield/forcefield.cpp:366
+#: qtplugins/forcefield/forcefield.cpp:517
+#: qtplugins/forcefield/forcefield.cpp:587
 #: qtplugins/playertool/playertool.cpp:386
-#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:935
-#: qtplugins/surfaces/surfaces.cpp:979 qtplugins/surfaces/surfaces.cpp:991
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:938
+#: qtplugins/surfaces/surfaces.cpp:982 qtplugins/surfaces/surfaces.cpp:994
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "아보가드로"
 
-#: qtplugins/forcefield/forcefield.cpp:340
+#: qtplugins/forcefield/forcefield.cpp:367
 msgid "No atoms provided for optimization"
 msgstr "최적화를 위해 제공되는 원자 없음"
 
-#: qtplugins/forcefield/forcefield.cpp:408
+#: qtplugins/forcefield/forcefield.cpp:435
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:489
+#: qtplugins/forcefield/forcefield.cpp:516
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 에너지 = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:559
+#: qtplugins/forcefield/forcefield.cpp:586
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 강도 기준 = %L2"
@@ -3265,15 +3294,15 @@ msgstr "스크립트를 포함한 역장 최소화"
 msgid "Autodetect (%1)"
 msgstr "자동 감지 (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:103 qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:34
 msgid "Universal Force Field"
 msgstr "범용 역 장"
 
-#: qtplugins/forcefield/obenergy.cpp:108 qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:109 qtplugins/forcefield/obmmenergy.cpp:39
 msgid "Generalized Amber Force Field"
 msgstr "일반화된 호박색 역 장"
 
-#: qtplugins/forcefield/obenergy.cpp:122 qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:123 qtplugins/forcefield/obmmenergy.cpp:53
 msgid "Merck Molecular Force Field 94"
 msgstr "Merck 분자 역 장 94"
 
@@ -3879,7 +3908,7 @@ msgstr "분자의 일반적인 특성을 봅니다."
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:271
+#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:273
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analyze"
 msgstr ""
@@ -4394,7 +4423,7 @@ msgstr "비트맵 그래픽 내보내기"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "동영상 (*.mp4);;동영상 (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:907
+#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:910
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -4410,11 +4439,11 @@ msgstr "GIF 파일 형식은 100 FPS 이상의 프레임 속도를 지원하지 
 msgid "Movie (*.avi)"
 msgstr "동영상 (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:980
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:983
 msgid "Error: cannot add frame to video."
 msgstr "오류: 비디오에 프레임을 추가할 수 없습니다."
 
-#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:992
+#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:995
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 파일을 저장할 수 없습니다."
@@ -5364,7 +5393,7 @@ msgstr ""
 msgid "Molecular Orbitals…"
 msgstr ""
 
-#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:861
+#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:864
 msgid "Meshes"
 msgstr "메쉬"
 
@@ -5452,70 +5481,70 @@ msgstr "파일에서"
 msgid " of %0"
 msgstr " %0 의"
 
-#: qtplugins/surfaces/surfaces.cpp:86
+#: qtplugins/surfaces/surfaces.cpp:88
 msgid "Create Surfaces…"
 msgstr "표면 생성…"
 
-#: qtplugins/surfaces/surfaces.cpp:116
+#: qtplugins/surfaces/surfaces.cpp:118
 msgid "Render the van der Waals surface."
 msgstr "반 데르 발스 표면을 렌더링합니다."
 
-#: qtplugins/surfaces/surfaces.cpp:118
+#: qtplugins/surfaces/surfaces.cpp:120
 msgid "Render the van der Waals molecular surface."
 msgstr "반 데르 발스 분자 표면을 렌더링합니다."
 
-#: qtplugins/surfaces/surfaces.cpp:120
+#: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the solvent-accessible molecular surface."
 msgstr "용매에 접근 가능한 분자 표면을 렌더링합니다."
 
-#: qtplugins/surfaces/surfaces.cpp:122
+#: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render the solvent-excluded molecular surface."
 msgstr "용매가 배제된 분자 표면을 렌더링합니다."
 
-#: qtplugins/surfaces/surfaces.cpp:123 qtplugins/surfaces/surfaces.cpp:124
+#: qtplugins/surfaces/surfaces.cpp:125 qtplugins/surfaces/surfaces.cpp:126
 msgid "Render a molecular orbital."
 msgstr "분자 궤도를 렌더링합니다."
 
-#: qtplugins/surfaces/surfaces.cpp:126
+#: qtplugins/surfaces/surfaces.cpp:128
 msgid "Render the electron density."
 msgstr "전자 밀도를 렌더링합니다."
 
-#: qtplugins/surfaces/surfaces.cpp:127
+#: qtplugins/surfaces/surfaces.cpp:129
 msgid "Render the spin density."
 msgstr "회전 밀도를 렌더링합니다."
 
-#: qtplugins/surfaces/surfaces.cpp:129
+#: qtplugins/surfaces/surfaces.cpp:131
 msgid "Render a cube supplied with the file."
 msgstr "파일과 함께 제공된 큐브를 렌더링합니다."
 
-#: qtplugins/surfaces/surfaces.cpp:307
+#: qtplugins/surfaces/surfaces.cpp:309
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:605
+#: qtplugins/surfaces/surfaces.cpp:608
 msgid "Calculating electron density"
 msgstr "전자 밀도 계산"
 
-#: qtplugins/surfaces/surfaces.cpp:614
+#: qtplugins/surfaces/surfaces.cpp:617
 msgid "Calculating spin density"
 msgstr "회전 밀도 계산"
 
-#: qtplugins/surfaces/surfaces.cpp:623
+#: qtplugins/surfaces/surfaces.cpp:626
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "분자 궤도 %L1 계산"
 
-#: qtplugins/surfaces/surfaces.cpp:884 qtplugins/surfaces/surfaces.cpp:912
+#: qtplugins/surfaces/surfaces.cpp:887 qtplugins/surfaces/surfaces.cpp:915
 msgid "Movie AVI (*.avi)"
 msgstr "동영상 AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:886
+#: qtplugins/surfaces/surfaces.cpp:889
 msgid "Export Movie"
 msgstr "동영상 내보내기"
 
-#: qtplugins/surfaces/surfaces.cpp:887
+#: qtplugins/surfaces/surfaces.cpp:890
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "동영상 MP4 (*.mp4);;동영상 AVI (*.avi);;GIF (*.gif)"
 
