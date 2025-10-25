@@ -8,6 +8,7 @@
 #include "avogadropython.h"
 #include "utilities.h"
 
+#include <QtCore/QDir>
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtCore/QLocale>
