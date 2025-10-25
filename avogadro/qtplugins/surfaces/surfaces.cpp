@@ -22,11 +22,14 @@ namespace {
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/neighborperceiver.h>
+
 #include <avogadro/qtgui/gaussiansetconcurrent.h>
 #include <avogadro/qtgui/meshgenerator.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/slatersetconcurrent.h>
+#include <avogadro/qtgui/timedprogressdialog.h>
+
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 
@@ -56,7 +59,6 @@ namespace {
 #include <QtCore/QProcess>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressDialog>
 
 #include <QGuiApplication>
 #include <QScreen>
@@ -578,7 +580,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
 
   // TODO: Check to see if this cube or surface has already been computed
   if (!m_progressDialog) {
-    m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
+    m_progressDialog =
+      new QtGui::TimedProgressDialog(qobject_cast<QWidget*>(parent()));
     m_progressDialog->setWindowModality(Qt::NonModal);
     connectSlots = true;
   }

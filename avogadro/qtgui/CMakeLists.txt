@@ -69,6 +69,7 @@ avogadro_headers(QtGui
   scriptloader.h
   slatersetconcurrent.h
   sortfiltertreeproxymodel.h
+  timedprogressdialog.h
   toolplugin.h
   utilities.h
   viewfactory.h
@@ -111,6 +112,7 @@ target_sources(QtGui PRIVATE
   scriptloader.cpp
   slatersetconcurrent.cpp
   sortfiltertreeproxymodel.cpp
+  timedprogressdialog.cpp
   toolplugin.cpp
   utilities.cpp
   viewfactory.cpp

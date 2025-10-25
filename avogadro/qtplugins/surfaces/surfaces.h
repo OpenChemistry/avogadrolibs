@@ -16,7 +16,6 @@
 
 class QAction;
 class QDialog;
-class QProgressDialog;
 
 namespace Avogadro {
 
@@ -24,6 +23,7 @@ namespace QtGui {
 class MeshGenerator;
 class GaussianSetConcurrent;
 class SlaterSetConcurrent;
+class TimedProgressDialog;
 } // namespace QtGui
 
 namespace Core {
@@ -114,7 +114,7 @@ private:
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 
   QList<QAction*> m_actions;
-  QProgressDialog* m_progressDialog = nullptr;
+  QtGui::TimedProgressDialog* m_progressDialog = nullptr;
 
   QtGui::Molecule* m_molecule = nullptr;
   Core::BasisSet* m_basis = nullptr;
