@@ -172,8 +172,35 @@ Forcefield::Forcefield(QObject* parent_)
 #ifdef BUILD_GPL_PLUGINS
   // These directly use Open Babel and are fast
   qDebug() << " registering GPL plugins";
-  Calc::EnergyManager::registerModel(new OBEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBEnergy("GAFF"));
+
+  // sanity check, try an energy for a (bad) water molecule
+  Molecule water;
+  water.addAtom(6);
+  water.addAtom(1);
+  water.addAtom(1);
+  water.addBond(0, 1);
+  water.addBond(0, 2);
+
+  auto ob = new OBEnergy("MMFF94");
+  ob->setMolecule(&water);
+  Eigen::VectorXd positions(3 * 3);
+  positions << 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0;
+  Real energy = ob->value(positions);
+  if (energy != 0.0) {
+    Calc::EnergyManager::registerModel(ob);
+  } else {
+    delete ob;
+  }
+
+  // check GAFF
+  ob = new OBEnergy("GAFF");
+  ob->setMolecule(&water);
+  energy = ob->value(positions);
+  if (energy != 0.0) {
+    Calc::EnergyManager::registerModel(ob);
+  } else {
+    delete ob;
+  }
 #else
   // These call obmm and can be slower
   qDebug() << " registering obmm plugins";
@@ -433,7 +460,7 @@ void Forcefield::optimize()
                                    gradient[3 * j + 2]);
       }
     } else {
-      qDebug() << "Non-finite energy, stopping optimization";
+      qDebug() << "Non-finite energy, stopping optimization" << currentEnergy;
       // reset to last positions
       positions = lastPositions;
       gradient = Eigen::VectorXd::Zero(3 * n);

@@ -32,6 +32,7 @@ public:
   // OBMol and OBForceField are owned by this class
   OBMol* m_obmol = nullptr;
   OBForceField* m_forceField = nullptr;
+  bool setup = false;
 
   ~Private()
   {
@@ -180,12 +181,12 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
 
   // make sure we can set up the force field
   if (d->m_forceField != nullptr) {
-    d->m_forceField->Setup(*d->m_obmol);
+    d->setup = d->m_forceField->Setup(*d->m_obmol);
   } else {
     d->m_forceField = static_cast<OBForceField*>(
       OBPlugin::GetPlugin("forcefields", m_identifier.c_str()));
     if (d->m_forceField != nullptr) {
-      d->m_forceField->Setup(*d->m_obmol);
+      d->setup = d->m_forceField->Setup(*d->m_obmol);
     }
   }
 }
