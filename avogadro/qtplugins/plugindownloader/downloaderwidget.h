@@ -43,6 +43,9 @@ public slots:
   void handleRedirect();
   void unzipPlugin();
 
+  void installationFinished();
+  void cancelInstallation();
+
 private:
   struct repo
   {
@@ -84,8 +87,6 @@ private:
   void installWithConda(const QString& requirementFile);
   void installWithPip(const QString& requirementFile);
   QString findRequirementFile(const QString& destinationDir);
-  void installationFinished();
-  void cancelInstallation();
 
   std::vector<repo> m_repoList;
   Ui::DownloaderWidget* m_ui = nullptr;
