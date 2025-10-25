@@ -86,14 +86,7 @@ QString TimedProgressDialog::formatTime(double seconds)
   } else {
     // hopefully we don't have anything this slow
     int hours = static_cast<int>(seconds / 3600);
-    int minutes = static_cast<int>((static_cast<int>(seconds) % 3600) / 60);
-    if (minutes > 0) {
-      // For complex plurals with two values, we use the primary value (hours)
-      // and format both in the translation string
-      return tr("%1 hour(s) %2 minute(s) remaining").arg(hours).arg(minutes);
-    } else {
-      return tr("%n hour(s) remaining", "", hours);
-    }
+    return tr("%n hour(s) remaining", "", hours);
   }
 }
 
