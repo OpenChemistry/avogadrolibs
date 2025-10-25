@@ -51,9 +51,11 @@ void PythonScript::setDefaultPythonInterpreter()
   // check to see if the interpreter exists and is executable
   QFileInfo info(m_pythonInterpreter);
   if (!info.isExecutable()) {
+#ifndef NDEBUG
     qWarning() << "Python interpreter" << m_pythonInterpreter
                << "does not exist trying \"python\" in your path."
                << "Please set a path to the python interpreter.";
+#endif
 
     // let's try to find a python
 #ifdef Q_OS_WIN
