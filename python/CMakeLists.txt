@@ -54,10 +54,10 @@ elseif(UNIX)
   set(_rpath_value "$ORIGIN")
 endif()
 
-if (NOT WIN32)
-  set_target_properties(avogadrocorepython avogadroiopython PROPERTIES
-                        INSTALL_RPATH ${_rpath_value})
-endif()
+#if (NOT WIN32)
+#  set_target_properties(avogadrocorepython avogadroiopython PROPERTIES
+#                        INSTALL_RPATH ${_rpath_value})
+#endif()
 
 # Install the python files.
 FILE(GLOB PY_SRCS "avogadro/*.py")
