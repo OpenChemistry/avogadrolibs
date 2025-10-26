@@ -47,22 +47,8 @@ jobs:
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
     steps:
-    - name: Checkout openchemistry
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        repository: openchemistry/openchemistry
-        submodules: recursive
-
-    - name: Checkout avogadroapp
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        repository: openchemistry/avogadroapp
-        path: avogadroapp
-
-    - name: Checkout avogadrolibs
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        path: avogadrolibs
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
 
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
@@ -101,7 +87,7 @@ jobs:
 
     - name: Build
       run: |
-        cmake --build . -j 4 --config RelWithDebInfo
+        cmake --build . -j --config RelWithDebInfo
       shell: bash
 
     - name: Perform CodeQL Analysis

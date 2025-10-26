@@ -65,6 +65,11 @@ jobs:
           }
 
     steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
 
     - name: Install Dependencies
       run: |
@@ -72,57 +77,10 @@ jobs:
         sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install libfuse2
 
-    - name: Checkout openchemistry
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        repository: openchemistry/openchemistry
-        submodules: recursive
-        path: openchemistry
-
-    - name: Checkout avogadroapp
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        repository: openchemistry/avogadroapp
-        path: openchemistry/avogadroapp
-
-    - name: Checkout avogadrolibs
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        path: openchemistry/avogadrolibs
-
-    - name: Checkout i18n
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        repository: openchemistry/avogadro-i18n
-        path: openchemistry/avogadro-i18n
-
-    - name: Checkout avogadrogenerators
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        repository: openchemistry/avogenerators
-        path: openchemistry/avogadrogenerators
-
-    - name: Checkout crystals
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        repository: openchemistry/crystals
-        path: openchemistry/crystals
-
-    - name: Checkout fragments
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        repository: openchemistry/fragments
-        path: openchemistry/fragments
-
-    - name: Checkout molecules
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      with:
-        repository: openchemistry/molecules
-        path: openchemistry/molecules
-
     - name: Install Qt
       uses: jurplel/install-qt-action@d325aaf2a8baeeda41ad0b5d39f84a6af9bcf005 # v4.3.0
       with:
+        cache: true
         version: ${{ env.QT_VERSION }}
 
     - name: Configure
