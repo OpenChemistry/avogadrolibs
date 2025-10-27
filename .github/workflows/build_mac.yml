@@ -143,8 +143,6 @@ jobs:
             # import certificate to keychain
             security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
             security list-keychain -d user -s $KEYCHAIN_PATH
-
-            # signing occurs via avogadroapp cpack instructions
           fi # certificate exists
         fi # password exists
 
@@ -160,8 +158,8 @@ jobs:
         macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
         if [ -n "${P12_PASSWORD}" ]; then
           # codesign the Open Babel modules, then the app
-          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../openchemistry/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app/Contents/lib/openbabel/*.so
-          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../openchemistry/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
+          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../${{ github.event.repository.name }}/openchemistry/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app/Contents/lib/openbabel/*.so
+          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../${{ github.event.repository.name }}/openchemistry/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
         fi
         # create the DMG
         cd prefix
