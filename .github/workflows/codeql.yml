@@ -12,11 +12,11 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "master" ]
+  #push:
+  #  branches: [ "master" ]
+  #pull_request:
+  #  # The branches below must be a subset of the branches above
+  #  branches: [ "master" ]
   schedule:
     - cron: '42 6 * * 6'
 
@@ -47,38 +47,24 @@ jobs:
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
     steps:
-    - name: Checkout openchemistry
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/openchemistry
-        submodules: recursive
-
-    - name: Checkout avogadroapp
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/avogadroapp
-        path: avogadroapp
-
-    - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
-      with:
-        path: avogadrolibs
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
 
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@b7840a6733f49e2a39c4355260d2375063d39b61 # v3
       with:
         cache: True
         version: ${{ env.QT_VERSION }}
 
     - name: Grab cache files
-      uses: actions/cache@v4
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       with:
         path: |
           ${{ runner.workspace }}/build/thirdparty
@@ -92,7 +78,7 @@ jobs:
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
       with:
         languages: ${{ matrix.language }}
         source-root: ${{ github.workspace }}/avogadrolibs
@@ -101,11 +87,11 @@ jobs:
 
     - name: Build
       run: |
-        cmake --build . -j 4 --config RelWithDebInfo
+        cmake --build . -j --config RelWithDebInfo
       shell: bash
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@4e94bd11f71e507f7f87df81788dff88d1dacbfb # v4.31.0
       with:
         category: "/language:${{matrix.language}}"
         checkout_path: ${{ github.workspace }}/avogadrolibs

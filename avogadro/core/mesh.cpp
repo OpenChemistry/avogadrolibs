@@ -19,9 +19,9 @@ Mesh::Mesh() : m_stable(true), m_other(0), m_cube(0), m_lock(new Mutex)
 
 Mesh::Mesh(const Mesh& other)
   : m_vertices(other.m_vertices), m_normals(other.m_normals),
-    m_colors(other.m_colors), m_name(other.m_name), m_stable(true),
-    m_isoValue(other.m_isoValue), m_other(other.m_other), m_cube(other.m_cube),
-    m_lock(new Mutex), m_triangles(other.m_triangles)
+    m_colors(other.m_colors), m_triangles(other.m_triangles),
+    m_name(other.m_name), m_stable(true), m_isoValue(other.m_isoValue),
+    m_other(other.m_other), m_cube(other.m_cube), m_lock(new Mutex)
 {
 }
 
@@ -60,7 +60,6 @@ const Vector3f* Mesh::vertex(int n) const
   return &(m_vertices[n * 3]);
 }
 
-
 bool Mesh::setTriangles(const Core::Array<Vector3f>& values)
 {
   m_triangles.clear();
@@ -68,11 +67,10 @@ bool Mesh::setTriangles(const Core::Array<Vector3f>& values)
   return true;
 }
 
-const Core::Array<Vector3f>&Mesh::triangles() const
+const Core::Array<Vector3f>& Mesh::triangles() const
 {
   return m_triangles;
 }
-
 
 bool Mesh::setVertices(const Core::Array<Vector3f>& values)
 {
@@ -86,7 +84,7 @@ bool Mesh::addVertices(const Core::Array<Vector3f>& values)
   if (m_vertices.capacity() < m_vertices.size() + values.size())
     m_vertices.reserve(m_vertices.capacity() * 2);
   if (values.size() % 3 == 0) {
-    for (const auto & value : values)
+    for (const auto& value : values)
       m_vertices.push_back(value);
     return true;
   } else {
@@ -116,7 +114,7 @@ bool Mesh::addNormals(const Core::Array<Vector3f>& values)
   if (m_normals.capacity() < m_normals.size() + values.size())
     m_normals.reserve(m_normals.capacity() * 2);
   if (values.size() % 3 == 0) {
-    for (const auto & value : values)
+    for (const auto& value : values)
       m_normals.push_back(value);
     return true;
   } else {
@@ -175,7 +173,7 @@ bool Mesh::clear()
 Mesh& Mesh::operator=(const Mesh& other)
 {
   m_vertices = other.m_vertices;
-  m_normals = other.m_vertices;
+  m_normals = other.m_normals;
   m_colors = other.m_colors;
   m_name = other.m_name;
   m_isoValue = other.m_isoValue;
@@ -184,7 +182,8 @@ Mesh& Mesh::operator=(const Mesh& other)
   return *this;
 }
 
-void Mesh::smooth(int iterationCount) {
+void Mesh::smooth(int iterationCount)
+{
   if (m_vertices.empty() || iterationCount <= 0)
     return;
 
@@ -206,9 +205,9 @@ void Mesh::smooth(int iterationCount) {
   // Remove duplicate neighbors and sort for faster lookups later (if needed)
   for (auto& neighbors : adjacencyList) {
     std::sort(neighbors.begin(), neighbors.end());
-    neighbors.erase(std::unique(neighbors.begin(), neighbors.end()), neighbors.end());
+    neighbors.erase(std::unique(neighbors.begin(), neighbors.end()),
+                    neighbors.end());
   }
-
 
   float weight = 1.0f;
   for (int iteration = 0; iteration < iterationCount; ++iteration) {
@@ -229,7 +228,6 @@ void Mesh::smooth(int iterationCount) {
     m_vertices = newVertices; // Update vertices after processing all
   }
 
-
   m_normals.clear();
   m_normals.resize(m_vertices.size(), Vector3f(0.0f, 0.0f, 0.0f));
 
@@ -246,8 +244,7 @@ void Mesh::smooth(int iterationCount) {
     m_normals[i] += triangleNormal;
     m_normals[j] += triangleNormal;
     m_normals[k] += triangleNormal;
-
-   }
+  }
 
   for (auto& normal : m_normals) {
     normal.normalize();

@@ -21,7 +21,7 @@ public:
    * @brief Probably don't want to support copy/assignment.
    */
   SolidPipeline(const SolidPipeline&) = delete;
-  SolidPipeline& operator= (const SolidPipeline&) = delete;
+  SolidPipeline& operator=(const SolidPipeline&) = delete;
 
   /**
    * @brief Initialize OpenGL objects.
@@ -32,7 +32,7 @@ public:
    * @brief Begin solid geometry rendering.
    */
   void begin();
-  
+
   void adjustOffset(const Camera& camera);
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
@@ -60,7 +60,7 @@ public:
    */
   bool getDofEnabled() { return m_dofEnabled; }
   void setDofEnabled(bool enabled) { m_dofEnabled = enabled; }
-  
+
   /**
    * @brief Get or set whether Fog is enabled.
    */
@@ -69,7 +69,7 @@ public:
 
   /**
    * @brief Set Background Color to it's current value.
-   */  
+   */
   Vector4ub backgroundColor() const { return m_backgroundColor; }
   void setBackgroundColor(const Vector4ub& c) { m_backgroundColor = c; }
 
@@ -80,15 +80,15 @@ public:
   void setAoStrength(float strength) { m_aoStrength = strength; }
 
   /**
-   * @brief Get or set fog strength. 
+   * @brief Get or set fog strength.
    */
   float getFogStrength() { return m_fogStrength; }
   void setFogStrength(float strength) { m_fogStrength = strength; }
 
   /**
-  * @brief Get or set fog position
-  */
-  float getFogPosition(){ return m_fogPosition;}
+   * @brief Get or set fog position
+   */
+  float getFogPosition() { return m_fogPosition; }
   void setFogPosition(float position) { m_fogPosition = position; }
 
   /**
@@ -102,15 +102,15 @@ public:
   }
 
   /**
-   * @brief Get or set dof strength. 
+   * @brief Get or set dof strength.
    */
   float getDofStrength() { return m_dofStrength; }
   void setDofStrength(float strength) { m_dofStrength = strength; }
 
   /**
-  * @brief Set positon of dof
-  */
-  float getDofPosition(){ return m_dofPosition;}
+   * @brief Set positon of dof
+   */
+  float getDofPosition() { return m_dofPosition; }
   void setDofPosition(float position) { m_dofPosition = position; }
 
   /**

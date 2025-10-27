@@ -11,6 +11,7 @@
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
+#include <QtGui/QPalette>
 
 namespace Avogadro::QtGui {
 
@@ -22,13 +23,44 @@ const int QTTY_COLUMNS = 6;
 
 LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0)
 {
-  m_plusIcon = QIcon(":/icons/fallback/32x32/plus.png");
-  m_dotsIcon = QIcon(":/icons/fallback/32x32/dots.png");
-  m_previewIcon = QIcon(":/icons/fallback/32x32/preview.png");
-  m_previewDashedIcon = QIcon(":/icons/fallback/32x32/dashed-preview.png");
-  m_lockIcon = QIcon(":/icons/fallback/32x32/lock.png");
-  m_openLockIcon = QIcon(":/icons/fallback/32x32/lock-open.png");
-  m_removeIcon = QIcon(":/icons/fallback/32x32/cross.png");
+  // determine if need dark mode or light mode icons
+  // e.g. https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5
+  const QPalette defaultPalette;
+  // i.e., the text is lighter than the background
+  bool darkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
+                   defaultPalette.color(QPalette::Window).lightness());
+  loadIcons(darkMode);
+}
+
+void LayerModel::loadIcons(bool darkMode)
+{
+  QString iconPath = ":icons/fallback/32x32/";
+
+  QString dashedPreviewIconPath = iconPath + "dashed-preview-light.png";
+  QString dotsIconPath = iconPath + "dots-light.png";
+  QString lockIconPath = iconPath + "lock-light.png";
+  QString openLockIconPath = iconPath + "lock-open-light.png";
+  QString plusIconPath = iconPath + "plus-light.png";
+  QString previewIconPath = iconPath + "preview-light.png";
+
+  if (darkMode) {
+    dashedPreviewIconPath = iconPath + "dashed-preview-dark.png";
+    dotsIconPath = iconPath + "dots-dark.png";
+    lockIconPath = iconPath + "lock-dark.png";
+    openLockIconPath = iconPath + "lock-open-dark.png";
+    plusIconPath = iconPath + "plus-dark.png";
+    previewIconPath = iconPath + "preview-dark.png";
+  }
+
+  m_plusIcon = QIcon::fromTheme("list-add", QIcon(plusIconPath));
+  m_removeIcon = QIcon::fromTheme(
+    "list-remove", QIcon(":/icons/fallback/32x32/edit-delete.png"));
+  m_dotsIcon = QIcon::fromTheme("view-more", QIcon(dotsIconPath));
+  m_previewIcon = QIcon::fromTheme("view-visible", QIcon(previewIconPath));
+  m_previewDashedIcon =
+    QIcon::fromTheme("view-hidden", QIcon(dashedPreviewIconPath));
+  m_lockIcon = QIcon::fromTheme("lock", QIcon(lockIconPath));
+  m_openLockIcon = QIcon::fromTheme("unlock", QIcon(openLockIconPath));
 }
 
 QModelIndex LayerModel::parent(const QModelIndex&) const
@@ -88,8 +120,10 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
         case Qt::ForegroundRole:
           if (layer == getMoleculeLayer().activeLayer())
             return QVariant(QColor(Qt::red));
-          else
-            return QVariant(QColor(Qt::black));
+          else {
+            const QPalette defaultPalette;
+            return QVariant(defaultPalette.color(QPalette::WindowText));
+          }
         default:
           return QVariant();
       }
@@ -148,8 +182,8 @@ QString LayerModel::getTranslatedName(const std::string& name) const
     return tr("Labels");
   else if (name == "Licorice")
     return tr("Licorice", "stick / licorice rendering");
-  else if (name == "Meshes")
-    return tr("Meshes");
+  else if (name == "Surfaces")
+    return tr("Surfaces");
   else if (name == "Non-Covalent")
     return tr("Non-Covalent");
   else if (name == "QTAIM")

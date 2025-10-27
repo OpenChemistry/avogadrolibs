@@ -10,6 +10,7 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <istream>
@@ -21,6 +22,7 @@
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
+using Avogadro::Core::endsWith;
 using Avogadro::Core::lexicalCast;
 using Avogadro::Core::split;
 using Avogadro::Core::startsWith;
@@ -39,7 +41,8 @@ namespace {
 
 // Helper function to handle partial charge property blocks
 // e.g. PUBCHEM_MMFF94_PARTIAL_CHARGES
-void handlePartialCharges(Core::Molecule& mol, std::string data)
+void handlePartialCharges(Core::Molecule& mol, std::string data,
+                          std::string name = "MMFF94")
 {
   // the string starts with the number of charges
   // then atom index  charge
@@ -47,15 +50,40 @@ void handlePartialCharges(Core::Molecule& mol, std::string data)
   std::istringstream iss(data);
   size_t numCharges;
   iss >> numCharges;
+  if (numCharges == 0 || numCharges > mol.atomCount()) {
+    return;
+  }
+
   for (size_t i = 0; i < numCharges; ++i) {
-    size_t index;
-    Real charge;
-    iss >> index >> charge;
+    if (!iss.good()) {
+      return;
+    }
+
+    size_t index = 0;
+    Real charge = 0.0;
+
+    iss >> index;
+    if (iss.fail() || index == 0 || index > mol.atomCount()) {
+      return;
+    }
+
+    iss >> charge;
+    if (iss.fail()) {
+      return;
+    }
     // prints with atom index 1, not zero
     charges(index - 1, 0) = charge;
   }
 
-  mol.setPartialCharges("MMFF94", charges);
+  // if present, remove atom.dpos and CHARGES from the string
+  if (startsWith(name, "atom.dpos")) {
+    name = name.substr(9, name.size() - 16);
+  }
+  if (endsWith(name, "CHARGES")) {
+    name = name.substr(0, name.size() - 7);
+  }
+
+  mol.setPartialCharges(name, charges);
 }
 } // namespace
 
@@ -75,12 +103,28 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   if (!buffer.empty())
     mol.setData("name", buffer);
 
+  if (!in.good()) {
+    appendError("Error reading molecule name.");
+    return false;
+  }
+
   // Skip the next two lines (generator, and comment).
   getline(in, buffer);
   getline(in, buffer);
+  if (!in.good()) {
+    appendError("Error reading generator and comment lines.");
+    return false;
+  }
 
   // The counts line, and version identifier.
   getline(in, buffer);
+  // should be long enough, e.g.
+  //   5  4  0  0  0  0  0  0  0  0999 V2000
+  if (!in.good() || buffer.size() < 39) {
+    appendError("Error reading counts line.");
+    return false;
+  }
+
   bool ok(false);
   int numAtoms(lexicalCast<int>(buffer.substr(0, 3), ok));
   if (!ok) {
@@ -105,6 +149,12 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   for (int i = 0; i < numAtoms; ++i) {
     Vector3 pos;
     getline(in, buffer);
+    //     0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    if (!in.good() || buffer.size() < 40) {
+      appendError("Error reading atom block.");
+      return false;
+    }
+
     pos.x() = lexicalCast<Real>(buffer.substr(0, 10), ok);
     if (!ok) {
       appendError("Failed to parse x coordinate: " + buffer.substr(0, 10));
@@ -122,7 +172,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     string element(trimmed(buffer.substr(31, 3)));
-    auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))));
+    auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))).value_or(0));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       Atom newAtom = mol.addAtom(atomicNum);
@@ -146,6 +196,12 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   for (int i = 0; i < numBonds; ++i) {
     // Bond atom indices start at 1, -1 for C++.
     getline(in, buffer);
+    //   1  2  1  0  0  0  0
+    if (!in.good() || buffer.size() < 10) {
+      appendError("Error reading bond block.");
+      return false;
+    }
+
     int begin(lexicalCast<int>(buffer.substr(0, 3), ok) - 1);
     if (!ok) {
       appendError("Error parsing beginning bond index:" + buffer.substr(0, 3));
@@ -174,6 +230,10 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   bool foundEnd(false);
   bool foundChgProperty(false);
   while (getline(in, buffer)) {
+    if (!in.good() || buffer.size() < 6) {
+      break;
+    }
+
     string prefix = buffer.substr(0, 6);
     if (prefix == "M  END") {
       foundEnd = true;
@@ -182,6 +242,12 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       if (!foundChgProperty)
         chargeList.clear(); // Forget old-style charges
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      if (buffer.length() < 17 + 8 * (entryCount - 1)) {
+        appendError("Error parsing charge block.");
+        std::cout << " " << entryCount << " " << buffer.length() << std::endl;
+        return false;
+      }
+
       for (size_t i = 0; i < entryCount; i++) {
         size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
@@ -202,8 +268,14 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       // radical center
       spinMultiplicity = 1; // reset and count
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      if (buffer.length() < 17 + 8 * (entryCount - 1)) {
+        appendError("Error parsing radical block.");
+        return false;
+      }
+
       for (size_t i = 0; i < entryCount; i++) {
-        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        [[maybe_unused]] size_t index(
+          lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
           appendError("Error parsing radical atom index:" +
                       buffer.substr(10 + 8 * i, 3));
@@ -225,14 +297,21 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     } else if (prefix == "M  ISO") {
       // isotope
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      if (buffer.length() < 17 + 8 * (entryCount - 1)) {
+        appendError("Error parsing isotope block.");
+        return false;
+      }
+
       for (size_t i = 0; i < entryCount; i++) {
-        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        [[maybe_unused]] size_t index(
+          lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
           appendError("Error parsing isotope atom index:" +
                       buffer.substr(10 + 8 * i, 3));
           return false;
         }
-        auto isotope(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        [[maybe_unused]] auto isotope(
+          lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
         if (!ok) {
           appendError("Error parsing isotope type:" +
                       buffer.substr(14 + 8 * i, 3));
@@ -241,6 +320,11 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         // TODO: Implement isotope setting
         // mol.atom(index).setIsotope(isotope);
       }
+    } // isotope
+    else {
+#ifndef NDEBUG
+      std::cout << " prefix " << buffer.substr(0, 6) << std::endl;
+#endif
     }
   }
 
@@ -275,16 +359,21 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   bool inValue(false);
   string dataName;
   string dataValue;
-  while (getline(in, buffer)) {
+  while (getline(in, buffer) && in.good()) {
     if (trimmed(buffer) == "$$$$")
-      return true;
+      break;
     if (inValue) {
       if (buffer.empty() && dataName.length() > 0) {
         // check for partial charges
         if (dataName == "PUBCHEM_MMFF94_PARTIAL_CHARGES")
           handlePartialCharges(mol, dataValue);
+        else if (startsWith(dataName, "atom.dpos") &&
+                 endsWith(dataName, "CHARGES"))
+          // remove the "CHARGES" from the end of the string
+          handlePartialCharges(mol, dataValue, dataName);
         else
           mol.setData(dataName, dataValue);
+
         dataName.clear();
         dataValue.clear();
         inValue = false;
@@ -293,12 +382,37 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
           dataValue += "\n";
         dataValue += buffer;
       }
-    } else if (startsWith(buffer, "> <")) {
+    } else if (startsWith(buffer, "> ")) {
       // This is a data header, read the name of the entry, and the value on
       // the following lines.
-      dataName = trimmed(buffer).substr(3, buffer.length() - 4);
-      inValue = true;
+      // e.g., > <propName>
+      // dataName will be anything from < to >
+      size_t start = buffer.find('<');
+      size_t end = buffer.find('>', start);
+      if (start != string::npos && end != string::npos) {
+        dataName = buffer.substr(start + 1, end - start - 1);
+        inValue = true;
+      }
     }
+  }
+
+  // handle pKa from QupKake model
+  if (mol.hasData("pka") && mol.hasData("idx")) {
+    // pka can sometimes say "tensor(3.1452)" or "3.1452"
+    // just convert to a string with 2 decimal places
+    std::string pka = mol.data("pka").toString();
+    if (startsWith(pka, "tensor("))
+      pka = pka.substr(7, pka.size() - 8);
+    // find the decimal to only keep 2 decimal places
+    size_t decimal = pka.find(".");
+    if (decimal != std::string::npos)
+      pka = pka.substr(0, decimal + 3);
+    mol.setData("pka", pka);
+    // convert the idx to an atom index
+    // and set the label
+    std::string idx = mol.data("idx").toString();
+    size_t atomIdx = lexicalCast<size_t>(idx).value_or(0);
+    mol.setAtomLabel(atomIdx, pka);
   }
 
   return true;
@@ -400,13 +514,17 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
             spinMultiplicity += 2;
         } else if (startsWith(key, "ISO=")) {
           // isotope
-          int isotope = lexicalCast<int>(key.substr(4), ok);
+          [[maybe_unused]] int isotope = lexicalCast<int>(key.substr(4), ok);
           if (!ok) {
             appendError("Failed to parse isotope type: " + key);
             return false;
           }
           // TODO: handle isotopes
           // mol.atom(i).setIsotope(isotope);
+        } else {
+#ifndef NDEBUG
+          std::cerr << "Unknown key: " << key << std::endl;
+#endif
         }
       } // end of key-value loop
     }
@@ -513,6 +631,10 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
   if (m_writeProperties) {
     const auto dataMap = mol.dataMap();
     for (const auto& key : dataMap.names()) {
+      // skip some keys
+      if (key == "modelView" || key == "projection")
+        continue;
+
       out << "> <" << key << ">\n";
       out << dataMap.value(key).toString() << "\n";
       out << "\n"; // empty line between data blocks
@@ -528,7 +650,25 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
 bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
 {
   // Header lines.
-  out << mol.data("name").toString() << "\n  Avogadro\n\n";
+  out << mol.data("name").toString() << "\n";
+
+  // Mol block header - need to indicate 3D coords
+  // e.g.   Avogadro08072512293D
+  // name of program MMDDYYHM3D
+  auto now = std::chrono::system_clock::now();
+  // Convert to time_t for use with ctime functions
+  std::time_t time_t_now = std::chrono::system_clock::to_time_t(now);
+  // Convert to a local time structure (tm)
+  std::tm* local_time = std::localtime(&time_t_now);
+
+  // Format the time using std::put_time
+  // %m: Month as decimal number (01-12)
+  // %d: Day of the month as decimal number (01-31)
+  // %y: Year without century (00-99)
+  // %H: Hour in 24-hour format (00-23)
+  // %M: Minute as decimal number (00-59)
+  out << "  Avogadro" << std::put_time(local_time, "%m%d%y%H%M") << "3D\n\n";
+
   // Counts line.
   if (mol.atomCount() > 999 || mol.bondCount() > 999) {
     // we need V3000 support for big molecules
@@ -574,6 +714,10 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   if (m_writeProperties) {
     const auto dataMap = mol.dataMap();
     for (const auto& key : dataMap.names()) {
+      // skip some keys
+      if (key == "modelView" || key == "projection")
+        continue;
+
       out << "> <" << key << ">\n";
       out << dataMap.value(key).toString() << "\n";
       out << "\n"; // empty line between data blocks

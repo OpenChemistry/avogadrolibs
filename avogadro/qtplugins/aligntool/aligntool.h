@@ -55,8 +55,6 @@ public:
 
   void draw(Rendering::GroupNode& node) override;
 
-  Vector3ub contrastingColor(const Vector3ub& rgb) const;
-
   void shiftAtomToOrigin(Index atomIndex);
   void alignAtomToAxis(Index atomIndex, int axis);
 

@@ -27,7 +27,7 @@ class BandDialog : public QDialog
 
 public:
   explicit BandDialog(QWidget* parent, YaehmopSettings& yaehmopSettings);
-  ~BandDialog();
+  ~BandDialog() override;
 
 public slots:
   int exec() override;

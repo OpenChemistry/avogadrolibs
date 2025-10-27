@@ -16,6 +16,7 @@
 #include <avogadro/rendering/textproperties.h>
 
 #include <avogadro/core/atom.h>
+#include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
@@ -32,6 +33,7 @@
 
 #include <cmath>
 
+using Avogadro::Core::contrastColor;
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
@@ -49,12 +51,12 @@ MeasureTool::MeasureTool(QObject* parent_)
   QString shortcut = tr("Ctrl+8", "control-key 8");
   m_activateAction->setText(tr("Measure"));
   m_activateAction->setToolTip(
-    tr("Measure Tool \t(%1)\n\n"
-       "Left Mouse: \tSelect up to four Atoms.\n"
+    tr("Measure Tool\t(%1)\n\n"
+       "Left Mouse:\tSelect up to four Atoms.\n"
        "\tDistances are measured between 1-2 and 2-3\n"
        "\tAngle is measured between 1-3 using 2 as the common point\n"
        "\tDihedral is measured between 1-2-3-4\n"
-       "Right Mouse: \tReset the measurements.")
+       "Right Mouse:\tReset the measurements.")
       .arg(shortcut));
   setIcon();
 }
@@ -138,7 +140,7 @@ void MeasureTool::createLabels(T* mol, GeometryNode* geo,
     positions[i] = atom.position3d();
 
     const unsigned char* color = Elements::color(atomicNumber);
-    atomLabelProp.setColorRgb(contrastingColor(Vector3ub(color)).data());
+    atomLabelProp.setColorRgb(contrastColor(Vector3ub(color)).data());
 
     auto* label = new TextLabel3D;
     label->setText(QString("#%1").arg(i + 1).toStdString());
@@ -239,7 +241,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   Vector3ub color(64, 255, 220);
   if (m_renderer) {
     auto backgroundColor = m_renderer->scene().backgroundColor();
-    color = contrastingColor(
+    color = contrastColor(
       Vector3ub(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
   }
 
@@ -253,28 +255,6 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   label->setAnchor(Vector2i(10, 10));
 
   geo->addDrawable(label);
-}
-
-inline Vector3ub MeasureTool::contrastingColor(const Vector3ub& rgb) const
-{
-  // If we're far 'enough' (+/-32) away from 128, just invert the component.
-  // If we're close to 128, inverting the color will end up too close to the
-  // input -- adjust the component before inverting.
-  const unsigned char minVal = 32;
-  const unsigned char maxVal = 223;
-  Vector3ub result;
-  for (size_t i = 0; i < 3; ++i) {
-    unsigned char input = rgb[i];
-    if (input > 160 || input < 96)
-      result[i] = static_cast<unsigned char>(255 - input);
-    else
-      result[i] = static_cast<unsigned char>(255 - (input / 4));
-
-    // Clamp to 32-->223 to prevent pure black/white
-    result[i] = std::min(maxVal, std::max(minVal, result[i]));
-  }
-
-  return result;
 }
 
 bool MeasureTool::toggleAtom(const Rendering::Identifier& atom)

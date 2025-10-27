@@ -147,4 +147,4 @@ void PeriodicTableView::resizeEvent(QResizeEvent* e)
   setTransform(scaleTransform);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

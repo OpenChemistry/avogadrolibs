@@ -1,0 +1,62 @@
+name: 'Checkout Avogadro Repositories'
+description: 'Checks out all required Avogadro repositories'
+inputs:
+  checkout-submodules:
+    description: 'Whether to checkout submodules for openchemistry'
+    required: false
+    default: 'recursive'
+  checkout-avogadrolibs-path:
+    description: 'Path for avogadrolibs checkout'
+    required: false
+    default: 'openchemistry/avogadrolibs'
+
+runs:
+  using: "composite"
+  steps:
+  - name: Checkout openchemistry
+    uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    with:
+      repository: openchemistry/openchemistry
+      submodules: ${{ inputs.checkout-submodules }}
+      path: openchemistry
+
+  - name: Checkout avogadroapp
+    uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    with:
+      repository: openchemistry/avogadroapp
+      path: openchemistry/avogadroapp
+
+  - name: Checkout avogadrolibs
+    uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    with:
+      path: openchemistry/avogadrolibs
+
+  - name: Checkout i18n
+    uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    with:
+      repository: openchemistry/avogadro-i18n
+      path: openchemistry/avogadro-i18n
+
+  - name: Checkout avogadrogenerators
+    uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    with:
+      repository: openchemistry/avogenerators
+      path: openchemistry/avogenerators
+
+  - name: Checkout crystals
+    uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    with:
+      repository: openchemistry/crystals
+      path: openchemistry/crystals
+
+  - name: Checkout fragments
+    uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    with:
+      repository: openchemistry/fragments
+      path: openchemistry/fragments
+
+  - name: Checkout molecules
+    uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    with:
+      repository: openchemistry/molecules
+      path: openchemistry/molecules

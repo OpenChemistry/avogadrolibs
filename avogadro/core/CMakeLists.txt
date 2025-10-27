@@ -20,6 +20,8 @@ target_sources(Headers PUBLIC
     array.h
     avogadrocore.h
     color3f.h
+    constraint.h
+    contrastcolor.h
     coordinateset.h
     matrix.h
     types.h

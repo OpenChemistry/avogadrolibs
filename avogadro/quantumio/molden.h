@@ -66,6 +66,7 @@ private:
   std::vector<double> m_c;
   std::vector<double> m_csp;
   std::vector<double> m_orbitalEnergy;
+  std::vector<std::string> m_symmetryLabels;
   std::vector<double> m_MOcoeffs;
 
   Core::Array<double> m_frequencies;

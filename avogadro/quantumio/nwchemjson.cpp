@@ -154,11 +154,11 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     // Figure out the mapping of basis set to molecular orbitals.
     Array<int> atomNumber;
     Array<string> atomSymbol;
-    for (auto & i : orbDesc) {
+    for (auto& i : orbDesc) {
       string desc = i;
       vector<string> parts = split(desc, ' ');
       assert(parts.size() == 3);
-      int num = Core::lexicalCast<int>(parts[0]);
+      int num = Core::lexicalCast<int>(parts[0]).value_or(0);
       if (atomNumber.size() > 0 && atomNumber.back() == num)
         continue;
       atomNumber.push_back(num);
@@ -173,7 +173,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
       string symbol = atomSymbol[i];
       json basisFunctions = basisSet.value("basisFunctions", json());
       json currentFunction;
-      for (auto & basisFunction : basisFunctions) {
+      for (auto& basisFunction : basisFunctions) {
         currentFunction = basisFunction;
 
         string elementType;
@@ -243,7 +243,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     vector<unsigned int> numArray;
     for (auto currentMO : moCoeffs) {
       json coeff = currentMO.value("moCoefficients", json());
-      for (auto & j : coeff)
+      for (auto& j : coeff)
         coeffArray.push_back(j);
       if (currentMO.count("orbitalEnergy")) {
         energyArray.push_back(currentMO["orbitalEnergy"].value("value", 0.0));
@@ -307,7 +307,6 @@ bool NWChemJson::write(std::ostream&, const Molecule&)
 vector<std::string> NWChemJson::fileExtensions() const
 {
   vector<std::string> ext;
-  ext.emplace_back("json");
   ext.emplace_back("nwjson");
   return ext;
 }
@@ -319,4 +318,4 @@ vector<std::string> NWChemJson::mimeTypes() const
   return mime;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO

@@ -177,7 +177,8 @@ void Crystal::registerCommands()
                        tr("Rotate the unit cell to the standard orientation."));
 }
 
-bool Crystal::handleCommand(const QString& command, const QVariantMap& options)
+bool Crystal::handleCommand(const QString& command,
+                            [[maybe_unused]] const QVariantMap& options)
 {
   if (m_molecule == nullptr)
     return false; // No molecule to handle the command.

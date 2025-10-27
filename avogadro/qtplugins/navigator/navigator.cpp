@@ -39,10 +39,11 @@ Navigator::Navigator(QObject* parent_)
   QString shortcut = tr("Ctrl+1", "control-key 1");
   m_activateAction->setText(tr("Navigate"));
   m_activateAction->setToolTip(
-    tr("Navigation Tool \t(%1)\n\n"
-       "Left Mouse: \tClick and drag to rotate the view.\n"
-       "Middle Mouse: \tClick and drag to zoom in or out.\n"
-       "Right Mouse: \tClick and drag to move the view.\n").arg(shortcut));
+    tr("Navigation Tool\t(%1)\n\n"
+       "Left Mouse:\tClick and drag to rotate the view.\n"
+       "Middle Mouse:\tClick and drag to zoom in or out.\n"
+       "Right Mouse:\tClick and drag to move the view.")
+      .arg(shortcut));
   setIcon();
   QSettings settings;
   m_zoomDirection = settings.value("navigator/zoom", 1).toInt();
@@ -104,8 +105,8 @@ QWidget* Navigator::toolWidget() const
 
     auto* swapZoom = new QCheckBox(tr("Reverse Direction of Zoom on Scroll"));
     swapZoom->setToolTip(
-      tr("Default:\t Scroll down to shrink, scroll up to zoom\n"
-         "Reversed:\t Scroll up to shrink, scroll down to zoom"));
+      tr("Default:\tScroll down to shrink, scroll up to zoom\n"
+         "Reversed:\tScroll up to shrink, scroll down to zoom"));
     connect(swapZoom, SIGNAL(toggled(bool)), this,
             SLOT(swapZoomDirection(bool)));
     layout->addWidget(swapZoom);

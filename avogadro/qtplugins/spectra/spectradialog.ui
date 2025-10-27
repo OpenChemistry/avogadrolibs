@@ -230,7 +230,7 @@
           <string>Imports a tsv of experimental spectra to overlay on the plot.</string>
          </property>
          <property name="text">
-          <string>&amp;Import...</string>
+          <string>&amp;Import…</string>
          </property>
         </widget>
        </item>
@@ -246,7 +246,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -298,7 +298,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -314,7 +314,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>&amp;Export...</string>
+          <string>&amp;Export…</string>
          </property>
         </widget>
        </item>
@@ -327,7 +327,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -366,7 +366,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -542,7 +542,7 @@
     </widget>
    </item>
    <item row="0" column="0" colspan="5">
-    <widget class="Avogadro::VTK::ChartWidget" name="plot" native="true">
+    <widget class="Avogadro::QtGui::ChartWidget" name="plot" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -585,7 +585,7 @@ Scroll wheel: Zoom to cursor</string>
       </sizepolicy>
      </property>
      <property name="text">
-      <string>&amp;Load data...</string>
+      <string>&amp;Load data…</string>
      </property>
     </widget>
    </item>
@@ -607,9 +607,9 @@ Scroll wheel: Zoom to cursor</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Avogadro::VTK::ChartWidget</class>
+   <class>Avogadro::QtGui::ChartWidget</class>
    <extends>QWidget</extends>
-   <header location="global">avogadro/vtk/chartwidget.h</header>
+   <header location="global">avogadro/qtgui/chartwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

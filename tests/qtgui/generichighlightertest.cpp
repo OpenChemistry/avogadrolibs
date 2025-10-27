@@ -52,8 +52,7 @@ public:
          current = current.next()) {
       const QTextLayout* layout(current.layout());
 
-      foreach (const QTextLayout::FormatRange& range,
-               layout->additionalFormats()) {
+      foreach (const QTextLayout::FormatRange& range, layout->formats()) {
         const int startIdx = current.position() + range.start - selectionStart;
         const int endIdx = startIdx + range.length;
         if (endIdx <= 0 || startIdx >= endOfDocument)

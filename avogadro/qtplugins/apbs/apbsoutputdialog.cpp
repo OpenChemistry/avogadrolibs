@@ -15,9 +15,7 @@ ApbsOutputDialog::ApbsOutputDialog(QWidget* parent_)
   m_ui->setupUi(this);
 }
 
-ApbsOutputDialog::~ApbsOutputDialog()
-{
-}
+ApbsOutputDialog::~ApbsOutputDialog() {}
 
 bool ApbsOutputDialog::loadStructureFile() const
 {
@@ -28,4 +26,4 @@ bool ApbsOutputDialog::loadCubeFile() const
 {
   return m_ui->loadCubeCheckBox->isChecked();
 }
-}
+} // namespace Avogadro::QtPlugins

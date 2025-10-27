@@ -46,12 +46,12 @@ Manipulator::Manipulator(QObject* parent_)
     m_toolWidget(new ManipulateWidget(dynamic_cast<QWidget*>(parent_))),
     m_currentAction(Nothing)
 {
-  QString shortcut = tr("Ctrl+6", "control-key 6");
+  QString shortcut = tr("Ctrl+5", "control-key 5");
   m_activateAction->setText(tr("Manipulate"));
   m_activateAction->setToolTip(
-    tr("Manipulation Tool \t(%1)\n\n"
-       "Left Mouse: \tClick and drag to move atoms\n"
-       "Right Mouse: \tClick and drag to rotate atoms.\n")
+    tr("Manipulation Tool\t(%1)\n\n"
+       "Left Mouse:\tClick and drag to move atoms\n"
+       "Right Mouse:\tClick and drag to rotate atoms.")
       .arg(shortcut));
   setIcon();
   connect(m_toolWidget->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
@@ -139,7 +139,7 @@ void Manipulator::buttonClicked(QAbstractButton* button)
 #ifndef DEG_TO_RAD
 #define DEG_TO_RAD 0.0174532925
 #endif
-  rotate(rotation * DEG_TO_RAD, center, moveSelected);
+  axisRotate(rotation * DEG_TO_RAD, center, moveSelected);
 
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
 }
@@ -332,6 +332,37 @@ void Manipulator::rotate(Vector3 delta, Vector3 centroid, bool moveSelected)
       continue;
 
     Vector3 currentPos = m_molecule->atomPosition3d(i);
+    m_molecule->setAtomPosition3d(
+      i, (fragmentRotation * currentPos.homogeneous()).head<3>());
+  }
+}
+
+void Manipulator::axisRotate(Vector3 delta, Vector3 centroid, bool moveSelected)
+{
+  // rotate by the x, y, z axes by delta[0], delta[1], delta[2]
+  // (in radians)
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (moveSelected && !m_molecule->atomSelected(i))
+      continue;
+    else if (!moveSelected && m_molecule->atomSelected(i))
+      continue;
+
+    Vector3 currentPos = m_molecule->atomPosition3d(i);
+    Eigen::Projective3d fragmentRotation;
+    fragmentRotation.matrix().setIdentity();
+    fragmentRotation.translation() = centroid;
+
+    // Rotate around the x-axis
+    fragmentRotation.rotate(
+      Eigen::AngleAxisd(delta[0], Vector3(1.0, 0.0, 0.0)));
+    // Rotate around the y-axis
+    fragmentRotation.rotate(
+      Eigen::AngleAxisd(delta[1], Vector3(0.0, 1.0, 0.0)));
+    // Rotate around the z-axis
+    fragmentRotation.rotate(
+      Eigen::AngleAxisd(delta[2], Vector3(0.0, 0.0, 1.0)));
+
+    fragmentRotation.translate(-centroid);
     m_molecule->setAtomPosition3d(
       i, (fragmentRotation * currentPos.homogeneous()).head<3>());
   }

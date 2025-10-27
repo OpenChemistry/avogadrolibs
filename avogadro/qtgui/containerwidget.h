@@ -48,7 +48,7 @@ private:
   bool m_active;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_CONTAINERWIDGET_H

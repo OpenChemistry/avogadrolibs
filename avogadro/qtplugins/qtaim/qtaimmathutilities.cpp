@@ -80,7 +80,7 @@ qreal ellipticityOfASymmetricThreeByThreeMatrix(const Matrix<qreal, 3, 3>& A)
 
 qreal distance(const Matrix<qreal, 3, 1>& a, const Matrix<qreal, 3, 1>& b)
 {
-  return sqrt(pow(a(0) - b(0), 2) + pow(a(1) - b(1), 2) + pow(a(2) - b(2), 2));
+  return std::hypot(a(0) - b(0), a(1) - b(1), a(2) - b(2));
 }
 
 Matrix<qreal, 3, 1> sphericalToCartesian(const Matrix<qreal, 3, 1>& rtp,
@@ -127,7 +127,7 @@ Matrix<qreal, 3, 1> cartesianToSpherical(const Matrix<qreal, 3, 1>& xyz,
   qreal yshift = y - y0;
   qreal zshift = z - z0;
 
-  qreal length = sqrt(pow(xshift, 2) + pow(yshift, 2) + pow(zshift, 2));
+  qreal length = std::hypot(xshift, yshift, zshift);
 
   Matrix<qreal, 3, 1> rtp;
 
@@ -207,8 +207,7 @@ Matrix<qreal, 3, 1> minusOneSignatureLocatorGradient(
   Matrix<qreal, 3, 1> eval = eigenvaluesOfASymmetricThreeByThreeMatrix(A);
 
   Matrix<qreal, 3, 1> lambda;
-  lambda << eval(2), eval(2),
-    (0.5) * (b(2) - sqrt(pow(b(2), 2) + 4.0 * pow(F(2), 2)));
+  lambda << eval(2), eval(2), (0.5) * (b(2) - std::hypot(b(2), 2 * F(2)));
 
   Matrix<qreal, 3, 1> denom;
   denom = b - lambda;
@@ -245,8 +244,7 @@ Matrix<qreal, 3, 1> plusOneSignatureLocatorGradient(
   Matrix<qreal, 3, 1> eval = eigenvaluesOfASymmetricThreeByThreeMatrix(A);
 
   Matrix<qreal, 3, 1> lambda;
-  lambda << eval(2), eval(2),
-    (0.5) * (b(0) + sqrt(pow(b(0), 2) + 4.0 * pow(F(0), 2)));
+  lambda << eval(2), eval(2), (0.5) * (b(0) + std::hypot(b(0), 2.0 * F(0)));
 
   Matrix<qreal, 3, 1> denom;
   denom = b - lambda;

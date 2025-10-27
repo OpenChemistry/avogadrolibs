@@ -72,7 +72,7 @@ PropertyTables::~PropertyTables() {}
 
 QString PropertyTables::description() const
 {
-  return tr("Tables for displaying and editng atom, bond, angle and torsion "
+  return tr("Tables for displaying and editing atom, bond, angle and torsion "
             "properties.");
 }
 
@@ -83,7 +83,7 @@ QList<QAction*> PropertyTables::actions() const
 
 QStringList PropertyTables::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Analysis") << tr("&Properties");
+  return QStringList() << tr("&Analyze") << tr("&Properties");
 }
 
 void PropertyTables::setMolecule(QtGui::Molecule* mol)

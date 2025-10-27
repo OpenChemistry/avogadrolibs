@@ -11,7 +11,7 @@
 
 namespace Avogadro {
 
-namespace Calc{
+namespace Calc {
 class ChargeModel;
 }
 

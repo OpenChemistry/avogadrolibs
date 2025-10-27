@@ -7,6 +7,7 @@
 #define AVOGADRO_CORE_UTILITIES_H
 
 #include <algorithm>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -69,6 +70,19 @@ inline bool startsWith(const std::string& input, const std::string& search)
 }
 
 /**
+ * @brief Efficient method to confirm input ends with the ending string.
+ * @param input String to be examined.
+ * @param ending String that will be searched for.
+ * @return True if the string ends with ending, false otherwise.
+ */
+inline bool endsWith(std::string const& input, std::string const& ending)
+{
+  if (ending.size() > input.size())
+    return false;
+  return std::equal(ending.rbegin(), ending.rend(), input.rbegin());
+}
+
+/**
  * @brief Trim a string of whitespace from the left and right.
  */
 inline std::string trimmed(const std::string& input)
@@ -81,14 +95,27 @@ inline std::string trimmed(const std::string& input)
 }
 
 /**
+ * @brief Remove trailing part of `str` after `c`
+ */
+inline std::string rstrip(const std::string& str, char c)
+{
+  return str.substr(0, str.find_first_of(c));
+}
+
+/**
  * @brief Cast the inputString to the specified type.
  * @param inputString String to cast to the specified type.
+ * @retval converted value if cast is successful
+ * @retval std::nullopt otherwise
  */
 template <typename T>
-T lexicalCast(const std::string& inputString)
+std::optional<T> lexicalCast(const std::string& inputString)
 {
   T value;
-  std::istringstream(inputString) >> value;
+  std::istringstream stream(inputString);
+  stream >> value;
+  if (stream.fail())
+    return std::nullopt;
   return value;
 }
 
@@ -101,11 +128,33 @@ T lexicalCast(const std::string& inputString)
 template <typename T>
 T lexicalCast(const std::string& inputString, bool& ok)
 {
-  T value;
-  std::istringstream stream(inputString);
-  stream >> value;
-  ok = !stream.fail();
-  return value;
+  if (auto value = lexicalCast<T>(inputString)) {
+    ok = true;
+    return *value;
+  }
+  ok = false;
+  return {};
+}
+
+/**
+ * @brief Cast the range to the specified type.
+ * @param first Start of the range
+ * @param last End of the range
+ * @retval converted values if cast of ALL the elements are successful
+ * @retval std::nullopt otherwise
+ */
+template <typename T, typename Iterator>
+std::optional<std::vector<T>> lexicalCast(Iterator first, Iterator last)
+{
+  std::vector<T> values;
+  for (; first != last; ++first) {
+    if (auto value = lexicalCast<T>(*first)) {
+      values.emplace_back(*value);
+    } else {
+      return std::nullopt;
+    }
+  }
+  return values;
 }
 
 } // namespace Avogadro::Core

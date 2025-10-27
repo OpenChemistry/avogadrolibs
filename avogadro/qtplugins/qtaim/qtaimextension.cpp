@@ -65,7 +65,7 @@ QList<QAction*> QTAIMExtension::actions() const
 
 QStringList QTAIMExtension::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Analysis") << tr("QTAIM");
+  return QStringList() << tr("&Analyze") << tr("QTAIM");
 }
 
 void QTAIMExtension::setMolecule(QtGui::Molecule* molecule)
@@ -83,9 +83,6 @@ void QTAIMExtension::triggered()
     m_molecule->property("QTAIMComment").isValid();
 
   int i = action->data().toInt();
-
-  QTime timer;
-  timer.start();
 
   QString fileName;
   if (!wavefunctionAlreadyLoaded) {
@@ -260,12 +257,9 @@ void QTAIMExtension::triggered()
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
                 for (auto j : bondPathList.at(bondPair)) {
-                  x =
-                    j.x() * convertBohrToAngstrom;
-                  y =
-                    j.y() * convertBohrToAngstrom;
-                  z =
-                    j.z() * convertBohrToAngstrom;
+                  x = j.x() * convertBohrToAngstrom;
+                  y = j.y() * convertBohrToAngstrom;
+                  z = j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -277,8 +271,8 @@ void QTAIMExtension::triggered()
               }
             }
           } // bond pairs
-        }   // atom1
-      }     // atom 0
+        } // atom1
+      } // atom 0
 
       m_molecule->setProperty("QTAIMXBondCriticalPoints", xBCPsVariantList);
       m_molecule->setProperty("QTAIMYBondCriticalPoints", yBCPsVariantList);
@@ -435,12 +429,9 @@ void QTAIMExtension::triggered()
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
                 for (auto j : bondPathList.at(bondPair)) {
-                  x =
-                    j.x() * convertBohrToAngstrom;
-                  y =
-                    j.y() * convertBohrToAngstrom;
-                  z =
-                    j.z() * convertBohrToAngstrom;
+                  x = j.x() * convertBohrToAngstrom;
+                  y = j.y() * convertBohrToAngstrom;
+                  z = j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -452,8 +443,8 @@ void QTAIMExtension::triggered()
               }
             }
           } // bond pairs
-        }   // atom1
-      }     // atom 0
+        } // atom1
+      } // atom 0
 
       m_molecule->setProperty("QTAIMXBondCriticalPoints", xBCPsVariantList);
       m_molecule->setProperty("QTAIMYBondCriticalPoints", yBCPsVariantList);
@@ -646,12 +637,9 @@ void QTAIMExtension::triggered()
 
                   bondPathSegmentStartIndexVariantList.append(bpCtr);
                   for (auto j : bondPathList.at(bondPair)) {
-                    x = j.x() *
-                        convertBohrToAngstrom;
-                    y = j.y() *
-                        convertBohrToAngstrom;
-                    z = j.z() *
-                        convertBohrToAngstrom;
+                    x = j.x() * convertBohrToAngstrom;
+                    y = j.y() * convertBohrToAngstrom;
+                    z = j.z() * convertBohrToAngstrom;
 
                     xBondPathsVariantList.append(x);
                     yBondPathsVariantList.append(y);
@@ -663,8 +651,8 @@ void QTAIMExtension::triggered()
                 }
               }
             } // bond pairs
-          }   // atom1
-        }     // atom 0
+          } // atom1
+        } // atom 0
 
         m_molecule->setProperty("QTAIMXBondCriticalPoints", xBCPsVariantList);
         m_molecule->setProperty("QTAIMYBondCriticalPoints", yBCPsVariantList);
@@ -727,4 +715,4 @@ void QTAIMExtension::triggered()
   emit requestActiveDisplayTypes(QStringList() << "QTAIMScenePlugin");
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

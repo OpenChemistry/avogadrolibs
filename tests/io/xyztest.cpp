@@ -28,7 +28,7 @@ TEST(XyzTest, readAtomicSymbols)
 {
   XyzFormat xyz;
   Molecule molecule;
-  EXPECT_TRUE(xyz.readFile(AVOGADRO_DATA "/data/methane.xyz", molecule));
+  EXPECT_TRUE(xyz.readFile(AVOGADRO_DATA "/data/xyz/methane.xyz", molecule));
   ASSERT_EQ(xyz.error(), std::string());
 
   EXPECT_EQ(molecule.atomCount(), 5);
@@ -47,13 +47,43 @@ TEST(XyzTest, readAtomicSymbols)
   EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
 }
 
+TEST(XyzTest, readTotalEnergy)
+{
+  {
+    // Open Babel
+    XyzFormat xyz;
+    Molecule molecule;
+    std::string str = "1\nEnergy: NaN\nAr 0.0 0.0 0.0\n";
+    ASSERT_TRUE(xyz.readString(str, molecule));
+    EXPECT_FALSE(molecule.hasData("totalEnergy")) << str;
+  }
+  {
+    // xtb
+    XyzFormat xyz;
+    Molecule molecule;
+    std::string str = "1\nenergy: -123.456\nAr 0.0 0.0 0.0\n";
+    ASSERT_TRUE(xyz.readString(str, molecule));
+    ASSERT_TRUE(molecule.hasData("totalEnergy")) << str;
+    EXPECT_EQ(molecule.data("totalEnergy").toDouble(), -123.456) << str;
+  }
+  {
+    // orca
+    XyzFormat xyz;
+    Molecule molecule;
+    std::string str = "1\n E -1.23456E+2\nAr 0.0 0.0 0.0\n";
+    ASSERT_TRUE(xyz.readString(str, molecule));
+    ASSERT_TRUE(molecule.hasData("totalEnergy")) << str;
+    EXPECT_EQ(molecule.data("totalEnergy").toDouble(), -123.456) << str;
+  }
+}
+
 // Turn off the option to perceive bonds
 TEST(XyzTest, readAtomicSymbolsNoBonds)
 {
   XyzFormat xyz;
   xyz.setOptions("{ \"perceiveBonds\": false }");
   Molecule molecule;
-  EXPECT_TRUE(xyz.readFile(AVOGADRO_DATA "/data/methane.xyz", molecule));
+  EXPECT_TRUE(xyz.readFile(AVOGADRO_DATA "/data/xyz/methane.xyz", molecule));
   ASSERT_EQ(xyz.error(), std::string());
 
   EXPECT_EQ(molecule.atomCount(), 5);
@@ -77,7 +107,7 @@ TEST(XyzTest, readAtomicNumbers)
 {
   XyzFormat xyz;
   Molecule molecule;
-  xyz.readFile(AVOGADRO_DATA "/data/methane-num.xyz", molecule);
+  xyz.readFile(AVOGADRO_DATA "/data/xyz/methane-num.xyz", molecule);
 
   EXPECT_EQ(molecule.atomCount(), 5);
 
@@ -134,13 +164,13 @@ TEST(XyzTest, modes)
   // This tests some of the mode setting/checking code, not explicitly Xyz but
   // a concrete implementation is required in order to test.
   XyzFormat format;
-  format.open(AVOGADRO_DATA "/data/multi.xyz", FileFormat::Read);
+  format.open(AVOGADRO_DATA "/data/xyz/multi.xyz", FileFormat::Read);
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.mode() & FileFormat::Read);
   EXPECT_FALSE(format.isMode(FileFormat::Write));
 
   // Try some combinations now.
-  format.open(AVOGADRO_DATA "/data/multi.xyz",
+  format.open(AVOGADRO_DATA "/data/xyz/multi.xyz",
               FileFormat::Read | FileFormat::MultiMolecule);
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.isMode(FileFormat::Read | FileFormat::MultiMolecule));
@@ -150,7 +180,7 @@ TEST(XyzTest, modes)
 TEST(DISABLED_XyzTest, readMulti)
 {
   XyzFormat multi;
-  multi.open(AVOGADRO_DATA "/data/multi.xyz",
+  multi.open(AVOGADRO_DATA "/data/xyz/multi.xyz",
              FileFormat::Read | FileFormat::MultiMolecule);
   Molecule molecule;
 
@@ -189,7 +219,7 @@ TEST(DISABLED_XyzTest, readMulti)
 TEST(DISABLED_XyzTest, writeMulti)
 {
   XyzFormat multi;
-  multi.open(AVOGADRO_DATA "/data/multi.xyz",
+  multi.open(AVOGADRO_DATA "/data/xyz/multi.xyz",
              FileFormat::Read | FileFormat::MultiMolecule);
   Molecule mol[2];
 

@@ -25,21 +25,24 @@ public:
     : m_residueName(std::move(name)), m_residueAtomNames(std::move(atomNames)),
       m_residueSingleBonds(std::move(singleBonds)),
       m_residueDoubleBonds(std::move(doubleBonds))
-  {}
+  {
+  }
 
   ResidueData(const ResidueData& other)
     : m_residueName(other.m_residueName),
       m_residueAtomNames(other.m_residueAtomNames),
       m_residueSingleBonds(other.m_residueSingleBonds),
       m_residueDoubleBonds(other.m_residueDoubleBonds)
-  {}
+  {
+  }
 
   ResidueData(ResidueData&& other) noexcept
     : m_residueName(std::move(other.m_residueName)),
       m_residueAtomNames(std::move(other.m_residueAtomNames)),
       m_residueSingleBonds(std::move(other.m_residueSingleBonds)),
       m_residueDoubleBonds(std::move(other.m_residueDoubleBonds))
-  {}
+  {
+  }
 
   ResidueData& operator=(ResidueData other)
   {

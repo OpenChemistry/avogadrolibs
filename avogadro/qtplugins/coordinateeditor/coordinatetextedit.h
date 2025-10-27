@@ -43,11 +43,7 @@ private:
     int start;
     int end;
     QString tooltip;
-    Mark(int s, int e, const QString& t)
-      : start(s)
-      , end(e)
-      , tooltip(t)
-    {}
+    Mark(int s, int e, const QString& t) : start(s), end(e), tooltip(t) {}
     bool contains(int i) const { return i >= start && i <= end; }
   };
   QList<Mark> m_marks;

@@ -117,7 +117,7 @@ void SpaceGroup::registerCommands()
 }
 
 bool SpaceGroup::handleCommand(const QString& command,
-                               const QVariantMap& options)
+                               [[maybe_unused]] const QVariantMap& options)
 {
   if (m_molecule == nullptr)
     return false; // No molecule to handle the command.

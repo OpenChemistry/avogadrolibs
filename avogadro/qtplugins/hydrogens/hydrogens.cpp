@@ -40,9 +40,7 @@ Hydrogens::Hydrogens(QObject* parent_)
   m_actions.append(action);
 }
 
-Hydrogens::~Hydrogens()
-{
-}
+Hydrogens::~Hydrogens() {}
 
 QString Hydrogens::description() const
 {
@@ -107,4 +105,4 @@ void Hydrogens::removeAllHydrogens()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

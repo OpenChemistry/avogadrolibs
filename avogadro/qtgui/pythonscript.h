@@ -138,6 +138,7 @@ public slots:
 protected:
   bool m_debug;
   QString m_pythonInterpreter;
+  QString m_pixi;
   QString m_scriptFilePath;
   QStringList m_errors;
   QProcess* m_process;

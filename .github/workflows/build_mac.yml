@@ -1,0 +1,225 @@
+name: Mac Build Matrix
+# Many thanks to Cristian Adam for examples
+# e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
+# https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  QT_VERSION: 6.10.0
+  # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
+  # we set MACOSX_DEPLOYMENT_TARGET later
+  MACOS_TARGET: 13
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_YAEHMOP=ON
+  CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+  SCCACHE_GHA_ENABLED: "true"
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "macOS Qt6 ARM", artifact: "macOS-arm64",
+            os: macos-15,
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
+          }
+        - {
+            name: "macOS Qt6 Intel", artifact: "macOS-intel",
+            os: macos-15-intel,
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64",
+          }
+
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    - name: Install Dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew install eigen glew pixi create-dmg
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@d325aaf2a8baeeda41ad0b5d39f84a6af9bcf005 # v4.3.0
+      with:
+        version: ${{ env.QT_VERSION }}
+
+    - name: Grab cache files
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: ${{ matrix.config.name }}-downloads
+
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        # won't have any effect except on Mac
+        echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} ${{env.CACHE}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+      shell: bash
+
+    - name: Build
+      run: |
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Fix Mac plugins
+      if: runner.os == 'macOS'
+      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
+      run: |
+        for plugin in *.so; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        cd .. # build/prefix/lib
+        for plugin in libinchi.?.?.?.dylib libopenbabel.?.?.?.dylib; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $plugin $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
+          done
+        done
+        otool -L libinchi.?.?.?.dylib
+        otool -L libopenbabel.?.?.?.dylib
+        # cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
+        # cp -p libopenbabel* ../Avogadro2.app/Contents/Frameworks/
+        # finally, fixup the binaries
+        cd ../bin
+        for exe in obabel obmm eht_bind genXrdPattern; do
+          for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $exe $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
+          done
+        done
+        ls .. # build/prefix
+
+    - name: Install the Apple certificate
+      # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
+      if: runner.os == 'macOS'
+      working-directory: ${{ runner.workspace }}/build
+      env:
+        BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
+        NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
+        CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+        PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
+      run: |
+        # create variables
+        if [ -n "${P12_PASSWORD}" ]; then
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 -d -o $CERTIFICATE_PATH
+
+          # create temporary keychain if the cert is non-zero
+          if [ -s $CERTIFICATE_PATH ]; then
+            security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+            security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+            # import certificate to keychain
+            security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+            security list-keychain -d user -s $KEYCHAIN_PATH
+
+            # signing occurs via avogadroapp cpack instructions
+          fi # certificate exists
+        fi # password exists
+
+    - name: Create Mac Packages
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        exe_path=prefix/Avogadro2.app/Contents/MacOS/
+        cp -p `which pixi` ${exe_path}
+        for exe in ${exe_path}*; do
+          args="${args} -executable=${exe}"
+        done;
+        macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
+        if [ -n "${P12_PASSWORD}" ]; then
+          # codesign the Open Babel modules, then the app
+          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app/Contents/lib/openbabel/*.so
+          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
+        fi
+        # create the DMG
+        cd prefix
+        if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          # This is a tag - extract version
+          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${VERSION#v}"  # Remove 'v' prefix if present
+          IS_RELEASE=true
+        else
+          # This is a nightly build - use current date
+          VERSION=$(date +%Y-%m-%d)
+          IS_RELEASE=false
+        fi
+        VOLNAME="Avogadro2 ${VERSION}"
+
+        # Determine architecture
+        ARCH=$(uname -m)
+
+        # Build DMG filename
+        if [[ "$IS_RELEASE" == true ]]; then
+          if [[ "$ARCH" == "arm64" ]]; then
+            DMG_NAME="Avogadro2-${VERSION}-Darwin-arm64.dmg"
+          else
+            DMG_NAME="Avogadro2-${VERSION}-Darwin.dmg"
+          fi
+        else
+          if [[ "$ARCH" == "arm64" ]]; then
+            DMG_NAME="Avogadro2-${VERSION}-arm64.dmg"
+          else
+            DMG_NAME="Avogadro2-${VERSION}.dmg"
+          fi
+        fi
+        echo "Building DMG: ${DMG_NAME}"
+        create-dmg --volname "${VOLNAME}" --icon-size 64 --filesystem "APFS" --format "ULMO" --no-internet-enable --icon "Avogadro2.app" 20 64 --app-drop-link 200 64 ${DMG_NAME} Avogadro2.app
+        mv ${DMG_NAME} ../${DMG_NAME}
+        cd ..
+        echo "Submitting DMG: ${DMG_NAME}"
+        xcrun notarytool submit ${DMG_NAME} --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
+        echo "Stapling notarized DMG: ${DMG_NAME}"
+        xcrun stapler staple -v ${DMG_NAME}
+      working-directory: ${{ runner.workspace }}/build/
+      continue-on-error: true
+      env:
+        NOTARIZE_TEAM: ${{ secrets.AC_TEAM }}
+        NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
+        NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
+        CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+        PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+
+    - name: Upload
+      if: matrix.config.artifact != 0
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      with:
+        path: ${{ runner.workspace }}/build/Avogadro2*.*
+        name: ${{ matrix.config.artifact }}
+
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
+      timeout-minutes: 60

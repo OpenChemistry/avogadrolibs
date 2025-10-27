@@ -11,8 +11,8 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/chartdialog.h>
-#include <avogadro/vtk/chartwidget.h>
+#include <avogadro/qtgui/chartdialog.h>
+#include <avogadro/qtgui/chartwidget.h>
 
 #include "pdfoptionsdialog.h"
 #include "plotpdf.h"
@@ -28,11 +28,10 @@ namespace Avogadro::QtPlugins {
 using Core::Array;
 
 PlotPdf::PlotPdf(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_)
-  , m_actions(QList<QAction*>())
-  , m_molecule(nullptr)
-  , m_pdfOptionsDialog(new PdfOptionsDialog(qobject_cast<QWidget*>(parent())))
-  , m_displayDialogAction(new QAction(this))
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
+    m_molecule(nullptr),
+    m_pdfOptionsDialog(new PdfOptionsDialog(qobject_cast<QWidget*>(parent()))),
+    m_displayDialogAction(new QAction(this))
 {
   m_displayDialogAction->setText(tr("Plot Pair Distribution Function…"));
   connect(m_displayDialogAction.data(), &QAction::triggered, this,
@@ -136,12 +135,13 @@ void PlotPdf::displayDialog()
   const char* windowName = "Pair Distribution Function";
 
   if (!m_chartDialog)
-    m_chartDialog.reset(new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+    m_chartDialog.reset(
+      new QtGui::ChartDialog(qobject_cast<QWidget*>(this->parent())));
 
   m_chartDialog->setWindowTitle(windowName);
   auto* chart = m_chartDialog->chartWidget();
   chart->clearPlots();
-  chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->addPlot(xData, yData, QtGui::color4ub{ 255, 0, 0, 255 });
   chart->setXAxisTitle(xTitle);
   chart->setYAxisTitle(yTitle);
   m_chartDialog->show();
@@ -204,4 +204,4 @@ bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -3,22 +3,40 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "molecule.h"
 #include "moleculemodel.h"
+#include "molecule.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
+#include <QtGui/QPalette>
 
 namespace Avogadro::QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
-{}
+{
+  const QPalette defaultPalette;
+  bool darkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
+                   defaultPalette.color(QPalette::Window).lightness());
+  loadIcons(darkMode);
+}
 
 QModelIndex MoleculeModel::parent(const QModelIndex&) const
 {
   return QModelIndex();
+}
+
+void MoleculeModel::loadIcons(bool darkMode)
+{
+  QString iconPath = ":icons/fallback/32x32/";
+  QString plusIconPath =
+    iconPath + (darkMode ? "plus-dark.png" : "plus-light.png");
+  QString closeIconPath =
+    iconPath + (darkMode ? "cross-dark.png" : "cross-light.png");
+
+  m_plusIcon = QIcon(plusIconPath);
+  m_closeIcon = QIcon(closeIconPath);
 }
 
 int MoleculeModel::rowCount(const QModelIndex& p) const
@@ -26,7 +44,7 @@ int MoleculeModel::rowCount(const QModelIndex& p) const
   if (p.isValid())
     return 0;
   else
-    return m_molecules.size();
+    return m_molecules.size() + 1;
 }
 
 int MoleculeModel::columnCount(const QModelIndex&) const
@@ -36,10 +54,12 @@ int MoleculeModel::columnCount(const QModelIndex&) const
 
 Qt::ItemFlags MoleculeModel::flags(const QModelIndex& idx) const
 {
+
+  if (idx.row() == m_molecules.size())
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
   if (idx.column() == 0)
     return static_cast<Qt::ItemFlags>(Qt::ItemIsEditable | Qt::ItemIsEnabled);
-  else
-    return Qt::ItemIsEnabled;
+  return Qt::ItemIsEnabled;
 }
 
 bool MoleculeModel::setData(const QModelIndex& idx, const QVariant& value,
@@ -83,6 +103,14 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
 
   auto* object = static_cast<QObject*>(idx.internalPointer());
   auto* mol = qobject_cast<Molecule*>(object);
+
+  if (idx.row() == m_molecules.size()) {
+    if (idx.column() == 0 && role == Qt::DecorationRole) {
+      return m_plusIcon;
+    }
+    return QVariant();
+  }
+
   if (!mol)
     return QVariant();
 
@@ -100,29 +128,33 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
                    .toStdString();
         }
         if (mol)
-          return (name + " (" + mol->formula() + ")").c_str();
+          return QString("%1 (%2)")
+            .arg(QString::fromStdString(name))
+            .arg(mol->formattedFormula());
         else
-          return "Edit molecule";
+          return tr("Edit molecule");
       }
       case Qt::EditRole:
         return mol->data("name").toString().c_str();
       case Qt::ToolTipRole:
         if (mol->hasData("fileName"))
           return mol->data("fileName").toString().c_str();
-        return "Not saved";
+        return tr("Not saved");
       case Qt::WhatsThisRole:
         return mol->formula().c_str();
       case Qt::ForegroundRole:
         if (mol == m_activeMolecule)
           return QVariant(QColor(Qt::red));
-        else
-          return QVariant(QColor(Qt::black));
+        else {
+          const QPalette defaultPalette;
+          return QVariant(defaultPalette.color(QPalette::WindowText));
+        }
       default:
         return QVariant();
     }
   } else if (idx.column() == 1) {
     if (role == Qt::DecorationRole)
-      return QIcon(":/icons/fallback/32x32/edit-delete.png");
+      return m_closeIcon;
   }
   return QVariant();
 }
@@ -131,8 +163,12 @@ QModelIndex MoleculeModel::index(int row, int column,
                                  const QModelIndex& p) const
 {
   if (!p.isValid())
-    if (row >= 0 && row < m_molecules.size())
+    if (row >= 0 && row < m_molecules.size()) {
       return createIndex(row, column, m_molecules[row]);
+    }
+  if (row == m_molecules.size()) {
+    return createIndex(row, column, nullptr);
+  }
   return QModelIndex();
 }
 
@@ -197,4 +233,4 @@ void MoleculeModel::itemChanged()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

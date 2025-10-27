@@ -14,8 +14,8 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/chartdialog.h>
-#include <avogadro/vtk/chartwidget.h>
+#include <avogadro/qtgui/chartdialog.h>
+#include <avogadro/qtgui/chartwidget.h>
 
 #include <QAction>
 #include <QByteArray>
@@ -343,10 +343,9 @@ void Yaehmop::calculateBandStructure()
   specialKPointVals.back() -= 0.0001;
 
   // Make a vector of labels for the special k points
-  std::vector<std::string> specialKPointLabels;
+  QStringList specialKPointLabels;
   for (int i = 0; i < numSpecialKPoints; ++i) {
-    std::string label = specialKPoints[i].label.toStdString();
-    specialKPointLabels.push_back(label);
+    specialKPointLabels.push_back(specialKPoints[i].label);
   }
 
   // Now generate a plot with the data
@@ -354,7 +353,8 @@ void Yaehmop::calculateBandStructure()
   data.push_back(xVals);
 
   // Make some labels
-  std::vector<std::string> lineLabels;
+  QStringList lineLabels;
+  lineLabels.push_back(tr("k-space"));
 
   // Set the color
   std::array<double, 4> color = { 255, 0, 0, 255 };
@@ -364,7 +364,7 @@ void Yaehmop::calculateBandStructure()
   for (const auto& band : bands) {
     std::vector<float> tmp(band.begin(), band.end());
     data.push_back(tmp);
-    lineLabels.push_back(tr("Band %1").arg(curBandNum).toStdString());
+    lineLabels.push_back(tr("Band %1").arg(curBandNum));
     lineColors.push_back(color);
     ++curBandNum;
   }
@@ -384,7 +384,7 @@ void Yaehmop::calculateBandStructure()
     }
 
     // Create a horizontal, black, dashed line for the fermi level
-    lineLabels.push_back(tr("Fermi Level").toStdString());
+    lineLabels.push_back(tr("Fermi Level"));
     lineColors.push_back({ 0, 0, 0, 255 });
 
     std::vector<float> fermiVals(xVals.size(), fermi);
@@ -397,20 +397,21 @@ void Yaehmop::calculateBandStructure()
 
   if (!m_chartDialog) {
     m_chartDialog.reset(
-      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+      new QtGui::ChartDialog(qobject_cast<QWidget*>(this->parent())));
   }
 
   m_chartDialog->setWindowTitle(windowName);
   auto* chart = m_chartDialog->chartWidget();
   chart->clearPlots();
-  chart->addPlots(data, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->addPlots(data, QtGui::color4ub{ 255, 0, 0, 255 }, lineLabels);
   chart->setXAxisTitle(xTitle);
   chart->setYAxisTitle(yTitle);
-  chart->setTickLabels(VTK::ChartWidget::Axis::x, specialKPointVals,
+  chart->setTickLabels(QtGui::ChartWidget::Axis::x, specialKPointVals,
                        specialKPointLabels);
-  chart->setAxisLimits(VTK::ChartWidget::Axis::x, xVals.front(), xVals.back());
+  chart->setAxisLimits(QtGui::ChartWidget::Axis::x, xVals.front(),
+                       xVals.back());
   if (m_yaehmopSettings.limitY) {
-    chart->setAxisLimits(VTK::ChartWidget::Axis::y, m_yaehmopSettings.minY,
+    chart->setAxisLimits(QtGui::ChartWidget::Axis::y, m_yaehmopSettings.minY,
                          m_yaehmopSettings.maxY);
   }
   m_chartDialog->show();

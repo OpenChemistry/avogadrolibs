@@ -122,7 +122,6 @@ public:
   bool setTriangles(const Core::Array<Vector3f>& values);
   const Core::Array<Vector3f>& triangles() const;
 
-
   /**
    * Clear the vertices vector and assign new values.
    */

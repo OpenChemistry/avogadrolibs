@@ -16,12 +16,14 @@ set(tests
   Mutex
   NeighborPerceiver
   RingPerceiver
-  Spacegroup
   Utilities
   UnitCell
   Variant
   VariantMap
   )
+if(USE_SPGLIB)
+  list(APPEND tests SpaceGroup)
+endif()
 
 # Build up the source file names.
 set(testSrcs "")

@@ -37,7 +37,7 @@ using Core::trimmed;
 using std::isalpha;
 #endif
 
-bool findEnergy(const std::string& buffer, double& energyValue)
+std::optional<double> findEnergy(const std::string& buffer)
 {
   // Check for energy in the comment line
   // orca uses  E -680.044112849966 (with spaces)
@@ -54,15 +54,11 @@ bool findEnergy(const std::string& buffer, double& energyValue)
   }
 
   if (energyStart != std::string::npos) {
-    // find the next whitespace or end of the string
-    std::size_t energyEnd = buffer.find_first_of(" \t", energyStart + offset);
-    if (energyEnd == std::string::npos)
-      energyEnd = buffer.size();
-    std::string energy = buffer.substr(energyStart + offset, energyEnd);
-    energyValue = lexicalCast<double>(energy);
-    return true;
+    // pick the next token
+    std::string energy = buffer.substr(energyStart + offset);
+    return lexicalCast<double>(energy);
   }
-  return false;
+  return std::nullopt;
 }
 
 bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
@@ -81,39 +77,58 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   string buffer;
   getline(inStream, buffer); // Finish the first line
+  if (!inStream.good()) {
+    appendError("Error reading first line.");
+    return false;
+  }
   getline(inStream, buffer); // comment or name or energy
   if (!buffer.empty())
     mol.setData("name", trimmed(buffer));
 
-  double energy = 0.0;
   std::vector<double> energies;
-  if (findEnergy(buffer, energy)) {
-    mol.setData("totalEnergy", energy);
-    energies.push_back(energy);
+  if (auto energy = findEnergy(buffer)) {
+    mol.setData("totalEnergy", *energy);
+    energies.push_back(*energy);
   }
 
   // check for Lattice= in an extended XYZ from ASE and company
   // e.g. Lattice="H11 H21 H31 H12 H22 H32 H13 H23 H33"
   // https://atomsk.univ-lille.fr/doc/en/format_xyz.html
   // https://gitlab.com/ase/ase/-/merge_requests/62
-  std::size_t start = buffer.find("Lattice=\"");
+  std::size_t start = buffer.find("Lattice=");
   if (start != std::string::npos) {
     // step through bit by bit until we hit the next quote character
-    start = start + 9;
+    start = start + 8;
+    // skip over the first quote
+    if (buffer[start] == '\"') {
+      start++;
+    }
     std::size_t end = buffer.find('\"', start);
     std::string lattice = buffer.substr(start, (end - start));
 
     std::vector<string> tokens(split(lattice, ' '));
-    if (tokens.size() == 9) {
-      Vector3 v1(lexicalCast<double>(tokens[0]), lexicalCast<double>(tokens[1]),
-                 lexicalCast<double>(tokens[2]));
-      Vector3 v2(lexicalCast<double>(tokens[3]), lexicalCast<double>(tokens[4]),
-                 lexicalCast<double>(tokens[5]));
-      Vector3 v3(lexicalCast<double>(tokens[6]), lexicalCast<double>(tokens[7]),
-                 lexicalCast<double>(tokens[8]));
 
-      auto* cell = new Core::UnitCell(v1, v2, v3);
-      mol.setUnitCell(cell);
+    // check for size
+    std::cout << "Lattice size: " << tokens.size() << std::endl;
+
+    if (tokens.size() >= 9) {
+      if (auto tmp = lexicalCast<double>(tokens.begin(), tokens.begin() + 9)) {
+        Vector3 v1(tmp->at(0), tmp->at(1), tmp->at(2));
+        Vector3 v2(tmp->at(3), tmp->at(4), tmp->at(5));
+        Vector3 v3(tmp->at(6), tmp->at(7), tmp->at(8));
+
+        auto* cell = new Core::UnitCell(v1, v2, v3);
+        std::cout << " Lattice: " << cell->aVector() << " " << cell->bVector()
+                  << " " << cell->cVector() << std::endl;
+        if (!cell->isRegular()) {
+          appendError("Lattice vectors are not linear independent");
+          delete cell;
+        } else {
+          mol.setUnitCell(cell);
+        }
+      } else {
+        appendError("Lattice vectors are malformed");
+      }
     }
   }
   // check to see if there's an extended XYZ Properties= line
@@ -142,14 +157,28 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
       // increment column based on the count of the property
       if (i + 2 < tokens.size()) {
-        column += lexicalCast<unsigned int>(tokens[i + 2]);
+        if (auto c = lexicalCast<unsigned int>(tokens[i + 2])) {
+          column += *c;
+        } else {
+          appendError("Error reading property column: " + tokens[i + 2]);
+        }
       }
     }
+  }
+
+  if (!inStream.good()) {
+    appendError("Error reading comment line.");
+    return false;
   }
 
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
     getline(inStream, buffer);
+    if (!inStream.good()) {
+      appendError("Error reading atom at index " + std::to_string(i) + ".");
+      return false;
+    }
+
     std::vector<string> tokens;
     // check for tabs PR#1512
     if (buffer.find('\t') != std::string::npos)
@@ -166,24 +195,38 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     if (isalpha(tokens[0][0]))
       atomicNum = Elements::atomicNumberFromSymbol(tokens[0]);
     else
-      atomicNum = static_cast<unsigned char>(lexicalCast<short int>(tokens[0]));
+      atomicNum = static_cast<unsigned char>(
+        lexicalCast<short int>(tokens[0]).value_or(0));
 
-    Vector3 pos(lexicalCast<double>(tokens[1]), lexicalCast<double>(tokens[2]),
-                lexicalCast<double>(tokens[3]));
+    Vector3 pos;
+    if (auto tmp =
+          lexicalCast<double>(tokens.begin() + 1, tokens.begin() + 4)) {
+      pos << tmp->at(0), tmp->at(1), tmp->at(2);
+    } else {
+      appendError("Error reading atom position");
+      return false;
+    }
 
     Atom newAtom = mol.addAtom(atomicNum);
     newAtom.setPosition3d(pos);
 
     // check for charge and force columns
     if (chargeColumn > 0 && chargeColumn < tokens.size()) {
-      charges.push_back(lexicalCast<double>(tokens[chargeColumn]));
+      if (auto c = lexicalCast<double>(tokens[chargeColumn])) {
+        charges.push_back(*c);
+      } else {
+        appendError("Error reading charge");
+      }
       // we set the charges after all atoms are added
     }
     if (forceColumn > 0 && forceColumn < tokens.size()) {
-      Vector3 force(lexicalCast<double>(tokens[forceColumn]),
-                    lexicalCast<double>(tokens[forceColumn + 1]),
-                    lexicalCast<double>(tokens[forceColumn + 2]));
-      newAtom.setForceVector(force);
+      if (auto tmp = lexicalCast<double>(tokens.begin() + forceColumn,
+                                         tokens.begin() + forceColumn + 3)) {
+        Vector3 force(tmp->at(0), tmp->at(1), tmp->at(2));
+        newAtom.setForceVector(force);
+      } else {
+        appendError("Error reading force");
+      }
     }
   }
 
@@ -198,18 +241,18 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Do we have an animation?
-  size_t numAtoms2;
   // check if the next frame has the same number of atoms
   getline(inStream, buffer); // should be the number of atoms
   if (buffer.size() == 0 || buffer[0] == '>') {
     getline(inStream, buffer); // Orca 6 prints ">" separators
   }
 
-  if ((numAtoms2 = lexicalCast<int>(buffer)) && numAtoms == numAtoms2) {
+  auto numAtoms2 = lexicalCast<int>(buffer);
+  if (numAtoms2 && numAtoms == *numAtoms2) {
     getline(inStream, buffer); // comment line
     // check for properties in the comment line
-    if (findEnergy(buffer, energy)) {
-      energies.push_back(energy);
+    if (auto energy = findEnergy(buffer)) {
+      energies.push_back(*energy);
     }
 
     mol.setCoordinate3d(mol.atomPositions3d(), 0);
@@ -232,10 +275,14 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
           appendError("Not enough tokens in this line: " + buffer);
           return false;
         }
-        Vector3 pos(lexicalCast<double>(tokens[1]),
-                    lexicalCast<double>(tokens[2]),
-                    lexicalCast<double>(tokens[3]));
-        positions.push_back(pos);
+        if (auto tmp =
+              lexicalCast<double>(tokens.begin() + 1, tokens.begin() + 4)) {
+          Vector3 pos(tmp->at(0), tmp->at(1), tmp->at(2));
+          positions.push_back(pos);
+        } else {
+          appendError("Error reading position");
+          return false;
+        }
       }
 
       if (!done)
@@ -261,8 +308,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
       std::getline(inStream, buffer); // Skip the blank
       // check for energies
-      if (findEnergy(buffer, energy)) {
-        energies.push_back(energy);
+      if (auto energy = findEnergy(buffer)) {
+        energies.push_back(*energy);
       }
       positions.clear();
     }
@@ -346,6 +393,7 @@ std::vector<std::string> XyzFormat::fileExtensions() const
   ext.emplace_back("xyz");
   ext.emplace_back("exyz");
   ext.emplace_back("extxyz");
+  ext.emplace_back("allxyz");
   return ext;
 }
 

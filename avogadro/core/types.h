@@ -121,6 +121,6 @@ public:
   static const char* name() { return "double"; }
 };
 
-} // end Avogadro namespace
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_H

@@ -51,7 +51,7 @@ const int ResidueColumns = 6;
 const int ConformerColumns = 1;
 
 // compute the RMSD between the two sets of coordinates
-inline double calcRMSD(const Array<Vector3>& v1, const Array<Vector3>& v2)
+inline double calculateRMSD(const Array<Vector3>& v1, const Array<Vector3>& v2)
 {
   // if they're not the same length, it's an error
   if (v1.size() != v2.size())
@@ -305,14 +305,42 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AtomDataPartialCharge:
         return partialCharge(m_molecule, row);
       case AtomDataX:
-        return QString("%L1").arg(m_molecule->atomPosition3d(row).x(), 0, 'f',
-                                  4);
+        if (role == Qt::UserRole)
+          // Return the x coordinate as a double for sorting
+          return m_molecule->atomPosition3d(row).x();
+        else // format fixed to 4 decimals
+        {
+          auto formatted =
+            QString("%L1").arg(m_molecule->atomPosition3d(row).x(), 0, 'f', 4);
+          if (m_molecule->frozenAtom(row) || m_molecule->frozenAtomAxis(row, 0))
+            formatted += "🔒";
+          return formatted;
+        }
+
       case AtomDataY:
-        return QString("%L1").arg(m_molecule->atomPosition3d(row).y(), 0, 'f',
-                                  4);
+        if (role == Qt::UserRole)
+          // Return the y coordinate as a double for sorting
+          return m_molecule->atomPosition3d(row).y();
+        else // format fixed to 4 decimals
+        {
+          auto formatted =
+            QString("%L1").arg(m_molecule->atomPosition3d(row).y(), 0, 'f', 4);
+          if (m_molecule->frozenAtom(row) || m_molecule->frozenAtomAxis(row, 1))
+            formatted += "🔒";
+          return formatted;
+        }
       case AtomDataZ:
-        return QString("%L1").arg(m_molecule->atomPosition3d(row).z(), 0, 'f',
-                                  4);
+        if (role == Qt::UserRole)
+          // Return the z coordinate as a double for sorting
+          return m_molecule->atomPosition3d(row).z();
+        else // format fixed to 4 decimals
+        {
+          auto formatted =
+            QString("%L1").arg(m_molecule->atomPosition3d(row).z(), 0, 'f', 4);
+          if (m_molecule->frozenAtom(row) || m_molecule->frozenAtomAxis(row, 2))
+            formatted += "🔒";
+          return formatted;
+        }
       case AtomDataLabel:
         return m_molecule->atomLabel(row).c_str();
       case AtomDataColor:
@@ -332,6 +360,17 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     auto bond = m_molecule->bond(row);
     auto atom1 = bond.atom1();
     auto atom2 = bond.atom2();
+    bool isConstrained = false;
+
+    // check constraints for this bond
+    for (auto& constraint : m_molecule->constraints()) {
+      if (constraint.aIndex() == atom1.index() &&
+          constraint.bIndex() == atom2.index()) {
+        isConstrained = true;
+        break;
+      }
+    }
+
     switch (column) {
       case BondDataType:
         return QString("%1-%2")
@@ -346,8 +385,16 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case BondDataLabel:
         return m_molecule->bondLabel(row).c_str();
       default: // length, rounded to 4 decimals
-        return QString("%L1 Å").arg(
-          distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the bond length as a double for sorting
+          return distance(atom1.position3d(), atom2.position3d());
+        else {
+          QString formatted = QString("%L1").arg(
+            distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
+          if (isConstrained)
+            formatted += "🔒";
+          return formatted;
+        }
     }
   } else if (m_type == ResidueType) {
 
@@ -390,6 +437,18 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     Vector3 a2 = m_molecule->atomPosition3d(std::get<1>(angle));
     Vector3 a3 = m_molecule->atomPosition3d(std::get<2>(angle));
 
+    bool isConstrained = false;
+
+    // check constraints for this angle
+    for (auto& constraint : m_molecule->constraints()) {
+      if (constraint.aIndex() == std::get<0>(angle) &&
+          constraint.bIndex() == std::get<1>(angle) &&
+          constraint.cIndex() == std::get<2>(angle)) {
+        isConstrained = true;
+        break;
+      }
+    }
+
     switch (column) {
       case AngleDataType:
         return angleTypeString(atomNumber1, atomNumber2, atomNumber3);
@@ -400,7 +459,16 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AngleDataAtom3:
         return QVariant::fromValue(std::get<2>(angle) + 1);
       case AngleDataValue:
-        return QString("%L1 °").arg(calcAngle(a1, a2, a3), 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the angle as a double for sorting
+          return calculateAngle(a1, a2, a3);
+        else { // format fixed to 3 decimals
+          QString formatted =
+            QString("%L1").arg(calculateAngle(a1, a2, a3), 0, 'f', 3);
+          if (isConstrained)
+            formatted += "🔒";
+          return formatted;
+        }
       default:
         return QVariant();
     }
@@ -422,6 +490,19 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     Vector3 a3 = m_molecule->atomPosition3d(std::get<2>(torsion));
     Vector3 a4 = m_molecule->atomPosition3d(std::get<3>(torsion));
 
+    bool isConstrained = false;
+
+    // check constraints for this torsion
+    for (auto& constraint : m_molecule->constraints()) {
+      if (constraint.aIndex() == std::get<0>(torsion) &&
+          constraint.bIndex() == std::get<1>(torsion) &&
+          constraint.cIndex() == std::get<2>(torsion) &&
+          constraint.dIndex() == std::get<3>(torsion)) {
+        isConstrained = true;
+        break;
+      }
+    }
+
     switch (column) {
       case TorsionDataType:
         return torsionTypeString(atomNumber1, atomNumber2, atomNumber3,
@@ -436,7 +517,16 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case TorsionDataAtom4:
         return QVariant::fromValue(std::get<3>(torsion) + 1);
       case TorsionDataValue:
-        return QString("%L1 °").arg(calcDihedral(a1, a2, a3, a4), 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the dihedral angle as a double for sorting
+          return calculateDihedral(a1, a2, a3, a4);
+        else { // format fixed to 3 decimals
+          QString format =
+            QString("%L1").arg(calculateDihedral(a1, a2, a3, a4), 0, 'f', 3);
+          if (isConstrained)
+            format += "🔒";
+          return format;
+        }
       default:
         return QVariant();
     }
@@ -451,11 +541,14 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case ConformerDataRMSD: { // rmsd
         double rmsd = 0.0;
         if (row > 0) {
-          rmsd = calcRMSD(m_molecule->coordinate3d(row),
-                          m_molecule->coordinate3d(0));
+          rmsd = calculateRMSD(m_molecule->coordinate3d(row),
+                               m_molecule->coordinate3d(0));
         }
-
-        return QString("%L1 Å").arg(rmsd, 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the RMSD as a double for sorting
+          return rmsd;
+        else // format fixed to 3 decimals
+          return QString("%L1 Å").arg(rmsd, 0, 'f', 3);
       }
       case ConformerDataEnergy: {
         double energy = 0.0;
@@ -469,7 +562,11 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
           if (row < static_cast<int>(energies.size()))
             energy = energies[row] - minEnergy;
         }
-        return QString("%L1").arg(energy, 0, 'f', 4);
+        if (role == Qt::UserRole)
+          // Return the energy as a double for sorting
+          return energy;
+        else // format fixed to 4 decimals
+          return QString("%L1").arg(energy, 0, 'f', 4);
       }
     }
   }
@@ -856,7 +953,7 @@ void PropertyModel::setAngle(unsigned int index, double newValue)
   Vector3 a = atom1.position3d();
   Vector3 b = atom2.position3d();
   Vector3 c = atom3.position3d();
-  const double currentValue = calcAngle(a, b, c);
+  const double currentValue = calculateAngle(a, b, c);
   Vector3 ab = b - a;
   Vector3 bc = c - b;
 
@@ -893,7 +990,7 @@ void PropertyModel::setTorsion(unsigned int index, double newValue)
   Vector3 b = atom2.position3d();
   Vector3 c = atom3.position3d();
   Vector3 d = atom4.position3d();
-  const double currentValue = calcDihedral(a, b, c, d);
+  const double currentValue = calculateDihedral(a, b, c, d);
 
   // Axis of rotation
   const Vector3 axis((c - b).normalized());
@@ -999,12 +1096,44 @@ Core::Angle PropertyModel::getAngle(unsigned int angle) const
   return m_angles[angle];
 }
 
+Real PropertyModel::getAngleValue(unsigned int angle) const
+{
+  if (angle >= m_angles.size())
+    return 0.0;
+
+  auto a = m_angles[angle];
+  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(a));
+  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(a));
+  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(a));
+  Vector3 a1 = atom1.position3d();
+  Vector3 a2 = atom2.position3d();
+  Vector3 a3 = atom3.position3d();
+  return calculateAngle(a1, a2, a3);
+}
+
 Core::Dihedral PropertyModel::getTorsion(unsigned int torsion) const
 {
   if (torsion >= m_torsions.size())
     return Core::Dihedral();
 
   return m_torsions[torsion];
+}
+
+Real PropertyModel::getTorsionValue(unsigned int torsion) const
+{
+  if (torsion >= m_torsions.size())
+    return 0.0;
+
+  auto t = m_torsions[torsion];
+  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(t));
+  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(t));
+  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(t));
+  auto atom4 = m_molecule->undoMolecule()->atom(std::get<3>(t));
+  Vector3 a1 = atom1.position3d();
+  Vector3 a2 = atom2.position3d();
+  Vector3 a3 = atom3.position3d();
+  Vector3 a4 = atom4.position3d();
+  return calculateDihedral(a1, a2, a3, a4);
 }
 
 } // end namespace Avogadro

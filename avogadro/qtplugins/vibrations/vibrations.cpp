@@ -39,7 +39,7 @@ QList<QAction*> Vibrations::actions() const
 QStringList Vibrations::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Analysis");
+  path << tr("&Analyze");
   return path;
 }
 
@@ -67,7 +67,7 @@ void Vibrations::setMolecule(QtGui::Molecule* mol)
           SLOT(moleculeChanged(unsigned int)));
 }
 
-void Vibrations::moleculeChanged(unsigned int changes)
+void Vibrations::moleculeChanged([[maybe_unused]] unsigned int changes)
 {
   if (m_molecule == nullptr)
     return;

@@ -6,6 +6,7 @@
 #include "energymanager.h"
 #include "energycalculator.h"
 #include "lennardjones.h"
+#include "uff.h"
 
 namespace Avogadro::Calc {
 
@@ -92,6 +93,8 @@ EnergyManager::EnergyManager()
   // LJ is the fallback, since it can handle anything
   // (maybe not well, but it can handle it)
   addModel(new LennardJones);
+  // UFF is good for a wide range of molecules
+  addModel(new UFF);
 }
 
 EnergyManager::~EnergyManager()
@@ -101,6 +104,15 @@ EnergyManager::~EnergyManager()
     delete m_model;
   }
   m_models.clear();
+}
+
+std::set<std::string> EnergyManager::identifiers() const
+{
+  std::set<std::string> identifiers;
+  for (auto& it : m_identifiers) {
+    identifiers.insert(it.first);
+  }
+  return identifiers;
 }
 
 std::set<std::string> EnergyManager::identifiersForMolecule(
@@ -132,6 +144,42 @@ std::set<std::string> EnergyManager::identifiersForMolecule(
   }
 
   return identifiers;
+}
+
+// order of preference for the built-in methods
+const std::vector<std::string> METHOD_TIER_LIST = { "GAFF", "MMFF94", "UFF",
+                                                    "LJ" };
+
+std::string EnergyManager::recommendedModel(
+  const Core::Molecule& molecule) const
+{
+  auto identifiers = identifiersForMolecule(molecule);
+  if (identifiers.empty())
+    return "LJ"; // shouldn't really ever happen
+
+  std::string bestOption;
+
+  // first, we look through the identifiers to see if there's
+  // something not in the built-in list
+  // i.e., installed by the user = try that first
+  for (auto option : identifiers) {
+    if (std::find(METHOD_TIER_LIST.begin(), METHOD_TIER_LIST.end(), option) ==
+        METHOD_TIER_LIST.end())
+      return option;
+  }
+
+  // if not, we look through the built-in list in order
+  // of preference (e.g., GAFF > MMFF94 > UFF > LJ)
+  for (auto option : METHOD_TIER_LIST) {
+    if (identifiers.find(option) != identifiers.end()) {
+      bestOption = option;
+      break;
+    }
+  }
+  if (!bestOption.empty())
+    return bestOption;
+  else
+    return "LJ"; // this will always work
 }
 
 } // namespace Avogadro::Calc

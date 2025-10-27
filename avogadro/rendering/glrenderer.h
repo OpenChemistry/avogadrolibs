@@ -194,7 +194,7 @@ inline Identifier GLRenderer::hit(int x, int y) const
   return Identifier();
 }
 
-} // End Rendering namespace
-} // End Avogadro namespace
+} // namespace Rendering
+} // namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_GLRENDERER_H

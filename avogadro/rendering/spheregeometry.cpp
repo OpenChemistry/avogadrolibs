@@ -47,7 +47,8 @@ public:
   size_t numberOfIndices;
 };
 
-SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private) {
+SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private)
+{
   setRenderPass(SolidPass);
 }
 
@@ -143,12 +144,12 @@ void SphereGeometry::update()
     if (!d->program->link())
       cout << d->program->error() << endl;
 
-/*
-    d->program.detachShader(d->vertexShader);
-    d->program.detachShader(d->fragmentShader);
-    d->vertexShader.cleanup();
-    d->fragmentShader.cleanup();
-    */
+    /*
+        d->program.detachShader(d->vertexShader);
+        d->program.detachShader(d->fragmentShader);
+        d->vertexShader.cleanup();
+        d->fragmentShader.cleanup();
+        */
   }
 }
 
@@ -177,8 +178,8 @@ void SphereGeometry::render(const Camera& camera)
   if (!d->program->enableAttributeArray("color"))
     cout << d->program->error() << endl;
   if (!d->program->useAttributeArray("color", ColorTextureVertex::colorOffset(),
-                                    sizeof(ColorTextureVertex), UCharType, 3,
-                                    ShaderProgram::Normalize)) {
+                                     sizeof(ColorTextureVertex), UCharType, 3,
+                                     ShaderProgram::Normalize)) {
     cout << d->program->error() << endl;
   }
   if (!d->program->enableAttributeArray("texCoordinate"))
@@ -193,7 +194,8 @@ void SphereGeometry::render(const Camera& camera)
   if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
     cout << d->program->error() << endl;
   }
-  if (!d->program->setUniformValue("projection", camera.projection().matrix())) {
+  if (!d->program->setUniformValue("projection",
+                                   camera.projection().matrix())) {
     cout << d->program->error() << endl;
   }
   if (!d->program->setUniformValue("opacity", m_opacity)) {
@@ -254,25 +256,56 @@ std::multimap<float, Identifier> SphereGeometry::hits(
 Array<Identifier> SphereGeometry::areaHits(const Frustrum& f) const
 {
   Array<Identifier> result;
-  // Check for intersection.
-  for (size_t i = 0; i < m_spheres.size(); ++i) {
-    const SphereColor& sphere = m_spheres[i];
+  if (f.planes[0] == Vector3f::Zero()) {
+    // Orthographic: simple axis-aligned AABB test
+    Vector3f minPoint = f.points[0];
+    Vector3f maxPoint = f.points[0];
+    for (int i = 1; i < 8; ++i) {
+      minPoint.x() = std::min(minPoint.x(), f.points[i].x());
+      minPoint.y() = std::min(minPoint.y(), f.points[i].y());
+      minPoint.z() = std::min(minPoint.z(), f.points[i].z());
+      maxPoint.x() = std::max(maxPoint.x(), f.points[i].x());
+      maxPoint.y() = std::max(maxPoint.y(), f.points[i].y());
+      maxPoint.z() = std::max(maxPoint.z(), f.points[i].z());
+    }
 
-    int in = 0;
-    for (in = 0; in < 4; ++in) {
-      float dist = (sphere.center - f.points[2 * in]).dot(f.planes[in]);
-      if (dist > 0.0f) {
-        // Outside of our frustrum, break.
-        break;
+    for (size_t i = 0; i < m_spheres.size(); ++i) {
+      const SphereColor& sphere = m_spheres[i];
+      if (sphere.center.x() >= minPoint.x() &&
+          sphere.center.x() <= maxPoint.x() &&
+          sphere.center.y() >= minPoint.y() &&
+          sphere.center.y() <= maxPoint.y() &&
+          sphere.center.z() >= minPoint.z() &&
+          sphere.center.z() <= maxPoint.z()) {
+        Identifier id;
+        id.molecule = m_identifier.molecule;
+        id.type = m_identifier.type;
+        id.index = m_indices[i];
+        result.push_back(id);
       }
     }
-    if (in == 4) {
-      // The center is within the four planes that make our frustrum - hit.
-      Identifier id;
-      id.molecule = m_identifier.molecule;
-      id.type = m_identifier.type;
-      id.index = m_indices[i];
-      result.push_back(id);
+  } else { // perspective
+
+    // Check for intersection.
+    for (size_t i = 0; i < m_spheres.size(); ++i) {
+      const SphereColor& sphere = m_spheres[i];
+
+      int in = 0;
+      for (in = 0; in < 4; ++in) {
+        float dist = (sphere.center - f.points[2 * in]).dot(f.planes[in]);
+        if (dist > 0.0f) {
+          // Outside of our frustrum, break.
+          break;
+        }
+      }
+      if (in == 4) {
+        // The center is within the four planes that make our frustrum - hit.
+        Identifier id;
+        id.molecule = m_identifier.molecule;
+        id.type = m_identifier.type;
+        id.index = m_indices[i];
+        result.push_back(id);
+      }
     }
   }
   return result;
@@ -292,4 +325,4 @@ void SphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

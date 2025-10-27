@@ -15,9 +15,10 @@
 #include <QtCore/QDebug>
 
 #include <avogadro/core/molecule.h>
-#include <avogadro/vtk/chartwidget.h>
+#include <avogadro/qtgui/chartwidget.h>
 
 using Avogadro::Core::Molecule;
+using Avogadro::QtGui::ChartWidget;
 
 namespace Avogadro::QtPlugins {
 
@@ -89,6 +90,7 @@ SpectraDialog::SpectraDialog(QWidget* parent)
 
   // connections for options
   connect(m_ui->push_options, SIGNAL(clicked()), this, SLOT(toggleOptions()));
+  connect(m_ui->push_exportData, SIGNAL(clicked()), this, SLOT(exportData()));
   connect(m_ui->push_colorBackground, SIGNAL(clicked()), this,
           SLOT(changeBackgroundColor()));
   connect(m_ui->push_colorForeground, SIGNAL(clicked()), this,
@@ -141,6 +143,13 @@ void SpectraDialog::disconnectOptions()
              SLOT(updatePlot()));
   disconnect(m_ui->peakWidth, SIGNAL(valueChanged(double)), this,
              SLOT(updatePlot()));
+}
+
+void SpectraDialog::mouseDoubleClickEvent(QMouseEvent* e)
+{
+  auto* chart = chartWidget();
+  if (chart)
+    chart->resetZoom();
 }
 
 void SpectraDialog::updateElementCombo()
@@ -415,6 +424,9 @@ void SpectraDialog::changeSpectra()
     m_ui->yAxisMinimum->setMinimum(-maxIntensity * 2.0);
     m_ui->yAxisMinimum->setValue(-maxIntensity);
   }
+  if (type == SpectraType::Infrared) {
+    m_ui->yAxisMaximum->setValue(102.0); // transmission
+  }
 
   updatePlot();
   connectOptions();
@@ -491,14 +503,26 @@ void SpectraDialog::readSettings()
 void SpectraDialog::changeBackgroundColor()
 {
   QSettings settings;
-  QColor current = settings.value("backgroundColor", white).value<QColor>();
+  QColor current =
+    settings.value("spectra/backgroundColor", white).value<QColor>();
   QColor color =
-    QColorDialog::getColor(current, this, tr("Select Background Color"));
+    QColorDialog::getColor(current, this, tr("Select Background Color"),
+                           QColorDialog::ShowAlphaChannel);
   if (color.isValid() && color != current) {
     settings.setValue("spectra/backgroundColor", color);
+    auto* chart = chartWidget();
+    if (chart != nullptr) {
+      QtGui::color4ub ubColor = { static_cast<unsigned char>(color.red()),
+                                  static_cast<unsigned char>(color.green()),
+                                  static_cast<unsigned char>(color.blue()),
+                                  static_cast<unsigned char>(color.alpha()) };
+      chart->setBackgroundColor(ubColor);
+    }
     updatePlot();
   }
 }
+
+void SpectraDialog::exportData() {}
 
 void SpectraDialog::changeForegroundColor()
 {
@@ -578,6 +602,7 @@ void SpectraDialog::updatePlot()
   QString yTitle;
   // TODO: switch units for electronic and CD
   QString xWave = tr("Wavelength (nm)");
+  QString xFreq = tr("Frequency (Hz)");
 
   bool transmission = false;
   // get the raw data from the spectra map
@@ -696,7 +721,7 @@ void SpectraDialog::updatePlot()
   // for some spectra, we need to take small steps, so we scale the x axis
   float xScale = 1.0;
   if (type == SpectraType::Electronic || type == SpectraType::CircularDichroism)
-    xScale = 1.0f / 0.05f;
+    xScale = 1.0f / 0.01f;
   else if (type == SpectraType::NMR)
     xScale = 1.0f / 0.01f;
 
@@ -729,25 +754,57 @@ void SpectraDialog::updatePlot()
 
   auto* chart = chartWidget();
   chart->clearPlots();
-  chart->setXAxisTitle(xTitle.toStdString());
-  chart->setYAxisTitle(yTitle.toStdString());
+  chart->setXAxisTitle(xTitle);
+  chart->setYAxisTitle(yTitle);
   unsigned int fontSize = m_ui->fontSizeCombo->currentText().toInt();
   chart->setFontSize(fontSize);
   float lineWidth = m_ui->lineWidthSpinBox->value();
   chart->setLineWidth(lineWidth);
+  // background color
+  QColor backgroundColor =
+    settings.value("spectra/backgroundColor", white).value<QColor>();
+  QtGui::color4ub ubColor = {
+    static_cast<unsigned char>(backgroundColor.red()),
+    static_cast<unsigned char>(backgroundColor.green()),
+    static_cast<unsigned char>(backgroundColor.blue()),
+    static_cast<unsigned char>(backgroundColor.alpha())
+  };
+  chart->setBackgroundColor(ubColor);
+  // axis color
+  QColor axisColor =
+    settings.value("spectra/foregroundColor", black).value<QColor>();
+  QtGui::color4ub axisColor4ub = {
+    static_cast<unsigned char>(axisColor.red()),
+    static_cast<unsigned char>(axisColor.green()),
+    static_cast<unsigned char>(axisColor.blue()),
+    static_cast<unsigned char>(axisColor.alpha())
+  };
+  chart->setAxisColor(QtGui::ChartWidget::Axis::x, axisColor4ub);
+  chart->setAxisColor(QtGui::ChartWidget::Axis::y, axisColor4ub);
 
   // get the spectra color
   QColor spectraColor =
     settings.value("spectra/calculatedColor", black).value<QColor>();
-  VTK::color4ub calculatedColor = {
+  QtGui::color4ub calculatedColor = {
     static_cast<unsigned char>(spectraColor.red()),
     static_cast<unsigned char>(spectraColor.green()),
     static_cast<unsigned char>(spectraColor.blue()),
     static_cast<unsigned char>(spectraColor.alpha())
   };
-  chart->addPlot(xData, yData, calculatedColor);
-  VTK::color4ub importedColor = { 255, 0, 0, 255 };
-  chart->addSeries(yStick, importedColor);
+  chart->addPlot(xData, yData, calculatedColor, xTitle, tr("Smoothed"));
+  // todo add hide/show raw data series
+  QtGui::color4ub rawColor = { 255, 0, 0, 255 };
+  chart->addSeries(yStick, rawColor, tr("Raw"));
+
+  QColor importedColor =
+    settings.value("spectra/importedColor", red).value<QColor>();
+  QtGui::color4ub importedColor4ub = {
+    static_cast<unsigned char>(importedColor.red()),
+    static_cast<unsigned char>(importedColor.green()),
+    static_cast<unsigned char>(importedColor.blue()),
+    static_cast<unsigned char>(importedColor.alpha())
+  };
+  // TODO: add imported data here
 
   // axis limits
   float xAxisMin = m_ui->xAxisMinimum->value();
@@ -758,11 +815,19 @@ void SpectraDialog::updatePlot()
   chart->setXAxisLimits(xAxisMin, xAxisMax);
   chart->setYAxisLimits(yAxisMin, yAxisMax);
 
+  chart->setAxisDigits(QtGui::ChartWidget::Axis::x, 4);
+
+  // set the location if needed
+  if (type == SpectraType::Infrared) {
+    chart->setLegendLocation(QtGui::ChartWidget::LegendLocation::BottomRight);
+  }
+
   // re-enable the options
   connectOptions();
+  raise();
 }
 
-VTK::ChartWidget* SpectraDialog::chartWidget()
+QtGui::ChartWidget* SpectraDialog::chartWidget()
 {
   return m_ui->plot;
 }

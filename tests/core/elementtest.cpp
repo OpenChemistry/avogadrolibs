@@ -10,6 +10,7 @@
 #include <avogadro/core/utilities.h>
 
 using Avogadro::Core::Elements;
+using namespace std::string_literals;
 
 TEST(ElementTest, symbolSingles)
 {
@@ -31,9 +32,9 @@ TEST(ElementTest, symbolDoubles)
 
 TEST(ElementTest, names)
 {
-  EXPECT_STREQ(Elements::name(1), "Hydrogen");
-  EXPECT_STREQ(Elements::name(6), "Carbon");
-  EXPECT_STREQ(Elements::name(Elements::atomicNumberFromSymbol("Fe")), "Iron");
+  EXPECT_EQ(Elements::name(1), "Hydrogen"s);
+  EXPECT_EQ(Elements::name(6), "Carbon"s);
+  EXPECT_EQ(Elements::name(Elements::atomicNumberFromSymbol("Fe")), "Iron"s);
 }
 
 TEST(ElementTest, masses)

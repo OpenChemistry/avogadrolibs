@@ -22,7 +22,7 @@ include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "1")
-set(AvogadroLibs_VERSION_MINOR   "99")
+set(AvogadroLibs_VERSION_MINOR   "102")
 set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
@@ -57,7 +57,6 @@ endif()
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
 option(TEST_QTGL "Build the Qt OpenGL test application" OFF)
-option(ENABLE_TRANSLATIONS "Enable building translations with Qt5 Linguist" OFF)
 option(USE_OPENGL "Enable libraries that use OpenGL" ON)
 option(USE_HDF5 "Enable optional HDF5 features" OFF)
 option(USE_QT "Enable libraries that use Qt 5 or 6" ON)
@@ -65,7 +64,7 @@ option(USE_VTK "Enable libraries that use VTK" OFF)
 option(USE_LIBARCHIVE "Enable optional Libarchive features" ON)
 option(USE_LIBMSYM "Enable optional features using libmsym" ON)
 option(USE_SPGLIB "Enable optional features using spglib" ON)
-option(USE_MMTF "Enable optional features using mmtf" ON)
+option(USE_MMTF "Enable optional features using mmtf" OFF) # MMTF is no longer maintained
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
 option(USE_EXTERNAL_NLOHMANN "Use an externally-provided version of the nlohmann JSON library" OFF)
 option(USE_EXTERNAL_PUGIXML "Use an externally-provided version of pugixml" OFF)
@@ -95,10 +94,6 @@ endif()
 
 if(USE_PYTHON)
   add_subdirectory(python)
-endif()
-
-if(ENABLE_TRANSLATIONS)
-  find_package(Qt5LinguistTools)
 endif()
 
 # SKBUILD is set for binary wheel

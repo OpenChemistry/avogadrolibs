@@ -68,4 +68,4 @@ void InputGeneratorDialog::setMolecule(Molecule* mol)
   ui->widget->setMolecule(mol);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

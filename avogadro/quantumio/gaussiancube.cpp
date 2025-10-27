@@ -9,8 +9,8 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 namespace Avogadro::QuantumIO {
 
@@ -62,8 +62,8 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
-    dim(i) = Core::lexicalCast<int>(list[0]);
-    spacing(i) = Core::lexicalCast<double>(list[i + 1]);
+    dim(i) = Core::lexicalCast<int>(list[0]).value_or(0);
+    spacing(i) = Core::lexicalCast<double>(list[i + 1]).value_or(0.0);
   }
 
   // Geometry block
@@ -72,10 +72,10 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
-    auto atomNum = Core::lexicalCast<short int>(list[0]);
+    auto atomNum = Core::lexicalCast<short int>(list[0]).value_or(0);
     Core::Atom a = molecule.addAtom(static_cast<unsigned char>(atomNum));
     for (unsigned int j = 2; j < 5; ++j)
-      pos(j - 2) = Core::lexicalCast<double>(list[j]);
+      pos(j - 2) = Core::lexicalCast<double>(list[j]).value_or(0.0);
     pos = pos * BOHR_TO_ANGSTROM;
     a.setPosition3d(pos);
   }
@@ -104,12 +104,14 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   for (unsigned int i = 0; i < nCubes; ++i) {
     // Get a cube object from molecule
     Core::Cube* cube = molecule.addCube();
+    cube->setCubeType(Core::Cube::Type::FromFile);
 
     cube->setLimits(min, dim, spacing);
     std::vector<float> values;
     // push_back is slow for this, resize vector first
     values.resize(dim(0) * dim(1) * dim(2));
-    for (float & value : values)
+
+    for (float& value : values)
       in >> value;
     // clear buffer, if more than one cube
     getline(in, line);
@@ -121,14 +123,13 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
 
 void writeFixedFloat(std::ostream& outStream, Real number)
 {
-  outStream << std::setw(12) << std::fixed << std::right 
-    << std::setprecision(6) << number;
+  outStream << std::setw(12) << std::fixed << std::right << std::setprecision(6)
+            << number;
 }
 
 void writeFixedInt(std::ostream& outStream, unsigned int number)
 {
-  outStream << std::setw(5) << std::fixed << std::right
-            << number;
+  outStream << std::setw(5) << std::fixed << std::right << number;
 }
 
 bool GaussianCube::write(std::ostream& outStream, const Core::Molecule& mol)
@@ -136,7 +137,8 @@ bool GaussianCube::write(std::ostream& outStream, const Core::Molecule& mol)
   if (mol.cubeCount() == 0)
     return false; // no cubes to write
 
-  const Core::Cube* cube = mol.cube(0); // eventually need to write all the cubes
+  const Core::Cube* cube =
+    mol.cube(0); // eventually need to write all the cubes
   Vector3 min = cube->min() * ANGSTROM_TO_BOHR;
   Vector3 spacing = cube->spacing() * ANGSTROM_TO_BOHR;
   Vector3i dim = cube->dimensions(); // number of points in each direction
@@ -152,29 +154,29 @@ bool GaussianCube::write(std::ostream& outStream, const Core::Molecule& mol)
   // Write out the number of atoms and the minimum coordinates
   size_t numAtoms = mol.atomCount();
   writeFixedInt(outStream, numAtoms);
-  writeFixedFloat(outStream,min[0]);
-  writeFixedFloat(outStream,min[1]);
-  writeFixedFloat(outStream,min[2]);
-  writeFixedInt(outStream,1); // one value per point (i.e., not vector)
+  writeFixedFloat(outStream, min[0]);
+  writeFixedFloat(outStream, min[1]);
+  writeFixedFloat(outStream, min[2]);
+  writeFixedInt(outStream, 1); // one value per point (i.e., not vector)
   outStream << "\n";
 
   // now write the size and spacing of the cube
-  writeFixedInt(outStream,dim[0]);
-  writeFixedFloat(outStream,spacing[0]);
-  writeFixedFloat(outStream,0.0);
-  writeFixedFloat(outStream,0.0);
+  writeFixedInt(outStream, dim[0]);
+  writeFixedFloat(outStream, spacing[0]);
+  writeFixedFloat(outStream, 0.0);
+  writeFixedFloat(outStream, 0.0);
   outStream << "\n";
 
-  writeFixedInt(outStream,dim[1]);
-  writeFixedFloat(outStream,0.0);
-  writeFixedFloat(outStream,spacing[1]);
-  writeFixedFloat(outStream,0.0);
+  writeFixedInt(outStream, dim[1]);
+  writeFixedFloat(outStream, 0.0);
+  writeFixedFloat(outStream, spacing[1]);
+  writeFixedFloat(outStream, 0.0);
   outStream << "\n";
 
-  writeFixedInt(outStream,dim[2]);
-  writeFixedFloat(outStream,0.0);
-  writeFixedFloat(outStream,0.0);
-  writeFixedFloat(outStream,spacing[2]);
+  writeFixedInt(outStream, dim[2]);
+  writeFixedFloat(outStream, 0.0);
+  writeFixedFloat(outStream, 0.0);
+  writeFixedFloat(outStream, spacing[2]);
   outStream << "\n";
 
   for (size_t i = 0; i < numAtoms; ++i) {
@@ -184,18 +186,18 @@ bool GaussianCube::write(std::ostream& outStream, const Core::Molecule& mol)
       return false;
     }
 
-    writeFixedInt(outStream,static_cast<int>(atom.atomicNumber()));
-    writeFixedFloat(outStream,0.0); // charge
-    writeFixedFloat(outStream,atom.position3d()[0] * ANGSTROM_TO_BOHR);
-    writeFixedFloat(outStream,atom.position3d()[1] * ANGSTROM_TO_BOHR);
-    writeFixedFloat(outStream,atom.position3d()[2] * ANGSTROM_TO_BOHR);
+    writeFixedInt(outStream, static_cast<int>(atom.atomicNumber()));
+    writeFixedFloat(outStream, 0.0); // charge
+    writeFixedFloat(outStream, atom.position3d()[0] * ANGSTROM_TO_BOHR);
+    writeFixedFloat(outStream, atom.position3d()[1] * ANGSTROM_TO_BOHR);
+    writeFixedFloat(outStream, atom.position3d()[2] * ANGSTROM_TO_BOHR);
     outStream << "\n";
   }
 
   // write the raw cube values
   const std::vector<float>* values = cube->data();
   for (unsigned int i = 0; i < values->size(); ++i) {
-    outStream << std::setw(13) << std::right << std::scientific 
+    outStream << std::setw(13) << std::right << std::scientific
               << std::setprecision(5) << (*values)[i];
     if (i % 6 == 5)
       outStream << "\n";
@@ -204,4 +206,4 @@ bool GaussianCube::write(std::ostream& outStream, const Core::Molecule& mol)
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO

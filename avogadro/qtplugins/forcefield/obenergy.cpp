@@ -32,11 +32,12 @@ public:
   // OBMol and OBForceField are owned by this class
   OBMol* m_obmol = nullptr;
   OBForceField* m_forceField = nullptr;
+  bool setup = false;
 
   ~Private()
   {
-    delete m_obmol;
-    delete m_forceField;
+    if (m_obmol != nullptr)
+      delete m_obmol;
   }
 };
 
@@ -91,11 +92,13 @@ OBEnergy::OBEnergy(const std::string& method)
   d->m_forceField = static_cast<OBForceField*>(
     OBPlugin::GetPlugin("forcefields", method.c_str()));
 
+#ifndef NDEBUG
   qDebug() << "OBEnergy: method: " << method.c_str();
   if (d->m_forceField == nullptr) {
     qDebug() << "OBEnergy: method not found: " << method.c_str();
     qDebug() << OBPlugin::ListAsString("forcefields").c_str();
   }
+#endif
 
   if (method == "UFF") {
     m_description = tr("Universal Force Field");
@@ -178,12 +181,12 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
 
   // make sure we can set up the force field
   if (d->m_forceField != nullptr) {
-    d->m_forceField->Setup(*d->m_obmol);
+    d->setup = d->m_forceField->Setup(*d->m_obmol);
   } else {
     d->m_forceField = static_cast<OBForceField*>(
       OBPlugin::GetPlugin("forcefields", m_identifier.c_str()));
     if (d->m_forceField != nullptr) {
-      d->m_forceField->Setup(*d->m_obmol);
+      d->setup = d->m_forceField->Setup(*d->m_obmol);
     }
   }
 }
@@ -204,6 +207,10 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
     d->m_forceField->SetCoordinates(*d->m_obmol);
     energy = d->m_forceField->Energy(false);
   }
+
+  // make sure to add in any constraint penalties
+  energy += constraintEnergies(x);
+
   return energy;
 }
 
@@ -233,6 +240,8 @@ void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
     grad *= -1; // OpenBabel outputs forces, not grads
     cleanGradients(grad);
+    // add in any constraints
+    constraintGradients(x, grad);
   }
 }
 

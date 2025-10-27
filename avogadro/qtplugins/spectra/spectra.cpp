@@ -11,8 +11,8 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <avogadro/vtk/chartdialog.h>
-#include <avogadro/vtk/chartwidget.h>
+#include <avogadro/qtgui/chartdialog.h>
+#include <avogadro/qtgui/chartwidget.h>
 
 #include <QAction>
 #include <QDebug>
@@ -40,7 +40,7 @@ QList<QAction*> Spectra::actions() const
 QStringList Spectra::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Analysis");
+  path << tr("&Analyze");
   return path;
 }
 

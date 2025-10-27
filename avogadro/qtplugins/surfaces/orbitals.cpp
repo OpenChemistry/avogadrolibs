@@ -28,8 +28,8 @@ const double cubePadding = 5.0;
 const int smoothingPasses = 1;
 
 Orbitals::Orbitals(QObject* p)
-  : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr),
-    m_action(new QAction(this))
+  : ExtensionPlugin(p), m_action(new QAction(this)), m_molecule(nullptr),
+    m_dialog(nullptr)
 {
   m_action->setEnabled(false);
   m_action->setText(tr("Molecular Orbitals…"));
@@ -59,7 +59,7 @@ QList<QAction*> Orbitals::actions() const
 QStringList Orbitals::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Analysis");
+  path << tr("&Analyze");
   return path;
 }
 
@@ -134,7 +134,7 @@ void Orbitals::loadOrbitals()
   m_dialog->show();
 }
 
-void Orbitals::moleculeChanged(unsigned int changes)
+void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
 {
   if (m_molecule == nullptr)
     return;
@@ -213,15 +213,15 @@ void Orbitals::precalculateOrbitals()
   // ....   3      2     1    1     2      3    ... << priorities
 
   // Determine range of precalculated orbitals
-  int startIndex =
+  unsigned int startIndex =
     (m_dialog->precalcLimit()) ? homo - (m_dialog->precalcRange() / 2) : 0;
-  if (startIndex < 0) {
+  if (startIndex > homo) { // overflow check
     startIndex = 0;
   }
-  int endIndex = (m_dialog->precalcLimit())
-                   ? homo + (m_dialog->precalcRange() / 2) - 1
-                   : m_basis->molecularOrbitalCount();
-  if (endIndex > m_basis->molecularOrbitalCount() - 1) {
+  unsigned int endIndex = (m_dialog->precalcLimit())
+                            ? homo + (m_dialog->precalcRange() / 2) - 1
+                            : m_basis->molecularOrbitalCount();
+  if (endIndex >= m_basis->molecularOrbitalCount()) {
     endIndex = m_basis->molecularOrbitalCount() - 1;
   }
 

@@ -55,4 +55,4 @@ void VolumeScalingDialog::factorEdited()
   m_ui->newVolume->blockSignals(false);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

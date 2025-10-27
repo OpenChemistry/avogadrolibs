@@ -22,11 +22,14 @@ namespace {
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/neighborperceiver.h>
+
 #include <avogadro/qtgui/gaussiansetconcurrent.h>
 #include <avogadro/qtgui/meshgenerator.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/slatersetconcurrent.h>
+#include <avogadro/qtgui/timedprogressdialog.h>
+
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 
@@ -37,12 +40,14 @@ namespace {
 #include <avogadro/quantumio/gamessus.h>
 #include <avogadro/quantumio/gaussiancube.h>
 #include <avogadro/quantumio/gaussianfchk.h>
+#include <avogadro/quantumio/genericjson.h>
 #include <avogadro/quantumio/genericoutput.h>
 #include <avogadro/quantumio/molden.h>
 #include <avogadro/quantumio/mopacaux.h>
 #include <avogadro/quantumio/nwchemjson.h>
 #include <avogadro/quantumio/nwchemlog.h>
 #include <avogadro/quantumio/orca.h>
+#include <avogadro/quantumio/qcschema.h>
 
 #include <QAction>
 #include <QOpenGLFramebufferObject>
@@ -54,7 +59,6 @@ namespace {
 #include <QtCore/QProcess>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressDialog>
 
 #include <QGuiApplication>
 #include <QScreen>
@@ -92,12 +96,14 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   Io::FileFormatManager::registerFormat(new QuantumIO::GAMESSUSOutput);
   Io::FileFormatManager::registerFormat(new QuantumIO::GaussianFchk);
   Io::FileFormatManager::registerFormat(new QuantumIO::GaussianCube);
+  Io::FileFormatManager::registerFormat(new QuantumIO::GenericJson);
   Io::FileFormatManager::registerFormat(new QuantumIO::GenericOutput);
   Io::FileFormatManager::registerFormat(new QuantumIO::MoldenFile);
   Io::FileFormatManager::registerFormat(new QuantumIO::MopacAux);
   Io::FileFormatManager::registerFormat(new QuantumIO::NWChemJson);
   Io::FileFormatManager::registerFormat(new QuantumIO::NWChemLog);
   Io::FileFormatManager::registerFormat(new QuantumIO::ORCAOutput);
+  Io::FileFormatManager::registerFormat(new QuantumIO::QCSchema);
 }
 
 Surfaces::~Surfaces()
@@ -175,15 +181,15 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
       // modify HOMO / LUMO based on "+ number" or "- number"
       if (expression.contains('-')) {
         modifier = expression.remove('-');
-        bool ok;
-        int n = modifier.toInt(&ok);
-        if (ok)
+        bool ok1;
+        int n = modifier.toInt(&ok1);
+        if (ok1)
           index = index - n;
       } else if (expression.contains('+')) {
         modifier = expression.remove('+');
-        bool ok;
-        int n = modifier.toInt(&ok);
-        if (ok)
+        bool ok2;
+        int n = modifier.toInt(&ok2);
+        if (ok2)
           index = index + n;
       }
       index = index - 1; // start from zero
@@ -228,16 +234,20 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
     m_molecule->disconnect(this);
   }
 
-  if (mol->basisSet()) {
-    m_basis = mol->basisSet();
-  } else if (mol->cubes().size() != 0) {
-    m_cubes = mol->cubes();
-  }
-
   m_cube = nullptr;
   m_mesh1 = nullptr;
   m_mesh2 = nullptr;
   m_molecule = mol;
+
+  if (mol->basisSet()) {
+    m_basis = mol->basisSet();
+  } else if (mol->cubes().size() != 0) {
+    m_cubes = mol->cubes();
+    // calculate the mesh for the first cube
+    if (m_cubes.size() > 0) {
+      calculateCube(0, m_isoValue);
+    }
+  }
 
   if (m_molecule != nullptr) {
     connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
@@ -260,7 +270,7 @@ QList<QAction*> Surfaces::actions() const
 QStringList Surfaces::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Analysis");
+  path << tr("&Analyze");
   return path;
 }
 
@@ -290,8 +300,18 @@ void Surfaces::surfacesActivated()
   if (m_cubes.size() > 0) {
     QStringList cubeNames;
     for (auto* cube : m_cubes) {
-      if (cube->cubeType() == Core::Cube::Type::FromFile)
-        cubeNames << cube->name().c_str();
+      if (cube->cubeType() == Core::Cube::Type::FromFile) {
+        // check if there's a name
+        if (cube->name().empty()) {
+          // use a numbered name
+          int number = 1;
+          QString name;
+          name = tr("Cube %1", "3D Volume Data Set").arg(number);
+          cubeNames << name;
+        } else {
+          cubeNames << cube->name().c_str();
+        }
+      }
     }
     m_dialog->setupCubes(cubeNames);
   }
@@ -329,7 +349,7 @@ float Surfaces::resolution(float specified)
     }
   }
 
-  r = std::max(minimum, std::min(maximum, r));
+  r = std::clamp(r, minimum, maximum);
   return r;
 }
 
@@ -385,6 +405,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
         break;
       case SolventAccessible:
         m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
+        break;
       case SolventExcluded:
         probeRadius = 1.4;
         m_cube->setCubeType(Core::Cube::Type::SolventExcluded);
@@ -408,7 +429,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
         max_radius = radius;
     }
 
-    double padding = max_radius + probeRadius;
+    double padding = max_radius + probeRadius + 0.2;
     m_cube->setLimits(*m_molecule, resolution(defaultResolution), padding);
     m_cube->fill(-1.0);
 
@@ -559,7 +580,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
 
   // TODO: Check to see if this cube or surface has already been computed
   if (!m_progressDialog) {
-    m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
+    m_progressDialog =
+      new QtGui::TimedProgressDialog(qobject_cast<QWidget*>(parent()));
     m_progressDialog->setWindowModality(Qt::NonModal);
     connectSlots = true;
   }

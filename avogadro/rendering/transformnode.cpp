@@ -7,12 +7,8 @@
 
 namespace Avogadro::Rendering {
 
-TransformNode::TransformNode(GroupNode* p) : GroupNode(p)
-{
-}
+TransformNode::TransformNode(GroupNode* p) : GroupNode(p) {}
 
-TransformNode::~TransformNode()
-{
-}
+TransformNode::~TransformNode() {}
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

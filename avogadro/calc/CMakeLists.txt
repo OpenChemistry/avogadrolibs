@@ -6,7 +6,10 @@ avogadro_headers(Calc
   defaultmodel.h
   energycalculator.h
   energymanager.h
+  gradients.h
   lennardjones.h
+  uff.h
+  uffdata.h
 )
 
 target_sources(Calc PRIVATE
@@ -16,6 +19,7 @@ target_sources(Calc PRIVATE
   energycalculator.cpp
   energymanager.cpp
   lennardjones.cpp
+  uff.cpp
 )
 
 avogadro_add_library(Calc)

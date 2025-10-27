@@ -29,4 +29,4 @@ Vector3f BezierGeometry::computeCurvePoint(
   return Q;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

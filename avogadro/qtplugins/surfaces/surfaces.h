@@ -16,7 +16,6 @@
 
 class QAction;
 class QDialog;
-class QProgressDialog;
 
 namespace Avogadro {
 
@@ -24,6 +23,7 @@ namespace QtGui {
 class MeshGenerator;
 class GaussianSetConcurrent;
 class SlaterSetConcurrent;
+class TimedProgressDialog;
 } // namespace QtGui
 
 namespace Core {
@@ -47,7 +47,7 @@ class Surfaces : public QtGui::ExtensionPlugin
 
 public:
   explicit Surfaces(QObject* parent = nullptr);
-  ~Surfaces();
+  ~Surfaces() override;
 
   enum Type
   {
@@ -114,7 +114,7 @@ private:
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 
   QList<QAction*> m_actions;
-  QProgressDialog* m_progressDialog = nullptr;
+  QtGui::TimedProgressDialog* m_progressDialog = nullptr;
 
   QtGui::Molecule* m_molecule = nullptr;
   Core::BasisSet* m_basis = nullptr;
@@ -134,8 +134,8 @@ private:
   QtGui::MeshGenerator* m_meshGenerator1 = nullptr;
   QtGui::MeshGenerator* m_meshGenerator2 = nullptr;
 
-  float m_isoValue = 0.01;
-  int m_smoothingPasses = 6;
+  float m_isoValue = 0.025;
+  int m_smoothingPasses = 2;
   int m_meshesLeft = 0;
 
   bool m_recordingMovie = false;

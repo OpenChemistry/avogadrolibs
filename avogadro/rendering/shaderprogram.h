@@ -190,7 +190,7 @@ inline bool ShaderProgram::setAttributeArray(const std::string& name,
   return setAttributeArrayInternal(name, &array[0], type, tupleSize, normalize);
 }
 
-} // End Rendering namespace
-} // End Avogadro namespace
+} // namespace Rendering
+} // namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_SHADERPROGRAM_H

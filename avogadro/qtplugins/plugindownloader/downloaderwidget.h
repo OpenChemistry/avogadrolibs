@@ -9,8 +9,10 @@
 #include <QtCore/QList>
 #include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
+#include <QtCore/QProcess>
 
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QProgressDialog>
 
 #include <nlohmann/json.hpp>
 
@@ -40,6 +42,9 @@ public slots:
   void getCheckedRepos();
   void handleRedirect();
   void unzipPlugin();
+
+  void installationFinished();
+  void cancelInstallation();
 
 private:
   struct repo
@@ -78,10 +83,18 @@ private:
   // check if we should install requirements.txt
   bool checkToInstall();
 
+  void installWithPixi(const QString& requirementFile);
+  void installWithConda(const QString& requirementFile);
+  void installWithPip(const QString& requirementFile);
+  QString findRequirementFile(const QString& destinationDir);
+
   std::vector<repo> m_repoList;
-  Ui::DownloaderWidget* m_ui;
-  QNetworkAccessManager* m_NetworkAccessManager;
-  QNetworkReply* m_reply;
+  Ui::DownloaderWidget* m_ui = nullptr;
+  QNetworkAccessManager* m_NetworkAccessManager = nullptr;
+  QNetworkReply* m_reply = nullptr;
+  QProcess* m_installerProcess = nullptr;
+  QProgressDialog* m_progressDialog = nullptr;
+
   /** Holds a node of JSON results */
   nlohmann::json m_root;
   /** Used to parse JSON results */

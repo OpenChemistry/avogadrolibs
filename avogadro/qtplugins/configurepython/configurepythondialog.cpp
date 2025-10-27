@@ -210,7 +210,9 @@ void ConfigurePythonDialog::setOptions(const QStringList& options)
 
 void ConfigurePythonDialog::optionChanged(int index)
 {
-  if (index == m_ui->environmentCombo->count() - 1) {
+  // if there's only one choice, check if it's "Other…"
+  if ((index == m_ui->environmentCombo->count() - 1) ||
+      m_ui->environmentCombo->currentText() == tr("Other…")) {
     // "Other…" selected
     m_ui->browseWidget->setEnabled(true);
     m_ui->browseWidget->show();

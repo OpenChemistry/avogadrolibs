@@ -5,6 +5,7 @@
 
 #include "pdbformat.h"
 
+#include "avogadro/core/avogadrocore.h"
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
@@ -50,6 +51,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   Array<Vector3> altAtomPositions;
 
   while (getline(in, buffer)) { // Read Each line one by one
+    if (!in.good())
+      break;
 
     if (startsWith(buffer, "ENDMDL")) {
       if (coordSet == 0) {
@@ -63,21 +66,37 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
     // e.g.   CRYST1    4.912    4.912    6.696  90.00  90.00 120.00 P1 1
     // https://www.wwpdb.org/documentation/file-format-content/format33/sect8.html
-    else if (startsWith(buffer, "CRYST1")) {
+    else if (startsWith(buffer, "CRYST1") && buffer.length() >= 55) {
       // PDB reports in degrees and Angstroms
       //   Avogadro uses radians internally
-      Real a = lexicalCast<Real>(buffer.substr(6, 9), ok);
-      Real b = lexicalCast<Real>(buffer.substr(15, 9), ok);
-      Real c = lexicalCast<Real>(buffer.substr(24, 9), ok);
-      Real alpha = lexicalCast<Real>(buffer.substr(33, 7), ok) * DEG_TO_RAD;
-      Real beta = lexicalCast<Real>(buffer.substr(40, 7), ok) * DEG_TO_RAD;
-      Real gamma = lexicalCast<Real>(buffer.substr(47, 8), ok) * DEG_TO_RAD;
+      auto a = lexicalCast<Real>(buffer.substr(6, 9));
+      auto b = lexicalCast<Real>(buffer.substr(15, 9));
+      auto c = lexicalCast<Real>(buffer.substr(24, 9));
+      auto alpha = lexicalCast<Real>(buffer.substr(33, 7));
+      auto beta = lexicalCast<Real>(buffer.substr(40, 7));
+      auto gamma = lexicalCast<Real>(buffer.substr(47, 8));
 
-      auto* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+      if (!a || !b || !c || !alpha || !beta || !gamma) {
+        appendError("Failed to parse CRYST1 :" + buffer);
+        return false;
+      }
+
+      auto* cell = new Core::UnitCell(*a, *b, *c, *alpha * DEG_TO_RAD,
+                                      *beta * DEG_TO_RAD, *gamma * DEG_TO_RAD);
+      if (!cell->isRegular()) {
+        appendError("CRYST1 does not give linear independent lattice vectors");
+        delete cell;
+        return false;
+      }
       mol.setUnitCell(cell);
     }
 
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
+      if (buffer.length() < 54) {
+        appendError("Error reading line.");
+        return false;
+      }
+
       // First we initialize the residue instance
       auto residueId = lexicalCast<size_t>(buffer.substr(22, 4), ok);
       if (!ok) {
@@ -198,6 +217,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     else if (startsWith(buffer, "CONECT")) {
+      if (buffer.length() < 16) {
+        appendError("Error reading line.");
+        return false;
+      }
+
       int a = lexicalCast<int>(buffer.substr(6, 5), ok);
       if (!ok) {
         appendError("Failed to parse bond connection a " + buffer.substr(6, 5));
@@ -231,13 +255,25 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           b = b - terCount;
           b = rawToAtomId[b];
 
-          if (a < b && a >= 0 && b >= 0) {
-            mol.Avogadro::Core::Molecule::addBond(a, b, 1);
+          if (a >= 0 && b >= 0) {
+            auto aIndex = static_cast<Avogadro::Index>(a);
+            auto bIndex = static_cast<Avogadro::Index>(b);
+            if (aIndex < mol.atomCount() && bIndex < mol.atomCount()) {
+              mol.Avogadro::Core::Molecule::addBond(aIndex, bIndex, 1);
+            } else {
+              appendError("Invalid bond connection: " + std::to_string(a) +
+                          " - " + std::to_string(b));
+            }
           }
         }
       }
     }
   } // End while loop
+
+  if (mol.atomCount() == 0) {
+    appendError("No atoms found in this file.");
+    return false;
+  }
 
   int count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;
   for (int c = 0; c < count; ++c) {
@@ -260,8 +296,12 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
   perceiveSubstitutedCations(mol);
-  SecondaryStructureAssigner ssa;
-  ssa.assign(&mol);
+
+  // if there are residue data, assign secondary structure
+  if (mol.residueCount() != 0) {
+    SecondaryStructureAssigner ssa;
+    ssa.assign(&mol);
+  }
 
   return true;
 } // End read

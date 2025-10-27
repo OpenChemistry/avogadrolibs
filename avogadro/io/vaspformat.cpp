@@ -61,9 +61,9 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Next line is scaling factor
   getline(inStream, line);
-  auto scalingFactor = lexicalCast<double>(line, ok);
+  const auto scalingFactor = lexicalCast<double>(line);
 
-  if (!ok) {
+  if (!scalingFactor) {
     appendError("Error: Could not convert scaling factor to double in POSCAR");
     return false;
   }
@@ -80,9 +80,15 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
       return false;
     }
     // UnitCell expects a matrix of this form
-    cellMat(0, i) = lexicalCast<double>(stringSplit.at(0)) * scalingFactor;
-    cellMat(1, i) = lexicalCast<double>(stringSplit.at(1)) * scalingFactor;
-    cellMat(2, i) = lexicalCast<double>(stringSplit.at(2)) * scalingFactor;
+    if (auto tmp =
+          lexicalCast<double>(stringSplit.begin(), stringSplit.end())) {
+      cellMat(0, i) = tmp->at(0) * *scalingFactor;
+      cellMat(1, i) = tmp->at(1) * *scalingFactor;
+      cellMat(2, i) = tmp->at(2) * *scalingFactor;
+    } else {
+      appendError("Error reading a lattice vector");
+      return false;
+    }
   }
 
   // Sometimes, atomic symbols go here.
@@ -103,7 +109,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
     // Assume atomic symbols are here and store them
     symbolsList = split(line, ' ');
     // Store atomic nums
-    for (auto & i : symbolsList)
+    for (auto& i : symbolsList)
       atomicNumbers.push_back(Elements::atomicNumberFromSymbol(i));
     // This next one should be atom types
     getline(inStream, line);
@@ -115,23 +121,25 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
     if (stringSplit.size() != 0) {
       string trimmedFormula = trimmed(stringSplit.at(0));
       // Let's replace all numbers with spaces
-      for (char & i : trimmedFormula) {
+      for (char& i : trimmedFormula) {
         if (isdigit(i))
           i = ' ';
       }
       // Now get the symbols with a simple space split
       symbolsList = split(trimmedFormula, ' ');
-      for (auto & i : symbolsList)
-        atomicNumbers.push_back(
-          Elements::atomicNumberFromSymbol(i));
+      for (auto& i : symbolsList)
+        atomicNumbers.push_back(Elements::atomicNumberFromSymbol(i));
     }
   }
 
   stringSplit = split(line, ' ');
   std::vector<unsigned int> atomCounts;
-  for (auto & i : stringSplit) {
-    auto atomCount = lexicalCast<unsigned int>(i);
-    atomCounts.push_back(atomCount);
+  if (auto tmp =
+        lexicalCast<unsigned int>(stringSplit.begin(), stringSplit.end())) {
+    atomCounts = std::move(*tmp);
+  } else {
+    appendError("Error reading numbers of atoms: " + line);
+    return false;
   }
 
   // If we never filled up the atomic numbers, fill them up
@@ -181,25 +189,34 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
         appendError("Error reading atomic coordinates in POSCAR");
         return false;
       }
-      Vector3 tmpAtom(lexicalCast<double>(stringSplit.at(0)),
-                      lexicalCast<double>(stringSplit.at(1)),
-                      lexicalCast<double>(stringSplit.at(2)));
-      atoms.push_back(tmpAtom);
+      if (auto tmp =
+            lexicalCast<double>(stringSplit.begin(), stringSplit.begin() + 3)) {
+        atoms.emplace_back(tmp->at(0), tmp->at(1), tmp->at(2));
+      } else {
+        appendError("Error reading atomic coordinates in POSCAR");
+        return false;
+      }
     }
   }
 
   // Let's make a unit cell
   auto* cell = new UnitCell(cellMat);
 
+  if (!cell->isRegular()) {
+    appendError("cell vectors are not linear independent");
+    delete cell;
+    return false;
+  }
+
   // If our atomic coordinates are fractional, convert them to Cartesian
   if (!cart) {
-    for (auto & atom : atoms)
+    for (auto& atom : atoms)
       atom = cell->toCartesian(atom);
   }
   // If they're cartesian, we just need to apply the scaling factor
   else {
-    for (auto & atom : atoms)
-      atom *= scalingFactor;
+    for (auto& atom : atoms)
+      atom *= *scalingFactor;
   }
 
   // If we made it this far, the read was a success!
@@ -247,7 +264,7 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   // A map of atomic symbols to their quantity.
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   std::map<unsigned char, size_t> composition;
-  for (unsigned char & atomicNumber : atomicNumbers) {
+  for (unsigned char& atomicNumber : atomicNumbers) {
     composition[atomicNumber]++;
   }
 
@@ -306,6 +323,8 @@ std::vector<std::string> PoscarFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("POSCAR");
+  ext.emplace_back("CONTCAR");
+  ext.emplace_back("vasp");
   return ext;
 }
 
@@ -334,7 +353,7 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   while (getline(inStream, buffer)) {
     // Checks whether the buffer object contains the lattice vectors keyword
-    if (strncmp(buffer.c_str(), latticeStr.c_str(), latticeStr.size()) == 0) {
+    if (buffer.substr(0, latticeStr.size()) == latticeStr) {
       // Checks whether lattice vectors have been already set. Reason being that
       // only the first occurrence denotes the true lattice vectors, and the
       // ones following these are vectors of the primitive cell.
@@ -343,52 +362,54 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
         for (int i = 0; i < 3; ++i) {
           getline(inStream, buffer);
           stringSplit = split(buffer, ' ');
+
+          auto x = lexicalCast<double>(
+            stringSplit.at(3).substr(0, stringSplit.at(3).size() - 1));
+          auto y = lexicalCast<double>(
+            stringSplit.at(4).substr(0, stringSplit.at(4).size() - 1));
+          auto z = lexicalCast<double>(
+            stringSplit.at(5).substr(0, stringSplit.at(5).size() - 1));
+
+          if (!x || !y || !z) {
+            appendError("Error reading a lattice vector");
+            return false;
+          }
+          Vector3 tmp(*x, *y, *z);
+
           if (stringSplit[0] == "A1") {
-            ax1 = Vector3(lexicalCast<double>(stringSplit.at(3).substr(
-                            0, stringSplit.at(3).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(4).substr(
-                            0, stringSplit.at(4).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(5).substr(
-                            0, stringSplit.at(5).size() - 1)));
+            ax1 = std::move(tmp);
             ax1Set = true;
           } else if (stringSplit[0] == "A2") {
-            ax2 = Vector3(lexicalCast<double>(stringSplit.at(3).substr(
-                            0, stringSplit.at(3).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(4).substr(
-                            0, stringSplit.at(4).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(5).substr(
-                            0, stringSplit.at(5).size() - 1)));
+            ax2 = std::move(tmp);
             ax2Set = true;
           } else if (stringSplit[0] == "A3") {
-            ax3 = Vector3(lexicalCast<double>(stringSplit.at(3).substr(
-                            0, stringSplit.at(3).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(4).substr(
-                            0, stringSplit.at(4).size() - 1)),
-                          lexicalCast<double>(stringSplit.at(5).substr(
-                            0, stringSplit.at(5).size() - 1)));
+            ax3 = std::move(tmp);
             ax3Set = true;
           }
         }
         // Checks whether all the three axis vectors have been read
         if (ax1Set && ax2Set && ax3Set) {
-          mol.setUnitCell(new UnitCell(ax1, ax2, ax3));
+          auto* cell = new UnitCell(ax1, ax2, ax3);
+          if (!cell->isRegular()) {
+            appendError("cell vectors are not linear independent");
+            return false;
+          }
+          mol.setUnitCell(cell);
         }
       }
     }
 
     // Checks whether the buffer object contains the POSITION keyword
-    else if (strncmp(buffer.c_str(), positionStr.c_str(), positionStr.size()) ==
-             0) {
+    else if (buffer.substr(0, positionStr.size()) == positionStr) {
       getline(inStream, buffer);
       // Double checks whether the succeeding line is a sequence of dashes
-      if (strncmp(buffer.c_str(), dashedStr.c_str(), dashedStr.size()) == 0) {
+      if (buffer.substr(0, dashedStr.size()) == dashedStr) {
         // natoms is not known, so the loop proceeds till the bottom dashed line
         // is encountered
         while (true) {
           getline(inStream, buffer);
           // Condition for encountering dashed line
-          if (strncmp(buffer.c_str(), dashedStr.c_str(), dashedStr.size()) ==
-              0) {
+          if (buffer.substr(0, dashedStr.size()) == dashedStr) {
             if (coordSet == 0) {
               mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
               positions.reserve(natoms);
@@ -400,9 +421,14 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
           }
           // Parsing the coordinates
           stringSplit = split(buffer, ' ');
-          Vector3 tmpAtom(lexicalCast<double>(stringSplit.at(0)),
-                          lexicalCast<double>(stringSplit.at(1)),
-                          lexicalCast<double>(stringSplit.at(2)));
+          Vector3 tmpAtom;
+          if (auto tmp = lexicalCast<double>(stringSplit.begin(),
+                                             stringSplit.begin() + 3)) {
+            tmpAtom << tmp->at(0), tmp->at(1), tmp->at(2);
+          } else {
+            appendError("Error reading atom position");
+            return false;
+          }
           if (coordSet == 0) {
             AtomTypeMap::const_iterator it;
             atomTypes.insert(
@@ -426,8 +452,9 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Set the custom element map if needed:
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (const auto & atomType : atomTypes) {
-      elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
+    for (const auto& atomType : atomTypes) {
+      elementMap.insert(
+        std::make_pair(atomType.second, "Atom " + atomType.first));
     }
     mol.setCustomElementMap(elementMap);
   }

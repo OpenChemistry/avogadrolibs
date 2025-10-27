@@ -63,4 +63,4 @@ void MoleQueueManager::updateQueueModel(const QJsonObject& json)
   emit queueListUpdated();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

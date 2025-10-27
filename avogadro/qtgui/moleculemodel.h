@@ -8,6 +8,7 @@
 
 #include "avogadroqtguiexport.h"
 
+#include <QIcon>
 #include <Eigen/Geometry>
 #include <QtCore/QAbstractItemModel>
 
@@ -67,10 +68,13 @@ public slots:
   void addItem(Avogadro::QtGui::Molecule* item);
   void removeItem(Avogadro::QtGui::Molecule* item);
   void itemChanged();
+  void loadIcons(bool darkMode);
 
 private:
   QList<Molecule*> m_molecules;
   QObject* m_activeMolecule;
+  QIcon m_plusIcon;
+  QIcon m_closeIcon;
 };
 
 } // namespace QtGui

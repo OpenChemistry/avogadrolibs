@@ -40,6 +40,16 @@ private:
   PropertyModel* m_model;
   void copySelectedRowsToClipboard();
   void openExportDialogBox();
+  void constrainSelectedRows();
+  void unconstrainSelectedRows();
+
+  void setFrozen(bool frozen);
+  void freezeAtom();
+  void unfreezeAtom();
+  void freezeX();
+  void freezeY();
+  void freezeZ();
+  void freezeAxis(int axis);
 };
 
 } // end namespace Avogadro

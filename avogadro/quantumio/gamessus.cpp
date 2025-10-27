@@ -56,16 +56,17 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
     } else if (Core::contains(buffer, "CHARGE OF MOLECULE")) {
       vector<string> parts = Core::split(buffer, '=');
       if (parts.size() == 2)
-        molecule.setData("totalCharge", Core::lexicalCast<int>(parts[1]));
+        molecule.setData("totalCharge",
+                         Core::lexicalCast<int>(parts[1]).value_or(0));
     } else if (Core::contains(buffer, "SPIN MULTIPLICITY")) {
       vector<string> parts = Core::split(buffer, '=');
       if (parts.size() == 2)
         molecule.setData("totalSpinMultiplicity",
-                         Core::lexicalCast<int>(parts[1]));
+                         Core::lexicalCast<int>(parts[1]).value_or(1));
     } else if (Core::contains(buffer, "NUMBER OF ELECTRONS")) {
       vector<string> parts = Core::split(buffer, '=');
       if (parts.size() == 2)
-        m_electrons = Core::lexicalCast<int>(parts[1]);
+        m_electrons = Core::lexicalCast<int>(parts[1]).value_or(0);
       else
         cout << "error" << buffer << endl;
     }
@@ -200,10 +201,10 @@ void GAMESSUSOutput::readBasisSet(std::istream& in)
       int numGTOs(0);
       while (parts.size() == 5 || parts.size() == 6) {
         ++numGTOs;
-        m_a.push_back(Core::lexicalCast<double>(parts[3]));
-        m_c.push_back(Core::lexicalCast<double>(parts[4]));
+        m_a.push_back(Core::lexicalCast<double>(parts[3]).value_or(0.0));
+        m_c.push_back(Core::lexicalCast<double>(parts[4]).value_or(0.0));
         if (shellType == GaussianSet::SP && parts.size() == 6)
-          m_csp.push_back(Core::lexicalCast<double>(parts[5]));
+          m_csp.push_back(Core::lexicalCast<double>(parts[5]).value_or(0.0));
         if (!getline(in, buffer))
           break;
         parts = Core::split(buffer, ' ');

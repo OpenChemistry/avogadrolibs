@@ -88,7 +88,7 @@ inline const char* customElementSymbol(unsigned char atomicNumber)
   return CustomElementSymbols[atomicNumber - CustomElementMin].c_str();
 }
 
-inline unsigned char* customElementColor(unsigned char atomicNumber)
+inline const unsigned char* customElementColor(unsigned char atomicNumber)
 {
   return Core::element_color[atomicNumber % element_count];
 }
@@ -112,7 +112,7 @@ public:
   }
 } CustomElementTableInitializer;
 
-} // end anon namespace
+} // namespace
 
 unsigned char Elements::elementCount()
 {
@@ -268,4 +268,4 @@ unsigned char Elements::valenceElectrons(unsigned char atomicNumber)
     return valence_electrons[0];
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Core

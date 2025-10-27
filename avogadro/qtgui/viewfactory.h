@@ -40,7 +40,7 @@ public:
   virtual QWidget* createView(const QString& view) = 0;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_VIEWFACTORY_H

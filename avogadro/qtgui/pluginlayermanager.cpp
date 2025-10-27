@@ -142,4 +142,4 @@ size_t PluginLayerManager::layerCount() const
 {
   return LayerManager::layerCount();
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
