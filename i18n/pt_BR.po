@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-10-25 16:46+0000\n"
+"POT-Creation-Date: 2025-10-27 01:16+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -1325,14 +1325,14 @@ msgstr "Crie uma nova vista"
 msgid "Periodic Table"
 msgstr "Tabela Periódica"
 
-#: qtgui/pythonscript.cpp:161 qtgui/pythonscript.cpp:249
+#: qtgui/pythonscript.cpp:172 qtgui/pythonscript.cpp:260
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Erro ao executar o script '%1 %2': Tempo limite esgotado ao aguardar o "
 "início (%3)."
 
-#: qtgui/pythonscript.cpp:171 qtgui/pythonscript.cpp:259
+#: qtgui/pythonscript.cpp:182 qtgui/pythonscript.cpp:270
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1341,14 +1341,14 @@ msgstr ""
 "Erro ao executar o script '%1 %2': falha ao gravar em stdin (len= %3, gravou "
 "%4 bytes, erro QProcess: %5)."
 
-#: qtgui/pythonscript.cpp:184
+#: qtgui/pythonscript.cpp:195
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Erro ao executar o script '%1 %2': Tempo limite esgotado ao aguardar "
 "conclusão (%3)."
 
-#: qtgui/pythonscript.cpp:193
+#: qtgui/pythonscript.cpp:204
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1361,32 +1361,32 @@ msgstr ""
 "Resultado:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:202
+#: qtgui/pythonscript.cpp:213
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Alerta '%1'"
 
-#: qtgui/pythonscript.cpp:324
+#: qtgui/pythonscript.cpp:335
 msgid "Script failed to start."
 msgstr "Script falhou ao iniciar."
 
-#: qtgui/pythonscript.cpp:327
+#: qtgui/pythonscript.cpp:338
 msgid "Script crashed."
 msgstr "O código falhou."
 
-#: qtgui/pythonscript.cpp:330
+#: qtgui/pythonscript.cpp:341
 msgid "Script timed out."
 msgstr "O script expirou."
 
-#: qtgui/pythonscript.cpp:333
+#: qtgui/pythonscript.cpp:344
 msgid "Read error."
 msgstr "Erro de leitura."
 
-#: qtgui/pythonscript.cpp:336
+#: qtgui/pythonscript.cpp:347
 msgid "Write error."
 msgstr "Erro de escrita."
 
-#: qtgui/pythonscript.cpp:340
+#: qtgui/pythonscript.cpp:351
 msgid "Unknown error."
 msgstr "Erro desconhecido."
 
@@ -1611,7 +1611,15 @@ msgid_plural "%n minute(s) remaining"
 msgstr[0] ""
 msgstr[1] ""
 
-#: qtgui/timedprogressdialog.cpp:89
+#: qtgui/timedprogressdialog.cpp:93
+#, qt-plural-format
+msgctxt ""
+msgid "1 hour %n minute(s) remaining"
+msgid_plural "1 hour %n minute(s) remaining"
+msgstr[0] ""
+msgstr[1] ""
+
+#: qtgui/timedprogressdialog.cpp:96
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
