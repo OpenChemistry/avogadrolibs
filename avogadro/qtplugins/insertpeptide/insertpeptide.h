@@ -36,7 +36,9 @@ public slots:
 
 private slots:
   void showDialog();
-  void performInsert(const QString& sequence);
+  void performInsert();
+  void updateText();
+  void setStructureType(int);
 
 private:
   QList<QAction*> m_actions;
