@@ -17,6 +17,17 @@ using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
+constexpr std::map<char, std::string> threeLetterCodes = {
+  // map single letter codes to three letter codes
+  // e.g. https://en.wikipedia.org/wiki/Amino_acid
+  { 'A', "ALA" }, { 'R', "ARG" }, { 'N', "ASN" }, { 'D', "ASP" },
+  { 'C', "CYS" }, { 'Q', "GLN" }, { 'E', "GLU" }, { 'G', "GLY" },
+  { 'H', "HIS" }, { 'I', "ILE" }, { 'L', "LEU" }, { 'K', "LYS" },
+  { 'M', "MET" }, { 'F', "PHE" }, { 'P', "PRO" }, { 'S', "SER" },
+  { 'T', "THR" }, { 'W', "TRP" }, { 'Y', "TYR" }, { 'V', "VAL" },
+  { 'O', "PYL" }, { 'U', "SEC" }
+};
+
 class InsertPeptideDialog : public QDialog, public Ui::InsertPeptideDialog
 {
 public:
@@ -130,9 +141,20 @@ void InsertPeptide::performInsert()
     return;
 
   // get the sequence
-  QString sequence = m_dialog->sequenceText->toPlainText();
-  if (sequence.isEmpty())
+  QString sequenceText = m_dialog->sequenceText->toPlainText();
+  if (sequenceText.isEmpty())
     return;
+
+  // figure out if the sequence has three-letter codes
+  // separated by dashes
+  QStringList sequenceList;
+  if (!sequence.contains('-')) {
+    // go through letter by letter to get the three letter code
+    foreach (const QChar& c, sequence) {
+      sequenceList.append(threeLetterCodes[c.toLatin1()]);
+    }
+  } else
+    sequenceList = sequence.split('-');
 
   QString chain = m_dialog->chainNumberCombo->currentText();
   if (chain.isEmpty())
@@ -142,8 +164,8 @@ void InsertPeptide::performInsert()
   double psi = m_dialog->psiSpin->value();
 
   // get the N and C terminus
-  QString nTerm = m_dialog->nTermCombo->currentText();
-  QString cTerm = m_dialog->cTermCombo->currentText();
+  auto nTerm = m_dialog->nTermCombo->currentIndex();
+  auto cTerm = m_dialog->cTermCombo->currentIndex();
 
   char stereo = m_dialog->lStereoButton->isChecked() ? 'L' : 'D';
 
