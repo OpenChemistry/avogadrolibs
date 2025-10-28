@@ -513,6 +513,12 @@ bool GaussianSet::generateDensityMatrix()
   if (m_scfType == Unknown)
     return false;
 
+  if (m_moMatrix[0].size() == 0)
+    return false;
+  // check if it's Rohf or Uhf too
+  if (m_scfType != Rhf && m_moMatrix[1].size() == 0)
+    return false;
+
   m_density.resize(m_numMOs, m_numMOs);
   m_density = MatrixX::Zero(m_numMOs, m_numMOs);
   for (unsigned int iBasis = 0; iBasis < m_numMOs; ++iBasis) {

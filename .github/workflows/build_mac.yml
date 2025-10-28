@@ -201,6 +201,7 @@ jobs:
         echo "Stapling notarized DMG: ${DMG_NAME}"
         xcrun stapler staple -v ${DMG_NAME}
       working-directory: ${{ runner.workspace }}/build/
+      continue-on-error: true
       env:
         NOTARIZE_TEAM: ${{ secrets.AC_TEAM }}
         NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
