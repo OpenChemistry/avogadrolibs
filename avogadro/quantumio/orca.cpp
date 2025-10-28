@@ -1116,9 +1116,11 @@ void ORCAOutput::load(GaussianSet* basis)
     basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, Core::BasisSet::Beta);
 
   // TODO: set orbital symmetries
+  // TODO: set vibrational symmetries
 
   m_homo = ceil(m_electrons / 2.0);
-  basis->generateDensityMatrix();
+  if (m_MOcoeffs.size() > 0)
+    basis->generateDensityMatrix();
 }
 
 GaussianSet::orbital ORCAOutput::orbitalIdx(std::string txt)
