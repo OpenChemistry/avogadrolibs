@@ -217,6 +217,14 @@ jobs:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
 
+    - name: Upload release assets
+      uses: ./.github/actions/upload-release
+      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
+      env:
+        GH_TOKEN: ${{ github.token }}
+      with:
+        artifacts: "${{ runner.workspace }}/build/Avogadro2*.dmg"
+
     - name: Setup tmate session
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
