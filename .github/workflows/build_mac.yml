@@ -219,6 +219,9 @@ jobs:
 
     - name: Upload release assets
       uses: ./.github/actions/upload-release
+      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
+      env:
+        GH_TOKEN: ${{ github.token }}
       with:
         artifacts: "${{ runner.workspace }}/build/Avogadro2*.dmg"
 

@@ -101,7 +101,7 @@ jobs:
           VERSION=$(date +%Y-%m-%d)
         fi
 
-        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}.exe
+        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}-arm64.exe
       working-directory: ${{ runner.workspace }}/build/
       env:
         GH_TOKEN: ${{ github.token }}
@@ -115,8 +115,10 @@ jobs:
         name: ${{ matrix.config.artifact }}
 
     - name: Upload release assets
-      if: matrix.config.artifact != 0
+      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
       uses: ./.github/actions/upload-release
+      env:
+        GH_TOKEN: ${{ github.token }}
       with:
         artifacts: "${{ runner.workspace }}/build/Avogadro2*.*"
 
