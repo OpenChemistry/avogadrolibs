@@ -48,4 +48,4 @@ runs:
       shell: bash
       run: |
         # --clobber will overwrite existing artifacts
-        gh release upload "${{ steps.vars.outputs.release_tag }}" ${{ inputs.artifacts }} --clobber
+        gh release upload "${{ steps.tag.outputs.release_tag }}" ${{ inputs.artifacts }} --clobber
