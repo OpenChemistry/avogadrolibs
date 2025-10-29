@@ -167,13 +167,15 @@ jobs:
           # This is a tag - extract version
           VERSION="${GITHUB_REF#refs/tags/}"
           VERSION="${VERSION#v}"  # Remove 'v' prefix if present
+          VOLNAME="Avogadro2 ${VERSION}"
           IS_RELEASE=true
         else
-          # This is a nightly build - use current date
-          VERSION=$(date +%Y-%m-%d)
+          # This is a nightly build - no version
+          # but include the date in the volume name
+          VERSION=""
+          VOLNAME="Avogadro2 $(date +%Y-%m-%d)"
           IS_RELEASE=false
         fi
-        VOLNAME="Avogadro2 ${VERSION}"
 
         # Determine architecture
         ARCH=$(uname -m)
@@ -187,9 +189,9 @@ jobs:
           fi
         else
           if [[ "$ARCH" == "arm64" ]]; then
-            DMG_NAME="Avogadro2-${VERSION}-arm64.dmg"
+            DMG_NAME="Avogadro2-continuous-arm64.dmg"
           else
-            DMG_NAME="Avogadro2-${VERSION}.dmg"
+            DMG_NAME="Avogadro2-continuous.dmg"
           fi
         fi
         echo "Building DMG: ${DMG_NAME}"
