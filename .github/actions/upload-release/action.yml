@@ -33,7 +33,7 @@ runs:
         notes="Automated build on ${build_date} from ${GITHUB_SHA}"
 
         if gh release view "$tag" &>/dev/null; then
-          # only update the "continous" tag
+          # only update the notes for the "continous" tag
           # so we don't break the release notes for other tags
           if [[ "$tag" == "${{ inputs.release_name }}" ]]; then
             echo "Updating existing release: $tag"
@@ -48,4 +48,4 @@ runs:
       shell: bash
       run: |
         # --clobber will overwrite existing artifacts
-        gh release upload "${{ steps.vars.outputs.release_tag }}" ${{ inputs.artifacts }} --clobber
+        gh release upload "${{ steps.vars.outputs.release_tag }}" "${{ inputs.artifacts }}" --clobber
