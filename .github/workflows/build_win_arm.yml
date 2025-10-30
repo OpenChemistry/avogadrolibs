@@ -55,12 +55,40 @@ jobs:
       with:
         arch: arm64
 
+    # Emit a vcpkg_version output
+    - name: Get vcpkg git sha
+      if: runner.os == 'Windows'
+      id: vcpkg_version
+      run: |
+        cd /c/vcpkg
+        git pull origin master
+        if [ -d /c/vcpkg/.git ]; then
+          echo "sha=$(git -C /c/vcpkg rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        else
+          # just in case
+          echo "sha=no-vcpkg-git" >> $GITHUB_OUTPUT
+      shell: bash
+
+    # Restore vcpkg cache (use manifest lock if available)
+    - name: Restore vcpkg cache
+      if: runner.os == 'Windows'
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: |
+          C:\vcpkg\installed
+          C:\vcpkg\packages
+          C:\vcpkg\downloads
+          C:\vcpkg\buildtrees
+        # We don't use a vcpkg manifest so we'll use the vcpkg git SHA as the cache key
+        # Fallback to vcpkg git SHA so cache is somewhat stable across runs.
+        key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
+      env:
+        VCPKG_ROOT: C:\vcpkg
+
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
         choco install nsis
-        cd /c/vcpkg
-        git pull origin master
         vcpkg install libarchive eigen3 libxml2 zlib
       shell: bash
 
@@ -101,7 +129,7 @@ jobs:
           VERSION=$(date +%Y-%m-%d)
         fi
 
-        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}-arm64.exe
+        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}-win-arm.exe
       working-directory: ${{ runner.workspace }}/build/
       env:
         GH_TOKEN: ${{ github.token }}
