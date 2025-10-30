@@ -67,6 +67,7 @@ jobs:
         else
           # just in case
           echo "sha=no-vcpkg-git" >> $GITHUB_OUTPUT
+        fi
       shell: bash
 
     # Restore vcpkg cache (use manifest lock if available)
@@ -126,7 +127,7 @@ jobs:
           VERSION="${VERSION#v}"  # Remove 'v' prefix if present
         else
           # This is a nightly build - use current date
-          VERSION=$(date +%Y-%m-%d)
+          VERSION="continuous"
         fi
 
         mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}-win-arm.exe
