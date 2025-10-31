@@ -25,7 +25,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  QT_VERSION: 5.15.2
+  QT_VERSION: 6.8.3
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
 
 jobs:
@@ -55,7 +55,6 @@ jobs:
       run: |
         sudo apt-get -qq update
         sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
-        sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
 
     - name: Install Qt
       uses: jurplel/install-qt-action@b7840a6733f49e2a39c4355260d2375063d39b61 # v3
