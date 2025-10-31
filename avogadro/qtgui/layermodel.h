@@ -37,7 +37,7 @@ public:
     Remove = 5
   };
 
-  explicit LayerModel(QObject* p = 0);
+  explicit LayerModel(QObject* p = nullptr);
 
   void loadIcons(bool darkMode);
 

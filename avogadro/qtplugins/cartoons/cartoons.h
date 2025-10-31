@@ -20,7 +20,7 @@ class Cartoons : public QtGui::ScenePlugin
   Q_OBJECT
 
 public:
-  explicit Cartoons(QObject* parent = 0);
+  explicit Cartoons(QObject* parent = nullptr);
   ~Cartoons() override = default;
 
   void process(const QtGui::Molecule& molecule,

@@ -16,8 +16,8 @@ using Avogadro::QtGui::RichTextDelegate;
 namespace Avogadro::QtPlugins {
 
 OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f), m_settings(0), m_quality(OQ_Low), m_isovalue(0.03),
-    m_precalc_limit(true), m_precalc_range(10),
+  : QWidget(parent, f), m_settings(nullptr), m_quality(OQ_Low),
+    m_isovalue(0.03), m_precalc_limit(true), m_precalc_range(10),
     m_tableModel(new OrbitalTableModel(this)),
     m_sortedTableModel(new OrbitalSortingProxyModel(this))
 {

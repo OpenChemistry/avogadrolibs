@@ -20,7 +20,7 @@ class MolecularView : public QTableView
 {
   Q_OBJECT
 public:
-  explicit MolecularView(QWidget* parent = 0);
+  explicit MolecularView(QWidget* parent = nullptr);
 
   void selectionChanged(const QItemSelection& selected,
                         const QItemSelection& previous) override;

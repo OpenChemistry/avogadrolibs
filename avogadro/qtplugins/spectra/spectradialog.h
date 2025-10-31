@@ -38,7 +38,7 @@ class SpectraDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit SpectraDialog(QWidget* parent = 0);
+  explicit SpectraDialog(QWidget* parent = nullptr);
   ~SpectraDialog() override;
 
   void writeSettings() const;

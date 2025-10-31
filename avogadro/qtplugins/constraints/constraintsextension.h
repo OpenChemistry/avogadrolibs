@@ -21,7 +21,7 @@ class ConstraintsExtension : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
-  explicit ConstraintsExtension(QObject* parent = 0);
+  explicit ConstraintsExtension(QObject* parent = nullptr);
   ~ConstraintsExtension() override;
 
   QString name() const override { return tr("Constraints"); }
