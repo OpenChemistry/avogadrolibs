@@ -174,7 +174,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
     getline(inStream, buffer);
-    if (!inStream.good()) {
+    if (buffer.empty()) {
       appendError("Error reading atom at index " + std::to_string(i) + ".");
       return false;
     }
