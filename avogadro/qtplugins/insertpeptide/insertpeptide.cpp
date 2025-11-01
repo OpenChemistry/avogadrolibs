@@ -43,7 +43,7 @@ const std::map<char, std::string> threeLetterCodes = {
 class InsertPeptideDialog : public QDialog, public Ui::InsertPeptideDialog
 {
 public:
-  InsertPeptideDialog(QWidget* parent = 0) : QDialog(parent)
+  InsertPeptideDialog(QWidget* parent = nullptr) : QDialog(parent)
   {
     setWindowFlags(Qt::Dialog | Qt::Tool);
     setupUi(this);
