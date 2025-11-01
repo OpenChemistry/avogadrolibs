@@ -157,7 +157,12 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
 
   QList<QVector3D> nuclearCriticalPoints;
   QFile nuclearCriticalPointsFile(nuclearCriticalPointsFileName);
-  nuclearCriticalPointsFile.open(QIODevice::ReadOnly);
+  if (!nuclearCriticalPointsFile.open(QIODevice::ReadOnly)) {
+    QMessageBox::critical(
+      nullptr, QObject::tr("Error"),
+      QObject::tr("Cannot read file %1.").arg(nuclearCriticalPointsFileName));
+    return {};
+  }
   QDataStream nuclearCriticalPointsFileIn(&nuclearCriticalPointsFile);
   nuclearCriticalPointsFileIn >> nuclearCriticalPoints;
   nuclearCriticalPointsFile.close();
@@ -441,7 +446,11 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
   QString nuclearCriticalPointsFileName =
     QTAIMCriticalPointLocator::temporaryFileName();
   QFile nuclearCriticalPointsFile(nuclearCriticalPointsFileName);
-  nuclearCriticalPointsFile.open(QIODevice::WriteOnly);
+  if (!nuclearCriticalPointsFile.open(QIODevice::WriteOnly)) {
+    QMessageBox::critical(nullptr, QObject::tr("Error"),
+                          QObject::tr("Failed to create a temporary file."));
+    return;
+  }
   QDataStream nuclearCriticalPointsOut(&nuclearCriticalPointsFile);
   nuclearCriticalPointsOut << m_nuclearCriticalPoints;
   nuclearCriticalPointsFile.close();

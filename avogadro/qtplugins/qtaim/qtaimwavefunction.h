@@ -27,6 +27,7 @@
 #include <QDataStream>
 #include <QFile>
 #include <QIODevice>
+#include <QMessageBox>
 
 #include <QVariant>
 #include <QVariantList>
@@ -42,7 +43,12 @@ public:
   void saveToBinaryFile(const QString& fileName)
   {
     QFile file(fileName);
-    file.open(QIODevice::WriteOnly);
+    if (!file.open(QIODevice::WriteOnly)) {
+      QMessageBox::critical(
+        nullptr, QObject::tr("Error"),
+        QObject::tr("Cannot save file %1.").arg(file.fileName()));
+      return;
+    }
     QDataStream out(&file);
     out << m_fileName;
     out << m_comment;
@@ -70,7 +76,12 @@ public:
   void loadFromBinaryFile(const QString& fileName)
   {
     QFile file(fileName);
-    file.open(QIODevice::ReadOnly);
+    if (!file.open(QIODevice::ReadOnly)) {
+      QMessageBox::critical(
+        nullptr, QObject::tr("Error"),
+        QObject::tr("Cannot read file %1.").arg(file.fileName()));
+      return;
+    }
     QDataStream in(&file);
     in >> m_fileName;
     in >> m_comment;

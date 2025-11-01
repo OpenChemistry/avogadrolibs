@@ -404,7 +404,11 @@ void DownloaderWidget::unzipPlugin()
     tr("Downloading %1 to %2\n").arg(filename).arg(m_filePath));
 
   QFile out(absolutePath);
-  out.open(QIODevice::WriteOnly);
+  if (!out.open(QIODevice::WriteOnly)) {
+    QMessageBox::critical(this, tr("Error"),
+                          tr("Cannot save file %1.").arg(absolutePath));
+    return;
+  }
   out.write(fileData);
   out.close();
 

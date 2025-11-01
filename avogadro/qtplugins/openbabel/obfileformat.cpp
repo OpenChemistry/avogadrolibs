@@ -165,7 +165,10 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 
       QTemporaryFile tmpFile;
       tmpFile.setAutoRemove(false);
-      tmpFile.open();
+      if (!tmpFile.open()) {
+        appendError("Internal error -- failed to create a temporary file");
+        return false;
+      }
       tmpFile.write(input.data());
       tmpFile.close();
       filename = tmpFile.fileName();

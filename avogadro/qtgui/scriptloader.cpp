@@ -81,7 +81,9 @@ QMultiMap<QString, QString> ScriptLoader::scriptList(const QString& type)
           if (jsonManifest.isReadable()) {
             // load the JSON
             QFile jsonFile(jsonManifest.absoluteFilePath());
-            jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+            if (!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+              continue;
+            }
             QByteArray data = jsonFile.readAll();
             jsonFile.close();
             QJsonDocument d = QJsonDocument::fromJson(data);
