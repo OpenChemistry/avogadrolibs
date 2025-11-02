@@ -111,6 +111,12 @@ void MoldenFile::processLine(std::istream& in)
     m_mode = VibrationalModes;
   } else if (Core::contains(line, "[INT]")) {
     m_mode = Intensities;
+  } else if (Core::contains(line, "[5D]")) {
+    m_cartesianD = false;
+  } else if (Core::contains(line, "[7F]")) {
+    m_cartesianF = false;
+  } else if (Core::contains(line, "[9G]")) {
+    m_cartesianG = false;
   } else if (Core::contains(line, "[")) { // unknown section
     m_mode = Unrecognized;
   } else {
@@ -143,13 +149,23 @@ void MoldenFile::processLine(std::istream& in)
             shellType = GaussianSet::S;
           else if (shell == "p")
             shellType = GaussianSet::P;
-          else if (shell == "d")
-            shellType = GaussianSet::D;
-          else if (shell == "f")
-            shellType = GaussianSet::F;
-          else if (shell == "g")
-            shellType = GaussianSet::G;
-
+          else if (shell == "d") {
+            if (m_cartesianD)
+              shellType = GaussianSet::D;
+            else
+              shellType = GaussianSet::D5;
+          } else if (shell == "f") {
+            if (m_cartesianF)
+              shellType = GaussianSet::F;
+            else
+              shellType = GaussianSet::F7;
+          } else if (shell == "g") {
+            if (m_cartesianG)
+              shellType = GaussianSet::G;
+            else
+              shellType = GaussianSet::G9;
+          }
+          // TODO if Molden ever supports h, i, j
           if (shellType != GaussianSet::UU) {
             m_shellTypes.push_back(shellType);
             m_shelltoAtom.push_back(atom);
@@ -334,6 +350,22 @@ void MoldenFile::load(GaussianSet* basis)
         ++nGTO;
       }
     } else {
+      // adjust the shell types if needed
+      if (!m_cartesianD && m_shellTypes[i] == GaussianSet::D)
+        m_shellTypes[i] = GaussianSet::D5;
+      else if (m_cartesianD && m_shellTypes[i] == GaussianSet::D5)
+        m_shellTypes[i] = GaussianSet::D;
+
+      if (!m_cartesianF && m_shellTypes[i] == GaussianSet::F)
+        m_shellTypes[i] = GaussianSet::F7;
+      else if (m_cartesianF && m_shellTypes[i] == GaussianSet::F7)
+        m_shellTypes[i] = GaussianSet::F;
+
+      if (!m_cartesianG && m_shellTypes[i] == GaussianSet::G)
+        m_shellTypes[i] = GaussianSet::G9;
+      else if (m_cartesianG && m_shellTypes[i] == GaussianSet::G9)
+        m_shellTypes[i] = GaussianSet::G;
+
       int b = basis->addBasis(m_shelltoAtom[i] - 1, m_shellTypes[i]);
       for (int j = 0; j < m_shellNums[i]; ++j) {
         basis->addGto(b, m_c[nGTO], m_a[nGTO]);
