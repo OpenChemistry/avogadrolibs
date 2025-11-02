@@ -1,8 +1,8 @@
 [project]
 name = "avogadro-plugins"
 requires-python = ">= 3.11"
-version = "1.102.0"
+version = "1.102.2"
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
-platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+platforms = ["win-64", "win-arm64", "linux-64", "linux-aarch64","freebsd-64","osx-64", "osx-arm64"]

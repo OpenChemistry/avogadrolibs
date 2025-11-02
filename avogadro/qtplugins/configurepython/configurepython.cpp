@@ -52,6 +52,21 @@ ConfigurePython::ConfigurePython(QObject* parent_)
   // check if we used pixi to install
   bool installedWithPixi = settings.value("installedWithPixi", false).toBool();
 
+  // make sure the pixi environment works
+  if (QDir(pluginPath + "/.pixi").exists()) {
+    // check if we have a useful python in .pixi
+    QString pythonPath = "/.pixi/envs/default/bin/";
+#ifdef Q_OS_WIN
+    pythonPath += "python.exe";
+#else
+    pythonPath += "python";
+#endif
+    QFileInfo python(pluginPath + pythonPath);
+    if (!python.exists() || python.isExecutable()) {
+      installedWithPixi = false;
+    }
+  }
+
   if (paths.isEmpty() && !installedWithPixi) { // show a warning
     // suggest the user install Python
     auto option = QMessageBox::information(
@@ -68,7 +83,9 @@ ConfigurePython::ConfigurePython(QObject* parent_)
         QProcess pixi;
         pixi.setWorkingDirectory(pluginPath);
         pixi.start(pixiPath + "/pixi", { "install" });
-        pixi.waitForFinished();
+        // wait up to a minute
+        // TODO: add a progress dialog
+        pixi.waitForFinished(60 * 1000);
 #ifndef NDEBUG
         qDebug() << "pixi output is " << pixi.readAllStandardOutput();
         qDebug() << "pixi error output is " << pixi.readAllStandardError();
