@@ -344,7 +344,13 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
         if (isNumericArray(order)) {
           for (unsigned int i = 0; i < molecule.bondCount() && i < order.size();
                ++i) {
-            molecule.bond(i).setOrder(static_cast<int>(order[i]));
+            int bondOrder = static_cast<int>(order[i]);
+            if (bondOrder < 1 || bondOrder > 6) {
+              appendError("Error: bond order is invalid.");
+              return false;
+            }
+
+            molecule.bond(i).setOrder(bondOrder);
           }
         }
       }

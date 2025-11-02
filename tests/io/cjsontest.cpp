@@ -69,6 +69,23 @@ TEST(CjsonTest, atomicNumberEdgeCase)
   }
 }
 
+TEST(CjsonTest, readNegativeBond)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  EXPECT_FALSE(cjson.readString(R"({"chemicalJson": 1,
+  "atoms": {
+    "coords": { "3d": [ 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 ] },
+    "elements": { "number": [ 1, 9 ] }
+  },
+  "bonds": {
+    "connections": { "index": [ 0, 1 ] },
+    "order": [ -1 ]
+}})",
+                                molecule));
+  EXPECT_EQ(cjson.error(), "Error: bond order is invalid.\n");
+}
+
 TEST(CjsonTest, readInvalidPeriodicFile)
 {
   const auto error_cell_params =
