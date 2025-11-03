@@ -39,7 +39,7 @@ Molecule::Molecule(const Molecule& other)
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
     m_bondLabels(other.m_bondLabels), m_coordinates3d(other.m_coordinates3d),
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges),
+    m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
@@ -134,7 +134,8 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
     m_bondLabels(other.m_bondLabels), m_coordinates3d(other.m_coordinates3d),
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
+    m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
+    m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
     m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
@@ -175,6 +176,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
+    m_isotopes = other.m_isotopes;
     m_colors = other.m_colors,
     m_vibrationFrequencies = other.m_vibrationFrequencies;
     m_vibrationIRIntensities = other.m_vibrationIRIntensities;
@@ -239,6 +241,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
+    m_isotopes = other.m_isotopes;
     m_colors = other.m_colors;
     m_vibrationFrequencies = other.m_vibrationFrequencies;
     m_vibrationIRIntensities = other.m_vibrationIRIntensities;
@@ -469,6 +472,16 @@ Array<AtomHybridization>& Molecule::hybridizations()
 const Array<AtomHybridization>& Molecule::hybridizations() const
 {
   return m_hybridizations;
+}
+
+Array<unsigned short>& Molecule::isotopes()
+{
+  return m_isotopes;
+}
+
+const Array<unsigned short>& Molecule::isotopes() const
+{
+  return m_isotopes;
 }
 
 Array<signed char>& Molecule::formalCharges()
