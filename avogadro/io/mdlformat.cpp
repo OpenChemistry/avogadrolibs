@@ -303,22 +303,19 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       }
 
       for (size_t i = 0; i < entryCount; i++) {
-        [[maybe_unused]] size_t index(
-          lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
           appendError("Error parsing isotope atom index:" +
                       buffer.substr(10 + 8 * i, 3));
           return false;
         }
-        [[maybe_unused]] auto isotope(
-          lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        auto isotope(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
         if (!ok) {
           appendError("Error parsing isotope type:" +
                       buffer.substr(14 + 8 * i, 3));
           return false;
         }
-        // TODO: Implement isotope setting
-        // mol.atom(index).setIsotope(isotope);
+        mol.setIsotope(index, isotope);
       }
     } // isotope
     else {
@@ -514,13 +511,12 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
             spinMultiplicity += 2;
         } else if (startsWith(key, "ISO=")) {
           // isotope
-          [[maybe_unused]] int isotope = lexicalCast<int>(key.substr(4), ok);
+          int isotope = lexicalCast<int>(key.substr(4), ok);
           if (!ok) {
             appendError("Failed to parse isotope type: " + key);
             return false;
           }
-          // TODO: handle isotopes
-          // mol.atom(i).setIsotope(isotope);
+          mol.setIsotope(newAtom.index(), isotope);
         } else {
 #ifndef NDEBUG
           std::cerr << "Unknown key: " << key << std::endl;
