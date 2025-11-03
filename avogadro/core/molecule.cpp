@@ -964,8 +964,21 @@ void Molecule::setUnitCell(UnitCell* uc)
 double Molecule::mass() const
 {
   double m(0.0);
+  for (Index i = 0; i < atomCount(); ++i) {
+    if (isotope(i) > 0)
+      m += Elements::isotopeMass(m_atomicNumbers[i], isotope(i));
+    else
+      m += Elements::mass(m_atomicNumbers[i]);
+  }
+  return m;
+}
+
+double Molecule::monoisotopicMass() const
+{
+  double m(0.0);
   for (Index i = 0; i < atomCount(); ++i)
-    m += Elements::mass(atom(i).atomicNumber());
+    // default will be the most common isotope
+    m += Elements::isotopeMass(m_atomicNumbers[i], isotope(i));
   return m;
 }
 
@@ -980,13 +993,17 @@ Vector3 Molecule::centerOfGeometry() const
 Vector3 Molecule::centerOfMass() const
 {
   Vector3 center(0.0, 0.0, 0.0);
+  Real totalMass = 0.0;
   for (Index i = 0; i < atomCount(); ++i) {
     AtomType curr_atom = atom(i);
-    center +=
-      (curr_atom.position3d() * Elements::mass(curr_atom.atomicNumber()));
+    auto mass = Elements::mass(m_atomicNumbers[i]);
+    if (isotope(i) > 0)
+      mass = Elements::isotopeMass(m_atomicNumbers[i], isotope(i));
+
+    center += (curr_atom.position3d() * mass);
+    totalMass += mass;
   }
-  center /= mass();
-  center /= atomCount();
+  center /= totalMass;
   return center;
 }
 

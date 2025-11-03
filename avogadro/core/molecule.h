@@ -533,6 +533,13 @@ public:
   double mass() const;
 
   /**
+   * @return the monoisotopic mass of the molecule obtained by summing
+   * the isotopic masses of the atoms (including the most common isotope
+   * if not specified).
+   */
+  double monoisotopicMass() const;
+
+  /**
    * @return The center of geometry of the molecule obtained by summing the
    * coordinates of the atoms.
    */
