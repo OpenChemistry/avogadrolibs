@@ -213,10 +213,12 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
     case 1:
       return m_molecule->mass();
     case 2:
-      return m_molecule->formattedFormula();
+      return m_molecule->monoisotopicMass();
     case 3:
-      return QVariant::fromValue(m_molecule->atomCount());
+      return m_molecule->formattedFormula();
     case 4:
+      return QVariant::fromValue(m_molecule->atomCount());
+    case 5:
       return QVariant::fromValue(m_molecule->bondCount());
   }
 
@@ -267,6 +269,8 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Molecule Name");
     else if (it->first == " 2mass")
       return tr("Molecular Mass (g/mol)");
+    else if (it->first == " 2monoisotopicMass")
+      return tr("Monoisotopic Mass (g/mol)");
     else if (it->first == " 3formula")
       return tr("Chemical Formula");
     else if (it->first == " 4atoms")
@@ -393,6 +397,8 @@ void MolecularModel::updateTable(unsigned int flags)
   // update the display names in the headerData method
   m_propertiesCache.setValue(" 1name", name());
   m_propertiesCache.setValue(" 2mass", m_molecule->mass());
+  m_propertiesCache.setValue(" 2monoisotopicMass",
+                             m_molecule->monoisotopicMass());
   m_propertiesCache.setValue(" 3formula", m_molecule->formattedFormula());
   m_propertiesCache.setValue(" 4atoms", m_molecule->atomCount());
   m_propertiesCache.setValue(" 5bonds", m_molecule->bondCount());
