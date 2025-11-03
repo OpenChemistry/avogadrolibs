@@ -1,7 +1,5 @@
 if(QT_VERSION EQUAL 6)
   find_package(Qt6 COMPONENTS Gui REQUIRED)
-else()
-  find_package(Qt5 COMPONENTS Widgets REQUIRED)
 endif()
 
 set(forcefield_srcs
@@ -36,8 +34,6 @@ target_link_libraries(Forcefield PRIVATE Avogadro::Calc)
 
 if(QT_VERSION EQUAL 6)
   target_link_libraries(Forcefield PRIVATE Qt6::Gui)
-else()
-  target_link_libraries(Forcefield PRIVATE Qt5::Widgets)
 endif()
 
 if (BUILD_GPL_PLUGINS AND OpenBabel3_LIBRARIES)

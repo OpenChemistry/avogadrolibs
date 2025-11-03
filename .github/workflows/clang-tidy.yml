@@ -6,7 +6,7 @@ on:
 env:
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_YAEHMOP=ON
   BUILD_TYPE: RelWithDebInfo
-  QT_VERSION: 5.15.2
+  QT_VERSION: 6.8.3
 
 jobs:
   build:
@@ -31,7 +31,6 @@ jobs:
       run: |
         sudo apt-get -qq update
         sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
-        sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
         sudo apt-get -qq install clang-tidy
 
     - name: Install Qt
