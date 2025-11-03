@@ -127,7 +127,10 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
   Q_UNUSED(parent);
   switch (m_type) {
     case AtomType:
-      return AtomColumns; // see above
+      if (m_molecule->isotopes().size() > 0)
+        return AtomColumns + 1;
+      else
+        return AtomColumns; // see above
     case BondType:
       return BondColumns; // see above
     case AngleType:
@@ -236,8 +239,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     if (m_type == ConformerType) {
       return toVariant(Qt::AlignRight | Qt::AlignVCenter); // energies
     } else if (m_type == AtomType) {
-      if ((index.column() == AtomDataCharge) ||
-          (index.column() == AtomDataColor))
+      if (index.column() == AtomDataColor)
         return toVariant(Qt::AlignRight | Qt::AlignVCenter);
       else
         return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -343,6 +345,13 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         }
       case AtomDataLabel:
         return m_molecule->atomLabel(row).c_str();
+      case AtomDataIsotope: {
+        int isotope = m_molecule->isotope(row);
+        if (isotope > 0)
+          return isotope;
+        else
+          return QVariant();
+      }
       case AtomDataColor:
       default:
         return QVariant(); // nothing to show
