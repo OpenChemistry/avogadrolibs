@@ -93,6 +93,18 @@ void PlotConformer::updateActions()
   }
 }
 
+void PlotConformer::clicked(float x, float y, Qt::KeyboardModifiers modifiers)
+{
+  // switch to the closest conformer to x
+  int conformer = static_cast<int>(x);
+  if (conformer < 0)
+    conformer = 0;
+  if (conformer >= m_molecule->coordinate3dCount())
+    conformer = m_molecule->coordinate3dCount() - 1;
+  m_molecule->setCoordinate3d(conformer);
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
 void PlotConformer::displayDialog()
 {
   PlotData results;
@@ -123,11 +135,15 @@ void PlotConformer::displayDialog()
 
   m_chartDialog->setWindowTitle(windowName);
   auto* chart = m_chartDialog->chartWidget();
+  connect(chart, &QtGui::ChartWidget::clicked, this, &PlotConformer::clicked);
+
   chart->clearPlots();
-  chart->addPlot(xData, yData, QtGui::color4ub{ 255, 0, 0, 255 });
   chart->setShowPoints(true);
-  chart->setXAxisLimits(0, static_cast<float>(m_molecule->coordinate3dCount()));
-  chart->setYAxisLimits(min, max);
+  chart->setLegendLocation(QtGui::ChartWidget::LegendLocation::None);
+  chart->addPlot(xData, yData, QtGui::color4ub{ 255, 0, 0, 255 });
+  chart->setXAxisLimits(
+    -0.1, static_cast<float>(m_molecule->coordinate3dCount()) - 0.9);
+  chart->setYAxisLimits(min, max * 1.1f);
   chart->setXAxisTitle(xTitle);
   chart->setYAxisTitle(yTitle);
   m_chartDialog->show();
