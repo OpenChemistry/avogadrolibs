@@ -63,6 +63,18 @@ std::optional<double> findEnergy(const std::string& buffer)
     std::string energy = buffer.substr(energyStart + offset);
     return lexicalCast<double>(energy);
   }
+
+  // also check if the comment just starts with a number
+  // try to split out the first token and look for a number
+  std::vector<string> tokens(split(buffer, ' '));
+  if (!tokens.empty()) {
+    bool ok(false);
+    auto energy = lexicalCast<double>(tokens[0], ok);
+    if (ok)
+      return energy;
+    // otherwise we fall through to return std::nullopt
+  }
+
   return std::nullopt;
 }
 
