@@ -131,6 +131,93 @@ void ConstraintsDialog::updateConstraints()
   else if (selectedAtoms.size() == 4)
     changeType(2);
 
+  // Each entry bonded[i] holds the atom indices bonded to selectedAtoms[i]
+  std::vector<std::vector<Index>> bonded(selectedAtoms.size());
+
+  for (Index i = 0; i < selectedAtoms.size(); ++i) {
+    Index ai = selectedAtoms[i];
+    for (Index j = i + 1; j < selectedAtoms.size(); ++j) {
+      Index aj = selectedAtoms[j];
+      if (m_molecule->bond(ai, aj).isValid()) {
+        bonded[i].push_back(j); // neighbor atom local index
+        bonded[j].push_back(i); // symmetric
+      }
+    }
+  }
+  std::vector<Index> degree(selectedAtoms.size(), 0);
+  for (Index i = 0; i < selectedAtoms.size(); ++i)
+    degree[i] = static_cast<Index>(bonded[i].size());
+
+  // Arrange selected atoms according to connectivity
+  if (selectedAtoms.size() == 3) {
+    Index i1, i2, i3;
+    bool assigned = false;
+
+    for (Index i = 0; i < selectedAtoms.size(); ++i) {
+      if (degree[i] == 2) {
+        i2 = selectedAtoms[i];
+        i1 = selectedAtoms[bonded[i][0]];
+        i3 = selectedAtoms[bonded[i][1]];
+        assigned = true;
+      }
+      else if (degree[i] == 0) {
+        return;
+      }
+      if (assigned)
+        break;
+    }
+    if (not assigned)
+      return;
+
+    // Set corrrect order
+    selectedAtoms[0] = i1;
+    selectedAtoms[1] = i2;
+    selectedAtoms[2] = i3;
+  }
+
+  else if (selectedAtoms.size() == 4) {
+    Index i1, i2, i3, i4;
+    bool assigned = false;
+
+    for (Index i = 0; i < selectedAtoms.size(); ++i) {
+      if (degree[i] == 2) {
+        i2 = selectedAtoms[i];
+        if (degree[bonded[i][0]] == 2) {
+          i1 = selectedAtoms[bonded[i][1]];
+          i3 = bonded[i][0];
+        }
+        else if (degree[bonded[i][1]] == 2) {
+          i1 = selectedAtoms[bonded[i][0]];
+          i3 = bonded[i][1];
+        }
+        else {
+          return;
+        }
+        if (selectedAtoms[bonded[i3][0]] == i2) {
+          i4 = selectedAtoms[bonded[i3][1]];
+        }
+        else {
+          i4 = selectedAtoms[bonded[i3][0]];
+        }
+        i3 = selectedAtoms[i3];
+        assigned = true;
+      }
+      else if (degree[i] == 0) {
+        return;
+      }
+      if (assigned)
+        break;
+    }
+    if (not assigned)
+      return;
+
+    // Set corrrect order
+    selectedAtoms[0] = i1;
+    selectedAtoms[1] = i2;
+    selectedAtoms[2] = i3;
+    selectedAtoms[3] = i4;
+  }
+
   // now set the edit boxes to the selected atoms
   if (selectedAtoms.size() >= 2) {
     ui->editA->setValue(selectedAtoms[0] + 1);
