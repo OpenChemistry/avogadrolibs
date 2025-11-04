@@ -219,33 +219,95 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
       if (std::find(tokens.begin(), tokens.end(), "angs") != tokens.end())
         latticeConversion = 1.0; // leave as Angstrom
 
-      for (int line = 0; line < 3; ++line) {
-        getline(inStream, buffer);
-        tokens = split(rstrip(buffer, '#'), ' ');
-        if (tokens.size() < 3)
-          break;
+      if (periodic_parsed) {
+        // $periodic appeared
+        if (*periodic_parsed == 0) {
+          hasLattice = false;
+          std::cerr << "Ignore $lattice since '$periodic 0' (non periodic) "
+                       "is specified\n";
+        }
 
-        if (auto tmp =
-              lexicalCast<double>(tokens.begin(), tokens.begin() + 3)) {
+        for (unsigned line = 0; line < *periodic_parsed; ++line) {
+          getline(inStream, buffer);
+          tokens = split(rstrip(buffer, '#'), ' ');
+          const auto tmp = lexicalCast<double>(tokens.begin(), tokens.end());
+          if (!tmp) {
+            appendError("Failed to parse this line following $lattice: " +
+                        buffer);
+            return false;
+          }
+          if (tmp->size() != *periodic_parsed) {
+            appendError(
+              "Not enough or extra tokens in this line following $lattice: " +
+              buffer);
+            return false;
+          }
+
           if (line == 0) {
             v1.x() = tmp->at(0) * latticeConversion;
-            v1.y() = tmp->at(1) * latticeConversion;
-            v1.z() = tmp->at(2) * latticeConversion;
+            v1.y() =
+              *periodic_parsed == 1 ? 0.0 : tmp->at(1) * latticeConversion;
+            v1.z() =
+              *periodic_parsed < 3 ? 0.0 : tmp->at(2) * latticeConversion;
           } else if (line == 1) {
             v2.x() = tmp->at(0) * latticeConversion;
             v2.y() = tmp->at(1) * latticeConversion;
+            v2.z() =
+              *periodic_parsed < 3 ? 0.0 : tmp->at(2) * latticeConversion;
+          } else if (line == 2) {
+            v3.x() = tmp->at(0) * latticeConversion;
+            v3.y() = tmp->at(1) * latticeConversion;
+            v3.z() = tmp->at(2) * latticeConversion;
+          }
+        }
+      } else {
+        // $periodic does not appear yet, so guess dimensionality from line(s)
+        // following $lattice
+        for (unsigned line = 0; line < 3; ++line) {
+          getline(inStream, buffer);
+          tokens = split(rstrip(buffer, '#'), ' ');
+          const auto tmp = lexicalCast<double>(tokens.begin(), tokens.end());
+          if (!tmp) {
+            appendError("Failed to parse: " + buffer);
+            return false;
+          }
+
+          const auto n = tmp->size();
+          if (line == 0) {
+            if (n == 0u || n > 3u) {
+              appendError("Could not determine dimensionality from lines "
+                          "following $lattice:\n" +
+                          buffer);
+              return false;
+            }
+            periodic_guessed = n;
+          } else if (*periodic_guessed != n) {
+            appendError("The previous and current lines respectively have " +
+                        std::to_string(*periodic_guessed) + " and " +
+                        std::to_string(n) + " element(s)\n" + buffer);
+            return false;
+          }
+
+          if (line == 0) {
+            v1.x() = tmp->at(0) * latticeConversion;
+            if (n < 2)
+              break;
+            v1.y() = tmp->at(1) * latticeConversion;
+            v1.z() = n != 3 ? 0.0 : tmp->at(2) * latticeConversion;
+          } else if (line == 1) {
+            v2.x() = tmp->at(0) * latticeConversion;
+            v2.y() = tmp->at(1) * latticeConversion;
+            if (n < 3)
+              break;
             v2.z() = tmp->at(2) * latticeConversion;
           } else if (line == 2) {
             v3.x() = tmp->at(0) * latticeConversion;
             v3.y() = tmp->at(1) * latticeConversion;
             v3.z() = tmp->at(2) * latticeConversion;
           }
-        } else {
-          appendError("Failed to parse this line following $lattice: " +
-                      buffer);
-          return false;
         }
       }
+
     } else if (tokens[0][0] != '#') {
       std::cerr << "Ignore unknown token: " << buffer << '\n';
     }
