@@ -45,8 +45,8 @@ TEST(ElementTest, masses)
 
 TEST(ElementTest, radiusVDW)
 {
-  EXPECT_EQ(Elements::radiusVDW(1), 1.675);
-  EXPECT_EQ(Elements::radiusVDW(6), 1.910);
+  EXPECT_EQ(Elements::radiusVDW(1), 1.2);
+  EXPECT_EQ(Elements::radiusVDW(6), 1.77);
 }
 
 TEST(ElementTest, radiusCovalent)
@@ -93,7 +93,7 @@ TEST(ElementTest, isotopes)
 
 TEST(ElementTest, dummyElement)
 {
-  EXPECT_EQ(Elements::radiusVDW(0), 0.837);
+  EXPECT_EQ(Elements::radiusVDW(0), 0.69);
   EXPECT_EQ(Elements::radiusCovalent(0), 0.18);
 }
 
