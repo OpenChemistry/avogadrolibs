@@ -186,10 +186,21 @@ void ConstraintsDialog::changeType(int newType)
       ui->editB->setMinimum(1);
   }
 
-  if (newType == 0)
+  if (newType == 0) {
     ui->editValue->setSuffix("Å");
-  else
+    ui->editValue->setMinimum(0.0);
+    ui->editValue->setMaximum(1000.0);
+  }
+  else if (newType == 1) {
     ui->editValue->setSuffix("°");
+    ui->editValue->setMinimum(0.0);
+    ui->editValue->setMaximum(180.0);
+  }
+  else {
+    ui->editValue->setSuffix("°");
+    ui->editValue->setMinimum(-180.0);
+    ui->editValue->setMaximum(180.0);
+  }
 }
 
 void ConstraintsDialog::acceptConstraints()
