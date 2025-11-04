@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 *******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_PLOTRMSD_H
-#define AVOGADRO_QTPLUGINS_PLOTRMSD_H
+#ifndef AVOGADRO_QTPLUGINS_PLOTCONFORMER_H
+#define AVOGADRO_QTPLUGINS_PLOTCONFORMER_H
 
 #include <avogadro/qtgui/extensionplugin.h>
 
@@ -18,20 +18,21 @@ class ChartDialog;
 
 namespace QtPlugins {
 
-// First item in the pair is the frame number. Second is the RMSD value.
-typedef std::vector<std::pair<double, double>> RmsdData;
+// First item in the pair is the frame number.
+// Second is the RMSD value or energy
+typedef std::vector<std::pair<double, double>> PlotData;
 
 /**
- * @brief Generate and plot an RMSD curve.
+ * @brief Generate and plot conformer data (RMSD or energy)
  */
-class PlotRmsd : public Avogadro::QtGui::ExtensionPlugin
+class PlotConformer : public Avogadro::QtGui::ExtensionPlugin
 {
   Q_OBJECT
 public:
-  explicit PlotRmsd(QObject* parent_ = nullptr);
-  ~PlotRmsd() override;
+  explicit PlotConformer(QObject* parent_ = nullptr);
+  ~PlotConformer() override;
 
-  QString name() const override { return tr("PlotRmsd"); }
+  QString name() const override { return tr("PlotConformer"); }
   QString description() const override;
   QList<QAction*> actions() const override;
   QStringList menuPath(QAction*) const override;
@@ -50,21 +51,26 @@ private:
   // Generate RMSD data from a coordinate set
   // Writes the results to @p results, which is a vector of pairs of doubles
   // (see definition above).
-  void generateRmsdPattern(RmsdData& results);
+  void generateRmsdCurve(PlotData& results);
+
+  // Generate a relative energy data from a coordinate set
+  // Writes the results to @p results, which is a vector of pairs of doubles
+  // (see definition above).
+  void generateEnergyCurve(PlotData& results);
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
 
-  std::unique_ptr<QAction> m_displayDialogAction;
+  QAction* m_displayDialogAction;
   QScopedPointer<QtGui::ChartDialog> m_chartDialog;
 };
 
-inline QString PlotRmsd::description() const
+inline QString PlotConformer::description() const
 {
-  return tr("Generate and plot an RMSD curve.");
+  return tr("Generate and plot conformer data (RMSD or energy).");
 }
 
 } // namespace QtPlugins
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_PLOTRMSD_H
+#endif // AVOGADRO_QTPLUGINS_PLOTCONFORMER_H
