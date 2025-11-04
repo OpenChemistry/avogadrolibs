@@ -28,6 +28,8 @@ ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f)
           SLOT(changeType(int)));
   connect(ui->okButton, SIGNAL(clicked()), this, SLOT(acceptConstraints()));
   connect(ui->addConstraint, SIGNAL(clicked()), this, SLOT(addConstraint()));
+  connect(ui->getConstraint, SIGNAL(clicked()), this,
+          SLOT(getConstraint()));
   connect(ui->deleteConstraint, SIGNAL(clicked()), this,
           SLOT(deleteConstraint()));
   connect(ui->deleteAllConstraints, SIGNAL(clicked()), this,
@@ -213,6 +215,16 @@ void ConstraintsDialog::changeType(int newType)
 void ConstraintsDialog::acceptConstraints()
 {
   hide();
+}
+
+void ConstraintsDialog::getConstraint()
+{
+  if (m_molecule == nullptr || m_molecule == nullptr)
+    return;
+
+  // get the new constraints
+  m_molecule->setConstraints(m_model->constraints());
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void ConstraintsDialog::deleteConstraint()
