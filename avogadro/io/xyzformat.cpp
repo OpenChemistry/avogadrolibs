@@ -68,11 +68,7 @@ std::optional<double> findEnergy(const std::string& buffer)
   // try to split out the first token and look for a number
   std::vector<string> tokens(split(buffer, ' '));
   if (!tokens.empty()) {
-    bool ok(false);
-    auto energy = lexicalCast<double>(tokens[0], ok);
-    if (ok)
-      return energy;
-    // otherwise we fall through to return std::nullopt
+    return lexicalCast<double>(tokens[0]);
   }
 
   return std::nullopt;
