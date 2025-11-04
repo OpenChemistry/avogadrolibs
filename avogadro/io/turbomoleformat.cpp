@@ -57,7 +57,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
   Vector3 v1(100.0, 0.0, 0.0);
   Vector3 v2(0.0, 100.0, 0.0);
   Vector3 v3(0.0, 0.0, 100.0);
-  std::optional<unsigned> periodic;
+  std::optional<unsigned> periodic_parsed, periodic_guessed;
 
   // we loop through each line until we hit $end or EOF
   string buffer;
@@ -83,7 +83,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
           appendError("Invalid dimensionality: " + buffer);
           return false;
         }
-        periodic = static_cast<unsigned>(*tmp);
+        periodic_parsed = static_cast<unsigned>(*tmp);
       } else {
         appendError("Failed to parse: " + buffer);
         return false;
@@ -153,20 +153,60 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
 
       getline(inStream, buffer);
       tokens = split(rstrip(buffer, '#'), ' ');
-      if (tokens.size() < 6) {
-        appendError("Not enough tokens in this line: " + buffer);
+      const auto tokens_converted =
+        lexicalCast<double>(tokens.begin(), tokens.end());
+      if (!tokens_converted) {
+        appendError("Failed to parse: " + buffer);
         return false;
       }
-      if (auto tmp = lexicalCast<double>(tokens.begin(), tokens.begin() + 6)) {
-        a = tmp->at(0) * cellConversion;
-        b = tmp->at(1) * cellConversion;
-        c = tmp->at(2) * cellConversion;
-        alpha = tmp->at(3) * DEG_TO_RAD;
-        beta = tmp->at(4) * DEG_TO_RAD;
-        gamma = tmp->at(5) * DEG_TO_RAD;
+
+      const auto ntokens = tokens_converted->size();
+
+      auto set_cell_vars = [&](unsigned periodic) {
+        if (periodic == 1) {
+          a = tokens_converted->at(0) * cellConversion;
+        } else if (periodic == 2) {
+          a = tokens_converted->at(0) * cellConversion;
+          b = tokens_converted->at(1) * cellConversion;
+          gamma = tokens_converted->at(2) * DEG_TO_RAD;
+        } else {
+          a = tokens_converted->at(0) * cellConversion;
+          b = tokens_converted->at(1) * cellConversion;
+          c = tokens_converted->at(2) * cellConversion;
+          alpha = tokens_converted->at(3) * DEG_TO_RAD;
+          beta = tokens_converted->at(4) * DEG_TO_RAD;
+          gamma = tokens_converted->at(5) * DEG_TO_RAD;
+        }
+      };
+
+      if (periodic_parsed) {
+        // $periodic appeared
+        if ((*periodic_parsed == 1 && ntokens == 1) ||
+            (*periodic_parsed == 2 && ntokens == 3) ||
+            (*periodic_parsed == 3 && ntokens == 6)) {
+          set_cell_vars(*periodic_parsed);
+        } else if (*periodic_parsed == 0) {
+          hasCell = false;
+          std::cerr << "Ignore $cell since '$periodic 0' (non periodic) "
+                       "is specified\n";
+        } else {
+          appendError("Not enough or extra tokens in this line: " + buffer);
+          return false;
+        }
       } else {
-        appendError("Failed to parse this line: " + buffer);
-        return false;
+        // $periodic does not appear yet, so guess it from the number of the
+        // elements
+        if (ntokens == 1) {
+          periodic_guessed = 1;
+        } else if (ntokens == 3) {
+          periodic_guessed = 2;
+        } else if (ntokens == 6) {
+          periodic_guessed = 3;
+        } else {
+          appendError("Cannot determine dimensionality from $cell: " + buffer);
+          return false;
+        }
+        set_cell_vars(*periodic_guessed);
       }
 
     } else if (tokens[0] == "$lattice") {
