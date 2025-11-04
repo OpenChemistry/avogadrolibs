@@ -77,6 +77,7 @@ void ConstraintsDialog::highlightSelected(const QModelIndex& newIndex,
 {
   // get the selected row in the table
   auto row = ui->constraintsTableView->currentIndex().row();
+  m_model->currentRow = row;
   if (row < 0 || row >= m_model->rowCount())
     return;
   // get the constraint
@@ -220,6 +221,11 @@ void ConstraintsDialog::deleteConstraint()
     return;
 
   auto row = ui->constraintsTableView->currentIndex().row();
+  row = m_model->currentRow;
+
+  if (!ui->constraintsTableView->selectionModel()->hasSelection())
+    return;
+
   m_model->deleteConstraint(row);
   // get the new constraints
   m_molecule->setConstraints(m_model->constraints());
