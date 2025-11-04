@@ -176,6 +176,14 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       Atom newAtom = mol.addAtom(atomicNum);
+      if (element == "D") {
+        newAtom.setAtomicNumber(1);
+        newAtom.setIsotope(2);
+      } else if (element == "T") {
+        newAtom.setAtomicNumber(1);
+        newAtom.setIsotope(3);
+      }
+
       newAtom.setPosition3d(pos);
       // In case there's no CHG property
       if (charge == 4) // doublet radical
@@ -465,6 +473,13 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     string element(trimmed(atomData[3]));
     unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
     Atom newAtom = mol.addAtom(atomicNum);
+    if (element == "D") {
+      newAtom.setAtomicNumber(1);
+      newAtom.setIsotope(2);
+    } else if (element == "T") {
+      newAtom.setAtomicNumber(1);
+      newAtom.setIsotope(3);
+    }
 
     Vector3 pos;
     pos.x() = lexicalCast<Real>(atomData[4], ok);
