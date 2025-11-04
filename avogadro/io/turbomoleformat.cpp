@@ -120,6 +120,10 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
         tokens = split(rstrip(buffer, '#'), ' ');
       }
     } else if (tokens[0] == "$cell") {
+      if (hasLattice) {
+        appendError("Both of $cell and $lattice are specified");
+        return false;
+      }
       hasCell = true;
       Real cellConversion = BOHR_TO_ANGSTROM;
       if (std::find(tokens.begin(), tokens.end(), "angs") != tokens.end())
@@ -144,6 +148,10 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
       }
 
     } else if (tokens[0] == "$lattice") {
+      if (hasCell) {
+        appendError("Both of $cell and $lattice are specified");
+        return false;
+      }
       hasLattice = true;
       Real latticeConversion = BOHR_TO_ANGSTROM; // default
       if (std::find(tokens.begin(), tokens.end(), "angs") != tokens.end())
