@@ -1,0 +1,51 @@
+# Uploads build artifacts to a tagged or continuous GitHub release
+# Inspired by GH cli docs https://cli.github.com/manual/gh_release
+
+name: "Upload to Release or Continuous"
+description: "Uploads build artifacts to a tagged or continuous GitHub release"
+inputs:
+  artifacts:
+    description: "Path or glob to artifacts to upload"
+    required: true
+  release_name:
+    description: "Release name for non-tag builds (default: continuous)"
+    required: false
+    default: "continuous"
+runs:
+  using: "composite"
+  steps:
+    - name: Determine release tag
+      id: tag
+      shell: bash
+      run: |
+        if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          echo "release_tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        else
+          # i.e. continuous
+          echo "release_tag=${{ inputs.release_name }}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Create or update release
+      shell: bash
+      run: |
+        tag="${{ steps.tag.outputs.release_tag }}"
+        build_date=$(date -u +"%Y-%m-%d %H:%M UTC")
+        notes="Automated build on ${build_date} from ${GITHUB_SHA}"
+
+        if gh release view "$tag" &>/dev/null; then
+          # only update the notes for the "continous" tag
+          # so we don't break the release notes for other tags
+          if [[ "$tag" == "${{ inputs.release_name }}" ]]; then
+            echo "Updating existing release: $tag"
+            gh release edit "$tag" --notes "$notes"
+          fi
+        else
+          echo "Creating release: $tag"
+          gh release create "$tag" --prerelease --title "$tag" --notes "$notes"
+        fi
+
+    - name: Upload artifacts
+      shell: bash
+      run: |
+        # --clobber will overwrite existing artifacts
+        gh release upload "${{ steps.tag.outputs.release_tag }}" "${{ inputs.artifacts }}" --clobber

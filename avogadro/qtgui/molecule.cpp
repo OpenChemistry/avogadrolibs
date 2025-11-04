@@ -320,18 +320,86 @@ RWMolecule* Molecule::undoMolecule()
 
 QString Molecule::formattedFormula() const
 {
-  QString formula = QString::fromStdString(this->formula());
-  QRegularExpression digitParser("(\\d+)");
+  // we're re-implmenting it here to enable isotopes
+  std::map<std::string, size_t> componentsCount;
 
-  QRegularExpressionMatchIterator i = digitParser.globalMatch(formula);
-  unsigned int offset = 0;
-  while (i.hasNext()) {
-    const QRegularExpressionMatch match = i.next();
-    QString digits = match.captured(1);
+  // loop through the atoms
+  for (Index i = 0; i < atomCount(); ++i) {
+    unsigned short atNumber = atomicNumber(i);
+    std::string atomSymbol(Core::Elements::symbol(atNumber));
+    unsigned short iso = isotope(i);
+    if (iso > 0) {
+      if (atNumber == 1 && iso == 1)
+        atomSymbol = "H";
+      else if (atNumber == 1 && iso == 2)
+        atomSymbol = "D";
+      else if (atNumber == 1 && iso == 3)
+        atomSymbol = "T";
+      else
+        // eg. 13C
+        atomSymbol = std::to_string(iso) + atomSymbol;
+    }
 
-    formula.replace(match.capturedStart(1) + offset, digits.size(),
-                    QString("<sub>%1</sub>").arg(digits));
-    offset += 11; // length of <sub>...</sub>
+    componentsCount[atomSymbol]++;
+  }
+
+  QString formula;
+  // loop through the components
+  // if carbon is present, it goes first
+  // if carbon is present, hydrogen is next
+  // then alphabetical
+  // and any components with a number in front get a superscript
+
+  std::map<std::string, size_t>::iterator iter;
+  iter = componentsCount.find("C");
+  if (iter != componentsCount.end()) {
+    formula += "C";
+    if (iter->second > 1)
+      formula += QString("<sub>%1</sub>").arg(iter->second);
+    componentsCount.erase(iter);
+
+    // hydrogen goes next if carbon is present
+    iter = componentsCount.find("H");
+    if (iter != componentsCount.end()) {
+      formula += "H";
+      if (iter->second > 1)
+        formula += QString("<sub>%1</sub>").arg(iter->second);
+      componentsCount.erase(iter);
+    }
+    // also deuterium and tritium
+    iter = componentsCount.find("D");
+    if (iter != componentsCount.end()) {
+      formula += "D";
+      if (iter->second > 1)
+        formula += QString("<sub>%1</sub>").arg(iter->second);
+      componentsCount.erase(iter);
+    }
+    iter = componentsCount.find("T");
+    if (iter != componentsCount.end()) {
+      formula += "T";
+      if (iter->second > 1)
+        formula += QString("<sub>%1</sub>").arg(iter->second);
+      componentsCount.erase(iter);
+    }
+  }
+
+  for (iter = componentsCount.begin(); iter != componentsCount.end(); ++iter) {
+    // check if iter->first starts with a digit
+    if (iter->first[0] >= '0' && iter->first[0] <= '9') {
+      // get the digits for a superscript
+      QString digits;
+      for (unsigned int i = 0; i < iter->first.length(); ++i) {
+        if (iter->first[i] >= '0' && iter->first[i] <= '9')
+          digits += iter->first[i];
+      }
+      formula += QString("<sup>%1</sup>").arg(digits);
+      // take the substring from the digit to the end
+      formula += iter->first.substr(digits.length());
+    } else
+      formula += iter->first;
+
+    if (iter->second > 1)
+      formula += QString("<sub>%1</sub>").arg(iter->second);
   }
 
   // add total charge as a superscript

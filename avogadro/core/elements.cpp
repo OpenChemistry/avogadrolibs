@@ -268,4 +268,24 @@ unsigned char Elements::valenceElectrons(unsigned char atomicNumber)
     return valence_electrons[0];
 }
 
+double Elements::isotopeMass(unsigned char atomicNumber, unsigned short isotope)
+{
+  if (atomicNumber >= element_count)
+    return 0.0;
+
+  // also handles element zero
+  const auto& list = isotopes[atomicNumber];
+  // if there's only one isotope, return its mass
+  if (list.size() == 1)
+    return list.begin()->second;
+
+  // find the isotope
+  for (auto&& [i, mass] : list) {
+    if (i == isotope)
+      return mass;
+  }
+
+  return 0.0;
+}
+
 } // namespace Avogadro::Core

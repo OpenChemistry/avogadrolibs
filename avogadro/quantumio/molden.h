@@ -54,6 +54,10 @@ private:
   void readAtom(const std::vector<std::string>& list);
   void load(Core::GaussianSet* basis);
 
+  bool m_cartesianD = true;
+  bool m_cartesianF = true;
+  bool m_cartesianG = true;
+
   double m_coordFactor;
   int m_electrons;
   unsigned int m_numBasisFunctions;

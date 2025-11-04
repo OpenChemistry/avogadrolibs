@@ -1,7 +1,5 @@
 if(QT_VERSION EQUAL 6)
   find_package(Qt6 COMPONENTS Widgets Network REQUIRED)
-else()
-  find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
 endif()
 
 add_library(MoleQueue)

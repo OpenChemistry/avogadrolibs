@@ -174,7 +174,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
     getline(inStream, buffer);
-    if (!inStream.good()) {
+    if (buffer.empty()) {
       appendError("Error reading atom at index " + std::to_string(i) + ".");
       return false;
     }
@@ -192,9 +192,13 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     unsigned char atomicNum(0);
-    if (isalpha(tokens[0][0]))
+    if (isalpha(tokens[0][0])) {
       atomicNum = Elements::atomicNumberFromSymbol(tokens[0]);
-    else
+      if (tokens[0] == "D")
+        atomicNum = 1;
+      else if (tokens[0] == "T")
+        atomicNum = 1;
+    } else
       atomicNum = static_cast<unsigned char>(
         lexicalCast<short int>(tokens[0]).value_or(0));
 
@@ -208,6 +212,10 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     Atom newAtom = mol.addAtom(atomicNum);
+    if (atomicNum == 1 && tokens[0] == "D")
+      newAtom.setIsotope(2);
+    else if (atomicNum == 1 && tokens[0] == "T")
+      newAtom.setIsotope(3);
     newAtom.setPosition3d(pos);
 
     // check for charge and force columns

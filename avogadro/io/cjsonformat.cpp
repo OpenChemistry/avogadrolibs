@@ -326,6 +326,15 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  // look for isotopes if present
+  if (atoms.contains("isotopes")) {
+    json isotopes = atoms["isotopes"];
+    if (isNumericArray(isotopes) && isotopes.size() == atomCount) {
+      for (Index i = 0; i < atomCount; ++i)
+        molecule.setIsotope(i, isotopes[i]);
+    }
+  }
+
   // Bonds are optional, but if present should be loaded.
   if (jsonRoot.contains("bonds")) {
     json bonds = jsonRoot["bonds"];
@@ -344,7 +353,13 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
         if (isNumericArray(order)) {
           for (unsigned int i = 0; i < molecule.bondCount() && i < order.size();
                ++i) {
-            molecule.bond(i).setOrder(static_cast<int>(order[i]));
+            int bondOrder = static_cast<int>(order[i]);
+            if (bondOrder < 1 || bondOrder > 6) {
+              appendError("Error: bond order is invalid.");
+              return false;
+            }
+
+            molecule.bond(i).setOrder(bondOrder);
           }
         }
       }
@@ -1494,6 +1509,16 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
     if (hasFormalCharges)
       atoms["formalCharges"] = formalCharges;
+
+    // isotopes (if present)
+    json isotopes;
+    const auto isotopeList = molecule.isotopes();
+    if (isotopeList.size() == molecule.atomCount()) {
+      for (Index i = 0; i < molecule.atomCount(); ++i) {
+        isotopes.push_back(isotopeList[i]);
+      }
+      atoms["isotopes"] = isotopes;
+    }
 
     auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;
     if (layer.atomCount()) {

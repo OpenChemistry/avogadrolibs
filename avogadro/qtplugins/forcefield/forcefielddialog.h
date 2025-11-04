@@ -28,7 +28,7 @@ public:
    * Construct a new dialog using the forcefields in @a forceFields.
    */
   explicit ForceFieldDialog(const QStringList& forceFields,
-                            QWidget* parent_ = 0);
+                            QWidget* parent_ = nullptr);
   ~ForceFieldDialog() override;
 
   /**

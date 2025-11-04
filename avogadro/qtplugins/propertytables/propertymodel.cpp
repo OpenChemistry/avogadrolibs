@@ -37,8 +37,9 @@ using std::vector;
 
 using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;
 
-// element, valence, formal charge, partial charge, x, y, z, label, color
-const int AtomColumns = 9;
+// element, valence, formal charge, partial charge, x, y, z, label, isotope,
+// color
+const int AtomColumns = 10;
 // type, atom 1, atom 2, bond order, length, label
 const int BondColumns = 6;
 // type, atom 1, atom 2, atom 3, angle
@@ -236,8 +237,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     if (m_type == ConformerType) {
       return toVariant(Qt::AlignRight | Qt::AlignVCenter); // energies
     } else if (m_type == AtomType) {
-      if ((index.column() == AtomDataCharge) ||
-          (index.column() == AtomDataColor))
+      if (index.column() == AtomDataColor)
         return toVariant(Qt::AlignRight | Qt::AlignVCenter);
       else
         return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -343,6 +343,13 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         }
       case AtomDataLabel:
         return m_molecule->atomLabel(row).c_str();
+      case AtomDataIsotope: {
+        int isotope = m_molecule->isotope(row);
+        if (isotope > 0)
+          return isotope;
+        else
+          return QVariant();
+      }
       case AtomDataColor:
       default:
         return QVariant(); // nothing to show
@@ -612,6 +619,8 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("Z (Å)");
         case AtomDataLabel:
           return tr("Label");
+        case AtomDataIsotope:
+          return tr("Isotope");
         case AtomDataColor:
           return tr("Color");
       }
@@ -726,7 +735,7 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
     if (index.column() == AtomDataElement ||
         index.column() == AtomDataFormalCharge || index.column() == AtomDataX ||
         index.column() == AtomDataY || index.column() == AtomDataZ ||
-        index.column() == AtomDataLabel)
+        index.column() == AtomDataLabel || index.column() == AtomDataIsotope)
       return editable;
     // TODO: Color
   } else if (m_type == BondType) {
@@ -802,6 +811,9 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         break;
       case AtomDataLabel:
         undoMolecule->setAtomLabel(index.row(), value.toString().toStdString());
+        break;
+      case AtomDataIsotope:
+        m_molecule->setIsotope(index.row(), value.toInt());
         break;
       default:
         return false;

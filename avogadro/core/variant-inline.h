@@ -382,7 +382,7 @@ inline void* Variant::value() const
   if (m_type == Pointer)
     return m_value.pointer;
 
-  return 0;
+  return nullptr;
 }
 
 template <>
@@ -459,13 +459,13 @@ inline void Variant::clear()
 {
   if (m_type == String) {
     delete m_value.string;
-    m_value.string = 0;
+    m_value.string = nullptr;
   } else if (m_type == Matrix) {
     delete m_value.matrix;
-    m_value.matrix = 0;
+    m_value.matrix = nullptr;
   } else if (m_type == Vector) {
     delete m_value.vector;
-    m_value.vector = 0;
+    m_value.vector = nullptr;
   }
 
   m_type = Null;

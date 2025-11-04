@@ -22,7 +22,7 @@ class ConstraintsDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit ConstraintsDialog(QWidget* parent_ = 0,
+  explicit ConstraintsDialog(QWidget* parent_ = nullptr,
                              Qt::WindowFlags f = Qt::WindowFlags());
   ~ConstraintsDialog() override;
 

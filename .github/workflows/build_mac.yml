@@ -143,8 +143,6 @@ jobs:
             # import certificate to keychain
             security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
             security list-keychain -d user -s $KEYCHAIN_PATH
-
-            # signing occurs via avogadroapp cpack instructions
           fi # certificate exists
         fi # password exists
 
@@ -160,8 +158,8 @@ jobs:
         macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
         if [ -n "${P12_PASSWORD}" ]; then
           # codesign the Open Babel modules, then the app
-          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app/Contents/lib/openbabel/*.so
-          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../avogadrolibs/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
+          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../${{ github.event.repository.name }}/openchemistry/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app/Contents/lib/openbabel/*.so
+          /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../${{ github.event.repository.name }}/openchemistry/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app
         fi
         # create the DMG
         cd prefix
@@ -169,13 +167,15 @@ jobs:
           # This is a tag - extract version
           VERSION="${GITHUB_REF#refs/tags/}"
           VERSION="${VERSION#v}"  # Remove 'v' prefix if present
+          VOLNAME="Avogadro2 ${VERSION}"
           IS_RELEASE=true
         else
-          # This is a nightly build - use current date
-          VERSION=$(date +%Y-%m-%d)
+          # This is a nightly build - no version
+          # but include the date in the volume name
+          VERSION=""
+          VOLNAME="Avogadro2 $(date +%Y-%m-%d)"
           IS_RELEASE=false
         fi
-        VOLNAME="Avogadro2 ${VERSION}"
 
         # Determine architecture
         ARCH=$(uname -m)
@@ -189,9 +189,9 @@ jobs:
           fi
         else
           if [[ "$ARCH" == "arm64" ]]; then
-            DMG_NAME="Avogadro2-${VERSION}-arm64.dmg"
+            DMG_NAME="Avogadro2-continuous-arm64.dmg"
           else
-            DMG_NAME="Avogadro2-${VERSION}.dmg"
+            DMG_NAME="Avogadro2-continuous.dmg"
           fi
         fi
         echo "Building DMG: ${DMG_NAME}"
@@ -214,10 +214,18 @@ jobs:
 
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
       with:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
+
+    - name: Upload release assets
+      uses: ./.github/actions/upload-release
+      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
+      env:
+        GH_TOKEN: ${{ github.token }}
+      with:
+        artifacts: "${{ runner.workspace }}/build/Avogadro2*.dmg"
 
     - name: Setup tmate session
       if: ${{ failure() }}

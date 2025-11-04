@@ -55,7 +55,7 @@ void Centroid::addCentroid()
   if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
-  Vector3 center;
+  Vector3 center(0.0, 0.0, 0.0);
   Index count = 0;
   bool hasSelection = !m_molecule->isSelectionEmpty();
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
@@ -79,9 +79,8 @@ void Centroid::addCenterOfMass()
   if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
-  Vector3 center;
+  Vector3 center(0.0, 0.0, 0.0);
   Real totalMass = 0.0;
-  Index count = 0;
   bool hasSelection = !m_molecule->isSelectionEmpty();
 
   // we have to first find the centroid
@@ -93,10 +92,12 @@ void Centroid::addCenterOfMass()
       continue;
 
     Real mass = Elements::mass(m_molecule->atomicNumber(i));
+    if (m_molecule->isotope(i) > 0)
+      mass = Elements::isotopeMass(m_molecule->atomicNumber(i),
+                                   m_molecule->isotope(i));
     center += m_molecule->atomPosition3d(i) * mass;
 
     totalMass += mass;
-    ++count;
   }
   center /= totalMass;
 

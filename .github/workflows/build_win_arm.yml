@@ -55,12 +55,41 @@ jobs:
       with:
         arch: arm64
 
+    # Emit a vcpkg_version output
+    - name: Get vcpkg git sha
+      if: runner.os == 'Windows'
+      id: vcpkg_version
+      run: |
+        cd /c/vcpkg
+        git pull origin master
+        if [ -d /c/vcpkg/.git ]; then
+          echo "sha=$(git -C /c/vcpkg rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        else
+          # just in case
+          echo "sha=no-vcpkg-git" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+
+    # Restore vcpkg cache (use manifest lock if available)
+    - name: Restore vcpkg cache
+      if: runner.os == 'Windows'
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: |
+          C:\vcpkg\installed
+          C:\vcpkg\packages
+          C:\vcpkg\downloads
+          C:\vcpkg\buildtrees
+        # We don't use a vcpkg manifest so we'll use the vcpkg git SHA as the cache key
+        # Fallback to vcpkg git SHA so cache is somewhat stable across runs.
+        key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
+      env:
+        VCPKG_ROOT: C:\vcpkg
+
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
         choco install nsis
-        cd /c/vcpkg
-        git pull origin master
         vcpkg install libarchive eigen3 libxml2 zlib
       shell: bash
 
@@ -98,10 +127,10 @@ jobs:
           VERSION="${VERSION#v}"  # Remove 'v' prefix if present
         else
           # This is a nightly build - use current date
-          VERSION=$(date +%Y-%m-%d)
+          VERSION="continuous"
         fi
 
-        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}.exe
+        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}-win-arm.exe
       working-directory: ${{ runner.workspace }}/build/
       env:
         GH_TOKEN: ${{ github.token }}
@@ -109,10 +138,18 @@ jobs:
     - name: Upload
       if: matrix.config.artifact != 0
       id: upload-artifact
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
       with:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
+
+    - name: Upload release assets
+      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
+      uses: ./.github/actions/upload-release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      with:
+        artifacts: "${{ runner.workspace }}/build/Avogadro2*.*"
 
     - name: Sign Windows release
       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
@@ -138,7 +175,7 @@ jobs:
         GH_TOKEN: ${{ github.token }}
 
     - name: Upload MSIX
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
       with:
         path: ${{ runner.workspace }}/build/Avogadro2.msix
         name: Avogadro2.msix

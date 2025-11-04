@@ -152,6 +152,14 @@ public:
   /** @} */
 
   /**
+   * The isotope of this atom
+   * @{
+   */
+  void setIsotope(unsigned short isotope);
+  unsigned short isotope() const;
+  /** @} */
+
+  /**
    * The color of this atom
    * @{
    */
@@ -326,6 +334,18 @@ template <class Molecule_T>
 signed char AtomTemplate<Molecule_T>::formalCharge() const
 {
   return m_molecule->formalCharge(m_index);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setIsotope(unsigned short isotope)
+{
+  m_molecule->setIsotope(m_index, isotope);
+}
+
+template <class Molecule_T>
+unsigned short AtomTemplate<Molecule_T>::isotope() const
+{
+  return m_molecule->isotope(m_index);
 }
 
 template <class Molecule_T>

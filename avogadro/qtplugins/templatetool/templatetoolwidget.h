@@ -25,7 +25,7 @@ class TemplateToolWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit TemplateToolWidget(QWidget* parent_ = 0);
+  explicit TemplateToolWidget(QWidget* parent_ = nullptr);
   ~TemplateToolWidget() override;
 
   void setAtomicNumber(unsigned char atomicNum);

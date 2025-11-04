@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-27 01:16+0000\n"
-"PO-Revision-Date: 2025-10-21 07:02+0000\n"
+"PO-Revision-Date: 2025-10-28 18:06+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Weblate 5.14.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1537,7 +1537,7 @@ msgstr ""
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
-msgstr ""
+msgstr "計算中…"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
@@ -1548,28 +1548,28 @@ msgstr ""
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] ""
+msgstr[0] "残り%n秒"
 
 #: qtgui/timedprogressdialog.cpp:85
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
 msgid_plural "%n minute(s) remaining"
-msgstr[0] ""
+msgstr[0] "残り%n分"
 
 #: qtgui/timedprogressdialog.cpp:93
 #, qt-plural-format
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] ""
+msgstr[0] "残り1時間%n分"
 
 #: qtgui/timedprogressdialog.cpp:96
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
 msgid_plural "%n hour(s) remaining"
-msgstr[0] ""
+msgstr[0] "残り%n時間"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
