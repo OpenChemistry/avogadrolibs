@@ -49,6 +49,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
   bool fractionalCoords = false;
 
   // possible lattice constants
+  // if periodic is either one or two, the values are used for "vacuum"
   Real a = 100.0, b = 100.0, c = 100.0;
   Real alpha = 90.0 * DEG_TO_RAD, beta = 90.0 * DEG_TO_RAD,
        gamma = 90.0 * DEG_TO_RAD;
