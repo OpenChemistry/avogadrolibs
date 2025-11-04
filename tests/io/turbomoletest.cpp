@@ -15,6 +15,7 @@
 
 #include <string>
 
+using Avogadro::ANGSTROM_TO_BOHR;
 using Avogadro::BOHR_TO_ANGSTROM;
 using Avogadro::Vector3;
 using Avogadro::Core::Molecule;
@@ -56,55 +57,104 @@ $end
 
 TEST(TurbomoleTest, readCellParameters)
 {
-  const auto periodic = "$periodic 3\n"s;
-
-  auto cell = [](const std::string& extra = ""s) {
-    return "$cell"s + extra + R"(
- 4.0  6.0  8.0   90.0   90.0   90.0
-)"s;
+  auto cell = [](unsigned periodic, const std::string& extra = "") {
+    const std::map<unsigned, std::string> CELLS = {
+      { 1, "6.0"s },
+      { 2, "6.0 8.0 90.0"s },
+      { 3, "6.0 8.0 10.0 90.0 90.0 90.0"s }
+    };
+    return "$cell"s + extra + '\n' + CELLS.at(periodic) + '\n';
   };
 
-  auto lattice = [](const std::string& extra = ""s) {
-    return "$lattice"s + extra + R"(
- 4.0  0.0  0.0
- 0.0  6.0  0.0
- 0.0  0.0  8.0
-)"s;
+  auto lattice = [](unsigned periodic, const std::string& extra = "") {
+    std::map<unsigned, std::string> LATTICES = {
+      { 1, "6.0"s },
+      { 2, "6.0 0.0\n0.0 8.0"s },
+      { 3, "6.0 0.0 0.0\n0.0 8.0 0.0\n0.0 0.0 10.0"s }
+    };
+    return "$lattice"s + extra + '\n' + LATTICES.at(periodic) + '\n';
   };
 
-  constexpr double EPS = 1.0e-15;
-  for (const auto& len : {
-         ""s,      // bohr
-         " angs"s, // ångström
-         "angs"s   // INVALID: space required
-       }) {
-    for (const auto& str : {
-           periodic + cell(len) + "$end"s,
-           periodic + lattice(len) + "$end"s,
-         }) {
+  constexpr double EPS = 1.0e-14;
+
+  for (unsigned periodic = 1u; periodic <= 3u; periodic++) {
+    const auto periodic_kw = "$periodic "s + std::to_string(periodic) + '\n';
+
+    {
       TurbomoleFormat tmol;
       Molecule molecule;
-      const bool ok = tmol.readString(str, molecule);
-      const auto* const uc = molecule.unitCell();
-      if (len == "angs"s) {
-        EXPECT_EQ(uc, nullptr) << str;
-      } else {
-        EXPECT_TRUE(ok) << str << '\n' << tmol.error();
-        ASSERT_NE(uc, nullptr) << str;
-        const double factor = len.empty() ? BOHR_TO_ANGSTROM : 1.0;
-        const auto& a = uc->aVector();
-        const auto& b = uc->bVector();
-        const auto& c = uc->cVector();
-        EXPECT_EQ(a[0] / factor, 4.0);
-        EXPECT_EQ(b[1] / factor, 6.0);
-        EXPECT_EQ(c[2] / factor, 8.0);
-        EXPECT_EQ(a[1], 0.0);
-        EXPECT_EQ(a[2], 0.0);
-        // evaluates to nonzero in case of $cell
-        EXPECT_NEAR(b[0], 0.0, EPS);
-        EXPECT_NEAR(b[2], 0.0, EPS);
-        EXPECT_NEAR(c[0], 0.0, EPS);
-        EXPECT_NEAR(c[1], 0.0, EPS);
+      // $periodic is specified but $cell/$lattice is missed
+      EXPECT_FALSE(tmol.readString(periodic_kw + "$end"s, molecule));
+    }
+
+    for (unsigned n = 1u; n <= 3u; n++) {
+      for (const auto& len : {
+             ""s,      // bohr
+             " angs"s, // ångström
+             "angs"s   // INVALID: space required
+           }) {
+        for (const auto& str : {
+               periodic_kw + cell(n, len) + "$end"s,
+               periodic_kw + lattice(n, len) + "$end"s,
+               cell(n, len) + periodic_kw + "$end"s,
+               lattice(n, len) + periodic_kw + "$end"s,
+             }) {
+          TurbomoleFormat tmol;
+          Molecule molecule;
+
+          if (periodic != n || len == "angs"s) {
+            // $periodic and $cell/$lattice mismatch, e.g.
+            //
+            // $periodic 3
+            // $cell 6.0  # 1D
+            // $end
+            //
+            // $periodic 3
+            // $lattice
+            // 6.0 0.0  # 2D
+            // 0.0 8.0  # 2D
+            // $end
+            //
+            // OR '$cellangs' or '$latticeangs'
+            EXPECT_FALSE(tmol.readString(str, molecule)) << str;
+          } else {
+            // $periodic and $cell/$lattice match
+            ASSERT_TRUE(tmol.readString(str, molecule)) << str << '\n'
+                                                        << tmol.error();
+            const auto* const uc = molecule.unitCell();
+            ASSERT_NE(uc, nullptr);
+            const double factor = len.empty() ? ANGSTROM_TO_BOHR : 1.0;
+            const auto& a = uc->aVector();
+            const auto& b = uc->bVector();
+            const auto& c = uc->cVector();
+
+            if (periodic == 1) {
+              EXPECT_EQ(a * factor, Vector3(6.0, 0.0, 0.0));
+              EXPECT_NEAR(b[0], 0.0, EPS);
+              EXPECT_EQ(b[1], 100.0);
+              EXPECT_NEAR(b[2], 0.0, EPS);
+              EXPECT_NEAR(c[0], 0.0, EPS);
+              EXPECT_NEAR(c[1], 0.0, EPS);
+              EXPECT_EQ(c[2], 100.0);
+            } else if (periodic == 2) {
+              EXPECT_EQ(a * factor, Vector3(6.0, 0.0, 0.0));
+              EXPECT_NEAR(b[0], 0.0, EPS);
+              EXPECT_EQ(b[1] * factor, 8.0);
+              EXPECT_NEAR(b[2], 0.0, EPS);
+              EXPECT_NEAR(c[0], 0.0, EPS);
+              EXPECT_NEAR(c[1], 0.0, EPS);
+              EXPECT_EQ(c[2], 100.0);
+            } else {
+              EXPECT_EQ(a * factor, Vector3(6.0, 0.0, 0.0));
+              EXPECT_NEAR(b[0], 0.0, EPS);
+              EXPECT_EQ(b[1] * factor, 8.0);
+              EXPECT_NEAR(b[2], 0.0, EPS);
+              EXPECT_NEAR(c[0], 0.0, EPS);
+              EXPECT_NEAR(c[1], 0.0, EPS);
+              EXPECT_NEAR(c[2] * factor, 10.0, EPS);
+            }
+          }
+        }
       }
     }
   }
