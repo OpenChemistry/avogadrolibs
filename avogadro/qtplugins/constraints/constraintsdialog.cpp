@@ -181,9 +181,12 @@ void ConstraintsDialog::changeType(int newType)
     case 1: // angle
       ui->editC->setEnabled(true);
       ui->editC->setMinimum(1);
+      ui->editD->setValue(0);
     case 0: // distance
       ui->editB->setEnabled(true);
       ui->editB->setMinimum(1);
+      ui->editC->setValue(0);
+      ui->editD->setValue(0);
   }
 
   if (newType == 0) {
