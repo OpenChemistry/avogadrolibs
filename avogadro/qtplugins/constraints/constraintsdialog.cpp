@@ -108,7 +108,7 @@ void ConstraintsDialog::updateConstraints()
   ui->constraintsTableView->resizeColumnsToContents();
 
   // update the maximum atoms on the spin boxes
-  Index maxAtom = m_molecule->atomCount() - 1;
+  Index maxAtom = m_molecule->atomCount();
   ui->editA->setMaximum(maxAtom);
   ui->editB->setMaximum(maxAtom);
   ui->editC->setMaximum(maxAtom);
