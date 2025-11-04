@@ -82,6 +82,15 @@ TEST(ElementTest, colors)
   EXPECT_EQ(Elements::color(8)[2], 13);
 }
 
+TEST(ElementTest, isotopes)
+{
+  EXPECT_EQ(Elements::isotopeMass(1, 0), 1.00782503223);
+  EXPECT_EQ(Elements::isotopeMass(1, 1), 1.00782503223);
+  EXPECT_EQ(Elements::isotopeMass(6, 12), 12.0);
+  EXPECT_EQ(Elements::isotopeMass(6, 0), Elements::isotopeMass(6, 12));
+  // TODO: spot-check other isotopes
+}
+
 TEST(ElementTest, dummyElement)
 {
   EXPECT_EQ(Elements::radiusVDW(0), 0.69);

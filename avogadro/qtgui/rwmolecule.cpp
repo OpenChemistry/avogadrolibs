@@ -252,6 +252,16 @@ bool RWMolecule::setFormalCharge(Index atomId, signed char charge)
   return true;
 }
 
+bool RWMolecule::setIsotope(Index atomId, unsigned short isotope)
+{
+  if (atomId >= atomCount())
+    return false;
+
+  // TODO: implement an undo command
+  m_molecule.setIsotope(atomId, isotope);
+  return true;
+}
+
 bool RWMolecule::setColor(Index atomId, Vector3ub color)
 {
   if (atomId >= atomCount())

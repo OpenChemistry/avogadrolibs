@@ -310,6 +310,22 @@ public:
   bool setFormalCharge(Index atomId, signed char charge);
 
   /**
+   * Get the isotope for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The isotope of the atom indexed at @a atomId, or
+   * 0 if @a atomId is invalid. (default is 0 for most common isotope)
+   */
+  unsigned short isotope(Index atomId) const;
+
+  /**
+   * Set the isotope of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param isotope The new isotope
+   * @return True on success, false otherwise.
+   */
+  bool setIsotope(Index atomId, unsigned short isotope);
+
+  /**
    * Get the color for the requested atom.
    * @param atomId The index of the atom.
    * @return The color of the atom indexed at @a atomId, or
@@ -785,6 +801,11 @@ inline Core::AtomHybridization RWMolecule::hybridization(Index atomId) const
 inline signed char RWMolecule::formalCharge(Index atomId) const
 {
   return m_molecule.formalCharge(atomId);
+}
+
+inline unsigned short RWMolecule::isotope(Index atomId) const
+{
+  return m_molecule.isotope(atomId);
 }
 
 inline Vector3ub RWMolecule::color(Index atomId) const

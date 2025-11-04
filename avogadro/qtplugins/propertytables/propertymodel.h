@@ -115,8 +115,8 @@ private:
     AtomDataY,
     AtomDataZ,
     AtomDataLabel,
+    AtomDataIsotope,
     AtomDataColor,
-    AtomDataCharge,
     AtomDataCustom,
   };
 

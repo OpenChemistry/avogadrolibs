@@ -157,24 +157,6 @@ public:
   const Array<signed char>& formalCharges() const;
 
   /**
-   * Get the total charge on the molecule.
-   * The method will first check to see if a total charge has been set. If not,
-   * it will calculate the total charge from the formal charges (if set).
-   * If neither has been set, it will assume the total charge is zero.
-   * @return The total charge of the molecule.
-   */
-  signed char totalCharge() const;
-
-  /**
-   * Get the total spin multiplicity of the molecule.
-   * The method will first check to see if a total spin has been set. If not,
-   * it will either suggest a singlet if an even number of electrons are
-   * present, or a doublet if an odd number of electrons are present.
-   * @return The total spin multiplicity of the molecule.
-   */
-  char totalSpinMultiplicity() const;
-
-  /**
    * Get the formal charge for the requested atom.
    * @param atomId The index of the atom.
    * @return The formal charge of the atom indexed at @a atomId, or
@@ -196,6 +178,53 @@ public:
    * @return True on success, false otherwise.
    */
   bool setFormalCharge(Index atomId, signed char charge);
+
+  /**
+   * Get the total charge on the molecule.
+   * The method will first check to see if a total charge has been set. If not,
+   * it will calculate the total charge from the formal charges (if set).
+   * If neither has been set, it will assume the total charge is zero.
+   * @return The total charge of the molecule.
+   */
+  signed char totalCharge() const;
+
+  /**
+   * Get the total spin multiplicity of the molecule.
+   * The method will first check to see if a total spin has been set. If not,
+   * it will either suggest a singlet if an even number of electrons are
+   * present, or a doublet if an odd number of electrons are present.
+   * @return The total spin multiplicity of the molecule.
+   */
+  char totalSpinMultiplicity() const;
+
+  /** @return an array of the isotopes for the atoms in the molecule. */
+  Array<unsigned short>& isotopes();
+
+  /** \overload */
+  const Array<unsigned short>& isotopes() const;
+
+  /**
+   * Get the isotope for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The isotope of the atom indexed at @a atomId, or
+   * 0 if @a atomId is invalid.
+   */
+  unsigned short isotope(Index atomId) const;
+
+  /**
+   * Replace the current array of isotopes.
+   * @param charges The new isotope array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setIsotopes(const Core::Array<unsigned short>& isotopes);
+
+  /**
+   * Set the isotope of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param isotope The new isotope (or zero for most common)
+   * @return True on success, false otherwise.
+   */
+  bool setIsotope(Index atomId, unsigned short isotope);
 
   /** \returns a vector of colors for the atoms in the moleucle. */
   Array<Vector3ub>& colors();
@@ -502,6 +531,13 @@ public:
    * masses.
    */
   double mass() const;
+
+  /**
+   * @return the monoisotopic mass of the molecule obtained by summing
+   * the isotopic masses of the atoms (including the most common isotope
+   * if not specified).
+   */
+  double monoisotopicMass() const;
 
   /**
    * @return The center of geometry of the molecule obtained by summing the
@@ -868,6 +904,7 @@ protected:
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
+  Array<unsigned short> m_isotopes; //!< Store isotopes of the atoms
   Array<Vector3> m_forceVectors;
   Array<Vector3ub> m_colors;
   // Vibration data if available.
@@ -965,6 +1002,31 @@ inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
     if (atomId >= m_formalCharges.size())
       m_formalCharges.resize(atomCount(), 0);
     m_formalCharges[atomId] = charge;
+    return true;
+  }
+  return false;
+}
+
+inline unsigned short Molecule::isotope(Index atomId) const
+{
+  return atomId < m_isotopes.size() ? m_isotopes[atomId] : 0;
+}
+
+inline bool Molecule::setIsotopes(const Core::Array<unsigned short>& isotopes)
+{
+  if (isotopes.size() == atomCount()) {
+    m_isotopes = isotopes;
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setIsotope(Index atomId, unsigned short isotope)
+{
+  if (atomId < atomCount()) {
+    if (atomId >= m_isotopes.size())
+      m_isotopes.resize(atomCount(), 0);
+    m_isotopes[atomId] = isotope;
     return true;
   }
   return false;
