@@ -1,4 +1,10 @@
-varying vec3 fnormal;
+#version 400
+precision highp float;
+
+in vec3 fnormal;
+in vec4 outColor;
+
+out vec4 colorOut;
 
 void main()
 {
@@ -9,9 +15,9 @@ void main()
   float df = max(0.0, dot(N, -L));
   float sf = max(0.0, dot(N, -H));
   sf = pow(sf, 32.0);
-  vec4 ambient = gl_Color / 2.2;
-  vec4 diffuse = gl_Color * 1.1;
-  vec4 specular = gl_Color * 5.0;
-  gl_FragColor = ambient + df * diffuse + sf * specular;
-  gl_FragColor.a = gl_Color.a;
+  vec4 ambient = outColor / 2.2;
+  vec4 diffuse = outColor * 1.1;
+  vec4 specular = outColor * 5.0;
+  colorOut = ambient + df * diffuse + sf * specular;
+  colorOut.a = outColor.a;
 }

@@ -1,30 +1,31 @@
 //
 // Input
 //
-
+#version 400
+precision highp float;
 // sphere position: model coordinates
-attribute vec3 a_pos;
+in vec3 a_pos;
 // sphere corner: [-r, -r], [r, -r], [r, r], [-r, r]
-attribute vec2 a_corner;
+in vec2 a_corner;
 // offset for the center of the sphere's AO map texture tile
-attribute vec2 a_tileOffset;
+in vec2 a_tileOffset;
 // color: RGB
-attribute vec3 a_color;
+in vec3 a_color;
 
 //
 // Output
 //
 
 // normalized corner
-varying vec2 v_corner;
+out vec2 v_corner;
 // color
-varying vec3 v_color;
+out vec3 v_color;
 // position in eye-coordinate space
-varying vec4 v_eyePos;
+out vec4 v_eyePos;
 // sphere radius
-varying float v_radius;
+out float v_radius;
 // AO tile offset
-varying vec2 v_tileOffset;
+out vec2 v_tileOffset;
 
 //
 // Uniforms
