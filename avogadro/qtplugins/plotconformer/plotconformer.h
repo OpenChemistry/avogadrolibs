@@ -56,8 +56,6 @@ private:
   void generateRmsdCurve(PlotData& results);
 
   // Generate a relative energy data from a coordinate set
-  // Writes the results to @p results, which is a vector of pairs of doubles
-  // (see definition above).
   void generateEnergyCurve(PlotData& results);
 
   QList<QAction*> m_actions;

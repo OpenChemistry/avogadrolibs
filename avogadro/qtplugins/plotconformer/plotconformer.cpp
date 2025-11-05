@@ -21,6 +21,10 @@ using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
+constexpr double HartreeToKcal = 627.5094740631;
+constexpr double EvToKcal = 23.06054;
+constexpr double KcalToKJ = 4.184; // by definition
+
 using Core::Array;
 
 PlotConformer::PlotConformer(QObject* parent_)
@@ -107,12 +111,13 @@ void PlotConformer::clicked(float x, float y, Qt::KeyboardModifiers modifiers)
 
 void PlotConformer::displayDialog()
 {
-  PlotData results;
-  generateRmsdCurve(results);
-
-  // Now generate a plot with the data
   std::vector<float> xData;
   std::vector<float> yData;
+  // generateRmsdCurve(results);
+  if (m_molecule != nullptr && m_molecule->hasData("energies"))
+    generateEnergyCurve(results);
+
+  // Now generate a plot with the data
   float min = std::numeric_limits<float>::max();
   float max = std::numeric_limits<float>::min();
   for (const auto& item : results) {
@@ -125,8 +130,10 @@ void PlotConformer::displayDialog()
   }
 
   const char* xTitle = "Frame";
-  const char* yTitle = "RMSD (Å)";
-  const char* windowName = "RMSD Curve";
+  const char* yTitle = "Energy (kcal/mol)";
+  // const char* yTitle = "RMSD (Å)";
+  // const char* windowName = "RMSD Curve";
+  const char* windowName = "Relative Energy";
 
   if (!m_chartDialog) {
     m_chartDialog.reset(
@@ -151,6 +158,9 @@ void PlotConformer::displayDialog()
 
 void PlotConformer::generateRmsdCurve(PlotData& results)
 {
+  if (!m_molecule)
+    return;
+
   m_molecule->setCoordinate3d(0);
   Array<Vector3> ref = m_molecule->atomPositions3d();
 
@@ -171,7 +181,7 @@ void PlotConformer::generateRmsdCurve(PlotData& results)
 void PlotConformer::generateEnergyCurve(PlotData& results)
 {
   // plot relative energies so get the minimum first
-  if (!m_molecule->hasData("energies")) {
+  if (m_molecule == nullptr || !m_molecule->hasData("energies")) {
     return;
   }
 
@@ -184,8 +194,10 @@ void PlotConformer::generateEnergyCurve(PlotData& results)
 
   // okay, now loop through to generate the curve
   for (int entry = 0; entry < energies.size(); entry++) {
-    results.push_back(
-      std::make_pair(static_cast<double>(entry), energies[entry] - minEnergy));
+    double relativeE = energies[entry] - minEnergy;
+    relativeE *= HartreeToKcal;
+
+    results.push_back(std::make_pair(static_cast<double>(entry), relativeE));
   }
 }
 
