@@ -39,6 +39,8 @@ QString findExecutablePath(QString program)
 
   // check the current application directory too
   paths.prepend(QCoreApplication::applicationDirPath());
+  // and check "../bin" too
+  paths.prepend(QCoreApplication::applicationDirPath() + "/../bin");
 
   // check to see if we find the program in that path
   for (const auto& dir : paths) {

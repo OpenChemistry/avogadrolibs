@@ -18,6 +18,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/chartdialog.h>
 #include <avogadro/qtgui/chartwidget.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include "plotxrd.h"
 #include "xrdoptionsdialog.h"
@@ -102,36 +103,62 @@ void PlotXrd::updateActions()
 
 void PlotXrd::displayDialog()
 {
-  // Do nothing if the user cancels
-  if (m_xrdOptionsDialog->exec() != QDialog::Accepted)
-    return;
-
-  // Otherwise, fetch the options and perform the run
-  double wavelength = m_xrdOptionsDialog->wavelength();
-  double peakwidth = m_xrdOptionsDialog->peakWidth();
-  size_t numpoints = m_xrdOptionsDialog->numDataPoints();
-  double max2theta = m_xrdOptionsDialog->max2Theta();
-
-  XrdData results;
-  QString err;
-  if (!generateXrdPattern(*m_molecule, results, err, wavelength, peakwidth,
-                          numpoints, max2theta)) {
-    QMessageBox::critical(qobject_cast<QWidget*>(parent()),
-                          tr("Failed to generate XRD pattern"),
-                          tr("Error message: ") + err);
-    return;
-  }
-
-  // Now generate a plot with the data
+  // check if there's already an XRD in the molecule spectra
+  bool hasXRD = false;
   std::vector<float> xData;
   std::vector<float> yData;
-  for (const auto& item : results) {
-    xData.push_back(item.first);
-    yData.push_back(item.second);
+
+  for (const auto& type : m_molecule->spectraTypes()) {
+    if (type == "XRD" || type == "xrd") {
+      hasXRD = true;
+      break;
+    }
   }
 
-  const char* xTitle = "2 Theta";
-  const char* yTitle = "Intensity";
+  if (hasXRD) {
+    // make sure it works
+    auto spectra = m_molecule->spectra("XRD");
+    // should be a MatrixXd with 2 columns
+    if (spectra.cols() != 2 || spectra.rows() < 2) {
+      hasXRD = false; // re-generate it
+    } else {
+      for (int i = 0; i < spectra.rows(); i++) {
+        xData.push_back(spectra(i, 0));
+        yData.push_back(spectra(i, 1));
+      }
+    }
+  }
+
+  if (!hasXRD) {
+    // we have to generate the XRD pattern
+    // Do nothing if the user cancels
+    if (m_xrdOptionsDialog->exec() != QDialog::Accepted)
+      return;
+
+    // Otherwise, fetch the options and perform the run
+    double wavelength = m_xrdOptionsDialog->wavelength();
+    double peakwidth = m_xrdOptionsDialog->peakWidth();
+    size_t numpoints = m_xrdOptionsDialog->numDataPoints();
+    double max2theta = m_xrdOptionsDialog->max2Theta();
+
+    QString err;
+    XrdData results;
+    if (!generateXrdPattern(*m_molecule, results, err, wavelength, peakwidth,
+                            numpoints, max2theta)) {
+      QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                            tr("Failed to generate XRD pattern"),
+                            tr("Error message: ") + err);
+      return;
+    }
+    // Now generate a plot with the data
+    for (const auto& item : results) {
+      xData.push_back(item.first);
+      yData.push_back(item.second);
+    }
+  }
+
+  QString xTitle = "2θ (°)";
+  QString yTitle = "Intensity";
   const char* windowName = "Theoretical XRD Pattern";
 
   if (!m_chartDialog)
@@ -222,15 +249,14 @@ bool PlotXrd::executeGenXrdPattern(const QStringList& args,
 #else
     QString executable = "genXrdPattern";
 #endif
-    QString path = QCoreApplication::applicationDirPath();
-    if (QFile::exists(path + "/" + executable))
-      program = path + "/" + executable;
-    else if (QFile::exists(path + "/../bin/" + executable))
-      program = path + "/../bin/" + executable;
-    else {
+
+    program = QtGui::Utilities::findExecutablePath(executable);
+    if (program.isEmpty()) {
       err = tr("Error: could not find genXrdPattern executable!");
       qDebug() << err;
       return false;
+    } else {
+      program += "/" + executable;
     }
   }
 
