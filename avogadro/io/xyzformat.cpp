@@ -43,6 +43,7 @@ std::optional<double> findEnergy(const std::string& buffer)
   // orca uses  E -680.044112849966 (with spaces)
   // xtb uses energy: -680.044112849966
   // Open Babel uses Energy: -680.044112849966
+  // crest uses Epot = -680.044112849966
   std::size_t energyStart = buffer.find("energy:");
   std::size_t offset = 7;
   if (energyStart == std::string::npos) {
@@ -52,12 +53,24 @@ std::optional<double> findEnergy(const std::string& buffer)
     energyStart = buffer.find(" E ");
     offset = 3;
   }
+  if (energyStart == std::string::npos) {
+    energyStart = buffer.find("Epot = ");
+    offset = 6;
+  }
 
   if (energyStart != std::string::npos) {
     // pick the next token
     std::string energy = buffer.substr(energyStart + offset);
     return lexicalCast<double>(energy);
   }
+
+  // also check if the comment just starts with a number
+  // try to split out the first token and look for a number
+  std::vector<string> tokens(split(buffer, ' '));
+  if (!tokens.empty()) {
+    return lexicalCast<double>(tokens[0]);
+  }
+
   return std::nullopt;
 }
 
