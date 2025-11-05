@@ -31,6 +31,7 @@ public:
 public slots:
   void acceptConstraints();
   void addConstraint();
+  void getConstraint();
   void deleteConstraint();
   void deleteAllConstraints();
   void highlightSelected(const QModelIndex& newIndex,

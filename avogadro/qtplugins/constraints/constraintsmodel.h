@@ -37,6 +37,7 @@ public:
   void addConstraint(int type, int a, int b, int c, int d, double value);
   void deleteConstraint(int index);
   void setConstraints(const std::vector<Core::Constraint>& constraints);
+  int currentRow = -1;
 
 public slots:
   void emitDataChanged();
