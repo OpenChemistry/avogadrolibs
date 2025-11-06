@@ -227,7 +227,7 @@ void ApplyColors::applyIndexColors()
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
-    float indexFraction = float(i) / float(numAtoms);
+    float indexFraction = float(i) / (float(numAtoms) - 1);
 
     m_molecule->atom(i).setColor(rainbowGradient(indexFraction, type));
   }
