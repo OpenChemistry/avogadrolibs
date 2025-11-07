@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-10-27 01:16+0000\n"
-"PO-Revision-Date: 2025-10-10 20:43+0000\n"
+"PO-Revision-Date: 2025-11-07 01:51+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1142,7 +1142,7 @@ msgstr "Inti Prosesor"
 
 #: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
 msgid "Memory"
-msgstr ""
+msgstr "Memori"
 
 #: qtgui/jsonwidget.cpp:233
 msgid "Calculation Type"
@@ -1166,12 +1166,12 @@ msgstr "Keragaman"
 
 #: qtgui/jsonwidget.cpp:255
 msgid "Solvent"
-msgstr ""
+msgstr "Pelarut"
 
 #: qtgui/jsonwidget.cpp:256
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #: qtgui/jsonwidget.cpp:378
 msgid "User Name"
@@ -1575,39 +1575,39 @@ msgstr "Memeriksa skrip %1 di jalur %2"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
-msgstr ""
+msgstr "Menghitung…"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
-msgstr ""
+msgstr "Kurang dari satu detik tersisa"
 
 #: qtgui/timedprogressdialog.cpp:82
 #, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] ""
+msgstr[0] "%n detik tersisa"
 
 #: qtgui/timedprogressdialog.cpp:85
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
 msgid_plural "%n minute(s) remaining"
-msgstr[0] ""
+msgstr[0] "%n menit tersisa"
 
 #: qtgui/timedprogressdialog.cpp:93
 #, qt-plural-format
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] ""
+msgstr[0] "1 jam %n menit tersisa"
 
 #: qtgui/timedprogressdialog.cpp:96
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
 msgid_plural "%n hour(s) remaining"
-msgstr[0] ""
+msgstr[0] "%n jam tersisa"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -3274,17 +3274,17 @@ msgstr "Bekukan Atom yang Terpilih"
 #: qtplugins/forcefield/forcefield.cpp:118
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
-msgstr ""
+msgstr "Bekukan X"
 
 #: qtplugins/forcefield/forcefield.cpp:126
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
-msgstr ""
+msgstr "Bekukan Y"
 
 #: qtplugins/forcefield/forcefield.cpp:134
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
-msgstr ""
+msgstr "Bekukan Z"
 
 #: qtplugins/forcefield/forcefield.cpp:142
 msgid "Unfreeze Selected Atoms"
@@ -4436,12 +4436,12 @@ msgstr "Bingkai:"
 #: qtplugins/playertool/playertool.cpp:113
 msgctxt "start or first frame index"
 msgid "Start:"
-msgstr ""
+msgstr "Mulai:"
 
 #: qtplugins/playertool/playertool.cpp:124
 msgctxt "end or last frame index"
 msgid "End:"
-msgstr ""
+msgstr "Akhir:"
 
 #: qtplugins/playertool/playertool.cpp:138
 msgid "Dynamic bonding?"
@@ -4463,7 +4463,7 @@ msgstr "Mainkan"
 
 #: qtplugins/playertool/playertool.cpp:165
 msgid "Record…"
-msgstr ""
+msgstr "Catat…"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
@@ -4656,7 +4656,7 @@ msgstr "Kesalahan saat mengekstrak: %1"
 #, qt-format
 msgctxt "argument is program name"
 msgid "Installing dependencies with %1…"
-msgstr ""
+msgstr "Menginstal dependensi dengan %1…"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:510
 #: qtplugins/plugindownloader/downloaderwidget.cpp:573
@@ -4666,7 +4666,7 @@ msgstr "Batalkan"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:658
 msgid "Installation canceled\n"
-msgstr ""
+msgstr "Instalasi dibatalkan\n"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -4942,19 +4942,19 @@ msgstr "Bekukan Atom"
 
 #: qtplugins/propertytables/propertyview.cpp:531
 msgid "Freeze X"
-msgstr ""
+msgstr "Bekukan X"
 
 #: qtplugins/propertytables/propertyview.cpp:534
 msgid "Freeze Y"
-msgstr ""
+msgstr "Bekukan Y"
 
 #: qtplugins/propertytables/propertyview.cpp:537
 msgid "Freeze Z"
-msgstr ""
+msgstr "Bekukan Z"
 
 #: qtplugins/propertytables/propertyview.cpp:540
 msgid "Unfreeze Atom"
-msgstr ""
+msgstr "Buka Beku Atom"
 
 #: qtplugins/propertytables/propertyview.cpp:548
 msgid "Constrain Bond"
@@ -4970,7 +4970,7 @@ msgstr "Membatasi Torsi"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Remove Constraint"
-msgstr ""
+msgstr "Hapus Batasan"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
