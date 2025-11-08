@@ -159,3 +159,48 @@ TEST(TurbomoleTest, readCellParameters)
     }
   }
 }
+
+TEST(TurbomoleTest, writeString)
+{
+  {
+    // N2
+    Molecule molecule;
+    molecule.addAtom(7);
+    molecule.setAtomPosition3d(0, { 0.0, 0.0, 0.0 });
+    molecule.addAtom(7);
+    molecule.setAtomPosition3d(1, { 1.42, 0.0, 0.0 });
+
+    TurbomoleFormat tmol;
+    std::string out;
+    ASSERT_TRUE(tmol.writeString(out, molecule));
+    EXPECT_EQ(out, R"($coord angs
+       0.0000000000       0.0000000000       0.0000000000     n
+       1.4200000000       0.0000000000       0.0000000000     n
+$end
+)");
+  }
+
+  {
+    // THO
+    Molecule molecule;
+    molecule.addAtom(1);
+    molecule.setIsotope(0, 3);
+    molecule.setAtomPosition3d(0, { -0.76, -0.6, 0.0 });
+    molecule.addAtom(1);
+    molecule.setAtomPosition3d(1, { 0.76, -0.6, 0.0 });
+    molecule.addAtom(8);
+    molecule.setAtomPosition3d(2, { 0.0, 0.0, 0.0 });
+
+    TurbomoleFormat tmol;
+    std::string out;
+    ASSERT_TRUE(tmol.writeString(out, molecule));
+    EXPECT_EQ(out, R"($coord angs
+      -0.7600000000      -0.6000000000       0.0000000000     h
+       0.7600000000      -0.6000000000       0.0000000000     h
+       0.0000000000       0.0000000000       0.0000000000     o
+$isosub
+1  3
+$end
+)");
+  }
+}
