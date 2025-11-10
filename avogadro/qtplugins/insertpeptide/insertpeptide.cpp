@@ -14,9 +14,10 @@
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QDebug>
-#include <QStandardPaths>
-#include <QDir>
-#include <QFile>
+#include <QtCore/QSettings>
+#include <QtCore/QStandardPaths>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include <QRegularExpression>
 
 #include <QAction>
@@ -51,6 +52,7 @@ InsertPeptide::InsertPeptide(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_dialog(nullptr)
 {
   auto* action = new QAction(tr("Peptide…"), this);
+  action->setProperty("menu priority", 880);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 }
@@ -80,6 +82,13 @@ void InsertPeptide::showDialog()
   if (m_dialog == nullptr) {
     m_dialog = new InsertPeptideDialog(qobject_cast<QWidget*>(parent()));
   }
+
+  QSettings settings;
+
+  m_dialog->phiSpin->setValue(settings.value("peptide/phi", 180.0).toDouble());
+  m_dialog->psiSpin->setValue(settings.value("peptide/psi", 180.0).toDouble());
+  m_dialog->structureCombo->setCurrentIndex(
+    settings.value("peptide/structure", 0).toInt());
 
   connect(m_dialog->insertButton, SIGNAL(clicked()), this,
           SLOT(performInsert()));
@@ -158,6 +167,11 @@ void InsertPeptide::setStructureType(int index)
     default:
       break;
   }
+
+  QSettings settings;
+  settings.setValue("peptide/phi", m_dialog->phiSpin->value());
+  settings.setValue("peptide/psi", m_dialog->psiSpin->value());
+  settings.setValue("peptide/structure", index);
 }
 
 void InsertPeptide::updateText()
@@ -369,13 +383,13 @@ void InsertPeptide::performInsert()
           coord.a = nextN; // N we just added
           coord.b = previousC;
           coord.c = previousCA;
-          coord.angle = 121.7;  // typical N-CA-C angle
-          coord.dihedral = phi; // phi angle
+          coord.angle = 121.7;    // typical N-CA-C angle
+          coord.dihedral = 180.0; // omega
         } else if (atomName == "C") {
           coord.a = nextCA; // CA we just added
           coord.b = nextN;  // N we just added
           coord.c = previousC;
-          coord.dihedral = 180.0; // omega
+          coord.dihedral = phi; // phi angle from previous residue
         } else {
           // Other atoms: adjust their reference indices
           // Add offset for all atoms from previous residues

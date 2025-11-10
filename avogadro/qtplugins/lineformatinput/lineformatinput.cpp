@@ -30,13 +30,13 @@ LineFormatInput::LineFormatInput(QObject* parent_)
     m_reader(nullptr)
 {
   auto* action = new QAction(tr("SMILES…"), this);
-  action->setProperty("menu priority", 800);
+  action->setProperty("menu priority", 710);
   action->setData("SMILES");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(tr("InChI…"), this);
-  action->setProperty("menu priority", 810);
+  action->setProperty("menu priority", 700);
   action->setData("InChI");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
