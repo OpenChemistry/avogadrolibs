@@ -308,10 +308,14 @@ void InsertPeptide::performInsert()
   Index previousCA = MaxIndex;
   Index previousC = MaxIndex;
   Index previousO = MaxIndex;
+  Index nextN = MaxIndex;
+  Index nextCA = MaxIndex;
+  Index nextC = MaxIndex;
+  Index nextO = MaxIndex;
 
   for (int i = 0; i < sequenceList.size(); i++) {
     QString aaString = sequenceList[i];
-    std::string aaStdString = aaString.toStdString();
+    std::string aaStdString = aaString.toUpper().toStdString();
 
     // Read amino acid if not already cached
     if (aaMap.find(aaStdString) == aaMap.end()) {
@@ -341,10 +345,6 @@ void InsertPeptide::performInsert()
       if (!isLastResidue && (atomName == "OXT" || atomName == "HXT"))
         continue;
 
-      // Skip H (N-terminal H) for non-first residues
-      if (!isFirstResidue && atomName == "H")
-        continue;
-
       // Add atom to molecule
       auto atom = newMol.addAtom(amino.atomicNumbers[j]);
       residue.addResidueAtom(atomName, atom);
@@ -366,11 +366,16 @@ void InsertPeptide::performInsert()
           coord.dihedral = psi; // psi angle from previous residue
         } else if (atomName == "CA") {
           // CA connects to N (just added)
-          coord.a = totalAtomCount - 1; // N we just added
+          coord.a = nextN; // N we just added
           coord.b = previousC;
           coord.c = previousCA;
           coord.angle = 121.7;  // typical N-CA-C angle
           coord.dihedral = phi; // phi angle
+        } else if (atomName == "C") {
+          coord.a = nextCA; // CA we just added
+          coord.b = nextN;  // N we just added
+          coord.c = previousC;
+          coord.dihedral = 180.0; // omega
         } else {
           // Other atoms: adjust their reference indices
           // Add offset for all atoms from previous residues
@@ -387,16 +392,20 @@ void InsertPeptide::performInsert()
 
       // Track key atoms for next residue
       if (atomName == "N")
-        previousN = totalAtomCount;
+        nextN = newMol.atomCount() - 1;
       else if (atomName == "CA")
-        previousCA = totalAtomCount;
+        nextCA = newMol.atomCount() - 1;
       else if (atomName == "C")
-        previousC = totalAtomCount;
+        nextC = newMol.atomCount() - 1;
       else if (atomName == "O")
-        previousO = totalAtomCount;
-
-      totalAtomCount++;
+        nextO = newMol.atomCount() - 1;
     }
+    totalAtomCount = newMol.atomCount();
+
+    previousN = nextN;
+    previousCA = nextCA;
+    previousC = nextC;
+    previousO = nextO;
   }
 
   // Convert internal coordinates to Cartesian
@@ -406,6 +415,8 @@ void InsertPeptide::performInsert()
   for (size_t i = 0; i < positions.size(); i++) {
     newMol.setAtomPosition3d(i, positions[i]);
   }
+  newMol.perceiveBondsSimple();          // add in all the N-C peptide bonds
+  newMol.perceiveBondsFromResidueData(); // set any double bonds, etc.
 
   m_molecule->undoMolecule()->appendMolecule(newMol, tr("Insert Peptide"));
   emit requestActiveTool("Manipulator");

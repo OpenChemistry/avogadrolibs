@@ -20,9 +20,6 @@ Array<Vector3> internalToCartesian(
   Matrix3 m;
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
-
-    std::cerr << " internal to coord " << i << std::endl;
-
     Real sinTheta, cosTheta, sinPhi, cosPhi;
     Real length = internalCoords[i].length;
     Real angle = internalCoords[i].angle;
