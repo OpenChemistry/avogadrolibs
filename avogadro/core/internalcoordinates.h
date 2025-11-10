@@ -6,8 +6,10 @@
 #ifndef AVOGADRO_CORE_INTERNALCOORDINATES_H
 #define AVOGADRO_CORE_INTERNALCOORDINATES_H
 
-#include "array.h"
 #include "avogadrocore.h"
+
+#include "array.h"
+#include "molecule.h"
 #include "vector.h"
 
 namespace Avogadro {
@@ -24,10 +26,11 @@ struct InternalCoordinate
   Real dihedral = 0.0;
 };
 
-Array<Vector3> internalToCartesian(
+AVOGADROCORE_EXPORT Array<Vector3> internalToCartesian(
   const Molecule& molecule, const Array<InternalCoordinate>& internalCoords);
 
-Array<InternalCoordinate> cartesianToInternal(const Molecule& molecule);
+AVOGADROCORE_EXPORT Array<InternalCoordinate> cartesianToInternal(
+  const Molecule& molecule);
 
 } // namespace Core
 } // namespace Avogadro
