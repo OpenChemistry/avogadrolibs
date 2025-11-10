@@ -9,14 +9,14 @@ avogadro_plugin(InsertPeptide
   insertpeptidedialog.ui
 )
 
-# Install the fragments
+# Install the fragments (for the amino acids)
 set(_fragments "${AvogadroLibs_SOURCE_DIR}/../fragments")
 
 # Look in parallel directory for the molecule fragment repository
 if(NOT EXISTS "${_fragments}")
 # download molecules...
 ExternalProject_Add(fragments
-    GIT_REPOSITORY https://github.com/openchemistry/fragments 
+    GIT_REPOSITORY https://github.com/openchemistry/fragments
     GIT_TAG main
     # or https://github.com/OpenChemistry/molecules/archive/refs/heads/master.zip
     SOURCE_DIR "${AvogadroLibs_SOURCE_DIR}/../fragments"
