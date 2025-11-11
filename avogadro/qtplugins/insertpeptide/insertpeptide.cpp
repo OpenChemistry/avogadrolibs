@@ -23,6 +23,7 @@
 #include <QAction>
 
 using Avogadro::Core::Array;
+using Avogadro::Core::InternalCoordinate;
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
@@ -265,6 +266,32 @@ AminoAcid InsertPeptide::readAminoAcid(const QString& threeLetterCode)
   return aa;
 }
 
+void AddTerminus(unsigned char element, QString atomID, Index a,
+                 double distance, Index b, double angle, Index c,
+                 double dihedral, Molecule& molecule,
+                 Array<InternalCoordinate>& coords)
+{
+  if (molecule.residueCount() == 0)
+    return; // can't do anything -- we're in a weird state
+
+  auto residue = molecule.residue(molecule.residueCount() - 1);
+
+  auto atom = molecule.addAtom(element);
+  residue.addResidueAtom(atomID.toStdString(), atom);
+
+  InternalCoordinate coord;
+  coord.a = a;
+  coord.b = b;
+  coord.c = c;
+  coord.length = distance;
+  coord.angle = angle;
+  coord.dihedral = dihedral;
+  coords.push_back(coord);
+
+  // Add a bond between the recently created atom and our "a"
+  molecule.addBond(molecule.atomCount() - 1, a, 1);
+}
+
 void InsertPeptide::performInsert()
 {
   if (m_molecule == nullptr || m_dialog == nullptr)
@@ -358,10 +385,23 @@ void InsertPeptide::performInsert()
       // Skip OXT/HXT for non-terminal residues
       if (!isLastResidue && (atomName == "OXT" || atomName == "HXT"))
         continue;
+      // if it's the last residue, check the terminus
+      if (isLastResidue && atomName == "HXT" && cTerm == 1) {
+        // CO2- termination
+        continue;
+      }
 
       // Add atom to molecule
       auto atom = newMol.addAtom(amino.atomicNumbers[j]);
       residue.addResidueAtom(atomName, atom);
+
+      // formal charges
+      if (isLastResidue && atomName == "OXT" && cTerm == 1) {
+        atom.setFormalCharge(-1);
+      }
+      if (isFirstResidue && atomName == "N" && nTerm == 1) {
+        atom.setFormalCharge(1);
+      }
 
       // Handle internal coordinates
       Core::InternalCoordinate coord = amino.internalCoords[j];
@@ -371,7 +411,6 @@ void InsertPeptide::performInsert()
       // For residues after the first, we need to adjust references
       if (i > 0) {
         // Atoms need to reference previous residue atoms for the peptide bond
-
         if (atomName == "N") {
           // N connects to previous C
           coord.a = previousC;
@@ -402,17 +441,20 @@ void InsertPeptide::performInsert()
           if (coord.c != MaxIndex)
             coord.c += totalAtomCount;
         }
-      }
 
+        // adjust the N-H position
+        if (atomName == "H") {
+          coord.angle = 120.0;
+          coord.dihedral = 0.0;
+        }
+      }
       internalCoords.push_back(coord);
 
-      /*
 #ifndef NDEBUG
-      qDebug() << " added " << atomName << " " << atom.index()
-      << " " << coord.a << " " << coord.b << " " << coord.c
-      << " " << coord.length << " " << coord.angle << " " << coord.dihedral;
+      qDebug() << " added " << atomName << " " << atom.index() << " " << coord.a
+               << " " << coord.b << " " << coord.c << " " << coord.length << " "
+               << coord.angle << " " << coord.dihedral;
 #endif
-      */
 
       // Track key atoms for next residue
       if (atomName == "N")
@@ -424,16 +466,33 @@ void InsertPeptide::performInsert()
       else if (atomName == "O")
         currentO = newMol.atomCount() - 1;
     }
-    totalAtomCount = newMol.atomCount();
 
+    if (i == 0) {
+      // fix the N terminus (e.g., NH2 or NH3+)
+      switch (nTerm) {
+        case 0: // NH2
+          AddTerminus(1, "H2", 0, 1.009, 1, 120.0, 2, 175.0, newMol,
+                      internalCoords);
+          break;
+        case 1: // NH3+
+          AddTerminus(1, "H2", 0, 1.009, 1, 109.5, 2, 120.0, newMol,
+                      internalCoords);
+          AddTerminus(1, "H3", 0, 1.009, 1, 109.5, 2, 60.0, newMol,
+                      internalCoords);
+          break;
+        default:
+          break;
+      }
+    }
+
+    totalAtomCount = newMol.atomCount();
     residue.resolveResidueBonds(newMol);
-    if (i > 0)
+    if (i > 0) {
       // Add peptide bond
       newMol.addBond(previousC, currentN);
-
-    // adjust the dihedral of the previous oxygen
-    if (i > 0)
+      // adjust the dihedral of the previous oxygen
       internalCoords[previousO].dihedral = 180.0 + psi;
+    }
 
     previousN = currentN;
     previousCA = currentCA;

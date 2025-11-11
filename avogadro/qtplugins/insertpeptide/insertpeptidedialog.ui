@@ -334,11 +334,6 @@
           </property>
           <item>
            <property name="text">
-            <string>CH₂CONH</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>NH₂</string>
            </property>
           </item>
@@ -362,11 +357,6 @@
           <item>
            <property name="text">
             <string>CO₂⁻</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>CONHCH₃</string>
            </property>
           </item>
          </widget>

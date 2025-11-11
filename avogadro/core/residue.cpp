@@ -65,7 +65,7 @@ std::vector<Atom> Residue::residueAtoms() const
   return res;
 }
 
-Atom Residue::getAtomByName(std::string name) const
+Atom Residue::atomByName(std::string name) const
 {
   Atom empty;
   auto search = m_atomNameMap.find(name);
@@ -76,7 +76,7 @@ Atom Residue::getAtomByName(std::string name) const
   return empty;
 }
 
-std::string Residue::getAtomName(const Atom atom) const
+std::string Residue::atomName(const Atom atom) const
 {
   for (const auto& it : m_atomNameMap) {
     if (it.second == atom) {
@@ -86,7 +86,7 @@ std::string Residue::getAtomName(const Atom atom) const
   return "";
 }
 
-std::string Residue::getAtomName(const Index index) const
+std::string Residue::atomName(const Index index) const
 {
   for (const auto& it : m_atomNameMap) {
     if (it.second.index() == index) {
@@ -120,7 +120,7 @@ void Residue::resolveResidueBonds(Molecule& mol)
   }
 }
 
-int Residue::getAtomicNumber(std::string name) const
+int Residue::atomicNumber(std::string name) const
 {
   auto search = m_atomNameMap.find(name);
   if (search != m_atomNameMap.end()) {

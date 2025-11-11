@@ -135,7 +135,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     Atom atom;
     int atomicNum = 0;
     if (r != nullptr)
-      r->getAtomicNumber(value);
+      r->atomicNumber(value);
     if (atomicNum) {
       atom = molecule.addAtom(atomicNum);
     } else {

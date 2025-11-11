@@ -287,7 +287,7 @@ void Label::processResidue(const Core::Molecule& molecule,
   node.addChild(geometry);
 
   for (const auto& residue : molecule.residues()) {
-    Atom caAtom = residue.getAtomByName("CA");
+    Atom caAtom = residue.atomByName("CA");
     if (!caAtom.isValid() ||
         !m_layerManager.atomEnabled(layer, caAtom.index())) {
       continue;
