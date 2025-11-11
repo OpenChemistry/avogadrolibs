@@ -518,6 +518,13 @@ public:
   void removeUnitCell();
 
   /**
+   * Add a residue to the molecule.
+   * @param residue The residue to be added.
+   * @param offset The atomic index offset for the new residue.
+   */
+  void addResidue(const Core::Residue& residue, Index offset = 0);
+
+  /**
    * Generic edit that changes the current molecule to be @a newMolecule.
    * Also sets the text for the undo command to be @a undoText. Changes are
    * emitted.

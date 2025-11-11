@@ -51,6 +51,7 @@ avogadro_headers(Core
   gaussianset.h
   gaussiansettools.h
   graph.h
+  internalcoordinates.h
   layer.h
   layermanager.h
   mesh.h
@@ -83,6 +84,7 @@ target_sources(Core PRIVATE
   gaussianset.cpp
   gaussiansettools.cpp
   graph.cpp
+  internalcoordinates.cpp
   layer.cpp
   layermanager.cpp
   mesh.cpp

@@ -12,6 +12,7 @@
 #ifdef USE_SPGLIB
 #include <avogadro/core/avospglib.h>
 #endif
+#include <avogadro/core/residue.h>
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/qtgui/hydrogentools.h>
 
@@ -470,8 +471,34 @@ void RWMolecule::appendMolecule(const Molecule& mol, const QString& undoText)
     addBond(bond.atom1().index() + offset, bond.atom2().index() + offset,
             bond.order());
   }
+  // now loop through and add the resiudes
+  for (size_t i = 0; i < mol.residueCount(); ++i) {
+    const Core::Residue res = mol.residue(i);
+    addResidue(res, offset);
+  }
   endMergeMode();
   emitChanged(changes);
+}
+
+void RWMolecule::addResidue(const Core::Residue& residue, Index offset)
+{
+  // copy the residue name, chain, etc.
+  std::string name = residue.residueName();
+  Index id = residue.residueId();
+  char chain = residue.chainId();
+  m_molecule.addResidue(name, id, chain);
+  Core::Residue newResidue = m_molecule.residue(m_molecule.residueCount() - 1);
+  newResidue.setHeterogen(residue.isHeterogen());
+
+  // now go through all the atoms and add them using the offset
+  for (Core::Atom atom : residue.residueAtoms()) {
+    // get the new index
+    Index newIndex = atom.index() + offset;
+    Core::Atom myAtom = m_molecule.atom(newIndex);
+    // get the atom name
+    std::string atomName = residue.atomName(atom);
+    newResidue.addResidueAtom(atomName, myAtom);
+  }
 }
 
 void RWMolecule::editUnitCell(Matrix3 cellMatrix, CrystalTools::Options options)

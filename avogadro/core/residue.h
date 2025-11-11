@@ -95,22 +95,22 @@ public:
   /**
    * \return the atom with the name specified (e.g., "CA")
    */
-  Atom getAtomByName(std::string name) const;
+  Atom atomByName(std::string name) const;
   /**
    * \return the atomic number of the atom with the name specified (e.g., "CA" =
    * "C")
    */
-  int getAtomicNumber(std::string name) const;
+  int atomicNumber(std::string name) const;
 
   /**
    * \return the name of @p atom or an empty string if not in this residue
    */
-  std::string getAtomName(const Atom atom) const;
+  std::string atomName(const Atom atom) const;
 
   /**
    * \return the name of atom @p index or an empty string if not in this residue
    */
-  std::string getAtomName(const Index index) const;
+  std::string atomName(const Index index) const;
 
   bool hasAtomByIndex(Index index) const;
   /** Set whether this residue is a "HET" / "HETATOM" ligand

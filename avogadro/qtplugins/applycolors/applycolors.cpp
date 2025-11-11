@@ -407,7 +407,7 @@ void ApplyColors::applyCustomColorResidue(const QColor& new_color)
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection &&
-        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+        !m_molecule->atomSelected(residue.atomByName("CA").index()))
       continue;
 
     residue.setColor(color);
@@ -427,7 +427,7 @@ void ApplyColors::resetColorsResidue()
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection &&
-        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+        !m_molecule->atomSelected(residue.atomByName("CA").index()))
       continue;
 
     int offset = 0;
@@ -457,7 +457,7 @@ void ApplyColors::applySecondaryStructureColors()
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection &&
-        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+        !m_molecule->atomSelected(residue.atomByName("CA").index()))
       continue;
 
     Core::Residue::SecondaryStructure type = residue.secondaryStructure();
@@ -541,7 +541,7 @@ void ApplyColors::applyAminoColors()
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection &&
-        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+        !m_molecule->atomSelected(residue.atomByName("CA").index()))
       continue;
 
     int offset = residueNameToOffset(residue.residueName());
@@ -564,7 +564,7 @@ void ApplyColors::applyShapelyColors()
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection &&
-        !m_molecule->atomSelected(residue.getAtomByName("CA").index()))
+        !m_molecule->atomSelected(residue.atomByName("CA").index()))
       continue;
 
     int offset = residueNameToOffset(residue.residueName());

@@ -169,27 +169,27 @@ void CloseContacts::process(const Molecule& molecule,
   for (const auto& r : molecule.residues()) {
     if (!r.residueName().compare("LYS")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.getAtomByName("NZ"), 1.0);
+                     r.atomByName("NZ"), 1.0);
     } else if (!r.residueName().compare("ARG")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.getAtomByName("NE"), 1.0);
+                     r.atomByName("NE"), 1.0);
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.getAtomByName("NH1"), 1.0);
+                     r.atomByName("NH1"), 1.0);
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.getAtomByName("NH2"), 1.0);
+                     r.atomByName("NH2"), 1.0);
     } else if (!r.residueName().compare("HIS")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.getAtomByName("ND1"), 1.0);
+                     r.atomByName("ND1"), 1.0);
     } else if (!r.residueName().compare("ASP")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.getAtomByName("OD1"), -1.0);
+                     r.atomByName("OD1"), -1.0);
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.getAtomByName("OD2"), -1.0);
+                     r.atomByName("OD2"), -1.0);
     } else if (!r.residueName().compare("GLU")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.getAtomByName("OE1"), -1.0);
+                     r.atomByName("OE1"), -1.0);
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.getAtomByName("OE2"), -1.0);
+                     r.atomByName("OE2"), -1.0);
     }
   }
 

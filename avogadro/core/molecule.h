@@ -683,6 +683,7 @@ public:
   Residue& addResidue(std::string& name, Index& number, char& id);
   void addResidue(Residue& residue);
   Residue& residue(Index index);
+  const Residue& residue(Index index) const;
 
   Array<Residue>& residues() { return m_residues; }
   const Array<Residue>& residues() const { return m_residues; }

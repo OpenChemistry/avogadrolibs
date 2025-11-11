@@ -1376,6 +1376,11 @@ Residue& Molecule::residue(Index index)
   return m_residues[index];
 }
 
+const Residue& Molecule::residue(Index index) const
+{
+  return m_residues[index];
+}
+
 Index Molecule::residueCount() const
 {
   return static_cast<Index>(m_residues.size());
