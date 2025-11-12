@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-09 02:51+0000\n"
-"PO-Revision-Date: 2025-11-02 17:51+0000\n"
+"PO-Revision-Date: 2025-11-12 11:51+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3857,7 +3857,7 @@ msgstr "Molecular Mass (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:273
 msgid "Monoisotopic Mass (g/mol)"
-msgstr ""
+msgstr "Monoisotopic Mass (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:275
 msgid "Chemical Formula"
@@ -4764,7 +4764,7 @@ msgstr "Label"
 
 #: qtplugins/propertytables/propertymodel.cpp:623
 msgid "Isotope"
-msgstr ""
+msgstr "Isotope"
 
 #: qtplugins/propertytables/propertymodel.cpp:625
 #: qtplugins/propertytables/propertymodel.cpp:666
@@ -6222,7 +6222,7 @@ msgstr "Options"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
 msgid "Get Constraint"
-msgstr ""
+msgstr "Get Constraint"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)

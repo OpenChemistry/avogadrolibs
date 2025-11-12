@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-09 02:51+0000\n"
-"PO-Revision-Date: 2025-11-07 01:51+0000\n"
+"PO-Revision-Date: 2025-11-12 11:51+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -3874,7 +3874,7 @@ msgstr "Massa Molekul (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:273
 msgid "Monoisotopic Mass (g/mol)"
-msgstr ""
+msgstr "Massa Monoisotopik (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:275
 msgid "Chemical Formula"
@@ -4784,7 +4784,7 @@ msgstr "Label"
 
 #: qtplugins/propertytables/propertymodel.cpp:623
 msgid "Isotope"
-msgstr ""
+msgstr "Isotop"
 
 #: qtplugins/propertytables/propertymodel.cpp:625
 #: qtplugins/propertytables/propertymodel.cpp:666
@@ -6244,7 +6244,7 @@ msgstr "Pilihan"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
 msgid "Get Constraint"
-msgstr ""
+msgstr "Dapatkan Batasan"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
