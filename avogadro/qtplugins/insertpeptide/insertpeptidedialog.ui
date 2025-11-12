@@ -289,7 +289,7 @@
         <item>
          <widget class="QRadioButton" name="lStereoButton">
           <property name="text">
-           <string>L</string>
+           <string notr="true">L</string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -302,7 +302,7 @@
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>D</string>
+           <string notr="true">D</string>
           </property>
           <property name="checkable">
            <bool>false</bool>
@@ -334,12 +334,12 @@
           </property>
           <item>
            <property name="text">
-            <string>NH₂</string>
+            <string notr="true">NH₂</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>NH₃⁺</string>
+            <string notr="true">NH₃⁺</string>
            </property>
           </item>
          </widget>
@@ -351,12 +351,12 @@
           </property>
           <item>
            <property name="text">
-            <string>CO₂H</string>
+            <string notr="true">CO₂H</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>CO₂⁻</string>
+            <string notr="true">CO₂⁻</string>
            </property>
           </item>
          </widget>
@@ -379,12 +379,12 @@
         </item>
         <item>
          <property name="text">
-          <string>Alpha Helix</string>
+          <string>α Helix</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Beta Sheet</string>
+          <string>β Sheet</string>
          </property>
         </item>
         <item>
@@ -394,7 +394,7 @@
         </item>
         <item>
          <property name="text">
-          <string>Pi Helix</string>
+          <string>π Helix</string>
          </property>
         </item>
         <item>
@@ -409,7 +409,7 @@
         <item row="0" column="0">
          <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>Phi:</string>
+           <string notr="true">Phi:</string>
           </property>
          </widget>
         </item>
@@ -448,7 +448,7 @@
         <item row="1" column="0">
          <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>Psi:</string>
+           <string notr="true">Psi:</string>
           </property>
          </widget>
         </item>
@@ -476,37 +476,52 @@
        </property>
        <item>
         <property name="text">
-         <string>A</string>
+         <string notr="true">A</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>B</string>
+         <string notr="true">B</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>C</string>
+         <string notr="true">C</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>D</string>
+         <string notr="true">D</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>E</string>
+         <string notr="true">E</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>F</string>
+         <string notr="true">F</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>G</string>
+         <string notr="true">G</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string notr="true">H</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string notr="true">I</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string notr="true">J</string>
         </property>
        </item>
       </widget>
