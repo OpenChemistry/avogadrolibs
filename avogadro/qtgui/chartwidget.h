@@ -205,6 +205,12 @@ public:
    */
   void setLegendLocation(LegendLocation location);
 
+  /**
+   * @brief Set the visibility of data points
+   * @param visible True to show data points, false to hide them
+   */
+  void setShowPoints(bool visible) { m_showPoints = visible; }
+
 signals:
   /**
    * @brief Emitted when the user single-clicks on the chart
@@ -225,6 +231,7 @@ public slots:
 private:
   void renderViews();
   float m_lineWidth = 1.0;
+  bool m_showPoints = false;
 
   // private members
   class ChartWidgetImpl;

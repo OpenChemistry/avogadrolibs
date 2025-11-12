@@ -101,7 +101,11 @@ bool ChartWidget::addPlot(const std::vector<float>& x,
   JKQTPXYLineGraph* graph = new JKQTPXYLineGraph(plot);
   graph->setXColumn(columnX);
   graph->setYColumn(columnY);
-  graph->setSymbolType(JKQTPNoSymbol);
+  if (!m_showPoints)
+    graph->setSymbolType(JKQTPNoSymbol);
+  else
+    graph->setSymbolType(JKQTPFilledCircle);
+
   graph->setLineWidth(m_lineWidth);
 
   QColor c(color[0], color[1], color[2], color[3]);
@@ -134,7 +138,11 @@ bool ChartWidget::addSeries(const std::vector<float>& newSeries,
   JKQTPXYLineGraph* graph = new JKQTPXYLineGraph(plot);
   graph->setXColumn(0);
   graph->setYColumn(columnY);
-  graph->setSymbolType(JKQTPNoSymbol);
+  if (!m_showPoints)
+    graph->setSymbolType(JKQTPNoSymbol);
+  else
+    graph->setSymbolType(JKQTPFilledCircle);
+
   graph->setLineWidth(m_lineWidth);
 
   QColor c(color[0], color[1], color[2], color[3]);
@@ -180,7 +188,11 @@ bool ChartWidget::addPlots(const std::vector<std::vector<float>>& plotData,
     JKQTPXYLineGraph* graph = new JKQTPXYLineGraph(plot);
     graph->setXColumn(columnX);
     graph->setYColumn(columnY);
-    graph->setSymbolType(JKQTPNoSymbol);
+    if (!m_showPoints)
+      graph->setSymbolType(JKQTPNoSymbol);
+    else
+      graph->setSymbolType(JKQTPFilledCircle);
+
     graph->setLineWidth(m_lineWidth);
     graph->setLineColor(c, color[3] / 255.0);
     graph->setTitle(yName);
