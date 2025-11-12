@@ -8,19 +8,20 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QDialog>
+#include <QComboBox>
+
 #include <memory>
 
 namespace Avogadro {
 
 namespace QtGui {
-class ChartDialog;
+class ChartWidget;
 }
 
 namespace QtPlugins {
 
-// First item in the pair is the frame number.
-// Second is the RMSD value or energy
-typedef std::vector<std::pair<double, double>> PlotData;
+using DataSeries = std::vector<float>;
 
 /**
  * @brief Generate and plot conformer data (RMSD or energy)
@@ -46,23 +47,33 @@ private slots:
   void updateActions();
 
   void displayDialog();
+  void updatePlot();
 
   void clicked(float x, float y, Qt::KeyboardModifiers modifiers);
 
 private:
   // Generate RMSD data from a coordinate set
-  // Writes the results to @p results, which is a vector of pairs of doubles
-  // (see definition above).
-  void generateRmsdCurve(PlotData& results);
+  // Writes the results to @p x and @p y
+  void generateRmsdCurve(DataSeries& x, DataSeries& y);
 
   // Generate a relative energy data from a coordinate set
-  void generateEnergyCurve(PlotData& results);
+  void generateEnergyCurve(DataSeries& x, DataSeries& y);
+
+  // Generate a forces data from a coordinate set
+  void generateForcesCurve(DataSeries& x, DataSeries& y);
+
+  // Generate a velocities data from a coordinate set
+  void generateVelocitiesCurve(DataSeries& x, DataSeries& y);
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
 
   QAction* m_displayDialogAction;
-  QScopedPointer<QtGui::ChartDialog> m_chartDialog;
+  std::unique_ptr<QDialog> m_dialog;
+  QtGui::ChartWidget* m_chartWidget;
+  QComboBox* m_propertyCombo;
+  QComboBox* m_unitsCombo;
+  QComboBox* m_targetUnitsCombo;
 };
 
 inline QString PlotConformer::description() const

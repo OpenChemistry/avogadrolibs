@@ -6,10 +6,14 @@
 #include "plotconformer.h"
 
 #include <QAction>
-#include <QDialog>
 #include <QMessageBox>
 #include <QProcess>
 #include <QString>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QComboBox>
+#include <QLineEdit>
 
 #include <avogadro/core/array.h>
 #include <avogadro/io/fileformatmanager.h>
@@ -31,11 +35,11 @@ PlotConformer::PlotConformer(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
     m_molecule(nullptr), m_displayDialogAction(new QAction(this))
 {
-  m_displayDialogAction->setText(tr("Plot RMSD Curve…"));
+  m_displayDialogAction->setText(tr("Plot Conformer Data…"));
   connect(m_displayDialogAction, &QAction::triggered, this,
           &PlotConformer::displayDialog);
   m_actions.push_back(m_displayDialogAction);
-  m_displayDialogAction->setProperty("menu priority", 80);
+  m_displayDialogAction->setProperty("menu priority", -890);
 
   updateActions();
 }
@@ -111,52 +115,137 @@ void PlotConformer::clicked(float x, float y, Qt::KeyboardModifiers modifiers)
 
 void PlotConformer::displayDialog()
 {
-  std::vector<float> xData;
-  std::vector<float> yData;
-  // generateRmsdCurve(results);
-  if (m_molecule != nullptr && m_molecule->hasData("energies"))
-    generateEnergyCurve(results);
+  bool hasEnergies = (m_molecule->hasData("energies"));
+  // RMSD forces for each coordinate set
+  bool hasForces = (m_molecule->hasData("forces"));
+  // and velocities for MD
+  bool hasVelocities = (m_molecule->hasData("velocities"));
 
-  // Now generate a plot with the data
-  float min = std::numeric_limits<float>::max();
-  float max = std::numeric_limits<float>::min();
-  for (const auto& item : results) {
-    xData.push_back(item.first);
-    yData.push_back(item.second);
-    if (item.second < min)
-      min = item.second;
-    if (item.second > max)
-      max = item.second;
+  if (!m_dialog) {
+    // Create the dialog
+    m_dialog.reset(new QDialog(qobject_cast<QWidget*>(this->parent())));
+    m_dialog->setWindowTitle(tr("Conformer Analysis"));
+    m_dialog->resize(600, 500);
+
+    // Create main layout
+    QVBoxLayout* mainLayout = new QVBoxLayout(m_dialog.get());
+
+    // Create chart widget
+    m_chartWidget = new QtGui::ChartWidget(m_dialog.get());
+    connect(m_chartWidget, &QtGui::ChartWidget::clicked, this,
+            &PlotConformer::clicked);
+    mainLayout->addWidget(m_chartWidget);
+
+    // Create property selection layout
+    QHBoxLayout* propertyLayout = new QHBoxLayout();
+    QLabel* propertyLabel = new QLabel(tr("Plot Type:"), m_dialog.get());
+    m_propertyCombo = new QComboBox(m_dialog.get());
+    m_propertyCombo->addItem(tr("RMSD"), "rmsd");
+    if (hasEnergies)
+      m_propertyCombo->addItem(tr("Energy"), "energy");
+    if (hasForces)
+      m_propertyCombo->addItem(tr("Forces"), "forces");
+    if (hasVelocities)
+      m_propertyCombo->addItem(tr("Velocities"), "velocities");
+
+    propertyLayout->addWidget(propertyLabel);
+    propertyLayout->addWidget(m_propertyCombo);
+    propertyLayout->addStretch();
+    mainLayout->addLayout(propertyLayout);
+
+    // Create energy conversion layout
+    QHBoxLayout* conversionLayout = new QHBoxLayout();
+    QLabel* conversionLabel = new QLabel(tr("Energy Units:"), m_dialog.get());
+    m_unitsCombo = new QComboBox(m_dialog.get());
+    m_unitsCombo->addItem(tr("Hartree"), HartreeToKcal);
+    m_unitsCombo->addItem(tr("eV"), EvToKcal);
+    m_unitsCombo->addItem(tr("kcal/mol"), 1.0);
+    m_unitsCombo->addItem(tr("kJ/mol"), KcalToKJ);
+    if (!hasEnergies)
+      m_unitsCombo->setEnabled(false);
+
+    QLabel* targetLabel = new QLabel(tr("to"), m_dialog.get());
+    m_targetUnitsCombo = new QComboBox(m_dialog.get());
+    m_targetUnitsCombo->addItem(tr("kcal/mol"), 1.0);
+    m_targetUnitsCombo->addItem(tr("kJ/mol"), KcalToKJ);
+    m_targetUnitsCombo->addItem(tr("eV"), 1.0 / EvToKcal);
+    m_targetUnitsCombo->addItem(tr("Hartree"), 1.0 / HartreeToKcal);
+    if (!hasEnergies)
+      m_targetUnitsCombo->setEnabled(false);
+
+    conversionLayout->addWidget(conversionLabel);
+    conversionLayout->addWidget(m_unitsCombo);
+    conversionLayout->addWidget(targetLabel);
+    conversionLayout->addWidget(m_targetUnitsCombo);
+    conversionLayout->addStretch();
+    mainLayout->addLayout(conversionLayout);
+
+    // Connect signals for updates
+    connect(m_propertyCombo,
+            QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+            &PlotConformer::updatePlot);
+    connect(m_unitsCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &PlotConformer::updatePlot);
+    connect(m_targetUnitsCombo,
+            QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+            &PlotConformer::updatePlot);
   }
 
-  const char* xTitle = "Frame";
-  const char* yTitle = "Energy (kcal/mol)";
-  // const char* yTitle = "RMSD (Å)";
-  // const char* windowName = "RMSD Curve";
-  const char* windowName = "Relative Energy";
-
-  if (!m_chartDialog) {
-    m_chartDialog.reset(
-      new QtGui::ChartDialog(qobject_cast<QWidget*>(this->parent())));
-  }
-
-  m_chartDialog->setWindowTitle(windowName);
-  auto* chart = m_chartDialog->chartWidget();
-  connect(chart, &QtGui::ChartWidget::clicked, this, &PlotConformer::clicked);
-
-  chart->clearPlots();
-  chart->setShowPoints(true);
-  chart->setLegendLocation(QtGui::ChartWidget::LegendLocation::None);
-  chart->addPlot(xData, yData, QtGui::color4ub{ 255, 0, 0, 255 });
-  chart->setXAxisLimits(
-    -0.1, static_cast<float>(m_molecule->coordinate3dCount()) - 0.9);
-  chart->setYAxisLimits(min, max * 1.1f);
-  chart->setXAxisTitle(xTitle);
-  chart->setYAxisTitle(yTitle);
-  m_chartDialog->show();
+  updatePlot();
+  m_dialog->show();
 }
 
-void PlotConformer::generateRmsdCurve(PlotData& results)
+void PlotConformer::updatePlot()
+{
+  if (!m_molecule || !m_chartWidget)
+    return;
+
+  DataSeries xData, yData;
+
+  QString plotType = m_propertyCombo->currentData().toString();
+
+  if (plotType == "rmsd") {
+    generateRmsdCurve(xData, yData);
+  } else if (plotType == "energy" && m_molecule->hasData("energies")) {
+    generateEnergyCurve(xData, yData);
+  } else if (plotType == "forces" && m_molecule->hasData("forces")) {
+    generateForcesCurve(xData, yData);
+  } else if (plotType == "velocities" && m_molecule->hasData("velocities")) {
+    generateVelocitiesCurve(xData, yData);
+  }
+
+  // Now generate a plot with the data
+  float min = *std::min_element(yData.begin(), yData.end());
+  float max = *std::max_element(yData.begin(), yData.end());
+
+  const char* xTitle = "Frame";
+  QString yTitle;
+
+  if (plotType == "rmsd") {
+    yTitle = tr("RMSD (Å)");
+  } else if (plotType == "energy" && m_molecule->hasData("energies")) {
+    QString targetUnit = m_targetUnitsCombo->currentText();
+    yTitle = tr("Relative Energy (%1)").arg(targetUnit);
+  } else if (plotType == "forces" && m_molecule->hasData("forces")) {
+    // TODO: Add units
+    yTitle = tr("Forces (N)");
+  } else if (plotType == "velocities" && m_molecule->hasData("velocities")) {
+    yTitle = tr("Velocities (m/s)");
+  }
+
+  m_chartWidget->clearPlots();
+  m_chartWidget->setShowPoints(true);
+  m_chartWidget->setLegendLocation(QtGui::ChartWidget::LegendLocation::None);
+  m_chartWidget->addPlot(xData, yData, QtGui::color4ub{ 255, 0, 0, 255 });
+  // make sure to pad the axes slightly
+  m_chartWidget->setXAxisLimits(
+    -0.1, static_cast<float>(m_molecule->coordinate3dCount()) - 0.9);
+  m_chartWidget->setYAxisLimits(min, max * 1.1f);
+  m_chartWidget->setXAxisTitle(xTitle);
+  m_chartWidget->setYAxisTitle(yTitle);
+}
+
+void PlotConformer::generateRmsdCurve(DataSeries& x, DataSeries& y)
 {
   if (!m_molecule)
     return;
@@ -174,11 +263,12 @@ void PlotConformer::generateRmsdCurve(PlotData& results)
              (positions[j][2] - ref[j][2]) * (positions[j][2] - ref[j][2]);
     }
     sum = sqrt(sum / m_molecule->coordinate3dCount());
-    results.push_back(std::make_pair(static_cast<double>(i), sum));
+    x.push_back(i);
+    y.push_back(sum);
   }
 }
 
-void PlotConformer::generateEnergyCurve(PlotData& results)
+void PlotConformer::generateEnergyCurve(DataSeries& x, DataSeries& y)
 {
   // plot relative energies so get the minimum first
   if (m_molecule == nullptr || !m_molecule->hasData("energies")) {
@@ -192,12 +282,50 @@ void PlotConformer::generateEnergyCurve(PlotData& results)
     minEnergy = std::min(minEnergy, e);
   }
 
+  // Get conversion factors
+  double fromFactor = m_unitsCombo->currentData().toDouble();
+  double toFactor = m_targetUnitsCombo->currentData().toDouble();
+
   // okay, now loop through to generate the curve
   for (int entry = 0; entry < energies.size(); entry++) {
     double relativeE = energies[entry] - minEnergy;
-    relativeE *= HartreeToKcal;
+    // Convert: first to kcal/mol, then to target units
+    relativeE = relativeE * fromFactor * toFactor;
 
-    results.push_back(std::make_pair(static_cast<double>(entry), relativeE));
+    x.push_back(static_cast<double>(entry));
+    y.push_back(relativeE);
+  }
+}
+
+void PlotConformer::generateForcesCurve(DataSeries& x, DataSeries& y)
+{
+  if (m_molecule == nullptr || !m_molecule->hasData("forces")) {
+    return;
+  }
+
+  std::vector<double> forces = m_molecule->data("forces").toList();
+
+  // okay, now loop through to generate the curve
+  for (int entry = 0; entry < forces.size(); entry++) {
+    // TODO : Add units
+    x.push_back(static_cast<double>(entry));
+    y.push_back(forces[entry]);
+  }
+}
+
+void PlotConformer::generateVelocitiesCurve(DataSeries& x, DataSeries& y)
+{
+  if (m_molecule == nullptr || !m_molecule->hasData("velocities")) {
+    return;
+  }
+
+  std::vector<double> velocities = m_molecule->data("velocities").toList();
+
+  // okay, now loop through to generate the curve
+  for (int entry = 0; entry < velocities.size(); entry++) {
+    // TODO : Add units
+    x.push_back(static_cast<double>(entry));
+    y.push_back(velocities[entry]);
   }
 }
 
