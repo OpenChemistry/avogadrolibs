@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-12 17:29+0000\n"
-"PO-Revision-Date: 2025-10-28 18:06+0000\n"
+"PO-Revision-Date: 2025-11-13 19:55+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3585,7 +3585,7 @@ msgstr "分子のフラグメントを挿入してより大きな分子を構築
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:55
 msgid "Peptide…"
-msgstr ""
+msgstr "ペプチド…"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3593,7 +3593,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:511:730 rc.cpp:922
 msgid "Insert Peptide"
-msgstr ""
+msgstr "ペプチドの挿入"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
@@ -3601,7 +3601,7 @@ msgstr ""
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "オリゴペプチド配列を挿入"
 
 #: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:303
 #: qtplugins/surfacerender/surfacerender.cpp:309
@@ -4537,16 +4537,16 @@ msgstr "RMSD"
 
 #: qtplugins/plotconformer/plotconformer.cpp:149
 msgid "Velocities"
-msgstr ""
+msgstr "速度"
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
+msgstr "エネルギーの単位:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:160
 #: qtplugins/plotconformer/plotconformer.cpp:172
 msgid "Hartree"
-msgstr ""
+msgstr "Hartree"
 
 #: qtplugins/plotconformer/plotconformer.cpp:161
 #: qtplugins/plotconformer/plotconformer.cpp:171
@@ -4556,12 +4556,12 @@ msgstr "eV"
 #: qtplugins/plotconformer/plotconformer.cpp:162
 #: qtplugins/plotconformer/plotconformer.cpp:169
 msgid "kcal/mol"
-msgstr ""
+msgstr "kcal/mol"
 
 #: qtplugins/plotconformer/plotconformer.cpp:163
 #: qtplugins/plotconformer/plotconformer.cpp:170
 msgid "kJ/mol"
-msgstr ""
+msgstr "kJ/mol"
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
 msgid "to"
@@ -4569,20 +4569,20 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:225
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:228
-#, qt-format
+#, fuzzy, qt-format
 msgid "Relative Energy (%1)"
-msgstr ""
+msgstr "相対エネルギー (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:231
 msgid "Forces (N)"
-msgstr ""
+msgstr "力 (N)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:233
 msgid "Velocities (m/s)"
-msgstr ""
+msgstr "速度 (m/s)"
 
 #: qtplugins/plotconformer/plotconformer.h:36
 msgid "PlotConformer"
@@ -4851,7 +4851,7 @@ msgstr "ラベル"
 
 #: qtplugins/propertytables/propertymodel.cpp:623
 msgid "Isotope"
-msgstr ""
+msgstr "同位体"
 
 #: qtplugins/propertytables/propertymodel.cpp:625
 #: qtplugins/propertytables/propertymodel.cpp:666
@@ -6309,8 +6309,9 @@ msgstr "オプション"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
+#, fuzzy
 msgid "Get Constraint"
-msgstr ""
+msgstr "制限を取得"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
@@ -7008,7 +7009,7 @@ msgstr "二本鎖"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Peptide Builder"
-msgstr ""
+msgstr "ペプチドビルダー"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:46
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton)
@@ -7167,8 +7168,9 @@ msgstr "プロリン"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:199
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_14)
+#, fuzzy
 msgid "Pro"
-msgstr ""
+msgstr "Pro"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:206
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_13)
@@ -7213,17 +7215,17 @@ msgstr "Leu"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:263
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Amino Acids:"
-msgstr ""
+msgstr "アミノ酸:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:270
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Sequence (N to C):"
-msgstr "配列 (N→C)"
+msgstr "配列 (N→C):"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:283
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Stereochemistry:"
-msgstr "立体化学"
+msgstr "立体化学:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:319
 #. i18n: ectx: property (text), widget (QLabel, label_7)
