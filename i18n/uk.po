@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-12 17:29+0000\n"
-"PO-Revision-Date: 2025-11-12 11:51+0000\n"
+"PO-Revision-Date: 2025-11-13 19:56+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -27,8 +27,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural="
+"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? "
+"1 : 2);\n"
 "X-Generator: Weblate 5.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
@@ -3640,7 +3641,7 @@ msgstr "Вставте молекулярні фрагменти для ство
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:55
 msgid "Peptide…"
-msgstr ""
+msgstr "Пептид…"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3648,15 +3649,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:511:730 rc.cpp:922
 msgid "Insert Peptide"
-msgstr ""
+msgstr "Вставити пептид"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
-msgstr ""
+msgstr "ВставитиПептид"
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "Вставте олігопептидні послідовності."
 
 #: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:303
 #: qtplugins/surfacerender/surfacerender.cpp:309
@@ -3918,7 +3919,7 @@ msgstr "Молекулярна маса (г/моль)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:273
 msgid "Monoisotopic Mass (g/mol)"
-msgstr "Моноізотопна маса (г/моль)"
+msgstr "Моноізотопна Маса (г/моль)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:275
 msgid "Chemical Formula"
@@ -4565,15 +4566,15 @@ msgstr "Відтворення траєкторій"
 
 #: qtplugins/plotconformer/plotconformer.cpp:38
 msgid "Plot Conformer Data…"
-msgstr ""
+msgstr "Дані конформера графіка…"
 
 #: qtplugins/plotconformer/plotconformer.cpp:127
 msgid "Conformer Analysis"
-msgstr ""
+msgstr "Аналіз конформера"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
-msgstr ""
+msgstr "Тип сюжету:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -4583,16 +4584,16 @@ msgstr "СКВ"
 
 #: qtplugins/plotconformer/plotconformer.cpp:149
 msgid "Velocities"
-msgstr ""
+msgstr "Швидкості"
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
+msgstr "Одиниці вимірювання енергії:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:160
 #: qtplugins/plotconformer/plotconformer.cpp:172
 msgid "Hartree"
-msgstr ""
+msgstr "Гартрі"
 
 #: qtplugins/plotconformer/plotconformer.cpp:161
 #: qtplugins/plotconformer/plotconformer.cpp:171
@@ -4602,41 +4603,43 @@ msgstr "еВ"
 #: qtplugins/plotconformer/plotconformer.cpp:162
 #: qtplugins/plotconformer/plotconformer.cpp:169
 msgid "kcal/mol"
-msgstr ""
+msgstr "ккал/моль"
 
 #: qtplugins/plotconformer/plotconformer.cpp:163
 #: qtplugins/plotconformer/plotconformer.cpp:170
 msgid "kJ/mol"
-msgstr ""
+msgstr "кДж/моль"
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
 msgid "to"
-msgstr ""
+msgstr "до"
 
 #: qtplugins/plotconformer/plotconformer.cpp:225
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:228
 #, qt-format
 msgid "Relative Energy (%1)"
-msgstr ""
+msgstr "Відносна енергія (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:231
 msgid "Forces (N)"
-msgstr ""
+msgstr "Сили (Н)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:233
 msgid "Velocities (m/s)"
-msgstr ""
+msgstr "Швидкості (м/с)"
 
 #: qtplugins/plotconformer/plotconformer.h:36
 msgid "PlotConformer"
-msgstr ""
+msgstr "ДілянкаКонформер"
 
 #: qtplugins/plotconformer/plotconformer.h:81
 msgid "Generate and plot conformer data (RMSD or energy)."
 msgstr ""
+"Згенеруйте та побудуйте графік даних конформера "
+"(середньоквадратичне відхилення або енергія)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -7065,7 +7068,7 @@ msgstr "Двомісний"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Peptide Builder"
-msgstr ""
+msgstr "Конструктор пептидів"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:46
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton)
@@ -7225,7 +7228,7 @@ msgstr "Пролін"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:199
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_14)
 msgid "Pro"
-msgstr ""
+msgstr "Про"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:206
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_13)
@@ -7270,7 +7273,7 @@ msgstr "Leu"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:263
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Amino Acids:"
-msgstr ""
+msgstr "Амінокислоти:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:270
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7305,22 +7308,22 @@ msgstr "Розгорнутий ланцюг"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:382
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "α Helix"
-msgstr ""
+msgstr "α-спіраль"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "β Sheet"
-msgstr ""
+msgstr "β-лист"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:392
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "3-10 Helix"
-msgstr ""
+msgstr "3-10 Спіраль"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:397
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "π Helix"
-msgstr ""
+msgstr "π-спіраль"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_9)
