@@ -40,13 +40,13 @@ an open-source community project.
 
 ## Installing
 
-For the most up-to-date experience use the nightly builds prepared by GitHub
+For the most up-to-date experience use the continuous builds prepared by GitHub
 actions for:
 
-* [Linux (AppImage)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_linux/master/Avogadro2-x86_64.AppImage.zip)
-* [macOS (Apple Silicon)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_mac/master/macOS-arm64.zip)
-* [macOS (Intel)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_mac/master/macOS-intel.zip)
-* [Windows](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_windows/master/Win64.exe.zip)
+* <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/refs/heads/7.x/svgs-full/brands/windows.svg" width="24" height="24">[Windows](https://github.com/OpenChemistry/avogadrolibs/releases/download/continuous/Avogadro2-continuous-win64.exe)
+* <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/refs/heads/7.x/svgs-full/brands/apple.svg" width="24" height="24">[macOS Apple Silicon](https://github.com/OpenChemistry/avogadrolibs/releases/download/continuous/Avogadro2-continuous-arm64.dmg)
+* <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/refs/heads/7.x/svgs-full/brands/apple.svg" width="24" height="24">[macOS Apple Silicon](https://github.com/OpenChemistry/avogadrolibs/releases/download/continuous/Avogadro2-continuous.dmg)
+* <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/refs/heads/7.x/svgs-full/brands/linux.svg" width="24" height="24"> [Linux (AppImage)](https://github.com/OpenChemistry/avogadrolibs/releases/download/continuous/Avogadro2-x86_64.AppImage)
 
 We also maintain a
 [`beta` Flatpak](https://two.avogadro.cc/install/flatpak.html#install-flatpak-beta)
