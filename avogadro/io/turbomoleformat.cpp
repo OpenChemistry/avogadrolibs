@@ -370,6 +370,9 @@ bool TurbomoleFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 
   outStream << "$coord angs\n";
 
+  // print $isosub only when an isotope exists
+  std::ostringstream isosub;
+
   for (size_t i = 0; i < numAtoms; ++i) {
     Atom atom = mol.atom(i);
     if (!atom.isValid()) {
@@ -387,6 +390,13 @@ bool TurbomoleFormat::write(std::ostream& outStream, const Core::Molecule& mol)
               << std::setw(18) << std::right << std::fixed
               << std::setprecision(10) << atom.position3d().z() << " "
               << std::setw(5) << std::right << symbol << "\n";
+    auto iso = mol.isotope(i);
+    if (iso > 0)
+      isosub << (i + 1) << "  " << iso << '\n';
+  }
+
+  if (auto s = isosub.str(); !s.empty()) {
+    outStream << "$isosub\n" << s;
   }
 
   if (mol.unitCell()) {
