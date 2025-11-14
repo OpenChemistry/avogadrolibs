@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-12 17:29+0000\n"
-"PO-Revision-Date: 2025-11-13 19:56+0000\n"
+"PO-Revision-Date: 2025-11-15 01:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -3650,7 +3650,7 @@ msgstr "Inserează fragmente moleculare pentru a construi molecule mari."
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:55
 msgid "Peptide…"
-msgstr ""
+msgstr "Peptidă…"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3658,15 +3658,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:511:730 rc.cpp:922
 msgid "Insert Peptide"
-msgstr ""
+msgstr "Inserare peptidă"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
-msgstr ""
+msgstr "InserarePeptidă"
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "Inserează secvențe oligopeptidice."
 
 #: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:303
 #: qtplugins/surfacerender/surfacerender.cpp:309
@@ -4580,15 +4580,15 @@ msgstr "Redare traiectorii"
 
 #: qtplugins/plotconformer/plotconformer.cpp:38
 msgid "Plot Conformer Data…"
-msgstr ""
+msgstr "Trasează datele conformerului…"
 
 #: qtplugins/plotconformer/plotconformer.cpp:127
 msgid "Conformer Analysis"
-msgstr ""
+msgstr "Analizarea conformerului"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
-msgstr ""
+msgstr "Tipul graficului:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -4598,16 +4598,16 @@ msgstr "RMSD"
 
 #: qtplugins/plotconformer/plotconformer.cpp:149
 msgid "Velocities"
-msgstr ""
+msgstr "Viteze"
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
+msgstr "Unități de energie:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:160
 #: qtplugins/plotconformer/plotconformer.cpp:172
 msgid "Hartree"
-msgstr ""
+msgstr "Hartree"
 
 #: qtplugins/plotconformer/plotconformer.cpp:161
 #: qtplugins/plotconformer/plotconformer.cpp:171
@@ -4617,41 +4617,41 @@ msgstr "eV"
 #: qtplugins/plotconformer/plotconformer.cpp:162
 #: qtplugins/plotconformer/plotconformer.cpp:169
 msgid "kcal/mol"
-msgstr ""
+msgstr "kcal/mol"
 
 #: qtplugins/plotconformer/plotconformer.cpp:163
 #: qtplugins/plotconformer/plotconformer.cpp:170
 msgid "kJ/mol"
-msgstr ""
+msgstr "kJ/mol"
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
 msgid "to"
-msgstr ""
+msgstr "la"
 
 #: qtplugins/plotconformer/plotconformer.cpp:225
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:228
 #, qt-format
 msgid "Relative Energy (%1)"
-msgstr ""
+msgstr "Energie relativă (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:231
 msgid "Forces (N)"
-msgstr ""
+msgstr "Forțe (N)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:233
 msgid "Velocities (m/s)"
-msgstr ""
+msgstr "Viteze (m/s)"
 
 #: qtplugins/plotconformer/plotconformer.h:36
 msgid "PlotConformer"
-msgstr ""
+msgstr "ConformerGrafic"
 
 #: qtplugins/plotconformer/plotconformer.h:81
 msgid "Generate and plot conformer data (RMSD or energy)."
-msgstr ""
+msgstr "Generează și trasează datele conformerului (RMSD sau energie)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -7086,272 +7086,272 @@ msgstr "Dublă"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Peptide Builder"
-msgstr ""
+msgstr "Constructor de peptide"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:46
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton)
 msgid "Alanine"
-msgstr ""
+msgstr "Alanină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:49
 #. i18n: ectx: property (text), widget (QToolButton, toolButton)
 msgid "Ala"
-msgstr ""
+msgstr "Ala"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:56
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_2)
 msgid "Arginine"
-msgstr ""
+msgstr "Arginină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:59
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_2)
 msgid "Arg"
-msgstr ""
+msgstr "Arg"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:66
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_3)
 msgid "Asparagine"
-msgstr ""
+msgstr "Asparagină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:69
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_3)
 msgid "Asn"
-msgstr ""
+msgstr "Asn"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:76
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_4)
 msgid "Aspartic acid"
-msgstr ""
+msgstr "Acid aspartic"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:79
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_4)
 msgid "Asp"
-msgstr ""
+msgstr "Asp"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:86
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_5)
 msgid "Cysteine"
-msgstr ""
+msgstr "Cisteină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:89
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_5)
 msgid "Cys"
-msgstr ""
+msgstr "Cys"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:96
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_6)
 msgid "Glutamic acid"
-msgstr ""
+msgstr "Acid glutamic"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:99
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_6)
 msgid "Glu"
-msgstr ""
+msgstr "Glu"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:106
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_7)
 msgid "Glutamine"
-msgstr ""
+msgstr "Glutamină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:109
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_7)
 msgid "Gln"
-msgstr ""
+msgstr "Gln"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:116
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_8)
 msgid "Glycine"
-msgstr ""
+msgstr "Glicină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:119
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_8)
 msgid "Gly"
-msgstr ""
+msgstr "Gly"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:126
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_9)
 msgid "Histidine"
-msgstr ""
+msgstr "Histidină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:129
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_9)
 msgid "His"
-msgstr ""
+msgstr "His"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:136
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_10)
 msgid "Isoleucine"
-msgstr ""
+msgstr "Isoleucină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:139
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_10)
 msgid "Ile"
-msgstr ""
+msgstr "Ile"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:146
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_19)
 msgid "Valine"
-msgstr ""
+msgstr "Valină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:149
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_19)
 msgid "Val"
-msgstr ""
+msgstr "Val"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_18)
 msgid "Tyrosine"
-msgstr ""
+msgstr "Tirozină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:159
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_18)
 msgid "Tyr"
-msgstr ""
+msgstr "Tyr"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:166
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_17)
 msgid "Tryptophan"
-msgstr ""
+msgstr "Triptofan"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:169
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_17)
 msgid "Trp"
-msgstr ""
+msgstr "Trp"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:176
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_16)
 msgid "Threonine"
-msgstr ""
+msgstr "Treonină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:179
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_16)
 msgid "Thr"
-msgstr ""
+msgstr "Thr"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:186
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_15)
 msgid "Serine"
-msgstr ""
+msgstr "Serină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:189
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_15)
 msgid "Ser"
-msgstr ""
+msgstr "Ser"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:196
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_14)
 msgid "Proline"
-msgstr ""
+msgstr "Prolină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:199
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_14)
 msgid "Pro"
-msgstr ""
+msgstr "Pro"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:206
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_13)
 msgid "Phenylalanine"
-msgstr ""
+msgstr "Fenilalanină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:209
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_13)
 msgid "Phe"
-msgstr ""
+msgstr "Phe"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:216
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_12)
 msgid "Methionine"
-msgstr ""
+msgstr "Metionină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:219
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_12)
 msgid "Met"
-msgstr ""
+msgstr "Met"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:226
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_11)
 msgid "Lysine"
-msgstr ""
+msgstr "Lizină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:229
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_11)
 msgid "Lys"
-msgstr ""
+msgstr "Lys"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:236
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_20)
 msgid "Leucine"
-msgstr ""
+msgstr "Leucină"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:239
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_20)
 msgid "Leu"
-msgstr ""
+msgstr "Leu"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:263
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Amino Acids:"
-msgstr ""
+msgstr "Aminoacizi:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:270
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Sequence (N to C):"
-msgstr ""
+msgstr "Secvență (de la N la C):"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:283
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Stereochemistry:"
-msgstr ""
+msgstr "Stereochimie:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:319
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "N Terminus:"
-msgstr ""
+msgstr "N-terminal:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:326
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "C Terminus:"
-msgstr ""
+msgstr "C-terminal:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:369
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Structure:"
-msgstr ""
+msgstr "Structură:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:377
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "Straight Chain"
-msgstr ""
+msgstr "Lanț drept"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:382
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "α Helix"
-msgstr ""
+msgstr "Elice α"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "β Sheet"
-msgstr ""
+msgstr "Foaie β"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:392
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "3-10 Helix"
-msgstr ""
+msgstr "Elice 3-10"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:397
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "π Helix"
-msgstr ""
+msgstr "Elice π"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Chain Number:"
-msgstr ""
+msgstr "Număr lanț:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:472
 #. i18n: ectx: property (toolTip), widget (QComboBox, chainNumberCombo)
 msgid "The chain number for the new peptide"
-msgstr ""
+msgstr "Numărul lanțului pentru noua peptidă"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
