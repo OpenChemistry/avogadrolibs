@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-12 17:29+0000\n"
-"PO-Revision-Date: 2025-11-13 19:55+0000\n"
+"PO-Revision-Date: 2025-11-15 01:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -4519,11 +4519,11 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:38
 msgid "Plot Conformer Data…"
-msgstr ""
+msgstr "配座異性体のデータをプロット…"
 
 #: qtplugins/plotconformer/plotconformer.cpp:127
 msgid "Conformer Analysis"
-msgstr ""
+msgstr "配座異性体解析"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
@@ -4572,7 +4572,7 @@ msgid "RMSD (Å)"
 msgstr "RMSD (Å)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:228
-#, fuzzy, qt-format
+#, qt-format
 msgid "Relative Energy (%1)"
 msgstr "相対エネルギー (%1)"
 
@@ -4590,7 +4590,7 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.h:81
 msgid "Generate and plot conformer data (RMSD or energy)."
-msgstr ""
+msgstr "配座異性体のデータを生成してプロット (RMSDまたはエネルギー)"
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -4732,7 +4732,6 @@ msgid "Cancel"
 msgstr "キャンセル"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:658
-#, fuzzy
 msgid "Installation canceled\n"
 msgstr "インストールはキャンセルされました\n"
 
@@ -6311,7 +6310,7 @@ msgstr "オプション"
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
 #, fuzzy
 msgid "Get Constraint"
-msgstr "制限を取得"
+msgstr "拘束条件を取得"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
@@ -7168,7 +7167,6 @@ msgstr "プロリン"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:199
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_14)
-#, fuzzy
 msgid "Pro"
 msgstr "Pro"
 
@@ -7230,12 +7228,12 @@ msgstr "立体化学:"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:319
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "N Terminus:"
-msgstr "N 末端:"
+msgstr "N末端:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:326
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "C Terminus:"
-msgstr "C 末端:"
+msgstr "C末端:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:369
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7250,22 +7248,22 @@ msgstr "直鎖"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:382
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "α Helix"
-msgstr ""
+msgstr "αヘリックス"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "β Sheet"
-msgstr ""
+msgstr "βシート"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:392
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "3-10 Helix"
-msgstr ""
+msgstr "3-10ヘリックス"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:397
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "π Helix"
-msgstr ""
+msgstr "πヘリックス"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_9)
