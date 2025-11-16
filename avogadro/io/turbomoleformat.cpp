@@ -95,7 +95,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
     if (tokens[0] == "$coord") {
       // check if there's a conversion to be done
       Real coordConversion = BOHR_TO_ANGSTROM; // default is Bohr
-      if (std::find(tokens.begin(), tokens.end(), "ang") != tokens.end())
+      if (std::find(tokens.begin(), tokens.end(), "angs") != tokens.end())
         coordConversion = 1.0; // leave as Angstrom
       else if (std::find(tokens.begin(), tokens.end(), "frac") !=
                tokens.end()) {
