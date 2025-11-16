@@ -479,10 +479,16 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
         // Add triangles
         const signed char* caseTri = m_caseTriangles[caseId]; // size 16
         for (int idx = 0; caseTri[idx] != -1; idx += 3) {
-
-          m_triangles[triIdx][0] = globalIdxs[caseTri[idx]];
-          m_triangles[triIdx][1] = globalIdxs[caseTri[idx + 1]];
-          m_triangles[triIdx][2] = globalIdxs[caseTri[idx + 2]];
+          if (!m_reverseWinding) {
+            // Reverse winding order by swapping vertices 1 and 2
+            m_triangles[triIdx][0] = globalIdxs[caseTri[idx]];
+            m_triangles[triIdx][1] = globalIdxs[caseTri[idx + 2]];
+            m_triangles[triIdx][2] = globalIdxs[caseTri[idx + 1]];
+          } else {
+            m_triangles[triIdx][0] = globalIdxs[caseTri[idx]];
+            m_triangles[triIdx][1] = globalIdxs[caseTri[idx + 1]];
+            m_triangles[triIdx][2] = globalIdxs[caseTri[idx + 2]];
+          }
           ++triIdx;
         }
       }
