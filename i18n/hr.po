@@ -3275,7 +3275,7 @@ msgstr "Zamrzni"
 #: qtplugins/forcefield/forcefield.cpp:126
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
-msgstr ""
+msgstr "Zamrzni"
 
 #: qtplugins/forcefield/forcefield.cpp:134
 msgctxt "freeze z-axis of selected atoms"
