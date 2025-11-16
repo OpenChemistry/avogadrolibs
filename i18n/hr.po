@@ -3711,6 +3711,9 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Alat za oznake atoma \t(%1)\n"
+"\n"
+"Lijeva tipka miša: \tKlikni na atome za dodavanje prilagođenih oznaka"
 
 #: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
@@ -4451,12 +4454,12 @@ msgstr "Sličica:"
 #: qtplugins/playertool/playertool.cpp:113
 msgctxt "start or first frame index"
 msgid "Start:"
-msgstr ""
+msgstr "Početak:"
 
 #: qtplugins/playertool/playertool.cpp:124
 msgctxt "end or last frame index"
 msgid "End:"
-msgstr ""
+msgstr "Kraj:"
 
 #: qtplugins/playertool/playertool.cpp:138
 msgid "Dynamic bonding?"
@@ -4478,7 +4481,7 @@ msgstr "Reproduciraj"
 
 #: qtplugins/playertool/playertool.cpp:165
 msgid "Record…"
-msgstr ""
+msgstr "Snimiti"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
