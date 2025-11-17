@@ -17,7 +17,6 @@
 #include <avogadro/core/vector.h>
 
 #include <QSettings>
-#include <QAction>
 
 #include <Eigen/Geometry>
 
@@ -231,98 +230,20 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
   mesh->addTriangles(triangles);
 }
 
-OverlayAxes::OverlayAxes(QObject* p)
-  : Avogadro::QtGui::ExtensionPlugin(p), m_initialized(false),
-    m_render(new RenderImpl), m_glWidget(nullptr),
-    m_axesAction(new QAction(tr("Reference Axes"), this))
+OverlayAxes::OverlayAxes(QObject* p) : ScenePlugin(p), m_render(new RenderImpl)
 {
-  connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxes()));
-
-  QSettings settings;
-  m_enabled = settings.value("overlayAxes/enabled", true).toBool();
-  m_axesAction->setCheckable(true);
-  m_axesAction->setChecked(m_enabled);
-  m_axesAction->setProperty("menu priority", 80);
-
-  // processAxes() will flip the value when called
-  //   so we need to invert it here
-  m_enabled = !m_enabled;
+  m_layerManager = QtGui::PluginLayerManager(m_name);
 }
 
-OverlayAxes::~OverlayAxes()
-{
-  delete m_render;
-}
+OverlayAxes::~OverlayAxes() {}
 
-QList<QAction*> OverlayAxes::actions() const
-{
-  QList<QAction*> result;
-  return result << m_axesAction;
-}
-
-QStringList OverlayAxes::menuPath(QAction*) const
-{
-  return QStringList() << tr("&View");
-}
-
-void OverlayAxes::processAxes()
-{
-  m_enabled = !m_enabled;
-  QSettings settings;
-  settings.setValue("overlayAxes/enabled", m_enabled);
-  m_axesAction->setChecked(m_enabled);
-
-  Rendering::GroupNode* engineNode = m_widgetToNode[m_glWidget];
-  GroupNode& node = m_scene->rootNode();
-  if (node.hasChild(engineNode)) {
-    engineNode->clearUI();
-    m_scene->rootNode().removeChild(engineNode);
-    delete engineNode;
-    m_widgetToNode[m_glWidget] = nullptr;
-  }
-
-  if (m_enabled) {
-    engineNode = new Rendering::GroupNode(&node);
-    m_widgetToNode[m_glWidget] = engineNode;
-    process(*m_molecule, *engineNode);
-  }
-} // namespace QtPlugins
-
-void OverlayAxes::setActiveWidget(QWidget* widget)
-{
-  if (widget != nullptr) {
-    m_glWidget = widget;
-    connect(this, SIGNAL(updateRequested()), m_glWidget, SLOT(requestUpdate()));
-
-    if (m_widgetToNode.find(m_glWidget) == m_widgetToNode.end()) {
-      m_widgetToNode[m_glWidget] = nullptr;
-    }
-  }
-}
-
-void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
+void OverlayAxes::process(const QtGui::Molecule&, Rendering::GroupNode& node)
 {
   auto* geo = new GeometryNode;
   // Since our geometry doesn't change, we just make a copy of the pre-built
   // set of axes.
   geo->addDrawable(new CustomMesh(*m_render->mesh));
-  node.addChild(geo, GroupNode::NodeType::UI);
-
-  emit updateRequested();
-}
-
-void OverlayAxes::setMolecule(QtGui::Molecule* molecule)
-{
-  m_molecule = molecule;
-}
-
-void OverlayAxes::setScene(Rendering::Scene* scene)
-{
-  m_scene = scene;
-  if (!m_initialized) {
-    m_initialized = true;
-    processAxes();
-  }
+  node.addChild(geo);
 }
 
 } // namespace Avogadro::QtPlugins

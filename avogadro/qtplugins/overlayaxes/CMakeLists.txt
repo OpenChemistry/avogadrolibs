@@ -2,8 +2,8 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
 avogadro_plugin(OverlayAxes
-  "Reference Axes Overlay"
-  ExtensionPlugin
+  "Reference Axes"
+  ScenePlugin
   overlayaxes.h
   OverlayAxes
   overlayaxes.cpp

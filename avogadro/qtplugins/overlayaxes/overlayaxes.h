@@ -6,9 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_OVERLAYAXES_H
 #define AVOGADRO_QTPLUGINS_OVERLAYAXES_H
 
-#include <avogadro/qtgui/extensionplugin.h>
-#include <avogadro/qtgui/molecule.h>
-#include <avogadro/qtgui/rwmolecule.h>
+#include <avogadro/qtgui/sceneplugin.h>
 
 #include <avogadro/rendering/groupnode.h>
 
@@ -20,46 +18,27 @@ namespace QtPlugins {
 /**
  * @brief Render reference axes in the corner of the display.
  */
-class OverlayAxes : public Avogadro::QtGui::ExtensionPlugin
+class OverlayAxes : public Avogadro::QtGui::ScenePlugin
 {
   Q_OBJECT
 public:
   explicit OverlayAxes(QObject* parent = nullptr);
   ~OverlayAxes() override;
 
-  QString name() const override { return tr("Reference Axes Overlay"); }
+  QString name() const override { return tr("Reference Axes"); }
   QString description() const override
   {
     return tr("Render reference axes in the corner of the display.");
   }
 
-  QList<QAction*> actions() const override;
-  QStringList menuPath(QAction*) const override;
-
-public slots:
-  void setMolecule(QtGui::Molecule* molecule) override;
-  void setScene(Rendering::Scene* scene) override;
-  void setActiveWidget(QWidget* widget) override;
-
-signals:
-  void updateRequested();
-
-private slots:
-  void processAxes();
+  void process(const QtGui::Molecule& molecule,
+               Rendering::GroupNode& node) override;
 
 private:
-  void process(const Core::Molecule& molecule, Rendering::GroupNode& node);
-
-  bool m_enabled;
-  bool m_initialized;
+  std::string m_name = "Reference Axes";
 
   class RenderImpl;
   RenderImpl* const m_render;
-  std::map<QWidget*, Rendering::GroupNode*> m_widgetToNode;
-  QtGui::Molecule* m_molecule = nullptr;
-  Rendering::Scene* m_scene;
-  QWidget* m_glWidget;
-  QAction* m_axesAction;
 };
 
 } // end namespace QtPlugins
