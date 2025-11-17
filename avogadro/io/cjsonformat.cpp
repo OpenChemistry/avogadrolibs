@@ -427,6 +427,10 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
         }
 
         molecule.addResidue(newResidue);
+
+        json label = residue["label"];
+        if (label.is_string())
+          molecule.setResidueLabel(molecule.residueCount() - 1, label);
       }
     }
   }
@@ -1564,6 +1568,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
   // Create and populate any residue arrays
   if (molecule.residues().size() > 0) {
     json residues; // array of objects
+    Array residueLabels = molecule.residueLabels();
     for (auto residue : molecule.residues()) {
       json entry;
       entry["name"] = residue.residueName();
@@ -1586,6 +1591,11 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       }
       entry["atoms"] = atoms;
       residues.push_back(entry);
+
+      // do we have custom residue labels?
+      if (residueLabels.size() > residue.residueId() + 1) {
+        entry["label"] = residueLabels[residue.residueId()];
+      }
     }
     root["residues"] = residues;
 
