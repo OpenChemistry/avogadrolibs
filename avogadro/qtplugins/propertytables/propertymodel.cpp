@@ -46,8 +46,8 @@ const int BondColumns = 6;
 const int AngleColumns = 5;
 // type, atom 1, atom 2, atom 3, atom 4, dihedral
 const int TorsionColumns = 6;
-// name, number, chain, secondary structure, heterogen, color
-const int ResidueColumns = 6;
+// name, number, chain, secondary structure, label, heterogen, color
+const int ResidueColumns = 7;
 // number, rmsd, energy or more depending on available properties
 const int ConformerColumns = 1;
 
@@ -424,6 +424,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return QString(residue.chainId());
       case ResidueDataSecStructure:
         return secStructure(residue.secondaryStructure());
+      case ResidueDataLabel:
+        return m_molecule->residueLabel(row).c_str();
       case ResidueDataHeterogen:
         return QString(residue.isHeterogen() ? "X" : "");
       default:
@@ -662,6 +664,8 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("Secondary Structure");
         case ResidueDataHeterogen:
           return tr("Heterogen");
+        case ResidueDataLabel:
+          return tr("Label");
         case ResidueDataColor:
           return tr("Color");
       }
@@ -743,6 +747,8 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
         index.column() == BondDataLabel)
       return editable;
   } else if (m_type == ResidueType) {
+    if (index.column() == ResidueDataLabel)
+      return editable;
     // TODO: Color
   } else if (m_type == AngleType) {
     if (index.column() == AngleDataValue)
@@ -842,6 +848,13 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
     emit dataChanged(index, index);
     m_molecule->emitChanged(Molecule::Bonds);
     return true;
+  } else if (m_type == ResidueType) {
+    if (index.column() == ResidueDataLabel) {
+      m_molecule->setResidueLabel(index.row(), value.toString().toStdString());
+      emit dataChanged(index, index);
+      m_molecule->emitChanged(Molecule::Residues);
+      return true;
+    }
   } else if (m_type == AngleType) {
     if (index.column() == AngleDataValue) {
       setAngle(index.row(), value.toDouble());

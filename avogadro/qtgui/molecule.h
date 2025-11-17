@@ -76,6 +76,7 @@ public:
     Layers = 16,
     Properties = 32,
     Constraints = 64,
+    Residues = 128,
     /** Operations that can affect the above types. */
     Added = 1024,
     Removed = 2048,

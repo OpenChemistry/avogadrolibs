@@ -166,6 +166,7 @@ private:
     ResidueDataID,
     ResidueDataChain,
     ResidueDataSecStructure,
+    ResidueDataLabel,
     ResidueDataColor,
     ResidueDataHeterogen
   };
