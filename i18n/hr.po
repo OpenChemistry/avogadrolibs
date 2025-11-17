@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-12 17:29+0000\n"
 "PO-Revision-Date: 2025-11-17 23:51+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3270,17 +3269,17 @@ msgstr "Zamrzni odabrane atome"
 #: qtplugins/forcefield/forcefield.cpp:118
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
-msgstr "Zamrzni"
+msgstr "Zamrzni X"
 
 #: qtplugins/forcefield/forcefield.cpp:126
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
-msgstr "Zamrzni"
+msgstr "Zamrzni Y"
 
 #: qtplugins/forcefield/forcefield.cpp:134
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
-msgstr "Zamrzni"
+msgstr "Zamrzni Z"
 
 #: qtplugins/forcefield/forcefield.cpp:142
 msgid "Unfreeze Selected Atoms"
@@ -4481,7 +4480,7 @@ msgstr "Reproduciraj"
 
 #: qtplugins/playertool/playertool.cpp:165
 msgid "Record…"
-msgstr "Snimiti"
+msgstr "Snimi …"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
@@ -5026,15 +5025,15 @@ msgstr "Zamrzni atom"
 
 #: qtplugins/propertytables/propertyview.cpp:531
 msgid "Freeze X"
-msgstr ""
+msgstr "Zamrzni X"
 
 #: qtplugins/propertytables/propertyview.cpp:534
 msgid "Freeze Y"
-msgstr ""
+msgstr "Zamrzni Y"
 
 #: qtplugins/propertytables/propertyview.cpp:537
 msgid "Freeze Z"
-msgstr ""
+msgstr "Zamrzni Z"
 
 #: qtplugins/propertytables/propertyview.cpp:540
 msgid "Unfreeze Atom"
@@ -9181,9 +9180,9 @@ msgid ""
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Podesiti energije tako da nula bude Fermi? Dostupno "
-"samo ako crtamo Fermi razinu.</p><p><br/></p><p>Zadano: isključeno</p></"
-"body></html>"
+"<html><head/><body><p>Podesiti energije tako da nula bude Fermi? Dostupno je "
+"samo ako crtamo Fermi razinu.</p><p><br/></p><p>Zadano: "
+"isključeno</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
