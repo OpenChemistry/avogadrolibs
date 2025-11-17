@@ -58,11 +58,75 @@ float closestTo(float x, float peak, float intensity, float scale = 1.0,
   return (fabs(delta) < peak_to_peak / 2.0) ? intensity : 0.0;
 }
 
+/**
+ * Grab the first colum of a matrix for std::vector<double> conversion
+ * @param matrix The matrix to convert
+ * @return The first column of the matrix
+ */
 std::vector<double> fromMatrix(const MatrixX& matrix)
 {
   std::vector<double> result;
   for (auto i = 0; i < matrix.rows(); ++i)
     result.push_back(matrix(i, 0));
+  return result;
+}
+
+/**
+ * Interpolate data points at targetX (e.g., computed spectra)
+ * from sourceX and sourceY.
+ *
+ * This function will linearly interpolate data points from sourceX and sourceY
+ * and return the corresponding interpolated values at targetX.
+ *
+ * @param expData The experimental data points, corresponding to sourceX and
+ * sourceY.
+ * @param targetX The independent variable data points where the interpolation
+ * should be performed.
+ *
+ * @return A vector of interpolated values, corresponding to targetX.
+ */
+std::vector<float> interpolateData(const MatrixX& expData,
+                                   const std::vector<float>& targetX)
+{
+  std::vector<float> result(targetX.size(), 0.0f);
+
+  if (expData.rows() == 0 || expData.cols() < 2)
+    return result;
+
+  for (size_t i = 0; i < targetX.size(); ++i) {
+    float x = targetX[i];
+
+    // Handle out-of-range cases
+    if (x <= expData(0, 0)) {
+      result[i] = expData(0, 1);
+      continue;
+    }
+    if (x >= expData(expData.rows() - 1, 0)) {
+      result[i] = expData(expData.rows() - 1, 1);
+      continue;
+    }
+
+    // Binary search for bracketing points
+    int lower = 0;
+    int upper = expData.rows() - 1;
+
+    while (upper - lower > 1) {
+      int mid = (lower + upper) / 2;
+      if (expData(mid, 0) < x)
+        lower = mid;
+      else
+        upper = mid;
+    }
+
+    // Linear interpolation
+    double x1 = expData(lower, 0);
+    double x2 = expData(upper, 0);
+    double y1 = expData(lower, 1);
+    double y2 = expData(upper, 1);
+
+    result[i] = y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+  }
+
   return result;
 }
 
@@ -550,10 +614,23 @@ void SpectraDialog::changeCalculatedSpectraColor()
   }
 }
 
+void SpectraDialog::changeRawSpectraColor()
+{
+  QSettings settings;
+  QColor current = settings.value("spectra/rawColor", red).value<QColor>();
+  QColor color =
+    QColorDialog::getColor(current, this, tr("Select Raw Spectra Color"));
+  if (color.isValid() && color != current) {
+    settings.setValue("spectra/rawColor", color);
+    updatePlot();
+  }
+}
+
 void SpectraDialog::changeImportedSpectraColor()
 {
   QSettings settings;
-  QColor current = settings.value("spectra/importedColor", red).value<QColor>();
+  QColor current =
+    settings.value("spectra/importedColor", blue).value<QColor>();
   QColor color =
     QColorDialog::getColor(current, this, tr("Select Imported Spectra Color"));
   if (color.isValid() && color != current) {
@@ -793,11 +870,16 @@ void SpectraDialog::updatePlot()
   };
   chart->addPlot(xData, yData, calculatedColor, xTitle, tr("Smoothed"));
   // todo add hide/show raw data series
-  QtGui::color4ub rawColor = { 255, 0, 0, 255 };
-  chart->addSeries(yStick, rawColor, tr("Raw"));
+  QColor rawColor = settings.value("spectra/rawColor", red).value<QColor>();
+  QtGui::color4ub rawColor4ub = { static_cast<unsigned char>(rawColor.red()),
+                                  static_cast<unsigned char>(rawColor.green()),
+                                  static_cast<unsigned char>(rawColor.blue()),
+                                  static_cast<unsigned char>(
+                                    rawColor.alpha()) };
+  chart->addSeries(yStick, rawColor4ub, tr("Raw"));
 
   QColor importedColor =
-    settings.value("spectra/importedColor", red).value<QColor>();
+    settings.value("spectra/importedColor", blue).value<QColor>();
   QtGui::color4ub importedColor4ub = {
     static_cast<unsigned char>(importedColor.red()),
     static_cast<unsigned char>(importedColor.green()),
@@ -830,6 +912,58 @@ void SpectraDialog::updatePlot()
 QtGui::ChartWidget* SpectraDialog::chartWidget()
 {
   return m_ui->plot;
+}
+
+void importExperimentalSpectra(const QString& filename)
+{
+  QFile file(filename);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    return false;
+
+  std::vector<std::pair<double, double>> tempData;
+
+  QTextStream in(&file);
+  // figure out if this is CSV or TSV data
+  QString delimiter = filename.endsWith(".tsv") ? "\t" : ",";
+
+  // Skip header if present (detect by checking if first line contains numbers)
+  QString firstLine = in.readLine();
+  bool hasHeader = !firstLine.contains(QRegularExpression("[0-9]"));
+  if (hasHeader && !in.atEnd())
+    firstLine = in.readLine();
+
+  // Parse data
+  do {
+    QStringList parts = firstLine.split(delimiter);
+    if (parts.size() >= 2) {
+      bool ok1, ok2;
+      double x = parts[0].trimmed().toDouble(&ok1);
+      double y = parts[1].trimmed().toDouble(&ok2);
+
+      if (ok1 && ok2) {
+        tempData.push_back({ x, y });
+      }
+    }
+    firstLine = in.readLine();
+  } while (!in.atEnd());
+
+  file.close();
+
+  if (tempData.empty())
+    return false;
+
+  // Sort by x-axis (energy/wavelength)
+  std::sort(tempData.begin(), tempData.end(),
+            [](const auto& a, const auto& b) { return a.first < b.first; });
+
+  // Convert to Eigen::MatrixXd (matching computed spectra format)
+  m_importedSpectra.resize(tempData.size(), 2);
+  for (size_t i = 0; i < tempData.size(); ++i) {
+    m_importedSpectra(i, 0) = tempData[i].first;  // energy/wavelength
+    m_importedSpectra(i, 1) = tempData[i].second; // intensity
+  }
+
+  return true;
 }
 
 void SpectraDialog::toggleOptions()

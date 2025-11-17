@@ -62,10 +62,13 @@ private slots:
   void changeBackgroundColor();
   void changeForegroundColor();
   void changeCalculatedSpectraColor();
+  void changeRawSpectraColor();
   void changeImportedSpectraColor();
   void changeFontSize();
   void changeLineWidth();
   void changeSpectra();
+
+  void importExperimentalSpectra(const QString& filename);
 
   void exportData();
 
@@ -76,6 +79,7 @@ private slots:
 
 private:
   std::map<std::string, MatrixX> m_spectra;
+  MatrixX m_importedSpectra;
   std::vector<unsigned char> m_elements; // for NMR
   // current spectra data
   std::vector<double> m_transitions;
