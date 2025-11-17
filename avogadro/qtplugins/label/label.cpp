@@ -220,29 +220,14 @@ struct LayerLabel : Core::LayerData
 
       auto* residue = new QComboBox;
       residue->setObjectName("residue");
-      for (char i = 0x00; i < std::pow(2, 2); ++i) {
-        if (i == 0) {
-          residue->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
-        } else {
-          char optval = 0x00;
-          QStringList opttext;
-          if (i & LabelOptions::Index) {
-            opttext << QObject::tr("ID");
-            optval |= LabelOptions::Index;
-          }
-          if (i & LabelOptions::Name) {
-            opttext << QObject::tr("Name");
-            optval |= LabelOptions::Name;
-          }
-          if (optval != 0x00) {
-            QString join = QObject::tr(" & ");
-            residue->addItem(opttext.join(join), QVariant(optval));
-            if (optval == residueOptions) {
-              residue->setCurrentText(opttext.join(join));
-            }
-          }
-        }
-      }
+
+      // set up the various residue options
+      residue->addItem(QObject::tr("None"), int(LabelOptions::None));
+      residue->addItem(QObject::tr("ID"), int(LabelOptions::Index));
+      residue->addItem(QObject::tr("Name"), int(LabelOptions::Name));
+      residue->addItem(QObject::tr("Name & ID"),
+                       int(LabelOptions::Index + LabelOptions::Name));
+      residue->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
       QObject::connect(residue, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(residueLabelType(int)));
 
@@ -294,6 +279,7 @@ void Label::processResidue(const Core::Molecule& molecule,
     }
     auto name = residue.residueName();
     const auto atoms = residue.residueAtoms();
+    const std::string customLabel = molecule.residueLabel(residue.residueId());
     Vector3f pos = Vector3f::Zero();
     for (const auto& atom : atoms) {
       pos += atom.position3d().cast<float>();
@@ -313,11 +299,14 @@ void Label::processResidue(const Core::Molecule& molecule,
     auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
     Vector3ub color = interface->color;
     std::string text = "";
-    if (interface->residueOptions & LayerLabel::LabelOptions::Index) {
-      text = std::to_string(residue.residueId());
-    }
     if (interface->residueOptions & LayerLabel::LabelOptions::Name) {
-      text += (text == "" ? "" : " / ") + name;
+      text = (text == "" ? "" : " / ") + name;
+    }
+    if (interface->residueOptions & LayerLabel::LabelOptions::Index) {
+      text += std::to_string(residue.residueId());
+    }
+    if (interface->residueOptions & LayerLabel::LabelOptions::Custom) {
+      text += (text == "" ? "" : " / ") + customLabel;
     }
     TextLabel3D* residueLabel = createLabel(text, pos, radius, color);
     geometry->addDrawable(residueLabel);

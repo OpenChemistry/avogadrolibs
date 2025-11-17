@@ -37,8 +37,9 @@ Molecule::Molecule(const Molecule& other)
     m_spectra(other.m_spectra), m_customElementMap(other.m_customElementMap),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
-    m_bondLabels(other.m_bondLabels), m_coordinates3d(other.m_coordinates3d),
-    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
+    m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
+    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
+    m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
@@ -77,6 +78,7 @@ void Molecule::readProperties(const Molecule& other)
 {
   m_atomLabels = other.m_atomLabels;
   m_bondLabels = other.m_bondLabels;
+  m_residueLabels = other.m_residueLabels;
   m_colors = other.m_colors;
   // merge data maps by iterating through other's map
   for (auto it = other.m_data.constBegin(); it != other.m_data.constEnd();
@@ -132,8 +134,9 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_customElementMap(std::move(other.m_customElementMap)),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
-    m_bondLabels(other.m_bondLabels), m_coordinates3d(other.m_coordinates3d),
-    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
+    m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
+    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
+    m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
@@ -172,6 +175,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_positions3d = other.m_positions3d;
     m_atomLabels = other.m_atomLabels;
     m_bondLabels = other.m_bondLabels;
+    m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
@@ -237,6 +241,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_positions3d = other.m_positions3d;
     m_atomLabels = other.m_atomLabels;
     m_bondLabels = other.m_bondLabels;
+    m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
@@ -697,6 +702,7 @@ void Molecule::clearAtoms()
   m_atomicNumbers.clear();
   m_bondOrders.clear();
   m_bondLabels.clear();
+  m_residueLabels.clear();
   m_graph.clear();
   m_partialCharges.clear();
   m_elements.reset();
@@ -1385,6 +1391,31 @@ const Residue& Molecule::residue(Index index) const
 Index Molecule::residueCount() const
 {
   return static_cast<Index>(m_residues.size());
+}
+
+std::string Molecule::residueLabel(Index residueId) const
+{
+  return residueId < m_residueLabels.size() ? m_residueLabels[residueId] : "";
+}
+
+bool Molecule::setResidueLabels(const Core::Array<std::string>& labels)
+{
+  if (labels.size() == residueCount() || labels.size() == 0) {
+    m_residueLabels = labels;
+    return true;
+  }
+  return false;
+}
+
+bool Molecule::setResidueLabel(Index residueId, const std::string& label)
+{
+  if (residueId < residueCount()) {
+    if (residueId >= m_residueLabels.size())
+      m_residueLabels.resize(residueCount(), "");
+    m_residueLabels[residueId] = label;
+    return true;
+  }
+  return false;
 }
 
 bool Molecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)

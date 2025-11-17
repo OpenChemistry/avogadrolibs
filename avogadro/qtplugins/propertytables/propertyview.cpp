@@ -541,7 +541,7 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
     menu.addAction(unfreezeAtomAction);
     connect(unfreezeAtomAction, &QAction::triggered, this,
             &PropertyView::unfreezeAtom);
-  } else {
+  } else if (m_type != PropertyType::ResidueType) {
     // bond angle & torsion are similar
     QString name;
     if (m_type == PropertyType::BondType)
