@@ -94,6 +94,10 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   molecule.setData("DeltaH", m_heatOfFormation);
   molecule.setData("Area", m_area);
   molecule.setData("Volume", m_volume);
+  if (m_energies.size() > 0)
+    molecule.setData("energies", m_energies);
+  if (m_forces.size() > 0)
+    molecule.setData("forces", m_forces);
 
   if (m_partialCharges.size() > 0) {
     MatrixX charges(m_partialCharges.size(), 1);
@@ -139,6 +143,18 @@ void MopacAux::processLine(std::istream& in)
       m_heatOfFormation = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Heat of formation = " << m_heatOfFormation << " kcal/mol"
            << endl;
+    }
+  } else if (Core::contains(key, "HEAT_OF_FORM_UPDATED:KCAL/MOL")) {
+    vector<string> list = Core::split(line, '=');
+    if (list.size() > 1) {
+      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
+      m_energies.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
+    }
+  } else if (Core::contains(key, "GRADIENT_NORM_UPDATED:KCAL/MOL")) {
+    vector<string> list = Core::split(line, '=');
+    if (list.size() > 1) {
+      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
+      m_forces.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
     }
   } else if (Core::contains(key, "AREA:SQUARE ANGSTROMS")) {
     vector<string> list = Core::split(line, '=');
@@ -226,8 +242,11 @@ void MopacAux::processLine(std::istream& in)
       cout << "Number of electrons = " << m_electrons << endl;
     }
   } else if (Core::contains(key, "ATOM_X")) {
+    auto lBracket = key.find('[');
+    auto rBracket = key.find(']');
     int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+      Core::lexicalCast<int>(key.substr(lBracket + 1, rBracket - lBracket - 1))
+        .value_or(0);
     cout << "Number of atomic coordinates = " << tmp << endl;
     m_atomPos = readArrayVec(in, tmp);
     m_coordSets.push_back(m_atomPos);
