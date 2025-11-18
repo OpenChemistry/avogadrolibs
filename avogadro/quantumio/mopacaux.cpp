@@ -226,8 +226,11 @@ void MopacAux::processLine(std::istream& in)
       cout << "Number of electrons = " << m_electrons << endl;
     }
   } else if (Core::contains(key, "ATOM_X")) {
+    auto lBracket = key.find('[');
+    auto rBracket = key.find(']');
     int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+      Core::lexicalCast<int>(key.substr(lBracket + 1, rBracket - lBracket - 1))
+        .value_or(0);
     cout << "Number of atomic coordinates = " << tmp << endl;
     m_atomPos = readArrayVec(in, tmp);
     m_coordSets.push_back(m_atomPos);
