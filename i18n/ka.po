@@ -9,8 +9,9 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-12 17:29+0000\n"
-"PO-Revision-Date: 2025-10-28 18:06+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"PO-Revision-Date: 2025-11-18 02:19+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -4916,7 +4917,7 @@ msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "Open WFN File"
-msgstr ""
+msgstr "WFN ფაილის გახსნა"
 
 #: qtplugins/qtaim/qtaimextension.cpp:91
 msgid "WFN files (*.wfn);;All files (*.*)"
@@ -7039,22 +7040,22 @@ msgstr ""
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:382
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "α Helix"
-msgstr ""
+msgstr "α სპირალი"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "β Sheet"
-msgstr ""
+msgstr "β ფურცელი"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:392
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "3-10 Helix"
-msgstr ""
+msgstr "3-10 სპირალი"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:397
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "π Helix"
-msgstr ""
+msgstr "π სპირალი"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7975,12 +7976,12 @@ msgstr "მოკვეთის გარეშე"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:288
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "CutoffNonPeriodic"
-msgstr ""
+msgstr "CutoffNonPeriodic"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:293
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "CutoffPeriodic"
-msgstr ""
+msgstr "CutoffPeriodic"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:298
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
@@ -8000,17 +8001,17 @@ msgstr "შეზღუდვები:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "HBonds"
-msgstr ""
+msgstr "H Bonds"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:355
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "AllBonds"
-msgstr ""
+msgstr "ყველა ბმა"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:360
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "HAngles"
-msgstr ""
+msgstr "HAngles"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:368
 #. i18n: ectx: property (text), widget (QLabel, label_constraintTolerance)
@@ -8061,17 +8062,17 @@ msgstr " K"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
 msgid "Integrator:"
-msgstr ""
+msgstr "ინტეგრატორი:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Langevin"
-msgstr ""
+msgstr "Langevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:511
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Verlet"
-msgstr ""
+msgstr "Verlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
@@ -8081,12 +8082,12 @@ msgstr "ყავისფერი"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:521
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableLangevin"
-msgstr ""
+msgstr "VariableLangevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:526
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableVerlet"
-msgstr ""
+msgstr "VariableVerlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
