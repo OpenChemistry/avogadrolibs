@@ -98,7 +98,12 @@ void NWChemLog::readAtoms(std::istream& in, Core::Molecule& mol)
     // Keep going until the expected number of components is not seen.
     if (parts.size() != 6)
       break;
-    unsigned char element = Core::Elements::atomicNumberFromSymbol(parts[1]);
+
+    std::string symbol = parts[1];
+    // upper-case the first character
+    symbol[0] = toupper(symbol[0]);
+
+    unsigned char element = Core::Elements::atomicNumberFromSymbol(symbol);
     if (element == Avogadro::InvalidElement) {
       appendError("Invalid element encountered: " + parts[1]);
       return;
