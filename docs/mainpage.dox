@@ -44,16 +44,17 @@ If you wish to extend Avogadro the main plugin base classes are:
 
 @section resources Resources
 
-This project is developed as part of the <a href="http://openchemistry.org/">
+This project is developed as part of the <a href="https://openchemistry.org/">
 Open Chemistry project</a>. Please see the
-<a href="http://wiki.openchemistry.org/Development">development guide</a> if
+<a href="https://wiki.openchemistry.org/Development">development guide</a> if
 you would like to contribute to the project. Some key resources include:
 
-- Wiki : http://wiki.openchemistry.org/
-- Bug tracker : http://projects.openchemistry.org/
-- Dashboard : http://cdash.openchemistry.org/index.php?project=AvogadroLibs
-- Mailing lists: http://www.openchemistry.org/OpenChemistry/help/mailing.html
+- Wiki : https://wiki.openchemistry.org/
+- Bug tracker : https://github.com/OpenChemistry
+- Dashboard : https://cdash.openchemistry.org/index.php?project=AvogadroLibs
+- Mailing lists: https://openchemistry.org/community/
 
  */
+
 
 }
