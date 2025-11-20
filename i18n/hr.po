@@ -4585,7 +4585,7 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:225
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:228
 #, qt-format
@@ -4743,11 +4743,11 @@ msgstr ""
 #: qtplugins/plugindownloader/downloaderwidget.cpp:573
 #: qtplugins/plugindownloader/downloaderwidget.cpp:610
 msgid "Cancel"
-msgstr ""
+msgstr "Odustani"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:658
 msgid "Installation canceled\n"
-msgstr ""
+msgstr "Instalacija prekinuta\n"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
