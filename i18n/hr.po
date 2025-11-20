@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-12 17:29+0000\n"
 "PO-Revision-Date: 2025-11-21 02:39+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -4543,7 +4542,7 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
-msgstr "Vrsta dijagrama"
+msgstr "Vrsta dijagrama:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -4747,7 +4746,7 @@ msgstr "Odustani"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:658
 msgid "Installation canceled\n"
-msgstr "Instalacija prekinuta\n"
+msgstr "Instalacija je prekinuta\n"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -7236,7 +7235,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:369
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Structure:"
-msgstr "Struktura"
+msgstr "Struktura:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:377
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
