@@ -7,7 +7,9 @@
 
 #include "ui_spectradialog.h"
 
+#include <QtCore/QFile>
 #include <QtCore/QSettings>
+
 #include <QtGui/QColor>
 #include <QtGui/QScreen>
 #include <QtWidgets/QColorDialog>
@@ -325,6 +327,18 @@ void SpectraDialog::changeSpectra()
       m_ui->peakWidth->setValue(settings.value("fwhm", 30.0).toDouble());
       settings.endGroup();
       break;
+    case SpectraType::VibrationalCD:
+      m_transitions = fromMatrix(m_spectra["VibrationalCD"].col(0));
+      m_intensities = fromMatrix(m_spectra["VibrationalCD"].col(1));
+
+      settings.beginGroup("spectra/vcd");
+      m_ui->scaleSpinBox->setValue(settings.value("scale", 1.0).toDouble());
+      m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
+      m_ui->xAxisMinimum->setValue(settings.value("xmin", 0.0).toDouble());
+      m_ui->xAxisMaximum->setValue(settings.value("xmax", 4000.0).toDouble());
+      m_ui->peakWidth->setValue(settings.value("fwhm", 30.0).toDouble());
+      settings.endGroup();
+      break;
     case SpectraType::NMR:
       // settings handled per-element below
       m_ui->elementCombo->show();
@@ -515,6 +529,10 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
     } else if (name == "Raman") {
       name = tr("Raman");
       m_ui->combo_spectra->addItem(name, static_cast<int>(SpectraType::Raman));
+    } else if (name == "VibrationalCD") {
+      name = tr("Vibrational CD", "vibrational circular dichroism");
+      m_ui->combo_spectra->addItem(
+        name, static_cast<int>(SpectraType::VibrationalCD));
     } else if (name == "NMR") {
       name = tr("NMR");
       m_ui->combo_spectra->addItem(name, static_cast<int>(SpectraType::NMR));
@@ -704,6 +722,19 @@ void SpectraDialog::updatePlot()
       yTitle = tr("Intensity");
       // save the plot settings
       settings.beginGroup("spectra/raman");
+      settings.setValue("xmin", m_ui->xAxisMinimum->value());
+      settings.setValue("xmax", m_ui->xAxisMaximum->value());
+      settings.setValue("fwhm", m_ui->peakWidth->value());
+      settings.setValue("scale", m_ui->scaleSpinBox->value());
+      settings.setValue("offset", m_ui->offsetSpinBox->value());
+      settings.endGroup();
+      break;
+    case SpectraType::VibrationalCD:
+      windowName = tr("Vibrational Circular Dicroism");
+      xTitle = tr("Wavenumbers (cm⁻¹)");
+      yTitle = tr("Intensity");
+      // save the plot settings
+      settings.beginGroup("spectra/vcd");
       settings.setValue("xmin", m_ui->xAxisMinimum->value());
       settings.setValue("xmax", m_ui->xAxisMaximum->value());
       settings.setValue("fwhm", m_ui->peakWidth->value());
@@ -914,11 +945,11 @@ QtGui::ChartWidget* SpectraDialog::chartWidget()
   return m_ui->plot;
 }
 
-void importExperimentalSpectra(const QString& filename)
+void SpectraDialog::importExperimentalSpectra(const QString& filename)
 {
   QFile file(filename);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    return false;
+    return;
 
   std::vector<std::pair<double, double>> tempData;
 
@@ -950,7 +981,7 @@ void importExperimentalSpectra(const QString& filename)
   file.close();
 
   if (tempData.empty())
-    return false;
+    return;
 
   // Sort by x-axis (energy/wavelength)
   std::sort(tempData.begin(), tempData.end(),
@@ -963,7 +994,7 @@ void importExperimentalSpectra(const QString& filename)
     m_importedSpectra(i, 1) = tempData[i].second; // intensity
   }
 
-  return true;
+  return;
 }
 
 void SpectraDialog::toggleOptions()

@@ -30,6 +30,8 @@ enum class SpectraType
   NMR,
   Electronic,
   CircularDichroism,
+  VibrationalCD,
+  MagneticCD,
   DensityOfStates
 };
 
