@@ -6,7 +6,7 @@ name: Mac Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.10.0
+  QT_VERSION: 6.10.1
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 13
