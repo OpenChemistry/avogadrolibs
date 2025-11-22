@@ -243,7 +243,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     string prefix = buffer.substr(0, 6);
-    if (prefix == "M  END") {
+    if (prefix == "M  END" || prefix == "M END") {
       foundEnd = true;
       break;
     } else if (prefix == "M  CHG") {
@@ -335,7 +335,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 
   if (!foundEnd) {
     appendError("Error, ending tag for file not found.");
-    return false;
+    // return false;
   }
 
   // Apply charges.
