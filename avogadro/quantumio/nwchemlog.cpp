@@ -75,6 +75,13 @@ void NWChemLog::processLine(std::istream& in, Core::Molecule& mol)
   if (Core::contains(key, "Output coordinates")) {
     if (mol.atomCount())
       mol.clearAtoms();
+
+    // get conversion factor
+    vector<string> list = Core::split(key, ' ');
+    if (list.size() == 11)
+      // conversion to Bohr
+      m_coordinateScale = Core::lexicalCast<double>(list[6]).value_or(1.0);
+
     readAtoms(in, mol);
   } else if (Core::contains(key, "P.Frequency")) {
     readFrequencies(line, in, mol);
@@ -90,6 +97,11 @@ void NWChemLog::readAtoms(std::istream& in, Core::Molecule& mol)
   for (int i = 0; i < 3; ++i)
     if (!getline(in, line))
       return;
+
+  // if m_coordinateScale is 1.0 NWChem output Bohr and we need to convert
+  Real scale = 1.0;
+  if (m_coordinateScale == 1.0)
+    scale = BOHR_TO_ANGSTROM;
 
   while (true) {
     if (!getline(in, line))
@@ -119,7 +131,7 @@ void NWChemLog::readAtoms(std::istream& in, Core::Molecule& mol)
       }
     }
     Core::Atom a = mol.addAtom(element);
-    a.setPosition3d(p);
+    a.setPosition3d(p * scale);
   }
 }
 

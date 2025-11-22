@@ -58,6 +58,8 @@ private:
   // Read the projected frequency intensities.
   void readIntensities(std::istream& in, Core::Molecule& mol);
 
+  Real m_coordinateScale = 1.0;
+
   Core::Array<double> m_frequencies;
   Core::Array<double> m_intensities;
   Core::Array<Core::Array<Vector3>> m_Lx;
