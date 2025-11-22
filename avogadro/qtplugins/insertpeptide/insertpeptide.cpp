@@ -445,7 +445,7 @@ void InsertPeptide::performInsert()
         // adjust the N-H position
         if (atomName == "H") {
           coord.angle = 120.0;
-          coord.dihedral = 0.0;
+          coord.dihedral = phi + 180.0 + 5.0 * sin(psi * DEG_TO_RAD);
         }
       }
       internalCoords.push_back(coord);
