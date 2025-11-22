@@ -58,6 +58,9 @@ private:
   // Read the projected frequency intensities.
   void readIntensities(std::istream& in, Core::Molecule& mol);
 
+  // Read unit cell information
+  void readLattice(std::istream& in, Core::Molecule& mol, double factor = 1.0);
+
   Real m_coordinateScale = 1.0;
 
   Core::Array<double> m_frequencies;

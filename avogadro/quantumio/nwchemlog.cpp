@@ -7,6 +7,7 @@
 
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
 #include <iostream>
@@ -87,6 +88,16 @@ void NWChemLog::processLine(std::istream& in, Core::Molecule& mol)
     readFrequencies(line, in, mol);
   } else if (Core::contains(key, "Projected Infra")) {
     readIntensities(in, mol);
+  } else if (Core::contains(key, "lattice vectors") &&
+             !Core::contains(key, "reciprocal")) {
+    // check the lattic conversion factor
+    Real factor = 1.0;
+    vector<string> list = Core::split(key, ' ');
+    if (list.size() == 11)
+      // conversion to Bohr
+      factor = Core::lexicalCast<double>(list[6]).value_or(1.0);
+
+    readLattice(in, mol, factor);
   }
 }
 
@@ -133,6 +144,49 @@ void NWChemLog::readAtoms(std::istream& in, Core::Molecule& mol)
     Core::Atom a = mol.addAtom(element);
     a.setPosition3d(p * scale);
   }
+}
+
+void NWChemLog::readLattice(std::istream& in, Core::Molecule& mol,
+                            double factor)
+{
+  Real scale = 1.0;
+  if (factor == 1.0)
+    scale = BOHR_TO_ANGSTROM;
+
+  string line;
+  if (!getline(in, line))
+    return;
+
+  // next 3 lines should be a1, a2, a3
+  getline(in, line);
+  vector<string> parts = Core::split(line, ' ');
+  if (parts.size() != 5)
+    return;
+  Vector3 a1;
+  a1[0] = Core::lexicalCast<double>(parts[1]).value_or(0.0);
+  a1[1] = Core::lexicalCast<double>(parts[2]).value_or(0.0);
+  a1[2] = Core::lexicalCast<double>(parts[3]).value_or(0.0);
+
+  getline(in, line);
+  parts = Core::split(line, ' ');
+  if (parts.size() != 5)
+    return;
+  Vector3 a2;
+  a2[0] = Core::lexicalCast<double>(parts[1]).value_or(0.0);
+  a2[1] = Core::lexicalCast<double>(parts[2]).value_or(0.0);
+  a2[2] = Core::lexicalCast<double>(parts[3]).value_or(0.0);
+
+  getline(in, line);
+  parts = Core::split(line, ' ');
+  if (parts.size() != 5)
+    return;
+  Vector3 a3;
+  a3[0] = Core::lexicalCast<double>(parts[1]).value_or(0.0);
+  a3[1] = Core::lexicalCast<double>(parts[2]).value_or(0.0);
+  a3[2] = Core::lexicalCast<double>(parts[3]).value_or(0.0);
+
+  auto* cell = new Core::UnitCell(a1 * scale, a2 * scale, a3 * scale);
+  mol.setUnitCell(cell);
 }
 
 void NWChemLog::readFrequencies(const std::string& firstLine, std::istream& in,
