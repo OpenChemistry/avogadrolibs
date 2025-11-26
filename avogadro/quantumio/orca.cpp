@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <iostream>
+#include <fstream>
 #include <regex>
 
 using std::regex;
@@ -118,6 +119,16 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       }
       molecule.setSpectra("CircularDichroism", electronicRotations);
     }
+  }
+
+  if (m_magneticTransitions.size() > 0 &&
+      m_magneticTransitions.size() == m_magneticCD.size()) {
+    MatrixX magneticData(m_magneticTransitions.size(), 2);
+    for (size_t i = 0; i < m_magneticTransitions.size(); ++i) {
+      magneticData(i, 0) = m_magneticTransitions[i];
+      magneticData(i, 1) = m_magneticCD[i];
+    }
+    molecule.setSpectra("MagneticCD", magneticData);
   }
 
   if (m_nmrShifts.size() > 0) {
@@ -369,6 +380,8 @@ void ORCAOutput::processLine(std::istream& in,
     // units
     getline(in, key);
     getline(in, key); // skip ------------
+  } else if (Core::contains(key, "MCD Transitions")) {
+    parseMCD();
   } else if (Core::contains(key, "CHEMICAL SHIELDING SUMMARY (ppm)")) {
     m_currentMode = NMR;
     for (int i = 0; i < 4; ++i) {
@@ -1168,6 +1181,46 @@ void ORCAOutput::load(GaussianSet* basis)
   m_homo = ceil(m_electrons / 2.0);
   if (m_MOcoeffs.size() > 0)
     basis->generateDensityMatrix();
+}
+
+void ORCAOutput::parseMCD()
+{
+  // look for files with "dipole-length.1.mcd"
+  std::string filename = fileName();
+  // probably something like test.out
+  // we need to look for test.cis-el.dipole-length.1.mcd
+  // remove the extension
+  size_t pos = filename.find_last_of('.');
+  if (pos != std::string::npos) {
+    filename = filename.substr(0, pos);
+  }
+  filename += ".cis-el.dipole-length.1.mcd";
+  std::ifstream in(filename.c_str());
+  if (!in) {
+    std::cerr << "Cannot open: " << filename << "\n";
+    return;
+  }
+
+  // read in line by line
+  // frequency, mcd, absorption
+  Real frequency, mcd, absorption;
+  frequency = mcd = absorption = 0.0;
+  while (in) {
+    in >> frequency >> mcd >> absorption;
+    if (!in)
+      break;
+
+    // if frequency goes down, we are done
+    // (or we hit the end of the file)
+    if (m_magneticTransitions.size() > 0 &&
+        frequency < m_magneticTransitions.back())
+      break;
+
+    m_magneticTransitions.push_back(frequency);
+    m_magneticCD.push_back(mcd);
+  }
+
+  in.close();
 }
 
 GaussianSet::orbital ORCAOutput::orbitalIdx(std::string txt)

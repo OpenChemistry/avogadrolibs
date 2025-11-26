@@ -346,6 +346,21 @@ void SpectraDialog::changeSpectra()
       m_ui->peakWidth->setValue(settings.value("fwhm", 30.0).toDouble());
       settings.endGroup();
       break;
+    case SpectraType::MagneticCD:
+      m_transitions = fromMatrix(m_spectra["MagneticCD"].col(0));
+      m_intensities = fromMatrix(m_spectra["MagneticCD"].col(1));
+
+      settings.beginGroup("spectra/mcd");
+      m_ui->scaleSpinBox->setValue(settings.value("scale", 1.0).toDouble());
+      m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
+      m_ui->xAxisMaximum->setMaximum(30000.0);
+      m_ui->xAxisMinimum->setValue(settings.value("xmin", 10000.0).toDouble());
+      m_ui->xAxisMaximum->setMaximum(
+        std::max(settings.value("xmax", 75000.0).toDouble(), 75000.0));
+      m_ui->xAxisMaximum->setValue(settings.value("xmax", 75000.0).toDouble());
+      m_ui->peakWidth->setValue(settings.value("fwhm", 100.0).toDouble());
+      settings.endGroup();
+      break;
     case SpectraType::NMR:
       // settings handled per-element below
       m_ui->elementCombo->show();
@@ -545,6 +560,10 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
       name = tr("Vibrational CD", "vibrational circular dichroism");
       m_ui->combo_spectra->addItem(
         name, static_cast<int>(SpectraType::VibrationalCD));
+    } else if (name == "MagneticCD") {
+      name = tr("Magnetic CD", "magnetic circular dichroism");
+      m_ui->combo_spectra->addItem(name,
+                                   static_cast<int>(SpectraType::MagneticCD));
     } else if (name == "NMR") {
       name = tr("NMR");
       m_ui->combo_spectra->addItem(name, static_cast<int>(SpectraType::NMR));
@@ -754,6 +773,19 @@ void SpectraDialog::updatePlot()
       settings.setValue("offset", m_ui->offsetSpinBox->value());
       settings.endGroup();
       break;
+    case SpectraType::MagneticCD:
+      windowName = tr("Magnetic Circular Dicroism");
+      xTitle = tr("Wavenumbers (cm⁻¹)");
+      yTitle = tr("Intensity");
+      // save the plot settings
+      settings.beginGroup("spectra/mcd");
+      settings.setValue("xmin", m_ui->xAxisMinimum->value());
+      settings.setValue("xmax", m_ui->xAxisMaximum->value());
+      settings.setValue("fwhm", m_ui->peakWidth->value());
+      settings.setValue("scale", m_ui->scaleSpinBox->value());
+      settings.setValue("offset", m_ui->offsetSpinBox->value());
+      settings.endGroup();
+      break;
     case SpectraType::NMR:
       windowName = tr("NMR Spectra");
       xTitle = tr("Chemical Shift (ppm)");
@@ -940,6 +972,8 @@ void SpectraDialog::updatePlot()
   float yAxisMax = m_ui->yAxisMaximum->value();
 
   chart->setXAxisLimits(xAxisMin, xAxisMax);
+  if (type == SpectraType::MagneticCD)
+    chart->setAxisLogScale(QtGui::ChartWidget::Axis::y, true);
   chart->setYAxisLimits(yAxisMin, yAxisMax);
 
   chart->setAxisDigits(QtGui::ChartWidget::Axis::x, 4);
