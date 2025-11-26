@@ -43,6 +43,23 @@ std::vector<std::string> ORCAOutput::mimeTypes() const
   return std::vector<std::string>();
 }
 
+/**
+ * @brief Parse an ORCA output stream and populate a Molecule with the parsed data.
+ *
+ * Populates the provided Molecule with atomic coordinates (including multiple
+ * coordinate frames if present), inferred bonds and bond orders, vibrational
+ * data (frequencies, IR/Raman intensities, displacements, VCD if present),
+ * electronic spectra (including circular dichroism if present), NMR shifts,
+ * partial charges, basis set and molecular orbital information, and common
+ * metadata (total charge, spin multiplicity, dipole moment, total energy,
+ * and optional energy list).
+ *
+ * @param in Input stream containing an ORCA output file.
+ * @param molecule Molecule instance to populate with parsed data.
+ * @return true if parsing succeeded and the molecule was populated; `false` if
+ *         no atomic coordinates were found or parsing failed to produce a valid
+ *         geometry.
+ */
 bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line
@@ -89,6 +106,16 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     molecule.setVibrationLx(m_vibDisplacements);
     if (m_RamanIntensities.size())
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
+  }
+
+  if (m_vcdIntensities.size() > 0 &&
+      m_vcdIntensities.size() == m_frequencies.size()) {
+    MatrixX vcdData(m_frequencies.size(), 2);
+    for (size_t i = 0; i < m_frequencies.size(); ++i) {
+      vcdData(i, 0) = m_frequencies[i];
+      vcdData(i, 1) = m_vcdIntensities[i];
+    }
+    molecule.setSpectra("VibrationalCD", vcdData);
   }
 
   if (m_electronicTransitions.size() > 0 &&
@@ -161,6 +188,31 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   return true;
 }
 
+/**
+ * @brief Parse the next logical block/line from an ORCA output stream and update the parser state.
+ *
+ * Reads a single trimmed line (and any additional lines required by the detected block)
+ * from the provided input stream and advances the internal state machine to parse ORCA
+ * output sections. Depending on the recognized section header or the current parsing
+ * mode, this updates ORCAOutput's internal containers with geometry, basis, orbital,
+ * vibrational, spectral, charge and bond-order data.
+ *
+ * The function may populate or modify internal members including (but not limited to):
+ * m_currentMode, m_atomNums, m_atomPos, m_atomLabel, m_coordSets, m_partialCharges,
+ * m_bondOrders, m_orbitalEnergy, m_betaOrbitalEnergy, m_MOcoeffs, m_BetaMOcoeffs,
+ * m_numBasisFunctions, m_a, m_c, m_shellNums, m_shellTypes, m_shelltoAtom,
+ * m_frequencies, m_vibDisplacements, m_IRintensities, m_RamanIntensities,
+ * m_vcdIntensities, m_electronicTransitions, m_electronicIntensities,
+ * m_electronicRotations, m_nmrShifts, m_dipoleMoment, m_charge, m_spin,
+ * m_totalEnergy, m_energies, and related temporary parsing containers.
+ *
+ * @param in  Input stream positioned at the next line of an ORCA output file; the function
+ *            reads the provided line and may consume additional lines necessary to complete
+ *            the current block.
+ * @param basis  Optional pointer to a GaussianSet (may be unused); the parser collects basis
+ *               construction data into internal buffers which are later loaded into the
+ *               actual GaussianSet via load().
+ */
 void ORCAOutput::processLine(std::istream& in,
                              [[maybe_unused]] GaussianSet* basis)
 {
@@ -259,6 +311,7 @@ void ORCAOutput::processLine(std::istream& in,
     }
     // starts at the next line
   } else if (Core::contains(key, "CD SPECTRUM") &&
+             !Core::contains(key, "VCD SPECTRUM") &&
              !Core::contains(key, "TRANSITION VELOCITY DIPOLE")) {
     m_currentMode = ECD;
     for (int i = 0; i < 4; ++i) {
@@ -349,6 +402,14 @@ void ORCAOutput::processLine(std::istream& in,
     getline(in, key); // skip ------------
     getline(in, key); // skip blank line
     getline(in, key); // skip column titles
+    getline(in, key); // skip ------------
+  } else if (Core::contains(key, "VCD SPECTRUM")) {
+    m_currentMode = VCD;
+    // look for "Mode" and "Freq"
+    while (!Core::contains(key, "Mode") && !Core::contains(key, "Freq"))
+      getline(in, key);
+    // units
+    getline(in, key);
     getline(in, key); // skip ------------
   } else if (Core::contains(key, "CHEMICAL SHIELDING SUMMARY (ppm)")) {
     m_currentMode = NMR;
@@ -565,6 +626,34 @@ void ORCAOutput::processLine(std::istream& in,
           m_vibDisplacements[i].resize(m_atomNums.size());
           for (unsigned int j = 0; j < m_atomNums.size(); j++)
             m_vibDisplacements[i].push_back(Eigen::Vector3d());
+        }
+
+        m_currentMode = NotParsing;
+        break;
+      }
+      case VCD: {
+        // should be mode, frequency, IR intensity
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        m_vcdIntensities.resize(m_frequencies.size(), 0.0);
+
+        while (!key.empty()) {
+          // e.g. 0:         0.00 cm**-1
+
+          if (list.size() != 3) {
+            break;
+          }
+          unsigned index = Core::lexicalCast<std::size_t>(list[0]).value_or(0);
+          if (index >= m_frequencies.size()) {
+            break;
+          }
+          m_vcdIntensities[index] =
+            Core::lexicalCast<double>(list[2]).value_or(0.0);
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
         }
 
         m_currentMode = NotParsing;

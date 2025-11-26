@@ -7,10 +7,13 @@
 
 #include "ui_spectradialog.h"
 
+#include <QtCore/QFile>
 #include <QtCore/QSettings>
+
 #include <QtGui/QColor>
 #include <QtGui/QScreen>
 #include <QtWidgets/QColorDialog>
+#include <QtWidgets/QFileDialog>
 
 #include <QtCore/QDebug>
 
@@ -45,6 +48,17 @@ float scaleAndBlur(float x, float peak, float intensity, float scale = 1.0,
   return intensity * gaussian;
 }
 
+/**
+ * @brief Returns the peak intensity when x lies sufficiently close to a scaled and shifted peak.
+ *
+ * Determines whether the coordinate `x` is within half the peak-to-peak spacing (1 / xScale)
+ * of the peak position after applying `shift` and `scale`; if so, returns `intensity`, otherwise 0.0.
+ *
+ * @param scale Factor applied to the peak position (default 1.0).
+ * @param shift Value subtracted from the peak before scaling (default 0.0).
+ * @param xScale Reciprocal of the spacing between generated sample points (higher values imply finer spacing, default 1.0).
+ * @return float `intensity` if `x` is within half the spacing of the scaled/shifted peak, `0.0` otherwise.
+ */
 float closestTo(float x, float peak, float intensity, float scale = 1.0,
                 float shift = 0.0, float xScale = 1.0)
 {
@@ -58,6 +72,14 @@ float closestTo(float x, float peak, float intensity, float scale = 1.0,
   return (fabs(delta) < peak_to_peak / 2.0) ? intensity : 0.0;
 }
 
+/**
+ * @brief Extracts the first column of a matrix into a std::vector<double>.
+ *
+ * Copies the column values in row order (row 0 to row N-1) into a vector.
+ *
+ * @param matrix Matrix with at least one column; only the first column is used.
+ * @return std::vector<double> Vector containing the values of the first column.
+ */
 std::vector<double> fromMatrix(const MatrixX& matrix)
 {
   std::vector<double> result;
@@ -66,6 +88,75 @@ std::vector<double> fromMatrix(const MatrixX& matrix)
   return result;
 }
 
+/**
+ * Interpolates y values at the specified target x positions from a two-column
+ * experimental data matrix.
+ *
+ * expData must have at least two columns where column 0 contains independent
+ * x values in ascending order and column 1 contains corresponding y values.
+ * Values for targetX outside the range of expData are clamped to the nearest
+ * endpoint y value; interior points are obtained by linear interpolation.
+ *
+ * @param expData Two-column matrix of experimental points (x in column 0, y in column 1).
+ * @param targetX X positions at which to compute interpolated y values.
+ * @return std::vector<float> Interpolated y values corresponding to targetX.
+ */
+std::vector<float> interpolateData(const MatrixX& expData,
+                                   const std::vector<float>& targetX)
+{
+  std::vector<float> result(targetX.size(), 0.0f);
+
+  if (expData.rows() == 0 || expData.cols() < 2)
+    return result;
+
+  for (size_t i = 0; i < targetX.size(); ++i) {
+    float x = targetX[i];
+
+    // Handle out-of-range cases
+    if (x <= expData(0, 0)) {
+      result[i] = expData(0, 1);
+      continue;
+    }
+    if (x >= expData(expData.rows() - 1, 0)) {
+      result[i] = expData(expData.rows() - 1, 1);
+      continue;
+    }
+
+    // Binary search for bracketing points
+    int lower = 0;
+    int upper = expData.rows() - 1;
+
+    while (upper - lower > 1) {
+      int mid = (lower + upper) / 2;
+      if (expData(mid, 0) < x)
+        lower = mid;
+      else
+        upper = mid;
+    }
+
+    // Linear interpolation
+    double x1 = expData(lower, 0);
+    double x2 = expData(upper, 0);
+    double y1 = expData(lower, 1);
+    double y2 = expData(upper, 1);
+
+    result[i] = y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+  }
+
+  return result;
+}
+
+/**
+ * @brief Construct a SpectraDialog, initialize UI state, restore settings, and connect UI signals.
+ *
+ * Initializes the dialog's user interface, hides units and NMR-specific controls, hides advanced
+ * options and the export-data button, configures the data table column resize mode, reads persisted
+ * settings, and connects UI controls (options toggle, import/export, raw/import toggles, color
+ * pickers, font size and line-width controls) to their corresponding slots. Also establishes
+ * additional spectrum-related signal connections by calling connectOptions().
+ *
+ * @param parent Parent widget for the dialog.
+ */
 SpectraDialog::SpectraDialog(QWidget* parent)
   : QDialog(parent), m_ui(new Ui::SpectraDialog)
 {
@@ -90,13 +181,19 @@ SpectraDialog::SpectraDialog(QWidget* parent)
 
   // connections for options
   connect(m_ui->push_options, SIGNAL(clicked()), this, SLOT(toggleOptions()));
+  connect(m_ui->push_export, SIGNAL(clicked()), this, SLOT(exportData()));
   connect(m_ui->push_exportData, SIGNAL(clicked()), this, SLOT(exportData()));
+  connect(m_ui->push_import, SIGNAL(clicked()), this, SLOT(importData()));
+  connect(m_ui->cb_raw, SIGNAL(toggled(bool)), this, SLOT(updatePlot()));
+  connect(m_ui->cb_import, SIGNAL(toggled(bool)), this, SLOT(updatePlot()));
   connect(m_ui->push_colorBackground, SIGNAL(clicked()), this,
           SLOT(changeBackgroundColor()));
   connect(m_ui->push_colorForeground, SIGNAL(clicked()), this,
           SLOT(changeForegroundColor()));
   connect(m_ui->push_colorCalculated, SIGNAL(clicked()), this,
           SLOT(changeCalculatedSpectraColor()));
+  connect(m_ui->push_colorRaw, SIGNAL(clicked()), this,
+          SLOT(changeRawSpectraColor()));
   connect(m_ui->push_colorImported, SIGNAL(clicked()), this,
           SLOT(changeImportedSpectraColor()));
   connect(m_ui->fontSizeCombo, SIGNAL(currentIndexChanged(int)), this,
@@ -217,6 +314,20 @@ void SpectraDialog::updateElementCombo()
   changeSpectra(); // default to 1H
 }
 
+/**
+ * @brief Update UI and internal data for the currently selected spectrum type.
+ *
+ * Loads per-spectrum settings, prepares transition and intensity arrays for plotting,
+ * applies NMR element-specific defaults when needed, populates the data table,
+ * adjusts axis limits and UI controls, and triggers a plot update.
+ *
+ * The method reads relevant QSettings groups for the active spectrum type (and
+ * per-element NMR settings), shows or hides the element chooser, fills
+ * m_transitions and m_intensities from m_spectra (or builds NMR transitions
+ * filtered by the selected element), updates the data table rows and intensity
+ * maximum, adjusts y-axis minimum/maximum for special cases (CD and IR
+ * transmission), and calls updatePlot().
+ */
 void SpectraDialog::changeSpectra()
 {
   // based on the current spectra type, update the options
@@ -254,6 +365,18 @@ void SpectraDialog::changeSpectra()
       m_intensities = fromMatrix(m_spectra["Raman"].col(1));
 
       settings.beginGroup("spectra/raman");
+      m_ui->scaleSpinBox->setValue(settings.value("scale", 1.0).toDouble());
+      m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
+      m_ui->xAxisMinimum->setValue(settings.value("xmin", 0.0).toDouble());
+      m_ui->xAxisMaximum->setValue(settings.value("xmax", 4000.0).toDouble());
+      m_ui->peakWidth->setValue(settings.value("fwhm", 30.0).toDouble());
+      settings.endGroup();
+      break;
+    case SpectraType::VibrationalCD:
+      m_transitions = fromMatrix(m_spectra["VibrationalCD"].col(0));
+      m_intensities = fromMatrix(m_spectra["VibrationalCD"].col(1));
+
+      settings.beginGroup("spectra/vcd");
       m_ui->scaleSpinBox->setValue(settings.value("scale", 1.0).toDouble());
       m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
       m_ui->xAxisMinimum->setValue(settings.value("xmin", 0.0).toDouble());
@@ -420,7 +543,8 @@ void SpectraDialog::changeSpectra()
   m_ui->yAxisMaximum->setValue(maxIntensity);
   m_ui->yAxisMinimum->setMinimum(0.0);
   // if CD, set the minimum too
-  if (type == SpectraType::CircularDichroism) {
+  if (type == SpectraType::CircularDichroism ||
+      type == SpectraType::VibrationalCD || type == SpectraType::MagneticCD) {
     m_ui->yAxisMinimum->setMinimum(-maxIntensity * 2.0);
     m_ui->yAxisMinimum->setValue(-maxIntensity);
   }
@@ -432,6 +556,21 @@ void SpectraDialog::changeSpectra()
   connectOptions();
 }
 
+/**
+ * @brief Set available spectra and rebuild the spectra selection UI.
+ *
+ * Stores the provided spectra map, repopulates the spectra combo box with
+ * localized human-readable names mapped to the internal SpectraType values,
+ * and updates the displayed spectrum. Unknown spectrum keys are ignored.
+ *
+ * The method temporarily disconnects the combo box change signal while it is
+ * rebuilt, invokes changeSpectra() to apply the new selection, and then
+ * reconnects the signal.
+ *
+ * @param spectra Map from spectrum identifier strings (e.g., "IR", "Raman",
+ * "NMR", "Electronic", "CircularDichroism", "VibrationalCD", "DensityOfStates")
+ * to their corresponding data matrices.
+ */
 void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
 {
   m_spectra = spectra;
@@ -444,6 +583,10 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
   for (auto& spectra : m_spectra) {
     QString name = QString::fromStdString(spectra.first);
 
+#ifndef NDEBUG
+    qDebug() << " reading spectra " << name;
+#endif
+
     if (name == "IR") {
       name = tr("Infrared");
       m_ui->combo_spectra->addItem(name,
@@ -451,6 +594,10 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
     } else if (name == "Raman") {
       name = tr("Raman");
       m_ui->combo_spectra->addItem(name, static_cast<int>(SpectraType::Raman));
+    } else if (name == "VibrationalCD") {
+      name = tr("Vibrational CD", "vibrational circular dichroism");
+      m_ui->combo_spectra->addItem(
+        name, static_cast<int>(SpectraType::VibrationalCD));
     } else if (name == "NMR") {
       name = tr("NMR");
       m_ui->combo_spectra->addItem(name, static_cast<int>(SpectraType::NMR));
@@ -537,6 +684,13 @@ void SpectraDialog::changeForegroundColor()
   }
 }
 
+/**
+ * @brief Prompt the user to choose the color used for calculated spectra and apply it.
+ *
+ * Opens a color selection dialog initialized to the current calculated-spectra color;
+ * if the user selects a different valid color, the choice is saved to application
+ * settings under "spectra/calculatedColor" and the plot is refreshed.
+ */
 void SpectraDialog::changeCalculatedSpectraColor()
 {
   QSettings settings;
@@ -550,10 +704,37 @@ void SpectraDialog::changeCalculatedSpectraColor()
   }
 }
 
+/**
+ * @brief Prompt the user to select the color used for raw spectra and apply any change.
+ *
+ * Opens a color picker initialized from the saved "spectra/rawColor" setting; if the user
+ * chooses a valid color different from the current value, the new color is saved to settings
+ * and the plot is updated.
+ */
+void SpectraDialog::changeRawSpectraColor()
+{
+  QSettings settings;
+  QColor current = settings.value("spectra/rawColor", red).value<QColor>();
+  QColor color =
+    QColorDialog::getColor(current, this, tr("Select Raw Spectra Color"));
+  if (color.isValid() && color != current) {
+    settings.setValue("spectra/rawColor", color);
+    updatePlot();
+  }
+}
+
+/**
+ * @brief Prompt the user to choose the color used for imported spectra and apply it.
+ *
+ * Opens a color selection dialog initialized with the currently stored imported-spectra
+ * color (falls back to the configured default). If the user picks a different valid
+ * color, the new color is saved to settings and the plot is refreshed.
+ */
 void SpectraDialog::changeImportedSpectraColor()
 {
   QSettings settings;
-  QColor current = settings.value("spectra/importedColor", red).value<QColor>();
+  QColor current =
+    settings.value("spectra/importedColor", blue).value<QColor>();
   QColor color =
     QColorDialog::getColor(current, this, tr("Select Imported Spectra Color"));
   if (color.isValid() && color != current) {
@@ -580,7 +761,16 @@ void SpectraDialog::changeLineWidth()
 
 ///////////////////////
 // Plot Manipulation //
-///////////////////////
+/**
+ * @brief Update the spectral plot to reflect current UI settings and data.
+ *
+ * Updates per-spectrum settings in persistent storage, composes the displayed
+ * spectrum from the dialog's transition and intensity data (including optional
+ * imported data), and refreshes the chart widget with configured colors,
+ * axis titles, limits, font size, and line width. The function also adds the
+ * smoothed calculated series and, if enabled, raw stick and imported series,
+ * and positions the legend for infrared spectra.
+ */
 
 void SpectraDialog::updatePlot()
 {
@@ -590,7 +780,7 @@ void SpectraDialog::updatePlot()
   // the raw data
   std::vector<double> transitions, intensities;
   // for the plot
-  std::vector<float> xData, yData, yStick;
+  std::vector<float> xData, yData, yStick, importedData;
 
   // determine the type to plot
   SpectraType type =
@@ -627,6 +817,19 @@ void SpectraDialog::updatePlot()
       yTitle = tr("Intensity");
       // save the plot settings
       settings.beginGroup("spectra/raman");
+      settings.setValue("xmin", m_ui->xAxisMinimum->value());
+      settings.setValue("xmax", m_ui->xAxisMaximum->value());
+      settings.setValue("fwhm", m_ui->peakWidth->value());
+      settings.setValue("scale", m_ui->scaleSpinBox->value());
+      settings.setValue("offset", m_ui->offsetSpinBox->value());
+      settings.endGroup();
+      break;
+    case SpectraType::VibrationalCD:
+      windowName = tr("Vibrational Circular Dicroism");
+      xTitle = tr("Wavenumbers (cm⁻¹)");
+      yTitle = tr("Intensity");
+      // save the plot settings
+      settings.beginGroup("spectra/vcd");
       settings.setValue("xmin", m_ui->xAxisMinimum->value());
       settings.setValue("xmax", m_ui->xAxisMaximum->value());
       settings.setValue("fwhm", m_ui->peakWidth->value());
@@ -793,18 +996,25 @@ void SpectraDialog::updatePlot()
   };
   chart->addPlot(xData, yData, calculatedColor, xTitle, tr("Smoothed"));
   // todo add hide/show raw data series
-  QtGui::color4ub rawColor = { 255, 0, 0, 255 };
-  chart->addSeries(yStick, rawColor, tr("Raw"));
+  QColor rawColor = settings.value("spectra/rawColor", red).value<QColor>();
+  QtGui::color4ub rawColor4ub = { static_cast<unsigned char>(rawColor.red()),
+                                  static_cast<unsigned char>(rawColor.green()),
+                                  static_cast<unsigned char>(rawColor.blue()),
+                                  static_cast<unsigned char>(
+                                    rawColor.alpha()) };
+  if (m_ui->cb_raw->isChecked())
+    chart->addSeries(yStick, rawColor4ub, tr("Raw"));
 
   QColor importedColor =
-    settings.value("spectra/importedColor", red).value<QColor>();
+    settings.value("spectra/importedColor", blue).value<QColor>();
   QtGui::color4ub importedColor4ub = {
     static_cast<unsigned char>(importedColor.red()),
     static_cast<unsigned char>(importedColor.green()),
     static_cast<unsigned char>(importedColor.blue()),
     static_cast<unsigned char>(importedColor.alpha())
   };
-  // TODO: add imported data here
+  if (m_ui->cb_import->isChecked() && !importedData.empty())
+    chart->addSeries(importedData, importedColor4ub, tr("Imported"));
 
   // axis limits
   float xAxisMin = m_ui->xAxisMinimum->value();
@@ -827,11 +1037,92 @@ void SpectraDialog::updatePlot()
   raise();
 }
 
+/**
+ * @brief Access the dialog's chart widget used for rendering spectra.
+ *
+ * @return QtGui::ChartWidget* Pointer to the chart widget used for plotting.
+ */
 QtGui::ChartWidget* SpectraDialog::chartWidget()
 {
   return m_ui->plot;
 }
 
+/**
+ * @brief Imports two-column spectral data from a CSV or TSV file into the dialog.
+ *
+ * Opens a file dialog to pick a .csv or .tsv file, parses numeric X,Y pairs (skipping a non-numeric header line if present),
+ * sorts rows by the X column, stores the result in m_importedSpectra (two-column matrix: X then Y), and enables the
+ * dialog's imported-data checkbox so the imported series will be plotted.
+ *
+ * The delimiter is chosen by file extension (".tsv" -> tab, otherwise comma). Lines with non-numeric or incomplete
+ * values are ignored. If no valid rows are found the method returns without changing existing imported data.
+ */
+void SpectraDialog::importData()
+{
+  // get the filename to import
+  QString filename = QFileDialog::getOpenFileName(
+    this, tr("Import Data"), "", tr("CSV Files (*.csv);;TSV Files (*.tsv)"));
+
+  QFile file(filename);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    return;
+
+  std::vector<std::pair<double, double>> tempData;
+
+  QTextStream in(&file);
+  // figure out if this is CSV or TSV data
+  QString delimiter = filename.endsWith(".tsv") ? "\t" : ",";
+
+  // Skip header if present (detect by checking if first line contains numbers)
+  QString firstLine = in.readLine();
+  bool hasHeader = !firstLine.contains(QRegularExpression("[0-9]"));
+  if (hasHeader && !in.atEnd())
+    firstLine = in.readLine();
+
+  // Parse data
+  do {
+    QStringList parts = firstLine.split(delimiter);
+    if (parts.size() >= 2) {
+      bool ok1, ok2;
+      double x = parts[0].trimmed().toDouble(&ok1);
+      double y = parts[1].trimmed().toDouble(&ok2);
+
+      if (ok1 && ok2) {
+        tempData.push_back({ x, y });
+      }
+    }
+    firstLine = in.readLine();
+  } while (!in.atEnd());
+
+  file.close();
+
+  if (tempData.empty())
+    return;
+
+  // Sort by x-axis (energy/wavelength)
+  std::sort(tempData.begin(), tempData.end(),
+            [](const auto& a, const auto& b) { return a.first < b.first; });
+
+  // Convert to Eigen::MatrixXd (matching computed spectra format)
+  m_importedSpectra.resize(tempData.size(), 2);
+  for (size_t i = 0; i < tempData.size(); ++i) {
+    m_importedSpectra(i, 0) = tempData[i].first;  // energy/wavelength
+    m_importedSpectra(i, 1) = tempData[i].second; // intensity
+  }
+
+  // enable the imported data series
+  m_ui->cb_import->setEnabled(true);
+  m_ui->cb_import->setChecked(true);
+
+  return;
+}
+
+/**
+ * @brief Toggles the visibility of advanced options and adjusts the dialog layout.
+ *
+ * Shows the advanced options tab, data table, and export button and enlarges the dialog to fit them when hidden;
+ * otherwise hides those widgets, reduces the dialog size accordingly, and recenters the window on the primary screen.
+ */
 void SpectraDialog::toggleOptions()
 {
   if (m_ui->tab_widget->isHidden()) {
