@@ -7,10 +7,13 @@
 
 #include "ui_spectradialog.h"
 
+#include <QtCore/QFile>
 #include <QtCore/QSettings>
+
 #include <QtGui/QColor>
 #include <QtGui/QScreen>
 #include <QtWidgets/QColorDialog>
+#include <QtWidgets/QFileDialog>
 
 #include <QtCore/QDebug>
 
@@ -58,11 +61,75 @@ float closestTo(float x, float peak, float intensity, float scale = 1.0,
   return (fabs(delta) < peak_to_peak / 2.0) ? intensity : 0.0;
 }
 
+/**
+ * Grab the first column of a matrix for std::vector<double> conversion
+ * @param matrix The matrix to convert
+ * @return The first column of the matrix
+ */
 std::vector<double> fromMatrix(const MatrixX& matrix)
 {
   std::vector<double> result;
   for (auto i = 0; i < matrix.rows(); ++i)
     result.push_back(matrix(i, 0));
+  return result;
+}
+
+/**
+ * Interpolate data points at targetX (e.g., computed spectra)
+ * from sourceX and sourceY.
+ *
+ * This function will linearly interpolate data points from sourceX and sourceY
+ * and return the corresponding interpolated values at targetX.
+ *
+ * @param expData The experimental data points, corresponding to sourceX and
+ * sourceY.
+ * @param targetX The independent variable data points where the interpolation
+ * should be performed.
+ *
+ * @return A vector of interpolated values, corresponding to targetX.
+ */
+std::vector<float> interpolateData(const MatrixX& expData,
+                                   const std::vector<float>& targetX)
+{
+  std::vector<float> result(targetX.size(), 0.0f);
+
+  if (expData.rows() == 0 || expData.cols() < 2)
+    return result;
+
+  for (size_t i = 0; i < targetX.size(); ++i) {
+    float x = targetX[i];
+
+    // Handle out-of-range cases
+    if (x <= expData(0, 0)) {
+      result[i] = expData(0, 1);
+      continue;
+    }
+    if (x >= expData(expData.rows() - 1, 0)) {
+      result[i] = expData(expData.rows() - 1, 1);
+      continue;
+    }
+
+    // Binary search for bracketing points
+    int lower = 0;
+    int upper = expData.rows() - 1;
+
+    while (upper - lower > 1) {
+      int mid = (lower + upper) / 2;
+      if (expData(mid, 0) < x)
+        lower = mid;
+      else
+        upper = mid;
+    }
+
+    // Linear interpolation
+    double x1 = expData(lower, 0);
+    double x2 = expData(upper, 0);
+    double y1 = expData(lower, 1);
+    double y2 = expData(upper, 1);
+
+    result[i] = y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+  }
+
   return result;
 }
 
@@ -90,13 +157,19 @@ SpectraDialog::SpectraDialog(QWidget* parent)
 
   // connections for options
   connect(m_ui->push_options, SIGNAL(clicked()), this, SLOT(toggleOptions()));
+  connect(m_ui->push_export, SIGNAL(clicked()), this, SLOT(exportData()));
   connect(m_ui->push_exportData, SIGNAL(clicked()), this, SLOT(exportData()));
+  connect(m_ui->push_import, SIGNAL(clicked()), this, SLOT(importData()));
+  connect(m_ui->cb_raw, SIGNAL(toggled(bool)), this, SLOT(updatePlot()));
+  connect(m_ui->cb_import, SIGNAL(toggled(bool)), this, SLOT(updatePlot()));
   connect(m_ui->push_colorBackground, SIGNAL(clicked()), this,
           SLOT(changeBackgroundColor()));
   connect(m_ui->push_colorForeground, SIGNAL(clicked()), this,
           SLOT(changeForegroundColor()));
   connect(m_ui->push_colorCalculated, SIGNAL(clicked()), this,
           SLOT(changeCalculatedSpectraColor()));
+  connect(m_ui->push_colorRaw, SIGNAL(clicked()), this,
+          SLOT(changeRawSpectraColor()));
   connect(m_ui->push_colorImported, SIGNAL(clicked()), this,
           SLOT(changeImportedSpectraColor()));
   connect(m_ui->fontSizeCombo, SIGNAL(currentIndexChanged(int)), this,
@@ -261,6 +334,33 @@ void SpectraDialog::changeSpectra()
       m_ui->peakWidth->setValue(settings.value("fwhm", 30.0).toDouble());
       settings.endGroup();
       break;
+    case SpectraType::VibrationalCD:
+      m_transitions = fromMatrix(m_spectra["VibrationalCD"].col(0));
+      m_intensities = fromMatrix(m_spectra["VibrationalCD"].col(1));
+
+      settings.beginGroup("spectra/vcd");
+      m_ui->scaleSpinBox->setValue(settings.value("scale", 1.0).toDouble());
+      m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
+      m_ui->xAxisMinimum->setValue(settings.value("xmin", 0.0).toDouble());
+      m_ui->xAxisMaximum->setValue(settings.value("xmax", 4000.0).toDouble());
+      m_ui->peakWidth->setValue(settings.value("fwhm", 30.0).toDouble());
+      settings.endGroup();
+      break;
+    case SpectraType::MagneticCD:
+      m_transitions = fromMatrix(m_spectra["MagneticCD"].col(0));
+      m_intensities = fromMatrix(m_spectra["MagneticCD"].col(1));
+
+      settings.beginGroup("spectra/mcd");
+      m_ui->scaleSpinBox->setValue(settings.value("scale", 1.0).toDouble());
+      m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
+      m_ui->xAxisMinimum->setMaximum(30000.0);
+      m_ui->xAxisMinimum->setValue(settings.value("xmin", 10000.0).toDouble());
+      m_ui->xAxisMaximum->setMaximum(
+        std::max(settings.value("xmax", 75000.0).toDouble(), 75000.0));
+      m_ui->xAxisMaximum->setValue(settings.value("xmax", 75000.0).toDouble());
+      m_ui->peakWidth->setValue(settings.value("fwhm", 100.0).toDouble());
+      settings.endGroup();
+      break;
     case SpectraType::NMR:
       // settings handled per-element below
       m_ui->elementCombo->show();
@@ -420,7 +520,8 @@ void SpectraDialog::changeSpectra()
   m_ui->yAxisMaximum->setValue(maxIntensity);
   m_ui->yAxisMinimum->setMinimum(0.0);
   // if CD, set the minimum too
-  if (type == SpectraType::CircularDichroism) {
+  if (type == SpectraType::CircularDichroism ||
+      type == SpectraType::VibrationalCD || type == SpectraType::MagneticCD) {
     m_ui->yAxisMinimum->setMinimum(-maxIntensity * 2.0);
     m_ui->yAxisMinimum->setValue(-maxIntensity);
   }
@@ -444,6 +545,10 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
   for (auto& spectra : m_spectra) {
     QString name = QString::fromStdString(spectra.first);
 
+#ifndef NDEBUG
+    qDebug() << " reading spectra " << name;
+#endif
+
     if (name == "IR") {
       name = tr("Infrared");
       m_ui->combo_spectra->addItem(name,
@@ -451,6 +556,14 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
     } else if (name == "Raman") {
       name = tr("Raman");
       m_ui->combo_spectra->addItem(name, static_cast<int>(SpectraType::Raman));
+    } else if (name == "VibrationalCD") {
+      name = tr("Vibrational CD", "vibrational circular dichroism");
+      m_ui->combo_spectra->addItem(
+        name, static_cast<int>(SpectraType::VibrationalCD));
+    } else if (name == "MagneticCD") {
+      name = tr("Magnetic CD", "magnetic circular dichroism");
+      m_ui->combo_spectra->addItem(name,
+                                   static_cast<int>(SpectraType::MagneticCD));
     } else if (name == "NMR") {
       name = tr("NMR");
       m_ui->combo_spectra->addItem(name, static_cast<int>(SpectraType::NMR));
@@ -550,10 +663,23 @@ void SpectraDialog::changeCalculatedSpectraColor()
   }
 }
 
+void SpectraDialog::changeRawSpectraColor()
+{
+  QSettings settings;
+  QColor current = settings.value("spectra/rawColor", red).value<QColor>();
+  QColor color =
+    QColorDialog::getColor(current, this, tr("Select Raw Spectra Color"));
+  if (color.isValid() && color != current) {
+    settings.setValue("spectra/rawColor", color);
+    updatePlot();
+  }
+}
+
 void SpectraDialog::changeImportedSpectraColor()
 {
   QSettings settings;
-  QColor current = settings.value("spectra/importedColor", red).value<QColor>();
+  QColor current =
+    settings.value("spectra/importedColor", blue).value<QColor>();
   QColor color =
     QColorDialog::getColor(current, this, tr("Select Imported Spectra Color"));
   if (color.isValid() && color != current) {
@@ -590,7 +716,7 @@ void SpectraDialog::updatePlot()
   // the raw data
   std::vector<double> transitions, intensities;
   // for the plot
-  std::vector<float> xData, yData, yStick;
+  std::vector<float> xData, yData, yStick, importedData;
 
   // determine the type to plot
   SpectraType type =
@@ -627,6 +753,32 @@ void SpectraDialog::updatePlot()
       yTitle = tr("Intensity");
       // save the plot settings
       settings.beginGroup("spectra/raman");
+      settings.setValue("xmin", m_ui->xAxisMinimum->value());
+      settings.setValue("xmax", m_ui->xAxisMaximum->value());
+      settings.setValue("fwhm", m_ui->peakWidth->value());
+      settings.setValue("scale", m_ui->scaleSpinBox->value());
+      settings.setValue("offset", m_ui->offsetSpinBox->value());
+      settings.endGroup();
+      break;
+    case SpectraType::VibrationalCD:
+      windowName = tr("Vibrational Circular Dichroism");
+      xTitle = tr("Wavenumbers (cm⁻¹)");
+      yTitle = tr("Intensity");
+      // save the plot settings
+      settings.beginGroup("spectra/vcd");
+      settings.setValue("xmin", m_ui->xAxisMinimum->value());
+      settings.setValue("xmax", m_ui->xAxisMaximum->value());
+      settings.setValue("fwhm", m_ui->peakWidth->value());
+      settings.setValue("scale", m_ui->scaleSpinBox->value());
+      settings.setValue("offset", m_ui->offsetSpinBox->value());
+      settings.endGroup();
+      break;
+    case SpectraType::MagneticCD:
+      windowName = tr("Magnetic Circular Dichroism");
+      xTitle = tr("Wavenumbers (cm⁻¹)");
+      yTitle = tr("Intensity");
+      // save the plot settings
+      settings.beginGroup("spectra/mcd");
       settings.setValue("xmin", m_ui->xAxisMinimum->value());
       settings.setValue("xmax", m_ui->xAxisMaximum->value());
       settings.setValue("fwhm", m_ui->peakWidth->value());
@@ -752,6 +904,11 @@ void SpectraDialog::updatePlot()
     }
   }
 
+  // Interpolate imported data if available
+  if (m_importedSpectra.rows() > 0) {
+    importedData = interpolateData(m_importedSpectra, xData);
+  }
+
   auto* chart = chartWidget();
   chart->clearPlots();
   chart->setXAxisTitle(xTitle);
@@ -793,18 +950,25 @@ void SpectraDialog::updatePlot()
   };
   chart->addPlot(xData, yData, calculatedColor, xTitle, tr("Smoothed"));
   // todo add hide/show raw data series
-  QtGui::color4ub rawColor = { 255, 0, 0, 255 };
-  chart->addSeries(yStick, rawColor, tr("Raw"));
+  QColor rawColor = settings.value("spectra/rawColor", red).value<QColor>();
+  QtGui::color4ub rawColor4ub = { static_cast<unsigned char>(rawColor.red()),
+                                  static_cast<unsigned char>(rawColor.green()),
+                                  static_cast<unsigned char>(rawColor.blue()),
+                                  static_cast<unsigned char>(
+                                    rawColor.alpha()) };
+  if (m_ui->cb_raw->isChecked())
+    chart->addSeries(yStick, rawColor4ub, tr("Raw"));
 
   QColor importedColor =
-    settings.value("spectra/importedColor", red).value<QColor>();
+    settings.value("spectra/importedColor", blue).value<QColor>();
   QtGui::color4ub importedColor4ub = {
     static_cast<unsigned char>(importedColor.red()),
     static_cast<unsigned char>(importedColor.green()),
     static_cast<unsigned char>(importedColor.blue()),
     static_cast<unsigned char>(importedColor.alpha())
   };
-  // TODO: add imported data here
+  if (m_ui->cb_import->isChecked() && !importedData.empty())
+    chart->addSeries(importedData, importedColor4ub, tr("Imported"));
 
   // axis limits
   float xAxisMin = m_ui->xAxisMinimum->value();
@@ -813,7 +977,10 @@ void SpectraDialog::updatePlot()
   float yAxisMax = m_ui->yAxisMaximum->value();
 
   chart->setXAxisLimits(xAxisMin, xAxisMax);
-  chart->setYAxisLimits(yAxisMin, yAxisMax);
+  if (type == SpectraType::MagneticCD)
+    chart->setYAxisLimits(-1.0e-4, 1.0e-4);
+  else
+    chart->setYAxisLimits(yAxisMin, yAxisMax);
 
   chart->setAxisDigits(QtGui::ChartWidget::Axis::x, 4);
 
@@ -830,6 +997,75 @@ void SpectraDialog::updatePlot()
 QtGui::ChartWidget* SpectraDialog::chartWidget()
 {
   return m_ui->plot;
+}
+
+void SpectraDialog::importData()
+{
+  // get the filename to import
+  QString filename = QFileDialog::getOpenFileName(
+    this, tr("Import Data"), "", tr("CSV Files (*.csv);;TSV Files (*.tsv)"));
+
+  QFile file(filename);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    return;
+
+  std::vector<std::pair<double, double>> tempData;
+
+  QTextStream in(&file);
+  // figure out if this is CSV or TSV data
+  QString delimiter = filename.endsWith(".tsv") ? "\t" : ",";
+
+  // Skip header if present (detect by checking if first line contains numbers)
+  QString firstLine = in.readLine();
+
+  // Try to parse first line as numbers; if it fails, assume header
+  QStringList testParts = firstLine.split(delimiter);
+  bool hasHeader = false;
+  if (testParts.size() >= 2) {
+    bool ok1, ok2;
+    testParts[0].trimmed().toDouble(&ok1);
+    testParts[1].trimmed().toDouble(&ok2);
+    hasHeader = !(ok1 && ok2);
+  }
+  if (hasHeader && !in.atEnd())
+    // skip the header
+    firstLine = in.readLine();
+
+  while (!in.atEnd() && !firstLine.isEmpty()) {
+    QStringList parts = firstLine.split(delimiter);
+    if (parts.size() >= 2) {
+      bool ok1, ok2;
+      double x = parts[0].trimmed().toDouble(&ok1);
+      double y = parts[1].trimmed().toDouble(&ok2);
+
+      if (ok1 && ok2) {
+        tempData.push_back({ x, y });
+      }
+    }
+    firstLine = in.readLine();
+  }
+
+  file.close();
+
+  if (tempData.empty())
+    return;
+
+  // Sort by x-axis (energy/wavelength)
+  std::sort(tempData.begin(), tempData.end(),
+            [](const auto& a, const auto& b) { return a.first < b.first; });
+
+  // Convert to Eigen::MatrixXd (matching computed spectra format)
+  m_importedSpectra.resize(tempData.size(), 2);
+  for (size_t i = 0; i < tempData.size(); ++i) {
+    m_importedSpectra(i, 0) = tempData[i].first;  // energy/wavelength
+    m_importedSpectra(i, 1) = tempData[i].second; // intensity
+  }
+
+  // enable the imported data series
+  m_ui->cb_import->setEnabled(true);
+  m_ui->cb_import->setChecked(true);
+
+  return;
 }
 
 void SpectraDialog::toggleOptions()

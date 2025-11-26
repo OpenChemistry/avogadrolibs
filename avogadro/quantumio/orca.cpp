@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <iostream>
+#include <fstream>
 #include <regex>
 
 using std::regex;
@@ -91,6 +92,16 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
+  if (m_vcdIntensities.size() > 0 &&
+      m_vcdIntensities.size() == m_frequencies.size()) {
+    MatrixX vcdData(m_frequencies.size(), 2);
+    for (size_t i = 0; i < m_frequencies.size(); ++i) {
+      vcdData(i, 0) = m_frequencies[i];
+      vcdData(i, 1) = m_vcdIntensities[i];
+    }
+    molecule.setSpectra("VibrationalCD", vcdData);
+  }
+
   if (m_electronicTransitions.size() > 0 &&
       m_electronicTransitions.size() == m_electronicIntensities.size()) {
     MatrixX electronicData(m_electronicTransitions.size(), 2);
@@ -108,6 +119,16 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       }
       molecule.setSpectra("CircularDichroism", electronicRotations);
     }
+  }
+
+  if (m_magneticTransitions.size() > 0 &&
+      m_magneticTransitions.size() == m_magneticCD.size()) {
+    MatrixX magneticData(m_magneticTransitions.size(), 2);
+    for (size_t i = 0; i < m_magneticTransitions.size(); ++i) {
+      magneticData(i, 0) = m_magneticTransitions[i];
+      magneticData(i, 1) = m_magneticCD[i];
+    }
+    molecule.setSpectra("MagneticCD", magneticData);
   }
 
   if (m_nmrShifts.size() > 0) {
@@ -259,6 +280,7 @@ void ORCAOutput::processLine(std::istream& in,
     }
     // starts at the next line
   } else if (Core::contains(key, "CD SPECTRUM") &&
+             !Core::contains(key, "VCD SPECTRUM") &&
              !Core::contains(key, "TRANSITION VELOCITY DIPOLE")) {
     m_currentMode = ECD;
     for (int i = 0; i < 4; ++i) {
@@ -350,6 +372,21 @@ void ORCAOutput::processLine(std::istream& in,
     getline(in, key); // skip blank line
     getline(in, key); // skip column titles
     getline(in, key); // skip ------------
+  } else if (Core::contains(key, "VCD SPECTRUM")) {
+    m_currentMode = VCD;
+    // look for "Mode" and "Freq"
+    int maxLines = 10; // reasonable limit for header lines
+    while (!Core::contains(key, "Mode") && !Core::contains(key, "Freq") && maxLines-- > 0 && !in.eof())
+      getline(in, key);
+    if (maxLines <= 0 || in.eof()) {
+      m_currentMode = NotParsing;
+      return;
+    }
+    // units
+    getline(in, key);
+    getline(in, key); // skip ------------
+  } else if (Core::contains(key, "MCD Transitions")) {
+    parseMCD();
   } else if (Core::contains(key, "CHEMICAL SHIELDING SUMMARY (ppm)")) {
     m_currentMode = NMR;
     for (int i = 0; i < 4; ++i) {
@@ -565,6 +602,34 @@ void ORCAOutput::processLine(std::istream& in,
           m_vibDisplacements[i].resize(m_atomNums.size());
           for (unsigned int j = 0; j < m_atomNums.size(); j++)
             m_vibDisplacements[i].push_back(Eigen::Vector3d());
+        }
+
+        m_currentMode = NotParsing;
+        break;
+      }
+      case VCD: {
+        // should be mode, frequency, IR intensity
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        m_vcdIntensities.resize(m_frequencies.size(), 0.0);
+
+        while (!key.empty()) {
+          // e.g. 0:         0.00 cm**-1
+
+          if (list.size() != 3) {
+            break;
+          }
+          unsigned index = Core::lexicalCast<std::size_t>(list[0]).value_or(0);
+          if (index >= m_frequencies.size()) {
+            break;
+          }
+          m_vcdIntensities[index] =
+            Core::lexicalCast<double>(list[2]).value_or(0.0);
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
         }
 
         m_currentMode = NotParsing;
@@ -1121,6 +1186,46 @@ void ORCAOutput::load(GaussianSet* basis)
   m_homo = ceil(m_electrons / 2.0);
   if (m_MOcoeffs.size() > 0)
     basis->generateDensityMatrix();
+}
+
+void ORCAOutput::parseMCD()
+{
+  // look for files with "dipole-length.1.mcd"
+  std::string filename = fileName();
+  // probably something like test.out
+  // we need to look for test.cis-el.dipole-length.1.mcd
+  // remove the extension
+  size_t pos = filename.find_last_of('.');
+  if (pos != std::string::npos) {
+    filename = filename.substr(0, pos);
+  }
+  filename += ".cis-el.dipole-length.1.mcd";
+  std::ifstream in(filename.c_str());
+  if (!in) {
+    std::cerr << "Cannot open: " << filename << "\n";
+    return;
+  }
+
+  // read in line by line
+  // frequency, mcd, absorption
+  Real frequency, mcd, absorption;
+  frequency = mcd = absorption = 0.0;
+  while (in) {
+    in >> frequency >> mcd >> absorption;
+    if (!in)
+      break;
+
+    // if frequency goes down, we are done
+    // (or we hit the end of the file)
+    if (m_magneticTransitions.size() > 0 &&
+        frequency < m_magneticTransitions.back())
+      break;
+
+    m_magneticTransitions.push_back(frequency);
+    m_magneticCD.push_back(mcd);
+  }
+
+  in.close();
 }
 
 GaussianSet::orbital ORCAOutput::orbitalIdx(std::string txt)
