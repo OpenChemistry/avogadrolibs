@@ -62,7 +62,7 @@ float closestTo(float x, float peak, float intensity, float scale = 1.0,
 }
 
 /**
- * Grab the first colum of a matrix for std::vector<double> conversion
+ * Grab the first column of a matrix for std::vector<double> conversion
  * @param matrix The matrix to convert
  * @return The first column of the matrix
  */
@@ -353,7 +353,7 @@ void SpectraDialog::changeSpectra()
       settings.beginGroup("spectra/mcd");
       m_ui->scaleSpinBox->setValue(settings.value("scale", 1.0).toDouble());
       m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
-      m_ui->xAxisMaximum->setMaximum(30000.0);
+      m_ui->xAxisMinimum->setMaximum(30000.0);
       m_ui->xAxisMinimum->setValue(settings.value("xmin", 10000.0).toDouble());
       m_ui->xAxisMaximum->setMaximum(
         std::max(settings.value("xmax", 75000.0).toDouble(), 75000.0));
@@ -1017,12 +1017,21 @@ void SpectraDialog::importData()
 
   // Skip header if present (detect by checking if first line contains numbers)
   QString firstLine = in.readLine();
-  bool hasHeader = !firstLine.contains(QRegularExpression("[0-9]"));
+
+  // Try to parse first line as numbers; if it fails, assume header
+  QStringList testParts = firstLine.split(delimiter);
+  bool hasHeader = false;
+  if (testParts.size() >= 2) {
+    bool ok1, ok2;
+    testParts[0].trimmed().toDouble(&ok1);
+    testParts[1].trimmed().toDouble(&ok2);
+    hasHeader = !(ok1 && ok2);
+  }
   if (hasHeader && !in.atEnd())
+    // skip the header
     firstLine = in.readLine();
 
-  // TODO: rewrite this into a standard while loop
-  do {
+  while (!in.atEnd() && !firstLine.isEmpty()) {
     QStringList parts = firstLine.split(delimiter);
     if (parts.size() >= 2) {
       bool ok1, ok2;
@@ -1034,7 +1043,7 @@ void SpectraDialog::importData()
       }
     }
     firstLine = in.readLine();
-  } while (!in.atEnd() && !firstLine.isEmpty());
+  }
 
   file.close();
 
