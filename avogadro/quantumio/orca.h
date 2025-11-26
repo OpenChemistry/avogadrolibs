@@ -88,8 +88,10 @@ private:
     VibrationalModes,
     IR,
     Raman,
+    VCD, // vibrational circular dichroism
     Electronic,
     ECD, // electronic circular dichroism
+    MCD, // magnetic circular dichroism
     NMR,
     BondOrders,
     NotParsing,
@@ -127,11 +129,14 @@ private:
   Core::Array<double> m_frequencies;
   Core::Array<double> m_IRintensities;
   Core::Array<double> m_RamanIntensities;
+  Core::Array<double> m_vcdIntensities;
   Core::Array<Core::Array<Vector3>> m_vibDisplacements;
 
   Core::Array<double> m_electronicTransitions; // in eV
   Core::Array<double> m_electronicIntensities;
   Core::Array<double> m_electronicRotations; // for CD
+
+  Core::Array<double> m_magneticCD; // for MCD
 
   Core::Array<double> m_nmrShifts; // for NMR (in ppm)
 };

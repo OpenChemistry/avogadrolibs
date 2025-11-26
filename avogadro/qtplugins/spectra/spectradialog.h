@@ -70,8 +70,7 @@ private slots:
   void changeLineWidth();
   void changeSpectra();
 
-  void importExperimentalSpectra(const QString& filename);
-
+  void importData();
   void exportData();
 
   void updateElementCombo();

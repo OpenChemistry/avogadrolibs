@@ -13,6 +13,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QScreen>
 #include <QtWidgets/QColorDialog>
+#include <QtWidgets/QFileDialog>
 
 #include <QtCore/QDebug>
 
@@ -156,13 +157,19 @@ SpectraDialog::SpectraDialog(QWidget* parent)
 
   // connections for options
   connect(m_ui->push_options, SIGNAL(clicked()), this, SLOT(toggleOptions()));
+  connect(m_ui->push_export, SIGNAL(clicked()), this, SLOT(exportData()));
   connect(m_ui->push_exportData, SIGNAL(clicked()), this, SLOT(exportData()));
+  connect(m_ui->push_import, SIGNAL(clicked()), this, SLOT(importData()));
+  connect(m_ui->cb_raw, SIGNAL(toggled(bool)), this, SLOT(updatePlot()));
+  connect(m_ui->cb_import, SIGNAL(toggled(bool)), this, SLOT(updatePlot()));
   connect(m_ui->push_colorBackground, SIGNAL(clicked()), this,
           SLOT(changeBackgroundColor()));
   connect(m_ui->push_colorForeground, SIGNAL(clicked()), this,
           SLOT(changeForegroundColor()));
   connect(m_ui->push_colorCalculated, SIGNAL(clicked()), this,
           SLOT(changeCalculatedSpectraColor()));
+  connect(m_ui->push_colorRaw, SIGNAL(clicked()), this,
+          SLOT(changeRawSpectraColor()));
   connect(m_ui->push_colorImported, SIGNAL(clicked()), this,
           SLOT(changeImportedSpectraColor()));
   connect(m_ui->fontSizeCombo, SIGNAL(currentIndexChanged(int)), this,
@@ -498,7 +505,8 @@ void SpectraDialog::changeSpectra()
   m_ui->yAxisMaximum->setValue(maxIntensity);
   m_ui->yAxisMinimum->setMinimum(0.0);
   // if CD, set the minimum too
-  if (type == SpectraType::CircularDichroism) {
+  if (type == SpectraType::CircularDichroism ||
+      type == SpectraType::VibrationalCD || type == SpectraType::MagneticCD) {
     m_ui->yAxisMinimum->setMinimum(-maxIntensity * 2.0);
     m_ui->yAxisMinimum->setValue(-maxIntensity);
   }
@@ -521,6 +529,10 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
   m_ui->combo_spectra->clear();
   for (auto& spectra : m_spectra) {
     QString name = QString::fromStdString(spectra.first);
+
+#ifndef NDEBUG
+    qDebug() << " reading spectra " << name;
+#endif
 
     if (name == "IR") {
       name = tr("Infrared");
@@ -685,7 +697,7 @@ void SpectraDialog::updatePlot()
   // the raw data
   std::vector<double> transitions, intensities;
   // for the plot
-  std::vector<float> xData, yData, yStick;
+  std::vector<float> xData, yData, yStick, importedData;
 
   // determine the type to plot
   SpectraType type =
@@ -907,7 +919,8 @@ void SpectraDialog::updatePlot()
                                   static_cast<unsigned char>(rawColor.blue()),
                                   static_cast<unsigned char>(
                                     rawColor.alpha()) };
-  chart->addSeries(yStick, rawColor4ub, tr("Raw"));
+  if (m_ui->cb_raw->isChecked())
+    chart->addSeries(yStick, rawColor4ub, tr("Raw"));
 
   QColor importedColor =
     settings.value("spectra/importedColor", blue).value<QColor>();
@@ -917,7 +930,8 @@ void SpectraDialog::updatePlot()
     static_cast<unsigned char>(importedColor.blue()),
     static_cast<unsigned char>(importedColor.alpha())
   };
-  // TODO: add imported data here
+  if (m_ui->cb_import->isChecked() && !importedData.empty())
+    chart->addSeries(importedData, importedColor4ub, tr("Imported"));
 
   // axis limits
   float xAxisMin = m_ui->xAxisMinimum->value();
@@ -945,8 +959,12 @@ QtGui::ChartWidget* SpectraDialog::chartWidget()
   return m_ui->plot;
 }
 
-void SpectraDialog::importExperimentalSpectra(const QString& filename)
+void SpectraDialog::importData()
 {
+  // get the filename to import
+  QString filename = QFileDialog::getOpenFileName(
+    this, tr("Import Data"), "", tr("CSV Files (*.csv);;TSV Files (*.tsv)"));
+
   QFile file(filename);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     return;
@@ -993,6 +1011,10 @@ void SpectraDialog::importExperimentalSpectra(const QString& filename)
     m_importedSpectra(i, 0) = tempData[i].first;  // energy/wavelength
     m_importedSpectra(i, 1) = tempData[i].second; // intensity
   }
+
+  // enable the imported data series
+  m_ui->cb_import->setEnabled(true);
+  m_ui->cb_import->setChecked(true);
 
   return;
 }
