@@ -375,8 +375,13 @@ void ORCAOutput::processLine(std::istream& in,
   } else if (Core::contains(key, "VCD SPECTRUM")) {
     m_currentMode = VCD;
     // look for "Mode" and "Freq"
-    while (!Core::contains(key, "Mode") && !Core::contains(key, "Freq"))
+    int maxLines = 10; // reasonable limit for header lines
+    while (!Core::contains(key, "Mode") && !Core::contains(key, "Freq") && maxLines-- > 0 && !in.eof())
       getline(in, key);
+    if (maxLines <= 0 || in.eof()) {
+      m_currentMode = NotParsing;
+      return;
+    }
     // units
     getline(in, key);
     getline(in, key); // skip ------------
