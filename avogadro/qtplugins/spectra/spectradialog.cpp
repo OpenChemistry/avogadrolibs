@@ -761,7 +761,7 @@ void SpectraDialog::updatePlot()
       settings.endGroup();
       break;
     case SpectraType::VibrationalCD:
-      windowName = tr("Vibrational Circular Dicroism");
+      windowName = tr("Vibrational Circular Dichroism");
       xTitle = tr("Wavenumbers (cm⁻¹)");
       yTitle = tr("Intensity");
       // save the plot settings
@@ -774,7 +774,7 @@ void SpectraDialog::updatePlot()
       settings.endGroup();
       break;
     case SpectraType::MagneticCD:
-      windowName = tr("Magnetic Circular Dicroism");
+      windowName = tr("Magnetic Circular Dichroism");
       xTitle = tr("Wavenumbers (cm⁻¹)");
       yTitle = tr("Intensity");
       // save the plot settings
@@ -904,6 +904,11 @@ void SpectraDialog::updatePlot()
     }
   }
 
+  // Interpolate imported data if available
+  if (m_importedSpectra.rows() > 0) {
+    importedData = interpolateData(m_importedSpectra, xData);
+  }
+
   auto* chart = chartWidget();
   chart->clearPlots();
   chart->setXAxisTitle(xTitle);
@@ -973,8 +978,9 @@ void SpectraDialog::updatePlot()
 
   chart->setXAxisLimits(xAxisMin, xAxisMax);
   if (type == SpectraType::MagneticCD)
-    chart->setAxisLogScale(QtGui::ChartWidget::Axis::y, true);
-  chart->setYAxisLimits(yAxisMin, yAxisMax);
+    chart->setYAxisLimits(-1.0e-4, 1.0e-4);
+  else
+    chart->setYAxisLimits(yAxisMin, yAxisMax);
 
   chart->setAxisDigits(QtGui::ChartWidget::Axis::x, 4);
 
@@ -1015,7 +1021,7 @@ void SpectraDialog::importData()
   if (hasHeader && !in.atEnd())
     firstLine = in.readLine();
 
-  // Parse data
+  // TODO: rewrite this into a standard while loop
   do {
     QStringList parts = firstLine.split(delimiter);
     if (parts.size() >= 2) {
@@ -1028,7 +1034,7 @@ void SpectraDialog::importData()
       }
     }
     firstLine = in.readLine();
-  } while (!in.atEnd());
+  } while (!in.atEnd() && !firstLine.isEmpty());
 
   file.close();
 
