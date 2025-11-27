@@ -139,7 +139,11 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   m_tempFileName =
     QDir::tempPath() + QDir::separator() + m_moleculeName + ".pdb";
   QFile out(m_tempFileName);
-  out.open(QIODevice::WriteOnly);
+  if (!out.open(QIODevice::WriteOnly)) {
+    QMessageBox::warning(qobject_cast<QWidget*>(parent()), tr("Error"),
+                         tr("Cannot save file %1.").arg(m_tempFileName));
+    return;
+  }
   out.write(m_moleculeData);
   out.close();
 
