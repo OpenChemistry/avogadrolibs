@@ -73,13 +73,9 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
   vertical->setMinimumSectionSize(30);
   vertical->setDefaultAlignment(Qt::AlignCenter);
 
-  // You can select everything (e.g., to copy, select all, etc.)
   setCornerButtonEnabled(true);
   setSelectionBehavior(QAbstractItemView::SelectRows);
-  if (type == ConformerType)
-    setSelectionMode(QAbstractItemView::SingleSelection);
-  else
-    setSelectionMode(QAbstractItemView::ExtendedSelection);
+  setSelectionMode(QAbstractItemView::SingleSelection);
   // Alternating row colors
   setAlternatingRowColors(true);
   // Allow sorting the table

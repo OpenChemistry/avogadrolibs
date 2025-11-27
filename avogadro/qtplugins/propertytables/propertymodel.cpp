@@ -806,21 +806,41 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         } // not a number
         break;
       }
-      case AtomDataX:
-        v[0] = value.toDouble();
+      case AtomDataX: {
+        bool ok;
+        double x = value.toDouble(&ok);
+        if (ok) {
+          v[0] = x;
+        }
         break;
-      case AtomDataY:
-        v[1] = value.toDouble();
+      }
+      case AtomDataY: {
+        bool ok;
+        double y = value.toDouble(&ok);
+        if (ok) {
+          v[1] = y;
+        }
         break;
-      case AtomDataZ:
-        v[2] = value.toDouble();
+      }
+      case AtomDataZ: {
+        bool ok;
+        double z = value.toDouble(&ok);
+        if (ok) {
+          v[2] = z;
+        }
         break;
+      }
       case AtomDataLabel:
         undoMolecule->setAtomLabel(index.row(), value.toString().toStdString());
         break;
-      case AtomDataIsotope:
-        m_molecule->setIsotope(index.row(), value.toInt());
+      case AtomDataIsotope: {
+        bool ok;
+        int isotope = value.toInt(&ok);
+        if (ok) {
+          m_molecule->setIsotope(index.row(), isotope);
+        }
         break;
+      }
       default:
         return false;
     }
@@ -832,12 +852,22 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
     return true;
   } else if (m_type == BondType) {
     switch (static_cast<BondColumn>(index.column())) {
-      case BondDataOrder:
-        undoMolecule->setBondOrder(index.row(), value.toInt());
+      case BondDataOrder: {
+        bool ok;
+        int order = value.toInt(&ok);
+        if (ok && order > 0 && order <= 6) {
+          undoMolecule->setBondOrder(index.row(), value.toInt());
+        }
         break;
-      case BondDataLength:
-        setBondLength(index.row(), value.toDouble());
+      }
+      case BondDataLength: {
+        bool ok;
+        double length = value.toDouble(&ok);
+        if (ok) {
+          setBondLength(index.row(), value.toDouble());
+        }
         break;
+      }
       case BondDataLabel:
         undoMolecule->setBondLabel(index.row(), value.toString().toStdString());
         break;
@@ -857,14 +887,22 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
     }
   } else if (m_type == AngleType) {
     if (index.column() == AngleDataValue) {
-      setAngle(index.row(), value.toDouble());
+      bool ok;
+      double angle = value.toDouble(&ok);
+      if (!ok)
+        return false;
+      setAngle(index.row(), angle);
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
     }
   } else if (m_type == TorsionType) {
     if (index.column() == TorsionDataValue) {
-      setTorsion(index.row(), value.toDouble());
+      bool ok;
+      double angle = value.toDouble(&ok);
+      if (!ok)
+        return false;
+      setTorsion(index.row(), angle);
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
