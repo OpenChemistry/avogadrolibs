@@ -938,8 +938,9 @@ void Surfaces::movieFrame()
 
   auto glWidget = QtOpenGL::ActiveObjects::instance().activeGLWidget();
   if (!glWidget) {
-    QMessageBox::warning(qobject_cast<QWidget*>(parent()), tr("Avogadro"),
-                         "Couldn't find the active render widget, failing.");
+    QMessageBox::warning(
+      qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+      tr("Couldn't find the active render widget, failing."));
     m_recordingMovie = false;
     m_dialog->enableRecord();
     return;
