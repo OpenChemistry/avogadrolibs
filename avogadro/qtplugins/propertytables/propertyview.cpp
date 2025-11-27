@@ -83,7 +83,7 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
 }
 
 void PropertyView::selectionChanged(const QItemSelection& selected,
-                                    const QItemSelection&)
+                                    const QItemSelection& deselected)
 {
   bool ok = false;
   if (m_molecule == nullptr)
@@ -155,6 +155,7 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
   } // end loop through selected
 
   m_molecule->emitChanged(Molecule::Atoms);
+  QTableView::selectionChanged(selected, deselected);
 }
 
 void PropertyView::setMolecule(Molecule* molecule)
