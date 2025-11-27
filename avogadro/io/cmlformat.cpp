@@ -20,6 +20,7 @@
 #include <pugixml.hpp>
 
 #include <bitset>
+#include <fstream>
 #include <locale>
 #include <map>
 #include <sstream>
