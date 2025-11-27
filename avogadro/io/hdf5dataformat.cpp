@@ -20,7 +20,7 @@ namespace Io {
 class Hdf5DataFormat::ResizeContainer
 {
 public:
-  virtual ~ResizeContainer() {};
+  virtual ~ResizeContainer(){};
   virtual bool resize(const std::vector<int>& dims) = 0;
   virtual void* dataPointer() = 0;
 
@@ -141,8 +141,15 @@ bool Hdf5DataFormat::openFile(const std::string& filename_,
 
   switch (mode) {
     case ReadOnly:
-      // File must exist -- use open
-      d->fileId = H5Fopen(filename_.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+      // File must exist -- check first before attempting to open
+      if (FILE* handle = fopen(filename_.c_str(), "r")) {
+        // File exists, pass it off to H5Fopen
+        fclose(handle);
+        d->fileId = H5Fopen(filename_.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+      } else {
+        // File doesn't exist
+        return false;
+      }
       break;
     case ReadWriteTruncate:
       // Create new file:

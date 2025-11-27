@@ -368,9 +368,14 @@ public:
     if (!dataNode)
       return true;
 
+    // Check if HDF5 file exists before attempting to open it
+    bool hdf5Available = false;
     Hdf5DataFormat hdf5;
-    hdf5.openFile(filename + ".h5", Hdf5DataFormat::ReadOnly);
-
+    if (std::ifstream(filename + ".h5").good()) {
+      if (hdf5.openFile(filename + ".h5", Hdf5DataFormat::ReadOnly)) {
+        hdf5Available = true;
+      }
+    }
     do {
       std::string dataNodeName = dataNode.name();
       std::string dataName = dataNode.attribute("name").as_string();
@@ -380,7 +385,7 @@ public:
 
       // Read data from HDF5?
       if (dataNodeName == "hdf5data") {
-        if (!hdf5.isOpen()) {
+        if (!hdf5Available) {
           error += "CmlFormatPrivate::data: Cannot read data member '" +
                    dataName + "'. Cannot open file " + filename + ".h5.";
           continue;
@@ -438,7 +443,8 @@ public:
       molecule->setData(dataName, variant);
     } while ((dataNode = dataNode.next_sibling()));
 
-    hdf5.closeFile();
+    if (hdf5Available)
+      hdf5.closeFile();
     return true;
   }
 #endif
