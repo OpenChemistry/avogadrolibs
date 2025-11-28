@@ -73,13 +73,9 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
   vertical->setMinimumSectionSize(30);
   vertical->setDefaultAlignment(Qt::AlignCenter);
 
-  // You can select everything (e.g., to copy, select all, etc.)
   setCornerButtonEnabled(true);
   setSelectionBehavior(QAbstractItemView::SelectRows);
-  if (type == ConformerType)
-    setSelectionMode(QAbstractItemView::SingleSelection);
-  else
-    setSelectionMode(QAbstractItemView::ExtendedSelection);
+  setSelectionMode(QAbstractItemView::SingleSelection);
   // Alternating row colors
   setAlternatingRowColors(true);
   // Allow sorting the table
@@ -87,7 +83,7 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
 }
 
 void PropertyView::selectionChanged(const QItemSelection& selected,
-                                    const QItemSelection&)
+                                    const QItemSelection& deselected)
 {
   bool ok = false;
   if (m_molecule == nullptr)
@@ -159,6 +155,7 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
   } // end loop through selected
 
   m_molecule->emitChanged(Molecule::Atoms);
+  QTableView::selectionChanged(selected, deselected);
 }
 
 void PropertyView::setMolecule(Molecule* molecule)
