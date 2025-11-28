@@ -875,7 +875,8 @@ void Surfaces::meshFinished()
 
       m_molecule->emitChanged(QtGui::Molecule::Added);
 
-      emit commandFinished(QString("Surface Finished"));
+      emit commandFinished(tr(
+        "Surface Finished", "finished rendering surface or molecular orbital"));
     }
   }
 }
