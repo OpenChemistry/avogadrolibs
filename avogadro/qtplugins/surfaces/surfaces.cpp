@@ -861,8 +861,8 @@ void Surfaces::meshFinished()
 
     // finished, so request to enable the mesh display type
     QStringList displayTypes;
-    displayTypes << tr("Meshes");
-    requestActiveDisplayTypes(displayTypes);
+    displayTypes << tr("Surfaces");
+    emit requestActiveDisplayTypes(displayTypes);
 
     if (m_recordingMovie) {
       // Move to the next frame.
@@ -874,6 +874,8 @@ void Surfaces::meshFinished()
         m_dialog->reenableCalculateButton();
 
       m_molecule->emitChanged(QtGui::Molecule::Added);
+
+      emit commandFinished(QString("Surface Finished"));
     }
   }
 }

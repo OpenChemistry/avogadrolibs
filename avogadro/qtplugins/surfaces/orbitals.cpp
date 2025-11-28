@@ -448,6 +448,10 @@ void Orbitals::calculateNegMeshDone()
   disconnect(m_meshGenerator, nullptr, this, nullptr);
 
   meshComplete();
+  // make sure the display type is turned on
+  QStringList displayTypes;
+  displayTypes << tr("Surfaces");
+  emit requestActiveDisplayTypes(displayTypes);
 
   // ask for a repaint
   m_molecule->emitChanged(QtGui::Molecule::Added);
@@ -533,8 +537,8 @@ void Orbitals::renderOrbital(unsigned int row)
 
   // add the orbital to the renderer
   QStringList displayTypes;
-  displayTypes << tr("Meshes");
-  requestActiveDisplayTypes(displayTypes);
+  displayTypes << tr("Surfaces");
+  emit requestActiveDisplayTypes(displayTypes);
 }
 
 void Orbitals::updateProgress(int current)
