@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-12 17:29+0000\n"
-"PO-Revision-Date: 2025-10-28 18:06+0000\n"
+"PO-Revision-Date: 2025-11-29 17:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/el/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1802,7 +1802,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:67
 #, fuzzy
 msgid "By Custom Color…"
-msgstr "Προσαρμοσμένο χρώμα"
+msgstr "Προσαρμοσμένο χρώμα…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
@@ -4216,7 +4216,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:550 qtplugins/openbabel/openbabel.cpp:701
 #: qtplugins/openbabel/openbabel.cpp:791
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
@@ -5158,7 +5158,7 @@ msgstr ""
 #: qtplugins/select/select.cpp:53
 #, fuzzy
 msgid "Select by Element…"
-msgstr "Χρώμα κατά στοιχείο"
+msgstr "Επιλογή κατά στοιχείο…"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
@@ -5294,7 +5294,7 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:50
 #, fuzzy
 msgid "Perceive Space Group…"
-msgstr "Κατανόηση ομάδας χώρου"
+msgstr "Κατανόηση ομάδας χώρου…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
@@ -5305,7 +5305,7 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:73
 #, fuzzy
 msgid "Fill Unit Cell…"
-msgstr "Γέμισμα μοναδιαίας κυψελίδας"
+msgstr "Γέμισμα μοναδιαίας κυψελίδας…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:79
 #: qtplugins/spacegroup/spacegroup.cpp:338
@@ -5754,7 +5754,7 @@ msgstr ""
 #: qtplugins/symmetry/symmetry.cpp:39
 #, fuzzy
 msgid "Symmetry…"
-msgstr "Συμμετρία"
+msgstr "Συμμετρία…"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
@@ -6457,7 +6457,7 @@ msgstr "Προεπιλεγμένα"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Αποθήκευση αρχείου"
+msgstr "Αποθήκευση αρχείου…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7965,7 +7965,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #, fuzzy
 msgid "Children:"
-msgstr "Θυγατρικά"
+msgstr "Θυγατρικά:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7978,7 +7978,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #, fuzzy
 msgid "Mutability:"
-msgstr "Αστάθεια"
+msgstr "Αστάθεια:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -7996,7 +7996,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #, fuzzy
 msgid "Scoring method:"
-msgstr "Μέθοδος βαθμολόγησης"
+msgstr "Μέθοδος βαθμολόγησης:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -8243,7 +8243,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
 #, fuzzy
 msgid "Constraints:"
-msgstr "Περιορισμοί"
+msgstr "Περιορισμοί:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -8536,7 +8536,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 msgid "Wavelength:"
-msgstr "Μήκος κύματος"
+msgstr "Μήκος κύματος:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)
@@ -9263,7 +9263,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
-#, fuzzy
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
@@ -9276,16 +9275,6 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
-"REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
-"css\">\n"
-"p, li { white-space: pre-wrap· }\n"
-"</style></head><body style=\" font-family:'Monospace'; font-size:12pt; font-"
-"weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-"
-"family:'Courier New,courier'; font-size:10pt;\"></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
