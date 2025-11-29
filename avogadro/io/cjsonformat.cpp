@@ -291,7 +291,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     } // might also be a 3xN array for per-axis freezing
     else if (frozen.is_array() && frozen.size() == 3 * atomCount) {
       for (Index i = 0; i < atomCount; ++i) {
-        bool freeze;
+        bool freeze = false;
         if (frozen[3 * i].is_number())
           freeze = (frozen[3 * i] != 0);
         else if (frozen[3 * i].is_boolean())
