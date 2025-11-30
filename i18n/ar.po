@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-30 03:03+0000\n"
-"PO-Revision-Date: 2025-11-29 17:00+0000\n"
+"PO-Revision-Date: 2025-12-01 23:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ar/>\n"
@@ -4011,9 +4011,8 @@ msgid "Interact with online databases, query structures etc."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:372
-#, fuzzy
 msgid " °"
-msgstr "°"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:400
 msgid "Angle tolerance:"
