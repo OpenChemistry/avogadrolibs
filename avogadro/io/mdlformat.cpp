@@ -114,8 +114,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   getline(in, buffer);
   // e.g.   -OEChem-01062507112D
   // check the last 2 characters
-  if (buffer.substr(buffer.size() - 2) == "2D") {
+  if (buffer.size() >= 2 && buffer.compare(buffer.size() - 2, 2, "2D") == 0) {
     m_is2D = true;
+
     // we should use Open Babel and --gen3D
     FileFormat* reader = nullptr;
     std::vector<const FileFormat*> readers =
@@ -132,12 +133,18 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 
     // make sure to generate 3D coordinates
     std::string options("{ \"arguments\": [\"--gen3D\"] }");
+    auto currentPos = in.tellg();
     if (reader) {
       reader->setOptions(options);
+      in.clear();
       in.seekg(0);
       if (reader->read(in, mol)) {
         delete reader;
         return true;
+      } else {
+        in.clear();
+        in.seekg(currentPos);
+        // continue with normal parsing
       }
       delete reader;
     }
