@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-30 03:03+0000\n"
-"PO-Revision-Date: 2025-11-15 01:51+0000\n"
+"PO-Revision-Date: 2025-12-01 23:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -3682,7 +3682,7 @@ msgstr "名前"
 
 #: qtplugins/label/label.cpp:228
 msgid "Name & ID"
-msgstr ""
+msgstr "名前とID"
 
 #: qtplugins/label/label.cpp:235
 msgid "Residue Label:"
@@ -5056,13 +5056,13 @@ msgstr "制限を解除"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:163
 #: qtplugins/qtaim/qtaimwavefunction.h:82
-#, qt-format
+#, fuzzy, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "ファイル %1 を読み込みできません。"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "一時ファイルの作成に失敗しました。"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5438,12 +5438,12 @@ msgstr "ラマン"
 #: qtplugins/spectra/spectradialog.cpp:560
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "振動CD"
 
 #: qtplugins/spectra/spectradialog.cpp:564
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "磁性CD"
 
 #: qtplugins/spectra/spectradialog.cpp:568
 msgid "NMR"
@@ -5475,8 +5475,9 @@ msgid "Select Calculated Spectra Color"
 msgstr "計算したスペクトルの色を選択"
 
 #: qtplugins/spectra/spectradialog.cpp:671
+#, fuzzy
 msgid "Select Raw Spectra Color"
-msgstr ""
+msgstr "無加工のスペクトルの色を選択"
 
 #: qtplugins/spectra/spectradialog.cpp:684
 msgid "Select Imported Spectra Color"
@@ -5520,11 +5521,11 @@ msgstr "強度"
 
 #: qtplugins/spectra/spectradialog.cpp:764
 msgid "Vibrational Circular Dichroism"
-msgstr ""
+msgstr "振動円二色性"
 
 #: qtplugins/spectra/spectradialog.cpp:777
 msgid "Magnetic Circular Dichroism"
-msgstr ""
+msgstr "磁気円二色性"
 
 #: qtplugins/spectra/spectradialog.cpp:790
 msgid "NMR Spectra"
@@ -5571,11 +5572,11 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "Import Data"
-msgstr ""
+msgstr "データのインポート"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
-msgstr ""
+msgstr "CSVファイル (*.csv);;TSVファイル (*.tsv)"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
@@ -8751,8 +8752,9 @@ msgstr "計算されたスペクトル:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
+#, fuzzy
 msgid "Raw Spectra:"
-msgstr ""
+msgstr "無加工のスペクトル:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
