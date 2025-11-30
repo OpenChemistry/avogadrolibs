@@ -5,6 +5,8 @@
 
 #include "mdlformat.h"
 
+#include "fileformatmanager.h"
+
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
@@ -108,8 +110,39 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     return false;
   }
 
-  // Skip the next two lines (generator, and comment).
+  // check the generator line for 2D vs 3D
   getline(in, buffer);
+  // e.g.   -OEChem-01062507112D
+  // check the last 2 characters
+  if (buffer.substr(buffer.size() - 2) == "2D") {
+    m_is2D = true;
+    // we should use Open Babel and --gen3D
+    FileFormat* reader = nullptr;
+    std::vector<const FileFormat*> readers =
+      Io::FileFormatManager::instance().fileFormatsFromFileExtension(
+        "sdf", FileFormat::File | FileFormat::Read);
+
+    // loop through writers to check for "cclib" or "Open Babel"
+    for (const FileFormat* r : readers) {
+      if (r->identifier().compare(0, 9, "OpenBabel") == 0) {
+        reader = r->newInstance();
+        break;
+      }
+    }
+
+    // make sure to generate 3D coordinates
+    std::string options("{ \"arguments\": [\"--gen3D\"] }");
+    if (reader) {
+      reader->setOptions(options);
+      in.seekg(0);
+      if (reader->read(in, mol)) {
+        delete reader;
+        return true;
+      }
+      delete reader;
+    }
+  }
+
   getline(in, buffer);
   if (!in.good()) {
     appendError("Error reading generator and comment lines.");

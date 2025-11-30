@@ -57,6 +57,7 @@ public:
 
 protected:
   bool m_writeProperties = false;
+  bool m_is2D = false;
 };
 
 } // namespace Avogadro::Io
