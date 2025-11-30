@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-12 17:29+0000\n"
+"POT-Creation-Date: 2025-11-30 03:03+0000\n"
 "PO-Revision-Date: 2025-11-15 01:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
@@ -532,7 +532,7 @@ msgstr "ホウ素 (Boron)"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:32:2205
+#: qtgui/elementtranslator.cpp:32:2211
 msgid "Carbon"
 msgstr "炭素 (Carbon)"
 
@@ -614,13 +614,13 @@ msgstr "マンガン (Manganese)"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:92:2208
+#: qtgui/elementtranslator.cpp:92:2214
 msgid "Iron"
 msgstr "鉄 (Iron)"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:95:2211
+#: qtgui/elementtranslator.cpp:95:2217
 msgid "Cobalt"
 msgstr "コバルト (Cobalt)"
 
@@ -1241,7 +1241,8 @@ msgid "Licorice"
 msgstr "リコリス"
 
 #: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
-#: qtplugins/surfaces/surfaces.h:71
+#: qtplugins/surfaces/orbitals.cpp:453 qtplugins/surfaces/orbitals.cpp:540
+#: qtplugins/surfaces/surfaces.cpp:864 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "表面"
 
@@ -1267,6 +1268,11 @@ msgstr "ファンデルワールス"
 #: qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "ワイヤーフレーム"
+
+#: qtgui/layermodel.cpp:198 qtplugins/overlayaxes/overlayaxes.h:28
+#, fuzzy
+msgid "Reference Axes"
+msgstr "参照軸"
 
 #: qtgui/moleculemodel.cpp:120
 msgid "Untitled"
@@ -1613,7 +1619,7 @@ msgstr "ビルド (&B)"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, elementLabel)
-#: qtplugins/alchemy/alchemy.cpp:74:523 rc.cpp:2199
+#: qtplugins/alchemy/alchemy.cpp:74:523 rc.cpp:2205
 msgid "Element:"
 msgstr "元素:"
 
@@ -1648,9 +1654,9 @@ msgstr ""
 "右ボタン:\tアラインメントをリセット\n"
 "ダブルクリック: \t原子を原点に"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:262
+#. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:81:1937
+#: qtplugins/aligntool/aligntool.cpp:81:1928
 msgid "Axis:"
 msgstr "座標軸:"
 
@@ -1757,8 +1763,8 @@ msgid "PQR Files (*.pqr)"
 msgstr "PQRファイル(*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
-#: qtplugins/commandscripts/command.cpp:139
-#: qtplugins/cp2kinput/cp2kinput.cpp:85
+#: qtplugins/apbs/apbsdialog.cpp:189 qtplugins/commandscripts/command.cpp:139
+#: qtplugins/cp2kinput/cp2kinput.cpp:85 qtplugins/fetchpdb/fetchpdb.cpp:143
 #: qtplugins/gamessinput/gamessinput.cpp:86
 #: qtplugins/insertfragment/insertfragment.cpp:107
 #: qtplugins/lammpsinput/lammpsinput.cpp:62
@@ -1779,8 +1785,13 @@ msgstr "PQRファイル(*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:101
 #: qtplugins/plugindownloader/downloaderwidget.cpp:107
-#: qtplugins/propertytables/propertyview.cpp:475
-#: qtplugins/propertytables/propertyview.cpp:508
+#: qtplugins/plugindownloader/downloaderwidget.cpp:408
+#: qtplugins/propertytables/propertyview.cpp:472
+#: qtplugins/propertytables/propertyview.cpp:505
+#: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:162
+#: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:450
+#: qtplugins/qtaim/qtaimwavefunction.h:48
+#: qtplugins/qtaim/qtaimwavefunction.h:81
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "エラー"
@@ -1812,6 +1823,14 @@ msgstr "成功"
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
+#: qtplugins/playertool/playertool.cpp:419
+#: qtplugins/plugindownloader/downloaderwidget.cpp:409
+#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:998
+#, qt-format
+msgid "Cannot save file %1."
+msgstr "ファイル %1 を保存できません。"
 
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
@@ -1932,7 +1951,7 @@ msgstr "シヴィディウス"
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:802:183 rc.cpp:2070
+#: qtplugins/surfaces/surfaces.cpp:802:183 rc.cpp:2076
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "スペクトル"
@@ -1942,7 +1961,7 @@ msgstr "スペクトル"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:804:180 rc.cpp:2067
+#: qtplugins/surfaces/surfaces.cpp:804:180 rc.cpp:2073
 #, fuzzy
 msgctxt "colormap"
 msgid "Coolwarm"
@@ -1953,7 +1972,7 @@ msgstr "クールウォーム"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:806:174 rc.cpp:2061
+#: qtplugins/surfaces/surfaces.cpp:806:174 rc.cpp:2067
 msgctxt "colormap"
 msgid "Balance"
 msgstr "バランス"
@@ -1963,7 +1982,7 @@ msgstr "バランス"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:808:177 rc.cpp:2064
+#: qtplugins/surfaces/surfaces.cpp:808:177 rc.cpp:2070
 #, fuzzy
 msgctxt "colormap"
 msgid "Blue-DarkRed"
@@ -1976,7 +1995,7 @@ msgstr "ブルー・ダークレッド"
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:810:186 rc.cpp:2073
+#: qtplugins/surfaces/surfaces.cpp:810:186 rc.cpp:2079
 #, fuzzy
 msgctxt "colormap"
 msgid "Turbo"
@@ -1988,7 +2007,6 @@ msgstr "原子と残基にカラースキームを適用します。"
 
 #: qtplugins/applycolors/applycolors.cpp:152
 #: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:42
-#: qtplugins/overlayaxes/overlayaxes.cpp:265
 #: qtplugins/resetview/resetview.cpp:76
 msgid "&View"
 msgstr "表示 (&V)"
@@ -2013,7 +2031,7 @@ msgstr "カラーマップを選択"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:2058
+#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:2064
 msgid "Colormap:"
 msgstr "カラーマップ:"
 
@@ -2194,7 +2212,7 @@ msgid "Bond Selected Atoms"
 msgstr "選択した原子を結合"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:649
+#: qtplugins/propertytables/propertymodel.cpp:651
 msgid "Bond"
 msgstr "結合"
 
@@ -2448,7 +2466,7 @@ msgstr "Python環境の設定。"
 #: qtplugins/templatetool/templatetoolwidget.cpp:381
 #: qtplugins/templatetool/templatetoolwidget.cpp:389
 #: qtplugins/templatetool/templatetoolwidget.cpp:397
-#: qtplugins/templatetool/templatetoolwidget.cpp:460:2319
+#: qtplugins/templatetool/templatetoolwidget.cpp:460:2325
 msgid "Other…"
 msgstr "その他…"
 
@@ -2512,9 +2530,9 @@ msgid "Freeze Z Axis"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
-#: qtplugins/propertytables/propertymodel.cpp:635
-#: qtplugins/propertytables/propertymodel.cpp:676
-#: qtplugins/propertytables/propertymodel.cpp:693
+#: qtplugins/propertytables/propertymodel.cpp:637
+#: qtplugins/propertytables/propertymodel.cpp:680
+#: qtplugins/propertytables/propertymodel.cpp:697
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "タイプ"
@@ -2524,24 +2542,24 @@ msgid "Value"
 msgstr "値"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
-#: qtplugins/propertytables/propertymodel.cpp:678
-#: qtplugins/propertytables/propertymodel.cpp:695
+#: qtplugins/propertytables/propertymodel.cpp:682
+#: qtplugins/propertytables/propertymodel.cpp:699
 msgid "Atom 1"
 msgstr "原子1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
-#: qtplugins/propertytables/propertymodel.cpp:697
+#: qtplugins/propertytables/propertymodel.cpp:701
 msgid "Atom 2"
 msgstr "原子2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
-#: qtplugins/propertytables/propertymodel.cpp:682
-#: qtplugins/propertytables/propertymodel.cpp:699
+#: qtplugins/propertytables/propertymodel.cpp:686
+#: qtplugins/propertytables/propertymodel.cpp:703
 msgid "Atom 3"
 msgstr "原子3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
-#: qtplugins/propertytables/propertymodel.cpp:701
+#: qtplugins/propertytables/propertymodel.cpp:705
 msgid "Atom 4"
 msgstr "原子4"
 
@@ -2665,7 +2683,8 @@ msgstr "原子座標の編集"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:192 qtplugins/label/label.cpp:215:2100
+#: qtplugins/label/label.cpp:192 qtplugins/label/label.cpp:215
+#: qtplugins/label/label.cpp:230:2106 rc.cpp:2136
 msgid "Custom"
 msgstr "カスタム"
 
@@ -2709,7 +2728,7 @@ msgstr "Turbomole形式"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:515:322
+#: qtplugins/propertytables/propertyview.cpp:512:322
 msgid "Copy"
 msgstr "コピー"
 
@@ -3120,7 +3139,7 @@ msgstr "エディターツール"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:209:2079 rc.cpp:2097
+#: qtplugins/editor/editortoolwidget.cpp:209:2085 rc.cpp:2103
 msgid "Automatic"
 msgstr "自動"
 
@@ -3271,8 +3290,8 @@ msgstr "原子間の距離の固定を解除"
 #: qtplugins/forcefield/forcefield.cpp:517
 #: qtplugins/forcefield/forcefield.cpp:587
 #: qtplugins/playertool/playertool.cpp:386
-#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:938
-#: qtplugins/surfaces/surfaces.cpp:982 qtplugins/surfaces/surfaces.cpp:994
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:941
+#: qtplugins/surfaces/surfaces.cpp:985 qtplugins/surfaces/surfaces.cpp:997
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
@@ -3387,7 +3406,7 @@ msgstr "内殻ポテンシャル"
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/gamessinput/gamessinputdialog.cpp:419
 #: qtplugins/label/label.cpp:182 qtplugins/label/label.cpp:212
-#: qtplugins/label/label.cpp:225:1619 rc.cpp:1712 rc.cpp:2052
+#: qtplugins/label/label.cpp:225:1619 rc.cpp:1712 rc.cpp:2058
 msgid "None"
 msgstr "なし"
 
@@ -3620,7 +3639,7 @@ msgstr "インデックス"
 msgid "Unique ID"
 msgstr "ユニークID"
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:603
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:605
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "元素"
@@ -3651,21 +3670,21 @@ msgstr "長さ"
 msgid "Bond Label:"
 msgstr "結合のラベル:"
 
-#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:658
+#: qtplugins/label/label.cpp:226 qtplugins/propertytables/propertymodel.cpp:660
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:234
+#: qtplugins/label/label.cpp:227
 #: qtplugins/plugindownloader/downloaderwidget.cpp:65
-#: qtplugins/propertytables/propertymodel.cpp:656
+#: qtplugins/propertytables/propertymodel.cpp:658
 msgid "Name"
 msgstr "名前"
 
-#: qtplugins/label/label.cpp:238
-msgid " & "
-msgstr " & "
+#: qtplugins/label/label.cpp:228
+msgid "Name & ID"
+msgstr ""
 
-#: qtplugins/label/label.cpp:250
+#: qtplugins/label/label.cpp:235
 msgid "Residue Label:"
 msgstr "残基のラベル:"
 
@@ -3850,7 +3869,7 @@ msgid "unknown molecule"
 msgstr "不明な分子"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:262
-#: qtplugins/propertytables/propertymodel.cpp:717
+#: qtplugins/propertytables/propertymodel.cpp:721
 msgid "Property"
 msgstr "性質"
 
@@ -3979,27 +3998,27 @@ msgid "Molecule Properties"
 msgstr "分子の性質"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:463
+#: qtplugins/propertytables/propertyview.cpp:460
 msgid "Export CSV"
 msgstr "CSVをエクスポート"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:464
+#: qtplugins/propertytables/propertyview.cpp:461
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "CSVファイル (*.csv);;全てのファイル (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:476
+#: qtplugins/propertytables/propertyview.cpp:473
 msgid "Could not open the file for writing."
 msgstr "ファイルを書き込みモードで開けません。"
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:508
+#: qtplugins/propertytables/propertyview.cpp:505
 msgid "Error writing to the file."
 msgstr "ファイルの書き込みでエラー"
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:520
+#: qtplugins/propertytables/propertyview.cpp:517
 msgid "Export…"
 msgstr "エクスポート…"
 
@@ -4396,16 +4415,7 @@ msgstr "top"
 msgid "True"
 msgstr "真"
 
-#: qtplugins/overlayaxes/overlayaxes.cpp:237
-#, fuzzy
-msgid "Reference Axes"
-msgstr "参照軸"
-
-#: qtplugins/overlayaxes/overlayaxes.h:30
-msgid "Reference Axes Overlay"
-msgstr ""
-
-#: qtplugins/overlayaxes/overlayaxes.h:33
+#: qtplugins/overlayaxes/overlayaxes.h:31
 msgid "Render reference axes in the corner of the display."
 msgstr ""
 
@@ -4425,7 +4435,7 @@ msgstr "アニメーションツール\t(%1)"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:83:2133
+#: qtplugins/playertool/playertool.cpp:83:2139
 msgid "Frame:"
 msgstr "フレーム:"
 
@@ -4483,7 +4493,7 @@ msgstr "ビットマップ画像のエクスポート"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "動画 (*.mp4);;動画 (*.avi);;GIF(*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:910
+#: qtplugins/playertool/playertool.cpp:303 qtplugins/surfaces/surfaces.cpp:913
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -4500,14 +4510,9 @@ msgstr ""
 msgid "Movie (*.avi)"
 msgstr "動画 (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:983
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:986
 msgid "Error: cannot add frame to video."
 msgstr "エラー：フレームをビデオに追加できません。"
-
-#: qtplugins/playertool/playertool.cpp:419 qtplugins/surfaces/surfaces.cpp:995
-#, qt-format
-msgid "Cannot save file %1."
-msgstr "ファイル %1 を保存できません。"
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -4698,40 +4703,40 @@ msgstr "%1からのダウンロードに失敗: 終了コード%2、%3\n"
 msgid "Downloading %1 to %2\n"
 msgstr "%1を%2にダウンロード中\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:417
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "%1 を %2 に伸長中\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:424
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:424
+#: qtplugins/plugindownloader/downloaderwidget.cpp:428
 msgid "Extraction successful\n"
 msgstr "伸長に成功\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:476
+#: qtplugins/plugindownloader/downloaderwidget.cpp:480
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "伸長でエラー: %1"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:508
-#: qtplugins/plugindownloader/downloaderwidget.cpp:571
-#: qtplugins/plugindownloader/downloaderwidget.cpp:608
+#: qtplugins/plugindownloader/downloaderwidget.cpp:512
+#: qtplugins/plugindownloader/downloaderwidget.cpp:575
+#: qtplugins/plugindownloader/downloaderwidget.cpp:612
 #, qt-format
 msgctxt "argument is program name"
 msgid "Installing dependencies with %1…"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:510
-#: qtplugins/plugindownloader/downloaderwidget.cpp:573
-#: qtplugins/plugindownloader/downloaderwidget.cpp:610
+#: qtplugins/plugindownloader/downloaderwidget.cpp:514
+#: qtplugins/plugindownloader/downloaderwidget.cpp:577
+#: qtplugins/plugindownloader/downloaderwidget.cpp:614
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:658
+#: qtplugins/plugindownloader/downloaderwidget.cpp:662
 msgid "Installation canceled\n"
 msgstr "インストールはキャンセルされました\n"
 
@@ -4817,139 +4822,140 @@ msgstr "POVRay"
 msgid "Render the scene using POV-Ray."
 msgstr "POV-Rayでシーンを描画"
 
-#: qtplugins/propertytables/propertymodel.cpp:605
+#: qtplugins/propertytables/propertymodel.cpp:607
 msgid "Valence"
 msgstr "原子価"
 
-#: qtplugins/propertytables/propertymodel.cpp:607
+#: qtplugins/propertytables/propertymodel.cpp:609
 msgid "Formal Charge"
 msgstr "形式電荷"
 
-#: qtplugins/propertytables/propertymodel.cpp:610
+#: qtplugins/propertytables/propertymodel.cpp:612
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1部分電荷"
 
-#: qtplugins/propertytables/propertymodel.cpp:615
+#: qtplugins/propertytables/propertymodel.cpp:617
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:617
+#: qtplugins/propertytables/propertymodel.cpp:619
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:619
+#: qtplugins/propertytables/propertymodel.cpp:621
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:621
-#: qtplugins/propertytables/propertymodel.cpp:643
+#: qtplugins/propertytables/propertymodel.cpp:623
+#: qtplugins/propertytables/propertymodel.cpp:645
+#: qtplugins/propertytables/propertymodel.cpp:668
 msgid "Label"
 msgstr "ラベル"
 
-#: qtplugins/propertytables/propertymodel.cpp:623
+#: qtplugins/propertytables/propertymodel.cpp:625
 msgid "Isotope"
 msgstr "同位体"
 
-#: qtplugins/propertytables/propertymodel.cpp:625
-#: qtplugins/propertytables/propertymodel.cpp:666
+#: qtplugins/propertytables/propertymodel.cpp:627
+#: qtplugins/propertytables/propertymodel.cpp:670
 msgid "Color"
 msgstr "色"
 
-#: qtplugins/propertytables/propertymodel.cpp:628
+#: qtplugins/propertytables/propertymodel.cpp:630
 msgid "Atom"
 msgstr "原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:637
+#: qtplugins/propertytables/propertymodel.cpp:639
 msgid "Start Atom"
 msgstr "始めの原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:639
+#: qtplugins/propertytables/propertymodel.cpp:641
 msgid "End Atom"
 msgstr "終わりの原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:641
+#: qtplugins/propertytables/propertymodel.cpp:643
 msgid "Bond Order"
 msgstr "結合次数"
 
-#: qtplugins/propertytables/propertymodel.cpp:645
+#: qtplugins/propertytables/propertymodel.cpp:647
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "長さ (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:660
+#: qtplugins/propertytables/propertymodel.cpp:662
 #, fuzzy
 msgid "Chain"
 msgstr "チェーン"
 
-#: qtplugins/propertytables/propertymodel.cpp:662
+#: qtplugins/propertytables/propertymodel.cpp:664
 msgid "Secondary Structure"
 msgstr "二次構造"
 
-#: qtplugins/propertytables/propertymodel.cpp:664
+#: qtplugins/propertytables/propertymodel.cpp:666
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:680
+#: qtplugins/propertytables/propertymodel.cpp:684
 msgid "Vertex"
 msgstr "頂点"
 
-#: qtplugins/propertytables/propertymodel.cpp:684
-#: qtplugins/propertytables/propertymodel.cpp:703
+#: qtplugins/propertytables/propertymodel.cpp:688
+#: qtplugins/propertytables/propertymodel.cpp:707
 msgid "Angle (°)"
 msgstr "角度 (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:714
+#: qtplugins/propertytables/propertymodel.cpp:718
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "RMSD (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:717
+#: qtplugins/propertytables/propertymodel.cpp:721
 msgid "Energy (kcal/mol)"
 msgstr "エネルギー (kcal/mol)"
 
-#: qtplugins/propertytables/propertymodel.cpp:916
+#: qtplugins/propertytables/propertymodel.cpp:967
 msgid "Adjust Fragment"
 msgstr "フラグメントを調整"
 
-#: qtplugins/propertytables/propertymodel.cpp:1042
+#: qtplugins/propertytables/propertymodel.cpp:1093
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "πヘリックス"
 
-#: qtplugins/propertytables/propertymodel.cpp:1044
+#: qtplugins/propertytables/propertymodel.cpp:1095
 #, fuzzy
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "屈曲"
 
-#: qtplugins/propertytables/propertymodel.cpp:1046
+#: qtplugins/propertytables/propertymodel.cpp:1097
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "αヘリックス"
 
-#: qtplugins/propertytables/propertymodel.cpp:1048
+#: qtplugins/propertytables/propertymodel.cpp:1099
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "βシート"
 
-#: qtplugins/propertytables/propertymodel.cpp:1050
+#: qtplugins/propertytables/propertymodel.cpp:1101
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10ヘリックス"
 
-#: qtplugins/propertytables/propertymodel.cpp:1052
+#: qtplugins/propertytables/propertymodel.cpp:1103
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "βブリッジ"
 
-#: qtplugins/propertytables/propertymodel.cpp:1054
+#: qtplugins/propertytables/propertymodel.cpp:1105
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1056
+#: qtplugins/propertytables/propertymodel.cpp:1107
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -5012,41 +5018,51 @@ msgstr "配座異性体のプロパティ"
 msgid "Residue Properties"
 msgstr "残基のプロパティ"
 
-#: qtplugins/propertytables/propertyview.cpp:527
+#: qtplugins/propertytables/propertyview.cpp:524
 msgid "Freeze Atom"
 msgstr "原子を固定"
 
-#: qtplugins/propertytables/propertyview.cpp:531
+#: qtplugins/propertytables/propertyview.cpp:528
 msgid "Freeze X"
 msgstr "X座標を固定"
 
-#: qtplugins/propertytables/propertyview.cpp:534
+#: qtplugins/propertytables/propertyview.cpp:531
 msgid "Freeze Y"
 msgstr "Y座標を固定"
 
-#: qtplugins/propertytables/propertyview.cpp:537
+#: qtplugins/propertytables/propertyview.cpp:534
 msgid "Freeze Z"
 msgstr "Z座標を固定"
 
-#: qtplugins/propertytables/propertyview.cpp:540
+#: qtplugins/propertytables/propertyview.cpp:537
 msgid "Unfreeze Atom"
 msgstr "原子の固定を解除"
 
-#: qtplugins/propertytables/propertyview.cpp:548
+#: qtplugins/propertytables/propertyview.cpp:545
 msgid "Constrain Bond"
 msgstr "結合を制限"
 
-#: qtplugins/propertytables/propertyview.cpp:550
+#: qtplugins/propertytables/propertyview.cpp:547
 msgid "Constrain Angle"
 msgstr "角度を制限"
 
-#: qtplugins/propertytables/propertyview.cpp:552
+#: qtplugins/propertytables/propertyview.cpp:549
 msgid "Constrain Torsion"
 msgstr "ねじれを制限"
 
-#: qtplugins/propertytables/propertyview.cpp:559
+#: qtplugins/propertytables/propertyview.cpp:556
 msgid "Remove Constraint"
 msgstr "制限を解除"
+
+#: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:163
+#: qtplugins/qtaim/qtaimwavefunction.h:82
+#, qt-format
+msgid "Cannot read file %1."
+msgstr ""
+
+#: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
+msgid "Failed to create a temporary file."
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5224,7 +5240,7 @@ msgstr "残基を選択"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:2172
+#: qtplugins/select/select.h:30:2178
 msgid "Select"
 msgstr "選択"
 
@@ -5276,7 +5292,7 @@ msgstr "空間群を検出…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:2157
+#: qtplugins/spacegroup/spacegroup.cpp:68:2163
 msgid "Symmetrize"
 msgstr "対称化"
 
@@ -5411,117 +5427,155 @@ msgstr "スペクトル"
 msgid "Display spectra plots."
 msgstr "スペクトルプロットを表示"
 
-#: qtplugins/spectra/spectradialog.cpp:448
+#: qtplugins/spectra/spectradialog.cpp:553
 msgid "Infrared"
 msgstr "赤外"
 
-#: qtplugins/spectra/spectradialog.cpp:452
+#: qtplugins/spectra/spectradialog.cpp:557
 msgid "Raman"
 msgstr "ラマン"
 
-#: qtplugins/spectra/spectradialog.cpp:455
+#: qtplugins/spectra/spectradialog.cpp:560
+msgctxt "vibrational circular dichroism"
+msgid "Vibrational CD"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:564
+msgctxt "magnetic circular dichroism"
+msgid "Magnetic CD"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:568
 msgid "NMR"
 msgstr "NMR"
 
-#: qtplugins/spectra/spectradialog.cpp:458
+#: qtplugins/spectra/spectradialog.cpp:571
 msgid "Electronic"
 msgstr "電子"
 
-#: qtplugins/spectra/spectradialog.cpp:462
+#: qtplugins/spectra/spectradialog.cpp:575
 msgid "Circular Dichroism"
 msgstr "円二色性"
 
-#: qtplugins/spectra/spectradialog.cpp:466
-#: qtplugins/spectra/spectradialog.cpp:678
+#: qtplugins/spectra/spectradialog.cpp:579
+#: qtplugins/spectra/spectradialog.cpp:830
 msgid "Density of States"
 msgstr "状態密度"
 
-#: qtplugins/spectra/spectradialog.cpp:509
+#: qtplugins/spectra/spectradialog.cpp:622
 msgid "Select Background Color"
 msgstr "背景色の選択"
 
-#: qtplugins/spectra/spectradialog.cpp:533
+#: qtplugins/spectra/spectradialog.cpp:646
 msgid "Select Foreground Color"
 msgstr "表示色の選択"
 
-#: qtplugins/spectra/spectradialog.cpp:546
+#: qtplugins/spectra/spectradialog.cpp:659
 msgid "Select Calculated Spectra Color"
 msgstr "計算したスペクトルの色を選択"
 
-#: qtplugins/spectra/spectradialog.cpp:558
+#: qtplugins/spectra/spectradialog.cpp:671
+msgid "Select Raw Spectra Color"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:684
 msgid "Select Imported Spectra Color"
 msgstr "インポートされたスペクトルの色を選択"
 
-#: qtplugins/spectra/spectradialog.cpp:604
+#: qtplugins/spectra/spectradialog.cpp:730
 msgid "Wavelength (nm)"
 msgstr "波長 (nm)"
 
-#: qtplugins/spectra/spectradialog.cpp:605
+#: qtplugins/spectra/spectradialog.cpp:731
 msgid "Frequency (Hz)"
 msgstr "周波数 (Hz)"
 
-#: qtplugins/spectra/spectradialog.cpp:611
+#: qtplugins/spectra/spectradialog.cpp:737
 msgid "Vibrational Spectra"
 msgstr "振動スペクトル"
 
-#: qtplugins/spectra/spectradialog.cpp:612
-#: qtplugins/spectra/spectradialog.cpp:626
+#: qtplugins/spectra/spectradialog.cpp:738
+#: qtplugins/spectra/spectradialog.cpp:752
+#: qtplugins/spectra/spectradialog.cpp:765
+#: qtplugins/spectra/spectradialog.cpp:778
 msgid "Wavenumbers (cm⁻¹)"
 msgstr "波数 (cm⁻¹)"
 
-#: qtplugins/spectra/spectradialog.cpp:613
+#: qtplugins/spectra/spectradialog.cpp:739
 msgid "Transmission"
 msgstr "透過"
 
-#: qtplugins/spectra/spectradialog.cpp:625
+#: qtplugins/spectra/spectradialog.cpp:751
 msgid "Raman Spectra"
 msgstr "ラマンスペクトル"
 
-#: qtplugins/spectra/spectradialog.cpp:627
-#: qtplugins/spectra/spectradialog.cpp:640
-#: qtplugins/spectra/spectradialog.cpp:654
-#: qtplugins/spectra/spectradialog.cpp:667
+#: qtplugins/spectra/spectradialog.cpp:753
+#: qtplugins/spectra/spectradialog.cpp:766
+#: qtplugins/spectra/spectradialog.cpp:779
+#: qtplugins/spectra/spectradialog.cpp:792
+#: qtplugins/spectra/spectradialog.cpp:806
+#: qtplugins/spectra/spectradialog.cpp:819
 msgid "Intensity"
 msgstr "強度"
 
-#: qtplugins/spectra/spectradialog.cpp:638
+#: qtplugins/spectra/spectradialog.cpp:764
+msgid "Vibrational Circular Dichroism"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:777
+msgid "Magnetic Circular Dichroism"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:790
 msgid "NMR Spectra"
 msgstr "NMRスペクトル"
 
-#: qtplugins/spectra/spectradialog.cpp:639
+#: qtplugins/spectra/spectradialog.cpp:791
 msgid "Chemical Shift (ppm)"
 msgstr "化学シフト (ppm)"
 
-#: qtplugins/spectra/spectradialog.cpp:652
+#: qtplugins/spectra/spectradialog.cpp:804
 msgid "Electronic Spectra"
 msgstr "電子スペクトル"
 
-#: qtplugins/spectra/spectradialog.cpp:653
-#: qtplugins/spectra/spectradialog.cpp:666
-#: qtplugins/spectra/spectradialog.cpp:679
+#: qtplugins/spectra/spectradialog.cpp:805
+#: qtplugins/spectra/spectradialog.cpp:818
+#: qtplugins/spectra/spectradialog.cpp:831
 #: qtplugins/surfaces/orbitaltablemodel.cpp:108
 msgid "Energy (eV)"
 msgstr "エネルギー (eV)"
 
-#: qtplugins/spectra/spectradialog.cpp:665
+#: qtplugins/spectra/spectradialog.cpp:817
 msgid "Circular Dichroism Spectra"
 msgstr "円二色性スペクトル"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-#: qtplugins/spectra/spectradialog.cpp:680:1790
+#: qtplugins/spectra/spectradialog.cpp:832:1790
 msgid "Density"
 msgstr "密度"
 
-#: qtplugins/spectra/spectradialog.cpp:794
+#: qtplugins/spectra/spectradialog.cpp:951
 #, fuzzy
 msgid "Smoothed"
 msgstr "平滑化"
 
-#: qtplugins/spectra/spectradialog.cpp:797
+#: qtplugins/spectra/spectradialog.cpp:960
 #, fuzzy
 msgid "Raw"
 msgstr "無加工"
+
+#: qtplugins/spectra/spectradialog.cpp:971
+msgid "Imported"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:1006
+msgid "Import Data"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:1006
+msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
+msgstr ""
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
@@ -5539,10 +5593,6 @@ msgstr "分子表面を描画。"
 msgid "Molecular Orbitals…"
 msgstr "分子軌道…"
 
-#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:864
-msgid "Meshes"
-msgstr "メッシュ"
-
 #: qtplugins/surfaces/orbitals.h:48
 #, fuzzy
 msgid "Orbital Window"
@@ -5559,7 +5609,7 @@ msgstr "軌道"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/surfaces/orbitaltablemodel.cpp:110
-#: qtplugins/symmetry/symmetry.h:34:2142
+#: qtplugins/symmetry/symmetry.h:34:2148
 msgid "Symmetry"
 msgstr "対称性"
 
@@ -5684,15 +5734,20 @@ msgstr "スピン密度を計算中"
 msgid "Calculating molecular orbital %L1"
 msgstr "第%L1分子軌道を計算中"
 
-#: qtplugins/surfaces/surfaces.cpp:887 qtplugins/surfaces/surfaces.cpp:915
+#: qtplugins/surfaces/surfaces.cpp:879
+msgctxt "finished rendering surface or molecular orbital"
+msgid "Surface Finished"
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:890 qtplugins/surfaces/surfaces.cpp:918
 msgid "Movie AVI (*.avi)"
 msgstr "動画 AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:889
+#: qtplugins/surfaces/surfaces.cpp:892
 msgid "Export Movie"
 msgstr "動画のエクスポート"
 
-#: qtplugins/surfaces/surfaces.cpp:890
+#: qtplugins/surfaces/surfaces.cpp:893
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "MP4動画 (*.mp4);;AVI動画 (*.avi);;GIF (*.gif)"
 
@@ -8612,117 +8667,124 @@ msgstr "単位:"
 msgid "&Appearance"
 msgstr "外観(&A)"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:214
-#. i18n: ectx: property (text), widget (QCheckBox, cb_import)
-#. i18n: file: qtplugins/spectra/spectradialog.ui:285
-#. i18n: ectx: property (text), widget (QCheckBox, cb_calculate)
-msgid "Show"
-msgstr "表示"
-
-#. i18n: file: qtplugins/spectra/spectradialog.ui:230
-#. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
-msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "実験スペクトルのtsvをインポートしてプロットに重ね描きする。"
-
-#. i18n: file: qtplugins/spectra/spectradialog.ui:233
-#. i18n: ectx: property (text), widget (QPushButton, push_import)
-msgid "&Import…"
-msgstr "インポート (&I)…"
-
-#. i18n: file: qtplugins/spectra/spectradialog.ui:249
-#. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
-#. i18n: file: qtplugins/spectra/spectradialog.ui:301
-#. i18n: ectx: property (text), widget (QPushButton, push_colorForeground)
-#. i18n: file: qtplugins/spectra/spectradialog.ui:330
+#. i18n: file: qtplugins/spectra/spectradialog.ui:217
 #. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
-#. i18n: file: qtplugins/spectra/spectradialog.ui:369
+#. i18n: file: qtplugins/spectra/spectradialog.ui:376
+#. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:389
 #. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:402
+#. i18n: ectx: property (text), widget (QPushButton, push_colorForeground)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:422
+#. i18n: ectx: property (text), widget (QPushButton, push_colorRaw)
 #, fuzzy
 msgid "Set Color…"
 msgstr "色の設定…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:269
+#. i18n: file: qtplugins/spectra/spectradialog.ui:237
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Imported Spectra:"
 msgstr "インポートされたスペクトル:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:317
-#. i18n: ectx: property (text), widget (QPushButton, push_export)
-msgid "&Export…"
-msgstr "エクスポート (&E)…"
-
-#. i18n: file: qtplugins/spectra/spectradialog.ui:343
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-msgid "Background:"
-msgstr "背景:"
-
-#. i18n: file: qtplugins/spectra/spectradialog.ui:356
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-msgid "Calculated Spectra:"
-msgstr "計算されたスペクトル:"
-
-#. i18n: file: qtplugins/spectra/spectradialog.ui:376
-#. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Font Size:"
-msgstr "フォントサイズ:"
-
-#. i18n: file: qtplugins/spectra/spectradialog.ui:387
+#. i18n: file: qtplugins/spectra/spectradialog.ui:248
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "10"
 msgstr "10"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:392
+#. i18n: file: qtplugins/spectra/spectradialog.ui:253
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "12"
 msgstr "12"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:397
+#. i18n: file: qtplugins/spectra/spectradialog.ui:258
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "14"
 msgstr "14"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:402
+#. i18n: file: qtplugins/spectra/spectradialog.ui:263
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "16"
 msgstr "16"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:407
+#. i18n: file: qtplugins/spectra/spectradialog.ui:268
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "18"
 msgstr "18"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:418
+#. i18n: file: qtplugins/spectra/spectradialog.ui:276
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Font Size:"
+msgstr "フォントサイズ:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:286
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgctxt "Size in pixels of the line drawing the spectra"
 msgid "Line Width:"
 msgstr "線幅:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:458
+#. i18n: file: qtplugins/spectra/spectradialog.ui:296
+#. i18n: ectx: property (text), widget (QCheckBox, cb_import)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:438
+#. i18n: ectx: property (text), widget (QCheckBox, cb_raw)
+msgid "Show"
+msgstr "表示"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:312
+#. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
+msgid "Imports a tsv of experimental spectra to overlay on the plot."
+msgstr "実験スペクトルのtsvをインポートしてプロットに重ね描きする。"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:315
+#. i18n: ectx: property (text), widget (QPushButton, push_import)
+msgid "&Import…"
+msgstr "インポート (&I)…"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:328
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Background:"
+msgstr "背景:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:341
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Calculated Spectra:"
+msgstr "計算されたスペクトル:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:409
+#. i18n: ectx: property (text), widget (QLabel, label_14)
+msgid "Raw Spectra:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:457
+#. i18n: ectx: property (text), widget (QPushButton, push_export)
+msgid "&Export…"
+msgstr "エクスポート (&E)…"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:478
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
 msgid "Export Data"
 msgstr "データのエクスポート"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:471
+#. i18n: file: qtplugins/spectra/spectradialog.ui:491
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 msgid "&Close"
 msgstr "閉じる(&C)"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:484
+#. i18n: file: qtplugins/spectra/spectradialog.ui:504
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
 msgstr "オプション (&O)…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:534
+#. i18n: file: qtplugins/spectra/spectradialog.ui:554
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
 msgstr "x"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:539
+#. i18n: file: qtplugins/spectra/spectradialog.ui:559
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
 msgstr "y"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:572
+#. i18n: file: qtplugins/spectra/spectradialog.ui:592
 #. i18n: ectx: property (toolTip), widget (Avogadro::QtGui::ChartWidget, plot)
 msgid ""
 "Controls:\n"
@@ -8737,7 +8799,7 @@ msgstr ""
 "中央クリック + ドラッグ: ズーム\n"
 "ホイールをスクロール: カーソルへズーム"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:588
+#. i18n: file: qtplugins/spectra/spectradialog.ui:608
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
 msgid "&Load data…"
 msgstr "データをロード (&L)…"
@@ -9327,6 +9389,12 @@ msgstr ""
 "devel@lists.sourceforge.net,,ktns.87@gmail.com,ken.i54k@gmail.com,,iwao.aoyama@gmail.com,,,,,avogadro-"
 "devel@lists.sourceforge.net,,ktns.87@gmail.com,ken.i54k@gmail.com,,iwao.aoyama@gmail.com,,,,,avogadro-"
 "devel@lists.sourceforge.net,,ktns.87@gmail.com,ken.i54k@gmail.com,,iwao.aoyama@gmail.com,,"
+
+#~ msgid " & "
+#~ msgstr " & "
+
+#~ msgid "Meshes"
+#~ msgstr "メッシュ"
 
 #, fuzzy
 #~ msgid "Generate and plot an RMSD curve."
