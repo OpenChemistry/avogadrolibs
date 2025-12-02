@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-30 03:03+0000\n"
-"PO-Revision-Date: 2025-11-13 19:56+0000\n"
+"PO-Revision-Date: 2025-12-01 23:00+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -3735,7 +3735,7 @@ msgstr "Ім'я"
 
 #: qtplugins/label/label.cpp:228
 msgid "Name & ID"
-msgstr ""
+msgstr "Ім'я та ідентифікатор"
 
 #: qtplugins/label/label.cpp:235
 msgid "Residue Label:"
@@ -5100,11 +5100,11 @@ msgstr "Вилучити обмеження"
 #: qtplugins/qtaim/qtaimwavefunction.h:82
 #, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "Не вдається прочитати файл %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Не вдалося створити тимчасовий файл."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5477,12 +5477,12 @@ msgstr "Раман"
 #: qtplugins/spectra/spectradialog.cpp:560
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "Вібраційний компакт-диск"
 
 #: qtplugins/spectra/spectradialog.cpp:564
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "Магнітний компакт-диск"
 
 #: qtplugins/spectra/spectradialog.cpp:568
 msgid "NMR"
@@ -5515,7 +5515,7 @@ msgstr "Вибір кольору обчислених спектрів"
 
 #: qtplugins/spectra/spectradialog.cpp:671
 msgid "Select Raw Spectra Color"
-msgstr ""
+msgstr "Виберіть колір необроблених спектрів"
 
 #: qtplugins/spectra/spectradialog.cpp:684
 msgid "Select Imported Spectra Color"
@@ -5559,11 +5559,11 @@ msgstr "Інтенсивність"
 
 #: qtplugins/spectra/spectradialog.cpp:764
 msgid "Vibrational Circular Dichroism"
-msgstr ""
+msgstr "Вібраційний круговий дихроїзм"
 
 #: qtplugins/spectra/spectradialog.cpp:777
 msgid "Magnetic Circular Dichroism"
-msgstr ""
+msgstr "Магнітний круговий дихроїзм"
 
 #: qtplugins/spectra/spectradialog.cpp:790
 msgid "NMR Spectra"
@@ -5604,15 +5604,15 @@ msgstr "Сире"
 
 #: qtplugins/spectra/spectradialog.cpp:971
 msgid "Imported"
-msgstr ""
+msgstr "Імпортовано"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "Import Data"
-msgstr ""
+msgstr "Імпорт даних"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
-msgstr ""
+msgstr "CSV-файли (*.csv); TSV-файли (*.tsv)"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
@@ -5772,7 +5772,7 @@ msgstr "Розрахунок молекулярної орбіталі %L1"
 #: qtplugins/surfaces/surfaces.cpp:879
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
-msgstr ""
+msgstr "Поверхнева обробка"
 
 #: qtplugins/surfaces/surfaces.cpp:890 qtplugins/surfaces/surfaces.cpp:918
 msgid "Movie AVI (*.avi)"
@@ -8817,7 +8817,7 @@ msgstr "Розраховані спектри:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "Raw Spectra:"
-msgstr ""
+msgstr "Сирі спектри:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)

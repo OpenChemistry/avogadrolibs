@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-30 03:03+0000\n"
-"PO-Revision-Date: 2025-11-15 01:51+0000\n"
+"PO-Revision-Date: 2025-12-01 23:00+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -3745,7 +3745,7 @@ msgstr "Nume"
 
 #: qtplugins/label/label.cpp:228
 msgid "Name & ID"
-msgstr ""
+msgstr "Nume și ID"
 
 #: qtplugins/label/label.cpp:235
 msgid "Residue Label:"
@@ -5113,11 +5113,11 @@ msgstr "Elimină constrângerea"
 #: qtplugins/qtaim/qtaimwavefunction.h:82
 #, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "Nu se poate citi fișierul %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Nu s-a putut crea fișierul temporar."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5495,12 +5495,12 @@ msgstr "Raman"
 #: qtplugins/spectra/spectradialog.cpp:560
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "Dicroism circular vibrațional (VCD)"
 
 #: qtplugins/spectra/spectradialog.cpp:564
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "Dicroism circular magnetic (MCD)"
 
 #: qtplugins/spectra/spectradialog.cpp:568
 msgid "NMR"
@@ -5533,7 +5533,7 @@ msgstr "Selectează culoarea spectrului calculat"
 
 #: qtplugins/spectra/spectradialog.cpp:671
 msgid "Select Raw Spectra Color"
-msgstr ""
+msgstr "Selectează culoarea spectrului brut"
 
 #: qtplugins/spectra/spectradialog.cpp:684
 msgid "Select Imported Spectra Color"
@@ -5577,11 +5577,11 @@ msgstr "Intensitate"
 
 #: qtplugins/spectra/spectradialog.cpp:764
 msgid "Vibrational Circular Dichroism"
-msgstr ""
+msgstr "Dicroism circular vibrațional"
 
 #: qtplugins/spectra/spectradialog.cpp:777
 msgid "Magnetic Circular Dichroism"
-msgstr ""
+msgstr "Dicroism circular magnetic"
 
 #: qtplugins/spectra/spectradialog.cpp:790
 msgid "NMR Spectra"
@@ -5622,15 +5622,15 @@ msgstr "Brut"
 
 #: qtplugins/spectra/spectradialog.cpp:971
 msgid "Imported"
-msgstr ""
+msgstr "Importate"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "Import Data"
-msgstr ""
+msgstr "Importare date"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
-msgstr ""
+msgstr "Fișiere CSV (*.csv);;Fișiere TSV (*.tsv)"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
@@ -5790,7 +5790,7 @@ msgstr "Se calculează orbitalul molecular %L1"
 #: qtplugins/surfaces/surfaces.cpp:879
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
-msgstr ""
+msgstr "Suprafață finisată"
 
 #: qtplugins/surfaces/surfaces.cpp:890 qtplugins/surfaces/surfaces.cpp:918
 msgid "Movie AVI (*.avi)"
@@ -8838,7 +8838,7 @@ msgstr "Spectre calculate:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "Raw Spectra:"
-msgstr ""
+msgstr "Spectru brut:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
