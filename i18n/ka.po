@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-30 03:03+0000\n"
-"PO-Revision-Date: 2025-11-18 02:19+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2025-12-04 07:00+0000\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -4632,7 +4631,7 @@ msgstr ""
 #, qt-format
 msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
-msgstr ""
+msgstr "გაფრთხილება: (%1)"
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"
@@ -5388,11 +5387,11 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:971
 msgid "Imported"
-msgstr ""
+msgstr "შემოტანილია"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "Import Data"
-msgstr ""
+msgstr "მონაცემების შემოტანა"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
