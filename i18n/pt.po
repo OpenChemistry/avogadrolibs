@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-30 03:03+0000\n"
-"PO-Revision-Date: 2025-08-27 08:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-12-04 07:00+0000\n"
+"Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
 "Language: pt\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3703,16 +3703,16 @@ msgstr "Elemento"
 
 #: qtplugins/label/label.cpp:186
 msgid "Element & Number"
-msgstr ""
+msgstr "Elemento & Número"
 
 #: qtplugins/label/label.cpp:188
 msgid "Element & ID"
-msgstr ""
+msgstr "Elemento & ID"
 
 #: qtplugins/label/label.cpp:190
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "Carga Parcial"
 
 #: qtplugins/label/label.cpp:205
 #, fuzzy
@@ -3729,17 +3729,17 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:226 qtplugins/propertytables/propertymodel.cpp:660
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: qtplugins/label/label.cpp:227
 #: qtplugins/plugindownloader/downloaderwidget.cpp:65
 #: qtplugins/propertytables/propertymodel.cpp:658
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: qtplugins/label/label.cpp:228
 msgid "Name & ID"
-msgstr ""
+msgstr "Nome & ID"
 
 #: qtplugins/label/label.cpp:235
 #, fuzzy
@@ -5121,11 +5121,11 @@ msgstr ""
 #: qtplugins/qtaim/qtaimwavefunction.h:82
 #, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "Não foi possível ler o arquivo %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Falha ao criar um arquivo temporário."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22

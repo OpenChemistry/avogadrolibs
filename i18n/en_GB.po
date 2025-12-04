@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-30 03:03+0000\n"
-"PO-Revision-Date: 2025-11-20 12:51+0000\n"
+"PO-Revision-Date: 2025-12-04 07:00+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -3698,7 +3698,7 @@ msgstr "Name"
 
 #: qtplugins/label/label.cpp:228
 msgid "Name & ID"
-msgstr ""
+msgstr "Name & ID"
 
 #: qtplugins/label/label.cpp:235
 msgid "Residue Label:"
@@ -5057,11 +5057,11 @@ msgstr "Remove Constraint"
 #: qtplugins/qtaim/qtaimwavefunction.h:82
 #, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "Cannot read file %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Failed to create a temporary file."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5433,12 +5433,12 @@ msgstr "Raman"
 #: qtplugins/spectra/spectradialog.cpp:560
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "Vibrational CD"
 
 #: qtplugins/spectra/spectradialog.cpp:564
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "Magnetic CD"
 
 #: qtplugins/spectra/spectradialog.cpp:568
 msgid "NMR"
@@ -5471,7 +5471,7 @@ msgstr "Select Calculated Spectra Colour"
 
 #: qtplugins/spectra/spectradialog.cpp:671
 msgid "Select Raw Spectra Color"
-msgstr ""
+msgstr "Select Raw Spectra Colour"
 
 #: qtplugins/spectra/spectradialog.cpp:684
 msgid "Select Imported Spectra Color"
@@ -5515,11 +5515,11 @@ msgstr "Intensity"
 
 #: qtplugins/spectra/spectradialog.cpp:764
 msgid "Vibrational Circular Dichroism"
-msgstr ""
+msgstr "Vibrational Circular Dichroism"
 
 #: qtplugins/spectra/spectradialog.cpp:777
 msgid "Magnetic Circular Dichroism"
-msgstr ""
+msgstr "Magnetic Circular Dichroism"
 
 #: qtplugins/spectra/spectradialog.cpp:790
 msgid "NMR Spectra"
@@ -5560,15 +5560,15 @@ msgstr "Raw"
 
 #: qtplugins/spectra/spectradialog.cpp:971
 msgid "Imported"
-msgstr ""
+msgstr "Imported"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "Import Data"
-msgstr ""
+msgstr "Import Data"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
-msgstr ""
+msgstr "CSV Files (*.csv);;TSV Files (*.tsv)"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
@@ -5728,7 +5728,7 @@ msgstr "Calculating molecular orbital %L1"
 #: qtplugins/surfaces/surfaces.cpp:879
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
-msgstr ""
+msgstr "Surface Finished"
 
 #: qtplugins/surfaces/surfaces.cpp:890 qtplugins/surfaces/surfaces.cpp:918
 msgid "Movie AVI (*.avi)"
@@ -8764,7 +8764,7 @@ msgstr "Calculated Spectra:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "Raw Spectra:"
-msgstr ""
+msgstr "Raw Spectra:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
