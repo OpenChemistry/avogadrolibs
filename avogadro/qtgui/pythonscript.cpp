@@ -157,6 +157,7 @@ QByteArray PythonScript::execute(const QStringList& args,
     }
 
     realArgs.prepend("run");
+    realArgs.insert(1, "--as-is");
 
 #ifdef Q_OS_WIN
     QString pixi(m_pixi + "/pixi.exe");
