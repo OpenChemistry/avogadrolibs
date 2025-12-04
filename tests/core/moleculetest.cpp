@@ -271,3 +271,46 @@ TEST_F(MoleculeTest, assignment)
 
   assertEqual(m_testMolecule, assign);
 }
+
+TEST_F(MoleculeTest, estimateVelocities)
+{
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(1);
+  Atom a2 = molecule.addAtom(1);
+
+  Array<Vector3> coords0;
+  coords0.push_back(Vector3(0.0, 0.0, 0.0));
+  coords0.push_back(Vector3(1.0, 0.0, 0.0));
+  molecule.setCoordinate3d(coords0, 0);
+  molecule.setTimeStep(0.0, 0);
+
+  Array<Vector3> coords1;
+  coords1.push_back(Vector3(1.0, 0.0, 0.0));
+  coords1.push_back(Vector3(2.0, 0.0, 0.0));
+  molecule.setCoordinate3d(coords1, 1);
+  molecule.setTimeStep(1.0, 1);
+
+  Array<Vector3> coords2;
+  coords2.push_back(Vector3(2.0, 0.0, 0.0));
+  coords2.push_back(Vector3(3.0, 0.0, 0.0));
+  molecule.setCoordinate3d(coords2, 2);
+  molecule.setTimeStep(2.0, 2);
+
+  molecule.estimateVelocities();
+
+  Array<Vector3> v0 = molecule.velocities(0);
+  ASSERT_EQ(v0.size(), 2);
+  EXPECT_NEAR(v0[0].x(), 1.0, 1e-5);
+  EXPECT_NEAR(v0[1].x(), 1.0, 1e-5);
+
+  Array<Vector3> v1 = molecule.velocities(1);
+  ASSERT_EQ(v1.size(), 2);
+  EXPECT_NEAR(v1[0].x(), 1.0, 1e-5);
+  EXPECT_NEAR(v1[1].x(), 1.0, 1e-5);
+
+  Array<Vector3> v2 = molecule.velocities(2);
+  ASSERT_EQ(v2.size(), 2);
+  EXPECT_NEAR(v2[0].x(), 1.0, 1e-5);
+  EXPECT_NEAR(v2[1].x(), 1.0, 1e-5);
+}
+
