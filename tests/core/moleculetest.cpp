@@ -313,4 +313,3 @@ TEST_F(MoleculeTest, estimateVelocities)
   EXPECT_NEAR(v2[0].x(), 1.0, 1e-5);
   EXPECT_NEAR(v2[1].x(), 1.0, 1e-5);
 }
-

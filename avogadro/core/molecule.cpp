@@ -40,8 +40,7 @@ Molecule::Molecule(const Molecule& other)
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
     m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
     m_coordinates3d(other.m_coordinates3d), m_velocities(other.m_velocities),
-    m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
@@ -138,8 +137,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
     m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
     m_coordinates3d(other.m_coordinates3d), m_velocities(other.m_velocities),
-    m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
@@ -1345,7 +1343,8 @@ bool Molecule::setCoordinate3d(const Array<Vector3>& coords, size_t index)
 
 void Molecule::estimateVelocities()
 {
-  if (m_coordinates3d.size() < 2 || m_timesteps.size() != m_coordinates3d.size())
+  if (m_coordinates3d.size() < 2 ||
+      m_timesteps.size() != m_coordinates3d.size())
     return;
 
   m_velocities.resize(m_coordinates3d.size());
@@ -1364,8 +1363,11 @@ void Molecule::estimateVelocities()
     m_velocities[i].resize(atomCount());
 
     const Array<Vector3>& currentCoords = m_coordinates3d[i];
-    const Array<Vector3>& prevCoords = (i > 0) ? m_coordinates3d[i - 1] : m_coordinates3d[0];
-    const Array<Vector3>& nextCoords = (i < m_coordinates3d.size() - 1) ? m_coordinates3d[i + 1] : m_coordinates3d[i];
+    const Array<Vector3>& prevCoords =
+      (i > 0) ? m_coordinates3d[i - 1] : m_coordinates3d[0];
+    const Array<Vector3>& nextCoords = (i < m_coordinates3d.size() - 1)
+                                         ? m_coordinates3d[i + 1]
+                                         : m_coordinates3d[i];
 
     if (i > 0) {
       // Backward difference for i > 0
