@@ -140,6 +140,8 @@ QByteArray PythonScript::execute(const QStringList& args,
       realArgs.prepend("python");
     } // otherwise hope pixi knows how to run this
 
+    realArgs.prepend("--as-is");
+
     // check if the script is in the plugin directory
     if (!pluginDir.isEmpty() && defaultManifest &&
         !m_scriptFilePath.startsWith(pluginDir)) {
@@ -157,7 +159,6 @@ QByteArray PythonScript::execute(const QStringList& args,
     }
 
     realArgs.prepend("run");
-    realArgs.insert(1, "--as-is");
 
 #ifdef Q_OS_WIN
     QString pixi(m_pixi + "/pixi.exe");
