@@ -179,7 +179,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
       // Tilt
       rotate(m_renderer->camera().focus(), 0, 0, delta.x());
       // Zoom
-      zoom(m_renderer->camera().focus(), delta.y());
+      // zoom(m_renderer->camera().focus(), delta.y());
       e->accept();
       break;
     }
