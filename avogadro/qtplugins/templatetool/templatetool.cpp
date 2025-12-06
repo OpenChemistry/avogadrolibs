@@ -110,15 +110,24 @@ QWidget* TemplateTool::toolWidget() const
 QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
 {
   clearKeyPressBuffer();
-  if (!m_renderer)
+  if (!m_renderer || !m_molecule)
     return nullptr;
 
   updatePressedButtons(e, false);
   m_clickPosition = e->pos();
 
-  if (m_molecule) {
-    m_molecule->setInteractive(true);
+  if (m_layerManager.activeLayerLocked()) {
+    // revert to navigation mode
+    return nullptr;
   }
+
+  // check if we have modifier keys
+  // if so, revert to navigation mode
+  // e.g., rotate, zoom
+  if (e->modifiers() != Qt::NoModifier)
+    return nullptr;
+
+  m_molecule->setInteractive(true);
 
   if (m_pressedButtons & Qt::LeftButton) {
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
