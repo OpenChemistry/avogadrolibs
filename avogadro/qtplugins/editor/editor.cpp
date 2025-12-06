@@ -113,7 +113,7 @@ QUndoCommand* Editor::mousePressEvent(QMouseEvent* e)
   // check if we have modifier keys
   // if so, revert to navigation mode
   // e.g., rotate, zoom
-  if (e->modifiers() != Qt::NoModifier)
+  if (e->modifiers() == Qt::ShiftModifier || e->modifiers() == Qt::AltModifier)
     return nullptr;
 
   if (m_pressedButtons & Qt::LeftButton) {
