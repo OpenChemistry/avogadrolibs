@@ -76,7 +76,7 @@ TemplateTool::TemplateTool(QObject* parent_)
     m_toolWidget(new TemplateToolWidget(qobject_cast<QWidget*>(parent_))),
     m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
-    m_fixValenceLater(false)
+    m_fixValenceLater(false), m_layerManager("Template")
 {
   QString shortcut = tr("Ctrl+3", "control-key 3");
   m_activateAction->setText(tr("Template"));
@@ -110,15 +110,24 @@ QWidget* TemplateTool::toolWidget() const
 QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
 {
   clearKeyPressBuffer();
-  if (!m_renderer)
+  if (!m_renderer || !m_molecule)
     return nullptr;
 
   updatePressedButtons(e, false);
   m_clickPosition = e->pos();
 
-  if (m_molecule) {
-    m_molecule->setInteractive(true);
+  if (m_layerManager.activeLayerLocked()) {
+    // revert to navigation mode
+    return nullptr;
   }
+
+  // check if we have modifier keys
+  // if so, revert to navigation mode
+  // e.g., rotate, zoom
+  if (e->modifiers() == Qt::ShiftModifier || e->modifiers() == Qt::AltModifier)
+    return nullptr;
+
+  m_molecule->setInteractive(true);
 
   if (m_pressedButtons & Qt::LeftButton) {
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
@@ -177,13 +186,6 @@ QUndoCommand* TemplateTool::mouseReleaseEvent(QMouseEvent* e)
 
 QUndoCommand* TemplateTool::mouseMoveEvent(QMouseEvent* e)
 {
-  if (!m_renderer)
-    return nullptr;
-
-  if (m_pressedButtons & Qt::LeftButton)
-    if (m_clickedObject.type == Rendering::AtomType)
-      atomLeftDrag(e);
-
   return nullptr;
 }
 
