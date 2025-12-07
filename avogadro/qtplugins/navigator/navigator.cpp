@@ -233,10 +233,10 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 QUndoCommand* Navigator::keyPressEvent(QKeyEvent* e)
 {
   Vector3f ref = m_renderer->camera().focus();
-  // Alt modifier = twice as large
+  // Alt modifier = bigger changes
   float scale = 1.0f;
   if (e->modifiers() & (Qt::AltModifier))
-    scale = 5.0f;
+    scale = 6.0f;
 
   // Get modifiers without Alt for comparison
   Qt::KeyboardModifiers mods = e->modifiers() & ~(Qt::AltModifier);
