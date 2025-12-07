@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.102.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-30 03:03+0000\n"
+"POT-Creation-Date: 2025-12-07 03:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1337,7 +1337,7 @@ msgid "Add Atom"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:73 qtgui/rwmolecule.cpp:88
-#: qtplugins/editor/editor.cpp:135
+#: qtplugins/editor/editor.cpp:142
 msgid "Remove Atom"
 msgstr ""
 
@@ -2095,7 +2095,7 @@ msgid "%L1°"
 msgstr ""
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:804
-#: qtplugins/editor/editor.cpp:250 qtplugins/measuretool/measuretool.cpp:226
+#: qtplugins/editor/editor.cpp:257 qtplugins/measuretool/measuretool.cpp:226
 #: qtplugins/measuretool/measuretool.cpp:227
 #: qtplugins/measuretool/measuretool.cpp:229
 #, qt-format
@@ -2995,7 +2995,7 @@ msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
 msgstr ""
 
@@ -3008,24 +3008,24 @@ msgid ""
 "Right Mouse:\tDelete Atom"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:116
+#: qtplugins/editor/editor.cpp:123
 msgid "Draw Atom"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:133
 msgid "Change Bond Type"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:139
+#: qtplugins/editor/editor.cpp:146
 msgid "Remove Bond"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:245 qtplugins/measuretool/measuretool.cpp:200
+#: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:225
 msgid "Distance:"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:248
+#: qtplugins/editor/editor.cpp:255
 #, qt-format
 msgid "%1 %L2"
 msgstr ""
@@ -5625,21 +5625,21 @@ msgid ""
 "it."
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:404
-#: qtplugins/templatetool/templatetool.cpp:572
+#: qtplugins/templatetool/templatetool.cpp:406
+#: qtplugins/templatetool/templatetool.cpp:574
 msgid "Clipboard"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:492
+#: qtplugins/templatetool/templatetool.cpp:494
 msgid "Insert Template"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:790
+#: qtplugins/templatetool/templatetool.cpp:792
 msgid "Insert Ligand"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
+#: qtplugins/templatetool/templatetool.h:37
 msgid "Template tool"
 msgstr ""
 
