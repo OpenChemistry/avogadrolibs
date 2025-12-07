@@ -179,7 +179,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
       // Tilt
       rotate(m_renderer->camera().focus(), 0, 0, delta.x());
       // Zoom
-      zoom(m_renderer->camera().focus(), delta.y());
+      // zoom(m_renderer->camera().focus(), delta.y());
       e->accept();
       break;
     }
@@ -233,58 +233,67 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 QUndoCommand* Navigator::keyPressEvent(QKeyEvent* e)
 {
   Vector3f ref = m_renderer->camera().focus();
+  // Alt modifier = bigger changes
+  float scale = 1.0f;
+  if (e->modifiers() & (Qt::AltModifier))
+    scale = 6.0f;
+
+  // Get modifiers without Alt for comparison
+  Qt::KeyboardModifiers mods = e->modifiers() & ~(Qt::AltModifier);
+
   switch (e->key()) {
     case Qt::Key_Left:
     case Qt::Key_H:
     case Qt::Key_A:
-      if (e->modifiers() == Qt::NoModifier ||
-          e->modifiers() == Qt::KeypadModifier)
-        rotate(ref, 0, -5, 0);
-      else if (e->modifiers() == Qt::ShiftModifier)
-        rotate(ref, 0, 0, -5);
-      else if (e->modifiers() == Qt::ControlModifier)
-        translate(ref, -5, 0);
+      if (mods == Qt::NoModifier || mods == Qt::KeypadModifier)
+        rotate(ref, 0, -5 * scale, 0);
+      else if (mods & Qt::ShiftModifier)
+        rotate(ref, 0, 0, -5 * scale);
+      else if (mods & Qt::ControlModifier)
+        translate(ref, -5 * scale, 0);
       e->accept();
       break;
+
     case Qt::Key_Right:
     case Qt::Key_L:
     case Qt::Key_D:
-      if (e->modifiers() == Qt::NoModifier ||
-          e->modifiers() == Qt::KeypadModifier)
-        rotate(ref, 0, 5, 0);
-      else if (e->modifiers() == Qt::ShiftModifier)
-        rotate(ref, 0, 0, 5);
-      else if (e->modifiers() == Qt::ControlModifier)
-        translate(ref, 5, 0);
+      if (mods == Qt::NoModifier || mods == Qt::KeypadModifier)
+        rotate(ref, 0, 5 * scale, 0);
+      else if (mods & Qt::ShiftModifier)
+        rotate(ref, 0, 0, 5 * scale);
+      else if (mods & Qt::ControlModifier)
+        translate(ref, 5 * scale, 0);
       e->accept();
       break;
+
     case Qt::Key_Up:
     case Qt::Key_K:
     case Qt::Key_W:
-      if (e->modifiers() == Qt::NoModifier ||
-          e->modifiers() == Qt::KeypadModifier)
-        rotate(ref, -5, 0, 0);
-      else if (e->modifiers() == Qt::ShiftModifier)
-        zoom(ref, -2);
-      else if (e->modifiers() == Qt::ControlModifier)
-        translate(ref, 0, -5);
+      if (mods == Qt::NoModifier || mods == Qt::KeypadModifier)
+        rotate(ref, -5 * scale, 0, 0);
+      else if (mods & Qt::ShiftModifier)
+        zoom(ref, -2 * scale);
+      else if (mods & Qt::ControlModifier)
+        translate(ref, 0, -5 * scale);
       e->accept();
       break;
+
     case Qt::Key_Down:
     case Qt::Key_J:
     case Qt::Key_S:
-      if (e->modifiers() == Qt::NoModifier ||
-          e->modifiers() == Qt::KeypadModifier)
-        rotate(ref, 5, 0, 0);
-      else if (e->modifiers() == Qt::ShiftModifier)
-        zoom(ref, 2);
-      else if (e->modifiers() == Qt::ControlModifier)
-        translate(ref, 0, 5);
+      if (mods == Qt::NoModifier || mods == Qt::KeypadModifier)
+        rotate(ref, 5 * scale, 0, 0);
+      else if (mods & Qt::ShiftModifier)
+        zoom(ref, 2 * scale);
+      else if (mods & Qt::ControlModifier)
+        translate(ref, 0, 5 * scale);
       e->accept();
       break;
+
     default:
       e->ignore();
   }
+
   emit updateRequested();
   return nullptr;
 }
