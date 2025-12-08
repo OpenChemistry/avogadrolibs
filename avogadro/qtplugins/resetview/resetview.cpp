@@ -164,6 +164,57 @@ void ResetView::animationCameraDefault(bool animate)
   animationCamera(goal, animate);
 }
 
+float ResetView::calculateOptimalOrthographicScale(
+  const Affine3f& viewTransform)
+{
+  if (m_camera->projectionType() != Projection::Orthographic) {
+    return 1.0f;
+  }
+
+  const Array<Vector3>& mols = m_molecule->atomPositions3d();
+  Vector3 min, max;
+  getBB(mols, min, max);
+
+  // Transform bounding box corners to view space
+  float infinity = numeric_limits<float>::infinity();
+  Vector3f minView{ infinity, infinity, infinity };
+  Vector3f maxView{ -infinity, -infinity, -infinity };
+
+  Vector3f corners[8] = {
+    Vector3f(min.x(), min.y(), min.z()), Vector3f(max.x(), min.y(), min.z()),
+    Vector3f(min.x(), max.y(), min.z()), Vector3f(max.x(), max.y(), min.z()),
+    Vector3f(min.x(), min.y(), max.z()), Vector3f(max.x(), min.y(), max.z()),
+    Vector3f(min.x(), max.y(), max.z()), Vector3f(max.x(), max.y(), max.z())
+  };
+
+  for (const auto& corner : corners) {
+    Vector3f transformed = viewTransform * corner;
+    minView.x() = std::min(transformed.x(), minView.x());
+    maxView.x() = std::max(transformed.x(), maxView.x());
+    minView.y() = std::min(transformed.y(), minView.y());
+    maxView.y() = std::max(transformed.y(), maxView.y());
+  }
+
+  // Calculate scene extent in view space
+  float sceneWidth = maxView.x() - minView.x();
+  float sceneHeight = maxView.y() - minView.y();
+
+  // Base orthographic frustum has half-height of 5.0
+  float baseHalfHeight = 5.0f;
+  float aspectRatio = static_cast<float>(m_camera->width()) /
+                      static_cast<float>(m_camera->height());
+  float baseHalfWidth = baseHalfHeight * aspectRatio;
+
+  // Calculate scale needed to fit with 10% padding
+  float scaleX = (sceneWidth / 2.0f) / baseHalfWidth * 1.1f;
+  float scaleY = (sceneHeight / 2.0f) / baseHalfHeight * 1.1f;
+
+  float optimalScale = std::max(scaleX, scaleY);
+
+  // Clamp to reasonable values
+  return std::clamp(0.1f, optimalScale, 10.0f);
+}
+
 void ResetView::animationCamera(const Affine3f& goal, bool animate)
 {
   if (animate) {
@@ -177,6 +228,10 @@ void ResetView::animationCamera(const Affine3f& goal, bool animate)
     Vector3f posStart = start.translation();
     auto rotStart = Quaternionf(rot_aux);
 
+    // Calculate optimal orthographic scales
+    float scaleStart = m_camera->orthographicScale();
+    float scaleGoal = calculateOptimalOrthographicScale(goal);
+
     for (int frame = 0; frame <= ResetView::TOTAL_FRAMES; ++frame) {
       Affine3f interpolation;
       float alpha = frame / float(ResetView::TOTAL_FRAMES);
@@ -184,20 +239,32 @@ void ResetView::animationCamera(const Affine3f& goal, bool animate)
         ((1.0f - alpha) * posStart) + (alpha * posGoal),
         rotStart.slerp(alpha, rotGoal), Vector3f(1.0f, 1.0f, 1.0f));
 
+      // Interpolate orthographic scale
+      float interpolatedScale = (1.0f - alpha) * scaleStart + alpha * scaleGoal;
+
       float time = frame * ResetView::DELTA_TIME;
-      QTimer::singleShot(time, this, [this, interpolation]() {
-        m_camera->setModelView(interpolation);
-        emit updateRequested();
-      });
+      QTimer::singleShot(
+        time, this, [this, interpolation, interpolatedScale]() {
+          m_camera->setModelView(interpolation);
+          if (m_camera->projectionType() == Projection::Orthographic) {
+            m_camera->setOrthographicScale(interpolatedScale);
+          }
+          emit updateRequested();
+        });
     }
 
   } else {
     m_camera->setModelView(goal);
+
+    // Set optimal orthographic scale immediately
+    float optimalScale = calculateOptimalOrthographicScale(goal);
+    m_camera->setOrthographicScale(optimalScale);
+
     emit updateRequested();
   }
 }
 
-// Calculate the oriented bounding box to get the most significand
+// Calculate the oriented bounding box to get the most significant
 // axis base and the centroid
 inline void getOBB(const Array<Vector3>& mols, Vector3d& centroid,
                    Vector3d& min, Vector3d& mid, Vector3d& max)
