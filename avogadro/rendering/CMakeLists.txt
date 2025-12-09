@@ -104,7 +104,6 @@ set(shader_files
   "linestrip_fs.glsl"
   "linestrip_vs.glsl"
   "mesh_fs.glsl"
-  "mesh_opaque_fs.glsl"
   "mesh_vs.glsl"
   "solid_vs.glsl"
   "solid_first_fs.glsl"
