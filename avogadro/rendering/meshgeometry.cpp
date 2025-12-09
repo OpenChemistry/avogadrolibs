@@ -22,7 +22,6 @@
 
 namespace {
 #include "mesh_fs.h"
-#include "mesh_opaque_fs.h"
 #include "mesh_vs.h"
 } // namespace
 
@@ -48,9 +47,7 @@ public:
 
   inline static Shader* vertexShader = nullptr;
   inline static Shader* fragmentShader = nullptr;
-  inline static Shader* fragmentShaderOpaque = nullptr;
   inline static ShaderProgram* program = nullptr;
-  inline static ShaderProgram* programOpaque = nullptr;
 
   size_t numberOfVertices;
   size_t numberOfIndices;
@@ -103,16 +100,10 @@ void MeshGeometry::update()
     d->fragmentShader->setType(Shader::Fragment);
     d->fragmentShader->setSource(mesh_fs);
 
-    d->fragmentShaderOpaque = new Shader;
-    d->fragmentShaderOpaque->setType(Shader::Fragment);
-    d->fragmentShaderOpaque->setSource(mesh_opaque_fs);
-
     if (!d->vertexShader->compile())
       cout << d->vertexShader->error() << endl;
     if (!d->fragmentShader->compile())
       cout << d->fragmentShader->error() << endl;
-    if (!d->fragmentShaderOpaque->compile())
-      cout << d->fragmentShaderOpaque->error() << endl;
 
     if (d->program == nullptr)
       d->program = new ShaderProgram;
@@ -120,13 +111,6 @@ void MeshGeometry::update()
     d->program->attachShader(*d->fragmentShader);
     if (!d->program->link())
       cout << d->program->error() << endl;
-
-    if (d->programOpaque == nullptr)
-      d->programOpaque = new ShaderProgram;
-    d->programOpaque->attachShader(*d->vertexShader);
-    d->programOpaque->attachShader(*d->fragmentShaderOpaque);
-    if (!d->programOpaque->link())
-      cout << d->programOpaque->error() << endl;
   }
 }
 
@@ -139,11 +123,7 @@ void MeshGeometry::render(const Camera& camera)
   update();
 
   ShaderProgram* program;
-  // If the mesh is opaque, use the opaque shader
-  if (m_opacity != 255)
-    program = d->program;
-  else
-    program = d->programOpaque;
+  program = d->program;
 
   if (!program->bind())
     cout << program->error() << endl;
