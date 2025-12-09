@@ -161,6 +161,14 @@ void GLRenderer::resetCamera()
   m_camera.setIdentity();
   m_camera.translate(-m_center);
   m_camera.preTranslate(-2.22f * m_radius * Vector3f::UnitZ());
+
+  if (m_camera.projectionType() == Orthographic) {
+    // The base orthographic frustum has half-height of 5.0
+    // We want the scene radius to fit comfortably with some padding
+    float baseHalfHeight = 5.0f;
+    float optimalScale = m_radius / baseHalfHeight;
+    m_camera.setOrthographicScale(optimalScale);
+  }
 }
 
 void GLRenderer::resetGeometry()
