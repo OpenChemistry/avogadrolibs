@@ -14,6 +14,7 @@
 #include <QOpenGLWidget>
 #include <QTimer>
 
+#include <algorithm>
 #include <limits>
 
 #define CAMERA_NEAR_DISTANCE 13.35f // Experimental number
@@ -212,7 +213,7 @@ float ResetView::calculateOptimalOrthographicScale(
   float optimalScale = std::max(scaleX, scaleY);
 
   // Clamp to reasonable values
-  return std::clamp(0.1f, optimalScale, 10.0f);
+  return std::clamp(optimalScale, 0.1f, 10.0f);
 }
 
 void ResetView::animationCamera(const Affine3f& goal, bool animate)
