@@ -37,7 +37,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://cms.mpi.univie.ac.at/vasp/guide/node59.html";
+    return "https://www.vasp.at/wiki/POSCAR";
   }
 
   std::vector<std::string> fileExtensions() const override;
@@ -70,7 +70,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "https://cms.mpi.univie.ac.at/wiki/index.php/OUTCAR";
+    return "https://www.vasp.at/wiki/OUTCAR";
   }
 
   std::vector<std::string> fileExtensions() const override;

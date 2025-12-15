@@ -34,7 +34,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://www.cmbi.ru.nl/molden/molden_format.html";
+    return "https://www.theochem.ru.nl/molden/molden_format.html";
   }
 
   std::vector<std::string> fileExtensions() const override;

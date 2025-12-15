@@ -43,7 +43,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://lammps.sandia.gov/";
+    return "https://www.lammps.org/";
   }
 
   std::vector<std::string> fileExtensions() const override;
@@ -76,7 +76,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://lammps.sandia.gov/";
+    return "https://www.lammps.org/";
   }
 
   std::vector<std::string> fileExtensions() const override;

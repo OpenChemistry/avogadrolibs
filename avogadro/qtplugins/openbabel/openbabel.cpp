@@ -127,7 +127,9 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   std::string fname;
   std::string fidentifier;
   std::string fdescription;
-  std::string fspecificationUrl("http://openbabel.org/wiki/Category:Formats");
+  std::string fspecificationUrl(
+    "https://openbabel.org/docs/FileFormats/Overview.html");
+  // http://openbabel.org/wiki/Category:Formats
   std::vector<std::string> fexts;
   std::vector<std::string> fmime;
 

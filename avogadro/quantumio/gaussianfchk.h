@@ -38,7 +38,9 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://www.gaussian.com/g_tech/g_ur/f_formchk.htm";
+    return "https://web.archive.org/web/20161203183148/http://www.gaussian.com/"
+           "g_tech/g_ur/f_formchk.htm";
+    // https://gaussian.com/formchk/
   }
 
   std::vector<std::string> fileExtensions() const override;

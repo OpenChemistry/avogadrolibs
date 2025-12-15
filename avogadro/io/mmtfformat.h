@@ -44,7 +44,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://mmtf.rcsb.org/";
+    return "https://github.com/rcsb/mmtf-cpp";
   }
 
   std::vector<std::string> fileExtensions() const override;

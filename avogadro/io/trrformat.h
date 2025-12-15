@@ -37,7 +37,8 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://manual.gromacs.org/current/online/trr.html";
+    return "https://manual.gromacs.org/current/reference-manual/"
+           "file-formats.html#trr";
   }
 
   std::vector<std::string> fileExtensions() const override;
