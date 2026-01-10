@@ -11,13 +11,13 @@
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # "C.Y.A.N" <bd3alz@gmail.com>, 2024.
 # Syifa Tadjoedin <31january2003@gmail.com>, 2024.
-# Arif Budiman <arifpedia@gmail.com>, 2025.
+# Arif Budiman <arifpedia@gmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-30 03:03+0000\n"
-"PO-Revision-Date: 2025-11-12 11:51+0000\n"
+"PO-Revision-Date: 2026-01-11 07:01+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3638,7 +3638,7 @@ msgstr "Masukkan fragmen molekul untuk membangun molekul yang lebih besar."
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:55
 msgid "Peptide…"
-msgstr ""
+msgstr "Peptida…"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3646,15 +3646,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:511:730 rc.cpp:922
 msgid "Insert Peptide"
-msgstr ""
+msgstr "Sisipkan Peptida"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
-msgstr ""
+msgstr "SisipkanPeptida"
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "Sisipkan sekuens oligopeptida."
 
 #: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:303
 #: qtplugins/surfacerender/surfacerender.cpp:309
@@ -3715,7 +3715,7 @@ msgstr "Nama"
 
 #: qtplugins/label/label.cpp:228
 msgid "Name & ID"
-msgstr ""
+msgstr "Nama & ID"
 
 #: qtplugins/label/label.cpp:235
 msgid "Residue Label:"
@@ -4550,15 +4550,15 @@ msgstr "Putarkan kembali lintasan"
 
 #: qtplugins/plotconformer/plotconformer.cpp:38
 msgid "Plot Conformer Data…"
-msgstr ""
+msgstr "Plot Data Konformer…"
 
 #: qtplugins/plotconformer/plotconformer.cpp:127
 msgid "Conformer Analysis"
-msgstr ""
+msgstr "Analisis Konformer"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
-msgstr ""
+msgstr "Jenis Plot:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -4568,16 +4568,16 @@ msgstr "RMSD"
 
 #: qtplugins/plotconformer/plotconformer.cpp:149
 msgid "Velocities"
-msgstr ""
+msgstr "Kecepatan"
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
+msgstr "Satuan Energi:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:160
 #: qtplugins/plotconformer/plotconformer.cpp:172
 msgid "Hartree"
-msgstr ""
+msgstr "Hartree"
 
 #: qtplugins/plotconformer/plotconformer.cpp:161
 #: qtplugins/plotconformer/plotconformer.cpp:171
@@ -4589,41 +4589,41 @@ msgstr " eV"
 #: qtplugins/plotconformer/plotconformer.cpp:162
 #: qtplugins/plotconformer/plotconformer.cpp:169
 msgid "kcal/mol"
-msgstr ""
+msgstr "kkal/mol"
 
 #: qtplugins/plotconformer/plotconformer.cpp:163
 #: qtplugins/plotconformer/plotconformer.cpp:170
 msgid "kJ/mol"
-msgstr ""
+msgstr "kJ/mol"
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
 msgid "to"
-msgstr ""
+msgstr "hingga"
 
 #: qtplugins/plotconformer/plotconformer.cpp:225
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:228
 #, qt-format
 msgid "Relative Energy (%1)"
-msgstr ""
+msgstr "Energi Relatif (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:231
 msgid "Forces (N)"
-msgstr ""
+msgstr "Gaya (N)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:233
 msgid "Velocities (m/s)"
-msgstr ""
+msgstr "Kecepatan (m/s)"
 
 #: qtplugins/plotconformer/plotconformer.h:36
 msgid "PlotConformer"
-msgstr ""
+msgstr "PlotKonformer"
 
 #: qtplugins/plotconformer/plotconformer.h:81
 msgid "Generate and plot conformer data (RMSD or energy)."
-msgstr ""
+msgstr "Hasilkan dan plot data konformer (RMSD atau energi)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -5079,11 +5079,11 @@ msgstr "Hapus Batasan"
 #: qtplugins/qtaim/qtaimwavefunction.h:82
 #, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "Tidak dapat membaca berkas %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Gagal membuat berkas sementara."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5457,12 +5457,12 @@ msgstr "Raman"
 #: qtplugins/spectra/spectradialog.cpp:560
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "CD Vibrasional"
 
 #: qtplugins/spectra/spectradialog.cpp:564
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "CD Magnetik"
 
 #: qtplugins/spectra/spectradialog.cpp:568
 msgid "NMR"
@@ -5495,7 +5495,7 @@ msgstr "Pilih Warna Spektrum yang Dihitung"
 
 #: qtplugins/spectra/spectradialog.cpp:671
 msgid "Select Raw Spectra Color"
-msgstr ""
+msgstr "Pilih Warna Spektra Mentah"
 
 #: qtplugins/spectra/spectradialog.cpp:684
 msgid "Select Imported Spectra Color"
@@ -5539,11 +5539,11 @@ msgstr "Intensitas"
 
 #: qtplugins/spectra/spectradialog.cpp:764
 msgid "Vibrational Circular Dichroism"
-msgstr ""
+msgstr "Dikroisme Sirkular Vibrasional"
 
 #: qtplugins/spectra/spectradialog.cpp:777
 msgid "Magnetic Circular Dichroism"
-msgstr ""
+msgstr "Dikroisme Sirkular Magnetik"
 
 #: qtplugins/spectra/spectradialog.cpp:790
 msgid "NMR Spectra"
@@ -5584,15 +5584,15 @@ msgstr "Mentah"
 
 #: qtplugins/spectra/spectradialog.cpp:971
 msgid "Imported"
-msgstr ""
+msgstr "Diimpor"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "Import Data"
-msgstr ""
+msgstr "Impor Data"
 
 #: qtplugins/spectra/spectradialog.cpp:1006
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
-msgstr ""
+msgstr "Berkas CSV (*.csv);;Berkas TSV (*.tsv)"
 
 #: qtplugins/surfacerender/surfacerender.cpp:263
 msgid "Surface"
@@ -5752,7 +5752,7 @@ msgstr "Perhitungan persentase orbital molekul %L1"
 #: qtplugins/surfaces/surfaces.cpp:879
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
-msgstr ""
+msgstr "Permukaan Selesai"
 
 #: qtplugins/surfaces/surfaces.cpp:890 qtplugins/surfaces/surfaces.cpp:918
 msgid "Movie AVI (*.avi)"
@@ -7099,12 +7099,12 @@ msgstr "Ganda"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Peptide Builder"
-msgstr ""
+msgstr "Pembuat Peptida"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:46
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton)
 msgid "Alanine"
-msgstr ""
+msgstr "Alanin"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:49
 #. i18n: ectx: property (text), widget (QToolButton, toolButton)
@@ -7204,7 +7204,7 @@ msgstr "Ile"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:146
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_19)
 msgid "Valine"
-msgstr ""
+msgstr "Valin"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:149
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_19)
@@ -7214,7 +7214,7 @@ msgstr "Val"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_18)
 msgid "Tyrosine"
-msgstr ""
+msgstr "Tirosin"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:159
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_18)
@@ -7259,7 +7259,7 @@ msgstr "Prolin"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:199
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_14)
 msgid "Pro"
-msgstr ""
+msgstr "Pro"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:206
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_13)
@@ -7304,7 +7304,7 @@ msgstr "Leu"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:263
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Amino Acids:"
-msgstr ""
+msgstr "Asam Amino:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:270
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7329,7 +7329,7 @@ msgstr "C Terminus:"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:369
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Structure:"
-msgstr ""
+msgstr "Struktur:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:377
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
@@ -7339,22 +7339,22 @@ msgstr "Rantai Lurus"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:382
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "α Helix"
-msgstr ""
+msgstr "Heliks α"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "β Sheet"
-msgstr ""
+msgstr "Lembaran β"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:392
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "3-10 Helix"
-msgstr ""
+msgstr "Heliks 3-10"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:397
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "π Helix"
-msgstr ""
+msgstr "Heliks π"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -8791,7 +8791,7 @@ msgstr "Spektrum yang dihitung:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "Raw Spectra:"
-msgstr ""
+msgstr "Spektra Mentah:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
@@ -9438,7 +9438,8 @@ msgstr ""
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "Email anda"
+msgstr ""
+"avogadro-devel@lists.sourceforge.net,hay@samsul.web.id,arifpedia@gmail.com"
 
 #~ msgid " & "
 #~ msgstr " & "
