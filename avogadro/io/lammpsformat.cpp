@@ -406,6 +406,7 @@ std::vector<std::string> LammpsTrajectoryFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("dump");
+  ext.emplace_back("lammpstrj");
   return ext;
 }
 
