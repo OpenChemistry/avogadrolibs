@@ -160,6 +160,12 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
   }
 
+  if (x_idx == SIZE_MAX || y_idx == SIZE_MAX || z_idx == SIZE_MAX ||
+      type_idx == SIZE_MAX) {
+    appendError("Failed to parse attributes: " + buffer);
+    return false;
+  }
+
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
     getline(inStream, buffer);
@@ -353,6 +359,12 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       } else if (labels[i] == "id") {
         id_idx = i;
       }
+    }
+
+    if (x_idx == SIZE_MAX || y_idx == SIZE_MAX || z_idx == SIZE_MAX ||
+        type_idx == SIZE_MAX) {
+      appendError("Failed to parse attributes: " + buffer);
+      return false;
     }
 
     Array<Vector3> positions;
