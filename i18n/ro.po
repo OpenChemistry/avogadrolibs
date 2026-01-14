@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-30 03:03+0000\n"
+"POT-Creation-Date: 2026-01-11 03:18+0000\n"
 "PO-Revision-Date: 2025-12-01 23:00+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -1331,14 +1331,14 @@ msgstr "Creează o nouă vizualizare"
 msgid "Periodic Table"
 msgstr "Tabelul periodic"
 
-#: qtgui/pythonscript.cpp:184 qtgui/pythonscript.cpp:272
+#: qtgui/pythonscript.cpp:186 qtgui/pythonscript.cpp:274
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Eroare la rularea scriptului „%1 %2”: Timpul de așteptare pentru pornirea "
 "(%3) a expirat."
 
-#: qtgui/pythonscript.cpp:194 qtgui/pythonscript.cpp:282
+#: qtgui/pythonscript.cpp:196 qtgui/pythonscript.cpp:284
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1347,14 +1347,14 @@ msgstr ""
 "Eroare la rularea scriptului „%1 %2”: nu s-a reușit scrierea la intrarea "
 "standard (lung.=%3, s-au scris %4 octeți, eroare QProcess: %5)."
 
-#: qtgui/pythonscript.cpp:207
+#: qtgui/pythonscript.cpp:209
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Eroare la rularea scriptului „%1 %2”: A expirat timpul de așteptare pentru "
 "finalizare (%3)."
 
-#: qtgui/pythonscript.cpp:216
+#: qtgui/pythonscript.cpp:218
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1367,32 +1367,32 @@ msgstr ""
 "Ieșire:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:225
+#: qtgui/pythonscript.cpp:227
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Avertisment „%1”"
 
-#: qtgui/pythonscript.cpp:347
+#: qtgui/pythonscript.cpp:349
 msgid "Script failed to start."
 msgstr "Scriptul a eșuat la pornire."
 
-#: qtgui/pythonscript.cpp:350
+#: qtgui/pythonscript.cpp:352
 msgid "Script crashed."
 msgstr "Scriptul s-a blocat."
 
-#: qtgui/pythonscript.cpp:353
+#: qtgui/pythonscript.cpp:355
 msgid "Script timed out."
 msgstr "Scriptul a depășit timpul de așteptare."
 
-#: qtgui/pythonscript.cpp:356
+#: qtgui/pythonscript.cpp:358
 msgid "Read error."
 msgstr "Eroare la citire."
 
-#: qtgui/pythonscript.cpp:359
+#: qtgui/pythonscript.cpp:361
 msgid "Write error."
 msgstr "Eroare la scriere."
 
-#: qtgui/pythonscript.cpp:363
+#: qtgui/pythonscript.cpp:365
 msgid "Unknown error."
 msgstr "Eroare necunoscută."
 
@@ -1430,7 +1430,7 @@ msgid "Add Atom"
 msgstr "Adăugare atom"
 
 #: qtgui/rwmolecule.cpp:73 qtgui/rwmolecule.cpp:88
-#: qtplugins/editor/editor.cpp:135
+#: qtplugins/editor/editor.cpp:142
 msgid "Remove Atom"
 msgstr "Eliminare atom"
 
@@ -1816,7 +1816,8 @@ msgid "PQR Files (*.pqr)"
 msgstr "Fișiere PQR (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
-#: qtplugins/apbs/apbsdialog.cpp:189 qtplugins/commandscripts/command.cpp:139
+#: qtplugins/apbs/apbsdialog.cpp:166 qtplugins/apbs/apbsdialog.cpp:189
+#: qtplugins/commandscripts/command.cpp:139
 #: qtplugins/cp2kinput/cp2kinput.cpp:85 qtplugins/fetchpdb/fetchpdb.cpp:143
 #: qtplugins/gamessinput/gamessinput.cpp:86
 #: qtplugins/insertfragment/insertfragment.cpp:107
@@ -1858,6 +1859,21 @@ msgstr "Eroare la rularea APBS: %1"
 msgid "Please specify PDB file"
 msgstr "Vă rugăm să specificați fișierul PDB"
 
+#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
+#: qtplugins/apbs/apbsdialog.cpp:161 qtplugins/apbs/apbsdialog.cpp:178
+msgid "Success"
+msgstr "Succes"
+
+#: qtplugins/apbs/apbsdialog.cpp:162
+#, qt-format
+msgid "Generated %1"
+msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:166
+msgid "Error running PDB2PQR"
+msgstr ""
+
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
 msgstr "Salvează fișierul de intrare APBS"
@@ -1865,12 +1881,6 @@ msgstr "Salvează fișierul de intrare APBS"
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
 msgstr "Intrare APBS (*.in)"
-
-#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
-#: qtplugins/apbs/apbsdialog.cpp:178:156
-msgid "Success"
-msgstr "Succes"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
@@ -1880,7 +1890,7 @@ msgstr "Fișier de intrare scris la „%1”"
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
 #: qtplugins/playertool/playertool.cpp:419
 #: qtplugins/plugindownloader/downloaderwidget.cpp:409
-#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:998
+#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:999
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Nu se poate salva fișierul %1."
@@ -2047,8 +2057,8 @@ msgid "Apply color schemes to atoms and residues."
 msgstr "Aplicați scheme de culori pentru atomi și reziduuri."
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:42
-#: qtplugins/resetview/resetview.cpp:76
+#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:40
+#: qtplugins/resetview/resetview.cpp:77
 msgid "&View"
 msgstr "&Vizualizare"
 
@@ -2228,7 +2238,7 @@ msgid "%L1°"
 msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:804
-#: qtplugins/editor/editor.cpp:250 qtplugins/measuretool/measuretool.cpp:226
+#: qtplugins/editor/editor.cpp:257 qtplugins/measuretool/measuretool.cpp:226
 #: qtplugins/measuretool/measuretool.cpp:227
 #: qtplugins/measuretool/measuretool.cpp:229
 #, qt-format
@@ -3154,7 +3164,7 @@ msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr "Ctrl+2"
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
 msgstr "Desenare"
 
@@ -3172,24 +3182,24 @@ msgstr ""
 "legături\n"
 "Butonul drept al mouse-ului:\tȘterge atomul"
 
-#: qtplugins/editor/editor.cpp:116
+#: qtplugins/editor/editor.cpp:123
 msgid "Draw Atom"
 msgstr "Desenează atom"
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:133
 msgid "Change Bond Type"
 msgstr "Schimbă tipul legăturii"
 
-#: qtplugins/editor/editor.cpp:139
+#: qtplugins/editor/editor.cpp:146
 msgid "Remove Bond"
 msgstr "Elimină legătura"
 
-#: qtplugins/editor/editor.cpp:245 qtplugins/measuretool/measuretool.cpp:200
+#: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:225
 msgid "Distance:"
 msgstr "Distanța:"
 
-#: qtplugins/editor/editor.cpp:248
+#: qtplugins/editor/editor.cpp:255
 #, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -3287,11 +3297,11 @@ msgid "Download PDB models from the Protein Data Bank"
 msgstr ""
 "Descarcă modele PDB din banca de date de proteine („Protein Data Bank”: PDB)"
 
-#: qtplugins/focus/focus.cpp:22
+#: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
 msgstr "Selectare focalizare"
 
-#: qtplugins/focus/focus.cpp:23
+#: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
 msgstr "Eliminare focalizare"
 
@@ -3354,8 +3364,8 @@ msgstr "Separă atomii selectați"
 #: qtplugins/forcefield/forcefield.cpp:517
 #: qtplugins/forcefield/forcefield.cpp:587
 #: qtplugins/playertool/playertool.cpp:386
-#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:941
-#: qtplugins/surfaces/surfaces.cpp:985 qtplugins/surfaces/surfaces.cpp:997
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:942
+#: qtplugins/surfaces/surfaces.cpp:986 qtplugins/surfaces/surfaces.cpp:998
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
@@ -4571,7 +4581,7 @@ msgstr ""
 msgid "Movie (*.avi)"
 msgstr "Videoclip (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:986
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:987
 msgid "Error: cannot add frame to video."
 msgstr "Eroare: nu se poate adăuga un cadru la video."
 
@@ -5160,15 +5170,15 @@ msgstr "Intrare cuantică"
 msgid "Generate input for quantum codes."
 msgstr "Generează date de intrare pentru codurile cuantice."
 
-#: qtplugins/resetview/resetview.cpp:38
+#: qtplugins/resetview/resetview.cpp:39
 msgid "Center"
 msgstr "Centrare"
 
-#: qtplugins/resetview/resetview.cpp:39
+#: qtplugins/resetview/resetview.cpp:40
 msgid "Align View to Axes"
 msgstr "Aliniază vizualizarea cu axele"
 
-#: qtplugins/resetview/resetview.cpp:52
+#: qtplugins/resetview/resetview.cpp:53
 msgid "Align view to axes."
 msgstr "Aliniază vizualizarea cu axele."
 
@@ -5804,6 +5814,10 @@ msgstr "Exportare videoclip"
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Videoclip MP4 (*.mp4);; Videoclip AVI (*.avi);; GIF (*.gif)"
 
+#: qtplugins/surfaces/surfaces.cpp:943
+msgid "Couldn't find the active render widget, failing."
+msgstr ""
+
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
 msgstr "Citește și redă suprafețele."
@@ -5880,21 +5894,21 @@ msgstr ""
 "Selectați un ligand sau un grup funcțional și faceți clic pe un atom de "
 "hidrogen pentru a-l atașa."
 
-#: qtplugins/templatetool/templatetool.cpp:404
-#: qtplugins/templatetool/templatetool.cpp:572
+#: qtplugins/templatetool/templatetool.cpp:406
+#: qtplugins/templatetool/templatetool.cpp:574
 msgid "Clipboard"
 msgstr "Clipboard"
 
-#: qtplugins/templatetool/templatetool.cpp:492
+#: qtplugins/templatetool/templatetool.cpp:494
 msgid "Insert Template"
 msgstr "Inserare șablon"
 
-#: qtplugins/templatetool/templatetool.cpp:790
+#: qtplugins/templatetool/templatetool.cpp:792
 msgid "Insert Ligand"
 msgstr "Inserare ligand"
 
-#: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
+#: qtplugins/templatetool/templatetool.h:37
 msgid "Template tool"
 msgstr "Instrument de șablon"
 

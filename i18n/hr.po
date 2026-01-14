@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-30 03:03+0000\n"
+"POT-Creation-Date: 2026-01-11 03:18+0000\n"
 "PO-Revision-Date: 2025-11-23 22:51+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -1320,12 +1320,12 @@ msgstr "Stvori novi prikaz"
 msgid "Periodic Table"
 msgstr "Periodni sustav elemenata"
 
-#: qtgui/pythonscript.cpp:184 qtgui/pythonscript.cpp:272
+#: qtgui/pythonscript.cpp:186 qtgui/pythonscript.cpp:274
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:194 qtgui/pythonscript.cpp:282
+#: qtgui/pythonscript.cpp:196 qtgui/pythonscript.cpp:284
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1334,12 +1334,12 @@ msgstr ""
 "Greška pri pokretanju skripte '%1 %2': neuspelo pisanje u stdin (len=%3, "
 "zapisano %4 bajta, QProcess greška: %5)."
 
-#: qtgui/pythonscript.cpp:207
+#: qtgui/pythonscript.cpp:209
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:216
+#: qtgui/pythonscript.cpp:218
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1353,32 +1353,32 @@ msgstr ""
 "Rezultat:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:225
+#: qtgui/pythonscript.cpp:227
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Upozorenje „%1”"
 
-#: qtgui/pythonscript.cpp:347
+#: qtgui/pythonscript.cpp:349
 msgid "Script failed to start."
 msgstr "Pokretanje skripta nije uspelo."
 
-#: qtgui/pythonscript.cpp:350
+#: qtgui/pythonscript.cpp:352
 msgid "Script crashed."
 msgstr "Neočekivan prekid skripta."
 
-#: qtgui/pythonscript.cpp:353
+#: qtgui/pythonscript.cpp:355
 msgid "Script timed out."
 msgstr "Vrijeme izvršavanja skripta je isteklo."
 
-#: qtgui/pythonscript.cpp:356
+#: qtgui/pythonscript.cpp:358
 msgid "Read error."
 msgstr "Greška pri čitanju."
 
-#: qtgui/pythonscript.cpp:359
+#: qtgui/pythonscript.cpp:361
 msgid "Write error."
 msgstr "Greška pri pisanju."
 
-#: qtgui/pythonscript.cpp:363
+#: qtgui/pythonscript.cpp:365
 msgid "Unknown error."
 msgstr "Nepoznata greška."
 
@@ -1416,7 +1416,7 @@ msgid "Add Atom"
 msgstr "Dodaj atom"
 
 #: qtgui/rwmolecule.cpp:73 qtgui/rwmolecule.cpp:88
-#: qtplugins/editor/editor.cpp:135
+#: qtplugins/editor/editor.cpp:142
 msgid "Remove Atom"
 msgstr "Ukloni atom"
 
@@ -1802,7 +1802,8 @@ msgid "PQR Files (*.pqr)"
 msgstr "PQR datoteke (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
-#: qtplugins/apbs/apbsdialog.cpp:189 qtplugins/commandscripts/command.cpp:139
+#: qtplugins/apbs/apbsdialog.cpp:166 qtplugins/apbs/apbsdialog.cpp:189
+#: qtplugins/commandscripts/command.cpp:139
 #: qtplugins/cp2kinput/cp2kinput.cpp:85 qtplugins/fetchpdb/fetchpdb.cpp:143
 #: qtplugins/gamessinput/gamessinput.cpp:86
 #: qtplugins/insertfragment/insertfragment.cpp:107
@@ -1844,6 +1845,21 @@ msgstr "Greška pri pokretanju APBS-a: %1"
 msgid "Please specify PDB file"
 msgstr "Navedi PDB datoteku"
 
+#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
+#: qtplugins/apbs/apbsdialog.cpp:161 qtplugins/apbs/apbsdialog.cpp:178
+msgid "Success"
+msgstr "Uspjeh"
+
+#: qtplugins/apbs/apbsdialog.cpp:162
+#, qt-format
+msgid "Generated %1"
+msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:166
+msgid "Error running PDB2PQR"
+msgstr ""
+
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
 msgstr "Spremi APBS datoteku unosa"
@@ -1851,12 +1867,6 @@ msgstr "Spremi APBS datoteku unosa"
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
 msgstr "APBS unos (*.in)"
-
-#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
-#: qtplugins/apbs/apbsdialog.cpp:178:156
-msgid "Success"
-msgstr "Uspjeh"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
@@ -1866,7 +1876,7 @@ msgstr "Datoteka unosa zapisana u '%1'"
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
 #: qtplugins/playertool/playertool.cpp:419
 #: qtplugins/plugindownloader/downloaderwidget.cpp:409
-#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:998
+#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:999
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Nije moguće spremiti datoteku %1."
@@ -2033,8 +2043,8 @@ msgid "Apply color schemes to atoms and residues."
 msgstr "Primijeni sheme boja na atome i ostatke."
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:42
-#: qtplugins/resetview/resetview.cpp:76
+#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:40
+#: qtplugins/resetview/resetview.cpp:77
 msgid "&View"
 msgstr "&Prikaz"
 
@@ -2198,7 +2208,7 @@ msgid "%L1°"
 msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:804
-#: qtplugins/editor/editor.cpp:250 qtplugins/measuretool/measuretool.cpp:226
+#: qtplugins/editor/editor.cpp:257 qtplugins/measuretool/measuretool.cpp:226
 #: qtplugins/measuretool/measuretool.cpp:227
 #: qtplugins/measuretool/measuretool.cpp:229
 #, qt-format
@@ -3119,7 +3129,7 @@ msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr "Ctrl+2"
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
 msgstr "Crtaj"
 
@@ -3136,24 +3146,24 @@ msgstr ""
 "Lijeva tipka miša: Klikni i povuci za stvaranje atoma i veza\n"
 "Desna tipka miša: Izbriši atom"
 
-#: qtplugins/editor/editor.cpp:116
+#: qtplugins/editor/editor.cpp:123
 msgid "Draw Atom"
 msgstr "Crtaj atom"
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:133
 msgid "Change Bond Type"
 msgstr "Promijeni vrstu veze"
 
-#: qtplugins/editor/editor.cpp:139
+#: qtplugins/editor/editor.cpp:146
 msgid "Remove Bond"
 msgstr "Ukloni vezu"
 
-#: qtplugins/editor/editor.cpp:245 qtplugins/measuretool/measuretool.cpp:200
+#: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:225
 msgid "Distance:"
 msgstr "Udaljenost:"
 
-#: qtplugins/editor/editor.cpp:248
+#: qtplugins/editor/editor.cpp:255
 #, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -3249,11 +3259,11 @@ msgstr "Dohvati iz PDB-a"
 msgid "Download PDB models from the Protein Data Bank"
 msgstr "Preuzmi PDB modele iz „Protein Data Bank” baze podataka"
 
-#: qtplugins/focus/focus.cpp:22
+#: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
 msgstr "Fokusiraj odabir"
 
-#: qtplugins/focus/focus.cpp:23
+#: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
 msgstr "Defokusiraj"
 
@@ -3316,8 +3326,8 @@ msgstr "Odspoji odabrane atome"
 #: qtplugins/forcefield/forcefield.cpp:517
 #: qtplugins/forcefield/forcefield.cpp:587
 #: qtplugins/playertool/playertool.cpp:386
-#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:941
-#: qtplugins/surfaces/surfaces.cpp:985 qtplugins/surfaces/surfaces.cpp:997
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:942
+#: qtplugins/surfaces/surfaces.cpp:986 qtplugins/surfaces/surfaces.cpp:998
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
@@ -4524,7 +4534,7 @@ msgstr "GIF format ne podržava broj sličica u sekundi iznad 100 FPS."
 msgid "Movie (*.avi)"
 msgstr "Video (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:986
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:987
 msgid "Error: cannot add frame to video."
 msgstr "Greška: nije moguće dodati kadar u video."
 
@@ -5111,15 +5121,15 @@ msgstr "Kvantni unos"
 msgid "Generate input for quantum codes."
 msgstr "Generiraj unos za kvantne kodove."
 
-#: qtplugins/resetview/resetview.cpp:38
+#: qtplugins/resetview/resetview.cpp:39
 msgid "Center"
 msgstr "Centriraj"
 
-#: qtplugins/resetview/resetview.cpp:39
+#: qtplugins/resetview/resetview.cpp:40
 msgid "Align View to Axes"
 msgstr "Poravnaj prikaz prema osima"
 
-#: qtplugins/resetview/resetview.cpp:52
+#: qtplugins/resetview/resetview.cpp:53
 msgid "Align view to axes."
 msgstr "Poravnaj prikaz prema osima."
 
@@ -5751,6 +5761,10 @@ msgstr "Izvezi video"
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Video MP4 (*.mp4);;Video AVI (*.avi);;GIF (*.gif)"
 
+#: qtplugins/surfaces/surfaces.cpp:943
+msgid "Couldn't find the active render widget, failing."
+msgstr ""
+
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
 msgstr "Čitaj i iscrtaj površine."
@@ -5826,21 +5840,21 @@ msgstr ""
 "\n"
 "Odaberi ligand ili funkcionalnu grupu i klikni na atom vodika za spajanje."
 
-#: qtplugins/templatetool/templatetool.cpp:404
-#: qtplugins/templatetool/templatetool.cpp:572
+#: qtplugins/templatetool/templatetool.cpp:406
+#: qtplugins/templatetool/templatetool.cpp:574
 msgid "Clipboard"
 msgstr "Međuspremnik"
 
-#: qtplugins/templatetool/templatetool.cpp:492
+#: qtplugins/templatetool/templatetool.cpp:494
 msgid "Insert Template"
 msgstr "Umetni predložak"
 
-#: qtplugins/templatetool/templatetool.cpp:790
+#: qtplugins/templatetool/templatetool.cpp:792
 msgid "Insert Ligand"
 msgstr "Umetni ligande"
 
-#: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
+#: qtplugins/templatetool/templatetool.h:37
 msgid "Template tool"
 msgstr "Alat za predloške"
 

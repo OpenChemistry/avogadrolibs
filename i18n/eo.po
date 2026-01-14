@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-30 03:03+0000\n"
+"POT-Creation-Date: 2026-01-11 03:18+0000\n"
 "PO-Revision-Date: 2025-08-27 08:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
@@ -1317,14 +1317,14 @@ msgstr "Krei novan vidon"
 msgid "Periodic Table"
 msgstr "Perioda Tabelo"
 
-#: qtgui/pythonscript.cpp:184 qtgui/pythonscript.cpp:272
+#: qtgui/pythonscript.cpp:186 qtgui/pythonscript.cpp:274
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Eraro pri rulado de programeto '%1 %2': Templimo elĉerpiĝis dum atendado de "
 "komenco (%3)."
 
-#: qtgui/pythonscript.cpp:194 qtgui/pythonscript.cpp:282
+#: qtgui/pythonscript.cpp:196 qtgui/pythonscript.cpp:284
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1333,14 +1333,14 @@ msgstr ""
 "Eraro pri rulado de programeto '%1 %2': malsukcesis skribi al ĉefenigujo "
 "(longo=%3, skribis %4 bajtojn, QProcess-eraro: %5)."
 
-#: qtgui/pythonscript.cpp:207
+#: qtgui/pythonscript.cpp:209
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Eraro pri rulado de programeto '%1 %2': Templimo elĉerpiĝis dum atendado de "
 "fino (%3)."
 
-#: qtgui/pythonscript.cpp:216
+#: qtgui/pythonscript.cpp:218
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1353,32 +1353,32 @@ msgstr ""
 "Eligo:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:225
+#: qtgui/pythonscript.cpp:227
 #, qt-format
 msgid "Warning '%1'"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:347
+#: qtgui/pythonscript.cpp:349
 msgid "Script failed to start."
 msgstr "Malsukcesis lanĉo de programeto."
 
-#: qtgui/pythonscript.cpp:350
+#: qtgui/pythonscript.cpp:352
 msgid "Script crashed."
 msgstr "Programeto kolapsis."
 
-#: qtgui/pythonscript.cpp:353
+#: qtgui/pythonscript.cpp:355
 msgid "Script timed out."
 msgstr "Programeto elĉerpis templimon."
 
-#: qtgui/pythonscript.cpp:356
+#: qtgui/pythonscript.cpp:358
 msgid "Read error."
 msgstr "Eraro pri legado."
 
-#: qtgui/pythonscript.cpp:359
+#: qtgui/pythonscript.cpp:361
 msgid "Write error."
 msgstr "Eraro pri skribado."
 
-#: qtgui/pythonscript.cpp:363
+#: qtgui/pythonscript.cpp:365
 msgid "Unknown error."
 msgstr "Nekonata eraro."
 
@@ -1416,7 +1416,7 @@ msgid "Add Atom"
 msgstr "Aldoni Atomon"
 
 #: qtgui/rwmolecule.cpp:73 qtgui/rwmolecule.cpp:88
-#: qtplugins/editor/editor.cpp:135
+#: qtplugins/editor/editor.cpp:142
 msgid "Remove Atom"
 msgstr "Forigi Atomon"
 
@@ -1795,7 +1795,8 @@ msgid "PQR Files (*.pqr)"
 msgstr "PQR-Dosieroj (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
-#: qtplugins/apbs/apbsdialog.cpp:189 qtplugins/commandscripts/command.cpp:139
+#: qtplugins/apbs/apbsdialog.cpp:166 qtplugins/apbs/apbsdialog.cpp:189
+#: qtplugins/commandscripts/command.cpp:139
 #: qtplugins/cp2kinput/cp2kinput.cpp:85 qtplugins/fetchpdb/fetchpdb.cpp:143
 #: qtplugins/gamessinput/gamessinput.cpp:86
 #: qtplugins/insertfragment/insertfragment.cpp:107
@@ -1837,6 +1838,21 @@ msgstr "Eraro pri rulado de APBS: %1"
 msgid "Please specify PDB file"
 msgstr "Bonvolu specifi PDB-dosieron"
 
+#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
+#: qtplugins/apbs/apbsdialog.cpp:161 qtplugins/apbs/apbsdialog.cpp:178
+msgid "Success"
+msgstr "Sukceso"
+
+#: qtplugins/apbs/apbsdialog.cpp:162
+#, qt-format
+msgid "Generated %1"
+msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:166
+msgid "Error running PDB2PQR"
+msgstr ""
+
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
 msgstr "Konservi Enigan Dosieron de APBS"
@@ -1844,12 +1860,6 @@ msgstr "Konservi Enigan Dosieron de APBS"
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
 msgstr ""
-
-#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
-#: qtplugins/apbs/apbsdialog.cpp:178:156
-msgid "Success"
-msgstr "Sukceso"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
@@ -1859,7 +1869,7 @@ msgstr "Eniga dosiero skribita al '%1'"
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
 #: qtplugins/playertool/playertool.cpp:419
 #: qtplugins/plugindownloader/downloaderwidget.cpp:409
-#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:998
+#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:999
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Ne povas konservi dosieron %1."
@@ -2029,8 +2039,8 @@ msgid "Apply color schemes to atoms and residues."
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:42
-#: qtplugins/resetview/resetview.cpp:76
+#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:40
+#: qtplugins/resetview/resetview.cpp:77
 msgid "&View"
 msgstr "&Vidi"
 
@@ -2186,7 +2196,7 @@ msgid "%L1°"
 msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:804
-#: qtplugins/editor/editor.cpp:250 qtplugins/measuretool/measuretool.cpp:226
+#: qtplugins/editor/editor.cpp:257 qtplugins/measuretool/measuretool.cpp:226
 #: qtplugins/measuretool/measuretool.cpp:227
 #: qtplugins/measuretool/measuretool.cpp:229
 #, qt-format
@@ -3125,7 +3135,7 @@ msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
 msgstr "Desegni"
 
@@ -3138,24 +3148,24 @@ msgid ""
 "Right Mouse:\tDelete Atom"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:116
+#: qtplugins/editor/editor.cpp:123
 msgid "Draw Atom"
 msgstr "Desegni Atomon"
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:133
 msgid "Change Bond Type"
 msgstr "Ŝanĝi Ligan Tipon"
 
-#: qtplugins/editor/editor.cpp:139
+#: qtplugins/editor/editor.cpp:146
 msgid "Remove Bond"
 msgstr "Forigi Ligon"
 
-#: qtplugins/editor/editor.cpp:245 qtplugins/measuretool/measuretool.cpp:200
+#: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:225
 msgid "Distance:"
 msgstr "Distanco:"
 
-#: qtplugins/editor/editor.cpp:248
+#: qtplugins/editor/editor.cpp:255
 #, fuzzy, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -3252,11 +3262,11 @@ msgstr "Elŝuti el PDB"
 msgid "Download PDB models from the Protein Data Bank"
 msgstr "Elŝuti PDB-modelojn el la Proteina Datenbanko"
 
-#: qtplugins/focus/focus.cpp:22
+#: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
 msgstr ""
 
-#: qtplugins/focus/focus.cpp:23
+#: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
 msgstr ""
 
@@ -3320,8 +3330,8 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:517
 #: qtplugins/forcefield/forcefield.cpp:587
 #: qtplugins/playertool/playertool.cpp:386
-#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:941
-#: qtplugins/surfaces/surfaces.cpp:985 qtplugins/surfaces/surfaces.cpp:997
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:942
+#: qtplugins/surfaces/surfaces.cpp:986 qtplugins/surfaces/surfaces.cpp:998
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
@@ -4534,7 +4544,7 @@ msgstr "La GIF-dosierformo ne subtenas filmerojn pli ol po 100 en sekundo."
 msgid "Movie (*.avi)"
 msgstr "Filmeto (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:986
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:987
 msgid "Error: cannot add frame to video."
 msgstr "Eraro: ne povas aldoni filmeron al filmeto."
 
@@ -5136,15 +5146,15 @@ msgstr "Kvantuma enigo"
 msgid "Generate input for quantum codes."
 msgstr "Generi enigon por kvantumaj kodoj."
 
-#: qtplugins/resetview/resetview.cpp:38
+#: qtplugins/resetview/resetview.cpp:39
 msgid "Center"
 msgstr "Centrigi"
 
-#: qtplugins/resetview/resetview.cpp:39
+#: qtplugins/resetview/resetview.cpp:40
 msgid "Align View to Axes"
 msgstr "Rektigi Vidon laŭ Aksoj"
 
-#: qtplugins/resetview/resetview.cpp:52
+#: qtplugins/resetview/resetview.cpp:53
 #, fuzzy
 msgid "Align view to axes."
 msgstr "Rektigi Vidon laŭ Aksoj"
@@ -5781,6 +5791,10 @@ msgstr "Eksporti Filmeton"
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "MP4-Filmeto (*.mp4);;AVI-Filmeto (*.avi);;GIF (*.gif)"
 
+#: qtplugins/surfaces/surfaces.cpp:943
+msgid "Couldn't find the active render widget, failing."
+msgstr ""
+
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
 msgstr "Legi kaj montri surfacojn."
@@ -5850,21 +5864,21 @@ msgid ""
 "it."
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:404
-#: qtplugins/templatetool/templatetool.cpp:572
+#: qtplugins/templatetool/templatetool.cpp:406
+#: qtplugins/templatetool/templatetool.cpp:574
 msgid "Clipboard"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:492
+#: qtplugins/templatetool/templatetool.cpp:494
 msgid "Insert Template"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:790
+#: qtplugins/templatetool/templatetool.cpp:792
 msgid "Insert Ligand"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
+#: qtplugins/templatetool/templatetool.h:37
 msgid "Template tool"
 msgstr ""
 
