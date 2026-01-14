@@ -679,7 +679,7 @@ public:
       Real r1 = std::hypot(dx1, dy1, dz1);
       Real r2 = std::hypot(dx2, dy2, dz2);
       Real dot = dx1 * dx2 + dy1 * dy2 + dz1 * dz2;
-      Real theta = acos(dot / (r1 * r2));
+      Real theta = acos(std::clamp(dot / (r1 * r2), -1.0, 1.0));
 
       /*
             std::cout << " Angle " << angle.coordination << " " << i << " " << j
