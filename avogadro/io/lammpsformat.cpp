@@ -428,7 +428,10 @@ bool LammpsDataFormat::read(std::istream&, Core::Molecule&)
 bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 {
   Core::Molecule mol2(mol);
-  CrystalTools::rotateToStandardOrientation(mol2, CrystalTools::TransformAtoms);
+  // enforce right-handed cell
+  // https://docs.lammps.org/read_data.html#header-specification-of-the-simulation-box-size-and-shape
+  CrystalTools::rotateToStandardOrientation(mol2, CrystalTools::TransformAtoms |
+                                                    CrystalTools::RightHanded);
 
   // Title
   if (mol2.data("name").toString().length())
