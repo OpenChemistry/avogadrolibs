@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-30 03:03+0000\n"
+"POT-Creation-Date: 2026-01-11 03:18+0000\n"
 "PO-Revision-Date: 2025-10-12 16:07+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
@@ -1320,14 +1320,14 @@ msgstr "Yeni bir görünüm oluştur"
 msgid "Periodic Table"
 msgstr "Periyodik Cetvel"
 
-#: qtgui/pythonscript.cpp:184 qtgui/pythonscript.cpp:272
+#: qtgui/pythonscript.cpp:186 qtgui/pythonscript.cpp:274
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "'%1 %2' komut dosyası çalıştırılırken hata oluştu: Başlatma için bekleme "
 "süresi doldu (%3)."
 
-#: qtgui/pythonscript.cpp:194 qtgui/pythonscript.cpp:282
+#: qtgui/pythonscript.cpp:196 qtgui/pythonscript.cpp:284
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1336,14 +1336,14 @@ msgstr ""
 "'%1 %2' komut dosyası çalıştırılırken hata: stdin'e yazılamadı (len = %3, %4 "
 "bayt yazdı, QProcess hatası: %5)."
 
-#: qtgui/pythonscript.cpp:207
+#: qtgui/pythonscript.cpp:209
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "'%1 %2' komut dosyası çalıştırılırken hata oluştu: Bitiş için bekleme süresi "
 "doldu (%3)."
 
-#: qtgui/pythonscript.cpp:216
+#: qtgui/pythonscript.cpp:218
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1357,32 +1357,32 @@ msgstr ""
 "Çıktı:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:225
+#: qtgui/pythonscript.cpp:227
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Uyarı '%1'"
 
-#: qtgui/pythonscript.cpp:347
+#: qtgui/pythonscript.cpp:349
 msgid "Script failed to start."
 msgstr "Betik başlatılamadı."
 
-#: qtgui/pythonscript.cpp:350
+#: qtgui/pythonscript.cpp:352
 msgid "Script crashed."
 msgstr "Komut dosyası çöktü."
 
-#: qtgui/pythonscript.cpp:353
+#: qtgui/pythonscript.cpp:355
 msgid "Script timed out."
 msgstr "Komut dosyası zaman aşımına uğradı."
 
-#: qtgui/pythonscript.cpp:356
+#: qtgui/pythonscript.cpp:358
 msgid "Read error."
 msgstr "Okuma hatası."
 
-#: qtgui/pythonscript.cpp:359
+#: qtgui/pythonscript.cpp:361
 msgid "Write error."
 msgstr "Yazma hatası."
 
-#: qtgui/pythonscript.cpp:363
+#: qtgui/pythonscript.cpp:365
 msgid "Unknown error."
 msgstr "Bilinmeyen hata."
 
@@ -1420,7 +1420,7 @@ msgid "Add Atom"
 msgstr "Atom Ekle"
 
 #: qtgui/rwmolecule.cpp:73 qtgui/rwmolecule.cpp:88
-#: qtplugins/editor/editor.cpp:135
+#: qtplugins/editor/editor.cpp:142
 msgid "Remove Atom"
 msgstr "Atomu Kaldır"
 
@@ -1804,7 +1804,8 @@ msgid "PQR Files (*.pqr)"
 msgstr "PQR Dosyaları (* .pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
-#: qtplugins/apbs/apbsdialog.cpp:189 qtplugins/commandscripts/command.cpp:139
+#: qtplugins/apbs/apbsdialog.cpp:166 qtplugins/apbs/apbsdialog.cpp:189
+#: qtplugins/commandscripts/command.cpp:139
 #: qtplugins/cp2kinput/cp2kinput.cpp:85 qtplugins/fetchpdb/fetchpdb.cpp:143
 #: qtplugins/gamessinput/gamessinput.cpp:86
 #: qtplugins/insertfragment/insertfragment.cpp:107
@@ -1846,6 +1847,21 @@ msgstr "APBS çalıştırken hata oluştu: %1"
 msgid "Please specify PDB file"
 msgstr "Lütfen PDB dosyasını belirtin"
 
+#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
+#: qtplugins/apbs/apbsdialog.cpp:161 qtplugins/apbs/apbsdialog.cpp:178
+msgid "Success"
+msgstr "Başarı"
+
+#: qtplugins/apbs/apbsdialog.cpp:162
+#, qt-format
+msgid "Generated %1"
+msgstr ""
+
+#: qtplugins/apbs/apbsdialog.cpp:166
+msgid "Error running PDB2PQR"
+msgstr ""
+
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
 msgstr "APBS Giriş Dosyasını Kaydet"
@@ -1853,12 +1869,6 @@ msgstr "APBS Giriş Dosyasını Kaydet"
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
 msgstr ""
-
-#. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
-#: qtplugins/apbs/apbsdialog.cpp:178:156
-msgid "Success"
-msgstr "Başarı"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
@@ -1868,7 +1878,7 @@ msgstr "Giriş dosyası '%1' e yazılmış"
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
 #: qtplugins/playertool/playertool.cpp:419
 #: qtplugins/plugindownloader/downloaderwidget.cpp:409
-#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:998
+#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:999
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 dosyası kaydedilemiyor."
@@ -2036,8 +2046,8 @@ msgid "Apply color schemes to atoms and residues."
 msgstr "Atomlara ve kalıntılara renk düzenleri uygula."
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:42
-#: qtplugins/resetview/resetview.cpp:76
+#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:40
+#: qtplugins/resetview/resetview.cpp:77
 msgid "&View"
 msgstr "&Görünüm"
 
@@ -2199,7 +2209,7 @@ msgid "%L1°"
 msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:804
-#: qtplugins/editor/editor.cpp:250 qtplugins/measuretool/measuretool.cpp:226
+#: qtplugins/editor/editor.cpp:257 qtplugins/measuretool/measuretool.cpp:226
 #: qtplugins/measuretool/measuretool.cpp:227
 #: qtplugins/measuretool/measuretool.cpp:229
 #, qt-format
@@ -3123,7 +3133,7 @@ msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr "Ctrl+2"
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
 msgstr "Çiz"
 
@@ -3136,24 +3146,24 @@ msgid ""
 "Right Mouse:\tDelete Atom"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:116
+#: qtplugins/editor/editor.cpp:123
 msgid "Draw Atom"
 msgstr "Atom Çiz"
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:133
 msgid "Change Bond Type"
 msgstr "Bağ Türünü Değiştirin"
 
-#: qtplugins/editor/editor.cpp:139
+#: qtplugins/editor/editor.cpp:146
 msgid "Remove Bond"
 msgstr "Bağı Kaldır"
 
-#: qtplugins/editor/editor.cpp:245 qtplugins/measuretool/measuretool.cpp:200
+#: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:225
 msgid "Distance:"
 msgstr "Mesafe:"
 
-#: qtplugins/editor/editor.cpp:248
+#: qtplugins/editor/editor.cpp:255
 #, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -3250,11 +3260,11 @@ msgstr "PDB'den Al"
 msgid "Download PDB models from the Protein Data Bank"
 msgstr ""
 
-#: qtplugins/focus/focus.cpp:22
+#: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
 msgstr ""
 
-#: qtplugins/focus/focus.cpp:23
+#: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
 msgstr "Odaklamayı Bırak"
 
@@ -3317,8 +3327,8 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:517
 #: qtplugins/forcefield/forcefield.cpp:587
 #: qtplugins/playertool/playertool.cpp:386
-#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:941
-#: qtplugins/surfaces/surfaces.cpp:985 qtplugins/surfaces/surfaces.cpp:997
+#: qtplugins/playertool/playertool.cpp:418 qtplugins/surfaces/surfaces.cpp:942
+#: qtplugins/surfaces/surfaces.cpp:986 qtplugins/surfaces/surfaces.cpp:998
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
@@ -4510,7 +4520,7 @@ msgstr "GIF dosya biçimi, 100 FPS'nin üzerindeki kare hızlarını desteklemez
 msgid "Movie (*.avi)"
 msgstr "Film (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:986
+#: qtplugins/playertool/playertool.cpp:387 qtplugins/surfaces/surfaces.cpp:987
 msgid "Error: cannot add frame to video."
 msgstr "Hata: videoya kare eklenemiyor."
 
@@ -5101,15 +5111,15 @@ msgstr ""
 msgid "Generate input for quantum codes."
 msgstr ""
 
-#: qtplugins/resetview/resetview.cpp:38
+#: qtplugins/resetview/resetview.cpp:39
 msgid "Center"
 msgstr "Ortala"
 
-#: qtplugins/resetview/resetview.cpp:39
+#: qtplugins/resetview/resetview.cpp:40
 msgid "Align View to Axes"
 msgstr "Görünümü Eksene Hizala"
 
-#: qtplugins/resetview/resetview.cpp:52
+#: qtplugins/resetview/resetview.cpp:53
 msgid "Align view to axes."
 msgstr "Görünümü eksene hizala."
 
@@ -5729,6 +5739,10 @@ msgstr "Filmi Dışa Aktar"
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Film MP4 (* .mp4) ;; Film AVI (* .avi) ;; GIF (* .gif)"
 
+#: qtplugins/surfaces/surfaces.cpp:943
+msgid "Couldn't find the active render widget, failing."
+msgstr ""
+
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
 msgstr "Yüzeyleri okuyun ve işleyin."
@@ -5797,21 +5811,21 @@ msgid ""
 "it."
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:404
-#: qtplugins/templatetool/templatetool.cpp:572
+#: qtplugins/templatetool/templatetool.cpp:406
+#: qtplugins/templatetool/templatetool.cpp:574
 msgid "Clipboard"
 msgstr "Pano"
 
-#: qtplugins/templatetool/templatetool.cpp:492
+#: qtplugins/templatetool/templatetool.cpp:494
 msgid "Insert Template"
 msgstr "Şablon Ekle"
 
-#: qtplugins/templatetool/templatetool.cpp:790
+#: qtplugins/templatetool/templatetool.cpp:792
 msgid "Insert Ligand"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
+#: qtplugins/templatetool/templatetool.h:37
 msgid "Template tool"
 msgstr "Şablon aracı"
 
