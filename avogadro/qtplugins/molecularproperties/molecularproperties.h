@@ -8,6 +8,9 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+class QNetworkAccessManager;
+class QNetworkReply;
+
 namespace Avogadro {
 
 namespace Core {
@@ -37,10 +40,14 @@ public slots:
 
 private slots:
   void showDialog();
+  void updateName();
+  void updateNameReady(QNetworkReply* reply);
 
 private:
   QAction* m_action;
   QtGui::Molecule* m_molecule;
+  QNetworkAccessManager* m_network;
+  bool m_nameRequestPending = false;
 };
 
 } // namespace QtPlugins
