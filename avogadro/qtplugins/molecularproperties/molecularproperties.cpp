@@ -112,13 +112,14 @@ void MolecularProperties::updateNameReady(QNetworkReply* reply)
   m_nameRequestPending = false;
   m_pendingReply = nullptr;
 
-  // Read in all the data
-  if (!reply->isReadable()) {
+  // Check if request was aborted or had network error
+  if (reply->error() != QNetworkReply::NoError || !reply->isReadable()) {
     reply->deleteLater();
     return;
   }
 
-  // check if the data came through
+  // Read in all the data
+  // and check if the data came through
   QByteArray data = reply->readAll();
   if (data.contains("Error report") || data.contains("<h1>")) {
     reply->deleteLater();
