@@ -11,8 +11,8 @@ env:
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 13
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_YAEHMOP=ON
-  CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
-  SCCACHE_GHA_ENABLED: "true"
+  # CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+  # SCCACHE_GHA_ENABLED: "true"
 
 jobs:
   build:
@@ -61,8 +61,8 @@ jobs:
           ${{ runner.workspace }}/build/Downloads
         key: ${{ matrix.config.name }}-downloads
 
-    - name: Run sccache-cache
-      uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
+    #- name: Run sccache-cache
+    #  uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
 
     - name: Configure
       run: |
@@ -75,7 +75,7 @@ jobs:
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 

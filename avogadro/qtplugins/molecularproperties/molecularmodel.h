@@ -11,9 +11,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-class QNetworkAccessManager;
-class QNetworkReply;
-
 #include <avogadro/core/variantmap.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -39,8 +36,6 @@ class MolecularModel : public QAbstractTableModel
 
 public slots:
   void updateTable(unsigned int flags);
-  void updateNameReady(QNetworkReply* reply); // reply from network
-  void canUpdateName();                       // don't do it too often
 
 public:
   explicit MolecularModel(QObject* parent = nullptr);
@@ -60,14 +55,7 @@ public:
 
 private:
   QtGui::Molecule* m_molecule = nullptr;
-  mutable QString m_name;
-  mutable bool m_nameRequestPending = false;
-
-  bool m_autoName = true;
-  bool m_nameUpdateNeeded = true;
   Core::VariantMap m_propertiesCache;
-
-  QNetworkAccessManager* m_network = nullptr;
 };
 
 } // end namespace Avogadro
