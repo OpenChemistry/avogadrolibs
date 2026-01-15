@@ -170,6 +170,10 @@ QByteArray PythonScript::execute(const QStringList& args,
       QString scriptDirPath(QFileInfo(m_scriptFilePath).absolutePath());
       proc.setWorkingDirectory(scriptDirPath);
     } else {
+      if (m_debug) {
+        qDebug() << "No valid pixi manifest configuration found for"
+                 << m_scriptFilePath;
+      }
       return QByteArray();
     }
 
@@ -340,6 +344,10 @@ void PythonScript::asyncExecute(const QStringList& args,
       QString scriptDirPath(QFileInfo(m_scriptFilePath).absolutePath());
       m_process->setWorkingDirectory(scriptDirPath);
     } else {
+      if (m_debug) {
+        qDebug() << "No valid pixi manifest configuration found for"
+                 << m_scriptFilePath;
+      }
       return;
     }
 
@@ -371,7 +379,7 @@ void PythonScript::asyncExecute(const QStringList& args,
     if (!m_process->waitForStarted(5000)) {
       m_errors << tr("Error running script '%1 %2': Timed out waiting for "
                      "start (%3).")
-                    .arg(m_pythonInterpreter,
+                    .arg(m_process->program(),
                          realArgs.join(QStringLiteral(" ")),
                          processErrorString(*m_process));
       return;
@@ -381,7 +389,7 @@ void PythonScript::asyncExecute(const QStringList& args,
     if (len != static_cast<qint64>(scriptStdin.size())) {
       m_errors << tr("Error running script '%1 %2': failed to write to stdin "
                      "(len=%3, wrote %4 bytes, QProcess error: %5).")
-                    .arg(m_pythonInterpreter)
+                    .arg(m_process->program())
                     .arg(realArgs.join(QStringLiteral(" ")))
                     .arg(scriptStdin.size())
                     .arg(len)
