@@ -6,14 +6,14 @@
 # ovari <ovari123@zoho.com>, 2022.
 # Geoff Hutchison <geoff.hutchison@gmail.com>, 2023.
 # matterhorn103 <milner94@live.co.uk>, 2023.
-# Andi Chandler <andi@gowling.com>, 2024, 2025.
+# Andi Chandler <andi@gowling.com>, 2024, 2025, 2026.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-11 03:18+0000\n"
-"PO-Revision-Date: 2025-12-04 07:00+0000\n"
+"PO-Revision-Date: 2026-01-15 04:17+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1838,11 +1838,11 @@ msgstr "Success"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "Generated %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "Error running PDB2PQR"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -5754,7 +5754,7 @@ msgstr "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:943
 msgid "Couldn't find the active render widget, failing."
-msgstr ""
+msgstr "Couldn't find the active render widget, failing."
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."

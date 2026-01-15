@@ -13,13 +13,13 @@
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
 # Максим Горпиніч <maksimgorpinic4@gmail.com>, 2025.
 # Максим Горпиніч <gorpinicmaksim5@gmail.com>, 2025.
-# Максим Горпиніч <gorpinicmaksim0@gmail.com>, 2025.
+# Максим Горпиніч <gorpinicmaksim0@gmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-11 03:18+0000\n"
-"PO-Revision-Date: 2025-12-01 23:00+0000\n"
+"PO-Revision-Date: 2026-01-15 06:32+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1867,11 +1867,11 @@ msgstr "Успіх"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "Згенеровано %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "Помилка запуску PDB2PQR"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -5798,7 +5798,7 @@ msgstr "Фільм MP4 (*.mp4);;Фільм AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:943
 msgid "Couldn't find the active render widget, failing."
-msgstr ""
+msgstr "Не вдалося знайти активний віджет рендерингу, не вдається."
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
