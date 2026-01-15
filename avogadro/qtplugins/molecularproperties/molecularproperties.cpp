@@ -64,6 +64,19 @@ void MolecularProperties::setMolecule(QtGui::Molecule* mol)
   if (mol == m_molecule)
     return;
 
+  // Cancel any pending network request to avoid applying the wrong name
+  if (m_nameRequestPending && m_pendingReply != nullptr) {
+    m_pendingReply->abort();
+    m_pendingReply = nullptr;
+    m_nameRequestPending = false;
+  }
+
+  // Disconnect from the old molecule if set
+  if (m_molecule) {
+    disconnect(m_molecule, &QtGui::Molecule::changed, this,
+               &MolecularProperties::updateName);
+  }
+
   m_molecule = mol;
 
   if (m_molecule) {
@@ -91,12 +104,13 @@ void MolecularProperties::updateName()
   QString requestURL =
     QString("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/" +
             QUrl::toPercentEncoding(smilesString) + "/json");
-  m_network->get(QNetworkRequest(QUrl(requestURL)));
+  m_pendingReply = m_network->get(QNetworkRequest(QUrl(requestURL)));
 }
 
 void MolecularProperties::updateNameReady(QNetworkReply* reply)
 {
   m_nameRequestPending = false;
+  m_pendingReply = nullptr;
 
   // Read in all the data
   if (!reply->isReadable()) {
@@ -133,13 +147,15 @@ void MolecularProperties::updateNameReady(QNetworkReply* reply)
     if (urn["name"].toString() == "Preferred") {
       // save this text version for files and copy/paste
       QJsonObject nameValue = obj["value"].toObject();
-      m_molecule->setData("name", nameValue["sval"].toString().toStdString());
-      break;
-    } else if (urn["name"].toString() == "Markup") {
+      if (m_molecule != nullptr)
+        m_molecule->setData("name", nameValue["sval"].toString().toStdString());
+    }
+    if (urn["name"].toString() == "Markup") {
       // HTML version for dialog
       QJsonObject nameValue = obj["value"].toObject();
-      m_molecule->setData("markup_name",
-                          nameValue["sval"].toString().toStdString());
+      if (m_molecule != nullptr)
+        m_molecule->setData("markup_name",
+                            nameValue["sval"].toString().toStdString());
     }
   }
 

@@ -47,6 +47,7 @@ private:
   QAction* m_action;
   QtGui::Molecule* m_molecule;
   QNetworkAccessManager* m_network;
+  QNetworkReply* m_pendingReply = nullptr;
   bool m_nameRequestPending = false;
 };
 

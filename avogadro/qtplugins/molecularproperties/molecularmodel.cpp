@@ -32,6 +32,12 @@ MolecularModel::MolecularModel(QObject* parent)
 
 void MolecularModel::setMolecule(QtGui::Molecule* molecule)
 {
+  // Disconnect from the old molecule if set
+  if (m_molecule) {
+    disconnect(m_molecule, &QtGui::Molecule::changed, this,
+               &MolecularModel::updateTable);
+  }
+
   m_molecule = molecule;
 
   // make sure we know if the molecule changed
