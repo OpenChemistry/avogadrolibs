@@ -98,7 +98,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d,
                                      Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size())) {
-    m_atomUniqueIds.push_back(m_uniqueIds.size());
+    m_atomUniqueIds.push_back(m_atomUniqueIds.size());
     return Core::Molecule::addAtom(number, position3d);
   } else {
     auto atom = Molecule::addAtom(number, uniqueId);

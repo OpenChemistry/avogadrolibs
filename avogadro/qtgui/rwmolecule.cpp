@@ -98,7 +98,7 @@ void RWMolecule::clearAtoms()
   m_undoStack.beginMacro(tr("Clear Atoms"));
 
   while (atomCount() != 0)
-    removeAtom(atomCount() - 1);
+    removeAtom(0);
 
   m_undoStack.endMacro();
 }
