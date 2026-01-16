@@ -78,7 +78,7 @@ Molecule::~Molecule() {}
 
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
-  m_atomUniqueIds.push_back(atomCount());
+  m_atomUniqueIds.push_back(m_atomUniqueIds.size());
   AtomType a = Core::Molecule::addAtom(number);
   return a;
 }
@@ -98,8 +98,12 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d,
                                      Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size())) {
-    m_atomUniqueIds.push_back(atomCount());
-    return Core::Molecule::addAtom(number, position3d);
+    // Add atom using our own addAtom (which handles unique IDs)
+    // then set the position
+    auto atom = Molecule::addAtom(number);
+    if (atom.isValid())
+      atom.setPosition3d(position3d);
+    return atom;
   } else {
     auto atom = Molecule::addAtom(number, uniqueId);
     if (atom.isValid())
@@ -161,7 +165,8 @@ Index Molecule::atomUniqueId(Index a) const
 Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
                                      unsigned char order)
 {
-  m_bondUniqueIds.push_back(bondCount());
+  m_bondUniqueIds.push_back(m_bondUniqueIds.size());
+
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
 
@@ -173,7 +178,7 @@ Molecule::BondType Molecule::addBond(Avogadro::Index atomId1,
                                      Avogadro::Index atomId2,
                                      unsigned char order)
 {
-  m_bondUniqueIds.push_back(bondCount());
+  m_bondUniqueIds.push_back(m_bondUniqueIds.size());
   return Core::Molecule::addBond(atomId1, atomId2, order);
 }
 
@@ -237,6 +242,7 @@ bool Molecule::removeBond(Index index)
   Index uniqueId = findBondUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
+
   m_bondUniqueIds[uniqueId] = MaxIndex; // Unique ID of a bond that was removed.
 
   auto newSize = static_cast<Index>(bondCount() - 1);
