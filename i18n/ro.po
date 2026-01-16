@@ -2,7 +2,7 @@
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Irina Puscas <irinapuscas82@gmail.com>, 2021.
-# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023, 2024, 2025.
+# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023, 2024, 2025, 2026.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-11 03:18+0000\n"
-"PO-Revision-Date: 2025-12-01 23:00+0000\n"
+"PO-Revision-Date: 2026-01-16 10:01+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1868,11 +1868,11 @@ msgstr "Succes"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "S-a generat %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "Eroare la rularea PDB2PQR"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -5816,7 +5816,7 @@ msgstr "Videoclip MP4 (*.mp4);; Videoclip AVI (*.avi);; GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:943
 msgid "Couldn't find the active render widget, failing."
-msgstr ""
+msgstr "Nu s-a găsit elementul grafic de redare activ, eșec."
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
@@ -9486,7 +9486,7 @@ msgstr "Remus-Gabriel Chelu"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "remusgabriel.chelu@disroot.org, 2023, 2024, 2025"
+msgstr "remusgabriel.chelu@disroot.org, 2023, 2024, 2025, 2026"
 
 #~ msgid " & "
 #~ msgstr " și "
