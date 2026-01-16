@@ -7,7 +7,7 @@ name: Windows ARM Build
 # .. since SignPath requires only a Windows build in the action
 # .. to successfully sign
 
-on: [push, pull_request, workflow_dispatch]
+on: [workflow_dispatch]
 
 env:
   QT_VERSION: 6.10.1
