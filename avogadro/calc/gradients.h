@@ -136,7 +136,7 @@ inline Real dihedralGradient(const Vector3& i, const Vector3& j,
 /**
  * Calculate the components of the gradient for the out-of-plane angle
  * where 'a' is the central atom bonded to b, c, and d
- * The out-of-plane angle is measured from atom d to the plane formed by a-b-c
+ * The out-of-plane angle is measured from atom a to the plane formed by b-c-d
  * @return the out-of-plane angle in radians
  */
 inline Real outOfPlaneGradient(const Vector3& a, const Vector3& b,
@@ -157,7 +157,7 @@ inline Real outOfPlaneGradient(const Vector3& a, const Vector3& b,
 
   // check if the bond vectors are near zero
   if (rab < 1e-3 || rac < 1e-3 || rad < 1e-3)
-    return 0.0;
+    return outOfPlaneAngle(a, b, c, d) * DEG_TO_RAD;
 
   // normalize the bond vectors
   ab = ab / rab;
@@ -171,7 +171,7 @@ inline Real outOfPlaneGradient(const Vector3& a, const Vector3& b,
 
   // avoid division by zero for linear angles
   if (sinTheta < 1e-6)
-    return 0.0;
+    return outOfPlaneAngle(a, b, c, d) * DEG_TO_RAD;
 
   // calculate the out-of-plane angle using angletools.h
   Real angle = outOfPlaneAngle(a, b, c, d) * DEG_TO_RAD;
