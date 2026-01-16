@@ -122,10 +122,16 @@ void Orbitals::loadOrbitals()
 
   if (!m_dialog) {
     m_dialog = new OrbitalWidget(qobject_cast<QWidget*>(parent()), Qt::Window);
-    connect(m_dialog, SIGNAL(orbitalSelected(unsigned int)), this,
-            SLOT(renderOrbital(unsigned int)));
-    connect(m_dialog, SIGNAL(renderRequested(unsigned int, double)), this,
-            SLOT(calculateOrbitalFromWidget(unsigned int, double)));
+    connect(m_dialog,
+            SIGNAL(orbitalSelected(unsigned int, Core::BasisSet::ElectronType)),
+            this,
+            SLOT(renderOrbital(unsigned int, Core::BasisSet::ElectronType)));
+    connect(m_dialog,
+            SIGNAL(renderRequested(unsigned int, double,
+                                   Core::BasisSet::ElectronType)),
+            this,
+            SLOT(calculateOrbitalFromWidget(unsigned int, double,
+                                            Core::BasisSet::ElectronType)));
     connect(m_dialog, SIGNAL(calculateAll()), this,
             SLOT(precalculateOrbitals()));
   }
@@ -158,10 +164,16 @@ void Orbitals::openDialog()
 {
   if (!m_dialog) {
     m_dialog = new OrbitalWidget(qobject_cast<QWidget*>(parent()), Qt::Window);
-    connect(m_dialog, SIGNAL(orbitalSelected(unsigned int)), this,
-            SLOT(renderOrbital(unsigned int)));
-    connect(m_dialog, SIGNAL(renderRequested(unsigned int, double)), this,
-            SLOT(calculateOrbitalFromWidget(unsigned int, double)));
+    connect(m_dialog,
+            SIGNAL(orbitalSelected(unsigned int, Core::BasisSet::ElectronType)),
+            this,
+            SLOT(renderOrbital(unsigned int, Core::BasisSet::ElectronType)));
+    connect(m_dialog,
+            SIGNAL(renderRequested(unsigned int, double,
+                                   Core::BasisSet::ElectronType)),
+            this,
+            SLOT(calculateOrbitalFromWidget(unsigned int, double,
+                                            Core::BasisSet::ElectronType)));
     connect(m_dialog, SIGNAL(calculateAll()), this,
             SLOT(precalculateOrbitals()));
   }
@@ -170,15 +182,17 @@ void Orbitals::openDialog()
   m_dialog->raise();
 }
 
-void Orbitals::calculateOrbitalFromWidget(unsigned int orbital,
-                                          double resolution)
+void Orbitals::calculateOrbitalFromWidget(
+  unsigned int orbital, double resolution,
+  Core::BasisSet::ElectronType electronType)
 {
   m_updateMesh = true;
 
-  // check if the orbital is already in the queue
+  // check if the orbital is already in the queue (with same electron type)
   bool found = false;
   for (int i = 0; i < m_queue.size(); i++) {
-    if (m_queue[i].orbital == orbital && m_queue[i].resolution == resolution) {
+    if (m_queue[i].orbital == orbital && m_queue[i].resolution == resolution &&
+        m_queue[i].electronType == electronType) {
       // change the priority to the highest
       m_queue[i].priority = 0;
       found = true;
@@ -187,7 +201,8 @@ void Orbitals::calculateOrbitalFromWidget(unsigned int orbital,
   }
 
   if (!found) {
-    addCalculationToQueue(orbital, resolution, m_dialog->isovalue(), 0);
+    addCalculationToQueue(orbital, resolution, m_dialog->isovalue(),
+                          electronType, 0);
   }
   checkQueue();
 }
@@ -225,6 +240,8 @@ void Orbitals::precalculateOrbitals()
     endIndex = m_basis->molecularOrbitalCount() - 1;
   }
 
+  // For now, precalculate paired/alpha orbitals only
+  // TODO: For open-shell, could precalculate both alpha and beta
   for (unsigned int i = startIndex; i <= endIndex; i++) {
 #ifndef NDEBUG
     qDebug() << " precalculate " << i << " priority " << priority;
@@ -232,7 +249,7 @@ void Orbitals::precalculateOrbitals()
     addCalculationToQueue(
       i, // orbital
       OrbitalWidget::OrbitalQualityToDouble(m_dialog->defaultQuality()),
-      m_dialog->isovalue(), priority);
+      m_dialog->isovalue(), Core::BasisSet::Paired, priority);
 
     // Update priority. Stays the same when i = homo.
     if (i + 1 < homo)
@@ -244,11 +261,14 @@ void Orbitals::precalculateOrbitals()
 }
 
 void Orbitals::addCalculationToQueue(unsigned int orbital, double resolution,
-                                     double isovalue, unsigned int priority)
+                                     double isovalue,
+                                     Core::BasisSet::ElectronType electronType,
+                                     unsigned int priority)
 {
   // Create new queue entry
   calcInfo newCalc;
   newCalc.orbital = orbital;
+  newCalc.electronType = electronType;
   newCalc.resolution = resolution;
   newCalc.isovalue = isovalue;
   newCalc.priority = priority;
@@ -335,11 +355,12 @@ void Orbitals::calculateCube()
 
   info->state = Running;
 
-  // Check if the cube we want already exists
+  // Check if the cube we want already exists (must match electron type too)
   for (int i = 0; i < m_queue.size(); i++) {
     calcInfo* cI = &m_queue[i];
     if (cI->state == Completed && cI->orbital == info->orbital &&
-        cI->resolution == info->resolution) {
+        cI->resolution == info->resolution &&
+        cI->electronType == info->electronType) {
       info->cube = cI->cube;
 #ifndef NDEBUG
       qDebug() << "Reusing cube from calculation " << i << ":\n"
@@ -377,8 +398,8 @@ void Orbitals::calculateCube()
 #ifndef NDEBUG
   qDebug() << info->orbital << " Cube calculation started.";
 #endif
-  // TODO: add alpha / beta
-  m_gaussianConcurrent->calculateMolecularOrbital(cube, info->orbital);
+  bool beta = (info->electronType == Core::BasisSet::Beta);
+  m_gaussianConcurrent->calculateMolecularOrbital(cube, info->orbital, beta);
 }
 
 void Orbitals::calculateCubeDone()
@@ -491,27 +512,23 @@ void Orbitals::calculationComplete()
   checkQueue();
 }
 
-void Orbitals::renderOrbital(unsigned int row)
+void Orbitals::renderOrbital(unsigned int orbital,
+                             Core::BasisSet::ElectronType electronType)
 {
-  if (row == 0)
-    return;
-
-  // table rows are indexed from 1
-  // orbitals are indexed from 0
-  unsigned int orbital = row - 1;
-
 #ifndef NDEBUG
-  qDebug() << "Rendering orbital " << orbital;
+  qDebug() << "Rendering orbital " << orbital
+           << " electronType: " << static_cast<int>(electronType);
 #endif
 
-  // Find the most recent calc matching the selected orbital:
+  // Find the most recent calc matching the selected orbital and electron type:
   calcInfo calc;
   int index = -1;
   // in the event of ties, pick the best resolution
   double resolution = OrbitalWidget::OrbitalQualityToDouble(0);
   for (int i = 0; i < m_queue.size(); i++) {
     calc = m_queue[i];
-    if (calc.orbital == orbital && calc.state == Completed) {
+    if (calc.orbital == orbital && calc.electronType == electronType &&
+        calc.state == Completed) {
       if (calc.resolution <= resolution) {
         resolution = calc.resolution;
         index = i;
@@ -522,8 +539,10 @@ void Orbitals::renderOrbital(unsigned int row)
   // calculate the meshes
   if (index == -1) {
     // need to calculate the cube first
-    calculateOrbitalFromWidget(orbital, OrbitalWidget::OrbitalQualityToDouble(
-                                          m_dialog->defaultQuality()));
+    calculateOrbitalFromWidget(
+      orbital,
+      OrbitalWidget::OrbitalQualityToDouble(m_dialog->defaultQuality()),
+      electronType);
   } else {
     // just need to update the meshes
     if (m_currentMeshCalculation == -1) {

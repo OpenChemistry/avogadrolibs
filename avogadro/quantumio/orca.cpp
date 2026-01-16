@@ -376,7 +376,8 @@ void ORCAOutput::processLine(std::istream& in,
     m_currentMode = VCD;
     // look for "Mode" and "Freq"
     int maxLines = 10; // reasonable limit for header lines
-    while (!Core::contains(key, "Mode") && !Core::contains(key, "Freq") && maxLines-- > 0 && !in.eof())
+    while (!Core::contains(key, "Mode") && !Core::contains(key, "Freq") &&
+           maxLines-- > 0 && !in.eof())
       getline(in, key);
     if (maxLines <= 0 || in.eof()) {
       m_currentMode = NotParsing;
@@ -1037,10 +1038,10 @@ void ORCAOutput::processLine(std::istream& in,
             getline(in, key); // energies
 
             list = Core::split(key, ' ');
-            // convert these all to double and add to m_orbitalEnergy
+            // convert these all to double and add to m_betaOrbitalEnergy
             for (unsigned int i = 0; i < list.size(); i++) {
               // convert from Hartree to eV
-              m_orbitalEnergy.push_back(
+              m_betaOrbitalEnergy.push_back(
                 Core::lexicalCast<double>(list[i]).value_or(0.0) *
                 HARTREE_TO_EV);
             }
@@ -1140,6 +1141,8 @@ void ORCAOutput::load(GaussianSet* basis)
 {
   // Now load up our basis set
   basis->setElectronCount(m_electrons);
+  if (m_openShell)
+    basis->setScfType(Core::Uhf);
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
