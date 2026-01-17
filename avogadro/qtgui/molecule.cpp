@@ -78,7 +78,7 @@ Molecule::~Molecule() {}
 
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
-  m_atomUniqueIds.push_back(m_atomUniqueIds.size());
+  m_atomUniqueIds.push_back(atomCount());
   AtomType a = Core::Molecule::addAtom(number);
   return a;
 }
@@ -119,6 +119,7 @@ bool Molecule::removeAtom(Index index)
   Index uniqueId = findAtomUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
+
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
   auto newSize = static_cast<Index>(atomCount() - 1);
@@ -165,7 +166,7 @@ Index Molecule::atomUniqueId(Index a) const
 Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
                                      unsigned char order)
 {
-  m_bondUniqueIds.push_back(m_bondUniqueIds.size());
+  m_bondUniqueIds.push_back(bondCount());
 
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
@@ -178,7 +179,7 @@ Molecule::BondType Molecule::addBond(Avogadro::Index atomId1,
                                      Avogadro::Index atomId2,
                                      unsigned char order)
 {
-  m_bondUniqueIds.push_back(m_bondUniqueIds.size());
+  m_bondUniqueIds.push_back(bondCount());
   return Core::Molecule::addBond(atomId1, atomId2, order);
 }
 
@@ -305,9 +306,10 @@ void Molecule::emitUpdate() const
 
 Index Molecule::findAtomUniqueId(Index index) const
 {
-  for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i)
+  for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i) {
     if (m_atomUniqueIds[i] == index)
       return i;
+  }
   return MaxIndex;
 }
 
