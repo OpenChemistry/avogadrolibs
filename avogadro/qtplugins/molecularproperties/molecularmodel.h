@@ -30,6 +30,8 @@ enum FixedRowType
   // these are the fixed rows
 };
 
+namespace QtPlugins {
+
 class MolecularModel : public QAbstractTableModel
 {
   Q_OBJECT
@@ -58,6 +60,7 @@ private:
   Core::VariantMap m_propertiesCache;
 };
 
+} // namespace QtPlugins
 } // end namespace Avogadro
 
 #endif
