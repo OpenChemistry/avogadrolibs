@@ -133,13 +133,67 @@ inline Real dihedralGradient(const Vector3& i, const Vector3& j,
   return phi;
 }
 
-inline Real outOfPlaneGradient(const Vector3& point, const Vector3& b,
+/**
+ * Calculate the components of the gradient for the out-of-plane angle
+ * where 'a' is the central atom bonded to b, c, and d
+ * The out-of-plane angle is measured from atom a to the plane formed by b-c-d
+ * @return the out-of-plane angle in radians
+ */
+inline Real outOfPlaneGradient(const Vector3& a, const Vector3& b,
                                const Vector3& c, const Vector3& d,
                                Vector3& aGrad, Vector3& bGrad, Vector3& cGrad,
                                Vector3& dGrad)
 {
   dGrad = cGrad = bGrad = aGrad = { 0.0, 0.0, 0.0 };
-  return 0.0;
+
+  // Get the bond vectors from central atom a
+  Vector3 ab = b - a;
+  Vector3 ac = c - a;
+  Vector3 ad = d - a;
+
+  Real rab = ab.norm();
+  Real rac = ac.norm();
+  Real rad = ad.norm();
+
+  // check if the bond vectors are near zero
+  if (rab < 1e-3 || rac < 1e-3 || rad < 1e-3)
+    return outOfPlaneAngle(a, b, c, d) * DEG_TO_RAD;
+
+  // normalize the bond vectors
+  ab = ab / rab;
+  ac = ac / rac;
+  ad = ad / rad;
+
+  // get the angle between the bonds (i.e., b-a-c)
+  Real cosTheta = std::clamp(ab.dot(ac), -1.0, 1.0);
+  Real theta = std::acos(cosTheta);
+  Real sinTheta = std::sin(theta);
+
+  // avoid division by zero for linear angles
+  if (sinTheta < 1e-6)
+    return outOfPlaneAngle(a, b, c, d) * DEG_TO_RAD;
+
+  // calculate the out-of-plane angle using angletools.h
+  Real angle = outOfPlaneAngle(a, b, c, d) * DEG_TO_RAD;
+  Real sinAngle = std::sin(angle);
+
+  // get the cross products (normalized)
+  Vector3 ac_cross_ad = ac.cross(ad).stableNormalized();
+  Vector3 ab_cross_ad = ab.cross(ad).stableNormalized();
+
+  // gradient for atom b
+  bGrad = (ac_cross_ad - ab * (ab.dot(ac_cross_ad))) / (rab * sinTheta);
+
+  // gradient for atom c
+  cGrad = (ab_cross_ad - ac * (ac.dot(ab_cross_ad))) / (rac * sinTheta);
+
+  // gradient for atom d
+  dGrad = (-ab_cross_ad / sinTheta - ad * sinAngle) / rad;
+
+  // gradient for central atom a (sum of other gradients, negated)
+  aGrad = -(bGrad + cGrad + dGrad);
+
+  return angle;
 }
 
 } // namespace Avogadro::Calc
