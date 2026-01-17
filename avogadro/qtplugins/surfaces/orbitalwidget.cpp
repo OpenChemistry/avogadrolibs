@@ -37,6 +37,8 @@ OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
                                      new RichTextDelegate(this));
   // TODO: Support orbital symmetry labels
   ui.table->hideColumn(OrbitalTableModel::C_Symmetry);
+  // Hide the electron type column (used internally for alpha/beta tracking)
+  ui.table->hideColumn(OrbitalTableModel::C_ElectronType);
   ui.table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   connect(
@@ -155,8 +157,14 @@ void OrbitalWidget::tableClicked(const QItemSelection& selected)
   // of the first entry.
   if (selection.size() == 0)
     return;
-  int orbital = selection.first().row() + 1;
-  emit orbitalSelected(orbital);
+
+  int row = selection.first().row();
+
+  // Get the actual orbital index and electron type from the model
+  int orbital = m_tableModel->orbitalIndex(row);
+  auto electronType = m_tableModel->electronType(row);
+
+  emit orbitalSelected(orbital, electronType);
 }
 
 void OrbitalWidget::renderClicked()
@@ -172,8 +180,13 @@ void OrbitalWidget::renderClicked()
   QModelIndex first = selection.first();
   first = m_sortedTableModel->mapToSource(first);
 
-  int orbital = first.row(); // renderRequested handles the +1
-  emit renderRequested(orbital, quality);
+  int row = first.row();
+
+  // Get the actual orbital index and electron type from the model
+  int orbital = m_tableModel->orbitalIndex(row);
+  auto electronType = m_tableModel->electronType(row);
+
+  emit renderRequested(orbital, quality, electronType);
 }
 
 double OrbitalWidget::OrbitalQualityToDouble(OrbitalQuality q)

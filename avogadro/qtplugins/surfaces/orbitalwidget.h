@@ -71,8 +71,10 @@ public slots:
   void calculationQueued(int orbital);
 
 signals:
-  void orbitalSelected(unsigned int orbital);
-  void renderRequested(unsigned int orbital, double resolution);
+  void orbitalSelected(unsigned int orbital,
+                       Core::BasisSet::ElectronType electronType);
+  void renderRequested(unsigned int orbital, double resolution,
+                       Core::BasisSet::ElectronType electronType);
   void calculateAll();
 
 private slots:

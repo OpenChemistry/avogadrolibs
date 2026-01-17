@@ -11,6 +11,8 @@
 #include <QSortFilterProxyModel>
 #include <QStyledItemDelegate>
 
+#include <avogadro/core/basisset.h>
+
 namespace Avogadro::Core {
 class BasisSet;
 }
@@ -23,8 +25,9 @@ struct Orbital
 {
   double energy;
   int index;
-  QString description; // (HOMO|LUMO)[(+|-)N]
-  QString symmetry;    // e.g., A1g (with subscripts)
+  Core::BasisSet::ElectronType electronType; // Paired, Alpha, or Beta
+  QString description;                       // (HOMO|LUMO)[(+|-)N]
+  QString symmetry;                          // e.g., A1g (with subscripts)
   calcInfo* queueEntry;
   // Progress data:
   int min;
@@ -40,7 +43,7 @@ class ProgressBarDelegate : public QStyledItemDelegate
   Q_OBJECT
 public:
   ProgressBarDelegate(QObject* parent = nullptr)
-    : QStyledItemDelegate(parent) {};
+    : QStyledItemDelegate(parent){};
   QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const override
   {
     return QSize(60, 30);
@@ -73,7 +76,7 @@ class OrbitalSortingProxyModel : public QSortFilterProxyModel
 
 public:
   OrbitalSortingProxyModel(QObject* parent = nullptr)
-    : QSortFilterProxyModel(parent), m_HOMOFirst(false) {};
+    : QSortFilterProxyModel(parent), m_HOMOFirst(false){};
 
   bool isHOMOFirst() { return m_HOMOFirst; };
   void HOMOFirst(bool b) { m_HOMOFirst = b; };
@@ -103,7 +106,8 @@ public:
     C_Description = 0,
     C_Energy,
     C_Symmetry,
-    C_Status, // also occupation (0/1/2)
+    C_Status,       // also occupation (0/1/2)
+    C_ElectronType, // hidden column for alpha/beta tracking
 
     COUNT
   };
@@ -123,6 +127,11 @@ public:
 
   QModelIndex HOMO() const;
   QModelIndex LUMO() const;
+
+  //! Get the orbital index (into basis set) for a given row
+  int orbitalIndex(int row) const;
+  //! Get the electron type for a given row
+  Core::BasisSet::ElectronType electronType(int row) const;
 
   bool setOrbitals(const Core::BasisSet* basis);
   bool clearOrbitals();
