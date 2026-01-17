@@ -30,7 +30,6 @@ public:
                         const QItemSelection& previous) override;
   void setMolecule(QtGui::Molecule* molecule);
   void setSourceModel(QtPlugins::MolecularModel* model) { m_model = model; }
-  void hideEvent(QHideEvent* event) override;
   void contextMenuEvent(QContextMenuEvent* event) override;
 
 protected:

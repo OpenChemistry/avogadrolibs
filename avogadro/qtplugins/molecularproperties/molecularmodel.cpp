@@ -300,18 +300,22 @@ void MolecularModel::updateTable(unsigned int flags)
 
   // we use internal key names here and
   // update the display names in the headerData method
-  m_propertiesCache.setValue(" 1name", name());
+  m_propertiesCache.setValue(" 1name", name().toStdString());
   m_propertiesCache.setValue(" 2mass", m_molecule->mass());
   m_propertiesCache.setValue(" 2monoisotopicMass",
                              m_molecule->monoisotopicMass());
-  m_propertiesCache.setValue(" 3formula", m_molecule->formattedFormula());
-  m_propertiesCache.setValue(" 4atoms", m_molecule->atomCount());
-  m_propertiesCache.setValue(" 5bonds", m_molecule->bondCount());
+  m_propertiesCache.setValue(" 3formula",
+                             m_molecule->formattedFormula().toStdString());
+  m_propertiesCache.setValue(" 4atoms",
+                             static_cast<int>(m_molecule->atomCount()));
+  m_propertiesCache.setValue(" 5bonds",
+                             static_cast<int>(m_molecule->bondCount()));
   if (m_molecule->coordinate3dCount() > 0)
-    m_propertiesCache.setValue(" 6coordinateSets",
-                               m_molecule->coordinate3dCount());
+    m_propertiesCache.setValue(
+      " 6coordinateSets", static_cast<int>(m_molecule->coordinate3dCount()));
   if (m_molecule->residueCount() > 0) {
-    m_propertiesCache.setValue(" 7residues", m_molecule->residueCount());
+    m_propertiesCache.setValue(" 7residues",
+                               static_cast<int>(m_molecule->residueCount()));
 
     // figure out if we have multiple chains
     unsigned int chainCount = 0;
@@ -327,7 +331,7 @@ void MolecularModel::updateTable(unsigned int flags)
 
       chainCount = std::max(chainCount, offset);
     }
-    m_propertiesCache.setValue(" 8chains", chainCount);
+    m_propertiesCache.setValue(" 8chains", static_cast<int>(chainCount));
   }
 
   m_propertiesCache.setValue(" 9totalCharge",
@@ -366,7 +370,7 @@ void MolecularModel::updateTable(unsigned int flags)
   const auto& properties = m_molecule->dataMap();
   for (const auto& key : properties.names()) {
     if (key == "formula" || key == "name" || key == "fileName" ||
-        key == "energies" || key == "totalCharge" ||
+        key == "energies" || key == "markup_name" || key == "totalCharge" ||
         key == "totalSpinMultiplicity")
       continue; // skip these
 

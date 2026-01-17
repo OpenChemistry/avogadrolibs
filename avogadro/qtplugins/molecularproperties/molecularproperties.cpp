@@ -102,11 +102,6 @@ void MolecularProperties::updateName(bool checkDialog)
 
   m_nameRequestPending = true;
 
-  qDebug() << "Updating name";
-
-  if (m_molecule != nullptr)
-    m_molecule->setData("name", tr("(pending)"));
-
   std::string smiles;
   Io::FileFormatManager::instance().writeString(*m_molecule, smiles, "smi");
   QString smilesString = QString::fromStdString(smiles);
@@ -189,10 +184,6 @@ void MolecularProperties::showDialog()
     layout->setContentsMargins(0, 0, 0, 0);
 
     m_model = new MolecularModel();
-    // check if the molecule has a name.. if not indicate pending
-    if (m_molecule != nullptr && !m_molecule->hasData("name")) {
-      m_molecule->setData("name", tr("(pending)"));
-    }
     m_model->setMolecule(m_molecule);
     // view will delete itself & model using deleteLater()
     auto* view = new MolecularView(m_dialog);

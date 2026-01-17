@@ -64,15 +64,6 @@ void MolecularView::setMolecule(Molecule* molecule)
   m_molecule = molecule;
 }
 
-void MolecularView::hideEvent(QHideEvent*)
-{
-  if (model()) {
-    model()->deleteLater();
-  }
-
-  this->deleteLater();
-}
-
 void MolecularView::keyPressEvent(QKeyEvent* event)
 {
   // handle copy event
