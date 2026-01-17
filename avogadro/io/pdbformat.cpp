@@ -259,7 +259,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
             auto aIndex = static_cast<Avogadro::Index>(a);
             auto bIndex = static_cast<Avogadro::Index>(b);
             if (aIndex < mol.atomCount() && bIndex < mol.atomCount()) {
-              mol.Avogadro::Core::Molecule::addBond(aIndex, bIndex, 1);
+              mol.addBond(aIndex, bIndex, 1);
             } else {
               appendError("Invalid bond connection: " + std::to_string(a) +
                           " - " + std::to_string(b));
