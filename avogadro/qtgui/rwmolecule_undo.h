@@ -8,6 +8,7 @@
 #include "rwmolecule.h"
 
 #include <QUndoCommand>
+#include <QDebug>
 #include <cassert>
 
 namespace Avogadro {
@@ -134,6 +135,13 @@ public:
     m_bonds = m_molecule.getAtomBonds(m_atomId);
     m_orders = m_molecule.getAtomOrders(m_atomId);
     m_molecule.removeAtom(m_atomId);
+
+    qDebug() << " Removing atom " << m_atomId << " with uid " << m_atomUid;
+    // get the unique atom ids remaining in the molecule
+    Array<Index> remainingIds;
+    remainingIds.reserve(m_molecule.atomCount());
+    for (Index i = 0; i < m_molecule.atomCount(); ++i)
+      qDebug() << " Atom " << i << " has uid " << m_molecule.atomUniqueId(i);
   }
 
   void undo() override

@@ -78,7 +78,9 @@ Molecule::~Molecule() {}
 
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
-  m_atomUniqueIds.push_back(m_atomUniqueIds.size());
+  qDebug() << " addAtom " << atomCount() << " " << m_atomUniqueIds.size();
+
+  m_atomUniqueIds.push_back(atomCount());
   AtomType a = Core::Molecule::addAtom(number);
   return a;
 }
@@ -119,6 +121,12 @@ bool Molecule::removeAtom(Index index)
   Index uniqueId = findAtomUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
+
+  qDebug() << " Molecule::removeAtom " << m_atomUniqueIds.size();
+  // loop through and print all remaining unique ids
+  for (Index i = 0; i < atomCount(); ++i)
+    qDebug() << " Atom " << i << " has uid " << findAtomUniqueId(i);
+
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
   auto newSize = static_cast<Index>(atomCount() - 1);
@@ -305,9 +313,11 @@ void Molecule::emitUpdate() const
 
 Index Molecule::findAtomUniqueId(Index index) const
 {
-  for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i)
+  for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i) {
+    qDebug() << " finding atom " << i << " with uid " << m_atomUniqueIds[i];
     if (m_atomUniqueIds[i] == index)
       return i;
+  }
   return MaxIndex;
 }
 
