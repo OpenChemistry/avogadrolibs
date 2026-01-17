@@ -182,12 +182,10 @@ inline Real outOfPlaneGradient(const Vector3& a, const Vector3& b,
   Vector3 ab_cross_ad = ab.cross(ad).stableNormalized();
 
   // gradient for atom b
-  bGrad = (ac_cross_ad - ab * (ac * cosTheta * sinAngle / sinTheta)) /
-          (rab * sinTheta);
+  bGrad = (ac_cross_ad - ab * (ab.dot(ac_cross_ad))) / (rab * sinTheta);
 
   // gradient for atom c
-  cGrad = (ab_cross_ad - ac * (ab * cosTheta * sinAngle / sinTheta)) /
-          (rac * sinTheta);
+  cGrad = (ab_cross_ad - ac * (ac.dot(ab_cross_ad))) / (rac * sinTheta);
 
   // gradient for atom d
   dGrad = (-ab_cross_ad / sinTheta - ad * sinAngle) / rad;
