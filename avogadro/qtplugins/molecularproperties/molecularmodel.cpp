@@ -14,7 +14,7 @@
 
 #include <limits>
 
-namespace Avogadro {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::Core::BasisSet;
 using Avogadro::Core::GaussianSet;
@@ -57,7 +57,11 @@ QString MolecularModel::name() const
   if (!m_molecule->data("markup_name").toString().empty())
     return QString::fromStdString(m_molecule->data("markup_name").toString());
 
-  return QString::fromStdString(m_molecule->data("name").toString());
+  // if not, check if there's any name
+  if (!m_molecule->data("name").toString().empty())
+    return QString::fromStdString(m_molecule->data("name").toString());
+
+  return tr("(pending)");
 }
 
 int MolecularModel::rowCount(const QModelIndex& parent) const
@@ -384,4 +388,4 @@ void MolecularModel::updateTable(unsigned int flags)
   }
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

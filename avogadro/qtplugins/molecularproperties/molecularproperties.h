@@ -8,6 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+class QDialog;
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -18,6 +19,8 @@ class Molecule;
 }
 
 namespace QtPlugins {
+
+class MolecularModel;
 
 /**
  * @brief The MolecularProperties class is an extension to launch
@@ -40,15 +43,18 @@ public slots:
 
 private slots:
   void showDialog();
-  void updateName();
+  void updateName(bool checkDialog = true);
   void updateNameReady(QNetworkReply* reply);
 
 private:
   QAction* m_action;
   QtGui::Molecule* m_molecule;
+  QDialog* m_dialog;
   QNetworkAccessManager* m_network;
   QNetworkReply* m_pendingReply = nullptr;
   bool m_nameRequestPending = false;
+
+  MolecularModel* m_model;
 };
 
 } // namespace QtPlugins

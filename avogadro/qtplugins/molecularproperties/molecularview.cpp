@@ -32,6 +32,7 @@
 namespace Avogadro {
 
 using QtGui::Molecule;
+using QtPlugins::MolecularModel;
 
 MolecularView::MolecularView(QWidget* parent)
   : QTableView(parent), m_molecule(nullptr), m_model(nullptr)

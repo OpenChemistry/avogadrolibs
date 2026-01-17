@@ -16,6 +16,10 @@ namespace QtGui {
 class Molecule;
 }
 
+namespace QtPlugins {
+class MolecularModel;
+}
+
 class MolecularView : public QTableView
 {
   Q_OBJECT
@@ -25,7 +29,7 @@ public:
   void selectionChanged(const QItemSelection& selected,
                         const QItemSelection& previous) override;
   void setMolecule(QtGui::Molecule* molecule);
-  void setSourceModel(MolecularModel* model) { m_model = model; }
+  void setSourceModel(QtPlugins::MolecularModel* model) { m_model = model; }
   void hideEvent(QHideEvent* event) override;
   void contextMenuEvent(QContextMenuEvent* event) override;
 
@@ -35,7 +39,7 @@ protected:
 
 private:
   QtGui::Molecule* m_molecule;
-  MolecularModel* m_model;
+  QtPlugins::MolecularModel* m_model;
   void copySelectedRowsToClipboard();
   void openExportDialogBox();
 };
