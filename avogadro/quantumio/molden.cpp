@@ -19,6 +19,7 @@ using std::vector;
 namespace Avogadro::QuantumIO {
 
 using Core::Atom;
+using Core::BasisSet;
 using Core::GaussianSet;
 
 MoldenFile::MoldenFile()
@@ -199,12 +200,27 @@ void MoldenFile::processLine(std::istream& in)
         while (!line.empty() && Core::contains(line, "=")) {
           if (Core::contains(line, "Occup"))
             m_electrons += Core::lexicalCast<int>(list[1]).value_or(0);
-          else if (Core::contains(line, "Ene"))
-            m_orbitalEnergy.push_back(
-              Core::lexicalCast<double>(list[1]).value_or(0.0) *
-              HARTREE_TO_EV_D);
-          else if (Core::contains(line, "Sym"))
-            m_symmetryLabels.push_back(list[1]);
+          else if (Core::contains(line, "Ene")) {
+            double energy = Core::lexicalCast<double>(list[1]).value_or(0.0) *
+                            HARTREE_TO_EV_D;
+            if (m_currentSpinBeta)
+              m_betaOrbitalEnergy.push_back(energy);
+            else
+              m_orbitalEnergy.push_back(energy);
+          } else if (Core::contains(line, "Spin")) {
+            // Check for Beta spin - handle both "Spin= Beta" and "Spin=Beta"
+            if (Core::contains(line, "Beta")) {
+              m_currentSpinBeta = true;
+              m_openShell = true;
+            } else {
+              m_currentSpinBeta = false;
+            }
+          } else if (Core::contains(line, "Sym")) {
+            if (m_currentSpinBeta)
+              m_betaSymmetryLabels.push_back(list[1]);
+            else
+              m_symmetryLabels.push_back(list[1]);
+          }
           getline(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
@@ -217,8 +233,12 @@ void MoldenFile::processLine(std::istream& in)
           if (list.size() < 2)
             break;
 
-          m_MOcoeffs.push_back(
-            Core::lexicalCast<double>(list[1]).value_or(0.0));
+          if (m_currentSpinBeta)
+            m_betaMOcoeffs.push_back(
+              Core::lexicalCast<double>(list[1]).value_or(0.0));
+          else
+            m_MOcoeffs.push_back(
+              Core::lexicalCast<double>(list[1]).value_or(0.0));
 
           // we might go too far ahead
           currentPos = in.tellg();
@@ -374,10 +394,35 @@ void MoldenFile::load(GaussianSet* basis)
     }
   }
   // Now to load in the MO coefficients
-  if (m_MOcoeffs.size())
-    basis->setMolecularOrbitals(m_MOcoeffs);
-  if (m_orbitalEnergy.size())
-    basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
+  if (m_openShell) {
+    // Set SCF type to UHF for open-shell calculations
+    basis->setScfType(Core::Uhf);
+
+    // Alpha orbitals (stored in m_MOcoeffs)
+    if (m_MOcoeffs.size())
+      basis->setMolecularOrbitals(m_MOcoeffs, BasisSet::Alpha);
+    if (m_orbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_orbitalEnergy, BasisSet::Alpha);
+    if (m_symmetryLabels.size())
+      basis->setSymmetryLabels(m_symmetryLabels, BasisSet::Alpha);
+
+    // Beta orbitals
+    if (m_betaMOcoeffs.size())
+      basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
+    if (m_betaOrbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, BasisSet::Beta);
+    if (m_betaSymmetryLabels.size())
+      basis->setSymmetryLabels(m_betaSymmetryLabels, BasisSet::Beta);
+  } else {
+    // Closed-shell (RHF) - use Paired type
+    basis->setScfType(Core::Rhf);
+    if (m_MOcoeffs.size())
+      basis->setMolecularOrbitals(m_MOcoeffs);
+    if (m_orbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
+    if (m_symmetryLabels.size())
+      basis->setSymmetryLabels(m_symmetryLabels);
+  }
 }
 
 void MoldenFile::outputAll()
