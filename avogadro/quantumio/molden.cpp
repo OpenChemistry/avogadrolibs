@@ -195,35 +195,53 @@ void MoldenFile::processLine(std::istream& in)
         }
       } break;
 
-      case MO:
+      case MO: {
+        // Buffer for orbital header fields - we need to wait for Spin line
+        // before committing, since Ene/Sym may appear before Spin
+        double pendingEnergy = 0.0;
+        bool havePendingEnergy = false;
+        string pendingSymmetry;
+        bool havePendingSymmetry = false;
+        bool pendingSpinBeta = m_currentSpinBeta; // default to current state
+
         // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
         while (!line.empty() && Core::contains(line, "=")) {
           if (Core::contains(line, "Occup"))
             m_electrons += Core::lexicalCast<int>(list[1]).value_or(0);
           else if (Core::contains(line, "Ene")) {
-            double energy = Core::lexicalCast<double>(list[1]).value_or(0.0) *
+            pendingEnergy = Core::lexicalCast<double>(list[1]).value_or(0.0) *
                             HARTREE_TO_EV_D;
-            if (m_currentSpinBeta)
-              m_betaOrbitalEnergy.push_back(energy);
-            else
-              m_orbitalEnergy.push_back(energy);
+            havePendingEnergy = true;
           } else if (Core::contains(line, "Spin")) {
             // Check for Beta spin - handle both "Spin= Beta" and "Spin=Beta"
             if (Core::contains(line, "Beta")) {
-              m_currentSpinBeta = true;
+              pendingSpinBeta = true;
               m_openShell = true;
             } else {
-              m_currentSpinBeta = false;
+              pendingSpinBeta = false;
             }
           } else if (Core::contains(line, "Sym")) {
-            if (m_currentSpinBeta)
-              m_betaSymmetryLabels.push_back(list[1]);
-            else
-              m_symmetryLabels.push_back(list[1]);
+            pendingSymmetry = list[1];
+            havePendingSymmetry = true;
           }
           getline(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
+        }
+
+        // Now commit the buffered values with the correct spin
+        m_currentSpinBeta = pendingSpinBeta;
+        if (havePendingEnergy) {
+          if (m_currentSpinBeta)
+            m_betaOrbitalEnergy.push_back(pendingEnergy);
+          else
+            m_orbitalEnergy.push_back(pendingEnergy);
+        }
+        if (havePendingSymmetry) {
+          if (m_currentSpinBeta)
+            m_betaSymmetryLabels.push_back(pendingSymmetry);
+          else
+            m_symmetryLabels.push_back(pendingSymmetry);
         }
 
         // Parse the molecular orbital coefficients.
@@ -248,7 +266,7 @@ void MoldenFile::processLine(std::istream& in)
         }
         // go back one line
         in.seekg(currentPos);
-        break;
+      } break;
 
       case Frequencies:
         // Parse the frequencies.
