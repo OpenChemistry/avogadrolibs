@@ -32,8 +32,8 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
-            build_flags: "-j 2",
+            cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
+            build_flags: "--parallel",
           }
 
     steps:
@@ -79,17 +79,18 @@ jobs:
           C:\vcpkg\installed
           C:\vcpkg\packages
           C:\vcpkg\downloads
-          C:\vcpkg\buildtrees
         # We don't use a vcpkg manifest so we'll use the vcpkg git SHA as the cache key
         # Fallback to vcpkg git SHA so cache is somewhat stable across runs.
         key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
+        restore-keys: |
+          vcpkg-${{ runner.os }}-${{ runner.arch }}-
       env:
         VCPKG_ROOT: C:\vcpkg
 
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
-        choco install nsis
+        choco install nsis ninja
         vcpkg install libarchive eigen3 libxml2 zlib
       shell: bash
 
@@ -99,6 +100,16 @@ jobs:
         cd "${{ runner.workspace }}/build"
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
+
+    # Cache thirdparty builds (OpenBabel, etc.)
+    - name: Cache thirdparty
+      uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: thirdparty-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('openchemistry/cmake/External*.cmake', 'openchemistry/cmake/projects/*.cmake') }}
+        restore-keys: |
+          thirdparty-${{ runner.os }}-${{ runner.arch }}-
 
     - name: Build
       run: |
