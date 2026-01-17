@@ -227,10 +227,10 @@ void AutoOpt::taskChanged(int index)
   if (index == 1) { // dynamics
     // enable the temperature and timestep
     disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
-    // connect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
+    connect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
   } else {
     // disable the temperature and timestep
-    // disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
+    disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
     connect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
   }
 }
@@ -460,7 +460,9 @@ void AutoOpt::dynamicsStep()
 
     m_method->gradient(positions, gradient);
     // calculate the acceleration from F = ma
-    Eigen::VectorXd a = -gradient.array() / m_masses;
+    // gradient is in kJ/(mol*Angstrom), mass in amu, result in Angstrom/fs^2
+    Eigen::VectorXd a =
+      -units::FORCE_CONVERSION * gradient.array() / m_masses.array();
 
     // update the velocity
     m_velocities += a * m_timeStep;
@@ -488,7 +490,7 @@ void AutoOpt::draw(Rendering::GroupNode& node)
     return; // nothing to draw
 
   QString overlayText;
-  overlayText = tr("%1 ΔE = %L2 kcal/mol")
+  overlayText = tr("%1 ΔE = %L2 kJ/mol")
                   .arg(m_currentMethod.c_str())
                   .arg(m_deltaE, 0, 'f', 2);
 

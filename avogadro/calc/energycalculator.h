@@ -22,6 +22,8 @@ class Molecule;
 
 namespace Calc {
 
+constexpr Real KCAL_TO_KJ = 4.184;
+
 class AVOGADROCALC_EXPORT EnergyCalculator : public cppoptlib::Problem<Real>
 {
 public:
