@@ -81,6 +81,9 @@ void MolecularProperties::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
 
   if (m_molecule) {
+    if (m_model)
+      m_model->setMolecule(m_molecule);
+
     connect(m_molecule, &QtGui::Molecule::changed, this,
             &MolecularProperties::updateName);
     updateName();
@@ -183,7 +186,7 @@ void MolecularProperties::showDialog()
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_model = new MolecularModel();
+    m_model = new MolecularModel(m_dialog);
     m_model->setMolecule(m_molecule);
     // view will delete itself & model using deleteLater()
     auto* view = new MolecularView(m_dialog);
