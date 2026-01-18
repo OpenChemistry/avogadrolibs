@@ -111,9 +111,13 @@ void AutoOpt::setMolecule(QtGui::Molecule* mol)
 
     m_masses.resize(mol->atomCount() * 3); // 3N to match coordinates
     for (unsigned int i = 0; i < mol->atomCount(); i++) {
-      m_masses[i * 3] = mol->atom(i).mass();
-      m_masses[i * 3 + 1] = mol->atom(i).mass();
-      m_masses[i * 3 + 2] = mol->atom(i).mass();
+      Real mass = mol->atom(i).mass();
+      if (mass < 0.5)
+        mass = 1.0; // for dummy atoms
+
+      m_masses[i * 3] = mass;
+      m_masses[i * 3 + 1] = mass;
+      m_masses[i * 3 + 2] = mass;
     }
   }
 }
