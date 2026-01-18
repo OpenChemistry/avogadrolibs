@@ -314,7 +314,7 @@ void AutoOpt::draw(Rendering::GroupNode& node)
     return; // nothing to draw
 
   QString overlayText;
-  overlayText = tr("%1 ΔE = %L2 kcal/mol")
+  overlayText = tr("%1 ΔE = %L2 kJ/mol")
                   .arg(m_currentMethod.c_str())
                   .arg(m_deltaE, 0, 'f', 2);
 
