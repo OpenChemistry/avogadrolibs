@@ -500,6 +500,11 @@ void AutoOpt::dynamicsStep()
     // Velocity Verlet Step 2: Compute new acceleration at new positions
     m_method->gradient(newPositions, gradient);
 
+    // Clamp large gradient components to prevent instability during interaction
+    const double maxGradientComponent = 10.0; // kJ/mol/Å
+    gradient =
+      gradient.cwiseMax(-maxGradientComponent).cwiseMin(maxGradientComponent);
+
     /* debugging statements
     qDebug() << " gradient norm " << gradient.norm();
     qDebug() << " max gradient component " << gradient.cwiseAbs().maxCoeff();
