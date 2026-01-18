@@ -479,18 +479,38 @@ void AutoOpt::dynamicsStep()
 
     // Velocity Verlet Step 1: Update positions
     // x(t+dt) = x(t) + v(t)*dt + 0.5*a(t)*dt^2
-    Eigen::VectorXd newPositions =
-      positions + m_velocities * dt + 0.5 * m_acceleration * dt * dt;
+    Eigen::VectorXd velocityTerm = m_velocities * dt;
+    Eigen::VectorXd accelTerm = 0.5 * m_acceleration * dt * dt;
+
+    /* debugging statements
+    qDebug() << " velocity term norm " << velocityTerm.norm();
+    qDebug() << " accel term norm " << accelTerm.norm();
+    qDebug() << " max velocity component "
+             << m_velocities.cwiseAbs().maxCoeff();
+    qDebug() << " max accel component " << m_acceleration.cwiseAbs().maxCoeff();
+    */
+
+    Eigen::VectorXd newPositions = positions + velocityTerm + accelTerm;
+
+    /* debugging statements
+    Eigen::VectorXd displacement = newPositions - positions;
+    qDebug() << " max displacement " << displacement.cwiseAbs().maxCoeff();
+    */
 
     // Velocity Verlet Step 2: Compute new acceleration at new positions
     m_method->gradient(newPositions, gradient);
 
+    /* debugging statements
     qDebug() << " gradient norm " << gradient.norm();
+    qDebug() << " max gradient component " << gradient.cwiseAbs().maxCoeff();
+    */
 
     Eigen::VectorXd newAcceleration =
       -units::FORCE_CONVERSION * gradient.array() / m_masses.array();
 
+    /* debugging statements
     qDebug() << " acceleration norm " << newAcceleration.norm();
+    */
 
     // Velocity Verlet Step 3: Update velocities
     // v(t+dt) = v(t) + 0.5*(a(t) + a(t+dt))*dt
@@ -499,14 +519,16 @@ void AutoOpt::dynamicsStep()
     // Store new acceleration for next step
     m_acceleration = newAcceleration;
 
-    qDebug() << " velocity norm " << m_velocities.norm();
-
     // Apply thermostat
     m_thermostat->apply(m_velocities, m_masses);
 
+    /* debugging statements
     qDebug() << " velocity norm after thermostat " << m_velocities.norm();
+    */
+#ifndef NDEBUG
     qDebug() << " temperature "
              << m_thermostat->compute_temperature(m_velocities, m_masses);
+#endif
 
     // update the positions
     for (Eigen::Index i = 0; i < n; ++i) {
