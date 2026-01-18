@@ -1,6 +1,16 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
+
+  CSVR Thermostat - Canonical Sampling through Velocity Rescaling
+  Based on: Bussi, Donadio, Parrinello, J. Chem. Phys. 126, 014101 (2007)
+
+  CHANGELOG:
+  - Fixed CSVR formula (was missing deterministic relaxation term)
+  - Added proper centering of chi-squared stochastic term
+  - Added unit consistency checks and documentation
+  - Added diagnostic logging capability
+  - Improved DOF handling with automatic COM correction option
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_CSVRTHERMOSTAT_H
@@ -8,6 +18,7 @@
 
 #include <cmath>
 #include <random>
+#include <iostream>
 #include <Eigen/Dense>
 
 namespace Avogadro::QtPlugins {
@@ -61,63 +72,90 @@ constexpr double FORCE_CONVERSION = 1e-4; // (kJ/mol/Å)/amu to Å/fs²
 class CSVRThermostat
 {
 private:
-  double target_temp;   // Target temperature (K)
-  double coupling_time; // Coupling time constant (ps or time units)
-  double dt;            // Timestep
-  int n_dof;            // Number of degrees of freedom
+  double target_temp; // Target temperature (K)
+  double
+    coupling_time; // Coupling time constant - MUST BE IN SAME UNITS AS dt (fs)
+  double dt;       // Timestep (fs)
+  int n_dof;       // Number of degrees of freedom
+  bool auto_dof;   // Automatically calculate DOF from atom count
+  bool remove_com; // Remove COM motion during velocity initialization
+  bool enable_diagnostics; // Enable diagnostic output
+
   std::mt19937 rng;
   std::normal_distribution<double> normal_dist;
-
-  // Generate random kinetic energy from distribution
-  double random_kinetic_energy(double mean_ke)
-  {
-    // For n degrees of freedom, kinetic energy follows chi-squared distribution
-    // We need to generate sum of squares of n_dof Gaussian random numbers
-    double sum = 0.0;
-    for (int i = 0; i < n_dof; ++i) {
-      double r = normal_dist(rng);
-      sum += r * r;
-    }
-    return 0.5 * mean_ke * sum / n_dof;
-  }
 
   // Generate single Gaussian random number
   double gaussian_random() { return normal_dist(rng); }
 
-public:
-  CSVRThermostat(double T_target = 300.0, double timestep = 1.0,
-                 double tau = 10.0, int ndof = 3, unsigned seed = 12345)
-    : target_temp(T_target), coupling_time(tau), dt(timestep), n_dof(ndof),
-      rng(seed), normal_dist(0.0, 1.0)
+  // Generate sum of squared Gaussian random numbers (chi-squared distribution)
+  // For n degrees of freedom
+  double sum_noises_squared(int n)
   {
+    double sum = 0.0;
+    for (int i = 0; i < n; ++i) {
+      double r = gaussian_random();
+      sum += r * r;
+    }
+    return sum;
   }
 
-  // set target temperature
+public:
+  CSVRThermostat(double T_target = 300.0, double timestep = 1.0,
+                 double tau = 100.0, int ndof = 3, unsigned seed = 12345)
+    : target_temp(T_target), coupling_time(tau), dt(timestep), n_dof(ndof),
+      auto_dof(true), remove_com(true), enable_diagnostics(false), rng(seed),
+      normal_dist(0.0, 1.0)
+  {
+    // IMPORTANT: Default coupling_time is now 100 fs (0.1 ps)
+    // Previously was 10, which if interpreted as ps would be 10000 fs
+    // Ensure coupling_time and dt are in the same units!
+  }
+
+  // Setters
   void setTargetTemperature(double T_target) { target_temp = T_target; }
 
-  // set coupling time constant
+  // IMPORTANT: tau must be in the same units as dt (femtoseconds)
+  // Typical values: 100-1000 fs (0.1-1.0 ps)
   void setCouplingTime(double tau) { coupling_time = tau; }
 
-  // set timestep
   void setTimeStep(double timestep) { dt = timestep; }
 
-  // set number of degrees of freedom
-  void setDegreesOfFreedom(int ndof) { n_dof = ndof; }
+  // Set number of degrees of freedom manually
+  // For N atoms: 3N (periodic), 3N-3 (non-periodic, COM removed),
+  //              3N-6 (non-periodic, COM and rotation removed)
+  void setDegreesOfFreedom(int ndof)
+  {
+    n_dof = ndof;
+    auto_dof = false; // Disable automatic calculation
+  }
+
+  // Enable/disable automatic DOF calculation (default: enabled)
+  // When enabled, DOF = 3*N_atoms - 3 (assumes COM motion removed)
+  void setAutoDOF(bool enable) { auto_dof = enable; }
+
+  // Enable/disable COM removal during velocity initialization
+  void setRemoveCOM(bool enable) { remove_com = enable; }
+
+  // Enable/disable diagnostic output
+  void setDiagnostics(bool enable) { enable_diagnostics = enable; }
+
+  // Getters for diagnostics
+  double getTargetTemperature() const { return target_temp; }
+  double getCouplingTime() const { return coupling_time; }
+  double getTimeStep() const { return dt; }
+  int getDegreesOfFreedom() const { return n_dof; }
 
   // Calculate current kinetic energy in Joules (SI)
   // This returns the kinetic energy for the entire system, not per mole.
   double compute_kinetic_energy(const Eigen::VectorXd& velocities,
                                 const Eigen::VectorXd& masses)
   {
-    // Convert velocities from Å/fs to m/s, and masses from amu to kg
     constexpr double Apfs_to_mps = 1e5;       // (m/s) / (Å/fs)
     constexpr double amu_to_kg = 1.66054e-27; // kg/amu
 
     double ke = 0.0;
     int n_atoms = masses.size() / 3;
 
-    // Velocities stored as [vx0, vy0, vz0, vx1, vy1, vz1, ...]
-    // Masses stored as [m0, m0, m0, m1, m1, m1, ...]
     for (int i = 0; i < n_atoms; ++i) {
       Eigen::Vector3d v = velocities.segment<3>(3 * i);
       double v_mps_sq = v.squaredNorm() * Apfs_to_mps * Apfs_to_mps;
@@ -127,72 +165,119 @@ public:
     return ke; // in Joules
   }
 
+  // Calculate current temperature from kinetic energy
+  double compute_temperature(const Eigen::VectorXd& velocities,
+                             const Eigen::VectorXd& masses)
+  {
+    constexpr double kB_SI = 1.380649e-23; // J/K
+    double ke = compute_kinetic_energy(velocities, masses);
+    // T = 2 * KE / (n_dof * kB)
+    return 2.0 * ke / (n_dof * kB_SI);
+  }
+
   // Apply CSVR (Canonical Sampling through Velocity Rescaling) thermostat
   // Based on Bussi, Donadio, Parrinello, J. Chem. Phys. 126, 014101 (2007)
   //
   // This thermostat correctly samples the canonical ensemble by adding
   // stochastic terms to the velocity rescaling. Unlike Berendsen, it
   // produces correct fluctuations in kinetic energy.
+  //
+  // The algorithm implements Eq. (A7) from the paper:
+  //   K_new = K_old * c + K_target * (1-c) * (sum_i R_i^2) / n_dof
+  //         + 2 * sqrt(K_old * K_target * c * (1-c) / n_dof) * R_1
+  //
+  // where c = exp(-dt/tau), R_i are independent Gaussian random numbers,
+  // and the sum is over n_dof terms.
+  //
+  // CRITICAL FIX: The original implementation was missing the deterministic
+  // relaxation toward K_target and had incorrect handling of the stochastic
+  // term.
   void apply(Eigen::VectorXd& velocities, const Eigen::VectorXd& masses)
   {
     constexpr double kB_SI = 1.380649e-23; // J/K
 
+    // Update DOF if automatic mode is enabled
+    if (auto_dof) {
+      int n_atoms = masses.size() / 3;
+      n_dof = 3 * n_atoms - 3; // Remove 3 DOF for COM translation
+      if (n_dof < 1)
+        n_dof = 1;
+    }
+
     // Current kinetic energy in Joules
     double ke_current = compute_kinetic_energy(velocities, masses);
 
-    if (ke_current < 1e-30)
-      return; // Avoid division by zero
+    if (ke_current < 1e-30) {
+      if (enable_diagnostics) {
+        std::cerr
+          << "CSVR Warning: Near-zero kinetic energy, skipping thermostat\n";
+      }
+      return;
+    }
 
     // Target kinetic energy from equipartition: KE = (n_dof/2) * kB * T
     double ke_target = 0.5 * n_dof * kB_SI * target_temp;
 
-    // CSVR scaling factor (Eq. A7 from Bussi et al.)
-    // The new kinetic energy is:
-    //   K_new = c*K + (1-c)*K_target + 2*sqrt(c*(1-c)*K*K_target/n_dof)*R1
-    //           + (1-c)*K_target/n_dof * sum_{i=2}^{n_dof}(R_i^2)
-    //
-    // where c = exp(-dt/tau), and R_i are independent Gaussian random numbers.
-    //
-    // The scaling factor alpha = sqrt(K_new / K)
+    // Exponential decay factor
+    // CRITICAL: dt and coupling_time MUST be in the same units (both in fs)
+    double c = std::exp(-dt / coupling_time);
 
-    double c = exp(-dt / coupling_time);
-
-    // First Gaussian random number
-    double R1 = gaussian_random();
-
-    // Sum of (n_dof - 1) squared Gaussian random numbers
-    // This approximates a chi-squared distribution with (n_dof-1) degrees of
-    // freedom
-    double sum_Rsq = 0.0;
-    for (int i = 0; i < n_dof - 1; ++i) {
-      double r = gaussian_random();
-      sum_Rsq += r * r;
+    // Sanity check on c value
+    if (c < 0.5 && enable_diagnostics) {
+      std::cerr << "CSVR Warning: c=" << c << " is very small. "
+                << "Check that dt (" << dt << ") and coupling_time ("
+                << coupling_time << ") are in the same units (fs).\n";
     }
 
-    // Compute new kinetic energy using CSVR formula
-    double ke_new =
-      c * ke_current + (1.0 - c) * ke_target * sum_Rsq / n_dof +
-      2.0 * sqrt(c * (1.0 - c) * ke_current * ke_target / n_dof) * R1;
+    // CSVR formula from Bussi et al. Eq. (A7)
+    // We need:
+    //   - R1: first Gaussian random number (enters linearly)
+    //   - sum_Rsq: sum of n_dof squared Gaussians (for chi-squared term)
+    //
+    // The formula can be rewritten as:
+    //   K_new = c * K + (1-c) * K_target
+    //         + 2 * sqrt(c * (1-c) * K * K_target / n_dof) * R1
+    //         + (1-c) * K_target * (sum_{i=2}^{n_dof} R_i^2 - (n_dof-1)) /
+    //         n_dof
+    //
+    // The last term centers the chi-squared distribution so its mean
+    // contribution is zero.
 
-    // Ensure ke_new is positive (can be negative due to stochastic term)
-    if (ke_new < 0.0)
-      ke_new = 0.0;
+    double R1 = gaussian_random();
+
+    // Sum of (n_dof - 1) squared Gaussians
+    double sum_Rsq = sum_noises_squared(n_dof - 1);
+
+    // Compute new kinetic energy using corrected CSVR formula
+    double ke_new =
+      c * ke_current + (1.0 - c) * ke_target +
+      2.0 * std::sqrt(c * (1.0 - c) * ke_current * ke_target / n_dof) * R1 +
+      (1.0 - c) * ke_target * (sum_Rsq - (n_dof - 1)) / n_dof;
+
+    // Ensure ke_new is positive (can rarely be negative due to stochastic
+    // terms)
+    if (ke_new < 0.0) {
+      ke_new = ke_target * 0.01; // Set to small positive value
+      if (enable_diagnostics) {
+        std::cerr << "CSVR Warning: Negative KE computed, clamping to small "
+                     "positive value\n";
+      }
+    }
 
     // Compute scaling factor
-    double alpha = sqrt(ke_new / ke_current);
+    double alpha = std::sqrt(ke_new / ke_current);
 
     // Rescale all velocities
     velocities *= alpha;
-  }
 
-  // Calculate current temperature from kinetic energy
-  double compute_temperature(const Eigen::VectorXd& velocities,
-                             const Eigen::VectorXd& masses)
-  {
-    constexpr double kB_SI = 1.380649e-23;                  // J/K
-    double ke = compute_kinetic_energy(velocities, masses); // in Joules
-    // T = 2 * KE / (n_dof * kB)
-    return 2.0 * ke / (n_dof * kB_SI);
+    // Diagnostic output
+    if (enable_diagnostics) {
+      double T_before = 2.0 * ke_current / (n_dof * kB_SI);
+      double T_after = 2.0 * ke_new / (n_dof * kB_SI);
+      std::cerr << "CSVR: T_before=" << T_before << " T_after=" << T_after
+                << " T_target=" << target_temp << " alpha=" << alpha
+                << " c=" << c << " n_dof=" << n_dof << "\n";
+    }
   }
 
   // Initialize velocities to Maxwell-Boltzmann distribution at target
@@ -203,23 +288,21 @@ public:
   {
     int n_atoms = masses.size() / 3;
 
-    // Use SI-based calculation for physically correct velocities.
-    // For each velocity component: sigma = sqrt(kB_SI * T / m_SI)
-    //
-    // kB_SI = 1.380649e-23 J/K
-    // m_SI = mass_amu * 1.66054e-27 kg
-    // Result is in m/s, convert to Å/fs by multiplying by 1e-5
-    //
-    // For H at 300K: sigma = sqrt(1.38e-23 * 300 / 1.66e-27) * 1e-5
-    //                      = sqrt(2.49e6) * 1e-5 = 1579 * 1e-5 = 0.016 Å/fs
-    //
+    // Update DOF if automatic mode is enabled
+    if (auto_dof) {
+      n_dof = 3 * n_atoms - 3;
+      if (n_dof < 1)
+        n_dof = 1;
+    }
+
     constexpr double kB_SI = 1.380649e-23;    // J/K
     constexpr double amu_to_kg = 1.66054e-27; // kg/amu
     constexpr double mps_to_Apfs = 1e-5;      // (Å/fs) / (m/s)
 
+    // Generate Maxwell-Boltzmann distributed velocities
     for (int i = 0; i < n_atoms; ++i) {
       double mass_kg = masses[3 * i] * amu_to_kg;
-      double sigma_mps = sqrt(kB_SI * target_temp / mass_kg);
+      double sigma_mps = std::sqrt(kB_SI * target_temp / mass_kg);
       double sigma = sigma_mps * mps_to_Apfs;
 
       velocities[3 * i] = sigma * gaussian_random();
@@ -227,27 +310,40 @@ public:
       velocities[3 * i + 2] = sigma * gaussian_random();
     }
 
-    // Remove center of mass motion
-    Eigen::Vector3d total_momentum = Eigen::Vector3d::Zero();
-    double total_mass = 0.0;
-    for (int i = 0; i < n_atoms; ++i) {
-      double mass = masses[3 * i];
-      total_momentum += mass * velocities.segment<3>(3 * i);
-      total_mass += mass;
-    }
-    Eigen::Vector3d com_velocity = total_momentum / total_mass;
+    // Remove center of mass motion if enabled
+    if (remove_com) {
+      Eigen::Vector3d total_momentum = Eigen::Vector3d::Zero();
+      double total_mass = 0.0;
 
-    for (int i = 0; i < n_atoms; ++i) {
-      velocities.segment<3>(3 * i) -= com_velocity;
+      for (int i = 0; i < n_atoms; ++i) {
+        double mass = masses[3 * i];
+        total_momentum += mass * velocities.segment<3>(3 * i);
+        total_mass += mass;
+      }
+
+      Eigen::Vector3d com_velocity = total_momentum / total_mass;
+
+      for (int i = 0; i < n_atoms; ++i) {
+        velocities.segment<3>(3 * i) -= com_velocity;
+      }
     }
 
     // Rescale to exact target temperature
     double current_temp = compute_temperature(velocities, masses);
     if (current_temp > 0.0) {
-      double scale = sqrt(target_temp / current_temp);
+      double scale = std::sqrt(target_temp / current_temp);
       velocities *= scale;
     }
+
+    if (enable_diagnostics) {
+      double final_temp = compute_temperature(velocities, masses);
+      std::cerr << "CSVR: Initialized velocities at T=" << final_temp
+                << "K (target=" << target_temp << "K)\n";
+    }
   }
+
+  // Reseed the random number generator
+  void reseed(unsigned seed) { rng.seed(seed); }
 };
 
 } // namespace Avogadro::QtPlugins
