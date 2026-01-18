@@ -5,7 +5,6 @@
 
 #include "uff.h"
 #include "uffdata.h"
-#include "gradients.h"
 
 #include <Eigen/src/Core/util/Meta.h>
 #include <avogadro/core/angleiterator.h>
@@ -852,19 +851,45 @@ public:
       Real theta0 = angle._theta0 * DEG_TO_RAD;
       Real kijk = angle._kijk;
 
-      const Vector3 vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
-      const Vector3 vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
-      const Vector3 vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
+      const Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      const Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      const Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
 
-      // Use inline gradient function from gradients.h
-      Vector3 grad_i, grad_j, grad_k;
-      Real theta = Calc::angleGradient(vi, vj, vk, grad_i, grad_j, grad_k);
+      const Vector3d ij = vi - vj;
+      const Vector3d kj = vk - vj;
 
-      // check for degenerate cases (gradients will be zero)
-      if (grad_i.squaredNorm() < 1e-12)
-        continue;
+      Real rij = ij.norm();
+      Real rkj = kj.norm();
 
-      // dE / dtheta depends on the coordination type
+      // check if these are near-zero
+      if (rij < 1e-3 || rkj < 1e-3)
+        continue; // skip this angle
+
+      Real dot = ij.dot(kj);
+      Vector3d ij_cross_kj = ij.cross(kj);
+      Real crossNorm = ij_cross_kj.norm();
+
+      // check for near-zero cross product
+      if (!std::isfinite(crossNorm) || crossNorm < 1e-6)
+        continue; // skip this angle
+
+      Real theta = atan2(crossNorm, dot);
+      // clamp the angle to -pi to pi
+      if (theta < -M_PI)
+        theta += 2 * M_PI;
+      else if (theta > M_PI)
+        theta -= 2 * M_PI;
+
+      /*
+            std::cout << " AngleGrad " << i << " " << j << " " << k << " "
+                      << theta0 * RAD_TO_DEG << " " << theta * RAD_TO_DEG << " "
+                      << dtheta * RAD_TO_DEG << " " << kijk << std::endl;
+                      std::cout << " Norms " << rij << " " << rkj << " " << rki
+         << std::endl;
+      */
+
+      // dE / dtheta is a bit annoying with UFF
+      // because there are a bunch of special cases
       Real f = 0.0;
       Real c0 = angle._c0;
       Real c1 = angle._c1;
@@ -881,11 +906,14 @@ public:
         case Octahedral:
           // c0 contains n for these cases
           // and kijk is already divided by n**2
+          // i.e., if the angle is less than approx theta0, energy goes up
+          // exponentially
           // energy +=
           // kijk * (1 - cos(c0 * theta)) + exp(-20.0 * (theta - theta0 +
           // 0.25));
           f = kijk * c0 * sin(c0 * theta) -
               20.0 * exp(-20.0 * (theta - theta0 + 0.25));
+
           break;
         case Tetrahedral: {
           Real cosTheta = cos(theta);
@@ -910,18 +938,41 @@ public:
       if (std::isnan(f))
         continue;
 
+      // Use the cross product to get the gradients
+      Vector3d n = ij_cross_kj / crossNorm;
+
+      // Gradients of the cross products
+      Vector3d grad_cross_i = (kj.cross(n)).stableNormalized();
+      Vector3d grad_cross_k = (n.cross(ij)).stableNormalized();
+      Vector3d grad_cross_j = -(grad_cross_i + grad_cross_k);
+
+      // Gradients of the dot product
+      Vector3d grad_dot_i = kj;
+      Vector3d grad_dot_k = ij;
+      Vector3d grad_dot_j = -(kj + ij);
+
+      // Final gradient using atan2 derivative: d/dx(atan2(y,x)) = (x*dy/dx -
+      // y*dx/dx)/(x^2 + y^2)
+      Real denom = crossNorm * crossNorm + dot * dot;
+      Vector3d grad_i =
+        f * (grad_cross_i * dot - crossNorm * grad_dot_i) / denom;
+      Vector3d grad_j =
+        f * (grad_cross_j * dot - crossNorm * grad_dot_j) / denom;
+      Vector3d grad_k =
+        f * (grad_cross_k * dot - crossNorm * grad_dot_k) / denom;
+
       // Add the gradients to the total gradients for each atom
-      grad[3 * i] += f * grad_i[0];
-      grad[3 * i + 1] += f * grad_i[1];
-      grad[3 * i + 2] += f * grad_i[2];
+      grad[3 * i] += grad_i[0];
+      grad[3 * i + 1] += grad_i[1];
+      grad[3 * i + 2] += grad_i[2];
 
-      grad[3 * j] += f * grad_j[0];
-      grad[3 * j + 1] += f * grad_j[1];
-      grad[3 * j + 2] += f * grad_j[2];
+      grad[3 * j] += grad_j[0];
+      grad[3 * j + 1] += grad_j[1];
+      grad[3 * j + 2] += grad_j[2];
 
-      grad[3 * k] += f * grad_k[0];
-      grad[3 * k + 1] += f * grad_k[1];
-      grad[3 * k + 2] += f * grad_k[2];
+      grad[3 * k] += grad_k[0];
+      grad[3 * k + 1] += grad_k[1];
+      grad[3 * k + 2] += grad_k[2];
     }
   }
 
@@ -935,23 +986,17 @@ public:
       Index l = oop._atom4;
 
       Real koop = oop._koop;
+      [[maybe_unused]] Real c0 = oop._c0;
       Real c1 = oop._c1;
       Real c2 = oop._c2;
 
-      Vector3 vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
-      Vector3 vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
-      Vector3 vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
-      Vector3 vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
+      Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
+      Vector3d vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
 
-      // Use inline gradient function from gradients.h
-      Vector3 grad_i, grad_j, grad_k, grad_l;
-      Real angle = Calc::outOfPlaneGradient(vi, vj, vk, vl, grad_i, grad_j,
-                                            grad_k, grad_l);
-
-      // check for degenerate cases (gradients will be zero)
-      if (grad_j.squaredNorm() < 1e-12)
-        continue;
-
+      // use outOfPlaneAngle() from angletools.h
+      Real angle = outOfPlaneAngle(vi, vj, vk, vl) * DEG_TO_RAD;
       Real sinAngle = sin(angle);
       // dE / dangle
       Real dE = koop * (-c1 * sinAngle - 2.0 * c2 * sin(2.0 * angle));
@@ -960,22 +1005,82 @@ public:
       if (std::isnan(dE))
         continue;
 
-      // add the gradients to the total gradients for each atom
-      grad[3 * i] += dE * grad_i[0];
-      grad[3 * i + 1] += dE * grad_i[1];
-      grad[3 * i + 2] += dE * grad_i[2];
+      // Get the bond vectors
+      Vector3d ij = vj - vi;
+      Vector3d ik = vk - vi;
+      Vector3d il = vl - vi;
 
-      grad[3 * j] += dE * grad_j[0];
-      grad[3 * j + 1] += dE * grad_j[1];
-      grad[3 * j + 2] += dE * grad_j[2];
+      Real rij = ij.norm();
+      Real rik = ik.norm();
+      Real ril = il.norm();
+      // check if the bond vectors are near zero
+      if (rij < 1e-3 || rik < 1e-3 || ril < 1e-3)
+        continue; // skip this oop
+      // normalize the bond vectors
+      ij = ij / rij;
+      ik = ik / rik;
+      il = il / ril;
 
-      grad[3 * k] += dE * grad_k[0];
-      grad[3 * k + 1] += dE * grad_k[1];
-      grad[3 * k + 2] += dE * grad_k[2];
+      // we also need the angle between the bonds (i.e., j-i-k)
+      Real cosTheta = ij.dot(ik) / (rij * rik);
+      // clamp the cosTheta to -1 to 1
+      cosTheta = std::clamp(cosTheta, -1.0, 1.0);
+      Real theta = acos(cosTheta);
+      Real sinTheta = sin(theta);
 
-      grad[3 * l] += dE * grad_l[0];
-      grad[3 * l + 1] += dE * grad_l[1];
-      grad[3 * l + 2] += dE * grad_l[2];
+      // get the cross products
+      [[maybe_unused]] Eigen::Vector3d ij_cross_ik =
+        ij.cross(ik).stableNormalized();
+      Eigen::Vector3d ik_cross_il = ik.cross(il).stableNormalized();
+      Eigen::Vector3d ij_cross_il = ij.cross(il).stableNormalized();
+
+      // some common factors
+      [[maybe_unused]] Real numerator = cosTheta * sinAngle / sinTheta;
+
+      // get the forces on the atoms
+      Real dj0 =
+        -dE *
+        (ik_cross_il[0] - ij[0] + (ik[0] * cosTheta * sinAngle / sinTheta)) /
+        (rij * sinTheta);
+      Real dj1 =
+        -dE *
+        (ik_cross_il[1] - ij[1] + (ik[1] * cosTheta * sinAngle / sinTheta)) /
+        (rij * sinTheta);
+      Real dj2 =
+        -dE *
+        (ik_cross_il[2] - ij[2] + (ik[2] * cosTheta * sinAngle / sinTheta)) /
+        (rij * sinTheta);
+      grad[3 * j] += dj0;
+      grad[3 * j + 1] += dj1;
+      grad[3 * j + 2] += dj2;
+
+      Real dk0 =
+        -dE *
+        (ij_cross_il[0] - ik[0] + (ij[0] * cosTheta * sinAngle / sinTheta)) /
+        (rik * sinTheta);
+      Real dk1 =
+        -dE *
+        (ij_cross_il[1] - ik[1] + (ij[1] * cosTheta * sinAngle / sinTheta)) /
+        (rik * sinTheta);
+      Real dk2 =
+        -dE *
+        (ij_cross_il[2] - ik[2] + (ij[2] * cosTheta * sinAngle / sinTheta)) /
+        (rik * sinTheta);
+      grad[3 * k] += dk0;
+      grad[3 * k + 1] += dk1;
+      grad[3 * k + 2] += dk2;
+
+      Real dl0 = -dE * (-ij_cross_il[0] / sinTheta - il[0] * sinAngle) / ril;
+      Real dl1 = -dE * (-ij_cross_il[1] / sinTheta - il[1] * sinAngle) / ril;
+      Real dl2 = -dE * (-ij_cross_il[2] / sinTheta - il[2] * sinAngle) / ril;
+      grad[3 * l] += dl0;
+      grad[3 * l + 1] += dl1;
+      grad[3 * l + 2] += dl2;
+
+      // i is the central atom, so add the other forces
+      grad[3 * i] -= dj0 + dk0 + dl0;
+      grad[3 * i + 1] -= dj1 + dk1 + dl1;
+      grad[3 * i + 2] -= dj2 + dk2 + dl2;
     }
   }
 
@@ -987,28 +1092,75 @@ public:
       Index k = torsion._atom3;
       Index l = torsion._atom4;
 
-      Vector3 vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
-      Vector3 vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
-      Vector3 vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
-      Vector3 vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
+      Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
+      Vector3d vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
 
-      // Use inline gradient function from gradients.h
-      Vector3 grad_i, grad_j, grad_k, grad_l;
-      Real phi =
-        Calc::dihedralGradient(vi, vj, vk, vl, grad_i, grad_j, grad_k, grad_l);
+      // get the bond vectors
+      Vector3d ij = vj - vi;
+      Vector3d jk = vk - vj;
+      Vector3d kl = vl - vk;
 
-      // check for degenerate cases (gradients will be zero)
-      if (grad_i.squaredNorm() < 1e-12)
-        continue;
+      Real rij = ij.norm();
+      Real rjk = jk.norm();
+      Real rkl = kl.norm();
 
+      // check if the bond vectors are near zero
+      if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3) {
+        continue; // skip this torsion
+      }
+
+      Real phi = calculateDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
+      Real sinPhi = sin(phi);
+      Real cosPhi = cos(phi);
       Real cosPhi0 = torsion._cos_phi0;
       Real kijkl = torsion._ijkl;
       // dE / dphi
       Real dE = kijkl * torsion._n * sin(torsion._n * phi) * cosPhi0;
 
-      // check for nan
-      if (std::isnan(dE))
+      // skip this torsion
+      if (std::abs(sinPhi) < 1e-6 || std::isnan(dE))
         continue;
+
+      // Using the BallView / Open Babel formula
+      // http://dx.doi.org/10.22028/D291-25896 (Appendix A)
+      // Thanks to Andreas Moll
+      // for the derivation of the gradients
+
+      // get the unit vectors
+      Vector3d n1 = ij / rij;
+      Vector3d n2 = jk / rjk;
+      Vector3d n3 = kl / rkl;
+
+      // get the angles between ijk and jkl
+      Vector3d n1_cross_n2 = n1.cross(n2);
+      Vector3d n2_cross_n3 = n2.cross(n3);
+
+      // check for near-zero cross products
+      if (n1_cross_n2.norm() < 1e-6 || n2_cross_n3.norm() < 1e-6) {
+        continue; // skip this torsion
+      }
+
+      Real sinAngleIJK = n1_cross_n2.norm();
+      Real sinAngleJKL = n2_cross_n3.norm();
+      Real cosAngleIJK = n1.dot(n2);
+      Real cosAngleJKL = n2.dot(n3);
+
+      // get the gradient components
+      Vector3d grad_i = -n1_cross_n2 / (rij * sinAngleIJK * sinAngleIJK);
+      Vector3d grad_l = n2_cross_n3 / (rkl * sinAngleJKL * sinAngleJKL);
+
+      // grad_j and grad_k are a bit more complicated
+
+      // clamp the cosines to -1 to 1
+      cosAngleIJK = std::clamp(cosAngleIJK, -1.0, 1.0);
+      cosAngleJKL = std::clamp(cosAngleJKL, -1.0, 1.0);
+
+      Real fraction1 = (rij / rjk) * (-cosAngleIJK);
+      Real fraction2 = (rkl / rjk) * (-cosAngleJKL);
+      Vector3d grad_j = grad_i * (fraction1 - 1) - grad_l * (fraction2);
+      Vector3d grad_k = -(grad_i + grad_l + grad_j);
 
       // add the gradients to the total gradients for each atom
       grad[3 * i] += dE * grad_i[0];
@@ -1125,7 +1277,8 @@ Real UFF::value(const Eigen::VectorXd& x)
   // Add constraint energies
   energy += constraintEnergies(x);
 
-  return energy;
+  return energy * KCAL_TO_KJ;
+  ;
 }
 
 Real UFF::bondEnergy(const Eigen::VectorXd& x)
@@ -1222,7 +1375,11 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // handle any constraints
   cleanGradients(grad);
+
   constraintGradients(x, grad);
+
+  // convert from kcal/mol to kJ/mol
+  grad *= KCAL_TO_KJ;
 }
 
 void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)

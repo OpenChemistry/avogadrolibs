@@ -208,6 +208,10 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
     energy = d->m_forceField->Energy(false);
   }
 
+  // if method is not GAFF, convert to kJ/mol
+  if (m_identifier != "GAFF")
+    energy *= Calc::KCAL_TO_KJ;
+
   // make sure to add in any constraint penalties
   energy += constraintEnergies(x);
 
@@ -239,6 +243,11 @@ void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     }
 
     grad *= -1; // OpenBabel outputs forces, not grads
+
+    // if method is not GAFF, convert to kJ/mol
+    if (m_identifier != "GAFF")
+      grad *= Calc::KCAL_TO_KJ;
+
     cleanGradients(grad);
     // add in any constraints
     constraintGradients(x, grad);
