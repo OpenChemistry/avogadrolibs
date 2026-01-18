@@ -101,6 +101,20 @@ void AutoOpt::setIcon(bool darkTheme)
     m_activateAction->setIcon(QIcon(":/icons/autoopt.svg"));
 }
 
+void setMasses(Eigen::ArrayXd& masses, const QtGui::Molecule* mol)
+{
+  masses.resize(mol->atomCount() * 3); // 3N to match coordinates
+  for (unsigned int i = 0; i < mol->atomCount(); i++) {
+    Real mass = mol->atom(i).mass();
+    if (mass < 0.5)
+      mass = 1.0; // for dummy atoms
+
+    masses[i * 3] = mass;
+    masses[i * 3 + 1] = mass;
+    masses[i * 3 + 2] = mass;
+  }
+}
+
 void AutoOpt::setMolecule(QtGui::Molecule* mol)
 {
   if (mol != nullptr) {
@@ -109,16 +123,7 @@ void AutoOpt::setMolecule(QtGui::Molecule* mol)
     connect(mol, SIGNAL(changed(unsigned int)),
             SLOT(moleculeChanged(unsigned int)));
 
-    m_masses.resize(mol->atomCount() * 3); // 3N to match coordinates
-    for (unsigned int i = 0; i < mol->atomCount(); i++) {
-      Real mass = mol->atom(i).mass();
-      if (mass < 0.5)
-        mass = 1.0; // for dummy atoms
-
-      m_masses[i * 3] = mass;
-      m_masses[i * 3 + 1] = mass;
-      m_masses[i * 3 + 2] = mass;
-    }
+    setMasses(m_masses, mol);
   }
 }
 
@@ -190,8 +195,8 @@ QWidget* AutoOpt::toolWidget() const
     // add a timestep double spin box for dynamics
     QDoubleSpinBox* timeStepSpinBox = new QDoubleSpinBox();
     timeStepSpinBox->setObjectName("timeStepSpinBox");
-    timeStepSpinBox->setRange(0.0, 1000.0);
-    timeStepSpinBox->setSingleStep(1.0);
+    timeStepSpinBox->setRange(0.1, 10.0);
+    timeStepSpinBox->setSingleStep(0.5);
     timeStepSpinBox->setDecimals(1);
     timeStepSpinBox->setSuffix(tr(" fs"));
     timeStepSpinBox->setValue(1.0);
@@ -286,12 +291,7 @@ void AutoOpt::start()
 #endif
   }
   // set up masses first (needed for velocity initialization)
-  m_masses.resize(m_molecule->atomCount() * 3); // 3N to match coordinates
-  for (unsigned int i = 0; i < m_molecule->atomCount(); i++) {
-    m_masses[i * 3] = m_molecule->atom(i).mass();
-    m_masses[i * 3 + 1] = m_molecule->atom(i).mass();
-    m_masses[i * 3 + 2] = m_molecule->atom(i).mass();
-  }
+  setMasses(m_masses, &m_molecule->molecule());
 
   // set the initial velocities
   m_velocities.resize(m_molecule->atomCount() * 3);
@@ -465,12 +465,7 @@ void AutoOpt::dynamicsStep()
 
     // check m_masses
     if (m_masses.rows() != 3 * n) {
-      m_masses = Eigen::VectorXd::Zero(3 * n);
-      for (unsigned int i = 0; i < n; i++) {
-        m_masses[i * 3] = m_molecule->atom(i).mass();
-        m_masses[i * 3 + 1] = m_molecule->atom(i).mass();
-        m_masses[i * 3 + 2] = m_molecule->atom(i).mass();
-      }
+      setMasses(m_masses, &(m_molecule->molecule()));
     }
 
     // On first step, compute initial acceleration
@@ -485,6 +480,11 @@ void AutoOpt::dynamicsStep()
     // x(t+dt) = x(t) + v(t)*dt + 0.5*a(t)*dt^2
     Eigen::VectorXd velocityTerm = m_velocities * dt;
     Eigen::VectorXd accelTerm = 0.5 * m_acceleration * dt * dt;
+
+    // zero out frozen atoms from the mask
+    // gradients should be zero anyway
+    velocityTerm = velocityTerm.array() * mask.array();
+    accelTerm = accelTerm.array() * mask.array();
 
     /* debugging statements
     qDebug() << " velocity term norm " << velocityTerm.norm();
@@ -524,6 +524,10 @@ void AutoOpt::dynamicsStep()
     // Velocity Verlet Step 3: Update velocities
     // v(t+dt) = v(t) + 0.5*(a(t) + a(t+dt))*dt
     m_velocities += 0.5 * (m_acceleration + newAcceleration) * dt;
+
+    // again, zero out frozen coords from the mask
+    m_velocities = m_velocities.array() * mask.array();
+    newAcceleration = newAcceleration.array() * mask.array();
 
     // Store new acceleration for next step
     m_acceleration = newAcceleration;
