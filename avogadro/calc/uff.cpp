@@ -1277,7 +1277,8 @@ Real UFF::value(const Eigen::VectorXd& x)
   // Add constraint energies
   energy += constraintEnergies(x);
 
-  return energy;
+  return energy * KCAL_TO_KJ;
+  ;
 }
 
 Real UFF::bondEnergy(const Eigen::VectorXd& x)
@@ -1374,7 +1375,11 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // handle any constraints
   cleanGradients(grad);
+
   constraintGradients(x, grad);
+
+  // convert from kcal/mol to kJ/mol
+  grad *= KCAL_TO_KJ;
 }
 
 void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
