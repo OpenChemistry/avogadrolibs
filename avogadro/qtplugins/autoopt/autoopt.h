@@ -112,6 +112,8 @@ private:
   Real m_timeStep = 1.0;      // fs
   int m_task = 0;             // default to optimization
   Eigen::VectorXd m_velocities;
+  Eigen::VectorXd m_acceleration; // stored for Velocity Verlet
+  bool m_firstStep = true;        // flag for first dynamics step
   Eigen::ArrayXd m_masses;
   CSVRThermostat* m_thermostat = nullptr;
 

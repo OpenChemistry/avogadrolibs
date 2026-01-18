@@ -281,15 +281,26 @@ void AutoOpt::start()
     qDebug() << "Initial energy:" << m_energy;
 #endif
   }
-  // set the initial velocities
-  m_velocities.resize(m_molecule->atomCount() * 3);
-  m_velocities.setZero();
-  // masses
+  // set up masses first (needed for velocity initialization)
   m_masses.resize(m_molecule->atomCount() * 3); // 3N to match coordinates
   for (unsigned int i = 0; i < m_molecule->atomCount(); i++) {
     m_masses[i * 3] = m_molecule->atom(i).mass();
     m_masses[i * 3 + 1] = m_molecule->atom(i).mass();
     m_masses[i * 3 + 2] = m_molecule->atom(i).mass();
+  }
+
+  // set the initial velocities
+  m_velocities.resize(m_molecule->atomCount() * 3);
+  m_acceleration.resize(m_molecule->atomCount() * 3);
+  m_acceleration.setZero();
+  m_firstStep = true; // reset for Velocity Verlet
+  if (m_task == 1) {
+    // For dynamics, initialize to Maxwell-Boltzmann distribution
+    m_thermostat->setTargetTemperature(m_temperature);
+    m_thermostat->setDegreesOfFreedom(3 * m_molecule->atomCount() - 3);
+    m_thermostat->initializeVelocities(m_velocities, m_masses);
+  } else {
+    m_velocities.setZero();
   }
 
   // start the optimization
@@ -421,11 +432,12 @@ void AutoOpt::dynamicsStep()
     return;
   }
 
-  // Velocity Verlet - get the forces
+  // Velocity Verlet integration
   if (m_method != nullptr) {
     int n = m_molecule->atomCount();
+    double dt = m_timeStep;
 
-    // update the thermostat
+    // update the thermostat settings
     m_thermostat->setTargetTemperature(m_temperature);
     m_thermostat->setTimeStep(m_timeStep);
     m_thermostat->setDegreesOfFreedom(3 * n - 3);
@@ -441,7 +453,6 @@ void AutoOpt::dynamicsStep()
     auto mask = m_molecule->molecule().frozenAtomMask();
     if (mask.rows() != 3 * n) {
       mask = Eigen::VectorXd::Zero(3 * n);
-      // set to 1.0
       for (Eigen::Index i = 0; i < 3 * n; ++i) {
         mask[i] = 1.0;
       }
@@ -458,25 +469,49 @@ void AutoOpt::dynamicsStep()
       }
     }
 
-    m_method->gradient(positions, gradient);
-    // calculate the acceleration from F = ma
-    // gradient is in kJ/(mol*Angstrom), mass in amu, result in Angstrom/fs^2
-    Eigen::VectorXd a =
+    // On first step, compute initial acceleration
+    if (m_firstStep) {
+      m_method->gradient(positions, gradient);
+      m_acceleration =
+        -units::FORCE_CONVERSION * gradient.array() / m_masses.array();
+      m_firstStep = false;
+    }
+
+    // Velocity Verlet Step 1: Update positions
+    // x(t+dt) = x(t) + v(t)*dt + 0.5*a(t)*dt^2
+    Eigen::VectorXd newPositions =
+      positions + m_velocities * dt + 0.5 * m_acceleration * dt * dt;
+
+    // Velocity Verlet Step 2: Compute new acceleration at new positions
+    m_method->gradient(newPositions, gradient);
+
+    qDebug() << " gradient norm " << gradient.norm();
+
+    Eigen::VectorXd newAcceleration =
       -units::FORCE_CONVERSION * gradient.array() / m_masses.array();
 
-    // update the velocity
-    m_velocities += a * m_timeStep;
+    qDebug() << " acceleration norm " << newAcceleration.norm();
+
+    // Velocity Verlet Step 3: Update velocities
+    // v(t+dt) = v(t) + 0.5*(a(t) + a(t+dt))*dt
+    m_velocities += 0.5 * (m_acceleration + newAcceleration) * dt;
+
+    // Store new acceleration for next step
+    m_acceleration = newAcceleration;
+
     qDebug() << " velocity norm " << m_velocities.norm();
-    // rescale by the thermostat
+
+    // Apply thermostat
     m_thermostat->apply(m_velocities, m_masses);
+
     qDebug() << " velocity norm after thermostat " << m_velocities.norm();
     qDebug() << " temperature "
              << m_thermostat->compute_temperature(m_velocities, m_masses);
-    Eigen::VectorXd x = positions + m_velocities * m_timeStep;
 
     // update the positions
     for (Eigen::Index i = 0; i < n; ++i) {
-      pos[i] = Vector3(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      pos[i] = Vector3(newPositions[3 * i], newPositions[3 * i + 1],
+                       newPositions[3 * i + 2]);
     }
     m_molecule->setAtomPositions3d(pos, tr("Molecular Dynamics"));
     Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
