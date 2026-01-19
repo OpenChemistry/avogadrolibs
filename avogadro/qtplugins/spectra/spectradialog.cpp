@@ -199,6 +199,13 @@ void SpectraDialog::connectOptions()
           SLOT(updatePlot()));
   connect(m_ui->peakWidth, SIGNAL(valueChanged(double)), this,
           SLOT(updatePlot()));
+
+  connect(m_ui->scaleSpinBox, SIGNAL(valueChanged(double)), this,
+          SLOT(updatePlot()));
+  connect(m_ui->offsetSpinBox, SIGNAL(valueChanged(double)), this,
+          SLOT(updatePlot()));
+  connect(m_ui->peakThreshold, SIGNAL(valueChanged(double)), this,
+          SLOT(updatePlot()));
 }
 
 void SpectraDialog::disconnectOptions()
@@ -215,6 +222,13 @@ void SpectraDialog::disconnectOptions()
   disconnect(m_ui->yAxisMaximum, SIGNAL(valueChanged(double)), this,
              SLOT(updatePlot()));
   disconnect(m_ui->peakWidth, SIGNAL(valueChanged(double)), this,
+             SLOT(updatePlot()));
+
+  disconnect(m_ui->scaleSpinBox, SIGNAL(valueChanged(double)), this,
+             SLOT(updatePlot()));
+  disconnect(m_ui->offsetSpinBox, SIGNAL(valueChanged(double)), this,
+             SLOT(updatePlot()));
+  disconnect(m_ui->peakThreshold, SIGNAL(valueChanged(double)), this,
              SLOT(updatePlot()));
 }
 
