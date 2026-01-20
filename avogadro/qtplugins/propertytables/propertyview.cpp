@@ -85,9 +85,16 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
 void PropertyView::selectionChanged(const QItemSelection& selected,
                                     const QItemSelection& deselected)
 {
+  // Guard against re-entrancy: modifying molecule selection triggers
+  // model updates which can cause recursive calls to selectionChanged
+  if (m_updatingSelection)
+    return;
+
   bool ok = false;
   if (m_molecule == nullptr)
     return;
+
+  m_updatingSelection = true;
 
   // Start by clearing the molecule selection
   for (Index i = 0; i < m_molecule->atomCount(); ++i)
@@ -155,6 +162,7 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
   } // end loop through selected
 
   m_molecule->emitChanged(Molecule::Atoms);
+  m_updatingSelection = false;
   QTableView::selectionChanged(selected, deselected);
 }
 
