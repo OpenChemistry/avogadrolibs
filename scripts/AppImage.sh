@@ -6,6 +6,7 @@
 
 HERE="$(dirname "$(readlink -f "${0}")")"
 
+export LC_NUMERIC=C
 export LD_LIBRARY_PATH="${HERE}/usr/lib:${LD_LIBRARY_PATH}"
 #export BABEL_DATADIR=$(readlink -f "${HERE}/usr/share/openbabel/*/")
 #export BABEL_LIBDIR=$(readlink -f "${HERE}/usr/lib/openbabel/")
