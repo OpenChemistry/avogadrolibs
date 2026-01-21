@@ -256,8 +256,13 @@ void PlayerTool::animate(int advance)
     if (m_dynamicBonding->isChecked()) {
       m_molecule->clearBonds();
       m_molecule->perceiveBondsSimple();
+      // Bonds were modified, so use Added flag
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
+                              Molecule::Removed | Molecule::Added);
+    } else {
+      // Coordinate-only change, use Moved flag
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
     }
-    m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
     m_slider->setValue(m_currentFrame);
     m_frameIdx->setValue(m_currentFrame + 1);
   }

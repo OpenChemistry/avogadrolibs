@@ -78,6 +78,11 @@ private:
   mutable std::vector<Core::Angle> m_angles;
   mutable std::vector<Core::Dihedral> m_torsions;
 
+  // Track structure counts to detect actual structural changes vs
+  // coordinate-only
+  mutable Index m_lastAtomCount = 0;
+  mutable Index m_lastBondCount = 0;
+
   QString secStructure(unsigned int type) const;
 
   std::vector<int> m_fragment;
