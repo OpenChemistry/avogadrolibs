@@ -111,25 +111,26 @@ private:
    * functions call this function to prepare values before multiplying by the
    * molecular orbital or density matrix elements.
    * @param position The position in space to calculate the value.
+   * @param values Output vector to store basis function values (will be resized
+   * and zeroed).
    */
-  std::vector<double> calculateValues(const Vector3& position) const;
+  void calculateValues(const Vector3& position, Eigen::VectorXd& values) const;
 
-  void pointS(unsigned int index, double dr2,
-              std::vector<double>& values) const;
+  void pointS(unsigned int index, double dr2, Eigen::VectorXd& values) const;
   void pointP(unsigned int index, const Vector3& delta, double dr2,
-              std::vector<double>& values) const;
+              Eigen::VectorXd& values) const;
   void pointD(unsigned int index, const Vector3& delta, double dr2,
-              std::vector<double>& values) const;
+              Eigen::VectorXd& values) const;
   void pointD5(unsigned int index, const Vector3& delta, double dr2,
-               std::vector<double>& values) const;
+               Eigen::VectorXd& values) const;
   void pointF(unsigned int index, const Vector3& delta, double dr2,
-              std::vector<double>& values) const;
+              Eigen::VectorXd& values) const;
   void pointF7(unsigned int index, const Vector3& delta, double dr2,
-               std::vector<double>& values) const;
+               Eigen::VectorXd& values) const;
   void pointG(unsigned int index, const Vector3& delta, double dr2,
-              std::vector<double>& values) const;
+              Eigen::VectorXd& values) const;
   void pointG9(unsigned int index, const Vector3& delta, double dr2,
-               std::vector<double>& values) const;
+               Eigen::VectorXd& values) const;
 
   // map from symmetry to angular momentum
   // S, SP, P, D, D5, F, F7, G, G9, etc.

@@ -53,17 +53,13 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
   if (mo > static_cast<int>(m_basis->molecularOrbitalCount()))
     return 0.0;
 
-  std::vector<double> values(calculateValues(position));
+  Eigen::VectorXd values;
+  calculateValues(position, values);
 
   const MatrixX& matrix = m_basis->moMatrix(m_type);
-  int matrixSize(static_cast<int>(matrix.rows()));
 
-  // Now calculate the value of the density at this point in space
-  double result(0.0);
-  for (int i = 0; i < matrixSize; ++i)
-    result += matrix(i, mo) * values[i];
-
-  return result;
+  // Use Eigen's optimized dot product
+  return matrix.col(mo).dot(values);
 }
 
 bool GaussianSetTools::calculateElectronDensity(Cube& cube) const
@@ -90,19 +86,12 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
     return 0.0;
   }
 
-  std::vector<double> values(calculateValues(position));
+  Eigen::VectorXd values;
+  calculateValues(position, values);
 
-  // Now calculate the value of the density at this point in space
-  double rho(0.0);
-  for (int i = 0; i < matrixSize; ++i) {
-    // Calculate the off-diagonal parts of the matrix
-    for (int j = 0; j < i; ++j)
-      rho += 2.0 * matrix(i, j) * (values[i] * values[j]);
-    // Now calculate the matrix diagonal
-    rho += matrix(i, i) * (values[i] * values[i]);
-  }
-
-  return rho;
+  // Compute the quadratic form: v^T * D * v
+  // The density matrix is symmetric, so we can use the full matrix multiply
+  return values.dot(matrix * values);
 }
 
 bool GaussianSetTools::calculateSpinDensity(Cube& cube) const
@@ -122,19 +111,13 @@ double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
     return 0.0;
   }
 
-  std::vector<double> values(calculateValues(position));
+  Eigen::VectorXd values;
+  calculateValues(position, values);
 
-  // Now calculate the value of the density at this point in space
-  double rho(0.0);
-  for (int i = 0; i < matrixSize; ++i) {
-    // Calculate the off-diagonal parts of the matrix
-    for (int j = 0; j < i; ++j)
-      rho += 2.0 * matrix(i, j) * (values[i] * values[j]);
-    // Now calculate the matrix diagonal
-    rho += matrix(i, i) * (values[i] * values[i]);
-  }
-
-  return rho;
+  // Compute the quadratic form: v^T * D * v
+  // The spin density matrix is symmetric, so we can use the full matrix
+  // multiply
+  return values.dot(matrix * values);
 }
 
 bool GaussianSetTools::isValid() const
@@ -191,8 +174,8 @@ inline void GaussianSetTools::calculateCutoffs()
   }
 }
 
-inline std::vector<double> GaussianSetTools::calculateValues(
-  const Vector3& position) const
+inline void GaussianSetTools::calculateValues(const Vector3& position,
+                                              Eigen::VectorXd& values) const
 {
   // Note: initCalculation() is called once in the constructor
   Index atomsSize = static_cast<Index>(m_atomPositionsBohr.cols());
@@ -210,10 +193,9 @@ inline std::vector<double> GaussianSetTools::calculateValues(
   // dr2: vector of squared distances for each atom
   Eigen::VectorXd dr2 = deltas.colwise().squaredNorm();
 
-  // Allocate space for the values to be calculated.
-  size_t matrixSize = m_basis->moMatrix().rows();
-  std::vector<double> values;
-  values.resize(matrixSize, 0.0);
+  // Resize and zero the output vector
+  Index matrixSize = m_basis->moMatrix().rows();
+  values.setZero(matrixSize);
 
   // Now calculate the values at this point in space
   for (unsigned int i = 0; i < basisSize; ++i) {
@@ -257,12 +239,10 @@ inline std::vector<double> GaussianSetTools::calculateValues(
         ;
     }
   }
-
-  return values;
 }
 
 inline void GaussianSetTools::pointS(unsigned int moIndex, double dr2,
-                                     std::vector<double>& values) const
+                                     Eigen::VectorXd& values) const
 {
   // S type orbitals - the simplest of the calculations with one component
   const vector<double>& gtoA = m_basis->gtoA();
@@ -279,8 +259,7 @@ inline void GaussianSetTools::pointS(unsigned int moIndex, double dr2,
 }
 
 inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
-                                     double dr2,
-                                     std::vector<double>& values) const
+                                     double dr2, Eigen::VectorXd& values) const
 {
   // P type orbitals have three components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -305,8 +284,7 @@ inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
 }
 
 inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
-                                     double dr2,
-                                     std::vector<double>& values) const
+                                     double dr2, Eigen::VectorXd& values) const
 {
   // D type orbitals have six components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -341,7 +319,7 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
 
 inline void GaussianSetTools::pointD5(unsigned int moIndex,
                                       const Vector3& delta, double dr2,
-                                      std::vector<double>& values) const
+                                      Eigen::VectorXd& values) const
 {
   // D type orbitals have five components and each component has a different
   // MO weighting. Many things can be cached to save time.
@@ -380,8 +358,7 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
     values[baseIndex + i] += componentsD[i] * components[i];
 }
 inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
-                                     double dr2,
-                                     std::vector<double>& values) const
+                                     double dr2, Eigen::VectorXd& values) const
 {
   // F type orbitals have 10 components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -426,7 +403,7 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
 
 inline void GaussianSetTools::pointF7(unsigned int moIndex,
                                       const Vector3& delta, double dr2,
-                                      std::vector<double>& values) const
+                                      Eigen::VectorXd& values) const
 {
   // F type orbitals have 7 components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -492,7 +469,7 @@ final normalization
 }
 
 inline void GaussianSetTools::pointG(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, vector<double>& values) const
+                                     double dr2, Eigen::VectorXd& values) const
 {
   // G type orbitals have 15 components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -547,7 +524,7 @@ inline void GaussianSetTools::pointG(unsigned int moIndex, const Vector3& delta,
 
 inline void GaussianSetTools::pointG9(unsigned int moIndex,
                                       const Vector3& delta, double dr2,
-                                      vector<double>& values) const
+                                      Eigen::VectorXd& values) const
 {
   // G type orbitals have 9 spherical components and each component
   // has a different independent MO weighting.
