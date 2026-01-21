@@ -95,7 +95,6 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
 
     for (unsigned int i = 0; i < m_aNums.size(); ++i) {
       charges(i, 0) = m_mullikenCharges[i];
-      std::cout << " mulliken " << m_mullikenCharges[i] << std::endl;
     }
     molecule.setPartialCharges("Mulliken", charges);
   }
