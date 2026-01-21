@@ -97,6 +97,8 @@ private:
   GaussianSet* m_basis;
   BasisSet::ElectronType m_type = BasisSet::Paired;
   std::vector<double> m_cutoffDistances;
+  // Cached atom positions in Bohr as 3 x N matrix for vectorized operations
+  Eigen::Matrix<double, 3, Eigen::Dynamic> m_atomPositionsBohr;
 
   bool isSmall(double value) const;
 
