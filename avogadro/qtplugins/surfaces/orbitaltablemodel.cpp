@@ -9,7 +9,11 @@
 #include <avogadro/core/basisset.h>
 #include <avogadro/core/gaussianset.h>
 
+#include <QBrush>
+#include <QColor>
 #include <QDebug>
+#include <QGuiApplication>
+#include <QPalette>
 
 namespace Avogadro::QtPlugins {
 
@@ -28,21 +32,41 @@ int OrbitalTableModel::columnCount(const QModelIndex&) const
 
 QVariant OrbitalTableModel::data(const QModelIndex& index, int role) const
 {
-  if ((role != Qt::DisplayRole && role != Qt::TextAlignmentRole) ||
-      !index.isValid())
+  if (!index.isValid())
     return QVariant();
+
+  const Orbital* orb = m_orbitals.at(index.row());
 
   // Simple lambda to convert QFlags to variant as in Qt 6 this needs help.
   auto toVariant = [&](auto flags) {
     return static_cast<Qt::Alignment::Int>(flags);
   };
 
+  if (role == Qt::BackgroundRole) {
+    // Tinted background for occupied orbitals
+    if (orb->occupation >= 0.5f) {
+      // Get default background and darken/lighten based on luminance
+      QColor base = QGuiApplication::palette().color(QPalette::Base);
+      // Use luminance to detect dark mode (dark mode has low luminance)
+      int luminance =
+        (base.red() * 299 + base.green() * 587 + base.blue() * 114) / 1000;
+      if (luminance < 128) {
+        // Dark mode: lighten the background
+        return QBrush(base.lighter(200));
+      } else {
+        // Light mode: darken the background
+        return QBrush(base.darker(120));
+      }
+    }
+    return QVariant();
+  }
+
   if (role == Qt::TextAlignmentRole) {
     switch (Column(index.column())) {
       case C_Energy:
         return toVariant(Qt::AlignRight |
                          Qt::AlignVCenter); // numeric alignment
-      case C_Status:                        // everything else can be centered
+      case C_Occupation:                    // everything else can be centered
       case C_Description:
       case C_Symmetry:
       default:
@@ -50,7 +74,8 @@ QVariant OrbitalTableModel::data(const QModelIndex& index, int role) const
     }
   }
 
-  const Orbital* orb = m_orbitals.at(index.row());
+  if (role != Qt::DisplayRole)
+    return QVariant();
   QString symbol; // use subscripts
   int subscriptStart;
 
@@ -59,22 +84,21 @@ QVariant OrbitalTableModel::data(const QModelIndex& index, int role) const
       return orb->description;
     case C_Energy:
       return QString("%L1").arg(orb->energy, 0, 'f', 3);
-    case C_Status: {
-      // Check for divide by zero
-      int percent;
-      if (orb->max == orb->min)
-        percent = 0;
-      else {
-        percent = 100 * (orb->current - orb->min) / float(orb->max - orb->min);
-        // Adjust for stages
-        int stages = (orb->totalStages == 0) ? 1 : orb->totalStages;
-        percent /= float(stages);
-        percent += (orb->stage - 1) * (100.0 / float(stages));
-        // clamp to 100%
-        if (percent > 100)
-          percent = 100;
+    case C_Occupation: {
+      // Show occupation arrows based on electron type and occupation
+      if (orb->occupation < 0.5f)
+        return QString(); // unoccupied - show nothing
+
+      switch (orb->electronType) {
+        case Core::BasisSet::Paired:
+          return QString::fromUtf8("⇅"); // paired electrons
+        case Core::BasisSet::Alpha:
+          return QString::fromUtf8("↑"); // alpha (spin up)
+        case Core::BasisSet::Beta:
+          return QString::fromUtf8("↓"); // beta (spin down)
+        default:
+          return QString();
       }
-      return QString("%L1%").arg(percent);
     }
     case C_Symmetry:
       symbol = orb->symmetry;
@@ -111,8 +135,8 @@ QVariant OrbitalTableModel::headerData(int section, Qt::Orientation orientation,
         return tr("Energy (eV)");
       case C_Symmetry:
         return tr("Symmetry");
-      case C_Status:
-        return tr("Status");
+      case C_Occupation:
+        return tr("Occupation");
       case C_ElectronType:
         return tr("Spin");
       default:
@@ -241,11 +265,8 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
       if (i < alphaSymmetries.size())
         orb->symmetry = QString::fromStdString(alphaSymmetries[i]);
       orb->queueEntry = nullptr;
-      orb->min = 0;
-      orb->max = 0;
-      orb->current = 0;
-      orb->stage = 1;
-      orb->totalStages = 1;
+      // Occupied if index < LUMO (i.e., index + 1 <= HOMO)
+      orb->occupation = (i + 1 <= alphaHomo) ? 1.0f : 0.0f;
       m_orbitals.append(orb);
     }
 
@@ -260,11 +281,8 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
       if (i < betaSymmetries.size())
         orb->symmetry = QString::fromStdString(betaSymmetries[i]);
       orb->queueEntry = nullptr;
-      orb->min = 0;
-      orb->max = 0;
-      orb->current = 0;
-      orb->stage = 1;
-      orb->totalStages = 1;
+      // Occupied if index < LUMO (i.e., index + 1 <= HOMO)
+      orb->occupation = (i + 1 <= betaHomo) ? 1.0f : 0.0f;
       m_orbitals.append(orb);
     }
 
@@ -289,11 +307,8 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
       if (i < symmetryLabels.size())
         orb->symmetry = QString::fromStdString(symmetryLabels[i]);
       orb->queueEntry = nullptr;
-      orb->min = 0;
-      orb->max = 0;
-      orb->current = 0;
-      orb->stage = 1;
-      orb->totalStages = 1;
+      // Occupied if index < LUMO (i.e., index + 1 <= HOMO), with 2 electrons
+      orb->occupation = (i + 1 <= homo) ? 2.0f : 0.0f;
       m_orbitals.append(orb);
     }
   }
@@ -315,83 +330,6 @@ bool OrbitalTableModel::clearOrbitals()
   }
 
   return true;
-}
-
-void OrbitalTableModel::setOrbitalProgressRange(int orbital, int min, int max,
-                                                int stage, int totalStages)
-{
-  Orbital* orb = m_orbitals[orbital];
-  orb->min = min;
-  orb->current = min;
-  orb->max = max;
-  orb->stage = stage;
-  orb->totalStages = totalStages;
-  // Update display
-  QModelIndex status = index(orbital, int(C_Status), QModelIndex());
-  emit dataChanged(status, status);
-}
-
-void OrbitalTableModel::incrementStage(int orbital, int newmin, int newmax)
-{
-  Orbital* orb = m_orbitals[orbital];
-  orb->stage++;
-  orb->min = newmin;
-  orb->current = newmin;
-  orb->max = newmax;
-  // Update display
-  QModelIndex status = index(orbital, C_Status, QModelIndex());
-  emit dataChanged(status, status);
-}
-
-void OrbitalTableModel::setOrbitalProgressValue(int orbital, int currentValue)
-{
-  Orbital* orb = m_orbitals[orbital];
-  orb->current = currentValue;
-  // Update display
-  QModelIndex status = index(orbital, C_Status, QModelIndex());
-  emit dataChanged(status, status);
-}
-
-void OrbitalTableModel::finishProgress(int orbital)
-{
-  Orbital* orb = m_orbitals[orbital];
-  orb->stage = 1;
-  orb->totalStages = 1;
-  orb->min = 0;
-  orb->current = 1;
-  orb->max = 1;
-
-  // Update display
-  QModelIndex status = index(orbital, C_Status, QModelIndex());
-  emit dataChanged(status, status);
-}
-
-void OrbitalTableModel::resetProgress(int orbital)
-{
-  Orbital* orb = m_orbitals[orbital];
-  orb->stage = 1;
-  orb->totalStages = 1;
-  orb->min = 0;
-  orb->current = 0;
-  orb->max = 0;
-
-  // Update display
-  QModelIndex status = index(orbital, C_Status, QModelIndex());
-  emit dataChanged(status, status);
-}
-
-void OrbitalTableModel::setProgressToZero(int orbital)
-{
-  Orbital* orb = m_orbitals[orbital];
-  orb->stage = 1;
-  orb->totalStages = 1;
-  orb->min = 0;
-  orb->current = 0;
-  orb->max = 1;
-
-  // Update display
-  QModelIndex status = index(orbital, C_Status, QModelIndex());
-  emit dataChanged(status, status);
 }
 
 } // namespace Avogadro::QtPlugins

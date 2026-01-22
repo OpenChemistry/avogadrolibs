@@ -138,6 +138,7 @@ void Orbitals::loadOrbitals()
 
   m_dialog->fillTable(m_basis);
   m_dialog->show();
+  m_dialog->raise();
 }
 
 void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
@@ -276,9 +277,6 @@ void Orbitals::addCalculationToQueue(unsigned int orbital, double resolution,
 
   // Add new calculation
   m_queue.append(newCalc);
-
-  // Set progress to show 0%
-  m_dialog->calculationQueued(newCalc.orbital);
 }
 
 void Orbitals::checkQueue()
@@ -389,12 +387,6 @@ void Orbitals::calculateCube()
   auto* watcher = &m_gaussianConcurrent->watcher();
   connect(watcher, SIGNAL(finished()), this, SLOT(calculateCubeDone()));
 
-  m_dialog->initializeProgress(info->orbital, watcher->progressMinimum(),
-                               watcher->progressMaximum(), 1, 3);
-
-  connect(watcher, SIGNAL(progressValueChanged(int)), this,
-          SLOT(updateProgress(int)));
-
 #ifndef NDEBUG
   qDebug() << info->orbital << " Cube calculation started.";
 #endif
@@ -500,8 +492,6 @@ void Orbitals::calculationComplete()
 
   calcInfo* info = &m_queue[m_currentRunningCalculation];
 
-  m_dialog->calculationComplete(info->orbital);
-
   info->state = Completed;
   m_currentRunningCalculation = -1;
   m_runningCube = false;
@@ -558,16 +548,6 @@ void Orbitals::renderOrbital(unsigned int orbital,
   QStringList displayTypes;
   displayTypes << tr("Surfaces");
   emit requestActiveDisplayTypes(displayTypes);
-}
-
-void Orbitals::updateProgress(int current)
-{
-  if (m_currentRunningCalculation == -1)
-    return;
-
-  calcInfo* info = &m_queue[m_currentRunningCalculation];
-  int orbital = info->orbital;
-  m_dialog->updateProgress(orbital, current);
 }
 
 } // namespace Avogadro::QtPlugins
