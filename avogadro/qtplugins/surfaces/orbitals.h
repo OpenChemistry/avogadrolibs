@@ -143,11 +143,6 @@ private slots:
   void renderOrbital(unsigned int orbital,
                      Core::BasisSet::ElectronType electronType);
 
-  /**
-   * Update the progress of the current calculation
-   */
-  void updateProgress(int current);
-
 private:
   QAction* m_action;
 
