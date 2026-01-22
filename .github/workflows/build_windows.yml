@@ -127,6 +127,9 @@ jobs:
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
         # run windeployqt
         windeployqt --release prefix/bin/avogadro2.exe
+        # copy ICU DLLs from Qt installation (needed for Windows 10 1903+)
+        # windeployqt doesn't always copy these automatically
+        cp "${QT_ROOT_DIR}/bin"/icu*.dll prefix/bin/ 2>/dev/null || true
         mv prefix avogadro2
         # 7z a Avogadro2-windows.zip avogadro2
         cd avogadro2
