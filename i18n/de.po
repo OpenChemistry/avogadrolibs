@@ -11,13 +11,14 @@
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
 # matterhorn103 <83813148+matterhorn103@users.noreply.github.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# Frank Hoffmann <kohaerenz@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-11 03:18+0000\n"
-"PO-Revision-Date: 2025-11-29 17:00+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-01-18 23:01+0000\n"
+"Last-Translator: Frank Hoffmann <kohaerenz@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1050,7 +1051,7 @@ msgstr ""
 #: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "verarbeiten"
 
 #: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
@@ -1153,7 +1154,7 @@ msgstr "Prozessorkerne"
 
 #: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
 msgid "Memory"
-msgstr ""
+msgstr "Speicher"
 
 #: qtgui/jsonwidget.cpp:233
 msgid "Calculation Type"
@@ -1177,20 +1178,20 @@ msgstr "Multiplizität"
 
 #: qtgui/jsonwidget.cpp:255
 msgid "Solvent"
-msgstr ""
+msgstr "Lösungsmittel"
 
 #: qtgui/jsonwidget.cpp:256
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "Modell"
 
 #: qtgui/jsonwidget.cpp:378
 msgid "User Name"
-msgstr ""
+msgstr "Benutzername"
 
 #: qtgui/jsonwidget.cpp:380
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: qtgui/jsonwidget.cpp:688
 #, qt-format
@@ -1312,11 +1313,11 @@ msgstr "Unbenannt"
 
 #: qtgui/moleculemodel.cpp:135
 msgid "Edit molecule"
-msgstr ""
+msgstr "Bearbeite Molekül"
 
 #: qtgui/moleculemodel.cpp:142
 msgid "Not saved"
-msgstr ""
+msgstr "Nicht gespeichert"
 
 #: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
@@ -1496,9 +1497,8 @@ msgid "Edit Unit Cell"
 msgstr "Elementarzelle bearbeiten"
 
 #: qtgui/rwmolecule.cpp:543
-#, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "Atome um Zelle wickeln"
+msgstr "Nur Atome innerhalb der Elementarzellenbegrenzung zeigen"
 
 #: qtgui/rwmolecule.cpp:566
 msgid "Scale Cell Volume"
@@ -1551,7 +1551,7 @@ msgstr "Atombeschriftung ändern"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Bindungskennung ändern"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -1577,43 +1577,43 @@ msgstr "Überprüfen von %1 Skripten im Pfad %2"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
-msgstr ""
+msgstr "Berechnung läuft…"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
-msgstr ""
+msgstr "Weniger als eine Sekunde verbleibend"
 
 #: qtgui/timedprogressdialog.cpp:82
 #, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%nSekunde verbleibt"
+msgstr[1] "%nSekunden verbleiben"
 
 #: qtgui/timedprogressdialog.cpp:85
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
 msgid_plural "%n minute(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%nMinute verbleibend"
+msgstr[1] "%nMinuten verbleibend"
 
 #: qtgui/timedprogressdialog.cpp:93
 #, qt-plural-format
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Stunde %nMinute verbleibend"
+msgstr[1] "1 Stunde %nMinuten verbleibend"
 
 #: qtgui/timedprogressdialog.cpp:96
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
 msgid_plural "%n hour(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%nStunde(n) verbleibend"
+msgstr[1] "%nStunden verbleibend"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -1663,11 +1663,11 @@ msgstr "Element:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "Alchemie"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Atomtypen ändern."
 
 #: qtplugins/aligntool/aligntool.cpp:51 qtplugins/aligntool/aligntool.cpp:94
 msgid "Align"
@@ -1854,11 +1854,11 @@ msgstr "Erfolg"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "%1erzeugt"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "Fehler beim Ausführen von PDB2PQR"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -2083,7 +2083,7 @@ msgstr "Strg+7"
 
 #: qtplugins/autoopt/autoopt.cpp:67
 msgid "Auto Optimize"
-msgstr ""
+msgstr "Automatische Optimierung"
 
 #: qtplugins/autoopt/autoopt.cpp:69
 #, qt-format
@@ -2125,15 +2125,15 @@ msgstr "Geometrie optimieren"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kcal/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 kcal/mol"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
-msgstr ""
+msgstr "Automisches Optimierungswerkzeug"
 
 #: qtplugins/autoopt/autoopt.h:45
 msgid "Interactive optimization of molecular geometry"
-msgstr ""
+msgstr "Interaktive Optimierung der Molekülgeometrie"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
