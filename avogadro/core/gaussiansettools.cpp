@@ -31,10 +31,11 @@ GaussianSetTools::GaussianSetTools(Molecule* mol) : m_molecule(mol)
 
     // Initialize the basis set calculation once (normalizes coefficients, etc.)
     // This avoids repeated initCalculation() calls in calculateValues()
-    if (m_basis)
+    if (m_basis) {
       m_basis->initCalculation();
-
-    calculateCutoffs();
+      // Pre-compute cutoff distances to ignore v. small exp(-alpha * r^2) terms
+      calculateCutoffs();
+    }
   }
 }
 
