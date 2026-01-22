@@ -93,9 +93,9 @@ QVariant OrbitalTableModel::data(const QModelIndex& index, int role) const
         case Core::BasisSet::Paired:
           return QString::fromUtf8("⇅"); // paired electrons
         case Core::BasisSet::Alpha:
-          return QString::fromUtf8("↑"); // alpha (spin up)
+          return QString::fromUtf8("↑  "); // alpha (spin up)
         case Core::BasisSet::Beta:
-          return QString::fromUtf8("↓"); // beta (spin down)
+          return QString::fromUtf8("  ↓"); // beta (spin down)
         default:
           return QString();
       }
@@ -249,6 +249,8 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
     auto betaEnergies = basis->moEnergy(Core::BasisSet::Beta);
     auto alphaSymmetries = basis->symmetryLabels(Core::BasisSet::Alpha);
     auto betaSymmetries = basis->symmetryLabels(Core::BasisSet::Beta);
+    auto alphaOccupancy = basis->moOccupancy(Core::BasisSet::Alpha);
+    auto betaOccupancy = basis->moOccupancy(Core::BasisSet::Beta);
 
     unsigned int alphaCount =
       basis->molecularOrbitalCount(Core::BasisSet::Alpha);
@@ -265,8 +267,11 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
       if (i < alphaSymmetries.size())
         orb->symmetry = QString::fromStdString(alphaSymmetries[i]);
       orb->queueEntry = nullptr;
-      // Occupied if index < LUMO (i.e., index + 1 <= HOMO)
-      orb->occupation = (i + 1 <= alphaHomo) ? 1.0f : 0.0f;
+      // Use occupancy data if available, otherwise fall back to HOMO-based
+      if (i < alphaOccupancy.size())
+        orb->occupation = static_cast<float>(alphaOccupancy[i]);
+      else
+        orb->occupation = (i + 1 <= alphaHomo) ? 1.0f : 0.0f;
       m_orbitals.append(orb);
     }
 
@@ -281,8 +286,11 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
       if (i < betaSymmetries.size())
         orb->symmetry = QString::fromStdString(betaSymmetries[i]);
       orb->queueEntry = nullptr;
-      // Occupied if index < LUMO (i.e., index + 1 <= HOMO)
-      orb->occupation = (i + 1 <= betaHomo) ? 1.0f : 0.0f;
+      // Use occupancy data if available, otherwise fall back to HOMO-based
+      if (i < betaOccupancy.size())
+        orb->occupation = static_cast<float>(betaOccupancy[i]);
+      else
+        orb->occupation = (i + 1 <= betaHomo) ? 1.0f : 0.0f;
       m_orbitals.append(orb);
     }
 
@@ -296,6 +304,7 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
 
     auto moEnergies = basis->moEnergy(Core::BasisSet::Paired);
     auto symmetryLabels = basis->symmetryLabels(Core::BasisSet::Paired);
+    auto moOccupancy = basis->moOccupancy(Core::BasisSet::Paired);
 
     for (unsigned int i = 0; i < basis->molecularOrbitalCount(); i++) {
       Orbital* orb = new Orbital;
@@ -307,8 +316,11 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
       if (i < symmetryLabels.size())
         orb->symmetry = QString::fromStdString(symmetryLabels[i]);
       orb->queueEntry = nullptr;
-      // Occupied if index < LUMO (i.e., index + 1 <= HOMO), with 2 electrons
-      orb->occupation = (i + 1 <= homo) ? 2.0f : 0.0f;
+      // Use occupancy data if available, otherwise fall back to HOMO-based
+      if (i < moOccupancy.size())
+        orb->occupation = static_cast<float>(moOccupancy[i]);
+      else
+        orb->occupation = (i + 1 <= homo) ? 2.0f : 0.0f;
       m_orbitals.append(orb);
     }
   }
