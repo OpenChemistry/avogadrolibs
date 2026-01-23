@@ -31,9 +31,13 @@ namespace {
 const float M_PI_F = 3.14159265358979323846f;
 } // namespace
 
+using Avogadro::FloatType;
+using Avogadro::UCharType;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Vector4ub;
+using Avogadro::Rendering::PackedVertex;
+using Avogadro::Rendering::ShaderProgram;
 
 using std::cout;
 using std::endl;
@@ -245,36 +249,35 @@ void ArrowGeometry::update()
       d->vbo.upload(d->meshVertices, BufferObject::ArrayBuffer);
       d->ibo.upload(d->meshIndices, BufferObject::ElementArrayBuffer);
     }
+    // update these even if empty (i.e. avoid stale data)
+    d->numberOfVertices = d->meshVertices.size();
+    d->numberOfIndices = d->meshIndices.size();
+
+    m_dirty = false;
   }
-  // update these even if empty (i.e. avoid stale data)
-  d->numberOfVertices = d->meshVertices.size();
-  d->numberOfIndices = d->meshIndices.size();
 
-  m_dirty = false;
-}
+  // Build and link the shader if it has not been used yet.
+  if (d->vertexShader == nullptr) {
+    d->vertexShader = new Shader;
+    d->vertexShader->setType(Shader::Vertex);
+    d->vertexShader->setSource(mesh_vs);
 
-// Build and link the shader if it has not been used yet.
-if (d->vertexShader == nullptr) {
-  d->vertexShader = new Shader;
-  d->vertexShader->setType(Shader::Vertex);
-  d->vertexShader->setSource(mesh_vs);
+    d->fragmentShader = new Shader;
+    d->fragmentShader->setType(Shader::Fragment);
+    d->fragmentShader->setSource(mesh_fs);
 
-  d->fragmentShader = new Shader;
-  d->fragmentShader->setType(Shader::Fragment);
-  d->fragmentShader->setSource(mesh_fs);
+    if (!d->vertexShader->compile())
+      cout << d->vertexShader->error() << endl;
+    if (!d->fragmentShader->compile())
+      cout << d->fragmentShader->error() << endl;
 
-  if (!d->vertexShader->compile())
-    cout << d->vertexShader->error() << endl;
-  if (!d->fragmentShader->compile())
-    cout << d->fragmentShader->error() << endl;
-
-  if (d->program == nullptr)
-    d->program = new ShaderProgram;
-  d->program->attachShader(*d->vertexShader);
-  d->program->attachShader(*d->fragmentShader);
-  if (!d->program->link())
-    cout << d->program->error() << endl;
-}
+    if (d->program == nullptr)
+      d->program = new ShaderProgram;
+    d->program->attachShader(*d->vertexShader);
+    d->program->attachShader(*d->fragmentShader);
+    if (!d->program->link())
+      cout << d->program->error() << endl;
+  }
 }
 
 void ArrowGeometry::render(const Camera& camera)
