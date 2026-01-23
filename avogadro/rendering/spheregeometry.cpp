@@ -142,9 +142,22 @@ void SphereGeometry::update()
       cout << d->ibo.error() << endl;
 
     // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
-    d->vao.bind();
-    d->vbo.bind();
-    d->ibo.bind();
+    // Check bind() return values - if binding fails (e.g., no GL context),
+    // early-return without clearing m_dirty so geometry will be retried later.
+    if (!d->vao.bind()) {
+      cout << "SphereGeometry: VAO bind failed" << endl;
+      return;
+    }
+    if (!d->vbo.bind()) {
+      cout << "SphereGeometry: VBO bind failed" << endl;
+      d->vao.release();
+      return;
+    }
+    if (!d->ibo.bind()) {
+      cout << "SphereGeometry: IBO bind failed" << endl;
+      d->vao.release();
+      return;
+    }
 
     ShaderProgram* program = d->program;
     if (!program->enableAttributeArray("vertex"))
@@ -192,7 +205,11 @@ void SphereGeometry::render(const Camera& camera)
     cout << d->program->error() << endl;
 
   // Bind the VAO (captures all vertex attribute state)
-  d->vao.bind();
+  // If bind fails (e.g., no GL context), skip rendering to avoid GL errors.
+  if (!d->vao.bind()) {
+    d->program->release();
+    return;
+  }
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
