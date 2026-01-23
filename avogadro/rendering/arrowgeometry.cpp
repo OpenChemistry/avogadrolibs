@@ -244,35 +244,37 @@ void ArrowGeometry::update()
     if (!d->meshVertices.empty()) {
       d->vbo.upload(d->meshVertices, BufferObject::ArrayBuffer);
       d->ibo.upload(d->meshIndices, BufferObject::ElementArrayBuffer);
-      d->numberOfVertices = d->meshVertices.size();
-      d->numberOfIndices = d->meshIndices.size();
     }
-
-    m_dirty = false;
   }
+  // update these even if empty (i.e. avoid stale data)
+  d->numberOfVertices = d->meshVertices.size();
+  d->numberOfIndices = d->meshIndices.size();
 
-  // Build and link the shader if it has not been used yet.
-  if (d->vertexShader == nullptr) {
-    d->vertexShader = new Shader;
-    d->vertexShader->setType(Shader::Vertex);
-    d->vertexShader->setSource(mesh_vs);
+  m_dirty = false;
+}
 
-    d->fragmentShader = new Shader;
-    d->fragmentShader->setType(Shader::Fragment);
-    d->fragmentShader->setSource(mesh_fs);
+// Build and link the shader if it has not been used yet.
+if (d->vertexShader == nullptr) {
+  d->vertexShader = new Shader;
+  d->vertexShader->setType(Shader::Vertex);
+  d->vertexShader->setSource(mesh_vs);
 
-    if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << endl;
-    if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << endl;
+  d->fragmentShader = new Shader;
+  d->fragmentShader->setType(Shader::Fragment);
+  d->fragmentShader->setSource(mesh_fs);
 
-    if (d->program == nullptr)
-      d->program = new ShaderProgram;
-    d->program->attachShader(*d->vertexShader);
-    d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
-      cout << d->program->error() << endl;
-  }
+  if (!d->vertexShader->compile())
+    cout << d->vertexShader->error() << endl;
+  if (!d->fragmentShader->compile())
+    cout << d->fragmentShader->error() << endl;
+
+  if (d->program == nullptr)
+    d->program = new ShaderProgram;
+  d->program->attachShader(*d->vertexShader);
+  d->program->attachShader(*d->fragmentShader);
+  if (!d->program->link())
+    cout << d->program->error() << endl;
+}
 }
 
 void ArrowGeometry::render(const Camera& camera)
