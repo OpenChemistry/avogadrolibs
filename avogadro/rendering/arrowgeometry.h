@@ -82,6 +82,16 @@ public:
   /** Set the default color for arrows added without explicit color. */
   void setColor(const Vector3ub& c) { m_color = c; }
 
+  /** Set a scale factor for arrow radii (default 1.0). */
+  void setRadiusScale(float scale)
+  {
+    m_radiusScale = scale;
+    m_dirty = true;
+  }
+
+  /** Get the current radius scale factor. */
+  float radiusScale() const { return m_radiusScale; }
+
 private:
   /**
    * @brief Update the shaders ready for rendering.
@@ -90,6 +100,7 @@ private:
 
   Core::Array<Arrow> m_arrows;
   Vector3ub m_color;
+  float m_radiusScale;
 
   bool m_dirty;
 
@@ -110,6 +121,7 @@ inline void swap(ArrowGeometry& lhs, ArrowGeometry& rhs)
   swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));
   swap(lhs.m_arrows, rhs.m_arrows);
   swap(lhs.m_color, rhs.m_color);
+  swap(lhs.m_radiusScale, rhs.m_radiusScale);
   lhs.m_dirty = rhs.m_dirty = true;
 }
 

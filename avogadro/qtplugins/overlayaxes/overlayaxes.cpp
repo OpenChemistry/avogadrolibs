@@ -53,6 +53,8 @@ void OverlayArrowGeometry::render(const Camera& camera)
   Camera arrowCamera(camera);
   arrowCamera.setViewport(maxDim / 10, maxDim / 10);
   arrowCamera.setModelView(mv);
+  // Reset orthographic scale so axes are constant size regardless of zoom
+  arrowCamera.setOrthographicScale(1.0f);
   arrowCamera.calculateOrthographic(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
 
   glViewport(static_cast<GLint>(10), static_cast<GLsizei>(10),
@@ -79,6 +81,8 @@ public:
 
 OverlayAxes::RenderImpl::RenderImpl() : arrows(new OverlayArrowGeometry)
 {
+  // Use thicker arrows for the overlay (closer to original mesh-based axes)
+  arrows->setRadiusScale(3.0f);
   // Add the three axes arrows (origin to unit axis, each with its own color)
   const Vector3f origin(0.f, 0.f, 0.f);
   arrows->addSingleArrow(origin, Vector3f(1.f, 0.f, 0.f), Vector3ub(255, 0, 0));

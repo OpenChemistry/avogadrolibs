@@ -60,13 +60,13 @@ public:
 };
 
 ArrowGeometry::ArrowGeometry()
-  : m_color(0, 255, 0), m_dirty(false), d(new Private)
+  : m_color(0, 255, 0), m_radiusScale(1.0f), m_dirty(false), d(new Private)
 {
 }
 
 ArrowGeometry::ArrowGeometry(const ArrowGeometry& other)
   : Drawable(other), m_arrows(other.m_arrows), m_color(other.m_color),
-    m_dirty(true), d(new Private)
+    m_radiusScale(other.m_radiusScale), m_dirty(true), d(new Private)
 {
 }
 
@@ -89,12 +89,13 @@ namespace {
  * @param origin Start point of the arrow
  * @param target End point of the arrow (tip of arrowhead)
  * @param color The arrow color
+ * @param radiusScale Scale factor for arrow radii (1.0 = default)
  * @param vertices Output vertex array
  * @param indices Output index array
  * @param baseOffset Starting index offset for this arrow's vertices
  */
 void generateArrowGeometry(const Vector3f& origin, const Vector3f& target,
-                           const Vector4ub& color,
+                           const Vector4ub& color, float radiusScale,
                            Core::Array<PackedVertex>& vertices,
                            Core::Array<unsigned int>& indices,
                            unsigned int baseOffset)
@@ -114,9 +115,9 @@ void generateArrowGeometry(const Vector3f& origin, const Vector3f& target,
   const float cylLength = totalLength * 0.8f;
   const float coneLength = totalLength * 0.2f;
 
-  // Radii proportional to arrow length
-  const float cylRadius = totalLength * 0.02f;
-  const float coneRadius = totalLength * 0.05f;
+  // Radii proportional to arrow length, with optional scale factor
+  const float cylRadius = totalLength * 0.02f * radiusScale;
+  const float coneRadius = totalLength * 0.05f * radiusScale;
 
   // Key vectors
   const Vector3f cylEnd = origin + axis * cylLength;
@@ -234,8 +235,8 @@ void ArrowGeometry::update()
     unsigned int baseOffset = 0;
     for (const auto& arrow : m_arrows) {
       Vector4ub color4(arrow.color[0], arrow.color[1], arrow.color[2], 255);
-      generateArrowGeometry(arrow.start, arrow.end, color4, d->meshVertices,
-                            d->meshIndices, baseOffset);
+      generateArrowGeometry(arrow.start, arrow.end, color4, m_radiusScale,
+                            d->meshVertices, d->meshIndices, baseOffset);
       baseOffset = static_cast<unsigned int>(d->meshVertices.size());
     }
 
