@@ -20,6 +20,9 @@ namespace Rendering {
  * This class wraps an OpenGL VAO, which captures the state of vertex
  * attribute bindings. Required for OpenGL 3.2+ core profile.
  *
+ * The VAO handle is lazily created on first bind(), allowing the object
+ * to be constructed before the OpenGL context is initialized.
+ *
  * Usage pattern:
  *   // During setup (when buffers change):
  *   vao.bind();

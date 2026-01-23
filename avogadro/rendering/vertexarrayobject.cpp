@@ -9,9 +9,10 @@
 
 namespace Avogadro::Rendering {
 
-VertexArrayObject::VertexArrayObject()
+VertexArrayObject::VertexArrayObject() : m_handle(0)
 {
-  glGenVertexArrays(1, &m_handle);
+  // Lazy initialization - VAO will be created on first bind()
+  // This allows the object to be constructed before GL context exists
 }
 
 VertexArrayObject::~VertexArrayObject()
@@ -22,6 +23,9 @@ VertexArrayObject::~VertexArrayObject()
 
 bool VertexArrayObject::bind()
 {
+  // Lazy initialization - create VAO on first bind when GL context exists
+  if (m_handle == 0)
+    glGenVertexArrays(1, &m_handle);
   if (m_handle == 0)
     return false;
   glBindVertexArray(m_handle);
