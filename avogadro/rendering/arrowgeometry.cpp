@@ -12,6 +12,7 @@
 #include "scene.h"
 #include "shader.h"
 #include "shaderprogram.h"
+#include "vertexarrayobject.h"
 #include "visitor.h"
 
 #include <avogadro/core/matrix.h>
@@ -51,6 +52,7 @@ public:
 
   BufferObject vbo;
   BufferObject ibo;
+  VertexArrayObject vao;
 
   inline static Shader* vertexShader = nullptr;
   inline static Shader* fragmentShader = nullptr;
@@ -223,6 +225,31 @@ void ArrowGeometry::update()
   if (m_arrows.empty())
     return;
 
+  // Build and link the shader if it has not been used yet.
+  // Must be done before VAO setup since we need the program for attribute
+  // setup.
+  if (d->vertexShader == nullptr) {
+    d->vertexShader = new Shader;
+    d->vertexShader->setType(Shader::Vertex);
+    d->vertexShader->setSource(mesh_vs);
+
+    d->fragmentShader = new Shader;
+    d->fragmentShader->setType(Shader::Fragment);
+    d->fragmentShader->setSource(mesh_fs);
+
+    if (!d->vertexShader->compile())
+      cout << d->vertexShader->error() << endl;
+    if (!d->fragmentShader->compile())
+      cout << d->fragmentShader->error() << endl;
+
+    if (d->program == nullptr)
+      d->program = new ShaderProgram;
+    d->program->attachShader(*d->vertexShader);
+    d->program->attachShader(*d->fragmentShader);
+    if (!d->program->link())
+      cout << d->program->error() << endl;
+  }
+
   // Rebuild mesh geometry if dirty
   if (!d->vbo.ready() || m_dirty) {
     d->meshVertices.clear();
@@ -248,35 +275,42 @@ void ArrowGeometry::update()
     if (!d->meshVertices.empty()) {
       d->vbo.upload(d->meshVertices, BufferObject::ArrayBuffer);
       d->ibo.upload(d->meshIndices, BufferObject::ElementArrayBuffer);
+
+      // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
+      d->vao.bind();
+      d->vbo.bind();
+      d->ibo.bind();
+
+      ShaderProgram* program = d->program;
+      if (!program->enableAttributeArray("vertex"))
+        cout << program->error() << endl;
+      if (!program->useAttributeArray("vertex", PackedVertex::vertexOffset(),
+                                      sizeof(PackedVertex), FloatType, 3,
+                                      ShaderProgram::NoNormalize)) {
+        cout << program->error() << endl;
+      }
+      if (!program->enableAttributeArray("color"))
+        cout << program->error() << endl;
+      if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
+                                      sizeof(PackedVertex), UCharType, 4,
+                                      ShaderProgram::Normalize)) {
+        cout << program->error() << endl;
+      }
+      if (!program->enableAttributeArray("normal"))
+        cout << program->error() << endl;
+      if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),
+                                      sizeof(PackedVertex), FloatType, 3,
+                                      ShaderProgram::NoNormalize)) {
+        cout << program->error() << endl;
+      }
+
+      d->vao.release();
     }
     // update these even if empty (i.e. avoid stale data)
     d->numberOfVertices = d->meshVertices.size();
     d->numberOfIndices = d->meshIndices.size();
 
     m_dirty = false;
-  }
-
-  // Build and link the shader if it has not been used yet.
-  if (d->vertexShader == nullptr) {
-    d->vertexShader = new Shader;
-    d->vertexShader->setType(Shader::Vertex);
-    d->vertexShader->setSource(mesh_vs);
-
-    d->fragmentShader = new Shader;
-    d->fragmentShader->setType(Shader::Fragment);
-    d->fragmentShader->setSource(mesh_fs);
-
-    if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << endl;
-    if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << endl;
-
-    if (d->program == nullptr)
-      d->program = new ShaderProgram;
-    d->program->attachShader(*d->vertexShader);
-    d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
-      cout << d->program->error() << endl;
   }
 }
 
@@ -285,7 +319,7 @@ void ArrowGeometry::render(const Camera& camera)
   if (m_arrows.empty())
     return;
 
-  // Prepare the VBOs, IBOs and shader program if necessary.
+  // Prepare the VBOs, IBOs, VAO, and shader program if necessary.
   update();
 
   if (d->numberOfVertices == 0 || d->numberOfIndices == 0)
@@ -296,31 +330,8 @@ void ArrowGeometry::render(const Camera& camera)
   if (!program->bind())
     cout << program->error() << endl;
 
-  d->vbo.bind();
-  d->ibo.bind();
-
-  // Set up our attribute arrays.
-  if (!program->enableAttributeArray("vertex"))
-    cout << program->error() << endl;
-  if (!program->useAttributeArray("vertex", PackedVertex::vertexOffset(),
-                                  sizeof(PackedVertex), FloatType, 3,
-                                  ShaderProgram::NoNormalize)) {
-    cout << program->error() << endl;
-  }
-  if (!program->enableAttributeArray("color"))
-    cout << program->error() << endl;
-  if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
-                                  sizeof(PackedVertex), UCharType, 4,
-                                  ShaderProgram::Normalize)) {
-    cout << program->error() << endl;
-  }
-  if (!program->enableAttributeArray("normal"))
-    cout << program->error() << endl;
-  if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),
-                                  sizeof(PackedVertex), FloatType, 3,
-                                  ShaderProgram::NoNormalize)) {
-    cout << program->error() << endl;
-  }
+  // Bind the VAO (captures all vertex attribute state)
+  d->vao.bind();
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
@@ -333,19 +344,13 @@ void ArrowGeometry::render(const Camera& camera)
   if (!program->setUniformValue("normalMatrix", normalMatrix))
     cout << program->error() << endl;
 
-  // Render using the shader and bound VBOs.
+  // Render using the shader and VAO.
   glDrawRangeElements(GL_TRIANGLES, 0,
                       static_cast<GLuint>(d->numberOfVertices - 1),
                       static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
                       reinterpret_cast<const GLvoid*>(0));
 
-  d->vbo.release();
-  d->ibo.release();
-
-  program->disableAttributeArray("vertex");
-  program->disableAttributeArray("color");
-  program->disableAttributeArray("normal");
-
+  d->vao.release();
   program->release();
 }
 

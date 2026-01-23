@@ -171,6 +171,29 @@ void CurveGeometry::update(int index)
 
   line->vbo.upload(vertices, BufferObject::ArrayBuffer);
   line->ibo.upload(indices, BufferObject::ElementArrayBuffer);
+
+  // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
+  line->vao.bind();
+  line->vbo.bind();
+  line->ibo.bind();
+
+  processShaderError(!m_shaderInfo.program.enableAttributeArray("vertex"));
+  processShaderError(!m_shaderInfo.program.useAttributeArray(
+    "vertex", ColorNormalVertex::vertexOffset(), sizeof(ColorNormalVertex),
+    FloatType, 3, ShaderProgram::NoNormalize));
+
+  processShaderError(!m_shaderInfo.program.enableAttributeArray("color"));
+  processShaderError(!m_shaderInfo.program.useAttributeArray(
+    "color", ColorNormalVertex::colorOffset(), sizeof(ColorNormalVertex),
+    UCharType, 3, ShaderProgram::Normalize));
+
+  processShaderError(!m_shaderInfo.program.enableAttributeArray("normal"));
+  processShaderError(!m_shaderInfo.program.useAttributeArray(
+    "normal", ColorNormalVertex::normalOffset(), sizeof(ColorNormalVertex),
+    FloatType, 3, ShaderProgram::NoNormalize));
+
+  line->vao.release();
+
   line->numberOfVertices = vertices.size();
   line->numberOfIndices = indices.size();
 
@@ -231,23 +254,9 @@ void CurveGeometry::render(const Camera& camera)
         update(i);
       }
 
-      line->vbo.bind();
-      line->ibo.bind();
+      // Bind the VAO (captures all vertex attribute state)
+      line->vao.bind();
 
-      processShaderError(!m_shaderInfo.program.enableAttributeArray("vertex"));
-      processShaderError(!m_shaderInfo.program.useAttributeArray(
-        "vertex", ColorNormalVertex::vertexOffset(), sizeof(ColorNormalVertex),
-        FloatType, 3, ShaderProgram::NoNormalize));
-
-      processShaderError(!m_shaderInfo.program.enableAttributeArray("color"));
-      processShaderError(!m_shaderInfo.program.useAttributeArray(
-        "color", ColorNormalVertex::colorOffset(), sizeof(ColorNormalVertex),
-        UCharType, 3, ShaderProgram::Normalize));
-
-      processShaderError(!m_shaderInfo.program.enableAttributeArray("normal"));
-      processShaderError(!m_shaderInfo.program.useAttributeArray(
-        "normal", ColorNormalVertex::normalOffset(), sizeof(ColorNormalVertex),
-        FloatType, 3, ShaderProgram::NoNormalize));
       if (line->flat && m_canBeFlat) {
         glLineWidth(-line->radius);
       }
@@ -256,11 +265,7 @@ void CurveGeometry::render(const Camera& camera)
                           0, static_cast<GLuint>(line->numberOfVertices),
                           static_cast<GLsizei>(line->numberOfIndices),
                           GL_UNSIGNED_INT, reinterpret_cast<const GLvoid*>(0));
-      line->vbo.release();
-      line->ibo.release();
-      m_shaderInfo.program.disableAttributeArray("vector");
-      m_shaderInfo.program.disableAttributeArray("color");
-      m_shaderInfo.program.disableAttributeArray("normal");
+      line->vao.release();
     }
     m_shaderInfo.program.release();
   }
