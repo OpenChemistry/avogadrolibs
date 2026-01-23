@@ -6,14 +6,17 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#version 120
+#version 400
+precision highp float;
 
 //
 // Input
 //
 
 // texture coordinates
-varying vec2 UV;
+in vec2 UV;
+
+out vec4 outColor;
 
 //
 // Uniforms
@@ -51,31 +54,31 @@ uniform float width, height;
 
 vec3 getNormalAt(vec2 normalUV)
 {
-    float xpos = texture2D(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-    float xneg = texture2D(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-    float ypos = texture2D(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-    float yneg = texture2D(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
-    float xdelta = xpos - xneg;
-    float ydelta = ypos - yneg;
-    vec3 r = vec3(xdelta, ydelta, 1.0 / width + 1.0 / height);
-    return normalize(r);
+  float xpos = texture(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
+  float xneg = texture(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
+  float ypos = texture(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
+  float yneg = texture(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
+  float xdelta = xpos - xneg;
+  float ydelta = ypos - yneg;
+  vec3 r = vec3(xdelta, ydelta, 1.0 / width + 1.0 / height);
+  return normalize(r);
 }
 
 vec3 getNormalNear(vec2 normalUV)
 {
-    float cent = texture2D(inDepthTex, normalUV).x;
-    float xpos = texture2D(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-    float xneg = texture2D(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-    float ypos = texture2D(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-    float yneg = texture2D(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
-    float xposdelta = xpos - cent;
-    float xnegdelta = cent - xneg;
-    float yposdelta = ypos - cent;
-    float ynegdelta = cent - yneg;
-    float xdelta = abs(xposdelta) > abs(xnegdelta) ? xnegdelta : xposdelta;
-    float ydelta = abs(yposdelta) > abs(ynegdelta) ? ynegdelta : yposdelta;
-    vec3 r = vec3(xdelta, ydelta, 0.5 / width + 0.5 / height);
-    return normalize(r);
+  float cent = texture(inDepthTex, normalUV).x;
+  float xpos = texture(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
+  float xneg = texture(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
+  float ypos = texture(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
+  float yneg = texture(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
+  float xposdelta = xpos - cent;
+  float xnegdelta = cent - xneg;
+  float yposdelta = ypos - cent;
+  float ynegdelta = cent - yneg;
+  float xdelta = abs(xposdelta) > abs(xnegdelta) ? xnegdelta : xposdelta;
+  float ydelta = abs(yposdelta) > abs(ynegdelta) ? ynegdelta : yposdelta;
+  vec3 r = vec3(xdelta, ydelta, 0.5 / width + 0.5 / height);
+  return normalize(r);
 }
 
 float lerp(float a, float b, float f)
@@ -156,25 +159,25 @@ const vec2 SSAOkernel[16] = vec2[16](
 
 float computeSSAOLuminosity(vec3 normal)
 {
-    float totalOcclusion = 0.0;
-    float depth = texture2D(inDepthTex, UV).x;
-    float A = (width * UV.x + 10 * height * UV.y) * 2.0 * 3.14159265358979 * 5.0 / 16.0;
-    float S = sin(A);
-    float C = cos(A);
-    mat2 rotation = mat2(
-            C, -S,
-            S, C
-        );
-    for (int i = 0; i < 16; i++) {
-        vec2 samplePoint = rotation * SSAOkernel[i];
-        float occluderDepth = texture2D(inDepthTex, UV + samplePoint).x;
-        vec3 occluder = vec3(samplePoint.xy, depth - occluderDepth);
-        float d = length(occluder);
-        float occlusion = max(0.0, dot(normal, occluder)) * (1.0 / (1.0 + d));
-        totalOcclusion += occlusion;
-    }
-
-    return max(0.0, 1.2 - inAoStrength * totalOcclusion);
+  float totalOcclusion = 0.0;
+  float depth = texture(inDepthTex, UV).x;
+  float A = (width * UV.x + 10 * height * UV.y) * 2.0 * 3.14159265358979 * 5.0 / 16.0;
+  float S = sin(A);
+  float C = cos(A);
+  mat2 rotation = mat2(
+    C, -S,
+    S, C
+  );
+  for (int i = 0; i < 16; i++) {
+    vec2 samplePoint = rotation * SSAOkernel[i];
+    float occluderDepth = texture(inDepthTex, UV + samplePoint).x;
+    vec3 occluder = vec3(samplePoint.xy, depth - occluderDepth);
+    float d = length(occluder);
+    float occlusion = max(0.0, dot(normal, occluder)) * (1.0 / (1.0 + d));
+    totalOcclusion += occlusion;
+  }
+  
+  return max(0.0, 1.2 - inAoStrength * totalOcclusion);
 }
 
 float computeEdgeLuminosity(vec3 normal)
@@ -237,6 +240,7 @@ void main() {
     // Set the final fragment color
     gl_FragColor = finalColor;
 
-    // Set fragment depth
-    gl_FragDepth = texture2D(inDepthTex, UV).x;
+  vec4 color = texture(inRGBTex, UV);
+  outColor = vec4(color.xyz * luminosity, color.w);
+  gl_FragDepth = texture(inDepthTex, UV).x;
 }
