@@ -184,7 +184,7 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
       !shaderProgram->setUniformValue("vpDims", vpDims) ||
       !shaderProgram->setUniformValue("anchor", anchor) ||
       !shaderProgram->setUniformValue("radius", radius) ||
-      !shaderProgram->setTextureSampler("texture", texture)) {
+      !shaderProgram->setTextureSampler("u_texture", texture)) {
     std::cerr << "Error setting up TextLabelBase shader program: "
               << shaderProgram->error() << std::endl;
     vao.release();

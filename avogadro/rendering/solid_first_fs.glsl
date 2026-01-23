@@ -104,26 +104,25 @@ float calcBlur(float z, float pixelScale) {
 
 vec4 applyBlur(vec2 texCoord) {
     float pixelScale = max(width, height);
-    float origZ = depthToZ(texture2D(inDepthTex, texCoord).x);
+    float origZ = depthToZ(texture(inDepthTex, texCoord).x);
     float blurAmt = calcBlur(origZ, pixelScale);
     // Skip blurring if the original depth is less than the threshold
     if (origZ < uoffset * inDofPosition) {
-        return texture2D(inRGBTex, texCoord);
+        return texture(inRGBTex, texCoord);
     }
     float total = 1.0;
-    vec4 color = texture2D(inRGBTex, texCoord);
+    vec4 color = texture(inRGBTex, texCoord);
     for (int i = 0; i < 32; i++) {
         float t = (float(i) / float(64));
         float angle = (t * 4.0) * 6.28319;
         float radius = (t * 2. - 1.);
         angle += 1.0 * rand(gl_FragCoord.xy);
         vec2 offset = (vec2(cos(angle), sin(angle)) * radius * 0.05 * inDofStrength) / pixelScale;
-        float z = depthToZ(texture2D(inDepthTex, texCoord + offset).x);
+        float z = depthToZ(texture(inDepthTex, texCoord + offset).x);
         float sampleBlur = calcBlur(z, pixelScale);
         float weight = 1.0 - smoothstep(0.0, 1.0, abs(z - origZ) / blurAmt);
-        vec4
-        sample = texture2D(inRGBTex, texCoord+offset);
-        color += weight * sample;
+        vec4 texSample = texture(inRGBTex, texCoord+offset);
+        color += weight * texSample;
         total += weight;
 }
 return color / total;
@@ -131,9 +130,9 @@ return color / total;
 
 vec4 applyFog(vec2 texCoord) {
     vec4 finalColor = mix(
-            texture2D(inRGBTex, texCoord),
+            texture(inRGBTex, texCoord),
             vec4(vec3(fogR, fogG, fogB), 1.),
-            pow(texture2D(inDepthTex, texCoord.xy).r, uoffset * inFogPosition / 10.0)
+            pow(texture(inDepthTex, texCoord.xy).r, uoffset * inFogPosition / 10.0)
         ) + inFogStrength / 100.0;
     return finalColor;
 }
@@ -176,7 +175,7 @@ float computeSSAOLuminosity(vec3 normal)
     float occlusion = max(0.0, dot(normal, occluder)) * (1.0 / (1.0 + d));
     totalOcclusion += occlusion;
   }
-  
+
   return max(0.0, 1.2 - inAoStrength * totalOcclusion);
 }
 
@@ -187,7 +186,7 @@ float computeEdgeLuminosity(vec3 normal)
 
 void main() {
     float luminosity = 1.0;
-    vec4 color = texture2D(inRGBTex, UV);
+    vec4 color = texture(inRGBTex, UV);
     vec4 finalColor = color; // Initialize finalColor with base color
 
     // Compute luminosity based on Ambient Occlusion (AO) and Edge Detection
@@ -238,9 +237,6 @@ void main() {
     }
 
     // Set the final fragment color
-    gl_FragColor = finalColor;
-
-  vec4 color = texture(inRGBTex, UV);
-  outColor = vec4(color.xyz * luminosity, color.w);
-  gl_FragDepth = texture(inDepthTex, UV).x;
+    outColor = finalColor;
+    gl_FragDepth = texture(inDepthTex, UV).x;
 }
