@@ -341,7 +341,7 @@ void PLYVisitor::visitCylinderLateralMethod(const CylinderColor& geometry,
 
 void PLYVisitor::visit(MeshGeometry& geometry)
 {
-  Core::Array<Rendering::MeshGeometry::PackedVertex> v = geometry.vertices();
+  Core::Array<Rendering::PackedVertex> v = geometry.vertices();
   Core::Array<unsigned int> tris = geometry.triangles();
   ostringstream vertexStr;
   ostringstream faceStr;
