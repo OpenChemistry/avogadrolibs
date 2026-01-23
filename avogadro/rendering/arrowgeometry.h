@@ -22,6 +22,19 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT ArrowGeometry : public Drawable
 {
 public:
+  /** Data for a single arrow. */
+  struct Arrow
+  {
+    Vector3f start;
+    Vector3f end;
+    Vector3ub color;
+
+    Arrow(const Vector3f& s, const Vector3f& e, const Vector3ub& c)
+      : start(s), end(e), color(c)
+    {
+    }
+  };
+
   static const size_t InvalidIndex;
 
   ArrowGeometry();
@@ -47,26 +60,26 @@ public:
    */
   void clear() override;
 
-  void drawLine(const Vector3f& start, const Vector3f& end, double lineWidth);
-  void drawCone(const Vector3f& base, const Vector3f& cap, double baseRadius,
-                double);
-
   /**
-   * Add a single arrow object.
+   * Add a single arrow object with a specific color.
    * @param pos1 The start coordinate of the arrow.
    * @param pos2 The end coordinate of the arrow.
-   * @{
+   * @param color The color of this arrow.
+   */
+  void addSingleArrow(const Vector3f& pos1, const Vector3f& pos2,
+                      const Vector3ub& color);
+
+  /**
+   * Add a single arrow object using the default color.
+   * @param pos1 The start coordinate of the arrow.
+   * @param pos2 The end coordinate of the arrow.
    */
   void addSingleArrow(const Vector3f& pos1, const Vector3f& pos2);
-  /** @} */
 
-  /** The vertex array. */
-  Core::Array<std::pair<Vector3f, Vector3f>> vertices() const
-  {
-    return m_vertices;
-  }
+  /** The arrow array. */
+  const Core::Array<Arrow>& arrows() const { return m_arrows; }
 
-  /** Set the color of the arrow */
+  /** Set the default color for arrows added without explicit color. */
   void setColor(const Vector3ub& c) { m_color = c; }
 
 private:
@@ -75,8 +88,7 @@ private:
    */
   void update();
 
-  Core::Array<std::pair<Vector3f, Vector3f>> m_vertices;
-  Core::Array<unsigned int> m_lineStarts;
+  Core::Array<Arrow> m_arrows;
   Vector3ub m_color;
 
   bool m_dirty;
@@ -96,7 +108,8 @@ inline void swap(ArrowGeometry& lhs, ArrowGeometry& rhs)
 {
   using std::swap;
   swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));
-  swap(lhs.m_vertices, rhs.m_vertices);
+  swap(lhs.m_arrows, rhs.m_arrows);
+  swap(lhs.m_color, rhs.m_color);
   lhs.m_dirty = rhs.m_dirty = true;
 }
 

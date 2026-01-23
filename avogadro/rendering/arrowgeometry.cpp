@@ -8,6 +8,7 @@
 #include "avogadrogl.h"
 #include "bufferobject.h"
 #include "camera.h"
+#include "packedvertex.h"
 #include "scene.h"
 #include "shader.h"
 #include "shaderprogram.h"
@@ -16,12 +17,19 @@
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/vector.h>
 
+#include <Eigen/Geometry>
+
+#include <cmath>
 #include <iostream>
 #include <limits>
 
 namespace {
-#include "arrow_vs.h"
-}
+// Use the mesh shaders for proper lighting
+#include "mesh_fs.h"
+#include "mesh_vs.h"
+
+const float M_PI_F = 3.14159265358979323846f;
+} // namespace
 
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
@@ -35,10 +43,20 @@ namespace Avogadro::Rendering {
 class ArrowGeometry::Private
 {
 public:
-  Private() {}
+  Private() : numberOfVertices(0), numberOfIndices(0) {}
 
-  Shader vertexShader;
-  ShaderProgram program;
+  BufferObject vbo;
+  BufferObject ibo;
+
+  inline static Shader* vertexShader = nullptr;
+  inline static Shader* fragmentShader = nullptr;
+  inline static ShaderProgram* program = nullptr;
+
+  Core::Array<PackedVertex> meshVertices;
+  Core::Array<unsigned int> meshIndices;
+
+  size_t numberOfVertices;
+  size_t numberOfIndices;
 };
 
 ArrowGeometry::ArrowGeometry()
@@ -47,9 +65,8 @@ ArrowGeometry::ArrowGeometry()
 }
 
 ArrowGeometry::ArrowGeometry(const ArrowGeometry& other)
-  : Drawable(other), m_vertices(other.m_vertices),
-    m_lineStarts(other.m_lineStarts), m_color(other.m_color), m_dirty(true),
-    d(new Private)
+  : Drawable(other), m_arrows(other.m_arrows), m_color(other.m_color),
+    m_dirty(true), d(new Private)
 {
 }
 
@@ -63,131 +80,287 @@ void ArrowGeometry::accept(Visitor& visitor)
   visitor.visit(*this);
 }
 
-void ArrowGeometry::update()
+namespace {
+
+/**
+ * Generate arrow geometry (cylinder shaft + cone head) for a single arrow.
+ * Adapted from overlayaxes plugin.
+ *
+ * @param origin Start point of the arrow
+ * @param target End point of the arrow (tip of arrowhead)
+ * @param color The arrow color
+ * @param vertices Output vertex array
+ * @param indices Output index array
+ * @param baseOffset Starting index offset for this arrow's vertices
+ */
+void generateArrowGeometry(const Vector3f& origin, const Vector3f& target,
+                           const Vector4ub& color,
+                           Core::Array<PackedVertex>& vertices,
+                           Core::Array<unsigned int>& indices,
+                           unsigned int baseOffset)
 {
-  if (m_vertices.empty())
+  Vector3f arrowVec = target - origin;
+  float totalLength = arrowVec.norm();
+  if (totalLength < 1e-6f)
     return;
 
+  Vector3f axis = arrowVec.normalized();
+
+  // Number of angular samples for cylinder/cone
+  const unsigned int res = 12;
+  const auto resf = static_cast<float>(res);
+
+  // Proportions: 80% cylinder, 20% cone head
+  const float cylLength = totalLength * 0.8f;
+  const float coneLength = totalLength * 0.2f;
+
+  // Radii proportional to arrow length
+  const float cylRadius = totalLength * 0.02f;
+  const float coneRadius = totalLength * 0.05f;
+
+  // Key vectors
+  const Vector3f cylEnd = origin + axis * cylLength;
+  const Vector3f radialUnit = axis.unitOrthogonal();
+
+  // Index offsets within this arrow's vertex set
+  const unsigned int coneBaseOffset = 0;
+  const unsigned int coneBaseRadialsOffset = coneBaseOffset + 1;
+  const unsigned int coneSideRadialsOffset = coneBaseRadialsOffset + res;
+  const unsigned int coneTipsOffset = coneSideRadialsOffset + res;
+  const unsigned int cylBaseRadialsOffset = coneTipsOffset + res;
+  const unsigned int cylTopRadialsOffset = cylBaseRadialsOffset + res;
+  const unsigned int numVertices = cylTopRadialsOffset + res;
+
+  // Allocate temporary vertex/normal arrays
+  Core::Array<Vector3f> verts(numVertices);
+  Core::Array<Vector3f> norms(numVertices);
+
+  // Cone base center point
+  verts[coneBaseOffset] = cylEnd;
+  norms[coneBaseOffset] = -axis;
+
+  // Create radial transform for stepping around the circle
+  Eigen::Affine3f xform(Eigen::AngleAxisf(2.f * M_PI_F / resf, axis));
+  Vector3f radial = radialUnit;
+
+  // Build vertex list
+  for (unsigned int i = 0; i < res; ++i) {
+    Vector3f coneRadial = cylEnd + (radial * coneRadius);
+
+    // Cone side normal calculation
+    Vector3f coneVec = axis * coneLength;
+    Vector3f coneSideNormal = -(coneVec.cross(radial * coneRadius))
+                                 .cross(coneVec - radial * coneRadius)
+                                 .normalized();
+
+    // Cone base radials (facing back)
+    verts[coneBaseRadialsOffset + i] = coneRadial;
+    norms[coneBaseRadialsOffset + i] = -axis;
+
+    // Cone side radials
+    verts[coneSideRadialsOffset + i] = coneRadial;
+    norms[coneSideRadialsOffset + i] = coneSideNormal;
+
+    // Cylinder vertices
+    Vector3f cylRadial = radial * cylRadius;
+    verts[cylBaseRadialsOffset + i] = origin + cylRadial;
+    norms[cylBaseRadialsOffset + i] = radial;
+
+    verts[cylTopRadialsOffset + i] = cylEnd + cylRadial;
+    norms[cylTopRadialsOffset + i] = radial;
+
+    radial = xform * radial;
+  }
+
+  // Cone tip normals (average of adjacent side normals)
+  for (unsigned int i = 0; i < res; ++i) {
+    unsigned int ind1 = coneSideRadialsOffset + i;
+    unsigned int ind2 = coneSideRadialsOffset + ((i + 1) % res);
+    verts[coneTipsOffset + i] = target;
+    norms[coneTipsOffset + i] = (norms[ind1] + norms[ind2]).normalized();
+  }
+
+  // Add vertices to output array
+  size_t vertexStart = vertices.size();
+  for (unsigned int i = 0; i < numVertices; ++i) {
+    vertices.push_back(PackedVertex(color, norms[i], verts[i]));
+  }
+
+  // Build triangle indices
+  for (unsigned int i = 0; i < res; ++i) {
+    unsigned int i2 = (i + 1) % res;
+
+    // Cone sides
+    indices.push_back(baseOffset + coneTipsOffset + i);
+    indices.push_back(baseOffset + coneSideRadialsOffset + i);
+    indices.push_back(baseOffset + coneSideRadialsOffset + i2);
+
+    // Cone base
+    indices.push_back(baseOffset + coneBaseRadialsOffset + i);
+    indices.push_back(baseOffset + coneBaseOffset);
+    indices.push_back(baseOffset + coneBaseRadialsOffset + i2);
+
+    // Cylinder side quad (2 triangles)
+    indices.push_back(baseOffset + cylTopRadialsOffset + i);
+    indices.push_back(baseOffset + cylBaseRadialsOffset + i);
+    indices.push_back(baseOffset + cylTopRadialsOffset + i2);
+
+    indices.push_back(baseOffset + cylBaseRadialsOffset + i);
+    indices.push_back(baseOffset + cylTopRadialsOffset + i2);
+    indices.push_back(baseOffset + cylBaseRadialsOffset + i2);
+  }
+}
+
+} // anonymous namespace
+
+void ArrowGeometry::update()
+{
+  if (m_arrows.empty())
+    return;
+
+  // Rebuild mesh geometry if dirty
+  if (!d->vbo.ready() || m_dirty) {
+    d->meshVertices.clear();
+    d->meshIndices.clear();
+
+    // Number of vertices per arrow (see generateArrowGeometry)
+    const unsigned int res = 12;
+    const unsigned int vertsPerArrow = 1 + res * 5; // cone base + 5 rings
+
+    // Reserve space for all arrows
+    d->meshVertices.reserve(m_arrows.size() * vertsPerArrow);
+    d->meshIndices.reserve(m_arrows.size() * res * 4 * 3); // 4 tris * 3 indices
+
+    unsigned int baseOffset = 0;
+    for (const auto& arrow : m_arrows) {
+      Vector4ub color4(arrow.color[0], arrow.color[1], arrow.color[2], 255);
+      generateArrowGeometry(arrow.start, arrow.end, color4, d->meshVertices,
+                            d->meshIndices, baseOffset);
+      baseOffset = static_cast<unsigned int>(d->meshVertices.size());
+    }
+
+    // Upload to GPU
+    if (!d->meshVertices.empty()) {
+      d->vbo.upload(d->meshVertices, BufferObject::ArrayBuffer);
+      d->ibo.upload(d->meshIndices, BufferObject::ElementArrayBuffer);
+      d->numberOfVertices = d->meshVertices.size();
+      d->numberOfIndices = d->meshIndices.size();
+    }
+
+    m_dirty = false;
+  }
+
   // Build and link the shader if it has not been used yet.
-  if (d->vertexShader.type() == Shader::Unknown) {
-    d->vertexShader.setType(Shader::Vertex);
-    d->vertexShader.setSource(arrow_vs);
-    if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << endl;
-    d->program.attachShader(d->vertexShader);
-    if (!d->program.link())
-      cout << d->program.error() << endl;
+  if (d->vertexShader == nullptr) {
+    d->vertexShader = new Shader;
+    d->vertexShader->setType(Shader::Vertex);
+    d->vertexShader->setSource(mesh_vs);
+
+    d->fragmentShader = new Shader;
+    d->fragmentShader->setType(Shader::Fragment);
+    d->fragmentShader->setSource(mesh_fs);
+
+    if (!d->vertexShader->compile())
+      cout << d->vertexShader->error() << endl;
+    if (!d->fragmentShader->compile())
+      cout << d->fragmentShader->error() << endl;
+
+    if (d->program == nullptr)
+      d->program = new ShaderProgram;
+    d->program->attachShader(*d->vertexShader);
+    d->program->attachShader(*d->fragmentShader);
+    if (!d->program->link())
+      cout << d->program->error() << endl;
   }
 }
 
 void ArrowGeometry::render(const Camera& camera)
 {
-  if (m_vertices.empty())
+  if (m_arrows.empty())
     return;
 
-  // Prepare the shader program if necessary.
+  // Prepare the VBOs, IBOs and shader program if necessary.
   update();
 
-  if (!d->program.bind())
-    cout << d->program.error() << endl;
+  if (d->numberOfVertices == 0 || d->numberOfIndices == 0)
+    return;
+
+  ShaderProgram* program = d->program;
+
+  if (!program->bind())
+    cout << program->error() << endl;
+
+  d->vbo.bind();
+  d->ibo.bind();
+
+  // Set up our attribute arrays.
+  if (!program->enableAttributeArray("vertex"))
+    cout << program->error() << endl;
+  if (!program->useAttributeArray("vertex", PackedVertex::vertexOffset(),
+                                  sizeof(PackedVertex), FloatType, 3,
+                                  ShaderProgram::NoNormalize)) {
+    cout << program->error() << endl;
+  }
+  if (!program->enableAttributeArray("color"))
+    cout << program->error() << endl;
+  if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
+                                  sizeof(PackedVertex), UCharType, 4,
+                                  ShaderProgram::Normalize)) {
+    cout << program->error() << endl;
+  }
+  if (!program->enableAttributeArray("normal"))
+    cout << program->error() << endl;
+  if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),
+                                  sizeof(PackedVertex), FloatType, 3,
+                                  ShaderProgram::NoNormalize)) {
+    cout << program->error() << endl;
+  }
 
   // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program.error() << endl;
+  if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
+    cout << program->error() << endl;
   }
-  if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
-    cout << d->program.error() << endl;
+  if (!program->setUniformValue("projection", camera.projection().matrix())) {
+    cout << program->error() << endl;
   }
+  Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
+  if (!program->setUniformValue("normalMatrix", normalMatrix))
+    cout << program->error() << endl;
 
-  // Render the arrows using the shader.
-  for (auto& m_vertice : m_vertices) {
-    Vector3f v3 = m_vertice.first + 0.8 * (m_vertice.second - m_vertice.first);
-    drawLine(m_vertice.first, v3, 2);
-    drawCone(v3, m_vertice.second, 0.05, 1.0);
-  }
+  // Render using the shader and bound VBOs.
+  glDrawRangeElements(GL_TRIANGLES, 0,
+                      static_cast<GLuint>(d->numberOfVertices - 1),
+                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
+                      reinterpret_cast<const GLvoid*>(0));
 
-  d->program.release();
+  d->vbo.release();
+  d->ibo.release();
+
+  program->disableAttributeArray("vertex");
+  program->disableAttributeArray("color");
+  program->disableAttributeArray("normal");
+
+  program->release();
 }
 
 void ArrowGeometry::clear()
 {
-  m_vertices.clear();
-  m_lineStarts.clear();
+  m_arrows.clear();
+  d->meshVertices.clear();
+  d->meshIndices.clear();
   m_dirty = true;
 }
 
-void ArrowGeometry::drawLine(const Vector3f& start, const Vector3f& end,
-                             double lineWidth)
+void ArrowGeometry::addSingleArrow(const Vector3f& pos1, const Vector3f& pos2,
+                                   const Vector3ub& color)
 {
-  // Draw a line between two points of the specified thickness
-  glPushAttrib(GL_LIGHTING_BIT);
-  glDisable(GL_LIGHTING);
-
-  glLineWidth(lineWidth);
-
-  // Draw the line
-  glBegin(GL_LINE_STRIP);
-  glVertex3fv(start.data());
-  glVertex3fv(end.data());
-  glEnd();
-
-  glPopAttrib();
-}
-
-void ArrowGeometry::drawCone(const Vector3f& base, const Vector3f& cap,
-                             double baseRadius, double)
-{
-  const int CONE_TESS_LEVEL = 30;
-  // This draws a cone which will be most useful for drawing arrows etc.
-  Vector3f axis = cap - base;
-  Vector3f axisNormalized = axis.normalized();
-  Vector3f ortho1, ortho2;
-  ortho1 = axisNormalized.unitOrthogonal();
-  ortho1 *= baseRadius;
-  ortho2 = axisNormalized.cross(ortho1);
-
-  // Draw the cone
-  // unfortunately we can't use a GL_TRIANGLE_FAN because this would force
-  // having a common normal vector at the tip.
-  for (int j = 0; j < CONE_TESS_LEVEL; j++) {
-    const double alphaStep = 2.0 * M_PI / CONE_TESS_LEVEL;
-    double alpha = j * alphaStep;
-    double alphaNext = alpha + alphaStep;
-    double alphaPrec = alpha - alphaStep;
-    Vector3f v = sin(alpha) * ortho1 + cos(alpha) * ortho2 + base;
-    Vector3f vNext = sin(alphaNext) * ortho1 + cos(alphaNext) * ortho2 + base;
-    Vector3f vPrec = sin(alphaPrec) * ortho1 + cos(alphaPrec) * ortho2 + base;
-    Vector3f n = (cap - v).cross(v - vPrec).normalized();
-    Vector3f nNext = (cap - vNext).cross(vNext - v).normalized();
-    glBegin(GL_TRIANGLES);
-    glColor3ub(m_color[0], m_color[1], m_color[2]);
-    glNormal3fv((n + nNext).normalized().data());
-    glVertex3fv(cap.data());
-    glNormal3fv(nNext.data());
-    glVertex3fv(vNext.data());
-    glNormal3fv(n.data());
-    glVertex3fv(v.data());
-    glEnd();
-  }
-
-  // Now to draw the base
-  glBegin(GL_TRIANGLE_FAN);
-  glNormal3fv((-axisNormalized).eval().data());
-  glVertex3fv(base.data());
-  for (int j = 0; j <= CONE_TESS_LEVEL; j++) {
-    double alpha = -j * M_PI / (CONE_TESS_LEVEL / 2.0);
-    Vector3f v = cos(alpha) * ortho1 + sin(alpha) * ortho2 + base;
-    glVertex3fv(v.data());
-  }
-  glEnd();
+  m_arrows.push_back(Arrow(pos1, pos2, color));
+  m_dirty = true;
 }
 
 void ArrowGeometry::addSingleArrow(const Vector3f& pos1, const Vector3f& pos2)
 {
-  m_vertices.reserve(m_vertices.size() + 1);
-  m_vertices.push_back(std::pair<Vector3f, Vector3f>(pos1, pos2));
-
-  m_dirty = true;
+  addSingleArrow(pos1, pos2, m_color);
 }
 
 } // namespace Avogadro::Rendering
