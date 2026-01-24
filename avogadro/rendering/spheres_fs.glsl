@@ -1,11 +1,16 @@
-varying vec2 v_texCoord;
-varying vec4 eyePosition;
-varying vec3 fColor;
-uniform mat3 normal;
-varying float radius;
+#version 400 
+precision highp float; 
+   
+in vec2 v_texCoord;
+in vec4 eyePosition;
+in vec3 fColor;
+in float radius;
 
+uniform mat3 normal;
 uniform float opacity;
 uniform mat4 projection;
+
+out vec4 outColor;
 
 void main()
 {
@@ -24,7 +29,7 @@ void main()
   vec3 diffuse = 0.55 * fColor;
   vec3 specular = 0.5 * (vec3(1, 1, 1) - fColor);
   vec3 color = ambient + df * diffuse + pow(sf, 20.0) * specular;
-  gl_FragColor = vec4(color, opacity);
+  outColor = vec4(color, opacity);
 
   // determine fragment depth
   vec4 pos = eyePosition;

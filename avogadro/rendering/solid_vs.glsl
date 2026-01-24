@@ -9,14 +9,17 @@
 //
 
 // input coordinates
-attribute vec3 inXYZ;
+#version 400
+precision highp float;
+
+in vec3 inXYZ;
 
 //
 // Output
 //
 
 // texture coordinates
-varying vec2 UV;
+out vec2 UV;
 
 void main()
 {

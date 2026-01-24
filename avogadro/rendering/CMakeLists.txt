@@ -47,6 +47,7 @@ avogadro_headers(Rendering
   textrenderstrategy.h
   texture2d.h
   transformnode.h
+  vertexarrayobject.h
   visitor.h
   volumegeometry.h
   vrmlvisitor.h
@@ -89,6 +90,7 @@ target_sources(Rendering PRIVATE
   textrenderstrategy.cpp
   texture2d.cpp
   transformnode.cpp
+  vertexarrayobject.cpp
   visitor.cpp
   volumegeometry.cpp
   vrmlvisitor.cpp
