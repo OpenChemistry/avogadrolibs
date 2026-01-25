@@ -117,10 +117,6 @@ jobs:
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
-    - name: Check build with tmate
-      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
-      timeout-minutes: 60
-
     - name: Create Windows Packages
       if: runner.os == 'Windows'
       shell: bash
@@ -131,9 +127,11 @@ jobs:
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
         # run windeployqt
         windeployqt --release prefix/bin/avogadro2.exe
-        # copy ICU DLLs from Qt installation (needed for Windows 10 1903+)
-        # windeployqt doesn't always copy these automatically
-        cp "${QT_ROOT_DIR}/bin"/icu*.dll prefix/bin/ 2>/dev/null || true
+        # copy Microsoft ICU DLLs for Windows 10 pre-1903 compatibility
+        # The system icu.dll is only available on Windows 10 1903+
+        # We redistribute Microsoft's ICU from NuGet for older systems
+        nuget install Microsoft.ICU.ICU4C.Runtime -OutputDirectory ./icu-nuget -Source https://api.nuget.org/v3/index.json
+        cp ./icu-nuget/Microsoft.ICU.ICU4C.Runtime.*/runtimes/win-x64/native/*.dll prefix/bin/
         mv prefix avogadro2
         # 7z a Avogadro2-windows.zip avogadro2
         cd avogadro2
