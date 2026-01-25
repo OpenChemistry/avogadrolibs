@@ -10,20 +10,7 @@
 
 #include <Eigen/LU>
 
-using std::vector;
-using std::cout;
-using std::endl;
-using Eigen::SelfAdjointEigenSolver;
-
 namespace Avogadro::Core {
-
-SlaterSet::SlaterSet() : m_initialized(false)
-{
-}
-
-SlaterSet::~SlaterSet()
-{
-}
 
 bool SlaterSet::addSlaterIndices(const std::vector<int>& i)
 {
@@ -74,14 +61,12 @@ bool SlaterSet::addDensityMatrix(const Eigen::MatrixXd& d)
   return true;
 }
 
-unsigned int SlaterSet::molecularOrbitalCount(ElectronType)
+unsigned int SlaterSet::molecularOrbitalCount(ElectronType) const
 {
   return static_cast<unsigned int>(m_overlap.cols());
 }
 
-void SlaterSet::outputAll()
-{
-}
+void SlaterSet::outputAll() {}
 
 void SlaterSet::initCalculation()
 {
@@ -90,7 +75,7 @@ void SlaterSet::initCalculation()
 
   m_normalized.resize(m_overlap.cols(), m_overlap.rows());
 
-  SelfAdjointEigenSolver<MatrixX> s(m_overlap);
+  Eigen::SelfAdjointEigenSolver<MatrixX> s(m_overlap);
   const MatrixX& p = s.eigenvectors();
   MatrixX m =
     p * s.eigenvalues().array().inverse().array().sqrt().matrix().asDiagonal() *
@@ -98,7 +83,8 @@ void SlaterSet::initCalculation()
   m_normalized = m * m_eigenVectors;
 
   if (!(m_overlap * m * m).eval().isIdentity())
-    cout << "Identity test FAILED - do you need a newer version of Eigen?\n";
+    std::cout
+      << "Identity test FAILED - do you need a newer version of Eigen?\n";
 
   m_factors.resize(m_zetas.size());
   m_PQNs = m_pqns;
@@ -140,12 +126,12 @@ void SlaterSet::initCalculation()
         m_PQNs[i] -= 3;
         break;
       default:
-        cout << "Orbital " << i << " not handled, type " << m_slaterTypes[i]
-             << endl;
+        std::cout << "Orbital " << i << " not handled, type "
+                  << m_slaterTypes[i] << std::endl;
     }
   }
   // Convert the exponents into Angstroms
-  for (double & m_zeta : m_zetas)
+  for (double& m_zeta : m_zetas)
     m_zeta = m_zeta / BOHR_TO_ANGSTROM_D;
 
   m_initialized = true;
@@ -153,9 +139,20 @@ void SlaterSet::initCalculation()
 
 inline unsigned int SlaterSet::factorial(unsigned int n)
 {
-  if (n <= 1)
-    return n;
+  switch (n) {
+    case 0:
+    case 1:
+      return 1;
+    case 2:
+      return 2;
+    case 3:
+      return 6;
+    case 4:
+      return 24;
+    case 5:
+      return 120;
+  }
   return (n * factorial(n - 1));
 }
 
-} // End namespace Avogadro
+} // End namespace Avogadro::Core

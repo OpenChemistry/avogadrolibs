@@ -58,20 +58,20 @@ public:
   /**
    * Type used to identify a job within this batch. Unique to this object.
    */
-  typedef int BatchId;
+  using BatchId = int;
   static const BatchId InvalidBatchId;
 
   /**
    * Type used to identify requests sent to the MoleQueue server.
    */
-  typedef int RequestId;
+  using RequestId = int;
   static const RequestId InvalidRequestId;
 
   /**
    * Type used by MoleQueue to identify jobs. Unique across the connected
    * MoleQueue server.
    */
-  typedef unsigned int ServerId;
+  using ServerId = unsigned int;
   static const ServerId InvalidServerId;
 
   /**
@@ -80,7 +80,7 @@ public:
    */
   explicit BatchJob(QObject* parent = nullptr);
   explicit BatchJob(const QString& scriptFilePath, QObject* parent = nullptr);
-  ~BatchJob() override;
+  ~BatchJob() override = default;
 
   /**
    * Options for the input generator.
@@ -235,9 +235,7 @@ private: // variables
   QMap<RequestId, Request> m_requests;
 };
 
-inline BatchJob::Request::Request(Type t, BatchId b) : type(t), batchId(b)
-{
-}
+inline BatchJob::Request::Request(Type t, BatchId b) : type(t), batchId(b) {}
 
 inline void BatchJob::setInputGeneratorOptions(const QJsonObject& opts)
 {
@@ -288,11 +286,10 @@ inline BatchJob::JobState BatchJob::jobState(BatchJob::BatchId id) const
 
 inline BatchJob::ServerId BatchJob::serverId(BatchJob::BatchId id) const
 {
-  return id < m_jobObjects.size()
-           ? m_jobObjects[id]
-               .value("moleQueueId", InvalidServerId)
-               .value<ServerId>()
-           : InvalidServerId;
+  return id < m_jobObjects.size() ? m_jobObjects[id]
+                                      .value("moleQueueId", InvalidServerId)
+                                      .value<ServerId>()
+                                  : InvalidServerId;
 }
 
 inline JobObject BatchJob::jobObject(BatchJob::BatchId id) const
@@ -315,10 +312,8 @@ inline bool BatchJob::isTerminal(BatchJob::JobState state)
 
 inline bool BatchJob::hasUnfinishedJobs() const
 {
-  for (QVector<JobState>::const_iterator it = m_states.begin(),
-                                         itEnd = m_states.end();
-       it != itEnd; ++it) {
-    if (!isTerminal(*it))
+  for (auto m_state : m_states) {
+    if (!isTerminal(m_state))
       return true;
   }
   return false;
@@ -327,10 +322,8 @@ inline bool BatchJob::hasUnfinishedJobs() const
 inline int BatchJob::unfinishedJobCount() const
 {
   int result = 0;
-  for (QVector<JobState>::const_iterator it = m_states.begin(),
-                                         itEnd = m_states.end();
-       it != itEnd; ++it) {
-    if (!isTerminal(*it))
+  for (auto m_state : m_states) {
+    if (!isTerminal(m_state))
       ++result;
   }
   return result;
@@ -339,10 +332,8 @@ inline int BatchJob::unfinishedJobCount() const
 inline int BatchJob::finishedJobCount() const
 {
   int result = 0;
-  for (QVector<JobState>::const_iterator it = m_states.begin(),
-                                         itEnd = m_states.end();
-       it != itEnd; ++it) {
-    if (isTerminal(*it))
+  for (auto m_state : m_states) {
+    if (isTerminal(m_state))
       ++result;
   }
   return result;

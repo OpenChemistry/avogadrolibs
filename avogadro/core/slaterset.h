@@ -13,8 +13,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class SlaterSet slaterset.h
@@ -42,12 +41,12 @@ public:
   /**
    * Constructor.
    */
-  SlaterSet();
+  SlaterSet() = default;
 
   /**
    * Destructor.
    */
-  ~SlaterSet() override;
+  ~SlaterSet() override = default;
 
   /**
    * Clone.
@@ -117,7 +116,7 @@ public:
   /**
    * @return The number of molecular orbitals in the BasisSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = Paired) override;
+  unsigned int molecularOrbitalCount(ElectronType type = Paired) const override;
 
   /**
    * @return True of the basis set is valid, false otherwise.
@@ -131,7 +130,7 @@ public:
   void initCalculation();
 
   /**
-   * Accessors for the various properties of the GaussianSet.
+   * Accessors for the various properties of the SlaterSet.
    */
   std::vector<int>& slaterIndices() { return m_slaterIndices; }
   std::vector<int>& slaterTypes() { return m_slaterTypes; }
@@ -141,6 +140,7 @@ public:
   MatrixX& normalizedMatrix() { return m_normalized; }
   MatrixX& densityMatrix() { return m_density; }
 
+  // Nonfunctional - Included for backwards compatibility
   void outputAll();
 
 private:
@@ -154,12 +154,11 @@ private:
   MatrixX m_eigenVectors;
   MatrixX m_density;
   MatrixX m_normalized;
-  bool m_initialized;
+  bool m_initialized = false;
 
   unsigned int factorial(unsigned int n);
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif

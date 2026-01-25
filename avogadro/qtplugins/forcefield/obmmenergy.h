@@ -66,6 +66,10 @@ public:
   // gradient (which may be unsupported and fall back to numeric)
   void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
 
+  bool acceptsIons() const override { return true; }
+  // UFF can handle radicals
+  bool acceptsRadicals() const override;
+
   /**
    * @brief Synchronous use of the QProcess.
    */

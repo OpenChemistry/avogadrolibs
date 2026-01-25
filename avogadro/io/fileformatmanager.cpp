@@ -15,6 +15,7 @@
 #include "lammpsformat.h"
 #include "mdlformat.h"
 #include "pdbformat.h"
+#include "sdfformat.h"
 #include "trrformat.h"
 #include "turbomoleformat.h"
 #include "vaspformat.h"
@@ -293,6 +294,7 @@ FileFormatManager::FileFormatManager()
   addFormat(new OutcarFormat);
   addFormat(new PdbFormat);
   addFormat(new PoscarFormat);
+  addFormat(new SdfFormat);
   addFormat(new TrrFormat);
   addFormat(new TurbomoleFormat);
   addFormat(new XyzFormat);

@@ -10,15 +10,13 @@
 
 #include "avogadrocore.h"
 
+#include <limits>
 #include <map>
 #include <string>
 
-#include "array.h"
-#include "bond.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Atom;
 class Molecule;
@@ -32,7 +30,7 @@ class AVOGADROCORE_EXPORT Residue
 {
 public:
   /** Type for atom name map. */
-  typedef std::map<std::string, Atom> AtomNameMap;
+  using AtomNameMap = std::map<std::string, Atom>;
 
   // using codes from MMTF specification
   // https://github.com/rcsb/mmtf/blob/master/spec.md#secstructlist
@@ -51,7 +49,7 @@ public:
   };
 
   /** Creates a new, empty residue. */
-  Residue();
+  Residue() = default;
   Residue(std::string& name);
   Residue(std::string& name, Index& number);
   Residue(std::string& name, Index& number, char& id);
@@ -60,26 +58,23 @@ public:
 
   Residue& operator=(Residue other);
 
-  virtual ~Residue();
+  virtual ~Residue() = default;
 
-  inline std::string residueName() const { return m_residueName; }
+  std::string residueName() const { return m_residueName; }
 
-  inline void setResidueName(std::string& name) { m_residueName = name; }
+  void setResidueName(std::string& name) { m_residueName = name; }
 
-  inline Index residueId() const { return m_residueId; }
+  Index residueId() const { return m_residueId; }
 
-  inline void setResidueId(Index& number) { m_residueId = number; }
+  void setResidueId(Index& number) { m_residueId = number; }
 
-  inline char chainId() const { return m_chainId; }
+  char chainId() const { return m_chainId; }
 
-  inline void setChainId(const char& id) { m_chainId = id; }
+  void setChainId(const char& id) { m_chainId = id; }
 
-  inline SecondaryStructure secondaryStructure() const
-  {
-    return m_secondaryStructure;
-  }
+  SecondaryStructure secondaryStructure() const { return m_secondaryStructure; }
 
-  inline void setSecondaryStructure(const SecondaryStructure& ss)
+  void setSecondaryStructure(const SecondaryStructure& ss)
   {
     m_secondaryStructure = ss;
   }
@@ -100,22 +95,22 @@ public:
   /**
    * \return the atom with the name specified (e.g., "CA")
    */
-  Atom getAtomByName(std::string name) const;
+  Atom atomByName(std::string name) const;
   /**
    * \return the atomic number of the atom with the name specified (e.g., "CA" =
    * "C")
    */
-  int getAtomicNumber(std::string name) const;
+  int atomicNumber(std::string name) const;
 
   /**
    * \return the name of @p atom or an empty string if not in this residue
    */
-  std::string getAtomName(const Atom atom) const;
+  std::string atomName(const Atom atom) const;
 
   /**
    * \return the name of atom @p index or an empty string if not in this residue
    */
-  std::string getAtomName(const Index index) const;
+  std::string atomName(const Index index) const;
 
   bool hasAtomByIndex(Index index) const;
   /** Set whether this residue is a "HET" / "HETATOM" ligand
@@ -136,7 +131,7 @@ public:
 
 protected:
   std::string m_residueName;
-  Index m_residueId;
+  Index m_residueId = std::numeric_limits<Index>::max();
   char m_chainId;
   AtomNameMap m_atomNameMap;
   bool m_heterogen;
@@ -145,7 +140,6 @@ protected:
   SecondaryStructure m_secondaryStructure;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_RESIDUE_H

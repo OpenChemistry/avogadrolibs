@@ -13,8 +13,7 @@
 #include "matrix.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class Molecule;
 class UnitCell;
 
@@ -35,9 +34,11 @@ public:
     /** No options specified. */
     None = 0x0,
     /** Transform atoms along with the unit cell. */
-    TransformAtoms = 0x1
+    TransformAtoms = 0x1,
+    /** Enforce right-handed system */
+    RightHanded = 0x2
   };
-  typedef int Options;
+  using Options = int;
 
   /**
    * Adjust the atomic positions in @a molecule so that the fractional (lattice)
@@ -141,7 +142,6 @@ public:
    * Set the atomic positions of @a molecule to the fractional coordinates in
    * @a coords, using the unit cell of @a molecule to perform the coordinate
    * transformation.
-   * @return
    */
   static bool setFractionalCoordinates(Molecule& molecule,
                                        const Array<Vector3>& coords);
@@ -151,7 +151,6 @@ private:
   ~CrystalTools(); // not implemented
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_CRYSTALTOOLS_H

@@ -1,6 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "dashedlinegeometry.h"
@@ -11,6 +11,7 @@
 #include "scene.h"
 #include "shader.h"
 #include "shaderprogram.h"
+#include "vertexarrayobject.h"
 #include "visitor.h"
 
 #include <avogadro/core/matrix.h>
@@ -22,7 +23,7 @@
 namespace {
 #include "dashedline_fs.h"
 #include "dashedline_vs.h"
-}
+} // namespace
 
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
@@ -39,6 +40,7 @@ public:
   Private() {}
 
   BufferObject vbo;
+  VertexArrayObject vao;
 
   Shader vertexShader;
   Shader fragmentShader;
@@ -46,8 +48,7 @@ public:
 };
 
 DashedLineGeometry::DashedLineGeometry()
-  : m_lineWidth(1.0), m_lineCount(0),
-    m_color(255, 0, 0), m_opacity(255),
+  : m_lineWidth(1.0), m_lineCount(0), m_color(255, 0, 0), m_opacity(255),
     m_dirty(false), d(new Private)
 {
 }
@@ -74,13 +75,9 @@ void DashedLineGeometry::update()
   if (m_vertices.empty())
     return;
 
-  // Check if the VBOs are ready, if not get them ready.
-  if (!d->vbo.ready() || m_dirty) {
-    d->vbo.upload(m_vertices, BufferObject::ArrayBuffer);
-    m_dirty = false;
-  }
-
   // Build and link the shader if it has not been used yet.
+  // Must be done before VAO setup since we need the program for attribute
+  // setup.
   if (d->vertexShader.type() == Shader::Unknown) {
     d->vertexShader.setType(Shader::Vertex);
     d->vertexShader.setSource(dashedline_vs);
@@ -100,6 +97,34 @@ void DashedLineGeometry::update()
     d->vertexShader.cleanup();
     d->fragmentShader.cleanup();
   }
+
+  // Check if the VBOs are ready, if not get them ready.
+  if (!d->vbo.ready() || m_dirty) {
+    d->vbo.upload(m_vertices, BufferObject::ArrayBuffer);
+
+    // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
+    d->vao.bind();
+    d->vbo.bind();
+
+    if (!d->program.enableAttributeArray("vertex"))
+      cout << d->program.error() << endl;
+    if (!d->program.useAttributeArray("vertex", PackedVertex::vertexOffset(),
+                                      sizeof(PackedVertex), FloatType, 3,
+                                      ShaderProgram::NoNormalize)) {
+      cout << d->program.error() << endl;
+    }
+    if (!d->program.enableAttributeArray("color"))
+      cout << d->program.error() << endl;
+    if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
+                                      sizeof(PackedVertex), UCharType, 4,
+                                      ShaderProgram::Normalize)) {
+      cout << d->program.error() << endl;
+    }
+
+    d->vao.release();
+
+    m_dirty = false;
+  }
 }
 
 void DashedLineGeometry::render(const Camera& camera)
@@ -107,29 +132,14 @@ void DashedLineGeometry::render(const Camera& camera)
   if (m_vertices.empty())
     return;
 
-  // Prepare the VBO and shader program if necessary.
+  // Prepare the VBO, VAO, and shader program if necessary.
   update();
 
   if (!d->program.bind())
     cout << d->program.error() << endl;
 
-  d->vbo.bind();
-
-  // Set up our attribute arrays.
-  if (!d->program.enableAttributeArray("vertex"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("vertex", PackedVertex::vertexOffset(),
-                                    sizeof(PackedVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
-  }
-  if (!d->program.enableAttributeArray("color"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
-                                    sizeof(PackedVertex), UCharType, 4,
-                                    ShaderProgram::Normalize)) {
-    cout << d->program.error() << endl;
-  }
+  // Bind the VAO (captures all vertex attribute state)
+  d->vao.bind();
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
@@ -142,14 +152,13 @@ void DashedLineGeometry::render(const Camera& camera)
   glEnable(GL_LINE_SMOOTH);
   glLineWidth(m_lineWidth);
 
-  // Render the lines using the shader and bound VBO.
+  // Render the lines using the shader and VAO.
   glDrawArrays(GL_LINES, static_cast<GLint>(0),
                static_cast<GLsizei>(m_vertices.size()));
 
   glDisable(GL_LINE_SMOOTH);
 
-  d->vbo.release();
-
+  d->vao.release();
   d->program.release();
 }
 
@@ -159,8 +168,9 @@ void DashedLineGeometry::clear()
   m_dirty = true;
 }
 
-size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &end,
-                                       const Vector4ub &rgba, int dashCount)
+size_t DashedLineGeometry::addDashedLine(const Vector3f& start,
+                                         const Vector3f& end,
+                                         const Vector4ub& rgba, int dashCount)
 {
   const int vertexCount = 2 * dashCount;
   Vector3f delta = (end - start) / (vertexCount - 1);
@@ -176,17 +186,18 @@ size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &
   return m_lineCount - 1;
 }
 
-size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &end,
-                                       const Vector3ub &rgb, int dashCount)
+size_t DashedLineGeometry::addDashedLine(const Vector3f& start,
+                                         const Vector3f& end,
+                                         const Vector3ub& rgb, int dashCount)
 {
   Vector4ub rgba = Vector4ub(rgb(0), rgb(1), rgb(2), m_opacity);
   return addDashedLine(start, end, rgba, dashCount);
 }
 
-size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &end,
-                                       int dashCount)
+size_t DashedLineGeometry::addDashedLine(const Vector3f& start,
+                                         const Vector3f& end, int dashCount)
 {
   return addDashedLine(start, end, m_color, dashCount);
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

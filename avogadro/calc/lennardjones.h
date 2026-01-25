@@ -22,7 +22,7 @@ class AVOGADROCALC_EXPORT LennardJones : public EnergyCalculator
 {
 public:
   LennardJones();
-  ~LennardJones();
+  ~LennardJones() override = default;
 
   LennardJones* newInstance() const override { return new LennardJones; }
 
@@ -35,6 +35,8 @@ public:
     return "Universal Lennard-Jones potential";
   }
 
+  bool acceptsIons() const override { return true; }
+  bool acceptsRadicals() const override { return true; }
   bool acceptsUnitCell() const override { return true; }
 
   Core::Molecule::ElementMask elements() const override { return (m_elements); }

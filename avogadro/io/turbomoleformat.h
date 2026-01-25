@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class TurbomoleFormat turbomoleformat.h <avogadro/io/turbomoleformat.h>
@@ -20,8 +19,8 @@ namespace Io {
 class AVOGADROIO_EXPORT TurbomoleFormat : public FileFormat
 {
 public:
-  TurbomoleFormat();
-  ~TurbomoleFormat() override;
+  TurbomoleFormat() = default;
+  ~TurbomoleFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -29,7 +28,10 @@ public:
   }
 
   FileFormat* newInstance() const override { return new TurbomoleFormat; }
-  std::string identifier() const override { return "Avogadro: Turbomole Coord"; }
+  std::string identifier() const override
+  {
+    return "Avogadro: Turbomole Coord";
+  }
   std::string name() const override { return "Turbomole"; }
   std::string description() const override
   {
@@ -38,7 +40,8 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "https://xtb-docs.readthedocs.io/en/latest/geometry.html#turbomole-coordinate-input";
+    return "https://xtb-docs.readthedocs.io/en/latest/"
+           "geometry.html#turbomole-coordinate-input";
   }
 
   std::vector<std::string> fileExtensions() const override;
@@ -48,7 +51,6 @@ public:
   bool write(std::ostream& outStream, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_TURBOMOLEFORMAT_H

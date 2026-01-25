@@ -160,6 +160,13 @@ signals:
    * @sa handleCommand
    */
   void registerCommand(QString command, QString description);
+
+  /**
+   * Indicate that a particular script command is finished.
+   * (e.g., from handleCommand)
+   * @param message An optional message to the script or user
+   */
+  void commandFinished(const QString& message = QString());
 };
 
 /**

@@ -9,8 +9,7 @@
 #include "avogadrocore.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 enum AtomHybridization
 {
@@ -47,7 +46,7 @@ template <class Molecule_T>
 class AtomTemplate
 {
 public:
-  typedef Molecule_T MoleculeType;
+  using MoleculeType = Molecule_T;
 
   /** Creates a new, invalid atom object. */
   AtomTemplate();
@@ -153,6 +152,14 @@ public:
   /** @} */
 
   /**
+   * The isotope of this atom
+   * @{
+   */
+  void setIsotope(unsigned short isotope);
+  unsigned short isotope() const;
+  /** @} */
+
+  /**
    * The color of this atom
    * @{
    */
@@ -195,12 +202,14 @@ private:
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate()
   : m_molecule(nullptr), m_index(MaxIndex)
-{}
+{
+}
 
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate(MoleculeType* m, Index i)
   : m_molecule(m), m_index(i)
-{}
+{
+}
 
 template <class Molecule_T>
 bool AtomTemplate<Molecule_T>::operator==(
@@ -328,6 +337,18 @@ signed char AtomTemplate<Molecule_T>::formalCharge() const
 }
 
 template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setIsotope(unsigned short isotope)
+{
+  m_molecule->setIsotope(m_index, isotope);
+}
+
+template <class Molecule_T>
+unsigned short AtomTemplate<Molecule_T>::isotope() const
+{
+  return m_molecule->isotope(m_index);
+}
+
+template <class Molecule_T>
 void AtomTemplate<Molecule_T>::setColor(Vector3ub color)
 {
   m_molecule->setColor(m_index, std::move(color));
@@ -389,7 +410,6 @@ std::string AtomTemplate<Molecule_T>::label() const
   return m_molecule->atomLabel(m_index);
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_ATOM_H

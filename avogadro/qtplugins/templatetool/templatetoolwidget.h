@@ -25,15 +25,16 @@ class TemplateToolWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit TemplateToolWidget(QWidget* parent_ = 0);
-  ~TemplateToolWidget();
+  explicit TemplateToolWidget(QWidget* parent_ = nullptr);
+  ~TemplateToolWidget() override;
 
   void setAtomicNumber(unsigned char atomicNum);
   unsigned char atomicNumber() const;
 
+  void setFormalCharge(int charge);
   signed char formalCharge() const;
 
-  void setCoordination(unsigned char order);
+  void setCoordination(unsigned char geometry);
   unsigned char coordination() const;
   QString coordinationString() const;
 
@@ -42,6 +43,9 @@ public:
 
   int denticity() const;
   std::vector<size_t>& selectedUIDs();
+
+  int currentTab() const;
+  void setCurrentTab(int index);
 
 private slots:
   void elementChanged(int index);
@@ -71,6 +75,7 @@ private:
   unsigned char m_currentElement;
   QStringList m_centers;
   QStringList m_ligands;
+  QStringList m_groups;
   QString m_ligandPath;
 
   int m_denticity;

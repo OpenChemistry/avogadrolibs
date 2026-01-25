@@ -33,6 +33,7 @@
 #include <string>
 
 using Avogadro::QtGui::Molecule;
+using namespace std::string_literals;
 
 namespace Avogadro::QtPlugins {
 
@@ -149,7 +150,7 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   foreach (const QString& qdesc, formatDescriptions) {
     mapDesc = qdesc.toStdString();
     fname = mapDesc;
-    fidentifier = std::string("OpenBabel: ") + mapDesc;
+    fidentifier = "OpenBabel: "s + mapDesc;
     fdescription = mapDesc;
     fexts.clear();
     fmime.clear();
@@ -260,15 +261,15 @@ void OpenBabel::handleReadFormatUpdate(const QMultiMap<QString, QString>& fmts)
   // Emit a signal indicating the file formats are ready if read and write
   // formats have both returned their results.
   if (!m_readFormatsPending && !m_writeFormatsPending) {
-    emit fileFormatsReady();
-
     // Update the default format if cjson is available
     if (m_readFormats.contains("Chemical JSON") &&
         m_writeFormats.contains("Chemical JSON")) {
       m_defaultFormat = "cjson";
 
-      qDebug() << "Setting default format to cjson.";
+      qDebug() << "Setting default format to " << m_defaultFormat.c_str();
     }
+
+    emit fileFormatsReady();
   }
 }
 
@@ -706,9 +707,18 @@ void OpenBabel::onGenerateConformersFinished(const QByteArray& output)
     return;
   }
 
-  //@todo .. multiple coordinate sets
   m_molecule->undoMolecule()->setAtomPositions3d(mol.atomPositions3d(),
                                                  tr("Generate Conformers"));
+
+  // copy the coordinate sets
+  m_molecule->clearCoordinate3d();
+  for (size_t i = 0; i < mol.coordinate3dCount(); ++i)
+    m_molecule->setCoordinate3d(mol.coordinate3d(i), static_cast<int>(i));
+
+  // energy data too
+  // TODO: check if other properties are needed
+  m_molecule->setData("energies", mol.data("energies"));
+
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
   m_progress->reset();
 }

@@ -75,7 +75,7 @@ Select::Select(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(selectSidechainAtoms()));
   m_actions.append(action);
 
-  action = new QAction(tr("Select Water…"), this);
+  action = new QAction(tr("Select Water"), this);
   action->setProperty("menu priority", 850);
   connect(action, SIGNAL(triggered()), SLOT(selectWater()));
   m_actions.append(action);
@@ -270,7 +270,7 @@ void Select::selectBackboneAtoms()
 
   for (const auto& residue : m_molecule->residues()) {
     for (auto atom : residue.residueAtoms()) {
-      auto name = residue.getAtomName(atom);
+      auto name = residue.atomName(atom);
       if (name == "CA" || name == "C" || name == "N" || name == "O") {
         Index i = atom.index();
         m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
@@ -282,7 +282,7 @@ void Select::selectBackboneAtoms()
         auto bonds = m_molecule->bonds(atom.index());
         if (bonds.size() == 1) {
           auto otherAtom = bonds[0].getOtherAtom(atom.index());
-          auto otherName = residue.getAtomName(otherAtom);
+          auto otherName = residue.atomName(otherAtom);
           if (otherName == "CA" || otherName == "C" || otherName == "N" ||
               otherName == "O") {
             Index i = atom.index();
@@ -309,7 +309,7 @@ void Select::selectSidechainAtoms()
 
   for (const auto& residue : m_molecule->residues()) {
     for (auto atom : residue.residueAtoms()) {
-      auto name = residue.getAtomName(atom);
+      auto name = residue.atomName(atom);
       if (name != "CA" && name != "C" && name != "N" && name != "O") {
         Index i = atom.index();
         m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
@@ -322,7 +322,7 @@ void Select::selectSidechainAtoms()
         auto bonds = m_molecule->bonds(atom.index());
         if (bonds.size() == 1) {
           auto otherAtom = bonds[0].getOtherAtom(atom.index());
-          auto otherName = residue.getAtomName(otherAtom);
+          auto otherName = residue.atomName(otherAtom);
           if (otherName == "CA" || otherName == "C" || otherName == "N" ||
               otherName == "O") {
             Index i = atom.index();

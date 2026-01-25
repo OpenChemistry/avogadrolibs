@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 if (NOT TARGET Avogadro::Core)
   find_package(AvogadroLibs REQUIRED)
@@ -17,7 +17,16 @@ set(wrapper_SRCS
 set(_python_module_install_dir "avogadro")
 # SKBUILD is set for binary wheel
 if (NOT SKBUILD)
-  set(_python_module_install_dir "${Python_SITEARCH}/avogadro")
+  execute_process(COMMAND "${Python_EXECUTABLE}" -c [=[
+import os
+import sysconfig
+print(sysconfig.get_path(name='platlib', vars={'platbase': ''}).lstrip(os.sep), end='')
+# this prints e.g. 'lib/pythonX.Y/site-packages' on a Linux machine,
+# which is relative so that CMake `file(INSTALL)` prepends ${CMAKE_INSTALL_PREFIX}
+]=]
+    OUTPUT_VARIABLE PYTHON_LIBDIR
+  )
+  set(_python_module_install_dir "${PYTHON_LIBDIR}/avogadro")
 endif()
 
 set(CMAKE_MODULE_LINKER_FLAGS "")

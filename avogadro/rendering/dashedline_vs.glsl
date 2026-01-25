@@ -1,11 +1,15 @@
-attribute vec4 vertex;
-attribute vec4 color;
+#version 400
+
+in vec4 vertex;
+in vec4 color;
+
+out vec4 outColor;
 
 uniform mat4 modelView;
 uniform mat4 projection;
 
 void main()
 {
-  gl_FrontColor = color;
+  outColor = color;
   gl_Position = projection * modelView * vertex;
 }

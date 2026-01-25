@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "iotests.h"
@@ -24,20 +13,21 @@
 
 #include <avogadro/io/cmlformat.h>
 
-using Avogadro::Core::Molecule;
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
-using Avogadro::Core::Variant;
-using Avogadro::Io::CmlFormat;
 using Avogadro::MatrixX;
 using Avogadro::Real;
 using Avogadro::Vector3;
+using Avogadro::Core::Atom;
+using Avogadro::Core::Bond;
+using Avogadro::Core::Molecule;
+using Avogadro::Core::Variant;
+using Avogadro::Io::CmlFormat;
+using namespace std::string_literals;
 
 TEST(CmlTest, readFile)
 {
   CmlFormat cml;
   Molecule molecule;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/cml/ethane.cml", molecule);
 
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -50,7 +40,7 @@ TEST(CmlTest, atoms)
 {
   CmlFormat cml;
   Molecule molecule;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/cml/ethane.cml", molecule);
 
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
@@ -73,7 +63,7 @@ TEST(CmlTest, bonds)
 {
   CmlFormat cml;
   Molecule molecule;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/cml/ethane.cml", molecule);
 
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8));
@@ -87,6 +77,28 @@ TEST(CmlTest, bonds)
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(4));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(7));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
+}
+
+TEST(CmlTest, readInvalidPeriodicFile)
+{
+  for (const auto& file : {
+         "impossible.cml"s,
+         "lin-dep2.cml"s,
+         "zero-a.cml"s,
+         "zero-alpha.cml"s,
+         "zero-b.cml"s,
+         "zero-beta.cml"s,
+         "zero-c.cml"s,
+         "zero-gamma.cml"s,
+       }) {
+    CmlFormat cml;
+    Molecule molecule;
+    auto f = std::string(AVOGADRO_DATA) + "/data/cml/singular/" + file;
+    EXPECT_FALSE(cml.readFile(f, molecule)) << f;
+    EXPECT_EQ(cml.error(),
+              "<crystal> does not give linear independent lattice vectors\n"s)
+      << f;
+  }
 }
 
 TEST(CmlTest, fractionalCoords)
@@ -142,7 +154,7 @@ TEST(CmlTest, saveFile)
 {
   CmlFormat cml;
   Molecule readMol, writeMol;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", readMol);
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/cml/ethane.cml", readMol);
   cml.writeFile("ethanetmp.cml", readMol);
 
   // Now read the file back in and check a few key values are still present.
@@ -165,7 +177,7 @@ TEST(CmlTest, hdf5Matrix)
 {
   CmlFormat cml;
   Molecule molecule;
-  cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule);
+  cml.readFile(std::string(AVOGADRO_DATA) + "/data/cml/ethane.cml", molecule);
   molecule.setData("name", "ethanol");
   MatrixX matrix(10, 12);
   for (int row = 0; row < matrix.rows(); ++row)
@@ -178,7 +190,7 @@ TEST(CmlTest, hdf5Matrix)
   cml.readFile("ethane.cml", readMolecule);
   if (readMolecule.data("matrix").type() == Variant::Matrix)
     EXPECT_TRUE(readMolecule.data("matrix").toMatrixRef().isApprox(matrix));
-  EXPECT_EQ(readMolecule.data("name").toString(), std::string("ethanol"));
+  EXPECT_EQ(readMolecule.data("name").toString(), "ethanol"s);
 }
 
 TEST(CmlTest, writeString)
@@ -186,7 +198,7 @@ TEST(CmlTest, writeString)
   CmlFormat cml;
   Molecule molecule;
   EXPECT_EQ(
-    cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule),
+    cml.readFile(std::string(AVOGADRO_DATA) + "/data/cml/ethane.cml", molecule),
     true);
   std::string file;
   EXPECT_EQ(cml.writeString(file, molecule), true);
@@ -197,7 +209,7 @@ TEST(CmlTest, readString)
   CmlFormat cml;
   Molecule molecule;
   EXPECT_EQ(
-    cml.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cml", molecule),
+    cml.readFile(std::string(AVOGADRO_DATA) + "/data/cml/ethane.cml", molecule),
     true);
   std::string file;
   EXPECT_EQ(cml.writeString(file, molecule), true);

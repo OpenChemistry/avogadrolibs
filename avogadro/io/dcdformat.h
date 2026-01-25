@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class DcdFormat dcdformat.h <avogadro/io/dcdformat.h>
@@ -20,12 +19,12 @@ namespace Io {
 class AVOGADROIO_EXPORT DcdFormat : public FileFormat
 {
 public:
-  DcdFormat();
-  ~DcdFormat() override;
+  DcdFormat() = default;
+  ~DcdFormat() override = default;
 
   Operations supportedOperations() const override
   {
-    return ReadWrite | MultiMolecule | File | Stream | String;
+    return Read | MultiMolecule | File | Stream | String;
   }
 
   FileFormat* newInstance() const override { return new DcdFormat; }
@@ -45,7 +44,6 @@ public:
   bool write(std::ostream& outStream, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_DCDFORMAT_H

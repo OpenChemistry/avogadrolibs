@@ -283,7 +283,7 @@ public slots:
   bool optimizeGeometry(const QByteArray& cml, const QStringList& options,
                         std::string format = "cml");
   bool generateConformers(const QByteArray& cml, const QStringList& options,
-                        std::string format = "cml");  
+                          std::string format = "cml");
 signals:
   /**
    * Emitted with the standard output of the process when it finishes.
@@ -382,7 +382,7 @@ private slots:
 signals:
   /**
    * Emitted after a call to calculateCharges() finishes.
-   * @param output the set of partial charges
+   * @param charges the set of partial charges
    */
   void chargesFinished(const Core::Array<double>& charges);
   // end Charge Models doxygen group

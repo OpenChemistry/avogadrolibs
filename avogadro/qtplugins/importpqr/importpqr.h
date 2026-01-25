@@ -10,6 +10,7 @@
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
 #include <QtCore/QString>
@@ -50,6 +51,7 @@ public slots:
 
 private slots:
   void menuActivated();
+  void checkAccess(QNetworkReply* reply);
 
 private:
   QAction* m_action;
@@ -59,8 +61,9 @@ private:
   QString m_moleculeName;
   QString m_moleculePath;
   QByteArray m_moleculeData;
+  QNetworkAccessManager* m_manager;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_IMPORTPQR_H

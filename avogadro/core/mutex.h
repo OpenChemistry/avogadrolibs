@@ -8,8 +8,7 @@
 
 #include "avogadrocoreexport.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class Mutex mutex.h <avogadro/core/mutex.h>
@@ -47,7 +46,6 @@ private:
   class PIMPL;
   PIMPL* d;
 };
-}
-}
+} // end namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_MUTEX_H

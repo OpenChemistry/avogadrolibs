@@ -94,14 +94,44 @@ public:
   std::set<std::string> identifiersForMolecule(
     const Core::Molecule& molecule) const;
 
+  /**
+   * @brief Get a recommended model for this molecule.
+   *
+   * This returns the identifier for a model that works,
+   * given the charge, unit cell, spin states, etc.
+   * @return The recommended model identifier
+   */
+  std::string recommendedModel(const Core::Molecule& molecule) const;
+
+  /**
+   * @return the user-visible name of the model with the identifier @a
+   * identifier
+   */
   std::string nameForModel(const std::string& identifier) const;
 
   /**
+   * This method will calculate atomic partial charges and save them,
+   * if the model is available (i.e., the molecule will change)
    * Note that some models do not have well-defined atomic partial charges
    * @return atomic partial charges for the molecule, or 0.0 if undefined
    */
   MatrixX partialCharges(const std::string& identifier,
                          Core::Molecule& mol) const;
+
+  /**
+   * Calculate the atomic partial charges and leave the molecule unchanged.
+   * Note that some models do not have well-defined atomic partial charges
+   * @return the dipole moment for the molecule, or 0.0 if undefined
+   */
+  MatrixX partialCharges(const std::string& identifier,
+                         const Core::Molecule& mol) const;
+
+  /**
+   * @return the dipole moment for the molecule, or 0.0 if the model is not
+   * available
+   */
+  Vector3 dipoleMoment(const std::string& identifier,
+                       const Core::Molecule& mol) const;
 
   /**
    * @return the potential at the point for the molecule, or 0.0 if the model is
@@ -124,7 +154,7 @@ public:
   std::string error() const;
 
 private:
-  typedef std::map<std::string, size_t> ChargeIdMap;
+  using ChargeIdMap = std::map<std::string, size_t>;
 
   ChargeManager();
   ~ChargeManager();

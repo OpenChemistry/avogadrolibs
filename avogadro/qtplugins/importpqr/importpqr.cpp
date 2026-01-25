@@ -18,16 +18,32 @@ namespace Avogadro::QtPlugins {
 
 ImportPQR::ImportPQR(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
-    m_dialog(nullptr), m_outputFormat(nullptr)
+    m_dialog(nullptr), m_outputFormat(nullptr),
+    m_manager(new QNetworkAccessManager(this))
 {
-  m_action->setEnabled(true);
+  m_action->setEnabled(false);
   m_action->setText(tr("&Search PQR…"));
   connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
+
+  // check if PQR is up
+  connect(m_manager, SIGNAL(finished(QNetworkReply*)),
+          SLOT(checkAccess(QNetworkReply*)));
+  m_manager->get(QNetworkRequest(QUrl("https://pqr.pitt.edu")));
 }
 
 ImportPQR::~ImportPQR()
 {
   delete m_outputFormat;
+  m_manager->deleteLater();
+}
+
+void ImportPQR::checkAccess(QNetworkReply* reply)
+{
+  // only enable if we can access the site
+  if (reply->error() == QNetworkReply::NoError) {
+    m_action->setEnabled(true);
+  }
+  reply->deleteLater();
 }
 
 QList<QAction*> ImportPQR::actions() const
@@ -77,4 +93,4 @@ void ImportPQR::setMoleculeData(QByteArray& molData, QString name)
   m_dialog->hide();
   emit moleculeReady(1);
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

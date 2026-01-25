@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class LammpsTrajectoryFormat lammpsformat.h <avogadro/io/lammpsformat.h>
@@ -20,12 +19,12 @@ namespace Io {
 class AVOGADROIO_EXPORT LammpsTrajectoryFormat : public FileFormat
 {
 public:
-  LammpsTrajectoryFormat();
-  ~LammpsTrajectoryFormat() override;
+  LammpsTrajectoryFormat() = default;
+  ~LammpsTrajectoryFormat() override = default;
 
   Operations supportedOperations() const override
   {
-    return ReadWrite | MultiMolecule | File | Stream | String;
+    return Read | MultiMolecule | File | Stream | String;
   }
 
   FileFormat* newInstance() const override
@@ -57,12 +56,12 @@ public:
 class AVOGADROIO_EXPORT LammpsDataFormat : public FileFormat
 {
 public:
-  LammpsDataFormat();
-  ~LammpsDataFormat() override;
+  LammpsDataFormat() = default;
+  ~LammpsDataFormat() override = default;
 
   Operations supportedOperations() const override
   {
-    return ReadWrite | MultiMolecule | File | Stream | String;
+    return Write | MultiMolecule | File | Stream | String;
   }
 
   FileFormat* newInstance() const override { return new LammpsDataFormat; }
@@ -85,7 +84,7 @@ public:
   bool write(std::ostream& outStream, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io
+  // end Avogadro namespace
 
 #endif // AVOGADRO_IO_LAMMPSFORMAT_H

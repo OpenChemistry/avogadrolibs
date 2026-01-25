@@ -184,4 +184,4 @@ void PeriodicTableScene::changeElement(int element)
   m_detail->setElement(element);
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::QtGui

@@ -7,17 +7,13 @@
 
 namespace Avogadro::Rendering {
 
-Node::Node() : m_parent(nullptr), m_visible(true)
-{
-}
+Node::Node() : m_parent(nullptr), m_visible(true) {}
 
-Node::~Node()
-{
-}
+Node::~Node() {}
 
 void Node::setParent(GroupNode* parent_)
 {
   m_parent = parent_;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

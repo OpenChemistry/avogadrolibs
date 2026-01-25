@@ -17,9 +17,9 @@ class ConformerSearchDialog : public QDialog
 
 public:
   //! Constructor
-  explicit ConformerSearchDialog(QWidget* parent = 0);
+  explicit ConformerSearchDialog(QWidget* parent = nullptr);
   //! Deconstructor
-  ~ConformerSearchDialog();
+  ~ConformerSearchDialog() override;
 
   int method();
   int numConformers();
@@ -27,8 +27,8 @@ public:
   QStringList options() const;
 
 public slots:
-  void accept();
-  void reject();
+  void accept() override;
+  void reject() override;
   void systematicToggled(bool checked);
   void randomToggled(bool checked);
   void weightedToggled(bool checked);

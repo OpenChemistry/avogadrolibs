@@ -17,7 +17,7 @@ VibrationDialog::VibrationDialog(QWidget* parent_, Qt::WindowFlags f)
 {
   m_ui->setupUi(this);
 
-  m_ui->tableView->verticalHeader()->setVisible(false);
+  m_ui->tableView->verticalHeader()->setVisible(true);
   m_ui->tableView->horizontalHeader()->setSectionResizeMode(
     QHeaderView::Stretch);
   m_ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -25,13 +25,29 @@ VibrationDialog::VibrationDialog(QWidget* parent_, Qt::WindowFlags f)
 
   connect(m_ui->amplitudeSlider, SIGNAL(sliderMoved(int)),
           SIGNAL(amplitudeChanged(int)));
-  connect(m_ui->startButton, SIGNAL(clicked(bool)), SIGNAL(startAnimation()));
-  connect(m_ui->stopButton, SIGNAL(clicked(bool)), SIGNAL(stopAnimation()));
+  connect(m_ui->startButton, SIGNAL(clicked(bool)), this,
+          SLOT(changeAnimation()));
 }
 
 VibrationDialog::~VibrationDialog()
 {
   delete m_ui;
+}
+
+void VibrationDialog::changeAnimation()
+{
+  const QString start = tr("Start Animation");
+  const QString stop = tr("Stop Animation");
+
+  if (m_ui->startButton->text() == start) {
+    m_ui->startButton->setText(stop);
+    m_ui->startButton->setIcon(QIcon::fromTheme("media-playback-pause"));
+    emit startAnimation();
+  } else {
+    m_ui->startButton->setText(start);
+    m_ui->startButton->setIcon(QIcon::fromTheme("media-playback-start"));
+    emit stopAnimation();
+  }
 }
 
 void VibrationDialog::setMolecule(QtGui::Molecule* molecule)

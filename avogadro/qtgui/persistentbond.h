@@ -124,7 +124,7 @@ typename Molecule_T::BondType PersistentBond<Molecule_T>::bond() const
   return m_molecule ? m_molecule->bondByUniqueId(m_uniqueId) : BondType();
 }
 
-} // End of QtGui namespace
-} // End of Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_PERSISTENTBOND_H

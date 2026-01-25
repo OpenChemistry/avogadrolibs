@@ -26,7 +26,7 @@ class XrdOptionsDialog : public QDialog
 
 public:
   explicit XrdOptionsDialog(QWidget* parent = nullptr);
-  ~XrdOptionsDialog();
+  ~XrdOptionsDialog() override;
 
   double wavelength() const;
   double peakWidth() const;
@@ -34,7 +34,7 @@ public:
   double max2Theta() const;
 
 protected slots:
-  void accept();
+  void accept() override;
 
 private:
   std::unique_ptr<Ui::XrdOptionsDialog> m_ui;

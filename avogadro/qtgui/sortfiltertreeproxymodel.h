@@ -22,7 +22,8 @@ public:
   {
   }
   // From http://kodeclutz.blogspot.com/2008/12/filtering-qtreeview.html
-  bool filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const;
+  bool filterAcceptsRow(int sourceRow,
+                        const QModelIndex& sourceParent) const override;
 
   // This is a hack to prevent us from becoming root-less
   // See

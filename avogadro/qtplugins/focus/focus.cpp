@@ -11,8 +11,6 @@
 
 #include <QAction>
 
-#include <iostream>
-
 namespace Avogadro::QtPlugins {
 
 using Avogadro::QtGui::ExtensionPlugin;
@@ -76,6 +74,11 @@ void Focus::newFocus(Eigen::Vector3f point, float distance)
   m_camera->setIdentity();
   m_camera->lookAt(cameraPoint, point, Eigen::Vector3f(0, 1, 0));
   m_camera->setFocus(point);
+
+  // if orthographic, adjust the scale
+  if (m_camera->projectionType() == Rendering::Projection::Orthographic) {
+    m_camera->setOrthographicScale(scaleFactor * 0.85f);
+  }
 }
 
 void Focus::focusSelection()
@@ -86,7 +89,7 @@ void Focus::focusSelection()
     return;
   if (m_molecule->isSelectionEmpty())
     return;
-  
+
   Eigen::Vector3f selectionCenter(0, 0, 0);
   std::vector<Index> selection;
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
@@ -101,9 +104,9 @@ void Focus::focusSelection()
     Eigen::Vector3f pos = m_molecule->atomPosition3d(i).cast<float>();
     float distance = (pos - selectionCenter).norm();
     if (distance > selectionRadius)
-        selectionRadius = distance;
+      selectionRadius = distance;
   }
-  
+
   newFocus(selectionCenter, selectionRadius + 10.0f);
   emit updateRequested();
 }
@@ -112,9 +115,22 @@ void Focus::unfocus()
 {
   if (!m_camera || !m_scene)
     return;
-  
-  newFocus(m_scene->center(), 2.22f * m_scene->radius());
+
+  // same as glrenderer resetCamera
+  auto center = m_scene->center();
+  auto radius = 1.5f * m_scene->radius();
+
+  m_camera->setFocus(center);
+  m_camera->setIdentity();
+  m_camera->translate(-center);
+  m_camera->preTranslate(-radius * Vector3f::UnitZ());
+
+  if (m_camera->projectionType() == Rendering::Projection::Orthographic) {
+    // We want the scene radius to fit comfortably with some padding
+    float optimalScale = radius / 10.0f;
+    m_camera->setOrthographicScale(optimalScale);
+  }
   emit updateRequested();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

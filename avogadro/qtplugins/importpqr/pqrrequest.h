@@ -33,8 +33,8 @@ class PQRRequest : public QObject
 
 public:
   /**
-   * @brief Constructor to initialize the NetworkAccessManager and set pointers to
-   * the widget's ui elements.
+   * @brief Constructor to initialize the NetworkAccessManager and set pointers
+   * to the widget's ui elements.
    * @param tw Pointer to ui's table widget
    * @param gv Pointer to ui's graphics view for SVG preview
    * @param nd Pointer to the name display
@@ -107,7 +107,8 @@ private:
     result()
       : inchikey("Error"), name("Error"), mol2url("Error"), formula("Error"),
         mass(-1.0)
-    {}
+    {
+    }
   };
   /** An array to hold all results from a query */
   std::vector<result> results;

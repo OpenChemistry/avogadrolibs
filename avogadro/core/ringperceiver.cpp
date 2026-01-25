@@ -22,9 +22,25 @@ namespace {
 class DistanceMatrix
 {
 public:
+  // swap function marked friend so it can only be found via Argument Dependent
+  // Lookup (ADL)
+  friend void swap(DistanceMatrix& first, DistanceMatrix& second)
+  {
+    // Enable ADL for the swap
+    using std::swap;
+
+    swap(first.m_size, second.m_size);
+    swap(first.m_values, second.m_values);
+  }
+
   // construction and destruction
   DistanceMatrix(size_t size);
   ~DistanceMatrix();
+
+  DistanceMatrix(const DistanceMatrix& other);
+
+  // intentional pass-by-value to leverage previous copy ctor
+  DistanceMatrix& operator=(DistanceMatrix other);
 
   // operators
   size_t operator()(size_t i, size_t j) const;
@@ -36,10 +52,28 @@ private:
 };
 
 DistanceMatrix::DistanceMatrix(size_t size)
+  : m_size(size), m_values(new size_t[size * size])
 {
-  m_size = size;
-  m_values = new size_t[size * size];
   memset(m_values, 0, size * size * sizeof(size_t));
+}
+
+[[maybe_unused]]
+DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
+  : m_size(other.m_size),
+    m_values(other.m_size ? new size_t[other.m_size * other.m_size] : nullptr)
+{
+  if (m_values)
+    std::copy(other.m_values, other.m_values + (other.m_size * other.m_size),
+              m_values);
+}
+
+[[maybe_unused]]
+DistanceMatrix& DistanceMatrix::operator=(DistanceMatrix other)
+{
+  // will use friend swap function via Argument Dependent Lookup
+  swap(*this, other);
+
+  return *this;
 }
 
 DistanceMatrix::~DistanceMatrix()
@@ -77,9 +111,8 @@ private:
 
 // --- Construction and Destruction ---------------------------------------- //
 PidMatrix::PidMatrix(size_t size)
+  : m_size(size), m_values(new std::vector<std::vector<size_t>>[size * size])
 {
-  m_size = size;
-  m_values = new std::vector<std::vector<size_t>>[ size * size ];
 }
 
 PidMatrix::~PidMatrix()
@@ -117,7 +150,7 @@ std::vector<std::vector<size_t>> PidMatrix::splice(size_t i, size_t j, size_t k)
     path.push_back(j);
     splicedPaths.push_back(path);
   } else if (ijPaths.empty()) {
-    for (auto & jkPath : jkPaths) {
+    for (auto& jkPath : jkPaths) {
       std::vector<size_t> path;
       path.push_back(j);
       path.insert(path.end(), jkPath.begin(), jkPath.end());
@@ -130,7 +163,7 @@ std::vector<std::vector<size_t>> PidMatrix::splice(size_t i, size_t j, size_t k)
     }
   } else {
     for (auto path : ijPaths) {
-      for (auto & jkPath : jkPaths) {
+      for (auto& jkPath : jkPaths) {
         path.push_back(j);
         path.insert(path.end(), jkPath.begin(), jkPath.end());
         splicedPaths.push_back(path);
@@ -164,10 +197,8 @@ private:
 
 // --- Construction and Destruction ---------------------------------------- //
 RingCandidate::RingCandidate(size_t n, size_t s, size_t e)
+  : m_size(n), m_start(s), m_end(e)
 {
-  m_size = n;
-  m_start = s;
-  m_end = e;
 }
 
 // --- Properties ---------------------------------------------------------- //
@@ -197,8 +228,8 @@ class Sssr
 {
 public:
   // construction and destruction
-  Sssr();
-  ~Sssr();
+  Sssr() = default;
+  ~Sssr() = default;
 
   // properties
   size_t size() const;
@@ -213,15 +244,6 @@ public:
 private:
   std::vector<std::vector<size_t>> m_rings;
 };
-
-// --- Construction and Destruction ---------------------------------------- //
-Sssr::Sssr()
-{
-}
-
-Sssr::~Sssr()
-{
-}
 
 // --- Properties ---------------------------------------------------------- //
 size_t Sssr::size() const
@@ -266,7 +288,7 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
   std::set<size_t> pathSet;
   pathSet.insert(path.begin(), path.end());
 
-  for (const auto & ring : m_rings) {
+  for (const auto& ring : m_rings) {
     std::set<size_t> ringSet;
     ringSet.insert(ring.begin(), ring.end());
 
@@ -293,7 +315,7 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
                                   std::max(path.front(), path.back())));
 
   // Remove bonds from path bonds that are already in a smaller ring.
-  for (const auto & ring : m_rings) {
+  for (const auto& ring : m_rings) {
     if (ring.size() >= path.size())
       continue;
 
@@ -307,7 +329,7 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
   }
 
   // Check if any other ring contains the same bonds.
-  for (const auto & ring : m_rings) {
+  for (const auto& ring : m_rings) {
     std::set<std::pair<size_t, size_t>> ringBonds;
 
     // Add ring bonds.
@@ -406,7 +428,7 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
   // Algorithm 3 - find sssr from the ring candidate set.
   Sssr sssr;
 
-  for (auto & candidate : candidates) {
+  for (auto& candidate : candidates) {
     // odd sized ring
     if (candidate.size() & 1) {
       for (size_t i = 0; i < Pt(candidate.start(), candidate.end()).size();
@@ -463,10 +485,6 @@ RingPerceiver::RingPerceiver(const Molecule* m)
 {
 }
 
-RingPerceiver::~RingPerceiver()
-{
-}
-
 void RingPerceiver::setMolecule(const Molecule* m)
 {
   m_molecule = m;
@@ -492,4 +510,4 @@ std::vector<std::vector<size_t>>& RingPerceiver::rings()
   return m_rings;
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Core

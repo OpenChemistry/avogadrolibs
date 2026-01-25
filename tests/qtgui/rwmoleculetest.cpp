@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -34,6 +23,9 @@ using Avogadro::QtGui::RWMolecule;
 #include <map>
 #include <sstream>
 #include <string>
+
+using namespace std::string_literals;
+
 template <class MoleculeType>
 std::string formula(const MoleculeType& mol)
 {
@@ -91,19 +83,19 @@ TEST(RWMoleculeTest, addAtom)
   mol.addAtom(8); // O
 
   EXPECT_EQ(5, mol.atomCount());
-  EXPECT_EQ(std::string("CHBNO"), formula(mol));
+  EXPECT_EQ("CHBNO"s, formula(mol));
   mol.undoStack().undo();
   EXPECT_EQ(4, mol.atomCount());
-  EXPECT_EQ(std::string("CHBN"), formula(mol));
+  EXPECT_EQ("CHBN"s, formula(mol));
   mol.undoStack().undo();
   EXPECT_EQ(3, mol.atomCount());
-  EXPECT_EQ(std::string("CHB"), formula(mol));
+  EXPECT_EQ("CHB"s, formula(mol));
   mol.undoStack().undo();
   EXPECT_EQ(2, mol.atomCount());
-  EXPECT_EQ(std::string("HB"), formula(mol));
+  EXPECT_EQ("HB"s, formula(mol));
   mol.undoStack().undo();
   EXPECT_EQ(1, mol.atomCount());
-  EXPECT_EQ(std::string("H"), formula(mol));
+  EXPECT_EQ("H"s, formula(mol));
   mol.undoStack().undo();
   EXPECT_EQ(0, mol.atomCount());
 
@@ -111,19 +103,19 @@ TEST(RWMoleculeTest, addAtom)
 
   mol.undoStack().redo();
   EXPECT_EQ(1, mol.atomCount());
-  EXPECT_EQ(std::string("H"), formula(mol));
+  EXPECT_EQ("H"s, formula(mol));
   mol.undoStack().redo();
   EXPECT_EQ(2, mol.atomCount());
-  EXPECT_EQ(std::string("HB"), formula(mol));
+  EXPECT_EQ("HB"s, formula(mol));
   mol.undoStack().redo();
   EXPECT_EQ(3, mol.atomCount());
-  EXPECT_EQ(std::string("CHB"), formula(mol));
+  EXPECT_EQ("CHB"s, formula(mol));
   mol.undoStack().redo();
   EXPECT_EQ(4, mol.atomCount());
-  EXPECT_EQ(std::string("CHBN"), formula(mol));
+  EXPECT_EQ("CHBN"s, formula(mol));
   mol.undoStack().redo();
   EXPECT_EQ(5, mol.atomCount());
-  EXPECT_EQ(std::string("CHBNO"), formula(mol));
+  EXPECT_EQ("CHBNO"s, formula(mol));
 
   EXPECT_FALSE(mol.undoStack().canRedo());
 
@@ -148,7 +140,7 @@ TEST(RWMoleculeTest, removeAtom)
   mol.setAtomPosition3d(0, pos);
 
   ASSERT_EQ(5, mol.atomCount());
-  ASSERT_EQ(std::string("HHeLiBeB"), formula(mol));
+  ASSERT_EQ("HHeLiBeB"s, formula(mol));
 
   // Add some bonds to ensure that they are properly added/removed when a bonded
   // atom is removed.
@@ -168,7 +160,7 @@ TEST(RWMoleculeTest, removeAtom)
   EXPECT_TRUE(mol.removeAtom(2));
   EXPECT_EQ(4, mol.atomCount());
   EXPECT_EQ(6, mol.bondCount());
-  EXPECT_EQ(std::string("HHeBeB"), formula(mol));
+  EXPECT_EQ("HHeBeB"s, formula(mol));
   EXPECT_FALSE(mol.atomByUniqueId(2).isValid());
   EXPECT_FALSE(mol.bondByUniqueId(1).isValid());
   EXPECT_FALSE(mol.bondByUniqueId(2).isValid());
@@ -178,7 +170,7 @@ TEST(RWMoleculeTest, removeAtom)
   EXPECT_TRUE(mol.removeAtom(0));
   EXPECT_EQ(3, mol.atomCount());
   EXPECT_EQ(3, mol.bondCount());
-  EXPECT_EQ(std::string("HeBeB"), formula(mol));
+  EXPECT_EQ("HeBeB"s, formula(mol));
   EXPECT_FALSE(mol.atomByUniqueId(0).isValid());
   EXPECT_FALSE(mol.bondByUniqueId(0).isValid());
   EXPECT_FALSE(mol.bondByUniqueId(7).isValid());
@@ -195,7 +187,7 @@ TEST(RWMoleculeTest, removeAtom)
 
   EXPECT_EQ(4, mol.atomCount());
   EXPECT_EQ(6, mol.bondCount());
-  EXPECT_EQ(std::string("HHeBeB"), formula(mol));
+  EXPECT_EQ("HHeBeB"s, formula(mol));
   EXPECT_FALSE(mol.atomByUniqueId(2).isValid());
   EXPECT_FALSE(mol.bondByUniqueId(1).isValid());
   EXPECT_FALSE(mol.bondByUniqueId(2).isValid());
@@ -215,7 +207,7 @@ TEST(RWMoleculeTest, removeAtom)
 
   ASSERT_EQ(5, mol.atomCount());
   ASSERT_EQ(10, mol.bondCount());
-  ASSERT_EQ(std::string("HHeLiBeB"), formula(mol));
+  ASSERT_EQ("HHeLiBeB"s, formula(mol));
 
   for (Index i = 0; i < mol.atomCount(); ++i) {
     EXPECT_EQ(static_cast<unsigned char>(i + 1), mol.atomicNumber(i));
@@ -256,7 +248,7 @@ TEST(RWMoleculeTest, clearAtoms)
   mol.setAtomPosition3d(0, pos);
 
   ASSERT_EQ(5, mol.atomCount());
-  ASSERT_EQ(std::string("HHeLiBeB"), formula(mol));
+  ASSERT_EQ("HHeLiBeB"s, formula(mol));
 
   // Add some bonds to ensure that they are properly added/removed when a bonded
   // atom is removed.
@@ -282,7 +274,7 @@ TEST(RWMoleculeTest, clearAtoms)
 
   ASSERT_EQ(5, mol.atomCount());
   ASSERT_EQ(10, mol.bondCount());
-  ASSERT_EQ(std::string("HHeLiBeB"), formula(mol));
+  ASSERT_EQ("HHeLiBeB"s, formula(mol));
 
   for (Index i = 0; i < mol.atomCount(); ++i) {
     EXPECT_EQ(static_cast<unsigned char>(i + 1), mol.atomicNumber(i));
@@ -293,8 +285,8 @@ TEST(RWMoleculeTest, clearAtoms)
   EXPECT_EQ(static_cast<unsigned char>(order), mol.bondOrder(ind));            \
   EXPECT_EQ(uid, mol.bondUniqueId(ind))
 
-// This is disabled because the pair may come in any order
-//   EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));
+  // This is disabled because the pair may come in any order
+  //   EXPECT_EQ(std::make_pair(Index(atom1), Index(atom2)), mol.bondPair(ind));
 
   VALIDATE_BOND(0, 0, 1, 0, 0);
   VALIDATE_BOND(1, 1, 2, 1, 1);

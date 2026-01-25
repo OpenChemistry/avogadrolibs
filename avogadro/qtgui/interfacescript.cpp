@@ -267,10 +267,10 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
     // select some atoms
     if (obj.contains("selectedAtoms") && obj["selectedAtoms"].isArray()) {
       QJsonArray selectedList = obj["selectedAtoms"].toArray();
-      for (int i = 0; i < selectedList.size(); ++i) {
-        if (selectedList[i].isDouble()) {
-          Index index = static_cast<Index>(selectedList[i].toDouble());
-          if (index >= 0 && index < guiMol->atomCount())
+      for (auto&& i : selectedList) {
+        if (i.isDouble()) {
+          auto index = static_cast<Index>(i.toDouble());
+          if (index < guiMol->atomCount())
             guiMol->undoMolecule()->setAtomSelected(index, true);
         }
       }
@@ -411,7 +411,7 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                           .arg(m_filenames.size());
           } // end if/else file is JSON object
-        }   // end foreach file
+        } // end foreach file
       } else {
         result = false;
         m_errors << tr("'files' member not an array.");
@@ -601,12 +601,15 @@ void InterfaceScript::replaceKeywords(QString& str,
 
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
-  QRegExp coordParser(R"(\$\$coords:([^\$]*)\$\$)");
+  QRegularExpression coordParser(R"(\$\$coords:([^\$]*)\$\$)");
+  QRegularExpressionMatch match;
   int ind = 0;
-  while ((ind = coordParser.indexIn(str, ind)) != -1) {
+  // Not sure while this needs to be a while statement since we replace all in
+  // one go? We never iterate ind...
+  while ((match = coordParser.match(str, ind)).hasMatch()) {
     // Extract spec and prepare the replacement
-    const QString keyword = coordParser.cap(0);
-    const QString spec = coordParser.cap(1);
+    const QString keyword = match.captured(0);
+    const QString spec = match.captured(1);
 
     // Replace all blocks with this signature
     str.replace(keyword, generateCoordinateBlock(spec, mol));
@@ -672,7 +675,7 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray& json) const
 }
 
 bool InterfaceScript::parseRules(const QJsonArray& json,
-                                 GenericHighlighter& highligher) const
+                                 GenericHighlighter& highlighter) const
 {
   bool result(true);
   foreach (QJsonValue ruleVal, json) {
@@ -712,10 +715,10 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
     }
     QJsonObject formatObj(ruleObj.value(QStringLiteral("format")).toObject());
 
-    GenericHighlighter::Rule& rule = highligher.addRule();
+    GenericHighlighter::Rule& rule = highlighter.addRule();
 
     foreach (QJsonValue patternVal, patternsArray) {
-      QRegExp pattern;
+      QRegularExpression pattern;
       if (!parsePattern(patternVal, pattern)) {
         qDebug() << "Error while parsing pattern:" << '\n'
                  << QString(QJsonDocument(patternVal.toObject()).toJson());
@@ -844,37 +847,49 @@ bool InterfaceScript::parseFormat(const QJsonObject& json,
 }
 
 bool InterfaceScript::parsePattern(const QJsonValue& json,
-                                   QRegExp& pattern) const
+                                   QRegularExpression& pattern) const
 {
   if (!json.isObject())
     return false;
 
   QJsonObject patternObj(json.toObject());
+  QString regexPattern;
+  QRegularExpression::PatternOptions patternOptions =
+    QRegularExpression::NoPatternOption;
 
   if (patternObj.contains(QStringLiteral("regexp")) &&
       patternObj.value(QStringLiteral("regexp")).isString()) {
-    pattern.setPatternSyntax(QRegExp::RegExp2);
-    pattern.setPattern(patternObj.value(QStringLiteral("regexp")).toString());
+    // Use the provided regular expression as-is
+    regexPattern = patternObj.value(QStringLiteral("regexp")).toString();
   } else if (patternObj.contains(QStringLiteral("wildcard")) &&
              patternObj.value(QStringLiteral("wildcard")).isString()) {
-    pattern.setPatternSyntax(QRegExp::WildcardUnix);
-    pattern.setPattern(patternObj.value(QStringLiteral("wildcard")).toString());
+    // Convert wildcard pattern (* -> .* and ? -> .)
+    QString wildcard = patternObj.value(QStringLiteral("wildcard")).toString();
+    regexPattern = QRegularExpression::escape(wildcard)
+                     .replace("\\*", ".*")
+                     .replace("\\?", ".");
   } else if (patternObj.contains(QStringLiteral("string")) &&
              patternObj.value(QStringLiteral("string")).isString()) {
-    pattern.setPatternSyntax(QRegExp::FixedString);
-    pattern.setPattern(patternObj.value(QStringLiteral("string")).toString());
+    // Escape the string so it is treated literally in the regex
+    regexPattern = QRegularExpression::escape(
+      patternObj.value(QStringLiteral("string")).toString());
   } else {
     return false;
   }
 
+  // Set case sensitivity if specified
   if (patternObj.contains(QStringLiteral("caseSensitive"))) {
-    pattern.setCaseSensitivity(
-      patternObj.value(QStringLiteral("caseSensitive")).toBool(true)
-        ? Qt::CaseSensitive
-        : Qt::CaseInsensitive);
+    bool caseSensitive =
+      patternObj.value(QStringLiteral("caseSensitive")).toBool(true);
+    if (!caseSensitive) {
+      patternOptions |= QRegularExpression::CaseInsensitiveOption;
+    }
   }
 
-  return true;
+  // Set the final pattern with options
+  pattern = QRegularExpression(regexPattern, patternOptions);
+
+  return pattern.isValid();
 }
 
 } // namespace Avogadro::QtGui

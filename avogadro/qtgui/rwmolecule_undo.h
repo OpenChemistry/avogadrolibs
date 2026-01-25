@@ -687,6 +687,26 @@ public:
 } // namespace
 
 namespace {
+class ModifyBondLabelCommand : public RWMolecule::UndoCommand
+{
+  Index m_bondId;
+  std::string m_newLabel;
+  std::string m_oldLabel;
+
+public:
+  ModifyBondLabelCommand(RWMolecule& m, Index bondId, const std::string& label)
+    : UndoCommand(m), m_bondId(bondId), m_newLabel(label)
+  {
+    m_oldLabel = m_mol.molecule().bondLabel(m_bondId);
+  }
+
+  void redo() override { m_mol.molecule().setBondLabel(m_bondId, m_newLabel); }
+
+  void undo() override { m_mol.molecule().setBondLabel(m_bondId, m_oldLabel); }
+};
+} // namespace
+
+namespace {
 class ModifySelectionCommand : public MergeUndoCommand<ModifySelectionMergeId>
 {
   std::vector<bool> m_newSelectedAtoms;

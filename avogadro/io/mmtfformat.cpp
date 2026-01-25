@@ -17,7 +17,6 @@
 
 #include <mmtf.hpp>
 
-#include <iomanip>
 #include <iostream>
 
 namespace Avogadro::Io {
@@ -29,11 +28,6 @@ using Core::Array;
 using Core::Elements;
 using Core::lexicalCast;
 using Core::Molecule;
-using Core::Residue;
-
-MMTFFormat::MMTFFormat() = default;
-
-MMTFFormat::~MMTFFormat() = default;
 
 namespace {
 // from latest MMTF code, under the MIT license
@@ -42,12 +36,10 @@ namespace {
 bool is_polymer(const unsigned int chain_index,
                 const std::vector<mmtf::Entity>& entity_list)
 {
-  for (const auto & i : entity_list) {
-    if (std::find(i.chainIndexList.begin(),
-                  i.chainIndexList.end(),
+  for (const auto& i : entity_list) {
+    if (std::find(i.chainIndexList.begin(), i.chainIndexList.end(),
                   chain_index) != i.chainIndexList.end()) {
-      return (i.type == "polymer" ||
-              i.type == "POLYMER");
+      return (i.type == "polymer" || i.type == "POLYMER");
     }
   }
   return false;
@@ -82,8 +74,12 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     Real beta = static_cast<Real>(structure.unitCell[4]) * DEG_TO_RAD;
     Real gamma = static_cast<Real>(structure.unitCell[5]) * DEG_TO_RAD;
 
-    auto* unitCellObject =
-      new Core::UnitCell(a, b, c, alpha, beta, gamma);
+    auto* unitCellObject = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+    if (!unitCellObject->isRegular()) {
+      appendError("cell matrix is singular");
+      delete unitCellObject;
+      return false;
+    }
     molecule.setUnitCell(unitCellObject);
   }
   // spaceGroup
@@ -155,9 +151,10 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 
       for (Index l = 0; l < groupSize; l++) {
         Vector3 pos(static_cast<Real>(structure.xCoordList[atomIndex]),
-                  static_cast<Real>(structure.yCoordList[atomIndex]),
-                  static_cast<Real>(structure.zCoordList[atomIndex]));
-        if (structure.altLocList[atomIndex] != '\0' && structure.altLocList[atomIndex] != 'A') {
+                    static_cast<Real>(structure.yCoordList[atomIndex]),
+                    static_cast<Real>(structure.zCoordList[atomIndex]));
+        if (structure.altLocList[atomIndex] != '\0' &&
+            structure.altLocList[atomIndex] != 'A') {
           rawToAtomId.push_back(-1);
           altAtomIds.push_back(molecule.atomCount() - 1);
           altAtomLocs.push_back(structure.altLocList[atomIndex]);
@@ -182,8 +179,10 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
       // Intra-residue bonds
       for (size_t l = 0; l < group.bondOrderList.size(); l++) {
 
-        auto atom1 = static_cast<Index>(rawToAtomId[atomOffset + group.bondAtomList[l * 2]]);
-        auto atom2 = static_cast<Index>(rawToAtomId[atomOffset + group.bondAtomList[l * 2 + 1]]);
+        auto atom1 = static_cast<Index>(
+          rawToAtomId[atomOffset + group.bondAtomList[l * 2]]);
+        auto atom2 = static_cast<Index>(
+          rawToAtomId[atomOffset + group.bondAtomList[l * 2 + 1]]);
 
         char bo = static_cast<char>(group.bondOrderList[l]);
 
@@ -208,8 +207,10 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
   // These are for inter-residue bonds
   for (size_t i = 0; i < structure.bondAtomList.size() / 2; i++) {
 
-    auto atom1 = static_cast<size_t>(rawToAtomId[structure.bondAtomList[i * 2]]);
-    auto atom2 = static_cast<size_t>(rawToAtomId[structure.bondAtomList[i * 2 + 1]]);
+    auto atom1 =
+      static_cast<size_t>(rawToAtomId[structure.bondAtomList[i * 2]]);
+    auto atom2 =
+      static_cast<size_t>(rawToAtomId[structure.bondAtomList[i * 2 + 1]]);
 
     /* Code for multiple models
     // We are below the atoms we care about
@@ -226,7 +227,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
       molecule.addBond(atom1, atom2, 1); // Always a single bond
   }
 
-  for (char l: altLocs) {
+  for (char l : altLocs) {
     Array<Vector3> coordinateSet = molecule.atomPositions3d();
     bool found = false;
     for (size_t i = 0; i < altAtomLocs.size(); i++) {
@@ -236,10 +237,9 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
       }
     }
     if (found) {
-      molecule.setCoordinate3d(
-        coordinateSet,
-        molecule.coordinate3dCount() ? molecule.coordinate3dCount() : 1
-      );
+      molecule.setCoordinate3d(coordinateSet, molecule.coordinate3dCount()
+                                                ? molecule.coordinate3dCount()
+                                                : 1);
     }
   }
 
@@ -265,4 +265,4 @@ vector<std::string> MMTFFormat::mimeTypes() const
   return mime;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Io

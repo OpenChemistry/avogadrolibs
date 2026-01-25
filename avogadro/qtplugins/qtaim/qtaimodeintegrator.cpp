@@ -20,16 +20,15 @@
 
 #include "qtaimodeintegrator.h"
 
+#include "qtaimmathutilities.h"
+
 namespace Avogadro::QtPlugins {
 
 QTAIMODEIntegrator::QTAIMODEIntegrator(QTAIMWavefunctionEvaluator& eval,
                                        const qint64 mode)
+  : m_eval(&eval), m_mode(mode), m_associatedSphere(0)
 {
-  m_eval = &eval;
-  m_mode = mode;
-
-  m_betaSpheres.empty();
-  m_associatedSphere = 0;
+  m_betaSpheres.clear();
 }
 
 QVector3D QTAIMODEIntegrator::integrate(QVector3D x0y0z0)
@@ -258,9 +257,7 @@ void QTAIMODEIntegrator::r8_f(qreal t, qreal y[], qreal yp[])
       break;
   }
 
-  qreal normGradient =
-    sqrt(gradient(0) * gradient(0) + gradient(1) * gradient(1) +
-         gradient(2) * gradient(2));
+  qreal normGradient = std::hypot(gradient(0), gradient(1), gradient(2));
 
   yp[0] = gradient(0) / normGradient;
   yp[1] = gradient(1) / normGradient;
@@ -337,9 +334,7 @@ qreal QTAIMODEIntegrator::r8_epsilon()
 //    Output, qreal R8_EPSILON, the R8 round-off unit.
 //
 {
-  qreal r;
-
-  r = 1.0;
+  qreal r = 1.0;
 
   while (1.0 < (qreal)(1.0 + r)) {
     r = r / 2.0;
@@ -426,12 +421,9 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
 //    Output, qreal S[NEQN], the estimate of the solution at T+H.
 //
 {
-  qreal ch;
-  qint64 i;
+  qreal ch = h_ / 4.0;
 
-  ch = h_ / 4.0;
-
-  for (i = 0; i < neqn; i++) {
+  for (qint64 i = 0; i < neqn; i++) {
     f5[i] = y[i] + ch * yp[i];
   }
 
@@ -439,7 +431,7 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
 
   ch = 3.0 * h_ / 32.0;
 
-  for (i = 0; i < neqn; i++) {
+  for (qint64 i = 0; i < neqn; i++) {
     f5[i] = y[i] + ch * (yp[i] + 3.0 * f1[i]);
   }
 
@@ -447,7 +439,7 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
 
   ch = h_ / 2197.0;
 
-  for (i = 0; i < neqn; i++) {
+  for (qint64 i = 0; i < neqn; i++) {
     f5[i] = y[i] + ch * (1932.0 * yp[i] + (7296.0 * f2[i] - 7200.0 * f1[i]));
   }
 
@@ -455,7 +447,7 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
 
   ch = h_ / 4104.0;
 
-  for (i = 0; i < neqn; i++) {
+  for (qint64 i = 0; i < neqn; i++) {
     f5[i] = y[i] + ch * ((8341.0 * yp[i] - 845.0 * f3[i]) +
                          (29440.0 * f2[i] - 32832.0 * f1[i]));
   }
@@ -464,7 +456,7 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
 
   ch = h_ / 20520.0;
 
-  for (i = 0; i < neqn; i++) {
+  for (qint64 i = 0; i < neqn; i++) {
     f1[i] = y[i] + ch * ((-6080.0 * yp[i] + (9295.0 * f3[i] - 5643.0 * f4[i])) +
                          (41040.0 * f1[i] - 28352.0 * f2[i]));
   }
@@ -475,13 +467,11 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
   //
   ch = h_ / 7618050.0;
 
-  for (i = 0; i < neqn; i++) {
+  for (qint64 i = 0; i < neqn; i++) {
     s[i] = y[i] +
            ch * ((902880.0 * yp[i] + (3855735.0 * f3[i] - 1371249.0 * f4[i])) +
                  (3953664.0 * f2[i] + 277020.0 * f5[i]));
   }
-
-  return;
 }
 //****************************************************************************80
 
@@ -1183,4 +1173,4 @@ qreal QTAIMODEIntegrator::r8_sign(qreal x)
 }
 //****************************************************************************80
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

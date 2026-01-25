@@ -12,6 +12,7 @@
 #include <avogadro/io/cmlformat.h>
 #include <avogadro/io/mdlformat.h>
 #include <avogadro/io/pdbformat.h>
+#include <avogadro/io/sdfformat.h>
 #include <avogadro/io/xyzformat.h>
 
 #include <QtCore/QDebug>
@@ -21,6 +22,8 @@
 #include <qjsondocument.h>
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
+
+using namespace std::string_literals;
 
 namespace Avogadro::QtPlugins {
 
@@ -130,10 +133,12 @@ FileFormatScript::Format FileFormatScript::stringToFormat(
     return Cjson;
   else if (str == "cml")
     return Cml;
-  else if (str == "mdl" || str == "mol" || str == "sdf" || str == "sd")
+  else if (str == "mdl" || str == "mol")
     return Mdl;
   else if (str == "pdb")
     return Pdb;
+  else if (str == "sdf")
+    return Sdf;
   else if (str == "xyz")
     return Xyz;
   return NotUsed;
@@ -150,6 +155,8 @@ Io::FileFormat* FileFormatScript::createFileFormat(FileFormatScript::Format fmt)
       return new Io::MdlFormat;
     case Pdb:
       return new Io::PdbFormat;
+    case Sdf:
+      return new Io::SdfFormat;
     case Xyz:
       return new Io::XyzFormat;
     default:
@@ -217,7 +224,7 @@ void FileFormatScript::readMetaData()
 
   // validate operations:
   Operations operationsTmp = Io::FileFormat::None;
-  for (auto & it : opStringsTmp) {
+  for (auto& it : opStringsTmp) {
     if (it == "read")
       operationsTmp |= Io::FileFormat::Read;
     else if (it == "write")
@@ -308,7 +315,7 @@ void FileFormatScript::readMetaData()
                  Io::FileFormat::String;
   m_inputFormat = inputFormatTmp;
   m_outputFormat = outputFormatTmp;
-  m_identifier = std::string("User Script: ") + identifierTmp;
+  m_identifier = "User Script: "s + identifierTmp;
   m_name = nameTmp;
 
   // check if we should bond on read:
@@ -357,4 +364,4 @@ bool FileFormatScript::parseStringArray(const QJsonObject& ob,
   return !array.empty();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

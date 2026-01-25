@@ -6,8 +6,7 @@
 #ifndef AVOGADRO_CORE_MDLVALENCE_P_H
 #define AVOGADRO_CORE_MDLVALENCE_P_H
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * Calculate the full valency (e.g. number of expected bonds) for a given atom.
@@ -646,7 +645,6 @@ static unsigned int atomValence(const unsigned char atomicNumber,
   return numBonds;
 }
 
-} // end namespace Core
-} // end namespace Avogadro
+} // end namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_MDLVALENCE_P_H

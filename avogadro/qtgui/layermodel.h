@@ -37,7 +37,9 @@ public:
     Remove = 5
   };
 
-  explicit LayerModel(QObject* p = 0);
+  explicit LayerModel(QObject* p = nullptr);
+
+  void loadIcons(bool darkMode);
 
   QModelIndex parent(const QModelIndex& child) const override;
   int rowCount(const QModelIndex& parent) const override;

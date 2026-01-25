@@ -31,7 +31,7 @@ LabelEditor::LabelEditor(QObject* parent_)
   m_activateAction->setText(tr("Edit Labels"));
   m_activateAction->setToolTip(
     tr("Atom Label Tool\n\n"
-       "Left Mouse: \tClick on Atoms to add Custom Labels"));
+       "Left Mouse:\tClick on Atoms to add Custom Labels"));
   setIcon();
 }
 
@@ -45,13 +45,15 @@ void LabelEditor::setIcon(bool darkTheme)
     m_activateAction->setIcon(QIcon(":/icons/label_light.svg"));
 }
 
-QUndoCommand* LabelEditor::mouseReleaseEvent(QMouseEvent*)
+QUndoCommand* LabelEditor::mouseReleaseEvent(QMouseEvent* e)
 {
+  e->ignore();
   return nullptr;
 }
 
-QUndoCommand* LabelEditor::mouseMoveEvent(QMouseEvent*)
+QUndoCommand* LabelEditor::mouseMoveEvent(QMouseEvent* e)
 {
+  e->ignore();
   return nullptr;
 }
 
@@ -81,7 +83,6 @@ void LabelEditor::save()
   m_selectedAtom = RWAtom();
 
   // make sure the label display is made active
-  qDebug() << "Requesting active display types";
   emit requestActiveDisplayTypes(QStringList() << "Labels");
 }
 
@@ -91,18 +92,25 @@ QUndoCommand* LabelEditor::mousePressEvent(QMouseEvent* e)
     return nullptr;
 
   if (e->buttons() & Qt::LeftButton) {
-    e->accept();
     if (m_selectedAtom.isValid()) {
+      e->accept();
       save();
+      emit drawablesChanged();
     }
 
     Identifier clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
     m_selected = (clickedObject.type == Rendering::AtomType);
     if (m_selected) {
+      e->accept();
       m_selectedAtom = m_molecule->atom(clickedObject.index);
       m_text = QString::fromStdString(m_selectedAtom.label());
+      emit drawablesChanged();
+    } else {
+      // clicked on empty space
+      e->ignore();
     }
-    emit drawablesChanged();
+  } else {
+    e->ignore();
   }
 
   return nullptr;

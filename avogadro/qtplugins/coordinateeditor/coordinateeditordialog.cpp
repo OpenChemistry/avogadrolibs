@@ -19,7 +19,7 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QFont>
 #include <QtGui/QIcon>
-#include <QtGui/QRegExpValidator>
+#include <QtGui/QRegularExpressionValidator>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocument>
 #include <QtWidgets/QApplication>
@@ -29,7 +29,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMimeData>
 #include <QtCore/QMutableListIterator>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
@@ -49,7 +49,7 @@ using Avogadro::QtGui::Molecule;
 namespace {
 
 // Ensure a cross-platform monospaced font
-#if defined(Q_OS_WIN) || defined(Q_OS_OSX)
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
 static const QString EDITOR_FONT = "Courier";
 #else // Linux and other OSes
 static const QString EDITOR_FONT = "Monospace";
@@ -77,18 +77,22 @@ enum TokenType
 };
 
 // Some frequently used regexes:
-static const QRegExp TOKEN_SEPARATOR("[\\s,;]+");
-static const QRegExp VALID_TOKEN("[^\\s,;]+");
-static const QRegExp INT_CHECKER("(:?[+-])?\\d+");
-static const QRegExp DOUBLE_CHECKER("(:?[+-])?" // Leading sign
-                                    "(:?" // Must match one of the following:
-                                    "\\d*\\.\\d*"           // Fractional part
-                                    "|"                     // or
-                                    "\\d+[Ee](:?[+-])?\\d+" // Exponential part
-                                    "|"                     // or
-                                    "\\d*\\.\\d*"       // Fractional part and
-                                    "[Ee](:?[+-])?\\d+" // Exponential part
-                                    ")");
+static const QRegularExpression TOKEN_SEPARATOR("[\\s,;]+");
+static const QRegularExpression VALID_TOKEN("[^\\s,;]+");
+// These two need to be exact
+static const QRegularExpression INT_CHECKER(
+  QRegularExpression::anchoredPattern("(:?[+-])?\\d+"));
+static const QRegularExpression DOUBLE_CHECKER(
+  QRegularExpression::anchoredPattern(
+    "(:?[+-])?"             // Leading sign
+    "(:?"                   // Must match one of the following:
+    "\\d*\\.\\d*"           // Fractional part
+    "|"                     // or
+    "\\d+[Ee](:?[+-])?\\d+" // Exponential part
+    "|"                     // or
+    "\\d*\\.\\d*"           // Fractional part and
+    "[Ee](:?[+-])?\\d+"     // Exponential part
+    ")"));
 
 struct AtomStruct
 {
@@ -140,8 +144,8 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget* parent_)
           SLOT(textModified(bool)));
 
   // Setup spec edit
-  QRegExp specRegExp("[#ZGSLNabcxyz01_]*");
-  auto* specValidator = new QRegExpValidator(specRegExp, this);
+  QRegularExpression specRegExp("[#ZGSLNabcxyz01_]*");
+  auto* specValidator = new QRegularExpressionValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
           SLOT(presetChanged(int)));
@@ -392,13 +396,14 @@ void CoordinateEditorDialog::validateInputWorker()
             cleanToken.replace(0, 1, cleanToken[0].toUpper());
 
           // Split the label into symbol and number
-          QRegExp labelSplitter("([A-Z][a-z]?)(\\d+)");
-          if (labelSplitter.indexIn(cleanToken) == -1) {
+          QRegularExpression labelSplitter("([A-Z][a-z]?)(\\d+)");
+          QRegularExpressionMatch match = labelSplitter.match(cleanToken);
+          if (match.hasMatch()) {
             m_ui->text->markInvalid(tokenCursor, tr("Invalid atom label."));
             break;
           }
           // check the symbol
-          std::string tokenStd(labelSplitter.cap(1).toStdString());
+          std::string tokenStd(match.captured(1).toStdString());
           atom.atomicNumber = Elements::atomicNumberFromSymbol(tokenStd);
           if (atom.atomicNumber == Avogadro::InvalidElement)
             m_ui->text->markInvalid(tokenCursor, tr("Invalid element symbol."));
@@ -410,7 +415,7 @@ void CoordinateEditorDialog::validateInputWorker()
         case '#': {
           // Validate integer:
           bool isInt;
-          int index = tokenCursor.selectedText().toInt(&isInt);
+          [[maybe_unused]] int index = tokenCursor.selectedText().toInt(&isInt);
           if (!isInt)
             m_ui->text->markInvalid(tokenCursor, tr("Invalid atomic index."));
           else
@@ -675,16 +680,16 @@ QString CoordinateEditorDialog::detectInputFormat() const
   FORMAT_DEBUG(qDebug() << "\n\nExamining sample:" << sample;)
 
   // Split the string into tokens, and identify the type of each.
-  QList<QString> tokens(sample.split(TOKEN_SEPARATOR, QString::SkipEmptyParts));
+  QList<QString> tokens(sample.split(TOKEN_SEPARATOR, Qt::SkipEmptyParts));
   QList<TokenType> tokenTypes;
   tokenTypes.reserve(tokens.size());
   size_t tokenTypeCounts[3] = { 0, 0, 0 };
 
   foreach (const QString& token, tokens) {
     TokenType tokenType = String;
-    if (INT_CHECKER.exactMatch(token))
+    if (INT_CHECKER.match(token).hasMatch())
       tokenType = Integer;
-    else if (DOUBLE_CHECKER.exactMatch(token))
+    else if (DOUBLE_CHECKER.match(token).hasMatch())
       tokenType = Double;
     ++tokenTypeCounts[tokenType];
     tokenTypes << tokenType;
@@ -797,8 +802,8 @@ QString CoordinateEditorDialog::detectInputFormat() const
 
   // Check the current specification -- if a|b|c appears before x|y|z, assume
   // that the specified coordinates are lattice coords
-  static QRegExp cartesianSniffer("x|y|z");
-  static QRegExp fractionalSniffer("a|b|c");
+  static QRegularExpression cartesianSniffer("x|y|z");
+  static QRegularExpression fractionalSniffer("a|b|c");
   const QString currentSpec(m_ui->spec->text());
   int cartesianIndex = currentSpec.indexOf(cartesianSniffer);
   int fractionalIndex = currentSpec.indexOf(fractionalSniffer);

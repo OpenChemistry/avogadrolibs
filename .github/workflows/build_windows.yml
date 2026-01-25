@@ -1,0 +1,200 @@
+name: Windows Build
+# Many thanks to Cristian Adam for examples
+# e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
+# https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
+
+# This workflow will build and (optionally) sign releases for Windows
+# .. since SignPath requires only a Windows build in the action
+# .. to successfully sign
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  QT_VERSION: 6.10.1
+  # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
+  # we set MACOSX_DEPLOYMENT_TARGET later
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Windows Qt6", artifact: "Win64.exe",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
+            build_flags: "--parallel",
+          }
+
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@d325aaf2a8baeeda41ad0b5d39f84a6af9bcf005 # v4.3.0
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure MSVC Command Prompt
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+      with:
+        arch: x64
+
+    # Emit a vcpkg_version output
+    - name: Get vcpkg git sha
+      if: runner.os == 'Windows'
+      id: vcpkg_version
+      run: |
+        cd /c/vcpkg
+        git pull origin master
+        if [ -d /c/vcpkg/.git ]; then
+          echo "sha=$(git -C /c/vcpkg rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        else
+          # just in case
+          echo "sha=no-vcpkg-git" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+
+    # Restore vcpkg cache (use manifest lock if available)
+    - name: Restore vcpkg cache
+      if: runner.os == 'Windows'
+      uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
+      with:
+        path: |
+          C:\vcpkg\installed
+          C:\vcpkg\packages
+          C:\vcpkg\downloads
+        # We don't use a vcpkg manifest so we'll use the vcpkg git SHA as the cache key
+        # Fallback to vcpkg git SHA so cache is somewhat stable across runs.
+        key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
+        restore-keys: |
+          vcpkg-${{ runner.os }}-${{ runner.arch }}-
+      env:
+        VCPKG_ROOT: C:\vcpkg
+
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        choco install nsis ninja
+        vcpkg install libarchive eigen3 libxml2 zlib
+      shell: bash
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+      shell: bash
+
+    # Cache thirdparty builds (OpenBabel, etc.)
+    - name: Cache thirdparty
+      uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: thirdparty-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('openchemistry/cmake/External*.cmake', 'openchemistry/cmake/projects/*.cmake') }}
+        restore-keys: |
+          thirdparty-${{ runner.os }}-${{ runner.arch }}-
+
+    - name: Build
+      run: |
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Create Windows Packages
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        gh release download -R prefix-dev/pixi -p "pixi-x86_64-pc-windows-msvc.exe"
+        # wget https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.exe
+        # move pixi to prefix/bin
+        mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
+        # run windeployqt
+        windeployqt --release prefix/bin/avogadro2.exe
+        # copy ICU DLLs from Qt installation (needed for Windows 10 1903+)
+        # windeployqt doesn't always copy these automatically
+        cp "${QT_ROOT_DIR}/bin"/icu*.dll prefix/bin/ 2>/dev/null || true
+        mv prefix avogadro2
+        # 7z a Avogadro2-windows.zip avogadro2
+        cd avogadro2
+        # create NSIS
+        /c/Program\ Files\ \(x86\)/NSIS/bin/makensis avogadro2.nsi
+        if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          # This is a tag - extract version
+          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${VERSION#v}"  # Remove 'v' prefix if present
+        else
+          # This is a nightly build - use current date
+          VERSION="continuous"
+        fi
+
+        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}-win64.exe
+      working-directory: ${{ runner.workspace }}/build/
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+    - name: Upload
+      if: matrix.config.artifact != 0
+      id: upload-artifact
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+      with:
+        path: ${{ runner.workspace }}/build/Avogadro2*.*
+        name: ${{ matrix.config.artifact }}
+
+    - name: Upload release assets
+      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
+      uses: ./.github/actions/upload-release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      with:
+        artifacts: "${{ runner.workspace }}/build/Avogadro2*.*"
+
+    - name: Sign Windows release
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
+      uses: signpath/github-action-submit-signing-request@3f9250c56651ff692d6729a2fbb0603a42d7d322 # v2.0
+      continue-on-error: true
+      with:
+        api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+        organization-id: '${{ secrets.SIGNPATH_ORG_ID }}'
+        project-slug: 'avogadrolibs'
+        signing-policy-slug: 'release-signing'
+        github-artifact-id: '${{ steps.upload-artifact.outputs.artifact-id }}'
+        wait-for-completion: false
+        output-artifact-directory: '../build/'
+
+    - name: Create MSIX
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
+      shell: powershell
+      run:
+        # create MSIX
+        makeappx pack /v /d . /p ../Avogadro2.msix
+      working-directory: ${{ runner.workspace }}/build/avogadro2
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+    - name: Upload MSIX
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+      with:
+        path: ${{ runner.workspace }}/build/Avogadro2.msix
+        name: Avogadro2.msix
+
+    - name: Setup tmate session
+      if: failure()
+      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
+      timeout-minutes: 60

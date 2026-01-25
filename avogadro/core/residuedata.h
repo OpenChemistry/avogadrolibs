@@ -4,9 +4,10 @@
 
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
-namespace Avogadro {
-namespace Core {
+
+namespace Avogadro::Core {
 
 class ResidueData
 {
@@ -17,23 +18,30 @@ private:
   std::vector<std::pair<std::string, std::string>> m_residueDoubleBonds;
 
 public:
-  ResidueData() {}
+  ResidueData() = default;
   ResidueData(std::string name, std::map<std::string, int> atomNames,
               std::vector<std::pair<std::string, std::string>> singleBonds,
               std::vector<std::pair<std::string, std::string>> doubleBonds)
+    : m_residueName(std::move(name)), m_residueAtomNames(std::move(atomNames)),
+      m_residueSingleBonds(std::move(singleBonds)),
+      m_residueDoubleBonds(std::move(doubleBonds))
   {
-    m_residueName = name;
-    m_residueAtomNames = atomNames;
-    m_residueSingleBonds = singleBonds;
-    m_residueDoubleBonds = doubleBonds;
   }
 
   ResidueData(const ResidueData& other)
+    : m_residueName(other.m_residueName),
+      m_residueAtomNames(other.m_residueAtomNames),
+      m_residueSingleBonds(other.m_residueSingleBonds),
+      m_residueDoubleBonds(other.m_residueDoubleBonds)
   {
-    m_residueName = other.m_residueName;
-    m_residueAtomNames = other.m_residueAtomNames;
-    m_residueSingleBonds = other.m_residueSingleBonds;
-    m_residueDoubleBonds = other.m_residueDoubleBonds;
+  }
+
+  ResidueData(ResidueData&& other) noexcept
+    : m_residueName(std::move(other.m_residueName)),
+      m_residueAtomNames(std::move(other.m_residueAtomNames)),
+      m_residueSingleBonds(std::move(other.m_residueSingleBonds)),
+      m_residueDoubleBonds(std::move(other.m_residueDoubleBonds))
+  {
   }
 
   ResidueData& operator=(ResidueData other)
@@ -2461,7 +2469,6 @@ std::map<std::string, ResidueData> residueDict = {
   { "SAM", SAMData }, { "GNP", GNPData }, { "FLC", FLCData },
 
 };
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif

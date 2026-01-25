@@ -3,6 +3,20 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+#include "yaehmop.h"
+
+#include "banddialog.h"
+#include "specialkpoints.h"
+#include "yaehmopout.h"
+
+#include <avogadro/core/array.h>
+#include <avogadro/core/elements.h>
+#include <avogadro/core/unitcell.h>
+#include <avogadro/core/vector.h>
+#include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/chartdialog.h>
+#include <avogadro/qtgui/chartwidget.h>
+
 #include <QAction>
 #include <QByteArray>
 #include <QCoreApplication>
@@ -17,20 +31,6 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 
-#include <avogadro/core/array.h>
-#include <avogadro/core/elements.h>
-#include <avogadro/core/unitcell.h>
-#include <avogadro/core/vector.h>
-#include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/chartdialog.h>
-#include <avogadro/vtk/chartwidget.h>
-
-#include "banddialog.h"
-#include "specialkpoints.h"
-#include "yaehmopout.h"
-
-#include "yaehmop.h"
-
 using Avogadro::Vector3;
 using Avogadro::Vector3i;
 using Avogadro::Core::Array;
@@ -38,8 +38,7 @@ using Avogadro::Core::Elements;
 using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Yaehmop::Yaehmop(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
@@ -132,7 +131,7 @@ void Yaehmop::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -344,10 +343,9 @@ void Yaehmop::calculateBandStructure()
   specialKPointVals.back() -= 0.0001;
 
   // Make a vector of labels for the special k points
-  std::vector<std::string> specialKPointLabels;
+  QStringList specialKPointLabels;
   for (int i = 0; i < numSpecialKPoints; ++i) {
-    std::string label = specialKPoints[i].label.toStdString();
-    specialKPointLabels.push_back(label);
+    specialKPointLabels.push_back(specialKPoints[i].label);
   }
 
   // Now generate a plot with the data
@@ -355,7 +353,8 @@ void Yaehmop::calculateBandStructure()
   data.push_back(xVals);
 
   // Make some labels
-  std::vector<std::string> lineLabels;
+  QStringList lineLabels;
+  lineLabels.push_back(tr("k-space"));
 
   // Set the color
   std::array<double, 4> color = { 255, 0, 0, 255 };
@@ -365,7 +364,7 @@ void Yaehmop::calculateBandStructure()
   for (const auto& band : bands) {
     std::vector<float> tmp(band.begin(), band.end());
     data.push_back(tmp);
-    lineLabels.push_back(tr("Band %1").arg(curBandNum).toStdString());
+    lineLabels.push_back(tr("Band %1").arg(curBandNum));
     lineColors.push_back(color);
     ++curBandNum;
   }
@@ -385,7 +384,7 @@ void Yaehmop::calculateBandStructure()
     }
 
     // Create a horizontal, black, dashed line for the fermi level
-    lineLabels.push_back(tr("Fermi Level").toStdString());
+    lineLabels.push_back(tr("Fermi Level"));
     lineColors.push_back({ 0, 0, 0, 255 });
 
     std::vector<float> fermiVals(xVals.size(), fermi);
@@ -398,20 +397,21 @@ void Yaehmop::calculateBandStructure()
 
   if (!m_chartDialog) {
     m_chartDialog.reset(
-      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+      new QtGui::ChartDialog(qobject_cast<QWidget*>(this->parent())));
   }
 
   m_chartDialog->setWindowTitle(windowName);
   auto* chart = m_chartDialog->chartWidget();
   chart->clearPlots();
-  chart->addPlots(data, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->addPlots(data, QtGui::color4ub{ 255, 0, 0, 255 }, lineLabels);
   chart->setXAxisTitle(xTitle);
   chart->setYAxisTitle(yTitle);
-  chart->setTickLabels(VTK::ChartWidget::Axis::x, specialKPointVals,
+  chart->setTickLabels(QtGui::ChartWidget::Axis::x, specialKPointVals,
                        specialKPointLabels);
-  chart->setAxisLimits(VTK::ChartWidget::Axis::x, xVals.front(), xVals.back());
+  chart->setAxisLimits(QtGui::ChartWidget::Axis::x, xVals.front(),
+                       xVals.back());
   if (m_yaehmopSettings.limitY) {
-    chart->setAxisLimits(VTK::ChartWidget::Axis::y, m_yaehmopSettings.minY,
+    chart->setAxisLimits(QtGui::ChartWidget::Axis::y, m_yaehmopSettings.minY,
                          m_yaehmopSettings.maxY);
   }
   m_chartDialog->show();
@@ -586,15 +586,15 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
 
 void Yaehmop::showYaehmopInput(const QString& input)
 {
-  QDialog* dialog = new QDialog(qobject_cast<QWidget*>(this->parent()));
+  auto* dialog = new QDialog(qobject_cast<QWidget*>(this->parent()));
 
   // Make sure this gets deleted upon closing
   dialog->setAttribute(Qt::WA_DeleteOnClose);
 
-  QVBoxLayout* layout = new QVBoxLayout(dialog);
+  auto* layout = new QVBoxLayout(dialog);
   dialog->setLayout(layout);
   dialog->setWindowTitle(tr("Yaehmop Input"));
-  QTextEdit* edit = new QTextEdit(dialog);
+  auto* edit = new QTextEdit(dialog);
   layout->addWidget(edit);
   dialog->resize(500, 500);
 
@@ -603,5 +603,4 @@ void Yaehmop::showYaehmopInput(const QString& input)
   dialog->show();
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

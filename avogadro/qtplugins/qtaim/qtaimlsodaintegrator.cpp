@@ -38,17 +38,15 @@ tam@wri.com
 */
 
 #include "qtaimlsodaintegrator.h"
+#include "qtaimmathutilities.h"
 
 namespace Avogadro::QtPlugins {
 
 QTAIMLSODAIntegrator::QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator& eval,
                                            const qint64 mode)
+  : m_eval(&eval), m_mode(mode), m_associatedSphere(0)
 {
-  m_eval = &eval;
-  m_mode = mode;
-
-  m_betaSpheres.empty();
-  m_associatedSphere = 0;
+  m_betaSpheres.clear();
 }
 
 QVector3D QTAIMLSODAIntegrator::integrate(QVector3D x0y0z0)
@@ -233,9 +231,7 @@ void QTAIMLSODAIntegrator::f(int neq, double t, double* y, double* ydot)
       break;
   }
 
-  qreal normGradient =
-    sqrt(gradient(0) * gradient(0) + gradient(1) * gradient(1) +
-         gradient(2) * gradient(2));
+  qreal normGradient = std::hypot(gradient(0), gradient(1), gradient(2));
 
   ydot[1] = gradient(0) / normGradient;
   ydot[2] = gradient(1) / normGradient;
@@ -321,7 +317,6 @@ defined in a similar way using incy.
 
   for (i = 1; i <= n_ * incx; i = i + incx)
     dy[i] = da * dx[i] + dy[i];
-  return;
 }
 
 double QTAIMLSODAIntegrator::ddot(int n_, double* dx, int incx, double* dy,
@@ -646,7 +641,6 @@ da * dx[1+i*incx].
     dx[i + 3] = da * dx[i + 3];
     dx[i + 4] = da * dx[i + 4];
   }
-  return;
 }
 
 int QTAIMLSODAIntegrator::idamax(int n_, double* dx, int incx)
@@ -789,7 +783,6 @@ void QTAIMLSODAIntegrator::terminate2(double* y, double* t)
   *t = tn;
   illin = 0;
   freevectors();
-  return;
 
 } /*   end terminate2   */
 
@@ -2129,8 +2122,6 @@ void QTAIMLSODAIntegrator::cfode(int meth_)
     tesco[nq_][3] = ((double)(nq_ + 2)) / elco[nq_][1];
     rq1fac /= fnq;
   }
-  return;
-
 } /*   end cfode   */
 
 void QTAIMLSODAIntegrator::scaleh(double* rh, double* pdh)
@@ -2479,7 +2470,6 @@ y = the right-hand side vector on input, and the solution vector
 
   if (miter == 2)
     dgesl(wm, n, ipvt, y, 0);
-  return;
 
 } /*   end solsy   */
 
@@ -2761,4 +2751,4 @@ void QTAIMLSODAIntegrator::freevectors()
   free(ipvt);
 } /*   end freevectors   */
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

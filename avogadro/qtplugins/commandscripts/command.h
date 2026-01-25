@@ -1,6 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_COMMAND_H
@@ -23,7 +23,7 @@ class FileFormat;
 namespace QtGui {
 class InterfaceScript;
 class InterfaceWidget;
-}
+} // namespace QtGui
 
 namespace QtPlugins {
 
@@ -84,12 +84,12 @@ private:
   QProgressDialog* m_progress;
 
   // maps program name --> script file path
-  QMap<QString, QString> m_commandScripts;
+  QMultiMap<QString, QString> m_commandScripts;
 
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_COMMAND_H

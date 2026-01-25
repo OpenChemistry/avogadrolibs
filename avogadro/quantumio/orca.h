@@ -51,6 +51,8 @@ private:
   void processLine(std::istream& in, Core::GaussianSet* basis);
   void load(Core::GaussianSet* basis);
 
+  void parseMCD();
+
   // OrcaStuff
   void orcaWarningMessage(const std::string& m);
   Core::GaussianSet::orbital orbitalIdx(std::string txt);
@@ -61,6 +63,10 @@ private:
 
   std::vector<int> m_atomNums;
   std::vector<Eigen::Vector3d> m_atomPos;
+  std::vector<std::vector<Eigen::Vector3d>> m_coordSets;
+  std::vector<double> m_energies;
+
+  Vector3 m_dipoleMoment;
 
   std::vector<std::vector<int>> m_bondOrders;
 
@@ -79,11 +85,15 @@ private:
     MO,
     OrbitalEnergies,
     Charges,
+    HirshfeldCharges,
     Frequencies,
     VibrationalModes,
     IR,
     Raman,
+    VCD, // vibrational circular dichroism
     Electronic,
+    ECD, // electronic circular dichroism
+    MCD, // magnetic circular dichroism
     NMR,
     BondOrders,
     NotParsing,
@@ -98,6 +108,9 @@ private:
   bool m_readBeta;
 
   int m_homo;
+  int m_charge;
+  int m_spin;
+  double m_totalEnergy;
 
   int m_currentAtom;
   unsigned int m_numBasisFunctions;
@@ -118,7 +131,17 @@ private:
   Core::Array<double> m_frequencies;
   Core::Array<double> m_IRintensities;
   Core::Array<double> m_RamanIntensities;
+  Core::Array<double> m_vcdIntensities;
   Core::Array<Core::Array<Vector3>> m_vibDisplacements;
+
+  Core::Array<double> m_electronicTransitions; // in eV
+  Core::Array<double> m_electronicIntensities;
+  Core::Array<double> m_electronicRotations; // for CD
+
+  Core::Array<double> m_magneticTransitions; // in cm^-1
+  Core::Array<double> m_magneticCD;          // for MCD
+
+  Core::Array<double> m_nmrShifts; // for NMR (in ppm)
 };
 
 } // namespace QuantumIO

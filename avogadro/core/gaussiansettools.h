@@ -8,15 +8,12 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
-
 #include "basisset.h"
 #include "vector.h"
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Cube;
 class GaussianSet;
@@ -33,7 +30,7 @@ class AVOGADROCORE_EXPORT GaussianSetTools
 {
 public:
   explicit GaussianSetTools(Molecule* mol = nullptr);
-  ~GaussianSetTools();
+  ~GaussianSetTools() = default;
 
   /**
    * @brief Set the electron type, must be called once MOs are available
@@ -100,6 +97,8 @@ private:
   GaussianSet* m_basis;
   BasisSet::ElectronType m_type = BasisSet::Paired;
   std::vector<double> m_cutoffDistances;
+  // Cached atom positions in Bohr as 3 x N matrix for vectorized operations
+  Eigen::Matrix<double, 3, Eigen::Dynamic> m_atomPositionsBohr;
 
   bool isSmall(double value) const;
 
@@ -112,28 +111,32 @@ private:
    * functions call this function to prepare values before multiplying by the
    * molecular orbital or density matrix elements.
    * @param position The position in space to calculate the value.
+   * @param values Output vector to store basis function values (will be resized
+   * and zeroed).
    */
-  std::vector<double> calculateValues(const Vector3& position) const;
+  void calculateValues(const Vector3& position, Eigen::VectorXd& values) const;
 
-  void pointS(unsigned int index, double dr2,
-              std::vector<double>& values) const;
+  void pointS(unsigned int index, double dr2, Eigen::VectorXd& values) const;
   void pointP(unsigned int index, const Vector3& delta, double dr2,
-              std::vector<double>& values) const;
+              Eigen::VectorXd& values) const;
   void pointD(unsigned int index, const Vector3& delta, double dr2,
-              std::vector<double>& values) const;
+              Eigen::VectorXd& values) const;
   void pointD5(unsigned int index, const Vector3& delta, double dr2,
-               std::vector<double>& values) const;
+               Eigen::VectorXd& values) const;
   void pointF(unsigned int index, const Vector3& delta, double dr2,
-              std::vector<double>& values) const;
+              Eigen::VectorXd& values) const;
   void pointF7(unsigned int index, const Vector3& delta, double dr2,
-               std::vector<double>& values) const;
+               Eigen::VectorXd& values) const;
+  void pointG(unsigned int index, const Vector3& delta, double dr2,
+              Eigen::VectorXd& values) const;
+  void pointG9(unsigned int index, const Vector3& delta, double dr2,
+               Eigen::VectorXd& values) const;
 
   // map from symmetry to angular momentum
   // S, SP, P, D, D5, F, F7, G, G9, etc.
   const int symToL[13] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 };
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_GAUSSIANSETTOOLS_H

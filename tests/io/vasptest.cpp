@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "iotests.h"
@@ -38,12 +27,14 @@ using Avogadro::Core::UnitCell;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::OutcarFormat;
 using Avogadro::Io::PoscarFormat;
+using namespace std::string_literals;
 
 TEST(VaspTest, readPoscar)
 {
   PoscarFormat poscar;
   Molecule molecule;
-  EXPECT_TRUE(poscar.readFile(AVOGADRO_DATA "/data/rutile.POSCAR", molecule));
+  EXPECT_TRUE(
+    poscar.readFile(AVOGADRO_DATA "/data/vasp/rutile.POSCAR", molecule));
   ASSERT_EQ(poscar.error(), std::string());
 
   // First, let's check the unit cell
@@ -75,6 +66,24 @@ TEST(VaspTest, readPoscar)
   EXPECT_DOUBLE_EQ(pos5.x(), 0.5);
   EXPECT_DOUBLE_EQ(pos5.y(), 0.5);
   EXPECT_DOUBLE_EQ(pos5.z(), 0.5);
+}
+
+TEST(VaspTest, readInvalidPoscar)
+{
+  for (const auto& file : {
+         "lin-dep.vasp"s,
+         "zero-a.vasp"s,
+         "zero-b.vasp"s,
+         "zero-c.vasp"s,
+         "zero-scale.vasp"s,
+       }) {
+    Molecule molecule;
+    PoscarFormat poscar;
+    auto f = std::string(AVOGADRO_DATA) + "/data/vasp/singular/" + file;
+    EXPECT_FALSE(poscar.readFile(f, molecule)) << f;
+    EXPECT_EQ(poscar.error(), "cell vectors are not linear independent\n"s)
+      << f;
+  }
 }
 
 TEST(VaspTest, writePoscar)
@@ -109,7 +118,7 @@ TEST(VaspTest, writePoscar)
 
   // The output should be an exact match with the sample file.
   std::istringstream outputStream(output);
-  std::ifstream refStream(AVOGADRO_DATA "/data/rutile.POSCAR");
+  std::ifstream refStream(AVOGADRO_DATA "/data/vasp/rutile.POSCAR");
   char outputChar = '\0';
   char refChar = '\0';
   outputStream >> std::noskipws;
@@ -128,7 +137,7 @@ TEST(VaspTest, PoscarModes)
   // but
   // a concrete implementation is required in order to test.
   PoscarFormat format;
-  format.open(AVOGADRO_DATA "/data/rutile.POSCAR", FileFormat::Read);
+  format.open(AVOGADRO_DATA "/data/vasp/rutile.POSCAR", FileFormat::Read);
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.mode() & FileFormat::Read);
   EXPECT_FALSE(format.isMode(FileFormat::Write));
@@ -137,7 +146,7 @@ TEST(VaspTest, PoscarModes)
 TEST(VaspTest, readOutcar)
 {
   OutcarFormat multi;
-  multi.open(AVOGADRO_DATA "/data/ti_bulk.OUTCAR",
+  multi.open(AVOGADRO_DATA "/data/vasp/ti_bulk.OUTCAR",
              FileFormat::Read | FileFormat::MultiMolecule);
   Molecule molecule;
 
@@ -192,13 +201,13 @@ TEST(VaspTest, OutcarModes)
 {
   // This tests some of the mode setting/checking code
   OutcarFormat format;
-  format.open(AVOGADRO_DATA "/data/ti_bulk.OUTCAR", FileFormat::Read);
+  format.open(AVOGADRO_DATA "/data/vasp/ti_bulk.OUTCAR", FileFormat::Read);
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.mode() & FileFormat::Read);
   EXPECT_FALSE(format.isMode(FileFormat::Write));
 
   // Try some combinations now.
-  format.open(AVOGADRO_DATA "/data/ti_bulk.OUTCAR",
+  format.open(AVOGADRO_DATA "/data/vasp/ti_bulk.OUTCAR",
               FileFormat::Read | FileFormat::MultiMolecule);
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.isMode(FileFormat::Read | FileFormat::MultiMolecule));

@@ -7,12 +7,8 @@
 
 namespace Avogadro::QtGui {
 
-ViewFactory::ViewFactory()
-{
-}
+ViewFactory::ViewFactory() {}
 
-ViewFactory::~ViewFactory()
-{
-}
+ViewFactory::~ViewFactory() {}
 
-} // End Avogadro namespace
+} // namespace Avogadro::QtGui

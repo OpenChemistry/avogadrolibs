@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -20,6 +9,7 @@
 
 using Avogadro::MatrixX;
 using Avogadro::Core::Variant;
+using namespace std::string_literals;
 
 TEST(VariantTest, isNull)
 {
@@ -131,13 +121,13 @@ TEST(VariantTest, toPointer)
 TEST(VariantTest, toString)
 {
   Variant variant("hello");
-  EXPECT_EQ(variant.toString(), std::string("hello"));
+  EXPECT_EQ(variant.toString(), "hello"s);
 
   variant.setValue(12);
-  EXPECT_EQ(variant.toString(), std::string("12"));
+  EXPECT_EQ(variant.toString(), "12"s);
 
-  variant.setValue(std::string("hello2"));
-  EXPECT_EQ(variant.toString(), std::string("hello2"));
+  variant.setValue("hello2"s);
+  EXPECT_EQ(variant.toString(), "hello2"s);
 }
 
 TEST(VariantTest, toMatrix)

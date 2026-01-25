@@ -16,10 +16,10 @@
 
 namespace Avogadro::Rendering {
 
-using std::string;
-using std::ostringstream;
-using std::ostream;
 using std::ofstream;
+using std::ostream;
+using std::ostringstream;
+using std::string;
 
 namespace {
 ostream& operator<<(ostream& os, const Vector3f& v)
@@ -41,7 +41,7 @@ ostream& operator<<(ostream& os, const Vector4ub& color)
      << color[2] / 255.0f << color[3] / 255.0f;
   return os;
 }
-}
+} // namespace
 
 VRMLVisitor::VRMLVisitor(const Camera& c)
   : m_camera(c), m_backgroundColor(255, 255, 255),
@@ -49,9 +49,7 @@ VRMLVisitor::VRMLVisitor(const Camera& c)
 {
 }
 
-VRMLVisitor::~VRMLVisitor()
-{
-}
+VRMLVisitor::~VRMLVisitor() {}
 
 void VRMLVisitor::begin()
 {
@@ -77,9 +75,7 @@ string VRMLVisitor::end()
   return m_sceneData;
 }
 
-void VRMLVisitor::visit(Drawable&)
-{
-}
+void VRMLVisitor::visit(Drawable&) {}
 
 void VRMLVisitor::visit(SphereGeometry& geometry)
 {
@@ -96,9 +92,7 @@ void VRMLVisitor::visit(SphereGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void VRMLVisitor::visit(AmbientOcclusionSphereGeometry&)
-{
-}
+void VRMLVisitor::visit(AmbientOcclusionSphereGeometry&) {}
 
 void VRMLVisitor::visit(CylinderGeometry& geometry)
 {
@@ -117,7 +111,7 @@ void VRMLVisitor::visit(CylinderGeometry& geometry)
     double dy = y2 - y1;
     double dz = z2 - z1;
 
-    double length = sqrt(dx * dx + dy * dy + dz * dz);
+    double length = std::hypot(dx, dy, dz);
     double tx = dx / 2 + x1;
     double ty = dy / 2 + y1;
     double tz = dz / 2 + z1;
@@ -161,7 +155,7 @@ void VRMLVisitor::visit(CylinderGeometry& geometry)
 
 void VRMLVisitor::visit(MeshGeometry& geometry)
 {
-  Core::Array<Rendering::MeshGeometry::PackedVertex> v = geometry.vertices();
+  Core::Array<Rendering::PackedVertex> v = geometry.vertices();
 
   // If there are no triangles then don't bother doing anything
   if (v.size() == 0)
@@ -195,8 +189,6 @@ void VRMLVisitor::visit(MeshGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void VRMLVisitor::visit(LineStripGeometry&)
-{
-}
+void VRMLVisitor::visit(LineStripGeometry&) {}
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

@@ -20,8 +20,8 @@ CoordinateTextEdit::CoordinateTextEdit(QWidget* p)
   setMouseTracking(true);
 
   m_unmarkedFormat.setUnderlineStyle(QTextCharFormat::NoUnderline);
-  m_unmarkedFormat.setForeground(qApp->palette().foreground().color());
-  m_unmarkedFormat.setBackground(qApp->palette().base().color());
+  m_unmarkedFormat.setForeground(qApp->palette().color(QPalette::WindowText));
+  m_unmarkedFormat.setBackground(qApp->palette().color(QPalette::Base));
 
   m_invalidFormat.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
   m_invalidFormat.setForeground(Qt::darkRed);
@@ -91,4 +91,4 @@ void CoordinateTextEdit::showToolTip(QHelpEvent* e) const
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

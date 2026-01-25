@@ -8,11 +8,6 @@
 #include "molecule.h"
 #include "slaterset.h"
 
-#include <iostream>
-
-
-using std::vector;
-
 namespace Avogadro::Core {
 
 SlaterSetTools::SlaterSetTools(Molecule* mol) : m_molecule(mol)
@@ -21,21 +16,17 @@ SlaterSetTools::SlaterSetTools(Molecule* mol) : m_molecule(mol)
     m_basis = dynamic_cast<SlaterSet*>(m_molecule->basisSet());
 }
 
-SlaterSetTools::~SlaterSetTools()
-{
-}
-
 double SlaterSetTools::calculateMolecularOrbital(const Vector3& position,
                                                  int mo) const
 {
   if (mo > static_cast<int>(m_basis->molecularOrbitalCount()))
     return 0.0;
 
-  vector<double> values(calculateValues(position));
+  std::vector<double> values(calculateValues(position));
 
   const MatrixX& matrix = m_basis->normalizedMatrix();
   int matrixSize(static_cast<int>(matrix.rows()));
-  int indexMO(mo - 1);
+  int indexMO(mo);
 
   // Now calculate the value of the density at this point in space
   double result(0.0);
@@ -52,7 +43,7 @@ double SlaterSetTools::calculateElectronDensity(const Vector3& position) const
   if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
     return 0.0;
 
-  vector<double> values(calculateValues(position));
+  std::vector<double> values(calculateValues(position));
 
   // Now calculate the value of the density at this point in space
   double rho(0.0);
@@ -74,35 +65,31 @@ double SlaterSetTools::calculateSpinDensity(const Vector3&) const
 
 bool SlaterSetTools::isValid() const
 {
-  if (m_molecule && dynamic_cast<SlaterSet*>(m_molecule->basisSet()))
-    return true;
-  else
-    return false;
+  return (m_molecule != nullptr) &&
+         (dynamic_cast<SlaterSet*>(m_molecule->basisSet()) != nullptr);
 }
 
 inline bool SlaterSetTools::isSmall(double val) const
 {
-  if (val > -1e-20 && val < 1e-20)
-    return true;
-  else
-    return false;
+  return std::abs(val) < 1e-20;
 }
 
-vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
+std::vector<double> SlaterSetTools::calculateValues(
+  const Vector3& position) const
 {
   m_basis->initCalculation();
 
   Index atomsSize = m_molecule->atomCount();
   size_t basisSize = m_basis->zetas().size();
 
-  const vector<int>& slaterIndices = m_basis->slaterIndices();
-  const vector<int>& slaterTypes = m_basis->slaterTypes();
-  const vector<int>& PQNs = m_basis->PQNs();
-  const vector<double>& factors = m_basis->factors();
-  const vector<double>& zetas = m_basis->zetas();
+  const std::vector<int>& slaterIndices = m_basis->slaterIndices();
+  const std::vector<int>& slaterTypes = m_basis->slaterTypes();
+  const std::vector<int>& PQNs = m_basis->PQNs();
+  const std::vector<double>& factors = m_basis->factors();
+  const std::vector<double>& zetas = m_basis->zetas();
 
-  vector<Vector3> deltas;
-  vector<double> dr2;
+  std::vector<Vector3> deltas;
+  std::vector<double> dr2;
   deltas.reserve(atomsSize);
   dr2.reserve(atomsSize);
 
@@ -113,7 +100,7 @@ vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
   }
 
   // Allocate space for the values to be calculated.
-  vector<double> values;
+  std::vector<double> values;
   values.resize(basisSize);
 
   // Now calculate the values at this point in space
@@ -160,4 +147,4 @@ vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
   return values;
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Core

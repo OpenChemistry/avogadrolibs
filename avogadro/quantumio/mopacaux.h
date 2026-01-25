@@ -64,6 +64,17 @@ private:
   bool readNormalModes(std::istream& in, unsigned int n);
 
   int m_electrons;
+  int m_charge = 0;
+  int m_spin = 1;
+  Vector3 m_dipoleMoment;
+  std::vector<double> m_partialCharges;
+  double m_heatOfFormation;
+  double m_area;
+  double m_volume;
+
+  std::vector<double> m_energies;
+  std::vector<double> m_forces;
+
   std::vector<int> m_shellTypes;
   std::vector<int> m_shellNums;
   std::vector<int> m_shelltoAtom;
@@ -78,6 +89,7 @@ private:
   std::vector<double> m_zeta;
   std::vector<int> m_pqn;
   std::vector<Eigen::Vector3d> m_atomPos;
+  std::vector<std::vector<Eigen::Vector3d>> m_coordSets;
 
   std::vector<double> m_frequencies;
   std::vector<double> m_irIntensities;

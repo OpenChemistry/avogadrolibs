@@ -6,6 +6,7 @@
 #include "propertymodel.h"
 
 #include <avogadro/calc/chargemanager.h>
+#include <avogadro/core/array.h>
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
@@ -25,6 +26,7 @@
 
 namespace Avogadro {
 
+using Avogadro::Core::Array;
 using Avogadro::QtGui::Molecule;
 using QtGui::Molecule;
 using QtGui::RWAtom;
@@ -35,18 +37,34 @@ using std::vector;
 
 using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;
 
-// element, valence, formal charge, partial charge, x, y, z, color
-const int AtomColumns = 8;
-// type, atom 1, atom 2, bond order, length
-const int BondColumns = 5;
+// element, valence, formal charge, partial charge, x, y, z, label, isotope,
+// color
+const int AtomColumns = 10;
+// type, atom 1, atom 2, bond order, length, label
+const int BondColumns = 6;
 // type, atom 1, atom 2, atom 3, angle
 const int AngleColumns = 5;
 // type, atom 1, atom 2, atom 3, atom 4, dihedral
 const int TorsionColumns = 6;
-// name, number, chain, secondary structure, heterogen, color
-const int ResidueColumns = 6;
-// number, energy, ??
-const int ConformerColumns = 2;
+// name, number, chain, secondary structure, label, heterogen, color
+const int ResidueColumns = 7;
+// number, rmsd, energy or more depending on available properties
+const int ConformerColumns = 1;
+
+// compute the RMSD between the two sets of coordinates
+inline double calculateRMSD(const Array<Vector3>& v1, const Array<Vector3>& v2)
+{
+  // if they're not the same length, it's an error
+  if (v1.size() != v2.size())
+    return numeric_limits<double>::quiet_NaN();
+
+  double sum = 0.0;
+  for (size_t i = 0; i < v1.size(); ++i) {
+    Vector3 diff = v1[i] - v2[i];
+    sum += diff.squaredNorm();
+  }
+  return sqrt(sum / v1.size());
+}
 
 inline double distance(Vector3 v1, Vector3 v2)
 {
@@ -119,30 +137,31 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
       return TorsionColumns;
     case ResidueType:
       return ResidueColumns;
-    case ConformerType:
-      return ConformerColumns;
+    case ConformerType: {
+      if (m_molecule->hasData("energies"))
+        return ConformerColumns + 1;
+      else
+        return ConformerColumns;
+    }
     default:
       return 0;
   }
   return 0;
 }
 
-QString partialCharge(Molecule* molecule, int atom)
+QString partialChargeType(Molecule* molecule)
 {
-  // TODO: we need to track type and/or calling the charge calculator
-  float charge = 0.0;
+  QString type;
+
   std::set<std::string> types = molecule->partialChargeTypes();
   if (types.size() > 0) {
-    auto first = types.cbegin();
-    MatrixX charges = molecule->partialCharges((*first));
-    charge = charges(atom, 0);
+    type = QString(types.cbegin()->c_str());
   } else {
     // find something
     const auto options =
       Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
     if (options.size() > 0) {
       // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
-      std::string type;
       if (options.find("GFN2") != options.end())
         type = "GFN2";
       else if (options.find("am1bcc") != options.end())
@@ -152,13 +171,49 @@ QString partialCharge(Molecule* molecule, int atom)
       else if (options.find("gasteiger") != options.end())
         type = "gasteiger";
       else
-        type = *options.begin();
-
-      MatrixX charges =
-        Calc::ChargeManager::instance().partialCharges(type, *molecule);
-      charge = charges(atom, 0);
+        type = *options.begin()->c_str();
     }
   }
+
+  return type;
+}
+
+QString formatChargeType(QString type)
+{
+  if (type == "gfn2")
+    return "GFN2";
+  else if (type == "am1bcc")
+    return "AM1BCC";
+  else if (type == "mmff94")
+    return "MMFF94";
+  else if (type == "gasteiger")
+    return "Gasteiger";
+  else if (type.startsWith("eem"))
+    return "EEM";
+  else if (type == "qeq")
+    return "QEq";
+  else if (type.toLower() == "mulliken")
+    return "Mulliken";
+  else if (type.toLower() == "lowdin")
+    return "Lowdin";
+  else if (type.toLower() == "chelpg")
+    return "CHELPG";
+  else if (type.toLower() == "hirshfeld")
+    return "Hirshfeld";
+  else
+    return type;
+}
+
+QString partialCharge(Molecule* molecule, int atom)
+{
+  // TODO: we need to track type and/or calling the charge calculator
+  float charge = 0.0;
+  std::string type = partialChargeType(molecule).toStdString();
+
+  MatrixX charges =
+    Calc::ChargeManager::instance().partialCharges(type, *molecule);
+  charge = charges(atom, 0);
+
   return QString("%L1").arg(charge, 0, 'f', 3);
 }
 
@@ -182,8 +237,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     if (m_type == ConformerType) {
       return toVariant(Qt::AlignRight | Qt::AlignVCenter); // energies
     } else if (m_type == AtomType) {
-      if ((index.column() == AtomDataCharge) ||
-          (index.column() == AtomDataColor))
+      if (index.column() == AtomDataColor)
         return toVariant(Qt::AlignRight | Qt::AlignVCenter);
       else
         return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -204,6 +258,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == ResidueType) {
       return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
+    } else if (m_type == ConformerType) {
+      return toVariant(Qt::AlignRight |
+                       Qt::AlignVCenter); // RMSD or other properties
     }
   }
 
@@ -227,9 +284,6 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
 
-  //  if (!m_validCache)
-  //    updateCache();
-
   if (m_type == AtomType) {
     auto column = static_cast<AtomColumn>(index.column());
 
@@ -251,14 +305,51 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AtomDataPartialCharge:
         return partialCharge(m_molecule, row);
       case AtomDataX:
-        return QString("%L1").arg(m_molecule->atomPosition3d(row).x(), 0, 'f',
-                                  4);
+        if (role == Qt::UserRole)
+          // Return the x coordinate as a double for sorting
+          return m_molecule->atomPosition3d(row).x();
+        else // format fixed to 4 decimals
+        {
+          auto formatted =
+            QString("%L1").arg(m_molecule->atomPosition3d(row).x(), 0, 'f', 4);
+          if (m_molecule->frozenAtom(row) || m_molecule->frozenAtomAxis(row, 0))
+            formatted += "🔒";
+          return formatted;
+        }
+
       case AtomDataY:
-        return QString("%L1").arg(m_molecule->atomPosition3d(row).y(), 0, 'f',
-                                  4);
+        if (role == Qt::UserRole)
+          // Return the y coordinate as a double for sorting
+          return m_molecule->atomPosition3d(row).y();
+        else // format fixed to 4 decimals
+        {
+          auto formatted =
+            QString("%L1").arg(m_molecule->atomPosition3d(row).y(), 0, 'f', 4);
+          if (m_molecule->frozenAtom(row) || m_molecule->frozenAtomAxis(row, 1))
+            formatted += "🔒";
+          return formatted;
+        }
       case AtomDataZ:
-        return QString("%L1").arg(m_molecule->atomPosition3d(row).z(), 0, 'f',
-                                  4);
+        if (role == Qt::UserRole)
+          // Return the z coordinate as a double for sorting
+          return m_molecule->atomPosition3d(row).z();
+        else // format fixed to 4 decimals
+        {
+          auto formatted =
+            QString("%L1").arg(m_molecule->atomPosition3d(row).z(), 0, 'f', 4);
+          if (m_molecule->frozenAtom(row) || m_molecule->frozenAtomAxis(row, 2))
+            formatted += "🔒";
+          return formatted;
+        }
+      case AtomDataLabel:
+        return m_molecule->atomLabel(row).c_str();
+      case AtomDataIsotope: {
+        int isotope = m_molecule->isotope(row);
+        if (isotope > 0)
+          return isotope;
+        else
+          return QVariant();
+      }
       case AtomDataColor:
       default:
         return QVariant(); // nothing to show
@@ -276,6 +367,17 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     auto bond = m_molecule->bond(row);
     auto atom1 = bond.atom1();
     auto atom2 = bond.atom2();
+    bool isConstrained = false;
+
+    // check constraints for this bond
+    for (auto& constraint : m_molecule->constraints()) {
+      if (constraint.aIndex() == atom1.index() &&
+          constraint.bIndex() == atom2.index()) {
+        isConstrained = true;
+        break;
+      }
+    }
+
     switch (column) {
       case BondDataType:
         return QString("%1-%2")
@@ -287,9 +389,19 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return QVariant::fromValue(atom2.index() + 1);
       case BondDataOrder:
         return bond.order();
+      case BondDataLabel:
+        return m_molecule->bondLabel(row).c_str();
       default: // length, rounded to 4 decimals
-        return QString("%L1").arg(
-          distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the bond length as a double for sorting
+          return distance(atom1.position3d(), atom2.position3d());
+        else {
+          QString formatted = QString("%L1").arg(
+            distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
+          if (isConstrained)
+            formatted += "🔒";
+          return formatted;
+        }
     }
   } else if (m_type == ResidueType) {
 
@@ -312,6 +424,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return QString(residue.chainId());
       case ResidueDataSecStructure:
         return secStructure(residue.secondaryStructure());
+      case ResidueDataLabel:
+        return m_molecule->residueLabel(row).c_str();
       case ResidueDataHeterogen:
         return QString(residue.isHeterogen() ? "X" : "");
       default:
@@ -332,6 +446,18 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     Vector3 a2 = m_molecule->atomPosition3d(std::get<1>(angle));
     Vector3 a3 = m_molecule->atomPosition3d(std::get<2>(angle));
 
+    bool isConstrained = false;
+
+    // check constraints for this angle
+    for (auto& constraint : m_molecule->constraints()) {
+      if (constraint.aIndex() == std::get<0>(angle) &&
+          constraint.bIndex() == std::get<1>(angle) &&
+          constraint.cIndex() == std::get<2>(angle)) {
+        isConstrained = true;
+        break;
+      }
+    }
+
     switch (column) {
       case AngleDataType:
         return angleTypeString(atomNumber1, atomNumber2, atomNumber3);
@@ -342,7 +468,16 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AngleDataAtom3:
         return QVariant::fromValue(std::get<2>(angle) + 1);
       case AngleDataValue:
-        return QString("%L1").arg(calcAngle(a1, a2, a3), 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the angle as a double for sorting
+          return calculateAngle(a1, a2, a3);
+        else { // format fixed to 3 decimals
+          QString formatted =
+            QString("%L1").arg(calculateAngle(a1, a2, a3), 0, 'f', 3);
+          if (isConstrained)
+            formatted += "🔒";
+          return formatted;
+        }
       default:
         return QVariant();
     }
@@ -364,6 +499,19 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     Vector3 a3 = m_molecule->atomPosition3d(std::get<2>(torsion));
     Vector3 a4 = m_molecule->atomPosition3d(std::get<3>(torsion));
 
+    bool isConstrained = false;
+
+    // check constraints for this torsion
+    for (auto& constraint : m_molecule->constraints()) {
+      if (constraint.aIndex() == std::get<0>(torsion) &&
+          constraint.bIndex() == std::get<1>(torsion) &&
+          constraint.cIndex() == std::get<2>(torsion) &&
+          constraint.dIndex() == std::get<3>(torsion)) {
+        isConstrained = true;
+        break;
+      }
+    }
+
     switch (column) {
       case TorsionDataType:
         return torsionTypeString(atomNumber1, atomNumber2, atomNumber3,
@@ -378,9 +526,57 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case TorsionDataAtom4:
         return QVariant::fromValue(std::get<3>(torsion) + 1);
       case TorsionDataValue:
-        return QString("%L1").arg(calcDihedral(a1, a2, a3, a4), 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the dihedral angle as a double for sorting
+          return calculateDihedral(a1, a2, a3, a4);
+        else { // format fixed to 3 decimals
+          QString format =
+            QString("%L1").arg(calculateDihedral(a1, a2, a3, a4), 0, 'f', 3);
+          if (isConstrained)
+            format += "🔒";
+          return format;
+        }
       default:
         return QVariant();
+    }
+  } else if (m_type == ConformerType) {
+    auto column = static_cast<ConformerColumn>(index.column());
+    if (row >= static_cast<int>(m_molecule->coordinate3dCount()) ||
+        column > ConformerColumns) {
+      return QVariant(); // invalid index
+    }
+
+    switch (column) {
+      case ConformerDataRMSD: { // rmsd
+        double rmsd = 0.0;
+        if (row > 0) {
+          rmsd = calculateRMSD(m_molecule->coordinate3d(row),
+                               m_molecule->coordinate3d(0));
+        }
+        if (role == Qt::UserRole)
+          // Return the RMSD as a double for sorting
+          return rmsd;
+        else // format fixed to 3 decimals
+          return QString("%L1 Å").arg(rmsd, 0, 'f', 3);
+      }
+      case ConformerDataEnergy: {
+        double energy = 0.0;
+        if (m_molecule->hasData("energies")) {
+          std::vector<double> energies = m_molecule->data("energies").toList();
+          // calculate the minimum
+          double minEnergy = std::numeric_limits<double>::max();
+          for (double e : energies) {
+            minEnergy = std::min(minEnergy, e);
+          }
+          if (row < static_cast<int>(energies.size()))
+            energy = energies[row] - minEnergy;
+        }
+        if (role == Qt::UserRole)
+          // Return the energy as a double for sorting
+          return energy;
+        else // format fixed to 4 decimals
+          return QString("%L1").arg(energy, 0, 'f', 4);
+      }
     }
   }
 
@@ -411,14 +607,22 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("Valence");
         case AtomDataFormalCharge:
           return tr("Formal Charge");
-        case AtomDataPartialCharge:
-          return tr("Partial Charge");
+        case AtomDataPartialCharge: {
+          QString charge =
+            tr("%1 Partial Charge", "e.g. MMFF94 Partial Charge or "
+                                    "Gasteiger Partial Charge");
+          return charge.arg(formatChargeType(partialChargeType(m_molecule)));
+        }
         case AtomDataX:
           return tr("X (Å)");
         case AtomDataY:
           return tr("Y (Å)");
         case AtomDataZ:
           return tr("Z (Å)");
+        case AtomDataLabel:
+          return tr("Label");
+        case AtomDataIsotope:
+          return tr("Isotope");
         case AtomDataColor:
           return tr("Color");
       }
@@ -437,6 +641,8 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("End Atom");
         case BondDataOrder:
           return tr("Bond Order");
+        case BondDataLabel:
+          return tr("Label");
         default: // A bond length
           return tr("Length (Å)", "in Angstrom");
       }
@@ -458,6 +664,8 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("Secondary Structure");
         case ResidueDataHeterogen:
           return tr("Heterogen");
+        case ResidueDataLabel:
+          return tr("Label");
         case ResidueDataColor:
           return tr("Color");
       }
@@ -500,6 +708,20 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
       }
     } else // row headers
       return QString("%L1").arg(section + 1);
+  } else if (m_type == ConformerType) {
+    // check if we have energies
+    bool hasEnergies = (m_molecule->hasData("energies"));
+    if (orientation == Qt::Horizontal) {
+      unsigned int column = static_cast<ConformerColumn>(section);
+      switch (column) {
+        case ConformerDataRMSD:
+          return tr("RMSD (Å)", "root mean squared displacement in Angstrom");
+        case ConformerDataEnergy:
+          // should only hit this if we have energies anyway
+          return hasEnergies ? tr("Energy (kcal/mol)") : tr("Property");
+      }
+    } else // row headers
+      return QString("%L1").arg(section + 1);
   }
 
   return QVariant();
@@ -516,13 +738,17 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
   if (m_type == AtomType) {
     if (index.column() == AtomDataElement ||
         index.column() == AtomDataFormalCharge || index.column() == AtomDataX ||
-        index.column() == AtomDataY || index.column() == AtomDataZ)
+        index.column() == AtomDataY || index.column() == AtomDataZ ||
+        index.column() == AtomDataLabel || index.column() == AtomDataIsotope)
       return editable;
     // TODO: Color
   } else if (m_type == BondType) {
-    if (index.column() == BondDataOrder || index.column() == BondDataLength)
+    if (index.column() == BondDataOrder || index.column() == BondDataLength ||
+        index.column() == BondDataLabel)
       return editable;
   } else if (m_type == ResidueType) {
+    if (index.column() == ResidueDataLabel)
+      return editable;
     // TODO: Color
   } else if (m_type == AngleType) {
     if (index.column() == AngleDataValue)
@@ -580,15 +806,41 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         } // not a number
         break;
       }
-      case AtomDataX:
-        v[0] = value.toDouble();
+      case AtomDataX: {
+        bool ok;
+        double x = value.toDouble(&ok);
+        if (ok) {
+          v[0] = x;
+        }
         break;
-      case AtomDataY:
-        v[1] = value.toDouble();
+      }
+      case AtomDataY: {
+        bool ok;
+        double y = value.toDouble(&ok);
+        if (ok) {
+          v[1] = y;
+        }
         break;
-      case AtomDataZ:
-        v[2] = value.toDouble();
+      }
+      case AtomDataZ: {
+        bool ok;
+        double z = value.toDouble(&ok);
+        if (ok) {
+          v[2] = z;
+        }
         break;
+      }
+      case AtomDataLabel:
+        undoMolecule->setAtomLabel(index.row(), value.toString().toStdString());
+        break;
+      case AtomDataIsotope: {
+        bool ok;
+        int isotope = value.toInt(&ok);
+        if (ok) {
+          m_molecule->setIsotope(index.row(), isotope);
+        }
+        break;
+      }
       default:
         return false;
     }
@@ -600,11 +852,24 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
     return true;
   } else if (m_type == BondType) {
     switch (static_cast<BondColumn>(index.column())) {
-      case BondDataOrder:
-        undoMolecule->setBondOrder(index.row(), value.toInt());
+      case BondDataOrder: {
+        bool ok;
+        int order = value.toInt(&ok);
+        if (ok && order > 0 && order <= 6) {
+          undoMolecule->setBondOrder(index.row(), value.toInt());
+        }
         break;
-      case BondDataLength:
-        setBondLength(index.row(), value.toDouble());
+      }
+      case BondDataLength: {
+        bool ok;
+        double length = value.toDouble(&ok);
+        if (ok) {
+          setBondLength(index.row(), value.toDouble());
+        }
+        break;
+      }
+      case BondDataLabel:
+        undoMolecule->setBondLabel(index.row(), value.toString().toStdString());
         break;
       default:
         return false;
@@ -613,16 +878,31 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
     emit dataChanged(index, index);
     m_molecule->emitChanged(Molecule::Bonds);
     return true;
+  } else if (m_type == ResidueType) {
+    if (index.column() == ResidueDataLabel) {
+      m_molecule->setResidueLabel(index.row(), value.toString().toStdString());
+      emit dataChanged(index, index);
+      m_molecule->emitChanged(Molecule::Residues);
+      return true;
+    }
   } else if (m_type == AngleType) {
     if (index.column() == AngleDataValue) {
-      setAngle(index.row(), value.toDouble());
+      bool ok;
+      double angle = value.toDouble(&ok);
+      if (!ok)
+        return false;
+      setAngle(index.row(), angle);
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
     }
   } else if (m_type == TorsionType) {
     if (index.column() == TorsionDataValue) {
-      setTorsion(index.row(), value.toDouble());
+      bool ok;
+      double angle = value.toDouble(&ok);
+      if (!ok)
+        return false;
+      setTorsion(index.row(), angle);
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
@@ -736,7 +1016,7 @@ void PropertyModel::setAngle(unsigned int index, double newValue)
   Vector3 a = atom1.position3d();
   Vector3 b = atom2.position3d();
   Vector3 c = atom3.position3d();
-  const double currentValue = calcAngle(a, b, c);
+  const double currentValue = calculateAngle(a, b, c);
   Vector3 ab = b - a;
   Vector3 bc = c - b;
 
@@ -773,7 +1053,7 @@ void PropertyModel::setTorsion(unsigned int index, double newValue)
   Vector3 b = atom2.position3d();
   Vector3 c = atom3.position3d();
   Vector3 d = atom4.position3d();
-  const double currentValue = calcDihedral(a, b, c, d);
+  const double currentValue = calculateDihedral(a, b, c, d);
 
   // Axis of rotation
   const Vector3 axis((c - b).normalized());
@@ -798,6 +1078,10 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 {
   if (molecule && molecule != m_molecule) {
     m_molecule = molecule;
+
+    // Initialize structure tracking for change detection
+    m_lastAtomCount = molecule->atomCount();
+    m_lastBondCount = molecule->bondCount();
 
     updateCache();
 
@@ -832,17 +1116,40 @@ QString PropertyModel::secStructure(unsigned int type) const
 
 void PropertyModel::updateTable(unsigned int flags)
 {
-  if (flags & Molecule::Added || flags & Molecule::Removed) {
-    // tear it down and rebuild the model
-    updateCache();
-    beginResetModel();
-    endResetModel();
-  } else {
-    // we can just update the current data
-    emit dataChanged(
-      QAbstractItemModel::createIndex(0, 0),
-      QAbstractItemModel::createIndex(rowCount(), columnCount()));
+  // During animation/vibration, coordinates change rapidly but the table
+  // structure (number of atoms, bonds, etc.) remains the same. We can skip
+  // updates when only coordinates changed (Atoms flag without Added/Removed).
+  //
+  // Note: Some code (e.g., vibrations) incorrectly uses Added flag for
+  // coordinate changes. We detect actual structural changes by checking
+  // if the counts changed.
+  bool structureChanged = false;
+
+  if (m_molecule != nullptr) {
+    // Check if the actual structure changed (not just coordinates)
+    Index currentAtomCount = m_molecule->atomCount();
+    Index currentBondCount = m_molecule->bondCount();
+
+    if (currentAtomCount != m_lastAtomCount ||
+        currentBondCount != m_lastBondCount) {
+      structureChanged = true;
+      m_lastAtomCount = currentAtomCount;
+      m_lastBondCount = currentBondCount;
+    }
   }
+
+  if (!structureChanged) {
+    // For coordinate-only changes, just invalidate the cache
+    // This avoids race conditions during rapid animation updates
+    m_validCache = false;
+    return;
+  }
+
+  // For structural changes, do a full model reset
+  // Use beginResetModel/endResetModel to ensure thread-safe updates
+  updateCache();
+  beginResetModel();
+  endResetModel();
 }
 
 void PropertyModel::updateCache() const
@@ -879,12 +1186,44 @@ Core::Angle PropertyModel::getAngle(unsigned int angle) const
   return m_angles[angle];
 }
 
+Real PropertyModel::getAngleValue(unsigned int angle) const
+{
+  if (angle >= m_angles.size())
+    return 0.0;
+
+  auto a = m_angles[angle];
+  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(a));
+  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(a));
+  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(a));
+  Vector3 a1 = atom1.position3d();
+  Vector3 a2 = atom2.position3d();
+  Vector3 a3 = atom3.position3d();
+  return calculateAngle(a1, a2, a3);
+}
+
 Core::Dihedral PropertyModel::getTorsion(unsigned int torsion) const
 {
   if (torsion >= m_torsions.size())
     return Core::Dihedral();
 
   return m_torsions[torsion];
+}
+
+Real PropertyModel::getTorsionValue(unsigned int torsion) const
+{
+  if (torsion >= m_torsions.size())
+    return 0.0;
+
+  auto t = m_torsions[torsion];
+  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(t));
+  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(t));
+  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(t));
+  auto atom4 = m_molecule->undoMolecule()->atom(std::get<3>(t));
+  Vector3 a1 = atom1.position3d();
+  Vector3 a2 = atom2.position3d();
+  Vector3 a3 = atom3.position3d();
+  Vector3 a4 = atom4.position3d();
+  return calculateDihedral(a1, a2, a3, a4);
 }
 
 } // end namespace Avogadro

@@ -23,7 +23,7 @@ GroupNode::~GroupNode()
 void GroupNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (auto & it : m_children) {
+  for (auto& it : m_children) {
     it.node->accept(visitor);
   }
 }
@@ -117,4 +117,4 @@ void GroupNode::clearUI()
   clear(UI);
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

@@ -5,6 +5,7 @@
 
 #include "aligntool.h"
 
+#include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/vector.h>
 
 #include <avogadro/qtgui/molecule.h>
@@ -33,8 +34,8 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 
+using Avogadro::Core::contrastColor;
 using Avogadro::Core::Elements;
-using Avogadro::QtGui::Molecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::TextLabel3D;
@@ -42,22 +43,19 @@ using Avogadro::Rendering::TextProperties;
 
 namespace Avogadro::QtPlugins {
 
-using QtGui::Molecule;
-using QtGui::RWAtom;
-
 AlignTool::AlignTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_toolWidget(nullptr), m_renderer(nullptr),
-    m_alignType(0), m_axis(0)
+    m_molecule(nullptr), m_renderer(nullptr), m_axis(0), m_alignType(0),
+    m_toolWidget(nullptr)
 {
   m_activateAction->setText(tr("Align"));
   m_activateAction->setToolTip(
     tr("Align Molecules\n\n"
-       "Left Mouse: \tSelect up to two atoms.\n"
+       "Left Mouse:\tSelect up to two atoms.\n"
        "\tThe first atom is centered at the origin.\n"
        "\tThe second atom is aligned to the selected axis.\n"
-       "Right Mouse: \tReset alignment.\n"
-       "Double-Click: \tCenter the atom at the origin."));
+       "Right Mouse:\tReset alignment.\n"
+       "Double-Click:\tCenter the atom at the origin."));
   setIcon();
 }
 
@@ -80,34 +78,34 @@ QWidget* AlignTool::toolWidget() const
   if (!m_toolWidget) {
     m_toolWidget = new QWidget;
 
-    QLabel* labelAxis = new QLabel(tr("Axis:"), m_toolWidget);
+    auto* labelAxis = new QLabel(tr("Axis:"), m_toolWidget);
     labelAxis->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     labelAxis->setMaximumHeight(15);
 
     // Combo box to select desired aixs to align to
-    QComboBox* comboAxis = new QComboBox(m_toolWidget);
+    auto* comboAxis = new QComboBox(m_toolWidget);
     comboAxis->addItem("x");
     comboAxis->addItem("y");
     comboAxis->addItem("z");
     comboAxis->setCurrentIndex(m_axis);
 
     // Button to actually perform actions
-    QPushButton* buttonAlign = new QPushButton(m_toolWidget);
+    auto* buttonAlign = new QPushButton(m_toolWidget);
     buttonAlign->setText(tr("Align"));
     connect(buttonAlign, SIGNAL(clicked()), this, SLOT(align()));
 
-    QGridLayout* gridLayout = new QGridLayout();
+    auto* gridLayout = new QGridLayout();
     gridLayout->addWidget(labelAxis, 0, 0, 1, 1, Qt::AlignRight);
-    QHBoxLayout* hLayout = new QHBoxLayout;
+    auto* hLayout = new QHBoxLayout;
     hLayout->addWidget(comboAxis);
     hLayout->addStretch(1);
     gridLayout->addLayout(hLayout, 0, 1);
 
-    QHBoxLayout* hLayout3 = new QHBoxLayout();
+    auto* hLayout3 = new QHBoxLayout();
     hLayout3->addStretch(1);
     hLayout3->addWidget(buttonAlign);
     hLayout3->addStretch(1);
-    QVBoxLayout* layout = new QVBoxLayout();
+    auto* layout = new QVBoxLayout();
     layout->addLayout(gridLayout);
     layout->addLayout(hLayout3);
     layout->addStretch(1);
@@ -144,8 +142,6 @@ void AlignTool::align()
     shiftAtomToOrigin(m_atoms[0].index);
   if (m_atoms.size() == 2)
     alignAtomToAxis(m_atoms[1].index, m_axis);
-
-  m_atoms.clear();
 }
 
 void AlignTool::shiftAtomToOrigin(Index atomIndex)
@@ -164,11 +160,12 @@ void AlignTool::shiftAtomToOrigin(Index atomIndex)
 void AlignTool::alignAtomToAxis(Index atomIndex, int axis)
 {
   // Align the atom to the specified axis
-  Vector3 align = m_molecule->atom(atomIndex).position3d();
+  [[maybe_unused]] Vector3 align = m_molecule->atom(atomIndex).position3d();
   const Core::Array<Vector3>& coords = m_molecule->atomPositions3d();
   Core::Array<Vector3> newCoords(coords.size());
 
-  double alpha, beta, gamma;
+  [[maybe_unused]] double alpha;
+  double beta, gamma;
   alpha = beta = gamma = 0.0;
 
   Vector3 pos = m_molecule->atom(atomIndex).position3d();
@@ -246,32 +243,18 @@ bool AlignTool::toggleAtom(const Rendering::Identifier& atom)
   return true;
 }
 
-inline Vector3ub AlignTool::contrastingColor(const Vector3ub& rgb) const
-{
-  // If we're far 'enough' (+/-32) away from 128, just invert the component.
-  // If we're close to 128, inverting the color will end up too close to the
-  // input -- adjust the component before inverting.
-  const unsigned char minVal = 32;
-  const unsigned char maxVal = 223;
-  Vector3ub result;
-  for (size_t i = 0; i < 3; ++i) {
-    unsigned char input = rgb[i];
-    if (input > 160 || input < 96)
-      result[i] = static_cast<unsigned char>(255 - input);
-    else
-      result[i] = static_cast<unsigned char>(255 - (input / 4));
-
-    // Clamp to 32-->223 to prevent pure black/white
-    result[i] = std::min(maxVal, std::max(minVal, result[i]));
-  }
-
-  return result;
-}
-
 void AlignTool::draw(Rendering::GroupNode& node)
 {
   if (m_atoms.size() == 0)
     return;
+
+  // check to make sure we have atoms for all of these
+  for (int i = 0; i < m_atoms.size(); ++i) {
+    Identifier& ident = m_atoms[i];
+    if (ident.type == Rendering::AtomType &&
+        ident.index >= m_molecule->atomCount())
+      return;
+  }
 
   auto* geo = new GeometryNode;
   node.addChild(geo);
@@ -295,7 +278,7 @@ void AlignTool::draw(Rendering::GroupNode& node)
 
     // get the color of the atom
     const unsigned char* color = Elements::color(atomicNumber);
-    atomLabelProp.setColorRgb(contrastingColor(Vector3ub(color)).data());
+    atomLabelProp.setColorRgb(contrastColor(Vector3ub(color)).data());
 
     auto* label = new TextLabel3D;
     label->setText(QString("#%1").arg(i + 1).toStdString());

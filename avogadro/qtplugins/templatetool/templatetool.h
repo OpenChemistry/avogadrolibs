@@ -10,6 +10,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/pluginlayermanager.h>
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QPoint>
@@ -29,8 +30,8 @@ class TemplateTool : public QtGui::ToolPlugin
 {
   Q_OBJECT
 public:
-  explicit TemplateTool(QObject* parent_ = NULL);
-  ~TemplateTool();
+  explicit TemplateTool(QObject* parent_ = nullptr);
+  ~TemplateTool() override;
 
   QString name() const override { return tr("Template tool"); }
   QString description() const override { return tr("Template tool"); }
@@ -99,6 +100,8 @@ private:
   bool m_bondAdded;
   bool m_fixValenceLater;
   QString m_keyPressBuffer;
+
+  QtGui::PluginLayerManager m_layerManager;
 
   Real m_bondDistance;
 };

@@ -32,10 +32,18 @@ ColorButton::ColorButton(const QColor& initial, QWidget* parent)
 void ColorButton::changeColor()
 {
   // This could be an ifdef for KColorDialog if KDE is present
+  QColor currentColor = m_color;
+
   if (m_title == "")
     m_color = QColorDialog::getColor(m_color, this);
   else
     m_color = QColorDialog::getColor(m_color, this, m_title);
+
+  if (currentColor == m_color || !m_color.isValid()) {
+    m_color = currentColor; // e.g., invalid color
+    return;
+  }
+
   update();
 
   emit colorChanged(m_color);
@@ -85,4 +93,4 @@ bool ColorButton::event(QEvent* e)
   return QAbstractButton::event(e);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

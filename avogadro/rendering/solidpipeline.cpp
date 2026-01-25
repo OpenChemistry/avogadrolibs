@@ -6,6 +6,7 @@
 #include "solidpipeline.h"
 
 #include "avogadrogl.h"
+#include "camera.h"
 #include "shader.h"
 #include "shaderprogram.h"
 
@@ -14,6 +15,8 @@
 #include "solid_first_fs.h"
 
 #include <iostream>
+
+#include <cmath>
 
 namespace Avogadro::Rendering {
 
@@ -47,6 +50,7 @@ public:
   GLuint renderFBO;
   GLuint renderTexture;
   GLuint depthTexture;
+  GLuint screenVAO;
   GLuint screenVBO;
   ShaderProgram firstStageShaders;
   Shader screenVertexShader;
@@ -54,12 +58,8 @@ public:
 };
 
 static const GLfloat s_fullscreenQuad[] = {
-  -1.0f, -1.0f, 0.0f,
-  1.0f, -1.0f, 0.0f,
-  -1.0f,  1.0f, 0.0f,
-  -1.0f,  1.0f, 0.0f,
-  1.0f, -1.0f, 0.0f,
-  1.0f,  1.0f, 0.0f,
+  -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, -1.0f, 1.0f, 0.0f,
+  -1.0f, 1.0f,  0.0f, 1.0f, -1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
 };
 
 void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
@@ -85,9 +85,11 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 }
 
 SolidPipeline::SolidPipeline()
-  : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f),
-    m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0),
-    d(new Private)
+  : m_pixelRatio(1.0f), m_aoEnabled(false), m_dofStrength(1.0f),
+    m_dofPosition(1.0), m_dofEnabled(false), m_fogPosition(1.0),
+    m_backgroundColor(0, 0, 0, 0), m_fogEnabled(true), m_aoStrength(1.0f),
+    m_fogStrength(1.0f), m_edEnabled(false), m_edStrength(1.0f), m_width(0),
+    m_height(0), d(new Private)
 {
 }
 
@@ -100,10 +102,20 @@ void SolidPipeline::initialize()
 {
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
 
+  // Create VAO for fullscreen quad (required for OpenGL Core Profile)
+  glGenVertexArrays(1, &d->screenVAO);
+  glBindVertexArray(d->screenVAO);
+
   glGenBuffers(1, &d->screenVBO);
   glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad), s_fullscreenQuad,
                GL_STATIC_DRAW);
+
+  // Set up vertex attribute for the fullscreen quad
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+  glBindVertexArray(0);
 
   d->screenVertexShader.setType(Shader::Vertex);
   d->screenVertexShader.setSource(solid_vs);
@@ -139,10 +151,8 @@ void SolidPipeline::begin()
 
 void SolidPipeline::end()
 {
-  // Draw fullscreen quad
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+  // Bind VAO for fullscreen quad (required for OpenGL Core Profile)
+  glBindVertexArray(d->screenVAO);
 
   // Draw to screen
   if (glIsFramebuffer(d->defaultFBO)) {
@@ -153,14 +163,48 @@ void SolidPipeline::end()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawBuffer(GL_BACK);
   }
-  d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture, "inDepthTex",
-                 d->depthTexture, m_width, m_height);
-  d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
+  d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture,
+                 "inDepthTex", d->depthTexture, m_width, m_height);
+  d->firstStageShaders.setUniformValue("inAoEnabled",
+                                       m_aoEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofEnabled",
+                                       m_dofEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue(
+    "inDofStrength", m_dofEnabled ? (m_dofStrength * 100.0f) : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofPosition",
+                                       ((m_dofPosition) / 10.0f));
   d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
+  d->firstStageShaders.setUniformValue("inFogEnabled",
+                                       m_fogEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inFogStrength",
+                                       m_fogEnabled ? m_fogStrength : 0.0f);
+  d->firstStageShaders.setUniformValue("inFogPosition", m_fogPosition);
+  d->firstStageShaders.setUniformValue("fogR", (m_backgroundColor[0]) / 255.0f);
+  d->firstStageShaders.setUniformValue("fogG", (m_backgroundColor[1]) / 255.0f);
+  d->firstStageShaders.setUniformValue("fogB", (m_backgroundColor[2]) / 255.0f);
   glDrawArrays(GL_TRIANGLES, 0, 6);
+  glBindVertexArray(0);
+}
 
-  glDisableVertexAttribArray(0);
+void SolidPipeline::adjustOffset(const Camera& cam)
+{
+
+  // The numbers used in calculations are random.
+  // They help define an offset with the projection-matrix
+  // to make the fog dynamic as the molecule moves away
+  // from the camera or come closer.
+  Eigen::Matrix4f projectView = cam.projection().matrix();
+
+  float project = ((((5000 + projectView(2, 3) * 1000) / 6) + 55) * 100);
+
+  float offSet = 0.000102337 * pow(project, 2) - 3.84689 * project + 36182.2;
+  if (project >= 21018.106 && project < 21595.588) {
+    offSet = 2.63129 * project - 54768.4;
+  } else if (project >= 21595.588) {
+    offSet = 9.952 * project - 212865;
+  }
+  d->firstStageShaders.setUniformValue("uoffset", offSet);
 }
 
 void SolidPipeline::resize(int width, int height)
@@ -170,11 +214,11 @@ void SolidPipeline::resize(int width, int height)
 
   glBindTexture(GL_TEXTURE_2D, d->renderTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, 0);
+               GL_UNSIGNED_BYTE, nullptr);
 
   glBindTexture(GL_TEXTURE_2D, d->depthTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
-               GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+               GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 }
 
 void SolidPipeline::setPixelRatio(float ratio)

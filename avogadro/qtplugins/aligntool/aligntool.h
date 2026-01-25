@@ -11,8 +11,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/primitive.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @class AlignTool aligntool.h
@@ -42,6 +41,8 @@ public:
   {
     if (mol)
       m_molecule = mol->undoMolecule();
+
+    m_atoms.clear();
   }
 
   void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
@@ -55,8 +56,6 @@ public:
   QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
 
   void draw(Rendering::GroupNode& node) override;
-
-  Vector3ub contrastingColor(const Vector3ub& rgb) const;
 
   void shiftAtomToOrigin(Index atomIndex);
   void alignAtomToAxis(Index atomIndex, int axis);
@@ -92,7 +91,6 @@ private Q_SLOTS:
   void toolWidgetDestroyed();
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTOPENGL_ALIGNTOOL_H

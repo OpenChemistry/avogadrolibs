@@ -11,8 +11,8 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <avogadro/vtk/chartdialog.h>
-#include <avogadro/vtk/chartwidget.h>
+#include <avogadro/qtgui/chartdialog.h>
+#include <avogadro/qtgui/chartwidget.h>
 
 #include <QAction>
 #include <QDebug>
@@ -24,15 +24,13 @@ namespace Avogadro::QtPlugins {
 Spectra::Spectra(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr)
 {
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setEnabled(false);
   action->setText(tr("Plot Spectra…"));
   action->setProperty("menu priority", -900);
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
   m_actions.push_back(action);
 }
-
-Spectra::~Spectra() {}
 
 QList<QAction*> Spectra::actions() const
 {
@@ -42,7 +40,7 @@ QList<QAction*> Spectra::actions() const
 QStringList Spectra::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Analysis");
+  path << tr("&Analyze");
   return path;
 }
 
@@ -108,6 +106,10 @@ void Spectra::openDialog()
   }
 
   gatherSpectra();
+  // update the elements
+  auto elements = m_molecule->atomicNumbers();
+  std::vector<unsigned char> atomicNumbers(elements.begin(), elements.end());
+  m_dialog->setElements(atomicNumbers);
   m_dialog->show();
 }
 

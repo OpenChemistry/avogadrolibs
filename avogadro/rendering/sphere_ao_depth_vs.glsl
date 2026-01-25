@@ -10,18 +10,19 @@
 //
 // Input
 //
-
+#version 400
+precision highp float;
 // sphere position: model coordinates
-attribute vec3 a_pos;
+in vec3 a_pos;
 // sphere corner: [-r, -r], [r, -r], [r, r], [-r, r]
-attribute vec2 a_corner;
+in vec2 a_corner;
 
 //
 // Output
 //
 
 // normalized corner: [-1, 1]
-varying vec2 v_corner;
+out vec2 v_corner;
 
 //
 // Uniforms

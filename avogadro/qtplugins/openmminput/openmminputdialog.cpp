@@ -408,8 +408,8 @@ void OpenMMInputDialog::generateClicked()
           tr("The input files cannot be written:\n\n%1").arg(errors.first());
         break;
       default: {
-        // If a fatal error occurred, it will be last one in the list. Pop it off
-        // and tell the user that it was the reason we had to stop.
+        // If a fatal error occurred, it will be last one in the list. Pop it
+        // off and tell the user that it was the reason we had to stop.
         QString fatal = errors.last();
         QStringList tmp(errors);
         tmp.pop_back();
@@ -956,8 +956,9 @@ QString OpenMMInputDialog::generateInputDeck()
   scriptStream << "nonbondedMethod="
                << "app." << getNonBondedType(m_nonBondedType) << ",";
   if (m_nonBondedCutoff > 0) {
-    scriptStream << " nonbondedCutoff=" << Qt::fixed << qSetRealNumberPrecision(4)
-                 << m_nonBondedCutoff << "*unit.nanometers,";
+    scriptStream << " nonbondedCutoff=" << Qt::fixed
+                 << qSetRealNumberPrecision(4) << m_nonBondedCutoff
+                 << "*unit.nanometers,";
   }
   if (m_constraintType == None) {
     scriptStream << " constraints=" << getConstraintType(m_constraintType);
@@ -1344,4 +1345,4 @@ void OpenMMInputDialog::writeSettings(QSettings& settings) const
   settings.setValue("openmm/savepath", m_savePath);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

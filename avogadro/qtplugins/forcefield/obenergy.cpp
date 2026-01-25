@@ -32,11 +32,12 @@ public:
   // OBMol and OBForceField are owned by this class
   OBMol* m_obmol = nullptr;
   OBForceField* m_forceField = nullptr;
+  bool setup = false;
 
   ~Private()
   {
-    delete m_obmol;
-    delete m_forceField;
+    if (m_obmol != nullptr)
+      delete m_obmol;
   }
 };
 
@@ -50,6 +51,40 @@ OBEnergy::OBEnergy(const std::string& method)
   QByteArray dataDir =
     QString(QCoreApplication::applicationDirPath() + "/data").toLocal8Bit();
   qputenv("BABEL_DATADIR", dataDir);
+#else
+  // check if BABEL_DATADIR is set in the environment
+  QStringList filters;
+  filters << "3.*"
+          << "2.*";
+  if (qgetenv("BABEL_DATADIR").isEmpty()) {
+    QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
+    QStringList dirs = dir.entryList(filters);
+    if (dirs.size() == 1) {
+      // versioned data directory
+      QString dataDir = QCoreApplication::applicationDirPath() +
+                        "/../share/openbabel/" + dirs[0];
+      qputenv("BABEL_DATADIR", dataDir.toLocal8Bit());
+    } else {
+      qDebug() << "Error, Open Babel data directory not found.";
+    }
+  }
+
+  // Check if BABEL_LIBDIR is set
+  if (qgetenv("BABEL_LIBDIR").isEmpty()) {
+    QDir dir(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
+    QStringList dirs = dir.entryList(filters);
+    if (dirs.size() == 0) {
+      QString libDir =
+        QCoreApplication::applicationDirPath() + "/../lib/openbabel/";
+      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
+    } else if (dirs.size() == 1) {
+      QString libDir =
+        QCoreApplication::applicationDirPath() + "/../lib/openbabel/" + dirs[0];
+      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
+    } else {
+      qDebug() << "Error, Open Babel plugins directory not found.";
+    }
+  }
 #endif
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
@@ -57,11 +92,13 @@ OBEnergy::OBEnergy(const std::string& method)
   d->m_forceField = static_cast<OBForceField*>(
     OBPlugin::GetPlugin("forcefields", method.c_str()));
 
+#ifndef NDEBUG
   qDebug() << "OBEnergy: method: " << method.c_str();
   if (d->m_forceField == nullptr) {
     qDebug() << "OBEnergy: method not found: " << method.c_str();
     qDebug() << OBPlugin::ListAsString("forcefields").c_str();
   }
+#endif
 
   if (method == "UFF") {
     m_description = tr("Universal Force Field");
@@ -103,6 +140,14 @@ OBEnergy::OBEnergy(const std::string& method)
 
 OBEnergy::~OBEnergy() {}
 
+bool OBEnergy::acceptsRadicals() const
+{
+  if (m_identifier == "UFF")
+    return true;
+
+  return false;
+}
+
 Calc::EnergyCalculator* OBEnergy::newInstance() const
 {
   return new OBEnergy(m_name);
@@ -136,12 +181,12 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
 
   // make sure we can set up the force field
   if (d->m_forceField != nullptr) {
-    d->m_forceField->Setup(*d->m_obmol);
+    d->setup = d->m_forceField->Setup(*d->m_obmol);
   } else {
     d->m_forceField = static_cast<OBForceField*>(
       OBPlugin::GetPlugin("forcefields", m_identifier.c_str()));
     if (d->m_forceField != nullptr) {
-      d->m_forceField->Setup(*d->m_obmol);
+      d->setup = d->m_forceField->Setup(*d->m_obmol);
     }
   }
 }
@@ -162,6 +207,14 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
     d->m_forceField->SetCoordinates(*d->m_obmol);
     energy = d->m_forceField->Energy(false);
   }
+
+  // if method is not GAFF, convert to kJ/mol
+  if (m_identifier != "GAFF")
+    energy *= Calc::KCAL_TO_KJ;
+
+  // make sure to add in any constraint penalties
+  energy += constraintEnergies(x);
+
   return energy;
 }
 
@@ -190,7 +243,14 @@ void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     }
 
     grad *= -1; // OpenBabel outputs forces, not grads
+
+    // if method is not GAFF, convert to kJ/mol
+    if (m_identifier != "GAFF")
+      grad *= Calc::KCAL_TO_KJ;
+
     cleanGradients(grad);
+    // add in any constraints
+    constraintGradients(x, grad);
   }
 }
 

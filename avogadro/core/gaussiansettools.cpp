@@ -20,11 +20,24 @@ GaussianSetTools::GaussianSetTools(Molecule* mol) : m_molecule(mol)
   if (m_molecule) {
     m_basis = dynamic_cast<GaussianSet*>(m_molecule->basisSet());
     m_cutoffDistances.resize(7, 0.0); // s, p, d, f, g, h, i (for now)
-    calculateCutoffs();
+
+    // Pre-compute atom positions in Bohr as 3 x N matrix for vectorized ops
+    Index atomsSize = m_molecule->atomCount();
+    m_atomPositionsBohr.resize(3, atomsSize);
+    for (Index i = 0; i < atomsSize; ++i) {
+      m_atomPositionsBohr.col(i) =
+        m_molecule->atom(i).position3d() * ANGSTROM_TO_BOHR;
+    }
+
+    // Initialize the basis set calculation once (normalizes coefficients, etc.)
+    // This avoids repeated initCalculation() calls in calculateValues()
+    if (m_basis) {
+      m_basis->initCalculation();
+      // Pre-compute cutoff distances to ignore v. small exp(-alpha * r^2) terms
+      calculateCutoffs();
+    }
   }
 }
-
-GaussianSetTools::~GaussianSetTools() {}
 
 bool GaussianSetTools::calculateMolecularOrbital(Cube& cube, int moNumber) const
 {
@@ -41,17 +54,13 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
   if (mo > static_cast<int>(m_basis->molecularOrbitalCount()))
     return 0.0;
 
-  vector<double> values(calculateValues(position));
+  Eigen::VectorXd values;
+  calculateValues(position, values);
 
   const MatrixX& matrix = m_basis->moMatrix(m_type);
-  int matrixSize(static_cast<int>(matrix.rows()));
 
-  // Now calculate the value of the density at this point in space
-  double result(0.0);
-  for (int i = 0; i < matrixSize; ++i)
-    result += matrix(i, mo) * values[i];
-
-  return result;
+  // Use Eigen's optimized dot product
+  return matrix.col(mo).dot(values);
 }
 
 bool GaussianSetTools::calculateElectronDensity(Cube& cube) const
@@ -78,19 +87,12 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
     return 0.0;
   }
 
-  vector<double> values(calculateValues(position));
+  Eigen::VectorXd values;
+  calculateValues(position, values);
 
-  // Now calculate the value of the density at this point in space
-  double rho(0.0);
-  for (int i = 0; i < matrixSize; ++i) {
-    // Calculate the off-diagonal parts of the matrix
-    for (int j = 0; j < i; ++j)
-      rho += 2.0 * matrix(i, j) * (values[i] * values[j]);
-    // Now calculate the matrix diagonal
-    rho += matrix(i, i) * (values[i] * values[i]);
-  }
-
-  return rho;
+  // Compute the quadratic form: v^T * D * v
+  // The density matrix is symmetric, so we can use the full matrix multiply
+  return values.dot(matrix * values);
 }
 
 bool GaussianSetTools::calculateSpinDensity(Cube& cube) const
@@ -110,27 +112,19 @@ double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
     return 0.0;
   }
 
-  vector<double> values(calculateValues(position));
+  Eigen::VectorXd values;
+  calculateValues(position, values);
 
-  // Now calculate the value of the density at this point in space
-  double rho(0.0);
-  for (int i = 0; i < matrixSize; ++i) {
-    // Calculate the off-diagonal parts of the matrix
-    for (int j = 0; j < i; ++j)
-      rho += 2.0 * matrix(i, j) * (values[i] * values[j]);
-    // Now calculate the matrix diagonal
-    rho += matrix(i, i) * (values[i] * values[i]);
-  }
-
-  return rho;
+  // Compute the quadratic form: v^T * D * v
+  // The spin density matrix is symmetric, so we can use the full matrix
+  // multiply
+  return values.dot(matrix * values);
 }
 
 bool GaussianSetTools::isValid() const
 {
-  if (m_molecule && dynamic_cast<GaussianSet*>(m_molecule->basisSet()))
-    return true;
-  else
-    return false;
+  return (m_molecule != nullptr) &&
+         (dynamic_cast<GaussianSet*>(m_molecule->basisSet()) != nullptr);
 }
 
 inline bool GaussianSetTools::isSmall(double val) const
@@ -181,99 +175,109 @@ inline void GaussianSetTools::calculateCutoffs()
   }
 }
 
-inline vector<double> GaussianSetTools::calculateValues(
-  const Vector3& position) const
+inline void GaussianSetTools::calculateValues(const Vector3& position,
+                                              Eigen::VectorXd& values) const
 {
-  m_basis->initCalculation();
-  Index atomsSize = m_molecule->atomCount();
+  // Note: initCalculation() is called once in the constructor
+  Index atomsSize = static_cast<Index>(m_atomPositionsBohr.cols());
   size_t basisSize = m_basis->symmetry().size();
   const std::vector<int>& basis = m_basis->symmetry();
   const std::vector<unsigned int>& atomIndices = m_basis->atomIndices();
-  vector<Vector3> deltas;
-  vector<double> dr2;
-  deltas.reserve(atomsSize);
-  dr2.reserve(atomsSize);
 
   // Calculate our position
   Vector3 pos(position * ANGSTROM_TO_BOHR);
 
-  // Calculate the deltas for the position
-  for (Index i = 0; i < atomsSize; ++i) {
-    deltas.emplace_back(pos -
-                        (m_molecule->atom(i).position3d() * ANGSTROM_TO_BOHR));
-    dr2.push_back(deltas[i].squaredNorm());
-  }
+  // Vectorized computation of deltas and squared distances
+  // deltas: 3 x N matrix where each column is (pos - atomPos[i])
+  Eigen::Matrix<double, 3, Eigen::Dynamic> deltas =
+    (-m_atomPositionsBohr).colwise() + pos;
+  // dr2: vector of squared distances for each atom
+  Eigen::VectorXd dr2 = deltas.colwise().squaredNorm();
 
-  // Allocate space for the values to be calculated.
-  size_t matrixSize = m_basis->moMatrix().rows();
-  vector<double> values;
-  values.resize(matrixSize, 0.0);
+  // Resize and zero the output vector
+  Index matrixSize = m_basis->moMatrix().rows();
+  values.setZero(matrixSize);
 
   // Now calculate the values at this point in space
   for (unsigned int i = 0; i < basisSize; ++i) {
     // bail early if the distance is too big
+    unsigned int atomIdx = atomIndices[i];
     double cutoff = m_cutoffDistances[symToL[basis[i]]];
-    if (dr2[atomIndices[i]] > cutoff)
+    if (dr2(atomIdx) > cutoff)
       continue;
+
+    // Get delta vector for this atom (column of the deltas matrix)
+    Vector3 delta = deltas.col(atomIdx);
+    double dr2_i = dr2(atomIdx);
 
     switch (basis[i]) {
       case GaussianSet::S:
-        pointS(i, dr2[atomIndices[i]], values);
+        pointS(i, dr2_i, values);
         break;
       case GaussianSet::P:
-        pointP(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+        pointP(i, delta, dr2_i, values);
         break;
       case GaussianSet::D:
-        pointD(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+        pointD(i, delta, dr2_i, values);
         break;
       case GaussianSet::D5:
-        pointD5(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+        pointD5(i, delta, dr2_i, values);
         break;
       case GaussianSet::F:
-        pointF(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+        pointF(i, delta, dr2_i, values);
         break;
       case GaussianSet::F7:
-        pointF7(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+        pointF7(i, delta, dr2_i, values);
+        break;
+      case GaussianSet::G:
+        pointG(i, delta, dr2_i, values);
+        break;
+      case GaussianSet::G9:
+        pointG9(i, delta, dr2_i, values);
         break;
       default:
         // Not handled - return a zero contribution
         ;
     }
   }
-
-  return values;
 }
 
 inline void GaussianSetTools::pointS(unsigned int moIndex, double dr2,
-                                     vector<double>& values) const
+                                     Eigen::VectorXd& values) const
 {
   // S type orbitals - the simplest of the calculations with one component
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<unsigned int>& gtoIndices = m_basis->gtoIndices();
+
   double tmp = 0.0;
   unsigned int cIndex = m_basis->cIndices()[moIndex];
-  for (unsigned int i = m_basis->gtoIndices()[moIndex];
-       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
-    tmp += m_basis->gtoCN()[cIndex++] * exp(-m_basis->gtoA()[i] * dr2);
+  for (unsigned int i = gtoIndices[moIndex]; i < gtoIndices[moIndex + 1]; ++i) {
+    tmp += gtoCN[cIndex++] * exp(-gtoA[i] * dr2);
   }
   // There is one MO coefficient per S shell basis.
   values[m_basis->moIndices()[moIndex]] = tmp;
 }
 
 inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, vector<double>& values) const
+                                     double dr2, Eigen::VectorXd& values) const
 {
   // P type orbitals have three components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<unsigned int>& gtoIndices = m_basis->gtoIndices();
+
   unsigned int baseIndex = m_basis->moIndices()[moIndex];
   Vector3 components(Vector3::Zero());
 
-  // Now iterate through the P type GTOs and sum their contributions
+  // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
-  for (unsigned int i = m_basis->gtoIndices()[moIndex];
-       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
-    double tmpGTO = exp(-m_basis->gtoA()[i] * dr2);
+  double tmpGTO = 0.0;
+  for (unsigned int i = gtoIndices[moIndex]; i < gtoIndices[moIndex + 1]; ++i) {
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (unsigned int j = 0; j < 3; ++j) {
-      // m_values[baseIndex + i] = m_basis->gtoCN()[cIndex++] * tmpGTO;
-      components[j] += m_basis->gtoCN()[cIndex++] * tmpGTO;
+      components[j] += gtoCN[cIndex++] * tmpGTO;
     }
   }
   for (unsigned int i = 0; i < 3; ++i)
@@ -281,23 +285,24 @@ inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
 }
 
 inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, vector<double>& values) const
+                                     double dr2, Eigen::VectorXd& values) const
 {
   // D type orbitals have six components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<unsigned int>& gtoIndices = m_basis->gtoIndices();
+
   unsigned int baseIndex = m_basis->moIndices()[moIndex];
 
   double components[6] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  vector<double>& gtoA = m_basis->gtoA();
-  vector<double>& gtoCN = m_basis->gtoCN();
-
-  // Now iterate through the D type GTOs and sum their contributions
+  // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
-  for (unsigned int i = m_basis->gtoIndices()[moIndex];
-       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
+  double tmpGTO = 0.0;
+  for (unsigned int i = gtoIndices[moIndex]; i < gtoIndices[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
@@ -315,22 +320,23 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
 
 inline void GaussianSetTools::pointD5(unsigned int moIndex,
                                       const Vector3& delta, double dr2,
-                                      vector<double>& values) const
+                                      Eigen::VectorXd& values) const
 {
   // D type orbitals have five components and each component has a different
   // MO weighting. Many things can be cached to save time.
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<unsigned int>& gtoIndices = m_basis->gtoIndices();
+
   unsigned int baseIndex = m_basis->moIndices()[moIndex];
   double components[5] = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  vector<double>& gtoA = m_basis->gtoA();
-  vector<double>& gtoCN = m_basis->gtoCN();
-
   // Now iterate through the D type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
-  for (unsigned int i = m_basis->gtoIndices()[moIndex];
-       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
+  double tmpGTO = 0.0;
+  for (unsigned int i = gtoIndices[moIndex]; i < gtoIndices[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
@@ -353,23 +359,24 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
     values[baseIndex + i] += componentsD[i] * components[i];
 }
 inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, vector<double>& values) const
+                                     double dr2, Eigen::VectorXd& values) const
 {
   // F type orbitals have 10 components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<unsigned int>& gtoIndices = m_basis->gtoIndices();
+
   unsigned int baseIndex = m_basis->moIndices()[moIndex];
 
   double components[10] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  vector<double>& gtoA = m_basis->gtoA();
-  vector<double>& gtoCN = m_basis->gtoCN();
-
-  // Now iterate through the D type GTOs and sum their contributions
+  // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
-  for (unsigned int i = m_basis->gtoIndices()[moIndex];
-       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
+  double tmpGTO = 0.0;
+  for (unsigned int i = gtoIndices[moIndex]; i < gtoIndices[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
@@ -397,23 +404,24 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
 
 inline void GaussianSetTools::pointF7(unsigned int moIndex,
                                       const Vector3& delta, double dr2,
-                                      vector<double>& values) const
+                                      Eigen::VectorXd& values) const
 {
   // F type orbitals have 7 components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<unsigned int>& gtoIndices = m_basis->gtoIndices();
+
   unsigned int baseIndex = m_basis->moIndices()[moIndex];
 
   double components[7] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  vector<double>& gtoA = m_basis->gtoA();
-  vector<double>& gtoCN = m_basis->gtoCN();
-
-  // Now iterate through the D type GTOs and sum their contributions
+  // Now iterate through the F type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
-  for (unsigned int i = m_basis->gtoIndices()[moIndex];
-       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
+  double tmpGTO = 0.0;
+  for (unsigned int i = gtoIndices[moIndex]; i < gtoIndices[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
@@ -459,6 +467,104 @@ final normalization
 
   for (int i = 0; i < 7; ++i)
     values[baseIndex + i] += components[i] * componentsF[i];
+}
+
+inline void GaussianSetTools::pointG(unsigned int moIndex, const Vector3& delta,
+                                     double dr2, Eigen::VectorXd& values) const
+{
+  // G type orbitals have 15 components and each component has a different
+  // independent MO weighting. Many things can be cached to save time though.
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<unsigned int>& gtoIndices = m_basis->gtoIndices();
+
+  unsigned int baseIndex = m_basis->moIndices()[moIndex];
+
+  double components[15] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+  // Now iterate through the G type GTOs and sum their contributions
+  unsigned int cIndex = m_basis->cIndices()[moIndex];
+  double tmpGTO = 0.0;
+  for (unsigned int i = gtoIndices[moIndex]; i < gtoIndices[moIndex + 1]; ++i) {
+    // Calculate the common factor
+    tmpGTO = exp(-gtoA[i] * dr2);
+    for (double& component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
+  }
+
+  // e.g. XXXX YYYY ZZZZ XXXY XXXZ XYYY YYYZ ZZZX ZZZY XXYY XXZZ YYZZ XXYZ XYYZ
+  // XYZZ
+  const double xxxx = delta.x() * delta.x() * delta.x() * delta.x();
+  const double yyyy = delta.y() * delta.y() * delta.y() * delta.y();
+  const double zzzz = delta.z() * delta.z() * delta.z() * delta.z();
+  const double xxxy = delta.x() * delta.x() * delta.x() * delta.y();
+  const double xxxz = delta.x() * delta.x() * delta.x() * delta.z();
+  const double yyyx = delta.y() * delta.y() * delta.y() * delta.x();
+  const double yyyz = delta.y() * delta.y() * delta.y() * delta.z();
+  const double zzzx = delta.z() * delta.z() * delta.z() * delta.x();
+  const double zzzy = delta.z() * delta.z() * delta.z() * delta.y();
+  const double xxyy = delta.x() * delta.x() * delta.y() * delta.y();
+  const double xxzz = delta.x() * delta.x() * delta.z() * delta.z();
+  const double yyzz = delta.y() * delta.y() * delta.z() * delta.z();
+  const double xxyz = delta.x() * delta.x() * delta.y() * delta.z();
+  const double yyxz = delta.y() * delta.y() * delta.x() * delta.z();
+  const double zzxy = delta.z() * delta.z() * delta.x() * delta.y();
+
+  // molden order
+  // https://www.theochem.ru.nl/molden/molden_format.html
+  // https://gau2grid.readthedocs.io/en/latest/order.html
+  // xxxx yyyy zzzz xxxy xxxz yyyx yyyz zzzx zzzy,
+  // xxyy xxzz yyzz xxyz yyxz zzxy
+  double componentsG[15] = { xxxx, yyyy, zzzz, xxxy, xxxz, yyyx, yyyz, zzzx,
+                             zzzy, xxyy, xxzz, yyzz, xxyz, yyxz, zzxy };
+
+  for (int i = 0; i < 15; ++i)
+    values[baseIndex + i] += components[i] * componentsG[i];
+}
+
+inline void GaussianSetTools::pointG9(unsigned int moIndex,
+                                      const Vector3& delta, double dr2,
+                                      Eigen::VectorXd& values) const
+{
+  // G type orbitals have 9 spherical components and each component
+  // has a different independent MO weighting.
+  // Many things can be cached to save time though.
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<unsigned int>& gtoIndices = m_basis->gtoIndices();
+
+  unsigned int baseIndex = m_basis->moIndices()[moIndex];
+
+  double components[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+  // Now iterate through the GTOs and sum their contributions
+  unsigned int cIndex = m_basis->cIndices()[moIndex];
+  double tmpGTO = 0.0;
+  for (unsigned int i = gtoIndices[moIndex]; i < gtoIndices[moIndex + 1]; ++i) {
+    // Calculate the common factor
+    tmpGTO = exp(-gtoA[i] * dr2);
+    for (double& component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
+  }
+
+  double x2(delta.x() * delta.x()), y2(delta.y() * delta.y()),
+    z2(delta.z() * delta.z());
+
+  double componentsG[9] = {
+    3.0 * dr2 * dr2 - 30.0 * dr2 * z2 + 35.0 * z2 * z2 * (1.0 / 8.0),
+    delta.x() * delta.z() * (7.0 * z2 - 3.0 * dr2) * (sqrt(5.0) / 8.0),
+    delta.y() * delta.z() * (7.0 * z2 - 3.0 * dr2) * (sqrt(5.0) / 8.0),
+    (x2 - y2) * (7.0 * z2 - dr2) * (sqrt(5.0) / 4.0),
+    delta.x() * delta.y() * (7.0 * z2 - dr2) * (sqrt(5.0) / 2.0),
+    delta.x() * delta.z() * (x2 - 3.0 * y2) * (sqrt(7.0) / 4.0),
+    delta.y() * delta.z() * (3.0 * x2 - y2) * (sqrt(7.0) / 4.0),
+    (x2 * x2 - 6.0 * x2 * y2 + y2 * y2) * (sqrt(35.0) / 8.0),
+    delta.x() * delta.y() * (x2 - y2) * (sqrt(35.0) / 2.0)
+  };
+
+  for (int i = 0; i < 9; ++i)
+    values[baseIndex + i] += components[i] * componentsG[i];
 }
 
 } // namespace Avogadro::Core

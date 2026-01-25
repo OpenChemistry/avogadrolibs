@@ -1,25 +1,16 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/utilities.h>
 
 using Avogadro::Core::Elements;
+using namespace std::string_literals;
 
 TEST(ElementTest, symbolSingles)
 {
@@ -41,9 +32,9 @@ TEST(ElementTest, symbolDoubles)
 
 TEST(ElementTest, names)
 {
-  EXPECT_STREQ(Elements::name(1), "Hydrogen");
-  EXPECT_STREQ(Elements::name(6), "Carbon");
-  EXPECT_STREQ(Elements::name(Elements::atomicNumberFromSymbol("Fe")), "Iron");
+  EXPECT_EQ(Elements::name(1), "Hydrogen"s);
+  EXPECT_EQ(Elements::name(6), "Carbon"s);
+  EXPECT_EQ(Elements::name(Elements::atomicNumberFromSymbol("Fe")), "Iron"s);
 }
 
 TEST(ElementTest, masses)
@@ -89,6 +80,15 @@ TEST(ElementTest, colors)
   EXPECT_EQ(Elements::color(8)[0], 255);
   EXPECT_EQ(Elements::color(8)[1], 13);
   EXPECT_EQ(Elements::color(8)[2], 13);
+}
+
+TEST(ElementTest, isotopes)
+{
+  EXPECT_EQ(Elements::isotopeMass(1, 0), 1.00782503223);
+  EXPECT_EQ(Elements::isotopeMass(1, 1), 1.00782503223);
+  EXPECT_EQ(Elements::isotopeMass(6, 12), 12.0);
+  EXPECT_EQ(Elements::isotopeMass(6, 0), Elements::isotopeMass(6, 12));
+  // TODO: spot-check other isotopes
 }
 
 TEST(ElementTest, dummyElement)

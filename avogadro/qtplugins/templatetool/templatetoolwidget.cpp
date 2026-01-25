@@ -42,12 +42,12 @@ enum LigandType
   Tetradentate = 3,
   Hexadentate = 4,
   Haptic = 5,
-  Clipboard = 7
+  Clipboard = 6
 };
 
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   : QWidget(parent_), m_ui(new Ui::TemplateToolWidget),
-    m_elementSelector(nullptr), m_fragmentDialog(nullptr), m_currentElement(26)
+    m_fragmentDialog(nullptr), m_elementSelector(nullptr), m_currentElement(26)
 {
   m_ui->setupUi(this);
 
@@ -60,7 +60,7 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   selectElement(currentElement);
 
   // In the same order of the coordinationComboBox
-  // append ".png" for the icon and ".cjson" for the template
+  // append ".svg" for the icon and ".cjson" for the template
   m_centers << "1-lin"
             << "2-lin"
             << "3-tpl"
@@ -72,6 +72,16 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
             << "6-tpr"
             << "7-pbp"
             << "8-sqa";
+
+  m_groups << "amide"
+           << "carboxylate"
+           << "ester"
+           << "ethylene"
+           << "ethyne"
+           << "nitro"
+           << "phenyl"
+           << "phosphate"
+           << "sulfonate" << tr("Other…");
 
   connect(m_ui->elementComboBox, SIGNAL(currentIndexChanged(int)), this,
           SLOT(elementChanged(int)));
@@ -96,7 +106,7 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   m_ui->coordinationComboBox->setCurrentIndex(index);
 
   // update the preview icon
-  QString iconPath = QString(":/icons/centers/%1.png").arg(currentCoord);
+  QString iconPath = QString(":/icons/centers/%1.svg").arg(currentCoord);
   m_ui->centerPreview->setIcon(QIcon(iconPath));
 
   unsigned int ligandType = settings.value("ligandType", 0).toUInt();
@@ -137,7 +147,16 @@ unsigned char TemplateToolWidget::atomicNumber() const
 
 signed char TemplateToolWidget::formalCharge() const
 {
-  return m_ui->chargeComboBox->currentIndex() - 0;
+  return m_ui->chargeSpinBox->value();
+}
+
+void TemplateToolWidget::setFormalCharge(int charge)
+{
+  QSpinBox* spinBox = m_ui->chargeSpinBox;
+  if (charge < spinBox->minimum() || charge > spinBox->maximum()) {
+    return;
+  }
+  spinBox->setValue(charge);
 }
 
 void TemplateToolWidget::setCoordination(unsigned char order)
@@ -156,6 +175,21 @@ QString TemplateToolWidget::coordinationString() const
   return m_centers.at(m_ui->coordinationComboBox->currentIndex());
 }
 
+int TemplateToolWidget::currentTab() const
+{
+  return m_ui->tabWidget->currentIndex();
+}
+
+void TemplateToolWidget::setCurrentTab(int index)
+{
+  if (index < 0)
+    index = m_ui->tabWidget->count() - 1;
+  else if (index >= m_ui->tabWidget->count())
+    index = 0;
+
+  m_ui->tabWidget->setCurrentIndex(index);
+}
+
 unsigned char TemplateToolWidget::ligand() const
 {
   return static_cast<unsigned char>(m_ui->ligandComboBox->currentIndex());
@@ -167,11 +201,12 @@ QString TemplateToolWidget::ligandString() const
   int tabIndex = m_ui->tabWidget->currentIndex();
 
   if (tabIndex == TabType::FunctionalGroups) {
+    int index = m_ui->groupComboBox->currentIndex();
     // check if it's "other"
-    if (m_ui->groupComboBox->currentText() == "Other…")
+    if (index == m_ui->groupComboBox->count() - 1)
       return m_ligandPath;
     else
-      return m_ui->groupComboBox->currentText();
+      return m_groups[index];
   }
 
   // tell us if we are using the clipboard
@@ -194,14 +229,15 @@ void TemplateToolWidget::coordinationChanged(int index)
   QSettings settings;
   settings.setValue("templatetool/coordination", iconName);
 
-  m_ui->centerPreview->setIcon(QIcon(":/icons/centers/" + iconName + ".png"));
+  m_ui->centerPreview->setIcon(QIcon(":/icons/centers/" + iconName + ".svg"));
 }
 
 void TemplateToolWidget::groupChanged(int index)
 {
   // get the current name from the text
-  QString groupName = m_ui->groupComboBox->currentText();
-  QString iconName = groupName;
+  int i = m_ui->groupComboBox->currentIndex();
+  const QString& groupName = m_groups[i];
+  const QString& iconName = groupName;
   m_denticity = 1;
 
   // check if it's "other"
@@ -218,7 +254,7 @@ void TemplateToolWidget::groupChanged(int index)
     return;
   }
 
-  m_ui->groupPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
+  m_ui->groupPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".svg"));
 }
 
 void TemplateToolWidget::ligandChanged(int index)
@@ -269,11 +305,11 @@ void TemplateToolWidget::ligandChanged(int index)
     return;
   }
 
-  m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
+  m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".svg"));
 }
 
 void TemplateToolWidget::otherLigandInsert(const QString& fileName,
-                                           bool crystal)
+                                           [[maybe_unused]] bool crystal)
 {
   if (m_fragmentDialog == nullptr)
     return;
@@ -285,11 +321,11 @@ void TemplateToolWidget::otherLigandInsert(const QString& fileName,
   m_fragmentDialog->hide();
   // it will be deleted later
 
-  // update the icon from the filename (so check for .png)
+  // update the icon from the filename (so check for .svg)
   QString iconName = fileName;
   if (iconName.endsWith(".cjson"))
     iconName.chop(6);
-  iconName += ".png";
+  iconName += ".svg";
 
   // check which tab is active
 

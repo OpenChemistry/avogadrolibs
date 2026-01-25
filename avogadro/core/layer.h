@@ -12,8 +12,7 @@
 
 #include <avogadro/core/array.h>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class Layer layer.h <avogadro/core/layer.h>
@@ -25,7 +24,8 @@ namespace Core {
 class AVOGADROCORE_EXPORT Layer
 {
 public:
-  Layer();
+  Layer() = default;
+  ~Layer() = default;
 
   // att atom to param layer
   void addAtom(size_t layer);
@@ -66,11 +66,10 @@ public:
 
 private:
   Core::Array<size_t> m_atomAndLayers;
-  size_t m_activeLayer;
-  size_t m_maxLayer;
+  size_t m_activeLayer = 0;
+  size_t m_maxLayer = 0;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif

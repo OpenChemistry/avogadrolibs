@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class TrrFormat trrformat.h <avogadro/io/trrformat.h>
@@ -20,12 +19,12 @@ namespace Io {
 class AVOGADROIO_EXPORT TrrFormat : public FileFormat
 {
 public:
-  TrrFormat();
-  ~TrrFormat() override;
+  TrrFormat() = default;
+  ~TrrFormat() override = default;
 
   Operations supportedOperations() const override
   {
-    return ReadWrite | MultiMolecule | File | Stream | String;
+    return Read | MultiMolecule | File | Stream | String;
   }
 
   FileFormat* newInstance() const override { return new TrrFormat; }
@@ -45,10 +44,11 @@ public:
   std::vector<std::string> mimeTypes() const override;
 
   bool read(std::istream& inStream, Core::Molecule& molecule) override;
+
+  // uninplemented
   bool write(std::ostream& outStream, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_TRRFORMAT_H

@@ -123,4 +123,4 @@ void ThreeDMolDialog::copyToClipboard()
   QApplication::clipboard()->setText(m_ui->plainTextEdit->toPlainText());
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

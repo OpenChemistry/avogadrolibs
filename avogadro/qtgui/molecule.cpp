@@ -8,22 +8,24 @@
 
 #include <iostream>
 
+// for HTML-formatted formulas
+#include <QtCore/QRegularExpression>
+
 namespace Avogadro::QtGui {
 
 using std::swap;
 
 Molecule::Molecule(QObject* p)
-  : QObject(p), Core::Molecule(),
-    m_undoMolecule(new RWMolecule(*this, this))
+  : QObject(p), Core::Molecule(), m_undoMolecule(new RWMolecule(*this, this))
 {
-  m_undoMolecule->setInteractive(true);
+  m_undoMolecule->setInteractive(false);
 }
 
 Molecule::Molecule(const Molecule& other)
   : QObject(), Core::Molecule(other),
     m_undoMolecule(new RWMolecule(*this, this))
 {
-  m_undoMolecule->setInteractive(true);
+  m_undoMolecule->setInteractive(false);
   // Now assign the unique ids
   for (Index i = 0; i < atomCount(); i++)
     m_atomUniqueIds.push_back(i);
@@ -96,8 +98,12 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d,
                                      Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size())) {
-    m_atomUniqueIds.push_back(atomCount());
-    return Core::Molecule::addAtom(number, position3d);
+    // Add atom using our own addAtom (which handles unique IDs)
+    // then set the position
+    auto atom = Molecule::addAtom(number);
+    if (atom.isValid())
+      atom.setPosition3d(position3d);
+    return atom;
   } else {
     auto atom = Molecule::addAtom(number, uniqueId);
     if (atom.isValid())
@@ -113,6 +119,7 @@ bool Molecule::removeAtom(Index index)
   Index uniqueId = findAtomUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
+
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
   auto newSize = static_cast<Index>(atomCount() - 1);
@@ -160,6 +167,7 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
                                      unsigned char order)
 {
   m_bondUniqueIds.push_back(bondCount());
+
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
 
@@ -204,8 +212,8 @@ void Molecule::swapAtom(Index a, Index b)
   Core::Molecule::swapAtom(a, b);
 }
 
-Molecule::BondType Molecule::addBond(Index a, Index b,
-                                     unsigned char order, Index uniqueId)
+Molecule::BondType Molecule::addBond(Index a, Index b, unsigned char order,
+                                     Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_bondUniqueIds.size()) ||
       m_bondUniqueIds[uniqueId] != MaxIndex) {
@@ -235,6 +243,7 @@ bool Molecule::removeBond(Index index)
   Index uniqueId = findBondUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
+
   m_bondUniqueIds[uniqueId] = MaxIndex; // Unique ID of a bond that was removed.
 
   auto newSize = static_cast<Index>(bondCount() - 1);
@@ -290,11 +299,17 @@ void Molecule::emitChanged(unsigned int change)
     emit changed(change);
 }
 
+void Molecule::emitUpdate() const
+{
+  emit update();
+}
+
 Index Molecule::findAtomUniqueId(Index index) const
 {
-  for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i)
+  for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i) {
     if (m_atomUniqueIds[i] == index)
       return i;
+  }
   return MaxIndex;
 }
 
@@ -311,4 +326,117 @@ RWMolecule* Molecule::undoMolecule()
   return m_undoMolecule;
 }
 
-} // namespace Avogadro
+QString Molecule::formattedFormula() const
+{
+  // we're re-implmenting it here to enable isotopes
+  std::map<std::string, size_t> componentsCount;
+
+  // loop through the atoms
+  for (Index i = 0; i < atomCount(); ++i) {
+    unsigned short atNumber = atomicNumber(i);
+    std::string atomSymbol(Core::Elements::symbol(atNumber));
+    unsigned short iso = isotope(i);
+    if (iso > 0) {
+      if (atNumber == 1 && iso == 1)
+        atomSymbol = "H";
+      else if (atNumber == 1 && iso == 2)
+        atomSymbol = "D";
+      else if (atNumber == 1 && iso == 3)
+        atomSymbol = "T";
+      else
+        // eg. 13C
+        atomSymbol = std::to_string(iso) + atomSymbol;
+    }
+
+    componentsCount[atomSymbol]++;
+  }
+
+  QString formula;
+  // loop through the components
+  // if carbon is present, it goes first
+  // if carbon is present, hydrogen is next
+  // then alphabetical
+  // and any components with a number in front get a superscript
+
+  std::map<std::string, size_t>::iterator iter;
+  iter = componentsCount.find("C");
+  if (iter != componentsCount.end()) {
+    formula += "C";
+    if (iter->second > 1)
+      formula += QString("<sub>%1</sub>").arg(iter->second);
+    componentsCount.erase(iter);
+
+    // hydrogen goes next if carbon is present
+    iter = componentsCount.find("H");
+    if (iter != componentsCount.end()) {
+      formula += "H";
+      if (iter->second > 1)
+        formula += QString("<sub>%1</sub>").arg(iter->second);
+      componentsCount.erase(iter);
+    }
+    // also deuterium and tritium
+    iter = componentsCount.find("D");
+    if (iter != componentsCount.end()) {
+      formula += "D";
+      if (iter->second > 1)
+        formula += QString("<sub>%1</sub>").arg(iter->second);
+      componentsCount.erase(iter);
+    }
+    iter = componentsCount.find("T");
+    if (iter != componentsCount.end()) {
+      formula += "T";
+      if (iter->second > 1)
+        formula += QString("<sub>%1</sub>").arg(iter->second);
+      componentsCount.erase(iter);
+    }
+  }
+
+  for (iter = componentsCount.begin(); iter != componentsCount.end(); ++iter) {
+    // check if iter->first starts with a digit
+    if (iter->first[0] >= '0' && iter->first[0] <= '9') {
+      // get the digits for a superscript
+      QString digits;
+      for (unsigned int i = 0; i < iter->first.length(); ++i) {
+        if (iter->first[i] >= '0' && iter->first[i] <= '9')
+          digits += iter->first[i];
+      }
+      formula += QString("<sup>%1</sup>").arg(digits);
+      // take the substring from the digit to the end
+      formula += iter->first.substr(digits.length());
+    } else
+      formula += iter->first;
+
+    if (iter->second > 1)
+      formula += QString("<sub>%1</sub>").arg(iter->second);
+  }
+
+  // add total charge as a superscript
+  int charge = totalCharge();
+  if (charge == -1)
+    formula += QString("<sup>-</sup>");
+  else if (charge < -1)
+    formula += QString("<sup>%1</sup>").arg(charge);
+  else if (charge == 1)
+    formula += QString("<sup>+</sup>");
+  else if (charge > 1)
+    formula += QString("<sup>+%1</sup>").arg(charge);
+
+  // add doublet or triplet for spin multiplicity as radical dot
+  int spinMultiplicity = totalSpinMultiplicity();
+  if (spinMultiplicity == 2)
+    formula += "<sup>•</sup>";
+  else if (spinMultiplicity == 3)
+    formula += "<sup>••</sup>";
+
+  return formula;
+}
+
+bool Molecule::isInteractive() const
+{
+  if (m_undoMolecule == nullptr)
+    return false;
+
+  return m_undoMolecule->isInteractive();
+}
+
+} // namespace Avogadro::QtGui

@@ -7,6 +7,7 @@
 
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QAction>
 
@@ -33,8 +34,6 @@ Centroid::Centroid(QObject* parent_)
   connect(m_normalAction, SIGNAL(triggered()), SLOT(normal()));
 }
 
-Centroid::~Centroid() {}
-
 QList<QAction*> Centroid::actions() const
 {
   QList<QAction*> result;
@@ -56,23 +55,22 @@ void Centroid::addCentroid()
   if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
-  if (m_molecule->isSelectionEmpty()) {
-    m_molecule->addAtom(0, m_molecule->centerOfGeometry());
-  } else {
-    Vector3 center;
-    Index selectedCount = 0;
-    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-      if (!m_molecule->atomSelected(i))
-        continue;
+  Vector3 center(0.0, 0.0, 0.0);
+  Index count = 0;
+  bool hasSelection = !m_molecule->isSelectionEmpty();
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (hasSelection && !m_molecule->atomSelected(i))
+      continue;
+    // don't count dummy atoms
+    if (m_molecule->atomicNumber(i) == 0)
+      continue;
 
-      center += m_molecule->atomPosition3d(i);
-      ++selectedCount;
-    }
-    center /= selectedCount;
-
-    m_molecule->addAtom(0, center);
+    center += m_molecule->atomPosition3d(i);
+    ++count;
   }
+  center /= count;
 
+  m_molecule->undoMolecule()->addAtom(0, center);
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 }
 
@@ -81,29 +79,29 @@ void Centroid::addCenterOfMass()
   if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
-  if (m_molecule->isSelectionEmpty()) {
-    m_molecule->addAtom(0, m_molecule->centerOfMass());
-  } else {
-    Vector3 center;
-    Index selectedCount = 0;
-    Real totalMass = 0.0;
+  Vector3 center(0.0, 0.0, 0.0);
+  Real totalMass = 0.0;
+  bool hasSelection = !m_molecule->isSelectionEmpty();
 
-    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-      if (!m_molecule->atomSelected(i))
-        continue;
+  // we have to first find the centroid
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (hasSelection && !m_molecule->atomSelected(i))
+      continue;
+    // skip it if it's a dummy atom
+    if (m_molecule->atomicNumber(i) == 0)
+      continue;
 
-      Real mass = Elements::mass(m_molecule->atomicNumber(i));
-      center += m_molecule->atomPosition3d(i) * mass;
+    Real mass = Elements::mass(m_molecule->atomicNumber(i));
+    if (m_molecule->isotope(i) > 0)
+      mass = Elements::isotopeMass(m_molecule->atomicNumber(i),
+                                   m_molecule->isotope(i));
+    center += m_molecule->atomPosition3d(i) * mass;
 
-      totalMass += mass;
-      ++selectedCount;
-    }
-    center /= selectedCount;
-    center /= totalMass;
-
-    m_molecule->addAtom(0, center);
+    totalMass += mass;
   }
+  center /= totalMass;
 
+  m_molecule->undoMolecule()->addAtom(0, center);
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 }
 

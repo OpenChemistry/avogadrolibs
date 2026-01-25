@@ -118,9 +118,7 @@ public:
 // end doxygen exclude:
 /// @endcond
 
-Hdf5DataFormat::Hdf5DataFormat() : d(new Private())
-{
-}
+Hdf5DataFormat::Hdf5DataFormat() : d(new Private()) {}
 
 Hdf5DataFormat::~Hdf5DataFormat()
 {
@@ -143,8 +141,15 @@ bool Hdf5DataFormat::openFile(const std::string& filename_,
 
   switch (mode) {
     case ReadOnly:
-      // File must exist -- use open
-      d->fileId = H5Fopen(filename_.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+      // File must exist -- check first before attempting to open
+      if (FILE* handle = fopen(filename_.c_str(), "r")) {
+        // File exists, pass it off to H5Fopen
+        fclose(handle);
+        d->fileId = H5Fopen(filename_.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+      } else {
+        // File doesn't exist
+        return false;
+      }
       break;
     case ReadWriteTruncate:
       // Create new file:
@@ -442,6 +447,7 @@ std::vector<int> Hdf5DataFormat::readRawDataset(
   for (int i = 0; i < ndims; ++i) {
     result.push_back(static_cast<int>(hdims[i]));
   }
+  delete[] hdims;
 
   // Allocate and read into data.
   if (!container.resize(result)) {

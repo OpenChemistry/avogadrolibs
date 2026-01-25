@@ -1,10 +1,12 @@
-attribute vec4 vertex;
-attribute vec3 color;
-attribute vec2 texCoordinate;
-varying vec2 v_texCoord;
-varying vec3 fColor;
-varying vec4 eyePosition;
-varying float radius;
+#version 400
+precision highp float;  
+in vec4 vertex;
+in vec3 color;
+in vec2 texCoordinate;
+out vec2 v_texCoord;
+out vec3 fColor;
+out vec4 eyePosition;
+out float radius;
 
 uniform mat4 modelView;
 uniform mat4 projection;

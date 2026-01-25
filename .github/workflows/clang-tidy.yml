@@ -1,12 +1,12 @@
 name: Clang-Tidy Static Analysis
 
-on: 
+on:
   workflow_dispatch:
 
 env:
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_YAEHMOP=ON
   BUILD_TYPE: RelWithDebInfo
-  QT_VERSION: 5.15.2
+  QT_VERSION: 6.8.3
 
 jobs:
   build:
@@ -30,36 +30,20 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
-        sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
+        sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install clang-tidy
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@b7840a6733f49e2a39c4355260d2375063d39b61 # v3
       with:
         cache: true
         version: ${{ env.QT_VERSION }}
 
-    - name: Checkout openchemistry
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/openchemistry
-        submodules: recursive
-
-    - name: Checkout avogadroapp
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/avogadroapp
-        path: avogadroapp
-
-    - name: Checkout avogadrolibs
-      uses: actions/checkout@v4
-      with:
-        path: avogadrolibs
-        fetch-depth: 2
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
 
     - name: Grab cache files
-      uses: actions/cache@v4
+      uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
       if: runner.os != 'Windows'
       with:
         path: |
@@ -82,11 +66,11 @@ jobs:
         bear -- ninja
       shell: bash
       working-directory: ${{ runner.workspace }}/build
-        
+
     - name: Create results directory
       run: |
         mkdir ${{ runner.workspace }}/clang-tidy-result
-    
+
     - name: Analyze
       run: |
         # generate the fixes and we'll make a diff
@@ -96,18 +80,18 @@ jobs:
         echo "Generating diff"
         git diff >${{ runner.workspace }}/clang-tidy-result/tidy.patch
       working-directory: ${{ runner.workspace }}/avogadrolibs
-    
+
     - name: Save PR metadata
       run: |
         echo ${{ github.event.number }} > ${{ runner.workspace }}/clang-tidy-result/pr-id.txt
         echo ${{ github.event.pull_request.head.repo.full_name }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-repo.txt
         echo ${{ github.event.pull_request.head.ref }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-ref.txt
 
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
         name: clang-tidy-result
         path: ${{ runner.workspace }}/clang-tidy-result/
-        
+
     - name: Setup tmate session
       if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
+      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
