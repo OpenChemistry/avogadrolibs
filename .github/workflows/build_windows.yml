@@ -10,7 +10,7 @@ name: Windows Build
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.10.1
+  QT_VERSION: 6.8.3
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
@@ -127,11 +127,6 @@ jobs:
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
         # run windeployqt
         windeployqt --release prefix/bin/avogadro2.exe
-        # copy Microsoft ICU DLLs for Windows 10 pre-1903 compatibility
-        # The system icu.dll is only available on Windows 10 1903+
-        # We redistribute Microsoft's ICU from NuGet for older systems
-        nuget install Microsoft.ICU.ICU4C.Runtime -OutputDirectory ./icu-nuget -Source https://api.nuget.org/v3/index.json
-        cp ./icu-nuget/Microsoft.ICU.ICU4C.Runtime.*/runtimes/win-x64/native/*.dll prefix/bin/
         mv prefix avogadro2
         # 7z a Avogadro2-windows.zip avogadro2
         cd avogadro2
