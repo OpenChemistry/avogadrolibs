@@ -117,6 +117,10 @@ jobs:
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
+    - name: Check build with tmate
+      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
+      timeout-minutes: 60
+
     - name: Create Windows Packages
       if: runner.os == 'Windows'
       shell: bash
