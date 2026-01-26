@@ -1,6 +1,7 @@
-#version 120
+#version 400
+precision highp float;
 
-attribute vec3 vertexPosition;
+in vec3 vertexPosition;
 
 void main()
 {

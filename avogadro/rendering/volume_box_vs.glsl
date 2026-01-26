@@ -1,16 +1,19 @@
-#version 120
+#version 400
+precision highp float;
 
-attribute vec3 vertexPosition;
-varying vec3 vBoxPos;
-uniform mat4 uMVP;
+in vec3 vertexPosition;
+out vec3 vWorldPos;
+
+uniform mat4 uModelView;
+uniform mat4 uProjection;
+uniform vec3 uBoxMin;
+uniform vec3 uBoxMax;
 
 void main()
 {
-    vBoxPos = vertexPosition;
-    vec4 clipPos = uMVP * vec4(vertexPosition, 1.0);
-    vec3 ndc = clipPos.xyz / clipPos.w;
-    ndc.x *= 5.5;
-    ndc.y *= 5.5;
-    clipPos.xyz = ndc * clipPos.w;
-    gl_Position = clipPos;
+    // Transform unit cube [-1,1] to world-space cube bounds
+    vec3 worldPos = uBoxMin + (vertexPosition * 0.5 + 0.5) * (uBoxMax - uBoxMin);
+    vWorldPos = worldPos;
+
+    gl_Position = uProjection * uModelView * vec4(worldPos, 1.0);
 }

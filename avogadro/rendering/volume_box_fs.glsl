@@ -1,9 +1,12 @@
-#version 120
+#version 400
+precision highp float;
 
-varying vec3 vBoxPos;
+in vec3 vWorldPos;
+
+out vec4 colorOut;
 
 void main()
 {
-    vec3 mappedPos = (vBoxPos * 0.5) + 0.5;
-    gl_FragColor = vec4(mappedPos, 1.0);
+    // Store world position (will be used for ray marching)
+    colorOut = vec4(vWorldPos, 1.0);
 }

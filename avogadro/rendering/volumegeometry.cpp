@@ -28,50 +28,90 @@ namespace Avogadro::Rendering {
 namespace {
 // A simple fullscreen quad (two triangles).
 static const GLfloat s_fullscreenQuad[] = {
-  -1.0f, -1.0f, 0.0f,   // Bottom-left
-   1.0f, -1.0f, 0.0f,   // Bottom-right
-  -1.0f,  1.0f, 0.0f,   // Top-left
+  -1.0f, -1.0f, 0.0f, // Bottom-left
+  1.0f,  -1.0f, 0.0f, // Bottom-right
+  -1.0f, 1.0f,  0.0f, // Top-left
 
-  -1.0f,  1.0f, 0.0f,   // Top-left
-   1.0f, -1.0f, 0.0f,   // Bottom-right
-   1.0f,  1.0f, 0.0f    // Top-right
+  -1.0f, 1.0f,  0.0f, // Top-left
+  1.0f,  -1.0f, 0.0f, // Bottom-right
+  1.0f,  1.0f,  0.0f  // Top-right
 };
 
 // A simple box (cube) for front/back passes
 static const GLfloat boxVertices[] = {
   // x      y      z
   // Front face
-  -1.0f, -1.0f,  1.0f,
-   1.0f, -1.0f,  1.0f,
-   1.0f,  1.0f,  1.0f,
-  -1.0f,  1.0f,  1.0f,
+  -1.0f,
+  -1.0f,
+  1.0f,
+  1.0f,
+  -1.0f,
+  1.0f,
+  1.0f,
+  1.0f,
+  1.0f,
+  -1.0f,
+  1.0f,
+  1.0f,
 
   // Back face
-  -1.0f, -1.0f, -1.0f,
-   1.0f, -1.0f, -1.0f,
-   1.0f,  1.0f, -1.0f,
-  -1.0f,  1.0f, -1.0f,
+  -1.0f,
+  -1.0f,
+  -1.0f,
+  1.0f,
+  -1.0f,
+  -1.0f,
+  1.0f,
+  1.0f,
+  -1.0f,
+  -1.0f,
+  1.0f,
+  -1.0f,
 };
 
 static const GLuint boxIndices[] = {
   // front
-  0, 1, 2,
-  0, 2, 3,
+  0,
+  1,
+  2,
+  0,
+  2,
+  3,
   // right
-  1, 5, 6,
-  1, 6, 2,
+  1,
+  5,
+  6,
+  1,
+  6,
+  2,
   // back
-  5, 4, 7,
-  5, 7, 6,
+  5,
+  4,
+  7,
+  5,
+  7,
+  6,
   // left
-  4, 0, 3,
-  4, 3, 7,
+  4,
+  0,
+  3,
+  4,
+  3,
+  7,
   // top
-  2, 6, 7,
-  2, 7, 3,
+  2,
+  6,
+  7,
+  2,
+  7,
+  3,
   // bottom
-  4, 5, 1,
-  4, 1, 0,
+  4,
+  5,
+  1,
+  4,
+  1,
+  0,
 };
 
 void initializeFramebuffers(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth,
@@ -85,10 +125,10 @@ void initializeFramebuffers(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth,
   glBindTexture(GL_TEXTURE_2D, *texRGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
-               GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                         GL_TEXTURE_2D, *texRGB, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+               GL_UNSIGNED_BYTE, nullptr);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                         *texRGB, 0);
 
   // Depth attachment.
   glGenTextures(1, texDepth);
@@ -97,19 +137,62 @@ void initializeFramebuffers(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth,
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-               width, height, 0,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0,
                GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                         GL_TEXTURE_2D, *texDepth, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                         *texDepth, 0);
 
   // Check for completeness.
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   if (status != GL_FRAMEBUFFER_COMPLETE) {
-    std::cerr << "Error: Framebuffer incomplete: 0x"
-              << std::hex << status << std::endl;
+    std::cerr << "Error: Framebuffer incomplete: 0x" << std::hex << status
+              << std::endl;
   } else {
+#ifndef NDEBUG
     std::cout << "Framebuffer complete.\n";
+#endif
+  }
+
+  // Unbind the FBO:
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+// Floating-point framebuffer for storing world positions
+void initializePositionFramebuffer(GLuint* outFBO, GLuint* texRGB,
+                                   GLuint* texDepth, int width, int height)
+{
+  glGenFramebuffers(1, outFBO);
+  glBindFramebuffer(GL_FRAMEBUFFER, *outFBO);
+
+  // Color attachment - use floating point for world positions
+  glGenTextures(1, texRGB);
+  glBindTexture(GL_TEXTURE_2D, *texRGB);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT,
+               nullptr);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                         *texRGB, 0);
+
+  // Depth attachment.
+  glGenTextures(1, texDepth);
+  glBindTexture(GL_TEXTURE_2D, *texDepth);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0,
+               GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                         *texDepth, 0);
+
+  // Check for completeness.
+  GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+  if (status != GL_FRAMEBUFFER_COMPLETE) {
+    std::cerr << "Error: Position framebuffer incomplete: 0x" << std::hex
+              << status << std::endl;
   }
 
   // Unbind the FBO:
@@ -122,15 +205,14 @@ class VolumeGeometry::Private
 {
 public:
   Private()
-    : vertexShader(nullptr), fragmentShader(nullptr), program(nullptr),
-      vao(0), vbo(0), defaultFBO(0), renderFBO(0),
-      renderTexture(0), depthTexture(0),
-      frontFBO(0), frontColorTexture(0), frontDepthTexture(0),
-      backFBO(0), backColorTexture(0), backDepthTexture(0),
-      boxVertexShader(nullptr), boxFragmentShader(nullptr), boxShaders(nullptr),
-      transferTexture(0), volumeBoxVao(0), volumeBoxVbo(0),
-      volumeBoxEbo(0), volumeTexture(0)
-  { }
+    : vertexShader(nullptr), fragmentShader(nullptr), program(nullptr), vao(0),
+      vbo(0), defaultFBO(0), renderFBO(0), renderTexture(0), depthTexture(0),
+      frontFBO(0), frontColorTexture(0), frontDepthTexture(0), backFBO(0),
+      backColorTexture(0), backDepthTexture(0), boxVertexShader(nullptr),
+      boxFragmentShader(nullptr), boxShaders(nullptr), transferTexture(0),
+      volumeBoxVao(0), volumeBoxVbo(0), volumeBoxEbo(0), volumeTexture(0)
+  {
+  }
 
   // GL resources
   Shader* vertexShader;
@@ -165,11 +247,8 @@ public:
 };
 
 VolumeGeometry::VolumeGeometry()
-  : m_cube(nullptr),
-    m_dirty(true),
-    m_positiveColor(255, 0, 0),
-    m_negativeColor(0, 0, 255),
-    d(new Private)
+  : m_cube(nullptr), m_dirty(true), m_positiveColor(255, 0, 0),
+    m_negativeColor(0, 0, 255), d(new Private)
 {
 }
 
@@ -180,13 +259,9 @@ VolumeGeometry::~VolumeGeometry()
 }
 
 VolumeGeometry::VolumeGeometry(const VolumeGeometry& other)
-  : Drawable(other),
-    m_positiveColor(other.m_positiveColor),
-    m_negativeColor(other.m_negativeColor),
-    m_cube(other.m_cube),
-    m_dirty(other.m_dirty),
-    d(new Private(*other.d)),
-    m_width(other.m_width),
+  : Drawable(other), m_positiveColor(other.m_positiveColor),
+    m_negativeColor(other.m_negativeColor), m_cube(other.m_cube),
+    m_dirty(other.m_dirty), d(new Private(*other.d)), m_width(other.m_width),
     m_height(other.m_height)
 {
 }
@@ -225,7 +300,6 @@ void VolumeGeometry::setCube(const Core::Cube& cube)
 {
   m_cube = &cube;
   m_dirty = true;
-
 }
 
 void VolumeGeometry::resizeFBO(int newWidth, int newHeight)
@@ -272,14 +346,15 @@ void VolumeGeometry::resizeFBO(int newWidth, int newHeight)
     d->backDepthTexture = 0;
   }
 
-  initializeFramebuffers(&d->renderFBO, &d->renderTexture,
-                         &d->depthTexture, m_width, m_height);
+  initializeFramebuffers(&d->renderFBO, &d->renderTexture, &d->depthTexture,
+                         m_width, m_height);
 
-  initializeFramebuffers(&d->backFBO, &d->backColorTexture,
-                         &d->backDepthTexture, m_width, m_height);
+  // Use floating-point framebuffers for position storage
+  initializePositionFramebuffer(&d->backFBO, &d->backColorTexture,
+                                &d->backDepthTexture, m_width, m_height);
 
-  initializeFramebuffers(&d->frontFBO, &d->frontColorTexture,
-                         &d->frontDepthTexture, m_width, m_height);
+  initializePositionFramebuffer(&d->frontFBO, &d->frontColorTexture,
+                                &d->frontDepthTexture, m_width, m_height);
 }
 
 void VolumeGeometry::initialize()
@@ -291,7 +366,6 @@ void VolumeGeometry::initialize()
   glGetIntegerv(GL_VIEWPORT, vp);
   int currentW = vp[2];
   int currentH = vp[3];
-
 
   // Build (or rebuild) the volume texture if needed:
   {
@@ -321,8 +395,8 @@ void VolumeGeometry::initialize()
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F,
-                 nx, ny, nz, 0, GL_RED, GL_FLOAT, volumeData.data());
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F, nx, ny, nz, 0, GL_RED, GL_FLOAT,
+                 volumeData.data());
   }
 
   // Simple 1D transfer function texture:
@@ -343,8 +417,8 @@ void VolumeGeometry::initialize()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 1, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, tfData.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 1, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, tfData.data());
     glBindTexture(GL_TEXTURE_2D, 0);
   }
 
@@ -355,14 +429,16 @@ void VolumeGeometry::initialize()
 
     glGenBuffers(1, &d->volumeBoxVbo);
     glBindBuffer(GL_ARRAY_BUFFER, d->volumeBoxVbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices,
+                 GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           (GLvoid*)0);
 
     glGenBuffers(1, &d->volumeBoxEbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d->volumeBoxEbo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boxIndices), boxIndices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boxIndices), boxIndices,
+                 GL_STATIC_DRAW);
 
     glBindVertexArray(0);
   }
@@ -371,15 +447,15 @@ void VolumeGeometry::initialize()
   {
     glGenBuffers(1, &d->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, d->vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad),
-                 s_fullscreenQuad, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad), s_fullscreenQuad,
+                 GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glGenVertexArrays(1, &d->vao);
     glBindVertexArray(d->vao);
     glBindBuffer(GL_ARRAY_BUFFER, d->vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-                          0, reinterpret_cast<void*>(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0,
+                          reinterpret_cast<void*>(0));
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
   }
@@ -453,18 +529,27 @@ void VolumeGeometry::render(const Camera& camera)
     initialize();
   }
 
-
   glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
 
-  // 1) Copy default FBO into renderFBO:
-  glBindFramebuffer(GL_READ_FRAMEBUFFER, d->defaultFBO);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, d->renderFBO);
-  glBlitFramebuffer(0, 0, m_width, m_height,
-                    0, 0, m_width, m_height,
-                    GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
-                    GL_NEAREST);
+  // Get cube bounds in world space
+  Eigen::Vector3f boxMin = m_cube->min().cast<float>();
+  Eigen::Vector3f boxMax = m_cube->max().cast<float>();
+  Eigen::Matrix4f mv = camera.modelView().matrix();
+  Eigen::Matrix4f proj = camera.projection().matrix();
 
-  // 2) Render the BACK faces of bounding box:
+  // Compute camera position in world space from inverse modelView
+  Eigen::Matrix4f mvInv = mv.inverse();
+  Eigen::Vector3f cameraPos = mvInv.block<3, 1>(0, 3);
+
+  // Compute view direction (for orthographic projection)
+  // View direction in camera space is -Z, transform to world space
+  Eigen::Vector3f viewDirWorld =
+    (mvInv.block<3, 3>(0, 0) * Eigen::Vector3f(0, 0, -1)).normalized();
+
+  // Get projection type (0 = perspective, 1 = orthographic)
+  int projType = (camera.projectionType() == Projection::Orthographic) ? 1 : 0;
+
+  // 2) Render the BACK faces of bounding box (exit points):
   {
     glBindFramebuffer(GL_FRAMEBUFFER, d->backFBO);
     glViewport(0, 0, m_width, m_height);
@@ -472,15 +557,16 @@ void VolumeGeometry::render(const Camera& camera)
     glEnable(GL_CULL_FACE);
 
     glCullFace(GL_FRONT);
-    glClearColor(0.f, 0.f, 0.f, 0.f);
+    // Use sentinel value for clear color to detect "no hit" pixels
+    glClearColor(-1e6f, -1e6f, -1e6f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     d->boxShaders->bind();
 
-    Eigen::Matrix4f mv = camera.modelView().matrix();
-    Eigen::Matrix4f proj = camera.projection().matrix();
-    Eigen::Matrix4f mvp = proj * mv;
-    d->boxShaders->setUniformValue("uMVP", mvp);
+    d->boxShaders->setUniformValue("uModelView", mv);
+    d->boxShaders->setUniformValue("uProjection", proj);
+    d->boxShaders->setUniformValue("uBoxMin", boxMin);
+    d->boxShaders->setUniformValue("uBoxMax", boxMax);
 
     glBindVertexArray(d->volumeBoxVao);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -492,7 +578,7 @@ void VolumeGeometry::render(const Camera& camera)
     glDisable(GL_DEPTH_TEST);
   }
 
-  // 3) Render the FRONT faces of bounding box:
+  // 3) Render the FRONT faces of bounding box (entry points):
   {
     glBindFramebuffer(GL_FRAMEBUFFER, d->frontFBO);
     glViewport(0, 0, m_width, m_height);
@@ -500,15 +586,16 @@ void VolumeGeometry::render(const Camera& camera)
     glEnable(GL_CULL_FACE);
 
     glCullFace(GL_BACK);
-    glClearColor(0.f, 0.f, 0.f, 0.f);
+    // Use sentinel value for clear color to detect "no hit" pixels
+    glClearColor(-1e6f, -1e6f, -1e6f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     d->boxShaders->bind();
 
-    Eigen::Matrix4f mv = camera.modelView().matrix();
-    Eigen::Matrix4f proj = camera.projection().matrix();
-    Eigen::Matrix4f mvp = proj * mv;
-    d->boxShaders->setUniformValue("uMVP", mvp);
+    d->boxShaders->setUniformValue("uModelView", mv);
+    d->boxShaders->setUniformValue("uProjection", proj);
+    d->boxShaders->setUniformValue("uBoxMin", boxMin);
+    d->boxShaders->setUniformValue("uBoxMax", boxMax);
 
     glBindVertexArray(d->volumeBoxVao);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -524,84 +611,81 @@ void VolumeGeometry::render(const Camera& camera)
   glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
   glViewport(0, 0, m_width, m_height);
 
+  // Disable depth test and depth write - the fullscreen quad should always draw
+  // (ray marching handles occlusion internally) but shouldn't corrupt depth
+  // buffer
+  glDisable(GL_DEPTH_TEST);
+  glDepthMask(GL_FALSE);
+
+  // Enable premultiplied alpha blending so volume composites over existing
+  // scene
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
   d->program->bind();
 
   GLint pId = 0;
   glGetIntegerv(GL_CURRENT_PROGRAM, &pId);
 
-  // inRGBTex -> unit 0
+  // inFrontPosTex -> unit 0
   {
-    GLint loc = glGetUniformLocation(pId, "inRGBTex");
+    GLint loc = glGetUniformLocation(pId, "inFrontPosTex");
     if (loc >= 0) {
       glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, d->renderTexture);
+      glBindTexture(GL_TEXTURE_2D, d->frontColorTexture);
       glUniform1i(loc, 0);
     }
   }
 
-  // inFrontPosTex -> unit 1
+  // inBackPosTex -> unit 1
   {
-    GLint loc = glGetUniformLocation(pId, "inFrontPosTex");
+    GLint loc = glGetUniformLocation(pId, "inBackPosTex");
     if (loc >= 0) {
       glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, d->frontColorTexture);
+      glBindTexture(GL_TEXTURE_2D, d->backColorTexture);
       glUniform1i(loc, 1);
     }
   }
 
-  // inBackPosTex -> unit 2
+  // uVolumeData -> unit 2
   {
-    GLint loc = glGetUniformLocation(pId, "inBackPosTex");
+    GLint loc = glGetUniformLocation(pId, "uVolumeData");
     if (loc >= 0) {
       glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, d->backColorTexture);
+      glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
       glUniform1i(loc, 2);
     }
   }
 
-  // transferTex -> unit 3
-  {
-    GLint loc = glGetUniformLocation(pId, "transferTex");
-    if (loc >= 0) {
-      glActiveTexture(GL_TEXTURE3);
-      glBindTexture(GL_TEXTURE_2D, d->transferTexture);
-      glUniform1i(loc, 3);
-    }
-  }
-
-  // uVolumeData -> unit 4
-  {
-    GLint loc = glGetUniformLocation(pId, "uVolumeData");
-    if (loc >= 0) {
-      glActiveTexture(GL_TEXTURE4);
-      glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
-      glUniform1i(loc, 4);
-    }
-  }
-
   // Colors, etc.
-  Eigen::Vector3f posCol(
-    m_positiveColor[0] / 255.0f,
-    m_positiveColor[1] / 255.0f,
-    m_positiveColor[2] / 255.0f
-  );
-  Eigen::Vector3f negCol(
-    m_negativeColor[0] / 255.0f,
-    m_negativeColor[1] / 255.0f,
-    m_negativeColor[2] / 255.0f
-  );
-  d->program->setUniformValue("width",  float(m_width));
+  Eigen::Vector3f posCol(m_positiveColor[0] / 255.0f,
+                         m_positiveColor[1] / 255.0f,
+                         m_positiveColor[2] / 255.0f);
+  Eigen::Vector3f negCol(m_negativeColor[0] / 255.0f,
+                         m_negativeColor[1] / 255.0f,
+                         m_negativeColor[2] / 255.0f);
+  d->program->setUniformValue("width", float(m_width));
   d->program->setUniformValue("height", float(m_height));
   d->program->setUniformValue("numSteps", 150);
   d->program->setUniformValue("alphaScale", 0.6f);
   d->program->setUniformValue("positiveColor", posCol);
   d->program->setUniformValue("negativeColor", negCol);
+  d->program->setUniformValue("uBoxMin", boxMin);
+  d->program->setUniformValue("uBoxMax", boxMax);
+  d->program->setUniformValue("uCameraPos", cameraPos);
+  d->program->setUniformValue("uViewDir", viewDirWorld);
+  d->program->setUniformValue("uProjectionType", projType);
 
   glBindVertexArray(d->vao);
   glDrawArrays(GL_TRIANGLES, 0, 6);
   glBindVertexArray(0);
 
   d->program->release();
+
+  // Restore GL state for other translucent objects
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glDepthMask(GL_TRUE);
+  glEnable(GL_DEPTH_TEST);
 }
 
 void VolumeGeometry::end()
