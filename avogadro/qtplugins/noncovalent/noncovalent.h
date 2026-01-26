@@ -50,10 +50,6 @@ public slots:
 private:
   const std::string m_name = "Non-Covalent";
 
-  const std::array<QString, 3> INTERACTION_NAMES = { tr("Hydrogen"),
-                                                     tr("Halogen"),
-                                                     tr("Chalcogen") };
-
   std::array<double, 3> m_angleTolerancesDegrees;
   std::array<double, 3> m_maximumDistances;
   std::array<Vector3ub, 3> m_lineColors;
