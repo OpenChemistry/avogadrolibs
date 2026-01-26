@@ -13,6 +13,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/volumegeometry.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
@@ -31,6 +32,7 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
 using Rendering::MeshGeometry;
+using Rendering::VolumeGeometry;
 
 SurfaceRender::SurfaceRender(QObject* p)
   : ScenePlugin(p), m_setupWidget(nullptr)
@@ -58,17 +60,6 @@ SurfaceRender::SurfaceRender(QObject* p)
 }
 
 SurfaceRender::~SurfaceRender() {}
-
-// Generator for std::generate call below:
-namespace {
-struct Sequence
-{
-  Sequence() : i(0) {}
-  unsigned int operator()() { return i++; }
-  void reset() { i = 0; }
-  unsigned int i;
-};
-} // namespace
 
 void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
 {
@@ -180,7 +171,23 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
         }
       }
     } // if style == Wireframe
-  }   // if meshCount != 0
+    else if (m_style == SurfaceRender::Volume) {
+      const Core::Cube* cube = mol.cube(0);
+      if (cube == nullptr)
+        return;
+
+      auto* volume = new VolumeGeometry;
+      // qDebug() << "Volume data size: " << cube->data()->size();
+      volume->setCube(*cube);
+      volume->setRenderPass(Rendering::TranslucentPass);
+
+      // TODO: better support for color ramps
+      volume->setPositiveColor(m_color1);
+      volume->setNegativeColor(m_color2);
+
+      geometry->addDrawable(volume);
+    }
+  } // if meshCount != 0
 }
 
 void SurfaceRender::setOpacity(int opacity)
@@ -262,6 +269,7 @@ QWidget* SurfaceRender::setupWidget()
     auto* combo = new QComboBox;
     combo->addItem(tr("Surface"));
     combo->addItem(tr("Wireframe"));
+    combo->addItem(tr("Volume"));
     combo->setCurrentIndex(m_style);
     connect(combo, SIGNAL(currentIndexChanged(int)), SLOT(setStyle(int)));
     form->addRow(tr("Style:"), combo);

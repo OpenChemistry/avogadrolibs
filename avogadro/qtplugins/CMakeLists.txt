@@ -181,7 +181,6 @@ add_subdirectory(licorice)
 add_subdirectory(surfacerender)
 add_subdirectory(noncovalent)
 add_subdirectory(vanderwaals)
-add_subdirectory(volumes)
 add_subdirectory(wireframe)
 if (USE_OPENGL)
   # needs some raw OpenGL code
