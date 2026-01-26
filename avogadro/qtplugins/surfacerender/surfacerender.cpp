@@ -172,7 +172,7 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
       }
     } // if style == Wireframe
     else if (m_style == SurfaceRender::Volume) {
-      const Core::Cube* cube = mol.cube(0);
+      const Core::Cube* cube = mol.activeCube();
       if (cube == nullptr)
         return;
 
