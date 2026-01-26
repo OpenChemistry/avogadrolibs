@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-24 19:10+0000\n"
-"PO-Revision-Date: 2026-01-24 19:17+0000\n"
+"PO-Revision-Date: 2026-01-26 08:52+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -2150,7 +2150,7 @@ msgstr "Optimizează geometria"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kJ/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 kJ/mol"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
@@ -3934,7 +3934,7 @@ msgstr "Instrument de măsurare"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
-msgstr ""
+msgstr "(în așteptare)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
 #: qtplugins/propertytables/propertymodel.cpp:721
@@ -5672,11 +5672,11 @@ msgstr "Simetrie"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
 msgid "Occupation"
-msgstr ""
+msgstr "Ocupare"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:141
 msgid "Spin"
-msgstr ""
+msgstr "Spin"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:152
 #: qtplugins/surfaces/orbitaltablemodel.cpp:238
