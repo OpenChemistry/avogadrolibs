@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-24 19:10+0000\n"
-"PO-Revision-Date: 2026-01-15 04:17+0000\n"
+"PO-Revision-Date: 2026-01-27 03:19+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.2\n"
+"X-Generator: Weblate 5.16-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2118,7 +2118,7 @@ msgstr "Optimize Geometry"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kJ/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 kJ/mol"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
@@ -3884,7 +3884,7 @@ msgstr "Measure tool"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
-msgstr ""
+msgstr "(pending)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
 #: qtplugins/propertytables/propertymodel.cpp:721
@@ -5610,11 +5610,11 @@ msgstr "Symmetry"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
 msgid "Occupation"
-msgstr ""
+msgstr "Occupation"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:141
 msgid "Spin"
-msgstr ""
+msgstr "Spin"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:152
 #: qtplugins/surfaces/orbitaltablemodel.cpp:238
