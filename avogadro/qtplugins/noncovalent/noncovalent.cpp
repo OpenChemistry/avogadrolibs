@@ -403,7 +403,19 @@ QWidget* NonCovalent::setupWidget()
 
     auto* page = new QWidget;
     page->setLayout(form);
-    tabs->addTab(page, INTERACTION_NAMES[i]);
+
+    switch (i) {
+      case 0:
+        tabs->addTab(page, tr("Hydrogen"));
+        break;
+      case 1:
+        tabs->addTab(page, tr("Halogen"));
+        break;
+      case 2:
+        tabs->addTab(page, tr("Chalcogen"));
+        break;
+      default:
+    }
   }
 
   v->addWidget(tabs);
