@@ -11,8 +11,8 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <avogadro/vtk/chartdialog.h>
-#include <avogadro/vtk/chartwidget.h>
+#include <avogadro/qtgui/chartdialog.h>
+#include <avogadro/qtgui/chartwidget.h>
 
 #include <QAction>
 #include <QDebug>

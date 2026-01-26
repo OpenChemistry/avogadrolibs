@@ -18,13 +18,14 @@
 namespace Avogadro::QtPlugins {
 
 OBMMEnergy::OBMMEnergy(const std::string& method)
-  : m_identifier(method), m_name(method), m_process(nullptr),
-    m_molecule(nullptr),
+  : m_molecule(nullptr), m_process(nullptr), m_executable(
 #if defined(_WIN32)
-    m_executable("obmm.exe")
+                                               "obmm.exe"
 #else
-    m_executable("obmm")
+                                               "obmm"
 #endif
+                                               ),
+    m_identifier(method), m_name(method)
 {
   // eventually CJSON might be nice
   m_inputFormat = new Io::CmlFormat;
@@ -232,7 +233,7 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
 
   // write the new coordinates and read the energy
   input = "coord\n";
-  for (Index i = 0; i < x.size(); i += 3) {
+  for (Eigen::Index i = 0; i < x.size(); i += 3) {
     // write as x y z (space separated)
     input += QString::number(x[i]).toUtf8() + " " +
              QString::number(x[i + 1]).toUtf8() + " " +
@@ -256,6 +257,11 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
     }
   }
 
+  // if method is not GAFF, convert to kJ/mol
+  if (m_identifier != "GAFF")
+    energy *= Calc::KCAL_TO_KJ;
+
+  energy += constraintEnergies(x);
   return energy; // if conversion fails, returns 0.0
 }
 
@@ -266,7 +272,7 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // write the new coordinates and read the energy
   QByteArray result, input = "coord\n";
-  for (Index i = 0; i < x.size(); i += 3) {
+  for (Eigen::Index i = 0; i < x.size(); i += 3) {
     // write as x y z (space separated)
     input += QString::number(x[i]).toUtf8() + " " +
              QString::number(x[i + 1]).toUtf8() + " " +
@@ -302,8 +308,11 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   grad *= -1; // OpenBabel outputs forces, not grads
 
   cleanGradients(grad);
+  // if method is not GAFF, convert to kJ/mol
+  if (m_identifier != "GAFF")
+    grad *= Calc::KCAL_TO_KJ;
+
+  constraintGradients(x, grad);
 }
 
 } // namespace Avogadro::QtPlugins
-
-#include "obmmenergy.moc"

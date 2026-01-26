@@ -19,6 +19,8 @@
 
 #include <string>
 
+using namespace std::string_literals;
+
 namespace Avogadro::Io {
 
 using Core::Atom;
@@ -32,12 +34,12 @@ using Core::UnitCell;
 
 std::vector<std::string> GromacsFormat::fileExtensions() const
 {
-  return std::vector<std::string>(1, std::string("gro"));
+  return std::vector<std::string>(1, "gro"s);
 }
 
 std::vector<std::string> GromacsFormat::mimeTypes() const
 {
-  return std::vector<std::string>(1, std::string("chemical/x-gro"));
+  return std::vector<std::string>(1, "chemical/x-gro"s);
 }
 
 bool GromacsFormat::read(std::istream& in, Molecule& molecule)
@@ -133,7 +135,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     Atom atom;
     int atomicNum = 0;
     if (r != nullptr)
-      r->getAtomicNumber(value);
+      r->atomicNumber(value);
     if (atomicNum) {
       atom = molecule.addAtom(atomicNum);
     } else {
@@ -175,7 +177,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   // Set the custom element map if needed:
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (const auto & atomType : atomTypes) {
+    for (const auto& atomType : atomTypes) {
       elementMap.insert(std::make_pair(atomType.second, atomType.first));
     }
     molecule.setCustomElementMap(elementMap);
@@ -210,6 +212,11 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
 
     auto* cell = new UnitCell;
     cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
+    if (!cell->isRegular()) {
+      appendError("box vectors are not linear independent");
+      delete cell;
+      return false;
+    }
     molecule.setUnitCell(cell);
   }
 
@@ -221,4 +228,4 @@ bool GromacsFormat::write(std::ostream&, const Core::Molecule&)
   return false;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Io

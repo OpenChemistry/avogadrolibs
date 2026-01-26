@@ -158,12 +158,12 @@ void ApbsDialog::runPdb2Pqr()
   process.waitForFinished();
 
   if (process.exitStatus() == QProcess::NormalExit) {
-    QMessageBox::information(this, "Success",
-                             QString("Generated %1").arg(pqrFileName_));
+    QMessageBox::information(this, tr("Success"),
+                             tr("Generated %1").arg(pqrFileName_));
     m_generatedPqrFileName = pqrFileName_;
     updatePreviewTextImmediately();
   } else {
-    QMessageBox::critical(this, "Error", QString("Error running PDB2PQR"));
+    QMessageBox::critical(this, tr("Error"), tr("Error running PDB2PQR"));
     m_generatedPqrFileName.clear();
   }
 }
@@ -185,7 +185,11 @@ void ApbsDialog::saveInputFile(const QString& fileName)
   QString contents = m_inputGenerator->fileContents("apbs.in");
 
   QFile file(fileName);
-  file.open(QFile::WriteOnly);
+  if (!file.open(QFile::WriteOnly)) {
+    QMessageBox::critical(this, tr("Error"),
+                          tr("Cannot save file %1.").arg(fileName));
+    return;
+  }
   file.write(contents.toLocal8Bit());
   file.close();
 }
@@ -218,4 +222,4 @@ void ApbsDialog::updatePreviewTextImmediately()
 
   m_ui->textEdit->setText(m_inputGenerator->fileContents("apbs.in"));
 }
-}
+} // namespace Avogadro::QtPlugins

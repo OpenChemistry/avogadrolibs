@@ -67,7 +67,7 @@ void Vibrations::setMolecule(QtGui::Molecule* mol)
           SLOT(moleculeChanged(unsigned int)));
 }
 
-void Vibrations::moleculeChanged(unsigned int changes)
+void Vibrations::moleculeChanged([[maybe_unused]] unsigned int changes)
 {
   if (m_molecule == nullptr)
     return;
@@ -220,7 +220,9 @@ void Vibrations::stopVibrationAnimation()
     m_timer->stop();
     m_molecule->setCoordinate3d(0);
     m_currentFrame = 0;
-    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+    // Use Moved flag for coordinate changes, not Added (which implies new
+    // atoms)
+    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Moved);
   }
 }
 
@@ -244,6 +246,7 @@ void Vibrations::advanceFrame()
   if (++m_currentFrame >= m_totalFrames)
     m_currentFrame = 0;
   m_molecule->setCoordinate3d(m_currentFrame);
-  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+  // Use Moved flag for coordinate changes, not Added (which implies new atoms)
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Moved);
 }
 } // namespace Avogadro::QtPlugins

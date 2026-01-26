@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "lennardjones.h"
+#include "avogadro/core/avogadrocore.h"
 
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
@@ -12,8 +13,8 @@
 namespace Avogadro::Calc {
 
 LennardJones::LennardJones()
-  : m_vdw(true), m_depth(100.0), m_exponent(6), m_cell(nullptr),
-    m_molecule(nullptr)
+  : m_molecule(nullptr), m_cell(nullptr), m_radii(), m_vdw(true),
+    m_depth(100.0), m_exponent(6), m_elements()
 {
   // defined for 1-118
   for (unsigned int i = 1; i <= 118; ++i) {
@@ -32,7 +33,7 @@ void LennardJones::setMolecule(Core::Molecule* mol)
   m_mask = mol->frozenAtomMask();
 
   m_cell = mol->unitCell(); // could be nullptr
-  int numAtoms = mol->atomCount();
+  Index numAtoms = mol->atomCount();
 
   // track atomic radii for this molecule
   m_radii.setZero();
@@ -73,7 +74,7 @@ Real LennardJones::value(const Eigen::VectorXd& x)
 
   // FYI https://en.wikipedia.org/wiki/Lennard-Jones_potential
   //@todo handle unit cells and minimum distances
-  int numAtoms = m_molecule->atomCount();
+  Index numAtoms = m_molecule->atomCount();
 
   Real energy = 0.0;
   // we put the conditional here outside the double loop
@@ -108,6 +109,7 @@ Real LennardJones::value(const Eigen::VectorXd& x)
   }
 
   // qDebug() << " lj: " << energy;
+  energy += constraintEnergies(x);
   return energy;
 }
 
@@ -119,7 +121,7 @@ void LennardJones::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   // clear the gradients
   grad.setZero();
 
-  int numAtoms = m_molecule->atomCount();
+  Index numAtoms = m_molecule->atomCount();
   // we put the conditional here outside the double loop
   if (m_cell == nullptr) {
     // regular molecule
@@ -177,6 +179,7 @@ void LennardJones::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // handle any constraints
   cleanGradients(grad);
+  constraintGradients(x, grad);
 }
 
 } // namespace Avogadro::Calc

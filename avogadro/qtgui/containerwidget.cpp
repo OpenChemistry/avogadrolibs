@@ -13,10 +13,8 @@
 namespace Avogadro::QtGui {
 
 ContainerWidget::ContainerWidget(QWidget* p, Qt::WindowFlags f)
-  : QWidget(p, f)
-  , m_viewWidget(nullptr)
-  , m_label(new QLabel(QStringLiteral("   "), this))
-  , m_active(false)
+  : QWidget(p, f), m_viewWidget(nullptr),
+    m_label(new QLabel(QStringLiteral("   "), this)), m_active(false)
 {
   auto* h = new QHBoxLayout;
   h->setContentsMargins(0, 0, 0, 0);
@@ -27,13 +25,16 @@ ContainerWidget::ContainerWidget(QWidget* p, Qt::WindowFlags f)
   h->addWidget(m_label);
   h->addStretch();
   auto* button = new QPushButton(tr("Split Horizontal"), this);
-  connect(button, SIGNAL(clicked()), SIGNAL(splitHorizontal()));
+  button->setEnabled(false);
+  //  connect(button, SIGNAL(clicked()), SIGNAL(splitHorizontal()));
   h->addWidget(button);
   button = new QPushButton(tr("Split Vertical"), this);
-  connect(button, SIGNAL(clicked()), SIGNAL(splitVertical()));
+  button->setEnabled(false);
+  //  connect(button, SIGNAL(clicked()), SIGNAL(splitVertical()));
   h->addWidget(button);
   button = new QPushButton(tr("Close"), this);
-  connect(button, SIGNAL(clicked()), SIGNAL(closeView()));
+  button->setEnabled(false);
+  //  connect(button, SIGNAL(clicked()), SIGNAL(closeView()));
   h->addWidget(button);
   v->addLayout(h);
   setLayout(v);
@@ -62,4 +63,4 @@ void ContainerWidget::setActive(bool active)
   }
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::QtGui

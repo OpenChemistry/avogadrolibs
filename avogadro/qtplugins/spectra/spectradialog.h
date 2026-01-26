@@ -17,7 +17,7 @@ class SpectraDialog;
 
 namespace Avogadro {
 
-namespace VTK {
+namespace QtGui {
 class ChartWidget;
 }
 
@@ -30,6 +30,8 @@ enum class SpectraType
   NMR,
   Electronic,
   CircularDichroism,
+  VibrationalCD,
+  MagneticCD,
   DensityOfStates
 };
 
@@ -38,8 +40,8 @@ class SpectraDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit SpectraDialog(QWidget* parent = 0);
-  ~SpectraDialog();
+  explicit SpectraDialog(QWidget* parent = nullptr);
+  ~SpectraDialog() override;
 
   void writeSettings() const;
   void readSettings();
@@ -51,19 +53,25 @@ public:
     updateElementCombo();
   }
 
-  VTK::ChartWidget* chartWidget();
+  QtGui::ChartWidget* chartWidget();
 
   void disconnectOptions();
   void connectOptions();
+
+  void mouseDoubleClickEvent(QMouseEvent* e) override;
 
 private slots:
   void changeBackgroundColor();
   void changeForegroundColor();
   void changeCalculatedSpectraColor();
+  void changeRawSpectraColor();
   void changeImportedSpectraColor();
   void changeFontSize();
   void changeLineWidth();
   void changeSpectra();
+
+  void importData();
+  void exportData();
 
   void updateElementCombo();
   void updatePlot();
@@ -72,10 +80,14 @@ private slots:
 
 private:
   std::map<std::string, MatrixX> m_spectra;
+  MatrixX m_importedSpectra;
   std::vector<unsigned char> m_elements; // for NMR
   // current spectra data
   std::vector<double> m_transitions;
   std::vector<double> m_intensities;
+  // imported spectra (if available)
+  std::vector<double> m_importedTransitions;
+  std::vector<double> m_importedIntensities;
 
   QString m_currentSpectraType;
   Ui::SpectraDialog* m_ui;

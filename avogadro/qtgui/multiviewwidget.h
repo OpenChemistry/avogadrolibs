@@ -67,7 +67,7 @@ private:
   void splitView(Qt::Orientation orient, ContainerWidget* container);
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_MULTIVIEWWIDGET_H

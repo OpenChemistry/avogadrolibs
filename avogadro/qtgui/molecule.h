@@ -18,6 +18,7 @@
 #include <list>
 
 namespace Avogadro {
+
 namespace QtGui {
 
 class Mesh;
@@ -66,18 +67,21 @@ public:
   enum MoleculeChange
   {
     /** Useful for initializing MoleculeChange variables. */
-    NoChange = 0x0,
+    NoChange = 0,
     /** Object types that can be changed. */
-    Atoms = 0x01,
-    Bonds = 0x02,
-    UnitCell = 0x04,
-    Selection = 0x08,
-    Layers = 0x16,
-    Properties = 0x32,
+    Atoms = 1,
+    Bonds = 2,
+    UnitCell = 4,
+    Selection = 8,
+    Layers = 16,
+    Properties = 32,
+    Constraints = 64,
+    Residues = 128,
     /** Operations that can affect the above types. */
-    Added = 0x1024,
-    Removed = 0x2048,
-    Modified = 0x4096
+    Added = 1024,
+    Removed = 2048,
+    Modified = 4096,
+    Moved = 8192
   };
   Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
 
@@ -170,8 +174,8 @@ public:
 
   /**
    * @brief Add a bond between the specified atoms.
-   * @param a The index of the first atom in the bond.
-   * @param b The index of the second atom in the bond.
+   * @param atomId1 The index of the first atom in the bond.
+   * @param atomId2 The index of the second atom in the bond.
    * @param bondOrder The order of the bond.
    * @param uniqueId The unique ID to use for the bond.
    * @return The bond created. This can be invalid if the unique ID was already

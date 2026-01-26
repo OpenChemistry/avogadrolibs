@@ -54,6 +54,10 @@ private:
   void readAtom(const std::vector<std::string>& list);
   void load(Core::GaussianSet* basis);
 
+  bool m_cartesianD = true;
+  bool m_cartesianF = true;
+  bool m_cartesianG = true;
+
   double m_coordFactor;
   int m_electrons;
   unsigned int m_numBasisFunctions;
@@ -66,7 +70,11 @@ private:
   std::vector<double> m_c;
   std::vector<double> m_csp;
   std::vector<double> m_orbitalEnergy;
+  std::vector<double> m_betaOrbitalEnergy;
+  std::vector<std::string> m_symmetryLabels;
+  std::vector<std::string> m_betaSymmetryLabels;
   std::vector<double> m_MOcoeffs;
+  std::vector<double> m_betaMOcoeffs;
 
   Core::Array<double> m_frequencies;
   Core::Array<double> m_IRintensities;
@@ -84,6 +92,9 @@ private:
     Unrecognized
   };
   Mode m_mode;
+
+  bool m_openShell = false;
+  bool m_currentSpinBeta = false; // Track current spin during MO parsing
 };
 
 } // namespace QuantumIO

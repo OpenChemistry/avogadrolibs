@@ -6,16 +6,13 @@ set(tests
   Lammps
   Mdl
   Pdb
+  Turbomole
   Vasp
   Xyz
   )
 
 if(USE_HDF5)
   list(APPEND tests Hdf5)
-endif()
-
-if(USE_MMTF)
-  list(APPEND tests MMTF)
 endif()
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"

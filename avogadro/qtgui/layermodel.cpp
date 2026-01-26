@@ -196,6 +196,8 @@ QString LayerModel::getTranslatedName(const std::string& name) const
     return tr("Volumes", "volumetric clouds");
   else if (name == "Wireframe")
     return tr("Wireframe");
+  else if (name == "Reference Axes")
+    return tr("Reference Axes");
 
   qDebug() << "LayerModel: name didn't match: " << name.c_str();
 

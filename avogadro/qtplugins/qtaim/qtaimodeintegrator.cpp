@@ -28,7 +28,7 @@ QTAIMODEIntegrator::QTAIMODEIntegrator(QTAIMWavefunctionEvaluator& eval,
                                        const qint64 mode)
   : m_eval(&eval), m_mode(mode), m_associatedSphere(0)
 {
-  m_betaSpheres.empty();
+  m_betaSpheres.clear();
 }
 
 QVector3D QTAIMODEIntegrator::integrate(QVector3D x0y0z0)
@@ -257,9 +257,7 @@ void QTAIMODEIntegrator::r8_f(qreal t, qreal y[], qreal yp[])
       break;
   }
 
-  qreal normGradient =
-    sqrt(gradient(0) * gradient(0) + gradient(1) * gradient(1) +
-         gradient(2) * gradient(2));
+  qreal normGradient = std::hypot(gradient(0), gradient(1), gradient(2));
 
   yp[0] = gradient(0) / normGradient;
   yp[1] = gradient(1) / normGradient;
@@ -1175,4 +1173,4 @@ qreal QTAIMODEIntegrator::r8_sign(qreal x)
 }
 //****************************************************************************80
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

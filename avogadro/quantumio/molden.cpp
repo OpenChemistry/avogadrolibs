@@ -19,6 +19,7 @@ using std::vector;
 namespace Avogadro::QuantumIO {
 
 using Core::Atom;
+using Core::BasisSet;
 using Core::GaussianSet;
 
 MoldenFile::MoldenFile()
@@ -111,6 +112,12 @@ void MoldenFile::processLine(std::istream& in)
     m_mode = VibrationalModes;
   } else if (Core::contains(line, "[INT]")) {
     m_mode = Intensities;
+  } else if (Core::contains(line, "[5D]")) {
+    m_cartesianD = false;
+  } else if (Core::contains(line, "[7F]")) {
+    m_cartesianF = false;
+  } else if (Core::contains(line, "[9G]")) {
+    m_cartesianG = false;
   } else if (Core::contains(line, "[")) { // unknown section
     m_mode = Unrecognized;
   } else {
@@ -127,7 +134,7 @@ void MoldenFile::processLine(std::istream& in)
         break;
       case GTO: {
         // TODO: detect dead files and make bullet-proof
-        int atom = Core::lexicalCast<int>(list[0]);
+        int atom = Core::lexicalCast<int>(list[0]).value_or(0);
 
         getline(in, line);
         line = Core::trimmed(line);
@@ -143,13 +150,23 @@ void MoldenFile::processLine(std::istream& in)
             shellType = GaussianSet::S;
           else if (shell == "p")
             shellType = GaussianSet::P;
-          else if (shell == "d")
-            shellType = GaussianSet::D;
-          else if (shell == "f")
-            shellType = GaussianSet::F;
-          else if (shell == "g")
-            shellType = GaussianSet::G;
-
+          else if (shell == "d") {
+            if (m_cartesianD)
+              shellType = GaussianSet::D;
+            else
+              shellType = GaussianSet::D5;
+          } else if (shell == "f") {
+            if (m_cartesianF)
+              shellType = GaussianSet::F;
+            else
+              shellType = GaussianSet::F7;
+          } else if (shell == "g") {
+            if (m_cartesianG)
+              shellType = GaussianSet::G;
+            else
+              shellType = GaussianSet::G9;
+          }
+          // TODO if Molden ever supports h, i, j
           if (shellType != GaussianSet::UU) {
             m_shellTypes.push_back(shellType);
             m_shelltoAtom.push_back(atom);
@@ -157,7 +174,7 @@ void MoldenFile::processLine(std::istream& in)
             return;
           }
 
-          int numGTOs = Core::lexicalCast<int>(list[1]);
+          int numGTOs = Core::lexicalCast<int>(list[1]).value_or(0);
           m_shellNums.push_back(numGTOs);
 
           // Now read all the exponents and contraction coefficients.
@@ -166,11 +183,11 @@ void MoldenFile::processLine(std::istream& in)
             line = Core::trimmed(line);
             list = Core::split(line, ' ');
             if (list.size() > 1) {
-              m_a.push_back(Core::lexicalCast<double>(list[0]));
-              m_c.push_back(Core::lexicalCast<double>(list[1]));
+              m_a.push_back(Core::lexicalCast<double>(list[0]).value_or(0.0));
+              m_c.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
             }
             if (shellType == GaussianSet::SP && list.size() > 2)
-              m_csp.push_back(Core::lexicalCast<double>(list[2]));
+              m_csp.push_back(Core::lexicalCast<double>(list[2]).value_or(0.0));
           }
           // Start reading the next shell.
           getline(in, line);
@@ -178,17 +195,53 @@ void MoldenFile::processLine(std::istream& in)
         }
       } break;
 
-      case MO:
+      case MO: {
+        // Buffer for orbital header fields - we need to wait for Spin line
+        // before committing, since Ene/Sym may appear before Spin
+        double pendingEnergy = 0.0;
+        bool havePendingEnergy = false;
+        string pendingSymmetry;
+        bool havePendingSymmetry = false;
+        bool pendingSpinBeta = m_currentSpinBeta; // default to current state
+
         // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
         while (!line.empty() && Core::contains(line, "=")) {
+          if (Core::contains(line, "Occup"))
+            m_electrons += Core::lexicalCast<int>(list[1]).value_or(0);
+          else if (Core::contains(line, "Ene")) {
+            pendingEnergy = Core::lexicalCast<double>(list[1]).value_or(0.0) *
+                            HARTREE_TO_EV_D;
+            havePendingEnergy = true;
+          } else if (Core::contains(line, "Spin")) {
+            // Check for Beta spin - handle both "Spin= Beta" and "Spin=Beta"
+            if (Core::contains(line, "Beta")) {
+              pendingSpinBeta = true;
+              m_openShell = true;
+            } else {
+              pendingSpinBeta = false;
+            }
+          } else if (Core::contains(line, "Sym")) {
+            pendingSymmetry = list[1];
+            havePendingSymmetry = true;
+          }
           getline(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
-          if (Core::contains(line, "Occup"))
-            m_electrons += Core::lexicalCast<int>(list[1]);
-          else if (Core::contains(line, "Ene"))
-            m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[1]));
-          // TODO: track alpha beta spin
+        }
+
+        // Now commit the buffered values with the correct spin
+        m_currentSpinBeta = pendingSpinBeta;
+        if (havePendingEnergy) {
+          if (m_currentSpinBeta)
+            m_betaOrbitalEnergy.push_back(pendingEnergy);
+          else
+            m_orbitalEnergy.push_back(pendingEnergy);
+        }
+        if (havePendingSymmetry) {
+          if (m_currentSpinBeta)
+            m_betaSymmetryLabels.push_back(pendingSymmetry);
+          else
+            m_symmetryLabels.push_back(pendingSymmetry);
         }
 
         // Parse the molecular orbital coefficients.
@@ -198,22 +251,30 @@ void MoldenFile::processLine(std::istream& in)
           if (list.size() < 2)
             break;
 
-          m_MOcoeffs.push_back(Core::lexicalCast<double>(list[1]));
+          if (m_currentSpinBeta)
+            m_betaMOcoeffs.push_back(
+              Core::lexicalCast<double>(list[1]).value_or(0.0));
+          else
+            m_MOcoeffs.push_back(
+              Core::lexicalCast<double>(list[1]).value_or(0.0));
 
+          // we might go too far ahead
+          currentPos = in.tellg();
           getline(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
         }
-        // go back to previous line
+        // go back one line
         in.seekg(currentPos);
-        break;
+      } break;
 
       case Frequencies:
         // Parse the frequencies.
         m_frequencies.clear();
         while (!line.empty() && !Core::contains(line, "[")) {
           line = Core::trimmed(line);
-          m_frequencies.push_back(Core::lexicalCast<double>(line));
+          m_frequencies.push_back(
+            Core::lexicalCast<double>(line).value_or(0.0));
           currentPos = in.tellg();
           getline(in, line);
         }
@@ -238,10 +299,13 @@ void MoldenFile::processLine(std::istream& in)
               if (list.size() < 3)
                 break;
 
-              m_vibDisplacements.back().push_back(Vector3(
-                Core::lexicalCast<double>(list[0]) * BOHR_TO_ANGSTROM_D,
-                Core::lexicalCast<double>(list[1]) * BOHR_TO_ANGSTROM_D,
-                Core::lexicalCast<double>(list[2]) * BOHR_TO_ANGSTROM_D));
+              m_vibDisplacements.back().push_back(
+                Vector3(Core::lexicalCast<double>(list[0]).value_or(0.0) *
+                          BOHR_TO_ANGSTROM_D,
+                        Core::lexicalCast<double>(list[1]).value_or(0.0) *
+                          BOHR_TO_ANGSTROM_D,
+                        Core::lexicalCast<double>(list[2]).value_or(0.0) *
+                          BOHR_TO_ANGSTROM_D));
 
               currentPos = in.tellg();
               getline(in, line);
@@ -267,9 +331,11 @@ void MoldenFile::processLine(std::istream& in)
         // could be just IR or two pieces including Raman
         while (!line.empty() && !Core::contains(line, "[")) {
           list = Core::split(line, ' ');
-          m_IRintensities.push_back(Core::lexicalCast<double>(list[0]));
+          m_IRintensities.push_back(
+            Core::lexicalCast<double>(list[0]).value_or(0.0));
           if (list.size() == 2)
-            m_RamanIntensities.push_back(Core::lexicalCast<double>(list[1]));
+            m_RamanIntensities.push_back(
+              Core::lexicalCast<double>(list[1]).value_or(0.0));
 
           if (m_IRintensities.size() == m_frequencies.size()) {
             // we're done
@@ -292,10 +358,13 @@ void MoldenFile::readAtom(const vector<string>& list)
   // element_name number atomic_number x y z
   if (list.size() < 6)
     return;
-  m_aNums.push_back(Core::lexicalCast<int>(list[2]));
-  m_aPos.push_back(Core::lexicalCast<double>(list[3]) * m_coordFactor);
-  m_aPos.push_back(Core::lexicalCast<double>(list[4]) * m_coordFactor);
-  m_aPos.push_back(Core::lexicalCast<double>(list[5]) * m_coordFactor);
+  m_aNums.push_back(Core::lexicalCast<int>(list[2]).value_or(0));
+  m_aPos.push_back(Core::lexicalCast<double>(list[3]).value_or(0.0) *
+                   m_coordFactor);
+  m_aPos.push_back(Core::lexicalCast<double>(list[4]).value_or(0.0) *
+                   m_coordFactor);
+  m_aPos.push_back(Core::lexicalCast<double>(list[5]).value_or(0.0) *
+                   m_coordFactor);
 }
 
 void MoldenFile::load(GaussianSet* basis)
@@ -319,6 +388,22 @@ void MoldenFile::load(GaussianSet* basis)
         ++nGTO;
       }
     } else {
+      // adjust the shell types if needed
+      if (!m_cartesianD && m_shellTypes[i] == GaussianSet::D)
+        m_shellTypes[i] = GaussianSet::D5;
+      else if (m_cartesianD && m_shellTypes[i] == GaussianSet::D5)
+        m_shellTypes[i] = GaussianSet::D;
+
+      if (!m_cartesianF && m_shellTypes[i] == GaussianSet::F)
+        m_shellTypes[i] = GaussianSet::F7;
+      else if (m_cartesianF && m_shellTypes[i] == GaussianSet::F7)
+        m_shellTypes[i] = GaussianSet::F;
+
+      if (!m_cartesianG && m_shellTypes[i] == GaussianSet::G)
+        m_shellTypes[i] = GaussianSet::G9;
+      else if (m_cartesianG && m_shellTypes[i] == GaussianSet::G9)
+        m_shellTypes[i] = GaussianSet::G;
+
       int b = basis->addBasis(m_shelltoAtom[i] - 1, m_shellTypes[i]);
       for (int j = 0; j < m_shellNums[i]; ++j) {
         basis->addGto(b, m_c[nGTO], m_a[nGTO]);
@@ -327,10 +412,35 @@ void MoldenFile::load(GaussianSet* basis)
     }
   }
   // Now to load in the MO coefficients
-  if (m_MOcoeffs.size())
-    basis->setMolecularOrbitals(m_MOcoeffs);
-  if (m_orbitalEnergy.size())
-    basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
+  if (m_openShell) {
+    // Set SCF type to UHF for open-shell calculations
+    basis->setScfType(Core::Uhf);
+
+    // Alpha orbitals (stored in m_MOcoeffs)
+    if (m_MOcoeffs.size())
+      basis->setMolecularOrbitals(m_MOcoeffs, BasisSet::Alpha);
+    if (m_orbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_orbitalEnergy, BasisSet::Alpha);
+    if (m_symmetryLabels.size())
+      basis->setSymmetryLabels(m_symmetryLabels, BasisSet::Alpha);
+
+    // Beta orbitals
+    if (m_betaMOcoeffs.size())
+      basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
+    if (m_betaOrbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, BasisSet::Beta);
+    if (m_betaSymmetryLabels.size())
+      basis->setSymmetryLabels(m_betaSymmetryLabels, BasisSet::Beta);
+  } else {
+    // Closed-shell (RHF) - use Paired type
+    basis->setScfType(Core::Rhf);
+    if (m_MOcoeffs.size())
+      basis->setMolecularOrbitals(m_MOcoeffs);
+    if (m_orbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
+    if (m_symmetryLabels.size())
+      basis->setSymmetryLabels(m_symmetryLabels);
+  }
 }
 
 void MoldenFile::outputAll()

@@ -45,7 +45,7 @@ private:
   void unregisterFileFormats();
   void registerFileFormats();
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H

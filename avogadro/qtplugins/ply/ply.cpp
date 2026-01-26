@@ -31,9 +31,7 @@ PLY::PLY(QObject* p)
   connect(m_action, SIGNAL(triggered()), SLOT(render()));
 }
 
-PLY::~PLY()
-{
-}
+PLY::~PLY() {}
 
 QList<QAction*> PLY::actions() const
 {
@@ -82,4 +80,4 @@ void PLY::render()
   file.close();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

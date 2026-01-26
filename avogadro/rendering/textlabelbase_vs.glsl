@@ -1,3 +1,5 @@
+#version 400
+precision highp float;
 // Modelview/projection matrix
 uniform mat4 mv;
 uniform mat4 proj;
@@ -9,14 +11,14 @@ uniform vec3 anchor;
 uniform float radius;
 
 // Vertex attributes.
-attribute vec2 offset;
-attribute vec2 texCoord;
+in vec2 offset;
+in vec2 texCoord;
 
 // Viewport dimensions:
 uniform ivec2 vpDims;
 
 // Texture coordinate.
-varying vec2 texc;
+out vec2 texc;
 
 // Given a clip coordinate, align the vertex to the nearest pixel center.
 void alignToPixelCenter(inout vec4 clipCoord)

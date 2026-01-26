@@ -10,6 +10,7 @@
 #include <avogadro/core/utilities.h>
 
 using Avogadro::Core::Elements;
+using namespace std::string_literals;
 
 TEST(ElementTest, symbolSingles)
 {
@@ -31,9 +32,9 @@ TEST(ElementTest, symbolDoubles)
 
 TEST(ElementTest, names)
 {
-  EXPECT_STREQ(Elements::name(1), "Hydrogen");
-  EXPECT_STREQ(Elements::name(6), "Carbon");
-  EXPECT_STREQ(Elements::name(Elements::atomicNumberFromSymbol("Fe")), "Iron");
+  EXPECT_EQ(Elements::name(1), "Hydrogen"s);
+  EXPECT_EQ(Elements::name(6), "Carbon"s);
+  EXPECT_EQ(Elements::name(Elements::atomicNumberFromSymbol("Fe")), "Iron"s);
 }
 
 TEST(ElementTest, masses)
@@ -79,6 +80,15 @@ TEST(ElementTest, colors)
   EXPECT_EQ(Elements::color(8)[0], 255);
   EXPECT_EQ(Elements::color(8)[1], 13);
   EXPECT_EQ(Elements::color(8)[2], 13);
+}
+
+TEST(ElementTest, isotopes)
+{
+  EXPECT_EQ(Elements::isotopeMass(1, 0), 1.00782503223);
+  EXPECT_EQ(Elements::isotopeMass(1, 1), 1.00782503223);
+  EXPECT_EQ(Elements::isotopeMass(6, 12), 12.0);
+  EXPECT_EQ(Elements::isotopeMass(6, 0), Elements::isotopeMass(6, 12));
+  // TODO: spot-check other isotopes
 }
 
 TEST(ElementTest, dummyElement)

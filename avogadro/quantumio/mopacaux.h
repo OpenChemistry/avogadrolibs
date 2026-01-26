@@ -72,6 +72,9 @@ private:
   double m_area;
   double m_volume;
 
+  std::vector<double> m_energies;
+  std::vector<double> m_forces;
+
   std::vector<int> m_shellTypes;
   std::vector<int> m_shellNums;
   std::vector<int> m_shelltoAtom;

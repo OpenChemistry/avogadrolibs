@@ -5,11 +5,14 @@
 
 #include "mdlformat.h"
 
+#include "fileformatmanager.h"
+
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <istream>
@@ -21,6 +24,7 @@
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
+using Avogadro::Core::endsWith;
 using Avogadro::Core::lexicalCast;
 using Avogadro::Core::split;
 using Avogadro::Core::startsWith;
@@ -39,7 +43,8 @@ namespace {
 
 // Helper function to handle partial charge property blocks
 // e.g. PUBCHEM_MMFF94_PARTIAL_CHARGES
-void handlePartialCharges(Core::Molecule& mol, std::string data)
+void handlePartialCharges(Core::Molecule& mol, std::string data,
+                          std::string name = "MMFF94")
 {
   // the string starts with the number of charges
   // then atom index  charge
@@ -72,7 +77,15 @@ void handlePartialCharges(Core::Molecule& mol, std::string data)
     charges(index - 1, 0) = charge;
   }
 
-  mol.setPartialCharges("MMFF94", charges);
+  // if present, remove atom.dpos and CHARGES from the string
+  if (startsWith(name, "atom.dpos")) {
+    name = name.substr(9, name.size() - 16);
+  }
+  if (endsWith(name, "CHARGES")) {
+    name = name.substr(0, name.size() - 7);
+  }
+
+  mol.setPartialCharges(name, charges);
 }
 } // namespace
 
@@ -97,8 +110,46 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     return false;
   }
 
-  // Skip the next two lines (generator, and comment).
+  // check the generator line for 2D vs 3D
   getline(in, buffer);
+  // e.g.   -OEChem-01062507112D
+  // check the last 2 characters
+  if (buffer.size() >= 2 && buffer.compare(buffer.size() - 2, 2, "2D") == 0) {
+    m_is2D = true;
+
+    // we should use Open Babel and --gen3D
+    FileFormat* reader = nullptr;
+    std::vector<const FileFormat*> readers =
+      Io::FileFormatManager::instance().fileFormatsFromFileExtension(
+        "sdf", FileFormat::File | FileFormat::Read);
+
+    // loop through writers to check for "cclib" or "Open Babel"
+    for (const FileFormat* r : readers) {
+      if (r->identifier().compare(0, 9, "OpenBabel") == 0) {
+        reader = r->newInstance();
+        break;
+      }
+    }
+
+    // make sure to generate 3D coordinates
+    std::string options("{ \"arguments\": [\"--gen3D\"] }");
+    auto currentPos = in.tellg();
+    if (reader) {
+      reader->setOptions(options);
+      in.clear();
+      in.seekg(0);
+      if (reader->read(in, mol)) {
+        delete reader;
+        return true;
+      } else {
+        in.clear();
+        in.seekg(currentPos);
+        // continue with normal parsing
+      }
+      delete reader;
+    }
+  }
+
   getline(in, buffer);
   if (!in.good()) {
     appendError("Error reading generator and comment lines.");
@@ -161,10 +212,18 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     string element(trimmed(buffer.substr(31, 3)));
-    auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))));
+    auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))).value_or(0));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       Atom newAtom = mol.addAtom(atomicNum);
+      if (element == "D") {
+        newAtom.setAtomicNumber(1);
+        newAtom.setIsotope(2);
+      } else if (element == "T") {
+        newAtom.setAtomicNumber(1);
+        newAtom.setIsotope(3);
+      }
+
       newAtom.setPosition3d(pos);
       // In case there's no CHG property
       if (charge == 4) // doublet radical
@@ -214,8 +273,6 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                 static_cast<unsigned char>(order));
   }
 
-  std::cout << "read atoms and bonds" << std::endl;
-
   // Parse the properties block until the end of the file.
   // Property lines count is not used, as it it now unsupported.
   bool foundEnd(false);
@@ -224,7 +281,6 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (!in.good() || buffer.size() < 6) {
       break;
     }
-    std::cout << " prefix " << buffer.substr(0, 6) << std::endl;
 
     string prefix = buffer.substr(0, 6);
     if (prefix == "M  END") {
@@ -266,7 +322,8 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       }
 
       for (size_t i = 0; i < entryCount; i++) {
-        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        [[maybe_unused]] size_t index(
+          lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
           appendError("Error parsing radical atom index:" +
                       buffer.substr(10 + 8 * i, 3));
@@ -306,13 +363,15 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                       buffer.substr(14 + 8 * i, 3));
           return false;
         }
-        // TODO: Implement isotope setting
-        // mol.atom(index).setIsotope(isotope);
+        mol.setIsotope(index, isotope);
       }
+    } // isotope
+    else {
+#ifndef NDEBUG
+      std::cout << " prefix " << buffer.substr(0, 6) << std::endl;
+#endif
     }
   }
-
-  std::cout << " read properties " << std::endl;
 
   if (!foundEnd) {
     appendError("Error, ending tag for file not found.");
@@ -353,8 +412,13 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         // check for partial charges
         if (dataName == "PUBCHEM_MMFF94_PARTIAL_CHARGES")
           handlePartialCharges(mol, dataValue);
+        else if (startsWith(dataName, "atom.dpos") &&
+                 endsWith(dataName, "CHARGES"))
+          // remove the "CHARGES" from the end of the string
+          handlePartialCharges(mol, dataValue, dataName);
         else
           mol.setData(dataName, dataValue);
+
         dataName.clear();
         dataValue.clear();
         inValue = false;
@@ -392,7 +456,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     // convert the idx to an atom index
     // and set the label
     std::string idx = mol.data("idx").toString();
-    size_t atomIdx = lexicalCast<size_t>(idx);
+    size_t atomIdx = lexicalCast<size_t>(idx).value_or(0);
     mol.setAtomLabel(atomIdx, pka);
   }
 
@@ -449,6 +513,13 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     string element(trimmed(atomData[3]));
     unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
     Atom newAtom = mol.addAtom(atomicNum);
+    if (element == "D") {
+      newAtom.setAtomicNumber(1);
+      newAtom.setIsotope(2);
+    } else if (element == "T") {
+      newAtom.setAtomicNumber(1);
+      newAtom.setIsotope(3);
+    }
 
     Vector3 pos;
     pos.x() = lexicalCast<Real>(atomData[4], ok);
@@ -500,8 +571,11 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
             appendError("Failed to parse isotope type: " + key);
             return false;
           }
-          // TODO: handle isotopes
-          // mol.atom(i).setIsotope(isotope);
+          mol.setIsotope(newAtom.index(), isotope);
+        } else {
+#ifndef NDEBUG
+          std::cerr << "Unknown key: " << key << std::endl;
+#endif
         }
       } // end of key-value loop
     }
@@ -608,6 +682,10 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
   if (m_writeProperties) {
     const auto dataMap = mol.dataMap();
     for (const auto& key : dataMap.names()) {
+      // skip some keys
+      if (key == "modelView" || key == "projection")
+        continue;
+
       out << "> <" << key << ">\n";
       out << dataMap.value(key).toString() << "\n";
       out << "\n"; // empty line between data blocks
@@ -623,7 +701,25 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
 bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
 {
   // Header lines.
-  out << mol.data("name").toString() << "\n  Avogadro\n\n";
+  out << mol.data("name").toString() << "\n";
+
+  // Mol block header - need to indicate 3D coords
+  // e.g.   Avogadro08072512293D
+  // name of program MMDDYYHM3D
+  auto now = std::chrono::system_clock::now();
+  // Convert to time_t for use with ctime functions
+  std::time_t time_t_now = std::chrono::system_clock::to_time_t(now);
+  // Convert to a local time structure (tm)
+  std::tm* local_time = std::localtime(&time_t_now);
+
+  // Format the time using std::put_time
+  // %m: Month as decimal number (01-12)
+  // %d: Day of the month as decimal number (01-31)
+  // %y: Year without century (00-99)
+  // %H: Hour in 24-hour format (00-23)
+  // %M: Minute as decimal number (00-59)
+  out << "  Avogadro" << std::put_time(local_time, "%m%d%y%H%M") << "3D\n\n";
+
   // Counts line.
   if (mol.atomCount() > 999 || mol.bondCount() > 999) {
     // we need V3000 support for big molecules
@@ -669,6 +765,10 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   if (m_writeProperties) {
     const auto dataMap = mol.dataMap();
     for (const auto& key : dataMap.names()) {
+      // skip some keys
+      if (key == "modelView" || key == "projection")
+        continue;
+
       out << "> <" << key << ">\n";
       out << dataMap.value(key).toString() << "\n";
       out << "\n"; // empty line between data blocks

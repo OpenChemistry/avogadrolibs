@@ -124,8 +124,7 @@ public:
    * @return A SubmitStatus enum value indicating the result of the submission.
    */
   static SubmitStatus submitJob(QWidget* parent_, const QString& caption,
-                                JobObject& jobTemplate,
-                                SubmitOptions options,
+                                JobObject& jobTemplate, SubmitOptions options,
                                 unsigned int* moleQueueId = nullptr,
                                 int* submissionRequestId = nullptr);
 

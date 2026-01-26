@@ -28,6 +28,12 @@ inline Variant::Variant(T v) : m_type(Null)
 }
 
 template <>
+inline Variant::Variant(char v) : m_type(Int)
+{
+  m_value._int = static_cast<unsigned char>(v);
+}
+
+template <>
 inline Variant::Variant(const char* v) : m_type(String)
 {
   m_value.string = new std::string(v);
@@ -150,7 +156,7 @@ inline bool Variant::setValue(char v)
   clear();
 
   m_type = Int;
-  m_value._int = v;
+  m_value._int = static_cast<unsigned char>(v);
 
   return true;
 }
@@ -376,7 +382,7 @@ inline void* Variant::value() const
   if (m_type == Pointer)
     return m_value.pointer;
 
-  return 0;
+  return nullptr;
 }
 
 template <>
@@ -453,13 +459,13 @@ inline void Variant::clear()
 {
   if (m_type == String) {
     delete m_value.string;
-    m_value.string = 0;
+    m_value.string = nullptr;
   } else if (m_type == Matrix) {
     delete m_value.matrix;
-    m_value.matrix = 0;
+    m_value.matrix = nullptr;
   } else if (m_type == Vector) {
     delete m_value.vector;
-    m_value.vector = 0;
+    m_value.vector = nullptr;
   }
 
   m_type = Null;

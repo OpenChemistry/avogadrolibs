@@ -38,7 +38,7 @@ public:
   explicit OrbitalWidget(QWidget* parent = nullptr,
                          Qt::WindowFlags f = Qt::Widget);
   //! Deconstructor
-  virtual ~OrbitalWidget();
+  ~OrbitalWidget() override;
 
   double isovalue() { return m_isovalue; };
   OrbitalQuality defaultQuality() { return m_quality; };
@@ -63,16 +63,12 @@ public slots:
   void setDefaults(OrbitalWidget::OrbitalQuality quality, double isovalue,
                    bool HOMOFirst);
   void setPrecalcSettings(bool limit, int range);
-  void initializeProgress(int orbital, int min, int max, int stage,
-                          int totalStages);
-  void nextProgressStage(int orbital, int newmin, int newmax);
-  void updateProgress(int orbital, int current);
-  void calculationComplete(int orbital);
-  void calculationQueued(int orbital);
 
 signals:
-  void orbitalSelected(unsigned int orbital);
-  void renderRequested(unsigned int orbital, double resolution);
+  void orbitalSelected(unsigned int orbital,
+                       Core::BasisSet::ElectronType electronType);
+  void renderRequested(unsigned int orbital, double resolution,
+                       Core::BasisSet::ElectronType electronType);
   void calculateAll();
 
 private slots:

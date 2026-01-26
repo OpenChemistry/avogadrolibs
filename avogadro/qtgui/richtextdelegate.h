@@ -20,7 +20,7 @@ class AVOGADROQTGUI_EXPORT RichTextDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  explicit RichTextDelegate(QObject* parent = 0);
+  explicit RichTextDelegate(QObject* parent = nullptr);
   ~RichTextDelegate() override;
 
   QSize sizeHint(const QStyleOptionViewItem& o,

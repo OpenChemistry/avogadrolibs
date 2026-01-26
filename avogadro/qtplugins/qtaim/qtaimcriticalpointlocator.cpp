@@ -157,7 +157,12 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
 
   QList<QVector3D> nuclearCriticalPoints;
   QFile nuclearCriticalPointsFile(nuclearCriticalPointsFileName);
-  nuclearCriticalPointsFile.open(QIODevice::ReadOnly);
+  if (!nuclearCriticalPointsFile.open(QIODevice::ReadOnly)) {
+    QMessageBox::critical(
+      nullptr, QObject::tr("Error"),
+      QObject::tr("Cannot read file %1.").arg(nuclearCriticalPointsFileName));
+    return {};
+  }
   QDataStream nuclearCriticalPointsFileIn(&nuclearCriticalPointsFile);
   nuclearCriticalPointsFileIn >> nuclearCriticalPoints;
   nuclearCriticalPointsFile.close();
@@ -349,19 +354,19 @@ QTAIMCriticalPointLocator::QTAIMCriticalPointLocator(QTAIMWavefunction& wfn)
 {
   m_wfn = &wfn;
 
-  m_nuclearCriticalPoints.empty();
-  m_bondCriticalPoints.empty();
-  m_ringCriticalPoints.empty();
-  m_cageCriticalPoints.empty();
+  m_nuclearCriticalPoints.clear();
+  m_bondCriticalPoints.clear();
+  m_ringCriticalPoints.clear();
+  m_cageCriticalPoints.clear();
 
-  m_laplacianAtBondCriticalPoints.empty();
-  m_ellipticityAtBondCriticalPoints.empty();
+  m_laplacianAtBondCriticalPoints.clear();
+  m_ellipticityAtBondCriticalPoints.clear();
 
-  m_bondPaths.empty();
-  m_bondedAtoms.empty();
+  m_bondPaths.clear();
+  m_bondedAtoms.clear();
 
-  m_electronDensitySources.empty();
-  m_electronDensitySinks.empty();
+  m_electronDensitySources.clear();
+  m_electronDensitySinks.clear();
 }
 
 void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
@@ -441,7 +446,11 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
   QString nuclearCriticalPointsFileName =
     QTAIMCriticalPointLocator::temporaryFileName();
   QFile nuclearCriticalPointsFile(nuclearCriticalPointsFileName);
-  nuclearCriticalPointsFile.open(QIODevice::WriteOnly);
+  if (!nuclearCriticalPointsFile.open(QIODevice::WriteOnly)) {
+    QMessageBox::critical(nullptr, QObject::tr("Error"),
+                          QObject::tr("Failed to create a temporary file."));
+    return;
+  }
   QDataStream nuclearCriticalPointsOut(&nuclearCriticalPointsFile);
   nuclearCriticalPointsOut << m_nuclearCriticalPoints;
   nuclearCriticalPointsFile.close();

@@ -122,6 +122,34 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
   return identifiers;
 }
 
+// order of preference for the built-in methods
+const std::vector<std::string> METHOD_TIER_LIST = { "eem", "mmff94",
+                                                    "gasteiger" };
+
+std::string ChargeManager::recommendedModel(
+  const Core::Molecule& molecule) const
+{
+  auto identifiers = identifiersForMolecule(molecule);
+
+  // first, we look through the identifiers to see if there's
+  // something not in the built-in list
+  // i.e., read from a file or installed by a user, try that first
+  for (auto option : identifiers) {
+    if (std::find(METHOD_TIER_LIST.begin(), METHOD_TIER_LIST.end(), option) ==
+        METHOD_TIER_LIST.end())
+      return option;
+  }
+
+  // if not, we look through the built-in list in order
+  // of preference (e.g., eem > mmff94 > gasteiger)
+  for (auto option : METHOD_TIER_LIST) {
+    if (identifiers.find(option) != identifiers.end()) {
+      return option;
+    }
+  }
+  return "";
+}
+
 MatrixX ChargeManager::partialCharges(const std::string& identifier,
                                       Core::Molecule& molecule) const
 {

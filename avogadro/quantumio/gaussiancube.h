@@ -22,7 +22,7 @@ public:
 
   Operations supportedOperations() const override
   {
-    return Read | File | Stream | String;
+    return ReadWrite | File | Stream | String;
   }
 
   FileFormat* newInstance() const override { return new GaussianCube; }
@@ -48,7 +48,7 @@ private:
   void outputAll();
 }; // End GaussianCube
 
-} // End QuantumIO namespace
-} // End Avogadro namespace
+} // namespace QuantumIO
+} // namespace Avogadro
 
 #endif

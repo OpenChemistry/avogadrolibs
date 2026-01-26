@@ -11,9 +11,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-class QNetworkAccessManager;
-class QNetworkReply;
-
 #include <avogadro/core/variantmap.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -33,26 +30,26 @@ enum FixedRowType
   // these are the fixed rows
 };
 
+namespace QtPlugins {
+
 class MolecularModel : public QAbstractTableModel
 {
   Q_OBJECT
 
 public slots:
   void updateTable(unsigned int flags);
-  void updateNameReady(QNetworkReply* reply); // reply from network
-  void canUpdateName();                       // don't do it too often
 
 public:
-  explicit MolecularModel(QObject* parent = 0);
+  explicit MolecularModel(QObject* parent = nullptr);
 
-  int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  QVariant data(const QModelIndex& index, int role) const;
-  Qt::ItemFlags flags(const QModelIndex& index) const;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex& index, int role) const override;
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
   bool setData(const QModelIndex& index, const QVariant& value,
-               int role = Qt::EditRole);
+               int role = Qt::EditRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,
-                      int role = Qt::DisplayRole) const;
+                      int role = Qt::DisplayRole) const override;
 
   void setMolecule(QtGui::Molecule* molecule);
 
@@ -60,16 +57,10 @@ public:
 
 private:
   QtGui::Molecule* m_molecule = nullptr;
-  mutable QString m_name;
-  mutable bool m_nameRequestPending = false;
-
-  bool m_autoName = true;
-  bool m_nameUpdateNeeded = true;
   Core::VariantMap m_propertiesCache;
-
-  QNetworkAccessManager* m_network = nullptr;
 };
 
+} // namespace QtPlugins
 } // end namespace Avogadro
 
 #endif

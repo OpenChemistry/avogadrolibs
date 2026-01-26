@@ -28,6 +28,7 @@ if (@QT_VERSION@ EQUAL 6)
   find_dependency(Qt6Gui)
   find_dependency(Qt6Network)
   find_dependency(Qt6Concurrent)
+  find_dependency(JKQTPlotter6 REQUIRED)
 endif()
 
 if(NOT TARGET AvogadroCore)

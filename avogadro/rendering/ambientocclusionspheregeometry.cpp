@@ -9,6 +9,7 @@
 #include "scene.h"
 
 #include "bufferobject.h"
+#include "vertexarrayobject.h"
 
 #include "shader.h"
 #include "shaderprogram.h"
@@ -1066,6 +1067,7 @@ public:
 
   BufferObject vbo;
   BufferObject ibo;
+  VertexArrayObject vao;
 
   Shader vertexShader;
   Shader fragmentShader;
@@ -1081,13 +1083,15 @@ public:
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry()
   : m_dirty(false), d(new Private)
-{}
+{
+}
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry(
   const AmbientOcclusionSphereGeometry& other)
   : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
     m_dirty(true), d(new Private)
-{}
+{
+}
 
 AmbientOcclusionSphereGeometry::~AmbientOcclusionSphereGeometry()
 {
@@ -1103,6 +1107,24 @@ void AmbientOcclusionSphereGeometry::update()
 {
   if (m_indices.empty() || m_spheres.empty())
     return;
+
+  // Build and link the shader if it has not been used yet.
+  // Must be done before VAO setup since we need the program for attribute
+  // setup.
+  if (d->vertexShader.type() == Shader::Unknown) {
+    d->vertexShader.setType(Shader::Vertex);
+    d->vertexShader.setSource(sphere_ao_render_vs);
+    d->fragmentShader.setType(Shader::Fragment);
+    d->fragmentShader.setSource(sphere_ao_render_fs);
+    if (!d->vertexShader.compile())
+      cout << d->vertexShader.error() << endl;
+    if (!d->fragmentShader.compile())
+      cout << d->fragmentShader.error() << endl;
+    d->program.attachShader(d->vertexShader);
+    d->program.attachShader(d->fragmentShader);
+    if (!d->program.link())
+      cout << d->program.error() << endl;
+  }
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
@@ -1124,20 +1146,13 @@ void AmbientOcclusionSphereGeometry::update()
 
     // calculate center
     Vector3f center(Vector3f::Zero());
-    for (auto & m_sphere : m_spheres)
+    for (auto& m_sphere : m_spheres)
       center += m_sphere.center;
     center /= static_cast<float>(nSpheres);
 
-    /*
-    d->translate = Eigen::Matrix4f::Identity();
-    d->translate(0, 3) = center.x();
-    d->translate(1, 3) = center.y();
-    d->translate(2, 3) = center.z();
-    */
-
     // calculate radius
     float radius = 0.0f;
-    for (auto & m_sphere : m_spheres)
+    for (auto& m_sphere : m_spheres)
       if ((m_sphere.center - center).norm() > radius)
         radius = (m_sphere.center - center).norm();
 
@@ -1180,6 +1195,45 @@ void AmbientOcclusionSphereGeometry::update()
     d->numberOfVertices = sphereVertices.size();
     d->numberOfIndices = sphereIndices.size();
 
+    // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
+    d->vao.bind();
+    d->vbo.bind();
+    d->ibo.bind();
+
+    if (!d->program.enableAttributeArray("a_pos"))
+      cout << d->program.error() << endl;
+    if (!d->program.useAttributeArray("a_pos",
+                                      ColorTextureVertex::vertexOffset(),
+                                      sizeof(ColorTextureVertex), FloatType, 3,
+                                      ShaderProgram::NoNormalize)) {
+      cout << d->program.error() << endl;
+    }
+    if (!d->program.enableAttributeArray("a_corner"))
+      cout << d->program.error() << endl;
+    if (!d->program.useAttributeArray("a_corner",
+                                      ColorTextureVertex::textureCoordOffset(),
+                                      sizeof(ColorTextureVertex), FloatType, 2,
+                                      ShaderProgram::NoNormalize)) {
+      cout << d->program.error() << endl;
+    }
+    if (!d->program.enableAttributeArray("a_tileOffset"))
+      cout << d->program.error() << endl;
+    if (!d->program.useAttributeArray("a_tileOffset",
+                                      ColorTextureVertex::textureCoord2Offset(),
+                                      sizeof(ColorTextureVertex), FloatType, 2,
+                                      ShaderProgram::NoNormalize)) {
+      cout << d->program.error() << endl;
+    }
+    if (!d->program.enableAttributeArray("a_color"))
+      cout << d->program.error() << endl;
+    if (!d->program.useAttributeArray(
+          "a_color", ColorTextureVertex::colorOffset(),
+          sizeof(ColorTextureVertex), UCharType, 3, ShaderProgram::Normalize)) {
+      cout << d->program.error() << endl;
+    }
+
+    d->vao.release();
+
     SphereAmbientOcclusionRenderer aoSphereRenderer(
       d->vbo, d->ibo, static_cast<int>(m_spheres.size()),
       static_cast<int>(d->numberOfVertices),
@@ -1192,22 +1246,6 @@ void AmbientOcclusionSphereGeometry::update()
 
     m_dirty = false;
   }
-
-  // Build and link the shader if it has not been used yet.
-  if (d->vertexShader.type() == Shader::Unknown) {
-    d->vertexShader.setType(Shader::Vertex);
-    d->vertexShader.setSource(sphere_ao_render_vs);
-    d->fragmentShader.setType(Shader::Fragment);
-    d->fragmentShader.setSource(sphere_ao_render_fs);
-    if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << endl;
-    if (!d->fragmentShader.compile())
-      cout << d->fragmentShader.error() << endl;
-    d->program.attachShader(d->vertexShader);
-    d->program.attachShader(d->fragmentShader);
-    if (!d->program.link())
-      cout << d->program.error() << endl;
-  }
 }
 
 void AmbientOcclusionSphereGeometry::render(const Camera& camera)
@@ -1215,7 +1253,7 @@ void AmbientOcclusionSphereGeometry::render(const Camera& camera)
   if (m_indices.empty() || m_spheres.empty())
     return;
 
-  // Prepare the VBOs, IBOs and shader program if necessary.
+  // Prepare the VBOs, IBOs, VAO, and shader program if necessary.
   update();
 
   glActiveTexture(GL_TEXTURE0);
@@ -1224,38 +1262,8 @@ void AmbientOcclusionSphereGeometry::render(const Camera& camera)
   if (!d->program.bind())
     cout << d->program.error() << endl;
 
-  d->vbo.bind();
-  d->ibo.bind();
-
-  // Set up our attribute arrays.
-  if (!d->program.enableAttributeArray("a_pos"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("a_pos", ColorTextureVertex::vertexOffset(),
-                                    sizeof(ColorTextureVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
-  }
-  if (!d->program.enableAttributeArray("a_corner"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray(
-        "a_corner", ColorTextureVertex::textureCoordOffset(),
-        sizeof(ColorTextureVertex), FloatType, 2, ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
-  }
-  if (!d->program.enableAttributeArray("a_tileOffset"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray(
-        "a_tileOffset", ColorTextureVertex::textureCoord2Offset(),
-        sizeof(ColorTextureVertex), FloatType, 2, ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
-  }
-  if (!d->program.enableAttributeArray("a_color"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray(
-        "a_color", ColorTextureVertex::colorOffset(),
-        sizeof(ColorTextureVertex), UCharType, 3, ShaderProgram::Normalize)) {
-    cout << d->program.error() << endl;
-  }
+  // Bind the VAO (captures all vertex attribute state)
+  d->vao.bind();
 
   // Set up our uniforms
   if (!d->program.setUniformValue("u_modelView", camera.modelView().matrix())) {
@@ -1295,19 +1303,12 @@ void AmbientOcclusionSphereGeometry::render(const Camera& camera)
     cout << d->program.error() << endl;
   }
 
-  // Render the loaded spheres using the shader and bound VBO.
+  // Render the loaded spheres using the shader and VAO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
                       static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
                       (const GLvoid*)nullptr);
 
-  d->vbo.release();
-  d->ibo.release();
-
-  d->program.disableAttributeArray("a_pos");
-  d->program.disableAttributeArray("a_color");
-  d->program.disableAttributeArray("a_corner");
-  d->program.disableAttributeArray("a_tileOffset");
-
+  d->vao.release();
   d->program.release();
 }
 
@@ -1362,4 +1363,4 @@ void AmbientOcclusionSphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

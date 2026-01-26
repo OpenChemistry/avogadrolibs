@@ -20,6 +20,7 @@
 
 using Avogadro::MoleQueue::InputGenerator;
 using Avogadro::QtGui::GenericHighlighter;
+using namespace std::string_literals;
 
 TEST(InputGeneratorTest, exercise)
 {
@@ -80,7 +81,7 @@ TEST(InputGeneratorTest, exercise)
   EXPECT_TRUE(gen.fileNames().contains("job.coords"));
   EXPECT_TRUE(gen.fileNames().contains("job.testFilePath"));
   EXPECT_TRUE(gen.fileNames().contains("debug_info"));
-  EXPECT_EQ(gen.mainFileName().toStdString(), std::string("job.opts"));
+  EXPECT_EQ(gen.mainFileName().toStdString(), "job.opts"s);
 
   // Validate the coordinates
   QString coords(gen.fileContents("job.coords"));

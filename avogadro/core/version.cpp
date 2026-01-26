@@ -12,4 +12,4 @@ const char* version()
   return AvogadroLibs_VERSION;
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro

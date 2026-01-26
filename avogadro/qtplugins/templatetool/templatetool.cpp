@@ -72,20 +72,20 @@ using Avogadro::Rendering::TextProperties;
 
 TemplateTool::TemplateTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(NULL), m_glWidget(NULL), m_renderer(NULL),
+    m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
     m_toolWidget(new TemplateToolWidget(qobject_cast<QWidget*>(parent_))),
     m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
-    m_fixValenceLater(false)
+    m_fixValenceLater(false), m_layerManager("Template")
 {
   QString shortcut = tr("Ctrl+3", "control-key 3");
   m_activateAction->setText(tr("Template"));
   m_activateAction->setToolTip(
-    tr("Template Tool \t(%1)\n\n"
+    tr("Template Tool\t(%1)\n\n"
        "Insert fragments, including metal centers.\n"
-       "Select an element and coordination geometry,"
+       "Select an element and coordination geometry, "
        "then click to insert a fragment.\n\n"
-       "Select a ligand or functional group and click"
+       "Select a ligand or functional group and click "
        "on a hydrogen atom to attach it.")
       .arg(shortcut));
   setIcon();
@@ -110,15 +110,24 @@ QWidget* TemplateTool::toolWidget() const
 QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
 {
   clearKeyPressBuffer();
-  if (!m_renderer)
-    return NULL;
+  if (!m_renderer || !m_molecule)
+    return nullptr;
 
   updatePressedButtons(e, false);
   m_clickPosition = e->pos();
 
-  if (m_molecule) {
-    m_molecule->setInteractive(true);
+  if (m_layerManager.activeLayerLocked()) {
+    // revert to navigation mode
+    return nullptr;
   }
+
+  // check if we have modifier keys
+  // if so, revert to navigation mode
+  // e.g., rotate, zoom
+  if (e->modifiers() == Qt::ShiftModifier || e->modifiers() == Qt::AltModifier)
+    return nullptr;
+
+  m_molecule->setInteractive(true);
 
   if (m_pressedButtons & Qt::LeftButton) {
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
@@ -126,10 +135,10 @@ QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
     switch (m_clickedObject.type) {
       case Rendering::InvalidType:
         emptyLeftClick(e);
-        return NULL;
+        return nullptr;
       case Rendering::AtomType:
         atomLeftClick(e);
-        return NULL;
+        return nullptr;
       default:
         break;
     }
@@ -139,19 +148,19 @@ QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
     switch (m_clickedObject.type) {
       case Rendering::AtomType:
         atomRightClick(e);
-        return NULL;
+        return nullptr;
       default:
         break;
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand* TemplateTool::mouseReleaseEvent(QMouseEvent* e)
 {
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   updatePressedButtons(e, true);
 
@@ -160,7 +169,7 @@ QUndoCommand* TemplateTool::mouseReleaseEvent(QMouseEvent* e)
   }
 
   if (m_clickedObject.type == Rendering::InvalidType)
-    return NULL;
+    return nullptr;
 
   switch (e->button()) {
     case Qt::LeftButton:
@@ -172,27 +181,37 @@ QUndoCommand* TemplateTool::mouseReleaseEvent(QMouseEvent* e)
       break;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand* TemplateTool::mouseMoveEvent(QMouseEvent* e)
 {
-  if (!m_renderer)
-    return NULL;
-
-  if (m_pressedButtons & Qt::LeftButton)
-    if (m_clickedObject.type == Rendering::AtomType)
-      atomLeftDrag(e);
-
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
 {
   if (e->text().isEmpty())
-    return NULL;
+    return nullptr;
 
   e->accept();
+
+  // check which tab is currently active
+  int currentTab = m_toolWidget->currentTab();
+
+  // if it's arrow keys, change tabs
+  if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right ||
+      e->key() == Qt::Key_BracketLeft || e->key() == Qt::Key_BracketRight) {
+    // cycle through tabs
+    // the widget will handle any wrap-around
+    if (e->key() == Qt::Key_Left || e->key() == Qt::Key_BracketLeft) {
+      currentTab--;
+    } else {
+      currentTab++;
+    }
+    m_toolWidget->setCurrentTab(currentTab);
+    return nullptr;
+  }
 
   // Set a timer to clear the buffer on first keypress:
   if (m_keyPressBuffer.isEmpty())
@@ -203,16 +222,87 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
 
   if (m_keyPressBuffer.size() >= 3) {
     clearKeyPressBuffer();
-    return NULL;
+    return nullptr;
   }
 
-  int atomicNum =
-    Core::Elements::atomicNumberFromSymbol(m_keyPressBuffer.toStdString());
+  if (currentTab == 0) {
+    // if it's + or -, change the formal charge
+    if (e->key() == Qt::Key_Plus || e->key() == Qt::Key_Minus) {
+      int formalCharge = m_toolWidget->formalCharge();
+      if (e->key() == Qt::Key_Plus)
+        formalCharge++;
+      else
+        formalCharge--;
+      m_toolWidget->setFormalCharge(formalCharge);
+      clearKeyPressBuffer();
+      return nullptr;
+    }
 
-  if (atomicNum != Avogadro::InvalidElement)
-    m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
+    // metal center -- interpret as an element
+    int atomicNum =
+      Core::Elements::atomicNumberFromSymbol(m_keyPressBuffer.toStdString());
 
-  return NULL;
+    if (atomicNum != Avogadro::InvalidElement)
+      m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
+    else {
+      // if it's a number, try a coordination number
+      bool ok = false;
+      int coordinationNumber = m_keyPressBuffer.toInt(&ok);
+      if (ok) {
+        unsigned char geometry = 0;
+        switch (coordinationNumber) {
+          // 1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8 are valid
+          case 1:
+            break;
+          case 2:
+            geometry = 1;
+            break;
+          case 3:
+            geometry = 2;
+            break;
+          case 4:
+            geometry = 3;
+            break;
+          case 44:
+            geometry = 4;
+            break;
+          case 5:
+            geometry = 5;
+            break;
+          case 55:
+            geometry = 6;
+            break;
+          case 6:
+            geometry = 7;
+            break;
+          case 66:
+            geometry = 8;
+            break;
+          case 7:
+            geometry = 9;
+            break;
+          case 8:
+            geometry = 10;
+            break;
+          default:
+            // do nothing, invalid coordination number
+            clearKeyPressBuffer();
+            break;
+        }
+        m_toolWidget->setCoordination(geometry);
+      }
+    }
+  } else if (currentTab == 1) {
+    // ligand
+    // e.g. bpy = bipyridine
+    // e.g. edta, tpy, etc.
+  } else if (currentTab == 2) {
+    // functional group
+    // e.g. c8 = octyl group
+    // p = phenyl group
+  }
+
+  return nullptr;
 }
 
 void TemplateTool::draw(Rendering::GroupNode&) {}
@@ -299,7 +389,7 @@ void TemplateTool::emptyLeftClick(QMouseEvent* e)
       return;
 
     // Add the atom and hydrogens around it following template
-    size_t centerIndex = 0;
+    [[maybe_unused]] size_t centerIndex = 0;
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
       if (templateMolecule.atomicNumber(i) != 1) {
         center = templateMolecule.atomPosition3d(i);
@@ -583,7 +673,8 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     // - first check to see if there is a bond
     Vector3 moleculeLigandOutVector(0.0, 0.0, 0.0);
     Vector3 displacement(0.0, 0.0, 0.0);
-    Vector3 centerPosition = m_molecule->atomPosition3d(selectedIndex);
+    [[maybe_unused]] Vector3 centerPosition =
+      m_molecule->atomPosition3d(selectedIndex);
     size_t moleculeCenterIndex = selectedIndex;
     size_t moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
 

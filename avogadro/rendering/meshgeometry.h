@@ -7,6 +7,7 @@
 #define AVOGADRO_RENDERING_MESHGEOMETRY_H
 
 #include "drawable.h"
+#include "packedvertex.h"
 
 #include <avogadro/core/array.h>
 
@@ -22,27 +23,6 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT MeshGeometry : public Drawable
 {
 public:
-  struct PackedVertex
-  {
-    Vector4ub color;          //  4 bytes
-    Vector3f normal;          // 12 bytes
-    Vector3f vertex;          // 12 bytes
-    unsigned char padding[4]; //  4 bytes
-
-    PackedVertex(const Vector4ub& c, const Vector3f& n, const Vector3f& v)
-      : color(c)
-      , normal(n)
-      , vertex(v)
-    {}
-
-    static int colorOffset() { return 0; }
-    static int normalOffset() { return static_cast<int>(sizeof(Vector4ub)); }
-    static int vertexOffset()
-    {
-      return normalOffset() + static_cast<int>(sizeof(Vector3f));
-    }
-  }; // 32 bytes total size - 16/32/64 are ideal for alignment.
-
   static const unsigned int InvalidIndex;
 
   MeshGeometry();
@@ -92,8 +72,7 @@ public:
    * the valid index range.
    * @{
    */
-  void addTriangle( size_t index1,  size_t index2,
-                    size_t index3);
+  void addTriangle(size_t index1, size_t index2, size_t index3);
   void addTriangles(const Core::Array<unsigned int>& indices);
   /** @} */
 

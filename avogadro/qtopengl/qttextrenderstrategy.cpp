@@ -260,4 +260,4 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtOpenGL

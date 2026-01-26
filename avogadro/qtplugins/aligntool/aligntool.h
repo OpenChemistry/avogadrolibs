@@ -41,6 +41,8 @@ public:
   {
     if (mol)
       m_molecule = mol->undoMolecule();
+
+    m_atoms.clear();
   }
 
   void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
@@ -54,8 +56,6 @@ public:
   QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
 
   void draw(Rendering::GroupNode& node) override;
-
-  Vector3ub contrastingColor(const Vector3ub& rgb) const;
 
   void shiftAtomToOrigin(Index atomIndex);
   void alignAtomToAxis(Index atomIndex, int axis);

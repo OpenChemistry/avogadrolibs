@@ -21,7 +21,7 @@ class PropertyView : public QTableView
 {
   Q_OBJECT
 public:
-  explicit PropertyView(PropertyType type, QWidget* parent = 0);
+  explicit PropertyView(PropertyType type, QWidget* parent = nullptr);
 
   void selectionChanged(const QItemSelection& selected,
                         const QItemSelection& previous) override;
@@ -38,8 +38,19 @@ private:
   PropertyType m_type;
   QtGui::Molecule* m_molecule;
   PropertyModel* m_model;
+  bool m_updatingSelection = false;
   void copySelectedRowsToClipboard();
   void openExportDialogBox();
+  void constrainSelectedRows();
+  void unconstrainSelectedRows();
+
+  void setFrozen(bool frozen);
+  void freezeAtom();
+  void unfreezeAtom();
+  void freezeX();
+  void freezeY();
+  void freezeZ();
+  void freezeAxis(int axis);
 };
 
 } // end namespace Avogadro

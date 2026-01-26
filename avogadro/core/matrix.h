@@ -22,6 +22,6 @@ using Matrix3f = Eigen::Matrix<float, 3, 3>;
 using Matrix4f = Eigen::Matrix<float, 4, 4>;
 using MatrixXf = Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>;
 
-} // end Avogadro namespace
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_MATRIX_H

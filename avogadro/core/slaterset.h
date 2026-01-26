@@ -130,7 +130,7 @@ public:
   void initCalculation();
 
   /**
-   * Accessors for the various properties of the GaussianSet.
+   * Accessors for the various properties of the SlaterSet.
    */
   std::vector<int>& slaterIndices() { return m_slaterIndices; }
   std::vector<int>& slaterTypes() { return m_slaterTypes; }

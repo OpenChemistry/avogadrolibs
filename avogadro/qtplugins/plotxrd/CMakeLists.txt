@@ -1,6 +1,11 @@
 # Download the executable if we are not to use the system one
-option(USE_SYSTEM_GENXRDPATTERN "Use the system genxrdpattern" ON)
+if(APPLE OR WIN32 OR INSTALL_BUNDLE_FILES)
+  option(USE_SYSTEM_GENXRDPATTERN "Use the system genxrdpattern" OFF)
+else()
+  option(USE_SYSTEM_GENXRDPATTERN "Use the system genxrdpattern" ON)
+endif()
 mark_as_advanced(USE_SYSTEM_GENXRDPATTERN)
+
 if(NOT USE_SYSTEM_GENXRDPATTERN)
   include(DownloadGenXrdPattern)
   DownloadGenXrdPattern()
@@ -24,4 +29,4 @@ avogadro_plugin(PlotXrd
   "${plotxrd_uis}"
 )
 
-target_link_libraries(PlotXrd PRIVATE Avogadro::Vtk)
+# target_link_libraries(PlotXrd PRIVATE Avogadro::Vtk)

@@ -24,7 +24,7 @@ public:
 
   Operations supportedOperations() const override
   {
-    return ReadWrite | MultiMolecule | File | Stream | String;
+    return Read | MultiMolecule | File | Stream | String;
   }
 
   FileFormat* newInstance() const override
@@ -61,7 +61,7 @@ public:
 
   Operations supportedOperations() const override
   {
-    return ReadWrite | MultiMolecule | File | Stream | String;
+    return Write | MultiMolecule | File | Stream | String;
   }
 
   FileFormat* newInstance() const override { return new LammpsDataFormat; }

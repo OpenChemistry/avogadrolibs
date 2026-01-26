@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>autoopt.svg</file>
+    </qresource>
+</RCC>

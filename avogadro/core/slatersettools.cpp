@@ -26,7 +26,7 @@ double SlaterSetTools::calculateMolecularOrbital(const Vector3& position,
 
   const MatrixX& matrix = m_basis->normalizedMatrix();
   int matrixSize(static_cast<int>(matrix.rows()));
-  int indexMO(mo - 1);
+  int indexMO(mo);
 
   // Now calculate the value of the density at this point in space
   double result(0.0);

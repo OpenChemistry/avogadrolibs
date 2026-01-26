@@ -7,12 +7,8 @@
 
 namespace Avogadro::Rendering {
 
-TextRenderStrategy::TextRenderStrategy()
-{
-}
+TextRenderStrategy::TextRenderStrategy() {}
 
-TextRenderStrategy::~TextRenderStrategy()
-{
-}
+TextRenderStrategy::~TextRenderStrategy() {}
 
-} // end namespace Avogadro
+} // namespace Avogadro::Rendering

@@ -15,7 +15,7 @@ extern "C"
 {
 #include <libmsym/msym.h>
 }
-}
+} // namespace msym
 
 namespace Avogadro {
 namespace QtPlugins {

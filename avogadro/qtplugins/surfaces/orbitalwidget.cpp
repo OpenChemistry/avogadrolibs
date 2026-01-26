@@ -16,8 +16,8 @@ using Avogadro::QtGui::RichTextDelegate;
 namespace Avogadro::QtPlugins {
 
 OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f), m_settings(0), m_quality(OQ_Low), m_isovalue(0.03),
-    m_precalc_limit(true), m_precalc_range(10),
+  : QWidget(parent, f), m_settings(nullptr), m_quality(OQ_Low),
+    m_isovalue(0.03), m_precalc_limit(true), m_precalc_range(10),
     m_tableModel(new OrbitalTableModel(this)),
     m_sortedTableModel(new OrbitalSortingProxyModel(this))
 {
@@ -37,6 +37,8 @@ OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
                                      new RichTextDelegate(this));
   // TODO: Support orbital symmetry labels
   ui.table->hideColumn(OrbitalTableModel::C_Symmetry);
+  // Hide the electron type column (used internally for alpha/beta tracking)
+  ui.table->hideColumn(OrbitalTableModel::C_ElectronType);
   ui.table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   connect(
@@ -155,8 +157,14 @@ void OrbitalWidget::tableClicked(const QItemSelection& selected)
   // of the first entry.
   if (selection.size() == 0)
     return;
-  int orbital = selection.first().row() + 1;
-  emit orbitalSelected(orbital);
+
+  int row = selection.first().row();
+
+  // Get the actual orbital index and electron type from the model
+  int orbital = m_tableModel->orbitalIndex(row);
+  auto electronType = m_tableModel->electronType(row);
+
+  emit orbitalSelected(orbital, electronType);
 }
 
 void OrbitalWidget::renderClicked()
@@ -172,8 +180,13 @@ void OrbitalWidget::renderClicked()
   QModelIndex first = selection.first();
   first = m_sortedTableModel->mapToSource(first);
 
-  int orbital = first.row(); // renderRequested handles the +1
-  emit renderRequested(orbital, quality);
+  int row = first.row();
+
+  // Get the actual orbital index and electron type from the model
+  int orbital = m_tableModel->orbitalIndex(row);
+  auto electronType = m_tableModel->electronType(row);
+
+  emit renderRequested(orbital, quality, electronType);
 }
 
 double OrbitalWidget::OrbitalQualityToDouble(OrbitalQuality q)
@@ -205,32 +218,6 @@ void OrbitalWidget::setPrecalcSettings(bool limit, int range)
 {
   m_precalc_limit = limit;
   m_precalc_range = range;
-}
-
-void OrbitalWidget::initializeProgress(int orbital, int min, int max, int stage,
-                                       int totalStages)
-{
-  m_tableModel->setOrbitalProgressRange(orbital, min, max, stage, totalStages);
-}
-
-void OrbitalWidget::nextProgressStage(int orbital, int newmin, int newmax)
-{
-  m_tableModel->incrementStage(orbital, newmin, newmax);
-}
-
-void OrbitalWidget::updateProgress(int orbital, int current)
-{
-  m_tableModel->setOrbitalProgressValue(orbital, current);
-}
-
-void OrbitalWidget::calculationComplete(int orbital)
-{
-  m_tableModel->finishProgress(orbital);
-}
-
-void OrbitalWidget::calculationQueued(int orbital)
-{
-  m_tableModel->setProgressToZero(orbital);
 }
 
 } // namespace Avogadro::QtPlugins

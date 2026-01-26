@@ -139,8 +139,19 @@ void SlaterSet::initCalculation()
 
 inline unsigned int SlaterSet::factorial(unsigned int n)
 {
-  if (n <= 1)
-    return n;
+  switch (n) {
+    case 0:
+    case 1:
+      return 1;
+    case 2:
+      return 2;
+    case 3:
+      return 6;
+    case 4:
+      return 24;
+    case 5:
+      return 120;
+  }
   return (n * factorial(n - 1));
 }
 

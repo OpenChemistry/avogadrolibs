@@ -94,6 +94,10 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   molecule.setData("DeltaH", m_heatOfFormation);
   molecule.setData("Area", m_area);
   molecule.setData("Volume", m_volume);
+  if (m_energies.size() > 0)
+    molecule.setData("energies", m_energies);
+  if (m_forces.size() > 0)
+    molecule.setData("forces", m_forces);
 
   if (m_partialCharges.size() > 0) {
     MatrixX charges(m_partialCharges.size(), 1);
@@ -128,29 +132,42 @@ void MopacAux::processLine(std::istream& in)
 
   // Big switch statement checking for various things we are interested in
   if (Core::contains(key, "ATOM_EL")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
     cout << "Number of atoms = " << tmp << endl;
     m_atomNums = readArrayElements(in, tmp);
   } else if (Core::contains(key, "HEAT_OF_FORMATION:KCAL/MOL")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
       std::replace(list[1].begin(), list[1].end(), 'D', 'E');
-      m_heatOfFormation = Core::lexicalCast<double>(list[1]);
+      m_heatOfFormation = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Heat of formation = " << m_heatOfFormation << " kcal/mol"
            << endl;
+    }
+  } else if (Core::contains(key, "HEAT_OF_FORM_UPDATED:KCAL/MOL")) {
+    vector<string> list = Core::split(line, '=');
+    if (list.size() > 1) {
+      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
+      m_energies.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
+    }
+  } else if (Core::contains(key, "GRADIENT_NORM_UPDATED:KCAL/MOL")) {
+    vector<string> list = Core::split(line, '=');
+    if (list.size() > 1) {
+      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
+      m_forces.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
     }
   } else if (Core::contains(key, "AREA:SQUARE ANGSTROMS")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
       std::replace(list[1].begin(), list[1].end(), 'D', 'E');
-      m_area = Core::lexicalCast<double>(list[1]);
+      m_area = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Area = " << m_area << " square Angstroms" << endl;
     }
   } else if (Core::contains(key, "VOLUME:CUBIC ANGSTROMS")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
       std::replace(list[1].begin(), list[1].end(), 'D', 'E');
-      m_volume = Core::lexicalCast<double>(list[1]);
+      m_volume = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Volume = " << m_volume << " cubic Angstroms" << endl;
     }
   } else if (Core::contains(key, "KEYWORDS=")) {
@@ -158,7 +175,7 @@ void MopacAux::processLine(std::istream& in)
     std::vector<std::string> list = Core::split(key, ' ');
     for (size_t i = 0; i < list.size(); ++i) {
       if (Core::contains(list[i], "CHARGE=")) {
-        m_charge = Core::lexicalCast<int>(list[i].substr(7));
+        m_charge = Core::lexicalCast<int>(list[i].substr(7)).value_or(0);
       } else if (Core::contains(list[i], "DOUBLET")) {
         m_spin = 2;
       } else if (Core::contains(list[i], "TRIPLET")) {
@@ -184,47 +201,58 @@ void MopacAux::processLine(std::istream& in)
       std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       vector<string> dipole = Core::split(list[1], ' ');
       if (dipole.size() == 3) {
-        m_dipoleMoment = Vector3(Core::lexicalCast<double>(dipole[0]),
-                                 Core::lexicalCast<double>(dipole[1]),
-                                 Core::lexicalCast<double>(dipole[2]));
+        m_dipoleMoment =
+          Vector3(Core::lexicalCast<double>(dipole[0]).value_or(0.0),
+                  Core::lexicalCast<double>(dipole[1]).value_or(0.0),
+                  Core::lexicalCast<double>(dipole[2]).value_or(0.0));
       }
     }
     cout << "Dipole moment " << m_dipoleMoment.norm() << " Debye" << endl;
   } else if (Core::contains(key, "AO_ATOMINDEX")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
     cout << "Number of atomic orbitals = " << tmp << endl;
     m_atomIndex = readArrayI(in, tmp);
     for (int& i : m_atomIndex)
       --i;
   } else if (Core::contains(key, "ATOM_SYMTYPE")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
     cout << "Number of atomic orbital types = " << tmp << endl;
     m_atomSym = readArraySym(in, tmp);
   } else if (Core::contains(key, "AO_ZETA")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
     cout << "Number of zeta values = " << tmp << endl;
     m_zeta = readArrayD(in, tmp);
   } else if (Core::contains(key, "ATOM_CHARGES")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
     cout << "Number of atomic charges = " << tmp << endl;
     m_partialCharges = readArrayD(in, tmp);
   } else if (Core::contains(key, "ATOM_PQN")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
     cout << "Number of PQN values =" << tmp << endl;
     m_pqn = readArrayI(in, tmp);
   } else if (Core::contains(key, "NUM_ELECTRONS")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      m_electrons = Core::lexicalCast<int>(list[1]);
+      m_electrons = Core::lexicalCast<int>(list[1]).value_or(0);
       cout << "Number of electrons = " << m_electrons << endl;
     }
   } else if (Core::contains(key, "ATOM_X")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
+    auto lBracket = key.find('[');
+    auto rBracket = key.find(']');
+    int tmp =
+      Core::lexicalCast<int>(key.substr(lBracket + 1, rBracket - lBracket - 1))
+        .value_or(0);
     cout << "Number of atomic coordinates = " << tmp << endl;
     m_atomPos = readArrayVec(in, tmp);
     m_coordSets.push_back(m_atomPos);
   } else if (Core::contains(key, "OVERLAP_MATRIX")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
     cout << "Size of lower half triangle of overlap matrix = " << tmp << endl;
     readOverlapMatrix(in, tmp);
   } else if (Core::contains(key, "EIGENVECTORS")) {
@@ -236,17 +264,21 @@ void MopacAux::processLine(std::istream& in)
     readEigenVectors(in,
                      static_cast<int>(m_atomIndex.size() * m_atomIndex.size()));
   } else if (Core::contains(key, "TOTAL_DENSITY_MATRIX")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
     cout << "Size of lower half triangle of density matrix = " << tmp << endl;
     readDensityMatrix(in, tmp);
   } else if (Core::contains(key, "VIB._FREQ")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
     readVibrationFrequencies(in, tmp);
   } else if (Core::contains(key, "VIB._T_DIP")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
     readVibrationIntensities(in, tmp);
   } else if (Core::contains(key, "NORMAL_MODES")) {
-    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    int tmp =
+      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
     readNormalModes(in, tmp);
   }
 }
@@ -292,7 +324,7 @@ vector<int> MopacAux::readArrayI(std::istream& in, unsigned int n)
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list)
-      tmp.push_back(Core::lexicalCast<int>(i));
+      tmp.push_back(Core::lexicalCast<int>(i).value_or(0));
   }
   return tmp;
 }
@@ -305,7 +337,7 @@ vector<double> MopacAux::readArrayD(std::istream& in, unsigned int n)
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list)
-      tmp.push_back(Core::lexicalCast<double>(i));
+      tmp.push_back(Core::lexicalCast<double>(i).value_or(0.0));
   }
   return tmp;
 }
@@ -355,7 +387,7 @@ vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list)
-      ptr[cnt++] = Core::lexicalCast<double>(i);
+      ptr[cnt++] = Core::lexicalCast<double>(i).value_or(0.0);
   }
   return tmp;
 }
@@ -395,7 +427,8 @@ bool MopacAux::readOverlapMatrix(std::istream& in, unsigned int n)
     vector<string> list = Core::split(line, ' ');
     for (auto& k : list) {
       // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_overlap(i, j) = m_overlap(j, i) = Core::lexicalCast<double>(k);
+      m_overlap(i, j) = m_overlap(j, i) =
+        Core::lexicalCast<double>(k).value_or(0.0);
       ++i;
       ++cnt;
       if (i == f) {
@@ -419,7 +452,7 @@ bool MopacAux::readEigenVectors(std::istream& in, unsigned int n)
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
     for (auto& k : list) {
-      m_eigenVectors(i, j) = Core::lexicalCast<double>(k);
+      m_eigenVectors(i, j) = Core::lexicalCast<double>(k).value_or(0.0);
       ++i;
       ++cnt;
       if (i == m_zeta.size()) {
@@ -446,7 +479,8 @@ bool MopacAux::readDensityMatrix(std::istream& in, unsigned int n)
     vector<string> list = Core::split(line, ' ');
     for (auto& k : list) {
       // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_density(i, j) = m_density(j, i) = Core::lexicalCast<double>(k);
+      m_density(i, j) = m_density(j, i) =
+        Core::lexicalCast<double>(k).value_or(0.0);
       ++i;
       ++cnt;
       if (i == f) {

@@ -13,13 +13,13 @@ namespace Avogadro::Core {
 Cube::Cube()
   : m_data(0), m_min(0.0, 0.0, 0.0), m_max(0.0, 0.0, 0.0),
     m_spacing(0.0, 0.0, 0.0), m_points(0, 0, 0), m_minValue(0.0),
-    m_maxValue(0.0), m_cubeType(None), m_lock(new Mutex)
+    m_maxValue(0.0), m_cubeType(None), m_lock(nullptr)
 {
 }
 
 Cube::~Cube()
 {
-  delete m_lock;
+  // delete m_lock;
   m_lock = nullptr;
 }
 
@@ -195,110 +195,106 @@ float Cube::value(int i, int j, int k) const
 
 std::array<float, 3> Cube::computeGradient(int i, int j, int k) const
 {
-    int nx = m_points.x();
-    int ny = m_points.y();
-    int nz = m_points.z();
-    int dataIdx = (i * ny * nz) + (j * nz) + k;
+  int nx = m_points.x();
+  int ny = m_points.y();
+  int nz = m_points.z();
+  int dataIdx = (i * ny * nz) + (j * nz) + k;
 
-    std::array<std::array<float, 2>, 3> x;
-    std::array<float, 3> run;
+  std::array<std::array<float, 2>, 3> x;
+  std::array<float, 3> run;
 
-    // X-direction
-    if (i == 0) {
-        x[0][0] = m_data[dataIdx + ny * nz];
-        x[0][1] = m_data[dataIdx];
-        run[0] = m_spacing.x();
-    } else if (i == (nx - 1)) {
-        x[0][0] = m_data[dataIdx];
-        x[0][1] = m_data[dataIdx - ny * nz];
-        run[0] = m_spacing.x();
-    } else {
-        x[0][0] = m_data[dataIdx + ny * nz];
-        x[0][1] = m_data[dataIdx - ny * nz];
-        run[0] = 2 * m_spacing.x();
-    }
+  // X-direction
+  if (i == 0) {
+    x[0][0] = m_data[dataIdx + ny * nz];
+    x[0][1] = m_data[dataIdx];
+    run[0] = m_spacing.x();
+  } else if (i == (nx - 1)) {
+    x[0][0] = m_data[dataIdx];
+    x[0][1] = m_data[dataIdx - ny * nz];
+    run[0] = m_spacing.x();
+  } else {
+    x[0][0] = m_data[dataIdx + ny * nz];
+    x[0][1] = m_data[dataIdx - ny * nz];
+    run[0] = 2 * m_spacing.x();
+  }
 
-    // Y-direction
-    if (j == 0) {
-        x[1][0] = m_data[dataIdx + nz];
-        x[1][1] = m_data[dataIdx];
-        run[1] = m_spacing.y();
-    } else if (j == (ny - 1)) {
-        x[1][0] = m_data[dataIdx];
-        x[1][1] = m_data[dataIdx - nz];
-        run[1] = m_spacing.y();
-    } else {
-        x[1][0] = m_data[dataIdx + nz];
-        x[1][1] = m_data[dataIdx - nz];
-        run[1] = 2 * m_spacing.y();
-    }
+  // Y-direction
+  if (j == 0) {
+    x[1][0] = m_data[dataIdx + nz];
+    x[1][1] = m_data[dataIdx];
+    run[1] = m_spacing.y();
+  } else if (j == (ny - 1)) {
+    x[1][0] = m_data[dataIdx];
+    x[1][1] = m_data[dataIdx - nz];
+    run[1] = m_spacing.y();
+  } else {
+    x[1][0] = m_data[dataIdx + nz];
+    x[1][1] = m_data[dataIdx - nz];
+    run[1] = 2 * m_spacing.y();
+  }
 
-    // Z-direction
-    if (k == 0) {
-        x[2][0] = m_data[dataIdx + 1];
-        x[2][1] = m_data[dataIdx];         
-        run[2] = m_spacing.z();
-    } else if (k == (nz - 1)) {
-        x[2][0] = m_data[dataIdx];        
-        x[2][1] = m_data[dataIdx - 1];     
-        run[2] = m_spacing.z();
-    } else {
-        x[2][0] = m_data[dataIdx + 1];    
-        x[2][1] = m_data[dataIdx - 1];     
-        run[2] = 2 * m_spacing.z();
-    }
+  // Z-direction
+  if (k == 0) {
+    x[2][0] = m_data[dataIdx + 1];
+    x[2][1] = m_data[dataIdx];
+    run[2] = m_spacing.z();
+  } else if (k == (nz - 1)) {
+    x[2][0] = m_data[dataIdx];
+    x[2][1] = m_data[dataIdx - 1];
+    run[2] = m_spacing.z();
+  } else {
+    x[2][0] = m_data[dataIdx + 1];
+    x[2][1] = m_data[dataIdx - 1];
+    run[2] = 2 * m_spacing.z();
+  }
 
-    std::array<float, 3> ret;
+  std::array<float, 3> ret;
 
-    ret[0] = (x[0][1] - x[0][0]) / run[0];
-    ret[1] = (x[1][1] - x[1][0]) / run[1];
-    ret[2] = (x[2][1] - x[2][0]) / run[2];
+  ret[0] = (x[0][1] - x[0][0]) / run[0];
+  ret[1] = (x[1][1] - x[1][0]) / run[1];
+  ret[2] = (x[2][1] - x[2][0]) / run[2];
 
-    return ret;
+  return ret;
 }
 
-std::array<std::array<float, 3>, 8>
-Cube::getGradCube(int i, int j, int k) const
+std::array<std::array<float, 3>, 8> Cube::getGradCube(int i, int j, int k) const
 {
-    std::array<std::array<float, 3>, 8> grad;
+  std::array<std::array<float, 3>, 8> grad;
 
-    grad[0] = computeGradient(i, j, k);
-    grad[1] = computeGradient(i + 1, j, k);
-    grad[2] = computeGradient(i + 1, j + 1, k);
-    grad[3] = computeGradient(i, j + 1, k);
-    grad[4] = computeGradient(i, j, k + 1);
-    grad[5] = computeGradient(i + 1, j, k + 1);
-    grad[6] = computeGradient(i + 1, j + 1, k + 1);
-    grad[7] = computeGradient(i, j + 1, k + 1);
+  grad[0] = computeGradient(i, j, k);
+  grad[1] = computeGradient(i + 1, j, k);
+  grad[2] = computeGradient(i + 1, j + 1, k);
+  grad[3] = computeGradient(i, j + 1, k);
+  grad[4] = computeGradient(i, j, k + 1);
+  grad[5] = computeGradient(i + 1, j, k + 1);
+  grad[6] = computeGradient(i + 1, j + 1, k + 1);
+  grad[7] = computeGradient(i, j + 1, k + 1);
 
-    return grad;
+  return grad;
 }
 
 std::array<float, 8> Cube::getValsCube(int i, int j, int k) const
 {
-    std::array<float, 8> vals;
-    
-    vals[0] = getData(i, j, k);
-    vals[1] = getData(i + 1, j, k);
-    vals[2] = getData(i + 1, j + 1, k);
-    vals[3] = getData(i, j + 1, k);
-    vals[4] = getData(i, j, k + 1);
-    vals[5] = getData(i + 1, j, k + 1);
-    vals[6] = getData(i + 1, j + 1, k + 1);
-    vals[7] = getData(i, j + 1, k + 1);
+  std::array<float, 8> vals;
 
-    return vals;
+  vals[0] = getData(i, j, k);
+  vals[1] = getData(i + 1, j, k);
+  vals[2] = getData(i + 1, j + 1, k);
+  vals[3] = getData(i, j + 1, k);
+  vals[4] = getData(i, j, k + 1);
+  vals[5] = getData(i + 1, j, k + 1);
+  vals[6] = getData(i + 1, j + 1, k + 1);
+  vals[7] = getData(i, j + 1, k + 1);
+
+  return vals;
 }
-
 
 float Cube::getData(int i, int j, int k) const
 {
-    int nx = m_points.x();
-    int ny = m_points.y();
-    int nz = m_points.z();
-    return m_data[(i * ny * nz) + (j * nz) + k];
+  int ny = m_points.y();
+  int nz = m_points.z();
+  return m_data[(i * ny * nz) + (j * nz) + k];
 }
-
 
 std::array<std::array<float, 3>, 8> Cube::getPosCube(int i, int j, int k) const
 {
@@ -345,7 +341,7 @@ std::array<std::array<float, 3>, 8> Cube::getPosCube(int i, int j, int k) const
 }
 
 float Cube::value(const Vector3i& pos) const
-{  
+{
   unsigned int index =
     pos.x() * m_points.y() * m_points.z() + pos.y() * m_points.z() + pos.z();
   if (index < m_data.size())
@@ -411,7 +407,8 @@ float Cube::value(const Vector3& pos) const
          value(hC.x(), hC.y(), hC.z()) * P.x() * P.y() * P.z();
 }
 
-bool Cube::setValue(unsigned int i, unsigned int j, unsigned int k, float value_)
+bool Cube::setValue(unsigned int i, unsigned int j, unsigned int k,
+                    float value_)
 {
   unsigned int index = i * m_points.y() * m_points.z() + j * m_points.z() + k;
   if (index >= m_data.size())
@@ -430,18 +427,19 @@ void Cube::fill(float value_)
   m_minValue = m_maxValue = value_;
 }
 
-bool Cube::fillStripe(
-  unsigned int i, unsigned int j, unsigned int kfirst, unsigned int klast, float value_
-) {
-  unsigned int stripeStartIndex = i * m_points.y() * m_points.z() + j * m_points.z();
+bool Cube::fillStripe(unsigned int i, unsigned int j, unsigned int kfirst,
+                      unsigned int klast, float value_)
+{
+  unsigned int stripeStartIndex =
+    i * m_points.y() * m_points.z() + j * m_points.z();
   unsigned int firstIndex = stripeStartIndex + kfirst;
   if (firstIndex >= m_data.size())
     return false;
   unsigned int lastIndex = stripeStartIndex + klast;
   if (lastIndex >= m_data.size())
     return false;
-  std::fill(&m_data[firstIndex], &m_data[lastIndex+1], value_);
+  std::fill(&m_data[firstIndex], &m_data[lastIndex + 1], value_);
   return true;
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Core

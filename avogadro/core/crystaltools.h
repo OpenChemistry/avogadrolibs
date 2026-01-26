@@ -34,7 +34,9 @@ public:
     /** No options specified. */
     None = 0x0,
     /** Transform atoms along with the unit cell. */
-    TransformAtoms = 0x1
+    TransformAtoms = 0x1,
+    /** Enforce right-handed system */
+    RightHanded = 0x2
   };
   using Options = int;
 
@@ -140,7 +142,6 @@ public:
    * Set the atomic positions of @a molecule to the fractional coordinates in
    * @a coords, using the unit cell of @a molecule to perform the coordinate
    * transformation.
-   * @return
    */
   static bool setFractionalCoordinates(Molecule& molecule,
                                        const Array<Vector3>& coords);

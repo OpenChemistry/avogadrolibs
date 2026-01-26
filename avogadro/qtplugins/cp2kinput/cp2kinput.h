@@ -29,17 +29,20 @@ class Cp2kInput : public QtGui::ExtensionPlugin
 
 public:
   explicit Cp2kInput(QObject* parent = nullptr);
-  ~Cp2kInput();
+  ~Cp2kInput() override;
 
-  QString name() const { return tr("CP2K input"); }
+  QString name() const override { return tr("CP2K input"); }
 
-  QString description() const { return tr("Generate input for CP2K."); }
+  QString description() const override
+  {
+    return tr("Generate input for CP2K.");
+  }
 
-  QList<QAction*> actions() const;
+  QList<QAction*> actions() const override;
 
-  QStringList menuPath(QAction*) const;
+  QStringList menuPath(QAction*) const override;
 
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
 public slots:
   /**
@@ -47,7 +50,7 @@ public slots:
    */
   void openJobOutput(const Avogadro::MoleQueue::JobObject& job);
 
-  bool readMolecule(QtGui::Molecule& mol);
+  bool readMolecule(QtGui::Molecule& mol) override;
 
 private slots:
   void menuActivated();

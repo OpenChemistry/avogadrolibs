@@ -58,7 +58,9 @@ protected slots:
   void recordMovie();
   void sliderPositionChanged(int k);
   void spinnerPositionChanged(int k);
-  void setSliderLimit();
+  void firstFramePositionChanged(int k);
+  void lastFramePositionChanged(int k);
+  void updateLimits();
 
 private:
   QAction* m_activateAction;
@@ -69,11 +71,12 @@ private:
   QTimer m_timer;
   mutable QSpinBox* m_animationFPS;
   mutable QSpinBox* m_frameIdx;
+  mutable QSpinBox* m_firstFrameIdx;
+  mutable QSpinBox* m_lastFrameIdx;
   mutable QCheckBox* m_dynamicBonding;
   mutable QOpenGLWidget* m_glWidget;
   mutable QSlider* m_slider;
   mutable QPushButton* playButton;
-  mutable QPushButton* stopButton;
 };
 
 inline void PlayerTool::setMolecule(QtGui::Molecule* mol)
@@ -81,7 +84,7 @@ inline void PlayerTool::setMolecule(QtGui::Molecule* mol)
   if (m_molecule != mol) {
     m_molecule = mol;
     m_currentFrame = 0;
-    setSliderLimit();
+    updateLimits();
   }
 }
 

@@ -84,24 +84,17 @@ void GLWidget::updateScene()
     Rendering::GroupNode& node = m_renderer.scene().rootNode();
     node.clear();
     auto* moleculeNode = new Rendering::GroupNode(&node);
-    QtGui::RWMolecule* rwmol = mol->undoMolecule();
 
     foreach (QtGui::ScenePlugin* scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
       auto* engineNode = new Rendering::GroupNode(moleculeNode);
       scenePlugin->process(*mol, *engineNode);
-      scenePlugin->processEditable(*rwmol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
-    if (m_activeTool) {
+    foreach (QtGui::ToolPlugin* tool, m_tools) {
       auto* toolNode = new Rendering::GroupNode(moleculeNode);
-      m_activeTool->draw(*toolNode);
-    }
-
-    if (m_defaultTool) {
-      auto* toolNode = new Rendering::GroupNode(moleculeNode);
-      m_defaultTool->draw(*toolNode);
+      tool->draw(*toolNode);
     }
 
     m_renderer.resetGeometry();

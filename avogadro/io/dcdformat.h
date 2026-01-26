@@ -24,7 +24,7 @@ public:
 
   Operations supportedOperations() const override
   {
-    return ReadWrite | MultiMolecule | File | Stream | String;
+    return Read | MultiMolecule | File | Stream | String;
   }
 
   FileFormat* newInstance() const override { return new DcdFormat; }

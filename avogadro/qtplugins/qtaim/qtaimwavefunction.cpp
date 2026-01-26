@@ -506,4 +506,4 @@ bool QTAIMWavefunction::initializeWithMoleculeProperties(QtGui::Molecule*& mol)
   return true;
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

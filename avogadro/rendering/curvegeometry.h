@@ -10,6 +10,7 @@
 #include "drawable.h"
 #include "shader.h"
 #include "shaderprogram.h"
+#include "vertexarrayobject.h"
 #include <avogadro/core/vector.h>
 #include <list>
 #include <map>
@@ -29,7 +30,8 @@ struct Point
 {
   Point(const Vector3f& p, const Vector3ub& c, size_t i)
     : pos(p), color(c), id(i)
-  {}
+  {
+  }
   Vector3f pos;
   Vector3ub color;
   size_t id;
@@ -57,6 +59,7 @@ struct Line
   float radius;
   BufferObject vbo;
   BufferObject ibo; // EBO/IBO
+  VertexArrayObject vao;
   size_t numberOfVertices;
   size_t numberOfIndices;
 };

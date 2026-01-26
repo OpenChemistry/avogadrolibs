@@ -22,9 +22,7 @@ GLRenderVisitor::GLRenderVisitor(const Camera& camera_,
 {
 }
 
-GLRenderVisitor::~GLRenderVisitor()
-{
-}
+GLRenderVisitor::~GLRenderVisitor() {}
 
 void GLRenderVisitor::visit(Drawable& geometry)
 {
@@ -86,4 +84,4 @@ void GLRenderVisitor::visit(LineStripGeometry& geometry)
     geometry.render(m_camera);
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

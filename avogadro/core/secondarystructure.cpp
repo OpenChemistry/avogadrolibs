@@ -69,6 +69,10 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
     }
   }
 
+  // If there are less than 3 residues, don't do anything
+  if (residueCount < 3)
+    return;
+
   // Plug gaps in the helix
   for (size_t i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
@@ -190,7 +194,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
     if (residue.isHeterogen())
       continue;
 
-    auto oxygen = residue.getAtomByName("O");
+    auto oxygen = residue.atomByName("O");
     if (oxygen.isValid()) {
       auto* oRecord = new hBondRecord();
       oRecord->atom = oxygen.index();
@@ -201,7 +205,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
       m_hBonds.push_back(oRecord);
     }
 
-    auto nitrogen = residue.getAtomByName("N");
+    auto nitrogen = residue.atomByName("N");
     if (nitrogen.isValid()) {
       auto* nRecord = new hBondRecord();
       nRecord->atom = nitrogen.index();

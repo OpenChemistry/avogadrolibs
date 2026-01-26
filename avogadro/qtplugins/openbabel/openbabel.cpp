@@ -33,6 +33,7 @@
 #include <string>
 
 using Avogadro::QtGui::Molecule;
+using namespace std::string_literals;
 
 namespace Avogadro::QtPlugins {
 
@@ -149,7 +150,7 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   foreach (const QString& qdesc, formatDescriptions) {
     mapDesc = qdesc.toStdString();
     fname = mapDesc;
-    fidentifier = std::string("OpenBabel: ") + mapDesc;
+    fidentifier = "OpenBabel: "s + mapDesc;
     fdescription = mapDesc;
     fexts.clear();
     fmime.clear();
@@ -712,7 +713,7 @@ void OpenBabel::onGenerateConformersFinished(const QByteArray& output)
   // copy the coordinate sets
   m_molecule->clearCoordinate3d();
   for (size_t i = 0; i < mol.coordinate3dCount(); ++i)
-    m_molecule->setCoordinate3d(mol.coordinate3d(i), i);
+    m_molecule->setCoordinate3d(mol.coordinate3d(i), static_cast<int>(i));
 
   // energy data too
   // TODO: check if other properties are needed

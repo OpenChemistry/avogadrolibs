@@ -12,15 +12,14 @@
 
 namespace Avogadro::Core {
 
-const unsigned char element_count = 119; //!< from 0 to 118
+constexpr unsigned char element_count = 119; //!< from 0 to 118
 
 /**
  * @class Elements elements.h <avogadro/core/elements.h>
  * @brief The Elements class stores basic data about chemical elements.
  *
  * The elements class gives a simple interface to basic data about chemical
- * elements. The data is automatically generated from the Blue Obelisk data
- * repository.
+ * elements.
  *
  * The atomic numbers between the symbolic constants CustomElementMin and
  * CustomElementMax are used to represent non-elemental entities, such as
@@ -97,6 +96,15 @@ public:
   /** @return the number of valence electrons for the supplied @p atomicNumber
    */
   static unsigned char valenceElectrons(unsigned char atomicNumber);
+
+  /**
+   * @return the mass of the element with the supplied @p atomicNumber and
+   * isotope @p isotopeNumber.
+   * @param atomicNumber The atomic number of the element.
+   * @param isotopeNumber The isotope number of the element.
+   */
+  static double isotopeMass(unsigned char atomicNumber,
+                            unsigned short isotopeNumber);
 };
 
 } // namespace Avogadro::Core

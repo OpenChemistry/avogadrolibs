@@ -10,7 +10,9 @@
 #include <avogadro/core/utilities.h>
 
 #include <algorithm>
+#include <cstddef>
 #include <iostream>
+#include <fstream>
 #include <regex>
 
 using std::regex;
@@ -26,6 +28,9 @@ using Core::GaussianSet;
 ORCAOutput::ORCAOutput() {}
 
 ORCAOutput::~ORCAOutput() {}
+
+constexpr double BOHR_TO_ANGSTROM = 0.529177210544;
+constexpr double HARTREE_TO_EV = 27.211386245981;
 
 std::vector<std::string> ORCAOutput::fileExtensions() const
 {
@@ -87,6 +92,16 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
+  if (m_vcdIntensities.size() > 0 &&
+      m_vcdIntensities.size() == m_frequencies.size()) {
+    MatrixX vcdData(m_frequencies.size(), 2);
+    for (size_t i = 0; i < m_frequencies.size(); ++i) {
+      vcdData(i, 0) = m_frequencies[i];
+      vcdData(i, 1) = m_vcdIntensities[i];
+    }
+    molecule.setSpectra("VibrationalCD", vcdData);
+  }
+
   if (m_electronicTransitions.size() > 0 &&
       m_electronicTransitions.size() == m_electronicIntensities.size()) {
     MatrixX electronicData(m_electronicTransitions.size(), 2);
@@ -95,6 +110,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       electronicData(i, 1) = m_electronicIntensities[i];
     }
     molecule.setSpectra("Electronic", electronicData);
+
     if (m_electronicRotations.size() == m_electronicTransitions.size()) {
       MatrixX electronicRotations(m_electronicTransitions.size(), 2);
       for (size_t i = 0; i < m_electronicTransitions.size(); ++i) {
@@ -103,6 +119,16 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       }
       molecule.setSpectra("CircularDichroism", electronicRotations);
     }
+  }
+
+  if (m_magneticTransitions.size() > 0 &&
+      m_magneticTransitions.size() == m_magneticCD.size()) {
+    MatrixX magneticData(m_magneticTransitions.size(), 2);
+    for (size_t i = 0; i < m_magneticTransitions.size(); ++i) {
+      magneticData(i, 0) = m_magneticTransitions[i];
+      magneticData(i, 1) = m_magneticCD[i];
+    }
+    molecule.setSpectra("MagneticCD", magneticData);
   }
 
   if (m_nmrShifts.size() > 0) {
@@ -156,7 +182,8 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   return true;
 }
 
-void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
+void ORCAOutput::processLine(std::istream& in,
+                             [[maybe_unused]] GaussianSet* basis)
 {
   // First truncate the line, remove trailing white space and check
   string line;
@@ -166,7 +193,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   string key = Core::trimmed(line);
   vector<string> list;
   int nGTOs = 0;
-  float vibScaling = 1.0f;
+  [[maybe_unused]] float vibScaling = 1.0f;
 
   if (Core::contains(key, "CARTESIAN COORDINATES (A.U.)")) {
     m_coordFactor = 1.; // leave the coords in BOHR ....
@@ -189,7 +216,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
       getline(in, key);
       list = Core::split(key, ' ');
       if (list.size() > 3) {
-        m_nGroups = Core::lexicalCast<int>(list[2]);
+        m_nGroups = Core::lexicalCast<int>(list[2]).value_or(0);
       } else {
         return;
       }
@@ -215,15 +242,15 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   } else if (Core::contains(key, "Total Charge")) {
     list = Core::split(key, ' ');
     if (list.size() > 4)
-      m_charge = Core::lexicalCast<int>(list[4]);
+      m_charge = Core::lexicalCast<int>(list[4]).value_or(0);
   } else if (Core::contains(key, "Multiplicity")) {
     list = Core::split(key, ' ');
     if (list.size() > 3)
-      m_spin = Core::lexicalCast<int>(list[3]);
+      m_spin = Core::lexicalCast<int>(list[3]).value_or(1);
   } else if (Core::contains(key, "FINAL SINGLE POINT ENERGY")) {
     list = Core::split(key, ' ');
     if (list.size() > 4)
-      m_totalEnergy = Core::lexicalCast<double>(list[4]);
+      m_totalEnergy = Core::lexicalCast<double>(list[4]).value_or(0.0);
     m_energies.push_back(m_totalEnergy);
   } else if (Core::contains(key, "TOTAL NUMBER OF BASIS SET")) {
     m_currentMode = NotParsing; // no longer reading GTOs
@@ -231,12 +258,13 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     m_currentMode = NotParsing; // no longer reading GTOs
   } else if (Core::contains(key, "Number of Electrons")) {
     list = Core::split(key, ' ');
-    m_electrons = Core::lexicalCast<int>(list[5]);
+    m_electrons = Core::lexicalCast<int>(list[5]).value_or(0);
   } else if (Core::contains(key, "Total Dipole Moment")) {
     list = Core::split(key, ' ');
-    m_dipoleMoment = Eigen::Vector3d(Core::lexicalCast<double>(list[4]),
-                                     Core::lexicalCast<double>(list[5]),
-                                     Core::lexicalCast<double>(list[6]));
+    m_dipoleMoment =
+      Eigen::Vector3d(Core::lexicalCast<double>(list[4]).value_or(0.0),
+                      Core::lexicalCast<double>(list[5]).value_or(0.0),
+                      Core::lexicalCast<double>(list[6]).value_or(0.0));
     // convert from atomic units to Debye
     // e.g. https://en.wikipedia.org/wiki/Debye
     m_dipoleMoment *= 2.54174628;
@@ -252,6 +280,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     }
     // starts at the next line
   } else if (Core::contains(key, "CD SPECTRUM") &&
+             !Core::contains(key, "VCD SPECTRUM") &&
              !Core::contains(key, "TRANSITION VELOCITY DIPOLE")) {
     m_currentMode = ECD;
     for (int i = 0; i < 4; ++i) {
@@ -295,6 +324,10 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     m_currentMode = Charges;
     m_chargeType = "CHELPG";
     getline(in, key); // skip ------------
+  } else if (Core::contains(key, "RESP Charges")) {
+    m_currentMode = Charges;
+    m_chargeType = "RESP";
+    getline(in, key); // skip ------------
   } else if (Core::contains(key, "ATOMIC CHARGES")) {
     m_currentMode = Charges;
     // figure out what type of charges we have
@@ -315,7 +348,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     // Scaling factor for frequencies =  1.000000000
     list = Core::split(key, ' ');
     if (list.size() > 6)
-      vibScaling = Core::lexicalCast<float>(list[5]);
+      vibScaling = Core::lexicalCast<float>(list[5]).value_or(0);
     getline(in, key); // skip blank line
   } else if (Core::contains(key, "NORMAL MODES")) {
     m_currentMode = VibrationalModes;
@@ -339,6 +372,22 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     getline(in, key); // skip blank line
     getline(in, key); // skip column titles
     getline(in, key); // skip ------------
+  } else if (Core::contains(key, "VCD SPECTRUM")) {
+    m_currentMode = VCD;
+    // look for "Mode" and "Freq"
+    int maxLines = 10; // reasonable limit for header lines
+    while (!Core::contains(key, "Mode") && !Core::contains(key, "Freq") &&
+           maxLines-- > 0 && !in.eof())
+      getline(in, key);
+    if (maxLines <= 0 || in.eof()) {
+      m_currentMode = NotParsing;
+      return;
+    }
+    // units
+    getline(in, key);
+    getline(in, key); // skip ------------
+  } else if (Core::contains(key, "MCD Transitions")) {
+    parseMCD();
   } else if (Core::contains(key, "CHEMICAL SHIELDING SUMMARY (ppm)")) {
     m_currentMode = NMR;
     for (int i = 0; i < 4; ++i) {
@@ -362,9 +411,9 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break;
           }
           Eigen::Vector3d pos(
-            Core::lexicalCast<double>(list[5]) * m_coordFactor,
-            Core::lexicalCast<double>(list[6]) * m_coordFactor,
-            Core::lexicalCast<double>(list[7]) * m_coordFactor);
+            Core::lexicalCast<double>(list[5]).value_or(0.0) * m_coordFactor,
+            Core::lexicalCast<double>(list[6]).value_or(0.0) * m_coordFactor,
+            Core::lexicalCast<double>(list[7]).value_or(0.0) * m_coordFactor);
 
           unsigned char atomicNum =
             Core::Elements::atomicNumberFromSymbol(Core::trimmed(list[1]));
@@ -393,8 +442,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           }
           // e.g. index atom charge spin
           // e.g. 0 O   -0.714286   0.000
-          int atomIndex = Core::lexicalCast<int>(list[0]);
-          double charge = Core::lexicalCast<double>(list[2]);
+          int atomIndex = Core::lexicalCast<int>(list[0]).value_or(0);
+          double charge = Core::lexicalCast<double>(list[2]).value_or(0.0);
           charges(atomIndex, 0) = charge;
 
           getline(in, key);
@@ -420,8 +469,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break;
           }
           // e.g. 0 O :   -0.714286
-          int atomIndex = Core::lexicalCast<int>(list[0]);
-          double charge = Core::lexicalCast<double>(list[3]);
+          int atomIndex = Core::lexicalCast<int>(list[0]).value_or(0);
+          double charge = Core::lexicalCast<double>(list[3]).value_or(0.0);
           charges(atomIndex, 0) = charge;
 
           getline(in, key);
@@ -440,40 +489,47 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         while (key[0] == 'B') {
           // @todo .. parse the bonds based on character position
           // e.g. B(  0-Ru,  1-C ) :   0.4881 B(  0-Ru,  4-C ) :   0.6050
-          Index firstAtom = Core::lexicalCast<Index>(key.substr(2, 3));
-          Index secondAtom = Core::lexicalCast<Index>(key.substr(9, 3));
-          double bondOrder = Core::lexicalCast<double>(key.substr(18, 9));
+          Index firstAtom =
+            Core::lexicalCast<Index>(key.substr(2, 3)).value_or(0);
+          Index secondAtom =
+            Core::lexicalCast<Index>(key.substr(9, 3)).value_or(0);
+          double bondOrder =
+            Core::lexicalCast<double>(key.substr(18, 9)).value_or(0.0);
 
           if (bondOrder > 1.6) {
             std::vector<int> bond;
-            bond.push_back(firstAtom);
-            bond.push_back(secondAtom);
+            bond.push_back(static_cast<int>(firstAtom));
+            bond.push_back(static_cast<int>(secondAtom));
             bond.push_back(static_cast<int>(std::round(bondOrder)));
             m_bondOrders.push_back(bond);
           }
 
           if (key.size() > 54 && key[28] == 'B') {
-            firstAtom = Core::lexicalCast<Index>(key.substr(30, 3));
-            secondAtom = Core::lexicalCast<Index>(key.substr(37, 3));
-            bondOrder = Core::lexicalCast<double>(key.substr(46, 9));
+            firstAtom = Core::lexicalCast<Index>(key.substr(30, 3)).value_or(0);
+            secondAtom =
+              Core::lexicalCast<Index>(key.substr(37, 3)).value_or(0);
+            bondOrder =
+              Core::lexicalCast<double>(key.substr(46, 9)).value_or(0.0);
 
             if (bondOrder > 1.6) {
               std::vector<int> bond;
-              bond.push_back(firstAtom);
-              bond.push_back(secondAtom);
+              bond.push_back(static_cast<int>(firstAtom));
+              bond.push_back(static_cast<int>(secondAtom));
               bond.push_back(static_cast<int>(std::round(bondOrder)));
               m_bondOrders.push_back(bond);
             }
           }
           if (key.size() > 82 && key[56] == 'B') {
-            firstAtom = Core::lexicalCast<Index>(key.substr(58, 3));
-            secondAtom = Core::lexicalCast<Index>(key.substr(65, 3));
-            bondOrder = Core::lexicalCast<double>(key.substr(74, 9));
+            firstAtom = Core::lexicalCast<Index>(key.substr(58, 3)).value_or(0);
+            secondAtom =
+              Core::lexicalCast<Index>(key.substr(65, 3)).value_or(0);
+            bondOrder =
+              Core::lexicalCast<double>(key.substr(74, 9)).value_or(0.0);
 
             if (bondOrder > 1.6) {
               std::vector<int> bond;
-              bond.push_back(firstAtom);
-              bond.push_back(secondAtom);
+              bond.push_back(static_cast<int>(firstAtom));
+              bond.push_back(static_cast<int>(secondAtom));
               bond.push_back(static_cast<int>(std::round(bondOrder)));
               m_bondOrders.push_back(bond);
             }
@@ -484,6 +540,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         }
 
         m_currentMode = NotParsing;
+        break;
       }
       case OrbitalEnergies: {
         if (key.empty())
@@ -502,7 +559,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           }
 
           // energy in Hartree in 3rd column in eV in 4th column
-          double energy = Core::lexicalCast<double>(list[3]);
+          double energy = Core::lexicalCast<double>(list[3]).value_or(0.0);
           if (!m_readBeta)
             m_orbitalEnergy.push_back(energy);
           else
@@ -529,7 +586,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break;
           }
           // e.g. 0:         0.00 cm**-1
-          double freq = Core::lexicalCast<double>(list[1]);
+          double freq = Core::lexicalCast<double>(list[1]).value_or(0.0);
           m_frequencies.push_back(freq);
 
           getline(in, key);
@@ -551,6 +608,34 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         m_currentMode = NotParsing;
         break;
       }
+      case VCD: {
+        // should be mode, frequency, IR intensity
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        m_vcdIntensities.resize(m_frequencies.size(), 0.0);
+
+        while (!key.empty()) {
+          // e.g. 0:         0.00 cm**-1
+
+          if (list.size() != 3) {
+            break;
+          }
+          unsigned index = Core::lexicalCast<std::size_t>(list[0]).value_or(0);
+          if (index >= m_frequencies.size()) {
+            break;
+          }
+          m_vcdIntensities[index] =
+            Core::lexicalCast<double>(list[2]).value_or(0.0);
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
+
+        m_currentMode = NotParsing;
+        break;
+      }
       case VibrationalModes: {
         if (key.empty())
           break;
@@ -562,7 +647,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           // e.g. 1  2  3  4  5  6  7  8  9 10
           modeIndex.clear();
           for (const auto& index_str : list) {
-            auto index = Core::lexicalCast<std::size_t>(index_str);
+            auto index = Core::lexicalCast<std::size_t>(index_str).value_or(0);
             if (index >= m_frequencies.size()) {
               invalid_index = true;
               break;
@@ -583,7 +668,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             unsigned int coordIndex = i % 3;
             for (unsigned int j = 0; j < modeIndex.size(); j++) {
               m_vibDisplacements[modeIndex[j]][atomIndex][coordIndex] =
-                Core::lexicalCast<double>(list[j + 1]);
+                Core::lexicalCast<double>(list[j + 1]).value_or(0.0);
             }
 
             getline(in, key);
@@ -607,12 +692,12 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           }
           // the first entry might be 5 or 6 because of removed rotations /
           // translations
-          auto index = Core::lexicalCast<std::size_t>(list[0]);
+          auto index = Core::lexicalCast<std::size_t>(list[0]).value_or(0);
           // invalid index
           if (index >= m_frequencies.size())
             break;
 
-          double intensity = Core::lexicalCast<double>(list[3]);
+          double intensity = Core::lexicalCast<double>(list[3]).value_or(0.0);
           m_IRintensities[index] = intensity;
 
           getline(in, key);
@@ -634,7 +719,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           }
           // the first entry might be 5 or 6 because of removed rotations /
           // translations
-          auto index = Core::lexicalCast<std::size_t>(list[0]);
+          auto index = Core::lexicalCast<std::size_t>(list[0]).value_or(0);
           // invalid index
           if (index >= m_frequencies.size())
             break;
@@ -644,7 +729,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             }
           }
           // index, frequency, activity, depolarization
-          double activity = Core::lexicalCast<double>(list[2]);
+          double activity = Core::lexicalCast<double>(list[2]).value_or(0.0);
           m_RamanIntensities.push_back(activity);
 
           getline(in, key);
@@ -662,17 +747,26 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         double wavenumbers;
         while (!key.empty()) {
           // should have 8 columns
-          if (list.size() != 8) {
+          if (list.size() < 8) {
             getline(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
             continue; // skip any spin-forbidden transitions
           }
 
-          wavenumbers = Core::lexicalCast<double>(list[1]);
-          // convert to eV
-          m_electronicTransitions.push_back(wavenumbers / 8065.544);
-          m_electronicIntensities.push_back(Core::lexicalCast<double>(list[3]));
+          if (list.size() == 8) {
+            wavenumbers = Core::lexicalCast<double>(list[1]).value_or(0.0);
+            // convert to eV
+            m_electronicTransitions.push_back(wavenumbers / 8065.544);
+            m_electronicIntensities.push_back(
+              Core::lexicalCast<double>(list[3]).value_or(0.0));
+          } else if (list.size() == 11) {
+            // directly use the eV
+            m_electronicTransitions.push_back(
+              Core::lexicalCast<double>(list[3]).value_or(0.0));
+            m_electronicIntensities.push_back(
+              Core::lexicalCast<double>(list[6]).value_or(0.0));
+          }
 
           getline(in, key);
           key = Core::trimmed(key);
@@ -681,26 +775,28 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break; // hit the blank line
         }
         m_currentMode = NotParsing;
+        break;
       }
       case ECD: {
         if (key.empty())
           break;
         list = Core::split(key, ' ');
 
-        double wavenumbers;
         while (!key.empty()) {
           // should have 7 columns
-          if (list.size() != 7) {
+          if (list.size() < 7) {
             getline(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
             continue; // skip any spin-forbidden transitions
           }
 
-          wavenumbers = Core::lexicalCast<double>(list[1]);
-          // convert to eV
-          // m_electronicTransitions.push_back(wavenumbers / 8065.544);
-          m_electronicRotations.push_back(Core::lexicalCast<double>(list[3]));
+          if (list.size() == 7)
+            m_electronicRotations.push_back(
+              Core::lexicalCast<double>(list[3]).value_or(0.0));
+          else if (list.size() == 10)
+            m_electronicRotations.push_back(
+              Core::lexicalCast<double>(list[6]).value_or(0.0));
 
           getline(in, key);
           key = Core::trimmed(key);
@@ -709,6 +805,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break; // hit the blank line
         }
         m_currentMode = NotParsing;
+        break;
       }
       case NMR: {
         if (key.empty())
@@ -723,8 +820,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           }
 
           // e.g.  1  C  0.0000  0.0000  0.0000  0.0000
-          int atomIndex = Core::lexicalCast<int>(list[0]);
-          double shift = Core::lexicalCast<double>(list[2]);
+          int atomIndex = Core::lexicalCast<int>(list[0]).value_or(0);
+          double shift = Core::lexicalCast<double>(list[2]).value_or(0.0);
           // ignore the anisotropy for now
           m_nmrShifts[atomIndex] = shift;
 
@@ -769,7 +866,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           shellTypes.resize(0);
           while (Core::trimmed(list[0]) != "end;") {
 
-            int nFunc = Core::lexicalCast<int>(Core::trimmed(list[1]));
+            int nFunc =
+              Core::lexicalCast<int>(Core::trimmed(list[1])).value_or(0);
             shellTypes.push_back(orbitalIdx(Core::trimmed(list[0])));
             shellFunctions.push_back(nFunc);
             m_basisFunctions.at(nGTOs)->push_back(
@@ -781,9 +879,9 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
               list = Core::split(key, ' ');
               m_basisFunctions.at(nGTOs)->at(nShells)->at(i).x() =
-                Core::lexicalCast<double>(list[1]); // exponent
+                Core::lexicalCast<double>(list[1]).value_or(0.0); // exponent
               m_basisFunctions.at(nGTOs)->at(nShells)->at(i).y() =
-                Core::lexicalCast<double>(list[2]); // coeff
+                Core::lexicalCast<double>(list[2]).value_or(0.0); // coeff
             }
 
             nShells++;
@@ -846,8 +944,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           // convert these all to double and add to m_orbitalEnergy
           for (unsigned int i = 0; i < list.size(); i++) {
             // convert from Hartree to eV
-            m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[i]) *
-                                      27.2114);
+            m_orbitalEnergy.push_back(
+              Core::lexicalCast<double>(list[i]).value_or(0.0) * HARTREE_TO_EV);
           }
 
           getline(in, key); // occupations
@@ -875,7 +973,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             orcaOrbitals.push_back(pieces[1]);
 
             for (unsigned int i = 0; i < numColumns; ++i) {
-              columns[i].push_back(Core::lexicalCast<double>(list[i]));
+              columns[i].push_back(
+                Core::lexicalCast<double>(list[i]).value_or(0.0));
             }
 
             getline(in, key);
@@ -892,7 +991,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           } // ok, we've finished one batch of MO coeffs
           // now reorder the p orbitals from "orcaStyle" (pz, px,py)
           // to expected Avogadro (px,py,pz)
-          int idx = 0;
+          std::size_t idx = 0;
           while (idx < orcaOrbitals.size()) {
             if (Core::contains(orcaOrbitals.at(idx), "pz")) {
               for (unsigned int i = 0; i < numColumns; i++) {
@@ -937,12 +1036,14 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           while (!Core::trimmed(key).empty()) {
             // currently reading the sequence number
             getline(in, key); // energies
+
             list = Core::split(key, ' ');
-            // convert these all to double and add to m_orbitalEnergy
+            // convert these all to double and add to m_betaOrbitalEnergy
             for (unsigned int i = 0; i < list.size(); i++) {
               // convert from Hartree to eV
-              m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[i]) *
-                                        27.2114);
+              m_betaOrbitalEnergy.push_back(
+                Core::lexicalCast<double>(list[i]).value_or(0.0) *
+                HARTREE_TO_EV);
             }
 
             getline(in, key); // symmetries
@@ -965,24 +1066,29 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
               std::vector<std::string> pieces = Core::split(key, ' ');
               orcaOrbitals.push_back(pieces[1]);
 
-              //                    columns.resize(numColumns);
               for (unsigned int i = 0; i < numColumns; ++i) {
-                columns[i].push_back(Core::lexicalCast<double>(list[i]));
+                columns[i].push_back(
+                  Core::lexicalCast<double>(list[i]).value_or(0.0));
               }
 
-              auto key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
-              auto key_end = std::sregex_iterator();
+              getline(in, key);
+              auto inner_key_begin =
+                std::sregex_iterator(key.begin(), key.end(), rx);
+              auto inner_key_end = std::sregex_iterator();
               list.clear();
-              for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
+              for (std::sregex_iterator i = inner_key_begin; i != inner_key_end;
+                   ++i) {
                 list.push_back(i->str());
               }
+
               if (list.size() != numColumns)
                 break;
 
             } // ok, we've finished one batch of MO coeffs
             // now reorder the p orbitals from "orcaStyle" (pz, px,py) to
             // expected Avogadro (px,py,pz)
-            int idx = 0;
+
+            std::size_t idx = 0;
             while (idx < orcaOrbitals.size()) {
               if (Core::contains(orcaOrbitals.at(idx), "pz")) {
                 for (unsigned int i = 0; i < numColumns; i++) {
@@ -1035,6 +1141,8 @@ void ORCAOutput::load(GaussianSet* basis)
 {
   // Now load up our basis set
   basis->setElectronCount(m_electrons);
+  if (m_openShell)
+    basis->setScfType(Core::Uhf);
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
@@ -1076,9 +1184,51 @@ void ORCAOutput::load(GaussianSet* basis)
     basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, Core::BasisSet::Beta);
 
   // TODO: set orbital symmetries
+  // TODO: set vibrational symmetries
 
   m_homo = ceil(m_electrons / 2.0);
-  basis->generateDensityMatrix();
+  if (m_MOcoeffs.size() > 0)
+    basis->generateDensityMatrix();
+}
+
+void ORCAOutput::parseMCD()
+{
+  // look for files with "dipole-length.1.mcd"
+  std::string filename = fileName();
+  // probably something like test.out
+  // we need to look for test.cis-el.dipole-length.1.mcd
+  // remove the extension
+  size_t pos = filename.find_last_of('.');
+  if (pos != std::string::npos) {
+    filename = filename.substr(0, pos);
+  }
+  filename += ".cis-el.dipole-length.1.mcd";
+  std::ifstream in(filename.c_str());
+  if (!in) {
+    std::cerr << "Cannot open: " << filename << "\n";
+    return;
+  }
+
+  // read in line by line
+  // frequency, mcd, absorption
+  Real frequency, mcd, absorption;
+  frequency = mcd = absorption = 0.0;
+  while (in) {
+    in >> frequency >> mcd >> absorption;
+    if (!in)
+      break;
+
+    // if frequency goes down, we are done
+    // (or we hit the end of the file)
+    if (m_magneticTransitions.size() > 0 &&
+        frequency < m_magneticTransitions.back())
+      break;
+
+    m_magneticTransitions.push_back(frequency);
+    m_magneticCD.push_back(mcd);
+  }
+
+  in.close();
 }
 
 GaussianSet::orbital ORCAOutput::orbitalIdx(std::string txt)

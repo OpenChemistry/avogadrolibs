@@ -66,7 +66,7 @@ bool CrystalTools::rotateToStandardOrientation(Molecule& molecule, Options opts)
 
   // Cache some frequently used values:
   // Length of v1
-  const Real L1 = std::sqrt(x1 * x1 + y1 * y1 + z1 * z1);
+  const Real L1 = std::hypot(x1, y1, z1);
   // Squared norm of v1's yz projection
   const Real sqrdnorm1yz = y1 * y1 + z1 * z1;
   // Squared norm of v2's yz projection
@@ -116,6 +116,9 @@ bool CrystalTools::rotateToStandardOrientation(Molecule& molecule, Options opts)
 
   // Numerator is determinant of original cell:
   newMat(2, 2) = before.determinant() / denom;
+
+  if (opts & RightHanded && newMat(2, 2) < 0.0)
+    newMat(2, 2) *= -1.0;
 
   return setCellMatrix(molecule, newMat, opts & TransformAtoms);
 }
@@ -630,6 +633,12 @@ bool CrystalTools::setCellMatrix(Molecule& molecule,
                   TransformAtomsFunctor(xform));
   }
 
+  if (!UnitCell::isRegular(newCellColMatrix)) {
+    std::cerr << __FUNCTION__ << " cell matrix is singular\n";
+    return false;
+  }
+
+  // only create a new unit cell if it doesn't exist
   if (!molecule.unitCell())
     molecule.setUnitCell(new UnitCell);
 

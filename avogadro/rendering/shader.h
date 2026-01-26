@@ -75,7 +75,7 @@ protected:
   std::string m_error;
 };
 
-} // End Rendering namespace
-} // End Avogadro namespace
+} // namespace Rendering
+} // namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_SHADER_H

@@ -43,16 +43,16 @@ public slots:
   void updateTable(unsigned int flags);
 
 public:
-  explicit PropertyModel(PropertyType type, QObject* parent = 0);
+  explicit PropertyModel(PropertyType type, QObject* parent = nullptr);
 
-  int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  QVariant data(const QModelIndex& index, int role) const;
-  Qt::ItemFlags flags(const QModelIndex& index) const;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex& index, int role) const override;
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
   bool setData(const QModelIndex& index, const QVariant& value,
-               int role = Qt::EditRole);
+               int role = Qt::EditRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,
-                      int role = Qt::DisplayRole) const;
+                      int role = Qt::DisplayRole) const override;
 
   void setMolecule(QtGui::Molecule* molecule);
 
@@ -64,9 +64,11 @@ public:
 
   // Get the angle for a given index
   Core::Angle getAngle(unsigned int angle) const;
+  Real getAngleValue(unsigned int angle) const;
 
   // Get the torson for a given index
   Core::Dihedral getTorsion(unsigned int torsion) const;
+  Real getTorsionValue(unsigned int torsion) const;
 
 private:
   PropertyType m_type;
@@ -75,6 +77,11 @@ private:
   mutable bool m_validCache;
   mutable std::vector<Core::Angle> m_angles;
   mutable std::vector<Core::Dihedral> m_torsions;
+
+  // Track structure counts to detect actual structural changes vs
+  // coordinate-only
+  mutable Index m_lastAtomCount = 0;
+  mutable Index m_lastBondCount = 0;
 
   QString secStructure(unsigned int type) const;
 
@@ -91,8 +98,8 @@ private:
   void setTorsion(unsigned int index, double newValue);
   void transformFragment() const;
 
-  inline QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
-                                       const QtGui::RWAtom& atom) const
+  QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
+                                const QtGui::RWAtom& atom) const
   {
     return bond.atom1() == atom ? bond.atom2() : bond.atom1();
   }
@@ -113,8 +120,8 @@ private:
     AtomDataY,
     AtomDataZ,
     AtomDataLabel,
+    AtomDataIsotope,
     AtomDataColor,
-    AtomDataCharge,
     AtomDataCustom,
   };
 
@@ -164,6 +171,7 @@ private:
     ResidueDataID,
     ResidueDataChain,
     ResidueDataSecStructure,
+    ResidueDataLabel,
     ResidueDataColor,
     ResidueDataHeterogen
   };

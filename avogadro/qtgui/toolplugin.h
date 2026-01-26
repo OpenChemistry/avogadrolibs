@@ -144,6 +144,13 @@ signals:
    */
   void requestActiveDisplayTypes(QStringList displayTypes);
 
+  /**
+   * Indicate that a particular script command is finished.
+   * (e.g., from handleCommand)
+   * @param message An optional message to the script or user
+   */
+  void commandFinished(const QString& message = QString());
+
 public slots:
   /**
    * Called when the current molecule changes.
@@ -180,6 +187,7 @@ public:
 
   virtual ToolPlugin* createInstance(QObject* parent = nullptr) = 0;
   virtual QString identifier() const = 0;
+  virtual QString description() const = 0;
 };
 
 } // namespace QtGui

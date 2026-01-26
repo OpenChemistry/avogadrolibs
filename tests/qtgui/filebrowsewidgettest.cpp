@@ -30,7 +30,7 @@ TEST(FileBrowseWidgetTest, setFileName)
   START_QAPP;
 
   FileBrowseWidget widget;
-  if(QT_VERSION==6)
+  if (QT_VERSION == 6)
     QSignalSpy spy(&widget, &FileBrowseWidget::fileNameChanged);
   else
     QSignalSpy spy(&widget, SIGNAL(fileNameChanged(QString)));

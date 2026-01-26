@@ -8,24 +8,13 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/residue.h>
-#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtCore/QDebug>
-#include <QtCore/QRegularExpression>
-#include <QtCore/QTimer>
-
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonObject>
-#include <QtCore/QJsonValue>
-
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
 
 #include <limits>
 
-namespace Avogadro {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::Core::BasisSet;
 using Avogadro::Core::GaussianSet;
@@ -39,120 +28,40 @@ using QtGui::Molecule;
 MolecularModel::MolecularModel(QObject* parent)
   : QAbstractTableModel(parent), m_molecule(nullptr)
 {
-  m_network = new QNetworkAccessManager(this);
-  connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
-          SLOT(updateNameReady(QNetworkReply*)));
 }
 
 void MolecularModel::setMolecule(QtGui::Molecule* molecule)
 {
-  m_molecule = molecule;
-  // check if it has a pre-defined name
-  if (molecule) {
-    if (m_molecule->data("name").toString().empty())
-      m_autoName = true;
-    else
-      m_autoName = false;
-    m_name = QString::fromStdString(molecule->data("name").toString());
+  // Disconnect from the old molecule if set
+  if (m_molecule) {
+    disconnect(m_molecule, &QtGui::Molecule::changed, this,
+               &MolecularModel::updateTable);
   }
 
+  m_molecule = molecule;
+
   // make sure we know if the molecule changed
-  connect(m_molecule, &QtGui::Molecule::changed, this,
-          &MolecularModel::updateTable);
+  if (m_molecule) {
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &MolecularModel::updateTable);
+  }
   updateTable(QtGui::Molecule::Added);
 }
 
 QString MolecularModel::name() const
 {
   if (!m_molecule || m_molecule->atomCount() == 0)
-    return m_name; // empty
+    return QString();
 
-  // if we have a defined name
-  // or we're not ready to update
-  // then return the current name
-  if (!m_autoName || !m_nameUpdateNeeded || m_nameRequestPending)
-    return m_name;
+  // check if we have a markup_name
+  if (!m_molecule->data("markup_name").toString().empty())
+    return QString::fromStdString(m_molecule->data("markup_name").toString());
 
-  // okay, kick off the update
-  m_name = tr("(pending)", "asking server for molecule name");
-  m_nameRequestPending = true;
+  // if not, check if there's any name
+  if (!m_molecule->data("name").toString().empty())
+    return QString::fromStdString(m_molecule->data("name").toString());
 
-  std::string smiles;
-  Io::FileFormatManager::instance().writeString(*m_molecule, smiles, "smi");
-  QString smilesString = QString::fromStdString(smiles);
-  smilesString.remove(QRegularExpression("\\s+.*"));
-  QString requestURL =
-    QString("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/" +
-            QUrl::toPercentEncoding(smilesString) + "/json");
-  m_network->get(QNetworkRequest(QUrl(requestURL)));
-
-  // don't update again until we're ready - 5 seconds
-  QTimer::singleShot(5000, this, SLOT(canUpdateName()));
-
-  return m_name;
-}
-
-void MolecularModel::canUpdateName()
-{
-  m_nameRequestPending = false;
-}
-
-void MolecularModel::updateNameReady(QNetworkReply* reply)
-{
-  // finished a request, don't need this until next modification
-  m_nameUpdateNeeded = false;
-
-  // Read in all the data
-  if (!reply->isReadable()) {
-    reply->deleteLater();
-    m_name = tr("unknown molecule");
-    return;
-  }
-
-  // check if the data came through
-  QByteArray data = reply->readAll();
-  if (data.contains("Error report") || data.contains("<h1>")) {
-    reply->deleteLater();
-    m_name = tr("unknown molecule");
-    return;
-  }
-
-  // parse the JSON
-  // https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/…/json
-
-  // PC_Compounds[0].props
-  // iterate // get "urn" / "name" == "Markup" and "Preferred"
-  //    ..       get "value" / "sval"
-
-  QJsonDocument doc = QJsonDocument::fromJson(data);
-  QJsonObject obj = doc.object();
-  QJsonArray array = obj["PC_Compounds"].toArray();
-  if (array.isEmpty()) {
-    reply->deleteLater();
-    m_name = tr("unknown molecule");
-    return;
-  }
-  obj = array.first().toObject();
-  array = obj["props"].toArray(); // props is an array of objects
-  for (const QJsonValue& value : array) {
-    obj = value.toObject();
-    QJsonObject urn = obj["urn"].toObject();
-
-    if (urn["name"].toString() == "Markup") {
-      // HTML version for dialog
-      QJsonObject nameValue = obj["value"].toObject();
-      m_name = nameValue["sval"].toString();
-    } else if (urn["name"].toString() == "Preferred") {
-      // save this text version for files and copy/paste
-      QJsonObject nameValue = obj["value"].toObject();
-      m_molecule->setData("name", nameValue["sval"].toString().toStdString());
-      m_name = nameValue["sval"].toString();
-    }
-  }
-
-  emit dataChanged(index(Name, 0), index(Name, 0));
-
-  reply->deleteLater();
+  return tr("(pending)");
 }
 
 int MolecularModel::rowCount(const QModelIndex& parent) const
@@ -189,7 +98,7 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
     return QVariant();
 
   int row = index.row();
-  int col = index.column();
+  [[maybe_unused]] int col = index.column();
 
   // Simple lambda to convert QFlags to variant as in Qt 6 this needs help.
   auto toVariant = [&](auto flags) {
@@ -213,10 +122,12 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
     case 1:
       return m_molecule->mass();
     case 2:
-      return m_molecule->formattedFormula();
+      return m_molecule->monoisotopicMass();
     case 3:
-      return QVariant::fromValue(m_molecule->atomCount());
+      return m_molecule->formattedFormula();
     case 4:
+      return QVariant::fromValue(m_molecule->atomCount());
+    case 5:
       return QVariant::fromValue(m_molecule->bondCount());
   }
 
@@ -267,6 +178,8 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Molecule Name");
     else if (it->first == " 2mass")
       return tr("Molecular Mass (g/mol)");
+    else if (it->first == " 2monoisotopicMass")
+      return tr("Monoisotopic Mass (g/mol)");
     else if (it->first == " 3formula")
       return tr("Chemical Formula");
     else if (it->first == " 4atoms")
@@ -352,9 +265,8 @@ bool MolecularModel::setData(const QModelIndex& index, const QVariant& value,
   int row = index.row();
 
   if (row == 0) { // name should always be the first row
-    m_name = value.toString();
-    m_autoName = false;
-    m_molecule->setData("name", m_name.toStdString());
+    m_molecule->setData("name", value.toString().toStdString());
+    m_molecule->setData("markup_name", value.toString().toStdString());
     emit dataChanged(index, index);
     return true;
   }
@@ -387,20 +299,24 @@ void MolecularModel::updateTable(unsigned int flags)
   if (m_molecule == nullptr)
     return;
 
-  m_nameUpdateNeeded = true;
-
   // we use internal key names here and
   // update the display names in the headerData method
-  m_propertiesCache.setValue(" 1name", name());
+  m_propertiesCache.setValue(" 1name", name().toStdString());
   m_propertiesCache.setValue(" 2mass", m_molecule->mass());
-  m_propertiesCache.setValue(" 3formula", m_molecule->formattedFormula());
-  m_propertiesCache.setValue(" 4atoms", m_molecule->atomCount());
-  m_propertiesCache.setValue(" 5bonds", m_molecule->bondCount());
+  m_propertiesCache.setValue(" 2monoisotopicMass",
+                             m_molecule->monoisotopicMass());
+  m_propertiesCache.setValue(" 3formula",
+                             m_molecule->formattedFormula().toStdString());
+  m_propertiesCache.setValue(" 4atoms",
+                             static_cast<int>(m_molecule->atomCount()));
+  m_propertiesCache.setValue(" 5bonds",
+                             static_cast<int>(m_molecule->bondCount()));
   if (m_molecule->coordinate3dCount() > 0)
-    m_propertiesCache.setValue(" 6coordinateSets",
-                               m_molecule->coordinate3dCount());
+    m_propertiesCache.setValue(
+      " 6coordinateSets", static_cast<int>(m_molecule->coordinate3dCount()));
   if (m_molecule->residueCount() > 0) {
-    m_propertiesCache.setValue(" 7residues", m_molecule->residueCount());
+    m_propertiesCache.setValue(" 7residues",
+                               static_cast<int>(m_molecule->residueCount()));
 
     // figure out if we have multiple chains
     unsigned int chainCount = 0;
@@ -416,7 +332,7 @@ void MolecularModel::updateTable(unsigned int flags)
 
       chainCount = std::max(chainCount, offset);
     }
-    m_propertiesCache.setValue(" 8chains", chainCount);
+    m_propertiesCache.setValue(" 8chains", static_cast<int>(chainCount));
   }
 
   m_propertiesCache.setValue(" 9totalCharge",
@@ -455,7 +371,7 @@ void MolecularModel::updateTable(unsigned int flags)
   const auto& properties = m_molecule->dataMap();
   for (const auto& key : properties.names()) {
     if (key == "formula" || key == "name" || key == "fileName" ||
-        key == "energies" || key == "totalCharge" ||
+        key == "energies" || key == "markup_name" || key == "totalCharge" ||
         key == "totalSpinMultiplicity")
       continue; // skip these
 
@@ -477,4 +393,4 @@ void MolecularModel::updateTable(unsigned int flags)
   }
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
