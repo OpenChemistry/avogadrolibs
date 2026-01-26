@@ -263,7 +263,7 @@ QWidget* CloseContacts::setupWidget()
       case 2:
         tabs->addTab(page, tr("Repulsive"));
         break;
-      default:
+      default:;
     }
   }
 
