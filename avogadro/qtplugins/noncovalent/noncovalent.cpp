@@ -414,7 +414,7 @@ QWidget* NonCovalent::setupWidget()
       case 2:
         tabs->addTab(page, tr("Chalcogen"));
         break;
-      default:
+      default:;
     }
   }
 
