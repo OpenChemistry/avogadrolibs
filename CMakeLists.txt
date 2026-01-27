@@ -64,6 +64,7 @@ option(USE_VTK "Enable libraries that use VTK" OFF)
 option(USE_LIBARCHIVE "Enable optional Libarchive features" ON)
 option(USE_LIBMSYM "Enable optional features using libmsym" ON)
 option(USE_SPGLIB "Enable optional features using spglib" ON)
+option(USE_PLOTTER "Enable JKQTPlotter for charts and spectra" ON)
 option(USE_MMTF "Enable optional features using mmtf" OFF) # MMTF is no longer maintained
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
 option(USE_EXTERNAL_NLOHMANN "Use an externally-provided version of the nlohmann JSON library" OFF)
