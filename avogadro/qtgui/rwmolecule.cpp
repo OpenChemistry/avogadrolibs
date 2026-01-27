@@ -12,6 +12,7 @@
 #ifdef USE_SPGLIB
 #include <avogadro/core/avospglib.h>
 #endif
+#include <avogadro/core/layermanager.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/qtgui/hydrogentools.h>
@@ -657,6 +658,11 @@ bool RWMolecule::reduceCellToPrimitive(double cartTol)
   QString undoText = tr("Reduce to Primitive");
 
   modifyMolecule(newMolecule, changes, undoText);
+
+  // Resize layer info to match the new atom count
+  Core::LayerManager::getMoleculeInfo(&m_molecule)
+    ->layer.resize(m_molecule.atomCount());
+
   return true;
 }
 
@@ -682,6 +688,11 @@ bool RWMolecule::conventionalizeCell(double cartTol)
   QString undoText = tr("Conventionalize Cell");
 
   modifyMolecule(newMolecule, changes, undoText);
+
+  // Resize layer info to match the new atom count
+  Core::LayerManager::getMoleculeInfo(&m_molecule)
+    ->layer.resize(m_molecule.atomCount());
+
   return true;
 }
 
@@ -707,6 +718,11 @@ bool RWMolecule::symmetrizeCell(double cartTol)
   QString undoText = tr("Symmetrize Cell");
 
   modifyMolecule(newMolecule, changes, undoText);
+
+  // Resize layer info to match the new atom count
+  Core::LayerManager::getMoleculeInfo(&m_molecule)
+    ->layer.resize(m_molecule.atomCount());
+
   return true;
 }
 
@@ -746,6 +762,11 @@ bool RWMolecule::reduceCellToAsymmetricUnit(unsigned short hallNumber,
   QString undoText = tr("Reduce Cell to Asymmetric Unit");
 
   modifyMolecule(newMolecule, changes, undoText);
+
+  // Resize layer info to match the new atom count
+  Core::LayerManager::getMoleculeInfo(&m_molecule)
+    ->layer.resize(m_molecule.atomCount());
+
   return true;
 }
 
