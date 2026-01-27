@@ -1525,9 +1525,10 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
 
     auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;
-    if (layer.atomCount()) {
+    if (layer.atomCount() && molecule.atomCount()) {
       json atomLayer;
-      for (Index i = 0; i < layer.atomCount(); ++i) {
+      // Use molecule atom count to avoid writing stale layer data
+      for (Index i = 0; i < molecule.atomCount(); ++i) {
         atomLayer.push_back(layer.getLayerID(i));
       }
       atoms["layer"] = atomLayer;
