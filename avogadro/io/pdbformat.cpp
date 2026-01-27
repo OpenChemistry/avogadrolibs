@@ -54,12 +54,15 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     if (!in.good())
       break;
 
-   if (startsWith(buffer, "ENDMDL")) {
-  // Ensure positions array is not empty before creating a new frame
-    if (!positions.empty()) {
-    mol.setCoordinate3d(positions, coordSet++);
-    positions.clear(); // Clear positions after adding them as a frame
-    }
+    if (startsWith(buffer, "ENDMDL")) {
+      // For the first frame (coordSet == 0), positions are stored directly
+      // in the molecule, not in the positions array
+      if (coordSet == 0) {
+        mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
+      } else if (!positions.empty()) {
+        mol.setCoordinate3d(positions, coordSet++);
+        positions.clear();
+      }
     }
 
     // e.g.   CRYST1    4.912    4.912    6.696  90.00  90.00 120.00 P1 1
@@ -274,10 +277,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   if (!positions.empty()) {
-    // This handles the last set of positions if the file doesn't end with ENDMDL
+    // This handles the last set of positions if the file doesn't end with
+    // ENDMDL
     mol.setCoordinate3d(positions, coordSet);
   }
-  
+
   int count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;
   for (int c = 0; c < count; ++c) {
     for (char l : altLocs) {
