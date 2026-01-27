@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-24 19:10+0000\n"
-"PO-Revision-Date: 2026-01-25 06:46+0000\n"
+"PO-Revision-Date: 2026-01-27 15:55+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -3625,8 +3625,9 @@ msgid "Insert Peptide"
 msgstr "ペプチドの挿入"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
+#, fuzzy
 msgid "InsertPeptide"
-msgstr ""
+msgstr "ペプチドを挿入"
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
@@ -5060,7 +5061,7 @@ msgstr "制限を解除"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:163
 #: qtplugins/qtaim/qtaimwavefunction.h:82
-#, fuzzy, qt-format
+#, qt-format
 msgid "Cannot read file %1."
 msgstr "ファイル %1 を読み込みできません。"
 

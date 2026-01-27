@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-24 19:10+0000\n"
-"PO-Revision-Date: 2026-01-18 23:01+0000\n"
+"PO-Revision-Date: 2026-01-27 03:19+0000\n"
 "Last-Translator: Frank Hoffmann <kohaerenz@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.2\n"
+"X-Generator: Weblate 5.16-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -475,7 +475,7 @@ msgstr "Informationen über die erledigte Aufgabe werden abgerufen …"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Zeitlimit für die Abfrage von Aufträgen"
 
 #: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
@@ -1046,7 +1046,7 @@ msgstr "Für das ausgewählte Format wird kein geeigneter Schreiber gefunden."
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "Verarbeiter"
 
 #: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
@@ -1146,7 +1146,7 @@ msgstr "Titel"
 
 #: qtgui/jsonwidget.cpp:214
 msgid "Filename Base"
-msgstr ""
+msgstr "Dateinamenbasis"
 
 #: qtgui/jsonwidget.cpp:220 qtgui/jsonwidget.cpp:225
 msgid "Processor Cores"
@@ -1209,6 +1209,8 @@ msgstr "Unbekannter Optionstyp '%1' von Option '%2'."
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
+"Fehler beim Festlegen der Standardeinstellung für die Option '%1'. "
+"Ungültiger Widget-Typ."
 
 #: qtgui/jsonwidget.cpp:739 qtgui/jsonwidget.cpp:774 qtgui/jsonwidget.cpp:795
 #: qtgui/jsonwidget.cpp:816 qtgui/jsonwidget.cpp:854 qtgui/jsonwidget.cpp:875
@@ -1216,6 +1218,8 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
+"Fehler beim Festlegen der Standardeinstellung für die Option '%1'. "
+"Ungültiger Standardwert:"
 
 #: qtgui/jsonwidget.cpp:753
 #, qt-format
@@ -1223,11 +1227,13 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
+"Fehler beim Festlegen der Standardeinstellung für die Option '%1'. Es konnte "
+"kein gültiger Auswahlboxindex für den Wert gefunden werden:"
 
 #: qtgui/jsonwidget.cpp:979
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
+msgstr "Unaufgearbeitetes Widget in collectOptions für Option '%1'."
 
 #: qtgui/jsonwidget.cpp:1024 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
@@ -1331,6 +1337,8 @@ msgstr "Periodensystem der Elemente"
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Fehler beim Ausführen des Skripts '%1 %2': Zeitüberschreitung beim Warten "
+"auf Start (%3)."
 
 #: qtgui/pythonscript.cpp:216 qtgui/pythonscript.cpp:390
 #, qt-format
@@ -1345,6 +1353,8 @@ msgstr ""
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Fehler beim Ausführen des Skripts '%1 %2': Zeitüberschreitung beim Warten "
+"auf Abschluss (%3)."
 
 #: qtgui/pythonscript.cpp:238
 #, qt-format
@@ -2004,7 +2014,7 @@ msgstr "Spectral"
 #: qtplugins/surfaces/surfaces.cpp:804:180 rc.cpp:2073
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr "Coolwarm"
+msgstr "Kühl-Warm"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2068,7 +2078,6 @@ msgstr "Farbschema auswählen"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:2064
-#, fuzzy
 msgid "Colormap:"
 msgstr "Farbschema:"
 
@@ -2125,7 +2134,7 @@ msgstr "Geometrie optimieren"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kJ/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 kJ/mol"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
@@ -2469,7 +2478,7 @@ msgstr "Python Einstellungen …"
 
 #: qtplugins/configurepython/configurepython.cpp:73
 msgid "Install Python"
-msgstr ""
+msgstr "Installiere Python"
 
 #: qtplugins/configurepython/configurepython.cpp:74
 msgid ""
@@ -2480,11 +2489,11 @@ msgstr ""
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "KonfigurierePython"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Konfiguriere die Python-Umgebungen."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:482
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2504,7 +2513,7 @@ msgstr "Andere …"
 
 #: qtplugins/constraints/constraintsextension.cpp:22
 msgid "Constraints…"
-msgstr ""
+msgstr "Beschränkungen…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:225
@@ -2520,13 +2529,13 @@ msgstr ""
 
 #: qtplugins/constraints/constraintsextension.h:31
 msgid "Set constraints for geometry optimizations"
-msgstr ""
+msgstr "Festlegen von Einschränkungen für Geometrieoptimierungen"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:60:259
 msgid "Distance"
-msgstr ""
+msgstr "Abstand"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2538,27 +2547,27 @@ msgstr "Winkel"
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:64:265
 msgid "Torsion Angle"
-msgstr ""
+msgstr "Torsionswinkel"
 
 #: qtplugins/constraints/constraintsmodel.cpp:68
 msgctxt "fix / remain constant"
 msgid "Freeze Atom"
-msgstr ""
+msgstr "Atom einfrieren"
 
 #: qtplugins/constraints/constraintsmodel.cpp:70
 msgctxt "fix / remain constant"
 msgid "Freeze X Axis"
-msgstr ""
+msgstr "x-Achse fixieren"
 
 #: qtplugins/constraints/constraintsmodel.cpp:72
 msgctxt "fix / remain constant"
 msgid "Freeze Y Axis"
-msgstr ""
+msgstr "y-Achse fixieren"
 
 #: qtplugins/constraints/constraintsmodel.cpp:74
 msgctxt "fix / remain constant"
 msgid "Freeze Z Axis"
-msgstr ""
+msgstr "z-Achse fixieren"
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
 #: qtplugins/propertytables/propertymodel.cpp:637
@@ -2570,7 +2579,7 @@ msgstr "Typ"
 
 #: qtplugins/constraints/constraintsmodel.cpp:129
 msgid "Value"
-msgstr ""
+msgstr "Wert"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
 #: qtplugins/propertytables/propertymodel.cpp:682
@@ -2646,7 +2655,7 @@ msgstr "Ungültige Atombeschriftung."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
-msgstr ""
+msgstr "Ungültiger atomarer Index."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 msgid "Atomic index."
@@ -2806,11 +2815,11 @@ msgstr "Kopieren als"
 
 #: qtplugins/copypaste/copypaste.cpp:165
 msgid "Error Clipping Molecule"
-msgstr ""
+msgstr "Fehler beim Molekülausschnitt"
 
 #: qtplugins/copypaste/copypaste.cpp:166
 msgid "Error generating clipboard data."
-msgstr ""
+msgstr "Fehler beim Erstellen der Zwischenablagedaten."
 
 #: qtplugins/copypaste/copypaste.cpp:167
 #, qt-format
@@ -2860,7 +2869,7 @@ msgstr "Kopieren und einfügen"
 
 #: qtplugins/copypaste/copypaste.h:35
 msgid "Interact with the clipboard."
-msgstr ""
+msgstr "Mit der Zwischenablage interagieren."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:33
 msgid "&CP2K…"
@@ -2896,7 +2905,7 @@ msgstr "Geometrieoptimierung"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:333
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "Elektronische Strukturmethoden (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:336
 msgid "Molecular Mechanics"
@@ -2904,7 +2913,7 @@ msgstr "Molekulare Mechanik"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:339
 msgid "Hybrid quantum classical (Not yet supported)"
-msgstr ""
+msgstr "Hybrid quantenklassisch (noch nicht unterstützt)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:354
 msgid "EWALD"
@@ -2934,15 +2943,15 @@ msgstr "ATOMIC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:380
 msgid "CORE"
-msgstr ""
+msgstr "KERN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:383
 msgid "DENSITIES"
-msgstr ""
+msgstr "DICHTEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:386
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "GESCHICHTE_NEUSTART"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:389
 msgid "MOPAC"
@@ -2950,15 +2959,15 @@ msgstr "MOPAC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:395
 msgid "RANDOM"
-msgstr ""
+msgstr "ZUFÄLLIG"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:398
 msgid "RESTART"
-msgstr ""
+msgstr "NEUSTART"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:401
 msgid "SPARSE"
-msgstr ""
+msgstr "DÜNN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:415
 msgid "BROYDEN"
@@ -3060,7 +3069,7 @@ msgstr "Einheitszelle auf Standardorientierung drehen."
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
-msgstr ""
+msgstr "Niggli Kristallreduktion"
 
 #: qtplugins/crystal/crystal.cpp:217
 msgid "The unit cell is already reduced."
@@ -3076,7 +3085,7 @@ msgstr "Werkzeuge für Kristall-spezifische Bearbeitung und Analyse."
 
 #: qtplugins/crystal/crystalscene.cpp:178
 msgid "Color axes:"
-msgstr ""
+msgstr "Achsen einfärben:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -3110,11 +3119,11 @@ msgstr "Einheitszelleneditor"
 #: qtplugins/crystal/unitcelldialog.cpp:282
 #: qtplugins/crystal/unitcelldialog.cpp:293
 msgid "Ignoring singular cell matrix"
-msgstr ""
+msgstr "Ignorieren der Einzelzellmatrix"
 
 #: qtplugins/crystal/unitcelldialog.cpp:304
 msgid "Ignoring singular fractional cell matrix"
-msgstr ""
+msgstr "Ignorieren einer einzelnen fraktionalen Zellmatrix"
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -3241,7 +3250,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:86
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "Abfrage für %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
 #: qtplugins/networkdatabases/networkdatabases.cpp:97
@@ -3270,23 +3279,23 @@ msgstr "PDB Modelle von der Protein Data Bank laden"
 
 #: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
-msgstr ""
+msgstr "Fokusauswahl"
 
 #: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
-msgstr ""
+msgstr "Fokus aufheben"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "Fokus"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "Den Blick auf bestimmte Merkmale richten."
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
-msgstr ""
+msgstr "Rendern Sie die Kraftfeldvisualisierungen für die Atome des Moleküls."
 
 #: qtplugins/forcefield/forcefield.cpp:90
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
@@ -3305,31 +3314,31 @@ msgstr "Ausgewählte Atome einfrieren"
 #: qtplugins/forcefield/forcefield.cpp:118
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
-msgstr ""
+msgstr "x einfrieren"
 
 #: qtplugins/forcefield/forcefield.cpp:126
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
-msgstr ""
+msgstr "y einfrieren"
 
 #: qtplugins/forcefield/forcefield.cpp:134
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
-msgstr ""
+msgstr "z einfrieren"
 
 #: qtplugins/forcefield/forcefield.cpp:142
 msgid "Unfreeze Selected Atoms"
-msgstr ""
+msgstr "Ausgewählte Atome freigeben"
 
 #: qtplugins/forcefield/forcefield.cpp:151
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
-msgstr ""
+msgstr "Ausgewählte Atome verschmelzen"
 
 #: qtplugins/forcefield/forcefield.cpp:159
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
-msgstr ""
+msgstr "Ausgewählte Atome trennen"
 
 #: qtplugins/forcefield/forcefield.cpp:366
 #: qtplugins/forcefield/forcefield.cpp:517
@@ -3349,7 +3358,7 @@ msgstr "Keine Atome für die Optimierung bereitgestellt"
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "Energie:%L1"
 
 #: qtplugins/forcefield/forcefield.cpp:516
 #, qt-format
@@ -3653,7 +3662,7 @@ msgstr "Einfügen von Molekülfragmenten zum Aufbau größerer Moleküle."
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:55
 msgid "Peptide…"
-msgstr ""
+msgstr "Peptid…"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3661,15 +3670,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:511:730 rc.cpp:922
 msgid "Insert Peptide"
-msgstr ""
+msgstr "Peptid einfügen"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
-msgstr ""
+msgstr "EinfügenPeptid"
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "Oligopeptidsequenzen einfügen."
 
 #: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:303
 #: qtplugins/surfacerender/surfacerender.cpp:309
@@ -3682,7 +3691,7 @@ msgstr "Abstand von der Mitte:"
 
 #: qtplugins/label/label.cpp:183 qtplugins/label/label.cpp:214
 msgid "Index"
-msgstr ""
+msgstr "Index"
 
 #: qtplugins/label/label.cpp:184
 msgid "Unique ID"
@@ -3700,7 +3709,7 @@ msgstr "Element & Nummer"
 
 #: qtplugins/label/label.cpp:188
 msgid "Element & ID"
-msgstr ""
+msgstr "Element & ID"
 
 #: qtplugins/label/label.cpp:190
 msgctxt "atomic partial charge"
@@ -3713,11 +3722,11 @@ msgstr "Atombeschriftung:"
 
 #: qtplugins/label/label.cpp:213
 msgid "Length"
-msgstr ""
+msgstr "Länge"
 
 #: qtplugins/label/label.cpp:219
 msgid "Bond Label:"
-msgstr ""
+msgstr "Bindungsbeschriftung:"
 
 #: qtplugins/label/label.cpp:226 qtplugins/propertytables/propertymodel.cpp:660
 msgid "ID"
@@ -3731,7 +3740,7 @@ msgstr "Name"
 
 #: qtplugins/label/label.cpp:228
 msgid "Name & ID"
-msgstr ""
+msgstr "Name & ID"
 
 #: qtplugins/label/label.cpp:235
 #, fuzzy
@@ -3740,7 +3749,7 @@ msgstr "Restbeschriftung:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
-msgstr ""
+msgstr "Anzeige von Beschriftungen im Kugel-Stab-Stil."
 
 #: qtplugins/label/labeleditor.cpp:31
 msgid "Edit Labels"
@@ -3759,7 +3768,7 @@ msgstr "Beschriftung erzeugen"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr ""
+msgstr "Werkzeug zum editieren von Beschriftungen"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
@@ -3820,11 +3829,11 @@ msgstr "Gewünschter Formatleser konnte nicht geladen werden."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
-msgstr ""
+msgstr "Keine Koordinaten gefunden!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:146
 msgid "Unable to generate 3D coordinates."
-msgstr ""
+msgstr "3D-Koordinaten können nicht generiert werden."
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3832,7 +3841,7 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:54
 msgid "Load single-line molecule descriptors through an input dialog."
-msgstr ""
+msgstr "Laden Sie einzeilige Molekülbeschreibungen über einen Eingabedialog."
 
 #: qtplugins/manipulator/manipulator.cpp:49
 msgctxt "control-key 5"
@@ -3909,7 +3918,7 @@ msgstr "Messwerkzeug"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
-msgstr ""
+msgstr "(ausstehend)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
 #: qtplugins/propertytables/propertymodel.cpp:721
@@ -3926,11 +3935,11 @@ msgstr "Molare Masse (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:182
 msgid "Monoisotopic Mass (g/mol)"
-msgstr ""
+msgstr "Monoisotopische Molekülmasse (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:184
 msgid "Chemical Formula"
-msgstr ""
+msgstr "Summenformel"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:186
 msgid "Number of Atoms"
@@ -3942,15 +3951,15 @@ msgstr "Anzahl der Bindungen"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:190
 msgid "Coordinate Sets"
-msgstr ""
+msgstr "Koordinatensätze"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:192
 msgid "Number of Residues"
-msgstr ""
+msgstr "Zahl der Reste"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:194
 msgid "Number of Chains"
-msgstr ""
+msgstr "Zahl der Ketten"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:196
 msgid "Net Charge"
@@ -4021,7 +4030,7 @@ msgstr "Allgemeine Eigenschaften eines Moleküls ansehen."
 #: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:273
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analyze"
-msgstr ""
+msgstr "&Analysiere"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:60
 #: qtplugins/propertytables/propertytables.cpp:86
@@ -4096,7 +4105,7 @@ msgstr "Drehen Sie die Szene entlang der x-, y- oder z-Achse."
 
 #: qtplugins/navigator/navigator.cpp:64
 msgid "Zoom the scene."
-msgstr ""
+msgstr "Vergrößere die Ansicht."
 
 #: qtplugins/navigator/navigator.cpp:65
 msgid "Translate the scene."
@@ -4132,7 +4141,7 @@ msgstr "Netzwerk-Datenbanken"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
-msgstr ""
+msgstr "Mit Online-Datenbanken, Abfragestrukturen usw. interagieren."
 
 #: qtplugins/noncovalent/noncovalent.cpp:372
 msgid " °"
@@ -4178,7 +4187,7 @@ msgstr "Wasserstoffatome entfernen"
 #: qtplugins/openbabel/openbabel.cpp:95
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr ""
+msgstr "%1 nicht gefunden! Open Babel-Plugin-Aktionen werden deaktiviert."
 
 #: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
@@ -4269,7 +4278,7 @@ msgstr "Molekül wird aktualisiert…"
 #: qtplugins/openbabel/openbabel.cpp:537 qtplugins/openbabel/openbabel.cpp:688
 #: qtplugins/openbabel/openbabel.cpp:779 qtplugins/openbabel/openbabel.cpp:961
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Fehler beim Interpretieren der Open-Babel-Ausgabe."
 
 #: qtplugins/openbabel/openbabel.cpp:550 qtplugins/openbabel/openbabel.cpp:701
 #: qtplugins/openbabel/openbabel.cpp:791
@@ -4291,11 +4300,11 @@ msgstr "Konformere können nicht mit Open Babel erzeugt werden."
 
 #: qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating Conformers (Open Babel)"
-msgstr ""
+msgstr "Erzeugen von Konformeren (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:711
 msgid "Generate Conformers"
-msgstr ""
+msgstr "Konformere erzeugen"
 
 #: qtplugins/openbabel/openbabel.cpp:730
 msgid "Cannot open file with Open Babel."
@@ -4311,16 +4320,16 @@ msgstr "Bindungen werden erkannt (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:743
 msgid "Generating XYZ representation…"
-msgstr ""
+msgstr "XYZ-Darstellung wird generiert…"
 
 #: qtplugins/openbabel/openbabel.cpp:750
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Fehler beim Erzeugen der XYZ-Zeichenkette."
 
 #: qtplugins/openbabel/openbabel.cpp:761
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr ""
+msgstr "Konvertierung von XYZ in Open Babel mit %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:771
 msgid "Updating molecule from Open Babel…"
@@ -4340,7 +4349,7 @@ msgstr "Open-Babel-Eingabe wird erstellt…"
 
 #: qtplugins/openbabel/openbabel.cpp:837 qtplugins/openbabel/openbabel.cpp:887
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Fehler beim Erzeugen der Open-Babel-Eingabe."
 
 #: qtplugins/openbabel/openbabel.cpp:850 qtplugins/openbabel/openbabel.cpp:900
 #: qtplugins/openbabel/openbabel.cpp:942
@@ -4359,7 +4368,7 @@ msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:879 qtplugins/openbabel/openbabel.cpp:921
 msgid "Generating obabel input…"
-msgstr ""
+msgstr "Open-Babel-Eingabe generieren…"
 
 #: qtplugins/openbabel/openbabel.cpp:915
 msgid "Cannot remove hydrogens with Open Babel."
@@ -4371,17 +4380,19 @@ msgstr "Wasserstoffatome entfernen (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:929
 msgid "Error generating Open Babel data."
-msgstr ""
+msgstr "Fehler beim Erstellen von Open-Babel-Daten."
 
 #: qtplugins/openbabel/openbabel.cpp:952
 msgid "Reading obabel output…"
-msgstr ""
+msgstr "Ausgabe von Open Babel lesen…"
 
 #: qtplugins/openbabel/openbabel.cpp:1015
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
+"Open Babel wird bereits ausgeführt. Warten Sie, bis der andere Vorgang "
+"abgeschlossen ist, und versuchen Sie es erneut."
 
 #: qtplugins/openbabel/openbabel.h:38
 msgid "OpenBabel"
@@ -4389,19 +4400,19 @@ msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:42
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Mit OpenBabel-Dienstprogrammen interagieren."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
-msgstr ""
+msgstr "&ÖffneMM-Skript…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
-msgstr ""
+msgstr "ÖffneMM Eingabe"
 
 #: qtplugins/openmminput/openmminput.h:35
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "Eingaben für OpenMM generieren."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
 #, fuzzy
@@ -4451,7 +4462,7 @@ msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
-msgstr ""
+msgstr "oben"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -4462,11 +4473,11 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:1061
 #: qtplugins/openmminput/openmminputdialog.cpp:1070:1637 rc.cpp:1652
 msgid "True"
-msgstr ""
+msgstr "Wahr"
 
 #: qtplugins/overlayaxes/overlayaxes.h:31
 msgid "Render reference axes in the corner of the display."
-msgstr ""
+msgstr "Referenzachsen in der Ecke des Displays rendern."
 
 #: qtplugins/playertool/playertool.cpp:51
 msgctxt "control-key 9"
@@ -4475,7 +4486,7 @@ msgstr "Strg+9"
 
 #: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
-msgstr ""
+msgstr "Abspieler"
 
 #: qtplugins/playertool/playertool.cpp:53
 #, fuzzy, qt-format
@@ -4492,12 +4503,12 @@ msgstr "Frame:"
 #: qtplugins/playertool/playertool.cpp:113
 msgctxt "start or first frame index"
 msgid "Start:"
-msgstr ""
+msgstr "Start:"
 
 #: qtplugins/playertool/playertool.cpp:124
 msgctxt "end or last frame index"
 msgid "End:"
-msgstr ""
+msgstr "Ende:"
 
 #: qtplugins/playertool/playertool.cpp:138
 msgid "Dynamic bonding?"
@@ -4520,7 +4531,7 @@ msgstr "Spielen"
 
 #: qtplugins/playertool/playertool.cpp:165
 msgid "Record…"
-msgstr ""
+msgstr "Aufzeichnen…"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
@@ -4545,7 +4556,7 @@ msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:314
 msgid "GIF FPS support warning"
-msgstr ""
+msgstr "Warnung zur GIF-FPS-Unterstützung"
 
 #: qtplugins/playertool/playertool.cpp:315
 msgid "The GIF file format does not support frame rates over 100 FPS."
@@ -4557,11 +4568,11 @@ msgstr "Video-Datei (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:392 qtplugins/surfaces/surfaces.cpp:987
 msgid "Error: cannot add frame to video."
-msgstr ""
+msgstr "Fehler: Einzelbild kann nicht zum Video hinzugefügt werden."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
-msgstr ""
+msgstr "Abspielwerkzeug"
 
 #: qtplugins/playertool/playertool.h:36
 msgid "Play back trajectories"
@@ -4573,11 +4584,11 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:127
 msgid "Conformer Analysis"
-msgstr ""
+msgstr "Konformer-Analyse"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
-msgstr ""
+msgstr "Diagramm-Typ:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -4587,7 +4598,7 @@ msgstr "RMSD"
 
 #: qtplugins/plotconformer/plotconformer.cpp:149
 msgid "Velocities"
-msgstr ""
+msgstr "Geschwindigkeiten"
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
