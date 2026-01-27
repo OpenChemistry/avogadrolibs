@@ -50,10 +50,11 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream& in, Core::Molecule& molecule) override;
+  [[nodiscard]] bool read(std::istream& in, Core::Molecule& molecule) override;
 
   // unimplemented
-  bool write(std::ostream& out, const Core::Molecule& molecule) override;
+  [[nodiscard]] bool write(std::ostream& out,
+                           const Core::Molecule& molecule) override;
 };
 
 } // namespace Io
