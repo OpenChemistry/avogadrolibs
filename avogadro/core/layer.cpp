@@ -75,8 +75,13 @@ void Layer::clear()
 
 void Layer::resize(size_t count)
 {
+  if (count == m_atomAndLayers.size())
+    return;
   if (count < m_atomAndLayers.size()) {
     m_atomAndLayers.resize(count);
+  } else {
+    // Default new atoms to the active layer
+    m_atomAndLayers.resize(count, m_activeLayer);
   }
 }
 
