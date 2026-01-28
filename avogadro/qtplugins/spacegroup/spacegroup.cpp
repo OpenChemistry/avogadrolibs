@@ -14,6 +14,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
+#include <avogadro/qtgui/richtextdelegate.h>
 
 #include <QAction>
 #include <QDebug>
@@ -36,6 +37,7 @@
 
 using Avogadro::Core::AvoSpglib;
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::RichTextDelegate;
 
 namespace Avogadro::QtPlugins {
 
@@ -179,14 +181,12 @@ const QString SpaceGroup::symbolToString(unsigned short hallNumber)
 
   // Replace -N notation with N̅ (number with combining overline U+0305)
   // for rotoinversion axes in Hermann-Mauguin symbols
-  /*
-  const QChar combiningOverline(0x0305);
-  symbol.replace(QStringLiteral("-1"), QStringLiteral("1") + combiningOverline);
-  symbol.replace(QStringLiteral("-2"), QStringLiteral("2") + combiningOverline);
-  symbol.replace(QStringLiteral("-3"), QStringLiteral("3") + combiningOverline);
-  symbol.replace(QStringLiteral("-4"), QStringLiteral("4") + combiningOverline);
-  symbol.replace(QStringLiteral("-6"), QStringLiteral("6") + combiningOverline);
-  */
+  QString htmlOverline("<span style=\"text-decoration: overline;\">%1</span>");
+  symbol.replace(QStringLiteral("-1"), htmlOverline.arg(QStringLiteral("1")));
+  symbol.replace(QStringLiteral("-2"), htmlOverline.arg(QStringLiteral("2")));
+  symbol.replace(QStringLiteral("-3"), htmlOverline.arg(QStringLiteral("3")));
+  symbol.replace(QStringLiteral("-4"), htmlOverline.arg(QStringLiteral("4")));
+  symbol.replace(QStringLiteral("-6"), htmlOverline.arg(QStringLiteral("6")));
 
   // Replace screw axis notation with subscripts
   // e.g., "21" -> "2₁", "42" -> "4₂", etc.
@@ -550,6 +550,11 @@ unsigned short SpaceGroup::selectSpaceGroup()
   dialog.layout()->addWidget(searchBox);
 
   auto* view = new QTableView;
+
+  // Rich text delegate for symbol
+  auto* symbolDelegate = new RichTextDelegate(this);
+  view->setItemDelegateForColumn(2, symbolDelegate);
+
   QFont font = view->font();
   font.setPointSize(font.pointSize() + 1);
   view->setFont(font);
