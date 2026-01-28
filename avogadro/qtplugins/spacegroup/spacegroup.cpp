@@ -34,6 +34,9 @@
 #include <QtGui/QFont>
 #include <QtGui/QStandardItemModel>
 
+#include <cmath>
+#include <sstream>
+
 using Avogadro::Core::AvoSpglib;
 using Avogadro::QtGui::Molecule;
 
@@ -412,6 +415,56 @@ void SpaceGroup::fillUnitCell()
   // If the hall number is zero, the user canceled
   if (hallNumber == 0)
     return;
+
+  // Check if the cell appears to be primitive but the space group expects
+  // a centered cell. This can cause unexpected atom duplication.
+  std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
+  if (!hallSymbol.empty()) {
+    char centering = hallSymbol[0];
+    // F, I, A, B, C are centered lattice types
+    if (centering == 'F' || centering == 'I' || centering == 'A' ||
+        centering == 'B' || centering == 'C') {
+      // Check if cell angles deviate significantly from 90 degrees
+      // which would suggest a primitive cell basis
+      Core::UnitCell* uc = m_molecule->unitCell();
+      if (uc) {
+        double alpha = uc->alpha() * 180.0 / M_PI;
+        double beta = uc->beta() * 180.0 / M_PI;
+        double gamma = uc->gamma() * 180.0 / M_PI;
+        double tolerance = 5.0; // degrees
+
+        bool nonConventionalAngles = (std::abs(alpha - 90.0) > tolerance) ||
+                                     (std::abs(beta - 90.0) > tolerance) ||
+                                     (std::abs(gamma - 90.0) > tolerance);
+
+        if (nonConventionalAngles) {
+          QMessageBox::StandardButton reply;
+          reply = QMessageBox::warning(
+            nullptr, tr("Primitive Cell Detected"),
+            tr(
+              "The current unit cell appears to be a primitive cell "
+              "(non-90° angles), but the space group %1 expects a "
+              "centered conventional cell.\n\n"
+              "Filling the unit cell may create unexpected duplicate atoms.\n\n"
+              "Would you like to create a conventional cell first?")
+              .arg(hallSymbol.c_str()),
+            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+          if (reply == QMessageBox::Cancel)
+            return;
+          if (reply == QMessageBox::Yes) {
+            // Conventionalize first, then fill
+            if (!m_molecule->undoMolecule()->conventionalizeCell(m_spgTol)) {
+              QMessageBox::warning(nullptr, tr("Error"),
+                                   tr("Failed to conventionalize the cell."));
+              return;
+            }
+          }
+          // If No, continue with fill anyway (user's choice)
+        }
+      }
+    }
+  }
 
   m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol);
 }
