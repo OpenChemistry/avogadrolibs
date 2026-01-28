@@ -51,7 +51,7 @@ SpaceGroup::SpaceGroup(QObject* parent_)
     m_reduceToPrimitiveAction(new QAction(this)),
     m_conventionalizeCellAction(new QAction(this)),
     m_symmetrizeAction(new QAction(this)),
-    m_fillCompleteCellAction(new QAction(this)),
+    m_fillTranslationalCellAction(new QAction(this)),
     m_fillUnitCellAction(new QAction(this)),
     m_reduceToAsymmetricUnitAction(new QAction(this)),
     m_setToleranceAction(new QAction(this))
@@ -96,11 +96,12 @@ SpaceGroup::SpaceGroup(QObject* parent_)
   m_actions.push_back(m_fillUnitCellAction);
   m_fillUnitCellAction->setProperty("menu priority", 185);
 
-  m_fillCompleteCellAction->setText(tr("Fill Complete Cell…"));
-  connect(m_fillCompleteCellAction, SIGNAL(triggered()),
-          SLOT(fillCompleteCell()));
-  m_actions.push_back(m_fillCompleteCellAction);
-  m_fillCompleteCellAction->setProperty("menu priority", 184);
+  m_fillTranslationalCellAction->setText(tr(
+    "Fill Translation Cell…", "fill the translationally unique repeat unit"));
+  connect(m_fillTranslationalCellAction, SIGNAL(triggered()),
+          SLOT(fillTranslationalCell()));
+  m_actions.push_back(m_fillTranslationalCellAction);
+  m_fillTranslationalCellAction->setProperty("menu priority", 184);
 
   updateActions();
 }
@@ -118,7 +119,7 @@ QList<QAction*> SpaceGroup::actions() const
 
 QStringList SpaceGroup::menuPath(QAction* action) const
 {
-  if (action == m_fillUnitCellAction || action == m_fillCompleteCellAction)
+  if (action == m_fillUnitCellAction || action == m_fillTranslationalCellAction)
     return QStringList() << tr("&Crystal");
 
   return QStringList() << tr("&Crystal") << tr("Space Group");
@@ -129,7 +130,7 @@ void SpaceGroup::registerCommands()
   emit registerCommand(
     "fillUnitCell",
     tr("Fill symmetric atoms based on the crystal space group."));
-  emit registerCommand("fillCompleteCell",
+  emit registerCommand("fillTranslationalCell",
                        tr("Fill all atoms based on the crystal space group."));
 }
 
@@ -142,8 +143,8 @@ bool SpaceGroup::handleCommand(const QString& command,
   if (command == "fillUnitCell") {
     fillUnitCell();
     return true;
-  } else if (command == "fillCompleteCell") {
-    fillCompleteCell();
+  } else if (command == "fillTranslationalCell") {
+    fillTranslationalCell();
     return true;
   }
   return false;
@@ -178,18 +179,22 @@ const QString SpaceGroup::toleranceToString()
   return QStringLiteral("%1 × 10%2").arg(mantissa, 0, 'f', 1).arg(expStr);
 }
 
-const QString SpaceGroup::symbolToString(unsigned short hallNumber)
+const QString SpaceGroup::symbolToString(unsigned short hallNumber,
+                                         bool replaceOverlines)
 {
   QString symbol(Core::SpaceGroups::internationalShort(hallNumber));
 
   // Replace -N notation with N̅ (number with combining overline U+0305)
   // for rotoinversion axes in Hermann-Mauguin symbols
-  QString htmlOverline("<span style=\"text-decoration: overline;\">%1</span>");
-  symbol.replace(QStringLiteral("-1"), htmlOverline.arg(QStringLiteral("1")));
-  symbol.replace(QStringLiteral("-2"), htmlOverline.arg(QStringLiteral("2")));
-  symbol.replace(QStringLiteral("-3"), htmlOverline.arg(QStringLiteral("3")));
-  symbol.replace(QStringLiteral("-4"), htmlOverline.arg(QStringLiteral("4")));
-  symbol.replace(QStringLiteral("-6"), htmlOverline.arg(QStringLiteral("6")));
+  if (replaceOverlines) {
+    QString htmlOverline(
+      "<span style=\"text-decoration: overline;\">%1</span>");
+    symbol.replace(QStringLiteral("-1"), htmlOverline.arg(QStringLiteral("1")));
+    symbol.replace(QStringLiteral("-2"), htmlOverline.arg(QStringLiteral("2")));
+    symbol.replace(QStringLiteral("-3"), htmlOverline.arg(QStringLiteral("3")));
+    symbol.replace(QStringLiteral("-4"), htmlOverline.arg(QStringLiteral("4")));
+    symbol.replace(QStringLiteral("-6"), htmlOverline.arg(QStringLiteral("6")));
+  }
 
   // Replace screw axis notation with subscripts
   // e.g., "21" -> "2₁", "42" -> "4₂", etc.
@@ -237,7 +242,7 @@ void SpaceGroup::setMolecule(QtGui::Molecule* mol)
     }
 
     if (m_molecule->atomCount() <= 5 || !(hasCarbon && hasHydrogen)) {
-      fillCompleteCell();
+      fillUnitCell();
     }
   }
 }
@@ -416,60 +421,14 @@ void SpaceGroup::fillUnitCell()
   if (hallNumber == 0)
     return;
 
-  // Check if the cell appears to be primitive but the space group expects
-  // a centered cell. This can cause unexpected atom duplication.
-  std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
-  if (!hallSymbol.empty()) {
-    char centering = hallSymbol[0];
-    // F, I, A, B, C are centered lattice types
-    if (centering == 'F' || centering == 'I' || centering == 'A' ||
-        centering == 'B' || centering == 'C') {
-      // Check if cell angles deviate significantly from 90 degrees
-      // which would suggest a primitive cell basis
-      Core::UnitCell* uc = m_molecule->unitCell();
-      if (uc) {
-        double alpha = uc->alpha() * 180.0 / M_PI;
-        double beta = uc->beta() * 180.0 / M_PI;
-        double gamma = uc->gamma() * 180.0 / M_PI;
-        double tolerance = 5.0; // degrees
+  if (!checkPrimitiveCell(hallNumber))
+    return;
 
-        bool nonConventionalAngles = (std::abs(alpha - 90.0) > tolerance) ||
-                                     (std::abs(beta - 90.0) > tolerance) ||
-                                     (std::abs(gamma - 90.0) > tolerance);
-
-        if (nonConventionalAngles) {
-          QMessageBox::StandardButton reply;
-          reply = QMessageBox::warning(
-            nullptr, tr("Primitive Cell Detected"),
-            tr(
-              "The current unit cell appears to be a primitive cell "
-              "(non-90° angles), but the space group %1 expects a "
-              "centered conventional cell.\n\n"
-              "Filling the unit cell may create unexpected duplicate atoms.\n\n"
-              "Would you like to create a conventional cell first?")
-              .arg(hallSymbol.c_str()),
-            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-
-          if (reply == QMessageBox::Cancel)
-            return;
-          if (reply == QMessageBox::Yes) {
-            // Conventionalize first, then fill
-            if (!m_molecule->undoMolecule()->conventionalizeCell(m_spgTol)) {
-              QMessageBox::warning(nullptr, tr("Error"),
-                                   tr("Failed to conventionalize the cell."));
-              return;
-            }
-          }
-          // If No, continue with fill anyway (user's choice)
-        }
-      }
-    }
-  }
-
-  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol);
+  // true here to fill all copies, including edges and corners
+  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol, true);
 }
 
-void SpaceGroup::fillCompleteCell()
+void SpaceGroup::fillTranslationalCell()
 {
   unsigned short hallNumber = m_molecule->hallNumber();
 
@@ -480,7 +439,10 @@ void SpaceGroup::fillCompleteCell()
   if (hallNumber == 0)
     return;
 
-  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol, true);
+  if (!checkPrimitiveCell(hallNumber))
+    return;
+
+  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol);
 }
 
 void SpaceGroup::reduceToAsymmetricUnit()
@@ -562,6 +524,60 @@ const QString SpaceGroup::crystalSystem(unsigned short hallNumber)
   }
 }
 
+bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber)
+{
+  // Check if the cell appears to be primitive but the space group expects
+  // a centered cell. This can cause unexpected atom duplication.
+  std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
+  if (!hallSymbol.empty()) {
+    char centering = hallSymbol[0];
+    // F, I, A, B, C are centered lattice types
+    if (centering == 'F' || centering == 'I' || centering == 'A' ||
+        centering == 'B' || centering == 'C') {
+      // Check if cell angles deviate significantly from 90 degrees
+      // which would suggest a primitive cell basis
+      Core::UnitCell* uc = m_molecule->unitCell();
+      if (uc) {
+        double alpha = uc->alpha() * 180.0 / M_PI;
+        double beta = uc->beta() * 180.0 / M_PI;
+        double gamma = uc->gamma() * 180.0 / M_PI;
+        double tolerance = 5.0; // degrees
+
+        bool nonConventionalAngles = (std::abs(alpha - 90.0) > tolerance) ||
+                                     (std::abs(beta - 90.0) > tolerance) ||
+                                     (std::abs(gamma - 90.0) > tolerance);
+
+        if (nonConventionalAngles) {
+          QMessageBox::StandardButton reply;
+          reply = QMessageBox::warning(
+            nullptr, tr("Primitive Cell Detected"),
+            tr(
+              "The current unit cell appears to be a primitive cell "
+              "(non-90° angles), but the space group %1 expects a "
+              "centered conventional cell.\n\n"
+              "Filling the unit cell may create unexpected duplicate atoms.\n\n"
+              "Would you like to create a conventional cell first?")
+              .arg(hallSymbol.c_str()),
+            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+          if (reply == QMessageBox::Cancel)
+            return false;
+          if (reply == QMessageBox::Yes) {
+            // Conventionalize first, then fill
+            if (!m_molecule->undoMolecule()->conventionalizeCell(m_spgTol)) {
+              QMessageBox::warning(nullptr, tr("Error"),
+                                   tr("Failed to conventionalize the cell."));
+              return false;
+            }
+          }
+          // If No, continue with fill anyway (user's choice)
+        }
+      }
+    }
+  }
+  return true;
+}
+
 unsigned short SpaceGroup::selectSpaceGroup()
 {
   QStandardItemModel spacegroups;
@@ -579,7 +595,8 @@ unsigned short SpaceGroup::selectSpaceGroup()
     auto* hallItem =
       new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)));
     hallItem->setEditable(false);
-    auto* hmItem = new QStandardItem(symbolToString(i));
+    // true = replace the overlines with HTML
+    auto* hmItem = new QStandardItem(symbolToString(i, true));
     hmItem->setEditable(false);
     auto* csItem = new QStandardItem(crystalSystem(i));
     csItem->setEditable(false);

@@ -44,7 +44,7 @@ private slots:
   void conventionalizeCell();
   void symmetrize();
   void fillUnitCell();
-  void fillCompleteCell();
+  void fillTranslationalCell();
   void reduceToAsymmetricUnit();
   void setTolerance();
 
@@ -53,6 +53,11 @@ private:
   // Returns the hall number for the selected space group.
   // Returns 0 if the user canceled.
   unsigned short selectSpaceGroup();
+
+  // Check if the cell appears to be primitive but the space group expects
+  // a centered cell. Warns the user and optionally conventionalizes.
+  // Returns true if we should proceed with filling, false if user canceled.
+  bool checkPrimitiveCell(unsigned short hallNumber);
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   double m_spgTol;
@@ -62,13 +67,14 @@ private:
   QAction* m_conventionalizeCellAction;
   QAction* m_symmetrizeAction;
   QAction* m_fillUnitCellAction;
-  QAction* m_fillCompleteCellAction;
+  QAction* m_fillTranslationalCellAction;
   QAction* m_reduceToAsymmetricUnitAction;
   QAction* m_setToleranceAction;
 
   const QString crystalSystem(unsigned short hallNumber);
   const QString toleranceToString();
-  const QString symbolToString(unsigned short hallNumber);
+  const QString symbolToString(unsigned short hallNumber,
+                               bool replaceOverlines = false);
 };
 
 inline QString SpaceGroup::description() const
