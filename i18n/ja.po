@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-24 19:10+0000\n"
-"PO-Revision-Date: 2026-01-27 15:55+0000\n"
+"PO-Revision-Date: 2026-01-27 16:06+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -5111,7 +5111,6 @@ msgid "Generate input for quantum codes."
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:39
-#, fuzzy
 msgid "Center"
 msgstr "中心"
 
@@ -8477,7 +8476,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_minimize)
 #, fuzzy
 msgid "Minimize?"
-msgstr "最小化？"
+msgstr "最小化しますか？"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
@@ -8542,8 +8541,9 @@ msgstr "最大半径:"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label2)
+#, fuzzy
 msgid "Step (dr):"
-msgstr ""
+msgstr "ステップ(dr):"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
@@ -8895,12 +8895,12 @@ msgstr "表面:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
 msgid "alpha"
-msgstr ""
+msgstr "アルファ"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
 msgid "beta"
-msgstr ""
+msgstr "ベータ"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
