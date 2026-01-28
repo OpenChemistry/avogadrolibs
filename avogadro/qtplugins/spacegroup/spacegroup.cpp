@@ -31,6 +31,7 @@
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStringList>
 
+#include <QtGui/QFont>
 #include <QtGui/QStandardItemModel>
 
 using Avogadro::Core::AvoSpglib;
@@ -172,6 +173,39 @@ const QString SpaceGroup::toleranceToString()
   return QStringLiteral("%1 × 10%2").arg(mantissa, 0, 'f', 1).arg(expStr);
 }
 
+const QString SpaceGroup::symbolToString(unsigned short hallNumber)
+{
+  QString symbol(Core::SpaceGroups::internationalShort(hallNumber));
+
+  // Replace -N notation with N̅ (number with combining overline U+0305)
+  // for rotoinversion axes in Hermann-Mauguin symbols
+  /*
+  const QChar combiningOverline(0x0305);
+  symbol.replace(QStringLiteral("-1"), QStringLiteral("1") + combiningOverline);
+  symbol.replace(QStringLiteral("-2"), QStringLiteral("2") + combiningOverline);
+  symbol.replace(QStringLiteral("-3"), QStringLiteral("3") + combiningOverline);
+  symbol.replace(QStringLiteral("-4"), QStringLiteral("4") + combiningOverline);
+  symbol.replace(QStringLiteral("-6"), QStringLiteral("6") + combiningOverline);
+  */
+
+  // Replace screw axis notation with subscripts
+  // e.g., "21" -> "2₁", "42" -> "4₂", etc.
+  // Unicode subscript digits: ₁=U+2081, ₂=U+2082, ₃=U+2083, ₄=U+2084, ₅=U+2085
+  symbol.replace(QStringLiteral("2_1"), QStringLiteral("2₁"));
+  symbol.replace(QStringLiteral("3_1"), QStringLiteral("3₁"));
+  symbol.replace(QStringLiteral("3_2"), QStringLiteral("3₂"));
+  symbol.replace(QStringLiteral("4_1"), QStringLiteral("4₁"));
+  symbol.replace(QStringLiteral("4_2"), QStringLiteral("4₂"));
+  symbol.replace(QStringLiteral("4_3"), QStringLiteral("4₃"));
+  symbol.replace(QStringLiteral("6_1"), QStringLiteral("6₁"));
+  symbol.replace(QStringLiteral("6_2"), QStringLiteral("6₂"));
+  symbol.replace(QStringLiteral("6_3"), QStringLiteral("6₃"));
+  symbol.replace(QStringLiteral("6_4"), QStringLiteral("6₄"));
+  symbol.replace(QStringLiteral("6_5"), QStringLiteral("6₅"));
+
+  return symbol;
+}
+
 void SpaceGroup::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule == mol)
@@ -186,6 +220,23 @@ void SpaceGroup::setMolecule(QtGui::Molecule* mol)
     connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
 
   updateActions();
+
+  // add a heuristic to completely fill the cell if it's a solid
+  if (m_molecule != nullptr && m_molecule->unitCell()) {
+    // check if there's carbon and hydrogen atoms and at least 5 total atoms
+    bool hasCarbon = false;
+    bool hasHydrogen = false;
+    for (unsigned int i = 0; i < m_molecule->atomCount(); ++i) {
+      if (m_molecule->atom(i).atomicNumber() == 6)
+        hasCarbon = true;
+      else if (m_molecule->atom(i).atomicNumber() == 1)
+        hasHydrogen = true;
+    }
+
+    if (m_molecule->atomCount() <= 5 || !(hasCarbon && hasHydrogen)) {
+      fillCompleteCell();
+    }
+  }
 }
 
 void SpaceGroup::moleculeChanged(unsigned int c)
@@ -243,7 +294,7 @@ void SpaceGroup::perceiveSpaceGroup()
   unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
   unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);
   std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
-  std::string intShort = Core::SpaceGroups::internationalShort(hallNumber);
+  QString intShort = symbolToString(hallNumber);
 
   // Success!
   if (hallNumber != 0) {
@@ -256,7 +307,7 @@ void SpaceGroup::perceiveSpaceGroup()
                         .arg(toleranceToString())
                         .arg(intNum)
                         .arg(hallSymbol.c_str())
-                        .arg(intShort.c_str());
+                        .arg(intShort);
 
     // Now let's make the Message Box
     QMessageBox::information(nullptr, tr("Perceive Space Group"), message);
@@ -385,7 +436,7 @@ void SpaceGroup::reduceToAsymmetricUnit()
   unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
   unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);
   std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
-  std::string intShort = Core::SpaceGroups::internationalShort(hallNumber);
+  QString intShort = symbolToString(hallNumber);
 
   // Ask the user if he/she wants to use this space group
   QString message =
@@ -471,10 +522,15 @@ unsigned short SpaceGroup::selectSpaceGroup()
     auto* intItem = new QStandardItem();
     intItem->setData(Core::SpaceGroups::internationalNumber(i),
                      Qt::DisplayRole);
-    row << intItem
-        << new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)))
-        << new QStandardItem(QString(Core::SpaceGroups::internationalShort(i)))
-        << new QStandardItem(crystalSystem(i));
+    intItem->setEditable(false);
+    auto* hallItem =
+      new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)));
+    hallItem->setEditable(false);
+    auto* hmItem = new QStandardItem(symbolToString(i));
+    hmItem->setEditable(false);
+    auto* csItem = new QStandardItem(crystalSystem(i));
+    csItem->setEditable(false);
+    row << intItem << hallItem << hmItem << csItem;
     spacegroups.appendRow(row);
   }
 
@@ -494,6 +550,9 @@ unsigned short SpaceGroup::selectSpaceGroup()
   dialog.layout()->addWidget(searchBox);
 
   auto* view = new QTableView;
+  QFont font = view->font();
+  font.setPointSize(font.pointSize() + 1);
+  view->setFont(font);
   view->setAlternatingRowColors(true);
   view->setSelectionBehavior(QAbstractItemView::SelectRows);
   view->setSelectionMode(QAbstractItemView::SingleSelection);

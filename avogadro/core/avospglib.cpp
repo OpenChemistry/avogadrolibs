@@ -11,7 +11,9 @@
 #include "unitcell.h"
 #include "vector.h"
 
+#include <array>
 #include <iostream>
+#include <vector>
 
 extern "C"
 {
@@ -37,23 +39,45 @@ unsigned short AvoSpglib::getHallNumber(Molecule& mol, double cartTol)
   }
 
   Index numAtoms = mol.atomCount();
-  auto* positions = new double[numAtoms][3];
-  int* types = new int[numAtoms];
-
   const Array<unsigned char>& atomicNums = mol.atomicNumbers();
   const Array<Vector3>& pos = mol.atomPositions3d();
+
+  // Use vectors to filter out translational duplicates (atoms at fracCoord
+  // >= 1.0)
+  std::vector<std::array<double, 3>> positionsVec;
+  std::vector<int> typesVec;
+  positionsVec.reserve(numAtoms);
+  typesVec.reserve(numAtoms);
 
   // Positions need to be in fractional coordinates
   for (Index i = 0; i < numAtoms; ++i) {
     Vector3 fracCoords = uc->toFractional(pos[i]);
-    positions[i][0] = fracCoords[0];
-    positions[i][1] = fracCoords[1];
-    positions[i][2] = fracCoords[2];
-    types[i] = atomicNums[i];
+    // Skip atoms with any fractional coordinate >= 1.0 (translational
+    // duplicates)
+    if (fracCoords[0] >= 1.0 || fracCoords[1] >= 1.0 || fracCoords[2] >= 1.0)
+      continue;
+    positionsVec.push_back({ fracCoords[0], fracCoords[1], fracCoords[2] });
+    typesVec.push_back(atomicNums[i]);
+  }
+
+  Index filteredNumAtoms = positionsVec.size();
+  if (filteredNumAtoms == 0) {
+    std::cerr << "No valid atoms found for spacegroup determination.\n";
+    return 0;
+  }
+
+  // Convert to C-style arrays for spglib
+  auto* positions = new double[filteredNumAtoms][3];
+  int* types = new int[filteredNumAtoms];
+  for (Index i = 0; i < filteredNumAtoms; ++i) {
+    positions[i][0] = positionsVec[i][0];
+    positions[i][1] = positionsVec[i][1];
+    positions[i][2] = positionsVec[i][2];
+    types[i] = typesVec[i];
   }
 
   SpglibDataset* data =
-    spg_get_dataset(lattice, positions, types, numAtoms, cartTol);
+    spg_get_dataset(lattice, positions, types, filteredNumAtoms, cartTol);
 
   if (!data) {
     std::cerr << "Cannot determine spacegroup.\n";
@@ -106,30 +130,52 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
   }
 
   Index numAtoms = mol.atomCount();
+  const Array<unsigned char>& atomicNums = mol.atomicNumbers();
+  const Array<Vector3>& pos = mol.atomPositions3d();
+
+  // Use vectors to filter out translational duplicates (atoms at fracCoord
+  // >= 1.0)
+  std::vector<std::array<double, 3>> positionsVec;
+  std::vector<int> typesVec;
+  positionsVec.reserve(numAtoms);
+  typesVec.reserve(numAtoms);
+
+  // Positions need to be in fractional coordinates
+  for (Index i = 0; i < numAtoms; ++i) {
+    Vector3 fracCoords = uc->toFractional(pos[i]);
+    // Skip atoms with any fractional coordinate >= 1.0 (translational
+    // duplicates)
+    if (fracCoords[0] >= 1.0 || fracCoords[1] >= 1.0 || fracCoords[2] >= 1.0)
+      continue;
+    positionsVec.push_back({ fracCoords[0], fracCoords[1], fracCoords[2] });
+    typesVec.push_back(atomicNums[i]);
+  }
+
+  Index filteredNumAtoms = positionsVec.size();
+  if (filteredNumAtoms == 0)
+    return false;
+
   // spg_standardize_cell() can cause the number of atoms to increase by
   // as much as 4x if toPrimitive is false.
   // So, we must make these arrays at least 4x the number of atoms.
   // If toPrimitive is true, then we will just use the number of atoms.
   // See http://atztogo.github.io/spglib/api.html#spg-standardize-cell
   int numAtomsMultiplier = toPrimitive ? 1 : 4;
-  auto* positions = new double[numAtoms * numAtomsMultiplier][3];
-  int* types = new int[numAtoms * numAtomsMultiplier];
+  auto* positions = new double[filteredNumAtoms * numAtomsMultiplier][3];
+  int* types = new int[filteredNumAtoms * numAtomsMultiplier];
 
-  const Array<unsigned char>& atomicNums = mol.atomicNumbers();
-  const Array<Vector3>& pos = mol.atomPositions3d();
-
-  // Positions need to be in fractional coordinates
-  for (Index i = 0; i < numAtoms; ++i) {
-    Vector3 fracCoords = uc->toFractional(pos[i]);
-    positions[i][0] = fracCoords[0];
-    positions[i][1] = fracCoords[1];
-    positions[i][2] = fracCoords[2];
-    types[i] = atomicNums[i];
+  // Copy filtered data to C-style arrays for spglib
+  for (Index i = 0; i < filteredNumAtoms; ++i) {
+    positions[i][0] = positionsVec[i][0];
+    positions[i][1] = positionsVec[i][1];
+    positions[i][2] = positionsVec[i][2];
+    types[i] = typesVec[i];
   }
 
   // Run the spglib algorithm
-  Index newNumAtoms = spg_standardize_cell(lattice, positions, types, numAtoms,
-                                           toPrimitive, !idealize, cartTol);
+  Index newNumAtoms =
+    spg_standardize_cell(lattice, positions, types, filteredNumAtoms,
+                         toPrimitive, !idealize, cartTol);
 
   // If 0 is returned, the algorithm failed.
   if (newNumAtoms == 0) {
