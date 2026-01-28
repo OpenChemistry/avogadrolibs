@@ -127,6 +127,10 @@ jobs:
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
         # run windeployqt
         windeployqt --release prefix/bin/avogadro2.exe
+        # Copy Qt DLLs that windeployqt misses (used by plugins and JKQTPlotter)
+        cp "${QT_ROOT_DIR}/bin/Qt6Concurrent.dll" prefix/bin/
+        cp "${QT_ROOT_DIR}/bin/Qt6PrintSupport.dll" prefix/bin/
+        cp "${QT_ROOT_DIR}/bin/Qt6Xml.dll" prefix/bin/
         mv prefix avogadro2
         # 7z a Avogadro2-windows.zip avogadro2
         cd avogadro2
