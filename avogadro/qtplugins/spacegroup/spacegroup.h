@@ -44,6 +44,7 @@ private slots:
   void conventionalizeCell();
   void symmetrize();
   void fillUnitCell();
+  void fillCompleteCell();
   void reduceToAsymmetricUnit();
   void setTolerance();
 
@@ -61,6 +62,7 @@ private:
   QAction* m_conventionalizeCellAction;
   QAction* m_symmetrizeAction;
   QAction* m_fillUnitCellAction;
+  QAction* m_fillCompleteCellAction;
   QAction* m_reduceToAsymmetricUnitAction;
   QAction* m_setToleranceAction;
 };

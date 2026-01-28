@@ -22,9 +22,11 @@
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QScrollBar>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 
+#include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStringList>
 
 #include <QtGui/QStandardItemModel>
@@ -43,6 +45,7 @@ SpaceGroup::SpaceGroup(QObject* parent_)
     m_reduceToPrimitiveAction(new QAction(this)),
     m_conventionalizeCellAction(new QAction(this)),
     m_symmetrizeAction(new QAction(this)),
+    m_fillCompleteCellAction(new QAction(this)),
     m_fillUnitCellAction(new QAction(this)),
     m_reduceToAsymmetricUnitAction(new QAction(this)),
     m_setToleranceAction(new QAction(this))
@@ -70,12 +73,6 @@ SpaceGroup::SpaceGroup(QObject* parent_)
   m_actions.push_back(m_symmetrizeAction);
   m_symmetrizeAction->setProperty("menu priority", 60);
 
-  m_fillUnitCellAction->setText(tr("Fill Unit Cell…"));
-  connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
-  m_actions.push_back(m_fillUnitCellAction);
-  // should fall next to the "Wrap Atoms to Unit Cell" action
-  m_fillUnitCellAction->setProperty("menu priority", 185);
-
   m_reduceToAsymmetricUnitAction->setText(tr("Reduce to Asymmetric Unit"));
   connect(m_reduceToAsymmetricUnitAction, SIGNAL(triggered()),
           SLOT(reduceToAsymmetricUnit()));
@@ -86,6 +83,18 @@ SpaceGroup::SpaceGroup(QObject* parent_)
   connect(m_setToleranceAction, SIGNAL(triggered()), SLOT(setTolerance()));
   m_actions.push_back(m_setToleranceAction);
   m_setToleranceAction->setProperty("menu priority", 0);
+
+  // should fall next to the "Wrap Atoms to Unit Cell" action on Crystal menu
+  m_fillUnitCellAction->setText(tr("Fill Unit Cell…"));
+  connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
+  m_actions.push_back(m_fillUnitCellAction);
+  m_fillUnitCellAction->setProperty("menu priority", 185);
+
+  m_fillCompleteCellAction->setText(tr("Fill Complete Cell…"));
+  connect(m_fillCompleteCellAction, SIGNAL(triggered()),
+          SLOT(fillCompleteCell()));
+  m_actions.push_back(m_fillCompleteCellAction);
+  m_fillCompleteCellAction->setProperty("menu priority", 184);
 
   updateActions();
 }
@@ -103,7 +112,7 @@ QList<QAction*> SpaceGroup::actions() const
 
 QStringList SpaceGroup::menuPath(QAction* action) const
 {
-  if (action == m_fillUnitCellAction)
+  if (action == m_fillUnitCellAction || action == m_fillCompleteCellAction)
     return QStringList() << tr("&Crystal");
 
   return QStringList() << tr("&Crystal") << tr("Space Group");
@@ -114,6 +123,8 @@ void SpaceGroup::registerCommands()
   emit registerCommand(
     "fillUnitCell",
     tr("Fill symmetric atoms based on the crystal space group."));
+  emit registerCommand("fillCompleteCell",
+                       tr("Fill all atoms based on the crystal space group."));
 }
 
 bool SpaceGroup::handleCommand(const QString& command,
@@ -124,6 +135,9 @@ bool SpaceGroup::handleCommand(const QString& command,
 
   if (command == "fillUnitCell") {
     fillUnitCell();
+    return true;
+  } else if (command == "fillCompleteCell") {
+    fillCompleteCell();
     return true;
   }
   return false;
@@ -319,6 +333,20 @@ void SpaceGroup::fillUnitCell()
   m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol);
 }
 
+void SpaceGroup::fillCompleteCell()
+{
+  unsigned short hallNumber = m_molecule->hallNumber();
+
+  // If it's not set, ask the user to select a space group
+  if (hallNumber == 0)
+    hallNumber = selectSpaceGroup();
+  // If the hall number is zero, the user canceled
+  if (hallNumber == 0)
+    return;
+
+  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol, true);
+}
+
 void SpaceGroup::reduceToAsymmetricUnit()
 {
   // Let's gather some information about the space group first
@@ -377,30 +405,53 @@ unsigned short SpaceGroup::selectSpaceGroup()
   spacegroups.setHorizontalHeaderLabels(modelHeader);
   for (unsigned short i = 1; i <= 530; ++i) {
     QList<QStandardItem*> row;
-    row << new QStandardItem(
-             QString::number(Core::SpaceGroups::internationalNumber(i)))
+    // Use setData with int type so the column sorts numerically
+    auto* intItem = new QStandardItem();
+    intItem->setData(Core::SpaceGroups::internationalNumber(i),
+                     Qt::DisplayRole);
+    row << intItem
         << new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)))
         << new QStandardItem(QString(Core::SpaceGroups::internationalShort(i)));
     spacegroups.appendRow(row);
   }
 
+  // Create a proxy model for filtering
+  QSortFilterProxyModel proxyModel;
+  proxyModel.setSourceModel(&spacegroups);
+  proxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
+  proxyModel.setFilterKeyColumn(-1); // Search all columns
+
   QDialog dialog;
   dialog.setLayout(new QVBoxLayout);
   dialog.setWindowTitle(tr("Select Space Group"));
+
+  // Add search box
+  auto* searchBox = new QLineEdit;
+  searchBox->setClearButtonEnabled(true);
+  dialog.layout()->addWidget(searchBox);
+
   auto* view = new QTableView;
+  view->setAlternatingRowColors(true);
   view->setSelectionBehavior(QAbstractItemView::SelectRows);
   view->setSelectionMode(QAbstractItemView::SingleSelection);
   view->setCornerButtonEnabled(false);
   view->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
   view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   view->verticalHeader()->hide();
-  view->setModel(&spacegroups);
+  view->setModel(&proxyModel);
+  view->setSortingEnabled(true);
+  view->sortByColumn(0, Qt::AscendingOrder);
   dialog.layout()->addWidget(view);
   view->selectRow(0);
   view->resizeColumnsToContents();
   view->resizeRowsToContents();
   view->setMinimumWidth(view->horizontalHeader()->length() +
                         view->verticalScrollBar()->sizeHint().width());
+
+  // Connect search box to filter
+  QObject::connect(searchBox, &QLineEdit::textChanged, &proxyModel,
+                   &QSortFilterProxyModel::setFilterFixedString);
+
   connect(view, SIGNAL(activated(QModelIndex)), &dialog, SLOT(accept()));
   auto* buttons =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -410,8 +461,10 @@ unsigned short SpaceGroup::selectSpaceGroup()
   if (dialog.exec() != QDialog::Accepted)
     return 0;
 
-  // This should be hall number
-  return view->currentIndex().row() + 1;
+  // Map the proxy index back to the source model to get the hall number
+  QModelIndex proxyIndex = view->currentIndex();
+  QModelIndex sourceIndex = proxyModel.mapToSource(proxyIndex);
+  return sourceIndex.row() + 1;
 }
 
 } // namespace Avogadro::QtPlugins
