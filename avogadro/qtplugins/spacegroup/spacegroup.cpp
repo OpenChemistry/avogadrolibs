@@ -463,7 +463,7 @@ void SpaceGroup::reduceToAsymmetricUnit()
        "Proceed with this space group?")
       .arg(toleranceToString())
       .arg(intNum)
-      .arg(hallSymbol)
+      .arg(hallSymbol.c_str())
       .arg(intShort);
   QMessageBox::StandardButton reply;
   reply = QMessageBox::question(nullptr, tr("Reduce to Asymmetric Unit"),
