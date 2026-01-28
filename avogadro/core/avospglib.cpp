@@ -42,8 +42,7 @@ unsigned short AvoSpglib::getHallNumber(Molecule& mol, double cartTol)
   const Array<unsigned char>& atomicNums = mol.atomicNumbers();
   const Array<Vector3>& pos = mol.atomPositions3d();
 
-  // Use vectors to filter out translational duplicates (atoms at fracCoord
-  // >= 1.0)
+  // Use vectors to filter out translational duplicates
   std::vector<std::array<double, 3>> positionsVec;
   std::vector<int> typesVec;
   positionsVec.reserve(numAtoms);
@@ -52,9 +51,11 @@ unsigned short AvoSpglib::getHallNumber(Molecule& mol, double cartTol)
   // Positions need to be in fractional coordinates
   for (Index i = 0; i < numAtoms; ++i) {
     Vector3 fracCoords = uc->toFractional(pos[i]);
-    // Skip atoms with any fractional coordinate >= 1.0 (translational
-    // duplicates)
-    if (fracCoords[0] >= 1.0 || fracCoords[1] >= 1.0 || fracCoords[2] >= 1.0)
+    // Skip atoms with any fractional coordinate ~1.0
+    // (translational duplicates of other atoms ~0.0
+    if (std::abs(fracCoords[0] - 1.0) < 1e-8 ||
+        std::abs(fracCoords[1] - 1.0) < 1e-8 ||
+        std::abs(fracCoords[2] - 1.0) < 1e-8)
       continue;
     positionsVec.push_back({ fracCoords[0], fracCoords[1], fracCoords[2] });
     typesVec.push_back(atomicNums[i]);
@@ -133,8 +134,8 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
   const Array<unsigned char>& atomicNums = mol.atomicNumbers();
   const Array<Vector3>& pos = mol.atomPositions3d();
 
-  // Use vectors to filter out translational duplicates (atoms at fracCoord
-  // >= 1.0)
+  // Use vectors to filter out translational duplicates
+  // (atoms at fracCoord ~1.0)
   std::vector<std::array<double, 3>> positionsVec;
   std::vector<int> typesVec;
   positionsVec.reserve(numAtoms);
@@ -143,9 +144,11 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
   // Positions need to be in fractional coordinates
   for (Index i = 0; i < numAtoms; ++i) {
     Vector3 fracCoords = uc->toFractional(pos[i]);
-    // Skip atoms with any fractional coordinate >= 1.0 (translational
-    // duplicates)
-    if (fracCoords[0] >= 1.0 || fracCoords[1] >= 1.0 || fracCoords[2] >= 1.0)
+    // Skip atoms with any fractional coordinate ~1.0
+    // (translational duplicates of other atoms ~0.0
+    if (std::abs(fracCoords[0] - 1.0) < 1e-8 ||
+        std::abs(fracCoords[1] - 1.0) < 1e-8 ||
+        std::abs(fracCoords[2] - 1.0) < 1e-8)
       continue;
     positionsVec.push_back({ fracCoords[0], fracCoords[1], fracCoords[2] });
     typesVec.push_back(atomicNums[i]);
