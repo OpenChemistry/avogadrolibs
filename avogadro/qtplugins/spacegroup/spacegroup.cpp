@@ -5,6 +5,8 @@
 
 #include "spacegroup.h"
 
+#include <cmath>
+
 #include <avogadro/core/avospglib.h>
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/spacegroups.h>
@@ -30,8 +32,6 @@
 #include <QtCore/QStringList>
 
 #include <QtGui/QStandardItemModel>
-
-#include <sstream>
 
 using Avogadro::Core::AvoSpglib;
 using Avogadro::QtGui::Molecule;
@@ -143,6 +143,35 @@ bool SpaceGroup::handleCommand(const QString& command,
   return false;
 }
 
+const QString SpaceGroup::toleranceToString()
+{
+  // Convert to scientific notation to extract mantissa and exponent
+  int exponent = static_cast<int>(std::floor(std::log10(m_spgTol)));
+  double mantissa = m_spgTol / std::pow(10.0, exponent);
+
+  // UTF-8 superscript characters
+  const QString superscriptDigits[] = {
+    QStringLiteral("⁰"), QStringLiteral("¹"), QStringLiteral("²"),
+    QStringLiteral("³"), QStringLiteral("⁴"), QStringLiteral("⁵"),
+    QStringLiteral("⁶"), QStringLiteral("⁷"), QStringLiteral("⁸"),
+    QStringLiteral("⁹")
+  };
+  const QString superscriptMinus = QStringLiteral("⁻");
+
+  // Build the exponent string with superscripts
+  QString expStr;
+  int absExp = std::abs(exponent);
+  if (exponent < 0)
+    expStr += superscriptMinus;
+
+  QString digits = QString::number(absExp);
+  for (const QChar& c : digits) {
+    expStr += superscriptDigits[c.digitValue()];
+  }
+
+  return QStringLiteral("%1 × 10%2").arg(mantissa, 0, 'f', 1).arg(expStr);
+}
+
 void SpaceGroup::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule == mol)
@@ -219,15 +248,18 @@ void SpaceGroup::perceiveSpaceGroup()
   // Success!
   if (hallNumber != 0) {
     // Let's make the message
-    std::stringstream ss;
-    ss << "Tolerance: " << m_spgTol << "  Å"
-       << "\nSpace Group: " << intNum << "\nHall symbol: " << hallSymbol
-       << "\nInternational symbol: " << intShort;
+    QString message = tr("Space group perception succeeded:\n"
+                         "Tolerance: %1  Å\n"
+                         "Space Group: %2\n"
+                         "Hall symbol: %3\n"
+                         "International symbol: %4")
+                        .arg(toleranceToString())
+                        .arg(intNum)
+                        .arg(hallSymbol.c_str())
+                        .arg(intShort.c_str());
 
     // Now let's make the Message Box
-    QMessageBox retMsgBox;
-    retMsgBox.setText(tr(ss.str().c_str()));
-    retMsgBox.exec();
+    QMessageBox::information(nullptr, tr("Perceive Space Group"), message);
   }
   // Failure
   else {
@@ -252,7 +284,7 @@ void SpaceGroup::reduceToPrimitive()
   reply = QMessageBox::question(nullptr, tr("Primitive Reduction"),
                                 tr("The tolerance is currently set to: %1.\n"
                                    "Proceed with this tolerance?")
-                                  .arg(m_spgTol),
+                                  .arg(toleranceToString()),
                                 QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::No)
     setTolerance();
@@ -277,7 +309,7 @@ void SpaceGroup::conventionalizeCell()
   reply = QMessageBox::question(nullptr, tr("Conventionalize Cell"),
                                 tr("The tolerance is currently set to: %1.\n"
                                    "Proceed with this tolerance?")
-                                  .arg(m_spgTol),
+                                  .arg(toleranceToString()),
                                 QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::No)
     setTolerance();
@@ -302,7 +334,7 @@ void SpaceGroup::symmetrize()
   reply = QMessageBox::question(nullptr, tr("Symmetrize Cell"),
                                 tr("The tolerance is currently set to: %1.\n"
                                    "Proceed with this tolerance?")
-                                  .arg(m_spgTol),
+                                  .arg(toleranceToString()),
                                 QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::No)
     setTolerance();
@@ -356,16 +388,20 @@ void SpaceGroup::reduceToAsymmetricUnit()
   std::string intShort = Core::SpaceGroups::internationalShort(hallNumber);
 
   // Ask the user if he/she wants to use this space group
-  std::stringstream ss;
-  ss << "With a tolerance of " << m_spgTol << "  Å, "
-     << "the space group information was perceived to be the following:"
-     << "\nSpace Group: " << intNum << "\nHall symbol: " << hallSymbol
-     << "\nInternational symbol: " << intShort
-     << "\n\nProceed with this space group?";
+  QString message =
+    tr("With a tolerance of %1  Å, "
+       "the space group information was perceived to be the following:\n"
+       "International number: %2\n"
+       "Hall symbol: %3\n"
+       "International symbol: %4\n\n"
+       "Proceed with this space group?")
+      .arg(toleranceToString())
+      .arg(intNum)
+      .arg(hallSymbol)
+      .arg(intShort);
   QMessageBox::StandardButton reply;
   reply = QMessageBox::question(nullptr, tr("Reduce to Asymmetric Unit"),
-                                tr(ss.str().c_str()),
-                                QMessageBox::Yes | QMessageBox::No);
+                                message, QMessageBox::Yes | QMessageBox::No);
 
   // If the user does not want to use the perceived space group,
   // let the user set it.

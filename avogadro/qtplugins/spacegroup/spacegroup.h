@@ -67,6 +67,7 @@ private:
   QAction* m_setToleranceAction;
 
   const QString crystalSystem(unsigned short hallNumber);
+  const QString toleranceToString();
 };
 
 inline QString SpaceGroup::description() const
