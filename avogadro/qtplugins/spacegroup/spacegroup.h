@@ -65,6 +65,8 @@ private:
   QAction* m_fillCompleteCellAction;
   QAction* m_reduceToAsymmetricUnitAction;
   QAction* m_setToleranceAction;
+
+  const QString crystalSystem(unsigned short hallNumber);
 };
 
 inline QString SpaceGroup::description() const

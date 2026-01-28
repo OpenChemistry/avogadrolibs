@@ -397,11 +397,37 @@ void SpaceGroup::setTolerance()
   m_spgTol = tol;
 }
 
+const QString SpaceGroup::crystalSystem(unsigned short hallNumber)
+{
+  auto cs = Core::SpaceGroups::crystalSystem(hallNumber);
+  switch (cs) {
+    case Core::Triclinic:
+      return tr("Triclinic");
+    case Core::Monoclinic:
+      return tr("Monoclinic");
+    case Core::Orthorhombic:
+      return tr("Orthorhombic");
+    case Core::Tetragonal:
+      return tr("Tetragonal");
+    case Core::Trigonal:
+      return tr("Trigonal");
+    case Core::Rhombohedral:
+      return tr("Rhombohedral");
+    case Core::Hexagonal:
+      return tr("Hexagonal");
+    case Core::Cubic:
+      return tr("Cubic");
+    default:
+      return tr("Unknown");
+  }
+}
+
 unsigned short SpaceGroup::selectSpaceGroup()
 {
   QStandardItemModel spacegroups;
   QStringList modelHeader;
-  modelHeader << tr("International") << tr("Hall") << tr("Hermann-Mauguin");
+  modelHeader << tr("International") << tr("Hall") << tr("Hermann-Mauguin")
+              << tr("Crystal System");
   spacegroups.setHorizontalHeaderLabels(modelHeader);
   for (unsigned short i = 1; i <= 530; ++i) {
     QList<QStandardItem*> row;
@@ -411,7 +437,8 @@ unsigned short SpaceGroup::selectSpaceGroup()
                      Qt::DisplayRole);
     row << intItem
         << new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)))
-        << new QStandardItem(QString(Core::SpaceGroups::internationalShort(i)));
+        << new QStandardItem(QString(Core::SpaceGroups::internationalShort(i)))
+        << new QStandardItem(crystalSystem(i));
     spacegroups.appendRow(row);
   }
 
