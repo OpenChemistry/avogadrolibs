@@ -18,18 +18,18 @@ RichTextDelegate::RichTextDelegate(QObject* parent_)
 {
 }
 
-RichTextDelegate::~RichTextDelegate() {};
+RichTextDelegate::~RichTextDelegate(){};
 
 QSize RichTextDelegate::sizeHint(const QStyleOptionViewItem& o,
                                  const QModelIndex& index) const
 {
-  if (o.text.isEmpty()) {
-    // This is nothing this function is supposed to handle
-    return QStyledItemDelegate::sizeHint(o, index);
-  }
-
   QStyleOptionViewItem ov = o;
   initStyleOption(&ov, index);
+
+  // Check after initStyleOption populates ov.text from the model
+  if (ov.text.isEmpty()) {
+    return QStyledItemDelegate::sizeHint(o, index);
+  }
 
   QTextDocument doc;
   doc.setHtml(ov.text);

@@ -726,7 +726,8 @@ bool RWMolecule::symmetrizeCell(double cartTol)
   return true;
 }
 
-bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol)
+bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
+                              bool allCopies)
 {
   // If there is no unit cell, there is nothing to do
   if (!m_molecule.unitCell())
@@ -736,7 +737,8 @@ bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol)
   // The atom positions and numbers of atoms may change
   Molecule newMolecule = m_molecule;
 
-  Core::SpaceGroups::fillUnitCell(newMolecule, hallNumber, cartTol);
+  Core::SpaceGroups::fillUnitCell(newMolecule, hallNumber, cartTol, true,
+                                  allCopies);
 
   Molecule::MoleculeChanges changes = Molecule::Added | Molecule::Atoms;
   QString undoText = tr("Fill Unit Cell");
