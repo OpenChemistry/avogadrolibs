@@ -214,6 +214,86 @@ const QString SpaceGroup::symbolToString(unsigned short hallNumber,
   return symbol;
 }
 
+const QString SpaceGroup::hallSymbolToString(unsigned short hallNumber)
+{
+  // Format a Hall symbol like "-P 2yc" with proper super/subscripts and
+  // overlines
+  QString symbol(Core::SpaceGroups::hallSymbol(hallNumber));
+  QString newSymbol;
+
+  // Superscript characters for axis directions
+  const QSet<QChar> superscriptChars = { 'x', 'y', 'z' };
+
+  // HTML template for overline
+  QString htmlOverline("<span style=\"text-decoration: overline;\">%1</span>");
+
+  // Split by spaces and process each token
+  QStringList tokens = symbol.split(' ');
+  bool firstToken = true;
+
+  for (const QString& token : tokens) {
+    if (!firstToken)
+      newSymbol += ' ';
+    firstToken = false;
+
+    // Parenthesized tokens like "(0 0 1)" are output as-is
+    if (token.startsWith('(')) {
+      newSymbol += token;
+      continue;
+    }
+
+    QString mainPart;
+    QString superPart;
+    QString subPart;
+    QString tailPart; // For *, ″ (from =), etc. that don't get subscripted
+    bool pastMain = false;
+
+    for (int i = 0; i < token.length(); ++i) {
+      QChar c = token[i];
+
+      // "-" means overline on the next character
+      if (c == '-' && i + 1 < token.length()) {
+        QChar next = token[i + 1];
+        mainPart += htmlOverline.arg(next);
+        ++i; // Skip the next character since we processed it
+        pastMain = true;
+        continue;
+      }
+
+      if (!pastMain) {
+        // This is the main rotation/lattice symbol - keep as-is
+        mainPart += c;
+        pastMain = true;
+      } else {
+        // Past the main symbol: x/y/z → superscript, others → subscript
+        if (superscriptChars.contains(c)) {
+          superPart += c;
+        } else if (c == '*') {
+          tailPart += c;
+        } else if (c == '=') {
+          // Double-prime character
+          tailPart += QStringLiteral("″");
+        } else {
+          subPart += c;
+        }
+      }
+    }
+
+    // Build the token: main + superscripts + grouped subscript + tail
+    newSymbol += mainPart;
+    if (!superPart.isEmpty()) {
+      newSymbol +=
+        QStringLiteral("<sup>") + superPart + QStringLiteral("</sup>");
+    }
+    if (!subPart.isEmpty()) {
+      newSymbol += QStringLiteral("<sub>") + subPart + QStringLiteral("</sub>");
+    }
+    newSymbol += tailPart;
+  }
+
+  return newSymbol;
+}
+
 void SpaceGroup::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule == mol)
@@ -592,14 +672,17 @@ unsigned short SpaceGroup::selectSpaceGroup()
     intItem->setData(Core::SpaceGroups::internationalNumber(i),
                      Qt::DisplayRole);
     intItem->setEditable(false);
-    auto* hallItem =
-      new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)));
+    intItem->setTextAlignment(Qt::AlignCenter);
+    auto* hallItem = new QStandardItem(hallSymbolToString(i));
     hallItem->setEditable(false);
+    hallItem->setTextAlignment(Qt::AlignCenter);
     // true = replace the overlines with HTML
     auto* hmItem = new QStandardItem(symbolToString(i, true));
     hmItem->setEditable(false);
+    hmItem->setTextAlignment(Qt::AlignCenter);
     auto* csItem = new QStandardItem(crystalSystem(i));
     csItem->setEditable(false);
+    csItem->setTextAlignment(Qt::AlignCenter);
     row << intItem << hallItem << hmItem << csItem;
     spacegroups.appendRow(row);
   }
@@ -623,6 +706,7 @@ unsigned short SpaceGroup::selectSpaceGroup()
 
   // Rich text delegate for symbol
   auto* symbolDelegate = new RichTextDelegate(this);
+  view->setItemDelegateForColumn(1, symbolDelegate);
   view->setItemDelegateForColumn(2, symbolDelegate);
 
   QFont font = view->font();

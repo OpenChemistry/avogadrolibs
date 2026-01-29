@@ -54,7 +54,29 @@ void RichTextDelegate::paint(QPainter* p, const QStyleOptionViewItem& o,
   ov.text = "";
   ov.widget->style()->drawControl(QStyle::CE_ItemViewItem, &ov, p);
 
-  p->translate(ov.rect.left(), ov.rect.top());
+  // Calculate position based on alignment
+  QSizeF docSize = doc.size();
+  qreal x = ov.rect.left();
+  qreal y = ov.rect.top();
+
+  // Get alignment from the style option (populated from Qt::TextAlignmentRole)
+  Qt::Alignment alignment = ov.displayAlignment;
+
+  // Horizontal alignment
+  if (alignment & Qt::AlignHCenter) {
+    x += (ov.rect.width() - docSize.width()) / 2.0;
+  } else if (alignment & Qt::AlignRight) {
+    x += ov.rect.width() - docSize.width();
+  }
+
+  // Vertical alignment
+  if (alignment & Qt::AlignVCenter) {
+    y += (ov.rect.height() - docSize.height()) / 2.0;
+  } else if (alignment & Qt::AlignBottom) {
+    y += ov.rect.height() - docSize.height();
+  }
+
+  p->translate(x, y);
   QRect clip(0, 0, ov.rect.width(), ov.rect.height());
   doc.drawContents(p, clip);
   p->restore();

@@ -75,6 +75,7 @@ private:
   const QString toleranceToString();
   const QString symbolToString(unsigned short hallNumber,
                                bool replaceOverlines = false);
+  const QString hallSymbolToString(unsigned short hallNumber);
 };
 
 inline QString SpaceGroup::description() const
