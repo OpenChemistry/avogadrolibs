@@ -29,6 +29,7 @@
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 
+#include <QtCore/QSet>
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStringList>
 
@@ -214,22 +215,90 @@ const QString SpaceGroup::symbolToString(unsigned short hallNumber,
   return symbol;
 }
 
-void SpaceGroup::setMolecule(QtGui::Molecule* mol)
+const QString SpaceGroup::hallSymbolToString(unsigned short hallNumber)
 {
-  if (m_molecule == mol)
-    return;
+  // Format a Hall symbol like "-P 2yc" with proper super/subscripts and
+  // overlines
+  QString symbol(Core::SpaceGroups::hallSymbol(hallNumber));
+  QString newSymbol;
 
-  if (m_molecule)
-    m_molecule->disconnect(this);
+  // Superscript characters for axis directions
+  const QSet<QChar> superscriptChars = { 'x', 'y', 'z' };
 
-  m_molecule = mol;
+  // HTML template for overline
+  QString htmlOverline("<span style=\"text-decoration: overline;\">%1</span>");
 
-  if (m_molecule)
-    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+  // Split by spaces and process each token
+  QStringList tokens = symbol.split(' ');
+  bool firstToken = true;
 
-  updateActions();
+  for (const QString& token : tokens) {
+    if (!firstToken)
+      newSymbol += ' ';
+    firstToken = false;
 
+    // Parenthesized tokens like "(0 0 1)" are output as-is
+    if (token.startsWith('(')) {
+      newSymbol += token;
+      continue;
+    }
+
+    QString mainPart;
+    QString superPart;
+    QString subPart;
+    QString tailPart; // For *, ″ (from =), etc. that don't get subscripted
+    bool pastMain = false;
+
+    for (int i = 0; i < token.length(); ++i) {
+      QChar c = token[i];
+
+      // "-" means overline on the next character
+      if (c == '-' && i + 1 < token.length()) {
+        QChar next = token[i + 1];
+        mainPart += htmlOverline.arg(next);
+        ++i; // Skip the next character since we processed it
+        pastMain = true;
+        continue;
+      }
+
+      if (!pastMain) {
+        // This is the main rotation/lattice symbol - keep as-is
+        mainPart += c;
+        pastMain = true;
+      } else {
+        // Past the main symbol: x/y/z → superscript, others → subscript
+        if (superscriptChars.contains(c)) {
+          superPart += c;
+        } else if (c == '*' || c == ')') {
+          tailPart += c;
+        } else if (c == '=') {
+          // Double-prime character
+          tailPart += QStringLiteral("″");
+        } else {
+          subPart += c;
+        }
+      }
+    }
+
+    // Build the token: main + superscripts + grouped subscript + tail
+    newSymbol += mainPart;
+    if (!superPart.isEmpty()) {
+      newSymbol +=
+        QStringLiteral("<sup>") + superPart + QStringLiteral("</sup>");
+    }
+    if (!subPart.isEmpty()) {
+      newSymbol += QStringLiteral("<sub>") + subPart + QStringLiteral("</sub>");
+    }
+    newSymbol += tailPart;
+  }
+
+  return newSymbol;
+}
+
+void SpaceGroup::fillHeuristic()
+{
   // add a heuristic to completely fill the cell if it's a solid
+  // (vs. a molecule)
   if (m_molecule != nullptr && m_molecule->unitCell()) {
     // check if there's carbon and hydrogen atoms and at least 5 total atoms
     bool hasCarbon = false;
@@ -247,6 +316,25 @@ void SpaceGroup::setMolecule(QtGui::Molecule* mol)
   }
 }
 
+void SpaceGroup::setMolecule(QtGui::Molecule* mol)
+{
+  if (m_molecule == mol)
+    return;
+
+  if (m_molecule)
+    m_molecule->disconnect(this);
+
+  m_molecule = mol;
+
+  if (m_molecule)
+    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+
+  updateActions();
+
+  // possibly fill the cell
+  fillHeuristic();
+}
+
 void SpaceGroup::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
@@ -256,6 +344,9 @@ void SpaceGroup::moleculeChanged(unsigned int c)
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
       updateActions();
+
+    // possible fill the cell
+    fillHeuristic();
   }
 }
 
@@ -592,14 +683,17 @@ unsigned short SpaceGroup::selectSpaceGroup()
     intItem->setData(Core::SpaceGroups::internationalNumber(i),
                      Qt::DisplayRole);
     intItem->setEditable(false);
-    auto* hallItem =
-      new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)));
+    intItem->setTextAlignment(Qt::AlignCenter);
+    auto* hallItem = new QStandardItem(hallSymbolToString(i));
     hallItem->setEditable(false);
+    hallItem->setTextAlignment(Qt::AlignCenter);
     // true = replace the overlines with HTML
     auto* hmItem = new QStandardItem(symbolToString(i, true));
     hmItem->setEditable(false);
+    hmItem->setTextAlignment(Qt::AlignCenter);
     auto* csItem = new QStandardItem(crystalSystem(i));
     csItem->setEditable(false);
+    csItem->setTextAlignment(Qt::AlignCenter);
     row << intItem << hallItem << hmItem << csItem;
     spacegroups.appendRow(row);
   }
@@ -623,6 +717,7 @@ unsigned short SpaceGroup::selectSpaceGroup()
 
   // Rich text delegate for symbol
   auto* symbolDelegate = new RichTextDelegate(this);
+  view->setItemDelegateForColumn(1, symbolDelegate);
   view->setItemDelegateForColumn(2, symbolDelegate);
 
   QFont font = view->font();
@@ -638,6 +733,7 @@ unsigned short SpaceGroup::selectSpaceGroup()
   view->setModel(&proxyModel);
   view->setSortingEnabled(true);
   view->sortByColumn(0, Qt::AscendingOrder);
+  view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   dialog.layout()->addWidget(view);
   view->selectRow(0);
   view->resizeColumnsToContents();
