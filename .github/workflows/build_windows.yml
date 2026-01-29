@@ -40,8 +40,8 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Debug",
-            cmake_flags: "-DENABLE_TESTING=ON -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
-            build_flags: "-j 2",
+            cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
+            build_flags: "--parallel",
           }
 
     steps:
@@ -107,6 +107,14 @@ jobs:
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+      shell: bash
+
+    - name: Testing
+      if: (matrix.config.build_type != 'Release')
+      run: |
+        cd "${{ runner.workspace }}/build"
+        # just turn on tests for avogadrolibs
+        cmake -DENABLE_TESTING=ON avogadrolibs
       shell: bash
 
     # Cache thirdparty builds (OpenBabel, etc.)
