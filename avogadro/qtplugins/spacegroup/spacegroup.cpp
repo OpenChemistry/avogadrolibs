@@ -29,6 +29,7 @@
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 
+#include <QtCore/QSet>
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStringList>
 
@@ -268,7 +269,7 @@ const QString SpaceGroup::hallSymbolToString(unsigned short hallNumber)
         // Past the main symbol: x/y/z → superscript, others → subscript
         if (superscriptChars.contains(c)) {
           superPart += c;
-        } else if (c == '*') {
+        } else if (c == '*' || c == ')') {
           tailPart += c;
         } else if (c == '=') {
           // Double-prime character
@@ -722,6 +723,7 @@ unsigned short SpaceGroup::selectSpaceGroup()
   view->setModel(&proxyModel);
   view->setSortingEnabled(true);
   view->sortByColumn(0, Qt::AscendingOrder);
+  view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   dialog.layout()->addWidget(view);
   view->selectRow(0);
   view->resizeColumnsToContents();
