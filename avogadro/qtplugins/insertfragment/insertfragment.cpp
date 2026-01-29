@@ -111,10 +111,14 @@ void InsertFragment::performInsert(const QString& fileName, bool crystal)
 
   if (crystal) {
     Molecule::MoleculeChanges changes =
-      (Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed);
+      (Molecule::Atoms | Molecule::Bonds | Molecule::UnitCell |
+       Molecule::Added | Molecule::Removed);
 
+    // remove any bonds from newMol
+    newMol.clearBonds();
     m_molecule->undoMolecule()->modifyMolecule(newMol, changes,
                                                tr("Import Crystal"));
+
     emit requestActiveTool("Navigator");
   } else {
     // insert mol into m_molecule

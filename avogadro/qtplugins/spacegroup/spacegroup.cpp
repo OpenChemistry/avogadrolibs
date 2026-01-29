@@ -295,22 +295,10 @@ const QString SpaceGroup::hallSymbolToString(unsigned short hallNumber)
   return newSymbol;
 }
 
-void SpaceGroup::setMolecule(QtGui::Molecule* mol)
+void SpaceGroup::fillHeuristic()
 {
-  if (m_molecule == mol)
-    return;
-
-  if (m_molecule)
-    m_molecule->disconnect(this);
-
-  m_molecule = mol;
-
-  if (m_molecule)
-    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
-
-  updateActions();
-
   // add a heuristic to completely fill the cell if it's a solid
+  // (vs. a molecule)
   if (m_molecule != nullptr && m_molecule->unitCell()) {
     // check if there's carbon and hydrogen atoms and at least 5 total atoms
     bool hasCarbon = false;
@@ -328,6 +316,25 @@ void SpaceGroup::setMolecule(QtGui::Molecule* mol)
   }
 }
 
+void SpaceGroup::setMolecule(QtGui::Molecule* mol)
+{
+  if (m_molecule == mol)
+    return;
+
+  if (m_molecule)
+    m_molecule->disconnect(this);
+
+  m_molecule = mol;
+
+  if (m_molecule)
+    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+
+  updateActions();
+
+  // possibly fill the cell
+  fillHeuristic();
+}
+
 void SpaceGroup::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
@@ -337,6 +344,9 @@ void SpaceGroup::moleculeChanged(unsigned int c)
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
       updateActions();
+
+    // possible fill the cell
+    fillHeuristic();
   }
 }
 
