@@ -278,6 +278,12 @@ public:
    */
   float getData(int i, int j, int k) const;
 
+  int nx() const { return m_points.x(); }
+  int ny() const { return m_points.y(); }
+  int nz() const { return m_points.z(); }
+
+  inline unsigned int linearIndex(int x, int y, int z) const;
+
   /**
    * Retrieves the positions of the eight corners of a cube at grid indices
    * (i, j, k).

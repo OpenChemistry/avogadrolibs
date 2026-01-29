@@ -66,6 +66,7 @@ Molecule::Molecule(const Molecule& other)
     Cube* c = addCube();
     *c = *other.cube(i);
   }
+  m_activeCubeIndex = other.m_activeCubeIndex;
 
   // Make sure all the atoms are in the active layer
   if (other.m_layers.maxLayer() == 0) {
@@ -210,6 +211,7 @@ Molecule& Molecule::operator=(const Molecule& other)
       Cube* c = addCube();
       *c = *other.cube(i);
     }
+    m_activeCubeIndex = other.m_activeCubeIndex;
 
     delete m_basisSet;
     m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : nullptr;
@@ -266,6 +268,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
 
     clearCubes();
     m_cubes = std::move(other.m_cubes);
+    m_activeCubeIndex = other.m_activeCubeIndex;
 
     delete m_basisSet;
     m_basisSet = std::exchange(other.m_basisSet, nullptr);
@@ -918,6 +921,34 @@ void Molecule::clearCubes()
     delete m_cubes.back();
     m_cubes.pop_back();
   }
+  m_activeCubeIndex = 0;
+}
+
+bool Molecule::setActiveCubeIndex(Index index)
+{
+  if (index < static_cast<Index>(m_cubes.size())) {
+    m_activeCubeIndex = index;
+    return true;
+  }
+  return false;
+}
+
+Cube* Molecule::activeCube()
+{
+  if (m_activeCubeIndex < static_cast<Index>(m_cubes.size()))
+    return m_cubes[m_activeCubeIndex];
+  else if (!m_cubes.empty())
+    return m_cubes[0];
+  return nullptr;
+}
+
+const Cube* Molecule::activeCube() const
+{
+  if (m_activeCubeIndex < static_cast<Index>(m_cubes.size()))
+    return m_cubes[m_activeCubeIndex];
+  else if (!m_cubes.empty())
+    return m_cubes[0];
+  return nullptr;
 }
 
 std::string Molecule::formula(const std::string& delimiter, int over) const

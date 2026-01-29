@@ -512,6 +512,26 @@ public:
   void clearCubes();
 
   /**
+   * @brief Set the active cube index for volume rendering.
+   * @param index The index of the cube to make active.
+   * @return True if the index is valid and was set, false otherwise.
+   */
+  bool setActiveCubeIndex(Index index);
+
+  /**
+   * @brief Get the index of the active cube.
+   * @return The active cube index, or 0 if no cubes exist.
+   */
+  Index activeCubeIndex() const { return m_activeCubeIndex; }
+
+  /**
+   * @brief Get the active cube for volume rendering.
+   * @return A pointer to the active cube, or nullptr if no cubes exist.
+   */
+  Cube* activeCube();
+  const Cube* activeCube() const;
+
+  /**
    * @brief Get the cubes vector set (if present) for the molecule.
    * @return The cube vector for the molecule
    */
@@ -945,6 +965,7 @@ protected:
 
   std::vector<Mesh*> m_meshes;
   std::vector<Cube*> m_cubes;
+  Index m_activeCubeIndex = 0;
 
   BasisSet* m_basisSet;
   UnitCell* m_unitCell;
