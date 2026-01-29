@@ -603,7 +603,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
   if (m_positions3d.size() == atomCount()) {
     m_positions3d.push_back(position3d);
   }
-  return Molecule::addAtom(number);
+  return addAtom(number); // Use virtual dispatch
 }
 
 void Molecule::swapBond(Index a, Index b)

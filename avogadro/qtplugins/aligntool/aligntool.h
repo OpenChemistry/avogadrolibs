@@ -41,6 +41,8 @@ public:
   {
     if (mol)
       m_molecule = mol->undoMolecule();
+
+    m_atoms.clear();
   }
 
   void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }

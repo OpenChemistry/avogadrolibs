@@ -61,6 +61,7 @@ private:
   bool defaultChecks();
   void animationCamera(const Eigen::Affine3f& goal, bool animate = true);
   void animationCameraDefault(bool animate = true);
+  float calculateOptimalOrthographicScale(const Eigen::Affine3f& viewTransform);
 };
 
 } // namespace QtPlugins

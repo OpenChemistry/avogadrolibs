@@ -861,8 +861,8 @@ void Surfaces::meshFinished()
 
     // finished, so request to enable the mesh display type
     QStringList displayTypes;
-    displayTypes << tr("Meshes");
-    requestActiveDisplayTypes(displayTypes);
+    displayTypes << tr("Surfaces");
+    emit requestActiveDisplayTypes(displayTypes);
 
     if (m_recordingMovie) {
       // Move to the next frame.
@@ -874,6 +874,9 @@ void Surfaces::meshFinished()
         m_dialog->reenableCalculateButton();
 
       m_molecule->emitChanged(QtGui::Molecule::Added);
+
+      emit commandFinished(tr(
+        "Surface Finished", "finished rendering surface or molecular orbital"));
     }
   }
 }
@@ -935,8 +938,9 @@ void Surfaces::movieFrame()
 
   auto glWidget = QtOpenGL::ActiveObjects::instance().activeGLWidget();
   if (!glWidget) {
-    QMessageBox::warning(qobject_cast<QWidget*>(parent()), tr("Avogadro"),
-                         "Couldn't find the active render widget, failing.");
+    QMessageBox::warning(
+      qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+      tr("Couldn't find the active render widget, failing."));
     m_recordingMovie = false;
     m_dialog->enableRecord();
     return;

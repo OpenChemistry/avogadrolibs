@@ -200,8 +200,8 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   QString distanceLabel = tr("Distance:");
   // Use the longest label size to determine the field width. Negate it to
   // indicate left-alignment.
-  int labelWidth = -std::max(std::max(dihedralLabel.size(), angleLabel.size()),
-                             distanceLabel.size());
+  int labelWidth = -std::max(
+    { dihedralLabel.size(), angleLabel.size(), distanceLabel.size() });
   switch (m_atoms.size()) {
     case 4:
       overlayText +=

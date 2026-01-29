@@ -679,7 +679,7 @@ public:
       Real r1 = std::hypot(dx1, dy1, dz1);
       Real r2 = std::hypot(dx2, dy2, dz2);
       Real dot = dx1 * dx2 + dy1 * dy2 + dz1 * dz2;
-      Real theta = acos(dot / (r1 * r2));
+      Real theta = acos(std::clamp(dot / (r1 * r2), -1.0, 1.0));
 
       /*
             std::cout << " Angle " << angle.coordination << " " << i << " " << j
@@ -1277,7 +1277,8 @@ Real UFF::value(const Eigen::VectorXd& x)
   // Add constraint energies
   energy += constraintEnergies(x);
 
-  return energy;
+  return energy * KCAL_TO_KJ;
+  ;
 }
 
 Real UFF::bondEnergy(const Eigen::VectorXd& x)
@@ -1374,7 +1375,11 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // handle any constraints
   cleanGradients(grad);
+
   constraintGradients(x, grad);
+
+  // convert from kcal/mol to kJ/mol
+  grad *= KCAL_TO_KJ;
 }
 
 void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)

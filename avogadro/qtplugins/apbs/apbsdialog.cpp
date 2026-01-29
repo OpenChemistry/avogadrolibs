@@ -158,12 +158,12 @@ void ApbsDialog::runPdb2Pqr()
   process.waitForFinished();
 
   if (process.exitStatus() == QProcess::NormalExit) {
-    QMessageBox::information(this, "Success",
-                             QString("Generated %1").arg(pqrFileName_));
+    QMessageBox::information(this, tr("Success"),
+                             tr("Generated %1").arg(pqrFileName_));
     m_generatedPqrFileName = pqrFileName_;
     updatePreviewTextImmediately();
   } else {
-    QMessageBox::critical(this, "Error", QString("Error running PDB2PQR"));
+    QMessageBox::critical(this, tr("Error"), tr("Error running PDB2PQR"));
     m_generatedPqrFileName.clear();
   }
 }

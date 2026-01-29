@@ -252,7 +252,19 @@ QWidget* CloseContacts::setupWidget()
 
     auto* page = new QWidget;
     page->setLayout(form);
-    tabs->addTab(page, INTERACTION_NAMES[i]);
+
+    switch (i) {
+      case 0:
+        tabs->addTab(page, tr("Contact"));
+        break;
+      case 1:
+        tabs->addTab(page, tr("Salt Bridge"));
+        break;
+      case 2:
+        tabs->addTab(page, tr("Repulsive"));
+        break;
+      default:;
+    }
   }
 
   v->addWidget(tabs);

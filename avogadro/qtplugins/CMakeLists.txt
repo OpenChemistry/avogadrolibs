@@ -148,14 +148,15 @@ add_subdirectory(templatetool)
 add_subdirectory(vibrations)
 add_subdirectory(vrml)
 
-# Plugins that require plotting
-# TODO make optional for USE_PLOTTING
-add_subdirectory(spectra)
-add_subdirectory(plotconformer)
-add_subdirectory(plotpdf)
-add_subdirectory(plotxrd)
-if(USE_SPGLIB)
-  add_subdirectory(yaehmop)
+# Plugins that require plotting (JKQTPlotter)
+if(USE_PLOTTER)
+  add_subdirectory(spectra)
+  add_subdirectory(plotconformer)
+  add_subdirectory(plotpdf)
+  add_subdirectory(plotxrd)
+  if(USE_SPGLIB)
+    add_subdirectory(yaehmop)
+  endif()
 endif()
 
 # script plugins (input generators, etc.)

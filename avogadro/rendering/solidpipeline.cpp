@@ -50,6 +50,7 @@ public:
   GLuint renderFBO;
   GLuint renderTexture;
   GLuint depthTexture;
+  GLuint screenVAO;
   GLuint screenVBO;
   ShaderProgram firstStageShaders;
   Shader screenVertexShader;
@@ -101,10 +102,20 @@ void SolidPipeline::initialize()
 {
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
 
+  // Create VAO for fullscreen quad (required for OpenGL Core Profile)
+  glGenVertexArrays(1, &d->screenVAO);
+  glBindVertexArray(d->screenVAO);
+
   glGenBuffers(1, &d->screenVBO);
   glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad), s_fullscreenQuad,
                GL_STATIC_DRAW);
+
+  // Set up vertex attribute for the fullscreen quad
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+  glBindVertexArray(0);
 
   d->screenVertexShader.setType(Shader::Vertex);
   d->screenVertexShader.setSource(solid_vs);
@@ -140,10 +151,8 @@ void SolidPipeline::begin()
 
 void SolidPipeline::end()
 {
-  // Draw fullscreen quad
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+  // Bind VAO for fullscreen quad (required for OpenGL Core Profile)
+  glBindVertexArray(d->screenVAO);
 
   // Draw to screen
   if (glIsFramebuffer(d->defaultFBO)) {
@@ -175,7 +184,7 @@ void SolidPipeline::end()
   d->firstStageShaders.setUniformValue("fogG", (m_backgroundColor[1]) / 255.0f);
   d->firstStageShaders.setUniformValue("fogB", (m_backgroundColor[2]) / 255.0f);
   glDrawArrays(GL_TRIANGLES, 0, 6);
-  glDisableVertexAttribArray(0);
+  glBindVertexArray(0);
 }
 
 void SolidPipeline::adjustOffset(const Camera& cam)

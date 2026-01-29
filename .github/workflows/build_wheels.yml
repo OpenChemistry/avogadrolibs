@@ -54,8 +54,8 @@ jobs:
             runs-on: ubuntu-24.04-arm
           - os: windows-intel
             runs-on: windows-latest
-          - os: windows-arm
-            runs-on: windows-11-arm
+          #- os: windows-arm
+          #  runs-on: windows-11-arm
           - os: macos-intel
             # macos-15-intel is the last x86_64 runner
             runs-on: macos-15-intel
@@ -67,7 +67,7 @@ jobs:
           #  platform: pyodide
 
     steps:
-      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           # Grab the whole history so that setuptools-scm can see the tags and
           # give it a correct version even on non-tag push.
@@ -77,12 +77,12 @@ jobs:
         run: . ./scripts/github-actions/install.sh
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@63fd63b352a9a8bdcc24791c9dbee952ee9a8abc # v3.3.0
+        uses: pypa/cibuildwheel@298ed2fb2c105540f5ed055e8a6ad78d82dd3a7e # v3.3.1
         env:
           CIBW_PLATFORM: ${{ matrix.platform || 'auto' }}
           CIBW_ARCHS: ${{ matrix.archs || 'auto' }}
 
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
@@ -91,7 +91,7 @@ jobs:
     name: Build source distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           # Grab the whole history so that setuptools-scm can see the tags and
           # give it a correct version even on non-tag push.
@@ -100,7 +100,7 @@ jobs:
       - name: Build sdist
         run: pipx run build --sdist
 
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: cibw-sdist
           path: dist/*.tar.gz
@@ -116,7 +116,7 @@ jobs:
       id-token: write
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
     steps:
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           # unpacks all CIBW artifacts into dist/
           pattern: cibw-*

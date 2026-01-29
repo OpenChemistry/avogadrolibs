@@ -51,10 +51,6 @@ public slots:
 private:
   std::string m_name = "Close Contacts";
 
-  const std::array<QString, 3> INTERACTION_NAMES = { tr("Contact"),
-                                                     tr("Salt Bridge"),
-                                                     tr("Repulsive") };
-
   std::array<double, 3> m_maximumDistances;
   std::array<Vector3ub, 3> m_lineColors;
   std::array<float, 3> m_lineWidths;

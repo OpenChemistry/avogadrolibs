@@ -83,9 +83,9 @@ QWidget* PlayerTool::toolWidget() const
     auto* frameLabel = new QLabel(tr("Frame:"));
     controls->addWidget(frameLabel);
     m_frameIdx = new QSpinBox;
-    m_frameIdx->setValue(1);
     m_frameIdx->setMinimum(1);
     m_frameIdx->setMaximum(maxFrame);
+    m_frameIdx->setValue(1);
     m_frameIdx->setSuffix("/" + QString::number(maxFrame));
     connect(m_frameIdx, SIGNAL(valueChanged(int)),
             SLOT(spinnerPositionChanged(int)));
@@ -112,9 +112,9 @@ QWidget* PlayerTool::toolWidget() const
     auto* frameLayout = new QHBoxLayout;
     auto* label3 = new QLabel(tr("Start:", "start or first frame index"));
     m_firstFrameIdx = new QSpinBox;
-    m_firstFrameIdx->setValue(1);
     m_firstFrameIdx->setMinimum(1);
     m_firstFrameIdx->setMaximum(maxFrame);
+    m_firstFrameIdx->setValue(1);
     connect(m_firstFrameIdx, SIGNAL(valueChanged(int)),
             SLOT(firstFramePositionChanged(int)));
     frameLayout->addWidget(label3);
@@ -123,9 +123,9 @@ QWidget* PlayerTool::toolWidget() const
     // last frame index
     auto* label5 = new QLabel(tr("End:", "end or last frame index"));
     m_lastFrameIdx = new QSpinBox;
-    m_lastFrameIdx->setValue(maxFrame);
     m_lastFrameIdx->setMinimum(1);
     m_lastFrameIdx->setMaximum(maxFrame);
+    m_lastFrameIdx->setValue(maxFrame);
     connect(m_lastFrameIdx, SIGNAL(valueChanged(int)),
             SLOT(lastFramePositionChanged(int)));
     frameLayout->addWidget(label5);
@@ -256,8 +256,13 @@ void PlayerTool::animate(int advance)
     if (m_dynamicBonding->isChecked()) {
       m_molecule->clearBonds();
       m_molecule->perceiveBondsSimple();
+      // Bonds were modified, so use Added flag
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
+                              Molecule::Removed | Molecule::Added);
+    } else {
+      // Coordinate-only change, use Moved flag
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
     }
-    m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
     m_slider->setValue(m_currentFrame);
     m_frameIdx->setValue(m_currentFrame + 1);
   }

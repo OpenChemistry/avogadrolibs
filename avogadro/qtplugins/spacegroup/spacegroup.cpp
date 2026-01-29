@@ -5,6 +5,8 @@
 
 #include "spacegroup.h"
 
+#include <cmath>
+
 #include <avogadro/core/avospglib.h>
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/spacegroups.h>
@@ -12,6 +14,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
+#include <avogadro/qtgui/richtextdelegate.h>
 
 #include <QAction>
 #include <QDebug>
@@ -22,17 +25,23 @@
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QScrollBar>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 
+#include <QtCore/QSet>
+#include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStringList>
 
+#include <QtGui/QFont>
 #include <QtGui/QStandardItemModel>
 
+#include <cmath>
 #include <sstream>
 
 using Avogadro::Core::AvoSpglib;
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::RichTextDelegate;
 
 namespace Avogadro::QtPlugins {
 
@@ -43,6 +52,7 @@ SpaceGroup::SpaceGroup(QObject* parent_)
     m_reduceToPrimitiveAction(new QAction(this)),
     m_conventionalizeCellAction(new QAction(this)),
     m_symmetrizeAction(new QAction(this)),
+    m_fillTranslationalCellAction(new QAction(this)),
     m_fillUnitCellAction(new QAction(this)),
     m_reduceToAsymmetricUnitAction(new QAction(this)),
     m_setToleranceAction(new QAction(this))
@@ -70,12 +80,6 @@ SpaceGroup::SpaceGroup(QObject* parent_)
   m_actions.push_back(m_symmetrizeAction);
   m_symmetrizeAction->setProperty("menu priority", 60);
 
-  m_fillUnitCellAction->setText(tr("Fill Unit Cell…"));
-  connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
-  m_actions.push_back(m_fillUnitCellAction);
-  // should fall next to the "Wrap Atoms to Unit Cell" action
-  m_fillUnitCellAction->setProperty("menu priority", 185);
-
   m_reduceToAsymmetricUnitAction->setText(tr("Reduce to Asymmetric Unit"));
   connect(m_reduceToAsymmetricUnitAction, SIGNAL(triggered()),
           SLOT(reduceToAsymmetricUnit()));
@@ -86,6 +90,19 @@ SpaceGroup::SpaceGroup(QObject* parent_)
   connect(m_setToleranceAction, SIGNAL(triggered()), SLOT(setTolerance()));
   m_actions.push_back(m_setToleranceAction);
   m_setToleranceAction->setProperty("menu priority", 0);
+
+  // should fall next to the "Wrap Atoms to Unit Cell" action on Crystal menu
+  m_fillUnitCellAction->setText(tr("Fill Unit Cell…"));
+  connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
+  m_actions.push_back(m_fillUnitCellAction);
+  m_fillUnitCellAction->setProperty("menu priority", 185);
+
+  m_fillTranslationalCellAction->setText(tr(
+    "Fill Translation Cell…", "fill the translationally unique repeat unit"));
+  connect(m_fillTranslationalCellAction, SIGNAL(triggered()),
+          SLOT(fillTranslationalCell()));
+  m_actions.push_back(m_fillTranslationalCellAction);
+  m_fillTranslationalCellAction->setProperty("menu priority", 184);
 
   updateActions();
 }
@@ -103,7 +120,7 @@ QList<QAction*> SpaceGroup::actions() const
 
 QStringList SpaceGroup::menuPath(QAction* action) const
 {
-  if (action == m_fillUnitCellAction)
+  if (action == m_fillUnitCellAction || action == m_fillTranslationalCellAction)
     return QStringList() << tr("&Crystal");
 
   return QStringList() << tr("&Crystal") << tr("Space Group");
@@ -114,6 +131,8 @@ void SpaceGroup::registerCommands()
   emit registerCommand(
     "fillUnitCell",
     tr("Fill symmetric atoms based on the crystal space group."));
+  emit registerCommand("fillTranslationalCell",
+                       tr("Fill all atoms based on the crystal space group."));
 }
 
 bool SpaceGroup::handleCommand(const QString& command,
@@ -125,8 +144,176 @@ bool SpaceGroup::handleCommand(const QString& command,
   if (command == "fillUnitCell") {
     fillUnitCell();
     return true;
+  } else if (command == "fillTranslationalCell") {
+    fillTranslationalCell();
+    return true;
   }
   return false;
+}
+
+const QString SpaceGroup::toleranceToString()
+{
+  // Convert to scientific notation to extract mantissa and exponent
+  int exponent = static_cast<int>(std::floor(std::log10(m_spgTol)));
+  double mantissa = m_spgTol / std::pow(10.0, exponent);
+
+  // UTF-8 superscript characters
+  const QString superscriptDigits[] = {
+    QStringLiteral("⁰"), QStringLiteral("¹"), QStringLiteral("²"),
+    QStringLiteral("³"), QStringLiteral("⁴"), QStringLiteral("⁵"),
+    QStringLiteral("⁶"), QStringLiteral("⁷"), QStringLiteral("⁸"),
+    QStringLiteral("⁹")
+  };
+  const QString superscriptMinus = QStringLiteral("⁻");
+
+  // Build the exponent string with superscripts
+  QString expStr;
+  int absExp = std::abs(exponent);
+  if (exponent < 0)
+    expStr += superscriptMinus;
+
+  QString digits = QString::number(absExp);
+  for (const QChar& c : digits) {
+    expStr += superscriptDigits[c.digitValue()];
+  }
+
+  return QStringLiteral("%1 × 10%2").arg(mantissa, 0, 'f', 1).arg(expStr);
+}
+
+const QString SpaceGroup::symbolToString(unsigned short hallNumber,
+                                         bool replaceOverlines)
+{
+  QString symbol(Core::SpaceGroups::internationalShort(hallNumber));
+
+  // Replace -N notation with N̅ (number with combining overline U+0305)
+  // for rotoinversion axes in Hermann-Mauguin symbols
+  if (replaceOverlines) {
+    QString htmlOverline(
+      "<span style=\"text-decoration: overline;\">%1</span>");
+    symbol.replace(QStringLiteral("-1"), htmlOverline.arg(QStringLiteral("1")));
+    symbol.replace(QStringLiteral("-2"), htmlOverline.arg(QStringLiteral("2")));
+    symbol.replace(QStringLiteral("-3"), htmlOverline.arg(QStringLiteral("3")));
+    symbol.replace(QStringLiteral("-4"), htmlOverline.arg(QStringLiteral("4")));
+    symbol.replace(QStringLiteral("-6"), htmlOverline.arg(QStringLiteral("6")));
+  }
+
+  // Replace screw axis notation with subscripts
+  // e.g., "21" -> "2₁", "42" -> "4₂", etc.
+  // Unicode subscript digits: ₁=U+2081, ₂=U+2082, ₃=U+2083, ₄=U+2084, ₅=U+2085
+  symbol.replace(QStringLiteral("2_1"), QStringLiteral("2₁"));
+  symbol.replace(QStringLiteral("3_1"), QStringLiteral("3₁"));
+  symbol.replace(QStringLiteral("3_2"), QStringLiteral("3₂"));
+  symbol.replace(QStringLiteral("4_1"), QStringLiteral("4₁"));
+  symbol.replace(QStringLiteral("4_2"), QStringLiteral("4₂"));
+  symbol.replace(QStringLiteral("4_3"), QStringLiteral("4₃"));
+  symbol.replace(QStringLiteral("6_1"), QStringLiteral("6₁"));
+  symbol.replace(QStringLiteral("6_2"), QStringLiteral("6₂"));
+  symbol.replace(QStringLiteral("6_3"), QStringLiteral("6₃"));
+  symbol.replace(QStringLiteral("6_4"), QStringLiteral("6₄"));
+  symbol.replace(QStringLiteral("6_5"), QStringLiteral("6₅"));
+
+  return symbol;
+}
+
+const QString SpaceGroup::hallSymbolToString(unsigned short hallNumber)
+{
+  // Format a Hall symbol like "-P 2yc" with proper super/subscripts and
+  // overlines
+  QString symbol(Core::SpaceGroups::hallSymbol(hallNumber));
+  QString newSymbol;
+
+  // Superscript characters for axis directions
+  const QSet<QChar> superscriptChars = { 'x', 'y', 'z' };
+
+  // HTML template for overline
+  QString htmlOverline("<span style=\"text-decoration: overline;\">%1</span>");
+
+  // Split by spaces and process each token
+  QStringList tokens = symbol.split(' ');
+  bool firstToken = true;
+
+  for (const QString& token : tokens) {
+    if (!firstToken)
+      newSymbol += ' ';
+    firstToken = false;
+
+    // Parenthesized tokens like "(0 0 1)" are output as-is
+    if (token.startsWith('(')) {
+      newSymbol += token;
+      continue;
+    }
+
+    QString mainPart;
+    QString superPart;
+    QString subPart;
+    QString tailPart; // For *, ″ (from =), etc. that don't get subscripted
+    bool pastMain = false;
+
+    for (int i = 0; i < token.length(); ++i) {
+      QChar c = token[i];
+
+      // "-" means overline on the next character
+      if (c == '-' && i + 1 < token.length()) {
+        QChar next = token[i + 1];
+        mainPart += htmlOverline.arg(next);
+        ++i; // Skip the next character since we processed it
+        pastMain = true;
+        continue;
+      }
+
+      if (!pastMain) {
+        // This is the main rotation/lattice symbol - keep as-is
+        mainPart += c;
+        pastMain = true;
+      } else {
+        // Past the main symbol: x/y/z → superscript, others → subscript
+        if (superscriptChars.contains(c)) {
+          superPart += c;
+        } else if (c == '*' || c == ')') {
+          tailPart += c;
+        } else if (c == '=') {
+          // Double-prime character
+          tailPart += QStringLiteral("″");
+        } else {
+          subPart += c;
+        }
+      }
+    }
+
+    // Build the token: main + superscripts + grouped subscript + tail
+    newSymbol += mainPart;
+    if (!superPart.isEmpty()) {
+      newSymbol +=
+        QStringLiteral("<sup>") + superPart + QStringLiteral("</sup>");
+    }
+    if (!subPart.isEmpty()) {
+      newSymbol += QStringLiteral("<sub>") + subPart + QStringLiteral("</sub>");
+    }
+    newSymbol += tailPart;
+  }
+
+  return newSymbol;
+}
+
+void SpaceGroup::fillHeuristic()
+{
+  // add a heuristic to completely fill the cell if it's a solid
+  // (vs. a molecule)
+  if (m_molecule != nullptr && m_molecule->unitCell()) {
+    // check if there's carbon and hydrogen atoms and at least 5 total atoms
+    bool hasCarbon = false;
+    bool hasHydrogen = false;
+    for (unsigned int i = 0; i < m_molecule->atomCount(); ++i) {
+      if (m_molecule->atom(i).atomicNumber() == 6)
+        hasCarbon = true;
+      else if (m_molecule->atom(i).atomicNumber() == 1)
+        hasHydrogen = true;
+    }
+
+    if (m_molecule->atomCount() <= 5 || !(hasCarbon && hasHydrogen)) {
+      fillUnitCell();
+    }
+  }
 }
 
 void SpaceGroup::setMolecule(QtGui::Molecule* mol)
@@ -143,6 +330,9 @@ void SpaceGroup::setMolecule(QtGui::Molecule* mol)
     connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
 
   updateActions();
+
+  // possibly fill the cell
+  fillHeuristic();
 }
 
 void SpaceGroup::moleculeChanged(unsigned int c)
@@ -154,6 +344,9 @@ void SpaceGroup::moleculeChanged(unsigned int c)
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
       updateActions();
+
+    // possible fill the cell
+    fillHeuristic();
   }
 }
 
@@ -200,20 +393,23 @@ void SpaceGroup::perceiveSpaceGroup()
   unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
   unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);
   std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
-  std::string intShort = Core::SpaceGroups::internationalShort(hallNumber);
+  QString intShort = symbolToString(hallNumber);
 
   // Success!
   if (hallNumber != 0) {
     // Let's make the message
-    std::stringstream ss;
-    ss << "Tolerance: " << m_spgTol << "  Å"
-       << "\nSpace Group: " << intNum << "\nHall symbol: " << hallSymbol
-       << "\nInternational symbol: " << intShort;
+    QString message = tr("Space group perception succeeded:\n"
+                         "Tolerance: %1  Å\n"
+                         "Space Group: %2\n"
+                         "Hall symbol: %3\n"
+                         "International symbol: %4")
+                        .arg(toleranceToString())
+                        .arg(intNum)
+                        .arg(hallSymbol.c_str())
+                        .arg(intShort);
 
     // Now let's make the Message Box
-    QMessageBox retMsgBox;
-    retMsgBox.setText(tr(ss.str().c_str()));
-    retMsgBox.exec();
+    QMessageBox::information(nullptr, tr("Perceive Space Group"), message);
   }
   // Failure
   else {
@@ -238,7 +434,7 @@ void SpaceGroup::reduceToPrimitive()
   reply = QMessageBox::question(nullptr, tr("Primitive Reduction"),
                                 tr("The tolerance is currently set to: %1.\n"
                                    "Proceed with this tolerance?")
-                                  .arg(m_spgTol),
+                                  .arg(toleranceToString()),
                                 QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::No)
     setTolerance();
@@ -263,7 +459,7 @@ void SpaceGroup::conventionalizeCell()
   reply = QMessageBox::question(nullptr, tr("Conventionalize Cell"),
                                 tr("The tolerance is currently set to: %1.\n"
                                    "Proceed with this tolerance?")
-                                  .arg(m_spgTol),
+                                  .arg(toleranceToString()),
                                 QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::No)
     setTolerance();
@@ -288,7 +484,7 @@ void SpaceGroup::symmetrize()
   reply = QMessageBox::question(nullptr, tr("Symmetrize Cell"),
                                 tr("The tolerance is currently set to: %1.\n"
                                    "Proceed with this tolerance?")
-                                  .arg(m_spgTol),
+                                  .arg(toleranceToString()),
                                 QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::No)
     setTolerance();
@@ -316,6 +512,27 @@ void SpaceGroup::fillUnitCell()
   if (hallNumber == 0)
     return;
 
+  if (!checkPrimitiveCell(hallNumber))
+    return;
+
+  // true here to fill all copies, including edges and corners
+  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol, true);
+}
+
+void SpaceGroup::fillTranslationalCell()
+{
+  unsigned short hallNumber = m_molecule->hallNumber();
+
+  // If it's not set, ask the user to select a space group
+  if (hallNumber == 0)
+    hallNumber = selectSpaceGroup();
+  // If the hall number is zero, the user canceled
+  if (hallNumber == 0)
+    return;
+
+  if (!checkPrimitiveCell(hallNumber))
+    return;
+
   m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol);
 }
 
@@ -325,19 +542,23 @@ void SpaceGroup::reduceToAsymmetricUnit()
   unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
   unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);
   std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
-  std::string intShort = Core::SpaceGroups::internationalShort(hallNumber);
+  QString intShort = symbolToString(hallNumber);
 
   // Ask the user if he/she wants to use this space group
-  std::stringstream ss;
-  ss << "With a tolerance of " << m_spgTol << "  Å, "
-     << "the space group information was perceived to be the following:"
-     << "\nSpace Group: " << intNum << "\nHall symbol: " << hallSymbol
-     << "\nInternational symbol: " << intShort
-     << "\n\nProceed with this space group?";
+  QString message =
+    tr("With a tolerance of %1  Å, "
+       "the space group information was perceived to be the following:\n"
+       "International number: %2\n"
+       "Hall symbol: %3\n"
+       "International symbol: %4\n\n"
+       "Proceed with this space group?")
+      .arg(toleranceToString())
+      .arg(intNum)
+      .arg(hallSymbol.c_str())
+      .arg(intShort);
   QMessageBox::StandardButton reply;
   reply = QMessageBox::question(nullptr, tr("Reduce to Asymmetric Unit"),
-                                tr(ss.str().c_str()),
-                                QMessageBox::Yes | QMessageBox::No);
+                                message, QMessageBox::Yes | QMessageBox::No);
 
   // If the user does not want to use the perceived space group,
   // let the user set it.
@@ -369,38 +590,161 @@ void SpaceGroup::setTolerance()
   m_spgTol = tol;
 }
 
+const QString SpaceGroup::crystalSystem(unsigned short hallNumber)
+{
+  auto cs = Core::SpaceGroups::crystalSystem(hallNumber);
+  switch (cs) {
+    case Core::Triclinic:
+      return tr("Triclinic");
+    case Core::Monoclinic:
+      return tr("Monoclinic");
+    case Core::Orthorhombic:
+      return tr("Orthorhombic");
+    case Core::Tetragonal:
+      return tr("Tetragonal");
+    case Core::Trigonal:
+      return tr("Trigonal");
+    case Core::Rhombohedral:
+      return tr("Rhombohedral");
+    case Core::Hexagonal:
+      return tr("Hexagonal");
+    case Core::Cubic:
+      return tr("Cubic");
+    default:
+      return tr("Unknown");
+  }
+}
+
+bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber)
+{
+  // Check if the cell appears to be primitive but the space group expects
+  // a centered cell. This can cause unexpected atom duplication.
+  std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
+  if (!hallSymbol.empty()) {
+    char centering = hallSymbol[0];
+    // F, I, A, B, C are centered lattice types
+    if (centering == 'F' || centering == 'I' || centering == 'A' ||
+        centering == 'B' || centering == 'C') {
+      // Check if cell angles deviate significantly from 90 degrees
+      // which would suggest a primitive cell basis
+      Core::UnitCell* uc = m_molecule->unitCell();
+      if (uc) {
+        double alpha = uc->alpha() * 180.0 / M_PI;
+        double beta = uc->beta() * 180.0 / M_PI;
+        double gamma = uc->gamma() * 180.0 / M_PI;
+        double tolerance = 5.0; // degrees
+
+        bool nonConventionalAngles = (std::abs(alpha - 90.0) > tolerance) ||
+                                     (std::abs(beta - 90.0) > tolerance) ||
+                                     (std::abs(gamma - 90.0) > tolerance);
+
+        if (nonConventionalAngles) {
+          QMessageBox::StandardButton reply;
+          reply = QMessageBox::warning(
+            nullptr, tr("Primitive Cell Detected"),
+            tr(
+              "The current unit cell appears to be a primitive cell "
+              "(non-90° angles), but the space group %1 expects a "
+              "centered conventional cell.\n\n"
+              "Filling the unit cell may create unexpected duplicate atoms.\n\n"
+              "Would you like to create a conventional cell first?")
+              .arg(hallSymbol.c_str()),
+            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+          if (reply == QMessageBox::Cancel)
+            return false;
+          if (reply == QMessageBox::Yes) {
+            // Conventionalize first, then fill
+            if (!m_molecule->undoMolecule()->conventionalizeCell(m_spgTol)) {
+              QMessageBox::warning(nullptr, tr("Error"),
+                                   tr("Failed to conventionalize the cell."));
+              return false;
+            }
+          }
+          // If No, continue with fill anyway (user's choice)
+        }
+      }
+    }
+  }
+  return true;
+}
+
 unsigned short SpaceGroup::selectSpaceGroup()
 {
   QStandardItemModel spacegroups;
   QStringList modelHeader;
-  modelHeader << tr("International") << tr("Hall") << tr("Hermann-Mauguin");
+  modelHeader << tr("International") << tr("Hall") << tr("Hermann-Mauguin")
+              << tr("Crystal System");
   spacegroups.setHorizontalHeaderLabels(modelHeader);
   for (unsigned short i = 1; i <= 530; ++i) {
     QList<QStandardItem*> row;
-    row << new QStandardItem(
-             QString::number(Core::SpaceGroups::internationalNumber(i)))
-        << new QStandardItem(QString(Core::SpaceGroups::hallSymbol(i)))
-        << new QStandardItem(QString(Core::SpaceGroups::internationalShort(i)));
+    // Use setData with int type so the column sorts numerically
+    auto* intItem = new QStandardItem();
+    intItem->setData(Core::SpaceGroups::internationalNumber(i),
+                     Qt::DisplayRole);
+    intItem->setEditable(false);
+    intItem->setTextAlignment(Qt::AlignCenter);
+    auto* hallItem = new QStandardItem(hallSymbolToString(i));
+    hallItem->setEditable(false);
+    hallItem->setTextAlignment(Qt::AlignCenter);
+    // true = replace the overlines with HTML
+    auto* hmItem = new QStandardItem(symbolToString(i, true));
+    hmItem->setEditable(false);
+    hmItem->setTextAlignment(Qt::AlignCenter);
+    auto* csItem = new QStandardItem(crystalSystem(i));
+    csItem->setEditable(false);
+    csItem->setTextAlignment(Qt::AlignCenter);
+    row << intItem << hallItem << hmItem << csItem;
     spacegroups.appendRow(row);
   }
+
+  // Create a proxy model for filtering
+  QSortFilterProxyModel proxyModel;
+  proxyModel.setSourceModel(&spacegroups);
+  proxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
+  proxyModel.setFilterKeyColumn(-1); // Search all columns
 
   QDialog dialog;
   dialog.setLayout(new QVBoxLayout);
   dialog.setWindowTitle(tr("Select Space Group"));
+
+  // Add search box
+  auto* searchBox = new QLineEdit;
+  searchBox->setClearButtonEnabled(true);
+  dialog.layout()->addWidget(searchBox);
+
   auto* view = new QTableView;
+
+  // Rich text delegate for symbol
+  auto* symbolDelegate = new RichTextDelegate(this);
+  view->setItemDelegateForColumn(1, symbolDelegate);
+  view->setItemDelegateForColumn(2, symbolDelegate);
+
+  QFont font = view->font();
+  font.setPointSize(font.pointSize() + 1);
+  view->setFont(font);
+  view->setAlternatingRowColors(true);
   view->setSelectionBehavior(QAbstractItemView::SelectRows);
   view->setSelectionMode(QAbstractItemView::SingleSelection);
   view->setCornerButtonEnabled(false);
   view->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
   view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   view->verticalHeader()->hide();
-  view->setModel(&spacegroups);
+  view->setModel(&proxyModel);
+  view->setSortingEnabled(true);
+  view->sortByColumn(0, Qt::AscendingOrder);
+  view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   dialog.layout()->addWidget(view);
   view->selectRow(0);
   view->resizeColumnsToContents();
   view->resizeRowsToContents();
   view->setMinimumWidth(view->horizontalHeader()->length() +
                         view->verticalScrollBar()->sizeHint().width());
+
+  // Connect search box to filter
+  QObject::connect(searchBox, &QLineEdit::textChanged, &proxyModel,
+                   &QSortFilterProxyModel::setFilterFixedString);
+
   connect(view, SIGNAL(activated(QModelIndex)), &dialog, SLOT(accept()));
   auto* buttons =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -410,8 +754,10 @@ unsigned short SpaceGroup::selectSpaceGroup()
   if (dialog.exec() != QDialog::Accepted)
     return 0;
 
-  // This should be hall number
-  return view->currentIndex().row() + 1;
+  // Map the proxy index back to the source model to get the hall number
+  QModelIndex proxyIndex = view->currentIndex();
+  QModelIndex sourceIndex = proxyModel.mapToSource(proxyIndex);
+  return sourceIndex.row() + 1;
 }
 
 } // namespace Avogadro::QtPlugins

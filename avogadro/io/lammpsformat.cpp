@@ -12,6 +12,7 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <cstdint>
 #include <istream>
 #include <ostream>
 #include <sstream>
@@ -37,8 +38,8 @@ using Core::UnitCell;
 
 bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
-  size_t numAtoms = 0, timestep = 0, x_idx = -1, y_idx = -1, z_idx = -1,
-         type_idx = -1, id_idx = -1;
+  size_t numAtoms = 0, timestep = 0, x_idx = SIZE_MAX, y_idx = SIZE_MAX,
+         z_idx = SIZE_MAX, type_idx = SIZE_MAX, id_idx = SIZE_MAX;
   double x_min = 0, x_max = 0, y_min = 0, y_max = 0, z_min = 0, z_max = 0,
          tilt_xy = 0, tilt_xz = 0, tilt_yz = 0, scale_x = 0., scale_y = 0.,
          scale_z = 0.;
@@ -98,12 +99,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     z_max = lexicalCast<double>(box_bounds_z.at(1)).value_or(0.0);
     tilt_yz = lexicalCast<double>(box_bounds_z.at(2)).value_or(0.0);
 
-    x_min -= std::min(std::min(std::min(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
-                      (double)0);
-    x_max -= std::max(std::max(std::max(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
-                      (double)0);
-    y_min -= std::min(tilt_yz, (double)0);
-    y_max -= std::max(tilt_yz, (double)0);
+    x_min -= std::min({ tilt_xy, tilt_xz, tilt_xy + tilt_xz, 0.0 });
+    x_max -= std::max({ tilt_xy, tilt_xz, tilt_xy + tilt_xz, 0.0 });
+    y_min -= std::min(tilt_yz, 0.0);
+    y_max -= std::max(tilt_yz, 0.0);
   }
 
   // Else if unit cell is orthogonal, tilt factors are zero
@@ -159,6 +158,12 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     } else if (labels[i] == "id") {
       id_idx = i;
     }
+  }
+
+  if (x_idx == SIZE_MAX || y_idx == SIZE_MAX || z_idx == SIZE_MAX ||
+      type_idx == SIZE_MAX) {
+    appendError("Failed to parse attributes: " + buffer);
+    return false;
   }
 
   // Parse atoms
@@ -238,11 +243,11 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   size_t numAtoms2;
   int coordSet = 1;
   while (getline(inStream, buffer) && trimmed(buffer) == "ITEM: TIMESTEP") {
-    x_idx = -1;
-    y_idx = -1;
-    z_idx = -1;
-    type_idx = -1;
-    id_idx = -1;
+    x_idx = SIZE_MAX;
+    y_idx = SIZE_MAX;
+    z_idx = SIZE_MAX;
+    type_idx = SIZE_MAX;
+    id_idx = SIZE_MAX;
     x_min = 0;
     x_max = 0;
     y_min = 0;
@@ -299,12 +304,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       z_max = lexicalCast<double>(box_bounds_z.at(1)).value_or(0.0);
       tilt_yz = lexicalCast<double>(box_bounds_z.at(2)).value_or(0.0);
 
-      x_min -= std::min(std::min(std::min(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
-                        (double)0);
-      x_max -= std::max(std::max(std::max(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
-                        (double)0);
-      y_min -= std::min(tilt_yz, (double)0);
-      y_max -= std::max(tilt_yz, (double)0);
+      x_min -= std::min({ tilt_xy, tilt_xz, tilt_xy + tilt_xz, 0.0 });
+      x_max -= std::max({ tilt_xy, tilt_xz, tilt_xy + tilt_xz, 0.0 });
+      y_min -= std::min(tilt_yz, 0.0);
+      y_max -= std::max(tilt_yz, 0.0);
     }
 
     // Else if unit cell is orthogonal, tilt factors are zero
@@ -356,6 +359,12 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       } else if (labels[i] == "id") {
         id_idx = i;
       }
+    }
+
+    if (x_idx == SIZE_MAX || y_idx == SIZE_MAX || z_idx == SIZE_MAX ||
+        type_idx == SIZE_MAX) {
+      appendError("Failed to parse attributes: " + buffer);
+      return false;
     }
 
     Array<Vector3> positions;
@@ -410,6 +419,7 @@ std::vector<std::string> LammpsTrajectoryFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("dump");
+  ext.emplace_back("lammpstrj");
   return ext;
 }
 
@@ -428,7 +438,10 @@ bool LammpsDataFormat::read(std::istream&, Core::Molecule&)
 bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 {
   Core::Molecule mol2(mol);
-  CrystalTools::rotateToStandardOrientation(mol2, CrystalTools::TransformAtoms);
+  // enforce right-handed cell
+  // https://docs.lammps.org/read_data.html#header-specification-of-the-simulation-box-size-and-shape
+  CrystalTools::rotateToStandardOrientation(mol2, CrystalTools::TransformAtoms |
+                                                    CrystalTools::RightHanded);
 
   // Title
   if (mol2.data("name").toString().length())

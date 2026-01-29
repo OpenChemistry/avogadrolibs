@@ -161,6 +161,14 @@ void GLRenderer::resetCamera()
   m_camera.setIdentity();
   m_camera.translate(-m_center);
   m_camera.preTranslate(-2.22f * m_radius * Vector3f::UnitZ());
+
+  if (m_camera.projectionType() == Orthographic) {
+    // The base orthographic frustum has half-height of 5.0
+    // We want the scene radius to fit comfortably with some padding
+    float baseHalfHeight = 5.0f;
+    float optimalScale = m_radius / baseHalfHeight;
+    m_camera.setOrthographicScale(optimalScale);
+  }
 }
 
 void GLRenderer::resetGeometry()
@@ -344,11 +352,27 @@ Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
     f.planes[2] = (f.points[4] - f.points[5]).cross(f.points[6] - f.points[7]);
     f.planes[3] = (f.points[6] - f.points[7]).cross(f.points[0] - f.points[1]);
   } else {
-    // For orthographic, just set planes to zero - we'll use points instead
-    f.planes[0] = Vector3f::Zero();
-    f.planes[1] = Vector3f::Zero();
-    f.planes[2] = Vector3f::Zero();
-    f.planes[3] = Vector3f::Zero();
+    // Orthographic: planes are parallel, defined by edges and view direction
+
+    // Left plane: normal points inward (to the right)
+    Vector3f edge01 = (f.points[1] - f.points[0]).normalized();
+    Vector3f edge02 = (f.points[2] - f.points[0]).normalized();
+    f.planes[0] = edge01.cross(edge02).normalized();
+
+    // Bottom plane: normal points inward (upward)
+    Vector3f edge23 = (f.points[3] - f.points[2]).normalized();
+    Vector3f edge24 = (f.points[4] - f.points[2]).normalized();
+    f.planes[1] = edge23.cross(edge24).normalized();
+
+    // Right plane: normal points inward (to the left)
+    Vector3f edge45 = (f.points[5] - f.points[4]).normalized();
+    Vector3f edge46 = (f.points[6] - f.points[4]).normalized();
+    f.planes[2] = edge45.cross(edge46).normalized();
+
+    // Top plane: normal points inward (downward)
+    Vector3f edge67 = (f.points[7] - f.points[6]).normalized();
+    Vector3f edge60 = (f.points[0] - f.points[6]).normalized();
+    f.planes[3] = edge67.cross(edge60).normalized();
   }
 
   return hits(&m_scene.rootNode(), f);

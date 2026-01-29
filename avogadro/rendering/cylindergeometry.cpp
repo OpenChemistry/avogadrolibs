@@ -10,6 +10,7 @@
 #include "visitor.h"
 
 #include "bufferobject.h"
+#include "vertexarrayobject.h"
 
 #include "shader.h"
 #include "shaderprogram.h"
@@ -37,6 +38,7 @@ public:
 
   BufferObject vbo;
   BufferObject ibo;
+  VertexArrayObject vao;
 
   inline static Shader* vertexShader = nullptr;
   inline static Shader* fragmentShader = nullptr;
@@ -73,6 +75,30 @@ void CylinderGeometry::update()
   if (m_indices.empty() || m_cylinders.empty())
     return;
 
+  // Build and link the shader if it has not been used yet.
+  // Must be done before VAO setup since we need the program for attribute
+  // setup.
+  if (d->vertexShader == nullptr) {
+    d->vertexShader = new Shader;
+    d->vertexShader->setType(Shader::Vertex);
+    d->vertexShader->setSource(cylinders_vs);
+    d->fragmentShader = new Shader;
+    d->fragmentShader->setType(Shader::Fragment);
+    d->fragmentShader->setSource(cylinders_fs);
+    if (!d->vertexShader->compile())
+      cout << d->vertexShader->error() << endl;
+    if (!d->fragmentShader->compile())
+      cout << d->fragmentShader->error() << endl;
+
+    if (d->program == nullptr)
+      d->program = new ShaderProgram;
+
+    d->program->attachShader(*d->vertexShader);
+    d->program->attachShader(*d->fragmentShader);
+    if (!d->program->link())
+      cout << d->program->error() << endl;
+  }
+
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
     // Set some defaults for our cylinders.
@@ -84,8 +110,6 @@ void CylinderGeometry::update()
 
     std::vector<unsigned int> cylinderIndices;
     std::vector<ColorNormalVertex> cylinderVertices;
-    // cylinderIndices.reserve(m_indices.size() * 4);
-    // cylinderVertices.reserve(m_cylinders.size() * 4);
 
     auto itIndex = m_indices.begin();
     auto itCylinder = m_cylinders.begin();
@@ -136,32 +160,41 @@ void CylinderGeometry::update()
 
     d->vbo.upload(cylinderVertices, BufferObject::ArrayBuffer);
     d->ibo.upload(cylinderIndices, BufferObject::ElementArrayBuffer);
+
+    // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
+    d->vao.bind();
+    d->vbo.bind();
+    d->ibo.bind();
+
+    ShaderProgram* program = d->program;
+    if (!program->enableAttributeArray("vertex"))
+      cout << program->error() << endl;
+    if (!program->useAttributeArray("vertex", ColorNormalVertex::vertexOffset(),
+                                    sizeof(ColorNormalVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
+      cout << program->error() << endl;
+    }
+    if (!program->enableAttributeArray("color"))
+      cout << program->error() << endl;
+    if (!program->useAttributeArray("color", ColorNormalVertex::colorOffset(),
+                                    sizeof(ColorNormalVertex), UCharType, 3,
+                                    ShaderProgram::Normalize)) {
+      cout << program->error() << endl;
+    }
+    if (!program->enableAttributeArray("normal"))
+      cout << program->error() << endl;
+    if (!program->useAttributeArray("normal", ColorNormalVertex::normalOffset(),
+                                    sizeof(ColorNormalVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
+      cout << program->error() << endl;
+    }
+
+    d->vao.release();
+
     d->numberOfVertices = cylinderVertices.size();
     d->numberOfIndices = cylinderIndices.size();
 
     m_dirty = false;
-  }
-
-  // Build and link the shader if it has not been used yet.
-  if (d->vertexShader == nullptr) {
-    d->vertexShader = new Shader;
-    d->vertexShader->setType(Shader::Vertex);
-    d->vertexShader->setSource(cylinders_vs);
-    d->fragmentShader = new Shader;
-    d->fragmentShader->setType(Shader::Fragment);
-    d->fragmentShader->setSource(cylinders_fs);
-    if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << endl;
-    if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << endl;
-
-    if (d->program == nullptr)
-      d->program = new ShaderProgram;
-
-    d->program->attachShader(*d->vertexShader);
-    d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
-      cout << d->program->error() << endl;
   }
 }
 
@@ -170,37 +203,14 @@ void CylinderGeometry::render(const Camera& camera)
   if (m_indices.empty() || m_cylinders.empty())
     return;
 
-  // Prepare the VBOs, IBOs and shader program if necessary.
+  // Prepare the VBOs, IBOs, VAO, and shader program if necessary.
   update();
 
   if (!d->program->bind())
     cout << d->program->error() << endl;
 
-  d->vbo.bind();
-  d->ibo.bind();
-
-  // Set up our attribute arrays.
-  if (!d->program->enableAttributeArray("vertex"))
-    cout << d->program->error() << endl;
-  if (!d->program->useAttributeArray(
-        "vertex", ColorNormalVertex::vertexOffset(), sizeof(ColorNormalVertex),
-        FloatType, 3, ShaderProgram::NoNormalize)) {
-    cout << d->program->error() << endl;
-  }
-  if (!d->program->enableAttributeArray("color"))
-    cout << d->program->error() << endl;
-  if (!d->program->useAttributeArray("color", ColorNormalVertex::colorOffset(),
-                                     sizeof(ColorNormalVertex), UCharType, 3,
-                                     ShaderProgram::Normalize)) {
-    cout << d->program->error() << endl;
-  }
-  if (!d->program->enableAttributeArray("normal"))
-    cout << d->program->error() << endl;
-  if (!d->program->useAttributeArray(
-        "normal", ColorNormalVertex::normalOffset(), sizeof(ColorNormalVertex),
-        FloatType, 3, ShaderProgram::NoNormalize)) {
-    cout << d->program->error() << endl;
-  }
+  // Bind the VAO (captures all vertex attribute state)
+  d->vao.bind();
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
@@ -217,18 +227,12 @@ void CylinderGeometry::render(const Camera& camera)
   if (!d->program->setUniformValue("normalMatrix", normalMatrix))
     std::cout << d->program->error() << std::endl;
 
-  // Render the loaded spheres using the shader and bound VBO.
+  // Render the loaded cylinders using the shader and VAO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
                       static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
                       reinterpret_cast<const GLvoid*>(0));
 
-  d->vbo.release();
-  d->ibo.release();
-
-  d->program->disableAttributeArray("vector");
-  d->program->disableAttributeArray("color");
-  d->program->disableAttributeArray("normal");
-
+  d->vao.release();
   d->program->release();
 }
 
