@@ -134,6 +134,8 @@ jobs:
         # just turn on tests for
         cmake -DENABLE_TESTING=ON .
         cmake --build .
+        # Add DLL directories to PATH so tests can find dependencies
+        export PATH="${QT_ROOT_DIR}/bin:/c/vcpkg/installed/x64-windows/bin:${{ runner.workspace }}/build/prefix/bin:$PATH"
         ctest --output-on-failure
 
     - name: Create Windows Packages
