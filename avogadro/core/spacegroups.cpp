@@ -279,16 +279,15 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
       if (wrapToCell)
         newCandidate = uc->wrapCartesian(newCandidate);
 
-      // If there is already an atom in this location within a
+      // If there is already any atom in this location within a
       // certain tolerance, do not add the atom.
       bool atomAlreadyPresent = false;
       for (Index k = 0; k < mol.atomCount(); k++) {
-        // If it does not have the same atomic number, skip over it.
-        if (mol.atomicNumber(k) != atomicNum)
-          continue;
         Real distance = uc->distance(mol.atomPosition3d(k), newCandidate);
-        if (distance <= cartTol)
+        if (distance <= cartTol) {
           atomAlreadyPresent = true;
+          break; // no need to keep looking
+        }
       }
 
       // If there is already an atom present here, just continue
