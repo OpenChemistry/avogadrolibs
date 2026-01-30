@@ -109,14 +109,6 @@ jobs:
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
-    - name: Testing
-      if: (matrix.config.build_type != 'Release')
-      run: |
-        cd "${{ runner.workspace }}/build"
-        # just turn on tests for avogadrolibs
-        cmake -DENABLE_TESTING=ON avogadrolibs
-      shell: bash
-
     # Cache thirdparty builds (OpenBabel, etc.)
     - name: Cache thirdparty
       uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
@@ -135,20 +127,13 @@ jobs:
 
     - name: Run tests
       if: (matrix.config.build_type != 'Release')
-      shell: cmake -P {0}
+      shell: bash
       run: |
-        include(ProcessorCount)
-        ProcessorCount(N)
-        set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
-        set(ENV{ASAN_OPTIONS} "new_delete_type_mismatch=0")
-        execute_process(
-          COMMAND ctest -j ${N}
-          WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs
-          RESULT_VARIABLE result
-        )
-        if (NOT result EQUAL 0)
-          message(FATAL_ERROR "Running tests failed!")
-        endif()
+        cd "${{ runner.workspace }}/build/avogadrolibs"
+        # just turn on tests for
+        cmake -DENABLE_TESTING=ON .
+        cmake --build .
+        ctest --output-on-failure
 
     - name: Create Windows Packages
       if: matrix.config.artifact != 0
