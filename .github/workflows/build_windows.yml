@@ -39,7 +39,8 @@ jobs:
             name: "Windows Tests", artifact: "",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            build_type: "Debug",
+            build_type: "Release",
+            test: true,
             cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
             build_flags: "--parallel",
           }
@@ -126,7 +127,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/build
 
     - name: Run tests
-      if: (matrix.config.build_type != 'Release')
+      if: (matrix.config.test == true)
       shell: bash
       run: |
         cd "${{ runner.workspace }}/build/avogadrolibs"
