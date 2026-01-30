@@ -100,7 +100,7 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         choco install nsis ninja
-        vcpkg install libarchive eigen3 libxml2 zlib
+        vcpkg install libarchive eigen3 libxml2 zlib gtest
       shell: bash
 
     - name: Configure
