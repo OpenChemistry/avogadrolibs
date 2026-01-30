@@ -238,7 +238,10 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
       int bCoords[] = { 11, 16, 21, 26 };
       for (int i = 0; i < 4; i++) {
-        if (trimmed(buffer.substr(bCoords[i], 5)) == "")
+        // Check if buffer is long enough for this column
+        if (static_cast<int>(buffer.length()) < bCoords[i] + 5)
+          break;
+        if (trimmed(buffer.substr(bCoords[i], 5)).empty())
           break;
 
         else {
