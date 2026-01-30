@@ -108,9 +108,9 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (!ok) {
     // Assume atomic symbols are here and store them
     symbolsList = split(line, ' ');
-    // Store atomic nums
+    // Store atomic nums (trim to handle Windows CRLF line endings)
     for (auto& i : symbolsList)
-      atomicNumbers.push_back(Elements::atomicNumberFromSymbol(i));
+      atomicNumbers.push_back(Elements::atomicNumberFromSymbol(trimmed(i)));
     // This next one should be atom types
     getline(inStream, line);
   }

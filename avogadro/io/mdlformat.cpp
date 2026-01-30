@@ -411,7 +411,8 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (trimmed(buffer) == "$$$$")
       break;
     if (inValue) {
-      if (buffer.empty() && dataName.length() > 0) {
+      // Use trimmed() to handle Windows CRLF line endings where \r remains
+      if (trimmed(buffer).empty() && dataName.length() > 0) {
         // check for partial charges
         if (dataName == "PUBCHEM_MMFF94_PARTIAL_CHARGES")
           handlePartialCharges(mol, dataValue);
@@ -428,7 +429,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       } else {
         if (dataValue.length())
           dataValue += "\n";
-        dataValue += buffer;
+        dataValue += trimmed(buffer);
       }
     } else if (startsWith(buffer, "> ")) {
       // This is a data header, read the name of the entry, and the value on
