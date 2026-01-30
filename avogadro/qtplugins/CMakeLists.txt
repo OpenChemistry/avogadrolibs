@@ -205,7 +205,6 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
   "// Automatically generated file. Do not edit.
 #ifndef AVOGADRO_STATIC_QTPLUGINS_H
 #define AVOGADRO_STATIC_QTPLUGINS_H
-
 #include <QtCore/QtPlugin>\n\n")
 
 foreach(_plugin ${AvogadroLibs_STATIC_PLUGINS})

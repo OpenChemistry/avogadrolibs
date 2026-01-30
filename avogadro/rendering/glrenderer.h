@@ -15,6 +15,7 @@
 #include "shader.h"
 #include "shaderprogram.h"
 #include "solidpipeline.h"
+#include "volumegeometry.h"
 
 #include <avogadro/core/array.h>
 
@@ -100,6 +101,9 @@ public:
   const SolidPipeline& solidPipeline() const { return m_solidPipeline; }
   SolidPipeline& solidPipeline() { return m_solidPipeline; }
 
+
+  const VolumeGeometry& volume() const { return m_volume; }
+  VolumeGeometry& volume() { return m_volume; }
   /**
    * Get/set the text rendering strategy for this object. The renderer takes
    * ownership of the strategy object. @{
@@ -151,6 +155,7 @@ private:
   Scene m_scene;
   TextRenderStrategy* m_textRenderStrategy;
   SolidPipeline m_solidPipeline;
+  VolumeGeometry m_volume;
 
   Vector3f m_center;
   float m_radius;

@@ -131,6 +131,8 @@ void SolidPipeline::initialize()
   d->firstStageShaders.attachShader(d->firstFragmentShader);
   if (!d->firstStageShaders.link())
     std::cout << d->firstStageShaders.error() << std::endl;
+
+  // here is the end of the code that needs to be compared
 }
 
 void SolidPipeline::begin()

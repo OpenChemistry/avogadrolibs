@@ -365,6 +365,13 @@ void Orbitals::calculateCube()
                << "\tOrbital " << cI->orbital << "\n"
                << "\tResolution " << cI->resolution;
 #endif
+      // Set this cube as the active cube for volume rendering
+      for (Index j = 0; j < m_molecule->cubeCount(); ++j) {
+        if (m_molecule->cube(j) == cI->cube) {
+          m_molecule->setActiveCubeIndex(j);
+          break;
+        }
+      }
       m_currentMeshCalculation = m_currentRunningCalculation;
       calculatePosMesh();
       calculationComplete();
@@ -378,6 +385,9 @@ void Orbitals::calculateCube()
   cube->setLimits(*m_molecule, info->resolution, cubePadding);
   cube->setName("Molecular Orbital " + std::to_string(info->orbital + 1));
   cube->setCubeType(Core::Cube::Type::MO);
+
+  // Set this cube as the active cube for volume rendering
+  m_molecule->setActiveCubeIndex(m_molecule->cubeCount() - 1);
 
   if (!m_gaussianConcurrent) {
     m_gaussianConcurrent = new QtGui::GaussianSetConcurrent(this);
@@ -534,6 +544,15 @@ void Orbitals::renderOrbital(unsigned int orbital,
       OrbitalWidget::OrbitalQualityToDouble(m_dialog->defaultQuality()),
       electronType);
   } else {
+    // Set this cube as the active cube for volume rendering
+    Core::Cube* activeCube = m_queue[index].cube;
+    for (Index j = 0; j < m_molecule->cubeCount(); ++j) {
+      if (m_molecule->cube(j) == activeCube) {
+        m_molecule->setActiveCubeIndex(j);
+        break;
+      }
+    }
+
     // just need to update the meshes
     if (m_currentMeshCalculation == -1) {
       m_currentMeshCalculation = index;
