@@ -31,7 +31,7 @@ inline const std::map<QString, QString>& ligandKeyMap()
     { "acac", "2-acetylacetonate" },
     { "bpy", "2-bipyridine" },
     { "dmg", "dimethylglyoxime" },
-    { "dmpe", "dppe-1,2-bis(dimethylphosphino)ethane" },
+    { "dmpe", "dmpe-1,2-bis(dimethylphosphino)ethane" },
     { "dppe", "dppe-1,2-bis(diphenylphosphino)ethane" },
     { "en", "2-ethylenediamine" },
     { "ox", "oxalate" },

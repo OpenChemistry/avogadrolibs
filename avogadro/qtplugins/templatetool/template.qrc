@@ -50,6 +50,7 @@
     <file>ligands/cyclopropane.svg</file>
     <file>ligands/decyl.svg</file>
     <file>ligands/dimethylglyoxime.svg</file>
+    <file>ligands/dmpe-1,2-bis(dimethylphosphino)ethane.svg</file>
     <file>ligands/disulfide.svg</file>
     <file>ligands/dppe-1,2-bis(diphenylphosphino)ethane.svg</file>
     <file>ligands/epoxide.svg</file>
@@ -155,6 +156,7 @@
     <file>ligands/cyclopropane.cjson</file>
     <file>ligands/decyl.cjson</file>
     <file>ligands/dimethylglyoxime.cjson</file>
+    <file>ligands/dmpe-1,2-bis(dimethylphosphino)ethane.cjson</file>
     <file>ligands/disulfide.cjson</file>
     <file>ligands/dppe-1,2-bis(diphenylphosphino)ethane.cjson</file>
     <file>ligands/epoxide.cjson</file>
