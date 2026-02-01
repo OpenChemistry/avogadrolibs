@@ -516,7 +516,8 @@ void SpaceGroup::fillUnitCell()
     return;
 
   // true here to fill all copies, including edges and corners
-  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol, true);
+  // 0.25 indicates the distance in A that two atoms must be apart
+  m_molecule->undoMolecule()->fillUnitCell(hallNumber, 0.25, true);
 }
 
 void SpaceGroup::fillTranslationalCell()
@@ -533,7 +534,8 @@ void SpaceGroup::fillTranslationalCell()
   if (!checkPrimitiveCell(hallNumber))
     return;
 
-  m_molecule->undoMolecule()->fillUnitCell(hallNumber, m_spgTol);
+  // 0.25 indicates the distance in A that two atoms must be apart
+  m_molecule->undoMolecule()->fillUnitCell(hallNumber, 0.25);
 }
 
 void SpaceGroup::reduceToAsymmetricUnit()

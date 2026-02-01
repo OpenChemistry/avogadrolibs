@@ -18,8 +18,10 @@
 
 #include <nlohmann/json.hpp>
 
+#include <cstdio>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
 
 using json = nlohmann::json;
 
@@ -86,6 +88,57 @@ json eigenColToJson(const MatrixX& matrix, int column)
   return j;
 }
 
+// Sanitize a raw string by replacing invalid UTF-8 sequences with '?'
+// (to work around a bug in Open Babel space group output)
+std::string sanitizeUtf8(const std::string& s)
+{
+  std::string result;
+  result.reserve(s.size());
+  const unsigned char* bytes = reinterpret_cast<const unsigned char*>(s.data());
+  size_t len = s.size();
+
+  for (size_t i = 0; i < len; ++i) {
+    if (bytes[i] <= 0x7F) {
+      result.push_back(static_cast<char>(bytes[i]));
+      continue;
+    }
+
+    size_t remaining = 0;
+    if ((bytes[i] & 0xE0) == 0xC0)
+      remaining = 1;
+    else if ((bytes[i] & 0xF0) == 0xE0)
+      remaining = 2;
+    else if ((bytes[i] & 0xF8) == 0xF0)
+      remaining = 3;
+    else {
+      result.push_back('?'); // invalid lead byte
+      continue;
+    }
+
+    if (i + remaining >= len) {
+      result.push_back('?'); // truncated sequence
+      continue;
+    }
+
+    bool valid = true;
+    for (size_t j = 1; j <= remaining; ++j) {
+      if ((bytes[i + j] & 0xC0) != 0x80) {
+        valid = false;
+        break;
+      }
+    }
+
+    if (valid) {
+      for (size_t j = 0; j <= remaining; ++j)
+        result.push_back(static_cast<char>(bytes[i + j]));
+      i += remaining;
+    } else {
+      result.push_back('?'); // invalid continuation
+    }
+  }
+  return result;
+}
+
 bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 {
   return deserialize(file, molecule, true);
@@ -95,6 +148,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
                               bool isJson)
 {
   json jsonRoot;
+
   // could throw parse errors
   try {
     if (isJson)
@@ -109,8 +163,18 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     return false;
   }
 
+  if (jsonRoot.is_discarded() && isJson) {
+    // Initial parse failed - try sanitizing UTF-8 and re-parsing
+    file.clear();
+    file.seekg(0);
+    std::string content((std::istreambuf_iterator<char>(file)),
+                        std::istreambuf_iterator<char>());
+    std::string sanitizedContent = sanitizeUtf8(content);
+    jsonRoot = json::parse(sanitizedContent, nullptr, false);
+  }
+
   if (jsonRoot.is_discarded()) {
-    appendError("Error reading CJSON file.");
+    appendError("Error reading CJSON file. Root is discarded.");
     return false;
   }
 
@@ -474,18 +538,20 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
           return false;
         }
       }
-      if (unitCellObject != nullptr)
+      if (unitCellObject != nullptr) {
         molecule.setUnitCell(unitCellObject);
 
-      // check for Hall number if present
-      if (unitCell["hallNumber"].is_number()) {
-        auto hallNumber = static_cast<int>(unitCell["hallNumber"]);
-        if (hallNumber > 0 && hallNumber < 531)
-          molecule.setHallNumber(hallNumber);
-      } else if (unitCell["spaceGroup"].is_string()) {
-        auto hallNumber = Core::SpaceGroups::hallNumber(unitCell["spaceGroup"]);
-        if (hallNumber != 0)
-          molecule.setHallNumber(hallNumber);
+        // check for Hall number if present
+        if (unitCell["hallNumber"].is_number()) {
+          auto hallNumber = static_cast<int>(unitCell["hallNumber"]);
+          if (hallNumber > 0 && hallNumber < 531)
+            molecule.setHallNumber(hallNumber);
+        } else if (unitCell["spaceGroup"].is_string()) {
+          auto hallNumber =
+            Core::SpaceGroups::hallNumber(unitCell["spaceGroup"]);
+          if (hallNumber != 0)
+            molecule.setHallNumber(hallNumber);
+        }
       }
     }
   }
