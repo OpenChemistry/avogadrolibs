@@ -212,6 +212,8 @@ void TemplateToolWidget::setGroup(const QString& groupName)
     m_ui->groupComboBox->setCurrentIndex(m_ui->groupComboBox->count() - 1);
     m_ui->groupComboBox->blockSignals(false);
     m_denticity = 1;
+    // Update the preview icon
+    m_ui->groupPreview->setIcon(QIcon(":/icons/ligands/" + groupName + ".svg"));
   }
 }
 
@@ -247,6 +249,9 @@ void TemplateToolWidget::setLigand(const QString& ligandName)
     m_ui->ligandComboBox->blockSignals(true);
     m_ui->ligandComboBox->setCurrentIndex(m_ui->ligandComboBox->count() - 1);
     m_ui->ligandComboBox->blockSignals(false);
+    // Update the preview icon
+    m_ui->ligandPreview->setIcon(
+      QIcon(":/icons/ligands/" + ligandName + ".svg"));
   }
 }
 
