@@ -118,6 +118,14 @@ void InsertFragment::performInsert(const QString& fileName, bool crystal)
     newMol.clearBonds();
     m_molecule->undoMolecule()->modifyMolecule(newMol, changes,
                                                tr("Import Crystal"));
+    // set the name
+    std::string name = newMol.data("name").toString();
+    if (!name.empty())
+      m_molecule->setData("name", name);
+    else {
+      name = QFileInfo(fileName).baseName().toStdString();
+      m_molecule->setData("name", name);
+    }
 
     emit requestActiveTool("Navigator");
   } else {
