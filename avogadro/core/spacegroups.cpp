@@ -357,10 +357,6 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
       // certain tolerance, do not add the atom.
       bool atomAlreadyPresent = false;
       for (Index k = 0; k < mol.atomCount(); k++) {
-        // If it does not have the same atomic number, skip over it.
-        if (mol.atomicNumber(k) != atomicNum)
-          continue;
-
         Real distance = (mol.atomPosition3d(k) - newCandidate).norm();
 
         if (distance <= cartTol) {
