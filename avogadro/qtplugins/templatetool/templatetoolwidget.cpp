@@ -190,6 +190,66 @@ void TemplateToolWidget::setCurrentTab(int index)
   m_ui->tabWidget->setCurrentIndex(index);
 }
 
+void TemplateToolWidget::setGroup(const QString& groupName)
+{
+  // Check if it's in the groups list (excluding "Other" at the end)
+  int index = -1;
+  for (int i = 0; i < m_groups.size() - 1; ++i) {
+    if (m_groups[i] == groupName) {
+      index = i;
+      break;
+    }
+  }
+
+  if (index >= 0) {
+    m_ui->groupComboBox->setCurrentIndex(index);
+    // groupChanged will be called automatically and update the preview
+  } else {
+    // Not in list, set as custom ligand path
+    m_ligandPath = ":/templates/ligands/" + groupName + ".cjson";
+    // Set to "Other" without triggering the dialog
+    m_ui->groupComboBox->blockSignals(true);
+    m_ui->groupComboBox->setCurrentIndex(m_ui->groupComboBox->count() - 1);
+    m_ui->groupComboBox->blockSignals(false);
+    m_denticity = 1;
+  }
+}
+
+void TemplateToolWidget::setLigand(const QString& ligandName)
+{
+  // Determine the ligand type from the prefix
+  int ligandType = LigandType::Monodentate;
+  if (ligandName.startsWith("eta") || ligandName.startsWith("e")) {
+    ligandType = LigandType::Haptic;
+  } else if (ligandName.startsWith("6-")) {
+    ligandType = LigandType::Hexadentate;
+  } else if (ligandName.startsWith("4-")) {
+    ligandType = LigandType::Tetradentate;
+  } else if (ligandName.startsWith("3-")) {
+    ligandType = LigandType::Tridentate;
+  } else if (ligandName.startsWith("2-")) {
+    ligandType = LigandType::Bidentate;
+  }
+
+  // Set the type combo box (this triggers typeChanged and populates m_ligands)
+  if (m_ui->typeComboBox->currentIndex() != ligandType) {
+    m_ui->typeComboBox->setCurrentIndex(ligandType);
+  }
+
+  // Find the ligand in the list
+  int index = m_ligands.indexOf(ligandName);
+  if (index >= 0 && index < m_ligands.size() - 1) {
+    m_ui->ligandComboBox->setCurrentIndex(index);
+  } else {
+    // Not in list, set as custom ligand path
+    m_ligandPath = ":/templates/ligands/" + ligandName + ".cjson";
+    // Set to "Other" without triggering the dialog
+    m_ui->ligandComboBox->blockSignals(true);
+    m_ui->ligandComboBox->setCurrentIndex(m_ui->ligandComboBox->count() - 1);
+    m_ui->ligandComboBox->blockSignals(false);
+  }
+}
+
 unsigned char TemplateToolWidget::ligand() const
 {
   return static_cast<unsigned char>(m_ui->ligandComboBox->currentIndex());
