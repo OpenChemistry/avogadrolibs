@@ -31,18 +31,76 @@
     <file>ligands/4-porphin.svg</file>
     <file>ligands/4-salen.svg</file>
     <file>ligands/6-edta.svg</file>
+    <file>ligands/aldehyde.svg</file>
     <file>ligands/amide.svg</file>
+    <file>ligands/azide.svg</file>
+    <file>ligands/azo.svg</file>
+    <file>ligands/boc-tert-butyloxycarbonyl.svg</file>
+    <file>ligands/butyl.svg</file>
+    <file>ligands/carbothioic_O-acid.svg</file>
     <file>ligands/carboxylate.svg</file>
+    <file>ligands/cbz-benzyloxycarbonyl.svg</file>
+    <file>ligands/cyclobutane.svg</file>
+    <file>ligands/cyclodecane.svg</file>
+    <file>ligands/cycloheptane.svg</file>
+    <file>ligands/cyclohexane.svg</file>
+    <file>ligands/cyclononane.svg</file>
+    <file>ligands/cyclooctane.svg</file>
+    <file>ligands/cyclopentane.svg</file>
+    <file>ligands/cyclopropane.svg</file>
+    <file>ligands/decyl.svg</file>
+    <file>ligands/dimethylglyoxime.svg</file>
+    <file>ligands/disulfide.svg</file>
+    <file>ligands/dppe-1,2-bis(diphenylphosphino)ethane.svg</file>
+    <file>ligands/epoxide.svg</file>
     <file>ligands/ester.svg</file>
-    <file>ligands/ethylene.svg</file>
-    <file>ligands/ethyne.svg</file>
-    <file>ligands/nitro.svg</file>
-    <file>ligands/phenyl.svg</file>
-    <file>ligands/phosphate.svg</file>
-    <file>ligands/sulfonate.svg</file>
     <file>ligands/eta2-ethylene.svg</file>
+    <file>ligands/eta3-alyl.svg</file>
+    <file>ligands/eta4-cyclo-octadiene.svg</file>
     <file>ligands/eta5-cyclopentyl.svg</file>
     <file>ligands/eta6-benzene.svg</file>
+    <file>ligands/ethyl.svg</file>
+    <file>ligands/ethylene.svg</file>
+    <file>ligands/ethyne.svg</file>
+    <file>ligands/fmoc-fluorenylmethoxycarbonyl.svg</file>
+    <file>ligands/heptyl.svg</file>
+    <file>ligands/hexyl.svg</file>
+    <file>ligands/imine.svg</file>
+    <file>ligands/iso-propyl.svg</file>
+    <file>ligands/isocyano.svg</file>
+    <file>ligands/isopentyl.svg</file>
+    <file>ligands/isothiocyanate.svg</file>
+    <file>ligands/mesityl.svg</file>
+    <file>ligands/mesyl.svg</file>
+    <file>ligands/methoxy.svg</file>
+    <file>ligands/neopentyl.svg</file>
+    <file>ligands/nitrile.svg</file>
+    <file>ligands/nitrite.svg</file>
+    <file>ligands/nitro.svg</file>
+    <file>ligands/nitroso.svg</file>
+    <file>ligands/nonyl.svg</file>
+    <file>ligands/octyl.svg</file>
+    <file>ligands/oxalate.svg</file>
+    <file>ligands/pentyl.svg</file>
+    <file>ligands/peroxide.svg</file>
+    <file>ligands/phenanthroline.svg</file>
+    <file>ligands/phenyl.svg</file>
+    <file>ligands/phosphate.svg</file>
+    <file>ligands/propyl.svg</file>
+    <file>ligands/sulfonate.svg</file>
+    <file>ligands/t-butyl.svg</file>
+    <file>ligands/thial.svg</file>
+    <file>ligands/thiocyanate.svg</file>
+    <file>ligands/thiocyanato-N.svg</file>
+    <file>ligands/thiocyano.svg</file>
+    <file>ligands/tosyl.svg</file>
+    <file>ligands/tribromomethyl.svg</file>
+    <file>ligands/trichloromethyl.svg</file>
+    <file>ligands/triflate.svg</file>
+    <file>ligands/trifluoromethyl.svg</file>
+    <file>ligands/triflyl.svg</file>
+    <file>ligands/trityl.svg</file>
+    <file>ligands/troc-2,2,2-trichloroethoxycarbonyl.svg</file>
     <file>template_light.svg</file>
     <file>template_dark.svg</file>
   </qresource>
@@ -62,33 +120,91 @@
     <file>ligands/1-aqua.cjson</file>
     <file>ligands/1-carbonyl.cjson</file>
     <file>ligands/1-cyano.cjson</file>
-    <file>ligands/1-phosphine.cjson</file>
-    <file>ligands/1-thiol.cjson</file>
-    <file>ligands/1-methyl.cjson</file>
     <file>ligands/1-ethyl.cjson</file>
-    <file>ligands/1-propyl.cjson</file>
     <file>ligands/1-isopropyl.cjson</file>
-    <file>ligands/1-t-butyl.cjson</file>
+    <file>ligands/1-methyl.cjson</file>
+    <file>ligands/1-phosphine.cjson</file>
+    <file>ligands/1-propyl.cjson</file>
     <file>ligands/1-pyridyl.cjson</file>
-  	<file>ligands/2-acetylacetonate.cjson</file>
+    <file>ligands/1-t-butyl.cjson</file>
+    <file>ligands/1-thiol.cjson</file>
+    <file>ligands/2-acetylacetonate.cjson</file>
     <file>ligands/2-bipyridine.cjson</file>
     <file>ligands/2-ethylenediamine.cjson</file>
     <file>ligands/3-terpyridine.cjson</file>
     <file>ligands/4-phthalocyanine.cjson</file>
     <file>ligands/4-porphin.cjson</file>
-  	<file>ligands/4-salen.cjson</file>
-  	<file>ligands/6-edta.cjson</file>
+    <file>ligands/4-salen.cjson</file>
+    <file>ligands/6-edta.cjson</file>
+    <file>ligands/aldehyde.cjson</file>
     <file>ligands/amide.cjson</file>
+    <file>ligands/azide.cjson</file>
+    <file>ligands/azo.cjson</file>
+    <file>ligands/boc-tert-butyloxycarbonyl.cjson</file>
+    <file>ligands/butyl.cjson</file>
+    <file>ligands/carbothioic_O-acid.cjson</file>
     <file>ligands/carboxylate.cjson</file>
+    <file>ligands/cbz-benzyloxycarbonyl.cjson</file>
+    <file>ligands/cyclobutane.cjson</file>
+    <file>ligands/cyclodecane.cjson</file>
+    <file>ligands/cycloheptane.cjson</file>
+    <file>ligands/cyclohexane.cjson</file>
+    <file>ligands/cyclononane.cjson</file>
+    <file>ligands/cyclooctane.cjson</file>
+    <file>ligands/cyclopentane.cjson</file>
+    <file>ligands/cyclopropane.cjson</file>
+    <file>ligands/decyl.cjson</file>
+    <file>ligands/dimethylglyoxime.cjson</file>
+    <file>ligands/disulfide.cjson</file>
+    <file>ligands/dppe-1,2-bis(diphenylphosphino)ethane.cjson</file>
+    <file>ligands/epoxide.cjson</file>
     <file>ligands/ester.cjson</file>
-    <file>ligands/ethylene.cjson</file>
-    <file>ligands/ethyne.cjson</file>
-    <file>ligands/nitro.cjson</file>
-    <file>ligands/phenyl.cjson</file>
-    <file>ligands/phosphate.cjson</file>
-    <file>ligands/sulfonate.cjson</file>
     <file>ligands/eta2-ethylene.cjson</file>
+    <file>ligands/eta3-alyl.cjson</file>
+    <file>ligands/eta4-cyclo-octadiene.cjson</file>
     <file>ligands/eta5-cyclopentyl.cjson</file>
     <file>ligands/eta6-benzene.cjson</file>
+    <file>ligands/ethyl.cjson</file>
+    <file>ligands/ethylene.cjson</file>
+    <file>ligands/ethyne.cjson</file>
+    <file>ligands/fmoc-fluorenylmethoxycarbonyl.cjson</file>
+    <file>ligands/heptyl.cjson</file>
+    <file>ligands/hexyl.cjson</file>
+    <file>ligands/imine.cjson</file>
+    <file>ligands/iso-propyl.cjson</file>
+    <file>ligands/isocyano.cjson</file>
+    <file>ligands/isopentyl.cjson</file>
+    <file>ligands/isothiocyanate.cjson</file>
+    <file>ligands/mesityl.cjson</file>
+    <file>ligands/mesyl.cjson</file>
+    <file>ligands/methoxy.cjson</file>
+    <file>ligands/neopentyl.cjson</file>
+    <file>ligands/nitrile.cjson</file>
+    <file>ligands/nitrite.cjson</file>
+    <file>ligands/nitro.cjson</file>
+    <file>ligands/nitroso.cjson</file>
+    <file>ligands/nonyl.cjson</file>
+    <file>ligands/octyl.cjson</file>
+    <file>ligands/oxalate.cjson</file>
+    <file>ligands/pentyl.cjson</file>
+    <file>ligands/peroxide.cjson</file>
+    <file>ligands/phenanthroline.cjson</file>
+    <file>ligands/phenyl.cjson</file>
+    <file>ligands/phosphate.cjson</file>
+    <file>ligands/propyl.cjson</file>
+    <file>ligands/sulfonate.cjson</file>
+    <file>ligands/t-butyl.cjson</file>
+    <file>ligands/thial.cjson</file>
+    <file>ligands/thiocyanate.cjson</file>
+    <file>ligands/thiocyanato-N.cjson</file>
+    <file>ligands/thiocyano.cjson</file>
+    <file>ligands/tosyl.cjson</file>
+    <file>ligands/tribromomethyl.cjson</file>
+    <file>ligands/trichloromethyl.cjson</file>
+    <file>ligands/triflate.cjson</file>
+    <file>ligands/trifluoromethyl.cjson</file>
+    <file>ligands/triflyl.cjson</file>
+    <file>ligands/trityl.cjson</file>
+    <file>ligands/troc-2,2,2-trichloroethoxycarbonyl.cjson</file>
   </qresource>
 </RCC>
