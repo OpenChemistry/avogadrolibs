@@ -45,6 +45,7 @@ inline const std::map<QString, QString>& ligandKeyMap()
     // Hexadentate
     { "edta", "6-edta" },
     // Haptic
+    { "cp", "eta5-cyclopentyl" },
     { "e2", "eta2-ethylene" },
     { "e3", "eta3-alyl" },
     { "e4", "eta4-cyclo-octadiene" },
@@ -72,6 +73,7 @@ inline const std::map<QString, QString>& groupKeyMap()
     { "c8", "octyl" },
     { "c9", "nonyl" },
     { "c0", "decyl" },
+    // Cycloalkyl
     { "C3", "cyclopropane" },
     { "C4", "cyclobutane" },
     { "C5", "cyclopentane" },
@@ -81,10 +83,11 @@ inline const std::map<QString, QString>& groupKeyMap()
     { "C9", "cyclononane" },
     { "C0", "cyclodecane" },
     // Branched alkyl
-    { "I", "1-isopropyl" },
-    { "K", "1-t-butyl" },
+    { "I", "iso-propyl" },
+    { "K", "t-butyl" },
     // others
     { "boc", "boc-tert-butyloxycarbonyl" },
+    { "c", "1-methyl" },
     { "C", "carboxylate" },
     { "cbz", "cbz-benzyloxycarbonyl" },
     { "cm", "t-butyl" },
@@ -93,6 +96,7 @@ inline const std::map<QString, QString>& groupKeyMap()
     { "co2", "carboxylate" },
     { "cs", "thial" },
     { "cso", "carbothioic_O-acid" },
+    { "E", "ester" },
     { "ep", "epoxide" },
     { "F", "trifluoromethyl" },
     { "fmoc", "fmoc-fluorenylmethoxycarbonyl" },
@@ -123,8 +127,10 @@ inline const std::map<QString, QString>& groupKeyMap()
     { "ss", "disulfide" },
     { "T", "troc-2,2,2-trichloroethoxycarbonyl" },
     { "tf", "triflyl" },
+    { "tos", "tosyl" },
     { "tr", "trityl" },
     { "ts", "tosyl" },
+    { "troc", "troc-2,2,2-trichloroethoxycarbonyl" },
     { "V", "ethylene" },
     { "W", "ethyne" },
     { "Y", "boc-tert-butyloxycarbonyl" },
