@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-31 02:11+0000\n"
-"PO-Revision-Date: 2026-01-26 08:52+0000\n"
+"PO-Revision-Date: 2026-02-02 13:10+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -1307,7 +1307,7 @@ msgstr "Van der Waals (OA)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "Volume"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -5379,7 +5379,7 @@ msgstr "Umple celula unitară…"
 #: qtplugins/spacegroup/spacegroup.cpp:101
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
-msgstr ""
+msgstr "Umple celula de translație…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
@@ -5387,11 +5387,11 @@ msgstr "Grupul spațial"
 
 #: qtplugins/spacegroup/spacegroup.cpp:133
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr "Umple atomii simetrici pe baza grupului spațial al cristalului."
+msgstr "Completează atomii simetrici pe baza grupului spațial al cristalului."
 
 #: qtplugins/spacegroup/spacegroup.cpp:135
 msgid "Fill all atoms based on the crystal space group."
-msgstr ""
+msgstr "Completează toți atomii pe baza grupului spațial al cristalului."
 
 #: qtplugins/spacegroup/spacegroup.cpp:384
 #: qtplugins/spacegroup/spacegroup.cpp:412
@@ -5416,6 +5416,11 @@ msgid ""
 "Hall symbol: %3\n"
 "International symbol: %4"
 msgstr ""
+"Percepția grupului spațial a reușit:\n"
+"Toleranță: %1  Å\n"
+"Grup spațial: %2\n"
+"Simbol Hall: %3\n"
+"Simbol internațional: %4"
 
 #: qtplugins/spacegroup/spacegroup.cpp:418
 msgid "Failure"
@@ -5482,6 +5487,13 @@ msgid ""
 "\n"
 "Proceed with this space group?"
 msgstr ""
+"Cu o toleranță de %1  Å, informațiile privind grupul spațial au fost "
+"percepute ca fiind următoarele:\n"
+"Număr internațional: %2\n"
+"Simbol Hall: %3\n"
+"Simbol internațional: %4\n"
+"\n"
+"Continuați cu acest grup spațial?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:580 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
@@ -5495,39 +5507,39 @@ msgstr "Selectați toleranța în Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:598
 msgid "Triclinic"
-msgstr ""
+msgstr "Triclinic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Monoclinic"
-msgstr ""
+msgstr "Monoclinic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Orthorhombic"
-msgstr ""
+msgstr "Ortorombic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Tetragonal"
-msgstr ""
+msgstr "Tetragonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Trigonal"
-msgstr ""
+msgstr "Trigonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Rhombohedral"
-msgstr ""
+msgstr "Romboedric"
 
 #: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Hexagonal"
-msgstr ""
+msgstr "Hexagonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:612
 msgid "Cubic"
-msgstr ""
+msgstr "Cubic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:644
 msgid "Primitive Cell Detected"
-msgstr ""
+msgstr "Celulă primitivă detectată"
 
 #: qtplugins/spacegroup/spacegroup.cpp:646
 #, qt-format
@@ -5539,10 +5551,16 @@ msgid ""
 "\n"
 "Would you like to create a conventional cell first?"
 msgstr ""
+"Celula unitară actuală pare a fi o celulă primitivă (unghiuri diferite de 90"
+"°), dar grupul spațial %1 se așteaptă la o celulă convențională centrată.\n"
+"\n"
+"Umplerea celulei unitare poate crea atomi duplicați neașteptați.\n"
+"\n"
+"Doriți să creați mai întâi o celulă convențională?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:660
 msgid "Failed to conventionalize the cell."
-msgstr ""
+msgstr "Convenționalizarea celulei a eșuat."
 
 #: qtplugins/spacegroup/spacegroup.cpp:676
 msgid "International"
@@ -5558,7 +5576,7 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:677
 msgid "Crystal System"
-msgstr ""
+msgstr "Sistem cristalin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:709
 msgid "Select Space Group"

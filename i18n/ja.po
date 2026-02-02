@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-31 02:11+0000\n"
-"PO-Revision-Date: 2026-01-27 16:06+0000\n"
+"PO-Revision-Date: 2026-02-01 16:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -5438,35 +5438,35 @@ msgstr "許容値を Å で選択:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:598
 msgid "Triclinic"
-msgstr ""
+msgstr "三斜晶"
 
 #: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Monoclinic"
-msgstr ""
+msgstr "単斜晶"
 
 #: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Orthorhombic"
-msgstr ""
+msgstr "直方晶"
 
 #: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Tetragonal"
-msgstr ""
+msgstr "正方晶"
 
 #: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Trigonal"
-msgstr ""
+msgstr "三方晶"
 
 #: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Rhombohedral"
-msgstr ""
+msgstr "菱面体晶"
 
 #: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Hexagonal"
-msgstr ""
+msgstr "六方晶"
 
 #: qtplugins/spacegroup/spacegroup.cpp:612
 msgid "Cubic"
-msgstr ""
+msgstr "立方晶"
 
 #: qtplugins/spacegroup/spacegroup.cpp:644
 msgid "Primitive Cell Detected"
@@ -5501,7 +5501,7 @@ msgstr "ヘルマン・モーガン記号"
 
 #: qtplugins/spacegroup/spacegroup.cpp:677
 msgid "Crystal System"
-msgstr ""
+msgstr "結晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:709
 msgid "Select Space Group"
