@@ -897,6 +897,13 @@ public:
   std::map<unsigned char, size_t> composition() const;
 
   /**
+   * @return a map of element symbols (including isotopes like D, T, 13C) to
+   * their count. Handles unit cell fractional contributions for atoms at
+   * corners (1/8), edges (1/4), and faces (1/2).
+   */
+  std::map<std::string, size_t> formulaComposition() const;
+
+  /**
    * @return the atom pairs for all bonds to the atom indexed at @a index.
    */
   Array<std::pair<Index, Index>> getAtomBonds(Index index) const;
