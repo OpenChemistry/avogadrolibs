@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <cstddef>
 #include <iostream>
 #include <utility>
@@ -953,35 +954,48 @@ const Cube* Molecule::activeCube() const
 
 std::string Molecule::formula(const std::string& delimiter, int over) const
 {
-  // Adapted from chemkit:
-  // A map of atomic symbols to their quantity.
-  std::map<unsigned char, size_t> componentsCount = composition();
+  // A map of element symbols (including isotopes) to their quantity.
+  std::map<std::string, size_t> componentsCount = formulaComposition();
 
   std::stringstream result;
-  std::map<unsigned char, size_t>::iterator iter;
+  std::map<std::string, size_t>::iterator iter;
 
   // Carbons first
-  iter = componentsCount.find(6);
+  iter = componentsCount.find("C");
   if (iter != componentsCount.end()) {
     result << "C";
     if (iter->second > static_cast<size_t>(over))
       result << delimiter << iter->second;
     componentsCount.erase(iter);
 
-    // If carbon is present, hydrogens are next.
-    iter = componentsCount.find(1);
+    // If carbon is present, hydrogens are next (including D and T).
+    iter = componentsCount.find("H");
     if (iter != componentsCount.end()) {
       result << delimiter << "H";
       if (iter->second > static_cast<size_t>(over))
         result << delimiter << iter->second;
       componentsCount.erase(iter);
     }
+    iter = componentsCount.find("D");
+    if (iter != componentsCount.end()) {
+      result << delimiter << "D";
+      if (iter->second > static_cast<size_t>(over))
+        result << delimiter << iter->second;
+      componentsCount.erase(iter);
+    }
+    iter = componentsCount.find("T");
+    if (iter != componentsCount.end()) {
+      result << delimiter << "T";
+      if (iter->second > static_cast<size_t>(over))
+        result << delimiter << iter->second;
+      componentsCount.erase(iter);
+    }
   }
 
-  // The rest:
+  // The rest (alphabetically, since std::map<std::string> sorts by key):
   iter = componentsCount.begin();
   while (iter != componentsCount.end()) {
-    result << delimiter << Elements::symbol(iter->first);
+    result << delimiter << iter->first;
     if (iter->second > static_cast<size_t>(over))
       result << delimiter << iter->second;
     ++iter;
@@ -1555,11 +1569,130 @@ bool Molecule::hasCustomElements() const
 
 std::map<unsigned char, size_t> Molecule::composition() const
 {
-  // A map of atomic symbols to their quantity.
-  std::map<unsigned char, size_t> composition;
-  for (unsigned char m_atomicNumber : m_atomicNumbers) {
-    ++composition[m_atomicNumber];
+  const double tolerance = 1.0e-3;
+
+  // A map of atomic numbers to their quantity (using double for fractional
+  // contributions when there's a unit cell)
+  std::map<unsigned char, double> compositionDouble;
+
+  // Check if we have a unit cell - if so, we need to account for fractional
+  // atoms at corners, edges, and faces
+  if (m_unitCell != nullptr) {
+    for (Index i = 0; i < atomCount(); ++i) {
+      unsigned char atomicNum = m_atomicNumbers[i];
+      Vector3 fracCoords = m_unitCell->toFractional(m_positions3d[i]);
+
+      // Count how many coordinates are at boundaries (0 or 1)
+      int boundaryCount = 0;
+      for (int j = 0; j < 3; ++j) {
+        double coord = fracCoords[j];
+        // Check if close to 0 or 1
+        if (std::fabs(coord) < tolerance ||
+            std::fabs(coord - 1.0) < tolerance) {
+          ++boundaryCount;
+        }
+      }
+
+      // Calculate fractional contribution based on boundary count
+      // Corner atoms (3 boundaries): 1/8
+      // Edge atoms (2 boundaries): 1/4
+      // Face atoms (1 boundary): 1/2
+      // Interior atoms (0 boundaries): 1
+      double weight = 1.0;
+      if (boundaryCount == 3) {
+        weight = 1.0 / 8.0;
+      } else if (boundaryCount == 2) {
+        weight = 1.0 / 4.0;
+      } else if (boundaryCount == 1) {
+        weight = 1.0 / 2.0;
+      }
+
+      compositionDouble[atomicNum] += weight;
+    }
+  } else {
+    // No unit cell, just count atoms normally
+    for (unsigned char atomicNum : m_atomicNumbers) {
+      compositionDouble[atomicNum] += 1.0;
+    }
   }
+
+  // Convert to size_t by rounding to nearest integer
+  std::map<unsigned char, size_t> composition;
+  for (const auto& pair : compositionDouble) {
+    size_t roundedCount = static_cast<size_t>(std::round(pair.second));
+    if (roundedCount > 0) {
+      composition[pair.first] = roundedCount;
+    }
+  }
+
+  return composition;
+}
+
+std::map<std::string, size_t> Molecule::formulaComposition() const
+{
+  const double tolerance = 1.0e-3;
+
+  // A map of element symbols (with isotopes) to their quantity
+  // Using double to accumulate fractional contributions from unit cells
+  std::map<std::string, double> compositionDouble;
+
+  for (Index i = 0; i < atomCount(); ++i) {
+    unsigned char atomicNum = m_atomicNumbers[i];
+    std::string atomSymbol(Elements::symbol(atomicNum));
+
+    // Handle isotopes
+    unsigned short iso = isotope(i);
+    if (iso > 0) {
+      if (atomicNum == 1 && iso == 1)
+        atomSymbol = "H";
+      else if (atomicNum == 1 && iso == 2)
+        atomSymbol = "D";
+      else if (atomicNum == 1 && iso == 3)
+        atomSymbol = "T";
+      else
+        // e.g., 13C
+        atomSymbol = std::to_string(iso) + atomSymbol;
+    }
+
+    // Calculate fractional contribution for unit cells
+    double weight = 1.0;
+    if (m_unitCell != nullptr) {
+      Vector3 fracCoords = m_unitCell->toFractional(m_positions3d[i]);
+
+      // Count how many coordinates are at boundaries (0 or 1)
+      int boundaryCount = 0;
+      for (int j = 0; j < 3; ++j) {
+        double coord = fracCoords[j];
+        if (std::fabs(coord) < tolerance ||
+            std::fabs(coord - 1.0) < tolerance) {
+          ++boundaryCount;
+        }
+      }
+
+      // Corner atoms (3 boundaries): 1/8
+      // Edge atoms (2 boundaries): 1/4
+      // Face atoms (1 boundary): 1/2
+      if (boundaryCount == 3) {
+        weight = 1.0 / 8.0;
+      } else if (boundaryCount == 2) {
+        weight = 1.0 / 4.0;
+      } else if (boundaryCount == 1) {
+        weight = 1.0 / 2.0;
+      }
+    }
+
+    compositionDouble[atomSymbol] += weight;
+  }
+
+  // Convert to size_t by rounding to nearest integer
+  std::map<std::string, size_t> composition;
+  for (const auto& pair : compositionDouble) {
+    size_t roundedCount = static_cast<size_t>(std::round(pair.second));
+    if (roundedCount > 0) {
+      composition[pair.first] = roundedCount;
+    }
+  }
+
   return composition;
 }
 
