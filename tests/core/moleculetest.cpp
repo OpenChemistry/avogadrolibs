@@ -11,6 +11,7 @@
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
 using Avogadro::Index;
@@ -23,6 +24,7 @@ using Avogadro::Core::Bond;
 using Avogadro::Core::Color3f;
 using Avogadro::Core::Mesh;
 using Avogadro::Core::Molecule;
+using Avogadro::Core::UnitCell;
 using Avogadro::Core::Variant;
 using Avogadro::Core::VariantMap;
 
@@ -270,4 +272,173 @@ TEST_F(MoleculeTest, assignment)
   assign = m_testMolecule;
 
   assertEqual(m_testMolecule, assign);
+}
+
+TEST_F(MoleculeTest, formulaCompositionBasic)
+{
+  // Test basic composition without unit cell (H2O from test fixture)
+  std::map<std::string, size_t> comp = m_testMolecule.formulaComposition();
+  EXPECT_EQ(comp["O"], 1);
+  EXPECT_EQ(comp["H"], 2);
+  EXPECT_EQ(comp.size(), 2);
+}
+
+TEST_F(MoleculeTest, formulaCompositionIsotopes)
+{
+  Molecule molecule;
+
+  // Add regular hydrogen
+  Atom h1 = molecule.addAtom(1);
+  h1.setPosition3d(Vector3(0, 0, 0));
+
+  // Add deuterium (hydrogen isotope 2)
+  Atom d1 = molecule.addAtom(1);
+  d1.setPosition3d(Vector3(1, 0, 0));
+  molecule.setIsotope(d1.index(), 2);
+
+  // Add tritium (hydrogen isotope 3)
+  Atom t1 = molecule.addAtom(1);
+  t1.setPosition3d(Vector3(2, 0, 0));
+  molecule.setIsotope(t1.index(), 3);
+
+  // Add carbon-13
+  Atom c13 = molecule.addAtom(6);
+  c13.setPosition3d(Vector3(3, 0, 0));
+  molecule.setIsotope(c13.index(), 13);
+
+  // Add regular carbon
+  Atom c12 = molecule.addAtom(6);
+  c12.setPosition3d(Vector3(4, 0, 0));
+
+  std::map<std::string, size_t> comp = molecule.formulaComposition();
+  EXPECT_EQ(comp["H"], 1);
+  EXPECT_EQ(comp["D"], 1);
+  EXPECT_EQ(comp["T"], 1);
+  EXPECT_EQ(comp["13C"], 1);
+  EXPECT_EQ(comp["C"], 1);
+}
+
+TEST_F(MoleculeTest, formulaCompositionUnitCellCorner)
+{
+  Molecule molecule;
+
+  // Create a simple cubic unit cell (10 Angstrom sides)
+  UnitCell* cell = new UnitCell(10.0, 10.0, 10.0, M_PI / 2, M_PI / 2, M_PI / 2);
+  molecule.setUnitCell(cell);
+
+  // Add 8 corner atoms (each at a corner of the unit cell)
+  // Each corner atom should count as 1/8, so 8 corners = 1 atom
+  Vector3 corners[8] = { Vector3(0, 0, 0),   Vector3(10, 0, 0),
+                         Vector3(0, 10, 0),  Vector3(0, 0, 10),
+                         Vector3(10, 10, 0), Vector3(10, 0, 10),
+                         Vector3(0, 10, 10), Vector3(10, 10, 10) };
+
+  for (int i = 0; i < 8; ++i) {
+    Atom a = molecule.addAtom(11); // Sodium
+    a.setPosition3d(corners[i]);
+  }
+
+  std::map<std::string, size_t> comp = molecule.formulaComposition();
+  // 8 corners * 1/8 = 1
+  EXPECT_EQ(comp["Na"], 1);
+}
+
+TEST_F(MoleculeTest, formulaCompositionUnitCellEdge)
+{
+  Molecule molecule;
+
+  // Create a simple cubic unit cell (10 Angstrom sides)
+  UnitCell* cell = new UnitCell(10.0, 10.0, 10.0, M_PI / 2, M_PI / 2, M_PI / 2);
+  molecule.setUnitCell(cell);
+
+  // Add 4 edge atoms (each on an edge of the unit cell, 2 coords at 0 or 1)
+  // Each edge atom should count as 1/4, so 4 edges = 1 atom
+  Vector3 edges[4] = {
+    Vector3(5, 0, 0),  // edge along x at y=0, z=0
+    Vector3(5, 10, 0), // edge along x at y=1, z=0
+    Vector3(5, 0, 10), // edge along x at y=0, z=1
+    Vector3(5, 10, 10) // edge along x at y=1, z=1
+  };
+
+  for (int i = 0; i < 4; ++i) {
+    Atom a = molecule.addAtom(17); // Chlorine
+    a.setPosition3d(edges[i]);
+  }
+
+  std::map<std::string, size_t> comp = molecule.formulaComposition();
+  // 4 edges * 1/4 = 1
+  EXPECT_EQ(comp["Cl"], 1);
+}
+
+TEST_F(MoleculeTest, formulaCompositionUnitCellFace)
+{
+  Molecule molecule;
+
+  // Create a simple cubic unit cell (10 Angstrom sides)
+  UnitCell* cell = new UnitCell(10.0, 10.0, 10.0, M_PI / 2, M_PI / 2, M_PI / 2);
+  molecule.setUnitCell(cell);
+
+  // Add 2 face atoms (each on a face of the unit cell, 1 coord at 0 or 1)
+  // Each face atom should count as 1/2, so 2 faces = 1 atom
+  Vector3 faces[2] = {
+    Vector3(5, 5, 0), // face at z=0
+    Vector3(5, 5, 10) // face at z=1
+  };
+
+  for (int i = 0; i < 2; ++i) {
+    Atom a = molecule.addAtom(35); // Bromine
+    a.setPosition3d(faces[i]);
+  }
+
+  std::map<std::string, size_t> comp = molecule.formulaComposition();
+  // 2 faces * 1/2 = 1
+  EXPECT_EQ(comp["Br"], 1);
+}
+
+TEST_F(MoleculeTest, formulaCompositionUnitCellInterior)
+{
+  Molecule molecule;
+
+  // Create a simple cubic unit cell (10 Angstrom sides)
+  UnitCell* cell = new UnitCell(10.0, 10.0, 10.0, M_PI / 2, M_PI / 2, M_PI / 2);
+  molecule.setUnitCell(cell);
+
+  // Add an interior atom (no coords at 0 or 1)
+  // Should count as 1
+  Atom a = molecule.addAtom(26); // Iron
+  a.setPosition3d(Vector3(5, 5, 5));
+
+  std::map<std::string, size_t> comp = molecule.formulaComposition();
+  EXPECT_EQ(comp["Fe"], 1);
+}
+
+TEST_F(MoleculeTest, formulaCompositionUnitCellMixed)
+{
+  Molecule molecule;
+
+  // Create a simple cubic unit cell (10 Angstrom sides)
+  UnitCell* cell = new UnitCell(10.0, 10.0, 10.0, M_PI / 2, M_PI / 2, M_PI / 2);
+  molecule.setUnitCell(cell);
+
+  // NaCl rock salt structure simulation:
+  // 8 Na at corners = 8 * 1/8 = 1 Na
+  Vector3 corners[8] = { Vector3(0, 0, 0),   Vector3(10, 0, 0),
+                         Vector3(0, 10, 0),  Vector3(0, 0, 10),
+                         Vector3(10, 10, 0), Vector3(10, 0, 10),
+                         Vector3(0, 10, 10), Vector3(10, 10, 10) };
+  for (int i = 0; i < 8; ++i) {
+    Atom a = molecule.addAtom(11); // Na
+    a.setPosition3d(corners[i]);
+  }
+
+  // 6 Cl at face centers = 6 * 1/2 = 3 Cl... but we want 1 Cl
+  // So add 2 face atoms for 1 Cl
+  Atom cl1 = molecule.addAtom(17);
+  cl1.setPosition3d(Vector3(5, 5, 0)); // z=0 face
+  Atom cl2 = molecule.addAtom(17);
+  cl2.setPosition3d(Vector3(5, 5, 10)); // z=1 face
+
+  std::map<std::string, size_t> comp = molecule.formulaComposition();
+  EXPECT_EQ(comp["Na"], 1);
+  EXPECT_EQ(comp["Cl"], 1);
 }
