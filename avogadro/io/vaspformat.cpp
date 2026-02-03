@@ -13,6 +13,7 @@
 #include <avogadro/core/vector.h>    // for Vector3
 
 #include <algorithm> // for std::count()
+#include <cmath>     // for floor()
 #include <iomanip>
 #include <iostream>
 
@@ -260,12 +261,54 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
     outStream << std::endl;
   }
 
-  // Adapted from chemkit:
-  // A map of atomic symbols to their quantity.
-  Array<unsigned char> atomicNumbers = mol.atomicNumbers();
+  // Filter out translational duplicates (atoms with fractional coords ~1.0
+  // that are duplicates of atoms at ~0.0 due to periodic boundary conditions)
+  struct AtomData
+  {
+    unsigned char atomicNumber;
+    Vector3 wrappedCoords;
+    Vector3 fracCoords;
+  };
+  std::vector<AtomData> atomsToExport;
+  const double tolerance = 0.001;
+  size_t totalAtoms = mol.atomCount();
+
+  for (size_t i = 0; i < totalAtoms; ++i) {
+    Atom atom = mol.atom(i);
+    Vector3 fracCoords = mol.unitCell()->toFractional(atom.position3d());
+
+    // Wrap coordinates to [0, 1) range for comparison
+    Vector3 wrappedCoords;
+    for (int c = 0; c < 3; ++c) {
+      double coord = fracCoords[c];
+      coord = coord - floor(coord);
+      if (coord > 1.0 - tolerance)
+        coord = 0.0;
+      wrappedCoords[c] = coord;
+    }
+
+    // Check if this is a duplicate of a previously accepted atom
+    bool isDuplicate = false;
+    for (const auto& prev : atomsToExport) {
+      if (prev.atomicNumber != atom.atomicNumber())
+        continue;
+
+      // Check if positions match within tolerance
+      if ((wrappedCoords - prev.wrappedCoords).norm() < tolerance) {
+        isDuplicate = true;
+        break;
+      }
+    }
+
+    if (!isDuplicate)
+      atomsToExport.push_back(
+        { atom.atomicNumber(), wrappedCoords, fracCoords });
+  }
+
+  // Build composition from filtered atoms only
   std::map<unsigned char, size_t> composition;
-  for (unsigned char& atomicNumber : atomicNumbers) {
-    composition[atomicNumber]++;
+  for (const auto& atomData : atomsToExport) {
+    composition[atomData.atomicNumber]++;
   }
 
   // Atom symbols
@@ -288,30 +331,23 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   outStream << "Direct" << std::endl;
 
   // Final section is atomic coordinates
-  size_t numAtoms = mol.atomCount();
-  // We need to make sure we that group the atomic numbers together.
+  // We need to make sure we group the atomic numbers together.
   // The outer loop is for grouping them.
   iter = composition.begin();
   while (iter != composition.end()) {
     unsigned char currentAtomicNum = iter->first;
-    for (size_t i = 0; i < numAtoms; ++i) {
+    for (const auto& atomData : atomsToExport) {
       // We need to group atomic numbers together. If this one is not
       // the current atomic number, skip over it.
-      if (atomicNumbers.at(i) != currentAtomicNum)
+      if (atomData.atomicNumber != currentAtomicNum)
         continue;
 
-      Atom atom = mol.atom(i);
-      if (!atom.isValid()) {
-        appendError("Internal error: Atom invalid.");
-        return false;
-      }
-      Vector3 fracCoords = mol.unitCell()->toFractional(atom.position3d());
       outStream << "  " << std::setw(10) << std::right << std::fixed
-                << std::setprecision(8) << fracCoords.x() << "  "
+                << std::setprecision(8) << atomData.fracCoords.x() << "  "
                 << std::setw(10) << std::right << std::fixed
-                << std::setprecision(8) << fracCoords.y() << "  "
+                << std::setprecision(8) << atomData.fracCoords.y() << "  "
                 << std::setw(10) << std::right << std::fixed
-                << std::setprecision(8) << fracCoords.z() << "\n";
+                << std::setprecision(8) << atomData.fracCoords.z() << "\n";
     }
     ++iter;
   }
