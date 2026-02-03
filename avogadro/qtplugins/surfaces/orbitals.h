@@ -6,6 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_ORBITALS_H
 #define AVOGADRO_QTPLUGINS_ORBITALS_H
 
+#include <avogadro/core/basisset.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
 #include <QtCore/QFutureWatcher>
@@ -68,6 +69,7 @@ public:
     Core::Mesh* negMesh;
     Core::Cube* cube;
     unsigned int orbital;
+    Core::BasisSet::ElectronType electronType;
     double resolution;
     double isovalue;
     unsigned int priority;
@@ -87,8 +89,10 @@ private slots:
    *
    * @param orbital The orbital to render
    * @param resolution The resolution of the cube
+   * @param electronType The electron type (Paired, Alpha, or Beta)
    */
-  void calculateOrbitalFromWidget(unsigned int orbital, double resolution);
+  void calculateOrbitalFromWidget(unsigned int orbital, double resolution,
+                                  Core::BasisSet::ElectronType electronType);
 
   /**
    * Calculate all molecular orbitals at low priority and moderate
@@ -105,10 +109,13 @@ private slots:
    * @param orbital Orbital number
    * @param resolution Resolution of grid
    * @param isoval Isovalue for surface
+   * @param electronType The electron type (Paired, Alpha, or Beta)
    * @param priority Priority. Default = 0 (user requested)
    */
   void addCalculationToQueue(unsigned int orbital, double resolution,
-                             double isoval, unsigned int priority = 0);
+                             double isoval,
+                             Core::BasisSet::ElectronType electronType,
+                             unsigned int priority = 0);
   /**
    * Check that no calculations are currently running and start the
    * highest priority calculation.
@@ -133,12 +140,8 @@ private slots:
   /**
    * Draw the indicated orbital on the GLWidget
    */
-  void renderOrbital(unsigned int orbital);
-
-  /**
-   * Update the progress of the current calculation
-   */
-  void updateProgress(int current);
+  void renderOrbital(unsigned int orbital,
+                     Core::BasisSet::ElectronType electronType);
 
 private:
   QAction* m_action;

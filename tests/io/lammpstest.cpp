@@ -23,6 +23,7 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::UnitCell;
 using Avogadro::Io::FileFormat;
+using Avogadro::Io::LammpsDataFormat;
 using Avogadro::Io::LammpsTrajectoryFormat;
 
 TEST(LammpsTest, read)
@@ -103,4 +104,81 @@ TEST(LammpsTest, modes)
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.isMode(FileFormat::Read | FileFormat::MultiMolecule));
   EXPECT_TRUE(format.isMode(FileFormat::MultiMolecule));
+}
+
+TEST(LammpsTest, write)
+{
+  Molecule molecule;
+  molecule.addAtom(5).setPosition3d(Vector3(1.2, 1.6, 2.0));
+  molecule.addAtom(7).setPosition3d(Vector3(3.0, 2.4, 2.5));
+
+  {
+    LammpsDataFormat lmpdat;
+    molecule.setData("name", "left-handed system [j, i, k]");
+    auto* const uc =
+      new UnitCell({ 0.0, 4.0, 0.0 }, { 5.0, 0.0, 0.0 }, { 0.0, 0.0, 6.0 });
+    molecule.setUnitCell(uc);
+
+    std::string output;
+    ASSERT_TRUE(lmpdat.writeString(output, molecule));
+    EXPECT_EQ(output, R"(left-handed system [j, i, k]
+2 atoms
+0 bonds
+2 atom types
+  0.000000   4.000000 xlo xhi
+  0.000000   5.000000 ylo yhi
+  0.000000   6.000000 zlo zhi
+  0.000000   0.000000   0.000000 xy xz yz
+
+
+Masses
+
+1   10.81
+2   14.007
+
+
+
+Atoms
+
+1 1   1.600000   1.200000   2.000000
+2 2   2.400000   3.000000   2.500000
+
+
+)");
+  }
+
+  {
+    LammpsDataFormat lmpdat;
+    molecule.setData("name", "right-handed silicon primitive cell");
+    auto* const uc =
+      new UnitCell({ 0.0, 2.0, 2.0 }, { 2.0, 0.0, 2.0 }, { 2.0, 2.0, 0.0 });
+    molecule.setUnitCell(uc);
+
+    std::string output;
+    ASSERT_TRUE(lmpdat.writeString(output, molecule));
+    EXPECT_EQ(output, R"(right-handed silicon primitive cell
+2 atoms
+0 bonds
+2 atom types
+  0.000000   2.828427 xlo xhi
+  0.000000   2.449490 ylo yhi
+  0.000000   2.309401 zlo zhi
+  1.414214   1.414214   0.816497 xy xz yz
+
+
+Masses
+
+1   10.81
+2   14.007
+
+
+
+Atoms
+
+1 1   2.545584   1.143095   0.461880
+2 2   3.464823   2.490315   1.674316
+
+
+)");
+  }
 }

@@ -7,7 +7,7 @@ name: Windows ARM Build
 # .. since SignPath requires only a Windows build in the action
 # .. to successfully sign
 
-on: [push, pull_request, workflow_dispatch]
+on: [workflow_dispatch]
 
 env:
   QT_VERSION: 6.10.1
@@ -38,7 +38,7 @@ jobs:
 
     steps:
     - name: Checkout workflow repository
-      uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
     - name: Checkout Repositories
       uses: ./.github/actions/checkout-repositories
@@ -73,7 +73,7 @@ jobs:
     # Restore vcpkg cache (use manifest lock if available)
     - name: Restore vcpkg cache
       if: runner.os == 'Windows'
-      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
       with:
         path: |
           C:\vcpkg\installed
@@ -138,7 +138,7 @@ jobs:
     - name: Upload
       if: matrix.config.artifact != 0
       id: upload-artifact
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
         path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
@@ -175,7 +175,7 @@ jobs:
         GH_TOKEN: ${{ github.token }}
 
     - name: Upload MSIX
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
         path: ${{ runner.workspace }}/build/Avogadro2.msix
         name: Avogadro2.msix

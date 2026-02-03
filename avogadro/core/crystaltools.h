@@ -34,7 +34,9 @@ public:
     /** No options specified. */
     None = 0x0,
     /** Transform atoms along with the unit cell. */
-    TransformAtoms = 0x1
+    TransformAtoms = 0x1,
+    /** Enforce right-handed system */
+    RightHanded = 0x2
   };
   using Options = int;
 

@@ -447,6 +447,7 @@ std::vector<int> Hdf5DataFormat::readRawDataset(
   for (int i = 0; i < ndims; ++i) {
     result.push_back(static_cast<int>(hdims[i]));
   }
+  delete[] hdims;
 
   // Allocate and read into data.
   if (!container.resize(result)) {

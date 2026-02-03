@@ -179,6 +179,14 @@ void OBProcess::queryWriteFormatsPrepare()
   while ((match = parser.match(output, pos)).hasMatch()) {
     QString extension = match.captured(1);
     QString description = match.captured(2);
+
+    // skip some formats that we want to ignore
+    if (extension == "png" || extension == "svg" || extension == "paint" ||
+        extension == "nul") {
+      pos = match.capturedEnd(0);
+      continue;
+    }
+
     result.insertMulti(description, extension);
     pos = match.capturedEnd(0);
   }

@@ -19,6 +19,9 @@ set(AvogadroLibs_CMAKE_DIR       "${AvogadroLibs_LIBRARY_DIR}/cmake/avogadrolibs
 set(AvogadroLibs_PLUGINS         "@AvogadroLibs_PLUGINS@")
 set(AvogadroLibs_STATIC_PLUGINS  "@AvogadroLibs_STATIC_PLUGINS@")
 
+# Optional feature flags
+set(AvogadroLibs_USE_PLOTTER     "@USE_PLOTTER@")
+
 include(CMakeFindDependencyMacro)
 
 if (@QT_VERSION@ EQUAL 6)
@@ -28,7 +31,9 @@ if (@QT_VERSION@ EQUAL 6)
   find_dependency(Qt6Gui)
   find_dependency(Qt6Network)
   find_dependency(Qt6Concurrent)
-  find_dependency(JKQTPlotter6 REQUIRED)
+  if(AvogadroLibs_USE_PLOTTER)
+    find_dependency(JKQTPlotter6 REQUIRED)
+  endif()
 endif()
 
 if(NOT TARGET AvogadroCore)

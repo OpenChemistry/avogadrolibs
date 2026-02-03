@@ -25,6 +25,13 @@ Molecule createCrystal(Real a, Real b, Real c, Real alpha, Real beta,
   return mol;
 }
 
+Molecule createCrystal(const Vector3& a, const Vector3& b, const Vector3& c)
+{
+  Molecule mol;
+  mol.setUnitCell(new UnitCell{ a, b, c });
+  return mol;
+}
+
 // use alpha, beta, gamma in degrees
 bool checkParams(const UnitCell& cell, Real a, Real b, Real c, Real alpha,
                  Real beta, Real gamma)
@@ -178,6 +185,51 @@ TEST(UnitCellTest, rotateToStandardOrientation)
   RTSO_TEST_PARAMS(4, 3, 1, 75.44444, 68.33333, 123.15682);
   RTSO_TEST_MATRIX(1, -4, 3, 0, 5, -8, 0, 0, -3);
   RTSO_TEST_MATRIX(1, 3, 6, -4, 5, -1, 3, -8, -3);
+}
+
+TEST(UnitCellTest, rotateToStandardOrientation_rightHanded)
+{
+  // left-handed systems
+  {
+    // [j, -k, i]
+    auto mol =
+      createCrystal({ 0.0, 4.0, 0.0 }, { 0.0, 0.0, -5.0 }, { 6.0, 0.0, 0.0 });
+    EXPECT_TRUE(CrystalTools::rotateToStandardOrientation(
+      mol, CrystalTools::RightHanded));
+    const auto& uc = *mol.unitCell();
+    EXPECT_EQ(uc.aVector(), Vector3(4.0, 0.0, 0.0));
+    EXPECT_EQ(uc.bVector(), Vector3(0.0, 5.0, 0.0));
+    EXPECT_EQ(uc.cVector(), Vector3(0.0, 0.0, 6.0));
+  }
+
+  {
+    // [k, j, i]
+    auto mol =
+      createCrystal({ 0.0, 0.0, 4.0 }, { 0.0, 5.0, 0.0 }, { 6.0, 0.0, 0.0 });
+    EXPECT_TRUE(CrystalTools::rotateToStandardOrientation(
+      mol, CrystalTools::RightHanded));
+    const auto& uc = *mol.unitCell();
+    EXPECT_EQ(uc.aVector(), Vector3(4.0, 0.0, 0.0));
+    EXPECT_EQ(uc.bVector(), Vector3(0.0, 5.0, 0.0));
+    EXPECT_EQ(uc.cVector(), Vector3(0.0, 0.0, 6.0));
+  }
+
+  {
+    // silicon primitive cell
+    auto mol =
+      createCrystal({ 1.0, 1.0, 0.0 }, { 1.0, 0.0, 1.0 }, { 0.0, 1.0, 1.0 });
+
+    EXPECT_TRUE(CrystalTools::rotateToStandardOrientation(
+      mol, CrystalTools::RightHanded));
+    const auto& uc = *mol.unitCell();
+    const auto& a = uc.aVector();
+    EXPECT_EQ(a, Vector3(std::sqrt(2.0), 0.0, 0.0));
+    const auto& b = uc.bVector();
+    EXPECT_TRUE(b.isApprox(Vector3(std::sqrt(0.5), std::sqrt(1.5), 0.0)));
+    const auto& c = uc.cVector();
+    EXPECT_TRUE(c.isApprox(
+      Vector3(std::sqrt(0.5), std::sqrt(1.0 / 6.0), std::sqrt(4.0 / 3.0))));
+  }
 }
 
 TEST(UnitCellTest, setVolume)

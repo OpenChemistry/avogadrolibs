@@ -155,7 +155,7 @@ void VRMLVisitor::visit(CylinderGeometry& geometry)
 
 void VRMLVisitor::visit(MeshGeometry& geometry)
 {
-  Core::Array<Rendering::MeshGeometry::PackedVertex> v = geometry.vertices();
+  Core::Array<Rendering::PackedVertex> v = geometry.vertices();
 
   // If there are no triangles then don't bother doing anything
   if (v.size() == 0)

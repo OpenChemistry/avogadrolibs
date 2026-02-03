@@ -248,6 +248,14 @@ void AlignTool::draw(Rendering::GroupNode& node)
   if (m_atoms.size() == 0)
     return;
 
+  // check to make sure we have atoms for all of these
+  for (int i = 0; i < m_atoms.size(); ++i) {
+    Identifier& ident = m_atoms[i];
+    if (ident.type == Rendering::AtomType &&
+        ident.index >= m_molecule->atomCount())
+      return;
+  }
+
   auto* geo = new GeometryNode;
   node.addChild(geo);
 

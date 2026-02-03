@@ -417,7 +417,10 @@ const unsigned char element_color[element_count][3] = {
   { 255, 0, 15 }
 };
 
-constexpr std::initializer_list<isotope> isotopes[element_count] = {
+// Note: Using const std::vector instead of constexpr std::initializer_list
+// because std::initializer_list doesn't own its backing storage, which causes
+// access violations on MSVC when the temporary arrays are not preserved.
+const std::vector<isotope> isotopes[element_count] = {
   // Common isotopes for each element from NIST
   // https://www.nist.gov/pml/atomic-weights-and-isotopic-compositions-relative-atomic-masses
   // for elements with multiple isotopes, the most common is listed as isotope

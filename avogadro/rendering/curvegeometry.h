@@ -10,6 +10,7 @@
 #include "drawable.h"
 #include "shader.h"
 #include "shaderprogram.h"
+#include "vertexarrayobject.h"
 #include <avogadro/core/vector.h>
 #include <list>
 #include <map>
@@ -58,6 +59,7 @@ struct Line
   float radius;
   BufferObject vbo;
   BufferObject ibo; // EBO/IBO
+  VertexArrayObject vao;
   size_t numberOfVertices;
   size_t numberOfIndices;
 };
