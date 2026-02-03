@@ -7,6 +7,7 @@
 
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
@@ -26,10 +27,12 @@ using std::string;
 
 namespace Avogadro::Io {
 
+using Core::Array;
 using Core::Atom;
 using Core::Elements;
 using Core::lexicalCast;
 using Core::rstrip;
+using Core::SpaceGroups;
 using Core::split;
 
 #ifndef _WIN32
@@ -366,15 +369,22 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
 
 bool TurbomoleFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 {
-  size_t numAtoms = mol.atomCount();
+  // Filter out translational duplicates if there's a unit cell
+  Array<Index> uniqueIndices = SpaceGroups::translationalUniqueAtoms(mol);
+  if (uniqueIndices.empty()) {
+    // No unit cell or no filtering needed - use all atoms
+    for (Index i = 0; i < mol.atomCount(); ++i)
+      uniqueIndices.push_back(i);
+  }
 
   outStream << "$coord angs\n";
 
   // print $isosub only when an isotope exists
   std::ostringstream isosub;
 
-  for (size_t i = 0; i < numAtoms; ++i) {
-    Atom atom = mol.atom(i);
+  Index outputIdx = 0;
+  for (Index atomIdx : uniqueIndices) {
+    Atom atom = mol.atom(atomIdx);
     if (!atom.isValid()) {
       appendError("Internal error: Atom invalid.");
       return false;
@@ -390,9 +400,10 @@ bool TurbomoleFormat::write(std::ostream& outStream, const Core::Molecule& mol)
               << std::setw(18) << std::right << std::fixed
               << std::setprecision(10) << atom.position3d().z() << " "
               << std::setw(5) << std::right << symbol << "\n";
-    auto iso = mol.isotope(i);
+    auto iso = mol.isotope(atomIdx);
     if (iso > 0)
-      isosub << (i + 1) << "  " << iso << '\n';
+      isosub << (outputIdx + 1) << "  " << iso << '\n';
+    ++outputIdx;
   }
 
   if (auto s = isosub.str(); !s.empty()) {
