@@ -62,8 +62,8 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   unsigned char atomicNumber;
   const char* symbol = "\0";
   const char* name = "\0";
-  Vector3 pos3d;
-  Vector3 fpos3d;
+  Vector3 pos3d = Vector3::Zero();
+  Vector3 fpos3d = Vector3::Zero();
   const UnitCell* cell =
     needFractionalPosition ? molecule()->unitCell() : nullptr;
 
@@ -192,7 +192,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
       // not at the end of the line, or a newline if we are.
       m_stream << std::setw(1) << (it + 1 != end ? ' ' : '\n');
     } // end spec char
-  } // end for atom
+  }   // end for atom
 
   return m_stream.str();
 }
