@@ -14,7 +14,9 @@
 #include <algorithm> // for std::count()
 #include <cassert>
 #include <cctype> // for isdigit()
+#include <cmath>  // for floor()
 #include <iostream>
+#include <vector>
 
 namespace Avogadro::Core {
 
@@ -417,6 +419,56 @@ void SpaceGroups::reduceToAsymmetricUnit(Molecule& mol,
       }
     }
   }
+}
+
+Array<Index> SpaceGroups::translationalUniqueAtoms(const Molecule& mol,
+                                                   double tolerance)
+{
+  Array<Index> uniqueIndices;
+
+  if (!mol.unitCell())
+    return uniqueIndices;
+
+  const UnitCell* uc = mol.unitCell();
+  Index numAtoms = mol.atomCount();
+
+  // Store wrapped coordinates for atoms we've already accepted
+  std::vector<std::pair<unsigned char, Vector3>> accepted;
+
+  for (Index i = 0; i < numAtoms; ++i) {
+    unsigned char atomicNum = mol.atomicNumber(i);
+    Vector3 fracCoords = uc->toFractional(mol.atomPosition3d(i));
+
+    // Wrap coordinates to [0, 1) range for comparison
+    Vector3 wrappedCoords;
+    for (int c = 0; c < 3; ++c) {
+      double coord = fracCoords[c];
+      coord = coord - floor(coord);
+      if (coord > 1.0 - tolerance)
+        coord = 0.0;
+      wrappedCoords[c] = coord;
+    }
+
+    // Check if this is a duplicate of a previously accepted atom
+    bool isDuplicate = false;
+    for (const auto& prev : accepted) {
+      if (prev.first != atomicNum)
+        continue;
+
+      // Check if positions match within tolerance
+      if ((wrappedCoords - prev.second).norm() < tolerance) {
+        isDuplicate = true;
+        break;
+      }
+    }
+
+    if (!isDuplicate) {
+      uniqueIndices.push_back(i);
+      accepted.emplace_back(atomicNum, wrappedCoords);
+    }
+  }
+
+  return uniqueIndices;
 }
 
 const char* SpaceGroups::transformsString(unsigned short hallNumber)

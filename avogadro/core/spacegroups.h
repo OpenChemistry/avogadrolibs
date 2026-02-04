@@ -138,6 +138,17 @@ public:
   static void reduceToAsymmetricUnit(Molecule& mol, unsigned short hallNumber,
                                      double cartTol = 1e-5);
 
+  /**
+   * Get indices of translationally unique atoms, filtering out duplicates.
+   * Atoms with fractional coordinates near 1.0 that duplicate atoms near 0.0
+   * (due to periodic boundary conditions) are excluded.
+   * @param mol The molecule with a unit cell
+   * @param tolerance Fractional coordinate tolerance for duplicate detection
+   * @return Array of atom indices to include (empty if no unit cell)
+   */
+  static Array<Index> translationalUniqueAtoms(const Molecule& mol,
+                                               double tolerance = 0.001);
+
 private:
   /**
    * Get the transforms string stored in the database.

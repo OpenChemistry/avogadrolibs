@@ -8,6 +8,7 @@
 #include <avogadro/core/elements.h> // for atomicNumberFromSymbol()
 #include <avogadro/core/matrix.h>   // for matrix3
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h> // for translationalUniqueAtoms()
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h> // for split(), trimmed(), lexicalCast()
 #include <avogadro/core/vector.h>    // for Vector3
@@ -27,6 +28,7 @@ using Core::Atom;
 using Core::Elements;
 using Core::lexicalCast;
 using Core::Molecule;
+using Core::SpaceGroups;
 using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
@@ -260,12 +262,13 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
     outStream << std::endl;
   }
 
-  // Adapted from chemkit:
-  // A map of atomic symbols to their quantity.
-  Array<unsigned char> atomicNumbers = mol.atomicNumbers();
+  // Filter out translational duplicates (atoms at ~1.0 that duplicate ~0.0)
+  Array<Index> uniqueIndices = SpaceGroups::translationalUniqueAtoms(mol);
+
+  // Build composition from filtered atoms only
   std::map<unsigned char, size_t> composition;
-  for (unsigned char& atomicNumber : atomicNumbers) {
-    composition[atomicNumber]++;
+  for (Index idx : uniqueIndices) {
+    composition[mol.atomicNumber(idx)]++;
   }
 
   // Atom symbols
@@ -288,19 +291,18 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   outStream << "Direct" << std::endl;
 
   // Final section is atomic coordinates
-  size_t numAtoms = mol.atomCount();
-  // We need to make sure we that group the atomic numbers together.
+  // We need to make sure we group the atomic numbers together.
   // The outer loop is for grouping them.
   iter = composition.begin();
   while (iter != composition.end()) {
     unsigned char currentAtomicNum = iter->first;
-    for (size_t i = 0; i < numAtoms; ++i) {
+    for (Index idx : uniqueIndices) {
       // We need to group atomic numbers together. If this one is not
       // the current atomic number, skip over it.
-      if (atomicNumbers.at(i) != currentAtomicNum)
+      if (mol.atomicNumber(idx) != currentAtomicNum)
         continue;
 
-      Atom atom = mol.atom(i);
+      Atom atom = mol.atom(idx);
       if (!atom.isValid()) {
         appendError("Internal error: Atom invalid.");
         return false;
