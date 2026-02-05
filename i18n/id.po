@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-31 02:11+0000\n"
-"PO-Revision-Date: 2026-01-11 07:01+0000\n"
+"PO-Revision-Date: 2026-02-05 04:01+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 5.16-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1290,15 +1290,14 @@ msgid "Van der Waals"
 msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:194
-#, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Van der Waals"
+msgstr "Van der Waals (AO)"
 
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "Volume"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -1860,11 +1859,11 @@ msgstr "Kesuksesan"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "Dihasilkan %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "Kesalahan saat menjalankan PDB2PQR"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -2140,7 +2139,7 @@ msgstr "Optimalkan Geometri"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kJ/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 kJ/mol"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
@@ -3914,7 +3913,7 @@ msgstr "Alat pengukur"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
-msgstr ""
+msgstr "(tertunda)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
 #: qtplugins/propertytables/propertymodel.cpp:721
@@ -4597,10 +4596,8 @@ msgstr "Hartree"
 
 #: qtplugins/plotconformer/plotconformer.cpp:161
 #: qtplugins/plotconformer/plotconformer.cpp:171
-#, fuzzy
-#| msgid " eV"
 msgid "eV"
-msgstr " eV"
+msgstr "eV"
 
 #: qtplugins/plotconformer/plotconformer.cpp:162
 #: qtplugins/plotconformer/plotconformer.cpp:169
@@ -5345,7 +5342,7 @@ msgstr "Isi Sel Unit…"
 #: qtplugins/spacegroup/spacegroup.cpp:101
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
-msgstr ""
+msgstr "Isi Sel Translasi…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
@@ -5357,7 +5354,7 @@ msgstr "Isi atom simetris berdasarkan kelompok ruang kristal."
 
 #: qtplugins/spacegroup/spacegroup.cpp:135
 msgid "Fill all atoms based on the crystal space group."
-msgstr ""
+msgstr "Isi semua atom berdasarkan grup ruang kristal."
 
 #: qtplugins/spacegroup/spacegroup.cpp:384
 #: qtplugins/spacegroup/spacegroup.cpp:412
@@ -5382,6 +5379,11 @@ msgid ""
 "Hall symbol: %3\n"
 "International symbol: %4"
 msgstr ""
+"Persepsi grup ruang berhasil:\n"
+"Toleransi: %1  Å\n"
+"Grup Ruang: %2\n"
+"Simbol Hall: %3\n"
+"Simbol Internasional: %4"
 
 #: qtplugins/spacegroup/spacegroup.cpp:418
 msgid "Failure"
@@ -5445,6 +5447,13 @@ msgid ""
 "\n"
 "Proceed with this space group?"
 msgstr ""
+"Dengan toleransi sebesar %1  Å, informasi grup ruang yang terdeteksi adalah "
+"sebagai berikut:\n"
+"Nomor internasional: %2\n"
+"Simbol Hall: %3\n"
+"Simbol Internasional: %4\n"
+"\n"
+"Lanjutkan dengan grup ruang ini?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:580 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
@@ -5458,39 +5467,39 @@ msgstr "Pilih toleransi dalam Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:598
 msgid "Triclinic"
-msgstr ""
+msgstr "Triklinik"
 
 #: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Monoclinic"
-msgstr ""
+msgstr "Monoklinik"
 
 #: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Orthorhombic"
-msgstr ""
+msgstr "Ortorombik"
 
 #: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Tetragonal"
-msgstr ""
+msgstr "Tetragonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Trigonal"
-msgstr ""
+msgstr "Trigonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Rhombohedral"
-msgstr ""
+msgstr "Rombohedral"
 
 #: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Hexagonal"
-msgstr ""
+msgstr "Heksagonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:612
 msgid "Cubic"
-msgstr ""
+msgstr "Kubik"
 
 #: qtplugins/spacegroup/spacegroup.cpp:644
 msgid "Primitive Cell Detected"
-msgstr ""
+msgstr "Sel Primitif Terdeteksi"
 
 #: qtplugins/spacegroup/spacegroup.cpp:646
 #, qt-format
@@ -5502,10 +5511,16 @@ msgid ""
 "\n"
 "Would you like to create a conventional cell first?"
 msgstr ""
+"Sel unit saat ini tampak sebagai sel primitif (sudut bukan 90°), tetapi grup "
+"ruang %1 memerlukan sel konvensional berpusat.\n"
+"\n"
+"Mengisi sel unit dapat menyebabkan duplikasi atom yang tidak diharapkan.\n"
+"\n"
+"Apakah Anda ingin membuat sel konvensional terlebih dahulu?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:660
 msgid "Failed to conventionalize the cell."
-msgstr ""
+msgstr "Gagal mengonvensionalisasi sel."
 
 #: qtplugins/spacegroup/spacegroup.cpp:676
 msgid "International"
@@ -5521,7 +5536,7 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:677
 msgid "Crystal System"
-msgstr ""
+msgstr "Sistem Kristal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:709
 msgid "Select Space Group"
@@ -5740,11 +5755,11 @@ msgstr "Simetri"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
 msgid "Occupation"
-msgstr ""
+msgstr "Okupansi"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:141
 msgid "Spin"
-msgstr ""
+msgstr "Spin"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:152
 #: qtplugins/surfaces/orbitaltablemodel.cpp:238
@@ -5881,7 +5896,7 @@ msgstr "Film MP4 (*.mp4);;Film AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:952
 msgid "Couldn't find the active render widget, failing."
-msgstr ""
+msgstr "Tidak dapat menemukan widget render yang aktif, gagal."
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
