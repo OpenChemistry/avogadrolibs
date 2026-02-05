@@ -612,13 +612,13 @@ void MoldenFile::writeMO(std::ostream& out, const Core::GaussianSet* basis)
 {
   out << "[MO]\n";
 
-  ScfType scfType = basis->scfType();
-  bool isOpenShell = (scfType == Uhf || scfType == Rohf);
+  Core::ScfType scfType = basis->scfType();
+  bool isOpenShell = (scfType == Core::Uhf || scfType == Core::Rohf);
 
   // Helper lambda to write orbitals for a given electron type
   auto writeOrbitals = [&](BasisSet::ElectronType type,
                            const string& spinLabel) {
-    Core::MatrixX moMatrix = basis->moMatrix(type);
+    MatrixX moMatrix = basis->moMatrix(type);
     std::vector<double> energies = basis->moEnergy(type);
     std::vector<std::string> symLabels = basis->symmetryLabels(type);
     std::vector<unsigned char> occupancies = basis->moOccupancy(type);
