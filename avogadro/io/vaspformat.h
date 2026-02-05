@@ -43,8 +43,9 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream& inStream, Core::Molecule& mol) override;
-  bool write(std::ostream& outStream, const Core::Molecule& mol) override;
+  [[nodiscard]] bool read(std::istream& inStream, Core::Molecule& mol) override;
+  [[nodiscard]] bool write(std::ostream& outStream,
+                           const Core::Molecule& mol) override;
 };
 
 class AVOGADROIO_EXPORT OutcarFormat : public FileFormat
@@ -75,10 +76,11 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream& inStream, Core::Molecule& mol) override;
+  [[nodiscard]] bool read(std::istream& inStream, Core::Molecule& mol) override;
 
   // unimplemented
-  bool write(std::ostream& outStream, const Core::Molecule& mol) override;
+  [[nodiscard]] bool write(std::ostream& outStream,
+                           const Core::Molecule& mol) override;
 };
 
 } // namespace Avogadro::Io

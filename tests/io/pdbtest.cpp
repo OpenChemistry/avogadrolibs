@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/residue.h>
 
 #include <avogadro/io/pdbformat.h>
 
@@ -99,4 +100,23 @@ TEST(PdbTest, cryst3)
   // make sure it has a unit cell
   bool hasUnitCell = (molecule.unitCell() != nullptr);
   EXPECT_TRUE(hasUnitCell);
+}
+
+TEST(PdbTest, pdb1)
+{
+  // Windows crash reported as #2456
+  PdbFormat pdb;
+  Molecule molecule;
+  pdb.readFile(std::string(AVOGADRO_DATA) + "/data/pdb/1.pdb", molecule);
+
+  // should be 60 atoms, sequence is TRP-LEU-ASN
+  EXPECT_EQ(molecule.atomCount(), 60);
+
+  // should be three residues
+  EXPECT_EQ(molecule.residueCount(), 3);
+
+  auto residues = molecule.residues();
+  EXPECT_EQ(residues[0].residueName(), "TRP");
+  EXPECT_EQ(residues[1].residueName(), "LEU");
+  EXPECT_EQ(residues[2].residueName(), "ASN");
 }

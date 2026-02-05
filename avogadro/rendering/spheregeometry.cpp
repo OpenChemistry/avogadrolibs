@@ -9,6 +9,7 @@
 #include "scene.h"
 
 #include "bufferobject.h"
+#include "vertexarrayobject.h"
 
 #include "shader.h"
 #include "shaderprogram.h"
@@ -38,6 +39,7 @@ public:
 
   BufferObject vbo;
   BufferObject ibo;
+  VertexArrayObject vao;
 
   inline static Shader* vertexShader = nullptr;
   inline static Shader* fragmentShader = nullptr;
@@ -74,6 +76,30 @@ void SphereGeometry::update()
   if (m_indices.empty() || m_spheres.empty())
     return;
 
+  // Build and link the shader if it has not been used yet.
+  // Must be done before VAO setup since we need the program for attribute
+  // setup.
+  if (d->vertexShader == nullptr) {
+    d->vertexShader = new Shader;
+    d->vertexShader->setType(Shader::Vertex);
+    d->vertexShader->setSource(spheres_vs);
+    d->fragmentShader = new Shader;
+    d->fragmentShader->setType(Shader::Fragment);
+    d->fragmentShader->setSource(spheres_fs);
+    if (!d->vertexShader->compile())
+      cout << d->vertexShader->error() << endl;
+    if (!d->fragmentShader->compile())
+      cout << d->fragmentShader->error() << endl;
+
+    if (d->program == nullptr)
+      d->program = new ShaderProgram;
+
+    d->program->attachShader(*d->vertexShader);
+    d->program->attachShader(*d->fragmentShader);
+    if (!d->program->link())
+      cout << d->program->error() << endl;
+  }
+
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
     std::vector<unsigned int> sphereIndices;
@@ -107,8 +133,6 @@ void SphereGeometry::update()
       sphereIndices.push_back(index + 3);
       sphereIndices.push_back(index + 2);
       sphereIndices.push_back(index + 1);
-
-      // m_spheres.push_back(Sphere(position, r, id, color));
     }
 
     if (!d->vbo.upload(sphereVertices, BufferObject::ArrayBuffer))
@@ -117,39 +141,55 @@ void SphereGeometry::update()
     if (!d->ibo.upload(sphereIndices, BufferObject::ElementArrayBuffer))
       cout << d->ibo.error() << endl;
 
+    // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
+    // Check bind() return values - if binding fails (e.g., no GL context),
+    // early-return without clearing m_dirty so geometry will be retried later.
+    if (!d->vao.bind()) {
+      cout << "SphereGeometry: VAO bind failed" << endl;
+      return;
+    }
+    if (!d->vbo.bind()) {
+      cout << "SphereGeometry: VBO bind failed" << endl;
+      d->vao.release();
+      return;
+    }
+    if (!d->ibo.bind()) {
+      cout << "SphereGeometry: IBO bind failed" << endl;
+      d->vao.release();
+      return;
+    }
+
+    ShaderProgram* program = d->program;
+    if (!program->enableAttributeArray("vertex"))
+      cout << program->error() << endl;
+    if (!program->useAttributeArray("vertex",
+                                    ColorTextureVertex::vertexOffset(),
+                                    sizeof(ColorTextureVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
+      cout << program->error() << endl;
+    }
+    if (!program->enableAttributeArray("color"))
+      cout << program->error() << endl;
+    if (!program->useAttributeArray("color", ColorTextureVertex::colorOffset(),
+                                    sizeof(ColorTextureVertex), UCharType, 3,
+                                    ShaderProgram::Normalize)) {
+      cout << program->error() << endl;
+    }
+    if (!program->enableAttributeArray("texCoordinate"))
+      cout << program->error() << endl;
+    if (!program->useAttributeArray("texCoordinate",
+                                    ColorTextureVertex::textureCoordOffset(),
+                                    sizeof(ColorTextureVertex), FloatType, 2,
+                                    ShaderProgram::NoNormalize)) {
+      cout << program->error() << endl;
+    }
+
+    d->vao.release();
+
     d->numberOfVertices = sphereVertices.size();
     d->numberOfIndices = sphereIndices.size();
 
     m_dirty = false;
-  }
-
-  // Build and link the shader if it has not been used yet.
-  if (d->vertexShader == nullptr) {
-    d->vertexShader = new Shader;
-    d->vertexShader->setType(Shader::Vertex);
-    d->vertexShader->setSource(spheres_vs);
-    d->fragmentShader = new Shader;
-    d->fragmentShader->setType(Shader::Fragment);
-    d->fragmentShader->setSource(spheres_fs);
-    if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << endl;
-    if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << endl;
-
-    if (d->program == nullptr)
-      d->program = new ShaderProgram;
-
-    d->program->attachShader(*d->vertexShader);
-    d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
-      cout << d->program->error() << endl;
-
-    /*
-        d->program.detachShader(d->vertexShader);
-        d->program.detachShader(d->fragmentShader);
-        d->vertexShader.cleanup();
-        d->fragmentShader.cleanup();
-        */
   }
 }
 
@@ -158,36 +198,17 @@ void SphereGeometry::render(const Camera& camera)
   if (m_indices.empty() || m_spheres.empty())
     return;
 
-  // Prepare the VBOs, IBOs and shader program if necessary.
+  // Prepare the VBOs, IBOs, VAO, and shader program if necessary.
   update();
 
   if (!d->program->bind())
     cout << d->program->error() << endl;
 
-  d->vbo.bind();
-  d->ibo.bind();
-
-  // Set up our attribute arrays.
-  if (!d->program->enableAttributeArray("vertex"))
-    cout << d->program->error() << endl;
-  if (!d->program->useAttributeArray(
-        "vertex", ColorTextureVertex::vertexOffset(),
-        sizeof(ColorTextureVertex), FloatType, 3, ShaderProgram::NoNormalize)) {
-    cout << d->program->error() << endl;
-  }
-  if (!d->program->enableAttributeArray("color"))
-    cout << d->program->error() << endl;
-  if (!d->program->useAttributeArray("color", ColorTextureVertex::colorOffset(),
-                                     sizeof(ColorTextureVertex), UCharType, 3,
-                                     ShaderProgram::Normalize)) {
-    cout << d->program->error() << endl;
-  }
-  if (!d->program->enableAttributeArray("texCoordinate"))
-    cout << d->program->error() << endl;
-  if (!d->program->useAttributeArray(
-        "texCoordinate", ColorTextureVertex::textureCoordOffset(),
-        sizeof(ColorTextureVertex), FloatType, 2, ShaderProgram::NoNormalize)) {
-    cout << d->program->error() << endl;
+  // Bind the VAO (captures all vertex attribute state)
+  // If bind fails (e.g., no GL context), skip rendering to avoid GL errors.
+  if (!d->vao.bind()) {
+    d->program->release();
+    return;
   }
 
   // Set up our uniforms (model-view and projection matrices right now).
@@ -202,18 +223,12 @@ void SphereGeometry::render(const Camera& camera)
     cout << d->program->error() << endl;
   }
 
-  // Render the loaded spheres using the shader and bound VBO.
+  // Render the loaded spheres using the shader and VAO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
                       static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
                       (const GLvoid*)nullptr);
 
-  d->vbo.release();
-  d->ibo.release();
-
-  d->program->disableAttributeArray("vector");
-  d->program->disableAttributeArray("color");
-  d->program->disableAttributeArray("texCoordinates");
-
+  d->vao.release();
   d->program->release();
 }
 

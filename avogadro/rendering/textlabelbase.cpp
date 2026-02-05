@@ -12,6 +12,7 @@
 #include "shaderprogram.h"
 #include "textrenderstrategy.h"
 #include "texture2d.h"
+#include "vertexarrayobject.h"
 #include "visitor.h"
 
 #include <avogadro/core/array.h>
@@ -46,6 +47,7 @@ public:
   // Actual vertex data
   Array<PackedVertex> vertices;
   BufferObject vbo;
+  VertexArrayObject vao;
 
   // Sentinels:
   bool shadersInvalid;
@@ -160,7 +162,7 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
     return;
   }
 
-  // Prepare GL
+  // Prepare GL - shaders must be compiled before VAO setup
   if (shadersInvalid)
     compileShaders();
   if (vboInvalid)
@@ -170,33 +172,22 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   const Matrix4f proj(cam.projection().matrix());
   const Vector2i vpDims(cam.width(), cam.height());
 
-  // Bind vbo
-  if (!vbo.bind()) {
-    std::cerr << "Error while binding TextLabelBase VBO: " << vbo.error()
-              << std::endl;
+  // Bind VAO (captures all vertex attribute state)
+  if (!vao.bind()) {
+    std::cerr << "Error while binding TextLabelBase VAO" << std::endl;
     return;
   }
 
-  // Setup shaders
+  // Setup shaders and uniforms
   if (!shaderProgram->bind() || !shaderProgram->setUniformValue("mv", mv) ||
       !shaderProgram->setUniformValue("proj", proj) ||
       !shaderProgram->setUniformValue("vpDims", vpDims) ||
       !shaderProgram->setUniformValue("anchor", anchor) ||
       !shaderProgram->setUniformValue("radius", radius) ||
-      !shaderProgram->setTextureSampler("texture", texture) ||
-
-      !shaderProgram->enableAttributeArray("offset") ||
-      !shaderProgram->useAttributeArray("offset", PackedVertex::offsetOffset(),
-                                        sizeof(PackedVertex), IntType, 2,
-                                        ShaderProgram::NoNormalize) ||
-
-      !shaderProgram->enableAttributeArray("texCoord") ||
-      !shaderProgram->useAttributeArray(
-        "texCoord", PackedVertex::tcoordOffset(), sizeof(PackedVertex),
-        FloatType, 2, ShaderProgram::NoNormalize)) {
+      !shaderProgram->setTextureSampler("u_texture", texture)) {
     std::cerr << "Error setting up TextLabelBase shader program: "
               << shaderProgram->error() << std::endl;
-    vbo.release();
+    vao.release();
     shaderProgram->release();
     return;
   }
@@ -205,10 +196,8 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
   // Release resources:
-  shaderProgram->disableAttributeArray("texCoords");
-  shaderProgram->disableAttributeArray("offset");
+  vao.release();
   shaderProgram->release();
-  vbo.release();
 }
 
 void TextLabelBase::RenderImpl::compileShaders()
@@ -254,10 +243,29 @@ void TextLabelBase::RenderImpl::compileShaders()
 
 void TextLabelBase::RenderImpl::uploadVbo()
 {
-  if (!vbo.upload(vertices, BufferObject::ArrayBuffer))
+  if (!vbo.upload(vertices, BufferObject::ArrayBuffer)) {
     std::cerr << "TextLabelBase VBO error: " << vbo.error() << std::endl;
-  else
-    vboInvalid = false;
+    return;
+  }
+
+  // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
+  vao.bind();
+  vbo.bind();
+
+  if (!shaderProgram->enableAttributeArray("offset") ||
+      !shaderProgram->useAttributeArray("offset", PackedVertex::offsetOffset(),
+                                        sizeof(PackedVertex), IntType, 2,
+                                        ShaderProgram::NoNormalize) ||
+      !shaderProgram->enableAttributeArray("texCoord") ||
+      !shaderProgram->useAttributeArray(
+        "texCoord", PackedVertex::tcoordOffset(), sizeof(PackedVertex),
+        FloatType, 2, ShaderProgram::NoNormalize)) {
+    std::cerr << "Error setting up TextLabelBase VAO: "
+              << shaderProgram->error() << std::endl;
+  }
+
+  vao.release();
+  vboInvalid = false;
 }
 
 TextLabelBase::TextLabelBase() : m_render(new RenderImpl) {}

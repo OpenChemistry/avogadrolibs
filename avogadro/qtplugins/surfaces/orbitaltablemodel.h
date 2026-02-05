@@ -7,9 +7,7 @@
 #define AVOGADRO_QTPLUGINS_ORBITALTABLEMODEL_H
 
 #include <QAbstractTableModel>
-#include <QApplication>
 #include <QSortFilterProxyModel>
-#include <QStyledItemDelegate>
 
 #include <avogadro/core/basisset.h>
 
@@ -29,44 +27,7 @@ struct Orbital
   QString description;                       // (HOMO|LUMO)[(+|-)N]
   QString symmetry;                          // e.g., A1g (with subscripts)
   calcInfo* queueEntry;
-  // Progress data:
-  int min;
-  int max;
-  int current;
-  int stage;
-  int totalStages;
-};
-
-// Allow progress bars to be embedded in the table
-class ProgressBarDelegate : public QStyledItemDelegate
-{
-  Q_OBJECT
-public:
-  ProgressBarDelegate(QObject* parent = nullptr)
-    : QStyledItemDelegate(parent){};
-  QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const override
-  {
-    return QSize(60, 30);
-  };
-
-  void paint(QPainter* p, const QStyleOptionViewItem& o,
-             const QModelIndex& ind) const override
-  {
-    QStyleOptionProgressBar opt;
-    // Call initFrom() which will set the style based on the parent
-    // GRH: This is critical to get things right on Mac
-    //   otherwise the status bars always look disabled
-    opt.initFrom(qobject_cast<QWidget*>(this->parent()));
-
-    opt.rect = o.rect;
-    opt.minimum = 1; // percentage
-    opt.maximum = 100;
-    opt.textVisible = true;
-    int percent = ind.model()->data(ind, Qt::DisplayRole).toInt();
-    opt.progress = percent;
-    opt.text = QString("%1%").arg(QString::number(percent));
-    QApplication::style()->drawControl(QStyle::CE_ProgressBar, &opt, p);
-  }
+  float occupation; // 0, 1, or 2 (supports future fractional)
 };
 
 // Used for sorting:
@@ -106,7 +67,7 @@ public:
     C_Description = 0,
     C_Energy,
     C_Symmetry,
-    C_Status,       // also occupation (0/1/2)
+    C_Occupation,   // Shows arrows: ⇅ for paired, ↑ for alpha, ↓ for beta
     C_ElectronType, // hidden column for alpha/beta tracking
 
     COUNT
@@ -135,15 +96,6 @@ public:
 
   bool setOrbitals(const Core::BasisSet* basis);
   bool clearOrbitals();
-
-  // Stages are used for multi-step processes, e.g. cube, posmesh, negmesh, etc
-  void setOrbitalProgressRange(int orbital, int min, int max, int stage,
-                               int totalStages);
-  void incrementStage(int orbital, int newmin, int newmax);
-  void setOrbitalProgressValue(int orbital, int currentValue);
-  void finishProgress(int orbital);
-  void resetProgress(int orbital);
-  void setProgressToZero(int orbital);
 
 private:
   QList<Orbital*> m_orbitals;

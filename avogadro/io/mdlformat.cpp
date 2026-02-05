@@ -21,6 +21,7 @@
 #include <string>
 #include <utility>
 
+using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
@@ -186,6 +187,8 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 
   // Parse the atom block.
   std::vector<chargePair> chargeList;
+  std::vector<unsigned char> atomicNumbers; // Store for conformer validation
+  atomicNumbers.reserve(numAtoms);
   for (int i = 0; i < numAtoms; ++i) {
     Vector3 pos;
     getline(in, buffer);
@@ -215,12 +218,13 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))).value_or(0));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
+      if (element == "D" || element == "T")
+        atomicNum = 1; // Deuterium and Tritium are hydrogen
+      atomicNumbers.push_back(atomicNum);
       Atom newAtom = mol.addAtom(atomicNum);
       if (element == "D") {
-        newAtom.setAtomicNumber(1);
         newAtom.setIsotope(2);
       } else if (element == "T") {
-        newAtom.setAtomicNumber(1);
         newAtom.setIsotope(3);
       }
 
@@ -278,15 +282,14 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   bool foundEnd(false);
   bool foundChgProperty(false);
   while (getline(in, buffer)) {
-    if (!in.good() || buffer.size() < 6) {
+    if (!in.good() || buffer.size() < 5) {
       break;
     }
 
-    string prefix = buffer.substr(0, 6);
-    if (prefix == "M  END") {
+    if (startsWith(buffer, "M  END") || startsWith(buffer, "M END")) {
       foundEnd = true;
       break;
-    } else if (prefix == "M  CHG") {
+    } else if (buffer.size() >= 6 && buffer.substr(0, 6) == "M  CHG") {
       if (!foundChgProperty)
         chargeList.clear(); // Forget old-style charges
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
@@ -312,7 +315,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         if (charge)
           chargeList.emplace_back(index, charge);
       }
-    } else if (prefix == "M  RAD") {
+    } else if (buffer.size() >= 6 && buffer.substr(0, 6) == "M  RAD") {
       // radical center
       spinMultiplicity = 1; // reset and count
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
@@ -342,7 +345,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         else if (radical == 3) // triplet
           spinMultiplicity += 2;
       }
-    } else if (prefix == "M  ISO") {
+    } else if (buffer.size() >= 6 && buffer.substr(0, 6) == "M  ISO") {
       // isotope
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
       if (buffer.length() < 17 + 8 * (entryCount - 1)) {
@@ -366,16 +369,16 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         mol.setIsotope(index, isotope);
       }
     } // isotope
-    else {
 #ifndef NDEBUG
+    else if (buffer.size() >= 6) {
       std::cout << " prefix " << buffer.substr(0, 6) << std::endl;
-#endif
     }
+#endif
   }
 
   if (!foundEnd) {
     appendError("Error, ending tag for file not found.");
-    return false;
+    // return false;
   }
 
   // Apply charges.
@@ -408,7 +411,8 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (trimmed(buffer) == "$$$$")
       break;
     if (inValue) {
-      if (buffer.empty() && dataName.length() > 0) {
+      // Use trimmed() to handle Windows CRLF line endings where \r remains
+      if (trimmed(buffer).empty() && dataName.length() > 0) {
         // check for partial charges
         if (dataName == "PUBCHEM_MMFF94_PARTIAL_CHARGES")
           handlePartialCharges(mol, dataValue);
@@ -425,7 +429,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       } else {
         if (dataValue.length())
           dataValue += "\n";
-        dataValue += buffer;
+        dataValue += trimmed(buffer);
       }
     } else if (startsWith(buffer, "> ")) {
       // This is a data header, read the name of the entry, and the value on
@@ -458,6 +462,143 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     std::string idx = mol.data("idx").toString();
     size_t atomIdx = lexicalCast<size_t>(idx).value_or(0);
     mol.setAtomLabel(atomIdx, pka);
+  }
+
+  // Read additional conformers from the file
+  // Save the initial coordinates as coordinate set 0
+  mol.setCoordinate3d(mol.atomPositions3d(), 0);
+  int coordSet = 1;
+
+  // Look for additional molecule blocks after $$$$
+  // (in case there are multiple conformers / coordinates)
+  // e.g. this is a multi-conformer or trajectory file
+  while (in.good()) {
+    // Save position at start of potential molecule block
+    std::streampos molPos = in.tellg();
+
+    // Skip to start of next molecule (should already be at $$$$ or past it)
+    // Read the molecule name line
+    if (!getline(in, buffer))
+      break;
+    buffer = trimmed(buffer);
+
+    // Skip $$$$ if we encounter it
+    if (buffer == "$$$$") {
+      // Update position to after $$$$, at start of next molecule
+      molPos = in.tellg();
+      if (!getline(in, buffer))
+        break;
+      buffer = trimmed(buffer);
+    }
+
+    // Empty line or EOF means no more molecules
+    if (buffer.empty() && !in.good())
+      break;
+
+    // Skip generator and comment lines
+    if (!getline(in, buffer) || !getline(in, buffer))
+      break;
+
+    // Read counts line
+    if (!getline(in, buffer) || buffer.size() < 39)
+      break;
+
+    // Check if this is V3000 - skip if so
+    // (that would be weird mixing V2000 and V3000)
+    string version(trimmed(buffer.substr(33)));
+    if (version == "V3000") {
+      // Restore stream position for potential future reading
+      if (molPos != std::streampos(-1))
+        in.seekg(molPos);
+      break;
+    }
+
+    // Parse atom count and verify it matches
+    int confAtoms = lexicalCast<int>(buffer.substr(0, 3), ok);
+    if (!ok || confAtoms != numAtoms) {
+      // Different molecule - restore stream position
+      if (molPos != std::streampos(-1))
+        in.seekg(molPos);
+      break;
+    }
+
+    int confBonds = lexicalCast<int>(buffer.substr(3, 3), ok);
+    if (!ok)
+      break;
+
+    // Parse atom block and collect positions
+    Array<Vector3> positions;
+    positions.reserve(numAtoms);
+    bool validConformer = true;
+
+    for (int i = 0; i < confAtoms; ++i) {
+      if (!getline(in, buffer) || buffer.size() < 40) {
+        validConformer = false;
+        break;
+      }
+
+      Vector3 pos;
+      pos.x() = lexicalCast<Real>(buffer.substr(0, 10), ok);
+      if (!ok) {
+        validConformer = false;
+        break;
+      }
+      pos.y() = lexicalCast<Real>(buffer.substr(10, 10), ok);
+      if (!ok) {
+        validConformer = false;
+        break;
+      }
+      pos.z() = lexicalCast<Real>(buffer.substr(20, 10), ok);
+      if (!ok) {
+        validConformer = false;
+        break;
+      }
+
+      // Check element matches
+      string element(trimmed(buffer.substr(31, 3)));
+      unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
+      if (element == "D" || element == "T")
+        atomicNum = 1;
+
+      if (atomicNum != atomicNumbers[i]) {
+        validConformer = false;
+        break; // Different element, not the same molecule
+      }
+
+      positions.push_back(pos);
+    }
+
+    if (!validConformer) {
+      // Different molecule or parse error - restore stream position
+      if (molPos != std::streampos(-1))
+        in.seekg(molPos);
+      break;
+    }
+
+    // Skip bond block
+    for (int i = 0; i < confBonds; ++i) {
+      if (!getline(in, buffer))
+        break;
+    }
+
+    // Skip properties block until M  END
+    // TODO: Consider reading properties in the future
+    // (e.g. if radicals or charges change during a trajectory)
+    while (getline(in, buffer)) {
+      if (startsWith(buffer, "M  END") || startsWith(buffer, "M END"))
+        break;
+    }
+
+    // Skip data block until $$$$
+    // TODO: Consider reading data from conformers in the future
+    // e.g. energies, etc.
+    while (getline(in, buffer)) {
+      if (trimmed(buffer) == "$$$$")
+        break;
+    }
+
+    // Add the conformer coordinates
+    mol.setCoordinate3d(positions, coordSet++);
   }
 
   return true;

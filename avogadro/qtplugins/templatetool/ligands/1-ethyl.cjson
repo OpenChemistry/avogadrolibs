@@ -16,7 +16,6 @@
     "order": [1, 1, 1, 1, 1, 1, 1]
   },
   "properties": {
-    "totalCharge": 0,
-    "totalSpinMultiplicity": 2
+    "totalCharge": 0
   }
 }

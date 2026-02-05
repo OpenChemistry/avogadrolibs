@@ -75,6 +75,7 @@ void GLRenderer::resize(int width, int height)
   if (!m_valid)
     return;
 
+  // m_volume.resize(width, height);
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
@@ -98,6 +99,7 @@ void GLRenderer::render()
 
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
   // Setup for solid geometry
+  // m_volume.begin()
   m_solidPipeline.begin();
   visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);

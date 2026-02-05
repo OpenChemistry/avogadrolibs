@@ -10,7 +10,7 @@ name: Windows Build
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.10.1
+  QT_VERSION: 6.8.3
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
@@ -35,10 +35,19 @@ jobs:
             cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
             build_flags: "--parallel",
           }
+        - {
+            name: "Windows Tests", artifact: "",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            build_type: "Release",
+            test: true,
+            cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
+            build_flags: "--parallel",
+          }
 
     steps:
     - name: Checkout workflow repository
-      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
     - name: Checkout Repositories
       uses: ./.github/actions/checkout-repositories
@@ -73,7 +82,7 @@ jobs:
     # Restore vcpkg cache (use manifest lock if available)
     - name: Restore vcpkg cache
       if: runner.os == 'Windows'
-      uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
       with:
         path: |
           C:\vcpkg\installed
@@ -91,7 +100,7 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         choco install nsis ninja
-        vcpkg install libarchive eigen3 libxml2 zlib
+        vcpkg install libarchive eigen3 libxml2 zlib gtest
       shell: bash
 
     - name: Configure
@@ -103,7 +112,7 @@ jobs:
 
     # Cache thirdparty builds (OpenBabel, etc.)
     - name: Cache thirdparty
-      uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
       with:
         path: |
           ${{ runner.workspace }}/build/Downloads
@@ -117,8 +126,20 @@ jobs:
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
+    - name: Run tests
+      if: (matrix.config.test == true)
+      shell: bash
+      run: |
+        cd "${{ runner.workspace }}/build/avogadrolibs"
+        # just turn on tests for
+        cmake -DENABLE_TESTING=ON .
+        cmake --build .
+        # Add DLL directories to PATH so tests can find dependencies
+        export PATH="${QT_ROOT_DIR}/bin:/c/vcpkg/installed/x64-windows/bin:${{ runner.workspace }}/build/prefix/bin:$PATH"
+        ctest --output-on-failure
+
     - name: Create Windows Packages
-      if: runner.os == 'Windows'
+      if: matrix.config.artifact != 0
       shell: bash
       run: |
         gh release download -R prefix-dev/pixi -p "pixi-x86_64-pc-windows-msvc.exe"
@@ -127,6 +148,10 @@ jobs:
         mv pixi-x86_64-pc-windows-msvc.exe prefix/bin/pixi.exe
         # run windeployqt
         windeployqt --release prefix/bin/avogadro2.exe
+        # Copy Qt DLLs that windeployqt misses (used by plugins and JKQTPlotter)
+        cp "${QT_ROOT_DIR}/bin/Qt6Concurrent.dll" prefix/bin/
+        cp "${QT_ROOT_DIR}/bin/Qt6PrintSupport.dll" prefix/bin/
+        cp "${QT_ROOT_DIR}/bin/Qt6Xml.dll" prefix/bin/
         mv prefix avogadro2
         # 7z a Avogadro2-windows.zip avogadro2
         cd avogadro2
@@ -186,6 +211,7 @@ jobs:
         GH_TOKEN: ${{ github.token }}
 
     - name: Upload MSIX
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
         path: ${{ runner.workspace }}/build/Avogadro2.msix

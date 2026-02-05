@@ -138,6 +138,7 @@ void Orbitals::loadOrbitals()
 
   m_dialog->fillTable(m_basis);
   m_dialog->show();
+  m_dialog->raise();
 }
 
 void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
@@ -276,9 +277,6 @@ void Orbitals::addCalculationToQueue(unsigned int orbital, double resolution,
 
   // Add new calculation
   m_queue.append(newCalc);
-
-  // Set progress to show 0%
-  m_dialog->calculationQueued(newCalc.orbital);
 }
 
 void Orbitals::checkQueue()
@@ -367,6 +365,13 @@ void Orbitals::calculateCube()
                << "\tOrbital " << cI->orbital << "\n"
                << "\tResolution " << cI->resolution;
 #endif
+      // Set this cube as the active cube for volume rendering
+      for (Index j = 0; j < m_molecule->cubeCount(); ++j) {
+        if (m_molecule->cube(j) == cI->cube) {
+          m_molecule->setActiveCubeIndex(j);
+          break;
+        }
+      }
       m_currentMeshCalculation = m_currentRunningCalculation;
       calculatePosMesh();
       calculationComplete();
@@ -381,6 +386,9 @@ void Orbitals::calculateCube()
   cube->setName("Molecular Orbital " + std::to_string(info->orbital + 1));
   cube->setCubeType(Core::Cube::Type::MO);
 
+  // Set this cube as the active cube for volume rendering
+  m_molecule->setActiveCubeIndex(m_molecule->cubeCount() - 1);
+
   if (!m_gaussianConcurrent) {
     m_gaussianConcurrent = new QtGui::GaussianSetConcurrent(this);
   }
@@ -388,12 +396,6 @@ void Orbitals::calculateCube()
 
   auto* watcher = &m_gaussianConcurrent->watcher();
   connect(watcher, SIGNAL(finished()), this, SLOT(calculateCubeDone()));
-
-  m_dialog->initializeProgress(info->orbital, watcher->progressMinimum(),
-                               watcher->progressMaximum(), 1, 3);
-
-  connect(watcher, SIGNAL(progressValueChanged(int)), this,
-          SLOT(updateProgress(int)));
 
 #ifndef NDEBUG
   qDebug() << info->orbital << " Cube calculation started.";
@@ -500,8 +502,6 @@ void Orbitals::calculationComplete()
 
   calcInfo* info = &m_queue[m_currentRunningCalculation];
 
-  m_dialog->calculationComplete(info->orbital);
-
   info->state = Completed;
   m_currentRunningCalculation = -1;
   m_runningCube = false;
@@ -544,6 +544,15 @@ void Orbitals::renderOrbital(unsigned int orbital,
       OrbitalWidget::OrbitalQualityToDouble(m_dialog->defaultQuality()),
       electronType);
   } else {
+    // Set this cube as the active cube for volume rendering
+    Core::Cube* activeCube = m_queue[index].cube;
+    for (Index j = 0; j < m_molecule->cubeCount(); ++j) {
+      if (m_molecule->cube(j) == activeCube) {
+        m_molecule->setActiveCubeIndex(j);
+        break;
+      }
+    }
+
     // just need to update the meshes
     if (m_currentMeshCalculation == -1) {
       m_currentMeshCalculation = index;
@@ -558,16 +567,6 @@ void Orbitals::renderOrbital(unsigned int orbital,
   QStringList displayTypes;
   displayTypes << tr("Surfaces");
   emit requestActiveDisplayTypes(displayTypes);
-}
-
-void Orbitals::updateProgress(int current)
-{
-  if (m_currentRunningCalculation == -1)
-    return;
-
-  calcInfo* info = &m_queue[m_currentRunningCalculation];
-  int orbital = info->orbital;
-  m_dialog->updateProgress(orbital, current);
 }
 
 } // namespace Avogadro::QtPlugins

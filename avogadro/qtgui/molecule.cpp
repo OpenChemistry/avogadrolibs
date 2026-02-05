@@ -328,28 +328,8 @@ RWMolecule* Molecule::undoMolecule()
 
 QString Molecule::formattedFormula() const
 {
-  // we're re-implmenting it here to enable isotopes
-  std::map<std::string, size_t> componentsCount;
-
-  // loop through the atoms
-  for (Index i = 0; i < atomCount(); ++i) {
-    unsigned short atNumber = atomicNumber(i);
-    std::string atomSymbol(Core::Elements::symbol(atNumber));
-    unsigned short iso = isotope(i);
-    if (iso > 0) {
-      if (atNumber == 1 && iso == 1)
-        atomSymbol = "H";
-      else if (atNumber == 1 && iso == 2)
-        atomSymbol = "D";
-      else if (atNumber == 1 && iso == 3)
-        atomSymbol = "T";
-      else
-        // eg. 13C
-        atomSymbol = std::to_string(iso) + atomSymbol;
-    }
-
-    componentsCount[atomSymbol]++;
-  }
+  // Get composition from core (handles isotopes and unit cell fractions)
+  std::map<std::string, size_t> componentsCount = formulaComposition();
 
   QString formula;
   // loop through the components

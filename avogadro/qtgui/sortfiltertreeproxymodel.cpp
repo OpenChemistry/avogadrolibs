@@ -30,6 +30,10 @@ bool SortFilterTreeProxyModel::filterAcceptsRow(
   // ignore any .smi files
   if (data.endsWith(".smi"))
     return false;
+  // other development files like .json, .md, and .py
+  if (data.endsWith(".json") || data.endsWith(".md") || data.endsWith(".py") ||
+      data.endsWith(".toml"))
+    return false;
 
   // Now we see if we're a child of the root
   // If not, we accept -- only filter under *our* tree

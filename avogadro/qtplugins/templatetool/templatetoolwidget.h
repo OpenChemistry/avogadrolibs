@@ -47,6 +47,9 @@ public:
   int currentTab() const;
   void setCurrentTab(int index);
 
+  void setGroup(const QString& groupName);
+  void setLigand(const QString& ligandName);
+
 private slots:
   void elementChanged(int index);
   void updateElementCombo();

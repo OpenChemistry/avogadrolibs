@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "templatetool.h"
+#include "templatetoolkeymap.h"
 #include "templatetoolwidget.h"
 
 #include <avogadro/core/atom.h>
@@ -217,10 +218,28 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
   if (m_keyPressBuffer.isEmpty())
     QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
 
-  m_keyPressBuffer.append(m_keyPressBuffer.isEmpty() ? e->text().toUpper()
-                                                     : e->text().toLower());
+  m_keyPressBuffer.append(e->text());
 
-  if (m_keyPressBuffer.size() >= 3) {
+  // Check for matches before clearing buffer
+  // (allows multi-character shortcuts like "bpy", "acac", "edta")
+  if (currentTab == 1) {
+    const auto& keyMap = ligandKeyMap();
+    auto it = keyMap.find(m_keyPressBuffer);
+    if (it != keyMap.end()) {
+      m_toolWidget->setLigand(it->second);
+      return nullptr;
+    }
+  } else if (currentTab == 2) {
+    const auto& keyMap = groupKeyMap();
+    auto it = keyMap.find(m_keyPressBuffer);
+    if (it != keyMap.end()) {
+      m_toolWidget->setGroup(it->second);
+      return nullptr;
+    }
+  }
+
+  // Clear buffer if too long (elements/coordination use max 2 chars)
+  if (m_keyPressBuffer.size() >= 5) {
     clearKeyPressBuffer();
     return nullptr;
   }
@@ -292,15 +311,8 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
         m_toolWidget->setCoordination(geometry);
       }
     }
-  } else if (currentTab == 1) {
-    // ligand
-    // e.g. bpy = bipyridine
-    // e.g. edta, tpy, etc.
-  } else if (currentTab == 2) {
-    // functional group
-    // e.g. c8 = octyl group
-    // p = phenyl group
   }
+  // Ligand and group tab matches are handled above before the buffer size check
 
   return nullptr;
 }

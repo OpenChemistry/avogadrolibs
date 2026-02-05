@@ -47,6 +47,7 @@ avogadro_headers(Rendering
   textrenderstrategy.h
   texture2d.h
   transformnode.h
+  vertexarrayobject.h
   visitor.h
   volumegeometry.h
   vrmlvisitor.h
@@ -89,6 +90,7 @@ target_sources(Rendering PRIVATE
   textrenderstrategy.cpp
   texture2d.cpp
   transformnode.cpp
+  vertexarrayobject.cpp
   visitor.cpp
   volumegeometry.cpp
   vrmlvisitor.cpp
@@ -107,6 +109,10 @@ set(shader_files
   "mesh_vs.glsl"
   "solid_vs.glsl"
   "solid_first_fs.glsl"
+  "volume_box_fs.glsl"
+  "volume_box_vs.glsl"
+  "volume_fs.glsl"
+  "volume_vs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
   "sphere_ao_depth_vs.glsl"

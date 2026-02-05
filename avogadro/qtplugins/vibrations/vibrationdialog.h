@@ -37,6 +37,7 @@ public:
 
 protected slots:
   void selectRow(QModelIndex);
+  void changeAnimation();
 
 signals:
   void modeChanged(int mode);

@@ -38,7 +38,7 @@ jobs:
 
     steps:
     - name: Checkout workflow repository
-      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
     - name: Checkout Repositories
       uses: ./.github/actions/checkout-repositories
@@ -73,7 +73,7 @@ jobs:
     # Restore vcpkg cache (use manifest lock if available)
     - name: Restore vcpkg cache
       if: runner.os == 'Windows'
-      uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
       with:
         path: |
           C:\vcpkg\installed

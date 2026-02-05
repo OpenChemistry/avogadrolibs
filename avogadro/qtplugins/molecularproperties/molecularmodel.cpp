@@ -266,6 +266,7 @@ bool MolecularModel::setData(const QModelIndex& index, const QVariant& value,
 
   if (row == 0) { // name should always be the first row
     m_molecule->setData("name", value.toString().toStdString());
+    m_molecule->setData("markup_name", value.toString().toStdString());
     emit dataChanged(index, index);
     return true;
   }

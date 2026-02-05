@@ -137,7 +137,7 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
 {
   ostringstream str;
   str << "mesh2 {\n";
-  Core::Array<Rendering::MeshGeometry::PackedVertex> v = geometry.vertices();
+  Core::Array<Rendering::PackedVertex> v = geometry.vertices();
   Core::Array<unsigned int> tris = geometry.triangles();
   str << "vertex_vectors{" << v.size() << ",\n";
   for (size_t i = 0; i < v.size(); ++i) {

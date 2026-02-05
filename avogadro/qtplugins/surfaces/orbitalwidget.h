@@ -63,12 +63,6 @@ public slots:
   void setDefaults(OrbitalWidget::OrbitalQuality quality, double isovalue,
                    bool HOMOFirst);
   void setPrecalcSettings(bool limit, int range);
-  void initializeProgress(int orbital, int min, int max, int stage,
-                          int totalStages);
-  void nextProgressStage(int orbital, int newmin, int newmax);
-  void updateProgress(int orbital, int current);
-  void calculationComplete(int orbital);
-  void calculationQueued(int orbital);
 
 signals:
   void orbitalSelected(unsigned int orbital,

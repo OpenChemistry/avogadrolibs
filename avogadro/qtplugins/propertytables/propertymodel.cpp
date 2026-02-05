@@ -1079,6 +1079,10 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
   if (molecule && molecule != m_molecule) {
     m_molecule = molecule;
 
+    // Initialize structure tracking for change detection
+    m_lastAtomCount = molecule->atomCount();
+    m_lastBondCount = molecule->bondCount();
+
     updateCache();
 
     connect(m_molecule, SIGNAL(changed(unsigned int)), this,
@@ -1112,17 +1116,40 @@ QString PropertyModel::secStructure(unsigned int type) const
 
 void PropertyModel::updateTable(unsigned int flags)
 {
-  if (flags & Molecule::Added || flags & Molecule::Removed) {
-    // tear it down and rebuild the model
-    updateCache();
-    beginResetModel();
-    endResetModel();
-  } else {
-    // we can just update the current data
-    emit dataChanged(
-      QAbstractItemModel::createIndex(0, 0),
-      QAbstractItemModel::createIndex(rowCount(), columnCount()));
+  // During animation/vibration, coordinates change rapidly but the table
+  // structure (number of atoms, bonds, etc.) remains the same. We can skip
+  // updates when only coordinates changed (Atoms flag without Added/Removed).
+  //
+  // Note: Some code (e.g., vibrations) incorrectly uses Added flag for
+  // coordinate changes. We detect actual structural changes by checking
+  // if the counts changed.
+  bool structureChanged = false;
+
+  if (m_molecule != nullptr) {
+    // Check if the actual structure changed (not just coordinates)
+    Index currentAtomCount = m_molecule->atomCount();
+    Index currentBondCount = m_molecule->bondCount();
+
+    if (currentAtomCount != m_lastAtomCount ||
+        currentBondCount != m_lastBondCount) {
+      structureChanged = true;
+      m_lastAtomCount = currentAtomCount;
+      m_lastBondCount = currentBondCount;
+    }
   }
+
+  if (!structureChanged) {
+    // For coordinate-only changes, just invalidate the cache
+    // This avoids race conditions during rapid animation updates
+    m_validCache = false;
+    return;
+  }
+
+  // For structural changes, do a full model reset
+  // Use beginResetModel/endResetModel to ensure thread-safe updates
+  updateCache();
+  beginResetModel();
+  endResetModel();
 }
 
 void PropertyModel::updateCache() const

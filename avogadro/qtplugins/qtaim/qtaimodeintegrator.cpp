@@ -52,7 +52,7 @@ QVector3D QTAIMODEIntegrator::integrate(QVector3D x0y0z0)
   qreal abserr;
   qint64 flag;
   qint64 i_step;
-  qint64 n_step;
+  qint64 n_step = 0;
   qreal relerr;
   qreal t;
   qreal t_out;

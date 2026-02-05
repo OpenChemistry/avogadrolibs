@@ -1374,6 +1374,7 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // handle any constraints
   cleanGradients(grad);
+
   constraintGradients(x, grad);
 
   // convert from kcal/mol to kJ/mol
