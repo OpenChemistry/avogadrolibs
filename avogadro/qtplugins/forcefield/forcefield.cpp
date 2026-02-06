@@ -378,10 +378,8 @@ void Forcefield::optimize()
   auto n = m_molecule->atomCount();
   setupConstraints();
 
-  // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  double* p = pos[0].data();
-  Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
+  Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   Eigen::VectorXd positions = map;
   Eigen::VectorXd lastPositions = positions;
 
@@ -441,24 +439,9 @@ void Forcefield::optimize()
 #endif
 
     // update coordinates
-    bool isFinite = std::isfinite(currentEnergy);
-    if (isFinite) {
-      const double* d = positions.data();
-      [[maybe_unused]] bool allFinite = true;
-      // casting back would be lovely...
-      for (Index j = 0; j < n; ++j) {
-        if (!std::isfinite(*d) || !std::isfinite(*(d + 1)) ||
-            !std::isfinite(*(d + 2))) {
-          allFinite = false;
-          break;
-        }
-
-        pos[j] = Vector3(*(d), *(d + 1), *(d + 2));
-        d += 3;
-
-        forces[j] = -0.1 * Vector3(gradient[3 * j], gradient[3 * j + 1],
-                                   gradient[3 * j + 2]);
-      }
+    if (std::isfinite(currentEnergy) && positions.allFinite()) {
+      Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = positions;
+      Eigen::Map<Eigen::VectorXd>(forces[0].data(), 3 * n) = -0.1 * gradient;
     } else {
       qDebug() << "Non-finite energy, stopping optimization" << currentEnergy;
       // reset to last positions
@@ -467,8 +450,7 @@ void Forcefield::optimize()
       break;
     }
 
-    // todo - merge these into one undo step
-    if (isFinite) {
+    {
       m_molecule->undoMolecule()->setAtomPositions3d(pos,
                                                      tr("Optimize Geometry"));
       m_molecule->setForceVectors(forces);
@@ -502,14 +484,10 @@ void Forcefield::energy()
   if (m_method == nullptr)
     return; // bad news
 
-  int n = m_molecule->atomCount();
-  // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  double* p = pos[0].data();
-  Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
-  Eigen::VectorXd positions = map;
+  Eigen::Map<Eigen::VectorXd> positions(pos[0].data(),
+                                        3 * m_molecule->atomCount());
 
-  // now get the energy
   m_method->setMolecule(m_molecule);
   Real energy = m_method->value(positions);
 
@@ -531,24 +509,15 @@ void Forcefield::forces()
 
   // double-check the mask
   auto mask = m_molecule->frozenAtomMask();
-  if (mask.rows() != 3 * n) {
-    mask = Eigen::VectorXd::Zero(3 * n);
-    // set to 1.0
-    for (Eigen::Index i = 0; i < 3 * n; ++i) {
-      mask[i] = 1.0;
-    }
-  }
+  if (mask.rows() != 3 * n)
+    mask = Eigen::VectorXd::Ones(3 * n);
   m_method->setMolecule(m_molecule);
   m_method->setMask(mask);
 
-  // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  double* p = pos[0].data();
-  Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
-  Eigen::VectorXd positions = map;
+  Eigen::Map<Eigen::VectorXd> positions(pos[0].data(), 3 * n);
 
   Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
-  // just to get the right size / shape
   // we'll use this to draw the force arrows
   Core::Array<Vector3> forces = m_molecule->atomPositions3d();
 
@@ -573,10 +542,7 @@ void Forcefield::forces()
   }
 #endif
 
-  for (Index i = 0; i < n; ++i) {
-    forces[i] =
-      -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1], gradient[3 * i + 2]);
-  }
+  Eigen::Map<Eigen::VectorXd>(forces[0].data(), 3 * n) = -0.1 * gradient;
 
   m_molecule->setForceVectors(forces);
   Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
