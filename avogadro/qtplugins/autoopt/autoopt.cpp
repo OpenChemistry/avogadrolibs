@@ -496,18 +496,33 @@ void AutoOpt::dynamicsStep()
 
     Eigen::VectorXd newPositions = positions + velocityTerm + accelTerm;
 
-    /* debugging statements
+    // Limit maximum displacement per atom to prevent instability.
+    // Unlike gradient clamping, this preserves force/potential consistency:
+    // the gradient is always evaluated at the actual position the atom moves
+    // to, so the Verlet integrator's symplectic properties are maintained.
+    const double maxAtomDisplacement = 0.33; // Angstroms per step
     Eigen::VectorXd displacement = newPositions - positions;
+    double maxDisp = displacement.cwiseAbs().maxCoeff();
+    if (maxDisp > maxAtomDisplacement) {
+      double scale = maxAtomDisplacement / maxDisp;
+      displacement *= scale;
+      newPositions = positions + displacement;
+
+      // Also scale velocities to stay consistent with the reduced displacement
+      // This prevents a mismatch between where atoms are and how fast they're
+      // going, which would cause energy non-conservation on the next step.
+      m_velocities *= scale;
+    }
+
+    /* debugging statements
     qDebug() << " max displacement " << displacement.cwiseAbs().maxCoeff();
     */
 
     // Velocity Verlet Step 2: Compute new acceleration at new positions
+    // IMPORTANT: No gradient clamping - forces must be the true derivative
+    // of the potential at the actual position. Clamping breaks the
+    // force/potential consistency that Verlet requires for energy conservation.
     m_method->gradient(newPositions, gradient);
-
-    // Clamp large gradient components to prevent instability during interaction
-    const double maxGradientComponent = 10.0; // kJ/mol/Å
-    gradient =
-      gradient.cwiseMax(-maxGradientComponent).cwiseMin(maxGradientComponent);
 
     /* debugging statements
     qDebug() << " gradient norm " << gradient.norm();
@@ -560,9 +575,16 @@ void AutoOpt::draw(Rendering::GroupNode& node)
     return; // nothing to draw
 
   QString overlayText;
-  overlayText = tr("%1 ΔE = %L2 kJ/mol")
-                  .arg(m_currentMethod.c_str())
-                  .arg(m_deltaE, 0, 'f', 2);
+  if (m_task == 1) {
+    // dynamics step
+    double temp = m_thermostat->compute_temperature(m_velocities, m_masses);
+    overlayText =
+      tr("%1 T = %L2 K").arg(m_currentMethod.c_str()).arg(temp, 0, 'f', 1);
+  } else {
+    overlayText = tr("%1 ΔE = %L2 kJ/mol")
+                    .arg(m_currentMethod.c_str())
+                    .arg(m_deltaE, 0, 'f', 2);
+  }
 
   auto* geo = new GeometryNode;
   node.addChild(geo);

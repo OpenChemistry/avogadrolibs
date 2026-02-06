@@ -230,37 +230,40 @@ public:
     }
 
     // CSVR formula from Bussi et al. Eq. (A7)
-    // We need:
-    //   - R1: first Gaussian random number (enters linearly)
-    //   - sum_Rsq: sum of n_dof squared Gaussians (for chi-squared term)
     //
-    // The formula can be rewritten as:
-    //   K_new = c * K + (1-c) * K_target
-    //         + 2 * sqrt(c * (1-c) * K * K_target / n_dof) * R1
-    //         + (1-c) * K_target * (sum_{i=2}^{n_dof} R_i^2 - (n_dof-1)) /
-    //         n_dof
+    // K_new = c * K + (1-c) * K_target / Nf * (R1² + sum_{i=2}^{Nf} Ri²)
+    //       + 2 * sqrt(c * (1-c) * K * K_target / Nf) * R1
     //
-    // The last term centers the chi-squared distribution so its mean
-    // contribution is zero.
+    // where R1 is the SAME Gaussian in both the linear and quadratic terms.
+    // This is a non-central chi-squared variate and is always non-negative.
+    //
+    // CRITICAL: The previous implementation replaced R1² with E[R1²] = 1
+    // ("centering"), which broke the non-central chi-squared structure,
+    // destroyed the R1/R1² correlation, and made ke_new occasionally negative.
 
     double R1 = gaussian_random();
 
-    // Sum of (n_dof - 1) squared Gaussians
-    double sum_Rsq = sum_noises_squared(n_dof - 1);
+    // Sum of (n_dof - 1) independent squared Gaussians (for i = 2..Nf)
+    double sum_Rsq_rest = sum_noises_squared(n_dof - 1);
 
-    // Compute new kinetic energy using corrected CSVR formula
+    // Full chi-squared sum includes R1² from the same draw
+    double chi_sq_sum = R1 * R1 + sum_Rsq_rest;
+
+    // Compute new kinetic energy using correct CSVR formula (Eq. A7)
     double ke_new =
-      c * ke_current + (1.0 - c) * ke_target +
-      2.0 * std::sqrt(c * (1.0 - c) * ke_current * ke_target / n_dof) * R1 +
-      (1.0 - c) * ke_target * (sum_Rsq - (n_dof - 1)) / n_dof;
+      c * ke_current + (1.0 - c) * ke_target / n_dof * chi_sq_sum +
+      2.0 * std::sqrt(c * (1.0 - c) * ke_current * ke_target / n_dof) * R1;
 
-    // Ensure ke_new is positive (can rarely be negative due to stochastic
-    // terms)
+    // Safety net: The correct CSVR formula is a non-central chi-squared
+    // variate and should always be non-negative. This guard should essentially
+    // never fire, but we keep it for numerical safety (e.g., extreme
+    // floating-point edge cases).
     if (ke_new < 0.0) {
-      ke_new = ke_target * 0.01; // Set to small positive value
+      ke_new = ke_target * 0.01;
       if (enable_diagnostics) {
-        std::cerr << "CSVR Warning: Negative KE computed, clamping to small "
-                     "positive value\n";
+        std::cerr
+          << "CSVR Warning: Negative KE computed (should be very rare "
+             "with correct formula), clamping to small positive value\n";
       }
     }
 
