@@ -356,14 +356,9 @@ void AutoOpt::methodChanged(const QString& method)
 
 Real AutoOpt::calculateEnergy()
 {
-  int n = m_molecule->atomCount();
-  // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  double* p = pos[0].data();
-  Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
-  Eigen::VectorXd positions = map;
-
-  // now get the energy
+  Eigen::Map<Eigen::VectorXd> positions(pos[0].data(),
+                                        3 * m_molecule->atomCount());
   return m_method->value(positions);
 }
 
@@ -375,21 +370,14 @@ void AutoOpt::optimizeStep()
   }
 
   int n = m_molecule->atomCount();
-  // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  double* p = pos[0].data();
-  Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
+  Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   Eigen::VectorXd positions = map;
 
   // get the frozen atoms
   auto mask = m_molecule->molecule().frozenAtomMask();
-  if (mask.rows() != 3 * n) {
-    mask = Eigen::VectorXd::Zero(3 * n);
-    // set to 1.0
-    for (Eigen::Index i = 0; i < 3 * n; ++i) {
-      mask[i] = 1.0;
-    }
-  }
+  if (mask.rows() != 3 * n)
+    mask = Eigen::VectorXd::Ones(3 * n);
   m_method->setMask(mask);
 
   // optimize one step
@@ -402,30 +390,15 @@ void AutoOpt::optimizeStep()
   solver.minimize(*m_method, positions);
   Real currentEnergy = m_method->value(positions);
 
-  bool isFinite = std::isfinite(currentEnergy);
-  if (isFinite) {
+  if (std::isfinite(currentEnergy) && positions.allFinite()) {
     m_deltaE = currentEnergy - m_energy; // should be negative = lower E
 
-    const double* d = positions.data();
-    [[maybe_unused]] bool allFinite = true;
-    // casting back would be lovely...
-    for (Index j = 0; j < n; ++j) {
-      if (!std::isfinite(*d) || !std::isfinite(*(d + 1)) ||
-          !std::isfinite(*(d + 2))) {
-        allFinite = false;
-        break;
-      }
+    // copy optimized positions back into the pos array
+    Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = positions;
 
-      pos[j] = Vector3(*(d), *(d + 1), *(d + 2));
-      d += 3;
-    }
-
-    // todo - merge these into one undo step
-    if (allFinite) {
-      m_molecule->setAtomPositions3d(pos, tr("Optimize Geometry"));
-      Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
-      m_molecule->emitChanged(changes);
-    }
+    m_molecule->setAtomPositions3d(pos, tr("Optimize Geometry"));
+    Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
+    m_molecule->emitChanged(changes);
   }
 }
 
@@ -446,21 +419,15 @@ void AutoOpt::dynamicsStep()
     m_thermostat->setTimeStep(m_timeStep);
     m_thermostat->setDegreesOfFreedom(3 * n - 3);
 
-    // we have to cast the current 3d positions into a VectorXd
     Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-    double* p = pos[0].data();
-    Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
+    Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
     Eigen::VectorXd positions = map;
     Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
 
     // get the frozen atoms to ensure these are zero gradients
     auto mask = m_molecule->molecule().frozenAtomMask();
-    if (mask.rows() != 3 * n) {
-      mask = Eigen::VectorXd::Zero(3 * n);
-      for (Eigen::Index i = 0; i < 3 * n; ++i) {
-        mask[i] = 1.0;
-      }
-    }
+    if (mask.rows() != 3 * n)
+      mask = Eigen::VectorXd::Ones(3 * n);
     m_method->setMask(mask);
 
     // check m_masses
@@ -500,19 +467,26 @@ void AutoOpt::dynamicsStep()
     // Unlike gradient clamping, this preserves force/potential consistency:
     // the gradient is always evaluated at the actual position the atom moves
     // to, so the Verlet integrator's symplectic properties are maintained.
-    const double maxAtomDisplacement = 0.33; // Angstroms per step
+    // Per-atom limit scales as sqrt(T/m): lighter atoms and higher
+    // temperatures allow larger displacements. Calibrated so that
+    // carbon (mass 12) at 300 K gets a 0.33 Angstrom limit.
+    const double baseDisplacement = 0.33 * std::sqrt(12.0 / 300.0);
+    Eigen::ArrayXd maxDisplacements =
+      baseDisplacement * (m_temperature / m_masses).sqrt();
     Eigen::VectorXd displacement = newPositions - positions;
-    double maxDisp = displacement.cwiseAbs().maxCoeff();
-    if (maxDisp > maxAtomDisplacement) {
-      double scale = maxAtomDisplacement / maxDisp;
-      displacement *= scale;
-      newPositions = positions + displacement;
-
-      // Also scale velocities to stay consistent with the reduced displacement
-      // This prevents a mismatch between where atoms are and how fast they're
-      // going, which would cause energy non-conservation on the next step.
-      m_velocities *= scale;
+    for (int i = 0; i < n; ++i) {
+      double dist = displacement.segment<3>(3 * i).norm();
+      double limit = maxDisplacements[3 * i]; // same for all 3 components
+      if (dist > limit) {
+        double scale = limit / dist;
+        displacement.segment<3>(3 * i) *= scale;
+        // Also scale velocities to stay consistent with the reduced
+        // displacement. This prevents a mismatch between where the atom is
+        // and how fast it's going, avoiding energy non-conservation.
+        m_velocities.segment<3>(3 * i) *= scale;
+      }
     }
+    newPositions = positions + displacement;
 
     /* debugging statements
     qDebug() << " max displacement " << displacement.cwiseAbs().maxCoeff();
@@ -558,11 +532,8 @@ void AutoOpt::dynamicsStep()
              << m_thermostat->compute_temperature(m_velocities, m_masses);
 #endif
 
-    // update the positions
-    for (Eigen::Index i = 0; i < n; ++i) {
-      pos[i] = Vector3(newPositions[3 * i], newPositions[3 * i + 1],
-                       newPositions[3 * i + 2]);
-    }
+    // copy new positions back into the pos array
+    Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = newPositions;
     m_molecule->setAtomPositions3d(pos, tr("Molecular Dynamics"));
     Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
     m_molecule->emitChanged(changes);
