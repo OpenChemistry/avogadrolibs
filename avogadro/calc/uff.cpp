@@ -798,6 +798,8 @@ public:
 
       Vector3d diff = x.segment<3>(3 * i) - x.segment<3>(3 * j);
       Real r = diff.norm();
+      if (r < 1e-3)
+        continue; // skip degenerate bond
       Vector3d force = 2.0 * bond._kb * (r - bond._r0) / r * diff;
       grad.segment<3>(3 * i) += force;
       grad.segment<3>(3 * j) -= force;
@@ -973,7 +975,8 @@ public:
       il = il / ril;
 
       // we also need the angle between the bonds (i.e., j-i-k)
-      Real cosTheta = ij.dot(ik) / (rij * rik);
+      // ij and ik are already normalized
+      Real cosTheta = ij.dot(ik);
       // clamp the cosTheta to -1 to 1
       cosTheta = std::clamp(cosTheta, -1.0, 1.0);
       Real theta = acos(cosTheta);

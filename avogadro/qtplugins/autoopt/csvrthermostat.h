@@ -4,13 +4,6 @@
 
   CSVR Thermostat - Canonical Sampling through Velocity Rescaling
   Based on: Bussi, Donadio, Parrinello, J. Chem. Phys. 126, 014101 (2007)
-
-  CHANGELOG:
-  - Fixed CSVR formula (was missing deterministic relaxation term)
-  - Added proper centering of chi-squared stochastic term
-  - Added unit consistency checks and documentation
-  - Added diagnostic logging capability
-  - Improved DOF handling with automatic COM correction option
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_CSVRTHERMOSTAT_H
@@ -49,14 +42,6 @@ namespace units {
 // Using R = kB * NA = 8.314 J/(mol·K) = 8.314e-3 kJ/(mol·K)
 constexpr double kB = 8.314462618e-3; // kJ/(mol*K) - this is R
 
-// Kinetic energy conversion:
-// KE (kJ/mol) = 0.5 * sum_i(m_i * v_i²) * KINETIC_CONVERSION
-// where m is in amu and v is in Å/fs.
-//
-// 1 amu·(Å/fs)² = 1.66054e-27 kg · (1e5 m/s)² = 1.66054e-17 J
-// Per mole: 1.66054e-17 J · 6.022e23 = 10.0 kJ/mol
-constexpr double KINETIC_CONVERSION = 10.0; // amu·(Å/fs)² to kJ/mol
-
 // Force/acceleration conversion:
 // The gradient from the force field is in kJ/(mol·Å).
 // We want acceleration in Å/fs².
@@ -76,9 +61,9 @@ private:
   double
     coupling_time; // Coupling time constant - MUST BE IN SAME UNITS AS dt (fs)
   double dt;       // Timestep (fs)
-  int n_dof;       // Number of degrees of freedom
-  bool auto_dof;   // Automatically calculate DOF from atom count
-  bool remove_com; // Remove COM motion during velocity initialization
+  unsigned int n_dof;      // Number of degrees of freedom
+  bool auto_dof;           // Automatically calculate DOF from atom count
+  bool remove_com;         // Remove COM motion during velocity initialization
   bool enable_diagnostics; // Enable diagnostic output
 
   std::mt19937 rng;
@@ -169,6 +154,9 @@ public:
   double compute_temperature(const Eigen::VectorXd& velocities,
                              const Eigen::VectorXd& masses)
   {
+    if (n_dof < 1)
+      return 0.0;
+
     constexpr double kB_SI = 1.380649e-23; // J/K
     double ke = compute_kinetic_energy(velocities, masses);
     // T = 2 * KE / (n_dof * kB)
@@ -188,10 +176,6 @@ public:
   //
   // where c = exp(-dt/tau), R_i are independent Gaussian random numbers,
   // and the sum is over n_dof terms.
-  //
-  // CRITICAL FIX: The original implementation was missing the deterministic
-  // relaxation toward K_target and had incorrect handling of the stochastic
-  // term.
   void apply(Eigen::VectorXd& velocities, const Eigen::VectorXd& masses)
   {
     constexpr double kB_SI = 1.380649e-23; // J/K

@@ -193,7 +193,8 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
 
 Real OBEnergy::value(const Eigen::VectorXd& x)
 {
-  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
+      d->m_obmol == nullptr || !d->setup)
     return 0.0; // nothing to do
 
   // update all coordinates at once (SetCoordinates copies the array)
@@ -217,7 +218,8 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
 
 void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
+      d->m_obmol == nullptr || !d->setup)
     return;
 
   // update all coordinates at once (SetCoordinates copies the array)

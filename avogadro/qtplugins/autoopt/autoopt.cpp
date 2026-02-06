@@ -132,6 +132,7 @@ void AutoOpt::moleculeChanged(unsigned int changes)
   // qDebug() << "molecule changed" << changes;
   if (m_running && (changes != (Molecule::Atoms | Molecule::Moved))) {
     // restart
+    stop();
     start();
   }
 }
@@ -301,7 +302,17 @@ void AutoOpt::start()
   if (m_task == 1) {
     // For dynamics, initialize to Maxwell-Boltzmann distribution
     m_thermostat->setTargetTemperature(m_temperature);
-    m_thermostat->setDegreesOfFreedom(3 * m_molecule->atomCount() - 3);
+
+    // Count free coordinates from the frozen atom mask
+    auto mask = m_molecule->molecule().frozenAtomMask();
+    int freeDOF = 3 * m_molecule->atomCount();
+    if (mask.rows() == freeDOF)
+      freeDOF = static_cast<int>(mask.sum());
+    // Subtract 3 for overall translation unless periodic (unit cell)
+    if (m_molecule->molecule().unitCell() == nullptr)
+      freeDOF -= 3;
+    m_thermostat->setDegreesOfFreedom(std::max(freeDOF, 1));
+
     m_thermostat->initializeVelocities(m_velocities, m_masses);
   } else {
     m_velocities.setZero();
@@ -350,6 +361,7 @@ void AutoOpt::methodChanged(const QString& method)
   // need to stop the current optimization,
   // then restart after a brief pause
   if (m_running) {
+    stop();
     start();
   }
 }
@@ -414,11 +426,6 @@ void AutoOpt::dynamicsStep()
     int n = m_molecule->atomCount();
     double dt = m_timeStep;
 
-    // update the thermostat settings
-    m_thermostat->setTargetTemperature(m_temperature);
-    m_thermostat->setTimeStep(m_timeStep);
-    m_thermostat->setDegreesOfFreedom(3 * n - 3);
-
     Core::Array<Vector3> pos = m_molecule->atomPositions3d();
     Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
     Eigen::VectorXd positions = map;
@@ -430,6 +437,15 @@ void AutoOpt::dynamicsStep()
       mask = Eigen::VectorXd::Ones(3 * n);
     m_method->setMask(mask);
 
+    // update the thermostat settings — DOF accounts for frozen coordinates
+    // and periodic systems (no translational DOF to remove with a unit cell)
+    int freeDOF = static_cast<int>(mask.sum());
+    if (m_molecule->molecule().unitCell() == nullptr)
+      freeDOF -= 3;
+    m_thermostat->setTargetTemperature(m_temperature);
+    m_thermostat->setTimeStep(m_timeStep);
+    m_thermostat->setDegreesOfFreedom(std::max(freeDOF, 1));
+
     // check m_masses
     if (m_masses.rows() != 3 * n) {
       setMasses(m_masses, &(m_molecule->molecule()));
@@ -438,8 +454,12 @@ void AutoOpt::dynamicsStep()
     // On first step, compute initial acceleration
     if (m_firstStep) {
       m_method->gradient(positions, gradient);
-      m_acceleration =
-        -units::FORCE_CONVERSION * gradient.array() / m_masses.array();
+      if (gradient.allFinite()) {
+        m_acceleration =
+          -units::FORCE_CONVERSION * gradient.array() / m_masses.array();
+      } else {
+        m_acceleration.setZero();
+      }
       m_firstStep = false;
     }
 
@@ -498,6 +518,12 @@ void AutoOpt::dynamicsStep()
     // force/potential consistency that Verlet requires for energy conservation.
     m_method->gradient(newPositions, gradient);
 
+    // Guard against NaN/Inf from the gradient — if the gradient is bad,
+    // treat it as zero force so atoms coast on their current velocities.
+    // The thermostat and displacement clamping will handle recovery.
+    if (!gradient.allFinite())
+      gradient.setZero();
+
     /* debugging statements
     qDebug() << " gradient norm " << gradient.norm();
     qDebug() << " max gradient component " << gradient.cwiseAbs().maxCoeff();
@@ -533,10 +559,12 @@ void AutoOpt::dynamicsStep()
 #endif
 
     // copy new positions back into the pos array
-    Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = newPositions;
-    m_molecule->setAtomPositions3d(pos, tr("Molecular Dynamics"));
-    Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
-    m_molecule->emitChanged(changes);
+    if (newPositions.allFinite()) {
+      Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = newPositions;
+      m_molecule->setAtomPositions3d(pos, tr("Molecular Dynamics"));
+      Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
+      m_molecule->emitChanged(changes);
+    }
   }
 }
 
