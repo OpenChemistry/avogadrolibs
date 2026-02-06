@@ -4,14 +4,15 @@
 
 At the moment, Avogadro2 is in beta release. As such, we can most easily support
 security updates on the most recent release and current nightly snapshots.
-We will work with distributions (e.g., Ubuntu, FreeBSD, etc.) to provide security
-patches for widely used long-term-support OS.
+We will work with distributions (e.g., Ubuntu, FreeBSD, etc.) to provide security patches for widely used long-term-support OS.
+
+After 2.0 is released, we will indicate particular releases for long-term-support, although we intend to keep to a frequent release schedule.
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 1.103.x | :white_check_mark: |
 | 1.102.x | :white_check_mark: |
-| 1.101.x | :white_check_mark: |
-| < 1.101 | :x:                |
+| < 1.102 | :x:                |
 
 ## Reporting a Vulnerability
 
