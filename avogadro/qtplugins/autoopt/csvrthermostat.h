@@ -76,12 +76,11 @@ private:
   // For n degrees of freedom
   double sum_noises_squared(int n)
   {
-    double sum = 0.0;
-    for (int i = 0; i < n; ++i) {
-      double r = gaussian_random();
-      sum += r * r;
-    }
-    return sum;
+    if (n <= 0)
+      return 0.0;
+    // didn't realize there was a chi-squared distribution
+    std::chi_squared_distribution<double> chi2(n);
+    return chi2(rng);
   }
 
 public:
