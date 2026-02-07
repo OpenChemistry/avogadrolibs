@@ -55,7 +55,7 @@ TEST(InputGeneratorTest, exercise)
   }
 
   // Use a cml file from the test data to test file path handling.
-  QString testFilePath(AVOGADRO_DATA "/data/ethane.cml");
+  QString testFilePath(AVOGADRO_DATA "/data/cml/ethane.cml");
   options["Test FilePath"] = testFilePath;
 
   // And a fake molecule...

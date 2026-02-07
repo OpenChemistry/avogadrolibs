@@ -30,10 +30,7 @@ TEST(FileBrowseWidgetTest, setFileName)
   START_QAPP;
 
   FileBrowseWidget widget;
-  if (QT_VERSION == 6)
-    QSignalSpy spy(&widget, &FileBrowseWidget::fileNameChanged);
-  else
-    QSignalSpy spy(&widget, SIGNAL(fileNameChanged(QString)));
+  QSignalSpy spy(&widget, &FileBrowseWidget::fileNameChanged);
   widget.setFileName("some file");
   EXPECT_EQ(1, spy.count());
   EXPECT_STREQ("some file", qPrintable(spy.front().front().toString()));
@@ -48,7 +45,7 @@ TEST(FileBrowseWidgetTest, validExistingFile)
   FileBrowseWidget widget;
 
   widget.setMode(FileBrowseWidget::ExistingFile);
-  widget.setFileName(AVOGADRO_DATA "/data/ethane.cml");
+  widget.setFileName(AVOGADRO_DATA "/data/cml/ethane.cml");
   EXPECT_TRUE(widget.validFileName());
   widget.setFileName(AVOGADRO_DATA "/data/nonexisting.file");
   EXPECT_FALSE(widget.validFileName());
@@ -68,7 +65,7 @@ TEST(FileBrowseWidgetTest, validExecutableFile)
   widget.setFileName("C:/Windows/System32/cmd.exe");
 #endif // Q_OS_WIN32
   EXPECT_TRUE(widget.validFileName());
-  widget.setFileName(AVOGADRO_DATA "/data/ethane.cml");
+  widget.setFileName(AVOGADRO_DATA "/data/cml/ethane.cml");
   EXPECT_FALSE(widget.validFileName());
   widget.setFileName(AVOGADRO_DATA "/data/nonexisting.file");
   EXPECT_FALSE(widget.validFileName());
