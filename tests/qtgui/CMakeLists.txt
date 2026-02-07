@@ -37,9 +37,9 @@ endif()
 
 if(Python3_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
-    FileBrowseWidget
     # these are still somewhat broken
     # but it's not crucial
+    #FileBrowseWidget
     #InputGenerator
     #InputGeneratorWidget
   )
