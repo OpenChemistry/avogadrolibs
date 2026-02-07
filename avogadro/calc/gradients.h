@@ -9,34 +9,59 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/core/angletools.h>
 
+#include <algorithm>
 #include <cmath>
 
 namespace Avogadro::Calc {
 
 /**
- * Calculate the components of the gradient for the angle a-b-c
- * @return the angle between a-b-c in radians
+ * Calculate the components of the gradient for the distance a-b.
+ * @return true if the length is well-defined.
+ */
+inline bool distanceGradient(const Vector3& a, const Vector3& b, Real& distance,
+                             Vector3& aGrad, Vector3& bGrad)
+{
+  bGrad = aGrad = Vector3::Zero();
+
+  const Vector3 ab = a - b;
+  distance = ab.norm();
+  if (distance < 1e-3)
+    return false;
+
+  const Vector3 direction = ab / distance;
+  aGrad = direction;
+  bGrad = -direction;
+  return true;
+}
+
+/**
+ * Calculate the components of the gradient for the angle a-b-c using atan2.
+ * @return the angle between a-b-c in radians or 0.0 if ill-defined
  */
 inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
                           Vector3& aGrad, Vector3& bGrad, Vector3& cGrad)
 {
-  cGrad = bGrad = aGrad = { 0.0, 0.0, 0.0 };
+  cGrad = bGrad = aGrad = Vector3::Zero();
 
   const Vector3 ab = a - b;
   const Vector3 cb = c - b;
   const Real rab = ab.norm();
   const Real rcb = cb.norm();
-  const Real dot = ab.dot(cb);
-  const Real norms = rab * rcb;
-  const Real angle = std::acos(-dot / norms);
 
   if (rab < 1.e-3 || rcb < 1.e-3)
-    return angle;
+    return 0.0;
 
+  const Real dot = ab.dot(cb);
   const Vector3 ab_cross_cb = ab.cross(cb);
-  Real crossNorm = ab_cross_cb.norm();
-  if (crossNorm < 1.e-6)
-    return angle;
+  const Real crossNorm = ab_cross_cb.norm();
+  if (!std::isfinite(crossNorm) || crossNorm < 1.e-6)
+    return 0.0;
+
+  Real angle = atan2(crossNorm, dot);
+  if (angle < -PI)
+    angle += 2 * PI;
+  else if (angle > PI)
+    angle -= 2 * PI;
 
   // Use the cross product to get the gradients
   const Vector3 n = ab_cross_cb / crossNorm;
@@ -69,7 +94,7 @@ inline Real dihedralGradient(const Vector3& i, const Vector3& j,
                              const Vector3& k, const Vector3& l, Vector3& iGrad,
                              Vector3& jGrad, Vector3& kGrad, Vector3& lGrad)
 {
-  lGrad = kGrad = jGrad = iGrad = { 0.0, 0.0, 0.0 };
+  lGrad = kGrad = jGrad = iGrad = Vector3::Zero();
 
   // get the bond vectors
   Vector3 ij = j - i;
@@ -138,8 +163,51 @@ inline Real outOfPlaneGradient(const Vector3& point, const Vector3& b,
                                Vector3& aGrad, Vector3& bGrad, Vector3& cGrad,
                                Vector3& dGrad)
 {
-  dGrad = cGrad = bGrad = aGrad = { 0.0, 0.0, 0.0 };
-  return 0.0;
+  dGrad = cGrad = bGrad = aGrad = Vector3::Zero();
+
+  // use outOfPlaneAngle() from angletools.h
+  const Real angle = outOfPlaneAngle(point, b, c, d) * DEG_TO_RAD;
+  const Real sinAngle = sin(angle);
+
+  // Get the bond vectors (point is the central atom)
+  Vector3 ij = b - point;
+  Vector3 ik = c - point;
+  Vector3 il = d - point;
+
+  const Real rij = ij.norm();
+  const Real rik = ik.norm();
+  const Real ril = il.norm();
+  // check if the bond vectors are near zero
+  if (rij < 1e-3 || rik < 1e-3 || ril < 1e-3)
+    return angle;
+
+  // normalize the bond vectors
+  ij = ij / rij;
+  ik = ik / rik;
+  il = il / ril;
+
+  // we also need the angle between the bonds (i.e., j-i-k)
+  // ij and ik are already normalized
+  Real cosTheta = ij.dot(ik);
+  // clamp the cosTheta to -1 to 1
+  cosTheta = std::clamp(cosTheta, -1.0, 1.0);
+  const Real theta = acos(cosTheta);
+  const Real sinTheta = sin(theta);
+  if (std::abs(sinTheta) < 1e-6)
+    return angle;
+
+  // get the cross products
+  Vector3 ik_cross_il = ik.cross(il).stableNormalized();
+  Vector3 ij_cross_il = ij.cross(il).stableNormalized();
+
+  const Real ratio = cosTheta * sinAngle / sinTheta;
+
+  bGrad = -1.0 / (rij * sinTheta) * (ik_cross_il - ij + ik * ratio);
+  cGrad = -1.0 / (rik * sinTheta) * (ij_cross_il - ik + ij * ratio);
+  dGrad = -1.0 / ril * (-ij_cross_il / sinTheta - il * sinAngle);
+  aGrad = -(bGrad + cGrad + dGrad);
+
+  return angle;
 }
 
 } // namespace Avogadro::Calc

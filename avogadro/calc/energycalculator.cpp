@@ -27,7 +27,7 @@ void EnergyCalculator::cleanGradients(TVector& grad)
   unsigned int size = grad.rows();
   // check for overflows -- in case of divide by zero, etc.
   for (unsigned int i = 0; i < size; ++i) {
-    if (!std::isfinite(grad[i]) || std::isnan(grad[i])) {
+    if (!std::isfinite(grad[i])) {
       grad[i] = 0.0;
     }
   }
@@ -103,8 +103,8 @@ Real EnergyCalculator::constraintEnergies(const TVector& x)
       // shouldn't happen - invalid constraint
       continue;
 
-    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
-    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
+    const Vector3d vA = x.segment<3>(3 * a);
+    const Vector3d vB = x.segment<3>(3 * b);
     const Vector3d vAB = vA - vB;
     const Real distance = vAB.norm();
     const Real delta = distance - constraint.value();
@@ -122,9 +122,9 @@ Real EnergyCalculator::constraintEnergies(const TVector& x)
       // shouldn't happen, invalid constraint
       continue;
 
-    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
-    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
-    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
+    const Vector3d vA = x.segment<3>(3 * a);
+    const Vector3d vB = x.segment<3>(3 * b);
+    const Vector3d vC = x.segment<3>(3 * c);
     const Real angle = calculateAngle(vA, vB, vC);
     const Real delta = angle - constraint.value();
 
@@ -142,10 +142,10 @@ Real EnergyCalculator::constraintEnergies(const TVector& x)
       // shouldn't happen, invalid constraint
       continue;
 
-    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
-    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
-    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
-    const Vector3d vD(x[3 * d], x[3 * d + 1], x[3 * d + 2]);
+    const Vector3d vA = x.segment<3>(3 * a);
+    const Vector3d vB = x.segment<3>(3 * b);
+    const Vector3d vC = x.segment<3>(3 * c);
+    const Vector3d vD = x.segment<3>(3 * d);
     const Real angle = calculateDihedral(vA, vB, vC, vD);
     const Real delta = angle - constraint.value();
 
@@ -163,10 +163,10 @@ Real EnergyCalculator::constraintEnergies(const TVector& x)
       // shouldn't happen, invalid constraint
       continue;
 
-    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
-    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
-    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
-    const Vector3d vD(x[3 * d], x[3 * d + 1], x[3 * d + 2]);
+    const Vector3d vA = x.segment<3>(3 * a);
+    const Vector3d vB = x.segment<3>(3 * b);
+    const Vector3d vC = x.segment<3>(3 * c);
+    const Vector3d vD = x.segment<3>(3 * d);
     const Real angle = outOfPlaneAngle(vA, vB, vC, vD);
     const Real delta = angle - constraint.value();
 
@@ -186,20 +186,15 @@ void EnergyCalculator::constraintGradients(const TVector& x, TVector& grad)
       // shouldn't happen - invalid constraint
       continue;
 
-    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
-    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
+    const Vector3d vA = x.segment<3>(3 * a);
+    const Vector3d vB = x.segment<3>(3 * b);
     const Vector3d vAB = vA - vB;
     const Real distance = vAB.norm();
     const Real delta = distance - constraint.value();
     const Real dE = constraint.k() * 2 * delta;
 
-    grad[3 * a] += dE * vAB[0];
-    grad[3 * a + 1] += dE * vAB[1];
-    grad[3 * a + 2] += dE * vAB[2];
-
-    grad[3 * b] -= dE * vAB[0];
-    grad[3 * b + 1] -= dE * vAB[1];
-    grad[3 * b + 2] -= dE * vAB[2];
+    grad.segment<3>(3 * a) += dE * vAB;
+    grad.segment<3>(3 * b) -= dE * vAB;
   }
 
   for (const auto& constraint : m_angleConstraints) {
@@ -211,27 +206,18 @@ void EnergyCalculator::constraintGradients(const TVector& x, TVector& grad)
       // shouldn't happen, invalid constraint
       continue;
 
-    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
-    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
-    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
+    const Vector3d vA = x.segment<3>(3 * a);
+    const Vector3d vB = x.segment<3>(3 * b);
+    const Vector3d vC = x.segment<3>(3 * c);
 
     Vector3d aGrad, bGrad, cGrad;
-    const Real angle = angleGradient(vA, vB, vC, aGrad, bGrad, cGrad);
+    Real angle = angleGradient(vA, vB, vC, aGrad, bGrad, cGrad);
     const Real delta = angle - constraint.value();
     const Real dE = constraint.k() * 2 * delta;
 
-    // update the master gradients
-    grad[3 * a] += dE * aGrad[0];
-    grad[3 * a + 1] += dE * aGrad[1];
-    grad[3 * a + 2] += dE * aGrad[2];
-
-    grad[3 * b] += dE * bGrad[0];
-    grad[3 * b + 1] += dE * bGrad[1];
-    grad[3 * b + 2] += dE * bGrad[2];
-
-    grad[3 * c] += dE * cGrad[0];
-    grad[3 * c + 1] += dE * cGrad[1];
-    grad[3 * c + 2] += dE * cGrad[2];
+    grad.segment<3>(3 * a) += dE * aGrad;
+    grad.segment<3>(3 * b) += dE * bGrad;
+    grad.segment<3>(3 * c) += dE * cGrad;
   }
 
   for (const auto& constraint : m_torsionConstraints) {
@@ -244,32 +230,20 @@ void EnergyCalculator::constraintGradients(const TVector& x, TVector& grad)
       // shouldn't happen, invalid constraint
       continue;
 
-    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
-    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
-    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
-    const Vector3d vD(x[3 * d], x[3 * d + 1], x[3 * d + 2]);
+    const Vector3d vA = x.segment<3>(3 * a);
+    const Vector3d vB = x.segment<3>(3 * b);
+    const Vector3d vC = x.segment<3>(3 * c);
+    const Vector3d vD = x.segment<3>(3 * d);
     Vector3d aGrad, bGrad, cGrad, dGrad;
     const Real angle =
       dihedralGradient(vA, vB, vC, vD, aGrad, bGrad, cGrad, dGrad);
     const Real delta = angle - constraint.value();
     const Real dE = constraint.k() * 2 * delta;
 
-    // update the master gradients
-    grad[3 * a] += dE * aGrad[0];
-    grad[3 * a + 1] += dE * aGrad[1];
-    grad[3 * a + 2] += dE * aGrad[2];
-
-    grad[3 * b] += dE * bGrad[0];
-    grad[3 * b + 1] += dE * bGrad[1];
-    grad[3 * b + 2] += dE * bGrad[2];
-
-    grad[3 * c] += dE * cGrad[0];
-    grad[3 * c + 1] += dE * cGrad[1];
-    grad[3 * c + 2] += dE * cGrad[2];
-
-    grad[3 * d] += dE * dGrad[0];
-    grad[3 * d + 1] += dE * dGrad[1];
-    grad[3 * d + 2] += dE * dGrad[2];
+    grad.segment<3>(3 * a) += dE * aGrad;
+    grad.segment<3>(3 * b) += dE * bGrad;
+    grad.segment<3>(3 * c) += dE * cGrad;
+    grad.segment<3>(3 * d) += dE * dGrad;
   }
 
   for (const auto& constraint : m_outOfPlaneConstraints) {
@@ -283,32 +257,20 @@ void EnergyCalculator::constraintGradients(const TVector& x, TVector& grad)
       // shouldn't happen, invalid constraint
       continue;
 
-    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
-    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
-    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
-    const Vector3d vD(x[3 * d], x[3 * d + 1], x[3 * d + 2]);
+    const Vector3d vA = x.segment<3>(3 * a);
+    const Vector3d vB = x.segment<3>(3 * b);
+    const Vector3d vC = x.segment<3>(3 * c);
+    const Vector3d vD = x.segment<3>(3 * d);
     Vector3d aGrad, bGrad, cGrad, dGrad;
     const Real angle =
       outOfPlaneGradient(vA, vB, vC, vD, aGrad, bGrad, cGrad, dGrad);
     const Real delta = angle - constraint.value();
     const Real dE = constraint.k() * 2 * delta;
 
-    // update the master gradients
-    grad[3 * a] += dE * aGrad[0];
-    grad[3 * a + 1] += dE * aGrad[1];
-    grad[3 * a + 2] += dE * aGrad[2];
-
-    grad[3 * b] += dE * bGrad[0];
-    grad[3 * b + 1] += dE * bGrad[1];
-    grad[3 * b + 2] += dE * bGrad[2];
-
-    grad[3 * c] += dE * cGrad[0];
-    grad[3 * c + 1] += dE * cGrad[1];
-    grad[3 * c + 2] += dE * cGrad[2];
-
-    grad[3 * d] += dE * dGrad[0];
-    grad[3 * d + 1] += dE * dGrad[1];
-    grad[3 * d + 2] += dE * dGrad[2];
+    grad.segment<3>(3 * a) += dE * aGrad;
+    grad.segment<3>(3 * b) += dE * bGrad;
+    grad.segment<3>(3 * c) += dE * cGrad;
+    grad.segment<3>(3 * d) += dE * dGrad;
   }
 }
 
