@@ -1021,10 +1021,19 @@ UFF::UFF() : d(nullptr)
   }
 }
 
-UFF::~UFF() {}
+UFF::~UFF()
+{
+  delete d;
+  d = nullptr;
+}
 
 void UFF::setMolecule(Core::Molecule* mol)
 {
+  if (d != nullptr) {
+    delete d;
+    d = nullptr;
+  }
+
   m_molecule = mol;
 
   if (mol == nullptr) {
@@ -1036,9 +1045,6 @@ void UFF::setMolecule(Core::Molecule* mol)
     return; // nothing to do for single atoms
 
   // start with assigning atom types
-  if (d != nullptr)
-    delete d;
-
   d = new UFFPrivate(mol);
 }
 

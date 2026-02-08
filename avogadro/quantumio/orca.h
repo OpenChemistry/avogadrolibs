@@ -50,6 +50,7 @@ private:
 
   void processLine(std::istream& in, Core::GaussianSet* basis);
   void load(Core::GaussianSet* basis);
+  void clearBasisFunctions();
 
   void parseMCD();
 
