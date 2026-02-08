@@ -105,12 +105,19 @@ QUndoCommand* Editor::mousePressEvent(QMouseEvent* e)
   updatePressedButtons(e, false);
   m_clickPosition = e->pos();
 
+  if (m_layerManager.activeLayerLocked()) {
+    // revert to navigation mode
+    return nullptr;
+  }
+
+  // check if we have modifier keys
+  // if so, revert to navigation mode
+  // e.g., rotate, zoom
+  if (e->modifiers() == Qt::ShiftModifier || e->modifiers() == Qt::AltModifier)
+    return nullptr;
+
   if (m_pressedButtons & Qt::LeftButton) {
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
-    if (m_layerManager.activeLayerLocked()) {
-      e->accept();
-      return nullptr;
-    }
     switch (m_clickedObject.type) {
       case Rendering::InvalidType:
         m_molecule->beginMergeMode(tr("Draw Atom"));

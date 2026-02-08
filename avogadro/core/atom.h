@@ -7,6 +7,7 @@
 #define AVOGADRO_CORE_ATOM_H
 
 #include "avogadrocore.h"
+#include "elements.h"
 #include "vector.h"
 
 namespace Avogadro::Core {
@@ -115,6 +116,11 @@ public:
   void setAtomicNumber(unsigned char num);
   unsigned char atomicNumber() const;
   /** @} */
+
+  /**
+   * @return The mass of this atom
+   */
+  Real mass() const;
 
   /**
    * The 2D position of this atom.
@@ -282,6 +288,13 @@ template <class Molecule_T>
 unsigned char AtomTemplate<Molecule_T>::atomicNumber() const
 {
   return m_molecule->atomicNumber(m_index);
+}
+
+template <class Molecule_T>
+Real AtomTemplate<Molecule_T>::mass() const
+{
+  // TODO: handle isotopes
+  return Elements::mass(atomicNumber());
 }
 
 template <class Molecule_T>

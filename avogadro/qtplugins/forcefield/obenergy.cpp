@@ -193,20 +193,22 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
 
 Real OBEnergy::value(const Eigen::VectorXd& x)
 {
-  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
+      d->m_obmol == nullptr || !d->setup)
     return 0.0; // nothing to do
 
-  // update coordinates in our private OBMol
-  for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
-    Eigen::Vector3d pos(x[i * 3], x[i * 3 + 1], x[i * 3 + 2]);
-    d->m_obmol->GetAtom(i + 1)->SetVector(pos.x(), pos.y(), pos.z());
-  }
+  // update all coordinates at once (SetCoordinates copies the array)
+  d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
 
   double energy = 0.0;
   if (d->m_forceField != nullptr) {
     d->m_forceField->SetCoordinates(*d->m_obmol);
     energy = d->m_forceField->Energy(false);
   }
+
+  // if method is not GAFF, convert to kJ/mol
+  if (m_identifier != "GAFF")
+    energy *= Calc::KCAL_TO_KJ;
 
   // make sure to add in any constraint penalties
   energy += constraintEnergies(x);
@@ -216,29 +218,29 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
 
 void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
+      d->m_obmol == nullptr || !d->setup)
     return;
 
-  // update coordinates in our private OBMol
-  for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
-    Eigen::Vector3d pos(x[i * 3], x[i * 3 + 1], x[i * 3 + 2]);
-    d->m_obmol->GetAtom(i + 1)->SetVector(pos.x(), pos.y(), pos.z());
-  }
+  // update all coordinates at once (SetCoordinates copies the array)
+  d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
 
   if (d->m_forceField != nullptr) {
     d->m_forceField->SetCoordinates(*d->m_obmol);
 
     // make sure gradients are calculated
     double energy = d->m_forceField->Energy(true);
-    for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
-      OBAtom* atom = d->m_obmol->GetAtom(i + 1);
-      OpenBabel::vector3 obGrad = d->m_forceField->GetGradient(atom);
-      grad[3 * i] = obGrad.x();
-      grad[3 * i + 1] = obGrad.y();
-      grad[3 * i + 2] = obGrad.z();
-    }
 
-    grad *= -1; // OpenBabel outputs forces, not grads
+    // GetGradientPtr returns forces (not gradients), so negate
+    auto n = m_molecule->atomCount();
+    Eigen::Map<const Eigen::VectorXd> obForces(
+      d->m_forceField->GetGradientPtr(), 3 * n);
+    grad = -obForces;
+
+    // if method is not GAFF, convert to kJ/mol
+    if (m_identifier != "GAFF")
+      grad *= Calc::KCAL_TO_KJ;
+
     cleanGradients(grad);
     // add in any constraints
     constraintGradients(x, grad);

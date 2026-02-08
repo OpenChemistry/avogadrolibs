@@ -132,12 +132,12 @@ public:
 protected:
   std::string m_residueName;
   Index m_residueId = std::numeric_limits<Index>::max();
-  char m_chainId;
+  char m_chainId = 'A';
   AtomNameMap m_atomNameMap;
-  bool m_heterogen;
-  Vector3ub m_color;
-  bool m_customColorSet;
-  SecondaryStructure m_secondaryStructure;
+  bool m_heterogen = false;
+  Vector3ub m_color = Vector3ub(0, 0, 0);
+  bool m_customColorSet = false;
+  SecondaryStructure m_secondaryStructure = undefined;
 };
 
 } // namespace Avogadro::Core

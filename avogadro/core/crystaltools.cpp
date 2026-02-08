@@ -117,6 +117,9 @@ bool CrystalTools::rotateToStandardOrientation(Molecule& molecule, Options opts)
   // Numerator is determinant of original cell:
   newMat(2, 2) = before.determinant() / denom;
 
+  if (opts & RightHanded && newMat(2, 2) < 0.0)
+    newMat(2, 2) *= -1.0;
+
   return setCellMatrix(molecule, newMat, opts & TransformAtoms);
 }
 

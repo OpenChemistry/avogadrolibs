@@ -32,6 +32,7 @@
 namespace Avogadro {
 
 using QtGui::Molecule;
+using QtPlugins::MolecularModel;
 
 MolecularView::MolecularView(QWidget* parent)
   : QTableView(parent), m_molecule(nullptr), m_model(nullptr)
@@ -61,15 +62,6 @@ void MolecularView::selectionChanged(
 void MolecularView::setMolecule(Molecule* molecule)
 {
   m_molecule = molecule;
-}
-
-void MolecularView::hideEvent(QHideEvent*)
-{
-  if (model()) {
-    model()->deleteLater();
-  }
-
-  this->deleteLater();
 }
 
 void MolecularView::keyPressEvent(QKeyEvent* event)

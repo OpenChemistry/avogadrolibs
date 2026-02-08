@@ -38,6 +38,22 @@ target_link_libraries(AvogadroCalcTests Avogadro::Calc Avogadro::IO
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
 foreach(TestName ${tests})
-  add_test(NAME "Calc-${TestName}"
-    COMMAND AvogadroCalcTests "--gtest_filter=${TestName}Test.*")
+  if(TestName STREQUAL "Gradient")
+    # Gradient tests use multiple suite names in gradienttest.cpp.
+    add_test(NAME "Calc-Gradient-Angle"
+      COMMAND AvogadroCalcTests "--gtest_filter=AngleGradientTest.*")
+    add_test(NAME "Calc-Gradient-Dihedral"
+      COMMAND AvogadroCalcTests "--gtest_filter=DihedralGradientTest.*")
+    add_test(NAME "Calc-Gradient-OutOfPlane"
+      COMMAND AvogadroCalcTests "--gtest_filter=OutOfPlaneGradientTest.*")
+    add_test(NAME "Calc-Gradient-Stress"
+      COMMAND AvogadroCalcTests "--gtest_filter=GradientStressTest.*")
+  elseif(TestName STREQUAL "UFF")
+    # Parameterized test suite name is UffGradientTest.
+    add_test(NAME "Calc-UFF"
+      COMMAND AvogadroCalcTests "--gtest_filter=UffTest/UffGradientTest.*")
+  else()
+    add_test(NAME "Calc-${TestName}"
+      COMMAND AvogadroCalcTests "--gtest_filter=${TestName}Test.*")
+  endif()
 endforeach()

@@ -432,9 +432,13 @@ TEST_F(MoleculeTest, mass)
   Atom a = mol.addAtom(8);
   mol.addAtom(1);
   mol.addAtom(1);
-  EXPECT_DOUBLE_EQ(mol.mass(), 18.01508);
+  double expectedWater =
+    Avogadro::Core::Elements::mass(8) + 2.0 * Avogadro::Core::Elements::mass(1);
+  EXPECT_DOUBLE_EQ(mol.mass(), expectedWater);
   a.setAtomicNumber(9);
-  EXPECT_DOUBLE_EQ(mol.mass(), 21.01408);
+  double expectedFH2 =
+    Avogadro::Core::Elements::mass(9) + 2.0 * Avogadro::Core::Elements::mass(1);
+  EXPECT_DOUBLE_EQ(mol.mass(), expectedFH2);
 }
 
 TEST_F(MoleculeTest, centerOfGeometry)
@@ -486,37 +490,30 @@ TEST_F(MoleculeTest, centerOfMass)
   mol.setAtomPosition3d(a.index(), Avogadro::Vector3(2.0, 0.0, 0.0));
   center = mol.centerOfMass();
   EXPECT_DOUBLE_EQ(center.x(),
-                   (2.0 * Avogadro::Core::Elements::mass(2) / mol.atomCount()) /
-                     mol.mass());
+                   (2.0 * Avogadro::Core::Elements::mass(2)) / mol.mass());
   EXPECT_DOUBLE_EQ(center.y(), 0.0);
   EXPECT_DOUBLE_EQ(center.z(), 0.0);
 
   a = mol.addAtom(3);
   mol.setAtomPosition3d(a.index(), Avogadro::Vector3(1.0, 3.0, -4.0));
   center = mol.centerOfMass();
-  EXPECT_DOUBLE_EQ(center.x(), ((2.0 * Avogadro::Core::Elements::mass(2) +
-                                 1.0 * Avogadro::Core::Elements::mass(3)) /
-                                mol.atomCount()) /
+  EXPECT_DOUBLE_EQ(center.x(), (2.0 * Avogadro::Core::Elements::mass(2) +
+                                1.0 * Avogadro::Core::Elements::mass(3)) /
                                  mol.mass());
   EXPECT_DOUBLE_EQ(center.y(),
-                   (3.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) /
-                     mol.mass());
-  EXPECT_DOUBLE_EQ(
-    center.z(),
-    (-4.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
+                   (3.0 * Avogadro::Core::Elements::mass(3)) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.z(),
+                   (-4.0 * Avogadro::Core::Elements::mass(3)) / mol.mass());
 
   a8.setAtomicNumber(9);
   center = mol.centerOfMass();
-  EXPECT_DOUBLE_EQ(center.x(), ((2.0 * Avogadro::Core::Elements::mass(2) +
-                                 1.0 * Avogadro::Core::Elements::mass(3)) /
-                                mol.atomCount()) /
+  EXPECT_DOUBLE_EQ(center.x(), (2.0 * Avogadro::Core::Elements::mass(2) +
+                                1.0 * Avogadro::Core::Elements::mass(3)) /
                                  mol.mass());
   EXPECT_DOUBLE_EQ(center.y(),
-                   (3.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) /
-                     mol.mass());
-  EXPECT_DOUBLE_EQ(
-    center.z(),
-    (-4.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
+                   (3.0 * Avogadro::Core::Elements::mass(3)) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.z(),
+                   (-4.0 * Avogadro::Core::Elements::mass(3)) / mol.mass());
 }
 
 TEST_F(MoleculeTest, radius)

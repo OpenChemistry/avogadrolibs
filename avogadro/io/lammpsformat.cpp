@@ -8,10 +8,12 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <cstdint>
 #include <istream>
 #include <ostream>
 #include <sstream>
@@ -31,14 +33,15 @@ using Core::CrystalTools;
 using Core::Elements;
 using Core::lexicalCast;
 using Core::Molecule;
+using Core::SpaceGroups;
 using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
 
 bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
-  size_t numAtoms = 0, timestep = 0, x_idx = -1, y_idx = -1, z_idx = -1,
-         type_idx = -1, id_idx = -1;
+  size_t numAtoms = 0, timestep = 0, x_idx = SIZE_MAX, y_idx = SIZE_MAX,
+         z_idx = SIZE_MAX, type_idx = SIZE_MAX, id_idx = SIZE_MAX;
   double x_min = 0, x_max = 0, y_min = 0, y_max = 0, z_min = 0, z_max = 0,
          tilt_xy = 0, tilt_xz = 0, tilt_yz = 0, scale_x = 0., scale_y = 0.,
          scale_z = 0.;
@@ -98,12 +101,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     z_max = lexicalCast<double>(box_bounds_z.at(1)).value_or(0.0);
     tilt_yz = lexicalCast<double>(box_bounds_z.at(2)).value_or(0.0);
 
-    x_min -= std::min(std::min(std::min(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
-                      (double)0);
-    x_max -= std::max(std::max(std::max(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
-                      (double)0);
-    y_min -= std::min(tilt_yz, (double)0);
-    y_max -= std::max(tilt_yz, (double)0);
+    x_min -= std::min({ tilt_xy, tilt_xz, tilt_xy + tilt_xz, 0.0 });
+    x_max -= std::max({ tilt_xy, tilt_xz, tilt_xy + tilt_xz, 0.0 });
+    y_min -= std::min(tilt_yz, 0.0);
+    y_max -= std::max(tilt_yz, 0.0);
   }
 
   // Else if unit cell is orthogonal, tilt factors are zero
@@ -159,6 +160,12 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     } else if (labels[i] == "id") {
       id_idx = i;
     }
+  }
+
+  if (x_idx == SIZE_MAX || y_idx == SIZE_MAX || z_idx == SIZE_MAX ||
+      type_idx == SIZE_MAX) {
+    appendError("Failed to parse attributes: " + buffer);
+    return false;
   }
 
   // Parse atoms
@@ -238,11 +245,11 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   size_t numAtoms2;
   int coordSet = 1;
   while (getline(inStream, buffer) && trimmed(buffer) == "ITEM: TIMESTEP") {
-    x_idx = -1;
-    y_idx = -1;
-    z_idx = -1;
-    type_idx = -1;
-    id_idx = -1;
+    x_idx = SIZE_MAX;
+    y_idx = SIZE_MAX;
+    z_idx = SIZE_MAX;
+    type_idx = SIZE_MAX;
+    id_idx = SIZE_MAX;
     x_min = 0;
     x_max = 0;
     y_min = 0;
@@ -299,12 +306,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       z_max = lexicalCast<double>(box_bounds_z.at(1)).value_or(0.0);
       tilt_yz = lexicalCast<double>(box_bounds_z.at(2)).value_or(0.0);
 
-      x_min -= std::min(std::min(std::min(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
-                        (double)0);
-      x_max -= std::max(std::max(std::max(tilt_xy, tilt_xz), tilt_xy + tilt_xz),
-                        (double)0);
-      y_min -= std::min(tilt_yz, (double)0);
-      y_max -= std::max(tilt_yz, (double)0);
+      x_min -= std::min({ tilt_xy, tilt_xz, tilt_xy + tilt_xz, 0.0 });
+      x_max -= std::max({ tilt_xy, tilt_xz, tilt_xy + tilt_xz, 0.0 });
+      y_min -= std::min(tilt_yz, 0.0);
+      y_max -= std::max(tilt_yz, 0.0);
     }
 
     // Else if unit cell is orthogonal, tilt factors are zero
@@ -356,6 +361,12 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       } else if (labels[i] == "id") {
         id_idx = i;
       }
+    }
+
+    if (x_idx == SIZE_MAX || y_idx == SIZE_MAX || z_idx == SIZE_MAX ||
+        type_idx == SIZE_MAX) {
+      appendError("Failed to parse attributes: " + buffer);
+      return false;
     }
 
     Array<Vector3> positions;
@@ -410,6 +421,7 @@ std::vector<std::string> LammpsTrajectoryFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("dump");
+  ext.emplace_back("lammpstrj");
   return ext;
 }
 
@@ -428,7 +440,10 @@ bool LammpsDataFormat::read(std::istream&, Core::Molecule&)
 bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 {
   Core::Molecule mol2(mol);
-  CrystalTools::rotateToStandardOrientation(mol2, CrystalTools::TransformAtoms);
+  // enforce right-handed cell
+  // https://docs.lammps.org/read_data.html#header-specification-of-the-simulation-box-size-and-shape
+  CrystalTools::rotateToStandardOrientation(mol2, CrystalTools::TransformAtoms |
+                                                    CrystalTools::RightHanded);
 
   // Title
   if (mol2.data("name").toString().length())
@@ -440,17 +455,38 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   double xmin, xmax, ymin, ymax, zmin, zmax;
   xmin = xmax = ymin = ymax = zmin = zmax = 0.0;
 
-  size_t numAtoms = mol2.atomCount();
+  // Filter out translational duplicates if there's a unit cell
+  Array<Index> uniqueIndices = SpaceGroups::translationalUniqueAtoms(mol2);
+  bool useFiltering = !uniqueIndices.empty();
+  if (!useFiltering) {
+    // No unit cell or no filtering needed - use all atoms
+    for (Index i = 0; i < mol2.atomCount(); ++i)
+      uniqueIndices.push_back(i);
+  }
+
+  // Build mapping from old indices to new indices (for bonds)
+  std::map<Index, Index> indexMap;
+  for (Index newIdx = 0; newIdx < uniqueIndices.size(); ++newIdx) {
+    indexMap[uniqueIndices[newIdx]] = newIdx;
+  }
+
+  size_t numAtoms = uniqueIndices.size();
   outStream << to_string(numAtoms) << " atoms\n";
 
-  size_t numBonds = mol2.bondCount();
+  // Count bonds where both atoms are in the unique set
+  size_t numBonds = 0;
+  for (Index i = 0; i < mol2.bondCount(); ++i) {
+    Bond b = mol2.bond(i);
+    if (indexMap.count(b.atom1().index()) && indexMap.count(b.atom2().index()))
+      ++numBonds;
+  }
   outStream << to_string(numBonds) << " bonds\n";
 
   // A map of atomic symbols to their quantity.
   size_t idx = 1;
-  Array<unsigned char> atomicNumbers = mol2.atomicNumbers();
   std::map<unsigned char, size_t> composition;
-  for (unsigned char& atomicNumber : atomicNumbers) {
+  for (Index atomIdx : uniqueIndices) {
+    unsigned char atomicNumber = mol2.atomicNumber(atomIdx);
     if (composition.find(atomicNumber) == composition.end()) {
       composition[atomicNumber] = idx++;
     }
@@ -470,14 +506,15 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   if (numAtoms) {
     // Atomic coordinates
     atomStream << "Atoms\n\n";
-    for (Index i = 0; i < numAtoms; ++i) {
-      Atom atom = mol2.atom(i);
+    Index outputIdx = 0;
+    for (Index atomIdx : uniqueIndices) {
+      Atom atom = mol2.atom(atomIdx);
       if (!atom.isValid()) {
         appendError("Internal error: Atom invalid.");
         return false;
       }
       Vector3 coords = atom.position3d();
-      if (i == 0) {
+      if (outputIdx == 0) {
         xmin = coords[0];
         xmax = coords[0];
         ymin = coords[1];
@@ -496,56 +533,70 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
       const unsigned int lineSize = 256;
       char atomline[lineSize];
       snprintf(atomline, lineSize - 1, "%-*d %d %10f %10f %10f\n",
-               static_cast<int>(log(numAtoms)) + 1, static_cast<int>(i + 1),
-               static_cast<int>(composition[atomicNumbers[i]]), coords.x(),
+               static_cast<int>(log(numAtoms)) + 1,
+               static_cast<int>(outputIdx + 1),
+               static_cast<int>(composition[atom.atomicNumber()]), coords.x(),
                coords.y(), coords.z());
       atomStream << atomline;
+      ++outputIdx;
     }
 
     atomStream << std::endl << std::endl;
   }
 
   if (numBonds) {
-    // Bonds
+    // Bonds - only include bonds where both atoms are in the unique set
     std::map<std::pair<unsigned char, unsigned char>, int> bondIds;
     int bondItr = 1;
     bondStream << "Bonds\n\n";
     const unsigned int lineSize = 256;
-    for (Index i = 0; i < numBonds; ++i) {
-      char bondline[lineSize];
+    Index bondOutputIdx = 0;
+    for (Index i = 0; i < mol2.bondCount(); ++i) {
       Bond b = mol2.bond(i);
+      // Skip bonds where either atom was filtered out
+      auto it1 = indexMap.find(b.atom1().index());
+      auto it2 = indexMap.find(b.atom2().index());
+      if (it1 == indexMap.end() || it2 == indexMap.end())
+        continue;
+
+      // Use remapped indices (1-based for output)
+      Index newIdx1 = it1->second + 1;
+      Index newIdx2 = it2->second + 1;
+
+      char bondline[lineSize];
       if (bondIds.find(std::make_pair(b.atom1().atomicNumber(),
                                       b.atom2().atomicNumber())) !=
           bondIds.end()) {
         snprintf(bondline, lineSize - 1, "%-*d %7d %7d %7d\n",
-                 static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
+                 static_cast<int>(log(numAtoms) + 1),
+                 static_cast<int>(bondOutputIdx + 1),
                  bondIds[std::make_pair(b.atom1().atomicNumber(),
                                         b.atom2().atomicNumber())],
-                 static_cast<int>(b.atom1().index() + 1),
-                 static_cast<int>(b.atom2().index() + 1));
+                 static_cast<int>(newIdx1), static_cast<int>(newIdx2));
         bondStream << bondline;
       } else if (bondIds.find(std::make_pair(b.atom2().atomicNumber(),
                                              b.atom1().atomicNumber())) !=
                  bondIds.end()) {
         snprintf(bondline, lineSize - 1, "%-*d %7d %7d %7d\n",
-                 static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
+                 static_cast<int>(log(numAtoms) + 1),
+                 static_cast<int>(bondOutputIdx + 1),
                  bondIds[std::make_pair(b.atom1().atomicNumber(),
                                         b.atom2().atomicNumber())],
-                 static_cast<int>(b.atom2().index() + 1),
-                 static_cast<int>(b.atom1().index() + 1));
+                 static_cast<int>(newIdx2), static_cast<int>(newIdx1));
         bondStream << bondline;
       } else {
         bondIds.insert(std::make_pair(
           std::make_pair(b.atom1().atomicNumber(), b.atom2().atomicNumber()),
           bondItr++));
         snprintf(bondline, lineSize - 1, "%-*d %7d %7d %7d\n",
-                 static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
+                 static_cast<int>(log(numAtoms) + 1),
+                 static_cast<int>(bondOutputIdx + 1),
                  bondIds[std::make_pair(b.atom1().atomicNumber(),
                                         b.atom2().atomicNumber())],
-                 static_cast<int>(b.atom1().index() + 1),
-                 static_cast<int>(b.atom2().index() + 1));
+                 static_cast<int>(newIdx1), static_cast<int>(newIdx2));
         bondStream << bondline;
       }
+      ++bondOutputIdx;
     }
   }
 

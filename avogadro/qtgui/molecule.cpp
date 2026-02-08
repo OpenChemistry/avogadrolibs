@@ -98,8 +98,12 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d,
                                      Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size())) {
-    m_atomUniqueIds.push_back(atomCount());
-    return Core::Molecule::addAtom(number, position3d);
+    // Add atom using our own addAtom (which handles unique IDs)
+    // then set the position
+    auto atom = Molecule::addAtom(number);
+    if (atom.isValid())
+      atom.setPosition3d(position3d);
+    return atom;
   } else {
     auto atom = Molecule::addAtom(number, uniqueId);
     if (atom.isValid())
@@ -115,6 +119,7 @@ bool Molecule::removeAtom(Index index)
   Index uniqueId = findAtomUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
+
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
   auto newSize = static_cast<Index>(atomCount() - 1);
@@ -162,6 +167,7 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
                                      unsigned char order)
 {
   m_bondUniqueIds.push_back(bondCount());
+
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
 
@@ -237,6 +243,7 @@ bool Molecule::removeBond(Index index)
   Index uniqueId = findBondUniqueId(index);
   if (uniqueId == MaxIndex)
     return false;
+
   m_bondUniqueIds[uniqueId] = MaxIndex; // Unique ID of a bond that was removed.
 
   auto newSize = static_cast<Index>(bondCount() - 1);
@@ -299,9 +306,10 @@ void Molecule::emitUpdate() const
 
 Index Molecule::findAtomUniqueId(Index index) const
 {
-  for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i)
+  for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i) {
     if (m_atomUniqueIds[i] == index)
       return i;
+  }
   return MaxIndex;
 }
 
@@ -320,28 +328,8 @@ RWMolecule* Molecule::undoMolecule()
 
 QString Molecule::formattedFormula() const
 {
-  // we're re-implmenting it here to enable isotopes
-  std::map<std::string, size_t> componentsCount;
-
-  // loop through the atoms
-  for (Index i = 0; i < atomCount(); ++i) {
-    unsigned short atNumber = atomicNumber(i);
-    std::string atomSymbol(Core::Elements::symbol(atNumber));
-    unsigned short iso = isotope(i);
-    if (iso > 0) {
-      if (atNumber == 1 && iso == 1)
-        atomSymbol = "H";
-      else if (atNumber == 1 && iso == 2)
-        atomSymbol = "D";
-      else if (atNumber == 1 && iso == 3)
-        atomSymbol = "T";
-      else
-        // eg. 13C
-        atomSymbol = std::to_string(iso) + atomSymbol;
-    }
-
-    componentsCount[atomSymbol]++;
-  }
+  // Get composition from core (handles isotopes and unit cell fractions)
+  std::map<std::string, size_t> componentsCount = formulaComposition();
 
   QString formula;
   // loop through the components

@@ -73,7 +73,7 @@ TEST(InputGeneratorWidgetTest, exercise)
   // Set a test filepath
   FileBrowseWidget* testFilePathWidget(
     widget.findChild<FileBrowseWidget*>("Test FilePath"));
-  QString testFilePath(AVOGADRO_DATA "/data/ethane.cml");
+  QString testFilePath(AVOGADRO_DATA "/data/cml/ethane.cml");
   testFilePathWidget->setFileName(testFilePath);
 
   // Show the widget so that events are processed
@@ -106,6 +106,9 @@ TEST(InputGeneratorWidgetTest, exercise)
   defaultsButton->click();
   flushEvents();
   EXPECT_TRUE(testFilePathWidget->fileName().isEmpty());
+  // Re-fetch the text edit in case the widget was recreated during regeneration
+  filePathEdit = widget.findChild<QTextEdit*>("job.testFilePath");
+  ASSERT_TRUE(filePathEdit != nullptr);
   EXPECT_EQ(filePathEdit->document()->toPlainText().toStdString(),
             "Reference file '' does not exist."s);
 

@@ -73,6 +73,18 @@ void Layer::clear()
   m_activeLayer = m_maxLayer = 0;
 }
 
+void Layer::resize(size_t count)
+{
+  if (count == m_atomAndLayers.size())
+    return;
+  if (count < m_atomAndLayers.size()) {
+    m_atomAndLayers.resize(count);
+  } else {
+    // Default new atoms to the active layer
+    m_atomAndLayers.resize(count, m_activeLayer);
+  }
+}
+
 size_t Layer::activeLayer() const
 {
   return m_activeLayer;

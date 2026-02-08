@@ -57,8 +57,7 @@ DistanceMatrix::DistanceMatrix(size_t size)
   memset(m_values, 0, size * size * sizeof(size_t));
 }
 
-[[maybe_unused]]
-DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
+[[maybe_unused]] DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
   : m_size(other.m_size),
     m_values(other.m_size ? new size_t[other.m_size * other.m_size] : nullptr)
 {
@@ -67,8 +66,7 @@ DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
               m_values);
 }
 
-[[maybe_unused]]
-DistanceMatrix& DistanceMatrix::operator=(DistanceMatrix other)
+[[maybe_unused]] DistanceMatrix& DistanceMatrix::operator=(DistanceMatrix other)
 {
   // will use friend swap function via Argument Dependent Lookup
   swap(*this, other);
@@ -359,7 +357,9 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
 {
   size_t n = graph.size();
 
-  size_t ringCount = graph.vertexCount() - graph.edgeCount() + 1;
+  if (graph.edgeCount() < graph.vertexCount())
+    return std::vector<std::vector<size_t>>();
+  size_t ringCount = graph.edgeCount() - graph.vertexCount() + 1;
   if (ringCount == 0)
     return std::vector<std::vector<size_t>>();
 

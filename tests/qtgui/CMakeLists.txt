@@ -17,13 +17,13 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  ElementTranslator
   GenericHighlighter
   HydrogenTools
-  # GitHub is showing this as a free() bug
-  # TODO: Fix this
-  # Molecule
+  MeshGenerator
+  Molecule
   RWMolecule
-  )
+)
 
 if (BUILD_MOLEQUEUE)
   # Pull in MoleQueue
@@ -37,11 +37,13 @@ endif()
 
 if(Python3_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
-# FIXME: These tests are broken
-#    FileBrowseWidget
-#    InputGenerator
-#    InputGeneratorWidget
+    # these are still somewhat broken
+    # but it's not crucial
+    #FileBrowseWidget
+    #InputGenerator
+    #InputGeneratorWidget
   )
+  list(APPEND MoleQueueLink Avogadro::MoleQueue)
 endif()
 
 # Build up the source file names.

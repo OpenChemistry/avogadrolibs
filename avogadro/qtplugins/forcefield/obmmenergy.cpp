@@ -257,6 +257,10 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
     }
   }
 
+  // if method is not GAFF, convert to kJ/mol
+  if (m_identifier != "GAFF")
+    energy *= Calc::KCAL_TO_KJ;
+
   energy += constraintEnergies(x);
   return energy; // if conversion fails, returns 0.0
 }
@@ -304,6 +308,10 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   grad *= -1; // OpenBabel outputs forces, not grads
 
   cleanGradients(grad);
+  // if method is not GAFF, convert to kJ/mol
+  if (m_identifier != "GAFF")
+    grad *= Calc::KCAL_TO_KJ;
+
   constraintGradients(x, grad);
 }
 

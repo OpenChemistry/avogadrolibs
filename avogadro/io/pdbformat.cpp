@@ -55,10 +55,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       break;
 
     if (startsWith(buffer, "ENDMDL")) {
+      // For the first frame (coordSet == 0), positions are stored directly
+      // in the molecule, not in the positions array
       if (coordSet == 0) {
         mol.setCoordinate3d(mol.atomPositions3d(), coordSet++);
-        positions.reserve(mol.atomCount());
-      } else {
+      } else if (!positions.empty()) {
         mol.setCoordinate3d(positions, coordSet++);
         positions.clear();
       }
@@ -237,7 +238,10 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
       int bCoords[] = { 11, 16, 21, 26 };
       for (int i = 0; i < 4; i++) {
-        if (trimmed(buffer.substr(bCoords[i], 5)) == "")
+        // Check if buffer is long enough for this column
+        if (static_cast<int>(buffer.length()) < bCoords[i] + 5)
+          break;
+        if (trimmed(buffer.substr(bCoords[i], 5)).empty())
           break;
 
         else {
@@ -259,7 +263,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
             auto aIndex = static_cast<Avogadro::Index>(a);
             auto bIndex = static_cast<Avogadro::Index>(b);
             if (aIndex < mol.atomCount() && bIndex < mol.atomCount()) {
-              mol.Avogadro::Core::Molecule::addBond(aIndex, bIndex, 1);
+              mol.addBond(aIndex, bIndex, 1);
             } else {
               appendError("Invalid bond connection: " + std::to_string(a) +
                           " - " + std::to_string(b));
@@ -273,6 +277,12 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   if (mol.atomCount() == 0) {
     appendError("No atoms found in this file.");
     return false;
+  }
+
+  if (!positions.empty()) {
+    // This handles the last set of positions if the file doesn't end with
+    // ENDMDL
+    mol.setCoordinate3d(positions, coordSet);
   }
 
   int count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;

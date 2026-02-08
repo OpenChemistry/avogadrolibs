@@ -8,6 +8,7 @@
 
 #include <avogadro/core/vector.h>
 
+#include <algorithm>
 #include <cmath>
 
 namespace Avogadro {
@@ -91,28 +92,40 @@ inline Real calculateDihedral(const Vector3& v1, const Vector3& v2,
 }
 
 /**
- * Calculate the out-of-plane angle for a point in space.
- * @param point The point to calculate the angle for.
- * @param b The first point in the plane.
- * @param c The second point in the plane.
- * @param d The third point in the plane.
+ * Calculate the Wilson out-of-plane angle for a central atom.
+ * Uses the Wilson angle definition:
+ *   sin(chi) = (u1 x u2) . u3 / |u1 x u2|
+ * where u1, u2, u3 are unit vectors from the central atom to b, c, d.
+ * @param point The central atom.
+ * @param b The first surrounding atom.
+ * @param c The second surrounding atom.
+ * @param d The third surrounding atom (out-of-plane atom).
  * @return The out-of-plane angle in degrees.
  */
 inline Real outOfPlaneAngle(const Vector3& point, const Vector3& b,
                             const Vector3& c, const Vector3& d)
 {
-  Real angle = 0.0;
+  Vector3 u1 = b - point;
+  Vector3 u2 = c - point;
+  Vector3 u3 = d - point;
 
-  Vector3 bc = b - c;
-  Vector3 cd = c - d;
+  const Real r1 = u1.norm();
+  const Real r2 = u2.norm();
+  const Real r3 = u3.norm();
+  if (r1 < 1e-10 || r2 < 1e-10 || r3 < 1e-10)
+    return 0.0;
 
-  Vector3 normal = bc.cross(cd);
-  Vector3 ac = point - c;
-  // we can get the angle by taking the dot product of the normal
-  // with the vector from the point to the center of the triangle
-  Real theta = std::acos(ac.dot(normal) / (ac.norm() * normal.norm()));
-  angle = 90.0 - (theta * RAD_TO_DEG_D);
-  return angle;
+  u1 /= r1;
+  u2 /= r2;
+  u3 /= r3;
+
+  const Vector3 n = u1.cross(u2);
+  const Real sinTheta = n.norm();
+  if (sinTheta < 1e-10)
+    return 0.0;
+
+  Real sinChi = std::clamp(n.dot(u3) / sinTheta, -1.0, 1.0);
+  return std::asin(sinChi) * RAD_TO_DEG_D;
 }
 
 } // namespace Avogadro

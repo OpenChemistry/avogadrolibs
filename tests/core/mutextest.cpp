@@ -21,7 +21,7 @@ TEST(MutexTest, lock)
   EXPECT_EQ(array[4], 1);
 }
 
-TEST(MutexText, tryLock)
+TEST(MutexTest, tryLock)
 {
   Mutex mutex;
 

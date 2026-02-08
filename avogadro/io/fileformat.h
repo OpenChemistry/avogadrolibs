@@ -124,7 +124,8 @@ public:
    * @param molecule The molecule the data will be read into.
    * @return True on success, false on failure.
    */
-  virtual bool read(std::istream& in, Core::Molecule& molecule) = 0;
+  [[nodiscard]] virtual bool read(std::istream& in,
+                                  Core::Molecule& molecule) = 0;
 
   /**
    * @brief Write to the given @p out stream the contents of @p molecule.
@@ -132,7 +133,8 @@ public:
    * @param molecule The contents of this molecule will be written to output.
    * @return True on success, false on failure.
    */
-  virtual bool write(std::ostream& out, const Core::Molecule& molecule) = 0;
+  [[nodiscard]] virtual bool write(std::ostream& out,
+                                   const Core::Molecule& molecule) = 0;
 
   /**
    * @brief Read the given @p fileName and load it into @p molecule.

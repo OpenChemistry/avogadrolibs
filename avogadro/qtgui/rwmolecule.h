@@ -614,9 +614,12 @@ public:
    * Fill unit cell using transforms for the space group. Changes are emitted.
    * @param hallNumber The hall number to be used for transforming the cell.
    * @param cartTol Cartesian tolerance for comparing atom positions.
+   * @param allCopies If true, all copies will be filled (i.e. edges and
+   * corners)
    * @return True if the algorithm succeeded, and false if it failed.
    */
-  bool fillUnitCell(unsigned short hallNumber, double cartTol = 1e-5);
+  bool fillUnitCell(unsigned short hallNumber, double cartTol = 1e-5,
+                    bool allCopies = false);
 
   /**
    * Use transforms to reduce a cell to its asymmetric unit. Changes are

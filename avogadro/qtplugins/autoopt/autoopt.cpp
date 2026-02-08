@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "autoopt.h"
+#include "csvrthermostat.h"
 
 #include <avogadro/calc/energymanager.h>
 #include <avogadro/calc/lennardjones.h>
@@ -31,6 +32,7 @@
 #include <QAction>
 #include <QFormLayout>
 #include <QComboBox>
+#include <QDoubleSpinBox>
 #include <QPushButton>
 #include <QSettings>
 #include <QElapsedTimer>
@@ -80,9 +82,16 @@ AutoOpt::AutoOpt(QObject* parent_)
 
   // used to run the optimization step
   connect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
+
+  // set up the the thermostat
+  m_thermostat =
+    new CSVRThermostat(m_temperature, m_timeStep, m_timeStep * 200.0);
 }
 
-AutoOpt::~AutoOpt() {}
+AutoOpt::~AutoOpt()
+{
+  delete m_thermostat;
+}
 
 void AutoOpt::setIcon(bool darkTheme)
 {
@@ -92,6 +101,20 @@ void AutoOpt::setIcon(bool darkTheme)
     m_activateAction->setIcon(QIcon(":/icons/autoopt.svg"));
 }
 
+void setMasses(Eigen::ArrayXd& masses, const QtGui::Molecule* mol)
+{
+  masses.resize(mol->atomCount() * 3); // 3N to match coordinates
+  for (unsigned int i = 0; i < mol->atomCount(); i++) {
+    Real mass = mol->atom(i).mass();
+    if (mass < 0.5)
+      mass = 1.0; // for dummy atoms
+
+    masses[i * 3] = mass;
+    masses[i * 3 + 1] = mass;
+    masses[i * 3 + 2] = mass;
+  }
+}
+
 void AutoOpt::setMolecule(QtGui::Molecule* mol)
 {
   if (mol != nullptr) {
@@ -99,6 +122,8 @@ void AutoOpt::setMolecule(QtGui::Molecule* mol)
     // connect to any molecule changes
     connect(mol, SIGNAL(changed(unsigned int)),
             SLOT(moleculeChanged(unsigned int)));
+
+    setMasses(m_masses, mol);
   }
 }
 
@@ -107,6 +132,7 @@ void AutoOpt::moleculeChanged(unsigned int changes)
   // qDebug() << "molecule changed" << changes;
   if (m_running && (changes != (Molecule::Atoms | Molecule::Moved))) {
     // restart
+    stop();
     start();
   }
 }
@@ -120,6 +146,16 @@ QWidget* AutoOpt::toolWidget() const
 
     // set up a form layout
     QFormLayout* form = new QFormLayout(m_toolWidget);
+
+    QComboBox* taskComboBox = new QComboBox();
+    taskComboBox->setObjectName("taskComboBox");
+    taskComboBox->addItem(tr("Optimize"));
+    taskComboBox->addItem(tr("Dynamics"));
+    taskComboBox->setCurrentIndex(0);
+    connect(taskComboBox, &QComboBox::currentIndexChanged, this,
+            &AutoOpt::taskChanged);
+    form->addRow(tr("Task:"), taskComboBox);
+
     // method combo box
     QComboBox* methodComboBox = new QComboBox();
     methodComboBox->setObjectName("methodComboBox");
@@ -145,6 +181,34 @@ QWidget* AutoOpt::toolWidget() const
             &AutoOpt::methodChanged);
     form->addRow(tr("Method:"), methodComboBox);
 
+    // add a temperature double spin box for dynamics
+    QDoubleSpinBox* temperatureSpinBox = new QDoubleSpinBox();
+    temperatureSpinBox->setObjectName("temperatureSpinBox");
+    temperatureSpinBox->setRange(0.0, 1000.0);
+    temperatureSpinBox->setSingleStep(1.0);
+    temperatureSpinBox->setDecimals(1);
+    temperatureSpinBox->setSuffix(tr(" K"));
+    temperatureSpinBox->setValue(300.0);
+    connect(temperatureSpinBox, &QDoubleSpinBox::valueChanged, this,
+            &AutoOpt::temperatureChanged);
+    form->addRow(tr("Temperature:"), temperatureSpinBox);
+
+    // add a timestep double spin box for dynamics
+    QDoubleSpinBox* timeStepSpinBox = new QDoubleSpinBox();
+    timeStepSpinBox->setObjectName("timeStepSpinBox");
+    timeStepSpinBox->setRange(0.1, 10.0);
+    timeStepSpinBox->setSingleStep(0.5);
+    timeStepSpinBox->setDecimals(1);
+    timeStepSpinBox->setSuffix(tr(" fs"));
+    timeStepSpinBox->setValue(1.0);
+    connect(timeStepSpinBox, &QDoubleSpinBox::valueChanged, this,
+            &AutoOpt::timeStepChanged);
+    form->addRow(tr("Timestep:"), timeStepSpinBox);
+
+    // disable the temperature and timestep for now
+    temperatureSpinBox->setEnabled(false);
+    timeStepSpinBox->setEnabled(false);
+
     // start stop button
     QPushButton* startStopButton = new QPushButton(tr("Start"));
     startStopButton->setObjectName("startStopButton");
@@ -155,6 +219,40 @@ QWidget* AutoOpt::toolWidget() const
     m_toolWidget->setLayout(form);
   }
   return m_toolWidget;
+}
+
+void AutoOpt::taskChanged(int index)
+{
+  m_task = index;
+
+  auto temperatureSpinBox =
+    m_toolWidget->findChild<QDoubleSpinBox*>("temperatureSpinBox");
+  auto timeStepSpinBox =
+    m_toolWidget->findChild<QDoubleSpinBox*>("timeStepSpinBox");
+
+  bool enabled = (index == 1);
+  temperatureSpinBox->setEnabled(enabled);
+  timeStepSpinBox->setEnabled(enabled);
+
+  if (index == 1) { // dynamics
+    // enable the temperature and timestep
+    disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
+    connect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
+  } else {
+    // disable the temperature and timestep
+    disconnect(&m_timer, &QTimer::timeout, this, &AutoOpt::dynamicsStep);
+    connect(&m_timer, &QTimer::timeout, this, &AutoOpt::optimizeStep);
+  }
+}
+
+void AutoOpt::temperatureChanged(double temp)
+{
+  m_temperature = temp;
+}
+
+void AutoOpt::timeStepChanged(double timeStep)
+{
+  m_timeStep = timeStep;
 }
 
 void AutoOpt::startStop()
@@ -183,6 +281,8 @@ void AutoOpt::start()
 
   m_method = Calc::EnergyManager::instance().model(m_currentMethod);
 
+  m_molecule->beginMergeMode("AutoOpt");
+
   if (m_method != nullptr) {
     m_method->setMolecule(&m_molecule->molecule());
     m_energy = calculateEnergy();
@@ -191,12 +291,42 @@ void AutoOpt::start()
     qDebug() << "Initial energy:" << m_energy;
 #endif
   }
+  // set up masses first (needed for velocity initialization)
+  setMasses(m_masses, &m_molecule->molecule());
+
+  // set the initial velocities
+  m_velocities.resize(m_molecule->atomCount() * 3);
+  m_acceleration.resize(m_molecule->atomCount() * 3);
+  m_acceleration.setZero();
+  m_firstStep = true; // reset for Velocity Verlet
+  if (m_task == 1) {
+    // For dynamics, initialize to Maxwell-Boltzmann distribution
+    m_thermostat->setTargetTemperature(m_temperature);
+
+    // Count free coordinates from the frozen atom mask
+    auto mask = m_molecule->molecule().frozenAtomMask();
+    int freeDOF = 3 * m_molecule->atomCount();
+    if (mask.rows() == freeDOF)
+      freeDOF = static_cast<int>(mask.sum());
+    // Subtract 3 for overall translation unless periodic (unit cell)
+    if (m_molecule->molecule().unitCell() == nullptr)
+      freeDOF -= 3;
+    m_thermostat->setDegreesOfFreedom(std::max(freeDOF, 1));
+
+    m_thermostat->initializeVelocities(m_velocities, m_masses);
+  } else {
+    m_velocities.setZero();
+  }
 
   // start the optimization
   QElapsedTimer timer;
-  timer.start();
-  optimizeStep();
   qint64 minimumStep = 33; // 30 fps
+  timer.start();
+  if (m_task == 0) {
+    optimizeStep();
+  } else {
+    dynamicsStep();
+  }
   m_oneStepTime = std::max(timer.elapsed() + 5, minimumStep);
 
 #ifndef NDEBUG
@@ -216,6 +346,8 @@ void AutoOpt::stop()
   startStopButton->setIcon(QIcon::fromTheme("go-down"));
   m_running = false;
 
+  m_molecule->endMergeMode();
+
   emit drawablesChanged();
 }
 
@@ -229,20 +361,16 @@ void AutoOpt::methodChanged(const QString& method)
   // need to stop the current optimization,
   // then restart after a brief pause
   if (m_running) {
+    stop();
     start();
   }
 }
 
 Real AutoOpt::calculateEnergy()
 {
-  int n = m_molecule->atomCount();
-  // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  double* p = pos[0].data();
-  Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
-  Eigen::VectorXd positions = map;
-
-  // now get the energy
+  Eigen::Map<Eigen::VectorXd> positions(pos[0].data(),
+                                        3 * m_molecule->atomCount());
   return m_method->value(positions);
 }
 
@@ -254,21 +382,14 @@ void AutoOpt::optimizeStep()
   }
 
   int n = m_molecule->atomCount();
-  // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  double* p = pos[0].data();
-  Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
+  Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   Eigen::VectorXd positions = map;
 
   // get the frozen atoms
   auto mask = m_molecule->molecule().frozenAtomMask();
-  if (mask.rows() != 3 * n) {
-    mask = Eigen::VectorXd::Zero(3 * n);
-    // set to 1.0
-    for (Eigen::Index i = 0; i < 3 * n; ++i) {
-      mask[i] = 1.0;
-    }
-  }
+  if (mask.rows() != 3 * n)
+    mask = Eigen::VectorXd::Ones(3 * n);
   m_method->setMask(mask);
 
   // optimize one step
@@ -281,27 +402,166 @@ void AutoOpt::optimizeStep()
   solver.minimize(*m_method, positions);
   Real currentEnergy = m_method->value(positions);
 
-  bool isFinite = std::isfinite(currentEnergy);
-  if (isFinite) {
+  if (std::isfinite(currentEnergy) && positions.allFinite()) {
     m_deltaE = currentEnergy - m_energy; // should be negative = lower E
 
-    const double* d = positions.data();
-    [[maybe_unused]] bool allFinite = true;
-    // casting back would be lovely...
-    for (Index j = 0; j < n; ++j) {
-      if (!std::isfinite(*d) || !std::isfinite(*(d + 1)) ||
-          !std::isfinite(*(d + 2))) {
-        allFinite = false;
-        break;
-      }
+    // copy optimized positions back into the pos array
+    Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = positions;
 
-      pos[j] = Vector3(*(d), *(d + 1), *(d + 2));
-      d += 3;
+    m_molecule->setAtomPositions3d(pos, tr("Optimize Geometry"));
+    Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
+    m_molecule->emitChanged(changes);
+  }
+}
+
+void AutoOpt::dynamicsStep()
+{
+  if (!m_running) {
+    m_timer.stop();
+    return;
+  }
+
+  // Velocity Verlet integration
+  if (m_method != nullptr) {
+    int n = m_molecule->atomCount();
+    double dt = m_timeStep;
+
+    Core::Array<Vector3> pos = m_molecule->atomPositions3d();
+    Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
+    Eigen::VectorXd positions = map;
+    Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
+
+    // get the frozen atoms to ensure these are zero gradients
+    auto mask = m_molecule->molecule().frozenAtomMask();
+    if (mask.rows() != 3 * n)
+      mask = Eigen::VectorXd::Ones(3 * n);
+    m_method->setMask(mask);
+
+    // update the thermostat settings — DOF accounts for frozen coordinates
+    // and periodic systems (no translational DOF to remove with a unit cell)
+    int freeDOF = static_cast<int>(mask.sum());
+    if (m_molecule->molecule().unitCell() == nullptr)
+      freeDOF -= 3;
+    m_thermostat->setTargetTemperature(m_temperature);
+    m_thermostat->setTimeStep(m_timeStep);
+    m_thermostat->setDegreesOfFreedom(std::max(freeDOF, 1));
+
+    // check m_masses
+    if (m_masses.rows() != 3 * n) {
+      setMasses(m_masses, &(m_molecule->molecule()));
     }
 
-    // todo - merge these into one undo step
-    if (allFinite) {
-      m_molecule->setAtomPositions3d(pos, tr("Optimize Geometry"));
+    // On first step, compute initial acceleration
+    if (m_firstStep) {
+      m_method->gradient(positions, gradient);
+      if (gradient.allFinite()) {
+        m_acceleration =
+          -units::FORCE_CONVERSION * gradient.array() / m_masses.array();
+      } else {
+        m_acceleration.setZero();
+      }
+      m_firstStep = false;
+    }
+
+    // Velocity Verlet Step 1: Update positions
+    // x(t+dt) = x(t) + v(t)*dt + 0.5*a(t)*dt^2
+    Eigen::VectorXd velocityTerm = m_velocities * dt;
+    Eigen::VectorXd accelTerm = 0.5 * m_acceleration * dt * dt;
+
+    // zero out frozen atoms from the mask
+    // gradients should be zero anyway
+    velocityTerm = velocityTerm.array() * mask.array();
+    accelTerm = accelTerm.array() * mask.array();
+
+    /* debugging statements
+    qDebug() << " velocity term norm " << velocityTerm.norm();
+    qDebug() << " accel term norm " << accelTerm.norm();
+    qDebug() << " max velocity component "
+             << m_velocities.cwiseAbs().maxCoeff();
+    qDebug() << " max accel component " << m_acceleration.cwiseAbs().maxCoeff();
+    */
+
+    Eigen::VectorXd newPositions = positions + velocityTerm + accelTerm;
+
+    // Limit maximum displacement per atom to prevent instability.
+    // Unlike gradient clamping, this preserves force/potential consistency:
+    // the gradient is always evaluated at the actual position the atom moves
+    // to, so the Verlet integrator's symplectic properties are maintained.
+    // Per-atom limit scales as sqrt(T/m): lighter atoms and higher
+    // temperatures allow larger displacements. Calibrated so that
+    // carbon (mass 12) at 300 K gets a 0.33 Angstrom limit.
+    const double baseDisplacement = 0.33 * std::sqrt(12.0 / 300.0);
+    Eigen::ArrayXd maxDisplacements =
+      baseDisplacement * (m_temperature / m_masses).sqrt();
+    Eigen::VectorXd displacement = newPositions - positions;
+    for (int i = 0; i < n; ++i) {
+      double dist = displacement.segment<3>(3 * i).norm();
+      double limit = maxDisplacements[3 * i]; // same for all 3 components
+      if (dist > limit) {
+        double scale = limit / dist;
+        displacement.segment<3>(3 * i) *= scale;
+        // Also scale velocities to stay consistent with the reduced
+        // displacement. This prevents a mismatch between where the atom is
+        // and how fast it's going, avoiding energy non-conservation.
+        m_velocities.segment<3>(3 * i) *= scale;
+      }
+    }
+    newPositions = positions + displacement;
+
+    /* debugging statements
+    qDebug() << " max displacement " << displacement.cwiseAbs().maxCoeff();
+    */
+
+    // Velocity Verlet Step 2: Compute new acceleration at new positions
+    // IMPORTANT: No gradient clamping - forces must be the true derivative
+    // of the potential at the actual position. Clamping breaks the
+    // force/potential consistency that Verlet requires for energy conservation.
+    m_method->gradient(newPositions, gradient);
+
+    // Guard against NaN/Inf from the gradient — if the gradient is bad,
+    // treat it as zero force so atoms coast on their current velocities.
+    // The thermostat and displacement clamping will handle recovery.
+    if (!gradient.allFinite())
+      gradient.setZero();
+
+    /* debugging statements
+    qDebug() << " gradient norm " << gradient.norm();
+    qDebug() << " max gradient component " << gradient.cwiseAbs().maxCoeff();
+    */
+
+    Eigen::VectorXd newAcceleration =
+      -units::FORCE_CONVERSION * gradient.array() / m_masses.array();
+
+    /* debugging statements
+    qDebug() << " acceleration norm " << newAcceleration.norm();
+    */
+
+    // Velocity Verlet Step 3: Update velocities
+    // v(t+dt) = v(t) + 0.5*(a(t) + a(t+dt))*dt
+    m_velocities += 0.5 * (m_acceleration + newAcceleration) * dt;
+
+    // again, zero out frozen coords from the mask
+    m_velocities = m_velocities.array() * mask.array();
+    newAcceleration = newAcceleration.array() * mask.array();
+
+    // Store new acceleration for next step
+    m_acceleration = newAcceleration;
+
+    // Apply thermostat
+    m_thermostat->apply(m_velocities, m_masses);
+
+    /* debugging statements
+    qDebug() << " velocity norm after thermostat " << m_velocities.norm();
+    */
+#ifndef NDEBUG
+    qDebug() << " temperature "
+             << m_thermostat->compute_temperature(m_velocities, m_masses);
+#endif
+
+    // copy new positions back into the pos array
+    if (newPositions.allFinite()) {
+      Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = newPositions;
+      m_molecule->setAtomPositions3d(pos, tr("Molecular Dynamics"));
       Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
       m_molecule->emitChanged(changes);
     }
@@ -314,9 +574,16 @@ void AutoOpt::draw(Rendering::GroupNode& node)
     return; // nothing to draw
 
   QString overlayText;
-  overlayText = tr("%1 ΔE = %L2 kcal/mol")
-                  .arg(m_currentMethod.c_str())
-                  .arg(m_deltaE, 0, 'f', 2);
+  if (m_task == 1) {
+    // dynamics step
+    double temp = m_thermostat->compute_temperature(m_velocities, m_masses);
+    overlayText =
+      tr("%1 T = %L2 K").arg(m_currentMethod.c_str()).arg(temp, 0, 'f', 1);
+  } else {
+    overlayText = tr("%1 ΔE = %L2 kJ/mol")
+                    .arg(m_currentMethod.c_str())
+                    .arg(m_deltaE, 0, 'f', 2);
+  }
 
   auto* geo = new GeometryNode;
   node.addChild(geo);

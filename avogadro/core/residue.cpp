@@ -105,16 +105,16 @@ void Residue::resolveResidueBonds(Molecule& mol)
     for (i = 0; i < bondSeq.size(); ++i) {
       if (m_atomNameMap.find(bondSeq[i].first) != m_atomNameMap.end() &&
           m_atomNameMap.find(bondSeq[i].second) != m_atomNameMap.end()) {
-        mol.Avogadro::Core::Molecule::addBond(
-          m_atomNameMap[bondSeq[i].first], m_atomNameMap[bondSeq[i].second], 1);
+        mol.addBond(m_atomNameMap[bondSeq[i].first],
+                    m_atomNameMap[bondSeq[i].second], 1);
       }
     }
     bondSeq = residueDict[m_residueName].residueDoubleBonds();
     for (i = 0; i < bondSeq.size(); ++i) {
       if (m_atomNameMap.find(bondSeq[i].first) != m_atomNameMap.end() &&
           m_atomNameMap.find(bondSeq[i].second) != m_atomNameMap.end()) {
-        mol.Avogadro::Core::Molecule::addBond(
-          m_atomNameMap[bondSeq[i].first], m_atomNameMap[bondSeq[i].second], 2);
+        mol.addBond(m_atomNameMap[bondSeq[i].first],
+                    m_atomNameMap[bondSeq[i].second], 2);
       }
     }
   }

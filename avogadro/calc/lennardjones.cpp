@@ -81,9 +81,9 @@ Real LennardJones::value(const Eigen::VectorXd& x)
   if (m_cell == nullptr) {
     // regular molecule
     for (Index i = 0; i < numAtoms; ++i) {
-      Vector3 ipos(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Vector3 ipos = x.segment<3>(3 * i);
       for (Index j = i + 1; j < numAtoms; ++j) {
-        Vector3 jpos(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+        Vector3 jpos = x.segment<3>(3 * j);
         Real r = (ipos - jpos).norm();
         if (r < 0.1)
           r = 0.1; // ensure we don't divide by zero
@@ -95,9 +95,9 @@ Real LennardJones::value(const Eigen::VectorXd& x)
   } else {
     // use the unit cell to get minimum distances
     for (Index i = 0; i < numAtoms; ++i) {
-      Vector3 ipos(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Vector3 ipos = x.segment<3>(3 * i);
       for (Index j = i + 1; j < numAtoms; ++j) {
-        Vector3 jpos(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+        Vector3 jpos = x.segment<3>(3 * j);
         Real r = m_cell->distance(ipos, jpos);
         if (r < 0.1)
           r = 0.1; // ensure we don't divide by zero
@@ -126,9 +126,9 @@ void LennardJones::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   if (m_cell == nullptr) {
     // regular molecule
     for (Index i = 0; i < numAtoms; ++i) {
-      Vector3 ipos(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Vector3 ipos = x.segment<3>(3 * i);
       for (Index j = i + 1; j < numAtoms; ++j) {
-        Vector3 jpos(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+        Vector3 jpos = x.segment<3>(3 * j);
         Vector3 force = ipos - jpos;
 
         Real r = force.norm();
@@ -142,19 +142,16 @@ void LennardJones::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
         force = (dE / r) * force;
 
-        // update gradients
-        for (unsigned int c = 0; c < 3; ++c) {
-          grad[3 * i + c] += force[c];
-          grad[3 * j + c] -= force[c];
-        }
+        grad.segment<3>(3 * i) += force;
+        grad.segment<3>(3 * j) -= force;
       }
     }
   } else {
     // unit cell
     for (Index i = 0; i < numAtoms; ++i) {
-      Vector3 ipos(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Vector3 ipos = x.segment<3>(3 * i);
       for (Index j = i + 1; j < numAtoms; ++j) {
-        Vector3 jpos(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+        Vector3 jpos = x.segment<3>(3 * j);
         Vector3 force = m_cell->minimumImage(ipos - jpos);
 
         Real r = force.norm();
@@ -168,11 +165,8 @@ void LennardJones::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
         force = (dE / r) * force;
 
-        // update gradients
-        for (unsigned int c = 0; c < 3; ++c) {
-          grad[3 * i + c] += force[c];
-          grad[3 * j + c] -= force[c];
-        }
+        grad.segment<3>(3 * i) += force;
+        grad.segment<3>(3 * j) -= force;
       }
     }
   }

@@ -1,9 +1,13 @@
-uniform sampler2D texture;
-varying vec2 texc;
+#version 400
+precision highp float;
+uniform sampler2D u_texture;
+in vec2 texc;
+
+out vec4 outColor;
 
 void main(void)
 {
-  gl_FragColor = texture2D(texture, texc);
-  if (gl_FragColor.a == 0.)
+  outColor = texture(u_texture, texc);
+  if (outColor.a == 0.)
     discard;
 }

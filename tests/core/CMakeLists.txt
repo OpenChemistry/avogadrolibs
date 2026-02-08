@@ -1,5 +1,6 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  AngleIterator
   Array
   Atom
   AtomTyper
@@ -8,14 +9,19 @@ set(tests
   CoordinateBlockGenerator
   CoordinateSet
   Cube
+  DihedralIterator
   Eigen
   Element
+  GaussianSet
   Graph
+  InternalCoordinates
   Mesh
   Molecule
   Mutex
   NeighborPerceiver
+  Residue
   RingPerceiver
+  SecondaryStructure
   Utilities
   UnitCell
   Variant

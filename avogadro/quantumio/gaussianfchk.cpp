@@ -95,7 +95,6 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
 
     for (unsigned int i = 0; i < m_aNums.size(); ++i) {
       charges(i, 0) = m_mullikenCharges[i];
-      std::cout << " mulliken " << m_mullikenCharges[i] << std::endl;
     }
     molecule.setPartialCharges("Mulliken", charges);
   }
@@ -268,6 +267,7 @@ void GaussianFchk::processLine(std::istream& in)
 void GaussianFchk::load(GaussianSet* basis)
 {
   // Now load up our basis set
+  basis->setScfType(m_scftype);
   basis->setElectronCount(m_electrons);
   // basis->setElectronCount(m_electronsAlpha, Core::GaussianSet::alpha);
   // basis->setElectronCount(m_electronsBeta, Core::GaussianSet::beta);

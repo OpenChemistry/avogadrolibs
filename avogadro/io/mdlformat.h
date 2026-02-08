@@ -50,10 +50,12 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
-  bool read(std::istream& in, Core::Molecule& molecule) override;
-  bool readV3000(std::istream& in, Core::Molecule& molecule);
-  bool write(std::ostream& out, const Core::Molecule& molecule) override;
-  bool writeV3000(std::ostream& out, const Core::Molecule& molecule);
+  [[nodiscard]] bool read(std::istream& in, Core::Molecule& molecule) override;
+  [[nodiscard]] bool readV3000(std::istream& in, Core::Molecule& molecule);
+  [[nodiscard]] bool write(std::ostream& out,
+                           const Core::Molecule& molecule) override;
+  [[nodiscard]] bool writeV3000(std::ostream& out,
+                                const Core::Molecule& molecule);
 
 protected:
   bool m_writeProperties = false;

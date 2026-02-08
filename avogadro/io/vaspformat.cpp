@@ -8,6 +8,7 @@
 #include <avogadro/core/elements.h> // for atomicNumberFromSymbol()
 #include <avogadro/core/matrix.h>   // for matrix3
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h> // for translationalUniqueAtoms()
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h> // for split(), trimmed(), lexicalCast()
 #include <avogadro/core/vector.h>    // for Vector3
@@ -27,6 +28,7 @@ using Core::Atom;
 using Core::Elements;
 using Core::lexicalCast;
 using Core::Molecule;
+using Core::SpaceGroups;
 using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
@@ -108,9 +110,9 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (!ok) {
     // Assume atomic symbols are here and store them
     symbolsList = split(line, ' ');
-    // Store atomic nums
+    // Store atomic nums (trim to handle Windows CRLF line endings)
     for (auto& i : symbolsList)
-      atomicNumbers.push_back(Elements::atomicNumberFromSymbol(i));
+      atomicNumbers.push_back(Elements::atomicNumberFromSymbol(trimmed(i)));
     // This next one should be atom types
     getline(inStream, line);
   }
@@ -260,12 +262,13 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
     outStream << std::endl;
   }
 
-  // Adapted from chemkit:
-  // A map of atomic symbols to their quantity.
-  Array<unsigned char> atomicNumbers = mol.atomicNumbers();
+  // Filter out translational duplicates (atoms at ~1.0 that duplicate ~0.0)
+  Array<Index> uniqueIndices = SpaceGroups::translationalUniqueAtoms(mol);
+
+  // Build composition from filtered atoms only
   std::map<unsigned char, size_t> composition;
-  for (unsigned char& atomicNumber : atomicNumbers) {
-    composition[atomicNumber]++;
+  for (Index idx : uniqueIndices) {
+    composition[mol.atomicNumber(idx)]++;
   }
 
   // Atom symbols
@@ -288,19 +291,18 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   outStream << "Direct" << std::endl;
 
   // Final section is atomic coordinates
-  size_t numAtoms = mol.atomCount();
-  // We need to make sure we that group the atomic numbers together.
+  // We need to make sure we group the atomic numbers together.
   // The outer loop is for grouping them.
   iter = composition.begin();
   while (iter != composition.end()) {
     unsigned char currentAtomicNum = iter->first;
-    for (size_t i = 0; i < numAtoms; ++i) {
+    for (Index idx : uniqueIndices) {
       // We need to group atomic numbers together. If this one is not
       // the current atomic number, skip over it.
-      if (atomicNumbers.at(i) != currentAtomicNum)
+      if (mol.atomicNumber(idx) != currentAtomicNum)
         continue;
 
-      Atom atom = mol.atom(i);
+      Atom atom = mol.atom(idx);
       if (!atom.isValid()) {
         appendError("Internal error: Atom invalid.");
         return false;
@@ -337,23 +339,58 @@ std::vector<std::string> PoscarFormat::mimeTypes() const
 
 bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
-  std::string buffer, dashedStr, positionStr, latticeStr;
+  std::string buffer, dashedStr, positionStr, latticeStr, directLatticeStr;
   positionStr = " POSITION";
   latticeStr = "  Lattice vectors:";
+  directLatticeStr = "  direct lattice vectors"; // VASP 6.x format
   dashedStr = " -----------";
+  std::string vrhfinStr = "   VRHFIN =";
+  std::string ionsPerTypeStr = "   ions per type =";
   std::vector<std::string> stringSplit;
   int coordSet = 0, natoms = 0;
   Array<Vector3> positions;
   Vector3 ax1, ax2, ax3;
   bool ax1Set = false, ax2Set = false, ax3Set = false;
 
+  // Element type information parsed from VRHFIN and "ions per type" lines
+  std::vector<unsigned char> elementTypes; // atomic numbers from VRHFIN
+  std::vector<unsigned int> atomCounts;    // counts from "ions per type"
+
   typedef map<string, unsigned char> AtomTypeMap;
   AtomTypeMap atomTypes;
   unsigned char customElementCounter = CustomElementMin;
 
   while (getline(inStream, buffer)) {
+    // Parse VRHFIN lines to get element symbols (e.g., "   VRHFIN =C: s2p2")
+    if (buffer.substr(0, vrhfinStr.size()) == vrhfinStr) {
+      // Extract element symbol between '=' and ':'
+      size_t startPos = buffer.find('=');
+      size_t endPos = buffer.find(':');
+      if (startPos != std::string::npos && endPos != std::string::npos &&
+          endPos > startPos + 1) {
+        std::string symbol =
+          trimmed(buffer.substr(startPos + 1, endPos - startPos - 1));
+        unsigned char atomicNum = Elements::atomicNumberFromSymbol(symbol);
+        if (atomicNum != Avogadro::InvalidElement) {
+          elementTypes.push_back(atomicNum);
+        }
+      }
+    }
+
+    // Parse "ions per type" line to get atom counts (e.g., "   ions per type =
+    // 48  24  26   8")
+    else if (buffer.substr(0, ionsPerTypeStr.size()) == ionsPerTypeStr) {
+      std::string countsStr = buffer.substr(ionsPerTypeStr.size());
+      stringSplit = split(countsStr, ' ');
+      for (const auto& countStr : stringSplit) {
+        if (auto count = lexicalCast<unsigned int>(countStr)) {
+          atomCounts.push_back(*count);
+        }
+      }
+    }
+
     // Checks whether the buffer object contains the lattice vectors keyword
-    if (buffer.substr(0, latticeStr.size()) == latticeStr) {
+    else if (buffer.substr(0, latticeStr.size()) == latticeStr) {
       // Checks whether lattice vectors have been already set. Reason being that
       // only the first occurrence denotes the true lattice vectors, and the
       // ones following these are vectors of the primitive cell.
@@ -399,6 +436,45 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
       }
     }
 
+    // VASP 6.x format: "  direct lattice vectors" with fixed-width columns
+    else if (buffer.substr(0, directLatticeStr.size()) == directLatticeStr) {
+      if (!(ax1Set && ax2Set && ax3Set)) {
+        // Read 3 lines of lattice vectors (fixed-width: 13 chars per value,
+        // starting at position 3)
+        Vector3 axes[3];
+        bool parseOk = true;
+        for (int i = 0; i < 3 && parseOk; ++i) {
+          getline(inStream, buffer);
+          if (buffer.size() >= 42) { // Need at least 3 + 13*3 = 42 characters
+            auto x = lexicalCast<double>(trimmed(buffer.substr(3, 13)));
+            auto y = lexicalCast<double>(trimmed(buffer.substr(16, 13)));
+            auto z = lexicalCast<double>(trimmed(buffer.substr(29, 13)));
+            if (x && y && z) {
+              axes[i] = Vector3(*x, *y, *z);
+            } else {
+              parseOk = false;
+            }
+          } else {
+            parseOk = false;
+          }
+        }
+        if (parseOk) {
+          ax1 = axes[0];
+          ax1Set = true;
+          ax2 = axes[1];
+          ax2Set = true;
+          ax3 = axes[2];
+          ax3Set = true;
+          auto* cell = new UnitCell(ax1, ax2, ax3);
+          if (!cell->isRegular()) {
+            appendError("cell vectors are not linear independent");
+            return false;
+          }
+          mol.setUnitCell(cell);
+        }
+      }
+    }
+
     // Checks whether the buffer object contains the POSITION keyword
     else if (buffer.substr(0, positionStr.size()) == positionStr) {
       getline(inStream, buffer);
@@ -430,15 +506,30 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
             return false;
           }
           if (coordSet == 0) {
-            AtomTypeMap::const_iterator it;
-            atomTypes.insert(
-              std::make_pair(std::to_string(natoms), customElementCounter++));
-            it = atomTypes.find(std::to_string(natoms));
-            // if (customElementCounter > CustomElementMax) {
-            //   appendError("Custom element type limit exceeded.");
-            //   return false;
-            // }
-            Atom newAtom = mol.addAtom(it->second);
+            unsigned char atomicNum;
+            // Check if we have valid element type information
+            if (!elementTypes.empty() &&
+                elementTypes.size() == atomCounts.size()) {
+              // Determine which element type this atom belongs to based on
+              // cumulative counts
+              unsigned int cumulative = 0;
+              atomicNum = elementTypes.back(); // default to last element
+              for (size_t i = 0; i < atomCounts.size(); ++i) {
+                cumulative += atomCounts[i];
+                if (static_cast<unsigned int>(natoms) < cumulative) {
+                  atomicNum = elementTypes[i];
+                  break;
+                }
+              }
+            } else {
+              // Fall back to custom elements if element info not available
+              AtomTypeMap::const_iterator it;
+              atomTypes.insert(
+                std::make_pair(std::to_string(natoms), customElementCounter++));
+              it = atomTypes.find(std::to_string(natoms));
+              atomicNum = it->second;
+            }
+            Atom newAtom = mol.addAtom(atomicNum);
             newAtom.setPosition3d(tmpAtom);
             natoms++;
           } else {

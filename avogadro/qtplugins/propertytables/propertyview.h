@@ -38,6 +38,7 @@ private:
   PropertyType m_type;
   QtGui::Molecule* m_molecule;
   PropertyModel* m_model;
+  bool m_updatingSelection = false;
   void copySelectedRowsToClipboard();
   void openExportDialogBox();
   void constrainSelectedRows();

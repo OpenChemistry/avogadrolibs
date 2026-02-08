@@ -85,8 +85,7 @@ public:
 
 } // namespace
 
-// This currently seg faults...
-TEST(DISABLED_GenericHighlighterTest, exercise)
+TEST(GenericHighlighterTest, exercise)
 {
   QTextDocument doc("A regexp will turn this blue.\n"
                     "Only this and that will be yellow.\n"
@@ -106,6 +105,12 @@ TEST(DISABLED_GenericHighlighterTest, exercise)
   format.setForeground(Qt::yellow);
   regexpCapRule.setFormat(format);
 
+  // Regex equivalent of the old QRegExp wildcard "A wildcard*red."
+  GenericHighlighter::Rule& wildcardRule = highlighter.addRule();
+  wildcardRule.addPattern(QRegularExpression("^A wildcard.*red\\.$"));
+  format.setForeground(Qt::red);
+  wildcardRule.setFormat(format);
+
   GenericHighlighter::Rule& stringRule = highlighter.addRule();
   stringRule.addPattern(QRegularExpression("This string will be green."));
   format.setForeground(Qt::green);
@@ -117,37 +122,16 @@ TEST(DISABLED_GenericHighlighterTest, exercise)
   QString html;
   highlighter.asHtml(html);
 
-  QString refHtml(
-    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
-    "\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-    "<html><head><meta name=\"qrichtext\" content=\"1\" />"
-    "<style type=\"text/css\">\n"
-    "p, li { white-space: pre-wrap; }\n"
-    "</style></head><body>\n"
-    "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-    "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-    "<!--StartFragment--><span style=\" color:#0000ff;\">"
-    "A regexp will turn this blue.</span></pre>\n"
-    "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-    "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-    "<span style=\" color:#a0a0a4;\">"
-    "Only </span><span style=\" color:#ffff00;\">"
-    "this</span><span style=\" color:#a0a0a4;\"> "
-    "and </span><span style=\" color:#ffff00;\">"
-    "that</span><span style=\" color:#a0a0a4;\"> "
-    "will be yellow.</span></pre>\n"
-    "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-    "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-    "<span style=\" color:#ff0000;\">"
-    "A wildcard expression will turn this red.</span></pre>\n"
-    "<pre style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-    "margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-    "<span style=\" color:#00ff00;\">"
-    "This string will be green.</span></pre>\n"
-    "<pre style=\"-qt-paragraph-type:empty; margin-top:0px; "
-    "margin-bottom:0px; margin-left:0px; margin-right:0px; "
-    "-qt-block-indent:0; text-indent:0px; color:#a0a0a4;\">"
-    "<br /><!--EndFragment--></pre></body></html>");
-
-  EXPECT_STREQ(qPrintable(refHtml), qPrintable(html));
+  // Verify the highlighted spans are present (Qt version-independent checks)
+  EXPECT_TRUE(html.contains("color:#0000ff;\">A regexp will turn this blue."))
+    << "Blue regexp rule should highlight first line";
+  EXPECT_TRUE(html.contains("color:#ffff00;\">this"))
+    << "Yellow capture rule should highlight 'this'";
+  EXPECT_TRUE(html.contains("color:#ffff00;\">that"))
+    << "Yellow capture rule should highlight 'that'";
+  EXPECT_TRUE(
+    html.contains("color:#ff0000;\">A wildcard expression will turn this red."))
+    << "Red wildcard rule should highlight third line";
+  EXPECT_TRUE(html.contains("color:#00ff00;\">This string will be green."))
+    << "Green string rule should highlight fourth line";
 }

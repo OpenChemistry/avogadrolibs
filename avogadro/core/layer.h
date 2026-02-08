@@ -51,6 +51,9 @@ public:
   /**  remove all IDs. */
   void clear();
 
+  /**  resize the atom-layer array to @p count atoms, removing any excess. */
+  void resize(size_t count);
+
   /**  increase the maximum layer allowed .*/
   void addLayer();
 

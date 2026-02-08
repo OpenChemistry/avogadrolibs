@@ -512,6 +512,26 @@ public:
   void clearCubes();
 
   /**
+   * @brief Set the active cube index for volume rendering.
+   * @param index The index of the cube to make active.
+   * @return True if the index is valid and was set, false otherwise.
+   */
+  bool setActiveCubeIndex(Index index);
+
+  /**
+   * @brief Get the index of the active cube.
+   * @return The active cube index, or 0 if no cubes exist.
+   */
+  Index activeCubeIndex() const { return m_activeCubeIndex; }
+
+  /**
+   * @brief Get the active cube for volume rendering.
+   * @return A pointer to the active cube, or nullptr if no cubes exist.
+   */
+  Cube* activeCube();
+  const Cube* activeCube() const;
+
+  /**
    * @brief Get the cubes vector set (if present) for the molecule.
    * @return The cube vector for the molecule
    */
@@ -897,6 +917,13 @@ public:
   std::map<unsigned char, size_t> composition() const;
 
   /**
+   * @return a map of element symbols (including isotopes like D, T, 13C) to
+   * their count. Handles unit cell fractional contributions for atoms at
+   * corners (1/8), edges (1/4), and faces (1/2).
+   */
+  std::map<std::string, size_t> formulaComposition() const;
+
+  /**
    * @return the atom pairs for all bonds to the atom indexed at @a index.
    */
   Array<std::pair<Index, Index>> getAtomBonds(Index index) const;
@@ -966,6 +993,7 @@ protected:
 
   std::vector<Mesh*> m_meshes;
   std::vector<Cube*> m_cubes;
+  Index m_activeCubeIndex = 0;
 
   BasisSet* m_basisSet;
   UnitCell* m_unitCell;
