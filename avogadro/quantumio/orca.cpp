@@ -27,7 +27,23 @@ using Core::GaussianSet;
 
 ORCAOutput::ORCAOutput() {}
 
-ORCAOutput::~ORCAOutput() {}
+ORCAOutput::~ORCAOutput()
+{
+  clearBasisFunctions();
+}
+
+void ORCAOutput::clearBasisFunctions()
+{
+  for (auto* atomShells : m_basisFunctions) {
+    if (!atomShells)
+      continue;
+    for (auto* shell : *atomShells) {
+      delete shell;
+    }
+    delete atomShells;
+  }
+  m_basisFunctions.clear();
+}
 
 constexpr double BOHR_TO_ANGSTROM = 0.529177210544;
 constexpr double HARTREE_TO_EV = 27.211386245981;
@@ -843,7 +859,7 @@ void ORCAOutput::processLine(std::istream& in,
         // init all vectors etc.
         m_basisAtomLabel.clear();
         m_orcaNumShells.resize(0);
-        m_basisFunctions.resize(0);
+        clearBasisFunctions();
         m_orcaShellTypes.resize(0);
 
         m_a.resize(0);

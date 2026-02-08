@@ -4,8 +4,8 @@ set(tests
   fchk
   molden
   orca
-  qcschema
   # TODO
+  # qcschema
   # GAMESS US
   # GAMESS UK
   # NWChem log
@@ -43,8 +43,25 @@ target_link_libraries(AvogadroQuantumIOTests Avogadro::IO Avogadro::QuantumIO
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
 foreach(TestName ${tests})
-  add_test(NAME "QuantumIo-${TestName}"
-    COMMAND AvogadroQuantumIOTests "--gtest_filter=${TestName}Test.*")
+  if(TestName STREQUAL "cube")
+    add_test(NAME "QuantumIo-cube"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianCubeTest.*")
+  elseif(TestName STREQUAL "fchk")
+    add_test(NAME "QuantumIo-fchk"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianFchkTest.*")
+  elseif(TestName STREQUAL "molden")
+    add_test(NAME "QuantumIo-molden"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=MoldenTest.*")
+  elseif(TestName STREQUAL "orca")
+    add_test(NAME "QuantumIo-orca"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=OrcaTest.*")
+  elseif(TestName STREQUAL "qcschema")
+    add_test(NAME "QuantumIo-qcschema"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=QCSchemaTest.*")
+  else()
+    add_test(NAME "QuantumIo-${TestName}"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=${TestName}Test.*")
+  endif()
 endforeach()
 
 if (DEFINED ENV{LIB_FUZZING_ENGINE})

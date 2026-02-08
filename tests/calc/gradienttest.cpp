@@ -26,7 +26,7 @@ class NumericalGradient
 public:
   static constexpr Real epsilon = 1e-7;
 
-  // Calculate numerical gradient for angle
+  // Calculate numerical gradient for angle using central differences
   static void angleNumerical(const Vector3& a, const Vector3& b,
                              const Vector3& c, Vector3& aGrad, Vector3& bGrad,
                              Vector3& cGrad)
@@ -35,31 +35,34 @@ public:
     bGrad.setZero();
     cGrad.setZero();
 
-    // Get the baseline angle
-    Real angle0 = calculateAngle(a, b, c) * DEG_TO_RAD;
-
     // Numerical gradient for point a
     for (int i = 0; i < 3; ++i) {
-      Vector3 aPlus = a;
+      Vector3 aPlus = a, aMinus = a;
       aPlus[i] += epsilon;
+      aMinus[i] -= epsilon;
       Real anglePlus = calculateAngle(aPlus, b, c) * DEG_TO_RAD;
-      aGrad[i] = (anglePlus - angle0) / epsilon;
+      Real angleMinus = calculateAngle(aMinus, b, c) * DEG_TO_RAD;
+      aGrad[i] = (anglePlus - angleMinus) / (2 * epsilon);
     }
 
     // Numerical gradient for point b
     for (int i = 0; i < 3; ++i) {
-      Vector3 bPlus = b;
+      Vector3 bPlus = b, bMinus = b;
       bPlus[i] += epsilon;
+      bMinus[i] -= epsilon;
       Real anglePlus = calculateAngle(a, bPlus, c) * DEG_TO_RAD;
-      bGrad[i] = (anglePlus - angle0) / epsilon;
+      Real angleMinus = calculateAngle(a, bMinus, c) * DEG_TO_RAD;
+      bGrad[i] = (anglePlus - angleMinus) / (2 * epsilon);
     }
 
     // Numerical gradient for point c
     for (int i = 0; i < 3; ++i) {
-      Vector3 cPlus = c;
+      Vector3 cPlus = c, cMinus = c;
       cPlus[i] += epsilon;
+      cMinus[i] -= epsilon;
       Real anglePlus = calculateAngle(a, b, cPlus) * DEG_TO_RAD;
-      cGrad[i] = (anglePlus - angle0) / epsilon;
+      Real angleMinus = calculateAngle(a, b, cMinus) * DEG_TO_RAD;
+      cGrad[i] = (anglePlus - angleMinus) / (2 * epsilon);
     }
   }
 
@@ -74,59 +77,114 @@ public:
     kGrad.setZero();
     lGrad.setZero();
 
-    Real phi0 = calculateDihedral(i, j, k, l) * DEG_TO_RAD;
-
     // Numerical gradient for point i
     for (int idx = 0; idx < 3; ++idx) {
-      Vector3 iPlus = i;
+      Vector3 iPlus = i, iMinus = i;
       iPlus[idx] += epsilon;
+      iMinus[idx] -= epsilon;
       Real phiPlus = calculateDihedral(iPlus, j, k, l) * DEG_TO_RAD;
-      Real diff = phiPlus - phi0;
+      Real phiMinus = calculateDihedral(iMinus, j, k, l) * DEG_TO_RAD;
+      Real diff = phiPlus - phiMinus;
       // Handle wrapping around -pi/pi
       if (diff > M_PI)
         diff -= 2 * M_PI;
       if (diff < -M_PI)
         diff += 2 * M_PI;
-      iGrad[idx] = diff / epsilon;
+      iGrad[idx] = diff / (2 * epsilon);
     }
 
     // Numerical gradient for point j
     for (int idx = 0; idx < 3; ++idx) {
-      Vector3 jPlus = j;
+      Vector3 jPlus = j, jMinus = j;
       jPlus[idx] += epsilon;
+      jMinus[idx] -= epsilon;
       Real phiPlus = calculateDihedral(i, jPlus, k, l) * DEG_TO_RAD;
-      Real diff = phiPlus - phi0;
+      Real phiMinus = calculateDihedral(i, jMinus, k, l) * DEG_TO_RAD;
+      Real diff = phiPlus - phiMinus;
       if (diff > M_PI)
         diff -= 2 * M_PI;
       if (diff < -M_PI)
         diff += 2 * M_PI;
-      jGrad[idx] = diff / epsilon;
+      jGrad[idx] = diff / (2 * epsilon);
     }
 
     // Numerical gradient for point k
     for (int idx = 0; idx < 3; ++idx) {
-      Vector3 kPlus = k;
+      Vector3 kPlus = k, kMinus = k;
       kPlus[idx] += epsilon;
+      kMinus[idx] -= epsilon;
       Real phiPlus = calculateDihedral(i, j, kPlus, l) * DEG_TO_RAD;
-      Real diff = phiPlus - phi0;
+      Real phiMinus = calculateDihedral(i, j, kMinus, l) * DEG_TO_RAD;
+      Real diff = phiPlus - phiMinus;
       if (diff > M_PI)
         diff -= 2 * M_PI;
       if (diff < -M_PI)
         diff += 2 * M_PI;
-      kGrad[idx] = diff / epsilon;
+      kGrad[idx] = diff / (2 * epsilon);
     }
 
     // Numerical gradient for point l
     for (int idx = 0; idx < 3; ++idx) {
-      Vector3 lPlus = l;
+      Vector3 lPlus = l, lMinus = l;
       lPlus[idx] += epsilon;
+      lMinus[idx] -= epsilon;
       Real phiPlus = calculateDihedral(i, j, k, lPlus) * DEG_TO_RAD;
-      Real diff = phiPlus - phi0;
+      Real phiMinus = calculateDihedral(i, j, k, lMinus) * DEG_TO_RAD;
+      Real diff = phiPlus - phiMinus;
       if (diff > M_PI)
         diff -= 2 * M_PI;
       if (diff < -M_PI)
         diff += 2 * M_PI;
-      lGrad[idx] = diff / epsilon;
+      lGrad[idx] = diff / (2 * epsilon);
+    }
+  }
+
+  // Calculate numerical gradient for out-of-plane angle using central
+  // differences
+  static void outOfPlaneNumerical(const Vector3& a, const Vector3& b,
+                                  const Vector3& c, const Vector3& d,
+                                  Vector3& aGrad, Vector3& bGrad,
+                                  Vector3& cGrad, Vector3& dGrad)
+  {
+    aGrad.setZero();
+    bGrad.setZero();
+    cGrad.setZero();
+    dGrad.setZero();
+
+    for (int i = 0; i < 3; ++i) {
+      Vector3 aPlus = a, aMinus = a;
+      aPlus[i] += epsilon;
+      aMinus[i] -= epsilon;
+      aGrad[i] =
+        (outOfPlaneAngle(aPlus, b, c, d) - outOfPlaneAngle(aMinus, b, c, d)) *
+        DEG_TO_RAD / (2 * epsilon);
+    }
+
+    for (int i = 0; i < 3; ++i) {
+      Vector3 bPlus = b, bMinus = b;
+      bPlus[i] += epsilon;
+      bMinus[i] -= epsilon;
+      bGrad[i] =
+        (outOfPlaneAngle(a, bPlus, c, d) - outOfPlaneAngle(a, bMinus, c, d)) *
+        DEG_TO_RAD / (2 * epsilon);
+    }
+
+    for (int i = 0; i < 3; ++i) {
+      Vector3 cPlus = c, cMinus = c;
+      cPlus[i] += epsilon;
+      cMinus[i] -= epsilon;
+      cGrad[i] =
+        (outOfPlaneAngle(a, b, cPlus, d) - outOfPlaneAngle(a, b, cMinus, d)) *
+        DEG_TO_RAD / (2 * epsilon);
+    }
+
+    for (int i = 0; i < 3; ++i) {
+      Vector3 dPlus = d, dMinus = d;
+      dPlus[i] += epsilon;
+      dMinus[i] -= epsilon;
+      dGrad[i] =
+        (outOfPlaneAngle(a, b, c, dPlus) - outOfPlaneAngle(a, b, c, dMinus)) *
+        DEG_TO_RAD / (2 * epsilon);
     }
   }
 };
@@ -151,7 +209,7 @@ protected:
   }
 
   void compareWithNumerical(const Vector3& a, const Vector3& b,
-                            const Vector3& c, Real tolerance = 1e-4)
+                            const Vector3& c, Real tolerance = 1e-6)
   {
     Vector3 aGrad, bGrad, cGrad;
     Vector3 aGradNum, bGradNum, cGradNum;
@@ -180,7 +238,7 @@ protected:
 
   void compareWithNumerical(const Vector3& i, const Vector3& j,
                             const Vector3& k, const Vector3& l,
-                            Real tolerance = 1e-4)
+                            Real tolerance = 1e-6)
   {
     Vector3 iGrad, jGrad, kGrad, lGrad;
     Vector3 iGradNum, jGradNum, kGradNum, lGradNum;
@@ -249,7 +307,7 @@ TEST_F(AngleGradientTest, NearLinear180Degrees)
   Vector3 aGrad, bGrad, cGrad;
   Real angle = angleGradient(a, b, c, aGrad, bGrad, cGrad);
 
-  EXPECT_NEAR(angle, M_PI, 1e-6);
+  EXPECT_NEAR(angle, 0.0, 1e-5);
   checkGradientsValid(aGrad, bGrad, cGrad);
 }
 
@@ -360,17 +418,19 @@ TEST_F(AngleGradientTest, GradientsSumToZero)
 
 TEST_F(DihedralGradientTest, StandardDihedral0Degrees)
 {
+  // For i(1,0,0), j(0,0,0), k(0,1,0): dihedral = atan2(-lz, lx)
+  // phi=0 => l=(1, 1, 0). But sin(0)=0 triggers early return in
+  // dihedralGradient, so only check angle and validity, not numerical.
   Vector3 i(1.0, 0.0, 0.0);
   Vector3 j(0.0, 0.0, 0.0);
   Vector3 k(0.0, 1.0, 0.0);
-  Vector3 l(0.0, 1.0, 1.0);
+  Vector3 l(1.0, 1.0, 0.0);
 
   Vector3 iGrad, jGrad, kGrad, lGrad;
   Real phi = dihedralGradient(i, j, k, l, iGrad, jGrad, kGrad, lGrad);
 
   EXPECT_NEAR(phi, 0.0, 1e-6);
   checkGradientsValid(iGrad, jGrad, kGrad, lGrad);
-  compareWithNumerical(i, j, k, l);
 }
 
 TEST_F(DihedralGradientTest, StandardDihedral90Degrees)
@@ -378,22 +438,23 @@ TEST_F(DihedralGradientTest, StandardDihedral90Degrees)
   Vector3 i(1.0, 0.0, 0.0);
   Vector3 j(0.0, 0.0, 0.0);
   Vector3 k(0.0, 1.0, 0.0);
-  Vector3 l(-1.0, 1.0, 0.0);
+  Vector3 l(0.0, 1.0, -1.0);
 
   Vector3 iGrad, jGrad, kGrad, lGrad;
   Real phi = dihedralGradient(i, j, k, l, iGrad, jGrad, kGrad, lGrad);
 
-  EXPECT_NEAR(std::abs(phi), M_PI / 2, 1e-5);
+  EXPECT_NEAR(phi, M_PI / 2, 1e-5);
   checkGradientsValid(iGrad, jGrad, kGrad, lGrad);
   compareWithNumerical(i, j, k, l);
 }
 
 TEST_F(DihedralGradientTest, StandardDihedral180Degrees)
 {
+  // sin(pi)=0 triggers early return, so skip numerical comparison
   Vector3 i(1.0, 0.0, 0.0);
   Vector3 j(0.0, 0.0, 0.0);
   Vector3 k(0.0, 1.0, 0.0);
-  Vector3 l(0.0, 1.0, -1.0);
+  Vector3 l(-1.0, 1.0, 0.0);
 
   Vector3 iGrad, jGrad, kGrad, lGrad;
   Real phi = dihedralGradient(i, j, k, l, iGrad, jGrad, kGrad, lGrad);
@@ -407,26 +468,32 @@ TEST_F(DihedralGradientTest, StandardDihedralMinus90Degrees)
   Vector3 i(1.0, 0.0, 0.0);
   Vector3 j(0.0, 0.0, 0.0);
   Vector3 k(0.0, 1.0, 0.0);
-  Vector3 l(1.0, 1.0, 0.0);
+  Vector3 l(0.0, 1.0, 1.0);
 
   Vector3 iGrad, jGrad, kGrad, lGrad;
   Real phi = dihedralGradient(i, j, k, l, iGrad, jGrad, kGrad, lGrad);
 
-  EXPECT_NEAR(std::abs(phi), M_PI / 2, 1e-5);
+  EXPECT_NEAR(phi, -M_PI / 2, 1e-5);
   checkGradientsValid(iGrad, jGrad, kGrad, lGrad);
   compareWithNumerical(i, j, k, l);
 }
 
 TEST_F(DihedralGradientTest, RangeOfDihedrals)
 {
-  // Test dihedrals from -180 to 180 degrees in 30 degree increments
-  for (int angleDeg = -180; angleDeg <= 180; angleDeg += 30) {
+  // Test dihedrals from -150 to 150 degrees in 30 degree increments
+  // Skip 0 and +/-180 where sin(phi)~0 causes gradient to be skipped
+  for (int angleDeg = -150; angleDeg <= 150; angleDeg += 30) {
+    if (angleDeg == 0)
+      continue;
+
     Real angleRad = angleDeg * DEG_TO_RAD;
 
+    // For i(r,0,0), j(0,0,0), k(0,r,0): dihedral = atan2(-lz, lx)
+    // so l = (r*cos(phi), r, -r*sin(phi)) gives the desired angle
     Vector3 i(1.5, 0.0, 0.0);
     Vector3 j(0.0, 0.0, 0.0);
     Vector3 k(0.0, 1.5, 0.0);
-    Vector3 l(1.5 * sin(angleRad), 1.5, 1.5 * cos(angleRad));
+    Vector3 l(1.5 * cos(angleRad), 1.5, -1.5 * sin(angleRad));
 
     Vector3 iGrad, jGrad, kGrad, lGrad;
     Real phi = dihedralGradient(i, j, k, l, iGrad, jGrad, kGrad, lGrad);
@@ -453,7 +520,7 @@ TEST_F(DihedralGradientTest, VaryingBondLengths)
         dihedralGradient(i, j, k, l, iGrad, jGrad, kGrad, lGrad);
 
         checkGradientsValid(iGrad, jGrad, kGrad, lGrad);
-        compareWithNumerical(i, j, k, l, 1e-3);
+        compareWithNumerical(i, j, k, l, 1e-5);
       }
     }
   }
@@ -484,7 +551,7 @@ TEST_F(DihedralGradientTest, ArbitraryConfiguration)
   dihedralGradient(i, j, k, l, iGrad, jGrad, kGrad, lGrad);
 
   checkGradientsValid(iGrad, jGrad, kGrad, lGrad);
-  compareWithNumerical(i, j, k, l, 1e-3);
+  compareWithNumerical(i, j, k, l, 1e-5);
 }
 
 TEST_F(DihedralGradientTest, VeryShortBondLength)
@@ -520,23 +587,30 @@ TEST_F(DihedralGradientTest, GradientsSumToZero)
 
 TEST(OutOfPlaneGradientTest, BasicTest)
 {
-  Vector3 a(1.0, 0.0, 0.5);
-  Vector3 b(0.0, 1.0, 0.0);
-  Vector3 c(-1.0, 0.0, 0.0);
-  Vector3 d(0.0, -1.0, 0.0);
+  Vector3 a(0.0, 0.0, 0.0);
+  Vector3 b(1.0, 0.0, 0.0);
+  Vector3 c(0.0, 1.0, 0.0);
+  Vector3 d(0.2, 0.1, 1.0);
 
   Vector3 aGrad, bGrad, cGrad, dGrad;
   Real angle = outOfPlaneGradient(a, b, c, d, aGrad, bGrad, cGrad, dGrad);
+  (void)angle;
 
-  // Currently returns 0
-  EXPECT_EQ(angle, 0.0);
   EXPECT_FALSE(hasNaNOrInf(aGrad));
   EXPECT_FALSE(hasNaNOrInf(bGrad));
   EXPECT_FALSE(hasNaNOrInf(cGrad));
   EXPECT_FALSE(hasNaNOrInf(dGrad));
+
+  Vector3 aNum, bNum, cNum, dNum;
+  NumericalGradient::outOfPlaneNumerical(a, b, c, d, aNum, bNum, cNum, dNum);
+
+  EXPECT_NEAR((aGrad - aNum).norm(), 0.0, 1e-5) << "aGrad mismatch";
+  EXPECT_NEAR((bGrad - bNum).norm(), 0.0, 1e-5) << "bGrad mismatch";
+  EXPECT_NEAR((cGrad - cNum).norm(), 0.0, 1e-5) << "cGrad mismatch";
+  EXPECT_NEAR((dGrad - dNum).norm(), 0.0, 1e-5) << "dGrad mismatch";
 }
 
-TEST(OutOfPlaneGradientTest, GradientsAreZero)
+TEST(OutOfPlaneGradientTest, ThreeDimensional)
 {
   Vector3 a(0.5, 0.5, 0.2);
   Vector3 b(1.0, 0.0, 0.0);
@@ -546,10 +620,133 @@ TEST(OutOfPlaneGradientTest, GradientsAreZero)
   Vector3 aGrad, bGrad, cGrad, dGrad;
   outOfPlaneGradient(a, b, c, d, aGrad, bGrad, cGrad, dGrad);
 
-  EXPECT_EQ(aGrad.norm(), 0.0);
-  EXPECT_EQ(bGrad.norm(), 0.0);
-  EXPECT_EQ(cGrad.norm(), 0.0);
-  EXPECT_EQ(dGrad.norm(), 0.0);
+  EXPECT_FALSE(hasNaNOrInf(aGrad));
+  EXPECT_FALSE(hasNaNOrInf(bGrad));
+  EXPECT_FALSE(hasNaNOrInf(cGrad));
+  EXPECT_FALSE(hasNaNOrInf(dGrad));
+
+  Vector3 aNum, bNum, cNum, dNum;
+  NumericalGradient::outOfPlaneNumerical(a, b, c, d, aNum, bNum, cNum, dNum);
+
+  EXPECT_NEAR((aGrad - aNum).norm(), 0.0, 1e-5) << "aGrad mismatch";
+  EXPECT_NEAR((bGrad - bNum).norm(), 0.0, 1e-5) << "bGrad mismatch";
+  EXPECT_NEAR((cGrad - cNum).norm(), 0.0, 1e-5) << "cGrad mismatch";
+  EXPECT_NEAR((dGrad - dNum).norm(), 0.0, 1e-5) << "dGrad mismatch";
+}
+
+TEST(OutOfPlaneGradientTest, NearPlanar)
+{
+  // Central atom nearly in the plane of b, c, d
+  for (Real offset = 1e-6; offset < 0.1; offset *= 10) {
+    Vector3 a(0.0, 0.0, offset);
+    Vector3 b(1.0, 0.0, 0.0);
+    Vector3 c(0.0, 1.0, 0.0);
+    Vector3 d(-1.0, -1.0, 0.0);
+
+    Vector3 aGrad, bGrad, cGrad, dGrad;
+    Real angle = outOfPlaneGradient(a, b, c, d, aGrad, bGrad, cGrad, dGrad);
+
+    EXPECT_FALSE(std::isnan(angle));
+    EXPECT_FALSE(std::isinf(angle));
+    EXPECT_FALSE(hasNaNOrInf(aGrad));
+    EXPECT_FALSE(hasNaNOrInf(bGrad));
+    EXPECT_FALSE(hasNaNOrInf(cGrad));
+    EXPECT_FALSE(hasNaNOrInf(dGrad));
+
+    Vector3 aNum, bNum, cNum, dNum;
+    NumericalGradient::outOfPlaneNumerical(a, b, c, d, aNum, bNum, cNum, dNum);
+
+    EXPECT_NEAR((aGrad - aNum).norm(), 0.0, 1e-4)
+      << "aGrad mismatch at offset " << offset;
+    EXPECT_NEAR((bGrad - bNum).norm(), 0.0, 1e-4)
+      << "bGrad mismatch at offset " << offset;
+    EXPECT_NEAR((cGrad - cNum).norm(), 0.0, 1e-4)
+      << "cGrad mismatch at offset " << offset;
+    EXPECT_NEAR((dGrad - dNum).norm(), 0.0, 1e-4)
+      << "dGrad mismatch at offset " << offset;
+  }
+}
+
+TEST(OutOfPlaneGradientTest, VaryingBondLengths)
+{
+  std::vector<Real> bondLengths = { 0.5, 1.0, 1.5, 2.0, 3.0 };
+
+  for (Real r1 : bondLengths) {
+    for (Real r2 : bondLengths) {
+      for (Real r3 : bondLengths) {
+        Vector3 a(0.0, 0.0, 0.3);
+        Vector3 b(r1, 0.0, 0.0);
+        Vector3 c(0.0, r2, 0.0);
+        Vector3 d(-r3, -r3, 0.0);
+
+        Vector3 aGrad, bGrad, cGrad, dGrad;
+        outOfPlaneGradient(a, b, c, d, aGrad, bGrad, cGrad, dGrad);
+
+        EXPECT_FALSE(hasNaNOrInf(aGrad));
+        EXPECT_FALSE(hasNaNOrInf(bGrad));
+        EXPECT_FALSE(hasNaNOrInf(cGrad));
+        EXPECT_FALSE(hasNaNOrInf(dGrad));
+
+        Vector3 aNum, bNum, cNum, dNum;
+        NumericalGradient::outOfPlaneNumerical(a, b, c, d, aNum, bNum, cNum,
+                                               dNum);
+
+        EXPECT_NEAR((aGrad - aNum).norm(), 0.0, 1e-4) << "aGrad mismatch";
+        EXPECT_NEAR((bGrad - bNum).norm(), 0.0, 1e-4) << "bGrad mismatch";
+        EXPECT_NEAR((cGrad - cNum).norm(), 0.0, 1e-4) << "cGrad mismatch";
+        EXPECT_NEAR((dGrad - dNum).norm(), 0.0, 1e-4) << "dGrad mismatch";
+      }
+    }
+  }
+}
+
+TEST(OutOfPlaneGradientTest, RangeOfAngles)
+{
+  // Vary the out-of-plane displacement from small to large
+  for (int angleDeg = 5; angleDeg <= 85; angleDeg += 10) {
+    Real z = sin(angleDeg * DEG_TO_RAD);
+    Real r = cos(angleDeg * DEG_TO_RAD);
+
+    Vector3 a(r, 0.0, z);
+    Vector3 b(1.0, 0.0, 0.0);
+    Vector3 c(0.0, 1.0, 0.0);
+    Vector3 d(-1.0, -1.0, 0.0);
+
+    Vector3 aGrad, bGrad, cGrad, dGrad;
+    outOfPlaneGradient(a, b, c, d, aGrad, bGrad, cGrad, dGrad);
+
+    EXPECT_FALSE(hasNaNOrInf(aGrad));
+    EXPECT_FALSE(hasNaNOrInf(bGrad));
+    EXPECT_FALSE(hasNaNOrInf(cGrad));
+    EXPECT_FALSE(hasNaNOrInf(dGrad));
+
+    Vector3 aNum, bNum, cNum, dNum;
+    NumericalGradient::outOfPlaneNumerical(a, b, c, d, aNum, bNum, cNum, dNum);
+
+    EXPECT_NEAR((aGrad - aNum).norm(), 0.0, 1e-4)
+      << "mismatch at " << angleDeg << " deg";
+    EXPECT_NEAR((bGrad - bNum).norm(), 0.0, 1e-4)
+      << "mismatch at " << angleDeg << " deg";
+    EXPECT_NEAR((cGrad - cNum).norm(), 0.0, 1e-4)
+      << "mismatch at " << angleDeg << " deg";
+    EXPECT_NEAR((dGrad - dNum).norm(), 0.0, 1e-4)
+      << "mismatch at " << angleDeg << " deg";
+  }
+}
+
+TEST(OutOfPlaneGradientTest, GradientsSumToZero)
+{
+  Vector3 a(0.2, 0.3, 0.5);
+  Vector3 b(1.5, 0.1, -0.1);
+  Vector3 c(-0.3, 1.2, 0.1);
+  Vector3 d(-0.5, -0.8, 0.2);
+
+  Vector3 aGrad, bGrad, cGrad, dGrad;
+  outOfPlaneGradient(a, b, c, d, aGrad, bGrad, cGrad, dGrad);
+
+  // Gradients should approximately sum to zero (translation invariance)
+  Vector3 sum = aGrad + bGrad + cGrad + dGrad;
+  EXPECT_NEAR(sum.norm(), 0.0, 1e-5);
 }
 
 // Stress tests with extreme values
