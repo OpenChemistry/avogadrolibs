@@ -739,7 +739,6 @@ public:
       Vector3d vk(x.segment<3>(3 * k));
       Vector3d vl(x.segment<3>(3 * l));
 
-      // use outOfPlaneAngle() from angletools.h
       Real angle = outOfPlaneAngle(vi, vj, vk, vl) * DEG_TO_RAD;
       energy += koop * (c0 + c1 * cos(angle) + c2 * cos(2 * angle));
     }

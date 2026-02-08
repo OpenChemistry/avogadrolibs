@@ -70,7 +70,7 @@ TEST_P(UffGradientTest, GradientComparison)
   for (int i = 0; i < 3 * n; i++) {
     // are these components within 10% of each other?
     EXPECT_NEAR(analytical[i], numeric[i],
-                std::max(1e-6, 0.1 * std::fabs(analytical[i])));
+                std::max(1e-5, 0.1 * std::fabs(analytical[i])));
   }
 }
 

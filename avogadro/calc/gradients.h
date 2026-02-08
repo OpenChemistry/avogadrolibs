@@ -165,49 +165,56 @@ inline Real outOfPlaneGradient(const Vector3& point, const Vector3& b,
 {
   dGrad = cGrad = bGrad = aGrad = Vector3::Zero();
 
-  // use outOfPlaneAngle() from angletools.h
-  const Real angle = outOfPlaneAngle(point, b, c, d) * DEG_TO_RAD;
-  const Real sinAngle = sin(angle);
+  // Bond vectors from central atom to surrounding atoms
+  Vector3 u1 = b - point;
+  Vector3 u2 = c - point;
+  Vector3 u3 = d - point;
 
-  // Get the bond vectors (point is the central atom)
-  Vector3 ij = b - point;
-  Vector3 ik = c - point;
-  Vector3 il = d - point;
+  const Real r1 = u1.norm();
+  const Real r2 = u2.norm();
+  const Real r3 = u3.norm();
+  if (r1 < 1e-3 || r2 < 1e-3 || r3 < 1e-3)
+    return 0.0;
 
-  const Real rij = ij.norm();
-  const Real rik = ik.norm();
-  const Real ril = il.norm();
-  // check if the bond vectors are near zero
-  if (rij < 1e-3 || rik < 1e-3 || ril < 1e-3)
-    return angle;
+  // Normalize to unit vectors
+  u1 /= r1;
+  u2 /= r2;
+  u3 /= r3;
 
-  // normalize the bond vectors
-  ij = ij / rij;
-  ik = ik / rik;
-  il = il / ril;
+  // Use outOfPlaneAngle (Wilson angle) for the angle value
+  const Real chi = outOfPlaneAngle(point, b, c, d) * DEG_TO_RAD;
+  const Real sinChi = std::sin(chi);
+  const Real cosChi = std::cos(chi);
+  if (std::abs(cosChi) < 1e-6)
+    return chi;
 
-  // we also need the angle between the bonds (i.e., j-i-k)
-  // ij and ik are already normalized
-  Real cosTheta = ij.dot(ik);
-  // clamp the cosTheta to -1 to 1
-  cosTheta = std::clamp(cosTheta, -1.0, 1.0);
-  const Real theta = acos(cosTheta);
-  const Real sinTheta = sin(theta);
-  if (std::abs(sinTheta) < 1e-6)
-    return angle;
+  // Cross product and derived quantities needed for gradient formulas
+  const Vector3 n = u1.cross(u2);
+  const Real sinTheta = n.norm();
+  if (sinTheta < 1e-6)
+    return chi;
 
-  // get the cross products
-  Vector3 ik_cross_il = ik.cross(il).stableNormalized();
-  Vector3 ij_cross_il = ij.cross(il).stableNormalized();
+  const Real cosTheta = u1.dot(u2);
+  const Vector3 n_hat = n / sinTheta;
+  const Real sinTheta2 = sinTheta * sinTheta;
 
-  const Real ratio = cosTheta * sinAngle / sinTheta;
+  // Gradient for atom d (out-of-plane atom)
+  dGrad = (n_hat - u3 * sinChi) / (r3 * cosChi);
 
-  bGrad = -1.0 / (rij * sinTheta) * (ik_cross_il - ij + ik * ratio);
-  cGrad = -1.0 / (rik * sinTheta) * (ij_cross_il - ik + ij * ratio);
-  dGrad = -1.0 / ril * (-ij_cross_il / sinTheta - il * sinAngle);
+  // Gradient for atom b (in-plane)
+  const Vector3 u2xu3 = u2.cross(u3);
+  bGrad = (u2xu3 * sinTheta - u1 * sinChi + u2 * sinChi * cosTheta) /
+          (r1 * cosChi * sinTheta2);
+
+  // Gradient for atom c (in-plane)
+  const Vector3 u3xu1 = u3.cross(u1);
+  cGrad = (u3xu1 * sinTheta - u2 * sinChi + u1 * sinChi * cosTheta) /
+          (r2 * cosChi * sinTheta2);
+
+  // Central atom gradient from translation invariance
   aGrad = -(bGrad + cGrad + dGrad);
 
-  return angle;
+  return chi;
 }
 
 } // namespace Avogadro::Calc
