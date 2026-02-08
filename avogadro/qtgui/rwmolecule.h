@@ -18,6 +18,7 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/crystaltools.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
@@ -342,6 +343,14 @@ public:
    * @return True on success, false otherwise.
    */
   bool setColor(Index atomId, Vector3ub color);
+
+  /**
+   * Set the color of a single residue.
+   * @param residueId The index of the residue to modify.
+   * @param color The new color.
+   * @return True on success, false otherwise.
+   */
+  bool setResidueColor(Index residueId, Vector3ub color);
 
   bool setLayer(Index atomId, size_t layer);
   size_t layer(Index atomId) const;

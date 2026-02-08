@@ -276,6 +276,18 @@ bool RWMolecule::setColor(Index atomId, Vector3ub color)
   return true;
 }
 
+bool RWMolecule::setResidueColor(Index residueId, Vector3ub color)
+{
+  if (residueId >= m_molecule.residueCount())
+    return false;
+
+  auto* comm = new SetResidueColorCommand(
+    *this, residueId, m_molecule.residue(residueId).color(), color);
+  comm->setText(tr("Change Residue Color"));
+  m_undoStack.push(comm);
+  return true;
+}
+
 bool RWMolecule::setLayer(Index atomId, size_t layer)
 {
   if (atomId >= atomCount())
