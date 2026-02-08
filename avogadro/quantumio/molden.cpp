@@ -512,7 +512,7 @@ bool MoldenFile::write(std::ostream& out, const Core::Molecule& molecule)
     writeFrequencies(out, molecule);
   }
 
-  return true;
+  return out.good();
 }
 
 void MoldenFile::writeAtoms(std::ostream& out, const Core::Molecule& molecule)
