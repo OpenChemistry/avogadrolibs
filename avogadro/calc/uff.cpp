@@ -962,7 +962,7 @@ public:
       Real dE = kijkl * torsion._n * sin(torsion._n * phi) * cosPhi0;
 
       // skip this torsion
-      if (std::abs(sinPhi) < 1e-6 || std::isnan(dE))
+      if (std::isnan(dE))
         continue;
 
       // add the gradients to the total gradients for each atom
@@ -983,20 +983,32 @@ public:
       // E = depth * (x^12 / r^12 - 2 * x^6 / r^6)
       // dE / dr = -12 * depth * x^6 / r^7 * (x^6 / r^6 - 1)
 
-      Vector3 r = Vector3(x.segment<3>(3 * i)) - Vector3(x.segment<3>(3 * j));
-      if (m_cell != nullptr) {
+      const Vector3d vi = x.segment<3>(3 * i);
+      const Vector3d vj = x.segment<3>(3 * j);
+      Vector3d iGrad;
+      Vector3d jGrad;
+      Real r = 0.0;
+      if (m_cell == nullptr) {
+        if (!distanceGradient(vi, vj, r, iGrad, jGrad))
+          continue; // skip degenerate pair
+      } else {
         // handle unit cell periodic boundary conditions
-        r = m_cell->minimumImage(r);
+        Vector3d diff = m_cell->minimumImage(vi - vj);
+        r = diff.norm();
+        if (r < 1e-3)
+          continue;
+        const Vector3d direction = diff / r;
+        iGrad = direction;
+        jGrad = -direction;
       }
-      Real r2 = r.squaredNorm();
 
-      Real r6 = r2 * r2 * r2;
-      Real r7 = r6 * sqrt(r2);
-      Real dE = 12 * vdw._depth * vdw._x6 / r7 * (1 - vdw._x6 / r6);
+      const Real r2 = r * r;
+      const Real r6 = r2 * r2 * r2;
+      const Real r7 = r6 * r;
+      const Real dEdr = 12 * vdw._depth * vdw._x6 / r7 * (1 - vdw._x6 / r6);
 
-      Vector3 force = dE * r;
-      grad.segment<3>(3 * i) += force;
-      grad.segment<3>(3 * j) -= force;
+      grad.segment<3>(3 * i) += dEdr * iGrad;
+      grad.segment<3>(3 * j) += dEdr * jGrad;
     }
   }
 };
