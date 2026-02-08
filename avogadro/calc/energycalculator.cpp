@@ -193,8 +193,8 @@ void EnergyCalculator::constraintGradients(const TVector& x, TVector& grad)
     const Real delta = distance - constraint.value();
     const Real dE = constraint.k() * 2 * delta;
 
-    grad.segment<3>(3 * a) += dE * vAB;
-    grad.segment<3>(3 * b) -= dE * vAB;
+    grad.segment<3>(3 * a) += (dE * vAB) / distance;
+    grad.segment<3>(3 * b) -= (dE * vAB) / distance;
   }
 
   for (const auto& constraint : m_angleConstraints) {

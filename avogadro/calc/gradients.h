@@ -67,8 +67,8 @@ inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
   const Vector3 n = ab_cross_cb / crossNorm;
 
   // Gradients of the cross products
-  Vector3 grad_cross_a = (cb.cross(n)).stableNormalized();
-  Vector3 grad_cross_c = (n.cross(ab)).stableNormalized();
+  Vector3 grad_cross_a = (cb.cross(n));
+  Vector3 grad_cross_c = (n.cross(ab));
   Vector3 grad_cross_b = -(grad_cross_a + grad_cross_c);
 
   // Gradients of the dot product

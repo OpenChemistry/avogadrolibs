@@ -433,8 +433,8 @@ public:
       oop._atom4 = neighbors[2];
 
       std::string symbol = uffparams[m_atomTypes[i]].label;
-      if (symbol == "N_R" || symbol == "N_2" || symbol == "N_R" ||
-          symbol == "O_2" || symbol == "O_R") {
+      if (symbol == "N_R" || symbol == "N_2" || symbol == "O_R" ||
+          symbol == "O_2") {
         oop._c0 = 1.0;
         oop._c1 = -1.0;
         oop._c2 = 0.0;
