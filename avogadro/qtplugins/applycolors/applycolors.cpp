@@ -300,7 +300,7 @@ void ApplyColors::applyChargeColors()
 
 void ApplyColors::applyDistanceColors()
 {
-  if (m_molecule == nullptr && m_molecule->atomCount() == 0)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   bool isSelection = !m_molecule->isSelectionEmpty();
@@ -417,9 +417,11 @@ void ApplyColors::applyCustomColorResidue(const QColor& new_color)
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
     rwmol->setResidueColor(i, color);
   }
@@ -439,9 +441,11 @@ void ApplyColors::resetColorsResidue()
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
     int offset = 0;
     char chainId = residue.chainId();
@@ -471,9 +475,11 @@ void ApplyColors::applySecondaryStructureColors()
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
     Core::Residue::SecondaryStructure type = residue.secondaryStructure();
     if (type < 0 || type > 7) {
@@ -557,9 +563,11 @@ void ApplyColors::applyAminoColors()
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
     int offset = residueNameToOffset(residue.residueName());
 
@@ -582,9 +590,11 @@ void ApplyColors::applyShapelyColors()
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
     int offset = residueNameToOffset(residue.residueName());
 
