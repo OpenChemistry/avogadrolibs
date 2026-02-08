@@ -21,6 +21,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <cmath>
 #include <iostream>
 #include <utility>
 
@@ -39,8 +40,8 @@ Molecule::Molecule(const Molecule& other)
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
     m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
-    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
+    m_coordinates3d(other.m_coordinates3d), m_velocities(other.m_velocities),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
@@ -137,8 +138,8 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
     m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
-    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
+    m_coordinates3d(other.m_coordinates3d), m_velocities(other.m_velocities),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
@@ -179,6 +180,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondLabels = other.m_bondLabels;
     m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
+    m_velocities = other.m_velocities;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
@@ -246,6 +248,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondLabels = other.m_bondLabels;
     m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
+    m_velocities = other.m_velocities;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
@@ -1381,6 +1384,71 @@ bool Molecule::setCoordinate3d(const Array<Vector3>& coords, size_t index)
     m_coordinates3d.resize(index + 1);
   m_coordinates3d[index] = coords;
   return true;
+}
+
+void Molecule::estimateVelocities()
+{
+  if (m_coordinates3d.size() < 2 ||
+      m_timesteps.size() != m_coordinates3d.size())
+    return;
+
+  m_velocities.resize(m_coordinates3d.size());
+
+  for (size_t i = 0; i < m_coordinates3d.size(); ++i) {
+    double dt = 0.0;
+    if (i > 0) {
+      dt = m_timesteps[i] - m_timesteps[i - 1];
+    } else if (m_timesteps.size() > 1) {
+      dt = m_timesteps[1] - m_timesteps[0];
+    }
+
+    if (std::abs(dt) < 1e-6)
+      continue;
+
+    m_velocities[i].resize(atomCount());
+
+    const Array<Vector3>& currentCoords = m_coordinates3d[i];
+    const Array<Vector3>& prevCoords =
+      (i > 0) ? m_coordinates3d[i - 1] : m_coordinates3d[0];
+    const Array<Vector3>& nextCoords = (i < m_coordinates3d.size() - 1)
+                                         ? m_coordinates3d[i + 1]
+                                         : m_coordinates3d[i];
+
+    if (i > 0) {
+      // Backward difference for i > 0
+      for (Index j = 0; j < atomCount(); ++j) {
+        m_velocities[i][j] = (currentCoords[j] - prevCoords[j]) / dt;
+      }
+    } else {
+      // Forward difference for i == 0
+      for (Index j = 0; j < atomCount(); ++j) {
+        m_velocities[i][j] = (nextCoords[j] - currentCoords[j]) / dt;
+      }
+    }
+  }
+}
+
+Array<Vector3> Molecule::velocities(int index) const
+{
+  if (index >= 0 && index < static_cast<int>(m_velocities.size()))
+    return m_velocities[index];
+  return Array<Vector3>();
+}
+
+bool Molecule::setVelocities(const Array<Vector3>& velocities, int index)
+{
+  if (index < 0)
+    return false;
+
+  if (static_cast<int>(m_velocities.size()) <= index)
+    m_velocities.resize(index + 1);
+  m_velocities[index] = velocities;
+  return true;
+}
+
+void Molecule::clearVelocities()
+{
+  m_velocities.clear();
 }
 
 double Molecule::timeStep(int index, bool& status)

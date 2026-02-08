@@ -666,6 +666,26 @@ public:
   void clearCoordinate3d();
 
   /**
+   * Estimate velocities from the coordinate sets and timesteps.
+   */
+  void estimateVelocities();
+
+  /**
+   * Get the velocities for the specified index.
+   */
+  Array<Vector3> velocities(int index) const;
+
+  /**
+   * Set the velocities for the specified index.
+   */
+  bool setVelocities(const Array<Vector3>& velocities, int index);
+
+  /**
+   * Clear all velocity sets.
+   */
+  void clearVelocities();
+
+  /**
    * Timestep property is used when molecular dynamics trajectories are read
    */
   bool setTimeStep(double timestep, int index);
@@ -955,6 +975,7 @@ protected:
   Array<std::string> m_bondLabels;
   Array<std::string> m_residueLabels;
   Array<Array<Vector3>> m_coordinates3d; //!< Store conformers/trajectories.
+  Array<Array<Vector3>> m_velocities;    //!< Store velocities.
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;
