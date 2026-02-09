@@ -1,8 +1,6 @@
 name: Linux Fuzz Tests
 
 on:
-  push:
-  pull_request:
   schedule:
   - cron: '0 3 * * *'
   workflow_dispatch:
@@ -43,7 +41,10 @@ jobs:
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
-        CC=clang CXX=clang++ cmake -G Ninja $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=asan -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DENABLE_FUZZ=ON -DUSE_SYSTEM_EIGEN=TRUE
+        CFLAGS="-O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined" \
+        CXXFLAGS="-O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined" \
+        LDFLAGS="-fsanitize=address,undefined" \
+        CC=clang CXX=clang++ cmake -G Ninja $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DENABLE_FUZZ=ON -DUSE_SYSTEM_EIGEN=TRUE
       shell: bash
 
     - name: Build
@@ -62,8 +63,6 @@ jobs:
 
         io_fuzzers=(cjson cml sdf pdb xyz)
         quantum_fuzzers=(cube fchk molden orca qcschema)
-
-        AVOGADRO_DATA_ROOT=../../avogadrolibs/openchemistry/avogadrodata
 
         for f in "${io_fuzzers[@]}"; do
           echo "Running IO fuzzer: $f"
@@ -95,8 +94,3 @@ jobs:
           ${{ runner.workspace }}/build/avogadrolibs/timeout*
           ${{ runner.workspace }}/build/avogadrolibs/leak*
         if-no-files-found: ignore
-
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
-      timeout-minutes: 60
