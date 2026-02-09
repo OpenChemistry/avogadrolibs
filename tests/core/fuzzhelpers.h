@@ -20,9 +20,9 @@
 namespace Avogadro::FuzzHelpers {
 
 // Caps to prevent OOM/timeout during fuzzing
-constexpr size_t kMaxAtoms = 64;
+constexpr size_t kMaxAtoms = 128;
 constexpr size_t kMaxBonds = 128;
-constexpr double kCoordRange = 20.0; // angstroms
+constexpr double kCoordRange = 100.0; // angstroms
 
 /**
  * Build a "mindless molecule" from fuzz data.
@@ -105,6 +105,23 @@ inline Core::Molecule buildCrystalMolecule(FuzzedDataProvider& fdp)
 inline std::string consumeString(FuzzedDataProvider& fdp, size_t maxLen = 4096)
 {
   return fdp.ConsumeRandomLengthString(maxLen);
+}
+
+unsigned char consumeAtomicNumber(FuzzedDataProvider& fdp)
+{
+  uint8_t z = fdp.ConsumeIntegral<uint8_t>();
+  return static_cast<unsigned char>(1 + (z % (Core::element_count - 1)));
+}
+
+Vector3 consumeVector3(FuzzedDataProvider& fdp)
+{
+  float x = fdp.ConsumeFloatingPointInRange<float>(-FuzzHelpers::kCoordRange,
+                                                   FuzzHelpers::kCoordRange);
+  float y = fdp.ConsumeFloatingPointInRange<float>(-FuzzHelpers::kCoordRange,
+                                                   FuzzHelpers::kCoordRange);
+  float z = fdp.ConsumeFloatingPointInRange<float>(-FuzzHelpers::kCoordRange,
+                                                   FuzzHelpers::kCoordRange);
+  return Vector3(x, y, z);
 }
 
 } // namespace Avogadro::FuzzHelpers

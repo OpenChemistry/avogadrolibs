@@ -13,25 +13,6 @@
 using namespace Avogadro;
 using namespace Avogadro::Core;
 
-namespace {
-unsigned char consumeAtomicNumber(FuzzedDataProvider& fdp)
-{
-  uint8_t z = fdp.ConsumeIntegral<uint8_t>();
-  return static_cast<unsigned char>(1 + (z % (Core::element_count - 1)));
-}
-
-Vector3 consumeVector3(FuzzedDataProvider& fdp)
-{
-  float x = fdp.ConsumeFloatingPointInRange<float>(-FuzzHelpers::kCoordRange,
-                                                   FuzzHelpers::kCoordRange);
-  float y = fdp.ConsumeFloatingPointInRange<float>(-FuzzHelpers::kCoordRange,
-                                                   FuzzHelpers::kCoordRange);
-  float z = fdp.ConsumeFloatingPointInRange<float>(-FuzzHelpers::kCoordRange,
-                                                   FuzzHelpers::kCoordRange);
-  return Vector3(x, y, z);
-}
-} // namespace
-
 // Fuzz Core::Molecule mutation operations and common queries.
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
 {
