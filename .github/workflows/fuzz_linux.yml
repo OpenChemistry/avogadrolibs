@@ -61,26 +61,36 @@ jobs:
         cmake -DENABLE_FUZZ=ON .
         cmake --build .
 
+        export LLVM_SYMBOLIZER_PATH="$(command -v llvm-symbolizer)"
+        export ASAN_OPTIONS="symbolize=1:detect_leaks=1:abort_on_error=1:color=always"
+        export UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=1"
+
         io_fuzzers=(cjson cml sdf pdb xyz)
         quantum_fuzzers=(cube fchk molden orca qcschema)
 
+        artifact_root="${{ runner.workspace }}/build/avogadrolibs/fuzz-artifacts"
+
         for f in "${io_fuzzers[@]}"; do
           echo "Running IO fuzzer: $f"
+          artifact_dir="${artifact_root}/io/${f}"
+          mkdir -p "${artifact_dir}"
           corpus_dir="${AVOGADRO_DATA_ROOT}/data/${f}"
           if [ -d "${corpus_dir}" ]; then
-            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 "${corpus_dir}"
+            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"
           else
-            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10
+            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"
           fi
         done
 
         for f in "${quantum_fuzzers[@]}"; do
           echo "Running QuantumIO fuzzer: $f"
+          artifact_dir="${artifact_root}/quantumio/${f}"
+          mkdir -p "${artifact_dir}"
           corpus_dir="${AVOGADRO_DATA_ROOT}/data/${f}"
           if [ -d "${corpus_dir}" ]; then
-            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 "${corpus_dir}"
+            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"
           else
-            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10
+            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"
           fi
         done
 
@@ -93,4 +103,5 @@ jobs:
           ${{ runner.workspace }}/build/avogadrolibs/crash*
           ${{ runner.workspace }}/build/avogadrolibs/timeout*
           ${{ runner.workspace }}/build/avogadrolibs/leak*
+          ${{ runner.workspace }}/build/avogadrolibs/fuzz-artifacts
         if-no-files-found: ignore
