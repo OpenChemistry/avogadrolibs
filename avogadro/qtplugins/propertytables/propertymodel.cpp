@@ -207,14 +207,10 @@ QString formatChargeType(QString type)
     return "RESP";
   else if (type.toLower() == "mbis")
     return "MBIS";
-  else if (type.toLower() == "mbis")
-    return "MBIS";
   else if (type.toLower() == "abcg2")
     return "ABCG2";
   else if (type.toLower() == "cm5")
     return "CM5";
-  else if (type.toLower() == "chelpg")
-    return "CHELPG";
   else
     return type;
 }
