@@ -460,13 +460,21 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
         if (!residue.is_object())
           continue; // malformed
 
+        // Validate required fields exist and have correct types
+        if (!residue.contains("name") || !residue["name"].is_string())
+          continue;
+        if (!residue.contains("id") || !residue["id"].is_number_integer())
+          continue;
+        if (!residue.contains("chainId") ||
+            !residue["chainId"].is_number_integer())
+          continue;
+
         auto name = residue["name"].get<std::string>();
         auto id = static_cast<Index>(residue["id"]);
-        auto chainId = residue["chainId"].get<char>();
+        auto chainId = static_cast<char>(residue["chainId"].get<int>());
         Residue newResidue(name, id, chainId);
 
-        json hetero = residue["hetero"];
-        if (hetero == true)
+        if (residue.contains("hetero") && residue["hetero"] == true)
           newResidue.setHeterogen(true);
 
         int secStruct = residue.value("secStruct", -1);
@@ -475,26 +483,29 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
             static_cast<Avogadro::Core::Residue::SecondaryStructure>(
               secStruct));
 
-        json atomsResidue = residue["atoms"];
-        if (atomsResidue.is_object()) {
+        if (residue.contains("atoms") && residue["atoms"].is_object()) {
+          json atomsResidue = residue["atoms"];
           for (auto& item : atomsResidue.items()) {
-            if (item.value() < molecule.atomCount()) {
-              const Atom& atom = molecule.atom(item.value());
+            if (item.value().is_number_integer() &&
+                static_cast<Index>(item.value()) < molecule.atomCount()) {
+              const Atom& atom =
+                molecule.atom(static_cast<Index>(item.value()));
               newResidue.addResidueAtom(item.key(), atom);
             }
           }
         }
-        json color = residue["color"];
-        if (color.is_array() && color.size() == 3) {
+        if (residue.contains("color") && residue["color"].is_array() &&
+            residue["color"].size() == 3 && isNumericArray(residue["color"])) {
+          json color = residue["color"];
           Vector3ub col = Vector3ub(color[0], color[1], color[2]);
           newResidue.setColor(col);
         }
 
         molecule.addResidue(newResidue);
 
-        json label = residue["label"];
-        if (label.is_string())
-          molecule.setResidueLabel(molecule.residueCount() - 1, label);
+        if (residue.contains("label") && residue["label"].is_string())
+          molecule.setResidueLabel(molecule.residueCount() - 1,
+                                   residue["label"]);
       }
     }
   }
