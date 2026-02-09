@@ -77,6 +77,16 @@ TEST(XyzTest, readTotalEnergy)
   }
 }
 
+TEST(XyzTest, readZeroAtomsNoHang)
+{
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string str = "0\ncomment\n0\n";
+  EXPECT_TRUE(xyz.readString(str, molecule));
+  EXPECT_TRUE(xyz.error().empty());
+  EXPECT_EQ(molecule.atomCount(), 0);
+}
+
 // Turn off the option to perceive bonds
 TEST(XyzTest, readAtomicSymbolsNoBonds)
 {

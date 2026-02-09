@@ -56,7 +56,7 @@ jobs:
     - name: Run fuzz tests
       shell: bash
       run: |
-        set -euo pipefail
+        set -uo pipefail
         cd "${{ runner.workspace }}/build/avogadrolibs"
         cmake -DENABLE_FUZZ=ON .
         cmake --build .
@@ -72,15 +72,21 @@ jobs:
 
         artifact_root="${{ runner.workspace }}/build/avogadrolibs/fuzz-artifacts"
 
+        failures=0
+
         for f in "${io_fuzzers[@]}"; do
           echo "Running IO fuzzer: $f"
           artifact_dir="${artifact_root}/io/${f}"
           mkdir -p "${artifact_dir}"
           corpus_dir="${AVOGADRO_DATA_ROOT}/data/${f}"
           if [ -d "${corpus_dir}" ]; then
-            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"
+            if ! "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"; then
+              failures=1
+            fi
           else
-            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"
+            if ! "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"; then
+              failures=1
+            fi
           fi
         done
 
@@ -90,11 +96,16 @@ jobs:
           mkdir -p "${artifact_dir}"
           corpus_dir="${AVOGADRO_DATA_ROOT}/data/${f}"
           if [ -d "${corpus_dir}" ]; then
-            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"
+            if ! "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"; then
+              failures=1
+            fi
           else
-            "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"
+            if ! "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"; then
+              failures=1
+            fi
           fi
         done
+        exit "${failures}"
 
         for f in "${core_fuzzers[@]}"; do
           echo "Running Core fuzzer: $f"

@@ -269,7 +269,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   auto numAtoms2 = lexicalCast<int>(buffer);
-  if (numAtoms2 && numAtoms == *numAtoms2) {
+  if (numAtoms2 && *numAtoms2 > 0 &&
+      numAtoms == static_cast<size_t>(*numAtoms2)) {
     getline(inStream, buffer); // comment line
     // check for properties in the comment line
     if (auto energy = findEnergy(buffer)) {
@@ -279,7 +280,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     mol.setCoordinate3d(mol.atomPositions3d(), 0);
     int coordSet = 1;
     bool done = false;
-    while (numAtoms == numAtoms2) {
+    while (numAtoms2 && *numAtoms2 > 0 &&
+           numAtoms == static_cast<size_t>(*numAtoms2)) {
       Array<Vector3> positions;
       positions.reserve(numAtoms);
 
@@ -323,8 +325,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         }
 
         numAtoms2 = lexicalCast<int>(buffer);
-        if (numAtoms != numAtoms2)
+        if (!numAtoms2 || *numAtoms2 <= 0 ||
+            numAtoms != static_cast<size_t>(*numAtoms2))
           break;
+      } else {
+        break;
       }
 
       std::getline(inStream, buffer); // Skip the blank
