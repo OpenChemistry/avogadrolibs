@@ -225,6 +225,21 @@ void PropertyView::keyPressEvent(QKeyEvent* event)
   QApplication::clipboard()->setText(text);
 }
 
+bool PropertyView::edit(const QModelIndex& index, EditTrigger trigger,
+                        QEvent* event)
+{
+  if (m_model != nullptr && m_model->isColorIndex(index)) {
+    if (m_inColorEdit)
+      return true;
+    m_inColorEdit = true;
+    m_model->setData(index, QVariant(), Qt::EditRole);
+    m_inColorEdit = false;
+    return true;
+  }
+
+  return QTableView::edit(index, trigger, event);
+}
+
 void PropertyView::copySelectedRowsToClipboard()
 {
   // get the selected rows (if any)

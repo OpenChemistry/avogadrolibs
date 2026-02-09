@@ -33,12 +33,15 @@ public:
 protected:
   // copy the selected properties to the clipboard
   void keyPressEvent(QKeyEvent* event) override;
+  bool edit(const QModelIndex& index, EditTrigger trigger,
+            QEvent* event) override;
 
 private:
   PropertyType m_type;
   QtGui::Molecule* m_molecule;
   PropertyModel* m_model;
   bool m_updatingSelection = false;
+  bool m_inColorEdit = false;
   void copySelectedRowsToClipboard();
   void openExportDialogBox();
   void constrainSelectedRows();

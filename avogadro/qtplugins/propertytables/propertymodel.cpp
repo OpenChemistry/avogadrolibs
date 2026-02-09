@@ -19,6 +19,7 @@
 
 #include <QtCore/QDebug>
 #include <QtGui/QColor>
+#include <QtWidgets/QColorDialog>
 
 #include <limits>
 
@@ -280,6 +281,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       return color;
     }
   }
+
+  if (role == Qt::ToolTipRole && isColorIndex(index))
+    return tr("Click to change color");
 
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
@@ -739,17 +743,17 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
     if (index.column() == AtomDataElement ||
         index.column() == AtomDataFormalCharge || index.column() == AtomDataX ||
         index.column() == AtomDataY || index.column() == AtomDataZ ||
-        index.column() == AtomDataLabel || index.column() == AtomDataIsotope)
+        index.column() == AtomDataLabel || index.column() == AtomDataIsotope ||
+        index.column() == AtomDataColor)
       return editable;
-    // TODO: Color
   } else if (m_type == BondType) {
     if (index.column() == BondDataOrder || index.column() == BondDataLength ||
         index.column() == BondDataLabel)
       return editable;
   } else if (m_type == ResidueType) {
-    if (index.column() == ResidueDataLabel)
+    if (index.column() == ResidueDataLabel ||
+        index.column() == ResidueDataColor)
       return editable;
-    // TODO: Color
   } else if (m_type == AngleType) {
     if (index.column() == AngleDataValue)
       return editable;
@@ -841,6 +845,21 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         }
         break;
       }
+      case AtomDataColor: {
+        // get the current color for the dialog
+        Vector3ub currentColor = m_molecule->color(index.row());
+        QColor currentQColor(currentColor[0], currentColor[1], currentColor[2]);
+        QColor newQColor = QColorDialog::getColor(currentQColor, nullptr,
+                                                  "Select Color for Atom");
+        if (newQColor.isValid()) {
+          Vector3ub newColor;
+          newColor[0] = static_cast<unsigned char>(newQColor.red());
+          newColor[1] = static_cast<unsigned char>(newQColor.green());
+          newColor[2] = static_cast<unsigned char>(newQColor.blue());
+          undoMolecule->setColor(index.row(), newColor);
+        }
+        break;
+      }
       default:
         return false;
     }
@@ -884,7 +903,23 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Residues);
       return true;
-    }
+    } else if (index.column() == ResidueDataColor) {
+      // get the current color for the dialog
+      Vector3ub currentColor = m_molecule->residue(index.row()).color();
+      QColor currentQColor(currentColor[0], currentColor[1], currentColor[2]);
+      QColor newQColor = QColorDialog::getColor(currentQColor, nullptr,
+                                                "Select Color for Residue");
+      if (newQColor.isValid()) {
+        Vector3ub newColor;
+        newColor[0] = static_cast<unsigned char>(newQColor.red());
+        newColor[1] = static_cast<unsigned char>(newQColor.green());
+        newColor[2] = static_cast<unsigned char>(newQColor.blue());
+        undoMolecule->setResidueColor(index.row(), newColor);
+        emit dataChanged(index, index);
+        m_molecule->emitChanged(Molecule::Residues);
+        return true;
+      }
+    } // end editing residues
   } else if (m_type == AngleType) {
     if (index.column() == AngleDataValue) {
       bool ok;
@@ -908,6 +943,19 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       return true;
     }
   }
+
+  return false;
+}
+
+bool PropertyModel::isColorIndex(const QModelIndex& index) const
+{
+  if (!index.isValid())
+    return false;
+
+  if (m_type == AtomType)
+    return index.column() == AtomDataColor;
+  if (m_type == ResidueType)
+    return index.column() == ResidueDataColor;
 
   return false;
 }

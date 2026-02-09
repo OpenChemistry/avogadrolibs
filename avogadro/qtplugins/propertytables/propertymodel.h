@@ -58,6 +58,7 @@ public:
 
   // Return what type of model this is
   PropertyType type() const { return m_type; };
+  bool isColorIndex(const QModelIndex& index) const;
 
   // Generate all data pertaining to angles and torsions
   void updateCache() const;
