@@ -1,0 +1,80 @@
+name: Linux Fuzz Tests
+
+on:
+  schedule:
+  - cron: '0 3 * * *'
+  workflow_dispatch:
+
+env:
+  QT_VERSION: 6.8.3
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
+  AVOGADRO_DATA_ROOT: ${{ github.workspace }}/openchemistry/avogadrodata
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fuzz:
+    name: Ubuntu Fuzz Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install clang ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@d325aaf2a8baeeda41ad0b5d39f84a6af9bcf005 # v4.3.0
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        CC=clang CXX=clang++ cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=asan -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DENABLE_FUZZ=ON -DUSE_SYSTEM_EIGEN=TRUE
+      shell: bash
+
+    - name: Build
+      run: |
+        CC=clang CXX=clang++ cmake --build .
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Run fuzz tests
+      shell: bash
+      run: |
+        set -euo pipefail
+        cd "${{ runner.workspace }}/build/avogadrolibs"
+
+        io_fuzzers=(cjson cml sdf pdb xyz)
+        quantum_fuzzers=(cube fchk molden orca qcschema)
+
+        for f in "${io_fuzzers[@]}"; do
+          echo "Running IO fuzzer: $f"
+          corpus_dir="${AVOGADRO_DATA_ROOT}/data/${f}"
+          if [ -d "${corpus_dir}" ]; then
+            "./tests/io/fuzz_${f}" -max_total_time=60 -timeout=10 "${corpus_dir}"
+          else
+            "./tests/io/fuzz_${f}" -max_total_time=60 -timeout=10
+          fi
+        done
+
+        for f in "${quantum_fuzzers[@]}"; do
+          echo "Running QuantumIO fuzzer: $f"
+          corpus_dir="${AVOGADRO_DATA_ROOT}/data/${f}"
+          if [ -d "${corpus_dir}" ]; then
+            "./tests/quantumio/fuzz_${f}" -max_total_time=60 -timeout=10 "${corpus_dir}"
+          else
+            "./tests/quantumio/fuzz_${f}" -max_total_time=60 -timeout=10
+          fi
+        done
