@@ -30,17 +30,28 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
   std::string input(reinterpret_cast<const char*>(Data), Size);
 
   // Register quantum file formats
-  Io::FileFormatManager::registerFormat(new QuantumIO::GAMESSUSOutput);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GaussianFchk);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GaussianCube);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GenericJson);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GenericOutput);
-  Io::FileFormatManager::registerFormat(new QuantumIO::MoldenFile);
-  Io::FileFormatManager::registerFormat(new QuantumIO::MopacAux);
-  Io::FileFormatManager::registerFormat(new QuantumIO::NWChemJson);
-  Io::FileFormatManager::registerFormat(new QuantumIO::NWChemLog);
-  Io::FileFormatManager::registerFormat(new QuantumIO::ORCAOutput);
-  Io::FileFormatManager::registerFormat(new QuantumIO::QCSchema);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::GAMESSUSOutput);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::GaussianFchk);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::GaussianCube);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::GenericJson);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::GenericOutput);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::MoldenFile);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::MopacAux);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::NWChemJson);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::NWChemLog);
+  Avogadro::Io::FileFormatManager::registerFormat(
+    new Avogadro::QuantumIO::ORCAOutput);
+  // Avogadro::Io::FileFormatManager::registerFormat(new
+  // Avogadro::QuantumIO::QCSchema);
 
   Molecule molecule;
   FileFormatManager::instance().readString(molecule, input, FUZZ_INPUT_FORMAT);

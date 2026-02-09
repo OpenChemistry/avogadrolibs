@@ -248,5 +248,3 @@ void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 }
 
 } // namespace Avogadro::QtPlugins
-
-#include "obenergy.moc"
