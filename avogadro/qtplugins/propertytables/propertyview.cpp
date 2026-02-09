@@ -25,6 +25,7 @@
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QSizePolicy>
@@ -537,6 +538,30 @@ void PropertyView::openExportDialogBox()
   }
 }
 
+void PropertyView::changeChargeType()
+{
+  if (m_model == nullptr || m_molecule == nullptr)
+    return;
+
+  QStringList types = m_model->availableChargeTypes();
+  if (types.isEmpty())
+    return;
+
+  // pre-select the current type
+  QString current = m_model->chargeType();
+
+  int currentIndex = types.indexOf(current, 0, Qt::CaseInsensitive);
+  if (currentIndex < 0)
+    currentIndex = 0;
+
+  bool ok = false;
+  QString selected = QInputDialog::getItem(
+    this, tr("Partial Charge Type"), tr("Select the partial charge type:"),
+    types, currentIndex, false, &ok);
+  if (ok && !selected.isEmpty())
+    m_model->setChargeType(selected);
+}
+
 void PropertyView::contextMenuEvent(QContextMenuEvent* event)
 {
   QMenu menu(this);
@@ -551,6 +576,13 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
           &PropertyView::openExportDialogBox);
 
   if (m_type == PropertyType::AtomType) {
+    // change partial charge type
+    QAction* chargeTypeAction = menu.addAction(tr("Change Charge Type…"));
+    connect(chargeTypeAction, &QAction::triggered, this,
+            &PropertyView::changeChargeType);
+
+    menu.addSeparator();
+
     // freeze atom
     QAction* freezeAtomAction = menu.addAction(tr("Freeze Atom"));
     menu.addAction(freezeAtomAction);

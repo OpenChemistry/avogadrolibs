@@ -60,6 +60,11 @@ public:
   PropertyType type() const { return m_type; };
   bool isColorIndex(const QModelIndex& index) const;
 
+  // Partial charge type selection
+  QStringList availableChargeTypes() const;
+  void setChargeType(const QString& type);
+  QString chargeType() const { return m_chargeType; }
+
   // Generate all data pertaining to angles and torsions
   void updateCache() const;
 
@@ -74,6 +79,7 @@ public:
 private:
   PropertyType m_type;
   QtGui::Molecule* m_molecule;
+  QString m_chargeType; // user-selected charge type override (empty = auto)
 
   mutable bool m_validCache;
   mutable std::vector<Core::Angle> m_angles;
