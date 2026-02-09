@@ -67,6 +67,8 @@ jobs:
 
         io_fuzzers=(cjson cml sdf pdb xyz)
         quantum_fuzzers=(cube fchk molden orca qcschema)
+        core_fuzzers=(bond crystal graph molecule neighbor ring utilities)
+        qtgui_fuzzers=(rwmolecule)
 
         artifact_root="${{ runner.workspace }}/build/avogadrolibs/fuzz-artifacts"
 
@@ -93,6 +95,40 @@ jobs:
             "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"
           fi
         done
+
+        for f in "${core_fuzzers[@]}"; do
+          echo "Running Core fuzzer: $f"
+          artifact_dir="${artifact_root}/core/${f}"
+          mkdir -p "${artifact_dir}"
+          corpus_dir="${AVOGADRO_DATA_ROOT}/data/core/${f}"
+          if [ -d "${corpus_dir}" ]; then
+            if ! "./bin/fuzz_core_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"; then
+              failures=1
+            fi
+          else
+            if ! "./bin/fuzz_core_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"; then
+              failures=1
+            fi
+          fi
+        done
+
+        for f in "${qtgui_fuzzers[@]}"; do
+          echo "Running QtGui fuzzer: $f"
+          artifact_dir="${artifact_root}/qtgui/${f}"
+          mkdir -p "${artifact_dir}"
+          corpus_dir="${AVOGADRO_DATA_ROOT}/data/qtgui/${f}"
+          if [ -d "${corpus_dir}" ]; then
+            if ! "./bin/fuzz_qtgui_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"; then
+              failures=1
+            fi
+          else
+            if ! "./bin/fuzz_qtgui_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"; then
+              failures=1
+            fi
+          fi
+        done
+
+        exit "${failures}"
 
     - name: Upload fuzz crash artifacts
       if: ${{ always() }}
