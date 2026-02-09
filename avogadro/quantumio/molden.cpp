@@ -54,19 +54,35 @@ bool MoldenFile::read(std::istream& in, Core::Molecule& molecule)
     processLine(in);
   }
 
-  auto* basis = new GaussianSet;
+  if (m_aPos.size() % 3 != 0) {
+    appendError("Invalid atom coordinate data in Molden file.");
+    return false;
+  }
 
-  int nAtom = 0;
-  for (unsigned int i = 0; i < m_aPos.size(); i += 3) {
-    Atom a = molecule.addAtom(static_cast<unsigned char>(m_aNums[nAtom++]));
-    a.setPosition3d(Vector3(m_aPos[i], m_aPos[i + 1], m_aPos[i + 2]));
+  const size_t atomCount = m_aPos.size() / 3;
+  if (m_aNums.size() < atomCount) {
+    appendError("Invalid atom list in Molden file.");
+    return false;
+  }
+
+  for (size_t i = 0; i < atomCount; ++i) {
+    Atom a = molecule.addAtom(static_cast<unsigned char>(m_aNums[i]));
+    const size_t posIndex = i * 3;
+    a.setPosition3d(
+      Vector3(m_aPos[posIndex], m_aPos[posIndex + 1], m_aPos[posIndex + 2]));
   }
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
+
+  auto* basis = new GaussianSet;
+  if (!load(basis, atomCount)) {
+    delete basis;
+    return false;
+  }
+
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
-  load(basis);
 
   if (m_frequencies.size() > 0 &&
       m_frequencies.size() == m_vibDisplacements.size()) {
@@ -370,21 +386,42 @@ void MoldenFile::readAtom(const vector<string>& list)
                    m_coordFactor);
 }
 
-void MoldenFile::load(GaussianSet* basis)
+bool MoldenFile::load(GaussianSet* basis, size_t atomCount)
 {
   // Now load up our basis set
   basis->setElectronCount(m_electrons);
+
+  if (m_shellTypes.size() != m_shellNums.size() ||
+      m_shellTypes.size() != m_shelltoAtom.size()) {
+    appendError("Invalid basis set data in Molden file.");
+    return false;
+  }
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
   int nSP = 0; // number of SP shells
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
+    if (m_shelltoAtom[i] <= 0 ||
+        static_cast<size_t>(m_shelltoAtom[i]) > atomCount) {
+      appendError("Invalid basis set atom index in Molden file.");
+      return false;
+    }
+
     // Handle the SP case separately - this should possibly be a distinct type
     if (m_shellTypes.at(i) == GaussianSet::SP) {
       // SP orbital type - currently have to unroll into two shells
       int s = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::S);
       int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
       for (int j = 0; j < m_shellNums[i]; ++j) {
+        if (static_cast<size_t>(nGTO) >= m_c.size() ||
+            static_cast<size_t>(nGTO) >= m_a.size()) {
+          appendError("Invalid basis set coefficients in Molden file.");
+          return false;
+        }
+        if (static_cast<size_t>(nSP) >= m_csp.size()) {
+          appendError("Invalid SP coefficients in Molden file.");
+          return false;
+        }
         basis->addGto(s, m_c[nGTO], m_a[nGTO]);
         basis->addGto(p, m_csp[nSP], m_a[nGTO]);
         ++nSP;
@@ -409,6 +446,11 @@ void MoldenFile::load(GaussianSet* basis)
 
       int b = basis->addBasis(m_shelltoAtom[i] - 1, m_shellTypes[i]);
       for (int j = 0; j < m_shellNums[i]; ++j) {
+        if (static_cast<size_t>(nGTO) >= m_c.size() ||
+            static_cast<size_t>(nGTO) >= m_a.size()) {
+          appendError("Invalid basis set coefficients in Molden file.");
+          return false;
+        }
         basis->addGto(b, m_c[nGTO], m_a[nGTO]);
         ++nGTO;
       }
@@ -444,6 +486,8 @@ void MoldenFile::load(GaussianSet* basis)
     if (m_symmetryLabels.size())
       basis->setSymmetryLabels(m_symmetryLabels);
   }
+
+  return true;
 }
 
 void MoldenFile::outputAll()

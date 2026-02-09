@@ -830,8 +830,8 @@ void ORCAOutput::processLine(std::istream& in,
         // default to filling m_nmrShifts with zeros
         m_nmrShifts.resize(m_atomNums.size(), 0.0);
         while (!key.empty()) {
-          // should have 4 columns
-          if (list.size() != 4) {
+          // need at least index, element, value
+          if (list.size() < 3) {
             break;
           }
 
@@ -839,7 +839,14 @@ void ORCAOutput::processLine(std::istream& in,
           int atomIndex = Core::lexicalCast<int>(list[0]).value_or(0);
           double shift = Core::lexicalCast<double>(list[2]).value_or(0.0);
           // ignore the anisotropy for now
-          m_nmrShifts[atomIndex] = shift;
+          if (!m_nmrShifts.empty()) {
+            const int maxIndex = static_cast<int>(m_nmrShifts.size());
+            if (atomIndex >= 1 && atomIndex <= maxIndex) {
+              m_nmrShifts[atomIndex - 1] = shift; // ORCA uses 1-based indices
+            } else if (atomIndex >= 0 && atomIndex < maxIndex) {
+              m_nmrShifts[atomIndex] = shift; // tolerate 0-based indices
+            }
+          }
 
           getline(in, key);
           key = Core::trimmed(key);

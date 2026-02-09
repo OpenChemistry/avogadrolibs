@@ -34,3 +34,21 @@ TEST(OrcaTest, basicRead)
 
   ASSERT_EQ(molecule.atomCount(), 4);
 }
+
+// Regression test: NMR block without atoms should not crash.
+TEST(OrcaTest, nmrWithoutAtomsDoesNotCrash)
+{
+  ORCAOutput qcs;
+  Molecule molecule;
+
+  const std::string input = "CHEMICAL SHIELDING SUMMARY (ppm)\n"
+                            "header1\n"
+                            "header2\n"
+                            "header3\n"
+                            "header4\n"
+                            "1 H 0.772198 0.0\n"
+                            "\n";
+
+  EXPECT_FALSE(qcs.readString(input, molecule));
+  EXPECT_NE(qcs.error(), std::string());
+}

@@ -49,7 +49,7 @@ private:
 
   void processLine(std::istream& in);
   void readAtom(const std::vector<std::string>& list);
-  void load(Core::GaussianSet* basis);
+  bool load(Core::GaussianSet* basis, size_t atomCount);
 
   // Write helper methods
   void writeAtoms(std::ostream& out, const Core::Molecule& molecule);
