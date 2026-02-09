@@ -106,7 +106,6 @@ jobs:
             fi
           fi
         done
-        exit "${failures}"
 
         for f in "${core_fuzzers[@]}"; do
           echo "Running Core fuzzer: $f"
