@@ -367,6 +367,25 @@ public:
   void undo() override { m_molecule.setColor(m_atomId, m_oldColor); }
 };
 
+class SetResidueColorCommand : public RWMolecule::UndoCommand
+{
+  Index m_residueId;
+  Vector3ub m_oldColor;
+  Vector3ub m_newColor;
+
+public:
+  SetResidueColorCommand(RWMolecule& m, Index residueId, Vector3ub oldColor,
+                         Vector3ub newColor)
+    : UndoCommand(m), m_residueId(residueId), m_oldColor(oldColor),
+      m_newColor(newColor)
+  {
+  }
+
+  void redo() override { m_molecule.residue(m_residueId).setColor(m_newColor); }
+
+  void undo() override { m_molecule.residue(m_residueId).setColor(m_oldColor); }
+};
+
 class SetLayerCommand : public RWMolecule::UndoCommand
 {
   Index m_atomId;

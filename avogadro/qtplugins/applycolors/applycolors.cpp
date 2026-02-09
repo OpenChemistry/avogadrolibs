@@ -11,6 +11,7 @@
 #include <avogadro/core/residuecolors.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QAction>
 #include <QColorDialog>
@@ -220,18 +221,19 @@ void ApplyColors::applyIndexColors()
 
   bool isSelection = !m_molecule->isSelectionEmpty();
 
-  // probably better to get color scales, but for now do it manually
-  auto numAtoms = m_molecule->atomCount();
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Apply Index Colors"));
+  auto numAtoms = rwmol->atomCount();
   for (Index i = 0; i < numAtoms; ++i) {
-    // if there's a selection and this atom isn't selected, skip  it
+    // if there's a selection and this atom isn't selected, skip it
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
     float indexFraction = float(i) / (float(numAtoms) - 1);
 
-    m_molecule->atom(i).setColor(rainbowGradient(indexFraction, type));
+    rwmol->setColor(i, rainbowGradient(indexFraction, type));
   }
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
@@ -283,20 +285,22 @@ void ApplyColors::applyChargeColors()
 
   // now apply the colors
   float clamp = std::max(std::abs(minCharge), std::abs(maxCharge));
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Apply Charge Colors"));
   for (Index i = 0; i < numAtoms; ++i) {
-    // if there's a selection and this atom isn't selected, skip  it
+    // if there's a selection and this atom isn't selected, skip it
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
-    m_molecule->atom(i).setColor(chargeGradient(charges(i, 0), clamp, type));
+    rwmol->setColor(i, chargeGradient(charges(i, 0), clamp, type));
   }
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
 void ApplyColors::applyDistanceColors()
 {
-  if (m_molecule == nullptr && m_molecule->atomCount() == 0)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   bool isSelection = !m_molecule->isSelectionEmpty();
@@ -319,10 +323,11 @@ void ApplyColors::applyDistanceColors()
   Vector3 firstPos = m_molecule->atomPosition3d(0);
   Real size = 2.0 * m_molecule->radius();
 
-  // probably better to get color scales, but for now do it manually
-  auto numAtoms = m_molecule->atomCount();
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Apply Distance Colors"));
+  auto numAtoms = rwmol->atomCount();
   for (Index i = 0; i < numAtoms; ++i) {
-    // if there's a selection and this atom isn't selected, skip  it
+    // if there's a selection and this atom isn't selected, skip it
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
@@ -331,9 +336,9 @@ void ApplyColors::applyDistanceColors()
     Real distance = diff.norm();
     Real distanceFraction = distance / size;
 
-    m_molecule->atom(i).setColor(rainbowGradient(distanceFraction, type));
+    rwmol->setColor(i, rainbowGradient(distanceFraction, type));
   }
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
@@ -344,15 +349,17 @@ void ApplyColors::resetColors()
 
   bool isSelection = !m_molecule->isSelectionEmpty();
 
-  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-    // if there's a selection and this atom isn't selected, skip  it
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Reset Atom Colors"));
+  for (Index i = 0; i < rwmol->atomCount(); ++i) {
+    // if there's a selection and this atom isn't selected, skip it
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
     Vector3ub color(Core::Elements::color(m_molecule->atomicNumber(i)));
-    m_molecule->atom(i).setColor(color);
+    rwmol->setColor(i, color);
   }
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
@@ -368,14 +375,16 @@ void ApplyColors::applyCustomColor(const QColor& new_color)
   color[1] = static_cast<unsigned char>(new_color.green());
   color[2] = static_cast<unsigned char>(new_color.blue());
 
-  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-    // if there's a selection and this atom isn't selected, skip  it
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Apply Custom Color"));
+  for (Index i = 0; i < rwmol->atomCount(); ++i) {
+    // if there's a selection and this atom isn't selected, skip it
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
-    m_molecule->atom(i).setColor(color);
+    rwmol->setColor(i, color);
   }
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
@@ -403,16 +412,20 @@ void ApplyColors::applyCustomColorResidue(const QColor& new_color)
   color[1] = static_cast<unsigned char>(new_color.green());
   color[2] = static_cast<unsigned char>(new_color.blue());
 
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Apply Custom Residue Color"));
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
-    residue.setColor(color);
+    rwmol->setResidueColor(i, color);
   }
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
@@ -423,12 +436,16 @@ void ApplyColors::resetColorsResidue()
 
   bool isSelection = !m_molecule->isSelectionEmpty();
 
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Reset Residue Colors"));
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
     int offset = 0;
     char chainId = residue.chainId();
@@ -440,9 +457,9 @@ void ApplyColors::resetColorsResidue()
       offset = chainId - '0' + 15; // starts at 'P'
 
     Vector3ub color(Core::chain_color[offset]);
-    residue.setColor(color);
+    rwmol->setResidueColor(i, color);
   }
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
@@ -453,21 +470,25 @@ void ApplyColors::applySecondaryStructureColors()
 
   bool isSelection = !m_molecule->isSelectionEmpty();
 
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Apply Secondary Structure Colors"));
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
     Core::Residue::SecondaryStructure type = residue.secondaryStructure();
     if (type < 0 || type > 7) {
       type = Core::Residue::SecondaryStructure::coil;
     }
     Vector3ub color(Core::secondary_color[type]);
-    residue.setColor(color);
+    rwmol->setResidueColor(i, color);
   } // end loop
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
@@ -537,19 +558,23 @@ void ApplyColors::applyAminoColors()
 
   bool isSelection = !m_molecule->isSelectionEmpty();
 
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Apply Amino Acid Colors"));
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
     int offset = residueNameToOffset(residue.residueName());
 
     Vector3ub color(Core::amino_color[offset]);
-    residue.setColor(color);
+    rwmol->setResidueColor(i, color);
   }
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
@@ -560,19 +585,23 @@ void ApplyColors::applyShapelyColors()
 
   bool isSelection = !m_molecule->isSelectionEmpty();
 
+  auto* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Apply Shapely Colors"));
   for (Index i = 0; i < m_molecule->residueCount(); ++i) {
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
-    if (isSelection &&
-        !m_molecule->atomSelected(residue.atomByName("CA").index()))
-      continue;
+    if (isSelection) {
+      auto caAtom = residue.atomByName("CA");
+      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+        continue;
+    }
 
     int offset = residueNameToOffset(residue.residueName());
 
     Vector3ub color(Core::shapely_color[offset]);
-    residue.setColor(color);
+    rwmol->setResidueColor(i, color);
   }
-
+  rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
