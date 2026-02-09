@@ -154,6 +154,7 @@ QString partialChargeType(Molecule* molecule)
   QString type;
 
   std::set<std::string> types = molecule->partialChargeTypes();
+
   if (types.size() > 0) {
     type = QString(types.cbegin()->c_str());
   } else {
@@ -195,24 +196,48 @@ QString formatChargeType(QString type)
   else if (type.toLower() == "mulliken")
     return "Mulliken";
   else if (type.toLower() == "lowdin")
-    return "Lowdin";
+    return "Löwdin";
+  else if (type.toLower() == "loewdin")
+    return "Löwdin";
   else if (type.toLower() == "chelpg")
     return "CHELPG";
   else if (type.toLower() == "hirshfeld")
     return "Hirshfeld";
+  else if (type.toLower() == "resp")
+    return "RESP";
+  else if (type.toLower() == "mbis")
+    return "MBIS";
+  else if (type.toLower() == "mbis")
+    return "MBIS";
+  else if (type.toLower() == "abcg2")
+    return "ABCG2";
+  else if (type.toLower() == "cm5")
+    return "CM5";
+  else if (type.toLower() == "chelpg")
+    return "CHELPG";
   else
     return type;
 }
 
-QString partialCharge(Molecule* molecule, int atom)
+QString partialCharge(Molecule* molecule, int atom, const QString& overrideType)
 {
-  // TODO: we need to track type and/or calling the charge calculator
   float charge = 0.0;
-  std::string type = partialChargeType(molecule).toStdString();
+  std::string type = overrideType.isEmpty()
+                       ? partialChargeType(molecule).toStdString()
+                       : overrideType.toStdString();
 
-  MatrixX charges =
-    Calc::ChargeManager::instance().partialCharges(type, *molecule);
-  charge = charges(atom, 0);
+  // first check if the molecule already has this charge type
+  // (e.g., read from a file like Mulliken charges)
+  // we need to use the original case from the molecule
+  std::set<std::string> types = molecule->partialChargeTypes();
+  if (types.find(type) != types.end()) {
+    MatrixX charges = molecule->partialCharges(type);
+    charge = charges(atom, 0);
+  } else {
+    MatrixX charges =
+      Calc::ChargeManager::instance().partialCharges(type, *molecule);
+    charge = charges(atom, 0);
+  }
 
   return QString("%L1").arg(charge, 0, 'f', 3);
 }
@@ -303,7 +328,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AtomDataFormalCharge:
         return m_molecule->formalCharge(row);
       case AtomDataPartialCharge:
-        return partialCharge(m_molecule, row);
+        return partialCharge(m_molecule, row, m_chargeType);
       case AtomDataX:
         if (role == Qt::UserRole)
           // Return the x coordinate as a double for sorting
@@ -611,7 +636,9 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           QString charge =
             tr("%1 Partial Charge", "e.g. MMFF94 Partial Charge or "
                                     "Gasteiger Partial Charge");
-          return charge.arg(formatChargeType(partialChargeType(m_molecule)));
+          QString type = m_chargeType.isEmpty() ? partialChargeType(m_molecule)
+                                                : m_chargeType;
+          return charge.arg(formatChargeType(type));
         }
         case AtomDataX:
           return tr("X (Å)");
@@ -1072,6 +1099,33 @@ void PropertyModel::setTorsion(unsigned int index, double newValue)
 
   // Perform transformation
   transformFragment();
+}
+
+QStringList PropertyModel::availableChargeTypes() const
+{
+  QStringList result;
+  if (m_molecule == nullptr)
+    return result;
+
+  // add types available from charge calculators
+  const auto options =
+    Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
+  for (const auto& model : options) {
+    std::string t = Calc::ChargeManager::instance().nameForModel(model);
+    QString name = QString::fromStdString(t);
+    if (!result.contains(name))
+      result << name;
+  }
+
+  return result;
+}
+
+void PropertyModel::setChargeType(const QString& type)
+{
+  m_chargeType = type;
+  // refresh the partial charge column and header
+  beginResetModel();
+  endResetModel();
 }
 
 void PropertyModel::setMolecule(QtGui::Molecule* molecule)

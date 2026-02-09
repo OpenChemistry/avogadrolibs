@@ -51,6 +51,7 @@ private:
   void freezeY();
   void freezeZ();
   void freezeAxis(int axis);
+  void changeChargeType();
 };
 
 } // end namespace Avogadro
