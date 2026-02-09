@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <memory>
 #include <iostream>
 #include <fstream>
 #include <regex>
@@ -63,10 +64,10 @@ std::vector<std::string> ORCAOutput::mimeTypes() const
 bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line
-  auto* basis = new GaussianSet;
+  auto basis = std::make_unique<GaussianSet>();
 
   while (!in.eof())
-    processLine(in, basis);
+    processLine(in, basis.get());
 
   // Set up the molecule
   int nAtom = 0;
@@ -173,9 +174,9 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     }
   }
 
-  molecule.setBasisSet(basis);
-  basis->setMolecule(&molecule);
-  load(basis);
+  molecule.setBasisSet(basis.release());
+  molecule.basisSet()->setMolecule(&molecule);
+  load(static_cast<GaussianSet*>(molecule.basisSet()));
 
   // we have to do a few things *after* any modifications to bonds / atoms
   // because those automatically clear partial charges and data
