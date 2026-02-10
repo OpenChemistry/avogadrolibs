@@ -15,6 +15,14 @@
 
 namespace Avogadro::QuantumIO {
 
+namespace {
+constexpr int kMaxCubeDim = 1024;
+constexpr int kMaxAtomCount = 1000000;
+constexpr unsigned int kMaxCubeCount = 128;
+constexpr size_t kMaxCubeValues = 64ull * 1024 * 1024;       // 64M values
+constexpr size_t kMaxTotalCubeValues = 128ull * 1024 * 1024; // 128M values
+} // namespace
+
 GaussianCube::GaussianCube() {}
 
 GaussianCube::~GaussianCube() {}
@@ -78,6 +86,10 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
   const int atomCount = nAtoms < 0 ? -nAtoms : nAtoms;
+  if (atomCount > kMaxAtomCount) {
+    appendError("Invalid atom count in cube file.");
+    return false;
+  }
 
   // Next 3 lines contains spacing and dim
   for (unsigned int i = 0; i < 3; ++i) {
@@ -97,10 +109,25 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     }
     dim(i) = Core::lexicalCast<int>(list[0]).value_or(0);
     spacing(i) = Core::lexicalCast<double>(list[i + 1]).value_or(0.0);
-    if (dim(i) <= 0) {
+    if (dim(i) <= 0 || dim(i) > kMaxCubeDim) {
       appendError("Invalid cube grid dimension.");
       return false;
     }
+  }
+
+  const size_t d0 = static_cast<size_t>(dim(0));
+  const size_t d1 = static_cast<size_t>(dim(1));
+  const size_t d2 = static_cast<size_t>(dim(2));
+  const size_t maxSize = std::numeric_limits<size_t>::max();
+  if (d0 == 0 || d1 == 0 || d2 == 0 || d0 > maxSize / d1 ||
+      d0 * d1 > maxSize / d2) {
+    appendError("Invalid cube data dimensions.");
+    return false;
+  }
+  const size_t valueCount = d0 * d1 * d2;
+  if (valueCount > kMaxCubeValues) {
+    appendError("Cube data exceeds supported size.");
+    return false;
   }
 
   // Geometry block
@@ -136,6 +163,14 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
       appendError("Invalid cube count.");
       return false;
     }
+    if (nCubes > kMaxCubeCount) {
+      appendError("Invalid cube count.");
+      return false;
+    }
+    if (valueCount > 0 && nCubes > kMaxTotalCubeValues / valueCount) {
+      appendError("Cube data exceeds supported size.");
+      return false;
+    }
     std::vector<unsigned int> moList(nCubes);
     for (unsigned int i = 0; i < nCubes; ++i)
       if (!(in >> moList[i])) {
@@ -166,16 +201,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     cube->setLimits(min, dim, spacing);
     std::vector<float> values;
     // push_back is slow for this, resize vector first
-    const size_t d0 = static_cast<size_t>(dim(0));
-    const size_t d1 = static_cast<size_t>(dim(1));
-    const size_t d2 = static_cast<size_t>(dim(2));
-    const size_t maxSize = std::numeric_limits<size_t>::max();
-    if (d0 == 0 || d1 == 0 || d2 == 0 || d0 > maxSize / d1 ||
-        d0 * d1 > maxSize / d2) {
-      appendError("Invalid cube data dimensions.");
-      return false;
-    }
-    values.resize(d0 * d1 * d2);
+    values.resize(valueCount);
 
     for (float& value : values) {
       if (!(in >> value)) {
