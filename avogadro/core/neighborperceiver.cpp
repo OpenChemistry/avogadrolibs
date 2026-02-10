@@ -5,13 +5,18 @@
 
 #include "neighborperceiver.h"
 
+#include <cmath>
+
 namespace Avogadro::Core {
 
 NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points,
                                      float maxDistance)
-  : m_maxDistance(maxDistance), m_cachedArray(nullptr)
+  : m_maxDistance(maxDistance), m_binCount({ 0, 0, 0 }), m_cachedArray(nullptr)
 {
   if (!points.size())
+    return;
+
+  if (m_maxDistance <= 0 || !std::isfinite(m_maxDistance))
     return;
 
   // find bounding box
@@ -25,11 +30,24 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points,
     }
   }
 
+  // Validate bounding box (NaN/Inf from malformed input)
+  for (size_t c = 0; c < 3; c++) {
+    if (!std::isfinite(m_minPos(c)) || !std::isfinite(m_maxPos(c)))
+      return;
+  }
+
   // group points into cubic bins so that each point is only checked against
   // other points inside bins within a 3-dimensional Moore neighborhood
-  for (size_t c = 0; c < 3; c++)
-    m_binCount[c] =
+  for (size_t c = 0; c < 3; c++) {
+    double count =
       std::floor((m_maxPos(c) + 0.1 - m_minPos(c)) / m_maxDistance) + 1;
+    if (!std::isfinite(count) || count < 1)
+      m_binCount[c] = 1;
+    else if (count > 1000)
+      m_binCount[c] = 1000;
+    else
+      m_binCount[c] = static_cast<int>(count);
+  }
   std::vector<std::vector<std::vector<std::vector<Index>>>> bins(
     m_binCount[0], std::vector<std::vector<std::vector<Index>>>(
                      m_binCount[1], std::vector<std::vector<Index>>(
@@ -37,13 +55,22 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points,
   m_bins = bins;
   for (Index i = 0; i < points.size(); i++) {
     std::array<int, 3> bin_index = getBinIndex(points[i]);
-    m_bins.at(bin_index[0]).at(bin_index[1]).at(bin_index[2]).push_back(i);
+    if (bin_index[0] >= 0 && bin_index[0] < m_binCount[0] &&
+        bin_index[1] >= 0 && bin_index[1] < m_binCount[1] &&
+        bin_index[2] >= 0 && bin_index[2] < m_binCount[2]) {
+      m_bins[bin_index[0]][bin_index[1]][bin_index[2]].push_back(i);
+    }
   }
 }
 
 void NeighborPerceiver::getNeighborsInclusiveInPlace(Array<Index>& out,
                                                      const Vector3& point) const
 {
+  if (m_bins.empty()) {
+    out.clear();
+    return;
+  }
+
   const std::array<int, 3> bin_index = getBinIndex(point);
   if (&out == m_cachedArray && bin_index == m_cachedIndex)
     return;
