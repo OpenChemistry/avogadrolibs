@@ -9,8 +9,10 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
+#include <algorithm>
 #include <cstddef>
 #include <iostream>
+#include <limits>
 
 using std::cout;
 using std::endl;
@@ -54,12 +56,18 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
 
   auto* basis = new GaussianSet;
 
-  int nAtom = 0;
-  for (unsigned int i = 0; i < m_aPos.size(); i += 3) {
-    Atom a = molecule.addAtom(static_cast<unsigned char>(m_aNums[nAtom++]));
-    a.setPosition3d(Vector3(m_aPos[i] * BOHR_TO_ANGSTROM,
-                            m_aPos[i + 1] * BOHR_TO_ANGSTROM,
-                            m_aPos[i + 2] * BOHR_TO_ANGSTROM));
+  const size_t posCount = m_aPos.size() / 3;
+  const size_t numCount = m_aNums.size();
+  size_t atomCount = std::min(posCount, numCount);
+  if (m_numAtoms > 0) {
+    atomCount = std::min(atomCount, static_cast<size_t>(m_numAtoms));
+  }
+  for (size_t i = 0; i < atomCount; ++i) {
+    Atom a = molecule.addAtom(static_cast<unsigned char>(m_aNums[i]));
+    const size_t offset = i * 3;
+    a.setPosition3d(Vector3(m_aPos[offset] * BOHR_TO_ANGSTROM,
+                            m_aPos[offset + 1] * BOHR_TO_ANGSTROM,
+                            m_aPos[offset + 2] * BOHR_TO_ANGSTROM));
   }
 
   if (m_frequencies.size() > 0 &&
@@ -272,6 +280,58 @@ void GaussianFchk::load(GaussianSet* basis)
   // basis->setElectronCount(m_electronsAlpha, Core::GaussianSet::alpha);
   // basis->setElectronCount(m_electronsBeta, Core::GaussianSet::beta);
 
+  if (m_shellTypes.empty()) {
+    cout << "GaussianFchk: no shell types found.\n";
+    return;
+  }
+  if (m_shellNums.size() != m_shellTypes.size() ||
+      m_shelltoAtom.size() != m_shellTypes.size()) {
+    cout << "GaussianFchk: inconsistent shell data sizes.\n";
+    return;
+  }
+  if (m_numAtoms <= 0) {
+    cout << "GaussianFchk: invalid atom count.\n";
+    return;
+  }
+
+  size_t totalPrimitives = 0;
+  size_t totalSpPrimitives = 0;
+  const size_t maxSize = std::numeric_limits<size_t>::max();
+  for (size_t i = 0; i < m_shellTypes.size(); ++i) {
+    const int shellNum = m_shellNums[i];
+    if (shellNum <= 0) {
+      cout << "GaussianFchk: invalid shell primitive count.\n";
+      return;
+    }
+    const int atomIndex = m_shelltoAtom[i];
+    if (atomIndex <= 0 || atomIndex > m_numAtoms) {
+      cout << "GaussianFchk: invalid shell-to-atom map.\n";
+      return;
+    }
+    const size_t shellNumU = static_cast<size_t>(shellNum);
+    if (totalPrimitives > maxSize - shellNumU) {
+      cout << "GaussianFchk: shell primitive count overflow.\n";
+      return;
+    }
+    totalPrimitives += shellNumU;
+    if (m_shellTypes[i] == -1) {
+      if (totalSpPrimitives > maxSize - shellNumU) {
+        cout << "GaussianFchk: SP primitive count overflow.\n";
+        return;
+      }
+      totalSpPrimitives += shellNumU;
+    }
+  }
+
+  if (m_a.size() < totalPrimitives || m_c.size() < totalPrimitives) {
+    cout << "GaussianFchk: insufficient primitive exponent data.\n";
+    return;
+  }
+  if (totalSpPrimitives > 0 && m_csp.size() < totalSpPrimitives) {
+    cout << "GaussianFchk: insufficient SP contraction data.\n";
+    return;
+  }
+
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
@@ -282,12 +342,22 @@ void GaussianFchk::load(GaussianSet* basis)
       int tmpGTO = nGTO;
       for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
            ++j) {
+        if (static_cast<size_t>(nGTO) >= m_a.size() ||
+            static_cast<size_t>(nGTO) >= m_c.size()) {
+          cout << "GaussianFchk: primitive index out of range.\n";
+          return;
+        }
         basis->addGto(s, m_c[nGTO], m_a[nGTO]);
         ++nGTO;
       }
       int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
       for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
            ++j) {
+        if (static_cast<size_t>(tmpGTO) >= m_a.size() ||
+            static_cast<size_t>(tmpGTO) >= m_csp.size()) {
+          cout << "GaussianFchk: SP primitive index out of range.\n";
+          return;
+        }
         basis->addGto(p, m_csp[tmpGTO], m_a[tmpGTO]);
         ++tmpGTO;
       }
@@ -340,6 +410,11 @@ void GaussianFchk::load(GaussianSet* basis)
         int b = basis->addBasis(m_shelltoAtom[i] - 1, type);
         for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
              ++j) {
+          if (static_cast<size_t>(nGTO) >= m_a.size() ||
+              static_cast<size_t>(nGTO) >= m_c.size()) {
+            cout << "GaussianFchk: primitive index out of range.\n";
+            return;
+          }
           basis->addGto(b, m_c[nGTO], m_a[nGTO]);
           ++nGTO;
         }
