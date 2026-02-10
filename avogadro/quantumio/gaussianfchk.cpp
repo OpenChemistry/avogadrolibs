@@ -28,6 +28,31 @@ using Core::Rhf;
 using Core::Rohf;
 using Core::Uhf;
 
+namespace {
+constexpr size_t kMaxFchkArrayEntries = 16ull * 1024 * 1024;   // 16M entries
+constexpr size_t kMaxFchkMatrixElements = 32ull * 1024 * 1024; // 32M elements
+
+bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
+{
+  if (minBytes == 0)
+    return true;
+
+  auto pos = in.tellg();
+  if (pos == std::streampos(-1))
+    return true;
+
+  in.clear();
+  in.seekg(0, std::ios::end);
+  auto end = in.tellg();
+  in.seekg(pos);
+  if (end == std::streampos(-1))
+    return true;
+
+  const size_t remaining = static_cast<size_t>(end - pos);
+  return remaining >= minBytes;
+}
+} // namespace
+
 // https://physics.nist.gov/cgi-bin/cuu/Value?hrev
 const double hartreeToEV = 27.211386245981;
 
@@ -54,7 +79,8 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
   while (!in.eof())
     processLine(in);
 
-  auto* basis = new GaussianSet;
+  if (!error().empty())
+    return false;
 
   const size_t posCount = m_aPos.size() / 3;
   const size_t numCount = m_aNums.size();
@@ -62,6 +88,13 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
   if (m_numAtoms > 0) {
     atomCount = std::min(atomCount, static_cast<size_t>(m_numAtoms));
   }
+  if (atomCount == 0) {
+    appendError("Could not find any atomic coordinates! Are you sure this is a "
+                "Gaussian formatted checkpoint file?");
+    return false;
+  }
+
+  auto* basis = new GaussianSet;
   for (size_t i = 0; i < atomCount; ++i) {
     Atom a = molecule.addAtom(static_cast<unsigned char>(m_aNums[i]));
     const size_t offset = i * 3;
@@ -453,6 +486,17 @@ void GaussianFchk::load(GaussianSet* basis)
 vector<int> GaussianFchk::readArrayI(std::istream& in, unsigned int n)
 {
   vector<int> tmp;
+  if (n == 0)
+    return tmp;
+  if (n > kMaxFchkArrayEntries) {
+    appendError("Array data exceeds supported size.");
+    return tmp;
+  }
+  const size_t nSize = static_cast<size_t>(n);
+  if (!hasMinimumRemainingBytes(in, nSize)) {
+    appendError("Invalid array data.");
+    return tmp;
+  }
   tmp.reserve(n);
   bool ok(false);
   while (tmp.size() < n) {
@@ -487,6 +531,23 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
                                         int width, double factor)
 {
   vector<double> tmp;
+  if (n == 0)
+    return tmp;
+  if (n > kMaxFchkArrayEntries) {
+    appendError("Array data exceeds supported size.");
+    return tmp;
+  }
+  const size_t nSize = static_cast<size_t>(n);
+  const size_t maxSize = std::numeric_limits<size_t>::max();
+  const size_t minBytesPerEntry = width > 0 ? static_cast<size_t>(width) : 1ull;
+  if (minBytesPerEntry > 0 && nSize > maxSize / minBytesPerEntry) {
+    appendError("Array data exceeds supported size.");
+    return tmp;
+  }
+  if (!hasMinimumRemainingBytes(in, nSize * minBytesPerEntry)) {
+    appendError("Invalid array data.");
+    return tmp;
+  }
   tmp.reserve(n);
   bool ok(false);
   while (tmp.size() < n) {
@@ -541,6 +602,47 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
                                      int width)
 {
   // This function reads in the lower triangular density matrix
+  if (n == 0)
+    return false;
+  if (n > kMaxFchkArrayEntries) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  if (m_numBasisFunctions <= 0) {
+    appendError("Invalid basis function count.");
+    return false;
+  }
+  const size_t basis = static_cast<size_t>(m_numBasisFunctions);
+  const size_t maxSize = std::numeric_limits<size_t>::max();
+  if (basis > 0 && basis > maxSize / basis) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  const size_t fullCount = basis * basis;
+  if (fullCount > kMaxFchkMatrixElements) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  if (basis > 0 && basis > maxSize / (basis + 1)) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  const size_t expectedLower = basis * (basis + 1) / 2;
+  if (static_cast<size_t>(n) > expectedLower) {
+    appendError("Invalid density matrix size.");
+    return false;
+  }
+  const size_t minBytesPerEntry = width > 0 ? static_cast<size_t>(width) : 1ull;
+  if (minBytesPerEntry > 0 &&
+      static_cast<size_t>(n) > maxSize / minBytesPerEntry) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  if (!hasMinimumRemainingBytes(in,
+                                static_cast<size_t>(n) * minBytesPerEntry)) {
+    appendError("Invalid density matrix data.");
+    return false;
+  }
   m_density.resize(m_numBasisFunctions, m_numBasisFunctions);
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;
@@ -617,6 +719,47 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
                                          int width)
 {
   // This function reads in the lower triangular density matrix
+  if (n == 0)
+    return false;
+  if (n > kMaxFchkArrayEntries) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  if (m_numBasisFunctions <= 0) {
+    appendError("Invalid basis function count.");
+    return false;
+  }
+  const size_t basis = static_cast<size_t>(m_numBasisFunctions);
+  const size_t maxSize = std::numeric_limits<size_t>::max();
+  if (basis > 0 && basis > maxSize / basis) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  const size_t fullCount = basis * basis;
+  if (fullCount > kMaxFchkMatrixElements) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  if (basis > 0 && basis > maxSize / (basis + 1)) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  const size_t expectedLower = basis * (basis + 1) / 2;
+  if (static_cast<size_t>(n) > expectedLower) {
+    appendError("Invalid spin density matrix size.");
+    return false;
+  }
+  const size_t minBytesPerEntry = width > 0 ? static_cast<size_t>(width) : 1ull;
+  if (minBytesPerEntry > 0 &&
+      static_cast<size_t>(n) > maxSize / minBytesPerEntry) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  if (!hasMinimumRemainingBytes(in,
+                                static_cast<size_t>(n) * minBytesPerEntry)) {
+    appendError("Invalid spin density matrix data.");
+    return false;
+  }
   m_spinDensity.resize(m_numBasisFunctions, m_numBasisFunctions);
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;

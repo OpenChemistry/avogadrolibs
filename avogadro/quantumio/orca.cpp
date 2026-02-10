@@ -521,7 +521,13 @@ void ORCAOutput::processLine(std::istream& in,
           break;
 
         m_bondOrders.clear();
-        while (key[0] == 'B') {
+        constexpr size_t kMinBondOrderLineLength = 27;
+        while (!key.empty() && key[0] == 'B') {
+          if (key.size() < kMinBondOrderLineLength || key[1] != '(') {
+            getline(in, key);
+            key = Core::trimmed(key);
+            continue;
+          }
           // @todo .. parse the bonds based on character position
           // e.g. B(  0-Ru,  1-C ) :   0.4881 B(  0-Ru,  4-C ) :   0.6050
           Index firstAtom =

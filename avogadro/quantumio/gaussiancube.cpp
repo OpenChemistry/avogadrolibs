@@ -21,6 +21,23 @@ constexpr int kMaxAtomCount = 1000000;
 constexpr unsigned int kMaxCubeCount = 128;
 constexpr size_t kMaxCubeValues = 64ull * 1024 * 1024;       // 64M values
 constexpr size_t kMaxTotalCubeValues = 128ull * 1024 * 1024; // 128M values
+
+bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
+{
+  auto pos = in.tellg();
+  if (pos == std::streampos(-1))
+    return true;
+
+  in.clear();
+  in.seekg(0, std::ios::end);
+  auto end = in.tellg();
+  in.seekg(pos);
+  if (end == std::streampos(-1))
+    return true;
+
+  const size_t remaining = static_cast<size_t>(end - pos);
+  return remaining >= minBytes;
+}
 } // namespace
 
 GaussianCube::GaussianCube() {}
@@ -193,28 +210,44 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   min *= BOHR_TO_ANGSTROM;
   spacing *= BOHR_TO_ANGSTROM;
 
+  const size_t cubeCount = static_cast<size_t>(nCubes);
+  if (valueCount > 0 && cubeCount > maxSize / valueCount) {
+    appendError("Cube data exceeds supported size.");
+    return false;
+  }
+  if (!hasMinimumRemainingBytes(in, valueCount * cubeCount)) {
+    appendError("Invalid cube data.");
+    return false;
+  }
+
   for (unsigned int i = 0; i < nCubes; ++i) {
     // Get a cube object from molecule
     Core::Cube* cube = molecule.addCube();
     cube->setCubeType(Core::Cube::Type::FromFile);
 
     cube->setLimits(min, dim, spacing);
-    std::vector<float> values;
-    // push_back is slow for this, resize vector first
-    values.resize(valueCount);
-
-    for (float& value : values) {
-      if (!(in >> value)) {
+    auto* values = cube->data();
+    if (!values) {
+      appendError("Invalid cube data.");
+      return false;
+    }
+    if (values->size() != valueCount)
+      values->resize(valueCount);
+    for (size_t index = 0; index < valueCount; ++index) {
+      if (!(in >> (*values)[index])) {
         appendError("Invalid cube data.");
         return false;
       }
+    }
+    if (!cube->setData(*values)) {
+      appendError("Invalid cube data.");
+      return false;
     }
     // clear buffer, if more than one cube
     if (!getline(in, line) && i + 1 < nCubes) {
       appendError("Invalid cube data.");
       return false;
     }
-    cube->setData(values);
   }
 
   return true;
