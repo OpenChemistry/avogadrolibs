@@ -70,6 +70,15 @@ TEST(GraphTest, removeVertex)
   EXPECT_EQ(graph.size(), static_cast<size_t>(2));
 }
 
+TEST(GraphTest, removeVertexUpdatesLoneVertices)
+{
+  Graph graph(1);
+  graph.removeVertex(0);
+  EXPECT_EQ(graph.size(), static_cast<size_t>(0));
+  EXPECT_EQ(graph.subgraphsCount(), static_cast<size_t>(0));
+  EXPECT_TRUE(graph.connectedComponents().empty());
+}
+
 TEST(GraphTest, vertexCount)
 {
   Graph graph;
@@ -107,6 +116,23 @@ TEST(GraphTest, removeEdge)
   Graph graph(5);
   graph.addEdge(0, 1);
   graph.addEdge(1, 4);
+}
+
+TEST(GraphTest, removeEdgesRemovesAllIncidentEdges)
+{
+  Graph graph(4);
+  graph.addEdge(0, 1);
+  graph.addEdge(0, 2);
+  graph.addEdge(0, 3);
+
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(3));
+
+  graph.removeEdges(0);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(0));
+  EXPECT_EQ(graph.degree(0), static_cast<size_t>(0));
+  EXPECT_EQ(graph.degree(1), static_cast<size_t>(0));
+  EXPECT_EQ(graph.degree(2), static_cast<size_t>(0));
+  EXPECT_EQ(graph.degree(3), static_cast<size_t>(0));
 }
 
 TEST(GraphTest, edgeCount)
