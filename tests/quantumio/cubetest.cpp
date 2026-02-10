@@ -59,3 +59,23 @@ TEST(GaussianCubeTest, oversizedCubeRejected)
   EXPECT_FALSE(cube.readString(out.str(), molecule));
   EXPECT_NE(cube.error(), std::string());
 }
+
+// Regression test: binary junk input should fail gracefully.
+TEST(GaussianCubeTest, binaryInputDoesNotCrash)
+{
+  GaussianCube cube;
+  Molecule molecule;
+
+  std::string input;
+  input.push_back(static_cast<char>(0x61));
+  input.push_back(static_cast<char>(0x25));
+  input.push_back(static_cast<char>(0x01));
+  input.push_back(static_cast<char>(0x00));
+  input.push_back(static_cast<char>(0x00));
+  input.push_back(static_cast<char>(0xdc));
+  input.push_back(static_cast<char>(0x00));
+  input.push_back(static_cast<char>(0x3f));
+
+  EXPECT_FALSE(cube.readString(input, molecule));
+  EXPECT_NE(cube.error(), std::string());
+}

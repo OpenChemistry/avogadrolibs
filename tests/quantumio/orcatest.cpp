@@ -67,3 +67,17 @@ TEST(OrcaTest, chargesWithoutAtomsDoesNotCrash)
   EXPECT_FALSE(qcs.readString(input, molecule));
   EXPECT_NE(qcs.error(), std::string());
 }
+
+// Regression test: malformed bond order line should not crash.
+TEST(OrcaTest, bondOrdersMalformedLineDoesNotCrash)
+{
+  ORCAOutput qcs;
+  Molecule molecule;
+
+  const std::string input = "Mayer bond orders larger than 0.100000\n"
+                            "B(  3-T available\n"
+                            "\n";
+
+  EXPECT_FALSE(qcs.readString(input, molecule));
+  EXPECT_NE(qcs.error(), std::string());
+}
