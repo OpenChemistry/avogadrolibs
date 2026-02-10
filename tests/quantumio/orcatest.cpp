@@ -52,3 +52,18 @@ TEST(OrcaTest, nmrWithoutAtomsDoesNotCrash)
   EXPECT_FALSE(qcs.readString(input, molecule));
   EXPECT_NE(qcs.error(), std::string());
 }
+
+// Regression test: charges block without atoms should not crash.
+TEST(OrcaTest, chargesWithoutAtomsDoesNotCrash)
+{
+  ORCAOutput qcs;
+  Molecule molecule;
+
+  const std::string input = "LOEWDIN ATOMIC CHARGES\n"
+                            "------------\n"
+                            "0 C :   -0.228326\n"
+                            "\n";
+
+  EXPECT_FALSE(qcs.readString(input, molecule));
+  EXPECT_NE(qcs.error(), std::string());
+}
