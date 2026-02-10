@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <memory>
 #include <iostream>
 #include <fstream>
 #include <regex>
@@ -63,10 +64,10 @@ std::vector<std::string> ORCAOutput::mimeTypes() const
 bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line
-  auto* basis = new GaussianSet;
+  auto basis = std::make_unique<GaussianSet>();
 
   while (!in.eof())
-    processLine(in, basis);
+    processLine(in, basis.get());
 
   // Set up the molecule
   int nAtom = 0;
@@ -173,9 +174,9 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     }
   }
 
-  molecule.setBasisSet(basis);
-  basis->setMolecule(&molecule);
-  load(basis);
+  molecule.setBasisSet(basis.release());
+  molecule.basisSet()->setMolecule(&molecule);
+  load(static_cast<GaussianSet*>(molecule.basisSet()));
 
   // we have to do a few things *after* any modifications to bonds / atoms
   // because those automatically clear partial charges and data
@@ -830,8 +831,8 @@ void ORCAOutput::processLine(std::istream& in,
         // default to filling m_nmrShifts with zeros
         m_nmrShifts.resize(m_atomNums.size(), 0.0);
         while (!key.empty()) {
-          // should have 4 columns
-          if (list.size() != 4) {
+          // need at least index, element, value
+          if (list.size() < 3) {
             break;
           }
 
@@ -839,7 +840,14 @@ void ORCAOutput::processLine(std::istream& in,
           int atomIndex = Core::lexicalCast<int>(list[0]).value_or(0);
           double shift = Core::lexicalCast<double>(list[2]).value_or(0.0);
           // ignore the anisotropy for now
-          m_nmrShifts[atomIndex] = shift;
+          if (!m_nmrShifts.empty()) {
+            const int maxIndex = static_cast<int>(m_nmrShifts.size());
+            if (atomIndex >= 1 && atomIndex <= maxIndex) {
+              m_nmrShifts[atomIndex - 1] = shift; // ORCA uses 1-based indices
+            } else if (atomIndex >= 0 && atomIndex < maxIndex) {
+              m_nmrShifts[atomIndex] = shift; // tolerate 0-based indices
+            }
+          }
 
           getline(in, key);
           key = Core::trimmed(key);

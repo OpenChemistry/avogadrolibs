@@ -458,3 +458,21 @@ TEST(MoldenTest, writeNoBasisSet)
   EXPECT_EQ(output.find("[GTO]"), std::string::npos);
   EXPECT_EQ(output.find("[MO]"), std::string::npos);
 }
+
+// Regression test: malformed GTO section should fail gracefully.
+TEST(MoldenTest, invalidGtoDoesNotCrash)
+{
+  MoldenFile format;
+  Molecule molecule;
+
+  const std::string input = "[Molden Format]\n"
+                            "[Atoms]\n"
+                            "O 1 8 0.0 0.0 0.0\n"
+                            "[GTO]\n"
+                            " 1 0\n"
+                            " s 1 1.0\n"
+                            "\n";
+
+  EXPECT_FALSE(format.readString(input, molecule));
+  EXPECT_NE(format.error(), std::string());
+}

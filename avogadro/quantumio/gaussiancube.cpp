@@ -11,6 +11,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <limits>
 
 namespace Avogadro::QuantumIO {
 
@@ -44,34 +45,81 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   // Gaussian Cube format is very specific
 
   // Read and set name
-  getline(in, line);
+  if (!getline(in, line)) {
+    appendError("Invalid cube header.");
+    return false;
+  }
   molecule.setData("name", line);
 
   // Read and skip field title (we may be able to use this to setCubeType in the
   // future)
-  getline(in, line);
+  if (!getline(in, line)) {
+    appendError("Invalid cube header.");
+    return false;
+  }
 
   // Next line contains nAtoms and m_min
-  in >> nAtoms;
+  if (!(in >> nAtoms)) {
+    appendError("Invalid cube header.");
+    return false;
+  }
   for (unsigned int i = 0; i < 3; ++i)
-    in >> min(i);
-  getline(in, line); // capture newline before continuing
+    if (!(in >> min(i))) {
+      appendError("Invalid cube header.");
+      return false;
+    }
+  if (!getline(in, line)) { // capture newline before continuing
+    appendError("Invalid cube header.");
+    return false;
+  }
+
+  if (nAtoms == std::numeric_limits<int>::min()) {
+    appendError("Invalid atom count in cube file.");
+    return false;
+  }
+  const int atomCount = nAtoms < 0 ? -nAtoms : nAtoms;
 
   // Next 3 lines contains spacing and dim
   for (unsigned int i = 0; i < 3; ++i) {
-    getline(in, line);
+    if (!getline(in, line)) {
+      appendError("Invalid cube header.");
+      return false;
+    }
     line = Core::trimmed(line);
+    if (line.empty()) {
+      appendError("Invalid cube header.");
+      return false;
+    }
     list = Core::split(line, ' ');
+    if (list.size() < 4) {
+      appendError("Invalid cube grid specification.");
+      return false;
+    }
     dim(i) = Core::lexicalCast<int>(list[0]).value_or(0);
     spacing(i) = Core::lexicalCast<double>(list[i + 1]).value_or(0.0);
+    if (dim(i) <= 0) {
+      appendError("Invalid cube grid dimension.");
+      return false;
+    }
   }
 
   // Geometry block
   Vector3 pos;
-  for (int i = 0; i < abs(nAtoms); ++i) {
-    getline(in, line);
+  for (int i = 0; i < atomCount; ++i) {
+    if (!getline(in, line)) {
+      appendError("Invalid cube atom data.");
+      return false;
+    }
     line = Core::trimmed(line);
+    if (line.empty()) {
+      appendError("Invalid cube atom data.");
+      return false;
+    }
     list = Core::split(line, ' ');
+    if (list.size() < 5) {
+      appendError("Invalid cube atom data.");
+      return false;
+    }
     auto atomNum = Core::lexicalCast<short int>(list[0]).value_or(0);
     Core::Atom a = molecule.addAtom(static_cast<unsigned char>(atomNum));
     for (unsigned int j = 2; j < 5; ++j)
@@ -84,12 +132,21 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   // the data which is necessary, maybe contain 1 or more cubes
   unsigned int nCubes = 1;
   if (nAtoms < 0) {
-    in >> nCubes;
+    if (!(in >> nCubes) || nCubes == 0) {
+      appendError("Invalid cube count.");
+      return false;
+    }
     std::vector<unsigned int> moList(nCubes);
     for (unsigned int i = 0; i < nCubes; ++i)
-      in >> moList[i];
+      if (!(in >> moList[i])) {
+        appendError("Invalid cube MO list.");
+        return false;
+      }
     // clear buffer
-    getline(in, line);
+    if (!getline(in, line)) {
+      appendError("Invalid cube header.");
+      return false;
+    }
   }
 
   // Render molecule
@@ -109,12 +166,28 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     cube->setLimits(min, dim, spacing);
     std::vector<float> values;
     // push_back is slow for this, resize vector first
-    values.resize(dim(0) * dim(1) * dim(2));
+    const size_t d0 = static_cast<size_t>(dim(0));
+    const size_t d1 = static_cast<size_t>(dim(1));
+    const size_t d2 = static_cast<size_t>(dim(2));
+    const size_t maxSize = std::numeric_limits<size_t>::max();
+    if (d0 == 0 || d1 == 0 || d2 == 0 || d0 > maxSize / d1 ||
+        d0 * d1 > maxSize / d2) {
+      appendError("Invalid cube data dimensions.");
+      return false;
+    }
+    values.resize(d0 * d1 * d2);
 
-    for (float& value : values)
-      in >> value;
+    for (float& value : values) {
+      if (!(in >> value)) {
+        appendError("Invalid cube data.");
+        return false;
+      }
+    }
     // clear buffer, if more than one cube
-    getline(in, line);
+    if (!getline(in, line) && i + 1 < nCubes) {
+      appendError("Invalid cube data.");
+      return false;
+    }
     cube->setData(values);
   }
 

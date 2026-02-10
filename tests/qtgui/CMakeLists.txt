@@ -66,3 +66,28 @@ foreach(TestName ${tests})
   add_test(NAME "QtGui-${TestName}"
     COMMAND AvogadroQtGuiTests "--gtest_filter=${TestName}Test.*")
 endforeach()
+
+if (DEFINED ENV{LIB_FUZZING_ENGINE})
+  option(ENABLE_FUZZ "Enable fuzz testing." ON)
+else()
+  option(ENABLE_FUZZ "Enable fuzz testing." OFF)
+endif()
+
+if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
+  set(qtgui_fuzz rwmolecule)
+  foreach(fuzzName ${qtgui_fuzz})
+    add_executable(fuzz_qtgui_${fuzzName} fuzz-${fuzzName}.cpp)
+    if(DEFINED ENV{LIB_FUZZING_ENGINE})
+      target_link_libraries(fuzz_qtgui_${fuzzName}
+        PRIVATE Avogadro::QtGui
+        Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test
+        $ENV{LIB_FUZZING_ENGINE})
+    else()
+      target_compile_options(fuzz_qtgui_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
+      target_link_options(fuzz_qtgui_${fuzzName} PRIVATE -fsanitize=fuzzer)
+      target_link_libraries(fuzz_qtgui_${fuzzName}
+        PRIVATE Avogadro::QtGui
+        Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
+    endif()
+  endforeach()
+endif()

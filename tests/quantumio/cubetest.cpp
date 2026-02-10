@@ -32,3 +32,13 @@ TEST(GaussianCubeTest, basicRead)
     cube.readFile(AVOGADRO_DATA "/data/cube/cn9-homo.cube", molecule));
   ASSERT_EQ(cube.error(), std::string());
 }
+
+// Regression test: malformed header should fail gracefully.
+TEST(GaussianCubeTest, invalidHeaderDoesNotCrash)
+{
+  GaussianCube cube;
+  Molecule molecule;
+
+  EXPECT_FALSE(cube.readString("", molecule));
+  EXPECT_NE(cube.error(), std::string());
+}
