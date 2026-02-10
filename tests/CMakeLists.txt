@@ -1,3 +1,13 @@
+if(NOT TARGET AvogadroCore)
+  # Enable build of standalone tests.
+
+  # cmake and QT_VERSION not previously defined when building tests only
+  cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
+  set(QT_VERSION 6)
+
+  find_package(AvogadroLibs REQUIRED)
+endif()
+
 include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/core")
 
 # find google test
