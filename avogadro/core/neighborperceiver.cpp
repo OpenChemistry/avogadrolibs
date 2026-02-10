@@ -48,6 +48,11 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points,
     else
       m_binCount[c] = static_cast<int>(count);
   }
+  const long long totalBins = static_cast<long long>(m_binCount[0])
+                            * m_binCount[1] * m_binCount[2];
+  if (totalBins > 10'000'000) // ~240 MB of vector overhead
+    return;
+
   std::vector<std::vector<std::vector<std::vector<Index>>>> bins(
     m_binCount[0], std::vector<std::vector<std::vector<Index>>>(
                      m_binCount[1], std::vector<std::vector<Index>>(
