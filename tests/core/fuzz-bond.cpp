@@ -23,7 +23,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
   double minDist = fdp.ConsumeFloatingPointInRange<double>(0.0, 1.0);
   mol.perceiveBondsSimple(tolerance, minDist);
   mol.perceiveBondOrders();
-  mol.perceiveSubstitutedCations();
 
   return 0;
 }

@@ -4,6 +4,7 @@ on:
   schedule:
   - cron: '0 3 * * *'
   workflow_dispatch:
+  pull_request:
   push:
 
 env:
@@ -152,3 +153,8 @@ jobs:
           ${{ runner.workspace }}/build/avogadrolibs/leak*
           ${{ runner.workspace }}/build/avogadrolibs/fuzz-artifacts
         if-no-files-found: ignore
+
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
+      timeout-minutes: 60
