@@ -12,6 +12,8 @@
 
 using namespace Avogadro;
 using namespace Avogadro::Core;
+using Avogadro::FuzzHelpers::consumeAtomicNumber;
+using Avogadro::FuzzHelpers::consumeVector3;
 
 // Fuzz Core::Molecule mutation operations and common queries.
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
