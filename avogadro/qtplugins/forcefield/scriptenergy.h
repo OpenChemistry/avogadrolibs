@@ -81,6 +81,7 @@ private:
   bool parseString(const QJsonObject& ob, const QString& key, std::string& str);
   void processElementString(const QString& str);
   bool parseElements(const QJsonObject& ob);
+  QByteArray writeCoordinates(const Eigen::VectorXd& x);
 
 private:
   QtGui::PythonScript* m_interpreter;

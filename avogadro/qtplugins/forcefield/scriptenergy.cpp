@@ -22,6 +22,10 @@
 
 #include <QRegularExpression>
 
+#include <algorithm>
+#include <charconv>
+#include <cstring>
+
 #include <qjsonarray.h>
 #include <qjsondocument.h>
 #include <qjsonobject.h>
@@ -109,38 +113,50 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
   m_interpreter->asyncExecute(options);
 }
 
+QByteArray ScriptEnergy::writeCoordinates(const Eigen::VectorXd& x)
+{
+  QByteArray input;
+  input.reserve(static_cast<int>(x.size() / 3) * 80);
+  char buf[32];
+  for (Eigen::Index i = 0; i < x.size(); i += 3) {
+    auto [p1, ec1] = std::to_chars(buf, buf + sizeof(buf), x[i]);
+    input.append(buf, static_cast<int>(p1 - buf));
+    input.append(' ');
+    auto [p2, ec2] = std::to_chars(buf, buf + sizeof(buf), x[i + 1]);
+    input.append(buf, static_cast<int>(p2 - buf));
+    input.append(' ');
+    auto [p3, ec3] = std::to_chars(buf, buf + sizeof(buf), x[i + 2]);
+    input.append(buf, static_cast<int>(p3 - buf));
+    input.append('\n');
+  }
+  return input;
+}
+
 Real ScriptEnergy::value(const Eigen::VectorXd& x)
 {
   if (m_molecule == nullptr || m_interpreter == nullptr)
     return 0.0; // nothing to do
 
-  // write the new coordinates and read the energy
-  QByteArray input;
-  for (Eigen::Index i = 0; i < x.size(); i += 3) {
-    // write as x y z (space separated)
-    input += QString::number(x[i]).toUtf8() + " " +
-             QString::number(x[i + 1]).toUtf8() + " " +
-             QString::number(x[i + 2]).toUtf8() + "\n";
-  }
-  // qDebug() << " wrote coords ";
+  QByteArray input = writeCoordinates(x);
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
-  // qDebug() << " got result " << result;
 
-  // go through lines in result until we see "AvogadroEnergy: "
-  QStringList lines = QString(result).remove('\r').split('\n');
+  // Find "AvogadroEnergy:" and parse the value directly from raw bytes
+  const char* data = result.constData();
+  const char* end = data + result.size();
+  constexpr char marker[] = "AvogadroEnergy:";
+  constexpr size_t markerLen = sizeof(marker) - 1;
+
   double energy = 0.0;
-  for (auto line : lines) {
-    if (line.startsWith("AvogadroEnergy:")) {
-      QStringList items = line.split(" ", Qt::SkipEmptyParts);
-      if (items.size() > 1) {
-        energy = items[1].toDouble();
-        break;
-      }
-    }
+  const char* pos = std::search(data, end, marker, marker + markerLen);
+  if (pos != end) {
+    pos += markerLen;
+    while (pos < end && (*pos == ' ' || *pos == '\t'))
+      ++pos;
+    std::from_chars(pos, end, energy);
   }
 
   energy += constraintEnergies(x);
-  return energy; // if conversion fails, returns 0.0
+  return energy;
 }
 
 void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
@@ -150,39 +166,63 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     return;
   }
 
-  // Get the gradient from the script
-  // write the new coordinates and read the energy
-  QByteArray input;
-  for (Eigen::Index i = 0; i < x.size(); i += 3) {
-    // write as x y z (space separated)
-    input += QString::number(x[i]).toUtf8() + " " +
-             QString::number(x[i + 1]).toUtf8() + " " +
-             QString::number(x[i + 2]).toUtf8() + "\n";
-  }
+  QByteArray input = writeCoordinates(x);
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
 
-  // parse the result
-  // first split on newlines
-  QStringList lines = QString(result).remove('\r').split('\n');
-  unsigned int i = 0;
-  bool readingGrad = false;
-  for (auto line : lines) {
-    if (line.startsWith("AvogadroGradient:")) {
-      readingGrad = true;
-      continue; // next line
-    }
+  // Parse directly from raw bytes — no QString/QStringList overhead
+  const char* data = result.constData();
+  const char* end = data + result.size();
+  constexpr char marker[] = "AvogadroGradient:";
+  constexpr size_t markerLen = sizeof(marker) - 1;
 
-    if (readingGrad) {
-      QStringList items = line.split(" ", Qt::SkipEmptyParts);
-      if (items.size() == 3) {
-        grad[i] = items[0].toDouble();
-        grad[i + 1] = items[1].toDouble();
-        grad[i + 2] = items[2].toDouble();
-        i += 3;
+  const char* pos = std::search(data, end, marker, marker + markerLen);
+  if (pos != end) {
+    // Skip to the next line
+    pos = static_cast<const char*>(std::memchr(pos, '\n', end - pos));
+    if (pos)
+      ++pos;
+
+    Eigen::Index i = 0;
+    while (pos && pos < end && i + 2 < x.size()) {
+      // Skip whitespace
+      while (pos < end && (*pos == ' ' || *pos == '\t' || *pos == '\r'))
+        ++pos;
+      if (pos >= end || *pos == '\n') {
+        if (pos < end)
+          ++pos;
+        continue;
       }
 
-      if (i > x.size())
+      double gx, gy, gz;
+      auto r1 = std::from_chars(pos, end, gx);
+      if (r1.ec != std::errc())
         break;
+      pos = r1.ptr;
+
+      while (pos < end && (*pos == ' ' || *pos == '\t'))
+        ++pos;
+      auto r2 = std::from_chars(pos, end, gy);
+      if (r2.ec != std::errc())
+        break;
+      pos = r2.ptr;
+
+      while (pos < end && (*pos == ' ' || *pos == '\t'))
+        ++pos;
+      auto r3 = std::from_chars(pos, end, gz);
+      if (r3.ec != std::errc())
+        break;
+      pos = r3.ptr;
+
+      grad[i] = gx;
+      grad[i + 1] = gy;
+      grad[i + 2] = gz;
+      i += 3;
+
+      // Skip to next line
+      while (pos < end && *pos != '\n')
+        ++pos;
+      if (pos < end)
+        ++pos;
     }
   }
 
