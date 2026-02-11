@@ -78,9 +78,9 @@ void exportMolecule(py::module_& m)
       [](const Molecule& self) -> py::array_t<double> {
         const auto& pos = self.atomPositions3d();
         if (pos.empty())
-          return py::array_t<double>({ Py_ssize_t(0), Py_ssize_t(3) });
+          return py::array_t<double>(std::vector<Py_ssize_t>{ 0, 3 });
         return py::array_t<double>(
-          { static_cast<Py_ssize_t>(pos.size()), Py_ssize_t(3) },
+          std::vector<Py_ssize_t>{ static_cast<Py_ssize_t>(pos.size()), 3 },
           { static_cast<Py_ssize_t>(3 * sizeof(double)),
             static_cast<Py_ssize_t>(sizeof(double)) },
           reinterpret_cast<const double*>(pos.constData()), py::cast(self));
@@ -136,9 +136,9 @@ void exportMolecule(py::module_& m)
       [](const Molecule& self) -> py::array_t<size_t> {
         const auto& pairs = self.bondPairs();
         if (pairs.empty())
-          return py::array_t<size_t>({ Py_ssize_t(0), Py_ssize_t(2) });
+          return py::array_t<size_t>(std::vector<Py_ssize_t>{ 0, 2 });
         return py::array_t<size_t>(
-          { static_cast<Py_ssize_t>(pairs.size()), Py_ssize_t(2) },
+          std::vector<Py_ssize_t>{ static_cast<Py_ssize_t>(pairs.size()), 2 },
           { static_cast<Py_ssize_t>(2 * sizeof(size_t)),
             static_cast<Py_ssize_t>(sizeof(size_t)) },
           reinterpret_cast<const size_t*>(pairs.constData()), py::cast(self));
@@ -201,9 +201,9 @@ void exportMolecule(py::module_& m)
       [](const Molecule& self) -> py::array_t<double> {
         const auto& forces = self.forceVectors();
         if (forces.empty())
-          return py::array_t<double>({ Py_ssize_t(0), Py_ssize_t(3) });
+          return py::array_t<double>(std::vector<Py_ssize_t>{ 0, 3 });
         return py::array_t<double>(
-          { static_cast<Py_ssize_t>(forces.size()), Py_ssize_t(3) },
+          std::vector<Py_ssize_t>{ static_cast<Py_ssize_t>(forces.size()), 3 },
           { static_cast<Py_ssize_t>(3 * sizeof(double)),
             static_cast<Py_ssize_t>(sizeof(double)) },
           reinterpret_cast<const double*>(forces.constData()), py::cast(self));
@@ -252,9 +252,9 @@ void exportMolecule(py::module_& m)
       [](const Molecule& self, int mode) -> py::array_t<double> {
         auto lx = self.vibrationLx(mode);
         if (lx.empty())
-          return py::array_t<double>({ Py_ssize_t(0), Py_ssize_t(3) });
+          return py::array_t<double>(std::vector<Py_ssize_t>{ 0, 3 });
         py::array_t<double> result(
-          { static_cast<Py_ssize_t>(lx.size()), Py_ssize_t(3) });
+          std::vector<Py_ssize_t>{ static_cast<Py_ssize_t>(lx.size()), 3 });
         std::memcpy(result.mutable_data(),
                     reinterpret_cast<const double*>(lx.constData()),
                     lx.size() * 3 * sizeof(double));
