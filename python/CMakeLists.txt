@@ -1,18 +1,10 @@
-cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
 if (NOT TARGET Avogadro::Core)
   find_package(AvogadroLibs REQUIRED)
 endif()
 find_package(Python COMPONENTS Interpreter Development)
-set(PYBIND11_PYTHON_VERSION "3" CACHE STRING "")
-set(PYBIND11_CPP_STANDARD "-std=c++17" CACHE STRING "")
-find_package(pybind11 REQUIRED)
-
-set(wrapper_SRCS
-  main.cpp
-  core.cpp
-  io.cpp
-  )
+find_package(pybind11 CONFIG REQUIRED)
 
 set(_python_module_install_dir "avogadro")
 # SKBUILD is set for binary wheel

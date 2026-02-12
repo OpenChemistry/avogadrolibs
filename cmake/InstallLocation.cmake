@@ -39,12 +39,24 @@ endif()
 
 # Set up RPATH for the project too.
 option(ENABLE_RPATH "Enable rpath support on Linux and Mac" ON)
-if(NOT CMAKE_INSTALL_RPATH)
-  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${INSTALL_LIBRARY_DIR}")
-endif()
-if(APPLE AND NOT CMAKE_INSTALL_NAME_DIR)
-  # Prefer @rpath-based install names on macOS for relocatable bundles.
-  set(CMAKE_INSTALL_NAME_DIR "@rpath")
+if(SKBUILD)
+  # When building a Python wheel, all shared libraries end up in the same
+  # directory. Use relative RPATHs so they can find each other at runtime.
+  if(APPLE)
+    set(CMAKE_INSTALL_RPATH "@loader_path")
+    set(CMAKE_INSTALL_NAME_DIR "@rpath")
+    set(CMAKE_MACOSX_RPATH ON)
+  elseif(UNIX)
+    set(CMAKE_INSTALL_RPATH "$ORIGIN")
+  endif()
+else()
+  if(NOT CMAKE_INSTALL_RPATH)
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${INSTALL_LIBRARY_DIR}")
+  endif()
+  if(APPLE AND NOT CMAKE_INSTALL_NAME_DIR)
+    # Prefer @rpath-based install names on macOS for relocatable bundles.
+    set(CMAKE_INSTALL_NAME_DIR "@rpath")
+  endif()
 endif()
 if(UNIX AND ENABLE_RPATH)
   set(CMAKE_SKIP_BUILD_RPATH FALSE)
