@@ -9,7 +9,7 @@ env:
   QT_VERSION: 6.10.1
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
-  MACOS_TARGET: 13
+  MACOS_TARGET: 14
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_YAEHMOP=ON
   # CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   # SCCACHE_GHA_ENABLED: "true"
@@ -150,12 +150,78 @@ jobs:
       if: runner.os == 'macOS'
       shell: bash
       run: |
+        set -euo pipefail
+
         exe_path=prefix/Avogadro2.app/Contents/MacOS/
+        args=""
         cp -p `which pixi` ${exe_path}
         for exe in ${exe_path}*; do
           args="${args} -executable=${exe}"
         done;
         macdeployqt prefix/Avogadro2.app ${args} -libpath=prefix/lib -always-overwrite
+
+        # Remove CI-only absolute RPATH entries and ensure each Mach-O has
+        # bundle-relative lookup paths for frameworks and private libraries.
+        app_path=prefix/Avogadro2.app
+        find "${app_path}/Contents" -type f \( -perm -111 -o -name "*.dylib" -o -name "*.so" \) -print0 | \
+        while IFS= read -r -d '' binary; do
+          if ! file "${binary}" | grep -q "Mach-O"; then
+            continue
+          fi
+
+          # Remove absolute RPATH entries from CI build/install roots.
+          while IFS= read -r rpath; do
+            if [[ -n "${rpath}" && "${rpath}" == /Users/runner/* ]]; then
+              echo "Deleting RPATH ${rpath} in ${binary}"
+              install_name_tool -delete_rpath "${rpath}" "${binary}" || true
+            fi
+            if [[ -n "${rpath}" && "${rpath}" == /home/runner/* ]]; then
+              echo "Deleting RPATH ${rpath} in ${binary}"
+              install_name_tool -delete_rpath "${rpath}" "${binary}" || true
+            fi
+            if [[ -n "${rpath}" && "${rpath}" == /opt/hostedtoolcache/* ]]; then
+              echo "Deleting RPATH ${rpath} in ${binary}"
+              install_name_tool -delete_rpath "${rpath}" "${binary}" || true
+            fi
+          done < <(otool -l "${binary}" | awk '/LC_RPATH/{getline; getline; if ($1 == "path") print $2}')
+
+          # Add bundle-relative RPATH entries (duplicates are ignored).
+          install_name_tool -add_rpath "@executable_path/../Frameworks" "${binary}" 2>/dev/null || true
+          install_name_tool -add_rpath "@executable_path/../lib" "${binary}" 2>/dev/null || true
+          install_name_tool -add_rpath "@loader_path/../Frameworks" "${binary}" 2>/dev/null || true
+          install_name_tool -add_rpath "@loader_path/../lib" "${binary}" 2>/dev/null || true
+          install_name_tool -add_rpath "@loader_path/../../Frameworks" "${binary}" 2>/dev/null || true
+          install_name_tool -add_rpath "@loader_path/../../lib" "${binary}" 2>/dev/null || true
+        done
+
+        # Ensure any remaining absolute CI paths in linked libraries are switched
+        # to @rpath-based references.
+        find "${app_path}/Contents" -type f \( -perm -111 -o -name "*.dylib" -o -name "*.so" \) -print0 | \
+        while IFS= read -r -d '' binary; do
+          if ! file "${binary}" | grep -q "Mach-O"; then
+            continue
+          fi
+
+          while IFS= read -r dep; do
+            case "${dep}" in
+              /Users/runner/*|/home/runner/*|/opt/hostedtoolcache/*) ;;
+              *) continue ;;
+            esac
+            if [[ "${dep}" == *".framework/"* ]]; then
+              rel_path="$(echo "${dep}" | sed -E 's|^.*([^/]+\.framework/Versions/[^/]+/[^/]+)$|\1|')"
+              if [[ -n "${rel_path}" && "${rel_path}" != "${dep}" ]]; then
+                new_dep="@rpath/${rel_path}"
+              else
+                new_dep="@rpath/$(basename "${dep}")"
+              fi
+            else
+              new_dep="@rpath/$(basename "${dep}")"
+            fi
+            echo "Rewriting ${binary}: ${dep} -> ${new_dep}"
+            install_name_tool -change "${dep}" "${new_dep}" "${binary}" || true
+          done < <(otool -L "${binary}" | awk '/^\t\// {print $1}')
+        done
+
         if [ -n "${P12_PASSWORD}" ]; then
           # codesign the Open Babel modules, then the app
           /usr/bin/codesign -s "${CODESIGN_IDENTITY}" -f --timestamp --deep --options runtime --entitlements ../${{ github.event.repository.name }}/openchemistry/avogadroapp/cmake/Entitlements.plist prefix/Avogadro2.app/Contents/lib/openbabel/*.so
@@ -194,14 +260,28 @@ jobs:
             DMG_NAME="Avogadro2-continuous.dmg"
           fi
         fi
+        # Notarize the app bundle first, so the stapled ticket
+        # is preserved when users copy the app out of the DMG
+        if [ -n "${P12_PASSWORD}" ]; then
+          echo "Creating ZIP for app notarization"
+          ditto -c -k --keepParent Avogadro2.app Avogadro2.zip
+          echo "Submitting app for notarization"
+          xcrun notarytool submit Avogadro2.zip --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
+          echo "Stapling app bundle"
+          xcrun stapler staple -v Avogadro2.app
+          rm Avogadro2.zip
+        fi
+
         echo "Building DMG: ${DMG_NAME}"
         create-dmg --volname "${VOLNAME}" --icon-size 64 --filesystem "APFS" --format "ULMO" --no-internet-enable --icon "Avogadro2.app" 20 64 --app-drop-link 200 64 ${DMG_NAME} Avogadro2.app
         mv ${DMG_NAME} ../${DMG_NAME}
         cd ..
-        echo "Submitting DMG: ${DMG_NAME}"
-        xcrun notarytool submit ${DMG_NAME} --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
-        echo "Stapling notarized DMG: ${DMG_NAME}"
-        xcrun stapler staple -v ${DMG_NAME}
+        if [ -n "${P12_PASSWORD}" ]; then
+          echo "Submitting DMG: ${DMG_NAME}"
+          xcrun notarytool submit ${DMG_NAME} --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
+          echo "Stapling notarized DMG: ${DMG_NAME}"
+          xcrun stapler staple -v ${DMG_NAME}
+        fi
       working-directory: ${{ runner.workspace }}/build/
       continue-on-error: true
       env:
