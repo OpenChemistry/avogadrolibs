@@ -2,7 +2,7 @@
 # Copyright (C) 2006-2021 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Temuri Doghonadze <temuri@delta-net.ge>, 2022.
-# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022, 2023, 2024, 2025.
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022, 2023, 2024, 2025, 2026.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025, 2026.
 msgid ""
 msgstr ""
@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-31 02:11+0000\n"
 "PO-Revision-Date: 2026-02-14 09:09+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -6292,7 +6291,7 @@ msgstr "მორგება"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
 msgid "Get Constraint"
-msgstr ""
+msgstr "შეზღუდვის მიღება"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
