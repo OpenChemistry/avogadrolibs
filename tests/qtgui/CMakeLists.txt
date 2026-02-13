@@ -22,6 +22,7 @@ set(tests
   HydrogenTools
   MeshGenerator
   Molecule
+  PackageManager
   RWMolecule
 )
 
