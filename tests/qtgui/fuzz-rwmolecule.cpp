@@ -16,6 +16,9 @@ using namespace Avogadro;
 using namespace Avogadro::Core;
 using namespace Avogadro::QtGui;
 
+using Avogadro::FuzzHelpers::consumeAtomicNumber;
+using Avogadro::FuzzHelpers::consumeVector3;
+
 namespace {
 QCoreApplication* ensureApp()
 {
@@ -35,7 +38,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
 
   FuzzedDataProvider fdp(Data, Size);
 
-  Molecule mol = FuzzHelpers::buildMolecule(fdp);
+  QtGui::Molecule mol = FuzzHelpers::buildMolecule(fdp);
   RWMolecule rwmol(mol);
 
   size_t steps = fdp.ConsumeIntegralInRange<size_t>(1, 128);

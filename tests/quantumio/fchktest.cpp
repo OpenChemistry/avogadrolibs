@@ -14,6 +14,7 @@
 #include <avogadro/quantumio/gaussianfchk.h>
 
 #include <fstream>
+#include <iomanip>
 #include <sstream>
 #include <string>
 
@@ -33,4 +34,20 @@ TEST(GaussianFchkTest, basicRead)
   ASSERT_EQ(format.error(), std::string());
 
   ASSERT_EQ(molecule.atomCount(), 3);
+}
+
+// Regression test: oversized array header should fail gracefully.
+TEST(GaussianFchkTest, oversizedArrayRejected)
+{
+  GaussianFchk format;
+  Molecule molecule;
+
+  std::ostringstream out;
+  out << "Header line 1\n";
+  out << "Header line 2\n";
+  out << std::left << std::setw(42) << "Atomic numbers"
+      << " I 20000000\n";
+
+  EXPECT_FALSE(format.readString(out.str(), molecule));
+  EXPECT_NE(format.error(), std::string());
 }

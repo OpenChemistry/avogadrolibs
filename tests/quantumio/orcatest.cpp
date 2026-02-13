@@ -52,3 +52,32 @@ TEST(OrcaTest, nmrWithoutAtomsDoesNotCrash)
   EXPECT_FALSE(qcs.readString(input, molecule));
   EXPECT_NE(qcs.error(), std::string());
 }
+
+// Regression test: charges block without atoms should not crash.
+TEST(OrcaTest, chargesWithoutAtomsDoesNotCrash)
+{
+  ORCAOutput qcs;
+  Molecule molecule;
+
+  const std::string input = "LOEWDIN ATOMIC CHARGES\n"
+                            "------------\n"
+                            "0 C :   -0.228326\n"
+                            "\n";
+
+  EXPECT_FALSE(qcs.readString(input, molecule));
+  EXPECT_NE(qcs.error(), std::string());
+}
+
+// Regression test: malformed bond order line should not crash.
+TEST(OrcaTest, bondOrdersMalformedLineDoesNotCrash)
+{
+  ORCAOutput qcs;
+  Molecule molecule;
+
+  const std::string input = "Mayer bond orders larger than 0.100000\n"
+                            "B(  3-T available\n"
+                            "\n";
+
+  EXPECT_FALSE(qcs.readString(input, molecule));
+  EXPECT_NE(qcs.error(), std::string());
+}

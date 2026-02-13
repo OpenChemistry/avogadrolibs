@@ -1,5 +1,62 @@
 [build-system]
-requires = ["setuptools>=40.8.0", "wheel", "scikit-build", "pybind11", "ninja"]
-build-backend = "setuptools.build_meta:__legacy__"
+requires = ["scikit-build-core>=0.10", "pybind11", "setuptools_scm>=8"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "avogadro"
+dynamic = ["version"]
+description = "Avogadro provides analysis and data processing useful in computational chemistry, molecular modeling, bioinformatics, materials science, and related areas."
+readme = "README.md"
+license = "BSD-3-Clause"
+requires-python = ">=3.9"
+authors = [
+    { name = "Avogadro / OpenChemistry Developers" },
+]
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: C++",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Libraries",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+]
+
+[project.urls]
+Documentation = "https://two.avogadro.cc"
+Funding = "https://github.com/sponsors/OpenChemistry"
+Source = "https://github.com/OpenChemistry/avogadrolibs"
+Tracker = "https://github.com/OpenChemistry/avogadrolibs/issues"
+Forum = "https://discuss.avogadro.cc"
+
+[tool.scikit-build]
+build.verbose = true
+cmake.define.USE_SPGLIB = "FALSE"
+cmake.define.USE_OPENGL = "FALSE"
+cmake.define.USE_QT = "FALSE"
+cmake.define.USE_MMTF = "FALSE"
+cmake.define.USE_PYTHON = "TRUE"
+cmake.define.USE_HDF5 = "FALSE"
+cmake.define.USE_LIBARCHIVE = "FALSE"
+cmake.define.USE_LIBMSYM = "FALSE"
+cmake.define.PYTHON_WHEEL_BUILD = "TRUE"
+cmake.define.INSTALL_RUNTIME_DIR = "avogadro"
+cmake.define.INSTALL_LIBRARY_DIR = "avogadro"
+cmake.define.INSTALL_ARCHIVE_DIR = "avogadro"
+
+[tool.scikit-build.metadata.version]
+provider = "scikit_build_core.metadata.setuptools_scm"
+
+[tool.setuptools_scm]
+fallback_version = "1.103.0"
+
 [tool.cibuildwheel]
 build-verbosity = "1"
