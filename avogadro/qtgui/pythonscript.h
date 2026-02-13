@@ -96,7 +96,8 @@ public:
    * Will send asyncFinished() signal when finished
    */
   void asyncExecute(const QStringList& args,
-                    const QByteArray& scriptStdin = QByteArray());
+                    const QByteArray& scriptStdin = QByteArray(),
+                    bool mergedChannels = true);
 
   /**
    * Write input to the asynchronous process' standard input and return the

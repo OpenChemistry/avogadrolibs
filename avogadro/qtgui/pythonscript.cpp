@@ -259,7 +259,8 @@ QByteArray PythonScript::execute(const QStringList& args,
 }
 
 void PythonScript::asyncExecute(const QStringList& args,
-                                const QByteArray& scriptStdin)
+                                const QByteArray& scriptStdin,
+                                bool mergedChannels)
 {
   clearErrors();
   if (m_process != nullptr) {
@@ -271,7 +272,8 @@ void PythonScript::asyncExecute(const QStringList& args,
   m_process = new QProcess(parent());
 
   // Merge stdout and stderr
-  m_process->setProcessChannelMode(QProcess::MergedChannels);
+  if (mergedChannels)
+    m_process->setProcessChannelMode(QProcess::MergedChannels);
 
   // Add debugging flag if needed.
   QStringList realArgs(args);

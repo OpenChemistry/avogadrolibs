@@ -2,6 +2,7 @@
 name = "avogadro-plugins"
 requires-python = ">= 3.11"
 version = "1.102.2"
+dependencies = ["numpy"]
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]

@@ -171,11 +171,14 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
             << "binary-v1";
 
   // start the interpreter
-  m_interpreter->asyncExecute(options);
+  m_interpreter->asyncExecute(options, QByteArray(), false);
 }
 
 QByteArray ScriptEnergy::writeCoordinatesText(const Eigen::VectorXd& x)
 {
+  if (x.size() == 0 || (x.size() % 3) != 0)
+    return QByteArray();
+
   QByteArray input;
   input.reserve(static_cast<int>(x.size() / 3) * 80);
   for (Eigen::Index i = 0; i < x.size(); i += 3) {
@@ -322,14 +325,14 @@ bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame)
 
   const auto* header = reinterpret_cast<const uchar*>(frame.constData());
   if (std::memcmp(frame.constData(), BINARY_MAGIC, sizeof(BINARY_MAGIC)) != 0) {
-    appendError("Invalid binary-v1 response magic.");
+    appendError("Invalid binary response magic.");
     return false;
   }
 
   const quint16 version = qFromLittleEndian<quint16>(header + 4);
   const quint32 payloadBytes = qFromLittleEndian<quint32>(header + 12);
   if (version != BINARY_VERSION) {
-    appendError("Unsupported binary-v1 response version.");
+    appendError("Unsupported binary response version.");
     return false;
   }
 
@@ -346,11 +349,11 @@ bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame)
   }
 
   if (frame.size() < totalBytes) {
-    appendError("Truncated binary-v1 response payload.");
+    appendError("Truncated binary response payload.");
     return false;
   }
   if (frame.size() > totalBytes) {
-    appendError("Binary-v1 response contained trailing bytes.");
+    appendError("Binary response contained trailing bytes.");
     return false;
   }
 
@@ -363,7 +366,7 @@ bool ScriptEnergy::evaluateBinary(const Eigen::VectorXd& x,
 {
   const QByteArray input = writeCoordinatesBinary(x, requestGradient);
   if (input.isEmpty()) {
-    appendError("Invalid coordinates for binary-v1 request.");
+    appendError("Invalid coordinates for binary request.");
     return false;
   }
 
@@ -390,6 +393,11 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
   }
 
   QByteArray input = writeCoordinatesText(x);
+  if (input.isEmpty()) {
+    appendError("Invalid coordinates for text request.");
+    return std::numeric_limits<Real>::quiet_NaN();
+  }
+
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
 
   // Find "AvogadroEnergy:" and parse the value directly from raw bytes
@@ -431,6 +439,12 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   }
 
   QByteArray input = writeCoordinatesText(x);
+  if (input.isEmpty()) {
+    appendError("Invalid coordinates for text request.");
+    grad.setConstant(std::numeric_limits<Real>::quiet_NaN());
+    return;
+  }
+
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
 
   // Parse directly from raw bytes — no QString/QStringList overhead

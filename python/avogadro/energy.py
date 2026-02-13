@@ -131,10 +131,9 @@ def _parse_batch_coords(payload: bytes, atom_count: int) -> "Tuple[int, npt.NDAr
             f"expected {expected_size} bytes, got {len(coords_data)}"
         )
 
-    coords = np.frombuffer(coords_data, dtype="<f8").reshape(
-        batch_size, atom_count, 3
-    )
+    coords = np.frombuffer(coords_data, dtype="<f8").reshape(batch_size, atom_count, 3)
     return batch_size, coords
+
 
 def _validate_request_flags(flags: int) -> None:
     unknown = flags & ~VALID_REQUEST_FLAGS
@@ -277,9 +276,7 @@ def _write_batch_gradients(
     """
     grad = np.asarray(gradients, dtype="<f8")
     if grad.ndim != 3:
-        raise BinaryProtocolError(
-            f"Gradients must be 3D array, got shape {grad.shape}"
-        )
+        raise BinaryProtocolError(f"Gradients must be 3D array, got shape {grad.shape}")
 
     if grad.shape[1:] != (atom_count, 3):
         raise BinaryProtocolError(
@@ -328,7 +325,9 @@ def read_coordinates(
     else:
         coords = _parse_single_coords(frame.payload, frame.atom_count)
 
-    return CoordinateFrame(flags=frame.flags, atom_count=frame.atom_count, coords=coords)
+    return CoordinateFrame(
+        flags=frame.flags, atom_count=frame.atom_count, coords=coords
+    )
 
 
 class EnergyServer:
@@ -365,6 +364,7 @@ class EnergyServer:
                     energy = model.compute_single(request.coords)
                     request.send_energy(energy)
     """
+
     __slots__ = ("input", "output", "atom_count", "auto_flush")
 
     def __init__(
@@ -383,7 +383,10 @@ class EnergyServer:
         return self
 
     def __exit__(self, *args) -> None:
-        pass
+        try:
+            self.output.flush()
+        except Exception:
+            pass
 
     def requests(self):
         """
@@ -417,6 +420,7 @@ class Request:
       frame: CoordinateFrame
 
     """
+
     __slots__ = ("_server", "flags", "coords", "_sent")
 
     def __init__(self, server: EnergyServer, frame: CoordinateFrame):
