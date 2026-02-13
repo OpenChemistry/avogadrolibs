@@ -9,8 +9,10 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
+#include <algorithm>
 #include <cstddef>
 #include <iostream>
+#include <limits>
 
 using std::cout;
 using std::endl;
@@ -25,6 +27,31 @@ using Core::GaussianSet;
 using Core::Rhf;
 using Core::Rohf;
 using Core::Uhf;
+
+namespace {
+constexpr size_t kMaxFchkArrayEntries = 16ull * 1024 * 1024;   // 16M entries
+constexpr size_t kMaxFchkMatrixElements = 32ull * 1024 * 1024; // 32M elements
+
+bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
+{
+  if (minBytes == 0)
+    return true;
+
+  auto pos = in.tellg();
+  if (pos == std::streampos(-1))
+    return true;
+
+  in.clear();
+  in.seekg(0, std::ios::end);
+  auto end = in.tellg();
+  in.seekg(pos);
+  if (end == std::streampos(-1))
+    return true;
+
+  const size_t remaining = static_cast<size_t>(end - pos);
+  return remaining >= minBytes;
+}
+} // namespace
 
 // https://physics.nist.gov/cgi-bin/cuu/Value?hrev
 const double hartreeToEV = 27.211386245981;
@@ -52,14 +79,28 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
   while (!in.eof())
     processLine(in);
 
-  auto* basis = new GaussianSet;
+  if (!error().empty())
+    return false;
 
-  int nAtom = 0;
-  for (unsigned int i = 0; i < m_aPos.size(); i += 3) {
-    Atom a = molecule.addAtom(static_cast<unsigned char>(m_aNums[nAtom++]));
-    a.setPosition3d(Vector3(m_aPos[i] * BOHR_TO_ANGSTROM,
-                            m_aPos[i + 1] * BOHR_TO_ANGSTROM,
-                            m_aPos[i + 2] * BOHR_TO_ANGSTROM));
+  const size_t posCount = m_aPos.size() / 3;
+  const size_t numCount = m_aNums.size();
+  size_t atomCount = std::min(posCount, numCount);
+  if (m_numAtoms > 0) {
+    atomCount = std::min(atomCount, static_cast<size_t>(m_numAtoms));
+  }
+  if (atomCount == 0) {
+    appendError("Could not find any atomic coordinates! Are you sure this is a "
+                "Gaussian formatted checkpoint file?");
+    return false;
+  }
+
+  auto* basis = new GaussianSet;
+  for (size_t i = 0; i < atomCount; ++i) {
+    Atom a = molecule.addAtom(static_cast<unsigned char>(m_aNums[i]));
+    const size_t offset = i * 3;
+    a.setPosition3d(Vector3(m_aPos[offset] * BOHR_TO_ANGSTROM,
+                            m_aPos[offset + 1] * BOHR_TO_ANGSTROM,
+                            m_aPos[offset + 2] * BOHR_TO_ANGSTROM));
   }
 
   if (m_frequencies.size() > 0 &&
@@ -272,6 +313,58 @@ void GaussianFchk::load(GaussianSet* basis)
   // basis->setElectronCount(m_electronsAlpha, Core::GaussianSet::alpha);
   // basis->setElectronCount(m_electronsBeta, Core::GaussianSet::beta);
 
+  if (m_shellTypes.empty()) {
+    cout << "GaussianFchk: no shell types found.\n";
+    return;
+  }
+  if (m_shellNums.size() != m_shellTypes.size() ||
+      m_shelltoAtom.size() != m_shellTypes.size()) {
+    cout << "GaussianFchk: inconsistent shell data sizes.\n";
+    return;
+  }
+  if (m_numAtoms <= 0) {
+    cout << "GaussianFchk: invalid atom count.\n";
+    return;
+  }
+
+  size_t totalPrimitives = 0;
+  size_t totalSpPrimitives = 0;
+  const size_t maxSize = std::numeric_limits<size_t>::max();
+  for (size_t i = 0; i < m_shellTypes.size(); ++i) {
+    const int shellNum = m_shellNums[i];
+    if (shellNum <= 0) {
+      cout << "GaussianFchk: invalid shell primitive count.\n";
+      return;
+    }
+    const int atomIndex = m_shelltoAtom[i];
+    if (atomIndex <= 0 || atomIndex > m_numAtoms) {
+      cout << "GaussianFchk: invalid shell-to-atom map.\n";
+      return;
+    }
+    const size_t shellNumU = static_cast<size_t>(shellNum);
+    if (totalPrimitives > maxSize - shellNumU) {
+      cout << "GaussianFchk: shell primitive count overflow.\n";
+      return;
+    }
+    totalPrimitives += shellNumU;
+    if (m_shellTypes[i] == -1) {
+      if (totalSpPrimitives > maxSize - shellNumU) {
+        cout << "GaussianFchk: SP primitive count overflow.\n";
+        return;
+      }
+      totalSpPrimitives += shellNumU;
+    }
+  }
+
+  if (m_a.size() < totalPrimitives || m_c.size() < totalPrimitives) {
+    cout << "GaussianFchk: insufficient primitive exponent data.\n";
+    return;
+  }
+  if (totalSpPrimitives > 0 && m_csp.size() < totalSpPrimitives) {
+    cout << "GaussianFchk: insufficient SP contraction data.\n";
+    return;
+  }
+
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
@@ -282,12 +375,22 @@ void GaussianFchk::load(GaussianSet* basis)
       int tmpGTO = nGTO;
       for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
            ++j) {
+        if (static_cast<size_t>(nGTO) >= m_a.size() ||
+            static_cast<size_t>(nGTO) >= m_c.size()) {
+          cout << "GaussianFchk: primitive index out of range.\n";
+          return;
+        }
         basis->addGto(s, m_c[nGTO], m_a[nGTO]);
         ++nGTO;
       }
       int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
       for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
            ++j) {
+        if (static_cast<size_t>(tmpGTO) >= m_a.size() ||
+            static_cast<size_t>(tmpGTO) >= m_csp.size()) {
+          cout << "GaussianFchk: SP primitive index out of range.\n";
+          return;
+        }
         basis->addGto(p, m_csp[tmpGTO], m_a[tmpGTO]);
         ++tmpGTO;
       }
@@ -340,6 +443,11 @@ void GaussianFchk::load(GaussianSet* basis)
         int b = basis->addBasis(m_shelltoAtom[i] - 1, type);
         for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
              ++j) {
+          if (static_cast<size_t>(nGTO) >= m_a.size() ||
+              static_cast<size_t>(nGTO) >= m_c.size()) {
+            cout << "GaussianFchk: primitive index out of range.\n";
+            return;
+          }
           basis->addGto(b, m_c[nGTO], m_a[nGTO]);
           ++nGTO;
         }
@@ -378,6 +486,17 @@ void GaussianFchk::load(GaussianSet* basis)
 vector<int> GaussianFchk::readArrayI(std::istream& in, unsigned int n)
 {
   vector<int> tmp;
+  if (n == 0)
+    return tmp;
+  if (n > kMaxFchkArrayEntries) {
+    appendError("Array data exceeds supported size.");
+    return tmp;
+  }
+  const size_t nSize = static_cast<size_t>(n);
+  if (!hasMinimumRemainingBytes(in, nSize)) {
+    appendError("Invalid array data.");
+    return tmp;
+  }
   tmp.reserve(n);
   bool ok(false);
   while (tmp.size() < n) {
@@ -412,6 +531,23 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
                                         int width, double factor)
 {
   vector<double> tmp;
+  if (n == 0)
+    return tmp;
+  if (n > kMaxFchkArrayEntries) {
+    appendError("Array data exceeds supported size.");
+    return tmp;
+  }
+  const size_t nSize = static_cast<size_t>(n);
+  const size_t maxSize = std::numeric_limits<size_t>::max();
+  const size_t minBytesPerEntry = width > 0 ? static_cast<size_t>(width) : 1ull;
+  if (minBytesPerEntry > 0 && nSize > maxSize / minBytesPerEntry) {
+    appendError("Array data exceeds supported size.");
+    return tmp;
+  }
+  if (!hasMinimumRemainingBytes(in, nSize * minBytesPerEntry)) {
+    appendError("Invalid array data.");
+    return tmp;
+  }
   tmp.reserve(n);
   bool ok(false);
   while (tmp.size() < n) {
@@ -466,6 +602,47 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
                                      int width)
 {
   // This function reads in the lower triangular density matrix
+  if (n == 0)
+    return false;
+  if (n > kMaxFchkArrayEntries) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  if (m_numBasisFunctions <= 0) {
+    appendError("Invalid basis function count.");
+    return false;
+  }
+  const size_t basis = static_cast<size_t>(m_numBasisFunctions);
+  const size_t maxSize = std::numeric_limits<size_t>::max();
+  if (basis > 0 && basis > maxSize / basis) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  const size_t fullCount = basis * basis;
+  if (fullCount > kMaxFchkMatrixElements) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  if (basis > 0 && basis > maxSize / (basis + 1)) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  const size_t expectedLower = basis * (basis + 1) / 2;
+  if (static_cast<size_t>(n) > expectedLower) {
+    appendError("Invalid density matrix size.");
+    return false;
+  }
+  const size_t minBytesPerEntry = width > 0 ? static_cast<size_t>(width) : 1ull;
+  if (minBytesPerEntry > 0 &&
+      static_cast<size_t>(n) > maxSize / minBytesPerEntry) {
+    appendError("Density matrix exceeds supported size.");
+    return false;
+  }
+  if (!hasMinimumRemainingBytes(in,
+                                static_cast<size_t>(n) * minBytesPerEntry)) {
+    appendError("Invalid density matrix data.");
+    return false;
+  }
   m_density.resize(m_numBasisFunctions, m_numBasisFunctions);
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;
@@ -542,6 +719,47 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
                                          int width)
 {
   // This function reads in the lower triangular density matrix
+  if (n == 0)
+    return false;
+  if (n > kMaxFchkArrayEntries) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  if (m_numBasisFunctions <= 0) {
+    appendError("Invalid basis function count.");
+    return false;
+  }
+  const size_t basis = static_cast<size_t>(m_numBasisFunctions);
+  const size_t maxSize = std::numeric_limits<size_t>::max();
+  if (basis > 0 && basis > maxSize / basis) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  const size_t fullCount = basis * basis;
+  if (fullCount > kMaxFchkMatrixElements) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  if (basis > 0 && basis > maxSize / (basis + 1)) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  const size_t expectedLower = basis * (basis + 1) / 2;
+  if (static_cast<size_t>(n) > expectedLower) {
+    appendError("Invalid spin density matrix size.");
+    return false;
+  }
+  const size_t minBytesPerEntry = width > 0 ? static_cast<size_t>(width) : 1ull;
+  if (minBytesPerEntry > 0 &&
+      static_cast<size_t>(n) > maxSize / minBytesPerEntry) {
+    appendError("Spin density matrix exceeds supported size.");
+    return false;
+  }
+  if (!hasMinimumRemainingBytes(in,
+                                static_cast<size_t>(n) * minBytesPerEntry)) {
+    appendError("Invalid spin density matrix data.");
+    return false;
+  }
   m_spinDensity.resize(m_numBasisFunctions, m_numBasisFunctions);
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;

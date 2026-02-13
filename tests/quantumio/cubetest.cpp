@@ -42,3 +42,40 @@ TEST(GaussianCubeTest, invalidHeaderDoesNotCrash)
   EXPECT_FALSE(cube.readString("", molecule));
   EXPECT_NE(cube.error(), std::string());
 }
+
+// Regression test: oversized cube dimensions should fail gracefully.
+TEST(GaussianCubeTest, oversizedCubeRejected)
+{
+  GaussianCube cube;
+  Molecule molecule;
+  std::ostringstream out;
+  out << "Comment line\n";
+  out << "Second comment line\n";
+  out << "0 0 0 0\n";
+  out << "512 1 0 0\n";
+  out << "512 0 1 0\n";
+  out << "512 0 0 1\n";
+
+  EXPECT_FALSE(cube.readString(out.str(), molecule));
+  EXPECT_NE(cube.error(), std::string());
+}
+
+// Regression test: binary junk input should fail gracefully.
+TEST(GaussianCubeTest, binaryInputDoesNotCrash)
+{
+  GaussianCube cube;
+  Molecule molecule;
+
+  std::string input;
+  input.push_back(static_cast<char>(0x61));
+  input.push_back(static_cast<char>(0x25));
+  input.push_back(static_cast<char>(0x01));
+  input.push_back(static_cast<char>(0x00));
+  input.push_back(static_cast<char>(0x00));
+  input.push_back(static_cast<char>(0xdc));
+  input.push_back(static_cast<char>(0x00));
+  input.push_back(static_cast<char>(0x3f));
+
+  EXPECT_FALSE(cube.readString(input, molecule));
+  EXPECT_NE(cube.error(), std::string());
+}

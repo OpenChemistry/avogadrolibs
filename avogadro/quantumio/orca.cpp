@@ -449,10 +449,14 @@ void ORCAOutput::processLine(std::istream& in,
         if (key.empty())
           break;
 
+        if (m_atomNums.empty())
+          break;
+
         Eigen::MatrixXd charges(m_atomNums.size(), 1);
         charges.setZero();
 
         list = Core::split(key, ' ');
+        bool invalidIndex = false;
         while (!key.empty()) {
           if (list.size() < 4) {
             break;
@@ -461,6 +465,10 @@ void ORCAOutput::processLine(std::istream& in,
           // e.g. 0 O   -0.714286   0.000
           int atomIndex = Core::lexicalCast<int>(list[0]).value_or(0);
           double charge = Core::lexicalCast<double>(list[2]).value_or(0.0);
+          if (atomIndex < 0 || atomIndex >= charges.rows()) {
+            invalidIndex = true;
+            break;
+          }
           charges(atomIndex, 0) = charge;
 
           getline(in, key);
@@ -468,7 +476,8 @@ void ORCAOutput::processLine(std::istream& in,
           list = Core::split(key, ' ');
         }
 
-        m_partialCharges[m_chargeType] = charges;
+        if (!invalidIndex)
+          m_partialCharges[m_chargeType] = charges;
         m_currentMode = NotParsing;
         break;
       }
@@ -477,10 +486,14 @@ void ORCAOutput::processLine(std::istream& in,
         if (key.empty())
           break;
 
+        if (m_atomNums.empty())
+          break;
+
         Eigen::MatrixXd charges(m_atomNums.size(), 1);
         charges.setZero();
 
         list = Core::split(key, ' ');
+        bool invalidIndex = false;
         while (!key.empty()) {
           if (list.size() != 4) {
             break;
@@ -488,13 +501,18 @@ void ORCAOutput::processLine(std::istream& in,
           // e.g. 0 O :   -0.714286
           int atomIndex = Core::lexicalCast<int>(list[0]).value_or(0);
           double charge = Core::lexicalCast<double>(list[3]).value_or(0.0);
+          if (atomIndex < 0 || atomIndex >= charges.rows()) {
+            invalidIndex = true;
+            break;
+          }
           charges(atomIndex, 0) = charge;
 
           getline(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
-        m_partialCharges[m_chargeType] = charges;
+        if (!invalidIndex)
+          m_partialCharges[m_chargeType] = charges;
         m_currentMode = NotParsing;
         break;
       }
@@ -503,7 +521,13 @@ void ORCAOutput::processLine(std::istream& in,
           break;
 
         m_bondOrders.clear();
-        while (key[0] == 'B') {
+        constexpr size_t kMinBondOrderLineLength = 27;
+        while (!key.empty() && key[0] == 'B') {
+          if (key.size() < kMinBondOrderLineLength || key[1] != '(') {
+            getline(in, key);
+            key = Core::trimmed(key);
+            continue;
+          }
           // @todo .. parse the bonds based on character position
           // e.g. B(  0-Ru,  1-C ) :   0.4881 B(  0-Ru,  4-C ) :   0.6050
           Index firstAtom =
