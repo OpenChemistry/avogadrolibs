@@ -68,7 +68,7 @@ jobs:
         io_fuzzers=(cjson cml sdf pdb xyz)
         quantum_fuzzers=(cube fchk molden orca qcschema)
         core_fuzzers=(bond crystal graph molecule neighbor ring utilities)
-        qtgui_fuzzers=(rwmolecule)
+        qtgui_fuzzers=(rwmolecule generichighlighter jsonwidget interfacescript-json)
 
         artifact_root="${{ runner.workspace }}/build/avogadrolibs/fuzz-artifacts"
 
