@@ -217,7 +217,11 @@ bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
 
   toml::table root;
   try {
-    root = toml::parse_file(tomlPath.toStdString());
+    QFile tomlFile(tomlPath);
+    if (!tomlFile.open(QIODevice::ReadOnly | QIODevice::Text))
+      return false;
+    QByteArray content = tomlFile.readAll();
+    root = toml::parse(std::string_view(content.constData(), content.size()));
   } catch (const toml::parse_error& err) {
     qWarning() << "PackageManager: TOML parse error in" << tomlPath << ":"
                << err.what();
