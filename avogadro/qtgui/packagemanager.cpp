@@ -134,6 +134,10 @@ bool PackageManager::registerPackage(const QString& packageDir)
   if (!parsePackage(packageDir, info, features))
     return false;
 
+  // If already registered, remove old features first
+  if (registeredPackages().contains(info.name))
+    unregisterPackage(info.name);
+
   saveToCache(info, features);
   emitFeatures(info, features);
   return true;
@@ -256,7 +260,7 @@ bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
       if (k.startsWith(QStringLiteral("avogadro-"))) {
         if (info.command.isEmpty())
           info.command = k;
-        // in principal we should break, but check for multiple entries
+        // in principle we should break, but check for multiple entries
         // and warn about them
         else
           qWarning() << "PackageManager: multiple avogadro-* entry points in"
@@ -339,7 +343,7 @@ void PackageManager::saveToCache(const PackageInfo& info,
   settings.setValue(prefix + "command", info.command);
   settings.setValue(prefix + "version", info.version);
   // not really crucial
-  // settings.setValue(prefix + "description", info.description);
+  settings.setValue(prefix + "description", info.description);
 
   // Serialize features as a JSON array string
   QJsonArray arr;
@@ -370,7 +374,8 @@ bool PackageManager::loadFromCache(const QString& packageName,
   info.directory = settings.value(prefix + "directory").toString();
   info.command = settings.value(prefix + "command").toString();
   info.version = settings.value(prefix + "version").toString();
-  // info.description = settings.value(prefix + "description").toString();
+  // not really crucial
+  info.description = settings.value(prefix + "description").toString();
 
   if (info.directory.isEmpty() || info.command.isEmpty())
     return false;

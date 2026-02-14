@@ -10,7 +10,6 @@
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
-#include <QtCore/QPair>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
