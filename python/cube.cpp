@@ -100,7 +100,7 @@ void exportCube(py::module_& m)
          py::arg("spacing"),
          "Set limits from min corner, dimensions and spacing")
     .def("set_limits", setLimits_mDV, py::arg("min"), py::arg("dim"),
-         py::arg("spacing"),
+         py::arg("spacing_vector"),
          "Set limits from min corner, dimensions and spacing vector")
     .def("set_limits", setLimits_C, py::arg("cube"),
          "Copy limits from another cube")

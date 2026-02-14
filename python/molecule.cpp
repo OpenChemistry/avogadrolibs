@@ -53,10 +53,11 @@ void exportMolecule(py::module_& m)
     .def("bond", bond0, "The bond at the specified index")
     .def("bond", bond1, "The bond between the specified atoms")
     .def("bond", bond2, "The bond between the specified atoms")
-    .def("add_cube", &Molecule::addCube, py::return_value_policy::reference,
-         "Add a new cube")
+    .def("add_cube", &Molecule::addCube,
+         py::return_value_policy::reference_internal, "Add a new cube")
     .def("cube_count", &Molecule::cubeCount, "The number of cubes")
-    .def("cube", cube0, "The cube at the specified index")
+    .def("cube", cube0, py::return_value_policy::reference_internal,
+         "The cube at the specified index")
     // --- Geometry ---
     .def_property_readonly("radius", &Molecule::radius,
                            "The radius of the molecule")
@@ -65,6 +66,7 @@ void exportMolecule(py::module_& m)
     .def_property_readonly("mass_center", &Molecule::centerOfMass,
                            "The center of mass of the molecule")
     .def_property_readonly("unit_cell", unitCell0,
+                           py::return_value_policy::reference_internal,
                            "The unit cell of the molecule, if defined")
     .def("has_custom_elements", &Molecule::hasCustomElements,
          "Returns true if the molecule contains any custom elements")
