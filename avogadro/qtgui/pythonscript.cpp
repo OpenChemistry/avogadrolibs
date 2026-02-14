@@ -259,7 +259,8 @@ QByteArray PythonScript::execute(const QStringList& args,
 }
 
 void PythonScript::asyncExecute(const QStringList& args,
-                                const QByteArray& scriptStdin)
+                                const QByteArray& scriptStdin,
+                                bool mergedChannels)
 {
   clearErrors();
   if (m_process != nullptr) {
@@ -271,7 +272,8 @@ void PythonScript::asyncExecute(const QStringList& args,
   m_process = new QProcess(parent());
 
   // Merge stdout and stderr
-  m_process->setProcessChannelMode(QProcess::MergedChannels);
+  if (mergedChannels)
+    m_process->setProcessChannelMode(QProcess::MergedChannels);
 
   // Add debugging flag if needed.
   QStringList realArgs(args);
@@ -435,6 +437,39 @@ QByteArray PythonScript::asyncWriteAndResponse(QByteArray input)
     }
   }
 
+  return buffer;
+}
+
+QByteArray PythonScript::asyncWriteAndResponseRaw(const QByteArray& input,
+                                                  int timeoutMs)
+{
+  if (m_process == nullptr) {
+    return QByteArray(); // wait
+  }
+
+  if (!input.isEmpty()) {
+    const qint64 len = m_process->write(input);
+    if (len != static_cast<qint64>(input.size())) {
+      m_errors << tr("Error writing raw request to script stdin (len=%1, wrote "
+                     "%2 bytes, QProcess error: %3).")
+                    .arg(input.size())
+                    .arg(len)
+                    .arg(processErrorString(*m_process));
+      return QByteArray();
+    }
+  }
+
+  QByteArray buffer;
+  if (!m_process->waitForReadyRead(timeoutMs)) {
+    return buffer;
+  }
+
+  buffer += m_process->readAll();
+  // Keep draining while data keeps arriving in short bursts.
+  while (m_process->waitForReadyRead(10)) {
+    buffer += m_process->readAll();
+  }
+  buffer += m_process->readAll();
   return buffer;
 }
 

@@ -18,9 +18,18 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QSysInfo>
+#include <QtCore/QtEndian>
 
 #include <QRegularExpression>
+
+#include <algorithm>
+#include <cstddef>
+#include <cstdlib>
+#include <cstring>
+#include <limits>
 
 #include <qjsonarray.h>
 #include <qjsondocument.h>
@@ -29,10 +38,62 @@
 
 namespace Avogadro::QtPlugins {
 
+namespace {
+
+constexpr int BINARY_HEADER_SIZE = 16;
+constexpr char BINARY_MAGIC[4] = { 'A', 'V', 'B', '1' };
+constexpr quint16 BINARY_VERSION = 1;
+
+constexpr quint16 FLAG_RESPONSE_ERROR = 0x8000;
+constexpr quint16 FLAG_REQUEST_GRADIENT = 0x0001;
+
+void appendFloat64LE(QByteArray& out, double value)
+{
+  quint64 bits = 0;
+  static_assert(sizeof(bits) == sizeof(value), "Unexpected double size");
+  std::memcpy(&bits, &value, sizeof(value));
+  bits = qToLittleEndian(bits);
+  out.append(reinterpret_cast<const char*>(&bits), sizeof(bits));
+}
+
+bool readFloat64LE(const char* src, const char* end, double& value)
+{
+  if (end - src < static_cast<ptrdiff_t>(sizeof(quint64)))
+    return false;
+
+  quint64 bits = 0;
+  std::memcpy(&bits, src, sizeof(bits));
+  bits = qFromLittleEndian(bits);
+  std::memcpy(&value, &bits, sizeof(value));
+  return true;
+}
+
+void appendFloatText(QByteArray& out, double value)
+{
+  out.append(QByteArray::number(value, 'g', 17));
+}
+
+bool readFloatText(const char*& pos, const char* end, double& value)
+{
+  if (pos == nullptr || pos >= end)
+    return false;
+
+  char* parsedEnd = nullptr;
+  value = std::strtod(pos, &parsedEnd);
+  if (parsedEnd == pos || parsedEnd == nullptr || parsedEnd > end)
+    return false;
+
+  pos = parsedEnd;
+  return true;
+}
+
+} // namespace
+
 ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)),
-    m_inputFormat(NotUsed), m_valid(true), m_gradients(false), m_ions(false),
-    m_radicals(false), m_unitCells(false)
+    m_inputFormat(NotUsed), m_protocol(Protocol::TextV1), m_molecule(nullptr),
+    m_valid(true), m_gradients(false), m_ions(false), m_radicals(false),
+    m_unitCells(false)
 {
   m_elements.reset();
   readMetaData();
@@ -63,16 +124,19 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
     return; // nothing to do
   }
 
+  // Always reset the running server before validating/restarting.
+  m_interpreter->asyncTerminate();
+
   if (!m_unitCells && mol->unitCell()) {
-    // appendError("Unit cell not supported for this script.");
+    appendError("Unit cell not supported for this script.");
     return;
   }
   if (!m_ions && mol->totalCharge() != 0) {
-    // appendError("Ionized molecules not supported for this script.");
+    appendError("Ionized molecules not supported for this script.");
     return;
   }
   if (!m_radicals && mol->totalSpinMultiplicity() != 1) {
-    // appendError("Radical molecules not supported for this script.");
+    appendError("Radical molecules not supported for this script.");
     return;
   }
 
@@ -80,7 +144,7 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
   // we need a tempory file to write the molecule
   QScopedPointer<Io::FileFormat> format(createFileFormat(m_inputFormat));
   if (format.isNull()) {
-    // appendError("Invalid input format.");
+    appendError("Invalid input format.");
     return;
   }
   // get a temporary filename
@@ -91,7 +155,7 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
     tempPath + "avogadroenergyXXXXXX." + format->fileExtensions()[0].c_str();
   m_tempFile.setFileTemplate(tempPattern);
   if (!m_tempFile.open()) {
-    // appendError("Error creating temporary file.");
+    appendError("Error creating temporary file.");
     return;
   }
 
@@ -102,11 +166,215 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
   // construct the command line options
   QStringList options;
   options << "-f" << m_tempFile.fileName();
+  if (m_protocol == Protocol::BinaryV1)
+    options << "--protocol"
+            << "binary-v1";
 
-  // if there was a previous process, kill it
-  m_interpreter->asyncTerminate();
   // start the interpreter
-  m_interpreter->asyncExecute(options);
+  m_interpreter->asyncExecute(options, QByteArray(), false);
+}
+
+QByteArray ScriptEnergy::writeCoordinatesText(const Eigen::VectorXd& x)
+{
+  if (x.size() == 0 || (x.size() % 3) != 0)
+    return QByteArray();
+
+  QByteArray input;
+  input.reserve(static_cast<int>(x.size() / 3) * 80);
+  for (Eigen::Index i = 0; i < x.size(); i += 3) {
+    appendFloatText(input, x[i]);
+    input.append(' ');
+    appendFloatText(input, x[i + 1]);
+    input.append(' ');
+    appendFloatText(input, x[i + 2]);
+    input.append('\n');
+  }
+  return input;
+}
+
+QByteArray ScriptEnergy::writeCoordinatesBinary(const Eigen::VectorXd& x,
+                                                bool requestGradient) const
+{
+  if (x.size() == 0 || (x.size() % 3) != 0)
+    return QByteArray();
+
+  const quint16 flags = requestGradient ? FLAG_REQUEST_GRADIENT : 0;
+  const quint32 atomCount = static_cast<quint32>(x.size() / 3);
+  const quint32 payloadBytes = static_cast<quint32>(x.size() * sizeof(double));
+
+  QByteArray input;
+  input.reserve(BINARY_HEADER_SIZE + static_cast<int>(payloadBytes));
+  input.append(BINARY_MAGIC, static_cast<int>(sizeof(BINARY_MAGIC)));
+
+  quint16 versionLE = qToLittleEndian(BINARY_VERSION);
+  quint16 flagsLE = qToLittleEndian(flags);
+  quint32 atomCountLE = qToLittleEndian(atomCount);
+  quint32 payloadBytesLE = qToLittleEndian(payloadBytes);
+
+  input.append(reinterpret_cast<const char*>(&versionLE), sizeof(versionLE));
+  input.append(reinterpret_cast<const char*>(&flagsLE), sizeof(flagsLE));
+  input.append(reinterpret_cast<const char*>(&atomCountLE),
+               sizeof(atomCountLE));
+  input.append(reinterpret_cast<const char*>(&payloadBytesLE),
+               sizeof(payloadBytesLE));
+
+  if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
+    input.append(reinterpret_cast<const char*>(x.data()),
+                 static_cast<int>(payloadBytes));
+  } else {
+    for (Eigen::Index i = 0; i < x.size(); ++i)
+      appendFloat64LE(input, x[i]);
+  }
+
+  return input;
+}
+
+bool ScriptEnergy::parseResponseBinary(const QByteArray& response,
+                                       bool requestGradient, double& energy,
+                                       Eigen::VectorXd& grad) const
+{
+  if (response.size() < BINARY_HEADER_SIZE)
+    return false;
+
+  const char* raw = response.constData();
+  if (std::memcmp(raw, BINARY_MAGIC, sizeof(BINARY_MAGIC)) != 0)
+    return false;
+
+  const auto* header = reinterpret_cast<const uchar*>(raw);
+  const quint16 version = qFromLittleEndian<quint16>(header + 4);
+  const quint16 flags = qFromLittleEndian<quint16>(header + 6);
+  const quint32 atomCount = qFromLittleEndian<quint32>(header + 8);
+  const quint32 payloadBytes = qFromLittleEndian<quint32>(header + 12);
+  if (version != BINARY_VERSION)
+    return false;
+
+  if (response.size() < BINARY_HEADER_SIZE + static_cast<int>(payloadBytes))
+    return false;
+
+  const char* payload = raw + BINARY_HEADER_SIZE;
+  const char* payloadEnd = payload + payloadBytes;
+
+  if (m_molecule != nullptr &&
+      atomCount != static_cast<quint32>(m_molecule->atomCount()))
+    return false;
+
+  if ((flags & FLAG_RESPONSE_ERROR) != 0) {
+    appendError(std::string(payload, payloadEnd), false);
+    return false;
+  }
+
+  if (requestGradient) {
+    if (atomCount != static_cast<quint32>(grad.size() / 3))
+      return false;
+    if (payloadBytes != static_cast<quint32>(grad.size() * sizeof(double)))
+      return false;
+
+    if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
+      std::memcpy(grad.data(), payload, payloadBytes);
+    } else {
+      for (Eigen::Index i = 0; i < grad.size(); ++i) {
+        double value = 0.0;
+        if (!readFloat64LE(payload + i * sizeof(double), payloadEnd, value))
+          return false;
+        grad[i] = value;
+      }
+    }
+    return true;
+  }
+
+  if (payloadBytes != sizeof(double))
+    return false;
+
+  if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
+    std::memcpy(&energy, payload, sizeof(double));
+    return true;
+  }
+
+  return readFloat64LE(payload, payloadEnd, energy);
+}
+
+bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame)
+{
+  if (m_interpreter == nullptr)
+    return false;
+
+  constexpr int timeoutMs = 5000;
+  QElapsedTimer timer;
+  timer.start();
+
+  frame = m_interpreter->asyncWriteAndResponseRaw(input, timeoutMs);
+  if (frame.isEmpty()) {
+    appendError("No binary response received from script.");
+    return false;
+  }
+
+  while (frame.size() < BINARY_HEADER_SIZE && timer.elapsed() < timeoutMs) {
+    const int remainingMs =
+      std::max(1, timeoutMs - static_cast<int>(timer.elapsed()));
+    const QByteArray chunk =
+      m_interpreter->asyncWriteAndResponseRaw(QByteArray(), remainingMs);
+    if (chunk.isEmpty())
+      break;
+    frame += chunk;
+  }
+
+  if (frame.size() < BINARY_HEADER_SIZE) {
+    appendError("Truncated binary header from script response.");
+    return false;
+  }
+
+  const auto* header = reinterpret_cast<const uchar*>(frame.constData());
+  if (std::memcmp(frame.constData(), BINARY_MAGIC, sizeof(BINARY_MAGIC)) != 0) {
+    appendError("Invalid binary response magic.");
+    return false;
+  }
+
+  const quint16 version = qFromLittleEndian<quint16>(header + 4);
+  const quint32 payloadBytes = qFromLittleEndian<quint32>(header + 12);
+  if (version != BINARY_VERSION) {
+    appendError("Unsupported binary response version.");
+    return false;
+  }
+
+  const qint64 totalBytes =
+    BINARY_HEADER_SIZE + static_cast<qint64>(payloadBytes);
+  while (frame.size() < totalBytes && timer.elapsed() < timeoutMs) {
+    const int remainingMs =
+      std::max(1, timeoutMs - static_cast<int>(timer.elapsed()));
+    const QByteArray chunk =
+      m_interpreter->asyncWriteAndResponseRaw(QByteArray(), remainingMs);
+    if (chunk.isEmpty())
+      break;
+    frame += chunk;
+  }
+
+  if (frame.size() < totalBytes) {
+    appendError("Truncated binary response payload.");
+    return false;
+  }
+  if (frame.size() > totalBytes) {
+    appendError("Binary response contained trailing bytes.");
+    return false;
+  }
+
+  return true;
+}
+
+bool ScriptEnergy::evaluateBinary(const Eigen::VectorXd& x,
+                                  bool requestGradient, double& energy,
+                                  Eigen::VectorXd& grad)
+{
+  const QByteArray input = writeCoordinatesBinary(x, requestGradient);
+  if (input.isEmpty()) {
+    appendError("Invalid coordinates for binary request.");
+    return false;
+  }
+
+  QByteArray response;
+  if (!readBinaryFrame(input, response))
+    return false;
+
+  return parseResponseBinary(response, requestGradient, energy, grad);
 }
 
 Real ScriptEnergy::value(const Eigen::VectorXd& x)
@@ -114,33 +382,42 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
   if (m_molecule == nullptr || m_interpreter == nullptr)
     return 0.0; // nothing to do
 
-  // write the new coordinates and read the energy
-  QByteArray input;
-  for (Eigen::Index i = 0; i < x.size(); i += 3) {
-    // write as x y z (space separated)
-    input += QString::number(x[i]).toUtf8() + " " +
-             QString::number(x[i + 1]).toUtf8() + " " +
-             QString::number(x[i + 2]).toUtf8() + "\n";
-  }
-  // qDebug() << " wrote coords ";
-  QByteArray result = m_interpreter->asyncWriteAndResponse(input);
-  // qDebug() << " got result " << result;
-
-  // go through lines in result until we see "AvogadroEnergy: "
-  QStringList lines = QString(result).remove('\r').split('\n');
   double energy = 0.0;
-  for (auto line : lines) {
-    if (line.startsWith("AvogadroEnergy:")) {
-      QStringList items = line.split(" ", Qt::SkipEmptyParts);
-      if (items.size() > 1) {
-        energy = items[1].toDouble();
-        break;
-      }
+  if (m_protocol == Protocol::BinaryV1) {
+    Eigen::VectorXd unusedGrad;
+    if (!evaluateBinary(x, false, energy, unusedGrad)) {
+      return std::numeric_limits<Real>::quiet_NaN();
     }
+    energy += constraintEnergies(x);
+    return energy;
+  }
+
+  QByteArray input = writeCoordinatesText(x);
+  if (input.isEmpty()) {
+    appendError("Invalid coordinates for text request.");
+    return std::numeric_limits<Real>::quiet_NaN();
+  }
+
+  QByteArray result = m_interpreter->asyncWriteAndResponse(input);
+
+  // Find "AvogadroEnergy:" and parse the value directly from raw bytes
+  const char* data = result.constData();
+  const char* end = data + result.size();
+  constexpr char marker[] = "AvogadroEnergy:";
+  constexpr size_t markerLen = sizeof(marker) - 1;
+
+  const char* pos = std::search(data, end, marker, marker + markerLen);
+  if (pos != end) {
+    pos += markerLen;
+    while (pos < end && (*pos == ' ' || *pos == '\t'))
+      ++pos;
+    double parsedEnergy = 0.0;
+    if (readFloatText(pos, end, parsedEnergy))
+      energy = parsedEnergy;
   }
 
   energy += constraintEnergies(x);
-  return energy; // if conversion fails, returns 0.0
+  return energy;
 }
 
 void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
@@ -150,39 +427,74 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     return;
   }
 
-  // Get the gradient from the script
-  // write the new coordinates and read the energy
-  QByteArray input;
-  for (Eigen::Index i = 0; i < x.size(); i += 3) {
-    // write as x y z (space separated)
-    input += QString::number(x[i]).toUtf8() + " " +
-             QString::number(x[i + 1]).toUtf8() + " " +
-             QString::number(x[i + 2]).toUtf8() + "\n";
+  if (m_protocol == Protocol::BinaryV1) {
+    double unusedEnergy = 0.0;
+    if (!evaluateBinary(x, true, unusedEnergy, grad)) {
+      grad.setConstant(std::numeric_limits<Real>::quiet_NaN());
+      return;
+    }
+    cleanGradients(grad);
+    constraintGradients(x, grad);
+    return;
   }
+
+  QByteArray input = writeCoordinatesText(x);
+  if (input.isEmpty()) {
+    appendError("Invalid coordinates for text request.");
+    grad.setConstant(std::numeric_limits<Real>::quiet_NaN());
+    return;
+  }
+
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
 
-  // parse the result
-  // first split on newlines
-  QStringList lines = QString(result).remove('\r').split('\n');
-  unsigned int i = 0;
-  bool readingGrad = false;
-  for (auto line : lines) {
-    if (line.startsWith("AvogadroGradient:")) {
-      readingGrad = true;
-      continue; // next line
-    }
+  // Parse directly from raw bytes — no QString/QStringList overhead
+  const char* data = result.constData();
+  const char* end = data + result.size();
+  constexpr char marker[] = "AvogadroGradient:";
+  constexpr size_t markerLen = sizeof(marker) - 1;
 
-    if (readingGrad) {
-      QStringList items = line.split(" ", Qt::SkipEmptyParts);
-      if (items.size() == 3) {
-        grad[i] = items[0].toDouble();
-        grad[i + 1] = items[1].toDouble();
-        grad[i + 2] = items[2].toDouble();
-        i += 3;
+  const char* pos = std::search(data, end, marker, marker + markerLen);
+  if (pos != end) {
+    // Skip to the next line
+    pos = static_cast<const char*>(std::memchr(pos, '\n', end - pos));
+    if (pos)
+      ++pos;
+
+    Eigen::Index i = 0;
+    while (pos && pos < end && i + 2 < x.size()) {
+      // Skip whitespace
+      while (pos < end && (*pos == ' ' || *pos == '\t' || *pos == '\r'))
+        ++pos;
+      if (pos >= end || *pos == '\n') {
+        if (pos < end)
+          ++pos;
+        continue;
       }
 
-      if (i > x.size())
+      double gx, gy, gz;
+      if (!readFloatText(pos, end, gx))
         break;
+
+      while (pos < end && (*pos == ' ' || *pos == '\t'))
+        ++pos;
+      if (!readFloatText(pos, end, gy))
+        break;
+
+      while (pos < end && (*pos == ' ' || *pos == '\t'))
+        ++pos;
+      if (!readFloatText(pos, end, gz))
+        break;
+
+      grad[i] = gx;
+      grad[i + 1] = gy;
+      grad[i + 2] = gz;
+      i += 3;
+
+      // Skip to next line
+      while (pos < end && *pos != '\n')
+        ++pos;
+      if (pos < end)
+        ++pos;
     }
   }
 
@@ -205,6 +517,14 @@ ScriptEnergy::Format ScriptEnergy::stringToFormat(const std::string& str)
   else if (str == "xyz")
     return Xyz;
   return NotUsed;
+}
+
+ScriptEnergy::Protocol ScriptEnergy::stringToProtocol(const std::string& str)
+{
+  if (str == "binary-v1")
+    return Protocol::BinaryV1;
+
+  return Protocol::TextV1;
 }
 
 Io::FileFormat* ScriptEnergy::createFileFormat(ScriptEnergy::Format fmt)
@@ -236,6 +556,7 @@ void ScriptEnergy::resetMetaData()
   m_radicals = false;
   m_unitCells = false;
   m_inputFormat = NotUsed;
+  m_protocol = Protocol::TextV1;
   m_identifier.clear();
   m_name.clear();
   m_description.clear();
@@ -328,8 +649,26 @@ void ScriptEnergy::readMetaData()
   }
   m_inputFormat = inputFormatTmp;
 
+  // optional protocol, defaults to text-v1
+  if (metaData["protocol"].isString()) {
+    const std::string protocolString =
+      metaData["protocol"].toString().toStdString();
+    if (protocolString == "text-v1" || protocolString == "binary-v1") {
+      m_protocol = stringToProtocol(protocolString);
+    } else {
+      qWarning() << "Error parsing metadata for energy script:"
+                 << scriptFilePath() << "\n"
+                 << "Member 'protocol' not recognized:"
+                 << protocolString.c_str()
+                 << "\nValid values are text-v1 or binary-v1.\n"
+                 << output;
+      return;
+    }
+  }
+
   // check ions, radicals, unit cells
   /* e.g.,
+        "protocol": "binary-v1",
         "unitCell": False,
         "gradients": True,
         "ion": False,
@@ -398,6 +737,7 @@ void ScriptEnergy::processElementString(const QString& str)
         return;
       for (int i = start; i <= end; ++i)
         m_elements.set(i);
+      continue;
     }
 
     bool ok;

@@ -15,7 +15,7 @@ concurrency:
 
 env:
   # builds to skip (e.g. skip 32-bit windows)
-  CIBW_SKIP: "*-manylinux_i686 *-win32"
+  CIBW_SKIP: "cp39-* *-manylinux_i686 *-win32"
 
   # Need to do some setup before repairing the wheel on linux...
   CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
