@@ -71,12 +71,18 @@ size_t Graph::addVertex()
 
 void Graph::removeVertex(size_t index)
 {
-  assert(index < size());
+  // invalid request, skip it
+  if (index >= size())
+    return;
+
   // Mark the subgraph as dirty, leave the work for later
   if (m_vertexToSubgraph[index] >= 0)
     m_subgraphDirty[m_vertexToSubgraph[index]] = true;
   // Remove the edges to the vertex.
   removeEdges(index);
+  // The vertex is being removed entirely, so it should no longer be tracked
+  // as a lone vertex.
+  m_loneVertices.erase(index);
 
   // Swap with last vertex.
   if (index < size() - 1) {
@@ -106,6 +112,8 @@ void Graph::removeVertex(size_t index)
       m_subgraphToVertices[m_vertexToSubgraph[index]].erase(affectedIndex);
       m_subgraphToVertices[m_vertexToSubgraph[index]].insert(index);
     }
+    if (m_loneVertices.erase(affectedIndex) > 0)
+      m_loneVertices.insert(index);
   }
   m_adjacencyList.pop_back();
   m_edgeMap.pop_back();
@@ -276,8 +284,8 @@ std::set<size_t> Graph::checkConectivity(size_t a, size_t b) const
 
 void Graph::removeEdge(size_t a, size_t b)
 {
-  assert(a < size());
-  assert(b < size());
+  if (a >= size() || b >= size())
+    return;
 
   std::vector<size_t>& neighborsA = m_adjacencyList[a];
   std::vector<size_t>& neighborsB = m_adjacencyList[b];
@@ -330,7 +338,9 @@ void Graph::removeEdge(size_t a, size_t b)
 
 void Graph::removeEdge(size_t edgeIndex)
 {
-  assert(edgeIndex < edgeCount());
+  if (edgeIndex >= edgeCount())
+    return;
+
   const std::pair<size_t, size_t>& pair = m_edgePairs[edgeIndex];
   removeEdge(pair.first, pair.second);
 }
@@ -350,15 +360,22 @@ void Graph::removeEdges()
 
 void Graph::removeEdges(size_t index)
 {
+  if (index >= size())
+    return;
+
+  // Mark the subgraph as dirty, leave the work for later
+  const int subgraph = m_vertexToSubgraph[index];
+  if (subgraph >= 0) {
+    m_subgraphDirty[subgraph] = true;
+    m_subgraphToVertices[subgraph].erase(index);
+  }
+
   m_vertexToSubgraph[index] = -1;
   m_loneVertices.insert(index);
-  // Mark the subgraph as dirty, leave the work for later
-  if (m_vertexToSubgraph[index] >= 0)
-    m_subgraphDirty[m_vertexToSubgraph[index]] = true;
 
-  const std::vector<size_t>& edges = m_edgeMap[index];
-  for (size_t i = 0; i < edges.size(); ++i)
-    removeEdge(edges[i]);
+  // Removing edges mutates m_edgeMap[index], so consume until empty.
+  while (!m_edgeMap[index].empty())
+    removeEdge(m_edgeMap[index].back());
 }
 
 void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
@@ -457,8 +474,8 @@ size_t Graph::degree(size_t index) const
 
 bool Graph::containsEdge(size_t a, size_t b) const
 {
-  assert(a < size());
-  assert(b < size());
+  if (a >= size() || b >= size())
+    return false;
 
   const std::vector<size_t>& neighborsA = neighbors(a);
 
@@ -568,11 +585,10 @@ size_t Graph::subgraph(size_t element) const
   int r = m_vertexToSubgraph[element];
   // Index -1 means disconnected (its own subgraph)
   if (r < 0) {
-    r = m_subgraphToVertices.size();
-    m_subgraphToVertices.push_back(std::set<size_t>());
-    m_subgraphToVertices[r].insert(element);
-    m_subgraphDirty[r] = false;
-    return r;
+    int newSubgraph = createNewSubgraph();
+    m_vertexToSubgraph[element] = newSubgraph;
+    m_subgraphToVertices[newSubgraph].insert(element);
+    return newSubgraph;
   }
   if (m_subgraphDirty[r]) {
     checkSplitSubgraph(r);
