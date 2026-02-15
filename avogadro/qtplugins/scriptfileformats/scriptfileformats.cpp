@@ -13,6 +13,7 @@
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QVariant>
 
 namespace Avogadro::QtPlugins {
 
@@ -88,10 +89,12 @@ void ScriptFileFormats::registerFeature(const QString& type,
   format->setPackageInfo(packageDir, command, identifier);
   format->readMetaData(metadata);
   if (format->isValid()) {
-    m_formats.push_back(format);
     if (!Io::FileFormatManager::registerFormat(format->newInstance())) {
       qDebug() << "Could not register file format" << identifier
                << "due to name conflict.";
+      delete format;
+    } else {
+      m_formats.push_back(format);
     }
   } else {
     delete format;

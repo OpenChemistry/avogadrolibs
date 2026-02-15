@@ -15,6 +15,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
+#include <QtCore/QVariant>
 
 #include <QAction>
 #include <QtWidgets/QMessageBox>
@@ -745,10 +746,12 @@ void Forcefield::registerFeature(const QString& type, const QString& packageDir,
   model->setPackageInfo(packageDir, command, identifier);
   model->readMetaData(metadata);
   if (model->isValid()) {
-    m_scripts.push_back(model);
     if (!Calc::EnergyManager::registerModel(model->newInstance())) {
       qDebug() << "Could not register energy model" << identifier
                << "due to name conflict.";
+      delete model;
+    } else {
+      m_scripts.push_back(model);
     }
   } else {
     delete model;

@@ -123,6 +123,9 @@ void ScriptEnergy::readMetaData(const QVariantMap& metadata)
   m_inputFormat = stringToFormat(inputFmt.toStdString());
   m_formatString = inputFmt;
 
+  QString protocol = metadata.value("protocol").toString();
+  m_protocol = stringToProtocol(protocol.toStdString());
+
   QVariantMap support = metadata.value("support").toMap();
   m_gradients = support.value("gradients", false).toBool();
   m_unitCells = support.value("unit-cell", false).toBool();
@@ -164,6 +167,7 @@ void ScriptEnergy::copyMetaDataFrom(const ScriptEnergy& other)
   m_description = other.m_description;
   m_inputFormat = other.m_inputFormat;
   m_formatString = other.m_formatString;
+  m_protocol = other.m_protocol;
   m_gradients = other.m_gradients;
   m_unitCells = other.m_unitCells;
   m_ions = other.m_ions;
@@ -579,7 +583,9 @@ ScriptEnergy::Format ScriptEnergy::stringToFormat(const std::string& str)
 
 ScriptEnergy::Protocol ScriptEnergy::stringToProtocol(const std::string& str)
 {
-  if (str == "binary-v1")
+  // Check for "binary" mode
+  // this will change if the binary format changes
+  if (str.rfind("binary", 0) == 0)
     return Protocol::BinaryV1;
 
   return Protocol::TextV1;

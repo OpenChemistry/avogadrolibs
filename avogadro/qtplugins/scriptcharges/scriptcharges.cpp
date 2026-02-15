@@ -15,6 +15,7 @@
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QVariant>
 
 namespace Avogadro::QtPlugins {
 
@@ -90,10 +91,12 @@ void ScriptCharges::registerFeature(const QString& type,
   model->setPackageInfo(packageDir, command, identifier);
   model->readMetaData(metadata);
   if (model->isValid()) {
-    m_models.push_back(model);
     if (!Calc::ChargeManager::registerModel(model->newInstance())) {
       qDebug() << "Could not register charge model" << identifier
                << "due to name conflict.";
+      delete model;
+    } else {
+      m_models.push_back(model);
     }
   } else {
     delete model;

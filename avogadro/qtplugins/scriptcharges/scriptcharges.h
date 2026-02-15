@@ -42,6 +42,7 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+public slots:
   /**
    * Handle a feature registered by PackageManager.
    */

@@ -185,6 +185,16 @@ protected:
   QProcess* m_process;
 
 private:
+  /**
+   * Resolve the executable and finalize the argument list for either
+   * execute() or asyncExecute().  On entry @p realArgs already contains
+   * the caller-supplied args plus --debug/--lang.  On return @p realArgs
+   * is fully prepended and @p proc has its working directory set.
+   * @return The program path to pass to QProcess::start(), or an empty
+   *         string on error (m_errors will be populated).
+   */
+  QString resolveCommand(QStringList& realArgs, QProcess& proc);
+
   QString processErrorString(const QProcess& proc) const;
 };
 

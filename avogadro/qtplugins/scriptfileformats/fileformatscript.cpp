@@ -89,7 +89,10 @@ void FileFormatScript::readMetaData(const QVariantMap& metadata)
   if (metadata.contains("bond"))
     m_bondOnRead = metadata.value("bond").toBool();
 
-  m_valid = !m_identifier.empty() && !m_name.empty();
+  m_valid =
+    !m_identifier.empty() && !m_name.empty() &&
+    (!(m_operations & Io::FileFormat::Write) || m_inputFormat != NotUsed) &&
+    (!(m_operations & Io::FileFormat::Read) || m_outputFormat != NotUsed);
 }
 
 QString FileFormatScript::scriptFilePath() const

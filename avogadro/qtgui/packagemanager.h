@@ -9,6 +9,7 @@
 #include "avogadroqtguiexport.h"
 
 #include <QtCore/QJsonObject>
+#include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -119,8 +120,8 @@ private:
                     const QList<FeatureEntry>& features);
 
   // JSON serialisation for QSettings cache
-  QJsonObject featureEntryToJson(const FeatureEntry& entry);
-  FeatureEntry featureEntryFromJson(const QJsonObject& obj);
+  static QJsonObject featureEntryToJson(const FeatureEntry& entry);
+  static FeatureEntry featureEntryFromJson(const QJsonObject& obj);
 
   // QSettings helpers
   void saveToCache(const PackageInfo& info,
