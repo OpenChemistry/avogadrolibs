@@ -10,6 +10,7 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
+#include <QtCore/QVariantMap>
 
 class QAction;
 class QDialog;
@@ -65,6 +66,13 @@ public slots:
 
   void processFinished();
 
+  /**
+   * Handle a feature registered by PackageManager.
+   */
+  void registerFeature(const QString& type, const QString& packageDir,
+                       const QString& command, const QString& identifier,
+                       const QVariantMap& metadata);
+
 private slots:
   void menuActivated();
   void configurePython();
@@ -76,7 +84,7 @@ private:
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
-  // keyed on script file path
+  // keyed on script file path or package identifier
   QMap<QString, QtGui::InterfaceWidget*> m_dialogs;
   QDialog* m_currentDialog;
   QtGui::InterfaceWidget* m_currentInterface;

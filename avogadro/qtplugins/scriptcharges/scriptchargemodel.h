@@ -11,6 +11,7 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <QtCore/QString>
+#include <QtCore/QVariantMap>
 
 class QJsonObject;
 
@@ -43,6 +44,18 @@ public:
 
   ScriptChargeModel(const QString& scriptFileName = "");
   ~ScriptChargeModel() override;
+
+  /**
+   * Configure the interpreter for package-based (pixi) execution.
+   */
+  void setPackageInfo(const QString& packageDir, const QString& command,
+                      const QString& identifier);
+
+  /**
+   * Populate metadata fields from a QVariantMap (e.g. from pyproject.toml)
+   * instead of calling the script with --metadata.
+   */
+  void readMetaData(const QVariantMap& metadata);
 
   QString scriptFilePath() const;
 
@@ -78,6 +91,7 @@ private:
   bool parseString(const QJsonObject& ob, const QString& key, std::string& str);
   void processElementString(const QString& str);
   bool parseElements(const QJsonObject& ob);
+  void copyMetaDataFrom(const ScriptChargeModel& other);
 
 private:
   QtGui::PythonScript* m_interpreter;

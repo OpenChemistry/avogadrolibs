@@ -8,8 +8,8 @@
 #include "avogadropython.h"
 #include "utilities.h"
 
-#include <QtCore/QDir>
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QLocale>
 #include <QtCore/QProcess>
@@ -17,6 +17,22 @@
 #include <QtCore/QStandardPaths>
 
 namespace Avogadro::QtGui {
+
+// Check whether the plugin directory has a usable pixi-managed python
+static bool hasDefaultPixiManifest(const QString& pluginDir)
+{
+  if (!QDir(pluginDir + "/.pixi").exists())
+    return false;
+
+  QString pythonPath = "/.pixi/envs/default/bin/";
+#ifdef Q_OS_WIN
+  pythonPath += "python.exe";
+#else
+  pythonPath += "python";
+#endif
+  QFileInfo python(pluginDir + pythonPath);
+  return python.exists() && python.isExecutable();
+}
 
 PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
@@ -37,6 +53,18 @@ PythonScript::~PythonScript() {}
 void PythonScript::setScriptFilePath(const QString& scriptFile)
 {
   m_scriptFilePath = scriptFile;
+  m_packageMode = false;
+}
+
+void PythonScript::setPackageInfo(const QString& packageDir,
+                                  const QString& command,
+                                  const QString& identifier)
+{
+  m_packageDir = packageDir;
+  m_packageCommand = command;
+  m_packageIdentifier = identifier;
+  m_packageMode = true;
+  m_scriptFilePath.clear();
 }
 
 void PythonScript::setDefaultPythonInterpreter()
@@ -108,76 +136,20 @@ QByteArray PythonScript::execute(const QStringList& args,
   realArgs.append("--lang");
   realArgs.append(QLocale().name());
 
-  // Start script
-  realArgs.prepend(m_scriptFilePath);
-  bool defaultManifest = false;
-
-  // check if the user installed the default pixi manifest
-  QString pluginDir =
-    QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-  if (QDir(pluginDir + "/.pixi").exists()) {
-    // check if we have a useful python in .pixi
-    QString pythonPath = "/.pixi/envs/default/bin/";
-#ifdef Q_OS_WIN
-    pythonPath += "python.exe";
-#else
-    pythonPath += "python";
-#endif
-    QFileInfo python(pluginDir + pythonPath);
-    if (python.exists() && python.isExecutable()) {
-      defaultManifest = true;
-    }
-  }
-
-  // Do we use pixi or just python?
-  // if there isn't a default manifest, use python
-  if (defaultManifest && !m_pixi.isEmpty()) {
-
-    // check if the script is a python script
-    // should eventually allow other pixi run options
-    if (m_scriptFilePath.contains(".py")) {
-      // python script
-      realArgs.prepend("python");
-    } // otherwise hope pixi knows how to run this
-
-    realArgs.prepend("--as-is");
-
-    // Also check to see if the script directory
-    //  (or its parent)
-    // has a .pixi directory in it
-    bool hasPixiDir = false;
-    QString scriptDirPath(QFileInfo(m_scriptFilePath).absolutePath());
-    if (QDir(scriptDirPath + "/.pixi").exists() ||
-        QDir(scriptDirPath + "/../.pixi").exists()) {
-      hasPixiDir = true;
-    }
-
-    // use the default manifest if
-    // 1. the default manifest exists
-    // 2. the script does not have a .pixi directory
-    // 3. the script is not in the user plugin directory
-    //          (i.e., we bundled it)
-    if (!pluginDir.isEmpty() && defaultManifest && !hasPixiDir &&
-        !m_scriptFilePath.startsWith(pluginDir)) {
-#ifndef NDEBUG
-      // use the manifest installed in the plugin directory
-      qDebug() << "Using manifest in" << pluginDir;
-#endif
-      realArgs.prepend(pluginDir);
-      realArgs.prepend("--manifest-path");
-    } else if (hasPixiDir || m_scriptFilePath.startsWith(pluginDir)) {
-      // change the working directory to the script's directory
-      QString scriptDirPath(QFileInfo(m_scriptFilePath).absolutePath());
-      proc.setWorkingDirectory(scriptDirPath);
-    } else {
-      if (m_debug) {
-        qDebug() << "No valid pixi manifest configuration found for"
-                 << m_scriptFilePath;
-      }
+  // --- Package mode: pixi run <command> <identifier> [args] ---
+  if (m_packageMode) {
+    if (m_pixi.isEmpty()) {
+      m_errors << tr("Package mode requires pixi but it was not found.");
       return QByteArray();
     }
 
+    // Build: pixi run <command> <identifier> [args]
+    realArgs.prepend(m_packageIdentifier);
+    realArgs.prepend(m_packageCommand);
+    realArgs.prepend("--as-is");
     realArgs.prepend("run");
+
+    proc.setWorkingDirectory(m_packageDir);
 
 #ifdef Q_OS_WIN
     QString pixi(m_pixi + "/pixi.exe");
@@ -186,19 +158,75 @@ QByteArray PythonScript::execute(const QStringList& args,
 #endif
 
     if (m_debug) {
-      qDebug() << "Executing" << pixi << realArgs.join(QStringLiteral(" "))
-               << "<" << scriptStdin;
-      qDebug() << "Working directory is" << proc.workingDirectory();
+      qDebug() << "Executing (package)" << pixi
+               << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+      qDebug() << "Working directory is" << m_packageDir;
     }
     proc.start(pixi, realArgs);
+
   } else {
-    // plain python
-    if (m_debug) {
-      qDebug() << "Executing" << m_pythonInterpreter
-               << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+    // --- Script file mode ---
+    realArgs.prepend(m_scriptFilePath);
+
+    // Check if the user installed the default pixi manifest
+    QString pluginDir =
+      QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    bool defaultManifest = hasDefaultPixiManifest(pluginDir);
+
+    if (defaultManifest && !m_pixi.isEmpty()) {
+      // Prepend "python" for .py scripts so pixi knows the interpreter
+      if (m_scriptFilePath.contains(".py"))
+        realArgs.prepend("python");
+
+      realArgs.prepend("--as-is");
+
+      // Check if the script directory (or its parent) has a .pixi directory
+      QString scriptDirPath(QFileInfo(m_scriptFilePath).absolutePath());
+      bool hasPixiDir = QDir(scriptDirPath + "/.pixi").exists() ||
+                        QDir(scriptDirPath + "/../.pixi").exists();
+
+      // Use the default manifest if the script doesn't have its own .pixi
+      // directory and isn't in the user plugin directory (i.e., we bundled it)
+      if (!pluginDir.isEmpty() && !hasPixiDir &&
+          !m_scriptFilePath.startsWith(pluginDir)) {
+#ifndef NDEBUG
+        qDebug() << "Using manifest in" << pluginDir;
+#endif
+        realArgs.prepend(pluginDir);
+        realArgs.prepend("--manifest-path");
+      } else if (hasPixiDir || m_scriptFilePath.startsWith(pluginDir)) {
+        proc.setWorkingDirectory(scriptDirPath);
+      } else {
+        if (m_debug) {
+          qDebug() << "No valid pixi manifest configuration found for"
+                   << m_scriptFilePath;
+        }
+        return QByteArray();
+      }
+
+      realArgs.prepend("run");
+
+#ifdef Q_OS_WIN
+      QString pixi(m_pixi + "/pixi.exe");
+#else
+      QString pixi(m_pixi + "/pixi");
+#endif
+
+      if (m_debug) {
+        qDebug() << "Executing" << pixi << realArgs.join(QStringLiteral(" "))
+                 << "<" << scriptStdin;
+        qDebug() << "Working directory is" << proc.workingDirectory();
+      }
+      proc.start(pixi, realArgs);
+    } else {
+      // Plain python
+      if (m_debug) {
+        qDebug() << "Executing" << m_pythonInterpreter
+                 << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+      }
+      proc.start(m_pythonInterpreter, realArgs);
     }
-    proc.start(m_pythonInterpreter, realArgs);
-  }
+  } // end script-file mode
 
   // Write scriptStdin to the process's stdin
   if (!scriptStdin.isNull()) {
@@ -282,76 +310,19 @@ void PythonScript::asyncExecute(const QStringList& args,
   realArgs.append("--lang");
   realArgs.append(QLocale().name());
 
-  // Start script
-  realArgs.prepend(m_scriptFilePath);
-  bool defaultManifest = false;
-
-  // check if the user installed the default pixi manifest
-  QString pluginDir =
-    QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-  if (QDir(pluginDir + "/.pixi").exists()) {
-    // check if we have a useful python in .pixi
-    QString pythonPath = "/.pixi/envs/default/bin/";
-#ifdef Q_OS_WIN
-    pythonPath += "python.exe";
-#else
-    pythonPath += "python";
-#endif
-    QFileInfo python(pluginDir + pythonPath);
-    if (python.exists() && python.isExecutable()) {
-      defaultManifest = true;
-    }
-  }
-
-  // Do we use pixi or just python?
-  // if there isn't a default manifest, use python
-  if (defaultManifest && !m_pixi.isEmpty()) {
-
-    // check if the script is a python script
-    // should eventually allow other pixi run options
-    if (m_scriptFilePath.contains(".py")) {
-      // python script
-      realArgs.prepend("python");
-    } // otherwise hope pixi knows how to run this
-
-    realArgs.prepend("--as-is");
-
-    // Also check to see if the script directory
-    //  (or its parent)
-    // has a .pixi directory in it
-    bool hasPixiDir = false;
-    QString scriptDirPath(QFileInfo(m_scriptFilePath).absolutePath());
-    if (QDir(scriptDirPath + "/.pixi").exists() ||
-        QDir(scriptDirPath + "/../.pixi").exists()) {
-      hasPixiDir = true;
-    }
-
-    // use the default manifest if
-    // 1. the default manifest exists
-    // 2. the script does not have a .pixi directory
-    // 3. the script is not in the user plugin directory
-    //          (i.e., we bundled it)
-    if (!pluginDir.isEmpty() && defaultManifest && !hasPixiDir &&
-        !m_scriptFilePath.startsWith(pluginDir)) {
-#ifndef NDEBUG
-      // use the manifest installed in the plugin directory
-      qDebug() << "Using manifest in" << pluginDir;
-#endif
-      realArgs.prepend(pluginDir);
-      realArgs.prepend("--manifest-path");
-    } else if (hasPixiDir || m_scriptFilePath.startsWith(pluginDir)) {
-      // change the working directory to the script's directory
-      QString scriptDirPath(QFileInfo(m_scriptFilePath).absolutePath());
-      m_process->setWorkingDirectory(scriptDirPath);
-    } else {
-      if (m_debug) {
-        qDebug() << "No valid pixi manifest configuration found for"
-                 << m_scriptFilePath;
-      }
+  // --- Package mode: pixi run <command> <identifier> [args] ---
+  if (m_packageMode) {
+    if (m_pixi.isEmpty()) {
+      m_errors << tr("Package mode requires pixi but it was not found.");
       return;
     }
 
+    realArgs.prepend(m_packageIdentifier);
+    realArgs.prepend(m_packageCommand);
+    realArgs.prepend("--as-is");
     realArgs.prepend("run");
+
+    m_process->setWorkingDirectory(m_packageDir);
 
 #ifdef Q_OS_WIN
     QString pixi(m_pixi + "/pixi.exe");
@@ -360,19 +331,75 @@ void PythonScript::asyncExecute(const QStringList& args,
 #endif
 
     if (m_debug) {
-      qDebug() << "Executing" << pixi << realArgs.join(QStringLiteral(" "))
-               << "<" << scriptStdin;
-      qDebug() << "Working directory is" << m_process->workingDirectory();
+      qDebug() << "Executing (package)" << pixi
+               << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+      qDebug() << "Working directory is" << m_packageDir;
     }
     m_process->start(pixi, realArgs);
+
   } else {
-    // plain python
-    if (m_debug) {
-      qDebug() << "Executing" << m_pythonInterpreter
-               << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+    // --- Script file mode ---
+    realArgs.prepend(m_scriptFilePath);
+
+    // Check if the user installed the default pixi manifest
+    QString pluginDir =
+      QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    bool defaultManifest = hasDefaultPixiManifest(pluginDir);
+
+    if (defaultManifest && !m_pixi.isEmpty()) {
+      // Prepend "python" for .py scripts so pixi knows the interpreter
+      if (m_scriptFilePath.contains(".py"))
+        realArgs.prepend("python");
+
+      realArgs.prepend("--as-is");
+
+      // Check if the script directory (or its parent) has a .pixi directory
+      QString scriptDirPath(QFileInfo(m_scriptFilePath).absolutePath());
+      bool hasPixiDir = QDir(scriptDirPath + "/.pixi").exists() ||
+                        QDir(scriptDirPath + "/../.pixi").exists();
+
+      // Use the default manifest if the script doesn't have its own .pixi
+      // directory and isn't in the user plugin directory (i.e., we bundled it)
+      if (!pluginDir.isEmpty() && !hasPixiDir &&
+          !m_scriptFilePath.startsWith(pluginDir)) {
+#ifndef NDEBUG
+        qDebug() << "Using manifest in" << pluginDir;
+#endif
+        realArgs.prepend(pluginDir);
+        realArgs.prepend("--manifest-path");
+      } else if (hasPixiDir || m_scriptFilePath.startsWith(pluginDir)) {
+        m_process->setWorkingDirectory(scriptDirPath);
+      } else {
+        if (m_debug) {
+          qDebug() << "No valid pixi manifest configuration found for"
+                   << m_scriptFilePath;
+        }
+        return;
+      }
+
+      realArgs.prepend("run");
+
+#ifdef Q_OS_WIN
+      QString pixi(m_pixi + "/pixi.exe");
+#else
+      QString pixi(m_pixi + "/pixi");
+#endif
+
+      if (m_debug) {
+        qDebug() << "Executing" << pixi << realArgs.join(QStringLiteral(" "))
+                 << "<" << scriptStdin;
+        qDebug() << "Working directory is" << m_process->workingDirectory();
+      }
+      m_process->start(pixi, realArgs);
+    } else {
+      // Plain python
+      if (m_debug) {
+        qDebug() << "Executing" << m_pythonInterpreter
+                 << realArgs.join(QStringLiteral(" ")) << "<" << scriptStdin;
+      }
+      m_process->start(m_pythonInterpreter, realArgs);
     }
-    m_process->start(m_pythonInterpreter, realArgs);
-  }
+  } // end script-file mode
 
   // Write scriptStdin to the process's stdin
   if (!scriptStdin.isNull()) {
@@ -421,28 +448,22 @@ void PythonScript::asyncTerminate()
 
 QByteArray PythonScript::asyncWriteAndResponse(QByteArray input)
 {
-  if (m_process == nullptr) {
-    return QByteArray(); // wait
-  }
+  if (m_process == nullptr)
+    return QByteArray();
 
   m_process->write(input);
   QByteArray buffer;
-
-  bool ready = m_process->waitForReadyRead();
-  if (ready) {
-    while (m_process->canReadLine()) {
+  if (m_process->waitForReadyRead()) {
+    while (m_process->canReadLine())
       buffer += m_process->readLine();
-    }
   }
-
   return buffer;
 }
 
 QByteArray PythonScript::asyncResponse()
 {
-  if (m_process == nullptr || m_process->state() == QProcess::Running) {
-    return QByteArray(); // wait
-  }
+  if (m_process == nullptr || m_process->state() == QProcess::Running)
+    return QByteArray();
 
   return m_process->readAll();
 }

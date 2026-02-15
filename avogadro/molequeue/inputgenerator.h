@@ -502,6 +502,15 @@ public:
   void setScriptFilePath(const QString& scriptFile);
 
   /**
+   * Access to the underlying PythonScript interpreter for direct
+   * configuration (e.g. setting package mode via setPackageInfo()).
+   * @{
+   */
+  QtGui::PythonScript& interpreter() { return *m_interpreter; }
+  const QtGui::PythonScript& interpreter() const { return *m_interpreter; }
+  /** @} */
+
+  /**
    * Clear any cached data and return to an uninitialized state.
    */
   void reset();

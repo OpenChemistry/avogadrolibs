@@ -70,6 +70,13 @@ public slots:
 
   void showDialog();
 
+  /**
+   * Handle a feature registered by PackageManager.
+   */
+  void registerFeature(const QString& type, const QString& packageDir,
+                       const QString& command, const QString& identifier,
+                       const QVariantMap& metadata);
+
 private slots:
   void energy();
   void forces();

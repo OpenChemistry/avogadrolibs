@@ -56,6 +56,34 @@ public:
   void setScriptFilePath(const QString& scriptFile);
 
   /**
+   * Enable package mode. In this mode, execute() runs
+   * "pixi run <command> <identifier> [args]" with packageDir as the
+   * working directory, instead of launching a script file via python.
+   */
+  void setPackageInfo(const QString& packageDir, const QString& command,
+                      const QString& identifier);
+
+  /**
+   * @return True if this script is in package mode.
+   */
+  bool isPackageMode() const { return m_packageMode; }
+
+  /**
+   * @return The package directory (only meaningful in package mode).
+   */
+  QString packageDir() const { return m_packageDir; }
+
+  /**
+   * @return The package command (only meaningful in package mode).
+   */
+  QString packageCommand() const { return m_packageCommand; }
+
+  /**
+   * @return The package identifier (only meaningful in package mode).
+   */
+  QString packageIdentifier() const { return m_packageIdentifier; }
+
+  /**
    * @return True if an error is set.
    */
   bool hasErrors() const { return !m_errors.isEmpty(); }
@@ -137,9 +165,13 @@ public slots:
 
 protected:
   bool m_debug;
+  bool m_packageMode = false;
   QString m_pythonInterpreter;
   QString m_pixi;
   QString m_scriptFilePath;
+  QString m_packageDir;
+  QString m_packageCommand;
+  QString m_packageIdentifier;
   QStringList m_errors;
   QProcess* m_process;
 

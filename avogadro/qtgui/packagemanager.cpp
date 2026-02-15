@@ -5,6 +5,7 @@
 
 #include "packagemanager.h"
 
+#include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -12,9 +13,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QSettings>
-
-#include <QDateTime>
-#include <QTimeZone>
+#include <QtCore/QTimeZone>
 
 // tomlplusplus — single header in thirdparty/
 #include <toml.hpp>
@@ -65,36 +64,33 @@ static QVariantList tomlArrayToVariantList(const toml::array& arr)
 static QVariant tomlNodeToVariant(const toml::node& node)
 {
   if (node.is_string())
-    return QVariant(
-      QString::fromStdString(std::string(node.as_string()->get())));
+    return QString::fromStdString(std::string(node.as_string()->get()));
   if (node.is_integer())
-    return QVariant(static_cast<qlonglong>(node.as_integer()->get()));
+    return static_cast<qlonglong>(node.as_integer()->get());
   if (node.is_floating_point())
-    return QVariant(node.as_floating_point()->get());
+    return node.as_floating_point()->get();
   if (node.is_boolean())
-    return QVariant(node.as_boolean()->get());
+    return node.as_boolean()->get();
   if (node.is_table())
-    return QVariant(tomlTableToVariantMap(*node.as_table()));
+    return tomlTableToVariantMap(*node.as_table());
   if (node.is_array())
-    return QVariant(tomlArrayToVariantList(*node.as_array()));
+    return tomlArrayToVariantList(*node.as_array());
   if (node.is_date()) {
     auto d = node.as_date()->get();
-    return QVariant(QDate(d.year, d.month, d.day));
+    return QDate(d.year, d.month, d.day);
   }
   if (node.is_time()) {
     auto t = node.as_time()->get();
-    return QVariant(QTime(t.hour, t.minute, t.second, t.nanosecond / 1000000));
+    return QTime(t.hour, t.minute, t.second, t.nanosecond / 1000000);
   }
   if (node.is_date_time()) {
     auto dt = node.as_date_time()->get();
     QDate date(dt.date.year, dt.date.month, dt.date.day);
     QTime time(dt.time.hour, dt.time.minute, dt.time.second,
                dt.time.nanosecond / 1000000);
-    if (dt.offset) {
-      return QVariant(
-        QDateTime(date, time, QTimeZone(dt.offset->minutes * 60)));
-    }
-    return QVariant(QDateTime(date, time));
+    if (dt.offset)
+      return QDateTime(date, time, QTimeZone(dt.offset->minutes * 60));
+    return QDateTime(date, time);
   }
   return {};
 }
@@ -201,6 +197,7 @@ PackageManager::PackageInfo PackageManager::packageInfo(
   info.version = settings.value(prefix + "version").toString();
   info.directory = settings.value(prefix + "directory").toString();
   info.command = settings.value(prefix + "command").toString();
+  // not really crucial
   info.description = settings.value(prefix + "description").toString();
   return info;
 }
@@ -245,6 +242,7 @@ bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
     info.name = QString::fromStdString(std::string(v->get()));
   if (auto* v = (*project)["version"].as_string())
     info.version = QString::fromStdString(std::string(v->get()));
+  // not really crucial
   if (auto* v = (*project)["description"].as_string())
     info.description = QString::fromStdString(std::string(v->get()));
 
@@ -304,11 +302,9 @@ bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
         continue;
       }
 
-      // Convert the rest of the table to QVariantMap
+      // Convert the entire table to metadata (identifier is kept for
+      // convenience)
       entry.metadata = tomlTableToVariantMap(*table);
-      // identifier is already extracted; keep it in metadata too for
-      // convenience (consumers may want it)
-
       features.append(entry);
     }
   }
@@ -358,7 +354,6 @@ void PackageManager::removeFromCache(const QString& packageName)
 {
   QSettings settings;
   settings.beginGroup(QStringLiteral("packages"));
-  // removes *all* subkeys
   settings.remove(packageName);
   settings.endGroup();
 }
@@ -374,7 +369,6 @@ bool PackageManager::loadFromCache(const QString& packageName,
   info.directory = settings.value(prefix + "directory").toString();
   info.command = settings.value(prefix + "command").toString();
   info.version = settings.value(prefix + "version").toString();
-  // not really crucial
   info.description = settings.value(prefix + "description").toString();
 
   if (info.directory.isEmpty() || info.command.isEmpty())

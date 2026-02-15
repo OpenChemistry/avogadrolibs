@@ -40,6 +40,37 @@ ScriptChargeModel::~ScriptChargeModel()
   delete m_interpreter;
 }
 
+void ScriptChargeModel::setPackageInfo(const QString& packageDir,
+                                       const QString& command,
+                                       const QString& identifier)
+{
+  m_interpreter->setPackageInfo(packageDir, command, identifier);
+}
+
+void ScriptChargeModel::readMetaData(const QVariantMap& metadata)
+{
+  resetMetaData();
+
+  m_identifier = metadata.value("identifier").toString().toStdString();
+  m_name = metadata.value("model-name").toString().toStdString();
+  m_description = metadata.value("description").toString().toStdString();
+
+  QString inputFmt = metadata.value("input-format").toString();
+  m_inputFormat = stringToFormat(inputFmt.toStdString());
+  m_formatString = inputFmt;
+
+  QVariantMap support = metadata.value("support").toMap();
+  m_partialCharges = support.value("charges", false).toBool();
+  m_electrostatics = support.value("potentials", false).toBool();
+
+  QString elemStr = support.value("elements").toString();
+  if (!elemStr.isEmpty())
+    processElementString(elemStr);
+
+  m_valid =
+    !m_identifier.empty() && !m_name.empty() && m_inputFormat != NotUsed;
+}
+
 QString ScriptChargeModel::scriptFilePath() const
 {
   return m_interpreter->scriptFilePath();
@@ -47,7 +78,30 @@ QString ScriptChargeModel::scriptFilePath() const
 
 Calc::ChargeModel* ScriptChargeModel::newInstance() const
 {
-  return new ScriptChargeModel(m_interpreter->scriptFilePath());
+  auto* copy = new ScriptChargeModel();
+  if (m_interpreter->isPackageMode()) {
+    copy->m_interpreter->setPackageInfo(m_interpreter->packageDir(),
+                                        m_interpreter->packageCommand(),
+                                        m_interpreter->packageIdentifier());
+    copy->copyMetaDataFrom(*this);
+  } else {
+    copy->m_interpreter->setScriptFilePath(m_interpreter->scriptFilePath());
+    copy->readMetaData();
+  }
+  return copy;
+}
+
+void ScriptChargeModel::copyMetaDataFrom(const ScriptChargeModel& other)
+{
+  m_identifier = other.m_identifier;
+  m_name = other.m_name;
+  m_description = other.m_description;
+  m_inputFormat = other.m_inputFormat;
+  m_formatString = other.m_formatString;
+  m_partialCharges = other.m_partialCharges;
+  m_electrostatics = other.m_electrostatics;
+  m_elements = other.m_elements;
+  m_valid = other.m_valid;
 }
 
 MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const

@@ -42,6 +42,13 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+  /**
+   * Handle a feature registered by PackageManager.
+   */
+  void registerFeature(const QString& type, const QString& packageDir,
+                       const QString& command, const QString& identifier,
+                       const QVariantMap& metadata);
+
 private:
   QList<Calc::ChargeModel*> m_models;
 
