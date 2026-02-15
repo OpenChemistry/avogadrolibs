@@ -5,6 +5,7 @@
 
 #include "packagemanager.h"
 
+#include <QtCore/QCryptographicHash>
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
@@ -153,6 +154,66 @@ bool PackageManager::unregisterPackage(const QString& packageName)
 
   removeFromCache(packageName);
   return true;
+}
+
+// ---------------------------------------------------------------------------
+// Directory scanning
+// ---------------------------------------------------------------------------
+
+int PackageManager::scanDirectory(const QString& directoryPath)
+{
+  QDir dir(directoryPath);
+  if (!dir.exists()) {
+    qWarning() << "PackageManager::scanDirectory: directory does not exist:"
+               << directoryPath;
+    return 0;
+  }
+
+  int count = 0;
+  const QStringList subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+  for (const QString& subdir : subdirs) {
+    QString packageDir = dir.absoluteFilePath(subdir);
+    QString tomlPath = packageDir + QStringLiteral("/pyproject.toml");
+
+    QFile tomlFile(tomlPath);
+    if (!tomlFile.exists())
+      continue;
+
+    // Compute hash of the current pyproject.toml
+    if (!tomlFile.open(QIODevice::ReadOnly))
+      continue;
+    QByteArray currentHash =
+      QCryptographicHash::hash(tomlFile.readAll(), QCryptographicHash::Sha256)
+        .toHex();
+    tomlFile.close();
+
+    // Check if we already have this package with the same hash
+    // We need to find the package name — check all registered packages
+    bool needsRegistration = true;
+    const QStringList known = registeredPackages();
+    for (const QString& name : known) {
+      PackageInfo info = packageInfo(name);
+      if (QDir(info.directory) == QDir(packageDir)) {
+        // Same directory — check the cached hash
+        QSettings settings;
+        QString prefix = QStringLiteral("packages/") + name + '/';
+        QByteArray cachedHash =
+          settings.value(prefix + "tomlHash").toByteArray();
+        if (cachedHash == currentHash) {
+          needsRegistration = false;
+        }
+        break;
+      }
+    }
+
+    if (needsRegistration) {
+      if (registerPackage(packageDir))
+        ++count;
+    }
+  }
+
+  return count;
 }
 
 // ---------------------------------------------------------------------------
@@ -340,6 +401,15 @@ void PackageManager::saveToCache(const PackageInfo& info,
   settings.setValue(prefix + "version", info.version);
   // not really crucial
   settings.setValue(prefix + "description", info.description);
+
+  // Store a hash of pyproject.toml so scanDirectory() can detect changes
+  QString tomlPath = info.directory + QStringLiteral("/pyproject.toml");
+  QFile tomlFile(tomlPath);
+  if (tomlFile.open(QIODevice::ReadOnly)) {
+    QByteArray hash =
+      QCryptographicHash::hash(tomlFile.readAll(), QCryptographicHash::Sha256);
+    settings.setValue(prefix + "tomlHash", hash.toHex());
+  }
 
   // Serialize features as a JSON array string
   QJsonArray arr;

@@ -72,6 +72,16 @@ public:
    */
   void loadRegisteredPackages();
 
+  // --- Directory scanning ---
+
+  /**
+   * Scan @p directoryPath for subdirectories that contain a pyproject.toml.
+   * Each discovered package is compared against the cached hash of its
+   * pyproject.toml; new or modified packages are (re-)registered automatically.
+   * @return the number of packages that were newly registered or updated.
+   */
+  int scanDirectory(const QString& directoryPath);
+
   // --- Queries ---
 
   QStringList registeredPackages() const;
