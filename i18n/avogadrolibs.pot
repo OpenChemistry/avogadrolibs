@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Avogadro 1.102.1\n"
+"Project-Id-Version: Avogadro 1.103.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-01-31 02:11+0000\n"
+"POT-Creation-Date: 2026-02-15 03:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,7 +171,7 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:372
 #: qtplugins/configurepython/configurepythondialog.cpp:188
 #: qtplugins/configurepython/configurepythondialog.cpp:191
-#: qtplugins/spacegroup/spacegroup.cpp:614
+#: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "Unknown"
 msgstr ""
 
@@ -1255,12 +1255,12 @@ msgstr ""
 msgid "Periodic Table"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:206 qtgui/pythonscript.cpp:380
+#: qtgui/pythonscript.cpp:206 qtgui/pythonscript.cpp:382
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:216 qtgui/pythonscript.cpp:390
+#: qtgui/pythonscript.cpp:216 qtgui/pythonscript.cpp:392
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1286,27 +1286,34 @@ msgstr ""
 msgid "Warning '%1'"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:455
+#: qtgui/pythonscript.cpp:453
+#, qt-format
+msgid ""
+"Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
+"error: %3)."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:490
 msgid "Script failed to start."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:458
+#: qtgui/pythonscript.cpp:493
 msgid "Script crashed."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:461
+#: qtgui/pythonscript.cpp:496
 msgid "Script timed out."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:464
+#: qtgui/pythonscript.cpp:499
 msgid "Read error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:467
+#: qtgui/pythonscript.cpp:502
 msgid "Write error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:471
+#: qtgui/pythonscript.cpp:506
 msgid "Unknown error."
 msgstr ""
 
@@ -1379,107 +1386,111 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:286
+msgid "Change Residue Color"
+msgstr ""
+
+#: qtgui/rwmolecule.cpp:298
 msgid "Change Atom Layer"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:302
+#: qtgui/rwmolecule.cpp:314
 msgid "Add Bond"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:328
+#: qtgui/rwmolecule.cpp:340
 msgid "Removed Bond"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:335
+#: qtgui/rwmolecule.cpp:347
 msgid "Clear Bonds"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:349
+#: qtgui/rwmolecule.cpp:361
 msgid "Set Bond Orders"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:361
+#: qtgui/rwmolecule.cpp:373
 msgid "Change Bond Order"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:383
+#: qtgui/rwmolecule.cpp:395
 msgid "Update Bonds"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:402
+#: qtgui/rwmolecule.cpp:414
 msgid "Update Bond"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:421
+#: qtgui/rwmolecule.cpp:433
 msgid "Add Unit Cell…"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:433
+#: qtgui/rwmolecule.cpp:445
 msgid "Remove Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:528
+#: qtgui/rwmolecule.cpp:540
 msgid "Edit Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:544
+#: qtgui/rwmolecule.cpp:556
 msgid "Wrap Atoms to Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:567
+#: qtgui/rwmolecule.cpp:579
 msgid "Scale Cell Volume"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:587
+#: qtgui/rwmolecule.cpp:599
 msgid "Build Super Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:611
+#: qtgui/rwmolecule.cpp:623
 msgid "Niggli Reduction"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:633
+#: qtgui/rwmolecule.cpp:645
 msgid "Rotate to Standard Orientation"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:658 qtplugins/spacegroup/spacegroup.cpp:66
+#: qtgui/rwmolecule.cpp:670 qtplugins/spacegroup/spacegroup.cpp:66
 msgid "Reduce to Primitive"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:688 qtplugins/spacegroup/spacegroup.cpp:72
+#: qtgui/rwmolecule.cpp:700 qtplugins/spacegroup/spacegroup.cpp:72
 #: qtplugins/spacegroup/spacegroup.cpp:459
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:718 qtplugins/spacegroup/spacegroup.cpp:484
+#: qtgui/rwmolecule.cpp:730 qtplugins/spacegroup/spacegroup.cpp:484
 msgid "Symmetrize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:744
+#: qtgui/rwmolecule.cpp:756
 msgid "Fill Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:764
+#: qtgui/rwmolecule.cpp:776
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr ""
 
-#: qtgui/rwmolecule.h:214
+#: qtgui/rwmolecule.h:215
 msgid "Change Atom Positions"
 msgstr ""
 
-#: qtgui/rwmolecule.h:224
+#: qtgui/rwmolecule.h:225
 msgid "Change Atom Position"
 msgstr ""
 
-#: qtgui/rwmolecule.h:242
+#: qtgui/rwmolecule.h:243
 msgid "Change Atom Label"
 msgstr ""
 
-#: qtgui/rwmolecule.h:260
+#: qtgui/rwmolecule.h:261
 msgid "Change Bond Label"
 msgstr ""
 
-#: qtgui/rwmolecule.h:266
+#: qtgui/rwmolecule.h:267
 msgid "Change Selection"
 msgstr ""
 
@@ -1727,30 +1738,30 @@ msgstr ""
 #: qtplugins/lammpsinput/lammpsinput.cpp:62
 #: qtplugins/molecularproperties/molecularview.cpp:150
 #: qtplugins/molecularproperties/molecularview.cpp:184
-#: qtplugins/openbabel/openbabel.cpp:209 qtplugins/openbabel/openbabel.cpp:218
-#: qtplugins/openbabel/openbabel.cpp:228 qtplugins/openbabel/openbabel.cpp:370
-#: qtplugins/openbabel/openbabel.cpp:398 qtplugins/openbabel/openbabel.cpp:423
-#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:486
-#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:549
-#: qtplugins/openbabel/openbabel.cpp:568 qtplugins/openbabel/openbabel.cpp:577
-#: qtplugins/openbabel/openbabel.cpp:637 qtplugins/openbabel/openbabel.cpp:687
-#: qtplugins/openbabel/openbabel.cpp:700 qtplugins/openbabel/openbabel.cpp:735
-#: qtplugins/openbabel/openbabel.cpp:749 qtplugins/openbabel/openbabel.cpp:778
-#: qtplugins/openbabel/openbabel.cpp:790 qtplugins/openbabel/openbabel.cpp:836
-#: qtplugins/openbabel/openbabel.cpp:886 qtplugins/openbabel/openbabel.cpp:928
-#: qtplugins/openbabel/openbabel.cpp:960
+#: qtplugins/openbabel/openbabel.cpp:211 qtplugins/openbabel/openbabel.cpp:220
+#: qtplugins/openbabel/openbabel.cpp:230 qtplugins/openbabel/openbabel.cpp:372
+#: qtplugins/openbabel/openbabel.cpp:400 qtplugins/openbabel/openbabel.cpp:425
+#: qtplugins/openbabel/openbabel.cpp:434 qtplugins/openbabel/openbabel.cpp:488
+#: qtplugins/openbabel/openbabel.cpp:538 qtplugins/openbabel/openbabel.cpp:551
+#: qtplugins/openbabel/openbabel.cpp:570 qtplugins/openbabel/openbabel.cpp:579
+#: qtplugins/openbabel/openbabel.cpp:639 qtplugins/openbabel/openbabel.cpp:689
+#: qtplugins/openbabel/openbabel.cpp:702 qtplugins/openbabel/openbabel.cpp:737
+#: qtplugins/openbabel/openbabel.cpp:751 qtplugins/openbabel/openbabel.cpp:780
+#: qtplugins/openbabel/openbabel.cpp:792 qtplugins/openbabel/openbabel.cpp:838
+#: qtplugins/openbabel/openbabel.cpp:888 qtplugins/openbabel/openbabel.cpp:930
+#: qtplugins/openbabel/openbabel.cpp:962
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:101
 #: qtplugins/plugindownloader/downloaderwidget.cpp:107
 #: qtplugins/plugindownloader/downloaderwidget.cpp:408
-#: qtplugins/propertytables/propertyview.cpp:488
-#: qtplugins/propertytables/propertyview.cpp:521
+#: qtplugins/propertytables/propertyview.cpp:504
+#: qtplugins/propertytables/propertyview.cpp:537
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:162
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:450
 #: qtplugins/qtaim/qtaimwavefunction.h:48
 #: qtplugins/qtaim/qtaimwavefunction.h:81
 #: qtplugins/quantuminput/quantuminput.cpp:104
-#: qtplugins/spacegroup/spacegroup.cpp:659
+#: qtplugins/spacegroup/spacegroup.cpp:661
 msgid "Error"
 msgstr ""
 
@@ -1799,104 +1810,104 @@ msgstr ""
 msgid "Cannot save file %1."
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:46
-#: qtplugins/applycolors/applycolors.cpp:67
+#: qtplugins/applycolors/applycolors.cpp:47
+#: qtplugins/applycolors/applycolors.cpp:68
 msgid "By Custom Color…"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:51
+#: qtplugins/applycolors/applycolors.cpp:52
 msgid "By Atomic Index…"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:56
+#: qtplugins/applycolors/applycolors.cpp:57
 msgid "By Distance…"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:61
+#: qtplugins/applycolors/applycolors.cpp:62
 msgid "By Element"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:72
+#: qtplugins/applycolors/applycolors.cpp:73
 msgid "By Chain"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:77
+#: qtplugins/applycolors/applycolors.cpp:78
 msgid "By Partial Charge…"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:82
+#: qtplugins/applycolors/applycolors.cpp:83
 msgid "By Secondary Structure"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:87
+#: qtplugins/applycolors/applycolors.cpp:88
 msgid "By Amino Acid"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:92
+#: qtplugins/applycolors/applycolors.cpp:93
 msgid "By Shapely Scheme"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:107
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:308
+#: qtplugins/applycolors/applycolors.cpp:108
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:312
 #: qtplugins/surfaces/surfaces.cpp:793
 msgctxt "colormap"
 msgid "Parula"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:109
+#: qtplugins/applycolors/applycolors.cpp:110
 #: qtplugins/surfaces/surfaces.cpp:795
 msgctxt "colormap"
 msgid "Heat"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:111
+#: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/surfaces/surfaces.cpp:797
 msgctxt "colormap"
 msgid "Hot"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:113
+#: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/surfaces/surfaces.cpp:799
 msgctxt "colormap"
 msgid "Gray"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:115
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:308
+#: qtplugins/applycolors/applycolors.cpp:116
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:312
 #: qtplugins/surfaces/surfaces.cpp:801
 msgctxt "colormap"
 msgid "Magma"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:117
-#: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:309
+#: qtplugins/applycolors/applycolors.cpp:118
+#: qtplugins/applycolors/applycolors.cpp:212
+#: qtplugins/applycolors/applycolors.cpp:313
 #: qtplugins/surfaces/surfaces.cpp:803
 msgctxt "colormap"
 msgid "Inferno"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:119
-#: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:309
+#: qtplugins/applycolors/applycolors.cpp:120
+#: qtplugins/applycolors/applycolors.cpp:212
+#: qtplugins/applycolors/applycolors.cpp:313
 #: qtplugins/surfaces/surfaces.cpp:805
 msgctxt "colormap"
 msgid "Plasma"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:121
-#: qtplugins/applycolors/applycolors.cpp:212
-#: qtplugins/applycolors/applycolors.cpp:310
+#: qtplugins/applycolors/applycolors.cpp:122
+#: qtplugins/applycolors/applycolors.cpp:213
+#: qtplugins/applycolors/applycolors.cpp:314
 #: qtplugins/surfaces/surfaces.cpp:807
 msgctxt "colormap"
 msgid "Viridis"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:123
-#: qtplugins/applycolors/applycolors.cpp:212
-#: qtplugins/applycolors/applycolors.cpp:310
+#: qtplugins/applycolors/applycolors.cpp:124
+#: qtplugins/applycolors/applycolors.cpp:213
+#: qtplugins/applycolors/applycolors.cpp:314
 #: qtplugins/surfaces/surfaces.cpp:809
 msgctxt "colormap"
 msgid "Cividis"
@@ -1906,9 +1917,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:174
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:125
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:311
+#: qtplugins/applycolors/applycolors.cpp:126
+#: qtplugins/applycolors/applycolors.cpp:214
+#: qtplugins/applycolors/applycolors.cpp:315
 #: qtplugins/surfaces/surfaces.cpp:811 :183 rc.cpp:2076
 msgctxt "colormap"
 msgid "Spectral"
@@ -1918,7 +1929,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:127
+#: qtplugins/applycolors/applycolors.cpp:128
 #: qtplugins/surfaces/surfaces.cpp:813 :180 rc.cpp:2073
 msgctxt "colormap"
 msgid "Coolwarm"
@@ -1928,7 +1939,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:129
+#: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/surfaces/surfaces.cpp:815 :174 rc.cpp:2067
 msgctxt "colormap"
 msgid "Balance"
@@ -1938,7 +1949,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:131
+#: qtplugins/applycolors/applycolors.cpp:132
 #: qtplugins/surfaces/surfaces.cpp:817 :177 rc.cpp:2070
 msgctxt "colormap"
 msgid "Blue-DarkRed"
@@ -1948,34 +1959,34 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:179
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:133
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:311
+#: qtplugins/applycolors/applycolors.cpp:134
+#: qtplugins/applycolors/applycolors.cpp:214
+#: qtplugins/applycolors/applycolors.cpp:315
 #: qtplugins/surfaces/surfaces.cpp:819 :186 rc.cpp:2079
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:141
+#: qtplugins/applycolors/applycolors.cpp:142
 msgid "Apply color schemes to atoms and residues."
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:152
-#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:40
+#: qtplugins/applycolors/applycolors.cpp:153
+#: qtplugins/applycolors/applycolors.cpp:155 qtplugins/focus/focus.cpp:40
 #: qtplugins/resetview/resetview.cpp:77
 msgid "&View"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:152
+#: qtplugins/applycolors/applycolors.cpp:153
 msgid "Color Atoms"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:154
+#: qtplugins/applycolors/applycolors.cpp:155
 msgid "Color Residues"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314
+#: qtplugins/applycolors/applycolors.cpp:217
+#: qtplugins/applycolors/applycolors.cpp:318
 msgid "Select Colormap"
 msgstr ""
 
@@ -1983,25 +1994,65 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314 :171 rc.cpp:2064
+#: qtplugins/applycolors/applycolors.cpp:217
+#: qtplugins/applycolors/applycolors.cpp:318 :171 rc.cpp:2064
 msgid "Colormap:"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:225
+msgid "Apply Index Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:289
+msgid "Apply Charge Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:327
+msgid "Apply Distance Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:353
+msgid "Reset Atom Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:379
+msgid "Apply Custom Color"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:416
+msgid "Apply Custom Residue Color"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:440
+msgid "Reset Residue Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:474
+msgid "Apply Secondary Structure Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:562
+msgid "Apply Amino Acid Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:589
+msgid "Apply Shapely Colors"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:66
+#: qtplugins/autoopt/autoopt.cpp:68
 msgctxt "control-key 7"
 msgid "Ctrl+7"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:67
+#: qtplugins/autoopt/autoopt.cpp:69
 msgid "Auto Optimize"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:69
+#: qtplugins/autoopt/autoopt.cpp:71
 #, qt-format
 msgid ""
 "Auto Optimize Tool\t(%1)\n"
@@ -2017,37 +2068,85 @@ msgid ""
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
 
+#: qtplugins/autoopt/autoopt.cpp:152
+msgid "Optimize"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:153
+msgid "Dynamics"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:157
+msgid "Task:"
+msgstr ""
+
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/autoopt/autoopt.cpp:146 :370
+#: qtplugins/autoopt/autoopt.cpp:182 :370
 msgid "Method:"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:149 qtplugins/autoopt/autoopt.cpp:215
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:625
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, temperatureSpin)
+#: qtplugins/autoopt/autoopt.cpp:190 :1661 rc.cpp:1706
+msgid " K"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
+#. i18n: ectx: property (text), widget (QLabel, label_temperature)
+#: qtplugins/autoopt/autoopt.cpp:194 :1703
+msgid "Temperature:"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
+#: qtplugins/autoopt/autoopt.cpp:202 :1691
+msgid " fs"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
+#. i18n: ectx: property (text), widget (QLabel, label_timestep)
+#: qtplugins/autoopt/autoopt.cpp:206 :1685
+msgid "Timestep:"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:213 qtplugins/autoopt/autoopt.cpp:345
 msgid "Start"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:173
+#: qtplugins/autoopt/autoopt.cpp:271
 msgid "Stop"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:418
-#: qtplugins/forcefield/forcefield.cpp:473 qtplugins/openbabel/openbabel.cpp:48
-#: qtplugins/openbabel/openbabel.cpp:560
+#: qtplugins/autoopt/autoopt.cpp:411 qtplugins/forcefield/forcefield.cpp:73
+#: qtplugins/forcefield/forcefield.cpp:416
+#: qtplugins/forcefield/forcefield.cpp:455 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:562
 msgid "Optimize Geometry"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:317
+#: qtplugins/autoopt/autoopt.cpp:564
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:261
+msgid "Molecular Dynamics"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:581
+#, qt-format
+msgid "%1 T = %L2 K"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:583
 #, qt-format
 msgid "%1 ΔE = %L2 kJ/mol"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.h:42
+#: qtplugins/autoopt/autoopt.h:43
 msgid "Auto Optimize tool"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.h:45
+#: qtplugins/autoopt/autoopt.h:46
 msgid "Interactive optimization of molecular geometry"
 msgstr ""
 
@@ -2150,7 +2249,7 @@ msgid "Bond Selected Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:651
+#: qtplugins/propertytables/propertymodel.cpp:678
 msgid "Bond"
 msgstr ""
 
@@ -2388,13 +2487,13 @@ msgstr ""
 #: qtplugins/configurepython/configurepythondialog.cpp:215
 #: qtplugins/editor/editortoolwidget.cpp:130
 #: qtplugins/templatetool/templatetoolwidget.cpp:84
-#: qtplugins/templatetool/templatetoolwidget.cpp:352
-#: qtplugins/templatetool/templatetoolwidget.cpp:365
-#: qtplugins/templatetool/templatetoolwidget.cpp:373
-#: qtplugins/templatetool/templatetoolwidget.cpp:381
-#: qtplugins/templatetool/templatetoolwidget.cpp:389
-#: qtplugins/templatetool/templatetoolwidget.cpp:397
-#: qtplugins/templatetool/templatetoolwidget.cpp:460 :2325
+#: qtplugins/templatetool/templatetoolwidget.cpp:417
+#: qtplugins/templatetool/templatetoolwidget.cpp:430
+#: qtplugins/templatetool/templatetoolwidget.cpp:438
+#: qtplugins/templatetool/templatetoolwidget.cpp:446
+#: qtplugins/templatetool/templatetoolwidget.cpp:454
+#: qtplugins/templatetool/templatetoolwidget.cpp:462
+#: qtplugins/templatetool/templatetoolwidget.cpp:525 :2325
 msgid "Other…"
 msgstr ""
 
@@ -2456,9 +2555,9 @@ msgid "Freeze Z Axis"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
-#: qtplugins/propertytables/propertymodel.cpp:637
-#: qtplugins/propertytables/propertymodel.cpp:680
-#: qtplugins/propertytables/propertymodel.cpp:697
+#: qtplugins/propertytables/propertymodel.cpp:664
+#: qtplugins/propertytables/propertymodel.cpp:707
+#: qtplugins/propertytables/propertymodel.cpp:724
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr ""
@@ -2468,24 +2567,24 @@ msgid "Value"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
-#: qtplugins/propertytables/propertymodel.cpp:682
-#: qtplugins/propertytables/propertymodel.cpp:699
+#: qtplugins/propertytables/propertymodel.cpp:709
+#: qtplugins/propertytables/propertymodel.cpp:726
 msgid "Atom 1"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
-#: qtplugins/propertytables/propertymodel.cpp:701
+#: qtplugins/propertytables/propertymodel.cpp:728
 msgid "Atom 2"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
-#: qtplugins/propertytables/propertymodel.cpp:686
-#: qtplugins/propertytables/propertymodel.cpp:703
+#: qtplugins/propertytables/propertymodel.cpp:713
+#: qtplugins/propertytables/propertymodel.cpp:730
 msgid "Atom 3"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
-#: qtplugins/propertytables/propertymodel.cpp:705
+#: qtplugins/propertytables/propertymodel.cpp:732
 msgid "Atom 4"
 msgstr ""
 
@@ -2652,7 +2751,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:191
-#: qtplugins/propertytables/propertyview.cpp:528 :322
+#: qtplugins/propertytables/propertyview.cpp:568 :322
 msgid "Copy"
 msgstr ""
 
@@ -2765,10 +2864,6 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:258
 msgid "Energy and Forces"
-msgstr ""
-
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:261
-msgid "Molecular Dynamics"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:264
@@ -3207,8 +3302,8 @@ msgid "Unfuse Selected Atoms"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:366
-#: qtplugins/forcefield/forcefield.cpp:517
-#: qtplugins/forcefield/forcefield.cpp:587
+#: qtplugins/forcefield/forcefield.cpp:495
+#: qtplugins/forcefield/forcefield.cpp:553
 #: qtplugins/playertool/playertool.cpp:391
 #: qtplugins/playertool/playertool.cpp:423 qtplugins/surfaces/surfaces.cpp:951
 #: qtplugins/surfaces/surfaces.cpp:995 qtplugins/surfaces/surfaces.cpp:1007
@@ -3220,18 +3315,18 @@ msgstr ""
 msgid "No atoms provided for optimization"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:435
+#: qtplugins/forcefield/forcefield.cpp:433
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:516
+#: qtplugins/forcefield/forcefield.cpp:494
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:586
+#: qtplugins/forcefield/forcefield.cpp:552
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr ""
@@ -3262,17 +3357,17 @@ msgstr ""
 msgid "Merck Molecular Force Field 94"
 msgstr ""
 
-#: qtplugins/forcefield/scriptenergy.cpp:253
+#: qtplugins/forcefield/scriptenergy.cpp:574
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
 msgstr ""
 
-#: qtplugins/forcefield/scriptenergy.cpp:263
+#: qtplugins/forcefield/scriptenergy.cpp:584
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
 msgstr ""
 
-#: qtplugins/forcefield/scriptenergy.cpp:271
+#: qtplugins/forcefield/scriptenergy.cpp:592
 #, qt-format
 msgid ""
 "Error parsing metadata for energy script: %1\n"
@@ -3508,7 +3603,7 @@ msgstr ""
 msgid "Import Crystal"
 msgstr ""
 
-#: qtplugins/insertfragment/insertfragment.cpp:125
+#: qtplugins/insertfragment/insertfragment.cpp:133
 msgid "Insert Fragment"
 msgstr ""
 
@@ -3557,7 +3652,7 @@ msgstr ""
 msgid "Unique ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:605
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:630
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr ""
@@ -3587,13 +3682,13 @@ msgstr ""
 msgid "Bond Label:"
 msgstr ""
 
-#: qtplugins/label/label.cpp:226 qtplugins/propertytables/propertymodel.cpp:660
+#: qtplugins/label/label.cpp:226 qtplugins/propertytables/propertymodel.cpp:687
 msgid "ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:227
 #: qtplugins/plugindownloader/downloaderwidget.cpp:65
-#: qtplugins/propertytables/propertymodel.cpp:658
+#: qtplugins/propertytables/propertymodel.cpp:685
 msgid "Name"
 msgstr ""
 
@@ -3762,7 +3857,7 @@ msgid "(pending)"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
-#: qtplugins/propertytables/propertymodel.cpp:721
+#: qtplugins/propertytables/propertymodel.cpp:748
 msgid "Property"
 msgstr ""
 
@@ -3884,32 +3979,32 @@ msgid "Molecular Properties"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:40
-#: qtplugins/propertytables/propertyview.cpp:63
+#: qtplugins/propertytables/propertyview.cpp:64
 msgid "Molecule Properties"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:138
-#: qtplugins/propertytables/propertyview.cpp:476
+#: qtplugins/propertytables/propertyview.cpp:492
 msgid "Export CSV"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:139
-#: qtplugins/propertytables/propertyview.cpp:477
+#: qtplugins/propertytables/propertyview.cpp:493
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:151
-#: qtplugins/propertytables/propertyview.cpp:489
+#: qtplugins/propertytables/propertyview.cpp:505
 msgid "Could not open the file for writing."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:184
-#: qtplugins/propertytables/propertyview.cpp:521
+#: qtplugins/propertytables/propertyview.cpp:537
 msgid "Error writing to the file."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:196
-#: qtplugins/propertytables/propertyview.cpp:533
+#: qtplugins/propertytables/propertyview.cpp:573
 msgid "Export…"
 msgstr ""
 
@@ -4023,63 +4118,63 @@ msgstr ""
 msgid "The Open Babel file formats are not ready to be added."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:204
+#: qtplugins/openbabel/openbabel.cpp:206
 msgid "Loading molecule from Open Babel…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:210
+#: qtplugins/openbabel/openbabel.cpp:212
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:219
+#: qtplugins/openbabel/openbabel.cpp:221
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:229
+#: qtplugins/openbabel/openbabel.cpp:231
 msgid "Error parsing openbabel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:371 qtplugins/openbabel/openbabel.cpp:399
-#: qtplugins/openbabel/openbabel.cpp:433 qtplugins/openbabel/openbabel.cpp:578
+#: qtplugins/openbabel/openbabel.cpp:373 qtplugins/openbabel/openbabel.cpp:401
+#: qtplugins/openbabel/openbabel.cpp:435 qtplugins/openbabel/openbabel.cpp:580
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:424
+#: qtplugins/openbabel/openbabel.cpp:426
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:442
+#: qtplugins/openbabel/openbabel.cpp:444
 msgid "Cannot optimize geometry with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:467
+#: qtplugins/openbabel/openbabel.cpp:469
 msgid "Optimizing Geometry (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:468 qtplugins/openbabel/openbabel.cpp:621
+#: qtplugins/openbabel/openbabel.cpp:470 qtplugins/openbabel/openbabel.cpp:623
 msgid "Generating…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:487 qtplugins/openbabel/openbabel.cpp:638
+#: qtplugins/openbabel/openbabel.cpp:489 qtplugins/openbabel/openbabel.cpp:640
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:644
+#: qtplugins/openbabel/openbabel.cpp:495 qtplugins/openbabel/openbabel.cpp:646
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:507 qtplugins/openbabel/openbabel.cpp:515
-#: qtplugins/openbabel/openbabel.cpp:658 qtplugins/openbabel/openbabel.cpp:666
+#: qtplugins/openbabel/openbabel.cpp:509 qtplugins/openbabel/openbabel.cpp:517
+#: qtplugins/openbabel/openbabel.cpp:660 qtplugins/openbabel/openbabel.cpp:668
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -4087,119 +4182,119 @@ msgid ""
 "dE: %4"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:529 qtplugins/openbabel/openbabel.cpp:680
+#: qtplugins/openbabel/openbabel.cpp:531 qtplugins/openbabel/openbabel.cpp:682
 msgid "Updating molecule…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:537 qtplugins/openbabel/openbabel.cpp:688
-#: qtplugins/openbabel/openbabel.cpp:779 qtplugins/openbabel/openbabel.cpp:961
+#: qtplugins/openbabel/openbabel.cpp:539 qtplugins/openbabel/openbabel.cpp:690
+#: qtplugins/openbabel/openbabel.cpp:781 qtplugins/openbabel/openbabel.cpp:963
 msgid "Error interpreting Open Babel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:550 qtplugins/openbabel/openbabel.cpp:701
-#: qtplugins/openbabel/openbabel.cpp:791
+#: qtplugins/openbabel/openbabel.cpp:552 qtplugins/openbabel/openbabel.cpp:703
+#: qtplugins/openbabel/openbabel.cpp:793
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:569
+#: qtplugins/openbabel/openbabel.cpp:571
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:587
+#: qtplugins/openbabel/openbabel.cpp:589
 msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:620
+#: qtplugins/openbabel/openbabel.cpp:622
 msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:711
+#: qtplugins/openbabel/openbabel.cpp:713
 msgid "Generate Conformers"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:730
+#: qtplugins/openbabel/openbabel.cpp:732
 msgid "Cannot open file with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:736
+#: qtplugins/openbabel/openbabel.cpp:738
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:742
+#: qtplugins/openbabel/openbabel.cpp:744
 msgid "Perceiving Bonds (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:743
+#: qtplugins/openbabel/openbabel.cpp:745
 msgid "Generating XYZ representation…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:750
+#: qtplugins/openbabel/openbabel.cpp:752
 msgid "Error generating XYZ string."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:761
+#: qtplugins/openbabel/openbabel.cpp:763
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:771
+#: qtplugins/openbabel/openbabel.cpp:773
 msgid "Updating molecule from Open Babel…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:823 qtplugins/openbabel/openbabel.cpp:865
+#: qtplugins/openbabel/openbabel.cpp:825 qtplugins/openbabel/openbabel.cpp:867
 msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:828 qtplugins/openbabel/openbabel.cpp:878
+#: qtplugins/openbabel/openbabel.cpp:830 qtplugins/openbabel/openbabel.cpp:880
 msgid "Adding Hydrogens (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:829
+#: qtplugins/openbabel/openbabel.cpp:831
 msgid "Generating Open Babel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:837 qtplugins/openbabel/openbabel.cpp:887
+#: qtplugins/openbabel/openbabel.cpp:839 qtplugins/openbabel/openbabel.cpp:889
 msgid "Error generating Open Babel input."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:850 qtplugins/openbabel/openbabel.cpp:900
-#: qtplugins/openbabel/openbabel.cpp:942
+#: qtplugins/openbabel/openbabel.cpp:852 qtplugins/openbabel/openbabel.cpp:902
+#: qtplugins/openbabel/openbabel.cpp:944
 #, qt-format
 msgid "Running %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:872
+#: qtplugins/openbabel/openbabel.cpp:874
 msgid "Add hydrogens for pH"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:872
+#: qtplugins/openbabel/openbabel.cpp:874
 msgid "pH:"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:879 qtplugins/openbabel/openbabel.cpp:921
+#: qtplugins/openbabel/openbabel.cpp:881 qtplugins/openbabel/openbabel.cpp:923
 msgid "Generating obabel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:915
+#: qtplugins/openbabel/openbabel.cpp:917
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:920
+#: qtplugins/openbabel/openbabel.cpp:922
 msgid "Removing Hydrogens (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:929
+#: qtplugins/openbabel/openbabel.cpp:931
 msgid "Error generating Open Babel data."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:952
+#: qtplugins/openbabel/openbabel.cpp:954
 msgid "Reading obabel output…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:1015
+#: qtplugins/openbabel/openbabel.cpp:1017
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -4673,138 +4768,142 @@ msgstr ""
 msgid "Render the scene using POV-Ray."
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:607
+#: qtplugins/propertytables/propertymodel.cpp:307
+msgid "Click to change color"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Valence"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:609
+#: qtplugins/propertytables/propertymodel.cpp:634
 msgid "Formal Charge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:612
+#: qtplugins/propertytables/propertymodel.cpp:637
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:617
+#: qtplugins/propertytables/propertymodel.cpp:644
 msgid "X (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:619
+#: qtplugins/propertytables/propertymodel.cpp:646
 msgid "Y (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:621
+#: qtplugins/propertytables/propertymodel.cpp:648
 msgid "Z (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:623
-#: qtplugins/propertytables/propertymodel.cpp:645
-#: qtplugins/propertytables/propertymodel.cpp:668
+#: qtplugins/propertytables/propertymodel.cpp:650
+#: qtplugins/propertytables/propertymodel.cpp:672
+#: qtplugins/propertytables/propertymodel.cpp:695
 msgid "Label"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:625
+#: qtplugins/propertytables/propertymodel.cpp:652
 msgid "Isotope"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:627
-#: qtplugins/propertytables/propertymodel.cpp:670
+#: qtplugins/propertytables/propertymodel.cpp:654
+#: qtplugins/propertytables/propertymodel.cpp:697
 msgid "Color"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:630
+#: qtplugins/propertytables/propertymodel.cpp:657
 msgid "Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:639
+#: qtplugins/propertytables/propertymodel.cpp:666
 msgid "Start Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:641
+#: qtplugins/propertytables/propertymodel.cpp:668
 msgid "End Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:643
+#: qtplugins/propertytables/propertymodel.cpp:670
 msgid "Bond Order"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:647
+#: qtplugins/propertytables/propertymodel.cpp:674
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:662
+#: qtplugins/propertytables/propertymodel.cpp:689
 msgid "Chain"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:664
+#: qtplugins/propertytables/propertymodel.cpp:691
 msgid "Secondary Structure"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:666
+#: qtplugins/propertytables/propertymodel.cpp:693
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:684
+#: qtplugins/propertytables/propertymodel.cpp:711
 msgid "Vertex"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:688
-#: qtplugins/propertytables/propertymodel.cpp:707
+#: qtplugins/propertytables/propertymodel.cpp:715
+#: qtplugins/propertytables/propertymodel.cpp:734
 msgid "Angle (°)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:718
+#: qtplugins/propertytables/propertymodel.cpp:745
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:721
+#: qtplugins/propertytables/propertymodel.cpp:748
 msgid "Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:967
+#: qtplugins/propertytables/propertymodel.cpp:1038
 msgid "Adjust Fragment"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1097
+#: qtplugins/propertytables/propertymodel.cpp:1195
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1099
+#: qtplugins/propertytables/propertymodel.cpp:1197
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1101
+#: qtplugins/propertytables/propertymodel.cpp:1199
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1103
+#: qtplugins/propertytables/propertymodel.cpp:1201
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1105
+#: qtplugins/propertytables/propertymodel.cpp:1203
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1107
+#: qtplugins/propertytables/propertymodel.cpp:1205
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1109
+#: qtplugins/propertytables/propertymodel.cpp:1207
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1111
+#: qtplugins/propertytables/propertymodel.cpp:1209
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -4842,63 +4941,75 @@ msgstr ""
 msgid "PropertyTables"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:45
+#: qtplugins/propertytables/propertyview.cpp:46
 msgid "Atom Properties"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:48
+#: qtplugins/propertytables/propertyview.cpp:49
 msgid "Bond Properties"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:51
+#: qtplugins/propertytables/propertyview.cpp:52
 msgid "Angle Properties"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:54
+#: qtplugins/propertytables/propertyview.cpp:55
 msgid "Torsion Properties"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:57
+#: qtplugins/propertytables/propertyview.cpp:58
 msgid "Conformer Properties"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:60
+#: qtplugins/propertytables/propertyview.cpp:61
 msgid "Residue Properties"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:540
+#: qtplugins/propertytables/propertyview.cpp:559
+msgid "Partial Charge Type"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:559
+msgid "Select the partial charge type:"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:580
+msgid "Change Charge Type…"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:544
+#: qtplugins/propertytables/propertyview.cpp:591
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:547
+#: qtplugins/propertytables/propertyview.cpp:594
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:550
+#: qtplugins/propertytables/propertyview.cpp:597
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:553
+#: qtplugins/propertytables/propertyview.cpp:600
 msgid "Unfreeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:561
+#: qtplugins/propertytables/propertyview.cpp:608
 msgid "Constrain Bond"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:563
+#: qtplugins/propertytables/propertyview.cpp:610
 msgid "Constrain Angle"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:565
+#: qtplugins/propertytables/propertyview.cpp:612
 msgid "Constrain Torsion"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:572
+#: qtplugins/propertytables/propertyview.cpp:619
 msgid "Remove Constraint"
 msgstr ""
 
@@ -5132,7 +5243,7 @@ msgid "Symmetrize"
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:83
-#: qtplugins/spacegroup/spacegroup.cpp:560
+#: qtplugins/spacegroup/spacegroup.cpp:562
 msgid "Reduce to Asymmetric Unit"
 msgstr ""
 
@@ -5224,7 +5335,7 @@ msgid ""
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:549
+#: qtplugins/spacegroup/spacegroup.cpp:551
 #, qt-format
 msgid ""
 "With a tolerance of %1  Å, the space group information was perceived to be "
@@ -5236,53 +5347,53 @@ msgid ""
 "Proceed with this space group?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:580 qtplugins/yaehmop/yaehmop.cpp:208
+#: qtplugins/spacegroup/spacegroup.cpp:582 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:581
+#: qtplugins/spacegroup/spacegroup.cpp:583
 msgid "Select tolerance in Å:"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:598
+#: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Triclinic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:600
+#: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Monoclinic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:602
+#: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Orthorhombic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:604
+#: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Tetragonal"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:606
+#: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Trigonal"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:608
+#: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Rhombohedral"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:610
+#: qtplugins/spacegroup/spacegroup.cpp:612
 msgid "Hexagonal"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:612
+#: qtplugins/spacegroup/spacegroup.cpp:614
 msgid "Cubic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:644
+#: qtplugins/spacegroup/spacegroup.cpp:646
 msgid "Primitive Cell Detected"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:646
+#: qtplugins/spacegroup/spacegroup.cpp:648
 #, qt-format
 msgid ""
 "The current unit cell appears to be a primitive cell (non-90° angles), but "
@@ -5293,27 +5404,27 @@ msgid ""
 "Would you like to create a conventional cell first?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:660
+#: qtplugins/spacegroup/spacegroup.cpp:662
 msgid "Failed to conventionalize the cell."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:676
+#: qtplugins/spacegroup/spacegroup.cpp:678
 msgid "International"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:676
+#: qtplugins/spacegroup/spacegroup.cpp:678
 msgid "Hall"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:676
+#: qtplugins/spacegroup/spacegroup.cpp:678
 msgid "Hermann-Mauguin"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:677
+#: qtplugins/spacegroup/spacegroup.cpp:679
 msgid "Crystal System"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:709
+#: qtplugins/spacegroup/spacegroup.cpp:711
 msgid "Select Space Group"
 msgstr ""
 
@@ -5719,16 +5830,16 @@ msgstr ""
 msgid "%1 %2"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:81
+#: qtplugins/templatetool/templatetool.cpp:82
 msgctxt "control-key 3"
 msgid "Ctrl+3"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:82
+#: qtplugins/templatetool/templatetool.cpp:83
 msgid "Template"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:84
+#: qtplugins/templatetool/templatetool.cpp:85
 #, qt-format
 msgid ""
 "Template Tool\t(%1)\n"
@@ -5741,16 +5852,16 @@ msgid ""
 "it."
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:406
-#: qtplugins/templatetool/templatetool.cpp:574
+#: qtplugins/templatetool/templatetool.cpp:418
+#: qtplugins/templatetool/templatetool.cpp:586
 msgid "Clipboard"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:494
+#: qtplugins/templatetool/templatetool.cpp:506
 msgid "Insert Template"
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:792
+#: qtplugins/templatetool/templatetool.cpp:804
 msgid "Insert Ligand"
 msgstr ""
 
@@ -8196,13 +8307,6 @@ msgstr ""
 msgid "Generation Temp:"
 msgstr ""
 
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:625
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, temperatureSpin)
-msgid " K"
-msgstr ""
-
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
 msgid "Integrator:"
@@ -8233,16 +8337,6 @@ msgstr ""
 msgid "VariableVerlet"
 msgstr ""
 
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
-#. i18n: ectx: property (text), widget (QLabel, label_timestep)
-msgid "Timestep:"
-msgstr ""
-
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
-msgid " fs"
-msgstr ""
-
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
 msgid "Error tolerance:"
@@ -8256,11 +8350,6 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:602
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, collisionRateSpin)
 msgid "/ps"
-msgstr ""
-
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
-#. i18n: ectx: property (text), widget (QLabel, label_temperature)
-msgid "Temperature:"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
