@@ -8,6 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtCore/QMultiHash>
 #include <QtCore/QMultiMap>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
@@ -78,6 +79,11 @@ public slots:
                        const QString& command, const QString& identifier,
                        const QVariantMap& metadata);
 
+  /**
+   * Handle a feature removed by PackageManager.
+   */
+  void unregisterFeature(const QString& type, const QString& identifier);
+
 private slots:
   void energy();
   void forces();
@@ -111,6 +117,7 @@ private:
   double m_gradientTolerance = 1.0e-4;
 
   QList<Calc::EnergyCalculator*> m_scripts;
+  QMultiHash<QString, QString> m_packageScripts;
 };
 
 } // namespace QtPlugins

@@ -26,6 +26,8 @@ ScriptCharges::ScriptCharges(QObject* p) : ExtensionPlugin(p)
   auto* pm = QtGui::PackageManager::instance();
   connect(pm, &QtGui::PackageManager::featureRegistered, this,
           &ScriptCharges::registerFeature);
+  connect(pm, &QtGui::PackageManager::featureRemoved, this,
+          &ScriptCharges::unregisterFeature);
 }
 
 ScriptCharges::~ScriptCharges() {}
@@ -47,6 +49,7 @@ void ScriptCharges::refreshModels()
   unregisterModels();
   qDeleteAll(m_models);
   m_models.clear();
+  m_packageModels.clear();
 
   QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("charges");
@@ -90,15 +93,37 @@ void ScriptCharges::registerFeature(const QString& type,
   model->setPackageInfo(packageDir, command, identifier);
   model->readMetaData(metadata);
   if (model->isValid()) {
+    QString managerId = QString::fromStdString(model->identifier());
     if (!Calc::ChargeManager::registerModel(model->newInstance())) {
       qDebug() << "Could not register charge model" << identifier
                << "due to name conflict.";
       delete model;
     } else {
       m_models.push_back(model);
+      m_packageModels.insert(identifier, managerId);
     }
   } else {
     delete model;
+  }
+}
+
+void ScriptCharges::unregisterFeature(const QString& type,
+                                      const QString& identifier)
+{
+  if (type != QLatin1String("electrostatic-models"))
+    return;
+
+  const QList<QString> managerIds = m_packageModels.values(identifier);
+  if (managerIds.isEmpty())
+    return;
+
+  m_packageModels.remove(identifier);
+  for (const QString& managerId : managerIds) {
+    Calc::ChargeManager::unregisterModel(managerId.toStdString());
+    for (int i = m_models.size() - 1; i >= 0; --i) {
+      if (QString::fromStdString(m_models[i]->identifier()) == managerId)
+        delete m_models.takeAt(i);
+    }
   }
 }
 

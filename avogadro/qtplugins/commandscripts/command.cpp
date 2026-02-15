@@ -48,6 +48,8 @@ Command::Command(QObject* parent_)
   auto* pm = QtGui::PackageManager::instance();
   connect(pm, &QtGui::PackageManager::featureRegistered, this,
           &Command::registerFeature);
+  connect(pm, &QtGui::PackageManager::featureRemoved, this,
+          &Command::unregisterFeature);
 }
 
 Command::~Command()
@@ -422,6 +424,38 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
 
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
+  m_packageActions.insert(identifier, action);
+}
+
+void Command::unregisterFeature(const QString& type, const QString& identifier)
+{
+  if (type != QLatin1String("menu-commands"))
+    return;
+
+  const QList<QAction*> actions = m_packageActions.values(identifier);
+  if (actions.isEmpty())
+    return;
+
+  m_packageActions.remove(identifier);
+
+  const QString key = QStringLiteral("pkg:") + identifier;
+  InterfaceWidget* widget = m_dialogs.take(key);
+  if (widget) {
+    if (widget == m_currentInterface) {
+      if (m_currentDialog) {
+        m_currentDialog->reject();
+        m_currentDialog->deleteLater();
+        m_currentDialog = nullptr;
+      }
+      m_currentInterface = nullptr;
+    }
+    delete widget;
+  }
+
+  for (QAction* action : actions) {
+    m_actions.removeAll(action);
+    action->deleteLater();
+  }
 }
 
 } // namespace Avogadro::QtPlugins

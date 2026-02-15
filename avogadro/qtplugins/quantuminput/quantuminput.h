@@ -9,6 +9,7 @@
 #include <avogadro/qtgui/extensionplugin.h>
 
 #include <QtCore/QMap>
+#include <QtCore/QMultiHash>
 #include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
 
@@ -73,6 +74,11 @@ public slots:
                        const QString& command, const QString& identifier,
                        const QVariantMap& metadata);
 
+  /**
+   * Handle a feature removed by PackageManager.
+   */
+  void unregisterFeature(const QString& type, const QString& identifier);
+
 private slots:
   void menuActivated();
 
@@ -89,6 +95,7 @@ private:
 
   // maps program name --> script file path
   QMultiMap<QString, QString> m_inputGeneratorScripts;
+  QMultiHash<QString, QAction*> m_packageActions;
 
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;

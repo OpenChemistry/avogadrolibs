@@ -24,6 +24,8 @@ ScriptFileFormats::ScriptFileFormats(QObject* p) : ExtensionPlugin(p)
   auto* pm = QtGui::PackageManager::instance();
   connect(pm, &QtGui::PackageManager::featureRegistered, this,
           &ScriptFileFormats::registerFeature);
+  connect(pm, &QtGui::PackageManager::featureRemoved, this,
+          &ScriptFileFormats::unregisterFeature);
 }
 
 ScriptFileFormats::~ScriptFileFormats() {}
@@ -45,6 +47,7 @@ void ScriptFileFormats::refreshFileFormats()
   unregisterFileFormats();
   qDeleteAll(m_formats);
   m_formats.clear();
+  m_packageFormats.clear();
 
   QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("formatScripts");
@@ -88,15 +91,37 @@ void ScriptFileFormats::registerFeature(const QString& type,
   format->setPackageInfo(packageDir, command, identifier);
   format->readMetaData(metadata);
   if (format->isValid()) {
+    QString managerId = QString::fromStdString(format->identifier());
     if (!Io::FileFormatManager::registerFormat(format->newInstance())) {
       qDebug() << "Could not register file format" << identifier
                << "due to name conflict.";
       delete format;
     } else {
       m_formats.push_back(format);
+      m_packageFormats.insert(identifier, managerId);
     }
   } else {
     delete format;
+  }
+}
+
+void ScriptFileFormats::unregisterFeature(const QString& type,
+                                          const QString& identifier)
+{
+  if (type != QLatin1String("file-formats"))
+    return;
+
+  const QList<QString> managerIds = m_packageFormats.values(identifier);
+  if (managerIds.isEmpty())
+    return;
+
+  m_packageFormats.remove(identifier);
+  for (const QString& managerId : managerIds) {
+    Io::FileFormatManager::unregisterFormat(managerId.toStdString());
+    for (int i = m_formats.size() - 1; i >= 0; --i) {
+      if (QString::fromStdString(m_formats[i]->identifier()) == managerId)
+        delete m_formats.takeAt(i);
+    }
   }
 }
 

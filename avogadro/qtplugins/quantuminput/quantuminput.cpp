@@ -49,6 +49,8 @@ QuantumInput::QuantumInput(QObject* parent_)
   auto* pm = QtGui::PackageManager::instance();
   connect(pm, &QtGui::PackageManager::featureRegistered, this,
           &QuantumInput::registerFeature);
+  connect(pm, &QtGui::PackageManager::featureRemoved, this,
+          &QuantumInput::unregisterFeature);
 }
 
 QuantumInput::~QuantumInput()
@@ -262,6 +264,32 @@ void QuantumInput::registerFeature(const QString& type,
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
+  m_packageActions.insert(identifier, action);
+}
+
+void QuantumInput::unregisterFeature(const QString& type,
+                                     const QString& identifier)
+{
+  if (type != QLatin1String("input-generators"))
+    return;
+
+  const QList<QAction*> actions = m_packageActions.values(identifier);
+  if (actions.isEmpty())
+    return;
+
+  m_packageActions.remove(identifier);
+
+  const QString key = QStringLiteral("pkg:") + identifier;
+  InputGeneratorDialog* dlg = m_dialogs.take(key);
+  if (dlg) {
+    dlg->close();
+    delete dlg;
+  }
+
+  for (QAction* action : actions) {
+    m_actions.removeAll(action);
+    action->deleteLater();
+  }
 }
 
 } // namespace Avogadro::QtPlugins
