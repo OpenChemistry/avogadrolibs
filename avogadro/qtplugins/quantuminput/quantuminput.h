@@ -9,7 +9,9 @@
 #include <avogadro/qtgui/extensionplugin.h>
 
 #include <QtCore/QMap>
+#include <QtCore/QMultiHash>
 #include <QtCore/QStringList>
+#include <QtCore/QVariantMap>
 
 class QAction;
 class QDialog;
@@ -65,6 +67,18 @@ public slots:
 
   bool readMolecule(QtGui::Molecule& mol) override;
 
+  /**
+   * Handle a feature registered by PackageManager.
+   */
+  void registerFeature(const QString& type, const QString& packageDir,
+                       const QString& command, const QString& identifier,
+                       const QVariantMap& metadata);
+
+  /**
+   * Handle a feature removed by PackageManager.
+   */
+  void unregisterFeature(const QString& type, const QString& identifier);
+
 private slots:
   void menuActivated();
 
@@ -76,11 +90,12 @@ private:
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
-  // keyed on script file path
+  // keyed on script file path or package identifier
   QMap<QString, MoleQueue::InputGeneratorDialog*> m_dialogs;
 
   // maps program name --> script file path
   QMultiMap<QString, QString> m_inputGeneratorScripts;
+  QMultiHash<QString, QAction*> m_packageActions;
 
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;

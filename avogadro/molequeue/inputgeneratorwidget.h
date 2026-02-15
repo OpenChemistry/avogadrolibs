@@ -67,8 +67,15 @@ public:
   void setInputGeneratorScript(const QString& scriptFilePath);
 
   /**
+   * Re-fetch options from the underlying script and rebuild the GUI.
+   * Call this after configuring the interpreter (e.g. for package mode).
+   */
+  void reloadOptions();
+
+  /**
    * Access to the underlying input generator object. @{
    */
+  InputGenerator& inputGenerator() { return m_inputGenerator; }
   const InputGenerator& inputGenerator() const { return m_inputGenerator; }
 
   /**

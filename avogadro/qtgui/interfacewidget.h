@@ -41,10 +41,13 @@ class AVOGADROQTGUI_EXPORT InterfaceWidget : public JsonWidget
 public:
   /**
    * Construct a widget that dynamically generates a GUI to configure the
-   * script specified by scriptFilePath.
+   * script specified by scriptFilePath. Pass an empty string to create
+   * without loading a script (configure via interfaceScript() then call
+   * reloadOptions()).
    */
   explicit InterfaceWidget(const QString& scriptFilePath,
                            QWidget* parent_ = nullptr);
+
   ~InterfaceWidget() override;
 
   /**
@@ -54,12 +57,20 @@ public:
   void setInterfaceScript(const QString& scriptFilePath);
 
   /**
-   * Access to the underlying input script object.
+   * Re-fetch options from the underlying script and rebuild the GUI.
+   * Call this after configuring the interpreter (e.g. for package mode).
    */
+  void reloadOptions();
+
+  /**
+   * Access to the underlying input script object. @{
+   */
+  QtGui::InterfaceScript& interfaceScript() { return m_interfaceScript; }
   const QtGui::InterfaceScript& interfaceScript() const
   {
     return m_interfaceScript;
   }
+  /** @} */
 
 private slots:
   /**

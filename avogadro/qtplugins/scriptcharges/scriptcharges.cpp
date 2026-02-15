@@ -10,6 +10,7 @@
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/calc/chargemodel.h>
 
+#include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
@@ -20,6 +21,13 @@ namespace Avogadro::QtPlugins {
 ScriptCharges::ScriptCharges(QObject* p) : ExtensionPlugin(p)
 {
   refreshModels();
+
+  // Connect to PackageManager for pyproject.toml-based packages
+  auto* pm = QtGui::PackageManager::instance();
+  connect(pm, &QtGui::PackageManager::featureRegistered, this,
+          &ScriptCharges::registerFeature);
+  connect(pm, &QtGui::PackageManager::featureRemoved, this,
+          &ScriptCharges::unregisterFeature);
 }
 
 ScriptCharges::~ScriptCharges() {}
@@ -41,6 +49,7 @@ void ScriptCharges::refreshModels()
   unregisterModels();
   qDeleteAll(m_models);
   m_models.clear();
+  m_packageModels.clear();
 
   QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("charges");
@@ -57,21 +66,63 @@ void ScriptCharges::refreshModels()
 
 void ScriptCharges::unregisterModels()
 {
-  for (QList<Calc::ChargeModel*>::const_iterator it = m_models.constBegin(),
-                                                 itEnd = m_models.constEnd();
-       it != itEnd; ++it) {
-    Calc::ChargeManager::unregisterModel((*it)->identifier());
-  }
+  for (auto* model : m_models)
+    Calc::ChargeManager::unregisterModel(model->identifier());
 }
 
 void ScriptCharges::registerModels()
 {
-  for (QList<Calc::ChargeModel*>::const_iterator it = m_models.constBegin(),
-                                                 itEnd = m_models.constEnd();
-       it != itEnd; ++it) {
-    if (!Calc::ChargeManager::registerModel((*it)->newInstance())) {
-      qDebug() << "Could not register model" << (*it)->identifier().c_str()
+  for (auto* model : m_models) {
+    if (!Calc::ChargeManager::registerModel(model->newInstance())) {
+      qDebug() << "Could not register model" << model->identifier().c_str()
                << "due to name conflict.";
+    }
+  }
+}
+
+void ScriptCharges::registerFeature(const QString& type,
+                                    const QString& packageDir,
+                                    const QString& command,
+                                    const QString& identifier,
+                                    const QVariantMap& metadata)
+{
+  if (type != QLatin1String("electrostatic-models"))
+    return;
+
+  auto* model = new ScriptChargeModel();
+  model->setPackageInfo(packageDir, command, identifier);
+  model->readMetaData(metadata);
+  if (model->isValid()) {
+    QString managerId = QString::fromStdString(model->identifier());
+    if (!Calc::ChargeManager::registerModel(model->newInstance())) {
+      qDebug() << "Could not register charge model" << identifier
+               << "due to name conflict.";
+      delete model;
+    } else {
+      m_models.push_back(model);
+      m_packageModels.insert(identifier, managerId);
+    }
+  } else {
+    delete model;
+  }
+}
+
+void ScriptCharges::unregisterFeature(const QString& type,
+                                      const QString& identifier)
+{
+  if (type != QLatin1String("electrostatic-models"))
+    return;
+
+  const QList<QString> managerIds = m_packageModels.values(identifier);
+  if (managerIds.isEmpty())
+    return;
+
+  m_packageModels.remove(identifier);
+  for (const QString& managerId : managerIds) {
+    Calc::ChargeManager::unregisterModel(managerId.toStdString());
+    for (int i = m_models.size() - 1; i >= 0; --i) {
+      if (QString::fromStdString(m_models[i]->identifier()) == managerId)
+        delete m_models.takeAt(i);
     }
   }
 }

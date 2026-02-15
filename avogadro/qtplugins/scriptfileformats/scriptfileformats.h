@@ -6,9 +6,11 @@
 #ifndef AVOGADRO_QTPLUGINS_SCRIPTFILEFORMATS_H
 #define AVOGADRO_QTPLUGINS_SCRIPTFILEFORMATS_H
 
+#include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
-#include <avogadro/core/avogadrocore.h>
+#include <QtCore/QMultiHash>
+#include <QtCore/QVariant>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -38,8 +40,21 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+  /**
+   * Handle a feature registered by PackageManager.
+   */
+  void registerFeature(const QString& type, const QString& packageDir,
+                       const QString& command, const QString& identifier,
+                       const QVariantMap& metadata);
+
+  /**
+   * Handle a feature removed by PackageManager.
+   */
+  void unregisterFeature(const QString& type, const QString& identifier);
+
 private:
   QList<Io::FileFormat*> m_formats;
+  QMultiHash<QString, QString> m_packageFormats;
 
   void refreshFileFormats();
   void unregisterFileFormats();

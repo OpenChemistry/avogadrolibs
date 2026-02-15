@@ -11,6 +11,8 @@
 #include <avogadro/qtgui/interfacescript.h>
 #include <avogadro/qtgui/interfacewidget.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/packagemanager.h>
+#include <avogadro/qtgui/pythonscript.h>
 #include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
@@ -41,6 +43,13 @@ Command::Command(QObject* parent_)
     m_outputFormat(nullptr)
 {
   refreshScripts();
+
+  // Connect to PackageManager for pyproject.toml-based packages
+  auto* pm = QtGui::PackageManager::instance();
+  connect(pm, &QtGui::PackageManager::featureRegistered, this,
+          &Command::registerFeature);
+  connect(pm, &QtGui::PackageManager::featureRemoved, this,
+          &Command::unregisterFeature);
 }
 
 Command::~Command()
@@ -56,10 +65,15 @@ QList<QAction*> Command::actions() const
 
 QStringList Command::menuPath(QAction* action) const
 {
+  // Package-based actions carry their menu path in a property
+  QVariant pkgMenuPath = action->property("packageMenuPath");
+  if (pkgMenuPath.isValid())
+    return pkgMenuPath.toStringList();
+
   QString scriptFileName = action->data().toString();
   QStringList path;
 
-  // if we're passed the "Set Python" action
+  // if we have an empty script name, default to Extensions > Scripts
   if (scriptFileName.isEmpty()) {
     path << tr("&Extensions") << tr("Scripts");
     return path;
@@ -160,7 +174,6 @@ void Command::menuActivated()
   if (!theSender)
     return;
 
-  QString scriptFileName = theSender->data().toString();
   QWidget* theParent = qobject_cast<QWidget*>(parent());
 
   if (m_currentDialog) {
@@ -169,24 +182,42 @@ void Command::menuActivated()
       m_currentInterface->hide();
   }
 
-  // check if there are any options before this song-and-dance
-  InterfaceWidget* widget = m_dialogs.value(scriptFileName, nullptr);
+  bool isPackage = theSender->property("packageMode").toBool();
+  QString key; // dialog cache key
+  InterfaceWidget* widget = nullptr;
 
-  if (!widget) {
-    widget = new InterfaceWidget(scriptFileName, theParent);
-    m_dialogs.insert(scriptFileName, widget);
+  if (isPackage) {
+    QString pkgDir = theSender->property("packageDir").toString();
+    QString pkgCmd = theSender->property("packageCommand").toString();
+    QString pkgId = theSender->property("packageIdentifier").toString();
+    key = QStringLiteral("pkg:") + pkgId;
+
+    widget = m_dialogs.value(key, nullptr);
+    if (!widget) {
+      widget = new InterfaceWidget(QString(), theParent);
+      widget->interfaceScript().interpreter().setPackageInfo(pkgDir, pkgCmd,
+                                                             pkgId);
+      widget->reloadOptions();
+      m_dialogs.insert(key, widget);
+    }
+  } else {
+    key = theSender->data().toString();
+    widget = m_dialogs.value(key, nullptr);
+    if (!widget) {
+      widget = new InterfaceWidget(key, theParent);
+      m_dialogs.insert(key, widget);
+    }
   }
+
   widget->setMolecule(m_molecule);
-  m_currentInterface = widget; // remember this when we get the run() signal
+  m_currentInterface = widget;
   if (widget->isEmpty()) {
     run(); // no options, do it immediately
     return;
   }
 
   m_currentDialog = new QDialog(theParent);
-  QString title;
-  QtGui::ScriptLoader::queryProgramName(scriptFileName, title);
-  m_currentDialog->setWindowTitle(title);
+  m_currentDialog->setWindowTitle(theSender->text());
 
   auto* vbox = new QVBoxLayout();
   widget->show();
@@ -217,16 +248,22 @@ void Command::run()
 
   if (m_currentInterface) {
     QJsonObject options = m_currentInterface->collectOptions();
+    const auto& iface = m_currentInterface->interfaceScript();
 
-    // @todo - need a cleaner way to get a script pointer from the widget
-    QString scriptFilePath =
-      m_currentInterface->interfaceScript().scriptFilePath();
-
-    m_currentScript = new InterfaceScript(scriptFilePath, parent());
+    // Create a new InterfaceScript with the same configuration
+    m_currentScript = new InterfaceScript(parent());
+    const auto& interp = iface.interpreter();
+    if (interp.isPackageMode()) {
+      m_currentScript->interpreter().setPackageInfo(interp.packageDir(),
+                                                    interp.packageCommand(),
+                                                    interp.packageIdentifier());
+    } else {
+      m_currentScript->setScriptFilePath(iface.scriptFilePath());
+    }
     connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
 
     // no cancel button - just an indication we're waiting...
-    QString title = tr("Processing %1").arg(m_currentScript->displayName());
+    QString title = tr("Processing %1").arg(iface.displayName());
     m_progress = new QProgressDialog(title, QString(), 0, 0,
                                      qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
@@ -339,6 +376,86 @@ void Command::addAction(const QString& label, const QString& scriptFilePath)
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
+}
+
+void Command::registerFeature(const QString& type, const QString& packageDir,
+                              const QString& command, const QString& identifier,
+                              const QVariantMap& metadata)
+{
+  if (type != QLatin1String("menu-commands"))
+    return;
+
+  // Extract label from metadata: path.entry.label
+  QVariantMap pathMap = metadata.value("path").toMap();
+  QVariantMap entryMap = pathMap.value("entry").toMap();
+  QString label = entryMap.value("label").toString();
+  if (label.isEmpty())
+    label = identifier;
+
+  // Build menu path from metadata: path.menu, path.submenu.menu, ...
+  QStringList menuPathList;
+  QString topMenu = pathMap.value("menu").toString();
+  if (!topMenu.isEmpty())
+    menuPathList << topMenu;
+
+  // Check for submenu
+  QString submenu = pathMap.value("submenu").toMap().value("menu").toString();
+  if (!submenu.isEmpty())
+    menuPathList << submenu;
+
+  // If no menu path specified, default to Extensions > Scripts
+  if (menuPathList.isEmpty())
+    menuPathList << tr("&Extensions") << tr("Scripts");
+
+  // Extract priority
+  int priority = entryMap.value("priority", 0).toInt();
+
+  // Create the action
+  auto* action = new QAction(label, this);
+  action->setProperty("packageMode", true);
+  action->setProperty("packageDir", packageDir);
+  action->setProperty("packageCommand", command);
+  action->setProperty("packageIdentifier", identifier);
+  action->setProperty("packageMenuPath", menuPathList);
+  action->setEnabled(true);
+
+  if (priority != 0)
+    action->setProperty("menu priority", priority);
+
+  connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
+  m_actions << action;
+  m_packageActions.insert(identifier, action);
+}
+
+void Command::unregisterFeature(const QString& type, const QString& identifier)
+{
+  if (type != QLatin1String("menu-commands"))
+    return;
+
+  const QList<QAction*> actions = m_packageActions.values(identifier);
+  if (actions.isEmpty())
+    return;
+
+  m_packageActions.remove(identifier);
+
+  const QString key = QStringLiteral("pkg:") + identifier;
+  InterfaceWidget* widget = m_dialogs.take(key);
+  if (widget) {
+    if (widget == m_currentInterface) {
+      if (m_currentDialog) {
+        m_currentDialog->reject();
+        m_currentDialog->deleteLater();
+        m_currentDialog = nullptr;
+      }
+      m_currentInterface = nullptr;
+    }
+    delete widget;
+  }
+
+  for (QAction* action : actions) {
+    m_actions.removeAll(action);
+    action->deleteLater();
+  }
 }
 
 } // namespace Avogadro::QtPlugins

@@ -29,6 +29,7 @@
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/utilities.h>
 
+#include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/scriptloader.h>
 
 #include <avogadro/calc/energymanager.h>
@@ -167,6 +168,13 @@ Forcefield::Forcefield(QObject* parent_)
 
   // prefer to use Python interface scripts if available
   refreshScripts();
+
+  // Connect to PackageManager for pyproject.toml-based packages
+  auto* pm = QtGui::PackageManager::instance();
+  connect(pm, &QtGui::PackageManager::featureRegistered, this,
+          &Forcefield::registerFeature);
+  connect(pm, &QtGui::PackageManager::featureRemoved, this,
+          &Forcefield::unregisterFeature);
 
   // add the openbabel calculators in case they don't exist
 #ifdef BUILD_GPL_PLUGINS
@@ -695,6 +703,7 @@ void Forcefield::refreshScripts()
   unregisterScripts();
   qDeleteAll(m_scripts);
   m_scripts.clear();
+  m_packageScripts.clear();
 
   QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("energy");
@@ -711,26 +720,64 @@ void Forcefield::refreshScripts()
 
 void Forcefield::unregisterScripts()
 {
-  for (QList<Calc::EnergyCalculator*>::const_iterator
-         it = m_scripts.constBegin(),
-         itEnd = m_scripts.constEnd();
-       it != itEnd; ++it) {
-    Calc::EnergyManager::unregisterModel((*it)->identifier());
-  }
+  for (auto* script : m_scripts)
+    Calc::EnergyManager::unregisterModel(script->identifier());
 }
 
 void Forcefield::registerScripts()
 {
-  for (QList<Calc::EnergyCalculator*>::const_iterator
-         it = m_scripts.constBegin(),
-         itEnd = m_scripts.constEnd();
-       it != itEnd; ++it) {
+  for (auto* script : m_scripts) {
+    qDebug() << " register " << script->identifier().c_str();
 
-    qDebug() << " register " << (*it)->identifier().c_str();
-
-    if (!Calc::EnergyManager::registerModel((*it)->newInstance())) {
-      qDebug() << "Could not register model" << (*it)->identifier().c_str()
+    if (!Calc::EnergyManager::registerModel(script->newInstance())) {
+      qDebug() << "Could not register model" << script->identifier().c_str()
                << "due to name conflict.";
+    }
+  }
+}
+
+void Forcefield::registerFeature(const QString& type, const QString& packageDir,
+                                 const QString& command,
+                                 const QString& identifier,
+                                 const QVariantMap& metadata)
+{
+  if (type != QLatin1String("energy-models"))
+    return;
+
+  auto* model = new ScriptEnergy();
+  model->setPackageInfo(packageDir, command, identifier);
+  model->readMetaData(metadata);
+  if (model->isValid()) {
+    QString managerId = QString::fromStdString(model->identifier());
+    if (!Calc::EnergyManager::registerModel(model->newInstance())) {
+      qDebug() << "Could not register energy model" << identifier
+               << "due to name conflict.";
+      delete model;
+    } else {
+      m_scripts.push_back(model);
+      m_packageScripts.insert(identifier, managerId);
+    }
+  } else {
+    delete model;
+  }
+}
+
+void Forcefield::unregisterFeature(const QString& type,
+                                   const QString& identifier)
+{
+  if (type != QLatin1String("energy-models"))
+    return;
+
+  const QList<QString> managerIds = m_packageScripts.values(identifier);
+  if (managerIds.isEmpty())
+    return;
+
+  m_packageScripts.remove(identifier);
+  for (const QString& managerId : managerIds) {
+    Calc::EnergyManager::unregisterModel(managerId.toStdString());
+    for (int i = m_scripts.size() - 1; i >= 0; --i) {
+      if (QString::fromStdString(m_scripts[i]->identifier()) == managerId)
+        delete m_scripts.takeAt(i);
     }
   }
 }

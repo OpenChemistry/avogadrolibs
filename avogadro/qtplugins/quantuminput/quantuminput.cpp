@@ -5,17 +5,19 @@
 
 #include "quantuminput.h"
 
+#include <avogadro/molequeue/client/jobobject.h>
 #include <avogadro/molequeue/inputgenerator.h>
 #include <avogadro/molequeue/inputgeneratordialog.h>
 #include <avogadro/molequeue/inputgeneratorwidget.h>
+
 #include <avogadro/qtgui/avogadropython.h>
 #include <avogadro/qtgui/filebrowsewidget.h>
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/packagemanager.h>
+#include <avogadro/qtgui/pythonscript.h>
 #include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
-
-#include <avogadro/molequeue/client/jobobject.h>
 
 #include <QAction>
 #include <QtWidgets/QDialog>
@@ -42,6 +44,13 @@ QuantumInput::QuantumInput(QObject* parent_)
   : ExtensionPlugin(parent_), m_molecule(nullptr), m_outputFormat(nullptr)
 {
   refreshGenerators();
+
+  // Connect to PackageManager for pyproject.toml-based packages
+  auto* pm = QtGui::PackageManager::instance();
+  connect(pm, &QtGui::PackageManager::featureRegistered, this,
+          &QuantumInput::registerFeature);
+  connect(pm, &QtGui::PackageManager::featureRemoved, this,
+          &QuantumInput::unregisterFeature);
 }
 
 QuantumInput::~QuantumInput()
@@ -60,6 +69,11 @@ QStringList QuantumInput::menuPath(QAction* action) const
   QStringList path;
   if (action == nullptr)
     return path;
+
+  // Package-based actions may carry a custom menu path
+  QVariant pkgMenuPath = action->property("packageMenuPath");
+  if (pkgMenuPath.isValid())
+    return pkgMenuPath.toStringList();
 
   path << tr("&Input");
   return path;
@@ -125,16 +139,41 @@ void QuantumInput::menuActivated()
   if (!theSender)
     return;
 
-  QString scriptFileName = theSender->data().toString();
   QWidget* theParent = qobject_cast<QWidget*>(parent());
-  InputGeneratorDialog* dlg = m_dialogs.value(scriptFileName, nullptr);
+  bool isPackage = theSender->property("packageMode").toBool();
+  QString key;
+  InputGeneratorDialog* dlg = nullptr;
 
-  if (!dlg) {
-    dlg = new InputGeneratorDialog(scriptFileName, theParent);
-    connect(&dlg->widget(), SIGNAL(openJobOutput(const MoleQueue::JobObject&)),
-            this, SLOT(openJobOutput(const MoleQueue::JobObject&)));
-    m_dialogs.insert(scriptFileName, dlg);
+  if (isPackage) {
+    QString pkgDir = theSender->property("packageDir").toString();
+    QString pkgCmd = theSender->property("packageCommand").toString();
+    QString pkgId = theSender->property("packageIdentifier").toString();
+    key = QStringLiteral("pkg:") + pkgId;
+
+    dlg = m_dialogs.value(key, nullptr);
+    if (!dlg) {
+      dlg = new InputGeneratorDialog(theParent);
+      dlg->widget().inputGenerator().interpreter().setPackageInfo(
+        pkgDir, pkgCmd, pkgId);
+      dlg->widget().reloadOptions();
+      dlg->setWindowTitle(tr("%1 Input Generator").arg(theSender->text()));
+      connect(&dlg->widget(),
+              SIGNAL(openJobOutput(const MoleQueue::JobObject&)), this,
+              SLOT(openJobOutput(const MoleQueue::JobObject&)));
+      m_dialogs.insert(key, dlg);
+    }
+  } else {
+    key = theSender->data().toString();
+    dlg = m_dialogs.value(key, nullptr);
+    if (!dlg) {
+      dlg = new InputGeneratorDialog(key, theParent);
+      connect(&dlg->widget(),
+              SIGNAL(openJobOutput(const MoleQueue::JobObject&)), this,
+              SLOT(openJobOutput(const MoleQueue::JobObject&)));
+      m_dialogs.insert(key, dlg);
+    }
   }
+
   dlg->setMolecule(m_molecule);
   dlg->show();
   dlg->raise();
@@ -151,18 +190,24 @@ void QuantumInput::updateActions()
 
   foreach (const QString& programName, m_inputGeneratorScripts.uniqueKeys()) {
     QStringList scripts = m_inputGeneratorScripts.values(programName);
-    // Include the full path if there are multiple generators with the same
-    // name.
+
     QString label = programName;
-    if (!label.endsWith("…") && !label.endsWith("..."))
+    // make sure it has the ellipsis for UI
+    if (label.endsWith("...")) {
+      label.chop(3);
+      label.append("…");
+    }
+    if (!label.endsWith("…"))
       label.append("…");
 
     if (scripts.size() == 1) {
       addAction(label, scripts.first());
     } else {
       foreach (const QString& filePath, scripts) {
-        addAction(QString("%1 (%2)").arg(label, filePath), filePath);
+        qWarning() << "Multiple generators for" << programName << filePath;
       }
+      qWarning() << "Using generator: " << scripts.first();
+      addAction(label, scripts.first());
     }
   }
 }
@@ -191,4 +236,60 @@ bool QuantumInput::queryProgramName(const QString& scriptFilePath,
   }
   return true;
 }
+
+void QuantumInput::registerFeature(const QString& type,
+                                   const QString& packageDir,
+                                   const QString& command,
+                                   const QString& identifier,
+                                   const QVariantMap& metadata)
+{
+  if (type != QLatin1String("input-generators"))
+    return;
+
+  // Extract label from metadata
+  QString label = metadata.value("program-name").toString();
+  if (label.isEmpty())
+    label = identifier;
+  if (!label.endsWith("…") && !label.endsWith("..."))
+    label.append("…");
+
+  // Create the action
+  auto* action = new QAction(label, this);
+  action->setProperty("packageMode", true);
+  action->setProperty("packageDir", packageDir);
+  action->setProperty("packageCommand", command);
+  action->setProperty("packageIdentifier", identifier);
+  // Default to &Input menu path
+  action->setProperty("packageMenuPath", QStringList() << tr("&Input"));
+  action->setEnabled(true);
+  connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
+  m_actions << action;
+  m_packageActions.insert(identifier, action);
+}
+
+void QuantumInput::unregisterFeature(const QString& type,
+                                     const QString& identifier)
+{
+  if (type != QLatin1String("input-generators"))
+    return;
+
+  const QList<QAction*> actions = m_packageActions.values(identifier);
+  if (actions.isEmpty())
+    return;
+
+  m_packageActions.remove(identifier);
+
+  const QString key = QStringLiteral("pkg:") + identifier;
+  InputGeneratorDialog* dlg = m_dialogs.take(key);
+  if (dlg) {
+    dlg->close();
+    delete dlg;
+  }
+
+  for (QAction* action : actions) {
+    m_actions.removeAll(action);
+    action->deleteLater();
+  }
+}
+
 } // namespace Avogadro::QtPlugins

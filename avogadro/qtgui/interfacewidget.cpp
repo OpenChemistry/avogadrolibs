@@ -33,7 +33,8 @@ InterfaceWidget::InterfaceWidget(const QString& scriptFilePath,
                                  QWidget* parent_)
   : JsonWidget(parent_), m_interfaceScript(QString())
 {
-  this->setInterfaceScript(scriptFilePath);
+  if (!scriptFilePath.isEmpty())
+    this->setInterfaceScript(scriptFilePath);
 }
 
 InterfaceWidget::~InterfaceWidget() {}
@@ -41,6 +42,12 @@ InterfaceWidget::~InterfaceWidget() {}
 void InterfaceWidget::setInterfaceScript(const QString& scriptFile)
 {
   m_interfaceScript.setScriptFilePath(scriptFile);
+  m_options = m_interfaceScript.options();
+  updateOptions();
+}
+
+void InterfaceWidget::reloadOptions()
+{
   m_options = m_interfaceScript.options();
   updateOptions();
 }

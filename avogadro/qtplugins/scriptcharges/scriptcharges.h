@@ -9,6 +9,9 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtCore/QMultiHash>
+#include <QtCore/QVariant>
+
 namespace Avogadro {
 
 namespace Calc {
@@ -42,8 +45,22 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+public slots:
+  /**
+   * Handle a feature registered by PackageManager.
+   */
+  void registerFeature(const QString& type, const QString& packageDir,
+                       const QString& command, const QString& identifier,
+                       const QVariantMap& metadata);
+
+  /**
+   * Handle a feature removed by PackageManager.
+   */
+  void unregisterFeature(const QString& type, const QString& identifier);
+
 private:
   QList<Calc::ChargeModel*> m_models;
+  QMultiHash<QString, QString> m_packageModels;
 
   void refreshModels();
   void unregisterModels();
