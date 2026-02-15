@@ -37,7 +37,8 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://openbabel.org/wiki/XYZ";
+    return "https://en.wikipedia.org/wiki/XYZ_file_format";
+    // "http://openbabel.org/wiki/XYZ";
   }
 
   std::vector<std::string> fileExtensions() const override;

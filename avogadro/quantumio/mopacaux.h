@@ -35,7 +35,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://openmopac.net/manual/auxiliary.html";
+    return "https://openmopac.net/Manual/auxiliary.html";
   }
 
   std::vector<std::string> fileExtensions() const override;
