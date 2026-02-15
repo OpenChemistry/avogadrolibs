@@ -7,6 +7,7 @@
 
 #include <avogadro/qtgui/packagemanager.h>
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QSettings>
@@ -17,11 +18,23 @@
 
 using Avogadro::QtGui::PackageManager;
 
+namespace {
+void ensureSettingsContext()
+{
+  if (QCoreApplication::organizationName().isEmpty())
+    QCoreApplication::setOrganizationName(QStringLiteral("OpenChemistry"));
+  if (QCoreApplication::applicationName().isEmpty())
+    QCoreApplication::setApplicationName(QStringLiteral("AvogadroLibsTests"));
+}
+} // namespace
+
 class PackageManagerTest : public testing::Test
 {
 protected:
   void SetUp() override
   {
+    ensureSettingsContext();
+
     // Write a minimal pyproject.toml into a temp directory
     m_tmpDir.reset(new QTemporaryDir);
     ASSERT_TRUE(m_tmpDir->isValid());
@@ -37,6 +50,7 @@ protected:
     settings.beginGroup("packages");
     settings.remove("test-plugin");
     settings.endGroup();
+    settings.sync();
   }
 
   void TearDown() override
@@ -46,6 +60,7 @@ protected:
     settings.beginGroup("packages");
     settings.remove("test-plugin");
     settings.endGroup();
+    settings.sync();
   }
 
   static QByteArray sampleToml()
@@ -311,6 +326,8 @@ TEST_F(PackageManagerTest, unregisterNonexistentFails)
 // keeping the required [project] and [project.scripts] boilerplate.
 static QString writeToml(QTemporaryDir& dir, const QByteArray& avogadroBlock)
 {
+  ensureSettingsContext();
+
   QByteArray toml = R"(
 [project]
 name = "parse-test"
@@ -576,6 +593,8 @@ program-name = "G1"
 
 TEST(TomlParsing, missingProjectTableFails)
 {
+  ensureSettingsContext();
+
   QTemporaryDir dir;
   ASSERT_TRUE(dir.isValid());
 
@@ -593,6 +612,8 @@ minimum-avogadro-version = "1.103"
 
 TEST(TomlParsing, missingScriptsEntryFails)
 {
+  ensureSettingsContext();
+
   QTemporaryDir dir;
   ASSERT_TRUE(dir.isValid());
 
@@ -617,6 +638,8 @@ minimum-avogadro-version = "1.103"
 
 TEST(TomlParsing, missingToolAvogadroFails)
 {
+  ensureSettingsContext();
+
   QTemporaryDir dir;
   ASSERT_TRUE(dir.isValid());
 
@@ -663,6 +686,8 @@ input-format = "cjson"
 
 TEST(TomlParsing, invalidTomlSyntaxFails)
 {
+  ensureSettingsContext();
+
   QTemporaryDir dir;
   ASSERT_TRUE(dir.isValid());
 

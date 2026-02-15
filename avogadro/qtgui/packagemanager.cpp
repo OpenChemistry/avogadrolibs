@@ -418,6 +418,7 @@ void PackageManager::saveToCache(const PackageInfo& info,
 
   settings.setValue(prefix + "features",
                     QJsonDocument(arr).toJson(QJsonDocument::Compact));
+  settings.sync();
 }
 
 void PackageManager::removeFromCache(const QString& packageName)
@@ -426,6 +427,7 @@ void PackageManager::removeFromCache(const QString& packageName)
   settings.beginGroup(QStringLiteral("packages"));
   settings.remove(packageName);
   settings.endGroup();
+  settings.sync();
 }
 
 bool PackageManager::loadFromCache(const QString& packageName,
