@@ -124,7 +124,8 @@ public:
    * Will send asyncFinished() signal when finished
    */
   void asyncExecute(const QStringList& args,
-                    const QByteArray& scriptStdin = QByteArray());
+                    const QByteArray& scriptStdin = QByteArray(),
+                    bool mergedChannels = true);
 
   /**
    * Write input to the asynchronous process' standard input and return the
@@ -135,6 +136,14 @@ public:
    * @return The standard output of the process
    */
   QByteArray asyncWriteAndResponse(QByteArray input);
+
+  /**
+   * Write input to the asynchronous process' standard input and return raw
+   * bytes from stdout. Unlike asyncWriteAndResponse(), this does not require
+   * line-oriented output and is suitable for framed binary protocols.
+   */
+  QByteArray asyncWriteAndResponseRaw(const QByteArray& input,
+                                      int timeoutMs = 5000);
 
   /**
    * Terminate the asynchronous process.

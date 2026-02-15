@@ -631,15 +631,8 @@ public slots:
    */
   void commandFinished();
 
-private:
-  QtGui::PythonScript* m_interpreter;
-
-  void setDefaultPythonInterpreter();
-  QByteArray execute(const QStringList& args,
-                     const QByteArray& scriptStdin = QByteArray()) const;
+protected:
   bool parseJson(const QByteArray& json, QJsonDocument& doc) const;
-  QString processErrorString(const QProcess& proc) const;
-  bool insertMolecule(QJsonObject& json, const Core::Molecule& mol) const;
   QString generateCoordinateBlock(const QString& spec,
                                   const Core::Molecule& mol) const;
   void replaceKeywords(QString& str, const Core::Molecule& mol) const;
@@ -648,6 +641,15 @@ private:
                   QtGui::GenericHighlighter& highligher) const;
   bool parseFormat(const QJsonObject& json, QTextCharFormat& format) const;
   bool parsePattern(const QJsonValue& json, QRegularExpression& pattern) const;
+
+private:
+  QtGui::PythonScript* m_interpreter;
+
+  void setDefaultPythonInterpreter();
+  QByteArray execute(const QStringList& args,
+                     const QByteArray& scriptStdin = QByteArray()) const;
+  QString processErrorString(const QProcess& proc) const;
+  bool insertMolecule(QJsonObject& json, const Core::Molecule& mol) const;
 
   // File extension of requested molecule format
   mutable QString m_moleculeExtension;

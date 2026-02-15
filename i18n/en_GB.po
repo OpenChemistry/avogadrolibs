@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-31 02:11+0000\n"
-"PO-Revision-Date: 2026-01-27 03:19+0000\n"
+"PO-Revision-Date: 2026-02-14 09:09+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -1285,7 +1285,7 @@ msgstr "Van der Waals (AO)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "Volumes"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -5320,7 +5320,7 @@ msgstr "Fill Unit Cell…"
 #: qtplugins/spacegroup/spacegroup.cpp:101
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
-msgstr ""
+msgstr "Fill Translation Cell…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
@@ -5332,7 +5332,7 @@ msgstr "Fill symmetric atoms based on the crystal space group."
 
 #: qtplugins/spacegroup/spacegroup.cpp:135
 msgid "Fill all atoms based on the crystal space group."
-msgstr ""
+msgstr "Fill all atoms based on the crystal space group."
 
 #: qtplugins/spacegroup/spacegroup.cpp:384
 #: qtplugins/spacegroup/spacegroup.cpp:412
@@ -5357,6 +5357,11 @@ msgid ""
 "Hall symbol: %3\n"
 "International symbol: %4"
 msgstr ""
+"Space group perception succeeded:\n"
+"Tolerance: %1  Å\n"
+"Space Group: %2\n"
+"Hall symbol: %3\n"
+"International symbol: %4"
 
 #: qtplugins/spacegroup/spacegroup.cpp:418
 msgid "Failure"
@@ -5420,6 +5425,13 @@ msgid ""
 "\n"
 "Proceed with this space group?"
 msgstr ""
+"With a tolerance of %1  Å, the space group information was perceived to be "
+"the following:\n"
+"International number: %2\n"
+"Hall symbol: %3\n"
+"International symbol: %4\n"
+"\n"
+"Proceed with this space group?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:580 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
@@ -5433,39 +5445,39 @@ msgstr "Select tolerance in Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:598
 msgid "Triclinic"
-msgstr ""
+msgstr "Triclinic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Monoclinic"
-msgstr ""
+msgstr "Monoclinic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Orthorhombic"
-msgstr ""
+msgstr "Orthorhombic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Tetragonal"
-msgstr ""
+msgstr "Tetragonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Trigonal"
-msgstr ""
+msgstr "Trigonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Rhombohedral"
-msgstr ""
+msgstr "Rhombohedral"
 
 #: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Hexagonal"
-msgstr ""
+msgstr "Hexagonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:612
 msgid "Cubic"
-msgstr ""
+msgstr "Cubic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:644
 msgid "Primitive Cell Detected"
-msgstr ""
+msgstr "Primitive Cell Detected"
 
 #: qtplugins/spacegroup/spacegroup.cpp:646
 #, qt-format
@@ -5477,10 +5489,16 @@ msgid ""
 "\n"
 "Would you like to create a conventional cell first?"
 msgstr ""
+"The current unit cell appears to be a primitive cell (non-90° angles), but "
+"the space group %1 expects a centred conventional cell.\n"
+"\n"
+"Filling the unit cell may create unexpected duplicate atoms.\n"
+"\n"
+"Would you like to create a conventional cell first?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:660
 msgid "Failed to conventionalize the cell."
-msgstr ""
+msgstr "Failed to conventionalise the cell."
 
 #: qtplugins/spacegroup/spacegroup.cpp:676
 msgid "International"
@@ -5496,7 +5514,7 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:677
 msgid "Crystal System"
-msgstr ""
+msgstr "Crystal System"
 
 #: qtplugins/spacegroup/spacegroup.cpp:709
 msgid "Select Space Group"

@@ -38,7 +38,8 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://www.gromacs.org/Documentation/File_Formats/.gro_File";
+    return "https://manual.gromacs.org/current/reference-manual/"
+           "file-formats.html#gro";
   }
 
   std::vector<std::string> fileExtensions() const override;

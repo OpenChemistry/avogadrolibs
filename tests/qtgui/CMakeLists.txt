@@ -75,7 +75,7 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
-  set(qtgui_fuzz rwmolecule)
+  set(qtgui_fuzz rwmolecule generichighlighter jsonwidget interfacescript-json)
   foreach(fuzzName ${qtgui_fuzz})
     add_executable(fuzz_qtgui_${fuzzName} fuzz-${fuzzName}.cpp)
     if(DEFINED ENV{LIB_FUZZING_ENGINE})

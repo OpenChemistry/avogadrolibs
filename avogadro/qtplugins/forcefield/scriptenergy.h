@@ -46,6 +46,14 @@ public:
     Xyz
   };
 
+  /** Protocol for coordinate/energy/gradient transport. */
+  enum class Protocol
+  {
+    TextV1,
+    // "binary-v1" uses little-endian float64 values on the wire.
+    BinaryV1
+  };
+
   ScriptEnergy(const QString& scriptFileName = "");
   ~ScriptEnergy() override;
 
@@ -88,6 +96,7 @@ public:
 
 private:
   static Format stringToFormat(const std::string& str);
+  static Protocol stringToProtocol(const std::string& str);
   static Io::FileFormat* createFileFormat(Format fmt);
   void resetMetaData();
   void readMetaData();
@@ -95,10 +104,20 @@ private:
   void processElementString(const QString& str);
   bool parseElements(const QJsonObject& ob);
   void copyMetaDataFrom(const ScriptEnergy& other);
+  
+  QByteArray writeCoordinatesText(const Eigen::VectorXd& x);
+  QByteArray writeCoordinatesBinary(const Eigen::VectorXd& x,
+                                    bool requestGradient) const;
+  bool parseResponseBinary(const QByteArray& response, bool requestGradient,
+                           double& energy, Eigen::VectorXd& grad) const;
+  bool readBinaryFrame(const QByteArray& input, QByteArray& frame);
+  bool evaluateBinary(const Eigen::VectorXd& x, bool requestGradient,
+                      double& energy, Eigen::VectorXd& grad);
 
 private:
   QtGui::PythonScript* m_interpreter;
   Format m_inputFormat;
+  Protocol m_protocol;
   Core::Molecule* m_molecule;
 
   // what's supported by this script

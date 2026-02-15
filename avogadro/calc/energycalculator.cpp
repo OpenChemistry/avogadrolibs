@@ -40,6 +40,14 @@ void EnergyCalculator::cleanGradients(TVector& grad)
               << std::endl;
 }
 
+void EnergyCalculator::appendError(const std::string& errorString,
+                                   bool newLine) const
+{
+  m_error += errorString;
+  if (newLine)
+    m_error += "\n";
+}
+
 void EnergyCalculator::setConstraints(
   const std::vector<Core::Constraint>& constraints)
 {

@@ -23,7 +23,12 @@ endif()
 
 set(CMAKE_MODULE_LINKER_FLAGS "")
 # Core
-pybind11_add_module(avogadrocorepython core.cpp)
+pybind11_add_module(avogadrocorepython
+  core.cpp
+  basisset.cpp
+  cube.cpp
+  molecule.cpp
+)
 set_target_properties(avogadrocorepython
   PROPERTIES
     OUTPUT_NAME core)
