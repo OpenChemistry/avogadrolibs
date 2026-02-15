@@ -6,9 +6,10 @@
 #ifndef AVOGADRO_QTPLUGINS_SCRIPTFILEFORMATS_H
 #define AVOGADRO_QTPLUGINS_SCRIPTFILEFORMATS_H
 
+#include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
-#include <avogadro/core/avogadrocore.h>
+#include <QtCore/QVariant>
 
 namespace Avogadro {
 namespace QtPlugins {

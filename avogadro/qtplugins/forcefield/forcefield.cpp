@@ -15,7 +15,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
-#include <QtCore/QVariant>
 
 #include <QAction>
 #include <QtWidgets/QMessageBox>

@@ -10,6 +10,7 @@
 
 #include <QtCore/QMultiMap>
 #include <QtCore/QStringList>
+#include <QtCore/QVariant>
 
 class QAction;
 class QDialog;

@@ -9,6 +9,8 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtCore/QVariant>
+
 namespace Avogadro {
 
 namespace Calc {

@@ -13,7 +13,6 @@
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QDebug>
-#include <QtCore/QVariant>
 
 namespace Avogadro::QtPlugins {
 
