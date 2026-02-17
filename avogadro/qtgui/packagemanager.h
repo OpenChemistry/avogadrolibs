@@ -77,10 +77,12 @@ public:
   /**
    * Scan @p directoryPath for subdirectories that contain a pyproject.toml.
    * Each discovered package is compared against the cached hash of its
-   * pyproject.toml; new or modified packages are (re-)registered automatically.
-   * @return the number of packages that were newly registered or updated.
+   * pyproject.toml; new or modified packages are returned as a list of
+   * absolute directory paths. The caller is responsible for calling
+   * registerPackage() on any directories it wants to install.
+   * @return list of package directories that are new or have been modified.
    */
-  int scanDirectory(const QString& directoryPath);
+  QStringList scanDirectory(const QString& directoryPath);
 
   // --- Queries ---
 

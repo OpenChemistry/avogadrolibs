@@ -160,16 +160,17 @@ bool PackageManager::unregisterPackage(const QString& packageName)
 // Directory scanning
 // ---------------------------------------------------------------------------
 
-int PackageManager::scanDirectory(const QString& directoryPath)
+QStringList PackageManager::scanDirectory(const QString& directoryPath)
 {
+  QStringList result;
+
   QDir dir(directoryPath);
   if (!dir.exists()) {
     qWarning() << "PackageManager::scanDirectory: directory does not exist:"
                << directoryPath;
-    return 0;
+    return result;
   }
 
-  int count = 0;
   const QStringList subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
   for (const QString& subdir : subdirs) {
@@ -208,12 +209,11 @@ int PackageManager::scanDirectory(const QString& directoryPath)
     }
 
     if (needsRegistration) {
-      if (registerPackage(packageDir))
-        ++count;
+      result.append(packageDir);
     }
   }
 
-  return count;
+  return result;
 }
 
 // ---------------------------------------------------------------------------
