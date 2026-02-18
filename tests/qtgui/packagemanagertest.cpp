@@ -289,6 +289,14 @@ TEST_F(PackageManagerTest, unregisterPackage)
 
   // Should have emitted featureRemoved for all 6 features
   EXPECT_EQ(removedSpy.count(), 6);
+  for (int i = 0; i < removedSpy.count(); ++i) {
+    const QList<QVariant> args = removedSpy.at(i);
+    ASSERT_EQ(args.size(), 4);
+    EXPECT_FALSE(args.at(0).toString().isEmpty()); // type
+    EXPECT_EQ(args.at(1).toString(), QDir(m_packageDir).absolutePath());
+    EXPECT_EQ(args.at(2).toString(), "avogadro-test-plugin");
+    EXPECT_FALSE(args.at(3).toString().isEmpty()); // identifier
+  }
 
   // Package should no longer be in the list
   EXPECT_FALSE(pm->registeredPackages().contains("test-plugin"));

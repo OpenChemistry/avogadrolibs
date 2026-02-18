@@ -77,7 +77,8 @@ public slots:
   /**
    * Handle a feature removed by PackageManager.
    */
-  void unregisterFeature(const QString& type, const QString& identifier);
+  void unregisterFeature(const QString& type, const QString& packageDir,
+                         const QString& command, const QString& identifier);
 
 private slots:
   void menuActivated();
@@ -90,7 +91,7 @@ private:
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
-  // keyed on script file path or package identifier
+  // keyed on script file path or package feature key
   QMap<QString, MoleQueue::InputGeneratorDialog*> m_dialogs;
 
   // maps program name --> script file path

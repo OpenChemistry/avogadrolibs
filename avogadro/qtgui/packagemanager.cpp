@@ -40,6 +40,14 @@ QStringList PackageManager::featureTypes()
            QStringLiteral("input-generators") };
 }
 
+QString PackageManager::packageFeatureKey(const QString& packageDir,
+                                          const QString& command,
+                                          const QString& identifier)
+{
+  return packageDir + QLatin1Char('\n') + command + QLatin1Char('\n') +
+         identifier;
+}
+
 // ---------------------------------------------------------------------------
 // TOML → QVariant helpers
 // ---------------------------------------------------------------------------
@@ -160,7 +168,6 @@ void PackageManager::installPackages(const QStringList& packageDirs)
           [this, packageDirs, installThread]() {
             for (const QString& packageDir : packageDirs)
               registerPackage(packageDir);
-            loadRegisteredPackages();
             emit packagesInstalled();
             installThread->deleteLater();
           });
@@ -199,7 +206,7 @@ bool PackageManager::unregisterPackage(const QString& packageName)
 
   // Notify consumers so they can clean up
   for (const auto& f : features)
-    emit featureRemoved(f.type, f.identifier);
+    emit featureRemoved(f.type, info.directory, info.command, f.identifier);
 
   removeFromCache(packageName);
   return true;

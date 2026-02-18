@@ -148,7 +148,7 @@ void QuantumInput::menuActivated()
     QString pkgDir = theSender->property("packageDir").toString();
     QString pkgCmd = theSender->property("packageCommand").toString();
     QString pkgId = theSender->property("packageIdentifier").toString();
-    key = QStringLiteral("pkg:") + pkgId;
+    key = QtGui::PackageManager::packageFeatureKey(pkgDir, pkgCmd, pkgId);
 
     dlg = m_dialogs.value(key, nullptr);
     if (!dlg) {
@@ -264,23 +264,28 @@ void QuantumInput::registerFeature(const QString& type,
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
-  m_packageActions.insert(identifier, action);
+  m_packageActions.insert(
+    QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier),
+    action);
 }
 
 void QuantumInput::unregisterFeature(const QString& type,
+                                     const QString& packageDir,
+                                     const QString& command,
                                      const QString& identifier)
 {
   if (type != QLatin1String("input-generators"))
     return;
 
-  const QList<QAction*> actions = m_packageActions.values(identifier);
+  const QString featureKey =
+    QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier);
+  const QList<QAction*> actions = m_packageActions.values(featureKey);
   if (actions.isEmpty())
     return;
 
-  m_packageActions.remove(identifier);
+  m_packageActions.remove(featureKey);
 
-  const QString key = QStringLiteral("pkg:") + identifier;
-  InputGeneratorDialog* dlg = m_dialogs.take(key);
+  InputGeneratorDialog* dlg = m_dialogs.take(featureKey);
   if (dlg) {
     dlg->close();
     delete dlg;

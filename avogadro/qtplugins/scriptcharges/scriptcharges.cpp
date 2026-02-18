@@ -100,7 +100,9 @@ void ScriptCharges::registerFeature(const QString& type,
       delete model;
     } else {
       m_models.push_back(model);
-      m_packageModels.insert(identifier, managerId);
+      m_packageModels.insert(QtGui::PackageManager::packageFeatureKey(
+                               packageDir, command, identifier),
+                             managerId);
     }
   } else {
     delete model;
@@ -108,16 +110,20 @@ void ScriptCharges::registerFeature(const QString& type,
 }
 
 void ScriptCharges::unregisterFeature(const QString& type,
+                                      const QString& packageDir,
+                                      const QString& command,
                                       const QString& identifier)
 {
   if (type != QLatin1String("electrostatic-models"))
     return;
 
-  const QList<QString> managerIds = m_packageModels.values(identifier);
+  const QString featureKey =
+    QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier);
+  const QList<QString> managerIds = m_packageModels.values(featureKey);
   if (managerIds.isEmpty())
     return;
 
-  m_packageModels.remove(identifier);
+  m_packageModels.remove(featureKey);
   for (const QString& managerId : managerIds) {
     Calc::ChargeManager::unregisterModel(managerId.toStdString());
     for (int i = m_models.size() - 1; i >= 0; --i) {

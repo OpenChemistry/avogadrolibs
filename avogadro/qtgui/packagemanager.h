@@ -48,11 +48,20 @@ public:
   /** Known feature-type strings (TOML table names under [tool.avogadro]). */
   static QStringList featureTypes();
 
+  /**
+   * Build a stable key for one package-provided feature.
+   * Consumers can use this as a map key to track registrations and removals.
+   * Components must not be empty.
+   */
+  static QString packageFeatureKey(const QString& packageDir,
+                                   const QString& command,
+                                   const QString& identifier);
+
   // --- Installation ---
 
   /**
    * Asynchronously run pixi (preferred) or pip install in each directory,
-   * then call registerPackage() for each and loadRegisteredPackages().
+   * then call registerPackage() for each.
    * Emits packagesInstalled() when the background thread finishes.
    * Safe to call from the main thread.
    */
@@ -122,8 +131,14 @@ signals:
 
   /**
    * Emitted when a feature is removed (so consumers can clean up).
+   *
+   * @param type       One of the featureTypes() strings.
+   * @param packageDir Absolute path to the package directory.
+   * @param command    Entry-point name from [project.scripts].
+   * @param identifier The feature's unique identifier.
    */
-  void featureRemoved(const QString& type, const QString& identifier);
+  void featureRemoved(const QString& type, const QString& packageDir,
+                      const QString& command, const QString& identifier);
 
 private:
   explicit PackageManager(QObject* parent = nullptr);

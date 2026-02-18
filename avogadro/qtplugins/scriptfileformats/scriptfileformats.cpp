@@ -98,7 +98,9 @@ void ScriptFileFormats::registerFeature(const QString& type,
       delete format;
     } else {
       m_formats.push_back(format);
-      m_packageFormats.insert(identifier, managerId);
+      m_packageFormats.insert(QtGui::PackageManager::packageFeatureKey(
+                                packageDir, command, identifier),
+                              managerId);
     }
   } else {
     delete format;
@@ -106,16 +108,20 @@ void ScriptFileFormats::registerFeature(const QString& type,
 }
 
 void ScriptFileFormats::unregisterFeature(const QString& type,
+                                          const QString& packageDir,
+                                          const QString& command,
                                           const QString& identifier)
 {
   if (type != QLatin1String("file-formats"))
     return;
 
-  const QList<QString> managerIds = m_packageFormats.values(identifier);
+  const QString featureKey =
+    QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier);
+  const QList<QString> managerIds = m_packageFormats.values(featureKey);
   if (managerIds.isEmpty())
     return;
 
-  m_packageFormats.remove(identifier);
+  m_packageFormats.remove(featureKey);
   for (const QString& managerId : managerIds) {
     Io::FileFormatManager::unregisterFormat(managerId.toStdString());
     for (int i = m_formats.size() - 1; i >= 0; --i) {

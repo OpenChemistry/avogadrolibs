@@ -755,7 +755,9 @@ void Forcefield::registerFeature(const QString& type, const QString& packageDir,
       delete model;
     } else {
       m_scripts.push_back(model);
-      m_packageScripts.insert(identifier, managerId);
+      m_packageScripts.insert(QtGui::PackageManager::packageFeatureKey(
+                                packageDir, command, identifier),
+                              managerId);
     }
   } else {
     delete model;
@@ -763,16 +765,20 @@ void Forcefield::registerFeature(const QString& type, const QString& packageDir,
 }
 
 void Forcefield::unregisterFeature(const QString& type,
+                                   const QString& packageDir,
+                                   const QString& command,
                                    const QString& identifier)
 {
   if (type != QLatin1String("energy-models"))
     return;
 
-  const QList<QString> managerIds = m_packageScripts.values(identifier);
+  const QString featureKey =
+    QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier);
+  const QList<QString> managerIds = m_packageScripts.values(featureKey);
   if (managerIds.isEmpty())
     return;
 
-  m_packageScripts.remove(identifier);
+  m_packageScripts.remove(featureKey);
   for (const QString& managerId : managerIds) {
     Calc::EnergyManager::unregisterModel(managerId.toStdString());
     for (int i = m_scripts.size() - 1; i >= 0; --i) {

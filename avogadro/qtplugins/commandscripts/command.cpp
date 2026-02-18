@@ -190,7 +190,7 @@ void Command::menuActivated()
     QString pkgDir = theSender->property("packageDir").toString();
     QString pkgCmd = theSender->property("packageCommand").toString();
     QString pkgId = theSender->property("packageIdentifier").toString();
-    key = QStringLiteral("pkg:") + pkgId;
+    key = QtGui::PackageManager::packageFeatureKey(pkgDir, pkgCmd, pkgId);
 
     widget = m_dialogs.value(key, nullptr);
     if (!widget) {
@@ -424,22 +424,27 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
 
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
-  m_packageActions.insert(identifier, action);
+  m_packageActions.insert(
+    QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier),
+    action);
 }
 
-void Command::unregisterFeature(const QString& type, const QString& identifier)
+void Command::unregisterFeature(const QString& type, const QString& packageDir,
+                                const QString& command,
+                                const QString& identifier)
 {
   if (type != QLatin1String("menu-commands"))
     return;
 
-  const QList<QAction*> actions = m_packageActions.values(identifier);
+  const QString featureKey =
+    QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier);
+  const QList<QAction*> actions = m_packageActions.values(featureKey);
   if (actions.isEmpty())
     return;
 
-  m_packageActions.remove(identifier);
+  m_packageActions.remove(featureKey);
 
-  const QString key = QStringLiteral("pkg:") + identifier;
-  InterfaceWidget* widget = m_dialogs.take(key);
+  InterfaceWidget* widget = m_dialogs.take(featureKey);
   if (widget) {
     if (widget == m_currentInterface) {
       if (m_currentDialog) {

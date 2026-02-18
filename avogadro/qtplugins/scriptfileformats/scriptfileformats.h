@@ -50,7 +50,8 @@ public:
   /**
    * Handle a feature removed by PackageManager.
    */
-  void unregisterFeature(const QString& type, const QString& identifier);
+  void unregisterFeature(const QString& type, const QString& packageDir,
+                         const QString& command, const QString& identifier);
 
 private:
   QList<Io::FileFormat*> m_formats;
