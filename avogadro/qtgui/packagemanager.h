@@ -48,6 +48,16 @@ public:
   /** Known feature-type strings (TOML table names under [tool.avogadro]). */
   static QStringList featureTypes();
 
+  // --- Installation ---
+
+  /**
+   * Asynchronously run pixi (preferred) or pip install in each directory,
+   * then call registerPackage() for each and loadRegisteredPackages().
+   * Emits packagesInstalled() when the background thread finishes.
+   * Safe to call from the main thread.
+   */
+  void installPackages(const QStringList& packageDirs);
+
   // --- Registration ---
 
   /**
@@ -90,6 +100,12 @@ public:
   PackageInfo packageInfo(const QString& packageName) const;
 
 signals:
+  /**
+   * Emitted after installPackages() finishes installing and registering
+   * all requested packages.
+   */
+  void packagesInstalled();
+
   /**
    * Emitted for each feature found in a package.
    *

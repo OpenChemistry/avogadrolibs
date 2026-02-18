@@ -6,6 +6,9 @@
 #include "packagemanager.h"
 
 #include <QtCore/QCryptographicHash>
+#include <QtCore/QProcess>
+#include <QtCore/QStandardPaths>
+#include <QtCore/QThread>
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
@@ -117,6 +120,52 @@ PackageManager::FeatureEntry PackageManager::featureEntryFromJson(
   entry.identifier = obj[QStringLiteral("identifier")].toString();
   entry.metadata = obj[QStringLiteral("metadata")].toObject().toVariantMap();
   return entry;
+}
+
+// ---------------------------------------------------------------------------
+// Installation
+// ---------------------------------------------------------------------------
+
+void PackageManager::installPackages(const QStringList& packageDirs)
+{
+  QString pixiExe = QStandardPaths::findExecutable(QStringLiteral("pixi"));
+  QString pipExe;
+  if (pixiExe.isEmpty()) {
+    pipExe = QStandardPaths::findExecutable(QStringLiteral("pip3"));
+    if (pipExe.isEmpty())
+      pipExe = QStandardPaths::findExecutable(QStringLiteral("pip"));
+  }
+
+  QThread* installThread = QThread::create([pixiExe, pipExe, packageDirs]() {
+    for (const QString& packageDir : packageDirs) {
+      if (pixiExe.isEmpty() && pipExe.isEmpty())
+        continue;
+      QProcess installer;
+      installer.setWorkingDirectory(packageDir);
+      if (!pixiExe.isEmpty()) {
+        installer.start(pixiExe, { QStringLiteral("install") });
+      } else {
+        installer.start(pipExe,
+                        { QStringLiteral("install"), QStringLiteral(".") });
+      }
+      installer.waitForFinished(-1);
+      if (installer.exitCode() != 0) {
+        qWarning() << "Package install failed for" << packageDir << ":"
+                   << installer.readAllStandardError();
+      }
+    }
+  });
+
+  connect(installThread, &QThread::finished, this,
+          [this, packageDirs, installThread]() {
+            for (const QString& packageDir : packageDirs)
+              registerPackage(packageDir);
+            loadRegisteredPackages();
+            emit packagesInstalled();
+            installThread->deleteLater();
+          });
+
+  installThread->start();
 }
 
 // ---------------------------------------------------------------------------
