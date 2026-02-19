@@ -11,14 +11,14 @@
 # btbt_bt <belegdal@yahoo.ca>, 2024, 2025.
 # Distant Prince <distantprinceca@gmail.com>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
+# Marcus Minhorst <marcus.minhorst@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-31 02:11+0000\n"
 "PO-Revision-Date: 2026-02-20 01:09+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Marcus Minhorst <marcus.minhorst@gmail.com>\n"
 "Language-Team: English (Canada) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_CA/>\n"
 "Language: en_CA\n"
@@ -223,14 +223,14 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
-"The following file(s) have been modified:\n"
+"The following file has been modified:\n"
 "\n"
 "%1\n"
 "\n"
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[1] ""
-"The following file(s) have been modified:\n"
+"The following files have been modified:\n"
 "\n"
 "%1\n"
 "\n"
@@ -1289,7 +1289,7 @@ msgstr "Van der Waals (AO)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "Volumes"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -1447,7 +1447,7 @@ msgstr "Change Atom Formal Charge"
 
 #: qtgui/rwmolecule.cpp:274
 msgid "Change Atom Color"
-msgstr "Change Atom Color"
+msgstr "Change Atom Colour"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Atom Layer"
@@ -1574,43 +1574,43 @@ msgstr "Checking for %1 scripts in path %2"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
-msgstr ""
+msgstr "Calculating…"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
-msgstr ""
+msgstr "Less than a second remaining"
 
 #: qtgui/timedprogressdialog.cpp:82
 #, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n second remaining"
+msgstr[1] "%n seconds remaining"
 
 #: qtgui/timedprogressdialog.cpp:85
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
 msgid_plural "%n minute(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n minute remaining"
+msgstr[1] "%n minutes remaining"
 
 #: qtgui/timedprogressdialog.cpp:93
 #, qt-plural-format
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 hour %n minute remaining"
+msgstr[1] "1 hour %n minutes remaining"
 
 #: qtgui/timedprogressdialog.cpp:96
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
 msgid_plural "%n hour(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n hour remaining"
+msgstr[1] "%n hours remaining"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -1682,11 +1682,11 @@ msgid ""
 msgstr ""
 "Align Molecules\n"
 "\n"
-"Left Mouse: \tSelect up to two atoms.\n"
+"Left Mouse:\tSelect up to two atoms.\n"
 "\tThe first atom is centred at the origin.\n"
 "\tThe second atom is aligned to the selected axis.\n"
-"Right Mouse: \tReset alignment.\n"
-"Double-Click: \tCentre the atom at the origin."
+"Right Mouse:\tReset alignment.\n"
+"Double-Click:\tCentre the atom at the origin."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1704,7 +1704,7 @@ msgstr "Align to Axis"
 
 #: qtplugins/aligntool/aligntool.cpp:295
 msgid "Center the atom at the origin."
-msgstr "Center the atom at the origin."
+msgstr "Centre the atom at the origin."
 
 #: qtplugins/aligntool/aligntool.cpp:298
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -1850,11 +1850,11 @@ msgstr "Success"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "Generated %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "Error running PDB2PQR"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -2130,7 +2130,7 @@ msgstr "Optimize Geometry"
 #: qtplugins/autoopt/autoopt.cpp:317
 #, qt-format
 msgid "%1 ΔE = %L2 kJ/mol"
-msgstr ""
+msgstr "%1 ΔE = %L2 kJ/mol"
 
 #: qtplugins/autoopt/autoopt.h:42
 msgid "Auto Optimize tool"
@@ -3647,7 +3647,7 @@ msgstr "Insert molecular fragments for building larger molecules."
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:55
 msgid "Peptide…"
-msgstr ""
+msgstr "Peptide…"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3655,15 +3655,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:511:730 rc.cpp:922
 msgid "Insert Peptide"
-msgstr ""
+msgstr "Insert Peptide"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
-msgstr ""
+msgstr "InsertPeptide"
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "Insert oligopeptide sequences."
 
 #: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:311
 #: qtplugins/surfacerender/surfacerender.cpp:317
@@ -3672,7 +3672,7 @@ msgstr "Colour:"
 
 #: qtplugins/label/label.cpp:172
 msgid "Distance from center:"
-msgstr "Distance from center:"
+msgstr "Distance from centre:"
 
 #: qtplugins/label/label.cpp:183 qtplugins/label/label.cpp:214
 msgid "Index"
@@ -3724,7 +3724,7 @@ msgstr "Name"
 
 #: qtplugins/label/label.cpp:228
 msgid "Name & ID"
-msgstr ""
+msgstr "Name & ID"
 
 #: qtplugins/label/label.cpp:235
 msgid "Residue Label:"
@@ -3917,7 +3917,7 @@ msgstr "Molecular Mass (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:182
 msgid "Monoisotopic Mass (g/mol)"
-msgstr ""
+msgstr "Monoisotopic Mass (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:184
 msgid "Chemical Formula"
@@ -4549,15 +4549,15 @@ msgstr "Play back trajectories"
 
 #: qtplugins/plotconformer/plotconformer.cpp:38
 msgid "Plot Conformer Data…"
-msgstr ""
+msgstr "Plot Conformer Data…"
 
 #: qtplugins/plotconformer/plotconformer.cpp:127
 msgid "Conformer Analysis"
-msgstr ""
+msgstr "Conformer Analysis"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
-msgstr ""
+msgstr "Plot Type:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -4567,16 +4567,16 @@ msgstr "RMSD"
 
 #: qtplugins/plotconformer/plotconformer.cpp:149
 msgid "Velocities"
-msgstr ""
+msgstr "Velocities"
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
+msgstr "Energy Units:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:160
 #: qtplugins/plotconformer/plotconformer.cpp:172
 msgid "Hartree"
-msgstr ""
+msgstr "Hartree"
 
 #: qtplugins/plotconformer/plotconformer.cpp:161
 #: qtplugins/plotconformer/plotconformer.cpp:171
@@ -4586,16 +4586,16 @@ msgstr "eV"
 #: qtplugins/plotconformer/plotconformer.cpp:162
 #: qtplugins/plotconformer/plotconformer.cpp:169
 msgid "kcal/mol"
-msgstr ""
+msgstr "kcal/mol"
 
 #: qtplugins/plotconformer/plotconformer.cpp:163
 #: qtplugins/plotconformer/plotconformer.cpp:170
 msgid "kJ/mol"
-msgstr ""
+msgstr "kJ/mol"
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
 msgid "to"
-msgstr ""
+msgstr "to"
 
 #: qtplugins/plotconformer/plotconformer.cpp:225
 msgid "RMSD (Å)"
@@ -4604,23 +4604,23 @@ msgstr ""
 #: qtplugins/plotconformer/plotconformer.cpp:228
 #, qt-format
 msgid "Relative Energy (%1)"
-msgstr ""
+msgstr "Relative Energy (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:231
 msgid "Forces (N)"
-msgstr ""
+msgstr "Forces (N)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:233
 msgid "Velocities (m/s)"
-msgstr ""
+msgstr "Velocities (m/s)"
 
 #: qtplugins/plotconformer/plotconformer.h:36
 msgid "PlotConformer"
-msgstr ""
+msgstr "PlotConformer"
 
 #: qtplugins/plotconformer/plotconformer.h:81
 msgid "Generate and plot conformer data (RMSD or energy)."
-msgstr ""
+msgstr "Generate and plot conformer data (RMSD or energy)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -4876,7 +4876,7 @@ msgstr "Label"
 
 #: qtplugins/propertytables/propertymodel.cpp:625
 msgid "Isotope"
-msgstr ""
+msgstr "Isotope"
 
 #: qtplugins/propertytables/propertymodel.cpp:627
 #: qtplugins/propertytables/propertymodel.cpp:670
@@ -5076,11 +5076,11 @@ msgstr "Remove Constraint"
 #: qtplugins/qtaim/qtaimwavefunction.h:82
 #, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "Cannot read file %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Failed to create a temporary file."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5324,7 +5324,7 @@ msgstr "Fill Unit Cell…"
 #: qtplugins/spacegroup/spacegroup.cpp:101
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
-msgstr ""
+msgstr "Fill Translation Cell…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
@@ -5336,7 +5336,7 @@ msgstr "Fill symmetric atoms based on the crystal space group."
 
 #: qtplugins/spacegroup/spacegroup.cpp:135
 msgid "Fill all atoms based on the crystal space group."
-msgstr ""
+msgstr "Fill all atoms based on the crystal space group."
 
 #: qtplugins/spacegroup/spacegroup.cpp:384
 #: qtplugins/spacegroup/spacegroup.cpp:412
@@ -5361,6 +5361,11 @@ msgid ""
 "Hall symbol: %3\n"
 "International symbol: %4"
 msgstr ""
+"Space group perception succeeded:\n"
+"Tolerance: %1  Å\n"
+"Space Group: %2\n"
+"Hall symbol: %3\n"
+"International symbol: %4"
 
 #: qtplugins/spacegroup/spacegroup.cpp:418
 msgid "Failure"
@@ -5424,6 +5429,13 @@ msgid ""
 "\n"
 "Proceed with this space group?"
 msgstr ""
+"With a tolerance of %1  Å, the space group information was perceived to be "
+"the following:\n"
+"International number: %2\n"
+"Hall symbol: %3\n"
+"International symbol: %4\n"
+"\n"
+"Proceed with this space group?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:580 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
@@ -5437,39 +5449,39 @@ msgstr "Select tolerance in Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:598
 msgid "Triclinic"
-msgstr ""
+msgstr "Triclinic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Monoclinic"
-msgstr ""
+msgstr "Monoclinic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Orthorhombic"
-msgstr ""
+msgstr "Orthorhombic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Tetragonal"
-msgstr ""
+msgstr "Tetragonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Trigonal"
-msgstr ""
+msgstr "Trigonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Rhombohedral"
-msgstr ""
+msgstr "Rhombohedral"
 
 #: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Hexagonal"
-msgstr ""
+msgstr "Hexagonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:612
 msgid "Cubic"
-msgstr ""
+msgstr "Cubic"
 
 #: qtplugins/spacegroup/spacegroup.cpp:644
 msgid "Primitive Cell Detected"
-msgstr ""
+msgstr "Primitive Cell Detected"
 
 #: qtplugins/spacegroup/spacegroup.cpp:646
 #, qt-format
@@ -5481,10 +5493,16 @@ msgid ""
 "\n"
 "Would you like to create a conventional cell first?"
 msgstr ""
+"The current unit cell appears to be a primitive cell (non-90° angles), but "
+"the space group %1 expects a centreed conventional cell.\n"
+"\n"
+"Filling the unit cell may create unexpected duplicate atoms.\n"
+"\n"
+"Would you like to create a conventional cell first?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:660
 msgid "Failed to conventionalize the cell."
-msgstr ""
+msgstr "Failed to conventionalize the cell."
 
 #: qtplugins/spacegroup/spacegroup.cpp:676
 msgid "International"
@@ -5500,7 +5518,7 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:677
 msgid "Crystal System"
-msgstr ""
+msgstr "Crystal System"
 
 #: qtplugins/spacegroup/spacegroup.cpp:709
 msgid "Select Space Group"
@@ -5539,12 +5557,12 @@ msgstr "Raman"
 #: qtplugins/spectra/spectradialog.cpp:574
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "Vibrational CD"
 
 #: qtplugins/spectra/spectradialog.cpp:578
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "Magnetic CD"
 
 #: qtplugins/spectra/spectradialog.cpp:582
 msgid "NMR"
@@ -5577,7 +5595,7 @@ msgstr "Select Calculated Spectra Colour"
 
 #: qtplugins/spectra/spectradialog.cpp:685
 msgid "Select Raw Spectra Color"
-msgstr ""
+msgstr "Select Raw Spectra Colour"
 
 #: qtplugins/spectra/spectradialog.cpp:698
 msgid "Select Imported Spectra Color"
@@ -5621,11 +5639,11 @@ msgstr "Intensity"
 
 #: qtplugins/spectra/spectradialog.cpp:778
 msgid "Vibrational Circular Dichroism"
-msgstr ""
+msgstr "Vibrational Circular Dichroism"
 
 #: qtplugins/spectra/spectradialog.cpp:791
 msgid "Magnetic Circular Dichroism"
-msgstr ""
+msgstr "Magnetic Circular Dichroism"
 
 #: qtplugins/spectra/spectradialog.cpp:804
 msgid "NMR Spectra"
@@ -5666,15 +5684,15 @@ msgstr "Raw"
 
 #: qtplugins/spectra/spectradialog.cpp:985
 msgid "Imported"
-msgstr ""
+msgstr "Imported"
 
 #: qtplugins/spectra/spectradialog.cpp:1020
 msgid "Import Data"
-msgstr ""
+msgstr "Import Data"
 
 #: qtplugins/spectra/spectradialog.cpp:1020
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
-msgstr ""
+msgstr "CSV Files (*.csv);;TSV Files (*.tsv)"
 
 #: qtplugins/surfacerender/surfacerender.cpp:270
 msgid "Surface"
@@ -5719,11 +5737,11 @@ msgstr "Symmetry"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
 msgid "Occupation"
-msgstr ""
+msgstr "Occupation"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:141
 msgid "Spin"
-msgstr ""
+msgstr "Spin"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:152
 #: qtplugins/surfaces/orbitaltablemodel.cpp:238
@@ -5844,7 +5862,7 @@ msgstr "Calculating molecular orbital %L1"
 #: qtplugins/surfaces/surfaces.cpp:888
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
-msgstr ""
+msgstr "Surface Finished"
 
 #: qtplugins/surfaces/surfaces.cpp:899 qtplugins/surfaces/surfaces.cpp:927
 msgid "Movie AVI (*.avi)"
@@ -5860,7 +5878,7 @@ msgstr "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:952
 msgid "Couldn't find the active render widget, failing."
-msgstr ""
+msgstr "Couldn't find the active render widget, failing."
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
@@ -5931,7 +5949,7 @@ msgid ""
 msgstr ""
 "Template Tool\t(%1)\n"
 "\n"
-"Insert fragments, including metal centers.\n"
+"Insert fragments, including metal centres.\n"
 "Select an element and coordination geometry, then click to insert a "
 "fragment.\n"
 "\n"
@@ -6494,7 +6512,7 @@ msgstr "Options"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
 msgid "Get Constraint"
-msgstr ""
+msgstr "Get Constraint"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
@@ -7203,7 +7221,7 @@ msgstr "Double"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Peptide Builder"
-msgstr ""
+msgstr "Peptide Builder"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:46
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton)
@@ -7363,7 +7381,7 @@ msgstr "Proline"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:199
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_14)
 msgid "Pro"
-msgstr ""
+msgstr "Pro"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:206
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_13)
@@ -7408,7 +7426,7 @@ msgstr "Leu"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:263
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Amino Acids:"
-msgstr ""
+msgstr "Amino Acids:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:270
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7443,22 +7461,22 @@ msgstr "Straight Chain"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:382
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "α Helix"
-msgstr ""
+msgstr "α Helix"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "β Sheet"
-msgstr ""
+msgstr "β Sheet"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:392
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "3-10 Helix"
-msgstr ""
+msgstr "3-10 Helix"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:397
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "π Helix"
-msgstr ""
+msgstr "π Helix"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -8257,7 +8275,7 @@ msgstr "Input Topology:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
 msgid "Forcefield:"
-msgstr "Force Field:"
+msgstr "Forcefield:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
@@ -8816,7 +8834,7 @@ msgstr "&Appearance"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:422
 #. i18n: ectx: property (text), widget (QPushButton, push_colorRaw)
 msgid "Set Color…"
-msgstr "Set Color…"
+msgstr "Set Colour…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:237
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -8889,7 +8907,7 @@ msgstr "Calculated Spectra:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "Raw Spectra:"
-msgstr ""
+msgstr "Raw Spectra:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
