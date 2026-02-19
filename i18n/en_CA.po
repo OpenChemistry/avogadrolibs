@@ -10,13 +10,15 @@
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 # btbt_bt <belegdal@yahoo.ca>, 2024, 2025.
 # Distant Prince <distantprinceca@gmail.com>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-31 02:11+0000\n"
-"PO-Revision-Date: 2025-10-09 02:07+0000\n"
-"Last-Translator: btbt_bt <belegdal@yahoo.ca>\n"
+"PO-Revision-Date: 2026-02-20 01:09+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: English (Canada) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_CA/>\n"
 "Language: en_CA\n"
@@ -24,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1680,11 +1682,11 @@ msgid ""
 msgstr ""
 "Align Molecules\n"
 "\n"
-"Left Mouse:\tSelect up to two atoms.\n"
+"Left Mouse: \tSelect up to two atoms.\n"
 "\tThe first atom is centred at the origin.\n"
 "\tThe second atom is aligned to the selected axis.\n"
-"Right Mouse:\tReset alignment.\n"
-"Double-Click:\tCentre the atom at the origin."
+"Right Mouse: \tReset alignment.\n"
+"Double-Click: \tCentre the atom at the origin."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
