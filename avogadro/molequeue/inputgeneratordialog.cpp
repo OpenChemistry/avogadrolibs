@@ -37,6 +37,12 @@ void InputGeneratorDialog::setInputGeneratorScript(const QString& scriptFile)
 {
   ui->widget->setInputGeneratorScript(scriptFile);
   QString displayName(ui->widget->inputGenerator().displayName());
+
+  if (displayName.endsWith("…"))
+    displayName.chop(1);
+  else if (displayName.endsWith("..."))
+    displayName.chop(3);
+
   if (ui->widget->inputGenerator().hasErrors())
     setWindowTitle(tr("Input Generator (error)").arg(displayName));
   else

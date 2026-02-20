@@ -86,10 +86,42 @@ void QuantumInput::setMolecule(QtGui::Molecule* mol)
   if (m_molecule == mol)
     return;
 
+  if (m_molecule)
+    disconnect(m_molecule, &QtGui::Molecule::changed, this,
+               &QuantumInput::moleculeChanged);
+
   m_molecule = mol;
+
+  if (m_molecule)
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &QuantumInput::moleculeChanged);
 
   foreach (InputGeneratorDialog* dlg, m_dialogs.values())
     dlg->setMolecule(mol);
+
+  updateActionStates();
+}
+
+void QuantumInput::moleculeChanged(unsigned int change)
+{
+  if (change & QtGui::Molecule::UnitCell)
+    updateActionStates();
+}
+
+void QuantumInput::updateActionStates()
+{
+  bool isPeriodic = m_molecule && m_molecule->unitCell() != nullptr;
+  for (QAction* action : m_packageActions.values()) {
+    // Default: supports molecules (true), does not support periodic (false)
+    bool supportsMolecular = action->property("supportMolecular").isValid()
+                               ? action->property("supportMolecular").toBool()
+                               : true;
+    bool supportsPeriodic = action->property("supportPeriodic").isValid()
+                              ? action->property("supportPeriodic").toBool()
+                              : false;
+
+    action->setEnabled(isPeriodic ? supportsPeriodic : supportsMolecular);
+  }
 }
 
 void QuantumInput::openJobOutput(const JobObject& job)
@@ -307,6 +339,13 @@ void QuantumInput::registerFeature(const QString& type,
                       metadata.value("highlight-styles").toString());
   // Default to &Input menu path
   action->setProperty("packageMenuPath", QStringList() << tr("&Input"));
+  // Molecule/periodic support: default molecular=true, periodic=false
+  // "support" is a nested QVariantMap in the metadata
+  QVariantMap supportMeta = metadata.value("support").toMap();
+  action->setProperty("supportMolecular",
+                      supportMeta.value("molecular", true).toBool());
+  action->setProperty("supportPeriodic",
+                      supportMeta.value("periodic", false).toBool());
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;

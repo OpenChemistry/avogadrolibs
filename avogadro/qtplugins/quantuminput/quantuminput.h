@@ -82,12 +82,14 @@ public slots:
 
 private slots:
   void menuActivated();
+  void moleculeChanged(unsigned int change);
 
 private:
   void updateInputGeneratorScripts();
   void updateActions();
   void addAction(const QString& label, const QString& scriptFilePath);
   bool queryProgramName(const QString& scriptFilePath, QString& displayName);
+  void updateActionStates();
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
