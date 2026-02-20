@@ -188,8 +188,9 @@ TEST(CmlTest, hdf5Matrix)
 
   Molecule readMolecule;
   cml.readFile("ethane.cml", readMolecule);
-  if (readMolecule.data("matrix").type() == Variant::Matrix)
+  if (readMolecule.data("matrix").type() == Variant::Matrix) {
     EXPECT_TRUE(readMolecule.data("matrix").toMatrixRef().isApprox(matrix));
+  }
   EXPECT_EQ(readMolecule.data("name").toString(), "ethanol"s);
 }
 
