@@ -31,6 +31,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QJsonArray>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringList>
@@ -171,6 +172,23 @@ void QuantumInput::menuActivated()
               theSender->property("packageInputFormat").toString();
             if (!inputFormat.isEmpty())
               opts.insert("inputMoleculeFormat", inputFormat);
+            QString highlightStylesRel =
+              theSender->property("packageHighlightStyles").toString();
+            if (!highlightStylesRel.isEmpty()) {
+              QFile stylesFile(pkgDir + '/' + highlightStylesRel);
+              if (stylesFile.open(QIODevice::ReadOnly)) {
+                QJsonDocument stylesDoc =
+                  QJsonDocument::fromJson(stylesFile.readAll());
+                // File may be a bare array or {"highlightStyles": [...]}
+                if (stylesDoc.isArray()) {
+                  opts.insert("highlightStyles", stylesDoc.array());
+                } else if (stylesDoc.isObject()) {
+                  QJsonValue v = stylesDoc.object().value("highlightStyles");
+                  if (v.isArray())
+                    opts.insert("highlightStyles", v.toArray());
+                }
+              }
+            }
             dlg->widget().inputGenerator().setOptions(opts);
           }
         } else {
@@ -181,9 +199,8 @@ void QuantumInput::menuActivated()
 
       dlg->widget().reloadOptions();
       dlg->setWindowTitle(tr("%1 Input Generator").arg(theSender->text()));
-      connect(&dlg->widget(),
-              SIGNAL(openJobOutput(const MoleQueue::JobObject&)), this,
-              SLOT(openJobOutput(const MoleQueue::JobObject&)));
+      connect(&dlg->widget(), &MoleQueue::InputGeneratorWidget::openJobOutput,
+              this, &QuantumInput::openJobOutput);
       m_dialogs.insert(key, dlg);
     }
   } else {
@@ -191,9 +208,8 @@ void QuantumInput::menuActivated()
     dlg = m_dialogs.value(key, nullptr);
     if (!dlg) {
       dlg = new InputGeneratorDialog(key, theParent);
-      connect(&dlg->widget(),
-              SIGNAL(openJobOutput(const MoleQueue::JobObject&)), this,
-              SLOT(openJobOutput(const MoleQueue::JobObject&)));
+      connect(&dlg->widget(), &MoleQueue::InputGeneratorWidget::openJobOutput,
+              this, &QuantumInput::openJobOutput);
       m_dialogs.insert(key, dlg);
     }
   }
@@ -287,6 +303,8 @@ void QuantumInput::registerFeature(const QString& type,
                       metadata.value("user-options").toString());
   action->setProperty("packageInputFormat",
                       metadata.value("input-format").toString());
+  action->setProperty("packageHighlightStyles",
+                      metadata.value("highlight-styles").toString());
   // Default to &Input menu path
   action->setProperty("packageMenuPath", QStringList() << tr("&Input"));
   action->setEnabled(true);

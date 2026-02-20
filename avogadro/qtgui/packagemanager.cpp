@@ -222,8 +222,10 @@ QStringList PackageManager::scanDirectory(const QString& directoryPath)
 
   QDir dir(directoryPath);
   if (!dir.exists()) {
+#ifndef NDEBUG
     qWarning() << "PackageManager::scanDirectory: directory does not exist:"
                << directoryPath;
+#endif
     return result;
   }
 

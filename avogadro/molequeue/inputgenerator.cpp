@@ -121,6 +121,14 @@ void InputGenerator::setOptions(const QJsonObject& options)
       m_options["inputMoleculeFormat"].isString()) {
     m_moleculeExtension = m_options["inputMoleculeFormat"].toString();
   }
+
+  if (m_options.contains("highlightStyles") &&
+      m_options.value("highlightStyles").isArray()) {
+    qDeleteAll(m_highlightStyles.values());
+    m_highlightStyles.clear();
+    if (!parseHighlightStyles(m_options.value("highlightStyles").toArray()))
+      qDebug() << "Failed to parse highlighting styles.";
+  }
 }
 
 void InputGenerator::reset()
