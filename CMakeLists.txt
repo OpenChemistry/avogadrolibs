@@ -82,8 +82,6 @@ add_subdirectory(utilities)
 add_subdirectory(avogadro)
 
 if(ENABLE_TESTING)
-  include(CTest)
-  enable_testing()
   add_subdirectory(tests)
 endif()
 

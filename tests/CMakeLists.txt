@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 project(AvogadroLibsTest LANGUAGES CXX)
 
+include(CTest)
+enable_testing()
+
 if(PROJECT_IS_TOP_LEVEL)
   # Enable build of standalone tests
   # testing against AvogadroLibs already installed on the system.
