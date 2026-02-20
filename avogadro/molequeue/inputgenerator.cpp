@@ -112,6 +112,17 @@ void InputGenerator::setScriptFilePath(const QString& scriptFile)
   m_interpreter->setScriptFilePath(scriptFile);
 }
 
+void InputGenerator::setOptions(const QJsonObject& options)
+{
+  m_options = options;
+
+  m_moleculeExtension = "None";
+  if (m_options.contains("inputMoleculeFormat") &&
+      m_options["inputMoleculeFormat"].isString()) {
+    m_moleculeExtension = m_options["inputMoleculeFormat"].toString();
+  }
+}
+
 void InputGenerator::reset()
 {
   m_interpreter->setDefaultPythonInterpreter();
@@ -144,8 +155,15 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
   if (!insertMolecule(allOptions, mol))
     return false;
 
-  QByteArray json(m_interpreter->execute(QStringList() << "--generate-input",
-                                         QJsonDocument(allOptions).toJson()));
+  // Package-mode scripts receive the JSON as a positional argument.
+  // Legacy scripts use --generate-input with JSON on stdin.
+  QByteArray jsonDoc = QJsonDocument(allOptions).toJson(QJsonDocument::Compact);
+  QByteArray json;
+  if (m_interpreter->isPackageMode()) {
+    json = m_interpreter->execute(QStringList() << QString::fromUtf8(jsonDoc));
+  } else {
+    json = m_interpreter->execute(QStringList() << "--generate-input", jsonDoc);
+  }
 
   if (m_interpreter->hasErrors()) {
     m_errors << m_interpreter->errorList();
@@ -238,7 +256,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                           .arg(m_filenames.size());
           } // end if/else file is JSON object
-        } // end foreach file
+        }   // end foreach file
       } else {
         result = false;
         m_errors << tr("'files' member not an array.");

@@ -29,6 +29,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringList>
@@ -61,7 +63,7 @@ QuantumInput::~QuantumInput()
 
 QList<QAction*> QuantumInput::actions() const
 {
-  return m_actions;
+  return m_packageActions.values();
 }
 
 QStringList QuantumInput::menuPath(QAction* action) const
@@ -74,7 +76,6 @@ QStringList QuantumInput::menuPath(QAction* action) const
   QVariant pkgMenuPath = action->property("packageMenuPath");
   if (pkgMenuPath.isValid())
     return pkgMenuPath.toStringList();
-
   path << tr("&Input");
   return path;
 }
@@ -155,6 +156,29 @@ void QuantumInput::menuActivated()
       dlg = new InputGeneratorDialog(theParent);
       dlg->widget().inputGenerator().interpreter().setPackageInfo(
         pkgDir, pkgCmd, pkgId);
+
+      // Load user options from the JSON file declared in pyproject.toml
+      QString userOptionsRel =
+        theSender->property("packageUserOptions").toString();
+      if (!userOptionsRel.isEmpty()) {
+        QString userOptionsPath = pkgDir + '/' + userOptionsRel;
+        QFile optFile(userOptionsPath);
+        if (optFile.open(QIODevice::ReadOnly)) {
+          QJsonDocument doc = QJsonDocument::fromJson(optFile.readAll());
+          if (doc.isObject()) {
+            QJsonObject opts = doc.object();
+            QString inputFormat =
+              theSender->property("packageInputFormat").toString();
+            if (!inputFormat.isEmpty())
+              opts.insert("inputMoleculeFormat", inputFormat);
+            dlg->widget().inputGenerator().setOptions(opts);
+          }
+        } else {
+          qWarning() << "QuantumInput: could not open user-options file:"
+                     << userOptionsPath;
+        }
+      }
+
       dlg->widget().reloadOptions();
       dlg->setWindowTitle(tr("%1 Input Generator").arg(theSender->text()));
       connect(&dlg->widget(),
@@ -259,6 +283,10 @@ void QuantumInput::registerFeature(const QString& type,
   action->setProperty("packageDir", packageDir);
   action->setProperty("packageCommand", command);
   action->setProperty("packageIdentifier", identifier);
+  action->setProperty("packageUserOptions",
+                      metadata.value("user-options").toString());
+  action->setProperty("packageInputFormat",
+                      metadata.value("input-format").toString());
   // Default to &Input menu path
   action->setProperty("packageMenuPath", QStringList() << tr("&Input"));
   action->setEnabled(true);
