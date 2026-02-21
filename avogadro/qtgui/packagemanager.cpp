@@ -48,6 +48,38 @@ QString PackageManager::packageFeatureKey(const QString& packageDir,
          identifier;
 }
 
+static bool hasNonExecutablePixiPython(const QString& packageDir)
+{
+#ifdef Q_OS_WIN
+  const QStringList pythonDirs = {
+    packageDir + QStringLiteral("/.pixi/envs/default/Scripts"),
+    packageDir + QStringLiteral("/.pixi/envs/default/bin")
+  };
+#else
+  const QStringList pythonDirs = { packageDir +
+                                   QStringLiteral("/.pixi/envs/default/bin") };
+#endif
+
+  for (const QString& dirPath : pythonDirs) {
+    QDir dir(dirPath);
+    if (!dir.exists())
+      continue;
+
+    const QFileInfoList candidates =
+      dir.entryInfoList(QStringList() << QStringLiteral("python*"),
+                        QDir::Files | QDir::NoDotAndDotDot);
+    if (candidates.isEmpty())
+      continue;
+
+    for (const QFileInfo& candidate : candidates) {
+      if (!candidate.isExecutable())
+        return true;
+    }
+  }
+
+  return false;
+}
+
 // ---------------------------------------------------------------------------
 // TOML → QVariant helpers
 // ---------------------------------------------------------------------------
@@ -151,6 +183,16 @@ void PackageManager::installPackages(const QStringList& packageDirs)
         continue;
 
       if (!pixiExe.isEmpty()) {
+        // If a copied package includes a non-executable .pixi environment,
+        // pixi install fails querying its interpreter. Remove it and recreate.
+        const QString pixiDir = packageDir + QStringLiteral("/.pixi");
+        if (hasNonExecutablePixiPython(packageDir)) {
+          if (!QDir(pixiDir).removeRecursively()) {
+            qWarning() << "Could not remove invalid .pixi directory in"
+                       << packageDir;
+          }
+        }
+
         // Step 1: pixi init --format pyproject
         QProcess initProc;
         initProc.setWorkingDirectory(packageDir);
@@ -174,7 +216,7 @@ void PackageManager::installPackages(const QStringList& packageDirs)
         }
         if (installProc.exitCode() != 0) {
           qWarning() << "pixi install failed for" << packageDir << ":"
-                     << installProc.readAllStandardError();
+                     << QString::fromUtf8(installProc.readAllStandardError());
         }
       } else {
         // Step 1: create a venv
