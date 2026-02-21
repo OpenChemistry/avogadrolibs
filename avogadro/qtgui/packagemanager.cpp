@@ -137,35 +137,82 @@ PackageManager::FeatureEntry PackageManager::featureEntryFromJson(
 void PackageManager::installPackages(const QStringList& packageDirs)
 {
   QString pixiExe = QStandardPaths::findExecutable(QStringLiteral("pixi"));
-  QString pipExe;
+  QString pythonExe;
   if (pixiExe.isEmpty()) {
-    pipExe = QStandardPaths::findExecutable(QStringLiteral("pip3"));
-    if (pipExe.isEmpty())
-      pipExe = QStandardPaths::findExecutable(QStringLiteral("pip"));
+    pythonExe = QStandardPaths::findExecutable(QStringLiteral("python3"));
+    if (pythonExe.isEmpty())
+      pythonExe = QStandardPaths::findExecutable(QStringLiteral("python"));
   }
 
-  QThread* installThread = QThread::create([pixiExe, pipExe, packageDirs]() {
+  QThread* installThread = QThread::create([pixiExe, pythonExe, packageDirs]() {
+    constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
     for (const QString& packageDir : packageDirs) {
-      if (pixiExe.isEmpty() && pipExe.isEmpty())
+      if (pixiExe.isEmpty() && pythonExe.isEmpty())
         continue;
-      QProcess installer;
-      installer.setWorkingDirectory(packageDir);
-      if (!pixiExe.isEmpty()) {
-        installer.start(pixiExe, { QStringLiteral("install") });
-      } else {
-        installer.start(pipExe,
-                        { QStringLiteral("install"), QStringLiteral(".") });
-      }
-      constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
-      if (!installer.waitForFinished(installTimeoutMs)) {
-        qWarning() << "Package install timed out for" << packageDir;
-        installer.kill();
-        continue;
-      }
 
-      if (installer.exitCode() != 0) {
-        qWarning() << "Package install failed for" << packageDir << ":"
-                   << installer.readAllStandardError();
+      if (!pixiExe.isEmpty()) {
+        // Step 1: pixi init --format pyproject
+        QProcess initProc;
+        initProc.setWorkingDirectory(packageDir);
+        initProc.start(pixiExe,
+                       { QStringLiteral("init"), QStringLiteral("--format"),
+                         QStringLiteral("pyproject") });
+        if (!initProc.waitForFinished(installTimeoutMs)) {
+          qWarning() << "pixi init timed out for" << packageDir;
+          initProc.kill();
+          continue;
+        }
+
+        // Step 2: pixi install
+        QProcess installProc;
+        installProc.setWorkingDirectory(packageDir);
+        installProc.start(pixiExe, { QStringLiteral("install") });
+        if (!installProc.waitForFinished(installTimeoutMs)) {
+          qWarning() << "pixi install timed out for" << packageDir;
+          installProc.kill();
+          continue;
+        }
+        if (installProc.exitCode() != 0) {
+          qWarning() << "pixi install failed for" << packageDir << ":"
+                     << installProc.readAllStandardError();
+        }
+      } else {
+        // Step 1: create a venv
+        QProcess venvProc;
+        venvProc.setWorkingDirectory(packageDir);
+        venvProc.start(pythonExe,
+                       { QStringLiteral("-m"), QStringLiteral("venv"),
+                         QStringLiteral(".venv") });
+        if (!venvProc.waitForFinished(installTimeoutMs)) {
+          qWarning() << "venv creation timed out for" << packageDir;
+          venvProc.kill();
+          continue;
+        }
+        if (venvProc.exitCode() != 0) {
+          qWarning() << "venv creation failed for" << packageDir << ":"
+                     << venvProc.readAllStandardError();
+          continue;
+        }
+
+        // Step 2: pip install . using the venv's pip
+#ifdef Q_OS_WIN
+        QString venvPip = packageDir + QStringLiteral("/.venv/Scripts/pip.exe");
+#else
+        QString venvPip = packageDir + QStringLiteral("/.venv/bin/pip");
+#endif
+        QProcess installProc;
+        installProc.setWorkingDirectory(packageDir);
+        installProc.start(venvPip,
+                          { QStringLiteral("install"), QStringLiteral(".") });
+        if (!installProc.waitForFinished(installTimeoutMs)) {
+          qWarning() << "pip install timed out for" << packageDir;
+          installProc.kill();
+          continue;
+        }
+        if (installProc.exitCode() != 0) {
+          qWarning() << "pip install failed for" << packageDir << ":"
+                     << installProc.readAllStandardError();
+        }
       }
     }
   });
