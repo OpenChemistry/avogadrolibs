@@ -156,7 +156,13 @@ void PackageManager::installPackages(const QStringList& packageDirs)
         installer.start(pipExe,
                         { QStringLiteral("install"), QStringLiteral(".") });
       }
-      installer.waitForFinished(-1);
+      constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
+      if (!installer.waitForFinished(installTimeoutMs)) {
+        qWarning() << "Package install timed out for" << packageDir;
+        installer.kill();
+        continue;
+      }
+
       if (installer.exitCode() != 0) {
         qWarning() << "Package install failed for" << packageDir << ":"
                    << installer.readAllStandardError();
@@ -164,13 +170,15 @@ void PackageManager::installPackages(const QStringList& packageDirs)
     }
   });
 
-  connect(installThread, &QThread::finished, this,
-          [this, packageDirs, installThread]() {
-            for (const QString& packageDir : packageDirs)
-              registerPackage(packageDir);
-            emit packagesInstalled();
-            installThread->deleteLater();
-          });
+  connect(
+    installThread, &QThread::finished, this,
+    [this, packageDirs, installThread]() {
+      for (const QString& packageDir : packageDirs)
+        registerPackage(packageDir);
+      emit packagesInstalled();
+      installThread->deleteLater();
+    },
+    Qt::QueuedConnection);
 
   installThread->start();
 }

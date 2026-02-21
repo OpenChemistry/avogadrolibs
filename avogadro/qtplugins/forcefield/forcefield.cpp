@@ -749,9 +749,11 @@ void Forcefield::registerFeature(const QString& type, const QString& packageDir,
   model->readMetaData(metadata);
   if (model->isValid()) {
     QString managerId = QString::fromStdString(model->identifier());
-    if (!Calc::EnergyManager::registerModel(model->newInstance())) {
+    auto* newModel = model->newInstance();
+    if (!Calc::EnergyManager::registerModel(newModel)) {
       qDebug() << "Could not register energy model" << identifier
                << "due to name conflict.";
+      delete newModel;
       delete model;
     } else {
       m_scripts.push_back(model);
