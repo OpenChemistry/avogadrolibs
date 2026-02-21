@@ -163,15 +163,9 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
   if (!insertMolecule(allOptions, mol))
     return false;
 
-  // Package-mode scripts receive the JSON as a positional argument.
-  // Legacy scripts use --generate-input with JSON on stdin.
+  // Pass options on stdin to avoid command-line length limits (e.g. Windows).
   QByteArray jsonDoc = QJsonDocument(allOptions).toJson(QJsonDocument::Compact);
-  QByteArray json;
-  if (m_interpreter->isPackageMode()) {
-    json = m_interpreter->execute(QStringList() << QString::fromUtf8(jsonDoc));
-  } else {
-    json = m_interpreter->execute(QStringList() << "--generate-input", jsonDoc);
-  }
+  QByteArray json = m_interpreter->execute(QStringList(), jsonDoc);
 
   if (m_interpreter->hasErrors()) {
     m_errors << m_interpreter->errorList();
