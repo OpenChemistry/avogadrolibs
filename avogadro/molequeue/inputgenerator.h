@@ -502,6 +502,22 @@ public:
   void setScriptFilePath(const QString& scriptFile);
 
   /**
+   * Pre-load options from a JSON object, bypassing the script's
+   * --print-options call. Used by package-based generators that store
+   * options in a separate JSON file declared in pyproject.toml.
+   */
+  void setOptions(const QJsonObject& options);
+
+  /**
+   * Access to the underlying PythonScript interpreter for direct
+   * configuration (e.g. setting package mode via setPackageInfo()).
+   * @{
+   */
+  QtGui::PythonScript& interpreter() { return *m_interpreter; }
+  const QtGui::PythonScript& interpreter() const { return *m_interpreter; }
+  /** @} */
+
+  /**
    * Clear any cached data and return to an uninitialized state.
    */
   void reset();

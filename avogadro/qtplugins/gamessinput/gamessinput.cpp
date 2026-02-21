@@ -56,6 +56,11 @@ void GamessInput::setMolecule(QtGui::Molecule* mol)
   if (m_dialog)
     m_dialog->setMolecule(mol);
   m_molecule = mol;
+
+  bool isPeriodic = (m_molecule && m_molecule->unitCell() != nullptr);
+
+  // GAMESS only handles molecules
+  m_action->setEnabled(!isPeriodic);
 }
 
 void GamessInput::openJobOutput(const JobObject& job)

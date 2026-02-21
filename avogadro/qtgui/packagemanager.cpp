@@ -1,0 +1,618 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
+#include "packagemanager.h"
+
+#include <QtCore/QCryptographicHash>
+#include <QtCore/QProcess>
+#include <QtCore/QStandardPaths>
+#include <QtCore/QThread>
+#include <QtCore/QDateTime>
+#include <QtCore/QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QFileInfo>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QSettings>
+#include <QtCore/QTimeZone>
+
+// tomlplusplus — single header in thirdparty/
+#include <toml.hpp>
+
+namespace Avogadro::QtGui {
+
+PackageManager::PackageManager(QObject* parent) : QObject(parent) {}
+
+PackageManager* PackageManager::instance()
+{
+  static PackageManager instance;
+  return &instance;
+}
+
+QStringList PackageManager::featureTypes()
+{
+  return { QStringLiteral("menu-commands"),
+           QStringLiteral("electrostatic-models"),
+           QStringLiteral("energy-models"), QStringLiteral("file-formats"),
+           QStringLiteral("input-generators") };
+}
+
+QString PackageManager::packageFeatureKey(const QString& packageDir,
+                                          const QString& command,
+                                          const QString& identifier)
+{
+  return packageDir + QLatin1Char('\n') + command + QLatin1Char('\n') +
+         identifier;
+}
+
+static bool hasNonExecutablePixiPython(const QString& packageDir)
+{
+#ifdef Q_OS_WIN
+  const QStringList pythonDirs = {
+    packageDir + QStringLiteral("/.pixi/envs/default/Scripts"),
+    packageDir + QStringLiteral("/.pixi/envs/default/bin")
+  };
+#else
+  const QStringList pythonDirs = { packageDir +
+                                   QStringLiteral("/.pixi/envs/default/bin") };
+#endif
+
+  for (const QString& dirPath : pythonDirs) {
+    QDir dir(dirPath);
+    if (!dir.exists())
+      continue;
+
+    const QFileInfoList candidates =
+      dir.entryInfoList(QStringList() << QStringLiteral("python*"),
+                        QDir::Files | QDir::NoDotAndDotDot);
+    if (candidates.isEmpty())
+      continue;
+
+    for (const QFileInfo& candidate : candidates) {
+      if (!candidate.isExecutable())
+        return true;
+    }
+  }
+
+  return false;
+}
+
+// ---------------------------------------------------------------------------
+// TOML → QVariant helpers
+// ---------------------------------------------------------------------------
+
+static QVariant tomlNodeToVariant(const toml::node& node);
+
+static QVariantMap tomlTableToVariantMap(const toml::table& tbl)
+{
+  QVariantMap map;
+  for (auto&& [key, val] : tbl) {
+    map.insert(QString::fromStdString(std::string(key.str())),
+               tomlNodeToVariant(val));
+  }
+  return map;
+}
+
+static QVariantList tomlArrayToVariantList(const toml::array& arr)
+{
+  QVariantList list;
+  for (auto&& val : arr) {
+    list.append(tomlNodeToVariant(val));
+  }
+  return list;
+}
+
+static QVariant tomlNodeToVariant(const toml::node& node)
+{
+  if (node.is_string())
+    return QString::fromStdString(std::string(node.as_string()->get()));
+  if (node.is_integer())
+    return static_cast<qlonglong>(node.as_integer()->get());
+  if (node.is_floating_point())
+    return node.as_floating_point()->get();
+  if (node.is_boolean())
+    return node.as_boolean()->get();
+  if (node.is_table())
+    return tomlTableToVariantMap(*node.as_table());
+  if (node.is_array())
+    return tomlArrayToVariantList(*node.as_array());
+  if (node.is_date()) {
+    auto d = node.as_date()->get();
+    return QDate(d.year, d.month, d.day);
+  }
+  if (node.is_time()) {
+    auto t = node.as_time()->get();
+    return QTime(t.hour, t.minute, t.second, t.nanosecond / 1000000);
+  }
+  if (node.is_date_time()) {
+    auto dt = node.as_date_time()->get();
+    QDate date(dt.date.year, dt.date.month, dt.date.day);
+    QTime time(dt.time.hour, dt.time.minute, dt.time.second,
+               dt.time.nanosecond / 1000000);
+    if (dt.offset)
+      return QDateTime(date, time, QTimeZone(dt.offset->minutes * 60));
+    return QDateTime(date, time);
+  }
+  return {};
+}
+
+// ---------------------------------------------------------------------------
+// QSettings serialisation helpers (features stored as JSON)
+// ---------------------------------------------------------------------------
+
+QJsonObject PackageManager::featureEntryToJson(const FeatureEntry& entry)
+{
+  QJsonObject obj;
+  obj[QStringLiteral("type")] = entry.type;
+  obj[QStringLiteral("identifier")] = entry.identifier;
+  obj[QStringLiteral("metadata")] = QJsonObject::fromVariantMap(entry.metadata);
+  return obj;
+}
+
+PackageManager::FeatureEntry PackageManager::featureEntryFromJson(
+  const QJsonObject& obj)
+{
+  FeatureEntry entry;
+  entry.type = obj[QStringLiteral("type")].toString();
+  entry.identifier = obj[QStringLiteral("identifier")].toString();
+  entry.metadata = obj[QStringLiteral("metadata")].toObject().toVariantMap();
+  return entry;
+}
+
+// ---------------------------------------------------------------------------
+// Installation
+// ---------------------------------------------------------------------------
+
+void PackageManager::installPackages(const QStringList& packageDirs)
+{
+  QString pixiExe = QStandardPaths::findExecutable(QStringLiteral("pixi"));
+  QString pythonExe;
+  if (pixiExe.isEmpty()) {
+    pythonExe = QStandardPaths::findExecutable(QStringLiteral("python3"));
+    if (pythonExe.isEmpty())
+      pythonExe = QStandardPaths::findExecutable(QStringLiteral("python"));
+  }
+
+  QThread* installThread = QThread::create([pixiExe, pythonExe, packageDirs]() {
+    constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
+    for (const QString& packageDir : packageDirs) {
+      if (pixiExe.isEmpty() && pythonExe.isEmpty())
+        continue;
+
+      if (!pixiExe.isEmpty()) {
+        // If a copied package includes a non-executable .pixi environment,
+        // pixi install fails querying its interpreter. Remove it and recreate.
+        const QString pixiDir = packageDir + QStringLiteral("/.pixi");
+        if (hasNonExecutablePixiPython(packageDir)) {
+          if (!QDir(pixiDir).removeRecursively()) {
+            qWarning() << "Could not remove invalid .pixi directory in"
+                       << packageDir;
+          }
+        }
+
+        // Step 1: pixi init --format pyproject
+        QProcess initProc;
+        initProc.setWorkingDirectory(packageDir);
+        initProc.start(pixiExe,
+                       { QStringLiteral("init"), QStringLiteral("--format"),
+                         QStringLiteral("pyproject") });
+        if (!initProc.waitForFinished(installTimeoutMs)) {
+          qWarning() << "pixi init timed out for" << packageDir;
+          initProc.kill();
+          continue;
+        }
+
+        // Step 2: pixi install
+        QProcess installProc;
+        installProc.setWorkingDirectory(packageDir);
+        installProc.start(pixiExe, { QStringLiteral("install") });
+        if (!installProc.waitForFinished(installTimeoutMs)) {
+          qWarning() << "pixi install timed out for" << packageDir;
+          installProc.kill();
+          continue;
+        }
+        if (installProc.exitCode() != 0) {
+          qWarning() << "pixi install failed for" << packageDir << ":"
+                     << QString::fromUtf8(installProc.readAllStandardError());
+        }
+      } else {
+        // Step 1: create a venv
+        QProcess venvProc;
+        venvProc.setWorkingDirectory(packageDir);
+        venvProc.start(pythonExe,
+                       { QStringLiteral("-m"), QStringLiteral("venv"),
+                         QStringLiteral(".venv") });
+        if (!venvProc.waitForFinished(installTimeoutMs)) {
+          qWarning() << "venv creation timed out for" << packageDir;
+          venvProc.kill();
+          continue;
+        }
+        if (venvProc.exitCode() != 0) {
+          qWarning() << "venv creation failed for" << packageDir << ":"
+                     << venvProc.readAllStandardError();
+          continue;
+        }
+
+        // Step 2: pip install . using the venv's pip
+#ifdef Q_OS_WIN
+        QString venvPip = packageDir + QStringLiteral("/.venv/Scripts/pip.exe");
+#else
+        QString venvPip = packageDir + QStringLiteral("/.venv/bin/pip");
+#endif
+        QProcess installProc;
+        installProc.setWorkingDirectory(packageDir);
+        installProc.start(venvPip,
+                          { QStringLiteral("install"), QStringLiteral(".") });
+        if (!installProc.waitForFinished(installTimeoutMs)) {
+          qWarning() << "pip install timed out for" << packageDir;
+          installProc.kill();
+          continue;
+        }
+        if (installProc.exitCode() != 0) {
+          qWarning() << "pip install failed for" << packageDir << ":"
+                     << installProc.readAllStandardError();
+        }
+      }
+    }
+  });
+
+  connect(
+    installThread, &QThread::finished, this,
+    [this, packageDirs, installThread]() {
+      for (const QString& packageDir : packageDirs)
+        registerPackage(packageDir);
+      emit packagesInstalled();
+      installThread->deleteLater();
+    },
+    Qt::QueuedConnection);
+
+  installThread->start();
+}
+
+// ---------------------------------------------------------------------------
+// Registration
+// ---------------------------------------------------------------------------
+
+bool PackageManager::registerPackage(const QString& packageDir)
+{
+  PackageInfo info;
+  QList<FeatureEntry> features;
+
+  if (!parsePackage(packageDir, info, features))
+    return false;
+
+  // If already registered, remove old features first
+  if (registeredPackages().contains(info.name))
+    unregisterPackage(info.name);
+
+  saveToCache(info, features);
+  emitFeatures(info, features);
+  return true;
+}
+
+bool PackageManager::unregisterPackage(const QString& packageName)
+{
+  PackageInfo info;
+  QList<FeatureEntry> features;
+
+  if (!loadFromCache(packageName, info, features))
+    return false;
+
+  // Notify consumers so they can clean up
+  for (const auto& f : features)
+    emit featureRemoved(f.type, info.directory, info.command, f.identifier);
+
+  removeFromCache(packageName);
+  return true;
+}
+
+// ---------------------------------------------------------------------------
+// Directory scanning
+// ---------------------------------------------------------------------------
+
+QStringList PackageManager::scanDirectory(const QString& directoryPath)
+{
+  QStringList result;
+
+  QDir dir(directoryPath);
+  if (!dir.exists()) {
+#ifndef NDEBUG
+    qWarning() << "PackageManager::scanDirectory: directory does not exist:"
+               << directoryPath;
+#endif
+    return result;
+  }
+
+  const QStringList subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+  for (const QString& subdir : subdirs) {
+    QString packageDir = dir.absoluteFilePath(subdir);
+    QString tomlPath = packageDir + QStringLiteral("/pyproject.toml");
+
+    QFile tomlFile(tomlPath);
+    if (!tomlFile.exists())
+      continue;
+
+    // Compute hash of the current pyproject.toml
+    if (!tomlFile.open(QIODevice::ReadOnly))
+      continue;
+    QByteArray currentHash =
+      QCryptographicHash::hash(tomlFile.readAll(), QCryptographicHash::Sha256)
+        .toHex();
+    tomlFile.close();
+
+    // Check if we already have this package with the same hash
+    // We need to find the package name — check all registered packages
+    bool needsRegistration = true;
+    const QStringList known = registeredPackages();
+    for (const QString& name : known) {
+      PackageInfo info = packageInfo(name);
+      if (QDir(info.directory) == QDir(packageDir)) {
+        // Same directory — check the cached hash
+        QSettings settings;
+        QString prefix = QStringLiteral("packages/") + name + '/';
+        QByteArray cachedHash =
+          settings.value(prefix + "tomlHash").toByteArray();
+        if (cachedHash == currentHash) {
+          needsRegistration = false;
+        }
+        break;
+      }
+    }
+
+    if (needsRegistration) {
+      result.append(packageDir);
+    }
+  }
+
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Startup
+// ---------------------------------------------------------------------------
+
+void PackageManager::loadRegisteredPackages()
+{
+  QSettings settings;
+  settings.beginGroup(QStringLiteral("packages"));
+  const QStringList names = settings.childGroups();
+  settings.endGroup();
+
+  for (const QString& name : names) {
+    PackageInfo info;
+    QList<FeatureEntry> features;
+    if (loadFromCache(name, info, features))
+      emitFeatures(info, features);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Queries
+// ---------------------------------------------------------------------------
+
+QStringList PackageManager::registeredPackages() const
+{
+  QSettings settings;
+  settings.beginGroup(QStringLiteral("packages"));
+  QStringList names = settings.childGroups();
+  settings.endGroup();
+  return names;
+}
+
+PackageManager::PackageInfo PackageManager::packageInfo(
+  const QString& packageName) const
+{
+  PackageInfo info;
+  QSettings settings;
+  QString prefix = QStringLiteral("packages/") + packageName + '/';
+  info.name = packageName;
+  info.version = settings.value(prefix + "version").toString();
+  info.directory = settings.value(prefix + "directory").toString();
+  info.command = settings.value(prefix + "command").toString();
+  // not really crucial
+  info.description = settings.value(prefix + "description").toString();
+  return info;
+}
+
+// ---------------------------------------------------------------------------
+// TOML parsing
+// ---------------------------------------------------------------------------
+
+bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
+                                  QList<FeatureEntry>& features)
+{
+  QString tomlPath = packageDir + QStringLiteral("/pyproject.toml");
+  QFileInfo fi(tomlPath);
+  if (!fi.exists() || !fi.isReadable()) {
+    qWarning() << "PackageManager: pyproject.toml not found in" << packageDir;
+    return false;
+  }
+
+  toml::table root;
+  try {
+    QFile tomlFile(tomlPath);
+    if (!tomlFile.open(QIODevice::ReadOnly | QIODevice::Text))
+      return false;
+    QByteArray content = tomlFile.readAll();
+    root = toml::parse(std::string_view(content.constData(), content.size()));
+  } catch (const toml::parse_error& err) {
+    qWarning() << "PackageManager: TOML parse error in" << tomlPath << ":"
+               << err.what();
+    return false;
+  }
+
+  // --- [project] ---
+  auto* project = root["project"].as_table();
+  if (!project) {
+    qWarning() << "PackageManager: missing [project] table in" << tomlPath;
+    return false;
+  }
+
+  info.directory = QDir(packageDir).absolutePath();
+
+  if (auto* v = (*project)["name"].as_string())
+    info.name = QString::fromStdString(std::string(v->get()));
+  if (auto* v = (*project)["version"].as_string())
+    info.version = QString::fromStdString(std::string(v->get()));
+  // not really crucial
+  if (auto* v = (*project)["description"].as_string())
+    info.description = QString::fromStdString(std::string(v->get()));
+
+  if (info.name.isEmpty()) {
+    qWarning() << "PackageManager: [project.name] is required in" << tomlPath;
+    return false;
+  }
+
+  // --- [project.scripts] → find the avogadro- entry point ---
+  if (auto* scripts = (*project)["scripts"].as_table()) {
+    for (auto&& [key, val] : *scripts) {
+      QString k = QString::fromStdString(std::string(key.str()));
+      if (k.startsWith(QStringLiteral("avogadro-"))) {
+        if (info.command.isEmpty())
+          info.command = k;
+        // in principle we should break, but check for multiple entries
+        // and warn about them
+        else
+          qWarning() << "PackageManager: multiple avogadro-* entry points in"
+                     << tomlPath;
+      }
+    }
+  }
+  if (info.command.isEmpty()) {
+    qWarning() << "PackageManager: no avogadro-* entry in [project.scripts]"
+               << "in" << tomlPath;
+    return false;
+  }
+
+  // --- [tool.avogadro.*] feature arrays ---
+  auto* toolAvogadro = root["tool"]["avogadro"].as_table();
+  if (!toolAvogadro) {
+    qWarning() << "PackageManager: missing [tool.avogadro] in" << tomlPath;
+    return false;
+  }
+
+  const QStringList types = featureTypes();
+  for (const QString& type : types) {
+    auto* arr = (*toolAvogadro)[type.toStdString()].as_array();
+    if (!arr)
+      continue;
+
+    for (auto&& element : *arr) {
+      auto* table = element.as_table();
+      if (!table)
+        continue;
+
+      FeatureEntry entry;
+      entry.type = type;
+
+      // Extract identifier (required)
+      if (auto* id = (*table)["identifier"].as_string()) {
+        entry.identifier = QString::fromStdString(std::string(id->get()));
+      } else {
+        qWarning() << "PackageManager: feature in" << type
+                   << "missing identifier, skipping";
+        continue;
+      }
+
+      // Convert the entire table to metadata (identifier is kept for
+      // convenience)
+      entry.metadata = tomlTableToVariantMap(*table);
+      features.append(entry);
+    }
+  }
+
+  return true;
+}
+
+// ---------------------------------------------------------------------------
+// Signal emission
+// ---------------------------------------------------------------------------
+
+void PackageManager::emitFeatures(const PackageInfo& info,
+                                  const QList<FeatureEntry>& features)
+{
+  for (const auto& f : features) {
+    emit featureRegistered(f.type, info.directory, info.command, f.identifier,
+                           f.metadata);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// QSettings cache
+// ---------------------------------------------------------------------------
+
+void PackageManager::saveToCache(const PackageInfo& info,
+                                 const QList<FeatureEntry>& features)
+{
+  QSettings settings;
+  QString prefix = QStringLiteral("packages/") + info.name + '/';
+
+  settings.setValue(prefix + "directory", info.directory);
+  settings.setValue(prefix + "command", info.command);
+  settings.setValue(prefix + "version", info.version);
+  // not really crucial
+  settings.setValue(prefix + "description", info.description);
+
+  // Store a hash of pyproject.toml so scanDirectory() can detect changes
+  QString tomlPath = info.directory + QStringLiteral("/pyproject.toml");
+  QFile tomlFile(tomlPath);
+  if (tomlFile.open(QIODevice::ReadOnly)) {
+    QByteArray hash =
+      QCryptographicHash::hash(tomlFile.readAll(), QCryptographicHash::Sha256);
+    settings.setValue(prefix + "tomlHash", hash.toHex());
+  }
+
+  // Serialize features as a JSON array string
+  QJsonArray arr;
+  for (const auto& f : features)
+    arr.append(featureEntryToJson(f));
+
+  settings.setValue(prefix + "features",
+                    QJsonDocument(arr).toJson(QJsonDocument::Compact));
+  settings.sync();
+}
+
+void PackageManager::removeFromCache(const QString& packageName)
+{
+  QSettings settings;
+  settings.beginGroup(QStringLiteral("packages"));
+  settings.remove(packageName);
+  settings.endGroup();
+  settings.sync();
+}
+
+bool PackageManager::loadFromCache(const QString& packageName,
+                                   PackageInfo& info,
+                                   QList<FeatureEntry>& features)
+{
+  QSettings settings;
+  QString prefix = QStringLiteral("packages/") + packageName + '/';
+
+  info.name = packageName;
+  info.directory = settings.value(prefix + "directory").toString();
+  info.command = settings.value(prefix + "command").toString();
+  info.version = settings.value(prefix + "version").toString();
+  info.description = settings.value(prefix + "description").toString();
+
+  if (info.directory.isEmpty() || info.command.isEmpty())
+    return false;
+
+  QByteArray json = settings.value(prefix + "features").toByteArray();
+  QJsonDocument doc = QJsonDocument::fromJson(json);
+  if (!doc.isArray())
+    return false;
+
+  const QJsonArray arr = doc.array();
+  for (const auto& val : arr) {
+    if (val.isObject())
+      features.append(featureEntryFromJson(val.toObject()));
+  }
+
+  return true;
+}
+
+} // namespace Avogadro::QtGui

@@ -104,6 +104,42 @@ ScriptEnergy::~ScriptEnergy()
   delete m_interpreter;
 }
 
+void ScriptEnergy::setPackageInfo(const QString& packageDir,
+                                  const QString& command,
+                                  const QString& identifier)
+{
+  m_interpreter->setPackageInfo(packageDir, command, identifier);
+}
+
+void ScriptEnergy::readMetaData(const QVariantMap& metadata)
+{
+  resetMetaData();
+
+  m_identifier = metadata.value("identifier").toString().toStdString();
+  m_name = metadata.value("model-name").toString().toStdString();
+  m_description = metadata.value("description").toString().toStdString();
+
+  QString inputFmt = metadata.value("input-format").toString();
+  m_inputFormat = stringToFormat(inputFmt.toStdString());
+  m_formatString = inputFmt;
+
+  QString protocol = metadata.value("protocol").toString();
+  m_protocol = stringToProtocol(protocol.toStdString());
+
+  QVariantMap support = metadata.value("support").toMap();
+  m_gradients = support.value("gradients", false).toBool();
+  m_unitCells = support.value("unit-cell", false).toBool();
+  m_ions = support.value("ions", false).toBool();
+  m_radicals = support.value("radicals", false).toBool();
+
+  QString elemStr = support.value("elements").toString();
+  if (!elemStr.isEmpty())
+    processElementString(elemStr);
+
+  m_valid =
+    !m_identifier.empty() && !m_name.empty() && m_inputFormat != NotUsed;
+}
+
 QString ScriptEnergy::scriptFilePath() const
 {
   return m_interpreter->scriptFilePath();
@@ -111,7 +147,33 @@ QString ScriptEnergy::scriptFilePath() const
 
 Calc::EnergyCalculator* ScriptEnergy::newInstance() const
 {
-  return new ScriptEnergy(m_interpreter->scriptFilePath());
+  auto* copy = new ScriptEnergy();
+  if (m_interpreter->isPackageMode()) {
+    copy->m_interpreter->setPackageInfo(m_interpreter->packageDir(),
+                                        m_interpreter->packageCommand(),
+                                        m_interpreter->packageIdentifier());
+    copy->copyMetaDataFrom(*this);
+  } else {
+    copy->m_interpreter->setScriptFilePath(m_interpreter->scriptFilePath());
+    copy->readMetaData();
+  }
+  return copy;
+}
+
+void ScriptEnergy::copyMetaDataFrom(const ScriptEnergy& other)
+{
+  m_identifier = other.m_identifier;
+  m_name = other.m_name;
+  m_description = other.m_description;
+  m_inputFormat = other.m_inputFormat;
+  m_formatString = other.m_formatString;
+  m_protocol = other.m_protocol;
+  m_gradients = other.m_gradients;
+  m_unitCells = other.m_unitCells;
+  m_ions = other.m_ions;
+  m_radicals = other.m_radicals;
+  m_elements = other.m_elements;
+  m_valid = other.m_valid;
 }
 
 void ScriptEnergy::setMolecule(Core::Molecule* mol)
@@ -521,7 +583,9 @@ ScriptEnergy::Format ScriptEnergy::stringToFormat(const std::string& str)
 
 ScriptEnergy::Protocol ScriptEnergy::stringToProtocol(const std::string& str)
 {
-  if (str == "binary-v1")
+  // Check for "binary" mode
+  // this will change if the binary format changes
+  if (str.rfind("binary", 0) == 0)
     return Protocol::BinaryV1;
 
   return Protocol::TextV1;

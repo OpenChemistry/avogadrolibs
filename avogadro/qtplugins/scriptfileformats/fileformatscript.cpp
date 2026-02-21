@@ -39,6 +39,62 @@ FileFormatScript::~FileFormatScript()
   delete m_interpreter;
 }
 
+void FileFormatScript::setPackageInfo(const QString& packageDir,
+                                      const QString& command,
+                                      const QString& identifier)
+{
+  m_interpreter->setPackageInfo(packageDir, command, identifier);
+}
+
+void FileFormatScript::readMetaData(const QVariantMap& metadata)
+{
+  resetMetaData();
+
+  m_identifier = metadata.value("identifier").toString().toStdString();
+  if (!m_identifier.empty())
+    m_identifier = "User Script: " + m_identifier;
+
+  m_name = metadata.value("format-name").toString().toStdString();
+  m_description = metadata.value("description").toString().toStdString();
+
+  QVariantMap support = metadata.value("support").toMap();
+  if (support.value("read", false).toBool())
+    m_operations |= Io::FileFormat::Read;
+  if (support.value("write", false).toBool())
+    m_operations |= Io::FileFormat::Write;
+  m_operations |=
+    Io::FileFormat::File | Io::FileFormat::Stream | Io::FileFormat::String;
+
+  if (m_operations & Io::FileFormat::Write) {
+    QString inputFmt = metadata.value("input-format").toString();
+    m_inputFormat = stringToFormat(inputFmt.toStdString());
+  }
+
+  if (m_operations & Io::FileFormat::Read) {
+    QString outputFmt = metadata.value("output-format").toString();
+    m_outputFormat = stringToFormat(outputFmt.toStdString());
+  }
+
+  // Parse file extensions array
+  QVariantList extList = metadata.value("file-extensions").toList();
+  for (const auto& ext : extList)
+    m_fileExtensions.push_back(ext.toString().toStdString());
+
+  // Parse mime types array
+  QVariantList mimeList = metadata.value("mime-types").toList();
+  for (const auto& mime : mimeList)
+    m_mimeTypes.push_back(mime.toString().toStdString());
+
+  // Check for bond-on-read
+  if (metadata.contains("bond"))
+    m_bondOnRead = metadata.value("bond").toBool();
+
+  m_valid =
+    !m_identifier.empty() && !m_name.empty() &&
+    (!(m_operations & Io::FileFormat::Write) || m_inputFormat != NotUsed) &&
+    (!(m_operations & Io::FileFormat::Read) || m_outputFormat != NotUsed);
+}
+
 QString FileFormatScript::scriptFilePath() const
 {
   return m_interpreter->scriptFilePath();
@@ -46,7 +102,32 @@ QString FileFormatScript::scriptFilePath() const
 
 Io::FileFormat* FileFormatScript::newInstance() const
 {
-  return new FileFormatScript(m_interpreter->scriptFilePath());
+  auto* copy = new FileFormatScript();
+  if (m_interpreter->isPackageMode()) {
+    copy->m_interpreter->setPackageInfo(m_interpreter->packageDir(),
+                                        m_interpreter->packageCommand(),
+                                        m_interpreter->packageIdentifier());
+    copy->copyMetaDataFrom(*this);
+  } else {
+    copy->m_interpreter->setScriptFilePath(m_interpreter->scriptFilePath());
+    copy->readMetaData();
+  }
+  return copy;
+}
+
+void FileFormatScript::copyMetaDataFrom(const FileFormatScript& other)
+{
+  m_identifier = other.m_identifier;
+  m_name = other.m_name;
+  m_description = other.m_description;
+  m_specificationUrl = other.m_specificationUrl;
+  m_operations = other.m_operations;
+  m_inputFormat = other.m_inputFormat;
+  m_outputFormat = other.m_outputFormat;
+  m_fileExtensions = other.m_fileExtensions;
+  m_mimeTypes = other.m_mimeTypes;
+  m_bondOnRead = other.m_bondOnRead;
+  m_valid = other.m_valid;
 }
 
 bool FileFormatScript::read(std::istream& in, Core::Molecule& molecule)

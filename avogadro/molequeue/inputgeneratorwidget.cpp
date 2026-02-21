@@ -55,6 +55,13 @@ void InputGeneratorWidget::setInputGeneratorScript(const QString& scriptFile)
   resetWarningDisplay();
 }
 
+void InputGeneratorWidget::reloadOptions()
+{
+  m_ui->debugCheckBox->setChecked(m_inputGenerator.debug());
+  updateOptions();
+  resetWarningDisplay();
+}
+
 void InputGeneratorWidget::setMolecule(QtGui::Molecule* mol)
 {
   if (mol == m_molecule)

@@ -55,6 +55,7 @@ avogadro_headers(QtGui
   molecule.h
   moleculemodel.h
   multiviewwidget.h
+  packagemanager.h
   periodictableview.h
   persistentatom.h
   persistentbond.h
@@ -98,6 +99,7 @@ target_sources(QtGui PRIVATE
   molecule.cpp
   moleculemodel.cpp
   multiviewwidget.cpp
+  packagemanager.cpp
   periodictablescene_p.cpp
   periodictableview.cpp
   pluginlayermanager.cpp
@@ -139,7 +141,8 @@ if(USE_PLOTTER)
 endif()
 
 avogadro_add_library(QtGui)
-target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets Qt::Concurrent)
+target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets Qt::Concurrent
+  PRIVATE tomlplusplus::tomlplusplus)
 if(USE_PLOTTER)
   target_link_libraries(QtGui PUBLIC JKQTPlotter${QT_VERSION}::JKQTPlotter${QT_VERSION})
   target_compile_definitions(QtGui PUBLIC USE_PLOTTER)

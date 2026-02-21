@@ -171,14 +171,14 @@ void JsonWidget::buildOptionGui()
 
     // create a layout for inserting the tabs
     tabs = new QTabWidget(this);
-    auto* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout;
     layout->addWidget(tabs);
     m_centralWidget->setLayout(layout);
   } else {
     size = 1;
 
     // create the form layout for the widget
-    auto* layout = new QFormLayout();
+    auto* layout = new QFormLayout;
     m_currentLayout = layout;
     m_centralWidget->setLayout(layout);
   }
@@ -682,6 +682,9 @@ void JsonWidget::setOptionDefaults()
          it != itEnd; ++it) {
       QString label = it.key();
       QJsonValue val = it.value();
+
+      if (label == "tabName")
+        continue;
 
       if (!val.isObject()) {
         qWarning()
