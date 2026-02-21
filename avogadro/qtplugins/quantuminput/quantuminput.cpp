@@ -230,7 +230,15 @@ void QuantumInput::menuActivated()
       }
 
       dlg->widget().reloadOptions();
-      dlg->setWindowTitle(tr("%1 Input Generator").arg(theSender->text()));
+
+      // check the title for …
+      QString title(theSender->text());
+      if (title.endsWith("..."))
+        title.chop(3);
+      else if (title.endsWith("…"))
+        title.chop(1);
+
+      dlg->setWindowTitle(tr("%1 Input Generator").arg(title));
       connect(&dlg->widget(), &MoleQueue::InputGeneratorWidget::openJobOutput,
               this, &QuantumInput::openJobOutput);
       m_dialogs.insert(key, dlg);
