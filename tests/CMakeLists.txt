@@ -1,3 +1,19 @@
+cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
+project(AvogadroLibsTest LANGUAGES CXX)
+
+include(CTest)
+enable_testing()
+
+if(PROJECT_IS_TOP_LEVEL)
+  # Enable build of standalone tests
+  # testing against AvogadroLibs already installed on the system.
+
+  # QT_VERSION not previously defined when building tests only
+  set(QT_VERSION 6)
+
+  find_package(AvogadroLibs REQUIRED)
+endif()
+
 include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/core")
 
 # find google test
@@ -34,7 +50,14 @@ find_path(AVOGADRO_DATA_ROOT .avogadro.data
 mark_as_advanced(AVOGADRO_DATA_ROOT)
 
 # Add the tests for each module.
-add_subdirectory(calc)
+
+if(NOT PROJECT_IS_TOP_LEVEL)
+  # calc/energycalculator.h requires cppoptlib/problem.h, which is
+  # provided in source but not currently installed with AvogadroLibs.
+  # So skip calc in standalone tests until Issue#2631 is resolved.
+  add_subdirectory(calc)
+endif()
+
 add_subdirectory(core)
 add_subdirectory(io)
 add_subdirectory(quantumio)
