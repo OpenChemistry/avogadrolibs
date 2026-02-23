@@ -17,6 +17,7 @@
 #include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
 #include <avogadro/qtgui/scriptloader.h>
+#include <avogadro/qtgui/tomlparse.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QAction>
@@ -209,15 +210,40 @@ void QuantumInput::menuActivated()
             if (!highlightStylesRel.isEmpty()) {
               QFile stylesFile(pkgDir + '/' + highlightStylesRel);
               if (stylesFile.open(QIODevice::ReadOnly)) {
-                QJsonDocument stylesDoc =
-                  QJsonDocument::fromJson(stylesFile.readAll());
-                // File may be a bare array or {"highlightStyles": [...]}
-                if (stylesDoc.isArray()) {
-                  opts.insert("highlightStyles", stylesDoc.array());
-                } else if (stylesDoc.isObject()) {
-                  QJsonValue v = stylesDoc.object().value("highlightStyles");
-                  if (v.isArray())
-                    opts.insert("highlightStyles", v.toArray());
+                QByteArray content = stylesFile.readAll();
+                if (highlightStylesRel.endsWith(QLatin1String(".toml"),
+                                                Qt::CaseInsensitive)) {
+                  // TOML format: each top-level key is a style name, with a
+                  // "rules" sub-array. e.g. [[default.rules]] → style "default"
+                  bool ok = false;
+                  QVariantMap tomlMap = QtGui::parseTomlString(
+                    std::string_view(content.constData(), content.size()), &ok);
+                  if (ok) {
+                    QJsonArray stylesArray;
+                    for (auto it = tomlMap.constBegin();
+                         it != tomlMap.constEnd(); ++it) {
+                      QVariantMap styleMap = it.value().toMap();
+                      QJsonObject styleObj;
+                      styleObj[QStringLiteral("style")] = it.key();
+                      styleObj[QStringLiteral("rules")] =
+                        QJsonArray::fromVariantList(
+                          styleMap.value(QStringLiteral("rules")).toList());
+                      stylesArray.append(styleObj);
+                    }
+                    if (!stylesArray.isEmpty())
+                      opts.insert("highlightStyles", stylesArray);
+                  }
+                } else {
+                  // JSON (default)
+                  QJsonDocument stylesDoc = QJsonDocument::fromJson(content);
+                  // File may be a bare array or {"highlightStyles": [...]}
+                  if (stylesDoc.isArray()) {
+                    opts.insert("highlightStyles", stylesDoc.array());
+                  } else if (stylesDoc.isObject()) {
+                    QJsonValue v = stylesDoc.object().value("highlightStyles");
+                    if (v.isArray())
+                      opts.insert("highlightStyles", v.toArray());
+                  }
                 }
               }
             }

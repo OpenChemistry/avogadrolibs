@@ -4,12 +4,12 @@
 ******************************************************************************/
 
 #include "packagemanager.h"
+#include "tomlparse.h"
 
 #include <QtCore/QCryptographicHash>
 #include <QtCore/QProcess>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QThread>
-#include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -17,10 +17,6 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QSettings>
-#include <QtCore/QTimeZone>
-
-// tomlplusplus — single header in thirdparty/
-#include <toml.hpp>
 
 namespace Avogadro::QtGui {
 
@@ -78,65 +74,6 @@ static bool hasNonExecutablePixiPython(const QString& packageDir)
   }
 
   return false;
-}
-
-// ---------------------------------------------------------------------------
-// TOML → QVariant helpers
-// ---------------------------------------------------------------------------
-
-static QVariant tomlNodeToVariant(const toml::node& node);
-
-static QVariantMap tomlTableToVariantMap(const toml::table& tbl)
-{
-  QVariantMap map;
-  for (auto&& [key, val] : tbl) {
-    map.insert(QString::fromStdString(std::string(key.str())),
-               tomlNodeToVariant(val));
-  }
-  return map;
-}
-
-static QVariantList tomlArrayToVariantList(const toml::array& arr)
-{
-  QVariantList list;
-  for (auto&& val : arr) {
-    list.append(tomlNodeToVariant(val));
-  }
-  return list;
-}
-
-static QVariant tomlNodeToVariant(const toml::node& node)
-{
-  if (node.is_string())
-    return QString::fromStdString(std::string(node.as_string()->get()));
-  if (node.is_integer())
-    return static_cast<qlonglong>(node.as_integer()->get());
-  if (node.is_floating_point())
-    return node.as_floating_point()->get();
-  if (node.is_boolean())
-    return node.as_boolean()->get();
-  if (node.is_table())
-    return tomlTableToVariantMap(*node.as_table());
-  if (node.is_array())
-    return tomlArrayToVariantList(*node.as_array());
-  if (node.is_date()) {
-    auto d = node.as_date()->get();
-    return QDate(d.year, d.month, d.day);
-  }
-  if (node.is_time()) {
-    auto t = node.as_time()->get();
-    return QTime(t.hour, t.minute, t.second, t.nanosecond / 1000000);
-  }
-  if (node.is_date_time()) {
-    auto dt = node.as_date_time()->get();
-    QDate date(dt.date.year, dt.date.month, dt.date.day);
-    QTime time(dt.time.hour, dt.time.minute, dt.time.second,
-               dt.time.nanosecond / 1000000);
-    if (dt.offset)
-      return QDateTime(date, time, QTimeZone(dt.offset->minutes * 60));
-    return QDateTime(date, time);
-  }
-  return {};
 }
 
 // ---------------------------------------------------------------------------
@@ -432,35 +369,31 @@ bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
     return false;
   }
 
-  toml::table root;
-  try {
-    QFile tomlFile(tomlPath);
-    if (!tomlFile.open(QIODevice::ReadOnly | QIODevice::Text))
-      return false;
-    QByteArray content = tomlFile.readAll();
-    root = toml::parse(std::string_view(content.constData(), content.size()));
-  } catch (const toml::parse_error& err) {
-    qWarning() << "PackageManager: TOML parse error in" << tomlPath << ":"
-               << err.what();
+  QFile tomlFile(tomlPath);
+  if (!tomlFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    return false;
+  QByteArray content = tomlFile.readAll();
+
+  bool ok = false;
+  QVariantMap root =
+    parseTomlString(std::string_view(content.constData(), content.size()), &ok);
+  if (!ok) {
+    qWarning() << "PackageManager: TOML parse error in" << tomlPath;
     return false;
   }
 
   // --- [project] ---
-  auto* project = root["project"].as_table();
-  if (!project) {
+  QVariantMap project = root.value(QStringLiteral("project")).toMap();
+  if (project.isEmpty()) {
     qWarning() << "PackageManager: missing [project] table in" << tomlPath;
     return false;
   }
 
   info.directory = QDir(packageDir).absolutePath();
-
-  if (auto* v = (*project)["name"].as_string())
-    info.name = QString::fromStdString(std::string(v->get()));
-  if (auto* v = (*project)["version"].as_string())
-    info.version = QString::fromStdString(std::string(v->get()));
+  info.name = project.value(QStringLiteral("name")).toString();
+  info.version = project.value(QStringLiteral("version")).toString();
   // not really crucial
-  if (auto* v = (*project)["description"].as_string())
-    info.description = QString::fromStdString(std::string(v->get()));
+  info.description = project.value(QStringLiteral("description")).toString();
 
   if (info.name.isEmpty()) {
     qWarning() << "PackageManager: [project.name] is required in" << tomlPath;
@@ -468,18 +401,16 @@ bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
   }
 
   // --- [project.scripts] → find the avogadro- entry point ---
-  if (auto* scripts = (*project)["scripts"].as_table()) {
-    for (auto&& [key, val] : *scripts) {
-      QString k = QString::fromStdString(std::string(key.str()));
-      if (k.startsWith(QStringLiteral("avogadro-"))) {
-        if (info.command.isEmpty())
-          info.command = k;
-        // in principle we should break, but check for multiple entries
-        // and warn about them
-        else
-          qWarning() << "PackageManager: multiple avogadro-* entry points in"
-                     << tomlPath;
-      }
+  QVariantMap scripts = project.value(QStringLiteral("scripts")).toMap();
+  for (auto it = scripts.constBegin(); it != scripts.constEnd(); ++it) {
+    if (it.key().startsWith(QStringLiteral("avogadro-"))) {
+      if (info.command.isEmpty())
+        info.command = it.key();
+      // in principle we should break, but check for multiple entries
+      // and warn about them
+      else
+        qWarning() << "PackageManager: multiple avogadro-* entry points in"
+                   << tomlPath;
     }
   }
   if (info.command.isEmpty()) {
@@ -489,38 +420,36 @@ bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
   }
 
   // --- [tool.avogadro.*] feature arrays ---
-  auto* toolAvogadro = root["tool"]["avogadro"].as_table();
-  if (!toolAvogadro) {
+  QVariantMap toolAvogadro = root.value(QStringLiteral("tool"))
+                               .toMap()
+                               .value(QStringLiteral("avogadro"))
+                               .toMap();
+  if (toolAvogadro.isEmpty()) {
     qWarning() << "PackageManager: missing [tool.avogadro] in" << tomlPath;
     return false;
   }
 
   const QStringList types = featureTypes();
   for (const QString& type : types) {
-    auto* arr = (*toolAvogadro)[type.toStdString()].as_array();
-    if (!arr)
-      continue;
-
-    for (auto&& element : *arr) {
-      auto* table = element.as_table();
-      if (!table)
+    const QVariantList arr = toolAvogadro.value(type).toList();
+    for (const QVariant& element : arr) {
+      QVariantMap table = element.toMap();
+      if (table.isEmpty())
         continue;
 
       FeatureEntry entry;
       entry.type = type;
+      entry.identifier = table.value(QStringLiteral("identifier")).toString();
 
-      // Extract identifier (required)
-      if (auto* id = (*table)["identifier"].as_string()) {
-        entry.identifier = QString::fromStdString(std::string(id->get()));
-      } else {
+      if (entry.identifier.isEmpty()) {
         qWarning() << "PackageManager: feature in" << type
                    << "missing identifier, skipping";
         continue;
       }
 
-      // Convert the entire table to metadata (identifier is kept for
+      // Store the entire table as metadata (identifier is kept for
       // convenience)
-      entry.metadata = tomlTableToVariantMap(*table);
+      entry.metadata = table;
       features.append(entry);
     }
   }

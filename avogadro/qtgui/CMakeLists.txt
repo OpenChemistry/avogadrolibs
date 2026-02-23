@@ -57,6 +57,7 @@ avogadro_headers(QtGui
   multiviewwidget.h
   packagemanager.h
   periodictableview.h
+  tomlparse.h
   persistentatom.h
   persistentbond.h
   pluginlayermanager.h
@@ -101,6 +102,7 @@ target_sources(QtGui PRIVATE
   multiviewwidget.cpp
   packagemanager.cpp
   periodictablescene_p.cpp
+  tomlparse.cpp
   periodictableview.cpp
   pluginlayermanager.cpp
   pythonscript.cpp
