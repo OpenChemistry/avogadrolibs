@@ -31,7 +31,8 @@ FileFormatScript::FileFormatScript(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
     m_bondOnRead(false), m_inputFormat(NotUsed), m_outputFormat(NotUsed)
 {
-  readMetaData();
+  if (!scriptFileName_.isEmpty())
+    readMetaData();
 }
 
 FileFormatScript::~FileFormatScript()
@@ -103,15 +104,10 @@ QString FileFormatScript::scriptFilePath() const
 Io::FileFormat* FileFormatScript::newInstance() const
 {
   auto* copy = new FileFormatScript();
-  if (m_interpreter->isPackageMode()) {
-    copy->m_interpreter->setPackageInfo(m_interpreter->packageDir(),
-                                        m_interpreter->packageCommand(),
-                                        m_interpreter->packageIdentifier());
-    copy->copyMetaDataFrom(*this);
-  } else {
-    copy->m_interpreter->setScriptFilePath(m_interpreter->scriptFilePath());
-    copy->readMetaData();
-  }
+  copy->m_interpreter->setPackageInfo(m_interpreter->packageDir(),
+                                      m_interpreter->packageCommand(),
+                                      m_interpreter->packageIdentifier());
+  copy->copyMetaDataFrom(*this);
   return copy;
 }
 
