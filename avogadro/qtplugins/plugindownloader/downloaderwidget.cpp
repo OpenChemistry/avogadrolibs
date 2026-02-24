@@ -49,7 +49,8 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
   : QDialog(parent), m_ui(new Ui::DownloaderWidget)
 {
   m_filePath =
-    QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
+    "/packages";
   m_NetworkAccessManager = new QNetworkAccessManager(this);
   m_ui->setupUi(this);
   // enable links in the readme to open an external browser
@@ -211,6 +212,7 @@ void DownloaderWidget::showREADME()
 
     m_ui->readmeBrowser->setMarkdown(QByteArray::fromBase64(content).data());
   }
+  m_reply->deleteLater();
 }
 
 // see which repositories the user checked
@@ -304,6 +306,7 @@ void DownloaderWidget::handleRedirect()
       QVariant possibleRedirectUrl =
         m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
       QUrl _urlRedirectedTo = possibleRedirectUrl.toUrl();
+      m_reply->deleteLater();
       QNetworkRequest request;
       setRawHeaders(&request);
       request.setUrl(_urlRedirectedTo); // Set the url
@@ -343,6 +346,9 @@ void DownloaderWidget::handleRedirect()
 void DownloaderWidget::unzipPlugin()
 {
   if (m_reply->error() != QNetworkReply::NoError) {
+    m_reply->deleteLater();
+    m_downloadList.removeLast();
+    downloadNext();
     return;
   }
 
@@ -353,11 +359,6 @@ void DownloaderWidget::unzipPlugin()
   QString repoName = m_downloadList.last().name;
   QString filename = repoName + ".zip";
   QString absolutePath = m_filePath + "/" + filename;
-  // something like /path/to/avogadro/commands or formats/ etc.
-  QString extractDirectory =
-    m_filePath + "/" + m_downloadList.last().type + "/";
-
-  QDir().mkpath(extractDirectory);
 
   m_ui->readmeBrowser->append(
     tr("Downloading %1 to %2\n").arg(filename).arg(m_filePath));
@@ -371,13 +372,13 @@ void DownloaderWidget::unzipPlugin()
   out.write(fileData);
   out.close();
 
-  std::string extractdir = extractDirectory.toStdString();
+  std::string extractdir = m_filePath.toStdString();
   std::string absolutep = absolutePath.toStdString();
 
   ZipExtracter unzip;
 
   m_ui->readmeBrowser->append(
-    tr("Extracting %1 to %2\n").arg(absolutePath).arg(extractDirectory));
+    tr("Extracting %1 to %2\n").arg(absolutePath).arg(m_filePath));
 
   QList<QString> newFiles = unzip.listFiles(absolutep);
   m_ui->readmeBrowser->append(tr("Finished %1 files\n").arg(newFiles.length()));
@@ -402,7 +403,7 @@ void DownloaderWidget::unzipPlugin()
       }
 
       QString component = namePieces.join('-');
-      QString destination(extractDirectory + '/' + component);
+      QString destination(m_filePath + '/' + component);
 
       // Remove previous version if it's present
       QDir previousInstall(destination);
@@ -410,7 +411,7 @@ void DownloaderWidget::unzipPlugin()
         previousInstall.removeRecursively();
 
       // move our new directory in place
-      QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+      QDir().rename(m_filePath + '/' + newFiles[0], destination);
 
       // Install dependencies and register the package
       QtGui::PackageManager::instance()->installPackages({ destination });
