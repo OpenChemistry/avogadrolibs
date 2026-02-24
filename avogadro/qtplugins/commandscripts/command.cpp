@@ -24,6 +24,8 @@
 #include <QtWidgets/QVBoxLayout>
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QFile>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
@@ -192,6 +194,36 @@ void Command::menuActivated()
       widget = new InterfaceWidget(QString(), theParent);
       widget->interfaceScript().interpreter().setPackageInfo(pkgDir, pkgCmd,
                                                              pkgId);
+
+      // Build options from pyproject.toml metadata; never call --print-options
+      // for package-based commands (mirrors QuantumInput::menuActivated()).
+      QJsonObject opts;
+      QString inputFormat =
+        theSender->property("packageInputFormat").toString();
+      if (!inputFormat.isEmpty())
+        opts.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
+
+      QString userOptionsRel =
+        theSender->property("packageUserOptions").toString();
+      if (!userOptionsRel.isEmpty()) {
+        QFile optFile(pkgDir + '/' + userOptionsRel);
+        if (optFile.open(QIODevice::ReadOnly)) {
+          QJsonDocument doc = QJsonDocument::fromJson(optFile.readAll());
+          if (doc.isObject()) {
+            QJsonObject fileOpts = doc.object();
+            for (auto it = fileOpts.constBegin(); it != fileOpts.constEnd();
+                 ++it)
+              opts.insert(it.key(), it.value());
+          }
+        } else {
+          qWarning() << "Command: could not open user-options file:"
+                     << (pkgDir + '/' + userOptionsRel);
+        }
+      }
+
+      // Pre-populate the cached options so reloadOptions() does not invoke
+      // the script with --print-options.
+      widget->interfaceScript().setOptionsJson(opts);
       widget->reloadOptions();
       m_dialogs.insert(key, widget);
     }
@@ -252,6 +284,8 @@ void Command::run()
       m_currentScript->interpreter().setPackageInfo(interp.packageDir(),
                                                     interp.packageCommand(),
                                                     interp.packageIdentifier());
+      // Copy cached options so insertMolecule() doesn't call --print-options
+      m_currentScript->setOptionsJson(iface.options());
     } else {
       m_currentScript->setScriptFilePath(iface.scriptFilePath());
     }
@@ -344,21 +378,35 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   if (type != QLatin1String("menu-commands"))
     return;
 
-  // Extract label from metadata: path.entry.label
+  // Labels can be a plain string or a localized table {default: "...", locale:
+  // "..."} Resolve to a string using the current locale, falling back to
+  // "default".
+  auto resolveLabel = [](const QVariant& var) -> QString {
+    if (var.typeId() == QMetaType::QVariantMap) {
+      QVariantMap m = var.toMap();
+      // TODO: use the actual locale from --lang arg
+      return m.value(QStringLiteral("default")).toString();
+    }
+    return var.toString();
+  };
+
+  // Extract label and priority from path.item (the TOML key is "item", not
+  // "entry")
   QVariantMap pathMap = metadata.value("path").toMap();
-  QVariantMap entryMap = pathMap.value("entry").toMap();
-  QString label = entryMap.value("label").toString();
+  QVariantMap itemMap = pathMap.value("item").toMap();
+  QString label = resolveLabel(itemMap.value("label"));
   if (label.isEmpty())
     label = identifier;
 
-  // Build menu path from metadata: path.menu, path.submenu.menu, ...
+  // Build menu path from metadata: path.menu, then path.submenu.label
   QStringList menuPathList;
   QString topMenu = pathMap.value("menu").toString();
   if (!topMenu.isEmpty())
     menuPathList << topMenu;
 
-  // Check for submenu
-  QString submenu = pathMap.value("submenu").toMap().value("menu").toString();
+  // Submenu label uses the "label" key (not "menu"), and may be localized
+  QVariantMap submenuData = pathMap.value("submenu").toMap();
+  QString submenu = resolveLabel(submenuData.value("label"));
   if (!submenu.isEmpty())
     menuPathList << submenu;
 
@@ -366,8 +414,8 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   if (menuPathList.isEmpty())
     menuPathList << tr("&Extensions") << tr("Scripts");
 
-  // Extract priority
-  int priority = entryMap.value("priority", 0).toInt();
+  // Extract priority from path.item.priority
+  int priority = itemMap.value("priority", 0).toInt();
 
   // Create the action
   auto* action = new QAction(label, this);
@@ -376,6 +424,10 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   action->setProperty("packageCommand", command);
   action->setProperty("packageIdentifier", identifier);
   action->setProperty("packageMenuPath", menuPathList);
+  action->setProperty("packageUserOptions",
+                      metadata.value("user-options").toString());
+  action->setProperty("packageInputFormat",
+                      metadata.value("input-format").toString());
   action->setEnabled(true);
 
   if (priority != 0)
@@ -386,6 +438,7 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   m_packageActions.insert(
     QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier),
     action);
+  emit actionsChanged();
 }
 
 void Command::unregisterFeature(const QString& type, const QString& packageDir,
@@ -420,6 +473,7 @@ void Command::unregisterFeature(const QString& type, const QString& packageDir,
     m_actions.removeAll(action);
     action->deleteLater();
   }
+  emit actionsChanged();
 }
 
 } // namespace Avogadro::QtPlugins

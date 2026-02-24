@@ -134,6 +134,11 @@ void InterfaceScript::setScriptFilePath(const QString& scriptFile)
   m_interpreter->setScriptFilePath(scriptFile);
 }
 
+void InterfaceScript::setOptionsJson(const QJsonObject& opts)
+{
+  m_options = opts;
+}
+
 void InterfaceScript::reset()
 {
   m_interpreter->setDefaultPythonInterpreter();
@@ -168,8 +173,13 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
 
   connect(m_interpreter, &PythonScript::finished, this,
           &::Avogadro::QtGui::InterfaceScript::commandFinished);
-  m_interpreter->asyncExecute(QStringList() << QStringLiteral("--run-command"),
-                              QJsonDocument(allOptions).toJson());
+  // Package-mode scripts take no command-line flag; the identifier is already
+  // the positional argument and JSON arrives on stdin (mirrors
+  // InputGenerator::generateInput() which passes QStringList()).
+  QStringList runArgs;
+  if (!m_interpreter->isPackageMode())
+    runArgs << QStringLiteral("--run-command");
+  m_interpreter->asyncExecute(runArgs, QJsonDocument(allOptions).toJson());
   return true;
 }
 
@@ -411,7 +421,7 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                           .arg(m_filenames.size());
           } // end if/else file is JSON object
-        } // end foreach file
+        }   // end foreach file
       } else {
         result = false;
         m_errors << tr("'files' member not an array.");

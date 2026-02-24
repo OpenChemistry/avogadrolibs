@@ -322,6 +322,7 @@ void QuantumInput::registerFeature(const QString& type,
   m_packageActions.insert(
     QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier),
     action);
+  emit actionsChanged();
 }
 
 void QuantumInput::unregisterFeature(const QString& type,
@@ -348,6 +349,7 @@ void QuantumInput::unregisterFeature(const QString& type,
 
   for (QAction* action : actions)
     action->deleteLater();
+  emit actionsChanged();
 }
 
 } // namespace Avogadro::QtPlugins

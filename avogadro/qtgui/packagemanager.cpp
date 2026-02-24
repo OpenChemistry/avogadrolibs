@@ -312,7 +312,7 @@ QStringList PackageManager::scanDirectory(const QString& directoryPath)
 // Startup
 // ---------------------------------------------------------------------------
 
-void PackageManager::loadRegisteredPackages()
+void PackageManager::loadRegisteredPackages(const QString& typeFilter)
 {
   QSettings settings;
   settings.beginGroup(QStringLiteral("packages"));
@@ -322,8 +322,21 @@ void PackageManager::loadRegisteredPackages()
   for (const QString& name : names) {
     PackageInfo info;
     QList<FeatureEntry> features;
-    if (loadFromCache(name, info, features))
+    if (!loadFromCache(name, info, features))
+      continue;
+
+    if (typeFilter.isEmpty()) {
       emitFeatures(info, features);
+      continue;
+    }
+
+    QList<FeatureEntry> filtered;
+    for (const auto& feature : features) {
+      if (feature.type == typeFilter)
+        filtered.append(feature);
+    }
+    if (!filtered.isEmpty())
+      emitFeatures(info, filtered);
   }
 }
 

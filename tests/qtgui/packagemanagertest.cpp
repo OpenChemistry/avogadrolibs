@@ -278,6 +278,24 @@ TEST_F(PackageManagerTest, loadRegisteredPackagesReplaysSignals)
   EXPECT_EQ(spy.count(), 6);
 }
 
+TEST_F(PackageManagerTest, loadRegisteredPackagesTypeFilterReplaysOnlyMatches)
+{
+  auto* pm = PackageManager::instance();
+
+  // Register first (this caches to QSettings)
+  pm->registerPackage(m_packageDir);
+
+  // Replay only electrostatic models from cache.
+  QSignalSpy spy(pm, &PackageManager::featureRegistered);
+  pm->loadRegisteredPackages(QStringLiteral("electrostatic-models"));
+
+  ASSERT_EQ(spy.count(), 1);
+  const QList<QVariant> args = spy.at(0);
+  ASSERT_EQ(args.size(), 5);
+  EXPECT_EQ(args.at(0).toString(), QStringLiteral("electrostatic-models"));
+  EXPECT_EQ(args.at(3).toString(), QStringLiteral("test_charges"));
+}
+
 TEST_F(PackageManagerTest, unregisterPackage)
 {
   auto* pm = PackageManager::instance();
