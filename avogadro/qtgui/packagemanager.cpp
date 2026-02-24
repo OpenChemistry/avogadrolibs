@@ -530,6 +530,13 @@ bool PackageManager::loadFromCache(const QString& packageName,
   if (info.directory.isEmpty() || info.command.isEmpty())
     return false;
 
+  // Verify the package directory still exists and has a pyproject.toml
+  QFileInfo pyproject(info.directory + "/pyproject.toml");
+  if (!pyproject.isFile()) {
+    removeFromCache(packageName);
+    return false;
+  }
+
   QByteArray json = settings.value(prefix + "features").toByteArray();
   QJsonDocument doc = QJsonDocument::fromJson(json);
   if (!doc.isArray())
