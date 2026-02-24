@@ -30,7 +30,6 @@
 #include <avogadro/qtgui/utilities.h>
 
 #include <avogadro/qtgui/packagemanager.h>
-#include <avogadro/qtgui/scriptloader.h>
 
 #include <avogadro/calc/energymanager.h>
 #include <avogadro/calc/lennardjones.h>
@@ -704,17 +703,6 @@ void Forcefield::refreshScripts()
   qDeleteAll(m_scripts);
   m_scripts.clear();
   m_packageScripts.clear();
-
-  QMultiMap<QString, QString> scriptPaths =
-    QtGui::ScriptLoader::scriptList("energy");
-  foreach (const QString& filePath, scriptPaths) {
-    auto* model = new ScriptEnergy(filePath);
-    if (model->isValid())
-      m_scripts.push_back(model);
-    else
-      delete model;
-  }
-
   registerScripts();
 }
 

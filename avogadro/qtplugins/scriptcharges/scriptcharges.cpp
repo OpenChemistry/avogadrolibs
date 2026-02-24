@@ -11,7 +11,6 @@
 #include <avogadro/calc/chargemodel.h>
 
 #include <avogadro/qtgui/packagemanager.h>
-#include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QDebug>
@@ -50,17 +49,6 @@ void ScriptCharges::refreshModels()
   qDeleteAll(m_models);
   m_models.clear();
   m_packageModels.clear();
-
-  QMultiMap<QString, QString> scriptPaths =
-    QtGui::ScriptLoader::scriptList("charges");
-  foreach (const QString& filePath, scriptPaths) {
-    auto* model = new ScriptChargeModel(filePath);
-    if (model->isValid())
-      m_models.push_back(model);
-    else
-      delete model;
-  }
-
   registerModels();
 }
 

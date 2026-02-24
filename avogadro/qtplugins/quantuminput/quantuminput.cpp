@@ -16,7 +16,6 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
-#include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/tomlparse.h>
 #include <avogadro/qtgui/utilities.h>
 
@@ -162,11 +161,7 @@ bool QuantumInput::readMolecule(QtGui::Molecule& mol)
   return success;
 }
 
-void QuantumInput::refreshGenerators()
-{
-  updateInputGeneratorScripts();
-  updateActions();
-}
+void QuantumInput::refreshGenerators() {}
 
 void QuantumInput::menuActivated()
 {
@@ -285,64 +280,6 @@ void QuantumInput::menuActivated()
   dlg->raise();
 }
 
-void QuantumInput::updateInputGeneratorScripts()
-{
-  m_inputGeneratorScripts = QtGui::ScriptLoader::scriptList("inputGenerators");
-}
-
-void QuantumInput::updateActions()
-{
-  m_actions.clear();
-
-  foreach (const QString& programName, m_inputGeneratorScripts.uniqueKeys()) {
-    QStringList scripts = m_inputGeneratorScripts.values(programName);
-
-    QString label = programName;
-    // make sure it has the ellipsis for UI
-    if (label.endsWith("...")) {
-      label.chop(3);
-      label.append("…");
-    }
-    if (!label.endsWith("…"))
-      label.append("…");
-
-    if (scripts.size() == 1) {
-      addAction(label, scripts.first());
-    } else {
-      foreach (const QString& filePath, scripts) {
-        qWarning() << "Multiple generators for" << programName << filePath;
-      }
-      qWarning() << "Using generator: " << scripts.first();
-      addAction(label, scripts.first());
-    }
-  }
-}
-
-void QuantumInput::addAction(const QString& label,
-                             const QString& scriptFilePath)
-{
-  auto* action = new QAction(label, this);
-  action->setData(scriptFilePath);
-  action->setEnabled(true);
-  connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
-  m_actions << action;
-}
-
-bool QuantumInput::queryProgramName(const QString& scriptFilePath,
-                                    QString& displayName)
-{
-  InputGenerator gen(scriptFilePath);
-  displayName = gen.displayName();
-  if (gen.hasErrors()) {
-    displayName.clear();
-    qWarning() << "QuantumInput::queryProgramName: Unable to retrieve program "
-                  "name for"
-               << scriptFilePath << ";" << gen.errorList().join("\n\n");
-    return false;
-  }
-  return true;
-}
-
 void QuantumInput::registerFeature(const QString& type,
                                    const QString& packageDir,
                                    const QString& command,
@@ -382,7 +319,6 @@ void QuantumInput::registerFeature(const QString& type,
                       supportMeta.value("periodic", false).toBool());
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
-  m_actions << action;
   m_packageActions.insert(
     QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier),
     action);
@@ -410,10 +346,8 @@ void QuantumInput::unregisterFeature(const QString& type,
     delete dlg;
   }
 
-  for (QAction* action : actions) {
-    m_actions.removeAll(action);
+  for (QAction* action : actions)
     action->deleteLater();
-  }
 }
 
 } // namespace Avogadro::QtPlugins

@@ -13,7 +13,6 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
-#include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QAction>
@@ -162,11 +161,7 @@ bool Command::readMolecule(QtGui::Molecule& mol)
   return success;
 }
 
-void Command::refreshScripts()
-{
-  updateScripts();
-  updateActions();
-}
+void Command::refreshScripts() {}
 
 void Command::menuActivated()
 {
@@ -340,42 +335,6 @@ void Command::configurePython()
 
   // Handle response
   settings.setValue("interpreters/python", browser->fileName());
-}
-
-void Command::updateScripts()
-{
-  m_commandScripts = QtGui::ScriptLoader::scriptList("commands");
-}
-
-void Command::updateActions()
-{
-  m_actions.clear();
-
-  //  QAction* action = new QAction(tr("Set Python Path…"), this);
-  //  connect(action, SIGNAL(triggered()), SLOT(configurePython()));
-  //  m_actions << action;
-
-  foreach (const QString& programName, m_commandScripts.uniqueKeys()) {
-    QStringList scripts = m_commandScripts.values(programName);
-    // Include the full path if there are multiple generators with the same
-    // name.
-    if (scripts.size() == 1) {
-      addAction(programName, scripts.first());
-    } else {
-      foreach (const QString& filePath, scripts) {
-        addAction(QString("%1 (%2)").arg(programName, filePath), filePath);
-      }
-    }
-  }
-}
-
-void Command::addAction(const QString& label, const QString& scriptFilePath)
-{
-  auto* action = new QAction(tr(label.toUtf8()), this);
-  action->setData(scriptFilePath);
-  action->setEnabled(true);
-  connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
-  m_actions << action;
 }
 
 void Command::registerFeature(const QString& type, const QString& packageDir,

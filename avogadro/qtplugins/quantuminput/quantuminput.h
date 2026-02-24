@@ -10,7 +10,6 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QMultiHash>
-#include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
 
 class QAction;
@@ -85,19 +84,11 @@ private slots:
   void moleculeChanged(unsigned int change);
 
 private:
-  void updateInputGeneratorScripts();
-  void updateActions();
-  void addAction(const QString& label, const QString& scriptFilePath);
-  bool queryProgramName(const QString& scriptFilePath, QString& displayName);
   void updateActionStates();
 
-  QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
-  // keyed on script file path or package feature key
+  // keyed on package feature key
   QMap<QString, MoleQueue::InputGeneratorDialog*> m_dialogs;
-
-  // maps program name --> script file path
-  QMultiMap<QString, QString> m_inputGeneratorScripts;
   QMultiHash<QString, QAction*> m_packageActions;
 
   const Io::FileFormat* m_outputFormat;
