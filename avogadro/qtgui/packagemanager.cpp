@@ -7,12 +7,12 @@
 #include "tomlparse.h"
 
 #include <QtCore/QCryptographicHash>
-#include <QtCore/QProcess>
-#include <QtCore/QStandardPaths>
-#include <QtCore/QThread>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QProcess>
+#include <QtCore/QStandardPaths>
+#include <QtCore/QThread>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
@@ -544,7 +544,7 @@ bool PackageManager::loadFromCache(const QString& packageName,
     return false;
 
   // Verify the package directory still exists and has a pyproject.toml
-  QFileInfo pyproject(info.directory + "/pyproject.toml");
+  QFileInfo pyproject(info.directory + QLatin1String("/pyproject.toml"));
   if (!pyproject.isFile()) {
     removeFromCache(packageName);
     return false;

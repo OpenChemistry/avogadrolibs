@@ -17,14 +17,67 @@
 #include <avogadro/io/xyzformat.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
+#include <QtCore/QList>
 #include <QtCore/QScopedPointer>
 
-#include <qjsonarray.h>
-#include <qjsondocument.h>
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
-
 namespace Avogadro::QtPlugins {
+
+// Parse a JSON byte array into a flat list of doubles.
+// Accepts either a bare JSON array or an object containing `arrayKey`.
+// Calls errorReporter(message) for structural problems and invalid elements.
+// Returns true when JSON parsed successfully (even if some elements were
+// invalid); returns false when JSON parsing itself failed, signalling the
+// caller should fall through to legacy line-delimited parsing.
+template <typename ErrorFunc>
+static bool parseJsonNumericArray(const QByteArray& result,
+                                  const QString& arrayKey,
+                                  QList<double>& outValues, int maxCount,
+                                  ErrorFunc errorReporter)
+{
+  QJsonParseError parseError;
+  QJsonDocument doc = QJsonDocument::fromJson(result, &parseError);
+  if (parseError.error != QJsonParseError::NoError)
+    return false;
+
+  QJsonArray values;
+  if (doc.isArray()) {
+    values = doc.array();
+  } else if (doc.isObject()) {
+    QJsonValue v = doc.object().value(arrayKey);
+    if (!v.isArray()) {
+      errorReporter(QStringLiteral("Invalid ") + arrayKey +
+                    QStringLiteral(" output: missing required '") + arrayKey +
+                    QStringLiteral("' JSON array."));
+      return true; // JSON was valid; caller receives empty outValues
+    }
+    values = v.toArray();
+  } else {
+    return false; // neither array nor object; fall through to legacy parser
+  }
+
+  if (values.size() > maxCount)
+    errorReporter(QStringLiteral("Too many ") + arrayKey +
+                  QStringLiteral(" in script output."));
+
+  const int n = qMin(static_cast<int>(values.size()), maxCount);
+  outValues.resize(n);
+  for (int i = 0; i < n; ++i) {
+    const auto value = values.at(i);
+    if (!value.isDouble()) {
+      errorReporter(QStringLiteral("Invalid ") + arrayKey +
+                    QStringLiteral(" value in JSON output at index ") +
+                    QString::number(i) + QStringLiteral("."));
+      outValues[i] = 0.0;
+    } else {
+      outValues[i] = value.toDouble();
+    }
+  }
+  return true;
+}
 
 ScriptChargeModel::ScriptChargeModel(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)),
@@ -170,45 +223,15 @@ MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const
     return charges;
   }
 
-  // parse the result - each charge should be on a line
-  QJsonParseError parseError;
-  QJsonDocument doc(QJsonDocument::fromJson(result, &parseError));
-  if (parseError.error == QJsonParseError::NoError) {
-    // Preferred output is JSON: either a bare array or {"charges":[...]}.
-    QJsonArray values;
-    bool parsedJsonValues = false;
-    if (doc.isArray()) {
-      values = doc.array();
-      parsedJsonValues = true;
-    } else if (doc.isObject()) {
-      QJsonValue jsonCharges = doc.object().value("charges");
-      if (!jsonCharges.isArray()) {
-        appendError(
-          "Invalid charge output: missing required 'charges' JSON array.");
-        return charges;
-      }
-      values = jsonCharges.toArray();
-      parsedJsonValues = true;
-    }
-
-    if (parsedJsonValues) {
-      if (values.size() > charges.rows()) {
-        appendError("Too many charges in script output.");
-      }
-      const int nValues = static_cast<int>(values.size());
-      const int nRows = static_cast<int>(charges.rows());
-      const int nCharges = (nValues < nRows) ? nValues : nRows;
-      for (int atom = 0; atom < nCharges; ++atom) {
-        const auto value = values.at(atom);
-        if (!value.isDouble()) {
-          appendError("Invalid charge value in JSON output at atom " +
-                      std::to_string(atom) + ".");
-          continue;
-        }
-        charges(atom, 0) = value.toDouble();
-      }
-      return charges;
-    }
+  // parse the result - preferred output is JSON: bare array or {"charges":[]}
+  QList<double> jsonValues;
+  if (parseJsonNumericArray(
+        result, QStringLiteral("charges"), jsonValues,
+        static_cast<int>(charges.rows()),
+        [this](const QString& msg) { appendError(msg.toStdString()); })) {
+    for (int i = 0; i < jsonValues.size(); ++i)
+      charges(i, 0) = jsonValues[i];
+    return charges;
   }
 
   // Backward compatibility: accept legacy line-delimited numeric output.
@@ -326,44 +349,15 @@ Core::Array<double> ScriptChargeModel::potentials(
     return potentials;
   }
 
-  QJsonParseError parseError;
-  QJsonDocument parsedDoc(QJsonDocument::fromJson(result, &parseError));
-  if (parseError.error == QJsonParseError::NoError) {
-    // Preferred output is JSON: either a bare array or {"potentials":[...]}.
-    QJsonArray values;
-    bool parsedJsonValues = false;
-    if (parsedDoc.isArray()) {
-      values = parsedDoc.array();
-      parsedJsonValues = true;
-    } else if (parsedDoc.isObject()) {
-      QJsonValue jsonPotentials = parsedDoc.object().value("potentials");
-      if (!jsonPotentials.isArray()) {
-        appendError("Invalid potential output: missing required 'potentials' "
-                    "JSON array.");
-        return potentials;
-      }
-      values = jsonPotentials.toArray();
-      parsedJsonValues = true;
-    }
-
-    if (parsedJsonValues) {
-      if (values.size() > static_cast<int>(potentials.size())) {
-        appendError("Too many potentials in script output.");
-      }
-      const int nValues = static_cast<int>(values.size());
-      const int nPoints = static_cast<int>(potentials.size());
-      const int nPotentials = (nValues < nPoints) ? nValues : nPoints;
-      for (int i = 0; i < nPotentials; ++i) {
-        const auto value = values.at(i);
-        if (!value.isDouble()) {
-          appendError("Invalid potential value in JSON output at index " +
-                      std::to_string(i) + ".");
-          continue;
-        }
-        potentials[i] = value.toDouble();
-      }
-      return potentials;
-    }
+  // Preferred output is JSON: bare array or {"potentials":[...]}
+  QList<double> jsonValues;
+  if (parseJsonNumericArray(
+        result, QStringLiteral("potentials"), jsonValues,
+        static_cast<int>(potentials.size()),
+        [this](const QString& msg) { appendError(msg.toStdString()); })) {
+    for (int i = 0; i < jsonValues.size(); ++i)
+      potentials[i] = jsonValues[i];
+    return potentials;
   }
 
   // Backward compatibility: accept legacy line-delimited numeric output.

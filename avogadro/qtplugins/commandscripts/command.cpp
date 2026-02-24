@@ -24,10 +24,10 @@
 #include <QtWidgets/QVBoxLayout>
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QFile>
-#include <QtCore/QJsonDocument>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringList>
@@ -208,8 +208,12 @@ void Command::menuActivated()
       if (!userOptionsRel.isEmpty()) {
         QFile optFile(pkgDir + '/' + userOptionsRel);
         if (optFile.open(QIODevice::ReadOnly)) {
-          QJsonDocument doc = QJsonDocument::fromJson(optFile.readAll());
-          if (doc.isObject()) {
+          QJsonParseError err;
+          QJsonDocument doc = QJsonDocument::fromJson(optFile.readAll(), &err);
+          if (err.error != QJsonParseError::NoError) {
+            qWarning() << "Command: failed to parse user-options JSON:"
+                       << (pkgDir + '/' + userOptionsRel) << err.errorString();
+          } else if (doc.isObject()) {
             QJsonObject fileOpts = doc.object();
             for (auto it = fileOpts.constBegin(); it != fileOpts.constEnd();
                  ++it)

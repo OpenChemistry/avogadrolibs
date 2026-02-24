@@ -30,8 +30,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringList>
@@ -213,7 +213,11 @@ void QuantumInput::menuActivated()
                   bool ok = false;
                   QVariantMap tomlMap = QtGui::parseTomlString(
                     std::string_view(content.constData(), content.size()), &ok);
-                  if (ok) {
+                  if (!ok) {
+                    qWarning() << "QuantumInput: failed to parse TOML highlight"
+                                  " styles file:"
+                               << highlightStylesRel;
+                  } else {
                     QJsonArray stylesArray;
                     for (auto it = tomlMap.constBegin();
                          it != tomlMap.constEnd(); ++it) {
