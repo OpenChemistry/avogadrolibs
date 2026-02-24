@@ -19,8 +19,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QScopedPointer>
 
-#include <algorithm>
-
 #include <qjsonarray.h>
 #include <qjsondocument.h>
 #include <qjsonobject.h>
@@ -31,7 +29,7 @@ namespace Avogadro::QtPlugins {
 ScriptChargeModel::ScriptChargeModel(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)),
     m_inputFormat(NotUsed), m_valid(false), m_partialCharges(false),
-    m_electrostatics(false)
+    m_electrostatics(false), m_inputCjson(false)
 {
   m_elements.reset();
   if (!scriptFileName_.isEmpty())
@@ -65,6 +63,7 @@ void ScriptChargeModel::readMetaData(const QVariantMap& metadata)
   QVariantMap support = metadata.value("support").toMap();
   m_partialCharges = support.value("charges", false).toBool();
   m_electrostatics = support.value("potentials", false).toBool();
+  m_inputCjson = metadata.value("input-cjson", false).toBool();
 
   QString elemStr = support.value("elements").toString();
   if (!elemStr.isEmpty())
@@ -98,6 +97,7 @@ void ScriptChargeModel::copyMetaDataFrom(const ScriptChargeModel& other)
   m_formatString = other.m_formatString;
   m_partialCharges = other.m_partialCharges;
   m_electrostatics = other.m_electrostatics;
+  m_inputCjson = other.m_inputCjson;
   m_elements = other.m_elements;
   m_valid = other.m_valid;
 }
@@ -128,9 +128,39 @@ MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const
     return charges;
   }
 
+  QByteArray scriptInput;
+  if (m_interpreter->isPackageMode()) {
+    // Package-mode scripts consume structured JSON from stdin.
+    QJsonObject request;
+    request[m_formatString] = QString::fromStdString(intermediate);
+    if (m_inputCjson) {
+      // Some package features request both the selected input format and a
+      // parsed cjson molecule object.
+      std::string cjson;
+      Io::CjsonFormat cjsonFormat;
+      if (!cjsonFormat.writeString(cjson, mol)) {
+        appendError(cjsonFormat.error(), false);
+        return charges;
+      }
+      QJsonParseError cjsonParseError;
+      QJsonDocument cjsonDoc = QJsonDocument::fromJson(
+        QByteArray::fromStdString(cjson), &cjsonParseError);
+      if (cjsonParseError.error == QJsonParseError::NoError &&
+          cjsonDoc.isObject()) {
+        request["cjson"] = cjsonDoc.object();
+      } else {
+        appendError("Failed to serialize cjson input for charge script.");
+        return charges;
+      }
+    }
+    scriptInput = QJsonDocument(request).toJson(QJsonDocument::Compact);
+  } else {
+    scriptInput = QByteArray::fromStdString(intermediate);
+  }
+
   // Call the script to convert the file
   QByteArray result =
-    m_interpreter->execute(QStringList() << "--charges", intermediate.c_str());
+    m_interpreter->execute(QStringList() << "--charges", scriptInput);
 
   if (m_interpreter->hasErrors()) {
     foreach (const QString& err, m_interpreter->errorList()) {
@@ -144,6 +174,7 @@ MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const
   QJsonParseError parseError;
   QJsonDocument doc(QJsonDocument::fromJson(result, &parseError));
   if (parseError.error == QJsonParseError::NoError) {
+    // Preferred output is JSON: either a bare array or {"charges":[...]}.
     QJsonArray values;
     bool parsedJsonValues = false;
     if (doc.isArray()) {
@@ -164,8 +195,9 @@ MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const
       if (values.size() > charges.rows()) {
         appendError("Too many charges in script output.");
       }
-      const int nCharges =
-        std::min(values.size(), static_cast<int>(charges.rows()));
+      const int nValues = static_cast<int>(values.size());
+      const int nRows = static_cast<int>(charges.rows());
+      const int nCharges = (nValues < nRows) ? nValues : nRows;
       for (int atom = 0; atom < nCharges; ++atom) {
         const auto value = values.at(atom);
         if (!value.isDouble()) {
@@ -179,6 +211,7 @@ MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const
     }
   }
 
+  // Backward compatibility: accept legacy line-delimited numeric output.
   QString resultString = QString::fromUtf8(result);
   QStringList lines = resultString.split('\n');
   // keep a separate atom counter in case there is other text
@@ -255,6 +288,25 @@ Core::Array<double> ScriptChargeModel::potentials(
   // now we stuff the file and the points into JSON
   QJsonObject json;
   json[m_formatString] = QString::fromStdString(intermediate);
+  if (m_inputCjson) {
+    // Mirror the package-mode charge request and include cjson when requested.
+    std::string cjson;
+    Io::CjsonFormat cjsonFormat;
+    if (!cjsonFormat.writeString(cjson, mol)) {
+      appendError(cjsonFormat.error(), false);
+      return potentials;
+    }
+    QJsonParseError cjsonParseError;
+    QJsonDocument cjsonDoc = QJsonDocument::fromJson(
+      QByteArray::fromStdString(cjson), &cjsonParseError);
+    if (cjsonParseError.error == QJsonParseError::NoError &&
+        cjsonDoc.isObject()) {
+      json["cjson"] = cjsonDoc.object();
+    } else {
+      appendError("Failed to serialize cjson input for potential script.");
+      return potentials;
+    }
+  }
   QJsonArray pointsArray;
   for (const auto& i : points) {
     QJsonArray point;
@@ -277,6 +329,7 @@ Core::Array<double> ScriptChargeModel::potentials(
   QJsonParseError parseError;
   QJsonDocument parsedDoc(QJsonDocument::fromJson(result, &parseError));
   if (parseError.error == QJsonParseError::NoError) {
+    // Preferred output is JSON: either a bare array or {"potentials":[...]}.
     QJsonArray values;
     bool parsedJsonValues = false;
     if (parsedDoc.isArray()) {
@@ -297,8 +350,9 @@ Core::Array<double> ScriptChargeModel::potentials(
       if (values.size() > static_cast<int>(potentials.size())) {
         appendError("Too many potentials in script output.");
       }
-      const int nPotentials =
-        std::min(values.size(), static_cast<int>(potentials.size()));
+      const int nValues = static_cast<int>(values.size());
+      const int nPoints = static_cast<int>(potentials.size());
+      const int nPotentials = (nValues < nPoints) ? nValues : nPoints;
       for (int i = 0; i < nPotentials; ++i) {
         const auto value = values.at(i);
         if (!value.isDouble()) {
@@ -312,7 +366,7 @@ Core::Array<double> ScriptChargeModel::potentials(
     }
   }
 
-  // parse the result - each potential should be on a line
+  // Backward compatibility: accept legacy line-delimited numeric output.
   QString resultString = QString::fromUtf8(result);
   QStringList lines = resultString.split('\n');
   unsigned int point = 0;
@@ -383,6 +437,7 @@ void ScriptChargeModel::resetMetaData()
   m_valid = false;
   m_partialCharges = false;
   m_electrostatics = false;
+  m_inputCjson = false;
   m_inputFormat = NotUsed;
   m_identifier.clear();
   m_name.clear();
@@ -483,6 +538,8 @@ void ScriptChargeModel::readMetaData()
     return; // not valid
   }
   m_electrostatics = metaData["potential"].toBool();
+  if (metaData["inputCjson"].isBool())
+    m_inputCjson = metaData["inputCjson"].toBool();
 
   // get the element mask
   // (if it doesn't exist, the default is no elements anyway)

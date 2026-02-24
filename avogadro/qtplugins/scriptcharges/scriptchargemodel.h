@@ -100,6 +100,7 @@ private:
   bool m_valid;
   bool m_partialCharges;
   bool m_electrostatics;
+  bool m_inputCjson;
 
   std::string m_identifier;
   std::string m_name;
