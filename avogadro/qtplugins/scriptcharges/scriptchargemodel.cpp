@@ -19,6 +19,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QScopedPointer>
 
+#include <algorithm>
+
 #include <qjsonarray.h>
 #include <qjsondocument.h>
 #include <qjsonobject.h>
@@ -32,7 +34,8 @@ ScriptChargeModel::ScriptChargeModel(const QString& scriptFileName_)
     m_electrostatics(false)
 {
   m_elements.reset();
-  readMetaData();
+  if (!scriptFileName_.isEmpty())
+    readMetaData();
 }
 
 ScriptChargeModel::~ScriptChargeModel()
@@ -79,15 +82,10 @@ QString ScriptChargeModel::scriptFilePath() const
 Calc::ChargeModel* ScriptChargeModel::newInstance() const
 {
   auto* copy = new ScriptChargeModel();
-  if (m_interpreter->isPackageMode()) {
-    copy->m_interpreter->setPackageInfo(m_interpreter->packageDir(),
-                                        m_interpreter->packageCommand(),
-                                        m_interpreter->packageIdentifier());
-    copy->copyMetaDataFrom(*this);
-  } else {
-    copy->m_interpreter->setScriptFilePath(m_interpreter->scriptFilePath());
-    copy->readMetaData();
-  }
+  copy->m_interpreter->setPackageInfo(m_interpreter->packageDir(),
+                                      m_interpreter->packageCommand(),
+                                      m_interpreter->packageIdentifier());
+  copy->copyMetaDataFrom(*this);
   return copy;
 }
 
@@ -143,7 +141,45 @@ MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const
   }
 
   // parse the result - each charge should be on a line
-  QString resultString = QString(result);
+  QJsonParseError parseError;
+  QJsonDocument doc(QJsonDocument::fromJson(result, &parseError));
+  if (parseError.error == QJsonParseError::NoError) {
+    QJsonArray values;
+    bool parsedJsonValues = false;
+    if (doc.isArray()) {
+      values = doc.array();
+      parsedJsonValues = true;
+    } else if (doc.isObject()) {
+      QJsonValue jsonCharges = doc.object().value("charges");
+      if (!jsonCharges.isArray()) {
+        appendError(
+          "Invalid charge output: missing required 'charges' JSON array.");
+        return charges;
+      }
+      values = jsonCharges.toArray();
+      parsedJsonValues = true;
+    }
+
+    if (parsedJsonValues) {
+      if (values.size() > charges.rows()) {
+        appendError("Too many charges in script output.");
+      }
+      const int nCharges =
+        std::min(values.size(), static_cast<int>(charges.rows()));
+      for (int atom = 0; atom < nCharges; ++atom) {
+        const auto value = values.at(atom);
+        if (!value.isDouble()) {
+          appendError("Invalid charge value in JSON output at atom " +
+                      std::to_string(atom) + ".");
+          continue;
+        }
+        charges(atom, 0) = value.toDouble();
+      }
+      return charges;
+    }
+  }
+
+  QString resultString = QString::fromUtf8(result);
   QStringList lines = resultString.split('\n');
   // keep a separate atom counter in case there is other text
   // (e.g., "normal termination, etc.")
@@ -151,6 +187,11 @@ MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const
   for (const auto& line : lines) {
     if (line.isEmpty())
       continue;
+
+    if (atom >= static_cast<unsigned int>(charges.rows())) {
+      appendError("Too many charges in script output.");
+      break;
+    }
 
     bool ok;
     double charge = line.toDouble(&ok);
@@ -233,12 +274,56 @@ Core::Array<double> ScriptChargeModel::potentials(
     return potentials;
   }
 
+  QJsonParseError parseError;
+  QJsonDocument parsedDoc(QJsonDocument::fromJson(result, &parseError));
+  if (parseError.error == QJsonParseError::NoError) {
+    QJsonArray values;
+    bool parsedJsonValues = false;
+    if (parsedDoc.isArray()) {
+      values = parsedDoc.array();
+      parsedJsonValues = true;
+    } else if (parsedDoc.isObject()) {
+      QJsonValue jsonPotentials = parsedDoc.object().value("potentials");
+      if (!jsonPotentials.isArray()) {
+        appendError("Invalid potential output: missing required 'potentials' "
+                    "JSON array.");
+        return potentials;
+      }
+      values = jsonPotentials.toArray();
+      parsedJsonValues = true;
+    }
+
+    if (parsedJsonValues) {
+      if (values.size() > static_cast<int>(potentials.size())) {
+        appendError("Too many potentials in script output.");
+      }
+      const int nPotentials =
+        std::min(values.size(), static_cast<int>(potentials.size()));
+      for (int i = 0; i < nPotentials; ++i) {
+        const auto value = values.at(i);
+        if (!value.isDouble()) {
+          appendError("Invalid potential value in JSON output at index " +
+                      std::to_string(i) + ".");
+          continue;
+        }
+        potentials[i] = value.toDouble();
+      }
+      return potentials;
+    }
+  }
+
   // parse the result - each potential should be on a line
-  QString resultString = QString(result);
+  QString resultString = QString::fromUtf8(result);
   QStringList lines = resultString.split('\n');
+  unsigned int point = 0;
   for (const QString& line : lines) {
     if (line.isEmpty())
       continue;
+
+    if (point >= potentials.size()) {
+      appendError("Too many potentials in script output.");
+      break;
+    }
 
     bool ok;
     double potential = line.toDouble(&ok);
@@ -246,7 +331,8 @@ Core::Array<double> ScriptChargeModel::potentials(
       appendError("Invalid potential: " + line.toStdString());
       continue;
     }
-    potentials.push_back(potential);
+    potentials[point] = potential;
+    ++point;
   }
 
   return potentials;
