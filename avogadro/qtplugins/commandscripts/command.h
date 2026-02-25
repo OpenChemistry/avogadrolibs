@@ -10,7 +10,6 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QMultiHash>
-#include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
 
 class QAction;
@@ -85,10 +84,6 @@ private slots:
   void configurePython();
 
 private:
-  void updateScripts();
-  void updateActions();
-  void addAction(const QString& label, const QString& scriptFilePath);
-
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   // keyed on script file path or package feature key
@@ -98,8 +93,6 @@ private:
   QtGui::InterfaceScript* m_currentScript;
   QProgressDialog* m_progress;
 
-  // maps program name --> script file path
-  QMultiMap<QString, QString> m_commandScripts;
   QMultiHash<QString, QAction*> m_packageActions;
 
   const Io::FileFormat* m_outputFormat;

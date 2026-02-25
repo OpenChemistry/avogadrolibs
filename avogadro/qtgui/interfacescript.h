@@ -524,6 +524,17 @@ public:
   void reset();
 
   /**
+   * Set the user options directly from a JSON object, bypassing the
+   * --print-options script call. Use this for package-based plugins whose
+   * options are stored in a file referenced by the pyproject.toml metadata.
+   * Insert "inputMoleculeFormat" into @p opts before calling if you need a
+   * specific molecule format (mirrors the InputGenerator::setOptions()
+   * pattern). After calling this, reloadOptions() on the widget will use the
+   * cached options without invoking the script.
+   */
+  void setOptionsJson(const QJsonObject& opts);
+
+  /**
    * Asynchronously run a command script using the supplied options object and
    * molecule. See the class documentation for details on the @p options_
    * object format.

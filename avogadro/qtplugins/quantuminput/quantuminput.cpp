@@ -16,7 +16,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
-#include <avogadro/qtgui/scriptloader.h>
+#include <avogadro/qtgui/tomlparse.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QAction>
@@ -30,8 +30,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringList>
@@ -161,11 +161,7 @@ bool QuantumInput::readMolecule(QtGui::Molecule& mol)
   return success;
 }
 
-void QuantumInput::refreshGenerators()
-{
-  updateInputGeneratorScripts();
-  updateActions();
-}
+void QuantumInput::refreshGenerators() {}
 
 void QuantumInput::menuActivated()
 {
@@ -209,15 +205,44 @@ void QuantumInput::menuActivated()
             if (!highlightStylesRel.isEmpty()) {
               QFile stylesFile(pkgDir + '/' + highlightStylesRel);
               if (stylesFile.open(QIODevice::ReadOnly)) {
-                QJsonDocument stylesDoc =
-                  QJsonDocument::fromJson(stylesFile.readAll());
-                // File may be a bare array or {"highlightStyles": [...]}
-                if (stylesDoc.isArray()) {
-                  opts.insert("highlightStyles", stylesDoc.array());
-                } else if (stylesDoc.isObject()) {
-                  QJsonValue v = stylesDoc.object().value("highlightStyles");
-                  if (v.isArray())
-                    opts.insert("highlightStyles", v.toArray());
+                QByteArray content = stylesFile.readAll();
+                if (highlightStylesRel.endsWith(QLatin1String(".toml"),
+                                                Qt::CaseInsensitive)) {
+                  // TOML format: each top-level key is a style name, with a
+                  // "rules" sub-array. e.g. [[default.rules]] → style "default"
+                  bool ok = false;
+                  QVariantMap tomlMap = QtGui::parseTomlString(
+                    std::string_view(content.constData(), content.size()), &ok);
+                  if (!ok) {
+                    qWarning() << "QuantumInput: failed to parse TOML highlight"
+                                  " styles file:"
+                               << highlightStylesRel;
+                  } else {
+                    QJsonArray stylesArray;
+                    for (auto it = tomlMap.constBegin();
+                         it != tomlMap.constEnd(); ++it) {
+                      QVariantMap styleMap = it.value().toMap();
+                      QJsonObject styleObj;
+                      styleObj[QStringLiteral("style")] = it.key();
+                      styleObj[QStringLiteral("rules")] =
+                        QJsonArray::fromVariantList(
+                          styleMap.value(QStringLiteral("rules")).toList());
+                      stylesArray.append(styleObj);
+                    }
+                    if (!stylesArray.isEmpty())
+                      opts.insert("highlightStyles", stylesArray);
+                  }
+                } else {
+                  // JSON (default)
+                  QJsonDocument stylesDoc = QJsonDocument::fromJson(content);
+                  // File may be a bare array or {"highlightStyles": [...]}
+                  if (stylesDoc.isArray()) {
+                    opts.insert("highlightStyles", stylesDoc.array());
+                  } else if (stylesDoc.isObject()) {
+                    QJsonValue v = stylesDoc.object().value("highlightStyles");
+                    if (v.isArray())
+                      opts.insert("highlightStyles", v.toArray());
+                  }
                 }
               }
             }
@@ -259,64 +284,6 @@ void QuantumInput::menuActivated()
   dlg->raise();
 }
 
-void QuantumInput::updateInputGeneratorScripts()
-{
-  m_inputGeneratorScripts = QtGui::ScriptLoader::scriptList("inputGenerators");
-}
-
-void QuantumInput::updateActions()
-{
-  m_actions.clear();
-
-  foreach (const QString& programName, m_inputGeneratorScripts.uniqueKeys()) {
-    QStringList scripts = m_inputGeneratorScripts.values(programName);
-
-    QString label = programName;
-    // make sure it has the ellipsis for UI
-    if (label.endsWith("...")) {
-      label.chop(3);
-      label.append("…");
-    }
-    if (!label.endsWith("…"))
-      label.append("…");
-
-    if (scripts.size() == 1) {
-      addAction(label, scripts.first());
-    } else {
-      foreach (const QString& filePath, scripts) {
-        qWarning() << "Multiple generators for" << programName << filePath;
-      }
-      qWarning() << "Using generator: " << scripts.first();
-      addAction(label, scripts.first());
-    }
-  }
-}
-
-void QuantumInput::addAction(const QString& label,
-                             const QString& scriptFilePath)
-{
-  auto* action = new QAction(label, this);
-  action->setData(scriptFilePath);
-  action->setEnabled(true);
-  connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
-  m_actions << action;
-}
-
-bool QuantumInput::queryProgramName(const QString& scriptFilePath,
-                                    QString& displayName)
-{
-  InputGenerator gen(scriptFilePath);
-  displayName = gen.displayName();
-  if (gen.hasErrors()) {
-    displayName.clear();
-    qWarning() << "QuantumInput::queryProgramName: Unable to retrieve program "
-                  "name for"
-               << scriptFilePath << ";" << gen.errorList().join("\n\n");
-    return false;
-  }
-  return true;
-}
-
 void QuantumInput::registerFeature(const QString& type,
                                    const QString& packageDir,
                                    const QString& command,
@@ -356,10 +323,10 @@ void QuantumInput::registerFeature(const QString& type,
                       supportMeta.value("periodic", false).toBool());
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
-  m_actions << action;
   m_packageActions.insert(
     QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier),
     action);
+  emit actionsChanged();
 }
 
 void QuantumInput::unregisterFeature(const QString& type,
@@ -384,10 +351,9 @@ void QuantumInput::unregisterFeature(const QString& type,
     delete dlg;
   }
 
-  for (QAction* action : actions) {
-    m_actions.removeAll(action);
+  for (QAction* action : actions)
     action->deleteLater();
-  }
+  emit actionsChanged();
 }
 
 } // namespace Avogadro::QtPlugins

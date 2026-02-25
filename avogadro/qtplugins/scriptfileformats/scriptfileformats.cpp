@@ -9,7 +9,6 @@
 
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/packagemanager.h>
-#include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QDebug>
@@ -48,17 +47,6 @@ void ScriptFileFormats::refreshFileFormats()
   qDeleteAll(m_formats);
   m_formats.clear();
   m_packageFormats.clear();
-
-  QMultiMap<QString, QString> scriptPaths =
-    QtGui::ScriptLoader::scriptList("formatScripts");
-  foreach (const QString& filePath, scriptPaths) {
-    auto* format = new FileFormatScript(filePath);
-    if (format->isValid())
-      m_formats.push_back(format);
-    else
-      delete format;
-  }
-
   registerFileFormats();
 }
 

@@ -83,11 +83,6 @@ private:
   // check if we should install requirements.txt
   bool checkToInstall();
 
-  void installWithPixi(const QString& requirementFile);
-  void installWithConda(const QString& requirementFile);
-  void installWithPip(const QString& requirementFile);
-  QString findRequirementFile(const QString& destinationDir);
-
   std::vector<repo> m_repoList;
   Ui::DownloaderWidget* m_ui = nullptr;
   QNetworkAccessManager* m_NetworkAccessManager = nullptr;

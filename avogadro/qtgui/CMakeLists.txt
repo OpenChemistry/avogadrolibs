@@ -57,6 +57,7 @@ avogadro_headers(QtGui
   multiviewwidget.h
   packagemanager.h
   periodictableview.h
+  tomlparse.h
   persistentatom.h
   persistentbond.h
   pluginlayermanager.h
@@ -65,7 +66,6 @@ avogadro_headers(QtGui
   rwmolecule.h
   sceneplugin.h
   scenepluginmodel.h
-  scriptloader.h
   slatersetconcurrent.h
   sortfiltertreeproxymodel.h
   timedprogressdialog.h
@@ -101,13 +101,13 @@ target_sources(QtGui PRIVATE
   multiviewwidget.cpp
   packagemanager.cpp
   periodictablescene_p.cpp
+  tomlparse.cpp
   periodictableview.cpp
   pluginlayermanager.cpp
   pythonscript.cpp
   rwmolecule.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
-  scriptloader.cpp
   slatersetconcurrent.cpp
   sortfiltertreeproxymodel.cpp
   timedprogressdialog.cpp

@@ -89,7 +89,7 @@ public:
    * featureRegistered() for each cached feature.
    * Call this once after all consumer plugins have connected.
    */
-  void loadRegisteredPackages();
+  void loadRegisteredPackages(const QString& typeFilter = QString());
 
   // --- Directory scanning ---
 

@@ -167,6 +167,12 @@ signals:
    * @param message An optional message to the script or user
    */
   void commandFinished(const QString& message = QString());
+
+  /**
+   * Indicate that the list of actions for this extension has changed.
+   * The application should rebuild menus to reflect the new action list.
+   */
+  void actionsChanged();
 };
 
 /**

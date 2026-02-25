@@ -96,7 +96,8 @@ ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
     m_unitCells(false)
 {
   m_elements.reset();
-  readMetaData();
+  if (!scriptFileName_.isEmpty())
+    readMetaData();
 }
 
 ScriptEnergy::~ScriptEnergy()
@@ -148,15 +149,10 @@ QString ScriptEnergy::scriptFilePath() const
 Calc::EnergyCalculator* ScriptEnergy::newInstance() const
 {
   auto* copy = new ScriptEnergy();
-  if (m_interpreter->isPackageMode()) {
-    copy->m_interpreter->setPackageInfo(m_interpreter->packageDir(),
-                                        m_interpreter->packageCommand(),
-                                        m_interpreter->packageIdentifier());
-    copy->copyMetaDataFrom(*this);
-  } else {
-    copy->m_interpreter->setScriptFilePath(m_interpreter->scriptFilePath());
-    copy->readMetaData();
-  }
+  copy->m_interpreter->setPackageInfo(m_interpreter->packageDir(),
+                                      m_interpreter->packageCommand(),
+                                      m_interpreter->packageIdentifier());
+  copy->copyMetaDataFrom(*this);
   return copy;
 }
 
