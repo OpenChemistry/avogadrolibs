@@ -202,13 +202,17 @@ void Command::menuActivated()
         opts.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
 
       // The pyproject.toml [avogadro.X] table may declare a separate
-      // user-options file (JSON or TOML) whose key/value pairs are merged
-      // into opts, providing defaults without calling --print-options.
+      // user-options file (JSON or TOML).  Its keys are the user-facing
+      // option definitions and must be wrapped under "userOptions" so that
+      // JsonWidget::buildOptionGui() recognises them and builds the dialog.
       QString userOptionsRel =
         theSender->property("packageUserOptions").toString();
       if (!userOptionsRel.isEmpty()) {
         QString userOptionsPath = pkgDir + '/' + userOptionsRel;
-        QtGui::PackageManager::mergeOptionsFromFile(opts, userOptionsPath);
+        QJsonObject userOpts =
+          QtGui::PackageManager::loadOptionsFromFile(userOptionsPath);
+        if (!userOpts.isEmpty())
+          opts.insert(QStringLiteral("userOptions"), userOpts);
       }
 
       // Pre-populate the cached options so reloadOptions() does not invoke
@@ -264,20 +268,25 @@ void Command::run()
   }
 
   if (m_currentInterface) {
-    QJsonObject options = m_currentInterface->collectOptions();
+    QJsonObject collected = m_currentInterface->collectOptions();
     const auto& iface = m_currentInterface->interfaceScript();
 
     // Create a new InterfaceScript with the same configuration
     m_currentScript = new InterfaceScript(parent());
     const auto& interp = iface.interpreter();
+    QJsonObject options;
     if (interp.isPackageMode()) {
       m_currentScript->interpreter().setPackageInfo(interp.packageDir(),
                                                     interp.packageCommand(),
                                                     interp.packageIdentifier());
       // Copy cached options so insertMolecule() doesn't call --print-options
       m_currentScript->setOptionsJson(iface.options());
+      // Wrap user selections under "options" so Python receives them as
+      // avo_input["options"]["key"] (matching the package plugin convention).
+      options.insert(QStringLiteral("options"), collected);
     } else {
       m_currentScript->setScriptFilePath(iface.scriptFilePath());
+      options = collected;
     }
     connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
 

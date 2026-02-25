@@ -278,22 +278,10 @@ void QuantumInput::menuActivated()
             this, &QuantumInput::openJobOutput);
     m_dialogs.insert(key, dlg);
   }
-}
-else
-{
-  key = theSender->data().toString();
-  dlg = m_dialogs.value(key, nullptr);
-  if (!dlg) {
-    dlg = new InputGeneratorDialog(key, theParent);
-    connect(&dlg->widget(), &MoleQueue::InputGeneratorWidget::openJobOutput,
-            this, &QuantumInput::openJobOutput);
-    m_dialogs.insert(key, dlg);
-  }
-}
 
-dlg->setMolecule(m_molecule);
-dlg->show();
-dlg->raise();
+  dlg->setMolecule(m_molecule);
+  dlg->show();
+  dlg->raise();
 }
 
 void QuantumInput::registerFeature(const QString& type,
