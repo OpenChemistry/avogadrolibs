@@ -321,11 +321,11 @@ TEST(RWMoleculeTest, setAtomicNumbers)
 
   mol.setAtomicNumbers(rep);
   ASSERT_TRUE(std::equal(mol.atomicNumbers().begin(), mol.atomicNumbers().end(),
-                         rep.begin()));
+                         rep.begin(), rep.end()));
 
   mol.undoStack().undo();
   EXPECT_TRUE(std::equal(mol.atomicNumbers().begin(), mol.atomicNumbers().end(),
-                         orig.begin()));
+                         orig.begin(), orig.end()));
 }
 
 TEST(RWMoleculeTest, setAtomicNumber)
@@ -385,13 +385,14 @@ TEST(RWMoleculeTest, setAtomPositions3d)
 
   mol.setAtomPositions3d(pos);
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
-                         mol.atomPositions3d().end(), pos.begin()));
+                         mol.atomPositions3d().end(), pos.begin(), pos.end()));
   mol.undoStack().undo();
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
-                         mol.atomPositions3d().end(), oldPositions.begin()));
+                         mol.atomPositions3d().end(), oldPositions.begin(),
+                         oldPositions.end()));
   mol.undoStack().redo();
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
-                         mol.atomPositions3d().end(), pos.begin()));
+                         mol.atomPositions3d().end(), pos.begin(), pos.end()));
   mol.undoStack().undo();
 
   // Test merging for interactive edits:
@@ -407,14 +408,15 @@ TEST(RWMoleculeTest, setAtomPositions3d)
   mol.setInteractive(false);
 
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
-                         mol.atomPositions3d().end(), pos.begin()));
+                         mol.atomPositions3d().end(), pos.begin(), pos.end()));
   EXPECT_EQ(1, mol.undoStack().count());
   mol.undoStack().undo();
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
-                         mol.atomPositions3d().end(), oldPositions.begin()));
+                         mol.atomPositions3d().end(), oldPositions.begin(),
+                         oldPositions.end()));
   mol.undoStack().redo();
   EXPECT_TRUE(std::equal(mol.atomPositions3d().begin(),
-                         mol.atomPositions3d().end(), pos.begin()));
+                         mol.atomPositions3d().end(), pos.begin(), pos.end()));
 }
 
 TEST(RWMoleculeTest, setAtomPosition3d)
@@ -472,8 +474,8 @@ TEST(RWMoleculeTest, setAtomPosition3d)
   for (Index i = 1; i < 5; ++i)
     EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(i));
   mol.undoStack().redo();
-  EXPECT_TRUE(
-    std::equal(pos.begin(), pos.end(), mol.atomPositions3d().begin()));
+  EXPECT_TRUE(std::equal(pos.begin(), pos.end(), mol.atomPositions3d().begin(),
+                         mol.atomPositions3d().end()));
 }
 
 TEST(RWMoleculeTest, addBond)
@@ -575,8 +577,10 @@ TEST(RWMoleculeTest, clearBonds)
 
   mol.undoStack().undo();
   EXPECT_EQ(3, mol.bondCount());
-  EXPECT_TRUE(std::equal(pairs.begin(), pairs.end(), mol.bondPairs().begin()));
-  EXPECT_TRUE(std::equal(ords.begin(), ords.end(), mol.bondOrders().begin()));
+  EXPECT_TRUE(std::equal(pairs.begin(), pairs.end(), mol.bondPairs().begin(),
+                         mol.bondPairs().end()));
+  EXPECT_TRUE(std::equal(ords.begin(), ords.end(), mol.bondOrders().begin(),
+                         mol.bondOrders().end()));
 }
 
 TEST(RWMoleculeTest, setBondOrders)
@@ -604,11 +608,14 @@ TEST(RWMoleculeTest, setBondOrders)
   }
 
   mol.setBondOrders(rep);
-  EXPECT_TRUE(std::equal(rep.begin(), rep.end(), mol.bondOrders().begin()));
+  EXPECT_TRUE(std::equal(rep.begin(), rep.end(), mol.bondOrders().begin(),
+                         mol.bondOrders().end()));
   mol.undoStack().undo();
-  EXPECT_TRUE(std::equal(old.begin(), old.end(), mol.bondOrders().begin()));
+  EXPECT_TRUE(std::equal(old.begin(), old.end(), mol.bondOrders().begin(),
+                         mol.bondOrders().end()));
   mol.undoStack().redo();
-  EXPECT_TRUE(std::equal(rep.begin(), rep.end(), mol.bondOrders().begin()));
+  EXPECT_TRUE(std::equal(rep.begin(), rep.end(), mol.bondOrders().begin(),
+                         mol.bondOrders().end()));
 }
 
 TEST(RWMoleculeTest, setBondOrder)
@@ -692,11 +699,14 @@ TEST(RWMoleculeTest, setBondPairs)
   }
 
   mol.setBondPairs(rep);
-  EXPECT_TRUE(std::equal(rep.begin(), rep.end(), mol.bondPairs().begin()));
+  EXPECT_TRUE(std::equal(rep.begin(), rep.end(), mol.bondPairs().begin(),
+                         mol.bondPairs().end()));
   mol.undoStack().undo();
-  EXPECT_TRUE(std::equal(old.begin(), old.end(), mol.bondPairs().begin()));
+  EXPECT_TRUE(std::equal(old.begin(), old.end(), mol.bondPairs().begin(),
+                         mol.bondPairs().end()));
   mol.undoStack().redo();
-  EXPECT_TRUE(std::equal(rep.begin(), rep.end(), mol.bondPairs().begin()));
+  EXPECT_TRUE(std::equal(rep.begin(), rep.end(), mol.bondPairs().begin(),
+                         mol.bondPairs().end()));
 }
 
 TEST(RWMoleculeTest, setBondPair)
