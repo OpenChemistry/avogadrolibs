@@ -187,7 +187,7 @@ QWidget* AutoOpt::toolWidget() const
     temperatureSpinBox->setRange(0.0, 1000.0);
     temperatureSpinBox->setSingleStep(1.0);
     temperatureSpinBox->setDecimals(1);
-    temperatureSpinBox->setSuffix(tr(" K"));
+    temperatureSpinBox->setSuffix(" K"); // don't translate units
     temperatureSpinBox->setValue(300.0);
     connect(temperatureSpinBox, &QDoubleSpinBox::valueChanged, this,
             &AutoOpt::temperatureChanged);
@@ -199,7 +199,7 @@ QWidget* AutoOpt::toolWidget() const
     timeStepSpinBox->setRange(0.1, 10.0);
     timeStepSpinBox->setSingleStep(0.5);
     timeStepSpinBox->setDecimals(1);
-    timeStepSpinBox->setSuffix(tr(" fs"));
+    timeStepSpinBox->setSuffix(" fs"); // don't translate units
     timeStepSpinBox->setValue(1.0);
     connect(timeStepSpinBox, &QDoubleSpinBox::valueChanged, this,
             &AutoOpt::timeStepChanged);
