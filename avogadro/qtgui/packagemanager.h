@@ -57,6 +57,19 @@ public:
                                    const QString& command,
                                    const QString& identifier);
 
+  /**
+   * Load package user-options from JSON or TOML (selected by extension).
+   * Returns an empty object on error.
+   */
+  static QJsonObject loadOptionsFromFile(const QString& userOptionsPath);
+
+  /**
+   * Merge package user-options into @p opts. Keys from the file override
+   * existing values in @p opts.
+   */
+  static void mergeOptionsFromFile(QJsonObject& opts,
+                                   const QString& userOptionsPath);
+
   // --- Installation ---
 
   /**

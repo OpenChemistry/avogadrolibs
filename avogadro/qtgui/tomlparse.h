@@ -8,10 +8,12 @@
 
 #include "avogadroqtguiexport.h"
 
+#include <QtCore/QJsonObject>
 #include <QtCore/QVariantMap>
 
 #include <string_view>
 
+class QByteArray;
 class QString;
 
 namespace Avogadro {
@@ -43,6 +45,20 @@ AVOGADROQTGUI_EXPORT QVariantMap parseTomlString(std::string_view content,
  * Overload accepting a QString (converted to UTF-8 internally).
  */
 AVOGADROQTGUI_EXPORT QVariantMap parseTomlString(const QString& content,
+                                                 bool* ok = nullptr);
+
+/**
+ * @brief Parse TOML bytes and return the top-level table as a QJsonObject.
+ *
+ * Convenience wrapper around parseTomlString() that converts the resulting
+ * QVariantMap to a QJsonObject via QJsonObject::fromVariantMap().  Useful
+ * when the caller needs to work with Qt's JSON types directly.
+ *
+ * @param content Raw UTF-8 encoded TOML bytes.
+ * @param ok      If non-null, set to true on success and false on error.
+ * @return The top-level TOML table as a QJsonObject; empty on parse error.
+ */
+AVOGADROQTGUI_EXPORT QJsonObject parseTomlToJson(const QByteArray& content,
                                                  bool* ok = nullptr);
 
 } // namespace QtGui

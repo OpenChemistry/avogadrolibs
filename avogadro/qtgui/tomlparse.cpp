@@ -5,9 +5,11 @@
 
 #include "tomlparse.h"
 
+#include <QtCore/QByteArray>
 #include <QtCore/QDate>
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
+#include <QtCore/QJsonObject>
 #include <QtCore/QString>
 #include <QtCore/QTime>
 #include <QtCore/QTimeZone>
@@ -99,6 +101,18 @@ QVariantMap parseTomlString(const QString& content, bool* ok)
 {
   QByteArray utf8 = content.toUtf8();
   return parseTomlString(std::string_view(utf8.constData(), utf8.size()), ok);
+}
+
+QJsonObject parseTomlToJson(const QByteArray& content, bool* ok)
+{
+  bool localOk = false;
+  QVariantMap map = parseTomlString(
+    std::string_view(content.constData(), content.size()), &localOk);
+  if (ok)
+    *ok = localOk;
+  if (!localOk)
+    return {};
+  return QJsonObject::fromVariantMap(map);
 }
 
 } // namespace Avogadro::QtGui
