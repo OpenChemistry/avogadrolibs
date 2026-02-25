@@ -343,6 +343,7 @@ public:
     if (index >= d->data.size()) {
       return;
     }
+    detachWithCopy();
     if (index != d->data.size() - 1) {
       d->data[index] = d->data.back();
     }

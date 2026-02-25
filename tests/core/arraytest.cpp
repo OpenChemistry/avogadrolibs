@@ -99,3 +99,23 @@ TEST(ArrayTest, operators)
   swap(a1, a2);
   EXPECT_TRUE(a2 == a1c);
 }
+
+TEST(ArrayTest, swapAndPopDetaches)
+{
+  Array<int> a1;
+  a1.push_back(1);
+  a1.push_back(2);
+  a1.push_back(3);
+
+  Array<int> a2 = a1;
+  EXPECT_EQ(a1.constData(), a2.constData());
+
+  a1.swapAndPop(0);
+
+  EXPECT_NE(a1.constData(), a2.constData());
+  EXPECT_EQ(a1.size(), static_cast<size_t>(2));
+  EXPECT_EQ(a2.size(), static_cast<size_t>(3));
+  EXPECT_EQ(a2.at(0), 1);
+  EXPECT_EQ(a2.at(1), 2);
+  EXPECT_EQ(a2.at(2), 3);
+}
