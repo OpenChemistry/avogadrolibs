@@ -9,6 +9,7 @@
 #include <QtCore/QCryptographicHash>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QStandardPaths>
@@ -16,6 +17,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
+#include <QtCore/QJsonParseError>
 #include <QtCore/QSettings>
 
 namespace Avogadro::QtGui {
@@ -42,6 +44,51 @@ QString PackageManager::packageFeatureKey(const QString& packageDir,
 {
   return packageDir + QLatin1Char('\n') + command + QLatin1Char('\n') +
          identifier;
+}
+
+QJsonObject PackageManager::loadOptionsFromFile(const QString& userOptionsPath)
+{
+  QFile optFile(userOptionsPath);
+  if (!optFile.open(QIODevice::ReadOnly)) {
+    qWarning() << "PackageManager: could not open user-options file:"
+               << userOptionsPath;
+    return {};
+  }
+
+  const QByteArray optContent = optFile.readAll();
+  if (userOptionsPath.endsWith(QLatin1String(".toml"), Qt::CaseInsensitive)) {
+    bool ok = false;
+    const QJsonObject opts = parseTomlToJson(optContent, &ok);
+    if (!ok) {
+      qWarning() << "PackageManager: failed to parse TOML user-options file:"
+                 << userOptionsPath;
+      return {};
+    }
+    return opts;
+  }
+
+  QJsonParseError err;
+  const QJsonDocument doc = QJsonDocument::fromJson(optContent, &err);
+  if (err.error != QJsonParseError::NoError) {
+    qWarning() << "PackageManager: failed to parse user-options JSON:"
+               << userOptionsPath << err.errorString();
+    return {};
+  }
+  if (!doc.isObject()) {
+    qWarning() << "PackageManager: user-options JSON root is not an object:"
+               << userOptionsPath;
+    return {};
+  }
+
+  return doc.object();
+}
+
+void PackageManager::mergeOptionsFromFile(QJsonObject& opts,
+                                          const QString& userOptionsPath)
+{
+  const QJsonObject fileOpts = loadOptionsFromFile(userOptionsPath);
+  for (auto it = fileOpts.constBegin(); it != fileOpts.constEnd(); ++it)
+    opts.insert(it.key(), it.value());
 }
 
 static bool hasNonExecutablePixiPython(const QString& packageDir)

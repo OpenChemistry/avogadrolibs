@@ -13,7 +13,6 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
-#include <avogadro/qtgui/tomlparse.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QAction>
@@ -27,8 +26,6 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QJsonDocument>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringList>
@@ -211,34 +208,7 @@ void Command::menuActivated()
         theSender->property("packageUserOptions").toString();
       if (!userOptionsRel.isEmpty()) {
         QString userOptionsPath = pkgDir + '/' + userOptionsRel;
-        QFile optFile(userOptionsPath);
-        if (optFile.open(QIODevice::ReadOnly)) {
-          QByteArray optContent = optFile.readAll();
-          QJsonObject fileOpts;
-          // Parse TOML or JSON depending on the file extension.
-          if (userOptionsRel.endsWith(QLatin1String(".toml"),
-                                      Qt::CaseInsensitive)) {
-            bool ok = false;
-            fileOpts = QtGui::parseTomlToJson(optContent, &ok);
-            if (!ok)
-              qWarning() << "Command: failed to parse TOML user-options file:"
-                         << userOptionsPath;
-          } else {
-            QJsonParseError err;
-            QJsonDocument doc = QJsonDocument::fromJson(optContent, &err);
-            if (err.error != QJsonParseError::NoError)
-              qWarning() << "Command: failed to parse user-options JSON:"
-                         << userOptionsPath << err.errorString();
-            else if (doc.isObject())
-              fileOpts = doc.object();
-          }
-          // Merge file options into opts (file opts take precedence).
-          for (auto it = fileOpts.constBegin(); it != fileOpts.constEnd(); ++it)
-            opts.insert(it.key(), it.value());
-        } else {
-          qWarning() << "Command: could not open user-options file:"
-                     << userOptionsPath;
-        }
+        QtGui::PackageManager::mergeOptionsFromFile(opts, userOptionsPath);
       }
 
       // Pre-populate the cached options so reloadOptions() does not invoke

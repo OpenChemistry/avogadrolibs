@@ -26,6 +26,16 @@ void ensureSettingsContext()
   if (QCoreApplication::applicationName().isEmpty())
     QCoreApplication::setApplicationName(QStringLiteral("AvogadroLibsTests"));
 }
+
+QString writeTextFile(const QString& path, const QByteArray& content)
+{
+  QFile file(path);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    return {};
+  if (file.write(content) != content.size())
+    return {};
+  return path;
+}
 } // namespace
 
 class PackageManagerTest : public testing::Test
@@ -342,6 +352,70 @@ TEST_F(PackageManagerTest, unregisterNonexistentFails)
   auto* pm = PackageManager::instance();
   bool ok = pm->unregisterPackage("no-such-package");
   EXPECT_FALSE(ok);
+}
+
+TEST_F(PackageManagerTest, loadOptionsFromFileJson)
+{
+  const QString path = QDir(m_packageDir).filePath("user-options.json");
+  ASSERT_FALSE(
+    writeTextFile(path, R"({"alpha": 1, "name": "demo"})").isEmpty());
+
+  const QJsonObject options = PackageManager::loadOptionsFromFile(path);
+  ASSERT_FALSE(options.isEmpty());
+  EXPECT_EQ(options.value("alpha").toInt(), 1);
+  EXPECT_EQ(options.value("name").toString(), "demo");
+}
+
+TEST_F(PackageManagerTest, loadOptionsFromFileToml)
+{
+  const QString path = QDir(m_packageDir).filePath("user-options.toml");
+  ASSERT_FALSE(writeTextFile(path, "alpha = 2\nname = \"demo\"\n").isEmpty());
+
+  const QJsonObject options = PackageManager::loadOptionsFromFile(path);
+  ASSERT_FALSE(options.isEmpty());
+  EXPECT_EQ(options.value("alpha").toInt(), 2);
+  EXPECT_EQ(options.value("name").toString(), "demo");
+}
+
+TEST_F(PackageManagerTest, loadOptionsFromFileMissingReturnsEmpty)
+{
+  const QString path = QDir(m_packageDir).filePath("does-not-exist.json");
+  const QJsonObject options = PackageManager::loadOptionsFromFile(path);
+  EXPECT_TRUE(options.isEmpty());
+}
+
+TEST_F(PackageManagerTest, loadOptionsFromFileInvalidJsonReturnsEmpty)
+{
+  const QString path = QDir(m_packageDir).filePath("invalid.json");
+  ASSERT_FALSE(writeTextFile(path, R"({"broken": )").isEmpty());
+
+  const QJsonObject options = PackageManager::loadOptionsFromFile(path);
+  EXPECT_TRUE(options.isEmpty());
+}
+
+TEST_F(PackageManagerTest, loadOptionsFromFileInvalidTomlReturnsEmpty)
+{
+  const QString path = QDir(m_packageDir).filePath("invalid.toml");
+  ASSERT_FALSE(writeTextFile(path, "broken =\n").isEmpty());
+
+  const QJsonObject options = PackageManager::loadOptionsFromFile(path);
+  EXPECT_TRUE(options.isEmpty());
+}
+
+TEST_F(PackageManagerTest, mergeOptionsFromFileOverridesExistingKeys)
+{
+  const QString path = QDir(m_packageDir).filePath("merge.json");
+  ASSERT_FALSE(
+    writeTextFile(path, R"({"alpha": 5, "beta": "added"})").isEmpty());
+
+  QJsonObject options;
+  options.insert("alpha", 1);
+  options.insert("keep", true);
+  PackageManager::mergeOptionsFromFile(options, path);
+
+  EXPECT_EQ(options.value("alpha").toInt(), 5);
+  EXPECT_EQ(options.value("beta").toString(), "added");
+  EXPECT_TRUE(options.value("keep").toBool());
 }
 
 // ---------------------------------------------------------------------------
