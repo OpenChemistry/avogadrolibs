@@ -13,6 +13,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
+#include <avogadro/qtgui/tomlparse.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QAction>
@@ -203,25 +204,40 @@ void Command::menuActivated()
       if (!inputFormat.isEmpty())
         opts.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
 
+      // The pyproject.toml [avogadro.X] table may declare a separate
+      // user-options file (JSON or TOML) whose key/value pairs are merged
+      // into opts, providing defaults without calling --print-options.
       QString userOptionsRel =
         theSender->property("packageUserOptions").toString();
       if (!userOptionsRel.isEmpty()) {
-        QFile optFile(pkgDir + '/' + userOptionsRel);
+        QString userOptionsPath = pkgDir + '/' + userOptionsRel;
+        QFile optFile(userOptionsPath);
         if (optFile.open(QIODevice::ReadOnly)) {
-          QJsonParseError err;
-          QJsonDocument doc = QJsonDocument::fromJson(optFile.readAll(), &err);
-          if (err.error != QJsonParseError::NoError) {
-            qWarning() << "Command: failed to parse user-options JSON:"
-                       << (pkgDir + '/' + userOptionsRel) << err.errorString();
-          } else if (doc.isObject()) {
-            QJsonObject fileOpts = doc.object();
-            for (auto it = fileOpts.constBegin(); it != fileOpts.constEnd();
-                 ++it)
-              opts.insert(it.key(), it.value());
+          QByteArray optContent = optFile.readAll();
+          QJsonObject fileOpts;
+          // Parse TOML or JSON depending on the file extension.
+          if (userOptionsRel.endsWith(QLatin1String(".toml"),
+                                      Qt::CaseInsensitive)) {
+            bool ok = false;
+            fileOpts = QtGui::parseTomlToJson(optContent, &ok);
+            if (!ok)
+              qWarning() << "Command: failed to parse TOML user-options file:"
+                         << userOptionsPath;
+          } else {
+            QJsonParseError err;
+            QJsonDocument doc = QJsonDocument::fromJson(optContent, &err);
+            if (err.error != QJsonParseError::NoError)
+              qWarning() << "Command: failed to parse user-options JSON:"
+                         << userOptionsPath << err.errorString();
+            else if (doc.isObject())
+              fileOpts = doc.object();
           }
+          // Merge file options into opts (file opts take precedence).
+          for (auto it = fileOpts.constBegin(); it != fileOpts.constEnd(); ++it)
+            opts.insert(it.key(), it.value());
         } else {
           qWarning() << "Command: could not open user-options file:"
-                     << (pkgDir + '/' + userOptionsRel);
+                     << userOptionsPath;
         }
       }
 
