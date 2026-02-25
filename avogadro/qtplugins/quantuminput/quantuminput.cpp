@@ -205,62 +205,63 @@ void QuantumInput::menuActivated()
         QtGui::PackageManager::mergeOptionsFromFile(opts, userOptionsPath);
       }
 
-      if (!opts.isEmpty()) {
-        // Optionally load syntax-highlight rules from a separate file.
-        // The file path is relative to the package directory and may be
-        // JSON or TOML.  The expected JSON shape fed to the widget is:
-        //   "highlightStyles": [ { "style": "<name>", "rules": [...] }, … ]
-        QString highlightStylesRel =
-          theSender->property("packageHighlightStyles").toString();
-        if (!highlightStylesRel.isEmpty()) {
-          QFile stylesFile(pkgDir + '/' + highlightStylesRel);
-          if (stylesFile.open(QIODevice::ReadOnly)) {
-            QByteArray content = stylesFile.readAll();
-            if (highlightStylesRel.endsWith(QLatin1String(".toml"),
-                                            Qt::CaseInsensitive)) {
-              // TOML layout: each top-level key is a style name whose
-              // value has a "rules" array, e.g.:
-              //   [[default.rules]]
-              //     …
-              // Each entry is reshaped into {"style": key, "rules": […]}.
-              bool ok = false;
-              QJsonObject stylesObj = QtGui::parseTomlToJson(content, &ok);
-              if (!ok) {
-                qWarning() << "QuantumInput: failed to parse TOML highlight"
-                              " styles file:"
-                           << highlightStylesRel;
-              } else { // it was converted to JSON successfully
-                QJsonArray stylesArray;
-                for (auto it = stylesObj.constBegin();
-                     it != stylesObj.constEnd(); ++it) {
-                  QJsonObject styleObj;
-                  styleObj[QStringLiteral("style")] = it.key();
-                  styleObj[QStringLiteral("rules")] =
-                    it.value()
-                      .toObject()
-                      .value(QStringLiteral("rules"))
-                      .toArray();
-                  stylesArray.append(styleObj);
-                }
-                if (!stylesArray.isEmpty())
-                  opts.insert("highlightStyles", stylesArray);
+      // Optionally load syntax-highlight rules from a separate file.
+      // The file path is relative to the package directory and may be
+      // JSON or TOML.  The expected JSON shape fed to the widget is:
+      //   "highlightStyles": [ { "style": "<name>", "rules": [...] }, … ]
+      // This runs unconditionally so a package that only supplies highlight
+      // styles (with no other options) is not silently skipped.
+      QString highlightStylesRel =
+        theSender->property("packageHighlightStyles").toString();
+      if (!highlightStylesRel.isEmpty()) {
+        QFile stylesFile(pkgDir + '/' + highlightStylesRel);
+        if (stylesFile.open(QIODevice::ReadOnly)) {
+          QByteArray content = stylesFile.readAll();
+          if (highlightStylesRel.endsWith(QLatin1String(".toml"),
+                                          Qt::CaseInsensitive)) {
+            // TOML layout: each top-level key is a style name whose
+            // value has a "rules" array, e.g.:
+            //   [[default.rules]]
+            //     …
+            // Each entry is reshaped into {"style": key, "rules": […]}.
+            bool ok = false;
+            QJsonObject stylesObj = QtGui::parseTomlToJson(content, &ok);
+            if (!ok) {
+              qWarning() << "QuantumInput: failed to parse TOML highlight"
+                            " styles file:"
+                         << highlightStylesRel;
+            } else { // it was converted to JSON successfully
+              QJsonArray stylesArray;
+              for (auto it = stylesObj.constBegin(); it != stylesObj.constEnd();
+                   ++it) {
+                QJsonObject styleObj;
+                styleObj[QStringLiteral("style")] = it.key();
+                styleObj[QStringLiteral("rules")] =
+                  it.value()
+                    .toObject()
+                    .value(QStringLiteral("rules"))
+                    .toArray();
+                stylesArray.append(styleObj);
               }
-            } else {
-              // JSON: accept either a bare array or an object that wraps
-              // the array under the "highlightStyles" key.
-              QJsonDocument stylesDoc = QJsonDocument::fromJson(content);
-              if (stylesDoc.isArray()) {
-                opts.insert("highlightStyles", stylesDoc.array());
-              } else if (stylesDoc.isObject()) {
-                QJsonValue v = stylesDoc.object().value("highlightStyles");
-                if (v.isArray())
-                  opts.insert("highlightStyles", v.toArray());
-              }
+              if (!stylesArray.isEmpty())
+                opts.insert("highlightStyles", stylesArray);
+            }
+          } else {
+            // JSON: accept either a bare array or an object that wraps
+            // the array under the "highlightStyles" key.
+            QJsonDocument stylesDoc = QJsonDocument::fromJson(content);
+            if (stylesDoc.isArray()) {
+              opts.insert("highlightStyles", stylesDoc.array());
+            } else if (stylesDoc.isObject()) {
+              QJsonValue v = stylesDoc.object().value("highlightStyles");
+              if (v.isArray())
+                opts.insert("highlightStyles", v.toArray());
             }
           }
         }
-        dlg->widget().inputGenerator().setOptions(opts);
       }
+      if (!opts.isEmpty())
+        dlg->widget().inputGenerator().setOptions(opts);
     }
 
     dlg->widget().reloadOptions();
