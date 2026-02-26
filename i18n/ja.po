@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-01-31 02:11+0000\n"
-"PO-Revision-Date: 2026-02-01 16:02+0000\n"
+"PO-Revision-Date: 2026-02-27 04:55+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1269,7 +1269,7 @@ msgstr "ファンデルワールス (AO)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "体積"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -3637,7 +3637,6 @@ msgid "Insert Peptide"
 msgstr "ペプチドの挿入"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
-#, fuzzy
 msgid "InsertPeptide"
 msgstr "ペプチドを挿入"
 
@@ -5411,7 +5410,7 @@ msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
-"対象化に失敗。\n"
+"対称化に失敗。\n"
 "結晶をチェックして異なる許容値を試してください。"
 
 #: qtplugins/spacegroup/spacegroup.cpp:549
@@ -5470,7 +5469,7 @@ msgstr "立方晶"
 
 #: qtplugins/spacegroup/spacegroup.cpp:644
 msgid "Primitive Cell Detected"
-msgstr ""
+msgstr "基本胞を検出"
 
 #: qtplugins/spacegroup/spacegroup.cpp:646
 #, qt-format
@@ -5485,7 +5484,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:660
 msgid "Failed to conventionalize the cell."
-msgstr ""
+msgstr "慣用胞化に失敗しました。"
 
 #: qtplugins/spacegroup/spacegroup.cpp:676
 msgid "International"
