@@ -212,7 +212,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
     case 3:
       angle12 = bondAngle(v1, v2);
       overlayText += QString("%1 %L2°")
-                       .arg(tr("Angles:"), labelWidth)
+                       .arg(tr("Angle:"), labelWidth)
                        .arg(angle12, 9, 'f', 3);
       if (angle23 < 360.f)
         overlayText += QString(" %L1°").arg(angle23, 9, 'f', 3);

@@ -590,7 +590,7 @@
      <item row="8" column="5">
       <widget class="QDoubleSpinBox" name="collisionRateSpin">
        <property name="suffix">
-        <string notr="true">/ps</string>
+        <string notr="true"> /ps</string>
        </property>
        <property name="decimals">
         <number>2</number>
