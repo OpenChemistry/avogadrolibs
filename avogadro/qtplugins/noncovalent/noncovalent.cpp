@@ -369,7 +369,7 @@ QWidget* NonCovalent::setupWidget()
     angle_spin->setRange(0.0, 180.0);
     angle_spin->setSingleStep(1.0);
     angle_spin->setDecimals(0);
-    angle_spin->setSuffix(tr(" °"));
+    angle_spin->setSuffix(" °");
     angle_spin->setValue(m_angleTolerancesDegrees[i]);
     QObject::connect(
       angle_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,
@@ -380,7 +380,7 @@ QWidget* NonCovalent::setupWidget()
     distance_spin->setRange(1.0, 10.0);
     distance_spin->setSingleStep(0.1);
     distance_spin->setDecimals(1);
-    distance_spin->setSuffix(tr(" Å"));
+    distance_spin->setSuffix(" Å");
     distance_spin->setValue(m_maximumDistances[i]);
     QObject::connect(
       distance_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,

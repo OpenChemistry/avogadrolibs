@@ -779,7 +779,7 @@ void BondCentricTool::drawBondAngle(Rendering::GeometryNode& node,
   const Vector3f& textPos(a1);
 
   auto* label = new Rendering::TextLabel3D;
-  label->setText(tr("%L1°").arg(displayAngle, 5, 'f', 1).toStdString());
+  label->setText(QString("%L1°").arg(displayAngle, 5, 'f', 1).toStdString());
   label->setRenderPass(Rendering::Overlay3DPass);
   label->setAnchor(textPos);
   node.addDrawable(label);
@@ -801,7 +801,8 @@ void BondCentricTool::drawBondLengthLabel(Rendering::GeometryNode& node,
   const Vector3f bondVector(endPos - startPos);
 
   auto* label = new Rendering::TextLabel3D;
-  label->setText(tr("%L1 Å").arg(bondVector.norm(), 4, 'f', 2).toStdString());
+  label->setText(
+    QString("%L1 Å").arg(bondVector.norm(), 4, 'f', 2).toStdString());
   label->setRenderPass(Rendering::Overlay3DPass);
   label->setAnchor(bondCenter);
   node.addDrawable(label);
@@ -867,7 +868,7 @@ void BondCentricTool::drawAtomBondAngle(Rendering::GeometryNode& node,
   arc->setArc(origin, start, axis, angle, 5.f, 1.f);
 
   auto* label = new Rendering::TextLabel3D;
-  label->setText(tr("%L1°").arg(angle, 6, 'f', 1).toStdString());
+  label->setText(QString("%L1°").arg(angle, 6, 'f', 1).toStdString());
   label->setRenderPass(Rendering::Overlay3DPass);
   label->setAnchor(labelPos);
   node.addDrawable(label);

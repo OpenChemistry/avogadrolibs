@@ -657,7 +657,7 @@
      <item row="9" column="3">
       <widget class="QDoubleSpinBox" name="pressureSpin">
        <property name="suffix">
-        <string> atm</string>
+        <string notr="true"> atm</string>
        </property>
        <property name="decimals">
         <number>2</number>

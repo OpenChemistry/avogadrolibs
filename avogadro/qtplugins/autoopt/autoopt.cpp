@@ -577,12 +577,15 @@ void AutoOpt::draw(Rendering::GroupNode& node)
   if (m_task == 1) {
     // dynamics step
     double temp = m_thermostat->compute_temperature(m_velocities, m_masses);
-    overlayText =
-      tr("%1 T = %L2 K").arg(m_currentMethod.c_str()).arg(temp, 0, 'f', 1);
-  } else {
-    overlayText = tr("%1 ΔE = %L2 kJ/mol")
+    overlayText = tr("%1 T = %L2", "temperature in Kelvin")
                     .arg(m_currentMethod.c_str())
-                    .arg(m_deltaE, 0, 'f', 2);
+                    .arg(temp, 0, 'f', 1) +
+                  " K";
+  } else {
+    overlayText = tr("%1 ΔE = %L2", "change in energy in kJ/mol")
+                    .arg(m_currentMethod.c_str())
+                    .arg(m_deltaE, 0, 'f', 2) +
+                  " kJ/mol";
   }
 
   auto* geo = new GeometryNode;
