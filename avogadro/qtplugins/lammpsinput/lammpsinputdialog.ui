@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>774</width>
+    <width>804</width>
     <height>697</height>
    </rect>
   </property>
@@ -24,12 +24,12 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="sizeConstraint">
-    <enum>QLayout::SetNoConstraint</enum>
+    <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+      <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
      </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label_7">
@@ -167,7 +167,7 @@ p, li { white-space: pre-wrap; }
      <item row="4" column="0" colspan="8">
       <widget class="Line" name="line_2">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -330,6 +330,9 @@ p, li { white-space: pre-wrap; }
      </item>
      <item row="8" column="3">
       <widget class="QDoubleSpinBox" name="tempSpin">
+       <property name="suffix">
+        <string notr="true"> K</string>
+       </property>
        <property name="decimals">
         <number>2</number>
        </property>
@@ -367,7 +370,7 @@ p, li { white-space: pre-wrap; }
      <item row="5" column="2" colspan="6">
       <spacer name="horizontalSpacer_3">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -383,7 +386,7 @@ p, li { white-space: pre-wrap; }
         <number>1</number>
        </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -423,7 +426,7 @@ p, li { white-space: pre-wrap; }
      <item row="11" column="0" colspan="8">
       <widget class="Line" name="line_4">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -450,32 +453,32 @@ p, li { white-space: pre-wrap; }
        </property>
        <item>
         <property name="text">
-         <string>p</string>
+         <string notr="true">p</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>s</string>
+         <string notr="true">s</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>f</string>
+         <string notr="true">f</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>m</string>
+         <string notr="true">m</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>fs</string>
+         <string notr="true">fs</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>fm</string>
+         <string notr="true">fm</string>
         </property>
        </item>
       </widget>
@@ -490,32 +493,32 @@ p, li { white-space: pre-wrap; }
        </property>
        <item>
         <property name="text">
-         <string>p</string>
+         <string notr="true">p</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>s</string>
+         <string notr="true">s</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>f</string>
+         <string notr="true">f</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>m</string>
+         <string notr="true">m</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>fs</string>
+         <string notr="true">fs</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>fm</string>
+         <string notr="true">fm</string>
         </property>
        </item>
       </widget>
@@ -530,32 +533,32 @@ p, li { white-space: pre-wrap; }
        </property>
        <item>
         <property name="text">
-         <string>p</string>
+         <string notr="true">p</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>s</string>
+         <string notr="true">s</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>f</string>
+         <string notr="true">f</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>m</string>
+         <string notr="true">m</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>fs</string>
+         <string notr="true">fs</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>fm</string>
+         <string notr="true">fm</string>
         </property>
        </item>
       </widget>
@@ -573,7 +576,7 @@ p, li { white-space: pre-wrap; }
      <item row="3" column="2" colspan="2">
       <spacer name="horizontalSpacer_4">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -596,7 +599,7 @@ p, li { white-space: pre-wrap; }
      <item row="2" column="2" colspan="2">
       <spacer name="horizontalSpacer_5">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -669,7 +672,7 @@ p, li { white-space: pre-wrap; }
      <item row="10" column="4" colspan="4">
       <spacer name="horizontalSpacer_6">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -699,7 +702,7 @@ p, li { white-space: pre-wrap; }
      <item row="13" column="6" colspan="2">
       <spacer name="horizontalSpacer_7">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -751,6 +754,9 @@ p, li { white-space: pre-wrap; }
        <property name="toolTip">
         <string>Set the initial atom velocities to match this temperature.</string>
        </property>
+       <property name="suffix">
+        <string notr="true"> K</string>
+       </property>
        <property name="maximum">
         <double>20000.000000000000000</double>
        </property>
@@ -791,7 +797,7 @@ p, li { white-space: pre-wrap; }
      <item row="8" column="6" colspan="2">
       <spacer name="horizontalSpacer_8">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -831,7 +837,7 @@ p, li { white-space: pre-wrap; }
      <item row="12" column="4" colspan="4">
       <spacer name="horizontalSpacer_9">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -885,7 +891,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -910,7 +916,7 @@ p, li { white-space: pre-wrap; }
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <property name="sizeConstraint">
-      <enum>QLayout::SetFixedSize</enum>
+      <enum>QLayout::SizeConstraint::SetFixedSize</enum>
      </property>
      <item>
       <widget class="QPushButton" name="resetButton">
@@ -932,7 +938,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -962,8 +968,6 @@ p, li { white-space: pre-wrap; }
  </widget>
  <tabstops>
   <tabstop>titleLine</tabstop>
-  <tabstop>moreButton</tabstop>
-  <tabstop>previewText</tabstop>
   <tabstop>generateButton</tabstop>
   <tabstop>closeButton</tabstop>
   <tabstop>resetButton</tabstop>

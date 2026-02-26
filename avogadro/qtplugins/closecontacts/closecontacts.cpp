@@ -230,7 +230,7 @@ QWidget* CloseContacts::setupWidget()
     distance_spin->setRange(1.5, 10.0);
     distance_spin->setSingleStep(0.1);
     distance_spin->setDecimals(1);
-    distance_spin->setSuffix(tr(" Å"));
+    distance_spin->setSuffix(" Å");
     distance_spin->setValue(m_maximumDistances[i]);
     QObject::connect(
       distance_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,

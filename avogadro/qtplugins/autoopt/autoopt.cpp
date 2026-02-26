@@ -187,7 +187,7 @@ QWidget* AutoOpt::toolWidget() const
     temperatureSpinBox->setRange(0.0, 1000.0);
     temperatureSpinBox->setSingleStep(1.0);
     temperatureSpinBox->setDecimals(1);
-    temperatureSpinBox->setSuffix(tr(" K"));
+    temperatureSpinBox->setSuffix(" K"); // don't translate units
     temperatureSpinBox->setValue(300.0);
     connect(temperatureSpinBox, &QDoubleSpinBox::valueChanged, this,
             &AutoOpt::temperatureChanged);
@@ -199,7 +199,7 @@ QWidget* AutoOpt::toolWidget() const
     timeStepSpinBox->setRange(0.1, 10.0);
     timeStepSpinBox->setSingleStep(0.5);
     timeStepSpinBox->setDecimals(1);
-    timeStepSpinBox->setSuffix(tr(" fs"));
+    timeStepSpinBox->setSuffix(" fs"); // don't translate units
     timeStepSpinBox->setValue(1.0);
     connect(timeStepSpinBox, &QDoubleSpinBox::valueChanged, this,
             &AutoOpt::timeStepChanged);
@@ -577,12 +577,15 @@ void AutoOpt::draw(Rendering::GroupNode& node)
   if (m_task == 1) {
     // dynamics step
     double temp = m_thermostat->compute_temperature(m_velocities, m_masses);
-    overlayText =
-      tr("%1 T = %L2 K").arg(m_currentMethod.c_str()).arg(temp, 0, 'f', 1);
-  } else {
-    overlayText = tr("%1 ΔE = %L2 kJ/mol")
+    overlayText = tr("%1 T = %L2", "temperature in Kelvin")
                     .arg(m_currentMethod.c_str())
-                    .arg(m_deltaE, 0, 'f', 2);
+                    .arg(temp, 0, 'f', 1) +
+                  " K";
+  } else {
+    overlayText = tr("%1 ΔE = %L2", "change in energy in kJ/mol")
+                    .arg(m_currentMethod.c_str())
+                    .arg(m_deltaE, 0, 'f', 2) +
+                  " kJ/mol";
   }
 
   auto* geo = new GeometryNode;

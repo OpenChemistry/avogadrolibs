@@ -157,19 +157,19 @@ void PlotConformer::displayDialog()
     QHBoxLayout* conversionLayout = new QHBoxLayout();
     QLabel* conversionLabel = new QLabel(tr("Energy Units:"), m_dialog.get());
     m_unitsCombo = new QComboBox(m_dialog.get());
-    m_unitsCombo->addItem(tr("Hartree"), HartreeToKcal);
-    m_unitsCombo->addItem(tr("eV"), EvToKcal);
-    m_unitsCombo->addItem(tr("kcal/mol"), 1.0);
-    m_unitsCombo->addItem(tr("kJ/mol"), KcalToKJ);
+    m_unitsCombo->addItem(QStringLiteral("Hartree"), HartreeToKcal);
+    m_unitsCombo->addItem(QStringLiteral("eV"), EvToKcal);
+    m_unitsCombo->addItem(QStringLiteral("kcal/mol"), 1.0);
+    m_unitsCombo->addItem(QStringLiteral("kJ/mol"), KcalToKJ);
     if (!hasEnergies)
       m_unitsCombo->setEnabled(false);
 
     QLabel* targetLabel = new QLabel(tr("to"), m_dialog.get());
     m_targetUnitsCombo = new QComboBox(m_dialog.get());
-    m_targetUnitsCombo->addItem(tr("kcal/mol"), 1.0);
-    m_targetUnitsCombo->addItem(tr("kJ/mol"), KcalToKJ);
-    m_targetUnitsCombo->addItem(tr("eV"), 1.0 / EvToKcal);
-    m_targetUnitsCombo->addItem(tr("Hartree"), 1.0 / HartreeToKcal);
+    m_targetUnitsCombo->addItem(QStringLiteral("kcal/mol"), 1.0);
+    m_targetUnitsCombo->addItem(QStringLiteral("kJ/mol"), KcalToKJ);
+    m_targetUnitsCombo->addItem(QStringLiteral("eV"), 1.0 / EvToKcal);
+    m_targetUnitsCombo->addItem(QStringLiteral("Hartree"), 1.0 / HartreeToKcal);
     if (!hasEnergies)
       m_targetUnitsCombo->setEnabled(false);
 

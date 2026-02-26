@@ -204,30 +204,29 @@ void MeasureTool::draw(Rendering::GroupNode& node)
     { dihedralLabel.size(), angleLabel.size(), distanceLabel.size() });
   switch (m_atoms.size()) {
     case 4:
-      overlayText +=
-        QString("%1 %L2\n")
-          .arg(tr("Dihedral:"), labelWidth)
-          .arg(tr("%L1°").arg(dihedralAngle(v1, v2, v3), 9, 'f', 3), 9);
+      overlayText += QString("%1 %L2°\n")
+                       .arg(tr("Dihedral:"), labelWidth)
+                       .arg(dihedralAngle(v1, v2, v3), 9, 'f', 3);
       angle23 = bondAngle(v2, v3);
-    // fall through
+      [[fallthrough]];
     case 3:
       angle12 = bondAngle(v1, v2);
-      overlayText +=
-        QString("%1 %L2 %L3\n")
-          .arg(tr("Angles:"), labelWidth)
-          .arg(tr("%L1°").arg(angle12, 9, 'f', 3), 9)
-          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 9, 'f', 3) : QString(),
-               10);
-    // fall through
+      overlayText += QString("%1 %L2°")
+                       .arg(tr("Angle:"), labelWidth)
+                       .arg(angle12, 9, 'f', 3);
+      if (angle23 < 360.f)
+        overlayText += QString(" %L1°").arg(angle23, 9, 'f', 3);
+      overlayText += '\n';
+      [[fallthrough]];
     case 2:
-      overlayText +=
-        QString("%1 %L2%L3%L4")
-          .arg(tr("Distance:"), labelWidth)
-          .arg(tr("%L1 Å").arg(v1Norm, 9, 'f', 3), 9)
-          .arg(v2Norm >= 0.f ? tr("%L1 Å").arg(v2Norm, 9, 'f', 3) : QString(),
-               9)
-          .arg(v3Norm >= 0.f ? tr("%L1 Å").arg(v3Norm, 9, 'f', 3) : QString(),
-               9);
+      overlayText += QString("%1 %L2 Å")
+                       .arg(tr("Distance:"), labelWidth)
+                       .arg(v1Norm, 9, 'f', 3);
+      if (v2Norm >= 0.f)
+        overlayText += QString(" %L1 Å").arg(v2Norm, 9, 'f', 3);
+      if (v3Norm >= 0.f)
+        overlayText += QString(" %L1 Å").arg(v3Norm, 9, 'f', 3);
+      [[fallthrough]];
     default:
       break;
   }

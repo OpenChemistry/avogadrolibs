@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1074</width>
+    <width>1182</width>
     <height>697</height>
    </rect>
   </property>
@@ -24,12 +24,12 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="sizeConstraint">
-    <enum>QLayout::SetNoConstraint</enum>
+    <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+      <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
      </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label_jobScript">
@@ -74,14 +74,14 @@
      </item>
      <item row="0" column="5">
       <widget class="QLineEdit" name="inputTopEdit">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="placeholderText">
         <string>input.prmtop</string>
-       </property>
-       <property name="enabled">
-        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -228,11 +228,11 @@
      </item>
      <item row="2" column="5">
       <widget class="QSpinBox" name="deviceIndexSpin">
-       <property name="maximum">
-        <number>10000</number>
-       </property>
        <property name="minimum">
         <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10000</number>
        </property>
        <property name="value">
         <number>1</number>
@@ -248,11 +248,11 @@
      </item>
      <item row="2" column="7">
       <widget class="QSpinBox" name="openCLIndexSpin">
-       <property name="maximum">
-        <number>10000</number>
-       </property>
        <property name="minimum">
         <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10000</number>
        </property>
        <property name="value">
         <number>1</number>
@@ -265,7 +265,7 @@
         <number>1</number>
        </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -314,20 +314,20 @@
      </item>
      <item row="4" column="3">
       <widget class="QDoubleSpinBox" name="ewaldToleranceSpin">
-        <property name="decimals">
-         <number>5</number>
-        </property>
-       <property name="singleStep">
-        <double>0.000010000000000</double>
-       </property>
-       <property name="value">
-        <double>0.000500000000000</double>
+       <property name="decimals">
+        <number>5</number>
        </property>
        <property name="minimum">
         <double>0.000010000000000</double>
        </property>
        <property name="maximum">
         <double>10000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.000010000000000</double>
+       </property>
+       <property name="value">
+        <double>0.000500000000000</double>
        </property>
       </widget>
      </item>
@@ -371,20 +371,20 @@
      </item>
      <item row="4" column="7">
       <widget class="QDoubleSpinBox" name="constraintToleranceSpin">
-        <property name="decimals">
-         <number>5</number>
-        </property>
-       <property name="singleStep">
-        <double>0.000010000000000</double>
-       </property>
-       <property name="value">
-        <double>1.000000000000000</double>
+       <property name="decimals">
+        <number>5</number>
        </property>
        <property name="minimum">
         <double>0.000010000000000</double>
        </property>
        <property name="maximum">
         <double>10000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.000010000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -418,14 +418,11 @@
      </item>
      <item row="5" column="3">
       <widget class="QDoubleSpinBox" name="nonBondedCutoffSpin">
-        <property name="decimals">
-         <number>4</number>
-        </property>
-       <property name="singleStep">
-        <double>0.000100000000000</double>
+       <property name="suffix">
+        <string notr="true"> nm</string>
        </property>
-       <property name="value">
-        <double>1.000000000000000</double>
+       <property name="decimals">
+        <number>4</number>
        </property>
        <property name="minimum">
         <double>0.000100000000000</double>
@@ -433,8 +430,11 @@
        <property name="maximum">
         <double>10000.000000000000000</double>
        </property>
-       <property name="suffix">
-        <string> nm</string>
+       <property name="singleStep">
+        <double>0.000100000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -468,6 +468,9 @@
      </item>
      <item row="5" column="7">
       <widget class="QDoubleSpinBox" name="generationTemperatureSpin">
+       <property name="suffix">
+        <string notr="true"> K</string>
+       </property>
        <property name="decimals">
         <number>2</number>
        </property>
@@ -477,9 +480,6 @@
        <property name="value">
         <double>298.149999999999977</double>
        </property>
-       <property name="suffix">
-        <string> K</string>
-       </property>
       </widget>
      </item>
      <item row="6" column="0" colspan="8">
@@ -488,7 +488,7 @@
         <number>1</number>
        </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -543,14 +543,14 @@
        <property name="toolTip">
         <string>Time step for the simulation in units according to &quot;Units&quot; specification.</string>
        </property>
+       <property name="suffix">
+        <string notr="true"> fs</string>
+       </property>
        <property name="singleStep">
         <double>0.500000000000000</double>
        </property>
        <property name="value">
         <double>2.000000000000000</double>
-       </property>
-       <property name="suffix">
-        <string> fs</string>
        </property>
       </widget>
      </item>
@@ -563,20 +563,20 @@
      </item>
      <item row="8" column="3">
       <widget class="QDoubleSpinBox" name="errorTolSpin">
-        <property name="decimals">
-         <number>4</number>
-        </property>
-       <property name="singleStep">
-        <double>0.000100000000000</double>
-       </property>
-       <property name="value">
-        <double>0.000100000000000</double>
+       <property name="decimals">
+        <number>4</number>
        </property>
        <property name="minimum">
         <double>0.000100000000000</double>
        </property>
        <property name="maximum">
         <double>10000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.000100000000000</double>
+       </property>
+       <property name="value">
+        <double>0.000100000000000</double>
        </property>
       </widget>
      </item>
@@ -589,6 +589,9 @@
      </item>
      <item row="8" column="5">
       <widget class="QDoubleSpinBox" name="collisionRateSpin">
+       <property name="suffix">
+        <string notr="true"> /ps</string>
+       </property>
        <property name="decimals">
         <number>2</number>
        </property>
@@ -596,10 +599,7 @@
         <double>20000.000000000000000</double>
        </property>
        <property name="value">
-        <double>1.50000000000</double>
-       </property>
-       <property name="suffix">
-        <string>/ps</string>
+        <double>1.500000000000000</double>
        </property>
       </widget>
      </item>
@@ -612,6 +612,9 @@
      </item>
      <item row="8" column="7">
       <widget class="QDoubleSpinBox" name="temperatureSpin">
+       <property name="suffix">
+        <string notr="true"> K</string>
+       </property>
        <property name="decimals">
         <number>2</number>
        </property>
@@ -620,9 +623,6 @@
        </property>
        <property name="value">
         <double>298.149999999999977</double>
-       </property>
-       <property name="suffix">
-        <string> K</string>
        </property>
       </widget>
      </item>
@@ -656,6 +656,9 @@
      </item>
      <item row="9" column="3">
       <widget class="QDoubleSpinBox" name="pressureSpin">
+       <property name="suffix">
+        <string notr="true"> atm</string>
+       </property>
        <property name="decimals">
         <number>2</number>
        </property>
@@ -663,10 +666,7 @@
         <double>20000.000000000000000</double>
        </property>
        <property name="value">
-        <double>1.0000000</double>
-       </property>
-       <property name="suffix">
-        <string> atm</string>
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -679,11 +679,11 @@
      </item>
      <item row="9" column="5">
       <widget class="QSpinBox" name="barostatIntervalSpin">
-       <property name="maximum">
-        <number>10000</number>
-       </property>
        <property name="minimum">
         <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10000</number>
        </property>
        <property name="value">
         <number>25</number>
@@ -693,7 +693,7 @@
      <item row="10" column="0" colspan="8">
       <widget class="Line" name="line_4">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -949,7 +949,7 @@
      <item>
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -974,7 +974,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <property name="sizeConstraint">
-      <enum>QLayout::SetFixedSize</enum>
+      <enum>QLayout::SizeConstraint::SetFixedSize</enum>
      </property>
      <item>
       <widget class="QPushButton" name="resetButton">
@@ -996,7 +996,7 @@
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
