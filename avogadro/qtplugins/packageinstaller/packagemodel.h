@@ -7,6 +7,7 @@
 #define AVOGADRO_QTPLUGINS_PACKAGEMODEL_H
 
 #include <QtCore/QAbstractTableModel>
+#include <QtCore/QDateTime>
 #include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtGui/QIcon>
@@ -51,6 +52,7 @@ public:
     QString description;
     QString onlineVersion; ///< "release_version" from JSON, "" if no release
     QString updatedAt;     ///< Formatted date, fallback when no release version
+    QDateTime onlineUpdatedAt; ///< Raw ISO timestamp for update heuristics.
     QString zipballUrl;
     QString baseUrl; ///< GitHub repo URL — primary match key
     QString readmeUrl;
@@ -59,6 +61,7 @@ public:
 
     // Installed state (populated from PackageManager)
     QString installedVersion; ///< from pyproject.toml [project.version]
+    QString packageKey;       ///< Registered package key used by PackageManager
     QString installedDir;     ///< absolute path on disk, "" if not installed
     bool isSymlink = false;   ///< true if installedDir is a symlink
 
@@ -110,6 +113,10 @@ public:
 private:
   /** Compute (or recompute) the status of one entry. */
   static PackageStatus computeStatus(const PackageEntry& e);
+  static bool isOnlineNewerByDate(const PackageEntry& e);
+  static bool parseSemVer(const QString& version, int& major, int& minor,
+                          int& patch);
+  static int compareSemVer(const QString& lhs, const QString& rhs, bool& ok);
 
   /** Icon for the given status. */
   static QIcon statusIcon(PackageStatus status);

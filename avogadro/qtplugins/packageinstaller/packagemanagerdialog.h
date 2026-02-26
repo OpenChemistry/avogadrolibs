@@ -49,27 +49,24 @@ private slots:
   void installFromDirectory();
   void onPackagesInstalled();
   void handleRedirect();
-  void unzipPlugin();
 
 private:
   void getRepoData(
     const QString& url = QStringLiteral("https://avogadro.cc/plugins.json"));
   void downloadNext();
-  bool checkToInstall();
+  void unzipPlugin(QNetworkReply* reply);
   static bool copyDir(const QString& src, const QString& dst);
 
   struct DownloadEntry
   {
     QString url;
     QString name;
-    QString type;
   };
 
   Ui::PackageManagerDialog* m_ui = nullptr;
   PackageModel* m_model = nullptr;
   QSortFilterProxyModel* m_proxyModel = nullptr;
   QNetworkAccessManager* m_network = nullptr;
-  QNetworkReply* m_reply = nullptr;
   QString m_filePath;
   QList<DownloadEntry> m_downloadQueue;
 };

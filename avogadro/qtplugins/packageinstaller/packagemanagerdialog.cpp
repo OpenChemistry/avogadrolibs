@@ -13,7 +13,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 
 #include <QtWidgets/QFileDialog>
@@ -107,8 +106,8 @@ void PackageManagerDialog::getRepoData(const QString& url)
   QNetworkRequest request;
   setRawHeaders(&request);
   request.setUrl(QUrl(url));
-  m_reply = m_network->get(request);
-  connect(m_reply, &QNetworkReply::finished, this,
+  QNetworkReply* reply = m_network->get(request);
+  connect(reply, &QNetworkReply::finished, this,
           &PackageManagerDialog::onCatalogReply);
 }
 
@@ -120,15 +119,19 @@ void PackageManagerDialog::refreshOnlineCatalog()
 
 void PackageManagerDialog::onCatalogReply()
 {
-  if (m_reply->error() != QNetworkReply::NoError) {
+  auto* reply = qobject_cast<QNetworkReply*>(sender());
+  if (reply == nullptr)
+    return;
+
+  if (reply->error() != QNetworkReply::NoError) {
     m_ui->readmeBrowser->append(
-      tr("Error downloading package list: %1").arg(m_reply->errorString()));
-    m_reply->deleteLater();
+      tr("Error downloading package list: %1").arg(reply->errorString()));
+    reply->deleteLater();
     return;
   }
 
-  QByteArray bytes = m_reply->readAll();
-  m_reply->deleteLater();
+  QByteArray bytes = reply->readAll();
+  reply->deleteLater();
 
   if (bytes.isEmpty()) {
     m_ui->readmeBrowser->append(tr("Error: empty response from server."));
@@ -167,20 +170,24 @@ void PackageManagerDialog::onTableClicked(const QModelIndex& proxyIndex)
   QNetworkRequest request;
   setRawHeaders(&request);
   request.setUrl(QUrl(url));
-  m_reply = m_network->get(request);
-  connect(m_reply, &QNetworkReply::finished, this,
+  QNetworkReply* reply = m_network->get(request);
+  connect(reply, &QNetworkReply::finished, this,
           &PackageManagerDialog::onReadmeReply);
 }
 
 void PackageManagerDialog::onReadmeReply()
 {
-  if (m_reply->error() != QNetworkReply::NoError) {
-    m_reply->deleteLater();
+  auto* reply = qobject_cast<QNetworkReply*>(sender());
+  if (reply == nullptr)
+    return;
+
+  if (reply->error() != QNetworkReply::NoError) {
+    reply->deleteLater();
     return;
   }
 
-  QByteArray bytes = m_reply->readAll();
-  m_reply->deleteLater();
+  QByteArray bytes = reply->readAll();
+  reply->deleteLater();
 
   // GitHub API returns JSON with base64-encoded content
   if (!nlohmann::json::accept(bytes.data()))
@@ -211,7 +218,6 @@ void PackageManagerDialog::installSelected()
     DownloadEntry de;
     de.url = e.zipballUrl;
     de.name = e.name;
-    de.type = e.type;
     m_downloadQueue.append(de);
   }
 
@@ -234,60 +240,88 @@ void PackageManagerDialog::downloadNext()
   QNetworkRequest request;
   setRawHeaders(&request);
   request.setUrl(QUrl(url));
-  m_reply = m_network->get(request);
-  connect(m_reply, &QNetworkReply::finished, this,
+  QNetworkReply* reply = m_network->get(request);
+  connect(reply, &QNetworkReply::finished, this,
           &PackageManagerDialog::handleRedirect);
 }
 
 void PackageManagerDialog::handleRedirect()
 {
-  int statusCode =
-    m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+  auto* reply = qobject_cast<QNetworkReply*>(sender());
+  if (reply == nullptr)
+    return;
+  if (m_downloadQueue.isEmpty()) {
+    reply->deleteLater();
+    return;
+  }
 
-  if (m_reply->error() == QNetworkReply::NoError) {
-    if (statusCode == 302) {
+  int statusCode =
+    reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+  if (reply->error() == QNetworkReply::NoError) {
+    if (statusCode == 301 || statusCode == 302 || statusCode == 307 ||
+        statusCode == 308) {
       QUrl redirectUrl =
-        m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-      m_reply->deleteLater();
+        reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+      if (redirectUrl.isRelative())
+        redirectUrl = reply->url().resolved(redirectUrl);
+      reply->deleteLater();
+
+      if (!redirectUrl.isValid()) {
+        m_ui->readmeBrowser->append(
+          tr("Failed to follow redirect while downloading %1.\n")
+            .arg(m_downloadQueue.last().name));
+        m_downloadQueue.removeLast();
+        downloadNext();
+        return;
+      }
+
       QNetworkRequest request;
       setRawHeaders(&request);
       request.setUrl(redirectUrl);
-      m_reply = m_network->get(request);
-      connect(m_reply, &QNetworkReply::finished, this,
-              &PackageManagerDialog::unzipPlugin);
+      QNetworkReply* redirectReply = m_network->get(request);
+      connect(redirectReply, &QNetworkReply::finished, this,
+              &PackageManagerDialog::handleRedirect);
     } else if (statusCode == 200) {
-      unzipPlugin();
+      unzipPlugin(reply);
     } else {
       m_ui->readmeBrowser->append(
         tr("Failed to download from %1: status %2, %3\n")
-          .arg(m_reply->url().toString())
+          .arg(reply->url().toString())
           .arg(statusCode)
-          .arg(m_reply->errorString()));
-      m_reply->deleteLater();
+          .arg(reply->errorString()));
+      reply->deleteLater();
       m_downloadQueue.removeLast();
       downloadNext();
     }
   } else {
     m_ui->readmeBrowser->append(tr("Failed to download from %1: %2\n")
-                                  .arg(m_reply->url().toString())
-                                  .arg(m_reply->errorString()));
-    m_reply->deleteLater();
+                                  .arg(reply->url().toString())
+                                  .arg(reply->errorString()));
+    reply->deleteLater();
     m_downloadQueue.removeLast();
     downloadNext();
   }
 }
 
-void PackageManagerDialog::unzipPlugin()
+void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
 {
-  if (m_reply->error() != QNetworkReply::NoError) {
-    m_reply->deleteLater();
+  if (reply == nullptr)
+    return;
+  if (m_downloadQueue.isEmpty()) {
+    reply->deleteLater();
+    return;
+  }
+
+  if (reply->error() != QNetworkReply::NoError) {
+    reply->deleteLater();
     m_downloadQueue.removeLast();
     downloadNext();
     return;
   }
 
-  QByteArray fileData = m_reply->readAll();
-  m_reply->deleteLater();
+  QByteArray fileData = reply->readAll();
+  reply->deleteLater();
 
   QDir().mkpath(m_filePath);
 
@@ -386,8 +420,7 @@ void PackageManagerDialog::removeSelected()
   msgBox.setIcon(QMessageBox::Question);
   msgBox.setStandardButtons(QMessageBox::Cancel);
 
-  QPushButton* keepBtn =
-    msgBox.addButton(tr("Keep Files on Disk"), QMessageBox::NoRole);
+  msgBox.addButton(tr("Keep Files on Disk"), QMessageBox::NoRole);
   QPushButton* deleteBtn = msgBox.addButton(tr("Delete Files from Disk"),
                                             QMessageBox::DestructiveRole);
 
@@ -400,7 +433,8 @@ void PackageManagerDialog::removeSelected()
 
   for (int row : toRemove) {
     PackageModel::PackageEntry& e = m_model->entry(row);
-    QtGui::PackageManager::instance()->unregisterPackage(e.name);
+    const QString packageKey = e.packageKey.isEmpty() ? e.name : e.packageKey;
+    QtGui::PackageManager::instance()->unregisterPackage(packageKey);
     if (deleteFiles && !e.installedDir.isEmpty())
       QDir(e.installedDir).removeRecursively();
   }
@@ -455,42 +489,6 @@ void PackageManagerDialog::installFromDirectory()
 
   m_ui->readmeBrowser->append(tr("Installing package from %1…\n").arg(dir));
   QtGui::PackageManager::instance()->installPackages({ linkPath });
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-bool PackageManagerDialog::checkToInstall()
-{
-  QSettings settings;
-  if (settings.value(QStringLiteral("neverInstallRequirements"), false)
-        .toBool())
-    return false;
-  if (settings.value(QStringLiteral("alwaysInstallRequirements"), false)
-        .toBool())
-    return true;
-
-  QMessageBox msgBox;
-  msgBox.setText(
-    tr("This package requires certain dependencies to be installed.\n"
-       "Do you want to install them?"));
-  msgBox.setIcon(QMessageBox::Question);
-  msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-  msgBox.setDefaultButton(QMessageBox::Yes);
-
-  QPushButton* alwaysBtn = msgBox.addButton(tr("Always"), QMessageBox::YesRole);
-  QPushButton* neverBtn = msgBox.addButton(tr("Never"), QMessageBox::NoRole);
-  msgBox.exec();
-
-  if (msgBox.clickedButton() == alwaysBtn) {
-    settings.setValue(QStringLiteral("alwaysInstallRequirements"), true);
-    return true;
-  } else if (msgBox.clickedButton() == neverBtn) {
-    settings.setValue(QStringLiteral("neverInstallRequirements"), true);
-    return false;
-  }
-  return msgBox.clickedButton() == msgBox.button(QMessageBox::Yes);
 }
 
 bool PackageManagerDialog::copyDir(const QString& src, const QString& dst)

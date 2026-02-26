@@ -11,6 +11,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QHash>
 #include <QtCore/QLocale>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QStringList>
 #include <QtGui/QIcon>
 
@@ -176,8 +177,9 @@ void PackageModel::loadOnlineCatalog(const QByteArray& jsonBytes)
     auto dateIt = item.find("updated_at");
     if (dateIt != item.end() && dateIt->is_string()) {
       QString raw = QString::fromStdString(dateIt->get<std::string>());
-      QDateTime dt = QDateTime::fromString(raw, Qt::ISODate);
-      e.updatedAt = QLocale().toString(dt.date(), QLocale::ShortFormat);
+      e.onlineUpdatedAt = QDateTime::fromString(raw, Qt::ISODate);
+      e.updatedAt =
+        QLocale().toString(e.onlineUpdatedAt.date(), QLocale::ShortFormat);
     }
 
     // Derive readmeUrl from baseUrl if not supplied
@@ -204,6 +206,7 @@ void PackageModel::mergeInstalledPackages()
   for (PackageEntry& e : m_entries) {
     if (e.status != PackageStatus::LocalOnly) {
       e.installedVersion.clear();
+      e.packageKey.clear();
       e.installedDir.clear();
       e.isSymlink = false;
       e.status = PackageStatus::NotInstalled;
@@ -256,6 +259,7 @@ void PackageModel::mergeInstalledPackages()
     if (idx != -1) {
       PackageEntry& e = m_entries[idx];
       e.installedVersion = info.version;
+      e.packageKey = pkgName;
       e.installedDir = info.directory;
       e.isSymlink = symlink;
       e.status = computeStatus(e);
@@ -265,6 +269,7 @@ void PackageModel::mergeInstalledPackages()
       e.name = pkgName;
       e.description = info.description;
       e.installedVersion = info.version;
+      e.packageKey = pkgName;
       e.installedDir = info.directory;
       e.isSymlink = symlink;
       e.status = PackageStatus::LocalOnly;
@@ -329,12 +334,83 @@ PackageModel::PackageStatus PackageModel::computeStatus(const PackageEntry& e)
     return PackageStatus::NotInstalled;
   if (e.status == PackageStatus::LocalOnly)
     return PackageStatus::LocalOnly;
-  // Compare versions only when both sides are non-empty
-  if (!e.installedVersion.isEmpty() && !e.onlineVersion.isEmpty() &&
-      e.installedVersion != e.onlineVersion) {
-    return PackageStatus::UpdateAvailable;
+
+  // Prefer semantic version ordering when both versions parse cleanly.
+  if (!e.installedVersion.isEmpty() && !e.onlineVersion.isEmpty()) {
+    bool semverComparable = false;
+    const int cmp =
+      compareSemVer(e.installedVersion, e.onlineVersion, semverComparable);
+    if (semverComparable)
+      return cmp < 0 ? PackageStatus::UpdateAvailable
+                     : PackageStatus::Installed;
   }
+
+  // Fallback: if the online catalog update timestamp is newer than the local
+  // package metadata file, treat it as an available update.
+  if (isOnlineNewerByDate(e))
+    return PackageStatus::UpdateAvailable;
+
   return PackageStatus::Installed;
+}
+
+bool PackageModel::isOnlineNewerByDate(const PackageEntry& e)
+{
+  if (!e.onlineUpdatedAt.isValid() || e.installedDir.isEmpty())
+    return false;
+
+  QDateTime localModified;
+  const QFileInfo pyproject(e.installedDir + QStringLiteral("/pyproject.toml"));
+  if (pyproject.exists())
+    localModified = pyproject.lastModified();
+  if (!localModified.isValid())
+    localModified = QFileInfo(e.installedDir).lastModified();
+  if (!localModified.isValid())
+    return false;
+
+  return e.onlineUpdatedAt > localModified;
+}
+
+bool PackageModel::parseSemVer(const QString& version, int& major, int& minor,
+                               int& patch)
+{
+  static const QRegularExpression re(
+    QStringLiteral("^v?(\\d+)\\.(\\d+)(?:\\.(\\d+))?(?:[-+].*)?$"));
+  const QRegularExpressionMatch match = re.match(version.trimmed());
+  if (!match.hasMatch())
+    return false;
+
+  bool okMajor = false;
+  bool okMinor = false;
+  bool okPatch = true;
+  major = match.captured(1).toInt(&okMajor);
+  minor = match.captured(2).toInt(&okMinor);
+  patch = match.captured(3).isEmpty() ? 0 : match.captured(3).toInt(&okPatch);
+  return okMajor && okMinor && okPatch;
+}
+
+int PackageModel::compareSemVer(const QString& lhs, const QString& rhs,
+                                bool& ok)
+{
+  int lhsMajor = 0;
+  int lhsMinor = 0;
+  int lhsPatch = 0;
+  int rhsMajor = 0;
+  int rhsMinor = 0;
+  int rhsPatch = 0;
+
+  const bool lhsValid = parseSemVer(lhs, lhsMajor, lhsMinor, lhsPatch);
+  const bool rhsValid = parseSemVer(rhs, rhsMajor, rhsMinor, rhsPatch);
+  ok = lhsValid && rhsValid;
+  if (!ok)
+    return 0;
+
+  if (lhsMajor != rhsMajor)
+    return lhsMajor < rhsMajor ? -1 : 1;
+  if (lhsMinor != rhsMinor)
+    return lhsMinor < rhsMinor ? -1 : 1;
+  if (lhsPatch != rhsPatch)
+    return lhsPatch < rhsPatch ? -1 : 1;
+  return 0;
 }
 
 QIcon PackageModel::statusIcon(PackageStatus status)
