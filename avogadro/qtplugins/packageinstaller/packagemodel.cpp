@@ -5,6 +5,7 @@
 
 #include "packagemodel.h"
 
+#include <avogadro/core/version.h>
 #include <avogadro/qtgui/packagemanager.h>
 
 #include <QtCore/QDateTime>
@@ -13,9 +14,14 @@
 #include <QtCore/QLocale>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QStringList>
+#include <QtGui/QColor>
 #include <QtGui/QIcon>
+#include <QtGui/QPainter>
+#include <QtGui/QPixmap>
 
 #include <nlohmann/json.hpp>
+
+#include <cstring>
 
 using json = nlohmann::json;
 
@@ -50,6 +56,12 @@ QVariant PackageModel::data(const QModelIndex& index, int role) const
   if (role == Qt::DecorationRole && index.column() == StatusColumn)
     return statusIcon(e.status);
 
+  if (role == Qt::DecorationRole && index.column() == FeaturesColumn) {
+    if (!e.featureTypes.isEmpty())
+      return featureIcon(e.featureTypes.first());
+    return {};
+  }
+
   if (role == Qt::ToolTipRole && index.column() == StatusColumn) {
     switch (e.status) {
       case PackageStatus::NotInstalled:
@@ -63,18 +75,46 @@ QVariant PackageModel::data(const QModelIndex& index, int role) const
     }
   }
 
+  if (role == Qt::ToolTipRole && index.column() == NameColumn) {
+    if (!versionCompatible(e))
+      return tr("Requires Avogadro %1 or later (running %2)")
+        .arg(e.minimumAvogadroVersion,
+             QString::fromLatin1(Avogadro::version()));
+    return {};
+  }
+
+  if (role == Qt::ToolTipRole && index.column() == FeaturesColumn) {
+    if (e.featureTypes.isEmpty())
+      return {};
+    // Build a human-readable list
+    QStringList labels;
+    for (const QString& ft : e.featureTypes)
+      labels.append(featureTypeLabel(ft));
+    return labels.join(QStringLiteral(", "));
+  }
+
+  // Red foreground for version-incompatible packages
+  if (role == Qt::ForegroundRole && !versionCompatible(e))
+    return QColor(Qt::red);
+
   if (role == Qt::DisplayRole) {
     switch (index.column()) {
       case StatusColumn:
         return {};
       case NameColumn:
         return e.name;
-      case InstalledColumn:
-        return e.installedVersion;
       case AvailableColumn:
         if (e.status == PackageStatus::LocalOnly)
-          return tr("local only");
+          return e.installedVersion;
         return e.hasRelease ? e.onlineVersion : e.updatedAt;
+      case FeaturesColumn: {
+        if (e.featureTypes.isEmpty())
+          return {};
+        QStringList labels;
+        for (const QString& ft : e.featureTypes)
+          labels.append(featureTypeLabel(ft));
+        return labels.join(QStringLiteral(", "));
+      }
       case DescriptionColumn:
         return e.description;
       default:
@@ -109,10 +149,10 @@ QVariant PackageModel::headerData(int section, Qt::Orientation orientation,
       return tr("Status");
     case NameColumn:
       return tr("Name");
-    case InstalledColumn:
-      return tr("Installed");
     case AvailableColumn:
-      return tr("Available");
+      return tr("Version");
+    case FeaturesColumn:
+      return tr("Features");
     case DescriptionColumn:
       return tr("Description");
     default:
@@ -169,6 +209,15 @@ void PackageModel::loadOnlineCatalog(const QByteArray& jsonBytes)
     get("zipball_url", e.zipballUrl);
     get("repo_url", e.baseUrl);
     get("readme_url", e.readmeUrl);
+    get("minimum-avogadro-version", e.minimumAvogadroVersion);
+
+    auto featIt = item.find("feature-types");
+    if (featIt != item.end() && featIt->is_array()) {
+      for (const auto& f : *featIt) {
+        if (f.is_string())
+          e.featureTypes.append(QString::fromStdString(f.get<std::string>()));
+      }
+    }
 
     auto hasIt = item.find("has_release");
     if (hasIt != item.end() && hasIt->is_boolean())
@@ -220,20 +269,18 @@ void PackageModel::mergeInstalledPackages()
   QtGui::PackageManager* pm = QtGui::PackageManager::instance();
   const QStringList installed = pm->registeredPackages();
 
-  // Build lookup maps from name and baseUrl-derived key
-  // key: package name → index in m_entries
-  QHash<QString, int> byName;
-  // key: last path segment of baseUrl → index
-  QHash<QString, int> byRepoSlug;
+  // Build a single lookup map keyed on the normalised package name.
+  // Each catalog entry is indexed by its name and its repo-slug (last segment
+  // of baseUrl), both normalised, so "avogenerators" == "generators", etc.
+  QHash<QString, int> byNormName;
   for (int i = 0; i < m_entries.size(); ++i) {
     const PackageEntry& e = m_entries[i];
     if (!e.name.isEmpty())
-      byName[e.name.toLower()] = i;
+      byNormName.insert(normalizePackageName(e.name), i);
     if (!e.baseUrl.isEmpty()) {
-      // e.g. "https://github.com/OpenChemistry/crystals" → "crystals"
-      QString slug = e.baseUrl.split('/').last().toLower();
+      const QString slug = e.baseUrl.split('/').last();
       if (!slug.isEmpty())
-        byRepoSlug[slug] = i;
+        byNormName.insert(normalizePackageName(slug), i);
     }
   }
 
@@ -243,17 +290,15 @@ void PackageModel::mergeInstalledPackages()
     // Determine if the installed directory is a symlink
     bool symlink = QFileInfo(info.directory).isSymLink();
 
-    // Try to find a matching entry in the online catalog.
-    // 1. Match by project name
-    int idx = -1;
-    if (byName.contains(pkgName.toLower()))
-      idx = byName[pkgName.toLower()];
+    // Try to find a matching entry in the online catalog using normalised
+    // names.
+    int idx = byNormName.value(normalizePackageName(pkgName), -1);
 
-    // 2. Match by directory base name (repo slug)
+    // Also try the directory base name (handles cases where pkgName != repo
+    // name)
     if (idx == -1) {
-      QString dirBase = QFileInfo(info.directory).fileName().toLower();
-      if (byRepoSlug.contains(dirBase))
-        idx = byRepoSlug[dirBase];
+      const QString dirBase = QFileInfo(info.directory).fileName();
+      idx = byNormName.value(normalizePackageName(dirBase), -1);
     }
 
     if (idx != -1) {
@@ -432,6 +477,89 @@ QIcon PackageModel::statusIcon(PackageStatus status)
                               QIcon::fromTheme(QStringLiteral("folder")));
   }
   return {};
+}
+
+QString PackageModel::normalizePackageName(const QString& name)
+{
+  QString n = name.toLower();
+  // Strip common Avogadro prefixes, longest first to avoid partial matches.
+  static const char* prefixes[] = { "avogadro-", "avogadro_", "avogadro",
+                                    "avo-",      "avo_",      "avo" };
+  for (const char* prefix : prefixes) {
+    if (n.startsWith(QLatin1String(prefix))) {
+      n = n.mid(static_cast<int>(strlen(prefix)));
+      break;
+    }
+  }
+  // Fold hyphens and underscores so "my-plugin" == "my_plugin".
+  n.replace('-', '_');
+  return n;
+}
+
+QString PackageModel::featureTypeLabel(const QString& featureType)
+{
+  if (featureType == QLatin1String("electrostatic-models"))
+    return tr("Electrostatic");
+  if (featureType == QLatin1String("energy-models"))
+    return tr("Energy");
+  if (featureType == QLatin1String("file-formats"))
+    return tr("File Formats");
+  if (featureType == QLatin1String("input-generators"))
+    return tr("Input Gen.");
+  if (featureType == QLatin1String("menu-commands"))
+    return tr("Commands");
+  // Unknown feature type — return as-is (capitalised for readability)
+  if (featureType.isEmpty())
+    return {};
+  QString label = featureType;
+  label[0] = label[0].toUpper();
+  return label.replace('-', ' ');
+}
+
+static QIcon glyphIcon(const QString& glyph, bool bold = false)
+{
+  const int sz = 22;
+  QPixmap pm(sz, sz);
+  pm.fill(Qt::transparent);
+  QPainter p(&pm);
+  QFont f = p.font();
+  f.setPixelSize(sz - 2);
+  f.setBold(bold);
+  p.setFont(f);
+  p.drawText(QRect(0, 0, sz, sz), Qt::AlignCenter, glyph);
+  return QIcon(pm);
+}
+
+QIcon PackageModel::featureIcon(const QString& featureType)
+{
+  // U+26A1 LIGHTNING BOLT
+  if (featureType == QLatin1String("electrostatic-models"))
+    return glyphIcon(QStringLiteral("\u26A1"));
+  // Bold capital E for energy
+  if (featureType == QLatin1String("energy-models"))
+    return glyphIcon(QStringLiteral("E"), true);
+  // U+1F4C4 PAGE FACING UP
+  if (featureType == QLatin1String("file-formats"))
+    return glyphIcon(QStringLiteral("\U0001F4C4"));
+  // U+269B ATOM SYMBOL
+  if (featureType == QLatin1String("input-generators"))
+    return glyphIcon(QStringLiteral("\u269B"));
+  if (featureType == QLatin1String("menu-commands"))
+    return QIcon::fromTheme(
+      QStringLiteral("application-menu"),
+      QIcon::fromTheme(QStringLiteral("preferences-other")));
+  return {};
+}
+
+bool PackageModel::versionCompatible(const PackageEntry& e)
+{
+  if (e.minimumAvogadroVersion.isEmpty())
+    return true;
+  bool ok = false;
+  const int cmp = compareSemVer(QString::fromLatin1(Avogadro::version()),
+                                e.minimumAvogadroVersion, ok);
+  // If either string didn't parse as semver, assume compatible.
+  return !ok || cmp >= 0;
 }
 
 } // namespace Avogadro::QtPlugins

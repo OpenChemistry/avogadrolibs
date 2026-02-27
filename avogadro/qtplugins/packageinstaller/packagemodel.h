@@ -29,8 +29,8 @@ public:
   {
     StatusColumn = 0,
     NameColumn = 1,
-    InstalledColumn = 2,
-    AvailableColumn = 3,
+    AvailableColumn = 2,
+    FeaturesColumn = 3,
     DescriptionColumn = 4,
     ColumnCount = 5
   };
@@ -58,6 +58,9 @@ public:
     QString readmeUrl;
     bool hasRelease = false;
     QString type;
+    QString
+      minimumAvogadroVersion; ///< from "minimum-avogadro-version", "" if none
+    QStringList featureTypes; ///< from "feature-types" array
 
     // Installed state (populated from PackageManager)
     QString installedVersion; ///< from pyproject.toml [project.version]
@@ -110,7 +113,22 @@ public:
   void setChecked(int row, bool checked);
   void uncheckAll();
 
+  /**
+   * Returns true when the running Avogadro version satisfies the entry's
+   * minimum-avogadro-version requirement (or when no minimum is specified).
+   */
+  static bool versionCompatible(const PackageEntry& e);
+
+  /** Short translated label for a feature type string. */
+  static QString featureTypeLabel(const QString& featureType);
+
 private:
+  /**
+   * Strip common Avogadro prefixes and normalise separators so that e.g.
+   * "avogenerators" and "generators" map to the same key.
+   */
+  static QString normalizePackageName(const QString& name);
+
   /** Compute (or recompute) the status of one entry. */
   static PackageStatus computeStatus(const PackageEntry& e);
   static bool isOnlineNewerByDate(const PackageEntry& e);
@@ -120,6 +138,9 @@ private:
 
   /** Icon for the given status. */
   static QIcon statusIcon(PackageStatus status);
+
+  /** Icon for the given feature type string. */
+  static QIcon featureIcon(const QString& featureType);
 
   QList<PackageEntry> m_entries;
 };

@@ -211,6 +211,26 @@ void PackageManagerDialog::installSelected()
   m_ui->readmeBrowser->clear();
 
   const QList<int> rows = m_model->checkedRows();
+
+  // Warn about any packages that require a newer Avogadro version
+  QStringList incompatible;
+  for (int row : rows) {
+    const PackageModel::PackageEntry& e = m_model->entry(row);
+    if (!PackageModel::versionCompatible(e))
+      incompatible.append(
+        tr("%1 (requires %2)").arg(e.name, e.minimumAvogadroVersion));
+  }
+  if (!incompatible.isEmpty()) {
+    const int ret = QMessageBox::warning(
+      this, tr("Version Incompatibility"),
+      tr("The following packages require a newer version of Avogadro:\n\n"
+         "%1\n\nInstall anyway?")
+        .arg(incompatible.join('\n')),
+      QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+    if (ret != QMessageBox::Yes)
+      return;
+  }
+
   for (int row : rows) {
     const PackageModel::PackageEntry& e = m_model->entry(row);
     if (e.zipballUrl.isEmpty())
