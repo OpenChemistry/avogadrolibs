@@ -4,13 +4,13 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Apostol Penkov <apostol.penkov@gmail.com>, 2020.
 # Salif Mehmed <mail@salif.eu>, 2023.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-02-26 21:52+0000\n"
-"PO-Revision-Date: 2025-08-27 08:01+0000\n"
+"PO-Revision-Date: 2026-02-28 14:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1227,10 +1227,9 @@ msgid "Van der Waals"
 msgstr "Van der Waal"
 
 #: qtgui/layermodel.cpp:194
-#, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Сфери на Van der Waal"
+msgstr ""
 
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
@@ -2084,7 +2083,7 @@ msgstr ""
 #: qtplugins/autoopt/autoopt.cpp:152
 #, fuzzy
 msgid "Optimize"
-msgstr "&Oптимизиране на геометрията"
+msgstr "Oптимизиран"
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
@@ -2282,10 +2281,9 @@ msgid "Ribbon"
 msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:96
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Анимационна"
+msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:97
 #, fuzzy
@@ -3303,9 +3301,8 @@ msgid "%1 Force Norm = %L2"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:49
-#, fuzzy
 msgid "Forcefield optimization"
-msgstr "Геометрична оптимизация"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:53
 msgid "Forcefield minimization, including scripts"
@@ -4886,9 +4883,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.h:29
-#, fuzzy
 msgid "PropertyTables"
-msgstr "Свойства"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:46
 msgid "Atom Properties"
@@ -6230,7 +6226,7 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
 #, fuzzy
 msgid "Partial Charges"
-msgstr "Цвят по частичен заряд"
+msgstr "частичен заряд"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
