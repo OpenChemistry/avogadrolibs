@@ -2,13 +2,13 @@
 # Copyright (C) 2006-2020 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # phlostically <phlostically@mailinator.com>, 2021.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-02-26 21:52+0000\n"
-"PO-Revision-Date: 2025-08-27 08:02+0000\n"
+"PO-Revision-Date: 2026-02-28 14:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -2158,7 +2158,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Optimize Geometry"
 msgid "Optimize"
-msgstr "Optimumigi Geometrion"
+msgstr "Optimumigi"
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
