@@ -15,7 +15,7 @@
 #include <QtCore/QTimeZone>
 
 // tomlplusplus — single header in thirdparty/
-#include <toml.hpp>
+#include <toml++/toml.hpp>
 
 namespace Avogadro::QtGui {
 
