@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-02-26 21:52+0000\n"
-"PO-Revision-Date: 2026-02-27 04:55+0000\n"
+"PO-Revision-Date: 2026-02-28 14:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1304,7 +1304,7 @@ msgstr "周期表"
 
 #: qtgui/pythonscript.cpp:126
 msgid "Package mode requires pixi but it was not found."
-msgstr ""
+msgstr "パッケージモードにはpixiが必要ですが見つかりませんでした。"
 
 #: qtgui/pythonscript.cpp:224 qtgui/pythonscript.cpp:314
 #, qt-format
@@ -1438,7 +1438,7 @@ msgstr "原子の色を変更"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Residue Color"
-msgstr ""
+msgstr "残基の色を変更"
 
 #: qtgui/rwmolecule.cpp:298
 msgid "Change Atom Layer"
@@ -2061,40 +2061,45 @@ msgid "Colormap:"
 msgstr "カラーマップ:"
 
 #: qtplugins/applycolors/applycolors.cpp:225
+#, fuzzy
 msgid "Apply Index Colors"
-msgstr ""
+msgstr "インデックスの色を適用"
 
 #: qtplugins/applycolors/applycolors.cpp:289
 msgid "Apply Charge Colors"
-msgstr ""
+msgstr "電荷の色を適用"
 
 #: qtplugins/applycolors/applycolors.cpp:327
+#, fuzzy
 msgid "Apply Distance Colors"
-msgstr ""
+msgstr "距離の色を適用"
 
 #: qtplugins/applycolors/applycolors.cpp:353
 msgid "Reset Atom Colors"
-msgstr ""
+msgstr "原子の色をリセット"
 
 #: qtplugins/applycolors/applycolors.cpp:379
 msgid "Apply Custom Color"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:416
+#, fuzzy
 msgid "Apply Custom Residue Color"
-msgstr ""
+msgstr "カスタムした残基の色を適用"
 
 #: qtplugins/applycolors/applycolors.cpp:440
 msgid "Reset Residue Colors"
-msgstr ""
+msgstr "残基の色をリセット"
 
 #: qtplugins/applycolors/applycolors.cpp:474
+#, fuzzy
 msgid "Apply Secondary Structure Colors"
-msgstr ""
+msgstr "二次構造の色を適用"
 
 #: qtplugins/applycolors/applycolors.cpp:562
+#, fuzzy
 msgid "Apply Amino Acid Colors"
-msgstr ""
+msgstr "アミノ酸の色を適用"
 
 #: qtplugins/applycolors/applycolors.cpp:589
 msgid "Apply Shapely Colors"
@@ -2130,18 +2135,17 @@ msgid ""
 msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:152
-#, fuzzy
-#| msgid "Optimization"
 msgid "Optimize"
-msgstr "構造最適化"
+msgstr "最適化"
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
-msgstr ""
+msgstr "動力学"
 
 #: qtplugins/autoopt/autoopt.cpp:157
+#, fuzzy
 msgid "Task:"
-msgstr ""
+msgstr "タスク:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2185,13 +2189,13 @@ msgstr "分子動力学"
 #, qt-format
 msgctxt "temperature in Kelvin"
 msgid "%1 T = %L2"
-msgstr ""
+msgstr "%1 T = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:585
 #, qt-format
 msgctxt "change in energy in kJ/mol"
 msgid "%1 ΔE = %L2"
-msgstr ""
+msgstr "%1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.h:43
 msgid "Auto Optimize tool"
@@ -4831,7 +4835,7 @@ msgstr "POV-Rayでシーンを描画"
 
 #: qtplugins/propertytables/propertymodel.cpp:307
 msgid "Click to change color"
-msgstr ""
+msgstr "クリックして色を変更"
 
 #: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Valence"
@@ -5030,16 +5034,19 @@ msgid "Residue Properties"
 msgstr "残基のプロパティ"
 
 #: qtplugins/propertytables/propertyview.cpp:559
+#, fuzzy
 msgid "Partial Charge Type"
-msgstr ""
+msgstr "部分電荷の形式"
 
 #: qtplugins/propertytables/propertyview.cpp:559
+#, fuzzy
 msgid "Select the partial charge type:"
-msgstr ""
+msgstr "部分電荷の形式を選択:"
 
 #: qtplugins/propertytables/propertyview.cpp:580
+#, fuzzy
 msgid "Change Charge Type…"
-msgstr ""
+msgstr "電荷形式の変更…"
 
 #: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"
@@ -5333,9 +5340,10 @@ msgid "Fill Unit Cell…"
 msgstr "ユニットセルを埋める…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:101
+#, fuzzy
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
-msgstr ""
+msgstr "並進セルを充填…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
@@ -5346,8 +5354,9 @@ msgid "Fill symmetric atoms based on the crystal space group."
 msgstr "結晶の空間群に基づいて対称な原子を追加。"
 
 #: qtplugins/spacegroup/spacegroup.cpp:135
+#, fuzzy
 msgid "Fill all atoms based on the crystal space group."
-msgstr ""
+msgstr "結晶の空間群に基づいて原子を充填。"
 
 #: qtplugins/spacegroup/spacegroup.cpp:384
 #: qtplugins/spacegroup/spacegroup.cpp:412
@@ -5730,9 +5739,8 @@ msgid "Symmetry"
 msgstr "対称性"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
-#, fuzzy
 msgid "Occupation"
-msgstr "占有数"
+msgstr "占有"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:141
 msgid "Spin"
