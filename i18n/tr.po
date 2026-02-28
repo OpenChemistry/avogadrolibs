@@ -11,7 +11,7 @@
 # Hıncal Gökhan BAKIR <hgokhanb@gmail.com>, 2023.
 # Hakkı Konu <hakkikonu@gmail.com>, 2023.
 # Emir <bitigchi@me.com>, 2024.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 # Onur Kalkan <onurkalkanmv@gmail.com>, 2024.
 # Oğuz Ersen <oguz@ersen.moe>, 2025.
 msgid ""
@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-02-26 21:52+0000\n"
-"PO-Revision-Date: 2025-10-12 16:07+0000\n"
-"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
+"PO-Revision-Date: 2026-02-28 14:10+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
 "Language: tr\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1293,7 +1293,7 @@ msgstr "Van der Waals"
 #, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Van der Waals Küreleri"
+msgstr "Van der Waals (AO)"
 
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
@@ -2162,7 +2162,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Optimize Geometry"
 msgid "Optimize"
-msgstr "Geometriyi İyileştir"
+msgstr "İyileştir"
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
