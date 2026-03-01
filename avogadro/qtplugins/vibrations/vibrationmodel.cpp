@@ -56,9 +56,9 @@ QVariant VibrationModel::headerData(int section, Qt::Orientation orientation,
         case 0:
           return QString("Frequency (cm⁻¹)");
         case 1:
-          return QString("Intensity (KM/mol)");
+          return QString("Intensity (km/mol)");
         case 2:
-          return QString("Raman Intensity (Å⁴/amu)");
+          return QString("Raman Intensity (a.u.)");
       }
     } else if (orientation == Qt::Vertical) {
       return QString::number(section + 1);
