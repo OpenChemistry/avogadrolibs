@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-02-26 21:52+0000\n"
-"PO-Revision-Date: 2026-02-14 09:09+0000\n"
+"PO-Revision-Date: 2026-02-28 14:09+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1319,7 +1319,7 @@ msgstr "Periodic Table"
 
 #: qtgui/pythonscript.cpp:126
 msgid "Package mode requires pixi but it was not found."
-msgstr ""
+msgstr "Package mode requires pixi but it was not found."
 
 #: qtgui/pythonscript.cpp:224 qtgui/pythonscript.cpp:314
 #, qt-format
@@ -1364,6 +1364,8 @@ msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
+"Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
+"error: %3)."
 
 #: qtgui/pythonscript.cpp:415
 msgid "Script failed to start."
@@ -1459,7 +1461,7 @@ msgstr "Change Atom Colour"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Residue Color"
-msgstr ""
+msgstr "Change Residue Colour"
 
 #: qtgui/rwmolecule.cpp:298
 msgid "Change Atom Layer"
@@ -2071,43 +2073,43 @@ msgstr "Colourmap:"
 
 #: qtplugins/applycolors/applycolors.cpp:225
 msgid "Apply Index Colors"
-msgstr ""
+msgstr "Apply Index Colours"
 
 #: qtplugins/applycolors/applycolors.cpp:289
 msgid "Apply Charge Colors"
-msgstr ""
+msgstr "Apply Charge Colours"
 
 #: qtplugins/applycolors/applycolors.cpp:327
 msgid "Apply Distance Colors"
-msgstr ""
+msgstr "Apply Distance Colours"
 
 #: qtplugins/applycolors/applycolors.cpp:353
 msgid "Reset Atom Colors"
-msgstr ""
+msgstr "Reset Atom Colours"
 
 #: qtplugins/applycolors/applycolors.cpp:379
 msgid "Apply Custom Color"
-msgstr ""
+msgstr "Apply Custom Colour"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 msgid "Apply Custom Residue Color"
-msgstr ""
+msgstr "Apply Custom Residue Colour"
 
 #: qtplugins/applycolors/applycolors.cpp:440
 msgid "Reset Residue Colors"
-msgstr ""
+msgstr "Reset Residue Colours"
 
 #: qtplugins/applycolors/applycolors.cpp:474
 msgid "Apply Secondary Structure Colors"
-msgstr ""
+msgstr "Apply Secondary Structure Colours"
 
 #: qtplugins/applycolors/applycolors.cpp:562
 msgid "Apply Amino Acid Colors"
-msgstr ""
+msgstr "Apply Amino Acid Colours"
 
 #: qtplugins/applycolors/applycolors.cpp:589
 msgid "Apply Shapely Colors"
-msgstr ""
+msgstr "Apply Shapely Colours"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2155,11 +2157,11 @@ msgstr "Optimize"
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
-msgstr ""
+msgstr "Dynamics"
 
 #: qtplugins/autoopt/autoopt.cpp:157
 msgid "Task:"
-msgstr ""
+msgstr "Task:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2203,13 +2205,13 @@ msgstr "Molecular Dynamics"
 #, qt-format
 msgctxt "temperature in Kelvin"
 msgid "%1 T = %L2"
-msgstr ""
+msgstr "%1 T = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:585
 #, qt-format
 msgctxt "change in energy in kJ/mol"
 msgid "%1 ΔE = %L2"
-msgstr ""
+msgstr "%1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.h:43
 msgid "Auto Optimize tool"
@@ -4829,7 +4831,7 @@ msgstr "Render the scene using POV-Ray."
 
 #: qtplugins/propertytables/propertymodel.cpp:307
 msgid "Click to change color"
-msgstr ""
+msgstr "Click to change colour"
 
 #: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Valence"
@@ -5027,15 +5029,15 @@ msgstr "Residue Properties"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Partial Charge Type"
-msgstr ""
+msgstr "Partial Charge Type"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Select the partial charge type:"
-msgstr ""
+msgstr "Select the partial charge type:"
 
 #: qtplugins/propertytables/propertyview.cpp:580
 msgid "Change Charge Type…"
-msgstr ""
+msgstr "Change Charge Type…"
 
 #: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"

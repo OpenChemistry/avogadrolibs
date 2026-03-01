@@ -11,13 +11,14 @@
 # Khemis <khemis@bol.com.br>, 2024.
 # nicejammer <snoring_parrot@users.noreply.hosted.weblate.org>, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
+# croomfolk <croomfolk@proton.me>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-02-26 21:52+0000\n"
-"PO-Revision-Date: 2025-12-04 07:00+0000\n"
-"Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
+"PO-Revision-Date: 2026-03-01 04:46+0000\n"
+"Last-Translator: croomfolk <croomfolk@proton.me>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4638,7 +4639,7 @@ msgstr "Vídeo (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:293
 msgid "Export Bitmap Graphics"
-msgstr "Exportar Gráficos BMP"
+msgstr "Exportar Gráficos Bitmap"
 
 #: qtplugins/playertool/playertool.cpp:294
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"

@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the avogadro package.
 #
 # Matej Urbančič <mateju@svn.gnome.org>, 2012.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-02-26 21:52+0000\n"
-"PO-Revision-Date: 2025-08-27 08:02+0000\n"
+"PO-Revision-Date: 2026-02-28 14:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovenian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sl/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
@@ -1236,7 +1236,7 @@ msgstr "Van der Waalsovi radii"
 #, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Van der Waalsovi radii"
+msgstr "Van der Waalsovi (AO)"
 
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
