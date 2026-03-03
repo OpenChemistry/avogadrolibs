@@ -11,11 +11,9 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QJsonObject>
 #include <QtCore/QString>
-#include <QtCore/QTemporaryFile>
 #include <QtCore/QVariantMap>
-
-class QJsonObject;
 
 namespace Avogadro {
 
@@ -79,6 +77,8 @@ public:
   std::string identifier() const override { return m_identifier; }
   std::string name() const override { return m_name; }
   std::string description() const override { return m_description; }
+  std::string userOptions() const override;
+  bool setUserOptions(const std::string& optionsJson) override;
 
   Core::Molecule::ElementMask elements() const override { return m_elements; }
   bool supportsGradients() const { return m_gradients; }
@@ -99,12 +99,9 @@ private:
   static Protocol stringToProtocol(const std::string& str);
   static Io::FileFormat* createFileFormat(Format fmt);
   void resetMetaData();
-  void readMetaData();
-  bool parseString(const QJsonObject& ob, const QString& key, std::string& str);
   void processElementString(const QString& str);
-  bool parseElements(const QJsonObject& ob);
   void copyMetaDataFrom(const ScriptEnergy& other);
-  
+
   QByteArray writeCoordinatesText(const Eigen::VectorXd& x);
   QByteArray writeCoordinatesBinary(const Eigen::VectorXd& x,
                                     bool requestGradient) const;
@@ -113,6 +110,7 @@ private:
   bool readBinaryFrame(const QByteArray& input, QByteArray& frame);
   bool evaluateBinary(const Eigen::VectorXd& x, bool requestGradient,
                       double& energy, Eigen::VectorXd& grad);
+  bool buildBootstrapInput(QByteArray& input) const;
 
 private:
   QtGui::PythonScript* m_interpreter;
@@ -132,7 +130,8 @@ private:
   std::string m_name;
   std::string m_description;
   QString m_formatString;
-  QTemporaryFile m_tempFile;
+  QJsonObject m_userOptionsSchema;
+  QJsonObject m_userOptionsValues;
 };
 
 } // namespace QtPlugins

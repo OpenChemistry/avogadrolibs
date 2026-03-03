@@ -116,6 +116,7 @@ private:
   unsigned int m_nSteps = 5;
   double m_tolerance = 1.0e-6;
   double m_gradientTolerance = 1.0e-4;
+  QVariantMap m_modelUserOptions;
 
   QList<Calc::EnergyCalculator*> m_scripts;
   QMultiHash<QString, QString> m_packageScripts;

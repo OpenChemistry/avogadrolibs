@@ -60,6 +60,21 @@ public:
   }
 
   /**
+   * @brief Return a JSON object string describing optional user-editable
+   * settings for this model. Empty string means no user options.
+   */
+  virtual std::string userOptions() const { return std::string(); }
+
+  /**
+   * @brief Set user-selected options serialized as a JSON object string.
+   * @return True on success.
+   */
+  virtual bool setUserOptions([[maybe_unused]] const std::string& optionsJson)
+  {
+    return true;
+  }
+
+  /**
    * @brief Indicate if your method only treats a subset of elements
    * @return an element mask corresponding to the defined subset
    */

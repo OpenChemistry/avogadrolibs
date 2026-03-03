@@ -30,7 +30,7 @@ avogadro_plugin(Forcefield
   forcefielddialog.ui
 )
 
-target_link_libraries(Forcefield PRIVATE Avogadro::Calc)
+target_link_libraries(Forcefield PRIVATE Avogadro::Calc Avogadro::QtGui)
 
 if(QT_VERSION EQUAL 6)
   target_link_libraries(Forcefield PRIVATE Qt6::Gui)
