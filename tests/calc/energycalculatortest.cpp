@@ -460,6 +460,16 @@ TEST_F(EnergyCalculatorTest, SetConfigurationMultipleValues)
   EXPECT_EQ(stored.value("key1").toString(), "value1");
 }
 
+TEST_F(EnergyCalculatorTest, UserOptionsDefaultEmpty)
+{
+  EXPECT_TRUE(calculator->userOptions().empty());
+}
+
+TEST_F(EnergyCalculatorTest, SetUserOptionsDefaultSucceeds)
+{
+  EXPECT_TRUE(calculator->setUserOptions(R"({"solvent":"water"})"));
+}
+
 // Custom Calculator Tests
 
 TEST(CustomCalculatorTest, DifferentIdentifiers)

@@ -6,6 +6,7 @@
 #include "scriptenergy.h"
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
 
 // formats supported in scripts
@@ -17,7 +18,6 @@
 #include <avogadro/io/xyzformat.h>
 
 #include <QtCore/QDebug>
-#include <QtCore/QDir>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QSysInfo>
@@ -96,8 +96,6 @@ ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
     m_unitCells(false)
 {
   m_elements.reset();
-  if (!scriptFileName_.isEmpty())
-    readMetaData();
 }
 
 ScriptEnergy::~ScriptEnergy()
@@ -137,6 +135,23 @@ void ScriptEnergy::readMetaData(const QVariantMap& metadata)
   if (!elemStr.isEmpty())
     processElementString(elemStr);
 
+  // Optional package-provided user-options schema.
+  m_userOptionsSchema = QJsonObject();
+  const QVariant userOptionsVar = metadata.value("user-options");
+  if (userOptionsVar.typeId() == QMetaType::QVariantMap) {
+    m_userOptionsSchema = QJsonObject::fromVariantMap(userOptionsVar.toMap());
+  } else {
+    const QString userOptionsRel = userOptionsVar.toString();
+    if (!userOptionsRel.isEmpty()) {
+      QString userOptionsPath = userOptionsRel;
+      if (!m_interpreter->packageDir().isEmpty()) {
+        userOptionsPath = m_interpreter->packageDir() + '/' + userOptionsRel;
+      }
+      m_userOptionsSchema =
+        QtGui::PackageManager::loadOptionsFromFile(userOptionsPath);
+    }
+  }
+
   m_valid =
     !m_identifier.empty() && !m_name.empty() && m_inputFormat != NotUsed;
 }
@@ -144,6 +159,33 @@ void ScriptEnergy::readMetaData(const QVariantMap& metadata)
 QString ScriptEnergy::scriptFilePath() const
 {
   return m_interpreter->scriptFilePath();
+}
+
+std::string ScriptEnergy::userOptions() const
+{
+  if (m_userOptionsSchema.isEmpty())
+    return std::string();
+
+  return QJsonDocument(m_userOptionsSchema)
+    .toJson(QJsonDocument::Compact)
+    .toStdString();
+}
+
+bool ScriptEnergy::setUserOptions(const std::string& optionsJson)
+{
+  if (optionsJson.empty()) {
+    m_userOptionsValues = QJsonObject();
+    return true;
+  }
+
+  QJsonParseError parseError;
+  const QJsonDocument doc = QJsonDocument::fromJson(
+    QByteArray::fromStdString(optionsJson), &parseError);
+  if (parseError.error != QJsonParseError::NoError || !doc.isObject())
+    return false;
+
+  m_userOptionsValues = doc.object();
+  return true;
 }
 
 Calc::EnergyCalculator* ScriptEnergy::newInstance() const
@@ -163,6 +205,8 @@ void ScriptEnergy::copyMetaDataFrom(const ScriptEnergy& other)
   m_description = other.m_description;
   m_inputFormat = other.m_inputFormat;
   m_formatString = other.m_formatString;
+  m_userOptionsSchema = other.m_userOptionsSchema;
+  m_userOptionsValues = other.m_userOptionsValues;
   m_protocol = other.m_protocol;
   m_gradients = other.m_gradients;
   m_unitCells = other.m_unitCells;
@@ -181,6 +225,10 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
   if (mol == nullptr || m_interpreter == nullptr) {
     return; // nothing to do
   }
+  if (!m_interpreter->isPackageMode()) {
+    appendError("Energy scripts must run in package mode.");
+    return;
+  }
 
   // Always reset the running server before validating/restarting.
   m_interpreter->asyncTerminate();
@@ -198,38 +246,19 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
     return;
   }
 
-  // start the process
-  // we need a tempory file to write the molecule
-  QScopedPointer<Io::FileFormat> format(createFileFormat(m_inputFormat));
-  if (format.isNull()) {
-    appendError("Invalid input format.");
+  QByteArray bootstrapInput;
+  if (!buildBootstrapInput(bootstrapInput))
     return;
-  }
-  // get a temporary filename
-  QString tempPath = QDir::tempPath();
-  if (!tempPath.endsWith(QDir::separator()))
-    tempPath += QDir::separator();
-  QString tempPattern =
-    tempPath + "avogadroenergyXXXXXX." + format->fileExtensions()[0].c_str();
-  m_tempFile.setFileTemplate(tempPattern);
-  if (!m_tempFile.open()) {
-    appendError("Error creating temporary file.");
-    return;
-  }
-
-  // write the molecule
-  format->writeFile(m_tempFile.fileName().toStdString(), *mol);
-  m_tempFile.close();
 
   // construct the command line options
   QStringList options;
-  options << "-f" << m_tempFile.fileName();
   if (m_protocol == Protocol::BinaryV1)
     options << "--protocol"
             << "binary-v1";
 
-  // start the interpreter
-  m_interpreter->asyncExecute(options, QByteArray(), false);
+  // Start the long-running interpreter and keep stdin open for coordinate
+  // requests after bootstrapping the model from JSON.
+  m_interpreter->asyncExecute(options, bootstrapInput, false, false);
 }
 
 QByteArray ScriptEnergy::writeCoordinatesText(const Eigen::VectorXd& x)
@@ -435,6 +464,56 @@ bool ScriptEnergy::evaluateBinary(const Eigen::VectorXd& x,
   return parseResponseBinary(response, requestGradient, energy, grad);
 }
 
+bool ScriptEnergy::buildBootstrapInput(QByteArray& input) const
+{
+  if (m_molecule == nullptr) {
+    return false;
+  }
+
+  QScopedPointer<Io::FileFormat> format(createFileFormat(m_inputFormat));
+  if (format.isNull()) {
+    appendError("Invalid input format.");
+    return false;
+  }
+
+  std::string moleculeString;
+  if (!format->writeString(moleculeString, *m_molecule)) {
+    appendError(format->error(), false);
+    return false;
+  }
+
+  QJsonObject request;
+  request.insert(QStringLiteral("charge"), m_molecule->totalCharge());
+  request.insert(QStringLiteral("spin"), m_molecule->totalSpinMultiplicity());
+
+  QJsonArray selectedList;
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (m_molecule->atomSelected(i))
+      selectedList.append(static_cast<qint64>(i));
+  }
+  request.insert(QStringLiteral("selectedAtoms"), selectedList);
+
+  if (m_formatString == QLatin1String("cjson")) {
+    QJsonParseError parseError;
+    const QJsonDocument parsed = QJsonDocument::fromJson(
+      QByteArray::fromStdString(moleculeString), &parseError);
+    if (parseError.error != QJsonParseError::NoError || !parsed.isObject()) {
+      appendError("Failed to serialize cjson bootstrap input.");
+      return false;
+    }
+    request.insert(QStringLiteral("cjson"), parsed.object());
+  } else {
+    request.insert(m_formatString, QString::fromStdString(moleculeString));
+  }
+
+  // Package energy scripts receive user-selected values under "options".
+  request.insert(QStringLiteral("options"), m_userOptionsValues);
+
+  input = QJsonDocument(request).toJson(QJsonDocument::Compact);
+  input.append('\n');
+  return true;
+}
+
 Real ScriptEnergy::value(const Eigen::VectorXd& x)
 {
   if (m_molecule == nullptr || m_interpreter == nullptr)
@@ -622,152 +701,8 @@ void ScriptEnergy::resetMetaData()
   m_description.clear();
   m_formatString.clear();
   m_elements.reset();
-}
-
-void ScriptEnergy::readMetaData()
-{
-  resetMetaData();
-
-  QByteArray output(m_interpreter->execute(QStringList() << "--metadata"));
-
-  if (m_interpreter->hasErrors()) {
-    qWarning() << tr("Error retrieving metadata for energy script: %1")
-                    .arg(scriptFilePath())
-               << "\n"
-               << m_interpreter->errorList();
-    return;
-  }
-
-  QJsonParseError parseError;
-  QJsonDocument doc(QJsonDocument::fromJson(output, &parseError));
-  if (parseError.error != QJsonParseError::NoError) {
-    qWarning() << tr("Error parsing metadata for energy script: %1")
-                    .arg(scriptFilePath())
-               << "\n"
-               << parseError.errorString();
-    return;
-  }
-
-  if (!doc.isObject()) {
-    qWarning() << tr("Error parsing metadata for energy script: %1\n"
-                     "Result is not a JSON object.\n")
-                    .arg(scriptFilePath());
-    return;
-  }
-
-  const QJsonObject metaData(doc.object());
-
-  // Read required inputs first.
-  std::string identifierTmp;
-  if (!parseString(metaData, "identifier", identifierTmp)) {
-    qWarning() << "Error parsing metadata for energy script:"
-               << scriptFilePath() << "\n"
-               << "Error parsing required member 'identifier'"
-               << "\n"
-               << output;
-    return;
-  }
-  m_identifier = identifierTmp;
-
-  std::string nameTmp;
-  if (!parseString(metaData, "name", nameTmp)) {
-    qWarning() << "Error parsing metadata for energy script:"
-               << scriptFilePath() << "\n"
-               << "Error parsing required member 'name'"
-               << "\n"
-               << output;
-    return;
-  }
-  m_name = nameTmp;
-
-  std::string descriptionTmp;
-  parseString(metaData, "description", descriptionTmp);
-  m_description = descriptionTmp; // optional
-
-  Format inputFormatTmp = NotUsed;
-  std::string inputFormatStrTmp;
-  if (!parseString(metaData, "inputFormat", inputFormatStrTmp)) {
-    qWarning() << "Error parsing metadata for energy script:"
-               << scriptFilePath() << "\n"
-               << "Member 'inputFormat' required for writable formats."
-               << "\n"
-               << output;
-    return;
-  }
-  m_formatString = inputFormatStrTmp.c_str(); // for the json key
-
-  // Validate the input format
-  inputFormatTmp = stringToFormat(inputFormatStrTmp);
-  if (inputFormatTmp == NotUsed) {
-    qWarning() << "Error parsing metadata for energy script:"
-               << scriptFilePath() << "\n"
-               << "Member 'inputFormat' not recognized:"
-               << inputFormatStrTmp.c_str()
-               << "\nValid values are cjson, cml, mdl/sdf, pdb, or xyz.\n"
-               << output;
-    return;
-  }
-  m_inputFormat = inputFormatTmp;
-
-  // optional protocol, defaults to text-v1
-  if (metaData["protocol"].isString()) {
-    const std::string protocolString =
-      metaData["protocol"].toString().toStdString();
-    if (protocolString == "text-v1" || protocolString == "binary-v1") {
-      m_protocol = stringToProtocol(protocolString);
-    } else {
-      qWarning() << "Error parsing metadata for energy script:"
-                 << scriptFilePath() << "\n"
-                 << "Member 'protocol' not recognized:"
-                 << protocolString.c_str()
-                 << "\nValid values are text-v1 or binary-v1.\n"
-                 << output;
-      return;
-    }
-  }
-
-  // check ions, radicals, unit cells
-  /* e.g.,
-        "protocol": "binary-v1",
-        "unitCell": False,
-        "gradients": True,
-        "ion": False,
-        "radical": False,
-  */
-  if (!metaData["gradients"].isBool()) {
-    return; // not valid
-  }
-  m_gradients = metaData["gradients"].toBool();
-
-  if (!metaData["unitCell"].isBool()) {
-    return; // not valid
-  }
-  m_unitCells = metaData["unitCell"].toBool();
-
-  if (!metaData["ion"].isBool()) {
-    return; // not valid
-  }
-  m_ions = metaData["ion"].toBool();
-
-  if (!metaData["radical"].isBool()) {
-    return; // not valid
-  }
-  m_radicals = metaData["radical"].toBool();
-
-  // get the element mask
-  // (if it doesn't exist, the default is no elements anyway)
-  m_valid = parseElements(metaData);
-}
-
-bool ScriptEnergy::parseString(const QJsonObject& ob, const QString& key,
-                               std::string& str)
-{
-  if (!ob[key].isString())
-    return false;
-
-  str = ob[key].toString().toStdString();
-
-  return !str.empty();
+  m_userOptionsSchema = QJsonObject();
+  m_userOptionsValues = QJsonObject();
 }
 
 void ScriptEnergy::processElementString(const QString& str)
@@ -807,30 +742,6 @@ void ScriptEnergy::processElementString(const QString& str)
 
     m_elements.set(i);
   }
-}
-
-bool ScriptEnergy::parseElements(const QJsonObject& object)
-{
-  m_elements.reset();
-
-  // we could either get a string or an array (of numbers)
-  if (object["elements"].isString()) {
-    auto str = object["elements"].toString();
-    processElementString(str);
-
-  } else if (object["elements"].isArray()) {
-    QJsonArray arr = object["elements"].toArray();
-    for (auto&& i : arr) {
-      if (i.isString()) {
-        processElementString(i.toString());
-      } else if (i.isDouble()) {
-        int element = i.toInt();
-        if (element >= 1 && element <= 119) // check the range
-          m_elements.set(element);
-      }
-    }
-  }
-  return true;
 }
 
 } // namespace Avogadro::QtPlugins

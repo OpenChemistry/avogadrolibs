@@ -7,6 +7,9 @@
 #define AVOGADRO_QTPLUGINS_FORCEFIELDDIALOG_H
 
 #include <QDialog>
+#include <QVariantMap>
+
+class QPushButton;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -66,12 +69,17 @@ public:
 
 private slots:
   void useRecommendedForceFieldToggled(bool state);
+  void modelOptionsClicked();
 
 private:
   void updateRecommendedForceField();
+  void updateOptionsButton();
 
   Ui::ForceFieldDialog* ui;
   QString m_recommendedForceField;
+  QVariantMap m_modelUserOptionSchemas;
+  QVariantMap m_modelUserOptions;
+  QPushButton* m_optionsButton = nullptr;
 };
 
 } // namespace QtPlugins

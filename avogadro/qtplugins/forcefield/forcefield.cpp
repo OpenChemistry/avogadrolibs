@@ -13,6 +13,7 @@
 #endif
 
 #include <QtCore/QDebug>
+#include <QtCore/QScopedPointer>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
@@ -66,6 +67,7 @@ Forcefield::Forcefield(QObject* parent_)
   m_maxSteps = settings.value("maxSteps", 250).toInt();
   m_tolerance = settings.value("tolerance", 1.0e-4).toDouble();
   m_gradientTolerance = settings.value("gradientTolerance", 1.0e-4).toDouble();
+  m_modelUserOptions = settings.value("modelUserOptions").toMap();
   settings.endGroup();
 
   QAction* action = new QAction(this);
@@ -237,10 +239,21 @@ QStringList Forcefield::menuPath(QAction* action) const
 void Forcefield::showDialog()
 {
   QStringList forceFields;
+  QVariantMap modelUserOptionSchemas;
   auto list =
     Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
   for (auto option : list) {
-    forceFields << option.c_str();
+    const QString optionName = option.c_str();
+    forceFields << optionName;
+
+    QScopedPointer<EnergyCalculator> model(
+      Calc::EnergyManager::instance().model(option));
+    if (model) {
+      const std::string schema = model->userOptions();
+      if (!schema.empty())
+        modelUserOptionSchemas.insert(optionName,
+                                      QString::fromStdString(schema));
+    }
   }
 
   QSettings settings;
@@ -251,6 +264,8 @@ void Forcefield::showDialog()
   options["tolerance"] = m_tolerance;
   options["gradientTolerance"] = m_gradientTolerance;
   options["autodetect"] = m_autodetect;
+  options["modelUserOptions"] = m_modelUserOptions;
+  options["modelUserOptionsSchemas"] = modelUserOptionSchemas;
 
   QVariantMap results = ForceFieldDialog::prompt(
     nullptr, forceFields, options, recommendedForceField().c_str());
@@ -269,6 +284,8 @@ void Forcefield::showDialog()
     settings.setValue("gradientTolerance", m_gradientTolerance);
     m_autodetect = results["autodetect"].toBool();
     settings.setValue("autodetect", m_autodetect);
+    m_modelUserOptions = results["modelUserOptions"].toMap();
+    settings.setValue("modelUserOptions", m_modelUserOptions);
     settings.endGroup();
   }
   setupMethod();
@@ -335,8 +352,15 @@ void Forcefield::setupMethod()
   }
   m_method = Calc::EnergyManager::instance().model(m_methodName);
 
-  if (m_method != nullptr)
+  if (m_method != nullptr) {
+    const QString methodId = QString::fromStdString(m_methodName);
+    const QString modelOptions = m_modelUserOptions.value(methodId).toString();
+    if (!modelOptions.trimmed().isEmpty() &&
+        !m_method->setUserOptions(modelOptions.toStdString())) {
+      qWarning() << "Failed to parse user options for force field" << methodId;
+    }
     m_method->setMolecule(m_molecule);
+  }
 }
 
 void Forcefield::setupConstraints()

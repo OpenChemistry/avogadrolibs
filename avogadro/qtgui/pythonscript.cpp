@@ -277,7 +277,7 @@ QByteArray PythonScript::execute(const QStringList& args,
 
 void PythonScript::asyncExecute(const QStringList& args,
                                 const QByteArray& scriptStdin,
-                                bool mergedChannels)
+                                bool mergedChannels, bool closeWriteChannel)
 {
   clearErrors();
   if (m_process != nullptr) {
@@ -329,7 +329,8 @@ void PythonScript::asyncExecute(const QStringList& args,
                     .arg(processErrorString(*m_process));
       return;
     }
-    m_process->closeWriteChannel();
+    if (closeWriteChannel)
+      m_process->closeWriteChannel();
   }
 
   // let the script run
