@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-02-26 21:52+0000\n"
-"PO-Revision-Date: 2026-02-14 09:09+0000\n"
+"POT-Creation-Date: 2026-03-01 04:49+0000\n"
+"PO-Revision-Date: 2026-03-03 01:09+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -2074,7 +2074,7 @@ msgstr "ოპტიმიზაცია"
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
-msgstr ""
+msgstr "დინამიკა"
 
 #: qtplugins/autoopt/autoopt.cpp:157
 msgid "Task:"
@@ -3397,7 +3397,7 @@ msgstr "წყალი"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:464
 msgid "Singlet"
-msgstr "ერთი"
+msgstr "ერთმაგი"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:467
 msgid "Doublet"
@@ -4873,7 +4873,7 @@ msgstr "ნარჩენების თვისებები"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Partial Charge Type"
-msgstr ""
+msgstr "ნაწილობრივი მუხტის ტიპი"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Select the partial charge type:"

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-02-26 21:52+0000\n"
-"PO-Revision-Date: 2026-02-28 14:10+0000\n"
+"POT-Creation-Date: 2026-03-01 04:49+0000\n"
+"PO-Revision-Date: 2026-03-03 01:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.1-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2079,8 +2079,9 @@ msgid "Reset Atom Colors"
 msgstr "原子の色をリセット"
 
 #: qtplugins/applycolors/applycolors.cpp:379
+#, fuzzy
 msgid "Apply Custom Color"
-msgstr ""
+msgstr "カスタムした色を適用"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 #, fuzzy
@@ -5373,7 +5374,7 @@ msgstr ""
 "上書きしますか？"
 
 #: qtplugins/spacegroup/spacegroup.cpp:401
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Space group perception succeeded:\n"
 "Tolerance: %1  Å\n"
@@ -5381,6 +5382,11 @@ msgid ""
 "Hall symbol: %3\n"
 "International symbol: %4"
 msgstr ""
+"空間群の検出に成功:\n"
+"許容値: %1  Å\n"
+"空間群: %2\n"
+"ホール記号: %3\n"
+"国際記号: %4"
 
 #: qtplugins/spacegroup/spacegroup.cpp:418
 msgid "Failure"
@@ -8626,7 +8632,7 @@ msgstr "一定サイズ"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:21
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Apply Color"
-msgstr ""
+msgstr "色を適用"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
