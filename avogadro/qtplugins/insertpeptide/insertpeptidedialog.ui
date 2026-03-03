@@ -416,7 +416,7 @@
         <item row="0" column="1">
          <widget class="QDoubleSpinBox" name="phiSpin">
           <property name="suffix">
-           <string>°</string>
+           <string notr="true">°</string>
           </property>
           <property name="minimum">
            <double>-180.000000000000000</double>
@@ -432,7 +432,7 @@
         <item row="1" column="1">
          <widget class="QDoubleSpinBox" name="psiSpin">
           <property name="suffix">
-           <string>°</string>
+           <string notr="true">°</string>
           </property>
           <property name="minimum">
            <double>-180.000000000000000</double>
