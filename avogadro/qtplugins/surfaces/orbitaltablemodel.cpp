@@ -256,6 +256,50 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
       basis->molecularOrbitalCount(Core::BasisSet::Alpha);
     unsigned int betaCount = basis->molecularOrbitalCount(Core::BasisSet::Beta);
 
+    // Generate orbital occupation from energy order if no occupancy is set
+    if (alphaOccupancy.empty() && betaOccupancy.empty()) {
+    
+      const unsigned int nElec = alphaHomo + betaHomo; // total electrons
+      alphaOccupancy.assign(alphaCount, 0.0);
+      betaOccupancy.assign(betaCount, 0.0);
+    
+      unsigned int ia = 0;
+      unsigned int ib = 0;
+    
+      // Fill the lowest-energy orbitals across alpha/beta ("merge" two sorted lists)
+      for (unsigned int e = 0; e < nElec; ++e) {
+    
+        // Compare next orbital energies (assumed already sorted by index)
+        const double ea = (ia < alphaEnergies.size()) ? alphaEnergies[ia]
+                                                      : std::numeric_limits<double>::infinity();
+        const double eb = (ib < betaEnergies.size())  ? betaEnergies[ib]
+                                                      : std::numeric_limits<double>::infinity();
+    
+        if (ea < eb) {
+          alphaOccupancy[ia] = 1.0;
+          ++ia;
+        } else if (eb < ea) {
+          betaOccupancy[ib] = 1.0;
+          ++ib;
+        } else {
+          // Fill less occupied spin orbitals if degenrate. In same conditions, alpha first 
+          if (ia <= ib) {
+            alphaOccupancy[ia] = 1.0;
+            ++ia;
+          } else {
+            betaOccupancy[ib] = 1.0;
+            ++ib;
+          }
+        }
+      }
+
+      // Update HOMO/LUMO consistent with the generated occupations.
+      alphaHomo = ia;
+      betaHomo  = ib;
+      alphaLumo = ia + 1;
+      betaLumo  = ib + 1;
+    }
+
     // Create alpha orbitals
     for (unsigned int i = 0; i < alphaCount; i++) {
       Orbital* orb = new Orbital;
