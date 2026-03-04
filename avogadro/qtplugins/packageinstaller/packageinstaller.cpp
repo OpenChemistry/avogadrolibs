@@ -19,7 +19,10 @@ PackageInstaller::PackageInstaller(QObject* parent_)
   connect(m_action, &QAction::triggered, this, &PackageInstaller::showDialog);
 }
 
-PackageInstaller::~PackageInstaller() = default;
+PackageInstaller::~PackageInstaller()
+{
+  delete m_dialog;
+}
 
 QList<QAction*> PackageInstaller::actions() const
 {

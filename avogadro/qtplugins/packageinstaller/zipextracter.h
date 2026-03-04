@@ -6,8 +6,8 @@
 #ifndef AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
 #define AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
 
-#include "archive.h"
-#include "archive_entry.h"
+#include <archive.h>
+#include <archive_entry.h>
 #include <QtCore/QObject>
 #include <QtCore/QList>
 #include <string>
@@ -23,10 +23,10 @@ class ZipExtracter : public QObject
 public:
   ZipExtracter();
   ~ZipExtracter();
-  char* convert(const std::string&);
   int copyData(struct archive* ar, struct archive* aw);
-  QList<QString> extract(std::string extractdir, std::string absolutepath);
-  QList<QString> listFiles(const std::string absolutepath);
+  QList<QString> extract(const std::string& extractdir,
+                         const std::string& absolutepath);
+  QList<QString> listFiles(const std::string& absolutepath);
 };
 
 } // namespace QtPlugins

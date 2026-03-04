@@ -40,10 +40,7 @@ static void setRawHeaders(QNetworkRequest* request)
 {
   request->setRawHeader("Accept", "text/html,application/xhtml+xml,application/"
                                   "xml;q=0.9,image/webp,*/*;q=0.8");
-  request->setRawHeader("User-Agent",
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                        "AppleWebKit/537.36 (KHTML, like Gecko) "
-                        "Chrome/54.0.2840.71 Safari/537.36");
+  request->setRawHeader("User-Agent", "Avogadro/2.0 PackageManager");
   request->setRawHeader("Accept-Language", "en-US,en;q=0.8");
 }
 
@@ -425,14 +422,16 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
       tr("Extraction complete (%1 files)\n").arg(newFiles.size()));
 
     // Derive component name: "OpenChemistry-crystals-a7c672d" → "crystals"
-    QStringList namePieces = newFiles[0].split('-');
-    if (namePieces.size() >= 3) {
-      namePieces.removeLast();
-      namePieces.removeFirst();
-    } else if (namePieces.size() == 2) {
-      namePieces.removeFirst();
-    }
-    const QString component = namePieces.join('-');
+    // Trim trailing '/', then take the substring between the first and last '-'
+    QString rawName = newFiles[0];
+    if (rawName.endsWith('/'))
+      rawName.chop(1);
+    const int firstDash = rawName.indexOf('-');
+    const int lastDash = rawName.lastIndexOf('-');
+    const QString component =
+      (firstDash != -1 && lastDash > firstDash)
+        ? rawName.mid(firstDash + 1, lastDash - firstDash - 1)
+        : rawName;
     const QString destination = m_filePath + '/' + component;
 
     QDir prev(destination);

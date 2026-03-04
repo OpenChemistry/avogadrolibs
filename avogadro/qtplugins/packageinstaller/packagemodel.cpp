@@ -201,13 +201,9 @@ void PackageModel::loadOnlineCatalog(const QByteArray& jsonBytes)
   beginResetModel();
   m_entries.clear();
 
-  if (!json::accept(jsonBytes.data())) {
-    endResetModel();
-    return;
-  }
-
-  json root = json::parse(jsonBytes.data());
-  if (!root.is_array()) {
+  json root =
+    json::parse(jsonBytes.data(), nullptr, /*allow_exceptions=*/false);
+  if (root.is_discarded() || !root.is_array()) {
     endResetModel();
     return;
   }
@@ -400,8 +396,10 @@ void PackageModel::uncheckAll()
 {
   for (PackageEntry& e : m_entries)
     e.checked = false;
-  emit dataChanged(index(0, StatusColumn), index(rowCount() - 1, StatusColumn),
-                   { Qt::CheckStateRole });
+  if (!m_entries.isEmpty())
+    emit dataChanged(index(0, StatusColumn),
+                     index(rowCount() - 1, StatusColumn),
+                     { Qt::CheckStateRole });
 }
 
 // ---------------------------------------------------------------------------

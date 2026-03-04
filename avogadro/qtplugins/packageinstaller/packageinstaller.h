@@ -42,7 +42,7 @@ private slots:
   void showDialog();
 
 private:
-  QAction* m_action;
+  QAction* m_action = nullptr;
   PackageManagerDialog* m_dialog = nullptr;
 };
 
