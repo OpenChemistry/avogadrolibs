@@ -13,20 +13,24 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QItemSelectionModel>
+#include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStandardPaths>
 
+#include <QtGui/QCursor>
+
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
+
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableView>
-
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
-
-#include <QtCore/QSortFilterProxyModel>
+#include <QtWidgets/QToolTip>
 
 #include <nlohmann/json.hpp>
 
@@ -52,7 +56,7 @@ PackageManagerDialog::PackageManagerDialog(QWidget* parent)
 {
   m_filePath =
     QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
-    QStringLiteral("/packages");
+    QStringLiteral("/plugins");
 
   m_ui->setupUi(this);
   m_network = new QNetworkAccessManager(this);
@@ -64,6 +68,8 @@ PackageManagerDialog::PackageManagerDialog(QWidget* parent)
   m_proxyModel->setFilterKeyColumn(-1); // search all columns
 
   m_ui->packageTable->setModel(m_proxyModel);
+  m_ui->packageTable->setMouseTracking(true);
+  m_ui->packageTable->viewport()->setMouseTracking(true);
   m_ui->packageTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_ui->packageTable->horizontalHeader()->setStretchLastSection(true);
   m_ui->packageTable->horizontalHeader()->setSectionResizeMode(
@@ -76,6 +82,11 @@ PackageManagerDialog::PackageManagerDialog(QWidget* parent)
           &PackageManagerDialog::refreshOnlineCatalog);
   connect(m_ui->packageTable, &QTableView::clicked, this,
           &PackageManagerDialog::onTableClicked);
+  connect(m_ui->packageTable->selectionModel(),
+          &QItemSelectionModel::currentRowChanged, this,
+          &PackageManagerDialog::onCurrentRowChanged);
+  connect(m_ui->packageTable, &QAbstractItemView::entered, this,
+          &PackageManagerDialog::showCellTooltip);
   connect(m_ui->installButton, &QPushButton::clicked, this,
           &PackageManagerDialog::installSelected);
   connect(m_ui->removeButton, &QPushButton::clicked, this,
@@ -125,7 +136,7 @@ void PackageManagerDialog::onCatalogReply()
 
   if (reply->error() != QNetworkReply::NoError) {
     m_ui->readmeBrowser->append(
-      tr("Error downloading package list: %1").arg(reply->errorString()));
+      tr("Error downloading plugin list: %1").arg(reply->errorString()));
     reply->deleteLater();
     return;
   }
@@ -146,23 +157,55 @@ void PackageManagerDialog::onCatalogReply()
 // README display
 // ---------------------------------------------------------------------------
 
+void PackageManagerDialog::showCellTooltip(const QModelIndex& proxyIndex)
+{
+  const QString tooltip =
+    m_proxyModel->data(proxyIndex, Qt::ToolTipRole).toString();
+  m_ui->packageTable->viewport()->setToolTip(tooltip);
+
+  if (tooltip.isEmpty()) {
+    QToolTip::hideText();
+    return;
+  }
+
+  int pointSize = QApplication::font().pointSize();
+  if (pointSize <= 0)
+    pointSize = 10;
+  ++pointSize;
+
+  QString html = tooltip.toHtmlEscaped();
+  html.replace(QLatin1Char('\n'), QStringLiteral("<br/>"));
+
+  QToolTip::showText(QCursor::pos(),
+                     QStringLiteral("<span style=\"font-size:%1pt;\">%2</span>")
+                       .arg(pointSize)
+                       .arg(html),
+                     m_ui->packageTable->viewport(),
+                     m_ui->packageTable->visualRect(proxyIndex));
+}
+
 void PackageManagerDialog::onTableClicked(const QModelIndex& proxyIndex)
 {
   if (!proxyIndex.isValid())
     return;
 
-  // Handle checkbox toggle on status column
-  QModelIndex sourceIndex = m_proxyModel->mapToSource(proxyIndex);
-  int row = sourceIndex.row();
-
   if (proxyIndex.column() == PackageModel::StatusColumn) {
+    QModelIndex sourceIndex = m_proxyModel->mapToSource(proxyIndex);
+    int row = sourceIndex.row();
     bool current = m_model->entry(row).checked;
     m_model->setChecked(row, !current);
-    return;
   }
+}
 
-  // Fetch README for the clicked row
-  QString url = m_model->readmeUrl(row);
+void PackageManagerDialog::onCurrentRowChanged(const QModelIndex& current,
+                                               const QModelIndex& previous)
+{
+  Q_UNUSED(previous)
+  if (!current.isValid())
+    return;
+
+  QModelIndex sourceIndex = m_proxyModel->mapToSource(current);
+  QString url = m_model->readmeUrl(sourceIndex.row());
   if (url.isEmpty())
     return;
 
@@ -170,6 +213,8 @@ void PackageManagerDialog::onTableClicked(const QModelIndex& proxyIndex)
   QNetworkRequest request;
   setRawHeaders(&request);
   request.setUrl(QUrl(url));
+  request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
+                       QNetworkRequest::NoLessSafeRedirectPolicy);
   QNetworkReply* reply = m_network->get(request);
   connect(reply, &QNetworkReply::finished, this,
           &PackageManagerDialog::onReadmeReply);
@@ -182,6 +227,8 @@ void PackageManagerDialog::onReadmeReply()
     return;
 
   if (reply->error() != QNetworkReply::NoError) {
+    m_ui->readmeBrowser->setPlainText(
+      tr("Error fetching README: %1").arg(reply->errorString()));
     reply->deleteLater();
     return;
   }
@@ -190,15 +237,18 @@ void PackageManagerDialog::onReadmeReply()
   reply->deleteLater();
 
   // GitHub API returns JSON with base64-encoded content
-  if (!nlohmann::json::accept(bytes.data()))
-    return;
-
-  nlohmann::json root = nlohmann::json::parse(bytes.data());
-  if (root.contains("content") && root["content"].is_string()) {
-    QByteArray content =
-      QByteArray::fromBase64(root["content"].get<std::string>().c_str());
-    m_ui->readmeBrowser->setMarkdown(QString::fromUtf8(content));
+  if (nlohmann::json::accept(bytes.data())) {
+    nlohmann::json root = nlohmann::json::parse(bytes.data());
+    if (root.contains("content") && root["content"].is_string()) {
+      QByteArray content =
+        QByteArray::fromBase64(root["content"].get<std::string>().c_str());
+      m_ui->readmeBrowser->setMarkdown(QString::fromUtf8(content));
+      return;
+    }
   }
+
+  // Fall back: treat the response as raw markdown
+  m_ui->readmeBrowser->setMarkdown(QString::fromUtf8(bytes));
 }
 
 // ---------------------------------------------------------------------------
@@ -223,7 +273,7 @@ void PackageManagerDialog::installSelected()
   if (!incompatible.isEmpty()) {
     const int ret = QMessageBox::warning(
       this, tr("Version Incompatibility"),
-      tr("The following packages require a newer version of Avogadro:\n\n"
+      tr("The following plugins require a newer version of Avogadro:\n\n"
          "%1\n\nInstall anyway?")
         .arg(incompatible.join('\n')),
       QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
@@ -244,7 +294,7 @@ void PackageManagerDialog::installSelected()
   if (m_downloadQueue.isEmpty()) {
     QMessageBox::information(
       this, tr("Nothing Selected"),
-      tr("Check the box next to a package to install or update it."));
+      tr("Check the box next to a plugin to install or update it."));
     return;
   }
 
@@ -368,7 +418,7 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
 
   QList<QString> newFiles = unzip.listFiles(absolutePath.toStdString());
   QList<QString> errors =
-    unzip.extract(m_filePath.toStdString(), absolutePath.toStdString());
+    unzip.extract(m_filePath.toStdString() + '/', absolutePath.toStdString());
 
   if (errors.empty() && !newFiles.isEmpty()) {
     m_ui->readmeBrowser->append(
@@ -429,20 +479,20 @@ void PackageManagerDialog::removeSelected()
   if (toRemove.isEmpty()) {
     QMessageBox::information(
       this, tr("Nothing to Remove"),
-      tr("Check the box next to an installed package to remove it."));
+      tr("Check the box next to an installed plugin to remove it."));
     return;
   }
 
   // Ask user whether to delete files
   QMessageBox msgBox(this);
-  msgBox.setWindowTitle(tr("Remove Packages"));
-  msgBox.setText(tr("Remove %n selected package(s)?", "", toRemove.size()));
+  msgBox.setWindowTitle(tr("Remove Plugins"));
+  msgBox.setText(tr("Remove %n selected plugin(s)?", "", toRemove.size()));
   msgBox.setIcon(QMessageBox::Question);
   msgBox.setStandardButtons(QMessageBox::Cancel);
 
-  msgBox.addButton(tr("Keep Files on Disk"), QMessageBox::NoRole);
-  QPushButton* deleteBtn = msgBox.addButton(tr("Delete Files from Disk"),
-                                            QMessageBox::DestructiveRole);
+  msgBox.addButton(tr("Keep Files"), QMessageBox::NoRole);
+  QPushButton* deleteBtn =
+    msgBox.addButton(tr("Delete Files"), QMessageBox::DestructiveRole);
 
   msgBox.exec();
 
@@ -471,7 +521,7 @@ void PackageManagerDialog::removeSelected()
 void PackageManagerDialog::installFromDirectory()
 {
   QString dir = QFileDialog::getExistingDirectory(
-    this, tr("Select Package Directory"), QDir::homePath());
+    this, tr("Select Plugin Directory"), QDir::homePath());
   if (dir.isEmpty())
     return;
 
@@ -507,7 +557,7 @@ void PackageManagerDialog::installFromDirectory()
     }
   }
 
-  m_ui->readmeBrowser->append(tr("Installing package from %1…\n").arg(dir));
+  m_ui->readmeBrowser->append(tr("Installing plugin from %1…\n").arg(dir));
   QtGui::PackageManager::instance()->installPackages({ linkPath });
 }
 

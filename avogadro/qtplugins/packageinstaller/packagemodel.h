@@ -129,6 +129,9 @@ private:
    */
   static QString normalizePackageName(const QString& name);
 
+  /** Strip common Avogadro prefixes for display, preserving original case. */
+  static QString displayName(const QString& name);
+
   /** Compute (or recompute) the status of one entry. */
   static PackageStatus computeStatus(const PackageEntry& e);
   static bool isOnlineNewerByDate(const PackageEntry& e);
@@ -139,8 +142,8 @@ private:
   /** Icon for the given status. */
   static QIcon statusIcon(PackageStatus status);
 
-  /** Icon for the given feature type string. */
-  static QIcon featureIcon(const QString& featureType);
+  /** Unicode glyph for the given feature type string. */
+  static QString featureGlyph(const QString& featureType);
 
   QList<PackageEntry> m_entries;
 };

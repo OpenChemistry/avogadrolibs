@@ -16,12 +16,8 @@
 #include <QtCore/QStringList>
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
-#include <QtGui/QPainter>
-#include <QtGui/QPixmap>
 
 #include <nlohmann/json.hpp>
-
-#include <cstring>
 
 using json = nlohmann::json;
 
@@ -56,12 +52,6 @@ QVariant PackageModel::data(const QModelIndex& index, int role) const
   if (role == Qt::DecorationRole && index.column() == StatusColumn)
     return statusIcon(e.status);
 
-  if (role == Qt::DecorationRole && index.column() == FeaturesColumn) {
-    if (!e.featureTypes.isEmpty())
-      return featureIcon(e.featureTypes.first());
-    return {};
-  }
-
   if (role == Qt::ToolTipRole && index.column() == StatusColumn) {
     switch (e.status) {
       case PackageStatus::NotInstalled:
@@ -86,11 +76,17 @@ QVariant PackageModel::data(const QModelIndex& index, int role) const
   if (role == Qt::ToolTipRole && index.column() == FeaturesColumn) {
     if (e.featureTypes.isEmpty())
       return {};
-    // Build a human-readable list
+    // Build one line per feature to clearly map displayed glyphs to labels.
     QStringList labels;
-    for (const QString& ft : e.featureTypes)
-      labels.append(featureTypeLabel(ft));
-    return labels.join(QStringLiteral(", "));
+    for (const QString& ft : e.featureTypes) {
+      const QString label = featureTypeLabel(ft);
+      const QString glyph = featureGlyph(ft);
+      if (!glyph.isEmpty())
+        labels.append(QStringLiteral("%1\t%2").arg(glyph, label));
+      else
+        labels.append(label);
+    }
+    return labels.join(QLatin1Char('\n'));
   }
 
   // Red foreground for version-incompatible packages
@@ -102,7 +98,7 @@ QVariant PackageModel::data(const QModelIndex& index, int role) const
       case StatusColumn:
         return {};
       case NameColumn:
-        return e.name;
+        return displayName(e.name);
       case AvailableColumn:
         if (e.status == PackageStatus::LocalOnly)
           return e.installedVersion;
@@ -110,10 +106,13 @@ QVariant PackageModel::data(const QModelIndex& index, int role) const
       case FeaturesColumn: {
         if (e.featureTypes.isEmpty())
           return {};
-        QStringList labels;
-        for (const QString& ft : e.featureTypes)
-          labels.append(featureTypeLabel(ft));
-        return labels.join(QStringLiteral(", "));
+        QStringList glyphs;
+        for (const QString& ft : e.featureTypes) {
+          const QString g = featureGlyph(ft);
+          if (!g.isEmpty())
+            glyphs.append(g);
+        }
+        return glyphs.join(QLatin1Char(' '));
       }
       case DescriptionColumn:
         return e.description;
@@ -142,8 +141,30 @@ bool PackageModel::setData(const QModelIndex& index, const QVariant& value,
 QVariant PackageModel::headerData(int section, Qt::Orientation orientation,
                                   int role) const
 {
-  if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
+  if (orientation != Qt::Horizontal)
     return {};
+
+  if (role == Qt::ToolTipRole && section == FeaturesColumn) {
+    const QStringList featureTypes = { QStringLiteral("electrostatic-models"),
+                                       QStringLiteral("energy-models"),
+                                       QStringLiteral("file-formats"),
+                                       QStringLiteral("input-generators"),
+                                       QStringLiteral("menu-commands") };
+    QStringList lines;
+    for (const QString& featureType : featureTypes) {
+      const QString label = featureTypeLabel(featureType);
+      const QString glyph = featureGlyph(featureType);
+      if (!glyph.isEmpty())
+        lines.append(QStringLiteral("%1\t%2").arg(glyph, label));
+      else
+        lines.append(label);
+    }
+    return tr("Feature icons:\n%1").arg(lines.join(QLatin1Char('\n')));
+  }
+
+  if (role != Qt::DisplayRole)
+    return {};
+
   switch (section) {
     case StatusColumn:
       return tr("Status");
@@ -204,12 +225,37 @@ void PackageModel::loadOnlineCatalog(const QByteArray& jsonBytes)
 
     get("name", e.name);
     get("description", e.description);
-    get("release_version", e.onlineVersion);
-    get("type", e.type);
-    get("zipball_url", e.zipballUrl);
-    get("repo_url", e.baseUrl);
-    get("readme_url", e.readmeUrl);
+    get("version", e.onlineVersion);
     get("minimum-avogadro-version", e.minimumAvogadroVersion);
+
+    // git.repo is a clone URL; strip .git suffix for a web base URL
+    auto gitIt = item.find("git");
+    if (gitIt != item.end() && gitIt->is_object()) {
+      auto repoIt = gitIt->find("repo");
+      if (repoIt != gitIt->end() && repoIt->is_string()) {
+        e.baseUrl = QString::fromStdString(repoIt->get<std::string>());
+        if (e.baseUrl.endsWith(QStringLiteral(".git")))
+          e.baseUrl.chop(4);
+      }
+    }
+
+    // src is an array of {url, sha256} objects; use the first url
+    auto srcIt = item.find("src");
+    if (srcIt != item.end() && srcIt->is_array() && !srcIt->empty()) {
+      auto urlIt = srcIt->front().find("url");
+      if (urlIt != srcIt->front().end() && urlIt->is_string()) {
+        e.zipballUrl = QString::fromStdString(urlIt->get<std::string>());
+        e.hasRelease = true;
+      }
+    }
+
+    // readme-url is a GitHub blob page URL; convert to raw for fetching
+    get("readme-url", e.readmeUrl);
+    if (!e.readmeUrl.isEmpty()) {
+      e.readmeUrl.replace(QStringLiteral("github.com"),
+                          QStringLiteral("raw.githubusercontent.com"));
+      e.readmeUrl.replace(QStringLiteral("/blob/"), QStringLiteral("/"));
+    }
 
     auto featIt = item.find("feature-types");
     if (featIt != item.end() && featIt->is_array()) {
@@ -219,23 +265,12 @@ void PackageModel::loadOnlineCatalog(const QByteArray& jsonBytes)
       }
     }
 
-    auto hasIt = item.find("has_release");
-    if (hasIt != item.end() && hasIt->is_boolean())
-      e.hasRelease = hasIt->get<bool>();
-
-    auto dateIt = item.find("updated_at");
+    auto dateIt = item.find("last-update");
     if (dateIt != item.end() && dateIt->is_string()) {
       QString raw = QString::fromStdString(dateIt->get<std::string>());
       e.onlineUpdatedAt = QDateTime::fromString(raw, Qt::ISODate);
       e.updatedAt =
         QLocale().toString(e.onlineUpdatedAt.date(), QLocale::ShortFormat);
-    }
-
-    // Derive readmeUrl from baseUrl if not supplied
-    if (e.readmeUrl.isEmpty() && !e.baseUrl.isEmpty()) {
-      QStringList parts = e.baseUrl.split('/');
-      parts.append(QStringLiteral("readme"));
-      e.readmeUrl = parts.join('/');
     }
 
     e.status = PackageStatus::NotInstalled;
@@ -479,21 +514,38 @@ QIcon PackageModel::statusIcon(PackageStatus status)
   return {};
 }
 
+// Common Avogadro prefixes, longest first to avoid partial matches.
+static const char* s_avoPrefixes[] = { "avogadro-", "avogadro_", "avogadro",
+                                       "avo-",      "avo_",      "avo" };
+
+/// Return the length of the first matching prefix, or 0 if none match.
+static int avoPrefixLength(const QString& name, Qt::CaseSensitivity cs)
+{
+  for (const char* prefix : s_avoPrefixes) {
+    const QLatin1String p(prefix);
+    if (name.startsWith(p, cs))
+      return p.size();
+  }
+  return 0;
+}
+
 QString PackageModel::normalizePackageName(const QString& name)
 {
   QString n = name.toLower();
-  // Strip common Avogadro prefixes, longest first to avoid partial matches.
-  static const char* prefixes[] = { "avogadro-", "avogadro_", "avogadro",
-                                    "avo-",      "avo_",      "avo" };
-  for (const char* prefix : prefixes) {
-    if (n.startsWith(QLatin1String(prefix))) {
-      n = n.mid(static_cast<int>(strlen(prefix)));
-      break;
-    }
-  }
+  int len = avoPrefixLength(n, Qt::CaseSensitive);
+  if (len > 0)
+    n = n.mid(len);
   // Fold hyphens and underscores so "my-plugin" == "my_plugin".
   n.replace('-', '_');
   return n;
+}
+
+QString PackageModel::displayName(const QString& name)
+{
+  int len = avoPrefixLength(name, Qt::CaseInsensitive);
+  if (len > 0)
+    return name.mid(len);
+  return name;
 }
 
 QString PackageModel::featureTypeLabel(const QString& featureType)
@@ -516,38 +568,18 @@ QString PackageModel::featureTypeLabel(const QString& featureType)
   return label.replace('-', ' ');
 }
 
-static QIcon glyphIcon(const QString& glyph, bool bold = false)
+QString PackageModel::featureGlyph(const QString& featureType)
 {
-  const int sz = 22;
-  QPixmap pm(sz, sz);
-  pm.fill(Qt::transparent);
-  QPainter p(&pm);
-  QFont f = p.font();
-  f.setPixelSize(sz - 2);
-  f.setBold(bold);
-  p.setFont(f);
-  p.drawText(QRect(0, 0, sz, sz), Qt::AlignCenter, glyph);
-  return QIcon(pm);
-}
-
-QIcon PackageModel::featureIcon(const QString& featureType)
-{
-  // U+26A1 LIGHTNING BOLT
   if (featureType == QLatin1String("electrostatic-models"))
-    return glyphIcon(QStringLiteral("\u26A1"));
-  // Bold capital E for energy
+    return QStringLiteral("\u26A1"); // ⚡ LIGHTNING BOLT
   if (featureType == QLatin1String("energy-models"))
-    return glyphIcon(QStringLiteral("E"), true);
-  // U+1F4C4 PAGE FACING UP
+    return QStringLiteral("E");
   if (featureType == QLatin1String("file-formats"))
-    return glyphIcon(QStringLiteral("\U0001F4C4"));
-  // U+269B ATOM SYMBOL
+    return QStringLiteral("\U0001F4C4"); // 📄 PAGE FACING UP
   if (featureType == QLatin1String("input-generators"))
-    return glyphIcon(QStringLiteral("\u269B"));
+    return QStringLiteral("\u269B"); // ⚛ ATOM SYMBOL
   if (featureType == QLatin1String("menu-commands"))
-    return QIcon::fromTheme(
-      QStringLiteral("application-menu"),
-      QIcon::fromTheme(QStringLiteral("preferences-other")));
+    return QStringLiteral("\u2630"); // ☰ TRIGRAM / HAMBURGER MENU
   return {};
 }
 

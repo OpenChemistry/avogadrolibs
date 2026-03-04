@@ -14,7 +14,7 @@ PackageInstaller::PackageInstaller(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this))
 {
   m_action->setEnabled(true);
-  m_action->setText(tr("Manage Packages…"));
+  m_action->setText(tr("Manage Plugins…"));
   m_action->setProperty("menu priority", 520);
   connect(m_action, &QAction::triggered, this, &PackageInstaller::showDialog);
 }

@@ -43,7 +43,10 @@ private slots:
   void refreshOnlineCatalog();
   void onCatalogReply();
   void onReadmeReply();
+  void showCellTooltip(const QModelIndex& index);
   void onTableClicked(const QModelIndex& index);
+  void onCurrentRowChanged(const QModelIndex& current,
+                           const QModelIndex& previous);
   void installSelected();
   void removeSelected();
   void installFromDirectory();
@@ -52,7 +55,7 @@ private slots:
 
 private:
   void getRepoData(
-    const QString& url = QStringLiteral("https://avogadro.cc/plugins.json"));
+    const QString& url = QStringLiteral("https://avogadro.cc/plugins2.json"));
   void downloadNext();
   void unzipPlugin(QNetworkReply* reply);
   static bool copyDir(const QString& src, const QString& dst);
