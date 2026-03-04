@@ -213,6 +213,7 @@ void PackageManagerDialog::onCurrentRowChanged(const QModelIndex& current,
   request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
                        QNetworkRequest::NoLessSafeRedirectPolicy);
   QNetworkReply* reply = m_network->get(request);
+  reply->setProperty("readmeUrl", url);
   connect(reply, &QNetworkReply::finished, this,
           &PackageManagerDialog::onReadmeReply);
 }
@@ -222,6 +223,18 @@ void PackageManagerDialog::onReadmeReply()
   auto* reply = qobject_cast<QNetworkReply*>(sender());
   if (reply == nullptr)
     return;
+
+  // Discard replies that no longer match the current selection
+  const QString requestedUrl = reply->property("readmeUrl").toString();
+  const QModelIndex currentIdx =
+    m_ui->packageTable->selectionModel()->currentIndex();
+  if (currentIdx.isValid()) {
+    const QModelIndex sourceIdx = m_proxyModel->mapToSource(currentIdx);
+    if (requestedUrl != m_model->readmeUrl(sourceIdx.row())) {
+      reply->deleteLater();
+      return;
+    }
+  }
 
   if (reply->error() != QNetworkReply::NoError) {
     m_ui->readmeBrowser->setPlainText(
@@ -438,7 +451,14 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
     if (prev.exists())
       prev.removeRecursively();
 
-    QDir().rename(m_filePath + '/' + newFiles[0], destination);
+    if (!QDir().rename(m_filePath + '/' + newFiles[0], destination)) {
+      m_ui->readmeBrowser->append(
+        tr("Error: could not move extracted package to %1\n").arg(destination));
+      out.remove();
+      m_downloadQueue.removeLast();
+      downloadNext();
+      return;
+    }
     QtGui::PackageManager::instance()->installPackages({ destination });
   } else {
     if (!errors.isEmpty())

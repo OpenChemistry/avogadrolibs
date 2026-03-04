@@ -21,7 +21,8 @@ PackageInstaller::PackageInstaller(QObject* parent_)
 
 PackageInstaller::~PackageInstaller()
 {
-  delete m_dialog;
+  if (m_dialog)
+    m_dialog->deleteLater();
 }
 
 QList<QAction*> PackageInstaller::actions() const

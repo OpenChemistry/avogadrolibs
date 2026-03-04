@@ -8,6 +8,8 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtCore/QPointer>
+
 class QAction;
 
 namespace Avogadro {
@@ -43,7 +45,7 @@ private slots:
 
 private:
   QAction* m_action = nullptr;
-  PackageManagerDialog* m_dialog = nullptr;
+  QPointer<PackageManagerDialog> m_dialog;
 };
 
 } // namespace QtPlugins
