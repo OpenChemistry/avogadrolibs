@@ -13,6 +13,8 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/io/turbomoleformat.h>
 
+#include <iomanip>
+#include <sstream>
 #include <string>
 
 using Avogadro::ANGSTROM_TO_BOHR;
@@ -162,8 +164,20 @@ TEST(TurbomoleTest, readCellParameters)
 
 TEST(TurbomoleTest, writeString)
 {
+  // Helper to format one atom line exactly as the writer does
+  auto formatAtomLine = [](double x, double y, double z,
+                           const std::string& sym) -> std::string {
+    std::ostringstream oss;
+    oss << " " << std::setw(18) << std::right << std::fixed
+        << std::setprecision(10) << x << " " << std::setw(18) << std::right
+        << std::fixed << std::setprecision(10) << y << " " << std::setw(18)
+        << std::right << std::fixed << std::setprecision(10) << z << " "
+        << std::setw(5) << std::right << sym << "\n";
+    return oss.str();
+  };
+
   {
-    // N2
+    // N2 — coordinates written in Bohr (default, no "angs" suffix)
     Molecule molecule;
     molecule.addAtom(7);
     molecule.setAtomPosition3d(0, { 0.0, 0.0, 0.0 });
@@ -173,15 +187,13 @@ TEST(TurbomoleTest, writeString)
     TurbomoleFormat tmol;
     std::string out;
     ASSERT_TRUE(tmol.writeString(out, molecule));
-    EXPECT_EQ(out, R"($coord angs
-       0.0000000000       0.0000000000       0.0000000000     n
-       1.4200000000       0.0000000000       0.0000000000     n
-$end
-)");
+    EXPECT_EQ(out, "$coord\n"s + formatAtomLine(0.0, 0.0, 0.0, "n") +
+                     formatAtomLine(1.42 * ANGSTROM_TO_BOHR, 0.0, 0.0, "n") +
+                     "$end\n");
   }
 
   {
-    // THO
+    // THO — tritium isotope label, coordinates in Bohr
     Molecule molecule;
     molecule.addAtom(1);
     molecule.setIsotope(0, 3);
@@ -194,13 +206,12 @@ $end
     TurbomoleFormat tmol;
     std::string out;
     ASSERT_TRUE(tmol.writeString(out, molecule));
-    EXPECT_EQ(out, R"($coord angs
-      -0.7600000000      -0.6000000000       0.0000000000     h
-       0.7600000000      -0.6000000000       0.0000000000     h
-       0.0000000000       0.0000000000       0.0000000000     o
-$isosub
-1  3
-$end
-)");
+    EXPECT_EQ(out, "$coord\n"s +
+                     formatAtomLine(-0.76 * ANGSTROM_TO_BOHR,
+                                    -0.6 * ANGSTROM_TO_BOHR, 0.0, "h") +
+                     formatAtomLine(0.76 * ANGSTROM_TO_BOHR,
+                                    -0.6 * ANGSTROM_TO_BOHR, 0.0, "h") +
+                     formatAtomLine(0.0, 0.0, 0.0, "o") + "$isosub\n1  3\n" +
+                     "$end\n");
   }
 }
