@@ -2157,7 +2157,7 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:152
 msgid "Optimize"
-msgstr ""
+msgstr "Optimizirano"
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
