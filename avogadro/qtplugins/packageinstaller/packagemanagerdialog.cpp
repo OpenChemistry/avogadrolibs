@@ -255,7 +255,14 @@ void PackageManagerDialog::installSelected()
   m_downloadQueue.clear();
   m_ui->readmeBrowser->clear();
 
-  const QList<int> rows = m_model->checkedRows();
+  QList<int> rows = m_model->checkedRows();
+  if (rows.isEmpty()) {
+    // Fall back to the view's selected (highlighted) rows
+    const QModelIndexList selected =
+      m_ui->packageTable->selectionModel()->selectedRows();
+    for (const QModelIndex& proxyIdx : selected)
+      rows.append(m_proxyModel->mapToSource(proxyIdx).row());
+  }
   if (rows.isEmpty()) {
     QMessageBox::information(
       this, tr("Nothing Selected"),
@@ -453,7 +460,9 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
 
     if (!QDir().rename(m_filePath + '/' + newFiles[0], destination)) {
       m_ui->readmeBrowser->append(
-        tr("Error: could not move extracted package to %1\n").arg(destination));
+        tr("Error: could not move extracted package %1 to %2\n")
+          .arg(m_filePath + '/' + newFiles[0])
+          .arg(destination));
       out.remove();
       m_downloadQueue.removeLast();
       downloadNext();
@@ -492,6 +501,18 @@ void PackageManagerDialog::removeSelected()
     const PackageModel::PackageEntry& e = m_model->entry(i);
     if (e.checked && e.status != PackageModel::PackageStatus::NotInstalled) {
       toRemove.append(i);
+    }
+  }
+
+  if (toRemove.isEmpty()) {
+    // Fall back to the view's selected (highlighted) rows
+    const QModelIndexList selected =
+      m_ui->packageTable->selectionModel()->selectedRows();
+    for (const QModelIndex& proxyIdx : selected) {
+      int row = m_proxyModel->mapToSource(proxyIdx).row();
+      const PackageModel::PackageEntry& e = m_model->entry(row);
+      if (e.status != PackageModel::PackageStatus::NotInstalled)
+        toRemove.append(row);
     }
   }
 
