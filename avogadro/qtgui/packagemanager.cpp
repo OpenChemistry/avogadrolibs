@@ -179,9 +179,23 @@ static QString readSetupCommand(const QString& packageDir)
                                 .toMap()
                                 .value(QStringLiteral("scripts"))
                                 .toMap();
+  // Only allow script names with safe characters (letters, digits, hyphen,
+  // underscore) to prevent path traversal when the name is used to build
+  // an executable path.
+  auto isSafeScriptName = [](const QString& name) {
+    for (const QChar ch : name) {
+      const ushort u = ch.unicode();
+      if (!((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') ||
+            (u >= '0' && u <= '9') || u == '-' || u == '_'))
+        return false;
+    }
+    return !name.isEmpty();
+  };
+
   for (auto it = scripts.constBegin(); it != scripts.constEnd(); ++it) {
     if (it.key().startsWith(QStringLiteral("avogadro-")) &&
-        it.key().endsWith(QStringLiteral("-setup")))
+        it.key().endsWith(QStringLiteral("-setup")) &&
+        isSafeScriptName(it.key()))
       return it.key();
   }
   return {};
@@ -224,6 +238,11 @@ static void runSetupScript(const QString& packageDir, const QString& setupCmd,
   QProcess proc;
   proc.setWorkingDirectory(packageDir);
   proc.start(setupExe, {});
+  if (!proc.waitForStarted(timeoutMs)) {
+    qWarning() << "setup script could not be started for" << packageDir << ":"
+               << proc.errorString();
+    return;
+  }
   if (!proc.waitForFinished(timeoutMs)) {
     qWarning() << "setup script timed out for" << packageDir;
     proc.kill();
@@ -277,6 +296,11 @@ void PackageManager::installPackages(const QStringList& packageDirs)
           if (!initProc.waitForFinished(installTimeoutMs)) {
             qWarning() << "pixi init timed out for" << packageDir;
             initProc.kill();
+            continue;
+          }
+          if (initProc.exitCode() != 0) {
+            qWarning() << "pixi init failed for" << packageDir << ":"
+                       << QString::fromUtf8(initProc.readAllStandardError());
             continue;
           }
 
