@@ -2161,7 +2161,7 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
-msgstr ""
+msgstr "Dinamički"
 
 #: qtplugins/autoopt/autoopt.cpp:157
 msgid "Task:"
