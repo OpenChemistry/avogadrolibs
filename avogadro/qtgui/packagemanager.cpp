@@ -160,6 +160,98 @@ PackageManager::FeatureEntry PackageManager::featureEntryFromJson(
 // Installation
 // ---------------------------------------------------------------------------
 
+// Read the *-setup script name from [project.scripts], if any.
+static QString readSetupCommand(const QString& packageDir)
+{
+  QString tomlPath = packageDir + QStringLiteral("/pyproject.toml");
+  QFile tomlFile(tomlPath);
+  if (!tomlFile.open(QIODevice::ReadOnly))
+    return {};
+  const QByteArray content = tomlFile.readAll();
+
+  bool ok = false;
+  const QVariantMap root =
+    parseTomlString(std::string_view(content.constData(), content.size()), &ok);
+  if (!ok)
+    return {};
+
+  const QVariantMap scripts = root.value(QStringLiteral("project"))
+                                .toMap()
+                                .value(QStringLiteral("scripts"))
+                                .toMap();
+  // Only allow script names with safe characters (letters, digits, hyphen,
+  // underscore) to prevent path traversal when the name is used to build
+  // an executable path.
+  auto isSafeScriptName = [](const QString& name) {
+    for (const QChar ch : name) {
+      const ushort u = ch.unicode();
+      if (!((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') ||
+            (u >= '0' && u <= '9') || u == '-' || u == '_'))
+        return false;
+    }
+    return !name.isEmpty();
+  };
+
+  for (auto it = scripts.constBegin(); it != scripts.constEnd(); ++it) {
+    if (it.key().startsWith(QStringLiteral("avogadro-")) &&
+        it.key().endsWith(QStringLiteral("-setup")) &&
+        isSafeScriptName(it.key()))
+      return it.key();
+  }
+  return {};
+}
+
+// Locate an installed console script inside a pixi or venv environment.
+static QString findInstalledScript(const QString& packageDir,
+                                   const QString& scriptName, bool isPixi)
+{
+#ifdef Q_OS_WIN
+  const QString binDir =
+    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/Scripts")
+                         : QStringLiteral("/.venv/Scripts"));
+  const QStringList exeSuffixes = { QStringLiteral(".exe"), QString() };
+#else
+  const QString binDir =
+    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/bin")
+                         : QStringLiteral("/.venv/bin"));
+  const QStringList exeSuffixes = { QString() };
+#endif
+
+  for (const QString& suffix : exeSuffixes) {
+    const QString candidate = binDir + QLatin1Char('/') + scriptName + suffix;
+    if (QFileInfo(candidate).isExecutable())
+      return candidate;
+  }
+  return {};
+}
+
+// Run a package's *-setup script (e.g. to download ML model weights).
+static void runSetupScript(const QString& packageDir, const QString& setupCmd,
+                           bool isPixi, int timeoutMs)
+{
+  if (setupCmd.isEmpty())
+    return;
+  const QString setupExe = findInstalledScript(packageDir, setupCmd, isPixi);
+  if (setupExe.isEmpty())
+    return;
+
+  QProcess proc;
+  proc.setWorkingDirectory(packageDir);
+  proc.start(setupExe, {});
+  if (!proc.waitForStarted(timeoutMs)) {
+    qWarning() << "setup script could not be started for" << packageDir << ":"
+               << proc.errorString();
+    return;
+  }
+  if (!proc.waitForFinished(timeoutMs)) {
+    qWarning() << "setup script timed out for" << packageDir;
+    proc.kill();
+  } else if (proc.exitCode() != 0) {
+    qWarning() << "setup script failed for" << packageDir << ":"
+               << QString::fromUtf8(proc.readAllStandardError());
+  }
+}
+
 void PackageManager::installPackages(const QStringList& packageDirs)
 {
   QString pixiExe = QStandardPaths::findExecutable(QStringLiteral("pixi"));
@@ -170,88 +262,111 @@ void PackageManager::installPackages(const QStringList& packageDirs)
       pythonExe = QStandardPaths::findExecutable(QStringLiteral("python"));
   }
 
-  QThread* installThread = QThread::create([pixiExe, pythonExe, packageDirs]() {
-    constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
-    for (const QString& packageDir : packageDirs) {
-      if (pixiExe.isEmpty() && pythonExe.isEmpty())
-        continue;
+  // Pre-read setup commands on the main thread so the install thread doesn't
+  // need to re-parse pyproject.toml (parsePackage() will read it again later).
+  QMap<QString, QString> setupCommands;
+  for (const QString& dir : packageDirs)
+    setupCommands[dir] = readSetupCommand(dir);
 
-      if (!pixiExe.isEmpty()) {
-        // If a copied package includes a non-executable .pixi environment,
-        // pixi install fails querying its interpreter. Remove it and recreate.
-        const QString pixiDir = packageDir + QStringLiteral("/.pixi");
-        if (hasNonExecutablePixiPython(packageDir)) {
-          if (!QDir(pixiDir).removeRecursively()) {
-            qWarning() << "Could not remove invalid .pixi directory in"
-                       << packageDir;
+  QThread* installThread =
+    QThread::create([pixiExe, pythonExe, packageDirs, setupCommands]() {
+      constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
+      for (const QString& packageDir : packageDirs) {
+        if (pixiExe.isEmpty() && pythonExe.isEmpty())
+          continue;
+
+        if (!pixiExe.isEmpty()) {
+          // If a copied package includes a non-executable .pixi environment,
+          // pixi install fails querying its interpreter. Remove it and
+          // recreate.
+          const QString pixiDir = packageDir + QStringLiteral("/.pixi");
+          if (hasNonExecutablePixiPython(packageDir)) {
+            if (!QDir(pixiDir).removeRecursively()) {
+              qWarning() << "Could not remove invalid .pixi directory in"
+                         << packageDir;
+            }
           }
-        }
 
-        // Step 1: pixi init --format pyproject
-        QProcess initProc;
-        initProc.setWorkingDirectory(packageDir);
-        initProc.start(pixiExe,
-                       { QStringLiteral("init"), QStringLiteral("--format"),
-                         QStringLiteral("pyproject") });
-        if (!initProc.waitForFinished(installTimeoutMs)) {
-          qWarning() << "pixi init timed out for" << packageDir;
-          initProc.kill();
-          continue;
-        }
+          // Step 1: pixi init --format pyproject
+          QProcess initProc;
+          initProc.setWorkingDirectory(packageDir);
+          initProc.start(pixiExe,
+                         { QStringLiteral("init"), QStringLiteral("--format"),
+                           QStringLiteral("pyproject") });
+          if (!initProc.waitForFinished(installTimeoutMs)) {
+            qWarning() << "pixi init timed out for" << packageDir;
+            initProc.kill();
+            continue;
+          }
+          if (initProc.exitCode() != 0) {
+            qWarning() << "pixi init failed for" << packageDir << ":"
+                       << QString::fromUtf8(initProc.readAllStandardError());
+            continue;
+          }
 
-        // Step 2: pixi install
-        QProcess installProc;
-        installProc.setWorkingDirectory(packageDir);
-        installProc.start(pixiExe, { QStringLiteral("install") });
-        if (!installProc.waitForFinished(installTimeoutMs)) {
-          qWarning() << "pixi install timed out for" << packageDir;
-          installProc.kill();
-          continue;
-        }
-        if (installProc.exitCode() != 0) {
-          qWarning() << "pixi install failed for" << packageDir << ":"
-                     << QString::fromUtf8(installProc.readAllStandardError());
-        }
-      } else {
-        // Step 1: create a venv
-        QProcess venvProc;
-        venvProc.setWorkingDirectory(packageDir);
-        venvProc.start(pythonExe,
-                       { QStringLiteral("-m"), QStringLiteral("venv"),
-                         QStringLiteral(".venv") });
-        if (!venvProc.waitForFinished(installTimeoutMs)) {
-          qWarning() << "venv creation timed out for" << packageDir;
-          venvProc.kill();
-          continue;
-        }
-        if (venvProc.exitCode() != 0) {
-          qWarning() << "venv creation failed for" << packageDir << ":"
-                     << venvProc.readAllStandardError();
-          continue;
-        }
+          // Step 2: pixi install
+          QProcess installProc;
+          installProc.setWorkingDirectory(packageDir);
+          installProc.start(pixiExe, { QStringLiteral("install") });
+          if (!installProc.waitForFinished(installTimeoutMs)) {
+            qWarning() << "pixi install timed out for" << packageDir;
+            installProc.kill();
+            continue;
+          }
+          if (installProc.exitCode() != 0) {
+            qWarning() << "pixi install failed for" << packageDir << ":"
+                       << QString::fromUtf8(installProc.readAllStandardError());
+          } else {
+            // Run the *-setup script if one is declared (e.g. to download ML
+            // model weights).
+            runSetupScript(packageDir, setupCommands.value(packageDir), true,
+                           installTimeoutMs);
+          }
+        } else {
+          // Step 1: create a venv
+          QProcess venvProc;
+          venvProc.setWorkingDirectory(packageDir);
+          venvProc.start(pythonExe,
+                         { QStringLiteral("-m"), QStringLiteral("venv"),
+                           QStringLiteral(".venv") });
+          if (!venvProc.waitForFinished(installTimeoutMs)) {
+            qWarning() << "venv creation timed out for" << packageDir;
+            venvProc.kill();
+            continue;
+          }
+          if (venvProc.exitCode() != 0) {
+            qWarning() << "venv creation failed for" << packageDir << ":"
+                       << venvProc.readAllStandardError();
+            continue;
+          }
 
         // Step 2: pip install . using the venv's pip
 #ifdef Q_OS_WIN
-        QString venvPip = packageDir + QStringLiteral("/.venv/Scripts/pip.exe");
+          QString venvPip =
+            packageDir + QStringLiteral("/.venv/Scripts/pip.exe");
 #else
-        QString venvPip = packageDir + QStringLiteral("/.venv/bin/pip");
+          QString venvPip = packageDir + QStringLiteral("/.venv/bin/pip");
 #endif
-        QProcess installProc;
-        installProc.setWorkingDirectory(packageDir);
-        installProc.start(venvPip,
-                          { QStringLiteral("install"), QStringLiteral(".") });
-        if (!installProc.waitForFinished(installTimeoutMs)) {
-          qWarning() << "pip install timed out for" << packageDir;
-          installProc.kill();
-          continue;
-        }
-        if (installProc.exitCode() != 0) {
-          qWarning() << "pip install failed for" << packageDir << ":"
-                     << installProc.readAllStandardError();
+          QProcess installProc;
+          installProc.setWorkingDirectory(packageDir);
+          installProc.start(venvPip,
+                            { QStringLiteral("install"), QStringLiteral(".") });
+          if (!installProc.waitForFinished(installTimeoutMs)) {
+            qWarning() << "pip install timed out for" << packageDir;
+            installProc.kill();
+            continue;
+          }
+          if (installProc.exitCode() != 0) {
+            qWarning() << "pip install failed for" << packageDir << ":"
+                       << installProc.readAllStandardError();
+          } else {
+            // Run the *-setup script if one is declared.
+            runSetupScript(packageDir, setupCommands.value(packageDir), false,
+                           installTimeoutMs);
+          }
         }
       }
-    }
-  });
+    });
 
   connect(
     installThread, &QThread::finished, this,
@@ -471,9 +586,11 @@ bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
   }
 
   // --- [project.scripts] → find the avogadro- entry point ---
+  // Skip *-setup scripts; those are post-install helpers, not the main command.
   QVariantMap scripts = project.value(QStringLiteral("scripts")).toMap();
   for (auto it = scripts.constBegin(); it != scripts.constEnd(); ++it) {
-    if (it.key().startsWith(QStringLiteral("avogadro-"))) {
+    if (it.key().startsWith(QStringLiteral("avogadro-")) &&
+        !it.key().endsWith(QStringLiteral("-setup"))) {
       if (info.command.isEmpty())
         info.command = it.key();
       // in principle we should break, but check for multiple entries

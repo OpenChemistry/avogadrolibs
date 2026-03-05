@@ -235,19 +235,24 @@ void PackageModel::loadOnlineCatalog(const QByteArray& jsonBytes)
       }
     }
 
-    // src is either an object {url, sha256} or an array of such objects
+    // src may be either:
+    // - object: {url, sha256}
+    // - array:  [{url, sha256}, ...] (legacy)
+    // Use the first available url.
     auto srcIt = item.find("src");
+    const auto setSrcUrl = [&](const json& srcObj) {
+      auto urlIt = srcObj.find("url");
+      if (urlIt != srcObj.end() && urlIt->is_string()) {
+        e.zipballUrl = QString::fromStdString(urlIt->get<std::string>());
+        e.hasRelease = true;
+      }
+    };
     if (srcIt != item.end()) {
-      const auto* srcObj =
-        srcIt->is_object()
-          ? &(*srcIt)
-          : (srcIt->is_array() && !srcIt->empty() ? &srcIt->front() : nullptr);
-      if (srcObj) {
-        auto urlIt = srcObj->find("url");
-        if (urlIt != srcObj->end() && urlIt->is_string()) {
-          e.zipballUrl = QString::fromStdString(urlIt->get<std::string>());
-          e.hasRelease = true;
-        }
+      if (srcIt->is_object()) {
+        setSrcUrl(*srcIt);
+      } else if (srcIt->is_array() && !srcIt->empty() &&
+                 srcIt->front().is_object()) {
+        setSrcUrl(srcIt->front());
       }
     }
 
