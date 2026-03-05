@@ -74,8 +74,18 @@ QJsonObject PackageManager::loadOptionsFromFile(const QString& userOptionsPath)
                << userOptionsPath << err.errorString();
     return {};
   }
+  // Accept either a bare array (new style, multiple tabs) or a wrapping
+  // object (old style, with a "userOptions" key).  A bare array is normalised
+  // to {"userOptions": <array>} so the rest of the code sees a uniform object.
+  if (doc.isArray()) {
+    QJsonObject wrapped;
+    wrapped.insert(QStringLiteral("userOptions"), doc.array());
+    return wrapped;
+  }
+
   if (!doc.isObject()) {
-    qWarning() << "PackageManager: user-options JSON root is not an object:"
+    qWarning() << "PackageManager: user-options JSON root is not an object or"
+                  " array:"
                << userOptionsPath;
     return {};
   }
