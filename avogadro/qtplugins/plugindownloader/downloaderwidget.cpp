@@ -50,7 +50,7 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
 {
   m_filePath =
     QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
-    "/packages";
+    "/plugins";
   m_NetworkAccessManager = new QNetworkAccessManager(this);
   m_ui->setupUi(this);
   // enable links in the readme to open an external browser
@@ -371,8 +371,8 @@ void DownloaderWidget::unzipPlugin()
   }
   out.write(fileData);
   out.close();
-
-  std::string extractdir = m_filePath.toStdString();
+  // Weird behavior with extractor, requires trailing slash on extractdir
+  std::string extractdir = m_filePath.toStdString() + "/";
   std::string absolutep = absolutePath.toStdString();
 
   ZipExtracter unzip;

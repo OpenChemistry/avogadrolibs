@@ -337,7 +337,7 @@ QStringList PackageManager::scanDirectory(const QString& directoryPath)
       if (QDir(info.directory) == QDir(packageDir)) {
         // Same directory — check the cached hash
         QSettings settings;
-        QString prefix = QStringLiteral("packages/") + name + '/';
+        QString prefix = QStringLiteral("plugins/") + name + '/';
         QByteArray cachedHash =
           settings.value(prefix + "tomlHash").toByteArray();
         if (cachedHash == currentHash) {
@@ -362,7 +362,7 @@ QStringList PackageManager::scanDirectory(const QString& directoryPath)
 void PackageManager::loadRegisteredPackages(const QString& typeFilter)
 {
   QSettings settings;
-  settings.beginGroup(QStringLiteral("packages"));
+  settings.beginGroup(QStringLiteral("plugins"));
   const QStringList names = settings.childGroups();
   settings.endGroup();
 
@@ -394,7 +394,7 @@ void PackageManager::loadRegisteredPackages(const QString& typeFilter)
 QStringList PackageManager::registeredPackages() const
 {
   QSettings settings;
-  settings.beginGroup(QStringLiteral("packages"));
+  settings.beginGroup(QStringLiteral("plugins"));
   QStringList names = settings.childGroups();
   settings.endGroup();
   return names;
@@ -405,7 +405,7 @@ PackageManager::PackageInfo PackageManager::packageInfo(
 {
   PackageInfo info;
   QSettings settings;
-  QString prefix = QStringLiteral("packages/") + packageName + '/';
+  QString prefix = QStringLiteral("plugins/") + packageName + '/';
   info.name = packageName;
   info.version = settings.value(prefix + "version").toString();
   info.directory = settings.value(prefix + "directory").toString();
@@ -538,7 +538,7 @@ void PackageManager::saveToCache(const PackageInfo& info,
                                  const QList<FeatureEntry>& features)
 {
   QSettings settings;
-  QString prefix = QStringLiteral("packages/") + info.name + '/';
+  QString prefix = QStringLiteral("plugins/") + info.name + '/';
 
   settings.setValue(prefix + "directory", info.directory);
   settings.setValue(prefix + "command", info.command);
@@ -568,7 +568,7 @@ void PackageManager::saveToCache(const PackageInfo& info,
 void PackageManager::removeFromCache(const QString& packageName)
 {
   QSettings settings;
-  settings.beginGroup(QStringLiteral("packages"));
+  settings.beginGroup(QStringLiteral("plugins"));
   settings.remove(packageName);
   settings.endGroup();
   settings.sync();
@@ -579,7 +579,7 @@ bool PackageManager::loadFromCache(const QString& packageName,
                                    QList<FeatureEntry>& features)
 {
   QSettings settings;
-  QString prefix = QStringLiteral("packages/") + packageName + '/';
+  QString prefix = QStringLiteral("plugins/") + packageName + '/';
 
   info.name = packageName;
   info.directory = settings.value(prefix + "directory").toString();

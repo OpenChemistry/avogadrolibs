@@ -16,7 +16,7 @@ target_link_libraries(QuantumInput PRIVATE Avogadro::IO Avogadro::MoleQueue)
 set(_prefix "${AvogadroLibs_SOURCE_DIR}/../avogenerators")
 if(EXISTS "${_prefix}")
   install(DIRECTORY "${_prefix}"
-    DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/packages/"
+    DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/plugins/"
     PATTERN ".git" EXCLUDE
     PATTERN ".pixi" EXCLUDE
     PATTERN "__pycache__" EXCLUDE)
