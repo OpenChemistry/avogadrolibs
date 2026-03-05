@@ -392,11 +392,10 @@ QByteArray PythonScript::asyncWriteAndResponseRaw(const QByteArray& input,
   }
 
   buffer += m_process->readAll();
-  // Keep draining while data keeps arriving in short bursts.
-  while (m_process->waitForReadyRead(10)) {
+  // Keep draining while data arrives immediately (no artificial delay).
+  while (m_process->waitForReadyRead(0)) {
     buffer += m_process->readAll();
   }
-  buffer += m_process->readAll();
   return buffer;
 }
 
