@@ -44,7 +44,6 @@ private slots:
   void onCatalogReply();
   void onReadmeReply();
   void showCellTooltip(const QModelIndex& index);
-  void onTableClicked(const QModelIndex& index);
   void onCurrentRowChanged(const QModelIndex& current,
                            const QModelIndex& previous);
   void installSelected();

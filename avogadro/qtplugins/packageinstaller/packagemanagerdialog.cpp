@@ -77,8 +77,6 @@ PackageManagerDialog::PackageManagerDialog(QWidget* parent)
           &QSortFilterProxyModel::setFilterFixedString);
   connect(m_ui->refreshButton, &QPushButton::clicked, this,
           &PackageManagerDialog::refreshOnlineCatalog);
-  connect(m_ui->packageTable, &QTableView::clicked, this,
-          &PackageManagerDialog::onTableClicked);
   connect(m_ui->packageTable->selectionModel(),
           &QItemSelectionModel::currentRowChanged, this,
           &PackageManagerDialog::onCurrentRowChanged);
@@ -181,19 +179,6 @@ void PackageManagerDialog::showCellTooltip(const QModelIndex& proxyIndex)
                      m_ui->packageTable->visualRect(proxyIndex));
 }
 
-void PackageManagerDialog::onTableClicked(const QModelIndex& proxyIndex)
-{
-  if (!proxyIndex.isValid())
-    return;
-
-  if (proxyIndex.column() == PackageModel::StatusColumn) {
-    QModelIndex sourceIndex = m_proxyModel->mapToSource(proxyIndex);
-    int row = sourceIndex.row();
-    bool current = m_model->entry(row).checked;
-    m_model->setChecked(row, !current);
-  }
-}
-
 void PackageManagerDialog::onCurrentRowChanged(const QModelIndex& current,
                                                const QModelIndex& previous)
 {
@@ -271,6 +256,12 @@ void PackageManagerDialog::installSelected()
   m_ui->readmeBrowser->clear();
 
   const QList<int> rows = m_model->checkedRows();
+  if (rows.isEmpty()) {
+    QMessageBox::information(
+      this, tr("Nothing Selected"),
+      tr("Check the box next to a plugin to install or update it."));
+    return;
+  }
 
   // Warn about any packages that require a newer Avogadro version
   QStringList incompatible;
@@ -302,9 +293,18 @@ void PackageManagerDialog::installSelected()
   }
 
   if (m_downloadQueue.isEmpty()) {
+    QStringList unavailable;
+    unavailable.reserve(rows.size());
+    for (int row : rows) {
+      const PackageModel::PackageEntry& e = m_model->entry(row);
+      if (e.zipballUrl.isEmpty())
+        unavailable.append(e.name);
+    }
     QMessageBox::information(
-      this, tr("Nothing Selected"),
-      tr("Check the box next to a plugin to install or update it."));
+      this, tr("No Download Available"),
+      tr("The selected plugin(s) do not provide a downloadable source URL:\n\n"
+         "%1")
+        .arg(unavailable.join(QLatin1Char('\n'))));
     return;
   }
 
