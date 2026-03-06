@@ -198,7 +198,7 @@ QByteArray PythonScript::execute(const QStringList& args,
 {
   clearErrors();
   QProcess proc;
-  proc.setProcessChannelMode(QProcess::MergedChannels);
+  proc.setProcessChannelMode(QProcess::SeparateChannels);
 
   QStringList realArgs(args);
   if (m_debug)
@@ -220,11 +220,12 @@ QByteArray PythonScript::execute(const QStringList& args,
 
   // Write scriptStdin to the process's stdin
   if (!scriptStdin.isNull()) {
-    if (!proc.waitForStarted(5000) && m_debug) {
-      m_errors << tr("Error running script '%1 %2': Timed out waiting for "
-                     "start (%3).")
-                    .arg(program, realArgs.join(QStringLiteral(" ")),
-                         processErrorString(proc));
+    if (!proc.waitForStarted(10000)) {
+      if (m_debug)
+        m_errors << tr("Error running script '%1 %2': Timed out waiting for "
+                       "start (%3).")
+                      .arg(program, realArgs.join(QStringLiteral(" ")),
+                           processErrorString(proc));
       return QByteArray();
     }
 
@@ -242,11 +243,13 @@ QByteArray PythonScript::execute(const QStringList& args,
     proc.closeWriteChannel();
   }
 
-  if (!proc.waitForFinished(5000) && m_debug) {
-    m_errors << tr("Error running script '%1 %2': Timed out waiting for "
-                   "finish (%3).")
-                  .arg(program, realArgs.join(QStringLiteral(" ")),
-                       processErrorString(proc));
+  if (!proc.waitForFinished(10000)) {
+    if (m_debug)
+      m_errors << tr("Error running script '%1 %2': Timed out waiting for "
+                     "finish (%3).")
+                    .arg(program, realArgs.join(QStringLiteral(" ")),
+                         processErrorString(proc));
+    proc.kill();
     return QByteArray();
   }
 
@@ -259,15 +262,20 @@ QByteArray PythonScript::execute(const QStringList& args,
                     .arg(proc.exitCode())
                     .arg(processErrorString(proc))
                     .arg(proc.errorString())
-                    .arg(QString(proc.readAll()));
+                    .arg(QString(proc.readAllStandardOutput()) +
+                         QString(proc.readAllStandardError()));
     else
       m_errors << tr("Warning '%1'").arg(proc.errorString());
     return QByteArray();
   }
 
-  QByteArray result(proc.readAll());
+  QByteArray result(proc.readAllStandardOutput());
+  QByteArray stderrOutput(proc.readAllStandardError());
 
   if (m_debug) {
+    if (!stderrOutput.isEmpty())
+      qDebug() << "Script stderr:" << stderrOutput;
+
     qDebug() << "Output:" << result;
     qDebug() << " Errors: " << m_errors;
   }

@@ -112,6 +112,8 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
 
   // check our models for compatibility
   for (auto* m_model : m_models) {
+    if (m_model == nullptr)
+      continue;
     // We check that every element in the molecule
     // is handled by the model
     auto mask = m_model->elements() & molecule.elements();

@@ -26,6 +26,19 @@
 
 namespace Avogadro::QtPlugins {
 
+// Strip any leading non-JSON output (e.g. deprecation warnings printed to
+// stdout by third-party libraries). Find the first '{' or '['.
+static void stripLeadingNonJson(QByteArray& data)
+{
+  qsizetype jsonObj = data.indexOf('{');
+  qsizetype jsonArr = data.indexOf('[');
+  qsizetype jsonStart = (jsonObj < 0)   ? jsonArr
+                        : (jsonArr < 0) ? jsonObj
+                                        : qMin(jsonObj, jsonArr);
+  if (jsonStart > 0)
+    data = data.mid(jsonStart);
+}
+
 // Parse a JSON byte array into a flat list of doubles.
 // Accepts either a bare JSON array or an object containing `arrayKey`.
 // Calls errorReporter(message) for structural problems and invalid elements.
@@ -216,12 +229,13 @@ MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const
     m_interpreter->execute(QStringList() << "--charges", scriptInput);
 
   if (m_interpreter->hasErrors()) {
-    foreach (const QString& err, m_interpreter->errorList()) {
+    foreach (const QString& err, m_interpreter->errorList())
       appendError(err.toStdString());
-    }
 
     return charges;
   }
+
+  stripLeadingNonJson(result);
 
   // parse the result - preferred output is JSON: bare array or {"charges":[]}
   QList<double> jsonValues;
@@ -348,6 +362,8 @@ Core::Array<double> ScriptChargeModel::potentials(
       appendError(err.toStdString());
     return potentials;
   }
+
+  stripLeadingNonJson(result);
 
   // Preferred output is JSON: bare array or {"potentials":[...]}
   QList<double> jsonValues;
