@@ -592,18 +592,21 @@ void PackageManagerDialog::installFromDirectory()
   const QString baseName = QFileInfo(dir).fileName();
   const QString linkPath = m_filePath + '/' + baseName;
 
-  // Check if already installed as a symlink — nothing to do
   QFileInfo existing(linkPath);
   if (existing.isSymLink()) {
-    m_ui->readmeBrowser->append(
-      tr("Plugin already installed as symlink: %1\n").arg(linkPath));
-    QtGui::PackageManager::instance()->installPackages({ linkPath });
-    return;
-  }
-
-  // Remove any previous installation at that path
-  if (existing.isDir())
+    if (existing.symLinkTarget() == dir) {
+      // Already pointing at the right directory — nothing to do
+      m_ui->readmeBrowser->append(
+        tr("Plugin already installed as symlink: %1\n").arg(linkPath));
+      QtGui::PackageManager::instance()->installPackages({ linkPath });
+      return;
+    }
+    // Stale symlink pointing elsewhere — remove and reinstall
+    QFile::remove(linkPath);
+  } else if (existing.isDir()) {
+    // Remove any previous non-symlink installation at that path
     QDir(linkPath).removeRecursively();
+  }
 
   // Attempt to create a symlink; fall back to a recursive copy
   bool linked = QFile::link(dir, linkPath);
