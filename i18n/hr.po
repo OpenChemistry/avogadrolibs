@@ -5347,7 +5347,7 @@ msgstr "Ispuni simetrične atome na temelju prostorne grupe kristala."
 
 #: qtplugins/spacegroup/spacegroup.cpp:135
 msgid "Fill all atoms based on the crystal space group."
-msgstr ""
+msgstr "Ispuni simetrične atome na temelju prostorne grupe kristala."
 
 #: qtplugins/spacegroup/spacegroup.cpp:384
 #: qtplugins/spacegroup/spacegroup.cpp:412
