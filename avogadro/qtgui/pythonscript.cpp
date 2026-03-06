@@ -221,12 +221,12 @@ QByteArray PythonScript::execute(const QStringList& args,
   // Write scriptStdin to the process's stdin
   if (!scriptStdin.isNull()) {
     if (!proc.waitForStarted(10000)) {
-      if (m_debug)
-        m_errors << tr("Error running script '%1 %2': Timed out waiting for "
-                       "start (%3).")
-                      .arg(program, realArgs.join(QStringLiteral(" ")),
-                           processErrorString(proc));
+      m_errors << tr("Error running script '%1 %2': Timed out waiting for "
+                     "start (%3).")
+                    .arg(program, realArgs.join(QStringLiteral(" ")),
+                         processErrorString(proc));
       return QByteArray();
+    }
     }
 
     qint64 len = proc.write(scriptStdin);
