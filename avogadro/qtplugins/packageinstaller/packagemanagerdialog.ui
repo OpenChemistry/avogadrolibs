@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Manage Packages…</string>
+   <string>Manage Plugins…</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <!-- Search + Refresh bar -->
@@ -20,7 +20,7 @@
      <item>
       <widget class="QLineEdit" name="searchEdit">
        <property name="placeholderText">
-        <string>Search packages…</string>
+        <string>Search plugins…</string>
        </property>
        <property name="clearButtonEnabled">
         <bool>true</bool>

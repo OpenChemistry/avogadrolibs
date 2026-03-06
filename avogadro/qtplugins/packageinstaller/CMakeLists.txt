@@ -4,7 +4,7 @@ set(packageinstaller_srcs
   packageinstaller.cpp
   packagemanagerdialog.cpp
   packagemodel.cpp
-  zipextracter.cpp
+  zipextractor.cpp
 )
 
 avogadro_plugin(PackageInstaller
