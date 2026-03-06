@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-01 04:49+0000\n"
-"PO-Revision-Date: 2026-01-27 03:19+0000\n"
+"PO-Revision-Date: 2026-03-06 07:09+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -2136,7 +2136,7 @@ msgstr "Ctrl+7"
 
 #: qtplugins/autoopt/autoopt.cpp:69
 msgid "Auto Optimize"
-msgstr ""
+msgstr "Optimiraj automatski"
 
 #: qtplugins/autoopt/autoopt.cpp:71
 #, qt-format
@@ -2156,15 +2156,15 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:152
 msgid "Optimize"
-msgstr ""
+msgstr "Optimiraj"
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
-msgstr ""
+msgstr "Dinamike"
 
 #: qtplugins/autoopt/autoopt.cpp:157
 msgid "Task:"
-msgstr ""
+msgstr "Zadatak:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -5034,15 +5034,15 @@ msgstr "Svojstva ostatka"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Partial Charge Type"
-msgstr ""
+msgstr "Vrsta djelomičnog naboja"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Select the partial charge type:"
-msgstr ""
+msgstr "Odaberi vrstu djelomičnog naboja:"
 
 #: qtplugins/propertytables/propertyview.cpp:580
 msgid "Change Charge Type…"
-msgstr ""
+msgstr "Promijeni vrstu naboja …"
 
 #: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"

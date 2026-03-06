@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-01 04:49+0000\n"
-"PO-Revision-Date: 2026-02-05 04:01+0000\n"
+"PO-Revision-Date: 2026-03-06 07:10+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1331,7 +1331,7 @@ msgstr "Tabel Periodik"
 
 #: qtgui/pythonscript.cpp:126
 msgid "Package mode requires pixi but it was not found."
-msgstr ""
+msgstr "Mode paket memerlukan pixi tetapi tidak ditemukan."
 
 #: qtgui/pythonscript.cpp:224 qtgui/pythonscript.cpp:314
 #, qt-format
@@ -1381,6 +1381,8 @@ msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
+"Kesalahan saat menulis permintaan mentah ke stdin skrip (len=%1, menulis %2 "
+"byte, kesalahan QProcess: %3)."
 
 #: qtgui/pythonscript.cpp:415
 msgid "Script failed to start."
@@ -1476,7 +1478,7 @@ msgstr "Ubah Warna Atom"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Residue Color"
-msgstr ""
+msgstr "Ubah Warna Residu"
 
 #: qtgui/rwmolecule.cpp:298
 msgid "Change Atom Layer"
@@ -2084,43 +2086,43 @@ msgstr "Peta Warna:"
 
 #: qtplugins/applycolors/applycolors.cpp:225
 msgid "Apply Index Colors"
-msgstr ""
+msgstr "Terapkan Warna Indeks"
 
 #: qtplugins/applycolors/applycolors.cpp:289
 msgid "Apply Charge Colors"
-msgstr ""
+msgstr "Terapkan Warna Muatan"
 
 #: qtplugins/applycolors/applycolors.cpp:327
 msgid "Apply Distance Colors"
-msgstr ""
+msgstr "Terapkan Warna Jarak"
 
 #: qtplugins/applycolors/applycolors.cpp:353
 msgid "Reset Atom Colors"
-msgstr ""
+msgstr "Atur Ulang Warna Atom"
 
 #: qtplugins/applycolors/applycolors.cpp:379
 msgid "Apply Custom Color"
-msgstr ""
+msgstr "Terapkan Warna Kustom"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 msgid "Apply Custom Residue Color"
-msgstr ""
+msgstr "Terapkan Warna Residu Kustom"
 
 #: qtplugins/applycolors/applycolors.cpp:440
 msgid "Reset Residue Colors"
-msgstr ""
+msgstr "Atur Ulang Warna Residu"
 
 #: qtplugins/applycolors/applycolors.cpp:474
 msgid "Apply Secondary Structure Colors"
-msgstr ""
+msgstr "Terapkan Warna Struktur Sekunder"
 
 #: qtplugins/applycolors/applycolors.cpp:562
 msgid "Apply Amino Acid Colors"
-msgstr ""
+msgstr "Terapkan Warna Asam Amino"
 
 #: qtplugins/applycolors/applycolors.cpp:589
 msgid "Apply Shapely Colors"
-msgstr ""
+msgstr "Terapkan Warna Shapely"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2163,18 +2165,16 @@ msgstr ""
 "Tombol Kanan Mouse:    Klik dan seret untuk memutar atom."
 
 #: qtplugins/autoopt/autoopt.cpp:152
-#, fuzzy
-#| msgid "Optimization"
 msgid "Optimize"
-msgstr "Optimisasi"
+msgstr "Optimalkan"
 
 #: qtplugins/autoopt/autoopt.cpp:153
 msgid "Dynamics"
-msgstr ""
+msgstr "Dinamika"
 
 #: qtplugins/autoopt/autoopt.cpp:157
 msgid "Task:"
-msgstr ""
+msgstr "Tugas:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2218,13 +2218,13 @@ msgstr "Dinamika Molekuler"
 #, qt-format
 msgctxt "temperature in Kelvin"
 msgid "%1 T = %L2"
-msgstr ""
+msgstr "%1 T = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:585
 #, qt-format
 msgctxt "change in energy in kJ/mol"
 msgid "%1 ΔE = %L2"
-msgstr ""
+msgstr "%1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.h:43
 msgid "Auto Optimize tool"
@@ -4851,7 +4851,7 @@ msgstr "Render adegan menggunakan POV-Ray."
 
 #: qtplugins/propertytables/propertymodel.cpp:307
 msgid "Click to change color"
-msgstr ""
+msgstr "Klik untuk mengubah warna"
 
 #: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Valence"
@@ -5049,15 +5049,15 @@ msgstr "Sifat Sisa"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Partial Charge Type"
-msgstr ""
+msgstr "Jenis Muatan Parsial"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Select the partial charge type:"
-msgstr ""
+msgstr "Pilih jenis muatan parsial:"
 
 #: qtplugins/propertytables/propertyview.cpp:580
 msgid "Change Charge Type…"
-msgstr ""
+msgstr "Ubah Jenis Muatan…"
 
 #: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"
