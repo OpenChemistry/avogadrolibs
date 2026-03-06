@@ -377,9 +377,36 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   if (type != QLatin1String("menu-commands"))
     return;
 
-  // Labels can be a plain string or a localized table {default: "...", locale:
-  // "..."} Resolve to a string using the current locale, falling back to
-  // "default".
+  // Extract the path for the command's menu item
+  // The TOML values that specify this are the following:
+  //
+  //    [[menu-commands]]
+  //    menu = string | table
+  //    submenu = string | table
+  //    subsubmenu = string | table
+  //    item = string | table
+  //    priorities = array[integer]
+  //
+  // The intermediate levels (submenu and subsubmenu) are optional.
+  //
+  // Each label in the cascade (menu, submenu, subsubmenu, item) is either a
+  // normal UTF-8 string or a table of localized strings.
+  // A localization table takes the form:
+  //    item = { default = "...", <locale> = "...", <locale> = "...", ... }
+  // (It may of course be formatted as a separate table with a header).
+  // Examples of locale strings are "fr", "de", "de_DE", "en_GB"
+  // Localized strings *must* include a "default" key, which is the fallback
+  // value if the current locale is not found (generally US English, but this
+  // should not be relied upon).
+  //
+  // The priorities array *must* contain exactly 1 fewer integer than the number
+  // of labels (though priority 0 is used as a fallback to avoid crashes).
+  // If the labels are ordered in an array [menu, (submenu), (subsubmenu), item]
+  // the integer at index i in priorities specifies the priority of the label
+  // [i + 1] within label [i], e.g. priorities = [ 400, 200 ] specifies that
+  // the item should have priority 200 within the submenu and the submenu should
+  // have priority 400 within the menu.
+
   auto resolveLabel = [](const QVariant& var) -> QString {
     if (var.typeId() == QMetaType::QVariantMap) {
       QVariantMap m = var.toMap();
@@ -389,35 +416,38 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
     return var.toString();
   };
 
-  // Extract label and priority from path.item (the TOML key is "item", not
-  // "entry")
-  QVariantMap pathMap = metadata.value("path").toMap();
-  QVariantMap itemMap = pathMap.value("item").toMap();
-  QString label = resolveLabel(itemMap.value("label"));
-  if (label.isEmpty())
-    label = identifier;
+  QString topMenu = resolveLabel(metadata.value("menu"));
+  QString subMenu = resolveLabel(metadata.value("submenu"));
+  QString subSubMenu = resolveLabel(metadata.value("subsubmenu"));
+  QString item = resolveLabel(metadata.value("item"));
 
-  // Build menu path from metadata: path.menu, then path.submenu.label
+  // If nothing is specified at all, just add under Extensions > Scripts with
+  // the identifier as the label
+  if (topMenu.isEmpty() && item.isEmpty()) {
+    topMenu = tr("&Extensions");
+    subMenu = tr("Scripts");
+    item = identifier;
+  }
+
+  // Build menu path list
   QStringList menuPathList;
-  QString topMenu = pathMap.value("menu").toString();
-  if (!topMenu.isEmpty())
-    menuPathList << topMenu;
-
-  // Submenu label uses the "label" key (not "menu"), and may be localized
-  QVariantMap submenuData = pathMap.value("submenu").toMap();
-  QString submenu = resolveLabel(submenuData.value("label"));
-  if (!submenu.isEmpty())
-    menuPathList << submenu;
-
-  // If no menu path specified, default to Extensions > Scripts
-  if (menuPathList.isEmpty())
-    menuPathList << tr("&Extensions") << tr("Scripts");
-
-  // Extract priority from path.item.priority
-  int priority = itemMap.value("priority", 0).toInt();
+  menuPathList << topMenu;
+  if (!subMenu.isEmpty()) {
+    menuPathList << subMenu;
+  }
+  if (!subSubMenu.isEmpty()) {
+    menuPathList << subSubMenu;
+  }
+  menuPathList << item;
+  
+  // Extract priorities
+  QVariantList priorities = metadata.value("priorities").toList();
+  int menuPriority        = priorities.size() > 0 ? priorities[0].toInt() : 0;
+  int subMenuPriority     = priorities.size() > 1 ? priorities[1].toInt() : 0;
+  int subSubMenuPriority  = priorities.size() > 2 ? priorities[2].toInt() : 0;
 
   // Create the action
-  auto* action = new QAction(label, this);
+  auto* action = new QAction(item, this);
   action->setProperty("packageMode", true);
   action->setProperty("packageDir", packageDir);
   action->setProperty("packageCommand", command);
@@ -429,9 +459,9 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
                       metadata.value("input-format").toString());
   action->setEnabled(true);
 
-  if (priority != 0)
-    action->setProperty("menu priority", priority);
-
+  // TODO submenu, subsubmenu priorities? Probably needs change in MenuBuilder
+  action->setProperty("menu priority", menuPriority);
+  
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
   m_packageActions.insert(
