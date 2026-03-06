@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-01 04:49+0000\n"
-"PO-Revision-Date: 2026-02-27 04:55+0000\n"
+"PO-Revision-Date: 2026-03-07 11:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
@@ -32,7 +32,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.1-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2379,10 +2379,9 @@ msgid "Ribbon"
 msgstr "Лента"
 
 #: qtplugins/cartoons/cartoons.cpp:96
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Мультипликация"
+msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:97
 #, fuzzy
@@ -4975,10 +4974,9 @@ msgid "Adjust Fragment"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1195
-#, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "Спираль"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1197
 msgctxt "protein bend secondary structure"
@@ -4986,16 +4984,14 @@ msgid "Bend"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1199
-#, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr "Спираль"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1201
-#, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr "Лист"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1203
 #, fuzzy
@@ -5194,9 +5190,8 @@ msgid "Align view to axes."
 msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
-#, fuzzy
 msgid "Reset view"
-msgstr "Сброс"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
