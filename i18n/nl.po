@@ -6,13 +6,13 @@
 # Joeri van Limpt <joerivanlimpt@live.nl>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-01 04:49+0000\n"
-"PO-Revision-Date: 2025-11-29 17:00+0000\n"
+"PO-Revision-Date: 2026-03-07 11:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/nl/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2306,10 +2306,9 @@ msgid "Ribbon"
 msgstr "Lint"
 
 #: qtplugins/cartoons/cartoons.cpp:96
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Cartoon"
+msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:97
 #, fuzzy
@@ -4874,10 +4873,9 @@ msgid "Adjust Fragment"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1195
-#, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "Helix"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1197
 msgctxt "protein bend secondary structure"
@@ -4885,16 +4883,14 @@ msgid "Bend"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1199
-#, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr "Helix"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1201
-#, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr "Blad"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1203
 msgctxt "3-10 helix"
@@ -5091,9 +5087,8 @@ msgid "Align view to axes."
 msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
-#, fuzzy
 msgid "Reset view"
-msgstr "Reset"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
