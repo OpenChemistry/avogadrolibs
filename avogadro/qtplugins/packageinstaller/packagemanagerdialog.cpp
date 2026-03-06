@@ -495,6 +495,20 @@ void PackageManagerDialog::removeSelected()
     }
   }
 
+  // Symlinks are created for local-disk installs — just remove the link
+  QMutableListIterator<int> it(toRemove);
+  while (it.hasNext()) {
+    int row = it.next();
+    const PackageModel::PackageEntry& e = m_model->entry(row);
+    QFileInfo fi(e.installedDir);
+    if (fi.isSymLink()) {
+      QFile::remove(e.installedDir);
+      const QString packageKey = e.packageKey.isEmpty() ? e.name : e.packageKey;
+      QtGui::PackageManager::instance()->unregisterPackage(packageKey);
+      it.remove();
+    }
+  }
+
   if (toRemove.isEmpty()) {
     QMessageBox::information(
       this, tr("Nothing to Remove"),
