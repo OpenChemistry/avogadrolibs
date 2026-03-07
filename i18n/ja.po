@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-01 04:49+0000\n"
-"PO-Revision-Date: 2026-03-03 01:09+0000\n"
+"PO-Revision-Date: 2026-03-07 11:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1270,7 +1270,7 @@ msgstr "ファンデルワールス (AO)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr "体積"
+msgstr ""
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -1559,8 +1559,9 @@ msgid "Calculating…"
 msgstr "計算中…"
 
 #: qtgui/timedprogressdialog.cpp:79
+#, fuzzy
 msgid "Less than a second remaining"
-msgstr ""
+msgstr "間もなく完了"
 
 #: qtgui/timedprogressdialog.cpp:82
 #, qt-plural-format
@@ -1722,7 +1723,7 @@ msgstr "&APBS"
 #: qtplugins/gamessinput/gamessinput.cpp:75
 #: qtplugins/quantuminput/quantuminput.cpp:136
 msgid "Open Output File"
-msgstr ""
+msgstr "出力ファイルを開く"
 
 #: qtplugins/apbs/apbs.cpp:63
 msgid "OpenDX File (*.dx)"
@@ -1735,7 +1736,7 @@ msgstr "IOエラー"
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "構造ファイル (%1) の読み込みでエラー"
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
@@ -1744,11 +1745,11 @@ msgstr "OpenDXエラー"
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "OpenDXファイルの読み込みでエラー: %1"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "OpenDXファイルの読み込みでエラー: キューブが見つかりません"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -1757,8 +1758,9 @@ msgid "APBS"
 msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:33
+#, fuzzy
 msgid "Interact with APBS utilities."
-msgstr ""
+msgstr "APBSユーティリティと対話"
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
@@ -1815,7 +1817,7 @@ msgstr "エラー"
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr ""
+msgstr "APBSの実行でエラー: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
@@ -1828,9 +1830,9 @@ msgid "Success"
 msgstr "成功"
 
 #: qtplugins/apbs/apbsdialog.cpp:162
-#, qt-format
+#, fuzzy, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "%1を生成"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
@@ -1847,7 +1849,7 @@ msgstr "APBSインプット (*.in)"
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "インプットファイルを '%1' に書き込み"
 
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
 #: qtplugins/playertool/playertool.cpp:424
@@ -2107,8 +2109,9 @@ msgid "Apply Shapely Colors"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
+#, fuzzy
 msgid "ApplyColors"
-msgstr ""
+msgstr "色を適用"
 
 #: qtplugins/autoopt/autoopt.cpp:68
 msgctxt "control-key 7"
@@ -5494,7 +5497,7 @@ msgid "Primitive Cell Detected"
 msgstr "基本胞を検出"
 
 #: qtplugins/spacegroup/spacegroup.cpp:648
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "The current unit cell appears to be a primitive cell (non-90° angles), but "
 "the space group %1 expects a centered conventional cell.\n"
@@ -5503,6 +5506,12 @@ msgid ""
 "\n"
 "Would you like to create a conventional cell first?"
 msgstr ""
+"現在のユニットセルは基本胞（角度が90°ではない）のようですが、空間群 %1 には慣"
+"用胞であることが望ましいです。\n"
+"\n"
+"ユニットセルを埋めると予期せずに重複した原子ができることがあります。\n"
+"\n"
+"まず慣用胞をつくりますか？"
 
 #: qtplugins/spacegroup/spacegroup.cpp:662
 msgid "Failed to conventionalize the cell."
@@ -5870,9 +5879,10 @@ msgid "Calculating molecular orbital %L1"
 msgstr "第%L1分子軌道を計算中"
 
 #: qtplugins/surfaces/surfaces.cpp:888
+#, fuzzy
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
-msgstr ""
+msgstr "表面レンダリングを完了"
 
 #: qtplugins/surfaces/surfaces.cpp:899 qtplugins/surfaces/surfaces.cpp:927
 msgid "Movie AVI (*.avi)"
@@ -5891,8 +5901,9 @@ msgid "Couldn't find the active render widget, failing."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.h:74
+#, fuzzy
 msgid "Read and render surfaces."
-msgstr ""
+msgstr "表面を読み込んでレンダリング"
 
 #: qtplugins/svg/svg.cpp:31
 msgid "&SVG…"

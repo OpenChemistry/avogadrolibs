@@ -5,13 +5,13 @@
 # Urszula <urszula127@gmail.com>, 2021.
 # Dominik Florjan <dominik.florjan@gmail.com>, 2022.
 # Jakub Brzeski <jakubbrzeski4@gmail.com>, 2023.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-01 04:49+0000\n"
-"PO-Revision-Date: 2025-08-27 08:02+0000\n"
+"PO-Revision-Date: 2026-03-07 11:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pl/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4842,10 +4842,9 @@ msgid "Adjust Fragment"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1195
-#, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "Spirala"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1197
 msgctxt "protein bend secondary structure"
@@ -4853,16 +4852,14 @@ msgid "Bend"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1199
-#, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr "Spirala"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1201
-#, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr "Arkusz"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1203
 msgctxt "3-10 helix"

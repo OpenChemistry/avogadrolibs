@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 # Emin Macanović <macanovic.emin@gmail.com>, 2021.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-01 04:49+0000\n"
-"PO-Revision-Date: 2025-08-27 08:01+0000\n"
+"PO-Revision-Date: 2026-03-07 11:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1695,9 +1695,8 @@ msgid "OpenDX File (*.dx)"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:115
-#, fuzzy
 msgid "IO Error"
-msgstr "Greška"
+msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
@@ -2251,7 +2250,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:678
 #, fuzzy
 msgid "Bond"
-msgstr "Ugao veze"
+msgstr "Veze"
 
 #: qtplugins/bonding/bonding.cpp:73
 msgid "Remove bonds from all or selected atoms."
@@ -2296,10 +2295,9 @@ msgid "Ribbon"
 msgstr "Traka"
 
 #: qtplugins/cartoons/cartoons.cpp:96
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Crtež"
+msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:97
 #, fuzzy
@@ -3173,9 +3171,8 @@ msgid "&Import"
 msgstr "Uvoz"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
-#, fuzzy
 msgid "Fetch PDB"
-msgstr "Donesi iz PDB"
+msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
@@ -3777,9 +3774,8 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 #: qtplugins/lineformatinput/lineformatinput.cpp:114
-#, fuzzy
 msgid "No descriptors found!"
-msgstr "Nema opisa!"
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:90
 msgid "No line format readers found!"
@@ -4870,10 +4866,9 @@ msgid "Adjust Fragment"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1195
-#, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "Zavojnica"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1197
 msgctxt "protein bend secondary structure"
@@ -4881,16 +4876,14 @@ msgid "Bend"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1199
-#, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr "Zavojnica"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1201
-#, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr "List"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:1203
 msgctxt "3-10 helix"
@@ -5088,9 +5081,8 @@ msgid "Align view to axes."
 msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
-#, fuzzy
 msgid "Reset view"
-msgstr "Reset"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
