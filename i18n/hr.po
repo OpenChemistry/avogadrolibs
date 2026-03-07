@@ -1298,7 +1298,7 @@ msgstr "Van der Waals (AO)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "Volumen"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
