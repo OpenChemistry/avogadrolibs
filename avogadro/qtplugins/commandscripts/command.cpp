@@ -385,7 +385,7 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   //    submenu = string | table
   //    subsubmenu = string | table
   //    item = string | table
-  //    priorities = array[integer]
+  //    menu-priorities = array[integer]
   //
   // The intermediate levels (submenu and subsubmenu) are optional.
   //
@@ -399,13 +399,13 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   // value if the current locale is not found (generally US English, but this
   // should not be relied upon).
   //
-  // The priorities array *must* contain exactly 1 fewer integer than the number
-  // of labels (though priority 0 is used as a fallback to avoid crashes).
+  // The menu-priorities array *must* contain exactly 1 fewer integer than the
+  // number of labels (though priority 0 is used as a fallback to avoid crashes)
   // If the labels are ordered in an array [menu, (submenu), (subsubmenu), item]
   // the integer at index i in priorities specifies the priority of the label
-  // [i + 1] within label [i], e.g. priorities = [ 400, 200 ] specifies that
-  // the item should have priority 200 within the submenu and the submenu should
-  // have priority 400 within the menu.
+  // [i + 1] within label [i], e.g. menu-priorities = [ 400, 200 ] specifies
+  // that the item should have priority 200 within the submenu and the submenu
+  // should have priority 400 within the menu.
 
   auto resolveLabel = [](const QVariant& var) -> QString {
     if (var.typeId() == QMetaType::QVariantMap) {
@@ -440,7 +440,7 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   }
   
   // Extract priorities
-  QVariantList priorities = metadata.value("priorities").toList();
+  QVariantList priorities = metadata.value("menu-priorities").toList();
   int menuPriority        = priorities.size() > 0 ? priorities[0].toInt() : 0;
   int subMenuPriority     = priorities.size() > 1 ? priorities[1].toInt() : 0;
   int subSubMenuPriority  = priorities.size() > 2 ? priorities[2].toInt() : 0;
