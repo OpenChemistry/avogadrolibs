@@ -406,6 +406,12 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   // [i + 1] within label [i], e.g. menu-priorities = [ 400, 200 ] specifies
   // that the item should have priority 200 within the submenu and the submenu
   // should have priority 400 within the menu.
+  // Items/submenus within a menu will be displayed in order of priority, with
+  // those with a higher priority nearer to the top. Ties are sorted
+  // alphabetically.
+  // Items with priorities within the same 100 span are grouped together (0-99
+  // in the first group, 100-199 in the next, and so on). A separator is
+  // inserted automatically between each group.
 
   auto resolveLabel = [](const QVariant& var) -> QString {
     if (var.typeId() == QMetaType::QVariantMap) {
