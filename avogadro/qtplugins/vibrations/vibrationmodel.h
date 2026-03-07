@@ -46,6 +46,7 @@ public slots:
 private:
   QtGui::Molecule* m_molecule;
   bool m_hasRaman;
+  bool m_hasSymmetry;
 };
 } // namespace QtPlugins
 } // namespace Avogadro
