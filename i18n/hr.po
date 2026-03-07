@@ -5476,7 +5476,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:614
 msgid "Cubic"
-msgstr ""
+msgstr "Kubik"
 
 #: qtplugins/spacegroup/spacegroup.cpp:646
 msgid "Primitive Cell Detected"
