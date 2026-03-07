@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-03-01 04:49+0000\n"
+"POT-Creation-Date: 2026-03-07 13:27+0000\n"
 "PO-Revision-Date: 2026-03-07 11:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -543,7 +543,7 @@ msgstr "கார்மம்"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:32:2109
+#: qtgui/elementtranslator.cpp:32:2127
 msgid "Carbon"
 msgstr "கரிமம்"
 
@@ -625,13 +625,13 @@ msgstr "மங்கனம்"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:92:2112
+#: qtgui/elementtranslator.cpp:92:2130
 msgid "Iron"
 msgstr "இரும்பு"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:95:2115
+#: qtgui/elementtranslator.cpp:95:2133
 msgid "Cobalt"
 msgstr "மென்வெள்ளி"
 
@@ -1252,7 +1252,7 @@ msgid "Licorice"
 msgstr "லைகோரைச்"
 
 #: qtgui/layermodel.cpp:184 qtplugins/surfacerender/surfacerender.h:29
-#: qtplugins/surfaces/orbitals.cpp:476 qtplugins/surfaces/orbitals.cpp:568
+#: qtplugins/surfaces/orbitals.cpp:478 qtplugins/surfaces/orbitals.cpp:570
 #: qtplugins/surfaces/surfaces.cpp:873 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "மேற்பரப்புகள்"
@@ -1318,12 +1318,12 @@ msgstr "தனிம அட்டவணை"
 msgid "Package mode requires pixi but it was not found."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:224 qtgui/pythonscript.cpp:314
+#: qtgui/pythonscript.cpp:224 qtgui/pythonscript.cpp:321
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr "ச்கிரிப்டை இயக்கும் பிழை '%1%2': தொடக்கத்திற்காக காத்திருக்கும் நேரம் (%3)."
 
-#: qtgui/pythonscript.cpp:233 qtgui/pythonscript.cpp:323
+#: qtgui/pythonscript.cpp:233 qtgui/pythonscript.cpp:330
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1332,12 +1332,12 @@ msgstr ""
 "பிழை இயங்கும் ச்கிரிப்ட் ' %1 %2': stdin க்கு எழுதத் தவறிவிட்டது (LEN = %3, %4 "
 "பைட்டுகளை எழுதினார், QPROCESS பிழை: %5)."
 
-#: qtgui/pythonscript.cpp:246
+#: qtgui/pythonscript.cpp:247
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr "'%1%2' ச்கிரிப்டை இயக்கும் பிழை: பூச்சுக்காக காத்திருக்கும் நேரம் (%3)."
 
-#: qtgui/pythonscript.cpp:255
+#: qtgui/pythonscript.cpp:257
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1350,39 +1350,39 @@ msgstr ""
 " வெளியீடு:\n"
 " %6"
 
-#: qtgui/pythonscript.cpp:264
+#: qtgui/pythonscript.cpp:267
 #, qt-format
 msgid "Warning '%1'"
 msgstr "எச்சரிக்கை '%1'"
 
-#: qtgui/pythonscript.cpp:379
+#: qtgui/pythonscript.cpp:387
 #, qt-format
 msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:415
+#: qtgui/pythonscript.cpp:422
 msgid "Script failed to start."
 msgstr "ச்கிரிப்ட் தொடங்கத் தவறிவிட்டது."
 
-#: qtgui/pythonscript.cpp:418
+#: qtgui/pythonscript.cpp:425
 msgid "Script crashed."
 msgstr "ச்கிரிப்ட் செயலிழந்தது."
 
-#: qtgui/pythonscript.cpp:421
+#: qtgui/pythonscript.cpp:428
 msgid "Script timed out."
 msgstr "ச்கிரிப்ட் நேரம் முடிந்தது."
 
-#: qtgui/pythonscript.cpp:424
+#: qtgui/pythonscript.cpp:431
 msgid "Read error."
 msgstr "பிழையைப் படியுங்கள்."
 
-#: qtgui/pythonscript.cpp:427
+#: qtgui/pythonscript.cpp:434
 msgid "Write error."
 msgstr "பிழையை எழுதுங்கள்."
 
-#: qtgui/pythonscript.cpp:431
+#: qtgui/pythonscript.cpp:438
 msgid "Unknown error."
 msgstr "தெரியாத பிழை."
 
@@ -1411,7 +1411,7 @@ msgstr "அடுக்கு தகவலைச் சேர்க்கவு�
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
-#: qtplugins/selectiontool/selectiontool.cpp:264:1789
+#: qtplugins/selectiontool/selectiontool.cpp:264:1807
 msgid "Change Layer"
 msgstr "அடுக்கை மாற்றவும்"
 
@@ -1653,7 +1653,7 @@ msgstr "& உருவாக்க"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, elementLabel)
-#: qtplugins/alchemy/alchemy.cpp:74:503 rc.cpp:2103
+#: qtplugins/alchemy/alchemy.cpp:74:503 rc.cpp:2121
 msgid "Element:"
 msgstr "உறுப்பு:"
 
@@ -1682,7 +1682,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:81:1831
+#: qtplugins/aligntool/aligntool.cpp:81:1849
 msgid "Axis:"
 msgstr "அச்சு:"
 
@@ -1811,6 +1811,8 @@ msgstr "PQR கோப்புகள் (*.pqr)"
 #: qtplugins/openbabel/openbabel.cpp:888 qtplugins/openbabel/openbabel.cpp:930
 #: qtplugins/openbabel/openbabel.cpp:962
 #: qtplugins/openmminput/openmminput.cpp:62
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:424
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:620
 #: qtplugins/plugindownloader/downloaderwidget.cpp:103
 #: qtplugins/plugindownloader/downloaderwidget.cpp:109
 #: qtplugins/plugindownloader/downloaderwidget.cpp:368
@@ -1863,6 +1865,7 @@ msgid "Input file written to '%1'"
 msgstr "உள்ளீட்டு கோப்பு '%1' க்கு எழுதப்பட்டது"
 
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:425
 #: qtplugins/playertool/playertool.cpp:424
 #: qtplugins/plugindownloader/downloaderwidget.cpp:369
 #: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1008
@@ -1980,7 +1983,7 @@ msgstr "சிடிச்"
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:811:183 rc.cpp:1979
+#: qtplugins/surfaces/surfaces.cpp:811:183 rc.cpp:1997
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "நிறமாலை"
@@ -1990,7 +1993,7 @@ msgstr "நிறமாலை"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:813:180 rc.cpp:1976
+#: qtplugins/surfaces/surfaces.cpp:813:180 rc.cpp:1994
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "கூல்வார்ம்"
@@ -2000,7 +2003,7 @@ msgstr "கூல்வார்ம்"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:130
-#: qtplugins/surfaces/surfaces.cpp:815:174 rc.cpp:1970
+#: qtplugins/surfaces/surfaces.cpp:815:174 rc.cpp:1988
 msgctxt "colormap"
 msgid "Balance"
 msgstr "இருப்பு"
@@ -2010,7 +2013,7 @@ msgstr "இருப்பு"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:132
-#: qtplugins/surfaces/surfaces.cpp:817:177 rc.cpp:1973
+#: qtplugins/surfaces/surfaces.cpp:817:177 rc.cpp:1991
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "நீலம்-இருண்ட"
@@ -2022,7 +2025,7 @@ msgstr "நீலம்-இருண்ட"
 #: qtplugins/applycolors/applycolors.cpp:134
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:819:186 rc.cpp:1982
+#: qtplugins/surfaces/surfaces.cpp:819:186 rc.cpp:2000
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "டர்போ"
@@ -2055,7 +2058,7 @@ msgstr "COLORMAP ஐத் தேர்ந்தெடுக்கவும்"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:217
-#: qtplugins/applycolors/applycolors.cpp:318:171 rc.cpp:1967
+#: qtplugins/applycolors/applycolors.cpp:318:171 rc.cpp:1985
 msgid "Colormap:"
 msgstr "COLORMAP:"
 
@@ -2166,9 +2169,9 @@ msgstr ""
 msgid "Stop"
 msgstr "நிறுத்து"
 
-#: qtplugins/autoopt/autoopt.cpp:411 qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:423
-#: qtplugins/forcefield/forcefield.cpp:462 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/autoopt/autoopt.cpp:411 qtplugins/forcefield/forcefield.cpp:75
+#: qtplugins/forcefield/forcefield.cpp:447
+#: qtplugins/forcefield/forcefield.cpp:486 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:562
 msgid "Optimize Geometry"
 msgstr "வடிவவியலை மேம்படுத்தவும்"
@@ -2405,9 +2408,10 @@ msgstr "வண்ண ஒளிபுகா வரைபடத்தைத் த
 #: qtplugins/commandscripts/command.cpp:414
 #: qtplugins/configurepython/configurepython.cpp:153
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:230
 #: qtplugins/forcefield/forcefield.cpp:232
+#: qtplugins/forcefield/forcefield.cpp:234
 #: qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Extensions"
@@ -2505,7 +2509,7 @@ msgstr "பைதான் சூழல்களை உள்ளமைக்க�
 #: qtplugins/templatetool/templatetoolwidget.cpp:446
 #: qtplugins/templatetool/templatetoolwidget.cpp:454
 #: qtplugins/templatetool/templatetoolwidget.cpp:462
-#: qtplugins/templatetool/templatetoolwidget.cpp:525:2223
+#: qtplugins/templatetool/templatetoolwidget.cpp:525:2241
 msgid "Other…"
 msgstr "மற்றொன்று…"
 
@@ -2514,7 +2518,7 @@ msgid "Constraints…"
 msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:232
+#: qtplugins/forcefield/forcefield.cpp:234
 msgid "&Calculate"
 msgstr "& கணக்கிடுங்கள்"
 
@@ -2724,8 +2728,8 @@ msgstr "அணு ஒருங்கிணைப்புகளைத் தி�
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:192 qtplugins/label/label.cpp:215
-#: qtplugins/label/label.cpp:230:2009 rc.cpp:2034
+#: qtplugins/label/label.cpp:209 qtplugins/label/label.cpp:232
+#: qtplugins/label/label.cpp:247:2027 rc.cpp:2052
 msgid "Custom"
 msgstr "தனிப்பயன்"
 
@@ -2881,7 +2885,7 @@ msgstr "CP2K க்கு உள்ளீட்டை உருவாக்க�
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:82
+#: qtplugins/forcefield/forcefield.cpp:84
 #: qtplugins/plotconformer/plotconformer.cpp:145:1360
 msgid "Energy"
 msgstr "ஆற்றல்"
@@ -3176,7 +3180,7 @@ msgstr "ஆசிரியர் கருவி"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:209:1988 rc.cpp:2006
+#: qtplugins/editor/editortoolwidget.cpp:209:2006 rc.cpp:2024
 msgid "Automatic"
 msgstr "தானியங்கி"
 
@@ -3279,52 +3283,52 @@ msgstr "குறிப்பிட்ட அம்சங்களில் ப�
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "மூலக்கூறின் அணுக்களுக்கான படை புலம் காட்சிப்படுத்தல்களை வழங்கவும்."
 
-#: qtplugins/forcefield/forcefield.cpp:90
+#: qtplugins/forcefield/forcefield.cpp:92
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:147
 msgid "Forces"
 msgstr "படைகள்"
 
-#: qtplugins/forcefield/forcefield.cpp:98
+#: qtplugins/forcefield/forcefield.cpp:100
 msgid "Configure…"
 msgstr "உள்ளமைக்கவும்…"
 
-#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:112
 msgid "Freeze Selected Atoms"
 msgstr "தேர்ந்தெடுக்கப்பட்ட அணுக்களை முடக்கம்"
 
-#: qtplugins/forcefield/forcefield.cpp:118
+#: qtplugins/forcefield/forcefield.cpp:120
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:126
+#: qtplugins/forcefield/forcefield.cpp:128
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:134
+#: qtplugins/forcefield/forcefield.cpp:136
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:142
+#: qtplugins/forcefield/forcefield.cpp:144
 msgid "Unfreeze Selected Atoms"
 msgstr "உறைந்த தேர்ந்தெடுக்கப்பட்ட அணுக்கள்"
 
-#: qtplugins/forcefield/forcefield.cpp:151
+#: qtplugins/forcefield/forcefield.cpp:153
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:159
+#: qtplugins/forcefield/forcefield.cpp:161
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:373
-#: qtplugins/forcefield/forcefield.cpp:502
-#: qtplugins/forcefield/forcefield.cpp:560
+#: qtplugins/forcefield/forcefield.cpp:397
+#: qtplugins/forcefield/forcefield.cpp:526
+#: qtplugins/forcefield/forcefield.cpp:584
 #: qtplugins/playertool/playertool.cpp:391
 #: qtplugins/playertool/playertool.cpp:423 qtplugins/surfaces/surfaces.cpp:951
 #: qtplugins/surfaces/surfaces.cpp:995 qtplugins/surfaces/surfaces.cpp:1007
@@ -3332,22 +3336,22 @@ msgstr ""
 msgid "Avogadro"
 msgstr "அவோகாட்ரோ"
 
-#: qtplugins/forcefield/forcefield.cpp:374
+#: qtplugins/forcefield/forcefield.cpp:398
 msgid "No atoms provided for optimization"
 msgstr "தேர்வுமுறைக்கு அணுக்கள் எதுவும் வழங்கப்படவில்லை"
 
-#: qtplugins/forcefield/forcefield.cpp:440
+#: qtplugins/forcefield/forcefield.cpp:464
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "சக்தி: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:501
+#: qtplugins/forcefield/forcefield.cpp:525
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 ஆற்றல் = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:559
+#: qtplugins/forcefield/forcefield.cpp:583
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 படை விதிமுறை = %L2"
@@ -3360,7 +3364,25 @@ msgstr "ஃபோர்ச்ஃபீல்ட் தேர்வுமுற�
 msgid "Forcefield minimization, including scripts"
 msgstr "ஃபோர்ச்ஃபீல்ட் குறைத்தல், ச்கிரிப்ட்கள் உட்பட"
 
-#: qtplugins/forcefield/forcefielddialog.cpp:119
+#: qtplugins/forcefield/forcefielddialog.cpp:56
+msgid "Options…"
+msgstr ""
+
+#: qtplugins/forcefield/forcefielddialog.cpp:175
+msgid "Invalid Model Options"
+msgstr ""
+
+#: qtplugins/forcefield/forcefielddialog.cpp:176
+#, qt-format
+msgid "Could not parse user options for model '%1'."
+msgstr ""
+
+#: qtplugins/forcefield/forcefielddialog.cpp:181
+#, qt-format
+msgid "%1 Options"
+msgstr ""
+
+#: qtplugins/forcefield/forcefielddialog.cpp:222
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
 msgid "Autodetect (%1)"
@@ -3377,25 +3399,6 @@ msgstr "பொதுவான அம்பர் படை புலம்"
 #: qtplugins/forcefield/obenergy.cpp:123 qtplugins/forcefield/obmmenergy.cpp:53
 msgid "Merck Molecular Force Field 94"
 msgstr "மெர்க் மூலக்கூறு படை புலம் 94"
-
-#: qtplugins/forcefield/scriptenergy.cpp:634
-#, qt-format
-msgid "Error retrieving metadata for energy script: %1"
-msgstr "எரிசக்தி ச்கிரிப்டுக்கான மெட்டாடேட்டாவை மீட்டெடுப்பதில் பிழை: %1"
-
-#: qtplugins/forcefield/scriptenergy.cpp:644
-#, qt-format
-msgid "Error parsing metadata for energy script: %1"
-msgstr "எரிசக்தி ச்கிரிப்டுக்கு மெட்டாடேட்டாவை பாகுபடுத்தும் பிழை: %1"
-
-#: qtplugins/forcefield/scriptenergy.cpp:652
-#, qt-format
-msgid ""
-"Error parsing metadata for energy script: %1\n"
-"Result is not a JSON object.\n"
-msgstr ""
-"எரிசக்தி ச்கிரிப்டுக்கு மெட்டாடேட்டாவை பாகுபடுத்தும் பிழை: %1\n"
-" முடிவு ஒரு சாதொபொகு பொருள் அல்ல.\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
@@ -3442,8 +3445,8 @@ msgstr "மைய சாத்தியம்"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/gamessinput/gamessinputdialog.cpp:419
-#: qtplugins/label/label.cpp:182 qtplugins/label/label.cpp:212
-#: qtplugins/label/label.cpp:225:1545 rc.cpp:1628 rc.cpp:1961
+#: qtplugins/label/label.cpp:199 qtplugins/label/label.cpp:229
+#: qtplugins/label/label.cpp:242:1545 rc.cpp:1628 rc.cpp:1979
 msgid "None"
 msgstr "எதுவுமில்லை"
 
@@ -3658,68 +3661,73 @@ msgstr ""
 msgid "Insert oligopeptide sequences."
 msgstr ""
 
-#: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:311
+#: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:311
 #: qtplugins/surfacerender/surfacerender.cpp:317
 msgid "Color:"
 msgstr "வண்ணம்:"
 
-#: qtplugins/label/label.cpp:172
+#: qtplugins/label/label.cpp:179
 msgid "Distance from center:"
 msgstr "மையத்திலிருந்து தூரம்:"
 
-#: qtplugins/label/label.cpp:183 qtplugins/label/label.cpp:214
+#: qtplugins/label/label.cpp:189
+msgid "Label scale:"
+msgstr ""
+
+#: qtplugins/label/label.cpp:200 qtplugins/label/label.cpp:231
 msgid "Index"
 msgstr "குறியெண்"
 
-#: qtplugins/label/label.cpp:184
+#: qtplugins/label/label.cpp:201
 msgid "Unique ID"
 msgstr "தனித்துவமான ஐடி"
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:630
+#: qtplugins/label/label.cpp:202 qtplugins/propertytables/propertymodel.cpp:630
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "தனிமம்"
 
-#: qtplugins/label/label.cpp:186
+#: qtplugins/label/label.cpp:203
 msgid "Element & Number"
 msgstr "உறுப்பு & எண்"
 
-#: qtplugins/label/label.cpp:188
+#: qtplugins/label/label.cpp:205
 msgid "Element & ID"
 msgstr "உறுப்பு & ஐடி"
 
-#: qtplugins/label/label.cpp:190
+#: qtplugins/label/label.cpp:207
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
 msgstr "பகுதி கட்டணம்"
 
-#: qtplugins/label/label.cpp:205
+#: qtplugins/label/label.cpp:222
 msgid "Atom Label:"
 msgstr "அணு லேபிள்:"
 
-#: qtplugins/label/label.cpp:213
+#: qtplugins/label/label.cpp:230
 msgid "Length"
 msgstr "நீளம்"
 
-#: qtplugins/label/label.cpp:219
+#: qtplugins/label/label.cpp:236
 msgid "Bond Label:"
 msgstr "பிணைப்பு லேபிள்:"
 
-#: qtplugins/label/label.cpp:226 qtplugins/propertytables/propertymodel.cpp:687
+#: qtplugins/label/label.cpp:243 qtplugins/propertytables/propertymodel.cpp:687
 msgid "ID"
 msgstr "ஐடி"
 
-#: qtplugins/label/label.cpp:227
+#: qtplugins/label/label.cpp:244
+#: qtplugins/packageinstaller/packagemodel.cpp:172
 #: qtplugins/plugindownloader/downloaderwidget.cpp:67
 #: qtplugins/propertytables/propertymodel.cpp:685
 msgid "Name"
 msgstr "பெயர்"
 
-#: qtplugins/label/label.cpp:228
+#: qtplugins/label/label.cpp:245
 msgid "Name & ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:235
+#: qtplugins/label/label.cpp:252
 msgid "Residue Label:"
 msgstr "எச்ச லேபிள்:"
 
@@ -3770,7 +3778,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/licorice/licorice.cpp:78
 #: qtplugins/surfacerender/surfacerender.cpp:284
-#: qtplugins/vanderwaals/vanderwaals.cpp:75:1780
+#: qtplugins/vanderwaals/vanderwaals.cpp:75:1798
 msgid "Opacity:"
 msgstr "ஒளிபுகாநிலை:"
 
@@ -4414,6 +4422,281 @@ msgstr "உண்மை"
 msgid "Render reference axes in the corner of the display."
 msgstr "காட்சியின் மூலையில் குறிப்பு அச்சுகளை வழங்கவும்."
 
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
+#: qtplugins/packageinstaller/packageinstaller.cpp:17:1719
+msgid "Manage Plugins…"
+msgstr ""
+
+#: qtplugins/packageinstaller/packageinstaller.h:32
+msgid "Package Installer"
+msgstr ""
+
+#: qtplugins/packageinstaller/packageinstaller.h:36
+msgid "Install, update, and remove Avogadro packages."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:134
+#, qt-format
+msgid "Error downloading plugin list: %1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:143
+msgid "Error: empty response from server."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:226
+#, qt-format
+msgid "Error fetching README: %1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:268
+msgid "Nothing Selected"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:269
+msgid "Check the box next to a plugin to install or update it."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:279
+#, qt-format
+msgid "%1 (requires %2)"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
+msgid "Version Incompatibility"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:284
+#, qt-format
+msgid ""
+"The following plugins require a newer version of Avogadro:\n"
+"\n"
+"%1\n"
+"\n"
+"Install anyway?"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:311
+msgid "No Download Available"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:312
+#, qt-format
+msgid ""
+"The selected plugin(s) do not provide a downloadable source URL:\n"
+"\n"
+"%1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:359
+#, qt-format
+msgid "Failed to follow redirect while downloading %1.\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:376
+#, qt-format
+msgid "Failed to download from %1: status %2, %3\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:385
+#, qt-format
+msgid "Failed to download from %1: %2\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:364
+#, qt-format
+msgid "Downloading %1 to %2\n"
+msgstr "%1 முதல் %2 வரை பதிவிறக்குகிறது\n"
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
+#, qt-format
+msgid "Extracting %1…\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:442
+#, qt-format
+msgid "Extraction complete (%1 files)\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:463
+#, qt-format
+msgid "Error: could not move extracted package %1 to %2\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:476
+#, qt-format
+msgid "Extraction error: %1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:478
+msgid "Extraction yielded no files.\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:488
+msgid "Installation complete.\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:536
+msgid "Nothing to Remove"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:537
+msgid "Check the box next to an installed plugin to remove it."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:543
+msgid "Remove Plugins"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:544
+#, qt-plural-format
+msgctxt ""
+msgid "Remove %n selected plugin(s)?"
+msgid_plural "Remove %n selected plugin(s)?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:548
+msgid "Keep Files"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
+msgid "Delete Files"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
+msgid "Select Plugin Directory"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:585
+msgid "Invalid Directory"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:586
+msgid "The selected directory does not contain a pyproject.toml file."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
+#, qt-format
+msgid "Plugin already installed as symlink: %1\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:615
+#, qt-format
+msgid "Created symlink: %1 → %2\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:618
+msgid "Symlink creation failed; copying files instead…\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:621
+#, qt-format
+msgid "Failed to copy package to %1."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:626
+#, qt-format
+msgid "Installing plugin from %1…\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:58
+msgid "Not installed"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:60
+msgid "Installed (up to date)"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:62
+msgid "Update available"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:64
+msgid "Installed locally (not in online catalog)"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:70
+#, qt-format
+msgid "Requires Avogadro %1 or later (running %2)"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:162
+#, qt-format
+msgid ""
+"Feature icons:\n"
+"%1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:170
+msgid "Status"
+msgstr "நிலை"
+
+#: qtplugins/packageinstaller/packagemodel.cpp:174
+#: qtplugins/plugindownloader/downloaderwidget.cpp:67
+msgid "Version"
+msgstr "பதிப்பு"
+
+#: qtplugins/packageinstaller/packagemodel.cpp:176
+msgid "Features"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:178
+#: qtplugins/plugindownloader/downloaderwidget.cpp:68
+msgid "Description"
+msgstr "விவரம்"
+
+#: qtplugins/packageinstaller/packagemodel.cpp:563
+msgid "Electrostatics"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:565
+msgid "Energy Models"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:567
+msgid "File Formats"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:569
+msgid "Input Generators"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:571
+msgid "Commands"
+msgstr ""
+
+#: qtplugins/packageinstaller/zipextractor.cpp:60
+#: qtplugins/plugindownloader/zipextracter.cpp:67
+#, qt-format
+msgctxt "%1 is the error message from libarchive"
+msgid ""
+"ERROR: could not open zip file to list contents.\n"
+"(%1)"
+msgstr ""
+
+#: qtplugins/packageinstaller/zipextractor.cpp:117
+#: qtplugins/plugindownloader/zipextracter.cpp:115
+#, qt-format
+msgctxt "%1 is the error message from libarchive"
+msgid ""
+"ERROR: could not open zip file to extract files.\n"
+"(%1)"
+msgstr ""
+
+#: qtplugins/packageinstaller/zipextractor.cpp:134
+#: qtplugins/packageinstaller/zipextractor.cpp:151
+#: qtplugins/packageinstaller/zipextractor.cpp:162
+#: qtplugins/plugindownloader/zipextracter.cpp:132
+#: qtplugins/plugindownloader/zipextracter.cpp:151
+#: qtplugins/plugindownloader/zipextracter.cpp:161
+#, qt-format
+msgctxt "%1 is the message from libarchive"
+msgid "Warning: (%1)"
+msgstr ""
+
 #: qtplugins/playertool/playertool.cpp:51
 msgctxt "control-key 9"
 msgid "Ctrl+9"
@@ -4430,7 +4713,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:83:2037
+#: qtplugins/playertool/playertool.cpp:83:2055
 msgid "Frame:"
 msgstr "சட்டகம்:"
 
@@ -4625,14 +4908,6 @@ msgstr ""
 msgid "Update"
 msgstr "புதுப்பிப்பு"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:67
-msgid "Version"
-msgstr "பதிப்பு"
-
-#: qtplugins/plugindownloader/downloaderwidget.cpp:68
-msgid "Description"
-msgstr "விவரம்"
-
 #: qtplugins/plugindownloader/downloaderwidget.cpp:104
 msgid "Error downloading plugin data."
 msgstr "சொருகி தரவை பதிவிறக்குவதில் பிழை."
@@ -4666,11 +4941,6 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr "%1 இலிருந்து பதிவிறக்கம் செய்யத் தவறிவிட்டது: நிலை குறியீடு %2, %3\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:364
-#, qt-format
-msgid "Downloading %1 to %2\n"
-msgstr "%1 முதல் %2 வரை பதிவிறக்குகிறது\n"
-
 #: qtplugins/plugindownloader/downloaderwidget.cpp:381
 #, qt-format
 msgid "Extracting %1 to %2\n"
@@ -4696,7 +4966,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.cpp:27:1762
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1780
 msgid "Download Plugins…"
 msgstr "செருகுநிரல்களைப் பதிவிறக்குக…"
 
@@ -4707,30 +4977,6 @@ msgstr "செருகுநிரல்களைப் பதிவிறக�
 #: qtplugins/plugindownloader/plugindownloader.h:41
 msgid "Download plugins from GitHub repositories."
 msgstr "அறிவிலிமையம் களஞ்சியங்களிலிருந்து செருகுநிரல்களைப் பதிவிறக்கவும்."
-
-#: qtplugins/plugindownloader/zipextracter.cpp:67
-#, qt-format
-msgctxt "%1 is the error message from libarchive"
-msgid ""
-"ERROR: could not open zip file to list contents.\n"
-"(%1)"
-msgstr ""
-
-#: qtplugins/plugindownloader/zipextracter.cpp:115
-#, qt-format
-msgctxt "%1 is the error message from libarchive"
-msgid ""
-"ERROR: could not open zip file to extract files.\n"
-"(%1)"
-msgstr ""
-
-#: qtplugins/plugindownloader/zipextracter.cpp:132
-#: qtplugins/plugindownloader/zipextracter.cpp:151
-#: qtplugins/plugindownloader/zipextracter.cpp:161
-#, qt-format
-msgctxt "%1 is the message from libarchive"
-msgid "Warning: (%1)"
-msgstr ""
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"
@@ -5199,7 +5445,7 @@ msgstr "எச்சத்தைத் தேர்ந்தெடுக்க�
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:2076
+#: qtplugins/select/select.h:30:2094
 msgid "Select"
 msgstr "தேர்ந்தெடு"
 
@@ -5243,7 +5489,7 @@ msgstr "விண்வெளி குழுவை உணருங்கள்�
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:78:2061
+#: qtplugins/spacegroup/spacegroup.cpp:78:2079
 msgid "Symmetrize"
 msgstr "சமச்சீர்"
 
@@ -5459,7 +5705,7 @@ msgstr "சூழ்ச்சி நிறமாலை…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:32:1795
+#: qtplugins/spectra/spectra.h:32:1813
 msgid "Spectra"
 msgstr "ச்பெக்ட்ரா"
 
@@ -5652,7 +5898,7 @@ msgstr "சுற்றுப்பாதை"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/surfaces/orbitaltablemodel.cpp:137
-#: qtplugins/symmetry/symmetry.h:34:2046
+#: qtplugins/symmetry/symmetry.h:34:2064
 msgid "Symmetry"
 msgstr "சமச்சீர்"
 
@@ -5893,7 +6139,7 @@ msgstr "VDW கோளங்களின் எளிய காட்சி."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
-#: qtplugins/vibrations/vibrationdialog.cpp:39:2232
+#: qtplugins/vibrations/vibrationdialog.cpp:39:2250
 msgid "Start Animation"
 msgstr "அனிமேசனைத் தொடங்குங்கள்"
 
@@ -6091,6 +6337,8 @@ msgstr "வரிசை மற்றும் நிரல்:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:33
+#. i18n: ectx: property (text), widget (QPushButton, refreshButton)
 msgid "Refresh"
 msgstr "புதுப்பிப்பு"
 
@@ -8442,6 +8690,26 @@ msgstr "இயக்காற்றல்"
 msgid "Total Energy"
 msgstr "மொத்த ஆற்றல்"
 
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
+msgid "Search plugins…"
+msgstr ""
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:69
+#. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
+msgid "Install from Directory…"
+msgstr ""
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:89
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+msgid "Remove Selected"
+msgstr ""
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:96
+#. i18n: ectx: property (text), widget (QPushButton, installButton)
+msgid "Install / Update Selected"
+msgstr ""
+
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
@@ -9303,6 +9571,22 @@ msgid "Your emails"
 msgstr "உங்கள் மின்னஞ்சல்கள்"
 
 #, qt-format
+#~ msgid "Error retrieving metadata for energy script: %1"
+#~ msgstr "எரிசக்தி ச்கிரிப்டுக்கான மெட்டாடேட்டாவை மீட்டெடுப்பதில் பிழை: %1"
+
+#, qt-format
+#~ msgid "Error parsing metadata for energy script: %1"
+#~ msgstr "எரிசக்தி ச்கிரிப்டுக்கு மெட்டாடேட்டாவை பாகுபடுத்தும் பிழை: %1"
+
+#, qt-format
+#~ msgid ""
+#~ "Error parsing metadata for energy script: %1\n"
+#~ "Result is not a JSON object.\n"
+#~ msgstr ""
+#~ "எரிசக்தி ச்கிரிப்டுக்கு மெட்டாடேட்டாவை பாகுபடுத்தும் பிழை: %1\n"
+#~ " முடிவு ஒரு சாதொபொகு பொருள் அல்ல.\n"
+
+#, qt-format
 #~ msgid "Cannot load script %1"
 #~ msgstr "ச்கிரிப்ட் %1 ஐ ஏற்ற முடியாது"
 
@@ -9385,9 +9669,6 @@ msgstr "உங்கள் மின்னஞ்சல்கள்"
 
 #~ msgid "unknown molecule"
 #~ msgstr "அறியப்படாத மூலக்கூறு"
-
-#~ msgid "Status"
-#~ msgstr "நிலை"
 
 #~ msgid " & "
 #~ msgstr " & "
