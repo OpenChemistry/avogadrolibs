@@ -3,16 +3,16 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "zipextracter.h"
+#include "zipextractor.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QString>
 
 namespace Avogadro::QtPlugins {
 
-ZipExtracter::ZipExtracter() {}
+ZipExtractor::ZipExtractor() {}
 
-ZipExtracter::~ZipExtracter() {}
+ZipExtractor::~ZipExtractor() {}
 
 /**
  * Copies data from one archive to another.
@@ -22,7 +22,7 @@ ZipExtracter::~ZipExtracter() {}
  * input archive. If there is an error reading or writing the data, it
  * will return the error code directly.
  */
-int ZipExtracter::copyData(struct archive* ar, struct archive* aw)
+int ZipExtractor::copyData(struct archive* ar, struct archive* aw)
 {
   int r;
   const void* buff;
@@ -43,7 +43,7 @@ int ZipExtracter::copyData(struct archive* ar, struct archive* aw)
   }
 }
 
-QList<QString> ZipExtracter::listFiles(const std::string& absolutepath)
+QList<QString> ZipExtractor::listFiles(const std::string& absolutepath)
 {
   struct archive* a;
   struct archive_entry* entry;
@@ -78,7 +78,7 @@ QList<QString> ZipExtracter::listFiles(const std::string& absolutepath)
 }
 
 // Extract method from libarchive docs, changed to return QList of errors
-QList<QString> ZipExtracter::extract(const std::string& extractdir,
+QList<QString> ZipExtractor::extract(const std::string& extractdir,
                                      const std::string& absolutepath)
 {
   struct archive* a;

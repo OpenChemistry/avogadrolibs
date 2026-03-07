@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
-#define AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
+#ifndef AVOGADRO_QTPLUGINS_ZIPEXTRACTOR_H
+#define AVOGADRO_QTPLUGINS_ZIPEXTRACTOR_H
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -16,13 +16,13 @@ namespace Avogadro {
 
 namespace QtPlugins {
 
-class ZipExtracter : public QObject
+class ZipExtractor : public QObject
 {
   Q_OBJECT
 
 public:
-  ZipExtracter();
-  ~ZipExtracter();
+  ZipExtractor();
+  ~ZipExtractor();
   int copyData(struct archive* ar, struct archive* aw);
   QList<QString> extract(const std::string& extractdir,
                          const std::string& absolutepath);

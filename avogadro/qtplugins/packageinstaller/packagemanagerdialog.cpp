@@ -6,7 +6,7 @@
 #include "packagemanagerdialog.h"
 #include "packagemodel.h"
 #include "ui_packagemanagerdialog.h"
-#include "zipextracter.h"
+#include "zipextractor.h"
 
 #include <avogadro/qtgui/packagemanager.h>
 
@@ -430,7 +430,7 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
   out.write(fileData);
   out.close();
 
-  ZipExtracter unzip;
+  ZipExtractor unzip;
   m_ui->readmeBrowser->append(tr("Extracting %1…\n").arg(filename));
 
   QList<QString> newFiles = unzip.listFiles(absolutePath.toStdString());
@@ -452,23 +452,24 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
       (firstDash != -1 && lastDash > firstDash)
         ? rawName.mid(firstDash + 1, lastDash - firstDash - 1)
         : rawName;
-    const QString destination = m_filePath + '/' + component;
+    const QString source = QDir::cleanPath(m_filePath + '/' + newFiles[0]);
+    const QString dest = QDir::cleanPath(m_filePath + '/' + component);
 
-    QDir prev(destination);
-    if (prev.exists())
-      prev.removeRecursively();
+    if (source != dest) {
+      QDir(dest).removeRecursively();
 
-    if (!QDir().rename(m_filePath + '/' + newFiles[0], destination)) {
-      m_ui->readmeBrowser->append(
-        tr("Error: could not move extracted package %1 to %2\n")
-          .arg(m_filePath + '/' + newFiles[0])
-          .arg(destination));
-      out.remove();
-      m_downloadQueue.removeLast();
-      downloadNext();
-      return;
+      if (!QDir().rename(source, dest)) {
+        m_ui->readmeBrowser->append(
+          tr("Error: could not move extracted package %1 to %2\n")
+            .arg(source)
+            .arg(dest));
+        out.remove();
+        m_downloadQueue.removeLast();
+        downloadNext();
+        return;
+      }
     }
-    QtGui::PackageManager::instance()->installPackages({ destination });
+    QtGui::PackageManager::instance()->installPackages({ dest });
   } else {
     if (!errors.isEmpty())
       m_ui->readmeBrowser->append(
@@ -591,10 +592,21 @@ void PackageManagerDialog::installFromDirectory()
   const QString baseName = QFileInfo(dir).fileName();
   const QString linkPath = m_filePath + '/' + baseName;
 
-  // Remove any previous installation at that path
   QFileInfo existing(linkPath);
-  if (existing.isSymLink() || existing.isDir())
+  if (existing.isSymLink()) {
+    if (existing.symLinkTarget() == dir) {
+      // Already pointing at the right directory — nothing to do
+      m_ui->readmeBrowser->append(
+        tr("Plugin already installed as symlink: %1\n").arg(linkPath));
+      QtGui::PackageManager::instance()->installPackages({ linkPath });
+      return;
+    }
+    // Stale symlink pointing elsewhere — remove and reinstall
+    QFile::remove(linkPath);
+  } else if (existing.isDir()) {
+    // Remove any previous non-symlink installation at that path
     QDir(linkPath).removeRecursively();
+  }
 
   // Attempt to create a symlink; fall back to a recursive copy
   bool linked = QFile::link(dir, linkPath);
