@@ -227,7 +227,6 @@ QByteArray PythonScript::execute(const QStringList& args,
                          processErrorString(proc));
       return QByteArray();
     }
-    }
 
     qint64 len = proc.write(scriptStdin);
     if (len != static_cast<qint64>(scriptStdin.size()) && m_debug) {
