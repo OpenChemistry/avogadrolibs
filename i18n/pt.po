@@ -2437,7 +2437,7 @@ msgstr "Ponte Salina"
 
 #: qtplugins/closecontacts/closecontacts.cpp:264
 msgid "Repulsive"
-msgstr ""
+msgstr "Repulsivo"
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
@@ -3335,7 +3335,7 @@ msgstr ""
 
 #: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
-msgstr ""
+msgstr "Desfoque"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
