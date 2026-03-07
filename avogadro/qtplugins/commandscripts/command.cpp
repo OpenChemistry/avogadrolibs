@@ -438,7 +438,6 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   if (!subSubMenu.isEmpty()) {
     menuPathList << subSubMenu;
   }
-  menuPathList << item;
   
   // Extract priorities
   QVariantList priorities = metadata.value("priorities").toList();
@@ -459,8 +458,8 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
                       metadata.value("input-format").toString());
   action->setEnabled(true);
 
-  // TODO submenu, subsubmenu priorities? Probably needs change in MenuBuilder
-  action->setProperty("menu priority", menuPriority);
+  // TODO priorities in higher level menus? Probably needs change in MenuBuilder
+  action->setProperty("menu priority", priorities.last());
   
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
