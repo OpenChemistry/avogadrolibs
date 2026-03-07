@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-01 04:49+0000\n"
 "PO-Revision-Date: 2026-03-07 11:10+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1298,7 +1297,7 @@ msgstr "Van der Waals (AO)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr "Volumen"
+msgstr "Volumeni"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -3933,7 +3932,7 @@ msgstr "Alat za mjerenje"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
-msgstr "(u tijeku)"
+msgstr "(na čekanju)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
 #: qtplugins/propertytables/propertymodel.cpp:748
@@ -3950,7 +3949,7 @@ msgstr "Molekulska masa (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:182
 msgid "Monoisotopic Mass (g/mol)"
-msgstr ""
+msgstr "Monoizotopska masa (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:184
 msgid "Chemical Formula"
@@ -5347,7 +5346,7 @@ msgstr "Ispuni simetrične atome na temelju prostorne grupe kristala."
 
 #: qtplugins/spacegroup/spacegroup.cpp:135
 msgid "Fill all atoms based on the crystal space group."
-msgstr "Ispuni simetrične atome na temelju prostorne grupe kristala."
+msgstr "Ispuni sve atome na temelju prostorne grupe kristala."
 
 #: qtplugins/spacegroup/spacegroup.cpp:384
 #: qtplugins/spacegroup/spacegroup.cpp:412
@@ -5448,39 +5447,39 @@ msgstr "Odberi toleranciju u Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Triclinic"
-msgstr ""
+msgstr "Triklinično"
 
 #: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Monoclinic"
-msgstr ""
+msgstr "Monoklinično"
 
 #: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Orthorhombic"
-msgstr ""
+msgstr "Ortorombično"
 
 #: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Tetragonal"
-msgstr ""
+msgstr "Tetragonalno"
 
 #: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Trigonal"
-msgstr ""
+msgstr "Trigonalno"
 
 #: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Rhombohedral"
-msgstr ""
+msgstr "Romboedarsko"
 
 #: qtplugins/spacegroup/spacegroup.cpp:612
 msgid "Hexagonal"
-msgstr ""
+msgstr "Heksagonalno"
 
 #: qtplugins/spacegroup/spacegroup.cpp:614
 msgid "Cubic"
-msgstr "Kubik"
+msgstr "Kubično"
 
 #: qtplugins/spacegroup/spacegroup.cpp:646
 msgid "Primitive Cell Detected"
-msgstr ""
+msgstr "Otkrivena je primitivna ćelija"
 
 #: qtplugins/spacegroup/spacegroup.cpp:648
 #, qt-format
@@ -5492,10 +5491,16 @@ msgid ""
 "\n"
 "Would you like to create a conventional cell first?"
 msgstr ""
+"Trenutačna jedinična ćelija izgleda kao primitivna ćelija (kutovi nisu 90°), "
+"ali prostorna grupa %1 očekuje centriranu konvencionalnu ćeliju.\n"
+"\n"
+"Popunjavanje jedinične ćelije može stvoriti neočekivane duple atome.\n"
+"\n"
+"Želiš li najprije stvoriti konvencionalnu ćeliju?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:662
 msgid "Failed to conventionalize the cell."
-msgstr ""
+msgstr "Pretvaranje ćelije u konvencionalnu ćeliju nije uspjelo."
 
 #: qtplugins/spacegroup/spacegroup.cpp:678
 msgid "International"
@@ -5685,7 +5690,7 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:1020
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
-msgstr ""
+msgstr "CSV datotke (*.csv);;TSV datotke (*.tsv)"
 
 #: qtplugins/surfacerender/surfacerender.cpp:270
 msgid "Surface"
