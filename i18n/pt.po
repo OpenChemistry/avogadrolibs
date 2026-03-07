@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Editor Do Sonic BR <sonicbr12345@gmail.com>, 2020.
-# ssantos <ssantos@web.de>, 2020, 2021, 2023, 2024, 2025.
+# ssantos <ssantos@web.de>, 2020, 2021, 2023, 2024, 2025, 2026.
 # Joana Vieira <joanaoliveiravieira8@gmail.com>, 2020.
 # João Tiago Antunes <jtiago.cbr@gmail.com>, 2020.
 # Andre Azevedo <andreazevedo2015@hotmail.com>, 2021.
@@ -18,8 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-07 13:27+0000\n"
 "PO-Revision-Date: 2026-03-08 15:53+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
 "Language: pt\n"
@@ -1192,7 +1191,7 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:380
 msgid "Password"
-msgstr ""
+msgstr "Palavra-passe"
 
 #: qtgui/jsonwidget.cpp:691
 #, qt-format
@@ -2367,7 +2366,7 @@ msgstr ""
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr "Tubos"
+msgstr "Tubo"
 
 #: qtplugins/cartoons/cartoons.cpp:95
 #, fuzzy
@@ -3337,7 +3336,7 @@ msgstr ""
 
 #: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
-msgstr "Desfoque"
+msgstr "Desfocar"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
