@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-07 13:27+0000\n"
 "PO-Revision-Date: 2026-03-08 15:53+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
 "Language: pt\n"
@@ -3354,7 +3354,7 @@ msgstr "Renderizar visualizações do campo de força para os átomos da molécu
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:147
 msgid "Forces"
-msgstr ""
+msgstr "Forças"
 
 #: qtplugins/forcefield/forcefield.cpp:100
 #, fuzzy
@@ -3522,7 +3522,7 @@ msgstr "Nenhum"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
 msgid "D1"
-msgstr ""
+msgstr "D1"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:425
 msgid "D2"
@@ -3534,7 +3534,7 @@ msgstr "D3"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:431
 msgid "D4"
-msgstr ""
+msgstr "D4"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:446
 msgid "Gas"
