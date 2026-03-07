@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-07 13:27+0000\n"
-"PO-Revision-Date: 2026-02-28 14:09+0000\n"
+"PO-Revision-Date: 2026-03-07 20:59+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3401,21 +3401,21 @@ msgstr "Force field minimization, including scripts"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:56
 msgid "Options…"
-msgstr ""
+msgstr "Options…"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:175
 msgid "Invalid Model Options"
-msgstr ""
+msgstr "Invalid Model Options"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:176
 #, qt-format
 msgid "Could not parse user options for model '%1'."
-msgstr ""
+msgstr "Could not parse user options for model '%1'."
 
 #: qtplugins/forcefield/forcefielddialog.cpp:181
 #, qt-format
 msgid "%1 Options"
-msgstr ""
+msgstr "%1 Options"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:222
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -3707,7 +3707,7 @@ msgstr "Distance from centre:"
 
 #: qtplugins/label/label.cpp:189
 msgid "Label scale:"
-msgstr ""
+msgstr "Label scale:"
 
 #: qtplugins/label/label.cpp:200 qtplugins/label/label.cpp:231
 msgid "Index"
@@ -4483,7 +4483,7 @@ msgstr "Render reference axes in the corner of the display."
 #. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
 #: qtplugins/packageinstaller/packageinstaller.cpp:17:1719
 msgid "Manage Plugins…"
-msgstr ""
+msgstr "Manage Plugins…"
 
 #: qtplugins/packageinstaller/packageinstaller.h:32
 msgid "Package Installer"
@@ -4718,9 +4718,8 @@ msgid "File Formats"
 msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:569
-#, fuzzy
 msgid "Input Generators"
-msgstr "Input Generator..."
+msgstr "Input Generators"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:571
 msgid "Commands"
