@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-01 04:49+0000\n"
-"PO-Revision-Date: 2026-03-07 11:10+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2026-03-07 13:29+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -455,7 +454,7 @@ msgstr "Istek vremena za slanje posla"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Avogadru je isteklo vrijeme čekanja na odgovor od MoleQueuea."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
@@ -478,6 +477,8 @@ msgstr "Istek vremena za preuzimanje posla"
 #: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Avogadru je isteklo vrijeme čekanja za detalje o završenom poslu od "
+"MoleQueuea."
 
 #: molequeue/molequeuedialog.cpp:129
 msgid "Error Submitting Job"
@@ -1168,7 +1169,7 @@ msgstr "Višekratnost"
 
 #: qtgui/jsonwidget.cpp:255
 msgid "Solvent"
-msgstr ""
+msgstr "Otapalo"
 
 #: qtgui/jsonwidget.cpp:256
 msgctxt "solvation method / model"
@@ -1331,12 +1332,14 @@ msgstr "Periodni sustav elemenata"
 
 #: qtgui/pythonscript.cpp:126
 msgid "Package mode requires pixi but it was not found."
-msgstr ""
+msgstr "Modus paketa zahtijeva pixi datoteku, ali ona nije pronađena."
 
 #: qtgui/pythonscript.cpp:224 qtgui/pythonscript.cpp:314
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Greška pri pokretanju skripta „%1 %2”: Isteklo vrijeme čekanja na početak "
+"(%3)."
 
 #: qtgui/pythonscript.cpp:233 qtgui/pythonscript.cpp:323
 #, qt-format
@@ -1344,13 +1347,15 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
-"Greška pri pokretanju skripte '%1 %2': neuspelo pisanje u stdin (len=%3, "
+"Greška pri pokretanju skripta „%1 %2”: neuspelo pisanje u stdin (len=%3, "
 "zapisano %4 bajta, QProcess greška: %5)."
 
 #: qtgui/pythonscript.cpp:246
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Greška pri pokretanju skripta „%1 %2”: Isteklo vrijeme čekanja na završetak "
+"(%3)."
 
 #: qtgui/pythonscript.cpp:255
 #, qt-format
@@ -1377,6 +1382,8 @@ msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
+"Greška pri pisanju neobrađenog zahtjeva u stdin skripta (duljina=%1, "
+"zapisano %2 bajtova, greška QProcessa: %3)."
 
 #: qtgui/pythonscript.cpp:415
 msgid "Script failed to start."
@@ -1472,7 +1479,7 @@ msgstr "Promijeni boju atoma"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Residue Color"
-msgstr ""
+msgstr "Promijeni boju ostatka"
 
 #: qtgui/rwmolecule.cpp:298
 msgid "Change Atom Layer"
@@ -1593,43 +1600,43 @@ msgstr "Izračunavanje …"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
-msgstr ""
+msgstr "Preostalo je manje od jedne sekunde"
 
 #: qtgui/timedprogressdialog.cpp:82
 #, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Preostala je %n sekunda"
+msgstr[1] "Preostale su %n sekunde"
+msgstr[2] "Preostalo je %n sekundi"
 
 #: qtgui/timedprogressdialog.cpp:85
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
 msgid_plural "%n minute(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Preostala je %n minuta"
+msgstr[1] "Preostale su %n minute"
+msgstr[2] "Preostalo je %n minuta"
 
 #: qtgui/timedprogressdialog.cpp:93
 #, qt-plural-format
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Preostalo je 1 sat i %n minuta"
+msgstr[1] "Preostalo je 1 sat i %n minute"
+msgstr[2] "Preostalo je 1 sat i %n minuta"
 
 #: qtgui/timedprogressdialog.cpp:96
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
 msgid_plural "%n hour(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Preostao je %n sat"
+msgstr[1] "Preostala su %n sata"
+msgstr[2] "Preostalo je %n sati"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -1701,11 +1708,11 @@ msgid ""
 msgstr ""
 "Poravnaj molekule\n"
 "\n"
-"Lijeva tipka miša: Odaberi do dva atoma.\n"
+"Lijeva tipka miša:\tOdaberi do dva atoma.\n"
 "\tPrvi atom je centriran pri izvoru.\n"
 "\tDrugi atom je poravnat na odabranu os.\n"
-"Desna tipka miša: Poništi poravnanje.\n"
-"Dvostruki klik: Centriraj atom pri izvoru."
+"Desna tipka miša:\tPoništi poravnanje.\n"
+"Dvostruki klik:\tCentriraj atom pri izvoru."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1870,11 +1877,11 @@ msgstr "Uspjeh"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "%1 generirano"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "Greška pri pokretanju PDB2PQR-a"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -2088,43 +2095,43 @@ msgstr "Paleta boja:"
 
 #: qtplugins/applycolors/applycolors.cpp:225
 msgid "Apply Index Colors"
-msgstr ""
+msgstr "Primijeni boje indeksa"
 
 #: qtplugins/applycolors/applycolors.cpp:289
 msgid "Apply Charge Colors"
-msgstr ""
+msgstr "Primijeni boje naboja"
 
 #: qtplugins/applycolors/applycolors.cpp:327
 msgid "Apply Distance Colors"
-msgstr ""
+msgstr "Primijeni boje udaljenosti"
 
 #: qtplugins/applycolors/applycolors.cpp:353
 msgid "Reset Atom Colors"
-msgstr ""
+msgstr "Resetiraj boje atoma"
 
 #: qtplugins/applycolors/applycolors.cpp:379
 msgid "Apply Custom Color"
-msgstr ""
+msgstr "Primijeni prilagođene boje"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 msgid "Apply Custom Residue Color"
-msgstr ""
+msgstr "Primijeni prilagođenu boju ostataka"
 
 #: qtplugins/applycolors/applycolors.cpp:440
 msgid "Reset Residue Colors"
-msgstr ""
+msgstr "Resetiraj boje ostataka"
 
 #: qtplugins/applycolors/applycolors.cpp:474
 msgid "Apply Secondary Structure Colors"
-msgstr ""
+msgstr "Primijeni boje sekundarne strukture"
 
 #: qtplugins/applycolors/applycolors.cpp:562
 msgid "Apply Amino Acid Colors"
-msgstr ""
+msgstr "Primijeni boje aminokiselina"
 
 #: qtplugins/applycolors/applycolors.cpp:589
 msgid "Apply Shapely Colors"
-msgstr ""
+msgstr "Primijeni Shapely boje"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2154,6 +2161,17 @@ msgid ""
 "Left Mouse:\tClick and drag atoms to move them.\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"Alat za automatsku optimizaciju\t(%1)\n"
+"\n"
+"Funkcije navigacije pri kliku u prazan prostor.\n"
+"Lijeva tipka miša:\tOkreći prostor\n"
+"Srednja tipka miša:\tZumiraj prostor\n"
+"Desna tipka miša:\tPomiči prostor\n"
+"Dvostruki klik:\tResetiraj prikaz\n"
+"\n"
+"Prilikom trčanja:\n"
+"Lijeva tipka miša:\tKlikni i povuci atome za njihovo premještanje.\n"
+"Desna tipka miša:\tKlikni i povuci za okretanje atoma."
 
 #: qtplugins/autoopt/autoopt.cpp:152
 msgid "Optimize"
@@ -2209,21 +2227,21 @@ msgstr "Molekularna dinamika"
 #, qt-format
 msgctxt "temperature in Kelvin"
 msgid "%1 T = %L2"
-msgstr ""
+msgstr "%1 T = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:585
 #, qt-format
 msgctxt "change in energy in kJ/mol"
 msgid "%1 ΔE = %L2"
-msgstr ""
+msgstr "%1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.h:43
 msgid "Auto Optimize tool"
-msgstr ""
+msgstr "Alat za automatsku optimizaciju"
 
 #: qtplugins/autoopt/autoopt.h:46
 msgid "Interactive optimization of molecular geometry"
-msgstr ""
+msgstr "Interaktivna optimizacija molekulske geometrije"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
@@ -2283,11 +2301,11 @@ msgstr ""
 "Desna tipka miša:\tKlikni i povuci za pomicanje prikaza.\n"
 "Dvostruki klik:\tResetiraj prikaz.\n"
 "\n"
-"Klikni lijevom tipkom miša i povuci na vezu za postavljanje ravnine "
+"Lijeva tipka miša:\tKlikni i povuci na vezu za postavljanje ravnine "
 "upravljanja\n"
-"Klikni lijevom tipkom miša i povuci jedan od atoma u vezi za mijenjanje "
+"Lijeva tipka miša:\tKlikni i povuci jedan od atoma u vezi za mijenjanje "
 "kuta\n"
-"Klikni desnom tipkom miša i povuci jedan od atoma u vezi zs mijenjanje "
+"Desna tipka miša:\tKlikni i povuci jedan od atoma u vezi za mijenjanje "
 "duljine"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
@@ -3191,8 +3209,8 @@ msgid ""
 msgstr ""
 "Alat za crtanje\t(%1)\n"
 "\n"
-"Lijeva tipka miša: Klikni i povuci za stvaranje atoma i veza\n"
-"Desna tipka miša: Izbriši atom"
+"Lijeva tipka miša:\tKlikni i povuci za stvaranje atoma i veza\n"
+"Desna tipka miša:\tIzbriši atom"
 
 #: qtplugins/editor/editor.cpp:123
 msgid "Draw Atom"
@@ -3683,7 +3701,7 @@ msgstr "Umetni molekularne fragmente za izgradnju većih molekula."
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:55
 msgid "Peptide…"
-msgstr ""
+msgstr "Peptid …"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3691,15 +3709,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:511:710 rc.cpp:898
 msgid "Insert Peptide"
-msgstr ""
+msgstr "Umetni peptid"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
-msgstr ""
+msgstr "Umetni peptid"
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "Umetni sekvence oligopeptida."
 
 #: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:311
 #: qtplugins/surfacerender/surfacerender.cpp:317
@@ -3760,7 +3778,7 @@ msgstr "Ime"
 
 #: qtplugins/label/label.cpp:228
 msgid "Name & ID"
-msgstr ""
+msgstr "Ime i ID"
 
 #: qtplugins/label/label.cpp:235
 msgid "Residue Label:"
@@ -3780,7 +3798,7 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
-"Alat za oznake atoma \t(%1)\n"
+"Alat za oznake atoma\n"
 "\n"
 "Lijeva tipka miša: \tKlikni na atome za dodavanje prilagođenih oznaka"
 
@@ -3809,6 +3827,8 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
 msgstr ""
+"Želiš li aktualizirati tekst pregleda i time izgubiti sve napravljene "
+"promjene u ploči prikaza LAMMPS-ove ulazne datoteke?"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
@@ -3982,7 +4002,7 @@ msgstr "Neto naboj"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:198
 msgid "Net Spin Multiplicity"
-msgstr ""
+msgstr "Netto spin multipliciteta"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:200
 msgid "Dipole Moment (Debye)"
@@ -4065,7 +4085,7 @@ msgstr "Svojstva molukula"
 #: qtplugins/molecularproperties/molecularview.cpp:138
 #: qtplugins/propertytables/propertyview.cpp:492
 msgid "Export CSV"
-msgstr "CSV izvoz"
+msgstr "Izvezi CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:139
 #: qtplugins/propertytables/propertyview.cpp:493
@@ -4085,7 +4105,7 @@ msgstr "Greška pri pisanju u datoteku."
 #: qtplugins/molecularproperties/molecularview.cpp:196
 #: qtplugins/propertytables/propertyview.cpp:573
 msgid "Export…"
-msgstr "Izvoz …"
+msgstr "Izvezi …"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
@@ -4421,6 +4441,8 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
+"Želiš li aktualizirati tekst pregleda i time izgubiti sve napravljene "
+"promjene u ploči prikaza OpenMM-ove ulazne datoteke?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -4577,11 +4599,11 @@ msgstr "Pokreni animaciju trajektorija"
 
 #: qtplugins/plotconformer/plotconformer.cpp:38
 msgid "Plot Conformer Data…"
-msgstr ""
+msgstr "Iscrtaj podatke konformera …"
 
 #: qtplugins/plotconformer/plotconformer.cpp:127
 msgid "Conformer Analysis"
-msgstr ""
+msgstr "Analiza konformera"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
@@ -4595,15 +4617,15 @@ msgstr "RMSD"
 
 #: qtplugins/plotconformer/plotconformer.cpp:149
 msgid "Velocities"
-msgstr ""
+msgstr "Brzine"
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
+msgstr "Jedinice energije:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
 msgid "to"
-msgstr ""
+msgstr "u"
 
 #: qtplugins/plotconformer/plotconformer.cpp:225
 msgid "RMSD (Å)"
@@ -4612,23 +4634,23 @@ msgstr "RMSD (Å)"
 #: qtplugins/plotconformer/plotconformer.cpp:228
 #, qt-format
 msgid "Relative Energy (%1)"
-msgstr ""
+msgstr "Relativna energija (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:231
 msgid "Forces (N)"
-msgstr ""
+msgstr "Sile (N)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:233
 msgid "Velocities (m/s)"
-msgstr ""
+msgstr "Brzine (m/s)"
 
 #: qtplugins/plotconformer/plotconformer.h:36
 msgid "PlotConformer"
-msgstr ""
+msgstr "Iscrtavanje konformera"
 
 #: qtplugins/plotconformer/plotconformer.h:81
 msgid "Generate and plot conformer data (RMSD or energy)."
-msgstr ""
+msgstr "Generiraj i iscrtaj podatke konformera (RMSD ili energiju)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -4838,7 +4860,7 @@ msgstr "Koristi POV-Ray za iscrtavanje prikaza."
 
 #: qtplugins/propertytables/propertymodel.cpp:307
 msgid "Click to change color"
-msgstr ""
+msgstr "Klikni za mijenjanje boje"
 
 #: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Valence"
@@ -4874,7 +4896,7 @@ msgstr "Oznaka"
 
 #: qtplugins/propertytables/propertymodel.cpp:652
 msgid "Isotope"
-msgstr ""
+msgstr "Izotop"
 
 #: qtplugins/propertytables/propertymodel.cpp:654
 #: qtplugins/propertytables/propertymodel.cpp:697
@@ -5063,7 +5085,7 @@ msgstr "Zamrzni Z"
 
 #: qtplugins/propertytables/propertyview.cpp:600
 msgid "Unfreeze Atom"
-msgstr ""
+msgstr "Odmrzni atom"
 
 #: qtplugins/propertytables/propertyview.cpp:608
 msgid "Constrain Bond"
@@ -5079,17 +5101,17 @@ msgstr "Ograniči torziju"
 
 #: qtplugins/propertytables/propertyview.cpp:619
 msgid "Remove Constraint"
-msgstr ""
+msgstr "Ukloni ograničenje"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:163
 #: qtplugins/qtaim/qtaimwavefunction.h:82
 #, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "Nije moguće čitati datoteku %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Neuspjelo stvaranje privremene datoteke."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5335,7 +5357,7 @@ msgstr "Ispuni jediničnu ćeliju …"
 #: qtplugins/spacegroup/spacegroup.cpp:101
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
-msgstr ""
+msgstr "Ispuni translacijsku ćeliju …"
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
@@ -5372,6 +5394,11 @@ msgid ""
 "Hall symbol: %3\n"
 "International symbol: %4"
 msgstr ""
+"Percepcija prostorne grupe je uspjela:\n"
+"Tolerancija: %1 Å\n"
+"Prostorna grupa: %2\n"
+"Hall simbol: %3\n"
+"Međunarodni simbol: %4"
 
 #: qtplugins/spacegroup/spacegroup.cpp:418
 msgid "Failure"
@@ -5435,6 +5462,13 @@ msgid ""
 "\n"
 "Proceed with this space group?"
 msgstr ""
+"S tolerancijom od %1 Å, informacije prostorne grupe su percipirane kao "
+"sljedeće:\n"
+"Međunarodni broj: %2\n"
+"Hall simbol: %3\n"
+"Međunarodni simbol: %4\n"
+"\n"
+"Nastaviti s ovom prostornom grupom?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:582 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
@@ -5517,7 +5551,7 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:679
 msgid "Crystal System"
-msgstr ""
+msgstr "Sustav kristala"
 
 #: qtplugins/spacegroup/spacegroup.cpp:711
 msgid "Select Space Group"
@@ -5556,12 +5590,12 @@ msgstr "Raman"
 #: qtplugins/spectra/spectradialog.cpp:574
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "Vibracijski cirkularni dikroizam"
 
 #: qtplugins/spectra/spectradialog.cpp:578
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "Magnetski cirkularni dikroizam"
 
 #: qtplugins/spectra/spectradialog.cpp:582
 msgid "NMR"
@@ -5590,15 +5624,15 @@ msgstr "Odaberi prednju boju"
 
 #: qtplugins/spectra/spectradialog.cpp:673
 msgid "Select Calculated Spectra Color"
-msgstr "Odaberi boju izračunatih spektara"
+msgstr "Odaberi boju izračunatog spektra"
 
 #: qtplugins/spectra/spectradialog.cpp:685
 msgid "Select Raw Spectra Color"
-msgstr ""
+msgstr "Odaberi boju neobrađenog spektra"
 
 #: qtplugins/spectra/spectradialog.cpp:698
 msgid "Select Imported Spectra Color"
-msgstr "Odaberi boju uvezenih spektara"
+msgstr "Odaberi boju uvezenog spektra"
 
 #: qtplugins/spectra/spectradialog.cpp:744
 msgid "Wavelength (nm)"
@@ -5679,7 +5713,7 @@ msgstr "Zaglađeno"
 
 #: qtplugins/spectra/spectradialog.cpp:974
 msgid "Raw"
-msgstr ""
+msgstr "Neobrađeno"
 
 #: qtplugins/spectra/spectradialog.cpp:985
 msgid "Imported"
@@ -5736,11 +5770,11 @@ msgstr "Simetrija"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
 msgid "Occupation"
-msgstr ""
+msgstr "Popunjenost"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:141
 msgid "Spin"
-msgstr ""
+msgstr "Spin"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:152
 #: qtplugins/surfaces/orbitaltablemodel.cpp:238
@@ -5861,7 +5895,7 @@ msgstr "Izračunavanje molekulske orbitale %L1"
 #: qtplugins/surfaces/surfaces.cpp:888
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
-msgstr ""
+msgstr "Površina završena"
 
 #: qtplugins/surfaces/surfaces.cpp:899 qtplugins/surfaces/surfaces.cpp:927
 msgid "Movie AVI (*.avi)"
@@ -5878,6 +5912,8 @@ msgstr "Video MP4 (*.mp4);;Video AVI (*.avi);;GIF (*.gif)"
 #: qtplugins/surfaces/surfaces.cpp:952
 msgid "Couldn't find the active render widget, failing."
 msgstr ""
+"Nije bilo moguće pronaći aktivni widget za iscrtavanje, operacija nije "
+"uspjela."
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
@@ -6438,6 +6474,9 @@ msgid ""
 "Would you like to create a new environment for Avogadro?\n"
 "This will make a copy of your base environment.\n"
 msgstr ""
+"Postoji samo „base” Conda okruženje.\n"
+"Želiš li stvoriti novo okruženje za Avogadro?\n"
+"Time će se izraditi kopija tvog osnovnog okruženja.\n"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6498,7 +6537,7 @@ msgstr "Opcije"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
 msgid "Get Constraint"
-msgstr ""
+msgstr "Dohvati ograničenje"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
@@ -6571,6 +6610,26 @@ msgid ""
 "for optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Specifikacija formata. Svaki znak označava vrijednost "
+"koju treba napisati po atomu:</p><p><span style=\" font-weight:600;\">#</"
+"span> - Indeks atoma (1, 2, …, broj atoma)<br/><span style=\" font-"
+"weight:600;\">Z</span> - Atomski broj (npr. „6” za ugljik)<br/><span "
+"style=\" font-weight:600;\">G</span> - Atomski broj u stilu GAMESS-a (npr. „"
+"6,0” za ugljik)<br/><span style=\" font-weight:600;\">N</span> - Ime "
+"elementa (npr. „Ugljik”)<br/><span style=\" font-weight:600;\">S</span> - "
+"Simbol elementa (npr. „C” za ugljik)<br/><span style=\" font-weight:700;\">"
+"L</span> - Oznaka atoma (npr. „C2” za drugi atom ugljika, „H1” za prvi "
+"vodik) <br/><span style=\" font-weight:600;\">x</span> - X koordinata "
+"položaja<br/><span style=\" font-weight:600;\">y</span> - Y koordinata "
+"položaja<br/><span style=\" font-weight:600;\">z</span> - Z koordinata "
+"položaja<br/><span style=\" font-weight:600;\">a</span> - koordinata rešetke "
+"'a' (samo kristali)<br/><span style=\" font-weight:600;\">b</span> - "
+"koordinata rešetke 'b' (samo kristali)<br/><span style=\" font-weight:600;\">"
+"c</span> - koordinata rešetke 'c' (samo kristali)<br/><span style=\" font-"
+"weight:600;\">_</span> - Znak razmaka (\" \"), korisno za poravnanje<br/>"
+"<span style=\" font-weight:600;\">0</span> - Znak 0 (\"0\"), korisno za "
+"optimizacijske oznake<br/><span style=\" font-weight:600;\">1</span> - Znak "
+"1 (\"1\"), korisno za optimizacijske oznake<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -7495,7 +7554,7 @@ msgstr "lj"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:116
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 msgid "real"
-msgstr ""
+msgstr "real"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:121
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
@@ -8762,7 +8821,7 @@ msgstr "Izračunati spektri:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "Raw Spectra:"
-msgstr ""
+msgstr "Neobrađeni spektar:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
