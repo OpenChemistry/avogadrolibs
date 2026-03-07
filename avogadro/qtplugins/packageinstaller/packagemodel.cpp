@@ -560,13 +560,13 @@ QString PackageModel::displayName(const QString& name)
 QString PackageModel::featureTypeLabel(const QString& featureType)
 {
   if (featureType == QLatin1String("electrostatic-models"))
-    return tr("Electrostatic");
+    return tr("Electrostatics");
   if (featureType == QLatin1String("energy-models"))
-    return tr("Energy");
+    return tr("Energy Models");
   if (featureType == QLatin1String("file-formats"))
     return tr("File Formats");
   if (featureType == QLatin1String("input-generators"))
-    return tr("Input Gen.");
+    return tr("Input Generators");
   if (featureType == QLatin1String("menu-commands"))
     return tr("Commands");
   // Unknown feature type — return as-is (capitalised for readability)
