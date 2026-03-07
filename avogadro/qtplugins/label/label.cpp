@@ -46,13 +46,15 @@ typedef Array<Molecule::BondType> NeighborListType;
 
 namespace {
 TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
-                         float radius, const Vector3ub& color)
+                         float radius, const Vector3ub& color, float scale = 1.0f)
 {
   Rendering::TextProperties tprop;
   tprop.setAlign(Rendering::TextProperties::HCenter,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
   tprop.setColorRgb(color.data());
+  // Apply label scale to the default pixel height (24)
+  tprop.setPixelHeight(static_cast<size_t>(24.0f * scale));
 
   auto* label = new TextLabel3D;
   label->setText(text);
@@ -83,6 +85,7 @@ struct LayerLabel : Core::LayerData
 
   QWidget* widget;
   float radiusScalar;
+  float labelScale;
   Vector3ub color;
 
   LayerLabel()
@@ -96,6 +99,7 @@ struct LayerLabel : Core::LayerData
     bondOptions =
       settings.value("label/bondoptions", LabelOptions::None).toInt();
     radiusScalar = settings.value("label/radiusscalar", 0.5).toDouble();
+    labelScale = settings.value("label/labelscale", 1.0).toDouble();
 
     auto q_color =
       settings.value("label/color", QColor(Qt::white)).value<QColor>();
@@ -123,7 +127,7 @@ struct LayerLabel : Core::LayerData
     std::stringstream output;
     output << atomOptions << " " << residueOptions << " " << radiusScalar << " "
            << (int)color[0] << " " << (int)color[1] << " " << (int)color[2]
-           << " " << bondOptions;
+           << " " << bondOptions << " " << labelScale;
     return output.str();
   }
 
@@ -146,6 +150,9 @@ struct LayerLabel : Core::LayerData
     ss >> aux;
     if (!aux.empty())
       bondOptions = std::stoi(aux); // backwards compatibility
+    ss >> aux;
+    if (!aux.empty())
+      labelScale = std::stof(aux); // backwards compatibility
   }
 
   void setupWidget(Label* slot)
@@ -170,6 +177,16 @@ struct LayerLabel : Core::LayerData
       QObject::connect(spin, SIGNAL(valueChanged(double)), slot,
                        SLOT(setRadiusScalar(double)));
       form->addRow(QObject::tr("Distance from center:"), spin);
+
+      // label scale
+      auto* scaleSpin = new QDoubleSpinBox;
+      scaleSpin->setRange(0.25, 3.0);
+      scaleSpin->setSingleStep(0.1);
+      scaleSpin->setDecimals(2);
+      scaleSpin->setValue(labelScale);
+      QObject::connect(scaleSpin, SIGNAL(valueChanged(double)), slot,
+                       SLOT(setLabelScale(double)));
+      form->addRow(QObject::tr("Label scale:"), scaleSpin);
 
       auto* atom = new QComboBox;
       atom->setObjectName("atom");
@@ -308,7 +325,7 @@ void Label::processResidue(const Core::Molecule& molecule,
     if (interface->residueOptions & LayerLabel::LabelOptions::Custom) {
       text += (text == "" ? "" : " / ") + customLabel;
     }
-    TextLabel3D* residueLabel = createLabel(text, pos, radius, color);
+    TextLabel3D* residueLabel = createLabel(text, pos, radius, color, interface->labelScale);
     geometry->addDrawable(residueLabel);
   }
 }
@@ -409,7 +426,7 @@ void Label::processAtom(const Core::Molecule& molecule,
                      interface->radiusScalar;
 
       TextLabel3D* atomLabel =
-        createLabel(text, pos, radius, contrastColor(color));
+        createLabel(text, pos, radius, contrastColor(color), interface->labelScale);
       geometry->addDrawable(atomLabel);
     }
   }
@@ -465,7 +482,7 @@ void Label::processBond(const Core::Molecule& molecule,
       (atom1.position3d().cast<float>() + atom2.position3d().cast<float>()) /
       2.0f;
 
-    TextLabel3D* bondLabel = createLabel(text.str(), pos, radius, color);
+    TextLabel3D* bondLabel = createLabel(text.str(), pos, radius, color, interface1->labelScale);
     geometry->addDrawable(bondLabel);
   }
 }
@@ -531,6 +548,16 @@ void Label::setRadiusScalar(double radius)
 
   QSettings settings;
   settings.setValue("label/radiusscalar", interface->radiusScalar);
+}
+
+void Label::setLabelScale(double scale)
+{
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->labelScale = float(scale);
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/labelscale", interface->labelScale);
 }
 
 QWidget* Label::setupWidget()
