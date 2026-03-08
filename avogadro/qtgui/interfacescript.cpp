@@ -37,8 +37,13 @@ static void stripLeadingNonJson(QByteArray& data)
   qsizetype jsonStart = (jsonObj < 0)   ? jsonArr
                         : (jsonArr < 0) ? jsonObj
                                         : qMin(jsonObj, jsonArr);
-  if (jsonStart > 0)
+  if (jsonStart > 0) {
+    if (!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()) {
+      qDebug() << "InterfaceScript: stripping leading non-JSON output:\n"
+               << data.left(jsonStart);
+    }
     data = data.mid(jsonStart);
+  }
 }
 
 InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
