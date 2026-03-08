@@ -525,6 +525,29 @@ QStringList PackageManager::registeredPackages() const
   return names;
 }
 
+QStringList PackageManager::packageFeatureTypes(
+  const QString& packageName) const
+{
+  QSettings settings;
+  QString prefix = QStringLiteral("plugins/") + packageName + '/';
+  QByteArray json = settings.value(prefix + "features").toByteArray();
+  QJsonDocument doc = QJsonDocument::fromJson(json);
+  if (!doc.isArray())
+    return {};
+
+  QStringList types;
+  const QJsonArray arr = doc.array();
+  for (const auto& val : arr) {
+    if (!val.isObject())
+      continue;
+    const QString type =
+      val.toObject().value(QStringLiteral("type")).toString();
+    if (!type.isEmpty() && !types.contains(type))
+      types.append(type);
+  }
+  return types;
+}
+
 PackageManager::PackageInfo PackageManager::packageInfo(
   const QString& packageName) const
 {

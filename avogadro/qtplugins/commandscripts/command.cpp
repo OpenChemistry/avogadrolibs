@@ -444,12 +444,12 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   if (!subSubMenu.isEmpty()) {
     menuPathList << subSubMenu;
   }
-  
+
   // Extract priorities
   QVariantList priorities = metadata.value("menu-priorities").toList();
-  int menuPriority        = priorities.size() > 0 ? priorities[0].toInt() : 0;
-  int subMenuPriority     = priorities.size() > 1 ? priorities[1].toInt() : 0;
-  int subSubMenuPriority  = priorities.size() > 2 ? priorities[2].toInt() : 0;
+  int menuPriority = priorities.size() > 0 ? priorities[0].toInt() : 0;
+  int subMenuPriority = priorities.size() > 1 ? priorities[1].toInt() : 0;
+  int subSubMenuPriority = priorities.size() > 2 ? priorities[2].toInt() : 0;
 
   // Create the action
   auto* action = new QAction(item, this);
@@ -465,8 +465,9 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   action->setEnabled(true);
 
   // TODO priorities in higher level menus? Probably needs change in MenuBuilder
-  action->setProperty("menu priority", priorities.last());
-  
+  if (priorities.size() > 0)
+    action->setProperty("menu priority", priorities.last());
+
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
   m_packageActions.insert(

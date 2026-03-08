@@ -121,6 +121,12 @@ public:
   QStringList registeredPackages() const;
   PackageInfo packageInfo(const QString& packageName) const;
 
+  /**
+   * Return the distinct feature-type strings (e.g. "menu-commands",
+   * "file-formats") for a registered package, read from the QSettings cache.
+   */
+  QStringList packageFeatureTypes(const QString& packageName) const;
+
 signals:
   /**
    * Emitted after installPackages() finishes installing and registering
