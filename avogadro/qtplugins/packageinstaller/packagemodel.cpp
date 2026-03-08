@@ -359,6 +359,7 @@ void PackageModel::mergeInstalledPackages()
       e.packageKey = pkgName;
       e.installedDir = info.directory;
       e.isSymlink = symlink;
+      e.featureTypes = pm->packageFeatureTypes(pkgName);
       e.status = PackageStatus::LocalOnly;
       m_entries.append(e);
     }
