@@ -28,6 +28,19 @@ namespace Avogadro::QtGui {
 using QtGui::GenericHighlighter;
 using QtGui::PythonScript;
 
+// Strip any leading non-JSON output (e.g. deprecation warnings printed to
+// stdout by third-party libraries). Find the first '{' or '['.
+static void stripLeadingNonJson(QByteArray& data)
+{
+  qsizetype jsonObj = data.indexOf('{');
+  qsizetype jsonArr = data.indexOf('[');
+  qsizetype jsonStart = (jsonObj < 0)   ? jsonArr
+                        : (jsonArr < 0) ? jsonObj
+                                        : qMin(jsonObj, jsonArr);
+  if (jsonStart > 0)
+    data = data.mid(jsonStart);
+}
+
 InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
                                  QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
@@ -199,6 +212,8 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
     m_errors << m_interpreter->errorList();
     return false;
   }
+
+  stripLeadingNonJson(json);
 
   QJsonDocument doc;
   if (!parseJson(json, doc)) {
