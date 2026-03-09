@@ -4729,7 +4729,7 @@ msgstr "Verzija"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:176
 msgid "Features"
-msgstr ""
+msgstr "Značajke"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:178
 #: qtplugins/plugindownloader/downloaderwidget.cpp:68
