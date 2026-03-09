@@ -4692,7 +4692,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:58
 msgid "Not installed"
-msgstr ""
+msgstr "Nije instalirano"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:60
 msgid "Installed (up to date)"
