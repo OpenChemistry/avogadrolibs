@@ -4627,7 +4627,7 @@ msgstr "Instalacija je dovršena!\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:536
 msgid "Nothing to Remove"
-msgstr ""
+msgstr "Nema se što obnoviti"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:537
 msgid "Check the box next to an installed plugin to remove it."
