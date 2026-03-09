@@ -4652,11 +4652,11 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
 msgid "Delete Files"
-msgstr ""
+msgstr "Izbriši datoteke"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
 msgid "Select Plugin Directory"
-msgstr ""
+msgstr "Odaberi direktorij"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:585
 msgid "Invalid Directory"
