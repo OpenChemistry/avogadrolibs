@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Gustavo Sousa Jr <grsousajunior@gmail.com>, 2020, 2021, 2022.
 # Pietro Valente Benevenga <pvbenevenga@gmail.com>, 2020.
-# Alexandre R Soares <ntegti@zipmail.com.br>, 2021, 2024, 2025.
+# Alexandre R Soares <ntegti@zipmail.com.br>, 2021, 2024, 2025, 2026.
 # "Kirito ._." <kiritokunn18@gmail.com>, 2024.
 # Iago Emanuel <iagoemanuel@live.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-07 13:27+0000\n"
-"PO-Revision-Date: 2026-03-07 11:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-09 22:10+0000\n"
+"Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -4676,12 +4676,12 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
 #, qt-format
 msgid "Extracting %1…\n"
-msgstr ""
+msgstr "A extrair %1…\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:442
 #, qt-format
 msgid "Extraction complete (%1 files)\n"
-msgstr ""
+msgstr "Extração concluída (%1 arquivos)\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:463
 #, qt-format
@@ -4691,7 +4691,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:476
 #, qt-format
 msgid "Extraction error: %1"
-msgstr ""
+msgstr "Erro ao extrair: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:478
 msgid "Extraction yielded no files.\n"
@@ -4727,64 +4727,66 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
 msgid "Delete Files"
-msgstr ""
+msgstr "Arquivos Deletados"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
 msgid "Select Plugin Directory"
-msgstr ""
+msgstr "Selecionar Pasta do Plugin"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:585
 msgid "Invalid Directory"
-msgstr ""
+msgstr "Diretório Inválido"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:586
 msgid "The selected directory does not contain a pyproject.toml file."
-msgstr ""
+msgstr "O diretório (pasta) selecionado não contém um arquivo pyproject.toml."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
 #, qt-format
 msgid "Plugin already installed as symlink: %1\n"
-msgstr ""
+msgstr "Plugin já instalado como link simbólico: %1\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:615
 #, qt-format
 msgid "Created symlink: %1 → %2\n"
-msgstr ""
+msgstr "Criado link simbólico: %1 → %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:618
 msgid "Symlink creation failed; copying files instead…\n"
 msgstr ""
+"A criação do link simbólico falhou; em vez disso, os arquivos serão copiados"
+"…\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:621
 #, qt-format
 msgid "Failed to copy package to %1."
-msgstr ""
+msgstr "Falha ao copiar o pacote para %1."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:626
 #, qt-format
 msgid "Installing plugin from %1…\n"
-msgstr ""
+msgstr "Instalando plugin de %1…\n"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:58
 msgid "Not installed"
-msgstr ""
+msgstr "Não instalado"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:60
 msgid "Installed (up to date)"
-msgstr ""
+msgstr "Instalado (atualizado)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:62
 msgid "Update available"
-msgstr ""
+msgstr "Atualização disponível"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:64
 msgid "Installed locally (not in online catalog)"
-msgstr ""
+msgstr "Instalado localmente (não no catálogo online)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:70
 #, qt-format
 msgid "Requires Avogadro %1 or later (running %2)"
-msgstr ""
+msgstr "Requer Avogadro %1 ou superior (está usando %2)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:162
 #, qt-format
@@ -4821,7 +4823,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:567
 msgid "File Formats"
-msgstr ""
+msgstr "Formatos de Arquivos"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:569
 msgid "Input Generators"
@@ -4829,7 +4831,7 @@ msgstr "Geradores de Entrada"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:571
 msgid "Commands"
-msgstr ""
+msgstr "Comandos"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:60
 #: qtplugins/plugindownloader/zipextracter.cpp:67
@@ -4839,6 +4841,8 @@ msgid ""
 "ERROR: could not open zip file to list contents.\n"
 "(%1)"
 msgstr ""
+"ERRO: não foi possível abrir o arquivo zip para listar o conteúdo.\n"
+"(%1)"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:117
 #: qtplugins/plugindownloader/zipextracter.cpp:115
@@ -4848,6 +4852,8 @@ msgid ""
 "ERROR: could not open zip file to extract files.\n"
 "(%1)"
 msgstr ""
+"ERRO: não foi possível abrir o arquivo zip para extrair os arquivos.\n"
+"(%1)"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:134
 #: qtplugins/packageinstaller/zipextractor.cpp:151
@@ -4858,12 +4864,13 @@ msgstr ""
 #, qt-format
 msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
-msgstr ""
+msgstr "Alerta: (%1)"
 
 #: qtplugins/playertool/playertool.cpp:51
+#, fuzzy
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
@@ -4872,7 +4879,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:53
 #, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr ""
+msgstr "Ferramenta de Animação\t(%1)"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
@@ -8898,22 +8905,22 @@ msgstr "Energia Total"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
 msgid "Search plugins…"
-msgstr ""
+msgstr "Procurar plugins…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
 msgid "Install from Directory…"
-msgstr ""
+msgstr "Instalar do Diretório…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:89
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 msgid "Remove Selected"
-msgstr ""
+msgstr "Remover Selecionado"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, installButton)
 msgid "Install / Update Selected"
-msgstr ""
+msgstr "Instalar/Atualizar Selecionado"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
