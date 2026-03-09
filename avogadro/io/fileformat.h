@@ -142,7 +142,7 @@ public:
    * @param molecule The molecule the data will be read into.
    * @return True on success, false on failure.
    */
-  bool readFile(const std::string& fileName, Core::Molecule& molecule);
+  virtual bool readFile(const std::string& fileName, Core::Molecule& molecule);
 
   /**
    * @brief Write to the given @p fileName the contents of @p molecule.
@@ -150,7 +150,8 @@ public:
    * @param molecule The contents of this molecule will be written to the file.
    * @return True on success, false on failure.
    */
-  bool writeFile(const std::string& fileName, const Core::Molecule& molecule);
+  virtual bool writeFile(const std::string& fileName,
+                         const Core::Molecule& molecule);
 
   /**
    * @brief Read the given @p string and load it into @p molecule.

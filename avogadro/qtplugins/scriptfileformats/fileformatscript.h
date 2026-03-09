@@ -13,8 +13,6 @@
 #include <QtCore/QString>
 #include <QtCore/QVariantMap>
 
-class QJsonObject;
-
 namespace Avogadro {
 namespace QtGui {
 class PythonScript;
@@ -155,6 +153,11 @@ public:
 
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 
+  bool readFile(const std::string& fileName, Core::Molecule& molecule) override;
+
+  bool writeFile(const std::string& fileName,
+                 const Core::Molecule& molecule) override;
+
   Operations supportedOperations() const override { return m_operations; }
 
   std::string identifier() const override { return m_identifier; }
@@ -174,18 +177,17 @@ public:
 
 private:
   static Format stringToFormat(const std::string& str);
+  static std::string formatToString(Format fmt);
   static Io::FileFormat* createFileFormat(Format fmt);
   void resetMetaData();
-  void readMetaData();
-  bool parseString(const QJsonObject& ob, const QString& key, std::string& str);
-  bool parseStringArray(const QJsonObject& ob, const QString& key,
-                        std::vector<std::string>& array);
   void copyMetaDataFrom(const FileFormatScript& other);
 
 private:
   QtGui::PythonScript* m_interpreter;
   bool m_valid;
   bool m_bondOnRead;
+  bool m_fileModeRead;
+  bool m_fileModeWrite;
   Operations m_operations;
   Format m_inputFormat;
   Format m_outputFormat;
