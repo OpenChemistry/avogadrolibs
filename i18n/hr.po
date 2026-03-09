@@ -8829,7 +8829,7 @@ msgstr ""
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:89
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 msgid "Remove Selected"
-msgstr ""
+msgstr "Ukloni odabrani element"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, installButton)
