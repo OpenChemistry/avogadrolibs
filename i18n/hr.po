@@ -4635,7 +4635,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:543
 msgid "Remove Plugins"
-msgstr ""
+msgstr "Uklonite dodatke"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:544
 #, qt-plural-format
