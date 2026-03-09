@@ -4660,7 +4660,7 @@ msgstr "Odaberi direktorij"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:585
 msgid "Invalid Directory"
-msgstr ""
+msgstr "Neispravna staza mape"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:586
 msgid "The selected directory does not contain a pyproject.toml file."
