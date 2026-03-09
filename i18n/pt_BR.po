@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-07 13:27+0000\n"
-"PO-Revision-Date: 2026-03-09 22:10+0000\n"
+"PO-Revision-Date: 2026-03-10 01:13+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -4589,7 +4589,7 @@ msgstr "Renderize os eixos de referência no canto da tela."
 #. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
 #: qtplugins/packageinstaller/packageinstaller.cpp:17:1719
 msgid "Manage Plugins…"
-msgstr ""
+msgstr "Gerenciar Plugins…"
 
 #: qtplugins/packageinstaller/packageinstaller.h:32
 msgid "Package Installer"
@@ -4624,11 +4624,11 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:279
 #, qt-format
 msgid "%1 (requires %2)"
-msgstr ""
+msgstr "%1 (requer %2)"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
 msgid "Version Incompatibility"
-msgstr ""
+msgstr "Incompatibilidade de Versões"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:284
 #, qt-format
@@ -4639,10 +4639,15 @@ msgid ""
 "\n"
 "Install anyway?"
 msgstr ""
+"Estes plugins necessitam uma versão mais nova do Avogadro:\n"
+"\n"
+"%1\n"
+"\n"
+"Instalar assim mesmo?"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:311
 msgid "No Download Available"
-msgstr ""
+msgstr "Sem Download Disponível"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:312
 #, qt-format
@@ -4655,7 +4660,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:359
 #, qt-format
 msgid "Failed to follow redirect while downloading %1.\n"
-msgstr ""
+msgstr "Falha ao seguir o redirecionamento ao transferir %1.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:376
 #, qt-format
@@ -4671,7 +4676,7 @@ msgstr ""
 #: qtplugins/plugindownloader/downloaderwidget.cpp:364
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "Transferindo %1 até %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
 #, qt-format
@@ -4695,23 +4700,23 @@ msgstr "Erro ao extrair: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:478
 msgid "Extraction yielded no files.\n"
-msgstr ""
+msgstr "A extração não gerou nenhum arquivo.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:488
 msgid "Installation complete.\n"
-msgstr ""
+msgstr "Instalação concluída.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:536
 msgid "Nothing to Remove"
-msgstr ""
+msgstr "Nada a Remover"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:537
 msgid "Check the box next to an installed plugin to remove it."
-msgstr ""
+msgstr "Marque a caixa ao lado de um plugin instalado para removê-lo."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:543
 msgid "Remove Plugins"
-msgstr ""
+msgstr "Remover Plugins"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:544
 #, qt-plural-format
@@ -4723,11 +4728,11 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:548
 msgid "Keep Files"
-msgstr ""
+msgstr "Manter Arquivos"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
 msgid "Delete Files"
-msgstr "Arquivos Deletados"
+msgstr "Deletar Arquivos"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
 msgid "Select Plugin Directory"
@@ -4794,6 +4799,8 @@ msgid ""
 "Feature icons:\n"
 "%1"
 msgstr ""
+"Ícones de recursos:\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:170
 msgid "Status"
