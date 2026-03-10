@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-07 13:27+0000\n"
-"PO-Revision-Date: 2026-03-07 11:10+0000\n"
+"PO-Revision-Date: 2026-03-11 10:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -3393,11 +3393,12 @@ msgstr "力場による最適化、スクリプトふくむ"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:56
 msgid "Options…"
-msgstr ""
+msgstr "オプション…"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:175
+#, fuzzy
 msgid "Invalid Model Options"
-msgstr ""
+msgstr "モデルのオプションが不正"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:176
 #, qt-format
@@ -3405,9 +3406,9 @@ msgid "Could not parse user options for model '%1'."
 msgstr ""
 
 #: qtplugins/forcefield/forcefielddialog.cpp:181
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1 Options"
-msgstr ""
+msgstr "%1 オプション"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:222
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -3700,7 +3701,7 @@ msgstr "中心からの距離:"
 
 #: qtplugins/label/label.cpp:189
 msgid "Label scale:"
-msgstr ""
+msgstr "ラベルのスケール:"
 
 #: qtplugins/label/label.cpp:200 qtplugins/label/label.cpp:231
 msgid "Index"
@@ -4482,46 +4483,49 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
 #: qtplugins/packageinstaller/packageinstaller.cpp:17:1719
 msgid "Manage Plugins…"
-msgstr ""
+msgstr "プラグインを管理…"
 
 #: qtplugins/packageinstaller/packageinstaller.h:32
 msgid "Package Installer"
-msgstr ""
+msgstr "パッケージインストーラ"
 
 #: qtplugins/packageinstaller/packageinstaller.h:36
 msgid "Install, update, and remove Avogadro packages."
-msgstr ""
+msgstr "Avogadroパッケージのインストール、更新、削除"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:134
 #, qt-format
 msgid "Error downloading plugin list: %1"
-msgstr ""
+msgstr "プラグイン一覧のダウンロードでエラー: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:143
+#, fuzzy
 msgid "Error: empty response from server."
-msgstr ""
+msgstr "エラー: サーバからの応答が空"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:226
 #, qt-format
 msgid "Error fetching README: %1"
-msgstr ""
+msgstr "README の取得でエラー: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:268
 msgid "Nothing Selected"
 msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:269
+#, fuzzy
 msgid "Check the box next to a plugin to install or update it."
-msgstr ""
+msgstr "インストールまたは更新するプラグインの隣のボックスをチェック"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:279
 #, qt-format
 msgid "%1 (requires %2)"
-msgstr ""
+msgstr "%1 (%2 が必要)"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
+#, fuzzy
 msgid "Version Incompatibility"
-msgstr ""
+msgstr "バージョンの互換性がありません"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:284
 #, qt-format
@@ -4534,8 +4538,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:311
+#, fuzzy
 msgid "No Download Available"
-msgstr ""
+msgstr "ダウンロード可能なものがありません"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:312
 #, qt-format
@@ -4546,19 +4551,19 @@ msgid ""
 msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:359
-#, qt-format
+#, fuzzy, qt-format
 msgid "Failed to follow redirect while downloading %1.\n"
-msgstr ""
+msgstr "%1 のダウンロード中にリダイレクトに失敗\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:376
-#, qt-format
+#, fuzzy, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
-msgstr ""
+msgstr "%1 からのダウンロードに失敗: %2, %3\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:385
 #, qt-format
 msgid "Failed to download from %1: %2\n"
-msgstr ""
+msgstr "%1 からのダウンロードに失敗: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:420
 #: qtplugins/plugindownloader/downloaderwidget.cpp:364
@@ -4567,107 +4572,116 @@ msgid "Downloading %1 to %2\n"
 msgstr "%1を%2にダウンロード中\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
-#, qt-format
+#, fuzzy, qt-format
 msgid "Extracting %1…\n"
-msgstr ""
+msgstr "%1 を展開中…\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:442
-#, qt-format
+#, fuzzy, qt-format
 msgid "Extraction complete (%1 files)\n"
-msgstr ""
+msgstr "展開完了 (%1 ファイル)\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:463
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error: could not move extracted package %1 to %2\n"
-msgstr ""
+msgstr "エラー: 展開したパッケージ %1 を %2 に移動できませんでした\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:476
-#, qt-format
+#, fuzzy, qt-format
 msgid "Extraction error: %1"
-msgstr ""
+msgstr "展開時にエラー: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:478
+#, fuzzy
 msgid "Extraction yielded no files.\n"
-msgstr ""
+msgstr "展開するファイルがありません。\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:488
+#, fuzzy
 msgid "Installation complete.\n"
-msgstr ""
+msgstr "インストール完了\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:536
+#, fuzzy
 msgid "Nothing to Remove"
-msgstr ""
+msgstr "削除するものなし"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:537
+#, fuzzy
 msgid "Check the box next to an installed plugin to remove it."
-msgstr ""
+msgstr "インストールされたプラグインの隣のボックスをチェックして削除。"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:543
 msgid "Remove Plugins"
-msgstr ""
+msgstr "プラグインを削除"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:544
-#, qt-plural-format
+#, fuzzy, qt-plural-format
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
 msgid_plural "Remove %n selected plugin(s)?"
-msgstr[0] ""
+msgstr[0] "選択した %n 件のプラグインを削除しますか？"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:548
 msgid "Keep Files"
-msgstr ""
+msgstr "ファイルを保持"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
 msgid "Delete Files"
-msgstr ""
+msgstr "ファイルを削除"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
+#, fuzzy
 msgid "Select Plugin Directory"
-msgstr ""
+msgstr "プラグインディレクトリーを選択"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:585
+#, fuzzy
 msgid "Invalid Directory"
-msgstr ""
+msgstr "不正なディレクトリー"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:586
+#, fuzzy
 msgid "The selected directory does not contain a pyproject.toml file."
-msgstr ""
+msgstr "選択されたディレクトリーに pyproject.toml がありません。"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
-#, qt-format
+#, fuzzy, qt-format
 msgid "Plugin already installed as symlink: %1\n"
-msgstr ""
+msgstr "プラグインはシンボリックリンクとしてインストール済: %1\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:615
 #, qt-format
 msgid "Created symlink: %1 → %2\n"
-msgstr ""
+msgstr "シンボリックリンクを作成: %1 → %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:618
+#, fuzzy
 msgid "Symlink creation failed; copying files instead…\n"
-msgstr ""
+msgstr "シンボリックリンクの作成に失敗；かわりにファイルをコピー中…\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:621
-#, qt-format
+#, fuzzy, qt-format
 msgid "Failed to copy package to %1."
-msgstr ""
+msgstr "パッケージを %1 にコピーするのに失敗しました。"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:626
 #, qt-format
 msgid "Installing plugin from %1…\n"
-msgstr ""
+msgstr "%1 からプラグインをインストール…\n"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:58
+#, fuzzy
 msgid "Not installed"
-msgstr ""
+msgstr "未インストール"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:60
 msgid "Installed (up to date)"
-msgstr ""
+msgstr "インストール済 (最新)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:62
 msgid "Update available"
-msgstr ""
+msgstr "更新可能"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:64
 msgid "Installed locally (not in online catalog)"
@@ -4676,7 +4690,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemodel.cpp:70
 #, qt-format
 msgid "Requires Avogadro %1 or later (running %2)"
-msgstr ""
+msgstr "Avogadro %1 以降が必要 (実行中のものは %2)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:162
 #, qt-format
@@ -4695,8 +4709,9 @@ msgid "Version"
 msgstr "バージョン"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:176
+#, fuzzy
 msgid "Features"
-msgstr ""
+msgstr "機能"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:178
 #: qtplugins/plugindownloader/downloaderwidget.cpp:68
@@ -4705,24 +4720,24 @@ msgstr "説明"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:563
 msgid "Electrostatics"
-msgstr ""
+msgstr "静電"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:565
 msgid "Energy Models"
-msgstr ""
+msgstr "エネルギーモデル"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:567
 msgid "File Formats"
-msgstr ""
+msgstr "ファイル形式"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:569
 #, fuzzy
 msgid "Input Generators"
-msgstr "インプットファイルを作る..."
+msgstr "インプットファイルを作る"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:571
 msgid "Commands"
-msgstr ""
+msgstr "コマンド"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:60
 #: qtplugins/plugindownloader/zipextracter.cpp:67
@@ -8789,22 +8804,22 @@ msgstr "全エネルギー"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
 msgid "Search plugins…"
-msgstr ""
+msgstr "プラグインを検索…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
 msgid "Install from Directory…"
-msgstr ""
+msgstr "ディレクトリーからインストール…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:89
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 msgid "Remove Selected"
-msgstr ""
+msgstr "選択したものを削除"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, installButton)
 msgid "Install / Update Selected"
-msgstr ""
+msgstr "選択したものをインストール/更新"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
