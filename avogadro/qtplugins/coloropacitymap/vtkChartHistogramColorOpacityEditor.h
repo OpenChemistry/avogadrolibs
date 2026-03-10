@@ -59,7 +59,7 @@ public:
   void SetDPI(int);
 
   // Paint event for the editor.
-  virtual bool Paint(vtkContext2D* painter) override;
+  bool Paint(vtkContext2D* painter) override;
 
 protected:
   // This provides the histogram, contour value marker, and opacity editor.

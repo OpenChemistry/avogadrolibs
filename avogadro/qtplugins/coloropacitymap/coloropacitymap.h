@@ -19,7 +19,7 @@ class ColorOpacityMap : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit ColorOpacityMap(QObject* parent_ = nullptr);
-  ~ColorOpacityMap();
+  ~ColorOpacityMap() override;
 
   QString name() const override { return tr("ColorOpacityMap"); }
   QString description() const override;

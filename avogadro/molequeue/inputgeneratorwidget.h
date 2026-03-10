@@ -124,7 +124,7 @@ private slots:
    * Update the input files. This method is throttled, and will only call the
    * generator script once every 250 milliseconds.
    */
-  void updatePreviewText();
+  void updatePreviewText() override;
 
   /**
    * Immediately update the input files, bypassing (and resetting) the throttle
