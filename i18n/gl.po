@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.1.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-07 13:27+0000\n"
-"PO-Revision-Date: 2026-03-07 11:09+0000\n"
+"PO-Revision-Date: 2026-03-11 10:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Galician <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/gl/>\n"
@@ -4682,7 +4682,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemodel.cpp:569
 #, fuzzy
 msgid "Input Generators"
-msgstr "Xerador de entrada..."
+msgstr "Xerador de entrada"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:571
 msgid "Commands"
