@@ -63,8 +63,10 @@ PackageManagerDialog::PackageManagerDialog(QWidget* parent)
   m_proxyModel->setSourceModel(m_model);
   m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
   m_proxyModel->setFilterKeyColumn(-1); // search all columns
+  m_proxyModel->sort(PackageModel::NameColumn, Qt::AscendingOrder);
 
   m_ui->packageTable->setModel(m_proxyModel);
+  m_ui->packageTable->setSortingEnabled(true);
   m_ui->packageTable->setMouseTracking(true);
   m_ui->packageTable->viewport()->setMouseTracking(true);
   m_ui->packageTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -188,10 +190,22 @@ void PackageManagerDialog::onCurrentRowChanged(const QModelIndex& current,
 
   QModelIndex sourceIndex = m_proxyModel->mapToSource(current);
   QString url = m_model->readmeUrl(sourceIndex.row());
-  if (url.isEmpty())
-    return;
 
   m_ui->readmeBrowser->clear();
+
+  // For locally-installed packages with no online README URL, try the local
+  // file
+  if (url.isEmpty()) {
+    const QString& dir = m_model->entry(sourceIndex.row()).installedDir;
+    if (!dir.isEmpty()) {
+      QFile localReadme(dir + QStringLiteral("/README.md"));
+      if (localReadme.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        m_ui->readmeBrowser->setMarkdown(
+          QString::fromUtf8(localReadme.readAll()));
+      }
+    }
+    return;
+  }
   QNetworkRequest request;
   setRawHeaders(&request);
   request.setUrl(QUrl(url));
