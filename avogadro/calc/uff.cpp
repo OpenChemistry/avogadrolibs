@@ -16,6 +16,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
+#include <cstdint>
 #include <unordered_set>
 
 namespace Avogadro::Calc {
