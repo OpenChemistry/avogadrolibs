@@ -4,11 +4,12 @@ set(tests
   EnergyManager
   EnergyCalculator
   Gradient
+  LennardJones
   UFF
 )
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
-	"${AvogadroLibs_BINARY_DIR}/avogadro/calc")
+  "${AvogadroLibs_BINARY_DIR}/avogadro/calc")
 
 # we also read some example data files
 if(AVOGADRO_DATA_ROOT)

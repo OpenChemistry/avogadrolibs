@@ -10,7 +10,57 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
+#include <cmath>
+
 namespace Avogadro::Calc {
+
+namespace {
+Real evaluateLennardJonesPairs(const Eigen::VectorXd& x,
+                               const Eigen::MatrixXd& radii,
+                               Core::UnitCell* cell, Real depth, int exponent,
+                               Eigen::VectorXd* grad)
+{
+  const Index numAtoms = radii.rows();
+  Real energy = 0.0;
+
+  for (Index i = 0; i < numAtoms; ++i) {
+    const Vector3 ipos = x.segment<3>(3 * i);
+    for (Index j = i + 1; j < numAtoms; ++j) {
+      const Vector3 jpos = x.segment<3>(3 * j);
+      Vector3 delta = Vector3::Zero();
+      Real r = 0.0;
+
+      if (cell == nullptr) {
+        delta = ipos - jpos;
+        r = delta.norm();
+      } else if (grad != nullptr) {
+        delta = cell->minimumImage(ipos - jpos);
+        r = delta.norm();
+      } else {
+        r = cell->distance(ipos, jpos);
+      }
+
+      if (r < 0.1)
+        r = 0.1; // ensure we don't divide by zero
+
+      const Real ratio = std::pow(radii(i, j) / r, exponent);
+      energy += depth * (ratio * ratio - 2.0 * ratio);
+
+      if (grad == nullptr)
+        continue;
+
+      // dE/dr for E = depth * ((sigma/r)^(2n) - 2 * (sigma/r)^n)
+      const Real dEdr =
+        -2.0 * depth * static_cast<Real>(exponent) * ratio * (ratio - 1.0) / r;
+      const Vector3 force = (dEdr / r) * delta;
+      grad->segment<3>(3 * i) += force;
+      grad->segment<3>(3 * j) -= force;
+    }
+  }
+
+  return energy;
+}
+} // namespace
 
 LennardJones::LennardJones()
   : m_molecule(nullptr), m_cell(nullptr), m_radii(), m_vdw(true),
@@ -69,111 +119,36 @@ void LennardJones::setMolecule(Core::Molecule* mol)
 
 Real LennardJones::value(const Eigen::VectorXd& x)
 {
-  if (!m_molecule)
-    return 0.0;
-
-  // FYI https://en.wikipedia.org/wiki/Lennard-Jones_potential
-  //@todo handle unit cells and minimum distances
-  Index numAtoms = m_molecule->atomCount();
-
-  Real energy = 0.0;
-  // we put the conditional here outside the double loop
-  if (m_cell == nullptr) {
-    // regular molecule
-    for (Index i = 0; i < numAtoms; ++i) {
-      Vector3 ipos = x.segment<3>(3 * i);
-      for (Index j = i + 1; j < numAtoms; ++j) {
-        Vector3 jpos = x.segment<3>(3 * j);
-        Real r = (ipos - jpos).norm();
-        if (r < 0.1)
-          r = 0.1; // ensure we don't divide by zero
-
-        Real ratio = pow((m_radii(i, j) / r), m_exponent);
-        energy += m_depth * (ratio * ratio - 2.0 * (ratio));
-      }
-    }
-  } else {
-    // use the unit cell to get minimum distances
-    for (Index i = 0; i < numAtoms; ++i) {
-      Vector3 ipos = x.segment<3>(3 * i);
-      for (Index j = i + 1; j < numAtoms; ++j) {
-        Vector3 jpos = x.segment<3>(3 * j);
-        Real r = m_cell->distance(ipos, jpos);
-        if (r < 0.1)
-          r = 0.1; // ensure we don't divide by zero
-
-        Real ratio = pow((m_radii(i, j) / r), m_exponent);
-        energy += m_depth * (ratio * ratio - 2.0 * (ratio));
-      }
-    }
-  }
-
-  // qDebug() << " lj: " << energy;
-  energy += constraintEnergies(x);
-  return energy;
+  return evaluate(x, nullptr);
 }
 
 void LennardJones::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  if (!m_molecule)
-    return;
+  evaluate(x, &grad);
+}
 
-  // clear the gradients
-  grad.setZero();
-
-  Index numAtoms = m_molecule->atomCount();
-  // we put the conditional here outside the double loop
-  if (m_cell == nullptr) {
-    // regular molecule
-    for (Index i = 0; i < numAtoms; ++i) {
-      Vector3 ipos = x.segment<3>(3 * i);
-      for (Index j = i + 1; j < numAtoms; ++j) {
-        Vector3 jpos = x.segment<3>(3 * j);
-        Vector3 force = ipos - jpos;
-
-        Real r = force.norm();
-        if (r < 0.1)
-          r = 0.1; // ensure we don't divide by zero
-
-        Real rad = pow(m_radii(i, j), m_exponent);
-        Real term1 = -2 * (m_exponent)*rad * rad * pow(r, -2 * m_exponent - 1);
-        Real term2 = 2 * (m_exponent)*rad * pow(r, -1 * m_exponent - 1);
-        Real dE = m_depth * (term1 + term2);
-
-        force = (dE / r) * force;
-
-        grad.segment<3>(3 * i) += force;
-        grad.segment<3>(3 * j) -= force;
-      }
-    }
-  } else {
-    // unit cell
-    for (Index i = 0; i < numAtoms; ++i) {
-      Vector3 ipos = x.segment<3>(3 * i);
-      for (Index j = i + 1; j < numAtoms; ++j) {
-        Vector3 jpos = x.segment<3>(3 * j);
-        Vector3 force = m_cell->minimumImage(ipos - jpos);
-
-        Real r = force.norm();
-        if (r < 0.1)
-          r = 0.1; // ensure we don't divide by zero
-
-        Real rad = pow(m_radii(i, j), m_exponent);
-        Real term1 = -2 * (m_exponent)*rad * rad * pow(r, -2 * m_exponent - 1);
-        Real term2 = 2 * (m_exponent)*rad * pow(r, -1 * m_exponent - 1);
-        Real dE = m_depth * (term1 + term2);
-
-        force = (dE / r) * force;
-
-        grad.segment<3>(3 * i) += force;
-        grad.segment<3>(3 * j) -= force;
-      }
-    }
+Real LennardJones::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
+{
+  if (grad != nullptr) {
+    if (grad->rows() != x.rows())
+      grad->resize(x.rows());
+    grad->setZero();
   }
 
-  // handle any constraints
-  cleanGradients(grad);
-  constraintGradients(x, grad);
+  if (!m_molecule ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
+    return 0.0;
+
+  Real energy =
+    evaluateLennardJonesPairs(x, m_radii, m_cell, m_depth, m_exponent, grad);
+  energy += constraintEnergies(x);
+
+  if (grad != nullptr) {
+    cleanGradients(*grad);
+    constraintGradients(x, *grad);
+  }
+
+  return energy;
 }
 
 } // namespace Avogadro::Calc

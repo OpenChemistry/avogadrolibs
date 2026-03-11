@@ -5,6 +5,7 @@ avogadro_headers(Calc
   chargemanager.h
   defaultmodel.h
   energycalculator.h
+  energyoptimizer.h
   energymanager.h
   gradients.h
   lennardjones.h
@@ -17,6 +18,7 @@ target_sources(Calc PRIVATE
   chargemanager.cpp
   defaultmodel.cpp
   energycalculator.cpp
+  energyoptimizer.cpp
   energymanager.cpp
   lennardjones.cpp
   uff.cpp
@@ -25,4 +27,5 @@ target_sources(Calc PRIVATE
 avogadro_add_library(Calc)
 
 target_link_libraries(Calc
-  PUBLIC Avogadro::Core cppoptlib)
+  PUBLIC Avogadro::Core
+  PRIVATE cppoptlib)
