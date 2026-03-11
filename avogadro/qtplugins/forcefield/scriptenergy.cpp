@@ -562,19 +562,24 @@ Real ScriptEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
   if (grad == nullptr)
     return value(x);
 
+  // Optimizers may pass an uninitialized/incorrectly-sized gradient buffer.
+  if (grad->rows() != x.rows())
+    grad->resize(x.rows());
+  grad->setZero();
+
   if (!m_gradients)
     return EnergyCalculator::evaluate(x, grad);
 
   if (m_protocol == Protocol::BinaryV1) {
-    double energy = 0.0;
-    if (!evaluateBinary(x, true, energy, *grad)) {
+    // The binary protocol doesn't currently support combined evaluation
+    double unusedEnergy = 0.0;
+    if (!evaluateBinary(x, true, unusedEnergy, *grad)) {
       grad->setConstant(std::numeric_limits<Real>::quiet_NaN());
       return std::numeric_limits<Real>::quiet_NaN();
     }
     cleanGradients(*grad);
     constraintGradients(x, *grad);
-    energy += constraintEnergies(x);
-    return energy;
+    return value(x);
   }
 
   // Text protocol parsers are currently separate for value and gradient.
@@ -584,6 +589,10 @@ Real ScriptEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
 
 void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
+  if (grad.rows() != x.rows())
+    grad.resize(x.rows());
+  grad.setZero();
+
   if (!m_gradients) {
     EnergyCalculator::gradient(x, grad);
     return;
