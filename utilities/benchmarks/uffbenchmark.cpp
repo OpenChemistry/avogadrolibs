@@ -13,10 +13,12 @@
 #include <chrono>
 #include <cmath>
 #include <filesystem>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <limits>
 #include <numeric>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -141,6 +143,61 @@ fs::path resolvePath(const std::string& dataRoot, const std::string& file)
   return p.is_absolute() ? p : fs::path(dataRoot) / p;
 }
 
+bool isPdbFile(const fs::path& path)
+{
+  std::string ext = path.extension().string();
+  std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c) {
+    return static_cast<char>(std::tolower(c));
+  });
+  return ext == ".pdb" || ext == ".ent";
+}
+
+std::string sanitizePdbInput(const std::string& input)
+{
+  std::istringstream stream(input);
+  std::ostringstream cleaned;
+  std::string line;
+  while (std::getline(stream, line)) {
+    if (line.rfind("CONECT", 0) == 0)
+      continue;
+
+    if ((line.rfind("ATOM", 0) == 0 || line.rfind("HETATM", 0) == 0) &&
+        line.size() > 16) {
+      const char altLoc = line[16];
+      if (altLoc != ' ' && altLoc != 'A')
+        continue;
+      if (altLoc == 'A')
+        line[16] = ' ';
+    }
+
+    cleaned << line << '\n';
+  }
+  return cleaned.str();
+}
+
+bool readMoleculeFromPath(const fs::path& moleculePath, Molecule& molecule)
+{
+  auto& manager = Avogadro::Io::FileFormatManager::instance();
+  if (!isPdbFile(moleculePath))
+    return manager.readFile(molecule, moleculePath.string());
+
+  std::ifstream file(moleculePath, std::ios::in);
+  if (!file)
+    return false;
+
+  std::ostringstream buffer;
+  buffer << file.rdbuf();
+  const std::string sanitized = sanitizePdbInput(buffer.str());
+  if (sanitized.empty())
+    return false;
+
+  if (manager.readString(molecule, sanitized, "pdb"))
+    return true;
+
+  // Fallback to the raw parser path if sanitizing unexpectedly fails.
+  return manager.readFile(molecule, moleculePath.string());
+}
+
 TimingStats computeStats(const std::vector<double>& samplesMs)
 {
   TimingStats stats;
@@ -179,8 +236,7 @@ BenchmarkResult benchmarkFile(const fs::path& moleculePath,
   }
 
   Molecule molecule;
-  if (!Avogadro::Io::FileFormatManager::instance().readFile(
-        molecule, moleculePath.string())) {
+  if (!readMoleculeFromPath(moleculePath, molecule)) {
     result.error = "Unable to load molecule via FileFormatManager";
     return result;
   }
