@@ -50,14 +50,6 @@ public:
   virtual std::string description() const = 0;
 
   /**
-   * Called to set the configuration (e.g., for a GUI options dialog)
-   */
-  virtual bool setConfiguration([[maybe_unused]] Core::VariantMap& config)
-  {
-    return true;
-  }
-
-  /**
    * @brief Return a JSON object string describing optional user-editable
    * settings for this model. Empty string means no user options.
    */

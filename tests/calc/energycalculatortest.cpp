@@ -43,13 +43,6 @@ public:
     return "Test calculator for unit testing";
   }
 
-  bool setConfiguration(VariantMap& config) override
-  {
-    m_configCalled = true;
-    m_config = config;
-    return true;
-  }
-
   Molecule::ElementMask elements() const override
   {
     // Support all elements by default
@@ -615,35 +608,6 @@ TEST_F(EnergyCalculatorTest, ElementMaskSize)
 }
 
 // Configuration Tests
-
-TEST_F(EnergyCalculatorTest, SetConfiguration)
-{
-  VariantMap config;
-  config.setValue("test_key", "test_value");
-
-  EXPECT_TRUE(calculator->setConfiguration(config));
-  EXPECT_TRUE(calculator->wasConfigCalled());
-}
-
-TEST_F(EnergyCalculatorTest, SetConfigurationEmpty)
-{
-  VariantMap config;
-
-  EXPECT_TRUE(calculator->setConfiguration(config));
-}
-
-TEST_F(EnergyCalculatorTest, SetConfigurationMultipleValues)
-{
-  VariantMap config;
-  config.setValue("key1", "value1");
-  config.setValue("key2", 42);
-  config.setValue("key3", 3.14);
-
-  EXPECT_TRUE(calculator->setConfiguration(config));
-
-  const VariantMap& stored = calculator->getConfig();
-  EXPECT_EQ(stored.value("key1").toString(), "value1");
-}
 
 TEST_F(EnergyCalculatorTest, UserOptionsDefaultEmpty)
 {
