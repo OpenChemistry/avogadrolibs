@@ -16,6 +16,8 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
+#include <unordered_set>
+
 namespace Avogadro::Calc {
 
 using namespace Core;
@@ -93,6 +95,15 @@ public:
   Real _x12; // precomputed x^12
 };
 
+// VdW distance cutoff squared (10 Angstrom cutoff).
+// UFF equilibrium VdW distances are 2.5-4.5 Angstroms,
+// so at ~2.5x the largest, LJ energy is negligible.
+static constexpr Real VDW_CUTOFF_SQ = 100.0;
+// Rebuild VdW pair list when max atom displacement exceeds 2 Angstroms
+static constexpr Real VDW_REBUILD_THRESHOLD_SQ = 4.0;
+// Only check for rebuild every N evaluations
+static constexpr int VDW_REBUILD_CHECK_INTERVAL = 10;
+
 class UFFPrivate // track the particular calculations for a molecule
 {
 public:
@@ -102,23 +113,37 @@ public:
   std::vector<UFFOOP> m_oops;
   std::vector<UFFTorsion> m_torsions;
   std::vector<UFFVdW> m_vdws;
+  std::unordered_set<uint64_t> m_excludedPairs; // 1-2 and 1-3 pairs
+  Eigen::VectorXd m_lastVdWPositions; // positions when VdW list was last built
+  int m_vdwCallCount = 0;             // counter for rebuild check interval
   Core::Molecule* m_molecule;
   Core::UnitCell* m_cell;
 
-  UFFPrivate(Core::Molecule* mol = nullptr) : m_molecule(mol)
+  static uint64_t pairKey(Index i, Index j)
+  {
+    return i < j ? (uint64_t(i) << 32 | uint64_t(j))
+                 : (uint64_t(j) << 32 | uint64_t(i));
+  }
+
+  UFFPrivate(Core::Molecule* mol = nullptr) : m_molecule(mol), m_cell(nullptr)
   {
     if (mol == nullptr || mol->atomCount() < 2) {
       return; // nothing to do
     }
+
+    m_cell = mol->unitCell(); // could be nullptr
 
     setAtomTypes();
     setBonds();
     setAngles();
     setOOPs();
     setTorsions();
-    setVdWs();
+    buildExclusionSet();
 
-    m_cell = mol->unitCell(); // could be nullptr
+    // Extract initial positions for VdW cutoff
+    Core::Array<Vector3> pos = mol->atomPositions3d();
+    Eigen::Map<Eigen::VectorXd> posMap(pos[0].data(), 3 * mol->atomCount());
+    setVdWs(posMap);
   }
 
   void setAtomTypes()
@@ -598,43 +623,90 @@ public:
     }
   }
 
-  // check if atoms i and j are 1-2 or 1-3 connected
-  // fairly fast because we're only checking neighbors
-  bool areConnected(Index i, Index j)
+  // Build a hash set of all 1-2 and 1-3 atom pairs for O(1) exclusion lookup
+  void buildExclusionSet()
   {
-    const std::vector<Index>& neighbors = m_molecule->graph().neighbors(i);
-    const std::vector<Index>& neighbors2 = m_molecule->graph().neighbors(j);
-    for (Index k : neighbors) {
-      if (k == j)
-        return true;
-      for (Index l : neighbors2) {
-        if (l == k)
-          return true;
+    const auto& graph = m_molecule->graph();
+    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+      const std::vector<Index>& neighbors = graph.neighbors(i);
+      for (Index j : neighbors) {
+        // 1-2 pair
+        m_excludedPairs.insert(pairKey(i, j));
+        // 1-3 pairs: neighbors of j that aren't i
+        const std::vector<Index>& neighbors2 = graph.neighbors(j);
+        for (Index k : neighbors2) {
+          if (k != i)
+            m_excludedPairs.insert(pairKey(i, k));
+        }
       }
     }
-    return false;
   }
 
-  void setVdWs()
+  // Check if atoms i and j are 1-2 or 1-3 connected (O(1) lookup)
+  bool areExcluded(Index i, Index j) const
   {
-    // we do a double-loop through the atoms
-    // and check for 1-2 or 1-3 with areConnected
-    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-      for (Index j = i + 1; j < m_molecule->atomCount(); ++j) {
-        if (!areConnected(i, j)) {
-          UFFVdW v;
-          v._atom1 = i;
-          v._atom2 = j;
+    return m_excludedPairs.count(pairKey(i, j)) > 0;
+  }
 
-          v._depth =
-            sqrt(uffparams[m_atomTypes[i]].D1 * uffparams[m_atomTypes[j]].D1);
-          v._x =
-            sqrt(uffparams[m_atomTypes[i]].x1 * uffparams[m_atomTypes[j]].x1);
-          Real x3 = v._x * v._x * v._x;
-          v._x6 = x3 * x3;
-          v._x12 = v._x6 * v._x6;
-          m_vdws.push_back(v);
+  // Build or rebuild the VdW pair list with distance cutoff
+  void setVdWs(const Eigen::VectorXd& x)
+  {
+    m_vdws.clear();
+    m_lastVdWPositions = x;
+
+    const Index n = m_molecule->atomCount();
+    for (Index i = 0; i < n; ++i) {
+      for (Index j = i + 1; j < n; ++j) {
+        if (areExcluded(i, j))
+          continue;
+
+        // Apply distance cutoff
+        Real r2;
+        if (m_cell == nullptr) {
+          const Vector3d diff = x.segment<3>(3 * i) - x.segment<3>(3 * j);
+          r2 = diff.squaredNorm();
+        } else {
+          r2 = m_cell->distanceSquared(Vector3(x.segment<3>(3 * i)),
+                                       Vector3(x.segment<3>(3 * j)));
         }
+        if (r2 > VDW_CUTOFF_SQ)
+          continue;
+
+        UFFVdW v;
+        v._atom1 = i;
+        v._atom2 = j;
+        v._depth =
+          sqrt(uffparams[m_atomTypes[i]].D1 * uffparams[m_atomTypes[j]].D1);
+        v._x =
+          sqrt(uffparams[m_atomTypes[i]].x1 * uffparams[m_atomTypes[j]].x1);
+        Real x3 = v._x * v._x * v._x;
+        v._x6 = x3 * x3;
+        v._x12 = v._x6 * v._x6;
+        m_vdws.push_back(v);
+      }
+    }
+  }
+
+  // Rebuild the VdW pair list if any atom has moved significantly.
+  // Only checks every N calls to avoid O(N) overhead on every evaluation.
+  void rebuildVdWsIfNeeded(const Eigen::VectorXd& x)
+  {
+    if (m_lastVdWPositions.size() != x.size()) {
+      setVdWs(x);
+      return;
+    }
+
+    if (++m_vdwCallCount % VDW_REBUILD_CHECK_INTERVAL != 0)
+      return;
+
+    // Check max squared displacement across all atoms
+    const Index n = m_molecule->atomCount();
+    for (Index i = 0; i < n; ++i) {
+      const Vector3d disp =
+        x.segment<3>(3 * i) - m_lastVdWPositions.segment<3>(3 * i);
+      if (disp.squaredNorm() > VDW_REBUILD_THRESHOLD_SQ) {
+        setVdWs(x);
+        return;
       }
     }
   }
@@ -875,6 +947,8 @@ public:
   void vdwEvaluate(const Eigen::VectorXd& x, Real* energy,
                    Eigen::VectorXd* grad)
   {
+    rebuildVdWsIfNeeded(x);
+
     const bool needsGradient = grad != nullptr;
 
     for (const UFFVdW& vdw : m_vdws) {
@@ -894,6 +968,10 @@ public:
       } else {
         r2 = m_cell->distanceSquared(vi, vj);
       }
+
+      // Skip pairs that moved beyond the cutoff since the list was built
+      if (r2 > VDW_CUTOFF_SQ)
+        continue;
 
       const Real r6 = r2 * r2 * r2;
       if (energy != nullptr) {
