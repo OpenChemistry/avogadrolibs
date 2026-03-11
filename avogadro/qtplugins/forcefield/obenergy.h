@@ -47,6 +47,7 @@ public:
   Real value(const Eigen::VectorXd& x) override;
   // gradient (which may be unsupported and fall back to numeric)
   void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
+  Real evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad) override;
 
   bool acceptsIons() const override { return true; }
   // UFF can handle radicals

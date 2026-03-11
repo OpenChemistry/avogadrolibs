@@ -33,11 +33,8 @@
 #include <avogadro/qtgui/packagemanager.h>
 
 #include <avogadro/calc/energymanager.h>
+#include <avogadro/calc/energyoptimizer.h>
 #include <avogadro/calc/lennardjones.h>
-
-#include <cppoptlib/meta.h>
-#include <cppoptlib/problem.h>
-#include <cppoptlib/solver/lbfgssolver.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -403,8 +400,10 @@ void Forcefield::optimize()
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
 
-  // TODO - use different solvers
-  cppoptlib::LbfgsSolver<EnergyCalculator> solver;
+  const size_t chunkIterations = 5;
+  Calc::OptimizationOptions options;
+  options.algorithm = Calc::OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = chunkIterations;
 
   auto n = m_molecule->atomCount();
   setupConstraints();
@@ -419,18 +418,7 @@ void Forcefield::optimize()
   // we'll use this to draw the force arrows later
   Core::Array<Vector3> forces = m_molecule->atomPositions3d();
 
-  // Create a Criteria class so we can update coords every N steps
-  cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
-
-  // e.g., every N steps, update coordinates
-  crit.iterations = 5;
-  // we don't set function or gradient criteria
-  // .. these seem to be broken in the solver code
-  // .. so we handle ourselves
-  solver.setStopCriteria(crit);
-
-  Real energy = m_method->value(positions);
-  m_method->gradient(positions, gradient);
+  Real energy = m_method->evaluate(positions, &gradient);
 
   // debug the gradients
 #ifndef NDEBUG
@@ -442,28 +430,28 @@ void Forcefield::optimize()
 
   qDebug() << " initial " << energy << " gradNorm: " << gradient.norm();
   qDebug() << " maxSteps" << m_maxSteps << " steps "
-           << m_maxSteps / crit.iterations;
+           << m_maxSteps / chunkIterations;
 
   QProgressDialog progress(tr("Optimize Geometry"), "Cancel", 0,
-                           m_maxSteps / crit.iterations);
+                           m_maxSteps / chunkIterations);
   progress.setWindowModality(Qt::WindowModal);
   progress.setMinimumDuration(0);
   progress.setAutoClose(true);
   progress.show();
 
   Real currentEnergy = 0.0;
-  for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {
-    solver.minimize(*m_method, positions);
+  for (size_t i = 0; i < static_cast<size_t>(m_maxSteps) / chunkIterations;
+       ++i) {
+    if (!Calc::optimizeSteps(*m_method, positions, options))
+      break;
     // update the progress dialog
-    progress.setValue(i);
+    progress.setValue(static_cast<int>(i));
 
     qApp->processEvents(QEventLoop::AllEvents, 500);
 
-    currentEnergy = m_method->value(positions);
+    currentEnergy = m_method->evaluate(positions, &gradient);
     progress.setLabelText(
       tr("Energy: %L1", "force field energy").arg(currentEnergy, 0, 'f', 3));
-    // get the current gradient for force visualization
-    m_method->gradient(positions, gradient);
 #ifndef NDEBUG
     qDebug() << " optimize " << i << currentEnergy
              << " gradNorm: " << gradient.norm();

@@ -6,6 +6,9 @@
 #include "energycalculator.h"
 #include "gradients.h"
 
+#include <cppoptlib/utils/derivatives.h>
+
+#include <algorithm>
 #include <iostream>
 #include <avogadro/core/angletools.h>
 
@@ -13,7 +16,48 @@ using Eigen::Vector3d;
 
 namespace Avogadro::Calc {
 
-void EnergyCalculator::gradient(const TVector& x, TVector& grad)
+namespace {
+struct FiniteDifferenceObjective
+{
+  using ScalarType = Real;
+  using VectorType = Eigen::VectorXd;
+
+  explicit FiniteDifferenceObjective(EnergyCalculator* calculator_)
+    : calculator(calculator_)
+  {
+  }
+
+  ScalarType operator()(const VectorType& x) const
+  {
+    return calculator->value(x);
+  }
+
+  EnergyCalculator* calculator;
+};
+} // namespace
+
+Real EnergyCalculator::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
+{
+  if (grad != nullptr) {
+    // Solvers may pass an uninitialized gradient buffer.
+    // Ensure derived implementations can safely index into grad.
+    if (grad->rows() != x.rows())
+      grad->resize(x.rows());
+    grad->setZero();
+    gradient(x, *grad);
+  }
+  return value(x);
+}
+
+void EnergyCalculator::finiteGradient(const Eigen::VectorXd& x,
+                                      Eigen::VectorXd& grad, int accuracy)
+{
+  const int accuracyLevel = std::clamp(accuracy, 0, 3);
+  FiniteDifferenceObjective objective(this);
+  cppoptlib::utils::ComputeFiniteGradient(objective, x, &grad, accuracyLevel);
+}
+
+void EnergyCalculator::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
   finiteGradient(x, grad);
   // clean and handle frozen atoms
@@ -22,7 +66,7 @@ void EnergyCalculator::gradient(const TVector& x, TVector& grad)
   constraintGradients(x, grad);
 }
 
-void EnergyCalculator::cleanGradients(TVector& grad)
+void EnergyCalculator::cleanGradients(Eigen::VectorXd& grad)
 {
   unsigned int size = grad.rows();
   // check for overflows -- in case of divide by zero, etc.
@@ -100,7 +144,7 @@ std::vector<Core::Constraint> EnergyCalculator::constraints() const
   return allConstraints;
 }
 
-Real EnergyCalculator::constraintEnergies(const TVector& x)
+Real EnergyCalculator::constraintEnergies(const Eigen::VectorXd& x)
 {
   Real totalEnergy = 0.0;
 
@@ -185,7 +229,8 @@ Real EnergyCalculator::constraintEnergies(const TVector& x)
   return totalEnergy;
 }
 
-void EnergyCalculator::constraintGradients(const TVector& x, TVector& grad)
+void EnergyCalculator::constraintGradients(const Eigen::VectorXd& x,
+                                           Eigen::VectorXd& grad)
 {
   for (const auto& constraint : m_distanceConstraints) {
     const Index a = constraint.aIndex();

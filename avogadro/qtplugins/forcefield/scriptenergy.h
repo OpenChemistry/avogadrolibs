@@ -93,6 +93,7 @@ public:
   Real value(const Eigen::VectorXd& x) override;
   // gradient (which may be unsupported and fall back to numeric)
   void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
+  Real evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad) override;
 
 private:
   static Format stringToFormat(const std::string& str);

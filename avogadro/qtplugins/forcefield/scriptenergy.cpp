@@ -557,6 +557,31 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
   return energy;
 }
 
+Real ScriptEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
+{
+  if (grad == nullptr)
+    return value(x);
+
+  if (!m_gradients)
+    return EnergyCalculator::evaluate(x, grad);
+
+  if (m_protocol == Protocol::BinaryV1) {
+    double energy = 0.0;
+    if (!evaluateBinary(x, true, energy, *grad)) {
+      grad->setConstant(std::numeric_limits<Real>::quiet_NaN());
+      return std::numeric_limits<Real>::quiet_NaN();
+    }
+    cleanGradients(*grad);
+    constraintGradients(x, *grad);
+    energy += constraintEnergies(x);
+    return energy;
+  }
+
+  // Text protocol parsers are currently separate for value and gradient.
+  gradient(x, *grad);
+  return value(x);
+}
+
 void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
   if (!m_gradients) {

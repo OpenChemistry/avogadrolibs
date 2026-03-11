@@ -7,11 +7,8 @@
 #include "csvrthermostat.h"
 
 #include <avogadro/calc/energymanager.h>
+#include <avogadro/calc/energyoptimizer.h>
 #include <avogadro/calc/lennardjones.h>
-
-#include <cppoptlib/meta.h>
-#include <cppoptlib/problem.h>
-#include <cppoptlib/solver/lbfgssolver.h>
 
 #include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/vector.h>
@@ -371,7 +368,7 @@ Real AutoOpt::calculateEnergy()
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   Eigen::Map<Eigen::VectorXd> positions(pos[0].data(),
                                         3 * m_molecule->atomCount());
-  return m_method->value(positions);
+  return m_method->evaluate(positions, nullptr);
 }
 
 void AutoOpt::optimizeStep()
@@ -392,15 +389,12 @@ void AutoOpt::optimizeStep()
     mask = Eigen::VectorXd::Ones(3 * n);
   m_method->setMask(mask);
 
-  // optimize one step
-  cppoptlib::LbfgsSolver<Calc::EnergyCalculator> solver;
-  cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
-  // e.g., every N steps, update coordinates
-  crit.iterations = 2;
-  solver.setStopCriteria(crit);
-
-  solver.minimize(*m_method, positions);
-  Real currentEnergy = m_method->value(positions);
+  Calc::OptimizationOptions options;
+  options.algorithm = Calc::OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 2;
+  if (!Calc::optimizeSteps(*m_method, positions, options))
+    return;
+  Real currentEnergy = m_method->evaluate(positions, nullptr);
 
   if (std::isfinite(currentEnergy) && positions.allFinite()) {
     m_deltaE = currentEnergy - m_energy; // should be negative = lower E
