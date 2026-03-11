@@ -43,6 +43,7 @@ public:
 
   Real value(const Eigen::VectorXd& x) override;
   void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
+  Real evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad) override;
 
   /**
    * Called when the current molecule changes.

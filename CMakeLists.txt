@@ -71,6 +71,7 @@ option(USE_EXTERNAL_NLOHMANN "Use an externally-provided version of the nlohmann
 option(USE_EXTERNAL_PUGIXML "Use an externally-provided version of pugixml" OFF)
 option(USE_EXTERNAL_STRUCT "Use an externally-provided version of the struct binary data formatting library" OFF)
 option(USE_EXTERNAL_TOMLPLUSPLUS "Use an externally-provided version of tomlplusplus" OFF)
+option(ENABLE_CALC_BENCHMARKS "Build optional calc benchmark executables" OFF)
 set(QT_VERSION "6" CACHE STRING "What major version of Qt")
 set(QT_VERSIONS_SUPPORTED 6)
 set_property(CACHE QT_VERSION PROPERTY STRINGS 6)

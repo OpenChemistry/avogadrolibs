@@ -74,6 +74,41 @@ TEST_P(UffGradientTest, GradientComparison)
   }
 }
 
+TEST_P(UffGradientTest, EvaluateMatchesValueAndGradient)
+{
+  const char* filename = GetParam();
+
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string filepath = std::string(AVOGADRO_DATA) + "/data/xyz/" + filename;
+  EXPECT_TRUE(xyz.readFile(filepath, molecule));
+  ASSERT_EQ(xyz.error(), std::string());
+  ASSERT_GT(molecule.atomCount(), 0);
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  const unsigned int n = molecule.atomCount();
+  Core::Array<Vector3> pos = molecule.atomPositions3d();
+  double* p = pos[0].data();
+  Eigen::Map<Eigen::VectorXd> positions(p, 3 * n);
+
+  const Real expectedEnergy = uff.value(positions);
+  Eigen::VectorXd expectedGradient = Eigen::VectorXd::Zero(3 * n);
+  uff.gradient(positions, expectedGradient);
+
+  Eigen::VectorXd fusedGradient(1); // intentional wrong size to validate resize
+  const Real fusedEnergy = uff.evaluate(positions, &fusedGradient);
+
+  EXPECT_NEAR(fusedEnergy, expectedEnergy,
+              std::max(1e-8, 1e-10 * std::fabs(expectedEnergy)));
+  ASSERT_EQ(fusedGradient.size(), expectedGradient.size());
+  for (int i = 0; i < expectedGradient.size(); ++i) {
+    EXPECT_NEAR(fusedGradient[i], expectedGradient[i],
+                std::max(1e-7, 1e-8 * std::fabs(expectedGradient[i])));
+  }
+}
+
 // Instantiate the test suite with different molecule files
 INSTANTIATE_TEST_SUITE_P(
   UffTest, UffGradientTest,
