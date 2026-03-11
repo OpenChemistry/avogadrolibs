@@ -5,13 +5,14 @@
 # Apostol Penkov <apostol.penkov@gmail.com>, 2020.
 # Salif Mehmed <mail@salif.eu>, 2023.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
+# Ivo Pilev <pilevivo8@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-07 13:27+0000\n"
-"PO-Revision-Date: 2026-02-28 14:09+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-12 19:09+0000\n"
+"Last-Translator: Ivo Pilev <pilevivo8@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
 "Language: bg\n"
@@ -19,17 +20,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
-#, qt-format
+#, fuzzy, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Групова работа #%L1 (%2)"
 
 #: molequeue/client/client.cpp:240
+#, fuzzy
 msgid "No message specified."
-msgstr ""
+msgstr "Не специфично съобщение"
 
 #: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:72
 #, qt-format
@@ -38,71 +40,80 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"Script --print-options може да изпраща само JSON обекти на най-голямото "
+"ниво. Получено:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:191 qtgui/interfacescript.cpp:220
 #: qtgui/interfacescript.cpp:353
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Не е текст предупреждение изпратено."
 
 #: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:223
 #: qtgui/interfacescript.cpp:356
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'warnings' член не е в масива."
 
 #: molequeue/inputgenerator.cpp:214 qtgui/interfacescript.cpp:376
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Препратка файл '%1' не съществува."
 
 #: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:378
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Грешка попълване файл %1: %2"
 
 #: molequeue/inputgenerator.cpp:220 qtgui/interfacescript.cpp:382
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"Файл '%1' е бедно форматиран. Липсва текст 'contents' или 'filePath' членове."
 
 #: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:415
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Не формулиран запис на файл: името на файла/попълненията липсват или "
+"текста:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:258 qtgui/interfacescript.cpp:421
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Не до формиран файл надпис в индекст %1: Не е обект."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:427
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'files' член не е масив."
 
 #: molequeue/inputgenerator.cpp:268 qtgui/interfacescript.cpp:431
 msgid "'files' member missing."
-msgstr ""
+msgstr "'files' член липсва."
 
 #: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:442
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "'mainFile' член не е препратен към запис 'files'."
 
 #: molequeue/inputgenerator.cpp:284 qtgui/interfacescript.cpp:447
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'mainFile' членове трябва да бъдат текст."
 
 #: molequeue/inputgenerator.cpp:295 qtgui/interfacescript.cpp:458
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Отговор трябва да бъде JSON обект в високо ниво."
 
 #: molequeue/inputgenerator.cpp:299 qtgui/interfacescript.cpp:462
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Скрипт заден пост:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:342 qtgui/interfacescript.cpp:506
 #, qt-format
@@ -118,12 +129,14 @@ msgstr ""
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Грешка запазването на молекули се репрезентира в текст:Непознат файл "
+"фортмат: %1"
 
 #: molequeue/inputgenerator.cpp:374
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr ""
+msgstr "Грешка при запазване на молекулна презентация в текст: %1"
 
 #: molequeue/inputgenerator.cpp:387 qtgui/interfacescript.cpp:573
 #, qt-format
@@ -133,6 +146,11 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Грешка при генериране на cjson обект:грешка при разбиване в разместването "
+"%1: %2\n"
+"Суров JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:396 qtgui/interfacescript.cpp:582
 #, qt-format
@@ -140,20 +158,22 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Грешка при генератор cjson обект: Разбит JSON не е обект:\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Генератор на вход (грешка)"
 
 #: molequeue/inputgeneratordialog.cpp:49
 #: qtplugins/quantuminput/quantuminput.cpp:276
 #, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "%1 генератор на вход"
 
 #: molequeue/inputgeneratorwidget.cpp:123
 msgid "Continue"
-msgstr ""
+msgstr "Продължи"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:130
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -199,28 +219,40 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Следващият файл беше модифициран:\n"
+"\n"
+"%1\n"
+"\n"
+"Искате ли да презапишеш Вашите смени да отразиш нова геометрия или нови "
+"опции за работа?"
 msgstr[1] ""
+"Следващите файлове бяха модифицирани:\n"
+"\n"
+"%1\n"
+"\n"
+"Искате ли да презапишете Вашите смени да отразиш нова геометрия или нови "
+"опции за работа?"
 
 #: molequeue/inputgeneratorwidget.cpp:178
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Презапишете модифицирани файлове за вход?"
 
 #: molequeue/inputgeneratorwidget.cpp:204
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Грешка се появи по време на генерирането на вход:"
 
 #: molequeue/inputgeneratorwidget.cpp:293
 msgid "No input files to save!"
-msgstr ""
+msgstr "Входа не е запазен!"
 
 #: molequeue/inputgeneratorwidget.cpp:301
 #: molequeue/inputgeneratorwidget.cpp:609 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:980
 #: qtplugins/gamessinput/gamessinputdialog.cpp:917
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Не може да се свържи MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:302
 #: molequeue/inputgeneratorwidget.cpp:610 molequeue/molequeuewidget.cpp:70
@@ -230,43 +262,45 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Не може да се свържеш до MoleQueue сървъри. Моля оведови се че върви и "
+"опитай отново."
 
 #: molequeue/inputgeneratorwidget.cpp:333
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Изпрати %1 калкулации"
 
 #: molequeue/inputgeneratorwidget.cpp:349
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1017
 #: qtplugins/gamessinput/gamessinputdialog.cpp:954
 msgid "Job Failed"
-msgstr ""
+msgstr "Работата се провали"
 
 #: molequeue/inputgeneratorwidget.cpp:350
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1018
 #: qtplugins/gamessinput/gamessinputdialog.cpp:955
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Работата не свърши успешно."
 
 #: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:62
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Скрипт връща предупреждавания:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:384
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Скрий& Предупреждения"
 
 #: molequeue/inputgeneratorwidget.cpp:390
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Покажи & Предупреждения"
 
 #: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:78
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Грешка се появи:"
 
 #: molequeue/inputgeneratorwidget.cpp:458
 msgid "Select output filename"
-msgstr ""
+msgstr "Избери изходна filename"
 
 #: molequeue/inputgeneratorwidget.cpp:470
 #, qt-format
@@ -454,7 +488,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Няма молекула поставена в BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -462,7 +496,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Няма поставено име в BackgroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -4597,15 +4631,15 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:567
 msgid "File Formats"
-msgstr ""
+msgstr "Формати за файл"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:569
 msgid "Input Generators"
-msgstr ""
+msgstr "Генератор на Вход"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:571
 msgid "Commands"
-msgstr ""
+msgstr "Команди"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:60
 #: qtplugins/plugindownloader/zipextracter.cpp:67
