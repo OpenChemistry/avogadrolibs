@@ -93,7 +93,10 @@ public:
   Real value(const Eigen::VectorXd& x) override;
   // gradient (which may be unsupported and fall back to numeric)
   void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
+  // fused energy + gradient
   Real evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad) override;
+  // hessian (falls back to finite difference if unsupported by script)
+  void hessian(const Eigen::VectorXd& x, Eigen::MatrixXd& hess) override;
 
 private:
   static Format stringToFormat(const std::string& str);
@@ -105,12 +108,14 @@ private:
 
   QByteArray writeCoordinatesText(const Eigen::VectorXd& x);
   QByteArray writeCoordinatesBinary(const Eigen::VectorXd& x,
-                                    bool requestGradient) const;
-  bool parseResponseBinary(const QByteArray& response, bool requestGradient,
-                           double& energy, Eigen::VectorXd& grad) const;
+                                    quint16 requestFlags) const;
+  bool parseResponseBinary(const QByteArray& response, quint16 requestFlags,
+                           double* energy, Eigen::VectorXd* grad,
+                           Eigen::MatrixXd* hess) const;
   bool readBinaryFrame(const QByteArray& input, QByteArray& frame);
-  bool evaluateBinary(const Eigen::VectorXd& x, bool requestGradient,
-                      double& energy, Eigen::VectorXd& grad);
+  bool evaluateBinary(const Eigen::VectorXd& x, quint16 requestFlags,
+                      double* energy = nullptr, Eigen::VectorXd* grad = nullptr,
+                      Eigen::MatrixXd* hess = nullptr);
   bool buildBootstrapInput(QByteArray& input) const;
 
 private:
@@ -123,6 +128,7 @@ private:
   Core::Molecule::ElementMask m_elements;
   bool m_valid;
   bool m_gradients;
+  bool m_hessians;
   bool m_ions;
   bool m_radicals;
   bool m_unitCells;

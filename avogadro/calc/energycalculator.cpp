@@ -66,6 +66,19 @@ void EnergyCalculator::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   constraintGradients(x, grad);
 }
 
+void EnergyCalculator::hessian(const Eigen::VectorXd& x, Eigen::MatrixXd& hess)
+{
+  finiteHessian(x, hess);
+}
+
+void EnergyCalculator::finiteHessian(const Eigen::VectorXd& x,
+                                     Eigen::MatrixXd& hess, int accuracy)
+{
+  const int accuracyLevel = std::clamp(accuracy, 0, 1);
+  FiniteDifferenceObjective objective(this);
+  cppoptlib::utils::ComputeFiniteHessian(objective, x, &hess, accuracyLevel);
+}
+
 void EnergyCalculator::cleanGradients(Eigen::VectorXd& grad)
 {
   unsigned int size = grad.rows();

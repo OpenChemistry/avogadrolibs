@@ -126,6 +126,18 @@ public:
                         Eigen::VectorXd* grad = nullptr);
 
   /**
+   * Calculate the Hessian matrix for this method, defaulting to numerical
+   * finite-difference methods.
+   */
+  virtual void hessian(const Eigen::VectorXd& x, Eigen::MatrixXd& hess);
+
+  /**
+   * Calculate numerical Hessian for this method.
+   */
+  void finiteHessian(const Eigen::VectorXd& x, Eigen::MatrixXd& hess,
+                     int accuracy = 0);
+
+  /**
    * Called to 'clean' gradients @param grad (e.g., for constraints)
    */
   void cleanGradients(Eigen::VectorXd& grad);
