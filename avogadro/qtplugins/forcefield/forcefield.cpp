@@ -15,17 +15,16 @@
 #include <QtCore/QDebug>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QSettings>
+#include <QtCore/QThread>
 #include <QtCore/QTimer>
 
 #include <QAction>
 #include <QtWidgets/QMessageBox>
 
-#include <QMutex>
-#include <QMutexLocker>
 #include <QProgressDialog>
-#include <QWriteLocker>
 
 #include <avogadro/qtgui/avogadropython.h>
+#include <avogadro/qtgui/calcworker.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/utilities.h>
@@ -215,7 +214,10 @@ Forcefield::Forcefield(QObject* parent_)
 #endif
 }
 
-Forcefield::~Forcefield() {}
+Forcefield::~Forcefield()
+{
+  cleanupWorker();
+}
 
 QList<QAction*> Forcefield::actions() const
 {
@@ -380,15 +382,89 @@ void Forcefield::setupConstraints()
   m_method->setConstraints(m_molecule->constraints());
 }
 
+void Forcefield::cleanupWorker()
+{
+  if (m_workerThread) {
+    m_workerThread->quit();
+    m_workerThread->wait(5000);
+    // deleteLater handles the worker and thread via finished() connections
+    m_workerThread = nullptr;
+    m_worker = nullptr;
+  }
+  if (m_progressDialog) {
+    m_progressDialog->hide();
+    m_progressDialog->deleteLater();
+    m_progressDialog = nullptr;
+  }
+  m_optimizing = false;
+}
+
+void Forcefield::startWorker()
+{
+  cleanupWorker();
+
+  auto n = m_molecule->atomCount();
+
+  // Build the frozen atom mask
+  auto mask = m_molecule->frozenAtomMask();
+  if (mask.rows() != static_cast<Eigen::Index>(3 * n))
+    mask = Eigen::VectorXd::Ones(static_cast<Eigen::Index>(3 * n));
+
+  auto constraints = m_molecule->constraints();
+
+  // Create a fresh calculator clone for the worker thread
+  auto* calc = Calc::EnergyManager::instance().model(m_methodName);
+  if (calc == nullptr)
+    return;
+
+  // Apply user options to the clone
+  const QString methodId = QString::fromStdString(m_methodName);
+  const QString modelOptions = m_modelUserOptions.value(methodId).toString();
+  if (!modelOptions.trimmed().isEmpty())
+    calc->setUserOptions(modelOptions.toStdString());
+
+  // Create a molecule snapshot (topology only, positions set separately)
+  Core::Molecule snapshot = static_cast<const Core::Molecule&>(*m_molecule);
+
+  // Set up the worker thread
+  m_workerThread = new QThread(this);
+  m_worker = new QtGui::CalcWorker();
+  m_worker->moveToThread(m_workerThread);
+
+  connect(m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
+  m_workerThread->start();
+
+  // Store args for initCalculator — caller must connect signals first,
+  // then invoke initCalculator via sendInitCalculator().
+  m_pendingCalc = calc;
+  m_pendingSnapshot = snapshot;
+  m_pendingMask = mask;
+  m_pendingConstraints = constraints;
+}
+
+void Forcefield::sendInitCalculator()
+{
+  if (!m_worker || !m_pendingCalc)
+    return;
+
+  QMetaObject::invokeMethod(
+    m_worker, "initCalculator", Qt::QueuedConnection,
+    Q_ARG(Avogadro::Calc::EnergyCalculator*, m_pendingCalc),
+    Q_ARG(Avogadro::Core::Molecule, m_pendingSnapshot),
+    Q_ARG(Eigen::VectorXd, m_pendingMask),
+    Q_ARG(std::vector<Avogadro::Core::Constraint>, m_pendingConstraints));
+  m_pendingCalc = nullptr;
+}
+
 void Forcefield::optimize()
 {
-  if (m_molecule == nullptr)
+  if (m_molecule == nullptr || m_optimizing)
     return;
 
   if (m_method == nullptr)
     setupMethod();
   if (m_method == nullptr)
-    return; // bad news
+    return;
 
   if (!m_molecule->atomCount()) {
     QMessageBox::information(nullptr, tr("Avogadro"),
@@ -396,172 +472,213 @@ void Forcefield::optimize()
     return;
   }
 
-  // merge all coordinate updates into one step for undo
-  bool isInteractive = m_molecule->undoMolecule()->isInteractive();
+  m_currentStep = 0;
+
+  // merge all coordinate updates into one undo step
   m_molecule->undoMolecule()->setInteractive(true);
 
-  const size_t chunkIterations = 5;
-  Calc::OptimizationOptions options;
-  options.algorithm = Calc::OptimizationAlgorithm::Lbfgs;
-  options.chunkIterations = chunkIterations;
+  // Set up optimization options
+  m_optOptions.algorithm = Calc::OptimizationAlgorithm::Lbfgs;
+  m_optOptions.chunkIterations = 5;
 
+  // Snapshot current positions
   auto n = m_molecule->atomCount();
-  setupConstraints();
-
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
-  Eigen::VectorXd positions = map;
-  Eigen::VectorXd lastPositions = positions;
+  m_lastPositions = map;
+  m_lastEnergy = 0.0;
 
-  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
-  // just to get the right size / shape
-  // we'll use this to draw the force arrows later
-  Core::Array<Vector3> forces = m_molecule->atomPositions3d();
+  // Start the worker first (calls cleanupWorker() which resets m_optimizing)
+  startWorker();
 
-  Real energy = m_method->evaluate(positions, &gradient);
+  // Set m_optimizing AFTER startWorker, since cleanupWorker resets it
+  m_optimizing = true;
 
-  // debug the gradients
-#ifndef NDEBUG
-  for (Index i = 0; i < n; ++i) {
-    qDebug() << " atom " << i << " grad: " << gradient[3 * i] << ", "
-             << gradient[3 * i + 1] << ", " << gradient[3 * i + 2];
-  }
-#endif
+  // Create progress dialog
+  int totalChunks = static_cast<int>(m_maxSteps / m_optOptions.chunkIterations);
+  m_progressDialog =
+    new QProgressDialog(tr("Optimize Geometry"), tr("Cancel"), 0, totalChunks);
+  m_progressDialog->setWindowModality(Qt::WindowModal);
+  m_progressDialog->setMinimumDuration(0);
+  m_progressDialog->show();
 
-  qDebug() << " initial " << energy << " gradNorm: " << gradient.norm();
-  qDebug() << " maxSteps" << m_maxSteps << " steps "
-           << m_maxSteps / chunkIterations;
+  connect(m_progressDialog, &QProgressDialog::canceled, this, [this]() {
+    if (m_worker)
+      m_worker->cancel();
+    cleanupWorker();
+    if (m_molecule)
+      m_molecule->undoMolecule()->setInteractive(false);
+  });
 
-  QProgressDialog progress(tr("Optimize Geometry"), "Cancel", 0,
-                           m_maxSteps / chunkIterations);
-  progress.setWindowModality(Qt::WindowModal);
-  progress.setMinimumDuration(0);
-  progress.setAutoClose(true);
-  progress.show();
+  connect(m_worker, &QtGui::CalcWorker::calculatorReady, this,
+          &Forcefield::onWorkerReady);
+  connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this,
+          &Forcefield::onOptimizeChunkDone);
 
-  Real currentEnergy = 0.0;
-  for (size_t i = 0; i < static_cast<size_t>(m_maxSteps) / chunkIterations;
-       ++i) {
-    if (!Calc::optimizeSteps(*m_method, positions, options))
-      break;
-    // update the progress dialog
-    progress.setValue(static_cast<int>(i));
+  sendInitCalculator();
+}
 
-    qApp->processEvents(QEventLoop::AllEvents, 500);
+void Forcefield::onWorkerReady()
+{
+  if (!m_optimizing || !m_worker)
+    return;
 
-    currentEnergy = m_method->evaluate(positions, &gradient);
-    progress.setLabelText(
-      tr("Energy: %L1", "force field energy").arg(currentEnergy, 0, 'f', 3));
-#ifndef NDEBUG
-    qDebug() << " optimize " << i << currentEnergy
-             << " gradNorm: " << gradient.norm();
-#endif
+  // Send the first optimization chunk
+  QMetaObject::invokeMethod(
+    m_worker, "runOptimizeChunk", Qt::QueuedConnection,
+    Q_ARG(Eigen::VectorXd, m_lastPositions),
+    Q_ARG(Avogadro::Calc::OptimizationOptions, m_optOptions));
+}
 
-    // update coordinates
-    if (std::isfinite(currentEnergy) && positions.allFinite()) {
-      Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = positions;
-      Eigen::Map<Eigen::VectorXd>(forces[0].data(), 3 * n) = -0.1 * gradient;
-    } else {
-      qDebug() << "Non-finite energy, stopping optimization" << currentEnergy;
-      // reset to last positions
-      positions = lastPositions;
-      gradient = Eigen::VectorXd::Zero(3 * n);
-      break;
-    }
+void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
+                                     Eigen::VectorXd gradient, double energy,
+                                     bool converged)
+{
+  if (!m_optimizing || m_molecule == nullptr)
+    return;
 
-    {
-      m_molecule->undoMolecule()->setAtomPositions3d(pos,
-                                                     tr("Optimize Geometry"));
-      m_molecule->setForceVectors(forces);
-      Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
-      m_molecule->emitChanged(changes);
-      lastPositions = positions;
+  auto n = m_molecule->atomCount();
+  m_currentStep++;
 
-      // check for convergence
-      if (fabs(gradient.maxCoeff()) < m_gradientTolerance)
-        break;
-      if (fabs(currentEnergy - energy) < m_tolerance)
-        break;
-
-      energy = currentEnergy;
-    }
-
-    if (progress.wasCanceled())
-      break;
+  if (m_progressDialog) {
+    m_progressDialog->setValue(m_currentStep);
+    m_progressDialog->setLabelText(
+      tr("Energy: %L1", "force field energy").arg(energy, 0, 'f', 3));
   }
 
-  m_molecule->undoMolecule()->setInteractive(isInteractive);
+#ifndef NDEBUG
+  qDebug() << " optimize " << m_currentStep << energy
+           << " gradNorm: " << gradient.norm();
+#endif
+
+  // Update coordinates if valid
+  if (std::isfinite(energy) && positions.allFinite()) {
+    Core::Array<Vector3> pos(n);
+    Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = positions;
+
+    Core::Array<Vector3> forces(n);
+    if (gradient.size() == 3 * static_cast<Eigen::Index>(n))
+      Eigen::Map<Eigen::VectorXd>(forces[0].data(), 3 * n) = -gradient;
+
+    m_molecule->undoMolecule()->setAtomPositions3d(pos,
+                                                   tr("Optimize Geometry"));
+    m_molecule->setForceVectors(forces);
+    Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+    m_molecule->emitChanged(changes);
+
+    m_lastPositions = positions;
+  } else {
+    qDebug() << "Non-finite energy, stopping optimization" << energy;
+    converged = true;
+  }
+
+  // Check convergence criteria
+  bool done = converged;
+  if (!done && gradient.size() > 0) {
+    if (fabs(gradient.maxCoeff()) < m_gradientTolerance)
+      done = true;
+    if (m_lastEnergy != 0.0 && fabs(energy - m_lastEnergy) < m_tolerance)
+      done = true;
+  }
+
+  int totalChunks = static_cast<int>(m_maxSteps / m_optOptions.chunkIterations);
+  if (m_currentStep >= totalChunks)
+    done = true;
+
+  m_lastEnergy = energy;
+
+  if (done || (m_progressDialog && m_progressDialog->wasCanceled())) {
+    // Optimization complete
+    m_molecule->undoMolecule()->setInteractive(false);
+    cleanupWorker();
+  } else {
+    // Request next chunk
+    QMetaObject::invokeMethod(
+      m_worker, "runOptimizeChunk", Qt::QueuedConnection,
+      Q_ARG(Eigen::VectorXd, m_lastPositions),
+      Q_ARG(Avogadro::Calc::OptimizationOptions, m_optOptions));
+  }
 }
 
 void Forcefield::energy()
 {
-  if (m_molecule == nullptr)
+  if (m_molecule == nullptr || m_optimizing)
     return;
 
   if (m_method == nullptr)
     setupMethod();
   if (m_method == nullptr)
-    return; // bad news
+    return;
 
+  auto n = m_molecule->atomCount();
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  Eigen::Map<Eigen::VectorXd> positions(pos[0].data(),
-                                        3 * m_molecule->atomCount());
+  Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
+  Eigen::VectorXd positions = map;
 
-  m_method->setMolecule(m_molecule);
-  Real energy = m_method->value(positions);
+  startWorker();
 
+  connect(
+    m_worker, &QtGui::CalcWorker::calculatorReady, this, [this, positions]() {
+      QMetaObject::invokeMethod(m_worker, "runEvaluate", Qt::QueuedConnection,
+                                Q_ARG(Eigen::VectorXd, positions),
+                                Q_ARG(bool, false));
+    });
+  connect(m_worker, &QtGui::CalcWorker::evaluateFinished, this,
+          &Forcefield::onEnergyDone);
+
+  sendInitCalculator();
+}
+
+void Forcefield::onEnergyDone(Eigen::VectorXd gradient, double energy)
+{
+  Q_UNUSED(gradient);
   QString msg(tr("%1 Energy = %L2").arg(m_methodName.c_str()).arg(energy));
+  cleanupWorker();
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
 }
 
 void Forcefield::forces()
 {
-  if (m_molecule == nullptr)
+  if (m_molecule == nullptr || m_optimizing)
     return;
 
   if (m_method == nullptr)
     setupMethod();
   if (m_method == nullptr)
-    return; // bad news
+    return;
+
+  auto n = m_molecule->atomCount();
+  Core::Array<Vector3> pos = m_molecule->atomPositions3d();
+  Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
+  Eigen::VectorXd positions = map;
+
+  startWorker();
+
+  connect(
+    m_worker, &QtGui::CalcWorker::calculatorReady, this, [this, positions]() {
+      QMetaObject::invokeMethod(m_worker, "runGradient", Qt::QueuedConnection,
+                                Q_ARG(Eigen::VectorXd, positions));
+    });
+  connect(m_worker, &QtGui::CalcWorker::evaluateFinished, this,
+          &Forcefield::onForcesDone);
+
+  sendInitCalculator();
+}
+
+void Forcefield::onForcesDone(Eigen::VectorXd gradient, double energy)
+{
+  Q_UNUSED(energy);
+
+  if (m_molecule == nullptr) {
+    cleanupWorker();
+    return;
+  }
 
   auto n = m_molecule->atomCount();
 
-  // double-check the mask
-  auto mask = m_molecule->frozenAtomMask();
-  if (mask.rows() != 3 * n)
-    mask = Eigen::VectorXd::Ones(3 * n);
-  m_method->setMolecule(m_molecule);
-  m_method->setMask(mask);
-
-  Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  Eigen::Map<Eigen::VectorXd> positions(pos[0].data(), 3 * n);
-
-  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
-  // we'll use this to draw the force arrows
-  Core::Array<Vector3> forces = m_molecule->atomPositions3d();
-
-  m_method->gradient(positions, gradient);
-
-#ifndef NDEBUG
-  qDebug() << " current gradient ";
-  for (Index i = 0; i < n; ++i) {
-    qDebug() << " atom " << i << " element "
-             << m_molecule->atom(i).atomicNumber()
-             << " grad: " << gradient[3 * i] << ", " << gradient[3 * i + 1]
-             << ", " << gradient[3 * i + 2];
-  }
-
-  qDebug() << " numeric gradient ";
-  m_method->finiteGradient(positions, gradient);
-  for (Index i = 0; i < n; ++i) {
-    qDebug() << " atom " << i << " element "
-             << m_molecule->atom(i).atomicNumber()
-             << " grad: " << gradient[3 * i] << ", " << gradient[3 * i + 1]
-             << ", " << gradient[3 * i + 2];
-  }
-#endif
-
-  Eigen::Map<Eigen::VectorXd>(forces[0].data(), 3 * n) = -0.1 * gradient;
+  Core::Array<Vector3> forces(n);
+  if (gradient.size() == 3 * static_cast<Eigen::Index>(n))
+    Eigen::Map<Eigen::VectorXd>(forces[0].data(), 3 * n) = -gradient;
 
   m_molecule->setForceVectors(forces);
   Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
@@ -569,6 +686,7 @@ void Forcefield::forces()
 
   QString msg(
     tr("%1 Force Norm = %L2").arg(m_methodName.c_str()).arg(gradient.norm()));
+  cleanupWorker();
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
 }
 
