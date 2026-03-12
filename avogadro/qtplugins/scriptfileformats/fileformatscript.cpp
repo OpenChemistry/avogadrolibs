@@ -25,7 +25,7 @@ namespace Avogadro::QtPlugins {
 
 FileFormatScript::FileFormatScript(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
-    m_bondOnRead(false), m_fileModeRead(false), m_fileModeWrite(false),
+    m_bondOnRead(false), m_inputModeFile(false), m_outputModeFile(false),
     m_inputFormat(NotUsed), m_outputFormat(NotUsed)
 {
 }
@@ -58,21 +58,16 @@ void FileFormatScript::readMetaData(const QVariantMap& metadata)
     m_operations |= Io::FileFormat::Read;
   if (support.value("write", false).toBool())
     m_operations |= Io::FileFormat::Write;
-  // Parse file-mode: "read", "write", or ["read", "write"]
-  if (metadata.contains("file-mode")) {
-    QVariant fileModeVar = metadata.value("file-mode");
-    QStringList fileModes;
-    if (fileModeVar.type() == QVariant::List) {
-      for (const auto& v : fileModeVar.toList())
-        fileModes << v.toString();
-    } else {
-      fileModes << fileModeVar.toString();
-    }
-    m_fileModeRead = fileModes.contains("read");
-    m_fileModeWrite = fileModes.contains("write");
-  }
+  // Parse input-mode / output-mode: "string" (default) or "file"
+  m_inputModeFile = metadata.value("input-mode")
+                      .toString()
+                      .compare(QLatin1String("file"), Qt::CaseInsensitive) == 0;
+  m_outputModeFile =
+    metadata.value("output-mode")
+      .toString()
+      .compare(QLatin1String("file"), Qt::CaseInsensitive) == 0;
 
-  if (m_fileModeRead || m_fileModeWrite)
+  if (m_inputModeFile || m_outputModeFile)
     m_operations |= Io::FileFormat::File;
   else
     m_operations |=
@@ -135,14 +130,14 @@ void FileFormatScript::copyMetaDataFrom(const FileFormatScript& other)
   m_fileExtensions = other.m_fileExtensions;
   m_mimeTypes = other.m_mimeTypes;
   m_bondOnRead = other.m_bondOnRead;
-  m_fileModeRead = other.m_fileModeRead;
-  m_fileModeWrite = other.m_fileModeWrite;
+  m_inputModeFile = other.m_inputModeFile;
+  m_outputModeFile = other.m_outputModeFile;
   m_valid = other.m_valid;
 }
 
 bool FileFormatScript::read(std::istream& in, Core::Molecule& molecule)
 {
-  if (m_fileModeRead) {
+  if (m_inputModeFile) {
     appendError("This format requires a file path and cannot be read from a "
                 "stream.");
     return false;
@@ -193,7 +188,7 @@ bool FileFormatScript::read(std::istream& in, Core::Molecule& molecule)
 
 bool FileFormatScript::write(std::ostream& out, const Core::Molecule& molecule)
 {
-  if (m_fileModeWrite) {
+  if (m_outputModeFile) {
     appendError("This format requires a file path and cannot be written to a "
                 "stream.");
     return false;
@@ -270,7 +265,7 @@ std::string FileFormatScript::formatToString(Format fmt)
 bool FileFormatScript::readFile(const std::string& fileName,
                                 Core::Molecule& molecule)
 {
-  if (!m_fileModeRead)
+  if (!m_inputModeFile)
     return FileFormat::readFile(fileName, molecule);
 
   QScopedPointer<FileFormat> format(createFileFormat(m_outputFormat));
@@ -309,7 +304,7 @@ bool FileFormatScript::readFile(const std::string& fileName,
 bool FileFormatScript::writeFile(const std::string& fileName,
                                  const Core::Molecule& molecule)
 {
-  if (!m_fileModeWrite)
+  if (!m_outputModeFile)
     return FileFormat::writeFile(fileName, molecule);
 
   QScopedPointer<FileFormat> format(createFileFormat(m_inputFormat));
@@ -368,8 +363,8 @@ void FileFormatScript::resetMetaData()
   m_operations = Io::FileFormat::None;
   m_valid = false;
   m_bondOnRead = false;
-  m_fileModeRead = false;
-  m_fileModeWrite = false;
+  m_inputModeFile = false;
+  m_outputModeFile = false;
   m_inputFormat = NotUsed;
   m_identifier.clear();
   m_name.clear();

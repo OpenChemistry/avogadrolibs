@@ -186,8 +186,8 @@ private:
   QtGui::PythonScript* m_interpreter;
   bool m_valid;
   bool m_bondOnRead;
-  bool m_fileModeRead;
-  bool m_fileModeWrite;
+  bool m_inputModeFile;
+  bool m_outputModeFile;
   Operations m_operations;
   Format m_inputFormat;
   Format m_outputFormat;
