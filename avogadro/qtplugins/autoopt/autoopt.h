@@ -8,6 +8,7 @@
 
 #include <avogadro/qtgui/toolplugin.h>
 
+#include <avogadro/calc/energyoptimizer.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/primitive.h>
 
@@ -15,10 +16,12 @@
 #include <QtCore/QTimer>
 #include <QtWidgets/QAbstractButton>
 
+class QThread;
+
 namespace Avogadro {
 
-namespace Calc {
-class EnergyCalculator;
+namespace QtGui {
+class CalcWorker;
 }
 
 namespace QtPlugins {
@@ -77,6 +80,11 @@ public slots:
   void optimizeStep();
   void dynamicsStep();
 
+  void onOptimizeStepDone(Eigen::VectorXd positions, Eigen::VectorXd gradient,
+                          double energy, bool converged);
+  void onGradientDone(Eigen::VectorXd gradient, double energy);
+  void onWorkerReady();
+
   void taskChanged(int task);
   void temperatureChanged(double temperature);
   void timeStepChanged(double timeStep);
@@ -87,8 +95,6 @@ private:
    * \todo Account for modifier keys.
    */
   void updatePressedButtons(QMouseEvent*, bool release);
-
-  Real calculateEnergy();
 
   void resetObject() { m_object = Rendering::Identifier(); }
   void translate(Vector3 delta, bool moveSelected = true);
@@ -104,7 +110,6 @@ private:
   Vector3f m_lastMouse3D;
   Qt::MouseButtons m_pressedButtons;
 
-  Calc::EnergyCalculator* m_method = nullptr;
   Real m_energy;
   Real m_deltaE;
 
@@ -134,6 +139,13 @@ private:
   ToolAction m_currentAction;
 
   std::string m_currentMethod;
+
+  // Worker thread state
+  QThread* m_workerThread = nullptr;
+  QtGui::CalcWorker* m_worker = nullptr;
+  bool m_computePending = false;
+  void startWorker();
+  void cleanupWorker();
 };
 
 } // namespace QtPlugins
