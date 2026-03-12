@@ -35,6 +35,7 @@ endif()
 
 avogadro_headers(QtGui
   backgroundfileformat.h
+  calcworker.h
   colorbutton.h
   containerwidget.h
   customelementdialog.h
@@ -76,6 +77,7 @@ avogadro_headers(QtGui
 
 target_sources(QtGui PRIVATE
   backgroundfileformat.cpp
+  calcworker.cpp
   colorbutton.cpp
   containerwidget.cpp
   customelementdialog.cpp
@@ -141,7 +143,7 @@ if(USE_PLOTTER)
 endif()
 
 avogadro_add_library(QtGui)
-target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets Qt::Concurrent
+target_link_libraries(QtGui PUBLIC Avogadro::IO Avogadro::Calc Qt::Widgets Qt::Concurrent
   PRIVATE tomlplusplus::tomlplusplus)
 if(USE_PLOTTER)
   target_link_libraries(QtGui PUBLIC JKQTPlotter${QT_VERSION}::JKQTPlotter${QT_VERSION})
