@@ -101,6 +101,85 @@ void PackageManager::mergeOptionsFromFile(QJsonObject& opts,
     opts.insert(it.key(), it.value());
 }
 
+QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
+                                                  const QString& command)
+{
+  // Locate pixi or the venv-installed script.
+  QString pixiExe = QStandardPaths::findExecutable(QStringLiteral("pixi"));
+  QProcess proc;
+  proc.setWorkingDirectory(packageDir);
+
+  if (!pixiExe.isEmpty()) {
+    proc.start(pixiExe, { QStringLiteral("run"), QStringLiteral("--as-is"),
+                          command, QStringLiteral("--user-options") });
+  } else {
+    // Try the venv-installed script directly.
+    QString scriptExe = findInstalledScript(packageDir, command, false);
+    if (scriptExe.isEmpty()) {
+      qWarning() << "PackageManager: cannot find pixi or venv script for"
+                 << command << "in" << packageDir;
+      return {};
+    }
+    proc.start(scriptExe, { QStringLiteral("--user-options") });
+  }
+
+  constexpr int timeoutMs = 30000; // 30 seconds
+  if (!proc.waitForStarted(timeoutMs)) {
+    qWarning() << "PackageManager: --user-options script could not start:"
+               << proc.errorString();
+    return {};
+  }
+  if (!proc.waitForFinished(timeoutMs)) {
+    qWarning() << "PackageManager: --user-options script timed out for"
+               << packageDir;
+    proc.kill();
+    return {};
+  }
+  if (proc.exitCode() != 0) {
+    qWarning() << "PackageManager: --user-options script failed for"
+               << packageDir << ":"
+               << QString::fromUtf8(proc.readAllStandardError());
+    return {};
+  }
+
+  const QByteArray output = proc.readAllStandardOutput();
+  QJsonParseError err;
+  const QJsonDocument doc = QJsonDocument::fromJson(output, &err);
+  if (err.error != QJsonParseError::NoError) {
+    qWarning() << "PackageManager: failed to parse --user-options JSON from"
+               << command << ":" << err.errorString();
+    return {};
+  }
+
+  if (doc.isArray()) {
+    QJsonObject wrapped;
+    wrapped.insert(QStringLiteral("userOptions"), doc.array());
+    return wrapped;
+  }
+
+  if (!doc.isObject()) {
+    qWarning() << "PackageManager: --user-options output is not an object or"
+                  " array from"
+               << command;
+    return {};
+  }
+
+  return doc.object();
+}
+
+QJsonObject PackageManager::resolveUserOptions(const QString& userOptionsValue,
+                                               const QString& packageDir,
+                                               const QString& command)
+{
+  if (userOptionsValue.isEmpty())
+    return {};
+
+  if (userOptionsValue == QLatin1String("dynamic"))
+    return loadOptionsFromScript(packageDir, command);
+
+  return loadOptionsFromFile(packageDir + '/' + userOptionsValue);
+}
+
 static bool hasNonExecutablePixiPython(const QString& packageDir)
 {
 #ifdef Q_OS_WIN
