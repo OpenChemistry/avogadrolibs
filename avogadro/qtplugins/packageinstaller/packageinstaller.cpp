@@ -40,7 +40,7 @@ void PackageInstaller::showDialog()
   if (m_dialog == nullptr)
     m_dialog = new PackageManagerDialog(qobject_cast<QWidget*>(parent()));
   m_dialog->show();
-  m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 } // namespace Avogadro::QtPlugins

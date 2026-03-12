@@ -174,6 +174,7 @@ void PropertyTables::showDialog()
   dialog->resize(dialogSize);
   dialog->setWindowFlags(Qt::Window);
   dialog->show();
+  dialog->activateWindow();
 }
 
 } // namespace Avogadro::QtPlugins
