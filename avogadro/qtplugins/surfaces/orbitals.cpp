@@ -139,6 +139,7 @@ void Orbitals::loadOrbitals()
   m_dialog->fillTable(m_basis);
   m_dialog->show();
   m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
@@ -183,6 +184,7 @@ void Orbitals::openDialog()
 
   m_dialog->show();
   m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 void Orbitals::calculateOrbitalFromWidget(

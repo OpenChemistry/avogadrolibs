@@ -1006,6 +1006,7 @@ void SpectraDialog::updatePlot()
   // re-enable the options
   connectOptions();
   raise();
+  activateWindow();
 }
 
 QtGui::ChartWidget* SpectraDialog::chartWidget()

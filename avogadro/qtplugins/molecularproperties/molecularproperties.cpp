@@ -217,6 +217,7 @@ void MolecularProperties::showDialog()
 
   m_dialog->show();
   m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 } // namespace Avogadro::QtPlugins
