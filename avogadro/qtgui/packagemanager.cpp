@@ -101,6 +101,30 @@ void PackageManager::mergeOptionsFromFile(QJsonObject& opts,
     opts.insert(it.key(), it.value());
 }
 
+// Locate an installed console script inside a pixi or venv environment.
+static QString findInstalledScript(const QString& packageDir,
+                                   const QString& scriptName, bool isPixi)
+{
+#ifdef Q_OS_WIN
+  const QString binDir =
+    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/Scripts")
+                         : QStringLiteral("/.venv/Scripts"));
+  const QStringList exeSuffixes = { QStringLiteral(".exe"), QString() };
+#else
+  const QString binDir =
+    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/bin")
+                         : QStringLiteral("/.venv/bin"));
+  const QStringList exeSuffixes = { QString() };
+#endif
+
+  for (const QString& suffix : exeSuffixes) {
+    const QString candidate = binDir + QLatin1Char('/') + scriptName + suffix;
+    if (QFileInfo(candidate).isExecutable())
+      return candidate;
+  }
+  return {};
+}
+
 QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
                                                   const QString& command)
 {
@@ -174,10 +198,19 @@ QJsonObject PackageManager::resolveUserOptions(const QString& userOptionsValue,
   if (userOptionsValue.isEmpty())
     return {};
 
+  QJsonObject result;
   if (userOptionsValue == QLatin1String("dynamic"))
-    return loadOptionsFromScript(packageDir, command);
+    result = loadOptionsFromScript(packageDir, command);
+  else
+    result = loadOptionsFromFile(packageDir + '/' + userOptionsValue);
 
-  return loadOptionsFromFile(packageDir + '/' + userOptionsValue);
+  // Both loadOptionsFromFile() and loadOptionsFromScript() may wrap a bare
+  // array under "userOptions".  Unwrap so callers can insert under their own
+  // key without double-nesting.
+  if (result.contains(QStringLiteral("userOptions")))
+    return result.value(QStringLiteral("userOptions")).toObject();
+
+  return result;
 }
 
 static bool hasNonExecutablePixiPython(const QString& packageDir)
@@ -276,30 +309,6 @@ static QString readSetupCommand(const QString& packageDir)
         it.key().endsWith(QStringLiteral("-setup")) &&
         isSafeScriptName(it.key()))
       return it.key();
-  }
-  return {};
-}
-
-// Locate an installed console script inside a pixi or venv environment.
-static QString findInstalledScript(const QString& packageDir,
-                                   const QString& scriptName, bool isPixi)
-{
-#ifdef Q_OS_WIN
-  const QString binDir =
-    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/Scripts")
-                         : QStringLiteral("/.venv/Scripts"));
-  const QStringList exeSuffixes = { QStringLiteral(".exe"), QString() };
-#else
-  const QString binDir =
-    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/bin")
-                         : QStringLiteral("/.venv/bin"));
-  const QStringList exeSuffixes = { QString() };
-#endif
-
-  for (const QString& suffix : exeSuffixes) {
-    const QString candidate = binDir + QLatin1Char('/') + scriptName + suffix;
-    if (QFileInfo(candidate).isExecutable())
-      return candidate;
   }
   return {};
 }

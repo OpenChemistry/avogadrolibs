@@ -203,8 +203,8 @@ void QuantumInput::menuActivated()
       if (!userOptionsRel.isEmpty()) {
         QJsonObject userOpts = QtGui::PackageManager::resolveUserOptions(
           userOptionsRel, pkgDir, pkgCmd);
-        for (auto it = userOpts.constBegin(); it != userOpts.constEnd(); ++it)
-          opts.insert(it.key(), it.value());
+        if (!userOpts.isEmpty())
+          opts.insert(QStringLiteral("userOptions"), userOpts);
       }
 
       // Optionally load syntax-highlight rules from a separate file.
