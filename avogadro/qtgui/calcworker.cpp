@@ -93,9 +93,7 @@ void CalcWorker::runGradient(Eigen::VectorXd positions)
   }
 
   Eigen::VectorXd gradient = Eigen::VectorXd::Zero(positions.size());
-  m_calc->gradient(positions, gradient);
-
-  double energy = m_calc->value(positions);
+  double energy = m_calc->evaluate(positions, &gradient);
   emit evaluateFinished(gradient, energy);
 }
 
