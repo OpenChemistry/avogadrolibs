@@ -12,13 +12,14 @@
 # "C.Y.A.N" <bd3alz@gmail.com>, 2024.
 # Syifa Tadjoedin <31january2003@gmail.com>, 2024.
 # Arif Budiman <arifpedia@gmail.com>, 2025, 2026.
+# Narada Fox <narada.fox7pc@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-07 13:27+0000\n"
-"PO-Revision-Date: 2026-03-08 15:53+0000\n"
-"Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
+"PO-Revision-Date: 2026-03-13 20:24+0000\n"
+"Last-Translator: Narada Fox <narada.fox7pc@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -731,7 +732,7 @@ msgstr "Indium"
 
 #: qtgui/elementtranslator.cpp:164
 msgid "Tin"
-msgstr "Tin"
+msgstr "Timah"
 
 #: qtgui/elementtranslator.cpp:167
 msgid "Antimony"
