@@ -229,8 +229,9 @@ void MoldenFile::processLine(std::istream& in)
           if (Core::contains(line, "Occup"))
             m_electrons += Core::lexicalCast<int>(list.back()).value_or(0);
           else if (Core::contains(line, "Ene")) {
-            pendingEnergy = Core::lexicalCast<double>(list.back()).value_or(0.0) *
-                            HARTREE_TO_EV_D;
+            pendingEnergy =
+              Core::lexicalCast<double>(list.back()).value_or(0.0) *
+              HARTREE_TO_EV_D;
             havePendingEnergy = true;
           } else if (Core::contains(line, "Spin")) {
             // Check for Beta spin - handle both "Spin= Beta" and "Spin=Beta"
