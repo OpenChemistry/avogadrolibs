@@ -287,24 +287,7 @@ void PackageManager::installPackages(const QStringList& packageDirs)
             }
           }
 
-          // Step 1: pixi init --format pyproject
-          QProcess initProc;
-          initProc.setWorkingDirectory(packageDir);
-          initProc.start(pixiExe,
-                         { QStringLiteral("init"), QStringLiteral("--format"),
-                           QStringLiteral("pyproject") });
-          if (!initProc.waitForFinished(installTimeoutMs)) {
-            qWarning() << "pixi init timed out for" << packageDir;
-            initProc.kill();
-            continue;
-          }
-          if (initProc.exitCode() != 0) {
-            qWarning() << "pixi init failed for" << packageDir << ":"
-                       << QString::fromUtf8(initProc.readAllStandardError());
-            continue;
-          }
-
-          // Step 2: pixi install
+          // Pixi install
           QProcess installProc;
           installProc.setWorkingDirectory(packageDir);
           installProc.start(pixiExe, { QStringLiteral("install") });
