@@ -118,11 +118,10 @@ QJsonObject InterfaceScript::options() const
 QString InterfaceScript::displayName() const
 {
   m_errors.clear();
+  // Not actually sure where this is even used now that the name is declared
+  // statically, but keeping the method in to avoid breaking anything
   if (m_displayName.isEmpty()) {
-    m_displayName = QString(m_interpreter->execute(
-      QStringList() << QStringLiteral("--display-name")));
-    m_errors << m_interpreter->errorList();
-    m_displayName = m_displayName.trimmed();
+    m_displayName = QString("Please report it if you ever see this text!");
   }
 
   return m_displayName;
