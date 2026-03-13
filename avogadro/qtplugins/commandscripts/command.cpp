@@ -190,8 +190,9 @@ void Command::menuActivated()
     widget = m_dialogs.value(key, nullptr);
     if (!widget) {
       widget = new InterfaceWidget(QString(), theParent);
-      widget->interfaceScript().interpreter().setPackageInfo(pkgDir, pkgCmd,
-                                                             pkgId);
+      widget->interfaceScript().interpreter().setPackageInfo(
+        pkgDir, pkgCmd, pkgId,
+        theSender->property("packageDisplayName").toString());
 
       // Build options from pyproject.toml metadata; never call --print-options
       // for package-based commands (mirrors QuantumInput::menuActivated()).
@@ -276,9 +277,9 @@ void Command::run()
     const auto& interp = iface.interpreter();
     QJsonObject options;
     if (interp.isPackageMode()) {
-      m_currentScript->interpreter().setPackageInfo(interp.packageDir(),
-                                                    interp.packageCommand(),
-                                                    interp.packageIdentifier());
+      m_currentScript->interpreter().setPackageInfo(
+        interp.packageDir(), interp.packageCommand(),
+        interp.packageIdentifier(), interp.packageDisplayName());
       // Copy cached options so insertMolecule() doesn't call --print-options
       m_currentScript->setOptionsJson(iface.options());
       // Wrap user selections under "options" so Python receives them as
@@ -457,6 +458,7 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   action->setProperty("packageDir", packageDir);
   action->setProperty("packageCommand", command);
   action->setProperty("packageIdentifier", identifier);
+  action->setProperty("packageDisplayName", item);
   action->setProperty("packageMenuPath", menuPathList);
   action->setProperty("packageUserOptions",
                       metadata.value("user-options").toString());
