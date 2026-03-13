@@ -126,16 +126,24 @@ static QString findInstalledScript(const QString& packageDir,
 }
 
 QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
-                                                  const QString& command)
+                                                  const QString& command,
+                                                  const QString& identifier)
 {
   // Locate pixi or the venv-installed script.
   QString pixiExe = QStandardPaths::findExecutable(QStringLiteral("pixi"));
   QProcess proc;
   proc.setWorkingDirectory(packageDir);
 
+  QStringList userOptsArgs;
+  if (!identifier.isEmpty())
+    userOptsArgs << identifier;
+  userOptsArgs << QStringLiteral("--user-options");
+
   if (!pixiExe.isEmpty()) {
-    proc.start(pixiExe, { QStringLiteral("run"), QStringLiteral("--as-is"),
-                          command, QStringLiteral("--user-options") });
+    QStringList pixiArgs = { QStringLiteral("run"), QStringLiteral("--as-is"),
+                             command };
+    pixiArgs << userOptsArgs;
+    proc.start(pixiExe, pixiArgs);
   } else {
     // Try the venv-installed script directly.
     QString scriptExe = findInstalledScript(packageDir, command, false);
@@ -144,7 +152,7 @@ QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
                  << command << "in" << packageDir;
       return {};
     }
-    proc.start(scriptExe, { QStringLiteral("--user-options") });
+    proc.start(scriptExe, userOptsArgs);
   }
 
   constexpr int timeoutMs = 30000; // 30 seconds
@@ -193,22 +201,28 @@ QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
 
 QJsonObject PackageManager::resolveUserOptions(const QString& userOptionsValue,
                                                const QString& packageDir,
-                                               const QString& command)
+                                               const QString& command,
+                                               const QString& identifier)
 {
   if (userOptionsValue.isEmpty())
     return {};
 
   QJsonObject result;
   if (userOptionsValue == QLatin1String("dynamic"))
-    result = loadOptionsFromScript(packageDir, command);
+    result = loadOptionsFromScript(packageDir, command, identifier);
   else
     result = loadOptionsFromFile(packageDir + '/' + userOptionsValue);
 
   // Both loadOptionsFromFile() and loadOptionsFromScript() may wrap a bare
   // array under "userOptions".  Unwrap so callers can insert under their own
   // key without double-nesting.
-  if (result.contains(QStringLiteral("userOptions")))
-    return result.value(QStringLiteral("userOptions")).toObject();
+  if (result.contains(QStringLiteral("userOptions"))) {
+    QJsonValue val = result.value(QStringLiteral("userOptions"));
+    if (val.isObject())
+      return val.toObject();
+    // Value is an array; return wrapped form for caller to handle.
+    return result;
+  }
 
   return result;
 }

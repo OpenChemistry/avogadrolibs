@@ -210,7 +210,7 @@ void Command::menuActivated()
         theSender->property("packageUserOptions").toString();
       if (!userOptionsRel.isEmpty()) {
         QJsonObject userOpts = QtGui::PackageManager::resolveUserOptions(
-          userOptionsRel, pkgDir, pkgCmd);
+          userOptionsRel, pkgDir, pkgCmd, pkgId);
         if (!userOpts.isEmpty())
           opts.insert(QStringLiteral("userOptions"), userOpts);
       }

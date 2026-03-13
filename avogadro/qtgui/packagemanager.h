@@ -76,7 +76,8 @@ public:
    * Returns an empty object on error.
    */
   static QJsonObject loadOptionsFromScript(const QString& packageDir,
-                                           const QString& command);
+                                           const QString& command,
+                                           const QString& identifier);
 
   /**
    * Resolve user-options for a package feature. If @p userOptionsValue is
@@ -87,7 +88,8 @@ public:
    */
   static QJsonObject resolveUserOptions(const QString& userOptionsValue,
                                         const QString& packageDir,
-                                        const QString& command);
+                                        const QString& command,
+                                        const QString& identifier);
 
   // --- Installation ---
 

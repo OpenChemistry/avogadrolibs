@@ -148,7 +148,7 @@ void ScriptEnergy::readMetaData(const QVariantMap& metadata)
     if (!userOptionsRel.isEmpty()) {
       m_userOptionsSchema = QtGui::PackageManager::resolveUserOptions(
         userOptionsRel, m_interpreter->packageDir(),
-        m_interpreter->packageCommand());
+        m_interpreter->packageCommand(), m_interpreter->packageIdentifier());
     }
   }
 
