@@ -497,7 +497,10 @@ void Forcefield::optimize()
   // Create progress dialog
   int totalChunks = static_cast<int>(m_maxSteps / m_optOptions.chunkIterations);
   m_progressDialog =
-    new QProgressDialog(tr("Optimize Geometry"), tr("Cancel"), 0, totalChunks);
+    new QProgressDialog(qobject_cast<QWidget*>(this->parent()));
+  m_progressDialog->setWindowTitle(tr("Optimize Geometry"));
+  // cancel button text is set automatically
+  m_progressDialog->setRange(0, totalChunks);
   m_progressDialog->setWindowModality(Qt::WindowModal);
   m_progressDialog->setMinimumDuration(0);
   m_progressDialog->show();
