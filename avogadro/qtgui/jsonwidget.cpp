@@ -171,12 +171,47 @@ void JsonWidget::buildOptionGui()
     return;
   }
 
-  // if we have an array, we'll create tabs for each
+  // Always expect an object now, should never be an array
+  QJsonObject userOptions = m_options["userOptions"].toObject();
+
+  // If a tabbed interface is specified, we'll create tabs for it
   QTabWidget* tabs = nullptr;
   QWidget* currentPage = nullptr;
 
+  // Two current contenders for the tabbed schema:
+  // 2. Top-level objects for each tab
+  // 3. Top-level objects for each user option (like when untabbed), indicate
+  //    the tab each option should belong to as an attribute of the option
+
+  // First work out whether a tabbed interface is specified and, if so,
+  // which schema is in use
+  bool isTabbed;
+  unsigned int tabsSchema;
+  if (userOptions.contains("tabbed")) {
+    // `tabbed` is the key for a bool
+    isTabbed = userOptions.value("tabbed").toBool();
+    if (isTabbed) {
+      tabsSchema = 2;
+    } else {
+      tabsSchema = 0;
+    }
+  } else if (userOptions.contains("tabs")) {
+    // `tabs` is the key for the array of tab names, so its presence implies the
+    // interface should be tabbed
+    isTabbed = true;
+    tabsSchema = 3;
+  } else {
+    // Interface doesn't have tabs at all
+    // Use a schema of 0 to represent an untabbed interface
+    isTabbed = false;
+    tabsSchema = 0;
+  }
+
+  // If tabbed, put the user options into a flat object with the user options as
+  // the key/value pairs, while extracting the tab membership information
+  // TODO
+
   // Create new widgets
-  QJsonObject userOptions;
   unsigned int size;
   bool isArray = m_options["userOptions"].isArray();
   QJsonArray options;
