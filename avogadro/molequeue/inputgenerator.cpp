@@ -263,7 +263,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                           .arg(m_filenames.size());
           } // end if/else file is JSON object
-        }   // end foreach file
+        } // end foreach file
       } else {
         result = false;
         m_errors << tr("'files' member not an array.");
@@ -569,7 +569,8 @@ bool InputGenerator::parseRules(const QJsonArray& json,
   return result;
 }
 
-enum class HighlightColor {
+enum class HighlightColor
+{
   green,
   cyan,
   blue,
@@ -580,40 +581,53 @@ enum class HighlightColor {
   yellow,
 };
 
-std::unordered_map<std::string, HighlightColor> mapStringToColor {
-  {"green",  HighlightColor::green},
-  {"cyan",   HighlightColor::cyan},
-  {"blue",   HighlightColor::blue},
-  {"purple", HighlightColor::purple},
-  {"pink",   HighlightColor::pink},
-  {"red",    HighlightColor::red},
-  {"orange", HighlightColor::orange},
-  {"yellow", HighlightColor::yellow},
+std::unordered_map<std::string, HighlightColor> mapStringToColor{
+  { "green", HighlightColor::green },   { "cyan", HighlightColor::cyan },
+  { "blue", HighlightColor::blue },     { "purple", HighlightColor::purple },
+  { "pink", HighlightColor::pink },     { "red", HighlightColor::red },
+  { "orange", HighlightColor::orange }, { "yellow", HighlightColor::yellow },
 };
 
-QColor textColor(const std::string colorName, bool darkMode = false) {
+QColor textColor(const std::string colorName, bool darkMode = false)
+{
   HighlightColor color = mapStringToColor[colorName];
   if (darkMode) {
     switch (color) {
-      case HighlightColor::green:  return QColor::fromString("springgreen");  // #00FF7F
-      case HighlightColor::cyan:   return QColor::fromString("cyan");         // #00FFFF
-      case HighlightColor::blue:   return QColor::fromString("dodgerblue");   // #1E90FF
-      case HighlightColor::purple: return QColor::fromString("mediumpurple"); // #9370DB
-      case HighlightColor::pink:   return QColor::fromString("orchid");       // #DA70D6
-      case HighlightColor::red:    return QColor::fromString("crimson");      // #DC143C
-      case HighlightColor::orange: return QColor::fromString("coral");        // #FF7F50
-      case HighlightColor::yellow: return QColor::fromString("goldenrod");    // #DAA520
+      case HighlightColor::green:
+        return QColor::fromString("springgreen"); // #00FF7F
+      case HighlightColor::cyan:
+        return QColor::fromString("cyan"); // #00FFFF
+      case HighlightColor::blue:
+        return QColor::fromString("dodgerblue"); // #1E90FF
+      case HighlightColor::purple:
+        return QColor::fromString("mediumpurple"); // #9370DB
+      case HighlightColor::pink:
+        return QColor::fromString("orchid"); // #DA70D6
+      case HighlightColor::red:
+        return QColor::fromString("crimson"); // #DC143C
+      case HighlightColor::orange:
+        return QColor::fromString("coral"); // #FF7F50
+      case HighlightColor::yellow:
+        return QColor::fromString("goldenrod"); // #DAA520
     }
   } else {
     switch (color) {
-      case HighlightColor::green:  return QColor::fromString("limegreen");    // #32CD32
-      case HighlightColor::cyan:   return QColor::fromString("deepskyblue");  // #00BFFF
-      case HighlightColor::blue:   return QColor::fromString("blue");         // #0000FF
-      case HighlightColor::purple: return QColor::fromString("blueviolet");   // #8A2BE2
-      case HighlightColor::pink:   return QColor::fromString("fuschia");      // #FF00FF
-      case HighlightColor::red:    return QColor::fromString("maroon");       // #800000
-      case HighlightColor::orange: return QColor::fromString("coral");        // #FF7F50
-      case HighlightColor::yellow: return QColor::fromString("goldenrod");    // #DAA520
+      case HighlightColor::green:
+        return QColor::fromString("limegreen"); // #32CD32
+      case HighlightColor::cyan:
+        return QColor::fromString("deepskyblue"); // #00BFFF
+      case HighlightColor::blue:
+        return QColor::fromString("blue"); // #0000FF
+      case HighlightColor::purple:
+        return QColor::fromString("blueviolet"); // #8A2BE2
+      case HighlightColor::pink:
+        return QColor::fromString("fuschia"); // #FF00FF
+      case HighlightColor::red:
+        return QColor::fromString("maroon"); // #800000
+      case HighlightColor::orange:
+        return QColor::fromString("coral"); // #FF7F50
+      case HighlightColor::yellow:
+        return QColor::fromString("goldenrod"); // #DAA520
     }
   }
   return QColor::fromString("papayawhip");
@@ -631,7 +645,8 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
 
     QString preset(json["preset"].toString());
 
-    enum class HighlightPreset {
+    enum class HighlightPreset
+    {
       Title,
       Keyword,
       Property,
@@ -642,18 +657,19 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
       Basis,
     };
 
-    std::unordered_map<QString, HighlightPreset> mapStringToPreset {
-      {QString("title"),       HighlightPreset::Title},
-      {QString("keyword"),     HighlightPreset::Keyword},
-      {QString("property"),    HighlightPreset::Property},
-      {QString("num_literal"), HighlightPreset::NumLiteral},
-      {QString("str_literal"), HighlightPreset::StrLiteral},
-      {QString("comment"),     HighlightPreset::Comment},
-      {QString("method"),      HighlightPreset::Method},
-      {QString("basis"),       HighlightPreset::Basis},
+    std::unordered_map<QString, HighlightPreset> mapStringToPreset{
+      { QString("title"), HighlightPreset::Title },
+      { QString("keyword"), HighlightPreset::Keyword },
+      { QString("property"), HighlightPreset::Property },
+      { QString("num_literal"), HighlightPreset::NumLiteral },
+      { QString("str_literal"), HighlightPreset::StrLiteral },
+      { QString("comment"), HighlightPreset::Comment },
+      { QString("method"), HighlightPreset::Method },
+      { QString("basis"), HighlightPreset::Basis },
     };
 
-    bool isDarkMode = QGuiApplication::styleHints() -> colorScheme() == Qt::ColorScheme::Dark;
+    bool isDarkMode =
+      QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark;
 
     if (mapStringToPreset.count(preset) == 0) {
       qDebug() << "Invalid style preset: " << preset;
