@@ -81,6 +81,10 @@ QJsonObject PackageManager::loadOptionsFromFile(const QString& userOptionsPath)
     QJsonObject wrapped;
     wrapped.insert(QStringLiteral("userOptions"), doc.array());
     return wrapped;
+  } else if (doc.isObject()) {
+    QJsonObject wrapped;
+    wrapped.insert(QStringLiteral("userOptions"), doc.object());
+    return wrapped;
   }
 
   if (!doc.isObject()) {
