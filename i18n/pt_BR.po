@@ -12,13 +12,14 @@
 # nicejammer <snoring_parrot@users.noreply.hosted.weblate.org>, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 # croomfolk <croomfolk@proton.me>, 2026.
+# Pedro Moreira <pedroltmoreira@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-10 01:13+0000\n"
-"Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
+"PO-Revision-Date: 2026-03-15 19:10+0000\n"
+"Last-Translator: Pedro Moreira <pedroltmoreira@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -1105,12 +1106,12 @@ msgstr "Mensagem %1"
 #: qtgui/interfacescript.cpp:343
 #, qt-format
 msgid "%1 Warning"
-msgstr ""
+msgstr "%1 Aviso"
 
 #: qtgui/interfacescript.cpp:350
 #, qt-format
 msgid "%1 Error"
-msgstr ""
+msgstr "%1 Erro"
 
 #: qtgui/interfacescript.cpp:593
 #, qt-format
@@ -1257,10 +1258,9 @@ msgid "Ball and Stick"
 msgstr "Bola e Bastão"
 
 #: qtgui/layermodel.cpp:172 qtplugins/cartoons/cartoons.h:31
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Ilustração"
+msgstr "Cartoons"
 
 #: qtgui/layermodel.cpp:174 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
@@ -1296,7 +1296,6 @@ msgid "Non-Covalent"
 msgstr "Não-Covalente"
 
 #: qtgui/layermodel.cpp:188
-#, fuzzy
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM"
@@ -1311,8 +1310,6 @@ msgid "Van der Waals"
 msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:194
-#, fuzzy
-#| msgid "Van der Waals (AO)"
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr "Van der Waals (OA)"
@@ -1320,7 +1317,7 @@ msgstr "Van der Waals (OA)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "Volumes"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -1353,7 +1350,7 @@ msgstr "Tabela Periódica"
 
 #: qtgui/pythonscript.cpp:132
 msgid "Package mode requires pixi but it was not found."
-msgstr ""
+msgstr "O modo de pacote requer o pixi, mas ele não foi encontrado."
 
 #: qtgui/pythonscript.cpp:230 qtgui/pythonscript.cpp:327
 #, qt-format
@@ -1402,6 +1399,8 @@ msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
+"Erro ao escrever a requisição bruta no stdin do script (tam=%1, escritos %2 "
+"bytes, erro do QProcess: %3)."
 
 #: qtgui/pythonscript.cpp:428
 msgid "Script failed to start."
@@ -1497,12 +1496,11 @@ msgstr "Mudar Cor do Átomo"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Residue Color"
-msgstr ""
+msgstr "Mudar cor do resíduo"
 
 #: qtgui/rwmolecule.cpp:298
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Mudar Cor do Átomo"
+msgstr "Mudar camada dos átomos"
 
 #: qtgui/rwmolecule.cpp:314
 msgid "Add Bond"
@@ -1533,9 +1531,8 @@ msgid "Update Bond"
 msgstr "Atualizar Ligação"
 
 #: qtgui/rwmolecule.cpp:433
-#, fuzzy
 msgid "Add Unit Cell…"
-msgstr "Adicionar Célula Unitária…"
+msgstr "Adicionar célula unitária…"
 
 #: qtgui/rwmolecule.cpp:445
 msgid "Remove Unit Cell"
@@ -1566,9 +1563,8 @@ msgid "Rotate to Standard Orientation"
 msgstr "Girar para Orientação Padrão"
 
 #: qtgui/rwmolecule.cpp:670 qtplugins/spacegroup/spacegroup.cpp:66
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "Reduzir para Célula Primitiva"
+msgstr "Reduzir à célula primitiva"
 
 #: qtgui/rwmolecule.cpp:700 qtplugins/spacegroup/spacegroup.cpp:72
 #: qtplugins/spacegroup/spacegroup.cpp:459
@@ -1584,9 +1580,8 @@ msgid "Fill Unit Cell"
 msgstr "Completar Célula Unitária"
 
 #: qtgui/rwmolecule.cpp:776
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Reduzir para Unidade Assimétrica"
+msgstr "Reduzir célula à unidade assimétrica"
 
 #: qtgui/rwmolecule.h:215
 msgid "Change Atom Positions"
@@ -1601,9 +1596,8 @@ msgid "Change Atom Label"
 msgstr "Mudar Rótulo do Átomo"
 
 #: qtgui/rwmolecule.h:261
-#, fuzzy
 msgid "Change Bond Label"
-msgstr "Mudar Rótulo da Ligação"
+msgstr "Alterar rótulo da ligação"
 
 #: qtgui/rwmolecule.h:267
 msgid "Change Selection"
@@ -1614,9 +1608,8 @@ msgid "Modify Molecule"
 msgstr "Modificar Molécula"
 
 #: qtgui/scenepluginmodel.cpp:101
-#, fuzzy
 msgid "Settings"
-msgstr "Definições"
+msgstr "Configurações"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
@@ -1659,7 +1652,6 @@ msgstr[0] "%n hora restante"
 msgstr[1] "%n horas restantes"
 
 #: qtplugins/3dmol/3dmol.cpp:37
-#, fuzzy
 msgid "3DMol HTML Block."
 msgstr "Bloco HTML 3DMol."
 
@@ -1680,12 +1672,11 @@ msgstr "&Exportar"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
-#, fuzzy
 msgid "Change Elements…"
-msgstr "Mudar Elementos…"
+msgstr "Alterar elementos…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:62
 #: qtplugins/centroid/centroid.cpp:45
@@ -1708,7 +1699,7 @@ msgstr "Elemento:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "Alquimia"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
@@ -1905,11 +1896,11 @@ msgstr "Sucesso"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "Gerado %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "Erro ao executar PDB2PQR"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -1935,7 +1926,6 @@ msgstr "Não foi possível salvar o arquivo %1."
 
 #: qtplugins/applycolors/applycolors.cpp:47
 #: qtplugins/applycolors/applycolors.cpp:68
-#, fuzzy
 msgid "By Custom Color…"
 msgstr "Por Cor Personalizada…"
 
@@ -1964,13 +1954,12 @@ msgid "By Secondary Structure"
 msgstr "Por Estrutura Secundária"
 
 #: qtplugins/applycolors/applycolors.cpp:88
-#, fuzzy
 msgid "By Amino Acid"
-msgstr "Por Aminoácidos"
+msgstr "Por aminoácido"
 
 #: qtplugins/applycolors/applycolors.cpp:93
 msgid "By Shapely Scheme"
-msgstr ""
+msgstr "Pelo esquema Shapely"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -2046,10 +2035,9 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
 #: qtplugins/surfaces/surfaces.cpp:811:183 rc.cpp:1997
-#, fuzzy
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Espectro"
+msgstr "Espectral"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2104,20 +2092,17 @@ msgid "&View"
 msgstr "&Exibir"
 
 #: qtplugins/applycolors/applycolors.cpp:153
-#, fuzzy
 msgid "Color Atoms"
-msgstr "Cor dos Átomos"
+msgstr "Colorir átomos"
 
 #: qtplugins/applycolors/applycolors.cpp:155
-#, fuzzy
 msgid "Color Residues"
-msgstr "Colorir resíduo"
+msgstr "Colorir resíduos"
 
 #: qtplugins/applycolors/applycolors.cpp:217
 #: qtplugins/applycolors/applycolors.cpp:318
-#, fuzzy
 msgid "Select Colormap"
-msgstr "Selecionar Mapa de Cores"
+msgstr "Selecionar mapa de cores"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -2130,48 +2115,47 @@ msgstr "Mapa de Cores:"
 
 #: qtplugins/applycolors/applycolors.cpp:225
 msgid "Apply Index Colors"
-msgstr ""
+msgstr "Aplicar cores de índice"
 
 #: qtplugins/applycolors/applycolors.cpp:289
 msgid "Apply Charge Colors"
-msgstr ""
+msgstr "Aplicar cores de carga"
 
 #: qtplugins/applycolors/applycolors.cpp:327
 msgid "Apply Distance Colors"
-msgstr ""
+msgstr "Aplicar cores de distância"
 
 #: qtplugins/applycolors/applycolors.cpp:353
 msgid "Reset Atom Colors"
-msgstr ""
+msgstr "Redefinir cores de átomos"
 
 #: qtplugins/applycolors/applycolors.cpp:379
 msgid "Apply Custom Color"
-msgstr ""
+msgstr "Aplicar cor personalizada"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 msgid "Apply Custom Residue Color"
-msgstr ""
+msgstr "Aplicar cor de resíduo personalizada"
 
 #: qtplugins/applycolors/applycolors.cpp:440
 msgid "Reset Residue Colors"
-msgstr ""
+msgstr "Redefinir cor de resíduos"
 
 #: qtplugins/applycolors/applycolors.cpp:474
 msgid "Apply Secondary Structure Colors"
-msgstr ""
+msgstr "Aplicar cores de estrutura secundária"
 
 #: qtplugins/applycolors/applycolors.cpp:562
 msgid "Apply Amino Acid Colors"
-msgstr ""
+msgstr "Aplicar cores de aminoácidos"
 
 #: qtplugins/applycolors/applycolors.cpp:589
 msgid "Apply Shapely Colors"
-msgstr ""
+msgstr "Aplicar cores do esquema Shapely"
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "Aplicar Cor"
+msgstr "Aplicar cores"
 
 #: qtplugins/autoopt/autoopt.cpp:67
 msgctxt "control-key 7"
@@ -2210,18 +2194,16 @@ msgstr ""
 "Botão direito do mouse:\tClique e arraste para girar os átomos."
 
 #: qtplugins/autoopt/autoopt.cpp:205
-#, fuzzy
-#| msgid "Optimization"
 msgid "Optimize"
-msgstr "Otimização"
+msgstr "Otimizar"
 
 #: qtplugins/autoopt/autoopt.cpp:206
 msgid "Dynamics"
-msgstr ""
+msgstr "Dinâmica"
 
 #: qtplugins/autoopt/autoopt.cpp:210
 msgid "Task:"
-msgstr ""
+msgstr "Tarefa:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2265,13 +2247,13 @@ msgstr "Dinâmica Molecular"
 #, qt-format
 msgctxt "temperature in Kelvin"
 msgid "%1 T = %L2"
-msgstr ""
+msgstr "%1 T = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:608
 #, qt-format
 msgctxt "change in energy in kJ/mol"
 msgid "%1 ΔE = %L2"
-msgstr ""
+msgstr "%1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.h:46
 msgid "Auto Optimize tool"
@@ -2287,7 +2269,7 @@ msgstr "Escala atômica"
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
 msgid "Bond scale"
-msgstr ""
+msgstr "Escala de ligação"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2314,12 +2296,11 @@ msgstr "Desenha átomos como esferas e ligações como cilindros."
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
-#, fuzzy
 msgid "Bond-Centric Manipulation"
-msgstr "Manipulação Ligação-Centrada"
+msgstr "Manipulação centrada em ligações"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
 #, qt-format
@@ -2353,7 +2334,7 @@ msgstr "Ligar Átomos"
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Perceive Bond Orders"
-msgstr ""
+msgstr "Determinar ordem de ligações"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2364,18 +2345,15 @@ msgid "Configure Bonding…"
 msgstr "Configurar Ligações…"
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
 msgid "Bond Selected Atoms"
-msgstr "Ligar Átomos Selecionados"
+msgstr "Ligar átomos selecionados"
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/propertytables/propertymodel.cpp:678
-#, fuzzy
 msgid "Bond"
-msgstr "Ligar"
+msgstr "Ligação"
 
 #: qtplugins/bonding/bonding.cpp:73
-#, fuzzy
 msgid "Remove bonds from all or selected atoms."
 msgstr "Remover ligações entre todos os átomos ou entre os selecionados."
 
@@ -2385,7 +2363,7 @@ msgstr "Criar ligações entre todos os átomos ou entre os selecionados."
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Perceive bond orders."
-msgstr ""
+msgstr "Determinar ordem de ligações."
 
 #: qtplugins/bonding/bonding.h:30
 #, fuzzy
@@ -2397,24 +2375,21 @@ msgid "Perform bonding operations."
 msgstr "Realize operações de ligação."
 
 #: qtplugins/cartoons/cartoons.cpp:92
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Backbone"
-msgstr "Espinha"
+msgstr "Esqueleto"
 
 #: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr ""
+msgstr "Traçado"
 
 #: qtplugins/cartoons/cartoons.cpp:94
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Tube"
 msgstr "Tubo"
 
 #: qtplugins/cartoons/cartoons.cpp:95
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Ribbon"
 msgstr "Fita"
@@ -2422,35 +2397,34 @@ msgstr "Fita"
 #: qtplugins/cartoons/cartoons.cpp:96
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr ""
+msgstr "Cartoon simples"
 
 #: qtplugins/cartoons/cartoons.cpp:97
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Cartoon"
-msgstr "Ilustração"
+msgstr "Cartoon"
 
 #: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
 msgid "Rope"
-msgstr ""
+msgstr "Corda"
 
 #: qtplugins/cartoons/cartoons.h:36
 msgid "Display of biomolecule ribbons / cartoons."
-msgstr ""
+msgstr "Exibição de fitas / cartoons de biomoléculas."
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Centroid"
-msgstr ""
+msgstr "Adicionar centroide"
 
 #: qtplugins/centroid/centroid.cpp:22
 msgid "Add Center of Mass"
-msgstr ""
+msgstr "Adicionar centro de massa"
 
 #: qtplugins/centroid/centroid.cpp:24
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr ""
+msgstr "Adicionar perpendicular"
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
@@ -2462,22 +2436,20 @@ msgstr "Adicionar centroides e centro de massa."
 
 #: qtplugins/closecontacts/closecontacts.cpp:250
 #: qtplugins/noncovalent/noncovalent.cpp:401
-#, fuzzy
 msgid "Maximum distance:"
-msgstr "Distância Máxima:"
+msgstr "Distância máxima:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:251
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:402
 #: qtplugins/surfacerender/surfacerender.cpp:295
 #: qtplugins/wireframe/wireframe.cpp:96
-#, fuzzy
 msgid "Line width:"
-msgstr "Largura do pico:"
+msgstr "Espessura da linha:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:258
 msgid "Contact"
-msgstr ""
+msgstr "Contato"
 
 #: qtplugins/closecontacts/closecontacts.cpp:261
 msgid "Salt Bridge"
@@ -2485,16 +2457,15 @@ msgstr "Ponte Salina"
 
 #: qtplugins/closecontacts/closecontacts.cpp:264
 msgid "Repulsive"
-msgstr ""
+msgstr "Repulsivo"
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
-msgstr ""
+msgstr "Renderizar contatos próximos entre átomos."
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
-#, fuzzy
 msgid "Edit Color Opacity Map…"
-msgstr "Editar Mapa de Opacidade de Cor …"
+msgstr "Editar mapa de opacidade de cor …"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:77
@@ -2513,7 +2484,7 @@ msgstr "&Extensões"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
-msgstr ""
+msgstr "ColorOpacityMap"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:59
 msgid "Edit color opacity maps, primarily for volume rendering."
@@ -2587,10 +2558,9 @@ msgstr ""
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "Configurar Python"
 
 #: qtplugins/configurepython/configurepython.h:29
-#, fuzzy
 msgid "Configure Python environments."
 msgstr "Configurar ambientes do Python."
 
@@ -2607,7 +2577,6 @@ msgstr "Configurar ambientes do Python."
 #: qtplugins/templatetool/templatetoolwidget.cpp:454
 #: qtplugins/templatetool/templatetoolwidget.cpp:462
 #: qtplugins/templatetool/templatetoolwidget.cpp:525:2241
-#, fuzzy
 msgid "Other…"
 msgstr "Outro…"
 
@@ -2617,7 +2586,6 @@ msgstr "Restrições…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:233
-#, fuzzy
 msgid "&Calculate"
 msgstr "&Calcular"
 
@@ -2625,7 +2593,7 @@ msgstr "&Calcular"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
 #: qtplugins/constraints/constraintsextension.h:27:244
 msgid "Constraints"
-msgstr ""
+msgstr "Restrições"
 
 #: qtplugins/constraints/constraintsextension.h:31
 msgid "Set constraints for geometry optimizations"
@@ -2640,7 +2608,6 @@ msgstr "Distância"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:62:256
-#, fuzzy
 msgid "Angle"
 msgstr "Ângulo"
 
@@ -2653,22 +2620,22 @@ msgstr "Ângulo de Torsão"
 #: qtplugins/constraints/constraintsmodel.cpp:68
 msgctxt "fix / remain constant"
 msgid "Freeze Atom"
-msgstr ""
+msgstr "Congelar átomo"
 
 #: qtplugins/constraints/constraintsmodel.cpp:70
 msgctxt "fix / remain constant"
 msgid "Freeze X Axis"
-msgstr ""
+msgstr "Congelar eixo X"
 
 #: qtplugins/constraints/constraintsmodel.cpp:72
 msgctxt "fix / remain constant"
 msgid "Freeze Y Axis"
-msgstr ""
+msgstr "Congelar eixo Y"
 
 #: qtplugins/constraints/constraintsmodel.cpp:74
 msgctxt "fix / remain constant"
 msgid "Freeze Z Axis"
-msgstr ""
+msgstr "Congelar eixo Z"
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
 #: qtplugins/propertytables/propertymodel.cpp:664
@@ -2685,31 +2652,26 @@ msgstr "Valor"
 #: qtplugins/constraints/constraintsmodel.cpp:132
 #: qtplugins/propertytables/propertymodel.cpp:709
 #: qtplugins/propertytables/propertymodel.cpp:726
-#, fuzzy
 msgid "Atom 1"
 msgstr "Átomo 1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
 #: qtplugins/propertytables/propertymodel.cpp:728
-#, fuzzy
 msgid "Atom 2"
 msgstr "Átomo 2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
 #: qtplugins/propertytables/propertymodel.cpp:713
 #: qtplugins/propertytables/propertymodel.cpp:730
-#, fuzzy
 msgid "Atom 3"
 msgstr "Átomo 3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
 #: qtplugins/propertytables/propertymodel.cpp:732
-#, fuzzy
 msgid "Atom 4"
 msgstr "Átomo 4"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
-#, fuzzy
 msgid "Atomic &Coordinate Editor…"
 msgstr "Editor de &Coordenadas Atômicas…"
 
@@ -2757,16 +2719,15 @@ msgstr "Símbolo do Elemento."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
-msgstr ""
+msgstr "Rótulo de átomo inválido."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
 msgstr "Índice atômico inválido."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
-#, fuzzy
 msgid "Atomic index."
-msgstr "Índices dos Átomos."
+msgstr "Índice atômico."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
@@ -2895,9 +2856,8 @@ msgid "Delete"
 msgstr "Excluir"
 
 #: qtplugins/copypaste/copypaste.cpp:37
-#, fuzzy
 msgid "&Paste"
-msgstr "Colar"
+msgstr "&Colar"
 
 #: qtplugins/copypaste/copypaste.cpp:83
 #: qtplugins/lineformatinput/lineformatinput.cpp:47
@@ -2979,7 +2939,6 @@ msgid "Interact with the clipboard."
 msgstr "Interagir com área de transferência."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:33
-#, fuzzy
 msgid "&CP2K…"
 msgstr "&CP2K…"
 
@@ -3028,7 +2987,7 @@ msgstr "EWALD"
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:357
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:966
 msgid "NONE"
-msgstr ""
+msgstr "NENHUM"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
@@ -3046,7 +3005,7 @@ msgstr "ATÔMICO"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:380
 msgid "CORE"
-msgstr ""
+msgstr "NÚCLEO"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:383
 msgid "DENSITIES"
@@ -3070,16 +3029,15 @@ msgstr "REINICIAR"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:401
 msgid "SPARSE"
-msgstr ""
+msgstr "Esparso"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:415
 msgid "BROYDEN"
-msgstr ""
+msgstr "BROYDEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:418
-#, fuzzy
 msgid "Conjugate Gradients"
-msgstr "Conjugar Gradientes"
+msgstr "Gradientes Conjugados"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:421
 msgid "DIIS"
@@ -3087,7 +3045,7 @@ msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:424
 msgid "Steepest descent"
-msgstr ""
+msgstr "Descida mais íngreme"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:539
 #: qtplugins/gamessinput/gamessinputdialog.cpp:547
@@ -3112,18 +3070,16 @@ msgid "Submit CP2K Calculation"
 msgstr "Enviar cálculo CP2K"
 
 #: qtplugins/crystal/crystal.cpp:40
-#, fuzzy
 msgid "Import Crystal from Clipboard…"
-msgstr "Importar Cristal da Área de Transferência…"
+msgstr "Importar cristal da Área de Transferência…"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Alternar célula unitária"
 
 #: qtplugins/crystal/crystal.cpp:52
-#, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Editar Célula Unitária…"
+msgstr "Editar célula unitária…"
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
@@ -3134,12 +3090,10 @@ msgid "Rotate to Standard &Orientation"
 msgstr "Girar para &Orientação Padrão"
 
 #: qtplugins/crystal/crystal.cpp:69
-#, fuzzy
 msgid "Scale Cell &Volume…"
-msgstr "Redimensionar &Volume da Célula…"
+msgstr "Redimensionar &Volume da célula…"
 
 #: qtplugins/crystal/crystal.cpp:74
-#, fuzzy
 msgid "Build &Supercell…"
 msgstr "Construir &Supercélula…"
 
@@ -3166,14 +3120,12 @@ msgid "Import Crystal from Clipboard"
 msgstr "I&mportar Cristal da Área de Transferência"
 
 #: qtplugins/crystal/crystal.cpp:175
-#, fuzzy
 msgid "Wrap atoms into the unit cell."
-msgstr "Envolver Átomos na Célula Unitária."
+msgstr "Envolver átomos na célula unitária."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Girar para Orientação Padrão."
+msgstr "Rotacionar célula unitária para a orientação padrão."
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
@@ -3193,7 +3145,7 @@ msgstr "Ferramentas para edição/análise específica de cristal."
 
 #: qtplugins/crystal/crystalscene.cpp:178
 msgid "Color axes:"
-msgstr ""
+msgstr "Colorir eixos:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -4738,7 +4690,7 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
-msgstr "Manter Arquivos"
+msgstr "Manter arquivos"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
