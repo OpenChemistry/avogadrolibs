@@ -22,6 +22,7 @@
 #include <QGuiApplication>
 #include <QStyleHints>
 #include <QColor>
+#include <QPalette>
 #include <unordered_map>
 
 namespace Avogadro::MoleQueue {
@@ -594,7 +595,7 @@ std::unordered_map<std::string, HighlightColor> mapStringToColor{
   { "orange", HighlightColor::orange }, { "yellow", HighlightColor::yellow },
 };
 
-QColor textColor(const std::string colorName, bool darkMode = false)
+QColor textColor(const std::string& colorName, bool darkMode = false)
 {
   HighlightColor color = mapStringToColor[colorName];
   if (darkMode) {
@@ -615,6 +616,8 @@ QColor textColor(const std::string colorName, bool darkMode = false)
         return QColor::fromString("coral"); // #FF7F50
       case HighlightColor::yellow:
         return QColor::fromString("goldenrod"); // #DAA520
+      default:
+        return QColor::fromString("white");
     }
   } else {
     switch (color) {
@@ -627,16 +630,17 @@ QColor textColor(const std::string colorName, bool darkMode = false)
       case HighlightColor::purple:
         return QColor::fromString("blueviolet"); // #8A2BE2
       case HighlightColor::pink:
-        return QColor::fromString("fuschia"); // #FF00FF
+        return QColor::fromString("fuchsia"); // #FF00FF
       case HighlightColor::red:
         return QColor::fromString("maroon"); // #800000
       case HighlightColor::orange:
         return QColor::fromString("coral"); // #FF7F50
       case HighlightColor::yellow:
         return QColor::fromString("goldenrod"); // #DAA520
+      default:
+        return QColor::fromString("black");
     }
   }
-  return QColor::fromString("papayawhip");
 }
 
 bool InputGenerator::parseFormat(const QJsonObject& json,
@@ -674,8 +678,9 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
       { QString("basis"), HighlightPreset::Basis },
     };
 
-    bool isDarkMode =
-      QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark;
+    const QPalette defaultPalette;
+    bool isDarkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
+                       defaultPalette.color(QPalette::Window).lightness());
 
     if (mapStringToPreset.count(preset) == 0) {
       qDebug() << "Invalid style preset: " << preset;
