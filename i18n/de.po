@@ -12,13 +12,14 @@
 # matterhorn103 <83813148+matterhorn103@users.noreply.github.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 # Frank Hoffmann <kohaerenz@gmail.com>, 2026.
+# Jakob Blahusch <jakob.blahusch@blahusch.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
 "PO-Revision-Date: 2026-03-15 19:09+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Jakob Blahusch <jakob.blahusch@blahusch.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1105,12 +1106,12 @@ msgstr "%1 Nachricht"
 #: qtgui/interfacescript.cpp:343
 #, qt-format
 msgid "%1 Warning"
-msgstr ""
+msgstr "%1 Warnung"
 
 #: qtgui/interfacescript.cpp:350
 #, qt-format
 msgid "%1 Error"
-msgstr ""
+msgstr "%1 Fehler"
 
 #: qtgui/interfacescript.cpp:593
 #, qt-format
@@ -1495,7 +1496,7 @@ msgstr "Atomfarbe ändern"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Residue Color"
-msgstr ""
+msgstr "Farbe des Restmaterials ändern"
 
 #: qtgui/rwmolecule.cpp:298
 msgid "Change Atom Layer"
@@ -2141,7 +2142,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:474
 msgid "Apply Secondary Structure Colors"
-msgstr ""
+msgstr "Sekundärstruktur Farben anwenden"
 
 #: qtplugins/applycolors/applycolors.cpp:562
 msgid "Apply Amino Acid Colors"
@@ -2188,11 +2189,11 @@ msgstr "Optimierung"
 
 #: qtplugins/autoopt/autoopt.cpp:206
 msgid "Dynamics"
-msgstr ""
+msgstr "Dynamiken"
 
 #: qtplugins/autoopt/autoopt.cpp:210
 msgid "Task:"
-msgstr ""
+msgstr "Aufgabe:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -4681,7 +4682,7 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
-msgstr ""
+msgstr "Dateien behalten"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
@@ -4693,11 +4694,11 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:599
 msgid "Invalid Directory"
-msgstr ""
+msgstr "Ungültiges Verzeichnis"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
 msgid "The selected directory does not contain a pyproject.toml file."
-msgstr ""
+msgstr "Das ausgewählte Verzeichnis enthält keine pyproject. toml Datei."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:614
 #, qt-format
@@ -5993,7 +5994,7 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:1021
 msgid "Import Data"
-msgstr ""
+msgstr "Daten importieren"
 
 #: qtplugins/spectra/spectradialog.cpp:1021
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
@@ -6042,11 +6043,11 @@ msgstr "Symmetrie"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
 msgid "Occupation"
-msgstr ""
+msgstr "Besetzung"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:141
 msgid "Spin"
-msgstr ""
+msgstr "Spin"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:152
 #: qtplugins/surfaces/orbitaltablemodel.cpp:238
@@ -9440,17 +9441,17 @@ msgstr "Gruppe:"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:437
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "amide"
-msgstr ""
+msgstr "Amid"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:442
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "carboxylate"
-msgstr ""
+msgstr "Carboxylat"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:447
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ester"
-msgstr ""
+msgstr "Ester"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:452
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -9470,7 +9471,7 @@ msgstr ""
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:467
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
-msgstr ""
+msgstr "Phenyl"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:472
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -9600,7 +9601,7 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>Das y-Interval im Diagramm beschränken?</p><p>Default: "
+"<html><head/><body><p>Das y-Umfang im Diagramm beschränken?</p><p>Default: "
 "off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
