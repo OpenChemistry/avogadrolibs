@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
 "PO-Revision-Date: 2026-03-15 19:09+0000\n"
-"Last-Translator: Jakob Blahusch <jakob.blahusch@blahusch.com>\n"
+"Last-Translator: Frank Hoffmann <kohaerenz@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2455,7 +2455,7 @@ msgstr "Salzbrücke"
 
 #: qtplugins/closecontacts/closecontacts.cpp:264
 msgid "Repulsive"
-msgstr ""
+msgstr "Abstoßend"
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
