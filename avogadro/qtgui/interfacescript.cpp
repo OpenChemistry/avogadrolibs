@@ -119,10 +119,16 @@ QString InterfaceScript::displayName() const
 {
   m_errors.clear();
   if (m_displayName.isEmpty()) {
-    m_displayName = QString(m_interpreter->execute(
-      QStringList() << QStringLiteral("--display-name")));
-    m_errors << m_interpreter->errorList();
-    m_displayName = m_displayName.trimmed();
+    if (m_interpreter->isPackageMode()) {
+      m_displayName = m_interpreter->packageDisplayName().trimmed();
+      if (m_displayName.isEmpty())
+        m_displayName = m_interpreter->packageIdentifier().trimmed();
+    } else {
+      m_displayName = QString(m_interpreter->execute(
+        QStringList() << QStringLiteral("--display-name")));
+      m_errors << m_interpreter->errorList();
+      m_displayName = m_displayName.trimmed();
+    }
   }
 
   return m_displayName;
@@ -308,21 +314,40 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
     }
 
     // check if there are messages for the user
-    if (obj.contains("message")) {
-      QString message;
-
-      if (obj["message"].isString())
-        message = obj["message"].toString();
-      else if (obj["message"].isArray()) {
-        QJsonArray messageList = obj["message"].toArray();
-        for (int i = 0; i < messageList.size(); ++i) {
-          if (messageList[i].isString())
-            message += messageList[i].toString() + "\n";
+    auto extractMessage = [](const QJsonValue& val) -> QString {
+      if (val.isString())
+        return val.toString();
+      if (val.isArray()) {
+        QString result;
+        const QJsonArray arr = val.toArray();
+        for (const auto& item : arr) {
+          if (item.isString())
+            result += item.toString() + '\n';
         }
+        return result;
       }
+      return {};
+    };
+
+    if (obj.contains("message")) {
+      QString message = extractMessage(obj["message"]);
       if (!message.isEmpty()) {
         QMessageBox::information(qobject_cast<QWidget*>(parent()),
                                  tr("%1 Message").arg(m_displayName), message);
+      }
+    }
+    if (obj.contains("warning")) {
+      QString message = extractMessage(obj["warning"]);
+      if (!message.isEmpty()) {
+        QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+                             tr("%1 Warning").arg(m_displayName), message);
+      }
+    }
+    if (obj.contains("error")) {
+      QString message = extractMessage(obj["error"]);
+      if (!message.isEmpty()) {
+        QMessageBox::critical(qobject_cast<QWidget*>(parent()),
+                              tr("%1 Error").arg(m_displayName), message);
       }
     }
   }

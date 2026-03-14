@@ -61,7 +61,8 @@ public:
    * working directory, instead of launching a script file via python.
    */
   void setPackageInfo(const QString& packageDir, const QString& command,
-                      const QString& identifier);
+                      const QString& identifier,
+                      const QString& displayName = QString());
 
   /**
    * @return True if this script is in package mode.
@@ -82,6 +83,11 @@ public:
    * @return The package identifier (only meaningful in package mode).
    */
   QString packageIdentifier() const { return m_packageIdentifier; }
+
+  /**
+   * @return The package display name from metadata, if one was provided.
+   */
+  QString packageDisplayName() const { return m_packageDisplayName; }
 
   /**
    * @return True if an error is set.
@@ -182,6 +188,7 @@ protected:
   QString m_packageDir;
   QString m_packageCommand;
   QString m_packageIdentifier;
+  QString m_packageDisplayName;
   QStringList m_errors;
   QProcess* m_process;
 

@@ -81,6 +81,10 @@ QJsonObject PackageManager::loadOptionsFromFile(const QString& userOptionsPath)
     QJsonObject wrapped;
     wrapped.insert(QStringLiteral("userOptions"), doc.array());
     return wrapped;
+  } else if (doc.isObject()) {
+    QJsonObject wrapped;
+    wrapped.insert(QStringLiteral("userOptions"), doc.object());
+    return wrapped;
   }
 
   if (!doc.isObject()) {
@@ -99,6 +103,132 @@ void PackageManager::mergeOptionsFromFile(QJsonObject& opts,
   const QJsonObject fileOpts = loadOptionsFromFile(userOptionsPath);
   for (auto it = fileOpts.constBegin(); it != fileOpts.constEnd(); ++it)
     opts.insert(it.key(), it.value());
+}
+
+// Locate an installed console script inside a pixi or venv environment.
+static QString findInstalledScript(const QString& packageDir,
+                                   const QString& scriptName, bool isPixi)
+{
+#ifdef Q_OS_WIN
+  const QString binDir =
+    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/Scripts")
+                         : QStringLiteral("/.venv/Scripts"));
+  const QStringList exeSuffixes = { QStringLiteral(".exe"), QString() };
+#else
+  const QString binDir =
+    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/bin")
+                         : QStringLiteral("/.venv/bin"));
+  const QStringList exeSuffixes = { QString() };
+#endif
+
+  for (const QString& suffix : exeSuffixes) {
+    const QString candidate = binDir + QLatin1Char('/') + scriptName + suffix;
+    if (QFileInfo(candidate).isExecutable())
+      return candidate;
+  }
+  return {};
+}
+
+QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
+                                                  const QString& command,
+                                                  const QString& identifier)
+{
+  // Locate pixi or the venv-installed script.
+  QString pixiExe = QStandardPaths::findExecutable(QStringLiteral("pixi"));
+  QProcess proc;
+  proc.setWorkingDirectory(packageDir);
+
+  QStringList userOptsArgs;
+  if (!identifier.isEmpty())
+    userOptsArgs << identifier;
+  userOptsArgs << QStringLiteral("--user-options");
+
+  if (!pixiExe.isEmpty()) {
+    QStringList pixiArgs = { QStringLiteral("run"), QStringLiteral("--as-is"),
+                             command };
+    pixiArgs << userOptsArgs;
+    proc.start(pixiExe, pixiArgs);
+  } else {
+    // Try the venv-installed script directly.
+    QString scriptExe = findInstalledScript(packageDir, command, false);
+    if (scriptExe.isEmpty()) {
+      qWarning() << "PackageManager: cannot find pixi or venv script for"
+                 << command << "in" << packageDir;
+      return {};
+    }
+    proc.start(scriptExe, userOptsArgs);
+  }
+
+  constexpr int timeoutMs = 30000; // 30 seconds
+  if (!proc.waitForStarted(timeoutMs)) {
+    qWarning() << "PackageManager: --user-options script could not start:"
+               << proc.errorString();
+    return {};
+  }
+  if (!proc.waitForFinished(timeoutMs)) {
+    qWarning() << "PackageManager: --user-options script timed out for"
+               << packageDir;
+    proc.kill();
+    return {};
+  }
+  if (proc.exitCode() != 0) {
+    qWarning() << "PackageManager: --user-options script failed for"
+               << packageDir << ":"
+               << QString::fromUtf8(proc.readAllStandardError());
+    return {};
+  }
+
+  const QByteArray output = proc.readAllStandardOutput();
+  QJsonParseError err;
+  const QJsonDocument doc = QJsonDocument::fromJson(output, &err);
+  if (err.error != QJsonParseError::NoError) {
+    qWarning() << "PackageManager: failed to parse --user-options JSON from"
+               << command << ":" << err.errorString();
+    return {};
+  }
+
+  if (doc.isArray()) {
+    QJsonObject wrapped;
+    wrapped.insert(QStringLiteral("userOptions"), doc.array());
+    return wrapped;
+  }
+
+  if (!doc.isObject()) {
+    qWarning() << "PackageManager: --user-options output is not an object or"
+                  " array from"
+               << command;
+    return {};
+  }
+
+  return doc.object();
+}
+
+QJsonObject PackageManager::resolveUserOptions(const QString& userOptionsValue,
+                                               const QString& packageDir,
+                                               const QString& command,
+                                               const QString& identifier)
+{
+  if (userOptionsValue.isEmpty())
+    return {};
+
+  QJsonObject result;
+  if (userOptionsValue == QLatin1String("dynamic"))
+    result = loadOptionsFromScript(packageDir, command, identifier);
+  else
+    result = loadOptionsFromFile(packageDir + '/' + userOptionsValue);
+
+  // Both loadOptionsFromFile() and loadOptionsFromScript() may wrap a bare
+  // array under "userOptions".  Unwrap so callers can insert under their own
+  // key without double-nesting.
+  if (result.contains(QStringLiteral("userOptions"))) {
+    QJsonValue val = result.value(QStringLiteral("userOptions"));
+    if (val.isObject())
+      return val.toObject();
+    // Value is an array; return wrapped form for caller to handle.
+    return result;
+  }
+
+  return result;
 }
 
 static bool hasNonExecutablePixiPython(const QString& packageDir)
@@ -201,30 +331,6 @@ static QString readSetupCommand(const QString& packageDir)
   return {};
 }
 
-// Locate an installed console script inside a pixi or venv environment.
-static QString findInstalledScript(const QString& packageDir,
-                                   const QString& scriptName, bool isPixi)
-{
-#ifdef Q_OS_WIN
-  const QString binDir =
-    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/Scripts")
-                         : QStringLiteral("/.venv/Scripts"));
-  const QStringList exeSuffixes = { QStringLiteral(".exe"), QString() };
-#else
-  const QString binDir =
-    packageDir + (isPixi ? QStringLiteral("/.pixi/envs/default/bin")
-                         : QStringLiteral("/.venv/bin"));
-  const QStringList exeSuffixes = { QString() };
-#endif
-
-  for (const QString& suffix : exeSuffixes) {
-    const QString candidate = binDir + QLatin1Char('/') + scriptName + suffix;
-    if (QFileInfo(candidate).isExecutable())
-      return candidate;
-  }
-  return {};
-}
-
 // Run a package's *-setup script (e.g. to download ML model weights).
 static void runSetupScript(const QString& packageDir, const QString& setupCmd,
                            bool isPixi, int timeoutMs)
@@ -287,24 +393,7 @@ void PackageManager::installPackages(const QStringList& packageDirs)
             }
           }
 
-          // Step 1: pixi init --format pyproject
-          QProcess initProc;
-          initProc.setWorkingDirectory(packageDir);
-          initProc.start(pixiExe,
-                         { QStringLiteral("init"), QStringLiteral("--format"),
-                           QStringLiteral("pyproject") });
-          if (!initProc.waitForFinished(installTimeoutMs)) {
-            qWarning() << "pixi init timed out for" << packageDir;
-            initProc.kill();
-            continue;
-          }
-          if (initProc.exitCode() != 0) {
-            qWarning() << "pixi init failed for" << packageDir << ":"
-                       << QString::fromUtf8(initProc.readAllStandardError());
-            continue;
-          }
-
-          // Step 2: pixi install
+          // Pixi install
           QProcess installProc;
           installProc.setWorkingDirectory(packageDir);
           installProc.start(pixiExe, { QStringLiteral("install") });

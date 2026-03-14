@@ -70,6 +70,27 @@ public:
   static void mergeOptionsFromFile(QJsonObject& opts,
                                    const QString& userOptionsPath);
 
+  /**
+   * Run the package script with @c --user-options and parse the JSON output.
+   * Uses pixi (preferred) or the venv-installed script as fallback.
+   * Returns an empty object on error.
+   */
+  static QJsonObject loadOptionsFromScript(const QString& packageDir,
+                                           const QString& command,
+                                           const QString& identifier);
+
+  /**
+   * Resolve user-options for a package feature. If @p userOptionsValue is
+   * the literal string "dynamic", runs the script with @c --user-options
+   * via loadOptionsFromScript(). Otherwise treats it as a relative file
+   * path and loads via loadOptionsFromFile().
+   * Returns an empty object on error or if @p userOptionsValue is empty.
+   */
+  static QJsonObject resolveUserOptions(const QString& userOptionsValue,
+                                        const QString& packageDir,
+                                        const QString& command,
+                                        const QString& identifier);
+
   // --- Installation ---
 
   /**

@@ -184,7 +184,8 @@ void QuantumInput::menuActivated()
     if (!dlg) {
       dlg = new InputGeneratorDialog(theParent);
       dlg->widget().inputGenerator().interpreter().setPackageInfo(
-        pkgDir, pkgCmd, pkgId);
+        pkgDir, pkgCmd, pkgId,
+        theSender->property("packageDisplayName").toString());
 
       // The pyproject.toml [avogadro.X] table may declare a separate
       // user-options file (JSON or TOML) that overrides the defaults baked
@@ -201,8 +202,10 @@ void QuantumInput::menuActivated()
       QString userOptionsRel =
         theSender->property("packageUserOptions").toString();
       if (!userOptionsRel.isEmpty()) {
-        QString userOptionsPath = pkgDir + '/' + userOptionsRel;
-        QtGui::PackageManager::mergeOptionsFromFile(opts, userOptionsPath);
+        QJsonObject userOpts = QtGui::PackageManager::resolveUserOptions(
+          userOptionsRel, pkgDir, pkgCmd, pkgId);
+        if (!userOpts.isEmpty())
+          opts.insert(QStringLiteral("userOptions"), userOpts);
       }
 
       // Optionally load syntax-highlight rules from a separate file.
@@ -295,9 +298,10 @@ void QuantumInput::registerFeature(const QString& type,
     return;
 
   // Extract label from metadata
-  QString label = metadata.value("program-name").toString();
-  if (label.isEmpty())
-    label = identifier;
+  QString displayName = metadata.value("program-name").toString();
+  if (displayName.isEmpty())
+    displayName = identifier;
+  QString label = displayName;
   if (!label.endsWith("…") && !label.endsWith("..."))
     label.append("…");
 
@@ -307,6 +311,7 @@ void QuantumInput::registerFeature(const QString& type,
   action->setProperty("packageDir", packageDir);
   action->setProperty("packageCommand", command);
   action->setProperty("packageIdentifier", identifier);
+  action->setProperty("packageDisplayName", displayName);
   action->setProperty("packageUserOptions",
                       metadata.value("user-options").toString());
   action->setProperty("packageInputFormat",

@@ -54,15 +54,21 @@ void PythonScript::setScriptFilePath(const QString& scriptFile)
 {
   m_scriptFilePath = scriptFile;
   m_packageMode = false;
+  m_packageDir.clear();
+  m_packageCommand.clear();
+  m_packageIdentifier.clear();
+  m_packageDisplayName.clear();
 }
 
 void PythonScript::setPackageInfo(const QString& packageDir,
                                   const QString& command,
-                                  const QString& identifier)
+                                  const QString& identifier,
+                                  const QString& displayName)
 {
   m_packageDir = packageDir;
   m_packageCommand = command;
   m_packageIdentifier = identifier;
+  m_packageDisplayName = displayName;
   m_packageMode = true;
   m_scriptFilePath.clear();
 }

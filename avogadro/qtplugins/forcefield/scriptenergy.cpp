@@ -146,12 +146,9 @@ void ScriptEnergy::readMetaData(const QVariantMap& metadata)
   } else {
     const QString userOptionsRel = userOptionsVar.toString();
     if (!userOptionsRel.isEmpty()) {
-      QString userOptionsPath = userOptionsRel;
-      if (!m_interpreter->packageDir().isEmpty()) {
-        userOptionsPath = m_interpreter->packageDir() + '/' + userOptionsRel;
-      }
-      m_userOptionsSchema =
-        QtGui::PackageManager::loadOptionsFromFile(userOptionsPath);
+      m_userOptionsSchema = QtGui::PackageManager::resolveUserOptions(
+        userOptionsRel, m_interpreter->packageDir(),
+        m_interpreter->packageCommand(), m_interpreter->packageIdentifier());
     }
   }
 
