@@ -479,7 +479,9 @@ public:
   QJsonObject options() const;
 
   /**
-   * Query the script for a user-friendly name (<tt>--display-name</tt>).
+   * Return a user-friendly name for the script.
+   * @note In package mode this is taken from package metadata. For legacy
+   *       script mode, the value is queried from <tt>--display-name</tt>.
    * @note The results will be cached the first time this function is called
    * and reused in subsequent calls.
    * @note If an error occurs, the error string will be set. Call hasErrors()

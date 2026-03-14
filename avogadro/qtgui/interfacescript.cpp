@@ -119,10 +119,16 @@ QString InterfaceScript::displayName() const
 {
   m_errors.clear();
   if (m_displayName.isEmpty()) {
-    m_displayName = QString(m_interpreter->execute(
-      QStringList() << QStringLiteral("--display-name")));
-    m_errors << m_interpreter->errorList();
-    m_displayName = m_displayName.trimmed();
+    if (m_interpreter->isPackageMode()) {
+      m_displayName = m_interpreter->packageDisplayName().trimmed();
+      if (m_displayName.isEmpty())
+        m_displayName = m_interpreter->packageIdentifier().trimmed();
+    } else {
+      m_displayName = QString(m_interpreter->execute(
+        QStringList() << QStringLiteral("--display-name")));
+      m_errors << m_interpreter->errorList();
+      m_displayName = m_displayName.trimmed();
+    }
   }
 
   return m_displayName;
