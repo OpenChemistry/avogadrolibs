@@ -12,13 +12,14 @@
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025, 2026.
 # Maetnicio <mxtt.tlc@gmail.com>, 2025.
 # "David D." <dadu042@users.noreply.hosted.weblate.org>, 2025.
+# FX Coudert <fxcoudert@ik.me>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-11 10:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-15 19:10+0000\n"
+"Last-Translator: FX Coudert <fxcoudert@ik.me>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -1110,12 +1111,12 @@ msgstr "%1 Message"
 #: qtgui/interfacescript.cpp:343
 #, qt-format
 msgid "%1 Warning"
-msgstr ""
+msgstr "%1 Avertissement"
 
 #: qtgui/interfacescript.cpp:350
 #, qt-format
 msgid "%1 Error"
-msgstr ""
+msgstr "%1 Erreur"
 
 #: qtgui/interfacescript.cpp:593
 #, qt-format
@@ -1172,7 +1173,7 @@ msgstr "Cœurs du processeur"
 
 #: qtgui/jsonwidget.cpp:236 qtgui/jsonwidget.cpp:243
 msgid "Memory"
-msgstr ""
+msgstr "Mémoire"
 
 #: qtgui/jsonwidget.cpp:248
 msgid "Calculation Type"
@@ -1196,12 +1197,12 @@ msgstr "Multiplicité"
 
 #: qtgui/jsonwidget.cpp:270
 msgid "Solvent"
-msgstr ""
+msgstr "Solvant"
 
 #: qtgui/jsonwidget.cpp:271
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "Modèle"
 
 #: qtgui/jsonwidget.cpp:393
 msgid "User Name"
@@ -1326,7 +1327,7 @@ msgstr "Van der Waals (OA)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "Volumes"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
