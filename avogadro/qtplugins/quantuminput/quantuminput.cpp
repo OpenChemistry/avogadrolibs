@@ -201,8 +201,10 @@ void QuantumInput::menuActivated()
       QString userOptionsRel =
         theSender->property("packageUserOptions").toString();
       if (!userOptionsRel.isEmpty()) {
-        QString userOptionsPath = pkgDir + '/' + userOptionsRel;
-        QtGui::PackageManager::mergeOptionsFromFile(opts, userOptionsPath);
+        QJsonObject userOpts = QtGui::PackageManager::resolveUserOptions(
+          userOptionsRel, pkgDir, pkgCmd, pkgId);
+        if (!userOpts.isEmpty())
+          opts.insert(QStringLiteral("userOptions"), userOpts);
       }
 
       // Optionally load syntax-highlight rules from a separate file.

@@ -202,15 +202,15 @@ void Command::menuActivated()
         opts.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
 
       // The pyproject.toml [avogadro.X] table may declare a separate
-      // user-options file (JSON or TOML).  Its keys are the user-facing
+      // user-options file (JSON or TOML), or the literal "dynamic" to run
+      // the script with --user-options.  Its keys are the user-facing
       // option definitions and must be wrapped under "userOptions" so that
       // JsonWidget::buildOptionGui() recognises them and builds the dialog.
       QString userOptionsRel =
         theSender->property("packageUserOptions").toString();
       if (!userOptionsRel.isEmpty()) {
-        QString userOptionsPath = pkgDir + '/' + userOptionsRel;
-        QJsonObject userOpts =
-          QtGui::PackageManager::loadOptionsFromFile(userOptionsPath);
+        QJsonObject userOpts = QtGui::PackageManager::resolveUserOptions(
+          userOptionsRel, pkgDir, pkgCmd, pkgId);
         if (!userOpts.isEmpty())
           opts.insert(QStringLiteral("userOptions"), userOpts);
       }
