@@ -41,7 +41,7 @@ class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKWidget
 
 public:
   vtkGLWidget(QWidget* p = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-  ~vtkGLWidget();
+  ~vtkGLWidget() override;
 
   /** Set the molecule the widget will render. */
   void setMolecule(QtGui::Molecule* molecule);

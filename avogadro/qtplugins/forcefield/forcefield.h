@@ -8,6 +8,12 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <avogadro/calc/energyoptimizer.h>
+#include <avogadro/core/constraint.h>
+#include <avogadro/core/molecule.h>
+
+#include <Eigen/Core>
+
 #include <QtCore/QMultiHash>
 #include <QtCore/QMultiMap>
 #include <QtCore/QStringList>
@@ -15,11 +21,17 @@
 
 class QAction;
 class QDialog;
+class QProgressDialog;
+class QThread;
 
 namespace Avogadro {
 
 namespace Calc {
 class EnergyCalculator;
+}
+
+namespace QtGui {
+class CalcWorker;
 }
 
 namespace QtPlugins {
@@ -103,7 +115,17 @@ private slots:
   void unfuseSelected();
   void updateActions();
 
+  // worker thread callbacks
+  void onOptimizeChunkDone(Eigen::VectorXd positions, Eigen::VectorXd gradient,
+                           double energy, bool converged);
+  void onEnergyDone(Eigen::VectorXd gradient, double energy);
+  void onForcesDone(Eigen::VectorXd gradient, double energy);
+  void onWorkerReady();
+
 private:
+  void cleanupWorker();
+  void startWorker();
+  void sendInitCalculator();
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
   Calc::EnergyCalculator* m_method = nullptr;
@@ -116,9 +138,27 @@ private:
   unsigned int m_nSteps = 5;
   double m_tolerance = 1.0e-6;
   double m_gradientTolerance = 1.0e-4;
+  QVariantMap m_modelUserOptions;
 
   QList<Calc::EnergyCalculator*> m_scripts;
   QMultiHash<QString, QString> m_packageScripts;
+
+  // worker thread state
+  QThread* m_workerThread = nullptr;
+  QtGui::CalcWorker* m_worker = nullptr;
+  QProgressDialog* m_progressDialog = nullptr;
+  bool m_optimizing = false;
+  int m_currentStep = 0;
+  Eigen::VectorXd m_lastPositions;
+  double m_lastEnergy = 0.0;
+  Calc::OptimizationOptions m_optOptions;
+
+  // Pending initCalculator args (set by startWorker, sent by
+  // sendInitCalculator)
+  Calc::EnergyCalculator* m_pendingCalc = nullptr;
+  Core::Molecule m_pendingSnapshot;
+  Eigen::VectorXd m_pendingMask;
+  std::vector<Core::Constraint> m_pendingConstraints;
 };
 
 } // namespace QtPlugins

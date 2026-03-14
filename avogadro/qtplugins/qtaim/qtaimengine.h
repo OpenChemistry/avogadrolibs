@@ -17,7 +17,7 @@ class QTAIMEngine : public QtGui::ScenePlugin
   Q_OBJECT
 public:
   explicit QTAIMEngine(QObject* parent = nullptr);
-  virtual ~QTAIMEngine() override = default;
+  ~QTAIMEngine() override = default;
 
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;

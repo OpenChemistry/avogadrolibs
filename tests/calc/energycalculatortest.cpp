@@ -9,6 +9,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/calc/energycalculator.h>
+#include <avogadro/calc/energyoptimizer.h>
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/molecule.h>
 
@@ -42,13 +43,6 @@ public:
     return "Test calculator for unit testing";
   }
 
-  bool setConfiguration(VariantMap& config) override
-  {
-    m_configCalled = true;
-    m_config = config;
-    return true;
-  }
-
   Molecule::ElementMask elements() const override
   {
     // Support all elements by default
@@ -62,7 +56,7 @@ public:
   bool acceptsRadicals() const override { return m_acceptsRadicals; }
 
   // Simple quadratic energy function for testing
-  Real value(const TVector& x) override { return x.squaredNorm(); }
+  Real value(const Eigen::VectorXd& x) override { return x.squaredNorm(); }
 
   void setMolecule(Molecule* mol) override { m_molecule = mol; }
 
@@ -82,6 +76,90 @@ private:
   bool m_acceptsRadicals;
   bool m_configCalled;
   VariantMap m_config;
+};
+
+class FusedEnergyCalculator : public EnergyCalculator
+{
+public:
+  EnergyCalculator* newInstance() const override
+  {
+    return new FusedEnergyCalculator();
+  }
+  std::string identifier() const override { return "fused_test"; }
+  std::string name() const override { return "Fused Test"; }
+  std::string description() const override { return "Fused evaluate test"; }
+  Molecule::ElementMask elements() const override
+  {
+    Molecule::ElementMask mask;
+    mask.set();
+    return mask;
+  }
+  void setMolecule(Molecule* /*mol*/) override {}
+
+  Real value(const Eigen::VectorXd& x) override
+  {
+    ++m_valueCalls;
+    return x.squaredNorm();
+  }
+
+  void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override
+  {
+    ++m_gradientCalls;
+    grad = 2.0 * x;
+  }
+
+  Real evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad) override
+  {
+    ++m_evaluateCalls;
+    if (grad != nullptr)
+      *grad = 2.0 * x;
+    return x.squaredNorm();
+  }
+
+  int evaluateCalls() const { return m_evaluateCalls; }
+  int valueCalls() const { return m_valueCalls; }
+  int gradientCalls() const { return m_gradientCalls; }
+
+private:
+  int m_evaluateCalls = 0;
+  int m_valueCalls = 0;
+  int m_gradientCalls = 0;
+};
+
+class SizedGradientCalculator : public EnergyCalculator
+{
+public:
+  EnergyCalculator* newInstance() const override
+  {
+    return new SizedGradientCalculator();
+  }
+  std::string identifier() const override { return "sized_grad_test"; }
+  std::string name() const override { return "Sized Gradient Test"; }
+  std::string description() const override
+  {
+    return "Checks evaluate() pre-sizes gradients";
+  }
+  Molecule::ElementMask elements() const override
+  {
+    Molecule::ElementMask mask;
+    mask.set();
+    return mask;
+  }
+  void setMolecule(Molecule* /*mol*/) override {}
+
+  Real value(const Eigen::VectorXd& x) override { return x.squaredNorm(); }
+
+  void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override
+  {
+    m_sawExpectedSize = (grad.size() == x.size());
+    for (Eigen::Index i = 0; i < x.size(); ++i)
+      grad[i] = 2.0 * x[i];
+  }
+
+  bool sawExpectedSize() const { return m_sawExpectedSize; }
+
+private:
+  bool m_sawExpectedSize = false;
 };
 
 // Test fixture for EnergyCalculator
@@ -216,6 +294,106 @@ TEST_F(EnergyCalculatorTest, GradientFunctionAtZero)
   // At zero, gradient should be close to zero
   EXPECT_NEAR(grad(0), 0.0, 1e-5);
   EXPECT_NEAR(grad(1), 0.0, 1e-5);
+}
+
+TEST_F(EnergyCalculatorTest, FiniteGradientFunction)
+{
+  Eigen::VectorXd x(3);
+  x << 1.0, -2.0, 3.0;
+
+  Eigen::VectorXd grad(3);
+  calculator->finiteGradient(x, grad);
+
+  EXPECT_EQ(grad.size(), 3);
+  EXPECT_NEAR(grad(0), 2.0, 1e-4);
+  EXPECT_NEAR(grad(1), -4.0, 1e-4);
+  EXPECT_NEAR(grad(2), 6.0, 1e-4);
+}
+
+TEST_F(EnergyCalculatorTest, EvaluateWithoutGradient)
+{
+  Eigen::VectorXd x(3);
+  x << 1.0, 2.0, 3.0;
+
+  Real evaluated = calculator->evaluate(x, nullptr);
+  EXPECT_DOUBLE_EQ(evaluated, calculator->value(x));
+}
+
+TEST_F(EnergyCalculatorTest, EvaluateWithGradient)
+{
+  Eigen::VectorXd x(2);
+  x << 1.5, -0.5;
+
+  Eigen::VectorXd grad(2);
+  Real evaluated = calculator->evaluate(x, &grad);
+
+  EXPECT_DOUBLE_EQ(evaluated, calculator->value(x));
+  EXPECT_EQ(grad.size(), 2);
+  EXPECT_NEAR(grad(0), 3.0, 1e-4);
+  EXPECT_NEAR(grad(1), -1.0, 1e-4);
+}
+
+TEST(EnergyCalculatorFusedTest, EvaluateOverrideIsUsed)
+{
+  FusedEnergyCalculator calculator;
+  Eigen::VectorXd x(2);
+  x << 2.0, -3.0;
+
+  Eigen::VectorXd grad(2);
+  Real energy = calculator.evaluate(x, &grad);
+
+  EXPECT_DOUBLE_EQ(energy, 13.0);
+  EXPECT_EQ(calculator.evaluateCalls(), 1);
+  EXPECT_EQ(calculator.valueCalls(), 0);
+  EXPECT_EQ(calculator.gradientCalls(), 0);
+  EXPECT_DOUBLE_EQ(grad(0), 4.0);
+  EXPECT_DOUBLE_EQ(grad(1), -6.0);
+}
+
+TEST(EnergyCalculatorEvaluateTest, DefaultEvaluatePreSizesGradient)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(3);
+  x << 1.0, -2.0, 0.5;
+
+  Eigen::VectorXd grad; // intentionally uninitialized size
+  Real energy = calculator.evaluate(x, &grad);
+
+  EXPECT_TRUE(calculator.sawExpectedSize());
+  EXPECT_EQ(grad.size(), x.size());
+  EXPECT_DOUBLE_EQ(energy, x.squaredNorm());
+}
+
+TEST(EnergyOptimizerTest, OptimizeStepsLbfgsReducesEnergy)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(3);
+  x << 3.0, -2.0, 1.0;
+
+  const Real initial = calculator.value(x);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 5;
+
+  EXPECT_TRUE(optimizeSteps(calculator, x, options));
+
+  const Real final = calculator.value(x);
+  EXPECT_LT(final, initial);
+}
+
+TEST(EnergyOptimizerTest, OptimizeStepsRejectsZeroIterations)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(3);
+  x << 3.0, -2.0, 1.0;
+  const Eigen::VectorXd original = x;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 0;
+
+  EXPECT_FALSE(optimizeSteps(calculator, x, options));
+  EXPECT_TRUE(x.isApprox(original));
 }
 
 // Constraint Tests
@@ -431,33 +609,14 @@ TEST_F(EnergyCalculatorTest, ElementMaskSize)
 
 // Configuration Tests
 
-TEST_F(EnergyCalculatorTest, SetConfiguration)
+TEST_F(EnergyCalculatorTest, UserOptionsDefaultEmpty)
 {
-  VariantMap config;
-  config.setValue("test_key", "test_value");
-
-  EXPECT_TRUE(calculator->setConfiguration(config));
-  EXPECT_TRUE(calculator->wasConfigCalled());
+  EXPECT_TRUE(calculator->userOptions().empty());
 }
 
-TEST_F(EnergyCalculatorTest, SetConfigurationEmpty)
+TEST_F(EnergyCalculatorTest, SetUserOptionsDefaultSucceeds)
 {
-  VariantMap config;
-
-  EXPECT_TRUE(calculator->setConfiguration(config));
-}
-
-TEST_F(EnergyCalculatorTest, SetConfigurationMultipleValues)
-{
-  VariantMap config;
-  config.setValue("key1", "value1");
-  config.setValue("key2", 42);
-  config.setValue("key3", 3.14);
-
-  EXPECT_TRUE(calculator->setConfiguration(config));
-
-  const VariantMap& stored = calculator->getConfig();
-  EXPECT_EQ(stored.value("key1").toString(), "value1");
+  EXPECT_TRUE(calculator->setUserOptions(R"({"solvent":"water"})"));
 }
 
 // Custom Calculator Tests

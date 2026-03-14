@@ -44,6 +44,7 @@ public slots:
   void bondLabelType(int index);
   void residueLabelType(int index);
   void setRadiusScalar(double radius);
+  void setLabelScale(double scale);
   void setColor(const QColor& color);
 
 private:

@@ -42,12 +42,27 @@ JsonWidget::~JsonWidget() {}
 void JsonWidget::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule != nullptr) {
-    // update charge and multiplicity if needed
+    // update charge and multiplicity only if those options exist
+    // (command scripts don't have them, unlike input generators)
+    auto hasUserOption = [&](const QString& key) -> bool {
+      if (!m_options.contains("userOptions"))
+        return false;
+      if (m_options["userOptions"].isArray()) {
+        for (const auto& tab : m_options["userOptions"].toArray())
+          if (tab.toObject().contains(key))
+            return true;
+        return false;
+      }
+      return m_options["userOptions"].toObject().contains(key);
+    };
+
     int charge = static_cast<int>(m_molecule->totalCharge());
     int multiplicity = static_cast<int>(m_molecule->totalSpinMultiplicity());
 
-    setOption("Charge", charge);
-    setOption("Multiplicity", multiplicity);
+    if (hasUserOption("Charge"))
+      setOption("Charge", charge);
+    if (hasUserOption("Multiplicity"))
+      setOption("Multiplicity", multiplicity);
 
     // check the molecule for "inputParameters" from CJSON
     // e.g.

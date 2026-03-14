@@ -38,7 +38,7 @@
    <item row="0" column="1">
     <widget class="QDoubleSpinBox" name="toleranceSpinBox">
      <property name="suffix">
-      <string> Å</string>
+      <string notr="true"> Å</string>
      </property>
      <property name="decimals">
       <number>3</number>
@@ -57,7 +57,7 @@
    <item row="1" column="1">
     <widget class="QDoubleSpinBox" name="minimumSpinBox">
      <property name="suffix">
-      <string> Å</string>
+      <string notr="true"> Å</string>
      </property>
      <property name="decimals">
       <number>3</number>

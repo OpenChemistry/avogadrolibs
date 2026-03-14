@@ -216,35 +216,46 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
   return energy;
 }
 
-void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+Real OBEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
 {
-  if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
-      d->m_obmol == nullptr || !d->setup)
-    return;
+  if (grad == nullptr)
+    return value(x);
 
-  // update all coordinates at once (SetCoordinates copies the array)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
+      d->m_obmol == nullptr || !d->setup) {
+    return 0.0;
+  }
+
   d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
 
+  double energy = 0.0;
   if (d->m_forceField != nullptr) {
     d->m_forceField->SetCoordinates(*d->m_obmol);
-
-    // make sure gradients are calculated
-    double energy = d->m_forceField->Energy(true);
+    energy = d->m_forceField->Energy(true);
 
     // GetGradientPtr returns forces (not gradients), so negate
-    auto n = m_molecule->atomCount();
+    const auto n = m_molecule->atomCount();
     Eigen::Map<const Eigen::VectorXd> obForces(
       d->m_forceField->GetGradientPtr(), 3 * n);
-    grad = -obForces;
+    *grad = -obForces;
 
     // if method is not GAFF, convert to kJ/mol
-    if (m_identifier != "GAFF")
-      grad *= Calc::KCAL_TO_KJ;
+    if (m_identifier != "GAFF") {
+      energy *= Calc::KCAL_TO_KJ;
+      *grad *= Calc::KCAL_TO_KJ;
+    }
 
-    cleanGradients(grad);
-    // add in any constraints
-    constraintGradients(x, grad);
+    cleanGradients(*grad);
+    constraintGradients(x, *grad);
   }
+
+  energy += constraintEnergies(x);
+  return energy;
+}
+
+void OBEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+{
+  evaluate(x, &grad);
 }
 
 } // namespace Avogadro::QtPlugins

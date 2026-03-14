@@ -67,6 +67,14 @@ public:
 
   bool isEmpty() const { return m_empty; }
 
+public slots:
+  /**
+   * Update the preview text in the GUI. The base implementation does nothing;
+   * subclasses that have a preview area (e.g. InputGeneratorWidget) override
+   * this to regenerate their preview when options change.
+   */
+  virtual void updatePreviewText() {}
+
 protected:
   /**
    * Given the name of a user-option in m_options, return the type string.

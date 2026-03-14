@@ -6,6 +6,7 @@
 #include "scriptenergy.h"
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
 
 // formats supported in scripts
@@ -17,7 +18,6 @@
 #include <avogadro/io/xyzformat.h>
 
 #include <QtCore/QDebug>
-#include <QtCore/QDir>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QSysInfo>
@@ -46,6 +46,8 @@ constexpr quint16 BINARY_VERSION = 1;
 
 constexpr quint16 FLAG_RESPONSE_ERROR = 0x8000;
 constexpr quint16 FLAG_REQUEST_GRADIENT = 0x0001;
+constexpr quint16 FLAG_REQUEST_ENERGY_AND_GRADIENT = 0x0004;
+constexpr quint16 FLAG_REQUEST_HESSIAN = 0x0008;
 
 void appendFloat64LE(QByteArray& out, double value)
 {
@@ -92,12 +94,10 @@ bool readFloatText(const char*& pos, const char* end, double& value)
 ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)),
     m_inputFormat(NotUsed), m_protocol(Protocol::TextV1), m_molecule(nullptr),
-    m_valid(true), m_gradients(false), m_ions(false), m_radicals(false),
-    m_unitCells(false)
+    m_valid(true), m_gradients(false), m_hessians(false), m_ions(false),
+    m_radicals(false), m_unitCells(false)
 {
   m_elements.reset();
-  if (!scriptFileName_.isEmpty())
-    readMetaData();
 }
 
 ScriptEnergy::~ScriptEnergy()
@@ -129,6 +129,7 @@ void ScriptEnergy::readMetaData(const QVariantMap& metadata)
 
   QVariantMap support = metadata.value("support").toMap();
   m_gradients = support.value("gradients", false).toBool();
+  m_hessians = support.value("hessians", false).toBool();
   m_unitCells = support.value("unit-cell", false).toBool();
   m_ions = support.value("ions", false).toBool();
   m_radicals = support.value("radicals", false).toBool();
@@ -137,6 +138,23 @@ void ScriptEnergy::readMetaData(const QVariantMap& metadata)
   if (!elemStr.isEmpty())
     processElementString(elemStr);
 
+  // Optional package-provided user-options schema.
+  m_userOptionsSchema = QJsonObject();
+  const QVariant userOptionsVar = metadata.value("user-options");
+  if (userOptionsVar.typeId() == QMetaType::QVariantMap) {
+    m_userOptionsSchema = QJsonObject::fromVariantMap(userOptionsVar.toMap());
+  } else {
+    const QString userOptionsRel = userOptionsVar.toString();
+    if (!userOptionsRel.isEmpty()) {
+      QString userOptionsPath = userOptionsRel;
+      if (!m_interpreter->packageDir().isEmpty()) {
+        userOptionsPath = m_interpreter->packageDir() + '/' + userOptionsRel;
+      }
+      m_userOptionsSchema =
+        QtGui::PackageManager::loadOptionsFromFile(userOptionsPath);
+    }
+  }
+
   m_valid =
     !m_identifier.empty() && !m_name.empty() && m_inputFormat != NotUsed;
 }
@@ -144,6 +162,33 @@ void ScriptEnergy::readMetaData(const QVariantMap& metadata)
 QString ScriptEnergy::scriptFilePath() const
 {
   return m_interpreter->scriptFilePath();
+}
+
+std::string ScriptEnergy::userOptions() const
+{
+  if (m_userOptionsSchema.isEmpty())
+    return std::string();
+
+  return QJsonDocument(m_userOptionsSchema)
+    .toJson(QJsonDocument::Compact)
+    .toStdString();
+}
+
+bool ScriptEnergy::setUserOptions(const std::string& optionsJson)
+{
+  if (optionsJson.empty()) {
+    m_userOptionsValues = QJsonObject();
+    return true;
+  }
+
+  QJsonParseError parseError;
+  const QJsonDocument doc = QJsonDocument::fromJson(
+    QByteArray::fromStdString(optionsJson), &parseError);
+  if (parseError.error != QJsonParseError::NoError || !doc.isObject())
+    return false;
+
+  m_userOptionsValues = doc.object();
+  return true;
 }
 
 Calc::EnergyCalculator* ScriptEnergy::newInstance() const
@@ -163,8 +208,11 @@ void ScriptEnergy::copyMetaDataFrom(const ScriptEnergy& other)
   m_description = other.m_description;
   m_inputFormat = other.m_inputFormat;
   m_formatString = other.m_formatString;
+  m_userOptionsSchema = other.m_userOptionsSchema;
+  m_userOptionsValues = other.m_userOptionsValues;
   m_protocol = other.m_protocol;
   m_gradients = other.m_gradients;
+  m_hessians = other.m_hessians;
   m_unitCells = other.m_unitCells;
   m_ions = other.m_ions;
   m_radicals = other.m_radicals;
@@ -180,6 +228,10 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
   // .. this should never happen, but let's be defensive
   if (mol == nullptr || m_interpreter == nullptr) {
     return; // nothing to do
+  }
+  if (!m_interpreter->isPackageMode()) {
+    appendError("Energy scripts must run in package mode.");
+    return;
   }
 
   // Always reset the running server before validating/restarting.
@@ -198,38 +250,19 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
     return;
   }
 
-  // start the process
-  // we need a tempory file to write the molecule
-  QScopedPointer<Io::FileFormat> format(createFileFormat(m_inputFormat));
-  if (format.isNull()) {
-    appendError("Invalid input format.");
+  QByteArray bootstrapInput;
+  if (!buildBootstrapInput(bootstrapInput))
     return;
-  }
-  // get a temporary filename
-  QString tempPath = QDir::tempPath();
-  if (!tempPath.endsWith(QDir::separator()))
-    tempPath += QDir::separator();
-  QString tempPattern =
-    tempPath + "avogadroenergyXXXXXX." + format->fileExtensions()[0].c_str();
-  m_tempFile.setFileTemplate(tempPattern);
-  if (!m_tempFile.open()) {
-    appendError("Error creating temporary file.");
-    return;
-  }
-
-  // write the molecule
-  format->writeFile(m_tempFile.fileName().toStdString(), *mol);
-  m_tempFile.close();
 
   // construct the command line options
   QStringList options;
-  options << "-f" << m_tempFile.fileName();
   if (m_protocol == Protocol::BinaryV1)
     options << "--protocol"
             << "binary-v1";
 
-  // start the interpreter
-  m_interpreter->asyncExecute(options, QByteArray(), false);
+  // Start the long-running interpreter and keep stdin open for coordinate
+  // requests after bootstrapping the model from JSON.
+  m_interpreter->asyncExecute(options, bootstrapInput, false, false);
 }
 
 QByteArray ScriptEnergy::writeCoordinatesText(const Eigen::VectorXd& x)
@@ -251,12 +284,12 @@ QByteArray ScriptEnergy::writeCoordinatesText(const Eigen::VectorXd& x)
 }
 
 QByteArray ScriptEnergy::writeCoordinatesBinary(const Eigen::VectorXd& x,
-                                                bool requestGradient) const
+                                                quint16 requestFlags) const
 {
   if (x.size() == 0 || (x.size() % 3) != 0)
     return QByteArray();
 
-  const quint16 flags = requestGradient ? FLAG_REQUEST_GRADIENT : 0;
+  const quint16 flags = requestFlags;
   const quint32 atomCount = static_cast<quint32>(x.size() / 3);
   const quint32 payloadBytes = static_cast<quint32>(x.size() * sizeof(double));
 
@@ -288,8 +321,9 @@ QByteArray ScriptEnergy::writeCoordinatesBinary(const Eigen::VectorXd& x,
 }
 
 bool ScriptEnergy::parseResponseBinary(const QByteArray& response,
-                                       bool requestGradient, double& energy,
-                                       Eigen::VectorXd& grad) const
+                                       quint16 requestFlags, double* energy,
+                                       Eigen::VectorXd* grad,
+                                       Eigen::MatrixXd* hess) const
 {
   if (response.size() < BINARY_HEADER_SIZE)
     return false;
@@ -321,34 +355,79 @@ bool ScriptEnergy::parseResponseBinary(const QByteArray& response,
     return false;
   }
 
-  if (requestGradient) {
-    if (atomCount != static_cast<quint32>(grad.size() / 3))
+  const auto readDoubles = [](const char* src, const char* srcEnd, double* dest,
+                              Eigen::Index count) -> bool {
+    const auto byteCount = count * static_cast<Eigen::Index>(sizeof(double));
+    if (srcEnd - src < byteCount)
       return false;
-    if (payloadBytes != static_cast<quint32>(grad.size() * sizeof(double)))
-      return false;
-
     if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
-      std::memcpy(grad.data(), payload, payloadBytes);
+      std::memcpy(dest, src, byteCount);
     } else {
-      for (Eigen::Index i = 0; i < grad.size(); ++i) {
-        double value = 0.0;
-        if (!readFloat64LE(payload + i * sizeof(double), payloadEnd, value))
+      for (Eigen::Index i = 0; i < count; ++i) {
+        if (!readFloat64LE(src + i * sizeof(double), srcEnd, dest[i]))
           return false;
-        grad[i] = value;
       }
+    }
+    return true;
+  };
+
+  // Hessian response: (3N)^2 doubles, row-major on wire
+  if ((requestFlags & FLAG_REQUEST_HESSIAN) != 0 && hess != nullptr) {
+    const Eigen::Index dim = static_cast<Eigen::Index>(atomCount) * 3;
+    const quint32 expectedBytes =
+      static_cast<quint32>(dim * dim * sizeof(double));
+    if (payloadBytes != expectedBytes)
+      return false;
+    if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
+      // Map row-major wire data directly into column-major Eigen matrix
+      Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic,
+                                     Eigen::RowMajor>>
+        rowMajorMap(reinterpret_cast<const double*>(payload), dim, dim);
+      *hess = rowMajorMap;
+    } else {
+      // Read with byte-swap into a temporary, then transpose
+      hess->resize(dim, dim);
+      Eigen::MatrixXd rowMajor(dim, dim);
+      if (!readDoubles(payload, payloadEnd, rowMajor.data(), dim * dim))
+        return false;
+      *hess = rowMajor.transpose();
     }
     return true;
   }
 
-  if (payloadBytes != sizeof(double))
-    return false;
-
-  if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
-    std::memcpy(&energy, payload, sizeof(double));
+  // Fused energy + gradient response: 1 double energy + 3N doubles gradient
+  if ((requestFlags & FLAG_REQUEST_ENERGY_AND_GRADIENT) != 0) {
+    if (grad == nullptr || energy == nullptr)
+      return false;
+    const quint32 gradBytes =
+      static_cast<quint32>(grad->size() * sizeof(double));
+    if (payloadBytes != sizeof(double) + gradBytes)
+      return false;
+    if (!readDoubles(payload, payloadEnd, energy, 1))
+      return false;
+    if (!readDoubles(payload + sizeof(double), payloadEnd, grad->data(),
+                     grad->size()))
+      return false;
     return true;
   }
 
-  return readFloat64LE(payload, payloadEnd, energy);
+  // Gradient-only response
+  if ((requestFlags & FLAG_REQUEST_GRADIENT) != 0) {
+    if (grad == nullptr)
+      return false;
+    if (atomCount != static_cast<quint32>(grad->size() / 3))
+      return false;
+    if (payloadBytes != static_cast<quint32>(grad->size() * sizeof(double)))
+      return false;
+    return readDoubles(payload, payloadEnd, grad->data(), grad->size());
+  }
+
+  // Energy-only response
+  if (energy == nullptr)
+    return false;
+  if (payloadBytes != sizeof(double))
+    return false;
+  return readDoubles(payload, payloadEnd, energy, 1);
 }
 
 bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame)
@@ -419,10 +498,10 @@ bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame)
 }
 
 bool ScriptEnergy::evaluateBinary(const Eigen::VectorXd& x,
-                                  bool requestGradient, double& energy,
-                                  Eigen::VectorXd& grad)
+                                  quint16 requestFlags, double* energy,
+                                  Eigen::VectorXd* grad, Eigen::MatrixXd* hess)
 {
-  const QByteArray input = writeCoordinatesBinary(x, requestGradient);
+  const QByteArray input = writeCoordinatesBinary(x, requestFlags);
   if (input.isEmpty()) {
     appendError("Invalid coordinates for binary request.");
     return false;
@@ -432,7 +511,57 @@ bool ScriptEnergy::evaluateBinary(const Eigen::VectorXd& x,
   if (!readBinaryFrame(input, response))
     return false;
 
-  return parseResponseBinary(response, requestGradient, energy, grad);
+  return parseResponseBinary(response, requestFlags, energy, grad, hess);
+}
+
+bool ScriptEnergy::buildBootstrapInput(QByteArray& input) const
+{
+  if (m_molecule == nullptr) {
+    return false;
+  }
+
+  QScopedPointer<Io::FileFormat> format(createFileFormat(m_inputFormat));
+  if (format.isNull()) {
+    appendError("Invalid input format.");
+    return false;
+  }
+
+  std::string moleculeString;
+  if (!format->writeString(moleculeString, *m_molecule)) {
+    appendError(format->error(), false);
+    return false;
+  }
+
+  QJsonObject request;
+  request.insert(QStringLiteral("charge"), m_molecule->totalCharge());
+  request.insert(QStringLiteral("spin"), m_molecule->totalSpinMultiplicity());
+
+  QJsonArray selectedList;
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (m_molecule->atomSelected(i))
+      selectedList.append(static_cast<qint64>(i));
+  }
+  request.insert(QStringLiteral("selectedAtoms"), selectedList);
+
+  if (m_formatString == QLatin1String("cjson")) {
+    QJsonParseError parseError;
+    const QJsonDocument parsed = QJsonDocument::fromJson(
+      QByteArray::fromStdString(moleculeString), &parseError);
+    if (parseError.error != QJsonParseError::NoError || !parsed.isObject()) {
+      appendError("Failed to serialize cjson bootstrap input.");
+      return false;
+    }
+    request.insert(QStringLiteral("cjson"), parsed.object());
+  } else {
+    request.insert(m_formatString, QString::fromStdString(moleculeString));
+  }
+
+  // Package energy scripts receive user-selected values under "options".
+  request.insert(QStringLiteral("options"), m_userOptionsValues);
+
+  input = QJsonDocument(request).toJson(QJsonDocument::Compact);
+  input.append('\n');
+  return true;
 }
 
 Real ScriptEnergy::value(const Eigen::VectorXd& x)
@@ -442,8 +571,7 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
 
   double energy = 0.0;
   if (m_protocol == Protocol::BinaryV1) {
-    Eigen::VectorXd unusedGrad;
-    if (!evaluateBinary(x, false, energy, unusedGrad)) {
+    if (!evaluateBinary(x, 0, &energy)) {
       return std::numeric_limits<Real>::quiet_NaN();
     }
     energy += constraintEnergies(x);
@@ -478,16 +606,49 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
   return energy;
 }
 
+Real ScriptEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
+{
+  if (grad == nullptr)
+    return value(x);
+
+  // Optimizers may pass an uninitialized/incorrectly-sized gradient buffer.
+  if (grad->rows() != x.rows())
+    grad->resize(x.rows());
+  grad->setZero();
+
+  if (!m_gradients)
+    return EnergyCalculator::evaluate(x, grad);
+
+  if (m_protocol == Protocol::BinaryV1) {
+    double energy = 0.0;
+    if (!evaluateBinary(x, FLAG_REQUEST_ENERGY_AND_GRADIENT, &energy, grad)) {
+      grad->setConstant(std::numeric_limits<Real>::quiet_NaN());
+      return std::numeric_limits<Real>::quiet_NaN();
+    }
+    cleanGradients(*grad);
+    constraintGradients(x, *grad);
+    energy += constraintEnergies(x);
+    return energy;
+  }
+
+  // Text protocol parsers are currently separate for value and gradient.
+  gradient(x, *grad);
+  return value(x);
+}
+
 void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
+  if (grad.rows() != x.rows())
+    grad.resize(x.rows());
+  grad.setZero();
+
   if (!m_gradients) {
     EnergyCalculator::gradient(x, grad);
     return;
   }
 
   if (m_protocol == Protocol::BinaryV1) {
-    double unusedEnergy = 0.0;
-    if (!evaluateBinary(x, true, unusedEnergy, grad)) {
+    if (!evaluateBinary(x, FLAG_REQUEST_GRADIENT, nullptr, &grad)) {
       grad.setConstant(std::numeric_limits<Real>::quiet_NaN());
       return;
     }
@@ -560,6 +721,23 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   constraintGradients(x, grad);
 }
 
+void ScriptEnergy::hessian(const Eigen::VectorXd& x, Eigen::MatrixXd& hess)
+{
+  if (!m_hessians || m_protocol != Protocol::BinaryV1) {
+    // Fall back to numerical Hessian
+    // Text-mode would be really slow anyway
+    EnergyCalculator::hessian(x, hess);
+    return;
+  }
+
+  if (!evaluateBinary(x, FLAG_REQUEST_HESSIAN, nullptr, nullptr, &hess)) {
+    // something went wrong
+    const Eigen::Index dim = x.size();
+    hess = Eigen::MatrixXd::Constant(dim, dim,
+                                     std::numeric_limits<Real>::quiet_NaN());
+  }
+}
+
 ScriptEnergy::Format ScriptEnergy::stringToFormat(const std::string& str)
 {
   if (str == "cjson")
@@ -612,6 +790,7 @@ void ScriptEnergy::resetMetaData()
 {
   m_valid = false;
   m_gradients = false;
+  m_hessians = false;
   m_ions = false;
   m_radicals = false;
   m_unitCells = false;
@@ -622,152 +801,8 @@ void ScriptEnergy::resetMetaData()
   m_description.clear();
   m_formatString.clear();
   m_elements.reset();
-}
-
-void ScriptEnergy::readMetaData()
-{
-  resetMetaData();
-
-  QByteArray output(m_interpreter->execute(QStringList() << "--metadata"));
-
-  if (m_interpreter->hasErrors()) {
-    qWarning() << tr("Error retrieving metadata for energy script: %1")
-                    .arg(scriptFilePath())
-               << "\n"
-               << m_interpreter->errorList();
-    return;
-  }
-
-  QJsonParseError parseError;
-  QJsonDocument doc(QJsonDocument::fromJson(output, &parseError));
-  if (parseError.error != QJsonParseError::NoError) {
-    qWarning() << tr("Error parsing metadata for energy script: %1")
-                    .arg(scriptFilePath())
-               << "\n"
-               << parseError.errorString();
-    return;
-  }
-
-  if (!doc.isObject()) {
-    qWarning() << tr("Error parsing metadata for energy script: %1\n"
-                     "Result is not a JSON object.\n")
-                    .arg(scriptFilePath());
-    return;
-  }
-
-  const QJsonObject metaData(doc.object());
-
-  // Read required inputs first.
-  std::string identifierTmp;
-  if (!parseString(metaData, "identifier", identifierTmp)) {
-    qWarning() << "Error parsing metadata for energy script:"
-               << scriptFilePath() << "\n"
-               << "Error parsing required member 'identifier'"
-               << "\n"
-               << output;
-    return;
-  }
-  m_identifier = identifierTmp;
-
-  std::string nameTmp;
-  if (!parseString(metaData, "name", nameTmp)) {
-    qWarning() << "Error parsing metadata for energy script:"
-               << scriptFilePath() << "\n"
-               << "Error parsing required member 'name'"
-               << "\n"
-               << output;
-    return;
-  }
-  m_name = nameTmp;
-
-  std::string descriptionTmp;
-  parseString(metaData, "description", descriptionTmp);
-  m_description = descriptionTmp; // optional
-
-  Format inputFormatTmp = NotUsed;
-  std::string inputFormatStrTmp;
-  if (!parseString(metaData, "inputFormat", inputFormatStrTmp)) {
-    qWarning() << "Error parsing metadata for energy script:"
-               << scriptFilePath() << "\n"
-               << "Member 'inputFormat' required for writable formats."
-               << "\n"
-               << output;
-    return;
-  }
-  m_formatString = inputFormatStrTmp.c_str(); // for the json key
-
-  // Validate the input format
-  inputFormatTmp = stringToFormat(inputFormatStrTmp);
-  if (inputFormatTmp == NotUsed) {
-    qWarning() << "Error parsing metadata for energy script:"
-               << scriptFilePath() << "\n"
-               << "Member 'inputFormat' not recognized:"
-               << inputFormatStrTmp.c_str()
-               << "\nValid values are cjson, cml, mdl/sdf, pdb, or xyz.\n"
-               << output;
-    return;
-  }
-  m_inputFormat = inputFormatTmp;
-
-  // optional protocol, defaults to text-v1
-  if (metaData["protocol"].isString()) {
-    const std::string protocolString =
-      metaData["protocol"].toString().toStdString();
-    if (protocolString == "text-v1" || protocolString == "binary-v1") {
-      m_protocol = stringToProtocol(protocolString);
-    } else {
-      qWarning() << "Error parsing metadata for energy script:"
-                 << scriptFilePath() << "\n"
-                 << "Member 'protocol' not recognized:"
-                 << protocolString.c_str()
-                 << "\nValid values are text-v1 or binary-v1.\n"
-                 << output;
-      return;
-    }
-  }
-
-  // check ions, radicals, unit cells
-  /* e.g.,
-        "protocol": "binary-v1",
-        "unitCell": False,
-        "gradients": True,
-        "ion": False,
-        "radical": False,
-  */
-  if (!metaData["gradients"].isBool()) {
-    return; // not valid
-  }
-  m_gradients = metaData["gradients"].toBool();
-
-  if (!metaData["unitCell"].isBool()) {
-    return; // not valid
-  }
-  m_unitCells = metaData["unitCell"].toBool();
-
-  if (!metaData["ion"].isBool()) {
-    return; // not valid
-  }
-  m_ions = metaData["ion"].toBool();
-
-  if (!metaData["radical"].isBool()) {
-    return; // not valid
-  }
-  m_radicals = metaData["radical"].toBool();
-
-  // get the element mask
-  // (if it doesn't exist, the default is no elements anyway)
-  m_valid = parseElements(metaData);
-}
-
-bool ScriptEnergy::parseString(const QJsonObject& ob, const QString& key,
-                               std::string& str)
-{
-  if (!ob[key].isString())
-    return false;
-
-  str = ob[key].toString().toStdString();
-
-  return !str.empty();
+  m_userOptionsSchema = QJsonObject();
+  m_userOptionsValues = QJsonObject();
 }
 
 void ScriptEnergy::processElementString(const QString& str)
@@ -807,30 +842,6 @@ void ScriptEnergy::processElementString(const QString& str)
 
     m_elements.set(i);
   }
-}
-
-bool ScriptEnergy::parseElements(const QJsonObject& object)
-{
-  m_elements.reset();
-
-  // we could either get a string or an array (of numbers)
-  if (object["elements"].isString()) {
-    auto str = object["elements"].toString();
-    processElementString(str);
-
-  } else if (object["elements"].isArray()) {
-    QJsonArray arr = object["elements"].toArray();
-    for (auto&& i : arr) {
-      if (i.isString()) {
-        processElementString(i.toString());
-      } else if (i.isDouble()) {
-        int element = i.toInt();
-        if (element >= 1 && element <= 119) // check the range
-          m_elements.set(element);
-      }
-    }
-  }
-  return true;
 }
 
 } // namespace Avogadro::QtPlugins

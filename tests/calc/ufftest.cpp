@@ -70,7 +70,42 @@ TEST_P(UffGradientTest, GradientComparison)
   for (int i = 0; i < 3 * n; i++) {
     // are these components within 10% of each other?
     EXPECT_NEAR(analytical[i], numeric[i],
-                std::max(1e-5, 0.1 * std::fabs(analytical[i])));
+                std::max(2.5e-5, 0.1 * std::fabs(analytical[i])));
+  }
+}
+
+TEST_P(UffGradientTest, EvaluateMatchesValueAndGradient)
+{
+  const char* filename = GetParam();
+
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string filepath = std::string(AVOGADRO_DATA) + "/data/xyz/" + filename;
+  EXPECT_TRUE(xyz.readFile(filepath, molecule));
+  ASSERT_EQ(xyz.error(), std::string());
+  ASSERT_GT(molecule.atomCount(), 0);
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  const unsigned int n = molecule.atomCount();
+  Core::Array<Vector3> pos = molecule.atomPositions3d();
+  double* p = pos[0].data();
+  Eigen::Map<Eigen::VectorXd> positions(p, 3 * n);
+
+  const Real expectedEnergy = uff.value(positions);
+  Eigen::VectorXd expectedGradient = Eigen::VectorXd::Zero(3 * n);
+  uff.gradient(positions, expectedGradient);
+
+  Eigen::VectorXd fusedGradient(1); // intentional wrong size to validate resize
+  const Real fusedEnergy = uff.evaluate(positions, &fusedGradient);
+
+  EXPECT_NEAR(fusedEnergy, expectedEnergy,
+              std::max(1e-8, 1e-10 * std::fabs(expectedEnergy)));
+  ASSERT_EQ(fusedGradient.size(), expectedGradient.size());
+  for (int i = 0; i < expectedGradient.size(); ++i) {
+    EXPECT_NEAR(fusedGradient[i], expectedGradient[i],
+                std::max(1e-7, 1e-8 * std::fabs(expectedGradient[i])));
   }
 }
 

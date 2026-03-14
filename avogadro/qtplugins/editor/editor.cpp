@@ -250,11 +250,11 @@ void Editor::draw(Rendering::GroupNode& node)
 
   // Determine the field width. Negate it to indicate left-alignment.
   QString distanceLabel = tr("Distance:");
-  int labelWidth = -1 * distanceLabel.size();
+  int labelWidth = -distanceLabel.size();
 
-  QString overlayText = tr("%1 %L2")
+  QString overlayText = QString("%1 %L2 Å")
                           .arg(distanceLabel, labelWidth)
-                          .arg(tr("%L1 Å").arg(m_bondDistance, 9, 'f', 3), 9);
+                          .arg(m_bondDistance, 9, 'f', 3);
 
   Vector3ub color(64, 255, 220);
   if (m_renderer) {

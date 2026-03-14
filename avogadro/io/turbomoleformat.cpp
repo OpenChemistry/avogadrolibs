@@ -377,7 +377,8 @@ bool TurbomoleFormat::write(std::ostream& outStream, const Core::Molecule& mol)
       uniqueIndices.push_back(i);
   }
 
-  outStream << "$coord angs\n";
+  // convert to Bohr because some programs can't handle Angstrom
+  outStream << "$coord\n";
 
   // print $isosub only when an isotope exists
   std::ostringstream isosub;
@@ -393,12 +394,12 @@ bool TurbomoleFormat::write(std::ostream& outStream, const Core::Molecule& mol)
     std::string symbol = Elements::symbol(atom.atomicNumber());
     symbol[0] = tolower(symbol[0]);
 
+    Vector3 position = atom.position3d() * ANGSTROM_TO_BOHR;
     outStream << " " << std::setw(18) << std::right << std::fixed
-              << std::setprecision(10) << atom.position3d().x() << " "
-              << std::setw(18) << std::right << std::fixed
-              << std::setprecision(10) << atom.position3d().y() << " "
-              << std::setw(18) << std::right << std::fixed
-              << std::setprecision(10) << atom.position3d().z() << " "
+              << std::setprecision(10) << position.x() << " " << std::setw(18)
+              << std::right << std::fixed << std::setprecision(10)
+              << position.y() << " " << std::setw(18) << std::right
+              << std::fixed << std::setprecision(10) << position.z() << " "
               << std::setw(5) << std::right << symbol << "\n";
     auto iso = mol.isotope(atomIdx);
     if (iso > 0)

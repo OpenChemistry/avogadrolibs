@@ -13,8 +13,6 @@
 #include <avogadro/core/variantmap.h>
 #include <avogadro/core/vector.h>
 
-#include <cppoptlib/problem.h>
-
 namespace Avogadro {
 namespace Core {
 class Molecule;
@@ -24,11 +22,11 @@ namespace Calc {
 
 constexpr Real KCAL_TO_KJ = 4.184;
 
-class AVOGADROCALC_EXPORT EnergyCalculator : public cppoptlib::Problem<Real>
+class AVOGADROCALC_EXPORT EnergyCalculator
 {
 public:
   EnergyCalculator() = default;
-  ~EnergyCalculator() override = default;
+  virtual ~EnergyCalculator() = default;
 
   /**
    * Create a new instance of the model. Ownership passes to the
@@ -52,9 +50,16 @@ public:
   virtual std::string description() const = 0;
 
   /**
-   * Called to set the configuration (e.g., for a GUI options dialog)
+   * @brief Return a JSON object string describing optional user-editable
+   * settings for this model. Empty string means no user options.
    */
-  virtual bool setConfiguration([[maybe_unused]] Core::VariantMap& config)
+  virtual std::string userOptions() const { return std::string(); }
+
+  /**
+   * @brief Set user-selected options serialized as a JSON object string.
+   * @return True on success.
+   */
+  virtual bool setUserOptions([[maybe_unused]] const std::string& optionsJson)
   {
     return true;
   }
@@ -88,15 +93,46 @@ public:
   virtual bool acceptsRadicals() const { return false; }
 
   /**
+   * Calculate the energy for this method.
+   */
+  virtual Real value(const Eigen::VectorXd& x) = 0;
+
+  /**
    * Calculate the gradients for this method, defaulting to numerical
    * finite-difference methods
    */
-  void gradient(const TVector& x, TVector& grad) override;
+  virtual void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad);
+
+  /**
+   * Calculate numerical gradients for this method.
+   */
+  void finiteGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad,
+                      int accuracy = 0);
+
+  /**
+   * Evaluate the energy and optionally gradients in one call.
+   *
+   * Derived classes with efficient fused implementations should override this.
+   */
+  virtual Real evaluate(const Eigen::VectorXd& x,
+                        Eigen::VectorXd* grad = nullptr);
+
+  /**
+   * Calculate the Hessian matrix for this method, defaulting to numerical
+   * finite-difference methods.
+   */
+  virtual void hessian(const Eigen::VectorXd& x, Eigen::MatrixXd& hess);
+
+  /**
+   * Calculate numerical Hessian for this method.
+   */
+  void finiteHessian(const Eigen::VectorXd& x, Eigen::MatrixXd& hess,
+                     int accuracy = 0);
 
   /**
    * Called to 'clean' gradients @param grad (e.g., for constraints)
    */
-  void cleanGradients(TVector& grad);
+  void cleanGradients(Eigen::VectorXd& grad);
 
   /**
    * Called to get the energies for the current set of constraints.
@@ -104,7 +140,7 @@ public:
    * in derived classes
    * @return the sum of the constraint energies
    */
-  Real constraintEnergies(const TVector& x);
+  Real constraintEnergies(const Eigen::VectorXd& x);
 
   /**
    * Called to get the gradients for the current set of constraints.
@@ -112,7 +148,7 @@ public:
    * @param x the current coordinates
    * @param grad the gradient vector to be updated with constraint gradients
    */
-  void constraintGradients(const TVector& x, TVector& grad);
+  void constraintGradients(const Eigen::VectorXd& x, Eigen::VectorXd& grad);
 
   /**
    * Called to get the constraints for this method.
@@ -126,12 +162,12 @@ public:
   /**
    * Called to update the "frozen" mask (e.g., during editing)
    */
-  void setMask(TVector mask) { m_mask = mask; }
+  void setMask(Eigen::VectorXd mask) { m_mask = mask; }
 
   /**
    * @return the frozen atoms mask
    */
-  TVector mask() const { return m_mask; }
+  Eigen::VectorXd mask() const { return m_mask; }
 
   /**
    * Called when the current molecule changes.
@@ -146,7 +182,7 @@ protected:
    */
   void appendError(const std::string& errorString, bool newLine = true) const;
 
-  TVector m_mask; // optimize or frozen atom mask
+  Eigen::VectorXd m_mask; // optimize or frozen atom mask
   // Separate the constraints into different types
   // for speed and convenience.
   std::vector<Core::Constraint> m_distanceConstraints;

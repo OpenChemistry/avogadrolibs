@@ -251,8 +251,13 @@ inline unsigned int BasisSet::lumo(ElectronType type) const
       }
     }
   }
-  // fall back to electron count
-  return m_electrons[0] / 2 + 1;
+  // fall back to electron count 
+  // (supports odd number of electrons))
+  if (type == Beta) {
+    return m_electrons[0] / 2 + 1;
+  } else {
+    return m_electrons[0] / 2 + (m_electrons[0] % 2) + 1;
+  }
 }
 
 inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)

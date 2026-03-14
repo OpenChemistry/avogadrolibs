@@ -51,12 +51,7 @@ mark_as_advanced(AVOGADRO_DATA_ROOT)
 
 # Add the tests for each module.
 
-if(NOT PROJECT_IS_TOP_LEVEL)
-  # calc/energycalculator.h requires cppoptlib/problem.h, which is
-  # provided in source but not currently installed with AvogadroLibs.
-  # So skip calc in standalone tests until Issue#2631 is resolved.
-  add_subdirectory(calc)
-endif()
+add_subdirectory(calc)
 
 add_subdirectory(core)
 add_subdirectory(io)

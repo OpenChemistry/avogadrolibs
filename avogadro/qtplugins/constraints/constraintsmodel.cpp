@@ -79,9 +79,9 @@ QVariant ConstraintsModel::data(const QModelIndex& index, int role) const
           return currentConstraint.value();
 
         if (currentConstraint.type() == 1)
-          return QString("%1 Å").arg(currentConstraint.value(), 0, 'f', 3);
+          return QString("%L1 Å").arg(currentConstraint.value(), 0, 'f', 3);
         else if (currentConstraint.type() == 2 || currentConstraint.type() == 3)
-          return QString("%1 °").arg(currentConstraint.value(), 0, 'f', 3);
+          return QString("%L1 °").arg(currentConstraint.value(), 0, 'f', 3);
         else
           return "--";
         break;

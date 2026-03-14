@@ -162,6 +162,7 @@ void MoldenFile::processLine(std::istream& in)
           if (list.size() < 1)
             break;
           shell = list[0];
+          std::transform(shell.begin(), shell.end(), shell.begin(), tolower);
           shellType = GaussianSet::UU;
           if (shell == "sp")
             shellType = GaussianSet::SP;
@@ -226,10 +227,11 @@ void MoldenFile::processLine(std::istream& in)
         // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
         while (!line.empty() && Core::contains(line, "=")) {
           if (Core::contains(line, "Occup"))
-            m_electrons += Core::lexicalCast<int>(list[1]).value_or(0);
+            m_electrons += Core::lexicalCast<int>(list.back()).value_or(0);
           else if (Core::contains(line, "Ene")) {
-            pendingEnergy = Core::lexicalCast<double>(list[1]).value_or(0.0) *
-                            HARTREE_TO_EV_D;
+            pendingEnergy =
+              Core::lexicalCast<double>(list.back()).value_or(0.0) *
+              HARTREE_TO_EV_D;
             havePendingEnergy = true;
           } else if (Core::contains(line, "Spin")) {
             // Check for Beta spin - handle both "Spin= Beta" and "Spin=Beta"
@@ -240,7 +242,7 @@ void MoldenFile::processLine(std::istream& in)
               pendingSpinBeta = false;
             }
           } else if (Core::contains(line, "Sym")) {
-            pendingSymmetry = list[1];
+            pendingSymmetry = list.back();
             havePendingSymmetry = true;
           }
           getline(in, line);

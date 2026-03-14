@@ -282,6 +282,7 @@ void QuantumInput::menuActivated()
   dlg->setMolecule(m_molecule);
   dlg->show();
   dlg->raise();
+  dlg->activateWindow();
 }
 
 void QuantumInput::registerFeature(const QString& type,

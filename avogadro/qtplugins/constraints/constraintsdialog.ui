@@ -122,7 +122,7 @@
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
           <property name="suffix">
-           <string>Å</string>
+           <string notr="true">Å</string>
           </property>
           <property name="decimals">
            <number>3</number>

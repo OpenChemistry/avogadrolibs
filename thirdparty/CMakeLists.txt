@@ -45,7 +45,7 @@ endif(USE_EXTERNAL_STRUCT)
 if(NOT TARGET cppoptlib)
   add_library(cppoptlib INTERFACE IMPORTED GLOBAL)
   target_include_directories(cppoptlib INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cppoptlib/include>)
 endif(NOT TARGET cppoptlib)
 
 if(USE_EXTERNAL_TOMLPLUSPLUS)

@@ -13,11 +13,3 @@ avogadro_plugin(ScriptFileFormats
 )
 
 target_link_libraries(ScriptFileFormats PRIVATE Avogadro::QuantumIO)
-
-# Bundled format scripts:
-set(format_scripts
-  formatScripts/zyx.py
-)
-
-install(PROGRAMS ${format_scripts}
-  DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/formatScripts/")

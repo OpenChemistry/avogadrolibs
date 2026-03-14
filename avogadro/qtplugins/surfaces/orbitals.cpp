@@ -139,6 +139,7 @@ void Orbitals::loadOrbitals()
   m_dialog->fillTable(m_basis);
   m_dialog->show();
   m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
@@ -156,8 +157,10 @@ void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
 
   if (isEnabled != hasOrbitals) {
     m_action->setEnabled(hasOrbitals);
-    if (hasOrbitals)
-      openDialog();
+    if (hasOrbitals) {
+      loadBasis();    // update m_basis from the new basisSet
+      loadOrbitals(); // fill the orbital table and show the dialog
+    }
   }
 }
 
@@ -181,6 +184,7 @@ void Orbitals::openDialog()
 
   m_dialog->show();
   m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 void Orbitals::calculateOrbitalFromWidget(

@@ -57,7 +57,7 @@ protected:
 
     // Clear any previous test data from QSettings
     QSettings settings;
-    settings.beginGroup("packages");
+    settings.beginGroup("plugins");
     settings.remove("test-plugin");
     settings.endGroup();
     settings.sync();
@@ -67,7 +67,7 @@ protected:
   {
     // Clean up QSettings
     QSettings settings;
-    settings.beginGroup("packages");
+    settings.beginGroup("plugins");
     settings.remove("test-plugin");
     settings.endGroup();
     settings.sync();

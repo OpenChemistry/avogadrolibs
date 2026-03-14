@@ -22,8 +22,15 @@ HEADER = struct.Struct("<4sHHII")
 
 FLAG_REQUEST_GRADIENT = 0x0001
 FLAG_BATCH_MODE = 0x0002
+FLAG_REQUEST_ENERGY_AND_GRADIENT = 0x0004
+FLAG_REQUEST_HESSIAN = 0x0008
 FLAG_RESPONSE_ERROR = 0x8000
-VALID_REQUEST_FLAGS = FLAG_REQUEST_GRADIENT | FLAG_BATCH_MODE
+VALID_REQUEST_FLAGS = (
+    FLAG_REQUEST_GRADIENT
+    | FLAG_BATCH_MODE
+    | FLAG_REQUEST_ENERGY_AND_GRADIENT
+    | FLAG_REQUEST_HESSIAN
+)
 
 
 class BinaryProtocolError(RuntimeError):
@@ -50,6 +57,14 @@ class CoordinateFrame:
     @property
     def wants_gradient(self) -> bool:
         return wants_gradient(self.flags)
+
+    @property
+    def wants_energy_and_gradient(self) -> bool:
+        return (self.flags & FLAG_REQUEST_ENERGY_AND_GRADIENT) != 0
+
+    @property
+    def wants_hessian(self) -> bool:
+        return (self.flags & FLAG_REQUEST_HESSIAN) != 0
 
     @property
     def is_batch(self) -> bool:
@@ -218,21 +233,62 @@ def is_batch_mode(flags: int) -> bool:
 def _write_single_energy(
     stream: "BinaryIO", atom_count: int, energy: float, flush: bool = True
 ) -> None:
-    payload = struct.pack("<d", float(energy))
+    payload = struct.pack("<d", energy)
     write_frame(stream, 0, atom_count, payload, flush=flush)
 
 
-def _write_single_gradient(
-    stream: "BinaryIO", atom_count: int, gradient: "npt.NDArray", flush: bool = True
-) -> None:
+def _normalize_gradient(gradient: "npt.NDArray", atom_count: int) -> "npt.NDArray":
+    """Validate and reshape gradient to contiguous (atom_count, 3) LE array."""
     grad = np.asarray(gradient, dtype=np.float64)
     if grad.shape == (atom_count * 3,):
         grad = grad.reshape(atom_count, 3)
     if grad.shape != (atom_count, 3):
         raise BinaryProtocolError("Gradient shape must be (atom_count, 3).")
+    return np.ascontiguousarray(grad, dtype="<f8")
 
-    grad = np.ascontiguousarray(grad, dtype="<f8")
+
+def _write_single_gradient(
+    stream: "BinaryIO", atom_count: int, gradient: "npt.NDArray", flush: bool = True
+) -> None:
+    grad = _normalize_gradient(gradient, atom_count)
     _write_frame_parts(stream, 0, atom_count, (grad,), flush=flush)
+
+
+def _write_single_energy_and_gradient(
+    stream: "BinaryIO",
+    atom_count: int,
+    energy: float,
+    gradient: "npt.NDArray",
+    flush: bool = True,
+) -> None:
+    grad = _normalize_gradient(gradient, atom_count)
+    energy_bytes = struct.pack("<d", energy)
+    _write_frame_parts(
+        stream,
+        FLAG_REQUEST_ENERGY_AND_GRADIENT,
+        atom_count,
+        (energy_bytes, grad),
+        flush=flush,
+    )
+
+
+def _write_single_hessian(
+    stream: "BinaryIO",
+    atom_count: int,
+    hessian: "npt.NDArray",
+    flush: bool = True,
+) -> None:
+    dim = atom_count * 3
+    hess = np.asarray(hessian, dtype=np.float64)
+    if hess.shape != (dim, dim):
+        raise BinaryProtocolError(
+            f"Hessian shape must be ({dim}, {dim}), got {hess.shape}."
+        )
+    # Send row-major (C order)
+    hess = np.ascontiguousarray(hess, dtype="<f8")
+    _write_frame_parts(
+        stream, FLAG_REQUEST_HESSIAN, atom_count, (hess,), flush=flush
+    )
 
 
 def _write_error(
@@ -395,9 +451,11 @@ class EnergyServer:
         Yields Request objects with:
           - coords: numpy array (atom_count, 3) or (batch_size, atom_count, 3)
           - flags: request flags
-          - wants_gradient: bool property
+          - wants_gradient, wants_energy_and_gradient, wants_hessian: bool
           - is_batch: bool property
           - send_energy / send_energies / send_gradient / send_gradients
+          - send_energy_and_gradient(energy, gradient): fused response
+          - send_hessian(hessian): Hessian matrix response
           - send_error(message): send error response
         """
         while True:
@@ -457,6 +515,16 @@ class Request:
         return wants_gradient(self.flags)
 
     @property
+    def wants_energy_and_gradient(self) -> bool:
+        """True if fused energy+gradient is requested."""
+        return (self.flags & FLAG_REQUEST_ENERGY_AND_GRADIENT) != 0
+
+    @property
+    def wants_hessian(self) -> bool:
+        """True if Hessian is requested (FLAG_REQUEST_HESSIAN set)."""
+        return (self.flags & FLAG_REQUEST_HESSIAN) != 0
+
+    @property
     def is_batch(self) -> bool:
         """True if this is a batch request (FLAG_BATCH_MODE set)."""
         return is_batch_mode(self.flags)
@@ -481,18 +549,25 @@ class Request:
         self._check_unsent()
         self._sent = True
 
-    def send(self, result: "npt.NDArray") -> None:
+    def send(self, result, gradient=None) -> None:
         """
-        Send response (automatically detects energy vs gradient, single vs batch).
+        Send response (automatically detects request type).
 
-        Args:
-          result: energy/gradient data as numpy array
-            - For single energy: scalar or shape (1,)
-            - For batch energies: shape (batch_size,)
-            - For single gradient: shape (atom_count, 3)
-            - For batch gradients: shape (batch_size, atom_count, 3)
+        For energy-only or gradient-only requests, pass the single result.
+        For fused energy+gradient, pass (energy, gradient) or use keyword arg.
+        For hessian, pass the hessian matrix.
         """
-        if self.is_batch:
+        if self.wants_hessian:
+            self.send_hessian(result)
+        elif self.wants_energy_and_gradient:
+            if gradient is not None:
+                self.send_energy_and_gradient(result, gradient)
+            else:
+                raise BinaryProtocolError(
+                    "Fused energy+gradient request requires both energy and "
+                    "gradient arguments: send(energy, gradient)."
+                )
+        elif self.is_batch:
             if self.wants_gradient:
                 self.send_gradients(result)
             else:
@@ -553,6 +628,38 @@ class Request:
             self._server.output,
             self._server.atom_count,
             gradient,
+            flush=self._server.auto_flush,
+        )
+
+    def send_energy_and_gradient(
+        self, energy: float, gradient: "npt.NDArray"
+    ) -> None:
+        """Send fused energy + gradient response."""
+        if not self.wants_energy_and_gradient:
+            raise BinaryProtocolError(
+                "send_energy_and_gradient() is only valid for "
+                "FLAG_REQUEST_ENERGY_AND_GRADIENT requests."
+            )
+        self._mark_sent()
+        _write_single_energy_and_gradient(
+            self._server.output,
+            self._server.atom_count,
+            energy,
+            gradient,
+            flush=self._server.auto_flush,
+        )
+
+    def send_hessian(self, hessian: "npt.NDArray") -> None:
+        """Send Hessian matrix response (shape 3N x 3N)."""
+        if not self.wants_hessian:
+            raise BinaryProtocolError(
+                "send_hessian() is only valid for FLAG_REQUEST_HESSIAN requests."
+            )
+        self._mark_sent()
+        _write_single_hessian(
+            self._server.output,
+            self._server.atom_count,
+            hessian,
             flush=self._server.auto_flush,
         )
 

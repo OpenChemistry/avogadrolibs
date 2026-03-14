@@ -166,7 +166,7 @@ add_subdirectory(scriptcharges)
 add_subdirectory(scriptfileformats)
 
 if(USE_LIBARCHIVE)
-  add_subdirectory(plugindownloader)
+  add_subdirectory(packageinstaller)
 endif()
 
 if(USE_LIBMSYM)

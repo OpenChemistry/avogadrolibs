@@ -1,9 +1,8 @@
 cc_library(
     name = "cppoptlib",
     hdrs = glob([
-        "*.h",
-        "solver/*.h",
-        "linesearch/*.h",
+        "include/cppoptlib/**/*.h",
     ]),
+    includes = ["include"],
     visibility = ["//visibility:public"],
 )

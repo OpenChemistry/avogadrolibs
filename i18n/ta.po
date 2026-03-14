@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the Avogadro package.
 # தமிழ்நேரம் <anishprabu.t@gmail.com>, 2024, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-01-31 02:11+0000\n"
-"PO-Revision-Date: 2025-09-02 16:02+0000\n"
+"POT-Creation-Date: 2026-03-07 13:27+0000\n"
+"PO-Revision-Date: 2026-03-07 11:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.1-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -40,27 +40,27 @@ msgstr ""
 "பெறப்பட்டது:\n"
 " %1"
 
-#: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
-#: qtgui/interfacescript.cpp:343
+#: molequeue/inputgenerator.cpp:191 qtgui/interfacescript.cpp:220
+#: qtgui/interfacescript.cpp:353
 msgid "Non-string warning returned."
 msgstr "சரம் அல்லாத எச்சரிக்கை திரும்பியது."
 
-#: molequeue/inputgenerator.cpp:174 qtgui/interfacescript.cpp:213
-#: qtgui/interfacescript.cpp:346
+#: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:223
+#: qtgui/interfacescript.cpp:356
 msgid "'warnings' member is not an array."
 msgstr "'எச்சரிக்கைகள்' உறுப்பினர் ஒரு வரிசை அல்ல."
 
-#: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:366
+#: molequeue/inputgenerator.cpp:214 qtgui/interfacescript.cpp:376
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr "குறிப்பு கோப்பு '%1' இல்லை."
 
-#: molequeue/inputgenerator.cpp:196 qtgui/interfacescript.cpp:368
+#: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:378
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr "பிழையானது கோப்பு %1: %2"
 
-#: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:372
+#: molequeue/inputgenerator.cpp:220 qtgui/interfacescript.cpp:382
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
@@ -68,7 +68,7 @@ msgstr ""
 "'%1' கோப்பு மோசமாக உருவானது. சரம் 'உள்ளடக்கங்கள்' அல்லது 'ஃபைல்பாத்' உறுப்பினர்களைக் "
 "காணவில்லை."
 
-#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:405
+#: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:415
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
@@ -77,32 +77,32 @@ msgstr ""
 "தவறான கோப்பு நுழைவு: கோப்பு பெயர்/உள்ளடக்கங்கள் காணவில்லை அல்லது சரங்கள் இல்லை:\n"
 " %1"
 
-#: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
+#: molequeue/inputgenerator.cpp:258 qtgui/interfacescript.cpp:421
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr "குறியீட்டு %1 இல் தவறான கோப்பு நுழைவு: ஒரு பொருள் அல்ல."
 
-#: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
+#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:427
 msgid "'files' member not an array."
 msgstr "'கோப்புகள்' உறுப்பினர் ஒரு வரிசை அல்ல."
 
-#: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:421
+#: molequeue/inputgenerator.cpp:268 qtgui/interfacescript.cpp:431
 msgid "'files' member missing."
 msgstr "'கோப்புகள்' உறுப்பினர் காணவில்லை."
 
-#: molequeue/inputgenerator.cpp:259 qtgui/interfacescript.cpp:432
+#: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:442
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr "'மெயின்ஃபைல்' உறுப்பினர் 'கோப்புகளில்' ஒரு உள்ளீட்டைக் குறிக்கவில்லை."
 
-#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:437
+#: molequeue/inputgenerator.cpp:284 qtgui/interfacescript.cpp:447
 msgid "'mainFile' member must be a string."
 msgstr "'மெயின்ஃபைல்' உறுப்பினர் ஒரு சரமாக இருக்க வேண்டும்."
 
-#: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:448
+#: molequeue/inputgenerator.cpp:295 qtgui/interfacescript.cpp:458
 msgid "Response must be a JSON object at top-level."
 msgstr "பதில் மேல் மட்டத்தில் சாதொபொகு பொருளாக இருக்க வேண்டும்."
 
-#: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:452
+#: molequeue/inputgenerator.cpp:299 qtgui/interfacescript.cpp:462
 #, qt-format
 msgid ""
 "Script output:\n"
@@ -111,7 +111,7 @@ msgstr ""
 "ச்கிரிப்ட் வெளியீடு:\n"
 " %1"
 
-#: molequeue/inputgenerator.cpp:322 qtgui/interfacescript.cpp:496
+#: molequeue/inputgenerator.cpp:342 qtgui/interfacescript.cpp:506
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -124,7 +124,7 @@ msgstr ""
 "\n"
 " %3"
 
-#: molequeue/inputgenerator.cpp:346
+#: molequeue/inputgenerator.cpp:366
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
@@ -132,13 +132,13 @@ msgstr ""
 "பிழையான மூலக்கூறு பிரதிநிதித்துவத்தை சரத்திற்கு சேமிப்பது: அங்கீகரிக்கப்படாத கோப்பு "
 "வடிவம்: %1"
 
-#: molequeue/inputgenerator.cpp:354
+#: molequeue/inputgenerator.cpp:374
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr "பிழையானது மூலக்கூறு பிரதிநிதித்துவத்தை சரத்திற்கு சேமிப்பது: %1"
 
-#: molequeue/inputgenerator.cpp:367 qtgui/interfacescript.cpp:563
+#: molequeue/inputgenerator.cpp:387 qtgui/interfacescript.cpp:573
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -151,7 +151,7 @@ msgstr ""
 "\n"
 " %3"
 
-#: molequeue/inputgenerator.cpp:376 qtgui/interfacescript.cpp:572
+#: molequeue/inputgenerator.cpp:396 qtgui/interfacescript.cpp:582
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -160,16 +160,17 @@ msgstr ""
 "பிழை செனரேட்டர் சி.சே.எச்.சான் பொருள்: பாகுபடுத்தப்பட்ட சாதொபொகு ஒரு பொருள் அல்ல:\n"
 " %1"
 
-#: molequeue/inputgeneratordialog.cpp:41
+#: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
 msgstr "உள்ளீட்டு செனரேட்டர் (பிழை)"
 
-#: molequeue/inputgeneratordialog.cpp:43
+#: molequeue/inputgeneratordialog.cpp:49
+#: qtplugins/quantuminput/quantuminput.cpp:276
 #, qt-format
 msgid "%1 Input Generator"
 msgstr "%1 உள்ளீட்டு செனரேட்டர்"
 
-#: molequeue/inputgeneratorwidget.cpp:116
+#: molequeue/inputgeneratorwidget.cpp:123
 msgid "Continue"
 msgstr "தொடரவும்"
 
@@ -183,22 +184,22 @@ msgstr "தொடரவும்"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:380
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:955
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:961
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:35
+#: molequeue/inputgeneratorwidget.cpp:123 qtgui/containerwidget.cpp:35
 msgid "Close"
 msgstr "மூடு"
 
-#: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:372
+#: molequeue/inputgeneratorwidget.cpp:171 qtgui/elementtranslator.cpp:372
 #: qtplugins/configurepython/configurepythondialog.cpp:188
 #: qtplugins/configurepython/configurepythondialog.cpp:191
-#: qtplugins/spacegroup/spacegroup.cpp:614
+#: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "Unknown"
 msgstr "தெரியவில்லை"
 
-#: molequeue/inputgeneratorwidget.cpp:165
+#: molequeue/inputgeneratorwidget.cpp:172
 #, qt-format, qt-plural-format
 msgctxt ""
 msgid ""
@@ -230,29 +231,29 @@ msgstr[1] ""
 " புதிய வடிவியல் அல்லது வேலை விருப்பங்களைப் பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத "
 "விரும்புகிறீர்களா?"
 
-#: molequeue/inputgeneratorwidget.cpp:171
+#: molequeue/inputgeneratorwidget.cpp:178
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
 msgstr "மாற்றியமைக்கப்பட்ட உள்ளீட்டு கோப்புகளை மேலெழுதவா?"
 
-#: molequeue/inputgeneratorwidget.cpp:197
+#: molequeue/inputgeneratorwidget.cpp:204
 msgid "Problems occurred during input generation:"
 msgstr "உள்ளீட்டு உருவாக்கத்தின் போது சிக்கல்கள் ஏற்பட்டன:"
 
-#: molequeue/inputgeneratorwidget.cpp:286
+#: molequeue/inputgeneratorwidget.cpp:293
 msgid "No input files to save!"
 msgstr "சேமிக்க உள்ளீட்டு கோப்புகள் இல்லை!"
 
-#: molequeue/inputgeneratorwidget.cpp:294
-#: molequeue/inputgeneratorwidget.cpp:602 molequeue/molequeuewidget.cpp:69
+#: molequeue/inputgeneratorwidget.cpp:301
+#: molequeue/inputgeneratorwidget.cpp:609 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:980
 #: qtplugins/gamessinput/gamessinputdialog.cpp:917
 msgid "Cannot connect to MoleQueue"
 msgstr "மோலெக்யூவுடன் இணைக்க முடியாது"
 
-#: molequeue/inputgeneratorwidget.cpp:295
-#: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
+#: molequeue/inputgeneratorwidget.cpp:302
+#: molequeue/inputgeneratorwidget.cpp:610 molequeue/molequeuewidget.cpp:70
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:981
 #: qtplugins/gamessinput/gamessinputdialog.cpp:918
 msgid ""
@@ -262,50 +263,50 @@ msgstr ""
 "மோலெக்யூ சேவையகத்துடன் இணைக்க முடியாது. தயவுசெய்து அது இயங்குவதை உறுதிசெய்து மீண்டும் "
 "முயற்சிக்கவும்."
 
-#: molequeue/inputgeneratorwidget.cpp:326
+#: molequeue/inputgeneratorwidget.cpp:333
 #, qt-format
 msgid "Submit %1 Calculation"
 msgstr "%1 கணக்கீட்டை சமர்ப்பிக்கவும்"
 
-#: molequeue/inputgeneratorwidget.cpp:342
+#: molequeue/inputgeneratorwidget.cpp:349
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1017
 #: qtplugins/gamessinput/gamessinputdialog.cpp:954
 msgid "Job Failed"
 msgstr "வேலை தோல்வியடைந்தது"
 
-#: molequeue/inputgeneratorwidget.cpp:343
+#: molequeue/inputgeneratorwidget.cpp:350
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1018
 #: qtplugins/gamessinput/gamessinputdialog.cpp:955
 msgid "The job did not complete successfully."
 msgstr "வேலை வெற்றிகரமாக முடிக்கவில்லை."
 
-#: molequeue/inputgeneratorwidget.cpp:360 qtgui/interfacewidget.cpp:55
+#: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:62
 msgid "Script returns warnings:\n"
 msgstr "ச்கிரிப்ட் எச்சரிக்கைகளை வழங்குகிறது:\n"
 
-#: molequeue/inputgeneratorwidget.cpp:377
+#: molequeue/inputgeneratorwidget.cpp:384
 msgid "Hide &Warnings"
 msgstr "மறை & எச்சரிக்கைகள்"
 
-#: molequeue/inputgeneratorwidget.cpp:383
+#: molequeue/inputgeneratorwidget.cpp:390
 msgid "Show &Warnings"
 msgstr "காட்டு & எச்சரிக்கைகள்"
 
-#: molequeue/inputgeneratorwidget.cpp:400 qtgui/interfacewidget.cpp:71
+#: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:78
 msgid "An error has occurred:"
 msgstr "பிழை ஏற்பட்டது:"
 
-#: molequeue/inputgeneratorwidget.cpp:451
+#: molequeue/inputgeneratorwidget.cpp:458
 msgid "Select output filename"
 msgstr "வெளியீட்டு கோப்பு பெயரைத் தேர்ந்தெடுக்கவும்"
 
-#: molequeue/inputgeneratorwidget.cpp:463
+#: molequeue/inputgeneratorwidget.cpp:470
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr "உள் பிழை: '%1' என்ற கோப்பு பெயருக்கான உரை விட்செட்டைக் கண்டுபிடிக்க முடியவில்லை"
 
-#: molequeue/inputgeneratorwidget.cpp:479
-#: molequeue/inputgeneratorwidget.cpp:590
+#: molequeue/inputgeneratorwidget.cpp:486
+#: molequeue/inputgeneratorwidget.cpp:597
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:970
 #: qtplugins/gamessinput/gamessinputdialog.cpp:907
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:324
@@ -317,8 +318,8 @@ msgstr "உள் பிழை: '%1' என்ற கோப்பு பெய�
 msgid "Output Error"
 msgstr "வெளியீட்டு பிழை"
 
-#: molequeue/inputgeneratorwidget.cpp:480
-#: molequeue/inputgeneratorwidget.cpp:591
+#: molequeue/inputgeneratorwidget.cpp:487
+#: molequeue/inputgeneratorwidget.cpp:598
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:971
 #: qtplugins/gamessinput/gamessinputdialog.cpp:908
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:355
@@ -329,27 +330,27 @@ msgstr "வெளியீட்டு பிழை"
 msgid "Failed to write to file %1."
 msgstr "கோப்பு %1 க்கு எழுதத் தவறிவிட்டது."
 
-#: molequeue/inputgeneratorwidget.cpp:491
+#: molequeue/inputgeneratorwidget.cpp:498
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
 msgstr "வெளியீட்டு கோப்பகத்தைத் தேர்ந்தெடுக்கவும்"
 
-#: molequeue/inputgeneratorwidget.cpp:508
+#: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
 msgstr "%1: அடைவு இல்லை!"
 
-#: molequeue/inputgeneratorwidget.cpp:514
+#: molequeue/inputgeneratorwidget.cpp:521
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
 msgstr "%1: கோப்பகத்தைப் படிக்க முடியாது!"
 
-#: molequeue/inputgeneratorwidget.cpp:524
+#: molequeue/inputgeneratorwidget.cpp:531
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:287
 #: qtplugins/openmminput/openmminputdialog.cpp:370
@@ -358,7 +359,7 @@ msgstr "%1: கோப்பகத்தைப் படிக்க முடி
 msgid "%1: File will be overwritten."
 msgstr "%1: கோப்பு மேலெழுதப்படும்."
 
-#: molequeue/inputgeneratorwidget.cpp:529
+#: molequeue/inputgeneratorwidget.cpp:536
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:294
 #: qtplugins/openmminput/openmminputdialog.cpp:377
@@ -367,13 +368,13 @@ msgstr "%1: கோப்பு மேலெழுதப்படும்."
 msgid "%1: File is not writable."
 msgstr "%1: கோப்பு எழுத முடியாது."
 
-#: molequeue/inputgeneratorwidget.cpp:542
+#: molequeue/inputgeneratorwidget.cpp:549
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
 msgstr "அறியப்படாத பிழை காரணமாக உள்ளீட்டு கோப்புகளை எழுத முடியாது."
 
-#: molequeue/inputgeneratorwidget.cpp:546
+#: molequeue/inputgeneratorwidget.cpp:553
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
 #: qtplugins/openmminput/openmminputdialog.cpp:408
 #, qt-format
@@ -386,7 +387,7 @@ msgstr ""
 "\n"
 " %1"
 
-#: molequeue/inputgeneratorwidget.cpp:555
+#: molequeue/inputgeneratorwidget.cpp:562
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
 #: qtplugins/openmminput/openmminputdialog.cpp:417
 #, qt-format
@@ -407,7 +408,7 @@ msgstr ""
 "\n"
 " %2"
 
-#: molequeue/inputgeneratorwidget.cpp:566
+#: molequeue/inputgeneratorwidget.cpp:573
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
 #: qtplugins/openmminput/openmminputdialog.cpp:428
 #, qt-format
@@ -424,13 +425,13 @@ msgstr ""
 "\n"
 " தொடர விரும்புகிறீர்களா?"
 
-#: molequeue/inputgeneratorwidget.cpp:570
+#: molequeue/inputgeneratorwidget.cpp:577
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
 msgstr "உள்ளீட்டு கோப்புகளை எழுதுங்கள்"
 
-#: molequeue/inputgeneratorwidget.cpp:617
+#: molequeue/inputgeneratorwidget.cpp:624
 msgid "Configure Job"
 msgstr "வேலையை உள்ளமைக்கவும்"
 
@@ -542,7 +543,7 @@ msgstr "கார்மம்"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:32:2211
+#: qtgui/elementtranslator.cpp:32:2127
 msgid "Carbon"
 msgstr "கரிமம்"
 
@@ -624,13 +625,13 @@ msgstr "மங்கனம்"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:92:2214
+#: qtgui/elementtranslator.cpp:92:2130
 msgid "Iron"
 msgstr "இரும்பு"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:95:2217
+#: qtgui/elementtranslator.cpp:95:2133
 msgid "Cobalt"
 msgstr "மென்வெள்ளி"
 
@@ -1070,24 +1071,24 @@ msgstr "அனைத்து கோப்புகள்"
 msgid "All supported formats"
 msgstr "அனைத்து உதவி வடிவங்களும்"
 
-#: qtgui/interfacescript.cpp:227
+#: qtgui/interfacescript.cpp:237
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr "மூலக்கூறு பிரதிநிதித்துவத்தை வாசிப்பது பிழை: அங்கீகரிக்கப்படாத கோப்பு வடிவம்: %1"
 
-#: qtgui/interfacescript.cpp:295
+#: qtgui/interfacescript.cpp:305
 #, qt-format
 msgid "%1 Message"
 msgstr "%1 செய்தி"
 
-#: qtgui/interfacescript.cpp:538
+#: qtgui/interfacescript.cpp:548
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 "சரம் மூலக்கூறு பிரதிநிதித்துவத்தை எழுதுவதில் பிழை: அங்கீகரிக்கப்படாத கோப்பு வடிவம்: %1"
 
-#: qtgui/interfacescript.cpp:546
+#: qtgui/interfacescript.cpp:556
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr "சரம் மூலக்கூறு பிரதிநிதித்துவத்தை எழுதுவது பிழை: %1"
@@ -1118,7 +1119,7 @@ msgstr "தாவல் %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:210:937
+#: qtgui/jsonwidget.cpp:210:913
 msgid "Title"
 msgstr "தலைப்பு"
 
@@ -1171,31 +1172,31 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:688
+#: qtgui/jsonwidget.cpp:691
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "பிழை: மதிப்பு முக்கிய '%1' க்கு பொருளாக இருக்க வேண்டும்."
 
-#: qtgui/jsonwidget.cpp:723
+#: qtgui/jsonwidget.cpp:726
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "அங்கீகரிக்கப்படாத விருப்பம் '%2' விருப்பத்திற்கு '%1' வகை."
 
-#: qtgui/jsonwidget.cpp:732 qtgui/jsonwidget.cpp:767 qtgui/jsonwidget.cpp:788
-#: qtgui/jsonwidget.cpp:809 qtgui/jsonwidget.cpp:847 qtgui/jsonwidget.cpp:868
-#: qtgui/jsonwidget.cpp:890 qtgui/jsonwidget.cpp:911
+#: qtgui/jsonwidget.cpp:735 qtgui/jsonwidget.cpp:770 qtgui/jsonwidget.cpp:791
+#: qtgui/jsonwidget.cpp:812 qtgui/jsonwidget.cpp:850 qtgui/jsonwidget.cpp:871
+#: qtgui/jsonwidget.cpp:893 qtgui/jsonwidget.cpp:914
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr "'%1' விருப்பத்திற்கு இயல்புநிலையை அமைத்தல். மோசமான விட்செட் வகை."
 
-#: qtgui/jsonwidget.cpp:739 qtgui/jsonwidget.cpp:774 qtgui/jsonwidget.cpp:795
-#: qtgui/jsonwidget.cpp:816 qtgui/jsonwidget.cpp:854 qtgui/jsonwidget.cpp:875
-#: qtgui/jsonwidget.cpp:897 qtgui/jsonwidget.cpp:918
+#: qtgui/jsonwidget.cpp:742 qtgui/jsonwidget.cpp:777 qtgui/jsonwidget.cpp:798
+#: qtgui/jsonwidget.cpp:819 qtgui/jsonwidget.cpp:857 qtgui/jsonwidget.cpp:878
+#: qtgui/jsonwidget.cpp:900 qtgui/jsonwidget.cpp:921
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr "'%1' விருப்பத்திற்கு இயல்புநிலையை அமைத்தல். மோசமான இயல்புநிலை மதிப்பு:"
 
-#: qtgui/jsonwidget.cpp:753
+#: qtgui/jsonwidget.cpp:756
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1204,12 +1205,12 @@ msgstr ""
 "'%1' விருப்பத்திற்கு இயல்புநிலையை அமைத்தல். மதிப்பிலிருந்து செல்லுபடியாகும் காம்போ "
 "நுழைவு குறியீட்டைக் கண்டுபிடிக்க முடியவில்லை:"
 
-#: qtgui/jsonwidget.cpp:979
+#: qtgui/jsonwidget.cpp:982
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "'%1' என்ற விருப்பத்திற்கான சேகரிப்புகளில் சேர்க்கப்படாத விட்செட்."
 
-#: qtgui/jsonwidget.cpp:1024 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1027 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr "[மூலக்கூறு இல்லை]"
@@ -1251,7 +1252,7 @@ msgid "Licorice"
 msgstr "லைகோரைச்"
 
 #: qtgui/layermodel.cpp:184 qtplugins/surfacerender/surfacerender.h:29
-#: qtplugins/surfaces/orbitals.cpp:476 qtplugins/surfaces/orbitals.cpp:568
+#: qtplugins/surfaces/orbitals.cpp:478 qtplugins/surfaces/orbitals.cpp:570
 #: qtplugins/surfaces/surfaces.cpp:873 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "மேற்பரப்புகள்"
@@ -1313,12 +1314,16 @@ msgstr "புதிய பார்வையை உருவாக்கவு�
 msgid "Periodic Table"
 msgstr "தனிம அட்டவணை"
 
-#: qtgui/pythonscript.cpp:206 qtgui/pythonscript.cpp:380
+#: qtgui/pythonscript.cpp:126
+msgid "Package mode requires pixi but it was not found."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:224 qtgui/pythonscript.cpp:321
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr "ச்கிரிப்டை இயக்கும் பிழை '%1%2': தொடக்கத்திற்காக காத்திருக்கும் நேரம் (%3)."
 
-#: qtgui/pythonscript.cpp:216 qtgui/pythonscript.cpp:390
+#: qtgui/pythonscript.cpp:233 qtgui/pythonscript.cpp:330
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1327,12 +1332,12 @@ msgstr ""
 "பிழை இயங்கும் ச்கிரிப்ட் ' %1 %2': stdin க்கு எழுதத் தவறிவிட்டது (LEN = %3, %4 "
 "பைட்டுகளை எழுதினார், QPROCESS பிழை: %5)."
 
-#: qtgui/pythonscript.cpp:229
+#: qtgui/pythonscript.cpp:247
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr "'%1%2' ச்கிரிப்டை இயக்கும் பிழை: பூச்சுக்காக காத்திருக்கும் நேரம் (%3)."
 
-#: qtgui/pythonscript.cpp:238
+#: qtgui/pythonscript.cpp:257
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1345,32 +1350,39 @@ msgstr ""
 " வெளியீடு:\n"
 " %6"
 
-#: qtgui/pythonscript.cpp:247
+#: qtgui/pythonscript.cpp:267
 #, qt-format
 msgid "Warning '%1'"
 msgstr "எச்சரிக்கை '%1'"
 
-#: qtgui/pythonscript.cpp:455
+#: qtgui/pythonscript.cpp:387
+#, qt-format
+msgid ""
+"Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
+"error: %3)."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:422
 msgid "Script failed to start."
 msgstr "ச்கிரிப்ட் தொடங்கத் தவறிவிட்டது."
 
-#: qtgui/pythonscript.cpp:458
+#: qtgui/pythonscript.cpp:425
 msgid "Script crashed."
 msgstr "ச்கிரிப்ட் செயலிழந்தது."
 
-#: qtgui/pythonscript.cpp:461
+#: qtgui/pythonscript.cpp:428
 msgid "Script timed out."
 msgstr "ச்கிரிப்ட் நேரம் முடிந்தது."
 
-#: qtgui/pythonscript.cpp:464
+#: qtgui/pythonscript.cpp:431
 msgid "Read error."
 msgstr "பிழையைப் படியுங்கள்."
 
-#: qtgui/pythonscript.cpp:467
+#: qtgui/pythonscript.cpp:434
 msgid "Write error."
 msgstr "பிழையை எழுதுங்கள்."
 
-#: qtgui/pythonscript.cpp:471
+#: qtgui/pythonscript.cpp:438
 msgid "Unknown error."
 msgstr "தெரியாத பிழை."
 
@@ -1399,7 +1411,7 @@ msgstr "அடுக்கு தகவலைச் சேர்க்கவு�
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
-#: qtplugins/selectiontool/selectiontool.cpp:264:1886
+#: qtplugins/selectiontool/selectiontool.cpp:264:1807
 msgid "Change Layer"
 msgstr "அடுக்கை மாற்றவும்"
 
@@ -1418,7 +1430,7 @@ msgstr "அணுகுமுறைகளை அழிக்கவும்"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:111 qtgui/rwmolecule.cpp:119:529
+#: qtgui/rwmolecule.cpp:111 qtgui/rwmolecule.cpp:119:509
 msgid "Adjust Hydrogens"
 msgstr "ஐட்ரசன்களை சரிசெய்யவும்"
 
@@ -1443,107 +1455,111 @@ msgid "Change Atom Color"
 msgstr "அணு நிறத்தை மாற்றவும்"
 
 #: qtgui/rwmolecule.cpp:286
+msgid "Change Residue Color"
+msgstr ""
+
+#: qtgui/rwmolecule.cpp:298
 msgid "Change Atom Layer"
 msgstr "அணு அடுக்கை மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:302
+#: qtgui/rwmolecule.cpp:314
 msgid "Add Bond"
 msgstr "பிணைப்பைச் சேர்க்கவும்"
 
-#: qtgui/rwmolecule.cpp:328
+#: qtgui/rwmolecule.cpp:340
 msgid "Removed Bond"
 msgstr "அகற்றப்பட்ட பிணைப்பு"
 
-#: qtgui/rwmolecule.cpp:335
+#: qtgui/rwmolecule.cpp:347
 msgid "Clear Bonds"
 msgstr "தெளிவான பிணைப்புகள்"
 
-#: qtgui/rwmolecule.cpp:349
+#: qtgui/rwmolecule.cpp:361
 msgid "Set Bond Orders"
 msgstr "பத்திர ஆர்டர்களை அமைக்கவும்"
 
-#: qtgui/rwmolecule.cpp:361
+#: qtgui/rwmolecule.cpp:373
 msgid "Change Bond Order"
 msgstr "பத்திர வரிசையை மாற்றவும்"
 
-#: qtgui/rwmolecule.cpp:383
+#: qtgui/rwmolecule.cpp:395
 msgid "Update Bonds"
 msgstr "பத்திரங்களை புதுப்பிக்கவும்"
 
-#: qtgui/rwmolecule.cpp:402
+#: qtgui/rwmolecule.cpp:414
 msgid "Update Bond"
 msgstr "பத்திரத்தைப் புதுப்பிக்கவும்"
 
-#: qtgui/rwmolecule.cpp:421
+#: qtgui/rwmolecule.cpp:433
 msgid "Add Unit Cell…"
 msgstr "அலகு கலத்தைச் சேர்க்கவும்…"
 
-#: qtgui/rwmolecule.cpp:433
+#: qtgui/rwmolecule.cpp:445
 msgid "Remove Unit Cell"
 msgstr "அலகு கலத்தை அகற்று"
 
-#: qtgui/rwmolecule.cpp:528
+#: qtgui/rwmolecule.cpp:540
 msgid "Edit Unit Cell"
 msgstr "அலகு கலத்தைத் திருத்து"
 
-#: qtgui/rwmolecule.cpp:544
+#: qtgui/rwmolecule.cpp:556
 msgid "Wrap Atoms to Cell"
 msgstr "அணுக்களை கலத்திற்கு மடிக்கவும்"
 
-#: qtgui/rwmolecule.cpp:567
+#: qtgui/rwmolecule.cpp:579
 msgid "Scale Cell Volume"
 msgstr "அளவிலான செல் தொகுதி"
 
-#: qtgui/rwmolecule.cpp:587
+#: qtgui/rwmolecule.cpp:599
 msgid "Build Super Cell"
 msgstr "சூப்பர் கலத்தை உருவாக்குங்கள்"
 
-#: qtgui/rwmolecule.cpp:611
+#: qtgui/rwmolecule.cpp:623
 msgid "Niggli Reduction"
 msgstr "நிக்லி குறைப்பு"
 
-#: qtgui/rwmolecule.cpp:633
+#: qtgui/rwmolecule.cpp:645
 msgid "Rotate to Standard Orientation"
 msgstr "நிலையான நோக்குநிலைக்கு சுழற்றுங்கள்"
 
-#: qtgui/rwmolecule.cpp:658 qtplugins/spacegroup/spacegroup.cpp:66
+#: qtgui/rwmolecule.cpp:670 qtplugins/spacegroup/spacegroup.cpp:66
 msgid "Reduce to Primitive"
 msgstr "பழமையானதாகக் குறைக்கவும்"
 
-#: qtgui/rwmolecule.cpp:688 qtplugins/spacegroup/spacegroup.cpp:72
+#: qtgui/rwmolecule.cpp:700 qtplugins/spacegroup/spacegroup.cpp:72
 #: qtplugins/spacegroup/spacegroup.cpp:459
 msgid "Conventionalize Cell"
 msgstr "வழக்கமான செல்"
 
-#: qtgui/rwmolecule.cpp:718 qtplugins/spacegroup/spacegroup.cpp:484
+#: qtgui/rwmolecule.cpp:730 qtplugins/spacegroup/spacegroup.cpp:484
 msgid "Symmetrize Cell"
 msgstr "செல் சமச்சீர்"
 
-#: qtgui/rwmolecule.cpp:744
+#: qtgui/rwmolecule.cpp:756
 msgid "Fill Unit Cell"
 msgstr "அலகு கலத்தை நிரப்பவும்"
 
-#: qtgui/rwmolecule.cpp:764
+#: qtgui/rwmolecule.cpp:776
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "கலத்தை சமச்சீரற்ற அலகுக்கு குறைக்கவும்"
 
-#: qtgui/rwmolecule.h:214
+#: qtgui/rwmolecule.h:215
 msgid "Change Atom Positions"
 msgstr "அணு நிலைகளை மாற்றவும்"
 
-#: qtgui/rwmolecule.h:224
+#: qtgui/rwmolecule.h:225
 msgid "Change Atom Position"
 msgstr "அணு நிலையை மாற்றவும்"
 
-#: qtgui/rwmolecule.h:242
+#: qtgui/rwmolecule.h:243
 msgid "Change Atom Label"
 msgstr "ஆட்டம் லேபிளை மாற்றவும்"
 
-#: qtgui/rwmolecule.h:260
+#: qtgui/rwmolecule.h:261
 msgid "Change Bond Label"
 msgstr "பத்திர லேபிளை மாற்றவும்"
 
-#: qtgui/rwmolecule.h:266
+#: qtgui/rwmolecule.h:267
 msgid "Change Selection"
 msgstr "தேர்வை மாற்றவும்"
 
@@ -1554,16 +1570,6 @@ msgstr "மூலக்கூறு மாற்றவும்"
 #: qtgui/scenepluginmodel.cpp:101
 msgid "Settings"
 msgstr "அமைப்புகள்"
-
-#: qtgui/scriptloader.cpp:33
-#, qt-format
-msgid "Cannot load script %1"
-msgstr "ச்கிரிப்ட் %1 ஐ ஏற்ற முடியாது"
-
-#: qtgui/scriptloader.cpp:69
-#, qt-format
-msgid "Checking for %1 scripts in path %2"
-msgstr "பாதை %2 இல் %1 ச்கிரிப்ட்களை சரிபார்க்கிறது"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
@@ -1647,7 +1653,7 @@ msgstr "& உருவாக்க"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, elementLabel)
-#: qtplugins/alchemy/alchemy.cpp:74:523 rc.cpp:2205
+#: qtplugins/alchemy/alchemy.cpp:74:503 rc.cpp:2121
 msgid "Element:"
 msgstr "உறுப்பு:"
 
@@ -1676,7 +1682,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:81:1928
+#: qtplugins/aligntool/aligntool.cpp:81:1849
 msgid "Axis:"
 msgstr "அச்சு:"
 
@@ -1716,7 +1722,8 @@ msgstr "திறந்த வெளியீட்டு கோப்பு…"
 #: qtplugins/gamessinput/gamessinput.cpp:50
 #: qtplugins/lammpsinput/lammpsinput.cpp:46
 #: qtplugins/openmminput/openmminput.cpp:46
-#: qtplugins/quantuminput/quantuminput.cpp:64
+#: qtplugins/quantuminput/quantuminput.cpp:80
+#: qtplugins/quantuminput/quantuminput.cpp:316
 msgid "&Input"
 msgstr "& உள்ளீடு"
 
@@ -1725,8 +1732,8 @@ msgid "&APBS"
 msgstr "& Apbs"
 
 #: qtplugins/apbs/apbs.cpp:62 qtplugins/cp2kinput/cp2kinput.cpp:69
-#: qtplugins/gamessinput/gamessinput.cpp:70
-#: qtplugins/quantuminput/quantuminput.cpp:88
+#: qtplugins/gamessinput/gamessinput.cpp:75
+#: qtplugins/quantuminput/quantuminput.cpp:136
 msgid "Open Output File"
 msgstr "வெளியீட்டு கோப்பைத் திறக்கவும்"
 
@@ -1784,37 +1791,39 @@ msgstr "PQR கோப்புகள் (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
 #: qtplugins/apbs/apbsdialog.cpp:166 qtplugins/apbs/apbsdialog.cpp:189
-#: qtplugins/commandscripts/command.cpp:139
+#: qtplugins/commandscripts/command.cpp:152
 #: qtplugins/cp2kinput/cp2kinput.cpp:85 qtplugins/fetchpdb/fetchpdb.cpp:143
-#: qtplugins/gamessinput/gamessinput.cpp:86
+#: qtplugins/gamessinput/gamessinput.cpp:91
 #: qtplugins/insertfragment/insertfragment.cpp:107
 #: qtplugins/lammpsinput/lammpsinput.cpp:62
 #: qtplugins/molecularproperties/molecularview.cpp:150
 #: qtplugins/molecularproperties/molecularview.cpp:184
-#: qtplugins/openbabel/openbabel.cpp:209 qtplugins/openbabel/openbabel.cpp:218
-#: qtplugins/openbabel/openbabel.cpp:228 qtplugins/openbabel/openbabel.cpp:370
-#: qtplugins/openbabel/openbabel.cpp:398 qtplugins/openbabel/openbabel.cpp:423
-#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:486
-#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:549
-#: qtplugins/openbabel/openbabel.cpp:568 qtplugins/openbabel/openbabel.cpp:577
-#: qtplugins/openbabel/openbabel.cpp:637 qtplugins/openbabel/openbabel.cpp:687
-#: qtplugins/openbabel/openbabel.cpp:700 qtplugins/openbabel/openbabel.cpp:735
-#: qtplugins/openbabel/openbabel.cpp:749 qtplugins/openbabel/openbabel.cpp:778
-#: qtplugins/openbabel/openbabel.cpp:790 qtplugins/openbabel/openbabel.cpp:836
-#: qtplugins/openbabel/openbabel.cpp:886 qtplugins/openbabel/openbabel.cpp:928
-#: qtplugins/openbabel/openbabel.cpp:960
+#: qtplugins/openbabel/openbabel.cpp:211 qtplugins/openbabel/openbabel.cpp:220
+#: qtplugins/openbabel/openbabel.cpp:230 qtplugins/openbabel/openbabel.cpp:372
+#: qtplugins/openbabel/openbabel.cpp:400 qtplugins/openbabel/openbabel.cpp:425
+#: qtplugins/openbabel/openbabel.cpp:434 qtplugins/openbabel/openbabel.cpp:488
+#: qtplugins/openbabel/openbabel.cpp:538 qtplugins/openbabel/openbabel.cpp:551
+#: qtplugins/openbabel/openbabel.cpp:570 qtplugins/openbabel/openbabel.cpp:579
+#: qtplugins/openbabel/openbabel.cpp:639 qtplugins/openbabel/openbabel.cpp:689
+#: qtplugins/openbabel/openbabel.cpp:702 qtplugins/openbabel/openbabel.cpp:737
+#: qtplugins/openbabel/openbabel.cpp:751 qtplugins/openbabel/openbabel.cpp:780
+#: qtplugins/openbabel/openbabel.cpp:792 qtplugins/openbabel/openbabel.cpp:838
+#: qtplugins/openbabel/openbabel.cpp:888 qtplugins/openbabel/openbabel.cpp:930
+#: qtplugins/openbabel/openbabel.cpp:962
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/plugindownloader/downloaderwidget.cpp:101
-#: qtplugins/plugindownloader/downloaderwidget.cpp:107
-#: qtplugins/plugindownloader/downloaderwidget.cpp:408
-#: qtplugins/propertytables/propertyview.cpp:488
-#: qtplugins/propertytables/propertyview.cpp:521
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:424
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:620
+#: qtplugins/plugindownloader/downloaderwidget.cpp:103
+#: qtplugins/plugindownloader/downloaderwidget.cpp:109
+#: qtplugins/plugindownloader/downloaderwidget.cpp:368
+#: qtplugins/propertytables/propertyview.cpp:504
+#: qtplugins/propertytables/propertyview.cpp:537
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:162
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:450
 #: qtplugins/qtaim/qtaimwavefunction.h:48
 #: qtplugins/qtaim/qtaimwavefunction.h:81
-#: qtplugins/quantuminput/quantuminput.cpp:104
-#: qtplugins/spacegroup/spacegroup.cpp:659
+#: qtplugins/quantuminput/quantuminput.cpp:152
+#: qtplugins/spacegroup/spacegroup.cpp:661
 msgid "Error"
 msgstr "பிழை"
 
@@ -1856,111 +1865,112 @@ msgid "Input file written to '%1'"
 msgstr "உள்ளீட்டு கோப்பு '%1' க்கு எழுதப்பட்டது"
 
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:425
 #: qtplugins/playertool/playertool.cpp:424
-#: qtplugins/plugindownloader/downloaderwidget.cpp:409
+#: qtplugins/plugindownloader/downloaderwidget.cpp:369
 #: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1008
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "கோப்பு %1 ஐ சேமிக்க முடியாது."
 
-#: qtplugins/applycolors/applycolors.cpp:46
-#: qtplugins/applycolors/applycolors.cpp:67
+#: qtplugins/applycolors/applycolors.cpp:47
+#: qtplugins/applycolors/applycolors.cpp:68
 msgid "By Custom Color…"
 msgstr "தனிப்பயன் வண்ணத்தால்…"
 
-#: qtplugins/applycolors/applycolors.cpp:51
+#: qtplugins/applycolors/applycolors.cpp:52
 msgid "By Atomic Index…"
 msgstr "அணு குறியீட்டால்…"
 
-#: qtplugins/applycolors/applycolors.cpp:56
+#: qtplugins/applycolors/applycolors.cpp:57
 msgid "By Distance…"
 msgstr "தூரம்…"
 
-#: qtplugins/applycolors/applycolors.cpp:61
+#: qtplugins/applycolors/applycolors.cpp:62
 msgid "By Element"
 msgstr "உறுப்பு மூலம்"
 
-#: qtplugins/applycolors/applycolors.cpp:72
+#: qtplugins/applycolors/applycolors.cpp:73
 msgid "By Chain"
 msgstr "சங்கிலி மூலம்"
 
-#: qtplugins/applycolors/applycolors.cpp:77
+#: qtplugins/applycolors/applycolors.cpp:78
 msgid "By Partial Charge…"
 msgstr "பகுதி கட்டணத்தால்…"
 
-#: qtplugins/applycolors/applycolors.cpp:82
+#: qtplugins/applycolors/applycolors.cpp:83
 msgid "By Secondary Structure"
 msgstr "இரண்டாம் நிலை அமைப்பு மூலம்"
 
-#: qtplugins/applycolors/applycolors.cpp:87
+#: qtplugins/applycolors/applycolors.cpp:88
 msgid "By Amino Acid"
 msgstr "அமினோ அமிலத்தால்"
 
-#: qtplugins/applycolors/applycolors.cpp:92
+#: qtplugins/applycolors/applycolors.cpp:93
 msgid "By Shapely Scheme"
 msgstr "செப்பிளி திட்டத்தால்"
 
-#: qtplugins/applycolors/applycolors.cpp:107
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:308
+#: qtplugins/applycolors/applycolors.cpp:108
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:312
 #: qtplugins/surfaces/surfaces.cpp:793
 msgctxt "colormap"
 msgid "Parula"
 msgstr "பேசுங்கள்"
 
-#: qtplugins/applycolors/applycolors.cpp:109
+#: qtplugins/applycolors/applycolors.cpp:110
 #: qtplugins/surfaces/surfaces.cpp:795
 msgctxt "colormap"
 msgid "Heat"
 msgstr "வெப்பம்"
 
-#: qtplugins/applycolors/applycolors.cpp:111
+#: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/surfaces/surfaces.cpp:797
 msgctxt "colormap"
 msgid "Hot"
 msgstr "சூடான"
 
-#: qtplugins/applycolors/applycolors.cpp:113
+#: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/surfaces/surfaces.cpp:799
 msgctxt "colormap"
 msgid "Gray"
 msgstr "சாம்பல்"
 
-#: qtplugins/applycolors/applycolors.cpp:115
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:308
+#: qtplugins/applycolors/applycolors.cpp:116
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:312
 #: qtplugins/surfaces/surfaces.cpp:801
 msgctxt "colormap"
 msgid "Magma"
 msgstr "கற்குழம்பு"
 
-#: qtplugins/applycolors/applycolors.cpp:117
-#: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:309
+#: qtplugins/applycolors/applycolors.cpp:118
+#: qtplugins/applycolors/applycolors.cpp:212
+#: qtplugins/applycolors/applycolors.cpp:313
 #: qtplugins/surfaces/surfaces.cpp:803
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "இன்ஃபெர்னோ"
 
-#: qtplugins/applycolors/applycolors.cpp:119
-#: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:309
+#: qtplugins/applycolors/applycolors.cpp:120
+#: qtplugins/applycolors/applycolors.cpp:212
+#: qtplugins/applycolors/applycolors.cpp:313
 #: qtplugins/surfaces/surfaces.cpp:805
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "மின்மம்"
 
-#: qtplugins/applycolors/applycolors.cpp:121
-#: qtplugins/applycolors/applycolors.cpp:212
-#: qtplugins/applycolors/applycolors.cpp:310
+#: qtplugins/applycolors/applycolors.cpp:122
+#: qtplugins/applycolors/applycolors.cpp:213
+#: qtplugins/applycolors/applycolors.cpp:314
 #: qtplugins/surfaces/surfaces.cpp:807
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "விரிடிச்"
 
-#: qtplugins/applycolors/applycolors.cpp:123
-#: qtplugins/applycolors/applycolors.cpp:212
-#: qtplugins/applycolors/applycolors.cpp:310
+#: qtplugins/applycolors/applycolors.cpp:124
+#: qtplugins/applycolors/applycolors.cpp:213
+#: qtplugins/applycolors/applycolors.cpp:314
 #: qtplugins/surfaces/surfaces.cpp:809
 msgctxt "colormap"
 msgid "Cividis"
@@ -1970,10 +1980,10 @@ msgstr "சிடிச்"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:174
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:125
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:811:183 rc.cpp:2076
+#: qtplugins/applycolors/applycolors.cpp:126
+#: qtplugins/applycolors/applycolors.cpp:214
+#: qtplugins/applycolors/applycolors.cpp:315
+#: qtplugins/surfaces/surfaces.cpp:811:183 rc.cpp:1997
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "நிறமாலை"
@@ -1982,8 +1992,8 @@ msgstr "நிறமாலை"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:813:180 rc.cpp:2073
+#: qtplugins/applycolors/applycolors.cpp:128
+#: qtplugins/surfaces/surfaces.cpp:813:180 rc.cpp:1994
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "கூல்வார்ம்"
@@ -1992,8 +2002,8 @@ msgstr "கூல்வார்ம்"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:815:174 rc.cpp:2067
+#: qtplugins/applycolors/applycolors.cpp:130
+#: qtplugins/surfaces/surfaces.cpp:815:174 rc.cpp:1988
 msgctxt "colormap"
 msgid "Balance"
 msgstr "இருப்பு"
@@ -2002,8 +2012,8 @@ msgstr "இருப்பு"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:817:177 rc.cpp:2070
+#: qtplugins/applycolors/applycolors.cpp:132
+#: qtplugins/surfaces/surfaces.cpp:817:177 rc.cpp:1991
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "நீலம்-இருண்ட"
@@ -2012,34 +2022,34 @@ msgstr "நீலம்-இருண்ட"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:179
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:133
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:819:186 rc.cpp:2079
+#: qtplugins/applycolors/applycolors.cpp:134
+#: qtplugins/applycolors/applycolors.cpp:214
+#: qtplugins/applycolors/applycolors.cpp:315
+#: qtplugins/surfaces/surfaces.cpp:819:186 rc.cpp:2000
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "டர்போ"
 
-#: qtplugins/applycolors/applycolors.cpp:141
+#: qtplugins/applycolors/applycolors.cpp:142
 msgid "Apply color schemes to atoms and residues."
 msgstr "அணுக்கள் மற்றும் எச்சங்களுக்கு வண்ணத் திட்டங்களைப் பயன்படுத்துங்கள்."
 
-#: qtplugins/applycolors/applycolors.cpp:152
-#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:40
+#: qtplugins/applycolors/applycolors.cpp:153
+#: qtplugins/applycolors/applycolors.cpp:155 qtplugins/focus/focus.cpp:40
 #: qtplugins/resetview/resetview.cpp:77
 msgid "&View"
 msgstr "காண்க (&v)"
 
-#: qtplugins/applycolors/applycolors.cpp:152
+#: qtplugins/applycolors/applycolors.cpp:153
 msgid "Color Atoms"
 msgstr "வண்ண அணுக்கள்"
 
-#: qtplugins/applycolors/applycolors.cpp:154
+#: qtplugins/applycolors/applycolors.cpp:155
 msgid "Color Residues"
 msgstr "வண்ண எச்சங்கள்"
 
-#: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314
+#: qtplugins/applycolors/applycolors.cpp:217
+#: qtplugins/applycolors/applycolors.cpp:318
 msgid "Select Colormap"
 msgstr "COLORMAP ஐத் தேர்ந்தெடுக்கவும்"
 
@@ -2047,25 +2057,65 @@ msgstr "COLORMAP ஐத் தேர்ந்தெடுக்கவும்"
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:2064
+#: qtplugins/applycolors/applycolors.cpp:217
+#: qtplugins/applycolors/applycolors.cpp:318:171 rc.cpp:1985
 msgid "Colormap:"
 msgstr "COLORMAP:"
+
+#: qtplugins/applycolors/applycolors.cpp:225
+msgid "Apply Index Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:289
+msgid "Apply Charge Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:327
+msgid "Apply Distance Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:353
+msgid "Reset Atom Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:379
+msgid "Apply Custom Color"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:416
+msgid "Apply Custom Residue Color"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:440
+msgid "Reset Residue Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:474
+msgid "Apply Secondary Structure Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:562
+msgid "Apply Amino Acid Colors"
+msgstr ""
+
+#: qtplugins/applycolors/applycolors.cpp:589
+msgid "Apply Shapely Colors"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
 msgstr "விண்ணப்பிப்பொருட்களைப் பயன்படுத்துங்கள்"
 
-#: qtplugins/autoopt/autoopt.cpp:66
+#: qtplugins/autoopt/autoopt.cpp:68
 msgctxt "control-key 7"
 msgid "Ctrl+7"
 msgstr "Ctrl+7"
 
-#: qtplugins/autoopt/autoopt.cpp:67
+#: qtplugins/autoopt/autoopt.cpp:69
 msgid "Auto Optimize"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:69
+#: qtplugins/autoopt/autoopt.cpp:71
 #, qt-format
 msgid ""
 "Auto Optimize Tool\t(%1)\n"
@@ -2081,37 +2131,73 @@ msgid ""
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
 
+#: qtplugins/autoopt/autoopt.cpp:152
+msgid "Optimize"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:153
+msgid "Dynamics"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.cpp:157
+msgid "Task:"
+msgstr ""
+
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/autoopt/autoopt.cpp:146:370
+#: qtplugins/autoopt/autoopt.cpp:182:362
 msgid "Method:"
 msgstr "முறை:"
 
-#: qtplugins/autoopt/autoopt.cpp:149 qtplugins/autoopt/autoopt.cpp:215
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
+#. i18n: ectx: property (text), widget (QLabel, label_temperature)
+#: qtplugins/autoopt/autoopt.cpp:194:1621
+msgid "Temperature:"
+msgstr "வெப்பநிலை:"
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
+#. i18n: ectx: property (text), widget (QLabel, label_timestep)
+#: qtplugins/autoopt/autoopt.cpp:206:1607
+msgid "Timestep:"
+msgstr "நேரம்:"
+
+#: qtplugins/autoopt/autoopt.cpp:213 qtplugins/autoopt/autoopt.cpp:345
 msgid "Start"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:173
+#: qtplugins/autoopt/autoopt.cpp:271
 msgid "Stop"
 msgstr "நிறுத்து"
 
-#: qtplugins/autoopt/autoopt.cpp:304 qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:418
-#: qtplugins/forcefield/forcefield.cpp:473 qtplugins/openbabel/openbabel.cpp:48
-#: qtplugins/openbabel/openbabel.cpp:560
+#: qtplugins/autoopt/autoopt.cpp:411 qtplugins/forcefield/forcefield.cpp:75
+#: qtplugins/forcefield/forcefield.cpp:447
+#: qtplugins/forcefield/forcefield.cpp:486 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:562
 msgid "Optimize Geometry"
 msgstr "வடிவவியலை மேம்படுத்தவும்"
 
-#: qtplugins/autoopt/autoopt.cpp:317
+#: qtplugins/autoopt/autoopt.cpp:564
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:261
+msgid "Molecular Dynamics"
+msgstr "மூலக்கூறு இயக்கவியல்"
+
+#: qtplugins/autoopt/autoopt.cpp:580
 #, qt-format
-msgid "%1 ΔE = %L2 kJ/mol"
+msgctxt "temperature in Kelvin"
+msgid "%1 T = %L2"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.h:42
+#: qtplugins/autoopt/autoopt.cpp:585
+#, qt-format
+msgctxt "change in energy in kJ/mol"
+msgid "%1 ΔE = %L2"
+msgstr ""
+
+#: qtplugins/autoopt/autoopt.h:43
 msgid "Auto Optimize tool"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.h:45
+#: qtplugins/autoopt/autoopt.h:46
 msgid "Interactive optimization of molecular geometry"
 msgstr ""
 
@@ -2125,7 +2211,7 @@ msgstr "பத்திர அளவு"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/ballandstick/ballandstick.cpp:125:222
+#: qtplugins/ballandstick/ballandstick.cpp:125:216
 msgid "Opacity"
 msgstr "ஒளிபுகாநிலை"
 
@@ -2167,23 +2253,6 @@ msgid ""
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:782
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:870
-#: qtplugins/measuretool/measuretool.cpp:210
-#: qtplugins/measuretool/measuretool.cpp:218
-#: qtplugins/measuretool/measuretool.cpp:219
-#, qt-format
-msgid "%L1°"
-msgstr "%L1 °"
-
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:804
-#: qtplugins/editor/editor.cpp:257 qtplugins/measuretool/measuretool.cpp:226
-#: qtplugins/measuretool/measuretool.cpp:227
-#: qtplugins/measuretool/measuretool.cpp:229
-#, qt-format
-msgid "%L1 Å"
-msgstr "%L1 Å"
-
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
 msgstr "பத்திர மைய கையாளுதல் கருவி."
@@ -2216,7 +2285,7 @@ msgid "Bond Selected Atoms"
 msgstr "பிணைப்பு தேர்ந்தெடுக்கப்பட்ட அணுக்கள்"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:651
+#: qtplugins/propertytables/propertymodel.cpp:678
 msgid "Bond"
 msgstr "கடனீடு"
 
@@ -2300,35 +2369,6 @@ msgstr "சென்ட்ராய்டு"
 msgid "Add centroids and center-of-mass."
 msgstr "சென்ட்ராய்டுகள் மற்றும் சென்டர்-ஆஃப்-வெகுசன சேர்க்கவும்."
 
-#. i18n: file: qtplugins/bonding/bondingdialog.ui:41
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
-#. i18n: file: qtplugins/bonding/bondingdialog.ui:60
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, minimumSpinBox)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:72
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, b)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:104
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, c)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:25
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, xTranslateSpinBox)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:44
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, yTranslateSpinBox)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:63
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, zTranslateSpinBox)
-#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:30
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxRadius)
-#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:59
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_step)
-#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:100
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:265
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-#: qtplugins/closecontacts/closecontacts.cpp:233
-#: qtplugins/noncovalent/noncovalent.cpp:383:201 rc.cpp:204 rc.cpp:451
-msgid " Å"
-msgstr " பெறுநர்"
-
 #: qtplugins/closecontacts/closecontacts.cpp:250
 #: qtplugins/noncovalent/noncovalent.cpp:401
 msgid "Maximum distance:"
@@ -2363,13 +2403,15 @@ msgid "Edit Color Opacity Map…"
 msgstr "வண்ண ஒளிபுகா வரைபடத்தைத் திருத்தவும்…"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
-#: qtplugins/commandscripts/command.cpp:64
-#: qtplugins/commandscripts/command.cpp:83
+#: qtplugins/commandscripts/command.cpp:77
+#: qtplugins/commandscripts/command.cpp:96
+#: qtplugins/commandscripts/command.cpp:414
 #: qtplugins/configurepython/configurepython.cpp:153
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:223
-#: qtplugins/forcefield/forcefield.cpp:225
+#: qtplugins/forcefield/forcefield.cpp:232
+#: qtplugins/forcefield/forcefield.cpp:234
 #: qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Extensions"
@@ -2383,17 +2425,18 @@ msgstr "Coloropacitymap"
 msgid "Edit color opacity maps, primarily for volume rendering."
 msgstr "வண்ண ஒளிபுகா வரைபடங்களைத் திருத்தவும், முதன்மையாக தொகுதி வழங்குதல்."
 
-#: qtplugins/commandscripts/command.cpp:64
-#: qtplugins/commandscripts/command.cpp:83
+#: qtplugins/commandscripts/command.cpp:77
+#: qtplugins/commandscripts/command.cpp:96
+#: qtplugins/commandscripts/command.cpp:414
 msgid "Scripts"
 msgstr "ச்கிரிப்ட்கள்"
 
-#: qtplugins/commandscripts/command.cpp:140
+#: qtplugins/commandscripts/command.cpp:153
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
-#: qtplugins/gamessinput/gamessinput.cpp:87
+#: qtplugins/gamessinput/gamessinput.cpp:92
 #: qtplugins/lammpsinput/lammpsinput.cpp:63
 #: qtplugins/openmminput/openmminput.cpp:63
-#: qtplugins/quantuminput/quantuminput.cpp:105
+#: qtplugins/quantuminput/quantuminput.cpp:153
 #, qt-format
 msgid ""
 "Error reading output file '%1':\n"
@@ -2402,16 +2445,16 @@ msgstr ""
 "வெளியீட்டு கோப்பை '%1' வாசிப்பதில் பிழை:\n"
 " %2"
 
-#: qtplugins/commandscripts/command.cpp:229
+#: qtplugins/commandscripts/command.cpp:294
 #, qt-format
 msgid "Processing %1"
 msgstr "செயலாக்கம் %1"
 
-#: qtplugins/commandscripts/command.cpp:284
+#: qtplugins/commandscripts/command.cpp:349
 msgid "Set path to Python interpreter:"
 msgstr "பைதான் மொழிபெயர்ப்பாளருக்கு பாதையை அமைக்கவும்:"
 
-#: qtplugins/commandscripts/command.cpp:286
+#: qtplugins/commandscripts/command.cpp:351
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2419,11 +2462,11 @@ msgstr ""
 "வெளிப்புற ச்கிரிப்ட்களை இயக்க பைதான் மொழிபெயர்ப்பாளரைத் தேர்ந்தெடுக்கவும்.\n"
 " ஏதேனும் மாற்றங்கள் நடைமுறைக்கு வர அவோகாட்ரோ மறுதொடக்கம் செய்யப்பட வேண்டும்."
 
-#: qtplugins/commandscripts/command.h:43
+#: qtplugins/commandscripts/command.h:44
 msgid "Command scripts"
 msgstr "கட்டளை ச்கிரிப்ட்கள்"
 
-#: qtplugins/commandscripts/command.h:47
+#: qtplugins/commandscripts/command.h:48
 msgid "Run external script commands"
 msgstr "வெளிப்புற ச்கிரிப்ட் கட்டளைகளை இயக்கவும்"
 
@@ -2431,7 +2474,7 @@ msgstr "வெளிப்புற ச்கிரிப்ட் கட்ட�
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
-#: qtplugins/configurepython/configurepython.cpp:36:225 rc.cpp:240
+#: qtplugins/configurepython/configurepython.cpp:36:219 rc.cpp:234
 msgid "Python Settings…"
 msgstr "பைதான் அமைப்புகள்…"
 
@@ -2460,13 +2503,13 @@ msgstr "பைதான் சூழல்களை உள்ளமைக்க�
 #: qtplugins/configurepython/configurepythondialog.cpp:215
 #: qtplugins/editor/editortoolwidget.cpp:130
 #: qtplugins/templatetool/templatetoolwidget.cpp:84
-#: qtplugins/templatetool/templatetoolwidget.cpp:352
-#: qtplugins/templatetool/templatetoolwidget.cpp:365
-#: qtplugins/templatetool/templatetoolwidget.cpp:373
-#: qtplugins/templatetool/templatetoolwidget.cpp:381
-#: qtplugins/templatetool/templatetoolwidget.cpp:389
-#: qtplugins/templatetool/templatetoolwidget.cpp:397
-#: qtplugins/templatetool/templatetoolwidget.cpp:460:2325
+#: qtplugins/templatetool/templatetoolwidget.cpp:417
+#: qtplugins/templatetool/templatetoolwidget.cpp:430
+#: qtplugins/templatetool/templatetoolwidget.cpp:438
+#: qtplugins/templatetool/templatetoolwidget.cpp:446
+#: qtplugins/templatetool/templatetoolwidget.cpp:454
+#: qtplugins/templatetool/templatetoolwidget.cpp:462
+#: qtplugins/templatetool/templatetoolwidget.cpp:525:2241
 msgid "Other…"
 msgstr "மற்றொன்று…"
 
@@ -2475,13 +2518,13 @@ msgid "Constraints…"
 msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:225
+#: qtplugins/forcefield/forcefield.cpp:234
 msgid "&Calculate"
 msgstr "& கணக்கிடுங்கள்"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
-#: qtplugins/constraints/constraintsextension.h:27:250
+#: qtplugins/constraints/constraintsextension.h:27:244
 msgid "Constraints"
 msgstr ""
 
@@ -2491,19 +2534,19 @@ msgstr ""
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
-#: qtplugins/constraints/constraintsmodel.cpp:60:259
+#: qtplugins/constraints/constraintsmodel.cpp:60:253
 msgid "Distance"
 msgstr ""
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
-#: qtplugins/constraints/constraintsmodel.cpp:62:262
+#: qtplugins/constraints/constraintsmodel.cpp:62:256
 msgid "Angle"
 msgstr ""
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
-#: qtplugins/constraints/constraintsmodel.cpp:64:265
+#: qtplugins/constraints/constraintsmodel.cpp:64:259
 msgid "Torsion Angle"
 msgstr ""
 
@@ -2528,9 +2571,9 @@ msgid "Freeze Z Axis"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
-#: qtplugins/propertytables/propertymodel.cpp:637
-#: qtplugins/propertytables/propertymodel.cpp:680
-#: qtplugins/propertytables/propertymodel.cpp:697
+#: qtplugins/propertytables/propertymodel.cpp:664
+#: qtplugins/propertytables/propertymodel.cpp:707
+#: qtplugins/propertytables/propertymodel.cpp:724
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "வகை"
@@ -2540,24 +2583,24 @@ msgid "Value"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
-#: qtplugins/propertytables/propertymodel.cpp:682
-#: qtplugins/propertytables/propertymodel.cpp:699
+#: qtplugins/propertytables/propertymodel.cpp:709
+#: qtplugins/propertytables/propertymodel.cpp:726
 msgid "Atom 1"
 msgstr "அணு 1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
-#: qtplugins/propertytables/propertymodel.cpp:701
+#: qtplugins/propertytables/propertymodel.cpp:728
 msgid "Atom 2"
 msgstr "அணு 2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
-#: qtplugins/propertytables/propertymodel.cpp:686
-#: qtplugins/propertytables/propertymodel.cpp:703
+#: qtplugins/propertytables/propertymodel.cpp:713
+#: qtplugins/propertytables/propertymodel.cpp:730
 msgid "Atom 3"
 msgstr "அணு 3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
-#: qtplugins/propertytables/propertymodel.cpp:705
+#: qtplugins/propertytables/propertymodel.cpp:732
 msgid "Atom 4"
 msgstr "அணு 4"
 
@@ -2685,8 +2728,8 @@ msgstr "அணு ஒருங்கிணைப்புகளைத் தி�
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:192 qtplugins/label/label.cpp:215
-#: qtplugins/label/label.cpp:230:2106 rc.cpp:2136
+#: qtplugins/label/label.cpp:209 qtplugins/label/label.cpp:232
+#: qtplugins/label/label.cpp:247:2027 rc.cpp:2052
 msgid "Custom"
 msgstr "தனிப்பயன்"
 
@@ -2730,13 +2773,13 @@ msgstr "டர்போமோல் வடிவம்"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:191
-#: qtplugins/propertytables/propertyview.cpp:528:322
+#: qtplugins/propertytables/propertyview.cpp:568:314
 msgid "Copy"
 msgstr "நகலெடு"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:35:319
+#: qtplugins/copypaste/copypaste.cpp:35:311
 msgid "Cut"
 msgstr "வெட்டு"
 
@@ -2842,18 +2885,14 @@ msgstr "CP2K க்கு உள்ளீட்டை உருவாக்க�
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:82
-#: qtplugins/plotconformer/plotconformer.cpp:145:1430
+#: qtplugins/forcefield/forcefield.cpp:84
+#: qtplugins/plotconformer/plotconformer.cpp:145:1360
 msgid "Energy"
 msgstr "ஆற்றல்"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:258
 msgid "Energy and Forces"
 msgstr "ஆற்றல் மற்றும் சக்திகள்"
-
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:261
-msgid "Molecular Dynamics"
-msgstr "மூலக்கூறு இயக்கவியல்"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:264
 msgid "Geometry Optimization"
@@ -2878,13 +2917,13 @@ msgstr "எவால்ட்"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:357
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:990
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:966
 msgid "NONE"
 msgstr "எதுவுமில்லை"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:360:1610
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:360:1536
 msgid "PME"
 msgstr "Pme"
 
@@ -3065,7 +3104,7 @@ msgstr "யூனிட் செல் இல்லை."
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
 #: qtplugins/crystal/unitcelldialog.cpp:281
 #: qtplugins/crystal/unitcelldialog.cpp:292
-#: qtplugins/crystal/unitcelldialog.cpp:303:445
+#: qtplugins/crystal/unitcelldialog.cpp:303:437
 msgid "Unit Cell Editor"
 msgstr "யூனிட் செல் எடிட்டர்"
 
@@ -3129,14 +3168,9 @@ msgid "Remove Bond"
 msgstr "பிணைப்பை அகற்று"
 
 #: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
-#: qtplugins/measuretool/measuretool.cpp:225
+#: qtplugins/measuretool/measuretool.cpp:223
 msgid "Distance:"
 msgstr "தூரம்:"
-
-#: qtplugins/editor/editor.cpp:255
-#, qt-format
-msgid "%1 %L2"
-msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
@@ -3146,7 +3180,7 @@ msgstr "ஆசிரியர் கருவி"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:209:2085 rc.cpp:2103
+#: qtplugins/editor/editortoolwidget.cpp:209:2006 rc.cpp:2024
 msgid "Automatic"
 msgstr "தானியங்கி"
 
@@ -3249,52 +3283,52 @@ msgstr "குறிப்பிட்ட அம்சங்களில் ப�
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "மூலக்கூறின் அணுக்களுக்கான படை புலம் காட்சிப்படுத்தல்களை வழங்கவும்."
 
-#: qtplugins/forcefield/forcefield.cpp:90
+#: qtplugins/forcefield/forcefield.cpp:92
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:147
 msgid "Forces"
 msgstr "படைகள்"
 
-#: qtplugins/forcefield/forcefield.cpp:98
+#: qtplugins/forcefield/forcefield.cpp:100
 msgid "Configure…"
 msgstr "உள்ளமைக்கவும்…"
 
-#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:112
 msgid "Freeze Selected Atoms"
 msgstr "தேர்ந்தெடுக்கப்பட்ட அணுக்களை முடக்கம்"
 
-#: qtplugins/forcefield/forcefield.cpp:118
+#: qtplugins/forcefield/forcefield.cpp:120
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:126
+#: qtplugins/forcefield/forcefield.cpp:128
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:134
+#: qtplugins/forcefield/forcefield.cpp:136
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:142
+#: qtplugins/forcefield/forcefield.cpp:144
 msgid "Unfreeze Selected Atoms"
 msgstr "உறைந்த தேர்ந்தெடுக்கப்பட்ட அணுக்கள்"
 
-#: qtplugins/forcefield/forcefield.cpp:151
+#: qtplugins/forcefield/forcefield.cpp:153
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:159
+#: qtplugins/forcefield/forcefield.cpp:161
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:366
-#: qtplugins/forcefield/forcefield.cpp:517
-#: qtplugins/forcefield/forcefield.cpp:587
+#: qtplugins/forcefield/forcefield.cpp:397
+#: qtplugins/forcefield/forcefield.cpp:526
+#: qtplugins/forcefield/forcefield.cpp:584
 #: qtplugins/playertool/playertool.cpp:391
 #: qtplugins/playertool/playertool.cpp:423 qtplugins/surfaces/surfaces.cpp:951
 #: qtplugins/surfaces/surfaces.cpp:995 qtplugins/surfaces/surfaces.cpp:1007
@@ -3302,35 +3336,53 @@ msgstr ""
 msgid "Avogadro"
 msgstr "அவோகாட்ரோ"
 
-#: qtplugins/forcefield/forcefield.cpp:367
+#: qtplugins/forcefield/forcefield.cpp:398
 msgid "No atoms provided for optimization"
 msgstr "தேர்வுமுறைக்கு அணுக்கள் எதுவும் வழங்கப்படவில்லை"
 
-#: qtplugins/forcefield/forcefield.cpp:435
+#: qtplugins/forcefield/forcefield.cpp:464
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "சக்தி: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:516
+#: qtplugins/forcefield/forcefield.cpp:525
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 ஆற்றல் = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:586
+#: qtplugins/forcefield/forcefield.cpp:583
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 படை விதிமுறை = %L2"
 
-#: qtplugins/forcefield/forcefield.h:47
+#: qtplugins/forcefield/forcefield.h:49
 msgid "Forcefield optimization"
 msgstr "ஃபோர்ச்ஃபீல்ட் தேர்வுமுறை"
 
-#: qtplugins/forcefield/forcefield.h:51
+#: qtplugins/forcefield/forcefield.h:53
 msgid "Forcefield minimization, including scripts"
 msgstr "ஃபோர்ச்ஃபீல்ட் குறைத்தல், ச்கிரிப்ட்கள் உட்பட"
 
-#: qtplugins/forcefield/forcefielddialog.cpp:119
+#: qtplugins/forcefield/forcefielddialog.cpp:56
+msgid "Options…"
+msgstr ""
+
+#: qtplugins/forcefield/forcefielddialog.cpp:175
+msgid "Invalid Model Options"
+msgstr ""
+
+#: qtplugins/forcefield/forcefielddialog.cpp:176
+#, qt-format
+msgid "Could not parse user options for model '%1'."
+msgstr ""
+
+#: qtplugins/forcefield/forcefielddialog.cpp:181
+#, qt-format
+msgid "%1 Options"
+msgstr ""
+
+#: qtplugins/forcefield/forcefielddialog.cpp:222
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
 msgid "Autodetect (%1)"
@@ -3347,25 +3399,6 @@ msgstr "பொதுவான அம்பர் படை புலம்"
 #: qtplugins/forcefield/obenergy.cpp:123 qtplugins/forcefield/obmmenergy.cpp:53
 msgid "Merck Molecular Force Field 94"
 msgstr "மெர்க் மூலக்கூறு படை புலம் 94"
-
-#: qtplugins/forcefield/scriptenergy.cpp:253
-#, qt-format
-msgid "Error retrieving metadata for energy script: %1"
-msgstr "எரிசக்தி ச்கிரிப்டுக்கான மெட்டாடேட்டாவை மீட்டெடுப்பதில் பிழை: %1"
-
-#: qtplugins/forcefield/scriptenergy.cpp:263
-#, qt-format
-msgid "Error parsing metadata for energy script: %1"
-msgstr "எரிசக்தி ச்கிரிப்டுக்கு மெட்டாடேட்டாவை பாகுபடுத்தும் பிழை: %1"
-
-#: qtplugins/forcefield/scriptenergy.cpp:271
-#, qt-format
-msgid ""
-"Error parsing metadata for energy script: %1\n"
-"Result is not a JSON object.\n"
-msgstr ""
-"எரிசக்தி ச்கிரிப்டுக்கு மெட்டாடேட்டாவை பாகுபடுத்தும் பிழை: %1\n"
-" முடிவு ஒரு சாதொபொகு பொருள் அல்ல.\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
@@ -3412,8 +3445,8 @@ msgstr "மைய சாத்தியம்"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/gamessinput/gamessinputdialog.cpp:419
-#: qtplugins/label/label.cpp:182 qtplugins/label/label.cpp:212
-#: qtplugins/label/label.cpp:225:1619 rc.cpp:1712 rc.cpp:2058
+#: qtplugins/label/label.cpp:199 qtplugins/label/label.cpp:229
+#: qtplugins/label/label.cpp:242:1545 rc.cpp:1628 rc.cpp:1979
 msgid "None"
 msgstr "எதுவுமில்லை"
 
@@ -3552,7 +3585,7 @@ msgstr "டி"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
-#: qtplugins/insertdna/insertdna.cpp:167:688
+#: qtplugins/insertdna/insertdna.cpp:167:668
 msgid "Thymine"
 msgstr "தைமின்"
 
@@ -3560,7 +3593,7 @@ msgstr "தைமின்"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
 #: qtplugins/lineformatinput/lineformatinput.cpp:110
-#: qtplugins/lineformatinput/lineformatinput.cpp:125:1292
+#: qtplugins/lineformatinput/lineformatinput.cpp:125:1234
 msgid "Insert Molecule…"
 msgstr "மூலக்கூறு செருகவும்…"
 
@@ -3592,11 +3625,11 @@ msgstr "கோப்பைப் படிப்பதில் பிழை (%1
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-#: qtplugins/insertfragment/insertfragment.cpp:120:424
+#: qtplugins/insertfragment/insertfragment.cpp:120:416
 msgid "Import Crystal"
 msgstr "படிக இறக்குமதி"
 
-#: qtplugins/insertfragment/insertfragment.cpp:125
+#: qtplugins/insertfragment/insertfragment.cpp:133
 msgid "Insert Fragment"
 msgstr "துண்டு செருகவும்"
 
@@ -3616,7 +3649,7 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:545
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#: qtplugins/insertpeptide/insertpeptide.cpp:511:730 rc.cpp:922
+#: qtplugins/insertpeptide/insertpeptide.cpp:511:710 rc.cpp:898
 msgid "Insert Peptide"
 msgstr ""
 
@@ -3628,68 +3661,73 @@ msgstr ""
 msgid "Insert oligopeptide sequences."
 msgstr ""
 
-#: qtplugins/label/label.cpp:162 qtplugins/surfacerender/surfacerender.cpp:311
+#: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:311
 #: qtplugins/surfacerender/surfacerender.cpp:317
 msgid "Color:"
 msgstr "வண்ணம்:"
 
-#: qtplugins/label/label.cpp:172
+#: qtplugins/label/label.cpp:179
 msgid "Distance from center:"
 msgstr "மையத்திலிருந்து தூரம்:"
 
-#: qtplugins/label/label.cpp:183 qtplugins/label/label.cpp:214
+#: qtplugins/label/label.cpp:189
+msgid "Label scale:"
+msgstr ""
+
+#: qtplugins/label/label.cpp:200 qtplugins/label/label.cpp:231
 msgid "Index"
 msgstr "குறியெண்"
 
-#: qtplugins/label/label.cpp:184
+#: qtplugins/label/label.cpp:201
 msgid "Unique ID"
 msgstr "தனித்துவமான ஐடி"
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:605
+#: qtplugins/label/label.cpp:202 qtplugins/propertytables/propertymodel.cpp:630
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "தனிமம்"
 
-#: qtplugins/label/label.cpp:186
+#: qtplugins/label/label.cpp:203
 msgid "Element & Number"
 msgstr "உறுப்பு & எண்"
 
-#: qtplugins/label/label.cpp:188
+#: qtplugins/label/label.cpp:205
 msgid "Element & ID"
 msgstr "உறுப்பு & ஐடி"
 
-#: qtplugins/label/label.cpp:190
+#: qtplugins/label/label.cpp:207
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
 msgstr "பகுதி கட்டணம்"
 
-#: qtplugins/label/label.cpp:205
+#: qtplugins/label/label.cpp:222
 msgid "Atom Label:"
 msgstr "அணு லேபிள்:"
 
-#: qtplugins/label/label.cpp:213
+#: qtplugins/label/label.cpp:230
 msgid "Length"
 msgstr "நீளம்"
 
-#: qtplugins/label/label.cpp:219
+#: qtplugins/label/label.cpp:236
 msgid "Bond Label:"
 msgstr "பிணைப்பு லேபிள்:"
 
-#: qtplugins/label/label.cpp:226 qtplugins/propertytables/propertymodel.cpp:660
+#: qtplugins/label/label.cpp:243 qtplugins/propertytables/propertymodel.cpp:687
 msgid "ID"
 msgstr "ஐடி"
 
-#: qtplugins/label/label.cpp:227
-#: qtplugins/plugindownloader/downloaderwidget.cpp:65
-#: qtplugins/propertytables/propertymodel.cpp:658
+#: qtplugins/label/label.cpp:244
+#: qtplugins/packageinstaller/packagemodel.cpp:172
+#: qtplugins/plugindownloader/downloaderwidget.cpp:67
+#: qtplugins/propertytables/propertymodel.cpp:685
 msgid "Name"
 msgstr "பெயர்"
 
-#: qtplugins/label/label.cpp:228
+#: qtplugins/label/label.cpp:245
 msgid "Name & ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:235
+#: qtplugins/label/label.cpp:252
 msgid "Residue Label:"
 msgstr "எச்ச லேபிள்:"
 
@@ -3740,7 +3778,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/licorice/licorice.cpp:78
 #: qtplugins/surfacerender/surfacerender.cpp:284
-#: qtplugins/vanderwaals/vanderwaals.cpp:75:1877
+#: qtplugins/vanderwaals/vanderwaals.cpp:75:1798
 msgid "Opacity:"
 msgstr "ஒளிபுகாநிலை:"
 
@@ -3830,17 +3868,14 @@ msgid ""
 msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:198
-#: qtplugins/measuretool/measuretool.cpp:209
+#: qtplugins/measuretool/measuretool.cpp:208
 msgid "Dihedral:"
 msgstr "டைஎட்ரல்:"
 
 #: qtplugins/measuretool/measuretool.cpp:199
+#: qtplugins/measuretool/measuretool.cpp:215
 msgid "Angle:"
 msgstr "கோணம்:"
-
-#: qtplugins/measuretool/measuretool.cpp:217
-msgid "Angles:"
-msgstr "கோணங்கள்:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
@@ -3852,7 +3887,7 @@ msgid "(pending)"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
-#: qtplugins/propertytables/propertymodel.cpp:721
+#: qtplugins/propertytables/propertymodel.cpp:748
 msgid "Property"
 msgstr "சொத்து"
 
@@ -3974,32 +4009,32 @@ msgid "Molecular Properties"
 msgstr "மூலக்கூறு பண்புகள்"
 
 #: qtplugins/molecularproperties/molecularview.cpp:40
-#: qtplugins/propertytables/propertyview.cpp:63
+#: qtplugins/propertytables/propertyview.cpp:64
 msgid "Molecule Properties"
 msgstr "மூலக்கூறு பண்புகள்"
 
 #: qtplugins/molecularproperties/molecularview.cpp:138
-#: qtplugins/propertytables/propertyview.cpp:476
+#: qtplugins/propertytables/propertyview.cpp:492
 msgid "Export CSV"
 msgstr "காபிம ஏற்றுமதி"
 
 #: qtplugins/molecularproperties/molecularview.cpp:139
-#: qtplugins/propertytables/propertyview.cpp:477
+#: qtplugins/propertytables/propertyview.cpp:493
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "காபிம கோப்புகள் (*.csv) ;; அனைத்து கோப்புகளும் (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:151
-#: qtplugins/propertytables/propertyview.cpp:489
+#: qtplugins/propertytables/propertyview.cpp:505
 msgid "Could not open the file for writing."
 msgstr "எழுதுவதற்கு கோப்பைத் திறக்க முடியவில்லை."
 
 #: qtplugins/molecularproperties/molecularview.cpp:184
-#: qtplugins/propertytables/propertyview.cpp:521
+#: qtplugins/propertytables/propertyview.cpp:537
 msgid "Error writing to the file."
 msgstr "கோப்பில் எழுதுவதில் பிழை."
 
 #: qtplugins/molecularproperties/molecularview.cpp:196
-#: qtplugins/propertytables/propertyview.cpp:533
+#: qtplugins/propertytables/propertyview.cpp:573
 msgid "Export…"
 msgstr "ஏற்றுமதி…"
 
@@ -4060,10 +4095,6 @@ msgstr "பிணைய தரவுத்தளங்கள்"
 msgid "Interact with online databases, query structures etc."
 msgstr "நிகழ்நிலை தரவுத்தளங்கள், வினவல் கட்டமைப்புகள் போன்றவற்றுடன் தொடர்பு கொள்ளுங்கள்."
 
-#: qtplugins/noncovalent/noncovalent.cpp:372
-msgid " °"
-msgstr " °"
-
 #: qtplugins/noncovalent/noncovalent.cpp:400
 msgid "Angle tolerance:"
 msgstr "கோண சகிப்புத்தன்மை:"
@@ -4113,11 +4144,11 @@ msgstr "& திறந்த பாபல்"
 msgid "The Open Babel file formats are not ready to be added."
 msgstr "திறந்த பாபல் கோப்பு வடிவங்கள் சேர்க்க தயாராக இல்லை."
 
-#: qtplugins/openbabel/openbabel.cpp:204
+#: qtplugins/openbabel/openbabel.cpp:206
 msgid "Loading molecule from Open Babel…"
 msgstr "திறந்த பாபலில் இருந்து மூலக்கூறு ஏற்றுகிறது…"
 
-#: qtplugins/openbabel/openbabel.cpp:210
+#: qtplugins/openbabel/openbabel.cpp:212
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
@@ -4125,17 +4156,17 @@ msgstr ""
 "ஒரு உள் பிழை ஏற்பட்டது: OpenBabel :: ReadMolocule அழைக்கப்படுகிறது, ஆனால் அலசுக்கு "
 "ஒபாபெல் வெளியீடு எதுவும் கிடைக்கவில்லை!"
 
-#: qtplugins/openbabel/openbabel.cpp:219
+#: qtplugins/openbabel/openbabel.cpp:221
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr "திறந்த பாபலை (%1) இயக்கும் போது பிழை ஏற்பட்டது."
 
-#: qtplugins/openbabel/openbabel.cpp:229
+#: qtplugins/openbabel/openbabel.cpp:231
 msgid "Error parsing openbabel output."
 msgstr "ஓபன் பேபல் வெளியீட்டை பாகுபடுத்துகிறது."
 
-#: qtplugins/openbabel/openbabel.cpp:371 qtplugins/openbabel/openbabel.cpp:399
-#: qtplugins/openbabel/openbabel.cpp:433 qtplugins/openbabel/openbabel.cpp:578
+#: qtplugins/openbabel/openbabel.cpp:373 qtplugins/openbabel/openbabel.cpp:401
+#: qtplugins/openbabel/openbabel.cpp:435 qtplugins/openbabel/openbabel.cpp:580
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
@@ -4144,37 +4175,37 @@ msgstr ""
 "ஆதரிக்கப்பட்ட ஃபோர்ச்ஃபீல்டுகளின் பட்டியலை மீட்டெடுக்கும் போது பிழை ஏற்பட்டது. ('%1' ஐப் "
 "பயன்படுத்துதல்)."
 
-#: qtplugins/openbabel/openbabel.cpp:424
+#: qtplugins/openbabel/openbabel.cpp:426
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr "மூலக்கூறு தவறானது. வடிவவியலை மேம்படுத்த முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:442
+#: qtplugins/openbabel/openbabel.cpp:444
 msgid "Cannot optimize geometry with Open Babel."
 msgstr "திறந்த பாபலுடன் வடிவவியலை மேம்படுத்த முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:467
+#: qtplugins/openbabel/openbabel.cpp:469
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "வடிவவியலை மேம்படுத்துதல் (திறந்த பாபல்)"
 
-#: qtplugins/openbabel/openbabel.cpp:468 qtplugins/openbabel/openbabel.cpp:621
+#: qtplugins/openbabel/openbabel.cpp:470 qtplugins/openbabel/openbabel.cpp:623
 msgid "Generating…"
 msgstr "உருவாக்குதல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:487 qtplugins/openbabel/openbabel.cpp:638
+#: qtplugins/openbabel/openbabel.cpp:489 qtplugins/openbabel/openbabel.cpp:640
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
 "தற்போதைய மூலக்கூறின் திறந்த பாபல் பிரதிநிதித்துவத்தை உருவாக்கும் போது உள் பிழை ஏற்பட்டது."
 
-#: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:644
+#: qtplugins/openbabel/openbabel.cpp:495 qtplugins/openbabel/openbabel.cpp:646
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr "தொடங்கி %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:507 qtplugins/openbabel/openbabel.cpp:515
-#: qtplugins/openbabel/openbabel.cpp:658 qtplugins/openbabel/openbabel.cpp:666
+#: qtplugins/openbabel/openbabel.cpp:509 qtplugins/openbabel/openbabel.cpp:517
+#: qtplugins/openbabel/openbabel.cpp:660 qtplugins/openbabel/openbabel.cpp:668
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -4185,17 +4216,17 @@ msgstr ""
 " தற்போதைய ஆற்றல்: %3\n"
 " DE: %4"
 
-#: qtplugins/openbabel/openbabel.cpp:529 qtplugins/openbabel/openbabel.cpp:680
+#: qtplugins/openbabel/openbabel.cpp:531 qtplugins/openbabel/openbabel.cpp:682
 msgid "Updating molecule…"
 msgstr "மூலக்கூறைப் புதுப்பித்தல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:537 qtplugins/openbabel/openbabel.cpp:688
-#: qtplugins/openbabel/openbabel.cpp:779 qtplugins/openbabel/openbabel.cpp:961
+#: qtplugins/openbabel/openbabel.cpp:539 qtplugins/openbabel/openbabel.cpp:690
+#: qtplugins/openbabel/openbabel.cpp:781 qtplugins/openbabel/openbabel.cpp:963
 msgid "Error interpreting Open Babel output."
 msgstr "திறந்த பாபல் வெளியீட்டை விளக்குவதில் பிழை."
 
-#: qtplugins/openbabel/openbabel.cpp:550 qtplugins/openbabel/openbabel.cpp:701
-#: qtplugins/openbabel/openbabel.cpp:791
+#: qtplugins/openbabel/openbabel.cpp:552 qtplugins/openbabel/openbabel.cpp:703
+#: qtplugins/openbabel/openbabel.cpp:793
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -4204,102 +4235,102 @@ msgstr ""
 "OBABEL வெளியீட்டில் உள்ள அணுக்களின் எண்ணிக்கை (%1) அசல் மூலக்கூறில் (%2) அணுக்களின் "
 "எண்ணிக்கையுடன் பொருந்தவில்லை."
 
-#: qtplugins/openbabel/openbabel.cpp:569
+#: qtplugins/openbabel/openbabel.cpp:571
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr "மூலக்கூறு தவறானது. கன்ஃபார்மர்களை உருவாக்க முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:587
+#: qtplugins/openbabel/openbabel.cpp:589
 msgid "Cannot generate conformers with Open Babel."
 msgstr "திறந்த பாபலுடன் கன்ஃபார்மர்களை உருவாக்க முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:620
+#: qtplugins/openbabel/openbabel.cpp:622
 msgid "Generating Conformers (Open Babel)"
 msgstr "இணங்குபவர்களை உருவாக்குதல் (திறந்த பாபல்)"
 
-#: qtplugins/openbabel/openbabel.cpp:711
+#: qtplugins/openbabel/openbabel.cpp:713
 msgid "Generate Conformers"
 msgstr "இணங்குபவர்களை உருவாக்குங்கள்"
 
-#: qtplugins/openbabel/openbabel.cpp:730
+#: qtplugins/openbabel/openbabel.cpp:732
 msgid "Cannot open file with Open Babel."
 msgstr "திறந்த பாபலுடன் கோப்பைத் திறக்க முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:736
+#: qtplugins/openbabel/openbabel.cpp:738
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr "தவறான மூலக்கூறு: பிணைப்புகளை உணர முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:742
+#: qtplugins/openbabel/openbabel.cpp:744
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "பிணைப்புகளை உணரும் (திறந்த பாபல்)"
 
-#: qtplugins/openbabel/openbabel.cpp:743
+#: qtplugins/openbabel/openbabel.cpp:745
 msgid "Generating XYZ representation…"
 msgstr "XYZ பிரதிநிதித்துவத்தை உருவாக்குதல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:750
+#: qtplugins/openbabel/openbabel.cpp:752
 msgid "Error generating XYZ string."
 msgstr "XYZ சரம் உருவாக்கும் பிழை."
 
-#: qtplugins/openbabel/openbabel.cpp:761
+#: qtplugins/openbabel/openbabel.cpp:763
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr "%1 உடன் பாபலை திறக்க XYZ ஐ மாற்றுவது…"
 
-#: qtplugins/openbabel/openbabel.cpp:771
+#: qtplugins/openbabel/openbabel.cpp:773
 msgid "Updating molecule from Open Babel…"
 msgstr "திறந்த பாபலில் இருந்து மூலக்கூறைப் புதுப்பித்தல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:823 qtplugins/openbabel/openbabel.cpp:865
+#: qtplugins/openbabel/openbabel.cpp:825 qtplugins/openbabel/openbabel.cpp:867
 msgid "Cannot add hydrogens with Open Babel."
 msgstr "திறந்த பாபலுடன் ஐட்ரசன்களைச் சேர்க்க முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:828 qtplugins/openbabel/openbabel.cpp:878
+#: qtplugins/openbabel/openbabel.cpp:830 qtplugins/openbabel/openbabel.cpp:880
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "ஐட்ரசன்களைச் சேர்ப்பது (திறந்த பாபல்)"
 
-#: qtplugins/openbabel/openbabel.cpp:829
+#: qtplugins/openbabel/openbabel.cpp:831
 msgid "Generating Open Babel input…"
 msgstr "திறந்த பாபல் உள்ளீட்டை உருவாக்குதல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:837 qtplugins/openbabel/openbabel.cpp:887
+#: qtplugins/openbabel/openbabel.cpp:839 qtplugins/openbabel/openbabel.cpp:889
 msgid "Error generating Open Babel input."
 msgstr "திறந்த பாபல் உள்ளீட்டை உருவாக்கும் பிழை."
 
-#: qtplugins/openbabel/openbabel.cpp:850 qtplugins/openbabel/openbabel.cpp:900
-#: qtplugins/openbabel/openbabel.cpp:942
+#: qtplugins/openbabel/openbabel.cpp:852 qtplugins/openbabel/openbabel.cpp:902
+#: qtplugins/openbabel/openbabel.cpp:944
 #, qt-format
 msgid "Running %1…"
 msgstr "இயங்கும் %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:872
+#: qtplugins/openbabel/openbabel.cpp:874
 msgid "Add hydrogens for pH"
 msgstr "PH க்கு ஐட்ரசன்களைச் சேர்க்கவும்"
 
-#: qtplugins/openbabel/openbabel.cpp:872
+#: qtplugins/openbabel/openbabel.cpp:874
 msgid "pH:"
 msgstr "ph:"
 
-#: qtplugins/openbabel/openbabel.cpp:879 qtplugins/openbabel/openbabel.cpp:921
+#: qtplugins/openbabel/openbabel.cpp:881 qtplugins/openbabel/openbabel.cpp:923
 msgid "Generating obabel input…"
 msgstr "ஒபாபல் உள்ளீட்டை உருவாக்குதல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:915
+#: qtplugins/openbabel/openbabel.cpp:917
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr "திறந்த பாபல் மூலம் ஐட்ரசன்களை அகற்ற முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:920
+#: qtplugins/openbabel/openbabel.cpp:922
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "ஐட்ரசன்களை அகற்றுதல் (திறந்த பாபல்)"
 
-#: qtplugins/openbabel/openbabel.cpp:929
+#: qtplugins/openbabel/openbabel.cpp:931
 msgid "Error generating Open Babel data."
 msgstr "திறந்த பாபல் தரவை உருவாக்கும் பிழை."
 
-#: qtplugins/openbabel/openbabel.cpp:952
+#: qtplugins/openbabel/openbabel.cpp:954
 msgid "Reading obabel output…"
 msgstr "OBABEL வெளியீட்டைப் படித்தல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:1015
+#: qtplugins/openbabel/openbabel.cpp:1017
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -4351,9 +4382,9 @@ msgstr "இன்ச்ர்டு"
 msgid "gro"
 msgstr "க்ரோ"
 
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:84
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:497:1520
+#: qtplugins/openmminput/openmminputdialog.cpp:497:1446
 msgid "input.prmtop"
 msgstr "Input.prmtop"
 
@@ -4383,13 +4414,288 @@ msgstr "மேலே"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1061
-#: qtplugins/openmminput/openmminputdialog.cpp:1070:1637 rc.cpp:1652
+#: qtplugins/openmminput/openmminputdialog.cpp:1070:1563 rc.cpp:1576
 msgid "True"
 msgstr "உண்மை"
 
 #: qtplugins/overlayaxes/overlayaxes.h:31
 msgid "Render reference axes in the corner of the display."
 msgstr "காட்சியின் மூலையில் குறிப்பு அச்சுகளை வழங்கவும்."
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
+#: qtplugins/packageinstaller/packageinstaller.cpp:17:1719
+msgid "Manage Plugins…"
+msgstr ""
+
+#: qtplugins/packageinstaller/packageinstaller.h:32
+msgid "Package Installer"
+msgstr ""
+
+#: qtplugins/packageinstaller/packageinstaller.h:36
+msgid "Install, update, and remove Avogadro packages."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:134
+#, qt-format
+msgid "Error downloading plugin list: %1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:143
+msgid "Error: empty response from server."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:226
+#, qt-format
+msgid "Error fetching README: %1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:268
+msgid "Nothing Selected"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:269
+msgid "Check the box next to a plugin to install or update it."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:279
+#, qt-format
+msgid "%1 (requires %2)"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
+msgid "Version Incompatibility"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:284
+#, qt-format
+msgid ""
+"The following plugins require a newer version of Avogadro:\n"
+"\n"
+"%1\n"
+"\n"
+"Install anyway?"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:311
+msgid "No Download Available"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:312
+#, qt-format
+msgid ""
+"The selected plugin(s) do not provide a downloadable source URL:\n"
+"\n"
+"%1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:359
+#, qt-format
+msgid "Failed to follow redirect while downloading %1.\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:376
+#, qt-format
+msgid "Failed to download from %1: status %2, %3\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:385
+#, qt-format
+msgid "Failed to download from %1: %2\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:420
+#: qtplugins/plugindownloader/downloaderwidget.cpp:364
+#, qt-format
+msgid "Downloading %1 to %2\n"
+msgstr "%1 முதல் %2 வரை பதிவிறக்குகிறது\n"
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
+#, qt-format
+msgid "Extracting %1…\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:442
+#, qt-format
+msgid "Extraction complete (%1 files)\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:463
+#, qt-format
+msgid "Error: could not move extracted package %1 to %2\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:476
+#, qt-format
+msgid "Extraction error: %1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:478
+msgid "Extraction yielded no files.\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:488
+msgid "Installation complete.\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:536
+msgid "Nothing to Remove"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:537
+msgid "Check the box next to an installed plugin to remove it."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:543
+msgid "Remove Plugins"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:544
+#, qt-plural-format
+msgctxt ""
+msgid "Remove %n selected plugin(s)?"
+msgid_plural "Remove %n selected plugin(s)?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:548
+msgid "Keep Files"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
+msgid "Delete Files"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
+msgid "Select Plugin Directory"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:585
+msgid "Invalid Directory"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:586
+msgid "The selected directory does not contain a pyproject.toml file."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
+#, qt-format
+msgid "Plugin already installed as symlink: %1\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:615
+#, qt-format
+msgid "Created symlink: %1 → %2\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:618
+msgid "Symlink creation failed; copying files instead…\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:621
+#, qt-format
+msgid "Failed to copy package to %1."
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:626
+#, qt-format
+msgid "Installing plugin from %1…\n"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:58
+msgid "Not installed"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:60
+msgid "Installed (up to date)"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:62
+msgid "Update available"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:64
+msgid "Installed locally (not in online catalog)"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:70
+#, qt-format
+msgid "Requires Avogadro %1 or later (running %2)"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:162
+#, qt-format
+msgid ""
+"Feature icons:\n"
+"%1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:170
+msgid "Status"
+msgstr "நிலை"
+
+#: qtplugins/packageinstaller/packagemodel.cpp:174
+#: qtplugins/plugindownloader/downloaderwidget.cpp:67
+msgid "Version"
+msgstr "பதிப்பு"
+
+#: qtplugins/packageinstaller/packagemodel.cpp:176
+msgid "Features"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:178
+#: qtplugins/plugindownloader/downloaderwidget.cpp:68
+msgid "Description"
+msgstr "விவரம்"
+
+#: qtplugins/packageinstaller/packagemodel.cpp:563
+msgid "Electrostatics"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:565
+msgid "Energy Models"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:567
+msgid "File Formats"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:569
+msgid "Input Generators"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:571
+msgid "Commands"
+msgstr ""
+
+#: qtplugins/packageinstaller/zipextractor.cpp:60
+#: qtplugins/plugindownloader/zipextracter.cpp:67
+#, qt-format
+msgctxt "%1 is the error message from libarchive"
+msgid ""
+"ERROR: could not open zip file to list contents.\n"
+"(%1)"
+msgstr ""
+
+#: qtplugins/packageinstaller/zipextractor.cpp:117
+#: qtplugins/plugindownloader/zipextracter.cpp:115
+#, qt-format
+msgctxt "%1 is the error message from libarchive"
+msgid ""
+"ERROR: could not open zip file to extract files.\n"
+"(%1)"
+msgstr ""
+
+#: qtplugins/packageinstaller/zipextractor.cpp:134
+#: qtplugins/packageinstaller/zipextractor.cpp:151
+#: qtplugins/packageinstaller/zipextractor.cpp:162
+#: qtplugins/plugindownloader/zipextracter.cpp:132
+#: qtplugins/plugindownloader/zipextracter.cpp:151
+#: qtplugins/plugindownloader/zipextracter.cpp:161
+#, qt-format
+msgctxt "%1 is the message from libarchive"
+msgid "Warning: (%1)"
+msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:51
 msgctxt "control-key 9"
@@ -4407,7 +4713,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:83:2139
+#: qtplugins/playertool/playertool.cpp:83:2055
 msgid "Frame:"
 msgstr "சட்டகம்:"
 
@@ -4502,7 +4808,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
-#: qtplugins/plotconformer/plotconformer.cpp:143:1427
+#: qtplugins/plotconformer/plotconformer.cpp:143:1357
 msgid "RMSD"
 msgstr "Rmsd"
 
@@ -4512,26 +4818,6 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
-
-#: qtplugins/plotconformer/plotconformer.cpp:160
-#: qtplugins/plotconformer/plotconformer.cpp:172
-msgid "Hartree"
-msgstr ""
-
-#: qtplugins/plotconformer/plotconformer.cpp:161
-#: qtplugins/plotconformer/plotconformer.cpp:171
-msgid "eV"
-msgstr "ஈ.வி."
-
-#: qtplugins/plotconformer/plotconformer.cpp:162
-#: qtplugins/plotconformer/plotconformer.cpp:169
-msgid "kcal/mol"
-msgstr ""
-
-#: qtplugins/plotconformer/plotconformer.cpp:163
-#: qtplugins/plotconformer/plotconformer.cpp:170
-msgid "kJ/mol"
 msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
@@ -4618,27 +4904,19 @@ msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr ""
 "ObjCryst ++ ஐப் பயன்படுத்தி ஒரு தத்துவார்த்த எக்ச்ஆர்டி வடிவத்தை உருவாக்கி திட்டமிடுங்கள்."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:65
+#: qtplugins/plugindownloader/downloaderwidget.cpp:67
 msgid "Update"
 msgstr "புதுப்பிப்பு"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:65
-msgid "Version"
-msgstr "பதிப்பு"
-
-#: qtplugins/plugindownloader/downloaderwidget.cpp:66
-msgid "Description"
-msgstr "விவரம்"
-
-#: qtplugins/plugindownloader/downloaderwidget.cpp:102
+#: qtplugins/plugindownloader/downloaderwidget.cpp:104
 msgid "Error downloading plugin data."
 msgstr "சொருகி தரவை பதிவிறக்குவதில் பிழை."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:107
+#: qtplugins/plugindownloader/downloaderwidget.cpp:109
 msgid "Error parsing plugin data."
 msgstr "சொருகி தரவை பாகுபடுத்துவதில் பிழை."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:309
+#: qtplugins/plugindownloader/downloaderwidget.cpp:270
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4646,16 +4924,16 @@ msgstr ""
 "இந்த சொருகி சில தொகுப்புகளை நிறுவ வேண்டும்.\n"
 " அவற்றை நிறுவ விரும்புகிறீர்களா?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:317
+#: qtplugins/plugindownloader/downloaderwidget.cpp:278
 msgid "Always"
 msgstr "எப்போதும்"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:318
+#: qtplugins/plugindownloader/downloaderwidget.cpp:279
 msgid "Never"
 msgstr "ஒருபோதும்"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:361
-#: qtplugins/plugindownloader/downloaderwidget.cpp:371
+#: qtplugins/plugindownloader/downloaderwidget.cpp:323
+#: qtplugins/plugindownloader/downloaderwidget.cpp:333
 #, qt-format
 msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
@@ -4663,51 +4941,32 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr "%1 இலிருந்து பதிவிறக்கம் செய்யத் தவறிவிட்டது: நிலை குறியீடு %2, %3\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:404
-#, qt-format
-msgid "Downloading %1 to %2\n"
-msgstr "%1 முதல் %2 வரை பதிவிறக்குகிறது\n"
-
-#: qtplugins/plugindownloader/downloaderwidget.cpp:421
+#: qtplugins/plugindownloader/downloaderwidget.cpp:381
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "%1 முதல் %2 வரை பிரித்தெடுக்கிறது\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:424
+#: qtplugins/plugindownloader/downloaderwidget.cpp:384
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "%1 கோப்புகள் முடிந்தது\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:428
+#: qtplugins/plugindownloader/downloaderwidget.cpp:388
 msgid "Extraction successful\n"
 msgstr "பிரித்தெடுத்தல் வெற்றிகரமாக\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:480
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "பிரித்தெடுக்கும் போது பிழை: %1"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:512
-#: qtplugins/plugindownloader/downloaderwidget.cpp:575
-#: qtplugins/plugindownloader/downloaderwidget.cpp:612
-#, qt-format
-msgctxt "argument is program name"
-msgid "Installing dependencies with %1…"
-msgstr ""
-
-#: qtplugins/plugindownloader/downloaderwidget.cpp:514
-#: qtplugins/plugindownloader/downloaderwidget.cpp:577
-#: qtplugins/plugindownloader/downloaderwidget.cpp:614
-msgid "Cancel"
-msgstr ""
-
-#: qtplugins/plugindownloader/downloaderwidget.cpp:662
+#: qtplugins/plugindownloader/downloaderwidget.cpp:452
 msgid "Installation canceled\n"
 msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.cpp:27:1859
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1780
 msgid "Download Plugins…"
 msgstr "செருகுநிரல்களைப் பதிவிறக்குக…"
 
@@ -4718,30 +4977,6 @@ msgstr "செருகுநிரல்களைப் பதிவிறக�
 #: qtplugins/plugindownloader/plugindownloader.h:41
 msgid "Download plugins from GitHub repositories."
 msgstr "அறிவிலிமையம் களஞ்சியங்களிலிருந்து செருகுநிரல்களைப் பதிவிறக்கவும்."
-
-#: qtplugins/plugindownloader/zipextracter.cpp:67
-#, qt-format
-msgctxt "%1 is the error message from libarchive"
-msgid ""
-"ERROR: could not open zip file to list contents.\n"
-"(%1)"
-msgstr ""
-
-#: qtplugins/plugindownloader/zipextracter.cpp:115
-#, qt-format
-msgctxt "%1 is the error message from libarchive"
-msgid ""
-"ERROR: could not open zip file to extract files.\n"
-"(%1)"
-msgstr ""
-
-#: qtplugins/plugindownloader/zipextracter.cpp:132
-#: qtplugins/plugindownloader/zipextracter.cpp:151
-#: qtplugins/plugindownloader/zipextracter.cpp:161
-#, qt-format
-msgctxt "%1 is the message from libarchive"
-msgid "Warning: (%1)"
-msgstr ""
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"
@@ -4780,138 +5015,143 @@ msgstr "போவ்ரே"
 msgid "Render the scene using POV-Ray."
 msgstr "POV-RAY ஐப் பயன்படுத்தி காட்சியை வழங்கவும்."
 
-#: qtplugins/propertytables/propertymodel.cpp:607
+#: qtplugins/propertytables/propertymodel.cpp:307
+msgid "Click to change color"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Valence"
 msgstr "இணைதிறன்"
 
-#: qtplugins/propertytables/propertymodel.cpp:609
+#: qtplugins/propertytables/propertymodel.cpp:634
 msgid "Formal Charge"
 msgstr "முறையான கட்டணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:612
+#: qtplugins/propertytables/propertymodel.cpp:637
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1 பகுதி கட்டணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:617
+#: qtplugins/propertytables/propertymodel.cpp:644
 msgid "X (Å)"
 msgstr "ஃச் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:619
+#: qtplugins/propertytables/propertymodel.cpp:646
 msgid "Y (Å)"
 msgstr "ஒய் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:621
+#: qtplugins/propertytables/propertymodel.cpp:648
 msgid "Z (Å)"
 msgstr "சட் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:623
-#: qtplugins/propertytables/propertymodel.cpp:645
-#: qtplugins/propertytables/propertymodel.cpp:668
+#: qtplugins/propertytables/propertymodel.cpp:650
+#: qtplugins/propertytables/propertymodel.cpp:672
+#: qtplugins/propertytables/propertymodel.cpp:695
 msgid "Label"
 msgstr "சிட்டை"
 
-#: qtplugins/propertytables/propertymodel.cpp:625
+#: qtplugins/propertytables/propertymodel.cpp:652
 msgid "Isotope"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:627
-#: qtplugins/propertytables/propertymodel.cpp:670
+#: qtplugins/propertytables/propertymodel.cpp:654
+#: qtplugins/propertytables/propertymodel.cpp:697
 msgid "Color"
 msgstr "நிறம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:630
+#: qtplugins/propertytables/propertymodel.cpp:657
 msgid "Atom"
 msgstr "அணு"
 
-#: qtplugins/propertytables/propertymodel.cpp:639
+#: qtplugins/propertytables/propertymodel.cpp:666
 msgid "Start Atom"
 msgstr "அணுவைத் தொடங்கவும்"
 
-#: qtplugins/propertytables/propertymodel.cpp:641
+#: qtplugins/propertytables/propertymodel.cpp:668
 msgid "End Atom"
 msgstr "இறுதி அணு"
 
-#: qtplugins/propertytables/propertymodel.cpp:643
+#: qtplugins/propertytables/propertymodel.cpp:670
 msgid "Bond Order"
 msgstr "பாண்ட் ஆணை"
 
-#: qtplugins/propertytables/propertymodel.cpp:647
+#: qtplugins/propertytables/propertymodel.cpp:674
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "நீளம் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:662
+#: qtplugins/propertytables/propertymodel.cpp:689
 msgid "Chain"
 msgstr "சங்கிலி"
 
-#: qtplugins/propertytables/propertymodel.cpp:664
+#: qtplugins/propertytables/propertymodel.cpp:691
 msgid "Secondary Structure"
 msgstr "இரண்டாம் நிலை அமைப்பு"
 
-#: qtplugins/propertytables/propertymodel.cpp:666
+#: qtplugins/propertytables/propertymodel.cpp:693
 msgid "Heterogen"
 msgstr "பன்முகத்தன்மை வாய்ந்த"
 
-#: qtplugins/propertytables/propertymodel.cpp:684
+#: qtplugins/propertytables/propertymodel.cpp:711
 msgid "Vertex"
 msgstr "வெர்டெக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:688
-#: qtplugins/propertytables/propertymodel.cpp:707
+#: qtplugins/propertytables/propertymodel.cpp:715
+#: qtplugins/propertytables/propertymodel.cpp:734
 msgid "Angle (°)"
 msgstr "(°) கோணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:718
+#: qtplugins/propertytables/propertymodel.cpp:745
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "Rmsd (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:721
+#: qtplugins/propertytables/propertymodel.cpp:748
 msgid "Energy (kcal/mol)"
 msgstr "ஆற்றல் (கிலோகலோரி/மோல்)"
 
-#: qtplugins/propertytables/propertymodel.cpp:967
+#: qtplugins/propertytables/propertymodel.cpp:1038
 msgid "Adjust Fragment"
 msgstr "துண்டு சரிசெய்யவும்"
 
-#: qtplugins/propertytables/propertymodel.cpp:1097
+#: qtplugins/propertytables/propertymodel.cpp:1195
+#, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "எலிக்ச்"
+msgstr "π எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:1099
+#: qtplugins/propertytables/propertymodel.cpp:1197
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "வளைவு"
 
-#: qtplugins/propertytables/propertymodel.cpp:1101
+#: qtplugins/propertytables/propertymodel.cpp:1199
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:1103
+#: qtplugins/propertytables/propertymodel.cpp:1201
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β தாள்"
 
-#: qtplugins/propertytables/propertymodel.cpp:1105
+#: qtplugins/propertytables/propertymodel.cpp:1203
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:1107
+#: qtplugins/propertytables/propertymodel.cpp:1205
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "பி பாலம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:1109
+#: qtplugins/propertytables/propertymodel.cpp:1207
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "திருப்பம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:1111
+#: qtplugins/propertytables/propertymodel.cpp:1209
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "சுருள்"
@@ -4952,63 +5192,75 @@ msgstr ""
 msgid "PropertyTables"
 msgstr "சொத்து டேபிள்ச்"
 
-#: qtplugins/propertytables/propertyview.cpp:45
+#: qtplugins/propertytables/propertyview.cpp:46
 msgid "Atom Properties"
 msgstr "அணு பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:48
+#: qtplugins/propertytables/propertyview.cpp:49
 msgid "Bond Properties"
 msgstr "பிணைப்பு பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:51
+#: qtplugins/propertytables/propertyview.cpp:52
 msgid "Angle Properties"
 msgstr "கோண பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:54
+#: qtplugins/propertytables/propertyview.cpp:55
 msgid "Torsion Properties"
 msgstr "முறுக்கு பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:57
+#: qtplugins/propertytables/propertyview.cpp:58
 msgid "Conformer Properties"
 msgstr "இணங்குபவர் பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:60
+#: qtplugins/propertytables/propertyview.cpp:61
 msgid "Residue Properties"
 msgstr "எச்ச பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:540
+#: qtplugins/propertytables/propertyview.cpp:559
+msgid "Partial Charge Type"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:559
+msgid "Select the partial charge type:"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:580
+msgid "Change Charge Type…"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:544
+#: qtplugins/propertytables/propertyview.cpp:591
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:547
+#: qtplugins/propertytables/propertyview.cpp:594
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:550
+#: qtplugins/propertytables/propertyview.cpp:597
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:553
+#: qtplugins/propertytables/propertyview.cpp:600
 msgid "Unfreeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:561
+#: qtplugins/propertytables/propertyview.cpp:608
 msgid "Constrain Bond"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:563
+#: qtplugins/propertytables/propertyview.cpp:610
 msgid "Constrain Angle"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:565
+#: qtplugins/propertytables/propertyview.cpp:612
 msgid "Constrain Torsion"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:572
+#: qtplugins/propertytables/propertyview.cpp:619
 msgid "Remove Constraint"
 msgstr ""
 
@@ -5055,11 +5307,11 @@ msgstr "Wfn கோப்புகள் (*.wfn) ;; அனைத்து கோ�
 msgid "QTAIM extension"
 msgstr "Qtaim நீட்டிப்பு"
 
-#: qtplugins/quantuminput/quantuminput.h:42
+#: qtplugins/quantuminput/quantuminput.h:43
 msgid "Quantum input"
 msgstr "எவ்வளவு உள்ளீடு"
 
-#: qtplugins/quantuminput/quantuminput.h:46
+#: qtplugins/quantuminput/quantuminput.h:47
 msgid "Generate input for quantum codes."
 msgstr "குவாண்டம் குறியீடுகளுக்கான உள்ளீட்டை உருவாக்குங்கள்."
 
@@ -5083,19 +5335,19 @@ msgstr "பார்வையை மீட்டமை"
 msgid "Manipulate the view camera."
 msgstr "பார்வை கேமராவை கையாளவும்."
 
-#: qtplugins/scriptcharges/scriptcharges.h:32
+#: qtplugins/scriptcharges/scriptcharges.h:35
 msgid "Script Charge Models"
 msgstr "ச்கிரிப்ட் சார்ச் மாதிரிகள்"
 
-#: qtplugins/scriptcharges/scriptcharges.h:36
+#: qtplugins/scriptcharges/scriptcharges.h:39
 msgid "Load electrostatic models from external scripts."
 msgstr "வெளிப்புற ச்கிரிப்ட்களிலிருந்து மின்னியல் மாதிரிகளை ஏற்றவும்."
 
-#: qtplugins/scriptfileformats/scriptfileformats.h:28
+#: qtplugins/scriptfileformats/scriptfileformats.h:30
 msgid "Script File Formats"
 msgstr "ச்கிரிப்ட் கோப்பு வடிவங்கள்"
 
-#: qtplugins/scriptfileformats/scriptfileformats.h:32
+#: qtplugins/scriptfileformats/scriptfileformats.h:34
 msgid "Load file reader/writers from external scripts."
 msgstr "வெளிப்புற ச்கிரிப்ட்களிலிருந்து கோப்பு வாசகர்/எழுத்தாளர்களை ஏற்றவும்."
 
@@ -5193,7 +5445,7 @@ msgstr "எச்சத்தைத் தேர்ந்தெடுக்க�
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:2178
+#: qtplugins/select/select.h:30:2094
 msgid "Select"
 msgstr "தேர்ந்தெடு"
 
@@ -5237,12 +5489,12 @@ msgstr "விண்வெளி குழுவை உணருங்கள்�
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:78:2163
+#: qtplugins/spacegroup/spacegroup.cpp:78:2079
 msgid "Symmetrize"
 msgstr "சமச்சீர்"
 
 #: qtplugins/spacegroup/spacegroup.cpp:83
-#: qtplugins/spacegroup/spacegroup.cpp:560
+#: qtplugins/spacegroup/spacegroup.cpp:562
 msgid "Reduce to Asymmetric Unit"
 msgstr "சமச்சீரற்ற அலகுக்கு குறைக்கவும்"
 
@@ -5346,7 +5598,7 @@ msgstr ""
 "சமச்சீர்நிலை தோல்வியடைந்தது.\n"
 " தயவுசெய்து உங்கள் படிகத்தை சரிபார்த்து, வேறு சகிப்புத்தன்மையுடன் மீண்டும் முயற்சிக்கவும்."
 
-#: qtplugins/spacegroup/spacegroup.cpp:549
+#: qtplugins/spacegroup/spacegroup.cpp:551
 #, qt-format
 msgid ""
 "With a tolerance of %1  Å, the space group information was perceived to be "
@@ -5358,53 +5610,53 @@ msgid ""
 "Proceed with this space group?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:580 qtplugins/yaehmop/yaehmop.cpp:208
+#: qtplugins/spacegroup/spacegroup.cpp:582 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
 msgstr "அவோகாட்ரோ 2"
 
-#: qtplugins/spacegroup/spacegroup.cpp:581
+#: qtplugins/spacegroup/spacegroup.cpp:583
 msgid "Select tolerance in Å:"
 msgstr "சகிப்புத்தன்மையைத் தேர்ந்தெடுக்கவும்:"
 
-#: qtplugins/spacegroup/spacegroup.cpp:598
+#: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Triclinic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:600
+#: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Monoclinic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:602
+#: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Orthorhombic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:604
+#: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Tetragonal"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:606
+#: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Trigonal"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:608
+#: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Rhombohedral"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:610
+#: qtplugins/spacegroup/spacegroup.cpp:612
 msgid "Hexagonal"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:612
+#: qtplugins/spacegroup/spacegroup.cpp:614
 msgid "Cubic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:644
+#: qtplugins/spacegroup/spacegroup.cpp:646
 msgid "Primitive Cell Detected"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:646
+#: qtplugins/spacegroup/spacegroup.cpp:648
 #, qt-format
 msgid ""
 "The current unit cell appears to be a primitive cell (non-90° angles), but "
@@ -5415,27 +5667,27 @@ msgid ""
 "Would you like to create a conventional cell first?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:660
+#: qtplugins/spacegroup/spacegroup.cpp:662
 msgid "Failed to conventionalize the cell."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:676
+#: qtplugins/spacegroup/spacegroup.cpp:678
 msgid "International"
 msgstr "பன்னாட்டு"
 
-#: qtplugins/spacegroup/spacegroup.cpp:676
+#: qtplugins/spacegroup/spacegroup.cpp:678
 msgid "Hall"
 msgstr "ஆல்"
 
-#: qtplugins/spacegroup/spacegroup.cpp:676
+#: qtplugins/spacegroup/spacegroup.cpp:678
 msgid "Hermann-Mauguin"
 msgstr "எர்மன்-மாகுயின்"
 
-#: qtplugins/spacegroup/spacegroup.cpp:677
+#: qtplugins/spacegroup/spacegroup.cpp:679
 msgid "Crystal System"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:709
+#: qtplugins/spacegroup/spacegroup.cpp:711
 msgid "Select Space Group"
 msgstr "விண்வெளி குழுவைத் தேர்ந்தெடுக்கவும்"
 
@@ -5453,7 +5705,7 @@ msgstr "சூழ்ச்சி நிறமாலை…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:32:1892
+#: qtplugins/spectra/spectra.h:32:1813
 msgid "Spectra"
 msgstr "ச்பெக்ட்ரா"
 
@@ -5585,7 +5837,7 @@ msgstr "வட்ட டைக்ரோயிசம் ச்பெக்ட்�
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-#: qtplugins/spectra/spectradialog.cpp:846:1790
+#: qtplugins/spectra/spectradialog.cpp:846:1704
 msgid "Density"
 msgstr "அடர்த்தி"
 
@@ -5615,7 +5867,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
-#: qtplugins/surfacerender/surfacerender.cpp:272:1787
+#: qtplugins/surfacerender/surfacerender.cpp:272:1701
 msgid "Volume"
 msgstr "தொகுதி"
 
@@ -5646,7 +5898,7 @@ msgstr "சுற்றுப்பாதை"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/surfaces/orbitaltablemodel.cpp:137
-#: qtplugins/symmetry/symmetry.h:34:2148
+#: qtplugins/symmetry/symmetry.h:34:2064
 msgid "Symmetry"
 msgstr "சமச்சீர்"
 
@@ -5841,16 +6093,16 @@ msgstr "குழு %1"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: qtplugins/templatetool/templatetool.cpp:81
+#: qtplugins/templatetool/templatetool.cpp:82
 msgctxt "control-key 3"
 msgid "Ctrl+3"
 msgstr "Ctrl+3"
 
-#: qtplugins/templatetool/templatetool.cpp:82
+#: qtplugins/templatetool/templatetool.cpp:83
 msgid "Template"
 msgstr "வார்ப்புரு"
 
-#: qtplugins/templatetool/templatetool.cpp:84
+#: qtplugins/templatetool/templatetool.cpp:85
 #, qt-format
 msgid ""
 "Template Tool\t(%1)\n"
@@ -5863,16 +6115,16 @@ msgid ""
 "it."
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:406
-#: qtplugins/templatetool/templatetool.cpp:574
+#: qtplugins/templatetool/templatetool.cpp:418
+#: qtplugins/templatetool/templatetool.cpp:586
 msgid "Clipboard"
 msgstr "இடைநிலைப் பலகை"
 
-#: qtplugins/templatetool/templatetool.cpp:494
+#: qtplugins/templatetool/templatetool.cpp:506
 msgid "Insert Template"
 msgstr "வார்ப்புருவைச் செருகவும்"
 
-#: qtplugins/templatetool/templatetool.cpp:792
+#: qtplugins/templatetool/templatetool.cpp:804
 msgid "Insert Ligand"
 msgstr "தசைநார் செருகவும்"
 
@@ -5887,7 +6139,7 @@ msgstr "VDW கோளங்களின் எளிய காட்சி."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
-#: qtplugins/vibrations/vibrationdialog.cpp:39:2334
+#: qtplugins/vibrations/vibrationdialog.cpp:39:2250
 msgid "Start Animation"
 msgstr "அனிமேசனைத் தொடங்குங்கள்"
 
@@ -6052,7 +6304,7 @@ msgstr "ஒதுக்கிட உரை…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:918
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:924
 #. i18n: ectx: property (text), widget (QPushButton, resetButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:982
 #. i18n: ectx: property (text), widget (QPushButton, resetButton)
@@ -6085,6 +6337,8 @@ msgstr "வரிசை மற்றும் நிரல்:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:33
+#. i18n: ectx: property (text), widget (QPushButton, refreshButton)
 msgid "Refresh"
 msgstr "புதுப்பிப்பு"
 
@@ -6396,15 +6650,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Value:"
 msgstr ""
-
-#. i18n: file: qtplugins/constraints/constraintsdialog.ui:125
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, editValue)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
-msgid "Å"
-msgstr "பெறுநர்"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, addConstraint)
@@ -6752,29 +6997,6 @@ msgstr "B:"
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "γ:"
 msgstr "சி:"
-
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:163
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, alpha)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:182
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, gamma)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:201
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, beta)
-#. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:419
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, phiSpin)
-#. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:435
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, psiSpin)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:147
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, xRotateSpinBox)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:163
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, yRotateSpinBox)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:179
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, zRotateSpinBox)
-#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:26
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_max2Theta)
-#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:48
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_peakWidth)
-msgid "°"
-msgstr "°"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -7642,28 +7864,28 @@ msgstr "Nve"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
 #. i18n: ectx: property (text), widget (QLabel, label_temp)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:745
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:748
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:918
 #. i18n: ectx: property (text), widget (QCheckBox, temperatureCheck)
 msgid "Temperature"
 msgstr "வெப்பநிலை"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:347
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:357
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:360
 #. i18n: ectx: property (toolTip), widget (QSpinBox, nhChainSpin)
 msgid "Select the number of Nosé-Hoover chains in the NVT ensemble."
 msgstr "என்விடி குழுமத்தில் நோச்-ஊவர் சங்கிலிகளின் எண்ணிக்கையைத் தேர்ந்தெடுக்கவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:353
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "NH Chains"
 msgstr "என்.எச் சங்கிலிகள்"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:393
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:403
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:406
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, stepSpin)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:534
 #. i18n: ectx: property (toolTip), widget (QLabel, label_timestep)
@@ -7673,256 +7895,202 @@ msgid ""
 "Time step for the simulation in units according to \"Units\" specification."
 msgstr "\"அலகுகள்\" விவரக்குறிப்பின் படி அலகுகளில் உருவகப்படுத்துதலுக்கான நேர படி."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Time Step"
 msgstr "நேர படி"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:416
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:419
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:642
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:645
 #. i18n: ectx: property (toolTip), widget (QLineEdit, dumpXYZEdit)
 msgid "Filename of the XYZ file to write during the simulation."
 msgstr "உருவகப்படுத்துதலின் போது எழுத XYZ கோப்பின் கோப்பு பெயர்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:419
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:422
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Dump XYZ"
 msgstr "XYZ ஐ டம்ப்"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:433
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
 #. i18n: ectx: property (toolTip), widget (QLabel, label_dimension)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:847
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:853
 #. i18n: ectx: property (toolTip), widget (QComboBox, dimensionCombo)
 msgid "Number of dimensions in the system."
 msgstr "கணினியில் பரிமாணங்களின் எண்ணிக்கை."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:439
 #. i18n: ectx: property (text), widget (QLabel, label_dimension)
 msgid "Dimensions"
 msgstr "பரிமாணங்கள்"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:446
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:449
 #. i18n: ectx: property (toolTip), widget (QComboBox, zBoundaryCombo)
 msgid "Change Z boundary style."
 msgstr "சட் எல்லை பாணியை மாற்றவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:453
-#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:493
-#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:533
-#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-msgid "p"
-msgstr "ப"
-
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:458
-#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:498
-#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:538
-#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-msgid "s"
-msgstr "கள்"
-
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:463
-#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:503
-#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:543
-#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-msgid "f"
-msgstr "f"
-
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:468
-#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:508
-#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:548
-#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-msgid "m"
-msgstr "மீ"
-
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:473
-#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:513
-#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:553
-#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-msgid "fs"
-msgstr "fs"
-
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:478
-#. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:518
-#. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:558
-#. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-msgid "fm"
-msgstr "எஃப்.எம்"
-
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:489
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
 msgid "Change Y boundary style."
 msgstr "ஒய் எல்லை பாணியை மாற்றவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:526
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:529
 #. i18n: ectx: property (toolTip), widget (QComboBox, xBoundaryCombo)
 msgid "Change X boundary style."
 msgstr "ஃச் எல்லை பாணியை மாற்றவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
 msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "ஃச், ஒய் மற்றும் சட் திசைகளில் எல்லை பாணிகளைத் தேர்ந்தெடுக்கவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:572
 #. i18n: ectx: property (text), widget (QLabel, label_boundary)
 msgid "Boundary"
 msgstr "எல்லை"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:589
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:592
 #. i18n: ectx: property (toolTip), widget (QLabel, label_5)
 msgid "Number of replicants in X, Y and Z directions."
 msgstr "ஃச், ஒய் மற்றும் சட் திசைகளில் பிரதிகளின் எண்ணிக்கை."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:592
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:595
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Replicate"
 msgstr "பிரதி"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:612
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:615
 #. i18n: ectx: property (toolTip), widget (QSpinBox, xReplicateSpin)
 msgid "Replicate the X direction."
 msgstr "ஃச் திசையை நகலெடுக்கவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:622
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:625
 #. i18n: ectx: property (toolTip), widget (QSpinBox, yReplicateSpin)
 msgid "Replicate the Y direction."
 msgstr "ஒய் திசையை நகலெடுக்கவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:632
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:635
 #. i18n: ectx: property (toolTip), widget (QSpinBox, zReplicateSpin)
 msgid "Replicate the Z direction."
 msgstr "சட் திசையை நகலெடுக்கவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:649
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:652
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:659
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:662
 #. i18n: ectx: property (toolTip), widget (QSpinBox, runSpin)
 msgid "Total number of timesteps to run the simulation."
 msgstr "உருவகப்படுத்துதலை இயக்க மொத்த நேரங்களின் எண்ணிக்கை."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:652
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:655
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Steps"
 msgstr "மொத்த படிகள்"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:685
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:688
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Dump Interval"
 msgstr "டம்ப் இடைவெளி"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:715
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:718
 #. i18n: ectx: property (toolTip), widget (QLabel, label_8)
 msgid "Set the initial atom velocities for the simulation."
 msgstr "உருவகப்படுத்துதலுக்கான ஆரம்ப அணு வேகங்களை அமைக்கவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:718
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:721
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Initial Velocities"
 msgstr "ஆரம்ப விரைவு"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:725
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:728
 #. i18n: ectx: property (toolTip), widget (QComboBox, velocityDistCombo)
 msgid "Select the distribution of initial atom velocities."
 msgstr "ஆரம்ப அணு வேகங்களின் விநியோகத்தைத் தேர்ந்தெடுக்கவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:729
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:732
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
 msgid "gaussian"
 msgstr "காசியன்"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:734
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:737
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
 msgid "uniform"
 msgstr "சீரான"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:742
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:745
 #. i18n: ectx: property (toolTip), widget (QLabel, label_9)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:752
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:755
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, velocityTempSpin)
 msgid "Set the initial atom velocities to match this temperature."
 msgstr "இந்த வெப்பநிலையுடன் பொருந்தக்கூடிய ஆரம்ப அணு வேகங்களை அமைக்கவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:768
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:774
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroMOMCheck)
 msgid "Remove system linear momentum from initial velocities."
 msgstr "ஆரம்ப வேகங்களிலிருந்து கணினி நேரியல் வேகத்தை அகற்று."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:771
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:777
 #. i18n: ectx: property (text), widget (QCheckBox, zeroMOMCheck)
 msgid "Zero Linear Momentum"
 msgstr "சுழிய நேரியல் உந்தம்"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:781
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:787
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroLCheck)
 msgid "Remove system angular momentum from initial velocities."
 msgstr "ஆரம்ப வேகங்களிலிருந்து கணினி கோண வேகத்தை அகற்று."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:784
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:790
 #. i18n: ectx: property (text), widget (QCheckBox, zeroLCheck)
 msgid "Zero Angular Momentum"
 msgstr "சுழிய கோண உந்தம்"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:807
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:813
 #. i18n: ectx: property (toolTip), widget (QLabel, label_10)
 msgid "Control the thermodynamic output during the simulation."
 msgstr "உருவகப்படுத்துதலின் போது வெப்ப இயக்கவியல் வெளியீட்டைக் கட்டுப்படுத்தவும்."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:810
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:816
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "Output"
 msgstr "வெளியீடு"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:817
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:823
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Output Interval"
 msgstr "வெளியீட்டு இடைவெளி"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:854
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:860
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
 msgid "2d"
 msgstr "மே"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:859
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:865
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
 msgid "3d"
 msgstr "ZD"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:867
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:873
 #. i18n: ectx: property (toolTip), widget (QComboBox, thermoStyleCombo)
 msgid "Thermodynamic output style."
 msgstr "வெப்ப இயக்கவியல் வெளியீட்டு நடை."
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:871
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:877
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
 msgid "One Line"
 msgstr "ஒரு வரி"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:876
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:882
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
 msgid "Multi Line"
 msgstr "பல வரி"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:928
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:934
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:992
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
 msgid "Use Form"
 msgstr "படிவத்தைப் பயன்படுத்தவும்"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:948
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:954
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -8367,11 +8535,6 @@ msgstr "தவறு"
 msgid "Nonbonded cutoff:"
 msgstr "பிணைக்கப்படாத வெட்டு:"
 
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:437
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, nonBondedCutoffSpin)
-msgid " nm"
-msgstr " என்.எம்"
-
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:444
 #. i18n: ectx: property (text), widget (QLabel, label_randomInitVel)
 msgid "Random initial velocity:"
@@ -8381,13 +8544,6 @@ msgstr "சீரற்ற ஆரம்ப வேகம்:"
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
 msgid "Generation Temp:"
 msgstr "தலைமுறை தற்காலிக:"
-
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:625
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, temperatureSpin)
-msgid " K"
-msgstr " கே"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
@@ -8419,16 +8575,6 @@ msgstr "Variablelangevin"
 msgid "VariableVerlet"
 msgstr "மாறிநிலை"
 
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
-#. i18n: ectx: property (text), widget (QLabel, label_timestep)
-msgid "Timestep:"
-msgstr "நேரம்:"
-
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
-msgid " fs"
-msgstr " fs"
-
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
 msgid "Error tolerance:"
@@ -8438,16 +8584,6 @@ msgstr "பிழை சகிப்புத்தன்மை:"
 #. i18n: ectx: property (text), widget (QLabel, label_collisionRate)
 msgid "Collision rate:"
 msgstr "மோதல் வீதம்:"
-
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:602
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, collisionRateSpin)
-msgid "/ps"
-msgstr "/சோசலிச்ட் கட்சி"
-
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
-#. i18n: ectx: property (text), widget (QLabel, label_temperature)
-msgid "Temperature:"
-msgstr "வெப்பநிலை:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
 #. i18n: ectx: property (text), widget (QLabel, label_barostat)
@@ -8463,11 +8599,6 @@ msgstr "மான்டே கார்லோ"
 #. i18n: ectx: property (text), widget (QLabel, label_pressure)
 msgid "Pressure:"
 msgstr "அழுத்தம்:"
-
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:669
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, pressureSpin)
-msgid " atm"
-msgstr " ஏடிஎம்"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:676
 #. i18n: ectx: property (text), widget (QLabel, label_barostatInterval)
@@ -8558,6 +8689,26 @@ msgstr "இயக்காற்றல்"
 #. i18n: ectx: property (text), widget (QCheckBox, totalEnergyCheck)
 msgid "Total Energy"
 msgstr "மொத்த ஆற்றல்"
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
+msgid "Search plugins…"
+msgstr ""
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:69
+#. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
+msgid "Install from Directory…"
+msgstr ""
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:89
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+msgid "Remove Selected"
+msgstr ""
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:96
+#. i18n: ectx: property (text), widget (QPushButton, installButton)
+msgid "Install / Update Selected"
+msgstr ""
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
@@ -8957,11 +9108,6 @@ msgstr "தீர்மானம்:"
 msgid "Isosurface Value:"
 msgstr "ஐசோசர்ஃபேச் மதிப்பு:"
 
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
-#. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
-msgid " "
-msgstr " "
-
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Smoothing:"
@@ -8979,12 +9125,12 @@ msgstr "ஒளி"
 msgid "Strong"
 msgstr "வலுவான"
 
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:512
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
 msgstr "கணக்கிடுங்கள்"
 
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:525
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
 msgid "Record Movie…"
 msgstr "பதிவு திரைப்படம்…"
@@ -9251,15 +9397,6 @@ msgstr "யேஅ்மோப் பேண்ட்"
 msgid "Min y: "
 msgstr "மணித்துளி ஒய்: "
 
-#. i18n: file: qtplugins/yaehmop/banddialog.ui:36
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_minY)
-#. i18n: file: qtplugins/yaehmop/banddialog.ui:101
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxY)
-#. i18n: file: qtplugins/yaehmop/banddialog.ui:123
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
-msgid " eV"
-msgstr " ஈ.வி."
-
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
 msgid ""
@@ -9433,15 +9570,105 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "உங்கள் மின்னஞ்சல்கள்"
 
+#, qt-format
+#~ msgid "Error retrieving metadata for energy script: %1"
+#~ msgstr "எரிசக்தி ச்கிரிப்டுக்கான மெட்டாடேட்டாவை மீட்டெடுப்பதில் பிழை: %1"
+
+#, qt-format
+#~ msgid "Error parsing metadata for energy script: %1"
+#~ msgstr "எரிசக்தி ச்கிரிப்டுக்கு மெட்டாடேட்டாவை பாகுபடுத்தும் பிழை: %1"
+
+#, qt-format
+#~ msgid ""
+#~ "Error parsing metadata for energy script: %1\n"
+#~ "Result is not a JSON object.\n"
+#~ msgstr ""
+#~ "எரிசக்தி ச்கிரிப்டுக்கு மெட்டாடேட்டாவை பாகுபடுத்தும் பிழை: %1\n"
+#~ " முடிவு ஒரு சாதொபொகு பொருள் அல்ல.\n"
+
+#, qt-format
+#~ msgid "Cannot load script %1"
+#~ msgstr "ச்கிரிப்ட் %1 ஐ ஏற்ற முடியாது"
+
+#, qt-format
+#~ msgid "Checking for %1 scripts in path %2"
+#~ msgstr "பாதை %2 இல் %1 ச்கிரிப்ட்களை சரிபார்க்கிறது"
+
+#, qt-format
+#~ msgid "%L1°"
+#~ msgstr "%L1 °"
+
+#, qt-format
+#~ msgid "%L1 Å"
+#~ msgstr "%L1 Å"
+
+#~ msgid " Å"
+#~ msgstr " பெறுநர்"
+
+#, qt-format
+#~ msgid "%1 %L2"
+#~ msgstr "%1 %L2"
+
+#~ msgid "Angles:"
+#~ msgstr "கோணங்கள்:"
+
+#~ msgid " °"
+#~ msgstr " °"
+
+#~ msgid "eV"
+#~ msgstr "ஈ.வி."
+
+#~ msgid "Å"
+#~ msgstr "பெறுநர்"
+
+#~ msgid "°"
+#~ msgstr "°"
+
+#~ msgid "p"
+#~ msgstr "ப"
+
+#~ msgid "s"
+#~ msgstr "கள்"
+
+#~ msgid "f"
+#~ msgstr "f"
+
+#~ msgid "m"
+#~ msgstr "மீ"
+
+#~ msgid "fs"
+#~ msgstr "fs"
+
+#~ msgid "fm"
+#~ msgstr "எஃப்.எம்"
+
+#~ msgid " nm"
+#~ msgstr " என்.எம்"
+
+#~ msgid " K"
+#~ msgstr " கே"
+
+#~ msgid " fs"
+#~ msgstr " fs"
+
+#~ msgid "/ps"
+#~ msgstr "/சோசலிச்ட் கட்சி"
+
+#~ msgid " atm"
+#~ msgstr " ஏடிஎம்"
+
+#~ msgid " "
+#~ msgstr " "
+
+#~ msgid " eV"
+#~ msgstr " ஈ.வி."
+
 #~ msgctxt "asking server for molecule name"
 #~ msgid "(pending)"
 #~ msgstr "(நிலுவையில் உள்ளது)"
 
 #~ msgid "unknown molecule"
 #~ msgstr "அறியப்படாத மூலக்கூறு"
-
-#~ msgid "Status"
-#~ msgstr "நிலை"
 
 #~ msgid " & "
 #~ msgstr " & "

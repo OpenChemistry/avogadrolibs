@@ -19,10 +19,10 @@
      <item row="3" column="0">
       <widget class="QDoubleSpinBox" name="xTranslateSpinBox">
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="suffix">
-        <string> Å</string>
+        <string notr="true"> Å</string>
        </property>
        <property name="decimals">
         <number>4</number>
@@ -38,10 +38,10 @@
      <item row="3" column="1">
       <widget class="QDoubleSpinBox" name="yTranslateSpinBox">
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="suffix">
-        <string> Å</string>
+        <string notr="true"> Å</string>
        </property>
        <property name="decimals">
         <number>4</number>
@@ -57,10 +57,10 @@
      <item row="3" column="2">
       <widget class="QDoubleSpinBox" name="zTranslateSpinBox">
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="suffix">
-        <string> Å</string>
+        <string notr="true"> Å</string>
        </property>
        <property name="decimals">
         <number>4</number>
@@ -141,10 +141,10 @@
      <item row="2" column="0">
       <widget class="QDoubleSpinBox" name="xRotateSpinBox">
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="suffix">
-        <string>°</string>
+        <string notr="true">°</string>
        </property>
        <property name="minimum">
         <double>-360.000000000000000</double>
@@ -157,10 +157,10 @@
      <item row="2" column="1">
       <widget class="QDoubleSpinBox" name="yRotateSpinBox">
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="suffix">
-        <string>°</string>
+        <string notr="true">°</string>
        </property>
        <property name="minimum">
         <double>-360.000000000000000</double>
@@ -173,10 +173,10 @@
      <item row="2" column="2">
       <widget class="QDoubleSpinBox" name="zRotateSpinBox">
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="suffix">
-        <string>°</string>
+        <string notr="true">°</string>
        </property>
        <property name="minimum">
         <double>-360.000000000000000</double>
@@ -240,7 +240,7 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Reset</set>
+      <set>QDialogButtonBox::StandardButton::Apply|QDialogButtonBox::StandardButton::Reset</set>
      </property>
      <property name="centerButtons">
       <bool>true</bool>
@@ -250,7 +250,7 @@
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
