@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-03-07 13:27+0000\n"
+"POT-Creation-Date: 2026-03-14 17:31+0000\n"
 "PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Thai <https://hosted.weblate.org/projects/avogadro/"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "No message specified."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:72
+#: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:90
 #, qt-format
 msgid ""
 "script --print-options output must be an JSON object at top level. "
@@ -37,72 +37,72 @@ msgid ""
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:191 qtgui/interfacescript.cpp:220
-#: qtgui/interfacescript.cpp:353
+#: molequeue/inputgenerator.cpp:197 qtgui/interfacescript.cpp:246
+#: qtgui/interfacescript.cpp:398
 msgid "Non-string warning returned."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:223
-#: qtgui/interfacescript.cpp:356
+#: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:249
+#: qtgui/interfacescript.cpp:401
 msgid "'warnings' member is not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:214 qtgui/interfacescript.cpp:376
+#: molequeue/inputgenerator.cpp:220 qtgui/interfacescript.cpp:421
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:378
+#: molequeue/inputgenerator.cpp:222 qtgui/interfacescript.cpp:423
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:220 qtgui/interfacescript.cpp:382
+#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:427
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:415
+#: molequeue/inputgenerator.cpp:258 qtgui/interfacescript.cpp:460
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:258 qtgui/interfacescript.cpp:421
+#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:466
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:427
+#: molequeue/inputgenerator.cpp:270 qtgui/interfacescript.cpp:472
 msgid "'files' member not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:268 qtgui/interfacescript.cpp:431
+#: molequeue/inputgenerator.cpp:274 qtgui/interfacescript.cpp:476
 msgid "'files' member missing."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:442
+#: molequeue/inputgenerator.cpp:285 qtgui/interfacescript.cpp:487
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:284 qtgui/interfacescript.cpp:447
+#: molequeue/inputgenerator.cpp:290 qtgui/interfacescript.cpp:492
 msgid "'mainFile' member must be a string."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:295 qtgui/interfacescript.cpp:458
+#: molequeue/inputgenerator.cpp:301 qtgui/interfacescript.cpp:503
 msgid "Response must be a JSON object at top-level."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:299 qtgui/interfacescript.cpp:462
+#: molequeue/inputgenerator.cpp:305 qtgui/interfacescript.cpp:507
 #, qt-format
 msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:342 qtgui/interfacescript.cpp:506
+#: molequeue/inputgenerator.cpp:348 qtgui/interfacescript.cpp:551
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -111,19 +111,19 @@ msgid ""
 "%3"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:366
+#: molequeue/inputgenerator.cpp:372
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:374
+#: molequeue/inputgenerator.cpp:380
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:387 qtgui/interfacescript.cpp:573
+#: molequeue/inputgenerator.cpp:393 qtgui/interfacescript.cpp:618
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -132,7 +132,7 @@ msgid ""
 "%3"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:396 qtgui/interfacescript.cpp:582
+#: molequeue/inputgenerator.cpp:402 qtgui/interfacescript.cpp:627
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -144,7 +144,7 @@ msgid "Input Generator (error)"
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:49
-#: qtplugins/quantuminput/quantuminput.cpp:276
+#: qtplugins/quantuminput/quantuminput.cpp:279
 #, qt-format
 msgid "%1 Input Generator"
 msgstr ""
@@ -1018,143 +1018,153 @@ msgstr ""
 msgid "All supported formats"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:237
+#: qtgui/interfacescript.cpp:263
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:305
+#: qtgui/interfacescript.cpp:336
 #, qt-format
 msgid "%1 Message"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:548
+#: qtgui/interfacescript.cpp:343
+#, qt-format
+msgid "%1 Warning"
+msgstr ""
+
+#: qtgui/interfacescript.cpp:350
+#, qt-format
+msgid "%1 Error"
+msgstr ""
+
+#: qtgui/interfacescript.cpp:593
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:556
+#: qtgui/interfacescript.cpp:601
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:88
+#: qtgui/jsonwidget.cpp:103
 msgid "'userOptions' missing."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:119
+#: qtgui/jsonwidget.cpp:134
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:126
+#: qtgui/jsonwidget.cpp:141
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:133
+#: qtgui/jsonwidget.cpp:148
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:187
+#: qtgui/jsonwidget.cpp:202
 #, qt-format
 msgid "Tab %1"
 msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:210:913
+#: qtgui/jsonwidget.cpp:225:913
 msgid "Title"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:214
+#: qtgui/jsonwidget.cpp:229
 msgid "Filename Base"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:220 qtgui/jsonwidget.cpp:225
+#: qtgui/jsonwidget.cpp:235 qtgui/jsonwidget.cpp:240
 msgid "Processor Cores"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
+#: qtgui/jsonwidget.cpp:236 qtgui/jsonwidget.cpp:243
 msgid "Memory"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:233
+#: qtgui/jsonwidget.cpp:248
 msgid "Calculation Type"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:237
+#: qtgui/jsonwidget.cpp:252
 msgid "Theory"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:237
+#: qtgui/jsonwidget.cpp:252
 msgid "Basis"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:242 qtgui/jsonwidget.cpp:246
+#: qtgui/jsonwidget.cpp:257 qtgui/jsonwidget.cpp:261
 msgid "Charge"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:243 qtgui/jsonwidget.cpp:248
+#: qtgui/jsonwidget.cpp:258 qtgui/jsonwidget.cpp:263
 msgid "Multiplicity"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:255
+#: qtgui/jsonwidget.cpp:270
 msgid "Solvent"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:256
+#: qtgui/jsonwidget.cpp:271
 msgctxt "solvation method / model"
 msgid "Model"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:378
+#: qtgui/jsonwidget.cpp:393
 msgid "User Name"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:380
+#: qtgui/jsonwidget.cpp:395
 msgid "Password"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:691
+#: qtgui/jsonwidget.cpp:706
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:726
+#: qtgui/jsonwidget.cpp:741
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:735 qtgui/jsonwidget.cpp:770 qtgui/jsonwidget.cpp:791
-#: qtgui/jsonwidget.cpp:812 qtgui/jsonwidget.cpp:850 qtgui/jsonwidget.cpp:871
-#: qtgui/jsonwidget.cpp:893 qtgui/jsonwidget.cpp:914
+#: qtgui/jsonwidget.cpp:750 qtgui/jsonwidget.cpp:785 qtgui/jsonwidget.cpp:806
+#: qtgui/jsonwidget.cpp:827 qtgui/jsonwidget.cpp:865 qtgui/jsonwidget.cpp:886
+#: qtgui/jsonwidget.cpp:908 qtgui/jsonwidget.cpp:929
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:742 qtgui/jsonwidget.cpp:777 qtgui/jsonwidget.cpp:798
-#: qtgui/jsonwidget.cpp:819 qtgui/jsonwidget.cpp:857 qtgui/jsonwidget.cpp:878
-#: qtgui/jsonwidget.cpp:900 qtgui/jsonwidget.cpp:921
+#: qtgui/jsonwidget.cpp:757 qtgui/jsonwidget.cpp:792 qtgui/jsonwidget.cpp:813
+#: qtgui/jsonwidget.cpp:834 qtgui/jsonwidget.cpp:872 qtgui/jsonwidget.cpp:893
+#: qtgui/jsonwidget.cpp:915 qtgui/jsonwidget.cpp:936
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:756
+#: qtgui/jsonwidget.cpp:771
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:982
+#: qtgui/jsonwidget.cpp:997
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:1027 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1042 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr ""
@@ -1196,7 +1206,7 @@ msgid "Licorice"
 msgstr ""
 
 #: qtgui/layermodel.cpp:184 qtplugins/surfacerender/surfacerender.h:29
-#: qtplugins/surfaces/orbitals.cpp:478 qtplugins/surfaces/orbitals.cpp:570
+#: qtplugins/surfaces/orbitals.cpp:480 qtplugins/surfaces/orbitals.cpp:572
 #: qtplugins/surfaces/surfaces.cpp:873 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr ""
@@ -1258,28 +1268,28 @@ msgstr ""
 msgid "Periodic Table"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:126
+#: qtgui/pythonscript.cpp:132
 msgid "Package mode requires pixi but it was not found."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:224 qtgui/pythonscript.cpp:321
+#: qtgui/pythonscript.cpp:230 qtgui/pythonscript.cpp:327
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:233 qtgui/pythonscript.cpp:330
+#: qtgui/pythonscript.cpp:239 qtgui/pythonscript.cpp:336
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:247
+#: qtgui/pythonscript.cpp:253
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:257
+#: qtgui/pythonscript.cpp:263
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1288,39 +1298,39 @@ msgid ""
 "%6"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:267
+#: qtgui/pythonscript.cpp:273
 #, qt-format
 msgid "Warning '%1'"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:387
+#: qtgui/pythonscript.cpp:393
 #, qt-format
 msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:422
+#: qtgui/pythonscript.cpp:428
 msgid "Script failed to start."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:425
+#: qtgui/pythonscript.cpp:431
 msgid "Script crashed."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:428
+#: qtgui/pythonscript.cpp:434
 msgid "Script timed out."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:431
+#: qtgui/pythonscript.cpp:437
 msgid "Read error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:434
+#: qtgui/pythonscript.cpp:440
 msgid "Write error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:438
+#: qtgui/pythonscript.cpp:444
 msgid "Unknown error."
 msgstr ""
 
@@ -1657,7 +1667,7 @@ msgstr ""
 #: qtplugins/lammpsinput/lammpsinput.cpp:46
 #: qtplugins/openmminput/openmminput.cpp:46
 #: qtplugins/quantuminput/quantuminput.cpp:80
-#: qtplugins/quantuminput/quantuminput.cpp:316
+#: qtplugins/quantuminput/quantuminput.cpp:322
 msgid "&Input"
 msgstr ""
 
@@ -1745,8 +1755,8 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:888 qtplugins/openbabel/openbabel.cpp:930
 #: qtplugins/openbabel/openbabel.cpp:962
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:424
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:620
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:438
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:634
 #: qtplugins/plugindownloader/downloaderwidget.cpp:103
 #: qtplugins/plugindownloader/downloaderwidget.cpp:109
 #: qtplugins/plugindownloader/downloaderwidget.cpp:368
@@ -1799,7 +1809,7 @@ msgid "Input file written to '%1'"
 msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:425
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:439
 #: qtplugins/playertool/playertool.cpp:424
 #: qtplugins/plugindownloader/downloaderwidget.cpp:369
 #: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1008
@@ -2041,16 +2051,16 @@ msgstr ""
 msgid "ApplyColors"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:68
+#: qtplugins/autoopt/autoopt.cpp:67
 msgctxt "control-key 7"
 msgid "Ctrl+7"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:69
+#: qtplugins/autoopt/autoopt.cpp:68
 msgid "Auto Optimize"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:71
+#: qtplugins/autoopt/autoopt.cpp:70
 #, qt-format
 msgid ""
 "Auto Optimize Tool\t(%1)\n"
@@ -2066,73 +2076,73 @@ msgid ""
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:152
+#: qtplugins/autoopt/autoopt.cpp:205
 msgid "Optimize"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:153
+#: qtplugins/autoopt/autoopt.cpp:206
 msgid "Dynamics"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:157
+#: qtplugins/autoopt/autoopt.cpp:210
 msgid "Task:"
 msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/autoopt/autoopt.cpp:182:362
+#: qtplugins/autoopt/autoopt.cpp:235:362
 msgid "Method:"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
-#: qtplugins/autoopt/autoopt.cpp:194:1621
+#: qtplugins/autoopt/autoopt.cpp:247:1621
 msgid "Temperature:"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
-#: qtplugins/autoopt/autoopt.cpp:206:1607
+#: qtplugins/autoopt/autoopt.cpp:259:1607
 msgid "Timestep:"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:213 qtplugins/autoopt/autoopt.cpp:345
+#: qtplugins/autoopt/autoopt.cpp:266 qtplugins/autoopt/autoopt.cpp:394
 msgid "Start"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:271
+#: qtplugins/autoopt/autoopt.cpp:324
 msgid "Stop"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:411 qtplugins/forcefield/forcefield.cpp:75
-#: qtplugins/forcefield/forcefield.cpp:447
-#: qtplugins/forcefield/forcefield.cpp:486 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/autoopt/autoopt.cpp:464 qtplugins/forcefield/forcefield.cpp:71
+#: qtplugins/forcefield/forcefield.cpp:501
+#: qtplugins/forcefield/forcefield.cpp:567 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:562
 msgid "Optimize Geometry"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:564
+#: qtplugins/autoopt/autoopt.cpp:528
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:261
 msgid "Molecular Dynamics"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:580
+#: qtplugins/autoopt/autoopt.cpp:603
 #, qt-format
 msgctxt "temperature in Kelvin"
 msgid "%1 T = %L2"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:585
+#: qtplugins/autoopt/autoopt.cpp:608
 #, qt-format
 msgctxt "change in energy in kJ/mol"
 msgid "%1 ΔE = %L2"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.h:43
+#: qtplugins/autoopt/autoopt.h:46
 msgid "Auto Optimize tool"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.h:46
+#: qtplugins/autoopt/autoopt.h:49
 msgid "Interactive optimization of molecular geometry"
 msgstr ""
 
@@ -2338,11 +2348,11 @@ msgstr ""
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:414
+#: qtplugins/commandscripts/command.cpp:434
 #: qtplugins/configurepython/configurepython.cpp:153
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:232
-#: qtplugins/forcefield/forcefield.cpp:234
+#: qtplugins/forcefield/forcefield.cpp:231
+#: qtplugins/forcefield/forcefield.cpp:233
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
@@ -2360,7 +2370,7 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:414
+#: qtplugins/commandscripts/command.cpp:435
 msgid "Scripts"
 msgstr ""
 
@@ -2376,16 +2386,16 @@ msgid ""
 "%2"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:294
+#: qtplugins/commandscripts/command.cpp:295
 #, qt-format
 msgid "Processing %1"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:349
+#: qtplugins/commandscripts/command.cpp:350
 msgid "Set path to Python interpreter:"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:351
+#: qtplugins/commandscripts/command.cpp:352
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2445,7 +2455,7 @@ msgid "Constraints…"
 msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:234
+#: qtplugins/forcefield/forcefield.cpp:233
 msgid "&Calculate"
 msgstr ""
 
@@ -2800,7 +2810,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:84
+#: qtplugins/forcefield/forcefield.cpp:80
 #: qtplugins/plotconformer/plotconformer.cpp:145:1360
 msgid "Energy"
 msgstr ""
@@ -3196,52 +3206,52 @@ msgstr ""
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:92
+#: qtplugins/forcefield/forcefield.cpp:88
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:147
 msgid "Forces"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:100
+#: qtplugins/forcefield/forcefield.cpp:96
 msgid "Configure…"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:112
+#: qtplugins/forcefield/forcefield.cpp:108
 msgid "Freeze Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:120
+#: qtplugins/forcefield/forcefield.cpp:116
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:128
+#: qtplugins/forcefield/forcefield.cpp:124
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:136
+#: qtplugins/forcefield/forcefield.cpp:132
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:144
+#: qtplugins/forcefield/forcefield.cpp:140
 msgid "Unfreeze Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:153
+#: qtplugins/forcefield/forcefield.cpp:149
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:161
+#: qtplugins/forcefield/forcefield.cpp:157
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:397
-#: qtplugins/forcefield/forcefield.cpp:526
-#: qtplugins/forcefield/forcefield.cpp:584
+#: qtplugins/forcefield/forcefield.cpp:470
+#: qtplugins/forcefield/forcefield.cpp:640
+#: qtplugins/forcefield/forcefield.cpp:693
 #: qtplugins/playertool/playertool.cpp:391
 #: qtplugins/playertool/playertool.cpp:423 qtplugins/surfaces/surfaces.cpp:951
 #: qtplugins/surfaces/surfaces.cpp:995 qtplugins/surfaces/surfaces.cpp:1007
@@ -3249,31 +3259,31 @@ msgstr ""
 msgid "Avogadro"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:398
+#: qtplugins/forcefield/forcefield.cpp:471
 msgid "No atoms provided for optimization"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:464
+#: qtplugins/forcefield/forcefield.cpp:549
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:525
+#: qtplugins/forcefield/forcefield.cpp:638
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:583
+#: qtplugins/forcefield/forcefield.cpp:691
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.h:49
+#: qtplugins/forcefield/forcefield.h:61
 msgid "Forcefield optimization"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.h:53
+#: qtplugins/forcefield/forcefield.h:65
 msgid "Forcefield minimization, including scripts"
 msgstr ""
 
@@ -4333,38 +4343,38 @@ msgstr ""
 msgid "Install, update, and remove Avogadro packages."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:134
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:136
 #, qt-format
 msgid "Error downloading plugin list: %1"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:143
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:145
 msgid "Error: empty response from server."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:226
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:240
 #, qt-format
 msgid "Error fetching README: %1"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:268
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:282
 msgid "Nothing Selected"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:269
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
 msgid "Check the box next to a plugin to install or update it."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:279
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:293
 #, qt-format
 msgid "%1 (requires %2)"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:297
 msgid "Version Incompatibility"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:284
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:298
 #, qt-format
 msgid ""
 "The following plugins require a newer version of Avogadro:\n"
@@ -4374,11 +4384,11 @@ msgid ""
 "Install anyway?"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:311
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:325
 msgid "No Download Available"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:312
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:326
 #, qt-format
 msgid ""
 "The selected plugin(s) do not provide a downloadable source URL:\n"
@@ -4386,114 +4396,114 @@ msgid ""
 "%1"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:359
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:373
 #, qt-format
 msgid "Failed to follow redirect while downloading %1.\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:376
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:390
 #, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:385
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:399
 #, qt-format
 msgid "Failed to download from %1: %2\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:420
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
 #: qtplugins/plugindownloader/downloaderwidget.cpp:364
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:448
 #, qt-format
 msgid "Extracting %1…\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:442
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:456
 #, qt-format
 msgid "Extraction complete (%1 files)\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:463
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:477
 #, qt-format
 msgid "Error: could not move extracted package %1 to %2\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:476
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:490
 #, qt-format
 msgid "Extraction error: %1"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:478
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:492
 msgid "Extraction yielded no files.\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:488
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:502
 msgid "Installation complete.\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:536
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
 msgid "Nothing to Remove"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:537
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
 msgid "Check the box next to an installed plugin to remove it."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:543
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:544
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:558
 #, qt-plural-format
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
 msgid_plural "Remove %n selected plugin(s)?"
 msgstr[0] ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:548
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:593
 msgid "Select Plugin Directory"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:585
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:599
 msgid "Invalid Directory"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:586
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
 msgid "The selected directory does not contain a pyproject.toml file."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:614
 #, qt-format
 msgid "Plugin already installed as symlink: %1\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:615
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:629
 #, qt-format
 msgid "Created symlink: %1 → %2\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:618
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:632
 msgid "Symlink creation failed; copying files instead…\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:621
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:635
 #, qt-format
 msgid "Failed to copy package to %1."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:626
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:640
 #, qt-format
 msgid "Installing plugin from %1…\n"
 msgstr ""
@@ -4544,23 +4554,23 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemodel.cpp:563
+#: qtplugins/packageinstaller/packagemodel.cpp:564
 msgid "Electrostatics"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemodel.cpp:565
+#: qtplugins/packageinstaller/packagemodel.cpp:566
 msgid "Energy Models"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemodel.cpp:567
+#: qtplugins/packageinstaller/packagemodel.cpp:568
 msgid "File Formats"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemodel.cpp:569
+#: qtplugins/packageinstaller/packagemodel.cpp:570
 msgid "Input Generators"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemodel.cpp:571
+#: qtplugins/packageinstaller/packagemodel.cpp:572
 msgid "Commands"
 msgstr ""
 
@@ -5730,11 +5740,11 @@ msgstr ""
 msgid "Imported"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:1020
+#: qtplugins/spectra/spectradialog.cpp:1021
 msgid "Import Data"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:1020
+#: qtplugins/spectra/spectradialog.cpp:1021
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
 msgstr ""
 
