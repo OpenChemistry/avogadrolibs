@@ -13,13 +13,14 @@
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 # croomfolk <croomfolk@proton.me>, 2026.
 # Pedro Moreira <pedroltmoreira@gmail.com>, 2026.
+# "Henrique C. S. Junior" <henriquecsj@outlook.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-15 19:10+0000\n"
-"Last-Translator: Pedro Moreira <pedroltmoreira@gmail.com>\n"
+"PO-Revision-Date: 2026-03-16 20:09+0000\n"
+"Last-Translator: \"Henrique C. S. Junior\" <henriquecsj@outlook.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -2316,6 +2317,19 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Ferramenta de Manipulação Centrada na Ligação\t(%1)\n"
+"\n"
+"Botão Esquerdo:\tClique e arraste para girar a visualização.\n"
+"Botão Central:\tClique e arraste para aproximar ou afastar.\n"
+"Botão Direito:\tClique e arraste para deslocar a visualização.\n"
+"Clique Duplo:\tRestaurar a visualização.\n"
+"\n"
+"Clique e Arraste com o Botão Esquerdo sobre uma Ligação para definir o Plano "
+"de Manipulação\n"
+"Clique e Arraste com o Botão Esquerdo sobre um dos Átomos da Ligação para "
+"alterar o ângulo\n"
+"Clique e Arraste com o Botão Direito sobre um dos Átomos da Ligação para "
+"alterar o comprimento"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
@@ -3179,11 +3193,11 @@ msgstr "Editor de Célula Unitária"
 #: qtplugins/crystal/unitcelldialog.cpp:282
 #: qtplugins/crystal/unitcelldialog.cpp:293
 msgid "Ignoring singular cell matrix"
-msgstr ""
+msgstr "Ignorando matriz singular da cela unitária"
 
 #: qtplugins/crystal/unitcelldialog.cpp:304
 msgid "Ignoring singular fractional cell matrix"
-msgstr ""
+msgstr "Ignorando matriz fracionária singular da cela unitária"
 
 #: qtplugins/customelements/customelements.cpp:19
 #, fuzzy
@@ -3204,12 +3218,12 @@ msgstr "Momento Dipolar"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "Renderizar o momento de dipolo da molécula."
 
 #: qtplugins/editor/editor.cpp:73
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
@@ -3283,7 +3297,7 @@ msgstr "Buscar no PDB"
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr ""
+msgstr "Não foi possível ler a molécula PDB: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
@@ -3339,19 +3353,19 @@ msgstr "Baixe modelos PDB do Protein Data Bank"
 
 #: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
-msgstr ""
+msgstr "Focalizar Seleção"
 
 #: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
-msgstr ""
+msgstr "Desfocalizar"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "Focalizar"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "Focalizar a visualização em características específicas."
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
