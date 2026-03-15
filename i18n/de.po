@@ -7,7 +7,7 @@
 # "Jörg S." <joerg.schwerdtfeger@gmail.com>, 2023.
 # Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024, 2025.
 # Jörn Weigend <das.jott@gmail.com>, 2023.
-# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025, 2026.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025, 2026.
 # matterhorn103 <83813148+matterhorn103@users.noreply.github.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
@@ -18,8 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
 "PO-Revision-Date: 2026-03-15 19:09+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1354,7 +1353,7 @@ msgstr "Periodensystem der Elemente"
 
 #: qtgui/pythonscript.cpp:132
 msgid "Package mode requires pixi but it was not found."
-msgstr ""
+msgstr "Paketmodus erfordert Pixi, aber es wurde nicht gefunden."
 
 #: qtgui/pythonscript.cpp:230 qtgui/pythonscript.cpp:327
 #, qt-format
@@ -1399,6 +1398,8 @@ msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
+"Fehler beim Schreiben von Rohanforderung an Skript stdin (len=%1, schrieb %2 "
+"Bytes, QProcess-Fehler: %3)."
 
 #: qtgui/pythonscript.cpp:428
 msgid "Script failed to start."
@@ -2124,11 +2125,11 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:353
 msgid "Reset Atom Colors"
-msgstr ""
+msgstr "Atomfarben zurücksetzen"
 
 #: qtplugins/applycolors/applycolors.cpp:379
 msgid "Apply Custom Color"
-msgstr ""
+msgstr "Benutzerdefinierte Farbe anwenden"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 msgid "Apply Custom Residue Color"
@@ -2144,7 +2145,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:562
 msgid "Apply Amino Acid Colors"
-msgstr ""
+msgstr "Aminosäurefarben anwenden"
 
 #: qtplugins/applycolors/applycolors.cpp:589
 msgid "Apply Shapely Colors"
@@ -3427,7 +3428,7 @@ msgstr "%1 Energie = %L2"
 #: qtplugins/forcefield/forcefield.cpp:691
 #, qt-format
 msgid "%1 Force Norm = %L2"
-msgstr ""
+msgstr "%1 Kraftnorm = %L2"
 
 #: qtplugins/forcefield/forcefield.h:61
 msgid "Forcefield optimization"
@@ -3453,7 +3454,7 @@ msgstr ""
 #: qtplugins/forcefield/forcefielddialog.cpp:181
 #, qt-format
 msgid "%1 Options"
-msgstr ""
+msgstr "%1 Optionen"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:222
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -3525,7 +3526,7 @@ msgstr "Keine"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
 msgid "D1"
-msgstr ""
+msgstr "D1"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:425
 msgid "D2"
@@ -3537,7 +3538,7 @@ msgstr "D3"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:431
 msgid "D4"
-msgstr ""
+msgstr "D4"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:446
 msgid "Gas"
@@ -4556,7 +4557,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:145
 msgid "Error: empty response from server."
-msgstr ""
+msgstr "Fehler: leere Antwort vom Server."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:240
 #, qt-format
@@ -4574,11 +4575,11 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:293
 #, qt-format
 msgid "%1 (requires %2)"
-msgstr ""
+msgstr "%1 (erfordert %2)"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:297
 msgid "Version Incompatibility"
-msgstr ""
+msgstr "Inkompatibilität"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:298
 #, qt-format
@@ -4589,10 +4590,15 @@ msgid ""
 "\n"
 "Install anyway?"
 msgstr ""
+"Die folgenden Plugins benötigen eine neuere Version von Avogadro:\n"
+"\n"
+"(X60X)\n"
+"\n"
+"Installieren?"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:325
 msgid "No Download Available"
-msgstr ""
+msgstr "Kein Download verfügbar"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:326
 #, qt-format
@@ -4636,16 +4642,18 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:477
 #, qt-format
 msgid "Error: could not move extracted package %1 to %2\n"
-msgstr ""
+msgstr "Fehler: konnte das extrahierte Paket %1 nicht auf %2 verschieben\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:490
 #, qt-format
 msgid "Extraction error: %1"
-msgstr ""
+msgstr "Extraktionsfehler: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:492
 msgid "Extraction yielded no files.\n"
 msgstr ""
+"Extraktion ergab keine Dateien.\n"
+".\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:502
 msgid "Installation complete.\n"
@@ -4694,12 +4702,12 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:614
 #, qt-format
 msgid "Plugin already installed as symlink: %1\n"
-msgstr ""
+msgstr "Plugin bereits als symlink installiert: %1\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:629
 #, qt-format
 msgid "Created symlink: %1 → %2\n"
-msgstr ""
+msgstr "Symlink erstellt: %1 → %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:632
 msgid "Symlink creation failed; copying files instead…\n"
@@ -4763,11 +4771,11 @@ msgstr "Beschreibung"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:564
 msgid "Electrostatics"
-msgstr ""
+msgstr "Elektrostatik"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:566
 msgid "Energy Models"
-msgstr ""
+msgstr "Energiemodelle"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:568
 msgid "File Formats"
@@ -4809,7 +4817,7 @@ msgstr ""
 #, qt-format
 msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
-msgstr ""
+msgstr "Warnung: (%1)"
 
 #: qtplugins/playertool/playertool.cpp:51
 msgctxt "control-key 9"
@@ -4934,7 +4942,7 @@ msgstr "Geschwindigkeiten"
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
+msgstr "Energieeinheiten:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
 msgid "to"
@@ -4947,15 +4955,15 @@ msgstr ""
 #: qtplugins/plotconformer/plotconformer.cpp:228
 #, qt-format
 msgid "Relative Energy (%1)"
-msgstr ""
+msgstr "Relative Energie (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:231
 msgid "Forces (N)"
-msgstr ""
+msgstr "Kräfte (N)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:233
 msgid "Velocities (m/s)"
-msgstr ""
+msgstr "Geschwindigkeiten (m/s)"
 
 #: qtplugins/plotconformer/plotconformer.h:36
 msgid "PlotConformer"
@@ -5171,7 +5179,7 @@ msgstr "Bezeichnung"
 
 #: qtplugins/propertytables/propertymodel.cpp:652
 msgid "Isotope"
-msgstr ""
+msgstr "Isotop"
 
 #: qtplugins/propertytables/propertymodel.cpp:654
 #: qtplugins/propertytables/propertymodel.cpp:697
