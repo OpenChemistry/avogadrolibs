@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-07 11:10+0000\n"
+"PO-Revision-Date: 2026-03-15 19:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -3783,11 +3783,15 @@ msgid "Edit Labels"
 msgstr "编辑标签"
 
 #: qtplugins/label/labeleditor.cpp:33
+#, fuzzy
 msgid ""
 "Atom Label Tool\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"原子标签工具\n"
+"\n"
+"鼠标左键：在原子上点击以添加自定义标签"
 
 #: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
