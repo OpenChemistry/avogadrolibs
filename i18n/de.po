@@ -8,7 +8,7 @@
 # Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024, 2025.
 # Jörn Weigend <das.jott@gmail.com>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025, 2026.
 # matterhorn103 <83813148+matterhorn103@users.noreply.github.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 # Frank Hoffmann <kohaerenz@gmail.com>, 2026.
@@ -17,8 +17,9 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-11 10:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-15 19:09+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1320,7 +1321,7 @@ msgstr "van-der-Waals (AO)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "Datenträger"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -4542,7 +4543,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packageinstaller.h:32
 msgid "Package Installer"
-msgstr ""
+msgstr "Paket-Installer"
 
 #: qtplugins/packageinstaller/packageinstaller.h:36
 msgid "Install, update, and remove Avogadro packages."
@@ -4564,7 +4565,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:282
 msgid "Nothing Selected"
-msgstr ""
+msgstr "Nichts ausgewählt"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
 msgid "Check the box next to a plugin to install or update it."
@@ -4648,11 +4649,11 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:502
 msgid "Installation complete.\n"
-msgstr ""
+msgstr "Installation abgeschlossen\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
 msgid "Nothing to Remove"
-msgstr ""
+msgstr "Nichts zu entfernen"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
 msgid "Check the box next to an installed plugin to remove it."
@@ -4660,7 +4661,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
-msgstr ""
+msgstr "Plugins entfernen"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:558
 #, qt-plural-format
@@ -4676,7 +4677,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
-msgstr ""
+msgstr "Dateien löschen"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:593
 msgid "Select Plugin Directory"
@@ -4716,7 +4717,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:58
 msgid "Not installed"
-msgstr ""
+msgstr "Nicht installiert"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:60
 msgid "Installed (up to date)"
@@ -4724,7 +4725,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:62
 msgid "Update available"
-msgstr ""
+msgstr "Aktualisierung verfügbar"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:64
 msgid "Installed locally (not in online catalog)"
@@ -4753,7 +4754,7 @@ msgstr "Version"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:176
 msgid "Features"
-msgstr ""
+msgstr "Funktionen"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:178
 #: qtplugins/plugindownloader/downloaderwidget.cpp:68
@@ -4770,7 +4771,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:568
 msgid "File Formats"
-msgstr ""
+msgstr "Dateiformate"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:570
 #, fuzzy
@@ -4779,7 +4780,7 @@ msgstr "Eingabe-Erzeuger"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:572
 msgid "Commands"
-msgstr ""
+msgstr "Befehle"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:60
 #: qtplugins/plugindownloader/zipextracter.cpp:67
@@ -5079,7 +5080,7 @@ msgstr "Extraktionsfehler: %1"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:452
 msgid "Installation canceled\n"
-msgstr ""
+msgstr "Installation abgebrochen\n"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -5166,7 +5167,7 @@ msgstr "Z (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:672
 #: qtplugins/propertytables/propertymodel.cpp:695
 msgid "Label"
-msgstr ""
+msgstr "Bezeichnung"
 
 #: qtplugins/propertytables/propertymodel.cpp:652
 msgid "Isotope"
@@ -5393,7 +5394,7 @@ msgstr ""
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Konnte temporäre Datei \"%s\" nicht erstellen."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
