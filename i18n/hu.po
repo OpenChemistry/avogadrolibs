@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Szabolcs Kalapos <kalapos.szabolcs@gmail.com>, 2020.
 # SoftwareByRedline <krajczar.david41@gmail.com>, 2021.
-# ovari <ovari123@zoho.com>, 2021, 2022, 2023, 2024.
+# ovari <ovari123@zoho.com>, 2021, 2022, 2023, 2024, 2026.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # Mirkó Attila <kisatti007hun@gmail.com>, 2024.
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-03-07 13:27+0000\n"
-"PO-Revision-Date: 2026-03-11 10:10+0000\n"
+"POT-Creation-Date: 2026-03-14 17:31+0000\n"
+"PO-Revision-Date: 2026-03-15 19:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -35,7 +35,7 @@ msgstr "Kötegelt feladat #%L1 (%2)"
 msgid "No message specified."
 msgstr "Nincs megadva üzenet."
 
-#: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:72
+#: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:90
 #, qt-format
 msgid ""
 "script --print-options output must be an JSON object at top level. "
@@ -46,27 +46,27 @@ msgstr ""
 "objektumnak kell lennie. Érkezett:\n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:191 qtgui/interfacescript.cpp:220
-#: qtgui/interfacescript.cpp:353
+#: molequeue/inputgenerator.cpp:197 qtgui/interfacescript.cpp:246
+#: qtgui/interfacescript.cpp:398
 msgid "Non-string warning returned."
 msgstr "A karakterlánc-mentes figyelmeztetés visszatért."
 
-#: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:223
-#: qtgui/interfacescript.cpp:356
+#: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:249
+#: qtgui/interfacescript.cpp:401
 msgid "'warnings' member is not an array."
 msgstr "A „warnings” (figyelmeztetések) tag nem tömb."
 
-#: molequeue/inputgenerator.cpp:214 qtgui/interfacescript.cpp:376
+#: molequeue/inputgenerator.cpp:220 qtgui/interfacescript.cpp:421
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr "A(z) „%1” hivatkozási fájl nem létezik."
 
-#: molequeue/inputgenerator.cpp:216 qtgui/interfacescript.cpp:378
+#: molequeue/inputgenerator.cpp:222 qtgui/interfacescript.cpp:423
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr "Hiba történt a(z) %1 fájl kitöltésében: %2"
 
-#: molequeue/inputgenerator.cpp:220 qtgui/interfacescript.cpp:382
+#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:427
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
@@ -74,7 +74,7 @@ msgstr ""
 "A(z) „%1” fájl rosszul van beállítva. Hiányzó karakterlánc „contents” "
 "(tartalom) vagy „filePath” (fájlelérésiÚt) tag."
 
-#: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:415
+#: molequeue/inputgenerator.cpp:258 qtgui/interfacescript.cpp:460
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
@@ -83,32 +83,32 @@ msgstr ""
 "Hibás fájlbejegyzés: a fájlnév/tartalom hiányzik vagy nincs karakterlánc:\n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:258 qtgui/interfacescript.cpp:421
+#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:466
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr "Hibás fájlbejegyzés a(z) %1 tárgymutatóban: Nem objektum."
 
-#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:427
+#: molequeue/inputgenerator.cpp:270 qtgui/interfacescript.cpp:472
 msgid "'files' member not an array."
 msgstr "A „files” (fájlok) tag nem tömb."
 
-#: molequeue/inputgenerator.cpp:268 qtgui/interfacescript.cpp:431
+#: molequeue/inputgenerator.cpp:274 qtgui/interfacescript.cpp:476
 msgid "'files' member missing."
 msgstr "A „files” (fájlok) tag hiányzik."
 
-#: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:442
+#: molequeue/inputgenerator.cpp:285 qtgui/interfacescript.cpp:487
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr "A „mainFile” (főFájl) tag nem utal a „files” (fájlok) bejegyzésére."
 
-#: molequeue/inputgenerator.cpp:284 qtgui/interfacescript.cpp:447
+#: molequeue/inputgenerator.cpp:290 qtgui/interfacescript.cpp:492
 msgid "'mainFile' member must be a string."
 msgstr "A „mainFile” (főFájl) tagnak karakterláncnak kell lennie."
 
-#: molequeue/inputgenerator.cpp:295 qtgui/interfacescript.cpp:458
+#: molequeue/inputgenerator.cpp:301 qtgui/interfacescript.cpp:503
 msgid "Response must be a JSON object at top-level."
 msgstr "A válasznak legfelső szintű JSON-objektumnak kell lennie."
 
-#: molequeue/inputgenerator.cpp:299 qtgui/interfacescript.cpp:462
+#: molequeue/inputgenerator.cpp:305 qtgui/interfacescript.cpp:507
 #, qt-format
 msgid ""
 "Script output:\n"
@@ -117,7 +117,7 @@ msgstr ""
 "Parancsfájl kimenet:\n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:342 qtgui/interfacescript.cpp:506
+#: molequeue/inputgenerator.cpp:348 qtgui/interfacescript.cpp:551
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -130,7 +130,7 @@ msgstr ""
 "\n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:366
+#: molequeue/inputgenerator.cpp:372
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
@@ -138,13 +138,13 @@ msgstr ""
 "Hiba történt a molekulaábrázolás mentése a karakterláncba: Felismerhetetlen "
 "fájlformátum: %1"
 
-#: molequeue/inputgenerator.cpp:374
+#: molequeue/inputgenerator.cpp:380
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr "Hiba történt a molekulaábrázolás mentése a karakterláncba: %1"
 
-#: molequeue/inputgenerator.cpp:387 qtgui/interfacescript.cpp:573
+#: molequeue/inputgenerator.cpp:393 qtgui/interfacescript.cpp:618
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -158,7 +158,7 @@ msgstr ""
 "\n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:396 qtgui/interfacescript.cpp:582
+#: molequeue/inputgenerator.cpp:402 qtgui/interfacescript.cpp:627
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -173,7 +173,7 @@ msgid "Input Generator (error)"
 msgstr "Bemeneti létrehozó (hiba)"
 
 #: molequeue/inputgeneratordialog.cpp:49
-#: qtplugins/quantuminput/quantuminput.cpp:276
+#: qtplugins/quantuminput/quantuminput.cpp:279
 #, qt-format
 msgid "%1 Input Generator"
 msgstr "%1 bemeneti létrehozó"
@@ -1091,19 +1091,29 @@ msgstr "Minden fájl"
 msgid "All supported formats"
 msgstr "Minden támogatott formátum"
 
-#: qtgui/interfacescript.cpp:237
+#: qtgui/interfacescript.cpp:263
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 "Hiba történt a molekulaábrázolás olvasásakor: Felismerhetetlen fájlformátum: "
 "%1"
 
-#: qtgui/interfacescript.cpp:305
+#: qtgui/interfacescript.cpp:336
 #, qt-format
 msgid "%1 Message"
 msgstr "%1 üzenet"
 
-#: qtgui/interfacescript.cpp:548
+#: qtgui/interfacescript.cpp:343
+#, qt-format
+msgid "%1 Warning"
+msgstr "%1 figyelmeztetés"
+
+#: qtgui/interfacescript.cpp:350
+#, qt-format
+msgid "%1 Error"
+msgstr "%1 hiba"
+
+#: qtgui/interfacescript.cpp:593
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
@@ -1111,119 +1121,119 @@ msgstr ""
 "Hiba történt a molekulaábrázolás karakterláncba írása során: "
 "Felismerhetetlen fájlformátum: %1"
 
-#: qtgui/interfacescript.cpp:556
+#: qtgui/interfacescript.cpp:601
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr "Hiba történt a molekulaábrázolás karakterláncba írása során: %1"
 
-#: qtgui/jsonwidget.cpp:88
+#: qtgui/jsonwidget.cpp:103
 msgid "'userOptions' missing."
 msgstr "Hiányzik a(z) „userOptions” (felhasználóiBeállítások)."
 
-#: qtgui/jsonwidget.cpp:119
+#: qtgui/jsonwidget.cpp:134
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr "A(z) „%1” beállítás nem hivatkozik objektumra."
 
-#: qtgui/jsonwidget.cpp:126
+#: qtgui/jsonwidget.cpp:141
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "A „type” (típus) nem karakterlánc a(z) „%1” beállításhoz."
 
-#: qtgui/jsonwidget.cpp:133
+#: qtgui/jsonwidget.cpp:148
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr "„%1” beállítás nem található."
 
-#: qtgui/jsonwidget.cpp:187
+#: qtgui/jsonwidget.cpp:202
 #, qt-format
 msgid "Tab %1"
 msgstr "Lap: %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:210:913
+#: qtgui/jsonwidget.cpp:225:913
 msgid "Title"
 msgstr "Cím"
 
-#: qtgui/jsonwidget.cpp:214
+#: qtgui/jsonwidget.cpp:229
 msgid "Filename Base"
 msgstr "A fájlnév alapja"
 
-#: qtgui/jsonwidget.cpp:220 qtgui/jsonwidget.cpp:225
+#: qtgui/jsonwidget.cpp:235 qtgui/jsonwidget.cpp:240
 msgid "Processor Cores"
 msgstr "Processzormagok"
 
-#: qtgui/jsonwidget.cpp:221 qtgui/jsonwidget.cpp:228
+#: qtgui/jsonwidget.cpp:236 qtgui/jsonwidget.cpp:243
 msgid "Memory"
-msgstr ""
+msgstr "Memória"
 
-#: qtgui/jsonwidget.cpp:233
+#: qtgui/jsonwidget.cpp:248
 msgid "Calculation Type"
 msgstr "Számítás típusa"
 
-#: qtgui/jsonwidget.cpp:237
+#: qtgui/jsonwidget.cpp:252
 msgid "Theory"
 msgstr "Elmélet"
 
-#: qtgui/jsonwidget.cpp:237
+#: qtgui/jsonwidget.cpp:252
 msgid "Basis"
 msgstr "Bázis"
 
-#: qtgui/jsonwidget.cpp:242 qtgui/jsonwidget.cpp:246
+#: qtgui/jsonwidget.cpp:257 qtgui/jsonwidget.cpp:261
 msgid "Charge"
 msgstr "Töltés"
 
-#: qtgui/jsonwidget.cpp:243 qtgui/jsonwidget.cpp:248
+#: qtgui/jsonwidget.cpp:258 qtgui/jsonwidget.cpp:263
 msgid "Multiplicity"
 msgstr "Többszörösség"
 
-#: qtgui/jsonwidget.cpp:255
+#: qtgui/jsonwidget.cpp:270
 msgid "Solvent"
-msgstr ""
+msgstr "Oldószer"
 
-#: qtgui/jsonwidget.cpp:256
+#: qtgui/jsonwidget.cpp:271
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "Modell"
 
-#: qtgui/jsonwidget.cpp:378
+#: qtgui/jsonwidget.cpp:393
 msgid "User Name"
-msgstr ""
+msgstr "Felhasználónév"
 
-#: qtgui/jsonwidget.cpp:380
+#: qtgui/jsonwidget.cpp:395
 msgid "Password"
-msgstr ""
+msgstr "Jelszó"
 
-#: qtgui/jsonwidget.cpp:691
+#: qtgui/jsonwidget.cpp:706
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "Hiba történt: az értéknek objektumnak kell lennie a(z) „%1” kulcsnál."
 
-#: qtgui/jsonwidget.cpp:726
+#: qtgui/jsonwidget.cpp:741
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Ismeretlen beállítási típus „%1” a(z) „%2” beállításnál."
 
-#: qtgui/jsonwidget.cpp:735 qtgui/jsonwidget.cpp:770 qtgui/jsonwidget.cpp:791
-#: qtgui/jsonwidget.cpp:812 qtgui/jsonwidget.cpp:850 qtgui/jsonwidget.cpp:871
-#: qtgui/jsonwidget.cpp:893 qtgui/jsonwidget.cpp:914
+#: qtgui/jsonwidget.cpp:750 qtgui/jsonwidget.cpp:785 qtgui/jsonwidget.cpp:806
+#: qtgui/jsonwidget.cpp:827 qtgui/jsonwidget.cpp:865 qtgui/jsonwidget.cpp:886
+#: qtgui/jsonwidget.cpp:908 qtgui/jsonwidget.cpp:929
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "Hibás történt a(z) „%1” beállítás alapértelmezett beállításakor. Hibás "
 "vezérlői típus."
 
-#: qtgui/jsonwidget.cpp:742 qtgui/jsonwidget.cpp:777 qtgui/jsonwidget.cpp:798
-#: qtgui/jsonwidget.cpp:819 qtgui/jsonwidget.cpp:857 qtgui/jsonwidget.cpp:878
-#: qtgui/jsonwidget.cpp:900 qtgui/jsonwidget.cpp:921
+#: qtgui/jsonwidget.cpp:757 qtgui/jsonwidget.cpp:792 qtgui/jsonwidget.cpp:813
+#: qtgui/jsonwidget.cpp:834 qtgui/jsonwidget.cpp:872 qtgui/jsonwidget.cpp:893
+#: qtgui/jsonwidget.cpp:915 qtgui/jsonwidget.cpp:936
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Hibás történt a(z) „%1” beállítás alapértelmezett beállításakor. Hibás "
 "alapértelmezett érték:"
 
-#: qtgui/jsonwidget.cpp:756
+#: qtgui/jsonwidget.cpp:771
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1232,14 +1242,14 @@ msgstr ""
 "Hibás történt a(z) „%1” beállítás alapértelmezett beállításakor. Nem "
 "található érvényes kombinált bejegyzés tárgymutató az értékből:"
 
-#: qtgui/jsonwidget.cpp:982
+#: qtgui/jsonwidget.cpp:997
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 "Nem kezelt vezérlő a „collectOptions” (Beállítások gyűjtése) menüben a(z) "
 "„%1” beállításhoz."
 
-#: qtgui/jsonwidget.cpp:1027 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1042 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr "[nincs molekula]"
@@ -1281,7 +1291,7 @@ msgid "Licorice"
 msgstr "Vonal/pálcamodell"
 
 #: qtgui/layermodel.cpp:184 qtplugins/surfacerender/surfacerender.h:29
-#: qtplugins/surfaces/orbitals.cpp:478 qtplugins/surfaces/orbitals.cpp:570
+#: qtplugins/surfaces/orbitals.cpp:480 qtplugins/surfaces/orbitals.cpp:572
 #: qtplugins/surfaces/surfaces.cpp:873 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "Felületek"
@@ -1305,7 +1315,6 @@ msgid "Van der Waals"
 msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:194
-#, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr "Van der Waals (AO)"
@@ -1313,7 +1322,7 @@ msgstr "Van der Waals (AO)"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "Kötetek"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -1330,11 +1339,11 @@ msgstr "Névtelen"
 
 #: qtgui/moleculemodel.cpp:135
 msgid "Edit molecule"
-msgstr ""
+msgstr "Molekula szerkesztése"
 
 #: qtgui/moleculemodel.cpp:142
 msgid "Not saved"
-msgstr ""
+msgstr "Nincs mentve"
 
 #: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
@@ -1344,18 +1353,18 @@ msgstr "Új nézet létrehozása"
 msgid "Periodic Table"
 msgstr "Periódusos táblázat"
 
-#: qtgui/pythonscript.cpp:126
+#: qtgui/pythonscript.cpp:132
 msgid "Package mode requires pixi but it was not found."
-msgstr ""
+msgstr "A csomag módhoz pixi szükséges, de az nem található."
 
-#: qtgui/pythonscript.cpp:224 qtgui/pythonscript.cpp:321
+#: qtgui/pythonscript.cpp:230 qtgui/pythonscript.cpp:327
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Hiba történt a parancsfájl futtatásakor „%1 %2”: Időtúllépés várt a kezdésre "
 "(%3)."
 
-#: qtgui/pythonscript.cpp:233 qtgui/pythonscript.cpp:330
+#: qtgui/pythonscript.cpp:239 qtgui/pythonscript.cpp:336
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1364,14 +1373,14 @@ msgstr ""
 "Hiba történt a(z) „%1 %2” parancsfájl futtatásakor: nem sikerült írni az "
 "„stdin”-nek (len=%3, %4 bájtot írt, QProcess hiba: %5)."
 
-#: qtgui/pythonscript.cpp:247
+#: qtgui/pythonscript.cpp:253
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Hiba történt a(z) „%1 %2” parancsfájl futtatásakor: Időtúllépés vár a "
 "befejezésre (%3)."
 
-#: qtgui/pythonscript.cpp:257
+#: qtgui/pythonscript.cpp:263
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1385,39 +1394,41 @@ msgstr ""
 "Kimenet:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:267
+#: qtgui/pythonscript.cpp:273
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Figyelmeztetés „%1”"
 
-#: qtgui/pythonscript.cpp:387
+#: qtgui/pythonscript.cpp:393
 #, qt-format
 msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
+"Hiba történt a nyers adatok kérés stdin parancsfájlba írása közben "
+"(hosszúság=%1, %2 bájt írva, Q-folyamathiba: %3)."
 
-#: qtgui/pythonscript.cpp:422
+#: qtgui/pythonscript.cpp:428
 msgid "Script failed to start."
 msgstr "A parancsfájl indítása nem sikerült."
 
-#: qtgui/pythonscript.cpp:425
+#: qtgui/pythonscript.cpp:431
 msgid "Script crashed."
 msgstr "A parancsfájl összeomlott."
 
-#: qtgui/pythonscript.cpp:428
+#: qtgui/pythonscript.cpp:434
 msgid "Script timed out."
 msgstr "A parancsfájl ideje lejárt."
 
-#: qtgui/pythonscript.cpp:431
+#: qtgui/pythonscript.cpp:437
 msgid "Read error."
 msgstr "Olvasási hiba."
 
-#: qtgui/pythonscript.cpp:434
+#: qtgui/pythonscript.cpp:440
 msgid "Write error."
 msgstr "Írási hiba."
 
-#: qtgui/pythonscript.cpp:438
+#: qtgui/pythonscript.cpp:444
 msgid "Unknown error."
 msgstr "Ismeretlen hiba."
 
@@ -1491,7 +1502,7 @@ msgstr "Atom színének módosítása"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Residue Color"
-msgstr ""
+msgstr "Maradék színének módosítása"
 
 #: qtgui/rwmolecule.cpp:298
 msgid "Change Atom Layer"
@@ -1592,7 +1603,7 @@ msgstr "Atomfelirat módosítása"
 
 #: qtgui/rwmolecule.h:261
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Kötéscímke módosítása"
 
 #: qtgui/rwmolecule.h:267
 msgid "Change Selection"
@@ -1608,43 +1619,43 @@ msgstr "Beállítások"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
-msgstr ""
+msgstr "Számítás…"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
-msgstr ""
+msgstr "Kevesebb mint egy másodperc van hátra"
 
 #: qtgui/timedprogressdialog.cpp:82
 #, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n másodperc van hátra"
+msgstr[1] "%n másodperc van hátra"
 
 #: qtgui/timedprogressdialog.cpp:85
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
 msgid_plural "%n minute(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n perc van hátra"
+msgstr[1] "%n perc van hátra"
 
 #: qtgui/timedprogressdialog.cpp:93
 #, qt-plural-format
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 óra %n perc van hátra"
+msgstr[1] "1 óra %n perc van hátra"
 
 #: qtgui/timedprogressdialog.cpp:96
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
 msgid_plural "%n hour(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n óra van hátra"
+msgstr[1] "%n óra van hátra"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -1671,7 +1682,7 @@ msgstr "3Dmol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "Elemek módosítása…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:62
 #: qtplugins/centroid/centroid.cpp:45
@@ -1694,11 +1705,11 @@ msgstr "Elem:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "Alkímia"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Az atomok elemeinek megváltoztatása."
 
 #: qtplugins/aligntool/aligntool.cpp:51 qtplugins/aligntool/aligntool.cpp:94
 msgid "Align"
@@ -1767,7 +1778,7 @@ msgstr "Kimeneti fájl megnyitása…"
 #: qtplugins/lammpsinput/lammpsinput.cpp:46
 #: qtplugins/openmminput/openmminput.cpp:46
 #: qtplugins/quantuminput/quantuminput.cpp:80
-#: qtplugins/quantuminput/quantuminput.cpp:316
+#: qtplugins/quantuminput/quantuminput.cpp:322
 msgid "&Input"
 msgstr "&Bemenet"
 
@@ -1855,8 +1866,8 @@ msgstr "PQR-fájlok (*.pqr)"
 #: qtplugins/openbabel/openbabel.cpp:888 qtplugins/openbabel/openbabel.cpp:930
 #: qtplugins/openbabel/openbabel.cpp:962
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:424
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:620
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:438
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:634
 #: qtplugins/plugindownloader/downloaderwidget.cpp:103
 #: qtplugins/plugindownloader/downloaderwidget.cpp:109
 #: qtplugins/plugindownloader/downloaderwidget.cpp:368
@@ -1889,11 +1900,11 @@ msgstr "Sikerült"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "Létrehozva %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "Hiba a PDB2PQR futtatásakor"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -1909,7 +1920,7 @@ msgid "Input file written to '%1'"
 msgstr "Bemeneti fájl mentve ide: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:425
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:439
 #: qtplugins/playertool/playertool.cpp:424
 #: qtplugins/plugindownloader/downloaderwidget.cpp:369
 #: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1008
@@ -1924,11 +1935,11 @@ msgstr "Egyedi szín szerint…"
 
 #: qtplugins/applycolors/applycolors.cpp:52
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "Atomi tárgymutató szerint…"
 
 #: qtplugins/applycolors/applycolors.cpp:57
 msgid "By Distance…"
-msgstr ""
+msgstr "Távolság szerint…"
 
 #: qtplugins/applycolors/applycolors.cpp:62
 msgid "By Element"
@@ -1940,7 +1951,7 @@ msgstr "Lánc szerint"
 
 #: qtplugins/applycolors/applycolors.cpp:78
 msgid "By Partial Charge…"
-msgstr "Részleges feltöltéssel…"
+msgstr "Részleges töltés szerint…"
 
 #: qtplugins/applycolors/applycolors.cpp:83
 msgid "By Secondary Structure"
@@ -2108,58 +2119,58 @@ msgstr "Színleképezés:"
 
 #: qtplugins/applycolors/applycolors.cpp:225
 msgid "Apply Index Colors"
-msgstr ""
+msgstr "Tárgymutatószínek alkalmazása"
 
 #: qtplugins/applycolors/applycolors.cpp:289
 msgid "Apply Charge Colors"
-msgstr ""
+msgstr "Töltési színek alkalmazása"
 
 #: qtplugins/applycolors/applycolors.cpp:327
 msgid "Apply Distance Colors"
-msgstr ""
+msgstr "Távolságszínek alkalmazása"
 
 #: qtplugins/applycolors/applycolors.cpp:353
 msgid "Reset Atom Colors"
-msgstr ""
+msgstr "Atomszínek visszaállítása"
 
 #: qtplugins/applycolors/applycolors.cpp:379
 msgid "Apply Custom Color"
-msgstr ""
+msgstr "Egyéni szín alkalmazása"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 msgid "Apply Custom Residue Color"
-msgstr ""
+msgstr "Egyéni maradékszín alkalmazása"
 
 #: qtplugins/applycolors/applycolors.cpp:440
 msgid "Reset Residue Colors"
-msgstr ""
+msgstr "Maradék színek visszaállítása"
 
 #: qtplugins/applycolors/applycolors.cpp:474
 msgid "Apply Secondary Structure Colors"
-msgstr ""
+msgstr "Másodlagos szerkezeti színek alkalmazása"
 
 #: qtplugins/applycolors/applycolors.cpp:562
 msgid "Apply Amino Acid Colors"
-msgstr ""
+msgstr "Aminosav-színek alkalmazása"
 
 #: qtplugins/applycolors/applycolors.cpp:589
 msgid "Apply Shapely Colors"
-msgstr ""
+msgstr "Formás színek alkalmazása"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
 msgstr "Színek alkalmazása"
 
-#: qtplugins/autoopt/autoopt.cpp:68
+#: qtplugins/autoopt/autoopt.cpp:67
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
-#: qtplugins/autoopt/autoopt.cpp:69
+#: qtplugins/autoopt/autoopt.cpp:68
 msgid "Auto Optimize"
-msgstr ""
+msgstr "Automatikus optimalizálás"
 
-#: qtplugins/autoopt/autoopt.cpp:71
+#: qtplugins/autoopt/autoopt.cpp:70
 #, qt-format
 msgid ""
 "Auto Optimize Tool\t(%1)\n"
@@ -2175,75 +2186,75 @@ msgid ""
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:152
+#: qtplugins/autoopt/autoopt.cpp:205
 msgid "Optimize"
 msgstr "Optimalizálás"
 
-#: qtplugins/autoopt/autoopt.cpp:153
+#: qtplugins/autoopt/autoopt.cpp:206
 msgid "Dynamics"
-msgstr ""
+msgstr "Dinamika"
 
-#: qtplugins/autoopt/autoopt.cpp:157
+#: qtplugins/autoopt/autoopt.cpp:210
 msgid "Task:"
-msgstr ""
+msgstr "Feladat:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/autoopt/autoopt.cpp:182:362
+#: qtplugins/autoopt/autoopt.cpp:235:362
 msgid "Method:"
 msgstr "Módszer:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
-#: qtplugins/autoopt/autoopt.cpp:194:1621
+#: qtplugins/autoopt/autoopt.cpp:247:1621
 msgid "Temperature:"
 msgstr "Hőmérséklet:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
-#: qtplugins/autoopt/autoopt.cpp:206:1607
+#: qtplugins/autoopt/autoopt.cpp:259:1607
 msgid "Timestep:"
 msgstr "Időlépés:"
 
-#: qtplugins/autoopt/autoopt.cpp:213 qtplugins/autoopt/autoopt.cpp:345
+#: qtplugins/autoopt/autoopt.cpp:266 qtplugins/autoopt/autoopt.cpp:394
 msgid "Start"
 msgstr "Indítás"
 
-#: qtplugins/autoopt/autoopt.cpp:271
+#: qtplugins/autoopt/autoopt.cpp:324
 msgid "Stop"
 msgstr "Leállítás"
 
-#: qtplugins/autoopt/autoopt.cpp:411 qtplugins/forcefield/forcefield.cpp:75
-#: qtplugins/forcefield/forcefield.cpp:447
-#: qtplugins/forcefield/forcefield.cpp:486 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/autoopt/autoopt.cpp:464 qtplugins/forcefield/forcefield.cpp:71
+#: qtplugins/forcefield/forcefield.cpp:501
+#: qtplugins/forcefield/forcefield.cpp:567 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:562
 msgid "Optimize Geometry"
 msgstr "Geometria optimalizálása"
 
-#: qtplugins/autoopt/autoopt.cpp:564
+#: qtplugins/autoopt/autoopt.cpp:528
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:261
 msgid "Molecular Dynamics"
 msgstr "Molekuladinamika"
 
-#: qtplugins/autoopt/autoopt.cpp:580
+#: qtplugins/autoopt/autoopt.cpp:603
 #, qt-format
 msgctxt "temperature in Kelvin"
 msgid "%1 T = %L2"
-msgstr ""
+msgstr "%1 hőmérséklet = %L2"
 
-#: qtplugins/autoopt/autoopt.cpp:585
+#: qtplugins/autoopt/autoopt.cpp:608
 #, qt-format
 msgctxt "change in energy in kJ/mol"
 msgid "%1 ΔE = %L2"
-msgstr ""
-
-#: qtplugins/autoopt/autoopt.h:43
-msgid "Auto Optimize tool"
-msgstr ""
+msgstr "%1 ΔEnergia = %L2"
 
 #: qtplugins/autoopt/autoopt.h:46
+msgid "Auto Optimize tool"
+msgstr "Automatikus optimalizálás eszköz"
+
+#: qtplugins/autoopt/autoopt.h:49
 msgid "Interactive optimization of molecular geometry"
-msgstr ""
+msgstr "A molekuláris geometria interaktív optimalizálása"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
@@ -2277,7 +2288,7 @@ msgstr ""
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
@@ -2463,11 +2474,11 @@ msgstr "Színes átlátszósági térkép szerkesztése…"
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:414
+#: qtplugins/commandscripts/command.cpp:434
 #: qtplugins/configurepython/configurepython.cpp:153
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:232
-#: qtplugins/forcefield/forcefield.cpp:234
+#: qtplugins/forcefield/forcefield.cpp:231
+#: qtplugins/forcefield/forcefield.cpp:233
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
@@ -2487,7 +2498,7 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:414
+#: qtplugins/commandscripts/command.cpp:435
 msgid "Scripts"
 msgstr "&Parancsfájlok"
 
@@ -2505,16 +2516,16 @@ msgstr ""
 "Hiba történt a(z) „%1” kimeneti fájl olvasásakor:\n"
 "%2"
 
-#: qtplugins/commandscripts/command.cpp:294
+#: qtplugins/commandscripts/command.cpp:295
 #, qt-format
 msgid "Processing %1"
 msgstr "%1 feldolgozása"
 
-#: qtplugins/commandscripts/command.cpp:349
+#: qtplugins/commandscripts/command.cpp:350
 msgid "Set path to Python interpreter:"
 msgstr "Python-értelmező elérési útja beállítása:"
 
-#: qtplugins/commandscripts/command.cpp:351
+#: qtplugins/commandscripts/command.cpp:352
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2576,10 +2587,10 @@ msgstr "Egyéb…"
 
 #: qtplugins/constraints/constraintsextension.cpp:22
 msgid "Constraints…"
-msgstr ""
+msgstr "Korlátozások…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:234
+#: qtplugins/forcefield/forcefield.cpp:233
 msgid "&Calculate"
 msgstr "S&zámítás"
 
@@ -2587,22 +2598,21 @@ msgstr "S&zámítás"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
 #: qtplugins/constraints/constraintsextension.h:27:244
 msgid "Constraints"
-msgstr ""
+msgstr "Korlátozások"
 
 #: qtplugins/constraints/constraintsextension.h:31
 msgid "Set constraints for geometry optimizations"
-msgstr ""
+msgstr "Geometria optimalizálási korlátozások beállítása"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:60:253
 msgid "Distance"
-msgstr ""
+msgstr "Távolság"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:62:256
-#, fuzzy
 msgid "Angle"
 msgstr "Szög"
 
@@ -2610,27 +2620,27 @@ msgstr "Szög"
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:64:259
 msgid "Torsion Angle"
-msgstr ""
+msgstr "Torziós szög"
 
 #: qtplugins/constraints/constraintsmodel.cpp:68
 msgctxt "fix / remain constant"
 msgid "Freeze Atom"
-msgstr ""
+msgstr "Atom fagyasztása"
 
 #: qtplugins/constraints/constraintsmodel.cpp:70
 msgctxt "fix / remain constant"
 msgid "Freeze X Axis"
-msgstr ""
+msgstr "X tengely fagyasztása"
 
 #: qtplugins/constraints/constraintsmodel.cpp:72
 msgctxt "fix / remain constant"
 msgid "Freeze Y Axis"
-msgstr ""
+msgstr "Y tengely fagyasztása"
 
 #: qtplugins/constraints/constraintsmodel.cpp:74
 msgctxt "fix / remain constant"
 msgid "Freeze Z Axis"
-msgstr ""
+msgstr "Z tengely fagyasztása"
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
 #: qtplugins/propertytables/propertymodel.cpp:664
@@ -2642,7 +2652,7 @@ msgstr "Típus"
 
 #: qtplugins/constraints/constraintsmodel.cpp:129
 msgid "Value"
-msgstr ""
+msgstr "Érték"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
 #: qtplugins/propertytables/propertymodel.cpp:709
@@ -2865,7 +2875,7 @@ msgstr "InChI"
 
 #: qtplugins/copypaste/copypaste.cpp:84
 msgid "XYZ"
-msgstr ""
+msgstr "XYZ"
 
 #: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
 msgid "&Edit"
@@ -2947,7 +2957,7 @@ msgstr "Bemenet létrehozása a CP2K számára."
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:84
+#: qtplugins/forcefield/forcefield.cpp:80
 #: qtplugins/plotconformer/plotconformer.cpp:145:1360
 msgid "Energy"
 msgstr "Energia"
@@ -3175,11 +3185,11 @@ msgstr "Egységsejtszerkesztő"
 #: qtplugins/crystal/unitcelldialog.cpp:282
 #: qtplugins/crystal/unitcelldialog.cpp:293
 msgid "Ignoring singular cell matrix"
-msgstr ""
+msgstr "Az egyedülálló sejtmátrix figyelmen kívül hagyása"
 
 #: qtplugins/crystal/unitcelldialog.cpp:304
 msgid "Ignoring singular fractional cell matrix"
-msgstr ""
+msgstr "Az egyedülálló frakcionális sejtmátrix figyelmen kívül hagyása"
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -3199,12 +3209,12 @@ msgstr "Dipólusmomentum"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "Molekula dipólusmomentumának megjelenítése."
 
 #: qtplugins/editor/editor.cpp:73
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
@@ -3351,52 +3361,52 @@ msgstr "Meghatározott jellemzőkre összpontosítása a nézetben."
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Atomi erőtérek képi megjelenítése a molekula számára."
 
-#: qtplugins/forcefield/forcefield.cpp:92
+#: qtplugins/forcefield/forcefield.cpp:88
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:147
 msgid "Forces"
 msgstr "Erők"
 
-#: qtplugins/forcefield/forcefield.cpp:100
+#: qtplugins/forcefield/forcefield.cpp:96
 msgid "Configure…"
 msgstr "Beállítások…"
 
-#: qtplugins/forcefield/forcefield.cpp:112
+#: qtplugins/forcefield/forcefield.cpp:108
 msgid "Freeze Selected Atoms"
-msgstr "Kijelölt atomok lefagyása"
+msgstr "Kijelölt atomok fagyasztása"
 
-#: qtplugins/forcefield/forcefield.cpp:120
+#: qtplugins/forcefield/forcefield.cpp:116
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
-msgstr ""
+msgstr "X fagyasztása"
 
-#: qtplugins/forcefield/forcefield.cpp:128
+#: qtplugins/forcefield/forcefield.cpp:124
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
-msgstr ""
+msgstr "Y fagyasztása"
 
-#: qtplugins/forcefield/forcefield.cpp:136
+#: qtplugins/forcefield/forcefield.cpp:132
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
-msgstr ""
+msgstr "Z fagyasztása"
 
-#: qtplugins/forcefield/forcefield.cpp:144
+#: qtplugins/forcefield/forcefield.cpp:140
 msgid "Unfreeze Selected Atoms"
-msgstr "Kijelölt atomok lefagyásának feloldása"
+msgstr "Kijelölt atomok fagyásának feloldása"
 
-#: qtplugins/forcefield/forcefield.cpp:153
+#: qtplugins/forcefield/forcefield.cpp:149
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
-msgstr ""
+msgstr "Kijelölt atomok egyesítése"
 
-#: qtplugins/forcefield/forcefield.cpp:161
+#: qtplugins/forcefield/forcefield.cpp:157
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
-msgstr ""
+msgstr "Kijelölt atomok egyesítésének feloldása"
 
-#: qtplugins/forcefield/forcefield.cpp:397
-#: qtplugins/forcefield/forcefield.cpp:526
-#: qtplugins/forcefield/forcefield.cpp:584
+#: qtplugins/forcefield/forcefield.cpp:470
+#: qtplugins/forcefield/forcefield.cpp:640
+#: qtplugins/forcefield/forcefield.cpp:693
 #: qtplugins/playertool/playertool.cpp:391
 #: qtplugins/playertool/playertool.cpp:423 qtplugins/surfaces/surfaces.cpp:951
 #: qtplugins/surfaces/surfaces.cpp:995 qtplugins/surfaces/surfaces.cpp:1007
@@ -3404,41 +3414,41 @@ msgstr ""
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:398
+#: qtplugins/forcefield/forcefield.cpp:471
 msgid "No atoms provided for optimization"
 msgstr "Nincsenek atomok az optimalizáláshoz"
 
-#: qtplugins/forcefield/forcefield.cpp:464
+#: qtplugins/forcefield/forcefield.cpp:549
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "Energia: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:525
+#: qtplugins/forcefield/forcefield.cpp:638
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 energia = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:583
+#: qtplugins/forcefield/forcefield.cpp:691
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Erő Norm = %L2"
 
-#: qtplugins/forcefield/forcefield.h:49
+#: qtplugins/forcefield/forcefield.h:61
 msgid "Forcefield optimization"
 msgstr "Erőtér optimalizálása"
 
-#: qtplugins/forcefield/forcefield.h:53
+#: qtplugins/forcefield/forcefield.h:65
 msgid "Forcefield minimization, including scripts"
 msgstr "Erőtér minimalizálás, parancsfájlok beleértve"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:56
 msgid "Options…"
-msgstr ""
+msgstr "Beállítások…"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:175
 msgid "Invalid Model Options"
-msgstr ""
+msgstr "Érvénytelen modellbeállítások"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:176
 #, qt-format
@@ -3448,7 +3458,7 @@ msgstr ""
 #: qtplugins/forcefield/forcefielddialog.cpp:181
 #, qt-format
 msgid "%1 Options"
-msgstr ""
+msgstr "%1 beállításai"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:222
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -3711,7 +3721,7 @@ msgstr "Molekulatöredék beillesztése nagyobb molekulák létrehozásához."
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:55
 msgid "Peptide…"
-msgstr ""
+msgstr "Peptid…"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3719,15 +3729,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:511:710 rc.cpp:898
 msgid "Insert Peptide"
-msgstr ""
+msgstr "Peptid beszúrása"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
-msgstr ""
+msgstr "Peptid beszúrása"
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "Oligopeptid sorozatok beillesztése."
 
 #: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:311
 #: qtplugins/surfacerender/surfacerender.cpp:317
@@ -3879,11 +3889,11 @@ msgstr "A kért formátumolvasó betöltése nem sikerült."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
-msgstr ""
+msgstr "Nem található koordináta!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:146
 msgid "Unable to generate 3D coordinates."
-msgstr ""
+msgstr "A 3D koordináták létrehozása nem sikerült."
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -4528,7 +4538,7 @@ msgstr "A referenciatengelyek megjelenítése a kijelző sarkában."
 #. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
 #: qtplugins/packageinstaller/packageinstaller.cpp:17:1719
 msgid "Manage Plugins…"
-msgstr ""
+msgstr "Bővítmények kezelése…"
 
 #: qtplugins/packageinstaller/packageinstaller.h:32
 msgid "Package Installer"
@@ -4538,38 +4548,38 @@ msgstr ""
 msgid "Install, update, and remove Avogadro packages."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:134
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:136
 #, qt-format
 msgid "Error downloading plugin list: %1"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:143
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:145
 msgid "Error: empty response from server."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:226
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:240
 #, qt-format
 msgid "Error fetching README: %1"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:268
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:282
 msgid "Nothing Selected"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:269
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
 msgid "Check the box next to a plugin to install or update it."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:279
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:293
 #, qt-format
 msgid "%1 (requires %2)"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:297
 msgid "Version Incompatibility"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:284
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:298
 #, qt-format
 msgid ""
 "The following plugins require a newer version of Avogadro:\n"
@@ -4578,12 +4588,17 @@ msgid ""
 "\n"
 "Install anyway?"
 msgstr ""
+"A következő bővítményekhez az Avogadro újabb verziója szükséges:\n"
+"\n"
+"%1\n"
+"\n"
+"Mégis folytatja a telepítést?"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:311
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:325
 msgid "No Download Available"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:312
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:326
 #, qt-format
 msgid ""
 "The selected plugin(s) do not provide a downloadable source URL:\n"
@@ -4591,68 +4606,68 @@ msgid ""
 "%1"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:359
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:373
 #, qt-format
 msgid "Failed to follow redirect while downloading %1.\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:376
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:390
 #, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:385
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:399
 #, qt-format
 msgid "Failed to download from %1: %2\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:420
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
 #: qtplugins/plugindownloader/downloaderwidget.cpp:364
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "%1-%2 letöltése\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:448
 #, qt-format
 msgid "Extracting %1…\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:442
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:456
 #, qt-format
 msgid "Extraction complete (%1 files)\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:463
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:477
 #, qt-format
 msgid "Error: could not move extracted package %1 to %2\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:476
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:490
 #, qt-format
 msgid "Extraction error: %1"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:478
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:492
 msgid "Extraction yielded no files.\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:488
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:502
 msgid "Installation complete.\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:536
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
 msgid "Nothing to Remove"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:537
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
 msgid "Check the box next to an installed plugin to remove it."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:543
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:544
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:558
 #, qt-plural-format
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
@@ -4660,46 +4675,46 @@ msgid_plural "Remove %n selected plugin(s)?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:548
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
-msgstr ""
+msgstr "Fájlok megtartása"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
-msgstr ""
+msgstr "Fájlok törlése"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:593
 msgid "Select Plugin Directory"
-msgstr ""
+msgstr "Bővítménykönyvtár kijelölése"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:585
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:599
 msgid "Invalid Directory"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:586
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
 msgid "The selected directory does not contain a pyproject.toml file."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:614
 #, qt-format
 msgid "Plugin already installed as symlink: %1\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:615
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:629
 #, qt-format
 msgid "Created symlink: %1 → %2\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:618
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:632
 msgid "Symlink creation failed; copying files instead…\n"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:621
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:635
 #, qt-format
 msgid "Failed to copy package to %1."
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:626
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:640
 #, qt-format
 msgid "Installing plugin from %1…\n"
 msgstr ""
@@ -4750,24 +4765,24 @@ msgstr ""
 msgid "Description"
 msgstr "Leírás"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:563
+#: qtplugins/packageinstaller/packagemodel.cpp:564
 msgid "Electrostatics"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemodel.cpp:565
+#: qtplugins/packageinstaller/packagemodel.cpp:566
 msgid "Energy Models"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemodel.cpp:567
+#: qtplugins/packageinstaller/packagemodel.cpp:568
 msgid "File Formats"
 msgstr ""
 
-#: qtplugins/packageinstaller/packagemodel.cpp:569
+#: qtplugins/packageinstaller/packagemodel.cpp:570
 #, fuzzy
 msgid "Input Generators"
 msgstr "Bemenet-generátor"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:571
+#: qtplugins/packageinstaller/packagemodel.cpp:572
 msgid "Commands"
 msgstr ""
 
@@ -5337,23 +5352,23 @@ msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"
-msgstr ""
+msgstr "Atom fagyasztása"
 
 #: qtplugins/propertytables/propertyview.cpp:591
 msgid "Freeze X"
-msgstr ""
+msgstr "X fagyasztás"
 
 #: qtplugins/propertytables/propertyview.cpp:594
 msgid "Freeze Y"
-msgstr ""
+msgstr "Y fagyasztás"
 
 #: qtplugins/propertytables/propertyview.cpp:597
 msgid "Freeze Z"
-msgstr ""
+msgstr "Z fagyasztás"
 
 #: qtplugins/propertytables/propertyview.cpp:600
 msgid "Unfreeze Atom"
-msgstr ""
+msgstr "Atom fagyásának feloldása"
 
 #: qtplugins/propertytables/propertyview.cpp:608
 msgid "Constrain Bond"
@@ -5369,7 +5384,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:619
 msgid "Remove Constraint"
-msgstr ""
+msgstr "Korlátozás eltávolítása"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:163
 #: qtplugins/qtaim/qtaimwavefunction.h:82
@@ -5567,7 +5582,7 @@ msgid "Selection"
 msgstr "Kijelölés"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -5577,6 +5592,13 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Kijelölőeszköz\t(%1)\n"
+"\n"
+"Bal egérgomb:\tKattintson ide az egyes atomok, maradékok vagy töredékek "
+"kijelöléséhez\n"
+"\tHúzással jelöl ki az atomok tartományát\n"
+"Jobb egérgomb:\tKattintson a molekulán kívülre a kijelölés törléséhez\n"
+"Dupla kattintás:\tJelöl ki egy teljes töredéket."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
@@ -5961,11 +5983,11 @@ msgstr ""
 msgid "Imported"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:1020
+#: qtplugins/spectra/spectradialog.cpp:1021
 msgid "Import Data"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:1020
+#: qtplugins/spectra/spectradialog.cpp:1021
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
 msgstr ""
 
@@ -6746,7 +6768,7 @@ msgstr "Környezet:"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:33
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Add Constraints"
-msgstr ""
+msgstr "Korlátozások hozzáadása"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6778,7 +6800,7 @@ msgstr ""
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
 msgid "Get Constraint"
-msgstr ""
+msgstr "Korlátozás lekérése"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
@@ -8611,7 +8633,7 @@ msgstr "Ewald tűréshatára:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:337
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
 msgid "Constraints:"
-msgstr "Megszorítások:"
+msgstr "Korlátozások:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
