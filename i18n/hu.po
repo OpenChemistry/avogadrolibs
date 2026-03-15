@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
 "PO-Revision-Date: 2026-03-15 19:10+0000\n"
-"Last-Translator: ovari <ovari123@zoho.com>\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
 "Language: hu\n"
@@ -5582,7 +5582,7 @@ msgid "Selection"
 msgstr "Kijelölés"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -5592,6 +5592,13 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Kijelölőeszköz\t(%1)\n"
+"\n"
+"Bal egérgomb:\tKattintson ide az egyes atomok, maradékok vagy töredékek "
+"kijelöléséhez\n"
+"\tHúzással jelöl ki az atomok tartományát\n"
+"Jobb egérgomb:\tKattintson a molekulán kívülre a kijelölés törléséhez\n"
+"Dupla kattintás:\tJelöl ki egy teljes töredéket."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
