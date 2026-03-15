@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-07 20:59+0000\n"
+"PO-Revision-Date: 2026-03-15 19:10+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -1087,12 +1087,12 @@ msgstr "%1 Message"
 #: qtgui/interfacescript.cpp:343
 #, qt-format
 msgid "%1 Warning"
-msgstr ""
+msgstr "%1 Warning"
 
 #: qtgui/interfacescript.cpp:350
 #, qt-format
 msgid "%1 Error"
-msgstr ""
+msgstr "%1 Error"
 
 #: qtgui/interfacescript.cpp:593
 #, qt-format
@@ -4497,42 +4497,42 @@ msgstr "Manage Plugins…"
 
 #: qtplugins/packageinstaller/packageinstaller.h:32
 msgid "Package Installer"
-msgstr ""
+msgstr "Package Installer"
 
 #: qtplugins/packageinstaller/packageinstaller.h:36
 msgid "Install, update, and remove Avogadro packages."
-msgstr ""
+msgstr "Install, update, and remove Avogadro packages."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:136
 #, qt-format
 msgid "Error downloading plugin list: %1"
-msgstr ""
+msgstr "Error downloading plugin list: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:145
 msgid "Error: empty response from server."
-msgstr ""
+msgstr "Error: empty response from server."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:240
 #, qt-format
 msgid "Error fetching README: %1"
-msgstr ""
+msgstr "Error fetching README: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:282
 msgid "Nothing Selected"
-msgstr ""
+msgstr "Nothing Selected"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
 msgid "Check the box next to a plugin to install or update it."
-msgstr ""
+msgstr "Check the box next to a plugin to install or update it."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:293
 #, qt-format
 msgid "%1 (requires %2)"
-msgstr ""
+msgstr "%1 (requires %2)"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:297
 msgid "Version Incompatibility"
-msgstr ""
+msgstr "Version Incompatibility"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:298
 #, qt-format
@@ -4543,10 +4543,15 @@ msgid ""
 "\n"
 "Install anyway?"
 msgstr ""
+"The following plugins require a newer version of Avogadro:\n"
+"\n"
+"%1\n"
+"\n"
+"Install anyway?"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:325
 msgid "No Download Available"
-msgstr ""
+msgstr "No Download Available"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:326
 #, qt-format
@@ -4555,21 +4560,24 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"The selected plugin(s) do not provide a downloadable source URL:\n"
+"\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:373
 #, qt-format
 msgid "Failed to follow redirect while downloading %1.\n"
-msgstr ""
+msgstr "Failed to follow redirect while downloading %1.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:390
 #, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
-msgstr ""
+msgstr "Failed to download from %1: status %2, %3\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:399
 #, qt-format
 msgid "Failed to download from %1: %2\n"
-msgstr ""
+msgstr "Failed to download from %1: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
 #: qtplugins/plugindownloader/downloaderwidget.cpp:364
@@ -4580,12 +4588,12 @@ msgstr "Downloading %1 to %2\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:448
 #, qt-format
 msgid "Extracting %1…\n"
-msgstr ""
+msgstr "Extracting %1…\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:456
 #, qt-format
 msgid "Extraction complete (%1 files)\n"
-msgstr ""
+msgstr "Extraction complete (%1 files)\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:477
 #, qt-format
@@ -4627,7 +4635,7 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
-msgstr ""
+msgstr "Keep Files"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
