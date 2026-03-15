@@ -39,37 +39,6 @@ JsonWidget::JsonWidget(QWidget* parent_)
 
 JsonWidget::~JsonWidget() {}
 
-QJsonObject JsonWidget::flattenedOptions() const
-{
-  QJsonObject userOptions = m_options["userOptions"].toObject();
-
-  // First work out whether a tabbed interface is specified
-  bool isTabbed;
-  if (userOptions.contains("tabbed")) {
-    isTabbed = userOptions.take("tabbed").toBool();
-  } else {
-    // Interface doesn't have tabs at all
-    isTabbed = false;
-  }
-
-  if (isTabbed) {
-    QJsonObject flattened;
-    for (auto tab = userOptions.constBegin(); tab != userOptions.constEnd(); ++tab)
-    {
-      QJsonObject tabOptions = tab.value().toObject();
-      // Discard tab-specific settings
-      tabOptions.take("tabPosition");
-      for (auto it = tabOptions.constBegin(); it != tabOptions.constEnd(); ++it)
-      {
-        flattened.insert(it.key(), it.value());
-      }
-    }
-    return flattened;
-  } else {
-    return userOptions;
-  }
-}
-
 void JsonWidget::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule != nullptr) {
@@ -78,7 +47,7 @@ void JsonWidget::setMolecule(QtGui::Molecule* mol)
     auto hasUserOption = [&](const QString& key) -> bool {
       if (!m_options.contains("userOptions"))
         return false;
-      return flattenedOptions().contains(key);
+      return m_options["userOptions"].toObject().contains(key);
     };
 
     int charge = static_cast<int>(m_molecule->totalCharge());
@@ -129,7 +98,7 @@ QString JsonWidget::lookupOptionType(const QString& name) const
     return QString();
   }
 
-  QJsonObject userOptions = flattenedOptions();
+  QJsonObject userOptions = m_options["userOptions"].toObject();
 
   if (!userOptions.contains(name)) {
     qWarning() << tr("Could not find option '%1'.").arg(name);
@@ -180,37 +149,37 @@ void JsonWidget::buildOptionGui()
 
   // First work out whether a tabbed interface is specified
   bool isTabbed;
-  if (userOptions.contains("tabbed")) {
-    isTabbed = userOptions.take("tabbed").toBool();
+  if (userOptions.contains("tabs")) {
+    isTabbed = true;
   } else {
     // Interface doesn't have tabs at all
     isTabbed = false;
   }
   m_isTabbed = isTabbed;
 
-  // We need to store the tab names, and we need to do it in order of position
-  // We need them to be ordered so we can loop over them in order so we can add
-  // them in the correct order
-  QStringList tabs;
+  QJsonArray tabs;
+  QMap<QString, QJsonObject> sortedOptions;
+  // We need to store the tab names in order of position
   if (isTabbed) {
-    // Tab names are the top level keys
-    QStringList unorderedTabs = userOptions.keys();
-    // Get and store all positions
-    QMap<int, QString> tabsByPosition;
-    // Loop over the tabs, which are the top-level key/value pairs
-    for (unsigned int i = 0; i < userOptions.size(); ++i) {
-      QString tabName = unorderedTabs.at(i);
-      QJsonObject tabOptions = userOptions.value(tabName).toObject();
-      // Get position if specified
-      // Use unique but unrealistically high default value otherwise
-      int tabPosition = i + 1000;
-      if (tabOptions.contains("tabPosition")) {
-        tabPosition = tabOptions.take("tabPosition").toInt();
-      }
-      tabsByPosition.insert(tabPosition, tabName);
+    tabs = userOptions.take("tabs").toArray();
+
+    // Sort the options by tab
+    for (auto it = tabs.constBegin(); it != tabs.constEnd(); ++it) {
+        QString tabName = it->toString();
+        sortedOptions.insert(tabName, QJsonObject());
     }
-    // Should be returned in key order
-    tabs = tabsByPosition.values();
+    // Iterate over all options
+    for (auto it = userOptions.constBegin(); it != userOptions.constEnd(); ++it)
+    {
+      if (!it.value().isObject())
+          continue;
+      QJsonObject obj = it.value().toObject();
+      QString tab = obj.value("tab").toString();
+      if (sortedOptions.contains(tab)) {
+          QJsonObject& tabObj = sortedOptions[tab];
+          tabObj.insert(it.key(), it.value());
+      }
+    }
   }
 
   // Lambda to add a set of options to the current layout
@@ -310,7 +279,7 @@ void JsonWidget::buildOptionGui()
     }
   };
 
-  // Create new widgets using the lambda  
+  // Create new widgets using the lambda
   if (isTabbed) {
     // Create a layout for inserting the tabs
     tabsWidget = new QTabWidget(this);
@@ -318,10 +287,9 @@ void JsonWidget::buildOptionGui()
     layout->addWidget(tabsWidget);
     m_centralWidget->setLayout(layout);
     // Loop over the tabs, which are the top-level key/value pairs
-    // The list of tabs has already been sorted into the correct order
-    for (unsigned int i = 0; i < tabs.size(); ++i) {
-      QString tabName = tabs.at(i);
-      QJsonObject tabOptions = userOptions.value(tabName).toObject();
+    for (auto it = tabs.constBegin(); it != tabs.constEnd(); ++it) {
+      QString tabName = it->toString();
+      QJsonObject tabOptions = sortedOptions.value(tabName);
       // Add the new tab
       currentPage = new QWidget(this);
       auto* tabLayout = new QFormLayout(currentPage);
@@ -688,25 +656,19 @@ void JsonWidget::setOptionDefaults()
   if (!m_options.contains("userOptions")) {
     return;
   }
-
-  QJsonObject userOptions = flattenedOptions();
+  QJsonObject userOptions = m_options["userOptions"].toObject();
+  // Remove those keys that aren't for options
+  userOptions.take("tabs");
 
   // Loop over all options
   for (auto it = userOptions.constBegin(); it != userOptions.constEnd(); ++it)
   {
     QString label = it.key();
-    QJsonValue val = it.value();
+    QJsonObject obj = it.value().toObject();
 
-    if (!val.isObject()) {
-      qWarning()
-        << tr("Error: value must be object for key '%1'.").arg(label);
-      continue;
-    }
-
-    QJsonObject obj = val.toObject();
     if (obj.contains("default")) {
       // TODO - check QSettings for a value too
-      setOption(label, obj[QStringLiteral("default")]);
+      setOption(label, obj.value("default"));
     }
   }
 }
