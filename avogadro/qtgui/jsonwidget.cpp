@@ -29,6 +29,8 @@
 
 #include <QRegularExpression>
 
+using namespace Qt::StringLiterals;
+
 namespace Avogadro::QtGui {
 
 JsonWidget::JsonWidget(QWidget* parent_)
@@ -45,18 +47,18 @@ void JsonWidget::setMolecule(QtGui::Molecule* mol)
     // update charge and multiplicity only if those options exist
     // (command scripts don't have them, unlike input generators)
     auto hasUserOption = [&](const QString& key) -> bool {
-      if (!m_options.contains("userOptions"))
+      if (!m_options.contains(u"userOptions"_s))
         return false;
-      return m_options["userOptions"].toObject().contains(key);
+      return m_options[u"userOptions"_s].toObject().contains(key);
     };
 
     int charge = static_cast<int>(m_molecule->totalCharge());
     int multiplicity = static_cast<int>(m_molecule->totalSpinMultiplicity());
 
-    if (hasUserOption("Charge"))
-      setOption("Charge", charge);
-    if (hasUserOption("Multiplicity"))
-      setOption("Multiplicity", multiplicity);
+    if (hasUserOption(u"Charge"_s))
+      setOption(u"Charge"_s, charge);
+    if (hasUserOption(u"Multiplicity"_s))
+      setOption(u"Multiplicity"_s, multiplicity);
 
     // check the molecule for "inputParameters" from CJSON
     // e.g.
@@ -68,16 +70,16 @@ void JsonWidget::setMolecule(QtGui::Molecule* mol)
       if (!doc.isNull() && doc.isObject()) {
         QJsonObject inputParameters = doc.object();
         // check for a few known keys
-        if (inputParameters.contains("processors"))
-          setOption("Processor Cores", inputParameters["processors"].toInt());
-        else if (inputParameters.contains("memory"))
-          setOption("Memory", inputParameters["memory"].toInt());
-        else if (inputParameters.contains("basis"))
-          setOption("Basis", inputParameters["basis"].toString());
-        else if (inputParameters.contains("functional"))
-          setOption("Theory", inputParameters["functional"].toString());
-        else if (inputParameters.contains("task"))
-          setOption("Calculation Type", inputParameters["task"].toString());
+        if (inputParameters.contains(u"processors"_s))
+          setOption(u"Processor Cores"_s, inputParameters[u"processors"_s].toInt());
+        else if (inputParameters.contains(u"memory"_s))
+          setOption(u"Memory"_s, inputParameters[u"memory"_s].toInt());
+        else if (inputParameters.contains(u"basis"_s))
+          setOption(u"Basis"_s, inputParameters[u"basis"_s].toString());
+        else if (inputParameters.contains(u"functional"_s))
+          setOption(u"Theory"_s, inputParameters[u"functional"_s].toString());
+        else if (inputParameters.contains(u"task"_s))
+          setOption(u"Calculation Type"_s, inputParameters[u"task"_s].toString());
       }
     }
   }
@@ -93,12 +95,12 @@ void JsonWidget::setMolecule(QtGui::Molecule* mol)
 
 QString JsonWidget::lookupOptionType(const QString& name) const
 {
-  if (!m_options.contains("userOptions")) {
+  if (!m_options.contains(u"userOptions"_s)) {
     qWarning() << tr("'userOptions' missing.");
     return QString();
   }
 
-  QJsonObject userOptions = m_options["userOptions"].toObject();
+  QJsonObject userOptions = m_options[u"userOptions"_s].toObject();
 
   if (!userOptions.contains(name)) {
     qWarning() << tr("Could not find option '%1'.").arg(name);
@@ -107,12 +109,12 @@ QString JsonWidget::lookupOptionType(const QString& name) const
 
   QJsonObject obj = userOptions[name].toObject();
 
-  if (!obj.contains("type") || !obj.value("type").isString()) {
+  if (!obj.contains(u"type"_s) || !obj[u"type"_s].isString()) {
     qWarning() << tr("'type' is not a string for option '%1'.").arg(name);
     return QString();
   }
 
-  return obj["type"].toString();
+  return obj[u"type"_s].toString();
 }
 
 void JsonWidget::updateOptions()
@@ -133,15 +135,15 @@ void JsonWidget::buildOptionGui()
   m_widgets.clear();
   delete m_centralWidget->layout();
 
-  if (!m_options.contains("userOptions")) {
+  if (!m_options.contains(u"userOptions"_s)) {
     return;
   }
 
   // Always expect an object now, should never be an array
-  if (m_options["userOptions"].isArray()) {
+  if (m_options[u"userOptions"_s].isArray()) {
     return;
   }
-  QJsonObject userOptions = m_options["userOptions"].toObject();
+  QJsonObject userOptions = m_options[u"userOptions"_s].toObject();
 
   // If a tabbed interface is specified, we'll create tabs for it
   QTabWidget* tabsWidget = nullptr;
@@ -149,7 +151,7 @@ void JsonWidget::buildOptionGui()
 
   // First work out whether a tabbed interface is specified
   bool isTabbed;
-  if (userOptions.contains("tabs")) {
+  if (userOptions.contains(u"tabs"_s)) {
     isTabbed = true;
   } else {
     // Interface doesn't have tabs at all
@@ -161,7 +163,7 @@ void JsonWidget::buildOptionGui()
   QMap<QString, QJsonObject> sortedOptions;
   // We need to store the tab names in order of position
   if (isTabbed) {
-    tabs = userOptions.take("tabs").toArray();
+    tabs = userOptions.take(u"tabs"_s).toArray();
 
     // Sort the options by tab
     for (auto it = tabs.constBegin(); it != tabs.constEnd(); ++it) {
@@ -174,7 +176,7 @@ void JsonWidget::buildOptionGui()
       if (!it.value().isObject())
           continue;
       QJsonObject obj = it.value().toObject();
-      QString tab = obj.value("tab").toString();
+      QString tab = obj[u"tab"_s].toString();
       if (sortedOptions.contains(tab)) {
           QJsonObject& tabObj = sortedOptions[tab];
           tabObj.insert(it.key(), it.value());
@@ -185,53 +187,53 @@ void JsonWidget::buildOptionGui()
   // Lambda to add a set of options to the current layout
   auto addOptions = [this](QJsonObject options) {
     // Title first
-    if (options.contains("Title"))
-      addOptionRow("Title", tr("Title"), options.take("Title"));
+    if (options.contains(u"Title"_s))
+      addOptionRow(u"Title"_s, tr("Title"), options.take(u"Title"_s));
 
     // File basename next:
-    if (options.contains("Filename Base"))
-      addOptionRow("Filename Base", tr("Filename Base"),
-                   options.take("Filename Base"));
+    if (options.contains(u"Filename Base"_s))
+      addOptionRow(u"Filename Base"_s, tr("Filename Base"),
+                   options.take(u"Filename Base"_s));
 
     // Number of cores and memory next:
-    if (options.contains("Processor Cores") &&
-        options.contains("Memory")) {
-      combinedOptionRow("Processor Cores", "Memory", tr("Processor Cores"),
+    if (options.contains(u"Processor Cores"_s) &&
+        options.contains(u"Memory"_s)) {
+      combinedOptionRow(u"Processor Cores"_s, u"Memory"_s, tr("Processor Cores"),
                         tr("Memory"), options, true); // both labels
     } else {
       // do them separately
-      if (options.contains("Processor Cores"))
-        addOptionRow("Processor Cores", tr("Processor Cores"),
-                     options.take("Processor Cores"));
-      if (options.contains("Memory"))
-        addOptionRow("Memory", tr("Memory"), options.take("Memory"));
+      if (options.contains(u"Processor Cores"_s))
+        addOptionRow(u"Processor Cores"_s, tr("Processor Cores"),
+                     options.take(u"Processor Cores"_s));
+      if (options.contains(u"Memory"_s))
+        addOptionRow(u"Memory"_s, tr("Memory"), options.take(u"Memory"_s));
     }
 
     // Calculation Type next:
-    if (options.contains("Calculation Type"))
-      addOptionRow("Calculation Type", tr("Calculation Type"),
-                   options.take("Calculation Type"));
+    if (options.contains(u"Calculation Type"_s))
+      addOptionRow(u"Calculation Type"_s, tr("Calculation Type"),
+                   options.take(u"Calculation Type"_s));
 
     // Theory/basis next. Combine into one row if both present.
-    combinedOptionRow("Theory", "Basis", tr("Theory"), tr("Basis"),
+    combinedOptionRow(u"Theory"_s, u"Basis"_s, tr("Theory"), tr("Basis"),
                       options);
 
     // Other special cases: Charge / Multiplicity
-    if (options.contains("Charge") && options.contains("Multiplicity"))
-      combinedOptionRow("Charge", "Multiplicity", tr("Charge"),
+    if (options.contains(u"Charge"_s) && options.contains(u"Multiplicity"_s))
+      combinedOptionRow(u"Charge"_s, u"Multiplicity"_s, tr("Charge"),
                         tr("Multiplicity"), options, true); // both labels
     else {
-      if (options.contains("Charge"))
-        addOptionRow("Charge", tr("Charge"), options.take("Charge"));
-      if (options.contains("Multiplicity"))
-        addOptionRow("Multiplicity", tr("Multiplicity"),
-                     options.take("Multiplicity"));
+      if (options.contains(u"Charge"_s))
+        addOptionRow(u"Charge"_s, tr("Charge"), options.take(u"Charge"_s));
+      if (options.contains(u"Multiplicity"_s))
+        addOptionRow(u"Multiplicity"_s, tr("Multiplicity"),
+                     options.take(u"Multiplicity"_s));
     }
 
     // Solvation / model
-    if (options.contains("Solvent") &&
-        options.contains("Solvation Model")) {
-      combinedOptionRow("Solvent", "Solvation Model", tr("Solvent"),
+    if (options.contains(u"Solvent"_s) &&
+        options.contains(u"Solvation Model"_s)) {
+      combinedOptionRow(u"Solvent"_s, u"Solvation Model"_s, tr("Solvent"),
                         tr("Model", "solvation method / model"), options,
                         true); // both labels
     }
@@ -245,8 +247,8 @@ void JsonWidget::buildOptionGui()
          it != itEnd; ++it) {
       if (it.value().isObject()) {
         QJsonObject obj = it.value().toObject();
-        if (obj.contains("order") && obj.value("order").isDouble()) {
-          order = obj.value("order").toInt();
+        if (obj.contains(u"order"_s) && obj[u"order"_s].isDouble()) {
+          order = obj[u"order"_s].toInt();
           keys.insert(order, it.key());
         } else { // object doesn't contain "order"
           keys.insert(order, it.key());
@@ -263,17 +265,17 @@ void JsonWidget::buildOptionGui()
 
     // Make connections for standard options:
     if (auto* combo = qobject_cast<QComboBox*>(
-          m_widgets.value("Calculation Type", nullptr))) {
+          m_widgets.value(u"Calculation Type"_s, nullptr))) {
       connect(combo, SIGNAL(currentIndexChanged(int)),
               SLOT(updateTitlePlaceholder()));
     }
     if (auto* combo =
-          qobject_cast<QComboBox*>(m_widgets.value("Theory", nullptr))) {
+          qobject_cast<QComboBox*>(m_widgets.value(u"Theory"_s, nullptr))) {
       connect(combo, SIGNAL(currentIndexChanged(int)),
               SLOT(updateTitlePlaceholder()));
     }
     if (auto* combo =
-          qobject_cast<QComboBox*>(m_widgets.value("Basis", nullptr))) {
+          qobject_cast<QComboBox*>(m_widgets.value(u"Basis"_s, nullptr))) {
       connect(combo, SIGNAL(currentIndexChanged(int)),
               SLOT(updateTitlePlaceholder()));
     }
@@ -371,16 +373,16 @@ void JsonWidget::addOptionRow(const QString& key, const QString& name,
 
   QJsonObject obj = option.toObject();
 
-  if (obj.contains(QStringLiteral("label")) &&
-      obj.value(QStringLiteral("label")).isString()) {
-    label = obj[QStringLiteral("label")].toString();
+  if (obj.contains(u"label"_s) &&
+      obj[u"label"_s].isString()) {
+    label = obj[u"label"_s].toString();
   }
 
   // also check for "User Name" or "Password" for translation
   // with case-insensitive comparison
-  if (label.toLower() == "user name" || label.toLower() == "username")
+  if (label.toLower() == u"user name"_s || label.toLower() == u"username"_s)
     label = tr("User Name");
-  else if (label.toLower() == "password") {
+  else if (label.toLower() == u"password"_s) {
     label = tr("Password");
     // make sure the widget has the right echo
     if (auto* lineEdit = qobject_cast<QLineEdit*>(widget)) {
@@ -393,9 +395,9 @@ void JsonWidget::addOptionRow(const QString& key, const QString& name,
 
   // optionally hide rows .. can be shown by the script later
   bool hide = false;
-  if (obj.contains(QStringLiteral("hide")) &&
-      obj.value(QStringLiteral("hide")).isBool()) {
-    hide = obj[QStringLiteral("hide")].toBool();
+  if (obj.contains(u"hide"_s) &&
+      obj[u"hide"_s].isBool()) {
+    hide = obj[u"hide"_s].toBool();
   }
   if (hide) {
     widget->hide();
@@ -413,27 +415,27 @@ QWidget* JsonWidget::createOptionWidget(const QJsonValue& option)
 
   QJsonObject obj = option.toObject();
 
-  if (!obj.contains(QStringLiteral("type")) ||
-      !obj.value(QStringLiteral("type")).isString())
+  if (!obj.contains(u"type"_s) ||
+      !obj[u"type"_s].isString())
     return nullptr;
 
-  QString type = obj[QStringLiteral("type")].toString();
+  QString type = obj[u"type"_s].toString();
 
-  if (type == QLatin1String("stringList"))
+  if (type == u"stringList"_s)
     return createStringListWidget(obj);
-  else if (type == QLatin1String("string"))
+  else if (type == u"string"_s)
     return createStringWidget(obj);
-  else if (type == QLatin1String("filePath"))
+  else if (type == u"filePath"_s)
     return createFilePathWidget(obj);
-  else if (type == QLatin1String("integer"))
+  else if (type == u"integer"_s)
     return createIntegerWidget(obj);
-  else if (type == QLatin1String("float"))
+  else if (type == u"float"_s)
     return createFloatWidget(obj);
-  else if (type == QLatin1String("boolean"))
+  else if (type == u"boolean"_s)
     return createBooleanWidget(obj);
-  else if (type == QLatin1String("text"))
+  else if (type == u"text"_s)
     return createTextWidget(obj);
-  else if (type == QLatin1String("table"))
+  else if (type == u"table"_s)
     return createTableWidget(obj);
 
   qDebug() << "Unrecognized option type:" << type;
@@ -442,14 +444,14 @@ QWidget* JsonWidget::createOptionWidget(const QJsonValue& option)
 
 QWidget* JsonWidget::createStringListWidget(const QJsonObject& obj)
 {
-  if (!obj.contains(QStringLiteral("values")) ||
-      !obj[QStringLiteral("values")].isArray()) {
+  if (!obj.contains(u"values"_s) ||
+      !obj[u"values"_s].isArray()) {
     qDebug() << "JsonWidget::createStringListWidget()"
                 "values missing, or not array!";
     return nullptr;
   }
 
-  QJsonArray valueArray = obj[QStringLiteral("values")].toArray();
+  QJsonArray valueArray = obj[u"values"_s].toArray();
 
   auto* combo = new QComboBox(this);
   for (QJsonArray::const_iterator vit = valueArray.constBegin(),
@@ -466,9 +468,9 @@ QWidget* JsonWidget::createStringListWidget(const QJsonObject& obj)
   }
   connect(combo, SIGNAL(currentIndexChanged(int)), SLOT(updatePreviewText()));
 
-  if (obj.contains(QStringLiteral("toolTip")) &&
-      obj.value(QStringLiteral("toolTip")).isString()) {
-    combo->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  if (obj.contains(u"toolTip"_s) &&
+      obj[u"toolTip"_s].isString()) {
+    combo->setToolTip(obj[u"toolTip"_s].toString());
   }
 
   return combo;
@@ -478,18 +480,18 @@ QWidget* JsonWidget::createStringWidget(const QJsonObject& obj)
 {
   auto* edit = new QLineEdit(this);
   connect(edit, SIGNAL(textChanged(QString)), SLOT(updatePreviewText()));
-  if (obj.contains(QStringLiteral("toolTip")) &&
-      obj.value(QStringLiteral("toolTip")).isString()) {
-    edit->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  if (obj.contains(u"toolTip"_s) &&
+      obj[u"toolTip"_s].isString()) {
+    edit->setToolTip(obj[u"toolTip"_s].toString());
   }
-  if (obj.contains(QStringLiteral("placeholderText")) &&
-      obj.value(QStringLiteral("placeholderText")).isString()) {
-    edit->setPlaceholderText(obj[QStringLiteral("placeholderText")].toString());
+  if (obj.contains(u"placeholderText"_s) &&
+      obj[u"placeholderText"_s].isString()) {
+    edit->setPlaceholderText(obj[u"placeholderText"_s].toString());
   }
   // don't echo password fields
-  if (obj.contains(QStringLiteral("password")) &&
-      obj.value(QStringLiteral("password")).isBool() &&
-      obj[QStringLiteral("password")].toBool()) {
+  if (obj.contains(u"password"_s) &&
+      obj[u"password"_s].isBool() &&
+      obj[u"password"_s].toBool()) {
     edit->setEchoMode(QLineEdit::PasswordEchoOnEdit);
   }
 
@@ -501,9 +503,9 @@ QWidget* JsonWidget::createTextWidget(const QJsonObject& obj)
   auto* text = new QLabel(this);
   text->setWordWrap(true);
 
-  if (obj.contains(QStringLiteral("toolTip")) &&
-      obj.value(QStringLiteral("toolTip")).isString()) {
-    text->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  if (obj.contains(u"toolTip"_s) &&
+      obj[u"toolTip"_s].isString()) {
+    text->setToolTip(obj[u"toolTip"_s].toString());
   }
 
   return text;
@@ -515,9 +517,9 @@ QWidget* JsonWidget::createFilePathWidget(const QJsonObject& obj)
   connect(fileBrowse, SIGNAL(fileNameChanged(QString)),
           SLOT(updatePreviewText()));
 
-  if (obj.contains(QStringLiteral("toolTip")) &&
-      obj.value(QStringLiteral("toolTip")).isString()) {
-    fileBrowse->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  if (obj.contains(u"toolTip"_s) &&
+      obj[u"toolTip"_s].isString()) {
+    fileBrowse->setToolTip(obj[u"toolTip"_s].toString());
   }
   return fileBrowse;
 }
@@ -525,27 +527,27 @@ QWidget* JsonWidget::createFilePathWidget(const QJsonObject& obj)
 QWidget* JsonWidget::createIntegerWidget(const QJsonObject& obj)
 {
   auto* spin = new QSpinBox(this);
-  if (obj.contains(QStringLiteral("minimum")) &&
-      obj.value(QStringLiteral("minimum")).isDouble()) {
+  if (obj.contains(u"minimum"_s) &&
+      obj[u"minimum"_s].isDouble()) {
     spin->setMinimum(
-      static_cast<int>(obj[QStringLiteral("minimum")].toDouble() + 0.5));
+      static_cast<int>(obj[u"minimum"_s].toDouble() + 0.5));
   }
-  if (obj.contains(QStringLiteral("maximum")) &&
-      obj.value(QStringLiteral("maximum")).isDouble()) {
+  if (obj.contains(u"maximum"_s) &&
+      obj[u"maximum"_s].isDouble()) {
     spin->setMaximum(
-      static_cast<int>(obj[QStringLiteral("maximum")].toDouble() + 0.5));
+      static_cast<int>(obj[u"maximum"_s].toDouble() + 0.5));
   }
-  if (obj.contains(QStringLiteral("prefix")) &&
-      obj.value(QStringLiteral("prefix")).isString()) {
-    spin->setPrefix(obj[QStringLiteral("prefix")].toString());
+  if (obj.contains(u"prefix"_s) &&
+      obj[u"prefix"_s].isString()) {
+    spin->setPrefix(obj[u"prefix"_s].toString());
   }
-  if (obj.contains(QStringLiteral("suffix")) &&
-      obj.value(QStringLiteral("suffix")).isString()) {
-    spin->setSuffix(obj[QStringLiteral("suffix")].toString());
+  if (obj.contains(u"suffix"_s) &&
+      obj[u"suffix"_s].isString()) {
+    spin->setSuffix(obj[u"suffix"_s].toString());
   }
-  if (obj.contains(QStringLiteral("toolTip")) &&
-      obj.value(QStringLiteral("toolTip")).isString()) {
-    spin->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  if (obj.contains(u"toolTip"_s) &&
+      obj[u"toolTip"_s].isString()) {
+    spin->setToolTip(obj[u"toolTip"_s].toString());
   }
   connect(spin, SIGNAL(valueChanged(int)), SLOT(updatePreviewText()));
   return spin;
@@ -554,30 +556,30 @@ QWidget* JsonWidget::createIntegerWidget(const QJsonObject& obj)
 QWidget* JsonWidget::createFloatWidget(const QJsonObject& obj)
 {
   auto* spin = new QDoubleSpinBox(this);
-  if (obj.contains(QStringLiteral("minimum")) &&
-      obj.value(QStringLiteral("minimum")).isDouble()) {
-    spin->setMinimum(obj[QStringLiteral("minimum")].toDouble());
+  if (obj.contains(u"minimum"_s) &&
+      obj[u"minimum"_s].isDouble()) {
+    spin->setMinimum(obj[u"minimum"_s].toDouble());
   }
-  if (obj.contains(QStringLiteral("maximum")) &&
-      obj.value(QStringLiteral("maximum")).isDouble()) {
-    spin->setMaximum(obj[QStringLiteral("maximum")].toDouble());
+  if (obj.contains(u"maximum"_s) &&
+      obj[u"maximum"_s].isDouble()) {
+    spin->setMaximum(obj[u"maximum"_s].toDouble());
   }
-  if (obj.contains(QStringLiteral("precision")) &&
-      obj.value(QStringLiteral("precision")).isDouble()) {
+  if (obj.contains(u"precision"_s) &&
+      obj[u"precision"_s].isDouble()) {
     spin->setDecimals(
-      static_cast<int>(obj[QStringLiteral("precision")].toDouble()));
+      static_cast<int>(obj[u"precision"_s].toDouble()));
   }
-  if (obj.contains(QStringLiteral("prefix")) &&
-      obj.value(QStringLiteral("prefix")).isString()) {
-    spin->setPrefix(obj[QStringLiteral("prefix")].toString());
+  if (obj.contains(u"prefix"_s) &&
+      obj[u"prefix"_s].isString()) {
+    spin->setPrefix(obj[u"prefix"_s].toString());
   }
-  if (obj.contains(QStringLiteral("suffix")) &&
-      obj.value(QStringLiteral("suffix")).isString()) {
-    spin->setSuffix(obj[QStringLiteral("suffix")].toString());
+  if (obj.contains(u"suffix"_s) &&
+      obj[u"suffix"_s].isString()) {
+    spin->setSuffix(obj[u"suffix"_s].toString());
   }
-  if (obj.contains(QStringLiteral("toolTip")) &&
-      obj.value(QStringLiteral("toolTip")).isString()) {
-    spin->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  if (obj.contains(u"toolTip"_s) &&
+      obj[u"toolTip"_s].isString()) {
+    spin->setToolTip(obj[u"toolTip"_s].toString());
   }
   connect(spin, SIGNAL(valueChanged(double)), SLOT(updatePreviewText()));
   return spin;
@@ -588,9 +590,9 @@ QWidget* JsonWidget::createBooleanWidget(const QJsonObject& obj)
   auto* checkBox = new QCheckBox(this);
   connect(checkBox, SIGNAL(toggled(bool)), SLOT(updatePreviewText()));
 
-  if (obj.contains(QStringLiteral("toolTip")) &&
-      obj.value(QStringLiteral("toolTip")).isString()) {
-    checkBox->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  if (obj.contains(u"toolTip"_s) &&
+      obj[u"toolTip"_s].isString()) {
+    checkBox->setToolTip(obj[u"toolTip"_s].toString());
   }
   return checkBox;
 }
@@ -601,28 +603,28 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
   connect(tableWidget, SIGNAL(cellChanged(int, int)),
           SLOT(updatePreviewText()));
 
-  if (obj.contains(QStringLiteral("toolTip")) &&
-      obj.value(QStringLiteral("toolTip")).isString()) {
-    tableWidget->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  if (obj.contains(u"toolTip"_s) &&
+      obj[u"toolTip"_s].isString()) {
+    tableWidget->setToolTip(obj[u"toolTip"_s].toString());
   }
-  if (obj.contains(QStringLiteral("headers")) &&
-      obj.value("headers").isArray()) {
-    QJsonArray headers = obj["headers"].toArray();
+  if (obj.contains(u"headers"_s) &&
+      obj[u"headers"_s].isArray()) {
+    QJsonArray headers = obj[u"headers"_s].toArray();
     tableWidget->setColumnCount(headers.size());
     for (int i = 0; i < headers.size(); ++i) {
       tableWidget->setHorizontalHeaderItem(
         i, new QTableWidgetItem(headers[i].toString()));
     }
   }
-  if (obj.contains(QStringLiteral("delimiter")) &&
-      obj.value("delimiter").isString()) {
-    tableWidget->setProperty("delimiter", obj["delimiter"].toString());
+  if (obj.contains(u"delimiter"_s) &&
+      obj[u"delimiter"_s].isString()) {
+    tableWidget->setProperty("delimiter", obj[u"delimiter"_s].toString());
   }
 
   // data might be supplied as columns or rows
-  if (obj.contains(QStringLiteral("columns")) &&
-      obj.value("columns").isArray()) {
-    QJsonArray columns = obj["columns"].toArray();
+  if (obj.contains(u"columns"_s) &&
+      obj[u"columns"_s].isArray()) {
+    QJsonArray columns = obj[u"columns"_s].toArray();
     // get the row count from the first column
     tableWidget->setRowCount(columns[0].toArray().size());
     for (int i = 0; i < columns.size(); ++i) {
@@ -634,8 +636,8 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
       }
     }
   }
-  if (obj.contains(QStringLiteral("rows")) && obj.value("rows").isArray()) {
-    QJsonArray rows = obj["rows"].toArray();
+  if (obj.contains(u"rows"_s) && obj[u"rows"_s].isArray()) {
+    QJsonArray rows = obj[u"rows"_s].toArray();
     // get the column count from the first row
     tableWidget->setColumnCount(rows[0].toArray().size());
     for (int j = 0; j < rows.size(); ++j) {
@@ -653,12 +655,12 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
 
 void JsonWidget::setOptionDefaults()
 {
-  if (!m_options.contains("userOptions")) {
+  if (!m_options.contains(u"userOptions"_s)) {
     return;
   }
-  QJsonObject userOptions = m_options["userOptions"].toObject();
+  QJsonObject userOptions = m_options[u"userOptions"_s].toObject();
   // Remove those keys that aren't for options
-  userOptions.take("tabs");
+  userOptions.take(u"tabs"_s);
 
   // Loop over all options
   for (auto it = userOptions.constBegin(); it != userOptions.constEnd(); ++it)
@@ -666,9 +668,9 @@ void JsonWidget::setOptionDefaults()
     QString label = it.key();
     QJsonObject obj = it.value().toObject();
 
-    if (obj.contains("default")) {
+    if (obj.contains(u"default"_s)) {
       // TODO - check QSettings for a value too
-      setOption(label, obj.value("default"));
+      setOption(label, obj[u"default"_s]);
     }
   }
 }
@@ -677,21 +679,21 @@ void JsonWidget::setOption(const QString& name, const QJsonValue& defaultValue)
 {
   QString type = lookupOptionType(name);
 
-  if (type == QLatin1String("stringList"))
+  if (type == u"stringList"_s)
     return setStringListOption(name, defaultValue);
-  else if (type == QLatin1String("string"))
+  else if (type == u"string"_s)
     return setStringOption(name, defaultValue);
-  else if (type == QLatin1String("filePath"))
+  else if (type == u"filePath"_s)
     return setFilePathOption(name, defaultValue);
-  else if (type == QLatin1String("integer"))
+  else if (type == u"integer"_s)
     return setIntegerOption(name, defaultValue);
-  else if (type == QLatin1String("float"))
+  else if (type == u"float"_s)
     return setFloatOption(name, defaultValue);
-  else if (type == QLatin1String("boolean"))
+  else if (type == u"boolean"_s)
     return setBooleanOption(name, defaultValue);
-  else if (type == QLatin1String("text"))
+  else if (type == u"text"_s)
     return setTextOption(name, defaultValue);
-  else if (type == QLatin1String("table"))
+  else if (type == u"table"_s)
     return setTableOption(name, defaultValue);
 
   qWarning()
@@ -937,7 +939,7 @@ QJsonObject JsonWidget::collectOptions() const
       ret.insert(label, combo->currentText());
     } else if (auto* lineEdit = qobject_cast<QLineEdit*>(widget)) {
       QString value(lineEdit->text());
-      if (value.isEmpty() && label == QLatin1String("Title"))
+      if (value.isEmpty() && label == u"Title"_s)
         value = generateJobTitle();
       ret.insert(label, value);
     } else if (auto* spinBox = qobject_cast<QSpinBox*>(widget)) {
@@ -970,13 +972,13 @@ void JsonWidget::applyOptions(const QJsonObject& opts)
 QString JsonWidget::generateJobTitle() const
 {
   QString calculation;
-  bool haveCalculation(optionString("Calculation Type", calculation));
+  bool haveCalculation(optionString(u"Calculation Type"_s, calculation));
 
   QString theory;
-  bool haveTheory(optionString("Theory", theory));
+  bool haveTheory(optionString(u"Theory"_s, theory));
 
   QString basis;
-  bool haveBasis(optionString("Basis", basis));
+  bool haveBasis(optionString(u"Basis"_s, basis));
 
   // Merge theory/basis into theory
   if (haveBasis) {
