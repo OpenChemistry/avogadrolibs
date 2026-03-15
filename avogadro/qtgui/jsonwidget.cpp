@@ -172,147 +172,109 @@ void JsonWidget::buildOptionGui()
   }
 
   // Always expect an object now, should never be an array
+  if (m_options["userOptions"].isArray()) {
+    return;
+  }
   QJsonObject userOptions = m_options["userOptions"].toObject();
 
   // If a tabbed interface is specified, we'll create tabs for it
-  QTabWidget* tabs = nullptr;
+  QTabWidget* tabsWidget = nullptr;
   QWidget* currentPage = nullptr;
 
-  // Two current contenders for the tabbed schema:
-  // 2. Top-level objects for each tab
-  // 3. Top-level objects for each user option (like when untabbed), indicate
-  //    the tab each option should belong to as an attribute of the option
-
-  // First work out whether a tabbed interface is specified and, if so,
-  // which schema is in use
+  // First work out whether a tabbed interface is specified
   bool isTabbed;
-  unsigned int tabsSchema;
   if (userOptions.contains("tabbed")) {
-    // `tabbed` is the key for a bool
-    isTabbed = userOptions.value("tabbed").toBool();
-    if (isTabbed) {
-      tabsSchema = 2;
-    } else {
-      tabsSchema = 0;
-    }
-  } else if (userOptions.contains("tabs")) {
-    // `tabs` is the key for the array of tab names, so its presence implies the
-    // interface should be tabbed
-    isTabbed = true;
-    tabsSchema = 3;
+    isTabbed = userOptions.take("tabbed").toBool();
   } else {
     // Interface doesn't have tabs at all
-    // Use a schema of 0 to represent an untabbed interface
     isTabbed = false;
-    tabsSchema = 0;
   }
 
-  // If tabbed, put the user options into a flat object with the user options as
-  // the key/value pairs, while extracting the tab membership information
-  // TODO
-
-  // Create new widgets
-  unsigned int size;
-  bool isArray = m_options["userOptions"].isArray();
-  QJsonArray options;
-  if (isArray) {
-    size = m_options["userOptions"].toArray().size();
-    options = m_options["userOptions"].toArray();
-
-    // create a layout for inserting the tabs
-    tabs = new QTabWidget(this);
-    auto* layout = new QVBoxLayout;
-    layout->addWidget(tabs);
-    m_centralWidget->setLayout(layout);
-  } else {
-    size = 1;
-
-    // create the form layout for the widget
-    auto* layout = new QFormLayout;
-    m_currentLayout = layout;
-    m_centralWidget->setLayout(layout);
-  }
-
-  for (unsigned int i = 0; i < size; ++i) {
-    QString tabName = tr("Tab %1").arg(i + 1); // default
-    if (isArray) {
-      userOptions = options.at(i).toObject();
-
-      // add a new tab
-      if (userOptions.contains("tabName") &&
-          userOptions.value("tabName").isString()) {
-        tabName = userOptions.value("tabName").toString();
-        userOptions.take("tabName");
+  // We need to store the tab names, and we need to do it in order of position
+  // We need them to be ordered so we can loop over them in order so we can add
+  // them in the correct order
+  QStringList tabs;
+  if (isTabbed) {
+    // Tab names are the top level keys
+    QStringList unorderedTabs = userOptions.keys();
+    // Get and store all positions
+    QMap<int, QString> tabsByPosition;
+    // Loop over the tabs, which are the top-level key/value pairs
+    for (unsigned int i = 0; i < userOptions.size(); ++i) {
+      QString tabName = unorderedTabs.at(i);
+      QJsonObject tabOptions = userOptions.value(tabName).toObject();
+      // Get position if specified
+      // Use unique but unrealistically high default value otherwise
+      int tabPosition = i + 1000;
+      if (tabOptions.contains("tabPosition")) {
+        tabPosition = tabOptions.take("tabPosition").toInt();
       }
-      currentPage = new QWidget(this);
-      auto* layout = new QFormLayout(currentPage);
-      currentPage->setLayout(layout);
-      m_currentLayout = layout;
-    } else if (m_options["userOptions"].isObject()) {
-      userOptions = m_options["userOptions"].toObject();
-      // don't need to set layout, we already did that
-    } else {
-      break;
+      tabsByPosition.insert(tabPosition, tabName);
     }
+    // Should be returned in key order
+    tabs = tabsByPosition.values();
+  }
 
+  // Lambda to add a set of options to the current layout
+  auto addOptions = [this](QJsonObject options) {
     // Title first
-    if (userOptions.contains("Title"))
-      addOptionRow("Title", tr("Title"), userOptions.take("Title"));
+    if (options.contains("Title"))
+      addOptionRow("Title", tr("Title"), options.take("Title"));
 
     // File basename next:
-    if (userOptions.contains("Filename Base"))
+    if (options.contains("Filename Base"))
       addOptionRow("Filename Base", tr("Filename Base"),
-                   userOptions.take("Filename Base"));
+                   options.take("Filename Base"));
 
     // Number of cores and memory next:
-    if (userOptions.contains("Processor Cores") &&
-        userOptions.contains("Memory")) {
+    if (options.contains("Processor Cores") &&
+        options.contains("Memory")) {
       combinedOptionRow("Processor Cores", "Memory", tr("Processor Cores"),
-                        tr("Memory"), userOptions, true); // both labels
+                        tr("Memory"), options, true); // both labels
     } else {
       // do them separately
-      if (userOptions.contains("Processor Cores"))
+      if (options.contains("Processor Cores"))
         addOptionRow("Processor Cores", tr("Processor Cores"),
-                     userOptions.take("Processor Cores"));
-      if (userOptions.contains("Memory"))
-        addOptionRow("Memory", tr("Memory"), userOptions.take("Memory"));
+                     options.take("Processor Cores"));
+      if (options.contains("Memory"))
+        addOptionRow("Memory", tr("Memory"), options.take("Memory"));
     }
 
     // Calculation Type next:
-    if (userOptions.contains("Calculation Type"))
+    if (options.contains("Calculation Type"))
       addOptionRow("Calculation Type", tr("Calculation Type"),
-                   userOptions.take("Calculation Type"));
+                   options.take("Calculation Type"));
 
     // Theory/basis next. Combine into one row if both present.
     combinedOptionRow("Theory", "Basis", tr("Theory"), tr("Basis"),
-                      userOptions);
+                      options);
 
     // Other special cases: Charge / Multiplicity
-    if (userOptions.contains("Charge") && userOptions.contains("Multiplicity"))
+    if (options.contains("Charge") && options.contains("Multiplicity"))
       combinedOptionRow("Charge", "Multiplicity", tr("Charge"),
-                        tr("Multiplicity"), userOptions, true); // both labels
+                        tr("Multiplicity"), options, true); // both labels
     else {
-      if (userOptions.contains("Charge"))
-        addOptionRow("Charge", tr("Charge"), userOptions.take("Charge"));
-      if (userOptions.contains("Multiplicity"))
+      if (options.contains("Charge"))
+        addOptionRow("Charge", tr("Charge"), options.take("Charge"));
+      if (options.contains("Multiplicity"))
         addOptionRow("Multiplicity", tr("Multiplicity"),
-                     userOptions.take("Multiplicity"));
+                     options.take("Multiplicity"));
     }
 
-    // solvation / model
-    if (userOptions.contains("Solvent") &&
-        userOptions.contains("Solvation Model")) {
+    // Solvation / model
+    if (options.contains("Solvent") &&
+        options.contains("Solvation Model")) {
       combinedOptionRow("Solvent", "Solvation Model", tr("Solvent"),
-                        tr("Model", "solvation method / model"), userOptions,
+                        tr("Model", "solvation method / model"), options,
                         true); // both labels
     }
 
     // Add remaining keys at bottom.
-    // look for "order" key to determine order
+    // Look for "order" key to determine order
     QMap<int, QString> keys;
     int order = 0;
-    for (QJsonObject::const_iterator it = userOptions.constBegin(),
-                                     itEnd = userOptions.constEnd();
+    for (QJsonObject::const_iterator it = options.constBegin(),
+                                     itEnd = options.constEnd();
          it != itEnd; ++it) {
       if (it.value().isObject()) {
         QJsonObject obj = it.value().toObject();
@@ -328,9 +290,9 @@ void JsonWidget::buildOptionGui()
       }
     }
 
-    // now loop over keys and add them
+    // Now loop over keys and add them
     for (QString key : std::as_const(keys))
-      addOptionRow(key, key, userOptions.take(key));
+      addOptionRow(key, key, options.take(key));
 
     // Make connections for standard options:
     if (auto* combo = qobject_cast<QComboBox*>(
@@ -348,12 +310,38 @@ void JsonWidget::buildOptionGui()
       connect(combo, SIGNAL(currentIndexChanged(int)),
               SLOT(updateTitlePlaceholder()));
     }
+  };
 
-    // if we're adding tabs, add it now
-    if (isArray) {
-      tabs->addTab(currentPage, tabName);
-    }
-  } // end loop over tabs
+  // Create new widgets using the lambda  
+  if (isTabbed) {
+    // Create a layout for inserting the tabs
+    tabsWidget = new QTabWidget(this);
+    auto* layout = new QVBoxLayout;
+    layout->addWidget(tabsWidget);
+    m_centralWidget->setLayout(layout);
+    // Loop over the tabs, which are the top-level key/value pairs
+    // The list of tabs has already been sorted into the correct order
+    for (unsigned int i = 0; i < tabs.size(); ++i) {
+      QString tabName = tabs.at(i);
+      QJsonObject tabOptions = userOptions.value(tabName).toObject();
+      // Add the new tab
+      currentPage = new QWidget(this);
+      auto* tabLayout = new QFormLayout(currentPage);
+      currentPage->setLayout(tabLayout);
+      // Make the created tab the current layout so that the lambda adds the
+      // tab's options to it
+      m_currentLayout = tabLayout;
+      addOptions(tabOptions);
+      tabsWidget->addTab(currentPage, tabName);
+    } // End loop over tabs
+  } else {
+    // Create the form layout for the widgets
+    auto* layout = new QFormLayout;
+    m_currentLayout = layout;
+    m_centralWidget->setLayout(layout);
+    // Options are just the top level
+    addOptions(userOptions);
+  }
 
   m_empty = m_widgets.isEmpty();
 }
