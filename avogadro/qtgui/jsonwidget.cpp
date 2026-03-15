@@ -39,6 +39,37 @@ JsonWidget::JsonWidget(QWidget* parent_)
 
 JsonWidget::~JsonWidget() {}
 
+QJsonObject JsonWidget::flattenedOptions() const
+{
+  QJsonObject userOptions = m_options["userOptions"].toObject();
+
+  // First work out whether a tabbed interface is specified
+  bool isTabbed;
+  if (userOptions.contains("tabbed")) {
+    isTabbed = userOptions.take("tabbed").toBool();
+  } else {
+    // Interface doesn't have tabs at all
+    isTabbed = false;
+  }
+
+  if (isTabbed) {
+    QJsonObject flattened;
+    for (auto tab = userOptions.constBegin(); tab != userOptions.constEnd(); ++tab)
+    {
+      QJsonObject tabOptions = tab.value().toObject();
+      // Discard tab-specific settings
+      tabOptions.take("tabPosition");
+      for (auto it = tabOptions.constBegin(); it != tabOptions.constEnd(); ++it)
+      {
+        flattened.insert(it.key(), it.value());
+      }
+    }
+    return flattened;
+  } else {
+    return userOptions;
+  }
+}
+
 void JsonWidget::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule != nullptr) {
@@ -47,13 +78,7 @@ void JsonWidget::setMolecule(QtGui::Molecule* mol)
     auto hasUserOption = [&](const QString& key) -> bool {
       if (!m_options.contains("userOptions"))
         return false;
-      if (m_options["userOptions"].isArray()) {
-        for (const auto& tab : m_options["userOptions"].toArray())
-          if (tab.toObject().contains(key))
-            return true;
-        return false;
-      }
-      return m_options["userOptions"].toObject().contains(key);
+      return flattenedOptions().contains(key);
     };
 
     int charge = static_cast<int>(m_molecule->totalCharge());
@@ -104,49 +129,21 @@ QString JsonWidget::lookupOptionType(const QString& name) const
     return QString();
   }
 
-  QJsonObject userOptions;
+  QJsonObject userOptions = flattenedOptions();
 
-  // if we have tabs, then userOptions is an array of objects
-  // need to loop through to find the right one
-  unsigned int size;
-  bool isArray = m_options["userOptions"].isArray();
-  QJsonArray options;
-  if (isArray) {
-    size = m_options["userOptions"].toArray().size();
-    options = m_options["userOptions"].toArray();
-  } else
-    size = 1;
-
-  for (unsigned int i = 0; i < size; ++i) {
-    if (isArray) {
-      userOptions = options.at(i).toObject();
-    } else if (m_options["userOptions"].isObject()) {
-      userOptions = m_options["userOptions"].toObject();
-    } else {
-      break;
-    }
-
-    if (!userOptions.contains(name)) {
-      continue; // look in next tab
-    }
-
-    if (!userOptions.value(name).isObject()) {
-      qWarning() << tr("Option '%1' does not refer to an object.").arg(name);
-      return QString();
-    }
-
-    QJsonObject obj = userOptions[name].toObject();
-
-    if (!obj.contains("type") || !obj.value("type").isString()) {
-      qWarning() << tr("'type' is not a string for option '%1'.").arg(name);
-      return QString();
-    }
-
-    return obj["type"].toString();
+  if (!userOptions.contains(name)) {
+    qWarning() << tr("Could not find option '%1'.").arg(name);
+    return QString();
   }
 
-  qWarning() << tr("Could not find option '%1'.").arg(name);
-  return QString();
+  QJsonObject obj = userOptions[name].toObject();
+
+  if (!obj.contains("type") || !obj.value("type").isString()) {
+    qWarning() << tr("'type' is not a string for option '%1'.").arg(name);
+    return QString();
+  }
+
+  return obj["type"].toString();
 }
 
 void JsonWidget::updateOptions()
@@ -189,6 +186,7 @@ void JsonWidget::buildOptionGui()
     // Interface doesn't have tabs at all
     isTabbed = false;
   }
+  m_isTabbed = isTabbed;
 
   // We need to store the tab names, and we need to do it in order of position
   // We need them to be ordered so we can loop over them in order so we can add
@@ -687,54 +685,28 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
 
 void JsonWidget::setOptionDefaults()
 {
-  if (!m_options.contains(QStringLiteral("userOptions"))) {
+  if (!m_options.contains("userOptions")) {
     return;
   }
 
-  // if we have tabs, then userOptions is an array of objects
-  // need to loop through to find the right one
-  unsigned int size;
-  bool isArray = m_options["userOptions"].isArray();
-  QJsonArray options;
-  QJsonObject userOptions;
-  if (isArray) {
-    size = m_options["userOptions"].toArray().size();
-    options = m_options["userOptions"].toArray();
-  } else
-    size = 1;
+  QJsonObject userOptions = flattenedOptions();
 
-  for (unsigned int i = 0; i < size; ++i) {
-    // loop over tabs
+  // Loop over all options
+  for (auto it = userOptions.constBegin(); it != userOptions.constEnd(); ++it)
+  {
+    QString label = it.key();
+    QJsonValue val = it.value();
 
-    if (isArray) {
-      userOptions = options.at(i).toObject();
-    } else if (m_options["userOptions"].isObject()) {
-      userOptions = m_options["userOptions"].toObject();
-    } else {
-      break;
+    if (!val.isObject()) {
+      qWarning()
+        << tr("Error: value must be object for key '%1'.").arg(label);
+      continue;
     }
 
-    // loop over widgets in the tab
-    for (QJsonObject::ConstIterator it = userOptions.constBegin(),
-                                    itEnd = userOptions.constEnd();
-         it != itEnd; ++it) {
-      QString label = it.key();
-      QJsonValue val = it.value();
-
-      if (label == "tabName")
-        continue;
-
-      if (!val.isObject()) {
-        qWarning()
-          << tr("Error: value must be object for key '%1'.").arg(label);
-        continue;
-      }
-
-      QJsonObject obj = val.toObject();
-      if (obj.contains("default")) {
-        // TODO - check QSettings for a value too
-        setOption(label, obj[QStringLiteral("default")]);
-      }
+    QJsonObject obj = val.toObject();
+    if (obj.contains("default")) {
+      // TODO - check QSettings for a value too
+      setOption(label, obj[QStringLiteral("default")]);
     }
   }
 }

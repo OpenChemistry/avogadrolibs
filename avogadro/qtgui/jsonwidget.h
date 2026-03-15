@@ -53,6 +53,12 @@ public:
   virtual void setMolecule(QtGui::Molecule* mol);
 
   /**
+   * Return all of the user-specified options in a single JSON object, not
+   * nested under each tab name.
+   */
+  QJsonObject flattenedOptions() const;
+
+  /**
    * Collect all of the user-specified options into a JSON object, to be sent
    * to the generator script.
    */
@@ -137,6 +143,7 @@ protected:
   QString generateJobTitle() const;
 
   QtGui::Molecule* m_molecule;
+  bool m_isTabbed;
   QJsonObject m_options;
   QJsonObject m_optionCache; // For reverting changes
   QList<QTextEdit*> m_dirtyTextEdits;
