@@ -11,7 +11,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
 "PO-Revision-Date: 2026-03-15 19:10+0000\n"
-"Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
 "Language: ta\n"
@@ -1156,7 +1157,7 @@ msgstr "கோட்பாடு"
 
 #: qtgui/jsonwidget.cpp:252
 msgid "Basis"
-msgstr "அடுக்களம்"
+msgstr "அடிப்படை"
 
 #: qtgui/jsonwidget.cpp:257 qtgui/jsonwidget.cpp:261
 msgid "Charge"
