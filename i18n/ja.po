@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-12 19:09+0000\n"
+"PO-Revision-Date: 2026-03-15 19:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -514,481 +514,481 @@ msgstr "上下に分割"
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:17 qtplugins/noncovalent/noncovalent.cpp:409
 msgid "Hydrogen"
-msgstr "水素 (Hydrogen)"
+msgstr "水素"
 
 #: qtgui/elementtranslator.cpp:20
 msgid "Helium"
-msgstr "ヘリウム (Helium)"
+msgstr "ヘリウム"
 
 #: qtgui/elementtranslator.cpp:23
 msgid "Lithium"
-msgstr "リチウム (Lithium)"
+msgstr "リチウム"
 
 #: qtgui/elementtranslator.cpp:26
 msgid "Beryllium"
-msgstr "ベリリウム (Beryllium)"
+msgstr "ベリリウム"
 
 #: qtgui/elementtranslator.cpp:29
 msgid "Boron"
-msgstr "ホウ素 (Boron)"
+msgstr "ホウ素"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:32:2127
 msgid "Carbon"
-msgstr "炭素 (Carbon)"
+msgstr "炭素"
 
 #: qtgui/elementtranslator.cpp:35
 msgid "Nitrogen"
-msgstr "窒素 (Nitrogen)"
+msgstr "窒素"
 
 #: qtgui/elementtranslator.cpp:38
 msgid "Oxygen"
-msgstr "酸素 (Oxygen)"
+msgstr "酸素"
 
 #: qtgui/elementtranslator.cpp:41
 msgid "Fluorine"
-msgstr "フッ素 (Fluorine)"
+msgstr "フッ素"
 
 #: qtgui/elementtranslator.cpp:44
 msgid "Neon"
-msgstr "ネオン (Neon)"
+msgstr "ネオン"
 
 #: qtgui/elementtranslator.cpp:47
 msgid "Sodium"
-msgstr "ナトリウム (Sodium)"
+msgstr "ナトリウム"
 
 #: qtgui/elementtranslator.cpp:50
 msgid "Magnesium"
-msgstr "マグネシウム (Magnesium)"
+msgstr "マグネシウム"
 
 #: qtgui/elementtranslator.cpp:53
 msgid "Aluminum"
-msgstr "アルミニウム (Aluminum)"
+msgstr "アルミニウム"
 
 #: qtgui/elementtranslator.cpp:56
 msgid "Silicon"
-msgstr "ケイ素 (Silicon)"
+msgstr "ケイ素"
 
 #: qtgui/elementtranslator.cpp:59
 msgid "Phosphorus"
-msgstr "リン (Phosphorus)"
+msgstr "リン"
 
 #: qtgui/elementtranslator.cpp:62
 msgid "Sulfur"
-msgstr "硫黄 (Sulfur)"
+msgstr "硫黄"
 
 #: qtgui/elementtranslator.cpp:65
 msgid "Chlorine"
-msgstr "塩素 (Chlorine)"
+msgstr "塩素"
 
 #: qtgui/elementtranslator.cpp:68
 msgid "Argon"
-msgstr "アルゴン (Argon)"
+msgstr "アルゴン"
 
 #: qtgui/elementtranslator.cpp:71
 msgid "Potassium"
-msgstr "カリウム (Potassium)"
+msgstr "カリウム"
 
 #: qtgui/elementtranslator.cpp:74
 msgid "Calcium"
-msgstr "カルシウム (Calcium)"
+msgstr "カルシウム"
 
 #: qtgui/elementtranslator.cpp:77
 msgid "Scandium"
-msgstr "スカンジウム (Scandium)"
+msgstr "スカンジウム"
 
 #: qtgui/elementtranslator.cpp:80
 msgid "Titanium"
-msgstr "チタン (Titanium)"
+msgstr "チタン"
 
 #: qtgui/elementtranslator.cpp:83
 msgid "Vanadium"
-msgstr "バナジウム (Vanadium)"
+msgstr "バナジウム"
 
 #: qtgui/elementtranslator.cpp:86
 msgid "Chromium"
-msgstr "クロム (Chromium)"
+msgstr "クロム"
 
 #: qtgui/elementtranslator.cpp:89
 msgid "Manganese"
-msgstr "マンガン (Manganese)"
+msgstr "マンガン"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:92:2130
 msgid "Iron"
-msgstr "鉄 (Iron)"
+msgstr "鉄"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:95:2133
 msgid "Cobalt"
-msgstr "コバルト (Cobalt)"
+msgstr "コバルト"
 
 #: qtgui/elementtranslator.cpp:98
 msgid "Nickel"
-msgstr "ニッケル (Nickel)"
+msgstr "ニッケル"
 
 #: qtgui/elementtranslator.cpp:101
 msgid "Copper"
-msgstr "銅 (Copper)"
+msgstr "銅"
 
 #: qtgui/elementtranslator.cpp:104
 msgid "Zinc"
-msgstr "亜鉛 (Zinc)"
+msgstr "亜鉛"
 
 #: qtgui/elementtranslator.cpp:107
 msgid "Gallium"
-msgstr "ガリウム (Gallium)"
+msgstr "ガリウム"
 
 #: qtgui/elementtranslator.cpp:110
 msgid "Germanium"
-msgstr "ゲルマニウム (Germanium)"
+msgstr "ゲルマニウム"
 
 #: qtgui/elementtranslator.cpp:113
 msgid "Arsenic"
-msgstr "ヒ素 (Arsenic)"
+msgstr "ヒ素"
 
 #: qtgui/elementtranslator.cpp:116
 msgid "Selenium"
-msgstr "セレン (Selenium)"
+msgstr "セレン"
 
 #: qtgui/elementtranslator.cpp:119
 msgid "Bromine"
-msgstr "臭素 (Bromine)"
+msgstr "臭素"
 
 #: qtgui/elementtranslator.cpp:122
 msgid "Krypton"
-msgstr "クリプトン (Krypton)"
+msgstr "クリプトン"
 
 #: qtgui/elementtranslator.cpp:125
 msgid "Rubidium"
-msgstr "ルビジウム (Rubidium)"
+msgstr "ルビジウム"
 
 #: qtgui/elementtranslator.cpp:128
 msgid "Strontium"
-msgstr "ストロンチウム (Strontium)"
+msgstr "ストロンチウム"
 
 #: qtgui/elementtranslator.cpp:131
 msgid "Yttrium"
-msgstr "イットリウム (Yttrium)"
+msgstr "イットリウム"
 
 #: qtgui/elementtranslator.cpp:134
 msgid "Zirconium"
-msgstr "ジルコニウム (Zirconium)"
+msgstr "ジルコニウム"
 
 #: qtgui/elementtranslator.cpp:137
 msgid "Niobium"
-msgstr "ニオブ (Niobium)"
+msgstr "ニオブ"
 
 #: qtgui/elementtranslator.cpp:140
 msgid "Molybdenum"
-msgstr "モリブデン (Molybdenum)"
+msgstr "モリブデン"
 
 #: qtgui/elementtranslator.cpp:143
 msgid "Technetium"
-msgstr "テクネチウム (Technetium)"
+msgstr "テクネチウム"
 
 #: qtgui/elementtranslator.cpp:146
 msgid "Ruthenium"
-msgstr "ルテニウム (Ruthenium)"
+msgstr "ルテニウム"
 
 #: qtgui/elementtranslator.cpp:149
 msgid "Rhodium"
-msgstr "ロジウム (Rhodium)"
+msgstr "ロジウム"
 
 #: qtgui/elementtranslator.cpp:152
 msgid "Palladium"
-msgstr "パラジウム (Palladium)"
+msgstr "パラジウム"
 
 #: qtgui/elementtranslator.cpp:155
 msgid "Silver"
-msgstr "銀 (Silver)"
+msgstr "銀"
 
 #: qtgui/elementtranslator.cpp:158
 msgid "Cadmium"
-msgstr "カドミウム (Cadmium)"
+msgstr "カドミウム"
 
 #: qtgui/elementtranslator.cpp:161
 msgid "Indium"
-msgstr "インジウム (Indium)"
+msgstr "インジウム"
 
 #: qtgui/elementtranslator.cpp:164
 msgid "Tin"
-msgstr "スズ (Tin)"
+msgstr "スズ"
 
 #: qtgui/elementtranslator.cpp:167
 msgid "Antimony"
-msgstr "アンチモン (Antimony)"
+msgstr "アンチモン"
 
 #: qtgui/elementtranslator.cpp:170
 msgid "Tellurium"
-msgstr "テルル (Tellurium)"
+msgstr "テルル"
 
 #: qtgui/elementtranslator.cpp:173
 msgid "Iodine"
-msgstr "ヨウ素 (Iodine)"
+msgstr "ヨウ素"
 
 #: qtgui/elementtranslator.cpp:176
 msgid "Xenon"
-msgstr "キセノン (Xenon)"
+msgstr "キセノン"
 
 #: qtgui/elementtranslator.cpp:179
 msgid "Cesium"
-msgstr "セシウム (Cesium)"
+msgstr "セシウム"
 
 #: qtgui/elementtranslator.cpp:182
 msgid "Barium"
-msgstr "バリウム (Barium)"
+msgstr "バリウム"
 
 #: qtgui/elementtranslator.cpp:185
 msgid "Lanthanum"
-msgstr "ランタン (Lanthanum)"
+msgstr "ランタン"
 
 #: qtgui/elementtranslator.cpp:188
 msgid "Cerium"
-msgstr "セリウム (Cerium)"
+msgstr "セリウム"
 
 #: qtgui/elementtranslator.cpp:191
 msgid "Praseodymium"
-msgstr "プラセオジム (Praseodymium)"
+msgstr "プラセオジム"
 
 #: qtgui/elementtranslator.cpp:194
 msgid "Neodymium"
-msgstr "ネオジム (Neodymium)"
+msgstr "ネオジム"
 
 #: qtgui/elementtranslator.cpp:197
 msgid "Promethium"
-msgstr "プロメチウム (Promethium)"
+msgstr "プロメチウム"
 
 #: qtgui/elementtranslator.cpp:200
 msgid "Samarium"
-msgstr "サマリウム (Samarium)"
+msgstr "サマリウム"
 
 #: qtgui/elementtranslator.cpp:203
 msgid "Europium"
-msgstr "ユウロピウム (Europium)"
+msgstr "ユウロピウム"
 
 #: qtgui/elementtranslator.cpp:206
 msgid "Gadolinium"
-msgstr "ガドリニウム (Gadolinium)"
+msgstr "ガドリニウム"
 
 #: qtgui/elementtranslator.cpp:209
 msgid "Terbium"
-msgstr "テルビウム (Terbium)"
+msgstr "テルビウム"
 
 #: qtgui/elementtranslator.cpp:212
 msgid "Dysprosium"
-msgstr "ジスプロシウム (Dysprosium)"
+msgstr "ジスプロシウム"
 
 #: qtgui/elementtranslator.cpp:215
 msgid "Holmium"
-msgstr "ホルミウム (Holmium)"
+msgstr "ホルミウム"
 
 #: qtgui/elementtranslator.cpp:218
 msgid "Erbium"
-msgstr "エルビウム (Erbium)"
+msgstr "エルビウム"
 
 #: qtgui/elementtranslator.cpp:221
 msgid "Thulium"
-msgstr "ツリウム (Thulium)"
+msgstr "ツリウム"
 
 #: qtgui/elementtranslator.cpp:224
 msgid "Ytterbium"
-msgstr "イッテルビウム (Ytterbium)"
+msgstr "イッテルビウム"
 
 #: qtgui/elementtranslator.cpp:227
 msgid "Lutetium"
-msgstr "ルテチウム (Lutetium)"
+msgstr "ルテチウム"
 
 #: qtgui/elementtranslator.cpp:230
 msgid "Hafnium"
-msgstr "ハフニウム (Hafnium)"
+msgstr "ハフニウム"
 
 #: qtgui/elementtranslator.cpp:233
 msgid "Tantalum"
-msgstr "タンタル (Tantalum)"
+msgstr "タンタル"
 
 #: qtgui/elementtranslator.cpp:236
 msgid "Tungsten"
-msgstr "タングステン (Tungsten)"
+msgstr "タングステン"
 
 #: qtgui/elementtranslator.cpp:239
 msgid "Rhenium"
-msgstr "レニウム (Rhenium)"
+msgstr "レニウム"
 
 #: qtgui/elementtranslator.cpp:242
 msgid "Osmium"
-msgstr "オスミウム (Osmium)"
+msgstr "オスミウム"
 
 #: qtgui/elementtranslator.cpp:245
 msgid "Iridium"
-msgstr "イリジウム (Iridium)"
+msgstr "イリジウム"
 
 #: qtgui/elementtranslator.cpp:248
 msgid "Platinum"
-msgstr "白金 (Platinum)"
+msgstr "白金"
 
 #: qtgui/elementtranslator.cpp:251
 msgid "Gold"
-msgstr "金 (Gold)"
+msgstr "金"
 
 #: qtgui/elementtranslator.cpp:254
 msgid "Mercury"
-msgstr "水銀 (Mercury)"
+msgstr "水銀"
 
 #: qtgui/elementtranslator.cpp:257
 msgid "Thallium"
-msgstr "タリウム (Thallium)"
+msgstr "タリウム"
 
 #: qtgui/elementtranslator.cpp:260
 msgid "Lead"
-msgstr "鉛 (Lead)"
+msgstr "鉛"
 
 #: qtgui/elementtranslator.cpp:263
 msgid "Bismuth"
-msgstr "ビスマス (Bismuth)"
+msgstr "ビスマス"
 
 #: qtgui/elementtranslator.cpp:266
 msgid "Polonium"
-msgstr "ポロニウム (Polonium)"
+msgstr "ポロニウム"
 
 #: qtgui/elementtranslator.cpp:269
 msgid "Astatine"
-msgstr "アスタチン (Astatine)"
+msgstr "アスタチン"
 
 #: qtgui/elementtranslator.cpp:272
 msgid "Radon"
-msgstr "ラドン (Radon)"
+msgstr "ラドン"
 
 #: qtgui/elementtranslator.cpp:275
 msgid "Francium"
-msgstr "フランシウム (Francium)"
+msgstr "フランシウム"
 
 #: qtgui/elementtranslator.cpp:278
 msgid "Radium"
-msgstr "ラジウム (Radium)"
+msgstr "ラジウム"
 
 #: qtgui/elementtranslator.cpp:281
 msgid "Actinium"
-msgstr "アクチニウム (Actinium)"
+msgstr "アクチニウム"
 
 #: qtgui/elementtranslator.cpp:284
 msgid "Thorium"
-msgstr "トリウム (Thorium)"
+msgstr "トリウム"
 
 #: qtgui/elementtranslator.cpp:287
 msgid "Protactinium"
-msgstr "プロトアクチニウム (Protactinium)"
+msgstr "プロトアクチニウム"
 
 #: qtgui/elementtranslator.cpp:290
 msgid "Uranium"
-msgstr "ウラン (Uranium)"
+msgstr "ウラン"
 
 #: qtgui/elementtranslator.cpp:293
 msgid "Neptunium"
-msgstr "ネプツニウム (Neptunium)"
+msgstr "ネプツニウム"
 
 #: qtgui/elementtranslator.cpp:296
 msgid "Plutonium"
-msgstr "プルトニウム (Plutonium)"
+msgstr "プルトニウム"
 
 #: qtgui/elementtranslator.cpp:299
 msgid "Americium"
-msgstr "アメリシウム (Americium)"
+msgstr "アメリシウム"
 
 #: qtgui/elementtranslator.cpp:302
 msgid "Curium"
-msgstr "キュリウム (Curium)"
+msgstr "キュリウム"
 
 #: qtgui/elementtranslator.cpp:305
 msgid "Berkelium"
-msgstr "バークリウム (Berkelium)"
+msgstr "バークリウム"
 
 #: qtgui/elementtranslator.cpp:308
 msgid "Californium"
-msgstr "カルホルニウム (Californium)"
+msgstr "カルホルニウム"
 
 #: qtgui/elementtranslator.cpp:311
 msgid "Einsteinium"
-msgstr "アインスタイニウム (Einsteinium)"
+msgstr "アインスタイニウム"
 
 #: qtgui/elementtranslator.cpp:314
 msgid "Fermium"
-msgstr "フェルミウム (Fermium)"
+msgstr "フェルミウム"
 
 #: qtgui/elementtranslator.cpp:317
 msgid "Mendelevium"
-msgstr "メンデレビウム (Mendelevium)"
+msgstr "メンデレビウム"
 
 #: qtgui/elementtranslator.cpp:320
 msgid "Nobelium"
-msgstr "ノーベリウム (Nobelium)"
+msgstr "ノーベリウム"
 
 #: qtgui/elementtranslator.cpp:323
 msgid "Lawrencium"
-msgstr "ローレンシウム (Lawrencium)"
+msgstr "ローレンシウム"
 
 #: qtgui/elementtranslator.cpp:326
 msgid "Rutherfordium"
-msgstr "ラザホージウム (Rutherfordium)"
+msgstr "ラザホージウム"
 
 #: qtgui/elementtranslator.cpp:329
 msgid "Dubnium"
-msgstr "ドブニウム (Dubnium)"
+msgstr "ドブニウム"
 
 #: qtgui/elementtranslator.cpp:332
 msgid "Seaborgium"
-msgstr "シーボーギウム (Seaborgium)"
+msgstr "シーボーギウム"
 
 #: qtgui/elementtranslator.cpp:335
 msgid "Bohrium"
-msgstr "ボーリウム (Bohrium)"
+msgstr "ボーリウム"
 
 #: qtgui/elementtranslator.cpp:338
 msgid "Hassium"
-msgstr "ハッシウム (Hassium)"
+msgstr "ハッシウム"
 
 #: qtgui/elementtranslator.cpp:341
 msgid "Meitnerium"
-msgstr "マイトネリウム (Meitnerium)"
+msgstr "マイトネリウム"
 
 #: qtgui/elementtranslator.cpp:344
 msgid "Darmstadtium"
-msgstr "ダルムスタチウム (Darmstadtium)"
+msgstr "ダルムスタチウム"
 
 #: qtgui/elementtranslator.cpp:347
 msgid "Roentgenium"
-msgstr "レントゲニウム (Roentgenium)"
+msgstr "レントゲニウム"
 
 #: qtgui/elementtranslator.cpp:350
 msgid "Copernicium"
-msgstr "コペルニシウム (Copernicium)"
+msgstr "コペルニシウム"
 
 #: qtgui/elementtranslator.cpp:353
 msgid "Nihonium"
-msgstr "ニホニウム (Zirconium)"
+msgstr "ニホニウム"
 
 #: qtgui/elementtranslator.cpp:356
 msgid "Flerovium"
-msgstr "フレロビウム (Flerovium)"
+msgstr "フレロビウム"
 
 #: qtgui/elementtranslator.cpp:359
 msgid "Moscovium"
-msgstr "モスコビウム (Moscovium)"
+msgstr "モスコビウム"
 
 #: qtgui/elementtranslator.cpp:362
 msgid "Livermorium"
-msgstr "リバモリウム (Livermorium)"
+msgstr "リバモリウム"
 
 #: qtgui/elementtranslator.cpp:365
 msgid "Tennessine"
-msgstr "テネシン (Tennessine)"
+msgstr "テネシン"
 
 #: qtgui/elementtranslator.cpp:368
 msgid "Oganesson"
-msgstr "オガネソン (Oganesson)"
+msgstr "オガネソン"
 
 #: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
@@ -1071,14 +1071,14 @@ msgid "%1 Message"
 msgstr "%1メッセージ"
 
 #: qtgui/interfacescript.cpp:343
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1 Warning"
-msgstr ""
+msgstr "%1 警告"
 
 #: qtgui/interfacescript.cpp:350
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1 Error"
-msgstr ""
+msgstr "%1 エラー"
 
 #: qtgui/interfacescript.cpp:593
 #, qt-format
