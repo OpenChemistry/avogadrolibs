@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-11 10:10+0000\n"
+"PO-Revision-Date: 2026-03-15 19:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -3823,11 +3823,16 @@ msgid "Edit Labels"
 msgstr "Editar Etiquetas"
 
 #: qtplugins/label/labeleditor.cpp:33
+#, fuzzy
 msgid ""
 "Atom Label Tool\n"
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Herramienta de etiquetas de átomos\n"
+"\n"
+"Botón izquierdo del ratón:\tHaga clic en los átomos para añadir etiquetas "
+"personalizadas"
 
 #: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
