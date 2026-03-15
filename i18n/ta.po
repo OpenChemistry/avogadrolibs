@@ -2,15 +2,16 @@
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # தமிழ்நேரம் <anishprabu.t@gmail.com>, 2024, 2025.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2026.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-07 11:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-15 19:10+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
 "Language: ta\n"
@@ -197,7 +198,7 @@ msgstr "மூடு"
 #: qtplugins/configurepython/configurepythondialog.cpp:191
 #: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "Unknown"
-msgstr "தெரியவில்லை"
+msgstr "தெரியாதது"
 
 #: molequeue/inputgeneratorwidget.cpp:172
 #, qt-format, qt-plural-format
@@ -1001,11 +1002,11 @@ msgstr "உகுந்தியம்"
 
 #: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
-msgstr "உலாவுங்கள்"
+msgstr "உலாவு"
 
 #: qtgui/filebrowsewidget.cpp:97
 msgid "Select file:"
-msgstr "கோப்பைத் தேர்ந்தெடுக்கவும்:"
+msgstr "கோப்பைத் தேர்ந்தெடு"
 
 #: qtgui/filebrowsewidget.cpp:100
 msgid "Select executable:"
