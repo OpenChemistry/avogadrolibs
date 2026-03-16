@@ -633,6 +633,7 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
       Comment,
       Method,
       Basis,
+      Block,
     };
 
     std::unordered_map<QString, HighlightPreset> mapStringToPreset{
@@ -644,6 +645,7 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
       { QString("comment"), HighlightPreset::Comment },
       { QString("method"), HighlightPreset::Method },
       { QString("basis"), HighlightPreset::Basis },
+      { QString("block"), HighlightPreset::Block },
     };
 
     const QPalette defaultPalette;
@@ -693,6 +695,10 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
       case HighlightPreset::Basis:
         format.setFontFamily(QStringLiteral("mono"));
         format.setForeground(highlightColor("pink", isDarkMode));
+        return true;
+      case HighlightPreset::Block:
+        format.setFontFamily(QStringLiteral("mono"));
+        format.setForeground(highlightColor("yellow", isDarkMode));
         return true;
     }
   }
