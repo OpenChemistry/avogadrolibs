@@ -576,71 +576,39 @@ bool InputGenerator::parseRules(const QJsonArray& json,
   return result;
 }
 
-enum class HighlightColor
-{
-  green,
-  cyan,
-  blue,
-  purple,
-  pink,
-  red,
-  orange,
-  yellow,
+// Dark-mode palette: brighter / higher-value colors for contrast on dark
+// backgrounds.
+static const std::map<std::string, QColor> darkModeColors = {
+  { "red", QColorConstants::Svg::crimson },         // #DC143C
+  { "orange", QColorConstants::Svg::coral },        // #FF7F50
+  { "yellow", QColorConstants::Svg::goldenrod },    // #DAA520
+  { "green", QColorConstants::Svg::springgreen },   // #00FF7F
+  { "cyan", QColorConstants::Svg::cyan },           // #00FFFF
+  { "blue", QColorConstants::Svg::dodgerblue },     // #1E90FF
+  { "purple", QColorConstants::Svg::mediumpurple }, // #9370DB
+  { "pink", QColorConstants::Svg::orchid },         // #DA70D6
+  { "white", QColorConstants::Svg::whitesmoke },    // #F5F5F5
+  { "gray", QColorConstants::Svg::darkgray },       // #A9A9A9
 };
 
-std::unordered_map<std::string, HighlightColor> mapStringToColor{
-  { "green", HighlightColor::green },   { "cyan", HighlightColor::cyan },
-  { "blue", HighlightColor::blue },     { "purple", HighlightColor::purple },
-  { "pink", HighlightColor::pink },     { "red", HighlightColor::red },
-  { "orange", HighlightColor::orange }, { "yellow", HighlightColor::yellow },
+// Light-mode palette: deeper / more saturated colors for contrast on light
+// backgrounds.
+static const std::map<std::string, QColor> lightModeColors = {
+  { "red", QColorConstants::Svg::maroon },        // #800000
+  { "orange", QColorConstants::Svg::coral },      // #FF7F50
+  { "yellow", QColorConstants::Svg::goldenrod },  // #DAA520
+  { "green", QColorConstants::Svg::limegreen },   // #32CD32
+  { "cyan", QColorConstants::Svg::deepskyblue },  // #00BFFF
+  { "blue", QColorConstants::Svg::blue },         // #0000FF
+  { "purple", QColorConstants::Svg::blueviolet }, // #8A2BE2
+  { "pink", QColorConstants::Svg::fuchsia },      // #FF00FF
+  { "white", QColorConstants::Svg::black },       // #000000
+  { "gray", QColorConstants::Svg::dimgray },      // #696969
 };
 
-QColor textColor(const std::string& colorName, bool darkMode = false)
+inline const QColor highlightColor(const std::string& name, bool isDarkMode)
 {
-  HighlightColor color = mapStringToColor[colorName];
-  if (darkMode) {
-    switch (color) {
-      case HighlightColor::green:
-        return QColor::fromString("springgreen"); // #00FF7F
-      case HighlightColor::cyan:
-        return QColor::fromString("cyan"); // #00FFFF
-      case HighlightColor::blue:
-        return QColor::fromString("dodgerblue"); // #1E90FF
-      case HighlightColor::purple:
-        return QColor::fromString("mediumpurple"); // #9370DB
-      case HighlightColor::pink:
-        return QColor::fromString("orchid"); // #DA70D6
-      case HighlightColor::red:
-        return QColor::fromString("crimson"); // #DC143C
-      case HighlightColor::orange:
-        return QColor::fromString("coral"); // #FF7F50
-      case HighlightColor::yellow:
-        return QColor::fromString("goldenrod"); // #DAA520
-      default:
-        return QColor::fromString("white");
-    }
-  } else {
-    switch (color) {
-      case HighlightColor::green:
-        return QColor::fromString("limegreen"); // #32CD32
-      case HighlightColor::cyan:
-        return QColor::fromString("deepskyblue"); // #00BFFF
-      case HighlightColor::blue:
-        return QColor::fromString("blue"); // #0000FF
-      case HighlightColor::purple:
-        return QColor::fromString("blueviolet"); // #8A2BE2
-      case HighlightColor::pink:
-        return QColor::fromString("fuchsia"); // #FF00FF
-      case HighlightColor::red:
-        return QColor::fromString("maroon"); // #800000
-      case HighlightColor::orange:
-        return QColor::fromString("coral"); // #FF7F50
-      case HighlightColor::yellow:
-        return QColor::fromString("goldenrod"); // #DAA520
-      default:
-        return QColor::fromString("black");
-    }
-  }
+  return isDarkMode ? darkModeColors.at(name) : lightModeColors.at(name);
 }
 
 bool InputGenerator::parseFormat(const QJsonObject& json,
@@ -695,36 +663,36 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
       case HighlightPreset::Title:
         format.setFontFamily(QStringLiteral("mono"));
         format.setFontWeight(QFont::Bold);
-        format.setForeground(textColor("green", isDarkMode));
+        format.setForeground(highlightColor("green", isDarkMode));
         return true;
       case HighlightPreset::Keyword:
         format.setFontFamily(QStringLiteral("mono"));
-        format.setForeground(textColor("blue", isDarkMode));
+        format.setForeground(highlightColor("blue", isDarkMode));
         return true;
       case HighlightPreset::Property:
         format.setFontFamily(QStringLiteral("mono"));
-        format.setForeground(textColor("cyan", isDarkMode));
+        format.setForeground(highlightColor("cyan", isDarkMode));
         return true;
       case HighlightPreset::NumLiteral:
         format.setFontFamily(QStringLiteral("mono"));
-        format.setForeground(textColor("orange", isDarkMode));
+        format.setForeground(highlightColor("orange", isDarkMode));
         return true;
       case HighlightPreset::StrLiteral:
         format.setFontFamily(QStringLiteral("mono"));
-        format.setForeground(textColor("red", isDarkMode));
+        format.setForeground(highlightColor("red", isDarkMode));
         return true;
       case HighlightPreset::Comment:
         format.setFontFamily(QStringLiteral("mono"));
         format.setFontItalic(true);
-        format.setForeground(textColor("yellow", isDarkMode));
+        format.setForeground(highlightColor("gray", isDarkMode));
         return true;
       case HighlightPreset::Method:
         format.setFontFamily(QStringLiteral("mono"));
-        format.setForeground(textColor("purple", isDarkMode));
+        format.setForeground(highlightColor("purple", isDarkMode));
         return true;
       case HighlightPreset::Basis:
         format.setFontFamily(QStringLiteral("mono"));
-        format.setForeground(textColor("pink", isDarkMode));
+        format.setForeground(highlightColor("pink", isDarkMode));
         return true;
     }
   }
