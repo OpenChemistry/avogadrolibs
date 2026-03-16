@@ -20,6 +20,8 @@
 #include <QtCore/QJsonParseError>
 #include <QtCore/QSettings>
 
+using namespace Qt::StringLiterals;
+
 namespace Avogadro::QtGui {
 
 PackageManager::PackageManager(QObject* parent) : QObject(parent) {}
@@ -158,6 +160,13 @@ QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
     }
     proc.start(scriptExe, userOptsArgs);
   }
+
+  // Plugins may always expect some valid JSON as input over stdin, even if it's
+  // just an empty object
+  QByteArray scriptStdin = "{}"_ba;
+  proc.write(scriptStdin);
+  // Python
+  proc.closeWriteChannel();
 
   constexpr int timeoutMs = 30000; // 30 seconds
   if (!proc.waitForStarted(timeoutMs)) {
