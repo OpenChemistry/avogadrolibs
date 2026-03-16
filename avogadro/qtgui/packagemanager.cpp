@@ -5,6 +5,7 @@
 
 #include "packagemanager.h"
 #include "tomlparse.h"
+#include "utilities.h"
 
 #include <QtCore/QCryptographicHash>
 #include <QtCore/QDebug>
@@ -136,7 +137,13 @@ QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
                                                   const QString& identifier)
 {
   // Locate pixi or the venv-installed script.
-  QString pixiExe = QStandardPaths::findExecutable(QStringLiteral("pixi"));
+#ifdef Q_OS_WIN
+  QString pixiName = QStringLiteral("pixi.exe");
+#else
+  QString pixiName = QStringLiteral("pixi");
+#endif
+  QString pixiDir = Utilities::findExecutablePath(pixiName);
+  QString pixiExe = pixiDir.isEmpty() ? QString() : pixiDir + '/' + pixiName;
   QProcess proc;
   proc.setWorkingDirectory(packageDir);
 
@@ -369,12 +376,20 @@ static void runSetupScript(const QString& packageDir, const QString& setupCmd,
 
 void PackageManager::installPackages(const QStringList& packageDirs)
 {
-  QString pixiExe = QStandardPaths::findExecutable(QStringLiteral("pixi"));
+#ifdef Q_OS_WIN
+  QString pixiName = QStringLiteral("pixi.exe");
+  QString pythonName = QStringLiteral("python.exe");
+#else
+  QString pixiName = QStringLiteral("pixi");
+  QString pythonName = QStringLiteral("python3");
+#endif
+  QString pixiDir = Utilities::findExecutablePath(pixiName);
+  QString pixiExe = pixiDir.isEmpty() ? QString() : pixiDir + '/' + pixiName;
   QString pythonExe;
   if (pixiExe.isEmpty()) {
-    pythonExe = QStandardPaths::findExecutable(QStringLiteral("python3"));
-    if (pythonExe.isEmpty())
-      pythonExe = QStandardPaths::findExecutable(QStringLiteral("python"));
+    QString pythonDir = Utilities::findExecutablePath(pythonName);
+    if (!pythonDir.isEmpty())
+      pythonExe = pythonDir + '/' + pythonName;
   }
 
   // Pre-read setup commands on the main thread so the install thread doesn't
