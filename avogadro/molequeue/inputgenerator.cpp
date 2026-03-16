@@ -19,6 +19,12 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
+#include <QGuiApplication>
+#include <QStyleHints>
+#include <QColor>
+#include <QPalette>
+#include <unordered_map>
+
 namespace Avogadro::MoleQueue {
 
 using QtGui::GenericHighlighter;
@@ -264,7 +270,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                           .arg(m_filenames.size());
           } // end if/else file is JSON object
-        }   // end foreach file
+        } // end foreach file
       } else {
         result = false;
         m_errors << tr("'files' member not an array.");
@@ -570,6 +576,41 @@ bool InputGenerator::parseRules(const QJsonArray& json,
   return result;
 }
 
+// Dark-mode palette: brighter / higher-value colors for contrast on dark
+// backgrounds.
+static const std::map<std::string, QColor> darkModeColors = {
+  { "red", QColorConstants::Svg::crimson },         // #DC143C
+  { "orange", QColorConstants::Svg::coral },        // #FF7F50
+  { "yellow", QColorConstants::Svg::goldenrod },    // #DAA520
+  { "green", QColorConstants::Svg::springgreen },   // #00FF7F
+  { "cyan", QColorConstants::Svg::cyan },           // #00FFFF
+  { "blue", QColorConstants::Svg::dodgerblue },     // #1E90FF
+  { "purple", QColorConstants::Svg::mediumpurple }, // #9370DB
+  { "pink", QColorConstants::Svg::orchid },         // #DA70D6
+  { "white", QColorConstants::Svg::whitesmoke },    // #F5F5F5
+  { "gray", QColorConstants::Svg::darkgray },       // #A9A9A9
+};
+
+// Light-mode palette: deeper / more saturated colors for contrast on light
+// backgrounds.
+static const std::map<std::string, QColor> lightModeColors = {
+  { "red", QColorConstants::Svg::maroon },        // #800000
+  { "orange", QColorConstants::Svg::coral },      // #FF7F50
+  { "yellow", QColorConstants::Svg::goldenrod },  // #DAA520
+  { "green", QColorConstants::Svg::limegreen },   // #32CD32
+  { "cyan", QColorConstants::Svg::deepskyblue },  // #00BFFF
+  { "blue", QColorConstants::Svg::blue },         // #0000FF
+  { "purple", QColorConstants::Svg::blueviolet }, // #8A2BE2
+  { "pink", QColorConstants::Svg::fuchsia },      // #FF00FF
+  { "white", QColorConstants::Svg::black },       // #000000
+  { "gray", QColorConstants::Svg::dimgray },      // #696969
+};
+
+inline const QColor highlightColor(const std::string& name, bool isDarkMode)
+{
+  return isDarkMode ? darkModeColors.at(name) : lightModeColors.at(name);
+}
+
 bool InputGenerator::parseFormat(const QJsonObject& json,
                                  QTextCharFormat& format) const
 {
@@ -581,30 +622,78 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
     }
 
     QString preset(json["preset"].toString());
-    /// @todo Store presets in a singleton that can be configured in the GUI,
-    /// rather than hardcoding them.
-    if (preset == "title") {
-      format.setFontFamily("serif");
-      format.setForeground(Qt::darkGreen);
-      format.setFontWeight(QFont::Bold);
-    } else if (preset == "keyword") {
-      format.setFontFamily("mono");
-      format.setForeground(Qt::darkBlue);
-    } else if (preset == "property") {
-      format.setFontFamily("mono");
-      format.setForeground(Qt::darkRed);
-    } else if (preset == "literal") {
-      format.setFontFamily("mono");
-      format.setForeground(Qt::darkMagenta);
-    } else if (preset == "comment") {
-      format.setFontFamily("serif");
-      format.setForeground(Qt::darkGreen);
-      format.setFontItalic(true);
-    } else {
+
+    enum class HighlightPreset
+    {
+      Title,
+      Keyword,
+      Property,
+      NumLiteral,
+      StrLiteral,
+      Comment,
+      Method,
+      Basis,
+      Block,
+    };
+
+    std::unordered_map<QString, HighlightPreset> mapStringToPreset{
+      { QString("title"), HighlightPreset::Title },
+      { QString("keyword"), HighlightPreset::Keyword },
+      { QString("property"), HighlightPreset::Property },
+      { QString("num_literal"), HighlightPreset::NumLiteral },
+      { QString("str_literal"), HighlightPreset::StrLiteral },
+      { QString("comment"), HighlightPreset::Comment },
+      { QString("method"), HighlightPreset::Method },
+      { QString("basis"), HighlightPreset::Basis },
+      { QString("block"), HighlightPreset::Block },
+    };
+
+    const QPalette defaultPalette;
+    bool isDarkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
+                       defaultPalette.color(QPalette::Window).lightness());
+
+    if (mapStringToPreset.count(preset) == 0) {
       qDebug() << "Invalid style preset: " << preset;
       return false;
     }
-    return true;
+
+    HighlightPreset presetType = mapStringToPreset[preset];
+
+    format.setFontFamily(QStringLiteral("mono"));
+
+    /// @todo Store presets in a singleton that can be configured in the GUI,
+    /// rather than hardcoding them.
+    switch (presetType) {
+      case HighlightPreset::Title:
+        format.setFontWeight(QFont::Bold);
+        format.setForeground(highlightColor("green", isDarkMode));
+        return true;
+      case HighlightPreset::Keyword:
+        format.setForeground(highlightColor("blue", isDarkMode));
+        return true;
+      case HighlightPreset::Property:
+        format.setForeground(highlightColor("cyan", isDarkMode));
+        return true;
+      case HighlightPreset::NumLiteral:
+        format.setForeground(highlightColor("orange", isDarkMode));
+        return true;
+      case HighlightPreset::StrLiteral:
+        format.setForeground(highlightColor("red", isDarkMode));
+        return true;
+      case HighlightPreset::Comment:
+        format.setFontItalic(true);
+        format.setForeground(highlightColor("gray", isDarkMode));
+        return true;
+      case HighlightPreset::Method:
+        format.setForeground(highlightColor("purple", isDarkMode));
+        return true;
+      case HighlightPreset::Basis:
+        format.setForeground(highlightColor("pink", isDarkMode));
+        return true;
+      case HighlightPreset::Block:
+        format.setForeground(highlightColor("yellow", isDarkMode));
+        return true;
+    }
   }
 
   // Extract an RGB tuple from 'array' as a QBrush:
