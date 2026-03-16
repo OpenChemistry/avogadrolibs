@@ -377,19 +377,25 @@ static void runSetupScript(const QString& packageDir, const QString& setupCmd,
 void PackageManager::installPackages(const QStringList& packageDirs)
 {
 #ifdef Q_OS_WIN
-  QString pixiName = QStringLiteral("pixi.exe");
-  QString pythonName = QStringLiteral("python.exe");
+  const QString pixiName = QStringLiteral("pixi.exe");
+  const QStringList pythonNames = { QStringLiteral("python.exe"),
+                                    QStringLiteral("python3.exe") };
 #else
-  QString pixiName = QStringLiteral("pixi");
-  QString pythonName = QStringLiteral("python3");
+  const QString pixiName = QStringLiteral("pixi");
+  const QStringList pythonNames = { QStringLiteral("python3"),
+                                    QStringLiteral("python") };
 #endif
   QString pixiDir = Utilities::findExecutablePath(pixiName);
   QString pixiExe = pixiDir.isEmpty() ? QString() : pixiDir + '/' + pixiName;
   QString pythonExe;
   if (pixiExe.isEmpty()) {
-    QString pythonDir = Utilities::findExecutablePath(pythonName);
-    if (!pythonDir.isEmpty())
-      pythonExe = pythonDir + '/' + pythonName;
+    for (const QString& pythonName : pythonNames) {
+      const QString pythonDir = Utilities::findExecutablePath(pythonName);
+      if (!pythonDir.isEmpty()) {
+        pythonExe = pythonDir + '/' + pythonName;
+        break;
+      }
+    }
   }
 
   // Pre-read setup commands on the main thread so the install thread doesn't
@@ -403,7 +409,7 @@ void PackageManager::installPackages(const QStringList& packageDirs)
       constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
       for (const QString& packageDir : packageDirs) {
         if (pixiExe.isEmpty() && pythonExe.isEmpty())
-          continue;
+          continue; // TODO - give a warning to the user that they need pixi
 
         if (!pixiExe.isEmpty()) {
           // If a copied package includes a non-executable .pixi environment,
