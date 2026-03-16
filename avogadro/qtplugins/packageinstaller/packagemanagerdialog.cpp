@@ -16,6 +16,7 @@
 #include <QtCore/QItemSelectionModel>
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStandardPaths>
+#include <QtCore/QStringView>
 
 #include <QtGui/QCursor>
 
@@ -455,17 +456,31 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
     m_ui->readmeBrowser->append(
       tr("Extraction complete (%1 files)\n").arg(newFiles.size()));
 
-    // Derive component name: "OpenChemistry-crystals-a7c672d" → "crystals"
-    // Trim trailing '/', then take the substring between the first and last '-'
+    // Derive component name from GitHub archive directory names like:
+    //   "OpenChemistry-crystals-a7c672d" → "crystals"
+    //   "ghutchis-avogadro-rdkit-2e9abcd" → "avogadro-rdkit"
+    // Pattern is always {org}-{repo}-{sha}, strip org prefix and SHA suffix.
     QString rawName = newFiles[0];
     if (rawName.endsWith('/'))
       rawName.chop(1);
-    const int firstDash = rawName.indexOf('-');
-    const int lastDash = rawName.lastIndexOf('-');
-    const QString component =
-      (firstDash != -1 && lastDash > firstDash)
-        ? rawName.mid(firstDash + 1, lastDash - firstDash - 1)
-        : rawName;
+
+    QString component = rawName;
+    // Strip trailing SHA: last segment if it looks like a hex hash (7+ chars)
+    int lastDash = component.lastIndexOf('-');
+    if (lastDash != -1) {
+      QStringView tail = QStringView(component).mid(lastDash + 1);
+      bool isHex = tail.size() >= 7;
+      for (qsizetype i = 0; isHex && i < tail.size(); ++i) {
+        QChar c = tail[i];
+        isHex = c.isDigit() || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+      }
+      if (isHex)
+        component = component.left(lastDash);
+    }
+    // Strip leading org/owner prefix (everything before the first dash)
+    int firstDash = component.indexOf('-');
+    if (firstDash != -1)
+      component = component.mid(firstDash + 1);
     const QString source = QDir::cleanPath(m_filePath + '/' + newFiles[0]);
     const QString dest = QDir::cleanPath(m_filePath + '/' + component);
 
