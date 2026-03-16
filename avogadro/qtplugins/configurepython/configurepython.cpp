@@ -77,12 +77,17 @@ ConfigurePython::ConfigurePython(QObject* parent_)
     if (option == QMessageBox::Yes) {
       // check if we have pixi
       // should be true for Mac and Windows because we bundle it
-      QString pixiPath = QtGui::Utilities::findExecutablePath("pixi");
+#ifdef Q_OS_WIN
+      QString pixiName = QStringLiteral("pixi.exe");
+#else
+      QString pixiName = QStringLiteral("pixi");
+#endif
+      QString pixiPath = QtGui::Utilities::findExecutablePath(pixiName);
       if (!pixiPath.isEmpty()) {
         // use pixi
         QProcess pixi;
         pixi.setWorkingDirectory(pluginPath);
-        pixi.start(pixiPath + "/pixi", { "install" });
+        pixi.start(pixiPath + '/' + pixiName, { "install" });
         // wait up to a minute
         // TODO: add a progress dialog
         pixi.waitForFinished(60 * 1000);
