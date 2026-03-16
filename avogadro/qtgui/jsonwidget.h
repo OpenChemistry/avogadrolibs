@@ -137,6 +137,7 @@ protected:
   QString generateJobTitle() const;
 
   QtGui::Molecule* m_molecule;
+  bool m_isTabbed;
   QJsonObject m_options;
   QJsonObject m_optionCache; // For reverting changes
   QList<QTextEdit*> m_dirtyTextEdits;
