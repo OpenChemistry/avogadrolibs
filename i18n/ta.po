@@ -10,9 +10,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-15 19:10+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2026-03-16 20:10+0000\n"
+"Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
 "Language: ta\n"
@@ -2072,7 +2071,7 @@ msgstr "வண்ண எச்சங்கள்"
 #: qtplugins/applycolors/applycolors.cpp:217
 #: qtplugins/applycolors/applycolors.cpp:318
 msgid "Select Colormap"
-msgstr "COLORMAP ஐத் தேர்ந்தெடுக்கவும்"
+msgstr "வண்ணவரைபடத்தைத் தேர்ந்தெடு"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -2081,7 +2080,7 @@ msgstr "COLORMAP ஐத் தேர்ந்தெடுக்கவும்"
 #: qtplugins/applycolors/applycolors.cpp:217
 #: qtplugins/applycolors/applycolors.cpp:318:171 rc.cpp:1985
 msgid "Colormap:"
-msgstr "COLORMAP:"
+msgstr "வண்ணவரைபடம்:"
 
 #: qtplugins/applycolors/applycolors.cpp:225
 msgid "Apply Index Colors"
@@ -3820,8 +3819,8 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
 msgstr ""
-"LAMMPS உள்ளீட்டு டெக் முன்னோட்ட பலகத்தில் செய்யப்பட்ட அனைத்து மாற்றங்களையும் இழந்து முன்னோட்ட "
-"உரையை புதுப்பிக்க விரும்புகிறீர்களா?"
+"Lammps உள்ளீட்டு டெக் முன்னோட்ட பலகத்தில் செய்யப்பட்ட அனைத்து மாற்றங்களையும் இழந்து முன்னோட்ட "
+"உரையைப் புதுப்பிக்க விரும்புகிறீர்களா?"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
@@ -3866,7 +3865,7 @@ msgstr "3D ஆயங்களை உருவாக்க முடியவி�
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
-msgstr "LINEFORMATINPUT"
+msgstr "வரிவடிவஉள்ளிடு"
 
 #: qtplugins/lineformatinput/lineformatinput.h:54
 msgid "Load single-line molecule descriptors through an input dialog."
@@ -4192,7 +4191,7 @@ msgstr "பத்திரங்களை உணருங்கள்"
 
 #: qtplugins/openbabel/openbabel.cpp:78
 msgid "Add Hydrogens for pH…"
-msgstr "PH க்கு ஐட்ரசன்களைச் சேர்க்கவும்…"
+msgstr "pH க்கு ஐட்ரசன்களைச் சேர்…"
 
 #: qtplugins/openbabel/openbabel.cpp:84
 msgid "Remove Hydrogens"
@@ -4280,8 +4279,8 @@ msgid ""
 "dE: %4"
 msgstr ""
 "%2 இன் படி %1\n"
-" தற்போதைய ஆற்றல்: %3\n"
-" DE: %4"
+"தற்போதைய ஆற்றல்: %3\n"
+"dE: %4"
 
 #: qtplugins/openbabel/openbabel.cpp:531 qtplugins/openbabel/openbabel.cpp:682
 msgid "Updating molecule…"
@@ -4299,7 +4298,7 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
-"OBABEL வெளியீட்டில் உள்ள அணுக்களின் எண்ணிக்கை (%1) அசல் மூலக்கூறில் (%2) அணுக்களின் "
+"obabel வெளியீட்டில் உள்ள அணுக்களின் எண்ணிக்கை (%1) அசல் மூலக்கூறில் (%2) அணுக்களின் "
 "எண்ணிக்கையுடன் பொருந்தவில்லை."
 
 #: qtplugins/openbabel/openbabel.cpp:571
@@ -4371,7 +4370,7 @@ msgstr "இயங்கும் %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:874
 msgid "Add hydrogens for pH"
-msgstr "PH க்கு ஐட்ரசன்களைச் சேர்க்கவும்"
+msgstr "pH க்கு ஐட்ரசன்களைச் சேர்"
 
 #: qtplugins/openbabel/openbabel.cpp:874
 msgid "pH:"
@@ -4395,7 +4394,7 @@ msgstr "திறந்த பாபல் தரவை உருவாக்க
 
 #: qtplugins/openbabel/openbabel.cpp:954
 msgid "Reading obabel output…"
-msgstr "OBABEL வெளியீட்டைப் படித்தல்…"
+msgstr "obabel வெளியீட்டைப் படித்தல்…"
 
 #: qtplugins/openbabel/openbabel.cpp:1017
 msgid ""
@@ -6249,7 +6248,7 @@ msgstr "வார்ப்புரு கருவி"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
-msgstr "VDW கோளங்களின் எளிய காட்சி."
+msgstr "VdW கோளங்களின் எளிய காட்சி."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
@@ -8180,7 +8179,7 @@ msgstr "மே"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:865
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
 msgid "3d"
-msgstr "ZD"
+msgstr "3டி"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:873
 #. i18n: ectx: property (toolTip), widget (QComboBox, thermoStyleCombo)
@@ -8618,7 +8617,7 @@ msgstr "Hbonds"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:355
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "AllBonds"
-msgstr "ALLBONDS"
+msgstr "அனைத்துபிணைப்புகள்"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:360
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -8767,7 +8766,7 @@ msgstr "அதிகபட்சம். படிகளைக் குறைக
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
 msgid "StateData options:"
-msgstr "STATEDATA விருப்பங்கள்:"
+msgstr "நிலைதரவு விருப்பங்கள்:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
