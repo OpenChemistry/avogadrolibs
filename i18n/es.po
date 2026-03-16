@@ -15,13 +15,14 @@
 # Adrian Lopez <adrlop1012@gmail.com>, 2025.
 # Armando Castro <darkarr2d2@gmail.com>, 2025.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025, 2026.
+# Javier Cerezo <jcb1@um.es>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-15 19:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-16 20:10+0000\n"
+"Last-Translator: Javier Cerezo <jcb1@um.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -6016,7 +6017,7 @@ msgstr "Mostrar listas orbitales."
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:133
 msgid "Orbital"
-msgstr "Òrbital"
+msgstr "Orbital"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
@@ -6037,13 +6038,13 @@ msgstr ""
 #: qtplugins/surfaces/orbitaltablemodel.cpp:238
 msgctxt "Highest Occupied MO"
 msgid "HOMO"
-msgstr "HOMO (orbital molecular ocupado de mayor energía)"
+msgstr "HOMO"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:164
 #: qtplugins/surfaces/orbitaltablemodel.cpp:239
 msgctxt "Lowest Unoccupied MO"
 msgid "LUMO"
-msgstr "LUMO (orbital molecular vacío de menor energía)"
+msgstr "LUMO"
 
 #: qtplugins/surfaces/orbitalwidget.cpp:26
 msgid "Molecular Orbitals"
@@ -6092,7 +6093,7 @@ msgstr "Desde Archivo"
 #: qtplugins/surfaces/surfacedialog.cpp:230
 #, qt-format
 msgid " of %0"
-msgstr " of %0"
+msgstr " de %0"
 
 #: qtplugins/surfaces/surfaces.cpp:88
 msgid "Create Surfaces…"
