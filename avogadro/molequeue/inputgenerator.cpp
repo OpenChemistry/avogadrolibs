@@ -659,45 +659,38 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
 
     HighlightPreset presetType = mapStringToPreset[preset];
 
+    format.setFontFamily(QStringLiteral("mono"));
+
     /// @todo Store presets in a singleton that can be configured in the GUI,
     /// rather than hardcoding them.
     switch (presetType) {
       case HighlightPreset::Title:
-        format.setFontFamily(QStringLiteral("mono"));
         format.setFontWeight(QFont::Bold);
         format.setForeground(highlightColor("green", isDarkMode));
         return true;
       case HighlightPreset::Keyword:
-        format.setFontFamily(QStringLiteral("mono"));
         format.setForeground(highlightColor("blue", isDarkMode));
         return true;
       case HighlightPreset::Property:
-        format.setFontFamily(QStringLiteral("mono"));
         format.setForeground(highlightColor("cyan", isDarkMode));
         return true;
       case HighlightPreset::NumLiteral:
-        format.setFontFamily(QStringLiteral("mono"));
         format.setForeground(highlightColor("orange", isDarkMode));
         return true;
       case HighlightPreset::StrLiteral:
-        format.setFontFamily(QStringLiteral("mono"));
         format.setForeground(highlightColor("red", isDarkMode));
         return true;
       case HighlightPreset::Comment:
-        format.setFontFamily(QStringLiteral("mono"));
         format.setFontItalic(true);
         format.setForeground(highlightColor("gray", isDarkMode));
         return true;
       case HighlightPreset::Method:
-        format.setFontFamily(QStringLiteral("mono"));
         format.setForeground(highlightColor("purple", isDarkMode));
         return true;
       case HighlightPreset::Basis:
-        format.setFontFamily(QStringLiteral("mono"));
         format.setForeground(highlightColor("pink", isDarkMode));
         return true;
       case HighlightPreset::Block:
-        format.setFontFamily(QStringLiteral("mono"));
         format.setForeground(highlightColor("yellow", isDarkMode));
         return true;
     }
