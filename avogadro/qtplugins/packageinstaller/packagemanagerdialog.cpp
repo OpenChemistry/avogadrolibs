@@ -470,7 +470,7 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
     if (lastDash != -1) {
       QStringView tail = QStringView(component).mid(lastDash + 1);
       bool isHex = tail.size() >= 7;
-      for (int i = 0; isHex && i < tail.size(); ++i) {
+      for (qsizetype i = 0; isHex && i < tail.size(); ++i) {
         QChar c = tail[i];
         isHex = c.isDigit() || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
       }
