@@ -9,16 +9,19 @@
 
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/core/unitcell.h>
 
 #include <avogadro/io/cjsonformat.h>
 
+using Avogadro::Index;
 using Avogadro::MatrixX;
 using Avogadro::PI_F;
 using Avogadro::Real;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Molecule;
+using Avogadro::Core::Residue;
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::Variant;
 using Avogadro::Io::CjsonFormat;
@@ -404,4 +407,44 @@ TEST(CjsonTest, bondPropertiesRoundTrip)
   auto wi1 = readMol.bondProperties().getDouble("wiberg_index", 1);
   ASSERT_TRUE(wi1.has_value());
   EXPECT_DOUBLE_EQ(*wi1, 0.93);
+}
+
+TEST(CjsonTest, residuePropertiesRoundTrip)
+{
+  // Build a minimal molecule with residues
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(6); // C
+  Atom a2 = molecule.addAtom(7); // N
+
+  std::string name1 = std::string("ALA");
+  Index id1 = 1;
+  char chain1 = 'A';
+  Residue r1(name1, id1, chain1);
+  r1.addResidueAtom("CA", a1);
+  molecule.addResidue(r1);
+
+  std::string name2 = std::string("GLY");
+  Index id2 = 2;
+  char chain2 = 'A';
+  Residue r2(name2, id2, chain2);
+  r2.addResidueAtom("CA", a2);
+  molecule.addResidue(r2);
+
+  molecule.residueProperties().setDouble("bfactor", 0, 15.2);
+  molecule.residueProperties().setDouble("bfactor", 1, 22.7);
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+
+  EXPECT_EQ(readMol.residueCount(), 2);
+  auto bf0 = readMol.residueProperties().getDouble("bfactor", 0);
+  ASSERT_TRUE(bf0.has_value());
+  EXPECT_DOUBLE_EQ(*bf0, 15.2);
+  auto bf1 = readMol.residueProperties().getDouble("bfactor", 1);
+  ASSERT_TRUE(bf1.has_value());
+  EXPECT_DOUBLE_EQ(*bf1, 22.7);
 }

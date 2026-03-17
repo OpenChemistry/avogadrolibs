@@ -578,6 +578,51 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  // Read residue properties (parallel arrays stored at root level)
+  if (jsonRoot.contains("residueProperties")) {
+    json resProps = jsonRoot["residueProperties"];
+    if (resProps.is_object()) {
+      for (auto& property : resProps.items()) {
+        const auto& arr = property.value();
+        if (arr.is_array() && arr.size() == molecule.residueCount()) {
+          bool allString = true;
+          bool hasFloat = false;
+          for (size_t i = 0; i < arr.size(); ++i) {
+            if (arr[i].is_number()) {
+              allString = false;
+              if (arr[i].is_number_float())
+                hasFloat = true;
+            } else if (!arr[i].is_string()) {
+              allString = false;
+            }
+          }
+          if (allString) {
+            for (size_t i = 0; i < arr.size(); ++i) {
+              if (arr[i].is_string()) {
+                molecule.residueProperties().setString(
+                  property.key(), i, arr[i].get<std::string>());
+              }
+            }
+          } else if (hasFloat) {
+            for (size_t i = 0; i < arr.size(); ++i) {
+              if (arr[i].is_number()) {
+                molecule.residueProperties().setDouble(property.key(), i,
+                                                       arr[i].get<double>());
+              }
+            }
+          } else {
+            for (size_t i = 0; i < arr.size(); ++i) {
+              if (arr[i].is_number_integer()) {
+                molecule.residueProperties().setInt(property.key(), i,
+                                                    arr[i].get<int>());
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   if (jsonRoot.contains("unitCell") || jsonRoot.contains("unit cell")) {
     json unitCell = jsonRoot["unitCell"];
     if (!unitCell.is_object())
@@ -1797,7 +1842,33 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
     root["residues"] = residues;
 
-    // TODO check for residue properties
+    // Write residue properties as parallel arrays alongside residues
+    if (!molecule.residueProperties().empty()) {
+      json resProps;
+      for (const auto& name : molecule.residueProperties().doubleNames()) {
+        json arr;
+        auto values = molecule.residueProperties().doubles(name);
+        for (Index i = 0; i < values.size(); ++i)
+          arr.push_back(values[i]);
+        resProps[name] = arr;
+      }
+      for (const auto& name : molecule.residueProperties().intNames()) {
+        json arr;
+        auto values = molecule.residueProperties().ints(name);
+        for (Index i = 0; i < values.size(); ++i)
+          arr.push_back(values[i]);
+        resProps[name] = arr;
+      }
+      for (const auto& name : molecule.residueProperties().stringNames()) {
+        json arr;
+        auto values = molecule.residueProperties().strings(name);
+        for (Index i = 0; i < values.size(); ++i)
+          arr.push_back(values[i]);
+        resProps[name] = arr;
+      }
+      if (!resProps.empty())
+        root["residueProperties"] = resProps;
+    }
   }
 
   // any constraints?
