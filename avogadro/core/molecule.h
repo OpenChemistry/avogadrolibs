@@ -140,6 +140,12 @@ public:
   /** \overload */
   const PropertyMap& residueProperties() const;
 
+  /** @return the per-conformer custom property map. */
+  PropertyMap& conformerProperties();
+
+  /** \overload */
+  const PropertyMap& conformerProperties() const;
+
   /** @return a vector of hybridizations for the atoms in the molecule. */
   Array<AtomHybridization>& hybridizations();
 
@@ -988,6 +994,7 @@ protected:
   PropertyMap m_atomProperties;             //!< Custom per-atom properties
   PropertyMap m_bondProperties;             //!< Custom per-bond properties
   PropertyMap m_residueProperties;          //!< Custom per-residue properties
+  PropertyMap m_conformerProperties;        //!< Custom per-conformer properties
   CustomElementMap m_customElementMap;
   ElementMask m_elements; //!< Which elements this molecule contains (e.g., for
                           //!< force fields)

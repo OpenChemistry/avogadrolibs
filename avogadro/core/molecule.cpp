@@ -39,6 +39,7 @@ Molecule::Molecule(const Molecule& other)
     m_spectra(other.m_spectra), m_atomProperties(other.m_atomProperties),
     m_bondProperties(other.m_bondProperties),
     m_residueProperties(other.m_residueProperties),
+    m_conformerProperties(other.m_conformerProperties),
     m_customElementMap(other.m_customElementMap), m_elements(other.m_elements),
     m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
     m_atomLabels(other.m_atomLabels), m_bondLabels(other.m_bondLabels),
@@ -105,6 +106,7 @@ void Molecule::readProperties(const Molecule& other)
   m_atomProperties = other.m_atomProperties;
   m_bondProperties = other.m_bondProperties;
   m_residueProperties = other.m_residueProperties;
+  m_conformerProperties = other.m_conformerProperties;
 
   // copy orbital information
   SlaterSet* slaterSet = dynamic_cast<SlaterSet*>(other.m_basisSet);
@@ -145,6 +147,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_atomProperties(std::move(other.m_atomProperties)),
     m_bondProperties(std::move(other.m_bondProperties)),
     m_residueProperties(std::move(other.m_residueProperties)),
+    m_conformerProperties(std::move(other.m_conformerProperties)),
     m_customElementMap(std::move(other.m_customElementMap)),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
@@ -186,6 +189,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_atomProperties = other.m_atomProperties;
     m_bondProperties = other.m_bondProperties;
     m_residueProperties = other.m_residueProperties;
+    m_conformerProperties = other.m_conformerProperties;
     m_customElementMap = other.m_customElementMap;
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
@@ -257,6 +261,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_atomProperties = std::move(other.m_atomProperties);
     m_bondProperties = std::move(other.m_bondProperties);
     m_residueProperties = std::move(other.m_residueProperties);
+    m_conformerProperties = std::move(other.m_conformerProperties);
     m_customElementMap = std::move(other.m_customElementMap);
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
@@ -384,6 +389,16 @@ PropertyMap& Molecule::residueProperties()
 const PropertyMap& Molecule::residueProperties() const
 {
   return m_residueProperties;
+}
+
+PropertyMap& Molecule::conformerProperties()
+{
+  return m_conformerProperties;
+}
+
+const PropertyMap& Molecule::conformerProperties() const
+{
+  return m_conformerProperties;
 }
 
 std::set<std::string> Molecule::spectraTypes() const
@@ -1427,6 +1442,7 @@ bool Molecule::setCoordinate3d(int coord)
 void Molecule::clearCoordinate3d()
 {
   m_coordinates3d.clear();
+  m_conformerProperties.clear();
 }
 
 Array<Vector3> Molecule::coordinate3d(size_t index) const

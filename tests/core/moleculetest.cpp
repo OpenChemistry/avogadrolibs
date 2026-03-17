@@ -764,3 +764,41 @@ TEST_F(MoleculeTest, CopyMoleculePreservesProperties)
   EXPECT_DOUBLE_EQ(*m_testMolecule.atomProperties().getDouble("charge", 0),
                    -0.3);
 }
+
+TEST_F(MoleculeTest, ConformerProperties)
+{
+  // Set up two conformers
+  Array<Vector3> coords1(3, Vector3::Zero());
+  Array<Vector3> coords2(3, Vector3::Zero());
+  m_testMolecule.setCoordinate3d(coords1, 0);
+  m_testMolecule.setCoordinate3d(coords2, 1);
+
+  // Store per-conformer energies
+  m_testMolecule.conformerProperties().setDouble("energy", 0, -75.5);
+  m_testMolecule.conformerProperties().setDouble("energy", 1, -74.2);
+
+  auto e0 = m_testMolecule.conformerProperties().getDouble("energy", 0);
+  auto e1 = m_testMolecule.conformerProperties().getDouble("energy", 1);
+  ASSERT_TRUE(e0.has_value());
+  ASSERT_TRUE(e1.has_value());
+  EXPECT_DOUBLE_EQ(*e0, -75.5);
+  EXPECT_DOUBLE_EQ(*e1, -74.2);
+
+  // Store per-conformer forces as MatrixX (atomCount x 3)
+  MatrixX forces(3, 3);
+  forces << 0.1, 0.2, 0.3, -0.1, -0.2, -0.3, 0.0, 0.0, 0.0;
+  m_testMolecule.conformerProperties().setMatrix("forces", 0, forces);
+
+  auto f0 = m_testMolecule.conformerProperties().getMatrix("forces", 0);
+  ASSERT_TRUE(f0.has_value());
+  EXPECT_EQ(f0->rows(), 3);
+  EXPECT_EQ(f0->cols(), 3);
+  EXPECT_DOUBLE_EQ((*f0)(0, 0), 0.1);
+
+  // Conformer 1 has no forces
+  EXPECT_FALSE(m_testMolecule.conformerProperties().hasMatrix("forces", 1));
+
+  // clearCoordinate3d should clear conformer properties
+  m_testMolecule.clearCoordinate3d();
+  EXPECT_TRUE(m_testMolecule.conformerProperties().empty());
+}
