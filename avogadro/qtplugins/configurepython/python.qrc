@@ -1,5 +1,0 @@
-<RCC>
-  <qresource prefix="/files">
-    <file>pyproject.toml</file>
-  </qresource>
-</RCC>
