@@ -8,13 +8,14 @@
 # matterhorn103 <milner94@live.co.uk>, 2023.
 # Andi Chandler <andi@gowling.com>, 2024, 2025, 2026.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
+# Hosted Weblate user 144212 <mkilgas14@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-15 19:10+0000\n"
-"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"PO-Revision-Date: 2026-03-18 15:09+0000\n"
+"Last-Translator: Hosted Weblate user 144212 <mkilgas14@gmail.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
 "Language: en_GB\n"
@@ -4598,40 +4599,40 @@ msgstr "Extraction complete (%1 files)\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:477
 #, qt-format
 msgid "Error: could not move extracted package %1 to %2\n"
-msgstr ""
+msgstr "Error: could not move extracted package %1 to %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:490
 #, qt-format
 msgid "Extraction error: %1"
-msgstr ""
+msgstr "Extraction error: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:492
 msgid "Extraction yielded no files.\n"
-msgstr ""
+msgstr "Extraction yielded no files.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:502
 msgid "Installation complete.\n"
-msgstr ""
+msgstr "Installation complete.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
 msgid "Nothing to Remove"
-msgstr ""
+msgstr "Nothing to remove"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
 msgid "Check the box next to an installed plugin to remove it."
-msgstr ""
+msgstr "Check the box next to an installed plugin to remove it."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
-msgstr ""
+msgstr "Remove Plugins"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:558
 #, qt-plural-format
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
 msgid_plural "Remove %n selected plugin(s)?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Remove %n selected plugin?"
+msgstr[1] "Remove %n selected plugins?"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
@@ -4643,60 +4644,60 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:593
 msgid "Select Plugin Directory"
-msgstr ""
+msgstr "Select Plugin Directory"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:599
 msgid "Invalid Directory"
-msgstr ""
+msgstr "Invalid Directory"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
 msgid "The selected directory does not contain a pyproject.toml file."
-msgstr ""
+msgstr "The selected directory does not contain a pyproject.toml file."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:614
 #, qt-format
 msgid "Plugin already installed as symlink: %1\n"
-msgstr ""
+msgstr "Plugin already installed as symlink: %1\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:629
 #, qt-format
 msgid "Created symlink: %1 → %2\n"
-msgstr ""
+msgstr "Created symlink: %1 → %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:632
 msgid "Symlink creation failed; copying files instead…\n"
-msgstr ""
+msgstr "Symlink creation failed; copying files instead…\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:635
 #, qt-format
 msgid "Failed to copy package to %1."
-msgstr ""
+msgstr "Failed to copy package to %1."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:640
 #, qt-format
 msgid "Installing plugin from %1…\n"
-msgstr ""
+msgstr "Installing plugin from %1…\n"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:58
 msgid "Not installed"
-msgstr ""
+msgstr "Not installed"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:60
 msgid "Installed (up to date)"
-msgstr ""
+msgstr "Installed (up to date)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:62
 msgid "Update available"
-msgstr ""
+msgstr "Update available"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:64
 msgid "Installed locally (not in online catalog)"
-msgstr ""
+msgstr "Installed locally (not in online catalogue)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:70
 #, qt-format
 msgid "Requires Avogadro %1 or later (running %2)"
-msgstr ""
+msgstr "Requires Avogadro %1 or later (running %2)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:162
 #, qt-format
@@ -4704,6 +4705,8 @@ msgid ""
 "Feature icons:\n"
 "%1"
 msgstr ""
+"Feature icons:\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:170
 msgid "Status"
@@ -4725,7 +4728,7 @@ msgstr "Description"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:564
 msgid "Electrostatics"
-msgstr ""
+msgstr "Electrostatics"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:566
 msgid "Energy Models"
