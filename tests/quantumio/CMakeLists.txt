@@ -2,6 +2,7 @@
 set(tests
   cube
   fchk
+  gaussiansettools
   molden
   orca
   # TODO
@@ -49,6 +50,9 @@ foreach(TestName ${tests})
   elseif(TestName STREQUAL "fchk")
     add_test(NAME "QuantumIo-fchk"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianFchkTest.*")
+  elseif(TestName STREQUAL "gaussiansettools")
+    add_test(NAME "QuantumIo-gaussiansettools"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianSetToolsTest.*")
   elseif(TestName STREQUAL "molden")
     add_test(NAME "QuantumIo-molden"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=MoldenTest.*")
