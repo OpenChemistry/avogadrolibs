@@ -8,7 +8,12 @@
 
 #include "avogadrocore.h"
 #include "elements.h"
+#include "matrix.h"
 #include "vector.h"
+
+#include <optional>
+#include <string>
+#include <type_traits>
 
 namespace Avogadro::Core {
 
@@ -198,6 +203,22 @@ public:
 
   void setLabel(const std::string& label);
   std::string label() const;
+  /** @} */
+
+  /**
+   * Custom property access. Setters are overloaded by value type.
+   * The template getter returns std::nullopt if the property is missing
+   * or if the requested type does not match the stored type.
+   * int and double values convert to string automatically.
+   * @{
+   */
+  void setProperty(const std::string& name, double value);
+  void setProperty(const std::string& name, int value);
+  void setProperty(const std::string& name, const std::string& value);
+  void setProperty(const std::string& name, const MatrixX& value);
+
+  template <typename T>
+  std::optional<T> property(const std::string& name) const;
   /** @} */
 
 private:
@@ -421,6 +442,63 @@ template <class Molecule_T>
 std::string AtomTemplate<Molecule_T>::label() const
 {
   return m_molecule->atomLabel(m_index);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setProperty(const std::string& name,
+                                           double value)
+{
+  m_molecule->atomProperties().setDouble(name, m_index, value);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setProperty(const std::string& name, int value)
+{
+  m_molecule->atomProperties().setInt(name, m_index, value);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setProperty(const std::string& name,
+                                           const std::string& value)
+{
+  m_molecule->atomProperties().setString(name, m_index, value);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setProperty(const std::string& name,
+                                           const MatrixX& value)
+{
+  m_molecule->atomProperties().setMatrix(name, m_index, value);
+}
+
+template <class Molecule_T>
+template <typename T>
+std::optional<T> AtomTemplate<Molecule_T>::property(
+  const std::string& name) const
+{
+  const auto& props = m_molecule->atomProperties();
+  if constexpr (std::is_same_v<T, double>) {
+    return props.getDouble(name, m_index);
+  } else if constexpr (std::is_same_v<T, int>) {
+    return props.getInt(name, m_index);
+  } else if constexpr (std::is_same_v<T, std::string>) {
+    auto result = props.getString(name, m_index);
+    if (result)
+      return result;
+    // Convert from double if available
+    auto dval = props.getDouble(name, m_index);
+    if (dval)
+      return std::to_string(*dval);
+    // Convert from int if available
+    auto ival = props.getInt(name, m_index);
+    if (ival)
+      return std::to_string(*ival);
+    return std::nullopt;
+  } else if constexpr (std::is_same_v<T, MatrixX>) {
+    return props.getMatrix(name, m_index);
+  } else {
+    return std::nullopt;
+  }
 }
 
 } // namespace Avogadro::Core

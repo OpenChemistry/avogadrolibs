@@ -7,8 +7,13 @@
 #define AVOGADRO_CORE_BOND_H
 
 #include "avogadrocore.h"
+#include "matrix.h"
 
 #include "atom.h"
+
+#include <optional>
+#include <string>
+#include <type_traits>
 
 namespace Avogadro::Core {
 
@@ -119,6 +124,22 @@ public:
    * A label for the bond (if any)
    */
   std::string label() const;
+
+  /**
+   * Custom property access. Setters are overloaded by value type.
+   * The template getter returns std::nullopt if the property is missing
+   * or if the requested type does not match the stored type.
+   * int and double values convert to string automatically.
+   * @{
+   */
+  void setProperty(const std::string& name, double value);
+  void setProperty(const std::string& name, int value);
+  void setProperty(const std::string& name, const std::string& value);
+  void setProperty(const std::string& name, const MatrixX& value);
+
+  template <typename T>
+  std::optional<T> property(const std::string& name) const;
+  /** @} */
 
 private:
   MoleculeType* m_molecule = nullptr;
@@ -249,6 +270,61 @@ template <class Molecule_T>
 std::string BondTemplate<Molecule_T>::label() const
 {
   return m_molecule->bondLabel(m_index);
+}
+
+template <class Molecule_T>
+void BondTemplate<Molecule_T>::setProperty(const std::string& name,
+                                           double value)
+{
+  m_molecule->bondProperties().setDouble(name, m_index, value);
+}
+
+template <class Molecule_T>
+void BondTemplate<Molecule_T>::setProperty(const std::string& name, int value)
+{
+  m_molecule->bondProperties().setInt(name, m_index, value);
+}
+
+template <class Molecule_T>
+void BondTemplate<Molecule_T>::setProperty(const std::string& name,
+                                           const std::string& value)
+{
+  m_molecule->bondProperties().setString(name, m_index, value);
+}
+
+template <class Molecule_T>
+void BondTemplate<Molecule_T>::setProperty(const std::string& name,
+                                           const MatrixX& value)
+{
+  m_molecule->bondProperties().setMatrix(name, m_index, value);
+}
+
+template <class Molecule_T>
+template <typename T>
+std::optional<T> BondTemplate<Molecule_T>::property(
+  const std::string& name) const
+{
+  const auto& props = m_molecule->bondProperties();
+  if constexpr (std::is_same_v<T, double>) {
+    return props.getDouble(name, m_index);
+  } else if constexpr (std::is_same_v<T, int>) {
+    return props.getInt(name, m_index);
+  } else if constexpr (std::is_same_v<T, std::string>) {
+    auto result = props.getString(name, m_index);
+    if (result)
+      return result;
+    auto dval = props.getDouble(name, m_index);
+    if (dval)
+      return std::to_string(*dval);
+    auto ival = props.getInt(name, m_index);
+    if (ival)
+      return std::to_string(*ival);
+    return std::nullopt;
+  } else if constexpr (std::is_same_v<T, MatrixX>) {
+    return props.getMatrix(name, m_index);
+  } else {
+    return std::nullopt;
+  }
 }
 
 } // namespace Avogadro::Core

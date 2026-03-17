@@ -323,8 +323,43 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     json atomProperties = atoms["properties"];
     if (atomProperties.is_object()) {
       for (auto& property : atomProperties.items()) {
-        if (property.value().is_array()) {
-          // TODO: handle atom properties
+        const auto& arr = property.value();
+        if (arr.is_array() && arr.size() == atomCount) {
+          // Detect type from first non-null element
+          bool allString = true;
+          bool hasFloat = false;
+          for (size_t i = 0; i < arr.size(); ++i) {
+            if (arr[i].is_number()) {
+              allString = false;
+              if (arr[i].is_number_float())
+                hasFloat = true;
+            } else if (!arr[i].is_string()) {
+              allString = false;
+            }
+          }
+          if (allString) {
+            for (size_t i = 0; i < arr.size(); ++i) {
+              if (arr[i].is_string()) {
+                molecule.atomProperties().setString(property.key(), i,
+                                                    arr[i].get<std::string>());
+              }
+            }
+          } else if (hasFloat) {
+            for (size_t i = 0; i < arr.size(); ++i) {
+              if (arr[i].is_number()) {
+                molecule.atomProperties().setDouble(property.key(), i,
+                                                    arr[i].get<double>());
+              }
+            }
+          } else {
+            // All integers
+            for (size_t i = 0; i < arr.size(); ++i) {
+              if (arr[i].is_number_integer()) {
+                molecule.atomProperties().setInt(property.key(), i,
+                                                 arr[i].get<int>());
+              }
+            }
+          }
         }
       }
     }
@@ -443,8 +478,41 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
         json bondProperties = bonds["properties"];
         if (bondProperties.is_object()) {
           for (auto& property : bondProperties.items()) {
-            if (property.value().is_array()) {
-              // TODO: handle bond properties
+            const auto& arr = property.value();
+            if (arr.is_array() && arr.size() == molecule.bondCount()) {
+              bool allString = true;
+              bool hasFloat = false;
+              for (size_t i = 0; i < arr.size(); ++i) {
+                if (arr[i].is_number()) {
+                  allString = false;
+                  if (arr[i].is_number_float())
+                    hasFloat = true;
+                } else if (!arr[i].is_string()) {
+                  allString = false;
+                }
+              }
+              if (allString) {
+                for (size_t i = 0; i < arr.size(); ++i) {
+                  if (arr[i].is_string()) {
+                    molecule.bondProperties().setString(
+                      property.key(), i, arr[i].get<std::string>());
+                  }
+                }
+              } else if (hasFloat) {
+                for (size_t i = 0; i < arr.size(); ++i) {
+                  if (arr[i].is_number()) {
+                    molecule.bondProperties().setDouble(property.key(), i,
+                                                        arr[i].get<double>());
+                  }
+                }
+              } else {
+                for (size_t i = 0; i < arr.size(); ++i) {
+                  if (arr[i].is_number_integer()) {
+                    molecule.bondProperties().setInt(property.key(), i,
+                                                     arr[i].get<int>());
+                  }
+                }
+              }
             }
           }
         }
@@ -1611,7 +1679,33 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       atoms["layer"] = atomLayer;
     }
 
-    // TODO check for atom properties
+    // Write custom atom properties
+    if (!molecule.atomProperties().empty()) {
+      json atomProps;
+      for (const auto& name : molecule.atomProperties().doubleNames()) {
+        json arr;
+        auto values = molecule.atomProperties().doubles(name);
+        for (Index i = 0; i < values.size(); ++i)
+          arr.push_back(values[i]);
+        atomProps[name] = arr;
+      }
+      for (const auto& name : molecule.atomProperties().intNames()) {
+        json arr;
+        auto values = molecule.atomProperties().ints(name);
+        for (Index i = 0; i < values.size(); ++i)
+          arr.push_back(values[i]);
+        atomProps[name] = arr;
+      }
+      for (const auto& name : molecule.atomProperties().stringNames()) {
+        json arr;
+        auto values = molecule.atomProperties().strings(name);
+        for (Index i = 0; i < values.size(); ++i)
+          arr.push_back(values[i]);
+        atomProps[name] = arr;
+      }
+      if (!atomProps.empty())
+        atoms["properties"] = atomProps;
+    }
     root["atoms"] = atoms; // end atoms
   }
 
@@ -1639,7 +1733,33 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       bonds["labels"] = labels;
     }
 
-    // TODO check for bond properties
+    // Write custom bond properties
+    if (!molecule.bondProperties().empty()) {
+      json bondProps;
+      for (const auto& name : molecule.bondProperties().doubleNames()) {
+        json arr;
+        auto values = molecule.bondProperties().doubles(name);
+        for (Index i = 0; i < values.size(); ++i)
+          arr.push_back(values[i]);
+        bondProps[name] = arr;
+      }
+      for (const auto& name : molecule.bondProperties().intNames()) {
+        json arr;
+        auto values = molecule.bondProperties().ints(name);
+        for (Index i = 0; i < values.size(); ++i)
+          arr.push_back(values[i]);
+        bondProps[name] = arr;
+      }
+      for (const auto& name : molecule.bondProperties().stringNames()) {
+        json arr;
+        auto values = molecule.bondProperties().strings(name);
+        for (Index i = 0; i < values.size(); ++i)
+          arr.push_back(values[i]);
+        bondProps[name] = arr;
+      }
+      if (!bondProps.empty())
+        bonds["properties"] = bondProps;
+    }
     root["bonds"] = bonds;
   }
 

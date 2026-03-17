@@ -11,10 +11,12 @@
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/propertymap.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
 using Avogadro::Index;
+using Avogadro::MatrixX;
 using Avogadro::Vector2;
 using Avogadro::Vector3;
 using Avogadro::Vector3f;
@@ -24,6 +26,7 @@ using Avogadro::Core::Bond;
 using Avogadro::Core::Color3f;
 using Avogadro::Core::Mesh;
 using Avogadro::Core::Molecule;
+using Avogadro::Core::PropertyMap;
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::Variant;
 using Avogadro::Core::VariantMap;
@@ -483,4 +486,281 @@ TEST_F(MoleculeTest, formulaCompositionUnitCellMixed)
   std::map<std::string, size_t> comp = molecule.formulaComposition();
   EXPECT_EQ(comp["Na"], 1);
   EXPECT_EQ(comp["Cl"], 1);
+}
+
+// --- PropertyMap standalone tests ---
+
+TEST(PropertyMapTest, DoubleProperties)
+{
+  PropertyMap pm;
+  pm.setDouble("charge", 0, -0.3);
+  pm.setDouble("charge", 1, 0.15);
+
+  auto val0 = pm.getDouble("charge", 0);
+  auto val1 = pm.getDouble("charge", 1);
+  ASSERT_TRUE(val0.has_value());
+  ASSERT_TRUE(val1.has_value());
+  EXPECT_DOUBLE_EQ(*val0, -0.3);
+  EXPECT_DOUBLE_EQ(*val1, 0.15);
+
+  // Missing index
+  EXPECT_FALSE(pm.getDouble("charge", 5).has_value());
+  // Missing name
+  EXPECT_FALSE(pm.getDouble("nonexistent", 0).has_value());
+}
+
+TEST(PropertyMapTest, IntProperties)
+{
+  PropertyMap pm;
+  pm.setInt("type", 0, 42);
+  pm.setInt("type", 2, 7);
+
+  EXPECT_EQ(*pm.getInt("type", 0), 42);
+  // Index 1 was auto-filled with sentinel
+  EXPECT_FALSE(pm.getInt("type", 1).has_value());
+  EXPECT_EQ(*pm.getInt("type", 2), 7);
+}
+
+TEST(PropertyMapTest, StringProperties)
+{
+  PropertyMap pm;
+  pm.setString("label", 0, "C.ar");
+  pm.setString("label", 1, "N.am");
+
+  EXPECT_EQ(*pm.getString("label", 0), "C.ar");
+  EXPECT_EQ(*pm.getString("label", 1), "N.am");
+  EXPECT_FALSE(pm.getString("label", 5).has_value());
+}
+
+TEST(PropertyMapTest, SparseMatrices)
+{
+  PropertyMap pm;
+  MatrixX tensor(3, 3);
+  tensor << 1, 0, 0, 0, 2, 0, 0, 0, 3;
+  pm.setMatrix("nmr_tensor", 5, tensor);
+
+  EXPECT_TRUE(pm.hasMatrix("nmr_tensor", 5));
+  EXPECT_FALSE(pm.hasMatrix("nmr_tensor", 0));
+
+  auto result = pm.getMatrix("nmr_tensor", 5);
+  ASSERT_TRUE(result.has_value());
+  EXPECT_EQ(result->rows(), 3);
+  EXPECT_EQ(result->cols(), 3);
+  EXPECT_DOUBLE_EQ((*result)(0, 0), 1.0);
+  EXPECT_DOUBLE_EQ((*result)(2, 2), 3.0);
+
+  EXPECT_FALSE(pm.getMatrix("nmr_tensor", 0).has_value());
+}
+
+TEST(PropertyMapTest, BulkSetGet)
+{
+  PropertyMap pm;
+  Array<double> charges(3, 0.0);
+  charges[0] = -0.3;
+  charges[1] = 0.15;
+  charges[2] = 0.15;
+  pm.setDoubles("charge", charges);
+
+  auto retrieved = pm.doubles("charge");
+  EXPECT_EQ(retrieved.size(), 3);
+  EXPECT_DOUBLE_EQ(retrieved[0], -0.3);
+
+  // Non-existent column returns empty
+  EXPECT_TRUE(pm.doubles("nope").empty());
+}
+
+TEST(PropertyMapTest, NameEnumeration)
+{
+  PropertyMap pm;
+  pm.setDouble("charge", 0, 1.0);
+  pm.setDouble("spin", 0, 0.5);
+  pm.setInt("type", 0, 1);
+  pm.setString("label", 0, "C");
+
+  auto dnames = pm.doubleNames();
+  EXPECT_EQ(dnames.size(), 2);
+  EXPECT_TRUE(dnames.count("charge"));
+  EXPECT_TRUE(dnames.count("spin"));
+  EXPECT_EQ(pm.intNames().size(), 1);
+  EXPECT_EQ(pm.stringNames().size(), 1);
+}
+
+TEST(PropertyMapTest, AddEntry)
+{
+  PropertyMap pm;
+  pm.setDouble("charge", 0, 1.0);
+  pm.setInt("type", 0, 5);
+  pm.addEntry();
+
+  // Column should now be size 2
+  auto col = pm.doubles("charge");
+  EXPECT_EQ(col.size(), 2);
+  // New entry should be sentinel (nullopt via getter)
+  EXPECT_FALSE(pm.getDouble("charge", 1).has_value());
+  EXPECT_FALSE(pm.getInt("type", 1).has_value());
+}
+
+TEST(PropertyMapTest, RemoveEntry)
+{
+  PropertyMap pm;
+  pm.setDouble("charge", 0, 1.0);
+  pm.setDouble("charge", 1, 2.0);
+  pm.setDouble("charge", 2, 3.0);
+
+  // Remove index 0 (swap with last, then pop)
+  pm.removeEntry(0, 3);
+
+  auto col = pm.doubles("charge");
+  EXPECT_EQ(col.size(), 2);
+  // Index 0 should now have old index 2's value
+  EXPECT_DOUBLE_EQ(*pm.getDouble("charge", 0), 3.0);
+  EXPECT_DOUBLE_EQ(*pm.getDouble("charge", 1), 2.0);
+}
+
+TEST(PropertyMapTest, RemoveEntrySparseMatrix)
+{
+  PropertyMap pm;
+  MatrixX m1(2, 2);
+  m1 << 1, 0, 0, 1;
+  MatrixX m2(2, 2);
+  m2 << 2, 0, 0, 2;
+
+  pm.setMatrix("tensor", 0, m1);
+  pm.setMatrix("tensor", 2, m2);
+
+  // Remove index 0 (swap with last index=2, then pop)
+  pm.removeEntry(0, 3);
+
+  // m2 (was at index 2) should now be at index 0
+  EXPECT_TRUE(pm.hasMatrix("tensor", 0));
+  EXPECT_DOUBLE_EQ((*pm.getMatrix("tensor", 0))(0, 0), 2.0);
+  EXPECT_FALSE(pm.hasMatrix("tensor", 2));
+}
+
+TEST(PropertyMapTest, SwapEntries)
+{
+  PropertyMap pm;
+  pm.setDouble("charge", 0, 1.0);
+  pm.setDouble("charge", 1, 2.0);
+
+  pm.swapEntries(0, 1, 2);
+  EXPECT_DOUBLE_EQ(*pm.getDouble("charge", 0), 2.0);
+  EXPECT_DOUBLE_EQ(*pm.getDouble("charge", 1), 1.0);
+}
+
+TEST(PropertyMapTest, Clear)
+{
+  PropertyMap pm;
+  pm.setDouble("a", 0, 1.0);
+  pm.setInt("b", 0, 2);
+  pm.setString("c", 0, "x");
+  EXPECT_FALSE(pm.empty());
+
+  pm.clear();
+  EXPECT_TRUE(pm.empty());
+  EXPECT_TRUE(pm.doubleNames().empty());
+}
+
+// --- Molecule integration tests ---
+
+TEST_F(MoleculeTest, AtomProperties)
+{
+  m_testMolecule.atomProperties().setDouble("charge", 0, -0.3);
+  m_testMolecule.atomProperties().setDouble("charge", 1, 0.15);
+  m_testMolecule.atomProperties().setDouble("charge", 2, 0.15);
+
+  EXPECT_DOUBLE_EQ(*m_testMolecule.atomProperties().getDouble("charge", 0),
+                   -0.3);
+  EXPECT_DOUBLE_EQ(*m_testMolecule.atomProperties().getDouble("charge", 2),
+                   0.15);
+}
+
+TEST_F(MoleculeTest, AtomProxyProperties)
+{
+  Atom o1 = m_testMolecule.atom(0);
+  o1.setProperty("spin_density", 0.42);
+  o1.setProperty("type_index", 3);
+  o1.setProperty("symmetry_label", std::string("C2v"));
+
+  auto spin = o1.property<double>("spin_density");
+  ASSERT_TRUE(spin.has_value());
+  EXPECT_DOUBLE_EQ(*spin, 0.42);
+
+  auto typeIdx = o1.property<int>("type_index");
+  ASSERT_TRUE(typeIdx.has_value());
+  EXPECT_EQ(*typeIdx, 3);
+
+  auto symLabel = o1.property<std::string>("symmetry_label");
+  ASSERT_TRUE(symLabel.has_value());
+  EXPECT_EQ(*symLabel, "C2v");
+
+  // Wrong type returns nullopt
+  EXPECT_FALSE(o1.property<int>("spin_density").has_value());
+  EXPECT_FALSE(o1.property<double>("symmetry_label").has_value());
+
+  // Numeric to string conversion
+  auto spinStr = o1.property<std::string>("spin_density");
+  ASSERT_TRUE(spinStr.has_value());
+  // Should be a string representation of 0.42
+  EXPECT_NE(spinStr->find("0.42"), std::string::npos);
+}
+
+TEST_F(MoleculeTest, BondProxyProperties)
+{
+  Bond b = m_testMolecule.bond(0);
+  b.setProperty("wiberg_index", 0.95);
+
+  auto wi = b.property<double>("wiberg_index");
+  ASSERT_TRUE(wi.has_value());
+  EXPECT_DOUBLE_EQ(*wi, 0.95);
+}
+
+TEST_F(MoleculeTest, AtomPropertyMatrices)
+{
+  Atom o1 = m_testMolecule.atom(0);
+  MatrixX tensor(3, 3);
+  tensor << 1, 2, 3, 4, 5, 6, 7, 8, 9;
+  o1.setProperty("nmr_tensor", tensor);
+
+  auto result = o1.property<MatrixX>("nmr_tensor");
+  ASSERT_TRUE(result.has_value());
+  EXPECT_EQ(result->rows(), 3);
+  EXPECT_DOUBLE_EQ((*result)(1, 1), 5.0);
+
+  // Other atoms don't have it
+  Atom h2 = m_testMolecule.atom(1);
+  EXPECT_FALSE(h2.property<MatrixX>("nmr_tensor").has_value());
+}
+
+TEST_F(MoleculeTest, RemoveAtomPreservesProperties)
+{
+  // Set properties on all 3 atoms (water: O, H, H)
+  m_testMolecule.atomProperties().setDouble("charge", 0, -0.8);
+  m_testMolecule.atomProperties().setDouble("charge", 1, 0.4);
+  m_testMolecule.atomProperties().setDouble("charge", 2, 0.4);
+
+  // Remove atom 0 (oxygen) — swap-and-pop with atom 2
+  m_testMolecule.removeAtom(0);
+
+  EXPECT_EQ(m_testMolecule.atomCount(), 2);
+  // Index 0 should now have old atom 2's charge
+  auto charge0 = m_testMolecule.atomProperties().getDouble("charge", 0);
+  ASSERT_TRUE(charge0.has_value());
+  EXPECT_DOUBLE_EQ(*charge0, 0.4);
+}
+
+TEST_F(MoleculeTest, CopyMoleculePreservesProperties)
+{
+  m_testMolecule.atomProperties().setDouble("charge", 0, -0.3);
+  m_testMolecule.bondProperties().setDouble("wiberg", 0, 0.95);
+
+  Molecule copy(m_testMolecule);
+
+  EXPECT_DOUBLE_EQ(*copy.atomProperties().getDouble("charge", 0), -0.3);
+  EXPECT_DOUBLE_EQ(*copy.bondProperties().getDouble("wiberg", 0), 0.95);
+
+  // Modify copy, verify original unchanged (COW)
+  copy.atomProperties().setDouble("charge", 0, 999.0);
+  EXPECT_DOUBLE_EQ(*m_testMolecule.atomProperties().getDouble("charge", 0),
+                   -0.3);
 }

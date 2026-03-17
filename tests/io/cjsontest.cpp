@@ -327,3 +327,81 @@ TEST(CjsonTest, partialCharges)
   EXPECT_EQ(mullikenCharges(0, 0), 0.16726);
   EXPECT_EQ(mullikenCharges(1, 0), -0.201292);
 }
+
+TEST(CjsonTest, atomPropertiesRoundTrip)
+{
+  // Create a molecule with custom atom properties
+  Molecule molecule;
+  molecule.addAtom(8);
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+  molecule.addBond(0, 1, 1);
+  molecule.addBond(0, 2, 1);
+
+  molecule.atomProperties().setDouble("mulliken_charge", 0, -0.3);
+  molecule.atomProperties().setDouble("mulliken_charge", 1, 0.15);
+  molecule.atomProperties().setDouble("mulliken_charge", 2, 0.15);
+  molecule.atomProperties().setInt("type_index", 0, 42);
+  molecule.atomProperties().setInt("type_index", 1, 7);
+  molecule.atomProperties().setInt("type_index", 2, 7);
+  molecule.atomProperties().setString("atom_type", 0, "O.3");
+  molecule.atomProperties().setString("atom_type", 1, "H");
+  molecule.atomProperties().setString("atom_type", 2, "H");
+
+  // Write to CJSON
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  // Read back
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+
+  // Verify double properties
+  auto charge0 = readMol.atomProperties().getDouble("mulliken_charge", 0);
+  ASSERT_TRUE(charge0.has_value());
+  EXPECT_DOUBLE_EQ(*charge0, -0.3);
+  auto charge2 = readMol.atomProperties().getDouble("mulliken_charge", 2);
+  ASSERT_TRUE(charge2.has_value());
+  EXPECT_DOUBLE_EQ(*charge2, 0.15);
+
+  // Verify int properties
+  auto type0 = readMol.atomProperties().getInt("type_index", 0);
+  ASSERT_TRUE(type0.has_value());
+  EXPECT_EQ(*type0, 42);
+
+  // Verify string properties
+  auto atomType0 = readMol.atomProperties().getString("atom_type", 0);
+  ASSERT_TRUE(atomType0.has_value());
+  EXPECT_EQ(*atomType0, "O.3");
+  auto atomType1 = readMol.atomProperties().getString("atom_type", 1);
+  ASSERT_TRUE(atomType1.has_value());
+  EXPECT_EQ(*atomType1, "H");
+}
+
+TEST(CjsonTest, bondPropertiesRoundTrip)
+{
+  Molecule molecule;
+  molecule.addAtom(8);
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+  molecule.addBond(0, 1, 1);
+  molecule.addBond(0, 2, 1);
+
+  molecule.bondProperties().setDouble("wiberg_index", 0, 0.95);
+  molecule.bondProperties().setDouble("wiberg_index", 1, 0.93);
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+
+  auto wi0 = readMol.bondProperties().getDouble("wiberg_index", 0);
+  ASSERT_TRUE(wi0.has_value());
+  EXPECT_DOUBLE_EQ(*wi0, 0.95);
+  auto wi1 = readMol.bondProperties().getDouble("wiberg_index", 1);
+  ASSERT_TRUE(wi1.has_value());
+  EXPECT_DOUBLE_EQ(*wi1, 0.93);
+}
