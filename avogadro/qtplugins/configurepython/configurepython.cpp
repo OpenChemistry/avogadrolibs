@@ -12,12 +12,10 @@
 #include <avogadro/qtgui/utilities.h>
 
 #include <QAction>
-#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
-#include <QtCore/QStandardPaths>
 #include <QtCore/QSysInfo>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
@@ -37,105 +35,73 @@ ConfigurePython::ConfigurePython(QObject* parent_)
   m_action->setProperty("menu priority", 510);
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 
-  // check if the default pyproject.toml is installed for plugins
-  QString pluginPath =
-    QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-  if (!QDir(pluginPath).exists()) {
-    QDir().mkpath(pluginPath);
-  }
-  QFileInfo info(pluginPath + "/pyproject.toml");
-  QFile::copy(":/files/pyproject.toml", pluginPath + "/pyproject.toml");
-
   // check for Python on first launch
-  QStringList paths = pythonPaths();
   QSettings settings;
-  // check if we used pixi to install
-  bool installedWithPixi = settings.value("installedWithPixi", false).toBool();
-
-  // make sure the pixi environment works
-  if (QDir(pluginPath + "/.pixi").exists()) {
-    // check if we have a useful python in .pixi
-    QString pythonPath = "/.pixi/envs/default/bin/";
+  if (!settings.value("interpreters/firstlaunch", false).toBool()) {
+    // First, check if pixi is available (plugins will use it for installs)
 #ifdef Q_OS_WIN
-    pythonPath += "python.exe";
+    QString pixiName = QStringLiteral("pixi.exe");
 #else
-    pythonPath += "python";
+    QString pixiName = QStringLiteral("pixi");
 #endif
-    QFileInfo python(pluginPath + pythonPath);
-    if (!python.exists() || python.isExecutable()) {
-      installedWithPixi = false;
-    }
-  }
+    QString pixiPath = QtGui::Utilities::findExecutablePath(pixiName);
 
-  if (paths.isEmpty() && !installedWithPixi) { // show a warning
-    // suggest the user install Python
-    auto option = QMessageBox::information(
-      qobject_cast<QWidget*>(parent()), tr("Install Python"),
-      tr("Python is used for many Avogadro "
-         "features. Do you want to download Python?"),
-      QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
-    if (option == QMessageBox::Yes) {
-      // check if we have pixi
-      // should be true for Mac and Windows because we bundle it
+    if (pixiPath.isEmpty()) {
+      // No pixi, check for python/python3 (plugins will use pip)
 #ifdef Q_OS_WIN
-      QString pixiName = QStringLiteral("pixi.exe");
+      QString pythonName = QStringLiteral("python3.exe");
+      QString pythonAlt = QStringLiteral("python.exe");
 #else
-      QString pixiName = QStringLiteral("pixi");
+      QString pythonName = QStringLiteral("python3");
+      QString pythonAlt = QStringLiteral("python");
 #endif
-      QString pixiPath = QtGui::Utilities::findExecutablePath(pixiName);
-      if (!pixiPath.isEmpty()) {
-        // use pixi
-        QProcess pixi;
-        pixi.setWorkingDirectory(pluginPath);
-        pixi.start(pixiPath + '/' + pixiName, { "install" });
-        // wait up to a minute
-        // TODO: add a progress dialog
-        pixi.waitForFinished(60 * 1000);
-#ifndef NDEBUG
-        qDebug() << "pixi output is " << pixi.readAllStandardOutput();
-        qDebug() << "pixi error output is " << pixi.readAllStandardError();
-#endif
-        if (pixi.exitCode() != 0) {
-          qWarning() << "Error installing dependencies with pixi";
-        } else {
-          installedWithPixi = true;
-          settings.setValue("installedWithPixi", true);
-          // don't need to do it again
-        }
+      QString pythonPath = QtGui::Utilities::findExecutablePath(pythonName);
+      if (pythonPath.isEmpty())
+        pythonPath = QtGui::Utilities::findExecutablePath(pythonAlt);
 
-      } else {
-        // no pixi, suggest installing miniforge
-        QUrl miniforge;
+      if (pythonPath.isEmpty()) {
+        // No pixi or python found — suggest installing miniforge
+        auto option = QMessageBox::information(
+          qobject_cast<QWidget*>(parent()), tr("Install Python"),
+          tr("Python is used for many Avogadro "
+             "features. Do you want to download Python?"),
+          QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        if (option == QMessageBox::Yes) {
+          QUrl miniforge;
 #ifdef Q_OS_WIN
-        // TODO: ARM or Intel? .. but conda-forge doesn't have ARM builds yet
-        miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                         "latest/download/Miniforge3-Windows-x86_64.exe");
+          // TODO: ARM or Intel? .. conda-forge doesn't have ARM builds yet
+          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
+                           "latest/download/Miniforge3-Windows-x86_64.exe");
 #elif defined(Q_OS_MACOS)
-        // ARM or Intel?
-        if (QSysInfo::currentCpuArchitecture().contains("arm"))
-          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                           "latest/download/Miniforge3-MacOSX-arm64.sh");
-        else
-          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                           "latest/download/Miniforge3-MacOSX-x86_64.sh");
+          if (QSysInfo::currentCpuArchitecture().contains("arm"))
+            miniforge =
+              QUrl("https://github.com/conda-forge/miniforge/releases/"
+                   "latest/download/Miniforge3-MacOSX-arm64.sh");
+          else
+            miniforge =
+              QUrl("https://github.com/conda-forge/miniforge/releases/"
+                   "latest/download/Miniforge3-MacOSX-x86_64.sh");
 #else
-        QString arch = QSysInfo::currentCpuArchitecture();
-        if (arch.contains("arm"))
-          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                           "latest/download/Miniforge3-Linux-aarch64.sh");
-        else if (arch.contains("ppc"))
-          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                           "latest/download/Miniforge3-Linux-ppc64le.sh");
-        else
-          miniforge = QUrl("https://github.com/conda-forge/miniforge/releases/"
-                           "latest/download/Miniforge3-Linux-x86_64.sh");
+          QString arch = QSysInfo::currentCpuArchitecture();
+          if (arch.contains("arm"))
+            miniforge =
+              QUrl("https://github.com/conda-forge/miniforge/releases/"
+                   "latest/download/Miniforge3-Linux-aarch64.sh");
+          else if (arch.contains("ppc"))
+            miniforge =
+              QUrl("https://github.com/conda-forge/miniforge/releases/"
+                   "latest/download/Miniforge3-Linux-ppc64le.sh");
+          else
+            miniforge =
+              QUrl("https://github.com/conda-forge/miniforge/releases/"
+                   "latest/download/Miniforge3-Linux-x86_64.sh");
 #endif
-        if (miniforge.isValid()) {
-          QDesktopServices::openUrl(miniforge);
-          // open install instructions
-          QDesktopServices::openUrl(
-            QUrl("https://github.com/conda-forge/"
-                 "miniforge?tab=readme-ov-file#install"));
+          if (miniforge.isValid()) {
+            QDesktopServices::openUrl(miniforge);
+            QDesktopServices::openUrl(
+              QUrl("https://github.com/conda-forge/"
+                   "miniforge?tab=readme-ov-file#install"));
+          }
         }
       }
     }

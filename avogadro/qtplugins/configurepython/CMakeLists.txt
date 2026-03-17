@@ -5,5 +5,4 @@ avogadro_plugin(ConfigurePython
   ConfigurePython
   "condadialog.cpp;configurepython.cpp;configurepythondialog.cpp"
   "condadialog.ui;configurepythondialog.ui"
-  "python.qrc"
 )
