@@ -110,9 +110,10 @@ void Centroid::normal()
   if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
+  Vector3 newPos(0.0, 0.0, 0.0);
   if (m_molecule->isSelectionEmpty()) {
     auto pair = m_molecule->bestFitPlane();
-    m_molecule->addAtom(0.0, pair.second * 2.0);
+    newPos = pair.second * 2.0 + pair.first;
   } else {
     Array<Vector3> selectedAtoms;
     for (Index i = 0; i < m_molecule->atomCount(); ++i) {
@@ -123,9 +124,9 @@ void Centroid::normal()
     }
 
     auto pair = m_molecule->bestFitPlane(selectedAtoms);
-    Vector3 newPos = pair.second * 2.0 + pair.first;
-    m_molecule->addAtom(0, newPos);
+    newPos = pair.second * 2.0 + pair.first;
   }
+  m_molecule->undoMolecule()->addAtom(0, newPos);
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 }
