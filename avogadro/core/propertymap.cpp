@@ -106,12 +106,13 @@ void PropertyMap::setDoubles(const std::string& name,
   m_doubles[name] = values;
 }
 
-Array<double> PropertyMap::doubles(const std::string& name) const
+const Array<double>& PropertyMap::doubles(const std::string& name) const
 {
+  static const Array<double> empty;
   auto it = m_doubles.find(name);
   if (it != m_doubles.end())
     return it->second;
-  return Array<double>();
+  return empty;
 }
 
 void PropertyMap::setInts(const std::string& name, const Array<int>& values)
@@ -119,12 +120,13 @@ void PropertyMap::setInts(const std::string& name, const Array<int>& values)
   m_ints[name] = values;
 }
 
-Array<int> PropertyMap::ints(const std::string& name) const
+const Array<int>& PropertyMap::ints(const std::string& name) const
 {
+  static const Array<int> empty;
   auto it = m_ints.find(name);
   if (it != m_ints.end())
     return it->second;
-  return Array<int>();
+  return empty;
 }
 
 void PropertyMap::setStrings(const std::string& name,
@@ -133,12 +135,13 @@ void PropertyMap::setStrings(const std::string& name,
   m_strings[name] = values;
 }
 
-Array<std::string> PropertyMap::strings(const std::string& name) const
+const Array<std::string>& PropertyMap::strings(const std::string& name) const
 {
+  static const Array<std::string> empty;
   auto it = m_strings.find(name);
   if (it != m_strings.end())
     return it->second;
-  return Array<std::string>();
+  return empty;
 }
 
 // --- Existence checks ---

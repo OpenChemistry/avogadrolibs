@@ -81,19 +81,19 @@ public:
   void setDoubles(const std::string& name, const Array<double>& values);
 
   /** @return the full double column for @p name, or empty array if absent. */
-  Array<double> doubles(const std::string& name) const;
+  const Array<double>& doubles(const std::string& name) const;
 
   /** Set an entire column of int values. */
   void setInts(const std::string& name, const Array<int>& values);
 
   /** @return the full int column for @p name, or empty array if absent. */
-  Array<int> ints(const std::string& name) const;
+  const Array<int>& ints(const std::string& name) const;
 
   /** Set an entire column of string values. */
   void setStrings(const std::string& name, const Array<std::string>& values);
 
   /** @return the full string column for @p name, or empty array if absent. */
-  Array<std::string> strings(const std::string& name) const;
+  const Array<std::string>& strings(const std::string& name) const;
 
   // --- Existence checks ---
 

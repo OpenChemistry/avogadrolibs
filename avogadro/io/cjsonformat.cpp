@@ -11,6 +11,7 @@
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/propertymap.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
@@ -86,6 +87,85 @@ json eigenColToJson(const MatrixX& matrix, int column)
     j.push_back(matrix(i, column));
   }
   return j;
+}
+
+using Core::PropertyMap;
+
+/** Deserialize a JSON object of named arrays into a PropertyMap. */
+void deserializeProperties(const json& obj, PropertyMap& props,
+                           size_t expectedCount)
+{
+  if (!obj.is_object())
+    return;
+  for (auto& property : obj.items()) {
+    const auto& arr = property.value();
+    if (!arr.is_array() || arr.size() != expectedCount)
+      continue;
+
+    // Detect type from array elements
+    bool allString = true;
+    bool hasFloat = false;
+    for (size_t i = 0; i < arr.size(); ++i) {
+      if (arr[i].is_number()) {
+        allString = false;
+        if (arr[i].is_number_float())
+          hasFloat = true;
+      } else if (!arr[i].is_string()) {
+        allString = false;
+      }
+    }
+
+    // Use bulk setters for efficiency
+    const auto& key = property.key();
+    if (allString) {
+      Array<std::string> values;
+      values.reserve(arr.size());
+      for (size_t i = 0; i < arr.size(); ++i)
+        values.push_back(arr[i].is_string() ? arr[i].get<std::string>()
+                                            : std::string());
+      props.setStrings(key, values);
+    } else if (hasFloat) {
+      Array<double> values;
+      values.reserve(arr.size());
+      for (size_t i = 0; i < arr.size(); ++i)
+        values.push_back(arr[i].is_number() ? arr[i].get<double>() : 0.0);
+      props.setDoubles(key, values);
+    } else {
+      Array<int> values;
+      values.reserve(arr.size());
+      for (size_t i = 0; i < arr.size(); ++i)
+        values.push_back(arr[i].is_number_integer() ? arr[i].get<int>() : 0);
+      props.setInts(key, values);
+    }
+  }
+}
+
+/** Serialize a PropertyMap into a JSON object of named arrays. */
+json serializeProperties(const PropertyMap& props)
+{
+  json result;
+  for (const auto& name : props.doubleNames()) {
+    json arr;
+    const auto& values = props.doubles(name);
+    for (Index i = 0; i < values.size(); ++i)
+      arr.push_back(values[i]);
+    result[name] = arr;
+  }
+  for (const auto& name : props.intNames()) {
+    json arr;
+    const auto& values = props.ints(name);
+    for (Index i = 0; i < values.size(); ++i)
+      arr.push_back(values[i]);
+    result[name] = arr;
+  }
+  for (const auto& name : props.stringNames()) {
+    json arr;
+    const auto& values = props.strings(name);
+    for (Index i = 0; i < values.size(); ++i)
+      arr.push_back(values[i]);
+    result[name] = arr;
+  }
+  return result;
 }
 
 // Sanitize a raw string by replacing invalid UTF-8 sequences with '?'
@@ -319,51 +399,9 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
-  if (atoms.contains("properties")) {
-    json atomProperties = atoms["properties"];
-    if (atomProperties.is_object()) {
-      for (auto& property : atomProperties.items()) {
-        const auto& arr = property.value();
-        if (arr.is_array() && arr.size() == atomCount) {
-          // Detect type from first non-null element
-          bool allString = true;
-          bool hasFloat = false;
-          for (size_t i = 0; i < arr.size(); ++i) {
-            if (arr[i].is_number()) {
-              allString = false;
-              if (arr[i].is_number_float())
-                hasFloat = true;
-            } else if (!arr[i].is_string()) {
-              allString = false;
-            }
-          }
-          if (allString) {
-            for (size_t i = 0; i < arr.size(); ++i) {
-              if (arr[i].is_string()) {
-                molecule.atomProperties().setString(property.key(), i,
-                                                    arr[i].get<std::string>());
-              }
-            }
-          } else if (hasFloat) {
-            for (size_t i = 0; i < arr.size(); ++i) {
-              if (arr[i].is_number()) {
-                molecule.atomProperties().setDouble(property.key(), i,
-                                                    arr[i].get<double>());
-              }
-            }
-          } else {
-            // All integers
-            for (size_t i = 0; i < arr.size(); ++i) {
-              if (arr[i].is_number_integer()) {
-                molecule.atomProperties().setInt(property.key(), i,
-                                                 arr[i].get<int>());
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  if (atoms.contains("properties"))
+    deserializeProperties(atoms["properties"], molecule.atomProperties(),
+                          atomCount);
 
   // Selection is optional, but if present should be loaded.
   if (atoms.contains("selected")) {
@@ -474,49 +512,9 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
         }
       }
 
-      if (bonds.contains("properties")) {
-        json bondProperties = bonds["properties"];
-        if (bondProperties.is_object()) {
-          for (auto& property : bondProperties.items()) {
-            const auto& arr = property.value();
-            if (arr.is_array() && arr.size() == molecule.bondCount()) {
-              bool allString = true;
-              bool hasFloat = false;
-              for (size_t i = 0; i < arr.size(); ++i) {
-                if (arr[i].is_number()) {
-                  allString = false;
-                  if (arr[i].is_number_float())
-                    hasFloat = true;
-                } else if (!arr[i].is_string()) {
-                  allString = false;
-                }
-              }
-              if (allString) {
-                for (size_t i = 0; i < arr.size(); ++i) {
-                  if (arr[i].is_string()) {
-                    molecule.bondProperties().setString(
-                      property.key(), i, arr[i].get<std::string>());
-                  }
-                }
-              } else if (hasFloat) {
-                for (size_t i = 0; i < arr.size(); ++i) {
-                  if (arr[i].is_number()) {
-                    molecule.bondProperties().setDouble(property.key(), i,
-                                                        arr[i].get<double>());
-                  }
-                }
-              } else {
-                for (size_t i = 0; i < arr.size(); ++i) {
-                  if (arr[i].is_number_integer()) {
-                    molecule.bondProperties().setInt(property.key(), i,
-                                                     arr[i].get<int>());
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      if (bonds.contains("properties"))
+        deserializeProperties(bonds["properties"], molecule.bondProperties(),
+                              molecule.bondCount());
     }
   }
 
@@ -579,49 +577,10 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   }
 
   // Read residue properties (parallel arrays stored at root level)
-  if (jsonRoot.contains("residueProperties")) {
-    json resProps = jsonRoot["residueProperties"];
-    if (resProps.is_object()) {
-      for (auto& property : resProps.items()) {
-        const auto& arr = property.value();
-        if (arr.is_array() && arr.size() == molecule.residueCount()) {
-          bool allString = true;
-          bool hasFloat = false;
-          for (size_t i = 0; i < arr.size(); ++i) {
-            if (arr[i].is_number()) {
-              allString = false;
-              if (arr[i].is_number_float())
-                hasFloat = true;
-            } else if (!arr[i].is_string()) {
-              allString = false;
-            }
-          }
-          if (allString) {
-            for (size_t i = 0; i < arr.size(); ++i) {
-              if (arr[i].is_string()) {
-                molecule.residueProperties().setString(
-                  property.key(), i, arr[i].get<std::string>());
-              }
-            }
-          } else if (hasFloat) {
-            for (size_t i = 0; i < arr.size(); ++i) {
-              if (arr[i].is_number()) {
-                molecule.residueProperties().setDouble(property.key(), i,
-                                                       arr[i].get<double>());
-              }
-            }
-          } else {
-            for (size_t i = 0; i < arr.size(); ++i) {
-              if (arr[i].is_number_integer()) {
-                molecule.residueProperties().setInt(property.key(), i,
-                                                    arr[i].get<int>());
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  if (jsonRoot.contains("residueProperties"))
+    deserializeProperties(jsonRoot["residueProperties"],
+                          molecule.residueProperties(),
+                          molecule.residueCount());
 
   if (jsonRoot.contains("unitCell") || jsonRoot.contains("unit cell")) {
     json unitCell = jsonRoot["unitCell"];
@@ -1726,28 +1685,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
 
     // Write custom atom properties
     if (!molecule.atomProperties().empty()) {
-      json atomProps;
-      for (const auto& name : molecule.atomProperties().doubleNames()) {
-        json arr;
-        auto values = molecule.atomProperties().doubles(name);
-        for (Index i = 0; i < values.size(); ++i)
-          arr.push_back(values[i]);
-        atomProps[name] = arr;
-      }
-      for (const auto& name : molecule.atomProperties().intNames()) {
-        json arr;
-        auto values = molecule.atomProperties().ints(name);
-        for (Index i = 0; i < values.size(); ++i)
-          arr.push_back(values[i]);
-        atomProps[name] = arr;
-      }
-      for (const auto& name : molecule.atomProperties().stringNames()) {
-        json arr;
-        auto values = molecule.atomProperties().strings(name);
-        for (Index i = 0; i < values.size(); ++i)
-          arr.push_back(values[i]);
-        atomProps[name] = arr;
-      }
+      json atomProps = serializeProperties(molecule.atomProperties());
       if (!atomProps.empty())
         atoms["properties"] = atomProps;
     }
@@ -1780,28 +1718,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
 
     // Write custom bond properties
     if (!molecule.bondProperties().empty()) {
-      json bondProps;
-      for (const auto& name : molecule.bondProperties().doubleNames()) {
-        json arr;
-        auto values = molecule.bondProperties().doubles(name);
-        for (Index i = 0; i < values.size(); ++i)
-          arr.push_back(values[i]);
-        bondProps[name] = arr;
-      }
-      for (const auto& name : molecule.bondProperties().intNames()) {
-        json arr;
-        auto values = molecule.bondProperties().ints(name);
-        for (Index i = 0; i < values.size(); ++i)
-          arr.push_back(values[i]);
-        bondProps[name] = arr;
-      }
-      for (const auto& name : molecule.bondProperties().stringNames()) {
-        json arr;
-        auto values = molecule.bondProperties().strings(name);
-        for (Index i = 0; i < values.size(); ++i)
-          arr.push_back(values[i]);
-        bondProps[name] = arr;
-      }
+      json bondProps = serializeProperties(molecule.bondProperties());
       if (!bondProps.empty())
         bonds["properties"] = bondProps;
     }
@@ -1844,28 +1761,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
 
     // Write residue properties as parallel arrays alongside residues
     if (!molecule.residueProperties().empty()) {
-      json resProps;
-      for (const auto& name : molecule.residueProperties().doubleNames()) {
-        json arr;
-        auto values = molecule.residueProperties().doubles(name);
-        for (Index i = 0; i < values.size(); ++i)
-          arr.push_back(values[i]);
-        resProps[name] = arr;
-      }
-      for (const auto& name : molecule.residueProperties().intNames()) {
-        json arr;
-        auto values = molecule.residueProperties().ints(name);
-        for (Index i = 0; i < values.size(); ++i)
-          arr.push_back(values[i]);
-        resProps[name] = arr;
-      }
-      for (const auto& name : molecule.residueProperties().stringNames()) {
-        json arr;
-        auto values = molecule.residueProperties().strings(name);
-        for (Index i = 0; i < values.size(); ++i)
-          arr.push_back(values[i]);
-        resProps[name] = arr;
-      }
+      json resProps = serializeProperties(molecule.residueProperties());
       if (!resProps.empty())
         root["residueProperties"] = resProps;
     }
