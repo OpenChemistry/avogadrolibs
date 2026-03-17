@@ -48,18 +48,11 @@ ConfigurePython::ConfigurePython(QObject* parent_)
 
     if (pixiPath.isEmpty()) {
       // No pixi, check for python/python3 (plugins will use pip)
-#ifdef Q_OS_WIN
-      QString pythonName = QStringLiteral("python3.exe");
-      QString pythonAlt = QStringLiteral("python.exe");
-#else
-      QString pythonName = QStringLiteral("python3");
-      QString pythonAlt = QStringLiteral("python");
-#endif
-      QString pythonPath = QtGui::Utilities::findExecutablePath(pythonName);
-      if (pythonPath.isEmpty())
-        pythonPath = QtGui::Utilities::findExecutablePath(pythonAlt);
+      // pythonPaths() checks PATH, Windows common install locations,
+      // environment variables, and validates each with a version check
+      QStringList paths = pythonPaths();
 
-      if (pythonPath.isEmpty()) {
+      if (paths.isEmpty()) {
         // No pixi or python found — suggest installing miniforge
         auto option = QMessageBox::information(
           qobject_cast<QWidget*>(parent()), tr("Install Python"),
@@ -83,15 +76,15 @@ ConfigurePython::ConfigurePython(QObject* parent_)
                    "latest/download/Miniforge3-MacOSX-x86_64.sh");
 #else
           QString arch = QSysInfo::currentCpuArchitecture();
-          if (arch.contains("arm"))
+          if (arch == QLatin1String("arm64"))
             miniforge =
               QUrl("https://github.com/conda-forge/miniforge/releases/"
                    "latest/download/Miniforge3-Linux-aarch64.sh");
-          else if (arch.contains("ppc"))
+          else if (arch == QLatin1String("power64"))
             miniforge =
               QUrl("https://github.com/conda-forge/miniforge/releases/"
                    "latest/download/Miniforge3-Linux-ppc64le.sh");
-          else
+          else if (arch == QLatin1String("x86_64"))
             miniforge =
               QUrl("https://github.com/conda-forge/miniforge/releases/"
                    "latest/download/Miniforge3-Linux-x86_64.sh");
