@@ -36,10 +36,13 @@ Molecule::Molecule()
 
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_partialCharges(other.m_partialCharges),
-    m_spectra(other.m_spectra), m_customElementMap(other.m_customElementMap),
-    m_elements(other.m_elements), m_positions2d(other.m_positions2d),
-    m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
-    m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
+    m_spectra(other.m_spectra), m_atomProperties(other.m_atomProperties),
+    m_bondProperties(other.m_bondProperties),
+    m_residueProperties(other.m_residueProperties),
+    m_customElementMap(other.m_customElementMap), m_elements(other.m_elements),
+    m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
+    m_atomLabels(other.m_atomLabels), m_bondLabels(other.m_bondLabels),
+    m_residueLabels(other.m_residueLabels),
     m_coordinates3d(other.m_coordinates3d), m_velocities(other.m_velocities),
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
@@ -98,6 +101,11 @@ void Molecule::readProperties(const Molecule& other)
   // copy spectra
   m_spectra = other.m_spectra;
 
+  // merge custom property maps
+  m_atomProperties = other.m_atomProperties;
+  m_bondProperties = other.m_bondProperties;
+  m_residueProperties = other.m_residueProperties;
+
   // copy orbital information
   SlaterSet* slaterSet = dynamic_cast<SlaterSet*>(other.m_basisSet);
   if (slaterSet != nullptr) {
@@ -134,6 +142,9 @@ void Molecule::readProperties(const Molecule& other)
 Molecule::Molecule(Molecule&& other) noexcept
   : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
     m_spectra(other.m_spectra),
+    m_atomProperties(std::move(other.m_atomProperties)),
+    m_bondProperties(std::move(other.m_bondProperties)),
+    m_residueProperties(std::move(other.m_residueProperties)),
     m_customElementMap(std::move(other.m_customElementMap)),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
@@ -172,6 +183,9 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_data = other.m_data;
     m_partialCharges = other.m_partialCharges;
     m_spectra = other.m_spectra;
+    m_atomProperties = other.m_atomProperties;
+    m_bondProperties = other.m_bondProperties;
+    m_residueProperties = other.m_residueProperties;
     m_customElementMap = other.m_customElementMap;
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
@@ -240,6 +254,9 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_data = other.m_data;
     m_partialCharges = std::move(other.m_partialCharges);
     m_spectra = other.m_spectra;
+    m_atomProperties = std::move(other.m_atomProperties);
+    m_bondProperties = std::move(other.m_bondProperties);
+    m_residueProperties = std::move(other.m_residueProperties);
     m_customElementMap = std::move(other.m_customElementMap);
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
@@ -337,6 +354,36 @@ std::set<std::string> Molecule::partialChargeTypes() const
   for (auto& it : m_partialCharges)
     types.insert(it.first);
   return types;
+}
+
+PropertyMap& Molecule::atomProperties()
+{
+  return m_atomProperties;
+}
+
+const PropertyMap& Molecule::atomProperties() const
+{
+  return m_atomProperties;
+}
+
+PropertyMap& Molecule::bondProperties()
+{
+  return m_bondProperties;
+}
+
+const PropertyMap& Molecule::bondProperties() const
+{
+  return m_bondProperties;
+}
+
+PropertyMap& Molecule::residueProperties()
+{
+  return m_residueProperties;
+}
+
+const PropertyMap& Molecule::residueProperties() const
+{
+  return m_residueProperties;
 }
 
 std::set<std::string> Molecule::spectraTypes() const
@@ -602,6 +649,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
 
   m_layers.addAtomToActiveLayer(atomCount() - 1);
   m_partialCharges.clear();
+  m_atomProperties.addEntry();
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
 
@@ -620,6 +668,7 @@ void Molecule::swapBond(Index a, Index b)
 
   m_graph.swapEdgeIndices(a, b);
   swap(m_bondOrders[a], m_bondOrders[b]);
+  m_bondProperties.swapEntries(a, b, bondCount());
 }
 void Molecule::swapAtom(Index a, Index b)
 {
@@ -641,6 +690,7 @@ void Molecule::swapAtom(Index a, Index b)
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
   m_graph.swapVertexIndices(a, b);
   m_layers.swapLayer(a, b);
+  m_atomProperties.swapEntries(a, b, atomCount());
 }
 
 bool Molecule::removeAtom(Index index)
@@ -667,6 +717,7 @@ bool Molecule::removeAtom(Index index)
   }
 
   m_partialCharges.clear();
+  m_atomProperties.removeEntry(index, atomCount());
   removeBonds(index);
 
   // before we remove, check if there's any other atom of this element
@@ -712,6 +763,8 @@ void Molecule::clearAtoms()
   m_residueLabels.clear();
   m_graph.clear();
   m_partialCharges.clear();
+  m_atomProperties.clear();
+  m_bondProperties.clear();
   m_elements.reset();
 }
 
@@ -730,6 +783,7 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   if (index >= bondCount()) {
     m_graph.addEdge(atom1, atom2);
     m_bondOrders.push_back(order);
+    m_bondProperties.addEntry();
     index = static_cast<Index>(m_graph.edgeCount() - 1);
   } else {
     m_bondOrders[index] = order;
@@ -763,6 +817,7 @@ bool Molecule::removeBond(Index index)
 {
   if (index >= bondCount())
     return false;
+  m_bondProperties.removeEntry(index, bondCount());
   m_graph.removeEdge(index);
   m_bondOrders.swapAndPop(index);
   m_partialCharges.clear();
@@ -787,6 +842,7 @@ bool Molecule::removeBond(const AtomType& a, const AtomType& b)
 void Molecule::clearBonds()
 {
   m_bondOrders.clear();
+  m_bondProperties.clear();
   m_graph.removeEdges();
   m_graph.setSize(atomCount());
   m_partialCharges.clear();
