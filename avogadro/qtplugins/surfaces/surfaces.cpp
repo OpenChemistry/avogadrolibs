@@ -256,9 +256,17 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
 
 void Surfaces::moleculeChanged(unsigned int changes)
 {
+  auto currentCubes = m_cubes.size();
+
   if (changes & Molecule::Added || changes & Molecule::Removed) {
     m_cubes = m_molecule->cubes();
     m_basis = m_molecule->basisSet();
+  }
+
+  // if we now have more cubes than before
+  // calculate the new mesh
+  if (currentCubes == 0 && m_cubes.size() > 0) {
+    calculateCube(0, m_isoValue);
   }
 }
 
