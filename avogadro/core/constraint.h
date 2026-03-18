@@ -135,7 +135,7 @@ protected:
   Index m_cIndex = MaxIndex;
   Index m_dIndex = MaxIndex;
   Real m_value = 0.0;
-  Real m_k = 1000.0; // force constant, default to 1000 kcal/mol/Angstrom^2
+  Real m_k = 41840.0; // force constant, default in kJ/mol/Angstrom^2
   mutable Constraint::Type m_type = None; // cached type, initialized to None
 };
 
