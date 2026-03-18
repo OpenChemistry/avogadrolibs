@@ -500,8 +500,9 @@ void RWMolecule::addResidue(const Core::Residue& residue, Index offset)
   Index id = residue.residueId();
   char chain = residue.chainId();
   m_molecule.addResidue(name, id, chain);
-  Core::Residue newResidue = m_molecule.residue(m_molecule.residueCount() - 1);
+  Core::Residue& newResidue = m_molecule.residue(m_molecule.residueCount() - 1);
   newResidue.setHeterogen(residue.isHeterogen());
+  newResidue.setSecondaryStructure(residue.secondaryStructure());
 
   // now go through all the atoms and add them using the offset
   for (Core::Atom atom : residue.residueAtoms()) {

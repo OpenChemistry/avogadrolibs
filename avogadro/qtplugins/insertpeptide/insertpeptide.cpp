@@ -8,6 +8,7 @@
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/secondarystructure.h>
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -371,8 +372,8 @@ void InsertPeptide::performInsert()
     }
 
     // Create residue
-    auto residue = newMol.addResidue(aaStdString, ++currentResidueNumber,
-                                     chain.toLatin1()[0]);
+    auto& residue = newMol.addResidue(aaStdString, ++currentResidueNumber,
+                                      chain.toLatin1()[0]);
 
     // Add atoms from this amino acid
     for (size_t j = 0; j < amino.atomNames.size(); j++) {
@@ -507,6 +508,10 @@ void InsertPeptide::performInsert()
   for (size_t i = 0; i < positions.size(); i++) {
     newMol.setAtomPosition3d(i, positions[i]);
   }
+
+  // okay, make sure we have secondary structure assigned
+  Core::SecondaryStructureAssigner ssa;
+  ssa.assign(&newMol);
 
   m_molecule->undoMolecule()->appendMolecule(newMol, tr("Insert Peptide"));
   emit requestActiveTool("Manipulator");
