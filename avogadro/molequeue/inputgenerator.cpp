@@ -258,6 +258,13 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
                   m_fileHighlighters[fileName] = highlighter;
                 else
                   highlighter->deleteLater();
+              } else if (m_highlightStyles.contains("default")) {
+                auto* highlighter(new GenericHighlighter(this));
+                *highlighter += *m_highlightStyles["default"];
+                if (highlighter->ruleCount() > 0)
+                  m_fileHighlighters[fileName] = highlighter;
+                else
+                  highlighter->deleteLater();
               }
             } else {
               result = false;
@@ -270,7 +277,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                           .arg(m_filenames.size());
           } // end if/else file is JSON object
-        } // end foreach file
+        }   // end foreach file
       } else {
         result = false;
         m_errors << tr("'files' member not an array.");
