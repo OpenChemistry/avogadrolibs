@@ -132,6 +132,12 @@ private:
   // Calculate cutoff distance for a single shell
   double calculateShellCutoff(const ShellInfo& shell) const;
 
+  // Shell-major grid evaluation with factored exp() and range-clipped cutoffs
+  bool calculateMolecularOrbitalGrid(Cube& cube, int moNumber) const;
+
+  // Density via occupied MO summation: ρ = Σ occ_i |ψ_i|²
+  bool calculateElectronDensityGrid(Cube& cube) const;
+
   /**
    * @brief Calculate the values at this position in space. The public calculate
    * functions call this function to prepare values before multiplying by the
