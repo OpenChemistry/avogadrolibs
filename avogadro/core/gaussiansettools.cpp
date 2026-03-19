@@ -96,9 +96,17 @@ double GaussianSetTools::calculateShellCutoff(const ShellInfo& shell) const
 
 bool GaussianSetTools::calculateMolecularOrbital(Cube& cube, int moNumber) const
 {
+  if (moNumber > static_cast<int>(m_basis->molecularOrbitalCount()))
+    return false;
+
+  const MatrixX& matrix = m_basis->moMatrix(m_type);
+  const auto& moCol = matrix.col(moNumber);
+  Eigen::VectorXd values;
+
   for (size_t i = 0; i < cube.data()->size(); ++i) {
     Vector3 pos = cube.position(i);
-    cube.setValue(i, calculateMolecularOrbital(pos, moNumber));
+    calculateValues(pos, values);
+    cube.setValue(i, moCol.dot(values));
   }
   return true;
 }
@@ -126,9 +134,18 @@ bool GaussianSetTools::calculateElectronDensity(Cube& cube) const
     m_basis->generateDensityMatrix();
   }
 
+  int matrixSize = static_cast<int>(m_basis->moMatrix().rows());
+  if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
+    return false;
+
+  Eigen::VectorXd values;
+  Eigen::VectorXd tmp;
+
   for (size_t i = 0; i < cube.data()->size(); ++i) {
     Vector3 pos = cube.position(i);
-    cube.setValue(i, calculateElectronDensity(pos));
+    calculateValues(pos, values);
+    tmp.noalias() = matrix * values;
+    cube.setValue(i, values.dot(tmp));
   }
   return true;
 }
@@ -152,9 +169,19 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
 
 bool GaussianSetTools::calculateSpinDensity(Cube& cube) const
 {
+  const MatrixX& matrix = m_basis->spinDensityMatrix();
+  int matrixSize = static_cast<int>(m_basis->moMatrix().rows());
+  if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
+    return false;
+
+  Eigen::VectorXd values;
+  Eigen::VectorXd tmp;
+
   for (size_t i = 0; i < cube.data()->size(); ++i) {
     Vector3 pos = cube.position(i);
-    cube.setValue(i, calculateSpinDensity(pos));
+    calculateValues(pos, values);
+    tmp.noalias() = matrix * values;
+    cube.setValue(i, values.dot(tmp));
   }
   return true;
 }
@@ -188,23 +215,19 @@ inline void GaussianSetTools::calculateValues(const Vector3& position,
   // Calculate our position in Bohr
   Vector3 pos(position * ANGSTROM_TO_BOHR);
 
-  // Vectorized computation of deltas and squared distances for all atoms
-  Eigen::Matrix<double, 3, Eigen::Dynamic> deltas =
-    (-m_atomPositionsBohr).colwise() + pos;
-  Eigen::VectorXd dr2 = deltas.colwise().squaredNorm();
-
   // Resize and zero the output vector
   Index matrixSize = m_basis->moMatrix().rows();
   values.setZero(matrixSize);
 
-  // Loop over pre-packed shells
+  // Loop over pre-packed shells, computing delta per-shell from cached centers
   for (const auto& shell : m_shells) {
-    // Bail early if the distance to this shell's center is beyond cutoff
-    if (dr2(shell.atomIndex) > shell.cutoffSquared)
-      continue;
+    Vector3 delta(pos.x() - shell.centerBohr[0], pos.y() - shell.centerBohr[1],
+                  pos.z() - shell.centerBohr[2]);
+    double dr2_i = delta.squaredNorm();
 
-    Vector3 delta = deltas.col(shell.atomIndex);
-    double dr2_i = dr2(shell.atomIndex);
+    // Bail early if the distance to this shell's center is beyond cutoff
+    if (dr2_i > shell.cutoffSquared)
+      continue;
 
     switch (shell.type) {
       case GaussianSet::S:
