@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-16 20:09+0000\n"
+"PO-Revision-Date: 2026-03-20 12:12+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -3026,8 +3026,9 @@ msgid "DENSITIES"
 msgstr "DENSIDADES"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:386
+#, fuzzy
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "HISTORY_RESTART"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:389
 msgid "MOPAC"
@@ -3619,7 +3620,7 @@ msgstr "Adicionar Hidrogênios"
 
 #: qtplugins/hydrogens/hydrogens.cpp:32
 msgid "Remove E&xtra Hydrogens"
-msgstr "Remover Hidrogênios Extras"
+msgstr "Remover Hidrogênios E&xtras"
 
 #: qtplugins/hydrogens/hydrogens.cpp:37
 msgid "&Remove All Hydrogens"
@@ -3781,7 +3782,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:200 qtplugins/label/label.cpp:231
 msgid "Index"
-msgstr ""
+msgstr "Índice"
 
 #: qtplugins/label/label.cpp:201
 msgid "Unique ID"
@@ -4723,8 +4724,8 @@ msgstr "Remover Plugins"
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
 msgid_plural "Remove %n selected plugin(s)?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Remover %n plugin selecionado?"
+msgstr[1] "Remover %n plugin(s) selecionados?"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
@@ -4984,7 +4985,7 @@ msgstr "Análise de Confôrmero"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
-msgstr ""
+msgstr "Tipo de Gráfico:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -5428,49 +5429,49 @@ msgstr "Tipo de Carga Parcial…"
 
 #: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"
-msgstr ""
+msgstr "Travar Átomo"
 
 #: qtplugins/propertytables/propertyview.cpp:591
 msgid "Freeze X"
-msgstr ""
+msgstr "Travar X"
 
 #: qtplugins/propertytables/propertyview.cpp:594
 msgid "Freeze Y"
-msgstr ""
+msgstr "Travar Y"
 
 #: qtplugins/propertytables/propertyview.cpp:597
 msgid "Freeze Z"
-msgstr ""
+msgstr "Travar Z"
 
 #: qtplugins/propertytables/propertyview.cpp:600
 msgid "Unfreeze Atom"
-msgstr ""
+msgstr "Destravar Átomo"
 
 #: qtplugins/propertytables/propertyview.cpp:608
 msgid "Constrain Bond"
-msgstr ""
+msgstr "Restringir Ligação"
 
 #: qtplugins/propertytables/propertyview.cpp:610
 msgid "Constrain Angle"
-msgstr ""
+msgstr "Restringir Ângulo"
 
 #: qtplugins/propertytables/propertyview.cpp:612
 msgid "Constrain Torsion"
-msgstr ""
+msgstr "Restringir Torsão"
 
 #: qtplugins/propertytables/propertyview.cpp:619
 msgid "Remove Constraint"
-msgstr ""
+msgstr "Restringir Remover"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:163
 #: qtplugins/qtaim/qtaimwavefunction.h:82
 #, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "Não foi possível ler o arquivo %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Falha ao criar um arquivo temporário."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5531,7 +5532,7 @@ msgstr "Alinhar Visão aos Eixos."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
-msgstr ""
+msgstr "Redefinir visualização"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
@@ -5543,7 +5544,7 @@ msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:39
 msgid "Load electrostatic models from external scripts."
-msgstr ""
+msgstr "Carregar modelos eletrostáticos a partir de scripts externos."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:30
 msgid "Script File Formats"
@@ -5567,7 +5568,7 @@ msgstr "Inverter Seleção"
 
 #: qtplugins/select/select.cpp:53
 msgid "Select by Element…"
-msgstr ""
+msgstr "Selecionar por elemento…"
 
 #: qtplugins/select/select.cpp:58
 #, fuzzy
@@ -5581,27 +5582,27 @@ msgstr "Selecionar por Resíduo…"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
-msgstr ""
+msgstr "Selecione os Átomos da Cadeia Principal…"
 
 #: qtplugins/select/select.cpp:73
 msgid "Select Sidechain Atoms…"
-msgstr ""
+msgstr "Selecione os Átomos da Cadeia Lateral…"
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 msgid "Select Water"
-msgstr ""
+msgstr "Selecionar Água"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
-msgstr ""
+msgstr "Ampliar Seleção"
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 msgid "Shrink Selection"
-msgstr ""
+msgstr "Reduzir Seleção"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "Criar Nova Camada a partir da Seleção"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
@@ -5613,35 +5614,35 @@ msgstr "&Selecionar"
 
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
-msgstr ""
+msgstr "Selecionar Elemento"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
-msgstr ""
+msgstr "Selecionar Cadeia Principal"
 
 #: qtplugins/select/select.cpp:308
 msgid "Select Sidechain"
-msgstr ""
+msgstr "Selecionar Cadeia Lateral"
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "Selecionar Átomos por Índice"
 
 #: qtplugins/select/select.cpp:441
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Átomos a Selecionar:"
 
 #: qtplugins/select/select.cpp:446
 msgid "Select Atom"
-msgstr ""
+msgstr "Selecionar Átomo"
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
-msgstr ""
+msgstr "Selecionar Átomos por Resíduo"
 
 #: qtplugins/select/select.cpp:486
 msgid "Residues to Select:"
-msgstr ""
+msgstr "Resíduos a Selecionar:"
 
 #: qtplugins/select/select.cpp:491
 #, fuzzy
@@ -5657,7 +5658,7 @@ msgstr "Selecionar"
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 4"
 msgid "Ctrl+4"
-msgstr ""
+msgstr "Ctrl+4"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -5674,10 +5675,18 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click:\tSelect an entire fragment."
 msgstr ""
+"Ferramenta de Seleção (%1)\n"
+"\n"
+"Botão esquerdo do mouse: Clique para selecionar átomos, resíduos ou "
+"fragmentos individuais\n"
+"\tArraste para selecionar um intervalo de átomos.\n"
+"Botão direito:\tClique fora da molécula para limpar a seleção.\n"
+"Use Ctrl para alternar a seleção e Shift para adicionar à seleção.\n"
+"Clique duplo:\t Seleciona um fragmento todo."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
-msgstr ""
+msgstr "Pintar Átomos"
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -5838,30 +5847,29 @@ msgstr "Selecione a tolerância em Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Triclinic"
-msgstr ""
+msgstr "Triclínica"
 
 #: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Monoclinic"
-msgstr ""
+msgstr "Monoclínica"
 
 #: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Orthorhombic"
-msgstr ""
+msgstr "Ortorrômbica"
 
 #: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Tetragonal"
-msgstr ""
+msgstr "Tetragonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Trigonal"
-msgstr ""
+msgstr "Trigonal"
 
 #: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Rhombohedral"
-msgstr ""
+msgstr "Romboédrica"
 
 #: qtplugins/spacegroup/spacegroup.cpp:612
-#, fuzzy
 msgid "Hexagonal"
 msgstr "Hexagonal"
 
@@ -5945,12 +5953,12 @@ msgstr "Raman"
 #: qtplugins/spectra/spectradialog.cpp:574
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "CD Vibracional"
 
 #: qtplugins/spectra/spectradialog.cpp:578
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "CD Magnético"
 
 #: qtplugins/spectra/spectradialog.cpp:582
 msgid "NMR"
@@ -5968,7 +5976,7 @@ msgstr ""
 #: qtplugins/spectra/spectradialog.cpp:593
 #: qtplugins/spectra/spectradialog.cpp:844
 msgid "Density of States"
-msgstr ""
+msgstr "Densidade dos Estados"
 
 #: qtplugins/spectra/spectradialog.cpp:636
 msgid "Select Background Color"
@@ -6012,7 +6020,7 @@ msgstr "Número de onda (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:753
 msgid "Transmission"
-msgstr ""
+msgstr "Transmissão"
 
 #: qtplugins/spectra/spectradialog.cpp:765
 msgid "Raman Spectra"
@@ -6087,7 +6095,7 @@ msgstr ""
 
 #: qtplugins/surfacerender/surfacerender.cpp:270
 msgid "Surface"
-msgstr ""
+msgstr "Superfície"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
@@ -6097,7 +6105,7 @@ msgstr "Volume"
 
 #: qtplugins/surfacerender/surfacerender.cpp:275
 msgid "Style:"
-msgstr ""
+msgstr "Estilo:"
 
 #: qtplugins/surfacerender/surfacerender.h:33
 msgid "Render molecular surfaces."
@@ -6117,7 +6125,7 @@ msgstr ""
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:133
 msgid "Orbital"
-msgstr ""
+msgstr "Orbital"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
@@ -6128,11 +6136,11 @@ msgstr "Simetria"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
 msgid "Occupation"
-msgstr ""
+msgstr "Ocupação"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:141
 msgid "Spin"
-msgstr ""
+msgstr "Spin"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:152
 #: qtplugins/surfaces/orbitaltablemodel.cpp:238
@@ -6202,49 +6210,49 @@ msgstr "Criar Superfícies…"
 
 #: qtplugins/surfaces/surfaces.cpp:118
 msgid "Render the van der Waals surface."
-msgstr ""
+msgstr "Renderizar a superfície de van der Waals."
 
 #: qtplugins/surfaces/surfaces.cpp:120
 msgid "Render the van der Waals molecular surface."
-msgstr ""
+msgstr "Renderizar a superfície molecular de van der Waals."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the solvent-accessible molecular surface."
-msgstr ""
+msgstr "Renderizar a superfície molecular acessível ao solvente."
 
 #: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render the solvent-excluded molecular surface."
-msgstr ""
+msgstr "Renderizar a superfície molecular excluída do solvente."
 
 #: qtplugins/surfaces/surfaces.cpp:125 qtplugins/surfaces/surfaces.cpp:126
 msgid "Render a molecular orbital."
-msgstr ""
+msgstr "Renderizar um orbital molecular."
 
 #: qtplugins/surfaces/surfaces.cpp:128
 msgid "Render the electron density."
-msgstr ""
+msgstr "Renderizar a densidade eletrônica."
 
 #: qtplugins/surfaces/surfaces.cpp:129
 msgid "Render the spin density."
-msgstr ""
+msgstr "Renderizar a densidade de spin."
 
 #: qtplugins/surfaces/surfaces.cpp:131
 msgid "Render a cube supplied with the file."
-msgstr ""
+msgstr "Renderizar um cubo fornecido com o arquivo."
 
 #: qtplugins/surfaces/surfaces.cpp:309
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
-msgstr ""
+msgstr "Cubo %1"
 
 #: qtplugins/surfaces/surfaces.cpp:614
 msgid "Calculating electron density"
-msgstr "Calculando densidade eletrônica"
+msgstr "Calculando a densidade eletrônica"
 
 #: qtplugins/surfaces/surfaces.cpp:623
 msgid "Calculating spin density"
-msgstr ""
+msgstr "Calculando a densidade de spin"
 
 #: qtplugins/surfaces/surfaces.cpp:632
 #, qt-format
@@ -6254,7 +6262,7 @@ msgstr "Calculando o orbital molecular %L1"
 #: qtplugins/surfaces/surfaces.cpp:888
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
-msgstr ""
+msgstr "Superfície Concluída"
 
 #: qtplugins/surfaces/surfaces.cpp:899 qtplugins/surfaces/surfaces.cpp:927
 msgid "Movie AVI (*.avi)"
@@ -6270,7 +6278,7 @@ msgstr "Vídeo MP4 (*.mp4);;Vídeo AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:952
 msgid "Couldn't find the active render widget, failing."
-msgstr ""
+msgstr "Não foi possível encontrar o widget de renderização ativo; falha."
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
@@ -6278,11 +6286,12 @@ msgstr "Ler e renderizar superfícies."
 
 #: qtplugins/svg/svg.cpp:31
 msgid "&SVG…"
-msgstr ""
+msgstr "&SVG…"
 
 #: qtplugins/svg/svg.cpp:258
+#, fuzzy
 msgid "SVG (*.svg)"
-msgstr ""
+msgstr "SVG (*.svg)"
 
 #: qtplugins/svg/svg.h:27
 msgid "SVG"
@@ -6290,7 +6299,7 @@ msgstr "SVG"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
-msgstr ""
+msgstr "Renderizar a cena em um arquivo SVG."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Class"
@@ -6322,7 +6331,7 @@ msgstr "%1 %2"
 #: qtplugins/templatetool/templatetool.cpp:82
 msgctxt "control-key 3"
 msgid "Ctrl+3"
-msgstr ""
+msgstr "Ctrl+3"
 
 #: qtplugins/templatetool/templatetool.cpp:83
 msgid "Template"
@@ -6384,7 +6393,7 @@ msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:91
 msgid "Set the vibrational mode."
-msgstr ""
+msgstr "Selecionar o modo de vibração."
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
@@ -6843,7 +6852,7 @@ msgstr ""
 #. i18n: file: qtplugins/configurepython/condadialog.ui:45
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, environmentName)
 msgid "avogadro"
-msgstr ""
+msgstr "avogadro"
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -7489,7 +7498,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
 msgid "Adenine"
-msgstr ""
+msgstr "Adenina"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
@@ -7501,7 +7510,7 @@ msgstr "A"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
 msgid "Cytosine"
-msgstr ""
+msgstr "Citosina"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
@@ -7513,7 +7522,7 @@ msgstr "C"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:69
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_G)
 msgid "Guanine"
-msgstr ""
+msgstr "Guanina"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
@@ -7598,7 +7607,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:46
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton)
 msgid "Alanine"
-msgstr ""
+msgstr "Alanina"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:49
 #. i18n: ectx: property (text), widget (QToolButton, toolButton)
@@ -7698,7 +7707,7 @@ msgstr "Ile"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:146
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_19)
 msgid "Valine"
-msgstr ""
+msgstr "Valina"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:149
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_19)
@@ -7708,7 +7717,7 @@ msgstr "Val"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_18)
 msgid "Tyrosine"
-msgstr ""
+msgstr "Tirosina"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:159
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_18)
@@ -7798,7 +7807,7 @@ msgstr "Leu"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:263
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Amino Acids:"
-msgstr ""
+msgstr "Aminoácidos:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:270
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7823,17 +7832,17 @@ msgstr "Estação C:"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:369
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Structure:"
-msgstr ""
+msgstr "Estrutura:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:377
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "Straight Chain"
-msgstr ""
+msgstr "Cadeia Normal"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:382
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "α Helix"
-msgstr ""
+msgstr "α Hélice"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
@@ -7848,17 +7857,17 @@ msgstr ""
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:397
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "π Helix"
-msgstr ""
+msgstr "π Hélice"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Chain Number:"
-msgstr ""
+msgstr "Número da Cadeia:"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:472
 #. i18n: ectx: property (toolTip), widget (QComboBox, chainNumberCombo)
 msgid "The chain number for the new peptide"
-msgstr ""
+msgstr "O número da cadeia para o novo peptídeo"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
@@ -8157,7 +8166,7 @@ msgstr "Alterar o estilo do limite Y."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:529
 #. i18n: ectx: property (toolTip), widget (QComboBox, xBoundaryCombo)
 msgid "Change X boundary style."
-msgstr ""
+msgstr "Alterar o estilo do limite Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
@@ -8298,7 +8307,7 @@ msgstr "Estilo de Saída Termodinâmica."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:877
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
 msgid "One Line"
-msgstr ""
+msgstr "Uma Linha"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:882
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
@@ -8316,9 +8325,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
 msgid "Generate…"
-msgstr "Criando…"
+msgstr "Criar…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8379,17 +8387,17 @@ msgstr "Eixo Z"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Move:"
-msgstr ""
+msgstr "Mover:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Selected Atoms"
-msgstr ""
+msgstr "Átomos Selecionados"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Everything Else"
-msgstr ""
+msgstr "Todo o Resto"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -9107,7 +9115,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
 msgid "Units:"
-msgstr ""
+msgstr "Unidades:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
@@ -9141,33 +9149,33 @@ msgstr "10"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:253
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "12"
-msgstr ""
+msgstr "12"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:258
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "14"
-msgstr ""
+msgstr "14"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:263
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "16"
-msgstr ""
+msgstr "16"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:268
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "18"
-msgstr ""
+msgstr "18"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Font Size:"
-msgstr ""
+msgstr "Tamanho da Fonte:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:286
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgctxt "Size in pixels of the line drawing the spectra"
 msgid "Line Width:"
-msgstr ""
+msgstr "Largura da Linha:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:296
 #. i18n: ectx: property (text), widget (QCheckBox, cb_import)
@@ -9180,6 +9188,7 @@ msgstr "Mostrar"
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
 msgstr ""
+"Importa um arquivo TSV de espectros experimentais para sobrepor ao gráfico."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:315
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -9210,7 +9219,7 @@ msgstr "&Exportar…"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:478
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
 msgid "Export Data"
-msgstr ""
+msgstr "Exportar Dados"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:491
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
@@ -9302,7 +9311,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, push_configure)
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -9332,7 +9341,7 @@ msgstr "Cor por:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 msgid "Electrostatic Potential"
-msgstr ""
+msgstr "Potencial Eletrostático"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:202
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -9458,99 +9467,99 @@ msgstr "Carga formal:"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:133
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
 msgid "Coordination:"
-msgstr ""
+msgstr "Coordenação:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:148
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:193
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Octahedral"
-msgstr ""
+msgstr "6: Octaédrico"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:158
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "1: Linear"
-msgstr ""
+msgstr "1: Linear"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:163
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "2: Linear"
-msgstr ""
+msgstr "2: Linear"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:168
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "3: Trigonal Planar"
-msgstr ""
+msgstr "3: Trigonal Planar"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:173
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Tetrahedral"
-msgstr ""
+msgstr "4: Tetraédrica"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:178
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Square Planar"
-msgstr ""
+msgstr "4: Quadrado Planar"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:183
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Trigonal Bipyramidal"
-msgstr ""
+msgstr "5: Bipiramidal Trigonal"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Square Pyramidal"
-msgstr ""
+msgstr "5: Piramidal Quadrada"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:198
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Trigonal Prism"
-msgstr ""
+msgstr "6: Prisma Trigonal"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:203
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "7: Pentagonal Bipyramidal"
-msgstr ""
+msgstr "7: Bipiramidal Pentagonal"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:208
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "8: Square Antiprism"
-msgstr ""
+msgstr "8: Antiprisma Quadrado"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:281
 #. i18n: ectx: attribute (title), widget (QWidget, ligandTab)
 msgid "Ligands"
-msgstr ""
+msgstr "Ligantes"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:297
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Monodentate"
-msgstr ""
+msgstr "Monodentado"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:302
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Bidentate"
-msgstr ""
+msgstr "Bidentado"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:307
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Tridentate"
-msgstr ""
+msgstr "Tridentado"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:312
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Tetradentate"
-msgstr ""
+msgstr "Tetradentado"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:317
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Hexadentate"
-msgstr ""
+msgstr "Hexadentado"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:322
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Haptic"
-msgstr ""
+msgstr "Háptico"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:327
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -9561,13 +9570,12 @@ msgstr "Da Área de Transferência"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:350
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
 msgid "Ligand:"
-msgstr ""
+msgstr "Ligante:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:421
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
 msgid "Groups"
-msgstr "Grupo"
+msgstr "Grupos"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:427
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -9578,47 +9586,47 @@ msgstr "Grupo:"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:437
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "amide"
-msgstr ""
+msgstr "amida"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:442
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "carboxylate"
-msgstr ""
+msgstr "carboxilato"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:447
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ester"
-msgstr ""
+msgstr "éster"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:452
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethylene"
-msgstr ""
+msgstr "etileno"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:457
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
-msgstr ""
+msgstr "etino"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:462
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "nitro"
-msgstr ""
+msgstr "nitro"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:467
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
-msgstr ""
+msgstr "fenil"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:472
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phosphate"
-msgstr ""
+msgstr "fosfato"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:477
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "sulfonate"
-msgstr ""
+msgstr "sulfonato"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
@@ -9638,7 +9646,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
 msgid "Min y: "
-msgstr ""
+msgstr "Mín y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
@@ -9652,6 +9660,14 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
+"<html><head/><body><p>O nível de Fermi deve ser conhecido antes de marcar "
+"esta caixa. Você pode descobri-lo ao calcular a densidade de estados e "
+"exibir os dados (ele aparecerá no topo dos dados). Além disso, se fizer um "
+"cálculo da densidade de estados, o nível de Fermi aqui será automaticamente "
+"definido para o valor detectado durante aquele cálculo.</p><p>Se esta caixa "
+"estiver marcada, certifique-se de que o nível de Fermi correto esteja "
+"definido na caixa de seleção à direita.</p><p>Padrão: desativado</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -9669,27 +9685,27 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
 msgid "Zero Fermi?"
-msgstr ""
+msgstr "Fermi Zero?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "# of k-points connecting special k-points:"
-msgstr ""
+msgstr "Número de pontos k a conectar pontos k especiais:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Special k-points"
-msgstr ""
+msgstr "Pontos k especiais"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:98
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_maxY)
 msgid "Max y: "
-msgstr ""
+msgstr "Máx y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_fermi)
 msgid "<html><head/><body><p>The Fermi Level</p></body></html>"
-msgstr ""
+msgstr "<html><head/><body><p>O Nível de Fermi</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:142
 #. i18n: ectx: property (toolTip), widget (QTextEdit, edit_specialKPoints)
@@ -9706,6 +9722,18 @@ msgid ""
 "different high symmetry points depending on the lattice (such as if a &gt; b "
 "or a &lt; b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Insira os pontos k especiais da seguinte forma:</p><p>"
+"L 0,5 0,5 0,5</p><p>G 0,0 0,0 0,0</p><p>X 0,5 0,0 0,5</p><p>Ou "
+"seja,&lt;símbolo&gt; &lt;x&gt;&lt;y&gt;&lt;z&gt; onde x, y e z são "
+"coordenadas fracionárias do espaço recíproco. Linhas serão desenhadas "
+"conectando esses pontos k no gráfico na ordem em que você os inserir. "
+"Observe que a orientação da sua célula pode afetar a localização desses "
+"pontos do espaço recíproco.</p><p>Se o grupo espacial do cristal tiver sido "
+"identificado ou definido, os pontos k especiais serão preenchidos "
+"automaticamente com os pontos de alta simetria da célula primitiva para esse "
+"grupo espacial. Existem alguns grupos espaciais com diferentes pontos de "
+"alta simetria dependendo da rede (como se a &gt; b ou a&lt; b) - isso é "
+"levado em consideração automaticamente.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -9758,7 +9786,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Number of Dimensions:"
-msgstr ""
+msgstr "Número de Dimensões:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
