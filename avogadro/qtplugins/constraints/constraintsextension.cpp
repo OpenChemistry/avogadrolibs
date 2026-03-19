@@ -54,6 +54,7 @@ void ConstraintsExtension::openDialog()
 
   m_dialog->show();
   m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 void ConstraintsExtension::setMolecule(QtGui::Molecule* mol)

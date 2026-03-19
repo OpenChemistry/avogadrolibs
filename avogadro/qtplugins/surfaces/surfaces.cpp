@@ -334,6 +334,8 @@ void Surfaces::surfacesActivated()
   m_dialog->setupModels(chargeModels);
 
   m_dialog->show();
+  m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 float Surfaces::resolution(float specified)

@@ -89,6 +89,8 @@ void InsertDna::showDialog()
     constructDialog();
   }
   m_dialog->show();
+  m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 void InsertDna::constructDialog()

@@ -239,6 +239,8 @@ void Vibrations::openDialog()
   if (m_molecule)
     m_dialog->setMolecule(m_molecule);
   m_dialog->show();
+  m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 void Vibrations::advanceFrame()

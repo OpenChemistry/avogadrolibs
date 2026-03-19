@@ -201,6 +201,8 @@ void Crystal::editUnitCell()
   }
 
   m_unitCellDialog->show();
+  m_unitCellDialog->raise();
+  m_unitCellDialog->activateWindow();
 }
 
 void Crystal::buildSupercell()

@@ -145,6 +145,8 @@ void PlotPdf::displayDialog()
   chart->setXAxisTitle(xTitle);
   chart->setYAxisTitle(yTitle);
   m_chartDialog->show();
+  m_chartDialog->raise();
+  m_chartDialog->activateWindow();
 }
 
 bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,

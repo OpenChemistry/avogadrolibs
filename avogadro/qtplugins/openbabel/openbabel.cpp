@@ -417,6 +417,8 @@ void OpenBabel::onConfigureConformerSearch()
   }
   // todo set options from last run
   m_conformerSearchDialog->show();
+  m_conformerSearchDialog->raise();
+  m_conformerSearchDialog->activateWindow();
 }
 
 void OpenBabel::onOptimizeGeometry()

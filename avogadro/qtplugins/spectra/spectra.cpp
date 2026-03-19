@@ -111,6 +111,8 @@ void Spectra::openDialog()
   std::vector<unsigned char> atomicNumbers(elements.begin(), elements.end());
   m_dialog->setElements(atomicNumbers);
   m_dialog->show();
+  m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 void Spectra::gatherSpectra()

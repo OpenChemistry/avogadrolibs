@@ -110,6 +110,7 @@ void Bonding::configure()
   }
 
   m_dialog->show();
+  m_dialog->raise();
   m_dialog->activateWindow();
 }
 

@@ -161,6 +161,8 @@ void Symmetry::viewSymmetry()
     detectSymmetry();
   }
   m_symmetryWidget->show();
+  m_symmetryWidget->raise();
+  m_symmetryWidget->activateWindow();
 }
 
 void Symmetry::detectSymmetry()

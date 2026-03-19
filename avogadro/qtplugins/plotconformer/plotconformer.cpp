@@ -193,6 +193,8 @@ void PlotConformer::displayDialog()
 
   updatePlot();
   m_dialog->show();
+  m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 void PlotConformer::updatePlot()

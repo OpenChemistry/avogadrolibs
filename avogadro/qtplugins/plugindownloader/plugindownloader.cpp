@@ -47,6 +47,8 @@ void PluginDownloader::showDialog()
     m_widget = new DownloaderWidget(qobject_cast<QWidget*>(parent()));
   }
   m_widget->show();
+  m_widget->raise();
+  m_widget->activateWindow();
 }
 
 void PluginDownloader::replyFinished(QNetworkReply*) {}
