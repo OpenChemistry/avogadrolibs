@@ -117,9 +117,6 @@ private:
   GaussianSet* m_basis;
   BasisSet::ElectronType m_type = BasisSet::Paired;
 
-  // Cached atom positions in Bohr as 3 x N matrix for vectorized operations
-  Eigen::Matrix<double, 3, Eigen::Dynamic> m_atomPositionsBohr;
-
   // Pre-packed shell data built once in the constructor
   std::vector<ShellInfo> m_shells;
   // Local contiguous copies of exponents and normalized coefficients
@@ -137,6 +134,14 @@ private:
 
   // Density via occupied MO summation: ρ = Σ occ_i |ψ_i|²
   bool calculateElectronDensityGrid(Cube& cube) const;
+
+  // Evaluate a single MO onto a double-precision grid buffer using the
+  // shell-major factored-exp approach with range clipping.
+  void evaluateMOGrid(int moIndex, const MatrixX& moMat, const Vector3& minBohr,
+                      const Vector3& spBohr, const std::vector<double>& gridX,
+                      const std::vector<double>& gridY,
+                      const std::vector<double>& gridZ, int nx, int ny, int nz,
+                      double* output) const;
 
   /**
    * @brief Calculate the values at this position in space. The public calculate
