@@ -522,10 +522,10 @@ QWidget* JsonWidget::createIntegerWidget(const QJsonObject& obj)
 {
   auto* spin = new QSpinBox(this);
   if (obj.contains(u"minimum"_s) && obj[u"minimum"_s].isDouble()) {
-    spin->setMinimum(static_cast<int>(obj[u"minimum"_s].toDouble() + 0.5));
+    spin->setMinimum(static_cast<int>(obj[u"minimum"_s].toDouble()));
   }
   if (obj.contains(u"maximum"_s) && obj[u"maximum"_s].isDouble()) {
-    spin->setMaximum(static_cast<int>(obj[u"maximum"_s].toDouble() + 0.5));
+    spin->setMaximum(static_cast<int>(obj[u"maximum"_s].toDouble()));
   }
   if (obj.contains(u"prefix"_s) && obj[u"prefix"_s].isString()) {
     spin->setPrefix(obj[u"prefix"_s].toString());
@@ -830,7 +830,7 @@ void JsonWidget::setIntegerOption(const QString& name, const QJsonValue& value)
     return;
   }
 
-  int intVal = static_cast<int>(value.toDouble() + 0.5);
+  int intVal = static_cast<int>(value.toDouble());
   spin->setValue(intVal);
 }
 
