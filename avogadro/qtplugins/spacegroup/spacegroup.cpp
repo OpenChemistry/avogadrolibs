@@ -298,8 +298,9 @@ const QString SpaceGroup::hallSymbolToString(unsigned short hallNumber)
 void SpaceGroup::fillHeuristic()
 {
   // add a heuristic to completely fill the cell if it's a solid
-  // (vs. a molecule)
-  if (m_molecule != nullptr && m_molecule->unitCell()) {
+  // (vs. a molecule) — skip if the cell was already filled
+  if (m_molecule != nullptr && m_molecule->unitCell() &&
+      m_molecule->hallNumber() == 0) {
     // check if there's carbon and hydrogen atoms and at least 5 total atoms
     bool hasCarbon = false;
     bool hasHydrogen = false;
