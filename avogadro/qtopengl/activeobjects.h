@@ -43,7 +43,7 @@ public:
   GLWidget* activeGLWidget() const;
 
   /**
-   * Get the active widget (more general, could be GLWidget, vtkGLWidget, etc).
+   * Get the active widget.
    */
   QWidget* activeWidget() const;
 
@@ -56,17 +56,17 @@ public slots:
   /** Set the active GLWidget. */
   void setActiveGLWidget(GLWidget* glWidget);
 
-  /** Set the active widget (GLWidget, vtkGLWidget, etc). */
+  /** Set the active widget. */
   void setActiveWidget(QWidget* widget);
 
-  /** Set the active widget (GLWidget, vtkGLWidget, etc). */
+  /** Set the active molecule. */
   void setActiveMolecule(QtGui::Molecule* molecule);
 
 signals:
   /** The active GL widget changed. */
   void activeGLWidgetChanged(GLWidget* glWidget);
 
-  /** The active widget changed (GLWidget, vtkGLWidget, etc). */
+  /** The active widget changed. */
   void activeWidgetChanged(QWidget* widget);
 
   /** The active molecule changed. */
