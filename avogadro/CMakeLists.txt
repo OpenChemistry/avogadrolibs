@@ -74,8 +74,5 @@ if(USE_QT)
   endif()
   # Add unconditionally as this talks to MoleQueue, but doesn't depend on it.
   add_subdirectory(molequeue)
-  if(USE_VTK)
-    add_subdirectory(vtk)
-  endif()
   add_subdirectory(qtplugins)
 endif()
