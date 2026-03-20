@@ -71,6 +71,8 @@ private:
   QAction* m_reduceToAsymmetricUnitAction;
   QAction* m_setToleranceAction;
 
+  bool m_blockFillHeuristic = false;
+
   const QString crystalSystem(unsigned short hallNumber);
   const QString toleranceToString();
   const QString symbolToString(unsigned short hallNumber,

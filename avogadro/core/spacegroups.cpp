@@ -303,15 +303,19 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
   }
 
   // Now we generate any copies on the unit boundary
-  // We need to loop through all the atoms again
-  // if a fractional coordinate contains 0.0, we need to generate a copy
-  // of the atom at 1.0
-  if (!allCopies)
-    return;
+  if (allCopies)
+    fillTranslationalCopies(mol, cartTol);
+}
 
-  atomicNumbers = mol.atomicNumbers();
-  positions = mol.atomPositions3d();
-  numAtoms = mol.atomCount();
+void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
+{
+  if (!mol.unitCell())
+    return;
+  UnitCell* uc = mol.unitCell();
+
+  Array<unsigned char> atomicNumbers = mol.atomicNumbers();
+  Array<Vector3> positions = mol.atomPositions3d();
+  Index numAtoms = mol.atomCount();
   for (Index i = 0; i < numAtoms; ++i) {
     unsigned char atomicNum = atomicNumbers[i];
     Vector3 pos = uc->toFractional(positions[i]);
@@ -358,10 +362,11 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
       // If there is already an atom in this location within a
       // certain tolerance, do not add the atom.
       bool atomAlreadyPresent = false;
+      Real cartTolSq = cartTol * cartTol;
       for (Index k = 0; k < mol.atomCount(); k++) {
-        Real distance = (mol.atomPosition3d(k) - newCandidate).norm();
+        Real distSq = (mol.atomPosition3d(k) - newCandidate).squaredNorm();
 
-        if (distance <= cartTol) {
+        if (distSq <= cartTolSq) {
           atomAlreadyPresent = true;
           break;
         }
