@@ -46,7 +46,7 @@ void AtomTyper<OutputType>::run()
 template <typename OutputType>
 OutputType AtomTyper<OutputType>::atomType(const Atom& atom)
 {
-  OutputType result;
+  OutputType result{};
   if (atom.isValid() && atom.molecule() == m_molecule) {
 
     // Return the calculated value if we've already run the typer.

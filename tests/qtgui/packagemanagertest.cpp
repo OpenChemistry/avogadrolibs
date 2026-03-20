@@ -443,7 +443,8 @@ minimum-avogadro-version = "1.103"
 )" + avogadroBlock;
 
   QFile f(dir.path() + "/pyproject.toml");
-  f.open(QIODevice::WriteOnly | QIODevice::Text);
+  if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
+    return {};
   f.write(toml);
   f.close();
   return dir.path();
@@ -699,7 +700,7 @@ TEST(TomlParsing, missingProjectTableFails)
   ASSERT_TRUE(dir.isValid());
 
   QFile f(dir.path() + "/pyproject.toml");
-  f.open(QIODevice::WriteOnly | QIODevice::Text);
+  ASSERT_TRUE(f.open(QIODevice::WriteOnly | QIODevice::Text));
   f.write(R"(
 [tool.avogadro]
 minimum-avogadro-version = "1.103"
@@ -718,7 +719,7 @@ TEST(TomlParsing, missingScriptsEntryFails)
   ASSERT_TRUE(dir.isValid());
 
   QFile f(dir.path() + "/pyproject.toml");
-  f.open(QIODevice::WriteOnly | QIODevice::Text);
+  ASSERT_TRUE(f.open(QIODevice::WriteOnly | QIODevice::Text));
   f.write(R"(
 [project]
 name = "no-scripts"
@@ -744,7 +745,7 @@ TEST(TomlParsing, missingToolAvogadroFails)
   ASSERT_TRUE(dir.isValid());
 
   QFile f(dir.path() + "/pyproject.toml");
-  f.open(QIODevice::WriteOnly | QIODevice::Text);
+  ASSERT_TRUE(f.open(QIODevice::WriteOnly | QIODevice::Text));
   f.write(R"(
 [project]
 name = "no-tool"
@@ -792,7 +793,7 @@ TEST(TomlParsing, invalidTomlSyntaxFails)
   ASSERT_TRUE(dir.isValid());
 
   QFile f(dir.path() + "/pyproject.toml");
-  f.open(QIODevice::WriteOnly | QIODevice::Text);
+  ASSERT_TRUE(f.open(QIODevice::WriteOnly | QIODevice::Text));
   f.write("this is not valid [[[toml syntax");
   f.close();
 
