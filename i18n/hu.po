@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-15 19:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-20 12:12+0000\n"
+"Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
 "Language: hu\n"
@@ -170,13 +170,13 @@ msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
-msgstr "Bemeneti létrehozó (hiba)"
+msgstr "Bemenet-létrehozó (hiba)"
 
 #: molequeue/inputgeneratordialog.cpp:49
 #: qtplugins/quantuminput/quantuminput.cpp:279
 #, qt-format
 msgid "%1 Input Generator"
-msgstr "%1 bemeneti létrehozó"
+msgstr "%1 bemenet-létrehozó"
 
 #: molequeue/inputgeneratorwidget.cpp:123
 msgid "Continue"
@@ -247,7 +247,7 @@ msgstr "Felülírja a módosított bemeneti fájlokat?"
 
 #: molequeue/inputgeneratorwidget.cpp:204
 msgid "Problems occurred during input generation:"
-msgstr "Problémák történtek a bemenet létrehozása során:"
+msgstr "Hibák történtek a bemenet-létrehozó során:"
 
 #: molequeue/inputgeneratorwidget.cpp:293
 msgid "No input files to save!"
@@ -2620,7 +2620,7 @@ msgstr "Szög"
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:64:259
 msgid "Torsion Angle"
-msgstr "Torziós szög"
+msgstr "Csavarodásszög"
 
 #: qtplugins/constraints/constraintsmodel.cpp:68
 msgctxt "fix / remain constant"
@@ -2952,7 +2952,7 @@ msgstr "CP2K bemenet"
 
 #: qtplugins/cp2kinput/cp2kinput.h:38
 msgid "Generate input for CP2K."
-msgstr "Bemenet létrehozása a CP2K számára."
+msgstr "CP2K bemenetének létrehozása."
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -3453,7 +3453,7 @@ msgstr "Érvénytelen modellbeállítások"
 #: qtplugins/forcefield/forcefielddialog.cpp:176
 #, qt-format
 msgid "Could not parse user options for model '%1'."
-msgstr ""
+msgstr "Nem sikerült elemezni a(z) „%1” modell felhasználói beállításait."
 
 #: qtplugins/forcefield/forcefielddialog.cpp:181
 #, qt-format
@@ -3488,7 +3488,7 @@ msgstr "GAMESS bemenet"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
-msgstr "Bemenet létrehozása a GAMESS számára."
+msgstr "GAMESS bemenetének létrehozása."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:263
 msgid "Single Point"
@@ -3750,7 +3750,7 @@ msgstr "Távolság a központtól:"
 
 #: qtplugins/label/label.cpp:189
 msgid "Label scale:"
-msgstr ""
+msgstr "Címkeméret:"
 
 #: qtplugins/label/label.cpp:200 qtplugins/label/label.cpp:231
 msgid "Index"
@@ -3784,11 +3784,11 @@ msgstr "Atomi címke:"
 
 #: qtplugins/label/label.cpp:230
 msgid "Length"
-msgstr ""
+msgstr "Hosszúság"
 
 #: qtplugins/label/label.cpp:236
 msgid "Bond Label:"
-msgstr ""
+msgstr "Kötéscímke:"
 
 #: qtplugins/label/label.cpp:243 qtplugins/propertytables/propertymodel.cpp:687
 msgid "ID"
@@ -3803,7 +3803,7 @@ msgstr "Név"
 
 #: qtplugins/label/label.cpp:245
 msgid "Name & ID"
-msgstr ""
+msgstr "Név és azonosító"
 
 #: qtplugins/label/label.cpp:252
 msgid "Residue Label:"
@@ -3842,7 +3842,7 @@ msgstr "LAMMPS bemenet"
 
 #: qtplugins/lammpsinput/lammpsinput.h:35
 msgid "Generate input for LAMMPS."
-msgstr "Bemenet létrehozása a LAMMPS számára."
+msgstr "LAMMPS bemenetének létrehozása."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
 msgid ""
@@ -3907,7 +3907,7 @@ msgstr ""
 #: qtplugins/manipulator/manipulator.cpp:49
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
@@ -3934,7 +3934,7 @@ msgstr "Manipuláló eszköz"
 #: qtplugins/measuretool/measuretool.cpp:51
 msgctxt "control-key 8"
 msgid "Ctrl+8"
-msgstr ""
+msgstr "Ctrl+8"
 
 #: qtplugins/measuretool/measuretool.cpp:52
 msgid "Measure"
@@ -3976,7 +3976,7 @@ msgstr "Méretezőeszköz"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
-msgstr ""
+msgstr "(függőben)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
 #: qtplugins/propertytables/propertymodel.cpp:748
@@ -3993,7 +3993,7 @@ msgstr "Molekulatömeg (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:182
 msgid "Monoisotopic Mass (g/mol)"
-msgstr ""
+msgstr "Monoizotópos tömeg (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:184
 msgid "Chemical Formula"
@@ -4029,7 +4029,7 @@ msgstr "Nettó centrifugálási többszörösség"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:200
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "Dipólusmomentum (Debye)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:202
 msgctxt "highest occupied molecular orbital"
@@ -4071,7 +4071,7 @@ msgstr "Gibbs-energia (kcal/mol)"
 #: qtplugins/molecularproperties/molecularmodel.cpp:220
 msgctxt "point group symmetry"
 msgid "Point Group"
-msgstr ""
+msgstr "Pontcsoport"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:38
 msgid "&Molecular…"
@@ -4088,7 +4088,7 @@ msgstr "Molekula általános tulajdonságok megtekintése."
 #: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:273
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analyze"
-msgstr ""
+msgstr "&Elemzés"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:60
 #: qtplugins/propertytables/propertytables.cpp:86
@@ -4133,7 +4133,7 @@ msgstr "Exportálás…"
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
 msgid "Ctrl+1"
-msgstr ""
+msgstr "Ctrl+1"
 
 #: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
@@ -4219,7 +4219,7 @@ msgstr "Erőtér beállítása…"
 
 #: qtplugins/openbabel/openbabel.cpp:60
 msgid "Conformer Search…"
-msgstr "Konformer keresése…"
+msgstr "Alkalmazkodás keresése…"
 
 #: qtplugins/openbabel/openbabel.cpp:66
 msgid "Perceive Bonds"
@@ -4342,21 +4342,21 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:571
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molekula érvénytelen. Nem lehet létrehozni a konformereket."
+msgstr "Molekula érvénytelen. Nem lehet létrehozni az alkalmazkodásokat."
 
 #: qtplugins/openbabel/openbabel.cpp:589
 msgid "Cannot generate conformers with Open Babel."
 msgstr ""
-"Nem lehet létrehozni a konformereket az „Open Babel” kémiai eszköztár "
+"Nem lehet létrehozni az alkalmazkodásokat az „Open Babel” kémiai eszköztár "
 "használatával."
 
 #: qtplugins/openbabel/openbabel.cpp:622
 msgid "Generating Conformers (Open Babel)"
-msgstr "Konformerek („Open Babel” kémiai eszköztár) létrehozása"
+msgstr "Alkalmazkodások („Open Babel” kémiai eszköztár) létrehozása"
 
 #: qtplugins/openbabel/openbabel.cpp:713
 msgid "Generate Conformers"
-msgstr "Konformerek létrehozása"
+msgstr "Alkalmazkodások létrehozása"
 
 #: qtplugins/openbabel/openbabel.cpp:732
 msgid "Cannot open file with Open Babel."
@@ -4400,11 +4400,12 @@ msgstr "Hidrogénatomok hozzáadása („Open Babel” kémiai eszköztár)"
 
 #: qtplugins/openbabel/openbabel.cpp:831
 msgid "Generating Open Babel input…"
-msgstr "„Open Babel” kémiai eszköztár bemenet létrehozása…"
+msgstr "„Open Babel” kémiai eszköztár bemenetének létrehozása…"
 
 #: qtplugins/openbabel/openbabel.cpp:839 qtplugins/openbabel/openbabel.cpp:889
 msgid "Error generating Open Babel input."
-msgstr "Hiba történt az „Open Babel” kémiai eszköztári bemenet létrehozásakor."
+msgstr ""
+"Hiba történt az „Open Babel” kémiai eszköztári bemenetének létrehozásakor."
 
 #: qtplugins/openbabel/openbabel.cpp:852 qtplugins/openbabel/openbabel.cpp:902
 #: qtplugins/openbabel/openbabel.cpp:944
@@ -4422,7 +4423,7 @@ msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:881 qtplugins/openbabel/openbabel.cpp:923
 msgid "Generating obabel input…"
-msgstr "Az obabel bemenet létrehozása…"
+msgstr "obabel bemenetének létrehozása…"
 
 #: qtplugins/openbabel/openbabel.cpp:917
 msgid "Cannot remove hydrogens with Open Babel."
@@ -4468,7 +4469,7 @@ msgstr "OpenMM bemenet"
 
 #: qtplugins/openmminput/openmminput.h:35
 msgid "Generate input for OpenMM."
-msgstr "Bemenet létrehozása az OpenMM számára."
+msgstr "OpenMM bemenetének létrehozása."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
 msgid ""
@@ -4542,42 +4543,43 @@ msgstr "Bővítmények kezelése…"
 
 #: qtplugins/packageinstaller/packageinstaller.h:32
 msgid "Package Installer"
-msgstr ""
+msgstr "Csomagtelepítő"
 
 #: qtplugins/packageinstaller/packageinstaller.h:36
 msgid "Install, update, and remove Avogadro packages."
-msgstr ""
+msgstr "Avogadro csomagok telepítése, frissítése és eltávolítása."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:136
 #, qt-format
 msgid "Error downloading plugin list: %1"
-msgstr ""
+msgstr "Hiba történt a bővítménylista letöltése közben: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:145
 msgid "Error: empty response from server."
-msgstr ""
+msgstr "Hiba: üres válasz a kiszolgálótól."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:240
 #, qt-format
 msgid "Error fetching README: %1"
-msgstr ""
+msgstr "Hiba történt a README-fájl lekérésekor: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:282
 msgid "Nothing Selected"
-msgstr ""
+msgstr "Semmi nincs kijelölve"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
 msgid "Check the box next to a plugin to install or update it."
 msgstr ""
+"Jelölje be a bővítmény melletti négyzetet a telepítéshez vagy frissítéshez."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:293
 #, qt-format
 msgid "%1 (requires %2)"
-msgstr ""
+msgstr "%1 (%2 szükséges)"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:297
 msgid "Version Incompatibility"
-msgstr ""
+msgstr "Verzióinkompatibilitás"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:298
 #, qt-format
@@ -4596,7 +4598,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:325
 msgid "No Download Available"
-msgstr ""
+msgstr "Nincs elérhető letöltés"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:326
 #, qt-format
@@ -4605,21 +4607,24 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"A tervezett bővítmény(ek) nem biztosítanak letölthető forrás URL-címet:\n"
+"\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:373
 #, qt-format
 msgid "Failed to follow redirect while downloading %1.\n"
-msgstr ""
+msgstr "Nem sikerült követni az átirányítást a(z) %1 letöltése közben.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:390
 #, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
-msgstr ""
+msgstr "Nem sikerült letölteni innen: %1: állapot %2, %3\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:399
 #, qt-format
 msgid "Failed to download from %1: %2\n"
-msgstr ""
+msgstr "Nem sikerült letölteni innen: %1: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:434
 #: qtplugins/plugindownloader/downloaderwidget.cpp:364
@@ -4630,50 +4635,51 @@ msgstr "%1-%2 letöltése\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:448
 #, qt-format
 msgid "Extracting %1…\n"
-msgstr ""
+msgstr "%1 kicsomagolása…\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:456
 #, qt-format
 msgid "Extraction complete (%1 files)\n"
-msgstr ""
+msgstr "Kicsomagolás befejeződött (%1 fájl)\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:477
 #, qt-format
 msgid "Error: could not move extracted package %1 to %2\n"
-msgstr ""
+msgstr "Hiba: nem sikerült áthelyezni a kicsomagolt csomagot (%1) ide: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:490
 #, qt-format
 msgid "Extraction error: %1"
-msgstr ""
+msgstr "Kicsomagolási hiba: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:492
 msgid "Extraction yielded no files.\n"
-msgstr ""
+msgstr "A kicsomagolás nem hozott eredményt fájlokból.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:502
 msgid "Installation complete.\n"
-msgstr ""
+msgstr "A telepítés sikeresen befejeződött.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
 msgid "Nothing to Remove"
-msgstr ""
+msgstr "Nincs mit eltávolítani"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
 msgid "Check the box next to an installed plugin to remove it."
 msgstr ""
+"Jelölje be a telepített bővítmény melletti négyzetet az eltávolításához."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
-msgstr ""
+msgstr "Bővítmények eltávolítása"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:558
 #, qt-plural-format
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
 msgid_plural "Remove %n selected plugin(s)?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Szeretne eltávolítani %n kijelölt bővítményt?"
+msgstr[1] "Szeretne eltávolítani %n kijelölt bővítményt?"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
@@ -4689,56 +4695,58 @@ msgstr "Bővítménykönyvtár kijelölése"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:599
 msgid "Invalid Directory"
-msgstr ""
+msgstr "Érvénytelen könyvtár"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
 msgid "The selected directory does not contain a pyproject.toml file."
-msgstr ""
+msgstr "A kijelölt könyvtár nem tartalmaz pyproject.toml-fájlt."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:614
 #, qt-format
 msgid "Plugin already installed as symlink: %1\n"
-msgstr ""
+msgstr "A bővítmény már telepítve van szimbolikus hivatkozásként: %1\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:629
 #, qt-format
 msgid "Created symlink: %1 → %2\n"
-msgstr ""
+msgstr "Létrehozott szimbolikus hivatkozás: %1 → %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:632
 msgid "Symlink creation failed; copying files instead…\n"
 msgstr ""
+"Nem sikerült létrehozni a szimbolikus hivatkozás; ehelyett fájlokat másolni"
+"…\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:635
 #, qt-format
 msgid "Failed to copy package to %1."
-msgstr ""
+msgstr "Nem sikerült a csomagot másolni ide: %1."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:640
 #, qt-format
 msgid "Installing plugin from %1…\n"
-msgstr ""
+msgstr "Bővítmény telepítése innen: %1…\n"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:58
 msgid "Not installed"
-msgstr ""
+msgstr "Nincs telepítve"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:60
 msgid "Installed (up to date)"
-msgstr ""
+msgstr "Telepítve (naprakész)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:62
 msgid "Update available"
-msgstr ""
+msgstr "Frissítés érhető el"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:64
 msgid "Installed locally (not in online catalog)"
-msgstr ""
+msgstr "Helyileg telepítve (nem szerepel az online katalógusban)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:70
 #, qt-format
 msgid "Requires Avogadro %1 or later (running %2)"
-msgstr ""
+msgstr "Avogadro %1 vagy újabb verziót igényel (jelenleg a %2 verzió fut)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:162
 #, qt-format
@@ -4749,7 +4757,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:170
 msgid "Status"
-msgstr ""
+msgstr "Állapot"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:174
 #: qtplugins/plugindownloader/downloaderwidget.cpp:67
@@ -4758,7 +4766,7 @@ msgstr "Verzió"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:176
 msgid "Features"
-msgstr ""
+msgstr "Jellemzők"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:178
 #: qtplugins/plugindownloader/downloaderwidget.cpp:68
@@ -4767,24 +4775,23 @@ msgstr "Leírás"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:564
 msgid "Electrostatics"
-msgstr ""
+msgstr "Elektrosztatika"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:566
 msgid "Energy Models"
-msgstr ""
+msgstr "Energiamodellek"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:568
 msgid "File Formats"
-msgstr ""
+msgstr "Fájlformátumok"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:570
-#, fuzzy
 msgid "Input Generators"
-msgstr "Bemenet-generátor"
+msgstr "Bemenet-létrehozók"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:572
 msgid "Commands"
-msgstr ""
+msgstr "Parancsok"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:60
 #: qtplugins/plugindownloader/zipextracter.cpp:67
@@ -4794,6 +4801,8 @@ msgid ""
 "ERROR: could not open zip file to list contents.\n"
 "(%1)"
 msgstr ""
+"HIBA: a zip-fájl nem nyitható meg a tartalom listázásához.\n"
+"(%1)"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:117
 #: qtplugins/plugindownloader/zipextracter.cpp:115
@@ -4803,6 +4812,8 @@ msgid ""
 "ERROR: could not open zip file to extract files.\n"
 "(%1)"
 msgstr ""
+"HIBA: nem sikerült megnyitni a zip-fájlt a fájlok kicsomagolásához.\n"
+"(%1)"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:134
 #: qtplugins/packageinstaller/zipextractor.cpp:151
@@ -4813,12 +4824,12 @@ msgstr ""
 #, qt-format
 msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
-msgstr ""
+msgstr "Figyelmeztetés: (%1)"
 
 #: qtplugins/playertool/playertool.cpp:51
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
@@ -4838,12 +4849,12 @@ msgstr "Képkocka:"
 #: qtplugins/playertool/playertool.cpp:113
 msgctxt "start or first frame index"
 msgid "Start:"
-msgstr ""
+msgstr "Kezdés:"
 
 #: qtplugins/playertool/playertool.cpp:124
 msgctxt "end or last frame index"
 msgid "End:"
-msgstr ""
+msgstr "Befejezés:"
 
 #: qtplugins/playertool/playertool.cpp:138
 msgid "Dynamic bonding?"
@@ -4865,11 +4876,11 @@ msgstr "Lejátszás"
 
 #: qtplugins/playertool/playertool.cpp:165
 msgid "Record…"
-msgstr ""
+msgstr "Felvétel…"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
-msgstr ""
+msgstr "Szüneteltetés"
 
 #: qtplugins/playertool/playertool.cpp:291
 #: qtplugins/playertool/playertool.cpp:396
@@ -4916,58 +4927,60 @@ msgstr "Pályák lejátszása"
 
 #: qtplugins/plotconformer/plotconformer.cpp:38
 msgid "Plot Conformer Data…"
-msgstr ""
+msgstr "Alkalmazkodások adatok ábrázolása…"
 
 #: qtplugins/plotconformer/plotconformer.cpp:127
 msgid "Conformer Analysis"
-msgstr ""
+msgstr "Alkalmazkodás elemzése"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
-msgstr ""
+msgstr "Ábra típusa:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/plotconformer/plotconformer.cpp:143:1357
 msgid "RMSD"
-msgstr "RMSD"
+msgstr "Gyök-közép-négyzet eltérés"
 
 #: qtplugins/plotconformer/plotconformer.cpp:149
 msgid "Velocities"
-msgstr ""
+msgstr "Sebességek"
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
+msgstr "Energiaegységek:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
 msgid "to"
-msgstr ""
+msgstr "/"
 
 #: qtplugins/plotconformer/plotconformer.cpp:225
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "Gyök-közép-négyzet eltérés (Å)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:228
 #, qt-format
 msgid "Relative Energy (%1)"
-msgstr ""
+msgstr "Relatív energia (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:231
 msgid "Forces (N)"
-msgstr ""
+msgstr "Erők (N)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:233
 msgid "Velocities (m/s)"
-msgstr ""
+msgstr "Sebesség (m/s)"
 
 #: qtplugins/plotconformer/plotconformer.h:36
 msgid "PlotConformer"
-msgstr ""
+msgstr "Alkalmazkodás-ábrázoló"
 
 #: qtplugins/plotconformer/plotconformer.h:81
 msgid "Generate and plot conformer data (RMSD or energy)."
 msgstr ""
+"Alkalmazkodás adatok létrehozása és ábrázolása (Gyök-közép-négyzet eltérés "
+"vagy energia)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -5063,6 +5076,8 @@ msgctxt ""
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr ""
+"Nem sikerült letölteni a(z) %1 URL-címről: HTTP-állapotkód: %2, hibaüzenet: "
+"%3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:381
 #, qt-format
@@ -5081,11 +5096,11 @@ msgstr "A fájlok kicsomagolása sikeresen megtörtént.\n"
 #: qtplugins/plugindownloader/downloaderwidget.cpp:421
 #, qt-format
 msgid "Error while extracting: %1"
-msgstr "Hiba történt a kivonás során: %1"
+msgstr "Hiba történt a kicsomagolás során: %1"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:452
 msgid "Installation canceled\n"
-msgstr ""
+msgstr "Telepítés megszakítva\n"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -5141,7 +5156,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:307
 msgid "Click to change color"
-msgstr ""
+msgstr "Kattintson a szín módosításához"
 
 #: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Valence"
@@ -5155,7 +5170,7 @@ msgstr "Hivatalos töltés"
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
-msgstr ""
+msgstr "%1 részleges töltés"
 
 #: qtplugins/propertytables/propertymodel.cpp:644
 msgid "X (Å)"
@@ -5173,11 +5188,11 @@ msgstr "Z (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:672
 #: qtplugins/propertytables/propertymodel.cpp:695
 msgid "Label"
-msgstr ""
+msgstr "Címke"
 
 #: qtplugins/propertytables/propertymodel.cpp:652
 msgid "Isotope"
-msgstr ""
+msgstr "Izotóp"
 
 #: qtplugins/propertytables/propertymodel.cpp:654
 #: qtplugins/propertytables/propertymodel.cpp:697
@@ -5229,11 +5244,11 @@ msgstr "Szög (°)"
 #: qtplugins/propertytables/propertymodel.cpp:745
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "Gyök-közép-négyzet eltérés (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:748
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "Energia (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:1038
 msgid "Adjust Fragment"
@@ -5301,7 +5316,7 @@ msgstr "Maradék tulajdonságai…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
-msgstr ""
+msgstr "Alkalmazkodás tulajdonságai…"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
@@ -5332,7 +5347,7 @@ msgstr "Csavarodás tulajdonságai"
 
 #: qtplugins/propertytables/propertyview.cpp:58
 msgid "Conformer Properties"
-msgstr "Konformer tulajdonságai"
+msgstr "Alkalmazkodás tulajdonságai"
 
 #: qtplugins/propertytables/propertyview.cpp:61
 msgid "Residue Properties"
@@ -5340,15 +5355,15 @@ msgstr "Maradék tulajdonságai"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Partial Charge Type"
-msgstr ""
+msgstr "Részleges töltés típusa"
 
 #: qtplugins/propertytables/propertyview.cpp:559
 msgid "Select the partial charge type:"
-msgstr ""
+msgstr "Részleges töltés típusának kijelölése:"
 
 #: qtplugins/propertytables/propertyview.cpp:580
 msgid "Change Charge Type…"
-msgstr ""
+msgstr "Töltés típusának módosítása…"
 
 #: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"
@@ -5372,15 +5387,15 @@ msgstr "Atom fagyásának feloldása"
 
 #: qtplugins/propertytables/propertyview.cpp:608
 msgid "Constrain Bond"
-msgstr ""
+msgstr "Kötéskorlátozás"
 
 #: qtplugins/propertytables/propertyview.cpp:610
 msgid "Constrain Angle"
-msgstr ""
+msgstr "Szögkorlátozás"
 
 #: qtplugins/propertytables/propertyview.cpp:612
 msgid "Constrain Torsion"
-msgstr ""
+msgstr "Csavarodáskorlátozás"
 
 #: qtplugins/propertytables/propertyview.cpp:619
 msgid "Remove Constraint"
@@ -5390,11 +5405,11 @@ msgstr "Korlátozás eltávolítása"
 #: qtplugins/qtaim/qtaimwavefunction.h:82
 #, qt-format
 msgid "Cannot read file %1."
-msgstr ""
+msgstr "Nem sikerült beolvasni a(z) %1 fájlt."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
-msgstr ""
+msgstr "Nem sikerült létrehozni az ideiglenes fájlt."
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -5436,7 +5451,7 @@ msgstr "Kvantum bemenet"
 
 #: qtplugins/quantuminput/quantuminput.h:47
 msgid "Generate input for quantum codes."
-msgstr "Bemenet létrehozása a kvantumkódok számára."
+msgstr "Kvantumkódok bemenetének létrehozása."
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Center"
@@ -5575,7 +5590,7 @@ msgstr "Kijelölés"
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 4"
 msgid "Ctrl+4"
-msgstr ""
+msgstr "Ctrl+4"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -5752,35 +5767,35 @@ msgstr "Tűréshatár kijelölése (Å):"
 
 #: qtplugins/spacegroup/spacegroup.cpp:600
 msgid "Triclinic"
-msgstr ""
+msgstr "Triklinika"
 
 #: qtplugins/spacegroup/spacegroup.cpp:602
 msgid "Monoclinic"
-msgstr ""
+msgstr "Monoklinika"
 
 #: qtplugins/spacegroup/spacegroup.cpp:604
 msgid "Orthorhombic"
-msgstr ""
+msgstr "Ortorombos"
 
 #: qtplugins/spacegroup/spacegroup.cpp:606
 msgid "Tetragonal"
-msgstr ""
+msgstr "Négyszögű"
 
 #: qtplugins/spacegroup/spacegroup.cpp:608
 msgid "Trigonal"
-msgstr ""
+msgstr "Trigonális"
 
 #: qtplugins/spacegroup/spacegroup.cpp:610
 msgid "Rhombohedral"
-msgstr ""
+msgstr "Romboéderes"
 
 #: qtplugins/spacegroup/spacegroup.cpp:612
 msgid "Hexagonal"
-msgstr ""
+msgstr "Hatszögletű"
 
 #: qtplugins/spacegroup/spacegroup.cpp:614
 msgid "Cubic"
-msgstr ""
+msgstr "Kocka alakú"
 
 #: qtplugins/spacegroup/spacegroup.cpp:646
 msgid "Primitive Cell Detected"
@@ -8308,7 +8323,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
 msgid "Conformer Search"
-msgstr "Konformer keresés"
+msgstr "Alkalmazkodás keresése"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -8318,7 +8333,7 @@ msgstr "Módszer"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Number of conformers:"
-msgstr "Konformerek száma:"
+msgstr "Alkalmazkodások száma:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -8343,7 +8358,7 @@ msgstr "Genetikai algoritmus keresése"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
 msgid "Optimization per conformer:"
-msgstr "Optimalizálás konformerenként:"
+msgstr "Optimalizálás alkalmazkodásonként:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
@@ -8397,8 +8412,8 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
-"pontozási módszer a genetikai algoritmushoz (RMSD = geometriai távolság, "
-"energia = legalacsonyabb energiák)"
+"pontozási módszer a genetikai algoritmushoz (Gyök-közép-négyzet eltérés = "
+"geometriai távolság, energia = legalacsonyabb energiák)"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)

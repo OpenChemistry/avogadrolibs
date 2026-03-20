@@ -3,7 +3,7 @@
 # Maxime Leroy <lisacintosh@gmail.com>, 2021, 2022.
 # Pa <poubelleanonyme@protonmail.com>, 2021.
 # Translator <kvb@tuta.io>, 2022, 2023.
-# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024, 2025.
+# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024, 2025, 2026.
 # research11111 <urgent.research@mailo.fr>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-18 15:09+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-20 12:12+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -8906,8 +8906,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>La valeur maximale 2thêta en degrés</p><p>Valeur par "
-"défaut : 162.00°</p></body></html>"
+"<html><head/><body><p>La valeur maximale 2thêta en degrés.</p><p>Valeur par "
+"défaut : 162.00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -8948,8 +8948,8 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Le nombre de points de 2theta à générer</p><p>Valeur "
-"par défault : 1000</p></body></html>"
+"<html><head/><body><p>Le nombre de points de 2theta à générer.</p><p>Valeur "
+"par défault : 1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -9636,7 +9636,7 @@ msgid ""
 "different high symmetry points depending on the lattice (such as if a &gt; b "
 "or a &lt; b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Enter k-points spéciaux comme tels :</p><p>L 0.5 0.5 "
+"<html><head/><body><p>Enter k-points spéciaux comme tels :</p><p>L 0.5 0.5 "
 "0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>C'est-à-dire, "
 "&lt;symbole&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt; où x, y, et z sont des "
 "coordonnées fractionnaires en espace réciproque. Les lignes seront tracées "
@@ -9647,7 +9647,7 @@ msgstr ""
 "automatiquement remplis des points de symétrie haute cellule primitive pour "
 "ce groupe d'espace. Il y a quelques groupes d'espaces différents points de "
 "symétrie haute en fonction du treillis (comme si un &gt; b ou un &lt; b) - "
-"qui est pris en compte automatiquement</p></body></html>"
+"qui est pris en compte automatiquement.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)

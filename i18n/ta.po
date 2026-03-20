@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-16 20:10+0000\n"
+"PO-Revision-Date: 2026-03-20 12:12+0000\n"
 "Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
@@ -1066,7 +1066,7 @@ msgstr "இந்த வடிவத்தை %2 முடியும் என
 
 #: qtgui/fileformatdialog.cpp:279
 msgid "All files"
-msgstr "அனைத்து கோப்புகள்"
+msgstr "அனைத்து கோப்புகள்"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
