@@ -648,7 +648,7 @@ void RWMolecule::rotateCellToStandardOrientation()
   modifyMolecule(newMolecule, changes, undoText);
 }
 
-bool RWMolecule::reduceCellToPrimitive(double cartTol)
+bool RWMolecule::reduceCellToPrimitive(double cartTol, double copyTol)
 {
   // If there is no unit cell, there is nothing to do
   if (!m_molecule.unitCell())
@@ -663,6 +663,10 @@ bool RWMolecule::reduceCellToPrimitive(double cartTol)
 #else
   return false;
 #endif
+
+  // Add boundary copies before committing, so it's a single undo step
+  if (copyTol > 0.0)
+    Core::SpaceGroups::fillTranslationalCopies(newMolecule, copyTol);
 
   // Since most components of the molecule will be modified,
   // we will just modify the whole thing...
@@ -679,7 +683,7 @@ bool RWMolecule::reduceCellToPrimitive(double cartTol)
   return true;
 }
 
-bool RWMolecule::conventionalizeCell(double cartTol)
+bool RWMolecule::conventionalizeCell(double cartTol, double copyTol)
 {
   // If there is no unit cell, there is nothing to do
   if (!m_molecule.unitCell())
@@ -696,6 +700,10 @@ bool RWMolecule::conventionalizeCell(double cartTol)
   return false;
 #endif
 
+  // Add boundary copies before committing, so it's a single undo step
+  if (copyTol > 0.0)
+    Core::SpaceGroups::fillTranslationalCopies(newMolecule, copyTol);
+
   Molecule::MoleculeChanges changes =
     Molecule::UnitCell | Molecule::Atoms | Molecule::Added;
   QString undoText = tr("Conventionalize Cell");
@@ -709,7 +717,7 @@ bool RWMolecule::conventionalizeCell(double cartTol)
   return true;
 }
 
-bool RWMolecule::symmetrizeCell(double cartTol)
+bool RWMolecule::symmetrizeCell(double cartTol, double copyTol)
 {
   // If there is no unit cell, there is nothing to do
   if (!m_molecule.unitCell())
@@ -725,6 +733,10 @@ bool RWMolecule::symmetrizeCell(double cartTol)
 #else
   return false;
 #endif
+
+  // Add boundary copies before committing, so it's a single undo step
+  if (copyTol > 0.0)
+    Core::SpaceGroups::fillTranslationalCopies(newMolecule, copyTol);
 
   Molecule::MoleculeChanges changes =
     Molecule::UnitCell | Molecule::Atoms | Molecule::Added;
@@ -755,6 +767,22 @@ bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
 
   Molecule::MoleculeChanges changes = Molecule::Added | Molecule::Atoms;
   QString undoText = tr("Fill Unit Cell");
+
+  modifyMolecule(newMolecule, changes, undoText);
+  return true;
+}
+
+bool RWMolecule::fillTranslationalCopies(double cartTol)
+{
+  if (!m_molecule.unitCell())
+    return false;
+
+  Molecule newMolecule = m_molecule;
+
+  Core::SpaceGroups::fillTranslationalCopies(newMolecule, cartTol);
+
+  Molecule::MoleculeChanges changes = Molecule::Added | Molecule::Atoms;
+  QString undoText = tr("Fill Translational Copies");
 
   modifyMolecule(newMolecule, changes, undoText);
   return true;

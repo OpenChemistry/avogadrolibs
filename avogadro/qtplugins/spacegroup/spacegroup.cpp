@@ -297,6 +297,10 @@ const QString SpaceGroup::hallSymbolToString(unsigned short hallNumber)
 
 void SpaceGroup::fillHeuristic()
 {
+  // Don't re-fill when we just performed a reduce/conventionalize/symmetrize
+  if (m_blockFillHeuristic)
+    return;
+
   // add a heuristic to completely fill the cell if it's a solid
   // (vs. a molecule)
   if (m_molecule != nullptr && m_molecule->unitCell()) {
@@ -345,8 +349,9 @@ void SpaceGroup::moleculeChanged(unsigned int c)
     if (changes & Molecule::Added || changes & Molecule::Removed)
       updateActions();
 
-    // possible fill the cell
-    fillHeuristic();
+    // Only fill when a new crystal is imported (not on every modification)
+    if (changes & Molecule::Crystal)
+      fillHeuristic();
   }
 }
 
@@ -439,8 +444,11 @@ void SpaceGroup::reduceToPrimitive()
   if (reply == QMessageBox::No)
     setTolerance();
 
-  // Primitive reduction!
-  bool success = m_molecule->undoMolecule()->reduceCellToPrimitive(m_spgTol);
+  // Primitive reduction (with boundary copies in the same undo step)
+  m_blockFillHeuristic = true;
+  bool success =
+    m_molecule->undoMolecule()->reduceCellToPrimitive(m_spgTol, 0.25);
+  m_blockFillHeuristic = false;
 
   if (!success) {
     // Print an error message.
@@ -464,8 +472,11 @@ void SpaceGroup::conventionalizeCell()
   if (reply == QMessageBox::No)
     setTolerance();
 
-  // Conventionalize the cell!
-  bool success = m_molecule->undoMolecule()->conventionalizeCell(m_spgTol);
+  // Conventionalize the cell (with boundary copies in the same undo step)
+  m_blockFillHeuristic = true;
+  bool success =
+    m_molecule->undoMolecule()->conventionalizeCell(m_spgTol, 0.25);
+  m_blockFillHeuristic = false;
 
   if (!success) {
     // Print an error message.
@@ -489,7 +500,9 @@ void SpaceGroup::symmetrize()
   if (reply == QMessageBox::No)
     setTolerance();
 
-  bool success = m_molecule->undoMolecule()->symmetrizeCell(m_spgTol);
+  m_blockFillHeuristic = true;
+  bool success = m_molecule->undoMolecule()->symmetrizeCell(m_spgTol, 0.25);
+  m_blockFillHeuristic = false;
 
   if (!success) {
     // Print an error message.

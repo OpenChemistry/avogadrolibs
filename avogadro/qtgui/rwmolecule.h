@@ -600,24 +600,30 @@ public:
   /**
    * Use spglib to reduce the cell to its primitive form. Changes are emitted.
    * @param cartTol Cartesian tolerance for primitive reduction.
+   * @param copyTol If > 0, add translational boundary copies with this
+   *   tolerance in the same undo step.
    * @return True if the algorithm succeeded, and false if it failed.
    */
-  bool reduceCellToPrimitive(double cartTol = 1e-5);
+  bool reduceCellToPrimitive(double cartTol = 1e-5, double copyTol = 0.0);
 
   /**
    * Use spglib to convert the cell to its conventional form. Changes are
    * emitted.
    * @param cartTol Cartesian tolerance for conventionalization.
+   * @param copyTol If > 0, add translational boundary copies with this
+   *   tolerance in the same undo step.
    * @return True if the algorithm succeeded, and false if it failed.
    */
-  bool conventionalizeCell(double cartTol = 1e-5);
+  bool conventionalizeCell(double cartTol = 1e-5, double copyTol = 0.0);
 
   /**
    * Use spglib to symmetrize the cell. Changes are emitted.
    * @param cartTol Cartesian tolerance for symmetrization.
+   * @param copyTol If > 0, add translational boundary copies with this
+   *   tolerance in the same undo step.
    * @return True if the algorithm succeeded, and false if it failed.
    */
-  bool symmetrizeCell(double cartTol = 1e-5);
+  bool symmetrizeCell(double cartTol = 1e-5, double copyTol = 0.0);
 
   /**
    * Fill unit cell using transforms for the space group. Changes are emitted.
@@ -629,6 +635,14 @@ public:
    */
   bool fillUnitCell(unsigned short hallNumber, double cartTol = 1e-5,
                     bool allCopies = false);
+
+  /**
+   * Add translational copies of atoms on the unit cell boundary without
+   * applying symmetry operations. Changes are emitted.
+   * @param cartTol Cartesian tolerance for comparing atom positions.
+   * @return True if the algorithm succeeded, and false if it failed.
+   */
+  bool fillTranslationalCopies(double cartTol = 1e-5);
 
   /**
    * Use transforms to reduce a cell to its asymmetric unit. Changes are

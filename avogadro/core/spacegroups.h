@@ -129,6 +129,14 @@ public:
                            bool allCopies = false);
 
   /**
+   * Add translational copies of atoms on the unit cell boundary.
+   * For atoms at fractional coordinate ~0, a copy is placed at ~1 and
+   * vice versa, plus edge and corner combinations.
+   * No symmetry operations are applied.
+   */
+  static void fillTranslationalCopies(Molecule& mol, double cartTol = 1e-5);
+
+  /**
    * Reduce a cell to its asymmetric unit.
    * Nothing will be done if the molecule does not have a unit cell.
    * The cartesian tolerance is used to check if an atom is present
