@@ -82,6 +82,8 @@ void ImportPQR::menuActivated()
     m_dialog = new PQRWidget(qobject_cast<QWidget*>(this), this);
 
   m_dialog->show();
+  m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 // called by widget

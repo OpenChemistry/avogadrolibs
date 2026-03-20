@@ -64,6 +64,8 @@ void ThreeDMol::showDialog()
       new ThreeDMolDialog(m_molecule, qobject_cast<QWidget*>(this->parent()));
   }
   m_dialog->show();
+  m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 } // namespace Avogadro::QtPlugins

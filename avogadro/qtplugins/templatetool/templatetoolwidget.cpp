@@ -316,6 +316,8 @@ void TemplateToolWidget::groupChanged(int index)
     connect(m_fragmentDialog, SIGNAL(performInsert(const QString&, bool)), this,
             SLOT(otherLigandInsert(const QString&, bool)));
     m_fragmentDialog->show();
+    m_fragmentDialog->raise();
+    m_fragmentDialog->activateWindow();
     return;
   }
 
@@ -367,6 +369,8 @@ void TemplateToolWidget::ligandChanged(int index)
     connect(m_fragmentDialog, SIGNAL(performInsert(const QString&, bool)), this,
             SLOT(otherLigandInsert(const QString&, bool)));
     m_fragmentDialog->show();
+    m_fragmentDialog->raise();
+    m_fragmentDialog->activateWindow();
     return;
   }
 
@@ -489,6 +493,8 @@ void TemplateToolWidget::elementChanged(int index)
       }
       m_elementSelector->setElement(m_currentElement);
       m_elementSelector->show();
+      m_elementSelector->raise();
+      m_elementSelector->activateWindow();
     } else {
       if (m_elementSelector)
         m_elementSelector->setElement(itemData.toInt());

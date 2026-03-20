@@ -244,6 +244,7 @@ void ConfigurePython::showDialog()
   m_dialog->setOptions(pythonInterps);
   m_dialog->show();
   m_dialog->raise();
+  m_dialog->activateWindow();
 }
 
 } // namespace Avogadro::QtPlugins

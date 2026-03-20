@@ -78,6 +78,8 @@ void LammpsInput::menuActivated()
   }
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();
+  m_dialog->raise();
+  m_dialog->activateWindow();
 }
 } // namespace QtPlugins
 } // namespace Avogadro

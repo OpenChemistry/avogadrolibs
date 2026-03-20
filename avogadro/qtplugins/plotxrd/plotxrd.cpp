@@ -172,6 +172,8 @@ void PlotXrd::displayDialog()
   chart->setXAxisTitle(xTitle);
   chart->setYAxisTitle(yTitle);
   m_chartDialog->show();
+  m_chartDialog->raise();
+  m_chartDialog->activateWindow();
 }
 
 bool PlotXrd::generateXrdPattern(const QtGui::Molecule& mol, XrdData& results,

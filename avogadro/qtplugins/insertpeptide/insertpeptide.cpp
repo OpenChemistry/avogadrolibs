@@ -105,6 +105,8 @@ void InsertPeptide::showDialog()
           SLOT(setStructureType(int)));
 
   m_dialog->show();
+  m_dialog->raise();
+  m_dialog->activateWindow();
 
   // deduce the directory for the fragments
   QString directory = "fragments/amino";

@@ -83,6 +83,8 @@ void InsertFragment::showDialog()
               &InsertFragment::performInsert);
     }
     m_crystalDialog->show();
+    m_crystalDialog->raise();
+    m_crystalDialog->activateWindow();
   } else {
     // fragments - create the dialog if it doesn't exist
     if (!m_moleculeDialog) {
@@ -91,6 +93,8 @@ void InsertFragment::showDialog()
               &InsertFragment::performInsert);
     }
     m_moleculeDialog->show();
+    m_moleculeDialog->raise();
+    m_moleculeDialog->activateWindow();
   }
 }
 

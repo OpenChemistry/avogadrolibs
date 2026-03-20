@@ -175,6 +175,8 @@ void ColorOpacityMap::displayDialog()
   }
   updateHistogram();
   m_comDialog->show();
+  m_comDialog->raise();
+  m_comDialog->activateWindow();
 }
 
 void ColorOpacityMap::render()
