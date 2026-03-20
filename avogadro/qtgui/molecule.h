@@ -78,7 +78,7 @@ public:
     Constraints = 64,
     Residues = 128,
     /** Indicates a new crystal structure (triggers space group fill). */
-    Crystal = 256,
+    NewCrystal = 256,
     /** Operations that can affect the above types. */
     Added = 1024,
     Removed = 2048,

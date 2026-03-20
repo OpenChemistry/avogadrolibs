@@ -350,7 +350,7 @@ void SpaceGroup::moleculeChanged(unsigned int c)
       updateActions();
 
     // Only fill when a new crystal is imported (not on every modification)
-    if (changes & Molecule::Crystal)
+    if (changes & Molecule::NewCrystal)
       fillHeuristic();
   }
 }

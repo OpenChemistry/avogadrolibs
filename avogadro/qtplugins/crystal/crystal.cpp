@@ -163,8 +163,9 @@ void Crystal::importCrystalClipboard()
   Core::Molecule m;
   if (d.importCrystalClipboard(m)) {
     // If we succeeded, update m_molecule
-    Molecule::MoleculeChanges changes =
-      Molecule::Added | Molecule::Atoms | Molecule::UnitCell;
+    Molecule::MoleculeChanges changes = Molecule::Added | Molecule::Atoms |
+                                        Molecule::UnitCell |
+                                        Molecule::NewCrystal;
     QString undoText = tr("Import Crystal from Clipboard");
     m_molecule->undoMolecule()->modifyMolecule(m, changes, undoText);
   }

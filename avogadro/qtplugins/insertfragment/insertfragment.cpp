@@ -116,7 +116,7 @@ void InsertFragment::performInsert(const QString& fileName, bool crystal)
   if (crystal) {
     Molecule::MoleculeChanges changes =
       (Molecule::Atoms | Molecule::Bonds | Molecule::UnitCell |
-       Molecule::Crystal | Molecule::Added | Molecule::Removed);
+       Molecule::NewCrystal | Molecule::Added | Molecule::Removed);
 
     // remove any bonds from newMol
     newMol.clearBonds();
