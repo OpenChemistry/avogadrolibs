@@ -589,8 +589,12 @@ void PackageManagerDialog::removeSelected()
     PackageModel::PackageEntry& e = m_model->entry(row);
     const QString packageKey = e.packageKey.isEmpty() ? e.name : e.packageKey;
     QtGui::PackageManager::instance()->unregisterPackage(packageKey);
-    if (deleteFiles && !e.installedDir.isEmpty())
-      QDir(e.installedDir).removeRecursively();
+    if (deleteFiles && !e.installedDir.isEmpty()) {
+      if (QFileInfo{ e.installedDir }.isSymLink())
+        QFile(e.installedDir).remove();
+      else
+        QDir(e.installedDir).removeRecursively();
+    }
   }
 
   // Refresh table state
