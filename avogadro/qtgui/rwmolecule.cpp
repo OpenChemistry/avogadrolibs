@@ -761,6 +761,7 @@ bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
   // Make a copy of the molecule to edit so we can store the old one
   // The atom positions and numbers of atoms may change
   Molecule newMolecule = m_molecule;
+  newMolecule.setHallNumber(hallNumber);
 
   Core::SpaceGroups::fillUnitCell(newMolecule, hallNumber, cartTol, true,
                                   allCopies);
