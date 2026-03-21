@@ -237,6 +237,26 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                             : ((charge < 4) ? charge : 0);
       if (charge)
         chargeList.emplace_back(newAtom.index(), charge);
+
+      // vvv field: valence (columns 48-50), 0 = default
+      if (buffer.size() >= 51) {
+        int valence =
+          lexicalCast<int>(trimmed(buffer.substr(48, 3))).value_or(0);
+        if (valence > 0 && valence <= 6) {
+          Core::AtomHybridization hyb = Core::HybridizationUnknown;
+          if (valence <= 2)
+            hyb = Core::SP;
+          else if (valence == 3)
+            hyb = Core::SP2;
+          else if (valence == 4)
+            hyb = Core::SP3;
+          else if (valence == 5)
+            hyb = Core::TrigonalBipyramidal;
+          else if (valence == 6)
+            hyb = Core::Octahedral;
+          mol.setHybridization(newAtom.index(), hyb);
+        }
+      }
       continue;
     } else {
       appendError("Error parsing atom block: " + buffer);
@@ -713,6 +733,28 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
             return false;
           }
           mol.setIsotope(newAtom.index(), isotope);
+        } else if (startsWith(key, "VAL=")) {
+          // explicit valence — map to hybridization
+          int valence = lexicalCast<int>(key.substr(4), ok);
+          if (!ok) {
+            appendError("Failed to parse valence: " + key);
+            return false;
+          }
+          // VAL=0 means "no marking" (default), VAL=-1 means zero valence
+          if (valence > 0 && valence <= 6) {
+            Core::AtomHybridization hyb = Core::HybridizationUnknown;
+            if (valence <= 2)
+              hyb = Core::SP;
+            else if (valence == 3)
+              hyb = Core::SP2;
+            else if (valence == 4)
+              hyb = Core::SP3;
+            else if (valence == 5)
+              hyb = Core::TrigonalBipyramidal;
+            else if (valence == 6)
+              hyb = Core::Octahedral;
+            mol.setHybridization(newAtom.index(), hyb);
+          }
         } else {
 #ifndef NDEBUG
           std::cerr << "Unknown key: " << key << std::endl;

@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/atom.h>
 #include <avogadro/core/molecule.h>
 
 #include <avogadro/io/mdlformat.h>
@@ -14,6 +15,7 @@
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Molecule;
+using Avogadro::Core::SP2;
 using Avogadro::Core::Variant;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::MdlFormat;
@@ -198,4 +200,62 @@ TEST(MdlTest, readSdfData)
     "InChI=1S/C9H17NO4/c1-7(11)14-8(5-9(12)13)6-10(2,3)4/h8H,5-6H2,1-4H3/p+1");
   EXPECT_EQ(mol[1].data("PUBCHEM_OPENEYE_CAN_SMILES").toString(),
             "CC(=O)OC(CC(=O)O)C[N+](C)(C)C");
+}
+
+TEST(MdlTest, readV2000Valence)
+{
+  // Test that the vvv valence field in V2000 atom lines sets hybridization.
+  // The carbene_v2000.mol file has two carbene carbons (atoms 8, 15)
+  // with VAL=3, which should be interpreted as SP2 hybridization.
+  MdlFormat mdl;
+  Molecule molecule;
+  bool success = mdl.readFile(
+    std::string(AVOGADRO_DATA) + "/data/sdf/carbene_v2000.mol", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(mdl.error(), "");
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(27));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(29));
+
+  // Carbene carbons at indices 8 and 15 should have SP2 hybridization
+  Atom carbene1 = molecule.atom(8);
+  EXPECT_EQ(carbene1.atomicNumber(), static_cast<unsigned char>(6));
+  EXPECT_EQ(carbene1.hybridization(), SP2);
+
+  Atom carbene2 = molecule.atom(15);
+  EXPECT_EQ(carbene2.atomicNumber(), static_cast<unsigned char>(6));
+  EXPECT_EQ(carbene2.hybridization(), SP2);
+
+  // A normal carbon (e.g., atom 0) should not have hybridization set
+  Atom normalC = molecule.atom(0);
+  EXPECT_EQ(normalC.atomicNumber(), static_cast<unsigned char>(6));
+  EXPECT_EQ(normalC.hybridization(), Avogadro::Core::HybridizationUnknown);
+}
+
+TEST(MdlTest, readV3000Valence)
+{
+  // Test that the VAL= property in V3000 atom lines sets hybridization.
+  // The carbene_v3000.mol file has two carbene carbons (atoms 8, 15)
+  // with VAL=3, which should be interpreted as SP2 hybridization.
+  MdlFormat mdl;
+  Molecule molecule;
+  bool success = mdl.readFile(
+    std::string(AVOGADRO_DATA) + "/data/sdf/carbene_v3000.mol", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(mdl.error(), "");
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(27));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(29));
+
+  // Carbene carbons at indices 8 and 15 should have SP2 hybridization
+  Atom carbene1 = molecule.atom(8);
+  EXPECT_EQ(carbene1.atomicNumber(), static_cast<unsigned char>(6));
+  EXPECT_EQ(carbene1.hybridization(), SP2);
+
+  Atom carbene2 = molecule.atom(15);
+  EXPECT_EQ(carbene2.atomicNumber(), static_cast<unsigned char>(6));
+  EXPECT_EQ(carbene2.hybridization(), SP2);
+
+  // A normal carbon (e.g., atom 0) should not have hybridization set
+  Atom normalC = molecule.atom(0);
+  EXPECT_EQ(normalC.atomicNumber(), static_cast<unsigned char>(6));
+  EXPECT_EQ(normalC.hybridization(), Avogadro::Core::HybridizationUnknown);
 }
