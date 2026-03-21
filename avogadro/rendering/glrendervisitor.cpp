@@ -9,6 +9,7 @@
 #include "curvegeometry.h"
 #include "cylindergeometry.h"
 #include "linestripgeometry.h"
+#include "widelinegeometry.h"
 #include "meshgeometry.h"
 #include "spheregeometry.h"
 #include "textlabel2d.h"
@@ -79,6 +80,12 @@ void GLRenderVisitor::visit(TextLabel3D& geometry)
 }
 
 void GLRenderVisitor::visit(LineStripGeometry& geometry)
+{
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(WideLineGeometry& geometry)
 {
   if (geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);

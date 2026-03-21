@@ -50,6 +50,7 @@ avogadro_headers(Rendering
   vertexarrayobject.h
   visitor.h
   volumegeometry.h
+  widelinegeometry.h
   vrmlvisitor.h
 )
 
@@ -94,6 +95,7 @@ target_sources(Rendering PRIVATE
   visitor.cpp
   volumegeometry.cpp
   vrmlvisitor.cpp
+  widelinegeometry.cpp
   ambientocclusionspheregeometry.cpp
 )
 
@@ -113,6 +115,8 @@ set(shader_files
   "volume_box_vs.glsl"
   "volume_fs.glsl"
   "volume_vs.glsl"
+  "wideline_fs.glsl"
+  "wideline_vs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
   "sphere_ao_depth_vs.glsl"

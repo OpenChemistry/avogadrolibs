@@ -9,6 +9,7 @@
 #include "curvegeometry.h"
 #include "linestripgeometry.h"
 #include "spheregeometry.h"
+#include "widelinegeometry.h"
 
 namespace Avogadro::Rendering {
 
@@ -128,6 +129,38 @@ void GeometryVisitor::visit(LineStripGeometry& lsg)
     float distance = (vert.vertex - tmpCenter).squaredNorm();
     if (distance > tmpRadius)
       tmpRadius = distance;
+  }
+
+  m_centers.push_back(tmpCenter);
+  m_radii.push_back(std::sqrt(tmpRadius));
+}
+
+void GeometryVisitor::visit(WideLineGeometry& wlg)
+{
+  size_t numLines = wlg.lineCount();
+  if (numLines == 0)
+    return;
+
+  m_dirty = true;
+
+  // Each line segment has 4 vertices (2 endpoints x 2 sides).
+  // Only sample unique endpoints: indices 0 and 2 per quad.
+  const auto& verts = wlg.vertices();
+  Vector3f tmpCenter(Vector3f::Zero());
+  for (size_t i = 0; i < verts.size(); i += 4) {
+    tmpCenter += verts[i].position;
+    tmpCenter += verts[i + 2].position;
+  }
+  tmpCenter /= static_cast<float>(numLines * 2);
+
+  float tmpRadius(0.f);
+  for (size_t i = 0; i < verts.size(); i += 4) {
+    float d1 = (verts[i].position - tmpCenter).squaredNorm();
+    float d2 = (verts[i + 2].position - tmpCenter).squaredNorm();
+    if (d1 > tmpRadius)
+      tmpRadius = d1;
+    if (d2 > tmpRadius)
+      tmpRadius = d2;
   }
 
   m_centers.push_back(tmpCenter);

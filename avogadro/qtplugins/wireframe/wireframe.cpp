@@ -9,7 +9,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
-#include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/widelinegeometry.h>
 #include <avogadro/rendering/spheregeometry.h>
 
 #include <QtCore/QSettings>
@@ -28,8 +28,8 @@ using Core::Elements;
 using QtGui::PluginLayerManager;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
-using Rendering::LineStripGeometry;
 using Rendering::SphereGeometry;
+using Rendering::WideLineGeometry;
 
 struct LayerWireframe : Core::LayerData
 {
@@ -131,7 +131,7 @@ void Wireframe::process(const QtGui::Molecule& molecule,
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  auto* lines = new LineStripGeometry;
+  auto* lines = new WideLineGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
   // add tiny atom sites for selection
@@ -145,6 +145,7 @@ void Wireframe::process(const QtGui::Molecule& molecule,
   geometry->addDrawable(lines);
   geometry->addDrawable(atoms);
   geometry->addDrawable(selectedAtoms);
+  lines->reserve(molecule.bondCount());
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
     if (!m_layerManager.bondEnabled(bond.atom1().index(),
@@ -164,17 +165,12 @@ void Wireframe::process(const QtGui::Molecule& molecule,
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
     Vector3ub color1(Elements::color(bond.atom1().atomicNumber()));
     Vector3ub color2(Elements::color(bond.atom2().atomicNumber()));
-    Array<Vector3f> points;
-    Array<Vector3ub> colors;
-    points.push_back(pos1);
-    points.push_back(pos2);
-    colors.push_back(color1);
-    colors.push_back(color2);
     float lineWidth = interface1->lineWidth;
 
     if (interface1->multiBonds || interface2->multiBonds)
       lineWidth *= bond.order();
-    lines->addLineStrip(points, colors, lineWidth);
+    // Scale from the old pixel-based range (0.5-5.0) to world-space units
+    lines->addLine(pos1, pos2, color1, color2, lineWidth * 0.035f);
     // add small spheres to allow the selection tool to work
     // smaller than this gets ignored
     atoms->addSphere(pos1, color1, 0.001f, bond.atom1().index());
