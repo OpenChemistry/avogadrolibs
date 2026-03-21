@@ -12,7 +12,7 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
-#include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/widelinegeometry.h>
 #include <avogadro/rendering/volumegeometry.h>
 
 #include <QtCore/QDebug>
@@ -30,9 +30,9 @@ namespace Avogadro::QtPlugins {
 using Core::Mesh;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
-using Rendering::LineStripGeometry;
 using Rendering::MeshGeometry;
 using Rendering::VolumeGeometry;
+using Rendering::WideLineGeometry;
 
 SurfaceRender::SurfaceRender(QObject* p)
   : ScenePlugin(p), m_setupWidget(nullptr)
@@ -124,8 +124,10 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
                                               : Rendering::TranslucentPass);
       }
     } else if (m_style == SurfaceRender::Wireframe) {
-      auto* ls1 = new LineStripGeometry;
+      auto* ls1 = new WideLineGeometry;
       geometry->addDrawable(ls1);
+      // Thinner scale for surface wireframes (denser mesh than molecular bonds)
+      float width = m_lineWidth * 0.01f;
 
       if (hasColors) {
         auto colors = mesh->colors();
@@ -135,39 +137,39 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
             Vector3ub(static_cast<unsigned char>(colors[i].red() * 255),
                       static_cast<unsigned char>(colors[i].green() * 255),
                       static_cast<unsigned char>(colors[i].blue() * 255));
-        ls1->addLineStrip(mesh->vertices(), colorsRGB, m_lineWidth);
+        ls1->addLineStrip(mesh->vertices(), colorsRGB, width);
       } else {
         auto vertices = mesh->vertices();
+        Vector3ub color1(m_color1[0], m_color1[1], m_color1[2]);
+        ls1->reserve(triangles.size() * 3);
         for (size_t i = 0; i < triangles.size(); ++i) {
-          Core::Array<Vector3f> triangle(3);
-          triangle[0] = vertices[triangles[i][0]];
-          triangle[1] = vertices[triangles[i][1]];
-          triangle[2] = vertices[triangles[i][2]];
-
-          ls1->addLineStrip(triangle,
-                            Vector3ub(m_color1[0], m_color1[1], m_color1[2]),
-                            m_lineWidth);
+          Vector3f v0 = vertices[triangles[i][0]];
+          Vector3f v1 = vertices[triangles[i][1]];
+          Vector3f v2 = vertices[triangles[i][2]];
+          ls1->addLine(v0, v1, color1, width);
+          ls1->addLine(v1, v2, color1, width);
+          ls1->addLine(v2, v0, color1, width);
         }
       }
 
       // Handle the second mesh if present (only has single colors)
       if (mol.meshCount() >= 2) {
-        auto* mesh2 = new LineStripGeometry;
-        geometry->addDrawable(mesh2);
+        auto* mesh2Lines = new WideLineGeometry;
+        geometry->addDrawable(mesh2Lines);
 
         mesh = mol.mesh(1);
 
         auto vertices2 = mesh->vertices();
         triangles = mesh->triangles();
+        Vector3ub color2(m_color2[0], m_color2[1], m_color2[2]);
+        mesh2Lines->reserve(triangles.size() * 3);
         for (size_t i = 0; i < triangles.size(); ++i) {
-          Core::Array<Vector3f> triangle(3);
-          triangle[0] = vertices2[triangles[i][0]];
-          triangle[1] = vertices2[triangles[i][1]];
-          triangle[2] = vertices2[triangles[i][2]];
-
-          ls1->addLineStrip(triangle,
-                            Vector3ub(m_color2[0], m_color2[1], m_color2[2]),
-                            m_lineWidth);
+          Vector3f v0 = vertices2[triangles[i][0]];
+          Vector3f v1 = vertices2[triangles[i][1]];
+          Vector3f v2 = vertices2[triangles[i][2]];
+          mesh2Lines->addLine(v0, v1, color2, width);
+          mesh2Lines->addLine(v1, v2, color2, width);
+          mesh2Lines->addLine(v2, v0, color2, width);
         }
       }
     } // if style == Wireframe

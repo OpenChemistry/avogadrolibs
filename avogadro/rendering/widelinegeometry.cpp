@@ -20,6 +20,11 @@ namespace {
 #include "wideline_vs.h"
 } // namespace
 
+using Avogadro::Vector3f;
+using Avogadro::Vector3ub;
+using Avogadro::Vector4ub;
+using Avogadro::Core::Array;
+
 using std::cout;
 using std::endl;
 
@@ -129,6 +134,14 @@ void WideLineGeometry::update()
       cout << d->program.error() << endl;
     }
 
+    if (!d->program.enableAttributeArray("lineParam"))
+      cout << d->program.error() << endl;
+    if (!d->program.useAttributeArray(
+          "lineParam", PackedVertex::lineParamOffset(), sizeof(PackedVertex),
+          FloatType, 1, ShaderProgram::NoNormalize)) {
+      cout << d->program.error() << endl;
+    }
+
     d->vao.release();
 
     m_dirty = false;
@@ -189,10 +202,11 @@ void WideLineGeometry::addLine(const Vector3f& start, const Vector3f& end,
   Vector4ub rgba2(colorEnd[0], colorEnd[1], colorEnd[2], m_opacity);
 
   // Four vertices per line segment: 2 endpoints x 2 sides
-  m_vertices.emplace_back(start, end, rgba1, -halfWidth); // start, left
-  m_vertices.emplace_back(start, end, rgba1, halfWidth);  // start, right
-  m_vertices.emplace_back(end, start, rgba2, -halfWidth); // end, left
-  m_vertices.emplace_back(end, start, rgba2, halfWidth);  // end, right
+  // lineParam = 0 for solid lines (never triggers discard)
+  m_vertices.emplace_back(start, end, rgba1, -halfWidth, 0.0f);
+  m_vertices.emplace_back(start, end, rgba1, halfWidth, 0.0f);
+  m_vertices.emplace_back(end, start, rgba2, -halfWidth, 0.0f);
+  m_vertices.emplace_back(end, start, rgba2, halfWidth, 0.0f);
 
   // Two triangles forming a quad
   m_indices.push_back(baseIndex + 0);
@@ -210,6 +224,60 @@ void WideLineGeometry::addLine(const Vector3f& start, const Vector3f& end,
                                const Vector3ub& color, float lineWidth)
 {
   addLine(start, end, color, color, lineWidth);
+}
+
+void WideLineGeometry::addLineStrip(const Array<Vector3f>& vertices,
+                                    const Vector3ub& color, float lineWidth)
+{
+  if (vertices.size() < 2)
+    return;
+  for (size_t i = 0; i + 1 < vertices.size(); ++i)
+    addLine(vertices[i], vertices[i + 1], color, lineWidth);
+}
+
+void WideLineGeometry::addLineStrip(const Array<Vector3f>& vertices,
+                                    const Array<Vector3ub>& colors,
+                                    float lineWidth)
+{
+  if (vertices.size() < 2 || vertices.size() != colors.size())
+    return;
+  for (size_t i = 0; i + 1 < vertices.size(); ++i)
+    addLine(vertices[i], vertices[i + 1], colors[i], colors[i + 1], lineWidth);
+}
+
+void WideLineGeometry::addDashedLine(const Vector3f& start, const Vector3f& end,
+                                     const Vector3ub& color, float lineWidth,
+                                     int dashCount)
+{
+  if (dashCount <= 0)
+    return;
+
+  float halfWidth = lineWidth * 0.5f;
+  auto baseIndex = static_cast<unsigned int>(m_vertices.size());
+
+  Vector4ub rgba(color[0], color[1], color[2], m_opacity);
+
+  // lineParam goes from 0 at start to dashCount*2 at end.
+  // The fragment shader discards when mod(lineParam, 2.0) > 1.0,
+  // producing exactly dashCount dashes with gaps between them.
+  float paramEnd = static_cast<float>(dashCount * 2);
+
+  // Use a small epsilon so the very start is not discarded
+  m_vertices.emplace_back(start, end, rgba, -halfWidth, 0.01f);
+  m_vertices.emplace_back(start, end, rgba, halfWidth, 0.01f);
+
+  m_vertices.emplace_back(end, start, rgba, -halfWidth, paramEnd);
+  m_vertices.emplace_back(end, start, rgba, halfWidth, paramEnd);
+
+  m_indices.push_back(baseIndex + 0);
+  m_indices.push_back(baseIndex + 1);
+  m_indices.push_back(baseIndex + 2);
+
+  m_indices.push_back(baseIndex + 2);
+  m_indices.push_back(baseIndex + 1);
+  m_indices.push_back(baseIndex + 3);
+
+  m_dirty = true;
 }
 
 } // namespace Avogadro::Rendering

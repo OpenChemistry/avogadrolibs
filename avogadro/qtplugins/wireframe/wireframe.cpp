@@ -170,7 +170,8 @@ void Wireframe::process(const QtGui::Molecule& molecule,
     if (interface1->multiBonds || interface2->multiBonds)
       lineWidth *= bond.order();
     // Scale from the old pixel-based range (0.5-5.0) to world-space units
-    lines->addLine(pos1, pos2, color1, color2, lineWidth * 0.035f);
+    lines->addLine(pos1, pos2, color1, color2,
+                   lineWidth * WideLineGeometry::lineWidthScale);
     // add small spheres to allow the selection tool to work
     // smaller than this gets ignored
     atoms->addSphere(pos1, color1, 0.001f, bond.atom1().index());

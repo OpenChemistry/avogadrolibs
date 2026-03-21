@@ -5,13 +5,12 @@
 
 #include "crystalscene.h"
 
-#include <avogadro/core/array.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/colorbutton.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
-#include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/widelinegeometry.h>
 
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
@@ -23,11 +22,10 @@
 
 namespace Avogadro::QtPlugins {
 
-using Core::Array;
 using Core::UnitCell;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
-using Rendering::LineStripGeometry;
+using Rendering::WideLineGeometry;
 
 const Vector3ub red = { 255, 0, 0 };
 const Vector3ub green = { 0, 255, 0 };
@@ -56,11 +54,12 @@ void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
   if (const UnitCell* cell = molecule.unitCell()) {
     auto* geometry = new GeometryNode;
     node.addChild(geometry);
-    auto* lines = new LineStripGeometry;
+    auto* lines = new WideLineGeometry;
     geometry->addDrawable(lines);
     lines->setColor(m_color);
     auto color = m_color;
-    float width = m_lineWidth;
+    // Scale from old pixel-based range to world-space units
+    float width = m_lineWidth * WideLineGeometry::lineWidthScale;
 
     Vector3f a = cell->aVector().cast<float>();
     Vector3f b = cell->bVector().cast<float>();
@@ -68,62 +67,35 @@ void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
 
     Vector3f vertex(Vector3f::Zero());
 
-    Array<Vector3f> strip;
-    // draw the a axis
-    strip.reserve(5);
-    strip.push_back(vertex);
-    strip.push_back(vertex + a);
-    if (!m_multiColor)
-      lines->addLineStrip(strip, color, width);
-    else // a axis is R-G-B
-      lines->addLineStrip(strip, red, width);
+    // 12 edges of the unit cell parallelepiped
+    lines->reserve(12);
 
-    // now the b-axis
-    strip.clear();
-    strip.push_back(vertex);
-    strip.push_back(vertex + b);
-    if (!m_multiColor)
-      lines->addLineStrip(strip, color, width);
-    else // b axis is R-G-B
-      lines->addLineStrip(strip, green, width);
+    // a axis
+    Vector3ub aColor = m_multiColor ? red : color;
+    lines->addLine(vertex, vertex + a, aColor, width);
 
-    // now the rest of the ab plane
-    strip.clear();
-    strip.push_back(vertex + a);
-    strip.push_back(vertex + a + b);
-    strip.push_back(vertex + b);
-    lines->addLineStrip(strip, width);
+    // b axis
+    Vector3ub bColor = m_multiColor ? green : color;
+    lines->addLine(vertex, vertex + b, bColor, width);
 
-    // now the ab plane "up" by axis c
-    strip.clear();
-    strip.push_back(vertex + c);
-    strip.push_back(vertex + a + c);
-    strip.push_back(vertex + a + b + c);
-    strip.push_back(vertex + b + c);
-    strip.push_back(vertex + c);
-    lines->addLineStrip(strip, width);
+    // rest of ab plane
+    lines->addLine(vertex + a, vertex + a + b, color, width);
+    lines->addLine(vertex + a + b, vertex + b, color, width);
 
-    // now the c axis
-    strip.resize(2);
-    strip[0] = Vector3f::Zero();
-    strip[1] = c;
-    if (!m_multiColor)
-      lines->addLineStrip(strip, color, width);
-    else // c axis is R-G-B
-      lines->addLineStrip(strip, blue, width);
+    // ab plane translated by c
+    lines->addLine(vertex + c, vertex + a + c, color, width);
+    lines->addLine(vertex + a + c, vertex + a + b + c, color, width);
+    lines->addLine(vertex + a + b + c, vertex + b + c, color, width);
+    lines->addLine(vertex + b + c, vertex + c, color, width);
 
-    // now the remaining "struts" from ab plane along c axis
-    strip[0] += a;
-    strip[1] += a;
-    lines->addLineStrip(strip, width);
+    // c axis
+    Vector3ub cColor = m_multiColor ? blue : color;
+    lines->addLine(vertex, vertex + c, cColor, width);
 
-    strip[0] += b;
-    strip[1] += b;
-    lines->addLineStrip(strip, width);
-
-    strip[0] -= a;
-    strip[1] -= a;
-    lines->addLineStrip(strip, width);
+    // remaining struts along c
+    lines->addLine(vertex + a, vertex + a + c, color, width);
+    lines->addLine(vertex + a + b, vertex + a + b + c, color, width);
+    lines->addLine(vertex + b, vertex + b + c, color, width);
   }
 }
 

@@ -12,7 +12,7 @@
 #include <avogadro/core/neighborperceiver.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/rendering/dashedlinegeometry.h>
+#include <avogadro/rendering/widelinegeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 
@@ -31,8 +31,8 @@ using Core::Bond;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
 using QtGui::PluginLayerManager;
-using Rendering::DashedLineGeometry;
 using Rendering::GeometryNode;
+using Rendering::WideLineGeometry;
 
 CloseContacts::CloseContacts(QObject* p) : ScenePlugin(p)
 {
@@ -120,12 +120,11 @@ void CloseContacts::process(const Molecule& molecule,
 
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
-  std::array<DashedLineGeometry*, 3> lineGroups;
+  std::array<WideLineGeometry*, 3> lineGroups;
   for (Index type = 0; type < 3; type++) {
-    lineGroups[type] = new DashedLineGeometry;
+    lineGroups[type] = new WideLineGeometry;
     lineGroups[type]->identifier().molecule = &molecule;
     lineGroups[type]->identifier().type = Rendering::BondType;
-    lineGroups[type]->setLineWidth(m_lineWidths[type]);
     geometry->addDrawable(lineGroups[type]);
   }
 
@@ -146,8 +145,9 @@ void CloseContacts::process(const Molecule& molecule,
       Vector3 npos = molecule.atomPosition3d(n);
       double distance = (npos - pos).norm();
       if (distance < m_maximumDistances[0])
-        lineGroups[0]->addDashedLine(pos.cast<float>(), npos.cast<float>(),
-                                     m_lineColors[0], 8);
+        lineGroups[0]->addDashedLine(
+          pos.cast<float>(), npos.cast<float>(), m_lineColors[0],
+          m_lineWidths[0] * WideLineGeometry::lineWidthScale, 8);
     }
   }
 
@@ -209,11 +209,13 @@ void CloseContacts::process(const Molecule& molecule,
       double distance = (npos - pos).norm();
 
       if (charges[i] * charges[n] > 0.0 && distance < m_maximumDistances[2])
-        lineGroups[2]->addDashedLine(pos.cast<float>(), npos.cast<float>(),
-                                     m_lineColors[2], 8);
+        lineGroups[2]->addDashedLine(
+          pos.cast<float>(), npos.cast<float>(), m_lineColors[2],
+          m_lineWidths[2] * WideLineGeometry::lineWidthScale, 8);
       else if (distance < m_maximumDistances[1])
-        lineGroups[1]->addDashedLine(pos.cast<float>(), npos.cast<float>(),
-                                     m_lineColors[1], 8);
+        lineGroups[1]->addDashedLine(
+          pos.cast<float>(), npos.cast<float>(), m_lineColors[1],
+          m_lineWidths[1] * WideLineGeometry::lineWidthScale, 8);
     }
   }
 }

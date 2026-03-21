@@ -12,7 +12,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/neighborperceiver.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/rendering/dashedlinegeometry.h>
+#include <avogadro/rendering/widelinegeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 
@@ -42,9 +42,9 @@ using Core::Elements;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
 using QtGui::PluginLayerManager;
-using Rendering::DashedLineGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
+using Rendering::WideLineGeometry;
 
 NonCovalent::NonCovalent(QObject* p) : ScenePlugin(p)
 {
@@ -312,12 +312,11 @@ void NonCovalent::process(const Molecule& molecule, Rendering::GroupNode& node)
 
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
-  std::array<DashedLineGeometry*, 3> lineGroups;
+  std::array<WideLineGeometry*, 3> lineGroups;
   for (Index type = 0; type < 3; type++) {
-    lineGroups[type] = new DashedLineGeometry;
+    lineGroups[type] = new WideLineGeometry;
     lineGroups[type]->identifier().molecule = &molecule;
     lineGroups[type]->identifier().type = Rendering::BondType;
-    lineGroups[type]->setLineWidth(m_lineWidths[type]);
     geometry->addDrawable(lineGroups[type]);
   }
   Array<Index> neighbors;
@@ -352,7 +351,7 @@ void NonCovalent::process(const Molecule& molecule, Rendering::GroupNode& node)
 
       lineGroups[interactionType]->addDashedLine(
         pos.cast<float>(), npos.cast<float>(), m_lineColors[interactionType],
-        8);
+        m_lineWidths[interactionType] * WideLineGeometry::lineWidthScale, 8);
     }
   }
 }

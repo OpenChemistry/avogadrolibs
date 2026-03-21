@@ -8,6 +8,8 @@
 
 #include "drawable.h"
 
+#include <avogadro/core/array.h>
+
 #include <vector>
 
 namespace Avogadro {
@@ -22,6 +24,9 @@ namespace Rendering {
  * renders each line segment as a quad (two triangles) whose width is computed
  * in the vertex shader, producing correct wide lines on all platforms.
  *
+ * Supports both solid and dashed lines. Dashing is implemented in the fragment
+ * shader using a per-vertex lineParam attribute — no extra geometry is needed.
+ *
  * Width is specified in world-space units.
  */
 
@@ -29,16 +34,17 @@ class AVOGADRORENDERING_EXPORT WideLineGeometry : public Drawable
 {
 public:
   struct PackedVertex
-  {                    // 32 bytes total:
+  {                    // 36 bytes total:
     Vector3f position; // 12 bytes - this endpoint
     Vector3f otherEnd; // 12 bytes - the other endpoint
     Vector4ub color;   //  4 bytes - RGBA
     float widthSide;   //  4 bytes - half-width * side (+1 or -1)
+    float lineParam;   //  4 bytes - dash parameter (0 = solid)
 
     PackedVertex() = default;
     PackedVertex(const Vector3f& pos, const Vector3f& other, const Vector4ub& c,
-                 float ws)
-      : position(pos), otherEnd(other), color(c), widthSide(ws)
+                 float ws, float lp = 0.0f)
+      : position(pos), otherEnd(other), color(c), widthSide(ws), lineParam(lp)
     {
     }
 
@@ -49,7 +55,15 @@ public:
     {
       return static_cast<int>(2 * sizeof(Vector3f) + sizeof(Vector4ub));
     }
+    static int lineParamOffset()
+    {
+      return static_cast<int>(2 * sizeof(Vector3f) + sizeof(Vector4ub) +
+                              sizeof(float));
+    }
   };
+
+  /** Scale factor converting legacy pixel-based widths to world-space units. */
+  static constexpr float lineWidthScale = 0.035f;
 
   WideLineGeometry();
   WideLineGeometry(const WideLineGeometry& other);
@@ -75,7 +89,7 @@ public:
   void clear() override;
 
   /**
-   * Add a single line segment.
+   * Add a single solid line segment.
    * @param start Start position of the line segment.
    * @param end End position of the line segment.
    * @param colorStart Color at the start.
@@ -87,10 +101,37 @@ public:
                float lineWidth);
 
   /**
-   * Add a single line segment with a uniform color.
+   * Add a single solid line segment with a uniform color.
    */
   void addLine(const Vector3f& start, const Vector3f& end,
                const Vector3ub& color, float lineWidth);
+
+  /**
+   * Add a connected strip of line segments from consecutive vertices.
+   * Each adjacent pair of vertices becomes one line segment.
+   * @param vertices The vertices forming the line strip.
+   * @param color Uniform color for the strip.
+   * @param lineWidth Width of the lines in world-space units.
+   */
+  void addLineStrip(const Core::Array<Vector3f>& vertices,
+                    const Vector3ub& color, float lineWidth);
+
+  /**
+   * Add a connected strip with per-vertex colors.
+   */
+  void addLineStrip(const Core::Array<Vector3f>& vertices,
+                    const Core::Array<Vector3ub>& colors, float lineWidth);
+
+  /**
+   * Add a dashed line segment.
+   * @param start Start position.
+   * @param end End position.
+   * @param color Line color.
+   * @param lineWidth Width in world-space units.
+   * @param dashCount Number of dashes.
+   */
+  void addDashedLine(const Vector3f& start, const Vector3f& end,
+                     const Vector3ub& color, float lineWidth, int dashCount);
 
   /**
    * The default color of the lines.
