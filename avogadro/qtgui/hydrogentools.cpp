@@ -46,7 +46,20 @@ inline unsigned int lookupValency(const RWAtom& atom,
                                   unsigned int numExistingBonds)
 {
   signed char charge = atom.formalCharge();
-  return atomValence(atom.atomicNumber(), charge, numExistingBonds);
+  unsigned int defaultVal =
+    atomValence(atom.atomicNumber(), charge, numExistingBonds);
+
+  // If hybridization is explicitly set (positive values, not perceived),
+  // cap the valence at the number of bonding orbitals implied by it.
+  // e.g., an sp2 carbon has max 3 bonds, not the default 4.
+  auto hyb = atom.hybridization();
+  if (hyb > 0) {
+    unsigned int maxFromHyb = static_cast<unsigned int>(hyb) + 1;
+    if (maxFromHyb < defaultVal)
+      return maxFromHyb;
+  }
+
+  return defaultVal;
 }
 
 inline float hydrogenBondDistance(unsigned char otherAtomicNumber)
