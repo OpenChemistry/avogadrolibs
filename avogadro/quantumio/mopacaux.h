@@ -66,7 +66,7 @@ private:
   int m_electrons;
   int m_charge = 0;
   int m_spin = 1;
-  Vector3 m_dipoleMoment;
+  Vector3 m_dipoleMoment = Vector3::Zero();
   std::vector<double> m_partialCharges;
   double m_heatOfFormation;
   double m_area;

@@ -301,7 +301,7 @@ void Graph::removeEdge(size_t a, size_t b)
             neighborsB.back());
   neighborsB.pop_back();
 
-  size_t edgeIndex;
+  size_t edgeIndex = 0;
   for (size_t i = 0; i < m_edgeMap[a].size(); i++) {
     edgeIndex = m_edgeMap[a][i];
     const std::pair<size_t, size_t>& pair = m_edgePairs[edgeIndex];
@@ -403,7 +403,7 @@ void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
 {
   // Find the 4 endpoints of both edges.
   const std::pair<size_t, size_t>& pair1 = m_edgePairs[edgeIndex1];
-  std::array<size_t*, 2> changeTo2;
+  std::array<size_t*, 2> changeTo2 = { nullptr, nullptr };
   // NOLINTBEGIN(*)
   for (size_t i = 0; i < m_edgeMap[pair1.first].size(); i++) {
     if (m_edgeMap[pair1.first][i] == edgeIndex1) {
@@ -416,7 +416,7 @@ void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
     }
   }
   const std::pair<size_t, size_t>& pair2 = m_edgePairs[edgeIndex2];
-  std::array<size_t*, 2> changeTo1;
+  std::array<size_t*, 2> changeTo1 = { nullptr, nullptr };
   for (size_t i = 0; i < m_edgeMap[pair2.first].size(); i++) {
     if (m_edgeMap[pair2.first][i] == edgeIndex2) {
       changeTo1[0] = &m_edgeMap[pair2.first][i];
@@ -432,10 +432,14 @@ void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
   /*
   Swap m_edgeMap values only after reading everything, to avoid race condition.
   */
-  *changeTo2[0] = edgeIndex2;
-  *changeTo2[1] = edgeIndex2;
-  *changeTo1[0] = edgeIndex1;
-  *changeTo1[1] = edgeIndex1;
+  if (changeTo2[0] && changeTo2[1]) {
+    *changeTo2[0] = edgeIndex2;
+    *changeTo2[1] = edgeIndex2;
+  }
+  if (changeTo1[0] && changeTo1[1]) {
+    *changeTo1[0] = edgeIndex1;
+    *changeTo1[1] = edgeIndex1;
+  }
 
   std::swap(m_edgePairs[edgeIndex1], m_edgePairs[edgeIndex2]);
 }

@@ -14,10 +14,8 @@ Array<Vector3> internalToCartesian(
   const Molecule& molecule, const Array<InternalCoordinate>& internalCoords)
 {
   Array<Vector3> coords(molecule.atomCount());
-  Vector3 ab;
-  Vector3 bc;
-  Vector3 n;
-  Matrix3 m;
+  Vector3 ab(0.0, 0.0, 0.0);
+  Vector3 bc(0.0, 0.0, 0.0);
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Real sinTheta, cosTheta, sinPhi, cosPhi;
@@ -113,9 +111,7 @@ Array<Vector3> internalToCartesian(
 
         // Build rotation matrix with columns [ab, n_perp, n]
         Matrix3 m;
-        m.col(0) = ab;
-        m.col(1) = n_perp;
-        m.col(2) = n;
+        m << ab, n_perp, n;
 
         // Transform to global coordinates and translate to atom a
         coords[i] = m * localPos + coords[a];
