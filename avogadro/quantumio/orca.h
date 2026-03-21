@@ -67,7 +67,7 @@ private:
   std::vector<std::vector<Eigen::Vector3d>> m_coordSets;
   std::vector<double> m_energies;
 
-  Vector3 m_dipoleMoment;
+  Vector3 m_dipoleMoment = Vector3::Zero();
 
   std::vector<std::vector<int>> m_bondOrders;
 

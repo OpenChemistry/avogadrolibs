@@ -66,8 +66,8 @@ protected:
   float m_maxDistance;
   std::array<int, 3> m_binCount;
   std::vector<std::vector<std::vector<std::vector<Index>>>> m_bins;
-  Vector3 m_minPos;
-  Vector3 m_maxPos;
+  Vector3 m_minPos = Vector3::Zero();
+  Vector3 m_maxPos = Vector3::Zero();
   mutable Array<Index>* m_cachedArray;
   mutable std::array<int, 3> m_cachedIndex;
 };
