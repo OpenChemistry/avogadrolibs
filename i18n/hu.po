@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-14 17:31+0000\n"
-"PO-Revision-Date: 2026-03-20 12:12+0000\n"
+"PO-Revision-Date: 2026-03-22 13:59+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -2041,7 +2041,7 @@ msgstr "Cividis"
 #: qtplugins/surfaces/surfaces.cpp:811:183 rc.cpp:1997
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Kísérteties"
+msgstr "Spektrális"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -4164,7 +4164,7 @@ msgstr "A jelenet nagyítása."
 
 #: qtplugins/navigator/navigator.cpp:65
 msgid "Translate the scene."
-msgstr "Jelenet mozgassa."
+msgstr "Jelenet áthelyezése."
 
 #: qtplugins/navigator/navigator.cpp:106
 msgid "Reverse Direction of Zoom on Scroll"
@@ -4838,7 +4838,7 @@ msgstr "Lejátszó"
 #: qtplugins/playertool/playertool.cpp:53
 #, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr ""
+msgstr "Élénkség eszköz (%1)"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
@@ -5654,7 +5654,7 @@ msgstr "Egységsejt kitöltése…"
 #: qtplugins/spacegroup/spacegroup.cpp:101
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
-msgstr ""
+msgstr "Áthelyezési cella kitöltése…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
@@ -5666,7 +5666,7 @@ msgstr "Szimmetrikus atomok kitöltése a kristálytércsoport alapján."
 
 #: qtplugins/spacegroup/spacegroup.cpp:135
 msgid "Fill all atoms based on the crystal space group."
-msgstr ""
+msgstr "Az összes atom kitöltése a kristálytércsoport alapján."
 
 #: qtplugins/spacegroup/spacegroup.cpp:384
 #: qtplugins/spacegroup/spacegroup.cpp:412
@@ -5799,7 +5799,7 @@ msgstr "Kocka alakú"
 
 #: qtplugins/spacegroup/spacegroup.cpp:646
 msgid "Primitive Cell Detected"
-msgstr ""
+msgstr "Egyszerű sejt észlelve"
 
 #: qtplugins/spacegroup/spacegroup.cpp:648
 #, qt-format
@@ -5814,7 +5814,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:662
 msgid "Failed to conventionalize the cell."
-msgstr ""
+msgstr "A cella hagyományosítása nem sikerült."
 
 #: qtplugins/spacegroup/spacegroup.cpp:678
 msgid "International"
@@ -5830,7 +5830,7 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:679
 msgid "Crystal System"
-msgstr ""
+msgstr "Kristályrendszer"
 
 #: qtplugins/spacegroup/spacegroup.cpp:711
 msgid "Select Space Group"
@@ -5869,12 +5869,12 @@ msgstr "Raman"
 #: qtplugins/spectra/spectradialog.cpp:574
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "VCD (Vibrational circular dichroism – Rezgési körkörös dikroizmus)"
 
 #: qtplugins/spectra/spectradialog.cpp:578
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "MCD (Magnetic circular dichroism – Mágneses körkörös dikroizmus)"
 
 #: qtplugins/spectra/spectradialog.cpp:582
 msgid "NMR"
@@ -5907,7 +5907,7 @@ msgstr "Számított spektrum színének kijelölése"
 
 #: qtplugins/spectra/spectradialog.cpp:685
 msgid "Select Raw Spectra Color"
-msgstr ""
+msgstr "Nyers spektrumok színének kijelölése"
 
 #: qtplugins/spectra/spectradialog.cpp:698
 msgid "Select Imported Spectra Color"
@@ -5915,11 +5915,11 @@ msgstr "Importált spektrum színének kijelölése"
 
 #: qtplugins/spectra/spectradialog.cpp:744
 msgid "Wavelength (nm)"
-msgstr ""
+msgstr "Hullámhossz (nm)"
 
 #: qtplugins/spectra/spectradialog.cpp:745
 msgid "Frequency (Hz)"
-msgstr ""
+msgstr "Frekvencia (Hz)"
 
 #: qtplugins/spectra/spectradialog.cpp:751
 msgid "Vibrational Spectra"
@@ -5951,11 +5951,11 @@ msgstr "Erősség"
 
 #: qtplugins/spectra/spectradialog.cpp:778
 msgid "Vibrational Circular Dichroism"
-msgstr ""
+msgstr "Rezgési körkörös dikroizmus"
 
 #: qtplugins/spectra/spectradialog.cpp:791
 msgid "Magnetic Circular Dichroism"
-msgstr ""
+msgstr "Mágneses körkörös dikroizmus"
 
 #: qtplugins/spectra/spectradialog.cpp:804
 msgid "NMR Spectra"
@@ -5988,27 +5988,27 @@ msgstr "Sűrűség"
 
 #: qtplugins/spectra/spectradialog.cpp:965
 msgid "Smoothed"
-msgstr ""
+msgstr "Simított"
 
 #: qtplugins/spectra/spectradialog.cpp:974
 msgid "Raw"
-msgstr ""
+msgstr "Nyers"
 
 #: qtplugins/spectra/spectradialog.cpp:985
 msgid "Imported"
-msgstr ""
+msgstr "Importált"
 
 #: qtplugins/spectra/spectradialog.cpp:1021
 msgid "Import Data"
-msgstr ""
+msgstr "Adatok importálása"
 
 #: qtplugins/spectra/spectradialog.cpp:1021
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
-msgstr ""
+msgstr "CSV-fájlok (*.csv);;TSV-fájlok (*.tsv)"
 
 #: qtplugins/surfacerender/surfacerender.cpp:270
 msgid "Surface"
-msgstr ""
+msgstr "Felület"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
@@ -6018,11 +6018,11 @@ msgstr "Térfogat"
 
 #: qtplugins/surfacerender/surfacerender.cpp:275
 msgid "Style:"
-msgstr ""
+msgstr "Stílus:"
 
 #: qtplugins/surfacerender/surfacerender.h:33
 msgid "Render molecular surfaces."
-msgstr ""
+msgstr "Molekuláris felületek megjelenítése."
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
@@ -6286,11 +6286,11 @@ msgstr "Van der Waals gömbök egyszerű megjelenítése."
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: qtplugins/vibrations/vibrationdialog.cpp:39:2250
 msgid "Start Animation"
-msgstr "Animáció indítása"
+msgstr "Élénkség indítása"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:40
 msgid "Stop Animation"
-msgstr "Animáció leállítása"
+msgstr "Élénkség leállítása"
 
 #: qtplugins/vibrations/vibrations.cpp:27
 msgid "Vibrational Modes…"
@@ -6310,11 +6310,11 @@ msgstr "Rezgési amplitúdó beállítása."
 
 #: qtplugins/vibrations/vibrations.cpp:95
 msgid "Start the vibrational animation."
-msgstr "Rezgés-animáció indítása."
+msgstr "Rezgés-élénkség indítása."
 
 #: qtplugins/vibrations/vibrations.cpp:97
 msgid "Stop the vibrational animation."
-msgstr "Rezgés-animáció leállítása."
+msgstr "Rezgés-élénkség leállítása."
 
 #: qtplugins/vibrations/vibrations.h:33
 msgid "Vibrations"
