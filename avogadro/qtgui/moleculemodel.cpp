@@ -8,6 +8,7 @@
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
+#include <QtGui/QFont>
 #include <QtGui/QIcon>
 #include <QtGui/QPalette>
 
@@ -142,13 +143,13 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
         return tr("Not saved");
       case Qt::WhatsThisRole:
         return mol->formula().c_str();
-      case Qt::ForegroundRole:
-        if (mol == m_activeMolecule)
-          return QVariant(QColor(Qt::red));
-        else {
-          const QPalette defaultPalette;
-          return QVariant(defaultPalette.color(QPalette::WindowText));
+      case Qt::FontRole:
+        if (mol == m_activeMolecule) {
+          QFont font;
+          font.setBold(true);
+          return font;
         }
+        return QVariant();
       default:
         return QVariant();
     }
