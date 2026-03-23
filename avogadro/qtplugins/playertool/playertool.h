@@ -42,6 +42,7 @@ public:
   QUndoCommand* mousePressEvent(QMouseEvent* e) override;
   QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
   QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
+  QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
 public slots:
   void setMolecule(QtGui::Molecule*) override;
