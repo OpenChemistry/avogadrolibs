@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-18 15:09+0000\n"
+"PO-Revision-Date: 2026-03-23 20:09+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -1543,7 +1543,7 @@ msgstr "Fill Unit Cell"
 
 #: qtgui/rwmolecule.cpp:786
 msgid "Fill Translational Copies"
-msgstr ""
+msgstr "Fill Translational Copies"
 
 #: qtgui/rwmolecule.cpp:806
 msgid "Reduce Cell to Asymmetric Unit"
