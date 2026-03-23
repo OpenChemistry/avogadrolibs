@@ -218,12 +218,14 @@ QUndoCommand* PlayerTool::keyPressEvent(QKeyEvent* e)
       break;
     case Qt::Key_Up:
       // go to first frame
-      animate(m_firstFrameIdx->value() - 1 - m_currentFrame);
+      if (m_firstFrameIdx)
+        animate(m_firstFrameIdx->value() - 1 - m_currentFrame);
       e->accept();
       break;
     case Qt::Key_Down:
       // go to last frame
-      animate(m_lastFrameIdx->value() - 1 - m_currentFrame);
+      if (m_lastFrameIdx)
+        animate(m_lastFrameIdx->value() - 1 - m_currentFrame);
       e->accept();
       break;
     default:
