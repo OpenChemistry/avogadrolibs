@@ -109,8 +109,10 @@ void PlotConformer::clicked(float x, float y, Qt::KeyboardModifiers modifiers)
     conformer = 0;
   if (conformer >= m_molecule->coordinate3dCount())
     conformer = m_molecule->coordinate3dCount() - 1;
+  m_currentFrame = conformer;
   m_molecule->setCoordinate3d(conformer);
   m_molecule->emitChanged(Molecule::Atoms);
+  updatePlot();
 }
 
 void PlotConformer::displayDialog()
@@ -239,6 +241,15 @@ void PlotConformer::updatePlot()
   m_chartWidget->setShowPoints(true);
   m_chartWidget->setLegendLocation(QtGui::ChartWidget::LegendLocation::None);
   m_chartWidget->addPlot(xData, yData, QtGui::color4ub{ 255, 0, 0, 255 });
+
+  // Add a marker for the current frame
+  if (m_currentFrame >= 0 && m_currentFrame < static_cast<int>(xData.size())) {
+    DataSeries markerX = { xData[m_currentFrame] };
+    DataSeries markerY = { yData[m_currentFrame] };
+    m_chartWidget->addPlot(markerX, markerY,
+                           QtGui::color4ub{ 255, 165, 0, 255 });
+  }
+
   // make sure to pad the axes slightly
   m_chartWidget->setXAxisLimits(
     -0.1, static_cast<float>(m_molecule->coordinate3dCount()) - 0.9);
