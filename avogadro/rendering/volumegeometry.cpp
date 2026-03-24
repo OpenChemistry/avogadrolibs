@@ -517,6 +517,12 @@ void VolumeGeometry::render(const Camera& camera)
 {
   if (!m_cube)
     return;
+
+  // Capture the default FBO before initialize() which may change it
+  // (resizeFBO creates new framebuffers and unbinds to FBO 0, losing
+  // the Qt widget's actual default FBO)
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
+
   if (m_dirty)
     initialize();
 
@@ -528,8 +534,6 @@ void VolumeGeometry::render(const Camera& camera)
     m_dirty = true;
     initialize();
   }
-
-  glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
 
   // Get cube bounds in world space
   Eigen::Vector3f boxMin = m_cube->min().cast<float>();
