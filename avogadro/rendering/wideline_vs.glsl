@@ -36,7 +36,10 @@ void main()
     offset = vec3(widthSide, 0.0, 0.0);
   }
 
-  viewPos.xyz += offset;
+  // Extend the endpoint outward by halfWidth for a square cap.
+  // This fills gaps at corners where two wide lines meet.
+  float halfWidth = abs(widthSide);
+  viewPos.xyz += offset - lineDir * halfWidth;
 
   gl_Position = projection * viewPos;
   outColor = color;
