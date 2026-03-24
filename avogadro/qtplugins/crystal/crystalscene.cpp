@@ -8,9 +8,10 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/colorbutton.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
-#include <avogadro/rendering/widelinegeometry.h>
+#include <avogadro/rendering/spheregeometry.h>
 
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
@@ -23,9 +24,10 @@
 namespace Avogadro::QtPlugins {
 
 using Core::UnitCell;
+using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
-using Rendering::WideLineGeometry;
+using Rendering::SphereGeometry;
 
 const Vector3ub red = { 255, 0, 0 };
 const Vector3ub green = { 0, 255, 0 };
@@ -54,48 +56,47 @@ void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
   if (const UnitCell* cell = molecule.unitCell()) {
     auto* geometry = new GeometryNode;
     node.addChild(geometry);
-    auto* lines = new WideLineGeometry;
-    geometry->addDrawable(lines);
-    lines->setColor(m_color);
+
+    auto* cylinders = new CylinderGeometry;
+    geometry->addDrawable(cylinders);
+    auto* spheres = new SphereGeometry;
+    geometry->addDrawable(spheres);
+
     auto color = m_color;
-    // Scale from old pixel-based range to world-space units
-    float width = m_lineWidth * WideLineGeometry::lineWidthScale;
+    float radius = static_cast<float>(m_lineWidth) * 0.0125f;
 
     Vector3f a = cell->aVector().cast<float>();
     Vector3f b = cell->bVector().cast<float>();
     Vector3f c = cell->cVector().cast<float>();
 
-    Vector3f vertex(Vector3f::Zero());
+    Vector3f o(Vector3f::Zero());
 
-    // 12 edges of the unit cell parallelepiped
-    lines->reserve(12);
+    // 8 corner spheres
+    Vector3f corners[8] = { o,     o + a,     o + b,     o + a + b,
+                            o + c, o + a + c, o + b + c, o + a + b + c };
+    for (const auto& corner : corners)
+      spheres->addSphere(corner, color, radius);
 
-    // a axis
+    // a-axis edges
     Vector3ub aColor = m_multiColor ? red : color;
-    lines->addLine(vertex, vertex + a, aColor, width);
+    cylinders->addCylinder(o, o + a, radius, aColor);
+    cylinders->addCylinder(o + c, o + a + c, radius, color);
+    cylinders->addCylinder(o + b, o + a + b, radius, color);
+    cylinders->addCylinder(o + b + c, o + a + b + c, radius, color);
 
-    // b axis
+    // b-axis edges
     Vector3ub bColor = m_multiColor ? green : color;
-    lines->addLine(vertex, vertex + b, bColor, width);
+    cylinders->addCylinder(o, o + b, radius, bColor);
+    cylinders->addCylinder(o + c, o + b + c, radius, color);
+    cylinders->addCylinder(o + a, o + a + b, radius, color);
+    cylinders->addCylinder(o + a + c, o + a + b + c, radius, color);
 
-    // rest of ab plane
-    lines->addLine(vertex + a, vertex + a + b, color, width);
-    lines->addLine(vertex + a + b, vertex + b, color, width);
-
-    // ab plane translated by c
-    lines->addLine(vertex + c, vertex + a + c, color, width);
-    lines->addLine(vertex + a + c, vertex + a + b + c, color, width);
-    lines->addLine(vertex + a + b + c, vertex + b + c, color, width);
-    lines->addLine(vertex + b + c, vertex + c, color, width);
-
-    // c axis
+    // c-axis edges
     Vector3ub cColor = m_multiColor ? blue : color;
-    lines->addLine(vertex, vertex + c, cColor, width);
-
-    // remaining struts along c
-    lines->addLine(vertex + a, vertex + a + c, color, width);
-    lines->addLine(vertex + a + b, vertex + a + b + c, color, width);
-    lines->addLine(vertex + b, vertex + b + c, color, width);
+    cylinders->addCylinder(o, o + c, radius, cColor);
+    cylinders->addCylinder(o + a, o + a + c, radius, color);
+    cylinders->addCylinder(o + b, o + b + c, radius, color);
+    cylinders->addCylinder(o + a + b, o + a + b + c, radius, color);
   }
 }
 
