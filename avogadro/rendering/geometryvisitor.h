@@ -46,6 +46,7 @@ public:
   void visit(TextLabel2D&) override { return; }
   void visit(TextLabel3D&) override { return; }
   void visit(LineStripGeometry&) override;
+  void visit(WideLineGeometry&) override;
 
   /**
    * Clear the state of the visitor.

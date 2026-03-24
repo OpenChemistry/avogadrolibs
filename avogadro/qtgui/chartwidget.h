@@ -211,6 +211,9 @@ public:
    */
   void setShowPoints(bool visible) { m_showPoints = visible; }
 
+protected:
+  void changeEvent(QEvent* event) override;
+
 signals:
   /**
    * @brief Emitted when the user single-clicks on the chart

@@ -17,6 +17,7 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QProcess>
 #include <QtGui/QIcon>
+#include <QtGui/QKeyEvent>
 #include <QtGui/QScreen>
 #include <QtGui/QWindow>
 #include <QtWidgets/QApplication>
@@ -188,6 +189,49 @@ QUndoCommand* PlayerTool::mouseReleaseEvent(QMouseEvent*)
 
 QUndoCommand* PlayerTool::mouseDoubleClickEvent(QMouseEvent*)
 {
+  return nullptr;
+}
+
+QUndoCommand* PlayerTool::keyPressEvent(QKeyEvent* e)
+{
+  switch (e->key()) {
+    case Qt::Key_Space:
+      // start or stop
+      play();
+      e->accept();
+      break;
+    case Qt::Key_Right:
+      // go forward
+      if (e->modifiers() & Qt::ShiftModifier)
+        animate(10);
+      else
+        animate(1);
+      e->accept();
+      break;
+    case Qt::Key_Left:
+      // go back
+      if (e->modifiers() & Qt::ShiftModifier)
+        animate(-10);
+      else
+        animate(-1);
+      e->accept();
+      break;
+    case Qt::Key_Up:
+      // go to first frame
+      if (m_firstFrameIdx)
+        animate(m_firstFrameIdx->value() - 1 - m_currentFrame);
+      e->accept();
+      break;
+    case Qt::Key_Down:
+      // go to last frame
+      if (m_lastFrameIdx)
+        animate(m_lastFrameIdx->value() - 1 - m_currentFrame);
+      e->accept();
+      break;
+    default:
+      e->ignore();
+      break;
+  }
   return nullptr;
 }
 

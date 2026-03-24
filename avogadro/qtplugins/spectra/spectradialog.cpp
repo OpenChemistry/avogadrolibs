@@ -7,10 +7,12 @@
 
 #include "ui_spectradialog.h"
 
+#include <QtCore/QEvent>
 #include <QtCore/QFile>
 #include <QtCore/QSettings>
 
 #include <QtGui/QColor>
+#include <QtGui/QPalette>
 #include <QtGui/QScreen>
 #include <QtWidgets/QColorDialog>
 #include <QtWidgets/QFileDialog>
@@ -25,11 +27,32 @@ using Avogadro::QtGui::ChartWidget;
 
 namespace Avogadro::QtPlugins {
 
-constexpr QColor black(0, 0, 0);
-constexpr QColor white(1, 1, 1);
-constexpr QColor red(1, 0, 0);
-constexpr QColor green(0, 1, 0);
-constexpr QColor blue(0, 0, 1);
+// Detect dark mode: text lighter than window background
+static bool isDarkMode()
+{
+  const QPalette p;
+  return p.color(QPalette::WindowText).lightness() >
+         p.color(QPalette::Window).lightness();
+}
+
+// Default colors that adapt to dark/light mode
+static QColor defaultBackgroundColor()
+{
+  return isDarkMode() ? QColor(0, 0, 0) : QColor(255, 255, 255);
+}
+
+static QColor defaultForegroundColor()
+{
+  return isDarkMode() ? QColor(255, 255, 255) : QColor(0, 0, 0);
+}
+
+static QColor defaultCalculatedColor()
+{
+  return isDarkMode() ? QColor(255, 255, 255) : QColor(0, 0, 0);
+}
+
+constexpr QColor red(255, 0, 0);
+constexpr QColor blue(0, 0, 255);
 
 float scaleAndBlur(float x, float peak, float intensity, float scale = 1.0,
                    float shift = 0.0, float fwhm = 0.0)
@@ -230,6 +253,13 @@ void SpectraDialog::disconnectOptions()
              SLOT(updatePlot()));
   disconnect(m_ui->peakThreshold, SIGNAL(valueChanged(double)), this,
              SLOT(updatePlot()));
+}
+
+void SpectraDialog::changeEvent(QEvent* event)
+{
+  if (event->type() == QEvent::PaletteChange)
+    updatePlot();
+  QDialog::changeEvent(event);
 }
 
 void SpectraDialog::mouseDoubleClickEvent(QMouseEvent* e)
@@ -631,7 +661,8 @@ void SpectraDialog::changeBackgroundColor()
 {
   QSettings settings;
   QColor current =
-    settings.value("spectra/backgroundColor", white).value<QColor>();
+    settings.value("spectra/backgroundColor", defaultBackgroundColor())
+      .value<QColor>();
   QColor color =
     QColorDialog::getColor(current, this, tr("Select Background Color"),
                            QColorDialog::ShowAlphaChannel);
@@ -655,7 +686,8 @@ void SpectraDialog::changeForegroundColor()
 {
   QSettings settings;
   QColor current =
-    settings.value("spectra/foregroundColor", black).value<QColor>();
+    settings.value("spectra/foregroundColor", defaultForegroundColor())
+      .value<QColor>();
   QColor color =
     QColorDialog::getColor(current, this, tr("Select Foreground Color"));
   if (color.isValid() && color != current) {
@@ -668,7 +700,8 @@ void SpectraDialog::changeCalculatedSpectraColor()
 {
   QSettings settings;
   QColor current =
-    settings.value("spectra/calculatedColor", black).value<QColor>();
+    settings.value("spectra/calculatedColor", defaultCalculatedColor())
+      .value<QColor>();
   QColor color = QColorDialog::getColor(current, this,
                                         tr("Select Calculated Spectra Color"));
   if (color.isValid() && color != current) {
@@ -933,7 +966,8 @@ void SpectraDialog::updatePlot()
   chart->setLineWidth(lineWidth);
   // background color
   QColor backgroundColor =
-    settings.value("spectra/backgroundColor", white).value<QColor>();
+    settings.value("spectra/backgroundColor", defaultBackgroundColor())
+      .value<QColor>();
   QtGui::color4ub ubColor = {
     static_cast<unsigned char>(backgroundColor.red()),
     static_cast<unsigned char>(backgroundColor.green()),
@@ -943,7 +977,8 @@ void SpectraDialog::updatePlot()
   chart->setBackgroundColor(ubColor);
   // axis color
   QColor axisColor =
-    settings.value("spectra/foregroundColor", black).value<QColor>();
+    settings.value("spectra/foregroundColor", defaultForegroundColor())
+      .value<QColor>();
   QtGui::color4ub axisColor4ub = {
     static_cast<unsigned char>(axisColor.red()),
     static_cast<unsigned char>(axisColor.green()),
@@ -955,7 +990,8 @@ void SpectraDialog::updatePlot()
 
   // get the spectra color
   QColor spectraColor =
-    settings.value("spectra/calculatedColor", black).value<QColor>();
+    settings.value("spectra/calculatedColor", defaultCalculatedColor())
+      .value<QColor>();
   QtGui::color4ub calculatedColor = {
     static_cast<unsigned char>(spectraColor.red()),
     static_cast<unsigned char>(spectraColor.green()),

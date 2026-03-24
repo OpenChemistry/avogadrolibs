@@ -5,13 +5,13 @@
 
 #include "crystalscene.h"
 
-#include <avogadro/core/array.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/colorbutton.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
-#include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/spheregeometry.h>
 
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
@@ -23,11 +23,11 @@
 
 namespace Avogadro::QtPlugins {
 
-using Core::Array;
 using Core::UnitCell;
+using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
-using Rendering::LineStripGeometry;
+using Rendering::SphereGeometry;
 
 const Vector3ub red = { 255, 0, 0 };
 const Vector3ub green = { 0, 255, 0 };
@@ -56,74 +56,47 @@ void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
   if (const UnitCell* cell = molecule.unitCell()) {
     auto* geometry = new GeometryNode;
     node.addChild(geometry);
-    auto* lines = new LineStripGeometry;
-    geometry->addDrawable(lines);
-    lines->setColor(m_color);
+
+    auto* cylinders = new CylinderGeometry;
+    geometry->addDrawable(cylinders);
+    auto* spheres = new SphereGeometry;
+    geometry->addDrawable(spheres);
+
     auto color = m_color;
-    float width = m_lineWidth;
+    float radius = static_cast<float>(m_lineWidth) * 0.0125f;
 
     Vector3f a = cell->aVector().cast<float>();
     Vector3f b = cell->bVector().cast<float>();
     Vector3f c = cell->cVector().cast<float>();
 
-    Vector3f vertex(Vector3f::Zero());
+    Vector3f o(Vector3f::Zero());
 
-    Array<Vector3f> strip;
-    // draw the a axis
-    strip.reserve(5);
-    strip.push_back(vertex);
-    strip.push_back(vertex + a);
-    if (!m_multiColor)
-      lines->addLineStrip(strip, color, width);
-    else // a axis is R-G-B
-      lines->addLineStrip(strip, red, width);
+    // 8 corner spheres
+    Vector3f corners[8] = { o,     o + a,     o + b,     o + a + b,
+                            o + c, o + a + c, o + b + c, o + a + b + c };
+    for (const auto& corner : corners)
+      spheres->addSphere(corner, color, radius);
 
-    // now the b-axis
-    strip.clear();
-    strip.push_back(vertex);
-    strip.push_back(vertex + b);
-    if (!m_multiColor)
-      lines->addLineStrip(strip, color, width);
-    else // b axis is R-G-B
-      lines->addLineStrip(strip, green, width);
+    // a-axis edges
+    Vector3ub aColor = m_multiColor ? red : color;
+    cylinders->addCylinder(o, o + a, radius, aColor);
+    cylinders->addCylinder(o + c, o + a + c, radius, color);
+    cylinders->addCylinder(o + b, o + a + b, radius, color);
+    cylinders->addCylinder(o + b + c, o + a + b + c, radius, color);
 
-    // now the rest of the ab plane
-    strip.clear();
-    strip.push_back(vertex + a);
-    strip.push_back(vertex + a + b);
-    strip.push_back(vertex + b);
-    lines->addLineStrip(strip, width);
+    // b-axis edges
+    Vector3ub bColor = m_multiColor ? green : color;
+    cylinders->addCylinder(o, o + b, radius, bColor);
+    cylinders->addCylinder(o + c, o + b + c, radius, color);
+    cylinders->addCylinder(o + a, o + a + b, radius, color);
+    cylinders->addCylinder(o + a + c, o + a + b + c, radius, color);
 
-    // now the ab plane "up" by axis c
-    strip.clear();
-    strip.push_back(vertex + c);
-    strip.push_back(vertex + a + c);
-    strip.push_back(vertex + a + b + c);
-    strip.push_back(vertex + b + c);
-    strip.push_back(vertex + c);
-    lines->addLineStrip(strip, width);
-
-    // now the c axis
-    strip.resize(2);
-    strip[0] = Vector3f::Zero();
-    strip[1] = c;
-    if (!m_multiColor)
-      lines->addLineStrip(strip, color, width);
-    else // c axis is R-G-B
-      lines->addLineStrip(strip, blue, width);
-
-    // now the remaining "struts" from ab plane along c axis
-    strip[0] += a;
-    strip[1] += a;
-    lines->addLineStrip(strip, width);
-
-    strip[0] += b;
-    strip[1] += b;
-    lines->addLineStrip(strip, width);
-
-    strip[0] -= a;
-    strip[1] -= a;
-    lines->addLineStrip(strip, width);
+    // c-axis edges
+    Vector3ub cColor = m_multiColor ? blue : color;
+    cylinders->addCylinder(o, o + c, radius, cColor);
+    cylinders->addCylinder(o + a, o + a + c, radius, color);
+    cylinders->addCylinder(o + b, o + b + c, radius, color);
+    cylinders->addCylinder(o + a + b, o + a + b + c, radius, color);
   }
 }
 

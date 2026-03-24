@@ -9,7 +9,9 @@
 #include <jkqtplotter/graphs/jkqtplines.h>
 
 #include <QDebug>
+#include <QEvent>
 #include <QHBoxLayout>
+#include <QPalette>
 
 namespace Avogadro::QtGui {
 
@@ -19,43 +21,26 @@ public:
   ChartWidgetImpl()
   {
     plot = new JKQTPlotter;
-    // set the default text color for dark and light mode
+    updateAxisColorsForTheme();
+  }
+  ~ChartWidgetImpl() { delete plot; }
+
+  ChartWidgetImpl(const ChartWidgetImpl&) = delete;
+  ChartWidgetImpl& operator=(const ChartWidgetImpl&) = delete;
+  ChartWidgetImpl(ChartWidgetImpl&&) = delete;
+  ChartWidgetImpl& operator=(ChartWidgetImpl&&) = delete;
+
+  void updateAxisColorsForTheme()
+  {
     const QPalette defaultPalette;
     // is the text lighter than the window color?
     bool darkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
                      defaultPalette.color(QPalette::Window).lightness());
-
-    if (darkMode) {
-      plot->getXAxis()->setTickLabelColor(Qt::white);
-      plot->getYAxis()->setTickLabelColor(Qt::white);
-      plot->getXAxis()->setLabelColor(Qt::white);
-      plot->getYAxis()->setLabelColor(Qt::white);
-    } else {
-      plot->getXAxis()->setTickLabelColor(Qt::black);
-      plot->getYAxis()->setTickLabelColor(Qt::black);
-      plot->getXAxis()->setLabelColor(Qt::black);
-      plot->getYAxis()->setLabelColor(Qt::black);
-    }
-  }
-  ~ChartWidgetImpl() { delete plot; }
-
-  // copy constructor
-  ChartWidgetImpl(const ChartWidgetImpl& other) { plot = other.plot; }
-
-  // copy assignment
-  ChartWidgetImpl& operator=(const ChartWidgetImpl& other)
-  {
-    plot = other.plot;
-    return *this;
-  }
-  // move constructor
-  ChartWidgetImpl(ChartWidgetImpl&& other) { plot = other.plot; }
-
-  // move assignment
-  ChartWidgetImpl& operator=(ChartWidgetImpl&& other)
-  {
-    plot = other.plot;
-    return *this;
+    QColor textColor = darkMode ? Qt::white : Qt::black;
+    plot->getXAxis()->setTickLabelColor(textColor);
+    plot->getYAxis()->setTickLabelColor(textColor);
+    plot->getXAxis()->setLabelColor(textColor);
+    plot->getYAxis()->setLabelColor(textColor);
   }
 
   JKQTPlotter* plot; // widget
@@ -201,6 +186,15 @@ bool ChartWidget::addPlots(const std::vector<std::vector<float>>& plotData,
   }
 
   return true;
+}
+
+void ChartWidget::changeEvent(QEvent* event)
+{
+  if (event->type() == QEvent::PaletteChange) {
+    m_impl->updateAxisColorsForTheme();
+    m_impl->plot->update();
+  }
+  QWidget::changeEvent(event);
 }
 
 void ChartWidget::resetZoom()

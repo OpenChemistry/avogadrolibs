@@ -74,6 +74,7 @@ private:
   QComboBox* m_propertyCombo;
   QComboBox* m_unitsCombo;
   QComboBox* m_targetUnitsCombo;
+  int m_currentFrame = 0;
 };
 
 inline QString PlotConformer::description() const
