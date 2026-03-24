@@ -132,7 +132,7 @@ jobs:
         # mv pixi-x86_64-unknown-linux-musl appdir/usr/bin/pixi
 
         # Add Wayland support
-        export EXTRA_PLATFORM_PLUGINS=libqwayland-egl.so:libqwayland-generic.so
+        export EXTRA_PLATFORM_PLUGINS="libqwayland-egl.so;libqwayland-generic.so"
         export EXTRA_QT_MODULES=waylandcompositor
 
         # Though it is not great security practice, bundle libssl and libcrypto
