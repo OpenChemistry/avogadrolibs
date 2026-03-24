@@ -25,6 +25,11 @@ public:
   }
   ~ChartWidgetImpl() { delete plot; }
 
+  ChartWidgetImpl(const ChartWidgetImpl&) = delete;
+  ChartWidgetImpl& operator=(const ChartWidgetImpl&) = delete;
+  ChartWidgetImpl(ChartWidgetImpl&&) = delete;
+  ChartWidgetImpl& operator=(ChartWidgetImpl&&) = delete;
+
   void updateAxisColorsForTheme()
   {
     const QPalette defaultPalette;
@@ -36,25 +41,6 @@ public:
     plot->getYAxis()->setTickLabelColor(textColor);
     plot->getXAxis()->setLabelColor(textColor);
     plot->getYAxis()->setLabelColor(textColor);
-  }
-
-  // copy constructor
-  ChartWidgetImpl(const ChartWidgetImpl& other) { plot = other.plot; }
-
-  // copy assignment
-  ChartWidgetImpl& operator=(const ChartWidgetImpl& other)
-  {
-    plot = other.plot;
-    return *this;
-  }
-  // move constructor
-  ChartWidgetImpl(ChartWidgetImpl&& other) { plot = other.plot; }
-
-  // move assignment
-  ChartWidgetImpl& operator=(ChartWidgetImpl&& other)
-  {
-    plot = other.plot;
-    return *this;
   }
 
   JKQTPlotter* plot; // widget
