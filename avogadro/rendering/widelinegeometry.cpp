@@ -201,12 +201,15 @@ void WideLineGeometry::addLine(const Vector3f& start, const Vector3f& end,
   Vector4ub rgba1(colorStart[0], colorStart[1], colorStart[2], m_opacity);
   Vector4ub rgba2(colorEnd[0], colorEnd[1], colorEnd[2], m_opacity);
 
-  // Four vertices per line segment: 2 endpoints x 2 sides
-  // lineParam = 0 for solid lines (never triggers discard)
+  // Four vertices per line segment: 2 endpoints x 2 sides.
+  // End vertices swap position/otherEnd, which reverses the cross product
+  // in the vertex shader.  Negate widthSide at the end to compensate,
+  // keeping the quad a proper rectangle instead of a bowtie.
+  // lineParam = 0 for solid lines (never triggers discard).
   m_vertices.emplace_back(start, end, rgba1, -halfWidth, 0.0f);
   m_vertices.emplace_back(start, end, rgba1, halfWidth, 0.0f);
-  m_vertices.emplace_back(end, start, rgba2, -halfWidth, 0.0f);
   m_vertices.emplace_back(end, start, rgba2, halfWidth, 0.0f);
+  m_vertices.emplace_back(end, start, rgba2, -halfWidth, 0.0f);
 
   // Two triangles forming a quad
   m_indices.push_back(baseIndex + 0);
@@ -266,8 +269,9 @@ void WideLineGeometry::addDashedLine(const Vector3f& start, const Vector3f& end,
   m_vertices.emplace_back(start, end, rgba, -halfWidth, 0.01f);
   m_vertices.emplace_back(start, end, rgba, halfWidth, 0.01f);
 
-  m_vertices.emplace_back(end, start, rgba, -halfWidth, paramEnd);
+  // Negate widthSide at the end to compensate for reversed cross product
   m_vertices.emplace_back(end, start, rgba, halfWidth, paramEnd);
+  m_vertices.emplace_back(end, start, rgba, -halfWidth, paramEnd);
 
   m_indices.push_back(baseIndex + 0);
   m_indices.push_back(baseIndex + 1);
