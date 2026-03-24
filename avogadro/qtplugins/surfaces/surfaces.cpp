@@ -369,9 +369,7 @@ void Surfaces::calculateSurface()
     return;
 
   Type type = m_dialog->surfaceType();
-  if (!m_cube)
-    m_cube = m_molecule->addCube();
-  // TODO we should add a name, type, etc.
+  // Each calculate* method handles its own cube creation/cleanup.
 
   switch (type) {
     case VanDerWaals:
@@ -403,6 +401,15 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 {
   if (type == Unknown && m_dialog != nullptr)
     type = m_dialog->surfaceType();
+
+  // Reset state to avoid stale meshes/cubes from prior calculations
+  // (e.g., switching from MO to VdW would leave m_mesh2 rendering)
+  m_molecule->clearCubes();
+  m_molecule->clearMeshes();
+  m_cube = nullptr;
+  m_mesh1 = nullptr;
+  m_mesh2 = nullptr;
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
 
   if (!m_cube)
     m_cube = m_molecule->addCube();
