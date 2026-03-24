@@ -24,6 +24,7 @@ class TextLabel2D;
 class TextLabel3D;
 class AmbientOcclusionSphereGeometry;
 class CurveGeometry;
+class WideLineGeometry;
 
 /**
  * @class Visitor visitor.h <avogadro/rendering/visitor.h>
@@ -55,6 +56,7 @@ public:
   virtual void visit(TextLabel2D&) { return; }
   virtual void visit(TextLabel3D&) { return; }
   virtual void visit(LineStripGeometry&) { return; }
+  virtual void visit(WideLineGeometry&) { return; }
 };
 
 } // End namespace Rendering
