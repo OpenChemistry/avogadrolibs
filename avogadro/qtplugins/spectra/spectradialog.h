@@ -58,6 +58,7 @@ public:
   void disconnectOptions();
   void connectOptions();
 
+  void changeEvent(QEvent* event) override;
   void mouseDoubleClickEvent(QMouseEvent* e) override;
 
 private slots:
