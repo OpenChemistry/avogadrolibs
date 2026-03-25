@@ -96,6 +96,17 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       if (buffer.length() >= 66) {
         std::string spaceGroup = trimmed(buffer.substr(55, 11));
         if (!spaceGroup.empty()) {
+          // Tweak PDB space group recognition, e.g. `P 1 21 1` -> `P 1 2_1 1`
+          // In each space-separated token, insert '_' between consecutive
+          // digits
+          for (size_t i = 0; i < spaceGroup.size() - 1; ++i) {
+            if (std::isdigit(spaceGroup[i]) &&
+                std::isdigit(spaceGroup[i + 1])) {
+              spaceGroup.insert(i + 1, 1, '_');
+              ++i; // skip past the inserted '_'
+            }
+          }
+
           unsigned short hall = Core::SpaceGroups::hallNumber(spaceGroup);
           if (hall > 0)
             mol.setHallNumber(hall);
