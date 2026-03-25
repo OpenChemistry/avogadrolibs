@@ -303,19 +303,23 @@ void SpaceGroup::fillHeuristic()
 
   // add a heuristic to completely fill the cell if it's a solid
   // (vs. a molecule) — skip if the cell was already filled
-  if (m_molecule != nullptr && m_molecule->unitCell() &&
-      m_molecule->hallNumber() == 0) {
+  if (m_molecule != nullptr && m_molecule->unitCell()) {
     // check if there's carbon and hydrogen atoms and at least 5 total atoms
     bool hasCarbon = false;
     bool hasHydrogen = false;
+
     for (unsigned int i = 0; i < m_molecule->atomCount(); ++i) {
       if (m_molecule->atom(i).atomicNumber() == 6)
         hasCarbon = true;
       else if (m_molecule->atom(i).atomicNumber() == 1)
         hasHydrogen = true;
+
+      if (hasCarbon && hasHydrogen)
+        break;
     }
 
-    if (m_molecule->atomCount() <= 5 || !(hasCarbon && hasHydrogen)) {
+    if (m_molecule->atomCount() <= 250 &&
+        (m_molecule->atomCount() <= 5 || !(hasCarbon && hasHydrogen))) {
       fillUnitCell();
     }
   }
@@ -727,6 +731,43 @@ unsigned short SpaceGroup::selectSpaceGroup()
   // Add search box
   auto* searchBox = new QLineEdit;
   searchBox->setClearButtonEnabled(true);
+
+  // Pre-filter by crystal system based on unit cell parameters
+  if (m_molecule && m_molecule->unitCell()) {
+    Core::UnitCell* uc = m_molecule->unitCell();
+    double a = uc->a();
+    double b = uc->b();
+    double c = uc->c();
+    double alpha = uc->alpha() * 180.0 / M_PI;
+    double beta = uc->beta() * 180.0 / M_PI;
+    double gamma = uc->gamma() * 180.0 / M_PI;
+    double angTol = 1.0;  // degrees
+    double lenTol = 0.01; // fractional
+
+    bool eq_ab = std::abs(a - b) < lenTol * a;
+    bool eq_bc = std::abs(b - c) < lenTol * b;
+    bool eq_abc = eq_ab && eq_bc;
+    bool a90 = std::abs(alpha - 90.0) < angTol;
+    bool b90 = std::abs(beta - 90.0) < angTol;
+    bool g90 = std::abs(gamma - 90.0) < angTol;
+    bool g120 = std::abs(gamma - 120.0) < angTol;
+    bool eq_angles =
+      std::abs(alpha - beta) < angTol && std::abs(beta - gamma) < angTol;
+
+    if (eq_abc && a90 && b90 && g90)
+      searchBox->setText(tr("Cubic"));
+    else if (eq_ab && a90 && b90 && g120)
+      searchBox->setText(tr("Hexagonal"));
+    else if (eq_ab && a90 && b90 && g90)
+      searchBox->setText(tr("Tetragonal"));
+    else if (eq_abc && eq_angles && !a90)
+      searchBox->setText(tr("Rhombohedral"));
+    else if (a90 && b90 && g90)
+      searchBox->setText(tr("Orthorhombic"));
+    else if ((a90 && g90 && !b90) || (a90 && b90 && !g90))
+      searchBox->setText(tr("Monoclinic"));
+  }
+
   dialog.layout()->addWidget(searchBox);
 
   auto* view = new QTableView;
@@ -760,6 +801,8 @@ unsigned short SpaceGroup::selectSpaceGroup()
   // Connect search box to filter
   QObject::connect(searchBox, &QLineEdit::textChanged, &proxyModel,
                    &QSortFilterProxyModel::setFilterFixedString);
+  // Apply the pre-populated filter
+  proxyModel.setFilterFixedString(searchBox->text());
 
   connect(view, SIGNAL(activated(QModelIndex)), &dialog, SLOT(accept()));
   auto* buttons =

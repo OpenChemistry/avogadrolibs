@@ -10,6 +10,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/secondarystructure.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
@@ -90,6 +91,16 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         return false;
       }
       mol.setUnitCell(cell);
+
+      // Parse space group symbol from columns 56-66
+      if (buffer.length() >= 66) {
+        std::string spaceGroup = trimmed(buffer.substr(55, 11));
+        if (!spaceGroup.empty()) {
+          unsigned short hall = Core::SpaceGroups::hallNumber(spaceGroup);
+          if (hall > 0)
+            mol.setHallNumber(hall);
+        }
+      }
     }
 
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
