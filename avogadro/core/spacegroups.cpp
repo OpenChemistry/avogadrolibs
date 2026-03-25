@@ -305,6 +305,24 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
   // Now we generate any copies on the unit boundary
   if (allCopies)
     fillTranslationalCopies(mol, cartTol);
+  else {
+    // Remove any atoms with fractional coordinates approximately 1.0
+    // These are translational copies on the boundary that duplicate atoms at
+    // 0.0
+    std::vector<Index> toRemove;
+    for (Index i = 0; i < mol.atomCount(); ++i) {
+      Vector3 frac = uc->toFractional(mol.atomPositions3d()[i]);
+      for (Index j = 0; j < 3; ++j) {
+        if (std::abs(frac[j] - 1.0) < 0.001) {
+          toRemove.push_back(i);
+          break;
+        }
+      }
+    }
+    // Remove in reverse order so indices remain valid
+    for (auto it = toRemove.rbegin(); it != toRemove.rend(); ++it)
+      mol.removeAtom(*it);
+  }
 }
 
 void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
