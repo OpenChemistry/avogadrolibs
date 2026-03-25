@@ -306,18 +306,51 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
   if (allCopies)
     fillTranslationalCopies(mol, cartTol);
   else {
-    // Remove any atoms with fractional coordinates approximately 1.0
-    // These are translational copies on the boundary that duplicate atoms at
-    // 0.0
+    // Remove atoms with fractional coordinates near 1.0 only if a
+    // translational duplicate exists near 0.0 (same element, wrapped
+    // fractional coords within tolerance). If no duplicate exists, wrap
+    // the coordinate to 0.0 instead of deleting.
+    const double fracTol = 0.001;
     std::vector<Index> toRemove;
     for (Index i = 0; i < mol.atomCount(); ++i) {
       Vector3 frac = uc->toFractional(mol.atomPositions3d()[i]);
+      bool nearBoundary = false;
       for (Index j = 0; j < 3; ++j) {
-        if (std::abs(frac[j] - 1.0) < 0.001) {
-          toRemove.push_back(i);
+        if (std::abs(frac[j] - 1.0) < fracTol) {
+          nearBoundary = true;
           break;
         }
       }
+      if (!nearBoundary)
+        continue;
+
+      // Build the wrapped version (1.0 -> 0.0)
+      Vector3 wrapped = frac;
+      for (Index j = 0; j < 3; ++j) {
+        if (std::abs(wrapped[j] - 1.0) < fracTol)
+          wrapped[j] = 0.0;
+      }
+      Vector3 wrappedCart = uc->toCartesian(wrapped);
+
+      // Check if a different atom of the same element exists at the
+      // wrapped position
+      bool hasDuplicate = false;
+      unsigned char atomicNum = mol.atomicNumber(i);
+      for (Index k = 0; k < mol.atomCount(); ++k) {
+        if (k == i)
+          continue;
+        if (mol.atomicNumber(k) != atomicNum)
+          continue;
+        if (uc->distance(mol.atomPosition3d(k), wrappedCart) < cartTol) {
+          hasDuplicate = true;
+          break;
+        }
+      }
+
+      if (hasDuplicate)
+        toRemove.push_back(i);
+      else
+        mol.setAtomPosition3d(i, wrappedCart); // wrap to 0.0
     }
     // Remove in reverse order so indices remain valid
     for (auto it = toRemove.rbegin(); it != toRemove.rend(); ++it)
