@@ -764,7 +764,8 @@ unsigned short SpaceGroup::selectSpaceGroup()
       searchBox->setText(tr("Rhombohedral"));
     else if (a90 && b90 && g90)
       searchBox->setText(tr("Orthorhombic"));
-    else if ((a90 && g90 && !b90) || (a90 && b90 && !g90))
+    else if ((a90 && g90 && !b90) || (a90 && b90 && !g90) ||
+             (!a90 && b90 && g90))
       searchBox->setText(tr("Monoclinic"));
   }
 
@@ -792,7 +793,6 @@ unsigned short SpaceGroup::selectSpaceGroup()
   view->sortByColumn(0, Qt::AscendingOrder);
   view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   dialog.layout()->addWidget(view);
-  view->selectRow(0);
   view->resizeColumnsToContents();
   view->resizeRowsToContents();
   view->setMinimumWidth(view->horizontalHeader()->length() +
@@ -803,6 +803,8 @@ unsigned short SpaceGroup::selectSpaceGroup()
                    &QSortFilterProxyModel::setFilterFixedString);
   // Apply the pre-populated filter
   proxyModel.setFilterFixedString(searchBox->text());
+  if (proxyModel.rowCount() > 0)
+    view->selectRow(0);
 
   connect(view, SIGNAL(activated(QModelIndex)), &dialog, SLOT(accept()));
   auto* buttons =
