@@ -572,10 +572,22 @@ bool CrystalTools::buildSupercell(Molecule& molecule, unsigned int a,
   Array<std::pair<Index, Index>> bondPairs = molecule.bondPairs();
   Array<unsigned char> bondOrders = molecule.bondOrders();
 
-  // Add in the atoms to the new subcells of the supercell
+  // Add in the atoms to the new subcells of the supercell.
+  // Track index mapping: indexMap[copyIndex][origAtomIndex] -> new atom index,
+  // so bonds can be copied correctly even when duplicates are skipped.
   Index numAtoms = molecule.atomCount();
   Array<Vector3> atoms = molecule.atomPositions3d();
   Array<unsigned char> atomicNums = molecule.atomicNumbers();
+  const double dupTol = 0.01;
+
+  // Copy 0 is the original subcell — identity mapping
+  unsigned totalCopies = a * b * c;
+  std::vector<std::vector<Index>> indexMap(totalCopies,
+                                           std::vector<Index>(numAtoms));
+  for (Index i = 0; i < numAtoms; ++i)
+    indexMap[0][i] = i;
+
+  unsigned copyIdx = 1;
   for (Index ind_a = 0; ind_a < a; ++ind_a) {
     for (Index ind_b = 0; ind_b < b; ++ind_b) {
       for (Index ind_c = 0; ind_c < c; ++ind_c) {
@@ -585,21 +597,38 @@ bool CrystalTools::buildSupercell(Molecule& molecule, unsigned int a,
         // The positions of the new atoms are displacements of the old atoms
         Vector3 displacement = ind_a * oldA + ind_b * oldB + ind_c * oldC;
         for (Index i = 0; i < numAtoms; ++i) {
-          Atom newAtom = molecule.addAtom(atomicNums.at(i));
-          newAtom.setPosition3d(atoms.at(i) + displacement);
+          Vector3 newPos = atoms.at(i) + displacement;
+          // Check if this duplicates an existing atom (e.g., translational
+          // copies at fractional ~1.0 overlap with the next subcell's ~0.0)
+          Index existingIdx = molecule.atomCount(); // sentinel
+          for (Index k = 0; k < molecule.atomCount(); ++k) {
+            if ((molecule.atomPosition3d(k) - newPos).norm() < dupTol) {
+              existingIdx = k;
+              break;
+            }
+          }
+          if (existingIdx < molecule.atomCount()) {
+            indexMap[copyIdx][i] = existingIdx;
+          } else {
+            Atom newAtom = molecule.addAtom(atomicNums.at(i));
+            newAtom.setPosition3d(newPos);
+            indexMap[copyIdx][i] = newAtom.index();
+          }
         }
+        ++copyIdx;
       }
     }
   }
 
-  // now we need to add the bonds
-  unsigned copies = molecule.atomCount() / numAtoms;
-  // we loop through the original bonds to add copies
+  // Now add the bonds using the index map
   for (Index i = 0; i < bondPairs.size(); ++i) {
     std::pair<Index, Index> bond = bondPairs.at(i);
-    for (unsigned j = 0; j < copies; ++j) {
-      molecule.addBond(bond.first + j * numAtoms, bond.second + j * numAtoms,
-                       bondOrders.at(i));
+    for (unsigned j = 0; j < totalCopies; ++j) {
+      Index a1 = indexMap[j][bond.first];
+      Index a2 = indexMap[j][bond.second];
+      // Avoid adding duplicate bonds (duplicated atoms may share bonds)
+      if (j > 0 && !molecule.bond(a1, a2).isValid())
+        molecule.addBond(a1, a2, bondOrders.at(i));
     }
   }
 
