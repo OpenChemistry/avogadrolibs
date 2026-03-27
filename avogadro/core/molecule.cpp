@@ -1142,6 +1142,16 @@ void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx)
   m_vibrationLx = lx;
 }
 
+Array<std::string> Molecule::vibrationSymmetryLabels() const
+{
+  return m_vibrationSymmetryLabels;
+}
+
+void Molecule::setVibrationSymmetryLabels(const Array<std::string>& labels)
+{
+  m_vibrationSymmetryLabels = labels;
+}
+
 void Molecule::perceiveBondOrders()
 {
   // check for coordinates and that there are some bonds
