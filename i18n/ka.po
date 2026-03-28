@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-03 01:09+0000\n"
+"PO-Revision-Date: 2026-03-28 05:09+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -4454,7 +4454,7 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:577
 msgid "Keep Files"
-msgstr ""
+msgstr "ფაილების შენარჩუნება"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
 msgid "Delete Files"

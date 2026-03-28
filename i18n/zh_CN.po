@@ -8,7 +8,7 @@
 # FAN JI <sifan95.ji@gmail.com>, 2022.
 # Shusong Zhang <sszhang@mail.nwpu.edu.cn>, 2023.
 # alchemistcai <alchemistcai@163.com>, 2023.
-# Chiyu Liang <532117255@qq.com>, 2023, 2024.
+# Chiyu Liang <532117255@qq.com>, 2023, 2024, 2026.
 # Sihan Zhang <chemistryzsh@gmail.com>, 2024.
 # KeysBits <KeysBytes@gmail.com>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-15 19:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-28 05:09+0000\n"
+"Last-Translator: Chiyu Liang <532117255@qq.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -50,7 +50,7 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
-"脚本 --print-options 输出必须是顶级的JSON对象。接收:\n"
+"脚本 --print-options 的输出必须是顶级的JSON对象。接收:\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:246
@@ -1081,12 +1081,12 @@ msgstr "%1 消息"
 #: qtgui/interfacescript.cpp:343
 #, qt-format
 msgid "%1 Warning"
-msgstr ""
+msgstr "%1 警告"
 
 #: qtgui/interfacescript.cpp:350
 #, qt-format
 msgid "%1 Error"
-msgstr ""
+msgstr "%1 错误"
 
 #: qtgui/interfacescript.cpp:593
 #, qt-format
@@ -1153,20 +1153,20 @@ msgstr "多重性"
 
 #: qtgui/jsonwidget.cpp:239
 msgid "Solvent"
-msgstr ""
+msgstr "溶剂"
 
 #: qtgui/jsonwidget.cpp:240
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "模型"
 
 #: qtgui/jsonwidget.cpp:386
 msgid "User Name"
-msgstr ""
+msgstr "用户名称"
 
 #: qtgui/jsonwidget.cpp:388
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: qtgui/jsonwidget.cpp:674
 #, qt-format
@@ -1293,11 +1293,11 @@ msgstr "无标题"
 
 #: qtgui/moleculemodel.cpp:135
 msgid "Edit molecule"
-msgstr ""
+msgstr "编辑分子"
 
 #: qtgui/moleculemodel.cpp:142
 msgid "Not saved"
-msgstr ""
+msgstr "未保存"
 
 #: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
@@ -1572,7 +1572,7 @@ msgstr "设置"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
-msgstr ""
+msgstr "计算中…"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
@@ -1597,14 +1597,14 @@ msgstr[0] ""
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] ""
+msgstr[0] "剩余 1 小时 %n 分钟"
 
 #: qtgui/timedprogressdialog.cpp:96
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
 msgid_plural "%n hour(s) remaining"
-msgstr[0] ""
+msgstr[0] "剩余 %n 小时"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -1848,7 +1848,7 @@ msgstr "成功"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "已生成 %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
@@ -1883,11 +1883,11 @@ msgstr "自定义颜色…"
 
 #: qtplugins/applycolors/applycolors.cpp:52
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "按原子序数…"
 
 #: qtplugins/applycolors/applycolors.cpp:57
 msgid "By Distance…"
-msgstr ""
+msgstr "按距离…"
 
 #: qtplugins/applycolors/applycolors.cpp:62
 msgid "By Element"
@@ -4598,7 +4598,7 @@ msgstr[0] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:577
 msgid "Keep Files"
-msgstr ""
+msgstr "保留文件"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
 msgid "Delete Files"
