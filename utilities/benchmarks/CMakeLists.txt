@@ -7,3 +7,9 @@ add_executable(AvogadroUFFBenchmark uffbenchmark.cpp)
 target_link_libraries(AvogadroUFFBenchmark PRIVATE Avogadro::Calc Avogadro::IO)
 target_compile_definitions(AvogadroUFFBenchmark
   PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")
+
+add_executable(AvogadroGaussianBenchmark gaussianbenchmark.cpp)
+target_link_libraries(AvogadroGaussianBenchmark
+  PRIVATE Avogadro::Core Avogadro::IO Avogadro::QuantumIO)
+target_compile_definitions(AvogadroGaussianBenchmark
+  PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")

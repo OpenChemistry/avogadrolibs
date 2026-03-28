@@ -9,6 +9,7 @@
 #include "avogadrocoreexport.h"
 
 #include "basisset.h"
+#include "gaussianset.h"
 #include "vector.h"
 
 #include <vector>
@@ -16,8 +17,27 @@
 namespace Avogadro::Core {
 
 class Cube;
-class GaussianSet;
 class Molecule;
+
+/**
+ * @brief Pre-packed shell metadata for fast evaluation.
+ * Concentrates all per-shell data from GaussianSet into a single contiguous
+ * struct, eliminating repeated indirect lookups into separate vectors during
+ * the hot evaluation loop.
+ */
+struct ShellInfo
+{
+  int type;               //! Shell type enum (GaussianSet::S, P, D, etc.)
+  int L;                  //! Angular momentum (0=S, 1=P, 2=D, ...)
+  unsigned int atomIndex; //! Index into atom positions
+  unsigned int moIndex;   //! Starting row in MO matrix for this shell
+  unsigned int gtoStart;  //! First primitive index in exponent/coeff arrays
+  unsigned int gtoEnd;    //! One-past-last primitive index
+  unsigned int cStart;    //! First index into normalized coefficient array
+  int nComponents;        //! Number of basis functions in this shell
+  double cutoffSquared;   //! Precomputed cutoff distance squared
+  double centerBohr[3];   //! Shell center in Bohr (precomputed)
+};
 
 /**
  * @class GaussianSetTools gaussiansettools.h <avogadro/core/gaussiansettools.h>
@@ -96,15 +116,32 @@ private:
   Molecule* m_molecule;
   GaussianSet* m_basis;
   BasisSet::ElectronType m_type = BasisSet::Paired;
-  std::vector<double> m_cutoffDistances;
-  // Cached atom positions in Bohr as 3 x N matrix for vectorized operations
-  Eigen::Matrix<double, 3, Eigen::Dynamic> m_atomPositionsBohr;
 
-  bool isSmall(double value) const;
+  // Pre-packed shell data built once in the constructor
+  std::vector<ShellInfo> m_shells;
+  // Local contiguous copies of exponents and normalized coefficients
+  std::vector<double> m_gtoA;
+  std::vector<double> m_gtoCN;
 
-  // get the cutoff distance for the given angular momentum
-  // .. and the current basis set (exponents)
-  void calculateCutoffs();
+  // Build m_shells and local coefficient copies from GaussianSet
+  void buildShellData();
+
+  // Calculate cutoff distance for a single shell
+  double calculateShellCutoff(const ShellInfo& shell) const;
+
+  // Shell-major grid evaluation with factored exp() and range-clipped cutoffs
+  bool calculateMolecularOrbitalGrid(Cube& cube, int moNumber) const;
+
+  // Density via occupied MO summation: ρ = Σ occ_i |ψ_i|²
+  bool calculateElectronDensityGrid(Cube& cube) const;
+
+  // Evaluate a single MO onto a double-precision grid buffer using the
+  // shell-major factored-exp approach with range clipping.
+  void evaluateMOGrid(int moIndex, const MatrixX& moMat, const Vector3& minBohr,
+                      const Vector3& spBohr, const std::vector<double>& gridX,
+                      const std::vector<double>& gridY,
+                      const std::vector<double>& gridZ, int nx, int ny, int nz,
+                      double* output) const;
 
   /**
    * @brief Calculate the values at this position in space. The public calculate
@@ -116,25 +153,30 @@ private:
    */
   void calculateValues(const Vector3& position, Eigen::VectorXd& values) const;
 
-  void pointS(unsigned int index, double dr2, Eigen::VectorXd& values) const;
-  void pointP(unsigned int index, const Vector3& delta, double dr2,
+  void pointS(const ShellInfo& shell, double dr2,
               Eigen::VectorXd& values) const;
-  void pointD(unsigned int index, const Vector3& delta, double dr2,
+  void pointP(const ShellInfo& shell, const Vector3& delta, double dr2,
               Eigen::VectorXd& values) const;
-  void pointD5(unsigned int index, const Vector3& delta, double dr2,
+  void pointD(const ShellInfo& shell, const Vector3& delta, double dr2,
+              Eigen::VectorXd& values) const;
+  void pointD5(const ShellInfo& shell, const Vector3& delta, double dr2,
                Eigen::VectorXd& values) const;
-  void pointF(unsigned int index, const Vector3& delta, double dr2,
+  void pointF(const ShellInfo& shell, const Vector3& delta, double dr2,
               Eigen::VectorXd& values) const;
-  void pointF7(unsigned int index, const Vector3& delta, double dr2,
+  void pointF7(const ShellInfo& shell, const Vector3& delta, double dr2,
                Eigen::VectorXd& values) const;
-  void pointG(unsigned int index, const Vector3& delta, double dr2,
+  void pointG(const ShellInfo& shell, const Vector3& delta, double dr2,
               Eigen::VectorXd& values) const;
-  void pointG9(unsigned int index, const Vector3& delta, double dr2,
+  void pointG9(const ShellInfo& shell, const Vector3& delta, double dr2,
                Eigen::VectorXd& values) const;
 
-  // map from symmetry to angular momentum
-  // S, SP, P, D, D5, F, F7, G, G9, etc.
-  const int symToL[13] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 };
+  // Map from shell type enum to angular momentum
+  // S, SP, P, D, D5, F, F7, G, G9, H, H11, I, I13
+  static constexpr int symToL[13] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 };
+
+  // Map from shell type enum to number of basis function components
+  static constexpr int symToNComp[13] = { 1,  4, 3,  6,  5,  10, 7,
+                                          15, 9, 21, 11, 28, 13 };
 };
 
 } // namespace Avogadro::Core
