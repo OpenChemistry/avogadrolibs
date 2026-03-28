@@ -16,6 +16,7 @@
 #include "elements.h"
 #include "graph.h"
 #include "layer.h"
+#include "propertymap.h"
 #include "variantmap.h"
 #include "vector.h"
 
@@ -120,6 +121,30 @@ public:
   /** @return the types of partial charges available stored with this molecule.
    */
   std::set<std::string> partialChargeTypes() const;
+
+  /** @return the per-atom custom property map. */
+  PropertyMap& atomProperties();
+
+  /** \overload */
+  const PropertyMap& atomProperties() const;
+
+  /** @return the per-bond custom property map. */
+  PropertyMap& bondProperties();
+
+  /** \overload */
+  const PropertyMap& bondProperties() const;
+
+  /** @return the per-residue custom property map. */
+  PropertyMap& residueProperties();
+
+  /** \overload */
+  const PropertyMap& residueProperties() const;
+
+  /** @return the per-conformer custom property map. */
+  PropertyMap& conformerProperties();
+
+  /** \overload */
+  const PropertyMap& conformerProperties() const;
 
   /** @return a vector of hybridizations for the atoms in the molecule. */
   Array<AtomHybridization>& hybridizations();
@@ -966,6 +991,10 @@ protected:
     m_partialCharges; //!< Sets of atomic partial charges
 
   std::map<std::string, MatrixX> m_spectra; //!< Sets of spectra
+  PropertyMap m_atomProperties;             //!< Custom per-atom properties
+  PropertyMap m_bondProperties;             //!< Custom per-bond properties
+  PropertyMap m_residueProperties;          //!< Custom per-residue properties
+  PropertyMap m_conformerProperties;        //!< Custom per-conformer properties
   CustomElementMap m_customElementMap;
   ElementMask m_elements; //!< Which elements this molecule contains (e.g., for
                           //!< force fields)
