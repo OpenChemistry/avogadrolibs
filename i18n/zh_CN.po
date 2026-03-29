@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-28 05:09+0000\n"
+"PO-Revision-Date: 2026-03-29 06:09+0000\n"
 "Last-Translator: Chiyu Liang <532117255@qq.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -2073,19 +2073,19 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:289
 msgid "Apply Charge Colors"
-msgstr ""
+msgstr "应用电荷颜色"
 
 #: qtplugins/applycolors/applycolors.cpp:327
 msgid "Apply Distance Colors"
-msgstr ""
+msgstr "应用距离颜色"
 
 #: qtplugins/applycolors/applycolors.cpp:353
 msgid "Reset Atom Colors"
-msgstr ""
+msgstr "重置原子颜色"
 
 #: qtplugins/applycolors/applycolors.cpp:379
 msgid "Apply Custom Color"
-msgstr ""
+msgstr "应用自定义颜色"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 msgid "Apply Custom Residue Color"
@@ -2118,7 +2118,7 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:68
 msgid "Auto Optimize"
-msgstr ""
+msgstr "自动优化"
 
 #: qtplugins/autoopt/autoopt.cpp:70
 #, qt-format
@@ -2137,8 +2137,6 @@ msgid ""
 msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:205
-#, fuzzy
-#| msgid "Optimization"
 msgid "Optimize"
 msgstr "优化"
 
@@ -2148,7 +2146,7 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:210
 msgid "Task:"
-msgstr ""
+msgstr "任务："
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2160,7 +2158,7 @@ msgstr "方式："
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
 #: qtplugins/autoopt/autoopt.cpp:247:1603
 msgid "Temperature:"
-msgstr ""
+msgstr "温度："
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
@@ -2540,7 +2538,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:60:235
 msgid "Distance"
-msgstr ""
+msgstr "距离"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -3349,13 +3347,13 @@ msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.cpp:471
 msgid "No atoms provided for optimization"
-msgstr ""
+msgstr "没有提供给优化的原子"
 
 #: qtplugins/forcefield/forcefield.cpp:549
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "能量：%L1"
 
 #: qtplugins/forcefield/forcefield.cpp:638
 #, qt-format
@@ -3378,21 +3376,21 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefielddialog.cpp:56
 msgid "Options…"
-msgstr ""
+msgstr "选项…"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:175
 msgid "Invalid Model Options"
-msgstr ""
+msgstr "无效的模型选项"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:176
 #, qt-format
 msgid "Could not parse user options for model '%1'."
-msgstr ""
+msgstr "无法解析对模型 '%1' 的用户选项。"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:181
 #, qt-format
 msgid "%1 Options"
-msgstr ""
+msgstr "%1 选项"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:222
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -3466,19 +3464,19 @@ msgstr "无"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
 msgid "D1"
-msgstr ""
+msgstr "D1"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:425
 msgid "D2"
-msgstr ""
+msgstr "D2"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:428
 msgid "D3"
-msgstr ""
+msgstr "D3"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:431
 msgid "D4"
-msgstr ""
+msgstr "D4"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:446
 msgid "Gas"
@@ -3593,7 +3591,6 @@ msgid "Uracil"
 msgstr "尿嘧啶"
 
 #: qtplugins/insertdna/insertdna.cpp:168
-#, fuzzy
 msgctxt "thymine"
 msgid "T"
 msgstr "T"
@@ -3660,7 +3657,7 @@ msgstr "插入分子片段以构建更大的分子。"
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:56
 msgid "Peptide…"
-msgstr ""
+msgstr "肽…"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3668,15 +3665,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:518:692 rc.cpp:880
 msgid "Insert Peptide"
-msgstr ""
+msgstr "插入肽"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
-msgstr ""
+msgstr "插入肽"
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "插入寡肽序列。"
 
 #: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:311
 #: qtplugins/surfacerender/surfacerender.cpp:317
@@ -3723,7 +3720,7 @@ msgstr "原子标签:"
 
 #: qtplugins/label/label.cpp:230
 msgid "Length"
-msgstr ""
+msgstr "长度"
 
 #: qtplugins/label/label.cpp:236
 msgid "Bond Label:"
@@ -3742,7 +3739,7 @@ msgstr "名称"
 
 #: qtplugins/label/label.cpp:245
 msgid "Name & ID"
-msgstr ""
+msgstr "名字与 ID"
 
 #: qtplugins/label/label.cpp:252
 msgid "Residue Label:"
@@ -3815,7 +3812,6 @@ msgstr "InChI…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 #: qtplugins/lineformatinput/lineformatinput.cpp:114
-#, fuzzy
 msgid "No descriptors found!"
 msgstr "未找到描述符！"
 
@@ -3829,11 +3825,11 @@ msgstr "无法加载所请求格式的读取器。"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
-msgstr ""
+msgstr "未找到坐标！"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:146
 msgid "Unable to generate 3D coordinates."
-msgstr ""
+msgstr "无法生成 3D 坐标。"
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3846,7 +3842,7 @@ msgstr "通过输入对话框加载单行分子描述符。"
 #: qtplugins/manipulator/manipulator.cpp:49
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
@@ -3873,7 +3869,7 @@ msgstr "操作工具"
 #: qtplugins/measuretool/measuretool.cpp:51
 msgctxt "control-key 8"
 msgid "Ctrl+8"
-msgstr ""
+msgstr "Ctrl+8"
 
 #: qtplugins/measuretool/measuretool.cpp:52
 msgid "Measure"
@@ -3910,7 +3906,6 @@ msgstr "角度："
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
-#, fuzzy
 msgid "Measure tool"
 msgstr "测量工具"
 
@@ -3925,27 +3920,27 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:178
 msgid "Molecule Name"
-msgstr ""
+msgstr "分子名称"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:180
 msgid "Molecular Mass (g/mol)"
-msgstr ""
+msgstr "分子量 (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:182
 msgid "Monoisotopic Mass (g/mol)"
-msgstr ""
+msgstr "单一同位素质量 (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:184
 msgid "Chemical Formula"
-msgstr ""
+msgstr "化学式"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:186
 msgid "Number of Atoms"
-msgstr ""
+msgstr "原子数"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:188
 msgid "Number of Bonds"
-msgstr ""
+msgstr "键数"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:190
 msgid "Coordinate Sets"
@@ -3961,20 +3956,20 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:196
 msgid "Net Charge"
-msgstr ""
+msgstr "净电荷"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:198
 msgid "Net Spin Multiplicity"
-msgstr ""
+msgstr "净自旋多重度"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:200
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "偶极矩 (Debye)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:202
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "HOMO 能量 (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:204
 msgctxt "lowest unoccupied molecular orbital"
@@ -4465,46 +4460,47 @@ msgstr "在角落渲染参考轴。"
 #. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
 #: qtplugins/packageinstaller/packageinstaller.cpp:17:1701
 msgid "Manage Plugins…"
-msgstr ""
+msgstr "管理插件…"
 
 #: qtplugins/packageinstaller/packageinstaller.h:32
 msgid "Package Installer"
-msgstr ""
+msgstr "包安装器"
 
 #: qtplugins/packageinstaller/packageinstaller.h:36
 msgid "Install, update, and remove Avogadro packages."
-msgstr ""
+msgstr "安装，更新和移除 Avogadro 包。"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:137
 #, qt-format
 msgid "Error downloading plugin list: %1"
-msgstr ""
+msgstr "下载插件列表时错误：%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:146
 msgid "Error: empty response from server."
-msgstr ""
+msgstr "错误：服务器响应为空。"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:241
 #, qt-format
 msgid "Error fetching README: %1"
-msgstr ""
+msgstr "获取 README 文件时出错：%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
+#, fuzzy
 msgid "Nothing Selected"
-msgstr ""
+msgstr "未选择任何项目"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:284
 msgid "Check the box next to a plugin to install or update it."
-msgstr ""
+msgstr "勾选插件旁的复选框以下载或更新。"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:294
 #, qt-format
 msgid "%1 (requires %2)"
-msgstr ""
+msgstr "%1 (要求 %2)"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:298
 msgid "Version Incompatibility"
-msgstr ""
+msgstr "版本不兼容性"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:299
 #, qt-format
@@ -4518,7 +4514,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:326
 msgid "No Download Available"
-msgstr ""
+msgstr "无可用下载"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:327
 #, qt-format
@@ -4670,7 +4666,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:170
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:174
 #: qtplugins/plugindownloader/downloaderwidget.cpp:67
@@ -4679,7 +4675,7 @@ msgstr "版本"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:176
 msgid "Features"
-msgstr ""
+msgstr "功能"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:178
 #: qtplugins/plugindownloader/downloaderwidget.cpp:68
@@ -4696,7 +4692,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:568
 msgid "File Formats"
-msgstr ""
+msgstr "文件格式"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:570
 msgid "Input Generators"
@@ -4733,12 +4729,12 @@ msgstr ""
 #, qt-format
 msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
-msgstr ""
+msgstr "警告：(%1)"
 
 #: qtplugins/playertool/playertool.cpp:51
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
@@ -4747,7 +4743,7 @@ msgstr "播放器"
 #: qtplugins/playertool/playertool.cpp:53
 #, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr ""
+msgstr "动画工具\t(%1)"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
@@ -4758,12 +4754,12 @@ msgstr "帧："
 #: qtplugins/playertool/playertool.cpp:113
 msgctxt "start or first frame index"
 msgid "Start:"
-msgstr ""
+msgstr "开始："
 
 #: qtplugins/playertool/playertool.cpp:124
 msgctxt "end or last frame index"
 msgid "End:"
-msgstr ""
+msgstr "结束："
 
 #: qtplugins/playertool/playertool.cpp:138
 #, fuzzy
@@ -4786,11 +4782,11 @@ msgstr "播放"
 
 #: qtplugins/playertool/playertool.cpp:165
 msgid "Record…"
-msgstr ""
+msgstr "录像…"
 
 #: qtplugins/playertool/playertool.cpp:216
 msgid "Pause"
-msgstr ""
+msgstr "暂停"
 
 #: qtplugins/playertool/playertool.cpp:291
 #: qtplugins/playertool/playertool.cpp:396
@@ -4840,7 +4836,7 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:127
 msgid "Conformer Analysis"
-msgstr ""
+msgstr "构象异构体分析"
 
 #: qtplugins/plotconformer/plotconformer.cpp:141
 msgid "Plot Type:"
@@ -4858,7 +4854,7 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:158
 msgid "Energy Units:"
-msgstr ""
+msgstr "能量单位："
 
 #: qtplugins/plotconformer/plotconformer.cpp:167
 msgid "to"
@@ -5001,7 +4997,7 @@ msgstr "提取时出错：%1"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:452
 msgid "Installation canceled\n"
-msgstr ""
+msgstr "安装已取消\n"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -5023,7 +5019,6 @@ msgstr "PLY 渲染…"
 
 #: qtplugins/ply/ply.cpp:68 qtplugins/povray/povray.cpp:68
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:68
-#, fuzzy
 msgid "Save File"
 msgstr "保存文件"
 
@@ -5036,7 +5031,6 @@ msgid "PLY"
 msgstr "PLY"
 
 #: qtplugins/ply/ply.h:29
-#, fuzzy
 msgid "Render the scene using PLY."
 msgstr "使用 PLY 渲染场景。"
 
@@ -5058,7 +5052,7 @@ msgstr "使用 POV-Ray 渲染场景。"
 
 #: qtplugins/propertytables/propertymodel.cpp:307
 msgid "Click to change color"
-msgstr ""
+msgstr "点击以更改颜色"
 
 #: qtplugins/propertytables/propertymodel.cpp:632
 msgid "Valence"
@@ -5225,7 +5219,7 @@ msgstr "残基属性…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
-msgstr ""
+msgstr "构象异构体属性…"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 #, fuzzy
@@ -5273,7 +5267,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:580
 msgid "Change Charge Type…"
-msgstr ""
+msgstr "更改电荷类型…"
 
 #: qtplugins/propertytables/propertyview.cpp:587
 msgid "Freeze Atom"
@@ -5536,7 +5530,7 @@ msgstr "选择工具"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
-msgstr ""
+msgstr "新图层"
 
 #: qtplugins/spacegroup/spacegroup.cpp:60
 msgid "Perceive Space Group…"
@@ -5668,7 +5662,6 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:596 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:433
-#, fuzzy
 msgid "Avogadro2"
 msgstr "Avogadro2"
 
