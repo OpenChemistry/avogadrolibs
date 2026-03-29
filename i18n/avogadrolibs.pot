@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.103.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-03-22 03:46+0000\n"
+"POT-Creation-Date: 2026-03-29 04:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -172,7 +172,7 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:171 qtgui/elementtranslator.cpp:372
 #: qtplugins/configurepython/configurepythondialog.cpp:188
 #: qtplugins/configurepython/configurepythondialog.cpp:191
-#: qtplugins/spacegroup/spacegroup.cpp:630
+#: qtplugins/spacegroup/spacegroup.cpp:634
 msgid "Unknown"
 msgstr ""
 
@@ -469,7 +469,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:17 qtplugins/noncovalent/noncovalent.cpp:409
+#: qtgui/elementtranslator.cpp:17 qtplugins/noncovalent/noncovalent.cpp:408
 msgid "Hydrogen"
 msgstr ""
 
@@ -1157,89 +1157,89 @@ msgstr ""
 msgid "Layer %1"
 msgstr ""
 
-#: qtgui/layermodel.cpp:170 qtplugins/ballandstick/ballandstick.h:28
+#: qtgui/layermodel.cpp:172 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr ""
 
-#: qtgui/layermodel.cpp:172 qtplugins/cartoons/cartoons.h:31
+#: qtgui/layermodel.cpp:174 qtplugins/cartoons/cartoons.h:31
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr ""
 
-#: qtgui/layermodel.cpp:174 qtplugins/closecontacts/closecontacts.h:31
+#: qtgui/layermodel.cpp:176 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr ""
 
-#: qtgui/layermodel.cpp:176 qtplugins/crystal/crystalscene.h:31
+#: qtgui/layermodel.cpp:178 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
 msgstr ""
 
-#: qtgui/layermodel.cpp:178 qtplugins/force/force.h:28
+#: qtgui/layermodel.cpp:180 qtplugins/force/force.h:28
 msgid "Force"
 msgstr ""
 
-#: qtgui/layermodel.cpp:180 qtplugins/label/label.h:25
+#: qtgui/layermodel.cpp:182 qtplugins/label/label.h:25
 msgid "Labels"
 msgstr ""
 
-#: qtgui/layermodel.cpp:182 qtplugins/licorice/licorice.h:31
+#: qtgui/layermodel.cpp:184 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
 msgstr ""
 
-#: qtgui/layermodel.cpp:184 qtplugins/surfacerender/surfacerender.h:29
+#: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
 #: qtplugins/surfaces/orbitals.cpp:480 qtplugins/surfaces/orbitals.cpp:572
-#: qtplugins/surfaces/surfaces.cpp:883 qtplugins/surfaces/surfaces.h:71
+#: qtplugins/surfaces/surfaces.cpp:890 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr ""
 
-#: qtgui/layermodel.cpp:186 qtplugins/noncovalent/noncovalent.h:30
+#: qtgui/layermodel.cpp:188 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
 msgstr ""
 
-#: qtgui/layermodel.cpp:188
+#: qtgui/layermodel.cpp:190
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr ""
 
-#: qtgui/layermodel.cpp:190 qtplugins/symmetry/symmetryscene.h:33
+#: qtgui/layermodel.cpp:192 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
 msgstr ""
 
-#: qtgui/layermodel.cpp:192 qtplugins/surfaces/surfacedialog.cpp:25
+#: qtgui/layermodel.cpp:194 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
 msgstr ""
 
-#: qtgui/layermodel.cpp:194
+#: qtgui/layermodel.cpp:196
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr ""
 
-#: qtgui/layermodel.cpp:196
+#: qtgui/layermodel.cpp:198
 msgctxt "volumetric clouds"
 msgid "Volumes"
 msgstr ""
 
-#: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
+#: qtgui/layermodel.cpp:200 qtplugins/surfacerender/surfacerender.cpp:273
 #: qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr ""
 
-#: qtgui/layermodel.cpp:200 qtplugins/overlayaxes/overlayaxes.h:28
+#: qtgui/layermodel.cpp:202 qtplugins/overlayaxes/overlayaxes.h:28
 msgid "Reference Axes"
 msgstr ""
 
-#: qtgui/moleculemodel.cpp:120
+#: qtgui/moleculemodel.cpp:121
 msgid "Untitled"
 msgstr ""
 
-#: qtgui/moleculemodel.cpp:135
+#: qtgui/moleculemodel.cpp:136
 msgid "Edit molecule"
 msgstr ""
 
-#: qtgui/moleculemodel.cpp:142
+#: qtgui/moleculemodel.cpp:143
 msgid "Not saved"
 msgstr ""
 
@@ -1458,11 +1458,11 @@ msgid "Reduce to Primitive"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:709 qtplugins/spacegroup/spacegroup.cpp:72
-#: qtplugins/spacegroup/spacegroup.cpp:468
+#: qtplugins/spacegroup/spacegroup.cpp:472
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:743 qtplugins/spacegroup/spacegroup.cpp:496
+#: qtgui/rwmolecule.cpp:743 qtplugins/spacegroup/spacegroup.cpp:500
 msgid "Symmetrize Cell"
 msgstr ""
 
@@ -1758,7 +1758,7 @@ msgstr ""
 #: qtplugins/qtaim/qtaimwavefunction.h:48
 #: qtplugins/qtaim/qtaimwavefunction.h:81
 #: qtplugins/quantuminput/quantuminput.cpp:152
-#: qtplugins/spacegroup/spacegroup.cpp:675
+#: qtplugins/spacegroup/spacegroup.cpp:679
 msgid "Error"
 msgstr ""
 
@@ -1801,9 +1801,9 @@ msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:440
-#: qtplugins/playertool/playertool.cpp:424
+#: qtplugins/playertool/playertool.cpp:468
 #: qtplugins/plugindownloader/downloaderwidget.cpp:369
-#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1018
+#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1025
 #, qt-format
 msgid "Cannot save file %1."
 msgstr ""
@@ -1848,25 +1848,25 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:312
-#: qtplugins/surfaces/surfaces.cpp:803
+#: qtplugins/surfaces/surfaces.cpp:810
 msgctxt "colormap"
 msgid "Parula"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:805
+#: qtplugins/surfaces/surfaces.cpp:812
 msgctxt "colormap"
 msgid "Heat"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:112
-#: qtplugins/surfaces/surfaces.cpp:807
+#: qtplugins/surfaces/surfaces.cpp:814
 msgctxt "colormap"
 msgid "Hot"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:114
-#: qtplugins/surfaces/surfaces.cpp:809
+#: qtplugins/surfaces/surfaces.cpp:816
 msgctxt "colormap"
 msgid "Gray"
 msgstr ""
@@ -1874,7 +1874,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:312
-#: qtplugins/surfaces/surfaces.cpp:811
+#: qtplugins/surfaces/surfaces.cpp:818
 msgctxt "colormap"
 msgid "Magma"
 msgstr ""
@@ -1882,7 +1882,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:313
-#: qtplugins/surfaces/surfaces.cpp:813
+#: qtplugins/surfaces/surfaces.cpp:820
 msgctxt "colormap"
 msgid "Inferno"
 msgstr ""
@@ -1890,7 +1890,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:313
-#: qtplugins/surfaces/surfaces.cpp:815
+#: qtplugins/surfaces/surfaces.cpp:822
 msgctxt "colormap"
 msgid "Plasma"
 msgstr ""
@@ -1898,7 +1898,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:314
-#: qtplugins/surfaces/surfaces.cpp:817
+#: qtplugins/surfaces/surfaces.cpp:824
 msgctxt "colormap"
 msgid "Viridis"
 msgstr ""
@@ -1906,7 +1906,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:124
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:314
-#: qtplugins/surfaces/surfaces.cpp:819
+#: qtplugins/surfaces/surfaces.cpp:826
 msgctxt "colormap"
 msgid "Cividis"
 msgstr ""
@@ -1918,7 +1918,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:821 :183 rc.cpp:1979
+#: qtplugins/surfaces/surfaces.cpp:828 :183 rc.cpp:1979
 msgctxt "colormap"
 msgid "Spectral"
 msgstr ""
@@ -1928,7 +1928,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:823 :180 rc.cpp:1976
+#: qtplugins/surfaces/surfaces.cpp:830 :180 rc.cpp:1976
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr ""
@@ -1938,7 +1938,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:130
-#: qtplugins/surfaces/surfaces.cpp:825 :174 rc.cpp:1970
+#: qtplugins/surfaces/surfaces.cpp:832 :174 rc.cpp:1970
 msgctxt "colormap"
 msgid "Balance"
 msgstr ""
@@ -1948,7 +1948,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:132
-#: qtplugins/surfaces/surfaces.cpp:827 :177 rc.cpp:1973
+#: qtplugins/surfaces/surfaces.cpp:834 :177 rc.cpp:1973
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr ""
@@ -1960,7 +1960,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:134
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:829 :186 rc.cpp:1982
+#: qtplugins/surfaces/surfaces.cpp:836 :186 rc.cpp:1982
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -2300,28 +2300,28 @@ msgstr ""
 msgid "Add centroids and center-of-mass."
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.cpp:250
-#: qtplugins/noncovalent/noncovalent.cpp:401
+#: qtplugins/closecontacts/closecontacts.cpp:252
+#: qtplugins/noncovalent/noncovalent.cpp:400
 msgid "Maximum distance:"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.cpp:251
-#: qtplugins/crystal/crystalscene.cpp:174
-#: qtplugins/noncovalent/noncovalent.cpp:402
-#: qtplugins/surfacerender/surfacerender.cpp:295
+#: qtplugins/closecontacts/closecontacts.cpp:253
+#: qtplugins/crystal/crystalscene.cpp:147
+#: qtplugins/noncovalent/noncovalent.cpp:401
+#: qtplugins/surfacerender/surfacerender.cpp:297
 #: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.cpp:258
+#: qtplugins/closecontacts/closecontacts.cpp:260
 msgid "Contact"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.cpp:261
+#: qtplugins/closecontacts/closecontacts.cpp:263
 msgid "Salt Bridge"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.cpp:264
+#: qtplugins/closecontacts/closecontacts.cpp:266
 msgid "Repulsive"
 msgstr ""
 
@@ -2786,7 +2786,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
 #: qtplugins/forcefield/forcefield.cpp:80
-#: qtplugins/plotconformer/plotconformer.cpp:145 :1342
+#: qtplugins/plotconformer/plotconformer.cpp:147 :1342
 msgid "Energy"
 msgstr ""
 
@@ -2973,11 +2973,11 @@ msgstr ""
 msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
-#: qtplugins/crystal/crystalscene.cpp:178
+#: qtplugins/crystal/crystalscene.cpp:151
 msgid "Color axes:"
 msgstr ""
 
-#: qtplugins/crystal/crystalscene.cpp:184
+#: qtplugins/crystal/crystalscene.cpp:157
 msgid "Line color:"
 msgstr ""
 
@@ -3183,7 +3183,7 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:88
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
-#: qtplugins/plotconformer/plotconformer.cpp:147
+#: qtplugins/plotconformer/plotconformer.cpp:149
 msgid "Forces"
 msgstr ""
 
@@ -3227,9 +3227,9 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:470
 #: qtplugins/forcefield/forcefield.cpp:640
 #: qtplugins/forcefield/forcefield.cpp:693
-#: qtplugins/playertool/playertool.cpp:391
-#: qtplugins/playertool/playertool.cpp:423 qtplugins/surfaces/surfaces.cpp:961
-#: qtplugins/surfaces/surfaces.cpp:1005 qtplugins/surfaces/surfaces.cpp:1017
+#: qtplugins/playertool/playertool.cpp:435
+#: qtplugins/playertool/playertool.cpp:467 qtplugins/surfaces/surfaces.cpp:968
+#: qtplugins/surfaces/surfaces.cpp:1012 qtplugins/surfaces/surfaces.cpp:1024
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr ""
@@ -3559,8 +3559,8 @@ msgstr ""
 msgid "Insert oligopeptide sequences."
 msgstr ""
 
-#: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:311
-#: qtplugins/surfacerender/surfacerender.cpp:317
+#: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:313
+#: qtplugins/surfacerender/surfacerender.cpp:319
 msgid "Color:"
 msgstr ""
 
@@ -3673,7 +3673,7 @@ msgstr ""
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/licorice/licorice.cpp:78
-#: qtplugins/surfacerender/surfacerender.cpp:284
+#: qtplugins/surfacerender/surfacerender.cpp:286
 #: qtplugins/vanderwaals/vanderwaals.cpp:75 :1780
 msgid "Opacity:"
 msgstr ""
@@ -3991,15 +3991,15 @@ msgstr ""
 msgid "Interact with online databases, query structures etc."
 msgstr ""
 
-#: qtplugins/noncovalent/noncovalent.cpp:400
+#: qtplugins/noncovalent/noncovalent.cpp:399
 msgid "Angle tolerance:"
 msgstr ""
 
-#: qtplugins/noncovalent/noncovalent.cpp:412
+#: qtplugins/noncovalent/noncovalent.cpp:411
 msgid "Halogen"
 msgstr ""
 
-#: qtplugins/noncovalent/noncovalent.cpp:415
+#: qtplugins/noncovalent/noncovalent.cpp:414
 msgid "Chalcogen"
 msgstr ""
 
@@ -4579,92 +4579,92 @@ msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:51
+#: qtplugins/playertool/playertool.cpp:52
 msgctxt "control-key 9"
 msgid "Ctrl+9"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:52
+#: qtplugins/playertool/playertool.cpp:53
 msgid "Player"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:53
+#: qtplugins/playertool/playertool.cpp:54
 #, qt-format
 msgid "Animation Tool\t(%1)"
 msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:83 :2037
+#: qtplugins/playertool/playertool.cpp:84 :2037
 msgid "Frame:"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:113
+#: qtplugins/playertool/playertool.cpp:114
 msgctxt "start or first frame index"
 msgid "Start:"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:124
+#: qtplugins/playertool/playertool.cpp:125
 msgctxt "end or last frame index"
 msgid "End:"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:138
+#: qtplugins/playertool/playertool.cpp:139
 msgid "Dynamic bonding?"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:146
+#: qtplugins/playertool/playertool.cpp:147
 msgid "Frame rate:"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:152
+#: qtplugins/playertool/playertool.cpp:153
 msgctxt "frames per second"
 msgid " FPS"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:160
-#: qtplugins/playertool/playertool.cpp:234
+#: qtplugins/playertool/playertool.cpp:161
+#: qtplugins/playertool/playertool.cpp:278
 msgid "Play"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:165
+#: qtplugins/playertool/playertool.cpp:166
 msgid "Record…"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:216
+#: qtplugins/playertool/playertool.cpp:260
 msgid "Pause"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:291
-#: qtplugins/playertool/playertool.cpp:396
+#: qtplugins/playertool/playertool.cpp:335
+#: qtplugins/playertool/playertool.cpp:440
 msgid "Movie (*.mp4)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:293
+#: qtplugins/playertool/playertool.cpp:337
 msgid "Export Bitmap Graphics"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:294
+#: qtplugins/playertool/playertool.cpp:338
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:308 qtplugins/surfaces/surfaces.cpp:932
+#: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:939
 msgid "GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:314
+#: qtplugins/playertool/playertool.cpp:358
 msgid "GIF FPS support warning"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:315
+#: qtplugins/playertool/playertool.cpp:359
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:360
+#: qtplugins/playertool/playertool.cpp:404
 msgid "Movie (*.avi)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:392 qtplugins/surfaces/surfaces.cpp:1006
+#: qtplugins/playertool/playertool.cpp:436 qtplugins/surfaces/surfaces.cpp:1013
 msgid "Error: cannot add frame to video."
 msgstr ""
 
@@ -4680,46 +4680,46 @@ msgstr ""
 msgid "Plot Conformer Data…"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:127
+#: qtplugins/plotconformer/plotconformer.cpp:129
 msgid "Conformer Analysis"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:141
+#: qtplugins/plotconformer/plotconformer.cpp:143
 msgid "Plot Type:"
 msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
-#: qtplugins/plotconformer/plotconformer.cpp:143 :1339
+#: qtplugins/plotconformer/plotconformer.cpp:145 :1339
 msgid "RMSD"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:149
+#: qtplugins/plotconformer/plotconformer.cpp:151
 msgid "Velocities"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:158
+#: qtplugins/plotconformer/plotconformer.cpp:160
 msgid "Energy Units:"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:167
+#: qtplugins/plotconformer/plotconformer.cpp:169
 msgid "to"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:227
+#: qtplugins/plotconformer/plotconformer.cpp:229
 msgid "RMSD (Å)"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:230
+#: qtplugins/plotconformer/plotconformer.cpp:232
 #, qt-format
 msgid "Relative Energy (%1)"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:233
+#: qtplugins/plotconformer/plotconformer.cpp:235
 msgid "Forces (N)"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:235
+#: qtplugins/plotconformer/plotconformer.cpp:237
 msgid "Velocities (m/s)"
 msgstr ""
 
@@ -4727,7 +4727,7 @@ msgstr ""
 msgid "PlotConformer"
 msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.h:81
+#: qtplugins/plotconformer/plotconformer.h:82
 msgid "Generate and plot conformer data (RMSD or energy)."
 msgstr ""
 
@@ -5369,7 +5369,7 @@ msgid "Symmetrize"
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:83
-#: qtplugins/spacegroup/spacegroup.cpp:576
+#: qtplugins/spacegroup/spacegroup.cpp:580
 msgid "Reduce to Asymmetric Unit"
 msgstr ""
 
@@ -5398,19 +5398,19 @@ msgstr ""
 msgid "Fill all atoms based on the crystal space group."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:390
-#: qtplugins/spacegroup/spacegroup.cpp:418
+#: qtplugins/spacegroup/spacegroup.cpp:394
+#: qtplugins/spacegroup/spacegroup.cpp:422
 msgid "Perceive Space Group"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:391
+#: qtplugins/spacegroup/spacegroup.cpp:395
 #, qt-format
 msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:407
+#: qtplugins/spacegroup/spacegroup.cpp:411
 #, qt-format
 msgid ""
 "Space group perception succeeded:\n"
@@ -5420,48 +5420,48 @@ msgid ""
 "International symbol: %4"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:424
+#: qtplugins/spacegroup/spacegroup.cpp:428
 msgid "Failure"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:425
+#: qtplugins/spacegroup/spacegroup.cpp:429
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:440
+#: qtplugins/spacegroup/spacegroup.cpp:444
 msgid "Primitive Reduction"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:441
-#: qtplugins/spacegroup/spacegroup.cpp:469
-#: qtplugins/spacegroup/spacegroup.cpp:497
+#: qtplugins/spacegroup/spacegroup.cpp:445
+#: qtplugins/spacegroup/spacegroup.cpp:473
+#: qtplugins/spacegroup/spacegroup.cpp:501
 #, qt-format
 msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:457
+#: qtplugins/spacegroup/spacegroup.cpp:461
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:485
+#: qtplugins/spacegroup/spacegroup.cpp:489
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:511
+#: qtplugins/spacegroup/spacegroup.cpp:515
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:565
+#: qtplugins/spacegroup/spacegroup.cpp:569
 #, qt-format
 msgid ""
 "With a tolerance of %1  Å, the space group information was perceived to be "
@@ -5473,53 +5473,59 @@ msgid ""
 "Proceed with this space group?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:596 qtplugins/yaehmop/yaehmop.cpp:208
+#: qtplugins/spacegroup/spacegroup.cpp:600 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:597
+#: qtplugins/spacegroup/spacegroup.cpp:601
 msgid "Select tolerance in Å:"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:614
+#: qtplugins/spacegroup/spacegroup.cpp:618
 msgid "Triclinic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:616
+#: qtplugins/spacegroup/spacegroup.cpp:620
+#: qtplugins/spacegroup/spacegroup.cpp:769
 msgid "Monoclinic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:618
+#: qtplugins/spacegroup/spacegroup.cpp:622
+#: qtplugins/spacegroup/spacegroup.cpp:766
 msgid "Orthorhombic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:620
+#: qtplugins/spacegroup/spacegroup.cpp:624
+#: qtplugins/spacegroup/spacegroup.cpp:762
 msgid "Tetragonal"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:622
+#: qtplugins/spacegroup/spacegroup.cpp:626
 msgid "Trigonal"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:624
+#: qtplugins/spacegroup/spacegroup.cpp:628
+#: qtplugins/spacegroup/spacegroup.cpp:764
 msgid "Rhombohedral"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:626
+#: qtplugins/spacegroup/spacegroup.cpp:630
+#: qtplugins/spacegroup/spacegroup.cpp:760
 msgid "Hexagonal"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:628
+#: qtplugins/spacegroup/spacegroup.cpp:632
+#: qtplugins/spacegroup/spacegroup.cpp:758
 msgid "Cubic"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:660
+#: qtplugins/spacegroup/spacegroup.cpp:664
 msgid "Primitive Cell Detected"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:662
+#: qtplugins/spacegroup/spacegroup.cpp:666
 #, qt-format
 msgid ""
 "The current unit cell appears to be a primitive cell (non-90° angles), but "
@@ -5530,27 +5536,27 @@ msgid ""
 "Would you like to create a conventional cell first?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:676
+#: qtplugins/spacegroup/spacegroup.cpp:680
 msgid "Failed to conventionalize the cell."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:692
+#: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "International"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:692
+#: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "Hall"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:692
+#: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "Hermann-Mauguin"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:693
+#: qtplugins/spacegroup/spacegroup.cpp:697
 msgid "Crystal System"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:725
+#: qtplugins/spacegroup/spacegroup.cpp:729
 msgid "Select Space Group"
 msgstr ""
 
@@ -5576,165 +5582,165 @@ msgstr ""
 msgid "Display spectra plots."
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:567
+#: qtplugins/spectra/spectradialog.cpp:597
 msgid "Infrared"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:571
+#: qtplugins/spectra/spectradialog.cpp:601
 msgid "Raman"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:574
+#: qtplugins/spectra/spectradialog.cpp:604
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:578
+#: qtplugins/spectra/spectradialog.cpp:608
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:582
+#: qtplugins/spectra/spectradialog.cpp:612
 msgid "NMR"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:585
+#: qtplugins/spectra/spectradialog.cpp:615
 msgid "Electronic"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:589
+#: qtplugins/spectra/spectradialog.cpp:619
 msgid "Circular Dichroism"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:593
-#: qtplugins/spectra/spectradialog.cpp:844
+#: qtplugins/spectra/spectradialog.cpp:623
+#: qtplugins/spectra/spectradialog.cpp:877
 msgid "Density of States"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:636
+#: qtplugins/spectra/spectradialog.cpp:667
 msgid "Select Background Color"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:660
+#: qtplugins/spectra/spectradialog.cpp:692
 msgid "Select Foreground Color"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:673
+#: qtplugins/spectra/spectradialog.cpp:706
 msgid "Select Calculated Spectra Color"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:685
+#: qtplugins/spectra/spectradialog.cpp:718
 msgid "Select Raw Spectra Color"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:698
+#: qtplugins/spectra/spectradialog.cpp:731
 msgid "Select Imported Spectra Color"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:744
+#: qtplugins/spectra/spectradialog.cpp:777
 msgid "Wavelength (nm)"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:745
+#: qtplugins/spectra/spectradialog.cpp:778
 msgid "Frequency (Hz)"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:751
+#: qtplugins/spectra/spectradialog.cpp:784
 msgid "Vibrational Spectra"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:752
-#: qtplugins/spectra/spectradialog.cpp:766
-#: qtplugins/spectra/spectradialog.cpp:779
-#: qtplugins/spectra/spectradialog.cpp:792
+#: qtplugins/spectra/spectradialog.cpp:785
+#: qtplugins/spectra/spectradialog.cpp:799
+#: qtplugins/spectra/spectradialog.cpp:812
+#: qtplugins/spectra/spectradialog.cpp:825
 msgid "Wavenumbers (cm⁻¹)"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:753
+#: qtplugins/spectra/spectradialog.cpp:786
 msgid "Transmission"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:765
+#: qtplugins/spectra/spectradialog.cpp:798
 msgid "Raman Spectra"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:767
-#: qtplugins/spectra/spectradialog.cpp:780
-#: qtplugins/spectra/spectradialog.cpp:793
-#: qtplugins/spectra/spectradialog.cpp:806
-#: qtplugins/spectra/spectradialog.cpp:820
-#: qtplugins/spectra/spectradialog.cpp:833
+#: qtplugins/spectra/spectradialog.cpp:800
+#: qtplugins/spectra/spectradialog.cpp:813
+#: qtplugins/spectra/spectradialog.cpp:826
+#: qtplugins/spectra/spectradialog.cpp:839
+#: qtplugins/spectra/spectradialog.cpp:853
+#: qtplugins/spectra/spectradialog.cpp:866
 msgid "Intensity"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:778
+#: qtplugins/spectra/spectradialog.cpp:811
 msgid "Vibrational Circular Dichroism"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:791
+#: qtplugins/spectra/spectradialog.cpp:824
 msgid "Magnetic Circular Dichroism"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:804
+#: qtplugins/spectra/spectradialog.cpp:837
 msgid "NMR Spectra"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:805
+#: qtplugins/spectra/spectradialog.cpp:838
 msgid "Chemical Shift (ppm)"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:818
+#: qtplugins/spectra/spectradialog.cpp:851
 msgid "Electronic Spectra"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:819
-#: qtplugins/spectra/spectradialog.cpp:832
-#: qtplugins/spectra/spectradialog.cpp:845
+#: qtplugins/spectra/spectradialog.cpp:852
+#: qtplugins/spectra/spectradialog.cpp:865
+#: qtplugins/spectra/spectradialog.cpp:878
 #: qtplugins/surfaces/orbitaltablemodel.cpp:135
 msgid "Energy (eV)"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:831
+#: qtplugins/spectra/spectradialog.cpp:864
 msgid "Circular Dichroism Spectra"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-#: qtplugins/spectra/spectradialog.cpp:846 :1686
+#: qtplugins/spectra/spectradialog.cpp:879 :1686
 msgid "Density"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:965
+#: qtplugins/spectra/spectradialog.cpp:1001
 msgid "Smoothed"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:974
+#: qtplugins/spectra/spectradialog.cpp:1010
 msgid "Raw"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:985
+#: qtplugins/spectra/spectradialog.cpp:1021
 msgid "Imported"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:1021
+#: qtplugins/spectra/spectradialog.cpp:1057
 msgid "Import Data"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:1021
+#: qtplugins/spectra/spectradialog.cpp:1057
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
 msgstr ""
 
-#: qtplugins/surfacerender/surfacerender.cpp:270
+#: qtplugins/surfacerender/surfacerender.cpp:272
 msgid "Surface"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
-#: qtplugins/surfacerender/surfacerender.cpp:272 :1683
+#: qtplugins/surfacerender/surfacerender.cpp:274 :1683
 msgid "Volume"
 msgstr ""
 
-#: qtplugins/surfacerender/surfacerender.cpp:275
+#: qtplugins/surfacerender/surfacerender.cpp:277
 msgid "Style:"
 msgstr ""
 
@@ -5876,37 +5882,37 @@ msgctxt "3D Volume Data Set"
 msgid "Cube %1"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:624
+#: qtplugins/surfaces/surfaces.cpp:631
 msgid "Calculating electron density"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:633
+#: qtplugins/surfaces/surfaces.cpp:640
 msgid "Calculating spin density"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:642
+#: qtplugins/surfaces/surfaces.cpp:649
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:898
+#: qtplugins/surfaces/surfaces.cpp:905
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:909 qtplugins/surfaces/surfaces.cpp:937
+#: qtplugins/surfaces/surfaces.cpp:916 qtplugins/surfaces/surfaces.cpp:944
 msgid "Movie AVI (*.avi)"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:911
+#: qtplugins/surfaces/surfaces.cpp:918
 msgid "Export Movie"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:912
+#: qtplugins/surfaces/surfaces.cpp:919
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:962
+#: qtplugins/surfaces/surfaces.cpp:969
 msgid "Couldn't find the active render widget, failing."
 msgstr ""
 
