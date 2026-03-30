@@ -23,10 +23,8 @@ Core features and goals of the Avogadro project include:
 
 Avogadro 2 began as a rewrite of the original [Avogadro 1.x][Avogadro1], which
 is now unsupported.
-The successor is faster, better, much more stable, and more featureful.
-A final couple of features yet to be ported will be implemented by the time of
-the 2.0 release, but in the meantime Avogadro 2 already has
-[much new functionality of its own](https://two.avogadro.cc/docs/whats-new-in-avogadro-2/).
+The successor is faster, better, much more stable, and [more feature-rich]
+(https://two.avogadro.cc/docs/whats-new-in-avogadro-2/).
 
 Avogadro's codebase is split across a
 [libraries repository](https://github.com/openchemistry/avogadrolibs)
