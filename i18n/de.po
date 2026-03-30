@@ -4988,7 +4988,7 @@ msgstr "pair distribution function zeichnen…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:120
 msgid "Failed to generate PDF pattern"
-msgstr ""
+msgstr "Fehler beim Erstellen von PDF-Muster"
 
 #: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:150
 msgid "Error message: "
@@ -6399,6 +6399,8 @@ msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
 msgstr ""
+"Die Yaehmop-Ausführung scheiterte mit folgendem Fehler:\n"
+"(X51X)"
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
