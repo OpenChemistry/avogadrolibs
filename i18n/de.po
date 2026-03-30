@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
 "PO-Revision-Date: 2026-03-31 12:10+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2898,9 +2898,8 @@ msgstr ""
 "%1"
 
 #: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
-#, fuzzy
 msgid "Error Pasting Molecule"
-msgstr "Einfügen von Molekül fehlgeschlagen"
+msgstr "Einfügen des Moleküls fehlgeschlagen"
 
 #: qtplugins/copypaste/copypaste.cpp:254
 msgid "Cannot paste molecule: Clipboard empty!"
@@ -4754,7 +4753,7 @@ msgid ""
 "%1"
 msgstr ""
 "Feature-Symbole:\n"
-"(X15X)"
+"(%1)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:170
 msgid "Status"
@@ -5425,11 +5424,11 @@ msgstr "Rendert primitive Strukturen mit Hilfe von QTAIM-Eigenschaften"
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
 msgid "Molecular Graph…"
-msgstr ""
+msgstr "Molekularer Graph …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
-msgstr ""
+msgstr "Molekularer Graph mit freien Elektronenpaaren …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
 #, fuzzy
@@ -5717,7 +5716,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:440
 msgid "Primitive Reduction"
-msgstr ""
+msgstr "Primitive Reduzierung"
 
 #: qtplugins/spacegroup/spacegroup.cpp:441
 #: qtplugins/spacegroup/spacegroup.cpp:469
@@ -5903,7 +5902,7 @@ msgstr ""
 #: qtplugins/spectra/spectradialog.cpp:578
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "Magnetischer Circulardichroismus"
 
 #: qtplugins/spectra/spectradialog.cpp:582
 msgid "NMR"
@@ -6399,12 +6398,13 @@ msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
 msgstr ""
-"Die Yaehmop-Ausführung scheiterte mit folgendem Fehler:\n"
-"(X51X)"
+"Die Yaehmop-Anwendung scheiterte mit folgendem Fehler:\n"
+"(%1)"
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
 msgstr ""
+"Die Bandstruktur konnte nicht aus der Ausgabe von Yaehmop gelesen werden!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:321
 msgid ""
@@ -8280,7 +8280,7 @@ msgstr "Ausgewählte Atome"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Everything Else"
-msgstr ""
+msgstr "Alles Andere"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -8324,7 +8324,7 @@ msgstr "Suche durch genetischen Algorithmus"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
 msgid "Optimization per conformer:"
-msgstr ""
+msgstr "Optimierung je Konformer:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
@@ -8336,7 +8336,7 @@ msgstr "Optionen für genetischen Algorithmus"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:112
 #. i18n: ectx: property (toolTip), widget (QSpinBox, childrenSpinBox)
 msgid "number of children for each parent geometry"
-msgstr "anzahl der kinder für jede elterngeometrie"
+msgstr "Anzahl der Kinder für jede Elterngeometrie"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8349,7 +8349,7 @@ msgstr "Kinder:"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:138
 #. i18n: ectx: property (toolTip), widget (QSpinBox, mutabilitySpinBox)
 msgid "mutation frequency (lower = more frequent mutations)"
-msgstr "mutationsfrequenz (unterer = häufigere mutationen)"
+msgstr "Mutationsfrequenz (tiefere Werte = häufigere Mutationen)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8362,12 +8362,12 @@ msgstr "Austauschbarkeit:"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:164
 #. i18n: ectx: property (toolTip), widget (QSpinBox, convergenceSpinBox)
 msgid "number of identical generations before convergence is reached"
-msgstr "anzahl der identischen generationen vor konvergenz"
+msgstr "Anzahl identischer Generationen vor Erreichen der Konvergenz"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Convergence:"
-msgstr "Konvergence:"
+msgstr "Konvergenz:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -8381,7 +8381,7 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
-"scoring-Methode für den genetischen Algorithmus (RMSD = geometrische "
+"Score-Methode für den genetischen Algorithmus (RMSD = geometrische "
 "Entfernung, Energie = niedrigste Energien)"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
@@ -8418,12 +8418,12 @@ msgstr "Newtonverfahren"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
 msgid "Limit Non-Bonded Interactions"
-msgstr ""
+msgstr "Nichtbindende Wechselwirkungen beschränken"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Van der Waals cutoff distance:"
-msgstr ""
+msgstr "Grenzwert van der Waals-Abstand:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -9069,7 +9069,9 @@ msgstr "Anzeigen"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:312
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "Importiert TSVs von experimentellen Spektren."
+msgstr ""
+"Importiert TSVs von experimentellen Spektren, um diese im Diagramm "
+"übereinanderzulegen."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:315
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
