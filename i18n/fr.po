@@ -13,14 +13,14 @@
 # Maetnicio <mxtt.tlc@gmail.com>, 2025.
 # "David D." <dadu042@users.noreply.hosted.weblate.org>, 2025.
 # FX Coudert <fxcoudert@ik.me>, 2026.
+# Li Chaoyu <2395074867@qq.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
 "PO-Revision-Date: 2026-03-31 12:09+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Li Chaoyu <2395074867@qq.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -1621,12 +1621,12 @@ msgid "Less than a second remaining"
 msgstr "Moins d ' une seconde restante"
 
 #: qtgui/timedprogressdialog.cpp:82
-#, qt-plural-format
+#, fuzzy, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n second restante"
+msgstr[1] "%n seconds restantes"
 
 #: qtgui/timedprogressdialog.cpp:85
 #, qt-plural-format
