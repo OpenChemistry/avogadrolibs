@@ -8349,7 +8349,7 @@ msgstr "Kinder:"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:138
 #. i18n: ectx: property (toolTip), widget (QSpinBox, mutabilitySpinBox)
 msgid "mutation frequency (lower = more frequent mutations)"
-msgstr ""
+msgstr "mutationsfrequenz (unterer = häufigere mutationen)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
