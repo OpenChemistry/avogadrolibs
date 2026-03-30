@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-29 06:09+0000\n"
+"PO-Revision-Date: 2026-03-30 08:10+0000\n"
 "Last-Translator: Chiyu Liang <532117255@qq.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -5671,35 +5671,35 @@ msgstr "选择 Å 为单位的容差："
 
 #: qtplugins/spacegroup/spacegroup.cpp:614
 msgid "Triclinic"
-msgstr ""
+msgstr "三斜晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "Monoclinic"
-msgstr ""
+msgstr "单斜晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:618
 msgid "Orthorhombic"
-msgstr ""
+msgstr "正交晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:620
 msgid "Tetragonal"
-msgstr ""
+msgstr "四方晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:622
 msgid "Trigonal"
-msgstr ""
+msgstr "三方晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:624
 msgid "Rhombohedral"
-msgstr ""
+msgstr "菱方晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:626
 msgid "Hexagonal"
-msgstr ""
+msgstr "六方晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:628
 msgid "Cubic"
-msgstr ""
+msgstr "立方晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:660
 msgid "Primitive Cell Detected"
@@ -5734,7 +5734,7 @@ msgstr "赫尔曼-莫甘"
 
 #: qtplugins/spacegroup/spacegroup.cpp:693
 msgid "Crystal System"
-msgstr ""
+msgstr "晶系"
 
 #: qtplugins/spacegroup/spacegroup.cpp:725
 msgid "Select Space Group"
@@ -5760,12 +5760,10 @@ msgid "Spectra"
 msgstr "光谱"
 
 #: qtplugins/spectra/spectra.h:34
-#, fuzzy
 msgid "Display spectra plots."
-msgstr "显示光谱。"
+msgstr "显示光谱谱图。"
 
 #: qtplugins/spectra/spectradialog.cpp:567
-#, fuzzy
 msgid "Infrared"
 msgstr "红外"
 
@@ -5776,12 +5774,12 @@ msgstr "拉曼"
 #: qtplugins/spectra/spectradialog.cpp:574
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "振动圆二色谱"
 
 #: qtplugins/spectra/spectradialog.cpp:578
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "磁圆二色谱"
 
 #: qtplugins/spectra/spectradialog.cpp:582
 msgid "NMR"
@@ -5799,15 +5797,15 @@ msgstr "圆二色性"
 #: qtplugins/spectra/spectradialog.cpp:593
 #: qtplugins/spectra/spectradialog.cpp:844
 msgid "Density of States"
-msgstr ""
+msgstr "态密度"
 
 #: qtplugins/spectra/spectradialog.cpp:636
 msgid "Select Background Color"
-msgstr ""
+msgstr "选择背景颜色"
 
 #: qtplugins/spectra/spectradialog.cpp:660
 msgid "Select Foreground Color"
-msgstr ""
+msgstr "选择前景颜色"
 
 #: qtplugins/spectra/spectradialog.cpp:673
 msgid "Select Calculated Spectra Color"
@@ -5823,11 +5821,11 @@ msgstr "选择导入的光谱颜色"
 
 #: qtplugins/spectra/spectradialog.cpp:744
 msgid "Wavelength (nm)"
-msgstr ""
+msgstr "波长 (nm)"
 
 #: qtplugins/spectra/spectradialog.cpp:745
 msgid "Frequency (Hz)"
-msgstr ""
+msgstr "频率 (Hz)"
 
 #: qtplugins/spectra/spectradialog.cpp:751
 msgid "Vibrational Spectra"
@@ -5994,7 +5992,6 @@ msgid "Solvent Excluded"
 msgstr "排除溶剂"
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
-#, fuzzy
 msgid "Molecular Orbital"
 msgstr "分子轨道"
 
@@ -6013,13 +6010,11 @@ msgid "MO %L1"
 msgstr "分子轨道 %L1"
 
 #: qtplugins/surfaces/surfacedialog.cpp:187
-#, fuzzy
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
 msgstr "(HOMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:189
-#, fuzzy
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
 msgstr "(LUMO)"
@@ -6187,7 +6182,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetool.cpp:418
 #: qtplugins/templatetool/templatetool.cpp:586
 msgid "Clipboard"
-msgstr ""
+msgstr "剪贴板"
 
 #: qtplugins/templatetool/templatetool.cpp:506
 msgid "Insert Template"
@@ -6199,7 +6194,6 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:36
 #: qtplugins/templatetool/templatetool.h:37
-#, fuzzy
 msgid "Template tool"
 msgstr "模板工具"
 
@@ -6227,7 +6221,7 @@ msgstr "显示振动模式对话框。"
 
 #: qtplugins/vibrations/vibrations.cpp:91
 msgid "Set the vibrational mode."
-msgstr ""
+msgstr "设置振动模式。"
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
@@ -6242,12 +6236,10 @@ msgid "Stop the vibrational animation."
 msgstr "停止振动动画演示。"
 
 #: qtplugins/vibrations/vibrations.h:33
-#, fuzzy
 msgid "Vibrations"
 msgstr "振动"
 
 #: qtplugins/vibrations/vibrations.h:37
-#, fuzzy
 msgid "Display vibrational modes."
 msgstr "显示振动模式。"
 
@@ -6304,7 +6296,7 @@ msgstr "在Yaehmop输出中仅发现一个特殊k点！需要两个或以上！"
 
 #: qtplugins/yaehmop/yaehmop.cpp:357
 msgid "k-space"
-msgstr ""
+msgstr "k 空间"
 
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
@@ -6533,7 +6525,7 @@ msgstr "PDB 文件："
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6619,7 +6611,6 @@ msgstr "加载多维数据集文件"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
-#, fuzzy
 msgid "Partial Charges"
 msgstr "部分电荷"
 
@@ -6694,7 +6685,7 @@ msgstr ""
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:113
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Value:"
-msgstr ""
+msgstr "值："
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, addConstraint)
@@ -6704,7 +6695,7 @@ msgstr "添加"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:167
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "Options"
-msgstr ""
+msgstr "选项"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
@@ -6714,12 +6705,12 @@ msgstr ""
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
 msgid "Delete Selected"
-msgstr ""
+msgstr "删除所选项"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:226
 #. i18n: ectx: property (text), widget (QPushButton, deleteAllConstraints)
 msgid "Delete All"
-msgstr ""
+msgstr "全部删除"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:233
 #. i18n: ectx: property (text), widget (QPushButton, okButton)
@@ -6878,7 +6869,7 @@ msgstr "计算："
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Basis set:"
-msgstr ""
+msgstr "基组："
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:215
 #. i18n: ectx: property (text), widget (QLabel, label_9)
