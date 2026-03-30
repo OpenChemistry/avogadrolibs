@@ -20,7 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
 "PO-Revision-Date: 2026-03-31 12:10+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2188,10 +2189,8 @@ msgstr ""
 "Rechte Maustaste:\tAtome anklicken und ziehen zum Rotieren."
 
 #: qtplugins/autoopt/autoopt.cpp:205
-#, fuzzy
-#| msgid "Optimization"
 msgid "Optimize"
-msgstr "Optimierung"
+msgstr "Optimieren"
 
 #: qtplugins/autoopt/autoopt.cpp:206
 msgid "Dynamics"
