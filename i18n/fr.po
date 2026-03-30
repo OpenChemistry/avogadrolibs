@@ -6,7 +6,7 @@
 # Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024, 2025, 2026.
 # research11111 <urgent.research@mailo.fr>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025, 2026.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025, 2026.
 # Eric Remy <eric.remy3@free.fr>, 2025.
 # Hēphaïstos <hephaistos@users.noreply.hosted.weblate.org>, 2025.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025, 2026.
@@ -19,7 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
 "PO-Revision-Date: 2026-03-31 12:09+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -1613,7 +1614,7 @@ msgstr "Paramètres"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
-msgstr ""
+msgstr "Calcul en cours…"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
