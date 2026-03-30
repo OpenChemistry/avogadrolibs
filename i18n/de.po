@@ -8381,6 +8381,8 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
+"scoring-Methode für den genetischen Algorithmus (RMSD = geometrische "
+"Entfernung, Energie = niedrigste Energien)"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
