@@ -20,8 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
 "PO-Revision-Date: 2026-03-31 12:10+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Alexander Krappe <alexander.krappe@fu-berlin.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4616,7 +4615,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:391
 #, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
-msgstr ""
+msgstr "Download von %1 fehlgeschlagen: Status %2, %3\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:400
 #, qt-format
@@ -4994,7 +4993,7 @@ msgstr "Fehlermeldung: "
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
-msgstr ""
+msgstr "PlotPdf"
 
 #: qtplugins/plotpdf/plotpdf.h:69
 msgid "Generate and plot a Pair Distribution Function curve."
@@ -5896,7 +5895,7 @@ msgstr "Raman"
 #: qtplugins/spectra/spectradialog.cpp:574
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "Vibronischer CD"
 
 #: qtplugins/spectra/spectradialog.cpp:578
 msgctxt "magnetic circular dichroism"
