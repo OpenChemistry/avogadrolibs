@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-30 08:10+0000\n"
+"PO-Revision-Date: 2026-03-31 12:10+0000\n"
 "Last-Translator: Chiyu Liang <532117255@qq.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -1045,7 +1045,6 @@ msgid "read"
 msgstr "读取"
 
 #: qtgui/fileformatdialog.cpp:173
-#, fuzzy
 msgctxt "File writers"
 msgid "writers"
 msgstr "写入器"
@@ -1129,7 +1128,7 @@ msgstr "处理器核心"
 
 #: qtgui/jsonwidget.cpp:204 qtgui/jsonwidget.cpp:212
 msgid "Memory"
-msgstr ""
+msgstr "内存"
 
 #: qtgui/jsonwidget.cpp:217
 msgid "Calculation Type"
@@ -1188,7 +1187,7 @@ msgid "Error setting default for option '%1'. Bad default value:"
 msgstr "设置选项 '%1' 的默认值时发生错误。无效的默认值："
 
 #: qtgui/jsonwidget.cpp:704
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
@@ -1214,7 +1213,6 @@ msgid "Ball and Stick"
 msgstr "球棍模型"
 
 #: qtgui/layermodel.cpp:172 qtplugins/cartoons/cartoons.h:31
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "卡通"
@@ -1233,7 +1231,6 @@ msgid "Force"
 msgstr "力"
 
 #: qtgui/layermodel.cpp:180 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
 msgstr "标签"
 
@@ -1275,7 +1272,7 @@ msgstr "Van der Waals（范德华）"
 #: qtgui/layermodel.cpp:196
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "体积"
 
 #: qtgui/layermodel.cpp:198 qtplugins/surfacerender/surfacerender.cpp:271
 #: qtplugins/wireframe/wireframe.h:28
@@ -1283,7 +1280,6 @@ msgid "Wireframe"
 msgstr "线框"
 
 #: qtgui/layermodel.cpp:200 qtplugins/overlayaxes/overlayaxes.h:28
-#, fuzzy
 msgid "Reference Axes"
 msgstr "参考轴"
 
@@ -1309,7 +1305,7 @@ msgstr "元素周期表"
 
 #: qtgui/pythonscript.cpp:132
 msgid "Package mode requires pixi but it was not found."
-msgstr ""
+msgstr "包模式要求 pixi 但未找到。"
 
 #: qtgui/pythonscript.cpp:230 qtgui/pythonscript.cpp:327
 #, qt-format
@@ -1449,12 +1445,11 @@ msgstr "更改原子颜色"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Residue Color"
-msgstr ""
+msgstr "更改残基颜色"
 
 #: qtgui/rwmolecule.cpp:298
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "改变原子杂化"
+msgstr "更改原子图层"
 
 #: qtgui/rwmolecule.cpp:314
 msgid "Add Bond"
@@ -1501,9 +1496,8 @@ msgid "Wrap Atoms to Cell"
 msgstr "将原子移入晶胞"
 
 #: qtgui/rwmolecule.cpp:580
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "比例缩放晶胞体积"
+msgstr "缩放晶胞体积"
 
 #: qtgui/rwmolecule.cpp:600
 msgid "Build Super Cell"
@@ -1536,7 +1530,7 @@ msgstr "填充晶胞"
 
 #: qtgui/rwmolecule.cpp:786
 msgid "Fill Translational Copies"
-msgstr ""
+msgstr "填充平移副本"
 
 #: qtgui/rwmolecule.cpp:806
 msgid "Reduce Cell to Asymmetric Unit"
@@ -1576,21 +1570,21 @@ msgstr "计算中…"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
-msgstr ""
+msgstr "剩余不到一秒"
 
 #: qtgui/timedprogressdialog.cpp:82
 #, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] ""
+msgstr[0] "剩余 %n 秒"
 
 #: qtgui/timedprogressdialog.cpp:85
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
 msgid_plural "%n minute(s) remaining"
-msgstr[0] ""
+msgstr[0] "剩余 %n 分钟"
 
 #: qtgui/timedprogressdialog.cpp:93
 #, qt-plural-format
@@ -1665,7 +1659,6 @@ msgid "Align"
 msgstr "对齐"
 
 #: qtplugins/aligntool/aligntool.cpp:53
-#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1681,7 +1674,7 @@ msgstr ""
 "\t第一个原子将被放置于原点。\n"
 "\t第二个原子将被对齐到选定的坐标轴。\n"
 "鼠标右键：重置对齐。\n"
-"鼠标双击：将原子放置在原点。"
+"鼠标双击：将原子回中到原点。"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1852,7 +1845,7 @@ msgstr "已生成 %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "运行 PDB2PQR 时出错"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -1902,7 +1895,6 @@ msgid "By Partial Charge…"
 msgstr "部分电荷…"
 
 #: qtplugins/applycolors/applycolors.cpp:83
-#, fuzzy
 msgid "By Secondary Structure"
 msgstr "按二级结构"
 
@@ -1911,7 +1903,6 @@ msgid "By Amino Acid"
 msgstr "按氨基酸"
 
 #: qtplugins/applycolors/applycolors.cpp:93
-#, fuzzy
 msgid "By Shapely Scheme"
 msgstr "按 Shapely 主题"
 
@@ -2089,23 +2080,23 @@ msgstr "应用自定义颜色"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 msgid "Apply Custom Residue Color"
-msgstr ""
+msgstr "应用自定义残基颜色"
 
 #: qtplugins/applycolors/applycolors.cpp:440
 msgid "Reset Residue Colors"
-msgstr ""
+msgstr "重置残基颜色"
 
 #: qtplugins/applycolors/applycolors.cpp:474
 msgid "Apply Secondary Structure Colors"
-msgstr ""
+msgstr "应用二级结构颜色"
 
 #: qtplugins/applycolors/applycolors.cpp:562
 msgid "Apply Amino Acid Colors"
-msgstr ""
+msgstr "应用氨基酸颜色"
 
 #: qtplugins/applycolors/applycolors.cpp:589
 msgid "Apply Shapely Colors"
-msgstr ""
+msgstr "应用 Shapely 颜色"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2114,7 +2105,7 @@ msgstr "应用颜色"
 #: qtplugins/autoopt/autoopt.cpp:67
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
 #: qtplugins/autoopt/autoopt.cpp:68
 msgid "Auto Optimize"
@@ -2142,7 +2133,7 @@ msgstr "优化"
 
 #: qtplugins/autoopt/autoopt.cpp:206
 msgid "Dynamics"
-msgstr ""
+msgstr "动力学"
 
 #: qtplugins/autoopt/autoopt.cpp:210
 msgid "Task:"
@@ -2190,21 +2181,21 @@ msgstr "分子动力学"
 #, qt-format
 msgctxt "temperature in Kelvin"
 msgid "%1 T = %L2"
-msgstr ""
+msgstr "%1 T = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:608
 #, qt-format
 msgctxt "change in energy in kJ/mol"
 msgid "%1 ΔE = %L2"
-msgstr ""
+msgstr "%1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.h:46
 msgid "Auto Optimize tool"
-msgstr ""
+msgstr "自动优化工具"
 
 #: qtplugins/autoopt/autoopt.h:49
 msgid "Interactive optimization of molecular geometry"
-msgstr ""
+msgstr "交互式分子几何构型优化"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
@@ -2235,15 +2226,14 @@ msgstr "将原子渲染为球体，将键渲染为圆柱体。"
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
-#, fuzzy
 msgid "Bond-Centric Manipulation"
 msgstr "化学键操纵"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2277,7 +2267,6 @@ msgid ""
 msgstr "基于键长和键角的分子几何形状修改工具。"
 
 #: qtplugins/bonding/bonding.cpp:28
-#, fuzzy
 msgid "Bond Atoms"
 msgstr "成键原子"
 
@@ -2299,7 +2288,6 @@ msgstr "让选定的原子成键"
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/propertytables/propertymodel.cpp:678
-#, fuzzy
 msgid "Bond"
 msgstr "键"
 
@@ -2324,7 +2312,6 @@ msgid "Perform bonding operations."
 msgstr "执行成键操作。"
 
 #: qtplugins/cartoons/cartoons.cpp:92
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Backbone"
 msgstr "骨架"
@@ -2351,7 +2338,6 @@ msgid "Simple Cartoon"
 msgstr "简单卡通"
 
 #: qtplugins/cartoons/cartoons.cpp:97
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Cartoon"
 msgstr "卡通"
@@ -2367,7 +2353,7 @@ msgstr "展示生物大分子色带/漫画。"
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Centroid"
-msgstr ""
+msgstr "添加质心"
 
 #: qtplugins/centroid/centroid.cpp:22
 msgid "Add Center of Mass"
@@ -2517,7 +2503,7 @@ msgstr "其它…"
 
 #: qtplugins/constraints/constraintsextension.cpp:22
 msgid "Constraints…"
-msgstr ""
+msgstr "约束…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:233
@@ -2528,11 +2514,11 @@ msgstr "计算(&C)"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
 #: qtplugins/constraints/constraintsextension.h:27:226
 msgid "Constraints"
-msgstr ""
+msgstr "约束"
 
 #: qtplugins/constraints/constraintsextension.h:31
 msgid "Set constraints for geometry optimizations"
-msgstr ""
+msgstr "设置几何构型优化的约束"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2550,7 +2536,7 @@ msgstr "角度"
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:64:241
 msgid "Torsion Angle"
-msgstr ""
+msgstr "扭转角"
 
 #: qtplugins/constraints/constraintsmodel.cpp:68
 msgctxt "fix / remain constant"
@@ -2582,7 +2568,7 @@ msgstr "类型"
 
 #: qtplugins/constraints/constraintsmodel.cpp:129
 msgid "Value"
-msgstr ""
+msgstr "值"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
 #: qtplugins/propertytables/propertymodel.cpp:709
@@ -2972,7 +2958,6 @@ msgid "BROYDEN"
 msgstr "BROYDEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:418
-#, fuzzy
 msgid "Conjugate Gradients"
 msgstr "共轭梯度法"
 
@@ -2981,7 +2966,6 @@ msgid "DIIS"
 msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:424
-#, fuzzy
 msgid "Steepest descent"
 msgstr "最速下降法"
 
@@ -3139,19 +3123,19 @@ msgstr "偶极矩"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "渲染分子的偶极矩。"
 
 #: qtplugins/editor/editor.cpp:73
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
 msgstr "绘制"
 
 #: qtplugins/editor/editor.cpp:76
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
@@ -3177,7 +3161,6 @@ msgstr "移除化学键"
 
 #: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:223
-#, fuzzy
 msgid "Distance:"
 msgstr "距离："
 
@@ -3366,13 +3349,12 @@ msgid "%1 Force Norm = %L2"
 msgstr "%1 力的范数 = %L2"
 
 #: qtplugins/forcefield/forcefield.h:61
-#, fuzzy
 msgid "Forcefield optimization"
 msgstr "力场优化"
 
 #: qtplugins/forcefield/forcefield.h:65
 msgid "Forcefield minimization, including scripts"
-msgstr ""
+msgstr "力场最小化，包括脚本"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:56
 msgid "Options…"
@@ -3415,7 +3397,6 @@ msgid "&GAMESS…"
 msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
-#, fuzzy
 msgid "GAMESS input"
 msgstr "GAMESS输入"
 
@@ -3712,7 +3693,7 @@ msgstr "元素 & ID"
 #: qtplugins/label/label.cpp:207
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "部分电荷"
 
 #: qtplugins/label/label.cpp:222
 msgid "Atom Label:"
@@ -3724,7 +3705,7 @@ msgstr "长度"
 
 #: qtplugins/label/label.cpp:236
 msgid "Bond Label:"
-msgstr ""
+msgstr "键标签："
 
 #: qtplugins/label/label.cpp:243 qtplugins/propertytables/propertymodel.cpp:687
 msgid "ID"
@@ -3952,7 +3933,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:194
 msgid "Number of Chains"
-msgstr ""
+msgstr "链数量"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:196
 msgid "Net Charge"
@@ -3974,39 +3955,39 @@ msgstr "HOMO 能量 (eV)"
 #: qtplugins/molecularproperties/molecularmodel.cpp:204
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "LUMO 能量 (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:206
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "SOMO 能量 (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:208
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
-msgstr ""
+msgstr "总能量 (Hartree)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:211
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
-msgstr ""
+msgstr "零点能 (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:214
 msgid "Enthalpy (kcal/mol)"
-msgstr ""
+msgstr "焓 (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:216
 msgid "Entropy (kcal/mol•K)"
-msgstr ""
+msgstr "熵 (kcal/mol•K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:218
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "Gibbs 自由能 (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:220
 msgctxt "point group symmetry"
 msgid "Point Group"
-msgstr ""
+msgstr "点群"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:38
 msgid "&Molecular…"
@@ -4023,7 +4004,7 @@ msgstr "查看分子的一般属性。"
 #: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:281
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analyze"
-msgstr ""
+msgstr "分析(&A)"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:60
 #: qtplugins/propertytables/propertytables.cpp:86
@@ -4052,9 +4033,8 @@ msgstr "CSV 文件 (*.csv);;所有文件 (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:151
 #: qtplugins/propertytables/propertyview.cpp:505
-#, fuzzy
 msgid "Could not open the file for writing."
-msgstr "无法打开文件并写入。"
+msgstr "无法打开文件以写入。"
 
 #: qtplugins/molecularproperties/molecularview.cpp:184
 #: qtplugins/propertytables/propertyview.cpp:537
@@ -4069,7 +4049,7 @@ msgstr "导出…"
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
 msgid "Ctrl+1"
-msgstr ""
+msgstr "Ctrl+1"
 
 #: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
@@ -4137,7 +4117,7 @@ msgstr "角度容差"
 
 #: qtplugins/noncovalent/noncovalent.cpp:412
 msgid "Halogen"
-msgstr ""
+msgstr "卤素"
 
 #: qtplugins/noncovalent/noncovalent.cpp:415
 msgid "Chalcogen"
@@ -4165,7 +4145,6 @@ msgid "Add Hydrogens for pH…"
 msgstr "添加特定 pH 下的氢原子…"
 
 #: qtplugins/openbabel/openbabel.cpp:84
-#, fuzzy
 msgid "Remove Hydrogens"
 msgstr "删除氢原子"
 
@@ -4281,7 +4260,7 @@ msgstr "生成构象异构体 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:715
 msgid "Generate Conformers"
-msgstr ""
+msgstr "生成构象异构体"
 
 #: qtplugins/openbabel/openbabel.cpp:734
 msgid "Cannot open file with Open Babel."
