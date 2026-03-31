@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-31 12:10+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2026-04-01 10:32+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
 "Language: fi\n"
@@ -1088,12 +1088,12 @@ msgstr "%1 viesti"
 #: qtgui/interfacescript.cpp:343
 #, qt-format
 msgid "%1 Warning"
-msgstr ""
+msgstr "%1 Varoitus"
 
 #: qtgui/interfacescript.cpp:350
 #, qt-format
 msgid "%1 Error"
-msgstr ""
+msgstr "%1 Virhe"
 
 #: qtgui/interfacescript.cpp:593
 #, qt-format
@@ -3398,21 +3398,21 @@ msgstr "Pakota kentän minimointi, mukaan lukien komentosarjat"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:56
 msgid "Options…"
-msgstr ""
+msgstr "Vaihtoehdot…"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:175
 msgid "Invalid Model Options"
-msgstr ""
+msgstr "Virheelliset mallivaihtoehdot"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:176
 #, qt-format
 msgid "Could not parse user options for model '%1'."
-msgstr ""
+msgstr "Mallin '%1' käyttäjävaihtoehtoja ei voitu jäsentää."
 
 #: qtplugins/forcefield/forcefielddialog.cpp:181
 #, qt-format
 msgid "%1 Options"
-msgstr ""
+msgstr "%1 vaihtoehdot"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:222
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -4482,46 +4482,47 @@ msgstr "Hahmonnoi referenssiakselit näytön kulmassa."
 #. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
 #: qtplugins/packageinstaller/packageinstaller.cpp:17:1701
 msgid "Manage Plugins…"
-msgstr ""
+msgstr "Hallitse liitännäisiä…"
 
 #: qtplugins/packageinstaller/packageinstaller.h:32
 msgid "Package Installer"
-msgstr ""
+msgstr "Pakettiasennusohjelma"
 
 #: qtplugins/packageinstaller/packageinstaller.h:36
 msgid "Install, update, and remove Avogadro packages."
-msgstr ""
+msgstr "Asenna, päivitä ja poista Avogadro-paketit."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:137
 #, qt-format
 msgid "Error downloading plugin list: %1"
-msgstr ""
+msgstr "Virhe ladattaessa liitännäisluetteloa: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:146
 msgid "Error: empty response from server."
-msgstr ""
+msgstr "Virhe: tyhjä vastaus palvelimelta."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:241
 #, qt-format
 msgid "Error fetching README: %1"
-msgstr ""
+msgstr "Virhe noudettaessa README:ta: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
 msgid "Nothing Selected"
-msgstr ""
+msgstr "Ei mitään valittuna"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:284
 msgid "Check the box next to a plugin to install or update it."
 msgstr ""
+"Valitse ruutu liitännäisen vieressä asentaaksesi tai päivittääksesi sen."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:294
 #, qt-format
 msgid "%1 (requires %2)"
-msgstr ""
+msgstr "%1 (vaatii %2)"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:298
 msgid "Version Incompatibility"
-msgstr ""
+msgstr "Versioyhteensopimattomuus"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:299
 #, qt-format
@@ -4532,6 +4533,11 @@ msgid ""
 "\n"
 "Install anyway?"
 msgstr ""
+"Seuraavat liitännäiset vaativat uudemman Avogadron version:\n"
+"\n"
+"%1\n"
+"\n"
+"Asennetaanko silti?"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:326
 msgid "No Download Available"
@@ -4544,6 +4550,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Valitut liitännäiset eivät tarjoa ladattavaa lähde-URL-osoitetta:\n"
+"\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:374
 #, qt-format
@@ -4600,23 +4609,23 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:566
 msgid "Check the box next to an installed plugin to remove it."
-msgstr ""
+msgstr "Poista asennettu liitännäinen valitsemalla sen vieressä oleva ruutu."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:572
 msgid "Remove Plugins"
-msgstr ""
+msgstr "Poista liitännäiset"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:573
 #, qt-plural-format
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
 msgid_plural "Remove %n selected plugin(s)?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Poistetaanko %n valittu liitännäinen?"
+msgstr[1] "Poistetaanko %n valittua liitännäistä?"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:577
 msgid "Keep Files"
-msgstr ""
+msgstr "Säilytä tiedostot"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:579
 msgid "Delete Files"
@@ -4624,7 +4633,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:612
 msgid "Select Plugin Directory"
-msgstr ""
+msgstr "Valitse liitännäisten hakemisto"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:618
 msgid "Invalid Directory"
@@ -4637,7 +4646,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:633
 #, qt-format
 msgid "Plugin already installed as symlink: %1\n"
-msgstr ""
+msgstr "Liitännäinen jo asennettu symbolisena linkkinä: %1\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:648
 #, qt-format
@@ -4656,7 +4665,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:659
 #, qt-format
 msgid "Installing plugin from %1…\n"
-msgstr ""
+msgstr "Asennetaan liitännäistä %1:sta…\n"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:58
 msgid "Not installed"
@@ -8712,7 +8721,7 @@ msgstr ""
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
 msgid "Search plugins…"
-msgstr ""
+msgstr "Hae liitännäisiä…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
