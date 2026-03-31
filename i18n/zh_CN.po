@@ -11,7 +11,7 @@
 # Chiyu Liang <532117255@qq.com>, 2023, 2024, 2026.
 # Sihan Zhang <chemistryzsh@gmail.com>, 2024.
 # KeysBits <KeysBytes@gmail.com>, 2024, 2026.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2026.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025, 2026.
 # zhang tengshuo <zhangtengshuo@gmail.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
@@ -23,7 +23,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
 "PO-Revision-Date: 2026-04-01 10:32+0000\n"
-"Last-Translator: Chiyu Liang <532117255@qq.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -3897,7 +3898,7 @@ msgstr "（待定）"
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
 #: qtplugins/propertytables/propertymodel.cpp:748
 msgid "Property"
-msgstr ""
+msgstr "属性"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:178
 msgid "Molecule Name"
