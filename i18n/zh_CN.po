@@ -16,14 +16,14 @@
 # zhang tengshuo <zhangtengshuo@gmail.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 # kuyoeku <kuyoeku@gmail.com>, 2025.
-# gmkeebiy <gmkeebiy@sharklasers.com>, 2025.
+# gmkeebiy <gmkeebiy@sharklasers.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-31 12:10+0000\n"
-"Last-Translator: Chiyu Liang <532117255@qq.com>\n"
+"PO-Revision-Date: 2026-04-01 10:31+0000\n"
+"Last-Translator: gmkeebiy <gmkeebiy@sharklasers.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -1992,7 +1992,7 @@ msgstr "Spectral"
 #: qtplugins/surfaces/surfaces.cpp:823:180 rc.cpp:1976
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr "Coolwarm"
+msgstr "冷热"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
