@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Ricky Tigg <ricky.tigg@gmail.com>, 2024, 2025.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2026.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 # Joona Nousiainen <nousiainej@proton.me>, 2025.
 msgid ""
@@ -12,8 +12,9 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2025-08-15 14:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-03-31 12:10+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
 "Language: fi\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1138,7 +1139,7 @@ msgstr "Suorittimen ytimet"
 
 #: qtgui/jsonwidget.cpp:204 qtgui/jsonwidget.cpp:212
 msgid "Memory"
-msgstr ""
+msgstr "Muisti"
 
 #: qtgui/jsonwidget.cpp:217
 msgid "Calculation Type"
@@ -1167,7 +1168,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:240
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "Malli"
 
 #: qtgui/jsonwidget.cpp:386
 msgid "User Name"
