@@ -15,9 +15,10 @@
 #include <QtCore/QRegularExpression>
 #include <QtCore/QStringList>
 #include <QtGui/QColor>
-#include <QtGui/QIcon>
 
 #include <nlohmann/json.hpp>
+
+#include <algorithm>
 
 using json = nlohmann::json;
 
@@ -46,10 +47,10 @@ QVariant PackageModel::data(const QModelIndex& index, int role) const
 
   const PackageEntry& e = m_entries[index.row()];
 
-  if (role == Qt::CheckStateRole && index.column() == StatusColumn)
-    return e.checked ? Qt::Checked : Qt::Unchecked;
+  if (role == Qt::TextAlignmentRole && index.column() == StatusColumn)
+    return static_cast<int>(Qt::AlignCenter);
 
-  if (role == Qt::DecorationRole && index.column() == StatusColumn)
+  if (role == Qt::DisplayRole && index.column() == StatusColumn)
     return statusIcon(e.status);
 
   if (role == Qt::ToolTipRole && index.column() == StatusColumn) {
@@ -130,11 +131,6 @@ bool PackageModel::setData(const QModelIndex& index, const QVariant& value,
   if (!index.isValid() || index.row() >= m_entries.size())
     return false;
 
-  if (role == Qt::CheckStateRole && index.column() == StatusColumn) {
-    m_entries[index.row()].checked = (value.toInt() == Qt::Checked);
-    emit dataChanged(index, index, { Qt::CheckStateRole });
-    return true;
-  }
   return false;
 }
 
@@ -186,10 +182,7 @@ Qt::ItemFlags PackageModel::flags(const QModelIndex& index) const
   if (!index.isValid())
     return Qt::NoItemFlags;
 
-  Qt::ItemFlags f = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
-  if (index.column() == StatusColumn)
-    f |= Qt::ItemIsUserCheckable;
-  return f;
+  return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
 // ---------------------------------------------------------------------------
@@ -285,6 +278,11 @@ void PackageModel::loadOnlineCatalog(const QByteArray& jsonBytes)
       m_entries.append(e);
   }
 
+  std::sort(m_entries.begin(), m_entries.end(),
+            [](const PackageEntry& a, const PackageEntry& b) {
+              return a.name.compare(b.name, Qt::CaseInsensitive) < 0;
+            });
+
   endResetModel();
 }
 
@@ -301,7 +299,6 @@ void PackageModel::mergeInstalledPackages()
       e.installedDir.clear();
       e.isSymlink = false;
       e.status = PackageStatus::NotInstalled;
-      e.checked = false;
     }
   }
   // Remove any previously added LocalOnly entries
@@ -365,11 +362,10 @@ void PackageModel::mergeInstalledPackages()
     }
   }
 
-  // Pre-check any UpdateAvailable entries
-  for (PackageEntry& e : m_entries) {
-    if (e.status == PackageStatus::UpdateAvailable)
-      e.checked = true;
-  }
+  std::sort(m_entries.begin(), m_entries.end(),
+            [](const PackageEntry& a, const PackageEntry& b) {
+              return a.name.compare(b.name, Qt::CaseInsensitive) < 0;
+            });
 
   endResetModel();
 }
@@ -383,35 +379,6 @@ QString PackageModel::readmeUrl(int row) const
   if (row < 0 || row >= m_entries.size())
     return {};
   return m_entries[row].readmeUrl;
-}
-
-QList<int> PackageModel::checkedRows() const
-{
-  QList<int> result;
-  for (int i = 0; i < m_entries.size(); ++i) {
-    if (m_entries[i].checked)
-      result.append(i);
-  }
-  return result;
-}
-
-void PackageModel::setChecked(int row, bool checked)
-{
-  if (row < 0 || row >= m_entries.size())
-    return;
-  m_entries[row].checked = checked;
-  QModelIndex idx = index(row, StatusColumn);
-  emit dataChanged(idx, idx, { Qt::CheckStateRole });
-}
-
-void PackageModel::uncheckAll()
-{
-  for (PackageEntry& e : m_entries)
-    e.checked = false;
-  if (!m_entries.isEmpty())
-    emit dataChanged(index(0, StatusColumn),
-                     index(rowCount() - 1, StatusColumn),
-                     { Qt::CheckStateRole });
 }
 
 // ---------------------------------------------------------------------------
@@ -503,23 +470,17 @@ int PackageModel::compareSemVer(const QString& lhs, const QString& rhs,
   return 0;
 }
 
-QIcon PackageModel::statusIcon(PackageStatus status)
+QString PackageModel::statusIcon(PackageStatus status)
 {
   switch (status) {
     case PackageStatus::NotInstalled:
-      return QIcon::fromTheme(QStringLiteral("package-available"),
-                              QIcon::fromTheme(QStringLiteral("list-add")));
+      return QStringLiteral("\u2795"); // ➕ heavy plus sign
     case PackageStatus::Installed:
-      return QIcon::fromTheme(
-        QStringLiteral("package-installed-updated"),
-        QIcon::fromTheme(QStringLiteral("dialog-ok-apply")));
+      return QStringLiteral("\u2705"); // ✅ white check mark
     case PackageStatus::UpdateAvailable:
-      return QIcon::fromTheme(
-        QStringLiteral("package-upgrade"),
-        QIcon::fromTheme(QStringLiteral("software-update-available")));
+      return QStringLiteral("\u2757"); // ❗ red exclamation mark
     case PackageStatus::LocalOnly:
-      return QIcon::fromTheme(QStringLiteral("folder-development"),
-                              QIcon::fromTheme(QStringLiteral("folder")));
+      return QStringLiteral("\U0001F4C1"); // 📁 file folder
   }
   return {};
 }

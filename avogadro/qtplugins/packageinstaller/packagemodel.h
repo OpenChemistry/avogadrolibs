@@ -10,7 +10,6 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QList>
 #include <QtCore/QString>
-#include <QtGui/QIcon>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -70,7 +69,6 @@ public:
 
     // UI state
     PackageStatus status = PackageStatus::NotInstalled;
-    bool checked = false; ///< checkbox state for bulk operations
   };
 
   explicit PackageModel(QObject* parent = nullptr);
@@ -108,11 +106,6 @@ public:
   /** README URL for the given source-model row. */
   QString readmeUrl(int row) const;
 
-  // Checkbox helpers
-  QList<int> checkedRows() const;
-  void setChecked(int row, bool checked);
-  void uncheckAll();
-
   /**
    * Returns true when the running Avogadro version satisfies the entry's
    * minimum-avogadro-version requirement (or when no minimum is specified).
@@ -139,8 +132,8 @@ private:
                           int& patch);
   static int compareSemVer(const QString& lhs, const QString& rhs, bool& ok);
 
-  /** Icon for the given status. */
-  static QIcon statusIcon(PackageStatus status);
+  /** Emoji glyph for the given status. */
+  static QString statusIcon(PackageStatus status);
 
   /** Unicode glyph for the given feature type string. */
   static QString featureGlyph(const QString& featureType);
