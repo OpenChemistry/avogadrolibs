@@ -270,14 +270,13 @@ void PackageManagerDialog::installSelected()
   m_downloadQueue.clear();
   m_ui->readmeBrowser->clear();
 
-  QList<int> rows = m_model->checkedRows();
-  if (rows.isEmpty()) {
-    // Fall back to the view's selected (highlighted) rows
-    const QModelIndexList selected =
-      m_ui->packageTable->selectionModel()->selectedRows();
-    for (const QModelIndex& proxyIdx : selected)
-      rows.append(m_proxyModel->mapToSource(proxyIdx).row());
-  }
+  QList<int> rows;
+  const QModelIndexList selected =
+    m_ui->packageTable->selectionModel()->selectedRows();
+  for (const QModelIndex& proxyIdx : selected)
+    rows.append(m_proxyModel->mapToSource(proxyIdx).row());
+
+  // TODO: Fix this since we don't use checkboxes
   if (rows.isEmpty()) {
     QMessageBox::information(
       this, tr("Nothing Selected"),
@@ -516,7 +515,6 @@ void PackageManagerDialog::onPackagesInstalled()
 {
   m_ui->readmeBrowser->append(tr("Installation complete.\n"));
   m_model->mergeInstalledPackages();
-  m_model->uncheckAll();
 }
 
 // ---------------------------------------------------------------------------
@@ -525,13 +523,15 @@ void PackageManagerDialog::onPackagesInstalled()
 
 void PackageManagerDialog::removeSelected()
 {
-  // Collect installed checked rows (map proxy → source)
+  // Collect installed selected rows (map proxy → source)
   QList<int> toRemove;
-  for (int i = 0; i < m_model->entryCount(); ++i) {
-    const PackageModel::PackageEntry& e = m_model->entry(i);
-    if (e.checked && e.status != PackageModel::PackageStatus::NotInstalled) {
-      toRemove.append(i);
-    }
+  const QModelIndexList selected =
+    m_ui->packageTable->selectionModel()->selectedRows();
+  for (const QModelIndex& proxyIdx : selected) {
+    int row = m_proxyModel->mapToSource(proxyIdx).row();
+    const PackageModel::PackageEntry& e = m_model->entry(row);
+    if (e.status != PackageModel::PackageStatus::NotInstalled)
+      toRemove.append(row);
   }
 
   // Symlinks are created for local-disk installs — just remove the link
@@ -548,18 +548,7 @@ void PackageManagerDialog::removeSelected()
     }
   }
 
-  if (toRemove.isEmpty()) {
-    // Fall back to the view's selected (highlighted) rows
-    const QModelIndexList selected =
-      m_ui->packageTable->selectionModel()->selectedRows();
-    for (const QModelIndex& proxyIdx : selected) {
-      int row = m_proxyModel->mapToSource(proxyIdx).row();
-      const PackageModel::PackageEntry& e = m_model->entry(row);
-      if (e.status != PackageModel::PackageStatus::NotInstalled)
-        toRemove.append(row);
-    }
-  }
-
+  // TODO - fix this string since we don't use checkboxes
   if (toRemove.isEmpty()) {
     QMessageBox::information(
       this, tr("Nothing to Remove"),
@@ -599,7 +588,6 @@ void PackageManagerDialog::removeSelected()
 
   // Refresh table state
   m_model->mergeInstalledPackages();
-  m_model->uncheckAll();
 }
 
 // ---------------------------------------------------------------------------
