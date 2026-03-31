@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-20 12:12+0000\n"
+"PO-Revision-Date: 2026-03-31 12:10+0000\n"
 "Last-Translator: Alexander Krappe <alexander.krappe@fu-berlin.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -2188,10 +2188,8 @@ msgstr ""
 "Rechte Maustaste:\tAtome anklicken und ziehen zum Rotieren."
 
 #: qtplugins/autoopt/autoopt.cpp:205
-#, fuzzy
-#| msgid "Optimization"
 msgid "Optimize"
-msgstr "Optimierung"
+msgstr "Optimieren"
 
 #: qtplugins/autoopt/autoopt.cpp:206
 msgid "Dynamics"
@@ -2898,9 +2896,8 @@ msgstr ""
 "%1"
 
 #: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
-#, fuzzy
 msgid "Error Pasting Molecule"
-msgstr "Einfügen von Molekül fehlgeschlagen"
+msgstr "Einfügen des Moleküls fehlgeschlagen"
 
 #: qtplugins/copypaste/copypaste.cpp:254
 msgid "Cannot paste molecule: Clipboard empty!"
@@ -4618,7 +4615,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:391
 #, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
-msgstr ""
+msgstr "Download von %1 fehlgeschlagen: Status %2, %3\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:400
 #, qt-format
@@ -4753,6 +4750,8 @@ msgid ""
 "Feature icons:\n"
 "%1"
 msgstr ""
+"Feature-Symbole:\n"
+"(%1)"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:170
 msgid "Status"
@@ -4986,7 +4985,7 @@ msgstr "pair distribution function zeichnen…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:120
 msgid "Failed to generate PDF pattern"
-msgstr ""
+msgstr "Fehler beim Erstellen von PDF-Muster"
 
 #: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:150
 msgid "Error message: "
@@ -4994,7 +4993,7 @@ msgstr "Fehlermeldung: "
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
-msgstr ""
+msgstr "PlotPdf"
 
 #: qtplugins/plotpdf/plotpdf.h:69
 msgid "Generate and plot a Pair Distribution Function curve."
@@ -5423,11 +5422,11 @@ msgstr "Rendert primitive Strukturen mit Hilfe von QTAIM-Eigenschaften"
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
 msgid "Molecular Graph…"
-msgstr ""
+msgstr "Molekularer Graph …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
-msgstr ""
+msgstr "Molekularer Graph mit freien Elektronenpaaren …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
 #, fuzzy
@@ -5715,7 +5714,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:440
 msgid "Primitive Reduction"
-msgstr ""
+msgstr "Primitive Reduzierung"
 
 #: qtplugins/spacegroup/spacegroup.cpp:441
 #: qtplugins/spacegroup/spacegroup.cpp:469
@@ -5896,12 +5895,12 @@ msgstr "Raman"
 #: qtplugins/spectra/spectradialog.cpp:574
 msgctxt "vibrational circular dichroism"
 msgid "Vibrational CD"
-msgstr ""
+msgstr "Vibronischer CD"
 
 #: qtplugins/spectra/spectradialog.cpp:578
 msgctxt "magnetic circular dichroism"
 msgid "Magnetic CD"
-msgstr ""
+msgstr "Magnetischer Circulardichroismus"
 
 #: qtplugins/spectra/spectradialog.cpp:582
 msgid "NMR"
@@ -6397,10 +6396,13 @@ msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
 msgstr ""
+"Die Yaehmop-Anwendung scheiterte mit folgendem Fehler:\n"
+"(%1)"
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
 msgstr ""
+"Die Bandstruktur konnte nicht aus der Ausgabe von Yaehmop gelesen werden!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:321
 msgid ""
@@ -7340,7 +7342,7 @@ msgstr "inchi"
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:85
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Search By: "
-msgstr ""
+msgstr "Suche nach: "
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -8271,12 +8273,12 @@ msgstr ""
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Selected Atoms"
-msgstr ""
+msgstr "Ausgewählte Atome"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Everything Else"
-msgstr ""
+msgstr "Alles Andere"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -8320,7 +8322,7 @@ msgstr "Suche durch genetischen Algorithmus"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
 msgid "Optimization per conformer:"
-msgstr ""
+msgstr "Optimierung je Konformer:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
@@ -8332,7 +8334,7 @@ msgstr "Optionen für genetischen Algorithmus"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:112
 #. i18n: ectx: property (toolTip), widget (QSpinBox, childrenSpinBox)
 msgid "number of children for each parent geometry"
-msgstr ""
+msgstr "Anzahl der Kinder für jede Elterngeometrie"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8345,7 +8347,7 @@ msgstr "Kinder:"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:138
 #. i18n: ectx: property (toolTip), widget (QSpinBox, mutabilitySpinBox)
 msgid "mutation frequency (lower = more frequent mutations)"
-msgstr ""
+msgstr "Mutationsfrequenz (tiefere Werte = häufigere Mutationen)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8358,12 +8360,12 @@ msgstr "Austauschbarkeit:"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:164
 #. i18n: ectx: property (toolTip), widget (QSpinBox, convergenceSpinBox)
 msgid "number of identical generations before convergence is reached"
-msgstr ""
+msgstr "Anzahl identischer Generationen vor Erreichen der Konvergenz"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Convergence:"
-msgstr ""
+msgstr "Konvergenz:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -8377,6 +8379,8 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
+"Score-Methode für den genetischen Algorithmus (RMSD = geometrische "
+"Entfernung, Energie = niedrigste Energien)"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8412,12 +8416,12 @@ msgstr "Newtonverfahren"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
 msgid "Limit Non-Bonded Interactions"
-msgstr ""
+msgstr "Nichtbindende Wechselwirkungen beschränken"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Van der Waals cutoff distance:"
-msgstr ""
+msgstr "Grenzwert van der Waals-Abstand:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -8432,7 +8436,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "\"Energie\" Konvergenz:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
@@ -8502,7 +8506,7 @@ msgstr "AMBER10"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_waterModel)
 msgid "Water Model:"
-msgstr ""
+msgstr "Wassermodell:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:145
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
@@ -8522,7 +8526,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:160
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "Implicit Solvent (OBC)"
-msgstr ""
+msgstr "Implizites Lösungsmittel (OBC)"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:168
 #. i18n: ectx: property (text), widget (QLabel, label_platform)
@@ -8587,12 +8591,12 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:283
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "NoCutoff"
-msgstr ""
+msgstr "NoCutoff"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:288
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "CutoffNonPeriodic"
-msgstr ""
+msgstr "CutoffNonPeriodic"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:293
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
@@ -9063,7 +9067,9 @@ msgstr "Anzeigen"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:312
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "Importiert TSVs von experimentellen Spektren."
+msgstr ""
+"Importiert TSVs von experimentellen Spektren, um diese im Diagramm "
+"übereinanderzulegen."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:315
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
