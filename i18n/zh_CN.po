@@ -10,7 +10,7 @@
 # alchemistcai <alchemistcai@163.com>, 2023.
 # Chiyu Liang <532117255@qq.com>, 2023, 2024, 2026.
 # Sihan Zhang <chemistryzsh@gmail.com>, 2024.
-# KeysBits <KeysBytes@gmail.com>, 2024.
+# KeysBits <KeysBytes@gmail.com>, 2024, 2026.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 # zhang tengshuo <zhangtengshuo@gmail.com>, 2024.
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
 "PO-Revision-Date: 2026-04-01 10:31+0000\n"
-"Last-Translator: gmkeebiy <gmkeebiy@sharklasers.com>\n"
+"Last-Translator: KeysBits <KeysBytes@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -6280,7 +6280,7 @@ msgstr "k 空间"
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
 msgid "Band %1"
-msgstr ""
+msgstr "能带 %1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:387
 msgid "Fermi Level"
@@ -6752,6 +6752,23 @@ msgid ""
 "for optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>格式的特殊说明。每个字符代表写入每个原子的值：</p><p>"
+"<span style=\" font-weight:600;\">#</span> - 原子次序 (1, 2, ..., numAtoms)"
+"<br/><span style=\" font-weight:600;\">Z</span> - 原子序数（如“6”代表碳原子"
+"） <br/><span style=\" font-weight:600;\">G</span> - GAMESS格式原子序数（如“"
+"6.0”代表碳原子） <br/><span style=\" font-weight:600;\">N</span> - 元素名称（"
+"如“碳”） <br/><span style=\" font-weight:600;\">S</span> - 元素符号（如“C”代"
+"表碳元素） <br/><span style=\" font-weight:700;\">L</span> - 原子标签（如“C2”"
+"代表第二个碳原子，“H1”代表第一个氢原子） <br/><span style=\" font-"
+"weight:600;\">x</span> - X轴位置坐标 <br/><span style=\" font-weight:600;\">"
+"y</span> - Y轴坐标位置 <br/><span style=\" font-weight:600;\">z</span> - Z轴"
+"坐标位置 <br/><span style=\" font-weight:600;\">a</span> - 晶格常数'a'（仅晶"
+"体） <br/><span style=\" font-weight:600;\">b</span> - 晶格常数'b'（仅晶体） "
+"<br/><span style=\" font-weight:600;\">c</span> - 晶格常数'c'（仅晶体） <br/>"
+"<span style=\" font-weight:600;\">_</span> - 字符空格\" \"用于对齐 <br/>"
+"<span style=\" font-weight:600;\">0</span> - 字符\"0\"用于优化标志 <br/>"
+"<span style=\" font-weight:600;\">1</span> - 字符\"1\"用于优化标志 <br/></p>"
+"</body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
