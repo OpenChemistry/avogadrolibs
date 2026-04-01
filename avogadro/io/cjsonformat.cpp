@@ -24,6 +24,7 @@
 #include <iterator>
 
 using json = nlohmann::json;
+using ordered_json = nlohmann::ordered_json;
 
 namespace Avogadro::Io {
 
@@ -1103,7 +1104,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
   else
     opts = json::object();
 
-  json root;
+  ordered_json root;
 
   root["chemicalJson"] = 1;
 
