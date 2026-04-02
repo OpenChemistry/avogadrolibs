@@ -11,6 +11,7 @@
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/propertymap.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
@@ -87,6 +88,85 @@ json eigenColToJson(const MatrixX& matrix, int column)
     j.push_back(matrix(i, column));
   }
   return j;
+}
+
+using Core::PropertyMap;
+
+/** Deserialize a JSON object of named arrays into a PropertyMap. */
+void deserializeProperties(const json& obj, PropertyMap& props,
+                           size_t expectedCount)
+{
+  if (!obj.is_object())
+    return;
+  for (auto& property : obj.items()) {
+    const auto& arr = property.value();
+    if (!arr.is_array() || arr.size() != expectedCount)
+      continue;
+
+    // Detect type from array elements
+    bool allString = true;
+    bool hasFloat = false;
+    for (size_t i = 0; i < arr.size(); ++i) {
+      if (arr[i].is_number()) {
+        allString = false;
+        if (arr[i].is_number_float())
+          hasFloat = true;
+      } else if (!arr[i].is_string()) {
+        allString = false;
+      }
+    }
+
+    // Use bulk setters for efficiency
+    const auto& key = property.key();
+    if (allString) {
+      Array<std::string> values;
+      values.reserve(arr.size());
+      for (size_t i = 0; i < arr.size(); ++i)
+        values.push_back(arr[i].is_string() ? arr[i].get<std::string>()
+                                            : std::string());
+      props.setStrings(key, values);
+    } else if (hasFloat) {
+      Array<double> values;
+      values.reserve(arr.size());
+      for (size_t i = 0; i < arr.size(); ++i)
+        values.push_back(arr[i].is_number() ? arr[i].get<double>() : 0.0);
+      props.setDoubles(key, values);
+    } else {
+      Array<int> values;
+      values.reserve(arr.size());
+      for (size_t i = 0; i < arr.size(); ++i)
+        values.push_back(arr[i].is_number_integer() ? arr[i].get<int>() : 0);
+      props.setInts(key, values);
+    }
+  }
+}
+
+/** Serialize a PropertyMap into a JSON object of named arrays. */
+json serializeProperties(const PropertyMap& props)
+{
+  json result;
+  for (const auto& name : props.doubleNames()) {
+    json arr;
+    const auto& values = props.doubles(name);
+    for (Index i = 0; i < values.size(); ++i)
+      arr.push_back(values[i]);
+    result[name] = arr;
+  }
+  for (const auto& name : props.intNames()) {
+    json arr;
+    const auto& values = props.ints(name);
+    for (Index i = 0; i < values.size(); ++i)
+      arr.push_back(values[i]);
+    result[name] = arr;
+  }
+  for (const auto& name : props.stringNames()) {
+    json arr;
+    const auto& values = props.strings(name);
+    for (Index i = 0; i < values.size(); ++i)
+      arr.push_back(values[i]);
+    result[name] = arr;
+  }
+  return result;
 }
 
 // Sanitize a raw string by replacing invalid UTF-8 sequences with '?'
@@ -320,16 +400,9 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
-  if (atoms.contains("properties")) {
-    json atomProperties = atoms["properties"];
-    if (atomProperties.is_object()) {
-      for (auto& property : atomProperties.items()) {
-        if (property.value().is_array()) {
-          // TODO: handle atom properties
-        }
-      }
-    }
-  }
+  if (atoms.contains("properties"))
+    deserializeProperties(atoms["properties"], molecule.atomProperties(),
+                          atomCount);
 
   // Selection is optional, but if present should be loaded.
   if (atoms.contains("selected")) {
@@ -440,16 +513,9 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
         }
       }
 
-      if (bonds.contains("properties")) {
-        json bondProperties = bonds["properties"];
-        if (bondProperties.is_object()) {
-          for (auto& property : bondProperties.items()) {
-            if (property.value().is_array()) {
-              // TODO: handle bond properties
-            }
-          }
-        }
-      }
+      if (bonds.contains("properties"))
+        deserializeProperties(bonds["properties"], molecule.bondProperties(),
+                              molecule.bondCount());
     }
   }
 
@@ -510,6 +576,12 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       }
     }
   }
+
+  // Read residue properties (parallel arrays stored at root level)
+  if (jsonRoot.contains("residueProperties"))
+    deserializeProperties(jsonRoot["residueProperties"],
+                          molecule.residueProperties(),
+                          molecule.residueCount());
 
   if (jsonRoot.contains("unitCell") || jsonRoot.contains("unit cell")) {
     json unitCell = jsonRoot["unitCell"];
@@ -1612,7 +1684,12 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       atoms["layer"] = atomLayer;
     }
 
-    // TODO check for atom properties
+    // Write custom atom properties
+    if (!molecule.atomProperties().empty()) {
+      json atomProps = serializeProperties(molecule.atomProperties());
+      if (!atomProps.empty())
+        atoms["properties"] = atomProps;
+    }
     root["atoms"] = atoms; // end atoms
   }
 
@@ -1640,7 +1717,12 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       bonds["labels"] = labels;
     }
 
-    // TODO check for bond properties
+    // Write custom bond properties
+    if (!molecule.bondProperties().empty()) {
+      json bondProps = serializeProperties(molecule.bondProperties());
+      if (!bondProps.empty())
+        bonds["properties"] = bondProps;
+    }
     root["bonds"] = bonds;
   }
 
@@ -1678,7 +1760,12 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
     root["residues"] = residues;
 
-    // TODO check for residue properties
+    // Write residue properties as parallel arrays alongside residues
+    if (!molecule.residueProperties().empty()) {
+      json resProps = serializeProperties(molecule.residueProperties());
+      if (!resProps.empty())
+        root["residueProperties"] = resProps;
+    }
   }
 
   // any constraints?

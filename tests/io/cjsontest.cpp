@@ -9,16 +9,19 @@
 
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/core/unitcell.h>
 
 #include <avogadro/io/cjsonformat.h>
 
+using Avogadro::Index;
 using Avogadro::MatrixX;
 using Avogadro::PI_F;
 using Avogadro::Real;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Molecule;
+using Avogadro::Core::Residue;
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::Variant;
 using Avogadro::Io::CjsonFormat;
@@ -326,4 +329,122 @@ TEST(CjsonTest, partialCharges)
   // check the charges on atoms
   EXPECT_EQ(mullikenCharges(0, 0), 0.16726);
   EXPECT_EQ(mullikenCharges(1, 0), -0.201292);
+}
+
+TEST(CjsonTest, atomPropertiesRoundTrip)
+{
+  // Create a molecule with custom atom properties
+  Molecule molecule;
+  molecule.addAtom(8);
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+  molecule.addBond(0, 1, 1);
+  molecule.addBond(0, 2, 1);
+
+  molecule.atomProperties().setDouble("mulliken_charge", 0, -0.3);
+  molecule.atomProperties().setDouble("mulliken_charge", 1, 0.15);
+  molecule.atomProperties().setDouble("mulliken_charge", 2, 0.15);
+  molecule.atomProperties().setInt("type_index", 0, 42);
+  molecule.atomProperties().setInt("type_index", 1, 7);
+  molecule.atomProperties().setInt("type_index", 2, 7);
+  molecule.atomProperties().setString("atom_type", 0, "O.3");
+  molecule.atomProperties().setString("atom_type", 1, "H");
+  molecule.atomProperties().setString("atom_type", 2, "H");
+
+  // Write to CJSON
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  // Read back
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+
+  // Verify double properties
+  auto charge0 = readMol.atomProperties().getDouble("mulliken_charge", 0);
+  ASSERT_TRUE(charge0.has_value());
+  EXPECT_DOUBLE_EQ(*charge0, -0.3);
+  auto charge2 = readMol.atomProperties().getDouble("mulliken_charge", 2);
+  ASSERT_TRUE(charge2.has_value());
+  EXPECT_DOUBLE_EQ(*charge2, 0.15);
+
+  // Verify int properties
+  auto type0 = readMol.atomProperties().getInt("type_index", 0);
+  ASSERT_TRUE(type0.has_value());
+  EXPECT_EQ(*type0, 42);
+
+  // Verify string properties
+  auto atomType0 = readMol.atomProperties().getString("atom_type", 0);
+  ASSERT_TRUE(atomType0.has_value());
+  EXPECT_EQ(*atomType0, "O.3");
+  auto atomType1 = readMol.atomProperties().getString("atom_type", 1);
+  ASSERT_TRUE(atomType1.has_value());
+  EXPECT_EQ(*atomType1, "H");
+}
+
+TEST(CjsonTest, bondPropertiesRoundTrip)
+{
+  Molecule molecule;
+  molecule.addAtom(8);
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+  molecule.addBond(0, 1, 1);
+  molecule.addBond(0, 2, 1);
+
+  molecule.bondProperties().setDouble("wiberg_index", 0, 0.95);
+  molecule.bondProperties().setDouble("wiberg_index", 1, 0.93);
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+
+  auto wi0 = readMol.bondProperties().getDouble("wiberg_index", 0);
+  ASSERT_TRUE(wi0.has_value());
+  EXPECT_DOUBLE_EQ(*wi0, 0.95);
+  auto wi1 = readMol.bondProperties().getDouble("wiberg_index", 1);
+  ASSERT_TRUE(wi1.has_value());
+  EXPECT_DOUBLE_EQ(*wi1, 0.93);
+}
+
+TEST(CjsonTest, residuePropertiesRoundTrip)
+{
+  // Build a minimal molecule with residues
+  Molecule molecule;
+  Atom a1 = molecule.addAtom(6); // C
+  Atom a2 = molecule.addAtom(7); // N
+
+  std::string name1 = std::string("ALA");
+  Index id1 = 1;
+  char chain1 = 'A';
+  Residue r1(name1, id1, chain1);
+  r1.addResidueAtom("CA", a1);
+  molecule.addResidue(r1);
+
+  std::string name2 = std::string("GLY");
+  Index id2 = 2;
+  char chain2 = 'A';
+  Residue r2(name2, id2, chain2);
+  r2.addResidueAtom("CA", a2);
+  molecule.addResidue(r2);
+
+  molecule.residueProperties().setDouble("bfactor", 0, 15.2);
+  molecule.residueProperties().setDouble("bfactor", 1, 22.7);
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+
+  EXPECT_EQ(readMol.residueCount(), 2);
+  auto bf0 = readMol.residueProperties().getDouble("bfactor", 0);
+  ASSERT_TRUE(bf0.has_value());
+  EXPECT_DOUBLE_EQ(*bf0, 15.2);
+  auto bf1 = readMol.residueProperties().getDouble("bfactor", 1);
+  ASSERT_TRUE(bf1.has_value());
+  EXPECT_DOUBLE_EQ(*bf1, 22.7);
 }

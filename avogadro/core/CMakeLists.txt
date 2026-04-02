@@ -59,6 +59,7 @@ avogadro_headers(Core
   mutex.h
   nameatomtyper.h
   neighborperceiver.h
+  propertymap.h
   residue.h
   ringperceiver.h
   secondarystructure.h
@@ -93,6 +94,7 @@ target_sources(Core PRIVATE
   mutex.cpp
   nameatomtyper.cpp
   neighborperceiver.cpp
+  propertymap.cpp
   residue.cpp
   ringperceiver.cpp
   secondarystructure.cpp
