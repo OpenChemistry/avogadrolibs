@@ -216,6 +216,7 @@ void MoldenFile::processLine(std::istream& in)
       } break;
 
       case MO: {
+        const unsigned int numBasisFunctions = basisFunctionCount();
         // Buffer for orbital header fields - we need to wait for Spin line
         // before committing, since Ene/Sym may appear before Spin
         double pendingEnergy = 0.0;
@@ -266,24 +267,47 @@ void MoldenFile::processLine(std::istream& in)
         }
 
         // Parse the molecular orbital coefficients.
+        vector<double> orbitalCoefficients;
+        if (numBasisFunctions > 0)
+          orbitalCoefficients.assign(numBasisFunctions, 0.0);
+        unsigned int sequentialIndex = 0;
         while (!line.empty() && !Core::contains(line, "=") &&
                !Core::contains(line, "[")) {
           list = Core::split(line, ' ');
           if (list.size() < 2)
             break;
 
-          if (m_currentSpinBeta)
-            m_betaMOcoeffs.push_back(
-              Core::lexicalCast<double>(list[1]).value_or(0.0));
-          else
-            m_MOcoeffs.push_back(
-              Core::lexicalCast<double>(list[1]).value_or(0.0));
+          const double coefficient =
+            Core::lexicalCast<double>(list[1]).value_or(0.0);
+          if (numBasisFunctions > 0) {
+            const int basisIndex = Core::lexicalCast<int>(list[0]).value_or(0);
+            if (basisIndex > 0 &&
+                static_cast<unsigned int>(basisIndex) <= numBasisFunctions) {
+              orbitalCoefficients[static_cast<size_t>(basisIndex - 1)] =
+                coefficient;
+            } else if (sequentialIndex < numBasisFunctions) {
+              orbitalCoefficients[sequentialIndex++] = coefficient;
+            }
+          } else if (m_currentSpinBeta) {
+            m_betaMOcoeffs.push_back(coefficient);
+          } else {
+            m_MOcoeffs.push_back(coefficient);
+          }
 
           // we might go too far ahead
           currentPos = in.tellg();
           getline(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
+        }
+        if (numBasisFunctions > 0) {
+          if (m_currentSpinBeta)
+            m_betaMOcoeffs.insert(m_betaMOcoeffs.end(),
+                                  orbitalCoefficients.begin(),
+                                  orbitalCoefficients.end());
+          else
+            m_MOcoeffs.insert(m_MOcoeffs.end(), orbitalCoefficients.begin(),
+                              orbitalCoefficients.end());
         }
         // go back one line
         in.seekg(currentPos);
@@ -386,6 +410,74 @@ void MoldenFile::readAtom(const vector<string>& list)
                    m_coordFactor);
   m_aPos.push_back(Core::lexicalCast<double>(list[5]).value_or(0.0) *
                    m_coordFactor);
+}
+
+unsigned int MoldenFile::basisFunctionCount() const
+{
+  unsigned int count = 0;
+
+  for (auto shellType : m_shellTypes) {
+    if (!m_cartesianD && shellType == GaussianSet::D)
+      shellType = GaussianSet::D5;
+    else if (m_cartesianD && shellType == GaussianSet::D5)
+      shellType = GaussianSet::D;
+
+    if (!m_cartesianF && shellType == GaussianSet::F)
+      shellType = GaussianSet::F7;
+    else if (m_cartesianF && shellType == GaussianSet::F7)
+      shellType = GaussianSet::F;
+
+    if (!m_cartesianG && shellType == GaussianSet::G)
+      shellType = GaussianSet::G9;
+    else if (m_cartesianG && shellType == GaussianSet::G9)
+      shellType = GaussianSet::G;
+
+    switch (shellType) {
+      case GaussianSet::S:
+        count += 1;
+        break;
+      case GaussianSet::P:
+        count += 3;
+        break;
+      case GaussianSet::SP:
+        count += 4;
+        break;
+      case GaussianSet::D:
+        count += 6;
+        break;
+      case GaussianSet::D5:
+        count += 5;
+        break;
+      case GaussianSet::F:
+        count += 10;
+        break;
+      case GaussianSet::F7:
+        count += 7;
+        break;
+      case GaussianSet::G:
+        count += 15;
+        break;
+      case GaussianSet::G9:
+        count += 9;
+        break;
+      case GaussianSet::H:
+        count += 21;
+        break;
+      case GaussianSet::H11:
+        count += 11;
+        break;
+      case GaussianSet::I:
+        count += 28;
+        break;
+      case GaussianSet::I13:
+        count += 13;
+        break;
+      default:
+        break;
+    }
+  }
+
+  return count;
 }
 
 bool MoldenFile::load(GaussianSet* basis, size_t atomCount)
