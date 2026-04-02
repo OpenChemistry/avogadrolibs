@@ -627,6 +627,12 @@ public:
   void setVibrationRamanIntensities(const Array<double>& intensities);
   Array<Vector3> vibrationLx(int mode) const;
   void setVibrationLx(const Array<Array<Vector3>>& lx);
+  /**
+   * Get the symmetry labels for vibrational modes (e.g., A1, B2, Eu)
+   * Returns an empty array if no symmetry labels are available.
+   */
+  Array<std::string> vibrationSymmetryLabels() const;
+  void setVibrationSymmetryLabels(const Array<std::string>& labels);
 
   /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
@@ -987,6 +993,7 @@ protected:
   Array<double> m_vibrationIRIntensities;
   Array<double> m_vibrationRamanIntensities;
   Array<Array<Vector3>> m_vibrationLx;
+  Array<std::string> m_vibrationSymmetryLabels;
 
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;

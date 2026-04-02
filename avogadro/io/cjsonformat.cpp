@@ -789,6 +789,16 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       }
       molecule.setVibrationRamanIntensities(intens);
     }
+    json symLabels = vibrations["symmetryLabels"];
+    if (symLabels.is_array()) {
+      Array<std::string> labels;
+      for (auto& label : symLabels) {
+        if (label.is_string()) {
+          labels.push_back(label.get<std::string>());
+        }
+      }
+      molecule.setVibrationSymmetryLabels(labels);
+    }
     json displacements = vibrations["eigenVectors"];
     if (displacements.is_array()) {
       Array<Array<Vector3>> disps;
@@ -1732,6 +1742,14 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     if (molecule.vibrationRamanIntensities().size() > 0)
       vibrations["ramanIntensities"] = raman;
     vibrations["eigenVectors"] = eigenVectors;
+    // Write vibration symmetry labels if available
+    if (molecule.vibrationSymmetryLabels().size() > 0) {
+      json symLabels;
+      for (const auto& label : molecule.vibrationSymmetryLabels()) {
+        symLabels.push_back(label);
+      }
+      vibrations["symmetryLabels"] = symLabels;
+    }
     root["vibrations"] = vibrations;
   }
 
