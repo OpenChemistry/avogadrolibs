@@ -7,23 +7,25 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.103.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-04-03 01:09+0000\n"
+"Last-Translator: \"Sabbir Hossain (Nipu)\" <sabbir80@student.sust.edu>\n"
+"Language-Team: Bengali <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/bn/>\n"
 "Language: bn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "ব্যাচ জব #%L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
-msgstr ""
+msgstr "কোনো মেসেজ নির্দিষ্ট করা হয়নি।"
 
 #: molequeue/inputgenerator.cpp:71 qtgui/interfacescript.cpp:90
 #, qt-format
@@ -36,28 +38,29 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:246
 #: qtgui/interfacescript.cpp:398
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "নন-স্ট্রিং সতর্কবার্তা ফেরত এসেছে।"
 
 #: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:249
 #: qtgui/interfacescript.cpp:401
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'warnings' মেম্বারটি একটি অ্যারে নয়।"
 
 #: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:421
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "রেফারেন্স ফাইল '%1' এর অস্তিত্ব নেই।"
 
 #: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:423
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "ফাইলটি পূরণ করতে ত্রুটি হয়েছে %1: %2"
 
 #: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:427
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"ফাইল '%1' ত্রুটিপূর্ণভাবে গঠিত। 'contents' বা 'filePath' স্ট্রিং মেম্বার অনুপস্থিত।"
 
 #: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:460
 #, qt-format
@@ -69,15 +72,15 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:466
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "%1 সূচকে ত্রুটিপূর্ণ ফাইল এন্ট্রি: এটি কোনো অবজেক্ট নয়।"
 
 #: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:472
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'files' সদস্যটি একটি অ্যারে নয়।"
 
 #: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:476
 msgid "'files' member missing."
-msgstr ""
+msgstr "'files' মেম্বার অনুপস্থিত।"
 
 #: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:487
 msgid "'mainFile' member does not refer to an entry in 'files'."
@@ -85,11 +88,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:492
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'mainFile' মেম্বারটি অবশ্যই একটি স্ট্রিং হতে হবে।"
 
 #: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:503
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "রেসপন্সটি অবশ্যই টপ-লেভেলে একটি JSON অবজেক্ট হতে হবে।"
 
 #: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:507
 #, qt-format
@@ -447,7 +450,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormat-এ কোনো অণু সেট করা নেই!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -455,7 +458,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormat-এ কোনো ফাইলের নাম সেট করা নেই!"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1231,7 +1234,7 @@ msgstr ""
 
 #: qtgui/moleculemodel.cpp:120
 msgid "Untitled"
-msgstr ""
+msgstr "শিরোনামহীন"
 
 #: qtgui/moleculemodel.cpp:135
 msgid "Edit molecule"
