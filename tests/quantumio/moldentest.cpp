@@ -40,6 +40,140 @@ TEST(MoldenTest, basicRead)
   ASSERT_EQ(molecule.atomCount(), 3);
 }
 
+TEST(MoldenTest, readSparseMolecularOrbitals)
+{
+  static const char sparseMolden[] = R"([Molden Format]
+[GTO]
+    1 0
+ s   6 1.00
+     130.7093200    0.1543289700
+      23.8088610    0.5353281400
+       6.4436083    0.4446345400
+       5.0331513    0.0000000000
+       1.1695961    0.0000000000
+       0.3803890    0.0000000000
+ s   6 1.00
+     130.7093200    0.0000000000
+      23.8088610    0.0000000000
+       6.4436083    0.0000000000
+       5.0331513   -0.0999672300
+       1.1695961    0.3995128300
+       0.3803890    0.7001154700
+ p   3 1.00
+       5.0331513    0.1559162700
+       1.1695961    0.6076837200
+       0.3803890    0.3919573900
+
+    2 0
+ s   3 1.00
+       3.4252509    0.1543289700
+       0.6239137    0.5353281400
+       0.1688554    0.4446345400
+
+    3 0
+ s   3 1.00
+       3.4252509    0.1543289700
+       0.6239137    0.5353281400
+       0.1688554    0.4446345400
+
+[SCFCONV]
+scf-first  1  THROUGH   6
+      -74.9111871529
+      -74.9591249593
+      -74.9643486920
+      -74.9644734769
+      -74.9644735608
+      -74.9644735733
+[TITLE]
+*** Dalton interface to Molden, wave function type : HF             3Apr24   13:
+[Atoms] AU
+O          1     8         0.0000000000         0.0000000000         0.226016913
+H          2     1         0.0000000000         1.4396179285        -0.904063875
+H          3     1         0.0000000000        -1.4396179285        -0.904063875
+[5D7F]
+[9G]
+[MO]
+Sym= A
+Ene=  -20.2442
+Spin= Alpha
+Occup=  2.0000
+    1       -0.994158
+    2       -0.026315
+    5        0.004261
+    6        0.005841
+    7        0.005841
+Sym= A
+Ene=   -1.2636
+Spin= Alpha
+Occup=  2.0000
+    1        0.233172
+    2       -0.837489
+    5        0.126492
+    6       -0.157787
+    7       -0.157787
+Sym= A
+Ene=   -0.6107
+Spin= Alpha
+Occup=  2.0000
+    4       -0.607190
+    6       -0.446173
+    7        0.446173
+Sym= A
+Ene=   -0.4535
+Spin= Alpha
+Occup=  2.0000
+    1        0.103065
+    2       -0.535442
+    5       -0.771827
+    6        0.283175
+    7        0.283175
+Sym= A
+Ene=   -0.3911
+Spin= Alpha
+Occup=  2.0000
+    3        1.000000
+Sym= A
+Ene=    0.5959
+Spin= Alpha
+Occup=  0.0000
+    1        0.130439
+    2       -0.863428
+    5        0.745860
+    6        0.788155
+    7        0.788155
+Sym= A
+Ene=    0.7268
+Spin= Alpha
+Occup=  0.0000
+    4       -0.981914
+    6        0.829084
+    7       -0.829084
+[End of Molden output from Dalton]
+)";
+
+  MoldenFile format;
+  Molecule molecule;
+  EXPECT_TRUE(format.readString(sparseMolden, molecule));
+  ASSERT_EQ(format.error(), std::string());
+
+  const auto* basis = dynamic_cast<const GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+
+  const auto moMatrix = basis->moMatrix();
+  EXPECT_EQ(moMatrix.rows(), 7);
+  EXPECT_EQ(moMatrix.cols(), 7);
+
+  EXPECT_NEAR(moMatrix(0, 0), -0.994158, 1e-6);
+  EXPECT_NEAR(moMatrix(1, 0), -0.026315, 1e-6);
+  EXPECT_DOUBLE_EQ(moMatrix(2, 0), 0.0);
+  EXPECT_DOUBLE_EQ(moMatrix(3, 0), 0.0);
+  EXPECT_NEAR(moMatrix(4, 0), 0.004261, 1e-6);
+  EXPECT_NEAR(moMatrix(3, 2), -0.607190, 1e-6);
+  EXPECT_DOUBLE_EQ(moMatrix(0, 2), 0.0);
+  EXPECT_DOUBLE_EQ(moMatrix(4, 2), 0.0);
+  EXPECT_NEAR(moMatrix(2, 4), 1.0, 1e-6);
+}
+
 // Test that supportedOperations includes Write
 TEST(MoldenTest, supportedOperations)
 {

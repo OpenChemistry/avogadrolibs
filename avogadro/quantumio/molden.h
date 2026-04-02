@@ -50,6 +50,7 @@ private:
   void processLine(std::istream& in);
   void readAtom(const std::vector<std::string>& list);
   bool load(Core::GaussianSet* basis, size_t atomCount);
+  unsigned int basisFunctionCount() const;
 
   // Write helper methods
   void writeAtoms(std::ostream& out, const Core::Molecule& molecule);
