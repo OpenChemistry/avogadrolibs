@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-03-22 03:46+0000\n"
-"PO-Revision-Date: 2026-03-20 12:12+0000\n"
+"PO-Revision-Date: 2026-04-03 01:09+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -5540,12 +5540,11 @@ msgstr "Inverter Seleção"
 
 #: qtplugins/select/select.cpp:53
 msgid "Select by Element…"
-msgstr "Selecionar por elemento…"
+msgstr "Selecionar por Elemento…"
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Atom Index…"
-msgstr "Selecione o Índices Átomos…"
+msgstr "Selecionar por Índice Atômico…"
 
 #: qtplugins/select/select.cpp:63
 #, fuzzy
