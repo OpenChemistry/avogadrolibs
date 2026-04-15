@@ -98,20 +98,9 @@ jobs:
 
     - name: Run tests
       if: (matrix.config.build_type != 'Release')
-      shell: cmake -P {0}
       run: |
-        include(ProcessorCount)
-        ProcessorCount(N)
-        set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
-        set(ENV{ASAN_OPTIONS} "new_delete_type_mismatch=0")
-        execute_process(
-          COMMAND ctest -j ${N}
-          WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs
-          RESULT_VARIABLE result
-        )
-        if (NOT result EQUAL 0)
-          message(FATAL_ERROR "Running tests failed!")
-        endif()
+        export ASAN_OPTIONS='new_delete_type_mismatch=0'
+        ctest --output-on-failure --test-dir ${{ runner.workspace }}/build/avogadrolibs/tests
 
     - name: Package AppImage
       if: matrix.config.name == 'AppImage x86'
