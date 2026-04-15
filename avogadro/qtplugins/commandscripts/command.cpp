@@ -171,6 +171,17 @@ void Command::menuActivated()
 
   QWidget* theParent = qobject_cast<QWidget*>(parent());
 
+  // Refuse to launch a new run while a previous script is still in flight,
+  // otherwise its results would land on whichever molecule is current when
+  // it eventually finishes.
+  if (m_currentScript) {
+    QMessageBox::information(
+      theParent, tr("Command In Progress"),
+      tr("A command script is already running. Please wait for it to finish "
+         "before starting another."));
+    return;
+  }
+
   if (m_currentDialog) {
     delete m_currentDialog->layout();
     if (m_currentInterface)
@@ -265,7 +276,11 @@ void Command::run()
   if (m_currentScript) {
     disconnect(m_currentScript, SIGNAL(finished()), this,
                SLOT(processFinished()));
+    // Kill the child process so an abandoned xtb run does not keep going.
+    m_currentScript->interpreter().asyncTerminate();
     m_currentScript->deleteLater();
+    m_currentScript = nullptr;
+    m_runningMolecule.clear();
   }
 
   if (m_currentInterface) {
@@ -297,6 +312,9 @@ void Command::run()
                                      qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
 
+    // Snapshot so processFinished() can detect if the molecule was closed
+    // or swapped before the async script returned.
+    m_runningMolecule = m_molecule;
     m_currentScript->runCommand(options, m_molecule);
   }
 }
@@ -312,12 +330,28 @@ void Command::processFinished()
     m_progress = nullptr;
   }
 
-  m_currentScript->processCommand(m_molecule);
+  // Drop results if the launch-time molecule was destroyed, or if the user
+  // has since swapped to a different molecule (its atom count/ordering may
+  // no longer match what the script is about to write back).
+  QtGui::Molecule* target = m_runningMolecule.data();
+  if (target != nullptr && target == m_molecule) {
+    m_currentScript->processCommand(target);
 
-  // collect errors
-  if (m_currentScript->hasErrors()) {
-    qWarning() << m_currentScript->errorList();
+    // collect errors
+    if (m_currentScript->hasErrors()) {
+      qWarning() << m_currentScript->errorList();
+    }
+  } else if (target == nullptr) {
+    qWarning() << "Command: discarding script results; molecule was closed "
+                  "while the command was running.";
+  } else {
+    qWarning() << "Command: discarding script results; active molecule "
+                  "changed while the command was running.";
   }
+
+  m_currentScript->deleteLater();
+  m_currentScript = nullptr;
+  m_runningMolecule.clear();
 }
 
 void Command::configurePython()
