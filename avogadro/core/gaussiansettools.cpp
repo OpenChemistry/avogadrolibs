@@ -39,7 +39,7 @@ void gridS(const Avogadro::Core::ShellInfo& shell, int mo,
            const Avogadro::MatrixX& moMat, const double* gtoA,
            const double* gtoCN, const double* dx, const double* dy,
            const double* dz, int imin, int imax, int jmin, int jmax, int kmin,
-           int kmax, int ny, int nz, double* output)
+           int kmax, int ny, int nz, int iStart, double* output)
 {
   double moCoeff = moMat(shell.moIndex, mo);
   if (moCoeff == 0.0)
@@ -64,7 +64,7 @@ void gridS(const Avogadro::Core::ShellInfo& shell, int mo,
       double cex = coeff * ex[i - imin];
       for (int j = jmin; j <= jmax; ++j) {
         double cexy = cex * ey[j - jmin];
-        int base = i * ny * nz + j * nz;
+        int base = (i - iStart) * ny * nz + j * nz;
         for (int k = kmin; k <= kmax; ++k) {
           output[base + k] += cexy * ez[k - kmin];
         }
@@ -77,7 +77,7 @@ void gridP(const Avogadro::Core::ShellInfo& shell, int mo,
            const Avogadro::MatrixX& moMat, const double* gtoA,
            const double* gtoCN, const double* dx, const double* dy,
            const double* dz, int imin, int imax, int jmin, int jmax, int kmin,
-           int kmax, int ny, int nz, double* output)
+           int kmax, int ny, int nz, int iStart, double* output)
 {
   double mo_x = moMat(shell.moIndex + 0, mo);
   double mo_y = moMat(shell.moIndex + 1, mo);
@@ -109,7 +109,7 @@ void gridP(const Avogadro::Core::ShellInfo& shell, int mo,
       for (int j = jmin; j <= jmax; ++j) {
         double exy = exi * ey[j - jmin];
         double dyj = dy[j];
-        int base = i * ny * nz + j * nz;
+        int base = (i - iStart) * ny * nz + j * nz;
         for (int k = kmin; k <= kmax; ++k) {
           double g = exy * ez[k - kmin];
           output[base + k] += g * (c_x * dxi + c_y * dyj + c_z * dz[k]);
@@ -123,7 +123,7 @@ void gridD(const Avogadro::Core::ShellInfo& shell, int mo,
            const Avogadro::MatrixX& moMat, const double* gtoA,
            const double* gtoCN, const double* dx, const double* dy,
            const double* dz, int imin, int imax, int jmin, int jmax, int kmin,
-           int kmax, int ny, int nz, double* output)
+           int kmax, int ny, int nz, int iStart, double* output)
 {
   // 6 cartesian D components: xx, yy, zz, xy, xz, yz
   double mo_c[6];
@@ -163,7 +163,7 @@ void gridD(const Avogadro::Core::ShellInfo& shell, int mo,
         double dxidyj = dxi * dyj;
         // Hoist k-independent terms
         double ij_sum = c[0] * dxi2 + c[1] * dyj2 + c[3] * dxidyj;
-        int base = i * ny * nz + j * nz;
+        int base = (i - iStart) * ny * nz + j * nz;
         for (int k = kmin; k <= kmax; ++k) {
           double dzk = dz[k];
           double g = exy * ez[k - kmin];
@@ -179,7 +179,7 @@ void gridD5(const Avogadro::Core::ShellInfo& shell, int mo,
             const Avogadro::MatrixX& moMat, const double* gtoA,
             const double* gtoCN, const double* dx, const double* dy,
             const double* dz, int imin, int imax, int jmin, int jmax, int kmin,
-            int kmax, int ny, int nz, double* output)
+            int kmax, int ny, int nz, int iStart, double* output)
 {
   // 5 spherical D components: d0, d+1, d-1, d+2, d-2
   // Angular: -(xx+yy), xz, yz, xx-yy, xy
@@ -223,7 +223,7 @@ void gridD5(const Avogadro::Core::ShellInfo& shell, int mo,
           c[0] * (-(dxi2 + dyj2)) + c[3] * (dxi2 - dyj2) + c[4] * (dxi * dyj);
         // d+1: xz, d-1: yz — these multiply dz[k]
         double dz_coeff = c[1] * dxi + c[2] * dyj;
-        int base = i * ny * nz + j * nz;
+        int base = (i - iStart) * ny * nz + j * nz;
         for (int k = kmin; k <= kmax; ++k) {
           double g = exy * ez[k - kmin];
           output[base + k] += g * (ij_sum + dz_coeff * dz[k]);
@@ -237,7 +237,7 @@ void gridF(const Avogadro::Core::ShellInfo& shell, int mo,
            const Avogadro::MatrixX& moMat, const double* gtoA,
            const double* gtoCN, const double* dx, const double* dy,
            const double* dz, int imin, int imax, int jmin, int jmax, int kmin,
-           int kmax, int ny, int nz, double* output)
+           int kmax, int ny, int nz, int iStart, double* output)
 {
   // 10 cartesian F: xxx,yyy,zzz,xyy,xxy,xxz,xzz,yzz,yyz,xyz (Molden order)
   double mo_c[10];
@@ -280,7 +280,7 @@ void gridF(const Avogadro::Core::ShellInfo& shell, int mo,
         // multiply by dz[k]: xxz, xzz->dz^2, yzz->dz^2, yyz, xyz
         double dz1_coeff = c[5] * dxi2 + c[8] * dyj2 + c[9] * dxi * dyj;
         double dz2_coeff = c[6] * dxi + c[7] * dyj;
-        int base = i * ny * nz + j * nz;
+        int base = (i - iStart) * ny * nz + j * nz;
         for (int k = kmin; k <= kmax; ++k) {
           double dzk = dz[k], dzk2 = dzk * dzk;
           double g = exy * ez[k - kmin];
@@ -296,7 +296,7 @@ void gridF7(const Avogadro::Core::ShellInfo& shell, int mo,
             const Avogadro::MatrixX& moMat, const double* gtoA,
             const double* gtoCN, const double* dx, const double* dy,
             const double* dz, int imin, int imax, int jmin, int jmax, int kmin,
-            int kmax, int ny, int nz, double* output)
+            int kmax, int ny, int nz, int iStart, double* output)
 {
   // 7 spherical F components
   double mo_c[7];
@@ -351,7 +351,7 @@ void gridF7(const Avogadro::Core::ShellInfo& shell, int mo,
         double f12_common_ij = -1.5 * (dxi2 + dyj2);
         double f1_dxi = dxi / root6;
         double f2_dyj = dyj / root6;
-        int base = i * ny * nz + j * nz;
+        int base = (i - iStart) * ny * nz + j * nz;
         for (int k = kmin; k <= kmax; ++k) {
           double dzk = dz[k], dzk2 = dzk * dzk, dzk3 = dzk2 * dzk;
           double g = exy * ez[k - kmin];
@@ -371,7 +371,7 @@ void gridG(const Avogadro::Core::ShellInfo& shell, int mo,
            const Avogadro::MatrixX& moMat, const double* gtoA,
            const double* gtoCN, const double* dx, const double* dy,
            const double* dz, int imin, int imax, int jmin, int jmax, int kmin,
-           int kmax, int ny, int nz, double* output)
+           int kmax, int ny, int nz, int iStart, double* output)
 {
   // 15 cartesian G: Molden order
   // xxxx,yyyy,zzzz,xxxy,xxxz,yyyx,yyyz,zzzx,zzzy,xxyy,xxzz,yyzz,xxyz,yyxz,zzxy
@@ -424,7 +424,7 @@ void gridG(const Avogadro::Core::ShellInfo& shell, int mo,
         double c3 = c[7] * dxi + c[8] * dyj;
         // dz^4: zzzz
         double c4 = c[2];
-        int base = i * ny * nz + j * nz;
+        int base = (i - iStart) * ny * nz + j * nz;
         for (int k = kmin; k <= kmax; ++k) {
           double dzk = dz[k], dzk2 = dzk * dzk;
           double g = exy * ez[k - kmin];
@@ -440,7 +440,7 @@ void gridG9(const Avogadro::Core::ShellInfo& shell, int mo,
             const Avogadro::MatrixX& moMat, const double* gtoA,
             const double* gtoCN, const double* dx, const double* dy,
             const double* dz, int imin, int imax, int jmin, int jmax, int kmin,
-            int kmax, int ny, int nz, double* output)
+            int kmax, int ny, int nz, int iStart, double* output)
 {
   // 9 spherical G components
   double mo_c[9];
@@ -488,7 +488,7 @@ void gridG9(const Avogadro::Core::ShellInfo& shell, int mo,
         double ij_only = c[7] * g7 + c[8] * g8;
         // Precompute parts for terms depending on dz
         double x2_m_y2 = x2 - y2;
-        int base = i * ny * nz + j * nz;
+        int base = (i - iStart) * ny * nz + j * nz;
         for (int k = kmin; k <= kmax; ++k) {
           double dzk = dz[k], z2 = dzk * dzk;
           double g0 = exy * ez[k - kmin];
@@ -594,7 +594,13 @@ double GaussianSetTools::calculateShellCutoff(const ShellInfo& shell) const
 
 bool GaussianSetTools::calculateMolecularOrbital(Cube& cube, int moNumber) const
 {
-  return calculateMolecularOrbitalGrid(cube, moNumber);
+  return calculateMolecularOrbitalSlab(cube, moNumber, 0, cube.nx());
+}
+
+bool GaussianSetTools::calculateMolecularOrbitalGrid(Cube& cube,
+                                                     int moNumber) const
+{
+  return calculateMolecularOrbitalSlab(cube, moNumber, 0, cube.nx());
 }
 
 void GaussianSetTools::evaluateMOGrid(int moIndex, const MatrixX& moMat,
@@ -604,6 +610,16 @@ void GaussianSetTools::evaluateMOGrid(int moIndex, const MatrixX& moMat,
                                       const std::vector<double>& gridY,
                                       const std::vector<double>& gridZ, int nx,
                                       int ny, int nz, double* output) const
+{
+  evaluateMOGrid(moIndex, moMat, minBohr, spBohr, gridX, gridY, gridZ, nx, ny,
+                 nz, 0, nx, output);
+}
+
+void GaussianSetTools::evaluateMOGrid(
+  int moIndex, const MatrixX& moMat, const Vector3& minBohr,
+  const Vector3& spBohr, const std::vector<double>& gridX,
+  const std::vector<double>& gridY, const std::vector<double>& gridZ, int nx,
+  int ny, int nz, int iStart, int iEnd, double* output) const
 {
   const double* gtoA = m_gtoA.data();
   const double* gtoCN = m_gtoCN.data();
@@ -622,13 +638,13 @@ void GaussianSetTools::evaluateMOGrid(int moIndex, const MatrixX& moMat,
     for (int k = 0; k < nz; ++k)
       dz[k] = gridZ[k] - shell.centerBohr[2];
 
-    // Range-clipped index bounds
+    // Range-clipped index bounds (clipped to slab in x)
     int imin = std::max(
-      0, static_cast<int>(std::floor(
-           (shell.centerBohr[0] - cutoff - minBohr.x()) / spBohr.x())));
+      iStart, static_cast<int>(std::floor(
+                (shell.centerBohr[0] - cutoff - minBohr.x()) / spBohr.x())));
     int imax = std::min(
-      nx - 1, static_cast<int>(std::ceil(
-                (shell.centerBohr[0] + cutoff - minBohr.x()) / spBohr.x())));
+      iEnd - 1, static_cast<int>(std::ceil(
+                  (shell.centerBohr[0] + cutoff - minBohr.x()) / spBohr.x())));
     int jmin = std::max(
       0, static_cast<int>(std::floor(
            (shell.centerBohr[1] - cutoff - minBohr.y()) / spBohr.y())));
@@ -648,35 +664,43 @@ void GaussianSetTools::evaluateMOGrid(int moIndex, const MatrixX& moMat,
     switch (shell.type) {
       case GaussianSet::S:
         gridS(shell, moIndex, moMat, gtoA, gtoCN, dx.data(), dy.data(),
-              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, output);
+              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, iStart,
+              output);
         break;
       case GaussianSet::P:
         gridP(shell, moIndex, moMat, gtoA, gtoCN, dx.data(), dy.data(),
-              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, output);
+              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, iStart,
+              output);
         break;
       case GaussianSet::D:
         gridD(shell, moIndex, moMat, gtoA, gtoCN, dx.data(), dy.data(),
-              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, output);
+              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, iStart,
+              output);
         break;
       case GaussianSet::D5:
         gridD5(shell, moIndex, moMat, gtoA, gtoCN, dx.data(), dy.data(),
-               dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, output);
+               dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, iStart,
+               output);
         break;
       case GaussianSet::F:
         gridF(shell, moIndex, moMat, gtoA, gtoCN, dx.data(), dy.data(),
-              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, output);
+              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, iStart,
+              output);
         break;
       case GaussianSet::F7:
         gridF7(shell, moIndex, moMat, gtoA, gtoCN, dx.data(), dy.data(),
-               dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, output);
+               dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, iStart,
+               output);
         break;
       case GaussianSet::G:
         gridG(shell, moIndex, moMat, gtoA, gtoCN, dx.data(), dy.data(),
-              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, output);
+              dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, iStart,
+              output);
         break;
       case GaussianSet::G9:
         gridG9(shell, moIndex, moMat, gtoA, gtoCN, dx.data(), dy.data(),
-               dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, output);
+               dz.data(), imin, imax, jmin, jmax, kmin, kmax, ny, nz, iStart,
+               output);
         break;
       default:
         break;
@@ -684,13 +708,17 @@ void GaussianSetTools::evaluateMOGrid(int moIndex, const MatrixX& moMat,
   }
 }
 
-bool GaussianSetTools::calculateMolecularOrbitalGrid(Cube& cube,
-                                                     int moNumber) const
+bool GaussianSetTools::calculateMolecularOrbitalSlab(Cube& cube, int moNumber,
+                                                     int iStart, int iEnd) const
 {
   if (moNumber > static_cast<int>(m_basis->molecularOrbitalCount()))
     return false;
 
   const int nx = cube.nx(), ny = cube.ny(), nz = cube.nz();
+  iStart = std::max(0, iStart);
+  iEnd = std::min(nx, iEnd);
+  if (iStart >= iEnd)
+    return true;
 
   Vector3 minBohr = cube.min() * ANGSTROM_TO_BOHR;
   Vector3 spBohr = cube.spacing() * ANGSTROM_TO_BOHR;
@@ -703,15 +731,21 @@ bool GaussianSetTools::calculateMolecularOrbitalGrid(Cube& cube,
   for (int k = 0; k < nz; ++k)
     gridZ[k] = minBohr.z() + k * spBohr.z();
 
-  std::vector<double> output(static_cast<size_t>(nx) * ny * nz, 0.0);
+  // Slab buffer: indexed by global i via (i - iStart) inside the shell
+  // evaluators
+  const size_t slabSize = static_cast<size_t>(iEnd - iStart) * ny * nz;
+  std::vector<double> output(slabSize, 0.0);
 
   const MatrixX& moMat = m_basis->moMatrix(m_type);
   evaluateMOGrid(moNumber, moMat, minBohr, spBohr, gridX, gridY, gridZ, nx, ny,
-                 nz, output.data());
+                 nz, iStart, iEnd, output.data());
 
-  // Copy results to cube
-  for (size_t i = 0; i < output.size(); ++i)
-    cube.setValue(static_cast<unsigned int>(i), static_cast<float>(output[i]));
+  // Copy slab results to cube. Each thread's slab does not overlap with
+  // others, so this is safe to do in parallel from multiple slab calls.
+  const size_t cubeOffset = static_cast<size_t>(iStart) * ny * nz;
+  for (size_t i = 0; i < slabSize; ++i)
+    cube.setValue(static_cast<unsigned int>(cubeOffset + i),
+                  static_cast<float>(output[i]));
 
   return true;
 }
@@ -733,10 +767,16 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
 
 bool GaussianSetTools::calculateElectronDensity(Cube& cube) const
 {
-  return calculateElectronDensityGrid(cube);
+  return calculateElectronDensitySlab(cube, 0, cube.nx());
 }
 
 bool GaussianSetTools::calculateElectronDensityGrid(Cube& cube) const
+{
+  return calculateElectronDensitySlab(cube, 0, cube.nx());
+}
+
+bool GaussianSetTools::calculateElectronDensitySlab(Cube& cube, int iStart,
+                                                    int iEnd) const
 {
   // Determine occupied MOs and their weights
   // RHF: ρ = 2 · Σ |ψ_i|² for i = 0..n_occ-1
@@ -796,19 +836,31 @@ bool GaussianSetTools::calculateElectronDensityGrid(Cube& cube) const
     }
   }
 
+  const int nx = cube.nx(), ny = cube.ny(), nz = cube.nz();
+  iStart = std::max(0, iStart);
+  iEnd = std::min(nx, iEnd);
+  if (iStart >= iEnd)
+    return true;
+
   if (occupiedMOs.empty()) {
-    // Fall back to density matrix path
+    // Fall back to density matrix path (slab subset).
+    // generateDensityMatrix() mutates the basis; only safe to call from the
+    // full-grid path. Slab callers should ensure the density matrix exists.
     const MatrixX& matrix = m_basis->densityMatrix();
-    if (matrix.rows() == 0 || matrix.cols() == 0)
-      m_basis->generateDensityMatrix();
+    if (matrix.rows() == 0 || matrix.cols() == 0) {
+      if (iStart == 0 && iEnd == nx)
+        m_basis->generateDensityMatrix();
+    }
 
     int matrixSize = static_cast<int>(m_basis->moMatrix().rows());
     if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
       return false;
 
+    const size_t startIdx = static_cast<size_t>(iStart) * ny * nz;
+    const size_t endIdx = static_cast<size_t>(iEnd) * ny * nz;
     Eigen::VectorXd values;
     Eigen::VectorXd tmp;
-    for (size_t i = 0; i < cube.data()->size(); ++i) {
+    for (size_t i = startIdx; i < endIdx; ++i) {
       Vector3 pos = cube.position(i);
       calculateValues(pos, values);
       tmp.noalias() = matrix * values;
@@ -817,8 +869,7 @@ bool GaussianSetTools::calculateElectronDensityGrid(Cube& cube) const
     return true;
   }
 
-  const int nx = cube.nx(), ny = cube.ny(), nz = cube.nz();
-  const size_t gridSize = static_cast<size_t>(nx) * ny * nz;
+  const size_t slabSize = static_cast<size_t>(iEnd - iStart) * ny * nz;
 
   Vector3 minBohr = cube.min() * ANGSTROM_TO_BOHR;
   Vector3 spBohr = cube.spacing() * ANGSTROM_TO_BOHR;
@@ -831,8 +882,8 @@ bool GaussianSetTools::calculateElectronDensityGrid(Cube& cube) const
   for (int k = 0; k < nz; ++k)
     gridZ[k] = minBohr.z() + k * spBohr.z();
 
-  std::vector<double> density(gridSize, 0.0);
-  std::vector<double> moGrid(gridSize);
+  std::vector<double> density(slabSize, 0.0);
+  std::vector<double> moGrid(slabSize);
 
   for (const auto& occ : occupiedMOs) {
     std::fill(moGrid.begin(), moGrid.end(), 0.0);
@@ -842,17 +893,19 @@ bool GaussianSetTools::calculateElectronDensityGrid(Cube& cube) const
       continue;
 
     evaluateMOGrid(occ.index, moMat, minBohr, spBohr, gridX, gridY, gridZ, nx,
-                   ny, nz, moGrid.data());
+                   ny, nz, iStart, iEnd, moGrid.data());
 
     // Accumulate: density += weight * |ψ|²
     double w = occ.weight;
-    for (size_t p = 0; p < gridSize; ++p)
+    for (size_t p = 0; p < slabSize; ++p)
       density[p] += w * moGrid[p] * moGrid[p];
   }
 
-  // Copy to cube
-  for (size_t i = 0; i < gridSize; ++i)
-    cube.setValue(static_cast<unsigned int>(i), static_cast<float>(density[i]));
+  // Copy slab to cube
+  const size_t cubeOffset = static_cast<size_t>(iStart) * ny * nz;
+  for (size_t i = 0; i < slabSize; ++i)
+    cube.setValue(static_cast<unsigned int>(cubeOffset + i),
+                  static_cast<float>(density[i]));
 
   return true;
 }
@@ -876,15 +929,30 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
 
 bool GaussianSetTools::calculateSpinDensity(Cube& cube) const
 {
+  return calculateSpinDensitySlab(cube, 0, cube.nx());
+}
+
+bool GaussianSetTools::calculateSpinDensitySlab(Cube& cube, int iStart,
+                                                int iEnd) const
+{
   const MatrixX& matrix = m_basis->spinDensityMatrix();
   int matrixSize = static_cast<int>(m_basis->moMatrix().rows());
   if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
     return false;
 
+  const int nx = cube.nx(), ny = cube.ny(), nz = cube.nz();
+  iStart = std::max(0, iStart);
+  iEnd = std::min(nx, iEnd);
+  if (iStart >= iEnd)
+    return true;
+
+  const size_t startIdx = static_cast<size_t>(iStart) * ny * nz;
+  const size_t endIdx = static_cast<size_t>(iEnd) * ny * nz;
+
   Eigen::VectorXd values;
   Eigen::VectorXd tmp;
 
-  for (size_t i = 0; i < cube.data()->size(); ++i) {
+  for (size_t i = startIdx; i < endIdx; ++i) {
     Vector3 pos = cube.position(i);
     calculateValues(pos, values);
     tmp.noalias() = matrix * values;

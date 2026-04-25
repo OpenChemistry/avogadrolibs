@@ -67,6 +67,16 @@ public:
   bool calculateMolecularOrbital(Cube& cube, int molecularOrbitalNumber) const;
 
   /**
+   * @brief Populate an x-slab [iStart, iEnd) of the cube with MO values.
+   * Threads can call this concurrently with non-overlapping i ranges; each
+   * slab maps to a contiguous region of the cube buffer so writes never
+   * conflict. Out-of-range bounds are clamped to [0, nx).
+   * @return True on success, false on failure.
+   */
+  bool calculateMolecularOrbitalSlab(Cube& cube, int molecularOrbitalNumber,
+                                     int iStart, int iEnd) const;
+
+  /**
    * @brief Calculate the value of the specified molecular orbital at the
    * position specified.
    * @param position The position in space to calculate the value.
@@ -84,6 +94,13 @@ public:
   bool calculateElectronDensity(Cube& cube) const;
 
   /**
+   * @brief Populate an x-slab [iStart, iEnd) of the cube with electron density.
+   * Safe to call from concurrent threads on non-overlapping slabs.
+   * @return True on success, false on failure.
+   */
+  bool calculateElectronDensitySlab(Cube& cube, int iStart, int iEnd) const;
+
+  /**
    * @brief Calculate the value of the electron density at the position
    * specified.
    * @param position The position in space to calculate the value.
@@ -97,6 +114,13 @@ public:
    * @return True on success, false on failure.
    */
   bool calculateSpinDensity(Cube& cube) const;
+
+  /**
+   * @brief Populate an x-slab [iStart, iEnd) of the cube with spin density.
+   * Safe to call from concurrent threads on non-overlapping slabs.
+   * @return True on success, false on failure.
+   */
+  bool calculateSpinDensitySlab(Cube& cube, int iStart, int iEnd) const;
 
   /**
    * @brief Calculate the value of the electron spin density at the position
@@ -129,14 +153,23 @@ private:
   // Calculate cutoff distance for a single shell
   double calculateShellCutoff(const ShellInfo& shell) const;
 
-  // Shell-major grid evaluation with factored exp() and range-clipped cutoffs
+  // Shell-major grid evaluation (full grid). Retained as private wrappers for
+  // backwards compatibility — both delegate to the slab methods with the full
+  // [0, nx) range.
   bool calculateMolecularOrbitalGrid(Cube& cube, int moNumber) const;
-
-  // Density via occupied MO summation: ρ = Σ occ_i |ψ_i|²
   bool calculateElectronDensityGrid(Cube& cube) const;
 
-  // Evaluate a single MO onto a double-precision grid buffer using the
-  // shell-major factored-exp approach with range clipping.
+  // Evaluate a single MO into an x-slab [iStart, iEnd) of a double-precision
+  // grid buffer. The buffer is sized (iEnd - iStart) * ny * nz and indexed
+  // via (i - iStart) * ny * nz + j * nz + k inside the shell evaluators.
+  void evaluateMOGrid(int moIndex, const MatrixX& moMat, const Vector3& minBohr,
+                      const Vector3& spBohr, const std::vector<double>& gridX,
+                      const std::vector<double>& gridY,
+                      const std::vector<double>& gridZ, int nx, int ny, int nz,
+                      int iStart, int iEnd, double* output) const;
+
+  // Backwards-compatible overload of evaluateMOGrid: equivalent to passing
+  // iStart=0, iEnd=nx (full grid).
   void evaluateMOGrid(int moIndex, const MatrixX& moMat, const Vector3& minBohr,
                       const Vector3& spBohr, const std::vector<double>& gridX,
                       const std::vector<double>& gridY,

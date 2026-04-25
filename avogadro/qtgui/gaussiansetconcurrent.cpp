@@ -13,6 +13,9 @@
 #include <avogadro/core/cube.h>
 
 #include <QtConcurrent/QtConcurrentMap>
+#include <QtCore/QThread>
+
+#include <algorithm>
 
 namespace Avogadro::QtGui {
 
@@ -31,12 +34,15 @@ class BasisSetConcurrent
   }
 };
 
+// One x-slab work item. Threads operate on non-overlapping i ranges so
+// writes to the cube buffer never conflict (cube layout is i-major).
 struct GaussianShell
 {
-  GaussianSetTools* tools; // A pointer to the tools, can't write to member vars
-  Cube* tCube;             // The target cube, used to initialise temp cubes too
-  unsigned int pos;        // The index of the point to calculate the MO for
-  unsigned int state;      // The MO number to calculate
+  GaussianSetTools* tools;
+  Cube* tCube;
+  int iStart;
+  int iEnd;
+  unsigned int state; // MO index — only used by the orbital path
 };
 
 GaussianSetConcurrent::GaussianSetConcurrent(QObject* p)
@@ -92,7 +98,6 @@ bool GaussianSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 
 void GaussianSetConcurrent::calculationComplete()
 {
-  // (*m_gaussianShells)[0].tCube->lock()->unlock();
   delete m_gaussianShells;
   m_gaussianShells = nullptr;
   emit finished();
@@ -107,23 +112,22 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
 
   m_set->initCalculation();
 
-  // Set up the points we want to calculate the density at.
-  m_gaussianShells =
-    new QVector<GaussianShell>(static_cast<int>(cube->data()->size()));
+  // Partition nx into x-slabs, one per available core (capped at nx).
+  // x-slabs map to contiguous m_data ranges (i is slowest-varying), so threads
+  // never share a cache line and never need locking.
+  const int nx = cube->nx();
+  int nSlabs = std::max(1, QThread::idealThreadCount());
+  nSlabs = std::min(nSlabs, std::max(1, nx));
 
-  for (int i = 0; i < m_gaussianShells->size(); ++i) {
-    (*m_gaussianShells)[i].tools = m_tools;
-    (*m_gaussianShells)[i].tCube = cube;
-    (*m_gaussianShells)[i].pos = i;
-    (*m_gaussianShells)[i].state = state;
+  m_gaussianShells = new QVector<GaussianShell>(nSlabs);
+  for (int s = 0; s < nSlabs; ++s) {
+    int iStart = s * nx / nSlabs;
+    int iEnd = (s + 1) * nx / nSlabs;
+    (*m_gaussianShells)[s] = { m_tools, cube, iStart, iEnd, state };
   }
 
-  // Lock the cube until we are done.
-  // cube->lock()->lock();
-
-  // The main part of the mapped reduced function...
+  // Map the work items across the QtConcurrent thread pool.
   m_future = QtConcurrent::map(*m_gaussianShells, func);
-  // Connect our watcher to our future
   m_watcher.setFuture(m_future);
 
   return true;
@@ -131,20 +135,18 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
 
 void GaussianSetConcurrent::processOrbital(GaussianShell& shell)
 {
-  Vector3 pos = shell.tCube->position(shell.pos);
-  shell.tCube->setValue(
-    shell.pos, shell.tools->calculateMolecularOrbital(pos, shell.state));
+  shell.tools->calculateMolecularOrbitalSlab(
+    *shell.tCube, static_cast<int>(shell.state), shell.iStart, shell.iEnd);
 }
 
 void GaussianSetConcurrent::processDensity(GaussianShell& shell)
 {
-  Vector3 pos = shell.tCube->position(shell.pos);
-  shell.tCube->setValue(shell.pos, shell.tools->calculateElectronDensity(pos));
+  shell.tools->calculateElectronDensitySlab(*shell.tCube, shell.iStart,
+                                            shell.iEnd);
 }
 
 void GaussianSetConcurrent::processSpinDensity(GaussianShell& shell)
 {
-  Vector3 pos = shell.tCube->position(shell.pos);
-  shell.tCube->setValue(shell.pos, shell.tools->calculateSpinDensity(pos));
+  shell.tools->calculateSpinDensitySlab(*shell.tCube, shell.iStart, shell.iEnd);
 }
 } // namespace Avogadro::QtGui
