@@ -643,7 +643,7 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
     appendError("Invalid density matrix data.");
     return false;
   }
-  m_density.resize(m_numBasisFunctions, m_numBasisFunctions);
+  m_density = MatrixX::Zero(m_numBasisFunctions, m_numBasisFunctions);
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;
   unsigned int f = 1;
@@ -713,6 +713,8 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
       }
     }
   }
+  // The fchk file stores only the lower triangle; mirror to make it symmetric.
+  m_density.triangularView<Eigen::StrictlyUpper>() = m_density.transpose();
   return true;
 }
 bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
@@ -760,7 +762,7 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
     appendError("Invalid spin density matrix data.");
     return false;
   }
-  m_spinDensity.resize(m_numBasisFunctions, m_numBasisFunctions);
+  m_spinDensity = MatrixX::Zero(m_numBasisFunctions, m_numBasisFunctions);
   unsigned int cnt = 0;
   unsigned int i = 0, j = 0;
   unsigned int f = 1;
@@ -830,6 +832,9 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
       }
     }
   }
+  // The fchk file stores only the lower triangle; mirror to make it symmetric.
+  m_spinDensity.triangularView<Eigen::StrictlyUpper>() =
+    m_spinDensity.transpose();
   return true;
 }
 
