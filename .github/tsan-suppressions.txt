@@ -8,6 +8,14 @@ called_from_lib:libQt6Core.so
 race:qt_static_metacall
 race:QtPrivate::QMetaTypeForType
 
+# CalcWorker is torn down via the standard Qt deleteLater + QThread::finished
+# idiom: the worker's destructor runs on the worker thread when its event loop
+# flushes deferred-delete events, and the happens-before chain back to earlier
+# main-thread invokeMethod calls passes through uninstrumented Qt internals.
+# The destructor itself is = default with no body, so there is no real shared
+# state to race on -- only the object-lifetime sync that TSan cannot observe.
+race:Avogadro::QtGui::CalcWorker::~CalcWorker
+
 # Qt6 on Linux uses glib's main loop by default, which wakes worker threads
 # via an eventfd. Synchronization happens through the kernel fd, which TSan
 # doesn't model; glib itself isn't instrumented either.
