@@ -104,6 +104,7 @@ jobs:
         ProcessorCount(N)
         set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
         set(ENV{ASAN_OPTIONS} "new_delete_type_mismatch=0")
+        set(ENV{TSAN_OPTIONS} "suppressions=$ENV{GITHUB_WORKSPACE}/openchemistry/avogadrolibs/.github/tsan-suppressions.txt halt_on_error=0 second_deadlock_stack=1")
         execute_process(
           COMMAND ctest -j ${N}
           WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs

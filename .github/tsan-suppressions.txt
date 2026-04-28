@@ -1,0 +1,5 @@
+# System Qt6 in CI is not built with -fsanitize=thread, so TSan cannot see
+# the synchronization in QCoreApplication::postEvent / event-queue mutex.
+# This makes every queued signal/slot delivery look like a race on the
+# QMetaCallEvent. Suppress races that originate inside libQt6Core.
+called_from_lib:libQt6Core.so
