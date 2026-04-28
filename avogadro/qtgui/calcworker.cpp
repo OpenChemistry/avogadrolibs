@@ -12,18 +12,14 @@ namespace Avogadro::QtGui {
 
 CalcWorker::CalcWorker(QObject* parent) : QObject(parent)
 {
-  static bool registered = false;
-  if (!registered) {
-    qRegisterMetaType<Eigen::VectorXd>("Eigen::VectorXd");
-    qRegisterMetaType<Core::Molecule>("Avogadro::Core::Molecule");
-    qRegisterMetaType<Calc::OptimizationOptions>(
-      "Avogadro::Calc::OptimizationOptions");
-    qRegisterMetaType<std::vector<Core::Constraint>>(
-      "std::vector<Avogadro::Core::Constraint>");
-    qRegisterMetaType<Calc::EnergyCalculator*>(
-      "Avogadro::Calc::EnergyCalculator*");
-    registered = true;
-  }
+  qRegisterMetaType<Eigen::VectorXd>("Eigen::VectorXd");
+  qRegisterMetaType<Core::Molecule>("Avogadro::Core::Molecule");
+  qRegisterMetaType<Calc::OptimizationOptions>(
+    "Avogadro::Calc::OptimizationOptions");
+  qRegisterMetaType<std::vector<Core::Constraint>>(
+    "std::vector<Avogadro::Core::Constraint>");
+  qRegisterMetaType<Calc::EnergyCalculator*>(
+    "Avogadro::Calc::EnergyCalculator*");
 }
 
 CalcWorker::~CalcWorker() = default;
