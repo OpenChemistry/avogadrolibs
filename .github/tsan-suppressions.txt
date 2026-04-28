@@ -6,3 +6,9 @@
 # the qt_static_metacall pattern, which only matches the moc shim).
 called_from_lib:libQt6Core.so
 race:qt_static_metacall
+race:QtPrivate::QMetaTypeForType
+
+# Qt6 on Linux uses glib's main loop by default, which wakes worker threads
+# via an eventfd. Synchronization happens through the kernel fd, which TSan
+# doesn't model; glib itself isn't instrumented either.
+called_from_lib:libglib-2.0.so
