@@ -363,7 +363,15 @@ void InsertPeptide::performInsert()
 
     // Read amino acid if not already cached
     if (aaMap.find(aaStdString) == aaMap.end()) {
-      aaMap[aaStdString] = readAminoAcid(aaString);
+      AminoAcid aa = readAminoAcid(aaString);
+      if (stereo == 'D') {
+        // Mirror through the N-CA-C plane: negate every dihedral.
+        // Bond lengths and angles are invariant under reflection, so this
+        // converts the L geometry from the zmat into its D enantiomer.
+        for (auto& coord : aa.internalCoords)
+          coord.dihedral = -coord.dihedral;
+      }
+      aaMap[aaStdString] = aa;
     }
 
     AminoAcid amino = aaMap[aaStdString];
@@ -413,8 +421,6 @@ void InsertPeptide::performInsert()
 
       // Handle internal coordinates
       Core::InternalCoordinate coord = amino.internalCoords[j];
-
-      // TODO : Handle stereochemistry for D- amino acids
 
       // For residues after the first, we need to adjust references
       if (i > 0) {
