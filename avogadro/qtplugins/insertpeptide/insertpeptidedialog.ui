@@ -276,9 +276,6 @@
       </item>
       <item row="3" column="1">
        <widget class="QLabel" name="label_2">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
         <property name="text">
          <string>Stereochemistry:</string>
         </property>
@@ -298,14 +295,8 @@
         </item>
         <item>
          <widget class="QRadioButton" name="dStereoButton">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string notr="true">D</string>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
           </property>
          </widget>
         </item>
