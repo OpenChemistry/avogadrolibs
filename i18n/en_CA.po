@@ -12,13 +12,14 @@
 # Distant Prince <distantprinceca@gmail.com>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
 # Marcus Minhorst <marcus.minhorst@gmail.com>, 2026.
+# LAKSAN Sineka <laksanlaksan99@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-04-12 04:21+0000\n"
-"PO-Revision-Date: 2026-03-11 10:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-04-28 21:09+0000\n"
+"Last-Translator: LAKSAN Sineka <laksanlaksan99@gmail.com>\n"
 "Language-Team: English (Canada) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_CA/>\n"
 "Language: en_CA\n"
@@ -26,11 +27,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 5.17.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
-#, qt-format
+#, fuzzy, qt-format
 msgid "Batch Job #%L1 (%2)"
 msgstr "Batch Job #%L1 (%2)"
 
