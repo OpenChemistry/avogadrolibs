@@ -61,6 +61,7 @@ public:
 
 public slots:
   void buttonClicked(QAbstractButton* button);
+  void invertSelectedTetrahedralCenter();
 
 private:
   /**

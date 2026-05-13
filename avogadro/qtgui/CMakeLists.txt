@@ -69,6 +69,7 @@ avogadro_headers(QtGui
   scenepluginmodel.h
   slatersetconcurrent.h
   sortfiltertreeproxymodel.h
+  stereotools.h
   timedprogressdialog.h
   toolplugin.h
   utilities.h
@@ -112,6 +113,7 @@ target_sources(QtGui PRIVATE
   scenepluginmodel.cpp
   slatersetconcurrent.cpp
   sortfiltertreeproxymodel.cpp
+  stereotools.cpp
   timedprogressdialog.cpp
   toolplugin.cpp
   utilities.cpp
