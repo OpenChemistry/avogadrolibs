@@ -9,8 +9,9 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-04-12 04:21+0000\n"
-"PO-Revision-Date: 2026-03-28 05:09+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"PO-Revision-Date: 2026-05-17 05:11+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -2369,7 +2370,7 @@ msgstr "%1-ის დამუშავება"
 
 #: qtplugins/commandscripts/command.cpp:350
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Python ინტერპრეტატორის ბილიკი:"
 
 #: qtplugins/commandscripts/command.cpp:352
 msgid ""
