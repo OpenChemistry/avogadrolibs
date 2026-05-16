@@ -4456,7 +4456,7 @@ msgstr "_ფაილების წაშლა"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
 msgid "Select Plugin Directory"
-msgstr ""
+msgstr "დამატებების საქაღალდე"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:606
 msgid "Invalid Directory"
