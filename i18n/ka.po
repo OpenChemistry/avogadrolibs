@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-04-12 04:21+0000\n"
 "PO-Revision-Date: 2026-05-17 05:11+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -4491,7 +4492,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:59
 msgid "Not installed"
-msgstr ""
+msgstr "დაყენებული არაა"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:61
 msgid "Installed (up to date)"
@@ -4499,7 +4500,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:63
 msgid "Update available"
-msgstr ""
+msgstr "ხელმისაწვდომია განახლებები"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:65
 msgid "Installed locally (not in online catalog)"
@@ -4527,7 +4528,7 @@ msgstr "ვერსია"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:172
 msgid "Features"
-msgstr ""
+msgstr "მახასიათებლები"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:174
 msgid "Description"
@@ -4543,15 +4544,15 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:529
 msgid "File Formats"
-msgstr ""
+msgstr "ფაილის ფორმატები"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:531
 msgid "Input Generators"
-msgstr ""
+msgstr "შეყვანის გენერატორები"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:533
 msgid "Commands"
-msgstr ""
+msgstr "ბრძანებები"
 
 #: qtplugins/packageinstaller/zipextractor.cpp:60
 #, qt-format
