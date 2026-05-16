@@ -3792,7 +3792,7 @@ msgstr "(დარჩენილი)"
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
 #: qtplugins/propertytables/propertymodel.cpp:748
 msgid "Property"
-msgstr ""
+msgstr "თვისება"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:178
 msgid "Molecule Name"
@@ -4424,7 +4424,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:516
 msgid "Installation complete.\n"
-msgstr ""
+msgstr "დაყენება დასრულდა\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:554
 msgid "Nothing to Remove"
@@ -4452,7 +4452,7 @@ msgstr "ფაილების შენარჩუნება"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:568
 msgid "Delete Files"
-msgstr ""
+msgstr "_ფაილების წაშლა"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
 msgid "Select Plugin Directory"
