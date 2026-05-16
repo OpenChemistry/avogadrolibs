@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-04-12 04:21+0000\n"
 "PO-Revision-Date: 2026-05-17 05:11+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -78,7 +77,7 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:472
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'files'-ის წევრი მასივი არაა."
 
 #: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:476
 msgid "'files' member missing."
@@ -1191,7 +1190,7 @@ msgstr "ჭდეები"
 #: qtgui/layermodel.cpp:184 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "ძირტკბილა"
 
 #: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
 #: qtplugins/surfaces/orbitals.cpp:480 qtplugins/surfaces/orbitals.cpp:572
@@ -1902,7 +1901,7 @@ msgstr "პლაზმა"
 #: qtplugins/surfaces/surfaces.cpp:824
 msgctxt "colormap"
 msgid "Viridis"
-msgstr ""
+msgstr "ვირი პიტნა"
 
 #: qtplugins/applycolors/applycolors.cpp:124
 #: qtplugins/applycolors/applycolors.cpp:213
@@ -2095,7 +2094,7 @@ msgstr "ტემპერატურა:"
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
 #: qtplugins/autoopt/autoopt.cpp:259:1589
 msgid "Timestep:"
-msgstr ""
+msgstr "დროის ბიჯი:"
 
 #: qtplugins/autoopt/autoopt.cpp:266 qtplugins/autoopt/autoopt.cpp:394
 msgid "Start"
@@ -2370,7 +2369,7 @@ msgstr "%1-ის დამუშავება"
 
 #: qtplugins/commandscripts/command.cpp:350
 msgid "Set path to Python interpreter:"
-msgstr "Python ინტერპრეტატორის ბილიკი:"
+msgstr "Python-ის ინტერპრეტატორის ბილიკის დაყენება:"
 
 #: qtplugins/commandscripts/command.cpp:352
 msgid ""
@@ -2723,7 +2722,7 @@ msgstr "კოპირება, როგორც"
 
 #: qtplugins/copypaste/copypaste.cpp:165
 msgid "Error Clipping Molecule"
-msgstr ""
+msgstr "მოლეკულის მოჭერის შეცდომა"
 
 #: qtplugins/copypaste/copypaste.cpp:166
 msgid "Error generating clipboard data."
@@ -3272,7 +3271,7 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefielddialog.cpp:56
 msgid "Options…"
-msgstr ""
+msgstr "პარამეტრები…"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:175
 msgid "Invalid Model Options"
@@ -4341,7 +4340,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:282
 msgid "Nothing Selected"
-msgstr ""
+msgstr "მონიშნული არაფერია"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:283
 msgid "Check the box next to a plugin to install or update it."
@@ -4452,11 +4451,11 @@ msgstr "ფაილების შენარჩუნება"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:568
 msgid "Delete Files"
-msgstr "_ფაილების წაშლა"
+msgstr "ფაილების წაშლა"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:600
 msgid "Select Plugin Directory"
-msgstr "დამატებების საქაღალდე"
+msgstr "დამატებების საქაღალდის არჩევა"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:606
 msgid "Invalid Directory"
@@ -4464,7 +4463,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:607
 msgid "The selected directory does not contain a pyproject.toml file."
-msgstr ""
+msgstr "არჩეული საქაღალდე ფაილს pyproject.toml არ შეიცავს."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:621
 #, qt-format
@@ -5199,7 +5198,7 @@ msgstr "მონიშნულის დაპატარავება"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "ახალი ფენის შექმნა მონიშნულიდან"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
@@ -5797,7 +5796,7 @@ msgstr "ელექტრონების სიმკვრივის რ�
 
 #: qtplugins/surfaces/surfaces.cpp:129
 msgid "Render the spin density."
-msgstr ""
+msgstr "სპინის სიმკვრივის რენდერი."
 
 #: qtplugins/surfaces/surfaces.cpp:131
 msgid "Render a cube supplied with the file."
@@ -7066,7 +7065,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Strands:"
-msgstr ""
+msgstr "სპირალები:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
@@ -8319,7 +8318,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
 #. i18n: ectx: property (text), widget (QLabel, label_barostat)
 msgid "Barostat:"
-msgstr ""
+msgstr "ბაროსტატი:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:645
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
@@ -8339,12 +8338,12 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:703
 #. i18n: ectx: property (text), widget (QLabel, label_reporters)
 msgid "Reporters:"
-msgstr ""
+msgstr "მომხსენებლები:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:710
 #. i18n: ectx: property (text), widget (QCheckBox, stateDataCheck)
 msgid "StateData"
-msgstr ""
+msgstr "StateData"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:720
 #. i18n: ectx: property (text), widget (QCheckBox, dcdCheck)
@@ -8374,7 +8373,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:800
 #. i18n: ectx: property (text), widget (QLabel, label_minimize)
 msgid "Minimize?"
-msgstr ""
+msgstr "ჩავკეცო?"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
