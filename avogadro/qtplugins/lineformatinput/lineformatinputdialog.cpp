@@ -58,7 +58,8 @@ void LineFormatInputDialog::setDescriptor(const QString& descriptor)
 
 QString LineFormatInputDialog::descriptor() const
 {
-  return m_ui->descriptor->text();
+  // trim whitespace to prevent strange failures (e.g., " CCCC")
+  return m_ui->descriptor->text().trimmed();
 }
 
 void LineFormatInputDialog::accept()
