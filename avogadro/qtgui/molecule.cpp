@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+#include <avogadro/core/basisset.h>
+
 // for HTML-formatted formulas
 #include <QtCore/QRegularExpression>
 
@@ -295,8 +297,21 @@ Index Molecule::bondUniqueId(Index b) const
 
 void Molecule::emitChanged(unsigned int change)
 {
-  if (change != NoChange)
+  if (change != NoChange) {
+    // Structural changes invalidate derived computational data
+    if ((change & Atoms) || (change & Bonds)) {
+      clearCubes();
+      clearMeshes();
+      delete m_basisSet;
+      m_basisSet = nullptr;
+      m_spectra.clear();
+      m_vibrationFrequencies.clear();
+      m_vibrationIRIntensities.clear();
+      m_vibrationRamanIntensities.clear();
+      m_vibrationLx.clear();
+    }
     emit changed(change);
+  }
 }
 
 void Molecule::emitUpdate() const

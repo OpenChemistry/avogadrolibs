@@ -258,9 +258,15 @@ void Surfaces::moleculeChanged(unsigned int changes)
 {
   auto currentCubes = m_cubes.size();
 
-  if (changes & Molecule::Added || changes & Molecule::Removed) {
+  if (changes & Molecule::Added || changes & Molecule::Removed ||
+      changes & Molecule::Modified) {
     m_cubes = m_molecule->cubes();
     m_basis = m_molecule->basisSet();
+    // Molecule::emitChanged() deletes cubes/meshes on Atoms/Bonds changes,
+    // so our cached raw pointers may now be dangling.
+    m_cube = nullptr;
+    m_mesh1 = nullptr;
+    m_mesh2 = nullptr;
   }
 
   // if we now have more cubes than before
