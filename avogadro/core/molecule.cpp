@@ -780,6 +780,14 @@ void Molecule::clearAtoms()
   m_partialCharges.clear();
   m_atomProperties.clear();
   m_bondProperties.clear();
+  m_residues.clear();
+  m_residueProperties.clear();
+  m_coordinates3d.clear();
+  m_conformerProperties.clear();
+  m_velocities.clear();
+  m_timesteps.clear();
+  m_selectedAtoms.clear();
+  m_layers.clear();
   m_elements.reset();
 }
 

@@ -98,43 +98,81 @@ void deserializeProperties(const json& obj, PropertyMap& props,
   if (!obj.is_object())
     return;
   for (auto& property : obj.items()) {
-    const auto& arr = property.value();
-    if (!arr.is_array() || arr.size() != expectedCount)
+    const auto& value = property.value();
+    const auto& key = property.key();
+
+    // Sparse matrix column: object of {"_type":"matrix","entries":{...}}
+    if (value.is_object() && value.value("_type", "") == "matrix" &&
+        value.contains("entries") && value["entries"].is_object()) {
+      for (auto& entry : value["entries"].items()) {
+        const auto& m = entry.value();
+        if (!m.is_object() || !m.contains("rows") || !m.contains("cols") ||
+            !m.contains("data") || !m["data"].is_array())
+          continue;
+        Eigen::Index rows = m["rows"].get<Eigen::Index>();
+        Eigen::Index cols = m["cols"].get<Eigen::Index>();
+        const auto& data = m["data"];
+        if (rows <= 0 || cols <= 0 ||
+            static_cast<Eigen::Index>(data.size()) != rows * cols)
+          continue;
+        MatrixX matrix(rows, cols);
+        for (Eigen::Index r = 0; r < rows; ++r)
+          for (Eigen::Index c = 0; c < cols; ++c)
+            matrix(r, c) = data[r * cols + c].get<double>();
+        const std::string& idxKey = entry.key();
+        if (idxKey.empty())
+          continue;
+        Index idx = 0;
+        bool validIdx = true;
+        for (char c : idxKey) {
+          if (c < '0' || c > '9') {
+            validIdx = false;
+            break;
+          }
+          idx = idx * 10 + static_cast<Index>(c - '0');
+        }
+        if (validIdx)
+          props.setMatrix(key, idx, matrix);
+      }
+      continue;
+    }
+
+    if (!value.is_array() || value.size() != expectedCount)
       continue;
 
     // Detect type from array elements
     bool allString = true;
     bool hasFloat = false;
-    for (size_t i = 0; i < arr.size(); ++i) {
-      if (arr[i].is_number()) {
+    for (size_t i = 0; i < value.size(); ++i) {
+      if (value[i].is_number()) {
         allString = false;
-        if (arr[i].is_number_float())
+        if (value[i].is_number_float())
           hasFloat = true;
-      } else if (!arr[i].is_string()) {
+      } else if (!value[i].is_string()) {
         allString = false;
       }
     }
 
     // Use bulk setters for efficiency
-    const auto& key = property.key();
     if (allString) {
       Array<std::string> values;
-      values.reserve(arr.size());
-      for (size_t i = 0; i < arr.size(); ++i)
-        values.push_back(arr[i].is_string() ? arr[i].get<std::string>()
-                                            : std::string());
+      values.reserve(value.size());
+      for (size_t i = 0; i < value.size(); ++i)
+        values.push_back(value[i].is_string() ? value[i].get<std::string>()
+                                              : std::string());
       props.setStrings(key, values);
     } else if (hasFloat) {
       Array<double> values;
-      values.reserve(arr.size());
-      for (size_t i = 0; i < arr.size(); ++i)
-        values.push_back(arr[i].is_number() ? arr[i].get<double>() : 0.0);
+      values.reserve(value.size());
+      for (size_t i = 0; i < value.size(); ++i)
+        values.push_back(value[i].is_number() ? value[i].get<double>() : 0.0);
       props.setDoubles(key, values);
     } else {
       Array<int> values;
-      values.reserve(arr.size());
-      for (size_t i = 0; i < arr.size(); ++i)
-        values.push_back(arr[i].is_number_integer() ? arr[i].get<int>() : 0);
+      values.reserve(value.size());
+      for (size_t i = 0; i < value.size(); ++i)
+        values.push_back(value[i].is_number_integer() ? value[i].get<int>()
+                                                      : 0);
       props.setInts(key, values);
     }
   }
@@ -164,6 +202,25 @@ json serializeProperties(const PropertyMap& props)
     for (Index i = 0; i < values.size(); ++i)
       arr.push_back(values[i]);
     result[name] = arr;
+  }
+  for (const auto& name : props.matrixNames()) {
+    json entries = json::object();
+    for (const auto& kv : props.matrices(name)) {
+      const MatrixX& matrix = kv.second;
+      json data = json::array();
+      for (Eigen::Index r = 0; r < matrix.rows(); ++r)
+        for (Eigen::Index c = 0; c < matrix.cols(); ++c)
+          data.push_back(matrix(r, c));
+      json entry;
+      entry["rows"] = matrix.rows();
+      entry["cols"] = matrix.cols();
+      entry["data"] = data;
+      entries[std::to_string(kv.first)] = entry;
+    }
+    json col;
+    col["_type"] = "matrix";
+    col["entries"] = entries;
+    result[name] = col;
   }
   return result;
 }

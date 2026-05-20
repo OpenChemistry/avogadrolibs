@@ -409,6 +409,45 @@ TEST(CjsonTest, bondPropertiesRoundTrip)
   EXPECT_DOUBLE_EQ(*wi1, 0.93);
 }
 
+TEST(CjsonTest, matrixPropertiesRoundTrip)
+{
+  // NMR tensors live on a sparse matrix column — verify round-trip.
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+
+  MatrixX tensor0(3, 3);
+  tensor0 << 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0;
+  MatrixX tensor2(2, 3);
+  tensor2 << -1.5, 2.5, 3.5, 4.5, -5.5, 6.5;
+
+  molecule.atomProperties().setMatrix("nmr_tensor", 0, tensor0);
+  molecule.atomProperties().setMatrix("nmr_tensor", 2, tensor2);
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+
+  auto t0 = readMol.atomProperties().getMatrix("nmr_tensor", 0);
+  ASSERT_TRUE(t0.has_value());
+  EXPECT_EQ(t0->rows(), 3);
+  EXPECT_EQ(t0->cols(), 3);
+  EXPECT_TRUE(t0->isApprox(tensor0));
+
+  auto t2 = readMol.atomProperties().getMatrix("nmr_tensor", 2);
+  ASSERT_TRUE(t2.has_value());
+  EXPECT_EQ(t2->rows(), 2);
+  EXPECT_EQ(t2->cols(), 3);
+  EXPECT_TRUE(t2->isApprox(tensor2));
+
+  // Sparse: index 1 was never set, must remain unset.
+  EXPECT_FALSE(readMol.atomProperties().getMatrix("nmr_tensor", 1).has_value());
+}
+
 TEST(CjsonTest, residuePropertiesRoundTrip)
 {
   // Build a minimal molecule with residues

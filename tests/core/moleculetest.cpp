@@ -12,6 +12,7 @@
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/propertymap.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
@@ -127,6 +128,44 @@ TEST_F(MoleculeTest, removeAtom)
   molecule.clearAtoms();
 
   EXPECT_EQ(0, molecule.atomCount());
+}
+
+TEST_F(MoleculeTest, clearAtomsResetsAtomKeyedState)
+{
+  Molecule molecule;
+  Atom a0 = molecule.addAtom(6);
+  Atom a1 = molecule.addAtom(1);
+  Atom a2 = molecule.addAtom(1);
+  molecule.addBond(a0, a1, 1);
+  molecule.addBond(a0, a2, 1);
+
+  // residues hold atom indices and must not survive clearAtoms()
+  std::string resName("MOL");
+  Avogadro::Index resNumber = 1;
+  char chain = 'A';
+  molecule.addResidue(resName, resNumber, chain);
+  molecule.residueProperties().setString("kind", 0, "ligand");
+
+  // conformer-keyed and per-atom-trajectory state
+  Array<Vector3> coords(3, Vector3(0.0, 0.0, 0.0));
+  molecule.setCoordinate3d(coords, 0);
+  molecule.setCoordinate3d(coords, 1);
+  molecule.conformerProperties().setDouble("energy", 0, -1.0);
+  molecule.setVelocities(coords, 0);
+  molecule.setTimeStep(0.5, 0);
+
+  // selection is atom-indexed
+  molecule.setAtomSelected(0, true);
+
+  molecule.clearAtoms();
+
+  EXPECT_EQ(0, molecule.atomCount());
+  EXPECT_EQ(0, molecule.bondCount());
+  EXPECT_EQ(static_cast<Avogadro::Index>(0), molecule.residueCount());
+  EXPECT_TRUE(molecule.residueProperties().empty());
+  EXPECT_EQ(static_cast<size_t>(0), molecule.coordinate3dCount());
+  EXPECT_TRUE(molecule.conformerProperties().empty());
+  EXPECT_TRUE(molecule.isSelectionEmpty());
 }
 
 TEST_F(MoleculeTest, addBond)

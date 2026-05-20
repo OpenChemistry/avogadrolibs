@@ -95,6 +95,11 @@ public:
   /** @return the full string column for @p name, or empty array if absent. */
   const Array<std::string>& strings(const std::string& name) const;
 
+  /** @return the sparse matrix column for @p name, or an empty map if absent.
+   */
+  const std::unordered_map<Index, MatrixX>& matrices(
+    const std::string& name) const;
+
   // --- Existence checks ---
 
   /** @return true if a double column named @p name exists. */

@@ -144,6 +144,16 @@ const Array<std::string>& PropertyMap::strings(const std::string& name) const
   return empty;
 }
 
+const std::unordered_map<Index, MatrixX>& PropertyMap::matrices(
+  const std::string& name) const
+{
+  static const std::unordered_map<Index, MatrixX> empty;
+  auto it = m_matrices.find(name);
+  if (it != m_matrices.end())
+    return it->second;
+  return empty;
+}
+
 // --- Existence checks ---
 
 bool PropertyMap::hasDoubles(const std::string& name) const
