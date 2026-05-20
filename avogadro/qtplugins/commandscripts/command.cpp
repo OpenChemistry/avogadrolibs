@@ -138,10 +138,33 @@ void Command::setMolecule(QtGui::Molecule* mol)
   if (m_molecule == mol)
     return;
 
+  if (m_molecule)
+    disconnect(m_molecule, &QtGui::Molecule::changed, this,
+               &Command::moleculeChanged);
+
   m_molecule = mol;
+
+  if (m_molecule)
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &Command::moleculeChanged);
 
   foreach (InterfaceWidget* dlg, m_dialogs.values())
     dlg->setMolecule(mol);
+}
+
+void Command::moleculeChanged(unsigned int change)
+{
+  // While a script is in flight, any structural mutation of the launch-time
+  // molecule invalidates the impending write-back: atom indices, bond ordering
+  // and the unit cell could all differ from what the script started with.
+  // Selection and Layer toggles are pure UI state and safe to ignore.
+  if (m_currentScript == nullptr || m_runningMolecule.isNull())
+    return;
+
+  const unsigned int kIgnore =
+    QtGui::Molecule::Selection | QtGui::Molecule::Layers;
+  if ((change & ~kIgnore) != 0)
+    m_runningMolecule.clear();
 }
 
 bool Command::readMolecule(QtGui::Molecule& mol)
@@ -170,6 +193,17 @@ void Command::menuActivated()
     return;
 
   QWidget* theParent = qobject_cast<QWidget*>(parent());
+
+  // Refuse to launch a new run while a previous script is still in flight,
+  // otherwise its results would land on whichever molecule is current when
+  // it eventually finishes.
+  if (m_currentScript) {
+    QMessageBox::information(
+      theParent, tr("Command In Progress"),
+      tr("A command script is already running. Please wait for it to finish "
+         "before starting another."));
+    return;
+  }
 
   if (m_currentDialog) {
     delete m_currentDialog->layout();
@@ -265,7 +299,11 @@ void Command::run()
   if (m_currentScript) {
     disconnect(m_currentScript, SIGNAL(finished()), this,
                SLOT(processFinished()));
+    // Kill the child process so an abandoned xtb run does not keep going.
+    m_currentScript->interpreter().asyncTerminate();
     m_currentScript->deleteLater();
+    m_currentScript = nullptr;
+    m_runningMolecule.clear();
   }
 
   if (m_currentInterface) {
@@ -297,6 +335,9 @@ void Command::run()
                                      qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
 
+    // Snapshot so processFinished() can detect if the molecule was closed
+    // or swapped before the async script returned.
+    m_runningMolecule = m_molecule;
     m_currentScript->runCommand(options, m_molecule);
   }
 }
@@ -312,12 +353,28 @@ void Command::processFinished()
     m_progress = nullptr;
   }
 
-  m_currentScript->processCommand(m_molecule);
+  // Drop results if the launch-time molecule was destroyed, or if the user
+  // has since swapped to a different molecule (its atom count/ordering may
+  // no longer match what the script is about to write back).
+  QtGui::Molecule* target = m_runningMolecule.data();
+  if (target != nullptr && target == m_molecule) {
+    m_currentScript->processCommand(target);
 
-  // collect errors
-  if (m_currentScript->hasErrors()) {
-    qWarning() << m_currentScript->errorList();
+    // collect errors
+    if (m_currentScript->hasErrors()) {
+      qWarning() << m_currentScript->errorList();
+    }
+  } else if (target == nullptr) {
+    qWarning() << "Command: discarding script results; molecule was closed "
+                  "or edited while the command was running.";
+  } else {
+    qWarning() << "Command: discarding script results; active molecule "
+                  "changed while the command was running.";
   }
+
+  m_currentScript->deleteLater();
+  m_currentScript = nullptr;
+  m_runningMolecule.clear();
 }
 
 void Command::configurePython()

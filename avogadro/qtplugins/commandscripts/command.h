@@ -10,7 +10,10 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QMultiHash>
+#include <QtCore/QPointer>
 #include <QtCore/QVariantMap>
+
+#include <avogadro/qtgui/molecule.h>
 
 class QAction;
 class QDialog;
@@ -82,10 +85,13 @@ public slots:
 private slots:
   void menuActivated();
   void configurePython();
+  void moleculeChanged(unsigned int change);
 
 private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
+  // Launch-time molecule for the async script; QPointer detects deletion.
+  QPointer<QtGui::Molecule> m_runningMolecule;
   // keyed on script file path or package feature key
   QMap<QString, QtGui::InterfaceWidget*> m_dialogs;
   QDialog* m_currentDialog;
