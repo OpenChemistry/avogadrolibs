@@ -85,6 +85,7 @@ public slots:
 private slots:
   void menuActivated();
   void configurePython();
+  void moleculeChanged(unsigned int change);
 
 private:
   QList<QAction*> m_actions;

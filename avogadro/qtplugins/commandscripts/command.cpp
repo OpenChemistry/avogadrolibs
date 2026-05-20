@@ -138,10 +138,33 @@ void Command::setMolecule(QtGui::Molecule* mol)
   if (m_molecule == mol)
     return;
 
+  if (m_molecule)
+    disconnect(m_molecule, &QtGui::Molecule::changed, this,
+               &Command::moleculeChanged);
+
   m_molecule = mol;
+
+  if (m_molecule)
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &Command::moleculeChanged);
 
   foreach (InterfaceWidget* dlg, m_dialogs.values())
     dlg->setMolecule(mol);
+}
+
+void Command::moleculeChanged(unsigned int change)
+{
+  // While a script is in flight, any structural mutation of the launch-time
+  // molecule invalidates the impending write-back: atom indices, bond ordering
+  // and the unit cell could all differ from what the script started with.
+  // Selection and Layer toggles are pure UI state and safe to ignore.
+  if (m_currentScript == nullptr || m_runningMolecule.isNull())
+    return;
+
+  const unsigned int kIgnore =
+    QtGui::Molecule::Selection | QtGui::Molecule::Layers;
+  if ((change & ~kIgnore) != 0)
+    m_runningMolecule.clear();
 }
 
 bool Command::readMolecule(QtGui::Molecule& mol)
@@ -343,7 +366,7 @@ void Command::processFinished()
     }
   } else if (target == nullptr) {
     qWarning() << "Command: discarding script results; molecule was closed "
-                  "while the command was running.";
+                  "or edited while the command was running.";
   } else {
     qWarning() << "Command: discarding script results; active molecule "
                   "changed while the command was running.";
