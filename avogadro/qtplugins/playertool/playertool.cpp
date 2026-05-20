@@ -49,6 +49,8 @@ PlayerTool::PlayerTool(QObject* parent_)
     m_glWidget(nullptr), m_timer(this), m_animationFPS(nullptr),
     playButton(nullptr)
 {
+  connect(&m_timer, &QTimer::timeout, this, [this]() { animate(); });
+
   QString shortcut = tr("Ctrl+9", "control-key 9");
   m_activateAction->setText(tr("Player"));
   m_activateAction->setToolTip(tr("Animation Tool\t(%1)").arg(shortcut));
@@ -172,8 +174,6 @@ QWidget* PlayerTool::toolWidget() const
 
     m_toolWidget->setLayout(layout);
   }
-  connect(&m_timer, SIGNAL(timeout()), SLOT(animate()));
-
   return m_toolWidget;
 }
 
