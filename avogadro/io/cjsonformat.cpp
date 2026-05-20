@@ -639,6 +639,13 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
                           molecule.residueProperties(),
                           molecule.residueCount());
 
+  // Read conformer properties (parallel arrays sized to coordinate3dCount()).
+  // Must come after conformer coords are loaded (above at "3dSets").
+  if (jsonRoot.contains("conformerProperties"))
+    deserializeProperties(jsonRoot["conformerProperties"],
+                          molecule.conformerProperties(),
+                          molecule.coordinate3dCount());
+
   if (jsonRoot.contains("unitCell") || jsonRoot.contains("unit cell")) {
     json unitCell = jsonRoot["unitCell"];
     if (!unitCell.is_object())
@@ -1822,6 +1829,13 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       if (!resProps.empty())
         root["residueProperties"] = resProps;
     }
+  }
+
+  // Conformer properties (parallel arrays sized to coordinate3dCount())
+  if (!molecule.conformerProperties().empty()) {
+    json confProps = serializeProperties(molecule.conformerProperties());
+    if (!confProps.empty())
+      root["conformerProperties"] = confProps;
   }
 
   // any constraints?

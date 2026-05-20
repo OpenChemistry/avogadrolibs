@@ -316,6 +316,99 @@ TEST_F(MoleculeTest, assignment)
   assertEqual(m_testMolecule, assign);
 }
 
+// Helper for property-map copy/move tests: populates one of each column type
+// (double, int, string, matrix) on atomProperties so a single fixture exercises
+// the full PropertyMap surface.
+static void populateAtomProperties(Molecule& m)
+{
+  m.addAtom(6);
+  m.addAtom(1);
+  m.atomProperties().setDouble("charge", 0, -0.5);
+  m.atomProperties().setInt("type", 1, 7);
+  m.atomProperties().setString("label", 0, "alpha");
+  MatrixX tensor(2, 2);
+  tensor << 1.0, 2.0, 3.0, 4.0;
+  m.atomProperties().setMatrix("tensor", 0, tensor);
+}
+
+TEST_F(MoleculeTest, propertyMapCopyConstruct)
+{
+  Molecule original;
+  populateAtomProperties(original);
+
+  Molecule copy(original);
+
+  EXPECT_DOUBLE_EQ(*copy.atomProperties().getDouble("charge", 0), -0.5);
+  EXPECT_EQ(*copy.atomProperties().getInt("type", 1), 7);
+  EXPECT_EQ(*copy.atomProperties().getString("label", 0), "alpha");
+  ASSERT_TRUE(copy.atomProperties().getMatrix("tensor", 0).has_value());
+  MatrixX expected(2, 2);
+  expected << 1.0, 2.0, 3.0, 4.0;
+  EXPECT_TRUE(copy.atomProperties().getMatrix("tensor", 0)->isApprox(expected));
+
+  // Deep copy: mutating the copy must not bleed back into the original.
+  copy.atomProperties().setDouble("charge", 0, 99.0);
+  EXPECT_DOUBLE_EQ(*original.atomProperties().getDouble("charge", 0), -0.5);
+}
+
+TEST_F(MoleculeTest, propertyMapCopyAssign)
+{
+  Molecule original;
+  populateAtomProperties(original);
+
+  // Pre-populate destination with different data to verify it gets overwritten.
+  Molecule assigned;
+  assigned.addAtom(8);
+  assigned.atomProperties().setDouble("charge", 0, 99.0);
+  assigned.atomProperties().setString("stale", 0, "should be replaced");
+
+  assigned = original;
+
+  EXPECT_DOUBLE_EQ(*assigned.atomProperties().getDouble("charge", 0), -0.5);
+  EXPECT_EQ(*assigned.atomProperties().getInt("type", 1), 7);
+  EXPECT_EQ(*assigned.atomProperties().getString("label", 0), "alpha");
+  ASSERT_TRUE(assigned.atomProperties().getMatrix("tensor", 0).has_value());
+  // Pre-existing column that did not exist in source must be gone.
+  EXPECT_FALSE(assigned.atomProperties().hasStrings("stale"));
+
+  // Deep copy.
+  assigned.atomProperties().setDouble("charge", 0, 42.0);
+  EXPECT_DOUBLE_EQ(*original.atomProperties().getDouble("charge", 0), -0.5);
+}
+
+TEST_F(MoleculeTest, propertyMapMoveConstruct)
+{
+  Molecule original;
+  populateAtomProperties(original);
+
+  Molecule moved(std::move(original));
+
+  EXPECT_DOUBLE_EQ(*moved.atomProperties().getDouble("charge", 0), -0.5);
+  EXPECT_EQ(*moved.atomProperties().getInt("type", 1), 7);
+  EXPECT_EQ(*moved.atomProperties().getString("label", 0), "alpha");
+  ASSERT_TRUE(moved.atomProperties().getMatrix("tensor", 0).has_value());
+  MatrixX expected(2, 2);
+  expected << 1.0, 2.0, 3.0, 4.0;
+  EXPECT_TRUE(
+    moved.atomProperties().getMatrix("tensor", 0)->isApprox(expected));
+}
+
+TEST_F(MoleculeTest, propertyMapMoveAssign)
+{
+  Molecule original;
+  populateAtomProperties(original);
+
+  Molecule target;
+  target.addAtom(8);
+  target.atomProperties().setDouble("charge", 0, 99.0);
+
+  target = std::move(original);
+
+  EXPECT_DOUBLE_EQ(*target.atomProperties().getDouble("charge", 0), -0.5);
+  EXPECT_EQ(*target.atomProperties().getInt("type", 1), 7);
+  ASSERT_TRUE(target.atomProperties().getMatrix("tensor", 0).has_value());
+}
+
 TEST_F(MoleculeTest, estimateVelocities)
 {
   Molecule molecule;

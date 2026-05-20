@@ -409,6 +409,74 @@ TEST(CjsonTest, bondPropertiesRoundTrip)
   EXPECT_DOUBLE_EQ(*wi1, 0.93);
 }
 
+TEST(CjsonTest, conformerPropertiesRoundTrip)
+{
+  // Build a molecule with multiple conformers and per-conformer properties.
+  // Per-atom 3D positions must also be set; the CJSON writer only emits
+  // the conformer "3dSets" block alongside an existing "3d" coords block.
+  Molecule molecule;
+  Atom o = molecule.addAtom(8);
+  Atom h1 = molecule.addAtom(1);
+  Atom h2 = molecule.addAtom(1);
+  o.setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.0));
+  h1.setPosition3d(Avogadro::Vector3(0.6, -0.5, 0.0));
+  h2.setPosition3d(Avogadro::Vector3(-0.6, -0.5, 0.0));
+
+  Avogadro::Core::Array<Avogadro::Vector3> frame0;
+  frame0.push_back(Avogadro::Vector3(0.0, 0.0, 0.0));
+  frame0.push_back(Avogadro::Vector3(0.6, -0.5, 0.0));
+  frame0.push_back(Avogadro::Vector3(-0.6, -0.5, 0.0));
+  Avogadro::Core::Array<Avogadro::Vector3> frame1;
+  frame1.push_back(Avogadro::Vector3(0.0, 0.1, 0.0));
+  frame1.push_back(Avogadro::Vector3(0.7, -0.4, 0.0));
+  frame1.push_back(Avogadro::Vector3(-0.7, -0.4, 0.0));
+  Avogadro::Core::Array<Avogadro::Vector3> frame2;
+  frame2.push_back(Avogadro::Vector3(0.0, 0.2, 0.0));
+  frame2.push_back(Avogadro::Vector3(0.8, -0.3, 0.0));
+  frame2.push_back(Avogadro::Vector3(-0.8, -0.3, 0.0));
+  molecule.setCoordinate3d(frame0, 0);
+  molecule.setCoordinate3d(frame1, 1);
+  molecule.setCoordinate3d(frame2, 2);
+
+  // Per-conformer dense columns plus one sparse matrix column.
+  molecule.conformerProperties().setDouble("energy", 0, -76.4);
+  molecule.conformerProperties().setDouble("energy", 1, -76.2);
+  molecule.conformerProperties().setDouble("energy", 2, -76.0);
+  molecule.conformerProperties().setString("method", 0, "B3LYP");
+  molecule.conformerProperties().setString("method", 1, "B3LYP");
+  molecule.conformerProperties().setString("method", 2, "B3LYP");
+
+  MatrixX forces0(3, 3);
+  forces0 << 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09;
+  molecule.conformerProperties().setMatrix("forces", 0, forces0);
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+
+  EXPECT_EQ(readMol.coordinate3dCount(), static_cast<size_t>(3));
+
+  auto e0 = readMol.conformerProperties().getDouble("energy", 0);
+  ASSERT_TRUE(e0.has_value());
+  EXPECT_DOUBLE_EQ(*e0, -76.4);
+  auto e2 = readMol.conformerProperties().getDouble("energy", 2);
+  ASSERT_TRUE(e2.has_value());
+  EXPECT_DOUBLE_EQ(*e2, -76.0);
+
+  auto m0 = readMol.conformerProperties().getString("method", 0);
+  ASSERT_TRUE(m0.has_value());
+  EXPECT_EQ(*m0, "B3LYP");
+
+  auto f0 = readMol.conformerProperties().getMatrix("forces", 0);
+  ASSERT_TRUE(f0.has_value());
+  EXPECT_TRUE(f0->isApprox(forces0));
+  EXPECT_FALSE(
+    readMol.conformerProperties().getMatrix("forces", 1).has_value());
+}
+
 TEST(CjsonTest, matrixPropertiesRoundTrip)
 {
   // NMR tensors live on a sparse matrix column — verify round-trip.
