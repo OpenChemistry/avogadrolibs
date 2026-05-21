@@ -77,6 +77,25 @@ public:
   const Molecule& molecule() const { return m_molecule; }
 
   /**
+   * Forwarders so the Core::AtomTemplate/BondTemplate proxies can reach the
+   * underlying property maps when parameterised on RWMolecule. MSVC checks
+   * template-member-function bodies eagerly, so these must exist even if no
+   * caller currently sets matrix/dense properties via an RWAtom/RWBond.
+   * @{
+   */
+  Core::PropertyMap& atomProperties() { return m_molecule.atomProperties(); }
+  const Core::PropertyMap& atomProperties() const
+  {
+    return m_molecule.atomProperties();
+  }
+  Core::PropertyMap& bondProperties() { return m_molecule.bondProperties(); }
+  const Core::PropertyMap& bondProperties() const
+  {
+    return m_molecule.bondProperties();
+  }
+  /** @} */
+
+  /**
    * Add a new atom to the molecule.
    * @param atomicNumber The atomic number of the new atom.
    * @param usingPositions Whether or not to use positions for this atom.
