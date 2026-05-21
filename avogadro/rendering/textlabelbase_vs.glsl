@@ -68,8 +68,6 @@ void main(void)
 
   // Apply the offset:
   gl_Position = clipAnchor + vec4(offset.x * conv.x, offset.y * conv.y, 0., 0.);
-  
-
 
   // Pass through the texture coordinate
   texc = texCoord;
