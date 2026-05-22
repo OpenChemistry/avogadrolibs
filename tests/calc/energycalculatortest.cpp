@@ -396,6 +396,55 @@ TEST(EnergyOptimizerTest, OptimizeStepsRejectsZeroIterations)
   EXPECT_TRUE(x.isApprox(original));
 }
 
+TEST(EnergyOptimizerTest, OptimizeStepsFire2ReducesEnergy)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(3);
+  x << 3.0, -2.0, 1.0;
+
+  const Real initial = calculator.value(x);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Fire2;
+  options.chunkIterations = 20;
+
+  EXPECT_TRUE(optimizeSteps(calculator, x, options));
+
+  const Real final = calculator.value(x);
+  EXPECT_LT(final, initial);
+}
+
+TEST(EnergyOptimizerTest, OptimizeStepsAbcFireReducesEnergy)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(3);
+  x << 3.0, -2.0, 1.0;
+
+  const Real initial = calculator.value(x);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::AbcFire;
+  options.chunkIterations = 20;
+
+  EXPECT_TRUE(optimizeSteps(calculator, x, options));
+
+  const Real final = calculator.value(x);
+  EXPECT_LT(final, initial);
+}
+
+TEST(EnergyOptimizerTest, OptimizeStepsFireAtMinimumStaysPut)
+{
+  // Gradient is zero at x = 0; FIRE should leave the position alone instead
+  // of dividing by zero in the bias-correction term or the force normaliser.
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x = Eigen::VectorXd::Zero(3);
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::AbcFire;
+  options.chunkIterations = 5;
+
+  EXPECT_TRUE(optimizeSteps(calculator, x, options));
+  EXPECT_TRUE(x.isZero());
+}
+
 // Constraint Tests
 
 TEST_F(EnergyCalculatorTest, ConstraintsInitiallyEmpty)

@@ -3,11 +3,19 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+#include <avogadro/calc/energycalculator.h>
 #include <avogadro/calc/uff.h>
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/io/fileformatmanager.h>
+
+#include "benchmark_common.h"
+
+#include <cppoptlib/function.h>
+#include <cppoptlib/solver/conjugated_gradient_descent.h>
+#include <cppoptlib/solver/lbfgs.h>
+#include <cppoptlib/solver/progress.h>
 
 #include <algorithm>
 #include <chrono>
@@ -27,6 +35,12 @@ namespace fs = std::filesystem;
 namespace {
 
 using Avogadro::Real;
+using Avogadro::Benchmarks::isPdbFile;
+using Avogadro::Benchmarks::parseDouble;
+using Avogadro::Benchmarks::parseUnsigned;
+using Avogadro::Benchmarks::readMoleculeFromPath;
+using Avogadro::Benchmarks::resolvePath;
+using Avogadro::Benchmarks::sanitizePdbInput;
 using Avogadro::Calc::UFF;
 using Avogadro::Core::Molecule;
 using Clock = std::chrono::steady_clock;
@@ -36,6 +50,8 @@ struct Options
   std::string dataRoot = AVOGADRO_BENCHMARK_DATA_ROOT;
   std::size_t warmup = 5;
   std::size_t iterations = 20;
+  std::size_t maxOptIterations = 500;
+  double gradientTolerance = 1.0e-2;
   std::vector<std::string> inputFiles;
 };
 
@@ -64,6 +80,7 @@ void printUsage(const char* argv0)
 {
   std::cout << "Usage: " << argv0
             << " [--data-root PATH] [--warmup N] [--iterations N]"
+               " [--max-opt-iter N] [--grad-tol VALUE]"
                " [relative/or/absolute molecule files...]\n"
             << "Default dataset includes:\n"
             << "  data/cjson/caffeine.cjson\n"
@@ -71,20 +88,6 @@ void printUsage(const char* argv0)
             << "  data/pdb/1CRN.pdb\n"
             << "  data/pdb/1MYK.pdb\n"
             << "  data/pdb/1FDT.pdb\n";
-}
-
-bool parseUnsigned(const std::string& text, std::size_t& value)
-{
-  try {
-    std::size_t consumed = 0;
-    const auto parsed = std::stoull(text, &consumed);
-    if (consumed != text.size())
-      return false;
-    value = static_cast<std::size_t>(parsed);
-    return true;
-  } catch (...) {
-    return false;
-  }
 }
 
 bool parseArgs(int argc, char** argv, Options& options)
@@ -119,12 +122,36 @@ bool parseArgs(int argc, char** argv, Options& options)
       ++i;
       continue;
     }
+    if (arg == "--max-opt-iter") {
+      if (i + 1 >= argc ||
+          !parseUnsigned(argv[i + 1], options.maxOptIterations)) {
+        std::cerr << "Invalid value for --max-opt-iter\n";
+        return false;
+      }
+      ++i;
+      continue;
+    }
+    if (arg == "--grad-tol") {
+      if (i + 1 >= argc ||
+          !parseDouble(argv[i + 1], options.gradientTolerance) ||
+          options.gradientTolerance <= 0.0) {
+        std::cerr << "Invalid value for --grad-tol\n";
+        return false;
+      }
+      ++i;
+      continue;
+    }
 
     options.inputFiles.push_back(arg);
   }
 
   if (options.iterations == 0) {
     std::cerr << "--iterations must be > 0\n";
+    return false;
+  }
+
+  if (options.maxOptIterations == 0) {
+    std::cerr << "--max-opt-iter must be > 0\n";
     return false;
   }
 
@@ -135,67 +162,6 @@ bool parseArgs(int argc, char** argv, Options& options)
   }
 
   return true;
-}
-
-fs::path resolvePath(const std::string& dataRoot, const std::string& file)
-{
-  const fs::path p(file);
-  return p.is_absolute() ? p : fs::path(dataRoot) / p;
-}
-
-bool isPdbFile(const fs::path& path)
-{
-  std::string ext = path.extension().string();
-  std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c) {
-    return static_cast<char>(std::tolower(c));
-  });
-  return ext == ".pdb" || ext == ".ent";
-}
-
-std::string sanitizePdbInput(const std::string& input)
-{
-  std::istringstream stream(input);
-  std::ostringstream cleaned;
-  std::string line;
-  while (std::getline(stream, line)) {
-    if (line.rfind("CONECT", 0) == 0)
-      continue;
-
-    if ((line.rfind("ATOM", 0) == 0 || line.rfind("HETATM", 0) == 0) &&
-        line.size() > 16) {
-      const char altLoc = line[16];
-      if (altLoc != ' ' && altLoc != 'A')
-        continue;
-      if (altLoc == 'A')
-        line[16] = ' ';
-    }
-
-    cleaned << line << '\n';
-  }
-  return cleaned.str();
-}
-
-bool readMoleculeFromPath(const fs::path& moleculePath, Molecule& molecule)
-{
-  auto& manager = Avogadro::Io::FileFormatManager::instance();
-  if (!isPdbFile(moleculePath))
-    return manager.readFile(molecule, moleculePath.string());
-
-  std::ifstream file(moleculePath, std::ios::in);
-  if (!file)
-    return false;
-
-  std::ostringstream buffer;
-  buffer << file.rdbuf();
-  const std::string sanitized = sanitizePdbInput(buffer.str());
-  if (sanitized.empty())
-    return false;
-
-  if (manager.readString(molecule, sanitized, "pdb"))
-    return true;
-
-  // Fallback to the raw parser path if sanitizing unexpectedly fails.
-  return manager.readFile(molecule, moleculePath.string());
 }
 
 TimingStats computeStats(const std::vector<double>& samplesMs)
@@ -321,6 +287,210 @@ BenchmarkResult benchmarkFile(const fs::path& moleculePath,
   return result;
 }
 
+class EnergyObjective : public cppoptlib::function::FunctionCRTP<
+                          EnergyObjective, double,
+                          cppoptlib::function::DifferentiabilityMode::First>
+{
+public:
+  explicit EnergyObjective(Avogadro::Calc::EnergyCalculator& method)
+    : m_method(method)
+  {
+  }
+
+  // Armijo line search (used by CG) calls with a single argument; expose an
+  // explicit 1-arg overload so name lookup in the derived class finds it.
+  ScalarType operator()(const VectorType& x) const { return m_method.value(x); }
+
+  ScalarType operator()(const VectorType& x, VectorType* grad) const
+  {
+    return m_method.evaluate(x, grad);
+  }
+
+private:
+  Avogadro::Calc::EnergyCalculator& m_method;
+};
+
+const char* statusName(cppoptlib::solver::Status status)
+{
+  using S = cppoptlib::solver::Status;
+  switch (status) {
+    case S::NotStarted:
+      return "NotStarted";
+    case S::Continue:
+      return "Continue";
+    case S::IterationLimit:
+      return "MaxIter";
+    case S::XDeltaViolation:
+      return "XDelta";
+    case S::FDeltaViolation:
+      return "FDelta";
+    case S::GradientNormViolation:
+      return "GradNorm";
+    case S::HessianConditionViolation:
+      return "Hessian";
+    case S::Finished:
+      return "Finished";
+  }
+  return "Unknown";
+}
+
+bool statusConverged(cppoptlib::solver::Status status)
+{
+  using S = cppoptlib::solver::Status;
+  return status == S::GradientNormViolation || status == S::FDeltaViolation ||
+         status == S::XDeltaViolation || status == S::Finished;
+}
+
+struct OptimizerStats
+{
+  std::size_t iterations = 0;
+  double walltimeMs = 0.0;
+  Real finalEnergy = std::numeric_limits<Real>::quiet_NaN();
+  double finalGradNorm = 0.0;
+  std::string status = "n/a";
+  bool converged = false;
+};
+
+struct ConvergenceResult
+{
+  std::string label;
+  std::size_t atoms = 0;
+  Real initialEnergy = std::numeric_limits<Real>::quiet_NaN();
+  OptimizerStats lbfgs;
+  OptimizerStats cg;
+  bool success = false;
+  std::string error;
+};
+
+template <class Solver>
+OptimizerStats runSolverToConvergence(UFF& uff,
+                                      const Eigen::VectorXd& initialPositions,
+                                      std::size_t maxIterations,
+                                      double gradientTolerance)
+{
+  EnergyObjective objective(uff);
+  Solver solver;
+
+  using StateType = typename Solver::StateType;
+  using ProgressType = typename Solver::ProgressType;
+  ProgressType stopProgress;
+  stopProgress.num_iterations = maxIterations;
+  stopProgress.x_delta = 0.0;
+  stopProgress.x_delta_violations = 5;
+  stopProgress.f_delta = 0.0;
+  stopProgress.f_delta_violations = 5;
+  stopProgress.gradient_norm = gradientTolerance;
+  stopProgress.condition_hessian = 0.0;
+  stopProgress.constraint_threshold = 1.0e-5;
+  stopProgress.status = cppoptlib::solver::Status::NotStarted;
+  solver.stopping_progress = stopProgress;
+
+  StateType initialState(initialPositions);
+
+  const auto start = Clock::now();
+  auto [solution, progress] = solver.Minimize(objective, initialState);
+  const auto end = Clock::now();
+
+  OptimizerStats stats;
+  stats.walltimeMs =
+    std::chrono::duration<double, std::milli>(end - start).count();
+  stats.iterations = progress.num_iterations;
+  Eigen::VectorXd finalGradient = Eigen::VectorXd::Zero(solution.x.size());
+  stats.finalEnergy = uff.evaluate(solution.x, &finalGradient);
+  stats.finalGradNorm = finalGradient.template lpNorm<Eigen::Infinity>();
+  stats.status = statusName(progress.status);
+  stats.converged = statusConverged(progress.status);
+  return stats;
+}
+
+ConvergenceResult convergenceBenchmark(const fs::path& moleculePath,
+                                       const Options& options)
+{
+  ConvergenceResult result;
+  result.label = moleculePath.filename().string();
+
+  if (!fs::exists(moleculePath)) {
+    result.error = "File not found: " + moleculePath.string();
+    return result;
+  }
+
+  Molecule molecule;
+  if (!readMoleculeFromPath(moleculePath, molecule)) {
+    result.error = "Unable to load molecule via FileFormatManager";
+    return result;
+  }
+
+  result.atoms = molecule.atomCount();
+  if (result.atoms < 2) {
+    result.error = "Molecule has fewer than 2 atoms";
+    return result;
+  }
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  const auto positionsArray = molecule.atomPositions3d();
+  Eigen::Map<const Eigen::VectorXd> initialMap(positionsArray[0].data(),
+                                               3 * result.atoms);
+  const Eigen::VectorXd initialPositions = initialMap;
+
+  // Touch caches so the first timed run is not skewed by lazy setup.
+  Eigen::VectorXd warmGradient = Eigen::VectorXd::Zero(initialPositions.size());
+  result.initialEnergy = uff.evaluate(initialPositions, &warmGradient);
+
+  result.lbfgs =
+    runSolverToConvergence<cppoptlib::solver::Lbfgs<EnergyObjective>>(
+      uff, initialPositions, options.maxOptIterations,
+      options.gradientTolerance);
+  result.cg = runSolverToConvergence<
+    cppoptlib::solver::ConjugatedGradientDescent<EnergyObjective>>(
+    uff, initialPositions, options.maxOptIterations, options.gradientTolerance);
+
+  result.success = true;
+  return result;
+}
+
+void printConvergenceResults(const std::vector<ConvergenceResult>& results,
+                             const Options& options)
+{
+  std::cout << "\nUFF optimizer convergence: L-BFGS vs Conjugate Gradients\n"
+            << "Max iterations: " << options.maxOptIterations
+            << "  Gradient tolerance (max-abs): " << std::scientific
+            << std::setprecision(2) << options.gradientTolerance << "\n\n";
+
+  std::cout << std::left << std::setw(18) << "Molecule" << std::right
+            << std::setw(8) << "Atoms"
+            << "  " << std::left << std::setw(8) << "Method" << std::right
+            << std::setw(8) << "Iters" << std::setw(12) << "Time(ms)"
+            << std::setw(16) << "E_final" << std::setw(12) << "|g|max"
+            << "  " << std::left << std::setw(10) << "Status"
+            << "\n";
+  std::cout << std::string(96, '-') << "\n";
+
+  auto printRow = [](const std::string& label, std::size_t atoms,
+                     const char* method, const OptimizerStats& stats) {
+    std::cout << std::left << std::setw(18) << label << std::right
+              << std::setw(8) << atoms << "  " << std::left << std::setw(8)
+              << method << std::right << std::setw(8) << stats.iterations
+              << std::setw(12) << std::fixed << std::setprecision(3)
+              << stats.walltimeMs << std::setw(16) << std::setprecision(4)
+              << stats.finalEnergy << std::setw(12) << std::scientific
+              << std::setprecision(3) << stats.finalGradNorm << "  "
+              << std::left << std::setw(10) << stats.status << "\n";
+  };
+
+  for (const auto& result : results) {
+    if (!result.success) {
+      std::cout << std::left << std::setw(18) << result.label
+                << " error: " << result.error << "\n";
+      continue;
+    }
+
+    printRow(result.label, result.atoms, "Lbfgs", result.lbfgs);
+    printRow("", result.atoms, "CG", result.cg);
+  }
+}
+
 void printResults(const std::vector<BenchmarkResult>& results,
                   const Options& options)
 {
@@ -368,15 +538,22 @@ int main(int argc, char** argv)
     return 1;
 
   std::vector<BenchmarkResult> results;
+  std::vector<ConvergenceResult> convergence;
   results.reserve(options.inputFiles.size());
-  for (const auto& file : options.inputFiles)
-    results.push_back(
-      benchmarkFile(resolvePath(options.dataRoot, file), options));
+  convergence.reserve(options.inputFiles.size());
+  for (const auto& file : options.inputFiles) {
+    const auto path = resolvePath(options.dataRoot, file);
+    results.push_back(benchmarkFile(path, options));
+    convergence.push_back(convergenceBenchmark(path, options));
+  }
 
   printResults(results, options);
+  printConvergenceResults(convergence, options);
 
   const bool anyFailure =
     std::any_of(results.begin(), results.end(),
-                [](const BenchmarkResult& r) { return !r.success; });
+                [](const BenchmarkResult& r) { return !r.success; }) ||
+    std::any_of(convergence.begin(), convergence.end(),
+                [](const ConvergenceResult& r) { return !r.success; });
   return anyFailure ? 2 : 0;
 }

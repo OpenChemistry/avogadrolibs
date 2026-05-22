@@ -11,6 +11,9 @@
 #include <cppoptlib/solver/lbfgs.h>
 #include <cppoptlib/solver/progress.h>
 
+#include <algorithm>
+#include <cmath>
+
 namespace Avogadro::Calc {
 
 namespace {
@@ -31,10 +34,15 @@ private:
 };
 
 bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
-                   size_t chunkIterations)
+                   size_t chunkIterations, const LbfgsParameters& params)
 {
   EnergyObjective objective(method);
   cppoptlib::solver::Lbfgs<EnergyObjective> solver;
+
+  if (params.maxStep > 0.0)
+    solver.SetMaxStep(params.maxStep);
+  if (params.wolfeGtol > 0.0)
+    solver.SetWolfeGtol(params.wolfeGtol);
 
   auto initialState = cppoptlib::function::FunctionState(positions);
   using StateType = decltype(initialState);
@@ -54,6 +62,80 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
   positions = solution.x;
   return true;
 }
+
+// State (velocity, dt, alpha, N_pos) is reset on every call. This handicaps
+// FIRE vs L-BFGS when chunkIterations is small (the adaptive timestep can't
+// ramp up across chunk boundaries); persistent state is a planned follow-up.
+bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
+                  size_t chunkIterations, const FireParameters& p,
+                  OptimizationAlgorithm algorithm)
+{
+  const Eigen::Index n = positions.size();
+  Eigen::VectorXd v = Eigen::VectorXd::Zero(n);
+  Eigen::VectorXd grad(n);
+  Eigen::VectorXd dr(n);
+  double dt = p.dt0;
+  double alpha = p.alphaStart;
+  int nPos = 0;
+  const bool biasCorrect = (algorithm == OptimizationAlgorithm::AbcFire);
+
+  for (size_t step = 0; step < chunkIterations; ++step) {
+    method.evaluate(positions, &grad);
+    const double power = -grad.dot(v);
+
+    if (power > 0.0) {
+      ++nPos;
+      if (nPos > p.nDelay) {
+        dt = std::min(dt * p.fInc, p.dtMax);
+        alpha *= p.fAlpha;
+      }
+    } else if (power < 0.0) {
+      // Always shrink dt on P<0 (matches ASE; gating shrink behind nDelay,
+      // as some FIRE2 references do, starves the stateless per-chunk caller
+      // since nPos resets every chunk before nDelay is reached). Shrink
+      // first, then backtrack with the new dt.
+      nPos = 0;
+      dt *= p.fDec;
+      positions.noalias() -= 0.5 * dt * v;
+      alpha = p.alphaStart;
+      v.setZero();
+    }
+
+    v.noalias() -= (dt / p.mass) * grad;
+
+    const double fNorm = grad.norm();
+    if (fNorm > 0.0) {
+      const double k = alpha * v.norm() / fNorm;
+      v *= (1.0 - alpha);
+      v.noalias() -= k * grad;
+    }
+
+    // ABC-FIRE bias correction (Echeverri Restrepo et al. 2023).
+    if (biasCorrect && nPos > 0) {
+      const double bcDenom = 1.0 - std::pow(1.0 - alpha, nPos);
+      if (bcDenom > 1e-12)
+        v /= bcDenom;
+    }
+
+    dr.noalias() = dt * v;
+    if (p.maxMove > 0.0 && n >= 3) {
+      double scale = 1.0;
+      for (Eigen::Index i = 0; i < n; i += 3) {
+        const double atomNorm = dr.segment<3>(i).norm();
+        if (atomNorm > p.maxMove)
+          scale = std::min(scale, p.maxMove / atomNorm);
+      }
+      if (scale < 1.0) {
+        dr *= scale;
+        v *= scale; // keep v consistent with the move we actually took
+      }
+    }
+
+    positions += dr;
+  }
+
+  return true;
+}
 } // namespace
 
 bool optimizeSteps(EnergyCalculator& method, Eigen::VectorXd& positions,
@@ -64,7 +146,12 @@ bool optimizeSteps(EnergyCalculator& method, Eigen::VectorXd& positions,
 
   switch (options.algorithm) {
     case OptimizationAlgorithm::Lbfgs:
-      return optimizeLbfgs(method, positions, options.chunkIterations);
+      return optimizeLbfgs(method, positions, options.chunkIterations,
+                           options.lbfgs);
+    case OptimizationAlgorithm::Fire2:
+    case OptimizationAlgorithm::AbcFire:
+      return optimizeFire(method, positions, options.chunkIterations,
+                          options.fire, options.algorithm);
     default:
       return false;
   }

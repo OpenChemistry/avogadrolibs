@@ -4,8 +4,15 @@ if(DEFINED AVOGADRO_DATA_ROOT AND NOT "${AVOGADRO_DATA_ROOT}" STREQUAL "")
 endif()
 
 add_executable(AvogadroUFFBenchmark uffbenchmark.cpp)
-target_link_libraries(AvogadroUFFBenchmark PRIVATE Avogadro::Calc Avogadro::IO)
+target_link_libraries(AvogadroUFFBenchmark
+  PRIVATE Avogadro::Calc Avogadro::IO cppoptlib)
 target_compile_definitions(AvogadroUFFBenchmark
+  PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")
+
+add_executable(AvogadroOptimizerBenchmark optimizerbenchmark.cpp)
+target_link_libraries(AvogadroOptimizerBenchmark
+  PRIVATE Avogadro::Calc Avogadro::IO)
+target_compile_definitions(AvogadroOptimizerBenchmark
   PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")
 
 add_executable(AvogadroGaussianBenchmark gaussianbenchmark.cpp)
