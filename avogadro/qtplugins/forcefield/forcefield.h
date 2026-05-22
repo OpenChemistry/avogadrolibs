@@ -14,6 +14,7 @@
 
 #include <Eigen/Core>
 
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QMultiHash>
 #include <QtCore/QMultiMap>
 #include <QtCore/QStringList>
@@ -148,10 +149,16 @@ private:
   QtGui::CalcWorker* m_worker = nullptr;
   QProgressDialog* m_progressDialog = nullptr;
   bool m_optimizing = false;
-  int m_currentStep = 0;
+  // Iterations completed (sum of chunk sizes already executed). Used to
+  // bound total work and drive the progress dialog now that the chunk
+  // size adapts per chunk.
+  unsigned int m_iterationsDone = 0;
   Eigen::VectorXd m_lastPositions;
   double m_lastEnergy = 0.0;
   Calc::OptimizationOptions m_optOptions;
+  // Timer for chunk wall-clock measurement (round-trip from dispatch to
+  // optimizeFinished, so dispatch overhead counts toward the frame budget).
+  QElapsedTimer m_chunkTimer;
 
   // Pending initCalculator args (set by startWorker, sent by
   // sendInitCalculator)

@@ -192,6 +192,36 @@ bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
 }
 } // namespace
 
+size_t adaptChunkIterations(size_t currentChunk, double measuredMs,
+                            double targetMs, double smoothing, size_t minChunk,
+                            size_t maxChunk)
+{
+  if (minChunk < 1)
+    minChunk = 1;
+  if (maxChunk < minChunk)
+    maxChunk = minChunk;
+
+  const size_t fallback =
+    (currentChunk < minChunk)
+      ? minChunk
+      : (currentChunk > maxChunk ? maxChunk : currentChunk);
+
+  if (!(measuredMs > 0.0) || !(targetMs > 0.0) || currentChunk == 0 ||
+      smoothing <= 0.0)
+    return fallback;
+
+  const double ratio = targetMs / measuredMs;
+  const double scale = std::pow(ratio, std::min(smoothing, 1.0));
+  double proposed = static_cast<double>(currentChunk) * scale;
+  const double lo = static_cast<double>(minChunk);
+  const double hi = static_cast<double>(maxChunk);
+  if (!(proposed > lo))
+    proposed = lo;
+  if (proposed > hi)
+    proposed = hi;
+  return static_cast<size_t>(std::lround(proposed));
+}
+
 bool optimizeSteps(EnergyCalculator& method, Eigen::VectorXd& positions,
                    const OptimizationOptions& options, OptimizerState* state)
 {
