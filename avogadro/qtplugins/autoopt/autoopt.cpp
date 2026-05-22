@@ -57,6 +57,31 @@ namespace Avogadro::QtPlugins {
 using QtGui::Molecule;
 using QtGui::RWAtom;
 
+namespace {
+
+QString formatEnergyOverlay(const QString& method, double energy,
+                            double deltaE, bool hasEnergy,
+                            bool hasDeltaEnergy)
+{
+  if (!hasEnergy)
+    return AutoOpt::tr("%1 E = pending", "energy is not available yet")
+      .arg(method);
+
+  QString overlayText =
+    AutoOpt::tr("%1 E = %L2", "absolute energy while auto-optimizing")
+      .arg(method)
+      .arg(energy, 0, 'g', 8);
+  if (hasDeltaEnergy) {
+    overlayText +=
+      AutoOpt::tr("\nΔE = %L1", "change in energy while auto-optimizing")
+        .arg(deltaE, 0, 'g', 6);
+  }
+
+  return overlayText;
+}
+
+} // namespace
+
 #define ROTATION_SPEED 0.5
 
 AutoOpt::AutoOpt(QObject* parent_)
@@ -336,6 +361,8 @@ void AutoOpt::start()
 
   m_energy = 0.0;
   m_deltaE = 0.0;
+  m_hasEnergy = false;
+  m_hasDeltaEnergy = false;
 
   // set up masses first (needed for velocity initialization)
   setMasses(m_masses, &m_molecule->molecule());
@@ -455,8 +482,11 @@ void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
   int n = m_molecule->atomCount();
 
   if (std::isfinite(energy) && positions.allFinite()) {
-    m_deltaE = energy - m_energy;
+    m_hasDeltaEnergy = m_hasEnergy;
+    if (m_hasDeltaEnergy)
+      m_deltaE = energy - m_energy;
     m_energy = energy;
+    m_hasEnergy = true;
 
     Core::Array<Vector3> pos(n);
     Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = positions;
@@ -464,6 +494,7 @@ void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
     m_molecule->setAtomPositions3d(pos, tr("Optimize Geometry"));
     Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
     m_molecule->emitChanged(changes);
+    emit drawablesChanged();
   }
 }
 
@@ -605,10 +636,9 @@ void AutoOpt::draw(Rendering::GroupNode& node)
                     .arg(temp, 0, 'f', 1) +
                   " K";
   } else {
-    overlayText = tr("%1 ΔE = %L2", "change in energy in kJ/mol")
-                    .arg(m_currentMethod.c_str())
-                    .arg(m_deltaE, 0, 'f', 2) +
-                  " kJ/mol";
+    overlayText = formatEnergyOverlay(QString::fromStdString(m_currentMethod),
+                                      m_energy, m_deltaE, m_hasEnergy,
+                                      m_hasDeltaEnergy);
   }
 
   auto* geo = new GeometryNode;

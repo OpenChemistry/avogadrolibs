@@ -112,6 +112,8 @@ private:
 
   Real m_energy;
   Real m_deltaE;
+  bool m_hasEnergy = false;
+  bool m_hasDeltaEnergy = false;
 
   Real m_temperature = 300.0; // Kelvin
   Real m_timeStep = 1.0;      // fs
