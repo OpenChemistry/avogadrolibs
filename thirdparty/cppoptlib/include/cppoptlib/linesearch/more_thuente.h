@@ -60,10 +60,16 @@ class MoreThuente {
    * that path avoids a total of two redundant full function evaluations per
    * outer iteration.
    */
+  // Avogadro patch: stpmax_arg lets callers cap |step| (trust radius), gtol_arg
+  // lets callers tune the strong Wolfe curvature tolerance. Defaults preserve
+  // upstream cppoptlib behavior. See avogadro/calc/energyoptimizer.h for the
+  // public knobs (LbfgsParameters::maxStep, LbfgsParameters::wolfeGtol).
   static ScalarType Search(const VectorType& x,
                            const VectorType& search_direction,
                            const FunctionType& function,
-                           const ScalarType alpha_init = ScalarType(1)) {
+                           const ScalarType alpha_init = ScalarType(1),
+                           const ScalarType stpmax_arg = ScalarType(1e15),
+                           const ScalarType gtol_arg = ScalarType(0.9)) {
     ScalarType alpha = alpha_init;
     VectorType g;
     ScalarType f = function(x, &g);
@@ -71,7 +77,7 @@ class MoreThuente {
     VectorType s = search_direction.eval();
     VectorType xx = x;
 
-    cvsrch(function, &xx, &f, &g, &alpha, s);
+    cvsrch(function, &xx, &f, &g, &alpha, s, stpmax_arg, gtol_arg);
 
     return alpha;
   }
@@ -91,14 +97,16 @@ class MoreThuente {
                            const VectorType& search_direction,
                            const FunctionType& function, ScalarType alpha_init,
                            VectorType* x_out, ScalarType* f_out,
-                           VectorType* g_out) {
+                           VectorType* g_out,
+                           const ScalarType stpmax_arg = ScalarType(1e15),
+                           const ScalarType gtol_arg = ScalarType(0.9)) {
     ScalarType alpha = alpha_init;
     ScalarType f = f0;
     VectorType g = g0;
     VectorType s = search_direction.eval();
     VectorType xx = x;
 
-    cvsrch(function, &xx, &f, &g, &alpha, s);
+    cvsrch(function, &xx, &f, &g, &alpha, s, stpmax_arg, gtol_arg);
 
     if (x_out) *x_out = std::move(xx);
     if (f_out) *f_out = f;
@@ -121,29 +129,31 @@ class MoreThuente {
   static State Search(const State& start, const VectorType& search_direction,
                       const FunctionType& function,
                       const ScalarType alpha_init = ScalarType(1),
-                      ScalarType* alpha_out = nullptr) {
+                      ScalarType* alpha_out = nullptr,
+                      const ScalarType stpmax_arg = ScalarType(1e15),
+                      const ScalarType gtol_arg = ScalarType(0.9)) {
     ScalarType alpha = alpha_init;
     ScalarType f = start.value;
     VectorType g = start.gradient;
     VectorType s = search_direction.eval();
     VectorType xx = start.x;
 
-    cvsrch(function, &xx, &f, &g, &alpha, s);
+    cvsrch(function, &xx, &f, &g, &alpha, s, stpmax_arg, gtol_arg);
 
     if (alpha_out) *alpha_out = alpha;
     return State(std::move(xx), f, std::move(g));
   }
 
   static int cvsrch(const FunctionType& function, VectorType* x, ScalarType* f,
-                    VectorType* g, ScalarType* stp, const VectorType& s) {
+                    VectorType* g, ScalarType* stp, const VectorType& s,
+                    const ScalarType stpmax = ScalarType(1e15),
+                    const ScalarType gtol = ScalarType(0.9)) {
     // we rewrite this from MIN-LAPACK and some MATLAB code
     int info = 0;
     int infoc = 1;
     constexpr ScalarType xtol = ScalarType(1e-15);
     constexpr ScalarType ftol = ScalarType(1e-4);
-    constexpr ScalarType gtol = ScalarType(0.9);
     constexpr ScalarType stpmin = ScalarType(1e-15);
-    constexpr ScalarType stpmax = ScalarType(1e15);
     constexpr ScalarType xtrapf = ScalarType(4);
     constexpr int maxfev = 20;
     int nfev = 0;

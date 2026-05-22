@@ -29,6 +29,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <utility>
 
 #include "../linesearch/more_thuente.h"
@@ -68,6 +69,18 @@ class Lbfgs
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   using Superclass::Superclass;
+
+  // Avogadro patch: trust-radius cap on the line-search step length, in the
+  // same units as |x|. Zero (default) disables the cap.
+  void SetMaxStep(ScalarType max_step) { max_step_ = max_step; }
+  ScalarType MaxStep() const { return max_step_; }
+
+  // Avogadro patch: strong Wolfe curvature tolerance for the line search.
+  // Default mirrors upstream cppoptlib (0.9, "loose Wolfe"). Tighter values
+  // (e.g. 0.1, 0.01) buy fewer outer iterations at the cost of many more
+  // gradient evaluations per iteration.
+  void SetWolfeGtol(ScalarType gtol) { wolfe_gtol_ = gtol; }
+  ScalarType WolfeGtol() const { return wolfe_gtol_; }
 
   void InitializeSolver(const FunctionType& /*function*/,
                         const StateType& initial_state) override {
@@ -223,13 +236,29 @@ class Lbfgs
           (gradient_norm > eps) ? ScalarType(1) / gradient_norm : ScalarType(1);
     }
 
+    // Avogadro patch: optional trust-radius cap. If max_step_ > 0, bound
+    // |rate * search_direction| <= max_step_ by converting to a per-step
+    // stpmax for the line search. Also clamp alpha_init so the line search
+    // starts inside the trust region. wolfe_gtol_ is threaded through as
+    // the strong Wolfe curvature tolerance.
+    ScalarType stpmax_arg = std::numeric_limits<ScalarType>::infinity();
+    if (max_step_ > ScalarType(0)) {
+      const ScalarType dir_norm = search_direction.norm();
+      if (dir_norm > eps) {
+        stpmax_arg = max_step_ / dir_norm;
+        if (alpha_init > stpmax_arg)
+          alpha_init = stpmax_arg;
+      }
+    }
+
     // Perform a line search.  The incoming `current` already carries
     // `(value, gradient)` at `current.x`, and the `State`-returning
     // overload of `Search` produces a `next` whose `(value, gradient)` are
     // captured from the line search's last internal evaluation.  No
     // redundant evaluations in either direction.
     const StateType next = LineSearch<FunctionType, 1>::Search(
-        current, -search_direction, function, alpha_init);
+        current, -search_direction, function, alpha_init,
+        /*alpha_out=*/nullptr, stpmax_arg, wolfe_gtol_);
 
     // Guard: if the line search landed on a non-finite objective
     // (NaN or Inf), the iterate is irrecoverable.  Return the last
@@ -321,6 +350,11 @@ class Lbfgs
   VectorType x_diff_scratch_;
   VectorType grad_diff_scratch_;
   VectorType search_direction_scratch_;
+
+  // Avogadro patch: trust-radius cap (zero disables) and Wolfe curvature
+  // tolerance for the line search.
+  ScalarType max_step_ = ScalarType(0);
+  ScalarType wolfe_gtol_ = ScalarType(0.9);
 };
 
 }  // namespace cppoptlib::solver
