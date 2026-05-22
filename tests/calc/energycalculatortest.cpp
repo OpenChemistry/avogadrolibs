@@ -570,6 +570,74 @@ TEST(EnergyOptimizerTest, HybridStaysInFireAboveThreshold)
   EXPECT_FALSE(state.hybridSwitched);
 }
 
+TEST(AdaptChunkIterationsTest, ScalesUpWhenChunkUnderBudget)
+{
+  // Chunk ran in 5ms vs 33ms budget -> propose larger chunk.
+  size_t next = adaptChunkIterations(5, /*measuredMs=*/5.0, /*targetMs=*/33.0,
+                                     /*smoothing=*/1.0, 1, 200);
+  EXPECT_GT(next, 5u);
+  // smoothing=1.0 is fully reactive: 5 * 33/5 = 33.
+  EXPECT_EQ(next, 33u);
+}
+
+TEST(AdaptChunkIterationsTest, ScalesDownWhenChunkOverBudget)
+{
+  // Chunk took 100ms vs 33ms budget -> shrink.
+  size_t next = adaptChunkIterations(10, /*measuredMs=*/100.0,
+                                     /*targetMs=*/33.0,
+                                     /*smoothing=*/1.0, 1, 200);
+  EXPECT_LT(next, 10u);
+}
+
+TEST(AdaptChunkIterationsTest, SmoothingDampensJumps)
+{
+  // Same ratio as ScalesUp test but with smoothing=0.5: chunk should
+  // increase, but less than the fully-reactive proposal.
+  size_t reactive = adaptChunkIterations(5, 5.0, 33.0, 1.0, 1, 200);
+  size_t smoothed = adaptChunkIterations(5, 5.0, 33.0, 0.5, 1, 200);
+  EXPECT_LT(smoothed, reactive);
+  EXPECT_GT(smoothed, 5u);
+}
+
+TEST(AdaptChunkIterationsTest, ClampsToBounds)
+{
+  // Huge speedup proposal -> capped at maxChunk.
+  EXPECT_EQ(adaptChunkIterations(5, 1.0, 1000.0, 1.0, 1, 50), 50u);
+  // Heavy slowdown -> bottoms out at minChunk.
+  EXPECT_EQ(adaptChunkIterations(5, 1000.0, 1.0, 1.0, 1, 200), 1u);
+}
+
+TEST(AdaptChunkIterationsTest, SubMillisecondMeasurementsStillScale)
+{
+  // 0.05ms chunk vs 33ms budget -> proposal hits maxChunk.
+  EXPECT_EQ(adaptChunkIterations(5, 0.05, 33.0, 1.0, 1, 200), 200u);
+}
+
+TEST(AdaptChunkIterationsTest, NonPositiveMeasurementIsNoop)
+{
+  // Bogus measurement leaves the chunk size unchanged (clamped only).
+  EXPECT_EQ(adaptChunkIterations(7, 0.0, 33.0, 0.7, 1, 200), 7u);
+  EXPECT_EQ(adaptChunkIterations(7, -1.0, 33.0, 0.7, 1, 200), 7u);
+  EXPECT_EQ(adaptChunkIterations(0, 5.0, 33.0, 0.7, 1, 200), 1u);
+}
+
+TEST(AdaptChunkIterationsTest, ConvergesToTargetAcrossSteps)
+{
+  // Simulate a method whose per-iteration cost is ~1ms. Adaptation
+  // should home in on chunk_size ~= targetMs within a few iterations.
+  constexpr double kCostPerIter = 1.0; // ms
+  constexpr double kTarget = 33.0;
+  constexpr double kSmoothing = 0.7;
+  size_t chunk = 5;
+  for (int i = 0; i < 6; ++i) {
+    double measured = chunk * kCostPerIter;
+    chunk = adaptChunkIterations(chunk, measured, kTarget, kSmoothing, 1, 200);
+  }
+  // Should be within ±15% of the target after a handful of steps.
+  EXPECT_GE(chunk, 28u);
+  EXPECT_LE(chunk, 38u);
+}
+
 // Constraint Tests
 
 TEST_F(EnergyCalculatorTest, ConstraintsInitiallyEmpty)

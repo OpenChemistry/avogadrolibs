@@ -45,14 +45,21 @@ struct Options
   std::size_t maxSteps = 500;
   double gradientTolerance = 1.0e-2;
   double hybridSwitchGradient = 5.0;
+  // When true, the chunk size for each call to optimizeSteps adapts toward
+  // adaptiveTargetMs using Calc::adaptChunkIterations. Mirrors the policy
+  // the Forcefield / AutoOpt UI uses to target ~30 fps.
+  bool adaptive = false;
+  double adaptiveTargetMs = 33.0;
   std::vector<std::string> inputFiles;
 };
 
 struct RunResult
 {
   std::size_t chunks = 0;
+  std::size_t iterations = 0; // total optimizer iters across all chunks
   std::size_t gradientEvals = 0;
   std::size_t chunksBeforeSwitch = 0; // Hybrid only: chunks spent in FIRE.
+  std::size_t itersBeforeSwitch = 0;  // Hybrid only: iters spent in FIRE.
   double walltimeMs = 0.0;
   Real initialEnergy = std::numeric_limits<Real>::quiet_NaN();
   Real finalEnergy = std::numeric_limits<Real>::quiet_NaN();
@@ -60,6 +67,7 @@ struct RunResult
   double finalGradMaxAbs = 0.0;
   bool converged = false;
   std::string status;
+  std::size_t finalChunkSize = 0; // last opts.chunkIterations used
 };
 
 struct BenchmarkResult
@@ -79,6 +87,7 @@ void printUsage(const char* argv0)
   std::cout << "Usage: " << argv0
             << " [--data-root PATH] [--chunk-iters N] [--max-steps N]"
                " [--grad-tol VALUE] [--switch-grad VALUE]"
+               " [--adaptive] [--adaptive-target-ms N]"
                " [relative/or/absolute molecule files...]\n"
             << "Default dataset includes:\n"
             << "  data/cjson/caffeine.cjson\n"
@@ -138,6 +147,20 @@ bool parseArgs(int argc, char** argv, Options& options)
           !parseDouble(argv[i + 1], options.hybridSwitchGradient) ||
           options.hybridSwitchGradient <= 0.0) {
         std::cerr << "Invalid value for --switch-grad\n";
+        return false;
+      }
+      ++i;
+      continue;
+    }
+    if (arg == "--adaptive") {
+      options.adaptive = true;
+      continue;
+    }
+    if (arg == "--adaptive-target-ms") {
+      if (i + 1 >= argc ||
+          !parseDouble(argv[i + 1], options.adaptiveTargetMs) ||
+          options.adaptiveTargetMs <= 0.0) {
+        std::cerr << "Invalid value for --adaptive-target-ms\n";
         return false;
       }
       ++i;
@@ -230,20 +253,30 @@ RunResult runOptimizer(UFF& uff, const Eigen::VectorXd& initialPositions,
   opts.hybrid.switchGradient = options.hybridSwitchGradient;
 
   Avogadro::Calc::OptimizerState state;
-  const std::size_t maxChunks = options.maxSteps / options.chunkIterations;
   bool wasFire = (algorithm == OptimizationAlgorithm::Hybrid);
 
   const auto start = Clock::now();
-  for (std::size_t chunk = 0; chunk < maxChunks; ++chunk) {
+  while (result.iterations < options.maxSteps) {
+    // Cap the last chunk so we don't overshoot the iteration budget --
+    // matters more in adaptive mode where chunks can grow large.
+    const std::size_t remaining = options.maxSteps - result.iterations;
+    if (opts.chunkIterations > remaining)
+      opts.chunkIterations = remaining;
+
+    const auto chunkStart = Clock::now();
     if (!optimizeSteps(counter, positions, opts, &state)) {
       result.status = "OptimizeFailed";
       break;
     }
+    const auto chunkEnd = Clock::now();
     ++result.chunks;
+    result.iterations += opts.chunkIterations;
+    result.finalChunkSize = opts.chunkIterations;
 
     // Snapshot where the hybrid handed off, for reporting.
     if (wasFire && state.hybridSwitched) {
       result.chunksBeforeSwitch = result.chunks;
+      result.itersBeforeSwitch = result.iterations;
       wasFire = false;
     }
 
@@ -261,6 +294,15 @@ RunResult runOptimizer(UFF& uff, const Eigen::VectorXd& initialPositions,
       result.converged = true;
       result.status = "Converged";
       break;
+    }
+
+    if (options.adaptive) {
+      const double chunkMs =
+        std::chrono::duration<double, std::milli>(chunkEnd - chunkStart)
+          .count();
+      opts.chunkIterations = Avogadro::Calc::adaptChunkIterations(
+        opts.chunkIterations, chunkMs, options.adaptiveTargetMs,
+        /*smoothing=*/0.7, /*minChunk=*/1, /*maxChunk=*/200);
     }
   }
   const auto end = Clock::now();
@@ -322,8 +364,10 @@ void printResults(const std::vector<BenchmarkResult>& results,
   std::cout << "\nOptimizer benchmark on UFF (L-BFGS vs FIRE2 vs ABC-FIRE vs "
                "Hybrid)\n"
             << "Data root: " << options.dataRoot << "\n"
-            << "Chunk: " << options.chunkIterations
-            << "  Max steps: " << options.maxSteps
+            << "Chunk: " << options.chunkIterations;
+  if (options.adaptive)
+    std::cout << " (adaptive, target " << options.adaptiveTargetMs << " ms)";
+  std::cout << "  Max steps: " << options.maxSteps
             << "  Gradient tol (max-abs): " << std::scientific
             << std::setprecision(2) << options.gradientTolerance
             << "  Hybrid switch grad: " << options.hybridSwitchGradient
@@ -332,27 +376,29 @@ void printResults(const std::vector<BenchmarkResult>& results,
   std::cout << std::left << std::setw(18) << "Molecule" << std::right
             << std::setw(6) << "Atoms"
             << "  " << std::left << std::setw(9) << "Method" << std::right
-            << std::setw(6) << "Iters" << std::setw(8) << "gEvals"
+            << std::setw(6) << "Iters" << std::setw(7) << "Chunks"
+            << std::setw(7) << "Final" << std::setw(8) << "gEvals"
             << std::setw(8) << "g/iter" << std::setw(10) << "Time(ms)"
             << std::setw(15) << "E_initial" << std::setw(15) << "E_final"
             << std::setw(11) << "|g|max"
             << "  " << std::left << std::setw(12) << "Status"
             << "\n";
-  std::cout << std::string(122, '-') << "\n";
+  std::cout << std::string(136, '-') << "\n";
 
   auto printRow = [&](const std::string& label, std::size_t atoms,
                       const char* method, const RunResult& run) {
-    const std::size_t iters = run.chunks * options.chunkIterations;
-    const double gPerIter = iters > 0 ? static_cast<double>(run.gradientEvals) /
-                                          static_cast<double>(iters)
-                                      : 0.0;
+    const double gPerIter = run.iterations > 0
+                              ? static_cast<double>(run.gradientEvals) /
+                                  static_cast<double>(run.iterations)
+                              : 0.0;
     std::cout << std::left << std::setw(18) << label << std::right
               << std::setw(6) << atoms << "  " << std::left << std::setw(9)
-              << method << std::right << std::setw(6) << iters << std::setw(8)
-              << run.gradientEvals << std::setw(8) << std::fixed
-              << std::setprecision(2) << gPerIter << std::setw(10)
-              << std::setprecision(1) << run.walltimeMs << std::setw(15)
-              << std::setprecision(4)
+              << method << std::right << std::setw(6) << run.iterations
+              << std::setw(7) << run.chunks << std::setw(7)
+              << run.finalChunkSize << std::setw(8) << run.gradientEvals
+              << std::setw(8) << std::fixed << std::setprecision(2) << gPerIter
+              << std::setw(10) << std::setprecision(1) << run.walltimeMs
+              << std::setw(15) << std::setprecision(4)
               << (std::isnan(run.initialEnergy) ? 0.0 : run.initialEnergy)
               << std::setw(15) << run.finalEnergy << std::setw(11)
               << std::scientific << std::setprecision(2) << run.finalGradMaxAbs
@@ -370,12 +416,10 @@ void printResults(const std::vector<BenchmarkResult>& results,
     printRow("", result.atoms, "FIRE2", result.fire2);
     printRow("", result.atoms, "ABC-FIRE", result.abcFire);
     printRow("", result.atoms, "Hybrid", result.hybrid);
-    if (result.hybrid.chunksBeforeSwitch > 0) {
-      const std::size_t switchIter =
-        result.hybrid.chunksBeforeSwitch * options.chunkIterations;
+    if (result.hybrid.itersBeforeSwitch > 0) {
       std::cout << std::string(20, ' ')
                 << "  (Hybrid switched ABC-FIRE -> L-BFGS at iter "
-                << switchIter << ")\n";
+                << result.hybrid.itersBeforeSwitch << ")\n";
     } else if (result.hybrid.chunks > 0) {
       std::cout << std::string(20, ' ')
                 << "  (Hybrid stayed in ABC-FIRE phase)\n";
@@ -395,7 +439,7 @@ void printResults(const std::vector<BenchmarkResult>& results,
       if (run.converged) {
         ++converged;
         totalMs += run.walltimeMs;
-        totalIters += run.chunks * options.chunkIterations;
+        totalIters += run.iterations;
       }
     }
     std::cout << "  " << std::left << std::setw(9) << method << "  "

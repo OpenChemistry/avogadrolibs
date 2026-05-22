@@ -12,6 +12,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/primitive.h>
 
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QPoint>
 #include <QtCore/QTimer>
 #include <QtWidgets/QAbstractButton>
@@ -144,6 +145,10 @@ private:
   QThread* m_workerThread = nullptr;
   QtGui::CalcWorker* m_worker = nullptr;
   bool m_computePending = false;
+  // Persistent across optimizeStep calls so adaptive chunk sizing carries
+  // over between timer ticks.
+  Calc::OptimizationOptions m_optOptions;
+  QElapsedTimer m_chunkTimer;
   void startWorker();
   void cleanupWorker();
 };

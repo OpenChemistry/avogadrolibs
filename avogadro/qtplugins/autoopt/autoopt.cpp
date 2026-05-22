@@ -336,6 +336,9 @@ void AutoOpt::start()
 
   m_energy = 0.0;
   m_deltaE = 0.0;
+  // Re-bootstrap the adaptive chunk size each run (molecule / method may
+  // have changed). optimizeStep() refills algorithm + initial chunk when 0.
+  m_optOptions.chunkIterations = 0;
 
   // set up masses first (needed for velocity initialization)
   setMasses(m_masses, &m_molecule->molecule());
@@ -430,15 +433,19 @@ void AutoOpt::optimizeStep()
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   Eigen::VectorXd positions = map;
 
-  Calc::OptimizationOptions options;
-  options.algorithm = Calc::OptimizationAlgorithm::Lbfgs;
-  options.chunkIterations = 2;
+  // Initialize options once per run, then let adaptive chunk sizing in
+  // onOptimizeStepDone take over. Hybrid drives ABC-FIRE then L-BFGS.
+  if (m_optOptions.chunkIterations == 0) {
+    m_optOptions.algorithm = Calc::OptimizationAlgorithm::Hybrid;
+    m_optOptions.chunkIterations = 2;
+  }
 
   m_computePending = true;
+  m_chunkTimer.start();
   QMetaObject::invokeMethod(
     m_worker, "runOptimizeChunk", Qt::QueuedConnection,
     Q_ARG(Eigen::VectorXd, positions),
-    Q_ARG(Avogadro::Calc::OptimizationOptions, options));
+    Q_ARG(Avogadro::Calc::OptimizationOptions, m_optOptions));
 }
 
 void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
@@ -448,6 +455,21 @@ void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
   Q_UNUSED(gradient);
   Q_UNUSED(converged);
   m_computePending = false;
+
+  // Adapt chunk size toward the timer interval (also 30 fps by default).
+  // Done before the early-return so the next tick benefits even if the
+  // user briefly paused the run. Sub-ms resolution via nsecsElapsed.
+  const double elapsedMs =
+    m_chunkTimer.isValid() ? m_chunkTimer.nsecsElapsed() / 1.0e6 : 0.0;
+  if (m_optOptions.chunkIterations > 0) {
+    constexpr double kTargetMs = 33.0; // 30 fps
+    constexpr double kSmoothing = 0.7;
+    constexpr size_t kMinChunk = 1;
+    constexpr size_t kMaxChunk = 200;
+    m_optOptions.chunkIterations =
+      Calc::adaptChunkIterations(m_optOptions.chunkIterations, elapsedMs,
+                                 kTargetMs, kSmoothing, kMinChunk, kMaxChunk);
+  }
 
   if (!m_running || m_molecule == nullptr)
     return;

@@ -109,6 +109,32 @@ AVOGADROCALC_EXPORT bool optimizeSteps(
   const OptimizationOptions& options = OptimizationOptions{},
   OptimizerState* state = nullptr);
 
+/**
+ * Propose a chunk size for the next optimizeSteps call so that one chunk
+ * fits within a wall-clock budget. Intended for interactive callers that
+ * want to refresh the view at a fixed rate (~30 fps) regardless of method
+ * cost.
+ *
+ * Uses multiplicative (log-space) EMA so a 2x speedup and a 2x slowdown
+ * move the chunk size by the same amount. With @p smoothing == 1.0 the
+ * step is fully reactive (no smoothing); with 0.0 it never changes.
+ *
+ * Time arguments are doubles in milliseconds so sub-ms chunks (small
+ * molecules in a Release build) still drive the chunk size upward; pass
+ * @c QElapsedTimer::nsecsElapsed()/1e6 from Qt callers.
+ *
+ * @param currentChunk  chunk size that produced the measurement
+ * @param measuredMs    wall time observed for that chunk (>0 required;
+ *                      otherwise @p currentChunk is returned, clamped)
+ * @param targetMs      desired wall time per chunk
+ * @param smoothing     EMA weight in [0, 1]; 0.7 is a reasonable default
+ * @param minChunk      lower clamp (must be >= 1)
+ * @param maxChunk      upper clamp
+ */
+AVOGADROCALC_EXPORT size_t
+adaptChunkIterations(size_t currentChunk, double measuredMs, double targetMs,
+                     double smoothing, size_t minChunk, size_t maxChunk);
+
 } // namespace Avogadro::Calc
 
 #endif // AVOGADRO_CALC_ENERGYOPTIMIZER_H

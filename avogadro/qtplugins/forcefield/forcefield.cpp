@@ -472,13 +472,16 @@ void Forcefield::optimize()
     return;
   }
 
-  m_currentStep = 0;
+  m_iterationsDone = 0;
 
   // merge all coordinate updates into one undo step
   m_molecule->undoMolecule()->setInteractive(true);
 
-  // Set up optimization options
-  m_optOptions.algorithm = Calc::OptimizationAlgorithm::Lbfgs;
+  // Set up optimization options. Hybrid drives ABC-FIRE until |g|_inf
+  // drops below ~5 kJ/(mol*A), then hands off to L-BFGS for the tail.
+  // Start with a small chunk so the first frame lands quickly; the size
+  // adapts per chunk in onOptimizeChunkDone to target ~30 fps.
+  m_optOptions.algorithm = Calc::OptimizationAlgorithm::Hybrid;
   m_optOptions.chunkIterations = 5;
 
   // Snapshot current positions
@@ -494,13 +497,13 @@ void Forcefield::optimize()
   // Set m_optimizing AFTER startWorker, since cleanupWorker resets it
   m_optimizing = true;
 
-  // Create progress dialog
-  int totalChunks = static_cast<int>(m_maxSteps / m_optOptions.chunkIterations);
+  // Create progress dialog. Range is in iterations (not chunks) since the
+  // chunk size now varies across the run.
   m_progressDialog =
     new QProgressDialog(qobject_cast<QWidget*>(this->parent()));
   m_progressDialog->setWindowTitle(tr("Optimize Geometry"));
   // cancel button text is set automatically
-  m_progressDialog->setRange(0, totalChunks);
+  m_progressDialog->setRange(0, static_cast<int>(m_maxSteps));
   m_progressDialog->setWindowModality(Qt::WindowModal);
   m_progressDialog->setMinimumDuration(0);
   m_progressDialog->show();
@@ -526,7 +529,9 @@ void Forcefield::onWorkerReady()
   if (!m_optimizing || !m_worker)
     return;
 
-  // Send the first optimization chunk
+  // Send the first optimization chunk. Time round-trip (dispatch + work +
+  // signal back) so adaptive chunk sizing reflects the actual UI cadence.
+  m_chunkTimer.start();
   QMetaObject::invokeMethod(
     m_worker, "runOptimizeChunk", Qt::QueuedConnection,
     Q_ARG(Eigen::VectorXd, m_lastPositions),
@@ -540,18 +545,26 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
   if (!m_optimizing || m_molecule == nullptr)
     return;
 
+  // Measure chunk wall time (round-trip) before launching the next chunk.
+  // nsecsElapsed gives us sub-ms resolution so adaptation still works when
+  // small molecules finish a chunk in well under 1 ms.
+  const double elapsedMs =
+    m_chunkTimer.isValid() ? m_chunkTimer.nsecsElapsed() / 1.0e6 : 0.0;
+
   auto n = m_molecule->atomCount();
-  m_currentStep++;
+  const unsigned int chunkRan = m_optOptions.chunkIterations;
+  m_iterationsDone += chunkRan;
 
   if (m_progressDialog) {
-    m_progressDialog->setValue(m_currentStep);
+    m_progressDialog->setValue(static_cast<int>(m_iterationsDone));
     m_progressDialog->setLabelText(
       tr("Energy: %L1", "force field energy").arg(energy, 0, 'f', 3));
   }
 
 #ifndef NDEBUG
-  qDebug() << " optimize " << m_currentStep << energy
-           << " gradNorm: " << gradient.norm();
+  qDebug() << " optimize " << m_iterationsDone << energy
+           << " gradNorm: " << gradient.norm() << " chunk=" << chunkRan
+           << " ms=" << elapsedMs;
 #endif
 
   // Update coordinates if valid
@@ -584,8 +597,7 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
       done = true;
   }
 
-  int totalChunks = static_cast<int>(m_maxSteps / m_optOptions.chunkIterations);
-  if (m_currentStep >= totalChunks)
+  if (m_iterationsDone >= m_maxSteps)
     done = true;
 
   m_lastEnergy = energy;
@@ -595,7 +607,21 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
     m_molecule->undoMolecule()->setInteractive(false);
     cleanupWorker();
   } else {
+    // Adapt chunk size toward ~30 fps using the measured round-trip. Cap
+    // at the remaining iteration budget so we don't overshoot m_maxSteps.
+    constexpr double kTargetMs = 33.0; // 30 fps
+    constexpr double kSmoothing = 0.7; // ~2-chunk convergence to target
+    constexpr size_t kMinChunk = 1;
+    constexpr size_t kMaxChunk = 200;
+    size_t next = Calc::adaptChunkIterations(chunkRan, elapsedMs, kTargetMs,
+                                             kSmoothing, kMinChunk, kMaxChunk);
+    const unsigned int remaining = m_maxSteps - m_iterationsDone;
+    if (next > remaining)
+      next = remaining;
+    m_optOptions.chunkIterations = next;
+
     // Request next chunk
+    m_chunkTimer.start();
     QMetaObject::invokeMethod(
       m_worker, "runOptimizeChunk", Qt::QueuedConnection,
       Q_ARG(Eigen::VectorXd, m_lastPositions),

@@ -45,8 +45,16 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
   if (params.wolfeGtol > 0.0)
     solver.SetWolfeGtol(params.wolfeGtol);
 
-  auto initialState = cppoptlib::function::FunctionState(positions);
-  using StateType = decltype(initialState);
+  using StateType = cppoptlib::function::FunctionState<double>;
+  // Reuse the cached (energy, gradient) from a prior chunk to skip the
+  // bootstrap evaluation cppoptlib would otherwise do at the start of
+  // Minimize. Valid when the gradient size matches positions and the
+  // cached energy is finite.
+  StateType initialState =
+    (state && state->gradient.size() == positions.size() &&
+     std::isfinite(state->energy))
+      ? StateType(positions, state->energy, state->gradient)
+      : StateType(positions);
   auto stopProgress =
     cppoptlib::solver::DefaultStoppingSolverProgress<EnergyObjective,
                                                      StateType>();
@@ -64,11 +72,13 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
 
   if (state) {
     state->energy = solution.value;
-    state->gradient = solution.gradient;
-    // L-BFGS does not share FIRE's integrator state; leave velocity / dt /
-    // alpha / nPos / initialized untouched so a caller alternating
-    // algorithms (planned hybrid FIRE -> L-BFGS) keeps FIRE state across
-    // the L-BFGS interludes.
+    state->gradient = std::move(solution.gradient);
+    // L-BFGS moved positions; any cached FIRE velocity is stale.
+    state->velocity.resize(0);
+    state->dt = 0.0;
+    state->alpha = 0.0;
+    state->nPos = 0;
+    state->initialized = false;
   }
   return true;
 }
@@ -97,8 +107,8 @@ bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
                        state->velocity.size() == n &&
                        state->gradient.size() == n;
   if (restore) {
-    v = state->velocity;
-    grad = state->gradient;
+    v = std::move(state->velocity);
+    grad = std::move(state->gradient);
     lastEnergy = state->energy;
     dt = state->dt;
     alpha = state->alpha;
@@ -182,6 +192,36 @@ bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
 }
 } // namespace
 
+size_t adaptChunkIterations(size_t currentChunk, double measuredMs,
+                            double targetMs, double smoothing, size_t minChunk,
+                            size_t maxChunk)
+{
+  if (minChunk < 1)
+    minChunk = 1;
+  if (maxChunk < minChunk)
+    maxChunk = minChunk;
+
+  const size_t fallback =
+    (currentChunk < minChunk)
+      ? minChunk
+      : (currentChunk > maxChunk ? maxChunk : currentChunk);
+
+  if (!(measuredMs > 0.0) || !(targetMs > 0.0) || currentChunk == 0 ||
+      smoothing <= 0.0)
+    return fallback;
+
+  const double ratio = targetMs / measuredMs;
+  const double scale = std::pow(ratio, std::min(smoothing, 1.0));
+  double proposed = static_cast<double>(currentChunk) * scale;
+  const double lo = static_cast<double>(minChunk);
+  const double hi = static_cast<double>(maxChunk);
+  if (!(proposed > lo))
+    proposed = lo;
+  if (proposed > hi)
+    proposed = hi;
+  return static_cast<size_t>(std::lround(proposed));
+}
+
 bool optimizeSteps(EnergyCalculator& method, Eigen::VectorXd& positions,
                    const OptimizationOptions& options, OptimizerState* state)
 {
@@ -194,7 +234,10 @@ bool optimizeSteps(EnergyCalculator& method, Eigen::VectorXd& positions,
     // dispatch ABC-FIRE while |g|_inf >= threshold. Without state we have
     // no gradient to consult, so default to the ABC-FIRE phase.
     bool useFire = !(state && state->hybridSwitched);
-    if (useFire && state && state->gradient.size() > 0 &&
+    // Only trust the cached gradient when a FIRE chunk populated it at the
+    // current problem size; stale/wrong-sized entries must not flip the switch.
+    if (useFire && state && state->initialized &&
+        state->gradient.size() == positions.size() &&
         state->gradient.cwiseAbs().maxCoeff() < options.hybrid.switchGradient) {
       useFire = false;
       state->hybridSwitched = true;
