@@ -18,13 +18,41 @@ class EnergyCalculator;
 
 enum class OptimizationAlgorithm
 {
-  Lbfgs
+  Lbfgs,
+  Fire2,
+  AbcFire
+};
+
+struct LbfgsParameters
+{
+  /// Trust-radius cap on |x_new - x|. Zero disables.
+  double maxStep = 0.0;
+  /// Strong Wolfe curvature tolerance for the line search.
+  double wolfeGtol = 0.9;
+};
+
+/// Defaults tuned for kJ/(mol*Angstrom) forces with unit mass per d.o.f.
+/// (Avogadro convention). The Guénolé 2020 paper assumes atomistic-MD units
+/// (eV/Angstrom, amu masses) and uses larger dt0 / maxMove.
+struct FireParameters
+{
+  double dt0 = 0.05;
+  double dtMax = 0.5;
+  double alphaStart = 0.25;
+  double fAlpha = 0.99;
+  double fInc = 1.1;
+  double fDec = 0.5;
+  int nDelay = 5;
+  double maxMove = 0.05;
+  double mass = 1.0;
 };
 
 struct AVOGADROCALC_EXPORT OptimizationOptions
 {
   OptimizationAlgorithm algorithm = OptimizationAlgorithm::Lbfgs;
   size_t chunkIterations = 5;
+  LbfgsParameters lbfgs;
+  FireParameters fire;
 };
 
 /**
