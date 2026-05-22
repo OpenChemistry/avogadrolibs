@@ -11,6 +11,7 @@
 #include <Eigen/Core>
 
 #include <cstddef>
+#include <limits>
 
 namespace Avogadro::Calc {
 
@@ -20,7 +21,12 @@ enum class OptimizationAlgorithm
 {
   Lbfgs,
   Fire2,
-  AbcFire
+  AbcFire,
+  /// Drive initial optimization with ABC-FIRE (cheap, robust on bad
+  /// geometries) then switch to L-BFGS (better tail convergence) once
+  /// |g|_inf falls below HybridParameters::switchGradient. The switch is
+  /// one-way; OptimizerState::hybridSwitched records it.
+  Hybrid
 };
 
 struct LbfgsParameters
@@ -47,12 +53,48 @@ struct FireParameters
   double mass = 1.0;
 };
 
+struct HybridParameters
+{
+  /// |g|_inf threshold at which the Hybrid algorithm hands off from
+  /// ABC-FIRE to L-BFGS. Units match the gradient reported by the energy
+  /// model (kJ/(mol*Angstrom) for Avogadro's built-in force fields). The
+  /// 5.0 default is "FIRE got close, let L-BFGS finish" — tuned on caffeine
+  /// / tpy-Ru / 1CRN UFF. Set lower for tighter FIRE-only runs, higher to
+  /// let L-BFGS take over sooner.
+  double switchGradient = 5.0;
+};
+
 struct AVOGADROCALC_EXPORT OptimizationOptions
 {
   OptimizationAlgorithm algorithm = OptimizationAlgorithm::Lbfgs;
   size_t chunkIterations = 5;
   LbfgsParameters lbfgs;
   FireParameters fire;
+  HybridParameters hybrid;
+};
+
+/// Optional persistent state for optimizeSteps. Carries FIRE's integrator
+/// state (velocity, dt, alpha, nPos) across chunks so the adaptive timestep
+/// is not reset each call. Always populated on successful return with
+/// (energy, gradient) at the final positions; callers may use those in
+/// place of an extra evaluate() to check convergence.
+///
+/// Set initialized=false (or default-construct) to restart cleanly. A size
+/// mismatch with positions also triggers an internal reset.
+struct OptimizerState
+{
+  Eigen::VectorXd velocity;
+  double dt = 0.0;
+  double alpha = 0.0;
+  int nPos = 0;
+  bool initialized = false;
+
+  /// Sticky flag set by the Hybrid algorithm once it has handed off from
+  /// ABC-FIRE to L-BFGS. Reset to drive a fresh hybrid run.
+  bool hybridSwitched = false;
+
+  double energy = std::numeric_limits<double>::quiet_NaN();
+  Eigen::VectorXd gradient;
 };
 
 /**
@@ -64,7 +106,8 @@ struct AVOGADROCALC_EXPORT OptimizationOptions
  */
 AVOGADROCALC_EXPORT bool optimizeSteps(
   EnergyCalculator& method, Eigen::VectorXd& positions,
-  const OptimizationOptions& options = OptimizationOptions{});
+  const OptimizationOptions& options = OptimizationOptions{},
+  OptimizerState* state = nullptr);
 
 } // namespace Avogadro::Calc
 
