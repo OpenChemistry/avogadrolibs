@@ -477,8 +477,9 @@ void Forcefield::optimize()
   // merge all coordinate updates into one undo step
   m_molecule->undoMolecule()->setInteractive(true);
 
-  // Set up optimization options
-  m_optOptions.algorithm = Calc::OptimizationAlgorithm::Lbfgs;
+  // Set up optimization options. Hybrid drives ABC-FIRE until |g|_inf
+  // drops below ~5 kJ/(mol*A), then hands off to L-BFGS for the tail.
+  m_optOptions.algorithm = Calc::OptimizationAlgorithm::Hybrid;
   m_optOptions.chunkIterations = 5;
 
   // Snapshot current positions

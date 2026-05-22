@@ -431,7 +431,7 @@ void AutoOpt::optimizeStep()
   Eigen::VectorXd positions = map;
 
   Calc::OptimizationOptions options;
-  options.algorithm = Calc::OptimizationAlgorithm::Lbfgs;
+  options.algorithm = Calc::OptimizationAlgorithm::Hybrid;
   options.chunkIterations = 2;
 
   m_computePending = true;

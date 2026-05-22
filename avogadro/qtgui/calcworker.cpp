@@ -32,6 +32,7 @@ void CalcWorker::initCalculator(Calc::EnergyCalculator* calculator,
   m_cancelled = false;
   m_calc.reset(calculator);
   m_molSnapshot = std::move(molSnapshot);
+  m_optState = Calc::OptimizerState{};
 
   // setMolecule on this thread so QProcess gets correct affinity
   m_calc->setMolecule(&m_molSnapshot);
@@ -49,15 +50,24 @@ void CalcWorker::runOptimizeChunk(Eigen::VectorXd positions,
     return;
   }
 
-  bool ok = Calc::optimizeSteps(*m_calc, positions, options);
+  bool ok = Calc::optimizeSteps(*m_calc, positions, options, &m_optState);
 
   if (m_cancelled) {
     emit optimizeFinished(positions, Eigen::VectorXd(), 0.0, true);
     return;
   }
 
-  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(positions.size());
-  double energy = m_calc->evaluate(positions, &gradient);
+  // Read (energy, gradient) from optimizer state. The optimizer already
+  // computed them at the final positions of this chunk; no extra
+  // evaluate() needed.
+  Eigen::VectorXd gradient = m_optState.gradient;
+  double energy = m_optState.energy;
+  if (gradient.size() != positions.size()) {
+    // Fallback for algorithms that don't populate state (shouldn't happen
+    // with the current dispatch; defensive only).
+    gradient = Eigen::VectorXd::Zero(positions.size());
+    energy = m_calc->evaluate(positions, &gradient);
+  }
 
   emit optimizeFinished(positions, gradient, energy, !ok);
 }

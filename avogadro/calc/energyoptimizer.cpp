@@ -45,8 +45,16 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
   if (params.wolfeGtol > 0.0)
     solver.SetWolfeGtol(params.wolfeGtol);
 
-  auto initialState = cppoptlib::function::FunctionState(positions);
-  using StateType = decltype(initialState);
+  using StateType = cppoptlib::function::FunctionState<double>;
+  // Reuse the cached (energy, gradient) from a prior chunk to skip the
+  // bootstrap evaluation cppoptlib would otherwise do at the start of
+  // Minimize. Valid when the gradient size matches positions and the
+  // cached energy is finite.
+  StateType initialState =
+    (state && state->gradient.size() == positions.size() &&
+     std::isfinite(state->energy))
+      ? StateType(positions, state->energy, state->gradient)
+      : StateType(positions);
   auto stopProgress =
     cppoptlib::solver::DefaultStoppingSolverProgress<EnergyObjective,
                                                      StateType>();

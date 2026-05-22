@@ -132,6 +132,11 @@ private:
   std::unique_ptr<Calc::EnergyCalculator> m_calc;
   Core::Molecule m_molSnapshot;
   std::atomic<bool> m_cancelled{ false };
+  // Persistent across optimizeSteps chunks within one optimization run.
+  // Reset by initCalculator. Carries FIRE integrator state, the Hybrid
+  // sticky-switch flag, and the (energy, gradient) cache that lets us skip
+  // the per-chunk convergence-probe evaluate.
+  Calc::OptimizerState m_optState;
 };
 
 } // namespace QtGui

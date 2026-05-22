@@ -188,7 +188,13 @@ class Solver {
     // `if constexpr` branch is skipped and we keep the caller's state as-is.
     StateType current_function_state = function_state;
     if constexpr (IsFunctionState<StateType>::value) {
-      current_function_state = StateType(function, function_state.x);
+      // Avogadro patch: skip the initial evaluation if the caller already
+      // populated `(value, gradient)` consistent with `x` (e.g. via the
+      // 3-arg FunctionState constructor). Saves one evaluation per call
+      // when driving the optimizer in chunks with persistent state.
+      if (function_state.gradient.size() != function_state.x.size()) {
+        current_function_state = StateType(function, function_state.x);
+      }
     }
 
     this->InitializeSolver(function, function_state);
