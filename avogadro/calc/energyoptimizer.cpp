@@ -34,7 +34,8 @@ private:
 };
 
 bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
-                   size_t chunkIterations, const LbfgsParameters& params)
+                   size_t chunkIterations, const LbfgsParameters& params,
+                   OptimizerState* state)
 {
   EnergyObjective objective(method);
   cppoptlib::solver::Lbfgs<EnergyObjective> solver;
@@ -60,27 +61,61 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
   auto [solution, solverProgress] = solver.Minimize(objective, initialState);
   (void)solverProgress;
   positions = solution.x;
+
+  if (state) {
+    state->energy = solution.value;
+    state->gradient = solution.gradient;
+    // L-BFGS does not share FIRE's integrator state; leave velocity / dt /
+    // alpha / nPos / initialized untouched so a caller alternating
+    // algorithms (planned hybrid FIRE -> L-BFGS) keeps FIRE state across
+    // the L-BFGS interludes.
+  }
   return true;
 }
 
-// State (velocity, dt, alpha, N_pos) is reset on every call. This handicaps
-// FIRE vs L-BFGS when chunkIterations is small (the adaptive timestep can't
-// ramp up across chunk boundaries); persistent state is a planned follow-up.
+// FIRE2 / ABC-FIRE driver. Gradient is evaluated at the *end* of each
+// iteration (not the start) so the persisted state carries (energy,
+// gradient) at the final positions on exit, and the next chunk can skip
+// the bootstrap eval entirely. With a valid state on entry, total cost
+// is N gradient evals per N-iteration chunk; the bootstrap eval only
+// fires on the first call (or on size mismatch / explicit reset).
 bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
                   size_t chunkIterations, const FireParameters& p,
-                  OptimizationAlgorithm algorithm)
+                  OptimizationAlgorithm algorithm, OptimizerState* state)
 {
   const Eigen::Index n = positions.size();
-  Eigen::VectorXd v = Eigen::VectorXd::Zero(n);
-  Eigen::VectorXd grad(n);
+  Eigen::VectorXd v;
+  Eigen::VectorXd grad;
   Eigen::VectorXd dr(n);
-  double dt = p.dt0;
-  double alpha = p.alphaStart;
-  int nPos = 0;
+  double dt;
+  double alpha;
+  int nPos;
+  double lastEnergy;
   const bool biasCorrect = (algorithm == OptimizationAlgorithm::AbcFire);
 
+  const bool restore = state && state->initialized &&
+                       state->velocity.size() == n &&
+                       state->gradient.size() == n;
+  if (restore) {
+    v = state->velocity;
+    grad = state->gradient;
+    lastEnergy = state->energy;
+    dt = state->dt;
+    alpha = state->alpha;
+    nPos = state->nPos;
+  } else {
+    v = Eigen::VectorXd::Zero(n);
+    grad.resize(n);
+    lastEnergy = method.evaluate(positions, &grad);
+    dt = p.dt0;
+    alpha = p.alphaStart;
+    nPos = 0;
+  }
+
   for (size_t step = 0; step < chunkIterations; ++step) {
-    method.evaluate(positions, &grad);
+    // grad / lastEnergy are at the current positions on every iteration:
+    // either restored from state, freshly bootstrapped, or computed at the
+    // end of the previous iteration.
     const double power = -grad.dot(v);
 
     if (power > 0.0) {
@@ -90,10 +125,9 @@ bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
         alpha *= p.fAlpha;
       }
     } else if (power < 0.0) {
-      // Always shrink dt on P<0 (matches ASE; gating shrink behind nDelay,
-      // as some FIRE2 references do, starves the stateless per-chunk caller
-      // since nPos resets every chunk before nDelay is reached). Shrink
-      // first, then backtrack with the new dt.
+      // Always shrink dt on P<0 (matches ASE; gating shrink behind nDelay
+      // would starve a stateless per-chunk caller that never reaches nDelay
+      // within a chunk). Shrink first, then backtrack with the new dt.
       nPos = 0;
       dt *= p.fDec;
       positions.noalias() -= 0.5 * dt * v;
@@ -132,26 +166,51 @@ bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
     }
 
     positions += dr;
+    lastEnergy = method.evaluate(positions, &grad);
   }
 
+  if (state) {
+    state->velocity = std::move(v);
+    state->gradient = std::move(grad);
+    state->energy = lastEnergy;
+    state->dt = dt;
+    state->alpha = alpha;
+    state->nPos = nPos;
+    state->initialized = true;
+  }
   return true;
 }
 } // namespace
 
 bool optimizeSteps(EnergyCalculator& method, Eigen::VectorXd& positions,
-                   const OptimizationOptions& options)
+                   const OptimizationOptions& options, OptimizerState* state)
 {
   if (options.chunkIterations == 0)
     return false;
 
-  switch (options.algorithm) {
+  OptimizationAlgorithm dispatch = options.algorithm;
+  if (dispatch == OptimizationAlgorithm::Hybrid) {
+    // Sticky switch: once L-BFGS has taken over, stay there. Otherwise
+    // dispatch ABC-FIRE while |g|_inf >= threshold. Without state we have
+    // no gradient to consult, so default to the ABC-FIRE phase.
+    bool useFire = !(state && state->hybridSwitched);
+    if (useFire && state && state->gradient.size() > 0 &&
+        state->gradient.cwiseAbs().maxCoeff() < options.hybrid.switchGradient) {
+      useFire = false;
+      state->hybridSwitched = true;
+    }
+    dispatch =
+      useFire ? OptimizationAlgorithm::AbcFire : OptimizationAlgorithm::Lbfgs;
+  }
+
+  switch (dispatch) {
     case OptimizationAlgorithm::Lbfgs:
       return optimizeLbfgs(method, positions, options.chunkIterations,
-                           options.lbfgs);
+                           options.lbfgs, state);
     case OptimizationAlgorithm::Fire2:
     case OptimizationAlgorithm::AbcFire:
       return optimizeFire(method, positions, options.chunkIterations,
-                          options.fire, options.algorithm);
+                          options.fire, dispatch, state);
     default:
       return false;
   }

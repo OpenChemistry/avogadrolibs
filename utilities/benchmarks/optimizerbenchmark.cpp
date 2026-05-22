@@ -44,6 +44,7 @@ struct Options
   std::size_t chunkIterations = 5;
   std::size_t maxSteps = 500;
   double gradientTolerance = 1.0e-2;
+  double hybridSwitchGradient = 5.0;
   std::vector<std::string> inputFiles;
 };
 
@@ -51,6 +52,7 @@ struct RunResult
 {
   std::size_t chunks = 0;
   std::size_t gradientEvals = 0;
+  std::size_t chunksBeforeSwitch = 0; // Hybrid only: chunks spent in FIRE.
   double walltimeMs = 0.0;
   Real initialEnergy = std::numeric_limits<Real>::quiet_NaN();
   Real finalEnergy = std::numeric_limits<Real>::quiet_NaN();
@@ -67,6 +69,7 @@ struct BenchmarkResult
   RunResult lbfgs;
   RunResult fire2;
   RunResult abcFire;
+  RunResult hybrid;
   bool success = false;
   std::string error;
 };
@@ -75,7 +78,7 @@ void printUsage(const char* argv0)
 {
   std::cout << "Usage: " << argv0
             << " [--data-root PATH] [--chunk-iters N] [--max-steps N]"
-               " [--grad-tol VALUE]"
+               " [--grad-tol VALUE] [--switch-grad VALUE]"
                " [relative/or/absolute molecule files...]\n"
             << "Default dataset includes:\n"
             << "  data/cjson/caffeine.cjson\n"
@@ -125,6 +128,16 @@ bool parseArgs(int argc, char** argv, Options& options)
           !parseDouble(argv[i + 1], options.gradientTolerance) ||
           options.gradientTolerance <= 0.0) {
         std::cerr << "Invalid value for --grad-tol\n";
+        return false;
+      }
+      ++i;
+      continue;
+    }
+    if (arg == "--switch-grad") {
+      if (i + 1 >= argc ||
+          !parseDouble(argv[i + 1], options.hybridSwitchGradient) ||
+          options.hybridSwitchGradient <= 0.0) {
+        std::cerr << "Invalid value for --switch-grad\n";
         return false;
       }
       ++i;
@@ -193,12 +206,12 @@ RunResult runOptimizer(UFF& uff, const Eigen::VectorXd& initialPositions,
   CountingUff counter(uff);
 
   Eigen::VectorXd positions = initialPositions;
-  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(positions.size());
 
   // Initial probe goes through the inner UFF so the counter reflects only
   // work the optimizer itself drove.
-  result.initialEnergy = uff.evaluate(positions, &gradient);
-  result.initialGradMaxAbs = gradient.cwiseAbs().maxCoeff();
+  Eigen::VectorXd probeGradient(positions.size());
+  result.initialEnergy = uff.evaluate(positions, &probeGradient);
+  result.initialGradMaxAbs = probeGradient.cwiseAbs().maxCoeff();
 
   if (result.initialGradMaxAbs < options.gradientTolerance) {
     result.converged = true;
@@ -214,23 +227,32 @@ RunResult runOptimizer(UFF& uff, const Eigen::VectorXd& initialPositions,
   // ~0.2 A average per-d.o.f. motion per L-BFGS step. FIRE self-caps via
   // FireParameters::maxMove.
   opts.lbfgs.maxStep = 0.2 * std::sqrt(static_cast<double>(positions.size()));
+  opts.hybrid.switchGradient = options.hybridSwitchGradient;
 
+  Avogadro::Calc::OptimizerState state;
   const std::size_t maxChunks = options.maxSteps / options.chunkIterations;
+  bool wasFire = (algorithm == OptimizationAlgorithm::Hybrid);
 
   const auto start = Clock::now();
   for (std::size_t chunk = 0; chunk < maxChunks; ++chunk) {
-    if (!optimizeSteps(counter, positions, opts)) {
+    if (!optimizeSteps(counter, positions, opts, &state)) {
       result.status = "OptimizeFailed";
       break;
     }
     ++result.chunks;
 
-    // Convergence probe uses the inner UFF so the counter isn't inflated.
-    const Real energy = uff.evaluate(positions, &gradient);
-    result.finalEnergy = energy;
-    result.finalGradMaxAbs = gradient.cwiseAbs().maxCoeff();
+    // Snapshot where the hybrid handed off, for reporting.
+    if (wasFire && state.hybridSwitched) {
+      result.chunksBeforeSwitch = result.chunks;
+      wasFire = false;
+    }
 
-    if (!std::isfinite(energy) || !positions.allFinite()) {
+    // Convergence reads (energy, gradient) from the optimizer state -- no
+    // extra evaluate() needed.
+    result.finalEnergy = state.energy;
+    result.finalGradMaxAbs = state.gradient.cwiseAbs().maxCoeff();
+
+    if (!std::isfinite(state.energy) || !positions.allFinite()) {
       result.status = "NonFinite";
       break;
     }
@@ -288,6 +310,8 @@ BenchmarkResult benchmarkFile(const fs::path& moleculePath,
     runOptimizer(uff, initialPositions, OptimizationAlgorithm::Fire2, options);
   result.abcFire = runOptimizer(uff, initialPositions,
                                 OptimizationAlgorithm::AbcFire, options);
+  result.hybrid =
+    runOptimizer(uff, initialPositions, OptimizationAlgorithm::Hybrid, options);
   result.success = true;
   return result;
 }
@@ -295,12 +319,15 @@ BenchmarkResult benchmarkFile(const fs::path& moleculePath,
 void printResults(const std::vector<BenchmarkResult>& results,
                   const Options& options)
 {
-  std::cout << "\nOptimizer benchmark on UFF (L-BFGS vs FIRE2 vs ABC-FIRE)\n"
+  std::cout << "\nOptimizer benchmark on UFF (L-BFGS vs FIRE2 vs ABC-FIRE vs "
+               "Hybrid)\n"
             << "Data root: " << options.dataRoot << "\n"
             << "Chunk: " << options.chunkIterations
             << "  Max steps: " << options.maxSteps
             << "  Gradient tol (max-abs): " << std::scientific
-            << std::setprecision(2) << options.gradientTolerance << "\n\n";
+            << std::setprecision(2) << options.gradientTolerance
+            << "  Hybrid switch grad: " << options.hybridSwitchGradient
+            << "\n\n";
 
   std::cout << std::left << std::setw(18) << "Molecule" << std::right
             << std::setw(6) << "Atoms"
@@ -342,6 +369,17 @@ void printResults(const std::vector<BenchmarkResult>& results,
     printRow(result.label, result.atoms, "L-BFGS", result.lbfgs);
     printRow("", result.atoms, "FIRE2", result.fire2);
     printRow("", result.atoms, "ABC-FIRE", result.abcFire);
+    printRow("", result.atoms, "Hybrid", result.hybrid);
+    if (result.hybrid.chunksBeforeSwitch > 0) {
+      const std::size_t switchIter =
+        result.hybrid.chunksBeforeSwitch * options.chunkIterations;
+      std::cout << std::string(20, ' ')
+                << "  (Hybrid switched ABC-FIRE -> L-BFGS at iter "
+                << switchIter << ")\n";
+    } else if (result.hybrid.chunks > 0) {
+      std::cout << std::string(20, ' ')
+                << "  (Hybrid stayed in ABC-FIRE phase)\n";
+    }
   }
 
   std::cout << "\nSummary (converged runs only):\n";
@@ -369,6 +407,7 @@ void printResults(const std::vector<BenchmarkResult>& results,
   summarize("L-BFGS", &BenchmarkResult::lbfgs);
   summarize("FIRE2", &BenchmarkResult::fire2);
   summarize("ABC-FIRE", &BenchmarkResult::abcFire);
+  summarize("Hybrid", &BenchmarkResult::hybrid);
 }
 
 } // namespace

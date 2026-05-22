@@ -445,6 +445,131 @@ TEST(EnergyOptimizerTest, OptimizeStepsFireAtMinimumStaysPut)
   EXPECT_TRUE(x.isZero());
 }
 
+TEST(EnergyOptimizerTest, OptimizerStatePersistsAcrossChunks)
+{
+  // With chunkIterations < nDelay (default 5), the adaptive timestep can
+  // never ramp up inside a single chunk. Persistent state across calls
+  // accumulates the positive-power counter and lets dt grow past the
+  // nDelay threshold; verify by driving multiple short chunks on a
+  // quadratic where every step has positive power.
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(6);
+  x << 3.0, -2.0, 1.0, 0.5, -1.5, 2.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Fire2;
+  options.chunkIterations = 3;
+
+  OptimizerState state;
+  // First chunk: bootstraps state, dt stays at dt0.
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  EXPECT_TRUE(state.initialized);
+  EXPECT_EQ(state.gradient.size(), x.size());
+  EXPECT_NEAR(state.dt, options.fire.dt0, 1e-12);
+
+  // Drive enough additional chunks to push nPos past nDelay (5).
+  for (int i = 0; i < 4; ++i)
+    EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+
+  // dt must have grown above dt0 -- proof the adaptive timestep is alive
+  // across chunks.
+  EXPECT_GT(state.dt, options.fire.dt0);
+  // state.gradient must remain consistent with x; |grad| = 2*|x| for the
+  // quadratic. As a coarse sanity check, just verify it tracks.
+  EXPECT_TRUE(state.gradient.isApprox(2.0 * x, 1e-10));
+}
+
+TEST(EnergyOptimizerTest, OptimizerStateRestartOnSizeMismatch)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x6(6);
+  x6 << 3.0, -2.0, 1.0, 0.5, -1.5, 2.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Fire2;
+  options.chunkIterations = 5;
+
+  OptimizerState state;
+  EXPECT_TRUE(optimizeSteps(calculator, x6, options, &state));
+  ASSERT_TRUE(state.initialized);
+  ASSERT_EQ(state.velocity.size(), 6);
+
+  // Switch to a different-sized problem; state must be silently rebuilt.
+  Eigen::VectorXd x3(3);
+  x3 << 1.0, 1.0, 1.0;
+  EXPECT_TRUE(optimizeSteps(calculator, x3, options, &state));
+  EXPECT_EQ(state.velocity.size(), 3);
+  EXPECT_EQ(state.gradient.size(), 3);
+}
+
+TEST(EnergyOptimizerTest, OptimizeStepsPopulatesStateForLbfgs)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(3);
+  x << 3.0, -2.0, 1.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 5;
+
+  OptimizerState state;
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+
+  // L-BFGS does not populate FIRE integrator state -- only (energy, grad).
+  EXPECT_EQ(state.gradient.size(), x.size());
+  EXPECT_TRUE(std::isfinite(state.energy));
+  EXPECT_TRUE(state.gradient.isApprox(2.0 * x, 1e-8));
+}
+
+TEST(EnergyOptimizerTest, HybridSwitchesFireToLbfgsBelowThreshold)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(6);
+  x << 3.0, -2.0, 1.0, 0.5, -1.5, 2.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Hybrid;
+  options.chunkIterations = 5;
+  // For the quadratic, |grad| = 2*|x|; pick a threshold well above the
+  // initial |g|_inf so the first chunk's bootstrap already trips the
+  // switch on the *second* call (state.gradient is then < threshold).
+  options.hybrid.switchGradient = 100.0;
+
+  OptimizerState state;
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  // First chunk: state.hybridSwitched starts false, no cached gradient,
+  // so dispatch picks ABC-FIRE. ABC-FIRE populates state.gradient.
+  EXPECT_FALSE(state.hybridSwitched);
+
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  // Second chunk: state.gradient is below threshold -> switch.
+  EXPECT_TRUE(state.hybridSwitched);
+
+  // Further calls remain L-BFGS even if gradient grew (it won't for this
+  // toy problem, but the flag is sticky).
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  EXPECT_TRUE(state.hybridSwitched);
+}
+
+TEST(EnergyOptimizerTest, HybridStaysInFireAboveThreshold)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(6);
+  x << 30.0, -20.0, 10.0, 5.0, -15.0, 20.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Hybrid;
+  options.chunkIterations = 3;
+  // Tight threshold: initial |grad|_inf = 60, ABC-FIRE will not get below
+  // this in just a few chunks.
+  options.hybrid.switchGradient = 1.0e-3;
+
+  OptimizerState state;
+  for (int i = 0; i < 3; ++i)
+    EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  EXPECT_FALSE(state.hybridSwitched);
+}
+
 // Constraint Tests
 
 TEST_F(EnergyCalculatorTest, ConstraintsInitiallyEmpty)
