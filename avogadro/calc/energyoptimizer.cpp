@@ -72,11 +72,13 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
 
   if (state) {
     state->energy = solution.value;
-    state->gradient = solution.gradient;
-    // L-BFGS does not share FIRE's integrator state; leave velocity / dt /
-    // alpha / nPos / initialized untouched so a caller alternating
-    // algorithms (planned hybrid FIRE -> L-BFGS) keeps FIRE state across
-    // the L-BFGS interludes.
+    state->gradient = std::move(solution.gradient);
+    // L-BFGS moved positions; any cached FIRE velocity is stale.
+    state->velocity.resize(0);
+    state->dt = 0.0;
+    state->alpha = 0.0;
+    state->nPos = 0;
+    state->initialized = false;
   }
   return true;
 }
@@ -105,8 +107,8 @@ bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
                        state->velocity.size() == n &&
                        state->gradient.size() == n;
   if (restore) {
-    v = state->velocity;
-    grad = state->gradient;
+    v = std::move(state->velocity);
+    grad = std::move(state->gradient);
     lastEnergy = state->energy;
     dt = state->dt;
     alpha = state->alpha;
@@ -202,7 +204,10 @@ bool optimizeSteps(EnergyCalculator& method, Eigen::VectorXd& positions,
     // dispatch ABC-FIRE while |g|_inf >= threshold. Without state we have
     // no gradient to consult, so default to the ABC-FIRE phase.
     bool useFire = !(state && state->hybridSwitched);
-    if (useFire && state && state->gradient.size() > 0 &&
+    // Only trust the cached gradient when a FIRE chunk populated it at the
+    // current problem size; stale/wrong-sized entries must not flip the switch.
+    if (useFire && state && state->initialized &&
+        state->gradient.size() == positions.size() &&
         state->gradient.cwiseAbs().maxCoeff() < options.hybrid.switchGradient) {
       useFire = false;
       state->hybridSwitched = true;
