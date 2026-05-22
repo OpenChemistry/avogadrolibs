@@ -34,6 +34,7 @@
 #include <iostream>
 #include <sstream>
 #include <tuple>
+#include <type_traits>
 #include <utility>
 
 #include "../function.h"
@@ -41,13 +42,24 @@
 
 namespace cppoptlib::solver {
 
+// Trait: true if `StateType` is a `FunctionState` (and thus participates in
+// the `(value, gradient)` invariant) rather than a separate state like
+// `AugmentedLagrangeState`.
+template <class, class = void>
+struct IsFunctionState : std::false_type {};
+
+template <class S>
+struct IsFunctionState<S, std::void_t<decltype(std::declval<S>().value),
+                                      decltype(std::declval<S>().gradient)>>
+    : std::true_type {};
+
 // Returns a callback function that prints progress to the specified stream.
 // The output stream (e.g., std::cout, std::cerr, or an std::ofstream)
 // is passed as an argument.
 template <class FunctionType, class StateType>
-auto PrintProgressCallback(std::ostream &output_stream) {
-  return [&output_stream](const FunctionType &function, const StateType &state,
-                          const Progress<FunctionType, StateType> &progress) {
+auto PrintProgressCallback(std::ostream& output_stream) {
+  return [&output_stream](const FunctionType& function, const StateType& state,
+                          const Progress<FunctionType, StateType>& progress) {
     const int label_width = 18;  // Width for labels like "Value:", "X Delta:"
     const int num_width = 15;    // Width for numeric values
     const int precision = 6;     // Decimal places for floating-point numbers
@@ -59,9 +71,22 @@ auto PrintProgressCallback(std::ostream &output_stream) {
                   << progress.num_iterations << " ---\n";
 
     // --- Function & State Information ---
-    output_stream << std::left << std::setw(label_width)
-                  << "  Value:" << std::right << std::setw(num_width)
-                  << function(state.x) << "\n";
+    // Read the cached value/gradient from the populated FunctionState.
+    // Fall back to one `function()` call only if the state isn't populated
+    // (e.g. first iteration with a user-supplied state that didn't go
+    // through `Solver::Minimize`'s initial evaluating constructor).
+    if constexpr (IsFunctionState<StateType>::value) {
+      const auto value = (state.gradient.size() == state.x.size())
+                             ? state.value
+                             : function(state.x);
+      output_stream << std::left << std::setw(label_width)
+                    << "  Value:" << std::right << std::setw(num_width) << value
+                    << "\n";
+    } else {
+      output_stream << std::left << std::setw(label_width)
+                    << "  Value:" << std::right << std::setw(num_width)
+                    << function(state.x) << "\n";
+    }
 
     // Format vector/matrix output using a stringstream to avoid messing up
     // widths easily
@@ -74,8 +99,18 @@ auto PrintProgressCallback(std::ostream &output_stream) {
     // --- Gradient (Conditional) ---
     if constexpr (FunctionType::Differentiability >=
                   cppoptlib::function::DifferentiabilityMode::First) {
-      typename FunctionType::VectorType gradient(state.x.size());
-      function(state.x, &gradient);
+      typename FunctionType::VectorType gradient;
+      if constexpr (IsFunctionState<StateType>::value) {
+        if (state.gradient.size() == state.x.size()) {
+          gradient = state.gradient;
+        } else {
+          gradient.resize(state.x.size());
+          function(state.x, &gradient);
+        }
+      } else {
+        gradient.resize(state.x.size());
+        function(state.x, &gradient);
+      }
       std::stringstream ss_grad;
       ss_grad << gradient.transpose();
       output_stream << std::left << std::setw(label_width) << "  Gradient:"
@@ -113,8 +148,8 @@ auto PrintProgressCallback(std::ostream &output_stream) {
 
 template <class FunctionType, class StateType>
 auto NoOpCallback() {
-  return [](const FunctionType & /*function*/, const StateType & /*state*/,
-            const Progress<FunctionType, StateType> & /*progress*/) {};
+  return [](const FunctionType& /*function*/, const StateType& /*state*/,
+            const Progress<FunctionType, StateType>& /*progress*/) {};
 }
 
 // Specifies a solver implementation (of a given order) for a given function
@@ -126,28 +161,35 @@ class Solver {
 
   using ProgressType = Progress<FunctionType, StateType>;
   using CallbackType = std::function<void(
-      const FunctionType &func, const StateType &, const ProgressType &)>;
+      const FunctionType& func, const StateType&, const ProgressType&)>;
 
   ProgressType stopping_progress;
 
  public:
-  explicit Solver(const ProgressType &stopping_progress =
+  explicit Solver(const ProgressType& progress =
                       DefaultStoppingSolverProgress<FunctionType, StateType>())
-      : stopping_progress(stopping_progress),
+      : stopping_progress(progress),
         step_callback_(NoOpCallback<FunctionType, StateType>()) {}
 
   virtual ~Solver() = default;
 
   void SetCallback(CallbackType callback) { step_callback_ = callback; }
 
-  virtual void InitializeSolver(const FunctionType & /*function*/,
-                                const StateType & /*initial_state*/) = 0;
+  virtual void InitializeSolver(const FunctionType& /*function*/,
+                                const StateType& /*initial_state*/) = 0;
 
   virtual std::tuple<StateType, Progress<FunctionType, StateType>> Minimize(
-      const FunctionType &function, const StateType &function_state) {
+      const FunctionType& function, const StateType& function_state) {
     // Solver state during the optimization.
     ProgressType solver_state;
+    // Evaluate `function` once at the user-supplied starting point so the
+    // `(value, gradient)` invariant on `FunctionState` is established.  For
+    // `AugmentedLagrangeState` and other non-FunctionState types this
+    // `if constexpr` branch is skipped and we keep the caller's state as-is.
     StateType current_function_state = function_state;
+    if constexpr (IsFunctionState<StateType>::value) {
+      current_function_state = StateType(function, function_state.x);
+    }
 
     this->InitializeSolver(function, function_state);
 
@@ -158,6 +200,21 @@ class Solver {
       current_function_state = this->OptimizationStep(
           function, previous_function_state, solver_state);
 
+      // Re-establish the `(value, gradient)` invariant on
+      // `current_function_state`.  Solvers that already return a populated
+      // state from their line search leave `gradient.size() == x.size()`
+      // -- in that case skip the rebuild so the optimization loop pays no
+      // redundant evaluation.  Unmigrated solvers return a state with an
+      // empty `gradient`; rebuild to keep `Update` and the callback
+      // consistent.
+      if constexpr (IsFunctionState<StateType>::value) {
+        if (current_function_state.gradient.size() !=
+            current_function_state.x.size()) {
+          current_function_state =
+              StateType(function, current_function_state.x);
+        }
+      }
+
       solver_state.Update(function, previous_function_state,
                           current_function_state, stopping_progress);
     } while (solver_state.status == Status::Continue);
@@ -166,9 +223,9 @@ class Solver {
     return {current_function_state, solver_state};
   }
 
-  virtual StateType OptimizationStep(const FunctionType &function,
-                                     const StateType &current,
-                                     const ProgressType &state) = 0;
+  virtual StateType OptimizationStep(const FunctionType& function,
+                                     const StateType& current,
+                                     const ProgressType& state) = 0;
 
   CallbackType step_callback_;  // A user-defined callback function.
 };

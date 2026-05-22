@@ -65,18 +65,43 @@ class NelderMead
 
   using Superclass::Superclass;
 
+  // Nelder-Mead is derivative-free: it cannot use a gradient-norm test to
+  // confirm "we really are at a minimum", so the solver relies on
+  // `x_delta`/`f_delta` alone.  Its simplex naturally produces consecutive
+  // iterations with very small x-deltas during legitimate progress
+  // (e.g. inside-contraction sequences while shrinking around a plateau),
+  // so the gradient-aware default of one-strike termination yields false
+  // positives here.  Restore the five-strike threshold used historically
+  // by the library's other derivative-free convergence paths.  Gradient-
+  // based solvers keep the one-strike default because a zero-step with
+  // non-zero gradient is a genuine line-search failure, not a pause.
+  //
+  // The wider-window `ConservativeStoppingSolverProgress` (rather than
+  // the aggressive default) is the right baseline here for the same
+  // structural reason: a short plateau window plus a loose
+  // `past_delta` fires far too early on a simplex that is legitimately
+  // contracting around the minimum.  Nelder-Mead's per-iteration
+  // objective change can easily drop below `1e-6` on a contract
+  // step while the simplex still has dozens of shrinks to go before
+  // it actually bounds the optimum.
+  NelderMead()
+      : Superclass(cppoptlib::solver::ConservativeStoppingSolverProgress<
+                   FunctionType, StateType>()) {
+    this->stopping_progress.x_delta_violations = 5;
+  }
+
   // Initialize the solver with the starting point.
-  void InitializeSolver(const FunctionType & /*function*/,
-                        const StateType &initial_state) override {
+  void InitializeSolver(const FunctionType& /*function*/,
+                        const StateType& initial_state) override {
     simplex_ = makeInitialSimplex(initial_state.x);
   }
 
   // Performs one iteration (step) of the Nelder–Mead algorithm.
   // This implementation updates the internal simplex and returns the current
   // best vertex.
-  StateType OptimizationStep(const FunctionType &function,
-                             const StateType &current,
-                             const ProgressType & /*progress*/) override {
+  StateType OptimizationStep(const FunctionType& function,
+                             const StateType& current,
+                             const ProgressType& /*progress*/) override {
     const size_t DIM = current.x.rows();
     const int numVertices = static_cast<int>(DIM) + 1;
 
@@ -174,7 +199,7 @@ class NelderMead
 
   // Create an initial simplex given the starting point x using adaptive
   // perturbations.
-  MatrixType makeInitialSimplex(const VectorType &x) {
+  MatrixType makeInitialSimplex(const VectorType& x) {
     const size_t DIM = x.rows();
     MatrixType s = MatrixType::Zero(DIM, DIM + 1);
     for (size_t c = 0; c < DIM + 1; ++c) {
@@ -192,13 +217,13 @@ class NelderMead
   }
 
   // Returns true if the two vectors are nearly equal (using the infinity norm).
-  bool isCoincident(const VectorType &a, const VectorType &b) const {
+  bool isCoincident(const VectorType& a, const VectorType& b) const {
     return (a - b).template lpNorm<Eigen::Infinity>() < degenerate_tol_;
   }
 
   // Shrink the simplex toward the best vertex.
-  void shrink(MatrixType &s, std::vector<int> &idx, std::vector<ScalarType> &f,
-              const FunctionType &function) {
+  void shrink(MatrixType& s, std::vector<int>& idx, std::vector<ScalarType>& f,
+              const FunctionType& function) {
     const size_t DIM = s.rows();
     // Re-evaluate the best vertex.
     f[idx[0]] = function(s.col(idx[0]));

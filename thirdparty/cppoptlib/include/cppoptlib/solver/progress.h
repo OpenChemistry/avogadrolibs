@@ -29,6 +29,9 @@
 #include <stdint.h>
 
 #include <Eigen/Core>
+#include <cmath>
+#include <cstdlib>
+#include <vector>
 namespace cppoptlib::solver {
 // Status of the solver state.
 enum class Status {
@@ -43,7 +46,7 @@ enum class Status {
   Finished                    // Successful finished
 };
 
-inline std::ostream &operator<<(std::ostream &stream, const Status &status) {
+inline std::ostream& operator<<(std::ostream& stream, const Status& status) {
   switch (status) {
     case Status::NotStarted:
       stream << "Solver not started.";
@@ -82,50 +85,104 @@ struct Progress {
   using MatrixType = typename FunctionType::MatrixType;
 
   size_t num_iterations = 0;           // Maximum number of allowed iterations.
-  ScalarType x_delta = ScalarType{0};  // Minimum change in parameter vector.
+  ScalarType x_delta = ScalarType(0);  // Minimum change in parameter vector.
   int x_delta_violations = 0;  // Number of violations in pareameter vector.
-  ScalarType f_delta = ScalarType{0};  // Minimum change in cost function.
+  ScalarType f_delta = ScalarType(0);  // Minimum change in cost function.
   int f_delta_violations = 0;          // Number of violations in cost function.
-  ScalarType gradient_norm = ScalarType{0};  // Minimum norm of gradient vector.
+  // When true, `f_delta` is interpreted as `factr * epsmch` in Fortran
+  // L-BFGS-B 3.0's `|f_k - f_{k+1}| <= factr * epsmch * max(|f_k|,
+  // |f_{k+1}|, 1)` convergence test (i.e. a *relative* tolerance scaled
+  // by the current function magnitude).  When false, `f_delta` is an
+  // absolute threshold.  Default false; `Lbfgsb` sets it true in its own
+  // constructor to match Fortran's convergence test exactly.
+  bool f_delta_relative = false;
+  ScalarType gradient_norm = ScalarType(0);  // Minimum norm of gradient vector.
+  // When true, `gradient_norm` is interpreted as a relative tolerance against
+  // the current iterate: the solver stops when
+  //     `|g|_inf < gradient_norm * max(1, |x|_inf)`.
+  // This matches the convergence tests used by Nocedal's Fortran L-BFGS
+  // (`gnorm/xnorm <= eps`) and libLBFGS (`||g|| < epsilon * max(1, ||x||)`)
+  // and handles badly-scaled problems where `|x|` is large but the residual
+  // is already at its floor (e.g. MGH-10 Meyer converges around
+  // |x| ~ 6e3, |g|_inf ~ 6e-2).  When false, `gradient_norm` is an absolute
+  // threshold, matching LBFGSpp.
+  bool gradient_norm_relative = true;
   ScalarType condition_hessian =
-      ScalarType{0};  // Maximum condition number of hessian_t.
+      ScalarType(0);  // Maximum condition number of hessian_t.
   ScalarType constraint_threshold =
-      ScalarType{0};                   // Minimum norm of constraint violations.
+      ScalarType(0);  // Minimum norm of constraint violations.
+  // Outer-loop KKT-stationarity tolerance.  The constrained solver
+  // (`AugmentedLagrangian`) reports `Status::Finished` only when
+  // primal feasibility AND Lagrangian-gradient stationarity both
+  // hold; `kkt_stationarity_threshold` is the threshold on the
+  // measured Lagrangian gradient sup-norm.  A non-positive value
+  // disables the check and falls back to feasibility-only stopping.
+  //
+  // The default is deliberately looser than the inner-solver
+  // `gradient_norm` threshold: the outer-loop Lagrangian gradient
+  // accumulates roundoff from all constraint evaluations, so a
+  // Lagrangian gradient at the `1e-6` level is often unattainable
+  // even when every per-constraint residual is at machine epsilon.
+  ScalarType kkt_stationarity_threshold = ScalarType(1e-4);
   Status status = Status::NotStarted;  // Status of state.
+
+  // Past-delta stopping: stop when the function value has not decreased
+  // meaningfully over the last `past` iterations.  The test fires when
+  //     |f_{k-past} - f_k| / max(1, |f_k|) < past_delta.
+  // Set `past = 0` to disable (default for backward compatibility).
+  // LBFGS-Lite uses past=3, delta=1e-6 and this is a major contributor
+  // to its lower nfev count on well-behaved problems.
+  int past = 0;
+  ScalarType past_delta = ScalarType(1e-6);
+
+  // Ring buffer for the past-delta stopping test (internal state).
+  std::vector<ScalarType> past_f_ring_;
+  int past_f_pos_ = 0;
 
   Progress() = default;
 
   // Updates state from function information.
-  void Update(const FunctionType &function,
-              const StateType &previous_function_state,
-              const StateType &current_function_state,
-              const Progress<FunctionType, StateType> &stop_progress) {
-    const VectorType &current_x = current_function_state.x;
-    const VectorType &previous_x = previous_function_state.x;
+  //
+  // For plain `FunctionState`, the `(value, gradient)` invariant means we
+  // can read the numbers we need directly from the two state arguments
+  // instead of calling `function()` again.  The `AugmentedLagrangeState`
+  // branch still re-evaluates because the augmented-Lagrangian objective
+  // is a *composite* built from `function`, the multipliers, and the
+  // penalty, none of which are stored as a cached `(value, gradient)` on
+  // the state itself.
+  void Update(const FunctionType& function,
+              const StateType& previous_function_state,
+              const StateType& current_function_state,
+              const Progress<FunctionType, StateType>& stop_progress) {
+    const VectorType& current_x = current_function_state.x;
+    const VectorType& previous_x = previous_function_state.x;
     VectorType previous_gradient, current_gradient;
     ScalarType previous_value;
     ScalarType current_value;
-    if constexpr (FunctionType::Differentiability >=
-                  cppoptlib::function::DifferentiabilityMode::First) {
-      if constexpr (StateType::NumConstraints > 0) {
-        const auto previous_function =
-            cppoptlib::function::ToAugmentedLagrangian(
-                function, previous_function_state.multiplier_state,
-                previous_function_state.penalty_state);
-        const auto current_function =
-            cppoptlib::function::ToAugmentedLagrangian(
-                function, current_function_state.multiplier_state,
-                current_function_state.penalty_state);
+    if constexpr (StateType::IsConstrained) {
+      // Augmented-Lagrangian path: value/gradient live in the composite
+      // objective, not on the state, so we still evaluate here.
+      const auto previous_function = cppoptlib::function::ToAugmentedLagrangian(
+          function, previous_function_state.multiplier_state,
+          previous_function_state.penalty_state);
+      const auto current_function = cppoptlib::function::ToAugmentedLagrangian(
+          function, current_function_state.multiplier_state,
+          current_function_state.penalty_state);
 
-        previous_value = previous_function(previous_x, &previous_gradient);
-        current_value = current_function(current_x, &current_gradient);
-      } else {
-        previous_value = function(previous_x, &previous_gradient);
-        current_value = function(current_x, &current_gradient);
-      }
+      previous_value = previous_function(previous_x, &previous_gradient);
+      current_value = current_function(current_x, &current_gradient);
+    } else if constexpr (FunctionType::Differentiability >=
+                         cppoptlib::function::DifferentiabilityMode::First) {
+      // FunctionState path: read cached (value, gradient) populated by the
+      // solver/line search -- no redundant function() calls.
+      previous_value = previous_function_state.value;
+      current_value = current_function_state.value;
+      previous_gradient = previous_function_state.gradient;
+      current_gradient = current_function_state.gradient;
     } else {
-      previous_value = function(previous_x);
-      current_value = function(current_x);
+      // None-mode FunctionState: only value is tracked.
+      previous_value = previous_function_state.value;
+      current_value = current_function_state.value;
     }
 
     num_iterations++;
@@ -138,9 +195,14 @@ struct Progress {
       gradient_norm = current_gradient.template lpNorm<Eigen::Infinity>();
     }
     // Compute Hessian condition number if the function supports second-order
-    // derivatives
-    if constexpr (FunctionType::Differentiability ==
-                  cppoptlib::function::DifferentiabilityMode::Second) {
+    // derivatives.  Gated on `!StateType::IsConstrained` so
+    // constrained-solver state types (`AugmentedLagrangeState`) skip it:
+    // their `FunctionType` is `ConstrainedOptimizationProblem`, which
+    // has no `operator()` -- the solver evaluates objective and
+    // constraints separately via the struct's member fields.
+    if constexpr (!StateType::IsConstrained &&
+                  FunctionType::Differentiability ==
+                      cppoptlib::function::DifferentiabilityMode::Second) {
       MatrixType current_hessian;
       function(current_x, nullptr, &current_hessian);
       condition_hessian =
@@ -152,13 +214,41 @@ struct Progress {
       status = Status::IterationLimit;
       return;
     }
-    if constexpr (StateType::NumConstraints > 0) {
-      if (std::abs(current_function_state.max_violation) >
-          stop_progress.constraint_threshold) {
-        status = Status::Continue;
+    if constexpr (StateType::IsConstrained) {
+      // KKT-aware outer-loop stopping.  Declare success only when
+      // primal feasibility AND stationarity of the Lagrangian hold.
+      // The feasibility-only form of this test is unsafe for
+      // non-convex objectives: a feasible stationary point of the
+      // raw objective satisfies `max_violation = 0` with zero
+      // multipliers without being an optimum.
+      //
+      // A non-positive `kkt_stationarity_threshold` disables the
+      // KKT check and falls back to feasibility-only behaviour --
+      // used by legacy callers that never saw the KKT machinery.
+      //
+      // NaN-guard: a pathological subproblem can produce NaN
+      // violations / gradients (e.g. HS019's unbounded cubic under
+      // penalty blow-up).  We treat that as a hard stop: there is
+      // no recovering iterate information from NaN, and the
+      // best-iterate tracker in the outer solver keeps any prior
+      // finite iterate for the return value.
+      if (!std::isfinite(current_function_state.max_violation) ||
+          !std::isfinite(current_function_state.max_lagrangian_gradient)) {
+        status = Status::IterationLimit;
         return;
       }
-      status = Status::Finished;  // All constraints satisfied
+      const bool primal_feasible =
+          std::abs(current_function_state.max_violation) <=
+          stop_progress.constraint_threshold;
+      const bool kkt_stationary =
+          (stop_progress.kkt_stationarity_threshold <= ScalarType(0)) ||
+          (current_function_state.max_lagrangian_gradient <=
+           stop_progress.kkt_stationarity_threshold);
+      if (primal_feasible && kkt_stationary) {
+        status = Status::Finished;
+        return;
+      }
+      status = Status::Continue;
       return;
     }
     if ((stop_progress.x_delta > 0) && (x_delta < stop_progress.x_delta)) {
@@ -170,7 +260,13 @@ struct Progress {
     } else {
       x_delta_violations = 0;
     }
-    if ((stop_progress.f_delta > 0) && (f_delta < stop_progress.f_delta)) {
+    if ((stop_progress.f_delta > 0) &&
+        (f_delta <
+         stop_progress.f_delta *
+             (stop_progress.f_delta_relative
+                  ? std::max({std::abs(current_value), std::abs(previous_value),
+                              ScalarType(1)})
+                  : ScalarType(1)))) {
       f_delta_violations++;
       if (f_delta_violations >= stop_progress.f_delta_violations) {
         status = Status::FDeltaViolation;
@@ -179,12 +275,44 @@ struct Progress {
     } else {
       f_delta_violations = 0;
     }
+    // Past-delta stopping: compare current f against f from `past`
+    // iterations ago.  The ring buffer is lazily initialized on first use.
+    if (stop_progress.past > 0) {
+      const int p = stop_progress.past;
+      if (static_cast<int>(past_f_ring_.size()) != p) {
+        past_f_ring_.assign(p, current_value);
+        past_f_pos_ = 0;
+      }
+      if (static_cast<int>(num_iterations) > p) {
+        const ScalarType past_f = past_f_ring_[past_f_pos_];
+        const ScalarType rate =
+            std::abs(past_f - current_value) /
+            std::max(ScalarType(1), std::abs(current_value));
+        if (rate < stop_progress.past_delta) {
+          status = Status::FDeltaViolation;
+          return;
+        }
+      }
+      past_f_ring_[past_f_pos_] = current_value;
+      past_f_pos_ = (past_f_pos_ + 1) % p;
+    }
     if constexpr (FunctionType::Differentiability >=
                   cppoptlib::function::DifferentiabilityMode::First) {
-      if ((stop_progress.gradient_norm > 0) &&
-          (gradient_norm < stop_progress.gradient_norm)) {
-        status = Status::GradientNormViolation;
-        return;
+      if (stop_progress.gradient_norm > 0) {
+        // Scale the gradient-norm threshold by `max(1, |x|_inf)` when the
+        // relative test is enabled (default) so badly-scaled problems do
+        // not waste line-search evaluations trying to drive `|g|_inf` below
+        // an absolute floor that is unachievable at finite precision.
+        const ScalarType scale =
+            stop_progress.gradient_norm_relative
+                ? std::max<ScalarType>(
+                      ScalarType(1),
+                      current_x.template lpNorm<Eigen::Infinity>())
+                : ScalarType(1);
+        if (gradient_norm < stop_progress.gradient_norm * scale) {
+          status = Status::GradientNormViolation;
+          return;
+        }
       }
     }
     if constexpr (FunctionType::Differentiability ==
@@ -199,19 +327,139 @@ struct Progress {
   }
 };
 // Returns the default stopping solver state.
+//
+// The default preset is tuned to stop as soon as the iterate has
+// plausibly reached a stationary point.  It accepts a solution
+// when either of two tests fires:
+//
+//   * Gradient-norm test.  `|g|_inf < 1e-5 * max(1, |x|_inf)`,
+//     the same relative tolerance used by Nocedal's reference
+//     `lbfgs_um` and Okazaki's libLBFGS.
+//
+//   * Plateau test.  The objective has moved by less than
+//     `past_delta = 1e-6` (relative to `max(1, |f|)`) over the
+//     last `past = 3` iterations.  Catches convergence on
+//     problems where the gradient never reaches the threshold
+//     because the iterate is already at a local minimum whose
+//     gradient is at the machine-precision floor.
+//
+// The plateau test is aggressive: it will stop a solver that is
+// moving slowly through a narrow valley before the bottom.  For
+// problems with deliberately-flat regions on the way to the
+// minimum (e.g. higher-order-contact singularities), use the
+// `ConservativeStoppingSolverProgress` variant below, which
+// requires a deeper plateau (`past = 5`, `past_delta = 1e-10`)
+// and a tighter gradient norm (`5e-6`) to stop.
 template <class FunctionType, class StateType>
 Progress<FunctionType, StateType> DefaultStoppingSolverProgress() {
   Progress<FunctionType, StateType> progress;
   using ScalarType = typename Progress<FunctionType, StateType>::ScalarType;
   progress.num_iterations = 10000;
-  progress.x_delta = ScalarType{1e-9};
-  progress.x_delta_violations = 5;
-  progress.f_delta = ScalarType{1e-9};
-  progress.f_delta_violations = 5;
-  progress.gradient_norm = ScalarType{1e-6};
-  progress.condition_hessian = ScalarType{0};
-  progress.constraint_threshold = ScalarType{1e-5};
+
+#ifdef CPPOPT_SWEEP
+  // Parameter sweep mode: read stopping criteria from environment
+  // variables so a single binary can be re-run with different settings
+  // without recompilation.  See scripts/sweep_params.py.
+  auto env_or = [](const char* name, double fallback) -> double {
+    const char* v = std::getenv(name);
+    return v ? std::atof(v) : fallback;
+  };
+  auto env_int_or = [](const char* name, int fallback) -> int {
+    const char* v = std::getenv(name);
+    return v ? std::atoi(v) : fallback;
+  };
+  progress.x_delta = static_cast<ScalarType>(env_or("CPPOPT_X_DELTA", 1e-9));
+  progress.x_delta_violations = env_int_or("CPPOPT_X_DELTA_VIOL", 1);
+  progress.f_delta = ScalarType(0);
+  progress.f_delta_violations = 1;
+  progress.gradient_norm =
+      static_cast<ScalarType>(env_or("CPPOPT_GRAD_NORM", 1e-5));
+  progress.condition_hessian = ScalarType(0);
+  progress.constraint_threshold = ScalarType(1e-5);
+  progress.past = env_int_or("CPPOPT_PAST", 3);
+  progress.past_delta =
+      static_cast<ScalarType>(env_or("CPPOPT_PAST_DELTA", 1e-6));
+#else
+  progress.x_delta = ScalarType(1e-9);
+  // One consecutive x-delta violation is enough for gradient-based solvers:
+  // a step that moves `x` by less than `1e-9` while `|g|` has not met the
+  // gradient-norm test is a line-search failure, not a legitimate pause.
+  // Continuing past it just burns `maxfev` line-search evaluations per
+  // iteration on a stuck iterate (seen on MGH 10 Meyer where the tail used
+  // to waste ~140 nfev in 7 repeated failed line searches).  Derivative-
+  // free solvers like `NelderMead` override this in their own constructor
+  // because their simplex does legitimately produce consecutive small
+  // x-deltas during contraction.
+  progress.x_delta_violations = 1;
+  // Unconstrained L-BFGS / BFGS / Gradient-descent etc: no f-delta stopping
+  // by default.  Reference implementations (Nocedal `lbfgs_um`, Okazaki's
+  // libLBFGS with `past=0`) use gradient-norm alone.  Ill-conditioned
+  // unconstrained problems like MGH-03 Powell badly scaled stall the line
+  // search with `|Δf| < 1e-9` on the first step while the gradient is
+  // still O(1), so an absolute f-delta test fires as a false positive.
+  // `Lbfgsb` re-enables it in its own constructor with
+  // `f_delta_relative = true` to match Fortran L-BFGS-B's
+  // `factr*epsmch*max(|f_k|,|f_{k+1}|,1)` convergence test.
+  progress.f_delta = ScalarType(0);
+  progress.f_delta_violations = 1;
+  // Gradient-norm convergence: `|g|_inf < gradient_norm * max(1, |x|_inf)`.
+  // The `gradient_norm_relative = true` default matches Nocedal's
+  // `lbfgs_um` (`gnorm/xnorm <= eps`, eps = 1e-5) and libLBFGS
+  // (`||g|| < epsilon * max(1, ||x||)`, epsilon = 1e-5).  A tighter
+  // default (`5e-6`) costs noticeable function evaluations on
+  // well-behaved problems where the gradient plateaus just above
+  // that threshold while the objective has already converged; the
+  // conservative preset below re-tightens the knob for callers
+  // who need it.
+  progress.gradient_norm = ScalarType(1e-5);
+  progress.condition_hessian = ScalarType(0);
+  progress.constraint_threshold = ScalarType(1e-5);
+  // Plateau stopping: accept convergence when the objective has
+  // moved by less than `past_delta` over the past `past`
+  // iterations.  `past = 3, past_delta = 1e-6` is the same
+  // aggressive setting used by reference implementations that
+  // match Nocedal's original L-BFGS memo.  A few test problems
+  // with carefully-flat valleys before their minimum (Powell
+  // singular, Powell badly scaled, Meyer) need a deeper plateau
+  // window or a tighter delta to avoid a premature stop; those
+  // callers should use `ConservativeStoppingSolverProgress`.
+  progress.past = 3;
+  progress.past_delta = ScalarType(1e-6);
+#endif  // CPPOPT_SWEEP
   progress.status = Status::NotStarted;
+  return progress;
+}
+
+// Returns a conservative stopping solver state.
+//
+// Same general stopping mechanism as
+// `DefaultStoppingSolverProgress`, but every tolerance is
+// tightened so the solver keeps working well beyond where the
+// default would accept convergence.  Use this when the objective
+// has genuinely flat regions on the way to the minimum -- a
+// fourth-order-contact stationary point, a degenerate saddle,
+// or a Powell-singular-style valley -- where the plateau test
+// would otherwise fire at a non-minimiser.
+//
+// Differences from the default preset:
+//   * `gradient_norm = 5e-6`   (default: 1e-5)
+//   * `past = 5`               (default: 3)
+//   * `past_delta = 1e-10`     (default: 1e-6)
+//
+// The tighter plateau test means the solver must see `past`
+// consecutive iterations of objective change below `past_delta`
+// before it declares convergence; in practice the test rarely
+// fires and the gradient-norm check drives termination.  Expect
+// several times more function evaluations than the default on
+// well-behaved problems in exchange for reliably finding the
+// minimum on pathological ones.
+template <class FunctionType, class StateType>
+Progress<FunctionType, StateType> ConservativeStoppingSolverProgress() {
+  auto progress = DefaultStoppingSolverProgress<FunctionType, StateType>();
+  using ScalarType = typename Progress<FunctionType, StateType>::ScalarType;
+  progress.gradient_norm = ScalarType(5e-6);
+  progress.past = 5;
+  progress.past_delta = ScalarType(1e-10);
   return progress;
 }
 }  // namespace cppoptlib::solver

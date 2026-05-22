@@ -28,7 +28,9 @@
 #define INCLUDE_CPPOPTLIB_SOLVER_LBFGSB_H_
 
 #include <algorithm>
+#include <cassert>
 #include <limits>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -39,7 +41,8 @@
 
 namespace cppoptlib::solver {
 
-template <typename FunctionType, int m = 5>
+template <typename FunctionType, int m = 5,
+          template <class, int> class LineSearch = linesearch::MoreThuente>
 class Lbfgsb
     : public Solver<FunctionType, typename cppoptlib::function::FunctionState<
                                       typename FunctionType::ScalarType,
@@ -70,14 +73,52 @@ class Lbfgsb
 
   using Superclass::Superclass;
 
-  void SetBounds(const VectorType &lower_bound, const VectorType &upper_bound) {
+  // Inherit `Solver`'s default constructor, then re-enable the
+  // factr-equivalent f-delta stopping test.  Plain L-BFGS/BFGS leave
+  // `f_delta = 0` (reference-compatible) and converge on gradient norm
+  // alone; Fortran L-BFGS-B 3.0 adds a `|Δf| <= factr * epsmch *
+  // max(|f_k|, |f_{k+1}|, 1)` test on top, with `factr = 1e7` by
+  // default, i.e. `2.22e-9` scaled relative to the current function
+  // magnitude.  Match that exactly by setting `f_delta_relative = true`
+  // and `f_delta = 2.22e-9`.
+  Lbfgsb() : Superclass() {
+    this->stopping_progress.f_delta = ScalarType(2.22e-9);
+    this->stopping_progress.f_delta_relative = true;
+  }
+
+  void SetBounds(const VectorType& lower_bound, const VectorType& upper_bound) {
     lower_bound_ = lower_bound;
     upper_bound_ = upper_bound;
     bounds_initialized_ = true;
   }
 
-  void InitializeSolver(const FunctionType & /*function*/,
-                        const StateType &initial_state) override {
+  // Sup-norm of the box-projected gradient: |g_j| zeroed at any
+  // coordinate where `x_j` has hit an active bound and `g_j` points
+  // out of the box.  This is the standard convergence measure for
+  // box-constrained problems (Nocedal & Wright 16.7) and is what the
+  // outer augmented-Lagrangian loop reads to decide KKT
+  // stationarity at a box-constrained inner optimum.
+  //
+  // Callable even if `SetBounds` was never invoked -- the
+  // `bounds_initialized_` check falls back to an unbounded box and
+  // the projected norm degenerates to `gradient.lpNorm<Inf>()`.
+  ScalarType ProjectedGradientInfNorm(const VectorType& x,
+                                      const VectorType& gradient) const {
+    if (!bounds_initialized_) {
+      return gradient.template lpNorm<Eigen::Infinity>();
+    }
+    ScalarType norm = ScalarType(0);
+    for (int j = 0; j < x.size(); ++j) {
+      ScalarType gj = gradient(j);
+      if (x(j) <= lower_bound_(j) && gj > 0) gj = ScalarType(0);
+      if (x(j) >= upper_bound_(j) && gj < 0) gj = ScalarType(0);
+      norm = std::max<ScalarType>(norm, std::abs(gj));
+    }
+    return norm;
+  }
+
+  void InitializeSolver(const FunctionType& /*function*/,
+                        const StateType& initial_state) override {
     dim_ = initial_state.x.rows();
 
     if (!bounds_initialized_) {
@@ -88,7 +129,7 @@ class Lbfgsb
       bounds_initialized_ = true;
     }
 
-    theta_ = 1.0;
+    theta_ = ScalarType(1);
 
     W_ = dyn_MatrixType::Zero(dim_, 0);
     // MM_lu_ will be initialized when first L-BFGS update occurs
@@ -97,18 +138,32 @@ class Lbfgsb
     s_history_ = dyn_MatrixType::Zero(dim_, 0);
   }
 
-  StateType OptimizationStep(const FunctionType &function,
-                             const StateType &current,
-                             const ProgressType & /*progress*/) override {
-    // Project current point to bounds (handles infeasible initial points)
-    const VectorType x =
-        current.x.cwiseMin(upper_bound_).cwiseMax(lower_bound_);
+  StateType OptimizationStep(const FunctionType& function,
+                             const StateType& current,
+                             const ProgressType& /*progress*/) override {
+    // Project current point to bounds (handles infeasible initial points).
+    // If the current iterate was already feasible (which it is from the
+    // second iteration onward) the cached `(value, gradient)` remain valid;
+    // otherwise we have to re-evaluate after the clip.
+    VectorType x = current.x.cwiseMin(upper_bound_).cwiseMax(lower_bound_);
+    ScalarType current_value = current.value;
+    VectorType current_gradient = current.gradient;
+    if (x != current.x) {
+      current_value = function(x, &current_gradient);
+    }
 
     // STEP 2: compute the cauchy point
     VectorType cauchy_point = VectorType::Zero(x.rows());
 
-    VectorType current_gradient;
-    function(x, &current_gradient);
+    // Record the projected-gradient norm at the current iterate so the
+    // overridden Minimize loop can test it against
+    // `stopping_progress.gradient_norm`.  The full gradient norm that the
+    // framework computes in `Progress::Update` is not a useful convergence
+    // signal for bound-constrained problems: at a bound-active minimum the
+    // full gradient's components perpendicular to the active face are
+    // balanced by the Lagrange multiplier and are typically nonzero.
+    last_projected_gradient_norm_ =
+        ProjectedGradientInfNorm(x, current_gradient);
 
     dyn_VectorType c = dyn_VectorType::Zero(W_.cols());
     GetGeneralizedCauchyPoint(x, current_gradient, &cauchy_point, &c);
@@ -118,26 +173,37 @@ class Lbfgsb
     const auto [subspace_min, do_line_search] =
         SubspaceMinimization(x, current_gradient, cauchy_point, c);
 
-    // STEP 4: perform linesearch and STEP 5: compute gradient
-    ScalarType rate = 1.0;
+    // STEP 4: perform linesearch and STEP 5: compute gradient.  The
+    // `State`-returning overload of `MoreThuente::Search` consumes the
+    // cached `(value, gradient)` from the starting state and captures the
+    // accepted step's `(value, gradient)` from its final internal
+    // evaluation -- no redundant evaluations per iteration.
+    //
+    // When `do_line_search` is false (no free variables, Cauchy point is
+    // already the quadratic minimizer subject to active bounds), we still
+    // have to evaluate once at the Cauchy point to populate the returned
+    // state.
+    StateType next = StateType(x, current_value, current_gradient);
     if (do_line_search) {
-      ScalarType alpha_init = 1.0;
-      rate = linesearch::MoreThuente<FunctionType, 1>::Search(
-          x, subspace_min - x, function, alpha_init);
+      const VectorType direction = subspace_min - x;
+      next = LineSearch<FunctionType, 1>::Search(next, direction, function,
+                                                 /*alpha_init=*/ScalarType(1));
+    } else {
+      next = StateType(function, subspace_min);
     }
 
-    // update current guess and function information
-    const VectorType x_next = x - rate * (x - subspace_min);
-    // if current solution is out of bound, we clip it
-    const VectorType clipped_x_next =
-        x_next.cwiseMin(upper_bound_).cwiseMax(lower_bound_);
-
-    const StateType next = StateType(clipped_x_next);
-    VectorType next_gradient;
-    function(next.x, &next_gradient);
+    // If the step crossed a bound (line search overshoots, or subspace min
+    // extrapolates past the box), project back into the feasible region.
+    // After a projection the cached `(value, gradient)` are no longer
+    // correct for `next.x`, so re-evaluate in that case.
+    const VectorType clipped_next_x =
+        next.x.cwiseMin(upper_bound_).cwiseMax(lower_bound_);
+    if (clipped_next_x != next.x) {
+      next = StateType(function, clipped_next_x);
+    }
 
     // prepare for next iteration
-    const VectorType new_y = next_gradient - current_gradient;
+    const VectorType new_y = next.gradient - current_gradient;
     const VectorType new_s = next.x - x;
 
     // STEP 6: Only update if positive curvature (s'*y > 0)
@@ -153,8 +219,8 @@ class Lbfgsb
       y_history_.rightCols(1) = new_y;
       s_history_.rightCols(1) = new_s;
       // STEP 7:
-      theta_ =
-          (ScalarType)(new_y.transpose() * new_y) / (new_y.transpose() * new_s);
+      theta_ = static_cast<ScalarType>(new_y.transpose() * new_y) /
+               static_cast<ScalarType>(new_y.transpose() * new_s);
       W_ = dyn_MatrixType::Zero(y_history_.rows(),
                                 y_history_.cols() + s_history_.cols());
       W_ << y_history_, (theta_ * s_history_);
@@ -171,12 +237,66 @@ class Lbfgsb
     return next;
   }
 
+  // Override the default loop so we can use the projected gradient (rather
+  // than the full gradient) as the convergence criterion for
+  // `stopping_progress.gradient_norm`.  At a bound-active minimum the
+  // coordinates with active bounds have non-zero gradient components that
+  // are balanced by Lagrange multipliers; the full-gradient test the base
+  // class uses therefore never fires, and the loop spins until the
+  // iteration limit.
+  std::tuple<StateType, ProgressType> Minimize(
+      const FunctionType& function, const StateType& function_state) override {
+    ProgressType solver_state;
+    // Establish the `(value, gradient)` invariant on `current_function_state`
+    // so `Progress::Update` can read cached fields instead of re-evaluating.
+    // Mirrors the base-class `Minimize` loop.
+    StateType current_function_state(function, function_state.x);
+
+    // Stash the caller's gradient-norm tolerance, then suppress the base
+    // class's full-gradient test so only our projected-gradient test drives
+    // convergence based on that tolerance.
+    const ScalarType projected_gradient_tolerance =
+        this->stopping_progress.gradient_norm;
+    this->stopping_progress.gradient_norm = ScalarType(0);
+
+    this->InitializeSolver(function, function_state);
+
+    do {
+      this->step_callback_(function, current_function_state, solver_state);
+
+      const StateType previous_function_state = current_function_state;
+      current_function_state = this->OptimizationStep(
+          function, previous_function_state, solver_state);
+      // Repopulate the state only if the solver returned an unpopulated
+      // one (legacy path).  See the analogous comment in
+      // `Solver::Minimize`.
+      if (current_function_state.gradient.size() !=
+          current_function_state.x.size()) {
+        current_function_state = StateType(function, current_function_state.x);
+      }
+
+      solver_state.Update(function, previous_function_state,
+                          current_function_state, this->stopping_progress);
+      if ((projected_gradient_tolerance > 0) &&
+          (last_projected_gradient_norm_ < projected_gradient_tolerance)) {
+        solver_state.status = Status::GradientNormViolation;
+      }
+    } while (solver_state.status == Status::Continue);
+
+    // Restore the caller's tolerance so subsequent Minimize() calls see the
+    // same state they set.
+    this->stopping_progress.gradient_norm = projected_gradient_tolerance;
+
+    this->step_callback_(function, current_function_state, solver_state);
+    return {current_function_state, solver_state};
+  }
+
  private:
   /**
    * @brief sort pairs (k,v) according v ascending
    */
   static std::vector<int> SortIndexes(
-      const std::vector<std::pair<int, ScalarType>> &v) {
+      const std::vector<std::pair<int, ScalarType>>& v) {
     std::vector<int> idx(v.size());
     for (size_t i = 0; i != idx.size(); ++i) idx[i] = v[i].first;
     sort(idx.begin(), idx.end(),
@@ -188,17 +308,17 @@ class Lbfgsb
    * @brief Solve MM * x = b using stored LU factorization (triangular solves)
    * More efficient than computing M_ * b when M_ = MM^{-1}
    */
-  dyn_VectorType SolveM(const dyn_VectorType &b) const {
+  dyn_VectorType SolveM(const dyn_VectorType& b) const {
     if (b.size() == 0 || MM_lu_.matrixLU().size() == 0) {
       return b;
     }
     return MM_lu_.solve(b);
   }
 
-  void GetGeneralizedCauchyPoint(const VectorType &x,
-                                 const VectorType &gradient,
-                                 VectorType *x_cauchy,
-                                 dyn_VectorType *c) const {
+  void GetGeneralizedCauchyPoint(const VectorType& x,
+                                 const VectorType& gradient,
+                                 VectorType* x_cauchy,
+                                 dyn_VectorType* c) const {
     constexpr ScalarType max_value = std::numeric_limits<ScalarType>::max();
     // Use larger epsilon for numerical stability
     constexpr ScalarType epsilon = 1e-12;
@@ -238,8 +358,8 @@ class Lbfgsb
     // f'' :=   \theta_*d^ScalarType*d-d^ScalarType*W*M*W^ScalarType*d =
     // -\theta_*f' - p^ScalarType*M*p
     // Use triangular solve: M*p means solve(MM, p)
-    ScalarType f_doubleprime = (ScalarType)(-1.0 * theta_) * f_prime -
-                               p.dot(SolveM(p));  // (O(m^2) operations)
+    ScalarType f_doubleprime =
+        (-theta_) * f_prime - p.dot(SolveM(p));  // (O(m^2) operations)
     f_doubleprime = std::max<ScalarType>(epsilon, f_doubleprime);
     ScalarType f_dp_orig = f_doubleprime;
     // \delta t_min :=  -f'/f''
@@ -290,10 +410,21 @@ class Lbfgsb
         dt = t - t_old;
       }
     }
-    dt_min = std::max<ScalarType>(dt_min, ScalarType{0});
+    dt_min = std::max<ScalarType>(dt_min, ScalarType(0));
     t_old += dt_min;
 
-    (*x_cauchy)(sorted_indices) = x(sorted_indices) + t_old * d(sorted_indices);
+    // Apply the final drift t_old * d only to coordinates that were not
+    // pinned to a bound inside the loop above.  Those activated coordinates
+    // already have x_cauchy set to the bound and `d(j) == 0`, so the
+    // previous implementation `x_cauchy(idx) = x(idx) + t_old * d(idx)`
+    // silently overwrote them with `x(j)` (since `t_old * 0 == 0`),
+    // effectively cancelling the activation.  Only the free (unactivated)
+    // indices from `sorted_indices[i..]` need the drift -- coordinates
+    // before index `i` were pinned during the loop.
+    for (int j = i; j < dim_; ++j) {
+      const int idx = sorted_indices[j];
+      (*x_cauchy)(idx) = x(idx) + t_old * d(idx);
+    }
 
     *c += dt_min * p;
   }
@@ -301,8 +432,8 @@ class Lbfgsb
   /**
    * @brief find alpha* = max {a : a <= 1 and  l_i-xc_i <= a*d_i <= u_i-xc_i}
    */
-  ScalarType FindAlpha(const VectorType &x_cp, const dyn_VectorType &du,
-                       const std::vector<int> &free_variables) const {
+  ScalarType FindAlpha(const VectorType& x_cp, const dyn_VectorType& du,
+                       const std::vector<int>& free_variables) const {
     ScalarType alphastar = 1;
     const unsigned int n = free_variables.size();
     assert(du.rows() == n);
@@ -326,8 +457,8 @@ class Lbfgsb
   }
 
   std::pair<VectorType, bool> SubspaceMinimization(
-      const VectorType &x, const VectorType &gradient,
-      const VectorType &x_cauchy, const dyn_VectorType &c) const {
+      const VectorType& x, const VectorType& gradient,
+      const VectorType& x_cauchy, const dyn_VectorType& c) const {
     std::vector<int> free_variables_index;
     for (int i = 0; i < x_cauchy.rows(); i++) {
       if ((x_cauchy(i) != upper_bound_(i)) &&
@@ -395,6 +526,11 @@ class Lbfgsb
 
   dyn_MatrixType y_history_;
   dyn_MatrixType s_history_;
+
+  // Projected gradient infinity norm at the start of the most recent
+  // OptimizationStep; consumed by the overridden Minimize loop.
+  ScalarType last_projected_gradient_norm_ =
+      std::numeric_limits<ScalarType>::infinity();
 };
 
 }  // namespace cppoptlib::solver
