@@ -123,6 +123,13 @@ private:
   Eigen::ArrayXd m_masses;
   CSVRThermostat* m_thermostat = nullptr;
 
+  // Pre-relaxation phase before dynamics: if initial gradients would kick
+  // the kinetic temperature far above target, run optimization chunks first.
+  bool m_preRelaxing = false;
+  int m_preRelaxIters = 0;
+  static constexpr int s_maxPreRelaxIters = 5;
+  static constexpr double s_preRelaxTempMargin = 250.0; // K above target
+
   mutable QWidget* m_toolWidget;
 
   bool m_running = false;

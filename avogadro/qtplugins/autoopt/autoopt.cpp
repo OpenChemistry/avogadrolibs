@@ -129,13 +129,17 @@ void AutoOpt::startWorker()
   connect(m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
   m_workerThread->start();
 
-  // Connect signals based on task
+  // Connect signals based on task. For dynamics we also connect the optimize
+  // signal so the pre-relax phase can drive optimization chunks through the
+  // same worker before MD begins.
   if (m_task == 0) {
     connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this,
             &AutoOpt::onOptimizeStepDone);
   } else {
     connect(m_worker, &QtGui::CalcWorker::evaluateFinished, this,
             &AutoOpt::onGradientDone);
+    connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this,
+            &AutoOpt::onOptimizeStepDone);
   }
   connect(m_worker, &QtGui::CalcWorker::calculatorReady, this,
           &AutoOpt::onWorkerReady);
@@ -182,12 +186,18 @@ void AutoOpt::setMolecule(QtGui::Molecule* mol)
 
 void AutoOpt::moleculeChanged(unsigned int changes)
 {
-  // qDebug() << "molecule changed" << changes;
-  if (m_running && (changes != (Molecule::Atoms | Molecule::Moved))) {
-    // restart
-    stop();
-    start();
-  }
+  if (!m_running)
+    return;
+  // Ignore the position-only updates we emit during optimization/dynamics.
+  if (changes == (Molecule::Atoms | Molecule::Moved))
+    return;
+
+  // Restart so the worker resnapshots the new topology. For dynamics this
+  // re-enters the pre-relax phase set up in start(), which bleeds off the
+  // edit-induced gradient via optimization chunks before MD resumes
+  // (issue #2788). For optimization the gradients are self-correcting.
+  stop();
+  start();
 }
 
 QWidget* AutoOpt::toolWidget() const
@@ -363,8 +373,15 @@ void AutoOpt::start()
     m_thermostat->setDegreesOfFreedom(std::max(freeDOF, 1));
 
     m_thermostat->initializeVelocities(m_velocities, m_masses);
+
+    // Start in pre-relaxation mode. dynamicsStep() will run optimize chunks
+    // until the predicted post-step temperature is within s_preRelaxTempMargin
+    // of the target, then transition to MD.
+    m_preRelaxing = true;
+    m_preRelaxIters = 0;
   } else {
     m_velocities.setZero();
+    m_preRelaxing = false;
   }
 
   // Start the worker thread — timer begins in onWorkerReady
@@ -452,7 +469,6 @@ void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
                                  Eigen::VectorXd gradient, double energy,
                                  bool converged)
 {
-  Q_UNUSED(gradient);
   Q_UNUSED(converged);
   m_computePending = false;
 
@@ -483,9 +499,32 @@ void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
     Core::Array<Vector3> pos(n);
     Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = positions;
 
-    m_molecule->setAtomPositions3d(pos, tr("Optimize Geometry"));
+    m_molecule->setAtomPositions3d(
+      pos, m_preRelaxing ? tr("Relax for Dynamics") : tr("Optimize Geometry"));
     Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
     m_molecule->emitChanged(changes);
+  }
+
+  // Pre-relax exit check: would the first MD kick push T well above target?
+  // The first Verlet step adds ~a*dt to each velocity, so estimate T from
+  // (v_MB + a*dt). If we're close enough — or we've hit the safety cap —
+  // switch to actual dynamics on the next timer tick.
+  if (m_preRelaxing && gradient.size() == 3 * n && gradient.allFinite() &&
+      m_masses.size() == 3 * n) {
+    Eigen::VectorXd accel =
+      -units::FORCE_CONVERSION * gradient.array() / m_masses.array();
+    Eigen::VectorXd kickedV = m_velocities + accel * m_timeStep;
+    double predictedT = m_thermostat->compute_temperature(kickedV, m_masses);
+
+    ++m_preRelaxIters;
+    if (predictedT <= m_temperature + s_preRelaxTempMargin ||
+        m_preRelaxIters >= s_maxPreRelaxIters) {
+      m_preRelaxing = false;
+      // Geometry shifted during pre-relax — refresh MB velocities at target.
+      m_thermostat->initializeVelocities(m_velocities, m_masses);
+      m_acceleration.setZero();
+      m_firstStep = true;
+    }
   }
 }
 
@@ -506,6 +545,22 @@ void AutoOpt::dynamicsStep()
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   Eigen::VectorXd positions = map;
+
+  // Pre-relax: run an optimization chunk instead of a Verlet step until the
+  // gradient is small enough that the first MD kick won't blow up T.
+  if (m_preRelaxing) {
+    if (m_optOptions.chunkIterations == 0) {
+      m_optOptions.algorithm = Calc::OptimizationAlgorithm::Hybrid;
+      m_optOptions.chunkIterations = 2;
+    }
+    m_computePending = true;
+    m_chunkTimer.start();
+    QMetaObject::invokeMethod(
+      m_worker, "runOptimizeChunk", Qt::QueuedConnection,
+      Q_ARG(Eigen::VectorXd, positions),
+      Q_ARG(Avogadro::Calc::OptimizationOptions, m_optOptions));
+    return;
+  }
 
   // get the frozen atoms
   auto mask = m_molecule->molecule().frozenAtomMask();
@@ -619,7 +674,12 @@ void AutoOpt::draw(Rendering::GroupNode& node)
     return; // nothing to draw
 
   QString overlayText;
-  if (m_task == 1) {
+  if (m_task == 1 && m_preRelaxing) {
+    overlayText = tr("Relaxing… %1 ΔE = %L2", "pre-relax before dynamics")
+                    .arg(m_currentMethod.c_str())
+                    .arg(m_deltaE, 0, 'f', 2) +
+                  " kJ/mol";
+  } else if (m_task == 1) {
     // dynamics step
     double temp = m_thermostat->compute_temperature(m_velocities, m_masses);
     overlayText = tr("%1 T = %L2", "temperature in Kelvin")
