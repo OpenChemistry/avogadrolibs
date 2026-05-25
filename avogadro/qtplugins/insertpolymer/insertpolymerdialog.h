@@ -58,11 +58,18 @@ private:
   // Get the monomer SMILES for a given slot (0=A, 1=B, 2=C)
   QString monomerSmiles(int slot) const;
 
+  // Compute the molar mass (g/mol) of a SMILES string. Returns 0.0 if the
+  // SMILES cannot be parsed (e.g. no SMILES reader available).
+  static double computeMonomerMass(const QString& smiles);
+
   ::Ui::InsertPolymerDialog* m_ui;
   QString m_polymerDirectory;
   QString m_smilesA;
   QString m_smilesB;
   QString m_smilesC;
+  double m_massA = 0.0;
+  double m_massB = 0.0;
+  double m_massC = 0.0;
 };
 
 } // namespace QtPlugins

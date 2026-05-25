@@ -7,7 +7,7 @@ avogadro_plugin(InsertPolymer
   "insertpolymerdialog.ui"
 )
 
-target_link_libraries(InsertPolymer PRIVATE Avogadro::QtGui)
+target_link_libraries(InsertPolymer PRIVATE Avogadro::QtGui Avogadro::IO)
 
 # Install polymer monomer data (SMILES + images)
 install(DIRECTORY "${AvogadroLibs_SOURCEDATA_DIR}/fragments/polymers"

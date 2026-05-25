@@ -6,12 +6,15 @@
 #include "insertpolymerdialog.h"
 #include "ui_insertpolymerdialog.h"
 
+#include <avogadro/core/molecule.h>
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QRandomGenerator>
+#include <QtCore/QSignalBlocker>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QTextStream>
 #include <QDialog>
@@ -26,6 +29,8 @@
 #include <QToolButton>
 #include <QTreeView>
 #include <QVBoxLayout>
+
+#include <cmath>
 
 namespace Avogadro::QtPlugins {
 
@@ -299,26 +304,49 @@ void InsertPolymerDialog::loadMonomer(const QString& filePath, int slot)
   if (QFile::exists(imgPath))
     icon = QIcon(imgPath);
 
+  double mass = computeMonomerMass(smiles);
+
   switch (slot) {
     case 0:
       m_ui->monomerAName->setText(name);
       m_ui->monomerAGraphics->setIcon(icon);
       m_ui->monomerAGraphics->setIconSize(QSize(128, 128));
       m_smilesA = smiles;
+      m_massA = mass;
       break;
     case 1:
       m_ui->monomerBName->setText(name);
       m_ui->monomerBGraphics->setIcon(icon);
       m_ui->monomerBGraphics->setIconSize(QSize(128, 128));
       m_smilesB = smiles;
+      m_massB = mass;
       break;
     case 2:
       m_ui->monomerCName->setText(name);
       m_ui->monomerCGraphics->setIcon(icon);
       m_ui->monomerCGraphics->setIconSize(QSize(128, 128));
       m_smilesC = smiles;
+      m_massC = mass;
       break;
   }
+}
+
+double InsertPolymerDialog::computeMonomerMass(const QString& smiles)
+{
+  if (smiles.isEmpty())
+    return 0.0;
+
+  // Strip attachment-point markers so they don't count toward the mass.
+  QString clean = smiles;
+  clean.remove('*');
+  if (clean.isEmpty())
+    return 0.0;
+
+  Core::Molecule mol;
+  if (!Io::FileFormatManager::instance().readString(mol, clean.toStdString(),
+                                                    "smi"))
+    return 0.0;
+  return mol.mass();
 }
 
 void InsertPolymerDialog::chooseMonomerA()
@@ -386,12 +414,19 @@ void InsertPolymerDialog::validateMonomerRepeats()
       m_ui->cRepeatSpinBox->value() == 0) {
     int aVal = m_ui->aRepeatSpinBox->value();
     int bVal = m_ui->bRepeatSpinBox->value();
-    // Determine which changed and adjust the other
-    // (signals are blocked implicitly by checking before setting)
     if (aVal + bVal != 100) {
-      // Just adjust B to complement A
-      m_ui->bRepeatSpinBox->setValue(100 - aVal);
+      // Adjust the spinbox the user did NOT just edit so their input
+      // is preserved. If the slot was triggered by something other
+      // than one of the spinboxes (e.g. a style change), default to
+      // adjusting B.
+      bool userEditedB = (sender() == m_ui->bRepeatSpinBox);
+      QSpinBox* target =
+        userEditedB ? m_ui->aRepeatSpinBox : m_ui->bRepeatSpinBox;
+      int complement = userEditedB ? 100 - bVal : 100 - aVal;
+      QSignalBlocker blocker(target);
+      target->setValue(complement);
     }
+    QSignalBlocker cBlocker(m_ui->cRepeatSpinBox);
     m_ui->cRepeatSpinBox->setValue(0);
     return;
   }
@@ -449,9 +484,32 @@ QString InsertPolymerDialog::assemblePolymerSmiles() const
   double aPercent = aRepeats / 100.0;
   double bPercent = bRepeats / 100.0;
 
-  int totalRepeats = m_ui->totalLengthSpinBox->value();
   bool statisticalPolymer = (m_ui->monomerRepeatStyle->currentIndex() == 0);
   int tacticity = m_ui->tacticityComboBox->currentIndex();
+
+  // totalLengthUnits: 0 = Repeat Units (direct), 1 = Molecular Weight (g/mol).
+  int totalRepeats = m_ui->totalLengthSpinBox->value();
+  if (m_ui->totalLengthUnits->currentIndex() == 1) {
+    double avgMass = 0.0;
+    if (statisticalPolymer) {
+      double cPercent =
+        1.0 - aPercent - bPercent; // remainder, may include disabled slots
+      if (cPercent < 0.0)
+        cPercent = 0.0;
+      avgMass = aPercent * m_massA + bPercent * m_massB + cPercent * m_massC;
+    } else {
+      int totalBlock = aRepeats + bRepeats + cRepeats;
+      if (totalBlock > 0)
+        avgMass =
+          (aRepeats * m_massA + bRepeats * m_massB + cRepeats * m_massC) /
+          static_cast<double>(totalBlock);
+    }
+    if (avgMass > 0.0) {
+      totalRepeats = static_cast<int>(std::round(totalRepeats / avgMass));
+      if (totalRepeats < 1)
+        totalRepeats = 1;
+    }
+  }
 
   // Check if any monomer uses attachment points
   bool attachMode = usesAttachmentPoints(smiA) ||
@@ -540,6 +598,28 @@ QString InsertPolymerDialog::assemblePolymerSmiles() const
 
 void InsertPolymerDialog::build()
 {
+  // In statistical (percent) mode, refuse to build when the enabled
+  // monomer percentages don't sum to 100 — otherwise
+  // assemblePolymerSmiles() silently redistributes the remainder to C.
+  if (m_ui->monomerRepeatStyle->currentIndex() == 0) {
+    int total = 0;
+    int enabledSlots = 0;
+    for (QSpinBox* sb :
+         { m_ui->aRepeatSpinBox, m_ui->bRepeatSpinBox, m_ui->cRepeatSpinBox }) {
+      if (sb->isEnabled()) {
+        total += sb->value();
+        ++enabledSlots;
+      }
+    }
+    if (enabledSlots > 1 && total != 100) {
+      QMessageBox::warning(
+        this, tr("Error"),
+        tr("Monomer percentages must sum to 100 (current total: %1).")
+          .arg(total));
+      return;
+    }
+  }
+
   QString smiles = assemblePolymerSmiles();
   if (smiles.isEmpty()) {
     QMessageBox::warning(this, tr("Error"),
