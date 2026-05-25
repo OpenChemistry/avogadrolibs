@@ -659,6 +659,17 @@ void AutoOpt::onGradientDone(Eigen::VectorXd gradient, double energy)
   // Store new acceleration for next step
   m_acceleration = newAcceleration;
 
+  // Guard: if the Verlet kick spiked T (e.g. rough sketch survived the
+  // pre-relax cap), hard-rescale to target so we don't wait many tau for
+  // CSVR to drag it down. Only fires when T > target + margin, so once the
+  // system equilibrates this becomes inactive and CSVR resumes natural
+  // sampling.
+  double currentT = m_thermostat->compute_temperature(m_velocities, m_masses);
+  if (currentT > m_temperature + s_preRelaxTempMargin && currentT > 0.0) {
+    double scale = std::sqrt(m_temperature / currentT);
+    m_velocities *= scale;
+  }
+
   // Apply thermostat
   m_thermostat->apply(m_velocities, m_masses);
 
