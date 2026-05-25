@@ -522,8 +522,10 @@ void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
       m_preRelaxing = false;
       // Geometry shifted during pre-relax — refresh MB velocities at target.
       m_thermostat->initializeVelocities(m_velocities, m_masses);
-      m_acceleration.setZero();
-      m_firstStep = true;
+      // Seed the integrator with the gradient we just computed so the first
+      // Verlet step uses a proper a(t) instead of a cold-start kick.
+      m_acceleration = accel;
+      m_firstStep = false;
     }
   }
 }
