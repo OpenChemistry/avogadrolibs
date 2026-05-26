@@ -30,7 +30,7 @@
       <item row="0" column="2">
        <widget class="QPushButton" name="monomerAButton">
         <property name="text">
-         <string>Choose...</string>
+         <string>Choose…</string>
         </property>
        </widget>
       </item>
@@ -47,7 +47,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Choose...</string>
+         <string>Choose…</string>
         </property>
        </widget>
       </item>
@@ -64,7 +64,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Choose...</string>
+         <string>Choose…</string>
         </property>
        </widget>
       </item>

@@ -629,7 +629,7 @@ void InsertPolymerDialog::build()
   }
 
   m_ui->buildPolymerButton->setEnabled(false);
-  m_ui->buildPolymerButton->setText(tr("Working..."));
+  m_ui->buildPolymerButton->setText(tr("Working"));
 
   emit buildPolymer(smiles);
 
