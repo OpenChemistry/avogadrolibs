@@ -79,6 +79,7 @@ private:
 
   void emptyLeftClick(QMouseEvent* e);
   void atomLeftClick(QMouseEvent* e);
+  void atomLeftClickCenter(QMouseEvent* e);
   void bondLeftClick(QMouseEvent* e);
 
   void atomRightClick(QMouseEvent* e);
