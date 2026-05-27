@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-03-15 19:10+0000\n"
+"PO-Revision-Date: 2026-05-28 02:11+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2182,8 +2182,9 @@ msgid "Stop"
 msgstr "停止"
 
 #: qtplugins/autoopt/autoopt.cpp:503
+#, fuzzy
 msgid "Relax for Dynamics"
-msgstr ""
+msgstr "動力学で緩和"
 
 #: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:71
 #: qtplugins/forcefield/forcefield.cpp:504
@@ -2201,7 +2202,7 @@ msgstr "分子動力学"
 #, qt-format
 msgctxt "pre-relax before dynamics"
 msgid "Relaxing… %1 ΔE = %L2"
-msgstr ""
+msgstr "緩和中… %1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:698
 #, qt-format
@@ -2472,13 +2473,16 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:202
 msgid "Command In Progress"
-msgstr ""
+msgstr "実行中のコマンド"
 
 #: qtplugins/commandscripts/command.cpp:203
+#, fuzzy
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
 msgstr ""
+"コマンドスクリプトはすでに実行中です。別のを始める前に終了を待機してください"
+"。"
 
 #: qtplugins/commandscripts/command.cpp:333
 #, qt-format
@@ -3698,11 +3702,12 @@ msgstr "オリゴペプチド配列を挿入"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:29
 msgid "Polymer…"
-msgstr ""
+msgstr "ポリマー…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:82
+#, fuzzy
 msgid "No SMILES format reader found. Is Open Babel available?"
-msgstr ""
+msgstr "SMILES形式のリーダーが見つかりません。Open Babelはありますか？"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, InsertPolymerDialog)
@@ -3713,11 +3718,11 @@ msgstr ""
 #: qtplugins/insertpolymer/insertpolymer.h:23
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:637:883 rc.cpp:958
 msgid "Insert Polymer"
-msgstr ""
+msgstr "ポリマーを挿入"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:90
 msgid "Generating 3D structure…"
-msgstr ""
+msgstr "3D構造を生成中…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:104
 #, qt-format
@@ -3725,10 +3730,13 @@ msgid ""
 "Failed to generate polymer from SMILES:\n"
 "%1"
 msgstr ""
+"SMILESからポリマーを生成するのに失敗しました:\n"
+"%1"
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
+#, fuzzy
 msgid "Build polymers from monomer repeat units."
-msgstr ""
+msgstr "モノマー繰り返し単位からポリマーを構築"
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
 msgid "Polymer monomer data directory not found."
@@ -3736,7 +3744,7 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:172
 msgid "Choose Monomer"
-msgstr ""
+msgstr "モノマーを選択"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3745,13 +3753,14 @@ msgid "Filter:"
 msgstr "フィルター:"
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:617
-#, qt-format
+#, fuzzy, qt-format
 msgid "Monomer percentages must sum to 100 (current total: %1)."
-msgstr ""
+msgstr "モノマーのパーセンテージは合計100でなければいけません（現在の合計は %1）"
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
+#, fuzzy
 msgid "No monomer specified. Please choose at least monomer A."
-msgstr ""
+msgstr "モノマーが指定されていません。少なくともモノマーAを選択してください。"
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
 msgid "Working"
@@ -4210,9 +4219,9 @@ msgid "Chemical Name"
 msgstr "化学名"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:131
-#, qt-format
+#, fuzzy, qt-format
 msgid "Querying PubChem for %1"
-msgstr ""
+msgstr "PubChemに %1 を問い合わせ中"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
@@ -4585,8 +4594,9 @@ msgid "Nothing Selected"
 msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:281
+#, fuzzy
 msgid "Select a plugin to install or update."
-msgstr ""
+msgstr "更新するプラグインを選択"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:291
 #, qt-format
@@ -4677,8 +4687,9 @@ msgid "Nothing to Remove"
 msgstr "削除するものなし"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
+#, fuzzy
 msgid "Select an installed plugin to remove it."
-msgstr ""
+msgstr "削除するプラグインを選択"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
@@ -7689,13 +7700,15 @@ msgstr "新規のペプチドの鎖数"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, aGroupBox)
+#, fuzzy
 msgid "Polymer Structure"
-msgstr ""
+msgstr "ポリマー構造"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "A unit:"
-msgstr ""
+msgstr "A単位:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:33
 #. i18n: ectx: property (text), widget (QPushButton, monomerAButton)
@@ -7704,37 +7717,43 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:67
 #. i18n: ectx: property (text), widget (QPushButton, monomerCButton)
 msgid "Choose…"
-msgstr ""
+msgstr "選択…"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
 msgid "B unit:"
-msgstr ""
+msgstr "B単位:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:57
 #. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
 msgid "C unit:"
-msgstr ""
+msgstr "C単位:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:87
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerAGraphics)
+#, fuzzy
 msgid "Depiction of the A repeat unit"
-msgstr ""
+msgstr "A繰り返し単位の描画"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:103
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerBGraphics)
+#, fuzzy
 msgid "Depiction of the B repeat unit"
-msgstr ""
+msgstr "B繰り返し単位の描画"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:119
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerCGraphics)
+#, fuzzy
 msgid "Depiction of the C repeat unit"
-msgstr ""
+msgstr "C繰り返し単位の描画"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, repeatLabel)
+#, fuzzy
 msgid "Repeats:"
-msgstr ""
+msgstr "繰り返し:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:221
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -7744,49 +7763,55 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
 msgid "Percent"
-msgstr ""
+msgstr "パーセント"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:237
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:269
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Repeat Units"
-msgstr ""
+msgstr "繰り返し単位"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
 msgid "Total Length:"
-msgstr ""
+msgstr "全長:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:274
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Molecular Weight"
-msgstr ""
+msgstr "分子量"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:285
 #. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
 msgid "Tacticity:"
-msgstr ""
+msgstr "タクティシティ:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:292
 #. i18n: ectx: property (toolTip), widget (QComboBox, tacticityComboBox)
+#, fuzzy
 msgid "Control of the polymer stereochemistry / tacticity"
-msgstr ""
+msgstr "ポリマーの立体化学/タクティシティの制御"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:299
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
+#, fuzzy
 msgid "Atactic / Random"
-msgstr ""
+msgstr "アタクティック/ランダム"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:304
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
+#, fuzzy
 msgid "Isotactic"
-msgstr ""
+msgstr "アイソタクティック"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:309
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
+#, fuzzy
 msgid "Syndiotactic"
-msgstr ""
+msgstr "シンジオタクティック"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
