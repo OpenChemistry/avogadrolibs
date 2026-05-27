@@ -19,6 +19,10 @@
 
 namespace Avogadro {
 
+namespace Core {
+class PropertyMap;
+}
+
 namespace QtGui {
 class Molecule;
 }
@@ -81,9 +85,27 @@ private:
   QtGui::Molecule* m_molecule;
   QString m_chargeType; // user-selected charge type override (empty = auto)
 
+  // Custom (per-entity) property columns from Molecule::*Properties()
+  struct CustomColumn
+  {
+    enum Type
+    {
+      Double,
+      Int,
+      String,
+      Matrix
+    };
+    std::string name;
+    Type type;
+  };
+
   mutable bool m_validCache;
   mutable std::vector<Core::Angle> m_angles;
   mutable std::vector<Core::Dihedral> m_torsions;
+  mutable std::vector<CustomColumn> m_customColumns;
+
+  const Core::PropertyMap* propertyMap() const;
+  int baseColumnCount() const;
 
   // Track structure counts to detect actual structural changes vs
   // coordinate-only
@@ -129,7 +151,6 @@ private:
     AtomDataLabel,
     AtomDataIsotope,
     AtomDataColor,
-    AtomDataCustom,
   };
 
   // Bond Data

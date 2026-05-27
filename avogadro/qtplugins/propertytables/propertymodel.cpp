@@ -10,6 +10,7 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/propertymap.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 
@@ -97,6 +98,46 @@ PropertyModel::PropertyModel(PropertyType type, QObject* parent)
 {
 }
 
+const Core::PropertyMap* PropertyModel::propertyMap() const
+{
+  if (m_molecule == nullptr)
+    return nullptr;
+  switch (m_type) {
+    case AtomType:
+      return &m_molecule->atomProperties();
+    case BondType:
+      return &m_molecule->bondProperties();
+    case ResidueType:
+      return &m_molecule->residueProperties();
+    case ConformerType:
+      return &m_molecule->conformerProperties();
+    default:
+      return nullptr;
+  }
+}
+
+int PropertyModel::baseColumnCount() const
+{
+  switch (m_type) {
+    case AtomType:
+      return AtomColumns;
+    case BondType:
+      return BondColumns;
+    case AngleType:
+      return AngleColumns;
+    case TorsionType:
+      return TorsionColumns;
+    case ResidueType:
+      return ResidueColumns;
+    case ConformerType:
+      if (m_molecule && m_molecule->hasData("energies"))
+        return ConformerColumns + 1;
+      return ConformerColumns;
+    default:
+      return 0;
+  }
+}
+
 int PropertyModel::rowCount(const QModelIndex& parent) const
 {
   Q_UNUSED(parent);
@@ -127,27 +168,9 @@ int PropertyModel::rowCount(const QModelIndex& parent) const
 int PropertyModel::columnCount(const QModelIndex& parent) const
 {
   Q_UNUSED(parent);
-  switch (m_type) {
-    case AtomType:
-      return AtomColumns; // see above
-    case BondType:
-      return BondColumns; // see above
-    case AngleType:
-      return AngleColumns; // see above
-    case TorsionType:
-      return TorsionColumns;
-    case ResidueType:
-      return ResidueColumns;
-    case ConformerType: {
-      if (m_molecule->hasData("energies"))
-        return ConformerColumns + 1;
-      else
-        return ConformerColumns;
-    }
-    default:
-      return 0;
-  }
-  return 0;
+  if (!m_validCache)
+    updateCache();
+  return baseColumnCount() + static_cast<int>(m_customColumns.size());
 }
 
 QString partialChargeType(Molecule* molecule)
@@ -308,6 +331,51 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
+
+  // Custom property columns (per-entity)
+  if (col >= baseColumnCount()) {
+    if (!m_validCache)
+      updateCache();
+    int idx = col - baseColumnCount();
+    if (idx < 0 || idx >= static_cast<int>(m_customColumns.size()))
+      return QVariant();
+    const CustomColumn& cc = m_customColumns[idx];
+    const Core::PropertyMap* pm = propertyMap();
+    if (pm == nullptr)
+      return QVariant();
+
+    switch (cc.type) {
+      case CustomColumn::Double: {
+        auto v = pm->getDouble(cc.name, row);
+        if (!v.has_value())
+          return QVariant();
+        if (role == Qt::UserRole || role == Qt::EditRole)
+          return *v;
+        return QString("%L1").arg(*v, 0, 'g', 6);
+      }
+      case CustomColumn::Int: {
+        auto v = pm->getInt(cc.name, row);
+        if (!v.has_value())
+          return QVariant();
+        return *v;
+      }
+      case CustomColumn::String: {
+        auto v = pm->getString(cc.name, row);
+        if (!v.has_value())
+          return QVariant();
+        return QString::fromStdString(*v);
+      }
+      case CustomColumn::Matrix: {
+        if (!pm->hasMatrix(cc.name, row))
+          return QVariant();
+        MatrixX m = pm->getMatrix(cc.name, row).value_or(MatrixX());
+        return QString("[%1×%2 matrix]")
+          .arg(static_cast<int>(m.rows()))
+          .arg(static_cast<int>(m.cols()));
+      }
+    }
+    return QVariant();
+  }
 
   if (m_type == AtomType) {
     auto column = static_cast<AtomColumn>(index.column());
@@ -621,6 +689,16 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
   if (role != Qt::DisplayRole)
     return QVariant();
 
+  // Custom property column headers (per-entity types only)
+  if (orientation == Qt::Horizontal && !m_validCache)
+    updateCache();
+  if (orientation == Qt::Horizontal && section >= baseColumnCount()) {
+    int idx = section - baseColumnCount();
+    if (idx >= 0 && idx < static_cast<int>(m_customColumns.size()))
+      return QString::fromStdString(m_customColumns[idx].name);
+    return QVariant();
+  }
+
   if (m_type == AtomType) {
     if (orientation == Qt::Horizontal) {
 
@@ -762,6 +840,21 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
   // return QAbstractItemModel::flags(index) | Qt::ItemIsEditable
   // for the types and columns that can be edited
   auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+
+  // Custom property columns: editable for double/int/string, read-only for
+  // matrix
+  if (index.column() >= baseColumnCount()) {
+    if (!m_validCache)
+      updateCache();
+    int idx = index.column() - baseColumnCount();
+    if (idx >= 0 && idx < static_cast<int>(m_customColumns.size())) {
+      if (m_customColumns[idx].type != CustomColumn::Matrix)
+        return editable;
+      return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    }
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+  }
+
   if (m_type == AtomType) {
     if (index.column() == AtomDataElement ||
         index.column() == AtomDataFormalCharge || index.column() == AtomDataX ||
@@ -802,6 +895,60 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   // So that we can call "return" and have the cache invalid when we leave
   m_validCache = false;
   auto* undoMolecule = m_molecule->undoMolecule();
+
+  // Custom property columns
+  if (index.column() >= baseColumnCount()) {
+    updateCache();
+    int idx = index.column() - baseColumnCount();
+    if (idx < 0 || idx >= static_cast<int>(m_customColumns.size()))
+      return false;
+    const CustomColumn& cc = m_customColumns[idx];
+    Core::PropertyMap* pm = nullptr;
+    switch (m_type) {
+      case AtomType:
+        pm = &m_molecule->atomProperties();
+        break;
+      case BondType:
+        pm = &m_molecule->bondProperties();
+        break;
+      case ResidueType:
+        pm = &m_molecule->residueProperties();
+        break;
+      case ConformerType:
+        pm = &m_molecule->conformerProperties();
+        break;
+      default:
+        return false;
+    }
+
+    bool ok = false;
+    switch (cc.type) {
+      case CustomColumn::Double: {
+        double d = value.toDouble(&ok);
+        if (!ok)
+          return false;
+        pm->setDouble(cc.name, index.row(), d);
+        break;
+      }
+      case CustomColumn::Int: {
+        int i = value.toInt(&ok);
+        if (!ok)
+          return false;
+        pm->setInt(cc.name, index.row(), i);
+        break;
+      }
+      case CustomColumn::String:
+        pm->setString(cc.name, index.row(), value.toString().toStdString());
+        break;
+      case CustomColumn::Matrix:
+      default:
+        return false;
+    }
+
+    emit dataChanged(index, index);
+    m_molecule->emitChanged(Molecule::Properties | Molecule::Modified);
+    return true;
+  }
 
   if (m_type == AtomType) {
     Vector3 v = m_molecule->atomPosition3d(index.row());
@@ -1255,6 +1402,7 @@ void PropertyModel::updateCache() const
   m_validCache = true;
   m_angles.clear();
   m_torsions.clear();
+  m_customColumns.clear();
 
   if (m_molecule == nullptr)
     return;
@@ -1273,6 +1421,19 @@ void PropertyModel::updateCache() const
       m_torsions.push_back(torsion);
       torsion = ++dIter;
     }
+  }
+
+  // Gather custom property columns (per-entity) for entity-based types
+  const Core::PropertyMap* pm = propertyMap();
+  if (pm != nullptr) {
+    for (const auto& name : pm->doubleNames())
+      m_customColumns.push_back({ name, CustomColumn::Double });
+    for (const auto& name : pm->intNames())
+      m_customColumns.push_back({ name, CustomColumn::Int });
+    for (const auto& name : pm->stringNames())
+      m_customColumns.push_back({ name, CustomColumn::String });
+    for (const auto& name : pm->matrixNames())
+      m_customColumns.push_back({ name, CustomColumn::Matrix });
   }
 }
 
