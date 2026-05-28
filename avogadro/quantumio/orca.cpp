@@ -366,7 +366,7 @@ void ORCAOutput::processLine(std::istream& in,
     list = Core::split(key, ' ');
     if (list.size() > 6)
       vibScaling = Core::lexicalCast<float>(list[5]).value_or(0);
-    getline(in, key); // skip blank line
+    getline(in, key); // skip blank line or "Point grup" line
   } else if (Core::contains(key, "NORMAL MODES")) {
     m_currentMode = VibrationalModes;
 
@@ -614,16 +614,27 @@ void ORCAOutput::processLine(std::istream& in,
         break;
       }
       case Frequencies: {
-        // should start at the first frequency - include zeros
+        // should start at the first frequency - include zeros or "Irrep" label
         if (key.empty())
           break;
         list = Core::split(key, ' ');
+        // If symmetry is enabled, a line wih "Irrep" label comes
+	std::size_t extraColumns = 0;
+        if (list[0] == "Irrep") {
+          // Job with symmetry
+          extraColumns = 1;
+          getline(in, key); // Get first freq
+          key = Core::trimmed(key);
+          if (key.empty())
+            break;
+          list = Core::split(key, ' ');
+        }
         while (!key.empty()) {
           // imaginary frequencies can have an additional comment:
           // ***imaginary mode***
-          if (list.size() != 3 &&
-              (list.size() != 5 || list[3] != "***imaginary" ||
-               list[4] != "mode***")) {
+          if (list.size() != 3 + extraColumns &&
+              (list.size() != 5 + extraColumns || list[3 + extraColumns] != "***imaginary" ||
+               list[4 + extraColumns] != "mode***")) {
             break;
           }
           // e.g. 0:         0.00 cm**-1
@@ -681,6 +692,17 @@ void ORCAOutput::processLine(std::istream& in,
         if (key.empty())
           break;
         list = Core::split(key, ' ');
+        bool has_sym = false;
+	if (list[0] == "Point") {
+	  // Job with symmetry
+	  getline(in, key); // skip blank line
+          has_sym = true;
+	  getline(in, key); // Get the indices
+          key = Core::trimmed(key);
+          if (key.empty())
+            break;
+          list = Core::split(key, ' ');
+	}
         vector<std::size_t> modeIndex;
         bool invalid_index = false;
         while (!key.empty()) {
@@ -699,6 +721,11 @@ void ORCAOutput::processLine(std::istream& in,
           if (invalid_index)
             break;
 
+	  // If has symmetry, skip symmetry labels
+	  if (has_sym) {
+	    getline(in, key); // e.g.: 1-A1       1-B1       1-B2       1-A2       2-B1...
+          }
+
           // now we read the displacements .. there should be 3N lines
           // x,y,z for each atom
           getline(in, key);
@@ -712,6 +739,12 @@ void ORCAOutput::processLine(std::istream& in,
                 Core::lexicalCast<double>(list[j + 1]).value_or(0.0);
             }
 
+            getline(in, key);
+            key = Core::trimmed(key);
+            list = Core::split(key, ' ');
+          }
+	  // If has symmetry, read next to account for blank line between blocks
+	  if (has_sym) {
             getline(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
