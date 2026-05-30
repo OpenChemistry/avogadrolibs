@@ -9,6 +9,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
+#include <cmath>
 #include <iostream>
 
 using std::cout;
@@ -88,16 +89,31 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   }
 
   // add charges and properties
+  // MOPAC reports energies in kcal/mol; store kJ/mol so units are consistent
+  // with the rest of Avogadro (e.g. the force-field energies).
   molecule.setData("totalCharge", m_charge);
   molecule.setData("totalSpinMultiplicity", m_spin);
   molecule.setData("dipoleMoment", m_dipoleMoment);
-  molecule.setData("DeltaH", m_heatOfFormation);
+  molecule.setData("DeltaH", m_heatOfFormation * KCAL_TO_KJ);
   molecule.setData("Area", m_area);
   molecule.setData("Volume", m_volume);
-  if (m_energies.size() > 0)
+  if (m_energies.size() > 0) {
+    for (auto& e : m_energies)
+      e *= KCAL_TO_KJ;
     molecule.setData("energies", m_energies);
-  if (m_forces.size() > 0)
+  }
+  if (m_forces.size() > 0) {
+    // MOPAC reports the gradient norm (GRADIENT_NORM); convert to an RMS
+    // gradient (norm / sqrt(3N)) so it is comparable across molecule sizes
+    // and matches the convention used elsewhere for per-conformer forces.
+    // Also convert kcal/mol/A to kJ/mol/A.
+    const size_t dof = 3 * molecule.atomCount();
+    const double scale =
+      dof > 0 ? KCAL_TO_KJ / std::sqrt(static_cast<double>(dof)) : KCAL_TO_KJ;
+    for (auto& f : m_forces)
+      f *= scale;
     molecule.setData("forces", m_forces);
+  }
 
   if (m_partialCharges.size() > 0) {
     MatrixX charges(m_partialCharges.size(), 1);

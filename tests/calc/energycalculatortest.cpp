@@ -350,6 +350,74 @@ TEST(EnergyCalculatorFusedTest, EvaluateOverrideIsUsed)
   EXPECT_DOUBLE_EQ(grad(1), -6.0);
 }
 
+TEST(EnergyCalculatorBatchTest, SupportsBatchDefaultsFalse)
+{
+  FusedEnergyCalculator calculator;
+  EXPECT_FALSE(calculator.supportsBatch());
+}
+
+TEST(EnergyCalculatorBatchTest, ValueBatchLoopsValue)
+{
+  FusedEnergyCalculator calculator;
+
+  std::vector<Eigen::VectorXd> coords;
+  Eigen::VectorXd a(2);
+  a << 1.0, 2.0; // |a|^2 = 5
+  Eigen::VectorXd b(2);
+  b << 3.0, 4.0; // |b|^2 = 25
+  Eigen::VectorXd c(2);
+  c << 0.0, 0.0; // 0
+  coords.push_back(a);
+  coords.push_back(b);
+  coords.push_back(c);
+
+  std::vector<Real> energies = calculator.valueBatch(coords);
+
+  ASSERT_EQ(energies.size(), 3u);
+  EXPECT_DOUBLE_EQ(energies[0], 5.0);
+  EXPECT_DOUBLE_EQ(energies[1], 25.0);
+  EXPECT_DOUBLE_EQ(energies[2], 0.0);
+  // Default fallback evaluates one set at a time.
+  EXPECT_EQ(calculator.valueCalls(), 3);
+}
+
+TEST(EnergyCalculatorBatchTest, GradientBatchLoopsGradient)
+{
+  FusedEnergyCalculator calculator;
+
+  std::vector<Eigen::VectorXd> coords;
+  Eigen::VectorXd a(2);
+  a << 1.0, 2.0;
+  Eigen::VectorXd b(3);
+  b << 3.0, -4.0, 5.0; // differently-sized set is fine
+  coords.push_back(a);
+  coords.push_back(b);
+
+  std::vector<Eigen::VectorXd> grads;
+  calculator.gradientBatch(coords, grads);
+
+  ASSERT_EQ(grads.size(), 2u);
+  ASSERT_EQ(grads[0].size(), 2);
+  ASSERT_EQ(grads[1].size(), 3);
+  // grad = 2x for the quadratic test calculator.
+  EXPECT_TRUE(grads[0].isApprox(2.0 * a));
+  EXPECT_TRUE(grads[1].isApprox(2.0 * b));
+  EXPECT_EQ(calculator.gradientCalls(), 2);
+}
+
+TEST(EnergyCalculatorBatchTest, EmptyBatchReturnsEmpty)
+{
+  FusedEnergyCalculator calculator;
+  std::vector<Eigen::VectorXd> coords;
+
+  std::vector<Real> energies = calculator.valueBatch(coords);
+  EXPECT_TRUE(energies.empty());
+
+  std::vector<Eigen::VectorXd> grads;
+  calculator.gradientBatch(coords, grads);
+  EXPECT_TRUE(grads.empty());
+}
+
 TEST(EnergyCalculatorEvaluateTest, DefaultEvaluatePreSizesGradient)
 {
   SizedGradientCalculator calculator;
