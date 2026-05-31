@@ -41,7 +41,23 @@ bool Shader::compile()
 
   GLenum type_ = m_type == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
   GLuint handle_ = glCreateShader(type_);
+
+#ifdef __EMSCRIPTEN__
+  std::string sourceForCompile = m_source;
+  size_t versionPos = sourceForCompile.find("#version");
+  if (versionPos != std::string::npos) {
+    size_t versionEnd = sourceForCompile.find('\n', versionPos);
+    if (versionEnd == std::string::npos)
+      sourceForCompile.erase(versionPos);
+    else
+      sourceForCompile.erase(versionPos, versionEnd - versionPos + 1);
+  }
+  sourceForCompile.insert(
+    0, "#version 300 es\nprecision highp float;\nprecision highp int;\n");
+  const auto* source_ = static_cast<const GLchar*>(sourceForCompile.c_str());
+#else
   const auto* source_ = static_cast<const GLchar*>(m_source.c_str());
+#endif
   glShaderSource(handle_, 1, &source_, nullptr);
   glCompileShader(handle_);
   GLint isCompiled;

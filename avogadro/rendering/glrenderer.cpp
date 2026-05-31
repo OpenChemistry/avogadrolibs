@@ -54,6 +54,9 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::initialize()
 {
+#ifdef __EMSCRIPTEN__
+  m_valid = true;
+#else
   GLenum result = glewInit();
   m_valid = (result == GLEW_OK || result == GLEW_ERROR_NO_GLX_DISPLAY);
   if (!m_valid) {
@@ -66,8 +69,11 @@ void GLRenderer::initialize()
     m_valid = false;
     return;
   }
+#endif
 
+#ifndef __EMSCRIPTEN__
   m_solidPipeline.initialize();
+#endif
 }
 
 void GLRenderer::resize(int width, int height)
@@ -79,12 +85,18 @@ void GLRenderer::resize(int width, int height)
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
+#ifndef __EMSCRIPTEN__
   m_solidPipeline.resize(width, height);
+#endif
 }
 
 void GLRenderer::setPixelRatio(float ratio)
 {
+#ifndef __EMSCRIPTEN__
   m_solidPipeline.setPixelRatio(ratio);
+#else
+  (void)ratio;
+#endif
 }
 
 void GLRenderer::render()
@@ -100,13 +112,17 @@ void GLRenderer::render()
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
   // Setup for solid geometry
   // m_volume.begin()
-  m_solidPipeline.begin();
   visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
+#ifndef __EMSCRIPTEN__
+  m_solidPipeline.begin();
   m_scene.rootNode().accept(visitor);
   m_solidPipeline.end();
   m_solidPipeline.adjustOffset(m_camera);
+#else
+  m_scene.rootNode().accept(visitor);
+#endif
 
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);

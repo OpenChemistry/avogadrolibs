@@ -568,7 +568,11 @@ public:
     // set the viewport
     glViewport(0, 0, m_textureSize, m_textureSize);
     // set the clear depth value
+#ifdef __EMSCRIPTEN__
+    glClearDepthf(1.0f);
+#else
     glClearDepth(1.0f);
+#endif
     // set the clear color
     glClearColor(0.0, 0.0, 0.0, 1.0);
     // enable polygon offset to resolve depth fighting
@@ -637,28 +641,38 @@ private:
         std::cerr << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"
                   << std::endl;
         break;
+#ifndef __EMSCRIPTEN__
       case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
         std::cerr << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER" << std::endl;
         break;
       case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
         std::cerr << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER" << std::endl;
         break;
+#endif
       case GL_FRAMEBUFFER_UNSUPPORTED:
         std::cerr << "GL_FRAMEBUFFER_UNSUPPORTED" << std::endl;
         break;
       case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
         std::cerr << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE" << std::endl;
         break;
+#ifndef __EMSCRIPTEN__
       case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
         std::cerr << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS" << std::endl;
         break;
+#endif
       default:
         std::cerr << "GL_FRAMEBUFFER_???" << std::endl;
         break;
     }
   }
 
-  void createDepthTexture(GLenum internalFormat = GL_DEPTH_COMPONENT32)
+  void createDepthTexture(
+#ifdef __EMSCRIPTEN__
+    GLenum internalFormat = GL_DEPTH_COMPONENT32F
+#else
+    GLenum internalFormat = GL_DEPTH_COMPONENT32
+#endif
+  )
   {
     // create depth texture
     glGenTextures(1, &m_depthTexture);
@@ -699,7 +713,9 @@ private:
                            m_depthTexture, 0);
 
     // disable draw and read buffer
+#ifndef __EMSCRIPTEN__
     glDrawBuffer(GL_NONE);
+#endif
     glReadBuffer(GL_NONE);
 
     // check framebuffer status
@@ -802,8 +818,13 @@ private:
       glGetFloatv(GL_DEPTH_CLEAR_VALUE, &clearDepthValue);
       // color
       glGetBooleanv(GL_BLEND, &blend);
+#ifdef __EMSCRIPTEN__
+      glGetIntegerv(GL_BLEND_SRC_RGB, &blendSrc);
+      glGetIntegerv(GL_BLEND_DST_RGB, &blendDst);
+#else
       glGetIntegerv(GL_BLEND_SRC, &blendSrc);
       glGetIntegerv(GL_BLEND_DST, &blendDst);
+#endif
       glGetFloatv(GL_COLOR_CLEAR_VALUE, clearColor);
       // polygon offset
       polygonOffset = glIsEnabled(GL_POLYGON_OFFSET_FILL);
@@ -822,7 +843,11 @@ private:
         glDisable(GL_DEPTH_TEST);
       else
         glEnable(GL_DEPTH_TEST);
+#ifdef __EMSCRIPTEN__
+      glClearDepthf(clearDepthValue);
+#else
       glClearDepth(clearDepthValue);
+#endif
       // color
       glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
       if (!blend)

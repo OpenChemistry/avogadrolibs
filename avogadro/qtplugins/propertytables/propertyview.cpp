@@ -550,7 +550,13 @@ void PropertyView::changeChargeType()
   // pre-select the current type
   QString current = m_model->chargeType();
 
-  int currentIndex = types.indexOf(current, 0, Qt::CaseInsensitive);
+  int currentIndex = -1;
+  for (int i = 0; i < types.size(); ++i) {
+    if (QString::compare(types[i], current, Qt::CaseInsensitive) == 0) {
+      currentIndex = i;
+      break;
+    }
+  }
   if (currentIndex < 0)
     currentIndex = 0;
 

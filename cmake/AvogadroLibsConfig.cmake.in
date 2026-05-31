@@ -21,6 +21,10 @@ set(AvogadroLibs_STATIC_PLUGINS  "@AvogadroLibs_STATIC_PLUGINS@")
 
 # Optional feature flags
 set(AvogadroLibs_USE_PLOTTER     "@USE_PLOTTER@")
+set(AvogadroLibs_USE_OPENGL      "@USE_OPENGL@")
+set(AvogadroLibs_USE_SPGLIB      "@USE_SPGLIB@")
+set(AvogadroLibs_USE_LIBARCHIVE  "@USE_LIBARCHIVE@")
+set(AvogadroLibs_USE_LIBMSYM     "@USE_LIBMSYM@")
 
 include(CMakeFindDependencyMacro)
 
@@ -34,6 +38,45 @@ if (@QT_VERSION@ EQUAL 6)
   if(AvogadroLibs_USE_PLOTTER)
     find_dependency(JKQTPlotter6 REQUIRED)
   endif()
+endif()
+
+if(AvogadroLibs_USE_SPGLIB)
+  find_dependency(Spglib REQUIRED)
+endif()
+
+if(AvogadroLibs_USE_OPENGL)
+  if(EMSCRIPTEN AND NOT TARGET OpenGL::GL)
+    add_library(OpenGL::GL INTERFACE IMPORTED)
+  endif()
+  find_dependency(GLEW REQUIRED)
+endif()
+
+if(AvogadroLibs_USE_LIBARCHIVE)
+  find_dependency(LibArchive REQUIRED)
+endif()
+
+if(AvogadroLibs_USE_LIBMSYM)
+  find_dependency(libmsym CONFIG REQUIRED)
+endif()
+
+if(NOT TARGET gif-h)
+  add_library(gif-h INTERFACE IMPORTED)
+endif()
+
+if(NOT TARGET tinycolormap)
+  add_library(tinycolormap INTERFACE IMPORTED)
+endif()
+
+if(NOT TARGET tomlplusplus)
+  add_library(tomlplusplus INTERFACE IMPORTED)
+endif()
+
+if(NOT TARGET nlohmann_json)
+  add_library(nlohmann_json INTERFACE IMPORTED)
+endif()
+
+if(NOT TARGET cppoptlib)
+  add_library(cppoptlib INTERFACE IMPORTED)
 endif()
 
 if(NOT TARGET AvogadroCore)
