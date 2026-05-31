@@ -12,6 +12,7 @@
 
 // for HTML-formatted formulas
 #include <QtCore/QRegularExpression>
+#include <QtCore/QString>
 
 namespace Avogadro::QtGui {
 
@@ -397,9 +398,9 @@ QString Molecule::formattedFormula() const
       }
       formula += QString("<sup>%1</sup>").arg(digits);
       // take the substring from the digit to the end
-      formula += iter->first.substr(digits.length());
+      formula += QString::fromStdString(iter->first.substr(digits.length()));
     } else
-      formula += iter->first;
+      formula += QString::fromStdString(iter->first);
 
     if (iter->second > 1)
       formula += QString("<sub>%1</sub>").arg(iter->second);

@@ -17,18 +17,99 @@
 
 #include <QAction>
 #include <QtCore/QTimer>
+#include <QtGui/QImage>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
 #include <QtGui/QWindow>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QVBoxLayout>
 
 namespace Avogadro::QtOpenGL {
 
+#ifdef Q_OS_WASM
+class WasmOpenGLWindow : public QOpenGLWindow
+{
+public:
+  explicit WasmOpenGLWindow(GLWidget* owner)
+    : QOpenGLWindow(QOpenGLWindow::NoPartialUpdate), m_owner(owner)
+  {
+  }
+
+protected:
+  void initializeGL() override { m_owner->initializeGL(); }
+  void resizeGL(int width, int height) override
+  {
+    m_owner->resizeGL(width, height);
+  }
+  void paintGL() override { m_owner->paintGL(); }
+
+  void mouseDoubleClickEvent(QMouseEvent* e) override
+  {
+    m_owner->mouseDoubleClickEvent(e);
+    if (!e->isAccepted())
+      QOpenGLWindow::mouseDoubleClickEvent(e);
+  }
+  void mousePressEvent(QMouseEvent* e) override
+  {
+    m_owner->mousePressEvent(e);
+    if (!e->isAccepted())
+      QOpenGLWindow::mousePressEvent(e);
+  }
+  void mouseMoveEvent(QMouseEvent* e) override
+  {
+    m_owner->mouseMoveEvent(e);
+    if (!e->isAccepted())
+      QOpenGLWindow::mouseMoveEvent(e);
+  }
+  void mouseReleaseEvent(QMouseEvent* e) override
+  {
+    m_owner->mouseReleaseEvent(e);
+    if (!e->isAccepted())
+      QOpenGLWindow::mouseReleaseEvent(e);
+  }
+  void wheelEvent(QWheelEvent* e) override
+  {
+    m_owner->wheelEvent(e);
+    if (!e->isAccepted())
+      QOpenGLWindow::wheelEvent(e);
+  }
+  void keyPressEvent(QKeyEvent* e) override
+  {
+    m_owner->keyPressEvent(e);
+    if (!e->isAccepted())
+      QOpenGLWindow::keyPressEvent(e);
+  }
+  void keyReleaseEvent(QKeyEvent* e) override
+  {
+    m_owner->keyReleaseEvent(e);
+    if (!e->isAccepted())
+      QOpenGLWindow::keyReleaseEvent(e);
+  }
+
+private:
+  GLWidget* m_owner;
+};
+#endif
+
 GLWidget::GLWidget(QWidget* p)
+#ifdef Q_OS_WASM
+  : QWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
+    m_renderTimer(nullptr), m_glWindow(new WasmOpenGLWindow(this)),
+    m_glContainer(nullptr)
+#else
   : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
     m_renderTimer(nullptr)
+#endif
 {
+#ifdef Q_OS_WASM
+  auto* layout = new QVBoxLayout(this);
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
+  m_glContainer = QWidget::createWindowContainer(m_glWindow, this);
+  m_glContainer->setFocusPolicy(Qt::ClickFocus);
+  layout->addWidget(m_glContainer);
+#endif
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginStateChanged, this,
           &GLWidget::updateScene);
@@ -38,6 +119,13 @@ GLWidget::GLWidget(QWidget* p)
 }
 
 GLWidget::~GLWidget() {}
+
+#ifdef Q_OS_WASM
+QImage GLWidget::grabFramebuffer()
+{
+  return m_glWindow ? m_glWindow->grabFramebuffer() : QImage();
+}
+#endif
 
 void GLWidget::setMolecule(QtGui::Molecule* mol)
 {
@@ -98,7 +186,14 @@ void GLWidget::updateScene()
     }
 
     m_renderer.resetGeometry();
+#ifdef Q_OS_WASM
+    if (m_glWindow)
+      m_glWindow->requestUpdate();
+    else
+      update();
+#else
     update();
+#endif
   }
   if (mol != m_molecule)
     delete mol;
@@ -222,7 +317,14 @@ void GLWidget::updateTimeout()
     m_renderTimer->deleteLater();
     m_renderTimer = nullptr;
   }
+#ifdef Q_OS_WASM
+  if (m_glWindow)
+    m_glWindow->requestUpdate();
+  else
+    update();
+#else
   update();
+#endif
 }
 
 void GLWidget::initializeGL()
@@ -234,7 +336,11 @@ void GLWidget::initializeGL()
 
 void GLWidget::resizeGL(int width_, int height_)
 {
+#ifdef Q_OS_WASM
+  float pixelRatio = m_glWindow ? m_glWindow->devicePixelRatio() : 1.0f;
+#else
   float pixelRatio = window()->windowHandle()->devicePixelRatio();
+#endif
   m_renderer.setPixelRatio(pixelRatio);
   m_renderer.resize(width_, height_);
 }
@@ -254,8 +360,13 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->mouseDoubleClickEvent(e);
 
-  if (!e->isAccepted())
+  if (!e->isAccepted()) {
+#ifdef Q_OS_WASM
+    QWidget::mouseDoubleClickEvent(e);
+#else
     QOpenGLWidget::mouseDoubleClickEvent(e);
+#endif
+  }
 }
 
 void GLWidget::mousePressEvent(QMouseEvent* e)
@@ -268,8 +379,13 @@ void GLWidget::mousePressEvent(QMouseEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->mousePressEvent(e);
 
-  if (!e->isAccepted())
+  if (!e->isAccepted()) {
+#ifdef Q_OS_WASM
+    QWidget::mousePressEvent(e);
+#else
     QOpenGLWidget::mousePressEvent(e);
+#endif
+  }
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* e)
@@ -282,8 +398,13 @@ void GLWidget::mouseMoveEvent(QMouseEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->mouseMoveEvent(e);
 
-  if (!e->isAccepted())
+  if (!e->isAccepted()) {
+#ifdef Q_OS_WASM
+    QWidget::mouseMoveEvent(e);
+#else
     QOpenGLWidget::mouseMoveEvent(e);
+#endif
+  }
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent* e)
@@ -296,8 +417,13 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->mouseReleaseEvent(e);
 
-  if (!e->isAccepted())
+  if (!e->isAccepted()) {
+#ifdef Q_OS_WASM
+    QWidget::mouseReleaseEvent(e);
+#else
     QOpenGLWidget::mouseReleaseEvent(e);
+#endif
+  }
 }
 
 void GLWidget::wheelEvent(QWheelEvent* e)
@@ -310,8 +436,13 @@ void GLWidget::wheelEvent(QWheelEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->wheelEvent(e);
 
-  if (!e->isAccepted())
+  if (!e->isAccepted()) {
+#ifdef Q_OS_WASM
+    QWidget::wheelEvent(e);
+#else
     QOpenGLWidget::wheelEvent(e);
+#endif
+  }
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* e)
@@ -324,8 +455,13 @@ void GLWidget::keyPressEvent(QKeyEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->keyPressEvent(e);
 
-  if (!e->isAccepted())
+  if (!e->isAccepted()) {
+#ifdef Q_OS_WASM
+    QWidget::keyPressEvent(e);
+#else
     QOpenGLWidget::keyPressEvent(e);
+#endif
+  }
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent* e)
@@ -338,8 +474,13 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->keyReleaseEvent(e);
 
-  if (!e->isAccepted())
+  if (!e->isAccepted()) {
+#ifdef Q_OS_WASM
+    QWidget::keyReleaseEvent(e);
+#else
     QOpenGLWidget::keyReleaseEvent(e);
+#endif
+  }
 }
 
 } // namespace Avogadro::QtOpenGL

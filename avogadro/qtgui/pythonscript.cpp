@@ -12,7 +12,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QLocale>
+#ifndef Q_OS_WASM
 #include <QtCore/QProcess>
+#endif
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 
@@ -36,14 +38,21 @@ static bool hasDefaultPixiManifest(const QString& pluginDir)
 
 PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
-    m_scriptFilePath(scriptFilePath_), m_process(nullptr)
+    m_scriptFilePath(scriptFilePath_)
+#ifndef Q_OS_WASM
+    ,
+    m_process(nullptr)
+#endif
 {
   setDefaultPythonInterpreter();
 }
 
 PythonScript::PythonScript(QObject* parent_)
-  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
+  : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty())
+#ifndef Q_OS_WASM
+    ,
     m_process(nullptr)
+#endif
 {
   setDefaultPythonInterpreter();
 }
@@ -124,6 +133,7 @@ void PythonScript::setDefaultPythonInterpreter()
 #endif
 }
 
+#ifndef Q_OS_WASM
 QString PythonScript::resolveCommand(QStringList& realArgs, QProcess& proc)
 {
   // --- Package mode: pixi run <command> <identifier> [args] ---
@@ -198,11 +208,18 @@ QString PythonScript::resolveCommand(QStringList& realArgs, QProcess& proc)
   return m_pixi + "/pixi";
 #endif
 }
+#endif
 
 QByteArray PythonScript::execute(const QStringList& args,
                                  const QByteArray& scriptStdin)
 {
   clearErrors();
+#ifdef Q_OS_WASM
+  Q_UNUSED(args);
+  Q_UNUSED(scriptStdin);
+  m_errors << tr("External Python scripts are not supported in WebAssembly builds.");
+  return QByteArray();
+#else
   QProcess proc;
   proc.setProcessChannelMode(QProcess::SeparateChannels);
 
@@ -286,6 +303,7 @@ QByteArray PythonScript::execute(const QStringList& args,
   }
 
   return result;
+#endif
 }
 
 void PythonScript::asyncExecute(const QStringList& args,
@@ -293,6 +311,14 @@ void PythonScript::asyncExecute(const QStringList& args,
                                 bool mergedChannels, bool closeWriteChannel)
 {
   clearErrors();
+#ifdef Q_OS_WASM
+  Q_UNUSED(args);
+  Q_UNUSED(scriptStdin);
+  Q_UNUSED(mergedChannels);
+  Q_UNUSED(closeWriteChannel);
+  m_errors << tr("External Python scripts are not supported in WebAssembly builds.");
+  emit finished();
+#else
   if (m_process != nullptr) {
     m_process->terminate();
     disconnect(m_process, SIGNAL(finished()), this, SLOT(processsFinished()));
@@ -349,25 +375,34 @@ void PythonScript::asyncExecute(const QStringList& args,
   // let the script run
   connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
           SLOT(processFinished(int, QProcess::ExitStatus)));
+#endif
 }
 
+#ifndef Q_OS_WASM
 void PythonScript::processFinished(int, QProcess::ExitStatus)
 {
   emit finished();
 }
+#endif
 
 void PythonScript::asyncTerminate()
 {
+#ifndef Q_OS_WASM
   if (m_process != nullptr) {
     disconnect(m_process, nullptr, nullptr, nullptr);
     m_process->kill();
     m_process->deleteLater();
     m_process = nullptr;
   }
+#endif
 }
 
 QByteArray PythonScript::asyncWriteAndResponse(QByteArray input)
 {
+#ifdef Q_OS_WASM
+  Q_UNUSED(input);
+  return QByteArray();
+#else
   if (m_process == nullptr)
     return QByteArray();
 
@@ -378,11 +413,17 @@ QByteArray PythonScript::asyncWriteAndResponse(QByteArray input)
       buffer += m_process->readLine();
   }
   return buffer;
+#endif
 }
 
 QByteArray PythonScript::asyncWriteAndResponseRaw(const QByteArray& input,
                                                   int timeoutMs)
 {
+#ifdef Q_OS_WASM
+  Q_UNUSED(input);
+  Q_UNUSED(timeoutMs);
+  return QByteArray();
+#else
   if (m_process == nullptr) {
     return QByteArray(); // wait
   }
@@ -410,16 +451,22 @@ QByteArray PythonScript::asyncWriteAndResponseRaw(const QByteArray& input,
     buffer += m_process->readAll();
   }
   return buffer;
+#endif
 }
 
 QByteArray PythonScript::asyncResponse()
 {
+#ifdef Q_OS_WASM
+  return QByteArray();
+#else
   if (m_process == nullptr || m_process->state() == QProcess::Running)
     return QByteArray();
 
   return m_process->readAll();
+#endif
 }
 
+#ifndef Q_OS_WASM
 QString PythonScript::processErrorString(const QProcess& proc) const
 {
   QString result;
@@ -446,5 +493,6 @@ QString PythonScript::processErrorString(const QProcess& proc) const
   }
   return result;
 }
+#endif
 
 } // namespace Avogadro::QtGui

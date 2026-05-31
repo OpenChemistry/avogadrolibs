@@ -35,7 +35,11 @@ inline GLenum convertType(Type type)
     case FloatType:
       return GL_FLOAT;
     case DoubleType:
+#ifdef __EMSCRIPTEN__
+      return GL_FLOAT;
+#else
       return GL_DOUBLE;
+#endif
   }
 }
 
