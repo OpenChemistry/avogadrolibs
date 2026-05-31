@@ -3,7 +3,7 @@
 
 namespace Avogadro::Core {
 
-unsigned char chain_color[][3] = {
+inline unsigned char chain_color[][3] = {
   // clang-format off
   // See, for example http://jmol.sourceforge.net/jscolors/index.en.html
   // # A             # B                 # C            # D
@@ -23,7 +23,7 @@ unsigned char chain_color[][3] = {
   // clang-format on
 };
 
-unsigned char amino_color[][3] = {
+inline unsigned char amino_color[][3] = {
   // clang-format off
   // See, for example http://jmol.sourceforge.net/jscolors/index.en.html
   // # Ala            # Arg             # Asn            # Asp
@@ -41,7 +41,7 @@ unsigned char amino_color[][3] = {
   // clang-format on
 };
 
-unsigned char shapely_color[][3] = {
+inline unsigned char shapely_color[][3] = {
   // clang-format off
   // See, for example http://jmol.sourceforge.net/jscolors/index.en.html
   // # Ala            # Arg             # Asn            # Asp
@@ -59,7 +59,7 @@ unsigned char shapely_color[][3] = {
   // clang-format on
 };
 
-unsigned char secondary_color[][3] = {
+inline unsigned char secondary_color[][3] = {
   // clang-format off
   // See, for example http://jmol.sourceforge.net/jscolors/index.en.html
   // using codes from MMTF

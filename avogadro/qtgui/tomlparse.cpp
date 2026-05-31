@@ -71,8 +71,10 @@ static QVariant tomlNodeToVariant(const toml::node& node)
     QDate date(dt.date.year, dt.date.month, dt.date.day);
     QTime time(dt.time.hour, dt.time.minute, dt.time.second,
                dt.time.nanosecond / 1000000);
-    if (dt.offset)
-      return QDateTime(date, time, QTimeZone(dt.offset->minutes * 60));
+    if (dt.offset) {
+      return QDateTime(
+        date, time, QTimeZone::fromSecondsAheadOfUtc(dt.offset->minutes * 60));
+    }
     return QDateTime(date, time);
   }
   return {};
