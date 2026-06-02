@@ -85,7 +85,10 @@ TemplateTool::TemplateTool(QObject* parent_)
     tr("Template Tool\t(%1)\n\n"
        "Insert fragments, including metal centers.\n"
        "Select an element and coordination geometry, "
-       "then click to insert a fragment.\n\n"
+       "then click to insert a fragment.\n"
+       "Click a hydrogen to replace it with the chosen "
+       "metal center, or click any other atom to change "
+       "its element and formal charge.\n\n"
        "Select a ligand or functional group and click "
        "on a hydrogen atom to attach it.")
       .arg(shortcut));
@@ -138,7 +141,10 @@ QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
         emptyLeftClick(e);
         return nullptr;
       case Rendering::AtomType:
-        atomLeftClick(e);
+        if (m_toolWidget->currentTab() == 0)
+          atomLeftClickCenter(e);
+        else
+          atomLeftClick(e);
         return nullptr;
       default:
         break;
@@ -811,6 +817,148 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
 
     m_toolWidget->selectedUIDs().clear();
   }
+}
+
+void TemplateTool::atomLeftClickCenter(QMouseEvent* e)
+{
+  // Clear any in-progress ligand selection from the other tab.
+  m_toolWidget->selectedUIDs().clear();
+
+  size_t selectedIndex = m_clickedObject.index;
+  if (!m_molecule->atom(selectedIndex).isValid())
+    return;
+
+  unsigned char newAtomic = m_toolWidget->atomicNumber();
+  signed char newCharge =
+    static_cast<signed char>(m_toolWidget->formalCharge());
+  unsigned char selectedAtomic = m_molecule->atomicNumber(selectedIndex);
+
+  // Non-hydrogen: swap element and formal charge in place, keep bonds.
+  if (selectedAtomic != 1) {
+    m_molecule->setAtomicNumber(selectedIndex, newAtomic);
+    m_molecule->setFormalCharge(selectedIndex, newCharge);
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+    e->accept();
+    return;
+  }
+
+  // Orphan hydrogen: nothing to anchor a coordination shell to.
+  auto hBonds = m_molecule->bonds(selectedIndex);
+  if (hBonds.empty()) {
+    m_molecule->setAtomicNumber(selectedIndex, newAtomic);
+    m_molecule->setFormalCharge(selectedIndex, newCharge);
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+    e->accept();
+    return;
+  }
+
+  // Hydrogen with a neighbor: insert the full coordinated metal center
+  // template, oriented so the H's neighbor occupies one coordination slot.
+  size_t anchorIndex = hBonds[0].getOtherAtom(selectedIndex).index();
+  Index anchorUID = m_molecule->atomUniqueId(anchorIndex);
+  Vector3 anchorPos = m_molecule->atomPosition3d(anchorIndex);
+  Vector3 hPos = m_molecule->atomPosition3d(selectedIndex);
+  unsigned char anchorAtomic = m_molecule->atomicNumber(anchorIndex);
+
+  CjsonFormat ff;
+  Molecule templateMolecule;
+  QFile templ(":/templates/centers/" + m_toolWidget->coordinationString() +
+              ".cjson");
+  if (!templ.open(QFile::ReadOnly | QFile::Text))
+    return;
+  QTextStream templateStream(&templ);
+  if (!ff.readString(templateStream.readAll().toStdString(), templateMolecule))
+    return;
+
+  // Apply the chosen element and formal charge to the template center.
+  size_t centerIdx = templateMolecule.atomCount();
+  for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+    if (templateMolecule.atomicNumber(i) != 1) {
+      centerIdx = i;
+      templateMolecule.setAtomicNumber(i, newAtomic);
+      templateMolecule.setFormalCharge(i, newCharge);
+      break;
+    }
+  }
+  if (centerIdx >= templateMolecule.atomCount())
+    return;
+
+  // Pick the first coordination-shell H as the one the anchor will replace.
+  size_t templateHIdx = templateMolecule.atomCount();
+  for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+    if (templateMolecule.atomicNumber(i) == 1) {
+      templateHIdx = i;
+      break;
+    }
+  }
+  if (templateHIdx >= templateMolecule.atomCount())
+    return;
+
+  Vector3 centerPos = templateMolecule.atomPosition3d(centerIdx);
+  Vector3 templateDir =
+    (templateMolecule.atomPosition3d(templateHIdx) - centerPos).normalized();
+
+  // Place the new metal at a reasonable bond distance from the anchor,
+  // keeping the original H direction so the geometry doesn't jump.
+  double bondDist = Elements::radiusCovalent(newAtomic) +
+                    Elements::radiusCovalent(anchorAtomic);
+  Vector3 hDir = hPos - anchorPos;
+  if (hDir.norm() < 1e-9)
+    hDir = Vector3(1.0, 0.0, 0.0);
+  hDir.normalize();
+  Vector3 newCenterPos = anchorPos + hDir * bondDist;
+  Vector3 targetDir = (anchorPos - newCenterPos).normalized();
+
+  // Rotate the template so the chosen coordination slot points at the anchor.
+  Matrix3 rotation = Matrix3::Identity();
+  Vector3 axis = templateDir.cross(targetDir);
+  double cosine = templateDir.dot(targetDir);
+  if (axis.norm() < 1e-9) {
+    if (cosine < 0.0) {
+      Vector3 perp = (std::abs(templateDir.x()) < 0.9) ? Vector3(1.0, 0.0, 0.0)
+                                                       : Vector3(0.0, 1.0, 0.0);
+      axis = templateDir.cross(perp);
+      axis.normalize();
+      rotation = Eigen::AngleAxisd(M_PI, axis).toRotationMatrix();
+    }
+  } else {
+    axis.normalize();
+    if (cosine > 1.0)
+      cosine = 1.0;
+    else if (cosine < -1.0)
+      cosine = -1.0;
+    rotation = Eigen::AngleAxisd(std::acos(cosine), axis).toRotationMatrix();
+  }
+  for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+    Vector3 rel = templateMolecule.atomPosition3d(i) - centerPos;
+    templateMolecule.setAtomPosition3d(i, rotation * rel + newCenterPos);
+  }
+
+  // Drop the slot that the anchor will occupy. swap-and-pop may move the
+  // center atom, so re-locate it as the only remaining non-H atom.
+  templateMolecule.removeAtom(templateHIdx);
+  size_t newCenterIdx = templateMolecule.atomCount();
+  for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+    if (templateMolecule.atomicNumber(i) != 1) {
+      newCenterIdx = i;
+      break;
+    }
+  }
+  if (newCenterIdx >= templateMolecule.atomCount())
+    return;
+
+  // Replace the clicked H with the coordinated template and bond the anchor
+  // to the new center. UIDs survive swap-and-pop; raw indices do not.
+  m_molecule->removeAtom(selectedIndex);
+  size_t base = m_molecule->atomCount();
+  m_molecule->appendMolecule(templateMolecule, tr("Insert Metal Center"));
+  size_t newAnchorIdx = m_molecule->atomByUniqueId(anchorUID).index();
+  m_molecule->addBond(newAnchorIdx, base + newCenterIdx);
+
+  Molecule::MoleculeChanges changes =
+    Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed;
+  m_molecule->emitChanged(changes);
+  e->accept();
 }
 
 void TemplateTool::atomRightClick(QMouseEvent* e)

@@ -11,8 +11,6 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   QT_VERSION: 6.8.3
-  # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
-  # we set MACOSX_DEPLOYMENT_TARGET later
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
 
 concurrency:
@@ -117,8 +115,6 @@ jobs:
         path: |
           ${{ runner.workspace }}/build/Downloads
         key: thirdparty-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('openchemistry/cmake/External*.cmake', 'openchemistry/cmake/projects/*.cmake') }}
-        restore-keys: |
-          thirdparty-${{ runner.os }}-${{ runner.arch }}-
 
     - name: Build
       run: |
