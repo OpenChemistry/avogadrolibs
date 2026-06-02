@@ -10,7 +10,7 @@
 namespace Avogadro::QtPlugins {
 
 VibrationModel::VibrationModel(QObject* p)
-  : QAbstractItemModel(p), m_molecule(nullptr), m_hasRaman(false)
+  : QAbstractItemModel(p), m_molecule(nullptr), m_hasRaman(false), m_hasSymmetry(false)
 {
 }
 
@@ -29,11 +29,15 @@ int VibrationModel::rowCount(const QModelIndex& p) const
 
 int VibrationModel::columnCount(const QModelIndex&) const
 {
-  // do we have raman data?
+  // Base columns: Frequency, Intensity
+  int count = 2;
+  // Add Raman column if we have Raman data
   if (m_molecule && m_hasRaman)
-    return 3;
-
-  return 2;
+    count++;
+  // Add Symmetry column if we have symmetry labels
+  if (m_molecule && m_hasSymmetry)
+    count++;
+  return count;
 }
 
 Qt::ItemFlags VibrationModel::flags(const QModelIndex&) const
@@ -45,6 +49,7 @@ void VibrationModel::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
   m_hasRaman = mol->vibrationRamanIntensities().size() > 0;
+  m_hasSymmetry = mol->vibrationSymmetryLabels().size() > 0;
 }
 
 QVariant VibrationModel::headerData(int section, Qt::Orientation orientation,
@@ -52,13 +57,21 @@ QVariant VibrationModel::headerData(int section, Qt::Orientation orientation,
 {
   if (role == Qt::DisplayRole) {
     if (orientation == Qt::Horizontal) {
-      switch (section) {
-        case 0:
-          return QString("Frequency (cm⁻¹)");
-        case 1:
-          return QString("Intensity (km/mol)");
-        case 2:
+      int col = 0;
+      if (section == col)
+        return QString("Frequency (cm⁻¹)");
+      col++;
+      if (section == col)
+        return QString("Intensity (km/mol)");
+      col++;
+      if (m_hasRaman) {
+        if (section == col)
           return QString("Raman Intensity (a.u.)");
+        col++;
+      }
+      if (m_hasSymmetry) {
+        if (section == col)
+          return QString("Symmetry");
       }
     } else if (orientation == Qt::Vertical) {
       return QString::number(section + 1);
@@ -74,35 +87,58 @@ bool VibrationModel::setData(const QModelIndex&, const QVariant&, int)
 
 QVariant VibrationModel::data(const QModelIndex& idx, int role) const
 {
-  if (!idx.isValid() || idx.column() > 2 || !m_molecule ||
+  if (!idx.isValid() || !m_molecule ||
       static_cast<int>(m_molecule->vibrationFrequencies().size()) <=
         idx.row()) {
     return QVariant();
   }
 
   if (role == Qt::DisplayRole) {
-    switch (idx.column()) {
-      case 0:
-        if (static_cast<int>(m_molecule->vibrationFrequencies().size()) >
-            idx.row())
-          return m_molecule->vibrationFrequencies()[idx.row()];
-        else
-          return "No value";
-      case 1:
-        if (static_cast<int>(m_molecule->vibrationIRIntensities().size()) >
-            idx.row())
-          return m_molecule->vibrationIRIntensities()[idx.row()];
-        else
-          return "No value";
-      case 2:
+    int col = 0;
+    // Frequency column
+    if (idx.column() == col) {
+      if (static_cast<int>(m_molecule->vibrationFrequencies().size()) >
+          idx.row())
+        return m_molecule->vibrationFrequencies()[idx.row()];
+      else
+        return "No value";
+    }
+    col++;
+    
+    // Intensity column
+    if (idx.column() == col) {
+      if (static_cast<int>(m_molecule->vibrationIRIntensities().size()) >
+          idx.row())
+        return m_molecule->vibrationIRIntensities()[idx.row()];
+      else
+        return "No value";
+    }
+    col++;
+    
+    // Raman column (if present)
+    if (m_hasRaman) {
+      if (idx.column() == col) {
         if (static_cast<int>(m_molecule->vibrationRamanIntensities().size()) >
             idx.row())
           return m_molecule->vibrationRamanIntensities()[idx.row()];
         else
           return "No value";
-      default:
-        return "Invalid";
+      }
+      col++;
     }
+    
+    // Symmetry column (if present)
+    if (m_hasSymmetry) {
+      if (idx.column() == col) {
+        auto labels = m_molecule->vibrationSymmetryLabels();
+        if (static_cast<int>(labels.size()) > idx.row())
+          return QString::fromStdString(labels[idx.row()]);
+        else
+          return QString();
+      }
+    }
+    
+    return "Invalid";
   }
 
   return QVariant();

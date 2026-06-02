@@ -114,6 +114,16 @@ void OrbitalWidget::fillTable(Core::BasisSet* basis)
   // Populate the model
   m_tableModel->setOrbitals(basis);
 
+  // Show symmetry column only if symmetry labels are available
+  auto symLabels = basis->symmetryLabels(Core::BasisSet::Paired);
+  bool hasSymmetry = !symLabels.empty();
+  // For open-shell, also check alpha/beta labels
+  if (!hasSymmetry) {
+    auto alphaSym = basis->symmetryLabels(Core::BasisSet::Alpha);
+    hasSymmetry = !alphaSym.empty();
+  }
+  ui.table->setColumnHidden(OrbitalTableModel::C_Symmetry, !hasSymmetry);
+
   ui.table->horizontalHeader()->sectionResizeMode(
     QHeaderView::ResizeToContents);
 
