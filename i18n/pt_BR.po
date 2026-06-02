@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-04-03 01:09+0000\n"
+"PO-Revision-Date: 2026-06-02 16:57+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.6\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2511,13 +2511,15 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:202
 msgid "Command In Progress"
-msgstr ""
+msgstr "Comando em Andamento"
 
 #: qtplugins/commandscripts/command.cpp:203
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
 msgstr ""
+"Um script de comando já está em execução. Aguarde até que ele termine antes "
+"de iniciar outro."
 
 #: qtplugins/commandscripts/command.cpp:333
 #, qt-format
@@ -3761,11 +3763,12 @@ msgstr "Inserir sequências de oligopeptídeos."
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:29
 msgid "Polymer…"
-msgstr ""
+msgstr "Polímero…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:82
 msgid "No SMILES format reader found. Is Open Babel available?"
 msgstr ""
+"Nenhum leitor de formato SMILES encontrado. O Open Babel está disponível?"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, InsertPolymerDialog)
@@ -3780,7 +3783,7 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:90
 msgid "Generating 3D structure…"
-msgstr ""
+msgstr "Gerando estrutura 3D…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:104
 #, qt-format
@@ -3788,18 +3791,20 @@ msgid ""
 "Failed to generate polymer from SMILES:\n"
 "%1"
 msgstr ""
+"Falha ao gerar o polímero a partir do SMILES:\n"
+"%1"
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
 msgid "Build polymers from monomer repeat units."
-msgstr ""
+msgstr "Construir polímeros a partir de unidades repetidas de monômeros."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
 msgid "Polymer monomer data directory not found."
-msgstr ""
+msgstr "Diretório de dados de monômeros de polímero não encontrado."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:172
 msgid "Choose Monomer"
-msgstr ""
+msgstr "Escolher Monômero"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3811,14 +3816,16 @@ msgstr "Filtro:"
 #, qt-format
 msgid "Monomer percentages must sum to 100 (current total: %1)."
 msgstr ""
+"A soma das porcentagens de monômeros deve ser igual a 100 (total atual: %1)."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
 msgid "No monomer specified. Please choose at least monomer A."
 msgstr ""
+"Nenhum monômero especificado. Por favor, selecione ao menos o monômero A."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
 msgid "Working"
-msgstr ""
+msgstr "A trabalhar"
 
 #: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:313
 #: qtplugins/surfacerender/surfacerender.cpp:319
@@ -4677,7 +4684,7 @@ msgstr "Nada Selecionado"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:281
 msgid "Select a plugin to install or update."
-msgstr ""
+msgstr "Selecione um plugin para instalar ou atualizar."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:291
 #, qt-format
@@ -4772,7 +4779,7 @@ msgstr "Nada a Remover"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
 msgid "Select an installed plugin to remove it."
-msgstr ""
+msgstr "Selecione um plugin instalado para removê-lo."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
@@ -5172,7 +5179,7 @@ msgstr "POV-Ray (*.pov);;Texto (*.txt)"
 
 #: qtplugins/povray/povray.h:25
 msgid "POVRay"
-msgstr ""
+msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:29
 msgid "Render the scene using POV-Ray."
@@ -5671,7 +5678,7 @@ msgstr "Ferramenta de Seleção"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
-msgstr ""
+msgstr "Nova Camada"
 
 #: qtplugins/spacegroup/spacegroup.cpp:60
 #, fuzzy
@@ -5691,7 +5698,7 @@ msgstr "Reduzir para Unidade Assimétrica"
 
 #: qtplugins/spacegroup/spacegroup.cpp:89
 msgid "Set Tolerance…"
-msgstr ""
+msgstr "Definir Tolerância…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:95
 #, fuzzy
@@ -5710,11 +5717,11 @@ msgstr "Grupo de Espaço"
 
 #: qtplugins/spacegroup/spacegroup.cpp:133
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr ""
+msgstr "Preencher os átomos simétricos com base no grupo espacial cristalino."
 
 #: qtplugins/spacegroup/spacegroup.cpp:135
 msgid "Fill all atoms based on the crystal space group."
-msgstr ""
+msgstr "Preencher todos os átomos com base no grupo espacial cristalino."
 
 #: qtplugins/spacegroup/spacegroup.cpp:394
 #: qtplugins/spacegroup/spacegroup.cpp:422
@@ -5727,6 +5734,8 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"O grupo espacial já está definido como: %1.\n"
+"Deseja sobrescrevê-lo?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:411
 #, qt-format
@@ -5737,6 +5746,11 @@ msgid ""
 "Hall symbol: %3\n"
 "International symbol: %4"
 msgstr ""
+"A percepção do grupo espacial foi bem-sucedida:\n"
+"Tolerância: %1  Å\n"
+"Grupo Espacial: %2\n"
+"Símbolo Hall: %3\n"
+"Símbolo Internacional: %4"
 
 #: qtplugins/spacegroup/spacegroup.cpp:428
 msgid "Failure"
@@ -5861,7 +5875,7 @@ msgstr "Cúbica"
 
 #: qtplugins/spacegroup/spacegroup.cpp:664
 msgid "Primitive Cell Detected"
-msgstr ""
+msgstr "Célula Primitiva Detectada"
 
 #: qtplugins/spacegroup/spacegroup.cpp:666
 #, qt-format
@@ -5873,10 +5887,16 @@ msgid ""
 "\n"
 "Would you like to create a conventional cell first?"
 msgstr ""
+"A célula unitária atual parece ser uma célula primitiva (ângulos diferentes "
+"de 90°), mas o grupo espacial %1 espera uma célula convencional centrada.\n"
+"\n"
+"Preencher a célula unitária pode criar átomos duplicados inesperados.\n"
+"\n"
+"Deseja primeiro criar uma célula convencional?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:680
 msgid "Failed to conventionalize the cell."
-msgstr ""
+msgstr "Não foi possível estilizar a célula."
 
 #: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "International"
@@ -5884,7 +5904,7 @@ msgstr "Internacional"
 
 #: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "Hall"
-msgstr ""
+msgstr "Hall"
 
 #: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "Hermann-Mauguin"
@@ -5892,7 +5912,7 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:697
 msgid "Crystal System"
-msgstr ""
+msgstr "Sistema Cristalino"
 
 #: qtplugins/spacegroup/spacegroup.cpp:729
 msgid "Select Space Group"
