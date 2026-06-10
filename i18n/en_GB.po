@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-03-23 20:09+0000\n"
+"PO-Revision-Date: 2026-06-11 21:01+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.7.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2197,7 +2197,7 @@ msgstr "Stop"
 
 #: qtplugins/autoopt/autoopt.cpp:503
 msgid "Relax for Dynamics"
-msgstr ""
+msgstr "Relax for Dynamics"
 
 #: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:71
 #: qtplugins/forcefield/forcefield.cpp:504
@@ -2215,7 +2215,7 @@ msgstr "Molecular Dynamics"
 #, qt-format
 msgctxt "pre-relax before dynamics"
 msgid "Relaxing… %1 ΔE = %L2"
-msgstr ""
+msgstr "Relaxing… %1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:698
 #, qt-format
@@ -2476,13 +2476,15 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:202
 msgid "Command In Progress"
-msgstr ""
+msgstr "Command In Progress"
 
 #: qtplugins/commandscripts/command.cpp:203
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
 msgstr ""
+"A command script is already running. Please wait for it to finish before "
+"starting another."
 
 #: qtplugins/commandscripts/command.cpp:333
 #, qt-format
@@ -3706,11 +3708,11 @@ msgstr "Insert oligopeptide sequences."
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:29
 msgid "Polymer…"
-msgstr ""
+msgstr "Polymer…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:82
 msgid "No SMILES format reader found. Is Open Babel available?"
-msgstr ""
+msgstr "No SMILES format reader found. Is Open Babel available?"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, InsertPolymerDialog)
@@ -3721,11 +3723,11 @@ msgstr ""
 #: qtplugins/insertpolymer/insertpolymer.h:23
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:637:883 rc.cpp:958
 msgid "Insert Polymer"
-msgstr ""
+msgstr "Insert Polymer"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:90
 msgid "Generating 3D structure…"
-msgstr ""
+msgstr "Generating 3D structure…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:104
 #, qt-format
@@ -3733,18 +3735,20 @@ msgid ""
 "Failed to generate polymer from SMILES:\n"
 "%1"
 msgstr ""
+"Failed to generate polymer from SMILES:\n"
+"%1"
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
 msgid "Build polymers from monomer repeat units."
-msgstr ""
+msgstr "Build polymers from monomer repeat units."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
 msgid "Polymer monomer data directory not found."
-msgstr ""
+msgstr "Polymer monomer data directory not found."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:172
 msgid "Choose Monomer"
-msgstr ""
+msgstr "Choose Monomer"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3755,15 +3759,15 @@ msgstr "Filter:"
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:617
 #, qt-format
 msgid "Monomer percentages must sum to 100 (current total: %1)."
-msgstr ""
+msgstr "Monomer percentages must sum to 100 (current total: %1)."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
 msgid "No monomer specified. Please choose at least monomer A."
-msgstr ""
+msgstr "No monomer specified. Please choose at least monomer A."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
 msgid "Working"
-msgstr ""
+msgstr "Working"
 
 #: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:313
 #: qtplugins/surfacerender/surfacerender.cpp:319
@@ -3951,6 +3955,15 @@ msgid ""
 "Ctrl+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"Manipulation Tool\t(%1)\n"
+"\n"
+"Left Mouse:\tClick and drag to move atoms\n"
+"Right Mouse:\tClick and drag to rotate atoms\n"
+"\n"
+"Arrow Keys:\tTranslate atoms\n"
+"Shift+Arrows:\tRotate around X/Y axes\n"
+"Ctrl+Left/Right:\tRotate around Z axis\n"
+"Alt+<key>:\tLarger steps"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -4215,7 +4228,7 @@ msgstr "Chemical Name"
 #: qtplugins/networkdatabases/networkdatabases.cpp:131
 #, qt-format
 msgid "Querying PubChem for %1"
-msgstr ""
+msgstr "Querying PubChem for %1"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
@@ -4587,7 +4600,7 @@ msgstr "Nothing Selected"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:281
 msgid "Select a plugin to install or update."
-msgstr ""
+msgstr "Select a plugin to install or update."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:291
 #, qt-format
@@ -4682,7 +4695,7 @@ msgstr "Nothing to Remove"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
 msgid "Select an installed plugin to remove it."
-msgstr ""
+msgstr "Select an installed plugin to remove it."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
@@ -7692,12 +7705,12 @@ msgstr "The chain number for the new peptide"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, aGroupBox)
 msgid "Polymer Structure"
-msgstr ""
+msgstr "Polymer Structure"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A unit:"
-msgstr ""
+msgstr "A unit:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:33
 #. i18n: ectx: property (text), widget (QPushButton, monomerAButton)
@@ -7706,89 +7719,89 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:67
 #. i18n: ectx: property (text), widget (QPushButton, monomerCButton)
 msgid "Choose…"
-msgstr ""
+msgstr "Choose…"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "B unit:"
-msgstr ""
+msgstr "B unit:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:57
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "C unit:"
-msgstr ""
+msgstr "C unit:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:87
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerAGraphics)
 msgid "Depiction of the A repeat unit"
-msgstr ""
+msgstr "Depiction of the A repeat unit"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:103
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerBGraphics)
 msgid "Depiction of the B repeat unit"
-msgstr ""
+msgstr "Depiction of the B repeat unit"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:119
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerCGraphics)
 msgid "Depiction of the C repeat unit"
-msgstr ""
+msgstr "Depiction of the C repeat unit"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, repeatLabel)
 msgid "Repeats:"
-msgstr ""
+msgstr "Repeats:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:221
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Repeat Style:"
-msgstr ""
+msgstr "Repeat Style:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
 msgid "Percent"
-msgstr ""
+msgstr "Percent"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:237
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:269
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Repeat Units"
-msgstr ""
+msgstr "Repeat Units"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Length:"
-msgstr ""
+msgstr "Total Length:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:274
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Molecular Weight"
-msgstr ""
+msgstr "Molecular Weight"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:285
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Tacticity:"
-msgstr ""
+msgstr "Tacticity:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:292
 #. i18n: ectx: property (toolTip), widget (QComboBox, tacticityComboBox)
 msgid "Control of the polymer stereochemistry / tacticity"
-msgstr ""
+msgstr "Control of the polymer stereochemistry / tacticity"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:299
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Atactic / Random"
-msgstr ""
+msgstr "Atactic / Random"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:304
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Isotactic"
-msgstr ""
+msgstr "Isotactic"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:309
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Syndiotactic"
-msgstr ""
+msgstr "Syndiotactic"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
