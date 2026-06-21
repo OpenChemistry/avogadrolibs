@@ -25,6 +25,7 @@ set(tests
   Molecule
   PackageManager
   RWMolecule
+  StereoTools
 )
 
 if (BUILD_MOLEQUEUE)

@@ -10,6 +10,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
+#include <avogadro/qtgui/stereotools.h>
 
 #include <avogadro/qtopengl/glwidget.h>
 
@@ -21,6 +22,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
+#include <QMessageBox>
 
 using Avogadro::QtGui::Molecule;
 
@@ -63,6 +65,8 @@ Manipulator::Manipulator(QObject* parent_)
   setIcon();
   connect(m_toolWidget->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
           SLOT(buttonClicked(QAbstractButton*)));
+  connect(m_toolWidget->invertTetrahedralButton, SIGNAL(clicked()), this,
+          SLOT(invertSelectedTetrahedralCenter()));
 }
 
 Manipulator::~Manipulator() {}
@@ -146,6 +150,56 @@ void Manipulator::buttonClicked(QAbstractButton* button)
   axisRotate(rotation * DEG_TO_RAD, center, moveSelected);
 
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+}
+
+void Manipulator::invertSelectedTetrahedralCenter()
+{
+  if (!m_molecule || !m_toolWidget)
+    return;
+
+  std::vector<Index> selectedAtoms;
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (m_molecule->atomSelected(i))
+      selectedAtoms.push_back(i);
+  }
+
+  if (selectedAtoms.size() != 1) {
+    QMessageBox::warning(m_toolWidget, tr("Invert Tetrahedral Center"),
+                         tr("Select exactly one tetrahedral carbon first."));
+    return;
+  }
+
+  const auto result =
+    QtGui::StereoTools::invertTetrahedralCenter(*m_molecule, selectedAtoms[0]);
+  if (result == QtGui::StereoInversionResult::Success)
+    return;
+
+  QString message;
+  switch (result) {
+    case QtGui::StereoInversionResult::NonCarbonCenter:
+      message = tr("Only tetrahedral carbon centers are supported.");
+      break;
+    case QtGui::StereoInversionResult::NonTetrahedralCenter:
+      message = tr("The selected atom must have four bonded neighbors.");
+      break;
+    case QtGui::StereoInversionResult::UnsupportedBondOrders:
+      message = tr("Only centers with four single bonds can be inverted.");
+      break;
+    case QtGui::StereoInversionResult::NoMovableSubstituent:
+      message = tr("No isolated substituent could be moved safely.");
+      break;
+    case QtGui::StereoInversionResult::DegenerateGeometry:
+      message = tr("The selected center does not have usable 3D geometry.");
+      break;
+    case QtGui::StereoInversionResult::InvalidAtom:
+      message = tr("The selected atom is no longer valid.");
+      break;
+    case QtGui::StereoInversionResult::Success:
+      message = tr("Select exactly one tetrahedral carbon first.");
+      break;
+  }
+
+  QMessageBox::warning(m_toolWidget, tr("Invert Tetrahedral Center"), message);
 }
 
 QUndoCommand* Manipulator::keyPressEvent(QKeyEvent* e)
