@@ -7,6 +7,14 @@ endif(NOT TARGET gif-h)
 # Only used by Qt plugin
 if (USE_QT)
   add_subdirectory(libgwavi)
+  if(USE_EXTERNAL_TOMLPLUSPLUS)
+    find_package(tomlplusplus 3.4.0 REQUIRED GLOBAL)
+  else()
+    add_library(tomlplusplus INTERFACE IMPORTED GLOBAL)
+    target_include_directories(tomlplusplus
+      INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+    add_library(tomlplusplus::tomlplusplus ALIAS tomlplusplus)
+  endif(USE_EXTERNAL_TOMLPLUSPLUS)
 endif()
 
 if(USE_EXTERNAL_NLOHMANN)
@@ -47,15 +55,6 @@ if(NOT TARGET cppoptlib)
   target_include_directories(cppoptlib INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cppoptlib/include>)
 endif(NOT TARGET cppoptlib)
-
-if(USE_EXTERNAL_TOMLPLUSPLUS)
-  find_package(tomlplusplus 3.4.0 REQUIRED GLOBAL)
-else()
-  add_library(tomlplusplus INTERFACE IMPORTED GLOBAL)
-  target_include_directories(tomlplusplus
-    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-  add_library(tomlplusplus::tomlplusplus ALIAS tomlplusplus)
-endif(USE_EXTERNAL_TOMLPLUSPLUS)
 
 if(NOT TARGET tinycolormap)
   add_library(tinycolormap INTERFACE IMPORTED GLOBAL)
