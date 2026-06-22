@@ -184,6 +184,9 @@ bool PropertyModel::addCustomProperty(const QString& name,
     case CustomPropertyType::String:
       pm->createStrings(key, count);
       break;
+    default:
+      // Unknown/invalid type: nothing was created, report failure.
+      return false;
   }
 
   // The new column changes the column set; invalidate so the view rebuilds it
