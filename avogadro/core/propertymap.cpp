@@ -100,6 +100,27 @@ std::optional<MatrixX> PropertyMap::getMatrix(const std::string& name,
 
 // --- Bulk setters/getters ---
 
+void PropertyMap::createDoubles(const std::string& name, Index count)
+{
+  if (m_doubles.find(name) != m_doubles.end())
+    return;
+  m_doubles[name] = Array<double>(count, doubleSentinel);
+}
+
+void PropertyMap::createInts(const std::string& name, Index count)
+{
+  if (m_ints.find(name) != m_ints.end())
+    return;
+  m_ints[name] = Array<int>(count, intSentinel);
+}
+
+void PropertyMap::createStrings(const std::string& name, Index count)
+{
+  if (m_strings.find(name) != m_strings.end())
+    return;
+  m_strings[name] = Array<std::string>(count, std::string());
+}
+
 void PropertyMap::setDoubles(const std::string& name,
                              const Array<double>& values)
 {

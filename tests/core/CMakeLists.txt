@@ -19,6 +19,7 @@ set(tests
   Molecule
   Mutex
   NeighborPerceiver
+  PropertyMap
   Residue
   RingPerceiver
   SecondaryStructure

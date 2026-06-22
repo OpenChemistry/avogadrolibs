@@ -22,10 +22,14 @@
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QMenu>
 
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QInputDialog>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QSizePolicy>
@@ -538,6 +542,61 @@ void PropertyView::openExportDialogBox()
   }
 }
 
+void PropertyView::addProperty()
+{
+  if (m_model == nullptr || !m_model->supportsCustomProperties())
+    return;
+
+  QDialog dialog(this);
+  dialog.setWindowTitle(tr("Add Property"));
+
+  auto* layout = new QFormLayout(&dialog);
+
+  auto* nameEdit = new QLineEdit(&dialog);
+  nameEdit->setPlaceholderText(tr("Property name"));
+  layout->addRow(tr("Name:"), nameEdit);
+
+  auto* typeCombo = new QComboBox(&dialog);
+  // Keep the data in sync with PropertyModel::CustomPropertyType.
+  typeCombo->addItem(
+    tr("Number"), static_cast<int>(PropertyModel::CustomPropertyType::Double));
+  typeCombo->addItem(tr("Integer"),
+                     static_cast<int>(PropertyModel::CustomPropertyType::Int));
+  typeCombo->addItem(
+    tr("Text"), static_cast<int>(PropertyModel::CustomPropertyType::String));
+  layout->addRow(tr("Type:"), typeCombo);
+
+  auto* buttons = new QDialogButtonBox(
+    QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+  layout->addRow(buttons);
+  connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+  connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+  if (dialog.exec() != QDialog::Accepted)
+    return;
+
+  QString name = nameEdit->text().trimmed();
+  if (name.isEmpty()) {
+    QMessageBox::warning(this, tr("Add Property"),
+                         tr("The property name cannot be empty."));
+    return;
+  }
+
+  auto type = static_cast<PropertyModel::CustomPropertyType>(
+    typeCombo->currentData().toInt());
+
+  if (!m_model->addCustomProperty(name, type)) {
+    QMessageBox::warning(
+      this, tr("Add Property"),
+      tr("Could not add a property named \"%1\". A column with that name may "
+         "already exist.")
+        .arg(name));
+    return;
+  }
+
+  resizeColumnsToContents();
+}
+
 void PropertyView::changeChargeType()
 {
   if (m_model == nullptr || m_molecule == nullptr)
@@ -574,6 +633,15 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
   menu.addAction(exportAction);
   connect(exportAction, &QAction::triggered, this,
           &PropertyView::openExportDialogBox);
+
+  // Custom properties can be added to per-entity tables (atom, bond, residue,
+  // conformer).
+  if (m_model != nullptr && m_model->supportsCustomProperties()) {
+    menu.addSeparator();
+    QAction* addPropertyAction = menu.addAction(tr("Add Property…"));
+    connect(addPropertyAction, &QAction::triggered, this,
+            &PropertyView::addProperty);
+  }
 
   if (m_type == PropertyType::AtomType) {
     // change partial charge type

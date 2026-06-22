@@ -19,6 +19,10 @@
 
 namespace Avogadro {
 
+namespace Core {
+class PropertyMap;
+}
+
 namespace QtGui {
 class Molecule;
 }
@@ -60,6 +64,23 @@ public:
   PropertyType type() const { return m_type; };
   bool isColorIndex(const QModelIndex& index) const;
 
+  // Value type for a new user-created custom property column.
+  enum class CustomPropertyType
+  {
+    Double,
+    Int,
+    String
+  };
+
+  // Returns true if this model holds per-entity properties that the user can
+  // extend with custom columns (atom, bond, residue, conformer tables).
+  bool supportsCustomProperties() const;
+
+  // Create a new (empty) custom property column with the given @p name and
+  // value @p type, then refresh the table. Returns false if the name is empty,
+  // already in use, or the model does not support custom properties.
+  bool addCustomProperty(const QString& name, CustomPropertyType type);
+
   // Partial charge type selection
   QStringList availableChargeTypes() const;
   void setChargeType(const QString& type);
@@ -81,9 +102,32 @@ private:
   QtGui::Molecule* m_molecule;
   QString m_chargeType; // user-selected charge type override (empty = auto)
 
+  // Custom (per-entity) property columns from Molecule::*Properties()
+  struct CustomColumn
+  {
+    enum Type
+    {
+      Double,
+      Int,
+      String,
+      Matrix
+    };
+    std::string name;
+    Type type;
+  };
+
   mutable bool m_validCache;
   mutable std::vector<Core::Angle> m_angles;
   mutable std::vector<Core::Dihedral> m_torsions;
+  mutable std::vector<CustomColumn> m_customColumns;
+
+  // The per-entity property map backing this table (atom, bond, residue, or
+  // conformer), or nullptr for computed tables (angle, torsion).
+  Core::PropertyMap* propertyMap();
+  const Core::PropertyMap* propertyMap() const;
+  // Number of rows (entities) in this table for the current molecule.
+  Index entityCount() const;
+  int baseColumnCount() const;
 
   // Track structure counts to detect actual structural changes vs
   // coordinate-only
@@ -129,7 +173,6 @@ private:
     AtomDataLabel,
     AtomDataIsotope,
     AtomDataColor,
-    AtomDataCustom,
   };
 
   // Bond Data
