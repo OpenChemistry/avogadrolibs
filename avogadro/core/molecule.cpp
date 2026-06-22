@@ -1442,15 +1442,22 @@ bool Molecule::setCoordinate3d(int coord)
 {
   if (coord >= 0 && coord < static_cast<int>(m_coordinates3d.size())) {
     m_positions3d = m_coordinates3d[coord];
+    m_coordinate3dIndex = coord;
     return true;
   }
   return false;
+}
+
+int Molecule::coordinate3d() const
+{
+  return m_coordinate3dIndex;
 }
 
 void Molecule::clearCoordinate3d()
 {
   m_coordinates3d.clear();
   m_conformerProperties.clear();
+  m_coordinate3dIndex = 0;
 }
 
 Array<Vector3> Molecule::coordinate3d(size_t index) const

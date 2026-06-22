@@ -233,7 +233,7 @@ void PlotConformer::updatePlot()
     yTitle = tr("Relative Energy (%1)").arg(targetUnit);
   } else if (plotType == "forces" && m_molecule->hasData("forces")) {
     // TODO: Add units
-    yTitle = tr("Forces (N)");
+    yTitle = tr("Forces");
   } else if (plotType == "velocities" && m_molecule->hasData("velocities")) {
     yTitle = tr("Velocities (m/s)");
   }

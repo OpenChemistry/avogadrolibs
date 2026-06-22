@@ -682,6 +682,8 @@ public:
 
   size_t coordinate3dCount() const;
   bool setCoordinate3d(int coord);
+  /** @return the index of the currently active coordinate set. */
+  int coordinate3d() const;
   Array<Vector3> coordinate3d(size_t index) const;
   bool setCoordinate3d(const Array<Vector3>& coords, size_t index);
 
@@ -1004,6 +1006,7 @@ protected:
   Array<std::string> m_bondLabels;
   Array<std::string> m_residueLabels;
   Array<Array<Vector3>> m_coordinates3d; //!< Store conformers/trajectories.
+  int m_coordinate3dIndex = 0;           //!< Active coordinate set index.
   Array<Array<Vector3>> m_velocities;    //!< Store velocities.
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;

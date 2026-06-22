@@ -28,6 +28,8 @@ Q_DECLARE_METATYPE(Avogadro::Core::Molecule)
 Q_DECLARE_METATYPE(Avogadro::Calc::OptimizationOptions)
 Q_DECLARE_METATYPE(std::vector<Avogadro::Core::Constraint>)
 Q_DECLARE_METATYPE(Avogadro::Calc::EnergyCalculator*)
+Q_DECLARE_METATYPE(std::vector<Eigen::VectorXd>)
+Q_DECLARE_METATYPE(std::vector<double>)
 
 namespace Avogadro {
 
@@ -88,6 +90,23 @@ signals:
   void evaluateFinished(Eigen::VectorXd gradient, double energy);
 
   /**
+   * Emitted after each chunk of a batch evaluation completes.
+   * @param done Number of coordinate sets evaluated so far.
+   * @param total Total number of coordinate sets in the batch.
+   */
+  void batchProgress(int done, int total);
+
+  /**
+   * Emitted after a batch energy/gradient evaluation completes (or is
+   * cancelled, in which case the vectors hold the partial results computed
+   * before cancellation).
+   * @param energies One energy per coordinate set.
+   * @param gradients One gradient per coordinate set (empty if not requested).
+   */
+  void evaluateBatchFinished(std::vector<double> energies,
+                             std::vector<Eigen::VectorXd> gradients);
+
+  /**
    * Emitted when the calculator has been initialized on the worker thread.
    */
   void calculatorReady();
@@ -121,6 +140,20 @@ public slots:
    * Run a one-shot gradient evaluation.
    */
   void runGradient(Eigen::VectorXd positions);
+
+  /**
+   * Evaluate energy (and optionally gradient) for many coordinate sets.
+   *
+   * The batch is split into chunks of @p chunkSize frames so a large
+   * trajectory never builds one giant wire buffer / model batch and so
+   * progress can be reported and cancellation honored between chunks.
+   *
+   * @param coordsList One coordinate vector per set (each 3 * atomCount long).
+   * @param computeGradient Request gradients in addition to energies.
+   * @param chunkSize Frames per chunk; <= 0 selects a memory-bounded default.
+   */
+  void runEvaluateBatch(std::vector<Eigen::VectorXd> coordsList,
+                        bool computeGradient, int chunkSize);
 
   /**
    * Request cancellation of the current computation.
