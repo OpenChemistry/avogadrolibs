@@ -44,6 +44,7 @@ private:
   bool m_inColorEdit = false;
   void copySelectedRowsToClipboard();
   void openExportDialogBox();
+  void addProperty();
   void constrainSelectedRows();
   void unconstrainSelectedRows();
 

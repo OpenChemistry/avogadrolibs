@@ -98,7 +98,7 @@ PropertyModel::PropertyModel(PropertyType type, QObject* parent)
 {
 }
 
-const Core::PropertyMap* PropertyModel::propertyMap() const
+Core::PropertyMap* PropertyModel::propertyMap()
 {
   if (m_molecule == nullptr)
     return nullptr;
@@ -114,6 +114,86 @@ const Core::PropertyMap* PropertyModel::propertyMap() const
     default:
       return nullptr;
   }
+}
+
+const Core::PropertyMap* PropertyModel::propertyMap() const
+{
+  return const_cast<PropertyModel*>(this)->propertyMap();
+}
+
+Index PropertyModel::entityCount() const
+{
+  if (m_molecule == nullptr)
+    return 0;
+  switch (m_type) {
+    case AtomType:
+      return m_molecule->atomCount();
+    case BondType:
+      return m_molecule->bondCount();
+    case ResidueType:
+      return m_molecule->residueCount();
+    case ConformerType:
+      return m_molecule->coordinate3dCount();
+    case AngleType:
+      return m_angles.size();
+    case TorsionType:
+      return m_torsions.size();
+    default:
+      return 0;
+  }
+}
+
+bool PropertyModel::supportsCustomProperties() const
+{
+  return propertyMap() != nullptr;
+}
+
+bool PropertyModel::addCustomProperty(const QString& name,
+                                      CustomPropertyType type)
+{
+  if (m_molecule == nullptr)
+    return false;
+
+  const QString trimmed = name.trimmed();
+  if (trimmed.isEmpty())
+    return false;
+
+  Core::PropertyMap* pm = propertyMap();
+  if (pm == nullptr)
+    return false;
+
+  const std::string key = trimmed.toStdString();
+
+  // Reject a name that collides with an existing column (custom or built-in).
+  if (pm->hasDoubles(key) || pm->hasInts(key) || pm->hasStrings(key) ||
+      pm->hasMatrices(key))
+    return false;
+  for (int col = 0; col < baseColumnCount(); ++col) {
+    if (headerData(col, Qt::Horizontal, Qt::DisplayRole).toString() == trimmed)
+      return false;
+  }
+
+  const Index count = entityCount();
+  switch (type) {
+    case CustomPropertyType::Double:
+      pm->createDoubles(key, count);
+      break;
+    case CustomPropertyType::Int:
+      pm->createInts(key, count);
+      break;
+    case CustomPropertyType::String:
+      pm->createStrings(key, count);
+      break;
+  }
+
+  // The new column changes the column set; invalidate so the view rebuilds it
+  // lazily on the next query.
+  m_validCache = false;
+  beginResetModel();
+  endResetModel();
+
+  m_molecule->emitChanged(Molecule::Properties | Molecule::Modified);
+  return true;
 }
 
 int PropertyModel::baseColumnCount() const
@@ -145,24 +225,7 @@ int PropertyModel::rowCount(const QModelIndex& parent) const
   if (!m_validCache)
     updateCache();
 
-  switch (m_type) {
-    case AtomType:
-      return m_molecule->atomCount();
-    case BondType:
-      return m_molecule->bondCount();
-    case ResidueType:
-      return m_molecule->residueCount();
-    case AngleType:
-      return m_angles.size();
-    case TorsionType:
-      return m_torsions.size();
-    case ConformerType:
-      return m_molecule->coordinate3dCount();
-    default:
-      return 0;
-  }
-
-  return 0;
+  return static_cast<int>(entityCount());
 }
 
 int PropertyModel::columnCount(const QModelIndex& parent) const
@@ -903,23 +966,9 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
     if (idx < 0 || idx >= static_cast<int>(m_customColumns.size()))
       return false;
     const CustomColumn& cc = m_customColumns[idx];
-    Core::PropertyMap* pm = nullptr;
-    switch (m_type) {
-      case AtomType:
-        pm = &m_molecule->atomProperties();
-        break;
-      case BondType:
-        pm = &m_molecule->bondProperties();
-        break;
-      case ResidueType:
-        pm = &m_molecule->residueProperties();
-        break;
-      case ConformerType:
-        pm = &m_molecule->conformerProperties();
-        break;
-      default:
-        return false;
-    }
+    Core::PropertyMap* pm = propertyMap();
+    if (pm == nullptr)
+      return false;
 
     bool ok = false;
     switch (cc.type) {
