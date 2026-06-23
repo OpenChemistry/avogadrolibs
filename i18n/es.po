@@ -3811,7 +3811,7 @@ msgstr "Filtrar:"
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:617
 #, qt-format
 msgid "Monomer percentages must sum to 100 (current total: %1)."
-msgstr ""
+msgstr "Los porcentajes de monómero deben sumarse a 100 ( total actual: %1)."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
 msgid "No monomer specified. Please choose at least monomer A."
