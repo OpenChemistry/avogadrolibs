@@ -18,14 +18,14 @@
 # Javier Cerezo <jcb1@um.es>, 2026.
 # "Juan E. Arias Martinez" <jeam.professional@gmail.com>, 2026.
 # Francisco Serrador <fserrador@gmail.com>, 2026.
+# Libre <6n0n1m0s@proton.me>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
 "PO-Revision-Date: 2026-06-23 20:07+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Libre <6n0n1m0s@proton.me>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -2239,7 +2239,7 @@ msgstr "Parar"
 
 #: qtplugins/autoopt/autoopt.cpp:503
 msgid "Relax for Dynamics"
-msgstr ""
+msgstr "Relax para Dinámicas"
 
 #: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:71
 #: qtplugins/forcefield/forcefield.cpp:504
@@ -2257,7 +2257,7 @@ msgstr "Dinámica Molecular"
 #, qt-format
 msgctxt "pre-relax before dynamics"
 msgid "Relaxing… %1 ΔE = %L2"
-msgstr ""
+msgstr "Relajando… %1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:698
 #, qt-format
@@ -2522,15 +2522,15 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:202
 msgid "Command In Progress"
-msgstr ""
+msgstr "Comando en progreso"
 
 #: qtplugins/commandscripts/command.cpp:203
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
 msgstr ""
-"Un guión de comando ya está funcionando. Por favor, espere a que termine "
-"antes de empezar otra."
+"Ya está funcionando un guión de comando. Espere a que finalice antes de "
+"empezar otro."
 
 #: qtplugins/commandscripts/command.cpp:333
 #, qt-format
@@ -3606,7 +3606,7 @@ msgstr "Dianión"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:888
 msgid "Save GAMESS input file"
-msgstr "Grabar archivo de entrada de GAMESS"
+msgstr "Guardar archivo de entrada de GAMESS"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:938
 msgid "Submit GAMESS Calculation"
@@ -3614,19 +3614,19 @@ msgstr "Enviar Cálculo de GAMESS"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 msgid "&Adjust Hydrogens"
-msgstr "&Ajustar Hidrógenos"
+msgstr "&Ajustar hidrógenos"
 
 #: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:72
 msgid "Add Hydrogens"
-msgstr "Añadir hidrógenos"
+msgstr "Añadir Hidrógenos"
 
 #: qtplugins/hydrogens/hydrogens.cpp:32
 msgid "Remove E&xtra Hydrogens"
-msgstr "Eliminar &Hidrógenos Extra"
+msgstr "Eliminar &hidrógenos adicionales"
 
 #: qtplugins/hydrogens/hydrogens.cpp:37
 msgid "&Remove All Hydrogens"
-msgstr "&Eliminar Todos los Hidrógenos"
+msgstr "&Retirar todos los hidrógenos"
 
 #: qtplugins/hydrogens/hydrogens.cpp:47
 msgid "Add/remove hydrogens from the current molecule."
@@ -3694,7 +3694,7 @@ msgstr "Timina"
 #: qtplugins/lineformatinput/lineformatinput.cpp:110
 #: qtplugins/lineformatinput/lineformatinput.cpp:125:1294
 msgid "Insert Molecule…"
-msgstr "Insertar Molécula…"
+msgstr "Insertar molécula…"
 
 #: qtplugins/insertdna/insertdna.cpp:203
 #: qtplugins/lineformatinput/lineformatinput.cpp:126
@@ -3703,11 +3703,11 @@ msgstr "Generando molécula 3D…"
 
 #: qtplugins/insertdna/insertdna.h:33
 msgid "InsertDNA"
-msgstr "Insertar ADN"
+msgstr "InsertDNA"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
-msgstr "Insertar fragmentos de ADN/ARN mediante texto."
+msgstr "Insertar fragmentos de ADN/ARN mediante un diálogo."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
 msgid "Molecule…"
@@ -3734,7 +3734,7 @@ msgstr "Insertar Fragmento"
 
 #: qtplugins/insertfragment/insertfragment.h:35
 msgid "InsertFragment"
-msgstr "Insertar Fragmento"
+msgstr "InsertFragment"
 
 #: qtplugins/insertfragment/insertfragment.h:60
 msgid "Insert molecular fragments for building larger molecules."
@@ -3762,7 +3762,7 @@ msgstr "Insertar secuencias de oligopéptido."
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:29
 msgid "Polymer…"
-msgstr ""
+msgstr "Polímero…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:82
 msgid "No SMILES format reader found. Is Open Babel available?"
@@ -3782,7 +3782,7 @@ msgstr "Insertar polímero"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:90
 msgid "Generating 3D structure…"
-msgstr "Generando estructura 3D.."
+msgstr "Generando estructura 3D…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:104
 #, qt-format
@@ -3790,18 +3790,20 @@ msgid ""
 "Failed to generate polymer from SMILES:\n"
 "%1"
 msgstr ""
+"Incorrecto al generar polímero desde SMILES:\n"
+"%1"
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
 msgid "Build polymers from monomer repeat units."
-msgstr ""
+msgstr "Crear polímeros desde unidades monómeros repetidas."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
 msgid "Polymer monomer data directory not found."
-msgstr ""
+msgstr "Polímero de directorio de datos monómero no encontrado."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:172
 msgid "Choose Monomer"
-msgstr "Elija Monomer"
+msgstr "Elegir Monómero"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3812,7 +3814,7 @@ msgstr "Filtrar:"
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:617
 #, qt-format
 msgid "Monomer percentages must sum to 100 (current total: %1)."
-msgstr "Los porcentajes de monómero deben sumarse a 100 ( total actual: %1)."
+msgstr "Los porcentajes de monómero deben sumarse a 100 (total actual: %1)."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
 msgid "No monomer specified. Please choose at least monomer A."
@@ -3820,7 +3822,7 @@ msgstr "No hay monómero especificado. Por favor elija al menos monómero A."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
 msgid "Working"
-msgstr ""
+msgstr "Funcionando"
 
 #: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:313
 #: qtplugins/surfacerender/surfacerender.cpp:319
@@ -3885,11 +3887,11 @@ msgstr "Nombre"
 
 #: qtplugins/label/label.cpp:245
 msgid "Name & ID"
-msgstr "Nombre e Identificación"
+msgstr "Nombre e ID"
 
 #: qtplugins/label/label.cpp:252
 msgid "Residue Label:"
-msgstr "Etiqueta de Residuo:"
+msgstr "Etiqueta de residuo:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3969,7 +3971,7 @@ msgstr "¡No se han encontrado lectores de formato de línea!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:115
 msgid "Unable to load requested format reader."
-msgstr "No se puede cargar el lector de formato solicitado."
+msgstr "No es capaz de cargar el lector con el formato solicitado."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
@@ -4012,18 +4014,18 @@ msgid ""
 msgstr ""
 "Herramienta de manipulación (%1)\n"
 "\n"
-"Ratón izquierdo: Haga clic y arrastre para mover átomos\n"
-"Ratón derecho: Haga clic y arrastre para rotar los átomos\n"
+"Ratón izquierdo: Pulse y arrastre para mover átomos\n"
+"Ratón derecho: Pulse y arrastre para rotar los átomos\n"
 "\n"
-"Llaves de flecha: Traducir átomos\n"
-"Shift+Arrows: girar alrededor de los ejes X/Y\n"
-"Ctrl+Left/Right: girar alrededor del eje Z\n"
-"Alt + llave inglesa: pasos más grandes"
+"Teclas de flecha: Trasladar átomos\n"
+"Mayús+Flechas: girar alrededor de los ejes X/Y\n"
+"Ctrl+Izquierda/Derecha: girar alrededor del eje Z\n"
+"Alt + <tecla>: Pasos más grandes"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
 msgid "Manipulate tool"
-msgstr "Herramienta de Manipulación"
+msgstr "Herr. manipulación"
 
 #: qtplugins/measuretool/measuretool.cpp:51
 msgctxt "control-key 8"
@@ -4056,7 +4058,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:208
 msgid "Dihedral:"
-msgstr "Ángulo Diedro:"
+msgstr "Ángulo diedro:"
 
 #: qtplugins/measuretool/measuretool.cpp:199
 #: qtplugins/measuretool/measuretool.cpp:215
@@ -4079,7 +4081,7 @@ msgstr "Propiedad"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:178
 msgid "Molecule Name"
-msgstr "Nombre de la molécula"
+msgstr "Nombre de Molécula"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:180
 msgid "Molecular Mass (g/mol)"
@@ -4099,7 +4101,7 @@ msgstr "Número de átomos"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:188
 msgid "Number of Bonds"
-msgstr "Número de enlaces"
+msgstr "Número de vínculos"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:190
 msgid "Coordinate Sets"
@@ -4115,7 +4117,7 @@ msgstr "Número de cadenas"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:196
 msgid "Net Charge"
-msgstr "Carga neta"
+msgstr "Carga Neta"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:198
 msgid "Net Spin Multiplicity"
@@ -4192,12 +4194,12 @@ msgstr "&Propiedades"
 
 #: qtplugins/molecularproperties/molecularproperties.h:36
 msgid "Molecular Properties"
-msgstr "Propiedades moleculares"
+msgstr "Propiedades Moleculares"
 
 #: qtplugins/molecularproperties/molecularview.cpp:40
 #: qtplugins/propertytables/propertyview.cpp:64
 msgid "Molecule Properties"
-msgstr "Propiedades Moleculares"
+msgstr "Propiedades de Molécula"
 
 #: qtplugins/molecularproperties/molecularview.cpp:138
 #: qtplugins/propertytables/propertyview.cpp:492
@@ -4283,7 +4285,7 @@ msgstr "Nombre Químico"
 #: qtplugins/networkdatabases/networkdatabases.cpp:131
 #, qt-format
 msgid "Querying PubChem for %1"
-msgstr ""
+msgstr "Consultar PubChem para %1"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
@@ -4327,7 +4329,7 @@ msgstr "Añadir Hidrógenos para pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:84
 msgid "Remove Hydrogens"
-msgstr "Eliminar Hidrógenos"
+msgstr "Retirar Hidrógenos"
 
 #: qtplugins/openbabel/openbabel.cpp:95
 #, qt-format
@@ -4752,7 +4754,7 @@ msgstr "Nada por Remover"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
 msgid "Select an installed plugin to remove it."
-msgstr "Seleccione un plugin instalado para eliminarlo."
+msgstr "Seleccione un plugin instalado para desinstalarlo."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
@@ -7777,7 +7779,7 @@ msgstr "La cadena para el nuevo número de péptidos"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, aGroupBox)
 msgid "Polymer Structure"
-msgstr "Estructura polímero"
+msgstr "Estructura Polímero"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7791,7 +7793,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:67
 #. i18n: ectx: property (text), widget (QPushButton, monomerCButton)
 msgid "Choose…"
-msgstr ""
+msgstr "Elija…"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7806,17 +7808,17 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:87
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerAGraphics)
 msgid "Depiction of the A repeat unit"
-msgstr ""
+msgstr "Representación de la unidad A repetida"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:103
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerBGraphics)
 msgid "Depiction of the B repeat unit"
-msgstr ""
+msgstr "Representación de la unidad B repetida"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:119
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerCGraphics)
 msgid "Depiction of the C repeat unit"
-msgstr ""
+msgstr "Representación de la unidad C repetida"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, repeatLabel)
@@ -7843,12 +7845,12 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Length:"
-msgstr "Longitud total"
+msgstr "Longitud total:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:274
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Molecular Weight"
-msgstr ""
+msgstr "Ponderación Molecular"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:285
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -7863,12 +7865,12 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:299
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Atactic / Random"
-msgstr ""
+msgstr "Atáctico / Aleatorio"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:304
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Isotactic"
-msgstr ""
+msgstr "Isotactico"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:309
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
