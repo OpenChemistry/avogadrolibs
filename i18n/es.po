@@ -3766,6 +3766,7 @@ msgstr ""
 #: qtplugins/insertpolymer/insertpolymer.cpp:82
 msgid "No SMILES format reader found. Is Open Babel available?"
 msgstr ""
+"No se encontró ningún lector de formato SMILES. ¿Está disponible Open Babel?"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, InsertPolymerDialog)
@@ -3776,11 +3777,11 @@ msgstr ""
 #: qtplugins/insertpolymer/insertpolymer.h:23
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:637:883 rc.cpp:958
 msgid "Insert Polymer"
-msgstr ""
+msgstr "Insertar polímero"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:90
 msgid "Generating 3D structure…"
-msgstr ""
+msgstr "Generando estructura 3D.."
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:104
 #, qt-format
