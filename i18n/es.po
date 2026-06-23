@@ -3800,7 +3800,7 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:172
 msgid "Choose Monomer"
-msgstr ""
+msgstr "Elija Monomer"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
