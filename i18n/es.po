@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-06-23 20:07+0000\n"
+"PO-Revision-Date: 2026-06-24 21:01+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -3795,7 +3795,7 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
 msgid "Build polymers from monomer repeat units."
-msgstr "Crear polímeros desde unidades monómeros repetidas."
+msgstr "Construir polímeros de unidades de repetición monomer."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
 msgid "Polymer monomer data directory not found."
