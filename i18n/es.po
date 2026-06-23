@@ -7776,7 +7776,7 @@ msgstr "La cadena para el nuevo número de péptidos"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, aGroupBox)
 msgid "Polymer Structure"
-msgstr ""
+msgstr "Estructura polímero"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
