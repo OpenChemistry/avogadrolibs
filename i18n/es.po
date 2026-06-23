@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
 "PO-Revision-Date: 2026-06-23 20:07+0000\n"
-"Last-Translator: Libre <6n0n1m0s@proton.me>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -7784,7 +7784,7 @@ msgstr "Estructura Polímero"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A unit:"
-msgstr ""
+msgstr "Una unidad:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:33
 #. i18n: ectx: property (text), widget (QPushButton, monomerAButton)
@@ -7798,12 +7798,12 @@ msgstr "Elija…"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "B unit:"
-msgstr ""
+msgstr "Unidad B:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:57
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "C unit:"
-msgstr ""
+msgstr "Unidad C:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:87
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerAGraphics)
@@ -7828,7 +7828,7 @@ msgstr "Repeticiones:"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:221
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Repeat Style:"
-msgstr ""
+msgstr "Estilo de repetición:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
@@ -7840,7 +7840,7 @@ msgstr "Porcentaje"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:269
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Repeat Units"
-msgstr ""
+msgstr "Unidades de repetición"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7855,12 +7855,12 @@ msgstr "Ponderación Molecular"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:285
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Tacticity:"
-msgstr ""
+msgstr "Táctica:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:292
 #. i18n: ectx: property (toolTip), widget (QComboBox, tacticityComboBox)
 msgid "Control of the polymer stereochemistry / tacticity"
-msgstr ""
+msgstr "Control de la estereoquímica / táctica del polímero"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:299
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
@@ -7875,7 +7875,7 @@ msgstr "Isotactico"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:309
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Syndiotactic"
-msgstr ""
+msgstr "Sindiáctica"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
