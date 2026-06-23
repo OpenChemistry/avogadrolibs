@@ -4656,7 +4656,7 @@ msgstr "Nada Seleccionado"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:281
 msgid "Select a plugin to install or update."
-msgstr ""
+msgstr "Seleccione un plugin para instalar o actualizar."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:291
 #, qt-format
@@ -4751,7 +4751,7 @@ msgstr "Nada por Remover"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
 msgid "Select an installed plugin to remove it."
-msgstr ""
+msgstr "Seleccione un plugin instalado para eliminarlo."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
 msgid "Remove Plugins"
