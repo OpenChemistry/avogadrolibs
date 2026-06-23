@@ -3815,7 +3815,7 @@ msgstr "Los porcentajes de monómero deben sumarse a 100 ( total actual: %1)."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
 msgid "No monomer specified. Please choose at least monomer A."
-msgstr ""
+msgstr "No hay monómero especificado. Por favor elija al menos monómero A."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
 msgid "Working"
@@ -4009,6 +4009,15 @@ msgid ""
 "Ctrl+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"Herramienta de manipulación (%1)\n"
+"\n"
+"Ratón izquierdo: Haga clic y arrastre para mover átomos\n"
+"Ratón derecho: Haga clic y arrastre para rotar los átomos\n"
+"\n"
+"Llaves de flecha: Traducir átomos\n"
+"Shift+Arrows: girar alrededor de los ejes X/Y\n"
+"Ctrl+Left/Right: girar alrededor del eje Z\n"
+"Alt + llave inglesa: pasos más grandes"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
