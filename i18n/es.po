@@ -24,8 +24,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-06-23 20:07+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-24 21:01+0000\n"
+"Last-Translator: Libre <6n0n1m0s@proton.me>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -2522,7 +2522,7 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:202
 msgid "Command In Progress"
-msgstr "Comando en progreso"
+msgstr "Comando en Progreso"
 
 #: qtplugins/commandscripts/command.cpp:203
 msgid ""
@@ -3795,7 +3795,7 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
 msgid "Build polymers from monomer repeat units."
-msgstr "Crear polímeros desde unidades monómeros repetidas."
+msgstr "Construir polímeros de unidades de repetición monómera."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
 msgid "Polymer monomer data directory not found."
@@ -3822,7 +3822,7 @@ msgstr "No hay monómero especificado. Por favor elija al menos monómero A."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
 msgid "Working"
-msgstr "Funcionando"
+msgstr "Ocupado"
 
 #: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:313
 #: qtplugins/surfacerender/surfacerender.cpp:319
@@ -8650,7 +8650,7 @@ msgstr "AMBER10"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_waterModel)
 msgid "Water Model:"
-msgstr "Modelo de Agua:"
+msgstr "Modelo de agua:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:145
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
@@ -8809,7 +8809,7 @@ msgstr "Velocidad inicial al azar:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
 msgid "Generation Temp:"
-msgstr "Temperatura de Generación:"
+msgstr "Temperatura de generación:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
@@ -8894,17 +8894,17 @@ msgstr "PDB"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
 #. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
 msgid "Report Interval:"
-msgstr "Intervalo de Informe:"
+msgstr "Intervalo de informe:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
 msgid "Equilibration Steps:"
-msgstr "Intervalos de Equilibrado:"
+msgstr "Intervalos de equilibrado:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
 #. i18n: ectx: property (text), widget (QLabel, label_productionSteps)
 msgid "Production Steps:"
-msgstr "Intervalos de Producción:"
+msgstr "Intervalos de producción:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:800
 #. i18n: ectx: property (text), widget (QLabel, label_minimize)
@@ -8959,17 +8959,17 @@ msgstr "Energía Total"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
 msgid "Search plugins…"
-msgstr "Buscando exenciones…"
+msgstr "Buscar complementos…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
 msgid "Install from Directory…"
-msgstr "Instalar del Directorio…"
+msgstr "Instalar desde directorio…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:89
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 msgid "Remove Selected"
-msgstr "Remover lo Seleccionado"
+msgstr "Retirar Seleccionado"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, installButton)
@@ -8984,7 +8984,7 @@ msgstr "Opciones de PDF"
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Maximum Radius:"
-msgstr "Radio Máximo:"
+msgstr "Radio máximo:"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label2)
@@ -9020,8 +9020,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Ensanchamiento de los picos en la base en grados.</"
-"p><p>Por defecto: 0.52958°</p></body></html>"
+"<html><head/><body><p>Ensanchamiento de los picos en la base en grados.</p>"
+"<p>Por defecto: 0'52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -9089,7 +9089,7 @@ msgstr "Aplicar Color"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
 msgid "Spectra Visualization"
-msgstr "Visualización de espectros"
+msgstr "Visualización Espectral"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QLabel, label_11)
@@ -9099,7 +9099,7 @@ msgstr "Factor de escalado:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "X-Axis Minimum:"
-msgstr "Mínimo eje X:"
+msgstr "Mínimo del eje X:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -9187,7 +9187,7 @@ msgstr "18"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Font Size:"
-msgstr "Tamaño de la fuente:"
+msgstr "Tamaño de tipografía:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:286
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -9207,7 +9207,7 @@ msgstr "Mostrar"
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
 msgstr ""
 "Las importaciones de un tsv espectros experimentales de la superposición en "
-"la parcela."
+"la trama."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:315
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -9222,7 +9222,7 @@ msgstr "Antecedentes:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:341
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Calculated Spectra:"
-msgstr "Espectros calculados:"
+msgstr "Espectro calculado:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
@@ -9476,7 +9476,7 @@ msgstr "Centros"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
 msgid "Formal Charge:"
-msgstr "Carga Formal:"
+msgstr "Carga formal:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:133
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
@@ -9578,7 +9578,7 @@ msgstr "Háptico"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:327
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "From Clipboard"
-msgstr "Desde el Portapapeles"
+msgstr "Desde Portapapeles"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:350
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
@@ -9618,7 +9618,7 @@ msgstr "etileno"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:457
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
-msgstr "Acetileno"
+msgstr "acetileno"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:462
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -9658,7 +9658,7 @@ msgstr "Banda de Yaehmop"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
 msgid "Min y: "
-msgstr "Valor mínimo de y: "
+msgstr "Valor mín y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
@@ -9684,7 +9684,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
 msgid "Plot Fermi?"
-msgstr "¿Mostrar el nivel de Fermi?"
+msgstr "¿Trama de Fermi?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_zeroFermi)
