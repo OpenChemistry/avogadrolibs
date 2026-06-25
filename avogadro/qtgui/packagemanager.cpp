@@ -347,19 +347,26 @@ static QString readSetupCommand(const QString& packageDir)
   return {};
 }
 
-// Run a package's *-setup script (e.g. to download ML model weights).
+// Run a package's *-setup command (e.g. to download ML model weights).
+// This is called regardless of whether the package has defined one or not.
 static void runSetupScript(const QString& packageDir, const QString& setupCmd,
-                           bool isPixi, int timeoutMs)
+                           const QString& pixiExe, bool isPixi, int timeoutMs)
 {
   if (setupCmd.isEmpty())
     return;
-  const QString setupExe = findInstalledScript(packageDir, setupCmd, isPixi);
-  if (setupExe.isEmpty())
-    return;
-
   QProcess proc;
   proc.setWorkingDirectory(packageDir);
-  proc.start(setupExe, {});
+  if (isPixi) {
+    // If we have Pixi, just run the command using `pixi run`
+    proc.start(pixiExe, { QStringLiteral("run"), setupCmd });
+  } else {
+    const QString setupExe = findInstalledScript(packageDir, setupCmd, isPixi);
+    if (setupExe.isEmpty()) {
+      qDebug("No setup exe found, early return");
+      return;
+    }
+    proc.start(setupExe, {});
+  }
   if (!proc.waitForStarted(timeoutMs)) {
     qWarning() << "setup script could not be started for" << packageDir << ":"
                << proc.errorString();
@@ -403,7 +410,6 @@ void PackageManager::installPackages(const QStringList& packageDirs)
   QMap<QString, QString> setupCommands;
   for (const QString& dir : packageDirs)
     setupCommands[dir] = readSetupCommand(dir);
-
   QThread* installThread =
     QThread::create([pixiExe, pythonExe, packageDirs, setupCommands]() {
       constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
@@ -438,8 +444,8 @@ void PackageManager::installPackages(const QStringList& packageDirs)
           } else {
             // Run the *-setup script if one is declared (e.g. to download ML
             // model weights).
-            runSetupScript(packageDir, setupCommands.value(packageDir), true,
-                           installTimeoutMs);
+            runSetupScript(packageDir, setupCommands.value(packageDir), pixiExe,
+                           true, installTimeoutMs);
           }
         } else {
           // Step 1: create a venv
@@ -480,8 +486,8 @@ void PackageManager::installPackages(const QStringList& packageDirs)
                        << installProc.readAllStandardError();
           } else {
             // Run the *-setup script if one is declared.
-            runSetupScript(packageDir, setupCommands.value(packageDir), false,
-                           installTimeoutMs);
+            runSetupScript(packageDir, setupCommands.value(packageDir),
+                           QStringLiteral(), false, installTimeoutMs);
           }
         }
       }
