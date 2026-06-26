@@ -38,6 +38,8 @@ class AVOGADROQTPLUGINS_EXPORT PluginManager : public QObject
   Q_OBJECT
 
 public:
+  ~PluginManager() override;
+
   /**
    * Get the singleton instance of the plugin manager. This instance should not
    * be deleted.
@@ -84,7 +86,6 @@ public:
 private:
   // Hide the constructor, destructor, copy and assignment operator.
   PluginManager(QObject* parent = nullptr);
-  ~PluginManager() override;
   PluginManager(const PluginManager&);            // Not implemented.
   PluginManager& operator=(const PluginManager&); // Not implemented.
 
