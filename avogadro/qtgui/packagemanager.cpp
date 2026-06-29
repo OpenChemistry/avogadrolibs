@@ -12,7 +12,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#ifndef Q_OS_WASM
 #include <QtCore/QProcess>
+#endif
 #include <QtCore/QStandardPaths>
 #include <QtCore/QThread>
 #include <QtCore/QJsonArray>
@@ -136,6 +138,13 @@ QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
                                                   const QString& command,
                                                   const QString& identifier)
 {
+#ifdef Q_OS_WASM
+  Q_UNUSED(packageDir);
+  Q_UNUSED(command);
+  Q_UNUSED(identifier);
+  qWarning() << "PackageManager: dynamic package options are not supported in WebAssembly builds.";
+  return {};
+#else
   // Locate pixi or the venv-installed script.
 #ifdef Q_OS_WIN
   QString pixiName = QStringLiteral("pixi.exe");
@@ -217,6 +226,7 @@ QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
   }
 
   return doc.object();
+#endif
 }
 
 QJsonObject PackageManager::resolveUserOptions(const QString& userOptionsValue,
@@ -351,6 +361,12 @@ static QString readSetupCommand(const QString& packageDir)
 static void runSetupScript(const QString& packageDir, const QString& setupCmd,
                            bool isPixi, int timeoutMs)
 {
+#ifdef Q_OS_WASM
+  Q_UNUSED(packageDir);
+  Q_UNUSED(setupCmd);
+  Q_UNUSED(isPixi);
+  Q_UNUSED(timeoutMs);
+#else
   if (setupCmd.isEmpty())
     return;
   const QString setupExe = findInstalledScript(packageDir, setupCmd, isPixi);
@@ -372,10 +388,17 @@ static void runSetupScript(const QString& packageDir, const QString& setupCmd,
     qWarning() << "setup script failed for" << packageDir << ":"
                << QString::fromUtf8(proc.readAllStandardError());
   }
+#endif
 }
 
 void PackageManager::installPackages(const QStringList& packageDirs)
 {
+#ifdef Q_OS_WASM
+  Q_UNUSED(packageDirs);
+  qWarning() << "PackageManager: package installation is not supported in WebAssembly builds.";
+  emit packagesInstalled();
+  return;
+#else
 #ifdef Q_OS_WIN
   const QString pixiName = QStringLiteral("pixi.exe");
   const QStringList pythonNames = { QStringLiteral("python.exe"),
@@ -498,6 +521,7 @@ void PackageManager::installPackages(const QStringList& packageDirs)
     Qt::QueuedConnection);
 
   installThread->start();
+#endif
 }
 
 // ---------------------------------------------------------------------------

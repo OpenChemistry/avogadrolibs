@@ -34,6 +34,11 @@ else()
   set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE ON)
   target_include_directories(pugixml PUBLIC $<BUILD_INTERFACE:${_PUGIXML_ROOT}>)
   add_library(pugixml::pugixml ALIAS pugixml)
+  if(NOT SKBUILD)
+    install(TARGETS pugixml
+      EXPORT "AvogadroLibsTargets"
+      ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
+  endif()
   unset(_PUGIXML_ROOT)
 endif(USE_EXTERNAL_PUGIXML)
 
@@ -47,6 +52,11 @@ else()
   )
   set_target_properties(struct PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
   target_include_directories(struct PUBLIC $<BUILD_INTERFACE:${_STRUCT_ROOT}>)
+  if(NOT SKBUILD)
+    install(TARGETS struct
+      EXPORT "AvogadroLibsTargets"
+      ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
+  endif()
   unset(_STRUCT_ROOT)
 endif(USE_EXTERNAL_STRUCT)
 

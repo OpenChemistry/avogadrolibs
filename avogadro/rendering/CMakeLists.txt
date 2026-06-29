@@ -10,6 +10,7 @@ add_library(Rendering)
 avogadro_headers(Rendering
   arcsector.h
   arcstrip.h
+  ambientocclusionspheregeometry.h
   arrowgeometry.h
   avogadrogl.h
   avogadrorendering.h
@@ -30,6 +31,7 @@ avogadro_headers(Rendering
   linestripgeometry.h
   meshgeometry.h
   node.h
+  packedvertex.h
   plyvisitor.h
   povrayvisitor.h
   primitive.h
