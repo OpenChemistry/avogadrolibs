@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
 "PO-Revision-Date: 2026-07-04 17:01+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Felix <felix@fmfl-devteam.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2519,7 +2519,7 @@ msgid ""
 "starting another."
 msgstr ""
 "Ein Befehlsskript läuft bereits. Bitte warten Sie, bis es fertig ist, bevor "
-"Sie eine andere starten."
+"Sie ein anderes starten."
 
 #: qtplugins/commandscripts/command.cpp:333
 #, qt-format
