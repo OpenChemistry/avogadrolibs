@@ -18,13 +18,15 @@
 # kuyoeku <kuyoeku@gmail.com>, 2025.
 # gmkeebiy <gmkeebiy@sharklasers.com>, 2025, 2026.
 # eNoWater <rf_sun@users.noreply.hosted.weblate.org>, 2026.
+# reducedradius <137701630+flytothehighest@users.noreply.github.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-07-02 11:01+0000\n"
-"Last-Translator: eNoWater <rf_sun@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2026-07-04 17:01+0000\n"
+"Last-Translator: reducedradius "
+"<137701630+flytothehighest@users.noreply.github.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -32,7 +34,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.7.1.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3715,7 +3717,7 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
 msgid "Build polymers from monomer repeat units."
-msgstr ""
+msgstr "用单体重复单位构建聚合物。"
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
 msgid "Polymer monomer data directory not found."
@@ -3742,7 +3744,7 @@ msgstr "未指定单体，请至少选择一种单体。"
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
 msgid "Working"
-msgstr ""
+msgstr "运行中"
 
 #: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:313
 #: qtplugins/surfacerender/surfacerender.cpp:319
@@ -4555,7 +4557,7 @@ msgstr "未选中任何项目"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:281
 msgid "Select a plugin to install or update."
-msgstr ""
+msgstr "选择要安装或更新的组件。"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:291
 #, qt-format
@@ -7650,7 +7652,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A unit:"
-msgstr ""
+msgstr "单位A："
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:33
 #. i18n: ectx: property (text), widget (QPushButton, monomerAButton)
@@ -7659,7 +7661,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:67
 #. i18n: ectx: property (text), widget (QPushButton, monomerCButton)
 msgid "Choose…"
-msgstr ""
+msgstr "选择…"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7706,7 +7708,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:269
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Repeat Units"
-msgstr ""
+msgstr "重复单位"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7716,12 +7718,12 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:274
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Molecular Weight"
-msgstr ""
+msgstr "分子量"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:285
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Tacticity:"
-msgstr ""
+msgstr "立构规整度："
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:292
 #. i18n: ectx: property (toolTip), widget (QComboBox, tacticityComboBox)
@@ -7736,12 +7738,12 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:304
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Isotactic"
-msgstr ""
+msgstr "等规立构"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:309
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Syndiotactic"
-msgstr ""
+msgstr "间规立构"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
