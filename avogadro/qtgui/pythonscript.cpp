@@ -13,6 +13,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QLocale>
 #include <QtCore/QProcess>
+#include <QtCore/QProcessEnvironment>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 
@@ -126,6 +127,12 @@ void PythonScript::setDefaultPythonInterpreter()
 
 QString PythonScript::resolveCommand(QStringList& realArgs, QProcess& proc)
 {
+#ifdef Q_OS_WIN
+  QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+  environment.insert(QStringLiteral("PYTHONUTF8"), QStringLiteral("1"));
+  proc.setProcessEnvironment(environment);
+#endif
+
   // --- Package mode: pixi run <command> <identifier> [args] ---
   if (m_packageMode) {
     if (m_pixi.isEmpty()) {

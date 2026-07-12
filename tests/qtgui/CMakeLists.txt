@@ -27,6 +27,12 @@ set(tests
   RWMolecule
 )
 
+if(Python3_EXECUTABLE)
+  list(APPEND tests
+    PythonScript
+  )
+endif()
+
 if (BUILD_MOLEQUEUE)
   # Pull in MoleQueue
   find_package(MoleQueue REQUIRED NO_MODULE)
