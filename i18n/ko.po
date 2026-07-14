@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Hoseok Seo <ddinghoya@gmail.com>, 2022, 2023.
 # simmon <simmon@nplob.com>, 2023, 2024.
-# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2026.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 # hooray804 <profs_35_pointer@icloud.com>, 2026.
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
 "PO-Revision-Date: 2026-07-15 07:01+0000\n"
-"Last-Translator: hooray804 <profs_35_pointer@icloud.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -1076,12 +1076,12 @@ msgstr "%1 메시지"
 #: qtgui/interfacescript.cpp:343
 #, qt-format
 msgid "%1 Warning"
-msgstr ""
+msgstr "%1 경고"
 
 #: qtgui/interfacescript.cpp:350
 #, qt-format
 msgid "%1 Error"
-msgstr ""
+msgstr "%1 오류"
 
 #: qtgui/interfacescript.cpp:593
 #, qt-format
@@ -1288,7 +1288,7 @@ msgstr "제목 없음"
 
 #: qtgui/moleculemodel.cpp:136
 msgid "Edit molecule"
-msgstr ""
+msgstr "분자 편집"
 
 #: qtgui/moleculemodel.cpp:143
 msgid "Not saved"
