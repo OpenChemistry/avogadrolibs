@@ -5,7 +5,7 @@
 # Hoseok Seo <ddinghoya@gmail.com>, 2022, 2023.
 # simmon <simmon@nplob.com>, 2023, 2024.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2026.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2026.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 # hooray804 <profs_35_pointer@icloud.com>, 2026.
 msgid ""
@@ -14,7 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
 "PO-Revision-Date: 2026-07-15 07:01+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -1124,7 +1125,7 @@ msgstr "프로세서 코어"
 
 #: qtgui/jsonwidget.cpp:204 qtgui/jsonwidget.cpp:212
 msgid "Memory"
-msgstr ""
+msgstr "메모리"
 
 #: qtgui/jsonwidget.cpp:217
 msgid "Calculation Type"
@@ -1153,15 +1154,15 @@ msgstr "용매"
 #: qtgui/jsonwidget.cpp:240
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "모델"
 
 #: qtgui/jsonwidget.cpp:386
 msgid "User Name"
-msgstr ""
+msgstr "사용자 이름"
 
 #: qtgui/jsonwidget.cpp:388
 msgid "Password"
-msgstr ""
+msgstr "비밀번호"
 
 #: qtgui/jsonwidget.cpp:674
 #, qt-format
