@@ -76,8 +76,8 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 
   glGenTextures(1, texDepth);
   glBindTexture(GL_TEXTURE_2D, *texDepth);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
@@ -148,7 +148,11 @@ void SolidPipeline::begin()
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(tmp[0], tmp[1], tmp[2], tmp[3]);
+#ifdef __EMSCRIPTEN__
+  glClearDepthf(tmp[4]);
+#else
   glClearDepth(tmp[4]);
+#endif
 }
 
 void SolidPipeline::end()
@@ -163,7 +167,9 @@ void SolidPipeline::end()
     glDrawBuffers(1, drawBuffersList);
   } else {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#ifndef __EMSCRIPTEN__
     glDrawBuffer(GL_BACK);
+#endif
   }
   d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture,
                  "inDepthTex", d->depthTexture, m_width, m_height);
@@ -215,12 +221,22 @@ void SolidPipeline::resize(int width, int height)
   m_height = height * m_pixelRatio;
 
   glBindTexture(GL_TEXTURE_2D, d->renderTexture);
+#ifdef __EMSCRIPTEN__
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, nullptr);
+#else
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA,
                GL_UNSIGNED_BYTE, nullptr);
+#endif
 
   glBindTexture(GL_TEXTURE_2D, d->depthTexture);
+#ifdef __EMSCRIPTEN__
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
+               GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, nullptr);
+#else
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
                GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+#endif
 }
 
 void SolidPipeline::setPixelRatio(float ratio)

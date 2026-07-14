@@ -92,11 +92,19 @@ GLint convertIncomingFormatToGL(Texture2D::IncomingFormat fmt)
     case Texture2D::IncomingRGB:
       return GL_RGB;
     case Texture2D::IncomingBGR:
+#ifdef __EMSCRIPTEN__
+      return GL_RGB;
+#else
       return GL_BGR;
+#endif
     case Texture2D::IncomingRGBA:
       return GL_RGBA;
     case Texture2D::IncomingBGRA:
+#ifdef __EMSCRIPTEN__
+      return GL_RGBA;
+#else
       return GL_BGRA;
+#endif
     case Texture2D::IncomingDepth:
       return GL_DEPTH_COMPONENT;
     case Texture2D::IncomingDepthStencil:
@@ -124,7 +132,11 @@ GLenum convertTypeToGL(Type type)
     case FloatType:
       return GL_FLOAT;
     case DoubleType:
+#ifdef __EMSCRIPTEN__
+      return GL_FLOAT;
+#else
       return GL_DOUBLE;
+#endif
     default:
       return 0;
   }

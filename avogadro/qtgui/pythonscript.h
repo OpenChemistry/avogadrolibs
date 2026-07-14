@@ -12,9 +12,11 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <QtCore/QByteArray>
-#include <QtCore/QProcess>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
+#ifndef Q_OS_WASM
+#include <QtCore/QProcess>
+#endif
 
 namespace Avogadro {
 namespace QtGui {
@@ -177,7 +179,9 @@ public slots:
   /**
    * Handle a finished process;
    */
+#ifndef Q_OS_WASM
   void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
+#endif
 
 protected:
   bool m_debug;
@@ -190,9 +194,12 @@ protected:
   QString m_packageIdentifier;
   QString m_packageDisplayName;
   QStringList m_errors;
+#ifndef Q_OS_WASM
   QProcess* m_process;
+#endif
 
 private:
+#ifndef Q_OS_WASM
   /**
    * Resolve the executable and finalize the argument list for either
    * execute() or asyncExecute().  On entry @p realArgs already contains
@@ -204,6 +211,7 @@ private:
   QString resolveCommand(QStringList& realArgs, QProcess& proc);
 
   QString processErrorString(const QProcess& proc) const;
+#endif
 };
 
 } // namespace QtGui

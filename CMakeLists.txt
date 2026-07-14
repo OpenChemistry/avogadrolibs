@@ -35,6 +35,12 @@ determine_version(${AvogadroLibs_SOURCE_DIR} ${GIT_EXECUTABLE} "AvogadroLibs")
 set(AvogadroLibs_SOURCEDATA_DIR "${AvogadroLibs_SOURCE_DIR}/..")
 
 option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
+if(EMSCRIPTEN)
+  set(BUILD_SHARED_LIBS OFF CACHE BOOL
+    "Build with shared libraries" FORCE)
+  add_compile_options(-pthread)
+  add_link_options(-pthread)
+endif()
 
 # Before any plugins are defined, and before any add_subdirectory calls:
 set_property(GLOBAL PROPERTY AvogadroLibs_PLUGINS)
