@@ -14,13 +14,14 @@
 # Frank Hoffmann <kohaerenz@gmail.com>, 2026.
 # Jakob Blahusch <jakob.blahusch@blahusch.com>, 2026.
 # Alexander Krappe <alexander.krappe@fu-berlin.de>, 2026.
+# Felix <felix@fmfl-devteam.de>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-03-31 12:10+0000\n"
-"Last-Translator: Alexander Krappe <alexander.krappe@fu-berlin.de>\n"
+"PO-Revision-Date: 2026-07-04 17:01+0000\n"
+"Last-Translator: Felix <felix@fmfl-devteam.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.7.1.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1572,7 +1573,7 @@ msgstr "Elementarzelle füllen"
 
 #: qtgui/rwmolecule.cpp:786
 msgid "Fill Translational Copies"
-msgstr ""
+msgstr "Übersetzungskopien ausfüllen"
 
 #: qtgui/rwmolecule.cpp:806
 msgid "Reduce Cell to Asymmetric Unit"
@@ -2510,13 +2511,15 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:202
 msgid "Command In Progress"
-msgstr ""
+msgstr "Befehl wird ausgeführt"
 
 #: qtplugins/commandscripts/command.cpp:203
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
 msgstr ""
+"Ein Befehlsskript läuft bereits. Bitte warten Sie, bis es fertig ist, bevor "
+"Sie ein anderes starten."
 
 #: qtplugins/commandscripts/command.cpp:333
 #, qt-format
