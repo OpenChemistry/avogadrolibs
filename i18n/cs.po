@@ -9,13 +9,14 @@
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # Tomáš Poláček <ostriz2@seznam.cz>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
+# Michal Várady <miko.vaji@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-03-11 10:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-07-17 08:15+0000\n"
+"Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
 "Language: cs\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1099,7 +1100,7 @@ msgstr "Teorie"
 
 #: qtgui/jsonwidget.cpp:221
 msgid "Basis"
-msgstr "Základ"
+msgstr "Báze"
 
 #: qtgui/jsonwidget.cpp:226 qtgui/jsonwidget.cpp:230
 msgid "Charge"
@@ -1428,7 +1429,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Change Bond Order"
-msgstr "Změnit druh vazby"
+msgstr "Změnit řád vazby"
 
 #: qtgui/rwmolecule.cpp:395
 #, fuzzy
@@ -1965,10 +1966,9 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
 #: qtplugins/surfaces/surfaces.cpp:834:183 rc.cpp:2051
-#, fuzzy
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Spektra"
+msgstr "Spectral"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2027,9 +2027,8 @@ msgid "Color Atoms"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:155
-#, fuzzy
 msgid "Color Residues"
-msgstr "Barva zbytku"
+msgstr "Barvit zbytky"
 
 #: qtplugins/applycolors/applycolors.cpp:217
 #: qtplugins/applycolors/applycolors.cpp:318
@@ -2680,9 +2679,8 @@ msgid "Invalid atomic number."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:434
-#, fuzzy
 msgid "Atomic number."
-msgstr "Atomové číslo."
+msgstr "Protonové číslo."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:443
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:454
@@ -2906,9 +2904,8 @@ msgid "Energy and Forces"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:264
-#, fuzzy
 msgid "Geometry Optimization"
-msgstr "Optimalizace uspořádání"
+msgstr "Optimalizace geometrie"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:333
 msgid "Electronic structure methods (DFT)"
@@ -2981,18 +2978,16 @@ msgid "BROYDEN"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:418
-#, fuzzy
 msgid "Conjugate Gradients"
-msgstr "Sdružovat přechody"
+msgstr "Sdružené gradienty"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:421
 msgid "DIIS"
 msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:424
-#, fuzzy
 msgid "Steepest descent"
-msgstr "Nejstrmější pokles"
+msgstr "Metoda největšího spádu"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:539
 #: qtplugins/gamessinput/gamessinputdialog.cpp:547
@@ -3024,9 +3019,8 @@ msgid "Toggle Unit Cell"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:52
-#, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Vazební jednotkovou buňku…"
+msgstr "Upravit základní buňku…"
 
 #: qtplugins/crystal/crystal.cpp:57
 #, fuzzy
@@ -3049,7 +3043,7 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
-msgstr "Zmenšit buňku (&titěrná)"
+msgstr "Niggliho &redukce buňky"
 
 #: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:54
 #: qtplugins/plotxrd/plotxrd.cpp:54 qtplugins/spacegroup/spacegroup.cpp:124
@@ -3072,9 +3066,8 @@ msgid "Import Crystal from Clipboard"
 msgstr "Zavést krystal ze schránky"
 
 #: qtplugins/crystal/crystal.cpp:176
-#, fuzzy
 msgid "Wrap atoms into the unit cell."
-msgstr "Zachovat atomy v jednotkové buňce."
+msgstr "Převést atomy do základní buňky."
 
 #: qtplugins/crystal/crystal.cpp:178
 msgid "Rotate the unit cell to the standard orientation."
@@ -3085,9 +3078,8 @@ msgid "Niggli Reduce Crystal"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:220
-#, fuzzy
 msgid "The unit cell is already reduced."
-msgstr "Tato jednotková buňka je již zmenšena."
+msgstr "Základní buňka je již redukovaná."
 
 #: qtplugins/crystal/crystal.h:25
 #, fuzzy
@@ -3390,9 +3382,8 @@ msgid "%1 Force Norm = %L2"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:62
-#, fuzzy
 msgid "Forcefield optimization"
-msgstr "Optimalizace silového pole"
+msgstr "Optimalizace pomocí silového pole"
 
 #: qtplugins/forcefield/forcefield.h:66
 msgid "Forcefield minimization, including scripts"
@@ -3455,11 +3446,11 @@ msgstr "Energie jednoho bodu"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:266
 msgid "Equilibrium Geometry"
-msgstr "Uspořádání rovnováhy"
+msgstr "Rovnovážná geometrie"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:272
 msgid "Transition State"
-msgstr "Stav přechodu"
+msgstr "Přechodový stav"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:275
 msgid "Frequencies"
@@ -3513,11 +3504,11 @@ msgstr "Voda"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:464
 msgid "Singlet"
-msgstr "Jednoelektronová vazebná energie (částice s nulovou vazebnou silou)"
+msgstr "Singlet"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:467
 msgid "Doublet"
-msgstr "Dvousložková spektrální čára"
+msgstr "Dublet"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:470
 msgid "Triplet"
@@ -3809,7 +3800,7 @@ msgstr ""
 #: qtplugins/label/label.cpp:207
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "Parciální náboj"
 
 #: qtplugins/label/label.cpp:222
 msgid "Atom Label:"
@@ -3987,7 +3978,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:208
 msgid "Dihedral:"
-msgstr "Střechan:"
+msgstr "Dihedrální úhel:"
 
 #: qtplugins/measuretool/measuretool.cpp:199
 #: qtplugins/measuretool/measuretool.cpp:215
@@ -5360,9 +5351,8 @@ msgid "Molecular Graph with Lone Pairs…"
 msgstr "Molekulární graf s osamělými páry…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
-#, fuzzy
 msgid "Atomic Charge…"
-msgstr "Atomický náboj…"
+msgstr "Atomový náboj…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "Open WFN File"
@@ -5566,9 +5556,8 @@ msgid "New Layer"
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:60
-#, fuzzy
 msgid "Perceive Space Group…"
-msgstr "Vnímat prostorovou skupinu…"
+msgstr "Určit prostorovou grupu…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
@@ -5596,9 +5585,8 @@ msgid "Fill Translation Cell…"
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
-#, fuzzy
 msgid "Space Group"
-msgstr "Prostorová skupina"
+msgstr "Prostorová grupa"
 
 #: qtplugins/spacegroup/spacegroup.cpp:133
 msgid "Fill symmetric atoms based on the crystal space group."
@@ -5771,7 +5759,6 @@ msgid "Crystal System"
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:729
-#, fuzzy
 msgid "Select Space Group"
 msgstr "Vybrat prostorovou grupu"
 
@@ -5993,7 +5980,7 @@ msgstr "Orbital"
 #: qtplugins/surfaces/orbitaltablemodel.cpp:137
 #: qtplugins/symmetry/symmetry.h:34:2118
 msgid "Symmetry"
-msgstr "Souměrnost"
+msgstr "Symetrie"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
 msgid "Occupation"
@@ -6028,7 +6015,6 @@ msgid "Solvent Excluded"
 msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
-#, fuzzy
 msgid "Molecular Orbital"
 msgstr "Molekulový orbital"
 
@@ -6637,9 +6623,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
-#, fuzzy
 msgid "Partial Charges"
-msgstr "Částečný náboj"
+msgstr "Parciální náboje"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
@@ -6893,7 +6878,7 @@ msgstr "Vypočítat:"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Basis set:"
-msgstr ""
+msgstr "Báze:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:215
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -6990,7 +6975,7 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Super Cell Options"
-msgstr "Volby pro superbunky"
+msgstr "Volby superbuňky"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
@@ -7097,7 +7082,7 @@ msgstr "Textový popisek"
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr "Druh vazby:"
+msgstr "Řád vazby:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -7198,7 +7183,7 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Multiplicity:"
-msgstr "Násobnost:"
+msgstr "Multiplicita:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7208,7 +7193,7 @@ msgstr "Šířka:"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:254
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
-msgstr "Náklad:"
+msgstr "Náboj:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
@@ -7859,7 +7844,7 @@ msgstr "elektron"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_waterPotential)
 msgid "Water Potential"
-msgstr "Potenciální půdní vlhkost"
+msgstr "Model vody"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:157
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -7996,12 +7981,12 @@ msgstr "Určete jméno, které bude použito pro souborové souřadnice."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:292
 #. i18n: ectx: property (text), widget (QLabel, label_readdata)
 msgid "Coordinate Data File"
-msgstr "Koordinovat datový soubor"
+msgstr "Soubor se souřadnicemi"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:306
 #. i18n: ectx: property (text), widget (QLabel, label_therm)
 msgid "Ensemble"
-msgstr "Soubor"
+msgstr "Statistický soubor"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:314
 #. i18n: ectx: property (text), item, widget (QComboBox, ensembleCombo)
@@ -8267,7 +8252,7 @@ msgstr "Y"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Translate by:"
-msgstr "Překlad od:"
+msgstr "Posunout o:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8322,7 +8307,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
 msgid "Conformer Search"
-msgstr "Hledání konformačního izomeru"
+msgstr "Vyhledávání konformerů"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -8331,24 +8316,23 @@ msgstr "Metoda"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Number of conformers:"
-msgstr "Počet konformačních izomerů:"
+msgstr "Počet konformerů:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
 msgid "Systematic rotor search"
-msgstr "Soustavné hledání bodu otáčení"
+msgstr "Systematické prohledávání otočných vazeb"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:47
 #. i18n: ectx: property (text), widget (QRadioButton, randomRadio)
 msgid "Random rotor search"
-msgstr "Náhodné hledání bodu otáčení"
+msgstr "Náhodné prohledávání otočných vazeb"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:54
 #. i18n: ectx: property (text), widget (QRadioButton, weightedRadio)
 msgid "Weighted rotor search"
-msgstr "Zatížené hledání bodu otáčení"
+msgstr "Vážené prohledávání otočných vazeb"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:61
 #. i18n: ectx: property (text), widget (QRadioButton, geneticRadio)
@@ -8434,7 +8418,7 @@ msgstr "Nejstrmější pokles"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Conjugate Gradient"
-msgstr ""
+msgstr "Metoda sdružených gradientů"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -8838,17 +8822,17 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:888
 #. i18n: ectx: property (text), widget (QCheckBox, potentialEnergyCheck)
 msgid "Potential Energy"
-msgstr ""
+msgstr "Potenciální energie"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:898
 #. i18n: ectx: property (text), widget (QCheckBox, kineticEnergyCheck)
 msgid "Kinetic Energy"
-msgstr ""
+msgstr "Kinetická energie"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:908
 #. i18n: ectx: property (text), widget (QCheckBox, totalEnergyCheck)
 msgid "Total Energy"
-msgstr "Celková síla"
+msgstr "Celková energie"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
@@ -9256,9 +9240,8 @@ msgstr "Rozlišení:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:299
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Isosurface Value:"
-msgstr "Hodnota isopovrchu:"
+msgstr "Hodnota izoplochy:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
