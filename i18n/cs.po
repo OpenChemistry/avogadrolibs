@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-07-18 19:20+0000\n"
+"PO-Revision-Date: 2026-07-18 21:19+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -3404,7 +3404,7 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefielddialog.cpp:56
 msgid "Options…"
-msgstr ""
+msgstr "Možnosti…"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:175
 msgid "Invalid Model Options"
@@ -3424,7 +3424,7 @@ msgstr ""
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
 msgid "Autodetect (%1)"
-msgstr ""
+msgstr "Automatický výběr (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:34
 msgid "Universal Force Field"
@@ -4257,7 +4257,6 @@ msgid "Render a few non-covalent interactions."
 msgstr "Vykreslovat několik nekovalentních interakcí."
 
 #: qtplugins/openbabel/openbabel.cpp:54
-#, fuzzy
 msgid "Configure Force Field…"
 msgstr "Nastavit silové pole…"
 
@@ -4266,51 +4265,50 @@ msgid "Conformer Search…"
 msgstr "Vyhledávání konformerů…"
 
 #: qtplugins/openbabel/openbabel.cpp:66
-#, fuzzy
 msgid "Perceive Bonds"
-msgstr "Rozpoznat vazby"
+msgstr "Určit vazby"
 
 #: qtplugins/openbabel/openbabel.cpp:78
-#, fuzzy
 msgid "Add Hydrogens for pH…"
 msgstr "Přidat vodíkové atomy pro pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:84
-#, fuzzy
 msgid "Remove Hydrogens"
 msgstr "Odstranit vodíkové atomy"
 
 #: qtplugins/openbabel/openbabel.cpp:95
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr ""
+msgstr "Nelze nalézt %1! Akce pluginu Open Babel budou zakázány."
 
 #: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
-msgstr ""
+msgstr "&Open Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:120
 msgid "The Open Babel file formats are not ready to be added."
-msgstr ""
+msgstr "Formáty souborů Open Babelu nejsou připraveny k přidání."
 
 #: qtplugins/openbabel/openbabel.cpp:206
 msgid "Loading molecule from Open Babel…"
-msgstr ""
+msgstr "Načítání molekuly z Open Babelu…"
 
 #: qtplugins/openbabel/openbabel.cpp:212
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
+"Došlo k interní chybě: byla volána metoda OpenBabel::readMolecule, ale není "
+"k dispozici žádný výstup obabel, který by bylo možné parsovat!"
 
 #: qtplugins/openbabel/openbabel.cpp:221
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr ""
+msgstr "Při běhu Open Babelu (%1) došlo k chybě."
 
 #: qtplugins/openbabel/openbabel.cpp:231
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "Chyba při parsování výstupu openbabel."
 
 #: qtplugins/openbabel/openbabel.cpp:373 qtplugins/openbabel/openbabel.cpp:401
 #: qtplugins/openbabel/openbabel.cpp:437 qtplugins/openbabel/openbabel.cpp:582
@@ -4322,32 +4320,33 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:428
 msgid "Molecule invalid. Cannot optimize geometry."
-msgstr ""
+msgstr "Molekula je neplatná. Geometrii nelze optimalizovat."
 
 #: qtplugins/openbabel/openbabel.cpp:446
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Geometrii nelze optimalizovat pomocí Open Babelu."
 
 #: qtplugins/openbabel/openbabel.cpp:471
-#, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "Vyladit uspořádání (Open Babel)"
+msgstr "Optimalizace geometrie (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:472 qtplugins/openbabel/openbabel.cpp:625
 msgid "Generating…"
-msgstr ""
+msgstr "Generování…"
 
 #: qtplugins/openbabel/openbabel.cpp:491 qtplugins/openbabel/openbabel.cpp:642
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
+"Při vytváření reprezentace aktuální molekuly pro Open Babel došlo k interní "
+"chybě."
 
 #: qtplugins/openbabel/openbabel.cpp:497 qtplugins/openbabel/openbabel.cpp:648
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
-msgstr ""
+msgstr "Spouštění %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:511 qtplugins/openbabel/openbabel.cpp:519
 #: qtplugins/openbabel/openbabel.cpp:662 qtplugins/openbabel/openbabel.cpp:670
@@ -4357,15 +4356,18 @@ msgid ""
 "Current energy: %3\n"
 "dE: %4"
 msgstr ""
+"Krok %1 z %2\n"
+"Aktuální energie: %3\n"
+"dE: %4"
 
 #: qtplugins/openbabel/openbabel.cpp:533 qtplugins/openbabel/openbabel.cpp:684
 msgid "Updating molecule…"
-msgstr ""
+msgstr "Aktualizace molekuly…"
 
 #: qtplugins/openbabel/openbabel.cpp:541 qtplugins/openbabel/openbabel.cpp:692
 #: qtplugins/openbabel/openbabel.cpp:783 qtplugins/openbabel/openbabel.cpp:965
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Chyba při interpretaci výstupu Open Babelu."
 
 #: qtplugins/openbabel/openbabel.cpp:554 qtplugins/openbabel/openbabel.cpp:705
 #: qtplugins/openbabel/openbabel.cpp:795
@@ -4374,18 +4376,20 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
+"Počet atomů ve výstupu obabel (%1) neodpovídá počtu atomů v původní molekule "
+"(%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:573
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr ""
+msgstr "Molekula je neplatná. Konformery nelze vygenerovat."
 
 #: qtplugins/openbabel/openbabel.cpp:591
 msgid "Cannot generate conformers with Open Babel."
-msgstr ""
+msgstr "Konformery nelze vygenerovat pomocí Open Babelu."
 
 #: qtplugins/openbabel/openbabel.cpp:624
 msgid "Generating Conformers (Open Babel)"
-msgstr ""
+msgstr "Generování konformerů (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:715
 msgid "Generate Conformers"
@@ -4393,121 +4397,118 @@ msgstr "Vygenerovat konformery"
 
 #: qtplugins/openbabel/openbabel.cpp:734
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Soubor nelze otevřít pomocí Open Babelu."
 
 #: qtplugins/openbabel/openbabel.cpp:740
 msgid "Invalid molecule: Cannot perceive bonds."
-msgstr ""
+msgstr "Neplatná molekula: vazby nelze určit."
 
 #: qtplugins/openbabel/openbabel.cpp:746
 msgid "Perceiving Bonds (Open Babel)"
-msgstr ""
+msgstr "Určování vazeb (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:747
 msgid "Generating XYZ representation…"
-msgstr ""
+msgstr "Vytváření reprezentace XYZ…"
 
 #: qtplugins/openbabel/openbabel.cpp:754
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Chyba při vytváření řetězce XYZ."
 
 #: qtplugins/openbabel/openbabel.cpp:765
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr ""
+msgstr "Převod XYZ do Open Babelu pomocí %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:775
 msgid "Updating molecule from Open Babel…"
-msgstr ""
+msgstr "Aktualizace molekuly z Open Babelu…"
 
 #: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:869
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Vodíkové atomy nelze přidat pomocí Open Babelu."
 
 #: qtplugins/openbabel/openbabel.cpp:832 qtplugins/openbabel/openbabel.cpp:882
-#, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "Přidat vodíkové atomy (Open Babel)"
+msgstr "Přidávání vodíkových atomů (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:833
 msgid "Generating Open Babel input…"
-msgstr ""
+msgstr "Vytváření vstupu pro Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:841 qtplugins/openbabel/openbabel.cpp:891
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Chyba při vytváření vstupu pro Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:854 qtplugins/openbabel/openbabel.cpp:904
 #: qtplugins/openbabel/openbabel.cpp:946
 #, qt-format
 msgid "Running %1…"
-msgstr ""
+msgstr "Běží %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:876
-#, fuzzy
 msgid "Add hydrogens for pH"
 msgstr "Přidat vodíkové atomy pro pH"
 
 #: qtplugins/openbabel/openbabel.cpp:876
-#, fuzzy
 msgid "pH:"
 msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:883 qtplugins/openbabel/openbabel.cpp:925
 msgid "Generating obabel input…"
-msgstr ""
+msgstr "Vytváření vstupu pro obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:919
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Vodíkové atomy nelze odstranit pomocí Open Babelu."
 
 #: qtplugins/openbabel/openbabel.cpp:924
-#, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Odstranit vodíkové atomy (Open Babel)"
+msgstr "Odstraňování vodíkových atomů (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:933
 msgid "Error generating Open Babel data."
-msgstr ""
+msgstr "Chyba při vytváření dat Open Babelu."
 
 #: qtplugins/openbabel/openbabel.cpp:956
 msgid "Reading obabel output…"
-msgstr ""
+msgstr "Čtení výstupu obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:1019
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
+"Open Babel již běží. Počkejte na dokončení probíhající operace a zkuste to "
+"znovu."
 
 #: qtplugins/openbabel/openbabel.h:38
 msgid "OpenBabel"
-msgstr ""
+msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:42
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Pracovat s nástroji OpenBabelu."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
-msgstr ""
+msgstr "Skript &OpenMM…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
-msgstr ""
+msgstr "Vstup OpenMM"
 
 #: qtplugins/openmminput/openmminput.h:35
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "Generovat vstup pro OpenMM."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
-#, fuzzy
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
-"Chtěl byste obnovit text náhledu?  Všechny změny provedené v náhledové "
-"tabulce zadávací vrstvy OpenMM budou ztraceny."
+"Chcete aktualizovat text náhledu, čímž ztratíte všechny změny provedené v "
+"podokně náhledu vstupu OpenMM?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -4515,7 +4516,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:933
 #: qtplugins/openmminput/openmminputdialog.cpp:1052
 msgid "inpcrd"
-msgstr ""
+msgstr "inpcrd"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:498
@@ -4523,32 +4524,32 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:942
 #: qtplugins/openmminput/openmminputdialog.cpp:1054
 msgid "gro"
-msgstr ""
+msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:84
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:497:1506
 msgid "input.prmtop"
-msgstr ""
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:499
 msgid "input.top"
-msgstr ""
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:502
 #: qtplugins/openmminput/openmminputdialog.cpp:926
 #: qtplugins/openmminput/openmminputdialog.cpp:1043
 #: qtplugins/openmminput/openmminputdialog.cpp:1050
 msgid "pdb"
-msgstr ""
+msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
-msgstr ""
+msgstr "top"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -5975,7 +5976,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
 #: qtplugins/surfacerender/surfacerender.cpp:274:1761
 msgid "Volume"
-msgstr ""
+msgstr "Objem"
 
 #: qtplugins/surfacerender/surfacerender.cpp:277
 msgid "Style:"
@@ -7146,26 +7147,26 @@ msgstr "Řád vazby:"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
 msgid "Geometry Optimization Parameters"
-msgstr ""
+msgstr "Parametry optimalizace geometrie"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 msgid "Convergence Criteria"
-msgstr ""
+msgstr "Kritéria konvergence"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Energy convergence:"
-msgstr ""
+msgstr "Konvergence energie:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Step limit:"
-msgstr ""
+msgstr "Maximální počet kroků:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:59
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
@@ -7174,7 +7175,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
 msgid " units"
-msgstr ""
+msgstr " jednotek"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:62
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
@@ -7183,7 +7184,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
 msgid "10^"
-msgstr ""
+msgstr "10^"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:78
 #. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
@@ -7194,33 +7195,33 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
 #. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
 msgid " steps"
-msgstr ""
+msgstr " kroků"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Gradient convergence:"
-msgstr ""
+msgstr "Konvergence gradientu:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:126
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "Optimization Method"
-msgstr ""
+msgstr "Metoda optimalizace"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force field:"
-msgstr ""
+msgstr "Silové pole:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:142
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
 msgid "Autodetect"
-msgstr ""
+msgstr "Automatický výběr"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
@@ -8392,7 +8393,7 @@ msgstr "Hledání genetického algoritmu"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
 msgid "Optimization per conformer:"
-msgstr ""
+msgstr "Optimalizace na konformer:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
@@ -8404,7 +8405,7 @@ msgstr "Volby pro genetický algoritm"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:112
 #. i18n: ectx: property (toolTip), widget (QSpinBox, childrenSpinBox)
 msgid "number of children for each parent geometry"
-msgstr ""
+msgstr "počet potomků pro každou rodičovskou geometrii"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8417,31 +8418,29 @@ msgstr "Potomci:"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:138
 #. i18n: ectx: property (toolTip), widget (QSpinBox, mutabilitySpinBox)
 msgid "mutation frequency (lower = more frequent mutations)"
-msgstr ""
+msgstr "četnost mutací (nižší hodnota = častější mutace)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Mutability:"
-msgstr "Proměnitelnost:"
+msgstr "Mutabilita:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:164
 #. i18n: ectx: property (toolTip), widget (QSpinBox, convergenceSpinBox)
 msgid "number of identical generations before convergence is reached"
-msgstr ""
+msgstr "počet shodných generací před dosažením konvergence"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Convergence:"
-msgstr ""
+msgstr "Konvergence:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
 msgid "Scoring method:"
-msgstr "Způsob bodování:"
+msgstr "Metoda hodnocení:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -8449,16 +8448,18 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
+"metoda hodnocení pro genetický algoritmus (RMSD = geometrická vzdálenost, "
+"energie = nejnižší energie)"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Optimization algorithm:"
-msgstr ""
+msgstr "Algoritmus optimalizace:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Line search technique:"
-msgstr ""
+msgstr "Metoda hledání na přímce:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
@@ -8473,247 +8474,242 @@ msgstr "Metoda sdružených gradientů"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Simple"
-msgstr ""
+msgstr "Jednoduchá"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Newton's Method"
-msgstr ""
+msgstr "Newtonova metoda"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
 msgid "Limit Non-Bonded Interactions"
-msgstr ""
+msgstr "Omezit nevazebné interakce"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Van der Waals cutoff distance:"
-msgstr ""
+msgstr "Mezní vzdálenost van der Waalsových interakcí:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Pair update frequency:"
-msgstr ""
+msgstr "Frekvence aktualizace párů:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "electrostatic cutoff distance:"
-msgstr ""
+msgstr "Mezní vzdálenost elektrostatických interakcí:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "Konvergence „energie“:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
 msgid "OpenMM Script Builder"
-msgstr ""
+msgstr "Generátor skriptů OpenMM"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label_jobScript)
 msgid "Job script:"
-msgstr ""
+msgstr "Skript úlohy:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:47
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, jobScriptEdit)
 msgid "script"
-msgstr ""
+msgstr "script"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:54
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 msgid "Input Coords:"
-msgstr ""
+msgstr "Vstupní souřadnice:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:64
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputCoordEdit)
 msgid "input.pdb"
-msgstr ""
+msgstr "input.pdb"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:71
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Input Topology:"
-msgstr ""
+msgstr "Vstupní topologie:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
-#, fuzzy
 msgid "Forcefield:"
 msgstr "Silové pole:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER96"
-msgstr ""
+msgstr "AMBER96"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:104
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb"
-msgstr ""
+msgstr "AMBER99sb"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-ildn"
-msgstr ""
+msgstr "AMBER99sb-ildn"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:114
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-nmr"
-msgstr ""
+msgstr "AMBER99sb-nmr"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:119
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER03"
-msgstr ""
+msgstr "AMBER03"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:124
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER10"
-msgstr ""
+msgstr "AMBER10"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_waterModel)
 msgid "Water Model:"
-msgstr ""
+msgstr "Model vody:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:145
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP3P"
-msgstr ""
+msgstr "TIP3P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:150
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP4P-Ew"
-msgstr ""
+msgstr "TIP4P-Ew"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:155
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP5P"
-msgstr ""
+msgstr "TIP5P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:160
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "Implicit Solvent (OBC)"
-msgstr ""
+msgstr "Implicitní rozpouštědlo (OBC)"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:168
 #. i18n: ectx: property (text), widget (QLabel, label_platform)
 msgid "Platform:"
-msgstr ""
+msgstr "Platforma:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
-#, fuzzy
 msgid "Reference"
-msgstr "Odkaz"
+msgstr "Reference"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "OpenCL"
-msgstr ""
+msgstr "OpenCL"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:186
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "CPU"
-msgstr ""
+msgstr "CPU"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "CUDA"
-msgstr ""
+msgstr "CUDA"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:199
 #. i18n: ectx: property (text), widget (QLabel, label_precision)
 msgid "Precision:"
-msgstr ""
+msgstr "Přesnost:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
-#, fuzzy
 msgid "single"
-msgstr "Jednoduchá"
+msgstr "single"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
 msgid "mixed"
-msgstr ""
+msgstr "mixed"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:217
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
-#, fuzzy
 msgid "double"
-msgstr "Dvojná"
+msgstr "double"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:225
 #. i18n: ectx: property (text), widget (QLabel, label_deviceIndex)
 msgid "Device Index:"
-msgstr ""
+msgstr "Index zařízení:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_openCLIndex)
 msgid "OpenCL Platform Index:"
-msgstr ""
+msgstr "Index platformy OpenCL:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:275
 #. i18n: ectx: property (text), widget (QLabel, label_nonbondedMethod)
 msgid "Nonbonded method:"
-msgstr ""
+msgstr "Metoda nevazebných interakcí:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:283
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "NoCutoff"
-msgstr ""
+msgstr "NoCutoff"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:288
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "CutoffNonPeriodic"
-msgstr ""
+msgstr "CutoffNonPeriodic"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:293
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "CutoffPeriodic"
-msgstr ""
+msgstr "CutoffPeriodic"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:298
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "Ewald"
-msgstr ""
+msgstr "Ewald"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:311
 #. i18n: ectx: property (text), widget (QLabel, label_ewaldTolerance)
 msgid "Ewald Tolerance:"
-msgstr ""
+msgstr "Ewaldova tolerance:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:337
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
-#, fuzzy
 msgid "Constraints:"
 msgstr "Omezení:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "HBonds"
-msgstr ""
+msgstr "HBonds"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:355
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "AllBonds"
-msgstr ""
+msgstr "AllBonds"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:360
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "HAngles"
-msgstr ""
+msgstr "HAngles"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:368
 #. i18n: ectx: property (text), widget (QLabel, label_constraintTolerance)
 msgid "Constraint Tolerance:"
-msgstr ""
+msgstr "Tolerance omezení:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:394
 #. i18n: ectx: property (text), widget (QLabel, label_rigidWater)
 msgid "Rigid water?"
-msgstr ""
+msgstr "Rigidní molekuly vody?"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:407
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -8722,152 +8718,152 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:813
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 msgid "False"
-msgstr ""
+msgstr "False"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:415
 #. i18n: ectx: property (text), widget (QLabel, label_nonBondedCutoff)
 msgid "Nonbonded cutoff:"
-msgstr ""
+msgstr "Mezní vzdálenost nevazebných interakcí:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:444
 #. i18n: ectx: property (text), widget (QLabel, label_randomInitVel)
 msgid "Random initial velocity:"
-msgstr ""
+msgstr "Náhodná počáteční rychlost:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
 msgid "Generation Temp:"
-msgstr ""
+msgstr "Teplota při generování:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
 msgid "Integrator:"
-msgstr ""
+msgstr "Integrátor:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Langevin"
-msgstr ""
+msgstr "Langevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:511
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Verlet"
-msgstr ""
+msgstr "Verlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Brownian"
-msgstr ""
+msgstr "Brownian"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:521
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableLangevin"
-msgstr ""
+msgstr "VariableLangevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:526
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableVerlet"
-msgstr ""
+msgstr "VariableVerlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
 msgid "Error tolerance:"
-msgstr ""
+msgstr "Tolerance chyby:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:586
 #. i18n: ectx: property (text), widget (QLabel, label_collisionRate)
 msgid "Collision rate:"
-msgstr ""
+msgstr "Frekvence srážek:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
 #. i18n: ectx: property (text), widget (QLabel, label_barostat)
 msgid "Barostat:"
-msgstr ""
+msgstr "Barostat:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:645
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
 msgid "Monte Carlo"
-msgstr ""
+msgstr "Monte Carlo"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:653
 #. i18n: ectx: property (text), widget (QLabel, label_pressure)
 msgid "Pressure:"
-msgstr ""
+msgstr "Tlak:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:676
 #. i18n: ectx: property (text), widget (QLabel, label_barostatInterval)
 msgid "Barostat Interval"
-msgstr ""
+msgstr "Interval barostatu"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:703
 #. i18n: ectx: property (text), widget (QLabel, label_reporters)
 msgid "Reporters:"
-msgstr ""
+msgstr "Reportéry:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:710
 #. i18n: ectx: property (text), widget (QCheckBox, stateDataCheck)
 msgid "StateData"
-msgstr ""
+msgstr "StateData"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:720
 #. i18n: ectx: property (text), widget (QCheckBox, dcdCheck)
 msgid "DCD"
-msgstr ""
+msgstr "DCD"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:730
 #. i18n: ectx: property (text), widget (QCheckBox, pdbCheck)
 msgid "PDB"
-msgstr ""
+msgstr "PDB"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
 #. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
 msgid "Report Interval:"
-msgstr ""
+msgstr "Interval reportování:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
 msgid "Equilibration Steps:"
-msgstr ""
+msgstr "Počet ekvilibračních kroků:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
 #. i18n: ectx: property (text), widget (QLabel, label_productionSteps)
 msgid "Production Steps:"
-msgstr ""
+msgstr "Počet produkčních kroků:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:800
 #. i18n: ectx: property (text), widget (QLabel, label_minimize)
 msgid "Minimize?"
-msgstr ""
+msgstr "Minimalizovat?"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
 msgid "Max. Minimize Steps:"
-msgstr ""
+msgstr "Maximální počet kroků minimalizace:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
 msgid "StateData options:"
-msgstr ""
+msgstr "Volby StateData:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
 msgid "Step Index"
-msgstr ""
+msgstr "Index kroku"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
 msgid "Time"
-msgstr ""
+msgstr "Čas"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:868
 #. i18n: ectx: property (text), widget (QCheckBox, speedCheck)
 msgid "Speed"
-msgstr ""
+msgstr "Rychlost"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:878
 #. i18n: ectx: property (text), widget (QCheckBox, progressCheck)
 msgid "Progress"
-msgstr ""
+msgstr "Průběh"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:888
 #. i18n: ectx: property (text), widget (QCheckBox, potentialEnergyCheck)
