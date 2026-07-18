@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-07-18 11:56+0000\n"
+"PO-Revision-Date: 2026-07-18 19:20+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -1210,18 +1210,17 @@ msgstr ""
 
 #: qtgui/layermodel.cpp:172 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
-msgstr "Koule a tyče"
+msgstr "Kuličky a tyčinky"
 
 #: qtgui/layermodel.cpp:174 qtplugins/cartoons/cartoons.h:31
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Předloha"
+msgstr "Schémata"
 
 #: qtgui/layermodel.cpp:176 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "Blízké kontakty"
 
 #: qtgui/layermodel.cpp:178 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
@@ -1232,14 +1231,13 @@ msgid "Force"
 msgstr "Síla"
 
 #: qtgui/layermodel.cpp:182 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
-msgstr "Značka"
+msgstr "Popisky"
 
 #: qtgui/layermodel.cpp:184 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "Tyčinky"
 
 #: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
 #: qtplugins/surfaces/orbitals.cpp:480 qtplugins/surfaces/orbitals.cpp:572
@@ -1249,7 +1247,7 @@ msgstr "Povrchy"
 
 #: qtgui/layermodel.cpp:188 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr ""
+msgstr "Nekovalentní"
 
 #: qtgui/layermodel.cpp:190
 #, fuzzy
@@ -1280,11 +1278,11 @@ msgstr ""
 #: qtgui/layermodel.cpp:200 qtplugins/surfacerender/surfacerender.cpp:273
 #: qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
-msgstr "Drátěná kostra"
+msgstr "Drátkový model"
 
 #: qtgui/layermodel.cpp:202 qtplugins/overlayaxes/overlayaxes.h:28
 msgid "Reference Axes"
-msgstr ""
+msgstr "Referenční osy"
 
 #: qtgui/moleculemodel.cpp:121
 #, fuzzy
@@ -1400,7 +1398,7 @@ msgstr ""
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:264:1861
 msgid "Change Layer"
-msgstr ""
+msgstr "Změnit vrstvu"
 
 #: qtgui/rwmolecule.cpp:43 qtgui/rwmolecule.cpp:52
 msgid "Add Atom"
@@ -1668,10 +1666,9 @@ msgstr "Měnit prvky atomů."
 
 #: qtplugins/aligntool/aligntool.cpp:51 qtplugins/aligntool/aligntool.cpp:94
 msgid "Align"
-msgstr "Zarovnání"
+msgstr "Zarovnat"
 
 #: qtplugins/aligntool/aligntool.cpp:53
-#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1683,11 +1680,11 @@ msgid ""
 msgstr ""
 "Zarovnat molekuly\n"
 "\n"
-"Levé tlačítko myši:\tVybrat až dva atomy.\n"
-"\tPrvní atom je vystředěn při původním.\n"
-"\tDruhý atom je zarovnán vůči vybrané ose.\n"
-"Pravé tlačítko myši:\tNastavit zarovnání znovu.\n"
-"Dvojité klepnutí:\tVystředit atom při původním."
+"Levé tlačítko myši:\tVyberte až dva atomy.\n"
+"\tPrvní atom se umístí do počátku.\n"
+"\tDruhý atom se zarovná podle vybrané osy.\n"
+"Pravé tlačítko myši:\tZrušte zarovnání.\n"
+"Dvojité kliknutí:\tUmístěte atom do počátku."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1697,27 +1694,27 @@ msgstr "Osa:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
-msgstr ""
+msgstr "Zarovnat do počátku"
 
 #: qtplugins/aligntool/aligntool.cpp:193
 msgid "Align to Axis"
-msgstr ""
+msgstr "Zarovnat podle osy"
 
 #: qtplugins/aligntool/aligntool.cpp:295
 msgid "Center the atom at the origin."
-msgstr ""
+msgstr "Umístit atom do počátku."
 
 #: qtplugins/aligntool/aligntool.cpp:298
 msgid "Rotate the molecule to align the atom to the specified axis."
-msgstr ""
+msgstr "Otočit molekulu tak, aby se atom zarovnal podle zadané osy."
 
 #: qtplugins/aligntool/aligntool.h:29
 msgid "Align tool"
-msgstr ""
+msgstr "Nástroj pro zarovnání"
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
-msgstr "Zarovnat molekuly ke kartézským osám"
+msgstr "Zarovnávat molekuly podle kartézské osy"
 
 #: qtplugins/apbs/apbs.cpp:32
 msgid "Run APBS…"
@@ -2050,7 +2047,7 @@ msgstr "Použít barevná schémata pro atomy a rezidua."
 #: qtplugins/applycolors/applycolors.cpp:155 qtplugins/focus/focus.cpp:40
 #: qtplugins/resetview/resetview.cpp:77
 msgid "&View"
-msgstr "&Zobrazit"
+msgstr "&Zobrazení"
 
 #: qtplugins/applycolors/applycolors.cpp:153
 msgid "Color Atoms"
@@ -2236,43 +2233,41 @@ msgstr "Interaktivní optimalizace geometrie molekuly"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
-msgstr ""
+msgstr "Měřítko atomů"
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
 msgid "Bond scale"
-msgstr ""
+msgstr "Měřítko vazeb"
 
 #: qtplugins/ballandstick/ballandstick.cpp:125
 msgid "Opacity"
-msgstr ""
+msgstr "Krytí"
 
 #: qtplugins/ballandstick/ballandstick.cpp:129
 #: qtplugins/wireframe/wireframe.cpp:100
-#, fuzzy
 msgid "Show multiple bonds"
-msgstr "Ukázat násobné vazby"
+msgstr "Zobrazit násobné vazby"
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
 msgid "Show hydrogens"
-msgstr ""
+msgstr "Zobrazit vodíky"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "Vykreslovat atomy jako koule a vazby jako válce."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
-#, fuzzy
 msgid "Bond-Centric Manipulation"
 msgstr "Úpravy zaměřené na vazbu"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2285,28 +2280,26 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
-"Nástroj pro zacházení s vazbami\t(%1)\n"
+"Nástroj pro úpravy zaměřené na vazbu\t(%1)\n"
 "\n"
-"Levé tlačítko myši:\tKlepněte a táhněte pro otočení pohledu\n"
-"Prostřední tlačítko myši:\tKlepněte a táhněte pro přiblížení nebo oddálení\n"
-"Pravé tlačítko myši:\tKlepněte a táhněte pro posunutí pohledu\n"
-"Dvojité klepnutí:\tNastavit pohled znovu\n"
+"Levé tlačítko myši:\tKliknutím a tažením otočíte pohled.\n"
+"Prostřední tlačítko myši:\tKliknutím a tažením pohled přiblížíte nebo "
+"oddálíte.\n"
+"Pravé tlačítko myši:\tKliknutím a tažením posunete pohled.\n"
+"Dvojité kliknutí:\tObnovíte pohled.\n"
 "\n"
-"Klepnutí levým tlačítkem myši & tažení vazby pro nastavení roviny pro "
-"zacházení\n"
-"Klepnutí levým tlačítkem myši & tažení jedním atomem ve vazbě pro změnu "
-"úhlu\n"
-"Klepnutí levým tlačítkem myši & tažení jedním atomem ve vazbě pro změnu délky"
+"Kliknutím na vazbu a tažením levým tlačítkem nastavíte rovinu úprav.\n"
+"Kliknutím na jeden z atomů ve vazbě a tažením levým tlačítkem změníte úhel.\n"
+"Kliknutím na jeden z atomů ve vazbě a tažením pravým tlačítkem změníte délku."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
-#, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Úpravy zaměřené na vazbu."
+msgstr "Nástroj pro úpravy zaměřené na vazbu."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
-msgstr ""
+msgstr "Nástroj k úpravě geometrie molekuly změnou délek a úhlů vazeb."
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
@@ -2354,7 +2347,6 @@ msgid "Perform bonding operations."
 msgstr "Provádět operace s vazbami."
 
 #: qtplugins/cartoons/cartoons.cpp:139
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Backbone"
 msgstr "Páteř"
@@ -2362,38 +2354,36 @@ msgstr "Páteř"
 #: qtplugins/cartoons/cartoons.cpp:140
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr ""
+msgstr "Stopa"
 
 #: qtplugins/cartoons/cartoons.cpp:141
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr ""
+msgstr "Trubice"
 
 #: qtplugins/cartoons/cartoons.cpp:142
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Ribbon"
-msgstr "Stuha"
+msgstr "Stužka"
 
 #: qtplugins/cartoons/cartoons.cpp:143
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr ""
+msgstr "Jednoduché schéma"
 
 #: qtplugins/cartoons/cartoons.cpp:144
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Cartoon"
-msgstr "Předloha"
+msgstr "Schéma"
 
 #: qtplugins/cartoons/cartoons.cpp:145
 msgctxt "protein rendering style"
 msgid "Rope"
-msgstr ""
+msgstr "Lano"
 
 #: qtplugins/cartoons/cartoons.h:36
 msgid "Display of biomolecule ribbons / cartoons."
-msgstr ""
+msgstr "Zobrazení stužek / schémat biomolekul."
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Centroid"
@@ -2419,7 +2409,7 @@ msgstr "Přidávat geometrické a hmotné středy."
 #: qtplugins/closecontacts/closecontacts.cpp:252
 #: qtplugins/noncovalent/noncovalent.cpp:400
 msgid "Maximum distance:"
-msgstr ""
+msgstr "Maximální vzdálenost:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:253
 #: qtplugins/crystal/crystalscene.cpp:147
@@ -2427,23 +2417,23 @@ msgstr ""
 #: qtplugins/surfacerender/surfacerender.cpp:297
 #: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
-msgstr ""
+msgstr "Tloušťka čáry:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:260
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #: qtplugins/closecontacts/closecontacts.cpp:263
 msgid "Salt Bridge"
-msgstr ""
+msgstr "Solný můstek"
 
 #: qtplugins/closecontacts/closecontacts.cpp:266
 msgid "Repulsive"
-msgstr ""
+msgstr "Odpudivé"
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
-msgstr ""
+msgstr "Vykreslovat blízké kontakty mezi atomy."
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
@@ -2959,7 +2949,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:357
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:1026
 msgid "NONE"
-msgstr "ŽÁDNÝ"
+msgstr "Žádný"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
@@ -3176,41 +3166,41 @@ msgstr "Dipólový moment"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "Vykreslovat dipólový moment molekuly."
 
 #: qtplugins/editor/editor.cpp:73
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
 msgstr "Nakreslit"
 
 #: qtplugins/editor/editor.cpp:76
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
 "Right Mouse:\tDelete Atom"
 msgstr ""
-"Nástroj na kreslení\t(%1)\n"
+"Nástroj pro kreslení\t(%1)\n"
 "\n"
-"Levé tlačítko myši:\tKlepnout a táhnout pro vytvoření atomů a vazeb\n"
-"Pravé tlačítko myši:\tSmazat atom"
+"Levé tlačítko myši:\tKliknutím a tažením vytvoříte atomy a vazbu\n"
+"Pravé tlačítko myši:\tOdstraníte atom"
 
 #: qtplugins/editor/editor.cpp:123
 msgid "Draw Atom"
-msgstr "Nakreslit Atom"
+msgstr "Nakreslit atom"
 
 #: qtplugins/editor/editor.cpp:133
 msgid "Change Bond Type"
-msgstr ""
+msgstr "Změnit typ vazby"
 
 #: qtplugins/editor/editor.cpp:146
 msgid "Remove Bond"
-msgstr ""
+msgstr "Odstranit vazbu"
 
 #: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:223
@@ -3220,7 +3210,7 @@ msgstr "Vzdálenost:"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
-msgstr ""
+msgstr "Nástroj pro úpravy"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:217
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
@@ -3245,23 +3235,21 @@ msgstr "Trojná"
 #: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:42
-#, fuzzy
 msgid "&Import"
 msgstr "&Import"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
-#, fuzzy
 msgid "Fetch PDB"
-msgstr "Natáhnout z PDB"
+msgstr "Stáhnout PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr ""
+msgstr "Molekulu z PDB se nepodařilo načíst: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
-msgstr ""
+msgstr "Kód PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:74
@@ -3270,32 +3258,32 @@ msgstr "Chemická struktura ke stažení."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "Neplatný kód PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "Kód PDB musí mít přesně 4 znaky."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "První znak kódu PDB musí být číslice 1–9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:90
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "Vyhledává se %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
 #: qtplugins/networkdatabases/networkdatabases.cpp:101
 #: qtplugins/networkdatabases/networkdatabases.cpp:141
 msgid "Network Download Failed"
-msgstr ""
+msgstr "Stažení ze sítě se nezdařilo"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 msgid "Network timeout or other error."
-msgstr "Vypršení času na síti nebo jiná chyba."
+msgstr "Vypršel časový limit sítě nebo došlo k jiné chybě."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:134
 #: qtplugins/networkdatabases/networkdatabases.cpp:142
@@ -3304,33 +3292,32 @@ msgid "Specified molecule could not be found: %1"
 msgstr "Zadanou molekulu nelze najít: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
-#, fuzzy
 msgid "Fetch from PDB"
-msgstr "Natáhnout z PDB"
+msgstr "Stáhnout z PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
-msgstr ""
+msgstr "Stahovat modely PDB z databáze Protein Data Bank"
 
 #: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
-msgstr ""
+msgstr "Zaměřit na výběr"
 
 #: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
-msgstr ""
+msgstr "Zrušit zaměření"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "Zaměření"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "Zaměřovat pohled na konkrétní objekty."
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
-msgstr ""
+msgstr "Vykreslovat znázornění silového pole pro atomy molekuly."
 
 #: qtplugins/forcefield/forcefield.cpp:88
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
@@ -3595,18 +3582,17 @@ msgstr "Vodíkové atomy"
 
 #: qtplugins/importpqr/importpqr.cpp:25
 msgid "&Search PQR…"
-msgstr ""
+msgstr "&Prohledat PQR…"
 
 #: qtplugins/importpqr/importpqr.h:35
 msgid "Import From PQR"
-msgstr ""
+msgstr "Importovat z PQR"
 
 #: qtplugins/importpqr/importpqr.h:39
 msgid "Download a molecule from PQR."
-msgstr ""
+msgstr "Stahovat molekulu z PQR."
 
 #: qtplugins/insertdna/insertdna.cpp:43
-#, fuzzy
 msgid "DNA/RNA…"
 msgstr "DNA/RNA…"
 
@@ -3657,48 +3643,43 @@ msgid "Generating 3D molecule…"
 msgstr "Generování 3D molekuly…"
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
 msgid "InsertDNA"
 msgstr "Vložit DNA"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
-msgstr ""
+msgstr "Vkládat fragmenty DNA/RNA prostřednictvím dialogu."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
 msgid "Molecule…"
 msgstr "Molekula…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
-#, fuzzy
 msgid "Crystal…"
 msgstr "Krystal…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:112
 #, qt-format
 msgid "Error reading file (%1)."
-msgstr ""
+msgstr "Chyba při čtení souboru (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
 #: qtplugins/insertfragment/insertfragment.cpp:124:398
 msgid "Import Crystal"
-msgstr "Import krystalu"
+msgstr "Importovat krystal"
 
 #: qtplugins/insertfragment/insertfragment.cpp:137
 msgid "Insert Fragment"
 msgstr "Vložit fragment"
 
 #: qtplugins/insertfragment/insertfragment.h:35
-#, fuzzy
 msgid "InsertFragment"
 msgstr "Vložit fragment"
 
 #: qtplugins/insertfragment/insertfragment.h:60
-#, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
-msgstr "Vložit fragmenty molekul pro sestavení větších molekul."
+msgstr "Vkládat molekulární fragmenty při sestavování větších molekul."
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:56
 msgid "Peptide…"
@@ -3789,17 +3770,16 @@ msgid "Color:"
 msgstr "Barva:"
 
 #: qtplugins/label/label.cpp:179
-#, fuzzy
 msgid "Distance from center:"
-msgstr "Vzdálenost od centra:"
+msgstr "Vzdálenost od středu:"
 
 #: qtplugins/label/label.cpp:189
 msgid "Label scale:"
-msgstr ""
+msgstr "Měřítko popisků:"
 
 #: qtplugins/label/label.cpp:200 qtplugins/label/label.cpp:231
 msgid "Index"
-msgstr ""
+msgstr "Index"
 
 #: qtplugins/label/label.cpp:201
 msgid "Unique ID"
@@ -3812,11 +3792,11 @@ msgstr "Prvek"
 
 #: qtplugins/label/label.cpp:203
 msgid "Element & Number"
-msgstr ""
+msgstr "Prvek a číslo"
 
 #: qtplugins/label/label.cpp:205
 msgid "Element & ID"
-msgstr ""
+msgstr "Prvek a ID"
 
 #: qtplugins/label/label.cpp:207
 msgctxt "atomic partial charge"
@@ -3825,41 +3805,41 @@ msgstr "Parciální náboj"
 
 #: qtplugins/label/label.cpp:222
 msgid "Atom Label:"
-msgstr ""
+msgstr "Popisek atomu:"
 
 #: qtplugins/label/label.cpp:230
 msgid "Length"
-msgstr ""
+msgstr "Délka"
 
 #: qtplugins/label/label.cpp:236
 msgid "Bond Label:"
-msgstr ""
+msgstr "Popisek vazby:"
 
 #: qtplugins/label/label.cpp:243 qtplugins/propertytables/propertymodel.cpp:687
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: qtplugins/label/label.cpp:244
 #: qtplugins/packageinstaller/packagemodel.cpp:168
 #: qtplugins/propertytables/propertymodel.cpp:685
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #: qtplugins/label/label.cpp:245
 msgid "Name & ID"
-msgstr ""
+msgstr "Název a ID"
 
 #: qtplugins/label/label.cpp:252
 msgid "Residue Label:"
-msgstr ""
+msgstr "Popisek rezidua:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
-msgstr ""
+msgstr "Zobrazovat popisky v kuličkovém a tyčinkovém stylu."
 
 #: qtplugins/label/labeleditor.cpp:31
 msgid "Edit Labels"
-msgstr ""
+msgstr "Upravit popisky"
 
 #: qtplugins/label/labeleditor.cpp:33
 msgid ""
@@ -3867,35 +3847,37 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"Nástroj pro popisky atomů\n"
+"\n"
+"Levé tlačítko myši:\tKliknutím na atom přidáte vlastní popisek"
 
 #: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
-msgstr ""
+msgstr "Vytvořit popisek"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr ""
+msgstr "Nástroj pro úpravu popisků"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
-#, fuzzy
 msgid "&LAMMPS…"
 msgstr "&LAMMPS…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
-msgstr ""
+msgstr "Vstup LAMMPS"
 
 #: qtplugins/lammpsinput/lammpsinput.h:35
 msgid "Generate input for LAMMPS."
-msgstr ""
+msgstr "Generovat vstup pro LAMMPS."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
 msgstr ""
-"Chcete zaktualizovat text náhledu? Všechny změny provedené v náhledové "
-"tabulce zadávací vrstvy Lammps budou ztraceny."
+"Chcete aktualizovat text náhledu, čímž ztratíte všechny změny provedené v "
+"podokně náhledu vstupu LAMMPS?"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
@@ -3903,11 +3885,11 @@ msgstr ""
 #: qtplugins/surfacerender/surfacerender.cpp:286
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1852
 msgid "Opacity:"
-msgstr "Průhlednost:"
+msgstr "Krytí:"
 
 #: qtplugins/licorice/licorice.h:36
 msgid "Render atoms as licorice / sticks."
-msgstr ""
+msgstr "Vykreslovat atomy v lékořicovém / tyčinkovém stylu."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:32
 msgid "SMILES…"
@@ -3950,11 +3932,11 @@ msgstr ""
 #: qtplugins/manipulator/manipulator.cpp:52
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/manipulator/manipulator.cpp:53
 msgid "Manipulate"
-msgstr "Upravit"
+msgstr "Manipulace"
 
 #: qtplugins/manipulator/manipulator.cpp:55
 #, qt-format
@@ -3969,16 +3951,25 @@ msgid ""
 "Ctrl+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"Nástroj pro manipulaci\t(%1)\n"
+"\n"
+"Levé tlačítko myši:\tKliknutím a tažením atomy přesunete\n"
+"Pravé tlačítko myši:\tKliknutím a tažením atomy otočíte\n"
+"\n"
+"Klávesy se šipkami:\tPosouvání atomů\n"
+"Shift+šipky:\tOtáčení kolem os X/Y\n"
+"Ctrl+šipka vlevo/vpravo:\tOtáčení kolem osy Z\n"
+"Alt+<klávesa>:\tVětší kroky"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
 msgid "Manipulate tool"
-msgstr ""
+msgstr "Nástroj pro manipulaci"
 
 #: qtplugins/measuretool/measuretool.cpp:51
 msgctxt "control-key 8"
 msgid "Ctrl+8"
-msgstr ""
+msgstr "Ctrl+8"
 
 #: qtplugins/measuretool/measuretool.cpp:52
 msgid "Measure"
@@ -3995,6 +3986,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse:\tReset the measurements."
 msgstr ""
+"Nástroj pro měření\t(%1)\n"
+"\n"
+"Levé tlačítko myši:\tVyberte až čtyři atomy.\n"
+"\tVzdálenosti se měří mezi 1–2 a 2–3\n"
+"\tÚhel se měří mezi 1–3, přičemž 2 je společný bod\n"
+"\tDihedrální úhel se měří mezi 1–2–3–4\n"
+"Pravé tlačítko myši:\tZrušte měření."
 
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:208
@@ -4009,7 +4007,7 @@ msgstr "Úhel:"
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
 msgid "Measure tool"
-msgstr ""
+msgstr "Nástroj pro měření"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
@@ -4175,14 +4173,14 @@ msgstr "Exportovat…"
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
 msgid "Ctrl+1"
-msgstr ""
+msgstr "Ctrl+1"
 
 #: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
-msgstr "Pohyb"
+msgstr "Navigace"
 
 #: qtplugins/navigator/navigator.cpp:42
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
@@ -4190,37 +4188,40 @@ msgid ""
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view."
 msgstr ""
-"Nástroj pro pohyb\t(%1)\n"
+"Nástroj pro navigaci\t(%1)\n"
 "\n"
-"Levé tlačítko myši:\tKlepněte a táhněte pro otočení pohledu\n"
-"Prostřední tlačítko myši:\tKlepněte a táhněte pro přiblížení nebo oddálení\n"
-"Pravé tlačítko myši:\tKlepněte a táhněte pro posunutí pohledu."
+"Levé tlačítko myši:\tKliknutím a tažením otočíte pohled.\n"
+"Prostřední tlačítko myši:\tKliknutím a tažením pohled přiblížíte nebo "
+"oddálíte.\n"
+"Pravé tlačítko myši:\tKliknutím a tažením posunete pohled."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "Otočit scénu kolem os x, y nebo z."
 
 #: qtplugins/navigator/navigator.cpp:64
 msgid "Zoom the scene."
-msgstr ""
+msgstr "Přiblížit nebo oddálit scénu."
 
 #: qtplugins/navigator/navigator.cpp:65
 msgid "Translate the scene."
-msgstr ""
+msgstr "Posunout scénu."
 
 #: qtplugins/navigator/navigator.cpp:106
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr ""
+msgstr "Obrátit směr přiblížení při posouvání"
 
 #: qtplugins/navigator/navigator.cpp:108
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
+"Výchozí:\tPosunutím dolů oddálíte, posunutím nahoru přiblížíte\n"
+"Obráceně:\tPosunutím nahoru oddálíte, posunutím dolů přiblížíte"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
-msgstr ""
+msgstr "Nástroj pro navigaci"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:73
 msgid "Chemical Name"
@@ -4229,31 +4230,31 @@ msgstr "Chemický název"
 #: qtplugins/networkdatabases/networkdatabases.cpp:131
 #, qt-format
 msgid "Querying PubChem for %1"
-msgstr ""
+msgstr "Vyhledává se %1 v PubChem"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
-msgstr ""
+msgstr "Síťové databáze"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
-msgstr ""
+msgstr "Pracovat s online databázemi, vyhledávat struktury atd."
 
 #: qtplugins/noncovalent/noncovalent.cpp:399
 msgid "Angle tolerance:"
-msgstr ""
+msgstr "Tolerance úhlu:"
 
 #: qtplugins/noncovalent/noncovalent.cpp:411
 msgid "Halogen"
-msgstr ""
+msgstr "Halogen"
 
 #: qtplugins/noncovalent/noncovalent.cpp:414
 msgid "Chalcogen"
-msgstr ""
+msgstr "Chalkogen"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
-msgstr ""
+msgstr "Vykreslovat několik nekovalentních interakcí."
 
 #: qtplugins/openbabel/openbabel.cpp:54
 #, fuzzy
@@ -4562,7 +4563,7 @@ msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.h:31
 msgid "Render reference axes in the corner of the display."
-msgstr ""
+msgstr "Vykreslovat referenční osy v rohu zobrazení."
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
@@ -4836,16 +4837,16 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:54
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:55
 msgid "Player"
-msgstr ""
+msgstr "Přehrávač"
 
 #: qtplugins/playertool/playertool.cpp:56
 #, qt-format
 msgid "Animation Tool\t(%1)"
-msgstr ""
+msgstr "Nástroj pro animaci\t(%1)"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
@@ -4856,35 +4857,34 @@ msgstr "Snímek:"
 #: qtplugins/playertool/playertool.cpp:116
 msgctxt "start or first frame index"
 msgid "Start:"
-msgstr ""
+msgstr "Začátek:"
 
 #: qtplugins/playertool/playertool.cpp:127
 msgctxt "end or last frame index"
 msgid "End:"
-msgstr ""
+msgstr "Konec:"
 
 #: qtplugins/playertool/playertool.cpp:141
-#, fuzzy
 msgid "Dynamic bonding?"
-msgstr "Dynamické vazby"
+msgstr "Dynamické vazby?"
 
 #: qtplugins/playertool/playertool.cpp:149
 msgid "Frame rate:"
-msgstr ""
+msgstr "Snímková frekvence:"
 
 #: qtplugins/playertool/playertool.cpp:155
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " FPS"
 
 #: qtplugins/playertool/playertool.cpp:163
 #: qtplugins/playertool/playertool.cpp:278
 msgid "Play"
-msgstr ""
+msgstr "Přehrát"
 
 #: qtplugins/playertool/playertool.cpp:168
 msgid "Record…"
-msgstr ""
+msgstr "Zaznamenat…"
 
 #: qtplugins/playertool/playertool.cpp:260
 msgid "Pause"
@@ -4893,15 +4893,15 @@ msgstr "Pozastavit"
 #: qtplugins/playertool/playertool.cpp:335
 #: qtplugins/playertool/playertool.cpp:440
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "Video (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:337
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Exportovat rastrovou grafiku"
 
 #: qtplugins/playertool/playertool.cpp:338
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Video (*.mp4);;Video (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:945
 msgid "GIF (*.gif)"
@@ -4909,16 +4909,15 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:358
 msgid "GIF FPS support warning"
-msgstr ""
+msgstr "Upozornění na omezení FPS u formátu GIF"
 
 #: qtplugins/playertool/playertool.cpp:359
 msgid "The GIF file format does not support frame rates over 100 FPS."
-msgstr ""
+msgstr "Formát GIF nepodporuje snímkovou frekvenci vyšší než 100 FPS."
 
 #: qtplugins/playertool/playertool.cpp:404
-#, fuzzy
 msgid "Movie (*.avi)"
-msgstr "Video soubory (*.avi)"
+msgstr "Video (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:436 qtplugins/surfaces/surfaces.cpp:1019
 msgid "Error: cannot add frame to video."
@@ -4926,11 +4925,11 @@ msgstr "Chyba: snímek nelze přidat do videa."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
-msgstr ""
+msgstr "Nástroj pro přehrávání"
 
 #: qtplugins/playertool/playertool.h:36
 msgid "Play back trajectories"
-msgstr ""
+msgstr "Přehrávat trajektorie"
 
 #: qtplugins/plotconformer/plotconformer.cpp:38
 msgid "Plot Conformer Data…"
@@ -5392,23 +5391,23 @@ msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Center"
-msgstr ""
+msgstr "Vycentrovat"
 
 #: qtplugins/resetview/resetview.cpp:40
 msgid "Align View to Axes"
-msgstr ""
+msgstr "Zarovnat pohled podle os"
 
 #: qtplugins/resetview/resetview.cpp:53
 msgid "Align view to axes."
-msgstr ""
+msgstr "Zarovnat pohled podle os."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
-msgstr ""
+msgstr "Obnovit pohled"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
-msgstr ""
+msgstr "Ovládat kameru zobrazení."
 
 #: qtplugins/scriptcharges/scriptcharges.h:35
 msgid "Script Charge Models"
@@ -5428,118 +5427,113 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
-msgstr ""
+msgstr "Vybrat vše"
 
 #: qtplugins/select/select.cpp:37
 msgid "Select None"
-msgstr ""
+msgstr "Zrušit výběr"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
-msgstr ""
+msgstr "Invertovat výběr"
 
 #: qtplugins/select/select.cpp:53
-#, fuzzy
 msgid "Select by Element…"
-msgstr "Výběr podle prvku…"
+msgstr "Vybrat podle prvku…"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
-msgstr ""
+msgstr "Vybrat podle indexu atomu…"
 
 #: qtplugins/select/select.cpp:63
-#, fuzzy
 msgid "Select by Residue…"
-msgstr "Výběr podle zbytku…"
+msgstr "Vybrat podle rezidua…"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
-msgstr ""
+msgstr "Vybrat atomy páteře…"
 
 #: qtplugins/select/select.cpp:73
 msgid "Select Sidechain Atoms…"
-msgstr ""
+msgstr "Vybrat atomy postranních řetězců…"
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 msgid "Select Water"
-msgstr ""
+msgstr "Vybrat vodu"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
-msgstr ""
+msgstr "Rozšířit výběr"
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 msgid "Shrink Selection"
-msgstr ""
+msgstr "Zmenšit výběr"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "Vytvořit z výběru novou vrstvu"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
-msgstr ""
+msgstr "Měnit výběry"
 
 #: qtplugins/select/select.cpp:127
 msgid "&Select"
-msgstr "&Vybrat"
+msgstr "&Výběr"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
 msgid "Select Element"
-msgstr "Výběr prvku"
+msgstr "Vybrat prvek"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
-msgstr ""
+msgstr "Vybrat páteř"
 
 #: qtplugins/select/select.cpp:308
 msgid "Select Sidechain"
-msgstr ""
+msgstr "Vybrat postranní řetězec"
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "Vybrat atomy podle indexu"
 
 #: qtplugins/select/select.cpp:441
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Atomy k výběru:"
 
 #: qtplugins/select/select.cpp:446
 msgid "Select Atom"
-msgstr ""
+msgstr "Vybrat atom"
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
-msgstr ""
+msgstr "Vybrat atomy podle rezidua"
 
 #: qtplugins/select/select.cpp:486
 msgid "Residues to Select:"
-msgstr ""
+msgstr "Rezidua k výběru:"
 
 #: qtplugins/select/select.cpp:491
-#, fuzzy
 msgid "Select Residue"
-msgstr "Výběr zbytku"
+msgstr "Vybrat reziduum"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:30:2148
-#, fuzzy
 msgid "Select"
-msgstr "Vybrat"
+msgstr "Výběr"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 4"
 msgid "Ctrl+4"
-msgstr ""
+msgstr "Ctrl+4"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
 msgstr "Výběr"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Selection Tool\t(%1)\n"
 "\n"
@@ -5551,25 +5545,25 @@ msgid ""
 msgstr ""
 "Nástroj pro výběr\t(%1)\n"
 "\n"
-"Levé tlačítko myši:\tKlepněte pro výběr jednotlivých atomů, zbytků nebo "
-"fragmentů\n"
-"\tTáhněte pro výběr rozsahu atomů\n"
-"Pravé tlačítko myši:\tKlepněte vně molekuly pro zbavení se výběru\n"
-"Dvojité klepnutí:\tVyberte celý fragment."
+"Levé tlačítko myši:\tKliknutím vyberete jednotlivé atomy, rezidua nebo "
+"fragmenty\n"
+"\tTažením vyberete rozsah atomů\n"
+"Pravé tlačítko myši:\tKliknutím mimo molekulu zrušíte výběr\n"
+"Pomocí Ctrl přepnete výběr a pomocí Shift přidáte položky do výběru.\n"
+"Dvojité kliknutí:\tVyberete celý fragment."
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "Počáteční atom"
+msgstr "Obarvit atomy"
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
 msgid "Selection tool"
-msgstr ""
+msgstr "Nástroj pro výběr"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
-msgstr ""
+msgstr "Nová vrstva"
 
 #: qtplugins/spacegroup/spacegroup.cpp:60
 msgid "Perceive Space Group…"
@@ -6255,7 +6249,7 @@ msgstr "Nástroj šablon"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
-msgstr ""
+msgstr "Jednoduché zobrazení van der Waalsových koulí."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
@@ -6317,7 +6311,7 @@ msgstr ""
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
-msgstr ""
+msgstr "Vykreslovat molekulu jako drátkový model."
 
 #: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
@@ -6528,7 +6522,6 @@ msgstr "Přejmenovat prvky"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
-#, fuzzy
 msgid "Insert Fragment…"
 msgstr "Vložit fragment…"
 
@@ -6536,7 +6529,7 @@ msgstr "Vložit fragment…"
 #. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
 msgid "Type a name or part of a name to show only matching files."
 msgstr ""
-"Zadejte název nebo část názvu, aby se ukázaly pouze odpovídající soubory."
+"Zadejte název nebo jeho část, aby se zobrazily pouze odpovídající soubory."
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
@@ -7262,52 +7255,52 @@ msgstr "Náboj:"
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
 msgid "Import From PQR…"
-msgstr ""
+msgstr "Importovat z PQR…"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
 msgid "Search"
-msgstr ""
+msgstr "Vyhledat"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "name"
-msgstr "Název"
+msgstr "name"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "tag"
-msgstr ""
+msgstr "tag"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "synonym"
-msgstr ""
+msgstr "synonym"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "formula"
-msgstr ""
+msgstr "formula"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "inchi"
-msgstr ""
+msgstr "inchi"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:85
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Search By: "
-msgstr ""
+msgstr "Hledat podle: "
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Formula:"
-msgstr ""
+msgstr "Vzorec:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 msgid "Download"
-msgstr ""
+msgstr "Stáhnout"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -7348,7 +7341,6 @@ msgstr "Adenin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
-#, fuzzy
 msgctxt "adenine (A)"
 msgid "A"
 msgstr "A"
@@ -7360,7 +7352,6 @@ msgstr "Cytosin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
-#, fuzzy
 msgctxt "cytosine (C)"
 msgid "C"
 msgstr "C"
@@ -7372,14 +7363,12 @@ msgstr "Guanin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
-#, fuzzy
 msgctxt "guanine (G)"
 msgid "G"
 msgstr "G"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:82
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_TU)
-#, fuzzy
 msgctxt "thymine (T)"
 msgid "T"
 msgstr "T"
@@ -7423,26 +7412,24 @@ msgstr "Jiná"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Bases Per Turn:"
-msgstr "Párů bází na otočení:"
+msgstr "Bází na závit:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Strands:"
-msgstr "Řetězců:"
+msgstr "Vlákna:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
-#, fuzzy
 msgctxt "single-strand DNA"
 msgid "Single"
-msgstr "Jednoduchá"
+msgstr "Jednovláknová"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
-#, fuzzy
 msgctxt "double-strand DNA"
 msgid "Double"
-msgstr "Dvojná"
+msgstr "Dvouvláknová"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
@@ -7820,21 +7807,21 @@ msgstr "Syndiotaktický"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
 msgid "LAMMPS Input"
-msgstr ""
+msgstr "Vstup LAMMPS"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:37
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:50
 #. i18n: ectx: property (toolTip), widget (QLineEdit, titleLine)
 msgid "Input file comments"
-msgstr ""
+msgstr "Komentáře ve vstupním souboru"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:77
 #. i18n: ectx: property (toolTip), widget (QLabel, label_units)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QComboBox, unitsCombo)
 msgid "Select the unit style to be used during the simulation."
-msgstr "Vyberte typ jednotek, které budou použity při simulaci."
+msgstr "Vyberte soustavu jednotek, která se má při simulaci používat."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:84
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_units)
@@ -7870,7 +7857,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
 msgid "Units"
-msgstr ""
+msgstr "Jednotky"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:111
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
@@ -7880,12 +7867,12 @@ msgstr "lj"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:116
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 msgid "real"
-msgstr "reálný"
+msgstr "real"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:121
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 msgid "metal"
-msgstr "kov"
+msgstr "metal"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:126
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
@@ -7902,7 +7889,7 @@ msgstr "cgs"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:236
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "electron"
-msgstr "elektron"
+msgstr "electron"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_waterPotential)
@@ -7926,7 +7913,7 @@ msgstr "SPC/E"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:197
 #. i18n: ectx: property (toolTip), widget (QComboBox, atomStyleCombo)
 msgid "Select atom_style used by the data file."
-msgstr "Vyberte hodnotu atom_style, který se používá v datovém souboru."
+msgstr "Vyberte atom_style používaný datovým souborem."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:184
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_atomstyle)
@@ -7962,7 +7949,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
 msgid "Atom Style"
-msgstr "Styl atomu"
+msgstr "Styl atomů"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:211
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -8039,12 +8026,12 @@ msgstr "vlnový balík"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:299
 #. i18n: ectx: property (toolTip), widget (QLineEdit, readDataLine)
 msgid "Specify the name to be used for the coordinate file."
-msgstr "Určete jméno, které bude použito pro souborové souřadnice."
+msgstr "Určete název souboru se souřadnicemi."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:292
 #. i18n: ectx: property (text), widget (QLabel, label_readdata)
 msgid "Coordinate Data File"
-msgstr "Soubor se souřadnicemi"
+msgstr "Datový soubor se souřadnicemi"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:306
 #. i18n: ectx: property (text), widget (QLabel, label_therm)
@@ -8075,12 +8062,13 @@ msgstr "Teplota"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:360
 #. i18n: ectx: property (toolTip), widget (QSpinBox, nhChainSpin)
 msgid "Select the number of Nosé-Hoover chains in the NVT ensemble."
-msgstr "Vyberte počet řetězců Nose-Hoovera v NVT souboru."
+msgstr ""
+"Vyberte počet Noséových-Hooverových řetězců ve statistickém souboru NVT."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:353
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "NH Chains"
-msgstr "řetězce NH"
+msgstr "Řetězce NH"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -8092,62 +8080,61 @@ msgstr "řetězce NH"
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, stepSpin)
 msgid ""
 "Time step for the simulation in units according to \"Units\" specification."
-msgstr "Časový krok pro simulaci v jednotkách dle specifikace \"jednotek\"."
+msgstr "Časový krok simulace v jednotkách odpovídajících nastavení „Jednotky“."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Time Step"
-msgstr "Doba kroku"
+msgstr "Časový krok"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:419
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:645
 #. i18n: ectx: property (toolTip), widget (QLineEdit, dumpXYZEdit)
 msgid "Filename of the XYZ file to write during the simulation."
-msgstr "Jméno souboru XYZ pro záznam dat během simulace."
+msgstr "Název souboru XYZ zapisovaného během simulace."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:422
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Dump XYZ"
-msgstr "Vypsat XYZ"
+msgstr "Výpis XYZ"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
 #. i18n: ectx: property (toolTip), widget (QLabel, label_dimension)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:853
 #. i18n: ectx: property (toolTip), widget (QComboBox, dimensionCombo)
 msgid "Number of dimensions in the system."
-msgstr "Počet rozměrů v systému."
+msgstr "Počet rozměrů systému."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:439
 #. i18n: ectx: property (text), widget (QLabel, label_dimension)
 msgid "Dimensions"
-msgstr "Rozměry"
+msgstr "Rozměrnost"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:449
 #. i18n: ectx: property (toolTip), widget (QComboBox, zBoundaryCombo)
 msgid "Change Z boundary style."
-msgstr "Změna hranice stylu pro Z."
+msgstr "Změnit typ okrajové podmínky ve směru Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:489
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
 msgid "Change Y boundary style."
-msgstr "Změna hranice stylu pro Y."
+msgstr "Změnit typ okrajové podmínky ve směru Y."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:529
 #. i18n: ectx: property (toolTip), widget (QComboBox, xBoundaryCombo)
 msgid "Change X boundary style."
-msgstr "Změna hranice stylu pro X."
+msgstr "Změnit typ okrajové podmínky ve směru X."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-#, fuzzy
 msgid "Select boundary Styles in X, Y and Z directions."
-msgstr "Vyberte hraniční styly pole ve směru X, Y a Z."
+msgstr "Vyberte typy okrajových podmínek ve směrech X, Y a Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:572
 #. i18n: ectx: property (text), widget (QLabel, label_boundary)
 msgid "Boundary"
-msgstr "Hranice"
+msgstr "Okrajové podmínky"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:592
 #. i18n: ectx: property (toolTip), widget (QLabel, label_5)
@@ -8157,39 +8144,39 @@ msgstr "Počet kopií ve směrech X, Y a Z."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:595
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Replicate"
-msgstr "kopírování"
+msgstr "Replikace"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:615
 #. i18n: ectx: property (toolTip), widget (QSpinBox, xReplicateSpin)
 msgid "Replicate the X direction."
-msgstr "Směr kopírování X."
+msgstr "Replikovat ve směru X."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:625
 #. i18n: ectx: property (toolTip), widget (QSpinBox, yReplicateSpin)
 msgid "Replicate the Y direction."
-msgstr "Směr kopírování Y."
+msgstr "Replikovat ve směru Y."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:635
 #. i18n: ectx: property (toolTip), widget (QSpinBox, zReplicateSpin)
 msgid "Replicate the Z direction."
-msgstr "Směr kopírování Z."
+msgstr "Replikovat ve směru Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:652
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:662
 #. i18n: ectx: property (toolTip), widget (QSpinBox, runSpin)
 msgid "Total number of timesteps to run the simulation."
-msgstr "Celkový počet časových kroků spustit simulaci."
+msgstr "Celkový počet časových kroků simulace."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:655
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Steps"
-msgstr "Počet kroků"
+msgstr "Celkový počet kroků"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:688
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Dump Interval"
-msgstr "interval záznamu"
+msgstr "Interval výpisu"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:718
 #. i18n: ectx: property (toolTip), widget (QLabel, label_8)
