@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-07-17 08:15+0000\n"
+"PO-Revision-Date: 2026-07-18 08:08+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 #: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Dávková úloha č. %L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
@@ -148,13 +148,13 @@ msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Generátor vstupů (chyba)"
 
 #: molequeue/inputgeneratordialog.cpp:49
 #: qtplugins/quantuminput/quantuminput.cpp:279
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Input Generator"
-msgstr "%1 Tvůrce vstupu"
+msgstr "Generátor vstupů pro %1"
 
 #: molequeue/inputgeneratorwidget.cpp:123
 msgid "Continue"
@@ -203,28 +203,47 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Byl změněn následující soubor:\n"
+"\n"
+"%1\n"
+"\n"
+"Chcete přepsat své změny tak, aby odpovídaly nové geometrii nebo novým "
+"možnostem úlohy?"
 msgstr[1] ""
+"Byly změněny následující soubory:\n"
+"\n"
+"%1\n"
+"\n"
+"Chcete přepsat své změny tak, aby odpovídaly nové geometrii nebo novým "
+"možnostem úlohy?"
+msgstr[2] ""
+"Byly změněny následující soubory:\n"
+"\n"
+"%1\n"
+"\n"
+"Chcete přepsat své změny tak, aby odpovídaly nové geometrii nebo novým "
+"možnostem úlohy?"
 
 #: molequeue/inputgeneratorwidget.cpp:178
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Přepsat změněné vstupní soubory?"
 
 #: molequeue/inputgeneratorwidget.cpp:204
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Při generování vstupu došlo k problémům:"
 
 #: molequeue/inputgeneratorwidget.cpp:293
 msgid "No input files to save!"
-msgstr ""
+msgstr "Nejsou žádné vstupní soubory k uložení!"
 
 #: molequeue/inputgeneratorwidget.cpp:301
 #: molequeue/inputgeneratorwidget.cpp:609 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:980
 #: qtplugins/gamessinput/gamessinputdialog.cpp:917
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Nelze se připojit k MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:302
 #: molequeue/inputgeneratorwidget.cpp:610 molequeue/molequeuewidget.cpp:70
@@ -234,48 +253,52 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Nelze se připojit k serveru MoleQueue. Ujistěte se, že je spuštěný, a zkuste "
+"to znovu."
 
 #: molequeue/inputgeneratorwidget.cpp:333
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Odeslat výpočet %1"
 
 #: molequeue/inputgeneratorwidget.cpp:349
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1017
 #: qtplugins/gamessinput/gamessinputdialog.cpp:954
 msgid "Job Failed"
-msgstr ""
+msgstr "Úloha selhala"
 
 #: molequeue/inputgeneratorwidget.cpp:350
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1018
 #: qtplugins/gamessinput/gamessinputdialog.cpp:955
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Úloha nebyla úspěšně dokončena."
 
 #: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:62
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Skript vrací varování:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:384
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Skrýt &varování"
 
 #: molequeue/inputgeneratorwidget.cpp:390
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Zobrazit &varování"
 
 #: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:78
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Došlo k chybě:"
 
 #: molequeue/inputgeneratorwidget.cpp:458
 msgid "Select output filename"
-msgstr ""
+msgstr "Vyberte název výstupního souboru"
 
 #: molequeue/inputgeneratorwidget.cpp:470
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
+"Interní chyba: nepodařilo se najít textový ovládací prvek pro název souboru "
+"„%1“"
 
 #: molequeue/inputgeneratorwidget.cpp:486
 #: molequeue/inputgeneratorwidget.cpp:597
@@ -288,7 +311,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:452
 #: qtplugins/openmminput/openmminputdialog.cpp:466
 msgid "Output Error"
-msgstr ""
+msgstr "Chyba výstupu"
 
 #: molequeue/inputgeneratorwidget.cpp:487
 #: molequeue/inputgeneratorwidget.cpp:598
@@ -300,27 +323,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Do souboru %1 se nepodařilo zapsat."
 
 #: molequeue/inputgeneratorwidget.cpp:498
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
-msgstr ""
+msgstr "Vyberte výstupní adresář"
 
 #: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: Adresář neexistuje!"
 
 #: molequeue/inputgeneratorwidget.cpp:521
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Adresář nelze číst!"
 
 #: molequeue/inputgeneratorwidget.cpp:531
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -329,7 +352,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Soubor bude přepsán."
 
 #: molequeue/inputgeneratorwidget.cpp:536
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -338,13 +361,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Do souboru nelze zapisovat."
 
 #: molequeue/inputgeneratorwidget.cpp:549
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "Vstupní soubory nelze zapsat kvůli neznámé chybě."
 
 #: molequeue/inputgeneratorwidget.cpp:553
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -355,6 +378,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Vstupní soubory nelze zapsat:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:562
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -369,6 +395,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Vstupní soubory nelze zapsat:\n"
+"\n"
+"%1\n"
+"\n"
+"Varování:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:573
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -381,80 +414,87 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Varování:\n"
+"\n"
+"%1\n"
+"\n"
+"Chcete pokračovat?"
 
 #: molequeue/inputgeneratorwidget.cpp:577
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Zapsat vstupní soubory"
 
 #: molequeue/inputgeneratorwidget.cpp:624
 msgid "Configure Job"
-msgstr ""
+msgstr "Nastavit úlohu"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Odesílá se úloha do MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Vypršel časový limit odeslání úlohy"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Avogadru při čekání na odpověď od MoleQueue vypršel časový limit."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Čeká se na dokončení úlohy %1 „%2“…"
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
-msgstr ""
+msgstr "Přestat čekat"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Načítají se informace o dokončené úloze…"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Vypršel časový limit načtení úlohy"
 
 #: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Avogadru při čekání na podrobnosti o dokončené úloze z MoleQueue vypršel "
+"časový limit."
 
 #: molequeue/molequeuedialog.cpp:129
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Chyba při odesílání úlohy"
 
 #: molequeue/molequeuedialog.cpp:130
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "MoleQueue odmítl úlohu: %1"
 
 #: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
-msgstr ""
+msgstr "Není vybrán žádný program."
 
 #: molequeue/molequeuedialog.cpp:198 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
-msgstr ""
+msgstr "Vyberte cílový program ze seznamu „Fronta a program“."
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Klientovi se nepodařilo odeslat úlohu do MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "Interní chyba."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "Nepodařilo se určit vybraný program. Jde o softwarovou chybu."
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
@@ -1161,7 +1201,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:975 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
-msgstr ""
+msgstr "[žádná molekula]"
 
 #: qtgui/layermodel.cpp:118
 #, qt-format
@@ -1382,9 +1422,8 @@ msgid "Adjust Hydrogens"
 msgstr "Upravit Vodíky"
 
 #: qtgui/rwmolecule.cpp:147 qtplugins/alchemy/alchemy.cpp:74
-#, fuzzy
 msgid "Change Elements"
-msgstr "Změnit prvek"
+msgstr "Změnit prvky"
 
 #: qtgui/rwmolecule.cpp:159
 msgid "Change Element"
@@ -1442,16 +1481,15 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:433
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Přidat základní buňku…"
 
 #: qtgui/rwmolecule.cpp:445
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Odstranit jednotkovou buňku"
+msgstr "Odstranit základní buňku"
 
 #: qtgui/rwmolecule.cpp:541
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Upravit základní buňku"
 
 #: qtgui/rwmolecule.cpp:557
 #, fuzzy
@@ -1459,9 +1497,8 @@ msgid "Wrap Atoms to Cell"
 msgstr "Zabalit atomy do buňky"
 
 #: qtgui/rwmolecule.cpp:580
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Změnit velikost objemu jednotkové buňky"
+msgstr "Změnit objem základní buňky"
 
 #: qtgui/rwmolecule.cpp:600
 msgid "Build Super Cell"
@@ -1476,22 +1513,21 @@ msgid "Rotate to Standard Orientation"
 msgstr "Otočit do obvyklého natočení"
 
 #: qtgui/rwmolecule.cpp:675 qtplugins/spacegroup/spacegroup.cpp:66
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "Zmenšit na základní buňku"
+msgstr "Redukovat na primitivní buňku"
 
 #: qtgui/rwmolecule.cpp:709 qtplugins/spacegroup/spacegroup.cpp:72
 #: qtplugins/spacegroup/spacegroup.cpp:472
 msgid "Conventionalize Cell"
-msgstr ""
+msgstr "Převést na konvenční buňku"
 
 #: qtgui/rwmolecule.cpp:743 qtplugins/spacegroup/spacegroup.cpp:500
 msgid "Symmetrize Cell"
-msgstr ""
+msgstr "Symetrizovat základní buňku"
 
 #: qtgui/rwmolecule.cpp:770
 msgid "Fill Unit Cell"
-msgstr "Vyplnit jednotkovou buňku"
+msgstr "Vyplnit základní buňku"
 
 #: qtgui/rwmolecule.cpp:786
 msgid "Fill Translational Copies"
@@ -1600,7 +1636,7 @@ msgstr ""
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "Změnit prvky…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:62
 #: qtplugins/centroid/centroid.cpp:45
@@ -1624,11 +1660,11 @@ msgstr "Prvek:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "Alchymie"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Měnit prvky atomů."
 
 #: qtplugins/aligntool/aligntool.cpp:51 qtplugins/aligntool/aligntool.cpp:94
 msgid "Align"
@@ -1698,7 +1734,7 @@ msgstr ""
 #: qtplugins/quantuminput/quantuminput.cpp:80
 #: qtplugins/quantuminput/quantuminput.cpp:322
 msgid "&Input"
-msgstr ""
+msgstr "&Vstup"
 
 #: qtplugins/apbs/apbs.cpp:50
 msgid "&APBS"
@@ -1708,7 +1744,7 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinput.cpp:75
 #: qtplugins/quantuminput/quantuminput.cpp:136
 msgid "Open Output File"
-msgstr ""
+msgstr "Otevřít výstupní soubor"
 
 #: qtplugins/apbs/apbs.cpp:63
 msgid "OpenDX File (*.dx)"
@@ -1874,9 +1910,8 @@ msgid "By Chain"
 msgstr "řetězce"
 
 #: qtplugins/applycolors/applycolors.cpp:78
-#, fuzzy
 msgid "By Partial Charge…"
-msgstr "Částečný náboj…"
+msgstr "Podle parciálního náboje…"
 
 #: qtplugins/applycolors/applycolors.cpp:83
 #, fuzzy
@@ -2273,49 +2308,48 @@ msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Vytvořit vazby mezi atomy"
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Perceive Bond Orders"
-msgstr ""
+msgstr "Určit řády vazeb"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
-msgstr ""
+msgstr "Odstranit vazby"
 
 #: qtplugins/bonding/bonding.cpp:31
 msgid "Configure Bonding…"
-msgstr ""
+msgstr "Nastavit vytváření vazeb…"
 
 #: qtplugins/bonding/bonding.cpp:32
 msgid "Bond Selected Atoms"
-msgstr ""
+msgstr "Vytvořit vazby mezi vybranými atomy"
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/propertytables/propertymodel.cpp:678
-#, fuzzy
 msgid "Bond"
 msgstr "Vazba"
 
 #: qtplugins/bonding/bonding.cpp:73
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "Odstranit vazby ze všech nebo vybraných atomů."
 
 #: qtplugins/bonding/bonding.cpp:75
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "Vytvořit vazby mezi všemi nebo vybranými atomy."
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Perceive bond orders."
-msgstr ""
+msgstr "Určit řády vazeb."
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
-msgstr ""
+msgstr "Vazby"
 
 #: qtplugins/bonding/bonding.h:34
 msgid "Perform bonding operations."
-msgstr ""
+msgstr "Provádět operace s vazbami."
 
 #: qtplugins/cartoons/cartoons.cpp:139
 #, fuzzy
@@ -2361,24 +2395,24 @@ msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Centroid"
-msgstr ""
+msgstr "Přidat geometrický střed"
 
 #: qtplugins/centroid/centroid.cpp:22
 msgid "Add Center of Mass"
-msgstr "Přidat střed hmoty"
+msgstr "Přidat hmotný střed"
 
 #: qtplugins/centroid/centroid.cpp:24
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr ""
+msgstr "Přidat kolmý bod"
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
-msgstr ""
+msgstr "Geometrický střed"
 
 #: qtplugins/centroid/centroid.h:28
 msgid "Add centroids and center-of-mass."
-msgstr ""
+msgstr "Přidávat geometrické a hmotné středy."
 
 #: qtplugins/closecontacts/closecontacts.cpp:252
 #: qtplugins/noncovalent/noncovalent.cpp:400
@@ -2441,39 +2475,44 @@ msgid ""
 "Error reading output file '%1':\n"
 "%2"
 msgstr ""
+"Chyba při čtení výstupního souboru „%1“:\n"
+"%2"
 
 #: qtplugins/commandscripts/command.cpp:202
 msgid "Command In Progress"
-msgstr ""
+msgstr "Probíhá zpracování příkazu"
 
 #: qtplugins/commandscripts/command.cpp:203
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
 msgstr ""
+"Již běží příkazový skript. Před spuštěním dalšího počkejte na jeho dokončení."
 
 #: qtplugins/commandscripts/command.cpp:333
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "Zpracovává se %1"
 
 #: qtplugins/commandscripts/command.cpp:407
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Nastavit cestu k interpretu Pythonu:"
 
 #: qtplugins/commandscripts/command.cpp:409
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Vyberte interpret Pythonu pro spouštění externích skriptů.\n"
+"Aby se změny projevily, je nutné Avogadro restartovat."
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Command scripts"
-msgstr ""
+msgstr "Příkazové skripty"
 
 #: qtplugins/commandscripts/command.h:51
 msgid "Run external script commands"
-msgstr ""
+msgstr "Spouštět externí skriptové příkazy"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
@@ -2481,24 +2520,24 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:34:201 rc.cpp:216
 msgid "Python Settings…"
-msgstr ""
+msgstr "Nastavení Pythonu…"
 
 #: qtplugins/configurepython/configurepython.cpp:58
 msgid "Install Python"
-msgstr ""
+msgstr "Instalace Pythonu"
 
 #: qtplugins/configurepython/configurepython.cpp:59
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
-msgstr ""
+msgstr "Python se používá pro mnoho funkcí Avogadra. Chcete Python stáhnout?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "Nastavení Pythonu"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Nastavení prostředí Pythonu."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:482
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2513,35 +2552,33 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:458
 #: qtplugins/templatetool/templatetoolwidget.cpp:466
 #: qtplugins/templatetool/templatetoolwidget.cpp:531:2295
-#, fuzzy
 msgid "Other…"
-msgstr "jiné…"
+msgstr "Jiné…"
 
 #: qtplugins/constraints/constraintsextension.cpp:22
 msgid "Constraints…"
-msgstr ""
+msgstr "Omezení…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:233
-#, fuzzy
 msgid "&Calculate"
-msgstr "Vypočítat"
+msgstr "&Výpočty"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
 #: qtplugins/constraints/constraintsextension.h:27:226
 msgid "Constraints"
-msgstr ""
+msgstr "Omezení"
 
 #: qtplugins/constraints/constraintsextension.h:31
 msgid "Set constraints for geometry optimizations"
-msgstr ""
+msgstr "Nastavení omezení pro optimalizace geometrie"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:60:235
 msgid "Distance"
-msgstr ""
+msgstr "Vzdálenost"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2553,27 +2590,27 @@ msgstr "Úhel"
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:64:241
 msgid "Torsion Angle"
-msgstr ""
+msgstr "Torzní úhel"
 
 #: qtplugins/constraints/constraintsmodel.cpp:68
 msgctxt "fix / remain constant"
 msgid "Freeze Atom"
-msgstr ""
+msgstr "Zmrazit atom"
 
 #: qtplugins/constraints/constraintsmodel.cpp:70
 msgctxt "fix / remain constant"
 msgid "Freeze X Axis"
-msgstr ""
+msgstr "Zmrazit osu X"
 
 #: qtplugins/constraints/constraintsmodel.cpp:72
 msgctxt "fix / remain constant"
 msgid "Freeze Y Axis"
-msgstr ""
+msgstr "Zmrazit osu Y"
 
 #: qtplugins/constraints/constraintsmodel.cpp:74
 msgctxt "fix / remain constant"
 msgid "Freeze Z Axis"
-msgstr ""
+msgstr "Zmrazit osu Z"
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
 #: qtplugins/propertytables/propertymodel.cpp:664
@@ -2585,98 +2622,91 @@ msgstr "Typ"
 
 #: qtplugins/constraints/constraintsmodel.cpp:129
 msgid "Value"
-msgstr ""
+msgstr "Hodnota"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
 #: qtplugins/propertytables/propertymodel.cpp:709
 #: qtplugins/propertytables/propertymodel.cpp:726
-#, fuzzy
 msgid "Atom 1"
 msgstr "Atom 1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
 #: qtplugins/propertytables/propertymodel.cpp:728
-#, fuzzy
 msgid "Atom 2"
 msgstr "Atom 2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
 #: qtplugins/propertytables/propertymodel.cpp:713
 #: qtplugins/propertytables/propertymodel.cpp:730
-#, fuzzy
 msgid "Atom 3"
 msgstr "Atom 3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
 #: qtplugins/propertytables/propertymodel.cpp:732
-#, fuzzy
 msgid "Atom 4"
 msgstr "Atom 4"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
-#, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Editor pro souřadnice…"
+msgstr "Editor atomových &souřadnic…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "Editor pro souřadnice"
+msgstr "Editor souřadnic"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
-msgstr ""
+msgstr "Textová úprava atomových souřadnic."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:228
 msgid "Overwrite changes?"
-msgstr ""
+msgstr "Přepsat změny?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:229
 msgid ""
 "The text document has been modified. Would you like to discard your changes "
 "and revert to the current molecule?"
 msgstr ""
+"Textový dokument byl změněn. Chcete změny zahodit a vrátit se k aktuální "
+"molekule?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:356
 msgid "Too few entries on line."
-msgstr ""
+msgstr "Na řádku je příliš málo položek."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:372
 msgid "Invalid element name."
-msgstr ""
+msgstr "Neplatný název prvku."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:374
-#, fuzzy
 msgid "Element name."
 msgstr "Název prvku."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
 msgid "Invalid element symbol."
-msgstr ""
+msgstr "Neplatná značka prvku."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
-#, fuzzy
 msgid "Element symbol."
-msgstr "Symbol prvku."
+msgstr "Značka prvku."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
-msgstr ""
+msgstr "Neplatné označení atomu."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
-msgstr ""
+msgstr "Neplatný index atomu."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
-#, fuzzy
 msgid "Atomic index."
-msgstr "Atomové indexy."
+msgstr "Index atomu."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
-msgstr ""
+msgstr "Neplatné protonové číslo."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:434
 msgid "Atomic number."
@@ -2689,38 +2719,35 @@ msgstr "Protonové číslo."
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:487
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:498
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "Neplatná souřadnice."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:445
-#, fuzzy
 msgid "X coordinate."
-msgstr "X Souřadnice."
+msgstr "Souřadnice x."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:456
-#, fuzzy
 msgid "Y coordinate."
-msgstr "Y Souřadnice."
+msgstr "Souřadnice y."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:467
-#, fuzzy
 msgid "Z coordinate."
-msgstr "Z Souřadnice."
+msgstr "Souřadnice z."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:478
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "Mřížková souřadnice „a“."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:489
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "Mřížková souřadnice „b“."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
 msgid "'c' lattice coordinate."
-msgstr ""
+msgstr "Mřížková souřadnice „c“."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
-msgstr ""
+msgstr "Chyba při použití geometrie"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:585
 msgid ""
@@ -2729,10 +2756,14 @@ msgid ""
 "\n"
 "(Hint: Hold the mouse over red text for a description of the error.)"
 msgstr ""
+"Specifikaci geometrie se nepodařilo zpracovat. Opravte zvýrazněné chyby a "
+"zkuste to znovu.\n"
+"\n"
+"(Tip: Umístěním ukazatele myši nad červený text zobrazíte popis chyby.)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:620
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "Upravit atomové souřadnice"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:254
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -2746,47 +2777,45 @@ msgstr "Vlastní"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
 msgid "XYZ format (symbols)"
-msgstr ""
+msgstr "Formát XYZ (značky)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:640
 msgid "XYZ format (names)"
-msgstr ""
+msgstr "Formát XYZ (názvy)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:641
 msgid "XYZ format (atomic numbers)"
-msgstr ""
+msgstr "Formát XYZ (protonová čísla)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:642
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Mřížkové souřadnice (značky)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:643
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Mřížkové souřadnice (názvy)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:644
 msgid "Lattice coordinates (atomic numbers)"
-msgstr ""
+msgstr "Mřížkové souřadnice (protonová čísla)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:646
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "Formát GAMESS (značky)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:647
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "Formát GAMESS (názvy)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:648
-#, fuzzy
 msgid "Turbomole format"
-msgstr "Vstup Turbomole"
+msgstr "Formát Turbomole"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:568:296
-#, fuzzy
 msgid "Copy"
 msgstr "Kopírovat"
 
@@ -2794,7 +2823,7 @@ msgstr "Kopírovat"
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:35:293
 msgid "Cut"
-msgstr ""
+msgstr "Vyjmout"
 
 #: qtplugins/copypaste/copypaste.cpp:36
 msgid "Delete"
@@ -3016,16 +3045,15 @@ msgstr "Zavést krystal ze schránky…"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Přidat nebo odstranit základní buňku"
 
 #: qtplugins/crystal/crystal.cpp:52
 msgid "Edit Unit Cell…"
 msgstr "Upravit základní buňku…"
 
 #: qtplugins/crystal/crystal.cpp:57
-#, fuzzy
 msgid "&Wrap Atoms to Unit Cell"
-msgstr "&Zabalit atomy do buňky"
+msgstr "&Převést atomy do základní buňky"
 
 #: qtplugins/crystal/crystal.cpp:63
 #, fuzzy
@@ -3033,13 +3061,12 @@ msgid "Rotate to Standard &Orientation"
 msgstr "&Otočit do obvyklého natočení"
 
 #: qtplugins/crystal/crystal.cpp:69
-#, fuzzy
 msgid "Scale Cell &Volume…"
-msgstr "Změnit velikost buňky k &objemu…"
+msgstr "Z&měnit objem základní buňky…"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
-msgstr ""
+msgstr "Vytvořit &superbuňku…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -3048,17 +3075,16 @@ msgstr "Niggliho &redukce buňky"
 #: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:54
 #: qtplugins/plotxrd/plotxrd.cpp:54 qtplugins/spacegroup/spacegroup.cpp:124
 #: qtplugins/spacegroup/spacegroup.cpp:126
-#, fuzzy
 msgid "&Crystal"
-msgstr "Krystal"
+msgstr "&Krystal"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
-msgstr "Odstranit &jednotkovou buňku"
+msgstr "Odstranit základní &buňku"
 
 #: qtplugins/crystal/crystal.cpp:156
 msgid "Add &Unit Cell"
-msgstr "Přidat &jednotkovou buňku"
+msgstr "Přidat základní &buňku"
 
 #: qtplugins/crystal/crystal.cpp:169
 #, fuzzy
@@ -3071,15 +3097,15 @@ msgstr "Převést atomy do základní buňky."
 
 #: qtplugins/crystal/crystal.cpp:178
 msgid "Rotate the unit cell to the standard orientation."
-msgstr ""
+msgstr "Otočit základní buňku do standardní orientace."
 
 #: qtplugins/crystal/crystal.cpp:219
 msgid "Niggli Reduce Crystal"
-msgstr ""
+msgstr "Niggliho redukce krystalu"
 
 #: qtplugins/crystal/crystal.cpp:220
 msgid "The unit cell is already reduced."
-msgstr "Základní buňka je již redukovaná."
+msgstr "Základní buňka již splňuje podmínky Niggliho redukce."
 
 #: qtplugins/crystal/crystal.h:25
 #, fuzzy
@@ -3121,7 +3147,7 @@ msgstr ""
 #: qtplugins/crystal/unitcelldialog.cpp:292
 #: qtplugins/crystal/unitcelldialog.cpp:303:419
 msgid "Unit Cell Editor"
-msgstr ""
+msgstr "Editor základní buňky"
 
 #: qtplugins/crystal/unitcelldialog.cpp:282
 #: qtplugins/crystal/unitcelldialog.cpp:293
@@ -3134,15 +3160,15 @@ msgstr ""
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
-msgstr ""
+msgstr "Znovu přiřadit &vlastní prvky…"
 
 #: qtplugins/customelements/customelements.cpp:30
 msgid "Manipulate custom element types in the current molecule."
-msgstr ""
+msgstr "Upravovat vlastní typy prvků v aktuální molekule."
 
 #: qtplugins/customelements/customelements.h:24
 msgid "Custom Elements"
-msgstr ""
+msgstr "Vlastní prvky"
 
 #: qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
@@ -3310,7 +3336,7 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:150
 msgid "Forces"
-msgstr ""
+msgstr "Síly"
 
 #: qtplugins/forcefield/forcefield.cpp:96
 #, fuzzy
@@ -3426,23 +3452,20 @@ msgid "Merck Molecular Force Field 94"
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
-#, fuzzy
 msgid "&GAMESS…"
 msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
-#, fuzzy
 msgid "GAMESS input"
 msgstr "Vstup GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
-msgstr ""
+msgstr "Generovat vstup pro GAMESS."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:263
-#, fuzzy
 msgid "Single Point"
-msgstr "Energie jednoho bodu"
+msgstr "Jednobodový výpočet"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:266
 msgid "Equilibrium Geometry"
@@ -3454,11 +3477,11 @@ msgstr "Přechodový stav"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:275
 msgid "Frequencies"
-msgstr "Kmitočty"
+msgstr "Frekvence"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:278
 msgid "Make EFP"
-msgstr "Provést EFP"
+msgstr "Vytvořit EFP"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:404
 msgid "Core Potential"
@@ -3520,7 +3543,7 @@ msgstr "Dikationt"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:488
 msgid "Cation"
-msgstr "Kationt (klaný iont)"
+msgstr "Kationt"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:491
 msgid "Neutral"
@@ -3528,7 +3551,7 @@ msgstr "Neutrální částice"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:494
 msgid "Anion"
-msgstr "Aniont (záporně nabitý iont)"
+msgstr "Aniont"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:497
 msgid "Dianion"
@@ -3536,38 +3559,35 @@ msgstr "Dianiont"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:888
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "Uložit vstupní soubor GAMESS"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:938
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "Odeslat výpočet GAMESS"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
-#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr "Upravit Vodíky"
+msgstr "&Upravit vodíkové atomy"
 
 #: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:72
 msgid "Add Hydrogens"
 msgstr "Přidat vodíkové atomy"
 
 #: qtplugins/hydrogens/hydrogens.cpp:32
-#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr "Odstranit vodíkové atomy"
+msgstr "Odstranit &přebytečné vodíkové atomy"
 
 #: qtplugins/hydrogens/hydrogens.cpp:37
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "O&dstranit všechny vodíkové atomy"
 
 #: qtplugins/hydrogens/hydrogens.cpp:47
 msgid "Add/remove hydrogens from the current molecule."
-msgstr ""
+msgstr "Přidávat a odstraňovat vodíkové atomy z aktuální molekuly."
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
-#, fuzzy
 msgid "&Hydrogens"
-msgstr "Vodíkové atomy"
+msgstr "&Vodíkové atomy"
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -4240,9 +4260,8 @@ msgid "Configure Force Field…"
 msgstr "Nastavit silové pole…"
 
 #: qtplugins/openbabel/openbabel.cpp:60
-#, fuzzy
 msgid "Conformer Search…"
-msgstr "Hledání konformačního izomeru…"
+msgstr "Vyhledávání konformerů…"
 
 #: qtplugins/openbabel/openbabel.cpp:66
 #, fuzzy
@@ -4367,9 +4386,8 @@ msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:715
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Konformační izomer"
+msgstr "Vygenerovat konformery"
 
 #: qtplugins/openbabel/openbabel.cpp:734
 msgid "Cannot open file with Open Babel."
@@ -5122,9 +5140,8 @@ msgid "End Atom"
 msgstr "Koncový atom"
 
 #: qtplugins/propertytables/propertymodel.cpp:670
-#, fuzzy
 msgid "Bond Order"
-msgstr "Druh vazby"
+msgstr "Řád vazby"
 
 #: qtplugins/propertytables/propertymodel.cpp:674
 #, fuzzy
@@ -5236,7 +5253,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
-msgstr ""
+msgstr "Vlastnosti konformerů…"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 #, fuzzy
@@ -5267,7 +5284,7 @@ msgstr "Vlastnosti zkroucení"
 
 #: qtplugins/propertytables/propertyview.cpp:58
 msgid "Conformer Properties"
-msgstr "Vlastnosti konformačního izomeru"
+msgstr "Vlastnosti konformerů"
 
 #: qtplugins/propertytables/propertyview.cpp:61
 msgid "Residue Properties"
@@ -5563,26 +5580,25 @@ msgstr "Určit prostorovou grupu…"
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:78:2133
 msgid "Symmetrize"
-msgstr ""
+msgstr "Symetrizovat"
 
 #: qtplugins/spacegroup/spacegroup.cpp:83
 #: qtplugins/spacegroup/spacegroup.cpp:580
 msgid "Reduce to Asymmetric Unit"
-msgstr "Redukovat na Asymetrickou jednotku"
+msgstr "Redukovat na asymetrickou jednotku"
 
 #: qtplugins/spacegroup/spacegroup.cpp:89
 msgid "Set Tolerance…"
-msgstr ""
+msgstr "Nastavit toleranci…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:95
-#, fuzzy
 msgid "Fill Unit Cell…"
-msgstr "Vyplnit jednotkovou buňku…"
+msgstr "Vyplnit základní buňku…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:101
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
-msgstr ""
+msgstr "Doplnit translační kopie…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
@@ -5599,7 +5615,7 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:394
 #: qtplugins/spacegroup/spacegroup.cpp:422
 msgid "Perceive Space Group"
-msgstr ""
+msgstr "Určení prostorové grupy"
 
 #: qtplugins/spacegroup/spacegroup.cpp:395
 #, qt-format
@@ -5607,6 +5623,8 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"Aktuálně nastavená prostorová grupa: %1.\n"
+"Chcete ji přepsat?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:411
 #, qt-format
@@ -5617,23 +5635,27 @@ msgid ""
 "Hall symbol: %3\n"
 "International symbol: %4"
 msgstr ""
+"Prostorová grupa byla úspěšně určena:\n"
+"Tolerance: %1  Å\n"
+"Prostorová grupa: %2\n"
+"Hallův symbol: %3\n"
+"Mezinárodní symbol: %4"
 
 #: qtplugins/spacegroup/spacegroup.cpp:428
 msgid "Failure"
-msgstr ""
+msgstr "Neúspěch"
 
 #: qtplugins/spacegroup/spacegroup.cpp:429
-#, fuzzy
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
-"Vnímání prostorové skupiny se nezdařilo:\n"
-"Chtěl byste to zkusit znovu s jinou povolenou odchylkou?"
+"Prostorovou grupu se nepodařilo určit.\n"
+"Chcete to zkusit znovu s jinou tolerancí?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:444
 msgid "Primitive Reduction"
-msgstr ""
+msgstr "Redukce na primitivní buňku"
 
 #: qtplugins/spacegroup/spacegroup.cpp:445
 #: qtplugins/spacegroup/spacegroup.cpp:473
@@ -5643,24 +5665,32 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"Aktuálně nastavená tolerance: %1.\n"
+"Pokračovat s touto tolerancí?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:461
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Redukce na primitivní buňku se nezdařila.\n"
+"Zkontrolujte krystal a zkuste to znovu s jinou tolerancí."
 
 #: qtplugins/spacegroup/spacegroup.cpp:489
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Převod na konvenční buňku se nezdařil.\n"
+"Zkontrolujte krystal a zkuste to znovu s jinou tolerancí."
 
 #: qtplugins/spacegroup/spacegroup.cpp:515
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Symetrizace se nezdařila.\n"
+"Zkontrolujte krystal a zkuste to znovu s jinou tolerancí."
 
 #: qtplugins/spacegroup/spacegroup.cpp:569
 #, qt-format
@@ -5673,6 +5703,12 @@ msgid ""
 "\n"
 "Proceed with this space group?"
 msgstr ""
+"Při toleranci %1  Å byla určena tato prostorová grupa:\n"
+"Mezinárodní číslo: %2\n"
+"Hallův symbol: %3\n"
+"Mezinárodní symbol: %4\n"
+"\n"
+"Pokračovat s touto prostorovou grupou?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:600 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
@@ -5683,49 +5719,49 @@ msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:601
 msgid "Select tolerance in Å:"
-msgstr ""
+msgstr "Zvolte toleranci v Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:618
 msgid "Triclinic"
-msgstr ""
+msgstr "Triklinická"
 
 #: qtplugins/spacegroup/spacegroup.cpp:620
 #: qtplugins/spacegroup/spacegroup.cpp:769
 msgid "Monoclinic"
-msgstr ""
+msgstr "Monoklinická"
 
 #: qtplugins/spacegroup/spacegroup.cpp:622
 #: qtplugins/spacegroup/spacegroup.cpp:766
 msgid "Orthorhombic"
-msgstr ""
+msgstr "Rombická"
 
 #: qtplugins/spacegroup/spacegroup.cpp:624
 #: qtplugins/spacegroup/spacegroup.cpp:762
 msgid "Tetragonal"
-msgstr ""
+msgstr "Tetragonální"
 
 #: qtplugins/spacegroup/spacegroup.cpp:626
 msgid "Trigonal"
-msgstr ""
+msgstr "Trigonální"
 
 #: qtplugins/spacegroup/spacegroup.cpp:628
 #: qtplugins/spacegroup/spacegroup.cpp:764
 msgid "Rhombohedral"
-msgstr ""
+msgstr "Romboedrická"
 
 #: qtplugins/spacegroup/spacegroup.cpp:630
 #: qtplugins/spacegroup/spacegroup.cpp:760
 msgid "Hexagonal"
-msgstr ""
+msgstr "Hexagonální"
 
 #: qtplugins/spacegroup/spacegroup.cpp:632
 #: qtplugins/spacegroup/spacegroup.cpp:758
 msgid "Cubic"
-msgstr ""
+msgstr "Kubická"
 
 #: qtplugins/spacegroup/spacegroup.cpp:664
 msgid "Primitive Cell Detected"
-msgstr ""
+msgstr "Detekována primitivní buňka"
 
 #: qtplugins/spacegroup/spacegroup.cpp:666
 #, qt-format
@@ -5737,10 +5773,16 @@ msgid ""
 "\n"
 "Would you like to create a conventional cell first?"
 msgstr ""
+"Aktuální základní buňka se jeví jako primitivní (úhly odlišné od 90°), ale "
+"prostorová grupa %1 předpokládá centrovanou konvenční buňku.\n"
+"\n"
+"Vyplnění základní buňky může vytvořit neočekávané duplicitní atomy.\n"
+"\n"
+"Chcete ji nejprve převést na konvenční buňku?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:680
 msgid "Failed to conventionalize the cell."
-msgstr ""
+msgstr "Převod na konvenční buňku se nezdařil."
 
 #: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "International"
@@ -5756,20 +5798,19 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:697
 msgid "Crystal System"
-msgstr ""
+msgstr "Krystalová soustava"
 
 #: qtplugins/spacegroup/spacegroup.cpp:729
 msgid "Select Space Group"
-msgstr "Vybrat prostorovou grupu"
+msgstr "Výběr prostorové grupy"
 
 #: qtplugins/spacegroup/spacegroup.h:24
-#, fuzzy
 msgid "SpaceGroup"
-msgstr "Prostorová skupina"
+msgstr "Prostorová grupa"
 
 #: qtplugins/spacegroup/spacegroup.h:87
 msgid "Space group features for crystals."
-msgstr ""
+msgstr "Funkce prostorových grup pro krystaly."
 
 #: qtplugins/spectra/spectra.cpp:29
 msgid "Plot Spectra…"
@@ -6156,9 +6197,8 @@ msgid "Class"
 msgstr ""
 
 #: qtplugins/symmetry/symmetry.cpp:39
-#, fuzzy
 msgid "Symmetry…"
-msgstr "Souměrnost…"
+msgstr "Symetrie…"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
@@ -6379,7 +6419,7 @@ msgstr "Formulář"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 msgid "Calculation Settings"
-msgstr ""
+msgstr "Nastavení výpočtu"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -6393,12 +6433,12 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:982
 #. i18n: ectx: property (text), widget (QPushButton, resetButton)
 msgid "Reset"
-msgstr ""
+msgstr "Obnovit"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:93
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
 msgid "Debug Script…"
-msgstr ""
+msgstr "Ladit skript…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -6407,24 +6447,24 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:366
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
-msgstr ""
+msgstr "Odeslat výpočet…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save Input…"
-msgstr ""
+msgstr "Uložit vstup…"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Queue and Program:"
-msgstr ""
+msgstr "Fronta a program:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:33
 #. i18n: ectx: property (text), widget (QPushButton, refreshButton)
 msgid "Refresh"
-msgstr ""
+msgstr "Obnovit"
 
 #. i18n: file: molequeue/molequeuewidget.ui:85
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
@@ -6432,11 +6472,13 @@ msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
 msgstr ""
+"<html><head/><body><p>Počet procesorových jader, která se mají vyhradit pro "
+"tuto úlohu.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Processor cores:"
-msgstr ""
+msgstr "Procesorová jádra:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:125
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -6445,11 +6487,14 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>Po dokončení úlohy odstranit vzdálené pracovní "
+"soubory. Výsledky se však nejprve zkopírují do místní mezipaměti úloh "
+"MoleQueue.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Delete remote files when finished:"
-msgstr ""
+msgstr "Po dokončení odstranit vzdálené soubory:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:145
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -6457,11 +6502,13 @@ msgid ""
 "<html><head/><body><p>Check to prevent this job from showing up in the "
 "MoleQueue GUI by default.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Zaškrtnutím se tato úloha ve výchozím nastavení nebude "
+"zobrazovat v grafickém rozhraní MoleQueue.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Hide job in MoleQueue:"
-msgstr ""
+msgstr "Skrýt úlohu v MoleQueue:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:158
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -6469,21 +6516,23 @@ msgid ""
 "<html><head/><body><p>Show a system popup notification when the job's status "
 "changes.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Při změně stavu úlohy zobrazit systémové vyskakovací "
+"oznámení.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Show progress notifications:"
-msgstr ""
+msgstr "Zobrazovat oznámení o průběhu:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, openOutputLabel)
 msgid "Open output when finished:"
-msgstr ""
+msgstr "Po dokončení otevřít výstup:"
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
 msgid "Rename Elements"
-msgstr ""
+msgstr "Přejmenovat prvky"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
@@ -6634,12 +6683,12 @@ msgstr ""
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Distance Tolerance:"
-msgstr ""
+msgstr "Tolerance vzdálenosti:"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Minimum Distance:"
-msgstr ""
+msgstr "Minimální vzdálenost:"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:29
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -6648,16 +6697,19 @@ msgid ""
 "Would you like to create a new environment for Avogadro?\n"
 "This will make a copy of your base environment.\n"
 msgstr ""
+"Existuje pouze prostředí conda „base“.\n"
+"Chcete vytvořit nové prostředí pro Avogadro?\n"
+"Tím se vytvoří kopie vašeho prostředí „base“.\n"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment name:"
-msgstr ""
+msgstr "Název prostředí:"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:45
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, environmentName)
 msgid "avogadro"
-msgstr ""
+msgstr "avogadro"
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -6665,11 +6717,13 @@ msgid ""
 "Select the Python version used to run scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Vyberte verzi Pythonu používanou ke spouštění skriptů.\n"
+"Aby se změny projevily, je nutné Avogadro restartovat."
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment:"
-msgstr ""
+msgstr "Prostředí:"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:33
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
@@ -6680,19 +6734,18 @@ msgstr "Přidat omezení"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:287
 #. i18n: ectx: property (text), widget (QLabel, typeLabel)
-#, fuzzy
 msgid "Type:"
 msgstr "Typ:"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:74
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Atom Indices:"
-msgstr ""
+msgstr "Indexy atomů:"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:113
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Value:"
-msgstr ""
+msgstr "Hodnota:"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, addConstraint)
@@ -6702,22 +6755,22 @@ msgstr "Přidat"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:167
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "Options"
-msgstr ""
+msgstr "Možnosti"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:200
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
 msgid "Get Constraint"
-msgstr ""
+msgstr "Získat omezení"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:219
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
 msgid "Delete Selected"
-msgstr ""
+msgstr "Odstranit vybrané"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:226
 #. i18n: ectx: property (text), widget (QPushButton, deleteAllConstraints)
 msgid "Delete All"
-msgstr ""
+msgstr "Odstranit vše"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:233
 #. i18n: ectx: property (text), widget (QPushButton, okButton)
@@ -6727,22 +6780,22 @@ msgstr "OK"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
 msgid "Coordinate Editor"
-msgstr ""
+msgstr "Editor souřadnic"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Preset:"
-msgstr ""
+msgstr "Předvolba:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Distance Unit:"
-msgstr ""
+msgstr "Jednotka vzdálenosti:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
 msgid "Angstrom"
-msgstr ""
+msgstr "ångström"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
@@ -6780,25 +6833,45 @@ msgid ""
 "for optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Specifikace formátu. Každý znak označuje hodnotu, "
+"která se má zapsat pro každý atom:</p><p><span style=\" font-weight:600;\">"
+"#</span> - Index atomu (1, 2, ..., numAtoms)<br/><span style=\" font-"
+"weight:600;\">Z</span> - Protonové číslo (např. \"6\" pro uhlík)<br/><span "
+"style=\" font-weight:600;\">G</span> - Protonové číslo ve stylu GAMESS "
+"(např. \"6.0\" pro uhlík)<br/><span style=\" font-weight:600;\">N</span> - "
+"Název prvku (např. \"Carbon\")<br/><span style=\" font-weight:600;\">S</"
+"span> - Značka prvku (např. \"C\" pro uhlík)<br/><span style=\" font-"
+"weight:700;\">L</span> - Označení atomu (např. \"C2\" pro druhý atom uhlíku, "
+"\"H1\" pro první atom vodíku) <br/><span style=\" font-weight:600;\">x</"
+"span> - Polohová souřadnice x<br/><span style=\" font-weight:600;\">y</"
+"span> - Polohová souřadnice y<br/><span style=\" font-weight:600;\">z</"
+"span> - Polohová souřadnice z<br/><span style=\" font-weight:600;\">a</"
+"span> - Mřížková souřadnice „a“ (pouze pro krystaly)<br/><span style=\" font-"
+"weight:600;\">b</span> - Mřížková souřadnice „b“ (pouze pro krystaly)<br/>"
+"<span style=\" font-weight:600;\">c</span> - Mřížková souřadnice „c“ (pouze "
+"pro krystaly)<br/><span style=\" font-weight:600;\">_</span> - Doslovná "
+"mezera (\" \"), užitečná pro zarovnání<br/><span style=\" font-weight:600;\">"
+"0</span> - Doslovná 0 (\"0\"), užitečná pro příznaky optimalizace<br/><span "
+"style=\" font-weight:600;\">1</span> - Doslovná 1 (\"1\"), užitečná pro "
+"příznaky optimalizace<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
 msgid "Help…"
-msgstr ""
+msgstr "Nápověda…"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 msgid "Paste"
-msgstr ""
+msgstr "Vložit"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:135
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "Revert"
-msgstr ""
+msgstr "Vrátit"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#, fuzzy
 msgid "Clear"
 msgstr "Vymazat"
 
@@ -6824,13 +6897,12 @@ msgstr "Obnovit vše"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:343
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
-msgstr "Výchozí"
+msgstr "Výchozí hodnoty"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:373
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
 msgid "Save File…"
 msgstr "Uložit soubor…"
 
@@ -6857,7 +6929,7 @@ msgstr "Název:"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Filename Base:"
-msgstr ""
+msgstr "Základ názvu souboru:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -6935,7 +7007,7 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "MAX SCF"
-msgstr ""
+msgstr "Max. SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:505
 #. i18n: ectx: property (text), widget (QLabel, label_14)
@@ -7057,7 +7129,7 @@ msgstr "&Skrýt"
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::VolumeScalingDialog)
 msgid "Scale Unit Cell Volume"
-msgstr "Změnit velikost objemu jednotkové buňky"
+msgstr "Změna objemu základní buňky"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7178,7 +7250,7 @@ msgstr "V:"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:107
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "CONV THRESH"
-msgstr ""
+msgstr "Práh konvergence"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -7188,7 +7260,7 @@ msgstr "Multiplicita:"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
-msgstr "Šířka:"
+msgstr "Pomocí:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:254
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -8413,7 +8485,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Steepest Descent"
-msgstr "Nejstrmější pokles"
+msgstr "Metoda největšího spádu"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
