@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-07-19 12:15+0000\n"
+"PO-Revision-Date: 2026-07-20 13:01+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -780,7 +780,7 @@ msgstr "Cer"
 
 #: qtgui/elementtranslator.cpp:191
 msgid "Praseodymium"
-msgstr "Praseodymi"
+msgstr "Praseodym"
 
 #: qtgui/elementtranslator.cpp:194
 msgid "Neodymium"
@@ -3515,7 +3515,7 @@ msgstr "Jaderný potenciál"
 #: qtplugins/label/label.cpp:199 qtplugins/label/label.cpp:229
 #: qtplugins/label/label.cpp:242:1605 rc.cpp:1688 rc.cpp:2033
 msgid "None"
-msgstr "Není"
+msgstr "Nic"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
 msgid "D1"
@@ -4945,7 +4945,7 @@ msgstr "Video (*.mp4);;Video (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:945
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:358
 msgid "GIF FPS support warning"
@@ -5290,13 +5290,12 @@ msgstr ""
 "úhlů."
 
 #: qtplugins/propertytables/propertytables.h:29
-#, fuzzy
 msgid "PropertyTables"
-msgstr "Vlastnosti"
+msgstr "Tabulky vlastností"
 
 #: qtplugins/propertytables/propertyview.cpp:46
 msgid "Atom Properties"
-msgstr "Vlastnosti atomu"
+msgstr "Vlastnosti atomů"
 
 #: qtplugins/propertytables/propertyview.cpp:49
 msgid "Bond Properties"
@@ -5619,7 +5618,7 @@ msgstr "Vyplnit základní buňku…"
 #: qtplugins/spacegroup/spacegroup.cpp:101
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
-msgstr "Doplnit translační kopie…"
+msgstr "Vyplnit translační buňku…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
@@ -6010,7 +6009,7 @@ msgstr "Styl:"
 
 #: qtplugins/surfacerender/surfacerender.h:33
 msgid "Render molecular surfaces."
-msgstr "Vykreslovat molekulární povrchy."
+msgstr "Vykreslovat molekulové povrchy."
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
@@ -6114,15 +6113,15 @@ msgstr "Vykreslit van der Waalsův povrch."
 
 #: qtplugins/surfaces/surfaces.cpp:120
 msgid "Render the van der Waals molecular surface."
-msgstr "Vykreslit molekulární van der Waalsův povrch."
+msgstr "Vykreslit van der Waalsův molekulový povrch."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the solvent-accessible molecular surface."
-msgstr "Vykreslit molekulární povrch přístupný rozpouštědlu."
+msgstr "Vykreslit molekulový povrch přístupný rozpouštědlu."
 
 #: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render the solvent-excluded molecular surface."
-msgstr "Vykreslit molekulární povrch vyloučený rozpouštědlem."
+msgstr "Vykreslit molekulový povrch vyloučený rozpouštědlem."
 
 #: qtplugins/surfaces/surfaces.cpp:125 qtplugins/surfaces/surfaces.cpp:126
 msgid "Render a molecular orbital."
@@ -6157,7 +6156,7 @@ msgstr "Výpočet spinové hustoty"
 #: qtplugins/surfaces/surfaces.cpp:655
 #, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr "Výpočet molekulárního orbitalu %L1"
+msgstr "Výpočet molekulového orbitalu %L1"
 
 #: qtplugins/surfaces/surfaces.cpp:911
 msgctxt "finished rendering surface or molecular orbital"
@@ -6341,7 +6340,7 @@ msgstr "Vykreslovat molekulu jako drátkový model."
 
 #: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
-msgstr ""
+msgstr "Vypočítat pásovou strukturu…"
 
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
@@ -6643,7 +6642,7 @@ msgstr "SWANSON"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:114
 #. i18n: ectx: property (text), widget (QPushButton, runPdb2PqrButton)
 msgid "Run PDB2PQR"
-msgstr ""
+msgstr "Spustit PDB2PQR"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:123
 #. i18n: ectx: property (text), widget (QRadioButton, loadFromPqrButton)
@@ -6898,7 +6897,7 @@ msgstr "Použít"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Cp2kInputDialog)
 msgid "CP2K Input"
-msgstr ""
+msgstr "Vstup CP2K"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
@@ -7414,7 +7413,7 @@ msgstr "Sekvence:"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:150
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, bpTurnsSpin)
 msgid "the number of base pairs per helix turn"
-msgstr "počet základních párů na otočení šroubovice"
+msgstr "počet párů bází na závit šroubovice"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
@@ -7675,7 +7674,7 @@ msgstr "Aminokyseliny:"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:270
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Sequence (N to C):"
-msgstr "Posloupnost (N k C):"
+msgstr "Sekvence (N → C):"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:280
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7707,12 +7706,12 @@ msgstr "Přímý řetězec"
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:373
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "α Helix"
-msgstr ""
+msgstr "α-šroubovice"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:378
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "β Sheet"
-msgstr ""
+msgstr "β-skládaný list"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:383
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
@@ -7985,27 +7984,27 @@ msgstr "Styl atomů"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:211
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "angle"
-msgstr "úhel"
+msgstr "angle"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:216
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "atomic"
-msgstr "atomový"
+msgstr "atomic"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:221
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "bond"
-msgstr "vazba"
+msgstr "bond"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:226
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "charge"
-msgstr "náboj"
+msgstr "charge"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:231
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "dipole"
-msgstr "dipól"
+msgstr "dipole"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:241
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -8015,12 +8014,12 @@ msgstr "elipsoid"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:246
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "full"
-msgstr "plný"
+msgstr "full"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:251
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "line"
-msgstr "čára"
+msgstr "line"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:256
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -8030,7 +8029,7 @@ msgstr "meso"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:261
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "molecular"
-msgstr "molekulární"
+msgstr "molecular"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:266
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -8040,7 +8039,7 @@ msgstr "peri"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:271
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "sphere"
-msgstr "koule"
+msgstr "sphere"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:276
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -8050,7 +8049,7 @@ msgstr "tri"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:281
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "wavepacket"
-msgstr "vlnový balík"
+msgstr "wavepacket"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:289
 #. i18n: ectx: property (toolTip), widget (QLabel, label_readdata)
@@ -8212,7 +8211,7 @@ msgstr "Interval výpisu"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:718
 #. i18n: ectx: property (toolTip), widget (QLabel, label_8)
 msgid "Set the initial atom velocities for the simulation."
-msgstr "Nastavte počáteční rychlost atomu pro simulaci."
+msgstr "Nastavte počáteční rychlosti atomů pro simulaci."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:721
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -8227,39 +8226,39 @@ msgstr "Výběr rozložení počátečních rychlostí atomů."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:732
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
 msgid "gaussian"
-msgstr "gaussovo"
+msgstr "gaussian"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:737
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
 msgid "uniform"
-msgstr "homogenní"
+msgstr "uniform"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:745
 #. i18n: ectx: property (toolTip), widget (QLabel, label_9)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:755
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, velocityTempSpin)
 msgid "Set the initial atom velocities to match this temperature."
-msgstr "Nastavte počáteční rychlost atomu tak, aby odpovídala této teplotě."
+msgstr "Nastavte počáteční rychlosti atomů tak, aby odpovídaly této teplotě."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:774
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroMOMCheck)
 msgid "Remove system linear momentum from initial velocities."
-msgstr "Odstranit lineární hybnost systému z počátečních rychlostí."
+msgstr "Odstraňte z počátečních rychlostí lineární hybnost systému."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:777
 #. i18n: ectx: property (text), widget (QCheckBox, zeroMOMCheck)
 msgid "Zero Linear Momentum"
-msgstr "nulová hybnost"
+msgstr "Vynulovat lineární hybnost"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:787
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroLCheck)
 msgid "Remove system angular momentum from initial velocities."
-msgstr "Odstraňte hybnost systému z počátečních rychlostí."
+msgstr "Odstraňte z počátečních rychlostí moment hybnosti systému."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:790
 #. i18n: ectx: property (text), widget (QCheckBox, zeroLCheck)
 msgid "Zero Angular Momentum"
-msgstr "Nulový moment hybnosti"
+msgstr "Vynulovat moment hybnosti"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:813
 #. i18n: ectx: property (toolTip), widget (QLabel, label_10)
@@ -8358,17 +8357,17 @@ msgstr "Střed výběru"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "X-axis"
-msgstr "X-osy"
+msgstr "Osa X"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:199
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Y-axis"
-msgstr "Y-osy"
+msgstr "Osa Y"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:206
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Z-axis"
-msgstr "Z-osy"
+msgstr "Osa Z"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -9022,7 +9021,7 @@ msgstr "Poloměr kritického bodu:"
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, bondRadiusLabel)
 msgid "Bond Path Radius:"
-msgstr "Poloměr vazební cesty:"
+msgstr "Poloměr vazebné cesty:"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:130
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_radius)
@@ -9032,7 +9031,7 @@ msgstr "Kovalentní"
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:135
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_radius)
 msgid "Constant Size"
-msgstr "Stálá velikost"
+msgstr "Konstantní velikost"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:21
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -9178,7 +9177,7 @@ msgstr "Vypočtená spektra:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "Raw Spectra:"
-msgstr ""
+msgstr "Nezpracovaná spektra:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
@@ -9290,7 +9289,7 @@ msgstr "Vytvořit povrchy"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Surface:"
-msgstr ""
+msgstr "Povrch:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
@@ -9417,7 +9416,7 @@ msgstr "Velmi volná"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:248
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
 msgid "Detect Symmetry"
-msgstr "Detekovat symetrii"
+msgstr "Určit symetrii"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:42
 #. i18n: ectx: attribute (title), widget (QWidget, centersTab)
@@ -9783,21 +9782,22 @@ msgid "Your names"
 msgstr ""
 ",Launchpad Contributions:,Vaclav Rehak,Vojtěch Trefný, ,Launchpad "
 "Contributions:,Vaclav Rehak,Vojtěch Trefný,milboy, ,Launchpad "
-"Contributions:,Avogadro Team,fri, ,Launchpad Contributions:,Avogadro "
-"Team,Geoff Hutchison,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Roman Horník,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Roman Horník,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Roman Horník,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Roman Horník,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Roman Horník,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Roman Horník,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Roman Horník,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Roman Horník,Zbyněk Schwarz,fri, ,Launchpad "
-"Contributions:,Avogadro Team,Geoff Hutchison,Pepa,Roman Horník,Zbyněk "
-"Schwarz,Zdeněk Chalupský,fri, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison,Pepa,Roman Horník,Zbyněk Schwarz,Zdeněk Chalupský,fri, ,Launchpad "
-"Contributions:,Avogadro Team,Geoff Hutchison,Martin Slavík,Pepa,Roman "
-"Horník,Zbyněk Schwarz,Zdeněk Chalupský,fri"
+"Contributions:,Avogadro Team,Vaclav Rehak,Vojtěch Trefný,milboy, ,Launchpad "
+"Contributions:,Avogadro Team,Vaclav Rehak,Vojtěch Trefný,milboy, Pavel Fric, "
+",Launchpad Contributions:,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
+"Contributions:,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
+"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
+"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
+"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
+"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
+"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
+"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
+"Contributions:,Avogadro Team,Jirka Emmer,Konki,Kuvaly [LCT],Milan "
+"Slovák,Vaclav Rehak,Vojtěch Trefný,Zdeněk Chalupský,fri, ,Launchpad "
+"Contributions:,Avogadro Team,Jirka Emmer,Konki,Kuvaly [LCT],Milan "
+"Slovák,Vaclav Rehak,Vojtěch Trefný,Zdeněk Chalupský,fri, ,Launchpad "
+"Contributions:,Avogadro Team,Jirka Emmer,Konki,Kuvaly [LCT],Milan "
+"Slovák,Vaclav Rehak,Vojtěch Trefný,Zdeněk Chalupský,fri"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
