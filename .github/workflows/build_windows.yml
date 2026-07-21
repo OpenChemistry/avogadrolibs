@@ -80,7 +80,7 @@ jobs:
     # Restore vcpkg cache (use manifest lock if available)
     - name: Restore vcpkg cache
       if: runner.os == 'Windows'
-      uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           C:\vcpkg\installed
@@ -110,7 +110,7 @@ jobs:
 
     # Cache thirdparty builds (OpenBabel, etc.)
     - name: Cache thirdparty
-      uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           ${{ runner.workspace }}/build/Downloads
