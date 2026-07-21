@@ -4,16 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Hoseok Seo <ddinghoya@gmail.com>, 2022, 2023.
 # simmon <simmon@nplob.com>, 2023, 2024.
-# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2026.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2026.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
+# hooray804 <profs_35_pointer@icloud.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-03-11 10:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-07-15 07:01+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1075,12 +1077,12 @@ msgstr "%1 메시지"
 #: qtgui/interfacescript.cpp:343
 #, qt-format
 msgid "%1 Warning"
-msgstr ""
+msgstr "%1 경고"
 
 #: qtgui/interfacescript.cpp:350
 #, qt-format
 msgid "%1 Error"
-msgstr ""
+msgstr "%1 오류"
 
 #: qtgui/interfacescript.cpp:593
 #, qt-format
@@ -1123,7 +1125,7 @@ msgstr "프로세서 코어"
 
 #: qtgui/jsonwidget.cpp:204 qtgui/jsonwidget.cpp:212
 msgid "Memory"
-msgstr ""
+msgstr "메모리"
 
 #: qtgui/jsonwidget.cpp:217
 msgid "Calculation Type"
@@ -1147,20 +1149,20 @@ msgstr "다중도"
 
 #: qtgui/jsonwidget.cpp:239
 msgid "Solvent"
-msgstr ""
+msgstr "용매"
 
 #: qtgui/jsonwidget.cpp:240
 msgctxt "solvation method / model"
 msgid "Model"
-msgstr ""
+msgstr "모델"
 
 #: qtgui/jsonwidget.cpp:386
 msgid "User Name"
-msgstr ""
+msgstr "사용자 이름"
 
 #: qtgui/jsonwidget.cpp:388
 msgid "Password"
-msgstr ""
+msgstr "비밀번호"
 
 #: qtgui/jsonwidget.cpp:674
 #, qt-format
@@ -1270,7 +1272,7 @@ msgstr "판 데르 발스 (AO)"
 #: qtgui/layermodel.cpp:198
 msgctxt "volumetric clouds"
 msgid "Volumes"
-msgstr ""
+msgstr "볼륨"
 
 #: qtgui/layermodel.cpp:200 qtplugins/surfacerender/surfacerender.cpp:273
 #: qtplugins/wireframe/wireframe.h:28
@@ -1287,11 +1289,11 @@ msgstr "제목 없음"
 
 #: qtgui/moleculemodel.cpp:136
 msgid "Edit molecule"
-msgstr ""
+msgstr "분자 편집"
 
 #: qtgui/moleculemodel.cpp:143
 msgid "Not saved"
-msgstr ""
+msgstr "저장되지 않음"
 
 #: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
@@ -1303,7 +1305,7 @@ msgstr "주기율표"
 
 #: qtgui/pythonscript.cpp:132
 msgid "Package mode requires pixi but it was not found."
-msgstr ""
+msgstr "패키지 모드를 사용하려면 pixi가 필요하지만 찾을 수 없습니다."
 
 #: qtgui/pythonscript.cpp:230 qtgui/pythonscript.cpp:327
 #, qt-format
@@ -1348,6 +1350,8 @@ msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
+"스크립트 stdin에 원시 요청을 쓰는 중 오류가 발생했습니다 (len=%1, %2 바이트 "
+"씀, QProcess 오류: %3)."
 
 #: qtgui/pythonscript.cpp:428
 msgid "Script failed to start."
@@ -1443,7 +1447,7 @@ msgstr "원자 색상 변경"
 
 #: qtgui/rwmolecule.cpp:286
 msgid "Change Residue Color"
-msgstr ""
+msgstr "잔기 색상 변경"
 
 #: qtgui/rwmolecule.cpp:298
 msgid "Change Atom Layer"
@@ -1479,7 +1483,7 @@ msgstr "결합 업데이트"
 
 #: qtgui/rwmolecule.cpp:433
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "단위 격자 추가…"
 
 #: qtgui/rwmolecule.cpp:445
 msgid "Remove Unit Cell"
@@ -1528,7 +1532,7 @@ msgstr "단위 격자 채우기"
 
 #: qtgui/rwmolecule.cpp:786
 msgid "Fill Translational Copies"
-msgstr ""
+msgstr "이동 복사본 채우기"
 
 #: qtgui/rwmolecule.cpp:806
 msgid "Reduce Cell to Asymmetric Unit"
@@ -1548,7 +1552,7 @@ msgstr "원자 레이블 변경"
 
 #: qtgui/rwmolecule.h:280
 msgid "Change Bond Label"
-msgstr ""
+msgstr "결합 레이블 변경"
 
 #: qtgui/rwmolecule.h:286
 msgid "Change Selection"
@@ -1564,39 +1568,39 @@ msgstr "설정"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
-msgstr ""
+msgstr "계산 중…"
 
 #: qtgui/timedprogressdialog.cpp:79
 msgid "Less than a second remaining"
-msgstr ""
+msgstr "1초도 안 남음"
 
 #: qtgui/timedprogressdialog.cpp:82
 #, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] ""
+msgstr[0] "%n초 남음"
 
 #: qtgui/timedprogressdialog.cpp:85
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
 msgid_plural "%n minute(s) remaining"
-msgstr[0] ""
+msgstr[0] "%n분 남음"
 
 #: qtgui/timedprogressdialog.cpp:93
 #, qt-plural-format
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] ""
+msgstr[0] "1시간 %n분 남음"
 
 #: qtgui/timedprogressdialog.cpp:96
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
 msgid_plural "%n hour(s) remaining"
-msgstr[0] ""
+msgstr[0] "%n시간 남음"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -1623,7 +1627,7 @@ msgstr "3DMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "원소 변경…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:62
 #: qtplugins/centroid/centroid.cpp:45
@@ -1651,7 +1655,7 @@ msgstr ""
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "원소 종류 변경"
 
 #: qtplugins/aligntool/aligntool.cpp:51 qtplugins/aligntool/aligntool.cpp:94
 msgid "Align"
@@ -1843,11 +1847,11 @@ msgstr "성공"
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
 msgid "Generated %1"
-msgstr ""
+msgstr "%1 생성됨"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr ""
+msgstr "PDB2PQR 실행 중 오류"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -1877,11 +1881,11 @@ msgstr "사용자 정의 색상별…"
 
 #: qtplugins/applycolors/applycolors.cpp:52
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "원자 번호별…"
 
 #: qtplugins/applycolors/applycolors.cpp:57
 msgid "By Distance…"
-msgstr ""
+msgstr "거리별…"
 
 #: qtplugins/applycolors/applycolors.cpp:62
 msgid "By Element"
@@ -2061,43 +2065,43 @@ msgstr "색상지도:"
 
 #: qtplugins/applycolors/applycolors.cpp:225
 msgid "Apply Index Colors"
-msgstr ""
+msgstr "인덱스 색상 적용"
 
 #: qtplugins/applycolors/applycolors.cpp:289
 msgid "Apply Charge Colors"
-msgstr ""
+msgstr "전하 색상 적용"
 
 #: qtplugins/applycolors/applycolors.cpp:327
 msgid "Apply Distance Colors"
-msgstr ""
+msgstr "거리 색상 적용"
 
 #: qtplugins/applycolors/applycolors.cpp:353
 msgid "Reset Atom Colors"
-msgstr ""
+msgstr "원자 색상 초기화"
 
 #: qtplugins/applycolors/applycolors.cpp:379
 msgid "Apply Custom Color"
-msgstr ""
+msgstr "사용자 지정 색상 적용"
 
 #: qtplugins/applycolors/applycolors.cpp:416
 msgid "Apply Custom Residue Color"
-msgstr ""
+msgstr "사용자 지정 잔기 색상 적용"
 
 #: qtplugins/applycolors/applycolors.cpp:440
 msgid "Reset Residue Colors"
-msgstr ""
+msgstr "잔기 색상 초기화"
 
 #: qtplugins/applycolors/applycolors.cpp:474
 msgid "Apply Secondary Structure Colors"
-msgstr ""
+msgstr "2차 구조 색상 적용"
 
 #: qtplugins/applycolors/applycolors.cpp:562
 msgid "Apply Amino Acid Colors"
-msgstr ""
+msgstr "아미노산 색상 적용"
 
 #: qtplugins/applycolors/applycolors.cpp:589
 msgid "Apply Shapely Colors"
-msgstr ""
+msgstr "Shapely 색상 적용"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2106,11 +2110,11 @@ msgstr "적용색상"
 #: qtplugins/autoopt/autoopt.cpp:67
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
 #: qtplugins/autoopt/autoopt.cpp:68
 msgid "Auto Optimize"
-msgstr ""
+msgstr "자동 최적화"
 
 #: qtplugins/autoopt/autoopt.cpp:70
 #, qt-format
@@ -2127,20 +2131,29 @@ msgid ""
 "Left Mouse:\tClick and drag atoms to move them.\n"
 "Right Mouse:\tClick and drag to rotate atoms."
 msgstr ""
+"자동 최적화 도구\t(%1)\n"
+"\n"
+"빈 공간을 클릭할 때의 탐색 기능\n"
+"마우스 왼쪽 버튼:\t화면 회전\n"
+"마우스 휠/가운데 버튼:\t화면 확대/축소\n"
+"마우스 오른쪽 버튼:\t화면 이동\n"
+"더블 클릭:\t뷰 초기화\n"
+"\n"
+"실행 중:\n"
+"마우스 왼쪽 버튼:\t원자를 클릭 후 드래그하여 이동\n"
+"마우스 오른쪽 버튼:\t클릭 후 드래그하여 원자 회전"
 
 #: qtplugins/autoopt/autoopt.cpp:215
-#, fuzzy
-#| msgid "Optimize Geometry"
 msgid "Optimize"
 msgstr "최적화"
 
 #: qtplugins/autoopt/autoopt.cpp:216
 msgid "Dynamics"
-msgstr ""
+msgstr "동역학"
 
 #: qtplugins/autoopt/autoopt.cpp:220
 msgid "Task:"
-msgstr ""
+msgstr "작업:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2170,7 +2183,7 @@ msgstr "중지"
 
 #: qtplugins/autoopt/autoopt.cpp:503
 msgid "Relax for Dynamics"
-msgstr ""
+msgstr "동역학을 위한 구조 완화"
 
 #: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:71
 #: qtplugins/forcefield/forcefield.cpp:504
@@ -2188,27 +2201,27 @@ msgstr "분자 동력학"
 #, qt-format
 msgctxt "pre-relax before dynamics"
 msgid "Relaxing… %1 ΔE = %L2"
-msgstr ""
+msgstr "구조 완화 중… %1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:698
 #, qt-format
 msgctxt "temperature in Kelvin"
 msgid "%1 T = %L2"
-msgstr ""
+msgstr "%1 T = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:703
 #, qt-format
 msgctxt "change in energy in kJ/mol"
 msgid "%1 ΔE = %L2"
-msgstr ""
+msgstr "%1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.h:47
 msgid "Auto Optimize tool"
-msgstr ""
+msgstr "자동 최적화 도구"
 
 #: qtplugins/autoopt/autoopt.h:50
 msgid "Interactive optimization of molecular geometry"
-msgstr ""
+msgstr "실시간 분자 구조 최적화"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
@@ -2239,14 +2252,14 @@ msgstr "원자를 구체로, 결합을 실린더로 렌더링합니다."
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
 msgstr "결합 중심 조작"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Bond Centric Manipulation Tool\t(%1)\n"
 "\n"
@@ -2259,16 +2272,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
-"Bond Centric Manipulation 도구\t(%1)\n"
+"결합 중심 조작 도구\t(%1)\n"
 "\n"
-"왼쪽 마우스:\t클릭하고 드래그하여 보기를 회전합니다.\n"
-"중간 마우스 :\t클릭하고 줌을 켜거나 밖으로 드래그하십시오.\n"
-"마우스 오른쪽:\t클릭하고 보기를 이동합니다.\n"
-"더블 클릭:\t보기를 재설정.\n"
+"마우스 왼쪽 버튼:\t클릭 후 드래그하여 화면 회전\n"
+"마우스 휠/가운데 버튼:\t클릭 후 드래그하여 화면 확대/축소\n"
+"마우스 오른쪽 버튼:\t클릭 후 드래그하여 화면 이동\n"
+"더블 클릭:\t뷰 초기화\n"
 "\n"
-"왼쪽 클릭 & 채권을 설정하려면 드래그:\n"
-"왼쪽 클릭 & 본드의 원자 중 하나를 드래그하여 각도를 변경\n"
-"오른쪽 클릭 & 채권의 원자 중 하나를 드래그하여 길이를 변경합니다"
+"결합을 왼쪽 클릭 후 드래그하여 조작 평면 설정\n"
+"결합된 원자 중 하나를 왼쪽 클릭 후 드래그하여 결합각 변경\n"
+"결합된 원자 중 하나를 오른쪽 클릭 후 드래그하여 결합 길이 변경"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
@@ -2449,13 +2462,15 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:202
 msgid "Command In Progress"
-msgstr ""
+msgstr "명령 실행 중"
 
 #: qtplugins/commandscripts/command.cpp:203
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
 msgstr ""
+"명령 스크립트가 이미 실행 중입니다. 다른 스크립트를 시작하기 전에 현재 실행 "
+"중인 작업이 완료될 때까지 기다려 주세요."
 
 #: qtplugins/commandscripts/command.cpp:333
 #, qt-format
@@ -2525,7 +2540,7 @@ msgstr "기타…"
 
 #: qtplugins/constraints/constraintsextension.cpp:22
 msgid "Constraints…"
-msgstr ""
+msgstr "제약 조건…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:233
@@ -2536,17 +2551,17 @@ msgstr "&계산"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
 #: qtplugins/constraints/constraintsextension.h:27:226
 msgid "Constraints"
-msgstr ""
+msgstr "제약 조건"
 
 #: qtplugins/constraints/constraintsextension.h:31
 msgid "Set constraints for geometry optimizations"
-msgstr ""
+msgstr "기하학 최적화를 위한 제약 조건 설정"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:60:235
 msgid "Distance"
-msgstr ""
+msgstr "거리"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
@@ -2558,27 +2573,27 @@ msgstr "각"
 #. i18n: ectx: property (text), item, widget (QComboBox, comboType)
 #: qtplugins/constraints/constraintsmodel.cpp:64:241
 msgid "Torsion Angle"
-msgstr ""
+msgstr "비틀림각"
 
 #: qtplugins/constraints/constraintsmodel.cpp:68
 msgctxt "fix / remain constant"
 msgid "Freeze Atom"
-msgstr ""
+msgstr "원자 고정"
 
 #: qtplugins/constraints/constraintsmodel.cpp:70
 msgctxt "fix / remain constant"
 msgid "Freeze X Axis"
-msgstr ""
+msgstr "X축 고정"
 
 #: qtplugins/constraints/constraintsmodel.cpp:72
 msgctxt "fix / remain constant"
 msgid "Freeze Y Axis"
-msgstr ""
+msgstr "Y축 고정"
 
 #: qtplugins/constraints/constraintsmodel.cpp:74
 msgctxt "fix / remain constant"
 msgid "Freeze Z Axis"
-msgstr ""
+msgstr "Z축 고정"
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
 #: qtplugins/propertytables/propertymodel.cpp:664
@@ -2590,7 +2605,7 @@ msgstr "형식"
 
 #: qtplugins/constraints/constraintsmodel.cpp:129
 msgid "Value"
-msgstr ""
+msgstr "값"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
 #: qtplugins/propertytables/propertymodel.cpp:709
@@ -2813,7 +2828,7 @@ msgstr "국제 화학 식별자"
 
 #: qtplugins/copypaste/copypaste.cpp:84
 msgid "XYZ"
-msgstr ""
+msgstr "XYZ"
 
 #: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
 msgid "&Edit"
@@ -3121,15 +3136,16 @@ msgstr "단위 격자 편집기"
 #: qtplugins/crystal/unitcelldialog.cpp:282
 #: qtplugins/crystal/unitcelldialog.cpp:293
 msgid "Ignoring singular cell matrix"
-msgstr ""
+msgstr "특이 단위 격자 행렬 무시"
 
 #: qtplugins/crystal/unitcelldialog.cpp:304
 msgid "Ignoring singular fractional cell matrix"
-msgstr ""
+msgstr "특이 분율 단위 격자 행렬 무시"
 
 #: qtplugins/customelements/customelements.cpp:19
+#, fuzzy
 msgid "Reassign &Custom Elements…"
-msgstr "사용자 정의 원소 재할당(&C)…"
+msgstr "Reassign &Custom Elements…"
 
 #: qtplugins/customelements/customelements.cpp:30
 msgid "Manipulate custom element types in the current molecule."
@@ -3145,19 +3161,19 @@ msgstr "쌍극자 모멘트"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "분자의 쌍극자 모멘트를 렌더링합니다."
 
 #: qtplugins/editor/editor.cpp:73
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
 msgid "Draw"
 msgstr "그리기"
 
 #: qtplugins/editor/editor.cpp:76
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
 "\n"
@@ -3314,17 +3330,17 @@ msgstr "선택된 원자 멈춤"
 #: qtplugins/forcefield/forcefield.cpp:116
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
-msgstr ""
+msgstr "X 고정"
 
 #: qtplugins/forcefield/forcefield.cpp:124
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
-msgstr ""
+msgstr "Y 고정"
 
 #: qtplugins/forcefield/forcefield.cpp:132
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
-msgstr ""
+msgstr "Z 고정"
 
 #: qtplugins/forcefield/forcefield.cpp:140
 msgid "Unfreeze Selected Atoms"
@@ -3333,12 +3349,12 @@ msgstr "선택된 원자 멈춤 해제"
 #: qtplugins/forcefield/forcefield.cpp:149
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
-msgstr ""
+msgstr "선택한 원자 결합"
 
 #: qtplugins/forcefield/forcefield.cpp:157
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
-msgstr ""
+msgstr "선택한 원자 결합 해제"
 
 #: qtplugins/forcefield/forcefield.cpp:470
 #: qtplugins/forcefield/forcefield.cpp:666
@@ -3380,21 +3396,21 @@ msgstr "스크립트를 포함한 역장 최소화"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:56
 msgid "Options…"
-msgstr ""
+msgstr "옵션…"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:175
 msgid "Invalid Model Options"
-msgstr ""
+msgstr "잘못된 모델 옵션"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:176
 #, qt-format
 msgid "Could not parse user options for model '%1'."
-msgstr ""
+msgstr "'%1' 모델의 사용자 옵션을 분석할 수 없습니다."
 
 #: qtplugins/forcefield/forcefielddialog.cpp:181
 #, qt-format
 msgid "%1 Options"
-msgstr ""
+msgstr "%1 옵션"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:222
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -3444,7 +3460,7 @@ msgstr "진동수"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:278
 msgid "Make EFP"
-msgstr ""
+msgstr "EFP 생성"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:404
 msgid "Core Potential"
@@ -3466,19 +3482,19 @@ msgstr "없음"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
 msgid "D1"
-msgstr ""
+msgstr "D1"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:425
 msgid "D2"
-msgstr ""
+msgstr "D2"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:428
 msgid "D3"
-msgstr ""
+msgstr "D3"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:431
 msgid "D4"
-msgstr ""
+msgstr "D4"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:446
 msgid "Gas"
@@ -4655,7 +4671,7 @@ msgstr[0] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
-msgstr ""
+msgstr "파일 유지"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
