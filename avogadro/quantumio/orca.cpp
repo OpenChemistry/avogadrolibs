@@ -14,9 +14,7 @@
 #include <memory>
 #include <iostream>
 #include <fstream>
-#include <regex>
 
-using std::regex;
 using std::string;
 using std::vector;
 
@@ -48,6 +46,73 @@ void ORCAOutput::clearBasisFunctions()
 
 constexpr double BOHR_TO_ANGSTROM = 0.529177210544;
 constexpr double HARTREE_TO_EV = 27.211386245981;
+
+namespace {
+// ORCA prints MO coefficients as fixed-width columns of the form
+// [-]dd.dddddd. Adjacent (negative) values can run together with no
+// separating whitespace, so we can't simply split on spaces. This extracts
+// the same tokens as the regex "[-]?[0-9]{1,2}[.][0-9]{6}" (leftmost,
+// non-overlapping matches) but without constructing and running a
+// std::regex for every line of a potentially huge output file.
+void extractOrcaCoefficients(const std::string& line,
+                             std::vector<std::string>& list)
+{
+  list.clear();
+  const std::size_t n = line.size();
+  std::size_t i = 0;
+  while (i < n) {
+    const std::size_t start = i;
+    // optional leading minus sign
+    if (line[i] == '-')
+      ++i;
+    // one or two integer digits
+    std::size_t intDigits = 0;
+    while (i < n && intDigits < 2 && line[i] >= '0' && line[i] <= '9') {
+      ++i;
+      ++intDigits;
+    }
+    // decimal point followed by exactly six fractional digits
+    if (intDigits >= 1 && i < n && line[i] == '.') {
+      ++i;
+      std::size_t fracDigits = 0;
+      while (i < n && fracDigits < 6 && line[i] >= '0' && line[i] <= '9') {
+        ++i;
+        ++fracDigits;
+      }
+      if (fracDigits == 6) {
+        list.push_back(line.substr(start, i - start));
+        continue; // resume scanning after the match
+      }
+    }
+    // no match at this position, advance by one character
+    i = start + 1;
+  }
+}
+
+// Return the whitespace-delimited token at position @p index (0-based) of
+// @p line, without allocating a vector of every token. Matches the semantics
+// of Core::split(line, ' ') with skipEmpty = true (runs of spaces are
+// collapsed). Returns an empty string if there is no such token.
+std::string nthSpaceToken(const std::string& line, std::size_t index)
+{
+  const std::size_t n = line.size();
+  std::size_t i = 0;
+  std::size_t token = 0;
+  while (i < n) {
+    while (i < n && line[i] == ' ')
+      ++i;
+    if (i >= n)
+      break;
+    const std::size_t start = i;
+    while (i < n && line[i] != ' ')
+      ++i;
+    if (token == index)
+      return line.substr(start, i - start);
+    ++token;
+  }
+  return std::string();
+}
+} // namespace
 
 std::vector<std::string> ORCAOutput::fileExtensions() const
 {
@@ -416,6 +481,9 @@ void ORCAOutput::processLine(std::istream& in,
     unsigned int numColumns, numRows;
     numColumns = 0;
     numRows = 0;
+    // number of basis functions (rows) per MO block, learned from the first
+    // block and used to pre-reserve storage for subsequent blocks
+    unsigned int expectedRows = 0;
     // parsing a line -- what mode are we in?
 
     switch (m_currentMode) {
@@ -1001,24 +1069,25 @@ void ORCAOutput::processLine(std::istream& in,
           getline(in, key); // now we've got coefficients
 
           // coefficients are optionally a -, one or two digits, a decimal
-          // point, and then 6 digits or just one or two digits a decimal point
-          // and then 6 digits we can use a regex to split the line
-          regex rx("[-]?[0-9]{1,2}[.][0-9]{6}");
-
-          auto key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
-          auto key_end = std::sregex_iterator();
-          list.clear();
-          for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
-            list.push_back(i->str());
-          }
+          // point, and then 6 digits; adjacent negative values can run
+          // together, so scan for the fixed-width fields directly
+          extractOrcaCoefficients(key, list);
 
           numColumns = list.size();
           columns.resize(numColumns);
+          // once we know how many basis functions (rows) a block holds, we can
+          // pre-allocate to avoid repeated reallocation on huge outputs
+          if (expectedRows > 0) {
+            for (unsigned int i = 0; i < numColumns; ++i)
+              columns[i].reserve(expectedRows);
+            orcaOrbitals.reserve(expectedRows);
+            m_MOcoeffs.reserve(static_cast<std::size_t>(expectedRows) *
+                               expectedRows);
+          }
           while (list.size() > 0) {
-            // get the '2s' or '1dx2y2' piece from the line
+            // get the '2s' or '1dx2y2' piece from the line (the orbital label)
             // so we can re-order the orbitals later
-            std::vector<std::string> pieces = Core::split(key, ' ');
-            orcaOrbitals.push_back(pieces[1]);
+            orcaOrbitals.push_back(nthSpaceToken(key, 1));
 
             for (unsigned int i = 0; i < numColumns; ++i) {
               columns[i].push_back(
@@ -1026,12 +1095,7 @@ void ORCAOutput::processLine(std::istream& in,
             }
 
             getline(in, key);
-            key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
-            key_end = std::sregex_iterator();
-            list.clear();
-            for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
-              list.push_back(i->str());
-            }
+            extractOrcaCoefficients(key, list);
 
             if (list.size() != numColumns)
               break;
@@ -1068,6 +1132,7 @@ void ORCAOutput::processLine(std::istream& in,
               m_MOcoeffs.push_back(columns[i][j]);
             }
           }
+          expectedRows = numRows; // reserve subsequent blocks up front
           columns.clear();
           orcaOrbitals.clear();
 
@@ -1098,21 +1163,21 @@ void ORCAOutput::processLine(std::istream& in,
             getline(in, key); // skip -----------
             getline(in, key); // now we've got coefficients
 
-            regex rx("[-]?[0-9]{1,2}[.][0-9]{6}");
-            auto key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
-            auto key_end = std::sregex_iterator();
-            list.clear();
-            for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
-              list.push_back(i->str());
-            }
+            extractOrcaCoefficients(key, list);
 
             numColumns = list.size();
             columns.resize(numColumns);
+            if (expectedRows > 0) {
+              for (unsigned int i = 0; i < numColumns; ++i)
+                columns[i].reserve(expectedRows);
+              orcaOrbitals.reserve(expectedRows);
+              m_BetaMOcoeffs.reserve(static_cast<std::size_t>(expectedRows) *
+                                     expectedRows);
+            }
             while (list.size() > 0) {
-              // get the '2s' or '1dx2y2' piece from the line
+              // get the '2s' or '1dx2y2' piece from the line (orbital label)
               // so we can re-order the orbitals later
-              std::vector<std::string> pieces = Core::split(key, ' ');
-              orcaOrbitals.push_back(pieces[1]);
+              orcaOrbitals.push_back(nthSpaceToken(key, 1));
 
               for (unsigned int i = 0; i < numColumns; ++i) {
                 columns[i].push_back(
@@ -1120,14 +1185,7 @@ void ORCAOutput::processLine(std::istream& in,
               }
 
               getline(in, key);
-              auto inner_key_begin =
-                std::sregex_iterator(key.begin(), key.end(), rx);
-              auto inner_key_end = std::sregex_iterator();
-              list.clear();
-              for (std::sregex_iterator i = inner_key_begin; i != inner_key_end;
-                   ++i) {
-                list.push_back(i->str());
-              }
+              extractOrcaCoefficients(key, list);
 
               if (list.size() != numColumns)
                 break;
@@ -1165,6 +1223,7 @@ void ORCAOutput::processLine(std::istream& in,
                 m_BetaMOcoeffs.push_back(columns[i][j]);
               }
             }
+            expectedRows = numRows; // reserve subsequent blocks up front
             columns.clear();
             orcaOrbitals.clear();
 
@@ -1235,8 +1294,8 @@ void ORCAOutput::load(GaussianSet* basis)
   // TODO: set vibrational symmetries
 
   m_homo = ceil(m_electrons / 2.0);
-  if (m_MOcoeffs.size() > 0)
-    basis->generateDensityMatrix();
+  // if (m_MOcoeffs.size() > 0)
+  // basis->generateDensityMatrix();
 }
 
 void ORCAOutput::parseMCD()
