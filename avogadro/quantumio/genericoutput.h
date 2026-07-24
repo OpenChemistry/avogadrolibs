@@ -10,6 +10,7 @@
 #include <avogadro/io/fileformat.h>
 
 #include <map>
+#include <mutex>
 #include <vector>
 
 namespace Avogadro {
@@ -27,7 +28,7 @@ public:
   }
 
   FileFormat* newInstance() const override { return new GenericOutput; }
-  std::string identifier() const override { return "Avogadro: Generic Output"; }
+  std::string identifier() const override;
   std::string name() const override { return "Generic Output"; }
   std::string description() const override { return "Generic output format."; }
 
@@ -42,6 +43,12 @@ public:
     // Empty, as we do not write output files.
     return false;
   }
+
+protected:
+  // The identifier is only known once read() has sniffed the file, which may
+  // happen on a worker thread while the GUI thread displays it - so guard it.
+  mutable std::mutex m_identifierMutex;
+  std::string m_identifier = "Avogadro: Generic Output";
 };
 
 } // namespace QuantumIO

@@ -22,6 +22,12 @@ GenericOutput::GenericOutput() {}
 
 GenericOutput::~GenericOutput() {}
 
+std::string GenericOutput::identifier() const
+{
+  const std::lock_guard<std::mutex> lock(m_identifierMutex);
+  return m_identifier;
+}
+
 std::vector<std::string> GenericOutput::fileExtensions() const
 {
   std::vector<std::string> extensions;
@@ -85,6 +91,11 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
         break;
       }
     }
+  }
+
+  if (reader != nullptr) {
+    const std::lock_guard<std::mutex> lock(m_identifierMutex);
+    m_identifier = reader->identifier();
   }
 
   // rewind the stream
