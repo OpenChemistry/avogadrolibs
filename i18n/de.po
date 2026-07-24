@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
 "PO-Revision-Date: 2026-07-25 09:01+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3755,7 +3755,7 @@ msgstr "Oligopeptidsequenzen einfügen."
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:29
 msgid "Polymer…"
-msgstr "Polymer.."
+msgstr "Polymer…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:82
 msgid "No SMILES format reader found. Is Open Babel available?"
