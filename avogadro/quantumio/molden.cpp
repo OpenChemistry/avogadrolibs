@@ -259,19 +259,28 @@ void MoldenFile::processLine(std::istream& in)
           list = Core::split(line, ' ');
         }
 
-        // Now commit the buffered values with the correct spin
+        // Set the correct spin before reading coefficients; the legacy
+        // (no basis count) path below routes coefficients based on it.
         m_currentSpinBeta = pendingSpinBeta;
-        if (havePendingEnergy) {
-          if (m_currentSpinBeta)
-            m_betaOrbitalEnergy.push_back(pendingEnergy);
-          else
-            m_orbitalEnergy.push_back(pendingEnergy);
-        }
-        if (havePendingSymmetry) {
-          if (m_currentSpinBeta)
-            m_betaSymmetryLabels.push_back(pendingSymmetry);
-          else
-            m_symmetryLabels.push_back(pendingSymmetry);
+
+        // For the legacy path (no basis count) commit the header fields now,
+        // since coefficients are streamed directly and cannot be buffered.
+        // For the normal path we defer the commit until after the
+        // coefficients are read, so all-zero "padding" orbitals can be
+        // dropped as a unit (see below).
+        if (numBasisFunctions == 0) {
+          if (havePendingEnergy) {
+            if (m_currentSpinBeta)
+              m_betaOrbitalEnergy.push_back(pendingEnergy);
+            else
+              m_orbitalEnergy.push_back(pendingEnergy);
+          }
+          if (havePendingSymmetry) {
+            if (m_currentSpinBeta)
+              m_betaSymmetryLabels.push_back(pendingSymmetry);
+            else
+              m_symmetryLabels.push_back(pendingSymmetry);
+          }
         }
 
         // Parse the molecular orbital coefficients.
@@ -309,13 +318,42 @@ void MoldenFile::processLine(std::istream& in)
           list = Core::split(line, ' ');
         }
         if (numBasisFunctions > 0) {
-          if (m_currentSpinBeta)
-            m_betaMOcoeffs.insert(m_betaMOcoeffs.end(),
-                                  orbitalCoefficients.begin(),
-                                  orbitalCoefficients.end());
-          else
-            m_MOcoeffs.insert(m_MOcoeffs.end(), orbitalCoefficients.begin(),
-                              orbitalCoefficients.end());
+          // Some codes pad the [MO] section out to the full basis dimension
+          // with all-zero, zero-energy "orbitals" (common for localized
+          // orbital sets such as IAO/IBO, NBO, Pipek-Mezey, which represent
+          // a reduced subspace). A normalized MO can never have all-zero
+          // coefficients, so drop such padding entries entirely - together
+          // with their buffered energy and symmetry - to keep the orbital
+          // list limited to the meaningful orbitals.
+          bool allZero = true;
+          for (double c : orbitalCoefficients) {
+            if (c != 0.0) {
+              allZero = false;
+              break;
+            }
+          }
+
+          if (!allZero) {
+            if (havePendingEnergy) {
+              if (m_currentSpinBeta)
+                m_betaOrbitalEnergy.push_back(pendingEnergy);
+              else
+                m_orbitalEnergy.push_back(pendingEnergy);
+            }
+            if (havePendingSymmetry) {
+              if (m_currentSpinBeta)
+                m_betaSymmetryLabels.push_back(pendingSymmetry);
+              else
+                m_symmetryLabels.push_back(pendingSymmetry);
+            }
+            if (m_currentSpinBeta)
+              m_betaMOcoeffs.insert(m_betaMOcoeffs.end(),
+                                    orbitalCoefficients.begin(),
+                                    orbitalCoefficients.end());
+            else
+              m_MOcoeffs.insert(m_MOcoeffs.end(), orbitalCoefficients.begin(),
+                                orbitalCoefficients.end());
+          }
         }
         // go back one line
         in.seekg(currentPos);
