@@ -317,6 +317,11 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
   if (mol == nullptr || m_molecule == mol)
     return;
 
+  // Disconnect from the old molecule so it no longer drives our actions.
+  if (m_molecule != nullptr)
+    disconnect(m_molecule, SIGNAL(changed(unsigned int)), this,
+               SLOT(updateActions()));
+
   m_molecule = mol;
 
   // Refresh action enable-state (e.g. batch actions) when the molecule
@@ -761,7 +766,9 @@ std::vector<Eigen::VectorXd> Forcefield::gatherCoordinateSets() const
   for (size_t c = 0; c < count; ++c) {
     // coordinate3d() returns a copy and does not change the displayed set.
     Core::Array<Vector3> set = m_molecule->coordinate3d(c);
-    Eigen::VectorXd x(3 * n);
+    // Zero first - a short coordinate set would otherwise leave the tail
+    // uninitialized and send garbage to the calculator.
+    Eigen::VectorXd x = Eigen::VectorXd::Zero(3 * n);
     for (size_t i = 0; i < n && i < set.size(); ++i) {
       x[3 * i] = set[i].x();
       x[3 * i + 1] = set[i].y();
@@ -857,9 +864,16 @@ void Forcefield::onBatchDone(std::vector<double> energies,
   }
 
   const auto n = m_molecule->atomCount();
+  const auto coordCount = m_molecule->coordinate3dCount();
+
+  // A cancelled batch finishes with only the chunks completed so far. Storing
+  // those would leave "energies"/"forces" out of step with the coordinate
+  // sets, so only persist a result that covers every conformer.
+  const bool energiesComplete = (energies.size() == coordCount);
+  const bool gradientsComplete = (gradients.size() == coordCount);
 
   // Store one energy per coordinate set (read by the conformer plot).
-  if (!energies.empty())
+  if (energiesComplete)
     m_molecule->setData("energies", Core::Variant(energies));
 
   // Store forces two ways:
@@ -868,7 +882,7 @@ void Forcefield::onBatchDone(std::vector<double> energies,
   //     conformer plot (parallels data("energies")).
   //   * conformerProperties("forces") - the full (N x 3) force matrix per
   //     coordinate set, for richer per-atom use.
-  if (!gradients.empty()) {
+  if (gradientsComplete) {
     std::vector<double> rmsGradients;
     rmsGradients.reserve(gradients.size());
     for (size_t c = 0; c < gradients.size(); ++c) {
@@ -889,17 +903,19 @@ void Forcefield::onBatchDone(std::vector<double> energies,
         "forces", static_cast<Index>(c), forceMat);
     }
     m_molecule->setData("forces", Core::Variant(rmsGradients));
+  }
 
-    // Update the displayed force vectors for the currently shown conformer.
-    const size_t activeIndex = static_cast<size_t>(m_molecule->coordinate3d());
-    if (activeIndex < gradients.size()) {
-      Core::Array<Vector3> forceVecs(n);
-      const Eigen::VectorXd& g = gradients[activeIndex];
-      for (size_t i = 0; i < n && 3 * i + 2 < static_cast<size_t>(g.size());
-           ++i)
-        forceVecs[i] = Vector3(-g[3 * i], -g[3 * i + 1], -g[3 * i + 2]);
-      m_molecule->setForceVectors(forceVecs);
-    }
+  // Update the displayed force vectors for the currently shown conformer. This
+  // is ephemeral display state, so it is worth showing even for a partial run,
+  // as long as the active conformer itself was evaluated.
+  const size_t activeIndex = static_cast<size_t>(m_molecule->coordinate3d());
+  if (activeIndex < gradients.size() &&
+      static_cast<size_t>(gradients[activeIndex].size()) >= 3 * n) {
+    Core::Array<Vector3> forceVecs(n, Vector3::Zero());
+    const Eigen::VectorXd& g = gradients[activeIndex];
+    for (size_t i = 0; i < n; ++i)
+      forceVecs[i] = Vector3(-g[3 * i], -g[3 * i + 1], -g[3 * i + 2]);
+    m_molecule->setForceVectors(forceVecs);
   }
 
   Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;

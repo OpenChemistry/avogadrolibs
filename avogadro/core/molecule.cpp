@@ -44,8 +44,10 @@ Molecule::Molecule(const Molecule& other)
     m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
     m_atomLabels(other.m_atomLabels), m_bondLabels(other.m_bondLabels),
     m_residueLabels(other.m_residueLabels),
-    m_coordinates3d(other.m_coordinates3d), m_velocities(other.m_velocities),
-    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
+    m_coordinates3d(other.m_coordinates3d),
+    m_coordinate3dIndex(other.m_coordinate3dIndex),
+    m_velocities(other.m_velocities), m_timesteps(other.m_timesteps),
+    m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
@@ -152,16 +154,19 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
     m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
-    m_coordinates3d(other.m_coordinates3d), m_velocities(other.m_velocities),
-    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
+    m_coordinates3d(other.m_coordinates3d),
+    m_coordinate3dIndex(std::exchange(other.m_coordinate3dIndex, 0)),
+    m_velocities(other.m_velocities), m_timesteps(other.m_timesteps),
+    m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
-    m_colors(other.m_colors),
+    m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
     m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
     m_vibrationLx(other.m_vibrationLx),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
+    m_activeCubeIndex(std::exchange(other.m_activeCubeIndex, 0)),
     m_basisSet(std::exchange(other.m_basisSet, nullptr)),
     m_unitCell(std::exchange(other.m_unitCell, nullptr)),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
@@ -198,12 +203,14 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondLabels = other.m_bondLabels;
     m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
+    m_coordinate3dIndex = other.m_coordinate3dIndex;
     m_velocities = other.m_velocities;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
     m_isotopes = other.m_isotopes;
-    m_colors = other.m_colors,
+    m_forceVectors = other.m_forceVectors;
+    m_colors = other.m_colors;
     m_vibrationFrequencies = other.m_vibrationFrequencies;
     m_vibrationIRIntensities = other.m_vibrationIRIntensities;
     m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
@@ -270,11 +277,13 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondLabels = other.m_bondLabels;
     m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
+    m_coordinate3dIndex = other.m_coordinate3dIndex;
     m_velocities = other.m_velocities;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
     m_isotopes = other.m_isotopes;
+    m_forceVectors = other.m_forceVectors;
     m_colors = other.m_colors;
     m_vibrationFrequencies = other.m_vibrationFrequencies;
     m_vibrationIRIntensities = other.m_vibrationIRIntensities;
