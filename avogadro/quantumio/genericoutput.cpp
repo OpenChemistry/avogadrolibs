@@ -93,7 +93,12 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
     }
   }
 
+  // Reset every time to be sure we don't return the *last* identifier
+  const std::lock_guard<std::mutex> lock(m_identifierMutex);
+  m_identifier = "Avogadro: Generic Output";
+
   if (reader != nullptr) {
+    // now update the identifier
     const std::lock_guard<std::mutex> lock(m_identifierMutex);
     m_identifier = reader->identifier();
   }
