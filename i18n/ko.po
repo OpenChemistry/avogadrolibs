@@ -13,9 +13,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-07-15 07:01+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2026-07-23 07:01+0000\n"
+"Last-Translator: hooray804 <profs_35_pointer@icloud.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -1662,7 +1661,6 @@ msgid "Align"
 msgstr "정렬"
 
 #: qtplugins/aligntool/aligntool.cpp:53
-#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1672,13 +1670,13 @@ msgid ""
 "Right Mouse:\tReset alignment.\n"
 "Double-Click:\tCenter the atom at the origin."
 msgstr ""
-"Align 분자\n"
+"분자 정렬\n"
 "\n"
-"왼쪽 마우스: 최대 2개의 원자를 선택합니다.\n"
-"\t첫번째 원자는 원점의 중심에 있습니다.\n"
+"마우스 왼쪽 버튼: 최대 2개의 원자를 선택합니다.\n"
+"\t첫번째 원자는 원점에 위치합니다.\n"
 "\t두 번째 원자는 선택한 축으로 정렬됩니다.\n"
-"마우스 오른쪽: 정렬 재설정.\n"
-"Double-Click: 원자를 원점 중심에 나두기."
+"마우스 오른쪽 버튼: 정렬 상태를 초기화합니다.\n"
+"더블클릭: 원자를 원점에 위치시킵니다."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -3143,9 +3141,8 @@ msgid "Ignoring singular fractional cell matrix"
 msgstr "특이 분율 단위 격자 행렬 무시"
 
 #: qtplugins/customelements/customelements.cpp:19
-#, fuzzy
 msgid "Reassign &Custom Elements…"
-msgstr "Reassign &Custom Elements…"
+msgstr "사용자 정의 요소 재할당(&C)…"
 
 #: qtplugins/customelements/customelements.cpp:30
 msgid "Manipulate custom element types in the current molecule."
@@ -3374,7 +3371,7 @@ msgstr "최적화를 위해 제공되는 원자 없음"
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "에너지: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:664
 #, qt-format
@@ -3674,7 +3671,7 @@ msgstr "더 큰 분자를 만들기 위해 분자 조각을 삽입합니다."
 
 #: qtplugins/insertpeptide/insertpeptide.cpp:56
 msgid "Peptide…"
-msgstr ""
+msgstr "펩타이드…"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
@@ -3682,7 +3679,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 #: qtplugins/insertpeptide/insertpeptide.cpp:535:692 rc.cpp:880
 msgid "Insert Peptide"
-msgstr ""
+msgstr "펩타이드 삽입"
 
 #: qtplugins/insertpeptide/insertpeptide.h:36
 msgid "InsertPeptide"
@@ -3690,15 +3687,15 @@ msgstr ""
 
 #: qtplugins/insertpeptide/insertpeptide.h:39
 msgid "Insert oligopeptide sequences."
-msgstr ""
+msgstr "올리고펩타이드 서열을 삽입하세요."
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:29
 msgid "Polymer…"
-msgstr ""
+msgstr "중합체…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:82
 msgid "No SMILES format reader found. Is Open Babel available?"
-msgstr ""
+msgstr "SMILES 형식 리더를 찾을 수 없습니다. Open Babel을 사용할 수 있습니까?"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, InsertPolymerDialog)
@@ -3709,11 +3706,11 @@ msgstr ""
 #: qtplugins/insertpolymer/insertpolymer.h:23
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:637:883 rc.cpp:958
 msgid "Insert Polymer"
-msgstr ""
+msgstr "중합체 삽입"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:90
 msgid "Generating 3D structure…"
-msgstr ""
+msgstr "3D 구조 생성 중…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:104
 #, qt-format
@@ -3724,15 +3721,15 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
 msgid "Build polymers from monomer repeat units."
-msgstr ""
+msgstr "단량체 반복 단위로부터 중합체를 생성합니다."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
 msgid "Polymer monomer data directory not found."
-msgstr ""
+msgstr "중합체 단량체 데이터 디렉터리를 찾을 수 없습니다."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:172
 msgid "Choose Monomer"
-msgstr ""
+msgstr "단량체 선택"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3747,7 +3744,7 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
 msgid "No monomer specified. Please choose at least monomer A."
-msgstr ""
+msgstr "지정된 단량체가 없습니다. 적어도 단량체 A를 선택해 주세요."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
 msgid "Working"
@@ -3790,7 +3787,7 @@ msgstr "성분 & ID"
 #: qtplugins/label/label.cpp:207
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "부분 전하"
 
 #: qtplugins/label/label.cpp:222
 msgid "Atom Label:"
@@ -3798,11 +3795,11 @@ msgstr "원자 레이블:"
 
 #: qtplugins/label/label.cpp:230
 msgid "Length"
-msgstr ""
+msgstr "길이"
 
 #: qtplugins/label/label.cpp:236
 msgid "Bond Label:"
-msgstr ""
+msgstr "결합 레이블:"
 
 #: qtplugins/label/label.cpp:243 qtplugins/propertytables/propertymodel.cpp:687
 msgid "ID"
