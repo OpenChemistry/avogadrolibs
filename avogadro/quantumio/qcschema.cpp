@@ -69,6 +69,8 @@ std::vector<std::string> QCSchema::mimeTypes() const
 
 bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
 {
+  float coordinateScale = 1.0; // default to Angstroms
+
   // This should be JSON so look for key attributes
   json root;
   try {
@@ -85,9 +87,16 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
 
   // check for 'schema_name'
   if (root.find("schema_name") == root.end() ||
-      root["schema_name"].get<std::string>() != "QC_JSON") {
+      (root["schema_name"].get<std::string>() != "QC_JSON" &&
+       root["schema_name"].get<std::string>() != "qcschema_molecule")) {
     appendError("Error: Input is not a QC_JSON object.");
     return false;
+  }
+
+  // if the schema_name is qcschema_molecule, then the coordinates are in
+  // bohr
+  if (root["schema_name"].get<std::string>() == "qcschema_molecule") {
+    coordinateScale = BOHR_TO_ANGSTROM;
   }
 
   // get the elements
@@ -127,8 +136,8 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
   }
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     auto a = molecule.atom(i);
-    a.setPosition3d(
-      Vector3(geometry[3 * i], geometry[3 * i + 1], geometry[3 * i + 2]));
+    Vector3 pos(geometry[3 * i], geometry[3 * i + 1], geometry[3 * i + 2]);
+    a.setPosition3d(pos * coordinateScale);
   }
 
   // check for (optional) connectivity
