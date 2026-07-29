@@ -5,8 +5,8 @@ set(tests
   gaussiansettools
   molden
   orca
+  qcschema
   # TODO
-  # qcschema
   # GAMESS US
   # GAMESS UK
   # NWChem log
@@ -39,7 +39,7 @@ message(STATUS "Test source files: ${testSrcs}")
 # Add a single executable for all of our tests.
 add_executable(AvogadroQuantumIOTests ${testSrcs})
 target_link_libraries(AvogadroQuantumIOTests Avogadro::IO Avogadro::QuantumIO
-  ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+  nlohmann_json::nlohmann_json ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.

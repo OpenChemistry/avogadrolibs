@@ -12,11 +12,18 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
+#include <avogadro/core/version.h>
 
 #include <nlohmann/json.hpp>
+
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <iomanip>
 #include <iostream>
 
 using json = nlohmann::json;
+using ordered_json = nlohmann::ordered_json;
 using std::string;
 
 namespace Avogadro::QuantumIO {
@@ -69,7 +76,7 @@ std::vector<std::string> QCSchema::mimeTypes() const
 
 bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
 {
-  float coordinateScale = 1.0; // default to Angstroms
+  double coordinateScale = 1.0; // default to Angstroms
 
   // This should be JSON so look for key attributes
   json root;
@@ -93,11 +100,15 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
-  // if the schema_name is qcschema_molecule, then the coordinates are in
-  // bohr
-  if (root["schema_name"].get<std::string>() == "qcschema_molecule") {
+  // "qcschema_molecule" is the MolSSI specification, while "QC_JSON" is the
+  // older WebMO variant. The MolSSI form uses bohr and zero-based connectivity
+  // indices, the WebMO one uses Angstroms and one-based indices.
+  const bool molssi =
+    root["schema_name"].get<std::string>() == "qcschema_molecule";
+  if (molssi) {
     coordinateScale = BOHR_TO_ANGSTROM;
   }
+  const Index indexOffset = molssi ? 0 : 1;
 
   // get the elements
   if (root.find("symbols") == root.end() || !root["symbols"].is_array()) {
@@ -142,14 +153,20 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
 
   // check for (optional) connectivity
   if (root.find("connectivity") != root.end() &&
-      root["connectivity"].is_array()) {
+      root["connectivity"].is_array() && !root["connectivity"].empty()) {
     // read the bonds and orders
     json connectivity = root["connectivity"];
     // stored as an array of 3-value arrays start, end, order
+    // the order may be fractional in the MolSSI specification
     for (const auto& bond : connectivity) {
-      Index start = bond[0].get<Index>() - 1;
-      Index end = bond[1].get<Index>() - 1;
-      unsigned char order = bond[2].get<unsigned char>();
+      if (!bond.is_array() || bond.size() < 3)
+        continue;
+      Index start = bond[0].get<Index>() - indexOffset;
+      Index end = bond[1].get<Index>() - indexOffset;
+      if (start >= atomCount || end >= atomCount)
+        continue;
+      auto order =
+        static_cast<unsigned char>(std::lround(bond[2].get<double>()));
       molecule.addBond(start, end, order);
     }
   } else {
@@ -158,17 +175,27 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     molecule.perceiveBondOrders();
   }
 
-  // check for optional comment / name
-  if (root.find("comment") != root.end())
+  // check for optional name / comment
+  if (root.find("name") != root.end() && root["name"].is_string())
+    molecule.setData("name", root["name"].get<std::string>());
+  else if (root.find("comment") != root.end() && root["comment"].is_string())
     molecule.setData("name", root["comment"].get<std::string>());
 
   // check for molecular_charge and molecular_multiplicity
-  if (root.find("molecular_charge") != root.end()) {
-    molecule.setData("totalCharge", root["molecular_charge"].get<int>());
+  // (the specification types both of these as floats)
+  if (root.find("molecular_charge") != root.end() &&
+      root["molecular_charge"].is_number()) {
+    molecule.setData("totalCharge", static_cast<int>(std::lround(
+                                      root["molecular_charge"].get<double>())));
   }
-  if (root.find("molecular_multiplicity") != root.end()) {
-    molecule.setData("totalSpinMultiplicity",
-                     root["molecular_multiplicity"].get<int>());
+  if (root.find("molecular_multiplicity") != root.end() &&
+      root["molecular_multiplicity"].is_number()) {
+    int multiplicity = static_cast<int>(
+      std::lround(root["molecular_multiplicity"].get<double>()));
+    // some files in the wild write a multiplicity of zero - ignore those and
+    // let the molecule work one out from the electron count instead
+    if (multiplicity >= 1)
+      molecule.setData("totalSpinMultiplicity", multiplicity);
   }
 
   // if the "properties object exists" look for properties
@@ -395,6 +422,128 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
   }
 
   return true;
+}
+
+namespace {
+
+/**
+ * QCSchema requires the provenance version to be a PEP 440 string, but our
+ * version may carry a git description (e.g. "2.0.0-209-gcae74147"). Keep the
+ * leading numeric release and move anything that follows into a local version
+ * label, e.g. "2.0.0+209.gcae74147".
+ */
+std::string pep440Version(const std::string& version)
+{
+  std::string::size_type end = version.find_first_not_of("0123456789.");
+  std::string release = version.substr(0, end);
+  // trim any trailing separator left behind, e.g. "2.0.0-" => "2.0.0"
+  while (!release.empty() && release.back() == '.')
+    release.pop_back();
+  if (release.empty())
+    return "0";
+  if (end == std::string::npos)
+    return release;
+
+  // the local label allows only lowercase alphanumerics separated by periods
+  std::string local;
+  for (std::string::size_type i = end; i < version.size(); ++i) {
+    char c = version[i];
+    if (std::isalnum(static_cast<unsigned char>(c)))
+      local += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    else if (!local.empty() && local.back() != '.')
+      local += '.';
+  }
+  while (!local.empty() && local.back() == '.')
+    local.pop_back();
+  if (local.empty())
+    return release;
+
+  return release + "+" + local;
+}
+
+} // namespace
+
+bool QCSchema::write(std::ostream& out, const Core::Molecule& molecule)
+{
+  const Index atomCount = molecule.atomCount();
+  if (atomCount == 0) {
+    appendError("Error: no atoms to write.");
+    return false;
+  }
+  // custom / dummy elements have no elemental symbol, so they cannot be
+  // expressed in a qcschema_molecule
+  if (molecule.hasCustomElements()) {
+    appendError("Error: QCSchema cannot represent custom elements.");
+    return false;
+  }
+
+  // use an ordered object so the output is stable and human readable
+  ordered_json root;
+
+  root["schema_name"] = "qcschema_molecule";
+  root["schema_version"] = 3;
+
+  if (molecule.data("name").type() == Core::Variant::String) {
+    std::string name = molecule.data("name").toString();
+    if (!name.empty())
+      root["name"] = name;
+  }
+  if (molecule.data("comment").type() == Core::Variant::String) {
+    std::string comment = molecule.data("comment").toString();
+    if (!comment.empty())
+      root["comment"] = comment;
+  }
+
+  // the ordered array of elemental symbols, in title case
+  ordered_json symbols = ordered_json::array();
+  const auto& atomicNumbers = molecule.atomicNumbers();
+  for (Index i = 0; i < atomCount; ++i)
+    symbols.push_back(Elements::symbol(atomicNumbers[i]));
+  root["symbols"] = symbols;
+
+  // geometry is a flat (3 * nat) array in bohr
+  ordered_json geometry = ordered_json::array();
+  const auto& positions = molecule.atomPositions3d();
+  for (Index i = 0; i < atomCount; ++i) {
+    const Vector3& pos = positions[i];
+    for (unsigned int j = 0; j < 3; ++j)
+      geometry.push_back(pos[j] * ANGSTROM_TO_BOHR);
+  }
+  root["geometry"] = geometry;
+
+  // both of these are typed as floats by the specification, and the
+  // multiplicity must be positive
+  root["molecular_charge"] = static_cast<double>(molecule.totalCharge());
+  root["molecular_multiplicity"] =
+    static_cast<double>(std::max<int>(molecule.totalSpinMultiplicity(), 1));
+
+  // connectivity is optional, and must be omitted rather than left empty
+  // each entry is (index a, index b, bond order) with zero-based indices
+  if (molecule.bondCount() > 0) {
+    ordered_json connectivity = ordered_json::array();
+    const auto& bondPairs = molecule.bondPairs();
+    const auto& bondOrders = molecule.bondOrders();
+    for (Index i = 0; i < molecule.bondCount(); ++i) {
+      // the specification limits bond orders to the range [0, 5]
+      double order = std::min(static_cast<double>(bondOrders[i]), 5.0);
+      connectivity.push_back(ordered_json::array(
+        { bondPairs[i].first, bondPairs[i].second, order }));
+    }
+    root["connectivity"] = connectivity;
+  }
+
+  // the coordinates come from the user, so ask that they be left alone rather
+  // than re-centered and re-oriented by the consumer
+  root["fix_com"] = true;
+  root["fix_orientation"] = true;
+
+  root["provenance"] = { { "creator", "Avogadro" },
+                         { "version", pep440Version(Avogadro::version()) },
+                         { "routine", "Avogadro::QuantumIO::QCSchema" } };
+
+  out << std::setw(2) << root << '\n';
+
+  return out.good();
 }
 
 } // namespace Avogadro::QuantumIO
