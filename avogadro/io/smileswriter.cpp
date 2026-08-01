@@ -152,9 +152,10 @@ private:
   void linkClosures();
   void markRingBonds();
   std::vector<Index> ringSystems() const;
-  void assignChirality();
-  void assignBondStereo();
+  void assignChirality(const std::vector<Index>& classes);
+  void assignBondStereo(const std::vector<Index>& classes);
   bool writtenNeighbors(Index atom, Index neighbors[4]) const;
+  bool hasStereoCandidates() const;
   bool directionalBond(Index carbon, Index partner, Index& bond,
                        Index& substituent) const;
   bool emit(std::string& smiles, std::string& error);
@@ -177,11 +178,11 @@ private:
   std::vector<bool> m_suppressed;
   std::vector<unsigned char> m_implicitH;
   std::vector<Index> m_suppressedHydrogen;
+  std::vector<Index> m_degree;
   std::vector<unsigned int> m_bondOrderSum;
 
   std::vector<Index> m_parent;
   std::vector<Index> m_parentBond;
-  std::vector<Index> m_classes;
   std::vector<Chirality> m_chirality;
   std::vector<bool> m_bondInRing;
   std::vector<bool> m_bondIsClosure;
@@ -204,12 +205,13 @@ private:
 
 bool Serializer::run(std::string& smiles, std::string& error)
 {
-  m_aromaticAtom.assign(m_mol.atomCount(), false);
-  m_aromaticBond.assign(m_mol.bondCount(), false);
   if (m_aromatic) {
     Core::AromaticityPerceiver perceiver(&m_mol);
     m_aromaticAtom = perceiver.aromaticAtoms();
     m_aromaticBond = perceiver.aromaticBonds();
+  } else {
+    m_aromaticAtom.assign(m_mol.atomCount(), false);
+    m_aromaticBond.assign(m_mol.bondCount(), false);
   }
 
   suppressHydrogens();
@@ -222,10 +224,13 @@ bool Serializer::run(std::string& smiles, std::string& error)
   // need to know which substituents are constitutionally distinguishable.
   m_chirality.assign(m_mol.atomCount(), Chirality::None);
   m_bondDirection.assign(m_mol.bondCount(), Direction::None);
-  if (m_mol.atomPositions3d().size() == m_mol.atomCount()) {
-    m_classes = atomEquivalenceClasses(m_mol);
-    assignChirality();
-    assignBondStereo();
+  // Equivalence classes cost a refinement over the whole molecule, so only
+  // pay for them when there is something they could decide.
+  if (m_mol.atomPositions3d().size() == m_mol.atomCount() &&
+      hasStereoCandidates()) {
+    const std::vector<Index> classes = atomEquivalenceClasses(m_mol);
+    assignChirality(classes);
+    assignBondStereo(classes);
   }
 
   return emit(smiles, error);
@@ -255,10 +260,10 @@ void Serializer::suppressHydrogens()
   const Core::Array<std::pair<Index, Index>>& pairs = m_mol.bondPairs();
   const Core::Array<unsigned char>& numbers = m_mol.atomicNumbers();
 
-  std::vector<Index> degree(atomCount, 0);
+  m_degree.assign(atomCount, 0);
   for (const std::pair<Index, Index>& ends : pairs) {
-    ++degree[ends.first];
-    ++degree[ends.second];
+    ++m_degree[ends.first];
+    ++m_degree[ends.second];
   }
 
   for (Index bond = 0; bond < pairs.size(); ++bond) {
@@ -281,7 +286,7 @@ void Serializer::suppressHydrogens()
       // was reached from, and writtenNeighbors() places it there.
       if (numbers[hydrogen] != 1 || numbers[neighbor] == 1)
         continue;
-      if (degree[hydrogen] != 1)
+      if (m_degree[hydrogen] != 1)
         continue;
       if (m_mol.formalCharge(hydrogen) != 0 || m_mol.isotope(hydrogen) != 0)
         continue;
@@ -481,8 +486,8 @@ std::vector<Index> Serializer::ringSystems() const
       continue;
 
     bool inRing = false;
-    for (Index bond : m_mol.graph().edges(seed))
-      inRing = inRing || m_bondInRing[bond];
+    for (Index i = m_adjacencyStart[seed]; i < m_adjacencyStart[seed + 1]; ++i)
+      inRing = inRing || m_bondInRing[m_adjacency[i]];
     if (!inRing)
       continue;
 
@@ -491,7 +496,9 @@ std::vector<Index> Serializer::ringSystems() const
     while (!queue.empty()) {
       const Index atom = queue.back();
       queue.pop_back();
-      for (Index bond : m_mol.graph().edges(atom)) {
+      for (Index i = m_adjacencyStart[atom]; i < m_adjacencyStart[atom + 1];
+           ++i) {
+        const Index bond = m_adjacency[i];
         if (!m_bondInRing[bond])
           continue;
         const std::pair<Index, Index>& ends = pairs[bond];
@@ -508,11 +515,34 @@ std::vector<Index> Serializer::ringSystems() const
   return system;
 }
 
-void Serializer::assignChirality()
+bool Serializer::hasStereoCandidates() const
+{
+  // A centre needs four written neighbours to have a handedness at all.
+  Index neighbors[4];
+  for (Index atom = 0; atom < m_mol.atomCount(); ++atom) {
+    if (!m_suppressed[atom] && writtenNeighbors(atom, neighbors))
+      return true;
+  }
+
+  // A double bond needs a substituent at each end. This rejects the carbonyls
+  // that most molecules are otherwise full of.
+  const Core::Array<std::pair<Index, Index>>& pairs = m_mol.bondPairs();
+  const Core::Array<unsigned char>& orders = m_mol.bondOrders();
+  for (Index bond = 0; bond < m_mol.bondCount(); ++bond) {
+    if (orders[bond] != 2 || m_bondInRing[bond])
+      continue;
+    const std::pair<Index, Index>& ends = pairs[bond];
+    if (m_degree[ends.first] > 1 && m_degree[ends.second] > 1)
+      return true;
+  }
+
+  return false;
+}
+
+void Serializer::assignChirality(const std::vector<Index>& classes)
 {
   const Index atomCount = m_mol.atomCount();
   const Core::Array<Vector3>& positions = m_mol.atomPositions3d();
-  const std::vector<Index>& classes = m_classes;
 
   // Which atoms are stereogenic, and on what grounds. A "ring dependent"
   // centre is one whose two equivalent substituents are the two ways round a
@@ -574,7 +604,13 @@ void Serializer::assignChirality()
 
   // A ring dependent centre needs a partner: cyclohexanol has exactly one and
   // is achiral, while 4-methylcyclohexanol has two and is cis/trans isomeric.
-  const std::vector<Index> ringSystem = ringSystems();
+  // Most molecules have no such centre, so do not walk the rings for nothing.
+  bool anyRingDependent = false;
+  for (Index atom = 0; atom < atomCount && !anyRingDependent; ++atom)
+    anyRingDependent = candidacy[atom] == Candidacy::RingDependent;
+
+  const std::vector<Index> ringSystem =
+    anyRingDependent ? ringSystems() : std::vector<Index>(atomCount, MaxIndex);
   std::vector<Index> dependentCount;
   for (Index atom = 0; atom < atomCount; ++atom) {
     if (candidacy[atom] != Candidacy::RingDependent ||
@@ -646,7 +682,7 @@ bool Serializer::directionalBond(Index carbon, Index partner, Index& bond,
   return found;
 }
 
-void Serializer::assignBondStereo()
+void Serializer::assignBondStereo(const std::vector<Index>& classes)
 {
   const Core::Array<std::pair<Index, Index>>& pairs = m_mol.bondPairs();
   const Core::Array<unsigned char>& orders = m_mol.bondOrders();
@@ -699,7 +735,7 @@ void Serializer::assignBondStereo()
     bool stereogenic = true;
     for (int end = 0; end < 2; ++end) {
       if (substituentCount[end] == 2 &&
-          m_classes[substituents[end][0]] == m_classes[substituents[end][1]])
+          classes[substituents[end][0]] == classes[substituents[end][1]])
         stereogenic = false;
     }
     if (!stereogenic)

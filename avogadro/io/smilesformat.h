@@ -65,14 +65,14 @@ public:
   /** @copydoc SmilesWriter::setHydrogenMode() */
   void setHydrogenMode(SmilesWriter::HydrogenMode mode)
   {
-    m_hydrogenMode = mode;
+    m_writer.setHydrogenMode(mode);
   }
 
   /** @copydoc SmilesWriter::setAtomMaps() */
-  void setAtomMaps(bool enable) { m_atomMaps = enable; }
+  void setAtomMaps(bool enable) { m_writer.setAtomMaps(enable); }
 
   /** @copydoc SmilesWriter::setAromatic() */
-  void setAromatic(bool enable) { m_aromatic = enable; }
+  void setAromatic(bool enable) { m_writer.setAromatic(enable); }
 
   [[nodiscard]] bool read(std::istream& inStream,
                           Core::Molecule& molecule) override;
@@ -80,10 +80,8 @@ public:
                            const Core::Molecule& molecule) override;
 
 private:
-  SmilesWriter::HydrogenMode m_hydrogenMode =
-    SmilesWriter::HydrogenMode::Implicit;
-  bool m_atomMaps = false;
-  bool m_aromatic = true;
+  //! Holds the settings; write() applies any options() on top of a copy.
+  SmilesWriter m_writer;
 };
 
 } // namespace Avogadro::Io

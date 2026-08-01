@@ -46,13 +46,38 @@ bool SmilesFormat::write(std::ostream& outStream,
   if (!opts.is_object())
     opts = json::object();
 
-  SmilesWriter writer;
-  writer.setHydrogenMode(m_hydrogenMode);
-  writer.setAtomMaps(opts.value("atomMaps", m_atomMaps));
-  writer.setAromatic(opts.value("aromatic", m_aromatic));
+  SmilesWriter writer = m_writer;
+
+  // Every option is type checked before it is read: json::value() throws when
+  // the stored type does not match, and this code must not throw.
+  bool valid = true;
+  const auto boolOption = [&](const char* name, bool& out) {
+    if (!opts.contains(name))
+      return;
+    if (!opts[name].is_boolean()) {
+      appendError(std::string("The \"") + name +
+                  "\" option must be a boolean.");
+      valid = false;
+      return;
+    }
+    out = opts[name].get<bool>();
+  };
+
+  bool atomMaps = writer.atomMaps();
+  bool aromatic = writer.aromatic();
+  boolOption("atomMaps", atomMaps);
+  boolOption("aromatic", aromatic);
+  if (!valid)
+    return false;
+  writer.setAtomMaps(atomMaps);
+  writer.setAromatic(aromatic);
 
   if (opts.contains("hydrogens")) {
-    const std::string hydrogens = opts.value("hydrogens", std::string());
+    if (!opts["hydrogens"].is_string()) {
+      appendError("The \"hydrogens\" option must be a string.");
+      return false;
+    }
+    const std::string hydrogens = opts["hydrogens"].get<std::string>();
     if (hydrogens == "implicit")
       writer.setHydrogenMode(SmilesWriter::HydrogenMode::Implicit);
     else if (hydrogens == "bracket")

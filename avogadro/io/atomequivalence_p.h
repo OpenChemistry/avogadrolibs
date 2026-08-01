@@ -120,8 +120,14 @@ inline std::vector<Index> atomEquivalenceClasses(const Core::Molecule& mol)
   Index classCount = rankByKeys();
 
   // Each round can only split classes, so the count is strictly increasing
-  // until it settles; it cannot exceed the atom count.
-  for (Index round = 0; round < atomCount; ++round) {
+  // until it settles. Refinement normally settles within a few rounds, but a
+  // long chain needs one round per bond to tell its ends apart, which would
+  // make this quadratic on a polymer or a protein backbone. Capping the rounds
+  // bounds that: atoms whose environments only differ further away than the
+  // cap stay in one class, which loses stereocentres rather than inventing
+  // them -- the same direction as this function's other limits.
+  const Index maxRounds = std::min<Index>(atomCount, 32);
+  for (Index round = 0; round < maxRounds; ++round) {
     for (Index atom = 0; atom < atomCount; ++atom) {
       uint64_t* key = &keys[atom * stride];
       key[0] = classes[atom];

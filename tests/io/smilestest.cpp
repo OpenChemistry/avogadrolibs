@@ -21,6 +21,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <utility>
 
 using Avogadro::Index;
 using Avogadro::Vector3;
@@ -32,7 +33,7 @@ using Avogadro::Io::SmilesWriter;
 
 namespace {
 
-/** Write in the only mode implemented so far: mapped, explicit hydrogens. */
+/** Write with atom maps, which implies explicit hydrogens. */
 std::string writeMapped(const Molecule& mol)
 {
   SmilesWriter writer;
@@ -291,6 +292,8 @@ TEST(SmilesTest, atomMapsImplyExplicitHydrogens)
   EXPECT_EQ(smiles, "[C:1]([H:2])([H:3])([H:4])[H:5]");
 }
 
+namespace {
+
 /** Write in the default (implicit hydrogen) mode. */
 std::string writeImplicit(const Molecule& mol)
 {
@@ -316,6 +319,8 @@ Molecule hydride(unsigned char atomicNumber, int count)
   addHydrogens(mol, mol.addAtom(atomicNumber).index(), count);
   return mol;
 }
+
+} // namespace
 
 TEST(SmilesTest, implicitOrganicSubset)
 {
@@ -630,6 +635,12 @@ Molecule difluoroethene(bool trans)
   return mol;
 }
 
+bool hasDirectionalBond(const std::string& smiles)
+{
+  return smiles.find('/') != std::string::npos ||
+         smiles.find('\\') != std::string::npos;
+}
+
 } // namespace
 
 TEST(SmilesTest, cisTransMarkers)
@@ -654,8 +665,7 @@ TEST(SmilesTest, noCisTransWithoutTwoDistinctEnds)
   mol.addBond(c2, mol.addAtom(1, Vector3(2.0, -1.03, 0.0)).index(), 1);
 
   const std::string smiles = writeImplicit(mol);
-  EXPECT_EQ(smiles.find('/'), std::string::npos) << smiles;
-  EXPECT_EQ(smiles.find('\\'), std::string::npos) << smiles;
+  EXPECT_FALSE(hasDirectionalBond(smiles)) << smiles;
 }
 
 TEST(SmilesTest, noCisTransWithoutCoordinates)
@@ -692,12 +702,6 @@ std::string buteneMol(const char* doubleBondStereo)
                      "  1  2  1  0\n"
                      "  2  3  2  ") +
          doubleBondStereo + "\n  3  4  1  0\nM  END\n";
-}
-
-bool hasDirectionalBond(const std::string& smiles)
-{
-  return smiles.find('/') != std::string::npos ||
-         smiles.find('\\') != std::string::npos;
 }
 
 } // namespace
@@ -749,8 +753,8 @@ TEST(SmilesTest, unspecifiedMarkersFollowTheirBonds)
 
 namespace {
 
-/** A ring of @a elements, alternating double and single bonds, plus one
- *  hydrogen on every atom that is given one in @a hydrogens. */
+/** A ring of @a elements bonded in @a orders, plus one hydrogen on every atom
+ *  flagged in @a hydrogens. */
 Molecule aromaticRing(const std::vector<unsigned char>& elements,
                       const std::vector<bool>& hydrogens,
                       const std::vector<unsigned char>& orders)
@@ -842,6 +846,33 @@ TEST(SmilesTest, formatOptions)
   std::string smiles;
   EXPECT_TRUE(format.writeString(smiles, mol)) << format.error();
   EXPECT_EQ(smiles, "[C:1]([H:2])([H:3])([H:4])[H:5]\n");
+
+  // Each hydrogen mode, through the option rather than the typed setter.
+  const std::pair<const char*, const char*> modes[] = {
+    { "implicit", "C\n" },
+    { "bracket", "[CH4]\n" },
+    { "explicit", "[C]([H])([H])([H])[H]\n" }
+  };
+  for (const auto& mode : modes) {
+    SmilesFormat format2;
+    format2.setOptions(std::string("{\"hydrogens\": \"") + mode.first + "\"}");
+    std::string output;
+    EXPECT_TRUE(format2.writeString(output, mol)) << format2.error();
+    EXPECT_EQ(output, mode.second) << mode.first;
+  }
+
+  // An option that is present but unusable is an error, not a silent default:
+  // a wrong type, and a value this format does not know.
+  const char* rejected[] = { "{\"hydrogens\": \"aromatic\"}",
+                             "{\"hydrogens\": true}",
+                             "{\"atomMaps\": \"yes\"}" };
+  for (const char* options : rejected) {
+    SmilesFormat bad;
+    bad.setOptions(options);
+    std::string output;
+    EXPECT_FALSE(bad.writeString(output, mol)) << options;
+    EXPECT_FALSE(bad.error().empty()) << options;
+  }
 
   SmilesFormat defaults;
   std::string implicit;

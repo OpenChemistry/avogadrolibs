@@ -22,13 +22,15 @@ namespace Avogadro::Io {
  * @class SmilesWriter smileswriter.h <avogadro/io/smileswriter.h>
  * @brief Serialize a molecule to a SMILES string.
  *
- * Output is Kekule only: bond orders are written as they are stored, and no
- * aromatic perception is performed.
+ * Tetrahedral chirality and double bond direction markers are read out of the
+ * molecule's coordinates, so they are written only for a molecule that has
+ * them; a structure without 3D positions is written without stereochemistry
+ * rather than with a guess. Which centres count as stereogenic is decided
+ * constitutionally, within the limits documented in atomequivalence_p.h.
  *
- * Tetrahedral and cis/trans stereochemistry are read from the coordinates and
- * written. There is no way to express "unspecified", so a centre with a
- * definite geometry always gets a definite descriptor. Ring cis/trans centres
- * are not detected -- see atomEquivalenceClasses().
+ * Where a source marked a configuration undefined -- see Core::stereo.h --
+ * that is honoured and no descriptor is written, since the coordinates in that
+ * case are a placement rather than a claim.
  */
 
 class AVOGADROIO_EXPORT SmilesWriter

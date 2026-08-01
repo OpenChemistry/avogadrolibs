@@ -10,8 +10,6 @@
 #include "ringperceiver.h"
 
 #include <algorithm>
-#include <map>
-#include <set>
 #include <utility>
 
 namespace Avogadro::Core {
@@ -105,6 +103,83 @@ bool huckel(int piElectrons)
   return piElectrons >= 2 && ((piElectrons - 2) % 4) == 0;
 }
 
+/**
+ * Mark every bond that lies on a cycle, by finding the bridges: a bond is on a
+ * cycle exactly when removing it would not disconnect its two ends.
+ *
+ * This is the iterative form of Tarjan's algorithm, in O(atoms + bonds). It
+ * replaces asking RingPerceiver, which is far more expensive and answers a
+ * harder question -- see the note on ring systems in perceive().
+ */
+std::vector<bool> findRingBonds(const Molecule& mol)
+{
+  const Index atomCount = mol.atomCount();
+  const Core::Array<std::pair<Index, Index>>& pairs = mol.bondPairs();
+  std::vector<bool> ringBond(mol.bondCount(), false);
+
+  std::vector<Index> discovery(atomCount, MaxIndex);
+  std::vector<Index> low(atomCount, MaxIndex);
+  Index timer = 0;
+
+  // Depth first, with an explicit stack: molecules can be long enough that
+  // recursing once per atom would overflow it.
+  struct Frame
+  {
+    Index atom;
+    Index parentBond;
+    Index next; //!< Cursor into this atom's incident bonds.
+  };
+  std::vector<Frame> stack;
+  std::vector<std::vector<size_t>> incident(atomCount);
+  for (Index bond = 0; bond < mol.bondCount(); ++bond) {
+    incident[pairs[bond].first].push_back(bond);
+    incident[pairs[bond].second].push_back(bond);
+  }
+
+  for (Index root = 0; root < atomCount; ++root) {
+    if (discovery[root] != MaxIndex)
+      continue;
+    discovery[root] = low[root] = timer++;
+    stack.push_back(Frame{ root, MaxIndex, 0 });
+
+    while (!stack.empty()) {
+      Frame& frame = stack.back();
+      if (frame.next >= incident[frame.atom].size()) {
+        const Index atom = frame.atom;
+        const Index parentBond = frame.parentBond;
+        stack.pop_back();
+        if (!stack.empty()) {
+          const Index parent = stack.back().atom;
+          low[parent] = std::min(low[parent], low[atom]);
+          // A bridge is a tree bond whose subtree reaches no further back.
+          if (low[atom] <= discovery[parent] && parentBond != MaxIndex)
+            ringBond[parentBond] = true;
+        }
+        continue;
+      }
+
+      const Index bond = incident[frame.atom][frame.next++];
+      if (bond == frame.parentBond)
+        continue;
+      const std::pair<Index, Index>& ends = pairs[bond];
+      const Index other = (ends.first == frame.atom) ? ends.second : ends.first;
+      if (other == frame.atom)
+        continue;
+
+      if (discovery[other] != MaxIndex) {
+        // Back edge: it closes a cycle, so it and the tree path are ring bonds.
+        low[frame.atom] = std::min(low[frame.atom], discovery[other]);
+        ringBond[bond] = true;
+      } else {
+        discovery[other] = low[other] = timer++;
+        stack.push_back(Frame{ other, bond, 0 });
+      }
+    }
+  }
+
+  return ringBond;
+}
+
 } // namespace
 
 AromaticityPerceiver::AromaticityPerceiver(const Molecule* m, Model model)
@@ -167,33 +242,9 @@ void AromaticityPerceiver::perceive() const
   if (atomCount == 0)
     return;
 
-  RingPerceiver perceiver(m_molecule);
-  const std::vector<std::vector<size_t>>& rings = perceiver.rings();
-  if (rings.empty())
-    return;
-
-  // Which bonds close a ring. Every bond between atoms adjacent in some
-  // smallest ring qualifies, which is what separates a double bond inside the
-  // ring from one leaving it.
-  std::vector<bool> ringBond(bondCount, false);
-  std::map<std::pair<Index, Index>, Index> bondLookup;
-  for (Index bond = 0; bond < bondCount; ++bond) {
-    const std::pair<Index, Index>& ends = pairs[bond];
-    bondLookup[{ std::min(ends.first, ends.second),
-                 std::max(ends.first, ends.second) }] = bond;
-  }
-  const auto findBond = [&](Index a, Index b) -> Index {
-    const auto it = bondLookup.find({ std::min(a, b), std::max(a, b) });
-    return it == bondLookup.end() ? MaxIndex : it->second;
-  };
-
-  for (const std::vector<size_t>& ring : rings) {
-    for (size_t i = 0; i < ring.size(); ++i) {
-      const Index bond = findBond(ring[i], ring[(i + 1) % ring.size()]);
-      if (bond != MaxIndex)
-        ringBond[bond] = true;
-    }
-  }
+  // Which bonds lie on a cycle. This separates a double bond inside a ring
+  // from one leaving it, and bounds all the work below to the ring systems.
+  const std::vector<bool> ringBond = findRingBonds(*m_molecule);
 
   // Per-atom pi contribution.
   std::vector<BondContext> context(atomCount);
@@ -213,9 +264,12 @@ void AromaticityPerceiver::perceive() const
   }
 
   std::vector<bool> inRing(atomCount, false);
-  for (const std::vector<size_t>& ring : rings)
-    for (size_t atom : ring)
-      inRing[atom] = true;
+  for (Index bond = 0; bond < bondCount; ++bond) {
+    if (ringBond[bond]) {
+      inRing[pairs[bond].first] = true;
+      inRing[pairs[bond].second] = true;
+    }
+  }
 
   for (Index atom = 0; atom < atomCount; ++atom) {
     if (!inRing[atom])
@@ -254,7 +308,6 @@ void AromaticityPerceiver::perceive() const
   // A set of atoms is aromatic when every one can contribute and the total
   // satisfies Huckel. Individual rings are tested first, then whole fused
   // systems, which is what catches azulene.
-  std::set<Index> aromatic;
   const auto test = [&](const std::vector<Index>& atoms) {
     int total = 0;
     for (Index atom : atoms) {
@@ -262,19 +315,54 @@ void AromaticityPerceiver::perceive() const
         return;
       total += m_piContributions[atom];
     }
-    if (huckel(total))
-      aromatic.insert(atoms.begin(), atoms.end());
+    if (!huckel(total))
+      return;
+    for (Index atom : atoms)
+      m_aromaticAtoms[atom] = true;
   };
 
-  for (const std::vector<size_t>& ring : rings)
-    test(std::vector<Index>(ring.begin(), ring.end()));
-  for (const std::vector<Index>& fused : m_ringSystems) {
-    if (fused.size() > 1)
-      test(fused);
+  // The ring bonds of each system, so the loop below does not rescan them all.
+  std::vector<std::vector<Index>> systemBonds(m_ringSystems.size());
+  for (Index bond = 0; bond < bondCount; ++bond) {
+    if (!ringBond[bond])
+      continue;
+    const Index id = system[pairs[bond].first];
+    if (id != MaxIndex)
+      systemBonds[id].push_back(bond);
   }
 
-  for (Index atom : aromatic)
-    m_aromaticAtoms[atom] = true;
+  // RingPerceiver's cost climbs steeply with the size of the graph it is
+  // handed -- steeply enough to hang on a molecule with a dozen rings -- so
+  // give it one ring system at a time. A ring never spans two systems, so the
+  // answer is the same, and systems stay small even when molecules do not.
+  std::vector<Index> local(atomCount, MaxIndex);
+  std::vector<Index> ringAtoms;
+  for (Index id = 0; id < m_ringSystems.size(); ++id) {
+    const std::vector<Index>& fused = m_ringSystems[id];
+
+    Molecule subset;
+    for (Index atom : fused) {
+      local[atom] = subset.atomCount();
+      subset.addAtom(numbers[atom]);
+    }
+    for (Index bond : systemBonds[id]) {
+      const std::pair<Index, Index>& ends = pairs[bond];
+      subset.addBond(local[ends.first], local[ends.second], orders[bond]);
+    }
+
+    RingPerceiver perceiver(&subset);
+    for (const std::vector<size_t>& ring : perceiver.rings()) {
+      ringAtoms.clear();
+      for (size_t atom : ring)
+        ringAtoms.push_back(fused[atom]);
+      test(ringAtoms);
+    }
+    if (fused.size() > 1)
+      test(fused);
+
+    for (Index atom : fused)
+      local[atom] = MaxIndex;
+  }
 
   for (Index bond = 0; bond < bondCount; ++bond) {
     const std::pair<Index, Index>& ends = pairs[bond];

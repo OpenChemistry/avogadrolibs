@@ -199,7 +199,7 @@ bool CopyPaste::copy(Io::FileFormat* format)
           .arg(QString::fromStdString(format->name()))
           .arg(QString::fromStdString(format->description())) +
         "\n\n" +
-        tr("Reader error:\n%1").arg(QString::fromStdString(format->error())));
+        tr("Writer error:\n%1").arg(QString::fromStdString(format->error())));
     return false;
   }
 

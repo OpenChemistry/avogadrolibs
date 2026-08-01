@@ -12,9 +12,7 @@ avogadro_headers(IO
   lammpsformat.h
   pdbformat.h
   sdfformat.h
-  atomequivalence_p.h
   smilesformat.h
-  smilesvalence_p.h
   smileswriter.h
   trrformat.h
   turbomoleformat.h
@@ -34,7 +32,9 @@ target_sources(IO PRIVATE
   mdlformat.cpp
   pdbformat.cpp
   sdfformat.cpp
+  atomequivalence_p.h
   smilesformat.cpp
+  smilesvalence_p.h
   smileswriter.cpp
   trrformat.cpp
   turbomoleformat.cpp
