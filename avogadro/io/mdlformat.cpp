@@ -9,6 +9,7 @@
 
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/stereo.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
@@ -293,8 +294,23 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       appendError("Bond read in with out of bounds index.");
       return false;
     }
-    mol.addBond(mol.atom(begin), mol.atom(end),
-                static_cast<unsigned char>(order));
+    Bond newBond = mol.addBond(mol.atom(begin), mol.atom(end),
+                               static_cast<unsigned char>(order));
+
+    // The stereo column is optional, and a file that omits it is simply
+    // saying nothing about configuration.
+    if (buffer.size() >= 12) {
+      const int stereo(lexicalCast<int>(buffer.substr(9, 3), ok));
+      if (ok) {
+        // 3 on a double bond is "cis or trans, either", and 4 on a single bond
+        // is a wedge drawn as "either". Both mean the author declined to state
+        // a configuration, so the coordinates must not be read as one.
+        if (order == 2 && stereo == 3)
+          setBondStereoUnspecified(mol, newBond.index());
+        else if (order == 1 && stereo == 4)
+          setAtomStereoUnspecified(mol, static_cast<Index>(begin));
+      }
+    }
   }
 
   // Parse the properties block until the end of the file.

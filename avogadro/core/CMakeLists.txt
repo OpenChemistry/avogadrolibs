@@ -66,6 +66,7 @@ avogadro_headers(Core
   slaterset.h
   slatersettools.h
   spacegroups.h
+  stereo.h
   symbolatomtyper.h
   unitcell.h
   variant.h
@@ -101,6 +102,7 @@ target_sources(Core PRIVATE
   slaterset.cpp
   slatersettools.cpp
   spacegroups.cpp
+  stereo.cpp
   symbolatomtyper.cpp
   unitcell.cpp
   variantmap.cpp

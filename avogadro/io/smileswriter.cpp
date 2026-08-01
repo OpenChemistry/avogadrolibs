@@ -12,6 +12,7 @@
 #include <avogadro/core/bond.h>
 #include <avogadro/core/graph.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/stereo.h>
 #include <avogadro/core/vector.h>
 
 #include <array>
@@ -178,6 +179,7 @@ private:
   std::vector<Index> m_classes;
   std::vector<Chirality> m_chirality;
   std::vector<bool> m_bondInRing;
+  std::vector<bool> m_bondIsClosure;
   std::vector<Direction> m_bondDirection;
 
   // Bonds incident to each atom, as a flat array indexed by m_adjacencyStart.
@@ -434,10 +436,12 @@ bool Serializer::writtenNeighbors(Index atom, Index neighbors[4]) const
 void Serializer::markRingBonds()
 {
   m_bondInRing.assign(m_mol.bondCount(), false);
+  m_bondIsClosure.assign(m_mol.bondCount(), false);
 
   // A ring closure and every tree bond between its two ends form one cycle.
   for (const RingClosure& closure : m_closures) {
     m_bondInRing[closure.bond] = true;
+    m_bondIsClosure[closure.bond] = true;
     Index atom = closure.close;
     while (atom != closure.open && atom != MaxIndex) {
       const Index bond = m_parentBond[atom];
@@ -512,6 +516,11 @@ void Serializer::assignChirality()
   Index neighbors[4];
   for (Index atom = 0; atom < atomCount; ++atom) {
     if (m_suppressed[atom] || !writtenNeighbors(atom, neighbors))
+      continue;
+
+    // The source placed this atom somewhere without claiming a configuration,
+    // so its geometry is not evidence of one.
+    if (Core::atomStereoUnspecified(m_mol, atom))
       continue;
 
     // Count how many substituents share a class with another. None means a
@@ -596,9 +605,11 @@ void Serializer::assignChirality()
 bool Serializer::directionalBond(Index carbon, Index partner, Index& bond,
                                  Index& substituent) const
 {
-  // A marker can only go on a bond that is actually written as a bond: not a
-  // folded hydrogen, and not a ring bond, whose two halves would each need
-  // their own consistent symbol.
+  // A marker can only go on a bond that is actually written once, as a bond:
+  // not a folded hydrogen, and not a ring closure, whose two occurrences would
+  // each need their own consistent symbol. An ordinary ring bond is fine --
+  // it appears exactly once, and an unsatisfiable set of constraints around
+  // the ring is caught by the agreement check in assignBondStereo().
   const Core::Array<std::pair<Index, Index>>& pairs = m_mol.bondPairs();
   bool found = false;
 
@@ -607,7 +618,7 @@ bool Serializer::directionalBond(Index carbon, Index partner, Index& bond,
     const Index other = (ends.first == carbon) ? ends.second : ends.first;
     if (other == partner)
       continue;
-    if (m_suppressed[other] || m_bondInRing[candidate])
+    if (m_suppressed[other] || m_bondIsClosure[candidate])
       continue;
 
     // Prefer the lowest bond index, so the choice does not depend on the
@@ -631,6 +642,11 @@ void Serializer::assignBondStereo()
 
   for (Index bond = 0; bond < m_mol.bondCount(); ++bond) {
     if (orders[bond] != 2 || m_bondInRing[bond])
+      continue;
+
+    // Marked "cis or trans, either" upstream: the coordinates say something
+    // the source explicitly did not.
+    if (Core::bondStereoUnspecified(m_mol, bond))
       continue;
 
     const Index first = pairs[bond].first;

@@ -10,7 +10,10 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
+#include <avogadro/core/stereo.h>
+
 #include <avogadro/io/cmlformat.h>
+#include <avogadro/io/mdlformat.h>
 #include <avogadro/io/smilesformat.h>
 #include <avogadro/io/smileswriter.h>
 
@@ -23,6 +26,7 @@ using Avogadro::Index;
 using Avogadro::Vector3;
 using Avogadro::Core::Molecule;
 using Avogadro::Io::CmlFormat;
+using Avogadro::Io::MdlFormat;
 using Avogadro::Io::SmilesFormat;
 using Avogadro::Io::SmilesWriter;
 
@@ -666,6 +670,81 @@ TEST(SmilesTest, noCisTransWithoutCoordinates)
   mol.addBond(c2, mol.addAtom(1).index(), 1);
 
   EXPECT_EQ(writeImplicit(mol), "C(F)=CF");
+}
+
+namespace {
+
+/** trans-2-butene in two dimensions, with the given MDL bond stereo flag. */
+std::string buteneMol(const char* doubleBondStereo)
+{
+  return std::string("2-butene\n"
+                     "  Avogadro\n"
+                     "\n"
+                     "  4  3  0  0  0  0  0  0  0  0999 V2000\n"
+                     "    0.5000    0.8700    0.0000 C   0  0  0  0  0  0  0  "
+                     "0  0  0  0  0\n"
+                     "    1.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  "
+                     "0  0  0  0  0\n"
+                     "    2.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  "
+                     "0  0  0  0  0\n"
+                     "    2.5000   -0.8700    0.0000 C   0  0  0  0  0  0  0  "
+                     "0  0  0  0  0\n"
+                     "  1  2  1  0\n"
+                     "  2  3  2  ") +
+         doubleBondStereo + "\n  3  4  1  0\nM  END\n";
+}
+
+bool hasDirectionalBond(const std::string& smiles)
+{
+  return smiles.find('/') != std::string::npos ||
+         smiles.find('\\') != std::string::npos;
+}
+
+} // namespace
+
+TEST(SmilesTest, unspecifiedDoubleBondStereoIsNotInvented)
+{
+  // With the stereo column clear, the coordinates are the author's statement
+  // about configuration and get written out.
+  MdlFormat mdl;
+  Molecule defined;
+  ASSERT_TRUE(mdl.readString(buteneMol("0"), defined)) << mdl.error();
+  EXPECT_FALSE(Avogadro::Core::bondStereoUnspecified(defined, 1));
+
+  const std::string definedSmiles = writeImplicit(defined);
+  EXPECT_TRUE(hasDirectionalBond(definedSmiles)) << definedSmiles;
+
+  // Flag 3 is "cis or trans, either": the atoms still have coordinates, but
+  // the author declined to claim a configuration, so none may be written.
+  MdlFormat eitherMdl;
+  Molecule either;
+  ASSERT_TRUE(eitherMdl.readString(buteneMol("3"), either))
+    << eitherMdl.error();
+  EXPECT_TRUE(Avogadro::Core::bondStereoUnspecified(either, 1));
+
+  const std::string eitherSmiles = writeImplicit(either);
+  EXPECT_FALSE(hasDirectionalBond(eitherSmiles)) << eitherSmiles;
+}
+
+TEST(SmilesTest, unspecifiedMarkersFollowTheirBonds)
+{
+  // The markers live in the property map, so they have to survive editing.
+  MdlFormat mdl;
+  Molecule mol;
+  ASSERT_TRUE(mdl.readString(buteneMol("3"), mol)) << mdl.error();
+  ASSERT_TRUE(Avogadro::Core::bondStereoUnspecified(mol, 1));
+
+  // Removing a bond renumbers the rest -- Graph and PropertyMap both swap the
+  // last entry into the freed slot -- so the marker has to move with its bond
+  // rather than stay at index 1.
+  mol.removeBond(static_cast<Index>(0));
+
+  bool markedDoubleBond = false;
+  for (Index bond = 0; bond < mol.bondCount(); ++bond) {
+    if (mol.bondOrders()[bond] == 2)
+      markedDoubleBond = Avogadro::Core::bondStereoUnspecified(mol, bond);
+  }
+  EXPECT_TRUE(markedDoubleBond);
 }
 
 TEST(SmilesTest, formatIsWriteOnly)
