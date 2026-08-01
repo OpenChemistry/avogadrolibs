@@ -9,7 +9,7 @@
 
 #include <avogadro/core/molecule.h>
 
-#include <avogadro/io/mdlformat.h>
+#include <avogadro/io/cmlformat.h>
 #include <avogadro/io/smilesformat.h>
 #include <avogadro/io/smileswriter.h>
 
@@ -19,23 +19,17 @@
 
 using Avogadro::Index;
 using Avogadro::Core::Molecule;
-using Avogadro::Io::MdlFormat;
+using Avogadro::Io::CmlFormat;
 using Avogadro::Io::SmilesFormat;
 using Avogadro::Io::SmilesWriter;
 
 namespace {
 
-/** A writer in the only mode implemented so far. */
-SmilesWriter mappedWriter()
+/** Write in the only mode implemented so far: mapped, explicit hydrogens. */
+std::string writeMapped(const Molecule& mol)
 {
   SmilesWriter writer;
   writer.setAtomMaps(true);
-  return writer;
-}
-
-std::string writeMapped(const Molecule& mol)
-{
-  SmilesWriter writer = mappedWriter();
   std::string smiles;
   EXPECT_TRUE(writer.write(mol, smiles)) << writer.error();
   return smiles;
@@ -269,10 +263,7 @@ TEST(SmilesTest, atomsWithoutAnElementSymbol)
 TEST(SmilesTest, emptyMolecule)
 {
   Molecule mol;
-  SmilesWriter writer = mappedWriter();
-  std::string smiles;
-  EXPECT_TRUE(writer.write(mol, smiles));
-  EXPECT_EQ(smiles, "");
+  EXPECT_EQ(writeMapped(mol), "");
 }
 
 TEST(SmilesTest, atomMapsImplyExplicitHydrogens)
@@ -336,10 +327,13 @@ TEST(SmilesTest, formatOptions)
 
 TEST(SmilesTest, structuralInvariantsOnRealMolecule)
 {
-  MdlFormat mdl;
+  // Caffeine rather than something acyclic: its fused rings are what give the
+  // ring closure invariant anything to check.
+  CmlFormat cml;
   Molecule mol;
   ASSERT_TRUE(
-    mdl.readFile(std::string(AVOGADRO_DATA) + "/data/sdf/ethane.mol", mol));
+    cml.readFile(std::string(AVOGADRO_DATA) + "/data/cml/caffeine.cml", mol));
+  ASSERT_GT(mol.bondCount(), mol.atomCount() - 1); // i.e. it has rings
 
   const std::string smiles = writeMapped(mol);
   EXPECT_TRUE(parenthesesBalanced(smiles)) << smiles;

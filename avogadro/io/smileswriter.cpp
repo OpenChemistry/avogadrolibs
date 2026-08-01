@@ -6,11 +6,11 @@
 #include "smileswriter.h"
 
 #include <avogadro/core/elements.h>
-#include <avogadro/core/graph.h>
 #include <avogadro/core/molecule.h>
 
-#include <set>
-#include <sstream>
+#include <array>
+#include <charconv>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -27,18 +27,29 @@ const int MaxRingNumber = 99;
 /** A bond that is not part of the depth-first spanning tree. */
 struct RingClosure
 {
-  Index open = MaxIndex;  //!< Atom the closure opens at (visited first).
-  Index close = MaxIndex; //!< Atom it closes at.
-  Index bond = MaxIndex;  //!< The molecule bond it stands for.
-  int number = 0;         //!< The ring bond number assigned to it.
+  Index open;      //!< Atom the closure opens at (visited first).
+  Index close;     //!< Atom it closes at.
+  Index bond;      //!< The molecule bond it stands for.
+  int number;      //!< The ring bond number assigned to it.
+  Index nextOpen;  //!< Next closure opening at the same atom.
+  Index nextClose; //!< Next closure closing at the same atom.
 };
 
 /** An edge of the spanning tree, from the perspective of the parent. */
 struct Child
 {
-  Index atom = MaxIndex;
-  Index bond = MaxIndex;
+  Index atom;
+  Index bond;
+  Index next; //!< Next child of the same parent, in discovery order.
 };
+
+void appendUnsigned(std::string& out, unsigned long long value)
+{
+  char buffer[24];
+  const std::to_chars_result result =
+    std::to_chars(buffer, buffer + sizeof(buffer), value);
+  out.append(buffer, result.ptr);
+}
 
 /**
  * Turns a molecule into a SMILES string.
@@ -47,6 +58,10 @@ struct Child
  * recursion: a long chain -- a protein backbone, a polymer -- would otherwise
  * recurse once per atom and overflow the stack on platforms with a small
  * default, and this code must not crash on a valid molecule.
+ *
+ * For the same reason the per-atom collections are flat arrays with intrusive
+ * next links rather than vectors of vectors, which would be one allocation per
+ * atom on a structure that may hold hundreds of thousands of them.
  */
 class Serializer
 {
@@ -54,6 +69,7 @@ public:
   Serializer(const Molecule& mol, bool atomMaps)
     : m_mol(mol), m_atomMaps(atomMaps)
   {
+    m_ringNumberUsed.fill(false);
   }
 
   bool run(std::string& smiles, std::string& error);
@@ -62,65 +78,86 @@ private:
   struct TraversalFrame
   {
     Index atom;
-    size_t next;
-    std::vector<size_t> incident;
+    Index next; //!< Cursor into this atom's slice of m_adjacency.
   };
 
   struct EmitFrame
   {
     Index atom;
-    size_t next;
+    Index child; //!< Index into m_children, or MaxIndex when exhausted.
     bool closeParen;
   };
 
+  void buildAdjacency();
   void traverse();
-  bool numberClosures(std::string& error);
-  void emit(std::string& smiles) const;
-  void emitAtom(std::ostringstream& out, Index atom) const;
-  std::string bondSymbol(Index bond) const;
+  void linkClosures();
+  bool emit(std::string& smiles, std::string& error);
+  bool emitAtom(std::string& out, Index atom, std::string& error);
+  bool takeRingNumber(int& number, std::string& error);
+  const char* bondSymbol(Index bond) const;
+  void appendRingNumber(std::string& out, int number) const;
 
   const Molecule& m_mol;
   bool m_atomMaps;
 
+  // Bonds incident to each atom, as a flat array indexed by m_adjacencyStart.
+  std::vector<Index> m_adjacencyStart;
+  std::vector<Index> m_adjacency;
+
   std::vector<Index> m_roots;
-  std::vector<Index> m_visitOrder;
-  std::vector<std::vector<Child>> m_children;
+  std::vector<Child> m_children;
+  std::vector<Index> m_firstChild;
+
   std::vector<RingClosure> m_closures;
-  std::vector<std::vector<size_t>> m_atomClosures;
+  std::vector<Index> m_firstOpen;
+  std::vector<Index> m_firstClose;
+
+  std::array<bool, MaxRingNumber + 1> m_ringNumberUsed;
 };
-
-std::string ringNumber(int number)
-{
-  if (number < 10)
-    return std::string(1, static_cast<char>('0' + number));
-
-  std::string result("%");
-  result += static_cast<char>('0' + number / 10);
-  result += static_cast<char>('0' + number % 10);
-  return result;
-}
 
 bool Serializer::run(std::string& smiles, std::string& error)
 {
+  buildAdjacency();
   traverse();
-  if (!numberClosures(error))
-    return false;
-  emit(smiles);
-  return true;
+  linkClosures();
+  return emit(smiles, error);
+}
+
+void Serializer::buildAdjacency()
+{
+  const Index atomCount = m_mol.atomCount();
+  const Core::Array<std::pair<Index, Index>>& pairs = m_mol.bondPairs();
+
+  m_adjacencyStart.assign(atomCount + 1, 0);
+  for (const std::pair<Index, Index>& ends : pairs) {
+    ++m_adjacencyStart[ends.first + 1];
+    ++m_adjacencyStart[ends.second + 1];
+  }
+  for (Index atom = 0; atom < atomCount; ++atom)
+    m_adjacencyStart[atom + 1] += m_adjacencyStart[atom];
+
+  // Filling in bond order per atom reproduces the order Graph::edges() would
+  // have given, so the traversal -- and the output -- is unchanged.
+  m_adjacency.resize(2 * pairs.size());
+  std::vector<Index> cursor(m_adjacencyStart.begin(),
+                            m_adjacencyStart.end() - 1);
+  for (Index bond = 0; bond < pairs.size(); ++bond) {
+    m_adjacency[cursor[pairs[bond].first]++] = bond;
+    m_adjacency[cursor[pairs[bond].second]++] = bond;
+  }
 }
 
 void Serializer::traverse()
 {
   const Index atomCount = m_mol.atomCount();
-  const Core::Graph& graph = m_mol.graph();
   const Core::Array<std::pair<Index, Index>>& pairs = m_mol.bondPairs();
 
   std::vector<bool> visited(atomCount, false);
   std::vector<bool> bondUsed(m_mol.bondCount(), false);
-  m_visitOrder.assign(atomCount, MaxIndex);
-  m_children.assign(atomCount, std::vector<Child>());
+  std::vector<Index> lastChild(atomCount, MaxIndex);
+  m_firstChild.assign(atomCount, MaxIndex);
+  m_children.reserve(atomCount);
 
-  Index order = 0;
   std::vector<TraversalFrame> stack;
 
   for (Index root = 0; root < atomCount; ++root) {
@@ -129,18 +166,17 @@ void Serializer::traverse()
 
     m_roots.push_back(root);
     visited[root] = true;
-    m_visitOrder[root] = order++;
-    stack.push_back(TraversalFrame{ root, 0, graph.edges(root) });
+    stack.push_back(TraversalFrame{ root, m_adjacencyStart[root] });
 
     while (!stack.empty()) {
       TraversalFrame& frame = stack.back();
-      if (frame.next >= frame.incident.size()) {
+      const Index current = frame.atom;
+      if (frame.next >= m_adjacencyStart[current + 1]) {
         stack.pop_back();
         continue;
       }
 
-      const Index current = frame.atom;
-      const Index bond = frame.incident[frame.next++];
+      const Index bond = m_adjacency[frame.next++];
       if (bondUsed[bond])
         continue;
 
@@ -153,80 +189,60 @@ void Serializer::traverse()
 
       if (visited[other]) {
         // A non-tree edge in an undirected depth-first search always joins an
-        // atom to one of its own ancestors, so the ancestor -- the one seen
-        // first -- is where the closure opens.
-        RingClosure closure;
-        closure.bond = bond;
-        if (m_visitOrder[other] < m_visitOrder[current]) {
-          closure.open = other;
-          closure.close = current;
-        } else {
-          closure.open = current;
-          closure.close = other;
-        }
-        m_closures.push_back(closure);
+        // atom to one of its own ancestors -- a descendant would have marked
+        // this bond used on its way down -- so the closure opens at the
+        // ancestor, which is the atom already visited.
+        m_closures.push_back(
+          RingClosure{ other, current, bond, 0, MaxIndex, MaxIndex });
       } else {
         visited[other] = true;
-        m_visitOrder[other] = order++;
-        m_children[current].push_back(Child{ other, bond });
+        const Index entry = m_children.size();
+        m_children.push_back(Child{ other, bond, MaxIndex });
+        if (m_firstChild[current] == MaxIndex)
+          m_firstChild[current] = entry;
+        else
+          m_children[lastChild[current]].next = entry;
+        lastChild[current] = entry;
         // Invalidates frame, so nothing above may be used after this point.
-        stack.push_back(TraversalFrame{ other, 0, graph.edges(other) });
+        stack.push_back(TraversalFrame{ other, m_adjacencyStart[other] });
       }
     }
   }
 }
 
-bool Serializer::numberClosures(std::string& error)
+void Serializer::linkClosures()
 {
   const Index atomCount = m_mol.atomCount();
+  m_firstOpen.assign(atomCount, MaxIndex);
+  m_firstClose.assign(atomCount, MaxIndex);
 
-  std::vector<std::vector<size_t>> opensAt(atomCount);
-  std::vector<std::vector<size_t>> closesAt(atomCount);
-  for (size_t i = 0; i < m_closures.size(); ++i) {
-    opensAt[m_closures[i].open].push_back(i);
-    closesAt[m_closures[i].close].push_back(i);
+  // Walking backwards means the head insertions leave each atom's list in
+  // ascending closure order.
+  for (Index i = m_closures.size(); i > 0; --i) {
+    RingClosure& closure = m_closures[i - 1];
+    closure.nextOpen = m_firstOpen[closure.open];
+    m_firstOpen[closure.open] = i - 1;
+    closure.nextClose = m_firstClose[closure.close];
+    m_firstClose[closure.close] = i - 1;
   }
-
-  std::vector<Index> orderToAtom(atomCount, MaxIndex);
-  for (Index atom = 0; atom < atomCount; ++atom)
-    orderToAtom[m_visitOrder[atom]] = atom;
-
-  m_atomClosures.assign(atomCount, std::vector<size_t>());
-  std::set<int> freeNumbers;
-  int nextNumber = 1;
-
-  for (Index position = 0; position < atomCount; ++position) {
-    const Index atom = orderToAtom[position];
-
-    // Allocate before releasing, so a number freed here cannot be reused on
-    // the same atom: "C11" would pair the two digits with each other rather
-    // than with their intended partners.
-    for (size_t closure : opensAt[atom]) {
-      int number = 0;
-      if (!freeNumbers.empty()) {
-        number = *freeNumbers.begin();
-        freeNumbers.erase(freeNumbers.begin());
-      } else if (nextNumber <= MaxRingNumber) {
-        number = nextNumber++;
-      } else {
-        error = "Too many ring closures are open at once; SMILES cannot "
-                "express more than 99.";
-        return false;
-      }
-      m_closures[closure].number = number;
-      m_atomClosures[atom].push_back(closure);
-    }
-
-    for (size_t closure : closesAt[atom]) {
-      freeNumbers.insert(m_closures[closure].number);
-      m_atomClosures[atom].push_back(closure);
-    }
-  }
-
-  return true;
 }
 
-std::string Serializer::bondSymbol(Index bond) const
+bool Serializer::takeRingNumber(int& number, std::string& error)
+{
+  for (int candidate = 1; candidate <= MaxRingNumber; ++candidate) {
+    if (!m_ringNumberUsed[candidate]) {
+      m_ringNumberUsed[candidate] = true;
+      number = candidate;
+      return true;
+    }
+  }
+
+  error = "Too many ring closures are open at once; SMILES cannot express "
+          "more than 99.";
+  return false;
+}
+
+const char* Serializer::bondSymbol(Index bond) const
 {
   switch (m_mol.bondOrders()[bond]) {
     case 2:
@@ -241,88 +257,119 @@ std::string Serializer::bondSymbol(Index bond) const
   }
 }
 
-void Serializer::emitAtom(std::ostringstream& out, Index atom) const
+void Serializer::appendRingNumber(std::string& out, int number) const
+{
+  if (number < 10) {
+    out += static_cast<char>('0' + number);
+    return;
+  }
+  out += '%';
+  out += static_cast<char>('0' + number / 10);
+  out += static_cast<char>('0' + number % 10);
+}
+
+bool Serializer::emitAtom(std::string& out, Index atom, std::string& error)
 {
   const unsigned char atomicNumber = m_mol.atomicNumbers()[atom];
   const int charge = m_mol.formalCharge(atom);
   const unsigned short isotope = m_mol.isotope(atom);
 
-  out << '[';
+  out += '[';
 
   if (isotope != 0)
-    out << isotope;
+    appendUnsigned(out, isotope);
 
   // Anything without a real element symbol -- a dummy atom, a custom element,
   // or InvalidElement from an unrecognized input symbol -- becomes the SMILES
   // wildcard. Elements::symbol() would answer "Xx" for these, which is not
   // valid SMILES, and dropping the atom instead would break the atom mapping.
   if (atomicNumber > 0 && atomicNumber < Core::element_count)
-    out << Elements::symbol(atomicNumber);
+    out += Elements::symbol(atomicNumber);
   else
-    out << '*';
+    out += '*';
 
   if (charge != 0) {
-    out << (charge > 0 ? '+' : '-');
+    out += (charge > 0) ? '+' : '-';
     const int magnitude = (charge > 0) ? charge : -charge;
     if (magnitude > 1)
-      out << magnitude;
+      appendUnsigned(out, magnitude);
   }
 
-  if (m_atomMaps)
-    out << ':' << (atom + 1);
+  if (m_atomMaps) {
+    out += ':';
+    appendUnsigned(out, atom + 1);
+  }
 
-  out << ']';
+  out += ']';
 
   // Ring bond numbers belong to the atom, ahead of any branch it opens.
-  for (size_t closure : m_atomClosures[atom]) {
+  // Numbers are taken before they are released, so one freed here cannot be
+  // reused on the same atom: "C11" would pair the two digits with each other
+  // rather than with their intended partners.
+  for (Index c = m_firstOpen[atom]; c != MaxIndex; c = m_closures[c].nextOpen) {
+    if (!takeRingNumber(m_closures[c].number, error))
+      return false;
     // Daylight allows the bond symbol on either or both occurrences, provided
     // they agree; writing it only where the closure opens keeps them trivially
     // consistent.
-    if (m_closures[closure].open == atom)
-      out << bondSymbol(m_closures[closure].bond);
-    out << ringNumber(m_closures[closure].number);
+    out += bondSymbol(m_closures[c].bond);
+    appendRingNumber(out, m_closures[c].number);
   }
+
+  for (Index c = m_firstClose[atom]; c != MaxIndex;
+       c = m_closures[c].nextClose) {
+    appendRingNumber(out, m_closures[c].number);
+    m_ringNumberUsed[m_closures[c].number] = false;
+  }
+
+  return true;
 }
 
-void Serializer::emit(std::string& smiles) const
+bool Serializer::emit(std::string& smiles, std::string& error)
 {
-  std::ostringstream out;
+  // Roughly a bracket atom plus a map class each, and a few characters per
+  // ring closure; growth from here is rare.
+  smiles.reserve(m_mol.atomCount() * 10 + m_closures.size() * 4 + 8);
+
   std::vector<EmitFrame> stack;
 
-  for (size_t component = 0; component < m_roots.size(); ++component) {
+  for (Index component = 0; component < m_roots.size(); ++component) {
     if (component != 0)
-      out << '.';
+      smiles += '.';
 
-    emitAtom(out, m_roots[component]);
-    stack.push_back(EmitFrame{ m_roots[component], 0, false });
+    const Index root = m_roots[component];
+    if (!emitAtom(smiles, root, error))
+      return false;
+    stack.push_back(EmitFrame{ root, m_firstChild[root], false });
 
     while (!stack.empty()) {
-      const Index atom = stack.back().atom;
-      const size_t childCount = m_children[atom].size();
-
-      if (stack.back().next >= childCount) {
-        const bool closeParen = stack.back().closeParen;
+      EmitFrame& frame = stack.back();
+      if (frame.child == MaxIndex) {
+        const bool closeParen = frame.closeParen;
         stack.pop_back();
         if (closeParen)
-          out << ')';
+          smiles += ')';
         continue;
       }
 
-      const size_t which = stack.back().next++;
-      const Child child = m_children[atom][which];
+      const Child child = m_children[frame.child];
+      frame.child = child.next;
 
       // Every child but the last is a branch; the last one continues the
       // chain, which is what keeps the output free of redundant parentheses.
-      const bool branch = (which + 1 < childCount);
+      const bool branch = (child.next != MaxIndex);
       if (branch)
-        out << '(';
-      out << bondSymbol(child.bond);
-      emitAtom(out, child.atom);
-      stack.push_back(EmitFrame{ child.atom, 0, branch });
+        smiles += '(';
+      smiles += bondSymbol(child.bond);
+      if (!emitAtom(smiles, child.atom, error))
+        return false;
+      // Invalidates frame, so nothing above may be used after this point.
+      stack.push_back(
+        EmitFrame{ child.atom, m_firstChild[child.atom], branch });
     }
   }
 
-  smiles = out.str();
+  return true;
 }
 
 } // namespace

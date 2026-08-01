@@ -8,6 +8,8 @@
 
 #include "fileformat.h"
 
+#include "smileswriter.h"
+
 namespace Avogadro::Io {
 
 /**
@@ -19,11 +21,14 @@ namespace Avogadro::Io {
  * coordinates natively, reading stays with the Open Babel plugin and this
  * format deliberately does not advertise Read.
  *
- * Behaviour is controlled through setOptions() with a JSON object:
+ * Behaviour is controlled either through the typed setters below, or -- for
+ * generic callers that only have a FileFormat -- through setOptions() with a
+ * JSON object:
  * @code
  * { "hydrogens": "implicit" | "bracket" | "explicit", "atomMaps": false }
  * @endcode
- * See SmilesWriter for what those mean. Note that "atomMaps" implies
+ * Keys present in the options string override the typed setters. See
+ * SmilesWriter for what the values mean. Note that "atomMaps" implies
  * "explicit", and that both default to the interchange-safe values, since
  * this format's output is pasted into other programs and sent to web
  * services.
@@ -56,10 +61,24 @@ public:
   std::vector<std::string> fileExtensions() const override;
   std::vector<std::string> mimeTypes() const override;
 
+  /** @copydoc SmilesWriter::setHydrogenMode() */
+  void setHydrogenMode(SmilesWriter::HydrogenMode mode)
+  {
+    m_hydrogenMode = mode;
+  }
+
+  /** @copydoc SmilesWriter::setAtomMaps() */
+  void setAtomMaps(bool enable) { m_atomMaps = enable; }
+
   [[nodiscard]] bool read(std::istream& inStream,
                           Core::Molecule& molecule) override;
   [[nodiscard]] bool write(std::ostream& outStream,
                            const Core::Molecule& molecule) override;
+
+private:
+  SmilesWriter::HydrogenMode m_hydrogenMode =
+    SmilesWriter::HydrogenMode::Implicit;
+  bool m_atomMaps = false;
 };
 
 } // namespace Avogadro::Io

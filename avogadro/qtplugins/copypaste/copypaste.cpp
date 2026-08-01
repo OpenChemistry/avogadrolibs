@@ -48,16 +48,22 @@ CopyPaste::CopyPaste(QObject* parent_)
   m_copyAction->setProperty("menu priority", 550);
   connect(m_copyAction, SIGNAL(triggered()), SLOT(copyCJSON()));
 
+  const QString copyAs = tr("Copy As");
+
   m_copySMILES->setProperty("menu priority", 540);
+  m_copySMILES->setProperty("menu submenu", copyAs);
   connect(m_copySMILES, SIGNAL(triggered()), SLOT(copySMILES()));
 
   m_copyMappedSMILES->setProperty("menu priority", 535);
+  m_copyMappedSMILES->setProperty("menu submenu", copyAs);
   connect(m_copyMappedSMILES, SIGNAL(triggered()), SLOT(copyMappedSMILES()));
 
   m_copyInChI->setProperty("menu priority", 530);
+  m_copyInChI->setProperty("menu submenu", copyAs);
   connect(m_copyInChI, SIGNAL(triggered()), SLOT(copyInChI()));
 
   m_copyXYZ->setProperty("menu priority", 520);
+  m_copyXYZ->setProperty("menu submenu", copyAs);
   connect(m_copyXYZ, SIGNAL(triggered()), SLOT(copyXYZ()));
 
   m_pasteAction->setShortcut(QKeySequence::Paste);
@@ -86,11 +92,12 @@ QList<QAction*> CopyPaste::actions() const
 
 QStringList CopyPaste::menuPath(QAction* action) const
 {
-  // Compare the actions themselves rather than their text: the format names
-  // are deliberately untranslated, so a tr() comparison would not match.
-  if (action == m_copySMILES || action == m_copyMappedSMILES ||
-      action == m_copyInChI || action == m_copyXYZ)
-    return QStringList() << tr("&Edit") << tr("Copy As");
+  // Each action carries its own submenu, in the same spirit as the "menu
+  // priority" property set above. Matching on text would not work here: the
+  // format names are deliberately untranslated.
+  const QVariant submenu = action->property("menu submenu");
+  if (submenu.isValid())
+    return QStringList() << tr("&Edit") << submenu.toString();
 
   return QStringList() << tr("&Edit");
 }
@@ -119,8 +126,11 @@ void CopyPaste::copyMappedSMILES()
 {
   // Not routed through FileFormatManager: the native SMILES format is not
   // registered for the "smi" extension, which still resolves to Open Babel.
+  // TODO: once implicit hydrogen output lands, both SMILES actions should go
+  // through one implementation rather than two engines with different
+  // aromaticity and hydrogen conventions.
   Io::SmilesFormat format;
-  format.setOptions("{\"atomMaps\": true}");
+  format.setAtomMaps(true);
 
   // The map classes number the atoms of whatever is written, one-based. With
   // a selection active, copy() writes a re-indexed copy of the selected atoms,
@@ -175,7 +185,7 @@ bool CopyPaste::copy(Io::FileFormat* format)
       Core::Bond bond = m_molecule->bond(i);
       Index start = bond.atom1().index();
       Index end = bond.atom2().index();
-      if (m_molecule->atomSelected(start) && m_molecule->atomSelected(start)) {
+      if (m_molecule->atomSelected(start) && m_molecule->atomSelected(end)) {
         copy->addBond(atomIndex[start], atomIndex[end], bond.order());
       }
     }

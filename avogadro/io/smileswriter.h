@@ -84,7 +84,7 @@ public:
   /**
    * @return A description of the last failure, or an empty string.
    */
-  std::string error() const { return m_error; }
+  const std::string& error() const { return m_error; }
 
 private:
   HydrogenMode m_hydrogenMode = HydrogenMode::Implicit;

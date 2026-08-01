@@ -40,28 +40,29 @@ bool SmilesFormat::read(std::istream&, Core::Molecule&)
 bool SmilesFormat::write(std::ostream& outStream,
                          const Core::Molecule& molecule)
 {
-  json opts;
-  if (!options().empty())
-    opts = json::parse(options(), nullptr, false);
-  else
+  // A malformed options string parses to a discarded value, on which value()
+  // would throw; fall back to the typed settings instead.
+  json opts = json::parse(options(), nullptr, false);
+  if (!opts.is_object())
     opts = json::object();
 
   SmilesWriter writer;
+  writer.setHydrogenMode(m_hydrogenMode);
+  writer.setAtomMaps(opts.value("atomMaps", m_atomMaps));
 
-  const std::string hydrogens =
-    opts.value("hydrogens", std::string("implicit"));
-  if (hydrogens == "implicit") {
-    writer.setHydrogenMode(SmilesWriter::HydrogenMode::Implicit);
-  } else if (hydrogens == "bracket") {
-    writer.setHydrogenMode(SmilesWriter::HydrogenMode::Bracket);
-  } else if (hydrogens == "explicit") {
-    writer.setHydrogenMode(SmilesWriter::HydrogenMode::Explicit);
-  } else {
-    appendError("Unknown value for the \"hydrogens\" option: " + hydrogens);
-    return false;
+  if (opts.contains("hydrogens")) {
+    const std::string hydrogens = opts.value("hydrogens", std::string());
+    if (hydrogens == "implicit")
+      writer.setHydrogenMode(SmilesWriter::HydrogenMode::Implicit);
+    else if (hydrogens == "bracket")
+      writer.setHydrogenMode(SmilesWriter::HydrogenMode::Bracket);
+    else if (hydrogens == "explicit")
+      writer.setHydrogenMode(SmilesWriter::HydrogenMode::Explicit);
+    else {
+      appendError("Unknown value for the \"hydrogens\" option: " + hydrogens);
+      return false;
+    }
   }
-
-  writer.setAtomMaps(opts.value("atomMaps", false));
 
   std::string smiles;
   if (!writer.write(molecule, smiles)) {
