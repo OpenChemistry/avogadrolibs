@@ -49,6 +49,7 @@ bool SmilesFormat::write(std::ostream& outStream,
   SmilesWriter writer;
   writer.setHydrogenMode(m_hydrogenMode);
   writer.setAtomMaps(opts.value("atomMaps", m_atomMaps));
+  writer.setAromatic(opts.value("aromatic", m_aromatic));
 
   if (opts.contains("hydrogens")) {
     const std::string hydrogens = opts.value("hydrogens", std::string());

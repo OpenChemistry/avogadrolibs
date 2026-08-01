@@ -25,7 +25,8 @@ namespace Avogadro::Io {
  * generic callers that only have a FileFormat -- through setOptions() with a
  * JSON object:
  * @code
- * { "hydrogens": "implicit" | "bracket" | "explicit", "atomMaps": false }
+ * { "hydrogens": "implicit" | "bracket" | "explicit", "atomMaps": false,
+ *   "aromatic": true }
  * @endcode
  * Keys present in the options string override the typed setters. See
  * SmilesWriter for what the values mean. Note that "atomMaps" implies
@@ -70,6 +71,9 @@ public:
   /** @copydoc SmilesWriter::setAtomMaps() */
   void setAtomMaps(bool enable) { m_atomMaps = enable; }
 
+  /** @copydoc SmilesWriter::setAromatic() */
+  void setAromatic(bool enable) { m_aromatic = enable; }
+
   [[nodiscard]] bool read(std::istream& inStream,
                           Core::Molecule& molecule) override;
   [[nodiscard]] bool write(std::ostream& outStream,
@@ -79,6 +83,7 @@ private:
   SmilesWriter::HydrogenMode m_hydrogenMode =
     SmilesWriter::HydrogenMode::Implicit;
   bool m_atomMaps = false;
+  bool m_aromatic = true;
 };
 
 } // namespace Avogadro::Io

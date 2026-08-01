@@ -747,6 +747,83 @@ TEST(SmilesTest, unspecifiedMarkersFollowTheirBonds)
   EXPECT_TRUE(markedDoubleBond);
 }
 
+namespace {
+
+/** A ring of @a elements, alternating double and single bonds, plus one
+ *  hydrogen on every atom that is given one in @a hydrogens. */
+Molecule aromaticRing(const std::vector<unsigned char>& elements,
+                      const std::vector<bool>& hydrogens,
+                      const std::vector<unsigned char>& orders)
+{
+  Molecule mol;
+  for (unsigned char element : elements)
+    mol.addAtom(element);
+  for (Index i = 0; i < elements.size(); ++i)
+    mol.addBond(i, (i + 1) % elements.size(), orders[i]);
+  for (Index i = 0; i < elements.size(); ++i) {
+    if (hydrogens[i])
+      mol.addBond(i, mol.addAtom(1).index(), 1);
+  }
+  return mol;
+}
+
+} // namespace
+
+TEST(SmilesTest, aromaticOutput)
+{
+  // Benzene, in the form everyone writes it.
+  Molecule benzene =
+    aromaticRing({ 6, 6, 6, 6, 6, 6 }, { true, true, true, true, true, true },
+                 { 2, 1, 2, 1, 2, 1 });
+  EXPECT_EQ(writeImplicit(benzene), "c1ccccc1");
+
+  // Pyridine: the nitrogen needs no hydrogen and stays bare.
+  Molecule pyridine =
+    aromaticRing({ 7, 6, 6, 6, 6, 6 }, { false, true, true, true, true, true },
+                 { 2, 1, 2, 1, 2, 1 });
+  EXPECT_EQ(writeImplicit(pyridine), "n1ccccc1");
+}
+
+TEST(SmilesTest, aromaticHeteroatomsSpellOutTheirHydrogens)
+{
+  // Pyrrole. A reader cannot kekulize the ring without knowing whether the
+  // nitrogen carries a hydrogen, so it has to be written explicitly.
+  Molecule pyrrole = aromaticRing(
+    { 7, 6, 6, 6, 6 }, { true, true, true, true, true }, { 1, 2, 1, 2, 1 });
+  EXPECT_EQ(writeImplicit(pyrrole), "[nH]1cccc1");
+
+  // Furan's oxygen has none, so it needs no bracket.
+  Molecule furan = aromaticRing(
+    { 8, 6, 6, 6, 6 }, { false, true, true, true, true }, { 1, 2, 1, 2, 1 });
+  EXPECT_EQ(writeImplicit(furan), "o1cccc1");
+}
+
+TEST(SmilesTest, kekuleOutputOnRequest)
+{
+  Molecule benzene =
+    aromaticRing({ 6, 6, 6, 6, 6, 6 }, { true, true, true, true, true, true },
+                 { 2, 1, 2, 1, 2, 1 });
+
+  SmilesWriter writer;
+  writer.setAromatic(false);
+  std::string smiles;
+  EXPECT_TRUE(writer.write(benzene, smiles)) << writer.error();
+  EXPECT_EQ(smiles, "C1=CC=CC=C1");
+}
+
+TEST(SmilesTest, nonAromaticRingsKeepTheirBondOrders)
+{
+  // Cyclohexane has no aromaticity to find, so nothing changes.
+  Molecule mol = aromaticRing({ 6, 6, 6, 6, 6, 6 },
+                              { false, false, false, false, false, false },
+                              { 1, 1, 1, 1, 1, 1 });
+  for (Index i = 0; i < 6; ++i) {
+    mol.addBond(i, mol.addAtom(1).index(), 1);
+    mol.addBond(i, mol.addAtom(1).index(), 1);
+  }
+  EXPECT_EQ(writeImplicit(mol), "C1CCCCC1");
+}
+
 TEST(SmilesTest, formatIsWriteOnly)
 {
   SmilesFormat format;

@@ -8,6 +8,7 @@
 #include "atomequivalence_p.h"
 #include "smilesvalence_p.h"
 
+#include <avogadro/core/aromaticity.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/graph.h>
@@ -123,8 +124,8 @@ class Serializer
 {
 public:
   Serializer(const Molecule& mol, SmilesWriter::HydrogenMode mode,
-             bool atomMaps)
-    : m_mol(mol), m_mode(mode), m_atomMaps(atomMaps)
+             bool atomMaps, bool aromatic)
+    : m_mol(mol), m_mode(mode), m_atomMaps(atomMaps), m_aromatic(aromatic)
   {
     m_ringNumberUsed.fill(false);
   }
@@ -167,6 +168,10 @@ private:
   const Molecule& m_mol;
   SmilesWriter::HydrogenMode m_mode;
   bool m_atomMaps;
+  bool m_aromatic;
+
+  std::vector<bool> m_aromaticAtom;
+  std::vector<bool> m_aromaticBond;
 
   // Hydrogens folded into a neighbour rather than written as their own atom.
   std::vector<bool> m_suppressed;
@@ -199,6 +204,14 @@ private:
 
 bool Serializer::run(std::string& smiles, std::string& error)
 {
+  m_aromaticAtom.assign(m_mol.atomCount(), false);
+  m_aromaticBond.assign(m_mol.bondCount(), false);
+  if (m_aromatic) {
+    Core::AromaticityPerceiver perceiver(&m_mol);
+    m_aromaticAtom = perceiver.aromaticAtoms();
+    m_aromaticBond = perceiver.aromaticBonds();
+  }
+
   suppressHydrogens();
   buildAdjacency();
   traverse();
@@ -775,6 +788,11 @@ bool Serializer::takeRingNumber(int& number, std::string& error)
 
 const char* Serializer::bondSymbol(Index bond, Index fromAtom) const
 {
+  // Between two lower case atoms the bond is aromatic by implication, and
+  // writing its Kekule order would contradict that.
+  if (m_aromaticBond[bond])
+    return "";
+
   switch (m_mol.bondOrders()[bond]) {
     case 2:
       return "=";
@@ -838,6 +856,13 @@ bool Serializer::needsBrackets(Index atom) const
   if (implied == SmilesNotOrganicSubset)
     return true;
 
+  // A reader has to kekulize an aromatic ring before it can infer hydrogen
+  // counts, but for a heteroatom the hydrogen count is itself what decides the
+  // kekulization. That circularity is why any hydrogen on an aromatic
+  // heteroatom has to be spelled out: pyrrole is "[nH]" where pyridine is "n".
+  if (m_aromaticAtom[atom] && atomicNumber != 6)
+    return m_implicitH[atom] != 0;
+
   // The bare form is only usable when a reader would infer exactly the
   // hydrogens this atom actually has. Where it would not -- a radical, or a
   // valence the model does not know -- the count has to be spelled out, which
@@ -862,10 +887,19 @@ bool Serializer::emitAtom(std::string& out, Index atom, std::string& error)
   // or InvalidElement from an unrecognized input symbol -- becomes the SMILES
   // wildcard. Elements::symbol() would answer "Xx" for these, which is not
   // valid SMILES, and dropping the atom instead would break the atom mapping.
-  if (hasElementSymbol(atomicNumber))
-    out += Elements::symbol(atomicNumber);
-  else
+  if (hasElementSymbol(atomicNumber)) {
+    const char* symbol = Elements::symbol(atomicNumber);
+    if (m_aromaticAtom[atom]) {
+      // Lower case marks membership of an aromatic system; a two letter
+      // symbol only lowers its first character, as in "[se]".
+      out += static_cast<char>(symbol[0] - 'A' + 'a');
+      out += symbol + 1;
+    } else {
+      out += symbol;
+    }
+  } else {
     out += '*';
+  }
 
   if (brackets) {
     // Chirality sits between the symbol and the hydrogen count.
@@ -985,7 +1019,8 @@ bool SmilesWriter::write(const Core::Molecule& molecule, std::string& smiles)
   if (molecule.atomCount() == 0)
     return true;
 
-  Serializer serializer(molecule, effectiveHydrogenMode(), m_atomMaps);
+  Serializer serializer(molecule, effectiveHydrogenMode(), m_atomMaps,
+                        m_aromatic);
   if (!serializer.run(smiles, m_error)) {
     smiles.clear();
     return false;

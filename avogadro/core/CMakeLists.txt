@@ -17,6 +17,7 @@ target_sources(Headers PUBLIC
   FILES
     angletools.h
     angleiterator.h
+  aromaticity.h
     array.h
     avogadrocore.h
     color3f.h
@@ -77,6 +78,7 @@ avogadro_headers(Core
 
 target_sources(Core PRIVATE
   angleiterator.cpp
+  aromaticity.cpp
   atomutilities.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp

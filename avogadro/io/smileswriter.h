@@ -74,6 +74,17 @@ public:
   bool atomMaps() const { return m_atomMaps; }
 
   /**
+   * Write perceived aromatic rings in the lowercase form, so benzene is
+   * "c1ccccc1" rather than "C1=CC=CC=C1". Both describe the same molecule;
+   * the lowercase form is what most toolkits produce and expect.
+   *
+   * Perception is Core::AromaticityPerceiver; anything it does not recognise
+   * is written with its bond orders as stored.
+   */
+  void setAromatic(bool enable) { m_aromatic = enable; }
+  bool aromatic() const { return m_aromatic; }
+
+  /**
    * @return The hydrogen mode that will actually be used, after applying the
    * implication described in setAtomMaps().
    */
@@ -94,6 +105,7 @@ public:
 private:
   HydrogenMode m_hydrogenMode = HydrogenMode::Implicit;
   bool m_atomMaps = false;
+  bool m_aromatic = true;
   std::string m_error;
 };
 

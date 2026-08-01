@@ -1,6 +1,7 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   AngleIterator
+  Aromaticity
   Array
   Atom
   AtomTyper
