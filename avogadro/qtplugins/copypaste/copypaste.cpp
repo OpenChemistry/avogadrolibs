@@ -7,6 +7,7 @@
 
 #include <avogadro/io/cjsonformat.h>
 #include <avogadro/io/fileformatmanager.h>
+#include <avogadro/io/smilesformat.h>
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -30,6 +31,7 @@ CopyPaste::CopyPaste(QObject* parent_)
     m_copyAction(new QAction(tr("Copy"), this)),
     // don't translate SMILES, InChI, or XYZ
     m_copySMILES(new QAction("SMILES", this)),
+    m_copyMappedSMILES(new QAction(tr("Atom Mapped SMILES"), this)),
     m_copyInChI(new QAction("InChI", this)),
     m_copyXYZ(new QAction("XYZ", this)),
     m_cutAction(new QAction(tr("Cut"), this)),
@@ -48,6 +50,9 @@ CopyPaste::CopyPaste(QObject* parent_)
 
   m_copySMILES->setProperty("menu priority", 540);
   connect(m_copySMILES, SIGNAL(triggered()), SLOT(copySMILES()));
+
+  m_copyMappedSMILES->setProperty("menu priority", 535);
+  connect(m_copyMappedSMILES, SIGNAL(triggered()), SLOT(copyMappedSMILES()));
 
   m_copyInChI->setProperty("menu priority", 530);
   connect(m_copyInChI, SIGNAL(triggered()), SLOT(copyInChI()));
@@ -74,17 +79,20 @@ CopyPaste::~CopyPaste()
 QList<QAction*> CopyPaste::actions() const
 {
   QList<QAction*> result;
-  return result << m_copyAction << m_copySMILES << m_copyInChI << m_copyXYZ
-                << m_cutAction << m_pasteAction << m_clearAction;
+  return result << m_copyAction << m_copySMILES << m_copyMappedSMILES
+                << m_copyInChI << m_copyXYZ << m_cutAction << m_pasteAction
+                << m_clearAction;
 }
 
 QStringList CopyPaste::menuPath(QAction* action) const
 {
-  if (action->text() != tr("SMILES") && action->text() != tr("InChI") &&
-      action->text() != tr("XYZ"))
-    return QStringList() << tr("&Edit");
-  else
+  // Compare the actions themselves rather than their text: the format names
+  // are deliberately untranslated, so a tr() comparison would not match.
+  if (action == m_copySMILES || action == m_copyMappedSMILES ||
+      action == m_copyInChI || action == m_copyXYZ)
     return QStringList() << tr("&Edit") << tr("Copy As");
+
+  return QStringList() << tr("&Edit");
 }
 
 void CopyPaste::setMolecule(QtGui::Molecule* mol)
@@ -105,6 +113,19 @@ void CopyPaste::copySMILES()
 
   copy(format);
   delete format;
+}
+
+void CopyPaste::copyMappedSMILES()
+{
+  // Not routed through FileFormatManager: the native SMILES format is not
+  // registered for the "smi" extension, which still resolves to Open Babel.
+  Io::SmilesFormat format;
+  format.setOptions("{\"atomMaps\": true}");
+
+  // The map classes number the atoms of whatever is written, one-based. With
+  // a selection active, copy() writes a re-indexed copy of the selected atoms,
+  // so the classes follow that fragment rather than the full molecule.
+  copy(&format);
 }
 
 void CopyPaste::copyInChI()
@@ -165,11 +186,10 @@ bool CopyPaste::copy(Io::FileFormat* format)
       qobject_cast<QWidget*>(this->parent()), tr("Error Clipping Molecule"),
       tr("Error generating clipboard data.") + "\n" +
         tr("Output format: %1\n%2", "file format")
-          .arg(QString::fromStdString(m_pastedFormat->name()))
-          .arg(QString::fromStdString(m_pastedFormat->description())) +
+          .arg(QString::fromStdString(format->name()))
+          .arg(QString::fromStdString(format->description())) +
         "\n\n" +
-        tr("Reader error:\n%1")
-          .arg(QString::fromStdString(m_pastedFormat->error())));
+        tr("Reader error:\n%1").arg(QString::fromStdString(format->error())));
     return false;
   }
 
