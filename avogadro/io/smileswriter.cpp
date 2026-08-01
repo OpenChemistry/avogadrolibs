@@ -9,6 +9,7 @@
 #include "smilesvalence_p.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/bond.h>
 #include <avogadro/core/graph.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
@@ -148,6 +149,7 @@ private:
   void traverse();
   void linkClosures();
   void markRingBonds();
+  std::vector<Index> ringSystems() const;
   void assignChirality();
   void assignBondStereo();
   bool writtenNeighbors(Index atom, Index neighbors[4]) const;
@@ -447,25 +449,133 @@ void Serializer::markRingBonds()
   }
 }
 
+std::vector<Index> Serializer::ringSystems() const
+{
+  // Connected components of the ring bonds: two centres in the same component
+  // can constrain each other's configuration.
+  const Index atomCount = m_mol.atomCount();
+  const Core::Array<std::pair<Index, Index>>& pairs = m_mol.bondPairs();
+  std::vector<Index> system(atomCount, MaxIndex);
+  std::vector<Index> queue;
+  Index next = 0;
+
+  for (Index seed = 0; seed < atomCount; ++seed) {
+    if (system[seed] != MaxIndex)
+      continue;
+
+    bool inRing = false;
+    for (Index bond : m_mol.graph().edges(seed))
+      inRing = inRing || m_bondInRing[bond];
+    if (!inRing)
+      continue;
+
+    system[seed] = next;
+    queue.push_back(seed);
+    while (!queue.empty()) {
+      const Index atom = queue.back();
+      queue.pop_back();
+      for (Index bond : m_mol.graph().edges(atom)) {
+        if (!m_bondInRing[bond])
+          continue;
+        const std::pair<Index, Index>& ends = pairs[bond];
+        const Index other = (ends.first == atom) ? ends.second : ends.first;
+        if (system[other] == MaxIndex) {
+          system[other] = next;
+          queue.push_back(other);
+        }
+      }
+    }
+    ++next;
+  }
+
+  return system;
+}
+
 void Serializer::assignChirality()
 {
   const Index atomCount = m_mol.atomCount();
   const Core::Array<Vector3>& positions = m_mol.atomPositions3d();
   const std::vector<Index>& classes = m_classes;
 
+  // Which atoms are stereogenic, and on what grounds. A "ring dependent"
+  // centre is one whose two equivalent substituents are the two ways round a
+  // ring: it means nothing by itself, but paired with another such centre it
+  // describes cis/trans across the ring.
+  enum class Candidacy : char
+  {
+    No,
+    Distinct,
+    RingDependent
+  };
+  std::vector<Candidacy> candidacy(atomCount, Candidacy::No);
+
   Index neighbors[4];
   for (Index atom = 0; atom < atomCount; ++atom) {
     if (m_suppressed[atom] || !writtenNeighbors(atom, neighbors))
       continue;
 
-    // Only a centre whose four substituents are all constitutionally
-    // different is stereogenic. Without this test every methyl carbon would
-    // pick up a meaningless "@".
-    bool distinct = true;
-    for (int i = 0; i < 4 && distinct; ++i)
-      for (int j = i + 1; j < 4 && distinct; ++j)
-        distinct = classes[neighbors[i]] != classes[neighbors[j]];
-    if (!distinct)
+    // Count how many substituents share a class with another. None means a
+    // classical stereocentre; exactly two means a single tied pair, which may
+    // still be stereogenic if the tie is a ring closing back on itself.
+    int tied = 0;
+    int tiedIndex[2] = { -1, -1 };
+    for (int i = 0; i < 4; ++i) {
+      for (int j = 0; j < 4; ++j) {
+        if (i != j && classes[neighbors[i]] == classes[neighbors[j]]) {
+          if (tied < 2)
+            tiedIndex[tied] = i;
+          ++tied;
+          break;
+        }
+      }
+    }
+
+    if (tied == 0) {
+      candidacy[atom] = Candidacy::Distinct;
+      continue;
+    }
+    if (tied != 2)
+      continue; // Three or four alike: nothing to orient against.
+
+    // The tie has to be the two directions around a ring. Two equivalent
+    // substituents hanging off separate branches -- the hydrogens of a CH2,
+    // the methyls of an isopropyl -- are interchangeable and mean nothing.
+    bool tiedThroughRing = true;
+    for (int end = 0; end < 2; ++end) {
+      const Core::Bond bond = m_mol.bond(atom, neighbors[tiedIndex[end]]);
+      if (!bond.isValid() || !m_bondInRing[bond.index()])
+        tiedThroughRing = false;
+    }
+    if (tiedThroughRing)
+      candidacy[atom] = Candidacy::RingDependent;
+  }
+
+  // A ring dependent centre needs a partner: cyclohexanol has exactly one and
+  // is achiral, while 4-methylcyclohexanol has two and is cis/trans isomeric.
+  const std::vector<Index> ringSystem = ringSystems();
+  std::vector<Index> dependentCount;
+  for (Index atom = 0; atom < atomCount; ++atom) {
+    if (candidacy[atom] != Candidacy::RingDependent ||
+        ringSystem[atom] == MaxIndex)
+      continue;
+    if (ringSystem[atom] >= dependentCount.size())
+      dependentCount.resize(ringSystem[atom] + 1, 0);
+    ++dependentCount[ringSystem[atom]];
+  }
+
+  for (Index atom = 0; atom < atomCount; ++atom) {
+    if (candidacy[atom] != Candidacy::RingDependent)
+      continue;
+    const Index system = ringSystem[atom];
+    if (system == MaxIndex || system >= dependentCount.size() ||
+        dependentCount[system] < 2)
+      candidacy[atom] = Candidacy::No;
+  }
+
+  for (Index atom = 0; atom < atomCount; ++atom) {
+    if (candidacy[atom] == Candidacy::No)
+      continue;
+    if (!writtenNeighbors(atom, neighbors))
       continue;
 
     // Viewed with the first neighbour between the viewer and the centre, are

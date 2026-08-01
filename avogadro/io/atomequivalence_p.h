@@ -32,16 +32,17 @@ namespace Avogadro::Io {
  * - The refinement is purely constitutional, so it cannot separate branches
  *   that differ only in their own stereochemistry. Meso compounds and
  *   pseudo-asymmetric centres come out symmetric.
- * - Ring cis/trans centres are missed. In 4-methylcyclohexanol the two ring
- *   branches leaving C1 really are constitutionally identical -- the molecule
- *   has a symmetry plane through C1 and C4 -- so they share a class, even
- *   though the ring makes the centre stereogenic. Detecting these needs
- *   pairwise reasoning about which centres depend on each other, since the
- *   same test must still reject plain cyclohexanol.
+ * - Ring cis/trans centres share a class here even though they are
+ *   stereogenic. In 4-methylcyclohexanol the two ring branches leaving C1
+ *   really are constitutionally identical -- the molecule has a symmetry plane
+ *   through C1 and C4 -- so this function cannot separate them. Callers that
+ *   care handle it on top: the SMILES writer treats a tie between two ring
+ *   neighbours as stereogenic when another such centre shares the ring system,
+ *   which is what tells 4-methylcyclohexanol apart from cyclohexanol.
  *
- * Both are resolved the same way, by re-running the refinement with stereo
- * descriptors folded into the invariant until it settles. That is deliberately
- * not done here.
+ * The first is resolved by re-running the refinement with stereo descriptors
+ * folded into the invariant until it settles. That is deliberately not done
+ * here.
  *
  * Hydrogens participate like any other atom, so the caller may run this over
  * the molecule as stored without suppressing them first.

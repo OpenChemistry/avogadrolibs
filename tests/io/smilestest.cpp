@@ -14,6 +14,7 @@
 #include <avogadro/io/smilesformat.h>
 #include <avogadro/io/smileswriter.h>
 
+#include <cmath>
 #include <map>
 #include <set>
 #include <string>
@@ -490,6 +491,103 @@ TEST(SmilesTest, noChiralityWithoutFourDistinctSubstituents)
 
   // Two hydrogens fold away and are indistinguishable.
   EXPECT_EQ(writeImplicit(tetrahedralCenter(1, 1, 17, 35)), "C(Cl)Br");
+}
+
+namespace {
+
+/**
+ * A puckered six-membered carbon ring, with the substituent on @a first and
+ * @a second placed above or below the mean plane according to @a firstUp and
+ * @a secondUp. Every other ring position carries two hydrogens.
+ */
+Molecule substitutedCyclohexane(unsigned char firstElement, Index first,
+                                bool firstUp, unsigned char secondElement,
+                                Index second, bool secondUp)
+{
+  Molecule mol;
+  Index ring[6];
+  for (Index i = 0; i < 6; ++i) {
+    const double angle = 2.0 * M_PI * static_cast<double>(i) / 6.0;
+    // Alternating pucker, so the ring is not planar and the substituents have
+    // a real side to be on.
+    const double z = (i % 2 == 0) ? 0.25 : -0.25;
+    ring[i] =
+      mol.addAtom(6, Vector3(1.5 * cos(angle), 1.5 * sin(angle), z)).index();
+  }
+  for (Index i = 0; i < 6; ++i)
+    mol.addBond(ring[i], ring[(i + 1) % 6], 1);
+
+  for (Index i = 0; i < 6; ++i) {
+    const double angle = 2.0 * M_PI * static_cast<double>(i) / 6.0;
+    const bool substituted = (i == first) || (i == second);
+    const unsigned char element =
+      (i == first) ? firstElement : (i == second ? secondElement : 1);
+    const bool up = (i == first) ? firstUp : secondUp;
+
+    if (substituted) {
+      mol.addBond(
+        ring[i],
+        mol
+          .addAtom(element,
+                   Vector3(2.4 * cos(angle), 2.4 * sin(angle), up ? 1.0 : -1.0))
+          .index(),
+        1);
+      mol.addBond(ring[i],
+                  mol
+                    .addAtom(1, Vector3(1.7 * cos(angle), 1.7 * sin(angle),
+                                        up ? -1.0 : 1.0))
+                    .index(),
+                  1);
+    } else {
+      mol.addBond(
+        ring[i],
+        mol.addAtom(1, Vector3(2.4 * cos(angle), 2.4 * sin(angle), 1.0))
+          .index(),
+        1);
+      mol.addBond(
+        ring[i],
+        mol.addAtom(1, Vector3(1.7 * cos(angle), 1.7 * sin(angle), -1.0))
+          .index(),
+        1);
+    }
+  }
+  return mol;
+}
+
+bool hasChirality(const std::string& smiles)
+{
+  return smiles.find('@') != std::string::npos;
+}
+
+} // namespace
+
+TEST(SmilesTest, ringDependentStereocenters)
+{
+  // 4-methylcyclohexanol. Neither centre has four constitutionally different
+  // substituents -- the two ways round the ring are equivalent -- but the two
+  // together describe cis or trans, so both have to be written.
+  const std::string cis =
+    writeImplicit(substitutedCyclohexane(8, 0, true, 6, 3, true));
+  const std::string trans =
+    writeImplicit(substitutedCyclohexane(8, 0, true, 6, 3, false));
+
+  EXPECT_TRUE(hasChirality(cis)) << cis;
+  EXPECT_TRUE(hasChirality(trans)) << trans;
+  EXPECT_NE(cis, trans);
+}
+
+TEST(SmilesTest, noRingStereocenterWithoutAPartner)
+{
+  // Cyclohexanol has one such centre and no partner, so there is nothing for
+  // it to be cis or trans to and it is achiral.
+  Molecule mol = substitutedCyclohexane(8, 0, true, 1, 3, true);
+  const std::string smiles = writeImplicit(mol);
+  EXPECT_FALSE(hasChirality(smiles)) << smiles;
+
+  // Methylcyclohexane, likewise.
+  Molecule methyl = substitutedCyclohexane(6, 0, true, 1, 3, true);
+  const std::string methylSmiles = writeImplicit(methyl);
+  EXPECT_FALSE(hasChirality(methylSmiles)) << methylSmiles;
 }
 
 TEST(SmilesTest, noChiralityWithoutCoordinates)
