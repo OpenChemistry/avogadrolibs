@@ -12,7 +12,9 @@ avogadro_headers(IO
   lammpsformat.h
   pdbformat.h
   sdfformat.h
+  atomequivalence_p.h
   smilesformat.h
+  smilesvalence_p.h
   smileswriter.h
   trrformat.h
   turbomoleformat.h

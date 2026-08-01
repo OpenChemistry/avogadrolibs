@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/vector.h>
 
 #include <avogadro/io/cmlformat.h>
 #include <avogadro/io/smilesformat.h>
@@ -18,6 +19,7 @@
 #include <string>
 
 using Avogadro::Index;
+using Avogadro::Vector3;
 using Avogadro::Core::Molecule;
 using Avogadro::Io::CmlFormat;
 using Avogadro::Io::SmilesFormat;
@@ -284,21 +286,288 @@ TEST(SmilesTest, atomMapsImplyExplicitHydrogens)
   EXPECT_EQ(smiles, "[C:1]([H:2])([H:3])([H:4])[H:5]");
 }
 
-TEST(SmilesTest, unimplementedModesFailCleanly)
+/** Write in the default (implicit hydrogen) mode. */
+std::string writeImplicit(const Molecule& mol)
+{
+  SmilesWriter writer;
+  std::string smiles;
+  EXPECT_TRUE(writer.write(mol, smiles)) << writer.error();
+  return smiles;
+}
+
+std::string writeBracket(const Molecule& mol)
+{
+  SmilesWriter writer;
+  writer.setHydrogenMode(SmilesWriter::HydrogenMode::Bracket);
+  std::string smiles;
+  EXPECT_TRUE(writer.write(mol, smiles)) << writer.error();
+  return smiles;
+}
+
+/** Build a heavy atom carrying @a count hydrogens. */
+Molecule hydride(unsigned char atomicNumber, int count)
 {
   Molecule mol;
-  mol.addAtom(6);
+  addHydrogens(mol, mol.addAtom(atomicNumber).index(), count);
+  return mol;
+}
 
-  for (SmilesWriter::HydrogenMode mode :
-       { SmilesWriter::HydrogenMode::Implicit,
-         SmilesWriter::HydrogenMode::Bracket }) {
-    SmilesWriter writer;
-    writer.setHydrogenMode(mode);
-    std::string smiles;
-    EXPECT_FALSE(writer.write(mol, smiles));
-    EXPECT_FALSE(writer.error().empty());
-    EXPECT_EQ(smiles, "");
+TEST(SmilesTest, implicitOrganicSubset)
+{
+  // One bare atom per organic subset element, at its lowest normal valence.
+  EXPECT_EQ(writeImplicit(hydride(6, 4)), "C");   // methane
+  EXPECT_EQ(writeImplicit(hydride(7, 3)), "N");   // ammonia
+  EXPECT_EQ(writeImplicit(hydride(8, 2)), "O");   // water
+  EXPECT_EQ(writeImplicit(hydride(5, 3)), "B");   // borane
+  EXPECT_EQ(writeImplicit(hydride(15, 3)), "P");  // phosphine
+  EXPECT_EQ(writeImplicit(hydride(16, 2)), "S");  // hydrogen sulfide
+  EXPECT_EQ(writeImplicit(hydride(9, 1)), "F");   // hydrogen fluoride
+  EXPECT_EQ(writeImplicit(hydride(17, 1)), "Cl"); // hydrogen chloride
+}
+
+TEST(SmilesTest, implicitHigherValences)
+{
+  // Nitrogen's second normal valence: a bond order sum of 4 implies one H.
+  Molecule imine;
+  Index nitrogen = imine.addAtom(7).index();
+  Index first = imine.addAtom(6).index();
+  Index second = imine.addAtom(6).index();
+  imine.addBond(nitrogen, first, 2);
+  imine.addBond(nitrogen, second, 2);
+  addHydrogens(imine, nitrogen, 1);
+  addHydrogens(imine, first, 2);
+  addHydrogens(imine, second, 2);
+
+  EXPECT_EQ(writeImplicit(imine), "N(=C)=C");
+
+  // Dimethyl sulfone: sulfur reaches its third normal valence, so it needs no
+  // hydrogens, while the methyl carbons reach their first and take three each.
+  Molecule sulfone;
+  Index sulfur = sulfone.addAtom(16).index();
+  sulfone.addBond(sulfur, sulfone.addAtom(8).index(), 2);
+  sulfone.addBond(sulfur, sulfone.addAtom(8).index(), 2);
+  for (int i = 0; i < 2; ++i) {
+    Index methyl = sulfone.addAtom(6).index();
+    sulfone.addBond(sulfur, methyl, 1);
+    addHydrogens(sulfone, methyl, 3);
   }
+
+  EXPECT_EQ(writeImplicit(sulfone), "S(=O)(=O)(C)C");
+}
+
+TEST(SmilesTest, implicitFallsBackToBrackets)
+{
+  // A methyl radical has one hydrogen fewer than carbon's valence implies, so
+  // writing it bare would silently turn it into methane.
+  EXPECT_EQ(writeImplicit(hydride(6, 3)), "[CH3]");
+
+  // Charge, isotope and non-subset elements each force a bracket.
+  Molecule ammonium = hydride(7, 4);
+  ammonium.setFormalCharge(0, 1);
+  EXPECT_EQ(writeImplicit(ammonium), "[NH4+]");
+
+  Molecule heavyWater = hydride(8, 2);
+  heavyWater.setIsotope(1, 2);
+  heavyWater.setIsotope(2, 2);
+  EXPECT_EQ(writeImplicit(heavyWater), "O([2H])[2H]");
+
+  Molecule iron;
+  iron.addAtom(26);
+  EXPECT_EQ(writeImplicit(iron), "[Fe]");
+
+  // Wildcards are always bracketed: bare '*' has no implied hydrogen rule.
+  Molecule dummy;
+  dummy.addAtom(0);
+  EXPECT_EQ(writeImplicit(dummy), "[*]");
+}
+
+TEST(SmilesTest, hydrogensThatCannotBeSuppressed)
+{
+  // Molecular hydrogen: neither atom has a heavy neighbour to fold into.
+  Molecule h2;
+  h2.addBond(h2.addAtom(1).index(), h2.addAtom(1).index(), 1);
+  EXPECT_EQ(writeImplicit(h2), "[H][H]");
+
+  // A lone hydrogen atom, and a hydride ion.
+  Molecule atomic;
+  atomic.addAtom(1);
+  EXPECT_EQ(writeImplicit(atomic), "[H]");
+
+  Molecule anion;
+  anion.addAtom(1);
+  anion.setFormalCharge(0, -1);
+  EXPECT_EQ(writeImplicit(anion), "[H-]");
+
+  // A bridging hydrogen has two bonds, so it stays an atom of its own while
+  // the terminal hydrogens on the same borons are folded away.
+  Molecule bridged;
+  Index left = bridged.addAtom(5).index();
+  Index right = bridged.addAtom(5).index();
+  Index bridge = bridged.addAtom(1).index();
+  bridged.addBond(left, bridge, 1);
+  bridged.addBond(right, bridge, 1);
+  addHydrogens(bridged, left, 2);
+  addHydrogens(bridged, right, 2);
+  EXPECT_EQ(writeImplicit(bridged), "B[H]B");
+}
+
+TEST(SmilesTest, bracketMode)
+{
+  EXPECT_EQ(writeBracket(hydride(6, 4)), "[CH4]");
+  EXPECT_EQ(writeBracket(hydride(8, 2)), "[OH2]");
+
+  // Bracket mode still folds hydrogens away; it just never goes bare.
+  Molecule ethanol;
+  Index c1 = ethanol.addAtom(6).index();
+  Index c2 = ethanol.addAtom(6).index();
+  Index oxygen = ethanol.addAtom(8).index();
+  ethanol.addBond(c1, c2, 1);
+  ethanol.addBond(c2, oxygen, 1);
+  addHydrogens(ethanol, c1, 3);
+  addHydrogens(ethanol, c2, 2);
+  addHydrogens(ethanol, oxygen, 1);
+
+  EXPECT_EQ(writeBracket(ethanol), "[CH3][CH2][OH]");
+  EXPECT_EQ(writeImplicit(ethanol), "CCO");
+}
+
+namespace {
+
+/**
+ * A tetrahedral centre with four substituents at alternating cube corners.
+ * Listing them in the order @a first .. @a fourth reproduces the neighbour
+ * order the writer will use, since the centre is atom zero and the bonds are
+ * added in that order.
+ *
+ * @param mirror Reflect the coordinates, giving the opposite enantiomer with
+ * an otherwise identical molecule and an identical neighbour order.
+ */
+Molecule tetrahedralCenter(unsigned char first, unsigned char second,
+                           unsigned char third, unsigned char fourth,
+                           bool mirror = false)
+{
+  Molecule mol;
+  Index center = mol.addAtom(6, Vector3(0.0, 0.0, 0.0)).index();
+  const Vector3 corners[4] = { Vector3(1.0, 1.0, 1.0), Vector3(1.0, -1.0, -1.0),
+                               Vector3(-1.0, 1.0, -1.0),
+                               Vector3(-1.0, -1.0, 1.0) };
+  const unsigned char elements[4] = { first, second, third, fourth };
+  const double flip = mirror ? -1.0 : 1.0;
+  for (int i = 0; i < 4; ++i) {
+    const Vector3 corner(flip * corners[i].x(), corners[i].y(), corners[i].z());
+    mol.addBond(center, mol.addAtom(elements[i], corner).index(), 1);
+  }
+  return mol;
+}
+
+} // namespace
+
+TEST(SmilesTest, tetrahedralChirality)
+{
+  // F, Cl, Br, I at the four corners in written order.
+  EXPECT_EQ(writeImplicit(tetrahedralCenter(9, 17, 35, 53)),
+            "[C@](F)(Cl)(Br)I");
+
+  // The mirror image is the same graph written the same way, so only the
+  // chirality symbol may differ.
+  EXPECT_EQ(writeImplicit(tetrahedralCenter(9, 17, 35, 53, true)),
+            "[C@@](F)(Cl)(Br)I");
+}
+
+TEST(SmilesTest, chiralityWithASuppressedHydrogen)
+{
+  // A folded hydrogen still occupies a slot in the neighbour ordering -- here
+  // the first, since the centre has no atom it was reached from.
+  EXPECT_EQ(writeImplicit(tetrahedralCenter(1, 9, 17, 35)), "[C@H](F)(Cl)Br");
+  EXPECT_EQ(writeImplicit(tetrahedralCenter(1, 9, 17, 35, true)),
+            "[C@@H](F)(Cl)Br");
+}
+
+TEST(SmilesTest, noChiralityWithoutFourDistinctSubstituents)
+{
+  // Two identical substituents: nothing stereogenic, so no "@" at all.
+  EXPECT_EQ(writeImplicit(tetrahedralCenter(9, 9, 17, 35)), "C(F)(F)(Cl)Br");
+
+  // Two hydrogens fold away and are indistinguishable.
+  EXPECT_EQ(writeImplicit(tetrahedralCenter(1, 1, 17, 35)), "C(Cl)Br");
+}
+
+TEST(SmilesTest, noChiralityWithoutCoordinates)
+{
+  // Built without positions, so there is no handedness to read.
+  Molecule mol;
+  Index center = mol.addAtom(6).index();
+  for (unsigned char element : { 9, 17, 35, 53 })
+    mol.addBond(center, mol.addAtom(element).index(), 1);
+
+  EXPECT_EQ(writeImplicit(mol), "C(F)(Cl)(Br)I");
+}
+
+namespace {
+
+/**
+ * Planar 1,2-difluoroethene. @a trans puts the two fluorines on opposite sides
+ * of the double bond; otherwise they sit on the same side.
+ */
+Molecule difluoroethene(bool trans)
+{
+  Molecule mol;
+  const double side = trans ? -1.0 : 1.0;
+  Index c1 = mol.addAtom(6, Vector3(0.0, 0.0, 0.0)).index();
+  Index f1 = mol.addAtom(9, Vector3(-0.67, 1.03, 0.0)).index();
+  Index h1 = mol.addAtom(1, Vector3(-0.67, -1.03, 0.0)).index();
+  Index c2 = mol.addAtom(6, Vector3(1.33, 0.0, 0.0)).index();
+  Index f2 = mol.addAtom(9, Vector3(2.0, side * 1.03, 0.0)).index();
+  Index h2 = mol.addAtom(1, Vector3(2.0, side * -1.03, 0.0)).index();
+
+  mol.addBond(c1, f1, 1);
+  mol.addBond(c1, h1, 1);
+  mol.addBond(c1, c2, 2);
+  mol.addBond(c2, f2, 1);
+  mol.addBond(c2, h2, 1);
+  return mol;
+}
+
+} // namespace
+
+TEST(SmilesTest, cisTransMarkers)
+{
+  // The markers sit on the single bonds either side of the double bond, and
+  // opposite senses mean the substituents are on opposite sides.
+  EXPECT_EQ(writeImplicit(difluoroethene(true)), "C(/F)=C\\F");
+  EXPECT_EQ(writeImplicit(difluoroethene(false)), "C(/F)=C/F");
+}
+
+TEST(SmilesTest, noCisTransWithoutTwoDistinctEnds)
+{
+  // 1,1-difluoroethene: one end carries two fluorines, so there is no
+  // cis/trans relationship to describe.
+  Molecule mol;
+  Index c1 = mol.addAtom(6, Vector3(0.0, 0.0, 0.0)).index();
+  Index c2 = mol.addAtom(6, Vector3(1.33, 0.0, 0.0)).index();
+  mol.addBond(c1, c2, 2);
+  mol.addBond(c1, mol.addAtom(9, Vector3(-0.67, 1.03, 0.0)).index(), 1);
+  mol.addBond(c1, mol.addAtom(9, Vector3(-0.67, -1.03, 0.0)).index(), 1);
+  mol.addBond(c2, mol.addAtom(1, Vector3(2.0, 1.03, 0.0)).index(), 1);
+  mol.addBond(c2, mol.addAtom(1, Vector3(2.0, -1.03, 0.0)).index(), 1);
+
+  const std::string smiles = writeImplicit(mol);
+  EXPECT_EQ(smiles.find('/'), std::string::npos) << smiles;
+  EXPECT_EQ(smiles.find('\\'), std::string::npos) << smiles;
+}
+
+TEST(SmilesTest, noCisTransWithoutCoordinates)
+{
+  Molecule mol;
+  Index c1 = mol.addAtom(6).index();
+  Index c2 = mol.addAtom(6).index();
+  mol.addBond(c1, mol.addAtom(9).index(), 1);
+  mol.addBond(c1, mol.addAtom(1).index(), 1);
+  mol.addBond(c1, c2, 2);
+  mol.addBond(c2, mol.addAtom(9).index(), 1);
+  mol.addBond(c2, mol.addAtom(1).index(), 1);
+
+  EXPECT_EQ(writeImplicit(mol), "C(F)=CF");
 }
 
 TEST(SmilesTest, formatIsWriteOnly)
@@ -321,8 +590,9 @@ TEST(SmilesTest, formatOptions)
   EXPECT_EQ(smiles, "[C:1]([H:2])([H:3])([H:4])[H:5]\n");
 
   SmilesFormat defaults;
-  std::string unimplemented;
-  EXPECT_FALSE(defaults.writeString(unimplemented, mol));
+  std::string implicit;
+  EXPECT_TRUE(defaults.writeString(implicit, mol)) << defaults.error();
+  EXPECT_EQ(implicit, "C\n");
 }
 
 TEST(SmilesTest, structuralInvariantsOnRealMolecule)
