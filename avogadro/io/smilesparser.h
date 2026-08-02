@@ -29,10 +29,12 @@ namespace Avogadro::Io {
  * branches, ring closures and dot-disconnected components.
  *
  * Aromatic input -- a lowercase atom, or an aromatic bond, anywhere in the
- * string -- is rejected outright rather than guessed at. Turning an aromatic
- * ring back into alternating single and double bonds (kekulization) is not
- * implemented yet; the rejection is a single block in the .cpp file, marked
- * as the place a future kekulizer replaces.
+ * string -- is accepted: Core::kekulize() turns the aromatic ring or ring
+ * system back into alternating single and double bond orders, which is how
+ * Avogadro stores structures internally. If no assignment satisfies every
+ * aromatic atom's valence -- an unkekulizable input -- parsing fails with an
+ * error positioned at the first aromatic token in the string, and the
+ * molecule is left empty, the same as any other parse failure.
  *
  * Chirality markers and the directional bond markers '/' and '\' are parsed
  * -- so the rest of the string still makes sense -- but the stereochemistry
@@ -44,14 +46,15 @@ namespace Avogadro::Io {
  * Avogadro's convention is that every hydrogen is a real atom in the graph,
  * so every hydrogen this class infers -- from the organic subset valence
  * model on a bare atom, or from a bracket's H count -- is materialized as
- * one. An atom's final bond order sum, and so its implied hydrogen count, is
- * not known until its ring closures have all been seen, so this happens in a
- * second pass after the rest of the molecule is built. As a result, the
- * molecule this class produces orders its atoms as: first, every atom
- * written explicitly in the SMILES, in the order it appears in the string
- * (branches included, depth first); then every hydrogen this class added,
- * grouped by the atom it was added to and in that atom's order, in no
- * particular order within a group (they are interchangeable).
+ * one. A bracket atom's count is stated in the string, but a bare aromatic
+ * atom's implied count depends on the bond orders kekulization produces, so
+ * hydrogens for those atoms are added only after kekulization succeeds. As a
+ * result, the molecule this class produces orders its atoms as: first, every
+ * atom written explicitly in the SMILES, in the order it appears in the
+ * string (branches included, depth first); then every hydrogen this class
+ * added. The order of the added hydrogens themselves is unspecified -- they
+ * are interchangeable -- and does not simply follow their parent atoms'
+ * order, since it is now split across two passes.
  */
 class AVOGADROIO_EXPORT SmilesParser
 {

@@ -8,6 +8,7 @@
 #include "fileformatmanager.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/kekulize.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/stereo.h>
 #include <avogadro/core/utilities.h>
@@ -266,6 +267,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Parse the bond block.
+  std::vector<bool> aromaticBonds;
+  aromaticBonds.reserve(numBonds);
+  bool anyAromaticBond = false;
   for (int i = 0; i < numBonds; ++i) {
     // Bond atom indices start at 1, -1 for C++.
     getline(in, buffer);
@@ -294,8 +298,19 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       appendError("Bond read in with out of bounds index.");
       return false;
     }
-    Bond newBond = mol.addBond(mol.atom(begin), mol.atom(end),
-                               static_cast<unsigned char>(order));
+    // Bond type 4 is aromatic. It used to be passed straight through to
+    // addBond(), which made it a quadruple bond; add it as a single-bond
+    // placeholder instead and let kekulize() assign its real order below.
+    // Query types 5-8 are left exactly as they were: out of scope here.
+    unsigned char bondOrder = static_cast<unsigned char>(order);
+    bool aromatic = false;
+    if (order == 4) {
+      aromatic = true;
+      anyAromaticBond = true;
+      bondOrder = 1;
+    }
+    Bond newBond = mol.addBond(mol.atom(begin), mol.atom(end), bondOrder);
+    aromaticBonds.push_back(aromatic);
 
     // The stereo column is optional, and a file that omits it is simply
     // saying nothing about configuration.
@@ -422,6 +437,18 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     size_t index = i.first;
     signed int charge = i.second;
     mol.setFormalCharge(index, charge);
+  }
+
+  // Aromatic (type 4) bonds were added above as single-bond placeholders;
+  // replace them with a real alternation now. This has to wait until here,
+  // after charges are applied, since a charged aromatic atom (a pyridinium
+  // nitrogen, for instance) classifies differently than a neutral one.
+  if (anyAromaticBond) {
+    Index failedAtom = MaxIndex;
+    if (!Core::kekulize(mol, aromaticBonds, &failedAtom)) {
+      appendError(Core::kekulizeFailureMessage(failedAtom));
+      return false;
+    }
   }
 
   // Set the total spin multiplicity

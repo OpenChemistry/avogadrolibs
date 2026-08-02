@@ -852,6 +852,14 @@ const char* Serializer::bondSymbol(Index bond, Index fromAtom) const
     return direction == Direction::Up ? "/" : "\\";
   }
 
+  // A single bond joining two aromatic atoms has to say so: OpenSMILES 3.2.1
+  // reads an omitted symbol between two lower case atoms as aromatic, so
+  // leaving it bare would write biphenyl as "c1ccccc1c1ccccc1" and claim the
+  // two rings are one aromatic system.
+  const std::pair<Index, Index>& pair = m_mol.bondPairs()[bond];
+  if (m_aromaticAtom[pair.first] && m_aromaticAtom[pair.second])
+    return "-";
+
   // Order 1, and anything unset, is the SMILES default and written bare.
   return "";
 }

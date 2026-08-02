@@ -8,6 +8,7 @@
 #include "smilesvalence_p.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/kekulize.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
@@ -67,6 +68,7 @@ struct ParsedAtom
   bool aromatic = false;         //!< Written lower case.
   unsigned char explicitH = 0;   //!< Bracket hydrogen count; unused otherwise.
   unsigned int bondOrderSum = 0; //!< Sum of orders of the bonds written to it.
+  bool hasAromaticBond = false;  //!< True once any bond to it is aromatic.
 };
 
 /** One written bond, whether from the chain or a ring closure. */
@@ -75,6 +77,7 @@ struct ParsedBond
   Index a;
   Index b;
   unsigned char order;
+  bool aromatic;
 };
 
 /** A bond symbol read from the input, waiting to attach to what follows it. */
@@ -125,13 +128,15 @@ private:
   bool readDigits(size_t& i, unsigned long maxValue, unsigned long& value);
 
   void finishAtom(Index atom, size_t atomStart);
-  void addRealBond(Index a, Index b, unsigned char order);
+  void addRealBond(Index a, Index b, unsigned char order, bool aromatic);
   bool bondExists(Index a, Index b) const;
   void noteAromatic(size_t position);
+  void notePendingBond();
+  bool rejectDanglingBond();
 
   void fail(const std::string& message, size_t position);
 
-  void buildMolecule(Molecule& molecule, std::vector<size_t>& atomMaps) const;
+  bool buildMolecule(Molecule& molecule, std::vector<size_t>& atomMaps);
 
   const std::string& m_input;
   size_t m_pos = 0;
@@ -171,6 +176,32 @@ void Parser::noteAromatic(size_t position)
   }
 }
 
+/**
+ * Record what a pending bond symbol says beyond its order, for whichever of
+ * the three things a bond can attach to consumes it.
+ */
+void Parser::notePendingBond()
+{
+  if (m_pendingBond.aromatic)
+    noteAromatic(m_pendingBond.position);
+  if (m_pendingBond.directional)
+    m_sawStereo = true;
+}
+
+/**
+ * A bond symbol has to be followed by something to bond to. Call this
+ * wherever the next token cannot be that thing.
+ * @return False if a bond symbol is left dangling, having reported it.
+ */
+bool Parser::rejectDanglingBond()
+{
+  if (!m_pendingBond.set)
+    return true;
+  fail("A bond symbol must be followed by an atom or ring closure.",
+       m_pendingBond.position);
+  return false;
+}
+
 bool Parser::bondExists(Index a, Index b) const
 {
   for (const ParsedBond& bond : m_bonds) {
@@ -180,11 +211,15 @@ bool Parser::bondExists(Index a, Index b) const
   return false;
 }
 
-void Parser::addRealBond(Index a, Index b, unsigned char order)
+void Parser::addRealBond(Index a, Index b, unsigned char order, bool aromatic)
 {
-  m_bonds.push_back(ParsedBond{ a, b, order });
+  m_bonds.push_back(ParsedBond{ a, b, order, aromatic });
   m_atoms[a].bondOrderSum += order;
   m_atoms[b].bondOrderSum += order;
+  if (aromatic) {
+    m_atoms[a].hasAromaticBond = true;
+    m_atoms[b].hasAromaticBond = true;
+  }
 }
 
 /**
@@ -221,18 +256,19 @@ void Parser::finishAtom(Index atom, size_t atomStart)
 
   if (m_previousAtom != MaxIndex) {
     // Nothing written between two atoms means a single bond, except between
-    // two lower case atoms, where it means an aromatic one -- but both of
-    // those already tripped noteAromatic() through their own symbols, so the
-    // order recorded for such a bond is never reached.
+    // two lower case atoms, where it means an aromatic one -- both of those
+    // already tripped noteAromatic() through their own symbols, so this is
+    // just recovering the same fact to flag the bond itself.
     unsigned char order = 1;
+    bool aromatic = false;
     if (m_pendingBond.set) {
       order = m_pendingBond.order;
-      if (m_pendingBond.aromatic)
-        noteAromatic(m_pendingBond.position);
-      if (m_pendingBond.directional)
-        m_sawStereo = true;
+      aromatic = m_pendingBond.aromatic;
+      notePendingBond();
+    } else {
+      aromatic = m_atoms[m_previousAtom].aromatic && m_atoms[atom].aromatic;
     }
-    addRealBond(m_previousAtom, atom, order);
+    addRealBond(m_previousAtom, atom, order, aromatic);
   }
 
   m_previousAtom = atom;
@@ -559,10 +595,7 @@ bool Parser::consumeRingClosure()
     if (m_pendingBond.set) {
       slot.order = m_pendingBond.order;
       slot.aromatic = m_pendingBond.aromatic;
-      if (m_pendingBond.aromatic)
-        noteAromatic(m_pendingBond.position);
-      if (m_pendingBond.directional)
-        m_sawStereo = true;
+      notePendingBond();
     } else {
       slot.order = -1;
       slot.aromatic = false;
@@ -583,10 +616,7 @@ bool Parser::consumeRingClosure()
   if (m_pendingBond.set) {
     closeOrder = m_pendingBond.order;
     closeAromatic = m_pendingBond.aromatic;
-    if (m_pendingBond.aromatic)
-      noteAromatic(m_pendingBond.position);
-    if (m_pendingBond.directional)
-      m_sawStereo = true;
+    notePendingBond();
   }
 
   const bool openSpecified = slot.order != -1 || slot.aromatic;
@@ -601,15 +631,19 @@ bool Parser::consumeRingClosure()
     }
   }
 
-  // Aromatic bond orders are never used past the rejection in run(), so
-  // recording them as plain single bonds here is harmless.
+  // An aromatic bond's order is a placeholder here: kekulize() decides the
+  // real one later, from the aromatic flag recorded alongside it below.
   unsigned char order = 1;
-  if (openSpecified)
-    order = slot.aromatic ? 1 : static_cast<unsigned char>(slot.order);
-  else if (closeSpecified)
-    order = closeAromatic ? 1 : static_cast<unsigned char>(closeOrder);
-  else if (m_atoms[openAtom].aromatic && m_atoms[m_previousAtom].aromatic)
-    order = 1; // Aromatic by default; already noted through the atoms.
+  bool aromatic = false;
+  if (openSpecified) {
+    aromatic = slot.aromatic;
+    order = aromatic ? 1 : static_cast<unsigned char>(slot.order);
+  } else if (closeSpecified) {
+    aromatic = closeAromatic;
+    order = aromatic ? 1 : static_cast<unsigned char>(closeOrder);
+  } else if (m_atoms[openAtom].aromatic && m_atoms[m_previousAtom].aromatic) {
+    aromatic = true; // Aromatic by default; already noted through the atoms.
+  }
 
   if (bondExists(openAtom, m_previousAtom)) {
     fail("This ring closure duplicates a bond that already exists between "
@@ -618,7 +652,7 @@ bool Parser::consumeRingClosure()
     return false;
   }
 
-  addRealBond(openAtom, m_previousAtom, order);
+  addRealBond(openAtom, m_previousAtom, order, aromatic);
   slot.open = false;
   m_pendingBond = PendingBond{};
   return true;
@@ -632,11 +666,8 @@ bool Parser::parseStructure()
     const char c = m_input[m_pos];
 
     if (c == '(') {
-      if (m_pendingBond.set) {
-        fail("A bond symbol must be followed by an atom or ring closure.",
-             m_pendingBond.position);
+      if (!rejectDanglingBond())
         return false;
-      }
       if (m_previousAtom == MaxIndex) {
         fail("'(' with no preceding atom to branch from.", m_pos);
         return false;
@@ -647,11 +678,8 @@ bool Parser::parseStructure()
     }
 
     if (c == ')') {
-      if (m_pendingBond.set) {
-        fail("A bond symbol must be followed by an atom or ring closure.",
-             m_pendingBond.position);
+      if (!rejectDanglingBond())
         return false;
-      }
       if (m_branchStack.empty()) {
         fail("')' has no matching '('.", m_pos);
         return false;
@@ -663,11 +691,8 @@ bool Parser::parseStructure()
     }
 
     if (c == '.') {
-      if (m_pendingBond.set) {
-        fail("A bond symbol must be followed by an atom or ring closure.",
-             m_pendingBond.position);
+      if (!rejectDanglingBond())
         return false;
-      }
       m_previousAtom = MaxIndex;
       ++m_pos;
       continue;
@@ -729,11 +754,8 @@ bool Parser::parseStructure()
       return false;
   }
 
-  if (m_pendingBond.set) {
-    fail("A bond symbol must be followed by an atom or ring closure.",
-         m_pendingBond.position);
+  if (!rejectDanglingBond())
     return false;
-  }
   if (!m_branchStack.empty()) {
     fail("'(' was never closed.", m_branchStack.back().second);
     return false;
@@ -758,8 +780,7 @@ bool Parser::parseStructure()
   return true;
 }
 
-void Parser::buildMolecule(Molecule& molecule,
-                           std::vector<size_t>& atomMaps) const
+bool Parser::buildMolecule(Molecule& molecule, std::vector<size_t>& atomMaps)
 {
   const Index writtenCount = static_cast<Index>(m_atoms.size());
 
@@ -771,16 +792,29 @@ void Parser::buildMolecule(Molecule& molecule,
       molecule.setIsotope(added.index(), atom.isotope);
   }
 
-  for (const ParsedBond& bond : m_bonds)
+  // Every aromatic bond starts out as a placeholder single bond; kekulize()
+  // below assigns its real order. m_bonds[i] and this molecule's bond i
+  // correspond one for one, which the hydrogen pass after kekulization
+  // relies on to read back the orders it produced.
+  std::vector<bool> aromaticBonds;
+  aromaticBonds.reserve(m_bonds.size());
+  bool anyAromatic = false;
+  for (const ParsedBond& bond : m_bonds) {
     molecule.addBond(bond.a, bond.b, bond.order);
+    aromaticBonds.push_back(bond.aromatic);
+    anyAromatic = anyAromatic || bond.aromatic;
+  }
 
-  // Second pass: every implied or bracket-counted hydrogen becomes a real
-  // atom, appended after every written atom and grouped by the atom it
-  // belongs to. This has to wait until now because a bare atom's implied
-  // count depends on its bond order sum, which is not final until its ring
-  // closures -- possibly written much later in the string -- have closed.
+  // First pass: every bracket atom (its count is stated in the string) and
+  // every bare atom with no aromatic bond (its bond order sum is therefore
+  // already final). This has to happen before kekulization, not after: a
+  // bracket atom's stated hydrogen count is part of what kekulize() needs to
+  // classify it correctly -- pyrrole's [nH] would be misread as pyridine's
+  // bare n otherwise.
   for (Index parent = 0; parent < writtenCount; ++parent) {
     const ParsedAtom& atom = m_atoms[parent];
+    if (!atom.bracket && atom.hasAromaticBond)
+      continue; // Bare and aromatic: handled below, once kekulized.
     int hCount = 0;
     if (atom.bracket) {
       hCount = atom.explicitH;
@@ -796,12 +830,57 @@ void Parser::buildMolecule(Molecule& molecule,
     for (int h = 0; h < hCount; ++h) {
       const Molecule::AtomType hydrogen = molecule.addAtom(1);
       molecule.addBond(parent, hydrogen.index(), 1);
+      // kekulize() below requires one aromaticBonds entry per bond in the
+      // molecule at the time it is called, and this hydrogen bond is not
+      // aromatic, so it needs an entry here too even though it has no
+      // ParsedBond of its own.
+      aromaticBonds.push_back(false);
+    }
+  }
+
+  if (anyAromatic) {
+    Index failedAtom = MaxIndex;
+    if (!Core::kekulize(molecule, aromaticBonds, &failedAtom)) {
+      fail("This aromatic system has no valid arrangement of alternating "
+           "single and double bonds.",
+           m_aromaticPosition);
+      return false;
+    }
+  }
+
+  // Second pass: bare atoms that are part of the aromatic system, whose
+  // implied hydrogen count depends on the bond orders kekulization just
+  // assigned. Their sum has to be read back from the molecule -- the
+  // placeholder order recorded in m_bonds is stale now.
+  if (anyAromatic) {
+    std::vector<unsigned int> finalOrderSum(writtenCount, 0);
+    const Core::Array<unsigned char>& orders = molecule.bondOrders();
+    for (Index i = 0; i < static_cast<Index>(m_bonds.size()); ++i) {
+      finalOrderSum[m_bonds[i].a] += orders[i];
+      finalOrderSum[m_bonds[i].b] += orders[i];
+    }
+
+    for (Index parent = 0; parent < writtenCount; ++parent) {
+      const ParsedAtom& atom = m_atoms[parent];
+      if (atom.bracket || !atom.hasAromaticBond)
+        continue; // Already handled in the first pass.
+      int hCount = 0;
+      if (atom.atomicNumber != 0) {
+        const int implied =
+          smilesImpliedHydrogens(atom.atomicNumber, finalOrderSum[parent]);
+        hCount = (implied == SmilesNotOrganicSubset) ? 0 : implied;
+      }
+      for (int h = 0; h < hCount; ++h) {
+        const Molecule::AtomType hydrogen = molecule.addAtom(1);
+        molecule.addBond(parent, hydrogen.index(), 1);
+      }
     }
   }
 
   atomMaps.assign(molecule.atomCount(), 0);
   for (Index i = 0; i < writtenCount; ++i)
     atomMaps[i] = m_atoms[i].mapClass;
+  return true;
 }
 
 bool Parser::run(Molecule& molecule, std::string& error, size_t& errorPosition,
@@ -814,19 +893,6 @@ bool Parser::run(Molecule& molecule, std::string& error, size_t& errorPosition,
     return false;
   }
 
-  // ---------------------------------------------------------------------
-  // Aromatic input is rejected here, as a single block, because turning an
-  // aromatic ring back into alternating single and double bonds requires a
-  // kekulizer that does not exist yet. Once one does, replace this block
-  // with a call to it instead of failing.
-  if (m_sawAromatic) {
-    error = "Aromatic SMILES requires kekulization, which is not yet "
-            "implemented.";
-    errorPosition = m_aromaticPosition;
-    return false;
-  }
-  // ---------------------------------------------------------------------
-
   if (m_sawStereo) {
     warnings.push_back(
       "Stereochemistry (chirality and bond direction markers) was "
@@ -834,7 +900,11 @@ bool Parser::run(Molecule& molecule, std::string& error, size_t& errorPosition,
       "describe.");
   }
 
-  buildMolecule(molecule, atomMaps);
+  if (!buildMolecule(molecule, atomMaps)) {
+    error = m_error;
+    errorPosition = m_errorPosition;
+    return false;
+  }
   return true;
 }
 
@@ -865,8 +935,10 @@ bool SmilesParser::parse(const std::string& smiles, Core::Molecule& molecule)
 
   Parser parser(structure);
   if (!parser.run(molecule, m_error, m_errorPosition, m_warnings, m_atomMaps)) {
-    // run() builds nothing until the whole string has parsed, so there is
-    // nothing to undo here; this only restates the guarantee.
+    // A structural failure builds nothing, but a kekulization failure is
+    // caught only after buildMolecule() has already added atoms and bonds --
+    // clear them so a failed parse always leaves the molecule empty, as
+    // documented.
     molecule.clearAtoms();
     m_atomMaps.clear();
     return false;

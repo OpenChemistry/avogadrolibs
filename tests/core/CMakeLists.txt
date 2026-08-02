@@ -16,6 +16,7 @@ set(tests
   GaussianSet
   Graph
   InternalCoordinates
+  Kekulize
   Mesh
   Molecule
   Mutex

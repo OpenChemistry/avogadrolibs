@@ -510,29 +510,213 @@ TEST(SmilesParserTest, errorAtomClassOverflow)
 }
 
 // ---------------------------------------------------------------------------
-// Aromatic input: rejected until a kekulizer exists.
+// Aromatic input: kekulized rather than rejected.
 
-TEST(SmilesParserTest, errorAromaticRingIsRejected)
+TEST(SmilesParserTest, aromaticBenzene)
 {
-  SmilesParser parser;
-  Molecule mol;
-  EXPECT_FALSE(parser.parse("c1ccccc1", mol));
-  EXPECT_EQ(parser.errorPosition(), 0u);
-  EXPECT_EQ(parser.error(),
-            "Aromatic SMILES requires kekulization, which is not yet "
-            "implemented.");
+  Molecule mol = parseOk("c1ccccc1");
+  EXPECT_EQ(mol.atomCount(), 12u);
+  EXPECT_EQ(countElement(mol, 6), 6);
+  EXPECT_EQ(countElement(mol, 1), 6);
+  EXPECT_EQ(countBondOrder(mol, 2), 3);
+  EXPECT_EQ(countBondOrder(mol, 1), 9);
 }
 
-TEST(SmilesParserTest, errorAromaticBracketAtomIsRejected)
+TEST(SmilesParserTest, aromaticPyridine)
 {
-  expectError("[nH]1cccc1", 0);
+  Molecule mol = parseOk("c1ccncc1");
+  EXPECT_EQ(mol.atomCount(), 11u);
+  EXPECT_EQ(countElement(mol, 6), 5);
+  EXPECT_EQ(countElement(mol, 7), 1);
+  EXPECT_EQ(countElement(mol, 1), 5);
+  EXPECT_EQ(countBondOrder(mol, 2), 3);
+  EXPECT_EQ(countBondOrder(mol, 1), 8);
 }
 
-TEST(SmilesParserTest, errorAromaticBondIsRejected)
+TEST(SmilesParserTest, aromaticPyrroleBracketNitrogen)
 {
-  // Neither atom is written lower case; only the explicit ':' bond is
-  // aromatic here.
-  expectError("C:C", 1);
+  // The [nH] states its hydrogen explicitly, which is what lets kekulize()
+  // classify the nitrogen correctly (it must not take a ring double bond).
+  Molecule mol = parseOk("[nH]1cccc1");
+  EXPECT_EQ(mol.atomCount(), 10u);
+  EXPECT_EQ(countElement(mol, 6), 4);
+  EXPECT_EQ(countElement(mol, 7), 1);
+  EXPECT_EQ(countElement(mol, 1), 5); // Four ring CH, plus the N-H.
+  EXPECT_EQ(countBondOrder(mol, 2), 2);
+  EXPECT_EQ(countBondOrder(mol, 1), 8);
+}
+
+TEST(SmilesParserTest, aromaticFuran)
+{
+  Molecule mol = parseOk("c1ccoc1");
+  EXPECT_EQ(mol.atomCount(), 9u);
+  EXPECT_EQ(countElement(mol, 6), 4);
+  EXPECT_EQ(countElement(mol, 8), 1);
+  EXPECT_EQ(countElement(mol, 1), 4);
+  EXPECT_EQ(countBondOrder(mol, 2), 2);
+  EXPECT_EQ(countBondOrder(mol, 1), 7);
+}
+
+TEST(SmilesParserTest, aromaticThiophene)
+{
+  Molecule mol = parseOk("c1ccsc1");
+  EXPECT_EQ(mol.atomCount(), 9u);
+  EXPECT_EQ(countElement(mol, 6), 4);
+  EXPECT_EQ(countElement(mol, 16), 1);
+  EXPECT_EQ(countElement(mol, 1), 4);
+  EXPECT_EQ(countBondOrder(mol, 2), 2);
+  EXPECT_EQ(countBondOrder(mol, 1), 7);
+}
+
+TEST(SmilesParserTest, aromaticImidazole)
+{
+  Molecule mol = parseOk("c1c[nH]cn1");
+  EXPECT_EQ(mol.atomCount(), 9u);
+  EXPECT_EQ(countElement(mol, 6), 3);
+  EXPECT_EQ(countElement(mol, 7), 2);
+  EXPECT_EQ(countElement(mol, 1), 4); // Three ring CH, plus the N-H.
+  EXPECT_EQ(countBondOrder(mol, 2), 2);
+  EXPECT_EQ(countBondOrder(mol, 1), 7);
+}
+
+TEST(SmilesParserTest, aromaticNaphthaleneFusedRings)
+{
+  Molecule mol = parseOk("c1ccc2ccccc2c1");
+  EXPECT_EQ(mol.atomCount(), 18u);
+  EXPECT_EQ(countElement(mol, 6), 10);
+  EXPECT_EQ(countElement(mol, 1), 8); // The two bridgeheads carry no H.
+  EXPECT_EQ(countBondOrder(mol, 2), 5);
+  EXPECT_EQ(countBondOrder(mol, 1), 14);
+}
+
+TEST(SmilesParserTest, aromaticBiphenylConnectingBondIsNotAromatic)
+{
+  // The explicit '-' is load bearing: between two lower case atoms, writing
+  // no bond symbol at all would mean an aromatic bond instead, joining the
+  // two rings into a single (unkekulizable) twelve-membered system.
+  Molecule mol = parseOk("c1ccc(cc1)-c1ccccc1");
+  EXPECT_EQ(mol.atomCount(), 22u);
+  EXPECT_EQ(countElement(mol, 6), 12);
+  EXPECT_EQ(countElement(mol, 1), 10);
+  EXPECT_EQ(countBondOrder(mol, 2), 6);
+  // Eleven ring single bonds (five per ring, plus the connecting bond) and
+  // ten C-H bonds.
+  EXPECT_EQ(countBondOrder(mol, 1), 17);
+}
+
+TEST(SmilesParserTest, aromaticCaffeine)
+{
+  // 1,3,7-trimethylxanthine: a fused imidazole and pyrimidinedione, with two
+  // exocyclic C=O bonds written explicitly inside the aromatic ring.
+  Molecule mol = parseOk("Cn1cnc2c1c(=O)n(C)c(=O)n2C");
+  EXPECT_EQ(mol.atomCount(), 24u);
+  EXPECT_EQ(countElement(mol, 6), 8);
+  EXPECT_EQ(countElement(mol, 7), 4);
+  EXPECT_EQ(countElement(mol, 8), 2);
+  EXPECT_EQ(countElement(mol, 1), 10);
+}
+
+TEST(SmilesParserTest, errorUnkekulizableAromaticRing)
+{
+  // Three aromatic carbons: a triangle has no perfect matching, so no
+  // arrangement of alternating bonds can satisfy every atom.
+  expectError("c1cc1", 0);
+}
+
+// ---------------------------------------------------------------------------
+// Aromatic round trip: parse, write back out with the writer's default
+// (setAromatic(true)), and reparse.
+//
+// Individual bonds cannot be compared. A ring with more than one valid Kekule
+// structure -- benzene, for instance -- can legitimately come back with a
+// different one, because perceiving it as aromatic in order to write it
+// discards which alternation the original happened to hold.
+//
+// Two things do survive that, and are worth far more than an atom count. The
+// number of double bonds is fixed by kekulize()'s classification rather than
+// by the search, so the bond order multiset is invariant. So is each atom's
+// total bond order, which is its valence -- and atom maps correlate the two
+// molecules exactly, since asking for maps does not turn aromatic output off.
+
+namespace {
+
+/** Total bond order at each atom, which is the atom's valence. */
+std::vector<unsigned int> valences(const Molecule& mol)
+{
+  std::vector<unsigned int> sums(mol.atomCount(), 0);
+  for (Index b = 0; b < mol.bondCount(); ++b) {
+    const unsigned char order = mol.bondOrders()[b];
+    sums[mol.bondPairs()[b].first] += order;
+    sums[mol.bondPairs()[b].second] += order;
+  }
+  return sums;
+}
+
+void expectAromaticRoundTrip(const std::string& smiles)
+{
+  Molecule original = parseOk(smiles);
+
+  SmilesWriter writer; // setAromatic(true) is the default.
+  writer.setAtomMaps(true);
+  std::string written;
+  ASSERT_TRUE(writer.write(original, written))
+    << smiles << ": " << writer.error();
+
+  SmilesParser reparser;
+  Molecule reparsed;
+  ASSERT_TRUE(reparser.parse(written, reparsed))
+    << smiles << " -> " << written << ": " << reparser.error();
+
+  ASSERT_EQ(reparsed.atomCount(), original.atomCount()) << smiles;
+  EXPECT_EQ(reparsed.bondCount(), original.bondCount()) << smiles;
+  for (unsigned char element : { 1, 6, 7, 8, 16 }) {
+    EXPECT_EQ(countElement(reparsed, element), countElement(original, element))
+      << smiles << ", element " << int(element);
+  }
+  for (unsigned char order : { 1, 2, 3 }) {
+    EXPECT_EQ(countBondOrder(reparsed, order), countBondOrder(original, order))
+      << smiles << ", bond order " << int(order);
+  }
+
+  const std::vector<unsigned int> before = valences(original);
+  const std::vector<unsigned int> after = valences(reparsed);
+  const std::vector<size_t>& maps = reparser.atomMaps();
+  ASSERT_EQ(maps.size(), reparsed.atomCount()) << smiles;
+  for (Index i = 0; i < reparsed.atomCount(); ++i) {
+    ASSERT_GT(maps[i], 0u) << smiles;
+    const Index originalIndex = static_cast<Index>(maps[i] - 1);
+    ASSERT_LT(originalIndex, original.atomCount()) << smiles;
+    EXPECT_EQ(reparsed.atomicNumber(i), original.atomicNumber(originalIndex))
+      << smiles << ": atom " << i;
+    EXPECT_EQ(after[i], before[originalIndex]) << smiles << ": atom " << i;
+  }
+}
+
+} // namespace
+
+TEST(SmilesParserTest, aromaticRoundTripBenzene)
+{
+  expectAromaticRoundTrip("c1ccccc1");
+}
+
+TEST(SmilesParserTest, aromaticRoundTripPyrrole)
+{
+  expectAromaticRoundTrip("[nH]1cccc1");
+}
+
+TEST(SmilesParserTest, aromaticRoundTripNaphthalene)
+{
+  expectAromaticRoundTrip("c1ccc2ccccc2c1");
+}
+
+TEST(SmilesParserTest, aromaticRoundTripBiphenyl)
+{
+  expectAromaticRoundTrip("c1ccc(cc1)-c1ccccc1");
+}
+
+TEST(SmilesParserTest, aromaticRoundTripCaffeine)
+{
+  expectAromaticRoundTrip("Cn1cnc2c1c(=O)n(C)c(=O)n2C");
 }
 
 // ---------------------------------------------------------------------------

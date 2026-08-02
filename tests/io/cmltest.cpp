@@ -221,3 +221,115 @@ TEST(CmlTest, readString)
   EXPECT_EQ(moleculeFromString.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(moleculeFromString.bondCount(), static_cast<size_t>(7));
 }
+
+TEST(CmlTest, aromaticBondOrderAIsKekulized)
+{
+  // Benzene, its six ring bonds written with the CML aromatic order "A".
+  // Before kekulize() was wired in, "A" fell through to the single-bond
+  // default; now it should come back as alternating single and double
+  // bonds, not all single.
+  std::string cmlStr("<?xml version=\"1.0\"?>"
+                     "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
+                     "<atomArray>"
+                     "<atom id=\"a1\" elementType=\"C\"/>"
+                     "<atom id=\"a2\" elementType=\"C\"/>"
+                     "<atom id=\"a3\" elementType=\"C\"/>"
+                     "<atom id=\"a4\" elementType=\"C\"/>"
+                     "<atom id=\"a5\" elementType=\"C\"/>"
+                     "<atom id=\"a6\" elementType=\"C\"/>"
+                     "<atom id=\"a7\" elementType=\"H\"/>"
+                     "<atom id=\"a8\" elementType=\"H\"/>"
+                     "<atom id=\"a9\" elementType=\"H\"/>"
+                     "<atom id=\"a10\" elementType=\"H\"/>"
+                     "<atom id=\"a11\" elementType=\"H\"/>"
+                     "<atom id=\"a12\" elementType=\"H\"/>"
+                     "</atomArray>"
+                     "<bondArray>"
+                     "<bond atomRefs2=\"a1 a2\" order=\"A\"/>"
+                     "<bond atomRefs2=\"a2 a3\" order=\"A\"/>"
+                     "<bond atomRefs2=\"a3 a4\" order=\"A\"/>"
+                     "<bond atomRefs2=\"a4 a5\" order=\"A\"/>"
+                     "<bond atomRefs2=\"a5 a6\" order=\"A\"/>"
+                     "<bond atomRefs2=\"a6 a1\" order=\"A\"/>"
+                     "<bond atomRefs2=\"a1 a7\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a2 a8\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a3 a9\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a4 a10\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a5 a11\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a6 a12\" order=\"1\"/>"
+                     "</bondArray>"
+                     "</molecule>");
+
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(cmlStr, molecule)) << cml.error();
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(12));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(12));
+
+  int doubleCount = 0;
+  int singleCount = 0;
+  int ringDouble = 0;
+  for (size_t i = 0; i < molecule.bondCount(); ++i) {
+    const unsigned char order = molecule.bond(i).order();
+    EXPECT_LE(order, static_cast<unsigned char>(2))
+      << "bond " << i << " should not still be a single bond by default";
+    if (order == 2) {
+      ++doubleCount;
+      if (i < 6)
+        ++ringDouble;
+    } else if (order == 1) {
+      ++singleCount;
+    }
+  }
+  EXPECT_EQ(doubleCount, 3);
+  EXPECT_EQ(singleCount, 9); // Three ring single bonds, plus six C-H.
+  EXPECT_EQ(ringDouble, 3);  // The ring bonds specifically must alternate.
+}
+
+TEST(CmlTest, aromaticBondOrderAromaticSpellingIsKekulized)
+{
+  // The same molecule, but with the multi-character spelling order
+  // ="aromatic", which the single-character comparison used to miss.
+  std::string cmlStr("<?xml version=\"1.0\"?>"
+                     "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
+                     "<atomArray>"
+                     "<atom id=\"a1\" elementType=\"C\"/>"
+                     "<atom id=\"a2\" elementType=\"C\"/>"
+                     "<atom id=\"a3\" elementType=\"C\"/>"
+                     "<atom id=\"a4\" elementType=\"C\"/>"
+                     "<atom id=\"a5\" elementType=\"C\"/>"
+                     "<atom id=\"a6\" elementType=\"C\"/>"
+                     "<atom id=\"a7\" elementType=\"H\"/>"
+                     "<atom id=\"a8\" elementType=\"H\"/>"
+                     "<atom id=\"a9\" elementType=\"H\"/>"
+                     "<atom id=\"a10\" elementType=\"H\"/>"
+                     "<atom id=\"a11\" elementType=\"H\"/>"
+                     "<atom id=\"a12\" elementType=\"H\"/>"
+                     "</atomArray>"
+                     "<bondArray>"
+                     "<bond atomRefs2=\"a1 a2\" order=\"aromatic\"/>"
+                     "<bond atomRefs2=\"a2 a3\" order=\"aromatic\"/>"
+                     "<bond atomRefs2=\"a3 a4\" order=\"aromatic\"/>"
+                     "<bond atomRefs2=\"a4 a5\" order=\"aromatic\"/>"
+                     "<bond atomRefs2=\"a5 a6\" order=\"aromatic\"/>"
+                     "<bond atomRefs2=\"a6 a1\" order=\"aromatic\"/>"
+                     "<bond atomRefs2=\"a1 a7\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a2 a8\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a3 a9\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a4 a10\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a5 a11\" order=\"1\"/>"
+                     "<bond atomRefs2=\"a6 a12\" order=\"1\"/>"
+                     "</bondArray>"
+                     "</molecule>");
+
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(cmlStr, molecule)) << cml.error();
+
+  int doubleCount = 0;
+  for (size_t i = 0; i < molecule.bondCount(); ++i) {
+    if (molecule.bond(i).order() == 2)
+      ++doubleCount;
+  }
+  EXPECT_EQ(doubleCount, 3);
+}

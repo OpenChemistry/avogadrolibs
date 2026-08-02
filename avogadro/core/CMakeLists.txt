@@ -53,6 +53,7 @@ avogadro_headers(Core
   gaussiansettools.h
   graph.h
   internalcoordinates.h
+  kekulize.h
   layer.h
   layermanager.h
   mesh.h
@@ -89,6 +90,7 @@ target_sources(Core PRIVATE
   gaussiansettools.cpp
   graph.cpp
   internalcoordinates.cpp
+  kekulize.cpp
   layer.cpp
   layermanager.cpp
   mesh.cpp

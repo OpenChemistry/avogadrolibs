@@ -259,3 +259,69 @@ TEST(MdlTest, readV3000Valence)
   EXPECT_EQ(normalC.atomicNumber(), static_cast<unsigned char>(6));
   EXPECT_EQ(normalC.hybridization(), Avogadro::Core::HybridizationUnknown);
 }
+
+TEST(MdlTest, aromaticBondType4IsKekulized)
+{
+  // Benzene, its six ring bonds written as MDL bond type 4 (aromatic).
+  // Before kekulize() was wired in, type 4 was passed straight to addBond()
+  // and became a quadruple bond; now it should come back as alternating
+  // single and double bonds, not all one order.
+  const std::string molfile =
+    "Benzene\n"
+    "  Test2D\n"
+    "\n"
+    " 12 12  0  0  0  0  0  0  0  0999 V2000\n"
+    "    1.2000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "    0.6000    1.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   -0.6000    1.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   -1.2000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   -0.6000   -1.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "    0.6000   -1.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "    2.2000    0.0000    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "    1.1000    1.9000    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   -1.1000    1.9000    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   -2.2000    0.0000    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   -1.1000   -1.9000    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "    1.1000   -1.9000    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "  1  2  4  0  0  0  0\n"
+    "  2  3  4  0  0  0  0\n"
+    "  3  4  4  0  0  0  0\n"
+    "  4  5  4  0  0  0  0\n"
+    "  5  6  4  0  0  0  0\n"
+    "  6  1  4  0  0  0  0\n"
+    "  1  7  1  0  0  0  0\n"
+    "  2  8  1  0  0  0  0\n"
+    "  3  9  1  0  0  0  0\n"
+    "  4 10  1  0  0  0  0\n"
+    "  5 11  1  0  0  0  0\n"
+    "  6 12  1  0  0  0  0\n"
+    "M  END\n";
+
+  MdlFormat mdl;
+  Molecule molecule;
+  ASSERT_TRUE(mdl.readString(molfile, molecule)) << mdl.error();
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(12));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(12));
+
+  int doubleCount = 0;
+  int singleCount = 0;
+  for (size_t i = 0; i < molecule.bondCount(); ++i) {
+    const unsigned char order = molecule.bond(i).order();
+    EXPECT_LE(order, static_cast<unsigned char>(2))
+      << "bond " << i << " should not still be a quadruple bond";
+    if (order == 2)
+      ++doubleCount;
+    else if (order == 1)
+      ++singleCount;
+  }
+  EXPECT_EQ(doubleCount, 3);
+  EXPECT_EQ(singleCount, 9); // Three ring single bonds, plus six C-H.
+
+  // Specifically, the ring bonds (0-5) must alternate rather than all match.
+  int ringDouble = 0;
+  for (size_t i = 0; i < 6; ++i) {
+    if (molecule.bond(i).order() == 2)
+      ++ringDouble;
+  }
+  EXPECT_EQ(ringDouble, 3);
+}
