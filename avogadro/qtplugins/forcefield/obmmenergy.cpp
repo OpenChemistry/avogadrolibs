@@ -9,6 +9,8 @@
 
 #include <avogadro/io/cmlformat.h>
 
+#include <avogadro/qtgui/utilities.h>
+
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QScopedPointer>
@@ -142,31 +144,17 @@ void OBMMEnergy::setupProcess()
         QFileInfo(baseDir.absolutePath() + '/' + m_executable).exists()) {
       m_executable = baseDir.absolutePath() + '/' + m_executable;
       QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-#if defined(_WIN32)
-      env.insert("BABEL_DATADIR",
-                 QCoreApplication::applicationDirPath() + "/data");
-#else
-      QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
-      QStringList filters;
-      filters << "3.*";
-      QStringList dirs = dir.entryList(filters);
-      if (dirs.size() == 1) {
-        env.insert("BABEL_DATADIR", QCoreApplication::applicationDirPath() +
-                                      "/../share/openbabel/" + dirs[0]);
-      } else {
+
+      QString dataDir = QtGui::Utilities::openBabelDataDirectory();
+      if (!dataDir.isEmpty())
+        env.insert("BABEL_DATADIR", dataDir);
+      else
         qDebug() << "Error, Open Babel data directory not found.";
-      }
-      dir.setPath(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
-      dirs = dir.entryList(filters);
-      if (dirs.size() == 1) {
-        env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
-                                     "/../lib/openbabel/" + dirs[0]);
-      } else {
-        env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
-                                     "/../lib/openbabel/");
-        qDebug() << "Error, Open Babel plugins directory not found.";
-      }
-#endif
+
+      QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
+      if (!pluginDir.isEmpty())
+        env.insert("BABEL_LIBDIR", pluginDir);
+
       m_process->setProcessEnvironment(env);
     }
   }

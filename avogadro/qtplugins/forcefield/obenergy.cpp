@@ -7,6 +7,7 @@
 #include "obenergy.h"
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <openbabel/babelconfig.h>
 
@@ -46,46 +47,21 @@ OBEnergy::OBEnergy(const std::string& method)
 {
   d = new Private;
 
-  // make sure we set the Open Babel variables for data files
-#ifdef _WIN32
-  QByteArray dataDir =
-    QString(QCoreApplication::applicationDirPath() + "/data").toLocal8Bit();
-  qputenv("BABEL_DATADIR", dataDir);
-#else
-  // check if BABEL_DATADIR is set in the environment
-  QStringList filters;
-  filters << "3.*"
-          << "2.*";
+  // make sure we set the Open Babel variables for data files, leaving any
+  // setting from the environment alone
   if (qgetenv("BABEL_DATADIR").isEmpty()) {
-    QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
-    QStringList dirs = dir.entryList(filters);
-    if (dirs.size() == 1) {
-      // versioned data directory
-      QString dataDir = QCoreApplication::applicationDirPath() +
-                        "/../share/openbabel/" + dirs[0];
+    QString dataDir = QtGui::Utilities::openBabelDataDirectory();
+    if (!dataDir.isEmpty())
       qputenv("BABEL_DATADIR", dataDir.toLocal8Bit());
-    } else {
+    else
       qDebug() << "Error, Open Babel data directory not found.";
-    }
   }
 
-  // Check if BABEL_LIBDIR is set
   if (qgetenv("BABEL_LIBDIR").isEmpty()) {
-    QDir dir(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
-    QStringList dirs = dir.entryList(filters);
-    if (dirs.size() == 0) {
-      QString libDir =
-        QCoreApplication::applicationDirPath() + "/../lib/openbabel/";
-      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
-    } else if (dirs.size() == 1) {
-      QString libDir =
-        QCoreApplication::applicationDirPath() + "/../lib/openbabel/" + dirs[0];
-      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
-    } else {
-      qDebug() << "Error, Open Babel plugins directory not found.";
-    }
+    QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
+    if (!pluginDir.isEmpty())
+      qputenv("BABEL_LIBDIR", pluginDir.toLocal8Bit());
   }
-#endif
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
 
