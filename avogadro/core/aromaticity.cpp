@@ -6,6 +6,7 @@
 #include "aromaticity.h"
 
 #include "graph.h"
+#include "mdlvalence_p.h"
 #include "molecule.h"
 #include "ringperceiver.h"
 
@@ -21,7 +22,8 @@ struct BondContext
 {
   bool ringDouble = false; //!< Double bond to another atom in the same ring.
   bool exocyclicDouble = false; //!< Double bond leaving the ring.
-  Index connections = 0;
+  Index connections = 0;        //!< Neighbours, implicit hydrogens included.
+  unsigned int orderSum = 0;    //!< Sum of the orders of the explicit bonds.
 };
 
 /**
@@ -252,6 +254,8 @@ void AromaticityPerceiver::perceive() const
     const std::pair<Index, Index>& ends = pairs[bond];
     ++context[ends.first].connections;
     ++context[ends.second].connections;
+    context[ends.first].orderSum += orders[bond];
+    context[ends.second].orderSum += orders[bond];
     if (orders[bond] != 2)
       continue;
     if (ringBond[bond]) {
@@ -274,8 +278,21 @@ void AromaticityPerceiver::perceive() const
   for (Index atom = 0; atom < atomCount; ++atom) {
     if (!inRing[atom])
       continue;
-    m_piContributions[atom] = contribution(
-      numbers[atom], m_molecule->formalCharge(atom), context[atom]);
+
+    // Hydrogens are not always present as atoms -- a structure imported in two
+    // dimensions, or from a file that omits them, carries them implicitly. The
+    // contribution rules ask how many neighbours an atom has, so count those
+    // too, or pyrrole read without its N-H would not be aromatic. An atom whose
+    // hydrogens are already explicit is unaffected: its bonds account for the
+    // whole valence, leaving nothing implied.
+    const signed char charge = m_molecule->formalCharge(atom);
+    const unsigned int valence =
+      atomValence(numbers[atom], charge, context[atom].connections);
+    if (valence > context[atom].orderSum)
+      context[atom].connections += valence - context[atom].orderSum;
+
+    m_piContributions[atom] =
+      contribution(numbers[atom], charge, context[atom]);
   }
 
   // Fused ring systems: connected components of the ring bonds.

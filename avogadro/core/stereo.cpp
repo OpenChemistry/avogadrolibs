@@ -9,7 +9,7 @@
 
 namespace Avogadro::Core {
 
-const char* StereoUnspecifiedProperty = "stereoUnspecified";
+const char* const StereoUnspecifiedProperty = "stereoUnspecified";
 
 namespace {
 

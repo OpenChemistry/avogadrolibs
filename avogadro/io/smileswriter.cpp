@@ -251,20 +251,22 @@ void Serializer::suppressHydrogens()
   m_implicitH.assign(atomCount, 0);
   m_suppressedHydrogen.assign(atomCount, MaxIndex);
 
-  // Explicit mode keeps every hydrogen as an atom of its own, which is also
-  // what atom mapping requires -- a folded hydrogen has nowhere to carry a
-  // map class.
-  if (m_mode == SmilesWriter::HydrogenMode::Explicit)
-    return;
-
   const Core::Array<std::pair<Index, Index>>& pairs = m_mol.bondPairs();
   const Core::Array<unsigned char>& numbers = m_mol.atomicNumbers();
 
+  // Filled before the early return below: hasStereoCandidates() reads it in
+  // every mode.
   m_degree.assign(atomCount, 0);
   for (const std::pair<Index, Index>& ends : pairs) {
     ++m_degree[ends.first];
     ++m_degree[ends.second];
   }
+
+  // Explicit mode keeps every hydrogen as an atom of its own, which is also
+  // what atom mapping requires -- a folded hydrogen has nowhere to carry a
+  // map class.
+  if (m_mode == SmilesWriter::HydrogenMode::Explicit)
+    return;
 
   for (Index bond = 0; bond < pairs.size(); ++bond) {
     if (m_mol.bondOrders()[bond] > 1)

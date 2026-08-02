@@ -760,6 +760,11 @@ Molecule aromaticRing(const std::vector<unsigned char>& elements,
                       const std::vector<unsigned char>& orders)
 {
   Molecule mol;
+  EXPECT_EQ(hydrogens.size(), elements.size());
+  EXPECT_EQ(orders.size(), elements.size());
+  if (hydrogens.size() != elements.size() || orders.size() != elements.size())
+    return mol;
+
   for (unsigned char element : elements)
     mol.addAtom(element);
   for (Index i = 0; i < elements.size(); ++i)
@@ -861,11 +866,34 @@ TEST(SmilesTest, formatOptions)
     EXPECT_EQ(output, mode.second) << mode.first;
   }
 
+  // The aromatic option, which is on unless a caller turns it off.
+  Molecule benzene =
+    aromaticRing({ 6, 6, 6, 6, 6, 6 }, { true, true, true, true, true, true },
+                 { 2, 1, 2, 1, 2, 1 });
+  for (const std::pair<const char*, const char*>& setting :
+       { std::make_pair("{}", "c1ccccc1\n"),
+         std::make_pair("{\"aromatic\": true}", "c1ccccc1\n"),
+         std::make_pair("{\"aromatic\": false}", "C1=CC=CC=C1\n") }) {
+    SmilesFormat format3;
+    format3.setOptions(setting.first);
+    std::string output;
+    EXPECT_TRUE(format3.writeString(output, benzene)) << format3.error();
+    EXPECT_EQ(output, setting.second) << setting.first;
+  }
+
+  // Malformed JSON is not an error: it parses to a discarded value and the
+  // typed settings stand. What matters is that nothing throws.
+  SmilesFormat malformed;
+  malformed.setOptions("{ this is not json ");
+  std::string fromMalformed;
+  EXPECT_TRUE(malformed.writeString(fromMalformed, mol)) << malformed.error();
+  EXPECT_EQ(fromMalformed, "C\n");
+
   // An option that is present but unusable is an error, not a silent default:
   // a wrong type, and a value this format does not know.
   const char* rejected[] = { "{\"hydrogens\": \"aromatic\"}",
-                             "{\"hydrogens\": true}",
-                             "{\"atomMaps\": \"yes\"}" };
+                             "{\"hydrogens\": true}", "{\"atomMaps\": \"yes\"}",
+                             "{\"aromatic\": \"yes\"}" };
   for (const char* options : rejected) {
     SmilesFormat bad;
     bad.setOptions(options);

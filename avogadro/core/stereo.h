@@ -42,7 +42,7 @@ class Molecule;
  * Property column recording that an atom's configuration is undefined. Part of
  * the on-disk CJSON format, so it must stay stable.
  */
-AVOGADROCORE_EXPORT extern const char* StereoUnspecifiedProperty;
+AVOGADROCORE_EXPORT extern const char* const StereoUnspecifiedProperty;
 
 /** @return true if @a atom is marked as having an undefined configuration. */
 AVOGADROCORE_EXPORT bool atomStereoUnspecified(const Molecule& molecule,

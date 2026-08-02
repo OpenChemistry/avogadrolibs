@@ -17,7 +17,7 @@ namespace Avogadro::Core {
 class Molecule;
 
 /** Reported for an atom that cannot take part in an aromatic system. */
-const signed char NotAromaticCandidate = -1;
+constexpr signed char NotAromaticCandidate = -1;
 
 /**
  * @class AromaticityPerceiver aromaticity.h <avogadro/core/aromaticity.h>

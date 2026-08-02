@@ -71,11 +71,11 @@ bool noneAromatic(const Molecule& mol)
   return true;
 }
 
-const unsigned char C = 6;
-const unsigned char N = 7;
-const unsigned char O = 8;
-const unsigned char S = 16;
-const unsigned char B = 5;
+constexpr unsigned char C = 6;
+constexpr unsigned char N = 7;
+constexpr unsigned char O = 8;
+constexpr unsigned char S = 16;
+constexpr unsigned char B = 5;
 
 } // namespace
 
@@ -155,12 +155,17 @@ TEST(AromaticityTest, antiaromaticAndSaturatedRingsAreNot)
     noneAromatic(ring({ { C, 0, 2 }, { C, 0, 1 }, { C, 0, 2 }, { C, 0, 1 } })));
 
   // Cyclohexane: no atom has a p orbital to lend.
-  EXPECT_TRUE(noneAromatic(ring({ { C, 0, 1 },
-                                  { C, 0, 1 },
-                                  { C, 0, 1 },
-                                  { C, 0, 1 },
-                                  { C, 0, 1 },
-                                  { C, 0, 1 } })));
+  Molecule cyclohexane = ring({ { C, 0, 1 },
+                                { C, 0, 1 },
+                                { C, 0, 1 },
+                                { C, 0, 1 },
+                                { C, 0, 1 },
+                                { C, 0, 1 } });
+  for (Index i = 0; i < 6; ++i) {
+    cyclohexane.addBond(i, cyclohexane.addAtom(1).index(), 1);
+    cyclohexane.addBond(i, cyclohexane.addAtom(1).index(), 1);
+  }
+  EXPECT_TRUE(noneAromatic(cyclohexane));
 
   // Cyclooctatetraene: eight electrons.
   EXPECT_TRUE(noneAromatic(ring({ { C, 0, 2 },
@@ -200,7 +205,7 @@ TEST(AromaticityTest, exocyclicDoubleBond)
   EXPECT_EQ(perceiver.piContributions()[0], 2) << "amide nitrogen";
   EXPECT_TRUE(perceiver.aromaticAtoms()[0]);
   EXPECT_TRUE(perceiver.aromaticAtoms()[1]);
-  EXPECT_FALSE(perceiver.aromaticAtoms()[6]) << "the oxygen is not in a ring";
+  EXPECT_FALSE(perceiver.aromaticAtoms()[7]) << "the oxygen is not in a ring";
 }
 
 TEST(AromaticityTest, fusedRings)

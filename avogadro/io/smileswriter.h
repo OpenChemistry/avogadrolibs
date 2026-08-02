@@ -78,7 +78,8 @@ public:
   /**
    * Write perceived aromatic rings in the lowercase form, so benzene is
    * "c1ccccc1" rather than "C1=CC=CC=C1". Both describe the same molecule;
-   * the lowercase form is what most toolkits produce and expect.
+   * the lowercase form is what most toolkits produce and expect, so it is
+   * enabled by default and callers wanting Kekule output must ask for it.
    *
    * Perception is Core::AromaticityPerceiver; anything it does not recognise
    * is written with its bond orders as stored.

@@ -946,10 +946,21 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   // Bond block.
   for (size_t i = 0; i < mol.bondCount(); ++i) {
     Bond bond = mol.bond(i);
+
+    // Carry an undefined configuration back out. Writing 0 here would assert
+    // that the coordinates mean something, which is the claim reading the flag
+    // was meant to avoid making.
+    int stereo = 0;
+    if (bond.order() == 2 && bondStereoUnspecified(mol, i))
+      stereo = 3; // cis or trans, either
+    else if (bond.order() == 1 &&
+             atomStereoUnspecified(mol, bond.atom1().index()))
+      stereo = 4; // a wedge drawn as either
+
     out.unsetf(std::ios::floatfield);
     out << setw(3) << std::right << bond.atom1().index() + 1 << setw(3)
         << bond.atom2().index() + 1 << setw(3) << static_cast<int>(bond.order())
-        << "  0  0  0  0\n";
+        << setw(3) << stereo << "  0  0  0\n";
   }
   // Properties block.
   for (auto& i : chargeList) {
