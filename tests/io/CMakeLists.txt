@@ -7,6 +7,7 @@ set(tests
   Mdl
   Pdb
   Smiles
+  SmilesParser
   Turbomole
   Vasp
   Xyz
