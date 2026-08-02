@@ -13,12 +13,14 @@
 #include <avogadro/core/stereo.h>
 
 #include <avogadro/io/cmlformat.h>
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/io/mdlformat.h>
 #include <avogadro/io/smilesformat.h>
 #include <avogadro/io/smileswriter.h>
 
 #include <cmath>
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include <utility>
@@ -30,6 +32,7 @@ using Avogadro::Io::CmlFormat;
 using Avogadro::Io::MdlFormat;
 using Avogadro::Io::SmilesFormat;
 using Avogadro::Io::SmilesWriter;
+namespace Io = Avogadro::Io;
 
 namespace {
 
@@ -838,6 +841,43 @@ TEST(SmilesTest, formatIsWriteOnly)
   SmilesFormat format;
   EXPECT_EQ(format.supportedOperations() & Avogadro::Io::FileFormat::Read, 0);
   EXPECT_NE(format.supportedOperations() & Avogadro::Io::FileFormat::Write, 0);
+}
+
+TEST(SmilesTest, registeredForWritingOnly)
+{
+  Io::FileFormatManager& manager = Io::FileFormatManager::instance();
+
+  // Asking for "smi" without a filter, as the copy and export paths do, has
+  // to reach the native writer.
+  std::unique_ptr<Io::FileFormat> anyUse(
+    manager.newFormatFromFileExtension("smi"));
+  ASSERT_NE(anyUse, nullptr);
+  EXPECT_EQ(anyUse->identifier(), "Avogadro: SMILES");
+
+  std::unique_ptr<Io::FileFormat> forWriting(manager.newFormatFromFileExtension(
+    "smi", Io::FileFormat::Write | Io::FileFormat::String));
+  ASSERT_NE(forWriting, nullptr);
+  EXPECT_EQ(forWriting->identifier(), "Avogadro: SMILES");
+
+  // Reading is deliberately not offered, so a SMILES reader -- Open Babel, in
+  // an application build -- is still the one that answers. Nothing registers
+  // one here, so there is no reader at all.
+  std::unique_ptr<Io::FileFormat> forReading(manager.newFormatFromFileExtension(
+    "smi", Io::FileFormat::Read | Io::FileFormat::String));
+  EXPECT_EQ(forReading, nullptr);
+}
+
+TEST(SmilesTest, writingThroughTheManager)
+{
+  Molecule mol;
+  Index carbon = mol.addAtom(6).index();
+  addHydrogens(mol, carbon, 4);
+
+  // What "Copy as SMILES" and a SMILES export both end up calling.
+  std::string smiles;
+  EXPECT_TRUE(
+    Io::FileFormatManager::instance().writeString(mol, smiles, "smi"));
+  EXPECT_EQ(smiles, "C\n");
 }
 
 TEST(SmilesTest, formatOptions)

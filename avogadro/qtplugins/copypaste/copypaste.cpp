@@ -124,11 +124,9 @@ void CopyPaste::copySMILES()
 
 void CopyPaste::copyMappedSMILES()
 {
-  // Not routed through FileFormatManager: the native SMILES format is not
-  // registered for the "smi" extension, which still resolves to Open Babel.
-  // TODO: once implicit hydrogen output lands, both SMILES actions should go
-  // through one implementation rather than two engines with different
-  // aromaticity and hydrogen conventions.
+  // Named directly rather than looked up by extension, because atom mapping is
+  // a setting only this format has. Plain "Copy as SMILES" reaches the same
+  // writer through the manager, so the two agree on everything else.
   Io::SmilesFormat format;
   format.setAtomMaps(true);
 
