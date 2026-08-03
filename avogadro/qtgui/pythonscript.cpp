@@ -295,7 +295,7 @@ QByteArray PythonScript::execute(const QStringList& args,
   return result;
 }
 
-void PythonScript::asyncExecute(const QStringList& args,
+bool PythonScript::asyncExecute(const QStringList& args,
                                 const QByteArray& scriptStdin,
                                 bool mergedChannels, bool closeWriteChannel)
 {
@@ -317,8 +317,16 @@ void PythonScript::asyncExecute(const QStringList& args,
   realArgs.append(QLocale().name());
 
   QString program = resolveCommand(realArgs, *m_process);
-  if (program.isEmpty())
-    return;
+  if (program.isEmpty()) {
+    // resolveCommand() failed to work out how to launch the script. It may
+    // have recorded why in m_errors, but nothing downstream drains that list
+    // when no process is ever started, so report it here.
+    m_errors << tr("Error running script '%1': could not resolve a command to "
+                   "run it (no python interpreter or pixi environment).")
+                  .arg(realArgs.join(QStringLiteral(" ")));
+    qWarning() << "PythonScript::asyncExecute failed:" << m_errors.join("\n");
+    return false;
+  }
 
   if (m_debug) {
     qDebug() << "Executing" << program << realArgs.join(QStringLiteral(" "))
@@ -335,7 +343,8 @@ void PythonScript::asyncExecute(const QStringList& args,
                      "start (%3).")
                     .arg(program, realArgs.join(QStringLiteral(" ")),
                          processErrorString(*m_process));
-      return;
+      qWarning() << "PythonScript::asyncExecute failed:" << m_errors.join("\n");
+      return false;
     }
 
     qint64 len = m_process->write(scriptStdin);
@@ -347,7 +356,8 @@ void PythonScript::asyncExecute(const QStringList& args,
                     .arg(scriptStdin.size())
                     .arg(len)
                     .arg(processErrorString(*m_process));
-      return;
+      qWarning() << "PythonScript::asyncExecute failed:" << m_errors.join("\n");
+      return false;
     }
     if (closeWriteChannel)
       m_process->closeWriteChannel();
@@ -356,6 +366,7 @@ void PythonScript::asyncExecute(const QStringList& args,
   // let the script run
   connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
           SLOT(processFinished(int, QProcess::ExitStatus)));
+  return true;
 }
 
 void PythonScript::processFinished(int, QProcess::ExitStatus)

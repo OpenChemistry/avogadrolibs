@@ -129,8 +129,12 @@ public:
    * If @p closeWriteChannel is false, stdin remains open for follow-up writes.
    *
    * Will send asyncFinished() signal when finished
+   *
+   * Returns true if the process was started; false if it could not be
+   * launched, in which case finished() will never be emitted and errorList()
+   * describes the failure.
    */
-  void asyncExecute(const QStringList& args,
+  bool asyncExecute(const QStringList& args,
                     const QByteArray& scriptStdin = QByteArray(),
                     bool mergedChannels = true, bool closeWriteChannel = true);
 
