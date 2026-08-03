@@ -663,7 +663,9 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
     m_elements.set(element_count - 1); // custom element
 
   m_layers.addAtomToActiveLayer(atomCount() - 1);
-  m_partialCharges.clear();
+  // The calculated results are per-atom, so a new atom invalidates them just
+  // as a removed atom does (see removeAtom()).
+  clearCalculatedResults();
   m_atomProperties.addEntry();
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
@@ -948,7 +950,10 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   } else {
     m_bondOrders[index] = order;
   }
-  // any existing charges are invalidated
+  // Any existing charges are invalidated, but deliberately *not*
+  // clearCalculatedResults(): perceiveBondsSimple() adds bonds one at a time,
+  // and the player tool re-perceives connectivity on every animation frame
+  // when dynamic bonding is on (see clearBonds()).
   m_partialCharges.clear();
   return BondType(this, index);
 }
