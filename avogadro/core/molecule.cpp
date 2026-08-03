@@ -663,7 +663,9 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
     m_elements.set(element_count - 1); // custom element
 
   m_layers.addAtomToActiveLayer(atomCount() - 1);
-  m_partialCharges.clear();
+  // The calculated results are per-atom, so a new atom invalidates them just
+  // as a removed atom does (see removeAtom()).
+  clearCalculatedResults();
   m_atomProperties.addEntry();
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
@@ -676,6 +678,116 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
   return addAtom(number); // Use virtual dispatch
 }
 
+namespace {
+
+// Every member touched below is indexed by atom, kept in step with
+// m_atomicNumbers and m_graph. Molecule::swapAtom(), Molecule::removeAtom(),
+// and Molecule::clearAtoms() must each handle every atom-indexed member: a
+// member that is added to the class but missed in one of the three is a
+// real bug (e.g. a label silently ending up on the wrong atom after a
+// removal). The helpers below let each member cost one line per function,
+// so the three function bodies can be written as parallel lists and a
+// member missing from one of them is visible by inspection. When a new
+// atom-indexed member is added to Molecule, add it to all three.
+//
+// "Handle" is not always "reindex". swapAtom() reindexes everything, since
+// swapping two indices relabels the same structure. removeAtom() changes the
+// structure, so anything computed *from* the structure -- forces, velocities,
+// normal modes, partial charges -- is dropped there instead; see the comment
+// in removeAtom(). Deciding which of the two a new member is, is the part
+// that needs thought.
+
+// Plain Array<T>, one entry per atom.
+template <typename T>
+void swapAtomEntry(Array<T>& values, Index a, Index b, Index max)
+{
+  using std::swap;
+  if (values.size() > max)
+    swap(values[a], values[b]);
+}
+
+template <typename T>
+void removeAtomEntry(Array<T>& values, Index index, Index atomCount)
+{
+  if (values.size() == atomCount)
+    values.swapAndPop(index);
+}
+
+// Nested Array<Array<T>>: the outer index is a conformer/trajectory frame
+// or a normal mode, the inner index is one entry per atom. Frames may
+// legitimately be empty or a different length than atomCount() (e.g. not
+// yet populated), so each frame is guarded individually rather than
+// assuming they all match.
+template <typename T>
+void swapAtomEntryFrames(Array<Array<T>>& frames, Index a, Index b, Index max)
+{
+  using std::swap;
+  for (auto& frame : frames) {
+    if (frame.size() > max)
+      swap(frame[a], frame[b]);
+  }
+}
+
+template <typename T>
+void removeAtomEntryFrames(Array<Array<T>>& frames, Index index,
+                           Index atomCount)
+{
+  for (auto& frame : frames) {
+    if (frame.size() == atomCount)
+      frame.swapAndPop(index);
+  }
+}
+
+// std::vector<bool>, one entry per atom. std::swap() on the vector<bool>
+// proxy reference is a well-known trap, so swap the two values explicitly.
+void swapAtomEntry(std::vector<bool>& values, Index a, Index b, Index max)
+{
+  if (values.size() > max) {
+    bool temp = values[a];
+    values[a] = values[b];
+    values[b] = temp;
+  }
+}
+
+// Eigen::VectorXd storing 3 entries (x, y, z) per atom, as used by
+// m_frozenAtomMask.
+void swapAtomMaskEntry(Eigen::VectorXd& values, Index a, Index b, Index max)
+{
+  auto ea = static_cast<Eigen::Index>(a);
+  auto eb = static_cast<Eigen::Index>(b);
+  if (values.rows() >= static_cast<Eigen::Index>(3 * (max + 1))) {
+    for (Eigen::Index i = 0; i < 3; ++i)
+      std::swap(values[3 * ea + i], values[3 * eb + i]);
+  }
+}
+
+void removeAtomMaskEntry(Eigen::VectorXd& values, Index index, Index atomCount)
+{
+  if (values.rows() == static_cast<Eigen::Index>(3 * atomCount)) {
+    auto eIndex = static_cast<Eigen::Index>(index);
+    Eigen::Index last = values.rows() - 3;
+    for (Eigen::Index i = 0; i < 3; ++i)
+      values[3 * eIndex + i] = values[last + i];
+    values.conservativeResize(values.rows() - 3);
+  }
+}
+
+// std::map<std::string, MatrixX>: one per-atom charge column per model.
+// removeAtom() deliberately clears this map instead of reindexing it, since
+// removing an atom invalidates any cached partial charges anyway.
+void swapAtomEntry(std::map<std::string, MatrixX>& models, Index a, Index b,
+                   Index max)
+{
+  using std::swap;
+  for (auto& model : models) {
+    if (static_cast<Index>(model.second.size()) > max)
+      swap(model.second(static_cast<Eigen::Index>(a), 0),
+           model.second(static_cast<Eigen::Index>(b), 0));
+  }
+}
+
+} // namespace
+
 void Molecule::swapBond(Index a, Index b)
 {
   // Allow Argument Dependent Lookup for swap
@@ -685,23 +797,31 @@ void Molecule::swapBond(Index a, Index b)
   swap(m_bondOrders[a], m_bondOrders[b]);
   m_bondProperties.swapEntries(a, b, bondCount());
 }
+
 void Molecule::swapAtom(Index a, Index b)
 {
+  Index max = a > b ? a : b;
+
+  // Atom-indexed members -- see the comment above the helpers in the
+  // anonymous namespace at the top of this file. Keep this list parallel
+  // with removeAtom() and clearAtoms().
+  swapAtomEntry(m_positions2d, a, b, max);
+  swapAtomEntry(m_positions3d, a, b, max);
+  swapAtomEntry(m_atomLabels, a, b, max);
+  swapAtomEntry(m_hybridizations, a, b, max);
+  swapAtomEntry(m_formalCharges, a, b, max);
+  swapAtomEntry(m_isotopes, a, b, max);
+  swapAtomEntry(m_forceVectors, a, b, max);
+  swapAtomEntry(m_colors, a, b, max);
+  swapAtomEntry(m_selectedAtoms, a, b, max);
+  swapAtomEntryFrames(m_coordinates3d, a, b, max);
+  swapAtomEntryFrames(m_velocities, a, b, max);
+  swapAtomEntryFrames(m_vibrationLx, a, b, max);
+  swapAtomMaskEntry(m_frozenAtomMask, a, b, max);
+  swapAtomEntry(m_partialCharges, a, b, max);
+
   // Allow Argument Dependent Lookup for swap
   using std::swap;
-
-  Index max = a > b ? a : b;
-  if (m_positions2d.size() > max)
-    swap(m_positions2d[a], m_positions2d[b]);
-  if (m_positions3d.size() > max)
-    swap(m_positions3d[a], m_positions3d[b]);
-  if (m_hybridizations.size() > max)
-    swap(m_hybridizations[a], m_hybridizations[b]);
-  if (m_formalCharges.size() > max)
-    swap(m_formalCharges[a], m_formalCharges[b]);
-  if (m_colors.size() > max)
-    swap(m_colors[a], m_colors[b]);
-
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
   m_graph.swapVertexIndices(a, b);
   m_layers.swapLayer(a, b);
@@ -712,16 +832,20 @@ bool Molecule::removeAtom(Index index)
 {
   if (index >= atomCount())
     return false;
-  if (m_positions2d.size() == atomCount())
-    m_positions2d.swapAndPop(index);
-  if (m_positions3d.size() == atomCount())
-    m_positions3d.swapAndPop(index);
-  if (m_hybridizations.size() == atomCount())
-    m_hybridizations.swapAndPop(index);
-  if (m_formalCharges.size() == atomCount())
-    m_formalCharges.swapAndPop(index);
-  if (m_colors.size() == atomCount())
-    m_colors.swapAndPop(index);
+
+  // Atom-indexed members -- see the comment above the helpers in the
+  // anonymous namespace at the top of this file. Keep this list parallel
+  // with swapAtom() and clearAtoms(). These must all run before
+  // m_atomicNumbers (and therefore atomCount()) is updated below.
+  removeAtomEntry(m_positions2d, index, atomCount());
+  removeAtomEntry(m_positions3d, index, atomCount());
+  removeAtomEntry(m_atomLabels, index, atomCount());
+  removeAtomEntry(m_hybridizations, index, atomCount());
+  removeAtomEntry(m_formalCharges, index, atomCount());
+  removeAtomEntry(m_isotopes, index, atomCount());
+  removeAtomEntry(m_colors, index, atomCount());
+  removeAtomEntryFrames(m_coordinates3d, index, atomCount());
+  removeAtomMaskEntry(m_frozenAtomMask, index, atomCount());
 
   if (m_selectedAtoms.size() == atomCount()) {
     // swap and pop on std::vector<bool>
@@ -731,7 +855,14 @@ bool Molecule::removeAtom(Index index)
     m_selectedAtoms.pop_back();
   }
 
-  m_partialCharges.clear();
+  // Losing an atom makes this a different molecule, so anything calculated
+  // from the old one goes rather than being reindexed. Contrast the members
+  // above, which are either the structure itself or user state about it
+  // (labels, colours, selection, frozen atoms) and do follow their atoms.
+  //
+  // swapAtom() reindexes instead, and is right to: swapping two indices
+  // relabels the same structure rather than changing it.
+  clearCalculatedResults();
   m_atomProperties.removeEntry(index, atomCount());
   removeBonds(index);
 
@@ -766,27 +897,35 @@ bool Molecule::removeAtom(const AtomType& atom_)
 
 void Molecule::clearAtoms()
 {
+  // Atom-indexed members -- see the comment above the helpers in the
+  // anonymous namespace at the top of this file. Keep this list parallel
+  // with swapAtom() and removeAtom().
   m_positions2d.clear();
   m_positions3d.clear();
   m_atomLabels.clear();
   m_hybridizations.clear();
   m_formalCharges.clear();
+  m_isotopes.clear();
+  m_forceVectors.clear();
   m_colors.clear();
+  m_selectedAtoms.clear();
+  m_coordinates3d.clear();
+  m_frozenAtomMask.resize(0);
+
+  // With no atoms left there is nothing for any calculated result to be about.
+  clearCalculatedResults();
+
   m_atomicNumbers.clear();
   m_bondOrders.clear();
   m_bondLabels.clear();
   m_residueLabels.clear();
   m_graph.clear();
-  m_partialCharges.clear();
   m_atomProperties.clear();
   m_bondProperties.clear();
   m_residues.clear();
   m_residueProperties.clear();
-  m_coordinates3d.clear();
   m_conformerProperties.clear();
-  m_velocities.clear();
   m_timesteps.clear();
-  m_selectedAtoms.clear();
   m_layers.clear();
   m_elements.reset();
 }
@@ -811,7 +950,10 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   } else {
     m_bondOrders[index] = order;
   }
-  // any existing charges are invalidated
+  // Any existing charges are invalidated, but deliberately *not*
+  // clearCalculatedResults(): perceiveBondsSimple() adds bonds one at a time,
+  // and the player tool re-perceives connectivity on every animation frame
+  // when dynamic bonding is on (see clearBonds()).
   m_partialCharges.clear();
   return BondType(this, index);
 }
@@ -836,6 +978,18 @@ size_t calcNlogN(size_t n)
   return n * aproxLog;
 }
 
+void Molecule::clearCalculatedResults()
+{
+  m_partialCharges.clear();
+  m_forceVectors.clear();
+  m_velocities.clear();
+  m_vibrationLx.clear();
+  m_vibrationFrequencies.clear();
+  m_vibrationIRIntensities.clear();
+  m_vibrationRamanIntensities.clear();
+  m_spectra.clear();
+}
+
 bool Molecule::removeBond(Index index)
 {
   if (index >= bondCount())
@@ -843,7 +997,9 @@ bool Molecule::removeBond(Index index)
   m_bondProperties.removeEntry(index, bondCount());
   m_graph.removeEdge(index);
   m_bondOrders.swapAndPop(index);
-  m_partialCharges.clear();
+  // Connectivity is part of what was calculated from, so a bond going away
+  // invalidates the results just as an atom going away does.
+  clearCalculatedResults();
   return true;
 }
 
@@ -868,6 +1024,13 @@ void Molecule::clearBonds()
   m_bondProperties.clear();
   m_graph.removeEdges();
   m_graph.setSize(atomCount());
+
+  // Deliberately *not* clearCalculatedResults(), unlike removeBond(). This is
+  // used as "re-perceive connectivity" rather than as a structural edit: the
+  // player tool calls it with perceiveBondsSimple() on every animation frame
+  // when dynamic bonding is on, so dropping the vibrations here would destroy
+  // the normal modes being animated. Partial charges are cleared because they
+  // depend directly on bond orders and are cheap to recompute.
   m_partialCharges.clear();
 }
 
