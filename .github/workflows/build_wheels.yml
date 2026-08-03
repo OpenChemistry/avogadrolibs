@@ -73,6 +73,10 @@ jobs:
           # give it a correct version even on non-tag push.
           fetch-depth: 0
 
+      - name: Ensure vcpkg is up to date
+        if: runner.os == 'Windows'
+        uses: ./.github/actions/update-vcpkg
+
       - name: Install dependencies
         run: . ./scripts/github-actions/install.sh
 
