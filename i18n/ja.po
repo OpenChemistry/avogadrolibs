@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 00:52+0000\n"
+"POT-Creation-Date: 2026-08-02 04:43+0000\n"
 "PO-Revision-Date: 2026-05-28 02:11+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
@@ -1297,28 +1297,28 @@ msgstr "新しいビューを作る"
 msgid "Periodic Table"
 msgstr "周期表"
 
-#: qtgui/pythonscript.cpp:132
+#: qtgui/pythonscript.cpp:139
 msgid "Package mode requires pixi but it was not found."
 msgstr "パッケージモードにはpixiが必要ですが見つかりませんでした。"
 
-#: qtgui/pythonscript.cpp:230 qtgui/pythonscript.cpp:327
+#: qtgui/pythonscript.cpp:237 qtgui/pythonscript.cpp:334
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:239 qtgui/pythonscript.cpp:336
+#: qtgui/pythonscript.cpp:246 qtgui/pythonscript.cpp:343
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:253
+#: qtgui/pythonscript.cpp:260
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:263
+#: qtgui/pythonscript.cpp:270
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1327,39 +1327,39 @@ msgid ""
 "%6"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:273
+#: qtgui/pythonscript.cpp:280
 #, qt-format
 msgid "Warning '%1'"
 msgstr "警告 '%1'"
 
-#: qtgui/pythonscript.cpp:393
+#: qtgui/pythonscript.cpp:400
 #, qt-format
 msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:428
+#: qtgui/pythonscript.cpp:435
 msgid "Script failed to start."
 msgstr "スクリプトの開始に失敗しました。"
 
-#: qtgui/pythonscript.cpp:431
+#: qtgui/pythonscript.cpp:438
 msgid "Script crashed."
 msgstr "スクリプトがクラッシュしました。"
 
-#: qtgui/pythonscript.cpp:434
+#: qtgui/pythonscript.cpp:441
 msgid "Script timed out."
 msgstr "スクリプトがタイムアウトしました。"
 
-#: qtgui/pythonscript.cpp:437
+#: qtgui/pythonscript.cpp:444
 msgid "Read error."
 msgstr "読み込みエラー。"
 
-#: qtgui/pythonscript.cpp:440
+#: qtgui/pythonscript.cpp:447
 msgid "Write error."
 msgstr "書き込みエラー。"
 
-#: qtgui/pythonscript.cpp:444
+#: qtgui/pythonscript.cpp:451
 msgid "Unknown error."
 msgstr "不明なエラー。"
 
@@ -1807,8 +1807,8 @@ msgstr "PQRファイル(*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:436
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:637
-#: qtplugins/propertytables/propertyview.cpp:504
-#: qtplugins/propertytables/propertyview.cpp:537
+#: qtplugins/propertytables/propertyview.cpp:508
+#: qtplugins/propertytables/propertyview.cpp:541
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:162
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:450
 #: qtplugins/qtaim/qtaimwavefunction.h:48
@@ -2319,7 +2319,7 @@ msgid "Bond Selected Atoms"
 msgstr "選択した原子を結合"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:678
+#: qtplugins/propertytables/propertymodel.cpp:822
 msgid "Bond"
 msgstr "結合"
 
@@ -2481,8 +2481,8 @@ msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
 msgstr ""
-"コマンドスクリプトはすでに実行中です。別のを始める前に終了を待機してください"
-"。"
+"コマンドスクリプトはすでに実行中です。別のを始める前に終了を待機してくださ"
+"い。"
 
 #: qtplugins/commandscripts/command.cpp:333
 #, qt-format
@@ -2610,9 +2610,9 @@ msgid "Freeze Z Axis"
 msgstr ""
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
-#: qtplugins/propertytables/propertymodel.cpp:664
-#: qtplugins/propertytables/propertymodel.cpp:707
-#: qtplugins/propertytables/propertymodel.cpp:724
+#: qtplugins/propertytables/propertymodel.cpp:808
+#: qtplugins/propertytables/propertymodel.cpp:851
+#: qtplugins/propertytables/propertymodel.cpp:868
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "タイプ"
@@ -2622,24 +2622,24 @@ msgid "Value"
 msgstr "値"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
-#: qtplugins/propertytables/propertymodel.cpp:709
-#: qtplugins/propertytables/propertymodel.cpp:726
+#: qtplugins/propertytables/propertymodel.cpp:853
+#: qtplugins/propertytables/propertymodel.cpp:870
 msgid "Atom 1"
 msgstr "原子1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
-#: qtplugins/propertytables/propertymodel.cpp:728
+#: qtplugins/propertytables/propertymodel.cpp:872
 msgid "Atom 2"
 msgstr "原子2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
-#: qtplugins/propertytables/propertymodel.cpp:713
-#: qtplugins/propertytables/propertymodel.cpp:730
+#: qtplugins/propertytables/propertymodel.cpp:857
+#: qtplugins/propertytables/propertymodel.cpp:874
 msgid "Atom 3"
 msgstr "原子3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
-#: qtplugins/propertytables/propertymodel.cpp:732
+#: qtplugins/propertytables/propertymodel.cpp:876
 msgid "Atom 4"
 msgstr "原子4"
 
@@ -2808,7 +2808,7 @@ msgstr "Turbomole形式"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:191
-#: qtplugins/propertytables/propertyview.cpp:568:296
+#: qtplugins/propertytables/propertyview.cpp:627:296
 msgid "Copy"
 msgstr "コピー"
 
@@ -3755,7 +3755,8 @@ msgstr "フィルター:"
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:617
 #, fuzzy, qt-format
 msgid "Monomer percentages must sum to 100 (current total: %1)."
-msgstr "モノマーのパーセンテージは合計100でなければいけません（現在の合計は %1）"
+msgstr ""
+"モノマーのパーセンテージは合計100でなければいけません（現在の合計は %1）"
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
 #, fuzzy
@@ -3787,7 +3788,7 @@ msgstr "インデックス"
 msgid "Unique ID"
 msgstr "ユニークID"
 
-#: qtplugins/label/label.cpp:202 qtplugins/propertytables/propertymodel.cpp:630
+#: qtplugins/label/label.cpp:202 qtplugins/propertytables/propertymodel.cpp:774
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "元素"
@@ -3818,13 +3819,13 @@ msgstr "長さ"
 msgid "Bond Label:"
 msgstr "結合のラベル:"
 
-#: qtplugins/label/label.cpp:243 qtplugins/propertytables/propertymodel.cpp:687
+#: qtplugins/label/label.cpp:243 qtplugins/propertytables/propertymodel.cpp:831
 msgid "ID"
 msgstr "ID"
 
 #: qtplugins/label/label.cpp:244
 #: qtplugins/packageinstaller/packagemodel.cpp:168
-#: qtplugins/propertytables/propertymodel.cpp:685
+#: qtplugins/propertytables/propertymodel.cpp:829
 msgid "Name"
 msgstr "名前"
 
@@ -4009,7 +4010,7 @@ msgid "(pending)"
 msgstr "(問い合せ中)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
-#: qtplugins/propertytables/propertymodel.cpp:748
+#: qtplugins/propertytables/propertymodel.cpp:892
 msgid "Property"
 msgstr "性質"
 
@@ -4133,32 +4134,32 @@ msgid "Molecular Properties"
 msgstr "分子の性質"
 
 #: qtplugins/molecularproperties/molecularview.cpp:40
-#: qtplugins/propertytables/propertyview.cpp:64
+#: qtplugins/propertytables/propertyview.cpp:68
 msgid "Molecule Properties"
 msgstr "分子の性質"
 
 #: qtplugins/molecularproperties/molecularview.cpp:138
-#: qtplugins/propertytables/propertyview.cpp:492
+#: qtplugins/propertytables/propertyview.cpp:496
 msgid "Export CSV"
 msgstr "CSVをエクスポート"
 
 #: qtplugins/molecularproperties/molecularview.cpp:139
-#: qtplugins/propertytables/propertyview.cpp:493
+#: qtplugins/propertytables/propertyview.cpp:497
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "CSVファイル (*.csv);;全てのファイル (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:151
-#: qtplugins/propertytables/propertyview.cpp:505
+#: qtplugins/propertytables/propertyview.cpp:509
 msgid "Could not open the file for writing."
 msgstr "ファイルを書き込みモードで開けません。"
 
 #: qtplugins/molecularproperties/molecularview.cpp:184
-#: qtplugins/propertytables/propertyview.cpp:537
+#: qtplugins/propertytables/propertyview.cpp:541
 msgid "Error writing to the file."
 msgstr "ファイルの書き込みでエラー"
 
 #: qtplugins/molecularproperties/molecularview.cpp:196
-#: qtplugins/propertytables/propertyview.cpp:573
+#: qtplugins/propertytables/propertyview.cpp:632
 msgid "Export…"
 msgstr "エクスポート…"
 
@@ -5098,144 +5099,144 @@ msgstr "POVRay"
 msgid "Render the scene using POV-Ray."
 msgstr "POV-Rayでシーンを描画"
 
-#: qtplugins/propertytables/propertymodel.cpp:307
+#: qtplugins/propertytables/propertymodel.cpp:396
 msgid "Click to change color"
 msgstr "クリックして色を変更"
 
-#: qtplugins/propertytables/propertymodel.cpp:632
+#: qtplugins/propertytables/propertymodel.cpp:776
 msgid "Valence"
 msgstr "原子価"
 
-#: qtplugins/propertytables/propertymodel.cpp:634
+#: qtplugins/propertytables/propertymodel.cpp:778
 msgid "Formal Charge"
 msgstr "形式電荷"
 
-#: qtplugins/propertytables/propertymodel.cpp:637
+#: qtplugins/propertytables/propertymodel.cpp:781
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1部分電荷"
 
-#: qtplugins/propertytables/propertymodel.cpp:644
+#: qtplugins/propertytables/propertymodel.cpp:788
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:646
+#: qtplugins/propertytables/propertymodel.cpp:790
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:648
+#: qtplugins/propertytables/propertymodel.cpp:792
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:650
-#: qtplugins/propertytables/propertymodel.cpp:672
-#: qtplugins/propertytables/propertymodel.cpp:695
+#: qtplugins/propertytables/propertymodel.cpp:794
+#: qtplugins/propertytables/propertymodel.cpp:816
+#: qtplugins/propertytables/propertymodel.cpp:839
 msgid "Label"
 msgstr "ラベル"
 
-#: qtplugins/propertytables/propertymodel.cpp:652
+#: qtplugins/propertytables/propertymodel.cpp:796
 msgid "Isotope"
 msgstr "同位体"
 
-#: qtplugins/propertytables/propertymodel.cpp:654
-#: qtplugins/propertytables/propertymodel.cpp:697
+#: qtplugins/propertytables/propertymodel.cpp:798
+#: qtplugins/propertytables/propertymodel.cpp:841
 msgid "Color"
 msgstr "色"
 
-#: qtplugins/propertytables/propertymodel.cpp:657
+#: qtplugins/propertytables/propertymodel.cpp:801
 msgid "Atom"
 msgstr "原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:666
+#: qtplugins/propertytables/propertymodel.cpp:810
 msgid "Start Atom"
 msgstr "始めの原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:668
+#: qtplugins/propertytables/propertymodel.cpp:812
 msgid "End Atom"
 msgstr "終わりの原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:670
+#: qtplugins/propertytables/propertymodel.cpp:814
 msgid "Bond Order"
 msgstr "結合次数"
 
-#: qtplugins/propertytables/propertymodel.cpp:674
+#: qtplugins/propertytables/propertymodel.cpp:818
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "長さ (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:689
+#: qtplugins/propertytables/propertymodel.cpp:833
 #, fuzzy
 msgid "Chain"
 msgstr "チェーン"
 
-#: qtplugins/propertytables/propertymodel.cpp:691
+#: qtplugins/propertytables/propertymodel.cpp:835
 msgid "Secondary Structure"
 msgstr "二次構造"
 
-#: qtplugins/propertytables/propertymodel.cpp:693
+#: qtplugins/propertytables/propertymodel.cpp:837
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:711
+#: qtplugins/propertytables/propertymodel.cpp:855
 msgid "Vertex"
 msgstr "頂点"
 
-#: qtplugins/propertytables/propertymodel.cpp:715
-#: qtplugins/propertytables/propertymodel.cpp:734
+#: qtplugins/propertytables/propertymodel.cpp:859
+#: qtplugins/propertytables/propertymodel.cpp:878
 msgid "Angle (°)"
 msgstr "角度 (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:745
+#: qtplugins/propertytables/propertymodel.cpp:889
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "RMSD (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:748
+#: qtplugins/propertytables/propertymodel.cpp:892
 msgid "Energy (kcal/mol)"
 msgstr "エネルギー (kcal/mol)"
 
-#: qtplugins/propertytables/propertymodel.cpp:1038
+#: qtplugins/propertytables/propertymodel.cpp:1237
 msgid "Adjust Fragment"
 msgstr "フラグメントを調整"
 
-#: qtplugins/propertytables/propertymodel.cpp:1195
+#: qtplugins/propertytables/propertymodel.cpp:1394
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "πヘリックス"
 
-#: qtplugins/propertytables/propertymodel.cpp:1197
+#: qtplugins/propertytables/propertymodel.cpp:1396
 #, fuzzy
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "屈曲"
 
-#: qtplugins/propertytables/propertymodel.cpp:1199
+#: qtplugins/propertytables/propertymodel.cpp:1398
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "αヘリックス"
 
-#: qtplugins/propertytables/propertymodel.cpp:1201
+#: qtplugins/propertytables/propertymodel.cpp:1400
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "βシート"
 
-#: qtplugins/propertytables/propertymodel.cpp:1203
+#: qtplugins/propertytables/propertymodel.cpp:1402
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10ヘリックス"
 
-#: qtplugins/propertytables/propertymodel.cpp:1205
+#: qtplugins/propertytables/propertymodel.cpp:1404
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "βブリッジ"
 
-#: qtplugins/propertytables/propertymodel.cpp:1207
+#: qtplugins/propertytables/propertymodel.cpp:1406
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:1209
+#: qtplugins/propertytables/propertymodel.cpp:1408
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -5274,78 +5275,131 @@ msgstr "原子、結合、角度、二面角のプロパティを表示・編集
 msgid "PropertyTables"
 msgstr "プロパティ表"
 
-#: qtplugins/propertytables/propertyview.cpp:46
+#: qtplugins/propertytables/propertyview.cpp:50
 msgid "Atom Properties"
 msgstr "原子のプロパティ"
 
-#: qtplugins/propertytables/propertyview.cpp:49
+#: qtplugins/propertytables/propertyview.cpp:53
 msgid "Bond Properties"
 msgstr "結合のプロパティ"
 
-#: qtplugins/propertytables/propertyview.cpp:52
+#: qtplugins/propertytables/propertyview.cpp:56
 msgid "Angle Properties"
 msgstr "角度のプロパティ"
 
-#: qtplugins/propertytables/propertyview.cpp:55
+#: qtplugins/propertytables/propertyview.cpp:59
 msgid "Torsion Properties"
 msgstr "二面角のプロパティ"
 
-#: qtplugins/propertytables/propertyview.cpp:58
+#: qtplugins/propertytables/propertyview.cpp:62
 msgid "Conformer Properties"
 msgstr "配座異性体のプロパティ"
 
-#: qtplugins/propertytables/propertyview.cpp:61
+#: qtplugins/propertytables/propertyview.cpp:65
 msgid "Residue Properties"
 msgstr "残基のプロパティ"
 
-#: qtplugins/propertytables/propertyview.cpp:559
+#: qtplugins/propertytables/propertyview.cpp:551
+#: qtplugins/propertytables/propertyview.cpp:580
+#: qtplugins/propertytables/propertyview.cpp:590
+msgid "Add Property"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:556
+msgid "Property name"
+msgstr ""
+
+#. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:126
+#. i18n: ectx: property (text), widget (QLabel, nameLabel)
+#: qtplugins/propertytables/propertyview.cpp:557:614 rc.cpp:919
+msgid "Name:"
+msgstr "名前:"
+
+#: qtplugins/propertytables/propertyview.cpp:562
+msgid "Number"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:563
+msgid "Integer"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:566
+msgid "Text"
+msgstr ""
+
+#. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
+#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:287
+#. i18n: ectx: property (text), widget (QLabel, typeLabel)
+#: qtplugins/propertytables/propertyview.cpp:567:232 rc.cpp:2235
+msgid "Type:"
+msgstr "タイプ:"
+
+#: qtplugins/propertytables/propertyview.cpp:581
+msgid "The property name cannot be empty."
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:591
+#, qt-format
+msgid ""
+"Could not add a property named \"%1\". A column with that name may already "
+"exist."
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:618
 #, fuzzy
 msgid "Partial Charge Type"
 msgstr "部分電荷の形式"
 
-#: qtplugins/propertytables/propertyview.cpp:559
+#: qtplugins/propertytables/propertyview.cpp:618
 #, fuzzy
 msgid "Select the partial charge type:"
 msgstr "部分電荷の形式を選択:"
 
-#: qtplugins/propertytables/propertyview.cpp:580
+#: qtplugins/propertytables/propertyview.cpp:641
+msgid "Add Property…"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:648
 #, fuzzy
 msgid "Change Charge Type…"
 msgstr "電荷形式の変更…"
 
-#: qtplugins/propertytables/propertyview.cpp:587
+#: qtplugins/propertytables/propertyview.cpp:655
 msgid "Freeze Atom"
 msgstr "原子を固定"
 
-#: qtplugins/propertytables/propertyview.cpp:591
+#: qtplugins/propertytables/propertyview.cpp:659
 msgid "Freeze X"
 msgstr "X座標を固定"
 
-#: qtplugins/propertytables/propertyview.cpp:594
+#: qtplugins/propertytables/propertyview.cpp:662
 msgid "Freeze Y"
 msgstr "Y座標を固定"
 
-#: qtplugins/propertytables/propertyview.cpp:597
+#: qtplugins/propertytables/propertyview.cpp:665
 msgid "Freeze Z"
 msgstr "Z座標を固定"
 
-#: qtplugins/propertytables/propertyview.cpp:600
+#: qtplugins/propertytables/propertyview.cpp:668
 msgid "Unfreeze Atom"
 msgstr "原子の固定を解除"
 
-#: qtplugins/propertytables/propertyview.cpp:608
+#: qtplugins/propertytables/propertyview.cpp:676
 msgid "Constrain Bond"
 msgstr "結合を制限"
 
-#: qtplugins/propertytables/propertyview.cpp:610
+#: qtplugins/propertytables/propertyview.cpp:678
 msgid "Constrain Angle"
 msgstr "角度を制限"
 
-#: qtplugins/propertytables/propertyview.cpp:612
+#: qtplugins/propertytables/propertyview.cpp:680
 msgid "Constrain Torsion"
 msgstr "ねじれを制限"
 
-#: qtplugins/propertytables/propertyview.cpp:619
+#: qtplugins/propertytables/propertyview.cpp:687
 msgid "Remove Constraint"
 msgstr "制限を解除"
 
@@ -6224,36 +6278,36 @@ msgid "Template"
 msgstr "テンプレート"
 
 #: qtplugins/templatetool/templatetool.cpp:85
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "Template Tool\t(%1)\n"
 "\n"
 "Insert fragments, including metal centers.\n"
 "Select an element and coordination geometry, then click to insert a "
 "fragment.\n"
+"Click a hydrogen to replace it with the chosen metal center, or click any "
+"other atom to change its element and formal charge.\n"
 "\n"
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
-"テンプレートツール\t(%1)\n"
-"\n"
-"金属中心を含むフラグメントを挿入\n"
-"元素と座標を選択し、クリックしてフラグメントを挿入\n"
-"\n"
-"リガンドまたは官能基を選択して、付加する水素をクリック"
 
-#: qtplugins/templatetool/templatetool.cpp:418
-#: qtplugins/templatetool/templatetool.cpp:586
+#: qtplugins/templatetool/templatetool.cpp:424
+#: qtplugins/templatetool/templatetool.cpp:592
 msgid "Clipboard"
 msgstr "クリップボード"
 
-#: qtplugins/templatetool/templatetool.cpp:506
+#: qtplugins/templatetool/templatetool.cpp:512
 msgid "Insert Template"
 msgstr "テンプレートを挿入"
 
-#: qtplugins/templatetool/templatetool.cpp:804
+#: qtplugins/templatetool/templatetool.cpp:810
 msgid "Insert Ligand"
 msgstr "リガンドを挿入"
+
+#: qtplugins/templatetool/templatetool.cpp:954
+msgid "Insert Metal Center"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:36
 #: qtplugins/templatetool/templatetool.h:37
@@ -6719,13 +6773,6 @@ msgstr "環境:"
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Add Constraints"
 msgstr "拘束条件を追加"
-
-#. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
-#. i18n: ectx: property (text), widget (QLabel, label)
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:287
-#. i18n: ectx: property (text), widget (QLabel, typeLabel)
-msgid "Type:"
-msgstr "タイプ:"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:74
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7296,13 +7343,6 @@ msgstr "式:"
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 msgid "Download"
 msgstr "ダウンロード"
-
-#. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:126
-#. i18n: ectx: property (text), widget (QLabel, nameLabel)
-msgid "Name:"
-msgstr "名前:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertDNADialog)
@@ -9769,6 +9809,24 @@ msgstr ""
 "devel@lists.sourceforge.net,,ktns.87@gmail.com,ken.i54k@gmail.com,,iwao.aoyama@gmail.com,,,,,avogadro-"
 "devel@lists.sourceforge.net,,ktns.87@gmail.com,ken.i54k@gmail.com,,iwao.aoyama@gmail.com,,,,,avogadro-"
 "devel@lists.sourceforge.net,,ktns.87@gmail.com,ken.i54k@gmail.com,,iwao.aoyama@gmail.com,,"
+
+#, fuzzy, qt-format
+#~ msgid ""
+#~ "Template Tool\t(%1)\n"
+#~ "\n"
+#~ "Insert fragments, including metal centers.\n"
+#~ "Select an element and coordination geometry, then click to insert a "
+#~ "fragment.\n"
+#~ "\n"
+#~ "Select a ligand or functional group and click on a hydrogen atom to "
+#~ "attach it."
+#~ msgstr ""
+#~ "テンプレートツール\t(%1)\n"
+#~ "\n"
+#~ "金属中心を含むフラグメントを挿入\n"
+#~ "元素と座標を選択し、クリックしてフラグメントを挿入\n"
+#~ "\n"
+#~ "リガンドまたは官能基を選択して、付加する水素をクリック"
 
 #, qt-format
 #~ msgid ""
