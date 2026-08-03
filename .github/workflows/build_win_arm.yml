@@ -55,20 +55,11 @@ jobs:
       with:
         arch: arm64
 
-    # Emit a vcpkg_version output
-    - name: Get vcpkg git sha
+    # Update + re-bootstrap vcpkg, and emit a vcpkg_version output
+    - name: Ensure vcpkg is up to date
       if: runner.os == 'Windows'
       id: vcpkg_version
-      run: |
-        cd /c/vcpkg
-        git pull origin master
-        if [ -d /c/vcpkg/.git ]; then
-          echo "sha=$(git -C /c/vcpkg rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        else
-          # just in case
-          echo "sha=no-vcpkg-git" >> $GITHUB_OUTPUT
-        fi
-      shell: bash
+      uses: ./.github/actions/update-vcpkg
 
     # Restore vcpkg cache (use manifest lock if available)
     - name: Restore vcpkg cache
