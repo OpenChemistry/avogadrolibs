@@ -260,6 +260,49 @@ TEST(MdlTest, readV3000Valence)
   EXPECT_EQ(normalC.hybridization(), Avogadro::Core::HybridizationUnknown);
 }
 
+namespace {
+
+/**
+ * Assert that @a molecule is benzene whose aromatic ring came back kekulized:
+ * no bond left at the aromatic order, and the ring alternating three double
+ * with three single bonds.
+ *
+ * Ring bonds are looked up by their endpoints rather than by bond index, so
+ * this does not quietly depend on the order the reader happened to add them
+ * in. The first six atoms are the ring, in order around it.
+ */
+void expectKekulizedBenzene(const Molecule& molecule)
+{
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(12));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(12));
+
+  int doubleCount = 0;
+  int singleCount = 0;
+  for (size_t i = 0; i < molecule.bondCount(); ++i) {
+    const unsigned char order = molecule.bond(i).order();
+    EXPECT_LE(order, static_cast<unsigned char>(2))
+      << "bond " << i << " should be single or double after kekulization,"
+      << " rather than still carrying the aromatic order";
+    if (order == 2)
+      ++doubleCount;
+    else if (order == 1)
+      ++singleCount;
+  }
+  EXPECT_EQ(doubleCount, 3);
+  EXPECT_EQ(singleCount, 9); // Three ring single bonds, plus six C-H.
+
+  int ringDouble = 0;
+  for (Avogadro::Index i = 0; i < 6; ++i) {
+    const Bond ring = molecule.bond(i, (i + 1) % 6);
+    ASSERT_TRUE(ring.isValid()) << "ring bond " << i << " is missing";
+    if (ring.order() == 2)
+      ++ringDouble;
+  }
+  EXPECT_EQ(ringDouble, 3); // The ring bonds specifically must alternate.
+}
+
+} // namespace
+
 TEST(MdlTest, aromaticBondType4IsKekulized)
 {
   // Benzene, its six ring bonds written as MDL bond type 4 (aromatic).
@@ -300,28 +343,52 @@ TEST(MdlTest, aromaticBondType4IsKekulized)
   MdlFormat mdl;
   Molecule molecule;
   ASSERT_TRUE(mdl.readString(molfile, molecule)) << mdl.error();
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(12));
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(12));
+  expectKekulizedBenzene(molecule);
+}
 
-  int doubleCount = 0;
-  int singleCount = 0;
-  for (size_t i = 0; i < molecule.bondCount(); ++i) {
-    const unsigned char order = molecule.bond(i).order();
-    EXPECT_LE(order, static_cast<unsigned char>(2))
-      << "bond " << i << " should not still be a quadruple bond";
-    if (order == 2)
-      ++doubleCount;
-    else if (order == 1)
-      ++singleCount;
-  }
-  EXPECT_EQ(doubleCount, 3);
-  EXPECT_EQ(singleCount, 9); // Three ring single bonds, plus six C-H.
+TEST(MdlTest, aromaticBondType4IsKekulizedV3000)
+{
+  // The same benzene in V3000, whose bond block is parsed by a separate
+  // function that had the same bug: order 4 went straight to addBond().
+  const std::string molfile = "Benzene\n"
+                              "  Test3D\n"
+                              "\n"
+                              "  0  0  0     0  0            999 V3000\n"
+                              "M  V30 BEGIN CTAB\n"
+                              "M  V30 COUNTS 12 12 0 0 0\n"
+                              "M  V30 BEGIN ATOM\n"
+                              "M  V30 1 C 1.2 0.0 0.0 0\n"
+                              "M  V30 2 C 0.6 1.0 0.0 0\n"
+                              "M  V30 3 C -0.6 1.0 0.0 0\n"
+                              "M  V30 4 C -1.2 0.0 0.0 0\n"
+                              "M  V30 5 C -0.6 -1.0 0.0 0\n"
+                              "M  V30 6 C 0.6 -1.0 0.0 0\n"
+                              "M  V30 7 H 2.2 0.0 0.0 0\n"
+                              "M  V30 8 H 1.1 1.9 0.0 0\n"
+                              "M  V30 9 H -1.1 1.9 0.0 0\n"
+                              "M  V30 10 H -2.2 0.0 0.0 0\n"
+                              "M  V30 11 H -1.1 -1.9 0.0 0\n"
+                              "M  V30 12 H 1.1 -1.9 0.0 0\n"
+                              "M  V30 END ATOM\n"
+                              "M  V30 BEGIN BOND\n"
+                              "M  V30 1 4 1 2\n"
+                              "M  V30 2 4 2 3\n"
+                              "M  V30 3 4 3 4\n"
+                              "M  V30 4 4 4 5\n"
+                              "M  V30 5 4 5 6\n"
+                              "M  V30 6 4 6 1\n"
+                              "M  V30 7 1 1 7\n"
+                              "M  V30 8 1 2 8\n"
+                              "M  V30 9 1 3 9\n"
+                              "M  V30 10 1 4 10\n"
+                              "M  V30 11 1 5 11\n"
+                              "M  V30 12 1 6 12\n"
+                              "M  V30 END BOND\n"
+                              "M  V30 END CTAB\n"
+                              "M  END\n";
 
-  // Specifically, the ring bonds (0-5) must alternate rather than all match.
-  int ringDouble = 0;
-  for (size_t i = 0; i < 6; ++i) {
-    if (molecule.bond(i).order() == 2)
-      ++ringDouble;
-  }
-  EXPECT_EQ(ringDouble, 3);
+  MdlFormat mdl;
+  Molecule molecule;
+  ASSERT_TRUE(mdl.readString(molfile, molecule)) << mdl.error();
+  expectKekulizedBenzene(molecule);
 }

@@ -222,114 +222,92 @@ TEST(CmlTest, readString)
   EXPECT_EQ(moleculeFromString.bondCount(), static_cast<size_t>(7));
 }
 
+namespace {
+
+/** Benzene with its six ring bonds written using @a order, e.g. "A". */
+std::string benzeneCml(const std::string& order)
+{
+  std::string cml("<?xml version=\"1.0\"?>"
+                  "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
+                  "<atomArray>");
+  for (int i = 1; i <= 6; ++i)
+    cml += "<atom id=\"a" + std::to_string(i) + "\" elementType=\"C\"/>";
+  for (int i = 7; i <= 12; ++i)
+    cml += "<atom id=\"a" + std::to_string(i) + "\" elementType=\"H\"/>";
+  cml += "</atomArray><bondArray>";
+  // The ring, then one C-H per ring carbon.
+  for (int i = 1; i <= 6; ++i) {
+    const int next = (i == 6) ? 1 : i + 1;
+    cml += "<bond atomRefs2=\"a" + std::to_string(i) + " a" +
+           std::to_string(next) + "\" order=\"" + order + "\"/>";
+  }
+  for (int i = 1; i <= 6; ++i)
+    cml += "<bond atomRefs2=\"a" + std::to_string(i) + " a" +
+           std::to_string(i + 6) + "\" order=\"1\"/>";
+  cml += "</bondArray></molecule>";
+  return cml;
+}
+
+/**
+ * Assert that @a molecule is benzene whose aromatic ring came back kekulized:
+ * no bond left at the aromatic order, and the ring alternating three double
+ * with three single bonds.
+ *
+ * Ring bonds are looked up by their endpoints rather than by bond index, so
+ * this does not quietly depend on the order the reader added them in. The
+ * first six atoms are the ring, in order around it.
+ */
+void expectKekulizedBenzene(const Molecule& molecule)
+{
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(12));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(12));
+
+  int doubleCount = 0;
+  int singleCount = 0;
+  for (size_t i = 0; i < molecule.bondCount(); ++i) {
+    const unsigned char order = molecule.bond(i).order();
+    EXPECT_LE(order, static_cast<unsigned char>(2))
+      << "bond " << i << " should be single or double after kekulization,"
+      << " rather than still carrying the aromatic order";
+    if (order == 2)
+      ++doubleCount;
+    else if (order == 1)
+      ++singleCount;
+  }
+  EXPECT_EQ(doubleCount, 3);
+  EXPECT_EQ(singleCount, 9); // Three ring single bonds, plus six C-H.
+
+  int ringDouble = 0;
+  for (Avogadro::Index i = 0; i < 6; ++i) {
+    const Bond ring = molecule.bond(i, (i + 1) % 6);
+    ASSERT_TRUE(ring.isValid()) << "ring bond " << i << " is missing";
+    if (ring.order() == 2)
+      ++ringDouble;
+  }
+  EXPECT_EQ(ringDouble, 3); // The ring bonds specifically must alternate.
+}
+
+} // namespace
+
 TEST(CmlTest, aromaticBondOrderAIsKekulized)
 {
   // Benzene, its six ring bonds written with the CML aromatic order "A".
   // Before kekulize() was wired in, "A" fell through to the single-bond
   // default; now it should come back as alternating single and double
   // bonds, not all single.
-  std::string cmlStr("<?xml version=\"1.0\"?>"
-                     "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
-                     "<atomArray>"
-                     "<atom id=\"a1\" elementType=\"C\"/>"
-                     "<atom id=\"a2\" elementType=\"C\"/>"
-                     "<atom id=\"a3\" elementType=\"C\"/>"
-                     "<atom id=\"a4\" elementType=\"C\"/>"
-                     "<atom id=\"a5\" elementType=\"C\"/>"
-                     "<atom id=\"a6\" elementType=\"C\"/>"
-                     "<atom id=\"a7\" elementType=\"H\"/>"
-                     "<atom id=\"a8\" elementType=\"H\"/>"
-                     "<atom id=\"a9\" elementType=\"H\"/>"
-                     "<atom id=\"a10\" elementType=\"H\"/>"
-                     "<atom id=\"a11\" elementType=\"H\"/>"
-                     "<atom id=\"a12\" elementType=\"H\"/>"
-                     "</atomArray>"
-                     "<bondArray>"
-                     "<bond atomRefs2=\"a1 a2\" order=\"A\"/>"
-                     "<bond atomRefs2=\"a2 a3\" order=\"A\"/>"
-                     "<bond atomRefs2=\"a3 a4\" order=\"A\"/>"
-                     "<bond atomRefs2=\"a4 a5\" order=\"A\"/>"
-                     "<bond atomRefs2=\"a5 a6\" order=\"A\"/>"
-                     "<bond atomRefs2=\"a6 a1\" order=\"A\"/>"
-                     "<bond atomRefs2=\"a1 a7\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a2 a8\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a3 a9\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a4 a10\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a5 a11\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a6 a12\" order=\"1\"/>"
-                     "</bondArray>"
-                     "</molecule>");
-
   CmlFormat cml;
   Molecule molecule;
-  ASSERT_TRUE(cml.readString(cmlStr, molecule)) << cml.error();
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(12));
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(12));
-
-  int doubleCount = 0;
-  int singleCount = 0;
-  int ringDouble = 0;
-  for (size_t i = 0; i < molecule.bondCount(); ++i) {
-    const unsigned char order = molecule.bond(i).order();
-    EXPECT_LE(order, static_cast<unsigned char>(2))
-      << "bond " << i << " should not still be a single bond by default";
-    if (order == 2) {
-      ++doubleCount;
-      if (i < 6)
-        ++ringDouble;
-    } else if (order == 1) {
-      ++singleCount;
-    }
-  }
-  EXPECT_EQ(doubleCount, 3);
-  EXPECT_EQ(singleCount, 9); // Three ring single bonds, plus six C-H.
-  EXPECT_EQ(ringDouble, 3);  // The ring bonds specifically must alternate.
+  ASSERT_TRUE(cml.readString(benzeneCml("A"), molecule)) << cml.error();
+  expectKekulizedBenzene(molecule);
 }
 
 TEST(CmlTest, aromaticBondOrderAromaticSpellingIsKekulized)
 {
   // The same molecule, but with the multi-character spelling order
-  // ="aromatic", which the single-character comparison used to miss.
-  std::string cmlStr("<?xml version=\"1.0\"?>"
-                     "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
-                     "<atomArray>"
-                     "<atom id=\"a1\" elementType=\"C\"/>"
-                     "<atom id=\"a2\" elementType=\"C\"/>"
-                     "<atom id=\"a3\" elementType=\"C\"/>"
-                     "<atom id=\"a4\" elementType=\"C\"/>"
-                     "<atom id=\"a5\" elementType=\"C\"/>"
-                     "<atom id=\"a6\" elementType=\"C\"/>"
-                     "<atom id=\"a7\" elementType=\"H\"/>"
-                     "<atom id=\"a8\" elementType=\"H\"/>"
-                     "<atom id=\"a9\" elementType=\"H\"/>"
-                     "<atom id=\"a10\" elementType=\"H\"/>"
-                     "<atom id=\"a11\" elementType=\"H\"/>"
-                     "<atom id=\"a12\" elementType=\"H\"/>"
-                     "</atomArray>"
-                     "<bondArray>"
-                     "<bond atomRefs2=\"a1 a2\" order=\"aromatic\"/>"
-                     "<bond atomRefs2=\"a2 a3\" order=\"aromatic\"/>"
-                     "<bond atomRefs2=\"a3 a4\" order=\"aromatic\"/>"
-                     "<bond atomRefs2=\"a4 a5\" order=\"aromatic\"/>"
-                     "<bond atomRefs2=\"a5 a6\" order=\"aromatic\"/>"
-                     "<bond atomRefs2=\"a6 a1\" order=\"aromatic\"/>"
-                     "<bond atomRefs2=\"a1 a7\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a2 a8\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a3 a9\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a4 a10\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a5 a11\" order=\"1\"/>"
-                     "<bond atomRefs2=\"a6 a12\" order=\"1\"/>"
-                     "</bondArray>"
-                     "</molecule>");
-
+  // ="aromatic", which the single-character comparison used to miss. It has
+  // to reach exactly the same result as "A", so it gets the same assertions.
   CmlFormat cml;
   Molecule molecule;
-  ASSERT_TRUE(cml.readString(cmlStr, molecule)) << cml.error();
-
-  int doubleCount = 0;
-  for (size_t i = 0; i < molecule.bondCount(); ++i) {
-    if (molecule.bond(i).order() == 2)
-      ++doubleCount;
-  }
-  EXPECT_EQ(doubleCount, 3);
+  ASSERT_TRUE(cml.readString(benzeneCml("aromatic"), molecule)) << cml.error();
+  expectKekulizedBenzene(molecule);
 }

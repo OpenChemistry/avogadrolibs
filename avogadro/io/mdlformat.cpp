@@ -821,6 +821,9 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     appendError("Error parsing V3000 bond block.");
     return false;
   }
+  std::vector<bool> aromaticBonds;
+  aromaticBonds.reserve(numBonds);
+  bool anyAromaticBond = false;
   for (int i = 0; i < numBonds; ++i) {
     getline(in, buffer);
     std::vector<string> bondData = split(trimmed(buffer), ' ');
@@ -843,9 +846,28 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
       appendError("Failed to parse bond atom2: " + bondData[5]);
       return false;
     }
-    mol.addBond(mol.atom(atom1), mol.atom(atom2),
-                static_cast<unsigned char>(order));
+    // Order 4 is aromatic here exactly as it is in V2000: add a single bond
+    // as a placeholder and let kekulize() below assign the real order.
+    unsigned char bondOrder = static_cast<unsigned char>(order);
+    bool aromatic = false;
+    if (order == 4) {
+      aromatic = true;
+      anyAromaticBond = true;
+      bondOrder = 1;
+    }
+    mol.addBond(mol.atom(atom1), mol.atom(atom2), bondOrder);
+    aromaticBonds.push_back(aromatic);
   } // end of bond block
+
+  // Unlike V2000, charges arrive with the atoms (CHG= in the atom block), so
+  // by here everything kekulize() classifies from is already in place.
+  if (anyAromaticBond) {
+    Index failedAtom = MaxIndex;
+    if (!Core::kekulize(mol, aromaticBonds, &failedAtom)) {
+      appendError(Core::kekulizeFailureMessage(failedAtom));
+      return false;
+    }
+  }
 
   // look for M  END
   while (getline(in, buffer)) {

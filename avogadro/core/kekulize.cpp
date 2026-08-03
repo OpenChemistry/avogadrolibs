@@ -100,12 +100,17 @@ private:
       if (aromaticCount[atom] == 0)
         continue; // Not part of an aromatic system at all.
 
+      // "current" is a bond order sum, not a bond count: non-aromatic bonds
+      // contribute their real order, and each aromatic bond counts as 1.
+      // atomValence() takes that sum as its selector among the valences an
+      // element has (nitrogen's 3 and 5, sulfur's 2, 4 and 6).
       const unsigned int current = otherOrderSum[atom] + aromaticCount[atom];
       const unsigned int target =
         atomValence(numbers[atom], molecule.formalCharge(atom), current);
-      // An overbonded atom -- target < current, from bad input -- also fails
-      // this test, and so is simply treated as not needing a double bond
-      // rather than as a separate error case.
+      // The atom needs a double bond when it has room for one more unit of
+      // bond order. An overbonded atom -- target < current, from bad input --
+      // also fails this test, and so is simply treated as not needing a
+      // double bond rather than as a separate error case.
       m_needsDouble[atom] = (current + 1 <= target);
     }
   }

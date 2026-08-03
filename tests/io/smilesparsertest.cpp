@@ -614,6 +614,15 @@ TEST(SmilesParserTest, aromaticCaffeine)
   EXPECT_EQ(countElement(mol, 7), 4);
   EXPECT_EQ(countElement(mol, 8), 2);
   EXPECT_EQ(countElement(mol, 1), 10);
+
+  // Four double bonds: the two exocyclic C=O written in the string, plus two
+  // the kekulizer assigns. Only four of the nine aromatic atoms have room for
+  // a double bond -- the two carbonyl carbons are already full, and all three
+  // nitrogens bearing a methyl are pyrrole-type -- so the ring system carries
+  // two, not the three a bare purine would.
+  EXPECT_EQ(mol.bondCount(), 25u);
+  EXPECT_EQ(countBondOrder(mol, 2), 4);
+  EXPECT_EQ(countBondOrder(mol, 1), 21);
 }
 
 TEST(SmilesParserTest, errorUnkekulizableAromaticRing)

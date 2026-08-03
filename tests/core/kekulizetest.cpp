@@ -523,6 +523,37 @@ TEST(KekulizeTest, pyrene)
 // ---------------------------------------------------------------------------
 // Failure cases.
 
+/**
+ * Run kekulize() expecting it to fail, and check it left every bond order
+ * exactly as it found it.
+ *
+ * kekulize() promises to write nothing unless the whole assignment succeeds,
+ * and that promise is what lets a caller report a clean error instead of
+ * handing back a half-assigned molecule. Asserting only the return value
+ * would leave it untested, so compare all the orders, not just the aromatic
+ * ones -- a bug that wrote through to a plain bond should show up too.
+ *
+ * @return The atom kekulize() blamed, for the caller to assert on.
+ */
+Index expectKekulizeFailsLeavingOrdersAlone(Builder& b)
+{
+  // Copied, not referenced: bondOrders() hands back a reference to the live
+  // array, which would track any write rather than record what was there.
+  const std::vector<unsigned char> before(b.mol.bondOrders().begin(),
+                                          b.mol.bondOrders().end());
+
+  Index failedAtom = MaxIndex;
+  EXPECT_FALSE(kekulize(b.mol, b.aromatic, &failedAtom));
+
+  const Avogadro::Core::Array<unsigned char>& after = b.mol.bondOrders();
+  EXPECT_EQ(after.size(), before.size());
+  for (Index bond = 0; bond < before.size() && bond < after.size(); ++bond) {
+    EXPECT_EQ(after[bond], before[bond])
+      << "bond " << bond << " was modified by a kekulize() that failed";
+  }
+  return failedAtom;
+}
+
 TEST(KekulizeTest, oddCarbocycleHasNoPerfectMatching)
 {
   // Three CH carbons, all needing a double bond: a triangle can match at
@@ -535,8 +566,7 @@ TEST(KekulizeTest, oddCarbocycleHasNoPerfectMatching)
   for (Index atom : ring)
     b.hydrogen(atom);
 
-  Index failedAtom = MaxIndex;
-  EXPECT_FALSE(kekulize(b.mol, b.aromatic, &failedAtom));
+  const Index failedAtom = expectKekulizeFailsLeavingOrdersAlone(b);
   EXPECT_LT(failedAtom, 3u) << "failedAtom should name one of the ring atoms";
 }
 
@@ -553,7 +583,6 @@ TEST(KekulizeTest, atomWithNoCandidatePartnerFails)
   for (int i = 0; i < 3; ++i)
     b.hydrogen(atom1);
 
-  Index failedAtom = MaxIndex;
-  EXPECT_FALSE(kekulize(b.mol, b.aromatic, &failedAtom));
+  const Index failedAtom = expectKekulizeFailsLeavingOrdersAlone(b);
   EXPECT_EQ(failedAtom, atom0);
 }
