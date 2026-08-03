@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-07-10 12:01+0000\n"
+"PO-Revision-Date: 2026-08-03 17:16+0000\n"
 "Last-Translator: reducedradius "
 "<137701630+flytothehighest@users.noreply.github.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -34,7 +34,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.7.1.dev0\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3689,7 +3689,7 @@ msgstr "聚合物……"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:82
 msgid "No SMILES format reader found. Is Open Babel available?"
-msgstr ""
+msgstr "没有SMILES格式阅读器。 是否有可用的Open Babel?"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, InsertPolymerDialog)
@@ -3931,6 +3931,15 @@ msgid ""
 "Ctrl+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"操纵工具\t(%1)\n"
+"\n"
+"左键：点击并拖曳移动原子\n"
+"右键：点击并拖动以旋转原子\n"
+"\n"
+"方向键：平移原子\n"
+"Shift+箭头：绕X/Y轴旋转\n"
+"旋转 Ctrl+左/右：绕Z轴旋转\n"
+"Alt+<key>：更大步数"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -7666,42 +7675,42 @@ msgstr "选择…"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "B unit:"
-msgstr ""
+msgstr "B 单位："
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:57
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "C unit:"
-msgstr ""
+msgstr "C单位："
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:87
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerAGraphics)
 msgid "Depiction of the A repeat unit"
-msgstr ""
+msgstr "A重复单元的图示"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:103
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerBGraphics)
 msgid "Depiction of the B repeat unit"
-msgstr ""
+msgstr "B重复单元的图示"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:119
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerCGraphics)
 msgid "Depiction of the C repeat unit"
-msgstr ""
+msgstr "C重复单元的图示"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, repeatLabel)
 msgid "Repeats:"
-msgstr ""
+msgstr "重复次数:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:221
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Repeat Style:"
-msgstr ""
+msgstr "重复样式："
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
 msgid "Percent"
-msgstr ""
+msgstr "百分比"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:237
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
@@ -7713,7 +7722,7 @@ msgstr "重复单位"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Length:"
-msgstr ""
+msgstr "总长度："
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:274
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
@@ -7728,12 +7737,12 @@ msgstr "立构规整度："
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:292
 #. i18n: ectx: property (toolTip), widget (QComboBox, tacticityComboBox)
 msgid "Control of the polymer stereochemistry / tacticity"
-msgstr ""
+msgstr "聚合物立体化学/立构规整性控制"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:299
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Atactic / Random"
-msgstr ""
+msgstr "无规异构 / 随机"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:304
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
