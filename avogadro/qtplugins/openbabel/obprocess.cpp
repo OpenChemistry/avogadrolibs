@@ -39,15 +39,20 @@ OBProcess::OBProcess(QObject* parent_)
       m_obabelExecutable = baseDir.absolutePath() + '/' + m_obabelExecutable;
       QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
-      QString dataDir = QtGui::Utilities::openBabelDataDirectory();
-      if (!dataDir.isEmpty())
-        env.insert("BABEL_DATADIR", dataDir);
-      else
-        qDebug() << "Error, Open Babel data directory not found.";
+      // Leave any setting from the environment alone.
+      if (env.value("BABEL_DATADIR").isEmpty()) {
+        const QString dataDir = QtGui::Utilities::openBabelDataDirectory();
+        if (!dataDir.isEmpty())
+          env.insert("BABEL_DATADIR", dataDir);
+        else
+          qDebug() << "Error, Open Babel data directory not found.";
+      }
 
-      QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
-      if (!pluginDir.isEmpty())
-        env.insert("BABEL_LIBDIR", pluginDir);
+      if (env.value("BABEL_LIBDIR").isEmpty()) {
+        const QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
+        if (!pluginDir.isEmpty())
+          env.insert("BABEL_LIBDIR", pluginDir);
+      }
 
       m_process->setProcessEnvironment(env);
     }

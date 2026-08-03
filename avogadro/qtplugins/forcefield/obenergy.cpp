@@ -50,7 +50,7 @@ OBEnergy::OBEnergy(const std::string& method)
   // make sure we set the Open Babel variables for data files, leaving any
   // setting from the environment alone
   if (qgetenv("BABEL_DATADIR").isEmpty()) {
-    QString dataDir = QtGui::Utilities::openBabelDataDirectory();
+    const QString dataDir = QtGui::Utilities::openBabelDataDirectory();
     if (!dataDir.isEmpty())
       qputenv("BABEL_DATADIR", dataDir.toLocal8Bit());
     else
@@ -58,7 +58,7 @@ OBEnergy::OBEnergy(const std::string& method)
   }
 
   if (qgetenv("BABEL_LIBDIR").isEmpty()) {
-    QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
+    const QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
     if (!pluginDir.isEmpty())
       qputenv("BABEL_LIBDIR", pluginDir.toLocal8Bit());
   }
