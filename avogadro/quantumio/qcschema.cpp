@@ -93,9 +93,13 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
   }
 
   // check for 'schema_name'
-  if (root.find("schema_name") == root.end() ||
-      (root["schema_name"].get<std::string>() != "QC_JSON" &&
-       root["schema_name"].get<std::string>() != "qcschema_molecule")) {
+  const auto schema = root.find("schema_name");
+  if (schema == root.end() || !schema->is_string()) {
+    appendError("Error: Input is not a QC_JSON object.");
+    return false;
+  }
+  const std::string schemaName = schema->get<std::string>();
+  if (schemaName != "QC_JSON" && schemaName != "qcschema_molecule") {
     appendError("Error: Input is not a QC_JSON object.");
     return false;
   }
@@ -103,8 +107,7 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
   // "qcschema_molecule" is the MolSSI specification, while "QC_JSON" is the
   // older WebMO variant. The MolSSI form uses bohr and zero-based connectivity
   // indices, the WebMO one uses Angstroms and one-based indices.
-  const bool molssi =
-    root["schema_name"].get<std::string>() == "qcschema_molecule";
+  const bool molssi = schemaName == "qcschema_molecule";
   if (molssi) {
     coordinateScale = BOHR_TO_ANGSTROM;
   }
@@ -120,6 +123,10 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
   unsigned char atomicNum(0);
   for (const auto& element : elements) {
     // convert from a string to atomic number
+    if (!element.is_string()) {
+      appendError("Error: \"symbols\" array must contain element symbols.");
+      return false;
+    }
     std::string symbol = element.get<std::string>();
     atomicNum = Elements::atomicNumberFromSymbol(symbol);
 
@@ -145,6 +152,10 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     appendError("Error: \"geometry\" array has incorrect length.");
     return false;
   }
+  if (!isNumericArray(geometry)) {
+    appendError("Error: \"geometry\" array must be numeric.");
+    return false;
+  }
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     auto a = molecule.atom(i);
     Vector3 pos(geometry[3 * i], geometry[3 * i + 1], geometry[3 * i + 2]);
@@ -161,12 +172,17 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     for (const auto& bond : connectivity) {
       if (!bond.is_array() || bond.size() < 3)
         continue;
+      // the endpoints must be integers, the order may be fractional
+      if (!bond[0].is_number_integer() || !bond[1].is_number_integer() ||
+          !bond[2].is_number())
+        continue;
       Index start = bond[0].get<Index>() - indexOffset;
       Index end = bond[1].get<Index>() - indexOffset;
       if (start >= atomCount || end >= atomCount)
         continue;
-      auto order =
-        static_cast<unsigned char>(std::lround(bond[2].get<double>()));
+      // the specification limits bond orders to the range [0, 5]
+      double bondOrder = std::min(std::max(bond[2].get<double>(), 0.0), 5.0);
+      auto order = static_cast<unsigned char>(std::lround(bondOrder));
       molecule.addBond(start, end, order);
     }
   } else {
@@ -205,7 +221,7 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     if (properties.find("dipole_moment") != properties.end()) {
       // read the numeric array
       json dipole = properties["dipole_moment"];
-      if (dipole.size() == 3) {
+      if (isNumericArray(dipole) && dipole.size() == 3) {
         Core::Variant dipoleMoment(dipole[0].get<float>(),
                                    dipole[1].get<float>(),
                                    dipole[2].get<float>());
@@ -233,7 +249,8 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     if (properties.find("total_energy") != properties.end() &&
         properties["total_energy"].is_object()) {
       json totalEnergy = properties["total_energy"];
-      if (totalEnergy.find("value") != totalEnergy.end())
+      if (totalEnergy.find("value") != totalEnergy.end() &&
+          totalEnergy["value"].is_number())
         molecule.setData("totalEnergy", totalEnergy["value"].get<float>());
     }
 
@@ -245,7 +262,7 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
 
       // energies should be a numeric array
       if (sequence.find("energies") != sequence.end() &&
-          sequence["energies"].is_array()) {
+          isNumericArray(sequence["energies"])) {
         std::vector<double> energies;
         for (unsigned int i = 0; i < sequence["energies"].size(); ++i) {
           energies.push_back(sequence["energies"][i].get<float>());
@@ -258,7 +275,8 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
         for (unsigned int i = 0; i < coordSets.size(); ++i) {
           Array<Vector3> setArray;
           json set = coordSets[i];
-          if (isNumericArray(set)) {
+          // every step has to match the atoms we read above
+          if (isNumericArray(set) && set.size() == atomCount * 3) {
             for (unsigned int j = 0; j < set.size() / 3; ++j) {
               setArray.push_back(
                 Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
@@ -308,7 +326,8 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
       json displacements = vib["displacement"];
       if (displacements.is_array()) {
         for (auto arr : displacements) {
-          if (isNumericArray(arr)) {
+          // each mode is a displacement vector for every atom
+          if (isNumericArray(arr) && arr.size() == atomCount * 3) {
             Array<Vector3> mode;
             mode.resize(arr.size() / 3);
             double* ptr = &mode[0][0];
@@ -346,7 +365,8 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
       json excitedStates = properties["excited_states"];
       // check units (defaults to nm)
       std::string units = "nm";
-      if (excitedStates.find("units") != excitedStates.end()) {
+      if (excitedStates.find("units") != excitedStates.end() &&
+          excitedStates["units"].is_string()) {
         units = excitedStates["units"].get<std::string>();
       }
       std::vector<double> energies;
@@ -357,21 +377,23 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
         json transition_energies = excitedStates["transition_energies"];
         if (isNumericArray(transition_energies)) {
           for (auto& i : transition_energies) {
-            if (units == "nm")
+            double value = static_cast<double>(i);
+            if (units == "nm") {
               // convert to eV, i.e. eV = 1239.8 / wavelength
-              energies.push_back(1239.841984 / static_cast<double>(i));
-            else if (units == "cm^-1")
-              energies.push_back(static_cast<double>(i) / 8065.544);
+              if (value != 0.0)
+                energies.push_back(1239.841984 / value);
+            } else if (units == "cm^-1")
+              energies.push_back(value / 8065.544);
             else if (units == "eV")
-              energies.push_back(static_cast<double>(i));
+              energies.push_back(value);
           }
         }
       }
       if (excitedStates.find("intensities") != excitedStates.end() &&
           excitedStates["intensities"].is_array()) {
-        json intensities = excitedStates["intensities"];
-        if (isNumericArray(intensities)) {
-          for (auto& i : intensities) {
+        json jsonIntensities = excitedStates["intensities"];
+        if (isNumericArray(jsonIntensities)) {
+          for (auto& i : jsonIntensities) {
             intensities.push_back(static_cast<double>(i));
           }
         }
@@ -409,11 +431,13 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
         }
       }
 
-      MatrixX nmrData(nmrShiftsIsotropic.size(), 1);
-      for (std::size_t i = 0; i < nmrShiftsIsotropic.size(); ++i) {
-        nmrData(i, 0) = nmrShiftsIsotropic[i];
+      if (!nmrShiftsIsotropic.empty()) {
+        MatrixX nmrData(nmrShiftsIsotropic.size(), 1);
+        for (std::size_t i = 0; i < nmrShiftsIsotropic.size(); ++i) {
+          nmrData(i, 0) = nmrShiftsIsotropic[i];
+        }
+        molecule.setSpectra("NMR", nmrData);
       }
-      molecule.setSpectra("NMR", nmrData);
     }
 
     // todo
