@@ -16,6 +16,12 @@ namespace Utilities {
 
 AVOGADROQTGUI_EXPORT QString libraryDirectory();
 AVOGADROQTGUI_EXPORT QString dataDirectory();
+//! \return the Open Babel data directory shipped alongside the application
+//! (suitable for BABEL_DATADIR), or an empty string if it cannot be found
+AVOGADROQTGUI_EXPORT QString openBabelDataDirectory();
+//! \return the Open Babel plugin directory shipped alongside the application
+//! (suitable for BABEL_LIBDIR), or an empty string if it cannot be found
+AVOGADROQTGUI_EXPORT QString openBabelLibraryDirectory();
 //! \return a fully-qualified path for a program or an empty string if not found
 AVOGADROQTGUI_EXPORT QString findExecutablePath(QString program);
 //! \return a list of all fully-qualified paths for programs that are found
