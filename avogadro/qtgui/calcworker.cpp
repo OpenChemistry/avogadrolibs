@@ -8,6 +8,9 @@
 #include <avogadro/calc/energycalculator.h>
 #include <avogadro/calc/energyoptimizer.h>
 
+#include <algorithm>
+#include <iterator>
+
 namespace Avogadro::QtGui {
 
 CalcWorker::CalcWorker(QObject* parent) : QObject(parent)
@@ -20,6 +23,9 @@ CalcWorker::CalcWorker(QObject* parent) : QObject(parent)
     "std::vector<Avogadro::Core::Constraint>");
   qRegisterMetaType<Calc::EnergyCalculator*>(
     "Avogadro::Calc::EnergyCalculator*");
+  qRegisterMetaType<std::vector<Eigen::VectorXd>>(
+    "std::vector<Eigen::VectorXd>");
+  qRegisterMetaType<std::vector<double>>("std::vector<double>");
 }
 
 CalcWorker::~CalcWorker() = default;
@@ -101,6 +107,69 @@ void CalcWorker::runGradient(Eigen::VectorXd positions)
   Eigen::VectorXd gradient = Eigen::VectorXd::Zero(positions.size());
   double energy = m_calc->evaluate(positions, &gradient);
   emit evaluateFinished(gradient, energy);
+}
+
+void CalcWorker::runEvaluateBatch(std::vector<Eigen::VectorXd> coordsList,
+                                  bool computeGradient, int chunkSize)
+{
+  std::vector<double> energies;
+  std::vector<Eigen::VectorXd> gradients;
+
+  if (!m_calc || coordsList.empty() || m_cancelled) {
+    emit evaluateBatchFinished(energies, gradients);
+    return;
+  }
+
+  const int total = static_cast<int>(coordsList.size());
+
+  // Memory-bounded auto chunk size: cap the per-chunk payload (which also
+  // bounds the equally-sized gradient response) to a sane budget.
+  if (chunkSize <= 0) {
+    constexpr std::size_t byteBudget = 32 * 1024 * 1024; // ~32 MB
+    constexpr std::size_t maxFramesCap = 256;
+    const std::size_t frameDoubles =
+      static_cast<std::size_t>(coordsList.front().size());
+    const std::size_t frameBytes =
+      std::max<std::size_t>(1, frameDoubles * sizeof(double));
+    std::size_t frames = byteBudget / frameBytes;
+    frames = std::clamp<std::size_t>(frames, 1, maxFramesCap);
+    chunkSize = static_cast<int>(frames);
+  }
+
+  energies.reserve(coordsList.size());
+  if (computeGradient)
+    gradients.reserve(coordsList.size());
+
+  for (std::size_t start = 0; start < coordsList.size();
+       start += static_cast<std::size_t>(chunkSize)) {
+    if (m_cancelled)
+      break;
+
+    const std::size_t end =
+      std::min(coordsList.size(), start + static_cast<std::size_t>(chunkSize));
+    std::vector<Eigen::VectorXd> chunk(coordsList.begin() + start,
+                                       coordsList.begin() + end);
+
+    if (computeGradient) {
+      std::vector<Eigen::VectorXd> chunkGrads;
+      m_calc->gradientBatch(chunk, chunkGrads);
+      // Energy alongside the gradient so callers always get both.
+      std::vector<double> chunkEnergies = m_calc->valueBatch(chunk);
+      energies.insert(energies.end(), chunkEnergies.begin(),
+                      chunkEnergies.end());
+      gradients.insert(gradients.end(),
+                       std::make_move_iterator(chunkGrads.begin()),
+                       std::make_move_iterator(chunkGrads.end()));
+    } else {
+      std::vector<double> chunkEnergies = m_calc->valueBatch(chunk);
+      energies.insert(energies.end(), chunkEnergies.begin(),
+                      chunkEnergies.end());
+    }
+
+    emit batchProgress(static_cast<int>(end), total);
+  }
+
+  emit evaluateBatchFinished(energies, gradients);
 }
 
 void CalcWorker::cancel()

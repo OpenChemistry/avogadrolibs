@@ -91,6 +91,11 @@ constexpr Real ANGSTROM_TO_BOHR = static_cast<Real>(ANGSTROM_TO_BOHR_D);
 constexpr double HARTREE_TO_EV_D = 27.211386245981;
 constexpr float HARTREE_TO_EV_F = static_cast<float>(HARTREE_TO_EV_D);
 constexpr Real HARTREE_TO_EV = static_cast<Real>(HARTREE_TO_EV_D);
+
+// thermochemical calorie
+constexpr double KCAL_TO_KJ_D = 4.184;
+constexpr float KCAL_TO_KJ_F = static_cast<float>(KCAL_TO_KJ_D);
+constexpr Real KCAL_TO_KJ = static_cast<Real>(KCAL_TO_KJ_D);
 /** @} */
 
 } // namespace Avogadro

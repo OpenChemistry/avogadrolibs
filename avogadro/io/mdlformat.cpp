@@ -12,6 +12,7 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <cctype>
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -423,6 +424,16 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     return false;
   }
 
+  // Per-conformer energies, collected in parallel with the coordinate sets so
+  // that data("energies") can drive the conformer energy plot. The first entry
+  // corresponds to coordinate set 0 (this initial block).
+  std::vector<double> energies;
+  auto isEnergyTag = [](std::string name) {
+    for (auto& c : name)
+      c = static_cast<char>(::tolower(static_cast<unsigned char>(c)));
+    return name == "energy";
+  };
+
   // Now parse the data block.
   bool inValue(false);
   string dataName;
@@ -440,8 +451,13 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                  endsWith(dataName, "CHARGES"))
           // remove the "CHARGES" from the end of the string
           handlePartialCharges(mol, dataValue, dataName);
-        else
+        else {
+          if (isEnergyTag(dataName)) {
+            if (auto e = lexicalCast<double>(trimmed(dataValue)))
+              energies.push_back(*e);
+          }
           mol.setData(dataName, dataValue);
+        }
 
         dataName.clear();
         dataValue.clear();
@@ -609,17 +625,34 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         break;
     }
 
-    // Skip data block until $$$$
-    // TODO: Consider reading data from conformers in the future
-    // e.g. energies, etc.
+    // Read the data block until $$$$, capturing an energy field if present so
+    // it stays parallel with the coordinate sets.
+    // TODO: Consider reading other per-conformer data in the future.
+    bool inEnergyValue = false;
     while (getline(in, buffer)) {
       if (trimmed(buffer) == "$$$$")
         break;
+      if (inEnergyValue) {
+        if (auto e = lexicalCast<double>(trimmed(buffer)))
+          energies.push_back(*e);
+        inEnergyValue = false;
+      } else if (startsWith(buffer, "> ")) {
+        size_t start = buffer.find('<');
+        size_t end = buffer.find('>', start);
+        if (start != string::npos && end != string::npos &&
+            isEnergyTag(buffer.substr(start + 1, end - start - 1)))
+          inEnergyValue = true;
+      }
     }
 
     // Add the conformer coordinates
     mol.setCoordinate3d(positions, coordSet++);
   }
+
+  // Only expose energies if every coordinate set contributed one, keeping the
+  // array aligned with the conformers for the energy plot / property table.
+  if (energies.size() > 1 && energies.size() == static_cast<size_t>(coordSet))
+    mol.setData("energies", energies);
 
   return true;
 }

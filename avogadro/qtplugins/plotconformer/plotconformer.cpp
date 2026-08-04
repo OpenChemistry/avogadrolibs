@@ -232,8 +232,8 @@ void PlotConformer::updatePlot()
     QString targetUnit = m_targetUnitsCombo->currentText();
     yTitle = tr("Relative Energy (%1)").arg(targetUnit);
   } else if (plotType == "forces" && m_molecule->hasData("forces")) {
-    // TODO: Add units
-    yTitle = tr("Forces (N)");
+    // TODO: Add units - data("forces") holds the RMS gradient per set
+    yTitle = tr("RMS Gradient");
   } else if (plotType == "velocities" && m_molecule->hasData("velocities")) {
     yTitle = tr("Velocities (m/s)");
   }
