@@ -970,6 +970,18 @@ public:
   // channge the Atom index position
   void swapAtom(Index a, Index b);
 
+  /**
+   * Drop everything that was calculated from the structure -- partial
+   * charges, forces, velocities, normal modes and spectra. Call this from
+   * any edit that changes which atoms or bonds exist: those results describe
+   * the molecule as it was, and after such an edit it is not that molecule.
+   *
+   * Reindexing them instead would keep the arrays the right length while the
+   * numbers went on describing something that no longer exists, which is the
+   * worse failure because nothing looks wrong.
+   */
+  void clearCalculatedResults();
+
   std::list<Index> getAtomsAtLayer(size_t layer);
 
   Layer& layer();

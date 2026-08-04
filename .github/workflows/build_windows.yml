@@ -45,7 +45,7 @@ jobs:
 
     steps:
     - name: Checkout workflow repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Checkout Repositories
       uses: ./.github/actions/checkout-repositories
@@ -62,25 +62,16 @@ jobs:
       with:
         arch: x64
 
-    # Emit a vcpkg_version output
-    - name: Get vcpkg git sha
+    # Update + re-bootstrap vcpkg, and emit a vcpkg_version output
+    - name: Ensure vcpkg is up to date
       if: runner.os == 'Windows'
       id: vcpkg_version
-      run: |
-        cd /c/vcpkg
-        git pull origin master
-        if [ -d /c/vcpkg/.git ]; then
-          echo "sha=$(git -C /c/vcpkg rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        else
-          # just in case
-          echo "sha=no-vcpkg-git" >> $GITHUB_OUTPUT
-        fi
-      shell: bash
+      uses: ./.github/actions/update-vcpkg
 
     # Restore vcpkg cache (use manifest lock if available)
     - name: Restore vcpkg cache
       if: runner.os == 'Windows'
-      uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           C:\vcpkg\installed
@@ -110,7 +101,7 @@ jobs:
 
     # Cache thirdparty builds (OpenBabel, etc.)
     - name: Cache thirdparty
-      uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           ${{ runner.workspace }}/build/Downloads

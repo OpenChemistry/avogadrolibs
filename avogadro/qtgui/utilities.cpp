@@ -6,11 +6,56 @@
 #include "utilities.h"
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QStringList>
+#include <QtCore/QVersionNumber>
+
+#include <algorithm>
 
 namespace Avogadro::QtGui::Utilities {
+
+namespace {
+
+// Open Babel installs its data and plugins into a versioned directory, e.g.
+// "share/openbabel/3.2.0". An install tree that has been reused across Open
+// Babel updates can hold several of these, so take the highest version rather
+// than giving up. Returns an empty string if there are no versioned
+// directories under @a base.
+QString highestVersionedDirectory(const QString& base)
+{
+  const QDir dir(base);
+  QStringList filters;
+  filters << "3.*"
+          << "2.*";
+
+  QString newest;
+  QVersionNumber newestVersion;
+  for (const QString& candidate : dir.entryList(filters, QDir::Dirs)) {
+    // Only accept names that are entirely a version number, so that leftovers
+    // such as "3.1.1-backup" are skipped rather than parsed as "3.1.1".
+    const bool versionOnly =
+      std::all_of(candidate.cbegin(), candidate.cend(),
+                  [](QChar c) { return c.isDigit() || c == QLatin1Char('.'); });
+    if (!versionOnly)
+      continue;
+
+    // Compare numerically, so that 3.10.0 sorts above 3.2.0.
+    const QVersionNumber version = QVersionNumber::fromString(candidate);
+    if (newest.isEmpty() || newestVersion < version) {
+      newest = candidate;
+      newestVersion = version;
+    }
+  }
+
+  if (newest.isEmpty())
+    return QString();
+
+  return QDir::cleanPath(dir.absoluteFilePath(newest));
+}
+
+} // namespace
 
 QString libraryDirectory()
 {
@@ -20,6 +65,39 @@ QString libraryDirectory()
 QString dataDirectory()
 {
   return QString(AvogadroLibs_DATA_DIR);
+}
+
+QString openBabelDataDirectory()
+{
+#ifdef Q_OS_WIN32
+  const QString dataDir =
+    QDir::cleanPath(QCoreApplication::applicationDirPath() + "/data");
+  // Callers treat an empty string as "not found", so don't hand back a path
+  // that isn't there.
+  return QDir(dataDir).exists() ? dataDir : QString();
+#else
+  return highestVersionedDirectory(QCoreApplication::applicationDirPath() +
+                                   "/../share/openbabel");
+#endif
+}
+
+QString openBabelLibraryDirectory()
+{
+#ifdef Q_OS_WIN32
+  // The plugins are linked into the Open Babel library on Windows.
+  return QString();
+#else
+  const QString base =
+    QCoreApplication::applicationDirPath() + "/../lib/openbabel";
+  const QString versioned = highestVersionedDirectory(base);
+  if (!versioned.isEmpty())
+    return versioned;
+
+  // Some configurations install the plugins unversioned, directly into the
+  // base directory. Only fall back to it if it actually exists.
+  const QDir baseDir(base);
+  return baseDir.exists() ? QDir::cleanPath(base) : QString();
+#endif
 }
 
 QString findExecutablePath(QString program)

@@ -192,8 +192,14 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
 
   // Add the molecule file to the options
   QJsonObject allOptions(options_);
-  if (!insertMolecule(allOptions, *mol))
+  if (!insertMolecule(allOptions, *mol)) {
+    // No process will be started, so commandFinished() will never run to drain
+    // m_errors. Report here or the failure is invisible.
+    qWarning() << "InterfaceScript::runCommand: could not supply the molecule "
+                  "to the script:"
+               << m_errors.join("\n");
     return false;
+  }
 
   connect(m_interpreter, &PythonScript::finished, this,
           &::Avogadro::QtGui::InterfaceScript::commandFinished);
@@ -203,7 +209,13 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
   QStringList runArgs;
   if (!m_interpreter->isPackageMode())
     runArgs << QStringLiteral("--run-command");
-  m_interpreter->asyncExecute(runArgs, QJsonDocument(allOptions).toJson());
+  if (!m_interpreter->asyncExecute(runArgs,
+                                   QJsonDocument(allOptions).toJson())) {
+    disconnect(m_interpreter, &PythonScript::finished, this,
+               &::Avogadro::QtGui::InterfaceScript::commandFinished);
+    m_errors << m_interpreter->errorList();
+    return false;
+  }
   return true;
 }
 
@@ -611,9 +623,12 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   // We will *always* write the CJSON representation
   // Embed CJSON as actual JSON, rather than a string,
   // .. so we'll have to re-parse it
-  cjsonFormat->writeString(str, mol);
+  // Use a separate string: reusing the one above would leave a tail of the
+  // other format behind whenever it is the longer of the two.
+  std::string cjsonStr;
+  cjsonFormat->writeString(cjsonStr, mol);
   QJsonParseError error;
-  QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
+  QJsonDocument doc = QJsonDocument::fromJson(cjsonStr.c_str(), &error);
   if (error.error != QJsonParseError::NoError) {
     m_errors << tr("Error generating cjson object: Parse error at offset %1: "
                    "%2\nRaw JSON:\n\n%3")

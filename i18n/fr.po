@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 00:52+0000\n"
-"PO-Revision-Date: 2026-05-11 08:11+0000\n"
-"Last-Translator: \"David D.\" <dadu042@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2026-07-25 09:01+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.5-dev\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1397,7 +1397,7 @@ msgid ""
 "error: %3)."
 msgstr ""
 "Erreur écrivant la requête brute au script stdin (len=%1, écrit %2 bytes, "
-"erreur QProcess: %3)."
+"erreur QProcess : %3)."
 
 #: qtgui/pythonscript.cpp:428
 msgid "Script failed to start."
@@ -8876,7 +8876,7 @@ msgstr "Max. Minimize Steps :"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
 msgid "StateData options:"
-msgstr "Options de StateData :"
+msgstr "Options de StateData :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
@@ -9635,7 +9635,7 @@ msgstr ""
 "niveau de Fermi sera automatiquement accordé au résultat du calcul de "
 "densité d'états.</p><p>Si cette case est cochée, assurez-vous que le niveau "
 "de Fermi correct est défini dans la boîte sur la droite.</p><p>Valeur à "
-"défaut : off</p></body></html>"
+"défaut : off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)

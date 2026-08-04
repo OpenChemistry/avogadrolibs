@@ -495,6 +495,337 @@ TEST_F(MoleculeTest, formulaCompositionIsotopes)
   EXPECT_EQ(comp["C"], 1);
 }
 
+TEST_F(MoleculeTest, isotopesFollowTheirAtoms)
+{
+  // The isotope array is allocated lazily, by the first setIsotope() call, so
+  // it is the one per-atom array that is easy to leave out of the bookkeeping
+  // every other one gets.
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.setIsotope(2, 13);
+  molecule.setIsotope(3, 14);
+
+  // removeAtom() swaps the last atom into the hole, so atom 3's isotope has
+  // to travel with it.
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.atomCount(), 3);
+  EXPECT_EQ(molecule.isotope(0), 0);
+  EXPECT_EQ(molecule.isotope(1), 14);
+  EXPECT_EQ(molecule.isotope(2), 13);
+
+  // And clearing must not leave the old isotopes behind for whatever atoms
+  // are added next.
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_EQ(molecule.isotope(0), 0);
+}
+
+TEST_F(MoleculeTest, atomLabelsFollowTheirAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.setAtomLabel(0, "zero");
+  molecule.setAtomLabel(1, "one");
+  molecule.setAtomLabel(2, "two");
+  molecule.setAtomLabel(3, "three");
+
+  // removeAtom() swaps the last atom into the hole, so atom 3's label has
+  // to travel with it.
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.atomCount(), 3);
+  EXPECT_EQ(molecule.atomLabel(0), "zero");
+  EXPECT_EQ(molecule.atomLabel(1), "three");
+  EXPECT_EQ(molecule.atomLabel(2), "two");
+
+  molecule.swapAtom(0, 2);
+  EXPECT_EQ(molecule.atomLabel(0), "two");
+  EXPECT_EQ(molecule.atomLabel(2), "zero");
+
+  // And clearing must not leave the old labels behind for whatever atoms
+  // are added next.
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_EQ(molecule.atomLabel(0), "");
+}
+
+TEST_F(MoleculeTest, forceVectorsFollowTheirAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.setForceVector(0, Vector3(1, 0, 0));
+  molecule.setForceVector(1, Vector3(2, 0, 0));
+  molecule.setForceVector(2, Vector3(3, 0, 0));
+  molecule.setForceVector(3, Vector3(4, 0, 0));
+
+  // A swap relabels the same structure, so the forces still describe it.
+  molecule.swapAtom(0, 2);
+  EXPECT_EQ(molecule.forceVector(0), Vector3(3, 0, 0));
+  EXPECT_EQ(molecule.forceVector(2), Vector3(1, 0, 0));
+
+  // Removing an atom does not: these forces were computed for a geometry
+  // that no longer exists, so they are dropped rather than reindexed.
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.atomCount(), 3);
+  EXPECT_TRUE(molecule.forceVectors().empty());
+
+  // Vector3() is an uninitialized Eigen fixed-size vector, not a zero
+  // vector, so forceVector() past the end of a shorter-than-atomCount array
+  // is not comparable to a specific value; what matters is that the array
+  // itself was actually cleared rather than left with the old atoms' data.
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_TRUE(molecule.forceVectors().empty());
+}
+
+TEST_F(MoleculeTest, selectedAtomsFollowTheirAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.setAtomSelected(0, false);
+  molecule.setAtomSelected(1, false);
+  molecule.setAtomSelected(2, false);
+  molecule.setAtomSelected(3, true);
+
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.atomCount(), 3);
+  EXPECT_FALSE(molecule.atomSelected(0));
+  EXPECT_TRUE(molecule.atomSelected(1)); // former atom 3
+  EXPECT_FALSE(molecule.atomSelected(2));
+
+  // swapAtom() was the one place this was missing: the selection is a
+  // std::vector<bool>, and std::swap() on its proxy references is unsafe.
+  molecule.swapAtom(0, 1);
+  EXPECT_TRUE(molecule.atomSelected(0));
+  EXPECT_FALSE(molecule.atomSelected(1));
+
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_FALSE(molecule.atomSelected(0));
+}
+
+TEST_F(MoleculeTest, frozenAtomMaskFollowsAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+
+  // give each atom a distinct per-axis pattern so a misassignment of the
+  // 3-entries-per-atom mask cannot pass by coincidence
+  molecule.setFrozenAtomAxis(0, 0, true); // atom0: x only
+  molecule.setFrozenAtomAxis(1, 1, true); // atom1: y only
+  molecule.setFrozenAtomAxis(2, 0, true);
+  molecule.setFrozenAtomAxis(2, 1, true); // atom2: x and y
+  molecule.setFrozenAtom(3, true);        // atom3: x, y and z
+
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.atomCount(), 3);
+  EXPECT_TRUE(molecule.frozenAtomAxis(0, 0));
+  EXPECT_FALSE(molecule.frozenAtomAxis(0, 1));
+  EXPECT_TRUE(molecule.frozenAtom(1)); // former atom 3
+  EXPECT_TRUE(molecule.frozenAtomAxis(2, 0));
+  EXPECT_TRUE(molecule.frozenAtomAxis(2, 1));
+  EXPECT_FALSE(molecule.frozenAtomAxis(2, 2));
+
+  molecule.swapAtom(0, 2);
+  EXPECT_TRUE(molecule.frozenAtomAxis(0, 0));
+  EXPECT_TRUE(molecule.frozenAtomAxis(0, 1));
+  EXPECT_TRUE(molecule.frozenAtomAxis(2, 0));
+  EXPECT_FALSE(molecule.frozenAtomAxis(2, 1));
+
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_FALSE(molecule.frozenAtom(0));
+}
+
+TEST_F(MoleculeTest, coordinates3dFollowTheirAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+
+  Array<Vector3> frame0;
+  frame0.push_back(Vector3(0, 0, 0));
+  frame0.push_back(Vector3(1, 0, 0));
+  frame0.push_back(Vector3(2, 0, 0));
+  frame0.push_back(Vector3(3, 0, 0));
+  molecule.setCoordinate3d(frame0, 0);
+
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.atomCount(), 3);
+  Array<Vector3> after = molecule.coordinate3d(0);
+  ASSERT_EQ(after.size(), static_cast<size_t>(3));
+  EXPECT_EQ(after[0], Vector3(0, 0, 0));
+  EXPECT_EQ(after[1], Vector3(3, 0, 0)); // former atom 3
+  EXPECT_EQ(after[2], Vector3(2, 0, 0));
+
+  molecule.swapAtom(0, 2);
+  after = molecule.coordinate3d(0);
+  EXPECT_EQ(after[0], Vector3(2, 0, 0));
+  EXPECT_EQ(after[2], Vector3(0, 0, 0));
+
+  // clearAtoms() already drops every stored frame outright.
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(0));
+}
+
+TEST_F(MoleculeTest, velocitiesFollowTheirAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+
+  Array<Vector3> vel0;
+  vel0.push_back(Vector3(0, 1, 0));
+  vel0.push_back(Vector3(1, 1, 0));
+  vel0.push_back(Vector3(2, 1, 0));
+  vel0.push_back(Vector3(3, 1, 0));
+  molecule.setVelocities(vel0, 0);
+
+  // A swap relabels the same structure, so the velocities still describe it.
+  molecule.swapAtom(0, 2);
+  Array<Vector3> after = molecule.velocities(0);
+  ASSERT_EQ(after.size(), static_cast<size_t>(4));
+  EXPECT_EQ(after[0], Vector3(2, 1, 0));
+  EXPECT_EQ(after[2], Vector3(0, 1, 0));
+
+  // Removing an atom does not: these velocities belong to a geometry that no
+  // longer exists, so they are dropped rather than reindexed.
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.atomCount(), 3);
+  EXPECT_TRUE(molecule.velocities(0).empty());
+
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_TRUE(molecule.velocities(0).empty());
+}
+
+TEST_F(MoleculeTest, vibrationLxFollowsAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+
+  Array<Array<Vector3>> modes(1);
+  modes[0].push_back(Vector3(0, 0, 1));
+  modes[0].push_back(Vector3(1, 0, 1));
+  modes[0].push_back(Vector3(2, 0, 1));
+  modes[0].push_back(Vector3(3, 0, 1));
+  molecule.setVibrationLx(modes);
+
+  // A swap relabels the same structure, so the modes still describe it.
+  molecule.swapAtom(0, 2);
+  Array<Vector3> mode0 = molecule.vibrationLx(0);
+  ASSERT_EQ(mode0.size(), static_cast<size_t>(4));
+  EXPECT_EQ(mode0[0], Vector3(2, 0, 1));
+  EXPECT_EQ(mode0[2], Vector3(0, 0, 1));
+
+  // Removing an atom makes the modes meaningless -- they were calculated for
+  // a different molecular structure -- so they are dropped, along with the
+  // frequencies and intensities that go with them, rather than reindexed.
+  molecule.setVibrationFrequencies(Array<double>(1, 1600.0));
+  molecule.setVibrationIRIntensities(Array<double>(1, 12.0));
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.atomCount(), 3);
+  EXPECT_TRUE(molecule.vibrationLx(0).empty());
+  EXPECT_TRUE(molecule.vibrationFrequencies().empty());
+  EXPECT_TRUE(molecule.vibrationIRIntensities().empty());
+
+  // And with no atoms left there is nothing for modes to describe either.
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_TRUE(molecule.vibrationLx(0).empty());
+}
+
+TEST_F(MoleculeTest, partialChargesFollowTheirAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+
+  MatrixX charges(4, 1);
+  charges << 1.0, 2.0, 3.0, 4.0;
+  molecule.setPartialCharges("test", charges);
+
+  // swapAtom() must reindex every charge model along with the atoms.
+  molecule.swapAtom(0, 2);
+  MatrixX swapped = molecule.partialCharges("test");
+  ASSERT_EQ(swapped.rows(), 4);
+  EXPECT_DOUBLE_EQ(swapped(0, 0), 3.0);
+  EXPECT_DOUBLE_EQ(swapped(1, 0), 2.0);
+  EXPECT_DOUBLE_EQ(swapped(2, 0), 1.0);
+  EXPECT_DOUBLE_EQ(swapped(3, 0), 4.0);
+
+  // removeAtom() deliberately clears partial charges instead of reindexing
+  // them: any change to the atom set invalidates cached charge models.
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_TRUE(molecule.partialChargeTypes().empty());
+
+  molecule.setPartialCharges("test2",
+                             MatrixX::Constant(molecule.atomCount(), 1, 5.0));
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_TRUE(molecule.partialChargeTypes().empty());
+}
+
+/** Build a molecule carrying a spectrum, for the tests below. */
+static Molecule moleculeWithSpectra()
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.addBond(0, 1, 1);
+  molecule.addBond(1, 2, 1);
+  MatrixX spectrum(2, 2);
+  spectrum << 1600.0, 12.0, 3000.0, 40.0;
+  molecule.setSpectra("IR", spectrum);
+  return molecule;
+}
+
+TEST_F(MoleculeTest, spectraDoNotSurviveStructuralEdits)
+{
+  // A spectrum describes one molecule. Any edit that changes which atoms or
+  // bonds exist makes it a different molecule, so the spectrum is dropped
+  // rather than left attached to something it does not describe.
+  Molecule removingAnAtom = moleculeWithSpectra();
+  ASSERT_FALSE(removingAnAtom.spectraTypes().empty());
+  ASSERT_TRUE(removingAnAtom.removeAtom(3));
+  EXPECT_TRUE(removingAnAtom.spectraTypes().empty());
+
+  Molecule removingABond = moleculeWithSpectra();
+  ASSERT_TRUE(removingABond.removeBond(0));
+  EXPECT_TRUE(removingABond.spectraTypes().empty());
+
+  Molecule cleared = moleculeWithSpectra();
+  cleared.clearAtoms();
+  EXPECT_TRUE(cleared.spectraTypes().empty());
+}
+
+TEST_F(MoleculeTest, clearBondsKeepsCalculatedResults)
+{
+  // clearBonds() is "re-perceive connectivity", not a structural edit: the
+  // player tool pairs it with perceiveBondsSimple() on every animation frame
+  // when dynamic bonding is on. Dropping the vibrations there would destroy
+  // the very normal modes being animated, so it must not.
+  Molecule molecule = moleculeWithSpectra();
+  molecule.setVibrationFrequencies(Array<double>(1, 1600.0));
+  Array<Array<Vector3>> modes(1);
+  for (int i = 0; i < 4; ++i)
+    modes[0].push_back(Vector3(0, 0, 1));
+  molecule.setVibrationLx(modes);
+
+  molecule.clearBonds();
+  molecule.perceiveBondsSimple();
+
+  EXPECT_FALSE(molecule.spectraTypes().empty());
+  EXPECT_FALSE(molecule.vibrationFrequencies().empty());
+  EXPECT_EQ(molecule.vibrationLx(0).size(), static_cast<size_t>(4));
+}
+
 TEST_F(MoleculeTest, formulaCompositionUnitCellCorner)
 {
   Molecule molecule;
