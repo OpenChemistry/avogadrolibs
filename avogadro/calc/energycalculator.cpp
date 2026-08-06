@@ -66,6 +66,28 @@ void EnergyCalculator::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   constraintGradients(x, grad);
 }
 
+std::vector<Real> EnergyCalculator::valueBatch(
+  const std::vector<Eigen::VectorXd>& coords)
+{
+  // Default: loop one coordinate set at a time. Derived classes with a true
+  // batch transport (e.g. ScriptEnergy over binary-v1) override this.
+  std::vector<Real> energies;
+  energies.reserve(coords.size());
+  for (const auto& x : coords)
+    energies.push_back(value(x));
+  return energies;
+}
+
+void EnergyCalculator::gradientBatch(const std::vector<Eigen::VectorXd>& coords,
+                                     std::vector<Eigen::VectorXd>& grads)
+{
+  // Default: loop one coordinate set at a time. gradient() already cleans and
+  // applies constraints, so the fallback matches the single-shot path.
+  grads.resize(coords.size());
+  for (std::size_t i = 0; i < coords.size(); ++i)
+    gradient(coords[i], grads[i]);
+}
+
 void EnergyCalculator::hessian(const Eigen::VectorXd& x, Eigen::MatrixXd& hess)
 {
   finiteHessian(x, hess);

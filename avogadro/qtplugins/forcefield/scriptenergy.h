@@ -82,6 +82,12 @@ public:
 
   Core::Molecule::ElementMask elements() const override { return m_elements; }
   bool supportsGradients() const { return m_gradients; }
+  // True batch transport is only available for binary-v1 scripts that opt in
+  // via support.batch in their metadata.
+  bool supportsBatch() const override
+  {
+    return m_batch && m_protocol == Protocol::BinaryV1;
+  }
   bool acceptsIons() const override { return m_ions; }
   bool acceptsRadicals() const override { return m_radicals; }
   bool acceptsUnitCell() const override { return m_unitCells; }
@@ -97,6 +103,11 @@ public:
   Real evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad) override;
   // hessian (falls back to finite difference if unsupported by script)
   void hessian(const Eigen::VectorXd& x, Eigen::MatrixXd& hess) override;
+  // batch energy / gradient (true batch over binary-v1, else loop fallback)
+  std::vector<Real> valueBatch(
+    const std::vector<Eigen::VectorXd>& coords) override;
+  void gradientBatch(const std::vector<Eigen::VectorXd>& coords,
+                     std::vector<Eigen::VectorXd>& grads) override;
 
 private:
   static Format stringToFormat(const std::string& str);
@@ -109,13 +120,23 @@ private:
   QByteArray writeCoordinatesText(const Eigen::VectorXd& x);
   QByteArray writeCoordinatesBinary(const Eigen::VectorXd& x,
                                     quint16 requestFlags) const;
+  QByteArray writeBatchCoordinatesBinary(
+    const std::vector<Eigen::VectorXd>& coords, quint16 requestFlags) const;
   bool parseResponseBinary(const QByteArray& response, quint16 requestFlags,
                            double* energy, Eigen::VectorXd* grad,
                            Eigen::MatrixXd* hess) const;
-  bool readBinaryFrame(const QByteArray& input, QByteArray& frame);
+  bool parseBatchResponseBinary(const QByteArray& response,
+                                quint16 requestFlags, std::size_t expectedBatch,
+                                std::vector<double>* energies,
+                                std::vector<Eigen::VectorXd>* grads) const;
+  bool readBinaryFrame(const QByteArray& input, QByteArray& frame,
+                       int timeoutMs = 5000);
   bool evaluateBinary(const Eigen::VectorXd& x, quint16 requestFlags,
                       double* energy = nullptr, Eigen::VectorXd* grad = nullptr,
                       Eigen::MatrixXd* hess = nullptr);
+  bool evaluateBatchBinary(const std::vector<Eigen::VectorXd>& coords,
+                           quint16 requestFlags, std::vector<double>* energies,
+                           std::vector<Eigen::VectorXd>* grads);
   bool buildBootstrapInput(QByteArray& input) const;
 
 private:
@@ -129,6 +150,7 @@ private:
   bool m_valid;
   bool m_gradients;
   bool m_hessians;
+  bool m_batch;
   bool m_ions;
   bool m_radicals;
   bool m_unitCells;

@@ -101,6 +101,8 @@ public slots:
 private slots:
   void energy();
   void forces();
+  void batchEnergy();
+  void batchForces();
   void optimize();
   void freezeSelected();
   void unfreezeSelected();
@@ -121,12 +123,18 @@ private slots:
                            double energy, bool converged);
   void onEnergyDone(Eigen::VectorXd gradient, double energy);
   void onForcesDone(Eigen::VectorXd gradient, double energy);
+  void onBatchDone(std::vector<double> energies,
+                   std::vector<Eigen::VectorXd> gradients);
   void onWorkerReady();
 
 private:
   void cleanupWorker();
   void startWorker();
   void sendInitCalculator();
+  // Gather every coordinate set as a flat 3N vector (non-destructive).
+  std::vector<Eigen::VectorXd> gatherCoordinateSets() const;
+  // Shared entry point for the two batch actions.
+  void runBatch(bool computeGradient);
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
   Calc::EnergyCalculator* m_method = nullptr;
@@ -149,6 +157,10 @@ private:
   QtGui::CalcWorker* m_worker = nullptr;
   QProgressDialog* m_progressDialog = nullptr;
   bool m_optimizing = false;
+  // True while a batch energy/forces run is in flight.
+  bool m_batchRunning = false;
+  // Whether the in-flight batch run requested gradients.
+  bool m_batchGradient = false;
   // Iterations completed (sum of chunk sizes already executed). Used to
   // bound total work and drive the progress dialog now that the chunk
   // size adapts per chunk.
