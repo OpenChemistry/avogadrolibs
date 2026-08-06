@@ -7,6 +7,7 @@
 
 #include <avogadro/io/cjsonformat.h>
 #include <avogadro/io/fileformatmanager.h>
+#include <avogadro/io/smilesformat.h>
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -30,6 +31,7 @@ CopyPaste::CopyPaste(QObject* parent_)
     m_copyAction(new QAction(tr("Copy"), this)),
     // don't translate SMILES, InChI, or XYZ
     m_copySMILES(new QAction("SMILES", this)),
+    m_copyMappedSMILES(new QAction(tr("Atom Mapped SMILES"), this)),
     m_copyInChI(new QAction("InChI", this)),
     m_copyXYZ(new QAction("XYZ", this)),
     m_cutAction(new QAction(tr("Cut"), this)),
@@ -46,13 +48,22 @@ CopyPaste::CopyPaste(QObject* parent_)
   m_copyAction->setProperty("menu priority", 550);
   connect(m_copyAction, SIGNAL(triggered()), SLOT(copyCJSON()));
 
+  const QString copyAs = tr("Copy As");
+
   m_copySMILES->setProperty("menu priority", 540);
+  m_copySMILES->setProperty("menu submenu", copyAs);
   connect(m_copySMILES, SIGNAL(triggered()), SLOT(copySMILES()));
 
+  m_copyMappedSMILES->setProperty("menu priority", 535);
+  m_copyMappedSMILES->setProperty("menu submenu", copyAs);
+  connect(m_copyMappedSMILES, SIGNAL(triggered()), SLOT(copyMappedSMILES()));
+
   m_copyInChI->setProperty("menu priority", 530);
+  m_copyInChI->setProperty("menu submenu", copyAs);
   connect(m_copyInChI, SIGNAL(triggered()), SLOT(copyInChI()));
 
   m_copyXYZ->setProperty("menu priority", 520);
+  m_copyXYZ->setProperty("menu submenu", copyAs);
   connect(m_copyXYZ, SIGNAL(triggered()), SLOT(copyXYZ()));
 
   m_pasteAction->setShortcut(QKeySequence::Paste);
@@ -74,17 +85,21 @@ CopyPaste::~CopyPaste()
 QList<QAction*> CopyPaste::actions() const
 {
   QList<QAction*> result;
-  return result << m_copyAction << m_copySMILES << m_copyInChI << m_copyXYZ
-                << m_cutAction << m_pasteAction << m_clearAction;
+  return result << m_copyAction << m_copySMILES << m_copyMappedSMILES
+                << m_copyInChI << m_copyXYZ << m_cutAction << m_pasteAction
+                << m_clearAction;
 }
 
 QStringList CopyPaste::menuPath(QAction* action) const
 {
-  if (action->text() != tr("SMILES") && action->text() != tr("InChI") &&
-      action->text() != tr("XYZ"))
-    return QStringList() << tr("&Edit");
-  else
-    return QStringList() << tr("&Edit") << tr("Copy As");
+  // Each action carries its own submenu, in the same spirit as the "menu
+  // priority" property set above. Matching on text would not work here: the
+  // format names are deliberately untranslated.
+  const QVariant submenu = action->property("menu submenu");
+  if (submenu.isValid())
+    return QStringList() << tr("&Edit") << submenu.toString();
+
+  return QStringList() << tr("&Edit");
 }
 
 void CopyPaste::setMolecule(QtGui::Molecule* mol)
@@ -105,6 +120,20 @@ void CopyPaste::copySMILES()
 
   copy(format);
   delete format;
+}
+
+void CopyPaste::copyMappedSMILES()
+{
+  // Named directly rather than looked up by extension, because atom mapping is
+  // a setting only this format has. Plain "Copy as SMILES" reaches the same
+  // writer through the manager, so the two agree on everything else.
+  Io::SmilesFormat format;
+  format.setAtomMaps(true);
+
+  // The map classes number the atoms of whatever is written, one-based. With
+  // a selection active, copy() writes a re-indexed copy of the selected atoms,
+  // so the classes follow that fragment rather than the full molecule.
+  copy(&format);
 }
 
 void CopyPaste::copyInChI()
@@ -154,7 +183,7 @@ bool CopyPaste::copy(Io::FileFormat* format)
       Core::Bond bond = m_molecule->bond(i);
       Index start = bond.atom1().index();
       Index end = bond.atom2().index();
-      if (m_molecule->atomSelected(start) && m_molecule->atomSelected(start)) {
+      if (m_molecule->atomSelected(start) && m_molecule->atomSelected(end)) {
         copy->addBond(atomIndex[start], atomIndex[end], bond.order());
       }
     }
@@ -165,11 +194,10 @@ bool CopyPaste::copy(Io::FileFormat* format)
       qobject_cast<QWidget*>(this->parent()), tr("Error Clipping Molecule"),
       tr("Error generating clipboard data.") + "\n" +
         tr("Output format: %1\n%2", "file format")
-          .arg(QString::fromStdString(m_pastedFormat->name()))
-          .arg(QString::fromStdString(m_pastedFormat->description())) +
+          .arg(QString::fromStdString(format->name()))
+          .arg(QString::fromStdString(format->description())) +
         "\n\n" +
-        tr("Reader error:\n%1")
-          .arg(QString::fromStdString(m_pastedFormat->error())));
+        tr("Writer error:\n%1").arg(QString::fromStdString(format->error())));
     return false;
   }
 

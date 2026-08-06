@@ -221,3 +221,93 @@ TEST(CmlTest, readString)
   EXPECT_EQ(moleculeFromString.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(moleculeFromString.bondCount(), static_cast<size_t>(7));
 }
+
+namespace {
+
+/** Benzene with its six ring bonds written using @a order, e.g. "A". */
+std::string benzeneCml(const std::string& order)
+{
+  std::string cml("<?xml version=\"1.0\"?>"
+                  "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
+                  "<atomArray>");
+  for (int i = 1; i <= 6; ++i)
+    cml += "<atom id=\"a" + std::to_string(i) + "\" elementType=\"C\"/>";
+  for (int i = 7; i <= 12; ++i)
+    cml += "<atom id=\"a" + std::to_string(i) + "\" elementType=\"H\"/>";
+  cml += "</atomArray><bondArray>";
+  // The ring, then one C-H per ring carbon.
+  for (int i = 1; i <= 6; ++i) {
+    const int next = (i == 6) ? 1 : i + 1;
+    cml += "<bond atomRefs2=\"a" + std::to_string(i) + " a" +
+           std::to_string(next) + "\" order=\"" + order + "\"/>";
+  }
+  for (int i = 1; i <= 6; ++i)
+    cml += "<bond atomRefs2=\"a" + std::to_string(i) + " a" +
+           std::to_string(i + 6) + "\" order=\"1\"/>";
+  cml += "</bondArray></molecule>";
+  return cml;
+}
+
+/**
+ * Assert that @a molecule is benzene whose aromatic ring came back kekulized:
+ * no bond left at the aromatic order, and the ring alternating three double
+ * with three single bonds.
+ *
+ * Ring bonds are looked up by their endpoints rather than by bond index, so
+ * this does not quietly depend on the order the reader added them in. The
+ * first six atoms are the ring, in order around it.
+ */
+void expectKekulizedBenzene(const Molecule& molecule)
+{
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(12));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(12));
+
+  int doubleCount = 0;
+  int singleCount = 0;
+  for (size_t i = 0; i < molecule.bondCount(); ++i) {
+    const unsigned char order = molecule.bond(i).order();
+    EXPECT_LE(order, static_cast<unsigned char>(2))
+      << "bond " << i << " should be single or double after kekulization,"
+      << " rather than still carrying the aromatic order";
+    if (order == 2)
+      ++doubleCount;
+    else if (order == 1)
+      ++singleCount;
+  }
+  EXPECT_EQ(doubleCount, 3);
+  EXPECT_EQ(singleCount, 9); // Three ring single bonds, plus six C-H.
+
+  int ringDouble = 0;
+  for (Avogadro::Index i = 0; i < 6; ++i) {
+    const Bond ring = molecule.bond(i, (i + 1) % 6);
+    ASSERT_TRUE(ring.isValid()) << "ring bond " << i << " is missing";
+    if (ring.order() == 2)
+      ++ringDouble;
+  }
+  EXPECT_EQ(ringDouble, 3); // The ring bonds specifically must alternate.
+}
+
+} // namespace
+
+TEST(CmlTest, aromaticBondOrderAIsKekulized)
+{
+  // Benzene, its six ring bonds written with the CML aromatic order "A".
+  // Before kekulize() was wired in, "A" fell through to the single-bond
+  // default; now it should come back as alternating single and double
+  // bonds, not all single.
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(benzeneCml("A"), molecule)) << cml.error();
+  expectKekulizedBenzene(molecule);
+}
+
+TEST(CmlTest, aromaticBondOrderAromaticSpellingIsKekulized)
+{
+  // The same molecule, but with the multi-character spelling order
+  // ="aromatic", which the single-character comparison used to miss. It has
+  // to reach exactly the same result as "A", so it gets the same assertions.
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(benzeneCml("aromatic"), molecule)) << cml.error();
+  expectKekulizedBenzene(molecule);
+}

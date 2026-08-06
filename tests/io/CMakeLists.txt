@@ -6,6 +6,8 @@ set(tests
   Lammps
   Mdl
   Pdb
+  Smiles
+  SmilesParser
   Turbomole
   Vasp
   Xyz

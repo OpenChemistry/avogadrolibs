@@ -317,7 +317,9 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
     if (ring.size() >= path.size())
       continue;
 
-    for (size_t i = 0; i < ring.size(); i++) {
+    // Stop one short: ring[i + 1] would run off the end on the last atom, and
+    // the bond that closes the ring is erased separately below.
+    for (size_t i = 0; i + 1 < ring.size(); i++) {
       pathBonds.erase(std::make_pair(std::min(ring[i], ring[i + 1]),
                                      std::max(ring[i], ring[i + 1])));
     }

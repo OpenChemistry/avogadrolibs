@@ -11,6 +11,7 @@
 
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/kekulize.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/spacegroups.h>
@@ -293,6 +294,11 @@ public:
 
     xml_node node = bondArray.child("bond");
 
+    // One entry per bond added below; kekulize() at the end replaces the
+    // order-1 placeholder every aromatic bond was given with a real one.
+    std::vector<bool> aromaticBonds;
+    bool anyAromaticBond = false;
+
     while (node) {
       xml_attribute attribute = node.attribute("atomRefs2");
       Bond bond;
@@ -321,8 +327,10 @@ public:
       }
 
       attribute = node.attribute("order");
-      if (attribute && strlen(attribute.value()) == 1) {
-        char o = attribute.value()[0];
+      bool aromatic = false;
+      const std::string orderStr = attribute ? attribute.value() : "";
+      if (orderStr.size() == 1) {
+        char o = orderStr[0];
         switch (o) {
           case '1':
           case 'S':
@@ -348,15 +356,35 @@ public:
           case '6':
             bond.setOrder(6);
             break;
+          case 'A':
+          case 'a':
+            // Aromatic: order 1 is a placeholder: kekulize() below assigns
+            // its real order.
+            bond.setOrder(1);
+            aromatic = true;
+            break;
           default:
             bond.setOrder(1);
         }
+      } else if (orderStr == "aromatic") {
+        bond.setOrder(1);
+        aromatic = true;
       } else {
         bond.setOrder(1);
       }
+      aromaticBonds.push_back(aromatic);
+      anyAromaticBond = anyAromaticBond || aromatic;
 
       // Move on to the next bond node (if there is one).
       node = node.next_sibling("bond");
+    }
+
+    if (anyAromaticBond) {
+      Index failedAtom = MaxIndex;
+      if (!Core::kekulize(*molecule, aromaticBonds, &failedAtom)) {
+        error += Core::kekulizeFailureMessage(failedAtom);
+        return false;
+      }
     }
 
     return true;

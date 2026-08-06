@@ -16,6 +16,7 @@
 #include "mdlformat.h"
 #include "pdbformat.h"
 #include "sdfformat.h"
+#include "smilesformat.h"
 #include "trrformat.h"
 #include "turbomoleformat.h"
 #include "vaspformat.h"
@@ -295,6 +296,9 @@ FileFormatManager::FileFormatManager()
   addFormat(new PdbFormat);
   addFormat(new PoscarFormat);
   addFormat(new SdfFormat);
+  // Write only, so the Open Babel plugin stays the reader for "smi": a SMILES
+  // string carries no coordinates, and generating them is still its job.
+  addFormat(new SmilesFormat);
   addFormat(new TrrFormat);
   addFormat(new TurbomoleFormat);
   addFormat(new XyzFormat);

@@ -8,7 +8,9 @@
 #include "fileformatmanager.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/kekulize.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/stereo.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
@@ -265,6 +267,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Parse the bond block.
+  std::vector<bool> aromaticBonds;
+  aromaticBonds.reserve(numBonds);
+  bool anyAromaticBond = false;
   for (int i = 0; i < numBonds; ++i) {
     // Bond atom indices start at 1, -1 for C++.
     getline(in, buffer);
@@ -293,8 +298,34 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       appendError("Bond read in with out of bounds index.");
       return false;
     }
-    mol.addBond(mol.atom(begin), mol.atom(end),
-                static_cast<unsigned char>(order));
+    // Bond type 4 is aromatic. It used to be passed straight through to
+    // addBond(), which made it a quadruple bond; add it as a single-bond
+    // placeholder instead and let kekulize() assign its real order below.
+    // Query types 5-8 are left exactly as they were: out of scope here.
+    unsigned char bondOrder = static_cast<unsigned char>(order);
+    bool aromatic = false;
+    if (order == 4) {
+      aromatic = true;
+      anyAromaticBond = true;
+      bondOrder = 1;
+    }
+    Bond newBond = mol.addBond(mol.atom(begin), mol.atom(end), bondOrder);
+    aromaticBonds.push_back(aromatic);
+
+    // The stereo column is optional, and a file that omits it is simply
+    // saying nothing about configuration.
+    if (buffer.size() >= 12) {
+      const int stereo(lexicalCast<int>(buffer.substr(9, 3), ok));
+      if (ok) {
+        // 3 on a double bond is "cis or trans, either", and 4 on a single bond
+        // is a wedge drawn as "either". Both mean the author declined to state
+        // a configuration, so the coordinates must not be read as one.
+        if (order == 2 && stereo == 3)
+          setBondStereoUnspecified(mol, newBond.index());
+        else if (order == 1 && stereo == 4)
+          setAtomStereoUnspecified(mol, static_cast<Index>(begin));
+      }
+    }
   }
 
   // Parse the properties block until the end of the file.
@@ -406,6 +437,18 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     size_t index = i.first;
     signed int charge = i.second;
     mol.setFormalCharge(index, charge);
+  }
+
+  // Aromatic (type 4) bonds were added above as single-bond placeholders;
+  // replace them with a real alternation now. This has to wait until here,
+  // after charges are applied, since a charged aromatic atom (a pyridinium
+  // nitrogen, for instance) classifies differently than a neutral one.
+  if (anyAromaticBond) {
+    Index failedAtom = MaxIndex;
+    if (!Core::kekulize(mol, aromaticBonds, &failedAtom)) {
+      appendError(Core::kekulizeFailureMessage(failedAtom));
+      return false;
+    }
   }
 
   // Set the total spin multiplicity
@@ -778,6 +821,9 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     appendError("Error parsing V3000 bond block.");
     return false;
   }
+  std::vector<bool> aromaticBonds;
+  aromaticBonds.reserve(numBonds);
+  bool anyAromaticBond = false;
   for (int i = 0; i < numBonds; ++i) {
     getline(in, buffer);
     std::vector<string> bondData = split(trimmed(buffer), ' ');
@@ -800,9 +846,28 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
       appendError("Failed to parse bond atom2: " + bondData[5]);
       return false;
     }
-    mol.addBond(mol.atom(atom1), mol.atom(atom2),
-                static_cast<unsigned char>(order));
+    // Order 4 is aromatic here exactly as it is in V2000: add a single bond
+    // as a placeholder and let kekulize() below assign the real order.
+    unsigned char bondOrder = static_cast<unsigned char>(order);
+    bool aromatic = false;
+    if (order == 4) {
+      aromatic = true;
+      anyAromaticBond = true;
+      bondOrder = 1;
+    }
+    mol.addBond(mol.atom(atom1), mol.atom(atom2), bondOrder);
+    aromaticBonds.push_back(aromatic);
   } // end of bond block
+
+  // Unlike V2000, charges arrive with the atoms (CHG= in the atom block), so
+  // by here everything kekulize() classifies from is already in place.
+  if (anyAromaticBond) {
+    Index failedAtom = MaxIndex;
+    if (!Core::kekulize(mol, aromaticBonds, &failedAtom)) {
+      appendError(Core::kekulizeFailureMessage(failedAtom));
+      return false;
+    }
+  }
 
   // look for M  END
   while (getline(in, buffer)) {
@@ -930,10 +995,21 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   // Bond block.
   for (size_t i = 0; i < mol.bondCount(); ++i) {
     Bond bond = mol.bond(i);
+
+    // Carry an undefined configuration back out. Writing 0 here would assert
+    // that the coordinates mean something, which is the claim reading the flag
+    // was meant to avoid making.
+    int stereo = 0;
+    if (bond.order() == 2 && bondStereoUnspecified(mol, i))
+      stereo = 3; // cis or trans, either
+    else if (bond.order() == 1 &&
+             atomStereoUnspecified(mol, bond.atom1().index()))
+      stereo = 4; // a wedge drawn as either
+
     out.unsetf(std::ios::floatfield);
     out << setw(3) << std::right << bond.atom1().index() + 1 << setw(3)
         << bond.atom2().index() + 1 << setw(3) << static_cast<int>(bond.order())
-        << "  0  0  0  0\n";
+        << setw(3) << stereo << "  0  0  0\n";
   }
   // Properties block.
   for (auto& i : chargeList) {

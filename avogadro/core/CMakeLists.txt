@@ -17,6 +17,7 @@ target_sources(Headers PUBLIC
   FILES
     angletools.h
     angleiterator.h
+  aromaticity.h
     array.h
     avogadrocore.h
     color3f.h
@@ -52,6 +53,7 @@ avogadro_headers(Core
   gaussiansettools.h
   graph.h
   internalcoordinates.h
+  kekulize.h
   layer.h
   layermanager.h
   mesh.h
@@ -66,6 +68,7 @@ avogadro_headers(Core
   slaterset.h
   slatersettools.h
   spacegroups.h
+  stereo.h
   symbolatomtyper.h
   unitcell.h
   variant.h
@@ -76,6 +79,7 @@ avogadro_headers(Core
 
 target_sources(Core PRIVATE
   angleiterator.cpp
+  aromaticity.cpp
   atomutilities.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp
@@ -86,6 +90,7 @@ target_sources(Core PRIVATE
   gaussiansettools.cpp
   graph.cpp
   internalcoordinates.cpp
+  kekulize.cpp
   layer.cpp
   layermanager.cpp
   mesh.cpp
@@ -101,6 +106,7 @@ target_sources(Core PRIVATE
   slaterset.cpp
   slatersettools.cpp
   spacegroups.cpp
+  stereo.cpp
   symbolatomtyper.cpp
   unitcell.cpp
   variantmap.cpp
