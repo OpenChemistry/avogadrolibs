@@ -112,6 +112,24 @@ TEST(XyzTest, readAtomicSymbolsNoBonds)
   EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
 }
 
+// An options string this format cannot use falls back to the default rather
+// than throwing out of the JSON lookup.
+TEST(XyzTest, unusableOptionsFallBackToDefaults)
+{
+  for (const char* options : { "", "{ this is not json ", "[1, 2, 3]",
+                               "{ \"perceiveBonds\": \"false\" }" }) {
+    XyzFormat xyz;
+    xyz.setOptions(options);
+    Molecule molecule;
+    ASSERT_TRUE(xyz.readFile(AVOGADRO_DATA "/data/xyz/methane.xyz", molecule))
+      << options;
+
+    // perceiveBonds defaults to on, so methane comes back with its four bonds.
+    EXPECT_EQ(molecule.atomCount(), 5) << options;
+    EXPECT_EQ(molecule.bondCount(), 4) << options;
+  }
+}
+
 // methane-num.xyz uses atomic numbers to identify atoms
 TEST(XyzTest, readAtomicNumbers)
 {
