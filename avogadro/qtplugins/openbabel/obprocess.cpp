@@ -5,6 +5,8 @@
 
 #include "obprocess.h"
 
+#include <avogadro/qtgui/utilities.h>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
@@ -36,33 +38,22 @@ OBProcess::OBProcess(QObject* parent_)
         QFileInfo(baseDir.absolutePath() + '/' + m_obabelExecutable).exists()) {
       m_obabelExecutable = baseDir.absolutePath() + '/' + m_obabelExecutable;
       QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-#if defined(_WIN32)
-      env.insert("BABEL_DATADIR",
-                 QCoreApplication::applicationDirPath() + "/data");
-#else
-      QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
-      QStringList filters;
-      filters << "3.*"
-              << "2.*";
-      QStringList dirs = dir.entryList(filters);
-      if (dirs.size() == 1) {
-        env.insert("BABEL_DATADIR", QCoreApplication::applicationDirPath() +
-                                      "/../share/openbabel/" + dirs[0]);
-      } else {
-        qDebug() << "Error, Open Babel data directory not found.";
+
+      // Leave any setting from the environment alone.
+      if (env.value("BABEL_DATADIR").isEmpty()) {
+        const QString dataDir = QtGui::Utilities::openBabelDataDirectory();
+        if (!dataDir.isEmpty())
+          env.insert("BABEL_DATADIR", dataDir);
+        else
+          qDebug() << "Error, Open Babel data directory not found.";
       }
-      dir.setPath(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
-      dirs = dir.entryList(filters);
-      if (dirs.size() == 0) {
-        env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
-                                     "/../lib/openbabel/");
-      } else if (dirs.size() == 1) {
-        env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
-                                     "/../lib/openbabel/" + dirs[0]);
-      } else {
-        qDebug() << "Error, Open Babel plugins directory not found.";
+
+      if (env.value("BABEL_LIBDIR").isEmpty()) {
+        const QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
+        if (!pluginDir.isEmpty())
+          env.insert("BABEL_LIBDIR", pluginDir);
       }
-#endif
+
       m_process->setProcessEnvironment(env);
     }
   }

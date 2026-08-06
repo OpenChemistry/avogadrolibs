@@ -338,8 +338,36 @@ void Command::run()
     // Snapshot so processFinished() can detect if the molecule was closed
     // or swapped before the async script returned.
     m_runningMolecule = m_molecule;
-    m_currentScript->runCommand(options, m_molecule);
+    if (!m_currentScript->runCommand(options, m_molecule)) {
+      // The script never started, so finished() will never arrive and
+      // processFinished() would never tear down the progress dialog. Clean up
+      // here and show why, rather than leaving a dialog that cannot be closed.
+      commandFailed(m_currentScript->errorList());
+    }
   }
+}
+
+void Command::commandFailed(const QStringList& errors)
+{
+  if (m_progress) {
+    m_progress->close();
+    m_progress->deleteLater();
+    m_progress = nullptr;
+  }
+
+  QString details = errors.join(QStringLiteral("\n"));
+  if (details.isEmpty())
+    details = tr("The script could not be started.");
+  qWarning() << "Command: script failed to start:" << details;
+
+  if (m_currentScript) {
+    m_currentScript->deleteLater();
+    m_currentScript = nullptr;
+  }
+  m_runningMolecule.clear();
+
+  QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+                       tr("Error Running Script"), details);
 }
 
 void Command::processFinished()

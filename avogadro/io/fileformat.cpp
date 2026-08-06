@@ -171,7 +171,10 @@ bool FileFormat::readString(const std::string& string, Core::Molecule& molecule)
 bool FileFormat::writeString(std::string& string,
                              const Core::Molecule& molecule)
 {
-  std::ostringstream stream(string, std::ostringstream::out);
+  // Note: the stream must not be seeded with @a string. Doing so overwrites
+  // from position 0 without truncating, so any part of a previous (longer)
+  // value would survive past the end of the new one.
+  std::ostringstream stream;
   // Imbue the standard C locale.
   locale cLocale("C");
   stream.imbue(cLocale);

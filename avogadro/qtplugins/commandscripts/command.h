@@ -88,6 +88,12 @@ private slots:
   void moleculeChanged(unsigned int change);
 
 private:
+  /**
+   * Tear down the progress dialog and running script after a command that
+   * never started, reporting @p errors to the terminal and the user.
+   */
+  void commandFailed(const QStringList& errors);
+
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   // Launch-time molecule for the async script; QPointer detects deletion.
