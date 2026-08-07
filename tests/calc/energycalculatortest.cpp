@@ -831,6 +831,46 @@ public:
   }
 };
 
+// Mirrors the convention every shipping calculator follows: value() reports a
+// real energy term *plus* constraintEnergies(). The base-class gradient()
+// finite-differences value(), so the restraint contribution must appear in the
+// gradient exactly once. Set includeRestraints(false) to model a value()
+// override that forgets constraintEnergies().
+class RestrainedQuadraticCalculator : public EnergyCalculator
+{
+public:
+  EnergyCalculator* newInstance() const override
+  {
+    return new RestrainedQuadraticCalculator();
+  }
+  std::string identifier() const override { return "restrained_quadratic"; }
+  std::string name() const override { return "Restrained Quadratic"; }
+  std::string description() const override
+  {
+    return "Quadratic energy plus restraint terms";
+  }
+  Molecule::ElementMask elements() const override
+  {
+    Molecule::ElementMask mask;
+    mask.set();
+    return mask;
+  }
+  void setMolecule(Molecule* /*mol*/) override {}
+
+  Real value(const Eigen::VectorXd& x) override
+  {
+    Real energy = x.squaredNorm();
+    if (m_includeRestraints)
+      energy += constraintEnergies(x);
+    return energy;
+  }
+
+  void includeRestraints(bool include) { m_includeRestraints = include; }
+
+private:
+  bool m_includeRestraints = true;
+};
+
 namespace {
 
 // A gauche-ish butane skeleton, C1 C2 C3 C4.
@@ -996,6 +1036,81 @@ TEST(RestraintTest, DefaultForceConstantDependsOnType)
   // an explicit force constant always wins
   torsion.setK(250.0);
   EXPECT_DOUBLE_EQ(torsion.k(), 250.0);
+}
+
+TEST(RestraintTest, SetReclassifiesTheConstraintType)
+{
+  Constraint c(0, 1);
+  // resolve and cache the inferred type
+  ASSERT_EQ(c.type(), Constraint::DistanceConstraint);
+  ASSERT_DOUBLE_EQ(c.k(), Constraint::DefaultDistanceK);
+
+  // the same object is now a torsion -- a stale cached type would keep the
+  // distance force constant (wrong units) and file it in the wrong bucket
+  c.set(0, 1, 2, 3, 45.0);
+  EXPECT_EQ(c.type(), Constraint::TorsionConstraint);
+  EXPECT_DOUBLE_EQ(c.k(), Constraint::DefaultAngularK);
+}
+
+TEST(RestraintTest, ExplicitTypeSurvivesSet)
+{
+  // Out-of-plane cannot be inferred -- it has the same four indices as a
+  // torsion -- so an explicitly assigned type must not be reset by set().
+  Constraint c(1, 0, 2, 3, 10.0);
+  c.setType(Constraint::OutOfPlaneConstraint);
+  ASSERT_EQ(c.type(), Constraint::OutOfPlaneConstraint);
+
+  c.set(2, 0, 1, 3, 15.0);
+  EXPECT_EQ(c.type(), Constraint::OutOfPlaneConstraint);
+
+  // passing None goes back to inferring from the indices
+  c.setType(Constraint::None);
+  EXPECT_EQ(c.type(), Constraint::TorsionConstraint);
+}
+
+TEST(RestraintTest, BaseGradientIncludesRestraintsExactlyOnce)
+{
+  // EnergyCalculator::gradient() finite-differences value(), which by
+  // convention already contains constraintEnergies(). Adding
+  // constraintGradients() on top of that would double the restraint force.
+  const Eigen::VectorXd x = butaneSkeleton();
+
+  RestrainedQuadraticCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) }); // violated restraint
+
+  Eigen::VectorXd restraint = Eigen::VectorXd::Zero(x.size());
+  calc.constraintGradients(x, restraint);
+  ASSERT_GT(restraint.norm(), 1.0); // the restraint really is violated
+
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(x.size());
+  calc.gradient(x, grad);
+
+  const Eigen::VectorXd quadratic = 2.0 * x;
+  const Real scale = restraint.norm();
+
+  // counted once
+  EXPECT_LT((grad - (quadratic + restraint)).norm() / scale, 1e-4);
+  // not missing
+  EXPECT_GT((grad - quadratic).norm() / scale, 0.5);
+  // not doubled
+  EXPECT_GT((grad - (quadratic + 2.0 * restraint)).norm() / scale, 0.5);
+}
+
+TEST(RestraintTest, BaseGradientDependsOnValueReportingRestraints)
+{
+  // Documents the contract the test above relies on: the base gradient() has
+  // no restraint term of its own, so a value() override that omits
+  // constraintEnergies() silently drops the restraint from the gradient.
+  const Eigen::VectorXd x = butaneSkeleton();
+
+  RestrainedQuadraticCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) });
+  calc.includeRestraints(false);
+
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(x.size());
+  calc.gradient(x, grad);
+
+  EXPECT_TRUE(grad.isApprox(2.0 * x, 1e-5));
 }
 
 // Mask Tests
