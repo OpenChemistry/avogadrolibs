@@ -437,11 +437,17 @@ bool OBProcess::generateConformers(const QByteArray& mol,
 
   QStringList realOptions;
   if (format == "cjson") {
+    // The cjson writer stores every conformer in one document, as 3dSets.
     realOptions << "-icjson"
                 << "-ocjson";
   } else {
+    // The CML writer has no conformer support, so it would only give us the
+    // lowest-energy geometry. --writeconformers writes each conformer as its
+    // own <molecule> instead, which the CML reader turns into coordinate sets.
+    // Open Babel gained cjson after 3.1.1, so this is the path most users take.
     realOptions << "-icml"
-                << "-ocml";
+                << "-ocml"
+                << "--writeconformers";
   }
   realOptions << "--conformer"
               << "--noh" // new in OB 3.0.1

@@ -61,6 +61,8 @@ public:
         success = atoms();
       if (success)
         success = bonds();
+      if (success)
+        success = conformers();
     } else {
       error += "Error, no molecule node found.";
       success = false;
@@ -386,6 +388,94 @@ public:
         return false;
       }
     }
+
+    return true;
+  }
+
+  // Reads the 3D geometry of @a node into @a positions, checking that the node
+  // describes the molecule that has already been parsed. Returns false if the
+  // atoms differ in count, element, or order, or if any of them lack a 3D
+  // position -- in those cases the node is a different molecule, not another
+  // geometry of this one.
+  bool geometry(const xml_node& node, Array<Vector3>& positions) const
+  {
+    xml_node atomArray = node.child("atomArray");
+    if (!atomArray)
+      return false;
+
+    positions.reserve(molecule->atomCount());
+
+    Index index = 0;
+    for (xml_node atomNode = atomArray.child("atom"); atomNode;
+         atomNode = atomNode.next_sibling("atom")) {
+      if (index >= molecule->atomCount())
+        return false;
+
+      // The atoms have to line up with the first molecule, or the coordinates
+      // would be applied to the wrong atoms.
+      xml_attribute elementAtt = atomNode.attribute("elementType");
+      if (!elementAtt || Elements::atomicNumberFromSymbol(elementAtt.value()) !=
+                           molecule->atomicNumber(index))
+        return false;
+
+      Vector3 position;
+      xml_attribute x3Att = atomNode.attribute("x3");
+      xml_attribute xFractAtt = atomNode.attribute("xFract");
+      if (x3Att) {
+        xml_attribute y3 = atomNode.attribute("y3");
+        xml_attribute z3 = atomNode.attribute("z3");
+        if (!y3 || !z3)
+          return false;
+        auto x = lexicalCast<double>(x3Att.value());
+        auto y = lexicalCast<double>(y3.value());
+        auto z = lexicalCast<double>(z3.value());
+        if (!x || !y || !z)
+          return false;
+        position = Vector3(*x, *y, *z);
+      } else if (xFractAtt && molecule->unitCell()) {
+        xml_attribute yFract = atomNode.attribute("yFract");
+        xml_attribute zFract = atomNode.attribute("zFract");
+        if (!yFract || !zFract)
+          return false;
+        position = Vector3(static_cast<Real>(xFractAtt.as_float()),
+                           static_cast<Real>(yFract.as_float()),
+                           static_cast<Real>(zFract.as_float()));
+        molecule->unitCell()->toCartesian(position, position);
+      } else {
+        return false;
+      }
+
+      positions.push_back(position);
+      ++index;
+    }
+
+    return index == molecule->atomCount();
+  }
+
+  // A CML file can hold several <molecule> elements, either wrapped in <cml> or
+  // -- as Open Babel writes them for a conformer search -- concatenated one
+  // after another. When every sibling turns out to be another geometry of the
+  // first molecule, keep them as coordinate sets instead of discarding them.
+  // Anything else is a genuine multi-molecule file, and only the first molecule
+  // is read, as before.
+  bool conformers()
+  {
+    if (!moleculeNode.next_sibling("molecule"))
+      return true;
+
+    std::vector<Array<Vector3>> coordinateSets;
+    for (xml_node node = moleculeNode.next_sibling("molecule"); node;
+         node = node.next_sibling("molecule")) {
+      Array<Vector3> positions;
+      if (!geometry(node, positions))
+        return true;
+      coordinateSets.push_back(positions);
+    }
+
+    // Coordinate set 0 is the geometry already loaded onto the atoms.
+    molecule->setCoordinate3d(molecule->atomPositions3d(), 0);
+    for (size_t i = 0; i < coordinateSets.size(); ++i)
+      molecule->setCoordinate3d(coordinateSets[i], i + 1);
 
     return true;
   }
