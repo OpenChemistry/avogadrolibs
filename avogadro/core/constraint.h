@@ -23,10 +23,20 @@ namespace Core {
  * during optimization or dynamics. More technically, these are implemented as
  * stiff harmonic oscillators restraining a particular atom set towards the
  * value.
+ *
+ * Distances are stored in Angstrom and angles / torsions in degrees, matching
+ * what the user sees in the property tables and constraint dialog. Energy
+ * calculators convert angular values to radians internally, so the angular
+ * force constants are in kJ/mol/radian^2.
  */
 class AVOGADROCORE_EXPORT Constraint
 {
 public:
+  /** Default force constant for distance restraints, in kJ/mol/Angstrom^2 */
+  static constexpr Real DefaultDistanceK = 41840.0;
+  /** Default force constant for angular restraints, in kJ/mol/radian^2 */
+  static constexpr Real DefaultAngularK = 10000.0;
+
   enum Type
   {
     None = 0,
@@ -44,8 +54,8 @@ public:
    * @param c Atom index of the third atom (for angles or torsions) or MaxIndex
    * @param d Atom index of the fourth atom (for torsion constraints) or
    * MaxIndex
-   * @param value The value of the constraint, either Angstrom for distance or
-   * radians)
+   * @param value The value of the constraint, either Angstrom for distance
+   * or degrees for angles and torsions
    */
   Constraint(Index a, Index b, Index c = MaxIndex, Index d = MaxIndex,
              Real value = 0.0)
@@ -59,8 +69,8 @@ public:
    * @param c Atom index of the third atom (for angles or torsions) or MaxIndex
    * @param d Atom index of the fourth atom (for torsion constraints) or
    * MaxIndex
-   * @param value The value of the constraint, either Angstrom for distance or
-   * radians)
+   * @param value The value of the constraint, either Angstrom for distance
+   * or degrees for angles and torsions
    */
   void set(Index a, Index b, Index c = MaxIndex, Index d = MaxIndex,
            Real value = 0.0)
@@ -74,8 +84,8 @@ public:
 
   /**
    * Set the constraint value (distance, angle, dihedral)
-   * @param value The value of the constraint, either Angstrom for distance or
-   * radians)
+   * @param value The value of the constraint, either Angstrom for distance
+   * or degrees for angles and torsions
    */
   void setValue(Real value) { m_value = value; }
 
@@ -100,8 +110,25 @@ public:
   Index cIndex() const { return m_cIndex; }
   Index dIndex() const { return m_dIndex; }
 
-  Real k() const { return m_k; }
-  void setK(Real k) { m_k = k; }
+  /**
+   * @return the harmonic force constant, either kJ/mol/Angstrom^2 for a
+   * distance restraint or kJ/mol/radian^2 for an angular one. If no force
+   * constant has been set explicitly, a type-appropriate default is used --
+   * the two have different units and cannot share a value.
+   */
+  Real k() const
+  {
+    if (m_kSet)
+      return m_k;
+
+    return (type() == DistanceConstraint) ? DefaultDistanceK : DefaultAngularK;
+  }
+
+  void setK(Real k)
+  {
+    m_k = k;
+    m_kSet = true;
+  }
 
   /**
    * @return the type of constraint
@@ -135,7 +162,8 @@ protected:
   Index m_cIndex = MaxIndex;
   Index m_dIndex = MaxIndex;
   Real m_value = 0.0;
-  Real m_k = 41840.0; // force constant, default in kJ/mol/Angstrom^2
+  Real m_k = DefaultDistanceK;            // units depend on the constraint type
+  bool m_kSet = false;                    // true once setK() has been called
   mutable Constraint::Type m_type = None; // cached type, initialized to None
 };
 

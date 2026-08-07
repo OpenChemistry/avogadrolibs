@@ -9,6 +9,7 @@
 #include <cppoptlib/utils/derivatives.h>
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <avogadro/core/angletools.h>
 
@@ -34,6 +35,15 @@ struct FiniteDifferenceObjective
 
   EnergyCalculator* calculator;
 };
+
+// Torsions are periodic, so the shortest path to the restrained value has to
+// be used. Without this a current angle of -179 degrees reads as 358 degrees
+// away from a +179 degree restraint instead of 2, and the restraint drives the
+// torsion the long way around.
+inline Real wrapToPi(Real delta)
+{
+  return std::remainder(delta, 2.0 * PI);
+}
 } // namespace
 
 Real EnergyCalculator::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
@@ -59,11 +69,12 @@ void EnergyCalculator::finiteGradient(const Eigen::VectorXd& x,
 
 void EnergyCalculator::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
+  // Derived value() implementations add constraintEnergies(), so the finite
+  // difference already contains the restraint terms - adding
+  // constraintGradients() here as well would count them twice.
   finiteGradient(x, grad);
   // clean and handle frozen atoms
   cleanGradients(grad);
-  // add any constraints
-  constraintGradients(x, grad);
 }
 
 std::vector<Real> EnergyCalculator::valueBatch(
@@ -212,8 +223,9 @@ Real EnergyCalculator::constraintEnergies(const Eigen::VectorXd& x)
     const Vector3d vA = x.segment<3>(3 * a);
     const Vector3d vB = x.segment<3>(3 * b);
     const Vector3d vC = x.segment<3>(3 * c);
-    const Real angle = calculateAngle(vA, vB, vC);
-    const Real delta = angle - constraint.value();
+    // work in radians to match the analytic gradients in constraintGradients()
+    const Real angle = calculateAngle(vA, vB, vC) * DEG_TO_RAD;
+    const Real delta = angle - constraint.value() * DEG_TO_RAD;
 
     // harmonic restraint
     totalEnergy += constraint.k() * delta * delta;
@@ -233,8 +245,8 @@ Real EnergyCalculator::constraintEnergies(const Eigen::VectorXd& x)
     const Vector3d vB = x.segment<3>(3 * b);
     const Vector3d vC = x.segment<3>(3 * c);
     const Vector3d vD = x.segment<3>(3 * d);
-    const Real angle = calculateDihedral(vA, vB, vC, vD);
-    const Real delta = angle - constraint.value();
+    const Real angle = calculateDihedral(vA, vB, vC, vD) * DEG_TO_RAD;
+    const Real delta = wrapToPi(angle - constraint.value() * DEG_TO_RAD);
 
     // harmonic restraint
     totalEnergy += constraint.k() * delta * delta;
@@ -254,8 +266,9 @@ Real EnergyCalculator::constraintEnergies(const Eigen::VectorXd& x)
     const Vector3d vB = x.segment<3>(3 * b);
     const Vector3d vC = x.segment<3>(3 * c);
     const Vector3d vD = x.segment<3>(3 * d);
-    const Real angle = outOfPlaneAngle(vA, vB, vC, vD);
-    const Real delta = angle - constraint.value();
+    // Wilson angles are limited to +/- 90 degrees, so no wrapping needed
+    const Real angle = outOfPlaneAngle(vA, vB, vC, vD) * DEG_TO_RAD;
+    const Real delta = angle - constraint.value() * DEG_TO_RAD;
 
     // harmonic restraint
     totalEnergy += constraint.k() * delta * delta;
@@ -299,8 +312,9 @@ void EnergyCalculator::constraintGradients(const Eigen::VectorXd& x,
     const Vector3d vC = x.segment<3>(3 * c);
 
     Vector3d aGrad, bGrad, cGrad;
+    // angleGradient() returns radians and d(radians)/dx
     Real angle = angleGradient(vA, vB, vC, aGrad, bGrad, cGrad);
-    const Real delta = angle - constraint.value();
+    const Real delta = angle - constraint.value() * DEG_TO_RAD;
     const Real dE = constraint.k() * 2 * delta;
 
     grad.segment<3>(3 * a) += dE * aGrad;
@@ -323,9 +337,10 @@ void EnergyCalculator::constraintGradients(const Eigen::VectorXd& x,
     const Vector3d vC = x.segment<3>(3 * c);
     const Vector3d vD = x.segment<3>(3 * d);
     Vector3d aGrad, bGrad, cGrad, dGrad;
+    // dihedralGradient() returns radians and d(radians)/dx
     const Real angle =
       dihedralGradient(vA, vB, vC, vD, aGrad, bGrad, cGrad, dGrad);
-    const Real delta = angle - constraint.value();
+    const Real delta = wrapToPi(angle - constraint.value() * DEG_TO_RAD);
     const Real dE = constraint.k() * 2 * delta;
 
     grad.segment<3>(3 * a) += dE * aGrad;
@@ -350,9 +365,10 @@ void EnergyCalculator::constraintGradients(const Eigen::VectorXd& x,
     const Vector3d vC = x.segment<3>(3 * c);
     const Vector3d vD = x.segment<3>(3 * d);
     Vector3d aGrad, bGrad, cGrad, dGrad;
+    // outOfPlaneGradient() returns radians and d(radians)/dx
     const Real angle =
       outOfPlaneGradient(vA, vB, vC, vD, aGrad, bGrad, cGrad, dGrad);
-    const Real delta = angle - constraint.value();
+    const Real delta = angle - constraint.value() * DEG_TO_RAD;
     const Real dE = constraint.k() * 2 * delta;
 
     grad.segment<3>(3 * a) += dE * aGrad;
@@ -360,6 +376,11 @@ void EnergyCalculator::constraintGradients(const Eigen::VectorXd& x,
     grad.segment<3>(3 * c) += dE * cGrad;
     grad.segment<3>(3 * d) += dE * dGrad;
   }
+
+  // Callers mask frozen atoms before adding these terms, so re-apply the mask
+  // here - otherwise a restraint can drag a frozen atom around.
+  if (m_mask.rows() == grad.rows())
+    grad = grad.cwiseProduct(m_mask);
 }
 
 } // namespace Avogadro::Calc

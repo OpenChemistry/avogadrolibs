@@ -10,6 +10,7 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/calc/energycalculator.h>
 #include <avogadro/calc/energyoptimizer.h>
+#include <avogadro/core/angletools.h>
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/molecule.h>
 
@@ -794,6 +795,207 @@ TEST_F(EnergyCalculatorTest, ConstraintGradients)
   calculator->setConstraints(constraints);
 
   EXPECT_NO_THROW(calculator->constraintGradients(x, grad));
+}
+
+// Restraint unit / periodicity regression tests
+//
+// constraintEnergies() and constraintGradients() must agree: the restraint
+// values are stored in degrees but the analytic gradient helpers work in
+// radians, so a missing conversion silently made the gradient ~57x too large
+// and pointed it at the wrong target, which sent constrained torsions
+// wind-milling with energies in the millions of kJ/mol.
+
+// Reports only the restraint terms, so finite differences of value() can be
+// compared directly against constraintGradients().
+class RestraintOnlyCalculator : public EnergyCalculator
+{
+public:
+  EnergyCalculator* newInstance() const override
+  {
+    return new RestraintOnlyCalculator();
+  }
+  std::string identifier() const override { return "restraint_test"; }
+  std::string name() const override { return "Restraint Test"; }
+  std::string description() const override { return "Restraint terms only"; }
+  Molecule::ElementMask elements() const override
+  {
+    Molecule::ElementMask mask;
+    mask.set();
+    return mask;
+  }
+  void setMolecule(Molecule* /*mol*/) override {}
+
+  Real value(const Eigen::VectorXd& x) override
+  {
+    return constraintEnergies(x);
+  }
+};
+
+namespace {
+
+// A gauche-ish butane skeleton, C1 C2 C3 C4.
+Eigen::VectorXd butaneSkeleton()
+{
+  Eigen::VectorXd x(12);
+  x << 1.430, -0.510, -0.240, 0.760, 0.180, 0.940, -0.760, 0.180, 0.560, -1.430,
+    -0.510, -0.640;
+  return x;
+}
+
+// Largest disagreement between the analytic restraint gradient and a central
+// difference of the restraint energy.
+Real maxGradientError(RestraintOnlyCalculator& calc, const Eigen::VectorXd& x)
+{
+  Eigen::VectorXd analytic = Eigen::VectorXd::Zero(x.size());
+  calc.constraintGradients(x, analytic);
+
+  const Real h = 1.0e-6;
+  Real worst = 0.0;
+  for (Eigen::Index i = 0; i < x.size(); ++i) {
+    Eigen::VectorXd xp = x, xm = x;
+    xp[i] += h;
+    xm[i] -= h;
+    const Real numeric = (calc.value(xp) - calc.value(xm)) / (2.0 * h);
+    worst = std::max(worst, std::abs(numeric - analytic[i]));
+  }
+  return worst;
+}
+
+} // namespace
+
+TEST(RestraintTest, TorsionEnergyUsesDegreesAndRadianForceConstant)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  const Real current = Avogadro::calculateDihedral(
+    x.segment<3>(0), x.segment<3>(3), x.segment<3>(6), x.segment<3>(9));
+
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) });
+
+  const Real delta = (current - 45.0) * Avogadro::DEG_TO_RAD;
+  EXPECT_NEAR(calc.value(x), Constraint::DefaultAngularK * delta * delta, 1e-6);
+}
+
+TEST(RestraintTest, TorsionGradientMatchesFiniteDifference)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) });
+
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, AngleGradientMatchesFiniteDifference)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, MaxIndex, 105.0) });
+
+  const Real current =
+    Avogadro::calculateAngle(x.segment<3>(0), x.segment<3>(3), x.segment<3>(6));
+  const Real delta = (current - 105.0) * Avogadro::DEG_TO_RAD;
+  EXPECT_NEAR(calc.value(x), Constraint::DefaultAngularK * delta * delta, 1e-6);
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, DistanceGradientMatchesFiniteDifference)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, MaxIndex, MaxIndex, 1.60) });
+
+  const Real current = (x.segment<3>(0) - x.segment<3>(3)).norm();
+  const Real delta = current - 1.60;
+  EXPECT_NEAR(calc.value(x), Constraint::DefaultDistanceK * delta * delta,
+              1e-6);
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, OutOfPlaneGradientMatchesFiniteDifference)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  Constraint oop(1, 0, 2, 3, 10.0);
+  oop.setType(Constraint::OutOfPlaneConstraint);
+  calc.setConstraints({ oop });
+
+  const Real current = Avogadro::outOfPlaneAngle(
+    x.segment<3>(3), x.segment<3>(0), x.segment<3>(6), x.segment<3>(9));
+  const Real delta = (current - 10.0) * Avogadro::DEG_TO_RAD;
+  EXPECT_NEAR(calc.value(x), Constraint::DefaultAngularK * delta * delta, 1e-6);
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, SatisfiedRestraintIsAMinimum)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  const Real current = Avogadro::calculateDihedral(
+    x.segment<3>(0), x.segment<3>(3), x.segment<3>(6), x.segment<3>(9));
+
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, current) });
+
+  EXPECT_NEAR(calc.value(x), 0.0, 1e-9);
+
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(12);
+  calc.constraintGradients(x, grad);
+  EXPECT_NEAR(grad.norm(), 0.0, 1e-9);
+}
+
+TEST(RestraintTest, TorsionTakesTheShortWayAroundThePeriodicSeam)
+{
+  // Build a -175 degree torsion by rotating the last atom about the b-c axis,
+  // which lies along x here, then restrain it to +175 degrees. The shortest
+  // path is 10 degrees, not 350.
+  const Real t = -175.0 * Avogadro::DEG_TO_RAD;
+  Eigen::VectorXd x(12);
+  x << -0.5, 1.0, 0.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 2.0, std::cos(t),
+    std::sin(t);
+
+  ASSERT_NEAR(Avogadro::calculateDihedral(x.segment<3>(0), x.segment<3>(3),
+                                          x.segment<3>(6), x.segment<3>(9)),
+              -175.0, 1e-6);
+
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 175.0) });
+
+  const Real tenDegrees = 10.0 * Avogadro::DEG_TO_RAD;
+  EXPECT_NEAR(calc.value(x),
+              Constraint::DefaultAngularK * tenDegrees * tenDegrees, 1e-6);
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, FrozenAtomsAreNotDraggedByARestraint)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) });
+
+  Eigen::VectorXd mask = Eigen::VectorXd::Ones(12);
+  mask.segment<3>(0).setZero(); // freeze the first carbon
+  calc.setMask(mask);
+
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(12);
+  calc.constraintGradients(x, grad);
+
+  EXPECT_NEAR(grad.segment<3>(0).norm(), 0.0, 1e-12);
+  // the remaining atoms must still feel the restraint
+  EXPECT_GT(grad.segment<9>(3).norm(), 1e-6);
+}
+
+TEST(RestraintTest, DefaultForceConstantDependsOnType)
+{
+  Constraint distance(0, 1, MaxIndex, MaxIndex, 1.5);
+  Constraint angle(0, 1, 2, MaxIndex, 109.5);
+  Constraint torsion(0, 1, 2, 3, 180.0);
+
+  EXPECT_DOUBLE_EQ(distance.k(), Constraint::DefaultDistanceK);
+  EXPECT_DOUBLE_EQ(angle.k(), Constraint::DefaultAngularK);
+  EXPECT_DOUBLE_EQ(torsion.k(), Constraint::DefaultAngularK);
+
+  // an explicit force constant always wins
+  torsion.setK(250.0);
+  EXPECT_DOUBLE_EQ(torsion.k(), 250.0);
 }
 
 // Mask Tests
