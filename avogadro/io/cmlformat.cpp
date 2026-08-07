@@ -437,9 +437,12 @@ public:
         xml_attribute zFract = atomNode.attribute("zFract");
         if (!yFract || !zFract)
           return false;
-        position = Vector3(static_cast<Real>(xFractAtt.as_float()),
-                           static_cast<Real>(yFract.as_float()),
-                           static_cast<Real>(zFract.as_float()));
+        auto x = lexicalCast<double>(xFractAtt.value());
+        auto y = lexicalCast<double>(yFract.value());
+        auto z = lexicalCast<double>(zFract.value());
+        if (!x || !y || !z)
+          return false;
+        position = Vector3(*x, *y, *z);
         molecule->unitCell()->toCartesian(position, position);
       } else {
         return false;
