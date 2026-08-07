@@ -27,6 +27,11 @@ ConformerSearchDialog::ConformerSearchDialog(QWidget* parent) : QDialog(parent)
   connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
           SLOT(buttonClicked(QAbstractButton*)));
 
+  // Open Babel matches these tokens exactly, so keep them out of the visible
+  // (and translated) item text.
+  ui.scoringComboBox->setItemData(0, QStringLiteral("rmsd"));
+  ui.scoringComboBox->setItemData(1, QStringLiteral("energy"));
+
   m_method = 1; // systematic
   m_numConformers = 100;
 
@@ -73,7 +78,9 @@ QStringList ConformerSearchDialog::options() const
     options << "--mutability" << QString::number(ui.mutabilitySpinBox->value());
     options << "--convergence"
             << QString::number(ui.convergenceSpinBox->value());
-    options << "--scoring" << ui.scoringComboBox->currentText();
+    const QString scoring = ui.scoringComboBox->currentData().toString();
+    options << "--score"
+            << (scoring.isEmpty() ? QStringLiteral("rmsd") : scoring);
   }
 
   return options;
