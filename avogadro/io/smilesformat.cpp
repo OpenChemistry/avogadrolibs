@@ -7,12 +7,8 @@
 
 #include "smileswriter.h"
 
-#include <nlohmann/json.hpp>
-
 #include <string>
 #include <vector>
-
-using json = nlohmann::json;
 
 namespace Avogadro::Io {
 
@@ -40,44 +36,24 @@ bool SmilesFormat::read(std::istream&, Core::Molecule&)
 bool SmilesFormat::write(std::ostream& outStream,
                          const Core::Molecule& molecule)
 {
-  // A malformed options string parses to a discarded value, on which value()
-  // would throw; fall back to the typed settings instead.
-  json opts = json::parse(options(), nullptr, false);
-  if (!opts.is_object())
-    opts = json::object();
-
   SmilesWriter writer = m_writer;
 
-  // Every option is type checked before it is read: json::value() throws when
-  // the stored type does not match, and this code must not throw.
-  bool valid = true;
-  const auto boolOption = [&](const char* name, bool& out) {
-    if (!opts.contains(name))
-      return;
-    if (!opts[name].is_boolean()) {
-      appendError(std::string("The \"") + name +
-                  "\" option must be a boolean.");
-      valid = false;
-      return;
-    }
-    out = opts[name].get<bool>();
-  };
-
+  // An option that is present but unusable is an error here rather than a
+  // silent fallback, so both lookups run before either result is checked and
+  // the caller hears about every bad option at once.
   bool atomMaps = writer.atomMaps();
   bool aromatic = writer.aromatic();
-  boolOption("atomMaps", atomMaps);
-  boolOption("aromatic", aromatic);
+  bool valid = boolOption("atomMaps", atomMaps);
+  valid = boolOption("aromatic", aromatic) && valid;
   if (!valid)
     return false;
   writer.setAtomMaps(atomMaps);
   writer.setAromatic(aromatic);
 
-  if (opts.contains("hydrogens")) {
-    if (!opts["hydrogens"].is_string()) {
-      appendError("The \"hydrogens\" option must be a string.");
-      return false;
-    }
-    const std::string hydrogens = opts["hydrogens"].get<std::string>();
+  std::string hydrogens;
+  if (!stringOption("hydrogens", hydrogens))
+    return false;
+  if (!hydrogens.empty()) {
     if (hydrogens == "implicit")
       writer.setHydrogenMode(SmilesWriter::HydrogenMode::Implicit);
     else if (hydrogens == "bracket")

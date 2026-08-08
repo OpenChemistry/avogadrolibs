@@ -5,6 +5,8 @@
 
 #include "fileformat.h"
 
+#include <nlohmann/json.hpp>
+
 #include <algorithm>
 #include <fstream>
 #include <locale>
@@ -15,6 +17,21 @@ namespace Avogadro::Io {
 using std::ifstream;
 using std::locale;
 using std::ofstream;
+
+using json = nlohmann::json;
+
+namespace {
+
+// Options are supplied as a JSON object. Parsing with exceptions disabled
+// yields a discarded value for anything malformed, and the lookups below must
+// not throw, so everything that is not an object becomes an empty object.
+json parseOptions(const std::string& options)
+{
+  json opts = json::parse(options, nullptr, false);
+  return opts.is_object() ? opts : json::object();
+}
+
+} // namespace
 
 FileFormat::FileFormat() : m_mode(None), m_in(nullptr), m_out(nullptr) {}
 
@@ -177,6 +194,64 @@ void FileFormat::appendError(const std::string& errorString, bool newLine)
   m_error += errorString;
   if (newLine)
     m_error += "\n";
+}
+
+bool FileFormat::boolOption(const std::string& name, bool& value)
+{
+  const json opts = parseOptions(m_options);
+  const auto match = opts.find(name);
+  if (match == opts.end())
+    return true;
+
+  if (!match->is_boolean()) {
+    appendError("The \"" + name + "\" option must be a boolean.");
+    return false;
+  }
+  value = match->get<bool>();
+  return true;
+}
+
+bool FileFormat::stringOption(const std::string& name, std::string& value)
+{
+  const json opts = parseOptions(m_options);
+  const auto match = opts.find(name);
+  if (match == opts.end())
+    return true;
+
+  if (!match->is_string()) {
+    appendError("The \"" + name + "\" option must be a string.");
+    return false;
+  }
+  value = match->get<std::string>();
+  return true;
+}
+
+bool FileFormat::stringArrayOption(const std::string& name,
+                                   std::vector<std::string>& values)
+{
+  const json opts = parseOptions(m_options);
+  const auto match = opts.find(name);
+  if (match == opts.end())
+    return true;
+
+  if (!match->is_array()) {
+    appendError("The \"" + name + "\" option must be an array of strings.");
+    return false;
+  }
+
+  // Only assign once every element checks out, so a bad entry leaves the
+  // caller's defaults alone rather than a partially filled list.
+  std::vector<std::string> parsed;
+  parsed.reserve(match->size());
+  for (const auto& element : *match) {
+    if (!element.is_string()) {
+      appendError("The \"" + name + "\" option must be an array of strings.");
+      return false;
+    }
+    parsed.push_back(element.get<std::string>());
+  }
+  values = std::move(parsed);
+  return true;
 }
 
 } // namespace Avogadro::Io

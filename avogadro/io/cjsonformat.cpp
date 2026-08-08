@@ -1234,17 +1234,14 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
                             bool isJson)
 {
-  json opts;
-  if (!options().empty())
-    opts = json::parse(options(), nullptr, false);
-  else
-    opts = json::object();
+  bool writeProperties = true;
+  boolOption("properties", writeProperties);
 
   ordered_json root;
 
   root["chemicalJson"] = 1;
 
-  if (opts.value("properties", true)) {
+  if (writeProperties) {
     if (molecule.data("name").type() == Variant::String)
       root["name"] = molecule.data("name").toString().c_str();
     if (molecule.data("inchi").type() == Variant::String)

@@ -11,14 +11,10 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
-#include <nlohmann/json.hpp>
-
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
-
-using json = nlohmann::json;
 
 using std::endl;
 using std::getline;
@@ -76,12 +72,6 @@ std::optional<double> findEnergy(const std::string& buffer)
 
 bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
-  json opts;
-  if (!options().empty())
-    opts = json::parse(options(), nullptr, false);
-  else
-    opts = json::object();
-
   size_t numAtoms = 0;
   if (!(inStream >> numAtoms)) {
     appendError("Error parsing number of atoms.");
@@ -342,7 +332,9 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // This format has no connectivity information, so perceive basics at least.
-  if (opts.value("perceiveBonds", true)) {
+  bool perceiveBonds = true;
+  boolOption("perceiveBonds", perceiveBonds);
+  if (perceiveBonds) {
     mol.perceiveBondsSimple();
     mol.perceiveBondOrders();
   }
