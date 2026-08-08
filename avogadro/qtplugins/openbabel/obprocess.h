@@ -13,6 +13,7 @@
 #include <QtCore/QStringList>
 
 class QProcess;
+class QTemporaryFile;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -415,6 +416,12 @@ executeObabel(options, this, SLOT(mySlot()));
 
   void resetState();
 
+  /**
+   * Delete the temporary file used to collect conformer search output, if one
+   * is present. Destroying the QTemporaryFile removes it from disk.
+   */
+  void clearConformerOutputFile();
+
   // Not thread safe -- just uses a bool.
   bool tryLockProcess()
   {
@@ -436,6 +443,9 @@ executeObabel(options, this, SLOT(mySlot()));
   int m_optimizeGeometryMaxSteps;
   unsigned m_maxConformers;
   QString m_optimizeGeometryLog;
+
+  // Conformer searches write their molecules here rather than to stdout.
+  QTemporaryFile* m_conformerOutputFile;
 };
 
 } // namespace QtPlugins
