@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-08-02 04:43+0000\n"
-"PO-Revision-Date: 2026-07-23 07:01+0000\n"
-"Last-Translator: hooray804 <profs_35_pointer@icloud.com>\n"
+"PO-Revision-Date: 2026-08-09 04:51+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3718,6 +3718,8 @@ msgid ""
 "Failed to generate polymer from SMILES:\n"
 "%1"
 msgstr ""
+"SMILES에서 고분자를 생성하지 못했습니다:\n"
+"%1"
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
 msgid "Build polymers from monomer repeat units."
@@ -3740,7 +3742,7 @@ msgstr "필터:"
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:617
 #, qt-format
 msgid "Monomer percentages must sum to 100 (current total: %1)."
-msgstr ""
+msgstr "단량체 비율의 합은 100%여야 합니다 (현재 합계: %1%)."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
 msgid "No monomer specified. Please choose at least monomer A."
@@ -3748,7 +3750,7 @@ msgstr "지정된 단량체가 없습니다. 적어도 단량체 A를 선택해 
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
 msgid "Working"
-msgstr ""
+msgstr "작동 중"
 
 #: qtplugins/label/label.cpp:169 qtplugins/surfacerender/surfacerender.cpp:313
 #: qtplugins/surfacerender/surfacerender.cpp:319
@@ -3761,7 +3763,7 @@ msgstr "중심으로부터의 거리:"
 
 #: qtplugins/label/label.cpp:189
 msgid "Label scale:"
-msgstr ""
+msgstr "라벨 크기:"
 
 #: qtplugins/label/label.cpp:200 qtplugins/label/label.cpp:231
 msgid "Index"
@@ -3813,7 +3815,7 @@ msgstr "이름"
 
 #: qtplugins/label/label.cpp:245
 msgid "Name & ID"
-msgstr ""
+msgstr "이름 & ID"
 
 #: qtplugins/label/label.cpp:252
 msgid "Residue Label:"
@@ -3833,6 +3835,9 @@ msgid ""
 "\n"
 "Left Mouse:\tClick on Atoms to add Custom Labels"
 msgstr ""
+"원자 레이블 도구 \n"
+" \n"
+"왼쪽 마우스: \t사용자 정의 레이블을 추가하려면 원자 클릭"
 
 #: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
@@ -3897,11 +3902,11 @@ msgstr "요청한 형식 리더를 불러올 수 없습니다."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
-msgstr ""
+msgstr "좌표를 찾을 수 없습니다!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:146
 msgid "Unable to generate 3D coordinates."
-msgstr ""
+msgstr "3D 좌표를 생성할 수 없습니다."
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3914,7 +3919,7 @@ msgstr "입력 대화상자를 통해 단일 선 분자 설명문구를 불러�
 #: qtplugins/manipulator/manipulator.cpp:52
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/manipulator/manipulator.cpp:53
 msgid "Manipulate"
@@ -3933,6 +3938,15 @@ msgid ""
 "Ctrl+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"조작 도구\t(%1)\n"
+"\n"
+"마우스 왼쪽 버튼:\t클릭 후 드래그하여 원자 이동\n"
+"마우스 오른쪽 버튼:\t클릭 후 드래그하여 원자 회전\n"
+"\n"
+"방향키:\t원자 평행 이동\n"
+"Shift+방향키:\tX/Y축 기준 회전\n"
+"Ctrl+왼쪽/오른쪽:\tZ축 기준 회전\n"
+"Alt+<키>:\t더 큰 단위로 조작"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3942,7 +3956,7 @@ msgstr "조작 도구"
 #: qtplugins/measuretool/measuretool.cpp:51
 msgctxt "control-key 8"
 msgid "Ctrl+8"
-msgstr ""
+msgstr "Ctrl+8"
 
 #: qtplugins/measuretool/measuretool.cpp:52
 msgid "Measure"
