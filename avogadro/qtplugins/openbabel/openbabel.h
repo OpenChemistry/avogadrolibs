@@ -95,6 +95,9 @@ private:
                                 bool showDialog = true);
   void showProcessInUseError(const QString& title) const;
   QString autoDetectForceField() const;
+  /// Pick the default interchange format and announce the file formats once
+  /// both the read and write format queries have finished.
+  void formatQueryFinished();
 
   QtGui::Molecule* m_molecule;
   OBProcess* m_process;

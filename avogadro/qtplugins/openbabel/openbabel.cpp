@@ -260,19 +260,25 @@ void OpenBabel::handleReadFormatUpdate(const QMultiMap<QString, QString>& fmts)
 
   m_readFormats = fmts;
 
-  // Emit a signal indicating the file formats are ready if read and write
-  // formats have both returned their results.
-  if (!m_readFormatsPending && !m_writeFormatsPending) {
-    // Update the default format if cjson is available
-    if (m_readFormats.contains("Chemical JSON") &&
-        m_writeFormats.contains("Chemical JSON")) {
-      m_defaultFormat = "cjson";
+  formatQueryFinished();
+}
 
-      qDebug() << "Setting default format to " << m_defaultFormat.c_str();
-    }
+void OpenBabel::formatQueryFinished()
+{
+  // Wait until both the read and write queries have returned their results.
+  if (m_readFormatsPending || m_writeFormatsPending)
+    return;
 
-    emit fileFormatsReady();
+  // Update the default format if cjson is available. This must happen *before*
+  // fileFormatsReady() is emitted: fileFormats() copies m_defaultFormat into
+  // every OBFileFormat it creates, and CML cannot round-trip vibrations,
+  // spectra, or other calculated data.
+  if (m_readFormats.contains("Chemical JSON") &&
+      m_writeFormats.contains("Chemical JSON")) {
+    m_defaultFormat = "cjson";
   }
+
+  emit fileFormatsReady();
 }
 
 void OpenBabel::refreshWriteFormats()
@@ -297,18 +303,7 @@ void OpenBabel::handleWriteFormatUpdate(const QMultiMap<QString, QString>& fmts)
 
   m_writeFormats = fmts;
 
-  // Emit a signal indicating the file formats are ready if read and write
-  // formats have both returned their results.
-  if (!m_readFormatsPending && !m_writeFormatsPending) {
-    emit fileFormatsReady();
-
-    // Update the default format if cjson is available
-    if (m_readFormats.contains("Chemical JSON") &&
-        m_writeFormats.contains("Chemical JSON")) {
-      m_defaultFormat = "cjson";
-      qDebug() << "Setting default format to cjson.";
-    }
-  }
+  formatQueryFinished();
 }
 
 void OpenBabel::refreshForceFields()
