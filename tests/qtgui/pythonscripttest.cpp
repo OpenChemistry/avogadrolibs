@@ -109,3 +109,27 @@ TEST(PythonScriptTest, AsyncProgressScanning)
   EXPECT_TRUE(
     pythonScript.asyncStandardError().contains("DEBUG library noise"));
 }
+
+// Scripts must be able to tell whether Avogadro is listening: releases up to
+// 2.0.0 cannot parse output containing progress envelopes.
+TEST(PythonScriptTest, AdvertisesProgressProtocol)
+{
+  QTemporaryDir temporaryDirectory;
+  ASSERT_TRUE(temporaryDirectory.isValid());
+
+  QFile script(temporaryDirectory.filePath("environment.py"));
+  ASSERT_TRUE(script.open(QIODevice::WriteOnly | QIODevice::Text));
+  const QByteArray source(
+    "import os\nprint(os.environ.get('AVO_PROGRESS_PROTOCOL', 'unset'))\n");
+  ASSERT_EQ(script.write(source), source.size());
+  script.close();
+
+  // Not scanning: the variable must be absent, or a script would print
+  // envelopes that nothing is there to strip out.
+  PythonScript quiet(script.fileName());
+  EXPECT_EQ(quiet.execute({}).trimmed(), QByteArray("unset"));
+
+  PythonScript scanning(script.fileName());
+  scanning.setProgressScanning(true);
+  EXPECT_EQ(scanning.execute({}).trimmed(), QByteArray("1"));
+}

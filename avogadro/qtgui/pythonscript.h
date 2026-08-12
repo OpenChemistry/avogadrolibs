@@ -151,6 +151,12 @@ public:
    * drains the process' output as it arrives, which is incompatible with
    * callers that read the process directly (e.g. asyncWriteAndResponse() in
    * "server mode").
+   *
+   * When enabled, the script is run with `AVO_PROGRESS_PROTOCOL` set in its
+   * environment so it can tell that Avogadro is listening. Scripts must check
+   * for it before printing envelopes: releases up to and including Avogadro
+   * 2.0.0 read the script's whole standard output as a single JSON document,
+   * and the extra lines make that parse fail outright.
    */
   void setProgressScanning(bool enable) { m_scanProgress = enable; }
 

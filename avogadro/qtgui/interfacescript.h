@@ -447,15 +447,25 @@ $$coords:[coordSpec]$$
  * These lines are consumed by Avogadro and removed from the script's output,
  * so they do not interfere with the final result. A line is only treated as a
  * progress update if it is a complete JSON object on one line with exactly one
- * member, named `avogadro` — a pretty-printed result block is never mistaken
- * for one, and any other output the script prints is passed through untouched.
+ * member, named `avogadro`, whose value is an object — a pretty-printed result
+ * block is never mistaken for one, and any other output the script prints is
+ * passed through untouched.
+ *
+ * **Check `AVO_PROGRESS_PROTOCOL` before printing an envelope.** Avogadro
+ * 2.0.0 and earlier read the whole of a script's standard output as a single
+ * JSON document, so an extra line makes that parse fail and the command
+ * reports an error instead of its result. Avogadro sets this environment
+ * variable only when it is reading progress updates, so a script that guards
+ * on it keeps working on older releases — it just shows the old indeterminate
+ * spinner. The value is the protocol revision, currently `1`.
  *
  * **`flush=True` is required.** Python block-buffers standard output when it is
  * connected to a pipe rather than a terminal, so without an explicit flush the
  * updates sit in the buffer and only reach Avogadro when the script exits — by
  * which point the progress bar is gone.
  *
- * The `avogadro.command` module (shipped with Avogadro) provides a helper:
+ * The `avogadro.command` module (shipped with Avogadro) handles both of these,
+ * and is a no-op when progress is unsupported, so it is always safe to call:
 ~~~{.py}
 from avogadro.command import report_progress
 
@@ -467,11 +477,15 @@ report_progress("Writing results")
 ~~~
  * That module is not importable in every environment a script may run in (for
  * example a package plugin with its own pixi environment), so scripts are free
- * to copy this self-contained equivalent instead:
+ * to copy this self-contained equivalent instead. Do not drop the environment
+ * check — without it the script breaks on Avogadro 2.0.0:
 ~~~{.py}
-import json
+import json, os
 
 def report_progress(message=None, value=None, maximum=None):
+    # Older Avogadro cannot parse these lines; stay silent there.
+    if not os.environ.get("AVO_PROGRESS_PROTOCOL"):
+        return
     payload = {}
     if message is not None: payload["message"] = message
     if value is not None:   payload["value"] = value

@@ -20,6 +20,13 @@
 
 namespace Avogadro::QtGui {
 
+// Environment variable telling a script that Avogadro is reading its standard
+// output for progress envelopes, and which revision of that protocol it
+// speaks. Bump the version if the envelope format ever changes, so scripts can
+// feature-detect rather than guess from the Avogadro version.
+static const char progressEnvironmentVariable[] = "AVO_PROGRESS_PROTOCOL";
+static const char progressProtocolVersion[] = "1";
+
 // Check whether the plugin directory has a usable pixi-managed python
 static bool hasDefaultPixiManifest(const QString& pluginDir)
 {
@@ -128,11 +135,25 @@ void PythonScript::setDefaultPythonInterpreter()
 
 QString PythonScript::resolveCommand(QStringList& realArgs, QProcess& proc)
 {
-#ifdef Q_OS_WIN
   QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+  bool customEnvironment = false;
+
+#ifdef Q_OS_WIN
   environment.insert(QStringLiteral("PYTHONUTF8"), QStringLiteral("1"));
-  proc.setProcessEnvironment(environment);
+  customEnvironment = true;
 #endif
+
+  if (m_scanProgress) {
+    // Advertise the progress protocol only when we are actually scanning for
+    // it, so a script that checks the variable can never be misled into
+    // printing envelopes at a version of Avogadro that would choke on them.
+    environment.insert(QLatin1String(progressEnvironmentVariable),
+                       QLatin1String(progressProtocolVersion));
+    customEnvironment = true;
+  }
+
+  if (customEnvironment)
+    proc.setProcessEnvironment(environment);
 
   // --- Package mode: pixi run <command> <identifier> [args] ---
   if (m_packageMode) {
