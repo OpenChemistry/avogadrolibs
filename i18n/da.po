@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-08-02 04:43+0000\n"
+"POT-Creation-Date: 2026-08-09 03:08+0000\n"
 "PO-Revision-Date: 2026-03-07 11:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/avogadro/"
@@ -37,72 +37,72 @@ msgid ""
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:246
-#: qtgui/interfacescript.cpp:398
+#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:258
+#: qtgui/interfacescript.cpp:410
 msgid "Non-string warning returned."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:249
-#: qtgui/interfacescript.cpp:401
+#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:261
+#: qtgui/interfacescript.cpp:413
 msgid "'warnings' member is not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:421
+#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:433
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:423
+#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:435
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:427
+#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:439
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:460
+#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:472
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:466
+#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:478
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:472
+#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:484
 msgid "'files' member not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:476
+#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:488
 msgid "'files' member missing."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:487
+#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:499
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:492
+#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:504
 msgid "'mainFile' member must be a string."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:503
+#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:515
 msgid "Response must be a JSON object at top-level."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:507
+#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:519
 #, qt-format
 msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:551
+#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:563
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -123,7 +123,7 @@ msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:618
+#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:633
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -132,7 +132,7 @@ msgid ""
 "%3"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:627
+#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:642
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -1021,33 +1021,33 @@ msgstr "Alle filer"
 msgid "All supported formats"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:263
+#: qtgui/interfacescript.cpp:275
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:336
+#: qtgui/interfacescript.cpp:348
 #, qt-format
 msgid "%1 Message"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:343
+#: qtgui/interfacescript.cpp:355
 #, qt-format
 msgid "%1 Warning"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:350
+#: qtgui/interfacescript.cpp:362
 #, qt-format
 msgid "%1 Error"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:593
+#: qtgui/interfacescript.cpp:605
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:601
+#: qtgui/interfacescript.cpp:613
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
@@ -1266,12 +1266,12 @@ msgstr "Periodisk tabel"
 msgid "Package mode requires pixi but it was not found."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:237 qtgui/pythonscript.cpp:334
+#: qtgui/pythonscript.cpp:237 qtgui/pythonscript.cpp:342
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:246 qtgui/pythonscript.cpp:343
+#: qtgui/pythonscript.cpp:246 qtgui/pythonscript.cpp:352
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1297,34 +1297,41 @@ msgstr ""
 msgid "Warning '%1'"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:400
+#: qtgui/pythonscript.cpp:324
+#, qt-format
+msgid ""
+"Error running script '%1': could not resolve a command to run it (no python "
+"interpreter or pixi environment)."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:411
 #, qt-format
 msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:435
+#: qtgui/pythonscript.cpp:446
 msgid "Script failed to start."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:438
+#: qtgui/pythonscript.cpp:449
 msgid "Script crashed."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:441
+#: qtgui/pythonscript.cpp:452
 msgid "Script timed out."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:444
+#: qtgui/pythonscript.cpp:455
 msgid "Read error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:447
+#: qtgui/pythonscript.cpp:458
 msgid "Write error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:451
+#: qtgui/pythonscript.cpp:462
 msgid "Unknown error."
 msgstr ""
 
@@ -2139,9 +2146,9 @@ msgstr "Stop"
 msgid "Relax for Dynamics"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:71
-#: qtplugins/forcefield/forcefield.cpp:504
-#: qtplugins/forcefield/forcefield.cpp:580 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:75
+#: qtplugins/forcefield/forcefield.cpp:539
+#: qtplugins/forcefield/forcefield.cpp:615 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:564
 #, fuzzy
 msgid "Optimize Geometry"
@@ -2381,11 +2388,11 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:491
+#: qtplugins/commandscripts/command.cpp:519
 #: qtplugins/configurepython/configurepython.cpp:117
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:231
-#: qtplugins/forcefield/forcefield.cpp:233
+#: qtplugins/forcefield/forcefield.cpp:253
+#: qtplugins/forcefield/forcefield.cpp:255
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2394,7 +2401,7 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:492
+#: qtplugins/commandscripts/command.cpp:520
 #, fuzzy
 msgid "Scripts"
 msgstr "Scripts"
@@ -2426,11 +2433,19 @@ msgstr ""
 msgid "Processing %1"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:407
+#: qtplugins/commandscripts/command.cpp:360
+msgid "The script could not be started."
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:370
+msgid "Error Running Script"
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:435
 msgid "Set path to Python interpreter:"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:409
+#: qtplugins/commandscripts/command.cpp:437
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2491,7 +2506,7 @@ msgid "Constraints…"
 msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:233
+#: qtplugins/forcefield/forcefield.cpp:255
 #, fuzzy
 msgid "&Calculate"
 msgstr "Udregn"
@@ -2747,58 +2762,47 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:30
+#: qtplugins/copypaste/copypaste.cpp:31
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:627:296
 msgid "Copy"
 msgstr ""
 
+#: qtplugins/copypaste/copypaste.cpp:34
+msgid "Atom Mapped SMILES"
+msgstr ""
+
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:35:293
+#: qtplugins/copypaste/copypaste.cpp:37:293
 msgid "Cut"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:36
+#: qtplugins/copypaste/copypaste.cpp:38
 msgid "Delete"
 msgstr "Slet"
 
-#: qtplugins/copypaste/copypaste.cpp:37
+#: qtplugins/copypaste/copypaste.cpp:39
 msgid "&Paste"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:83
-#: qtplugins/lineformatinput/lineformatinput.cpp:47
-#, fuzzy
-msgid "SMILES"
-msgstr "SMILES"
-
-#: qtplugins/copypaste/copypaste.cpp:83
-#: qtplugins/lineformatinput/lineformatinput.cpp:46
-msgid "InChI"
-msgstr ""
-
-#: qtplugins/copypaste/copypaste.cpp:84
-msgid "XYZ"
-msgstr ""
-
-#: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
-msgid "&Edit"
-msgstr ""
-
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:51
 msgid "Copy As"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:165
+#: qtplugins/copypaste/copypaste.cpp:100 qtplugins/copypaste/copypaste.cpp:102
+msgid "&Edit"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:194
 msgid "Error Clipping Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:166
+#: qtplugins/copypaste/copypaste.cpp:195
 msgid "Error generating clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:167
+#: qtplugins/copypaste/copypaste.cpp:196
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2806,31 +2810,38 @@ msgid ""
 "%2"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:171 qtplugins/copypaste/copypaste.cpp:292
+#: qtplugins/copypaste/copypaste.cpp:200
 #, qt-format
 msgid ""
-"Reader error:\n"
+"Writer error:\n"
 "%1"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
+#: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:254
+#: qtplugins/copypaste/copypaste.cpp:282
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:287
+#: qtplugins/copypaste/copypaste.cpp:315
 msgid "Error reading clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:288
+#: qtplugins/copypaste/copypaste.cpp:316
 #, qt-format
 msgctxt "file format description"
 msgid ""
 "Detected format: %1\n"
 "%2"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:320
+#, qt-format
+msgid ""
+"Reader error:\n"
+"%1"
 msgstr ""
 
 #: qtplugins/copypaste/copypaste.h:31
@@ -2856,7 +2867,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:80
+#: qtplugins/forcefield/forcefield.cpp:84
 #: qtplugins/plotconformer/plotconformer.cpp:148:1420
 msgid "Energy"
 msgstr "Energi"
@@ -3270,52 +3281,63 @@ msgstr ""
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:88
+#: qtplugins/forcefield/forcefield.cpp:92
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:150
 msgid "Forces"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:96
+#: qtplugins/forcefield/forcefield.cpp:102
+#: qtplugins/forcefield/forcefield.cpp:822
+msgid "Energies (All Conformers)"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:821
+msgid "Forces (All Conformers)"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:118
 msgid "Configure…"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:108
+#: qtplugins/forcefield/forcefield.cpp:130
 msgid "Freeze Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:116
+#: qtplugins/forcefield/forcefield.cpp:138
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:124
+#: qtplugins/forcefield/forcefield.cpp:146
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:132
+#: qtplugins/forcefield/forcefield.cpp:154
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:140
+#: qtplugins/forcefield/forcefield.cpp:162
 msgid "Unfreeze Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:149
+#: qtplugins/forcefield/forcefield.cpp:171
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:157
+#: qtplugins/forcefield/forcefield.cpp:179
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:470
-#: qtplugins/forcefield/forcefield.cpp:666
-#: qtplugins/forcefield/forcefield.cpp:719
+#: qtplugins/forcefield/forcefield.cpp:505
+#: qtplugins/forcefield/forcefield.cpp:701
+#: qtplugins/forcefield/forcefield.cpp:754
+#: qtplugins/forcefield/forcefield.cpp:803
 #: qtplugins/playertool/playertool.cpp:435
 #: qtplugins/playertool/playertool.cpp:467 qtplugins/surfaces/surfaces.cpp:974
 #: qtplugins/surfaces/surfaces.cpp:1018 qtplugins/surfaces/surfaces.cpp:1030
@@ -3323,24 +3345,28 @@ msgstr ""
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:471
+#: qtplugins/forcefield/forcefield.cpp:506
 msgid "No atoms provided for optimization"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:561
+#: qtplugins/forcefield/forcefield.cpp:596
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:664
+#: qtplugins/forcefield/forcefield.cpp:699
 #, fuzzy, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Energi = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:717
+#: qtplugins/forcefield/forcefield.cpp:752
 #, qt-format
 msgid "%1 Force Norm = %L2"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:804
+msgid "This molecule has only one coordinate set."
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:62
@@ -3376,15 +3402,15 @@ msgstr ""
 msgid "Autodetect (%1)"
 msgstr ""
 
-#: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:80 qtplugins/forcefield/obmmenergy.cpp:36
 msgid "Universal Force Field"
 msgstr ""
 
-#: qtplugins/forcefield/obenergy.cpp:109 qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:85 qtplugins/forcefield/obmmenergy.cpp:41
 msgid "Generalized Amber Force Field"
 msgstr ""
 
-#: qtplugins/forcefield/obenergy.cpp:123 qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:99 qtplugins/forcefield/obmmenergy.cpp:55
 msgid "Merck Molecular Force Field 94"
 msgstr ""
 
@@ -3857,6 +3883,15 @@ msgstr "SMILES,,,"
 #: qtplugins/lineformatinput/lineformatinput.cpp:38
 msgid "InChI…"
 msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:46
+msgid "InChI"
+msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:47
+#, fuzzy
+msgid "SMILES"
+msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 #: qtplugins/lineformatinput/lineformatinput.cpp:114
@@ -4907,7 +4942,7 @@ msgid "Relative Energy (%1)"
 msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:236
-msgid "Forces (N)"
+msgid "RMS Gradient"
 msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:238

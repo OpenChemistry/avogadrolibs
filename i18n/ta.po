@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-08-02 04:43+0000\n"
+"POT-Creation-Date: 2026-08-09 03:08+0000\n"
 "PO-Revision-Date: 2026-06-16 04:01+0000\n"
 "Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -41,27 +41,27 @@ msgstr ""
 "பெறப்பட்டது:\n"
 " %1"
 
-#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:246
-#: qtgui/interfacescript.cpp:398
+#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:258
+#: qtgui/interfacescript.cpp:410
 msgid "Non-string warning returned."
 msgstr "சரம் அல்லாத எச்சரிக்கை திரும்பியது."
 
-#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:249
-#: qtgui/interfacescript.cpp:401
+#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:261
+#: qtgui/interfacescript.cpp:413
 msgid "'warnings' member is not an array."
 msgstr "'எச்சரிக்கைகள்' உறுப்பினர் ஒரு வரிசை அல்ல."
 
-#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:421
+#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:433
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr "குறிப்பு கோப்பு '%1' இல்லை."
 
-#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:423
+#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:435
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr "பிழையானது கோப்பு %1: %2"
 
-#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:427
+#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:439
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
@@ -69,7 +69,7 @@ msgstr ""
 "'%1' கோப்பு மோசமாக உருவானது. சரம் 'உள்ளடக்கங்கள்' அல்லது 'ஃபைல்பாத்' உறுப்பினர்களைக் "
 "காணவில்லை."
 
-#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:460
+#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:472
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
@@ -78,32 +78,32 @@ msgstr ""
 "தவறான கோப்பு நுழைவு: கோப்பு பெயர்/உள்ளடக்கங்கள் காணவில்லை அல்லது சரங்கள் இல்லை:\n"
 " %1"
 
-#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:466
+#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:478
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr "குறியீட்டு %1 இல் தவறான கோப்பு நுழைவு: ஒரு பொருள் அல்ல."
 
-#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:472
+#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:484
 msgid "'files' member not an array."
 msgstr "'கோப்புகள்' உறுப்பினர் ஒரு வரிசை அல்ல."
 
-#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:476
+#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:488
 msgid "'files' member missing."
 msgstr "'கோப்புகள்' உறுப்பினர் காணவில்லை."
 
-#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:487
+#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:499
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr "'மெயின்ஃபைல்' உறுப்பினர் 'கோப்புகளில்' ஒரு உள்ளீட்டைக் குறிக்கவில்லை."
 
-#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:492
+#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:504
 msgid "'mainFile' member must be a string."
 msgstr "'மெயின்ஃபைல்' உறுப்பினர் ஒரு சரமாக இருக்க வேண்டும்."
 
-#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:503
+#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:515
 msgid "Response must be a JSON object at top-level."
 msgstr "பதில் மேல் மட்டத்தில் சாதொபொகு பொருளாக இருக்க வேண்டும்."
 
-#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:507
+#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:519
 #, qt-format
 msgid ""
 "Script output:\n"
@@ -112,7 +112,7 @@ msgstr ""
 "ச்கிரிப்ட் வெளியீடு:\n"
 " %1"
 
-#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:551
+#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:563
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -139,7 +139,7 @@ msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr "பிழையானது மூலக்கூறு பிரதிநிதித்துவத்தை சரத்திற்கு சேமிப்பது: %1"
 
-#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:618
+#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:633
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -152,7 +152,7 @@ msgstr ""
 "\n"
 " %3"
 
-#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:627
+#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:642
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -1072,34 +1072,34 @@ msgstr "அனைத்து கோப்புகள்"
 msgid "All supported formats"
 msgstr "அனைத்து உதவி வடிவங்களும்"
 
-#: qtgui/interfacescript.cpp:263
+#: qtgui/interfacescript.cpp:275
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr "மூலக்கூறு பிரதிநிதித்துவத்தை வாசிப்பது பிழை: அங்கீகரிக்கப்படாத கோப்பு வடிவம்: %1"
 
-#: qtgui/interfacescript.cpp:336
+#: qtgui/interfacescript.cpp:348
 #, qt-format
 msgid "%1 Message"
 msgstr "%1 செய்தி"
 
-#: qtgui/interfacescript.cpp:343
+#: qtgui/interfacescript.cpp:355
 #, qt-format
 msgid "%1 Warning"
 msgstr "%1 முன்னறிவிப்பு"
 
-#: qtgui/interfacescript.cpp:350
+#: qtgui/interfacescript.cpp:362
 #, qt-format
 msgid "%1 Error"
 msgstr "%1 பிழை"
 
-#: qtgui/interfacescript.cpp:593
+#: qtgui/interfacescript.cpp:605
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 "சரம் மூலக்கூறு பிரதிநிதித்துவத்தை எழுதுவதில் பிழை: அங்கீகரிக்கப்படாத கோப்பு வடிவம்: %1"
 
-#: qtgui/interfacescript.cpp:601
+#: qtgui/interfacescript.cpp:613
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr "சரம் மூலக்கூறு பிரதிநிதித்துவத்தை எழுதுவது பிழை: %1"
@@ -1314,12 +1314,12 @@ msgstr "தனிம அட்டவணை"
 msgid "Package mode requires pixi but it was not found."
 msgstr "தொகுப்பு பயன்முறைக்கு pixi தேவை ஆனால் அது கிடைக்கவில்லை."
 
-#: qtgui/pythonscript.cpp:237 qtgui/pythonscript.cpp:334
+#: qtgui/pythonscript.cpp:237 qtgui/pythonscript.cpp:342
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr "ச்கிரிப்டை இயக்கும் பிழை '%1%2': தொடக்கத்திற்காக காத்திருக்கும் நேரம் (%3)."
 
-#: qtgui/pythonscript.cpp:246 qtgui/pythonscript.cpp:343
+#: qtgui/pythonscript.cpp:246 qtgui/pythonscript.cpp:352
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1351,7 +1351,14 @@ msgstr ""
 msgid "Warning '%1'"
 msgstr "எச்சரிக்கை '%1'"
 
-#: qtgui/pythonscript.cpp:400
+#: qtgui/pythonscript.cpp:324
+#, qt-format
+msgid ""
+"Error running script '%1': could not resolve a command to run it (no python "
+"interpreter or pixi environment)."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:411
 #, qt-format
 msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
@@ -1360,27 +1367,27 @@ msgstr ""
 "ச்கிரிப்ட் stdin க்கு மூல கோரிக்கையை எழுதுவதில் பிழை (len=%1, %2 பைட்டுகள் "
 "எழுதப்பட்டது, QProcess பிழை: %3)."
 
-#: qtgui/pythonscript.cpp:435
+#: qtgui/pythonscript.cpp:446
 msgid "Script failed to start."
 msgstr "ச்கிரிப்ட் தொடங்கத் தவறிவிட்டது."
 
-#: qtgui/pythonscript.cpp:438
+#: qtgui/pythonscript.cpp:449
 msgid "Script crashed."
 msgstr "ச்கிரிப்ட் செயலிழந்தது."
 
-#: qtgui/pythonscript.cpp:441
+#: qtgui/pythonscript.cpp:452
 msgid "Script timed out."
 msgstr "ச்கிரிப்ட் நேரம் முடிந்தது."
 
-#: qtgui/pythonscript.cpp:444
+#: qtgui/pythonscript.cpp:455
 msgid "Read error."
 msgstr "பிழையைப் படியுங்கள்."
 
-#: qtgui/pythonscript.cpp:447
+#: qtgui/pythonscript.cpp:458
 msgid "Write error."
 msgstr "பிழையை எழுதுங்கள்."
 
-#: qtgui/pythonscript.cpp:451
+#: qtgui/pythonscript.cpp:462
 msgid "Unknown error."
 msgstr "தெரியாத பிழை."
 
@@ -2195,9 +2202,9 @@ msgstr "நிறுத்து"
 msgid "Relax for Dynamics"
 msgstr "இயக்கவியலுக்கு ஓய்வெடுங்கள்"
 
-#: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:71
-#: qtplugins/forcefield/forcefield.cpp:504
-#: qtplugins/forcefield/forcefield.cpp:580 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:75
+#: qtplugins/forcefield/forcefield.cpp:539
+#: qtplugins/forcefield/forcefield.cpp:615 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:564
 msgid "Optimize Geometry"
 msgstr "வடிவவியலை மேம்படுத்தவும்"
@@ -2440,11 +2447,11 @@ msgstr "அணுக்களுக்கு இடையில் நெரு�
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:491
+#: qtplugins/commandscripts/command.cpp:519
 #: qtplugins/configurepython/configurepython.cpp:117
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:231
-#: qtplugins/forcefield/forcefield.cpp:233
+#: qtplugins/forcefield/forcefield.cpp:253
+#: qtplugins/forcefield/forcefield.cpp:255
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2453,7 +2460,7 @@ msgstr "நீட்டிப்புகள்"
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:492
+#: qtplugins/commandscripts/command.cpp:520
 msgid "Scripts"
 msgstr "ச்கிரிப்ட்கள்"
 
@@ -2488,11 +2495,19 @@ msgstr ""
 msgid "Processing %1"
 msgstr "செயலாக்கம் %1"
 
-#: qtplugins/commandscripts/command.cpp:407
+#: qtplugins/commandscripts/command.cpp:360
+msgid "The script could not be started."
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:370
+msgid "Error Running Script"
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:435
 msgid "Set path to Python interpreter:"
 msgstr "பைதான் மொழிபெயர்ப்பாளருக்கு பாதையை அமைக்கவும்:"
 
-#: qtplugins/commandscripts/command.cpp:409
+#: qtplugins/commandscripts/command.cpp:437
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2556,7 +2571,7 @@ msgid "Constraints…"
 msgstr "கட்டுப்பாடுகள்…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:233
+#: qtplugins/forcefield/forcefield.cpp:255
 msgid "&Calculate"
 msgstr "& கணக்கிடுங்கள்"
 
@@ -2809,57 +2824,47 @@ msgstr "டர்போமோல் வடிவம்"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:30
+#: qtplugins/copypaste/copypaste.cpp:31
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:627:296
 msgid "Copy"
 msgstr "நகலெடு"
 
+#: qtplugins/copypaste/copypaste.cpp:34
+msgid "Atom Mapped SMILES"
+msgstr ""
+
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:35:293
+#: qtplugins/copypaste/copypaste.cpp:37:293
 msgid "Cut"
 msgstr "வெட்டு"
 
-#: qtplugins/copypaste/copypaste.cpp:36
+#: qtplugins/copypaste/copypaste.cpp:38
 msgid "Delete"
 msgstr "நீக்கு"
 
-#: qtplugins/copypaste/copypaste.cpp:37
+#: qtplugins/copypaste/copypaste.cpp:39
 msgid "&Paste"
 msgstr "ஒட்டு (&p)"
 
-#: qtplugins/copypaste/copypaste.cpp:83
-#: qtplugins/lineformatinput/lineformatinput.cpp:47
-msgid "SMILES"
-msgstr "புன்னகைகள்"
-
-#: qtplugins/copypaste/copypaste.cpp:83
-#: qtplugins/lineformatinput/lineformatinput.cpp:46
-msgid "InChI"
-msgstr "அங்குலங்கள்"
-
-#: qtplugins/copypaste/copypaste.cpp:84
-msgid "XYZ"
-msgstr "XYZ"
-
-#: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
-msgid "&Edit"
-msgstr "திருத்து (&e)"
-
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:51
 msgid "Copy As"
 msgstr "என நகலெடுக்கவும்"
 
-#: qtplugins/copypaste/copypaste.cpp:165
+#: qtplugins/copypaste/copypaste.cpp:100 qtplugins/copypaste/copypaste.cpp:102
+msgid "&Edit"
+msgstr "திருத்து (&e)"
+
+#: qtplugins/copypaste/copypaste.cpp:194
 msgid "Error Clipping Molecule"
 msgstr "பிழை கிளிப்பிங் மூலக்கூறு"
 
-#: qtplugins/copypaste/copypaste.cpp:166
+#: qtplugins/copypaste/copypaste.cpp:195
 msgid "Error generating clipboard data."
 msgstr "கிளிப்போர்டு தரவை உருவாக்குவதில் பிழை."
 
-#: qtplugins/copypaste/copypaste.cpp:167
+#: qtplugins/copypaste/copypaste.cpp:196
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2869,28 +2874,26 @@ msgstr ""
 "வெளியீட்டு வடிவம்: %1\n"
 " %2"
 
-#: qtplugins/copypaste/copypaste.cpp:171 qtplugins/copypaste/copypaste.cpp:292
+#: qtplugins/copypaste/copypaste.cpp:200
 #, qt-format
 msgid ""
-"Reader error:\n"
+"Writer error:\n"
 "%1"
 msgstr ""
-"வாசகர் பிழை:\n"
-" %1"
 
-#: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
+#: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
 msgstr "பிழை ஒட்டுதல் மூலக்கூறு"
 
-#: qtplugins/copypaste/copypaste.cpp:254
+#: qtplugins/copypaste/copypaste.cpp:282
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "மூலக்கூறு ஒட்ட முடியாது: கிளிப்போர்டு காலியாக உள்ளது!"
 
-#: qtplugins/copypaste/copypaste.cpp:287
+#: qtplugins/copypaste/copypaste.cpp:315
 msgid "Error reading clipboard data."
 msgstr "கிளிப்போர்டு தரவைப் படிப்பதில் பிழை."
 
-#: qtplugins/copypaste/copypaste.cpp:288
+#: qtplugins/copypaste/copypaste.cpp:316
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -2899,6 +2902,15 @@ msgid ""
 msgstr ""
 "கண்டறியப்பட்ட வடிவம்: %1\n"
 " %2"
+
+#: qtplugins/copypaste/copypaste.cpp:320
+#, qt-format
+msgid ""
+"Reader error:\n"
+"%1"
+msgstr ""
+"வாசகர் பிழை:\n"
+" %1"
 
 #: qtplugins/copypaste/copypaste.h:31
 msgid "Copy and paste"
@@ -2923,7 +2935,7 @@ msgstr "CP2K க்கு உள்ளீட்டை உருவாக்க�
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:80
+#: qtplugins/forcefield/forcefield.cpp:84
 #: qtplugins/plotconformer/plotconformer.cpp:148:1420
 msgid "Energy"
 msgstr "ஆற்றல்"
@@ -3325,52 +3337,63 @@ msgstr "குறிப்பிட்ட அம்சங்களில் ப�
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "மூலக்கூறின் அணுக்களுக்கான படை புலம் காட்சிப்படுத்தல்களை வழங்கவும்."
 
-#: qtplugins/forcefield/forcefield.cpp:88
+#: qtplugins/forcefield/forcefield.cpp:92
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:150
 msgid "Forces"
 msgstr "படைகள்"
 
-#: qtplugins/forcefield/forcefield.cpp:96
+#: qtplugins/forcefield/forcefield.cpp:102
+#: qtplugins/forcefield/forcefield.cpp:822
+msgid "Energies (All Conformers)"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:821
+msgid "Forces (All Conformers)"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:118
 msgid "Configure…"
 msgstr "உள்ளமைக்கவும்…"
 
-#: qtplugins/forcefield/forcefield.cpp:108
+#: qtplugins/forcefield/forcefield.cpp:130
 msgid "Freeze Selected Atoms"
 msgstr "தேர்ந்தெடுக்கப்பட்ட அணுக்களை முடக்கம்"
 
-#: qtplugins/forcefield/forcefield.cpp:116
+#: qtplugins/forcefield/forcefield.cpp:138
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
 msgstr "ஃப்ரீச் ஃச்"
 
-#: qtplugins/forcefield/forcefield.cpp:124
+#: qtplugins/forcefield/forcefield.cpp:146
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
 msgstr "ஃப்ரீச் ஒய்"
 
-#: qtplugins/forcefield/forcefield.cpp:132
+#: qtplugins/forcefield/forcefield.cpp:154
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
 msgstr "ஃப்ரீச் சட்"
 
-#: qtplugins/forcefield/forcefield.cpp:140
+#: qtplugins/forcefield/forcefield.cpp:162
 msgid "Unfreeze Selected Atoms"
 msgstr "உறைந்த தேர்ந்தெடுக்கப்பட்ட அணுக்கள்"
 
-#: qtplugins/forcefield/forcefield.cpp:149
+#: qtplugins/forcefield/forcefield.cpp:171
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr "தேர்ந்தெடுக்கப்பட்ட அணுக்களை இணைக்கவும்"
 
-#: qtplugins/forcefield/forcefield.cpp:157
+#: qtplugins/forcefield/forcefield.cpp:179
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr "தேர்ந்தெடுக்கப்பட்ட அணுக்களை அவிழ்த்து விடுங்கள்"
 
-#: qtplugins/forcefield/forcefield.cpp:470
-#: qtplugins/forcefield/forcefield.cpp:666
-#: qtplugins/forcefield/forcefield.cpp:719
+#: qtplugins/forcefield/forcefield.cpp:505
+#: qtplugins/forcefield/forcefield.cpp:701
+#: qtplugins/forcefield/forcefield.cpp:754
+#: qtplugins/forcefield/forcefield.cpp:803
 #: qtplugins/playertool/playertool.cpp:435
 #: qtplugins/playertool/playertool.cpp:467 qtplugins/surfaces/surfaces.cpp:974
 #: qtplugins/surfaces/surfaces.cpp:1018 qtplugins/surfaces/surfaces.cpp:1030
@@ -3378,25 +3401,29 @@ msgstr "தேர்ந்தெடுக்கப்பட்ட அணுக�
 msgid "Avogadro"
 msgstr "அவோகாட்ரோ"
 
-#: qtplugins/forcefield/forcefield.cpp:471
+#: qtplugins/forcefield/forcefield.cpp:506
 msgid "No atoms provided for optimization"
 msgstr "தேர்வுமுறைக்கு அணுக்கள் எதுவும் வழங்கப்படவில்லை"
 
-#: qtplugins/forcefield/forcefield.cpp:561
+#: qtplugins/forcefield/forcefield.cpp:596
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "சக்தி: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:664
+#: qtplugins/forcefield/forcefield.cpp:699
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 ஆற்றல் = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:717
+#: qtplugins/forcefield/forcefield.cpp:752
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 படை விதிமுறை = %L2"
+
+#: qtplugins/forcefield/forcefield.cpp:804
+msgid "This molecule has only one coordinate set."
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:62
 msgid "Forcefield optimization"
@@ -3430,15 +3457,15 @@ msgstr "%1 விருப்பங்கள்"
 msgid "Autodetect (%1)"
 msgstr "தன்னியக்க (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:80 qtplugins/forcefield/obmmenergy.cpp:36
 msgid "Universal Force Field"
 msgstr "யுனிவர்சல் ஃபோர்ச் புலம்"
 
-#: qtplugins/forcefield/obenergy.cpp:109 qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:85 qtplugins/forcefield/obmmenergy.cpp:41
 msgid "Generalized Amber Force Field"
 msgstr "பொதுவான அம்பர் படை புலம்"
 
-#: qtplugins/forcefield/obenergy.cpp:123 qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:99 qtplugins/forcefield/obmmenergy.cpp:55
 msgid "Merck Molecular Force Field 94"
 msgstr "மெர்க் மூலக்கூறு படை புலம் 94"
 
@@ -3901,6 +3928,14 @@ msgstr "புன்னகைகள்…"
 #: qtplugins/lineformatinput/lineformatinput.cpp:38
 msgid "InChI…"
 msgstr "அங்குலம்…"
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:46
+msgid "InChI"
+msgstr "அங்குலங்கள்"
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:47
+msgid "SMILES"
+msgstr "புன்னகைகள்"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 #: qtplugins/lineformatinput/lineformatinput.cpp:114
@@ -4981,8 +5016,8 @@ msgid "Relative Energy (%1)"
 msgstr "உறவினர் ஆற்றல் (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:236
-msgid "Forces (N)"
-msgstr "படைகள் (N)"
+msgid "RMS Gradient"
+msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:238
 msgid "Velocities (m/s)"
@@ -9785,6 +9820,12 @@ msgstr "உங்கள் பெயர்கள்"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "உங்கள் மின்னஞ்சல்கள்"
+
+#~ msgid "XYZ"
+#~ msgstr "XYZ"
+
+#~ msgid "Forces (N)"
+#~ msgstr "படைகள் (N)"
 
 #, qt-format
 #~ msgid ""
