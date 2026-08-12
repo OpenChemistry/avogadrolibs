@@ -238,6 +238,16 @@
     </layout>
    </item>
    <item>
+    <widget class="QPushButton" name="invertTetrahedralButton">
+     <property name="toolTip">
+      <string>Move the smallest isolated substituent to the opposite side of a selected tetrahedral carbon.</string>
+     </property>
+     <property name="text">
+      <string>Invert Tetrahedral Center</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
       <set>QDialogButtonBox::StandardButton::Apply|QDialogButtonBox::StandardButton::Reset</set>
