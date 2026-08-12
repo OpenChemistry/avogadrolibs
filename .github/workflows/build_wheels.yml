@@ -25,6 +25,12 @@ env:
   # Specify eigen location for windows
   CIBW_ENVIRONMENT_WINDOWS: "CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
 
+  # cibuildwheel 4.0+ runs delvewheel on Windows by default. Our CMake install
+  # already places the Avogadro DLLs next to the extension modules, so tell
+  # delvewheel not to look for them outside the wheel (it only searches the
+  # wheel itself with --ignore-existing). It still vendors the MSVC runtime.
+  CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair --ignore-existing -w {dest_dir} -v {wheel}"
+
   # Run tests
   CIBW_TEST_REQUIRES: pytest
 
