@@ -296,49 +296,57 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       m_moleculeExtension = obj["moleculeFormat"].toString();
     }
 
-    Io::FileFormatManager& formats = Io::FileFormatManager::instance();
-    QScopedPointer<Io::FileFormat> format(
-      formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
-
-    if (format.isNull()) {
-      m_errors << tr("Error reading molecule representation: "
-                     "Unrecognized file format: %1")
-                    .arg(m_moleculeExtension);
-      return false;
-    }
-
-    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
-    QtGui::Molecule newMol(guiMol->parent());
+    // Pull out the molecule the script returned, if it returned one at all.
+    // Commands that only report a message (e.g. exporting an image) must leave
+    // the current molecule untouched rather than replacing it with an empty
+    // one.
+    QString moleculeString;
     if (m_moleculeExtension == "cjson") {
-      // convert the "cjson" field to a string
       QJsonObject cjsonObj = obj["cjson"].toObject();
-      QJsonDocument doc2(cjsonObj);
-      QString strCJSON(doc2.toJson(QJsonDocument::Compact));
-      if (!strCJSON.isEmpty()) {
-        result = format->readString(strCJSON.toStdString(), newMol);
+      if (!cjsonObj.isEmpty()) {
+        QJsonDocument doc2(cjsonObj);
+        moleculeString = QString(doc2.toJson(QJsonDocument::Compact));
       }
     } else if (obj.contains(m_moleculeExtension) &&
                obj[m_moleculeExtension].isString()) {
-      QString strFile = obj[m_moleculeExtension].toString();
-      result = format->readString(strFile.toStdString(), newMol);
+      moleculeString = obj[m_moleculeExtension].toString();
     }
 
-    // check if the script wants us to perceive bonds first
-    if (obj["bond"].toBool()) {
-      newMol.perceiveBondsSimple();
-      newMol.perceiveBondOrders();
-    }
+    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
 
-    // how do we handle this result?
-    if (obj["readProperties"].toBool()) {
-      guiMol->readProperties(newMol);
-      guiMol->emitChanged(Molecule::Properties | Molecule::Added);
-    } else if (obj["append"].toBool()) {
-      guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
-    } else { // replace the whole molecule
-      Molecule::MoleculeChanges changes = (Molecule::Atoms | Molecule::Bonds |
-                                           Molecule::Added | Molecule::Removed);
-      guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+    if (!moleculeString.isEmpty()) {
+      Io::FileFormatManager& formats = Io::FileFormatManager::instance();
+      QScopedPointer<Io::FileFormat> format(
+        formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
+
+      if (format.isNull()) {
+        m_errors << tr("Error reading molecule representation: "
+                       "Unrecognized file format: %1")
+                      .arg(m_moleculeExtension);
+        return false;
+      }
+
+      QtGui::Molecule newMol(guiMol->parent());
+      result = format->readString(moleculeString.toStdString(), newMol);
+
+      // check if the script wants us to perceive bonds first
+      if (obj["bond"].toBool()) {
+        newMol.perceiveBondsSimple();
+        newMol.perceiveBondOrders();
+      }
+
+      // how do we handle this result?
+      if (obj["readProperties"].toBool()) {
+        guiMol->readProperties(newMol);
+        guiMol->emitChanged(Molecule::Properties | Molecule::Added);
+      } else if (obj["append"].toBool()) {
+        guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
+      } else { // replace the whole molecule
+        Molecule::MoleculeChanges changes =
+          (Molecule::Atoms | Molecule::Bonds | Molecule::Added |
+           Molecule::Removed);
+        guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+      }
     }
 
     // select some atoms
