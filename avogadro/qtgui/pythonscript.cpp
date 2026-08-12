@@ -57,7 +57,18 @@ PythonScript::PythonScript(QObject* parent_)
   setDefaultPythonInterpreter();
 }
 
-PythonScript::~PythonScript() {}
+PythonScript::~PythonScript()
+{
+  if (m_process != nullptr) {
+    // Sever the connections before killing: finished() would otherwise be
+    // emitted into a half-destroyed object. Delete outright rather than
+    // deleteLater(), which never runs if no event loop outlives us.
+    disconnect(m_process, nullptr, this, nullptr);
+    m_process->kill();
+    delete m_process;
+    m_process = nullptr;
+  }
+}
 
 void PythonScript::setScriptFilePath(const QString& scriptFile)
 {
@@ -330,7 +341,9 @@ bool PythonScript::asyncExecute(const QStringList& args,
     disconnect(m_process, nullptr, this, nullptr);
     m_process->deleteLater();
   }
-  m_process = new QProcess(parent());
+  // Own the process outright: parenting it to parent() (which is often null)
+  // leaks it, and lets it outlive the script that is driving it.
+  m_process = new QProcess(this);
 
   if (mergedChannels)
     m_process->setProcessChannelMode(QProcess::MergedChannels);
