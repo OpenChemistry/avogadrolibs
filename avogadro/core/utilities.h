@@ -7,6 +7,10 @@
 #define AVOGADRO_CORE_UTILITIES_H
 
 #include <algorithm>
+#include <cerrno>
+#include <cmath>
+#include <cstdlib>
+#include <limits>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -116,6 +120,40 @@ std::optional<T> lexicalCast(const std::string& inputString)
   stream >> value;
   if (stream.fail())
     return std::nullopt;
+  return value;
+}
+
+/**
+ * @brief Cast the inputString to a double, tolerating out of range exponents.
+ *
+ * Some programs write coordinates (or other values) with exponents a double
+ * cannot represent, e.g. "2.61793E-500" or "-7.5467E-6000". The stream
+ * extractor reports these as errors, which would otherwise abort reading an
+ * entire file over a value that is effectively zero. Fall back to strtod for
+ * the range error alone: underflow becomes zero and overflow is clamped to the
+ * largest representable magnitude so that later arithmetic cannot see an
+ * infinity. Anything the extractor rejects for another reason (including the
+ * literals "nan" and "inf") is still an error.
+ */
+template <>
+inline std::optional<double> lexicalCast(const std::string& inputString)
+{
+  double value;
+  std::istringstream stream(inputString);
+  stream >> value;
+  if (!stream.fail())
+    return value;
+
+  const char* first = inputString.c_str();
+  char* last = nullptr;
+  errno = 0;
+  value = std::strtod(first, &last);
+  if (last == first || errno != ERANGE)
+    return std::nullopt;
+
+  if (std::isinf(value))
+    value = (value > 0.0) ? std::numeric_limits<double>::max()
+                          : std::numeric_limits<double>::lowest();
   return value;
 }
 
