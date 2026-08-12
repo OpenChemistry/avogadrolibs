@@ -11,8 +11,10 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <cctype>
 #include <iomanip>
-#include <iostream>
+#include <istream>
+#include <ostream>
 #include <sstream>
 #include <string>
 
@@ -111,9 +113,6 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     std::vector<string> tokens(split(lattice, ' '));
 
-    // check for size
-    std::cout << "Lattice size: " << tokens.size() << std::endl;
-
     if (tokens.size() >= 9) {
       if (auto tmp = lexicalCast<double>(tokens.begin(), tokens.begin() + 9)) {
         Vector3 v1(tmp->at(0), tmp->at(1), tmp->at(2));
@@ -121,8 +120,6 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         Vector3 v3(tmp->at(6), tmp->at(7), tmp->at(8));
 
         auto* cell = new Core::UnitCell(v1, v2, v3);
-        std::cout << " Lattice: " << cell->aVector() << " " << cell->bVector()
-                  << " " << cell->cVector() << std::endl;
         if (!cell->isRegular()) {
           appendError("Lattice vectors are not linear independent");
           delete cell;

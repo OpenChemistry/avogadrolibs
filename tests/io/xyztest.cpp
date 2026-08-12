@@ -77,6 +77,28 @@ TEST(XyzTest, readTotalEnergy)
   }
 }
 
+// Some programs write coordinates with an exponent a double cannot hold, e.g.
+// "2.61793E-500". Those are effectively zero and must not abort the read.
+TEST(XyzTest, readUnderflowedCoordinates)
+{
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string str = "2\nframe 1\n"
+                    "Ar 0.0 0.0 0.0\n"
+                    "Ar 0.0 0.0 4.0\n"
+                    "2\nframe 2\n"
+                    "Ar 2.61793E-500 0.0 0.0\n"
+                    "Ar 0.0 -7.5467E-6000 4.0\n";
+  ASSERT_TRUE(xyz.readString(str, molecule));
+  EXPECT_EQ(xyz.error(), std::string());
+
+  EXPECT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.coordinate3dCount(), 2);
+  EXPECT_EQ(molecule.coordinate3d(1)[0].x(), 0.0);
+  EXPECT_EQ(molecule.coordinate3d(1)[1].y(), 0.0);
+  EXPECT_EQ(molecule.coordinate3d(1)[1].z(), 4.0);
+}
+
 TEST(XyzTest, readZeroAtomsNoHang)
 {
   XyzFormat xyz;

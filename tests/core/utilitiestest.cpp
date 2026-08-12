@@ -44,6 +44,25 @@ TEST(UtilitiesTest, lexicalCast)
   EXPECT_EQ(lexicalCast<double>("5.3E-10"), 5.3e-10);
 }
 
+TEST(UtilitiesTest, lexicalCastOutOfRange)
+{
+  // Some programs write exponents a double cannot represent. These are
+  // effectively zero and should not abort reading the rest of a file.
+  EXPECT_EQ(lexicalCast<double>("2.61793E-500"), 0.0);
+  EXPECT_EQ(lexicalCast<double>("-7.5467E-6000"), 0.0);
+
+  // Overflow is clamped rather than becoming an infinity.
+  EXPECT_EQ(lexicalCast<double>("1.0E+500"),
+            std::numeric_limits<double>::max());
+  EXPECT_EQ(lexicalCast<double>("-1.0E+500"),
+            std::numeric_limits<double>::lowest());
+
+  // Values that are not numbers still fail, including the special literals.
+  EXPECT_EQ(lexicalCast<double>("five"), std::nullopt);
+  EXPECT_EQ(lexicalCast<double>("NaN"), std::nullopt);
+  EXPECT_EQ(lexicalCast<double>(""), std::nullopt);
+}
+
 TEST(UtilitiesTest, lexicalCastCheck)
 {
   // Something simple that should pass.
