@@ -107,6 +107,13 @@ private:
    */
   void commandFailed(const QStringList& errors);
 
+  /**
+   * Close and destroy the progress dialog, if there is one. Disconnects it
+   * first: QProgressDialog::close() emits canceled(), which would otherwise
+   * re-enter cancelCommand() and tear down state the caller still holds.
+   */
+  void closeProgressDialog();
+
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   // Launch-time molecule for the async script; QPointer detects deletion.
