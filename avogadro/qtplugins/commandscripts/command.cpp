@@ -328,12 +328,21 @@ void Command::run()
       options = collected;
     }
     connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
+    connect(m_currentScript, &QtGui::InterfaceScript::progress, this,
+            &Command::updateProgress);
 
-    // no cancel button - just an indication we're waiting...
+    // Starts indeterminate; a script that reports progress switches it to a
+    // determinate bar. See InterfaceScript for the script-side protocol.
     QString title = tr("Processing %1").arg(iface.displayName());
-    m_progress = new QProgressDialog(title, QString(), 0, 0,
+    m_progress = new QProgressDialog(title, tr("Cancel"), 0, 0,
                                      qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
+    // Don't let a script that reports its final step and then keeps working
+    // (writing files, etc.) make the dialog vanish early.
+    m_progress->setAutoClose(false);
+    m_progress->setAutoReset(false);
+    connect(m_progress, &QProgressDialog::canceled, this,
+            &Command::cancelCommand);
 
     // Snapshot so processFinished() can detect if the molecule was closed
     // or swapped before the async script returned.
@@ -345,6 +354,42 @@ void Command::run()
       commandFailed(m_currentScript->errorList());
     }
   }
+}
+
+void Command::updateProgress(const QString& message, int value, int maximum)
+{
+  if (m_progress == nullptr)
+    return;
+
+  if (maximum > 0 && m_progress->maximum() != maximum)
+    m_progress->setRange(0, maximum);
+
+  // Only meaningful once a script has given the bar a determinate range.
+  if (value >= 0 && m_progress->maximum() > 0)
+    m_progress->setValue(value);
+
+  if (!message.isEmpty())
+    m_progress->setLabelText(message);
+}
+
+void Command::cancelCommand()
+{
+  if (m_progress) {
+    m_progress->close();
+    m_progress->deleteLater();
+    m_progress = nullptr;
+  }
+
+  if (m_currentScript == nullptr)
+    return;
+
+  // Kill the child process and drop whatever partial output it produced.
+  disconnect(m_currentScript, SIGNAL(finished()), this,
+             SLOT(processFinished()));
+  m_currentScript->interpreter().asyncTerminate();
+  m_currentScript->deleteLater();
+  m_currentScript = nullptr;
+  m_runningMolecule.clear();
 }
 
 void Command::commandFailed(const QStringList& errors)

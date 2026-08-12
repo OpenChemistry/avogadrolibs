@@ -203,20 +203,38 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
 
   connect(m_interpreter, &PythonScript::finished, this,
           &::Avogadro::QtGui::InterfaceScript::commandFinished);
+  connect(m_interpreter, &PythonScript::asyncProgress, this,
+          &::Avogadro::QtGui::InterfaceScript::handleProgress);
   // Package-mode scripts take no command-line flag; the identifier is already
   // the positional argument and JSON arrives on stdin (mirrors
   // InputGenerator::generateInput() which passes QStringList()).
   QStringList runArgs;
   if (!m_interpreter->isPackageMode())
     runArgs << QStringLiteral("--run-command");
-  if (!m_interpreter->asyncExecute(runArgs,
-                                   QJsonDocument(allOptions).toJson())) {
+  // Scan stdout for progress envelopes, and keep stderr on its own channel so
+  // library chatter (pixi, warnings, progress bars) cannot corrupt the result.
+  m_interpreter->setProgressScanning(true);
+  if (!m_interpreter->asyncExecute(runArgs, QJsonDocument(allOptions).toJson(),
+                                   /* mergedChannels = */ false)) {
     disconnect(m_interpreter, &PythonScript::finished, this,
                &::Avogadro::QtGui::InterfaceScript::commandFinished);
+    disconnect(m_interpreter, &PythonScript::asyncProgress, this,
+               &::Avogadro::QtGui::InterfaceScript::handleProgress);
     m_errors << m_interpreter->errorList();
     return false;
   }
   return true;
+}
+
+void InterfaceScript::handleProgress(const QJsonObject& payload)
+{
+  const QString message =
+    payload.value(QStringLiteral("message")).toString(QString());
+  // -1 marks "not supplied" - the bar keeps whatever state it had.
+  const int value = payload.value(QStringLiteral("value")).toInt(-1);
+  const int maximum = payload.value(QStringLiteral("maximum")).toInt(-1);
+
+  emit progress(message, value, maximum);
 }
 
 void InterfaceScript::commandFinished()
@@ -240,6 +258,12 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
 
   QJsonDocument doc;
   if (!parseJson(json, doc)) {
+    // The script ran with separate channels, so a python traceback never
+    // reached stdout. Surface it here or the failure has no explanation.
+    const QByteArray stderrOutput = m_interpreter->asyncStandardError();
+    if (!stderrOutput.isEmpty())
+      m_errors << tr("Script standard error:\n%1")
+                    .arg(QString::fromUtf8(stderrOutput));
     return false;
   }
 

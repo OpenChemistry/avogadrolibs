@@ -83,6 +83,19 @@ public slots:
                          const QString& command, const QString& identifier);
 
 private slots:
+  /**
+   * Show a progress report from the running script.
+   * @param message Status text, or empty to leave the label alone.
+   * @param value The current step, or -1 if the script did not supply one.
+   * @param maximum The total number of steps, or -1 if not supplied.
+   */
+  void updateProgress(const QString& message, int value, int maximum);
+
+  /**
+   * Kill the running script after the user hits Cancel.
+   */
+  void cancelCommand();
+
   void menuActivated();
   void configurePython();
   void moleculeChanged(unsigned int change);
