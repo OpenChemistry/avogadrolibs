@@ -30,6 +30,7 @@ set(tests
 
 if(Python3_EXECUTABLE)
   list(APPEND tests
+    InterfaceScript
     PythonScript
   )
 endif()

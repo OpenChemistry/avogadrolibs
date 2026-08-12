@@ -425,10 +425,16 @@ bool PythonScript::parseProgressEnvelope(const QByteArray& line,
   // Require exactly one member, named "avogadro". A result object that merely
   // happens to carry an "avogadro" key alongside others is not an envelope.
   const QJsonObject object = doc.object();
-  if (object.size() != 1 || !object.contains(QStringLiteral("avogadro")))
+  if (object.size() != 1)
     return false;
 
-  payload = object.value(QStringLiteral("avogadro")).toObject();
+  // The member must be an object. A scalar or null payload would otherwise
+  // yield an empty payload from toObject() and silently swallow the line.
+  const QJsonValue value = object.value(QStringLiteral("avogadro"));
+  if (!value.isObject())
+    return false;
+
+  payload = value.toObject();
   return true;
 }
 

@@ -201,10 +201,15 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
     return false;
   }
 
+  // UniqueConnection: the connections are only torn down on the failure path
+  // below, so running the same instance again would otherwise stack duplicates
+  // and deliver every signal once per previous run.
   connect(m_interpreter, &PythonScript::finished, this,
-          &::Avogadro::QtGui::InterfaceScript::commandFinished);
+          &::Avogadro::QtGui::InterfaceScript::commandFinished,
+          Qt::UniqueConnection);
   connect(m_interpreter, &PythonScript::asyncProgress, this,
-          &::Avogadro::QtGui::InterfaceScript::handleProgress);
+          &::Avogadro::QtGui::InterfaceScript::handleProgress,
+          Qt::UniqueConnection);
   // Package-mode scripts take no command-line flag; the identifier is already
   // the positional argument and JSON arrives on stdin (mirrors
   // InputGenerator::generateInput() which passes QStringList()).

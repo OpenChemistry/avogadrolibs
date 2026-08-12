@@ -68,6 +68,18 @@ TEST(ScriptProgressTest, RejectsNonEnvelopes)
   EXPECT_FALSE(PythonScript::parseProgressEnvelope(
     R"({"avogadro": {"value": 1}, "cjson": {}})", payload));
 
+  // The "avogadro" member has to be an object. A scalar or null would parse
+  // into an empty payload, so the line would vanish from the output while
+  // reporting progress nobody asked for.
+  EXPECT_FALSE(
+    PythonScript::parseProgressEnvelope(R"({"avogadro": 1})", payload));
+  EXPECT_FALSE(
+    PythonScript::parseProgressEnvelope(R"({"avogadro": null})", payload));
+  EXPECT_FALSE(
+    PythonScript::parseProgressEnvelope(R"({"avogadro": "text"})", payload));
+  EXPECT_FALSE(
+    PythonScript::parseProgressEnvelope(R"({"avogadro": []})", payload));
+
   // Truncated JSON must not be mistaken for an envelope.
   EXPECT_FALSE(PythonScript::parseProgressEnvelope(
     R"({"avogadro": {"value": 1})", payload));
@@ -86,6 +98,8 @@ TEST(ScriptProgressTest, FiltersProgressFromOutput)
                     "\n"
                     R"({"avogadro": {"message": "Done"}})"
                     "\n"
+                    R"({"avogadro": 1})"
+                    "\n"
                     "{\n"
                     "  \"cjson\": {}\n"
                     "}\n");
@@ -99,8 +113,10 @@ TEST(ScriptProgressTest, FiltersProgressFromOutput)
   EXPECT_EQ(payloads.at(0).value("value").toInt(-1), 1);
   EXPECT_EQ(payloads.at(1).value("message").toString(), QString("Done"));
 
-  // Everything else survives byte for byte, newlines included.
-  EXPECT_EQ(output, QByteArray("Loading model...\n{\n  \"cjson\": {}\n}\n"));
+  // Everything else survives byte for byte, newlines included - including the
+  // scalar "avogadro" line, which is not an envelope.
+  EXPECT_EQ(output, QByteArray("Loading model...\n{\"avogadro\": 1}\n"
+                               "{\n  \"cjson\": {}\n}\n"));
 }
 
 TEST(ScriptProgressTest, BuffersPartialLines)
