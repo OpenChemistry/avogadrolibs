@@ -293,8 +293,7 @@ void Command::run()
   if (m_currentDialog)
     m_currentDialog->accept();
 
-  if (m_progress)
-    m_progress->deleteLater();
+  closeProgressDialog();
 
   if (m_currentScript) {
     disconnect(m_currentScript, SIGNAL(finished()), this,
@@ -328,12 +327,21 @@ void Command::run()
       options = collected;
     }
     connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
+    connect(m_currentScript, &QtGui::InterfaceScript::progress, this,
+            &Command::updateProgress);
 
-    // no cancel button - just an indication we're waiting...
+    // Starts indeterminate; a script that reports progress switches it to a
+    // determinate bar. See InterfaceScript for the script-side protocol.
     QString title = tr("Processing %1").arg(iface.displayName());
-    m_progress = new QProgressDialog(title, QString(), 0, 0,
+    m_progress = new QProgressDialog(title, tr("Cancel"), 0, 0,
                                      qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
+    // Don't let a script that reports its final step and then keeps working
+    // (writing files, etc.) make the dialog vanish early.
+    m_progress->setAutoClose(false);
+    m_progress->setAutoReset(false);
+    connect(m_progress, &QProgressDialog::canceled, this,
+            &Command::cancelCommand);
 
     // Snapshot so processFinished() can detect if the molecule was closed
     // or swapped before the async script returned.
@@ -347,13 +355,57 @@ void Command::run()
   }
 }
 
+void Command::updateProgress(const QString& message, int value, int maximum)
+{
+  if (m_progress == nullptr)
+    return;
+
+  if (maximum > 0 && m_progress->maximum() != maximum)
+    m_progress->setRange(0, maximum);
+
+  // Only meaningful once a script has given the bar a determinate range.
+  if (value >= 0 && m_progress->maximum() > 0)
+    m_progress->setValue(value);
+
+  if (!message.isEmpty())
+    m_progress->setLabelText(message);
+}
+
+void Command::closeProgressDialog()
+{
+  if (m_progress == nullptr)
+    return;
+
+  // Clear the member and drop the connection before closing: close() emits
+  // canceled() even for a dialog that was never shown, and cancelCommand()
+  // would then delete the dialog (and the running script) out from under
+  // whoever called us.
+  QProgressDialog* dialog = m_progress;
+  m_progress = nullptr;
+  disconnect(dialog, &QProgressDialog::canceled, this, &Command::cancelCommand);
+  dialog->close();
+  dialog->deleteLater();
+}
+
+void Command::cancelCommand()
+{
+  closeProgressDialog();
+
+  if (m_currentScript == nullptr)
+    return;
+
+  // Kill the child process and drop whatever partial output it produced.
+  disconnect(m_currentScript, SIGNAL(finished()), this,
+             SLOT(processFinished()));
+  m_currentScript->interpreter().asyncTerminate();
+  m_currentScript->deleteLater();
+  m_currentScript = nullptr;
+  m_runningMolecule.clear();
+}
+
 void Command::commandFailed(const QStringList& errors)
 {
-  if (m_progress) {
-    m_progress->close();
-    m_progress->deleteLater();
-    m_progress = nullptr;
-  }
+  closeProgressDialog();
 
   QString details = errors.join(QStringLiteral("\n"));
   if (details.isEmpty())
@@ -375,22 +427,26 @@ void Command::processFinished()
   if (m_currentScript == nullptr)
     return;
 
-  if (m_progress) {
-    m_progress->close();
-    m_progress->deleteLater();
-    m_progress = nullptr;
-  }
+  // Take the script and its molecule locally before doing anything that can
+  // run the event loop (closing the dialog, writing results back): a
+  // re-entrant call must see this command as already finished rather than act
+  // on a script that is being torn down here.
+  QtGui::InterfaceScript* script = m_currentScript;
+  m_currentScript = nullptr;
+  QtGui::Molecule* target = m_runningMolecule.data();
+  m_runningMolecule.clear();
+
+  closeProgressDialog();
 
   // Drop results if the launch-time molecule was destroyed, or if the user
   // has since swapped to a different molecule (its atom count/ordering may
   // no longer match what the script is about to write back).
-  QtGui::Molecule* target = m_runningMolecule.data();
   if (target != nullptr && target == m_molecule) {
-    m_currentScript->processCommand(target);
+    script->processCommand(target);
 
     // collect errors
-    if (m_currentScript->hasErrors()) {
-      qWarning() << m_currentScript->errorList();
+    if (script->hasErrors()) {
+      qWarning() << script->errorList();
     }
   } else if (target == nullptr) {
     qWarning() << "Command: discarding script results; molecule was closed "
@@ -400,9 +456,7 @@ void Command::processFinished()
                   "changed while the command was running.";
   }
 
-  m_currentScript->deleteLater();
-  m_currentScript = nullptr;
-  m_runningMolecule.clear();
+  script->deleteLater();
 }
 
 void Command::configurePython()

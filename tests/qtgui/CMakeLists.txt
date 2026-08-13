@@ -25,10 +25,12 @@ set(tests
   Molecule
   PackageManager
   RWMolecule
+  ScriptProgress
 )
 
 if(Python3_EXECUTABLE)
   list(APPEND tests
+    InterfaceScript
     PythonScript
   )
 endif()

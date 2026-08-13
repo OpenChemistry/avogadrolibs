@@ -11,6 +11,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QLocale>
 #include <QtCore/QProcess>
 #include <QtCore/QProcessEnvironment>
@@ -18,6 +19,13 @@
 #include <QtCore/QStandardPaths>
 
 namespace Avogadro::QtGui {
+
+// Environment variable telling a script that Avogadro is reading its standard
+// output for progress envelopes, and which revision of that protocol it
+// speaks. Bump the version if the envelope format ever changes, so scripts can
+// feature-detect rather than guess from the Avogadro version.
+static const char progressEnvironmentVariable[] = "AVO_PROGRESS_PROTOCOL";
+static const char progressProtocolVersion[] = "1";
 
 // Check whether the plugin directory has a usable pixi-managed python
 static bool hasDefaultPixiManifest(const QString& pluginDir)
@@ -49,7 +57,18 @@ PythonScript::PythonScript(QObject* parent_)
   setDefaultPythonInterpreter();
 }
 
-PythonScript::~PythonScript() {}
+PythonScript::~PythonScript()
+{
+  if (m_process != nullptr) {
+    // Sever the connections before killing: finished() would otherwise be
+    // emitted into a half-destroyed object. Delete outright rather than
+    // deleteLater(), which never runs if no event loop outlives us.
+    disconnect(m_process, nullptr, this, nullptr);
+    m_process->kill();
+    delete m_process;
+    m_process = nullptr;
+  }
+}
 
 void PythonScript::setScriptFilePath(const QString& scriptFile)
 {
@@ -127,11 +146,25 @@ void PythonScript::setDefaultPythonInterpreter()
 
 QString PythonScript::resolveCommand(QStringList& realArgs, QProcess& proc)
 {
-#ifdef Q_OS_WIN
   QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+  bool customEnvironment = false;
+
+#ifdef Q_OS_WIN
   environment.insert(QStringLiteral("PYTHONUTF8"), QStringLiteral("1"));
-  proc.setProcessEnvironment(environment);
+  customEnvironment = true;
 #endif
+
+  if (m_scanProgress) {
+    // Advertise the progress protocol only when we are actually scanning for
+    // it, so a script that checks the variable can never be misled into
+    // printing envelopes at a version of Avogadro that would choke on them.
+    environment.insert(QLatin1String(progressEnvironmentVariable),
+                       QLatin1String(progressProtocolVersion));
+    customEnvironment = true;
+  }
+
+  if (customEnvironment)
+    proc.setProcessEnvironment(environment);
 
   // --- Package mode: pixi run <command> <identifier> [args] ---
   if (m_packageMode) {
@@ -302,13 +335,30 @@ bool PythonScript::asyncExecute(const QStringList& args,
   clearErrors();
   if (m_process != nullptr) {
     m_process->terminate();
-    disconnect(m_process, SIGNAL(finished()), this, SLOT(processsFinished()));
+    // Sever every connection, not just finished(): the abandoned process is
+    // still alive until deleteLater() runs, and its signals would otherwise
+    // arrive while m_process already points at the replacement.
+    disconnect(m_process, nullptr, this, nullptr);
     m_process->deleteLater();
   }
-  m_process = new QProcess(parent());
+  // Own the process outright: parenting it to parent() (which is often null)
+  // leaks it, and lets it outlive the script that is driving it.
+  m_process = new QProcess(this);
 
   if (mergedChannels)
     m_process->setProcessChannelMode(QProcess::MergedChannels);
+
+  m_stdoutBuffer.clear();
+  m_stderrBuffer.clear();
+  m_lineBuffer.clear();
+  if (m_scanProgress) {
+    // Drain both channels as they arrive so progress envelopes can be acted on
+    // while the script is still running.
+    connect(m_process, &QProcess::readyReadStandardOutput, this,
+            &PythonScript::readAsyncStandardOutput);
+    connect(m_process, &QProcess::readyReadStandardError, this,
+            &PythonScript::readAsyncStandardError);
+  }
 
   QStringList realArgs(args);
   if (m_debug)
@@ -371,7 +421,92 @@ bool PythonScript::asyncExecute(const QStringList& args,
 
 void PythonScript::processFinished(int, QProcess::ExitStatus)
 {
+  if (m_scanProgress && m_process != nullptr) {
+    // readyRead() may not have fired for the last chunk, and a script's final
+    // line is not guaranteed to end with a newline.
+    readAsyncStandardError();
+    readAsyncStandardOutput();
+    if (!m_lineBuffer.isEmpty()) {
+      QJsonObject payload;
+      if (parseProgressEnvelope(m_lineBuffer, payload))
+        emit asyncProgress(payload);
+      else
+        m_stdoutBuffer += m_lineBuffer;
+      m_lineBuffer.clear();
+    }
+
+    if (m_debug && !m_stderrBuffer.isEmpty())
+      qDebug() << "Script standard error:" << m_stderrBuffer;
+  }
+
   emit finished();
+}
+
+bool PythonScript::parseProgressEnvelope(const QByteArray& line,
+                                         QJsonObject& payload)
+{
+  // Reject cheaply first: the result blob may be large and pretty-printed, and
+  // running the JSON parser over every one of its lines is wasted work.
+  const QByteArray trimmed = line.trimmed();
+  if (!trimmed.startsWith('{') || !trimmed.contains("\"avogadro\""))
+    return false;
+
+  QJsonParseError error;
+  const QJsonDocument doc = QJsonDocument::fromJson(trimmed, &error);
+  if (error.error != QJsonParseError::NoError || !doc.isObject())
+    return false;
+
+  // Require exactly one member, named "avogadro". A result object that merely
+  // happens to carry an "avogadro" key alongside others is not an envelope.
+  const QJsonObject object = doc.object();
+  if (object.size() != 1)
+    return false;
+
+  // The member must be an object. A scalar or null payload would otherwise
+  // yield an empty payload from toObject() and silently swallow the line.
+  const QJsonValue value = object.value(QStringLiteral("avogadro"));
+  if (!value.isObject())
+    return false;
+
+  payload = value.toObject();
+  return true;
+}
+
+void PythonScript::filterProgressLines(QByteArray& buffer, QByteArray& output,
+                                       QList<QJsonObject>& payloads)
+{
+  qsizetype start = 0;
+  qsizetype newline = buffer.indexOf('\n');
+  QJsonObject payload;
+  while (newline >= 0) {
+    if (parseProgressEnvelope(buffer.mid(start, newline - start), payload))
+      payloads.append(payload);
+    else // keep the line verbatim, newline included
+      output += buffer.mid(start, newline - start + 1);
+    start = newline + 1;
+    newline = buffer.indexOf('\n', start);
+  }
+  buffer.remove(0, start);
+}
+
+void PythonScript::readAsyncStandardOutput()
+{
+  if (m_process == nullptr)
+    return;
+
+  m_lineBuffer += m_process->readAllStandardOutput();
+  QList<QJsonObject> payloads;
+  filterProgressLines(m_lineBuffer, m_stdoutBuffer, payloads);
+  for (const QJsonObject& payload : payloads)
+    emit asyncProgress(payload);
+}
+
+void PythonScript::readAsyncStandardError()
+{
+  if (m_process == nullptr)
+    return;
+
+  m_stderrBuffer += m_process->readAllStandardError();
 }
 
 void PythonScript::asyncTerminate()
@@ -432,6 +567,15 @@ QByteArray PythonScript::asyncWriteAndResponseRaw(const QByteArray& input,
 
 QByteArray PythonScript::asyncResponse()
 {
+  if (m_scanProgress) {
+    // Standard output was drained as it arrived, so the buffer is complete
+    // (and outlives the process) once the script has finished.
+    if (m_process != nullptr && m_process->state() == QProcess::Running)
+      return QByteArray();
+
+    return m_stdoutBuffer;
+  }
+
   if (m_process == nullptr || m_process->state() == QProcess::Running)
     return QByteArray();
 

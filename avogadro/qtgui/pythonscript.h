@@ -12,6 +12,8 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <QtCore/QByteArray>
+#include <QtCore/QJsonObject>
+#include <QtCore/QList>
 #include <QtCore/QProcess>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -139,6 +141,54 @@ public:
                     bool mergedChannels = true, bool closeWriteChannel = true);
 
   /**
+   * Enable incremental scanning of the asynchronous process' standard output
+   * for progress envelopes, i.e. single lines of the form
+   * `{"avogadro": { ... }}`. Matching lines are removed from the output and
+   * reported through the asyncProgress() signal; every other line is kept and
+   * returned by asyncResponse() as usual.
+   *
+   * This must be set before asyncExecute(). It is opt-in because scanning
+   * drains the process' output as it arrives, which is incompatible with
+   * callers that read the process directly (e.g. asyncWriteAndResponse() in
+   * "server mode").
+   *
+   * When enabled, the script is run with `AVO_PROGRESS_PROTOCOL` set in its
+   * environment so it can tell that Avogadro is listening. Scripts must check
+   * for it before printing envelopes: releases up to and including Avogadro
+   * 2.0.0 read the script's whole standard output as a single JSON document,
+   * and the extra lines make that parse fail outright.
+   */
+  void setProgressScanning(bool enable) { m_scanProgress = enable; }
+
+  /**
+   * @return True if standard output is being scanned for progress envelopes.
+   */
+  bool progressScanning() const { return m_scanProgress; }
+
+  /**
+   * Test whether a single line of script output is a progress envelope.
+   *
+   * To avoid mistaking part of a pretty-printed result for an envelope, the
+   * line must parse as a complete JSON object with exactly one member, named
+   * "avogadro".
+   *
+   * @param line The line to test, without its trailing newline.
+   * @param payload Set to the contents of the "avogadro" member on success.
+   * @return True if @p line is a progress envelope.
+   */
+  static bool parseProgressEnvelope(const QByteArray& line,
+                                    QJsonObject& payload);
+
+  /**
+   * Split @p buffer into complete lines, appending the payload of any progress
+   * envelope to @p payloads and every other line (newline included) verbatim
+   * to @p output. A trailing partial line is left in @p buffer for the next
+   * call.
+   */
+  static void filterProgressLines(QByteArray& buffer, QByteArray& output,
+                                  QList<QJsonObject>& payloads);
+
+  /**
    * Write input to the asynchronous process' standard input and return the
    * standard output when ready. Does not wait for the process to terminate
    * before returning (e.g. "server mode").
@@ -163,14 +213,31 @@ public:
 
   /**
    * Returns the standard output of the asynchronous process when finished.
+   * If progress scanning is enabled, progress envelope lines have been
+   * removed and the remainder is returned even after the process is gone.
    */
   QByteArray asyncResponse();
+
+  /**
+   * @return The standard error collected from the asynchronous process. Only
+   * populated when the process was started with separate channels; useful for
+   * reporting a python traceback that never reached standard output.
+   */
+  QByteArray asyncStandardError() const { return m_stderrBuffer; }
 
 signals:
   /**
    * The asynchronous execution is finished or timed out
    */
   void finished();
+
+  /**
+   * A progress envelope was read from the asynchronous process' standard
+   * output. Only emitted when setProgressScanning(true) was called before
+   * asyncExecute().
+   * @param payload The contents of the "avogadro" member of the envelope.
+   */
+  void asyncProgress(const QJsonObject& payload);
 
 public slots:
   /**
@@ -182,6 +249,16 @@ public slots:
    * Handle a finished process;
    */
   void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
+
+private slots:
+  /**
+   * Drain whatever the asynchronous process has written so far, filtering
+   * progress envelopes out of standard output.
+   * @{
+   */
+  void readAsyncStandardOutput();
+  void readAsyncStandardError();
+  /**@}*/
 
 protected:
   bool m_debug;
@@ -197,6 +274,16 @@ protected:
   QProcess* m_process;
 
 private:
+  // Scan the asynchronous process' stdout for progress envelopes, buffering
+  // the rest for asyncResponse(). Off by default; see setProgressScanning().
+  bool m_scanProgress = false;
+  // Standard output with any progress envelopes removed.
+  QByteArray m_stdoutBuffer;
+  // Standard error, kept for diagnostics (separate channels only).
+  QByteArray m_stderrBuffer;
+  // Trailing partial line of standard output, awaiting its newline.
+  QByteArray m_lineBuffer;
+
   /**
    * Resolve the executable and finalize the argument list for either
    * execute() or asyncExecute().  On entry @p realArgs already contains

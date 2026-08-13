@@ -426,6 +426,80 @@ $$coords:[coordSpec]$$
  * - `$$atomCount$$`: Number of atoms in the molecule.
  * - `$$bondCount$$`: Number of bonds in the molecule.
  *
+ * Progress and Status Updates
+ * ===========================
+ *
+ * A long-running command script can report its progress while it works, so the
+ * user sees a determinate progress bar and/or a status message instead of an
+ * anonymous spinner. To do so, print a single line of JSON to standard output
+ * of the form:
+~~~{.js}
+{"avogadro": {"message": "Optimizing conformer 3 of 25", "value": 3, "maximum":
+25}}
+~~~
+ * All three members are optional:
+ * - `message`: status text to display, e.g. "Current energy: -135.2 eV".
+ * - `value`: the current step of a determinate progress bar.
+ * - `maximum`: the total number of steps. Supply `value` and `maximum`
+ *   together; a `message` on its own just updates the text and leaves the bar
+ *   as it was.
+ *
+ * These lines are consumed by Avogadro and removed from the script's output,
+ * so they do not interfere with the final result. A line is only treated as a
+ * progress update if it is a complete JSON object on one line with exactly one
+ * member, named `avogadro`, whose value is an object — a pretty-printed result
+ * block is never mistaken for one, and any other output the script prints is
+ * passed through untouched.
+ *
+ * **Check `AVO_PROGRESS_PROTOCOL` before printing an envelope.** Avogadro
+ * 2.0.0 and earlier read the whole of a script's standard output as a single
+ * JSON document, so an extra line makes that parse fail and the command
+ * reports an error instead of its result. Avogadro sets this environment
+ * variable only when it is reading progress updates, so a script that guards
+ * on it keeps working on older releases — it just shows the old indeterminate
+ * spinner. The value is the protocol revision, currently `1`.
+ *
+ * **`flush=True` is required.** Python block-buffers standard output when it is
+ * connected to a pipe rather than a terminal, so without an explicit flush the
+ * updates sit in the buffer and only reach Avogadro when the script exits — by
+ * which point the progress bar is gone.
+ *
+ * The `avogadro.command` module (shipped with Avogadro) handles both of these,
+ * and is a no-op when progress is unsupported, so it is always safe to call:
+~~~{.py}
+from avogadro.command import report_progress
+
+for i, conformer in enumerate(conformers, start=1):
+    report_progress(f"Conformer {i} of {len(conformers)}", i, len(conformers))
+    optimize(conformer)
+
+report_progress("Writing results")
+~~~
+ * That module is not importable in every environment a script may run in (for
+ * example a package plugin with its own pixi environment), so scripts are free
+ * to copy this self-contained equivalent instead. Do not drop the environment
+ * check — without it the script breaks on Avogadro 2.0.0:
+~~~{.py}
+import json, os
+
+def report_progress(message=None, value=None, maximum=None):
+    # Older Avogadro cannot parse these lines; stay silent there.
+    if not os.environ.get("AVO_PROGRESS_PROTOCOL"):
+        return
+    payload = {}
+    if message is not None: payload["message"] = message
+    if value is not None:   payload["value"] = value
+    if maximum is not None: payload["maximum"] = maximum
+    # flush=True is required - stdout is block-buffered when piped
+    print(json.dumps({"avogadro": payload}), flush=True)
+~~~
+ * Reporting progress is entirely optional; a script that prints nothing until
+ * it is finished behaves exactly as it always has.
+ *
+ * The progress dialog shown while a command runs has a Cancel button, which
+ * kills the script's process. Scripts that write files or otherwise touch state
+ * outside Avogadro should be prepared to be terminated partway through.
+ *
  * Error Handling
  * ==============
  *
@@ -434,6 +508,12 @@ $$coords:[coordSpec]$$
  * occurs that must be reported to the user, simply write the error message to
  * standard output as plain text (i.e. not JSON), and it will be shown to the
  * user.
+ *
+ * While a command script runs (`--run-command`), its standard output and
+ * standard error are kept separate: the result and any plain-text error belong
+ * on standard output, while standard error is captured for diagnostics and
+ * reported if the output cannot be parsed. This means library chatter and
+ * warnings on standard error cannot corrupt the result.
  *
  * Debugging
  * =========
@@ -633,6 +713,17 @@ public:
 signals:
   void finished();
 
+  /**
+   * A running command script reported its progress. See the "Progress and
+   * Status Updates" section above for the script-side protocol.
+   * @param message Status text to show, or an empty string if the script did
+   * not supply one.
+   * @param value The current step, or -1 if the script did not supply one.
+   * @param maximum The total number of steps, or -1 if the script did not
+   * supply one.
+   */
+  void progress(const QString& message, int value, int maximum);
+
 public slots:
   /**
    * Enable/disable debugging.
@@ -643,6 +734,13 @@ public slots:
    * Receives a signal when asynchronous command scripts are finished
    */
   void commandFinished();
+
+private slots:
+  /**
+   * Translate a progress envelope from a running command script into the
+   * progress() signal.
+   */
+  void handleProgress(const QJsonObject& payload);
 
 protected:
   bool parseJson(const QByteArray& json, QJsonDocument& doc) const;
