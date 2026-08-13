@@ -273,7 +273,6 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
   }
 
   // Update cache
-  bool result = true;
   if (doc.isObject()) {
     QJsonObject obj = doc.object();
 
@@ -327,7 +326,15 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       }
 
       QtGui::Molecule newMol(guiMol->parent());
-      result = format->readString(moleculeString.toStdString(), newMol);
+      if (!format->readString(moleculeString.toStdString(), newMol)) {
+        // A failed parse can still leave atoms behind (a truncated xyz file
+        // reads several before it gives up), so this has to stop before
+        // anything touches guiMol: replacing the user's molecule with a
+        // fragment of what the script meant to return loses their structure.
+        m_errors << tr("Error reading molecule representation: %1")
+                      .arg(QString::fromStdString(format->error()));
+        return false;
+      }
 
       // check if the script wants us to perceive bonds first
       if (obj["bond"].toBool()) {
@@ -400,7 +407,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       }
     }
   }
-  return result;
+  return true;
 }
 
 bool InterfaceScript::generateInput(const QJsonObject& options_,
