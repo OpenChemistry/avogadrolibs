@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-08-09 03:08+0000\n"
-"PO-Revision-Date: 2026-06-06 11:01+0000\n"
+"PO-Revision-Date: 2026-08-15 07:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1385,6 +1385,8 @@ msgid ""
 "Error running script '%1': could not resolve a command to run it (no python "
 "interpreter or pixi environment)."
 msgstr ""
+"Eroare la executarea scriptului „%1”: nu s-a putut identifica o comandă "
+"pentru executarea acestuia (nu există interpret Python sau mediu Pixi)."
 
 #: qtgui/pythonscript.cpp:411
 #, qt-format
@@ -2537,11 +2539,11 @@ msgstr "Se procesează %1"
 
 #: qtplugins/commandscripts/command.cpp:360
 msgid "The script could not be started."
-msgstr ""
+msgstr "Scriptul nu a putut fi inițiat."
 
 #: qtplugins/commandscripts/command.cpp:370
 msgid "Error Running Script"
-msgstr ""
+msgstr "Eroare la executarea scriptului"
 
 #: qtplugins/commandscripts/command.cpp:435
 msgid "Set path to Python interpreter:"
@@ -2874,7 +2876,7 @@ msgstr "Copiază"
 
 #: qtplugins/copypaste/copypaste.cpp:34
 msgid "Atom Mapped SMILES"
-msgstr ""
+msgstr "Atom cartografiat SMILES"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
@@ -2922,6 +2924,8 @@ msgid ""
 "Writer error:\n"
 "%1"
 msgstr ""
+"Eroare de scriere:\n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
@@ -3391,12 +3395,12 @@ msgstr "Forțe"
 #: qtplugins/forcefield/forcefield.cpp:102
 #: qtplugins/forcefield/forcefield.cpp:822
 msgid "Energies (All Conformers)"
-msgstr ""
+msgstr "Energii (Toți conformerii)"
 
 #: qtplugins/forcefield/forcefield.cpp:110
 #: qtplugins/forcefield/forcefield.cpp:821
 msgid "Forces (All Conformers)"
-msgstr ""
+msgstr "Forțe (Toți conformerii)"
 
 #: qtplugins/forcefield/forcefield.cpp:118
 msgid "Configure…"
@@ -3468,7 +3472,7 @@ msgstr "%1 Normă de forță = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:804
 msgid "This molecule has only one coordinate set."
-msgstr ""
+msgstr "Această moleculă are un singur set de coordonate."
 
 #: qtplugins/forcefield/forcefield.h:62
 msgid "Forcefield optimization"
@@ -5076,7 +5080,7 @@ msgstr "Energie relativă (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:236
 msgid "RMS Gradient"
-msgstr ""
+msgstr "Gradient RMS"
 
 #: qtplugins/plotconformer/plotconformer.cpp:238
 msgid "Velocities (m/s)"
@@ -5384,11 +5388,11 @@ msgstr "Proprietățile reziduului"
 #: qtplugins/propertytables/propertyview.cpp:580
 #: qtplugins/propertytables/propertyview.cpp:590
 msgid "Add Property"
-msgstr ""
+msgstr "Adăugare proprietate"
 
 #: qtplugins/propertytables/propertyview.cpp:556
 msgid "Property name"
-msgstr ""
+msgstr "Numele proprietății"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5400,15 +5404,15 @@ msgstr "Nume:"
 
 #: qtplugins/propertytables/propertyview.cpp:562
 msgid "Number"
-msgstr ""
+msgstr "Număr"
 
 #: qtplugins/propertytables/propertyview.cpp:563
 msgid "Integer"
-msgstr ""
+msgstr "Număr întreg"
 
 #: qtplugins/propertytables/propertyview.cpp:566
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5420,7 +5424,7 @@ msgstr "Tip:"
 
 #: qtplugins/propertytables/propertyview.cpp:581
 msgid "The property name cannot be empty."
-msgstr ""
+msgstr "Numele proprietății nu poate să fie gol."
 
 #: qtplugins/propertytables/propertyview.cpp:591
 #, qt-format
@@ -5428,6 +5432,8 @@ msgid ""
 "Could not add a property named \"%1\". A column with that name may already "
 "exist."
 msgstr ""
+"Nu s-a putut adăuga o proprietate cu numele „%1”. Este posibil ca o coloană "
+"cu acest nume să existe deja."
 
 #: qtplugins/propertytables/propertyview.cpp:618
 msgid "Partial Charge Type"
@@ -5439,7 +5445,7 @@ msgstr "Selectați tipul de sarcină parțială:"
 
 #: qtplugins/propertytables/propertyview.cpp:641
 msgid "Add Property…"
-msgstr ""
+msgstr "Adăugare proprietate…"
 
 #: qtplugins/propertytables/propertyview.cpp:648
 msgid "Change Charge Type…"
@@ -6370,6 +6376,17 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"Instrument pentru șabloane\t(%1)\n"
+"\n"
+"Inserați fragmente, inclusiv centre metalice.\n"
+"Selectați un element și o geometrie de coordonare, apoi faceți clic pentru a "
+"insera un fragment.\n"
+"Faceți clic pe un atom de hidrogen pentru a-l înlocui cu centrul metalic "
+"ales sau faceți clic pe orice alt atom pentru a-i modifica elementul și "
+"sarcina formală.\n"
+"\n"
+"Selectați un ligand sau o grupare funcțională și faceți clic pe un atom de "
+"hidrogen pentru a-l atașa."
 
 #: qtplugins/templatetool/templatetool.cpp:424
 #: qtplugins/templatetool/templatetool.cpp:592
@@ -6386,7 +6403,7 @@ msgstr "Inserare ligand"
 
 #: qtplugins/templatetool/templatetool.cpp:954
 msgid "Insert Metal Center"
-msgstr ""
+msgstr "Inserare centru metalic"
 
 #: qtplugins/templatetool/templatetool.h:36
 #: qtplugins/templatetool/templatetool.h:37
