@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-08-09 03:08+0000\n"
-"PO-Revision-Date: 2026-07-20 13:01+0000\n"
+"PO-Revision-Date: 2026-08-15 16:53+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1382,6 +1382,8 @@ msgid ""
 "Error running script '%1': could not resolve a command to run it (no python "
 "interpreter or pixi environment)."
 msgstr ""
+"Chyba při spouštění skriptu „%1“: nepodařilo se určit příkaz pro jeho "
+"spuštění (není k dispozici interpret Pythonu ani prostředí pixi)."
 
 #: qtgui/pythonscript.cpp:411
 #, qt-format
@@ -2524,11 +2526,11 @@ msgstr "Zpracovává se %1"
 
 #: qtplugins/commandscripts/command.cpp:360
 msgid "The script could not be started."
-msgstr ""
+msgstr "Skript se nepodařilo spustit."
 
 #: qtplugins/commandscripts/command.cpp:370
 msgid "Error Running Script"
-msgstr ""
+msgstr "Chyba při spouštění skriptu"
 
 #: qtplugins/commandscripts/command.cpp:435
 msgid "Set path to Python interpreter:"
@@ -2857,7 +2859,7 @@ msgstr "Kopírovat"
 
 #: qtplugins/copypaste/copypaste.cpp:34
 msgid "Atom Mapped SMILES"
-msgstr ""
+msgstr "SMILES s mapováním atomů"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
@@ -2905,6 +2907,8 @@ msgid ""
 "Writer error:\n"
 "%1"
 msgstr ""
+"Chyba zapisovače:\n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
@@ -3371,12 +3375,12 @@ msgstr "Síly"
 #: qtplugins/forcefield/forcefield.cpp:102
 #: qtplugins/forcefield/forcefield.cpp:822
 msgid "Energies (All Conformers)"
-msgstr ""
+msgstr "Energie (všechny konformery)"
 
 #: qtplugins/forcefield/forcefield.cpp:110
 #: qtplugins/forcefield/forcefield.cpp:821
 msgid "Forces (All Conformers)"
-msgstr ""
+msgstr "Síly (všechny konformery)"
 
 #: qtplugins/forcefield/forcefield.cpp:118
 msgid "Configure…"
@@ -3448,7 +3452,7 @@ msgstr "%1: norma síly = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:804
 msgid "This molecule has only one coordinate set."
-msgstr ""
+msgstr "Tato molekula má pouze jednu souřadnicovou sadu."
 
 #: qtplugins/forcefield/forcefield.h:62
 msgid "Forcefield optimization"
@@ -5048,7 +5052,7 @@ msgstr "Relativní energie (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:236
 msgid "RMS Gradient"
-msgstr ""
+msgstr "RMS gradientu"
 
 #: qtplugins/plotconformer/plotconformer.cpp:238
 msgid "Velocities (m/s)"
@@ -5357,11 +5361,11 @@ msgstr "Vlastnosti reziduí"
 #: qtplugins/propertytables/propertyview.cpp:580
 #: qtplugins/propertytables/propertyview.cpp:590
 msgid "Add Property"
-msgstr ""
+msgstr "Přidat vlastnost"
 
 #: qtplugins/propertytables/propertyview.cpp:556
 msgid "Property name"
-msgstr ""
+msgstr "Název vlastnosti"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5373,15 +5377,15 @@ msgstr "Název:"
 
 #: qtplugins/propertytables/propertyview.cpp:562
 msgid "Number"
-msgstr ""
+msgstr "Číslo"
 
 #: qtplugins/propertytables/propertyview.cpp:563
 msgid "Integer"
-msgstr ""
+msgstr "Celé číslo"
 
 #: qtplugins/propertytables/propertyview.cpp:566
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5393,7 +5397,7 @@ msgstr "Typ:"
 
 #: qtplugins/propertytables/propertyview.cpp:581
 msgid "The property name cannot be empty."
-msgstr ""
+msgstr "Název vlastnosti nesmí být prázdný."
 
 #: qtplugins/propertytables/propertyview.cpp:591
 #, qt-format
@@ -5401,6 +5405,8 @@ msgid ""
 "Could not add a property named \"%1\". A column with that name may already "
 "exist."
 msgstr ""
+"Vlastnost s názvem „%1“ se nepodařilo přidat. Sloupec s tímto názvem již "
+"možná existuje."
 
 #: qtplugins/propertytables/propertyview.cpp:618
 msgid "Partial Charge Type"
@@ -5412,7 +5418,7 @@ msgstr "Vyberte typ parciálního náboje:"
 
 #: qtplugins/propertytables/propertyview.cpp:641
 msgid "Add Property…"
-msgstr ""
+msgstr "Přidat vlastnost…"
 
 #: qtplugins/propertytables/propertyview.cpp:648
 msgid "Change Charge Type…"
@@ -6337,6 +6343,15 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"Nástroj šablon\t(%1)\n"
+"\n"
+"Vkládejte fragmenty včetně kovových center.\n"
+"Vyberte prvek a koordinační geometrii a poté kliknutím vložte fragment.\n"
+"Kliknutím na vodík jej nahraďte zvoleným kovovým centrem, nebo kliknutím na "
+"libovolný jiný atom změňte jeho prvek a formální náboj.\n"
+"\n"
+"Vyberte ligand nebo funkční skupinu a klikněte na atom vodíku, ke kterému se "
+"má připojit."
 
 #: qtplugins/templatetool/templatetool.cpp:424
 #: qtplugins/templatetool/templatetool.cpp:592
@@ -6353,7 +6368,7 @@ msgstr "Vložit ligand"
 
 #: qtplugins/templatetool/templatetool.cpp:954
 msgid "Insert Metal Center"
-msgstr ""
+msgstr "Vložit kovové centrum"
 
 #: qtplugins/templatetool/templatetool.h:36
 #: qtplugins/templatetool/templatetool.h:37
