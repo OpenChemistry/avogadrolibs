@@ -21,8 +21,21 @@
 using Avogadro::QtGui::PackageManager;
 
 namespace {
+// Ensure a QCoreApplication exists and that QSettings has an organisation and
+// application to write under. findExecutablePath(), reached via
+// resolveCommandLine(), searches applicationDirPath(), which warns and returns
+// an empty string without an application object — turning the first search
+// entries into root-relative paths. The test binary uses gtest_main, which
+// creates none. argv[0] matches the name set below, so the QSettings scope is
+// the same either way.
 void ensureSettingsContext()
 {
+  if (!QCoreApplication::instance()) {
+    static int argc = 1;
+    static char name[] = "AvogadroLibsTests";
+    static char* argv[] = { name, nullptr };
+    static QCoreApplication app(argc, argv);
+  }
   if (QCoreApplication::organizationName().isEmpty())
     QCoreApplication::setOrganizationName(QStringLiteral("OpenChemistry"));
   if (QCoreApplication::applicationName().isEmpty())
@@ -1135,4 +1148,60 @@ TEST_F(PackageManagerTest, removeSupersededVenvRejectsEmptyArguments)
   EXPECT_FALSE(PackageManager::removeSupersededVenv(QString(), "avo-cmd"));
   EXPECT_FALSE(PackageManager::removeSupersededVenv(m_packageDir, QString()));
   EXPECT_TRUE(QDir(m_packageDir + "/.venv").exists());
+}
+
+// ---------------------------------------------------------------------------
+// resolveCommandLine()
+//
+// The single place that decides which backend runs a package command, so both
+// the run sites (PythonScript and loadOptionsFromScript) inherit the policy.
+// ---------------------------------------------------------------------------
+
+TEST_F(PackageManagerTest, resolveCommandLinePrefersPixiEnvironment)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd"));
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+
+  const auto commandLine =
+    PackageManager::resolveCommandLine(m_packageDir, "avo-cmd");
+
+  // Only meaningful where pixi is installed; elsewhere the venv is the only
+  // option and the fallback case below covers it.
+#ifdef Q_OS_WIN
+  const bool pixiInstalled =
+    !Avogadro::QtGui::Utilities::findExecutablePath("pixi.exe").isEmpty();
+#else
+  const bool pixiInstalled =
+    !Avogadro::QtGui::Utilities::findExecutablePath("pixi").isEmpty();
+#endif
+  if (!pixiInstalled)
+    GTEST_SKIP() << "pixi is not installed on this machine";
+
+  EXPECT_TRUE(commandLine.program.endsWith("pixi") ||
+              commandLine.program.endsWith("pixi.exe"));
+  EXPECT_EQ(commandLine.prefixArgs,
+            QStringList({ "run", "--as-is", "avo-cmd" }));
+}
+
+TEST_F(PackageManagerTest, resolveCommandLineFallsBackToVenvScript)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+
+  // No pixi environment, so the console script is run directly and needs no
+  // arguments in front of its own.
+  const auto commandLine =
+    PackageManager::resolveCommandLine(m_packageDir, "avo-cmd");
+
+  EXPECT_EQ(commandLine.program,
+            PackageManager::venvScriptPath(m_packageDir, "avo-cmd"));
+  EXPECT_TRUE(commandLine.prefixArgs.isEmpty());
+}
+
+TEST_F(PackageManagerTest, resolveCommandLineEmptyWithoutAnyEnvironment)
+{
+  const auto commandLine =
+    PackageManager::resolveCommandLine(m_packageDir, "avo-cmd");
+
+  EXPECT_TRUE(commandLine.program.isEmpty());
+  EXPECT_TRUE(commandLine.prefixArgs.isEmpty());
 }

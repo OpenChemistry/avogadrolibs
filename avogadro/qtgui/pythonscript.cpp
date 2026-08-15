@@ -182,7 +182,9 @@ QString PythonScript::resolveCommand(QStringList& realArgs, QProcess& proc)
       return QString();
     }
 
-    realArgs.prepend(m_packageIdentifier);
+    // An empty identifier would otherwise be passed as an empty argument.
+    if (!m_packageIdentifier.isEmpty())
+      realArgs.prepend(m_packageIdentifier);
     realArgs = commandLine.prefixArgs + realArgs;
     return commandLine.program;
   }
