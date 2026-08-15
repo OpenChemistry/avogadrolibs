@@ -194,6 +194,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     unsigned char atomicNum(0);
     if (isalpha(tokens[0][0])) {
       atomicNum = Elements::atomicNumberFromSymbol(tokens[0]);
+      // Crystallography tools (e.g. Mercury) often write atom labels rather
+      // than plain symbols, i.e. "N1" instead of "N". Fall back to trimming
+      // the label down to the longest leading symbol we recognize.
+      if (atomicNum == InvalidElement)
+        atomicNum = Elements::guessAtomicNumber(tokens[0]);
       if (tokens[0] == "D")
         atomicNum = 1;
       else if (tokens[0] == "T")
