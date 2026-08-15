@@ -55,6 +55,40 @@ QString highestVersionedDirectory(const QString& base)
   return QDir::cleanPath(dir.absoluteFilePath(newest));
 }
 
+// Directories to search for an executable, highest priority first.
+//
+// pixi installs itself into $PIXI_HOME/bin (by default $HOME/.pixi/bin) and
+// adds that directory to PATH from the user's shell profile. An application
+// started from a desktop launcher, the Dock or Finder never sources that
+// profile, so pixi is invisible to us even though the user's terminal finds
+// it. Search the directory explicitly, after PATH so that a pixi the user has
+// deliberately put on PATH still wins.
+QStringList executableSearchPaths()
+{
+  const QProcessEnvironment system = QProcessEnvironment::systemEnvironment();
+#ifdef Q_OS_WIN32
+  QStringList paths = system.value("PATH").split(';', Qt::SkipEmptyParts);
+#else
+  QStringList paths = system.value("PATH").split(':', Qt::SkipEmptyParts);
+  // check standard locations first
+  paths.prepend("/usr/bin");
+  paths.prepend("/usr/local/bin");
+#endif
+
+  // check the current application directory too
+  paths.prepend(QCoreApplication::applicationDirPath());
+  // and check "../bin" too
+  paths.prepend(QCoreApplication::applicationDirPath() + "/../bin");
+
+  QString pixiHome = system.value("PIXI_HOME");
+  if (pixiHome.isEmpty())
+    pixiHome = QDir::homePath() + "/.pixi";
+  paths.append(pixiHome + "/bin");
+
+  paths.removeDuplicates();
+  return paths;
+}
+
 } // namespace
 
 QString libraryDirectory()
@@ -102,23 +136,7 @@ QString openBabelLibraryDirectory()
 
 QString findExecutablePath(QString program)
 {
-  // we want to return the path to a program if it exists
-  // using the PATH system environment variable
-  QProcessEnvironment system = QProcessEnvironment::systemEnvironment();
-  QString path = system.value("PATH");
-#ifdef Q_OS_WIN32
-  QStringList paths = path.split(';');
-#else
-  QStringList paths = path.split(':');
-  // check standard locations first
-  paths.prepend("/usr/bin");
-  paths.prepend("/usr/local/bin");
-#endif
-
-  // check the current application directory too
-  paths.prepend(QCoreApplication::applicationDirPath());
-  // and check "../bin" too
-  paths.prepend(QCoreApplication::applicationDirPath() + "/../bin");
+  const QStringList paths = executableSearchPaths();
 
   // check to see if we find the program in that path
   for (const auto& dir : paths) {
@@ -136,21 +154,7 @@ QStringList findExecutablePaths(QStringList programs)
 {
   QStringList result;
 
-  // we want to return the path to a program if it exists
-  // using the PATH system environment variable
-  QProcessEnvironment system = QProcessEnvironment::systemEnvironment();
-  QString path = system.value("PATH");
-#ifdef Q_OS_WIN32
-  QStringList paths = path.split(';');
-#else
-  QStringList paths = path.split(':');
-  // check standard locations first
-  paths.prepend("/usr/bin");
-  paths.prepend("/usr/local/bin");
-#endif
-
-  // check the current application directory too
-  paths.prepend(QCoreApplication::applicationDirPath());
+  const QStringList paths = executableSearchPaths();
 
   // loop through all programs and all possible paths
   for (const auto& program : programs) {

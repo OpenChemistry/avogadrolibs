@@ -6,10 +6,12 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/qtgui/packagemanager.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 #include <QtCore/QTemporaryDir>
 #include <QtCore/QVariantMap>
@@ -19,8 +21,21 @@
 using Avogadro::QtGui::PackageManager;
 
 namespace {
+// Ensure a QCoreApplication exists and that QSettings has an organisation and
+// application to write under. findExecutablePath(), reached via
+// resolveCommandLine(), searches applicationDirPath(), which warns and returns
+// an empty string without an application object — turning the first search
+// entries into root-relative paths. The test binary uses gtest_main, which
+// creates none. argv[0] matches the name set below, so the QSettings scope is
+// the same either way.
 void ensureSettingsContext()
 {
+  if (!QCoreApplication::instance()) {
+    static int argc = 1;
+    static char name[] = "AvogadroLibsTests";
+    static char* argv[] = { name, nullptr };
+    static QCoreApplication app(argc, argv);
+  }
   if (QCoreApplication::organizationName().isEmpty())
     QCoreApplication::setOrganizationName(QStringLiteral("OpenChemistry"));
   if (QCoreApplication::applicationName().isEmpty())
@@ -73,6 +88,7 @@ protected:
     settings.sync();
   }
 
+public:
   static QByteArray sampleToml()
   {
     return R"(
@@ -133,6 +149,7 @@ input-format = "cjson"
 )";
   }
 
+protected:
   std::unique_ptr<QTemporaryDir> m_tmpDir;
   QString m_packageDir;
 };
@@ -850,4 +867,341 @@ nested.key = "val"
   EXPECT_EQ(nested["key"].toString(), "val");
 
   pm->unregisterPackage("parse-test");
+}
+
+// ---------------------------------------------------------------------------
+// Installed-environment probing
+//
+// Package commands run as "pixi run --as-is", which is shorthand for
+// --no-install --frozen and so never creates a missing environment. A package
+// installed while pixi was absent lives in .venv instead, and must keep
+// running from there until it is installed again.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+// Relative path of the directory a console script is installed into.
+QString pixiBinDir()
+{
+#ifdef Q_OS_WIN
+  return QStringLiteral("/.pixi/envs/default/Scripts");
+#else
+  return QStringLiteral("/.pixi/envs/default/bin");
+#endif
+}
+
+QString venvBinDir()
+{
+#ifdef Q_OS_WIN
+  return QStringLiteral("/.venv/Scripts");
+#else
+  return QStringLiteral("/.venv/bin");
+#endif
+}
+
+// Create a stand-in for a pip/pixi installed console script.
+bool createConsoleScript(const QString& binDir, const QString& command,
+                         bool executable = true)
+{
+  if (!QDir().mkpath(binDir))
+    return false;
+
+#ifdef Q_OS_WIN
+  const QString path = binDir + '/' + command + ".exe";
+#else
+  const QString path = binDir + '/' + command;
+#endif
+  if (writeTextFile(path, "#!/bin/sh\n").isEmpty())
+    return false;
+
+  QFile::Permissions perms = QFile::ReadOwner | QFile::WriteOwner;
+  if (executable)
+    perms |= QFile::ExeOwner;
+  return QFile::setPermissions(path, perms);
+}
+
+} // namespace
+
+TEST_F(PackageManagerTest, scriptPathsEmptyWithoutEnvironment)
+{
+  EXPECT_TRUE(
+    PackageManager::pixiScriptPath(m_packageDir, "avogadro-test-plugin")
+      .isEmpty());
+  EXPECT_TRUE(
+    PackageManager::venvScriptPath(m_packageDir, "avogadro-test-plugin")
+      .isEmpty());
+}
+
+TEST_F(PackageManagerTest, scriptPathsRejectEmptyArguments)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "cmd"));
+
+  EXPECT_TRUE(PackageManager::pixiScriptPath(QString(), "cmd").isEmpty());
+  EXPECT_TRUE(
+    PackageManager::pixiScriptPath(m_packageDir, QString()).isEmpty());
+  EXPECT_TRUE(PackageManager::venvScriptPath(QString(), "cmd").isEmpty());
+  EXPECT_TRUE(
+    PackageManager::venvScriptPath(m_packageDir, QString()).isEmpty());
+}
+
+TEST_F(PackageManagerTest, pixiScriptPathFindsInstalledCommand)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd"));
+
+  const QString found = PackageManager::pixiScriptPath(m_packageDir, "avo-cmd");
+  ASSERT_FALSE(found.isEmpty());
+  EXPECT_TRUE(found.startsWith(m_packageDir + pixiBinDir()));
+  EXPECT_TRUE(QFileInfo(found).isExecutable());
+
+  // A pixi environment is not a venv, and vice versa.
+  EXPECT_TRUE(
+    PackageManager::venvScriptPath(m_packageDir, "avo-cmd").isEmpty());
+}
+
+TEST_F(PackageManagerTest, venvScriptPathFindsInstalledCommand)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+
+  const QString found = PackageManager::venvScriptPath(m_packageDir, "avo-cmd");
+  ASSERT_FALSE(found.isEmpty());
+  EXPECT_TRUE(found.startsWith(m_packageDir + venvBinDir()));
+
+  EXPECT_TRUE(
+    PackageManager::pixiScriptPath(m_packageDir, "avo-cmd").isEmpty());
+}
+
+TEST_F(PackageManagerTest, scriptPathsIgnoreNonExecutableFiles)
+{
+  // A package directory copied off a read-only medium (or unpacked without
+  // permissions) can hold a .pixi tree whose contents cannot be run.
+  ASSERT_TRUE(
+    createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd", false));
+
+  EXPECT_TRUE(
+    PackageManager::pixiScriptPath(m_packageDir, "avo-cmd").isEmpty());
+}
+
+// ---------------------------------------------------------------------------
+// scanDirectory() environment checks
+//
+// The pyproject.toml hash alone is not enough to decide that a registered
+// package is ready to use: installing pixi after a package was pip-installed
+// leaves the manifest untouched but changes which backend we should use.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+// scanDirectory() looks at the immediate subdirectories of what it is given,
+// so nest a package one level below the directory that will be scanned.
+// Returns the package directory, or an empty string on failure.
+QString createScannablePackage(const QString& scanDir, const QByteArray& toml)
+{
+  const QString packageDir = scanDir + "/test-plugin";
+  if (!QDir().mkpath(packageDir))
+    return {};
+  if (writeTextFile(packageDir + "/pyproject.toml", toml).isEmpty())
+    return {};
+  return packageDir;
+}
+
+// Whether this machine has anything capable of building an environment.
+// scanDirectory() will not ask to re-install when it cannot help.
+bool pixiIsInstalled()
+{
+#ifdef Q_OS_WIN
+  return !Avogadro::QtGui::Utilities::findExecutablePath("pixi.exe").isEmpty();
+#else
+  return !Avogadro::QtGui::Utilities::findExecutablePath("pixi").isEmpty();
+#endif
+}
+
+bool canInstallPackages()
+{
+#ifdef Q_OS_WIN
+  const QStringList pythonNames = { "python.exe", "python3.exe" };
+#else
+  const QStringList pythonNames = { "python3", "python" };
+#endif
+  for (const QString& name : pythonNames) {
+    if (!Avogadro::QtGui::Utilities::findExecutablePath(name).isEmpty())
+      return true;
+  }
+  return pixiIsInstalled();
+}
+
+} // namespace
+
+TEST_F(PackageManagerTest, scanDirectoryReturnsUnregisteredPackage)
+{
+  const QString scanDir = m_packageDir + "/scan";
+  const QString pkgDir = createScannablePackage(scanDir, sampleToml());
+  ASSERT_FALSE(pkgDir.isEmpty());
+
+  EXPECT_TRUE(PackageManager::instance()->scanDirectory(scanDir).contains(
+    QDir(pkgDir).absolutePath()));
+}
+
+TEST_F(PackageManagerTest, scanDirectorySkipsPackageWithPixiEnvironment)
+{
+  const QString scanDir = m_packageDir + "/scan";
+  const QString pkgDir = createScannablePackage(scanDir, sampleToml());
+  ASSERT_FALSE(pkgDir.isEmpty());
+
+  auto* pm = PackageManager::instance();
+  ASSERT_TRUE(pm->registerPackage(pkgDir));
+  ASSERT_TRUE(
+    createConsoleScript(pkgDir + pixiBinDir(), "avogadro-test-plugin"));
+
+  // Manifest unchanged and the preferred backend is in place: nothing to do.
+  EXPECT_FALSE(
+    pm->scanDirectory(scanDir).contains(QDir(pkgDir).absolutePath()));
+}
+
+TEST_F(PackageManagerTest, scanDirectoryRescansPackageWithMissingEnvironment)
+{
+  if (!canInstallPackages())
+    GTEST_SKIP() << "no pixi or python available to install with";
+
+  const QString scanDir = m_packageDir + "/scan";
+  const QString pkgDir = createScannablePackage(scanDir, sampleToml());
+  ASSERT_FALSE(pkgDir.isEmpty());
+
+  auto* pm = PackageManager::instance();
+  ASSERT_TRUE(pm->registerPackage(pkgDir));
+
+  // Registered, manifest unchanged, but nothing was ever installed — the
+  // install failed, or the environment was removed. Offer to install again.
+  EXPECT_TRUE(pm->scanDirectory(scanDir).contains(QDir(pkgDir).absolutePath()));
+}
+
+TEST_F(PackageManagerTest, scanDirectoryRescansVenvPackageOncePixiIsAvailable)
+{
+  const QString scanDir = m_packageDir + "/scan";
+  const QString pkgDir = createScannablePackage(scanDir, sampleToml());
+  ASSERT_FALSE(pkgDir.isEmpty());
+
+  auto* pm = PackageManager::instance();
+  ASSERT_TRUE(pm->registerPackage(pkgDir));
+  ASSERT_TRUE(
+    createConsoleScript(pkgDir + venvBinDir(), "avogadro-test-plugin"));
+
+  // A pip-installed package still runs, so it is only worth re-installing in
+  // order to migrate it to pixi — and only if pixi is actually here now.
+  EXPECT_EQ(pm->scanDirectory(scanDir).contains(QDir(pkgDir).absolutePath()),
+            pixiIsInstalled());
+}
+
+// ---------------------------------------------------------------------------
+// removeSupersededVenv()
+//
+// Deleting the pip-installed tree is the one destructive step in a migration,
+// so it must happen only once pixi can demonstrably run the command.
+// ---------------------------------------------------------------------------
+
+TEST_F(PackageManagerTest, removeSupersededVenvDeletesVenvOncePixiProvidesIt)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd"));
+
+  EXPECT_TRUE(PackageManager::removeSupersededVenv(m_packageDir, "avo-cmd"));
+  EXPECT_FALSE(QDir(m_packageDir + "/.venv").exists());
+
+  // The pixi environment must be left alone.
+  EXPECT_FALSE(
+    PackageManager::pixiScriptPath(m_packageDir, "avo-cmd").isEmpty());
+}
+
+TEST_F(PackageManagerTest, removeSupersededVenvKeepsVenvWithoutPixiCommand)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+
+  // No pixi environment at all: removing the venv would leave the package
+  // with no way to run.
+  EXPECT_FALSE(PackageManager::removeSupersededVenv(m_packageDir, "avo-cmd"));
+  EXPECT_TRUE(QDir(m_packageDir + "/.venv").exists());
+}
+
+TEST_F(PackageManagerTest, removeSupersededVenvKeepsVenvWhenPixiEnvLacksCommand)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+  // A pixi environment exists, but the install did not put our command in it.
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "other-cmd"));
+
+  EXPECT_FALSE(PackageManager::removeSupersededVenv(m_packageDir, "avo-cmd"));
+  EXPECT_TRUE(QDir(m_packageDir + "/.venv").exists());
+}
+
+TEST_F(PackageManagerTest, removeSupersededVenvIgnoresPackageWithoutVenv)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd"));
+
+  EXPECT_FALSE(PackageManager::removeSupersededVenv(m_packageDir, "avo-cmd"));
+}
+
+TEST_F(PackageManagerTest, removeSupersededVenvRejectsEmptyArguments)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd"));
+
+  // An empty package directory must never be turned into a path to delete,
+  // and an unknown command is not evidence that pixi can take over.
+  EXPECT_FALSE(PackageManager::removeSupersededVenv(QString(), "avo-cmd"));
+  EXPECT_FALSE(PackageManager::removeSupersededVenv(m_packageDir, QString()));
+  EXPECT_TRUE(QDir(m_packageDir + "/.venv").exists());
+}
+
+// ---------------------------------------------------------------------------
+// resolveCommandLine()
+//
+// The single place that decides which backend runs a package command, so both
+// the run sites (PythonScript and loadOptionsFromScript) inherit the policy.
+// ---------------------------------------------------------------------------
+
+TEST_F(PackageManagerTest, resolveCommandLinePrefersPixiEnvironment)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd"));
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+
+  const auto commandLine =
+    PackageManager::resolveCommandLine(m_packageDir, "avo-cmd");
+
+  // Only meaningful where pixi is installed; elsewhere the venv is the only
+  // option and the fallback case below covers it.
+#ifdef Q_OS_WIN
+  const bool pixiInstalled =
+    !Avogadro::QtGui::Utilities::findExecutablePath("pixi.exe").isEmpty();
+#else
+  const bool pixiInstalled =
+    !Avogadro::QtGui::Utilities::findExecutablePath("pixi").isEmpty();
+#endif
+  if (!pixiInstalled)
+    GTEST_SKIP() << "pixi is not installed on this machine";
+
+  EXPECT_TRUE(commandLine.program.endsWith("pixi") ||
+              commandLine.program.endsWith("pixi.exe"));
+  EXPECT_EQ(commandLine.prefixArgs,
+            QStringList({ "run", "--as-is", "avo-cmd" }));
+}
+
+TEST_F(PackageManagerTest, resolveCommandLineFallsBackToVenvScript)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+
+  // No pixi environment, so the console script is run directly and needs no
+  // arguments in front of its own.
+  const auto commandLine =
+    PackageManager::resolveCommandLine(m_packageDir, "avo-cmd");
+
+  EXPECT_EQ(commandLine.program,
+            PackageManager::venvScriptPath(m_packageDir, "avo-cmd"));
+  EXPECT_TRUE(commandLine.prefixArgs.isEmpty());
+}
+
+TEST_F(PackageManagerTest, resolveCommandLineEmptyWithoutAnyEnvironment)
+{
+  const auto commandLine =
+    PackageManager::resolveCommandLine(m_packageDir, "avo-cmd");
+
+  EXPECT_TRUE(commandLine.program.isEmpty());
+  EXPECT_TRUE(commandLine.prefixArgs.isEmpty());
 }

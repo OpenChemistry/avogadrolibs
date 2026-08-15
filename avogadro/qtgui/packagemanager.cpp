@@ -132,41 +132,81 @@ static QString findInstalledScript(const QString& packageDir,
   return {};
 }
 
+// Names to try, in order of preference, when looking for a Python
+// interpreter to install a package with.
+static QStringList pythonExecutableNames()
+{
+#ifdef Q_OS_WIN
+  return { QStringLiteral("python.exe"), QStringLiteral("python3.exe") };
+#else
+  return { QStringLiteral("python3"), QStringLiteral("python") };
+#endif
+}
+
+// Full path to the pixi executable, or an empty string if it is not installed.
+static QString findPixiExecutable()
+{
+#ifdef Q_OS_WIN
+  const QString pixiName = QStringLiteral("pixi.exe");
+#else
+  const QString pixiName = QStringLiteral("pixi");
+#endif
+  const QString pixiDir = Utilities::findExecutablePath(pixiName);
+  return pixiDir.isEmpty() ? QString() : pixiDir + '/' + pixiName;
+}
+
+QString PackageManager::pixiScriptPath(const QString& packageDir,
+                                       const QString& command)
+{
+  if (packageDir.isEmpty() || command.isEmpty())
+    return {};
+  return findInstalledScript(packageDir, command, true);
+}
+
+QString PackageManager::venvScriptPath(const QString& packageDir,
+                                       const QString& command)
+{
+  if (packageDir.isEmpty() || command.isEmpty())
+    return {};
+  return findInstalledScript(packageDir, command, false);
+}
+
+PackageManager::CommandLine PackageManager::resolveCommandLine(
+  const QString& packageDir, const QString& command)
+{
+  CommandLine commandLine;
+
+  const QString pixiExe = findPixiExecutable();
+  if (!pixiExe.isEmpty() && !pixiScriptPath(packageDir, command).isEmpty()) {
+    commandLine.program = pixiExe;
+    commandLine.prefixArgs = { QStringLiteral("run"), QStringLiteral("--as-is"),
+                               command };
+    return commandLine;
+  }
+
+  commandLine.program = venvScriptPath(packageDir, command);
+  return commandLine;
+}
+
 QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
                                                   const QString& command,
                                                   const QString& identifier)
 {
-  // Locate pixi or the venv-installed script.
-#ifdef Q_OS_WIN
-  QString pixiName = QStringLiteral("pixi.exe");
-#else
-  QString pixiName = QStringLiteral("pixi");
-#endif
-  QString pixiDir = Utilities::findExecutablePath(pixiName);
-  QString pixiExe = pixiDir.isEmpty() ? QString() : pixiDir + '/' + pixiName;
-  QProcess proc;
-  proc.setWorkingDirectory(packageDir);
+  const CommandLine commandLine = resolveCommandLine(packageDir, command);
+  if (commandLine.program.isEmpty()) {
+    qWarning() << "PackageManager: no installed environment providing"
+               << command << "in" << packageDir;
+    return {};
+  }
 
-  QStringList userOptsArgs;
+  QStringList userOptsArgs = commandLine.prefixArgs;
   if (!identifier.isEmpty())
     userOptsArgs << identifier;
   userOptsArgs << QStringLiteral("--user-options");
 
-  if (!pixiExe.isEmpty()) {
-    QStringList pixiArgs = { QStringLiteral("run"), QStringLiteral("--as-is"),
-                             command };
-    pixiArgs << userOptsArgs;
-    proc.start(pixiExe, pixiArgs);
-  } else {
-    // Try the venv-installed script directly.
-    QString scriptExe = findInstalledScript(packageDir, command, false);
-    if (scriptExe.isEmpty()) {
-      qWarning() << "PackageManager: cannot find pixi or venv script for"
-                 << command << "in" << packageDir;
-      return {};
-    }
-    proc.start(scriptExe, userOptsArgs);
-  }
+  QProcess proc;
+  proc.setWorkingDirectory(packageDir);
+  proc.start(commandLine.program, userOptsArgs);
 
   // Plugins may always expect some valid JSON as input over stdin, even if it's
   // just an empty object
@@ -306,10 +346,60 @@ PackageManager::FeatureEntry PackageManager::featureEntryFromJson(
 // Installation
 // ---------------------------------------------------------------------------
 
-// Read the *-setup script name from [project.scripts], if any.
-static QString readSetupCommand(const QString& packageDir)
+// Entry-point names read from [project.scripts].
+struct PackageCommands
 {
-  QString tomlPath = packageDir + QStringLiteral("/pyproject.toml");
+  QString command;      ///< the avogadro-* entry point
+  QString setupCommand; ///< the avogadro-*-setup helper, if any
+};
+
+// Only allow script names with safe characters (letters, digits, hyphen,
+// underscore) to prevent path traversal when the name is used to build
+// an executable path.
+static bool isSafeScriptName(const QString& name)
+{
+  for (const QChar ch : name) {
+    const ushort u = ch.unicode();
+    if (!((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') ||
+          (u >= '0' && u <= '9') || u == '-' || u == '_'))
+      return false;
+  }
+  return !name.isEmpty();
+}
+
+// Pick the avogadro-* entry points out of a parsed [project.scripts] table.
+// @p tomlPath is used only for warnings.
+static PackageCommands selectScriptCommands(const QVariantMap& scripts,
+                                            const QString& tomlPath)
+{
+  PackageCommands commands;
+
+  for (auto it = scripts.constBegin(); it != scripts.constEnd(); ++it) {
+    if (!it.key().startsWith(QStringLiteral("avogadro-")) ||
+        !isSafeScriptName(it.key()))
+      continue;
+
+    // *-setup scripts are post-install helpers, not the main command.
+    if (it.key().endsWith(QStringLiteral("-setup"))) {
+      if (commands.setupCommand.isEmpty())
+        commands.setupCommand = it.key();
+    } else if (commands.command.isEmpty()) {
+      commands.command = it.key();
+    } else {
+      // in principle we should stop at the first, but check for multiple
+      // entries and warn about them
+      qWarning() << "PackageManager: multiple avogadro-* entry points in"
+                 << tomlPath;
+    }
+  }
+
+  return commands;
+}
+
+// Read the entry-point names from [project.scripts], if any.
+static PackageCommands readScriptCommands(const QString& packageDir)
+{
+  const QString tomlPath = packageDir + QStringLiteral("/pyproject.toml");
   QFile tomlFile(tomlPath);
   if (!tomlFile.open(QIODevice::ReadOnly))
     return {};
@@ -321,30 +411,38 @@ static QString readSetupCommand(const QString& packageDir)
   if (!ok)
     return {};
 
-  const QVariantMap scripts = root.value(QStringLiteral("project"))
+  return selectScriptCommands(root.value(QStringLiteral("project"))
                                 .toMap()
                                 .value(QStringLiteral("scripts"))
-                                .toMap();
-  // Only allow script names with safe characters (letters, digits, hyphen,
-  // underscore) to prevent path traversal when the name is used to build
-  // an executable path.
-  auto isSafeScriptName = [](const QString& name) {
-    for (const QChar ch : name) {
-      const ushort u = ch.unicode();
-      if (!((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') ||
-            (u >= '0' && u <= '9') || u == '-' || u == '_'))
-        return false;
-    }
-    return !name.isEmpty();
-  };
+                                .toMap(),
+                              tomlPath);
+}
 
-  for (auto it = scripts.constBegin(); it != scripts.constEnd(); ++it) {
-    if (it.key().startsWith(QStringLiteral("avogadro-")) &&
-        it.key().endsWith(QStringLiteral("-setup")) &&
-        isSafeScriptName(it.key()))
-      return it.key();
+bool PackageManager::removeSupersededVenv(const QString& packageDir,
+                                          const QString& command)
+{
+  // Never build a path to remove recursively out of an empty directory.
+  if (packageDir.isEmpty())
+    return false;
+
+  const QString venvDir = packageDir + QStringLiteral("/.venv");
+  if (!QDir(venvDir).exists())
+    return false;
+
+  // Only give up the venv once pixi can actually run the command, so that a
+  // failed or partial install cannot leave the package unrunnable.
+  if (pixiScriptPath(packageDir, command).isEmpty()) {
+    qWarning() << "Keeping" << venvDir
+               << "because the pixi environment does not provide" << command;
+    return false;
   }
-  return {};
+
+  if (!QDir(venvDir).removeRecursively()) {
+    qWarning() << "Could not remove superseded virtual environment" << venvDir;
+    return false;
+  }
+
+  return true;
 }
 
 // Run a package's *-setup command (e.g. to download ML model weights).
@@ -383,35 +481,25 @@ static void runSetupScript(const QString& packageDir, const QString& setupCmd,
 
 void PackageManager::installPackages(const QStringList& packageDirs)
 {
-#ifdef Q_OS_WIN
-  const QString pixiName = QStringLiteral("pixi.exe");
-  const QStringList pythonNames = { QStringLiteral("python.exe"),
-                                    QStringLiteral("python3.exe") };
-#else
-  const QString pixiName = QStringLiteral("pixi");
-  const QStringList pythonNames = { QStringLiteral("python3"),
-                                    QStringLiteral("python") };
-#endif
-  QString pixiDir = Utilities::findExecutablePath(pixiName);
-  QString pixiExe = pixiDir.isEmpty() ? QString() : pixiDir + '/' + pixiName;
+  QString pixiExe = findPixiExecutable();
   QString pythonExe;
   if (pixiExe.isEmpty()) {
-    for (const QString& pythonName : pythonNames) {
-      const QString pythonDir = Utilities::findExecutablePath(pythonName);
-      if (!pythonDir.isEmpty()) {
-        pythonExe = pythonDir + '/' + pythonName;
-        break;
-      }
-    }
+    // Paths come back in the order the names were given, so the first hit is
+    // the most preferred interpreter.
+    const QStringList pythons =
+      Utilities::findExecutablePaths(pythonExecutableNames());
+    if (!pythons.isEmpty())
+      pythonExe = pythons.constFirst();
   }
 
-  // Pre-read setup commands on the main thread so the install thread doesn't
-  // need to re-parse pyproject.toml (parsePackage() will read it again later).
-  QMap<QString, QString> setupCommands;
+  // Pre-read entry-point names on the main thread so the install thread
+  // doesn't need to re-parse pyproject.toml (parsePackage() reads it again
+  // later).
+  QMap<QString, PackageCommands> packageCommands;
   for (const QString& dir : packageDirs)
-    setupCommands[dir] = readSetupCommand(dir);
+    packageCommands[dir] = readScriptCommands(dir);
   QThread* installThread =
-    QThread::create([pixiExe, pythonExe, packageDirs, setupCommands]() {
+    QThread::create([pixiExe, pythonExe, packageDirs, packageCommands]() {
       constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
       for (const QString& packageDir : packageDirs) {
         if (pixiExe.isEmpty() && pythonExe.isEmpty())
@@ -442,10 +530,16 @@ void PackageManager::installPackages(const QStringList& packageDirs)
             qWarning() << "pixi install failed for" << packageDir << ":"
                        << QString::fromUtf8(installProc.readAllStandardError());
           } else {
+            // A package set up before pixi was available was pip-installed
+            // into .venv. Now that pixi has taken over, drop that tree.
+            removeSupersededVenv(packageDir,
+                                 packageCommands.value(packageDir).command);
+
             // Run the *-setup script if one is declared (e.g. to download ML
             // model weights).
-            runSetupScript(packageDir, setupCommands.value(packageDir), pixiExe,
-                           true, installTimeoutMs);
+            runSetupScript(packageDir,
+                           packageCommands.value(packageDir).setupCommand,
+                           pixiExe, true, installTimeoutMs);
           }
         } else {
           // Step 1: create a venv
@@ -486,7 +580,8 @@ void PackageManager::installPackages(const QStringList& packageDirs)
                        << installProc.readAllStandardError();
           } else {
             // Run the *-setup script if one is declared.
-            runSetupScript(packageDir, setupCommands.value(packageDir),
+            runSetupScript(packageDir,
+                           packageCommands.value(packageDir).setupCommand,
                            QStringLiteral(), false, installTimeoutMs);
           }
         }
@@ -547,6 +642,31 @@ bool PackageManager::unregisterPackage(const QString& packageName)
 // Directory scanning
 // ---------------------------------------------------------------------------
 
+// Decide whether an already-registered package whose pyproject.toml is
+// unchanged should nevertheless be installed again. Nothing about the package
+// itself has changed, but the environment it was installed into may be missing
+// or may have been built with a backend we no longer prefer: a package
+// pip-installed into .venv predates pixi being available on this machine, and
+// "pixi run --as-is" will not create the pixi environment on demand. Both are
+// repaired by installing again.
+static bool environmentNeedsInstall(const QString& packageDir,
+                                    const QString& command, bool pixiAvailable,
+                                    bool canInstall)
+{
+  // Nothing to install with, or nothing to install — don't ask every launch.
+  if (!canInstall || command.isEmpty())
+    return false;
+
+  if (!PackageManager::pixiScriptPath(packageDir, command).isEmpty())
+    return false; // usable pixi environment, the preferred backend
+
+  if (PackageManager::venvScriptPath(packageDir, command).isEmpty())
+    return true; // no usable environment at all
+
+  // A working .venv, but pixi has been installed since it was created.
+  return pixiAvailable;
+}
+
 QStringList PackageManager::scanDirectory(const QString& directoryPath)
 {
   QStringList result;
@@ -559,6 +679,12 @@ QStringList PackageManager::scanDirectory(const QString& directoryPath)
 #endif
     return result;
   }
+
+  // Whether we could repair a package with a missing or outdated environment.
+  const bool pixiAvailable = !findPixiExecutable().isEmpty();
+  const bool canInstall =
+    pixiAvailable ||
+    !Utilities::findExecutablePaths(pythonExecutableNames()).isEmpty();
 
   const QStringList subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
@@ -591,7 +717,8 @@ QStringList PackageManager::scanDirectory(const QString& directoryPath)
         QByteArray cachedHash =
           settings.value(prefix + "tomlHash").toByteArray();
         if (cachedHash == currentHash) {
-          needsRegistration = false;
+          needsRegistration = environmentNeedsInstall(
+            packageDir, info.command, pixiAvailable, canInstall);
         }
         break;
       }
@@ -734,20 +861,9 @@ bool PackageManager::parsePackage(const QString& packageDir, PackageInfo& info,
   }
 
   // --- [project.scripts] → find the avogadro- entry point ---
-  // Skip *-setup scripts; those are post-install helpers, not the main command.
-  QVariantMap scripts = project.value(QStringLiteral("scripts")).toMap();
-  for (auto it = scripts.constBegin(); it != scripts.constEnd(); ++it) {
-    if (it.key().startsWith(QStringLiteral("avogadro-")) &&
-        !it.key().endsWith(QStringLiteral("-setup"))) {
-      if (info.command.isEmpty())
-        info.command = it.key();
-      // in principle we should break, but check for multiple entries
-      // and warn about them
-      else
-        qWarning() << "PackageManager: multiple avogadro-* entry points in"
-                   << tomlPath;
-    }
-  }
+  info.command = selectScriptCommands(
+                   project.value(QStringLiteral("scripts")).toMap(), tomlPath)
+                   .command;
   if (info.command.isEmpty()) {
     qWarning() << "PackageManager: no avogadro-* entry in [project.scripts]"
                << "in" << tomlPath;
