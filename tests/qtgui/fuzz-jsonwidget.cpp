@@ -5,9 +5,9 @@
 
 #include <fuzzer/FuzzedDataProvider.h>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
+#include <QtWidgets/QApplication>
 
 #include <avogadro/qtgui/jsonwidget.h>
 
@@ -17,12 +17,18 @@ namespace {
 
 constexpr size_t kMaxJsonLen = 8192;
 
-QCoreApplication* ensureApp()
+QApplication* ensureApp()
 {
   static int argc = 1;
   static char arg0[] = "fuzz";
   static char* argv[] = { arg0, nullptr };
-  static QCoreApplication app(argc, argv);
+  // JsonWidget is a QWidget, so a QCoreApplication is not enough. Default to
+  // the offscreen platform so the fuzzer runs without a display.
+  static const bool offscreen =
+    !qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM") ||
+    qputenv("QT_QPA_PLATFORM", "offscreen");
+  (void)offscreen;
+  static QApplication app(argc, argv);
   return &app;
 }
 

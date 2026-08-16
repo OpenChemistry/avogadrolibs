@@ -23,35 +23,37 @@
 using Avogadro::Core::Molecule;
 using Avogadro::Io::FileFormatManager;
 
+namespace {
+
+// Register the quantum file formats exactly once. Re-registering on every
+// iteration leaks each rejected format object and exhausts memory in seconds.
+bool registerFormats()
+{
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::GAMESSUSOutput);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::GaussianFchk);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::GaussianCube);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::GenericJson);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::GenericOutput);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::MoldenFile);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::MopacAux);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::NWChemJson);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::NWChemLog);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::ORCAOutput);
+  // Avogadro::Io::FileFormatManager::registerFormat(new
+  // Avogadro::QuantumIO::QCSchema);
+  return true;
+}
+
+} // namespace
+
 // FUZZ_INPUT_FORMAT is defined in the build system
 // e.g., "cjson", "sdf", "xyz", etc.
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
 {
-  std::string input(reinterpret_cast<const char*>(Data), Size);
+  static const bool registered = registerFormats();
+  (void)registered;
 
-  // Register quantum file formats
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::GAMESSUSOutput);
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::GaussianFchk);
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::GaussianCube);
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::GenericJson);
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::GenericOutput);
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::MoldenFile);
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::MopacAux);
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::NWChemJson);
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::NWChemLog);
-  Avogadro::Io::FileFormatManager::registerFormat(
-    new Avogadro::QuantumIO::ORCAOutput);
-  // Avogadro::Io::FileFormatManager::registerFormat(new
-  // Avogadro::QuantumIO::QCSchema);
+  std::string input(reinterpret_cast<const char*>(Data), Size);
 
   Molecule molecule;
   FileFormatManager::instance().readString(molecule, input, FUZZ_INPUT_FORMAT);

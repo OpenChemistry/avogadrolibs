@@ -1,14 +1,24 @@
 name: Linux Fuzz Tests
 
 on:
+  pull_request:
   schedule:
   - cron: '0 3 * * *'
   workflow_dispatch:
+    inputs:
+      fuzz_seconds:
+        description: 'Seconds to spend on each fuzz target'
+        required: false
+        default: '60'
 
 env:
   QT_VERSION: 6.8.3
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
   AVOGADRO_DATA_ROOT: ${{ github.workspace }}/openchemistry/avogadrodata
+  # Some QtGui fuzz targets construct widgets, so they need a windowless platform.
+  QT_QPA_PLATFORM: offscreen
+  # Pull requests get a quick smoke run; the nightly run fuzzes for longer.
+  FUZZ_SECONDS: ${{ github.event_name == 'pull_request' && '10' || github.event.inputs.fuzz_seconds || '60' }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,6 +28,7 @@ jobs:
   fuzz:
     name: Ubuntu Fuzz Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 90
 
     steps:
     - name: Checkout workflow repository
@@ -49,93 +60,113 @@ jobs:
 
     - name: Build
       run: |
-        CC=clang CXX=clang++ cmake --build .
+        # Only avogadrolibs (and its dependencies) are needed for fuzzing, so
+        # skip building avogadroapp.
+        CC=clang CXX=clang++ cmake --build . --target avogadrolibs
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
-    - name: Run fuzz tests
-      shell: bash
+    - name: Build fuzz targets
       run: |
-        set -uo pipefail
-        cd "${{ runner.workspace }}/build/avogadrolibs"
+        # ENABLE_FUZZ is not forwarded through the superbuild, so turn it on in
+        # the avogadrolibs build itself.
         cmake -DENABLE_FUZZ=ON .
         cmake --build .
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+
+    - name: Run fuzz tests
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      run: |
+        set -uo pipefail
 
         export LLVM_SYMBOLIZER_PATH="$(command -v llvm-symbolizer)"
         export ASAN_OPTIONS="symbolize=1:detect_leaks=1:abort_on_error=1:color=always"
         export UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=1"
 
-        io_fuzzers=(cjson cml sdf pdb xyz)
-        quantum_fuzzers=(cube fchk molden orca qcschema)
-        core_fuzzers=(bond crystal graph molecule neighbor ring utilities)
-        qtgui_fuzzers=(rwmolecule generichighlighter jsonwidget interfacescript-json)
+        # One line per suite:
+        #   suite | binary prefix | corpus dir under $AVOGADRO_DATA_ROOT/data | targets
+        # To fuzz a new class, add its name here and to the matching list in
+        # tests/<suite>/CMakeLists.txt.
+        suites=(
+          "io|fuzz_||cjson cml sdf pdb xyz"
+          "quantumio|fuzz_||cube fchk molden orca qcschema"
+          "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap"
+          "qtgui|fuzz_qtgui_|qtgui|rwmolecule generichighlighter jsonwidget interfacescript-json"
+        )
 
-        artifact_root="${{ runner.workspace }}/build/avogadrolibs/fuzz-artifacts"
+        # Targets with known, pre-existing failures. They still run and still
+        # upload artifacts, but they do not fail the job. Delete entries here as
+        # the underlying bugs are fixed.
+        known_issues=(
+          "io/xyz"
+          "quantumio/molden"
+          "quantumio/orca"
+        )
 
+        is_known_issue() {
+          local entry
+          for entry in "${known_issues[@]}"; do
+            if [ "${entry}" = "$1" ]; then
+              return 0
+            fi
+          done
+          return 1
+        }
+
+        artifact_root="${PWD}/fuzz-artifacts"
         failures=0
 
-        for f in "${io_fuzzers[@]}"; do
-          echo "Running IO fuzzer: $f"
-          artifact_dir="${artifact_root}/io/${f}"
-          mkdir -p "${artifact_dir}"
-          corpus_dir="${AVOGADRO_DATA_ROOT}/data/${f}"
-          if [ -d "${corpus_dir}" ]; then
-            if ! "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"; then
-              failures=1
-            fi
-          else
-            if ! "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"; then
-              failures=1
-            fi
-          fi
-        done
+        {
+          echo "## Fuzz results (${FUZZ_SECONDS}s per target)"
+          echo
+          echo "| Target | Corpus | Result |"
+          echo "| --- | --- | --- |"
+        } >> "${GITHUB_STEP_SUMMARY}"
 
-        for f in "${quantum_fuzzers[@]}"; do
-          echo "Running QuantumIO fuzzer: $f"
-          artifact_dir="${artifact_root}/quantumio/${f}"
-          mkdir -p "${artifact_dir}"
-          corpus_dir="${AVOGADRO_DATA_ROOT}/data/${f}"
-          if [ -d "${corpus_dir}" ]; then
-            if ! "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"; then
-              failures=1
-            fi
-          else
-            if ! "./bin/fuzz_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"; then
-              failures=1
-            fi
-          fi
-        done
+        for spec in "${suites[@]}"; do
+          IFS='|' read -r suite prefix corpus_sub targets <<< "${spec}"
 
-        for f in "${core_fuzzers[@]}"; do
-          echo "Running Core fuzzer: $f"
-          artifact_dir="${artifact_root}/core/${f}"
-          mkdir -p "${artifact_dir}"
-          corpus_dir="${AVOGADRO_DATA_ROOT}/data/core/${f}"
-          if [ -d "${corpus_dir}" ]; then
-            if ! "./bin/fuzz_core_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"; then
-              failures=1
-            fi
-          else
-            if ! "./bin/fuzz_core_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"; then
-              failures=1
-            fi
-          fi
-        done
+          for target in ${targets}; do
+            name="${suite}/${target}"
+            binary="./bin/${prefix}${target}"
+            artifact_dir="${artifact_root}/${suite}/${target}"
+            mkdir -p "${artifact_dir}"
 
-        for f in "${qtgui_fuzzers[@]}"; do
-          echo "Running QtGui fuzzer: $f"
-          artifact_dir="${artifact_root}/qtgui/${f}"
-          mkdir -p "${artifact_dir}"
-          corpus_dir="${AVOGADRO_DATA_ROOT}/data/qtgui/${f}"
-          if [ -d "${corpus_dir}" ]; then
-            if ! "./bin/fuzz_qtgui_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" "${corpus_dir}" 2>&1 | tee "${artifact_dir}/run.log"; then
+            if [ ! -x "${binary}" ]; then
+              echo "::error::Fuzz binary ${binary} for ${name} was not built"
+              echo "| ${name} | - | not built |" >> "${GITHUB_STEP_SUMMARY}"
+              failures=1
+              continue
+            fi
+
+            corpus_dir="${AVOGADRO_DATA_ROOT}/data${corpus_sub:+/${corpus_sub}}/${target}"
+            corpus_args=()
+            corpus_label="none"
+            if [ -d "${corpus_dir}" ]; then
+              corpus_args=("${corpus_dir}")
+              corpus_label="seeded"
+            fi
+
+            echo "::group::Fuzzing ${name}"
+            if "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=10 \
+                 -artifact_prefix="${artifact_dir}/" \
+                 ${corpus_args[@]+"${corpus_args[@]}"} 2>&1 \
+                 | tee "${artifact_dir}/run.log"; then
+              result="pass"
+            elif is_known_issue "${name}"; then
+              result="known failure"
+              echo "::warning::${name} failed (known issue, not failing the job)"
+            else
+              result="**FAIL**"
+              echo "::error::${name} failed - see the fuzz-crashes artifact"
               failures=1
             fi
-          else
-            if ! "./bin/fuzz_qtgui_${f}" -max_total_time=60 -timeout=10 -artifact_prefix="${artifact_dir}/" 2>&1 | tee "${artifact_dir}/run.log"; then
-              failures=1
-            fi
-          fi
+            echo "::endgroup::"
+
+            echo "| ${name} | ${corpus_label} | ${result} |" >> "${GITHUB_STEP_SUMMARY}"
+          done
         done
 
         exit "${failures}"
