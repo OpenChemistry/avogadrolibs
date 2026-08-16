@@ -900,6 +900,12 @@ QString venvBinDir()
 }
 
 // Create a stand-in for a pip/pixi installed console script.
+//
+// Windows has no executable bit. Unless an application opts into NTFS
+// permission checks, Qt reports a file as executable from its suffix alone
+// (.exe/.com/.bat/.cmd/.pif), so QFile::setPermissions() cannot make a .exe
+// unrunnable. A file that cannot be run is instead one that is not a runnable
+// type, so drop the suffix rather than the permission bit there.
 bool createConsoleScript(const QString& binDir, const QString& command,
                          bool executable = true)
 {
@@ -907,7 +913,8 @@ bool createConsoleScript(const QString& binDir, const QString& command,
     return false;
 
 #ifdef Q_OS_WIN
-  const QString path = binDir + '/' + command + ".exe";
+  const QString path =
+    binDir + '/' + command + (executable ? QStringLiteral(".exe") : QString());
 #else
   const QString path = binDir + '/' + command;
 #endif
@@ -973,7 +980,9 @@ TEST_F(PackageManagerTest, venvScriptPathFindsInstalledCommand)
 TEST_F(PackageManagerTest, scriptPathsIgnoreNonExecutableFiles)
 {
   // A package directory copied off a read-only medium (or unpacked without
-  // permissions) can hold a .pixi tree whose contents cannot be run.
+  // permissions) can hold a .pixi tree whose contents cannot be run. On
+  // Windows that is a leftover with no executable suffix -- see
+  // createConsoleScript().
   ASSERT_TRUE(
     createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd", false));
 
