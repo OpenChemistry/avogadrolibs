@@ -465,9 +465,10 @@ void InsertPeptide::performInsert()
       internalCoords.push_back(coord);
 
 #ifndef NDEBUG
-      qDebug() << " added " << atomName << " " << atom.index() << " " << coord.a
-               << " " << coord.b << " " << coord.c << " " << coord.length << " "
-               << coord.angle << " " << coord.dihedral;
+      qDebug() << " added " << QString::fromStdString(atomName) << " "
+               << atom.index() << " " << coord.a << " " << coord.b << " "
+               << coord.c << " " << coord.length << " " << coord.angle << " "
+               << coord.dihedral;
 #endif
 
       // Track key atoms for next residue
