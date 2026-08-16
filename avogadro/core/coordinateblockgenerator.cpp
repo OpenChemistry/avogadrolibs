@@ -12,6 +12,7 @@
 #include <avogadro/core/unitcell.h>
 
 #include <iomanip>
+#include <limits>
 
 namespace Avogadro::Core {
 
@@ -81,13 +82,18 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
     gamessAtomicNumberWidth = 5
   };
   const int indexWidth(
-    static_cast<int>(std::log10(static_cast<float>(numAtoms))) + 1);
+    numAtoms > 0
+      ? static_cast<int>(std::log10(static_cast<float>(numAtoms))) + 1
+      : 1);
 
   // Use fixed number format.
   m_stream << std::fixed;
 
-  // Count the number for each element
-  std::vector<unsigned int> elementCounts(Elements::elementCount(), 0);
+  // Count the number for each element. Atomic numbers are not limited to the
+  // real elements: files can supply custom elements (128-254) or unrecognized
+  // symbols (InvalidElement), so index the full unsigned char range.
+  std::vector<unsigned int> elementCounts(
+    std::numeric_limits<unsigned char>::max() + 1, 0);
 
   // Iterate through the atoms
   for (Index atomI = 0; atomI < numAtoms; ++atomI) {

@@ -9,6 +9,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 
+#include <algorithm>
 #include <string>
 
 using Avogadro::Vector3;
@@ -272,4 +273,40 @@ TEST(CoordinateBlockGeneratorTest, generateCoordinateBlock)
   gen.setSpecification("#ZGSNxyz01__01");
 
   EXPECT_EQ(refCoordBlock, gen.generateCoordinateBlock());
+}
+
+// Files can contain symbols that are not real elements: unrecognized symbols
+// become InvalidElement (255) and custom elements occupy 128-254. Neither is
+// a valid index into the per-element counters, so both used to write past the
+// end of that array while generating an input file.
+TEST(CoordinateBlockGeneratorTest, nonElementAtomicNumbers)
+{
+  Molecule molecule;
+  molecule.addAtom(Avogadro::InvalidElement)
+    .setPosition3d(Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(Avogadro::CustomElementMin)
+    .setPosition3d(Vector3(1.0, 0.0, 0.0));
+  molecule.addAtom(Avogadro::CustomElementMax)
+    .setPosition3d(Vector3(0.0, 1.0, 0.0));
+  molecule.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 1.0));
+
+  CoordinateBlockGenerator gen;
+  gen.setMolecule(&molecule);
+  // The spec used by the ORCA input generator.
+  gen.setSpecification("____Sxyz");
+  const std::string block(gen.generateCoordinateBlock());
+  EXPECT_EQ(4, std::count(block.begin(), block.end(), '\n'));
+
+  // "L" is the specifier that actually reads the per-element counters back.
+  gen.setSpecification("Lxyz");
+  EXPECT_FALSE(gen.generateCoordinateBlock().empty());
+}
+
+TEST(CoordinateBlockGeneratorTest, emptyMolecule)
+{
+  Molecule molecule;
+  CoordinateBlockGenerator gen;
+  gen.setMolecule(&molecule);
+  gen.setSpecification("#Sxyz");
+  EXPECT_EQ(std::string(), gen.generateCoordinateBlock());
 }

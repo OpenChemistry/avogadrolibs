@@ -175,6 +175,54 @@ TEST(XyzTest, readAtomicNumbers)
   EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
 }
 
+// Crystallography tools (e.g. Mercury) export atom labels rather than plain
+// symbols. Those used to read back as InvalidElement, which poisoned the
+// electron count and the formula.
+TEST(XyzTest, readAtomLabels)
+{
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string str = "6\nWERPOY\n"
+                    "N1   0.0 0.0 0.0\n"
+                    "C12  1.5 0.0 0.0\n"
+                    "S1   3.0 0.0 0.0\n"
+                    "CL1  4.5 0.0 0.0\n"
+                    "Cl2  6.0 0.0 0.0\n"
+                    "Nb1  7.5 0.0 0.0\n";
+  ASSERT_TRUE(xyz.readString(str, molecule));
+  ASSERT_EQ(molecule.atomCount(), 6);
+
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 7);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 6);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 16);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), 17);
+  EXPECT_EQ(molecule.atom(4).atomicNumber(), 17);
+  // The two-letter symbol must win over the one-letter one.
+  EXPECT_EQ(molecule.atom(5).atomicNumber(), 41);
+
+  EXPECT_EQ(molecule.formula(), "CCl2NNbS");
+}
+
+// Plain symbols and custom elements must not be re-interpreted by the label
+// fallback, and a label with no recognizable element must not be guessed at.
+TEST(XyzTest, readAtomLabelsDoesNotOverreach)
+{
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string str = "4\ncomment\n"
+                    "Nb  0.0 0.0 0.0\n"
+                    "Xx  1.5 0.0 0.0\n"
+                    "Xaa 3.0 0.0 0.0\n"
+                    "Q1  4.5 0.0 0.0\n";
+  ASSERT_TRUE(xyz.readString(str, molecule));
+  ASSERT_EQ(molecule.atomCount(), 4);
+
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 41);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 0);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), Avogadro::CustomElementMin);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), Avogadro::InvalidElement);
+}
+
 TEST(XyzTest, write)
 {
   XyzFormat xyz;
