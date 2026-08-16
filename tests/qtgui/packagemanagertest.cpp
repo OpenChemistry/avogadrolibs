@@ -6,10 +6,12 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/qtgui/packagemanager.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 #include <QtCore/QTemporaryDir>
 #include <QtCore/QVariantMap>
@@ -19,8 +21,21 @@
 using Avogadro::QtGui::PackageManager;
 
 namespace {
+// Ensure a QCoreApplication exists and that QSettings has an organisation and
+// application to write under. findExecutablePath(), reached via
+// resolveCommandLine(), searches applicationDirPath(), which warns and returns
+// an empty string without an application object — turning the first search
+// entries into root-relative paths. The test binary uses gtest_main, which
+// creates none. argv[0] matches the name set below, so the QSettings scope is
+// the same either way.
 void ensureSettingsContext()
 {
+  if (!QCoreApplication::instance()) {
+    static int argc = 1;
+    static char name[] = "AvogadroLibsTests";
+    static char* argv[] = { name, nullptr };
+    static QCoreApplication app(argc, argv);
+  }
   if (QCoreApplication::organizationName().isEmpty())
     QCoreApplication::setOrganizationName(QStringLiteral("OpenChemistry"));
   if (QCoreApplication::applicationName().isEmpty())
@@ -73,6 +88,7 @@ protected:
     settings.sync();
   }
 
+public:
   static QByteArray sampleToml()
   {
     return R"(
@@ -133,6 +149,7 @@ input-format = "cjson"
 )";
   }
 
+protected:
   std::unique_ptr<QTemporaryDir> m_tmpDir;
   QString m_packageDir;
 };
@@ -851,8 +868,6 @@ nested.key = "val"
 
   pm->unregisterPackage("parse-test");
 }
-<<<<<<< Updated upstream
-=======
 
 // ---------------------------------------------------------------------------
 // Installed-environment probing
@@ -1199,4 +1214,3 @@ TEST_F(PackageManagerTest, resolveCommandLineEmptyWithoutAnyEnvironment)
   EXPECT_TRUE(commandLine.program.isEmpty());
   EXPECT_TRUE(commandLine.prefixArgs.isEmpty());
 }
->>>>>>> Stashed changes

@@ -6,6 +6,7 @@
 #include "pythonscript.h"
 
 #include "avogadropython.h"
+#include "packagemanager.h"
 #include "utilities.h"
 
 #include <QtCore/QDebug>
@@ -166,25 +167,26 @@ QString PythonScript::resolveCommand(QStringList& realArgs, QProcess& proc)
   if (customEnvironment)
     proc.setProcessEnvironment(environment);
 
-  // --- Package mode: pixi run <command> <identifier> [args] ---
+  // --- Package mode: run the command from the package's environment ---
   if (m_packageMode) {
-    if (m_pixi.isEmpty()) {
-      m_errors << tr("Package mode requires pixi but it was not found.");
+    proc.setWorkingDirectory(m_packageDir);
+
+    const PackageManager::CommandLine commandLine =
+      PackageManager::resolveCommandLine(m_packageDir, m_packageCommand);
+    if (commandLine.program.isEmpty()) {
+      m_errors << tr("The package '%1' has no installed Python environment, so "
+                     "'%2' cannot be run. Try installing the package again.")
+                    .arg(m_packageDisplayName.isEmpty() ? m_packageDir
+                                                        : m_packageDisplayName,
+                         m_packageCommand);
       return QString();
     }
 
-    realArgs.prepend(m_packageIdentifier);
-    realArgs.prepend(m_packageCommand);
-    realArgs.prepend("--as-is");
-    realArgs.prepend("run");
-
-    proc.setWorkingDirectory(m_packageDir);
-
-#ifdef Q_OS_WIN
-    return m_pixi + "/pixi.exe";
-#else
-    return m_pixi + "/pixi";
-#endif
+    // An empty identifier would otherwise be passed as an empty argument.
+    if (!m_packageIdentifier.isEmpty())
+      realArgs.prepend(m_packageIdentifier);
+    realArgs = commandLine.prefixArgs + realArgs;
+    return commandLine.program;
   }
 
   // --- Script file mode ---

@@ -26,6 +26,7 @@ set(tests
   PackageManager
   RWMolecule
   ScriptProgress
+  Utilities
 )
 
 if(Python3_EXECUTABLE)
