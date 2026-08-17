@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-08-09 03:08+0000\n"
+"POT-Creation-Date: 2026-08-16 02:34+0000\n"
 "PO-Revision-Date: 2026-08-15 07:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -42,27 +42,27 @@ msgstr ""
 "superior. Recepționat:\n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:258
-#: qtgui/interfacescript.cpp:410
+#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:286
+#: qtgui/interfacescript.cpp:454
 msgid "Non-string warning returned."
 msgstr "A fost returnat un avertisment ce nu este un șir de caractere."
 
-#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:261
-#: qtgui/interfacescript.cpp:413
+#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:289
+#: qtgui/interfacescript.cpp:457
 msgid "'warnings' member is not an array."
 msgstr "Membrul „warnings” nu este o matrice."
 
-#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:433
+#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:477
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr "Fișierul de referință „%1” nu există."
 
-#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:435
+#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:479
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr "Eroare la popularea fișierului %1: %2"
 
-#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:439
+#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:483
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
@@ -70,7 +70,7 @@ msgstr ""
 "Fișierul „%1” nu este bine format. Lipsesc membrii șirului „contents” sau "
 "„filePath”."
 
-#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:472
+#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:516
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
@@ -80,32 +80,32 @@ msgstr ""
 "nu conține șiruri de caractere:\n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:478
+#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:522
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr "Intrare de fișier formată greșit la pozițial %1: Nu este un obiect."
 
-#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:484
+#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:528
 msgid "'files' member not an array."
 msgstr "Membrul „files” nu este o matrice."
 
-#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:488
+#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:532
 msgid "'files' member missing."
 msgstr "Lipsește membrul „files”."
 
-#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:499
+#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:543
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr "Membrul „mainFile” nu se referă la o intrare din „files”."
 
-#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:504
+#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:548
 msgid "'mainFile' member must be a string."
 msgstr "Membrul „mainFile” trebuie să fie un șir de caractere."
 
-#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:515
+#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:559
 msgid "Response must be a JSON object at top-level."
 msgstr "Răspunsul trebuie să fie un obiect JSON la nivel superior."
 
-#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:519
+#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:563
 #, qt-format
 msgid ""
 "Script output:\n"
@@ -114,7 +114,7 @@ msgstr ""
 "Ieșirea scriptului:\n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:563
+#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:607
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -141,7 +141,7 @@ msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr "Eroare la salvarea reprezentării moleculei în șir de caractere: %1"
 
-#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:633
+#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:677
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -154,7 +154,7 @@ msgstr ""
 "\n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:642
+#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:686
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -1090,28 +1090,40 @@ msgstr "Toate fișierele"
 msgid "All supported formats"
 msgstr "Toate formatele acceptate"
 
-#: qtgui/interfacescript.cpp:275
+#: qtgui/interfacescript.cpp:270
+#, qt-format
+msgid ""
+"Script standard error:\n"
+"%1"
+msgstr ""
+
+#: qtgui/interfacescript.cpp:322
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 "Eroare la citirea reprezentării moleculei: Format de fișier nerecunoscut: %1"
 
-#: qtgui/interfacescript.cpp:348
+#: qtgui/interfacescript.cpp:334
+#, qt-format
+msgid "Error reading molecule representation: %1"
+msgstr ""
+
+#: qtgui/interfacescript.cpp:392
 #, qt-format
 msgid "%1 Message"
 msgstr "Mesaj %1"
 
-#: qtgui/interfacescript.cpp:355
+#: qtgui/interfacescript.cpp:399
 #, qt-format
 msgid "%1 Warning"
 msgstr "Avertisment %1"
 
-#: qtgui/interfacescript.cpp:362
+#: qtgui/interfacescript.cpp:406
 #, qt-format
 msgid "%1 Error"
 msgstr "Eroare %1"
 
-#: qtgui/interfacescript.cpp:605
+#: qtgui/interfacescript.cpp:649
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
@@ -1119,7 +1131,7 @@ msgstr ""
 "Eroare la scrierea reprezentării moleculei în șir de caractere: Format de "
 "fișier nerecunoscut: %1"
 
-#: qtgui/interfacescript.cpp:613
+#: qtgui/interfacescript.cpp:657
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr "Eroare la scrierea reprezentării moleculei în șir de caractere: %1"
@@ -1334,18 +1346,21 @@ msgstr "Creează o nouă vizualizare"
 msgid "Periodic Table"
 msgstr "Tabelul periodic"
 
-#: qtgui/pythonscript.cpp:139
-msgid "Package mode requires pixi but it was not found."
-msgstr "Modul pachetului necesită pixi, dar acesta nu a fost găsit."
+#: qtgui/pythonscript.cpp:177
+#, qt-format
+msgid ""
+"The package '%1' has no installed Python environment, so '%2' cannot be run. "
+"Try installing the package again."
+msgstr ""
 
-#: qtgui/pythonscript.cpp:237 qtgui/pythonscript.cpp:342
+#: qtgui/pythonscript.cpp:272 qtgui/pythonscript.cpp:394
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Eroare la rularea scriptului „%1 %2”: Timpul de așteptare pentru pornirea "
 "(%3) a expirat."
 
-#: qtgui/pythonscript.cpp:246 qtgui/pythonscript.cpp:352
+#: qtgui/pythonscript.cpp:281 qtgui/pythonscript.cpp:404
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1354,14 +1369,14 @@ msgstr ""
 "Eroare la rularea scriptului „%1 %2”: nu s-a reușit scrierea la intrarea "
 "standard (lung.=%3, s-au scris %4 octeți, eroare QProcess: %5)."
 
-#: qtgui/pythonscript.cpp:260
+#: qtgui/pythonscript.cpp:295
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 "Eroare la rularea scriptului „%1 %2”: A expirat timpul de așteptare pentru "
 "finalizare (%3)."
 
-#: qtgui/pythonscript.cpp:270
+#: qtgui/pythonscript.cpp:305
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1374,12 +1389,12 @@ msgstr ""
 "Ieșire:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:280
+#: qtgui/pythonscript.cpp:315
 #, qt-format
 msgid "Warning '%1'"
 msgstr "Avertisment „%1”"
 
-#: qtgui/pythonscript.cpp:324
+#: qtgui/pythonscript.cpp:376
 #, qt-format
 msgid ""
 "Error running script '%1': could not resolve a command to run it (no python "
@@ -1388,7 +1403,7 @@ msgstr ""
 "Eroare la executarea scriptului „%1”: nu s-a putut identifica o comandă "
 "pentru executarea acestuia (nu există interpret Python sau mediu Pixi)."
 
-#: qtgui/pythonscript.cpp:411
+#: qtgui/pythonscript.cpp:548
 #, qt-format
 msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
@@ -1397,27 +1412,27 @@ msgstr ""
 "Eroare la scrierea cererii brute în scriptul stdin (lung=%1, s-au scris %2 "
 "octeți, eroare QProcess: %3)."
 
-#: qtgui/pythonscript.cpp:446
+#: qtgui/pythonscript.cpp:592
 msgid "Script failed to start."
 msgstr "Scriptul a eșuat la pornire."
 
-#: qtgui/pythonscript.cpp:449
+#: qtgui/pythonscript.cpp:595
 msgid "Script crashed."
 msgstr "Scriptul s-a blocat."
 
-#: qtgui/pythonscript.cpp:452
+#: qtgui/pythonscript.cpp:598
 msgid "Script timed out."
 msgstr "Scriptul a depășit timpul de așteptare."
 
-#: qtgui/pythonscript.cpp:455
+#: qtgui/pythonscript.cpp:601
 msgid "Read error."
 msgstr "Eroare la citire."
 
-#: qtgui/pythonscript.cpp:458
+#: qtgui/pythonscript.cpp:604
 msgid "Write error."
 msgstr "Eroare la scriere."
 
-#: qtgui/pythonscript.cpp:462
+#: qtgui/pythonscript.cpp:608
 msgid "Unknown error."
 msgstr "Eroare necunoscută."
 
@@ -1855,17 +1870,17 @@ msgstr "Fișiere PQR (*.pqr)"
 #: qtplugins/molecularproperties/molecularview.cpp:150
 #: qtplugins/molecularproperties/molecularview.cpp:184
 #: qtplugins/openbabel/openbabel.cpp:211 qtplugins/openbabel/openbabel.cpp:220
-#: qtplugins/openbabel/openbabel.cpp:230 qtplugins/openbabel/openbabel.cpp:372
-#: qtplugins/openbabel/openbabel.cpp:400 qtplugins/openbabel/openbabel.cpp:427
-#: qtplugins/openbabel/openbabel.cpp:436 qtplugins/openbabel/openbabel.cpp:490
-#: qtplugins/openbabel/openbabel.cpp:540 qtplugins/openbabel/openbabel.cpp:553
-#: qtplugins/openbabel/openbabel.cpp:572 qtplugins/openbabel/openbabel.cpp:581
-#: qtplugins/openbabel/openbabel.cpp:641 qtplugins/openbabel/openbabel.cpp:691
-#: qtplugins/openbabel/openbabel.cpp:704 qtplugins/openbabel/openbabel.cpp:739
-#: qtplugins/openbabel/openbabel.cpp:753 qtplugins/openbabel/openbabel.cpp:782
-#: qtplugins/openbabel/openbabel.cpp:794 qtplugins/openbabel/openbabel.cpp:840
-#: qtplugins/openbabel/openbabel.cpp:890 qtplugins/openbabel/openbabel.cpp:932
-#: qtplugins/openbabel/openbabel.cpp:964
+#: qtplugins/openbabel/openbabel.cpp:230 qtplugins/openbabel/openbabel.cpp:367
+#: qtplugins/openbabel/openbabel.cpp:395 qtplugins/openbabel/openbabel.cpp:422
+#: qtplugins/openbabel/openbabel.cpp:431 qtplugins/openbabel/openbabel.cpp:485
+#: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
+#: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
+#: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
+#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:748 qtplugins/openbabel/openbabel.cpp:777
+#: qtplugins/openbabel/openbabel.cpp:789 qtplugins/openbabel/openbabel.cpp:835
+#: qtplugins/openbabel/openbabel.cpp:885 qtplugins/openbabel/openbabel.cpp:927
+#: qtplugins/openbabel/openbabel.cpp:959
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:436
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:637
@@ -2241,7 +2256,7 @@ msgstr "Relaxare pentru studiul dinamicii"
 #: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:75
 #: qtplugins/forcefield/forcefield.cpp:539
 #: qtplugins/forcefield/forcefield.cpp:615 qtplugins/openbabel/openbabel.cpp:48
-#: qtplugins/openbabel/openbabel.cpp:564
+#: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Optimizează geometria"
 
@@ -2489,7 +2504,7 @@ msgstr "Reprezintă contactele strânse dintre atomi."
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:519
+#: qtplugins/commandscripts/command.cpp:573
 #: qtplugins/configurepython/configurepython.cpp:117
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:253
@@ -2502,7 +2517,7 @@ msgstr "&Extensii"
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:520
+#: qtplugins/commandscripts/command.cpp:574
 msgid "Scripts"
 msgstr "Scripturi"
 
@@ -2532,24 +2547,28 @@ msgstr ""
 "Un script de comandă este deja în execuție. Vă rugăm să așteptați "
 "finalizarea acestuia înainte de a porni altul."
 
-#: qtplugins/commandscripts/command.cpp:333
+#: qtplugins/commandscripts/command.cpp:335
 #, qt-format
 msgid "Processing %1"
 msgstr "Se procesează %1"
 
-#: qtplugins/commandscripts/command.cpp:360
+#: qtplugins/commandscripts/command.cpp:336
+msgid "Cancel"
+msgstr "Anulează"
+
+#: qtplugins/commandscripts/command.cpp:412
 msgid "The script could not be started."
 msgstr "Scriptul nu a putut fi inițiat."
 
-#: qtplugins/commandscripts/command.cpp:370
+#: qtplugins/commandscripts/command.cpp:422
 msgid "Error Running Script"
 msgstr "Eroare la executarea scriptului"
 
-#: qtplugins/commandscripts/command.cpp:435
+#: qtplugins/commandscripts/command.cpp:489
 msgid "Set path to Python interpreter:"
 msgstr "Stabilește ruta către interpretul python:"
 
-#: qtplugins/commandscripts/command.cpp:437
+#: qtplugins/commandscripts/command.cpp:491
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2870,7 +2889,7 @@ msgstr "Formatul Turbomole"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:31
 #: qtplugins/molecularproperties/molecularview.cpp:191
-#: qtplugins/propertytables/propertyview.cpp:627:296
+#: qtplugins/propertytables/propertyview.cpp:633:296
 msgid "Copy"
 msgstr "Copiază"
 
@@ -3768,7 +3787,7 @@ msgstr "Peptidă…"
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:536
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#: qtplugins/insertpeptide/insertpeptide.cpp:535:692 rc.cpp:880
+#: qtplugins/insertpeptide/insertpeptide.cpp:536:692 rc.cpp:880
 msgid "Insert Peptide"
 msgstr "Inserare peptidă"
 
@@ -4253,7 +4272,7 @@ msgid "Error writing to the file."
 msgstr "Eroare la scrierea în fișier."
 
 #: qtplugins/molecularproperties/molecularview.cpp:196
-#: qtplugins/propertytables/propertyview.cpp:632
+#: qtplugins/propertytables/propertyview.cpp:638
 msgid "Export…"
 msgstr "Exportare…"
 
@@ -4400,8 +4419,8 @@ msgstr "A apărut o eroare în timpul rulării Open Babel (%1)."
 msgid "Error parsing openbabel output."
 msgstr "Eroare la analizarea ieșirii openbabel."
 
-#: qtplugins/openbabel/openbabel.cpp:373 qtplugins/openbabel/openbabel.cpp:401
-#: qtplugins/openbabel/openbabel.cpp:437 qtplugins/openbabel/openbabel.cpp:582
+#: qtplugins/openbabel/openbabel.cpp:368 qtplugins/openbabel/openbabel.cpp:396
+#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
@@ -4410,23 +4429,23 @@ msgstr ""
 "A apărut o eroare în timpul recuperării listei câmpurilor de forță "
 "acceptate. (folosind „%1”)."
 
-#: qtplugins/openbabel/openbabel.cpp:428
+#: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr "Moleculă nevalidă. Nu se poate optimiza geometria."
 
-#: qtplugins/openbabel/openbabel.cpp:446
+#: qtplugins/openbabel/openbabel.cpp:441
 msgid "Cannot optimize geometry with Open Babel."
 msgstr "Nu se poate optimiza geometria cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:471
+#: qtplugins/openbabel/openbabel.cpp:466
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "Se optimizează geometria (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:472 qtplugins/openbabel/openbabel.cpp:625
+#: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
 msgstr "Se generează…"
 
-#: qtplugins/openbabel/openbabel.cpp:491 qtplugins/openbabel/openbabel.cpp:642
+#: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
@@ -4434,14 +4453,14 @@ msgstr ""
 "A apărut o eroare internă în timpul generării unei reprezentări Open Babel a "
 "moleculei curente."
 
-#: qtplugins/openbabel/openbabel.cpp:497 qtplugins/openbabel/openbabel.cpp:648
+#: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr "Se lansează %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:511 qtplugins/openbabel/openbabel.cpp:519
-#: qtplugins/openbabel/openbabel.cpp:662 qtplugins/openbabel/openbabel.cpp:670
+#: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
+#: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -4452,17 +4471,17 @@ msgstr ""
 "Energia curentă: %3\n"
 "dE: %4"
 
-#: qtplugins/openbabel/openbabel.cpp:533 qtplugins/openbabel/openbabel.cpp:684
+#: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
 msgid "Updating molecule…"
 msgstr "Se actualizează molecula…"
 
-#: qtplugins/openbabel/openbabel.cpp:541 qtplugins/openbabel/openbabel.cpp:692
-#: qtplugins/openbabel/openbabel.cpp:783 qtplugins/openbabel/openbabel.cpp:965
+#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
+#: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
 msgid "Error interpreting Open Babel output."
 msgstr "Eroare la interpretarea ieșirii Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:554 qtplugins/openbabel/openbabel.cpp:705
-#: qtplugins/openbabel/openbabel.cpp:795
+#: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
+#: qtplugins/openbabel/openbabel.cpp:790
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -4471,102 +4490,102 @@ msgstr ""
 "Numărul de atomi din rezultatul obabel (%1) nu corespunde numărului de atomi "
 "din molecula originală (%2)."
 
-#: qtplugins/openbabel/openbabel.cpp:573
+#: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr "Moleculă nevalidă. Nu se pot genera conformeri."
 
-#: qtplugins/openbabel/openbabel.cpp:591
+#: qtplugins/openbabel/openbabel.cpp:586
 msgid "Cannot generate conformers with Open Babel."
 msgstr "Nu se pot genera conformeri cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:624
+#: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
 msgstr "Se generează conformeri (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:715
+#: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
 msgstr "Generează conformeri"
 
-#: qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
 msgstr "Nu se poate deschide fișierul cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:740
+#: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr "Moleculă nevalidă: Nu se pot percepe legăturile."
 
-#: qtplugins/openbabel/openbabel.cpp:746
+#: qtplugins/openbabel/openbabel.cpp:741
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "Perceperea legăturilor (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:747
+#: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
 msgstr "Se generează reprezentarea XYZ…"
 
-#: qtplugins/openbabel/openbabel.cpp:754
+#: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
 msgstr "Eroare la generarea șirului XYZ."
 
-#: qtplugins/openbabel/openbabel.cpp:765
+#: qtplugins/openbabel/openbabel.cpp:760
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr "Se convertește XYZ la Open Babel cu %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:775
+#: qtplugins/openbabel/openbabel.cpp:770
 msgid "Updating molecule from Open Babel…"
 msgstr "Se actualizează molecula din Open Babel…"
 
-#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:869
+#: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
 msgstr "Nu se pot adăuga hidrogeni cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:832 qtplugins/openbabel/openbabel.cpp:882
+#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "Se adaugă hidrogeni (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:833
+#: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
 msgstr "Se generează intrarea Open Babel…"
 
-#: qtplugins/openbabel/openbabel.cpp:841 qtplugins/openbabel/openbabel.cpp:891
+#: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
 msgstr "Eroare la generarea intrării Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:854 qtplugins/openbabel/openbabel.cpp:904
-#: qtplugins/openbabel/openbabel.cpp:946
+#: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
+#: qtplugins/openbabel/openbabel.cpp:941
 #, qt-format
 msgid "Running %1…"
 msgstr "Se execută %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:876
+#: qtplugins/openbabel/openbabel.cpp:871
 msgid "Add hydrogens for pH"
 msgstr "Adaugă hidrogeni pentru pH"
 
-#: qtplugins/openbabel/openbabel.cpp:876
+#: qtplugins/openbabel/openbabel.cpp:871
 msgid "pH:"
 msgstr "pH:"
 
-#: qtplugins/openbabel/openbabel.cpp:883 qtplugins/openbabel/openbabel.cpp:925
+#: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
 msgid "Generating obabel input…"
 msgstr "Se generează intrarea obabel…"
 
-#: qtplugins/openbabel/openbabel.cpp:919
+#: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr "Nu se pot elimina hidrogeni cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:924
+#: qtplugins/openbabel/openbabel.cpp:919
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "Se elimină hidrogenii (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:933
+#: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
 msgstr "Eroare la generarea datelor Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:956
+#: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
 msgstr "Se citește ieșirea obabel…"
 
-#: qtplugins/openbabel/openbabel.cpp:1019
+#: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -5435,55 +5454,55 @@ msgstr ""
 "Nu s-a putut adăuga o proprietate cu numele „%1”. Este posibil ca o coloană "
 "cu acest nume să existe deja."
 
-#: qtplugins/propertytables/propertyview.cpp:618
+#: qtplugins/propertytables/propertyview.cpp:624
 msgid "Partial Charge Type"
 msgstr "Tipul de sarcină parțială"
 
-#: qtplugins/propertytables/propertyview.cpp:618
+#: qtplugins/propertytables/propertyview.cpp:624
 msgid "Select the partial charge type:"
 msgstr "Selectați tipul de sarcină parțială:"
 
-#: qtplugins/propertytables/propertyview.cpp:641
+#: qtplugins/propertytables/propertyview.cpp:647
 msgid "Add Property…"
 msgstr "Adăugare proprietate…"
 
-#: qtplugins/propertytables/propertyview.cpp:648
+#: qtplugins/propertytables/propertyview.cpp:654
 msgid "Change Charge Type…"
 msgstr "Schimbarea tipului de sarcină…"
 
-#: qtplugins/propertytables/propertyview.cpp:655
+#: qtplugins/propertytables/propertyview.cpp:661
 msgid "Freeze Atom"
 msgstr "Înghețați atomul"
 
-#: qtplugins/propertytables/propertyview.cpp:659
+#: qtplugins/propertytables/propertyview.cpp:665
 msgid "Freeze X"
 msgstr "Înghețare pe axa X"
 
-#: qtplugins/propertytables/propertyview.cpp:662
+#: qtplugins/propertytables/propertyview.cpp:668
 msgid "Freeze Y"
 msgstr "Înghețare pe axa Y"
 
-#: qtplugins/propertytables/propertyview.cpp:665
+#: qtplugins/propertytables/propertyview.cpp:671
 msgid "Freeze Z"
 msgstr "Înghețare pe axa Z"
 
-#: qtplugins/propertytables/propertyview.cpp:668
+#: qtplugins/propertytables/propertyview.cpp:674
 msgid "Unfreeze Atom"
 msgstr "Dezgheață atomul"
 
-#: qtplugins/propertytables/propertyview.cpp:676
+#: qtplugins/propertytables/propertyview.cpp:682
 msgid "Constrain Bond"
 msgstr "Constrângere(limitare) legătură"
 
-#: qtplugins/propertytables/propertyview.cpp:678
+#: qtplugins/propertytables/propertyview.cpp:684
 msgid "Constrain Angle"
 msgstr "Constrângere(limitare) unghi"
 
-#: qtplugins/propertytables/propertyview.cpp:680
+#: qtplugins/propertytables/propertyview.cpp:686
 msgid "Constrain Torsion"
 msgstr "Constrângere(limitare) torsiune"
 
-#: qtplugins/propertytables/propertyview.cpp:687
+#: qtplugins/propertytables/propertyview.cpp:693
 msgid "Remove Constraint"
 msgstr "Elimină constrângerea"
 
@@ -9922,6 +9941,9 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "remusgabriel.chelu@disroot.org, 2023, 2024, 2025, 2026"
 
+#~ msgid "Package mode requires pixi but it was not found."
+#~ msgstr "Modul pachetului necesită pixi, dar acesta nu a fost găsit."
+
 #~ msgid "XYZ"
 #~ msgstr "XYZ"
 
@@ -10128,9 +10150,6 @@ msgstr "remusgabriel.chelu@disroot.org, 2023, 2024, 2025, 2026"
 #~ msgctxt "argument is program name"
 #~ msgid "Installing dependencies with %1…"
 #~ msgstr "Se instalează dependențele pentru %1…"
-
-#~ msgid "Cancel"
-#~ msgstr "Anulează"
 
 #~ msgid "Å"
 #~ msgstr "Å"
