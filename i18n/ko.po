@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-08-02 04:43+0000\n"
+"POT-Creation-Date: 2026-08-16 02:34+0000\n"
 "PO-Revision-Date: 2026-08-09 04:51+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -44,27 +44,27 @@ msgstr ""
 "script --print-options 출력은 최상위 수준에서 JSON 객체여야 합니다. 접수: \n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:246
-#: qtgui/interfacescript.cpp:398
+#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:286
+#: qtgui/interfacescript.cpp:454
 msgid "Non-string warning returned."
 msgstr "문자열이 아닌 경고가 반환되었습니다."
 
-#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:249
-#: qtgui/interfacescript.cpp:401
+#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:289
+#: qtgui/interfacescript.cpp:457
 msgid "'warnings' member is not an array."
 msgstr "'경고' 멤버는 배열이 아닙니다."
 
-#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:421
+#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:477
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr "참조 파일 '%1'이(가) 없습니다."
 
-#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:423
+#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:479
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr "%1 파일 채우는 중 오류: %2"
 
-#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:427
+#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:483
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
@@ -72,7 +72,7 @@ msgstr ""
 "'%1' 파일의 형식이 잘못되었습니다. 문자열 '내용' 또는 '파일경로' 멤버가 누락"
 "되었습니다."
 
-#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:460
+#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:516
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
@@ -81,32 +81,32 @@ msgstr ""
 "형식이 잘못된 파일 항목: 파일 이름/내용이 없거나 문자열이 아님: \n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:466
+#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:522
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr "인덱스 %1의 잘못된 파일 항목: 객체가 아닙니다."
 
-#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:472
+#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:528
 msgid "'files' member not an array."
 msgstr "'파일' 멤버가 배열이 아닙니다."
 
-#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:476
+#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:532
 msgid "'files' member missing."
 msgstr "'파일' 멤버가 없습니다."
 
-#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:487
+#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:543
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr "'주요파일' 멤버가 '파일'의 항목을 참조하지 않습니다."
 
-#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:492
+#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:548
 msgid "'mainFile' member must be a string."
 msgstr "'주요파일' 멤버는 문자열이어야 합니다."
 
-#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:503
+#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:559
 msgid "Response must be a JSON object at top-level."
 msgstr "응답은 최상위 JSON 객체여야 합니다."
 
-#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:507
+#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:563
 #, qt-format
 msgid ""
 "Script output:\n"
@@ -115,7 +115,7 @@ msgstr ""
 "스크립트 출력: \n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:551
+#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:607
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -141,7 +141,7 @@ msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr "분자 표현을 문자열에 저장하는 동안 오류 발생: %1"
 
-#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:618
+#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:677
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -154,7 +154,7 @@ msgstr ""
 " \n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:627
+#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:686
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -1063,33 +1063,45 @@ msgstr "모든 파일"
 msgid "All supported formats"
 msgstr "지원되는 모든 형식"
 
-#: qtgui/interfacescript.cpp:263
+#: qtgui/interfacescript.cpp:270
+#, qt-format
+msgid ""
+"Script standard error:\n"
+"%1"
+msgstr ""
+
+#: qtgui/interfacescript.cpp:322
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr "분자 표현을 읽는 중 오류 발생: 인식할 수 없는 파일 형식: %1"
 
-#: qtgui/interfacescript.cpp:336
+#: qtgui/interfacescript.cpp:334
+#, qt-format
+msgid "Error reading molecule representation: %1"
+msgstr ""
+
+#: qtgui/interfacescript.cpp:392
 #, qt-format
 msgid "%1 Message"
 msgstr "%1 메시지"
 
-#: qtgui/interfacescript.cpp:343
+#: qtgui/interfacescript.cpp:399
 #, qt-format
 msgid "%1 Warning"
 msgstr "%1 경고"
 
-#: qtgui/interfacescript.cpp:350
+#: qtgui/interfacescript.cpp:406
 #, qt-format
 msgid "%1 Error"
 msgstr "%1 오류"
 
-#: qtgui/interfacescript.cpp:593
+#: qtgui/interfacescript.cpp:649
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr "분자 표현을 문자열에 쓰는 중 오류 발생: 인식할 수 없는 파일 형식: %1"
 
-#: qtgui/interfacescript.cpp:601
+#: qtgui/interfacescript.cpp:657
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr "분자 표현을 문자열에 쓰는 중 오류: %1"
@@ -1302,16 +1314,19 @@ msgstr "새로운 보기 만들기"
 msgid "Periodic Table"
 msgstr "주기율표"
 
-#: qtgui/pythonscript.cpp:139
-msgid "Package mode requires pixi but it was not found."
-msgstr "패키지 모드를 사용하려면 pixi가 필요하지만 찾을 수 없습니다."
+#: qtgui/pythonscript.cpp:177
+#, qt-format
+msgid ""
+"The package '%1' has no installed Python environment, so '%2' cannot be run. "
+"Try installing the package again."
+msgstr ""
 
-#: qtgui/pythonscript.cpp:237 qtgui/pythonscript.cpp:334
+#: qtgui/pythonscript.cpp:272 qtgui/pythonscript.cpp:394
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr "스크립트 '%1 %2' 실행 중 오류: 시작(%3) 대기 시간이 초과되었습니다."
 
-#: qtgui/pythonscript.cpp:246 qtgui/pythonscript.cpp:343
+#: qtgui/pythonscript.cpp:281 qtgui/pythonscript.cpp:404
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1320,12 +1335,12 @@ msgstr ""
 "스크립트 '%1 %2' 실행 중 오류: 표준 입력(len=%3, %4바이트 쓰기, QProcess 오"
 "류: %5)에 쓰지 못했습니다."
 
-#: qtgui/pythonscript.cpp:260
+#: qtgui/pythonscript.cpp:295
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr "스크립트 '%1 %2' 실행 오류: 완료 (%3) 대기 시간이 초과되었습니다."
 
-#: qtgui/pythonscript.cpp:270
+#: qtgui/pythonscript.cpp:305
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1338,12 +1353,19 @@ msgstr ""
 "출력: \n"
 "%6"
 
-#: qtgui/pythonscript.cpp:280
+#: qtgui/pythonscript.cpp:315
 #, qt-format
 msgid "Warning '%1'"
 msgstr "경고 '%1'"
 
-#: qtgui/pythonscript.cpp:400
+#: qtgui/pythonscript.cpp:376
+#, qt-format
+msgid ""
+"Error running script '%1': could not resolve a command to run it (no python "
+"interpreter or pixi environment)."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:548
 #, qt-format
 msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
@@ -1352,27 +1374,27 @@ msgstr ""
 "스크립트 stdin에 원시 요청을 쓰는 중 오류가 발생했습니다 (len=%1, %2 바이트 "
 "씀, QProcess 오류: %3)."
 
-#: qtgui/pythonscript.cpp:435
+#: qtgui/pythonscript.cpp:592
 msgid "Script failed to start."
 msgstr "스크립트를 시작하지 못했습니다."
 
-#: qtgui/pythonscript.cpp:438
+#: qtgui/pythonscript.cpp:595
 msgid "Script crashed."
 msgstr "스크립트가 충돌했습니다."
 
-#: qtgui/pythonscript.cpp:441
+#: qtgui/pythonscript.cpp:598
 msgid "Script timed out."
 msgstr "스크립트 시간이 초과되었습니다."
 
-#: qtgui/pythonscript.cpp:444
+#: qtgui/pythonscript.cpp:601
 msgid "Read error."
 msgstr "읽기 오류입니다."
 
-#: qtgui/pythonscript.cpp:447
+#: qtgui/pythonscript.cpp:604
 msgid "Write error."
 msgstr "쓰기 오류입니다."
 
-#: qtgui/pythonscript.cpp:451
+#: qtgui/pythonscript.cpp:608
 msgid "Unknown error."
 msgstr "알 수 없는 오류입니다."
 
@@ -1802,17 +1824,17 @@ msgstr "PQR 파일 (*.pqr)"
 #: qtplugins/molecularproperties/molecularview.cpp:150
 #: qtplugins/molecularproperties/molecularview.cpp:184
 #: qtplugins/openbabel/openbabel.cpp:211 qtplugins/openbabel/openbabel.cpp:220
-#: qtplugins/openbabel/openbabel.cpp:230 qtplugins/openbabel/openbabel.cpp:372
-#: qtplugins/openbabel/openbabel.cpp:400 qtplugins/openbabel/openbabel.cpp:427
-#: qtplugins/openbabel/openbabel.cpp:436 qtplugins/openbabel/openbabel.cpp:490
-#: qtplugins/openbabel/openbabel.cpp:540 qtplugins/openbabel/openbabel.cpp:553
-#: qtplugins/openbabel/openbabel.cpp:572 qtplugins/openbabel/openbabel.cpp:581
-#: qtplugins/openbabel/openbabel.cpp:641 qtplugins/openbabel/openbabel.cpp:691
-#: qtplugins/openbabel/openbabel.cpp:704 qtplugins/openbabel/openbabel.cpp:739
-#: qtplugins/openbabel/openbabel.cpp:753 qtplugins/openbabel/openbabel.cpp:782
-#: qtplugins/openbabel/openbabel.cpp:794 qtplugins/openbabel/openbabel.cpp:840
-#: qtplugins/openbabel/openbabel.cpp:890 qtplugins/openbabel/openbabel.cpp:932
-#: qtplugins/openbabel/openbabel.cpp:964
+#: qtplugins/openbabel/openbabel.cpp:230 qtplugins/openbabel/openbabel.cpp:367
+#: qtplugins/openbabel/openbabel.cpp:395 qtplugins/openbabel/openbabel.cpp:422
+#: qtplugins/openbabel/openbabel.cpp:431 qtplugins/openbabel/openbabel.cpp:485
+#: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
+#: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
+#: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
+#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:748 qtplugins/openbabel/openbabel.cpp:777
+#: qtplugins/openbabel/openbabel.cpp:789 qtplugins/openbabel/openbabel.cpp:835
+#: qtplugins/openbabel/openbabel.cpp:885 qtplugins/openbabel/openbabel.cpp:927
+#: qtplugins/openbabel/openbabel.cpp:959
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:436
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:637
@@ -2183,10 +2205,10 @@ msgstr "중지"
 msgid "Relax for Dynamics"
 msgstr "동역학을 위한 구조 완화"
 
-#: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:71
-#: qtplugins/forcefield/forcefield.cpp:504
-#: qtplugins/forcefield/forcefield.cpp:580 qtplugins/openbabel/openbabel.cpp:48
-#: qtplugins/openbabel/openbabel.cpp:564
+#: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:75
+#: qtplugins/forcefield/forcefield.cpp:539
+#: qtplugins/forcefield/forcefield.cpp:615 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "기하학 최적화"
 
@@ -2427,11 +2449,11 @@ msgstr "원자 사이의 밀접한 접촉을 렌더링합니다."
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:491
+#: qtplugins/commandscripts/command.cpp:573
 #: qtplugins/configurepython/configurepython.cpp:117
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:231
-#: qtplugins/forcefield/forcefield.cpp:233
+#: qtplugins/forcefield/forcefield.cpp:253
+#: qtplugins/forcefield/forcefield.cpp:255
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2440,7 +2462,7 @@ msgstr "확장(&E)"
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:492
+#: qtplugins/commandscripts/command.cpp:574
 msgid "Scripts"
 msgstr "스크립트"
 
@@ -2470,16 +2492,28 @@ msgstr ""
 "명령 스크립트가 이미 실행 중입니다. 다른 스크립트를 시작하기 전에 현재 실행 "
 "중인 작업이 완료될 때까지 기다려 주세요."
 
-#: qtplugins/commandscripts/command.cpp:333
+#: qtplugins/commandscripts/command.cpp:335
 #, qt-format
 msgid "Processing %1"
 msgstr "%1 처리 중"
 
-#: qtplugins/commandscripts/command.cpp:407
+#: qtplugins/commandscripts/command.cpp:336
+msgid "Cancel"
+msgstr "취소"
+
+#: qtplugins/commandscripts/command.cpp:412
+msgid "The script could not be started."
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:422
+msgid "Error Running Script"
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:489
 msgid "Set path to Python interpreter:"
 msgstr "파이썬 해석기에 대한 경로 설정:"
 
-#: qtplugins/commandscripts/command.cpp:409
+#: qtplugins/commandscripts/command.cpp:491
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2541,7 +2575,7 @@ msgid "Constraints…"
 msgstr "제약 조건…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:233
+#: qtplugins/forcefield/forcefield.cpp:255
 msgid "&Calculate"
 msgstr "&계산"
 
@@ -2794,57 +2828,47 @@ msgstr "터보몰 형식"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:30
+#: qtplugins/copypaste/copypaste.cpp:31
 #: qtplugins/molecularproperties/molecularview.cpp:191
-#: qtplugins/propertytables/propertyview.cpp:627:296
+#: qtplugins/propertytables/propertyview.cpp:633:296
 msgid "Copy"
 msgstr "복사"
 
+#: qtplugins/copypaste/copypaste.cpp:34
+msgid "Atom Mapped SMILES"
+msgstr ""
+
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:35:293
+#: qtplugins/copypaste/copypaste.cpp:37:293
 msgid "Cut"
 msgstr "잘라내기"
 
-#: qtplugins/copypaste/copypaste.cpp:36
+#: qtplugins/copypaste/copypaste.cpp:38
 msgid "Delete"
 msgstr "지우기"
 
-#: qtplugins/copypaste/copypaste.cpp:37
+#: qtplugins/copypaste/copypaste.cpp:39
 msgid "&Paste"
 msgstr "붙여넣기(&P)"
 
-#: qtplugins/copypaste/copypaste.cpp:83
-#: qtplugins/lineformatinput/lineformatinput.cpp:47
-msgid "SMILES"
-msgstr "SMILES"
-
-#: qtplugins/copypaste/copypaste.cpp:83
-#: qtplugins/lineformatinput/lineformatinput.cpp:46
-msgid "InChI"
-msgstr "국제 화학 식별자"
-
-#: qtplugins/copypaste/copypaste.cpp:84
-msgid "XYZ"
-msgstr "XYZ"
-
-#: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
-msgid "&Edit"
-msgstr "편집(&E)"
-
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:51
 msgid "Copy As"
 msgstr "다른 이름으로 복사"
 
-#: qtplugins/copypaste/copypaste.cpp:165
+#: qtplugins/copypaste/copypaste.cpp:100 qtplugins/copypaste/copypaste.cpp:102
+msgid "&Edit"
+msgstr "편집(&E)"
+
+#: qtplugins/copypaste/copypaste.cpp:194
 msgid "Error Clipping Molecule"
 msgstr "분자 클리핑 오류"
 
-#: qtplugins/copypaste/copypaste.cpp:166
+#: qtplugins/copypaste/copypaste.cpp:195
 msgid "Error generating clipboard data."
 msgstr "클립보드 데이터를 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/copypaste/copypaste.cpp:167
+#: qtplugins/copypaste/copypaste.cpp:196
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2854,28 +2878,26 @@ msgstr ""
 "출력 형식: %1 \n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:171 qtplugins/copypaste/copypaste.cpp:292
+#: qtplugins/copypaste/copypaste.cpp:200
 #, qt-format
 msgid ""
-"Reader error:\n"
+"Writer error:\n"
 "%1"
 msgstr ""
-"리더 오류: \n"
-"%1"
 
-#: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
+#: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
 msgstr "분자 붙여넣기 오류"
 
-#: qtplugins/copypaste/copypaste.cpp:254
+#: qtplugins/copypaste/copypaste.cpp:282
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "분자를 붙여넣을 수 없음: 클립보드가 비어 있습니다!"
 
-#: qtplugins/copypaste/copypaste.cpp:287
+#: qtplugins/copypaste/copypaste.cpp:315
 msgid "Error reading clipboard data."
 msgstr "클립보드 데이터를 읽는 동안 오류가 발생했습니다."
 
-#: qtplugins/copypaste/copypaste.cpp:288
+#: qtplugins/copypaste/copypaste.cpp:316
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -2884,6 +2906,15 @@ msgid ""
 msgstr ""
 "감지된 형식: %1 \n"
 "%2"
+
+#: qtplugins/copypaste/copypaste.cpp:320
+#, qt-format
+msgid ""
+"Reader error:\n"
+"%1"
+msgstr ""
+"리더 오류: \n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.h:31
 msgid "Copy and paste"
@@ -2908,7 +2939,7 @@ msgstr "CP2K에 대한 입력을 생성합니다."
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:80
+#: qtplugins/forcefield/forcefield.cpp:84
 #: qtplugins/plotconformer/plotconformer.cpp:148:1420
 msgid "Energy"
 msgstr "에너지"
@@ -3310,52 +3341,63 @@ msgstr "특정 기능에 초점을 맞춥니다."
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "분자의 원자에 대한 역장 시각화를 렌더링합니다."
 
-#: qtplugins/forcefield/forcefield.cpp:88
+#: qtplugins/forcefield/forcefield.cpp:92
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:150
 msgid "Forces"
 msgstr "힘"
 
-#: qtplugins/forcefield/forcefield.cpp:96
+#: qtplugins/forcefield/forcefield.cpp:102
+#: qtplugins/forcefield/forcefield.cpp:822
+msgid "Energies (All Conformers)"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:821
+msgid "Forces (All Conformers)"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:118
 msgid "Configure…"
 msgstr "구성…"
 
-#: qtplugins/forcefield/forcefield.cpp:108
+#: qtplugins/forcefield/forcefield.cpp:130
 msgid "Freeze Selected Atoms"
 msgstr "선택된 원자 멈춤"
 
-#: qtplugins/forcefield/forcefield.cpp:116
+#: qtplugins/forcefield/forcefield.cpp:138
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
 msgstr "X 고정"
 
-#: qtplugins/forcefield/forcefield.cpp:124
+#: qtplugins/forcefield/forcefield.cpp:146
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
 msgstr "Y 고정"
 
-#: qtplugins/forcefield/forcefield.cpp:132
+#: qtplugins/forcefield/forcefield.cpp:154
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
 msgstr "Z 고정"
 
-#: qtplugins/forcefield/forcefield.cpp:140
+#: qtplugins/forcefield/forcefield.cpp:162
 msgid "Unfreeze Selected Atoms"
 msgstr "선택된 원자 멈춤 해제"
 
-#: qtplugins/forcefield/forcefield.cpp:149
+#: qtplugins/forcefield/forcefield.cpp:171
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr "선택한 원자 결합"
 
-#: qtplugins/forcefield/forcefield.cpp:157
+#: qtplugins/forcefield/forcefield.cpp:179
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr "선택한 원자 결합 해제"
 
-#: qtplugins/forcefield/forcefield.cpp:470
-#: qtplugins/forcefield/forcefield.cpp:666
-#: qtplugins/forcefield/forcefield.cpp:719
+#: qtplugins/forcefield/forcefield.cpp:505
+#: qtplugins/forcefield/forcefield.cpp:701
+#: qtplugins/forcefield/forcefield.cpp:754
+#: qtplugins/forcefield/forcefield.cpp:803
 #: qtplugins/playertool/playertool.cpp:435
 #: qtplugins/playertool/playertool.cpp:467 qtplugins/surfaces/surfaces.cpp:974
 #: qtplugins/surfaces/surfaces.cpp:1018 qtplugins/surfaces/surfaces.cpp:1030
@@ -3363,25 +3405,29 @@ msgstr "선택한 원자 결합 해제"
 msgid "Avogadro"
 msgstr "아보가드로"
 
-#: qtplugins/forcefield/forcefield.cpp:471
+#: qtplugins/forcefield/forcefield.cpp:506
 msgid "No atoms provided for optimization"
 msgstr "최적화를 위해 제공되는 원자 없음"
 
-#: qtplugins/forcefield/forcefield.cpp:561
+#: qtplugins/forcefield/forcefield.cpp:596
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "에너지: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:664
+#: qtplugins/forcefield/forcefield.cpp:699
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 에너지 = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:717
+#: qtplugins/forcefield/forcefield.cpp:752
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 강도 기준 = %L2"
+
+#: qtplugins/forcefield/forcefield.cpp:804
+msgid "This molecule has only one coordinate set."
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:62
 msgid "Forcefield optimization"
@@ -3415,15 +3461,15 @@ msgstr "%1 옵션"
 msgid "Autodetect (%1)"
 msgstr "자동 감지 (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:80 qtplugins/forcefield/obmmenergy.cpp:36
 msgid "Universal Force Field"
 msgstr "범용 역 장"
 
-#: qtplugins/forcefield/obenergy.cpp:109 qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:85 qtplugins/forcefield/obmmenergy.cpp:41
 msgid "Generalized Amber Force Field"
 msgstr "일반화된 호박색 역 장"
 
-#: qtplugins/forcefield/obenergy.cpp:123 qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:99 qtplugins/forcefield/obmmenergy.cpp:55
 msgid "Merck Molecular Force Field 94"
 msgstr "Merck 분자 역 장 94"
 
@@ -3677,7 +3723,7 @@ msgstr "펩타이드…"
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:536
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#: qtplugins/insertpeptide/insertpeptide.cpp:535:692 rc.cpp:880
+#: qtplugins/insertpeptide/insertpeptide.cpp:536:692 rc.cpp:880
 msgid "Insert Peptide"
 msgstr "펩타이드 삽입"
 
@@ -3886,6 +3932,14 @@ msgstr "SMILES…"
 #: qtplugins/lineformatinput/lineformatinput.cpp:38
 msgid "InChI…"
 msgstr "국제 화학 식별자…"
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:46
+msgid "InChI"
+msgstr "국제 화학 식별자"
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:47
+msgid "SMILES"
+msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 #: qtplugins/lineformatinput/lineformatinput.cpp:114
@@ -4148,7 +4202,7 @@ msgid "Error writing to the file."
 msgstr "파일에 오류 쓰기."
 
 #: qtplugins/molecularproperties/molecularview.cpp:196
-#: qtplugins/propertytables/propertyview.cpp:632
+#: qtplugins/propertytables/propertyview.cpp:638
 msgid "Export…"
 msgstr "내보내기…"
 
@@ -4292,8 +4346,8 @@ msgstr "바벨 (%1) 열기를 실행하는 동안 오류가 발생했습니다."
 msgid "Error parsing openbabel output."
 msgstr "openbabel 출력을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:373 qtplugins/openbabel/openbabel.cpp:401
-#: qtplugins/openbabel/openbabel.cpp:437 qtplugins/openbabel/openbabel.cpp:582
+#: qtplugins/openbabel/openbabel.cpp:368 qtplugins/openbabel/openbabel.cpp:396
+#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
@@ -4301,36 +4355,36 @@ msgid ""
 msgstr ""
 "지원되는 forcefields 목록을 검색하는 동안 오류가 발생했습니다. ('%1' 사용)."
 
-#: qtplugins/openbabel/openbabel.cpp:428
+#: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr "분자가 잘못되었습니다. 기하학을 최적화할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:446
+#: qtplugins/openbabel/openbabel.cpp:441
 msgid "Cannot optimize geometry with Open Babel."
 msgstr "바벨 열기로 기하학을 최적화할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:471
+#: qtplugins/openbabel/openbabel.cpp:466
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "기하학 최적화 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:472 qtplugins/openbabel/openbabel.cpp:625
+#: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
 msgstr "생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:491 qtplugins/openbabel/openbabel.cpp:642
+#: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr "현재 분자의 바벨 열기 표현을 생성하는 동안 내부 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:497 qtplugins/openbabel/openbabel.cpp:648
+#: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr "%1 시작 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:511 qtplugins/openbabel/openbabel.cpp:519
-#: qtplugins/openbabel/openbabel.cpp:662 qtplugins/openbabel/openbabel.cpp:670
+#: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
+#: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -4341,17 +4395,17 @@ msgstr ""
 "현재 에너지: %3 \n"
 "dE: %4"
 
-#: qtplugins/openbabel/openbabel.cpp:533 qtplugins/openbabel/openbabel.cpp:684
+#: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
 msgid "Updating molecule…"
 msgstr "분자 업데이트 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:541 qtplugins/openbabel/openbabel.cpp:692
-#: qtplugins/openbabel/openbabel.cpp:783 qtplugins/openbabel/openbabel.cpp:965
+#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
+#: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
 msgid "Error interpreting Open Babel output."
 msgstr "바벨 열기 출력을 해석하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:554 qtplugins/openbabel/openbabel.cpp:705
-#: qtplugins/openbabel/openbabel.cpp:795
+#: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
+#: qtplugins/openbabel/openbabel.cpp:790
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -4359,102 +4413,102 @@ msgid ""
 msgstr ""
 "obabel 출력의 원자 수 (%1)가 원래 분자의 원자 수 (%2)와 일치하지 않습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:573
+#: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr "분자가 잘못되었습니다. 이형태체를 생성 할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:591
+#: qtplugins/openbabel/openbabel.cpp:586
 msgid "Cannot generate conformers with Open Babel."
 msgstr "오픈 바벨과 함께 이형태체를 생성 할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:624
+#: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
 msgstr "이형태체 생성 중 (오픈 바벨)"
 
-#: qtplugins/openbabel/openbabel.cpp:715
+#: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
 msgstr "이형태체 생성"
 
-#: qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
 msgstr "바벨 열기로 파일을 열 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:740
+#: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr "잘못된 분자: 결합을 인식할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:746
+#: qtplugins/openbabel/openbabel.cpp:741
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "결합 인식 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:747
+#: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
 msgstr "XYZ 표현 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:754
+#: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
 msgstr "XYZ 문자열을 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:765
+#: qtplugins/openbabel/openbabel.cpp:760
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr "%1을(를) 사용하여 XYZ를 바벨 열기로 변환 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:775
+#: qtplugins/openbabel/openbabel.cpp:770
 msgid "Updating molecule from Open Babel…"
 msgstr "바벨 열기에서 분자 업데이트 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:869
+#: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
 msgstr "바벨 열기로 수소를 추가할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:832 qtplugins/openbabel/openbabel.cpp:882
+#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "수소 추가 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:833
+#: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
 msgstr "바벨 열기 입력 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:841 qtplugins/openbabel/openbabel.cpp:891
+#: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
 msgstr "바벨 열기 입력을 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:854 qtplugins/openbabel/openbabel.cpp:904
-#: qtplugins/openbabel/openbabel.cpp:946
+#: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
+#: qtplugins/openbabel/openbabel.cpp:941
 #, qt-format
 msgid "Running %1…"
 msgstr "%1 실행 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:876
+#: qtplugins/openbabel/openbabel.cpp:871
 msgid "Add hydrogens for pH"
 msgstr "pH에 대한 수소 추가"
 
-#: qtplugins/openbabel/openbabel.cpp:876
+#: qtplugins/openbabel/openbabel.cpp:871
 msgid "pH:"
 msgstr "pH:"
 
-#: qtplugins/openbabel/openbabel.cpp:883 qtplugins/openbabel/openbabel.cpp:925
+#: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
 msgid "Generating obabel input…"
 msgstr "obabel 입력 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:919
+#: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr "바벨 열기로 수소를 제거할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:924
+#: qtplugins/openbabel/openbabel.cpp:919
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "수소 제거 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:933
+#: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
 msgstr "바벨 열기를 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:956
+#: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
 msgstr "obabel 출력을 읽는 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:1019
+#: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -4950,7 +5004,7 @@ msgid "Relative Energy (%1)"
 msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:236
-msgid "Forces (N)"
+msgid "RMS Gradient"
 msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:238
@@ -5302,55 +5356,55 @@ msgid ""
 "exist."
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:618
+#: qtplugins/propertytables/propertyview.cpp:624
 msgid "Partial Charge Type"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:618
+#: qtplugins/propertytables/propertyview.cpp:624
 msgid "Select the partial charge type:"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:641
+#: qtplugins/propertytables/propertyview.cpp:647
 msgid "Add Property…"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:648
+#: qtplugins/propertytables/propertyview.cpp:654
 msgid "Change Charge Type…"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:655
+#: qtplugins/propertytables/propertyview.cpp:661
 msgid "Freeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:659
+#: qtplugins/propertytables/propertyview.cpp:665
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:662
+#: qtplugins/propertytables/propertyview.cpp:668
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:665
+#: qtplugins/propertytables/propertyview.cpp:671
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:668
+#: qtplugins/propertytables/propertyview.cpp:674
 msgid "Unfreeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:676
+#: qtplugins/propertytables/propertyview.cpp:682
 msgid "Constrain Bond"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:678
+#: qtplugins/propertytables/propertyview.cpp:684
 msgid "Constrain Angle"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:680
+#: qtplugins/propertytables/propertyview.cpp:686
 msgid "Constrain Torsion"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:687
+#: qtplugins/propertytables/propertyview.cpp:693
 msgid "Remove Constraint"
 msgstr ""
 
@@ -9730,6 +9784,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com, simmon@nplob.com"
 
+#~ msgid "Package mode requires pixi but it was not found."
+#~ msgstr "패키지 모드를 사용하려면 pixi가 필요하지만 찾을 수 없습니다."
+
+#~ msgid "XYZ"
+#~ msgstr "XYZ"
+
 #, fuzzy, qt-format
 #~ msgid ""
 #~ "Template Tool\t(%1)\n"
@@ -9886,9 +9946,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com, simmon@nplob.com"
 
 #~ msgid "eV"
 #~ msgstr "eV"
-
-#~ msgid "Cancel"
-#~ msgstr "취소"
 
 #~ msgid "Å"
 #~ msgstr "Å"

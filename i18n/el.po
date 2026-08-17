@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-08-02 04:43+0000\n"
+"POT-Creation-Date: 2026-08-16 02:34+0000\n"
 "PO-Revision-Date: 2026-03-11 10:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
@@ -40,72 +40,72 @@ msgid ""
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:246
-#: qtgui/interfacescript.cpp:398
+#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:286
+#: qtgui/interfacescript.cpp:454
 msgid "Non-string warning returned."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:249
-#: qtgui/interfacescript.cpp:401
+#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:289
+#: qtgui/interfacescript.cpp:457
 msgid "'warnings' member is not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:421
+#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:477
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:423
+#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:479
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:427
+#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:483
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:460
+#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:516
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:466
+#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:522
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:472
+#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:528
 msgid "'files' member not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:476
+#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:532
 msgid "'files' member missing."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:487
+#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:543
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:492
+#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:548
 msgid "'mainFile' member must be a string."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:503
+#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:559
 msgid "Response must be a JSON object at top-level."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:507
+#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:563
 #, qt-format
 msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:551
+#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:607
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -126,7 +126,7 @@ msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:618
+#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:677
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -135,7 +135,7 @@ msgid ""
 "%3"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:627
+#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:686
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -1024,33 +1024,45 @@ msgstr "Όλα τα Αρχεία"
 msgid "All supported formats"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:263
+#: qtgui/interfacescript.cpp:270
+#, qt-format
+msgid ""
+"Script standard error:\n"
+"%1"
+msgstr ""
+
+#: qtgui/interfacescript.cpp:322
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:336
+#: qtgui/interfacescript.cpp:334
+#, qt-format
+msgid "Error reading molecule representation: %1"
+msgstr ""
+
+#: qtgui/interfacescript.cpp:392
 #, qt-format
 msgid "%1 Message"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:343
+#: qtgui/interfacescript.cpp:399
 #, qt-format
 msgid "%1 Warning"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:350
+#: qtgui/interfacescript.cpp:406
 #, qt-format
 msgid "%1 Error"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:593
+#: qtgui/interfacescript.cpp:649
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:601
+#: qtgui/interfacescript.cpp:657
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
@@ -1266,28 +1278,31 @@ msgstr ""
 msgid "Periodic Table"
 msgstr "Περιοδικός Πίνακας"
 
-#: qtgui/pythonscript.cpp:139
-msgid "Package mode requires pixi but it was not found."
+#: qtgui/pythonscript.cpp:177
+#, qt-format
+msgid ""
+"The package '%1' has no installed Python environment, so '%2' cannot be run. "
+"Try installing the package again."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:237 qtgui/pythonscript.cpp:334
+#: qtgui/pythonscript.cpp:272 qtgui/pythonscript.cpp:394
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:246 qtgui/pythonscript.cpp:343
+#: qtgui/pythonscript.cpp:281 qtgui/pythonscript.cpp:404
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:260
+#: qtgui/pythonscript.cpp:295
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:270
+#: qtgui/pythonscript.cpp:305
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1296,39 +1311,46 @@ msgid ""
 "%6"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:280
+#: qtgui/pythonscript.cpp:315
 #, qt-format
 msgid "Warning '%1'"
 msgstr ""
 
-#: qtgui/pythonscript.cpp:400
+#: qtgui/pythonscript.cpp:376
+#, qt-format
+msgid ""
+"Error running script '%1': could not resolve a command to run it (no python "
+"interpreter or pixi environment)."
+msgstr ""
+
+#: qtgui/pythonscript.cpp:548
 #, qt-format
 msgid ""
 "Error writing raw request to script stdin (len=%1, wrote %2 bytes, QProcess "
 "error: %3)."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:435
+#: qtgui/pythonscript.cpp:592
 msgid "Script failed to start."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:438
+#: qtgui/pythonscript.cpp:595
 msgid "Script crashed."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:441
+#: qtgui/pythonscript.cpp:598
 msgid "Script timed out."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:444
+#: qtgui/pythonscript.cpp:601
 msgid "Read error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:447
+#: qtgui/pythonscript.cpp:604
 msgid "Write error."
 msgstr ""
 
-#: qtgui/pythonscript.cpp:451
+#: qtgui/pythonscript.cpp:608
 msgid "Unknown error."
 msgstr ""
 
@@ -1775,17 +1797,17 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularview.cpp:150
 #: qtplugins/molecularproperties/molecularview.cpp:184
 #: qtplugins/openbabel/openbabel.cpp:211 qtplugins/openbabel/openbabel.cpp:220
-#: qtplugins/openbabel/openbabel.cpp:230 qtplugins/openbabel/openbabel.cpp:372
-#: qtplugins/openbabel/openbabel.cpp:400 qtplugins/openbabel/openbabel.cpp:427
-#: qtplugins/openbabel/openbabel.cpp:436 qtplugins/openbabel/openbabel.cpp:490
-#: qtplugins/openbabel/openbabel.cpp:540 qtplugins/openbabel/openbabel.cpp:553
-#: qtplugins/openbabel/openbabel.cpp:572 qtplugins/openbabel/openbabel.cpp:581
-#: qtplugins/openbabel/openbabel.cpp:641 qtplugins/openbabel/openbabel.cpp:691
-#: qtplugins/openbabel/openbabel.cpp:704 qtplugins/openbabel/openbabel.cpp:739
-#: qtplugins/openbabel/openbabel.cpp:753 qtplugins/openbabel/openbabel.cpp:782
-#: qtplugins/openbabel/openbabel.cpp:794 qtplugins/openbabel/openbabel.cpp:840
-#: qtplugins/openbabel/openbabel.cpp:890 qtplugins/openbabel/openbabel.cpp:932
-#: qtplugins/openbabel/openbabel.cpp:964
+#: qtplugins/openbabel/openbabel.cpp:230 qtplugins/openbabel/openbabel.cpp:367
+#: qtplugins/openbabel/openbabel.cpp:395 qtplugins/openbabel/openbabel.cpp:422
+#: qtplugins/openbabel/openbabel.cpp:431 qtplugins/openbabel/openbabel.cpp:485
+#: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
+#: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
+#: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
+#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:748 qtplugins/openbabel/openbabel.cpp:777
+#: qtplugins/openbabel/openbabel.cpp:789 qtplugins/openbabel/openbabel.cpp:835
+#: qtplugins/openbabel/openbabel.cpp:885 qtplugins/openbabel/openbabel.cpp:927
+#: qtplugins/openbabel/openbabel.cpp:959
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:436
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:637
@@ -2155,10 +2177,10 @@ msgstr "Διακοπή"
 msgid "Relax for Dynamics"
 msgstr ""
 
-#: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:71
-#: qtplugins/forcefield/forcefield.cpp:504
-#: qtplugins/forcefield/forcefield.cpp:580 qtplugins/openbabel/openbabel.cpp:48
-#: qtplugins/openbabel/openbabel.cpp:564
+#: qtplugins/autoopt/autoopt.cpp:503 qtplugins/forcefield/forcefield.cpp:75
+#: qtplugins/forcefield/forcefield.cpp:539
+#: qtplugins/forcefield/forcefield.cpp:615 qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:559
 #, fuzzy
 msgid "Optimize Geometry"
 msgstr "Βελτιστοποίηση Γεωμετρίας"
@@ -2409,11 +2431,11 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:491
+#: qtplugins/commandscripts/command.cpp:573
 #: qtplugins/configurepython/configurepython.cpp:117
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:231
-#: qtplugins/forcefield/forcefield.cpp:233
+#: qtplugins/forcefield/forcefield.cpp:253
+#: qtplugins/forcefield/forcefield.cpp:255
 #: qtplugins/openbabel/openbabel.cpp:113
 #: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2423,7 +2445,7 @@ msgstr "&Επεκτάσεις"
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:492
+#: qtplugins/commandscripts/command.cpp:574
 #, fuzzy
 msgid "Scripts"
 msgstr "Σενάρια"
@@ -2450,16 +2472,28 @@ msgid ""
 "starting another."
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:333
+#: qtplugins/commandscripts/command.cpp:335
 #, qt-format
 msgid "Processing %1"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:407
+#: qtplugins/commandscripts/command.cpp:336
+msgid "Cancel"
+msgstr "Άκυρο"
+
+#: qtplugins/commandscripts/command.cpp:412
+msgid "The script could not be started."
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:422
+msgid "Error Running Script"
+msgstr ""
+
+#: qtplugins/commandscripts/command.cpp:489
 msgid "Set path to Python interpreter:"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:409
+#: qtplugins/commandscripts/command.cpp:491
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2520,7 +2554,7 @@ msgid "Constraints…"
 msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:233
+#: qtplugins/forcefield/forcefield.cpp:255
 #, fuzzy
 msgid "&Calculate"
 msgstr "Υπολογισμός"
@@ -2777,59 +2811,48 @@ msgstr "Είσοδος Turbomole"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:30
+#: qtplugins/copypaste/copypaste.cpp:31
 #: qtplugins/molecularproperties/molecularview.cpp:191
-#: qtplugins/propertytables/propertyview.cpp:627:296
+#: qtplugins/propertytables/propertyview.cpp:633:296
 #, fuzzy
 msgid "Copy"
 msgstr "Αντιγραφή"
 
+#: qtplugins/copypaste/copypaste.cpp:34
+msgid "Atom Mapped SMILES"
+msgstr ""
+
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:35:293
+#: qtplugins/copypaste/copypaste.cpp:37:293
 msgid "Cut"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:36
+#: qtplugins/copypaste/copypaste.cpp:38
 msgid "Delete"
 msgstr "Διαγραφή"
 
-#: qtplugins/copypaste/copypaste.cpp:37
+#: qtplugins/copypaste/copypaste.cpp:39
 msgid "&Paste"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:83
-#: qtplugins/lineformatinput/lineformatinput.cpp:47
-#, fuzzy
-msgid "SMILES"
-msgstr "SMILES"
-
-#: qtplugins/copypaste/copypaste.cpp:83
-#: qtplugins/lineformatinput/lineformatinput.cpp:46
-msgid "InChI"
-msgstr ""
-
-#: qtplugins/copypaste/copypaste.cpp:84
-msgid "XYZ"
-msgstr "XYZ"
-
-#: qtplugins/copypaste/copypaste.cpp:85 qtplugins/copypaste/copypaste.cpp:87
-msgid "&Edit"
-msgstr ""
-
-#: qtplugins/copypaste/copypaste.cpp:87
+#: qtplugins/copypaste/copypaste.cpp:51
 msgid "Copy As"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:165
+#: qtplugins/copypaste/copypaste.cpp:100 qtplugins/copypaste/copypaste.cpp:102
+msgid "&Edit"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:194
 msgid "Error Clipping Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:166
+#: qtplugins/copypaste/copypaste.cpp:195
 msgid "Error generating clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:167
+#: qtplugins/copypaste/copypaste.cpp:196
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2837,31 +2860,38 @@ msgid ""
 "%2"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:171 qtplugins/copypaste/copypaste.cpp:292
+#: qtplugins/copypaste/copypaste.cpp:200
 #, qt-format
 msgid ""
-"Reader error:\n"
+"Writer error:\n"
 "%1"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:253 qtplugins/copypaste/copypaste.cpp:286
+#: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:254
+#: qtplugins/copypaste/copypaste.cpp:282
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:287
+#: qtplugins/copypaste/copypaste.cpp:315
 msgid "Error reading clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:288
+#: qtplugins/copypaste/copypaste.cpp:316
 #, qt-format
 msgctxt "file format description"
 msgid ""
 "Detected format: %1\n"
 "%2"
+msgstr ""
+
+#: qtplugins/copypaste/copypaste.cpp:320
+#, qt-format
+msgid ""
+"Reader error:\n"
+"%1"
 msgstr ""
 
 #: qtplugins/copypaste/copypaste.h:31
@@ -2887,7 +2917,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:80
+#: qtplugins/forcefield/forcefield.cpp:84
 #: qtplugins/plotconformer/plotconformer.cpp:148:1420
 msgid "Energy"
 msgstr "Ενέργεια"
@@ -3305,52 +3335,63 @@ msgstr ""
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:88
+#: qtplugins/forcefield/forcefield.cpp:92
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:150
 msgid "Forces"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:96
+#: qtplugins/forcefield/forcefield.cpp:102
+#: qtplugins/forcefield/forcefield.cpp:822
+msgid "Energies (All Conformers)"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:821
+msgid "Forces (All Conformers)"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:118
 msgid "Configure…"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:108
+#: qtplugins/forcefield/forcefield.cpp:130
 msgid "Freeze Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:116
+#: qtplugins/forcefield/forcefield.cpp:138
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:124
+#: qtplugins/forcefield/forcefield.cpp:146
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:132
+#: qtplugins/forcefield/forcefield.cpp:154
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:140
+#: qtplugins/forcefield/forcefield.cpp:162
 msgid "Unfreeze Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:149
+#: qtplugins/forcefield/forcefield.cpp:171
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:157
+#: qtplugins/forcefield/forcefield.cpp:179
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:470
-#: qtplugins/forcefield/forcefield.cpp:666
-#: qtplugins/forcefield/forcefield.cpp:719
+#: qtplugins/forcefield/forcefield.cpp:505
+#: qtplugins/forcefield/forcefield.cpp:701
+#: qtplugins/forcefield/forcefield.cpp:754
+#: qtplugins/forcefield/forcefield.cpp:803
 #: qtplugins/playertool/playertool.cpp:435
 #: qtplugins/playertool/playertool.cpp:467 qtplugins/surfaces/surfaces.cpp:974
 #: qtplugins/surfaces/surfaces.cpp:1018 qtplugins/surfaces/surfaces.cpp:1030
@@ -3358,24 +3399,28 @@ msgstr ""
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:471
+#: qtplugins/forcefield/forcefield.cpp:506
 msgid "No atoms provided for optimization"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:561
+#: qtplugins/forcefield/forcefield.cpp:596
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:664
+#: qtplugins/forcefield/forcefield.cpp:699
 #, fuzzy, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Ενέργεια = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:717
+#: qtplugins/forcefield/forcefield.cpp:752
 #, qt-format
 msgid "%1 Force Norm = %L2"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:804
+msgid "This molecule has only one coordinate set."
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:62
@@ -3411,15 +3456,15 @@ msgstr ""
 msgid "Autodetect (%1)"
 msgstr ""
 
-#: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:34
+#: qtplugins/forcefield/obenergy.cpp:80 qtplugins/forcefield/obmmenergy.cpp:36
 msgid "Universal Force Field"
 msgstr ""
 
-#: qtplugins/forcefield/obenergy.cpp:109 qtplugins/forcefield/obmmenergy.cpp:39
+#: qtplugins/forcefield/obenergy.cpp:85 qtplugins/forcefield/obmmenergy.cpp:41
 msgid "Generalized Amber Force Field"
 msgstr ""
 
-#: qtplugins/forcefield/obenergy.cpp:123 qtplugins/forcefield/obmmenergy.cpp:53
+#: qtplugins/forcefield/obenergy.cpp:99 qtplugins/forcefield/obmmenergy.cpp:55
 msgid "Merck Molecular Force Field 94"
 msgstr ""
 
@@ -3687,7 +3732,7 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:536
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#: qtplugins/insertpeptide/insertpeptide.cpp:535:692 rc.cpp:880
+#: qtplugins/insertpeptide/insertpeptide.cpp:536:692 rc.cpp:880
 msgid "Insert Peptide"
 msgstr ""
 
@@ -3896,6 +3941,15 @@ msgstr "SMILES…"
 #: qtplugins/lineformatinput/lineformatinput.cpp:38
 msgid "InChI…"
 msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:46
+msgid "InChI"
+msgstr ""
+
+#: qtplugins/lineformatinput/lineformatinput.cpp:47
+#, fuzzy
+msgid "SMILES"
+msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 #: qtplugins/lineformatinput/lineformatinput.cpp:114
@@ -4153,7 +4207,7 @@ msgid "Error writing to the file."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:196
-#: qtplugins/propertytables/propertyview.cpp:632
+#: qtplugins/propertytables/propertyview.cpp:638
 #, fuzzy
 msgid "Export…"
 msgstr "Εξαγωγή…"
@@ -4298,45 +4352,45 @@ msgstr ""
 msgid "Error parsing openbabel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:373 qtplugins/openbabel/openbabel.cpp:401
-#: qtplugins/openbabel/openbabel.cpp:437 qtplugins/openbabel/openbabel.cpp:582
+#: qtplugins/openbabel/openbabel.cpp:368 qtplugins/openbabel/openbabel.cpp:396
+#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:428
+#: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:446
+#: qtplugins/openbabel/openbabel.cpp:441
 msgid "Cannot optimize geometry with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:471
+#: qtplugins/openbabel/openbabel.cpp:466
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "Βελτιστοποίηση Γεωμετρίας (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:472 qtplugins/openbabel/openbabel.cpp:625
+#: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:491 qtplugins/openbabel/openbabel.cpp:642
+#: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:497 qtplugins/openbabel/openbabel.cpp:648
+#: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:511 qtplugins/openbabel/openbabel.cpp:519
-#: qtplugins/openbabel/openbabel.cpp:662 qtplugins/openbabel/openbabel.cpp:670
+#: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
+#: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -4344,17 +4398,17 @@ msgid ""
 "dE: %4"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:533 qtplugins/openbabel/openbabel.cpp:684
+#: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
 msgid "Updating molecule…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:541 qtplugins/openbabel/openbabel.cpp:692
-#: qtplugins/openbabel/openbabel.cpp:783 qtplugins/openbabel/openbabel.cpp:965
+#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
+#: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
 msgid "Error interpreting Open Babel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:554 qtplugins/openbabel/openbabel.cpp:705
-#: qtplugins/openbabel/openbabel.cpp:795
+#: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
+#: qtplugins/openbabel/openbabel.cpp:790
 #, fuzzy, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -4363,106 +4417,106 @@ msgstr ""
 "Ο αριθμός των ατόμων στο παρών μόριο δεν είναι ίδιος με αυτόν του αρχείου "
 "τροχιάς %1"
 
-#: qtplugins/openbabel/openbabel.cpp:573
+#: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:591
+#: qtplugins/openbabel/openbabel.cpp:586
 msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:624
+#: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:715
+#: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:740
+#: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:746
+#: qtplugins/openbabel/openbabel.cpp:741
 msgid "Perceiving Bonds (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:747
+#: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:754
+#: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:765
+#: qtplugins/openbabel/openbabel.cpp:760
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:775
+#: qtplugins/openbabel/openbabel.cpp:770
 msgid "Updating molecule from Open Babel…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:869
+#: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:832 qtplugins/openbabel/openbabel.cpp:882
+#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 #, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "Προσθήκη υδρογόνων (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:833
+#: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:841 qtplugins/openbabel/openbabel.cpp:891
+#: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:854 qtplugins/openbabel/openbabel.cpp:904
-#: qtplugins/openbabel/openbabel.cpp:946
+#: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
+#: qtplugins/openbabel/openbabel.cpp:941
 #, qt-format
 msgid "Running %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:876
+#: qtplugins/openbabel/openbabel.cpp:871
 #, fuzzy
 msgid "Add hydrogens for pH"
 msgstr "Προσθήκη υδρογόνων για pH"
 
-#: qtplugins/openbabel/openbabel.cpp:876
+#: qtplugins/openbabel/openbabel.cpp:871
 #, fuzzy
 msgid "pH:"
 msgstr "pH:"
 
-#: qtplugins/openbabel/openbabel.cpp:883 qtplugins/openbabel/openbabel.cpp:925
+#: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
 msgid "Generating obabel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:919
+#: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:924
+#: qtplugins/openbabel/openbabel.cpp:919
 #, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "Αφαίρεση Υδρογόνων (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:933
+#: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:956
+#: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:1019
+#: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -4960,7 +5014,7 @@ msgid "Relative Energy (%1)"
 msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:236
-msgid "Forces (N)"
+msgid "RMS Gradient"
 msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:238
@@ -5328,55 +5382,55 @@ msgid ""
 "exist."
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:618
+#: qtplugins/propertytables/propertyview.cpp:624
 msgid "Partial Charge Type"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:618
+#: qtplugins/propertytables/propertyview.cpp:624
 msgid "Select the partial charge type:"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:641
+#: qtplugins/propertytables/propertyview.cpp:647
 msgid "Add Property…"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:648
+#: qtplugins/propertytables/propertyview.cpp:654
 msgid "Change Charge Type…"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:655
+#: qtplugins/propertytables/propertyview.cpp:661
 msgid "Freeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:659
+#: qtplugins/propertytables/propertyview.cpp:665
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:662
+#: qtplugins/propertytables/propertyview.cpp:668
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:665
+#: qtplugins/propertytables/propertyview.cpp:671
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:668
+#: qtplugins/propertytables/propertyview.cpp:674
 msgid "Unfreeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:676
+#: qtplugins/propertytables/propertyview.cpp:682
 msgid "Constrain Bond"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:678
+#: qtplugins/propertytables/propertyview.cpp:684
 msgid "Constrain Angle"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:680
+#: qtplugins/propertytables/propertyview.cpp:686
 msgid "Constrain Torsion"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:687
+#: qtplugins/propertytables/propertyview.cpp:693
 msgid "Remove Constraint"
 msgstr ""
 
@@ -9760,6 +9814,9 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ",,a.brzns@gmail.com,elkosmas@gmail.com,,,a.brzns@gmail.com,elkosmas@gmail.com,,,,a.brzns@gmail.com,elkosmas@gmail.com,,,,a.brzns@gmail.com,elkosmas@gmail.com,,,,a.brzns@gmail.com,elkosmas@gmail.com,,,,a.brzns@gmail.com,elkosmas@gmail.com,,,,a.brzns@gmail.com,elkosmas@gmail.com,,,,a.brzns@gmail.com,elkosmas@gmail.com,,,,angelosarn@hotmail.com,a.brzns@gmail.com,,elkosmas@gmail.com,,athmakrigiannis@gmail.com,,,angelosarn@hotmail.com,a.brzns@gmail.com,,elkosmas@gmail.com,,athmakrigiannis@gmail.com,,,angelosarn@hotmail.com,a.brzns@gmail.com,,elkosmas@gmail.com,,athmakrigiannis@gmail.com"
 
+#~ msgid "XYZ"
+#~ msgstr "XYZ"
+
 #, fuzzy, qt-format
 #~ msgid ""
 #~ "Manipulation Tool\t(%1)\n"
@@ -9786,9 +9843,6 @@ msgstr ",,a.brzns@gmail.com,elkosmas@gmail.com,,,a.brzns@gmail.com,elkosmas@gmai
 #, fuzzy
 #~ msgid "eV"
 #~ msgstr "eV"
-
-#~ msgid "Cancel"
-#~ msgstr "Άκυρο"
 
 #~ msgid "°"
 #~ msgstr "°"
