@@ -3,6 +3,7 @@ include(ExternalProject)
 find_package(Qt${QT_VERSION} REQUIRED COMPONENTS Svg)
 
 set(template_srcs
+  templateattachment.cpp
   templatetool.cpp
   templatetoolwidget.cpp
 )

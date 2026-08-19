@@ -77,6 +77,11 @@ private:
    */
   void reset();
 
+  /**
+   * Discard any pending ligand attachment points and refresh the display.
+   */
+  void clearLigandSelection();
+
   void emptyLeftClick(QMouseEvent* e);
   void atomLeftClick(QMouseEvent* e);
   void atomLeftClickCenter(QMouseEvent* e);
