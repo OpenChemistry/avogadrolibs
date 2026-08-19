@@ -108,7 +108,7 @@ void MoldenFile::processLine(std::istream& in)
 {
   // First truncate the line, remove trailing white space and check for blanks.
   string line;
-  if (!getline(in, line) || Core::trimmed(line).empty())
+  if (!Core::getLine(in, line) || Core::trimmed(line).empty())
     return;
 
   vector<string> list = Core::split(line, ' ');
@@ -161,13 +161,16 @@ void MoldenFile::processLine(std::istream& in)
         break;
       case GTO: {
         // TODO: detect dead files and make bullet-proof
+        if (list.empty())
+          break;
         int atom = Core::lexicalCast<int>(list[0]).value_or(0);
 
-        getline(in, line);
+        Core::getLine(in, line);
         line = Core::trimmed(line);
         while (!line.empty()) { // Read the shell types in this GTO.
           list = Core::split(line, ' ');
-          if (list.size() < 1)
+          // a shell line is "<type> <numGTOs> ...", so both are required
+          if (list.size() < 2)
             break;
           shell = list[0];
           std::transform(shell.begin(), shell.end(), shell.begin(), tolower);
@@ -207,7 +210,7 @@ void MoldenFile::processLine(std::istream& in)
 
           // Now read all the exponents and contraction coefficients.
           for (int gto = 0; gto < numGTOs; ++gto) {
-            getline(in, line);
+            Core::getLine(in, line);
             line = Core::trimmed(line);
             list = Core::split(line, ' ');
             if (list.size() > 1) {
@@ -218,7 +221,7 @@ void MoldenFile::processLine(std::istream& in)
               m_csp.push_back(Core::lexicalCast<double>(list[2]).value_or(0.0));
           }
           // Start reading the next shell.
-          getline(in, line);
+          Core::getLine(in, line);
           line = Core::trimmed(line);
         }
       } break;
@@ -254,7 +257,7 @@ void MoldenFile::processLine(std::istream& in)
             pendingSymmetry = list.back();
             havePendingSymmetry = true;
           }
-          getline(in, line);
+          Core::getLine(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
         }
@@ -313,7 +316,7 @@ void MoldenFile::processLine(std::istream& in)
 
           // we might go too far ahead
           currentPos = in.tellg();
-          getline(in, line);
+          Core::getLine(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
         }
@@ -367,7 +370,7 @@ void MoldenFile::processLine(std::istream& in)
           m_frequencies.push_back(
             Core::lexicalCast<double>(line).value_or(0.0));
           currentPos = in.tellg();
-          getline(in, line);
+          Core::getLine(in, line);
         }
         // go back to previous line
         in.seekg(currentPos);
@@ -382,7 +385,7 @@ void MoldenFile::processLine(std::istream& in)
         while (!line.empty() && !Core::contains(line, "[")) {
           if (Core::contains(line, "vibration")) {
             m_vibDisplacements.push_back(Core::Array<Vector3>());
-            getline(in, line);
+            Core::getLine(in, line);
             line = Core::trimmed(line);
             while (!line.empty() && !Core::contains(line, "[") &&
                    !Core::contains(line, "vibration")) {
@@ -399,7 +402,7 @@ void MoldenFile::processLine(std::istream& in)
                           BOHR_TO_ANGSTROM_D));
 
               currentPos = in.tellg();
-              getline(in, line);
+              Core::getLine(in, line);
               line = Core::trimmed(line);
             }
           } else {
@@ -422,6 +425,8 @@ void MoldenFile::processLine(std::istream& in)
         // could be just IR or two pieces including Raman
         while (!line.empty() && !Core::contains(line, "[")) {
           list = Core::split(line, ' ');
+          if (list.empty())
+            break;
           m_IRintensities.push_back(
             Core::lexicalCast<double>(list[0]).value_or(0.0));
           if (list.size() == 2)
@@ -434,7 +439,7 @@ void MoldenFile::processLine(std::istream& in)
           }
 
           currentPos = in.tellg();
-          getline(in, line);
+          Core::getLine(in, line);
           line = Core::trimmed(line);
         }
         break;
