@@ -90,6 +90,16 @@ AutoOpt::AutoOpt(QObject* parent_)
 AutoOpt::~AutoOpt()
 {
   cleanupWorker();
+
+  // Join anything that blew through its shutdown timeout before our children
+  // are destroyed - Qt aborts the process if a running QThread is deleted.
+  const QList<QThread*> stillRunning = m_retiredThreads;
+  for (QThread* thread : stillRunning) {
+    thread->quit();
+    thread->wait();
+  }
+  m_retiredThreads.clear();
+
   delete m_thermostat;
 }
 
@@ -107,9 +117,19 @@ void AutoOpt::cleanupWorker()
     m_workerThread->quit();
     // The worker deletes itself via the thread's finished() signal, but the
     // thread is parented to us, so one leaks per restart unless we drop it.
-    // Don't destroy a thread that refused to stop.
-    if (m_workerThread->wait(5000))
+    if (m_workerThread->wait(5000)) {
       m_workerThread->deleteLater();
+    } else {
+      // Still chewing on a chunk. Deleting a running QThread is fatal and so
+      // is letting ~QObject collect it as a child, so keep track of it and
+      // clean up once it does stop; the destructor joins whatever is left.
+      QThread* stalled = m_workerThread;
+      m_retiredThreads.append(stalled);
+      connect(stalled, &QThread::finished, this, [this, stalled]() {
+        m_retiredThreads.removeAll(stalled);
+        stalled->deleteLater();
+      });
+    }
     m_workerThread = nullptr;
     m_worker = nullptr;
   }
@@ -141,20 +161,41 @@ void AutoOpt::startWorker()
   connect(m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
   m_workerThread->start();
 
+  // Everything this worker emits is stamped with its generation. Results it
+  // had already emitted when an edit retired it are still queued for us, and
+  // their coordinates describe the pre-edit molecule - drop them rather than
+  // apply them or let them clear m_computePending for the live worker.
+  const quint64 generation = ++m_workerGeneration;
+
   // Connect signals based on task. For dynamics we also connect the optimize
   // signal so the pre-relax phase can drive optimization chunks through the
   // same worker before MD begins.
+  auto optimizeDone = [this, generation](Eigen::VectorXd positions,
+                                         Eigen::VectorXd gradient,
+                                         double energy, bool converged) {
+    if (generation != m_workerGeneration)
+      return;
+    onOptimizeStepDone(positions, gradient, energy, converged);
+  };
+  auto gradientDone = [this, generation](Eigen::VectorXd gradient,
+                                         double energy) {
+    if (generation != m_workerGeneration)
+      return;
+    onGradientDone(gradient, energy);
+  };
+
   if (m_task == 0) {
-    connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this,
-            &AutoOpt::onOptimizeStepDone);
+    connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this, optimizeDone);
   } else {
-    connect(m_worker, &QtGui::CalcWorker::evaluateFinished, this,
-            &AutoOpt::onGradientDone);
-    connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this,
-            &AutoOpt::onOptimizeStepDone);
+    connect(m_worker, &QtGui::CalcWorker::evaluateFinished, this, gradientDone);
+    connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this, optimizeDone);
   }
   connect(m_worker, &QtGui::CalcWorker::calculatorReady, this,
-          &AutoOpt::onWorkerReady);
+          [this, generation]() {
+            if (generation != m_workerGeneration)
+              return;
+            onWorkerReady();
+          });
 
   // Now invoke initCalculator after connections are established
   QMetaObject::invokeMethod(

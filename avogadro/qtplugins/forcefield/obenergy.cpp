@@ -23,6 +23,8 @@
 #include <QDebug>
 #include <QDir>
 
+#include <memory>
+
 using namespace OpenBabel;
 
 namespace Avogadro::QtPlugins {
@@ -31,16 +33,10 @@ class OBEnergy::Private
 {
 public:
   // OBMol and OBForceField are owned by this class
-  OBMol* m_obmol = nullptr;
+  std::unique_ptr<OBMol> m_obmol;
   // A private clone, never the plugin singleton (see setupForceField).
-  OBForceField* m_forceField = nullptr;
+  std::unique_ptr<OBForceField> m_forceField;
   bool setup = false;
-
-  ~Private()
-  {
-    delete m_obmol;
-    delete m_forceField;
-  }
 
   // Open Babel hands out one global instance per force field plugin.
   // Setup() reassigns that instance's molecule and reallocates its gradient
@@ -58,7 +54,7 @@ public:
     if (plugin == nullptr)
       return false;
 
-    m_forceField = plugin->MakeNewInstance();
+    m_forceField.reset(plugin->MakeNewInstance());
     return m_forceField != nullptr;
   }
 };
@@ -86,9 +82,10 @@ OBEnergy::OBEnergy(const std::string& method)
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
 
-  // The force field clone is created lazily in setMolecule() - cloning parses
-  // the parameter files, which is wasted work for an instance that is only
-  // ever queried for its identifier or element mask.
+  // The private force field instance is created lazily in setMolecule():
+  // MakeNewInstance() allocates it and the first Setup() then calls
+  // ParseParamFile() to load the parameters. Neither is worth doing for an
+  // instance that is only ever queried for its identifier or element mask.
 
 #ifndef NDEBUG
   qDebug() << "OBEnergy: method: " << method.c_str();
@@ -173,9 +170,8 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
   }
 
   // set up our internal OBMol, discarding any molecule from a previous call
-  delete d->m_obmol;
   d->setup = false;
-  d->m_obmol = new OBMol;
+  d->m_obmol = std::make_unique<OBMol>();
   // copy the atoms, bonds, and coordinates
   d->m_obmol->BeginModify();
   for (size_t i = 0; i < mol->atomCount(); ++i) {
@@ -235,15 +231,20 @@ Real OBEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
 
   if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
       d->m_obmol == nullptr || !d->setup) {
+    grad->setZero();
     return 0.0;
   }
 
   // The gradient array is sized for the molecule the force field was set up
   // with, which is not necessarily the molecule we were handed since - bail
-  // out rather than read past either buffer.
+  // out rather than read past either buffer. Zero the caller's gradient so a
+  // reused buffer can't feed a previous iteration's forces back to the
+  // optimizer alongside our zero energy.
   const auto n = d->m_obmol->NumAtoms();
-  if (x.size() != static_cast<Eigen::Index>(3 * n))
+  if (x.size() != static_cast<Eigen::Index>(3 * n)) {
+    grad->setZero();
     return 0.0;
+  }
 
   d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
 
