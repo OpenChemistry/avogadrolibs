@@ -90,14 +90,46 @@ AutoOpt::AutoOpt(QObject* parent_)
 AutoOpt::~AutoOpt()
 {
   cleanupWorker();
+
+  // Join anything that blew through its shutdown timeout before our children
+  // are destroyed - Qt aborts the process if a running QThread is deleted.
+  const QList<QThread*> stillRunning = m_retiredThreads;
+  for (QThread* thread : stillRunning) {
+    thread->quit();
+    thread->wait();
+  }
+  m_retiredThreads.clear();
+
   delete m_thermostat;
 }
 
 void AutoOpt::cleanupWorker()
 {
   if (m_workerThread) {
+    // Stop listening before tearing the thread down. A result the worker
+    // already emitted is sitting in our event queue sized for the pre-edit
+    // molecule, and moleculeChanged() restarts us straight away - the
+    // handlers would then apply those coordinates to the edited molecule.
+    if (m_worker) {
+      m_worker->cancel();
+      disconnect(m_worker, nullptr, this, nullptr);
+    }
     m_workerThread->quit();
-    m_workerThread->wait(5000);
+    // The worker deletes itself via the thread's finished() signal, but the
+    // thread is parented to us, so one leaks per restart unless we drop it.
+    if (m_workerThread->wait(5000)) {
+      m_workerThread->deleteLater();
+    } else {
+      // Still chewing on a chunk. Deleting a running QThread is fatal and so
+      // is letting ~QObject collect it as a child, so keep track of it and
+      // clean up once it does stop; the destructor joins whatever is left.
+      QThread* stalled = m_workerThread;
+      m_retiredThreads.append(stalled);
+      connect(stalled, &QThread::finished, this, [this, stalled]() {
+        m_retiredThreads.removeAll(stalled);
+        stalled->deleteLater();
+      });
+    }
     m_workerThread = nullptr;
     m_worker = nullptr;
   }
@@ -129,20 +161,41 @@ void AutoOpt::startWorker()
   connect(m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
   m_workerThread->start();
 
+  // Everything this worker emits is stamped with its generation. Results it
+  // had already emitted when an edit retired it are still queued for us, and
+  // their coordinates describe the pre-edit molecule - drop them rather than
+  // apply them or let them clear m_computePending for the live worker.
+  const quint64 generation = ++m_workerGeneration;
+
   // Connect signals based on task. For dynamics we also connect the optimize
   // signal so the pre-relax phase can drive optimization chunks through the
   // same worker before MD begins.
+  auto optimizeDone = [this, generation](Eigen::VectorXd positions,
+                                         Eigen::VectorXd gradient,
+                                         double energy, bool converged) {
+    if (generation != m_workerGeneration)
+      return;
+    onOptimizeStepDone(positions, gradient, energy, converged);
+  };
+  auto gradientDone = [this, generation](Eigen::VectorXd gradient,
+                                         double energy) {
+    if (generation != m_workerGeneration)
+      return;
+    onGradientDone(gradient, energy);
+  };
+
   if (m_task == 0) {
-    connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this,
-            &AutoOpt::onOptimizeStepDone);
+    connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this, optimizeDone);
   } else {
-    connect(m_worker, &QtGui::CalcWorker::evaluateFinished, this,
-            &AutoOpt::onGradientDone);
-    connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this,
-            &AutoOpt::onOptimizeStepDone);
+    connect(m_worker, &QtGui::CalcWorker::evaluateFinished, this, gradientDone);
+    connect(m_worker, &QtGui::CalcWorker::optimizeFinished, this, optimizeDone);
   }
   connect(m_worker, &QtGui::CalcWorker::calculatorReady, this,
-          &AutoOpt::onWorkerReady);
+          [this, generation]() {
+            if (generation != m_workerGeneration)
+              return;
+            onWorkerReady();
+          });
 
   // Now invoke initCalculator after connections are established
   QMetaObject::invokeMethod(
@@ -492,6 +545,11 @@ void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
 
   int n = m_molecule->atomCount();
 
+  // Defensive: never map a coordinate vector that doesn't match the molecule
+  // we're about to write it into.
+  if (positions.size() != 3 * n)
+    return;
+
   if (std::isfinite(energy) && positions.allFinite()) {
     m_deltaE = energy - m_energy;
     m_energy = energy;
@@ -625,6 +683,12 @@ void AutoOpt::onGradientDone(Eigen::VectorXd gradient, double energy)
 
   int n = m_molecule->atomCount();
   double dt = m_timeStep;
+
+  // Defensive: the integrator arrays are all resized together in start(), so
+  // a mismatch means this gradient belongs to a molecule we've since edited.
+  if (gradient.size() != 3 * n || m_masses.size() != 3 * n ||
+      m_velocities.size() != 3 * n || m_acceleration.size() != 3 * n)
+    return;
 
   auto mask = m_molecule->molecule().frozenAtomMask();
   if (mask.rows() != 3 * n)
