@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "templatetool.h"
+#include "templateattachment.h"
 #include "templatetoolkeymap.h"
 #include "templatetoolwidget.h"
 
@@ -97,6 +98,10 @@ TemplateTool::TemplateTool(QObject* parent_)
       .arg(shortcut));
   setIcon();
   reset();
+
+  // Discard the markers when the widget drops a pending ligand selection.
+  connect(m_toolWidget, &TemplateToolWidget::selectionCleared, this,
+          &TemplateTool::drawablesChanged);
 }
 
 TemplateTool::~TemplateTool() {}
@@ -428,14 +433,22 @@ void TemplateTool::reset()
   emit drawablesChanged();
 }
 
+void TemplateTool::clearLigandSelection()
+{
+  if (m_toolWidget == nullptr || m_toolWidget->selectedUIDs().empty())
+    return;
+
+  m_toolWidget->selectedUIDs().clear();
+  emit drawablesChanged();
+}
+
 void TemplateTool::emptyLeftClick(QMouseEvent* e)
 {
   // Get the coordinates of the clicked position
   if (m_renderer == nullptr)
     return;
 
-  m_toolWidget->selectedUIDs().clear();
-  emit drawablesChanged();
+  clearLigandSelection();
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
   // center of inserted template
@@ -606,10 +619,11 @@ Vector3 rotateLigandCoords(Vector3 in, Vector3 centerVector, Vector3 outVector)
 Matrix3 applyKabsch(const std::vector<Vector3>& templatePoints,
                     const std::vector<Vector3>& moleculePoints)
 {
-  // The two sets should always match, but a mismatched template would
-  // otherwise read past the end of the shorter one.
-  size_t count = std::min(templatePoints.size(), moleculePoints.size());
-  if (count == 0)
+  // Callers must pair every template point with a molecule point. Anything
+  // else is a bad attachment mapping, so refuse to rotate rather than read
+  // past the end of the shorter set.
+  size_t count = templatePoints.size();
+  if (count == 0 || count != moleculePoints.size())
     return Matrix3::Identity();
 
   MatrixX TP(count, 3);
@@ -669,6 +683,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
       const QMimeData* mimeData(QApplication::clipboard()->mimeData());
 
       if (!mimeData) {
+        clearLigandSelection();
         return;
       }
 
@@ -693,16 +708,20 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
         pastedData = mimeData->text().toLatin1();
       }
 
-      if (pastedFormat == nullptr)
+      if (pastedFormat == nullptr) {
+        clearLigandSelection();
         return;
+      }
 
       // we have a format, so try to insert the new bits into the molecule
       bool success = pastedFormat->readString(
         std::string(pastedData.constData(), pastedData.size()),
         templateMolecule);
 
-      if (!success)
+      if (!success) {
+        clearLigandSelection();
         return;
+      }
 
     } else {
       QString path;
@@ -714,53 +733,38 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
       }
 
       QFile templ(path);
-      if (!templ.open(QFile::ReadOnly | QFile::Text))
+      if (!templ.open(QFile::ReadOnly | QFile::Text)) {
+        clearLigandSelection();
         return;
+      }
       QTextStream templateStream(&templ);
 
       CjsonFormat ff;
 
       if (!ff.readString(templateStream.readAll().toStdString(),
-                         templateMolecule))
+                         templateMolecule)) {
+        clearLigandSelection();
         return;
-    }
-
-    // Find dummy atom in template and get all necessary info
-    // for haptic ligands, we pick the dummy atom that's
-    // furthest from the centroid of the carbon atoms
-    Vector3 centroid(0.0, 0.0, 0.0);
-    unsigned carbonCount = 0;
-    for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
-      if (templateMolecule.atomicNumber(i) == 6) {
-        carbonCount++;
-        centroid += templateMolecule.atomPosition3d(i);
       }
     }
-    if (carbonCount > 1)
-      centroid = centroid / carbonCount;
 
-    size_t templateDummyIndex = 0;
-    std::vector<size_t> templateLigandIndices;
-    std::vector<size_t> templateLigandUIDs;
-    float maxDistance = 0.0;
-    for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
-      // in some ligands (e.g., haptic) we might have two dummy atoms
-      // so we only select the one furthest from the ligand centroid
-      if (templateMolecule.atomicNumber(i) == 0) {
-        Vector3 delta = templateMolecule.atomPosition3d(i) - centroid;
-        if (delta.squaredNorm() < maxDistance)
-          continue; // too close to the centroid
+    // Find the dummy atom in the template and get all necessary info
+    Index templateDummyIndex = templateAttachmentDummy(templateMolecule);
+    std::vector<Index> templateLigandIndices =
+      templateAttachmentPoints(templateMolecule, templateDummyIndex);
+    std::vector<Index> templateLigandUIDs;
+    templateLigandUIDs.reserve(templateLigandIndices.size());
+    for (Index index : templateLigandIndices)
+      templateLigandUIDs.push_back(templateMolecule.atomUniqueId(index));
 
-        maxDistance = delta.squaredNorm();
-        templateDummyIndex = i;
-        templateLigandIndices.clear();
-        templateLigandUIDs.clear();
-        for (const auto& bond : templateMolecule.bonds(i)) {
-          size_t newIndex = bond.getOtherAtom(i).index();
-          templateLigandIndices.push_back(newIndex);
-          templateLigandUIDs.push_back(templateMolecule.atomUniqueId(newIndex));
-        }
-      }
+    // The template has to offer exactly one attachment point per placeholder
+    // picked, or we would bond the wrong number of sites to the center (and
+    // have no way to align the two sets). Bail out before touching the
+    // molecule - this only happens for a custom ligand whose denticity does
+    // not match the type it was inserted under.
+    if (templateLigandIndices.size() != selectedUIDs.size()) {
+      clearLigandSelection();
+      return;
     }
 
     // Find center atom in our current molecule and get all necessary info
@@ -891,8 +895,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     for (size_t index : templateNewLigandIndices)
       m_molecule->addBond(index + moleculeBaseIndex, moleculeCenterNewIndex);
 
-    selectedUIDs.clear();
-    emit drawablesChanged();
+    clearLigandSelection();
   }
 }
 
