@@ -32,13 +32,34 @@ class OBEnergy::Private
 public:
   // OBMol and OBForceField are owned by this class
   OBMol* m_obmol = nullptr;
+  // A private clone, never the plugin singleton (see setupForceField).
   OBForceField* m_forceField = nullptr;
   bool setup = false;
 
   ~Private()
   {
-    if (m_obmol != nullptr)
-      delete m_obmol;
+    delete m_obmol;
+    delete m_forceField;
+  }
+
+  // Open Babel hands out one global instance per force field plugin.
+  // Setup() reassigns that instance's molecule and reallocates its gradient
+  // array, so sharing it across the energy readout, the optimizer worker and
+  // the AutoOpt worker thread means one caller frees the atoms and gradients
+  // another is still reading. MakeNewInstance() is Open Babel's documented
+  // way to get a private copy for exactly this reason.
+  bool setupForceField(const std::string& method)
+  {
+    if (m_forceField != nullptr)
+      return true;
+
+    auto* plugin = static_cast<OBForceField*>(
+      OBPlugin::GetPlugin("forcefields", method.c_str()));
+    if (plugin == nullptr)
+      return false;
+
+    m_forceField = plugin->MakeNewInstance();
+    return m_forceField != nullptr;
   }
 };
 
@@ -65,12 +86,13 @@ OBEnergy::OBEnergy(const std::string& method)
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
 
-  d->m_forceField = static_cast<OBForceField*>(
-    OBPlugin::GetPlugin("forcefields", method.c_str()));
+  // The force field clone is created lazily in setMolecule() - cloning parses
+  // the parameter files, which is wasted work for an instance that is only
+  // ever queried for its identifier or element mask.
 
 #ifndef NDEBUG
   qDebug() << "OBEnergy: method: " << method.c_str();
-  if (d->m_forceField == nullptr) {
+  if (OBPlugin::GetPlugin("forcefields", method.c_str()) == nullptr) {
     qDebug() << "OBEnergy: method not found: " << method.c_str();
     qDebug() << OBPlugin::ListAsString("forcefields").c_str();
   }
@@ -124,7 +146,10 @@ OBEnergy::OBEnergy(const std::string& method)
   }
 }
 
-OBEnergy::~OBEnergy() {}
+OBEnergy::~OBEnergy()
+{
+  delete d;
+}
 
 bool OBEnergy::acceptsRadicals() const
 {
@@ -147,7 +172,9 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
     return; // nothing to do
   }
 
-  // set up our internal OBMol
+  // set up our internal OBMol, discarding any molecule from a previous call
+  delete d->m_obmol;
+  d->setup = false;
   d->m_obmol = new OBMol;
   // copy the atoms, bonds, and coordinates
   d->m_obmol->BeginModify();
@@ -166,15 +193,8 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
   d->m_obmol->EndModify();
 
   // make sure we can set up the force field
-  if (d->m_forceField != nullptr) {
+  if (d->setupForceField(m_identifier))
     d->setup = d->m_forceField->Setup(*d->m_obmol);
-  } else {
-    d->m_forceField = static_cast<OBForceField*>(
-      OBPlugin::GetPlugin("forcefields", m_identifier.c_str()));
-    if (d->m_forceField != nullptr) {
-      d->setup = d->m_forceField->Setup(*d->m_obmol);
-    }
-  }
 }
 
 Real OBEnergy::value(const Eigen::VectorXd& x)
@@ -182,6 +202,12 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
   if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
       d->m_obmol == nullptr || !d->setup)
     return 0.0; // nothing to do
+
+  // OBMol::SetCoordinates() blindly copies 3 * NumAtoms() doubles out of the
+  // supplied array, so a stale coordinate vector would read off the end.
+  const auto n = d->m_obmol->NumAtoms();
+  if (x.size() != static_cast<Eigen::Index>(3 * n))
+    return 0.0;
 
   // update all coordinates at once (SetCoordinates copies the array)
   d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
@@ -212,6 +238,13 @@ Real OBEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
     return 0.0;
   }
 
+  // The gradient array is sized for the molecule the force field was set up
+  // with, which is not necessarily the molecule we were handed since - bail
+  // out rather than read past either buffer.
+  const auto n = d->m_obmol->NumAtoms();
+  if (x.size() != static_cast<Eigen::Index>(3 * n))
+    return 0.0;
+
   d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
 
   double energy = 0.0;
@@ -220,7 +253,6 @@ Real OBEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
     energy = d->m_forceField->Energy(true);
 
     // GetGradientPtr returns forces (not gradients), so negate
-    const auto n = m_molecule->atomCount();
     Eigen::Map<const Eigen::VectorXd> obForces(
       d->m_forceField->GetGradientPtr(), 3 * n);
     *grad = -obForces;

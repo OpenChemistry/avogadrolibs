@@ -96,8 +96,20 @@ AutoOpt::~AutoOpt()
 void AutoOpt::cleanupWorker()
 {
   if (m_workerThread) {
+    // Stop listening before tearing the thread down. A result the worker
+    // already emitted is sitting in our event queue sized for the pre-edit
+    // molecule, and moleculeChanged() restarts us straight away - the
+    // handlers would then apply those coordinates to the edited molecule.
+    if (m_worker) {
+      m_worker->cancel();
+      disconnect(m_worker, nullptr, this, nullptr);
+    }
     m_workerThread->quit();
-    m_workerThread->wait(5000);
+    // The worker deletes itself via the thread's finished() signal, but the
+    // thread is parented to us, so one leaks per restart unless we drop it.
+    // Don't destroy a thread that refused to stop.
+    if (m_workerThread->wait(5000))
+      m_workerThread->deleteLater();
     m_workerThread = nullptr;
     m_worker = nullptr;
   }
@@ -492,6 +504,11 @@ void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
 
   int n = m_molecule->atomCount();
 
+  // Defensive: never map a coordinate vector that doesn't match the molecule
+  // we're about to write it into.
+  if (positions.size() != 3 * n)
+    return;
+
   if (std::isfinite(energy) && positions.allFinite()) {
     m_deltaE = energy - m_energy;
     m_energy = energy;
@@ -625,6 +642,12 @@ void AutoOpt::onGradientDone(Eigen::VectorXd gradient, double energy)
 
   int n = m_molecule->atomCount();
   double dt = m_timeStep;
+
+  // Defensive: the integrator arrays are all resized together in start(), so
+  // a mismatch means this gradient belongs to a molecule we've since edited.
+  if (gradient.size() != 3 * n || m_masses.size() != 3 * n ||
+      m_velocities.size() != 3 * n || m_acceleration.size() != 3 * n)
+    return;
 
   auto mask = m_molecule->molecule().frozenAtomMask();
   if (mask.rows() != 3 * n)
