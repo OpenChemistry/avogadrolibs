@@ -235,6 +235,15 @@ void TemplateToolWidget::setCurrentTab(int index)
   m_ui->tabWidget->setCurrentIndex(index);
 }
 
+void TemplateToolWidget::clearSelection()
+{
+  if (m_selectedUIDs.empty())
+    return;
+
+  m_selectedUIDs.clear();
+  emit selectionCleared();
+}
+
 void TemplateToolWidget::useCustomLigand(const QString& fileName)
 {
   m_ligandPath = fileName;
@@ -256,18 +265,14 @@ void TemplateToolWidget::useCustomLigand(const QString& fileName)
   m_ui->ligandComboBox->blockSignals(false);
 
   m_denticity = denticity;
-  m_selectedUIDs.clear();
+  clearSelection();
 }
 
 void TemplateToolWidget::tabChanged(int)
 {
   // A half-finished ligand can't carry over to another tab - the new tab has
   // its own denticity, so any pending attachment points are meaningless here.
-  if (m_selectedUIDs.empty())
-    return;
-
-  m_selectedUIDs.clear();
-  emit selectionCleared();
+  clearSelection();
 }
 
 void TemplateToolWidget::setGroup(const QString& groupName)
@@ -485,7 +490,7 @@ void TemplateToolWidget::typeChanged(int index)
   settings.beginGroup("templatetool");
   settings.setValue("ligandType", index);
 
-  m_selectedUIDs.clear();
+  clearSelection();
   m_denticity = denticityForType(index);
   m_ui->ligandComboBox->clear();
   m_ligands = QStringList();

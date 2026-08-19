@@ -73,6 +73,12 @@ private slots:
 
 private:
   /**
+   * Discard any pending attachment points and let the tool know, so the
+   * markers for them are removed from the display.
+   */
+  void clearSelection();
+
+  /**
    * Point the ligand tab at a custom template, matching the type combo to the
    * denticity measured from the file.
    */
