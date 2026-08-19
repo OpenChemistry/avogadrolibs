@@ -47,7 +47,8 @@ enum LigandType
 
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   : QWidget(parent_), m_ui(new Ui::TemplateToolWidget),
-    m_fragmentDialog(nullptr), m_elementSelector(nullptr), m_currentElement(26)
+    m_fragmentDialog(nullptr), m_elementSelector(nullptr), m_currentElement(26),
+    m_denticity(1)
 {
   m_ui->setupUi(this);
 
@@ -211,7 +212,6 @@ void TemplateToolWidget::setGroup(const QString& groupName)
     m_ui->groupComboBox->blockSignals(true);
     m_ui->groupComboBox->setCurrentIndex(m_ui->groupComboBox->count() - 1);
     m_ui->groupComboBox->blockSignals(false);
-    m_denticity = 1;
     // Update the preview icon
     m_ui->groupPreview->setIcon(QIcon(":/icons/ligands/" + groupName + ".svg"));
   }
@@ -303,7 +303,6 @@ void TemplateToolWidget::groupChanged(int index)
   int i = m_ui->groupComboBox->currentIndex();
   const QString& groupName = m_groups[i];
   const QString& iconName = groupName;
-  m_denticity = 1;
 
   // check if it's "other"
   if (index == m_ui->groupComboBox->count() - 1) {
@@ -616,6 +615,11 @@ void TemplateToolWidget::saveElements()
 
 int TemplateToolWidget::denticity() const
 {
+  // Functional groups always attach through a single placeholder - m_denticity
+  // belongs to the ligand tab, so don't let it leak across.
+  if (currentTab() == TabType::FunctionalGroups)
+    return 1;
+
   return m_denticity;
 }
 

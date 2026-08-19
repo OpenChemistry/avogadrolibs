@@ -27,6 +27,7 @@
 #include <avogadro/rendering/glrenderer.h>
 
 #include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/spheregeometry.h>
 #include <avogadro/rendering/textlabel2d.h>
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
@@ -46,6 +47,7 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
 
+#include <algorithm>
 #include <limits>
 
 namespace {
@@ -67,6 +69,7 @@ using Avogadro::Io::CjsonFormat;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
+using Avogadro::Rendering::SphereGeometry;
 using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
@@ -323,7 +326,55 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
   return nullptr;
 }
 
-void TemplateTool::draw(Rendering::GroupNode&) {}
+void TemplateTool::draw(Rendering::GroupNode& node)
+{
+  if (m_molecule == nullptr || m_toolWidget == nullptr)
+    return;
+
+  // Mark the placeholder atoms picked so far for a polydentate ligand.
+  const std::vector<size_t>& selectedUIDs = m_toolWidget->selectedUIDs();
+  if (selectedUIDs.empty())
+    return;
+
+  auto* geo = new GeometryNode;
+  node.addChild(geo);
+
+  // Translucent red, to keep these distinct from the blue selection color.
+  // The identifier is left unset so these never intercept atom picking.
+  auto* spheres = new SphereGeometry;
+  spheres->setOpacity(0.55f);
+  spheres->setRenderPass(Rendering::TranslucentPass);
+  geo->addDrawable(spheres);
+
+  TextProperties labelProp;
+  labelProp.setFontFamily(TextProperties::SansSerif);
+  labelProp.setAlign(TextProperties::HCenter, TextProperties::VCenter);
+  labelProp.setColorRgb(255, 255, 255);
+
+  unsigned int count = 0;
+  for (size_t UID : selectedUIDs) {
+    RWAtom atom = m_molecule->atomByUniqueId(UID);
+    if (!atom.isValid())
+      continue;
+
+    Vector3f position = atom.position3d().cast<float>();
+    // Big enough to show around a ball-and-stick hydrogen or a dummy atom.
+    float radius = std::max(
+      static_cast<float>(Elements::radiusVDW(atom.atomicNumber())) * 0.4f,
+      0.35f);
+    spheres->addSphere(position, Vector3ub(255, 0, 0), radius, count);
+
+    // Number the attachment points in the order they were clicked.
+    auto* label = new TextLabel3D;
+    label->setText(QString("#%1").arg(count + 1).toStdString());
+    label->setTextProperties(labelProp);
+    label->setAnchor(position);
+    label->setRadius(radius);
+    geo->addDrawable(label);
+
+    ++count;
+  }
+}
 
 void TemplateTool::updatePressedButtons(QMouseEvent* e, bool release)
 {
@@ -384,6 +435,7 @@ void TemplateTool::emptyLeftClick(QMouseEvent* e)
     return;
 
   m_toolWidget->selectedUIDs().clear();
+  emit drawablesChanged();
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
   // center of inserted template
@@ -551,13 +603,18 @@ Vector3 rotateLigandCoords(Vector3 in, Vector3 centerVector, Vector3 outVector)
   return rot * in;
 }
 
-Matrix3 applyKabsch(std::vector<Vector3> templatePoints,
-                    std::vector<Vector3> moleculePoints)
+Matrix3 applyKabsch(const std::vector<Vector3>& templatePoints,
+                    const std::vector<Vector3>& moleculePoints)
 {
-  assert(templatePoints.size() == moleculePoints.size());
-  MatrixX TP(templatePoints.size(), 3);
-  MatrixX MP(templatePoints.size(), 3);
-  for (size_t i = 0; i < templatePoints.size(); i++) {
+  // The two sets should always match, but a mismatched template would
+  // otherwise read past the end of the shorter one.
+  size_t count = std::min(templatePoints.size(), moleculePoints.size());
+  if (count == 0)
+    return Matrix3::Identity();
+
+  MatrixX TP(count, 3);
+  MatrixX MP(count, 3);
+  for (size_t i = 0; i < count; i++) {
     TP.row(i) = templatePoints[i];
     MP.row(i) = moleculePoints[i];
   }
@@ -578,11 +635,30 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
   if (m_molecule->atom(selectedIndex).isValid() &&
       (m_molecule->atomicNumber(selectedIndex) == 1 ||
        m_molecule->atomicNumber(selectedIndex) == 0)) {
-    m_toolWidget->selectedUIDs().push_back(
-      m_molecule->atomUniqueId(selectedIndex));
-    if (static_cast<int>(m_toolWidget->selectedUIDs().size()) !=
-        m_toolWidget->denticity())
+    std::vector<size_t>& selectedUIDs = m_toolWidget->selectedUIDs();
+
+    // Drop any stale selections (e.g. atoms removed by an undo) so we never
+    // try to attach a ligand to an atom that no longer exists.
+    selectedUIDs.erase(
+      std::remove_if(selectedUIDs.begin(), selectedUIDs.end(),
+                     [this](size_t uid) {
+                       return !m_molecule->atomByUniqueId(uid).isValid();
+                     }),
+      selectedUIDs.end());
+
+    // Every attachment point of a polydentate ligand has to be a distinct
+    // atom, so ignore repeat clicks on an atom that is already selected.
+    size_t selectedUID = m_molecule->atomUniqueId(selectedIndex);
+    if (std::find(selectedUIDs.begin(), selectedUIDs.end(), selectedUID) !=
+        selectedUIDs.end())
       return;
+
+    selectedUIDs.push_back(selectedUID);
+    if (static_cast<int>(selectedUIDs.size()) != m_toolWidget->denticity()) {
+      // Show the marker for this attachment point and wait for the rest.
+      emit drawablesChanged();
+      return;
+    }
 
     // Get the ligand template
     // - check if we should use the clipboard
@@ -700,7 +776,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
       moleculeCenterIndex =
         m_molecule->bonds(selectedIndex)[0].getOtherAtom(selectedIndex).index();
       moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
-      for (size_t UID : m_toolWidget->selectedUIDs()) {
+      for (size_t UID : selectedUIDs) {
         size_t index = m_molecule->atomByUniqueId(UID).index();
         Vector3 newPos = m_molecule->atomPosition3d(index);
         moleculeLigandOutVector +=
@@ -751,7 +827,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
           templateMolecule.atomPosition3d(index) -
           m_molecule->atomPosition3d(moleculeCenterIndex));
       std::vector<Vector3> moleculeLigandPositions;
-      for (size_t UID : m_toolWidget->selectedUIDs())
+      for (size_t UID : selectedUIDs)
         moleculeLigandPositions.push_back(
           m_molecule->atomPosition3d(m_molecule->atomByUniqueId(UID).index()) -
           m_molecule->atomPosition3d(moleculeCenterIndex));
@@ -803,7 +879,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     // Remove selected atoms and insert ligand
     // (unless there wasn't a bond to begin with)
     if (m_molecule->bonds(selectedIndex).size() != 0) {
-      for (size_t UID : m_toolWidget->selectedUIDs())
+      for (size_t UID : selectedUIDs)
         m_molecule->removeAtom(m_molecule->atomByUniqueId(UID).index());
     }
     size_t moleculeBaseIndex = m_molecule->atomCount();
@@ -815,7 +891,8 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     for (size_t index : templateNewLigandIndices)
       m_molecule->addBond(index + moleculeBaseIndex, moleculeCenterNewIndex);
 
-    m_toolWidget->selectedUIDs().clear();
+    selectedUIDs.clear();
+    emit drawablesChanged();
   }
 }
 
