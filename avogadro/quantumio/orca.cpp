@@ -269,7 +269,7 @@ void ORCAOutput::processLine(std::istream& in,
 {
   // First truncate the line, remove trailing white space and check
   string line;
-  if (!getline(in, line) || Core::trimmed(line).empty())
+  if (!Core::getLine(in, line) || Core::trimmed(line).empty())
     return;
 
   string key = Core::trimmed(line);
@@ -287,28 +287,28 @@ void ORCAOutput::processLine(std::istream& in,
     m_atomPos.clear();
     m_atomNums.clear();
     m_atomLabel.clear();
-    getline(in, key); // skip ----- line
-    getline(in, key); // column titles
+    Core::getLine(in, key); // skip ----- line
+    Core::getLine(in, key); // column titles
   } else if (Core::contains(key, "BASIS SET INFORMATION")) {
     if (!Core::contains(key, "AUXILIARY")) { // skip auxiliary basis set infos
       m_currentMode = GTO;
-      getline(in, key); // skip ----- line
+      Core::getLine(in, key); // skip ----- line
 
       // Number of groups of distinct atoms
-      getline(in, key);
+      Core::getLine(in, key);
       list = Core::split(key, ' ');
       if (list.size() > 3) {
         m_nGroups = Core::lexicalCast<int>(list[2]).value_or(0);
       } else {
         return;
       }
-      getline(in, key); // skip blank line
+      Core::getLine(in, key); // skip blank line
       for (int i = 0; i < m_nGroups; ++i) {
-        getline(in, key); // skip group information
+        Core::getLine(in, key); // skip group information
       }
-      getline(in, key); // skip blank line
+      Core::getLine(in, key); // skip blank line
       for (unsigned int i = 0; i < m_atomNums.size(); ++i) {
-        getline(in, key); // skip group information
+        Core::getLine(in, key); // skip group information
       }
 
       // now skip
@@ -318,7 +318,7 @@ void ORCAOutput::processLine(std::istream& in,
       // ----------------------------
       // blank line
       for (unsigned int i = 0; i < 6; ++i) {
-        getline(in, key);
+        Core::getLine(in, key);
       }
     }
   } else if (Core::contains(key, "Total Charge")) {
@@ -340,16 +340,19 @@ void ORCAOutput::processLine(std::istream& in,
     m_currentMode = NotParsing; // no longer reading GTOs
   } else if (Core::contains(key, "Number of Electrons")) {
     list = Core::split(key, ' ');
-    m_electrons = Core::lexicalCast<int>(list[5]).value_or(0);
+    if (list.size() > 5)
+      m_electrons = Core::lexicalCast<int>(list[5]).value_or(0);
   } else if (Core::contains(key, "Total Dipole Moment")) {
     list = Core::split(key, ' ');
-    m_dipoleMoment =
-      Eigen::Vector3d(Core::lexicalCast<double>(list[4]).value_or(0.0),
-                      Core::lexicalCast<double>(list[5]).value_or(0.0),
-                      Core::lexicalCast<double>(list[6]).value_or(0.0));
-    // convert from atomic units to Debye
-    // e.g. https://en.wikipedia.org/wiki/Debye
-    m_dipoleMoment *= 2.54174628;
+    if (list.size() > 6) {
+      m_dipoleMoment =
+        Eigen::Vector3d(Core::lexicalCast<double>(list[4]).value_or(0.0),
+                        Core::lexicalCast<double>(list[5]).value_or(0.0),
+                        Core::lexicalCast<double>(list[6]).value_or(0.0));
+      // convert from atomic units to Debye
+      // e.g. https://en.wikipedia.org/wiki/Debye
+      m_dipoleMoment *= 2.54174628;
+    }
   } else if (Core::contains(key, "Mayer bond orders")) {
     m_currentMode = BondOrders;
     // starts at the next line
@@ -358,7 +361,7 @@ void ORCAOutput::processLine(std::istream& in,
                "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS")) {
     m_currentMode = Electronic;
     for (int i = 0; i < 4; ++i) {
-      getline(in, key); // skip header
+      Core::getLine(in, key); // skip header
     }
     // starts at the next line
   } else if (Core::contains(key, "CD SPECTRUM") &&
@@ -366,12 +369,12 @@ void ORCAOutput::processLine(std::istream& in,
              !Core::contains(key, "TRANSITION VELOCITY DIPOLE")) {
     m_currentMode = ECD;
     for (int i = 0; i < 4; ++i) {
-      getline(in, key); // skip header
+      Core::getLine(in, key); // skip header
     }
   } else if (Core::contains(key, "ORBITAL ENERGIES")) {
     m_currentMode = OrbitalEnergies;
-    getline(in, key); // skip ------------
-    getline(in, key); // check if SPIN UP ORBITALS are present
+    Core::getLine(in, key); // skip ------------
+    Core::getLine(in, key); // check if SPIN UP ORBITALS are present
     if (Core::contains(key, "SPIN UP ORBITALS")) {
       m_openShell = true;
       m_readBeta = false;
@@ -379,37 +382,37 @@ void ORCAOutput::processLine(std::istream& in,
       m_openShell = false;
       m_readBeta = false;
     }
-    getline(in, key); // skip column titles
+    Core::getLine(in, key); // skip column titles
   } else if (Core::contains(key, "SPIN DOWN ORBITALS")) {
     m_currentMode = OrbitalEnergies;
     m_openShell = true;
     m_readBeta = true;
-    getline(in, key); // skip column headers
+    Core::getLine(in, key); // skip column headers
   } else if (Core::contains(key, "MOLECULAR ORBITALS")) {
     m_currentMode = MO;
-    getline(in, key); //------------
+    Core::getLine(in, key); //------------
   } else if (Core::contains(key, "HIRSHFELD ANALYSIS")) {
     m_currentMode = HirshfeldCharges;
     m_chargeType = "Hirshfeld";
     for (unsigned int i = 0; i < 6; ++i) {
-      getline(in, key); // skip header
+      Core::getLine(in, key); // skip header
     }
   } else if (Core::contains(key, "MBIS ANALYSIS")) {
     // MBIS analysis is similar to Hirshfeld, but with different headers
     m_currentMode = HirshfeldCharges;
     m_chargeType = "MBIS";
     for (unsigned int i = 0; i < 9; ++i) {
-      getline(in, key); // skip header
+      Core::getLine(in, key); // skip header
     }
   } else if (Core::contains(key, "CHELPG Charges")) {
     // similar to standard charges
     m_currentMode = Charges;
     m_chargeType = "CHELPG";
-    getline(in, key); // skip ------------
+    Core::getLine(in, key); // skip ------------
   } else if (Core::contains(key, "RESP Charges")) {
     m_currentMode = Charges;
     m_chargeType = "RESP";
-    getline(in, key); // skip ------------
+    Core::getLine(in, key); // skip ------------
   } else if (Core::contains(key, "ATOMIC CHARGES")) {
     m_currentMode = Charges;
     // figure out what type of charges we have
@@ -421,59 +424,59 @@ void ORCAOutput::processLine(std::istream& in,
     for (unsigned int i = 1; i < m_chargeType.size(); ++i) {
       m_chargeType[i] = tolower(m_chargeType[i]);
     }
-    getline(in, key); // skip ------------
+    Core::getLine(in, key); // skip ------------
   } else if (Core::contains(key, "VIBRATIONAL FREQUENCIES")) {
     m_currentMode = Frequencies;
-    getline(in, key); // skip ------------
-    getline(in, key); // skip blank line
-    getline(in, key); // scaling factor
+    Core::getLine(in, key); // skip ------------
+    Core::getLine(in, key); // skip blank line
+    Core::getLine(in, key); // scaling factor
     // Scaling factor for frequencies =  1.000000000
     list = Core::split(key, ' ');
     if (list.size() > 6)
       vibScaling = Core::lexicalCast<float>(list[5]).value_or(0);
-    getline(in, key); // skip blank line or "Point grup" line
+    Core::getLine(in, key); // skip blank line or "Point grup" line
   } else if (Core::contains(key, "NORMAL MODES")) {
     m_currentMode = VibrationalModes;
 
-    getline(in, key); // skip ------------
-    getline(in, key); // skip blank line
-    getline(in, key); // skip comment
-    getline(in, key); // skip more comments
-    getline(in, key); // skip even more comment
-    getline(in, key); // skip blank line
+    Core::getLine(in, key); // skip ------------
+    Core::getLine(in, key); // skip blank line
+    Core::getLine(in, key); // skip comment
+    Core::getLine(in, key); // skip more comments
+    Core::getLine(in, key); // skip even more comment
+    Core::getLine(in, key); // skip blank line
   } else if (Core::contains(key, "IR SPECTRUM")) {
     m_currentMode = IR;
-    getline(in, key); // skip ------------
-    getline(in, key); // skip blank line
-    getline(in, key); // skip column titles
-    getline(in, key); // skip more column titles
-    getline(in, key); // skip ------------
+    Core::getLine(in, key); // skip ------------
+    Core::getLine(in, key); // skip blank line
+    Core::getLine(in, key); // skip column titles
+    Core::getLine(in, key); // skip more column titles
+    Core::getLine(in, key); // skip ------------
   } else if (Core::contains(key, "RAMAN SPECTRUM")) {
     m_currentMode = Raman;
-    getline(in, key); // skip ------------
-    getline(in, key); // skip blank line
-    getline(in, key); // skip column titles
-    getline(in, key); // skip ------------
+    Core::getLine(in, key); // skip ------------
+    Core::getLine(in, key); // skip blank line
+    Core::getLine(in, key); // skip column titles
+    Core::getLine(in, key); // skip ------------
   } else if (Core::contains(key, "VCD SPECTRUM")) {
     m_currentMode = VCD;
     // look for "Mode" and "Freq"
     int maxLines = 10; // reasonable limit for header lines
     while (!Core::contains(key, "Mode") && !Core::contains(key, "Freq") &&
            maxLines-- > 0 && !in.eof())
-      getline(in, key);
+      Core::getLine(in, key);
     if (maxLines <= 0 || in.eof()) {
       m_currentMode = NotParsing;
       return;
     }
     // units
-    getline(in, key);
-    getline(in, key); // skip ------------
+    Core::getLine(in, key);
+    Core::getLine(in, key); // skip ------------
   } else if (Core::contains(key, "MCD Transitions")) {
     parseMCD();
   } else if (Core::contains(key, "CHEMICAL SHIELDING SUMMARY (ppm)")) {
     m_currentMode = NMR;
     for (int i = 0; i < 4; ++i) {
-      getline(in, key); // skip header
+      Core::getLine(in, key); // skip header
     }
   } else {
 
@@ -505,7 +508,7 @@ void ORCAOutput::processLine(std::istream& in,
           m_atomNums.push_back(atomicNum);
           m_atomPos.push_back(pos);
           m_atomLabel.push_back(Core::trimmed(list[1]));
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
@@ -539,7 +542,7 @@ void ORCAOutput::processLine(std::istream& in,
           }
           charges(atomIndex, 0) = charge;
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
@@ -575,7 +578,7 @@ void ORCAOutput::processLine(std::istream& in,
           }
           charges(atomIndex, 0) = charge;
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
@@ -592,7 +595,7 @@ void ORCAOutput::processLine(std::istream& in,
         constexpr size_t kMinBondOrderLineLength = 27;
         while (!key.empty() && key[0] == 'B') {
           if (key.size() < kMinBondOrderLineLength || key[1] != '(') {
-            getline(in, key);
+            Core::getLine(in, key);
             key = Core::trimmed(key);
             continue;
           }
@@ -644,7 +647,7 @@ void ORCAOutput::processLine(std::istream& in,
             }
           }
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
         }
 
@@ -674,7 +677,7 @@ void ORCAOutput::processLine(std::istream& in,
           else
             m_betaOrbitalEnergy.push_back(energy);
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
@@ -687,11 +690,11 @@ void ORCAOutput::processLine(std::istream& in,
           break;
         list = Core::split(key, ' ');
         // If symmetry is enabled, a line wih "Irrep" label comes
-	std::size_t extraColumns = 0;
-        if (list[0] == "Irrep") {
+        std::size_t extraColumns = 0;
+        if (!list.empty() && list[0] == "Irrep") {
           // Job with symmetry
           extraColumns = 1;
-          getline(in, key); // Get first freq
+          Core::getLine(in, key); // Get first freq
           key = Core::trimmed(key);
           if (key.empty())
             break;
@@ -701,7 +704,8 @@ void ORCAOutput::processLine(std::istream& in,
           // imaginary frequencies can have an additional comment:
           // ***imaginary mode***
           if (list.size() != 3 + extraColumns &&
-              (list.size() != 5 + extraColumns || list[3 + extraColumns] != "***imaginary" ||
+              (list.size() != 5 + extraColumns ||
+               list[3 + extraColumns] != "***imaginary" ||
                list[4 + extraColumns] != "mode***")) {
             break;
           }
@@ -709,7 +713,7 @@ void ORCAOutput::processLine(std::istream& in,
           double freq = Core::lexicalCast<double>(list[1]).value_or(0.0);
           m_frequencies.push_back(freq);
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
@@ -748,7 +752,7 @@ void ORCAOutput::processLine(std::istream& in,
           m_vcdIntensities[index] =
             Core::lexicalCast<double>(list[2]).value_or(0.0);
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
@@ -761,16 +765,16 @@ void ORCAOutput::processLine(std::istream& in,
           break;
         list = Core::split(key, ' ');
         bool has_sym = false;
-	if (list[0] == "Point") {
-	  // Job with symmetry
-	  getline(in, key); // skip blank line
+        if (!list.empty() && list[0] == "Point") {
+          // Job with symmetry
+          Core::getLine(in, key); // skip blank line
           has_sym = true;
-	  getline(in, key); // Get the indices
+          Core::getLine(in, key); // Get the indices
           key = Core::trimmed(key);
           if (key.empty())
             break;
           list = Core::split(key, ' ');
-	}
+        }
         vector<std::size_t> modeIndex;
         bool invalid_index = false;
         while (!key.empty()) {
@@ -789,17 +793,22 @@ void ORCAOutput::processLine(std::istream& in,
           if (invalid_index)
             break;
 
-	  // If has symmetry, skip symmetry labels
-	  if (has_sym) {
-	    getline(in, key); // e.g.: 1-A1       1-B1       1-B2       1-A2       2-B1...
+          // If has symmetry, skip symmetry labels
+          if (has_sym) {
+            Core::getLine(
+              in, key); // e.g.: 1-A1       1-B1       1-B2       1-A2 2-B1...
           }
 
           // now we read the displacements .. there should be 3N lines
           // x,y,z for each atom
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
           for (unsigned int i = 0; i < 3 * m_atomNums.size(); i++) {
+            // the line holds an index followed by one column per mode, so a
+            // shorter line means the block was truncated
+            if (list.size() <= modeIndex.size())
+              break;
             unsigned int atomIndex = i / 3;
             unsigned int coordIndex = i % 3;
             for (unsigned int j = 0; j < modeIndex.size(); j++) {
@@ -807,13 +816,13 @@ void ORCAOutput::processLine(std::istream& in,
                 Core::lexicalCast<double>(list[j + 1]).value_or(0.0);
             }
 
-            getline(in, key);
+            Core::getLine(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
           }
-	  // If has symmetry, read next to account for blank line between blocks
-	  if (has_sym) {
-            getline(in, key);
+          // If has symmetry, read next to account for blank line between blocks
+          if (has_sym) {
+            Core::getLine(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
           }
@@ -842,7 +851,7 @@ void ORCAOutput::processLine(std::istream& in,
           double intensity = Core::lexicalCast<double>(list[3]).value_or(0.0);
           m_IRintensities[index] = intensity;
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
@@ -874,7 +883,7 @@ void ORCAOutput::processLine(std::istream& in,
           double activity = Core::lexicalCast<double>(list[2]).value_or(0.0);
           m_RamanIntensities.push_back(activity);
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
@@ -890,7 +899,7 @@ void ORCAOutput::processLine(std::istream& in,
         while (!key.empty()) {
           // should have 8 columns
           if (list.size() < 8) {
-            getline(in, key);
+            Core::getLine(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
             continue; // skip any spin-forbidden transitions
@@ -910,7 +919,7 @@ void ORCAOutput::processLine(std::istream& in,
               Core::lexicalCast<double>(list[6]).value_or(0.0));
           }
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
           if (list.size() < 2)
@@ -927,7 +936,7 @@ void ORCAOutput::processLine(std::istream& in,
         while (!key.empty()) {
           // should have 7 columns
           if (list.size() < 7) {
-            getline(in, key);
+            Core::getLine(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
             continue; // skip any spin-forbidden transitions
@@ -940,7 +949,7 @@ void ORCAOutput::processLine(std::istream& in,
             m_electronicRotations.push_back(
               Core::lexicalCast<double>(list[6]).value_or(0.0));
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
           if (list.size() < 2)
@@ -974,7 +983,7 @@ void ORCAOutput::processLine(std::istream& in,
             }
           }
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
@@ -1000,10 +1009,13 @@ void ORCAOutput::processLine(std::istream& in,
         m_shellNums.resize(0);
         m_shellTypes.resize(0);
         m_shelltoAtom.resize(0);
-        while (Core::trimmed(list[0]) == "NewGTO") {
+        while (!list.empty() && Core::trimmed(list[0]) == "NewGTO") {
+          // "NewGTO <label>" - without the label there is no basis to read
+          if (list.size() < 2)
+            break;
           m_basisAtomLabel.push_back(Core::trimmed(list[1]));
 
-          getline(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
 
           list = Core::split(key, ' ');
@@ -1013,20 +1025,30 @@ void ORCAOutput::processLine(std::istream& in,
             new std::vector<std::vector<Eigen::Vector2d>*>);
           shellFunctions.resize(0);
           shellTypes.resize(0);
-          while (Core::trimmed(list[0]) != "end;") {
+          while (!list.empty() && Core::trimmed(list[0]) != "end;") {
+            // "<shell type> <number of primitives>"
+            if (list.size() < 2)
+              break;
 
             int nFunc =
               Core::lexicalCast<int>(Core::trimmed(list[1])).value_or(0);
+            // a shell with no primitives is malformed, and a negative count
+            // would be converted to a huge size when sizing the vector below
+            if (nFunc <= 0)
+              break;
             shellTypes.push_back(orbitalIdx(Core::trimmed(list[0])));
             shellFunctions.push_back(nFunc);
             m_basisFunctions.at(nGTOs)->push_back(
               new std::vector<Eigen::Vector2d>(nFunc));
 
             for (int i = 0; i < nFunc; i++) {
-              getline(in, key);
+              Core::getLine(in, key);
               key = Core::trimmed(key);
 
               list = Core::split(key, ' ');
+              // "<index> <exponent> <coefficient>"
+              if (list.size() < 3)
+                break;
               m_basisFunctions.at(nGTOs)->at(nShells)->at(i).x() =
                 Core::lexicalCast<double>(list[1]).value_or(0.0); // exponent
               m_basisFunctions.at(nGTOs)->at(nShells)->at(i).y() =
@@ -1034,7 +1056,7 @@ void ORCAOutput::processLine(std::istream& in,
             }
 
             nShells++;
-            getline(in, key);
+            Core::getLine(in, key);
             key = Core::trimmed(key);
 
             list = Core::split(key, ' ');
@@ -1046,9 +1068,9 @@ void ORCAOutput::processLine(std::istream& in,
           m_orcaNumShells.at(nGTOs) = shellFunctions;
           nGTOs++;
 
-          getline(in, key);
-          getline(in, key);
-          getline(in, key);
+          Core::getLine(in, key);
+          Core::getLine(in, key);
+          Core::getLine(in, key);
           key = Core::trimmed(key);
 
           list = Core::split(key, ' ');
@@ -1088,7 +1110,7 @@ void ORCAOutput::processLine(std::istream& in,
 
         while (!Core::trimmed(key).empty()) {
           // currently reading the sequence number
-          getline(in, key); // energies
+          Core::getLine(in, key); // energies
           list = Core::split(key, ' ');
           // convert these all to double and add to m_orbitalEnergy
           for (unsigned int i = 0; i < list.size(); i++) {
@@ -1097,9 +1119,9 @@ void ORCAOutput::processLine(std::istream& in,
               Core::lexicalCast<double>(list[i]).value_or(0.0) * HARTREE_TO_EV);
           }
 
-          getline(in, key); // occupations
-          getline(in, key); // skip -----------
-          getline(in, key); // now we've got coefficients
+          Core::getLine(in, key); // occupations
+          Core::getLine(in, key); // skip -----------
+          Core::getLine(in, key); // now we've got coefficients
 
           // coefficients are optionally a -, one or two digits, a decimal
           // point, and then 6 digits; adjacent negative values can run
@@ -1127,7 +1149,7 @@ void ORCAOutput::processLine(std::istream& in,
                 Core::lexicalCast<double>(list[i]).value_or(0.0));
             }
 
-            getline(in, key);
+            Core::getLine(in, key);
             extractOrcaCoefficients(key, list);
 
             if (list.size() != numColumns)
@@ -1178,10 +1200,10 @@ void ORCAOutput::processLine(std::istream& in,
           // TODO: parse both alpha and beta orbitals
           m_BetaMOcoeffs.clear(); // if the orbitals were punched multiple times
           m_betaOrbitalEnergy.clear(); // we can get the energies here
-          getline(in, key);
+          Core::getLine(in, key);
           while (!Core::trimmed(key).empty()) {
             // currently reading the sequence number
-            getline(in, key); // energies
+            Core::getLine(in, key); // energies
 
             list = Core::split(key, ' ');
             // convert these all to double and add to m_betaOrbitalEnergy
@@ -1192,9 +1214,9 @@ void ORCAOutput::processLine(std::istream& in,
                 HARTREE_TO_EV);
             }
 
-            getline(in, key); // symmetries
-            getline(in, key); // skip -----------
-            getline(in, key); // now we've got coefficients
+            Core::getLine(in, key); // symmetries
+            Core::getLine(in, key); // skip -----------
+            Core::getLine(in, key); // now we've got coefficients
 
             extractOrcaCoefficients(key, list);
 
@@ -1217,7 +1239,7 @@ void ORCAOutput::processLine(std::istream& in,
                   Core::lexicalCast<double>(list[i]).value_or(0.0));
               }
 
-              getline(in, key);
+              Core::getLine(in, key);
               extractOrcaCoefficients(key, list);
 
               if (list.size() != numColumns)
@@ -1261,8 +1283,8 @@ void ORCAOutput::processLine(std::istream& in,
             orcaOrbitals.clear();
 
             if (Core::trimmed(key).empty())
-              getline(in, key); // skip the blank line after the MOs
-          }                     // finished parsing 2nd. MOs
+              Core::getLine(in, key); // skip the blank line after the MOs
+          }                           // finished parsing 2nd. MOs
           if (m_MOcoeffs.size() != numRows * numRows) {
             m_orcaSuccess = false;
           }

@@ -151,7 +151,7 @@ void GaussianFchk::processLine(std::istream& in)
   // If we are in any other kind of block that is not known skip through until
   // we find a recognized block.
   string line;
-  if (!getline(in, line) || line.size() < 44)
+  if (!Core::getLine(in, line) || line.size() < 44)
     return;
 
   string key = line.substr(0, 42);
@@ -216,7 +216,8 @@ void GaussianFchk::processLine(std::istream& in)
     m_c = readArrayD(in, Core::lexicalCast<int>(list[2]).value_or(0), 16);
   } else if (key == "P(S=P) Contraction coefficients" && list.size() > 2) {
     m_csp = readArrayD(in, Core::lexicalCast<int>(list[2]).value_or(0), 16);
-  } else if (key == "Alpha Orbital Energies" || key == "orbital energies") {
+  } else if ((key == "Alpha Orbital Energies" || key == "orbital energies") &&
+             list.size() > 2) {
     if (m_scftype == Rhf) {
       m_orbitalEnergy = readArrayD(
         in, Core::lexicalCast<int>(list[2]).value_or(0), 16, hartreeToEV);
@@ -224,7 +225,7 @@ void GaussianFchk::processLine(std::istream& in)
       m_alphaOrbitalEnergy = readArrayD(
         in, Core::lexicalCast<int>(list[2]).value_or(0), 16, hartreeToEV);
     }
-  } else if (key == "Beta Orbital Energies") {
+  } else if (key == "Beta Orbital Energies" && list.size() > 2) {
     if (m_scftype != Uhf) {
       m_scftype = Uhf;
       m_alphaOrbitalEnergy = m_orbitalEnergy;
@@ -513,7 +514,7 @@ vector<int> GaussianFchk::readArrayI(std::istream& in, unsigned int n)
       return tmp;
     }
     string line;
-    if (getline(in, line), line.empty())
+    if (!Core::getLine(in, line) || line.empty())
       return tmp;
 
     vector<string> list = Core::split(line, ' ');
@@ -564,7 +565,7 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
       return tmp;
     }
     string line;
-    if (getline(in, line), line.empty())
+    if (!Core::getLine(in, line) || line.empty())
       return tmp;
 
     if (width == 0) { // we can split by spaces
@@ -662,7 +663,7 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
       return false;
     }
     string line;
-    if (getline(in, line), line.empty())
+    if (!Core::getLine(in, line) || line.empty())
       return false;
 
     if (width == 0) { // we can split by spaces
@@ -781,7 +782,7 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
       return false;
     }
     string line;
-    if (getline(in, line), line.empty())
+    if (!Core::getLine(in, line) || line.empty())
       return false;
 
     if (width == 0) { // we can split by spaces

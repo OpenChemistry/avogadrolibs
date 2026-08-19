@@ -101,8 +101,6 @@ jobs:
         # the underlying bugs are fixed.
         known_issues=(
           "io/xyz"
-          "quantumio/molden"
-          "quantumio/orca"
         )
 
         is_known_issue() {

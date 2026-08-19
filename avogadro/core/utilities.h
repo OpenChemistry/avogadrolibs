@@ -10,6 +10,7 @@
 #include <cerrno>
 #include <cmath>
 #include <cstdlib>
+#include <istream>
 #include <limits>
 #include <optional>
 #include <sstream>
@@ -17,6 +18,27 @@
 #include <vector>
 
 namespace Avogadro::Core {
+
+/**
+ * @brief Read one line from @p in, clearing @p line if the read fails.
+ * @param in The stream to read from.
+ * @param line Receives the line read, or an empty string on failure.
+ * @return True if a line was read, false at end of file or on error.
+ *
+ * std::getline only clears its target string after the sentry check succeeds,
+ * so on a stream that has already failed it leaves the previous line in place.
+ * File parsers that loop until they see a blank line therefore never terminate
+ * at end of file, and keep re-parsing the last line read. Use this in place of
+ * std::getline in those loops.
+ */
+inline bool getLine(std::istream& in, std::string& line)
+{
+  if (!std::getline(in, line)) {
+    line.clear();
+    return false;
+  }
+  return true;
+}
 
 /**
  * @brief Split the supplied @p string by the @p delimiter.
