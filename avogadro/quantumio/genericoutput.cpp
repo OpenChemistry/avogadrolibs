@@ -81,12 +81,12 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
       Io::FileFormatManager::instance().fileFormatsFromFileExtension(
         "out", FileFormat::File | FileFormat::Read);
 
-    // loop through writers to check for "cclib" or "Open Babel"
+    // loop through readers to check for "cclib" or "Open Babel"
     for (const FileFormat* r : readers) {
-      if (r->name() == "cclib") {
+      if (r->identifier().compare(0, 9, "OpenBabel") == 0) {
         reader = r->newInstance();
         break;
-      } else if (r->identifier().compare(0, 9, "OpenBabel") == 0) {
+      } else if (r->name() == "cclib") { // avogadro-cclib plugin
         reader = r->newInstance();
         break;
       }
