@@ -286,17 +286,21 @@ void GaussianFchk::processLine(std::istream& in)
     // than none. Vib-LE2Fix, when present, states the block count, so the
     // layout is checked rather than assumed -- divide rather than multiply so
     // that a bogus count cannot overflow.
-    if (modes > total ||
-        (modes > 0 && m_vibBlocks > 0 &&
-         (total % modes != 0 ||
-          total / modes != static_cast<size_t>(m_vibBlocks)))) {
+    if (modes > 0 && (modes > total || total % modes != 0 ||
+                      (m_vibBlocks > 0 &&
+                       total / modes != static_cast<size_t>(m_vibBlocks)))) {
       modes = 0;
     }
 
+    // Only read a block that is present in full: a partial block is not a
+    // partial spectrum, it is values from a truncated file that would be
+    // silently paired with the wrong modes.
     auto readBlock = [&](size_t block, Core::Array<double>& target) {
       const size_t start = block * modes;
+      if (modes == 0 || start + modes > total)
+        return;
       target.reserve(modes);
-      for (size_t i = start; i < start + modes && i < total; ++i)
+      for (size_t i = start; i < start + modes; ++i)
         target.push_back(tmpVec[i]);
     };
 

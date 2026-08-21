@@ -66,6 +66,14 @@ bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
                                                       unsigned int state,
                                                       bool beta)
 {
+  if (!m_tools)
+    return false;
+
+  // setElectronType() mutates the tools the running workers hold a pointer to,
+  // so the previous calculation has to be stopped before touching it -
+  // setUpCalculation() below cancels too late for this.
+  cancelAndWait();
+
   // We can do some initial set up of the tools here to set electron type.
   if (!beta)
     m_tools->setElectronType(BasisSet::Alpha);
@@ -77,6 +85,13 @@ bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
 
 bool GaussianSetConcurrent::calculateElectronDensity(Core::Cube* cube)
 {
+  if (!m_set)
+    return false;
+
+  // generateDensityMatrix() mutates the set the running workers read through
+  // m_tools, so it has the same ordering requirement as the orbital path.
+  cancelAndWait();
+
   const MatrixX& matrix = m_set->densityMatrix();
   if (matrix.rows() == 0 || matrix.cols() == 0) {
     // we don't have a density matrix, so calculate one

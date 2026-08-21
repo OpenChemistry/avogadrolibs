@@ -414,10 +414,15 @@ void GAMESSUSOutput::outputAll()
     cout << m_nMOs << " MOs, " << nGTOs << " GTOs" << endl;
   }
 
-  for (unsigned int iMO = 0; iMO < 10; iMO++) {
-    for (unsigned int i = iMO * nGTOs; i < nGTOs * iMO + 10;
-         ++i) // m_MOcoeffs.size(); ++i)
-      cout << m_MOcoeffs.at(i) << "\t";
+  // Dump the first few coefficients of the first few MOs, bounded by both the
+  // MO count and what was actually read.
+  for (int iMO = 0; iMO < 10 && iMO < m_nMOs && nGTOs > 0; ++iMO) {
+    const size_t start = static_cast<size_t>(iMO) * static_cast<size_t>(nGTOs);
+    size_t end = start + 10;
+    if (end > m_MOcoeffs.size())
+      end = m_MOcoeffs.size();
+    for (size_t i = start; i < end; ++i)
+      cout << m_MOcoeffs[i] << "\t";
     cout << "\n";
   }
 

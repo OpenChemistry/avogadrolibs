@@ -1872,23 +1872,34 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     root["constraints"] = constraints;
   }
 
-  // If there is vibrational data write this out too.
-  if (molecule.vibrationFrequencies().size() > 0 &&
-      (molecule.vibrationFrequencies().size() ==
-       molecule.vibrationIRIntensities().size())) {
+  // If there is vibrational data write this out too. Each intensity array is
+  // optional and is only written when it lines up with the frequencies, so a
+  // Raman-only or frequency-only calculation still round trips instead of
+  // being dropped for want of IR data.
+  const auto frequencies = molecule.vibrationFrequencies();
+  const auto irIntensities = molecule.vibrationIRIntensities();
+  const auto ramanIntensities = molecule.vibrationRamanIntensities();
+  if (frequencies.size() > 0) {
+    const size_t count = frequencies.size();
+    const bool hasIR = irIntensities.size() == count;
+    const bool hasRaman = ramanIntensities.size() == count;
     json vibrations;
     json modes;
     json freqs;
     json inten;
     json raman;
     json eigenVectors;
-    for (size_t i = 0; i < molecule.vibrationFrequencies().size(); ++i) {
+    bool hasEigenVectors = true;
+    for (size_t i = 0; i < count; ++i) {
       modes.push_back(static_cast<unsigned int>(i) + 1);
-      freqs.push_back(molecule.vibrationFrequencies()[i]);
-      inten.push_back(molecule.vibrationIRIntensities()[i]);
-      if (molecule.vibrationRamanIntensities().size() > i)
-        raman.push_back(molecule.vibrationRamanIntensities()[i]);
+      freqs.push_back(frequencies[i]);
+      if (hasIR)
+        inten.push_back(irIntensities[i]);
+      if (hasRaman)
+        raman.push_back(ramanIntensities[i]);
       Core::Array<Vector3> atomDisplacements = molecule.vibrationLx(i);
+      if (atomDisplacements.empty())
+        hasEigenVectors = false;
       json eigenVector;
       for (auto pos : atomDisplacements) {
         eigenVector.push_back(pos[0]);
@@ -1899,10 +1910,14 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
     vibrations["modes"] = modes;
     vibrations["frequencies"] = freqs;
-    vibrations["intensities"] = inten;
-    if (molecule.vibrationRamanIntensities().size() > 0)
+    if (hasIR)
+      vibrations["intensities"] = inten;
+    if (hasRaman)
       vibrations["ramanIntensities"] = raman;
-    vibrations["eigenVectors"] = eigenVectors;
+    // Only write displacements if every mode has them; a partial set would be
+    // read back as a mode count that disagrees with the frequencies.
+    if (hasEigenVectors)
+      vibrations["eigenVectors"] = eigenVectors;
     root["vibrations"] = vibrations;
   }
 
