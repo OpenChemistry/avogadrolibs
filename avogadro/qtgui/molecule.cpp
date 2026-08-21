@@ -296,16 +296,21 @@ Index Molecule::bondUniqueId(Index b) const
   return findBondUniqueId(b);
 }
 
+bool Molecule::invalidatesDerivedData(unsigned int changes)
+{
+  // Structural changes invalidate derived computational data. Moving atoms is
+  // not structural: vibration animation, trajectory playback and interactive
+  // optimization all move atoms on every frame, and the vibration modes and
+  // orbitals being displayed have to survive that.
+  const bool movedOnly =
+    (changes & Moved) && !(changes & (Added | Removed | Modified));
+  return (changes & (Atoms | Bonds)) && !movedOnly;
+}
+
 void Molecule::emitChanged(unsigned int change)
 {
   if (change != NoChange) {
-    // Structural changes invalidate derived computational data. Moving atoms
-    // is not structural: vibration animation, trajectory playback and
-    // interactive optimization all move atoms on every frame, and the
-    // vibration modes and orbitals being displayed have to survive that.
-    const unsigned int edited = Added | Removed | Modified;
-    const bool movedOnly = (change & Moved) && !(change & edited);
-    if (((change & Atoms) || (change & Bonds)) && !movedOnly) {
+    if (invalidatesDerivedData(change)) {
       clearCubes();
       clearMeshes();
       delete m_basisSet;

@@ -904,6 +904,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     Array<double> freqs;
     json frequencies = vibrations["frequencies"];
     if (isNumericArray(frequencies)) {
+      freqs.reserve(frequencies.size());
       for (auto& frequencie : frequencies) {
         freqs.push_back(static_cast<double>(frequencie));
       }
@@ -918,6 +919,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     json intensities = vibrations["intensities"];
     if (isNumericArray(intensities) && intensities.size() == modes) {
       Array<double> intens;
+      intens.reserve(modes);
       for (auto& intensitie : intensities) {
         intens.push_back(static_cast<double>(intensitie));
       }
@@ -926,6 +928,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     json raman = vibrations["ramanIntensities"];
     if (isNumericArray(raman) && raman.size() == modes) {
       Array<double> intens;
+      intens.reserve(modes);
       for (auto& i : raman) {
         intens.push_back(static_cast<double>(i));
       }
@@ -934,11 +937,15 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     json displacements = vibrations["eigenVectors"];
     if (displacements.is_array()) {
       Array<Array<Vector3>> disps;
-      for (auto arr : displacements) {
+      disps.reserve(displacements.size());
+      // Take each eigenvector by reference: by value copies every coordinate
+      // out of the document before reading it once.
+      for (auto& arr : displacements) {
         // Each eigenvector is a flat list of x,y,z triples written straight
-        // into the Vector3 buffer below. A length that is not a positive
-        // multiple of three would run past the end of that buffer.
-        if (isNumericArray(arr) && arr.size() >= 3 && arr.size() % 3 == 0) {
+        // into the Vector3 buffer below. A length that is not a multiple of
+        // three would run past the end of that buffer. isNumericArray()
+        // already rejects an empty array.
+        if (isNumericArray(arr) && arr.size() % 3 == 0) {
           Array<Vector3> mode;
           mode.resize(arr.size() / 3);
           double* ptr = &mode[0][0];

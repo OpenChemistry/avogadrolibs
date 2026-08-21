@@ -100,7 +100,6 @@ bool SlaterSetConcurrent::setUpCalculation(Core::Cube* cube, unsigned int state,
   if (!m_set || !m_tools)
     return false;
 
-  // Drop any previous run before reusing m_shells and the cube.
   cancelAndWait();
 
   m_set->initCalculation();

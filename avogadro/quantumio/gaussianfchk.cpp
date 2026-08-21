@@ -277,31 +277,25 @@ void GaussianFchk::processLine(std::istream& in)
     // are not read here. The stride is therefore the number of normal modes,
     // not 3N -- those coincide only for a non-linear three-atom molecule.
     // Gaussian zero-fills a property it did not compute rather than omitting
-    // its block (every file tested carries fourteen blocks), so a block being
-    // present does not mean the property was calculated. Only blocks 0, 3 and
-    // 4 are read here and the count is never assumed. readArrayD also returns
-    // a short vector for truncated input, so every span below is clamped to
-    // what was actually read.
+    // its block, so a block being present does not mean it was calculated.
     const size_t total = tmpVec.size();
     size_t modes = m_normalModes > 0 ? static_cast<size_t>(m_normalModes) : 0;
 
-    // A mode count that cannot fit the data means the sections disagree, so
-    // no offset derived from it can be trusted. Read nothing rather than
-    // report values taken from the wrong block.
-    if (modes > total)
-      modes = 0;
-
-    // Gaussian declares the block count itself in Vib-LE2Fix, so when it is
-    // present the layout can be checked rather than assumed. Division rather
-    // than multiplication keeps a bogus block count from overflowing.
-    if (m_vibBlocks > 0 && modes > 0 &&
-        (total % modes != 0 ||
-         total / modes != static_cast<size_t>(m_vibBlocks))) {
+    // Reject a mode count the data cannot support: no offset derived from it
+    // would be trustworthy, and values taken from the wrong block are worse
+    // than none. Vib-LE2Fix, when present, states the block count, so the
+    // layout is checked rather than assumed -- divide rather than multiply so
+    // that a bogus count cannot overflow.
+    if (modes > total ||
+        (modes > 0 && m_vibBlocks > 0 &&
+         (total % modes != 0 ||
+          total / modes != static_cast<size_t>(m_vibBlocks)))) {
       modes = 0;
     }
 
     auto readBlock = [&](size_t block, Core::Array<double>& target) {
       const size_t start = block * modes;
+      target.reserve(modes);
       for (size_t i = start; i < start + modes && i < total; ++i)
         target.push_back(tmpVec[i]);
     };
@@ -313,16 +307,11 @@ void GaussianFchk::processLine(std::istream& in)
     // be tested for content. Testing only its first element is not enough: the
     // lowest mode of a centrosymmetric molecule is legitimately zero (benzene
     // e2u, the CO2 bends), which would discard a whole valid Raman spectrum.
-    const size_t ramanStart = 4 * modes;
-    bool hasRaman = false;
-    for (size_t i = ramanStart; i < ramanStart + modes && i < total; ++i) {
-      if (tmpVec[i] != 0.0) {
-        hasRaman = true;
-        break;
-      }
-    }
-    if (hasRaman)
-      readBlock(4, m_RamanIntensities);
+    Core::Array<double> raman;
+    readBlock(4, raman);
+    if (std::any_of(raman.begin(), raman.end(),
+                    [](double v) { return v != 0.0; }))
+      m_RamanIntensities.swap(raman);
   } else if (key == "Vib-Modes" && list.size() > 2) {
     tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]).value_or(0), 16);
     m_vibDisplacements.clear();

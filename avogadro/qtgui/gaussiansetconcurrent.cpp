@@ -23,16 +23,6 @@ using Core::BasisSet;
 using Core::Cube;
 using Core::GaussianSet;
 using Core::GaussianSetTools;
-using Core::Molecule;
-
-template <typename Derived>
-class BasisSetConcurrent
-{
-  void setMolecule(Molecule* mol)
-  {
-    static_cast<Derived*>(this)->setMolecule(mol);
-  }
-};
 
 // One x-slab work item. Threads operate on non-overlapping i ranges so
 // writes to the cube buffer never conflict (cube layout is i-major).
@@ -130,7 +120,6 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
   if (!m_set || !m_tools)
     return false;
 
-  // Drop any previous run before reusing m_gaussianShells and the cube.
   cancelAndWait();
 
   m_set->initCalculation();

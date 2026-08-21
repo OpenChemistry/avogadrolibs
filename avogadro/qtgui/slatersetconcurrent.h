@@ -71,9 +71,8 @@ private:
                         void (*func)(SlaterShell&));
 
   /**
-   * Cancel any in-flight calculation and block until the worker
-   * threads have stopped touching the shells, tools and cube. Must be
-   * called before anything they reference is freed or replaced.
+   * Cancel any in-flight calculation and block until the worker threads have
+   * stopped. Must be called before anything they reference is freed.
    */
   void cancelAndWait();
 
