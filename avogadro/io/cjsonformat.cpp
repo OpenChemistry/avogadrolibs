@@ -901,16 +901,22 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   // See if there is any vibration data, load it if so.
   json vibrations = jsonRoot["vibrations"];
   if (vibrations.is_object()) {
+    Array<double> freqs;
     json frequencies = vibrations["frequencies"];
     if (isNumericArray(frequencies)) {
-      Array<double> freqs;
       for (auto& frequencie : frequencies) {
         freqs.push_back(static_cast<double>(frequencie));
       }
       molecule.setVibrationFrequencies(freqs);
     }
+
+    // The intensity arrays are indexed by the frequency count elsewhere, so
+    // only accept one that matches it. Unlike every other reader, CJSON is
+    // hand-editable and may carry intensities without frequencies at all.
+    const size_t modes = freqs.size();
+
     json intensities = vibrations["intensities"];
-    if (isNumericArray(intensities)) {
+    if (isNumericArray(intensities) && intensities.size() == modes) {
       Array<double> intens;
       for (auto& intensitie : intensities) {
         intens.push_back(static_cast<double>(intensitie));
@@ -918,7 +924,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       molecule.setVibrationIRIntensities(intens);
     }
     json raman = vibrations["ramanIntensities"];
-    if (isNumericArray(raman)) {
+    if (isNumericArray(raman) && raman.size() == modes) {
       Array<double> intens;
       for (auto& i : raman) {
         intens.push_back(static_cast<double>(i));
@@ -929,7 +935,10 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     if (displacements.is_array()) {
       Array<Array<Vector3>> disps;
       for (auto arr : displacements) {
-        if (isNumericArray(arr)) {
+        // Each eigenvector is a flat list of x,y,z triples written straight
+        // into the Vector3 buffer below. A length that is not a positive
+        // multiple of three would run past the end of that buffer.
+        if (isNumericArray(arr) && arr.size() >= 3 && arr.size() % 3 == 0) {
           Array<Vector3> mode;
           mode.resize(arr.size() / 3);
           double* ptr = &mode[0][0];
