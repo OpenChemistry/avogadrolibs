@@ -54,13 +54,18 @@ GaussianSetConcurrent::GaussianSetConcurrent(QObject* p)
 
 GaussianSetConcurrent::~GaussianSetConcurrent()
 {
-  delete m_gaussianShells;
+  cancelAndWait();
+  delete m_tools;
 }
 
 void GaussianSetConcurrent::setMolecule(Core::Molecule* mol)
 {
   if (!mol)
     return;
+  // The worker items hold a raw pointer to m_tools, so nothing may replace it
+  // while a calculation is still in flight.
+  cancelAndWait();
+
   m_set = dynamic_cast<GaussianSet*>(mol->basisSet());
 
   delete m_tools;
@@ -98,9 +103,24 @@ bool GaussianSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 
 void GaussianSetConcurrent::calculationComplete()
 {
+  // A queued finished() from a cancelled run can arrive after the next
+  // calculation has already been set up. Never free that one's work items.
+  if (m_future.isRunning())
+    return;
+
   delete m_gaussianShells;
   m_gaussianShells = nullptr;
   emit finished();
+}
+
+void GaussianSetConcurrent::cancelAndWait()
+{
+  if (m_future.isStarted() && !m_future.isFinished()) {
+    m_future.cancel();
+    m_future.waitForFinished();
+  }
+  delete m_gaussianShells;
+  m_gaussianShells = nullptr;
 }
 
 bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
@@ -109,6 +129,9 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
 {
   if (!m_set || !m_tools)
     return false;
+
+  // Drop any previous run before reusing m_gaussianShells and the cube.
+  cancelAndWait();
 
   m_set->initCalculation();
 
