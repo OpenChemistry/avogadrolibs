@@ -9,6 +9,7 @@
 #include <avogadro/qtgui/extensionplugin.h>
 
 #include <QDialog>
+#include <QCheckBox>
 #include <QComboBox>
 
 #include <memory>
@@ -52,6 +53,9 @@ private slots:
   void clicked(float x, float y, Qt::KeyboardModifiers modifiers);
 
 private:
+  int currentConformerIndex() const;
+  void updateXAxisOptions();
+
   // Generate RMSD data from a coordinate set
   // Writes the results to @p x and @p y
   void generateRmsdCurve(DataSeries& x, DataSeries& y);
@@ -74,7 +78,9 @@ private:
   QComboBox* m_propertyCombo;
   QComboBox* m_unitsCombo;
   QComboBox* m_targetUnitsCombo;
-  int m_currentFrame = 0;
+  QComboBox* m_xAxisCombo;
+  QCheckBox* m_unwrapDihedralsCheck = nullptr;
+  DataSeries m_lastXData;
 };
 
 inline QString PlotConformer::description() const
