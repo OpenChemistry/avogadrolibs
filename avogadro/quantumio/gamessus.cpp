@@ -409,7 +409,7 @@ void GAMESSUSOutput::outputAll()
          << ", atom = " << m_shelltoAtom.at(i) << endl;
   }
   int nGTOs = 0;
-  if (m_MOcoeffs.size()) {
+  if (m_MOcoeffs.size() && m_nMOs > 0) {
     nGTOs = m_MOcoeffs.size() / m_nMOs;
     cout << m_nMOs << " MOs, " << nGTOs << " GTOs" << endl;
   }
