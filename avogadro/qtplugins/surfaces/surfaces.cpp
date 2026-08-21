@@ -258,12 +258,13 @@ void Surfaces::moleculeChanged(unsigned int changes)
 {
   auto currentCubes = m_cubes.size();
 
-  if (changes & Molecule::Added || changes & Molecule::Removed ||
-      changes & Molecule::Modified) {
+  // Molecule::emitChanged() clears the cubes, meshes and basis set on any
+  // Atoms or Bonds change, so the cached raw pointers have to be refreshed
+  // under exactly that condition - testing Added/Removed/Modified instead
+  // missed a bare Atoms change and left them dangling.
+  if ((changes & Molecule::Atoms) || (changes & Molecule::Bonds)) {
     m_cubes = m_molecule->cubes();
     m_basis = m_molecule->basisSet();
-    // Molecule::emitChanged() deletes cubes/meshes on Atoms/Bonds changes,
-    // so our cached raw pointers may now be dangling.
     m_cube = nullptr;
     m_mesh1 = nullptr;
     m_mesh2 = nullptr;

@@ -127,24 +127,29 @@ void Spectra::gatherSpectra()
   }
 
   // check to see if it has IR or Raman data
-  if (!m_molecule->vibrationFrequencies().empty()) {
-    const unsigned int n = m_molecule->vibrationFrequencies().size();
+  const auto frequencies = m_molecule->vibrationFrequencies();
+  const auto irIntensities = m_molecule->vibrationIRIntensities();
+  const auto ramanIntensities = m_molecule->vibrationRamanIntensities();
+  if (!frequencies.empty()) {
+    const unsigned int n = frequencies.size();
 
-    MatrixX ir(n, 2);
-    // check max intensity
-    for (unsigned int i = 0; i < n; ++i) {
-      ir(i, 0) = m_molecule->vibrationFrequencies()[i];
-      ir(i, 1) = m_molecule->vibrationIRIntensities()[i];
+    // Both intensity arrays are optional and are not guaranteed to match the
+    // frequency count - a file can carry one, the other, or neither - so
+    // neither may be indexed by n without checking first.
+    if (irIntensities.size() == frequencies.size()) {
+      MatrixX ir(n, 2);
+      for (unsigned int i = 0; i < n; ++i) {
+        ir(i, 0) = frequencies[i];
+        ir(i, 1) = irIntensities[i];
+      }
+      spectra["IR"] = ir;
     }
 
-    spectra["IR"] = ir;
-
-    if (m_molecule->vibrationRamanIntensities().size() ==
-        m_molecule->vibrationFrequencies().size()) {
+    if (ramanIntensities.size() == frequencies.size()) {
       MatrixX raman(n, 2);
       for (unsigned int i = 0; i < n; ++i) {
-        raman(i, 0) = m_molecule->vibrationFrequencies()[i];
-        raman(i, 1) = m_molecule->vibrationRamanIntensities()[i];
+        raman(i, 0) = frequencies[i];
+        raman(i, 1) = ramanIntensities[i];
       }
       spectra["Raman"] = raman;
     }

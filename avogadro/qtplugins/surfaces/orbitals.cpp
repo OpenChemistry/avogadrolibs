@@ -155,11 +155,27 @@ void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
   if (basis == nullptr || basis->moMatrix().size() == 0)
     hasOrbitals = false;
 
+  // Molecule::emitChanged() deletes the basis set on a structural change, so
+  // resynchronise unconditionally - the cached pointer can be dangling even
+  // when the enabled state has not changed, for instance when one basis set
+  // replaces another.
+  loadBasis();
+
   if (isEnabled != hasOrbitals) {
     m_action->setEnabled(hasOrbitals);
     if (hasOrbitals) {
-      loadBasis();    // update m_basis from the new basisSet
       loadOrbitals(); // fill the orbital table and show the dialog
+    } else {
+      // The orbitals are gone. Anything queued or on screen was derived from
+      // the freed basis set, so drop it rather than let the user click a row
+      // that no longer refers to anything.
+      m_queue.clear();
+      m_currentRunningCalculation = -1;
+      m_currentMeshCalculation = -1;
+      if (m_dialog) {
+        m_dialog->clearTable();
+        m_dialog->hide();
+      }
     }
   }
 }
