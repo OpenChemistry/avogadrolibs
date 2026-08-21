@@ -33,13 +33,25 @@ MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
   initialize(cube_, mesh_, iso, passes);
 }
 
-MeshGenerator::~MeshGenerator() {}
+MeshGenerator::~MeshGenerator()
+{
+  // QThread aborts if it is destroyed while still running, and run() reads
+  // m_cube/m_mesh and the pass working buffers right to the end.
+  wait();
+}
 
 bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
                                int passes, bool reverse)
 {
   if (!cube_ || !mesh_)
     return false;
+
+  // Generators are reused across surfaces. Everything below is read by run(),
+  // including the pass buffers resized at the end of this function, so a
+  // previous run has to finish first. There is no cancellation support, so
+  // this blocks until the outstanding isosurface is complete.
+  wait();
+
   m_cube = cube_;
   m_mesh = mesh_;
   m_iso = iso;
@@ -530,6 +542,7 @@ void MeshGenerator::run()
 
 void MeshGenerator::clear()
 {
+  wait();
   m_iso = 0.0;
   m_passes = 6;
   m_cube = nullptr;

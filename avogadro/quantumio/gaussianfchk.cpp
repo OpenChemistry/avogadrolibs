@@ -177,9 +177,11 @@ void GaussianFchk::processLine(std::istream& in)
   } else if (key == "Dipole Moment" && list.size() > 2) {
     vector<double> dipole =
       readArrayD(in, Core::lexicalCast<int>(list[2]).value_or(0));
-    m_dipoleMoment = Vector3(dipole[0], dipole[1], dipole[2]);
-    // convert from au
-    m_dipoleMoment *= 2.541746;
+    if (dipole.size() >= 3) {
+      m_dipoleMoment = Vector3(dipole[0], dipole[1], dipole[2]);
+      // convert from au
+      m_dipoleMoment *= 2.541746;
+    }
   } else if (key == "Number of electrons" && list.size() > 1) {
     m_electrons = Core::lexicalCast<int>(list[1]).value_or(0);
   } else if (key == "Number of alpha electrons" && list.size() > 1) {
@@ -260,31 +262,60 @@ void GaussianFchk::processLine(std::istream& in)
       cout << "Error reading in the SCF spin density matrix.\n";
   } else if (key == "Number of Normal Modes" && list.size() > 1) {
     m_normalModes = Core::lexicalCast<int>(list[1]).value_or(0);
+  } else if (key == "Vib-LE2Fix" && list.size() > 1) {
+    m_vibBlocks = Core::lexicalCast<int>(list[1]).value_or(0);
   } else if (key == "Vib-E2" && list.size() > 2) {
     m_frequencies.clear();
     m_IRintensities.clear();
     m_RamanIntensities.clear();
 
-    unsigned threeN = m_numAtoms * 3; // degrees of freedom
     tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]).value_or(0), 16);
 
-    // read in the first 3N-6 elements as frequencies
-    for (unsigned int i = 0; i < static_cast<unsigned int>(m_normalModes);
-         ++i) {
-      m_frequencies.push_back(tmpVec[i]);
+    // Vib-E2 is a series of blocks, each holding one value per normal mode:
+    // frequencies, reduced masses, force constants, IR intensities, Raman
+    // activities, depolarization ratios (P then U), then further blocks that
+    // are not read here. The stride is therefore the number of normal modes,
+    // not 3N -- those coincide only for a non-linear three-atom molecule.
+    // Gaussian zero-fills a property it did not compute rather than omitting
+    // its block, so a block being present does not mean it was calculated.
+    const size_t total = tmpVec.size();
+    size_t modes = m_normalModes > 0 ? static_cast<size_t>(m_normalModes) : 0;
+
+    // Reject a mode count the data cannot support: no offset derived from it
+    // would be trustworthy, and values taken from the wrong block are worse
+    // than none. Vib-LE2Fix, when present, states the block count, so the
+    // layout is checked rather than assumed -- divide rather than multiply so
+    // that a bogus count cannot overflow.
+    if (modes > 0 && (modes > total || total % modes != 0 ||
+                      (m_vibBlocks > 0 &&
+                       total / modes != static_cast<size_t>(m_vibBlocks)))) {
+      modes = 0;
     }
-    // skip to after threeN elements then read IR intensities
-    for (unsigned int i = threeN;
-         i < threeN + static_cast<unsigned int>(m_normalModes); ++i) {
-      m_IRintensities.push_back(tmpVec[i]);
-    }
-    // now check if we have Raman intensities
-    if (tmpVec[threeN + m_normalModes] != 0.0) {
-      for (unsigned int i = threeN + m_normalModes;
-           i < threeN + 2 * static_cast<unsigned int>(m_normalModes); ++i) {
-        m_RamanIntensities.push_back(tmpVec[i]);
-      }
-    }
+
+    // Only read a block that is present in full: a partial block is not a
+    // partial spectrum, it is values from a truncated file that would be
+    // silently paired with the wrong modes.
+    auto readBlock = [&](size_t block, Core::Array<double>& target) {
+      const size_t start = block * modes;
+      if (modes == 0 || start + modes > total)
+        return;
+      target.reserve(modes);
+      for (size_t i = start; i < start + modes; ++i)
+        target.push_back(tmpVec[i]);
+    };
+
+    readBlock(0, m_frequencies);
+    readBlock(3, m_IRintensities);
+
+    // A run without Raman still gets a zero-filled block, so the block has to
+    // be tested for content. Testing only its first element is not enough: the
+    // lowest mode of a centrosymmetric molecule is legitimately zero (benzene
+    // e2u, the CO2 bends), which would discard a whole valid Raman spectrum.
+    Core::Array<double> raman;
+    readBlock(4, raman);
+    if (std::any_of(raman.begin(), raman.end(),
+                    [](double v) { return v != 0.0; }))
+      m_RamanIntensities.swap(raman);
   } else if (key == "Vib-Modes" && list.size() > 2) {
     tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]).value_or(0), 16);
     m_vibDisplacements.clear();

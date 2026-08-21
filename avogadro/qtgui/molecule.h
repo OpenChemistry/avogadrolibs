@@ -88,6 +88,14 @@ public:
   Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
 
   /**
+   * @return True if @p changes causes emitChanged() to discard the cubes,
+   * meshes, basis set and vibration data derived from this molecule.
+   * Consumers that cache raw pointers to any of that must refresh them in
+   * step with this, rather than re-deriving the rule from the flags.
+   */
+  static bool invalidatesDerivedData(unsigned int changes);
+
+  /**
    * Add an atom with @p atomicNumber to the molecule.
    * @return The atom created.
    */

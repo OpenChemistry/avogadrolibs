@@ -65,7 +65,7 @@ private:
 
   double m_coordFactor;
   int m_electrons;
-  unsigned int m_numBasisFunctions;
+  unsigned int m_numBasisFunctions = 0;
   std::vector<int> m_aNums;
   std::vector<double> m_aPos;
   std::vector<Core::GaussianSet::orbital> m_shellTypes;

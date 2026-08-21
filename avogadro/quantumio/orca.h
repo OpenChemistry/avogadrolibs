@@ -57,7 +57,7 @@ private:
   // OrcaStuff
   void orcaWarningMessage(const std::string& m);
   Core::GaussianSet::orbital orbitalIdx(std::string txt);
-  bool m_orcaSuccess;
+  bool m_orcaSuccess = true;
 
   std::vector<std::string> m_atomLabel;
   std::vector<std::string> m_basisAtomLabel;
@@ -75,7 +75,7 @@ private:
   std::vector<Core::GaussianSet::orbital> shellTypes;
   std::vector<std::vector<int>> m_orcaNumShells;
   std::vector<std::vector<Core::GaussianSet::orbital>> m_orcaShellTypes;
-  int m_nGroups;
+  int m_nGroups = 0;
 
   std::vector<std::vector<std::vector<Eigen::Vector2d>*>*> m_basisFunctions;
 
@@ -101,20 +101,21 @@ private:
     Unrecognized
   };
 
-  double m_coordFactor;
-  mode m_currentMode;
-  int m_electrons;
+  // Bohr; the only assignment (CARTESIAN COORDINATES (A.U.)) also uses 1.0
+  double m_coordFactor = 1.0;
+  mode m_currentMode = NotParsing;
+  int m_electrons = 0;
 
-  bool m_openShell;
-  bool m_readBeta;
+  bool m_openShell = false;
+  bool m_readBeta = false;
 
-  int m_homo;
-  int m_charge;
-  int m_spin;
-  double m_totalEnergy;
+  int m_homo = 0;
+  int m_charge = 0;
+  int m_spin = 1;
+  double m_totalEnergy = 0.0;
 
-  int m_currentAtom;
-  unsigned int m_numBasisFunctions;
+  int m_currentAtom = 0;
+  unsigned int m_numBasisFunctions = 0;
   std::vector<Core::GaussianSet::orbital> m_shellTypes;
   std::vector<int> m_shellNums;
   std::vector<int> m_shelltoAtom;

@@ -901,25 +901,34 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   // See if there is any vibration data, load it if so.
   json vibrations = jsonRoot["vibrations"];
   if (vibrations.is_object()) {
+    Array<double> freqs;
     json frequencies = vibrations["frequencies"];
     if (isNumericArray(frequencies)) {
-      Array<double> freqs;
+      freqs.reserve(frequencies.size());
       for (auto& frequencie : frequencies) {
         freqs.push_back(static_cast<double>(frequencie));
       }
       molecule.setVibrationFrequencies(freqs);
     }
+
+    // The intensity arrays are indexed by the frequency count elsewhere, so
+    // only accept one that matches it. Unlike every other reader, CJSON is
+    // hand-editable and may carry intensities without frequencies at all.
+    const size_t modes = freqs.size();
+
     json intensities = vibrations["intensities"];
-    if (isNumericArray(intensities)) {
+    if (isNumericArray(intensities) && intensities.size() == modes) {
       Array<double> intens;
+      intens.reserve(modes);
       for (auto& intensitie : intensities) {
         intens.push_back(static_cast<double>(intensitie));
       }
       molecule.setVibrationIRIntensities(intens);
     }
     json raman = vibrations["ramanIntensities"];
-    if (isNumericArray(raman)) {
+    if (isNumericArray(raman) && raman.size() == modes) {
       Array<double> intens;
+      intens.reserve(modes);
       for (auto& i : raman) {
         intens.push_back(static_cast<double>(i));
       }
@@ -928,8 +937,15 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     json displacements = vibrations["eigenVectors"];
     if (displacements.is_array()) {
       Array<Array<Vector3>> disps;
-      for (auto arr : displacements) {
-        if (isNumericArray(arr)) {
+      disps.reserve(displacements.size());
+      // Take each eigenvector by reference: by value copies every coordinate
+      // out of the document before reading it once.
+      for (auto& arr : displacements) {
+        // Each eigenvector is a flat list of x,y,z triples written straight
+        // into the Vector3 buffer below. A length that is not a multiple of
+        // three would run past the end of that buffer. isNumericArray()
+        // already rejects an empty array.
+        if (isNumericArray(arr) && arr.size() % 3 == 0) {
           Array<Vector3> mode;
           mode.resize(arr.size() / 3);
           double* ptr = &mode[0][0];
@@ -1856,23 +1872,34 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     root["constraints"] = constraints;
   }
 
-  // If there is vibrational data write this out too.
-  if (molecule.vibrationFrequencies().size() > 0 &&
-      (molecule.vibrationFrequencies().size() ==
-       molecule.vibrationIRIntensities().size())) {
+  // If there is vibrational data write this out too. Each intensity array is
+  // optional and is only written when it lines up with the frequencies, so a
+  // Raman-only or frequency-only calculation still round trips instead of
+  // being dropped for want of IR data.
+  const auto frequencies = molecule.vibrationFrequencies();
+  const auto irIntensities = molecule.vibrationIRIntensities();
+  const auto ramanIntensities = molecule.vibrationRamanIntensities();
+  if (frequencies.size() > 0) {
+    const size_t count = frequencies.size();
+    const bool hasIR = irIntensities.size() == count;
+    const bool hasRaman = ramanIntensities.size() == count;
     json vibrations;
     json modes;
     json freqs;
     json inten;
     json raman;
     json eigenVectors;
-    for (size_t i = 0; i < molecule.vibrationFrequencies().size(); ++i) {
+    bool hasEigenVectors = true;
+    for (size_t i = 0; i < count; ++i) {
       modes.push_back(static_cast<unsigned int>(i) + 1);
-      freqs.push_back(molecule.vibrationFrequencies()[i]);
-      inten.push_back(molecule.vibrationIRIntensities()[i]);
-      if (molecule.vibrationRamanIntensities().size() > i)
-        raman.push_back(molecule.vibrationRamanIntensities()[i]);
+      freqs.push_back(frequencies[i]);
+      if (hasIR)
+        inten.push_back(irIntensities[i]);
+      if (hasRaman)
+        raman.push_back(ramanIntensities[i]);
       Core::Array<Vector3> atomDisplacements = molecule.vibrationLx(i);
+      if (atomDisplacements.empty())
+        hasEigenVectors = false;
       json eigenVector;
       for (auto pos : atomDisplacements) {
         eigenVector.push_back(pos[0]);
@@ -1883,10 +1910,14 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
     vibrations["modes"] = modes;
     vibrations["frequencies"] = freqs;
-    vibrations["intensities"] = inten;
-    if (molecule.vibrationRamanIntensities().size() > 0)
+    if (hasIR)
+      vibrations["intensities"] = inten;
+    if (hasRaman)
       vibrations["ramanIntensities"] = raman;
-    vibrations["eigenVectors"] = eigenVectors;
+    // Only write displacements if every mode has them; a partial set would be
+    // read back as a mode count that disagrees with the frequencies.
+    if (hasEigenVectors)
+      vibrations["eigenVectors"] = eigenVectors;
     root["vibrations"] = vibrations;
   }
 

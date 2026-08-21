@@ -68,9 +68,9 @@ private:
   int m_spin = 1;
   Vector3 m_dipoleMoment = Vector3::Zero();
   std::vector<double> m_partialCharges;
-  double m_heatOfFormation;
-  double m_area;
-  double m_volume;
+  double m_heatOfFormation = 0.0;
+  double m_area = 0.0;
+  double m_volume = 0.0;
 
   std::vector<double> m_energies;
   std::vector<double> m_forces;

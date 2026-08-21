@@ -62,7 +62,6 @@ private slots:
 private:
   QFuture<void> m_future;
   QFutureWatcher<void> m_watcher;
-  Core::Cube* m_cube;
   QVector<SlaterShell>* m_shells;
 
   Core::SlaterSet* m_set;
@@ -70,6 +69,12 @@ private:
 
   bool setUpCalculation(Core::Cube* cube, unsigned int state,
                         void (*func)(SlaterShell&));
+
+  /**
+   * Cancel any in-flight calculation and block until the worker threads have
+   * stopped. Must be called before anything they reference is freed.
+   */
+  void cancelAndWait();
 
   static void processOrbital(SlaterShell& shell);
   static void processDensity(SlaterShell& shell);

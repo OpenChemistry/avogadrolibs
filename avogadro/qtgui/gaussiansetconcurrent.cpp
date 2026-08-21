@@ -23,16 +23,6 @@ using Core::BasisSet;
 using Core::Cube;
 using Core::GaussianSet;
 using Core::GaussianSetTools;
-using Core::Molecule;
-
-template <typename Derived>
-class BasisSetConcurrent
-{
-  void setMolecule(Molecule* mol)
-  {
-    static_cast<Derived*>(this)->setMolecule(mol);
-  }
-};
 
 // One x-slab work item. Threads operate on non-overlapping i ranges so
 // writes to the cube buffer never conflict (cube layout is i-major).
@@ -54,13 +44,18 @@ GaussianSetConcurrent::GaussianSetConcurrent(QObject* p)
 
 GaussianSetConcurrent::~GaussianSetConcurrent()
 {
-  delete m_gaussianShells;
+  cancelAndWait();
+  delete m_tools;
 }
 
 void GaussianSetConcurrent::setMolecule(Core::Molecule* mol)
 {
   if (!mol)
     return;
+  // The worker items hold a raw pointer to m_tools, so nothing may replace it
+  // while a calculation is still in flight.
+  cancelAndWait();
+
   m_set = dynamic_cast<GaussianSet*>(mol->basisSet());
 
   delete m_tools;
@@ -71,6 +66,14 @@ bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
                                                       unsigned int state,
                                                       bool beta)
 {
+  if (!m_tools)
+    return false;
+
+  // setElectronType() mutates the tools the running workers hold a pointer to,
+  // so the previous calculation has to be stopped before touching it -
+  // setUpCalculation() below cancels too late for this.
+  cancelAndWait();
+
   // We can do some initial set up of the tools here to set electron type.
   if (!beta)
     m_tools->setElectronType(BasisSet::Alpha);
@@ -82,6 +85,13 @@ bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
 
 bool GaussianSetConcurrent::calculateElectronDensity(Core::Cube* cube)
 {
+  if (!m_set)
+    return false;
+
+  // generateDensityMatrix() mutates the set the running workers read through
+  // m_tools, so it has the same ordering requirement as the orbital path.
+  cancelAndWait();
+
   const MatrixX& matrix = m_set->densityMatrix();
   if (matrix.rows() == 0 || matrix.cols() == 0) {
     // we don't have a density matrix, so calculate one
@@ -98,9 +108,24 @@ bool GaussianSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 
 void GaussianSetConcurrent::calculationComplete()
 {
+  // A queued finished() from a cancelled run can arrive after the next
+  // calculation has already been set up. Never free that one's work items.
+  if (m_future.isRunning())
+    return;
+
   delete m_gaussianShells;
   m_gaussianShells = nullptr;
   emit finished();
+}
+
+void GaussianSetConcurrent::cancelAndWait()
+{
+  if (m_future.isStarted() && !m_future.isFinished()) {
+    m_future.cancel();
+    m_future.waitForFinished();
+  }
+  delete m_gaussianShells;
+  m_gaussianShells = nullptr;
 }
 
 bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
@@ -109,6 +134,8 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
 {
   if (!m_set || !m_tools)
     return false;
+
+  cancelAndWait();
 
   m_set->initCalculation();
 

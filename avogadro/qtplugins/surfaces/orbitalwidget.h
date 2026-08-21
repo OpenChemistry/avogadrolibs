@@ -58,6 +58,8 @@ public slots:
   void reject();
 
   void fillTable(Core::BasisSet* basis);
+  /** Empty the table, for when the molecule no longer has any orbitals. */
+  void clearTable();
   void setQuality(OrbitalQuality q);
   void selectOrbital(unsigned int orbital);
   void setDefaults(OrbitalWidget::OrbitalQuality quality, double isovalue,

@@ -155,12 +155,34 @@ void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
   if (basis == nullptr || basis->moMatrix().size() == 0)
     hasOrbitals = false;
 
-  if (isEnabled != hasOrbitals) {
-    m_action->setEnabled(hasOrbitals);
-    if (hasOrbitals) {
-      loadBasis();    // update m_basis from the new basisSet
-      loadOrbitals(); // fill the orbital table and show the dialog
+  // Molecule::emitChanged() frees the basis set, cubes and meshes whenever
+  // this holds. Queued calculations cache raw Cube*/Mesh* pointers into that
+  // storage and the table rows describe the old basis, so both have to go -
+  // including when one valid basis set replaces another and the enabled state
+  // never changes.
+  const bool derivedDataDropped =
+    QtGui::Molecule::invalidatesDerivedData(changes);
+  if (derivedDataDropped) {
+    m_queue.clear();
+    m_currentRunningCalculation = -1;
+    m_currentMeshCalculation = -1;
+    if (m_dialog)
+      m_dialog->clearTable();
+  }
+
+  loadBasis(); // the cached pointer may have just been freed
+
+  m_action->setEnabled(hasOrbitals);
+
+  if (hasOrbitals) {
+    if (!isEnabled) {
+      loadOrbitals(); // orbitals appeared: fill the table and show the dialog
+    } else if (derivedDataDropped && m_dialog && m_dialog->isVisible()) {
+      // Refill in place; the dialog was already open, so do not raise it.
+      m_dialog->fillTable(m_basis);
     }
+  } else if (m_dialog) {
+    m_dialog->hide();
   }
 }
 
