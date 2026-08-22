@@ -724,9 +724,12 @@ void ORCAOutput::processLine(std::istream& in,
         // we don't bother with Raman, because that's less common
         for (unsigned int i = 0; i < m_frequencies.size(); i++) {
           m_IRintensities[i] = 0.0;
-          m_vibDisplacements[i].resize(m_atomNums.size());
-          for (unsigned int j = 0; j < m_atomNums.size(); j++)
-            m_vibDisplacements[i].push_back(Eigen::Vector3d());
+          // One displacement per atom. resize() already creates them, so do
+          // not also push_back: that produced arrays of 2N entries, leaving
+          // the trailing N uninitialized. Zero them so a truncated NORMAL
+          // MODES block cannot leave garbage displacements behind either.
+          m_vibDisplacements[i].resize(m_atomNums.size(),
+                                       Eigen::Vector3d::Zero());
         }
 
         m_currentMode = NotParsing;

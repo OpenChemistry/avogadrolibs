@@ -35,6 +35,13 @@ public:
   void setMolecule(QtGui::Molecule* molecule);
   int currentMode() const;
 
+  /**
+   * Put the animation button back into its "stopped" state, for when the
+   * animation is stopped by something other than the button itself (such as
+   * the active conformer changing).
+   */
+  void resetAnimationButton();
+
 protected slots:
   void selectRow(QModelIndex);
   void changeAnimation();

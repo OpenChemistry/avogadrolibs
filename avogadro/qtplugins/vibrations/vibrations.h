@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_QTPLUGINS_VIBRATIONS_H
 #define AVOGADRO_QTPLUGINS_VIBRATIONS_H
 
+#include <avogadro/core/array.h>
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
 class QAction;
@@ -60,6 +62,25 @@ private slots:
   void advanceFrame();
 
 private:
+  /** Stop any running animation and discard its frames. */
+  void resetAnimation();
+
+  /**
+   * Rebuild the dialog's mode table for the active conformer. Records which
+   * conformer it was built for so playback, which signals a conformer change
+   * on every frame, does not rebuild it repeatedly.
+   */
+  void reloadDialog();
+
+  /** @return True if the active conformer index refers to a coordinate set. */
+  bool activeConformerIsStored() const;
+
+  /**
+   * Put back the undisplaced geometry the animation was drawn on top of, and
+   * reset the frame counter.
+   */
+  void restoreRestGeometry();
+
   QList<QAction*> m_actions;
 
   QtGui::Molecule* m_molecule;
@@ -68,8 +89,17 @@ private:
 
   QTimer* m_timer;
 
-  int m_currentFrame;
-  int m_totalFrames;
+  /**
+   * The displaced geometries the animation cycles through. These are held
+   * here rather than pushed into the molecule's coordinate sets, which would
+   * destroy any trajectory or reaction path that was loaded from the file.
+   */
+  Core::Array<Core::Array<Vector3>> m_animationFrames;
+
+  /** The conformer the dialog's mode table was last built for, -1 if none. */
+  int m_dialogConformer = -1;
+
+  int m_currentFrame = 0;
   int m_mode;
   int m_amplitude;
 };

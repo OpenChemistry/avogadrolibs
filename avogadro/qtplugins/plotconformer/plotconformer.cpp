@@ -112,7 +112,8 @@ void PlotConformer::clicked(float x, float y, Qt::KeyboardModifiers modifiers)
     conformer = m_molecule->coordinate3dCount() - 1;
   m_currentFrame = conformer;
   m_molecule->setCoordinate3d(conformer);
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved |
+                          Molecule::Conformer);
   updatePlot();
 }
 
@@ -264,12 +265,15 @@ void PlotConformer::generateRmsdCurve(DataSeries& x, DataSeries& y)
   if (!m_molecule)
     return;
 
-  m_molecule->setCoordinate3d(0);
-  Array<Vector3> ref = m_molecule->atomPositions3d();
+  if (m_molecule->coordinate3dCount() == 0)
+    return;
+
+  // coordinate3d(i) returns a copy and does not change the displayed set, so
+  // this reads the whole trajectory without disturbing the active conformer.
+  Array<Vector3> ref = m_molecule->coordinate3d(0);
 
   for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
-    m_molecule->setCoordinate3d(i);
-    Array<Vector3> positions = m_molecule->atomPositions3d();
+    Array<Vector3> positions = m_molecule->coordinate3d(i);
     double sum = 0;
     for (size_t j = 0; j < positions.size(); ++j) {
       sum += (positions[j][0] - ref[j][0]) * (positions[j][0] - ref[j][0]) +

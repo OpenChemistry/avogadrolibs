@@ -10,6 +10,8 @@
 
 #include <avogadro/core/molecule.h>
 
+#include <QtCore/QAbstractItemModel>
+
 namespace Avogadro::QtPlugins {
 
 VibrationDialog::VibrationDialog(QWidget* parent_, Qt::WindowFlags f)
@@ -44,10 +46,15 @@ void VibrationDialog::changeAnimation()
     m_ui->startButton->setIcon(QIcon::fromTheme("media-playback-pause"));
     emit startAnimation();
   } else {
-    m_ui->startButton->setText(start);
-    m_ui->startButton->setIcon(QIcon::fromTheme("media-playback-start"));
+    resetAnimationButton();
     emit stopAnimation();
   }
+}
+
+void VibrationDialog::resetAnimationButton()
+{
+  m_ui->startButton->setText(tr("Start Animation"));
+  m_ui->startButton->setIcon(QIcon::fromTheme("media-playback-start"));
 }
 
 void VibrationDialog::setMolecule(QtGui::Molecule* molecule)
@@ -58,9 +65,16 @@ void VibrationDialog::setMolecule(QtGui::Molecule* molecule)
                SLOT(selectRow(QModelIndex)));
   }
 
+  // QTableView does not take ownership of its model, so the previous one has
+  // to go explicitly. This is called on every conformer change, and leaving
+  // the old models parented to the dialog accumulated one per change.
+  QAbstractItemModel* previous = m_ui->tableView->model();
+
   auto* model = new VibrationModel(this);
   model->setMolecule(molecule);
   m_ui->tableView->setModel(model);
+  delete previous;
+
   connect(m_ui->tableView->selectionModel(),
           SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
           SLOT(selectRow(QModelIndex)));

@@ -174,7 +174,14 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
     }
   } // end loop through selected
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  if (m_type == PropertyType::ConformerType) {
+    // conformer switches move atoms - pair with Moved (not Modified) so
+    // derived data like vibrations and orbitals survives
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved |
+                            Molecule::Conformer);
+  } else {
+    m_molecule->emitChanged(Molecule::Selection);
+  }
   m_updatingSelection = false;
   QTableView::selectionChanged(selected, deselected);
 }
@@ -436,7 +443,7 @@ void PropertyView::setFrozen(bool freeze)
     m_molecule->setFrozenAtom(rowNum, freeze);
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void PropertyView::freezeX()
@@ -486,7 +493,7 @@ void PropertyView::freezeAxis(int axis)
     m_molecule->setFrozenAtomAxis(rowNum, axis, true);
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void PropertyView::openExportDialogBox()

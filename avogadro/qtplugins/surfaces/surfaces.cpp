@@ -739,7 +739,11 @@ void Surfaces::stepChanged(int n)
     m_cube = nullptr;
     m_mesh1 = nullptr;
     m_mesh2 = nullptr;
-    m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
+    // Switching the MO set step moves to that conformer's geometry. Emit a
+    // moved-only change: Added would delete the basis set we are stepping
+    // through (see Molecule::invalidatesDerivedData()).
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved |
+                            Molecule::Conformer);
   }
 }
 

@@ -41,6 +41,22 @@ namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 
+namespace {
+
+// Flags for advancing to another coordinate set. Re-perceiving bonds is a
+// structural edit; a plain frame change only moves atoms, and pairing it with
+// Moved keeps derived data (vibrations, orbitals) alive across playback --
+// see QtGui::Molecule::invalidatesDerivedData().
+unsigned int frameChangeFlags(bool dynamicBonding)
+{
+  if (dynamicBonding)
+    return Molecule::Atoms | Molecule::Bonds | Molecule::Removed |
+           Molecule::Added | Molecule::Conformer;
+  return Molecule::Atoms | Molecule::Moved | Molecule::Conformer;
+}
+
+} // namespace
+
 PlayerTool::PlayerTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_renderer(nullptr), m_currentFrame(0),
@@ -297,16 +313,12 @@ void PlayerTool::animate(int advance)
       m_currentFrame = advance > 0 ? firstFrame : end;
       m_molecule->setCoordinate3d(m_currentFrame);
     }
-    if (m_dynamicBonding->isChecked()) {
+    const bool bonding = m_dynamicBonding->isChecked();
+    if (bonding) {
       m_molecule->clearBonds();
       m_molecule->perceiveBondsSimple();
-      // Bonds were modified, so use Added flag
-      m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
-                              Molecule::Removed | Molecule::Added);
-    } else {
-      // Coordinate-only change, use Moved flag
-      m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
     }
+    m_molecule->emitChanged(frameChangeFlags(bonding));
     m_slider->setValue(m_currentFrame);
     m_frameIdx->setValue(m_currentFrame + 1);
   }
@@ -367,7 +379,7 @@ void PlayerTool::recordMovie()
         m_molecule->clearBonds();
         m_molecule->perceiveBondsSimple();
       }
-      m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+      m_molecule->emitChanged(frameChangeFlags(bonding));
 
       QImage exportImage;
       m_glWidget->raise();
@@ -412,7 +424,7 @@ void PlayerTool::recordMovie()
         m_molecule->clearBonds();
         m_molecule->perceiveBondsSimple();
       }
-      m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+      m_molecule->emitChanged(frameChangeFlags(bonding));
 
       QImage exportImage;
       m_glWidget->raise();
@@ -445,7 +457,7 @@ void PlayerTool::recordMovie()
         m_molecule->clearBonds();
         m_molecule->perceiveBondsSimple();
       }
-      m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+      m_molecule->emitChanged(frameChangeFlags(bonding));
       QString fileName = QString::number(i);
       while (fileName.length() < numberLength)
         fileName.prepend('0');

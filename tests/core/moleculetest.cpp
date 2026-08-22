@@ -741,6 +741,165 @@ TEST_F(MoleculeTest, vibrationLxFollowsAtoms)
   EXPECT_TRUE(molecule.vibrationLx(0).empty());
 }
 
+TEST_F(MoleculeTest, vibrationsAreStoredPerConformer)
+{
+  // A calculation can produce a Hessian at more than one geometry along a
+  // path, so the modes belong to a conformer rather than to the molecule.
+  Molecule molecule;
+  for (int i = 0; i < 2; ++i)
+    molecule.addAtom(6);
+
+  Array<Vector3> first(2, Vector3(0, 0, 0));
+  Array<Vector3> second(2, Vector3(0, 0, 1));
+  molecule.setCoordinate3d(first, 0);
+  molecule.setCoordinate3d(second, 1);
+
+  molecule.setVibrationFrequencies(Array<double>(1, 1600.0), 0);
+  molecule.setVibrationFrequencies(Array<double>(1, 1750.0), 1);
+
+  Array<Array<Vector3>> modes0(1, Array<Vector3>(2, Vector3(1, 0, 0)));
+  Array<Array<Vector3>> modes1(1, Array<Vector3>(2, Vector3(0, 1, 0)));
+  molecule.setVibrationLx(modes0, 0);
+  molecule.setVibrationLx(modes1, 1);
+
+  // The unindexed getters are a view onto the active conformer.
+  ASSERT_TRUE(molecule.setCoordinate3d(0));
+  ASSERT_EQ(molecule.vibrationFrequencies().size(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.vibrationFrequencies()[0], 1600.0);
+  EXPECT_EQ(molecule.vibrationLx(0)[0], Vector3(1, 0, 0));
+
+  ASSERT_TRUE(molecule.setCoordinate3d(1));
+  ASSERT_EQ(molecule.vibrationFrequencies().size(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.vibrationFrequencies()[0], 1750.0);
+  EXPECT_EQ(molecule.vibrationLx(0)[0], Vector3(0, 1, 0));
+
+  // The indexed getters reach any conformer regardless of which is active.
+  EXPECT_EQ(molecule.vibrationFrequencies(0)[0], 1600.0);
+  EXPECT_EQ(molecule.vibrationLx(0, 0)[0], Vector3(1, 0, 0));
+
+  EXPECT_EQ(molecule.vibrationConformerCount(), static_cast<size_t>(2));
+  EXPECT_TRUE(molecule.hasVibrations(0));
+  EXPECT_TRUE(molecule.hasVibrations(1));
+}
+
+TEST_F(MoleculeTest, conformersWithoutAHessianAreEmptyNotMissing)
+{
+  // The common case: a trajectory with frequencies only at the converged
+  // geometry. Conformers without a Hessian must read as empty rather than
+  // returning another conformer's modes or going out of bounds.
+  Molecule molecule;
+  for (int i = 0; i < 2; ++i)
+    molecule.addAtom(6);
+
+  for (size_t i = 0; i < 4; ++i)
+    molecule.setCoordinate3d(Array<Vector3>(2, Vector3(0, 0, 0)), i);
+
+  molecule.setVibrationFrequencies(Array<double>(1, 1600.0), 3);
+
+  EXPECT_EQ(molecule.vibrationConformerCount(), static_cast<size_t>(1));
+  ASSERT_EQ(molecule.vibrationConformers().size(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.vibrationConformers()[0], static_cast<size_t>(3));
+
+  ASSERT_TRUE(molecule.setCoordinate3d(1));
+  EXPECT_FALSE(molecule.hasVibrations());
+  EXPECT_TRUE(molecule.vibrationFrequencies().empty());
+  EXPECT_TRUE(molecule.vibrationIRIntensities().empty());
+  EXPECT_TRUE(molecule.vibrationLx(0).empty());
+
+  ASSERT_TRUE(molecule.setCoordinate3d(3));
+  EXPECT_TRUE(molecule.hasVibrations());
+  EXPECT_EQ(molecule.vibrationFrequencies()[0], 1600.0);
+
+  // Out-of-range modes stay empty rather than reading past the end.
+  EXPECT_TRUE(molecule.vibrationLx(7).empty());
+  EXPECT_TRUE(molecule.vibrationLx(-1).empty());
+}
+
+TEST_F(MoleculeTest, vibrationsWithoutConformersUseTheActiveView)
+{
+  // Several parsers (molden, Gaussian fchk, NWChem) set vibrations on a
+  // molecule that has no coordinate sets at all. That has to keep working
+  // exactly as it did before vibrations became per-conformer.
+  Molecule molecule;
+  for (int i = 0; i < 2; ++i)
+    molecule.addAtom(6);
+
+  EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(0));
+  molecule.setVibrationFrequencies(Array<double>(1, 1600.0));
+  molecule.setVibrationIRIntensities(Array<double>(1, 12.0));
+
+  EXPECT_TRUE(molecule.hasVibrations());
+  ASSERT_EQ(molecule.vibrationFrequencies().size(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.vibrationFrequencies()[0], 1600.0);
+  EXPECT_EQ(molecule.vibrationIRIntensities()[0], 12.0);
+}
+
+TEST_F(MoleculeTest, swapAtomReindexesEveryConformersModes)
+{
+  // swapAtom() relabels the same structure, so every conformer's normal mode
+  // displacements have to follow their atoms, not just the active one's.
+  Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(6);
+
+  for (size_t conformer = 0; conformer < 2; ++conformer) {
+    Array<Array<Vector3>> modes(1);
+    for (int atom = 0; atom < 3; ++atom)
+      modes[0].push_back(Vector3(atom, static_cast<double>(conformer), 0));
+    molecule.setVibrationLx(modes, conformer);
+  }
+
+  molecule.swapAtom(0, 2);
+
+  for (size_t conformer = 0; conformer < 2; ++conformer) {
+    Array<Vector3> mode = molecule.vibrationLx(0, conformer);
+    ASSERT_EQ(mode.size(), static_cast<size_t>(3));
+    EXPECT_EQ(mode[0], Vector3(2, static_cast<double>(conformer), 0));
+    EXPECT_EQ(mode[2], Vector3(0, static_cast<double>(conformer), 0));
+  }
+}
+
+TEST_F(MoleculeTest, clearCoordinate3dKeepsTheActiveConformersModes)
+{
+  // Flattening a trajectory keeps the geometry on screen, so it keeps the
+  // vibrations that belong to that geometry and drops the rest.
+  Molecule molecule;
+  for (int i = 0; i < 2; ++i)
+    molecule.addAtom(6);
+
+  for (size_t i = 0; i < 3; ++i)
+    molecule.setCoordinate3d(Array<Vector3>(2, Vector3(0, 0, 0)), i);
+
+  molecule.setVibrationFrequencies(Array<double>(1, 1600.0), 0);
+  molecule.setVibrationFrequencies(Array<double>(1, 1750.0), 2);
+
+  ASSERT_TRUE(molecule.setCoordinate3d(2));
+  molecule.clearCoordinate3d();
+
+  EXPECT_EQ(molecule.vibrationConformerCount(), static_cast<size_t>(1));
+  ASSERT_EQ(molecule.vibrationFrequencies().size(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.vibrationFrequencies()[0], 1750.0);
+}
+
+TEST_F(MoleculeTest, copiedMoleculesKeepEveryConformersModes)
+{
+  Molecule molecule;
+  for (int i = 0; i < 2; ++i)
+    molecule.addAtom(6);
+
+  molecule.setVibrationFrequencies(Array<double>(1, 1600.0), 0);
+  molecule.setVibrationFrequencies(Array<double>(1, 1750.0), 1);
+
+  Molecule copy(molecule);
+  EXPECT_EQ(copy.vibrationConformerCount(), static_cast<size_t>(2));
+  EXPECT_EQ(copy.vibrationFrequencies(1)[0], 1750.0);
+
+  Molecule assigned;
+  assigned = molecule;
+  EXPECT_EQ(assigned.vibrationConformerCount(), static_cast<size_t>(2));
+  EXPECT_EQ(assigned.vibrationFrequencies(1)[0], 1750.0);
+}
+
 TEST_F(MoleculeTest, partialChargesFollowTheirAtoms)
 {
   Molecule molecule;

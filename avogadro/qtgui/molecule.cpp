@@ -316,10 +316,7 @@ void Molecule::emitChanged(unsigned int change)
       delete m_basisSet;
       m_basisSet = nullptr;
       m_spectra.clear();
-      m_vibrationFrequencies.clear();
-      m_vibrationIRIntensities.clear();
-      m_vibrationRamanIntensities.clear();
-      m_vibrationLx.clear();
+      clearVibrations();
     }
     emit changed(change);
   }
