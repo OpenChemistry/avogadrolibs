@@ -36,7 +36,9 @@ public:
     /** Transform atoms along with the unit cell. */
     TransformAtoms = 0x1,
     /** Enforce right-handed system */
-    RightHanded = 0x2
+    RightHanded = 0x2,
+    /** Bond the replicated cells to each other across periodic boundaries. */
+    PerceivePeriodicBonds = 0x4
   };
   using Options = int;
 
@@ -95,16 +97,92 @@ public:
   static bool isNiggliReduced(const Molecule& mol);
 
   /**
+   * @brief A single bond of a periodic structure.
+   *
+   * The bond joins @a atom1 to the image of @a atom2 displaced by @a offset
+   * lattice vectors, so a zero @a offset is an ordinary bond lying wholly
+   * inside the cell and anything else crosses a cell boundary.
+   */
+  struct PeriodicBond
+  {
+    /** Index of the first atom. */
+    Index atom1;
+    /** Index of the second atom. */
+    Index atom2;
+    /** Lattice translation applied to @a atom2, in whole cell units. */
+    Vector3i offset;
+    /** Bond order. Newly perceived bonds are always single. */
+    unsigned char order;
+    /** True if this pass found the bond, false if @a molecule already had it.
+     */
+    bool perceived;
+  };
+
+  /**
+   * Work out the full bond topology of a periodic structure, including the
+   * bonds that cross a cell boundary and are therefore missing from the
+   * molecule itself: once the atoms have been wrapped into the cell their
+   * periodic neighbours sit a whole cell away in Cartesian space, so ordinary
+   * distance-based perception never sees them.
+   *
+   * The molecule's own bonds come first in the returned list, in molecule bond
+   * order, followed by any that this pass perceived.
+   *
+   * Every bond already in @a molecule comes back with its order intact and with
+   * the lattice offset of whichever image of the second atom lies nearest the
+   * first, so a bond stored stretched across the cell is reported as the short
+   * bond it really is. Further bonds are perceived only where they cross a cell
+   * boundary, using covalent radii plus @a tolerance. Pairs lying wholly inside
+   * the cell are left to the molecule's own connectivity, so this never
+   * second-guesses the bonding that a file specified.
+   *
+   * If @a molecule has no unit cell, or has no coordinates, its bonds are
+   * returned unchanged with zero offsets.
+   *
+   * @param tolerance Added to the sum of the two covalent radii.
+   */
+  static Array<PeriodicBond> perceivePeriodicBonds(const Molecule& molecule,
+                                                   double tolerance = 0.45);
+
+  /**
    * Build a supercell by expanding upon the unit cell of @a molecule. It will
    * only return false if the molecule does not have a unit cell or if a, b, or
    * c is set to zero.
    * @param a The number of units along lattice vector a for the supercell
    * @param b The number of units along lattice vector b for the supercell
    * @param c The number of units along lattice vector c for the supercell
+   * @param opts If PerceivePeriodicBonds is specified, the copies are bonded to
+   * each other across the cell boundaries they share.
    * @return True on success, false on failure.
    */
   static bool buildSupercell(Molecule& molecule, unsigned int a, unsigned int b,
-                             unsigned int c);
+                             unsigned int c, Options opts = None);
+
+  /**
+   * Build a supercell by replicating the unit cell of @a molecule over a
+   * fractional range along each lattice vector, e.g. -0.5 to 0.5, or 0.0 to
+   * 1.5.
+   *
+   * If every limit is an integer the result is a true supercell: the range is
+   * treated as half-open, the cell vectors are scaled by (max - min), and the
+   * atoms are shifted so that @a rangeMin lands on the new origin. Passing
+   * (0, 0, 0) and (a, b, c) is therefore identical to the integer form above.
+   *
+   * A non-integer limit cannot describe a lattice, so in that case the unit
+   * cell is left untouched and the replicated atoms simply extend beyond it -
+   * the usual crystal packing view. The range is then treated as closed, so
+   * atoms lying on either bounding face are included.
+   *
+   * @param rangeMin The lower fractional limit along a, b and c.
+   * @param rangeMax The upper fractional limit along a, b and c.
+   * @param opts If PerceivePeriodicBonds is specified, the copies are bonded to
+   * each other across the cell boundaries they share, so that a molecule split
+   * by a boundary is drawn whole wherever both of its halves are present.
+   * @return True on success, false if @a molecule has no unit cell or if any
+   * axis has an empty range (max <= min).
+   */
+  static bool buildSupercell(Molecule& molecule, const Vector3& rangeMin,
+                             const Vector3& rangeMax, Options opts = None);
 
   /**
    * Set the unit cell in @a molecule to represent the real-space column-vector

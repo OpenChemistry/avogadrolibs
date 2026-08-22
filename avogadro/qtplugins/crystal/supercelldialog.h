@@ -38,6 +38,10 @@ public:
 
   void displayInvalidFormatMessage();
 
+private slots:
+  /** Disable the OK button while any axis has an empty range. */
+  void rangeChanged();
+
 private:
   AVO_DISABLE_COPY(SupercellDialog)
 
