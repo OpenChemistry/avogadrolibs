@@ -736,6 +736,11 @@ void Surfaces::stepChanged(int n)
     g->setActiveSetStep(n - 1);
     m_molecule->clearCubes();
     m_molecule->clearMeshes();
+    // clearCubes() deletes the cubes, so drop our copies of those pointers
+    // here rather than relying on moleculeChanged() to refresh them: the
+    // moved-only change emitted below deliberately does not invalidate
+    // derived data, so that refresh does not run.
+    m_cubes.clear();
     m_cube = nullptr;
     m_mesh1 = nullptr;
     m_mesh2 = nullptr;

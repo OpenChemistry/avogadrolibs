@@ -72,7 +72,10 @@ private:
    */
   void reloadDialog();
 
-  /** @return True if the active conformer index refers to a coordinate set. */
+  /**
+   * @return True if the active conformer index refers to a coordinate set.
+   * @note m_molecule must not be null; the callers check that first.
+   */
   bool activeConformerIsStored() const;
 
   /**

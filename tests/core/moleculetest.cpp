@@ -898,6 +898,59 @@ TEST_F(MoleculeTest, copiedMoleculesKeepEveryConformersModes)
   assigned = molecule;
   EXPECT_EQ(assigned.vibrationConformerCount(), static_cast<size_t>(2));
   EXPECT_EQ(assigned.vibrationFrequencies(1)[0], 1750.0);
+
+  // Moving has to carry the modes across too, not silently drop them.
+  Molecule movedFrom(molecule);
+  Molecule moveConstructed(std::move(movedFrom));
+  EXPECT_EQ(moveConstructed.vibrationConformerCount(), static_cast<size_t>(2));
+  EXPECT_EQ(moveConstructed.vibrationFrequencies(1)[0], 1750.0);
+
+  Molecule moveAssignedFrom(molecule);
+  Molecule moveAssigned;
+  moveAssigned = std::move(moveAssignedFrom);
+  EXPECT_EQ(moveAssigned.vibrationConformerCount(), static_cast<size_t>(2));
+  EXPECT_EQ(moveAssigned.vibrationFrequencies(1)[0], 1750.0);
+}
+
+TEST_F(MoleculeTest, vibrationDataExposesEveryFieldPerConformer)
+{
+  Molecule molecule;
+  for (int i = 0; i < 2; ++i)
+    molecule.addAtom(6);
+
+  molecule.setVibrationFrequencies(Array<double>(1, 1600.0), 1);
+  molecule.setVibrationIRIntensities(Array<double>(1, 12.0), 1);
+  molecule.setVibrationRamanIntensities(Array<double>(1, 3.5), 1);
+  Array<Array<Vector3>> modes(1, Array<Vector3>(2, Vector3(0, 0, 1)));
+  molecule.setVibrationLx(modes, 1);
+
+  // The indexed accessors read back what was written, for every field.
+  EXPECT_EQ(molecule.vibrationIRIntensities(1)[0], 12.0);
+  EXPECT_EQ(molecule.vibrationRamanIntensities(1)[0], 3.5);
+  EXPECT_EQ(molecule.vibrationLx(0, 1)[0], Vector3(0, 0, 1));
+
+  // A conformer with no data reads as empty rather than as another's.
+  EXPECT_TRUE(molecule.vibrationIRIntensities(0).empty());
+  EXPECT_TRUE(molecule.vibrationRamanIntensities(0).empty());
+
+  // vibrationData() is the same information in one lookup, and is null for a
+  // conformer that has none.
+  const Molecule::VibrationData* data = molecule.vibrationData(1);
+  ASSERT_NE(data, nullptr);
+  EXPECT_FALSE(data->isEmpty());
+  EXPECT_EQ(data->frequencies[0], 1600.0);
+  EXPECT_EQ(data->irIntensities[0], 12.0);
+  EXPECT_EQ(data->ramanIntensities[0], 3.5);
+  EXPECT_EQ(data->lx[0][0], Vector3(0, 0, 1));
+  EXPECT_EQ(molecule.vibrationData(0), nullptr);
+
+  // clearVibrations() drops every conformer's data, leaving the geometry.
+  molecule.clearVibrations();
+  EXPECT_EQ(molecule.vibrationConformerCount(), static_cast<size_t>(0));
+  EXPECT_FALSE(molecule.hasVibrations(1));
+  EXPECT_EQ(molecule.vibrationData(1), nullptr);
+  EXPECT_TRUE(molecule.vibrationFrequencies(1).empty());
+  EXPECT_EQ(molecule.atomCount(), 2);
 }
 
 TEST_F(MoleculeTest, partialChargesFollowTheirAtoms)
