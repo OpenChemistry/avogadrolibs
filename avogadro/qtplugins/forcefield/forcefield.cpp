@@ -327,6 +327,16 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
   if (mol == nullptr || m_molecule == mol)
     return;
 
+  // Any running calculation belongs to the outgoing molecule. Cancel it and
+  // close its undo merge before switching, so queued results can't be applied
+  // to the new molecule (cleanupWorker() disconnects the worker, so the
+  // sender() checks in the result handlers reject anything still in flight).
+  if (m_worker != nullptr || m_optimizing || m_batchRunning) {
+    if (m_optimizing && m_molecule != nullptr)
+      m_molecule->undoMolecule()->setInteractive(false);
+    cleanupWorker();
+  }
+
   // Disconnect from the old molecule so it no longer drives our actions.
   if (m_molecule != nullptr)
     disconnect(m_molecule, SIGNAL(changed(unsigned int)), this,

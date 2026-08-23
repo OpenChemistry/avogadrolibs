@@ -299,6 +299,7 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   // go through lines in result until we see "gradient "
   QStringList lines = QString(result).remove('\r').split('\n');
   bool readingGradient = false;
+  bool validGradient = true;
   const Eigen::Index atomCount = m_molecule->atomCount();
   Eigen::Index i = 0;
   for (auto line : lines) {
@@ -315,10 +316,16 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
         const double gx = items[0].toDouble(&xOk);
         const double gy = items[1].toDouble(&yOk);
         const double gz = items[2].toDouble(&zOk);
-        if (!xOk || !yOk || !zOk)
-          continue;
+        // Skipping a bad row would shift every later row onto the wrong
+        // atom, so treat any malformed row as a failed read.
+        if (!xOk || !yOk || !zOk) {
+          appendError("OBMM returned an unreadable gradient row.");
+          validGradient = false;
+          break;
+        }
         if (i >= atomCount) {
           appendError("OBMM returned more gradient rows than atoms.");
+          validGradient = false;
           break;
         }
         grad[3 * i] = gx;
@@ -329,8 +336,17 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     }
   }
 
-  if (i != atomCount)
+  if (validGradient && i != atomCount) {
     appendError("OBMM returned an incomplete gradient.");
+    validGradient = false;
+  }
+
+  // A partial or misaligned gradient is worse than none - the caller would
+  // apply forces belonging to other atoms. Hand back zeros instead.
+  if (!validGradient) {
+    grad.setZero();
+    return;
+  }
 
   grad *= -1; // OpenBabel outputs forces, not grads
 

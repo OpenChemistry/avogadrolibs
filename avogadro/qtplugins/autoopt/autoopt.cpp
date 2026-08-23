@@ -669,14 +669,20 @@ void AutoOpt::dynamicsStep()
   }
   newPositions = positions + displacement;
 
-  // Update molecule positions immediately (visual feedback)
-  if (n > 0 && newPositions.allFinite()) {
-    Core::Array<Vector3> newPos(n);
-    Eigen::Map<Eigen::VectorXd>(newPos[0].data(), 3 * n) = newPositions;
-    m_molecule->setAtomPositions3d(newPos, tr("Molecular Dynamics"));
-    Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
-    m_molecule->emitChanged(changes);
+  // A non-finite integration step means the trajectory has blown up. Don't
+  // move the molecule and don't hand NaN coordinates to the energy method -
+  // stop the run instead.
+  if (!newPositions.allFinite()) {
+    stop();
+    return;
   }
+
+  // Update molecule positions immediately (visual feedback)
+  Core::Array<Vector3> newPos(n);
+  Eigen::Map<Eigen::VectorXd>(newPos[0].data(), 3 * n) = newPositions;
+  m_molecule->setAtomPositions3d(newPos, tr("Molecular Dynamics"));
+  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Moved;
+  m_molecule->emitChanged(changes);
 
   // Send newPositions to worker for gradient computation (Verlet Step 2)
   m_computePending = true;
