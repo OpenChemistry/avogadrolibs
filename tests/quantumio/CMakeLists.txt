@@ -4,14 +4,14 @@ set(tests
   fchk
   gaussiansettools
   molden
+  mopacaux
+  nwchemlog
   orca
   qcschema
   # TODO
   # GAMESS US
   # GAMESS UK
-  # NWChem log
   # NWChem JSON
-  # MOPAC aux
 )
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
@@ -56,6 +56,12 @@ foreach(TestName ${tests})
   elseif(TestName STREQUAL "molden")
     add_test(NAME "QuantumIo-molden"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=MoldenTest.*")
+  elseif(TestName STREQUAL "mopacaux")
+    add_test(NAME "QuantumIo-mopacaux"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=MopacAuxTest.*")
+  elseif(TestName STREQUAL "nwchemlog")
+    add_test(NAME "QuantumIo-nwchemlog"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=NWChemLogTest.*")
   elseif(TestName STREQUAL "orca")
     add_test(NAME "QuantumIo-orca"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=OrcaTest.*")

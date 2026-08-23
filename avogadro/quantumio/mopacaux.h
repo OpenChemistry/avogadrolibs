@@ -91,9 +91,28 @@ private:
   std::vector<Eigen::Vector3d> m_atomPos;
   std::vector<std::vector<Eigen::Vector3d>> m_coordSets;
 
+  // Vibrational data for the geometry being parsed. Completed sets move into
+  // m_vibrationSets when a new geometry arrives, so a job with more than one
+  // Hessian keeps each against the geometry it was computed at.
   std::vector<double> m_frequencies;
   std::vector<double> m_irIntensities;
   std::vector<Eigen::Vector3d> m_normalModes;
+
+  /** One completed set of vibrational data, and the geometry it belongs to. */
+  struct VibrationSet
+  {
+    size_t conformerIndex = 0;
+    std::vector<double> frequencies;
+    std::vector<double> irIntensities;
+    std::vector<Eigen::Vector3d> normalModes;
+  };
+  std::vector<VibrationSet> m_vibrationSets;
+
+  /**
+   * Bank the vibrational data accumulated so far against the most recently
+   * read geometry, and reset for the next Hessian.
+   */
+  void flushVibrationData();
 
   Eigen::MatrixXd m_overlap; /// Overlap matrix
   Eigen::MatrixXd m_eigenVectors;

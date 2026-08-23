@@ -58,34 +58,42 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   basis->setMolecule(&molecule);
   load(basis);
 
-  // check if there is vibrational data
-  if (m_frequencies.size() > 0) {
+  // Bank the last Hessian, which has no following geometry to trigger it.
+  flushVibrationData();
+
+  const Index atomCount = molecule.atomCount();
+  for (const auto& set : m_vibrationSets) {
     // convert the std::vector to Array
-    Core::Array<double> frequencies(m_frequencies.size());
-    for (unsigned int i = 0; i < m_frequencies.size(); ++i)
-      frequencies[i] = m_frequencies[i];
-    molecule.setVibrationFrequencies(frequencies);
+    Core::Array<double> frequencies(set.frequencies.size());
+    for (unsigned int i = 0; i < set.frequencies.size(); ++i)
+      frequencies[i] = set.frequencies[i];
+    molecule.setVibrationFrequencies(frequencies, set.conformerIndex);
 
     // convert the std::vector to Array
-    Core::Array<double> intensities(m_frequencies.size(), 0.0);
-    if (m_irIntensities.size() == m_frequencies.size()) {
-      for (unsigned int i = 0; i < m_irIntensities.size(); ++i)
-        intensities[i] = m_irIntensities[i];
+    Core::Array<double> intensities(set.frequencies.size(), 0.0);
+    if (set.irIntensities.size() == set.frequencies.size()) {
+      for (unsigned int i = 0; i < set.irIntensities.size(); ++i)
+        intensities[i] = set.irIntensities[i];
     }
-    molecule.setVibrationIRIntensities(intensities);
+    molecule.setVibrationIRIntensities(intensities, set.conformerIndex);
 
-    // wrap the normal modes into a vector of vectors
+    // The modes arrive as one displacement per atom per mode, flattened, so
+    // they are chunked every atomCount entries. Testing i % atomCount == 0
+    // instead emitted a one-displacement first mode and left every later
+    // mode straddling two real ones.
     Core::Array<Core::Array<Vector3>> normalModes;
-    Core::Array<Vector3> normalMode;
-    Index atomCount = molecule.atomCount();
-    for (unsigned int i = 0; i < m_normalModes.size(); ++i) {
-      normalMode.push_back(m_normalModes[i]);
-      if (i % atomCount == 0 && normalMode.size() > 0) {
-        normalModes.push_back(normalMode);
-        normalMode.clear();
+    if (atomCount > 0) {
+      Core::Array<Vector3> normalMode;
+      normalMode.reserve(atomCount);
+      for (unsigned int i = 0; i < set.normalModes.size(); ++i) {
+        normalMode.push_back(set.normalModes[i]);
+        if (normalMode.size() == atomCount) {
+          normalModes.push_back(normalMode);
+          normalMode.clear();
+        }
       }
     }
-    molecule.setVibrationLx(normalModes);
+    molecule.setVibrationLx(normalModes, set.conformerIndex);
   }
 
   // add charges and properties
@@ -132,6 +140,12 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
       }
       molecule.setCoordinate3d(positions, i);
     }
+    // The atoms were added from the last block (ATOM_X_OPT, the optimized
+    // geometry), so the active index has to name that set rather than being
+    // left at 0 - the input geometry. Anything reading the active conformer,
+    // vibrations included, would otherwise be looking at a different
+    // structure than the one on screen.
+    molecule.setCoordinate3d(static_cast<int>(m_coordSets.size()) - 1);
   }
 
   return true;
@@ -264,6 +278,18 @@ void MopacAux::processLine(std::istream& in)
       Core::lexicalCast<int>(key.substr(lBracket + 1, rBracket - lBracket - 1))
         .value_or(0);
     cout << "Number of atomic coordinates = " << tmp << endl;
+    // A new geometry means any Hessian read so far belongs to the previous
+    // one, so bank it before the geometry changes underneath it.
+    //
+    // ORIENTATION_ATOM_X and ATOM_X_FORCE are the exception: they are the
+    // same structure re-expressed in the frame the vibrational analysis runs
+    // in - the frame the normal modes are given in - rather than another
+    // optimization step. They must not close off the Hessian being read, or
+    // the modes end up keyed to the frame before the one on screen and the
+    // molecule reads as having no vibrations at all.
+    if (!Core::contains(key, "ORIENTATION") && !Core::contains(key, "FORCE"))
+      flushVibrationData();
+
     m_atomPos = readArrayVec(in, tmp);
     m_coordSets.push_back(m_atomPos);
   } else if (Core::contains(key, "OVERLAP_MATRIX")) {
@@ -406,6 +432,23 @@ vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
       ptr[cnt++] = Core::lexicalCast<double>(i).value_or(0.0);
   }
   return tmp;
+}
+
+void MopacAux::flushVibrationData()
+{
+  if (!m_frequencies.empty() && !m_coordSets.empty()) {
+    VibrationSet set;
+    // The Hessian belongs to the geometry that precedes it: the last pushed.
+    set.conformerIndex = m_coordSets.size() - 1;
+    set.frequencies = m_frequencies;
+    set.irIntensities = m_irIntensities;
+    set.normalModes = m_normalModes;
+    m_vibrationSets.push_back(set);
+  }
+
+  m_frequencies.clear();
+  m_irIntensities.clear();
+  m_normalModes.clear();
 }
 
 bool MopacAux::readVibrationFrequencies(std::istream& in, unsigned int n)

@@ -47,11 +47,27 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
-  if (m_frequencies.size() > 0 && m_frequencies.size() == m_Lx.size() &&
-      m_frequencies.size() == m_intensities.size()) {
-    molecule.setVibrationFrequencies(m_frequencies);
-    molecule.setVibrationIRIntensities(m_intensities);
-    molecule.setVibrationLx(m_Lx);
+  // Bank the last Hessian, which has no following geometry to trigger it.
+  flushVibrationData();
+
+  // Store the geometries as conformers. readAtoms() replaces the molecule's
+  // atoms on every "Output coordinates" block, so the molecule already holds
+  // the last one; the earlier steps would otherwise be dropped entirely.
+  if (m_coordSets.size() > 1) {
+    for (size_t i = 0; i < m_coordSets.size(); ++i) {
+      if (m_coordSets[i].size() != molecule.atomCount())
+        continue; // a section with a different atom count is not a step
+      molecule.setCoordinate3d(m_coordSets[i], i);
+    }
+    // Open on the final geometry, as the optimized structure is what the
+    // user expects to see first.
+    molecule.setCoordinate3d(static_cast<int>(m_coordSets.size()) - 1);
+  }
+
+  for (const auto& set : m_vibrationSets) {
+    molecule.setVibrationFrequencies(set.frequencies, set.conformerIndex);
+    molecule.setVibrationIRIntensities(set.intensities, set.conformerIndex);
+    molecule.setVibrationLx(set.Lx, set.conformerIndex);
   }
 
   // GaussianSet *basis = new GaussianSet;
@@ -61,6 +77,29 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
   molecule.perceiveBondOrders();
 
   return true;
+}
+
+void NWChemLog::flushVibrationData()
+{
+  // The intensities come from a separate section, so a Hessian whose
+  // intensity block is missing or truncated is kept only if every array
+  // lines up - the same rule read() applied before the data became
+  // per-conformer.
+  if (!m_frequencies.empty() && m_frequencies.size() == m_Lx.size() &&
+      m_frequencies.size() == m_intensities.size() && !m_coordSets.empty()) {
+    VibrationSet set;
+    // The Hessian belongs to the geometry that precedes it, which is the
+    // last one pushed.
+    set.conformerIndex = m_coordSets.size() - 1;
+    set.frequencies = m_frequencies;
+    set.intensities = m_intensities;
+    set.Lx = m_Lx;
+    m_vibrationSets.push_back(set);
+  }
+
+  m_frequencies.clear();
+  m_intensities.clear();
+  m_Lx.clear();
 }
 
 void NWChemLog::processLine(std::istream& in, Core::Molecule& mol)
@@ -74,6 +113,13 @@ void NWChemLog::processLine(std::istream& in, Core::Molecule& mol)
 
   // Big switch statement checking for various things we are interested in
   if (Core::contains(key, "Output coordinates")) {
+    // A new geometry means any Hessian read so far belongs to the previous
+    // one. Bank it before the geometry changes underneath it: NWChem prints
+    // one Hessian as several P.Frequency column blocks, so the accumulators
+    // cannot simply be reset per block, and letting two Hessians run
+    // together produced one list of twice the modes the molecule has.
+    flushVibrationData();
+
     if (mol.atomCount())
       mol.clearAtoms();
 
@@ -84,6 +130,7 @@ void NWChemLog::processLine(std::istream& in, Core::Molecule& mol)
       m_coordinateScale = Core::lexicalCast<double>(list[6]).value_or(1.0);
 
     readAtoms(in, mol);
+    m_coordSets.push_back(mol.atomPositions3d());
   } else if (Core::contains(key, "P.Frequency")) {
     readFrequencies(line, in, mol);
   } else if (Core::contains(key, "Projected Infra")) {
