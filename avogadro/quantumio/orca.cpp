@@ -126,11 +126,13 @@ void ORCAOutput::flushVibrationData()
       m_frequencies.size() == m_IRintensities.size()) {
     VibrationSet set;
     set.conformerIndex = m_vibrationConformer;
-    set.frequencies = std::move(m_frequencies);
-    set.irIntensities = std::move(m_IRintensities);
-    set.ramanIntensities = std::move(m_RamanIntensities);
-    set.vcdIntensities = std::move(m_vcdIntensities);
-    set.displacements = std::move(m_vibDisplacements);
+    // Core::Array has no move constructor, so swap rather than assign: the
+    // accumulators are cleared below either way.
+    set.frequencies.swap(m_frequencies);
+    set.irIntensities.swap(m_IRintensities);
+    set.ramanIntensities.swap(m_RamanIntensities);
+    set.displacements.swap(m_vibDisplacements);
+    set.vcdIntensities.swap(m_vcdIntensities);
     m_vibrationSets.push_back(std::move(set));
   }
 
@@ -206,22 +208,22 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     if (set.conformerIndex > finalConformer)
       continue;
 
-    molecule.setVibrationFrequencies(set.frequencies, set.conformerIndex);
-    molecule.setVibrationIRIntensities(set.irIntensities, set.conformerIndex);
-    molecule.setVibrationLx(set.displacements, set.conformerIndex);
-    if (set.ramanIntensities.size())
-      molecule.setVibrationRamanIntensities(set.ramanIntensities,
-                                            set.conformerIndex);
-  }
+    Core::Molecule::VibrationData data;
+    data.frequencies = set.frequencies;
+    data.irIntensities = set.irIntensities;
+    data.ramanIntensities = set.ramanIntensities;
+    data.lx = set.displacements;
+    molecule.setVibrationData(data, set.conformerIndex);
 
-  // Spectra are not per-conformer, so plot the modes of the geometry the
-  // molecule opens on - the last set in the file that has VCD data.
-  for (const auto& set : m_vibrationSets) {
-    if (set.vcdIntensities.size() > 0 &&
-        set.vcdIntensities.size() == set.frequencies.size()) {
-      MatrixX vcdData(set.frequencies.size(), 2);
-      for (size_t i = 0; i < set.frequencies.size(); ++i) {
-        vcdData(i, 0) = set.frequencies[i];
+    // Spectra are not per-conformer, so the last set carrying VCD data wins.
+    // Building it here rather than in a second pass avoids allocating a
+    // matrix for every earlier set only to overwrite it.
+    const auto& frequencies = set.frequencies;
+    if (!set.vcdIntensities.empty() &&
+        set.vcdIntensities.size() == frequencies.size()) {
+      MatrixX vcdData(frequencies.size(), 2);
+      for (size_t i = 0; i < frequencies.size(); ++i) {
+        vcdData(i, 0) = frequencies[i];
         vcdData(i, 1) = set.vcdIntensities[i];
       }
       molecule.setSpectra("VibrationalCD", vcdData);
@@ -871,8 +873,8 @@ void ORCAOutput::processLine(std::istream& in,
             for (unsigned int j = 0; j < modeIndex.size(); j++) {
               m_vibDisplacements[modeIndex[j]][atomIndex][coordIndex] =
                 Core::lexicalCast<double>(list[j + 1]).value_or(0.0);
-              m_haveNormalModes = true;
             }
+            m_haveNormalModes = true;
 
             Core::getLine(in, key);
             key = Core::trimmed(key);

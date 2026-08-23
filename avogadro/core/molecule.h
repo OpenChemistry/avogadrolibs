@@ -735,6 +735,14 @@ public:
   const VibrationData* vibrationData(size_t conformerIndex) const;
 
   /**
+   * Store a whole set of vibrational data against @p conformerIndex, replacing
+   * anything already there. Parsers that assemble a complete Hessian should
+   * prefer this to the per-field setters: it is one lookup, and a new field
+   * added to VibrationData needs no new call.
+   */
+  void setVibrationData(const VibrationData& data, size_t conformerIndex);
+
+  /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
    *  atoms are considered bonded if within the sum of radii
    *  plus a small @p tolerance.

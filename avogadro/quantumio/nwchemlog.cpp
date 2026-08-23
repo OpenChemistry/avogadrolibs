@@ -65,9 +65,11 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
   }
 
   for (const auto& set : m_vibrationSets) {
-    molecule.setVibrationFrequencies(set.frequencies, set.conformerIndex);
-    molecule.setVibrationIRIntensities(set.intensities, set.conformerIndex);
-    molecule.setVibrationLx(set.Lx, set.conformerIndex);
+    Core::Molecule::VibrationData data;
+    data.frequencies = set.frequencies;
+    data.irIntensities = set.intensities;
+    data.lx = set.Lx;
+    molecule.setVibrationData(data, set.conformerIndex);
   }
 
   // GaussianSet *basis = new GaussianSet;
@@ -91,10 +93,12 @@ void NWChemLog::flushVibrationData()
     // The Hessian belongs to the geometry that precedes it, which is the
     // last one pushed.
     set.conformerIndex = m_coordSets.size() - 1;
-    set.frequencies = m_frequencies;
-    set.intensities = m_intensities;
-    set.Lx = m_Lx;
-    m_vibrationSets.push_back(set);
+    // Core::Array has no move constructor, so swap rather than assign: the
+    // accumulators are cleared below either way.
+    set.frequencies.swap(m_frequencies);
+    set.intensities.swap(m_intensities);
+    set.Lx.swap(m_Lx);
+    m_vibrationSets.push_back(std::move(set));
   }
 
   m_frequencies.clear();

@@ -54,7 +54,7 @@ bool setJsonKey(json& j, Molecule& m, const std::string& key)
   return false;
 }
 
-bool isNumericArray(json& j)
+bool isNumericArray(const json& j)
 {
   if (j.is_array() && j.size() > 0) {
     for (const auto& v : j) {
@@ -93,6 +93,93 @@ json eigenColToJson(const MatrixX& matrix, int column)
 using Core::PropertyMap;
 
 /** Deserialize a JSON object of named arrays into a PropertyMap. */
+// Decimal index used as a key in a sparse map. Anything that is not a run of
+// digits is not an index; those entries are skipped rather than folded into
+// conformer 0, which would silently merge unrelated data.
+bool parseIndexKey(const std::string& key, size_t& index)
+{
+  if (key.empty())
+    return false;
+  index = 0;
+  for (char c : key) {
+    if (c < '0' || c > '9')
+      return false;
+    index = index * 10 + static_cast<size_t>(c - '0');
+  }
+  return true;
+}
+
+// One conformer's vibrational data. Mirrors serializeVibrations().
+void deserializeVibrations(const json& vibrations, Core::Molecule& molecule,
+                           size_t conformerIndex)
+{
+  if (!vibrations.is_object())
+    return;
+
+  // Look keys up rather than indexing: on a const object, operator[] with a
+  // key that is not there is undefined behaviour.
+  auto member = [&vibrations](const char* name) -> const json& {
+    static const json missing;
+    auto it = vibrations.find(name);
+    return it == vibrations.end() ? missing : *it;
+  };
+
+  Array<double> freqs;
+  const json& frequencies = member("frequencies");
+  if (isNumericArray(frequencies)) {
+    freqs.reserve(frequencies.size());
+    for (const auto& frequency : frequencies)
+      freqs.push_back(static_cast<double>(frequency));
+    molecule.setVibrationFrequencies(freqs, conformerIndex);
+  }
+
+  // The intensity arrays are indexed by the frequency count elsewhere, so
+  // only accept one that matches it. Unlike every other reader, CJSON is
+  // hand-editable and may carry intensities without frequencies at all.
+  const size_t modes = freqs.size();
+
+  const json& intensities = member("intensities");
+  if (isNumericArray(intensities) && intensities.size() == modes) {
+    Array<double> intens;
+    intens.reserve(modes);
+    for (const auto& intensity : intensities)
+      intens.push_back(static_cast<double>(intensity));
+    molecule.setVibrationIRIntensities(intens, conformerIndex);
+  }
+
+  const json& raman = member("ramanIntensities");
+  if (isNumericArray(raman) && raman.size() == modes) {
+    Array<double> intens;
+    intens.reserve(modes);
+    for (const auto& i : raman)
+      intens.push_back(static_cast<double>(i));
+    molecule.setVibrationRamanIntensities(intens, conformerIndex);
+  }
+
+  const json& displacements = member("eigenVectors");
+  if (displacements.is_array()) {
+    Array<Array<Vector3>> disps;
+    disps.reserve(displacements.size());
+    // Take each eigenvector by reference: by value copies every coordinate
+    // out of the document before reading it once.
+    for (const auto& arr : displacements) {
+      // Each eigenvector is a flat list of x,y,z triples written straight
+      // into the Vector3 buffer below. A length that is not a multiple of
+      // three would run past the end of that buffer. isNumericArray()
+      // already rejects an empty array.
+      if (isNumericArray(arr) && arr.size() % 3 == 0) {
+        Array<Vector3> mode;
+        mode.resize(arr.size() / 3);
+        double* ptr = &mode[0][0];
+        for (const auto& j : arr)
+          *(ptr++) = static_cast<double>(j);
+        disps.push_back(mode);
+      }
+    }
+    molecule.setVibrationLx(disps, conformerIndex);
+  }
+}
+
 void deserializeProperties(const json& obj, PropertyMap& props,
                            size_t expectedCount)
 {
@@ -120,19 +207,8 @@ void deserializeProperties(const json& obj, PropertyMap& props,
         for (Eigen::Index r = 0; r < rows; ++r)
           for (Eigen::Index c = 0; c < cols; ++c)
             matrix(r, c) = data[r * cols + c].get<double>();
-        const std::string& idxKey = entry.key();
-        if (idxKey.empty())
-          continue;
         Index idx = 0;
-        bool validIdx = true;
-        for (char c : idxKey) {
-          if (c < '0' || c > '9') {
-            validIdx = false;
-            break;
-          }
-          idx = idx * 10 + static_cast<Index>(c - '0');
-        }
-        if (validIdx)
+        if (parseIndexKey(entry.key(), idx))
           props.setMatrix(key, idx, matrix);
       }
       continue;
@@ -180,6 +256,65 @@ void deserializeProperties(const json& obj, PropertyMap& props,
 }
 
 /** Serialize a PropertyMap into a JSON object of named arrays. */
+// One conformer's vibrational data, in the flat shape CJSON has always used
+// for the single-Hessian case. Written both at the top level (for the active
+// conformer) and as the values of the sparse "conformers" map.
+json serializeVibrations(const Core::Molecule& molecule, size_t conformerIndex)
+{
+  const auto frequencies = molecule.vibrationFrequencies(conformerIndex);
+  const auto irIntensities = molecule.vibrationIRIntensities(conformerIndex);
+  const auto ramanIntensities =
+    molecule.vibrationRamanIntensities(conformerIndex);
+
+  // Each intensity array is optional and is only written when it lines up
+  // with the frequencies, so a Raman-only or frequency-only calculation still
+  // round trips instead of being dropped for want of IR data.
+  const size_t count = frequencies.size();
+  const bool hasIR = irIntensities.size() == count;
+  const bool hasRaman = ramanIntensities.size() == count;
+
+  json modes;
+  json freqs;
+  json inten;
+  json raman;
+  json eigenVectors;
+  bool hasEigenVectors = true;
+  for (size_t i = 0; i < count; ++i) {
+    modes.push_back(static_cast<unsigned int>(i) + 1);
+    freqs.push_back(frequencies[i]);
+    if (hasIR)
+      inten.push_back(irIntensities[i]);
+    if (hasRaman)
+      raman.push_back(ramanIntensities[i]);
+    Core::Array<Vector3> atomDisplacements =
+      molecule.vibrationLx(static_cast<int>(i), conformerIndex);
+    if (atomDisplacements.empty())
+      hasEigenVectors = false;
+    json eigenVector;
+    for (auto pos : atomDisplacements) {
+      eigenVector.push_back(pos[0]);
+      eigenVector.push_back(pos[1]);
+      eigenVector.push_back(pos[2]);
+    }
+    eigenVectors.push_back(std::move(eigenVector));
+  }
+
+  // Moved rather than assigned: nlohmann's operator= takes its argument by
+  // value, so assigning these lvalues would deep copy every eigenvector.
+  json vibrations;
+  vibrations["modes"] = std::move(modes);
+  vibrations["frequencies"] = std::move(freqs);
+  if (hasIR)
+    vibrations["intensities"] = std::move(inten);
+  if (hasRaman)
+    vibrations["ramanIntensities"] = std::move(raman);
+  // Only write displacements if every mode has them; a partial set would be
+  // read back as a mode count that disagrees with the frequencies.
+  if (hasEigenVectors)
+    vibrations["eigenVectors"] = std::move(eigenVectors);
+  return vibrations;
+}
+
 json serializeProperties(const PropertyMap& props)
 {
   json result;
@@ -408,8 +543,18 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
             molecule.setCoordinate3d(setArray, i);
           }
         }
-        // Make sure the first step is active once we are done loading the sets.
-        molecule.setCoordinate3d(0);
+        // Restore the set that was on screen when this was written, falling
+        // back to the first step for files that predate "3dSetsActive". This
+        // has to happen before the vibrations are read, since the unindexed
+        // vibration setters write to the active conformer.
+        int activeSet = 0;
+        if (atoms["coords"].contains("3dSetsActive")) {
+          const json& active = atoms["coords"]["3dSetsActive"];
+          if (active.is_number_unsigned())
+            activeSet = active.get<int>();
+        }
+        if (!molecule.setCoordinate3d(activeSet))
+          molecule.setCoordinate3d(0);
       }
     }
   }
@@ -899,63 +1044,24 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   }
 
   // See if there is any vibration data, load it if so.
-  json vibrations = jsonRoot["vibrations"];
+  // By reference: copying would duplicate every conformer's eigenvectors out
+  // of the document just to read each one once.
+  json& vibrations = jsonRoot["vibrations"];
   if (vibrations.is_object()) {
-    Array<double> freqs;
-    json frequencies = vibrations["frequencies"];
-    if (isNumericArray(frequencies)) {
-      freqs.reserve(frequencies.size());
-      for (auto& frequencie : frequencies) {
-        freqs.push_back(static_cast<double>(frequencie));
+    // A sparse map of conformer index to that conformer's modes, written when
+    // a file carries a Hessian at more than one geometry. When it is present
+    // it is authoritative: it also contains the active conformer's set, which
+    // the flat keys duplicate for older readers.
+    const json& perConformer = vibrations["conformers"];
+    if (perConformer.is_object()) {
+      for (const auto& entry : perConformer.items()) {
+        size_t conformerIndex = 0;
+        if (parseIndexKey(entry.key(), conformerIndex))
+          deserializeVibrations(entry.value(), molecule, conformerIndex);
       }
-      molecule.setVibrationFrequencies(freqs);
-    }
-
-    // The intensity arrays are indexed by the frequency count elsewhere, so
-    // only accept one that matches it. Unlike every other reader, CJSON is
-    // hand-editable and may carry intensities without frequencies at all.
-    const size_t modes = freqs.size();
-
-    json intensities = vibrations["intensities"];
-    if (isNumericArray(intensities) && intensities.size() == modes) {
-      Array<double> intens;
-      intens.reserve(modes);
-      for (auto& intensitie : intensities) {
-        intens.push_back(static_cast<double>(intensitie));
-      }
-      molecule.setVibrationIRIntensities(intens);
-    }
-    json raman = vibrations["ramanIntensities"];
-    if (isNumericArray(raman) && raman.size() == modes) {
-      Array<double> intens;
-      intens.reserve(modes);
-      for (auto& i : raman) {
-        intens.push_back(static_cast<double>(i));
-      }
-      molecule.setVibrationRamanIntensities(intens);
-    }
-    json displacements = vibrations["eigenVectors"];
-    if (displacements.is_array()) {
-      Array<Array<Vector3>> disps;
-      disps.reserve(displacements.size());
-      // Take each eigenvector by reference: by value copies every coordinate
-      // out of the document before reading it once.
-      for (auto& arr : displacements) {
-        // Each eigenvector is a flat list of x,y,z triples written straight
-        // into the Vector3 buffer below. A length that is not a multiple of
-        // three would run past the end of that buffer. isNumericArray()
-        // already rejects an empty array.
-        if (isNumericArray(arr) && arr.size() % 3 == 0) {
-          Array<Vector3> mode;
-          mode.resize(arr.size() / 3);
-          double* ptr = &mode[0][0];
-          for (auto& j : arr) {
-            *(ptr++) = static_cast<double>(j);
-          }
-          disps.push_back(mode);
-        }
-      }
-      molecule.setVibrationLx(disps);
+    } else {
+      deserializeVibrations(vibrations, molecule,
+                            static_cast<size_t>(molecule.coordinate3d()));
     }
   }
 
@@ -1694,6 +1800,11 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
           coords3dSets.push_back(coordsSet);
         }
         coords["3dSets"] = coords3dSets;
+        // Which set is on screen. Without this a reload silently lands on the
+        // first step, which for an optimization is the starting geometry
+        // rather than the result, and re-keys the active vibrations with it.
+        coords["3dSetsActive"] =
+          static_cast<unsigned int>(molecule.coordinate3d());
       }
     }
 
@@ -1872,53 +1983,45 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     root["constraints"] = constraints;
   }
 
-  // If there is vibrational data write this out too. Each intensity array is
-  // optional and is only written when it lines up with the frequencies, so a
-  // Raman-only or frequency-only calculation still round trips instead of
-  // being dropped for want of IR data.
-  const auto frequencies = molecule.vibrationFrequencies();
-  const auto irIntensities = molecule.vibrationIRIntensities();
-  const auto ramanIntensities = molecule.vibrationRamanIntensities();
-  if (frequencies.size() > 0) {
-    const size_t count = frequencies.size();
-    const bool hasIR = irIntensities.size() == count;
-    const bool hasRaman = ramanIntensities.size() == count;
-    json vibrations;
-    json modes;
-    json freqs;
-    json inten;
-    json raman;
-    json eigenVectors;
-    bool hasEigenVectors = true;
-    for (size_t i = 0; i < count; ++i) {
-      modes.push_back(static_cast<unsigned int>(i) + 1);
-      freqs.push_back(frequencies[i]);
-      if (hasIR)
-        inten.push_back(irIntensities[i]);
-      if (hasRaman)
-        raman.push_back(ramanIntensities[i]);
-      Core::Array<Vector3> atomDisplacements = molecule.vibrationLx(i);
-      if (atomDisplacements.empty())
-        hasEigenVectors = false;
-      json eigenVector;
-      for (auto pos : atomDisplacements) {
-        eigenVector.push_back(pos[0]);
-        eigenVector.push_back(pos[1]);
-        eigenVector.push_back(pos[2]);
+  // If there is vibrational data write this out too.
+  //
+  // A calculation can produce a Hessian at more than one geometry (a
+  // transition state search recomputes it every few steps), and those sets
+  // belong to different conformers. The set of conformers carrying one is the
+  // single source of truth here: gating on the *active* conformer's modes
+  // instead would drop every Hessian in the file whenever the user had
+  // stepped to a geometry that has none.
+  const auto vibrationConformers = molecule.vibrationConformers();
+  if (!vibrationConformers.empty()) {
+    // The flat keys are the active conformer's data, so a file with one
+    // Hessian is written exactly as before and older readers still find it.
+    // Fall back to the first set that exists when the conformer on screen has
+    // none, so the flat block is never empty while data exists.
+    const auto active = static_cast<size_t>(molecule.coordinate3d());
+    const bool activeHasModes = molecule.hasVibrations(active);
+    const size_t flatConformer =
+      activeHasModes ? active : vibrationConformers[0];
+
+    json vibrations = serializeVibrations(molecule, flatConformer);
+
+    // Sparse map keyed by conformer index: most conformers have no Hessian,
+    // so a dense array parallel to the coordinate sets would be mostly empty.
+    // This matches the sparse form already used for matrix properties. It is
+    // only needed when the flat block alone cannot reproduce the molecule.
+    if (vibrationConformers.size() > 1 || flatConformer != active) {
+      json perConformer = json::object();
+      for (size_t i = 0; i < vibrationConformers.size(); ++i) {
+        const size_t conformer = vibrationConformers[i];
+        // The flat block already holds this one; reuse it rather than
+        // rebuilding every eigenvector.
+        perConformer[std::to_string(conformer)] =
+          conformer == flatConformer ? vibrations
+                                     : serializeVibrations(molecule, conformer);
       }
-      eigenVectors.push_back(eigenVector);
+      vibrations["conformers"] = std::move(perConformer);
     }
-    vibrations["modes"] = modes;
-    vibrations["frequencies"] = freqs;
-    if (hasIR)
-      vibrations["intensities"] = inten;
-    if (hasRaman)
-      vibrations["ramanIntensities"] = raman;
-    // Only write displacements if every mode has them; a partial set would be
-    // read back as a mode count that disagrees with the frequencies.
-    if (hasEigenVectors)
-      vibrations["eigenVectors"] = eigenVectors;
-    root["vibrations"] = vibrations;
+
+    root["vibrations"] = std::move(vibrations);
   }
 
   auto names = LayerManager::getMoleculeInfo(&molecule);

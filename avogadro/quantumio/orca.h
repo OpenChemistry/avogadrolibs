@@ -146,8 +146,10 @@ private:
     Core::Array<double> frequencies;
     Core::Array<double> irIntensities;
     Core::Array<double> ramanIntensities;
-    Core::Array<double> vcdIntensities;
     Core::Array<Core::Array<Vector3>> displacements;
+    // Not handed to the molecule as vibrational data: VCD is stored as a
+    // spectrum, and ORCA is the only format here that reads it.
+    Core::Array<double> vcdIntensities;
   };
   std::vector<VibrationSet> m_vibrationSets;
 

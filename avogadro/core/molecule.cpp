@@ -1400,6 +1400,12 @@ const Molecule::VibrationData* Molecule::vibrationData(
   return match == m_vibrations.end() ? nullptr : &match->second;
 }
 
+void Molecule::setVibrationData(const VibrationData& data,
+                                size_t conformerIndex)
+{
+  m_vibrations[conformerIndex] = data;
+}
+
 Array<double> Molecule::vibrationFrequencies(size_t conformerIndex) const
 {
   const VibrationData* data = vibrationData(conformerIndex);
