@@ -381,6 +381,10 @@ void AutoOpt::startStop()
 
 void AutoOpt::start()
 {
+  if (m_molecule == nullptr || m_toolWidget == nullptr ||
+      m_molecule->atomCount() == 0)
+    return;
+
   // get the button from the widget
   QPushButton* startStopButton =
     m_toolWidget->findChild<QPushButton*>("startStopButton");
@@ -462,12 +466,17 @@ void AutoOpt::stop()
   cleanupWorker();
 
   // get the button from the widget
-  QPushButton* startStopButton =
-    m_toolWidget->findChild<QPushButton*>("startStopButton");
-  startStopButton->setText(tr("Start"));
-  startStopButton->setIcon(QIcon::fromTheme("go-down"));
+  if (m_toolWidget) {
+    auto* startStopButton =
+      m_toolWidget->findChild<QPushButton*>("startStopButton");
+    if (startStopButton) {
+      startStopButton->setText(tr("Start"));
+      startStopButton->setIcon(QIcon::fromTheme("go-down"));
+    }
+  }
 
-  m_molecule->endMergeMode();
+  if (m_molecule)
+    m_molecule->endMergeMode();
 
   emit drawablesChanged();
 }
@@ -495,7 +504,8 @@ void AutoOpt::optimizeStep()
   }
 
   // Skip if a previous computation is still in progress
-  if (m_computePending || !m_worker)
+  if (m_computePending || !m_worker || m_molecule == nullptr ||
+      m_molecule->atomCount() == 0)
     return;
 
   int n = m_molecule->atomCount();
@@ -550,7 +560,7 @@ void AutoOpt::onOptimizeStepDone(Eigen::VectorXd positions,
   if (positions.size() != 3 * n)
     return;
 
-  if (std::isfinite(energy) && positions.allFinite()) {
+  if (n > 0 && std::isfinite(energy) && positions.allFinite()) {
     m_deltaE = energy - m_energy;
     m_energy = energy;
 
@@ -596,7 +606,8 @@ void AutoOpt::dynamicsStep()
   }
 
   // Skip if a previous computation is still in progress
-  if (m_computePending || !m_worker)
+  if (m_computePending || !m_worker || m_molecule == nullptr ||
+      m_molecule->atomCount() == 0)
     return;
 
   int n = m_molecule->atomCount();
@@ -659,7 +670,7 @@ void AutoOpt::dynamicsStep()
   newPositions = positions + displacement;
 
   // Update molecule positions immediately (visual feedback)
-  if (newPositions.allFinite()) {
+  if (n > 0 && newPositions.allFinite()) {
     Core::Array<Vector3> newPos(n);
     Eigen::Map<Eigen::VectorXd>(newPos[0].data(), 3 * n) = newPositions;
     m_molecule->setAtomPositions3d(newPos, tr("Molecular Dynamics"));
@@ -747,7 +758,7 @@ void AutoOpt::onGradientDone(Eigen::VectorXd gradient, double energy)
 
 void AutoOpt::draw(Rendering::GroupNode& node)
 {
-  if (!m_running)
+  if (!m_running || !m_renderer)
     return; // nothing to draw
 
   QString overlayText;
@@ -800,6 +811,9 @@ void AutoOpt::draw(Rendering::GroupNode& node)
 
 QUndoCommand* AutoOpt::keyPressEvent(QKeyEvent* e)
 {
+  if (m_molecule == nullptr)
+    return nullptr;
+
   switch (e->key()) {
     case Qt::Key_Left:
     case Qt::Key_H:
@@ -890,6 +904,11 @@ QUndoCommand* AutoOpt::mouseReleaseEvent(QMouseEvent* e)
 
 QUndoCommand* AutoOpt::mouseMoveEvent(QMouseEvent* e)
 {
+  if (m_molecule == nullptr || m_renderer == nullptr) {
+    e->ignore();
+    return nullptr;
+  }
+
   // if we're dragging through empty space, just return and ignore
   // (e.g., fall back to the navigate tool)
   const Core::Molecule* mol = &m_molecule->molecule();
@@ -904,7 +923,8 @@ QUndoCommand* AutoOpt::mouseMoveEvent(QMouseEvent* e)
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
 
   if (mol->isSelectionEmpty() && m_object.type == Rendering::AtomType &&
-      m_object.molecule == &m_molecule->molecule()) {
+      m_object.molecule == &m_molecule->molecule() &&
+      m_object.index < m_molecule->atomCount()) {
     // translate single atom position
     RWAtom atom = m_molecule->atom(m_object.index);
     Vector3f oldPos(atom.position3d().cast<float>());

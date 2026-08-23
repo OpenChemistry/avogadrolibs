@@ -13,7 +13,33 @@
 
 using namespace Avogadro::Calc;
 using namespace Avogadro::Core;
+using Avogadro::MatrixX;
 using Avogadro::Vector3;
+
+class MismatchedChargeModel : public ChargeModel
+{
+public:
+  ChargeModel* newInstance() const override
+  {
+    return new MismatchedChargeModel;
+  }
+  std::string identifier() const override { return "mismatched"; }
+  std::string name() const override { return "Mismatched"; }
+  Molecule::ElementMask elements() const override
+  {
+    Molecule::ElementMask mask;
+    mask.set();
+    return mask;
+  }
+  MatrixX partialCharges(Molecule& mol) const override
+  {
+    return MatrixX::Ones(static_cast<Eigen::Index>(mol.atomCount()) + 1, 1);
+  }
+  MatrixX partialCharges(const Molecule& mol) const override
+  {
+    return MatrixX::Ones(static_cast<Eigen::Index>(mol.atomCount()) + 1, 1);
+  }
+};
 
 class ChargeManagerTest : public testing::Test
 {
@@ -39,4 +65,15 @@ protected:
   }
 };
 
-// TODO Add more tests
+TEST_F(ChargeManagerTest, RemovingUnknownModelFailsSafely)
+{
+  EXPECT_FALSE(m_chargeManager->removeModel("not_registered"));
+}
+
+TEST_F(ChargeManagerTest, MismatchedPartialChargesAreBoundedByAtomCount)
+{
+  MismatchedChargeModel model;
+
+  EXPECT_TRUE(model.dipoleMoment(m_testMolecule).allFinite());
+  EXPECT_TRUE(model.potential(m_testMolecule, Vector3(2.0, 0.0, 0.0)) > 0.0);
+}

@@ -108,6 +108,17 @@ TEST_F(EnergyManagerTest, RegisterAndUnregisterModel)
   EXPECT_TRUE(ids.find("test_model") == ids.end());
 }
 
+TEST_F(EnergyManagerTest, RemovingUnknownModelDoesNotRemoveRegisteredModel)
+{
+  auto* model = new MockEnergyCalculator("retained", "Retained Model");
+  ASSERT_TRUE(manager->addModel(model));
+
+  EXPECT_FALSE(manager->removeModel("not_registered"));
+  auto* retrieved = manager->model("retained");
+  ASSERT_NE(retrieved, nullptr);
+  delete retrieved;
+}
+
 TEST_F(EnergyManagerTest, AddAndRemoveModel)
 {
   auto* model = new MockEnergyCalculator("add_test", "Add Test");

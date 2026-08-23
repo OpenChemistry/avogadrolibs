@@ -98,7 +98,7 @@ bool OBMMEnergy::acceptsRadicals() const
 
 QByteArray OBMMEnergy::writeAndRead(const QByteArray& input)
 {
-  if (m_process == nullptr)
+  if (m_process == nullptr || m_process->state() != QProcess::Running)
     return QByteArray();
 
   QByteArray result, line;
@@ -229,7 +229,9 @@ void OBMMEnergy::setMolecule(Core::Molecule* mol)
 
 Real OBMMEnergy::value(const Eigen::VectorXd& x)
 {
-  if (m_molecule == nullptr || m_process == nullptr)
+  if (m_molecule == nullptr || m_process == nullptr ||
+      m_process->state() != QProcess::Running ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return 0.0; // nothing to do
 
   QByteArray input, result;
@@ -270,7 +272,13 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
 
 void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  if (m_molecule == nullptr || m_process == nullptr)
+  if (grad.size() != x.size())
+    grad.resize(x.size());
+  grad.setZero();
+
+  if (m_molecule == nullptr || m_process == nullptr ||
+      m_process->state() != QProcess::Running ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return;
 
   // write the new coordinates and read the energy
@@ -291,7 +299,8 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   // go through lines in result until we see "gradient "
   QStringList lines = QString(result).remove('\r').split('\n');
   bool readingGradient = false;
-  unsigned int i = 0;
+  const Eigen::Index atomCount = m_molecule->atomCount();
+  Eigen::Index i = 0;
   for (auto line : lines) {
     if (line.contains("gradient")) {
       readingGradient = true;
@@ -300,13 +309,28 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     if (readingGradient) {
       QStringList items = line.split(" ", Qt::SkipEmptyParts);
       if (items.size() == 3) {
-        grad[3 * i] = items[0].toDouble();
-        grad[3 * i + 1] = items[1].toDouble();
-        grad[3 * i + 2] = items[2].toDouble();
+        bool xOk = false;
+        bool yOk = false;
+        bool zOk = false;
+        const double gx = items[0].toDouble(&xOk);
+        const double gy = items[1].toDouble(&yOk);
+        const double gz = items[2].toDouble(&zOk);
+        if (!xOk || !yOk || !zOk)
+          continue;
+        if (i >= atomCount) {
+          appendError("OBMM returned more gradient rows than atoms.");
+          break;
+        }
+        grad[3 * i] = gx;
+        grad[3 * i + 1] = gy;
+        grad[3 * i + 2] = gz;
         ++i;
       }
     }
   }
+
+  if (i != atomCount)
+    appendError("OBMM returned an incomplete gradient.");
 
   grad *= -1; // OpenBabel outputs forces, not grads
 

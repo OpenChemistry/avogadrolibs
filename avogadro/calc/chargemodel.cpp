@@ -9,6 +9,7 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
 
+#include <algorithm>
 #include <cstddef>
 #include <iostream>
 
@@ -35,11 +36,14 @@ Vector3 ChargeModel::dipoleMoment(const Molecule& mol) const
   const Array<Vector3> positions = mol.atomPositions3d();
 
   Vector3 dipole(0.0, 0.0, 0.0);
-  if (static_cast<std::size_t>(charges.rows()) != positions.size())
+  if (charges.cols() < 1 ||
+      static_cast<std::size_t>(charges.rows()) != positions.size())
     std::cout << "Error: charges " << charges.rows() << " != positions "
               << positions.size() << std::endl;
 
-  for (Eigen::Index i = 0; i < charges.size(); ++i)
+  const Eigen::Index count =
+    std::min(charges.rows(), static_cast<Eigen::Index>(positions.size()));
+  for (Eigen::Index i = 0; i < count && charges.cols() > 0; ++i)
     dipole += charges(i, 0) * positions[i];
 
   dipole *= 4.80320471257; // convert to Debye from electron-Angstrom
@@ -61,7 +65,9 @@ double ChargeModel::potential(Molecule& mol, const Vector3& point) const
   // note this is usually multithreaded by the caller
   // but more efficient methods can be implemented
   double potential = 0.0;
-  for (unsigned int i = 0; i < charges.size(); ++i) {
+  const Eigen::Index count =
+    std::min(charges.rows(), static_cast<Eigen::Index>(positions.size()));
+  for (Eigen::Index i = 0; i < count && charges.cols() > 0; ++i) {
     double distance = (positions[i] - point).norm();
     if (distance > 0.01) {
       // drop small distances to avoid overflow

@@ -15,6 +15,7 @@
 #include <Eigen/Core>
 
 #include <QtCore/QElapsedTimer>
+#include <QtCore/QList>
 #include <QtCore/QMultiHash>
 #include <QtCore/QMultiMap>
 #include <QtCore/QStringList>
@@ -155,6 +156,10 @@ private:
   // worker thread state
   QThread* m_workerThread = nullptr;
   QtGui::CalcWorker* m_worker = nullptr;
+  // Threads that did not stop within cleanupWorker()'s bounded wait. They
+  // must remain alive until their work finishes; deleting a running QThread
+  // aborts the process.
+  QList<QThread*> m_retiredThreads;
   QProgressDialog* m_progressDialog = nullptr;
   bool m_optimizing = false;
   // True while a batch energy/forces run is in flight.
