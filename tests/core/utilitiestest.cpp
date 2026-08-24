@@ -58,8 +58,15 @@ TEST(UtilitiesTest, lexicalCastOutOfRange)
             std::numeric_limits<double>::lowest());
 
   // Values that are not numbers still fail, including the special literals.
+  // Whether operator>> accepts these depends on the standard library, so keep
+  // every spelling strtod would take covered on both libstdc++ and libc++.
   EXPECT_EQ(lexicalCast<double>("five"), std::nullopt);
   EXPECT_EQ(lexicalCast<double>("NaN"), std::nullopt);
+  EXPECT_EQ(lexicalCast<double>("nan"), std::nullopt);
+  EXPECT_EQ(lexicalCast<double>("-nan"), std::nullopt);
+  EXPECT_EQ(lexicalCast<double>("inf"), std::nullopt);
+  EXPECT_EQ(lexicalCast<double>("-inf"), std::nullopt);
+  EXPECT_EQ(lexicalCast<double>("infinity"), std::nullopt);
   EXPECT_EQ(lexicalCast<double>(""), std::nullopt);
 }
 

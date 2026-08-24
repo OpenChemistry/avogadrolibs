@@ -279,29 +279,25 @@ std::string sanitizeUtf8(const std::string& s)
 
 bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 {
-  return deserialize(file, molecule, true);
+  return deserialize(file, molecule);
 }
 
-bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
-                              bool isJson)
+bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
 {
   json jsonRoot;
 
-  // could throw parse errors
   try {
-    if (isJson)
-      jsonRoot = json::parse(file, nullptr, false);
-    else // msgpack
-      jsonRoot = json::from_msgpack(file);
-  } catch (json::parse_error& e) {
-    appendError("Error reading CJSON file: " + string(e.what()));
-    return false;
-  } catch (json::type_error& e) {
+    // allow_exceptions = false: a malformed input yields a discarded value,
+    // handled below, rather than an exception.
+    jsonRoot = json::parse(file, nullptr, false);
+  } catch (const json::exception& e) {
+    // The base class covers all five nlohmann error types, so a number the
+    // parser cannot represent (out_of_range) cannot escape and terminate.
     appendError("Error reading CJSON file: " + string(e.what()));
     return false;
   }
 
-  if (jsonRoot.is_discarded() && isJson) {
+  if (jsonRoot.is_discarded()) {
     // Initial parse failed - try sanitizing UTF-8 and re-parsing
     file.clear();
     file.seekg(0);
@@ -1244,11 +1240,10 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
 
 bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 {
-  return serialize(file, molecule, true);
+  return serialize(file, molecule);
 }
 
-bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
-                            bool isJson)
+bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
 {
   bool writeProperties = true;
   boolOption("properties", writeProperties);
@@ -1277,8 +1272,12 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
 
     // check for "inputParameters" and handle it separately
     if (element.first == "inputParameters") {
-      json inputParameters = json::parse(element.second.toString());
-      root["inputParameters"] = inputParameters;
+      // Non-throwing overload: this value came from somewhere else and is not
+      // guaranteed to be JSON, and writing a molecule must not terminate.
+      json inputParameters =
+        json::parse(element.second.toString(), nullptr, false);
+      if (!inputParameters.is_discarded())
+        root["inputParameters"] = inputParameters;
       continue;
     }
 
@@ -1950,17 +1949,12 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
   }
   root["layer"] = layer;
 
-  if (isJson)
 #ifndef NDEBUG
-    // if debugging, pretty print
-    file << std::setw(2) << root;
+  // if debugging, pretty print
+  file << std::setw(2) << root;
 #else
-    // release mode
-    file << root;
+  file << root;
 #endif
-  else { // write msgpack
-    json::to_msgpack(root, file);
-  }
 
   return true;
 }

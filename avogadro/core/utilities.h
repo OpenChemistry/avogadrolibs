@@ -163,7 +163,12 @@ inline std::optional<double> lexicalCast(const std::string& inputString)
   double value;
   std::istringstream stream(inputString);
   stream >> value;
-  if (!stream.fail())
+  // Whether the extractor accepts the literals "nan" and "inf" varies between
+  // standard library implementations and versions -- libstdc++ rejects them,
+  // and libc++ accepted them until recently -- so a non-finite result from it
+  // cannot be trusted. Fall through to strtod, which tells a genuine
+  // out-of-range exponent (ERANGE, clamped below) apart from a literal.
+  if (!stream.fail() && std::isfinite(value))
     return value;
 
   const char* first = inputString.c_str();

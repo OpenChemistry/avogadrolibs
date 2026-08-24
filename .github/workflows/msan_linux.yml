@@ -1,0 +1,210 @@
+name: Linux Memory Sanitizer
+
+# MemorySanitizer finds reads of uninitialized memory, which the other
+# sanitizers do not: ASan sees bad addresses, UBSan sees bad operations, but
+# neither notices a parser that leaves a member unset on a short record and
+# then uses it. That is exactly the failure mode of the hand-rolled column and
+# field parsing in io/ and quantumio/, so it is worth a job of its own.
+#
+# This cannot be another entry in build_linux.yml's matrix, for two reasons:
+#
+#   1. GCC has no MemorySanitizer at all -- it is a Clang-only sanitizer --
+#      and that matrix builds with GCC.
+#   2. MSan reports a false positive for every byte that passes through
+#      uninstrumented code, so the *entire* linked stack has to be built with
+#      it. Instrumenting Qt is not practical, so this job builds libc++ and
+#      GoogleTest from source and configures avogadrolibs with USE_QT=OFF.
+#
+# What that leaves is core, calc, io, quantumio and command -- which is where
+# the uninitialized reads would be anyway.
+
+on:
+  pull_request:
+  push:
+    branches:
+    - master
+  schedule:
+  - cron: '0 4 * * *'
+  workflow_dispatch:
+
+env:
+  # The libc++ runtimes have to match the compiler that instruments them, so
+  # bump LLVM_VERSION and LLVM_TAG together.
+  LLVM_VERSION: 18
+  LLVM_TAG: llvmorg-18.1.8
+  # Matches the version the superbuild pins in cmake/projects.cmake.
+  GTEST_TAG: v1.17.0
+  AVOGADRO_DATA_ROOT: ${{ github.workspace }}/openchemistry/avogadrodata
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  msan:
+    name: Ubuntu Memory Sanitizer
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev \
+          clang-${LLVM_VERSION} llvm-${LLVM_VERSION}
+
+    - name: Set up MSan flags
+      shell: bash
+      run: |
+        prefix="${{ runner.workspace }}/msan-prefix"
+        {
+          echo "MSAN_PREFIX=${prefix}"
+          echo "CC=clang-${LLVM_VERSION}"
+          echo "CXX=clang++-${LLVM_VERSION}"
+        } >> "${GITHUB_ENV}"
+
+        # -O2 rather than -O1: MSan's origin tracking is expensive enough that
+        # the test suite needs the optimizer to finish in reasonable time.
+        # These mirror CMAKE_CXX_FLAGS_MSAN in cmake/CompilerFlags.cmake, which
+        # is only defined for GCC and so cannot be used here.
+        san="-fsanitize=memory -fsanitize-memory-track-origins=2"
+        san="${san} -fno-omit-frame-pointer -fno-optimize-sibling-calls -g -O2"
+
+        # Eigen's aligned SIMD loads deliberately read whole vectors, including
+        # lanes past the initialized data, which MSan reports. Scalar code is
+        # slower but keeps the signal clean.
+        eigen="-DEIGEN_DONT_VECTORIZE"
+
+        cxx_only="-stdlib=libc++ -nostdinc++ -isystem ${prefix}/include/c++/v1"
+        link="-fsanitize=memory -stdlib=libc++ -L${prefix}/lib"
+        link="${link} -Wl,-rpath,${prefix}/lib -lc++abi"
+
+        {
+          echo "MSAN_CFLAGS=${san} ${eigen}"
+          echo "MSAN_CXXFLAGS=${san} ${eigen} ${cxx_only}"
+          echo "MSAN_LDFLAGS=${link}"
+        } >> "${GITHUB_ENV}"
+
+    # Instrumented libc++ is deterministic for a given LLVM tag, so an exact
+    # cache hit skips the ~15 minute build entirely.
+    - name: Cache instrumented libc++
+      id: libcxx-cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.workspace }}/msan-prefix
+        key: msan-libcxx-${{ runner.os }}-${{ env.LLVM_TAG }}-clang${{ env.LLVM_VERSION }}
+
+    - name: Build instrumented libc++
+      if: steps.libcxx-cache.outputs.cache-hit != 'true'
+      shell: bash
+      working-directory: ${{ runner.workspace }}
+      run: |
+        set -euo pipefail
+        # Only the runtimes are needed, so avoid cloning all of LLVM's history.
+        git clone --depth 1 --branch "${LLVM_TAG}" \
+          https://github.com/llvm/llvm-project.git llvm-project
+
+        cmake -G Ninja -S llvm-project/runtimes -B build-libcxx \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_C_COMPILER="${CC}" \
+          -DCMAKE_CXX_COMPILER="${CXX}" \
+          -DCMAKE_INSTALL_PREFIX="${MSAN_PREFIX}" \
+          -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" \
+          -DLLVM_USE_SANITIZER=MemoryWithOrigins
+
+        ninja -C build-libcxx cxx cxxabi unwind
+        ninja -C build-libcxx install-cxx install-cxxabi install-unwind
+
+    - name: Build instrumented GoogleTest
+      shell: bash
+      working-directory: ${{ runner.workspace }}
+      run: |
+        set -euo pipefail
+        # A system libgtest would be uninstrumented, and every string it hands
+        # back would be reported as uninitialized.
+        git clone --depth 1 --branch "${GTEST_TAG}" \
+          https://github.com/google/googletest.git googletest
+
+        cmake -G Ninja -S googletest -B build-gtest \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_C_COMPILER="${CC}" \
+          -DCMAKE_CXX_COMPILER="${CXX}" \
+          -DCMAKE_C_FLAGS="${MSAN_CFLAGS}" \
+          -DCMAKE_CXX_FLAGS="${MSAN_CXXFLAGS}" \
+          -DCMAKE_EXE_LINKER_FLAGS="${MSAN_LDFLAGS}" \
+          -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/gtest-prefix"
+
+        cmake --build build-gtest
+        cmake --install build-gtest
+
+    - name: Configure
+      shell: bash
+      working-directory: ${{ runner.workspace }}
+      run: |
+        set -euo pipefail
+        # Standalone avogadrolibs rather than the superbuild: the superbuild
+        # would pull in spglib, glew and the rest, none of which would be
+        # instrumented, and none of which core/io/quantumio need.
+        cmake -G Ninja -S "$GITHUB_WORKSPACE/openchemistry/avogadrolibs" -B build-msan \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DCMAKE_C_COMPILER="${CC}" \
+          -DCMAKE_CXX_COMPILER="${CXX}" \
+          -DCMAKE_C_FLAGS="${MSAN_CFLAGS}" \
+          -DCMAKE_CXX_FLAGS="${MSAN_CXXFLAGS}" \
+          -DCMAKE_EXE_LINKER_FLAGS="${MSAN_LDFLAGS}" \
+          -DCMAKE_SHARED_LINKER_FLAGS="${MSAN_LDFLAGS}" \
+          -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/gtest-prefix" \
+          -DENABLE_TESTING=ON \
+          -DUSE_QT=OFF \
+          -DUSE_OPENGL=OFF \
+          -DUSE_SPGLIB=OFF \
+          -DUSE_LIBARCHIVE=OFF \
+          -DUSE_LIBMSYM=OFF \
+          -DUSE_PLOTTER=OFF \
+          -DUSE_HDF5=OFF \
+          -DAVOGADRO_DATA_ROOT="${AVOGADRO_DATA_ROOT}"
+
+    - name: Build
+      shell: bash
+      working-directory: ${{ runner.workspace }}
+      run: cmake --build build-msan
+
+    - name: Run tests
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build-msan
+      run: |
+        set -uo pipefail
+        export MSAN_SYMBOLIZER_PATH="$(command -v llvm-symbolizer-${LLVM_VERSION})"
+        export MSAN_OPTIONS="halt_on_error=1:print_stats=1"
+        export CTEST_OUTPUT_ON_FAILURE=ON
+
+        # Headroom, not a fix for anything specific: origin tracking stores a
+        # shadow and an origin word per value, so frames here are several times
+        # larger than in an ordinary build. Note this also means genuine
+        # stack-exhaustion bugs will not surface in this job -- hunt those in
+        # the ASan fuzz job, where frame sizes are realistic.
+        #
+        # If a test dies with "stack-overflow" at the first point it throws a
+        # C++ exception, suspect the unwinder rather than the code: this job
+        # links the libc++abi and libunwind it built above, and if the link
+        # still resolves _Unwind_* to the system, uninstrumented libgcc_s, the
+        # two disagree. Try adding -rtlib=compiler-rt --unwindlib=libunwind to
+        # MSAN_LDFLAGS before going looking for a bug in avogadrolibs.
+        ulimit -s 65536
+
+        ctest -j "$(nproc)"
+
+    - name: Upload test logs
+      if: ${{ always() }}
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: msan-test-logs
+        path: ${{ runner.workspace }}/build-msan/Testing/Temporary/
+        if-no-files-found: ignore
