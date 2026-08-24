@@ -185,16 +185,18 @@ jobs:
         export MSAN_OPTIONS="halt_on_error=1:print_stats=1"
         export CTEST_OUTPUT_ON_FAILURE=ON
 
-        # Origin tracking stores a shadow *and* an origin word for every value,
-        # which inflates stack frames several-fold. Template-heavy code such as
-        # nlohmann_json's msgpack reader then overruns the default 8MB stack on
-        # input that needs well under 100KB uninstrumented, which surfaces as a
-        # stack-overflow that has nothing to do with the code under test. Give
-        # the instrumented build the headroom its frames actually need.
+        # Headroom, not a fix for anything specific: origin tracking stores a
+        # shadow and an origin word per value, so frames here are several times
+        # larger than in an ordinary build. Note this also means genuine
+        # stack-exhaustion bugs will not surface in this job -- hunt those in
+        # the ASan fuzz job, where frame sizes are realistic.
         #
-        # This does mean genuine stack-exhaustion bugs -- deeply nested CJSON,
-        # say -- will not show up here. Hunt those in the ASan fuzz job, where
-        # frame sizes are realistic and the depth threshold means something.
+        # If a test dies with "stack-overflow" at the first point it throws a
+        # C++ exception, suspect the unwinder rather than the code: this job
+        # links the libc++abi and libunwind it built above, and if the link
+        # still resolves _Unwind_* to the system, uninstrumented libgcc_s, the
+        # two disagree. Try adding -rtlib=compiler-rt --unwindlib=libunwind to
+        # MSAN_LDFLAGS before going looking for a bug in avogadrolibs.
         ulimit -s 65536
 
         ctest -j "$(nproc)"
