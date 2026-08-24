@@ -184,6 +184,19 @@ jobs:
         export MSAN_SYMBOLIZER_PATH="$(command -v llvm-symbolizer-${LLVM_VERSION})"
         export MSAN_OPTIONS="halt_on_error=1:print_stats=1"
         export CTEST_OUTPUT_ON_FAILURE=ON
+
+        # Origin tracking stores a shadow *and* an origin word for every value,
+        # which inflates stack frames several-fold. Template-heavy code such as
+        # nlohmann_json's msgpack reader then overruns the default 8MB stack on
+        # input that needs well under 100KB uninstrumented, which surfaces as a
+        # stack-overflow that has nothing to do with the code under test. Give
+        # the instrumented build the headroom its frames actually need.
+        #
+        # This does mean genuine stack-exhaustion bugs -- deeply nested CJSON,
+        # say -- will not show up here. Hunt those in the ASan fuzz job, where
+        # frame sizes are realistic and the depth threshold means something.
+        ulimit -s 65536
+
         ctest -j "$(nproc)"
 
     - name: Upload test logs
