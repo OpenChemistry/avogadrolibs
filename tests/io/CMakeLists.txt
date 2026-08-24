@@ -2,12 +2,14 @@
 set(tests
   Cjson
   Cml
+  Dcd
   FileFormatManager
   Lammps
   Mdl
   Pdb
   Smiles
   SmilesParser
+  Trr
   Turbomole
   Vasp
   Xyz

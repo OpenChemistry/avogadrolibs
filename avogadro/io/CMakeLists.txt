@@ -21,6 +21,7 @@ avogadro_headers(IO
 )
 
 target_sources(IO PRIVATE
+  binaryblock_p.h
   cjsonformat.cpp
   cmlformat.cpp
   dcdformat.cpp
