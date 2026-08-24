@@ -293,10 +293,10 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       jsonRoot = json::parse(file, nullptr, false);
     else // msgpack
       jsonRoot = json::from_msgpack(file);
-  } catch (json::parse_error& e) {
-    appendError("Error reading CJSON file: " + string(e.what()));
-    return false;
-  } catch (json::type_error& e) {
+  } catch (const json::exception& e) {
+    // The base class covers all five nlohmann error types. parse_error and
+    // type_error alone let out_of_range through, which from_msgpack throws for
+    // a number it cannot represent.
     appendError("Error reading CJSON file: " + string(e.what()));
     return false;
   }
@@ -1277,8 +1277,12 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
 
     // check for "inputParameters" and handle it separately
     if (element.first == "inputParameters") {
-      json inputParameters = json::parse(element.second.toString());
-      root["inputParameters"] = inputParameters;
+      // Non-throwing overload: this value came from somewhere else and is not
+      // guaranteed to be JSON, and writing a molecule must not terminate.
+      json inputParameters =
+        json::parse(element.second.toString(), nullptr, false);
+      if (!inputParameters.is_discarded())
+        root["inputParameters"] = inputParameters;
       continue;
     }
 

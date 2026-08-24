@@ -38,7 +38,10 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   json root;
   try {
     file >> root;
-  } catch (json::parse_error& e) {
+  } catch (const json::exception& e) {
+    // Every nlohmann error type, not just parse_error: a number the parser
+    // cannot represent throws out_of_range, which would otherwise escape and
+    // terminate.
     appendError("Error parsing JSON: " + string(e.what()));
     return false;
   }
