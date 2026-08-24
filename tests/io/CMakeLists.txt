@@ -58,13 +58,20 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
-  # todo - make this into a loop for multiple formats
+  # Each name here is a *file extension* that FileFormatManager maps to a
+  # format supporting Read | String -- fuzztest.cpp passes it straight to
+  # readString(). Adding an extension no format claims for reading silently
+  # produces a target that does nothing, so check supportedOperations() first.
+  # The lookup is case-sensitive, hence POSCAR and OUTCAR.
   set(fuzz
     cjson
     cml
     sdf
     pdb
     xyz
+    tmol
+    POSCAR
+    OUTCAR
   )
   foreach(fuzzName ${fuzz})
     add_executable(fuzz_${fuzzName} fuzztest.cpp)
@@ -77,4 +84,15 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
       target_link_libraries(fuzz_${fuzzName} PRIVATE Avogadro::IO)
     endif()
   endforeach()
+
+  # SmilesFormat is write-only, so the SMILES parser needs its own harness
+  # rather than an entry in the list above.
+  add_executable(fuzz_smiles fuzz-smilesparser.cpp)
+  if(DEFINED ENV{LIB_FUZZING_ENGINE})
+    target_link_libraries(fuzz_smiles PRIVATE Avogadro::IO $ENV{LIB_FUZZING_ENGINE})
+  else()
+    target_compile_options(fuzz_smiles PRIVATE -g -fsanitize=fuzzer)
+    target_link_options(fuzz_smiles PRIVATE -fsanitize=fuzzer)
+    target_link_libraries(fuzz_smiles PRIVATE Avogadro::IO)
+  endif()
 endif()

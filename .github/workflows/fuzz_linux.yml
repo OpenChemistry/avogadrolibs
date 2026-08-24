@@ -48,12 +48,49 @@ jobs:
         cache: true
         version: ${{ env.QT_VERSION }}
 
+    # Coverage-guided fuzzing is cumulative: units the fuzzer discovers are
+    # only useful if they survive to the next run. Restore last night's
+    # corpus, fuzz on top of it, then save the merged result below.
+    - name: Restore fuzz corpus
+      id: corpus-restore
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.workspace }}/fuzz-corpus
+        key: fuzz-corpus-${{ github.run_id }}
+        restore-keys: |
+          fuzz-corpus-
+
     - name: Configure
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
-        CFLAGS="-O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined" \
-        CXXFLAGS="-O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined" \
+
+        # Hardening flags, on top of the sanitizers. _GLIBCXX_ASSERTIONS is the
+        # important one here: Core::Array::operator[] forwards to std::vector,
+        # so an index past the end but still inside the allocation is invisible
+        # to ASan and becomes a hard failure only with the libstdc++ assertions
+        # turned on.
+        #
+        # Note that glibc disables _FORTIFY_SOURCE when __SANITIZE_ADDRESS__ is
+        # defined, so it is a no-op in this job -- it is set anyway so the flag
+        # list stays the one we want everywhere, and starts working if a
+        # non-ASan fuzz configuration is ever added.
+        HARDENING="-D_GLIBCXX_ASSERTIONS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3"
+        HARDENING="$HARDENING -fstack-clash-protection -fstack-protector-strong"
+
+        # -fhardened is GCC 14+ only; clang rejects it outright. Probe rather
+        # than assume, so this keeps working if the job ever changes compiler.
+        if echo 'int main(){return 0;}' | clang++ -fhardened -x c++ - -o /dev/null 2>/dev/null; then
+          HARDENING="$HARDENING -fhardened"
+          echo "-fhardened is supported, enabling it"
+        else
+          echo "-fhardened is not supported by this compiler, skipping it"
+        fi
+
+        SAN="-O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined"
+
+        CFLAGS="$SAN $HARDENING" \
+        CXXFLAGS="$SAN $HARDENING" \
         LDFLAGS="-fsanitize=address,undefined" \
         CC=clang CXX=clang++ cmake -G Ninja $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DENABLE_FUZZ=ON -DUSE_SYSTEM_EIGEN=TRUE
       shell: bash
@@ -86,12 +123,14 @@ jobs:
         export UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=1"
 
         # One line per suite:
-        #   suite | binary prefix | corpus dir under $AVOGADRO_DATA_ROOT/data | targets
+        #   suite | binary prefix | seed dir under $AVOGADRO_DATA_ROOT/data | targets
+        # A target is either "name" -- seeds come from <seed dir>/name -- or
+        # "name=subdir", when the target name and the data directory differ.
         # To fuzz a new class, add its name here and to the matching list in
         # tests/<suite>/CMakeLists.txt.
         suites=(
-          "io|fuzz_||cjson cml sdf pdb xyz"
-          "quantumio|fuzz_||cube fchk molden orca qcschema"
+          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles"
+          "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap"
           "qtgui|fuzz_qtgui_|qtgui|rwmolecule generichighlighter jsonwidget interfacescript-json"
         )
@@ -114,43 +153,57 @@ jobs:
         }
 
         artifact_root="${PWD}/fuzz-artifacts"
+        corpus_root="${{ runner.workspace }}/fuzz-corpus"
         failures=0
 
         {
           echo "## Fuzz results (${FUZZ_SECONDS}s per target)"
           echo
-          echo "| Target | Corpus | Result |"
-          echo "| --- | --- | --- |"
+          echo "| Target | Seeds | Corpus | Result |"
+          echo "| --- | --- | --- | --- |"
         } >> "${GITHUB_STEP_SUMMARY}"
 
         for spec in "${suites[@]}"; do
           IFS='|' read -r suite prefix corpus_sub targets <<< "${spec}"
 
-          for target in ${targets}; do
+          for entry in ${targets}; do
+            target="${entry%%=*}"
+            seed_name="${entry##*=}"
             name="${suite}/${target}"
             binary="./bin/${prefix}${target}"
             artifact_dir="${artifact_root}/${suite}/${target}"
-            mkdir -p "${artifact_dir}"
+            corpus_dir="${corpus_root}/${suite}/${target}"
+            mkdir -p "${artifact_dir}" "${corpus_dir}"
 
             if [ ! -x "${binary}" ]; then
               echo "::error::Fuzz binary ${binary} for ${name} was not built"
-              echo "| ${name} | - | not built |" >> "${GITHUB_STEP_SUMMARY}"
+              echo "| ${name} | - | - | not built |" >> "${GITHUB_STEP_SUMMARY}"
               failures=1
               continue
             fi
 
-            corpus_dir="${AVOGADRO_DATA_ROOT}/data${corpus_sub:+/${corpus_sub}}/${target}"
-            corpus_args=()
-            corpus_label="none"
-            if [ -d "${corpus_dir}" ]; then
-              corpus_args=("${corpus_dir}")
-              corpus_label="seeded"
+            # Seeds live in the avogadrodata checkout. libFuzzer does not
+            # recurse into subdirectories, so flatten the tree into one dir.
+            seed_root="${AVOGADRO_DATA_ROOT}/data${corpus_sub:+/${corpus_sub}}/${seed_name}"
+            seed_dir="${RUNNER_TEMP}/fuzz-seeds/${suite}/${target}"
+            seed_args=()
+            seed_count=0
+            if [ -d "${seed_root}" ]; then
+              rm -rf "${seed_dir}" && mkdir -p "${seed_dir}"
+              while IFS= read -r -d '' f; do
+                cp "${f}" "${seed_dir}/$(sha1sum "${f}" | cut -c1-40)"
+              done < <(find "${seed_root}" -type f ! -name 'README*' -print0)
+              seed_count=$(find "${seed_dir}" -type f | wc -l)
+              [ "${seed_count}" -gt 0 ] && seed_args=("${seed_dir}")
             fi
 
+            # libFuzzer writes newly discovered units to the *first* corpus
+            # directory only, so the restored corpus grows and the seed
+            # directory stays untouched.
             echo "::group::Fuzzing ${name}"
             if "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=10 \
                  -artifact_prefix="${artifact_dir}/" \
-                 ${corpus_args[@]+"${corpus_args[@]}"} 2>&1 \
+                 "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
                  | tee "${artifact_dir}/run.log"; then
               result="pass"
             elif is_known_issue "${name}"; then
@@ -163,11 +216,50 @@ jobs:
             fi
             echo "::endgroup::"
 
-            echo "| ${name} | ${corpus_label} | ${result} |" >> "${GITHUB_STEP_SUMMARY}"
+            # Minimize on the way out: rebuild the corpus as the smallest set
+            # of units covering everything the corpus and seeds reach. Without
+            # this the cached corpus grows without bound. The timeout is above
+            # the fuzzing one so a unit that was fast enough to keep is not
+            # dropped here.
+            #
+            # A merge only fails if replaying a stored unit crashes, times out
+            # or runs out of memory, which means the cached corpus itself has
+            # become poison: keeping it would wedge this target on every future
+            # run, since libFuzzer replays the whole corpus at startup. The
+            # corpus is a cache and the seeds are the source of truth, so throw
+            # it away and rebuild from the seeds next time.
+            merged_dir="${RUNNER_TEMP}/fuzz-merge/${suite}/${target}"
+            rm -rf "${merged_dir}" && mkdir -p "${merged_dir}"
+            if "${binary}" -merge=1 -timeout=25 \
+                 "${merged_dir}" "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} \
+                 > "${artifact_dir}/merge.log" 2>&1 \
+               && [ -n "$(ls -A "${merged_dir}")" ]; then
+              rm -rf "${corpus_dir}"
+              mv "${merged_dir}" "${corpus_dir}"
+            else
+              echo "::warning::${name} corpus merge failed, resetting the corpus"
+              rm -rf "${merged_dir}" "${corpus_dir}"
+              mkdir -p "${corpus_dir}"
+            fi
+            corpus_count=$(find "${corpus_dir}" -type f | wc -l)
+
+            echo "| ${name} | ${seed_count} | ${corpus_count} | ${result} |" >> "${GITHUB_STEP_SUMMARY}"
           done
         done
 
+        du -sh "${corpus_root}" || true
+
         exit "${failures}"
+
+    # Saved even when a target crashed: the corpus built up to that point is
+    # still worth keeping, and a rolling key means the next run restores the
+    # most recent entry.
+    - name: Save fuzz corpus
+      if: ${{ always() && github.event_name != 'pull_request' }}
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.workspace }}/fuzz-corpus
+        key: fuzz-corpus-${{ github.run_id }}
 
     - name: Upload fuzz crash artifacts
       if: ${{ always() }}
