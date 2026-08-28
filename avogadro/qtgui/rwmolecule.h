@@ -612,6 +612,19 @@ public:
   void buildSupercell(unsigned int a, unsigned int b, unsigned int c);
 
   /**
+   * Build a supercell spanning a fractional range along each lattice vector,
+   * e.g. -0.5 to 0.5, or 0.0 to 1.5. Changes are emitted.
+   * @param rangeMin The lower fractional limit along a, b and c.
+   * @param rangeMax The upper fractional limit along a, b and c.
+   * @param options If CrystalTools::PerceivePeriodicBonds is set, the copies
+   *                are bonded to each other across their shared boundaries.
+   * @sa Core::CrystalTools::buildSupercell
+   */
+  void buildSupercell(
+    const Vector3& rangeMin, const Vector3& rangeMax,
+    Core::CrystalTools::Options options = Core::CrystalTools::None);
+
+  /**
    * Perform a Niggli reduction on the cell. Changes are emitted.
    */
   void niggliReduceCell();

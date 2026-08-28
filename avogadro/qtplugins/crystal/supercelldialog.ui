@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>324</width>
-    <height>188</height>
+    <width>400</width>
+    <height>270</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,45 +22,191 @@
         <string>Super Cell Options</string>
        </property>
        <layout class="QGridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="aRepeatLabel">
+        <item row="0" column="1">
+         <widget class="QLabel" name="minLabel">
           <property name="text">
-           <string>A repeat:</string>
+           <string>Minimum</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="aCellSpinBox">
-          <property name="minimum">
-           <number>1</number>
+        <item row="0" column="2">
+         <widget class="QLabel" name="maxLabel">
+          <property name="text">
+           <string>Maximum</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="bRepeatLabel">
+         <widget class="QLabel" name="aRepeatLabel">
           <property name="text">
-           <string>B repeat:</string>
+           <string>A range:</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="bCellSpinBox">
+         <widget class="QDoubleSpinBox" name="aMinSpinBox">
+          <property name="decimals">
+           <number>2</number>
+          </property>
           <property name="minimum">
-           <number>1</number>
+           <double>-100.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.500000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QDoubleSpinBox" name="aMaxSpinBox">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>-100.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.500000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
           </property>
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QLabel" name="cRepeatLabel">
+         <widget class="QLabel" name="bRepeatLabel">
           <property name="text">
-           <string>C repeat:</string>
+           <string>B range:</string>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QSpinBox" name="cCellSpinBox">
+         <widget class="QDoubleSpinBox" name="bMinSpinBox">
+          <property name="decimals">
+           <number>2</number>
+          </property>
           <property name="minimum">
-           <number>1</number>
+           <double>-100.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.500000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QDoubleSpinBox" name="bMaxSpinBox">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>-100.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.500000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="cRepeatLabel">
+          <property name="text">
+           <string>C range:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="cMinSpinBox">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>-100.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.500000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QDoubleSpinBox" name="cMaxSpinBox">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>-100.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.500000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="3">
+         <widget class="QCheckBox" name="periodicBondsCheckBox">
+          <property name="text">
+           <string>Bond copies across cell boundaries</string>
+          </property>
+          <property name="toolTip">
+           <string>Join molecules that are split by a cell boundary, so that they are drawn whole wherever both halves are present. Turn this off if it bonds atoms that should not be bonded.</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="3">
+         <widget class="QLabel" name="hintLabel">
+          <property name="text">
+           <string>Whole-number ranges build a supercell; fractional ranges keep the original cell and pack copies around it.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="3">
+         <widget class="QLabel" name="warningLabel">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

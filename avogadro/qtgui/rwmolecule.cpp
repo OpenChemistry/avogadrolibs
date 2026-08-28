@@ -602,6 +602,30 @@ void RWMolecule::buildSupercell(unsigned int a, unsigned int b, unsigned int c)
   modifyMolecule(newMolecule, changes, undoText);
 }
 
+void RWMolecule::buildSupercell(const Vector3& rangeMin,
+                                const Vector3& rangeMax,
+                                CrystalTools::Options options)
+{
+  // If there is no unit cell, there is nothing to do
+  if (!m_molecule.unitCell())
+    return;
+
+  // Make a copy of the molecule to edit so we can store the old one
+  // The unit cell and atom positions may change
+  Molecule newMolecule = m_molecule;
+
+  if (!CrystalTools::buildSupercell(newMolecule, rangeMin, rangeMax, options))
+    return;
+
+  // We will just modify the whole molecule since there may be many changes
+  Molecule::MoleculeChanges changes = Molecule::UnitCell | Molecule::Modified |
+                                      Molecule::Atoms | Molecule::Bonds |
+                                      Molecule::Added;
+  QString undoText = tr("Build Super Cell");
+
+  modifyMolecule(newMolecule, changes, undoText);
+}
+
 void RWMolecule::niggliReduceCell()
 {
   // If there is no unit cell, there is nothing to do

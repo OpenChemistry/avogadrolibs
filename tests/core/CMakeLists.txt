@@ -9,6 +9,7 @@ set(tests
   Bond
   CoordinateBlockGenerator
   CoordinateSet
+  CrystalTools
   Cube
   DihedralIterator
   Eigen
