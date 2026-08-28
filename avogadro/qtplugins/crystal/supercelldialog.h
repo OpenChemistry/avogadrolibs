@@ -39,13 +39,19 @@ public:
   void displayInvalidFormatMessage();
 
 private slots:
-  /** Disable the OK button while any axis has an empty range. */
+  /**
+   * Disable the OK button while any axis has an empty range, or while the
+   * requested range would generate an impractical number of atoms.
+   */
   void rangeChanged();
 
 private:
   AVO_DISABLE_COPY(SupercellDialog)
 
   Ui::SupercellDialog* m_ui;
+
+  /** Atom count of the molecule being expanded, used to size the request. */
+  Index m_atomCount = 0;
 };
 
 } // namespace QtPlugins

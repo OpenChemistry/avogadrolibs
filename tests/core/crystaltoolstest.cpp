@@ -9,6 +9,8 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
+#include <algorithm>
+
 using namespace Avogadro;
 using namespace Avogadro::Core;
 
