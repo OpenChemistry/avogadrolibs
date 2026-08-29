@@ -165,15 +165,15 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
     case RotTrackball: {
       QPoint delta = e->pos() - m_lastMousePosition;
 
-      int w = m_glWidget()->width();
-      int h = m_glWidget()->height();
+      int w = m_glWidget->width();
+      int h = m_glWidget->height();
 
       // Calculate moplecule screen section center (pivot)
       QPointF center(w / 2.0, h / 2.0);
 
       // Compute squared distances from center to test the Trackball boundary
       QPointF currentVec = QPointF(e->pos()) - center;
-      QPointF prevVec = QPointF(prevPos) - center;
+      QPointF prevVec = QPointF(m_lastMousePosition) - center;
 
       double distSqCurrent = currentVec.x() * currentVec.x() + currentVec.y() * currentVec.y();
       double trackballRadius = 0.45 * std::min(w, h);
@@ -191,7 +191,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
         double dotProduct = x1 * x2 + y1 * y2;
         double angleDelta = std::atan2(crossProduct, dotProduct);
         double degreesDelta = angleDelta * (180.0 / M_PI); // to degrees
-        rotate(m_renderer->camera().focus(), 0, 0, angleDelta);
+        rotate(m_renderer->camera().focus(), 0, 0, degreesDelta);
       }
       e->accept();
       break;
