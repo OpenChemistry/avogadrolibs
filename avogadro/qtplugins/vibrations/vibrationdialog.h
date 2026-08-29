@@ -10,6 +10,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtCore/QList>
 #include <QtCore/QModelIndex>
 
 namespace Ui {
@@ -36,6 +37,12 @@ public:
   int currentMode() const;
 
   /**
+   * @return The rows selected in the mode table, in increasing order. Empty
+   * when nothing is selected.
+   */
+  QList<int> selectedModes() const;
+
+  /**
    * Put the animation button back into its "stopped" state, for when the
    * animation is stopped by something other than the button itself (such as
    * the active conformer changing).
@@ -45,14 +52,25 @@ public:
 protected slots:
   void selectRow(QModelIndex);
   void changeAnimation();
+  void showTableContextMenu(const QPoint& point);
+  void requestDisplacedCoordinates();
 
 signals:
   void modeChanged(int mode);
+  /**
+   * The user asked for new coordinate sets displaced along @p modes, summed
+   * and scaled by @p scale. @p structures is how many geometries to generate.
+   */
+  void generateDisplacedCoordinates(const QList<int>& modes, double scale,
+                                    int structures);
   void amplitudeChanged(int amplitude);
   void startAnimation();
   void stopAnimation();
 
 private:
+  /** Human-readable list of @p modes, for the displacement dialog. */
+  QString modeSummary(const QList<int>& modes) const;
+
   Ui::VibrationDialog* m_ui;
 };
 

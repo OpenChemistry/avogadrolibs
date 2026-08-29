@@ -10,6 +10,8 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtCore/QList>
+
 class QAction;
 class QDialog;
 class QTimer;
@@ -58,6 +60,15 @@ public slots:
   void openDialog();
   void moleculeChanged(unsigned int changes);
 
+  /**
+   * Append new coordinate sets displaced along @p modes, which are summed and
+   * scaled by @p scale. @p structures == 1 generates a single geometry at
+   * @p scale; more are spread evenly over [-scale, +scale]. The first new set
+   * becomes the active one.
+   */
+  void generateDisplacedCoordinates(const QList<int>& modes, double scale,
+                                    int structures);
+
 private slots:
   void advanceFrame();
 
@@ -83,6 +94,14 @@ private:
    * reset the frame counter.
    */
   void restoreRestGeometry();
+
+  /**
+   * @return The geometry the normal modes belong to, which is not necessarily
+   * what is on screen: while an animation is running the displayed positions
+   * are a displaced frame.
+   * @note m_molecule must not be null; the callers check that first.
+   */
+  Core::Array<Vector3> restGeometry() const;
 
   QList<QAction*> m_actions;
 

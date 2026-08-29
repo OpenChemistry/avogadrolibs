@@ -16,6 +16,8 @@
 #include <QtCore/QTimer>
 #include <QtWidgets/QFileDialog>
 
+#include <cmath>
+
 namespace Avogadro::QtPlugins {
 
 Vibrations::Vibrations(QObject* p)
@@ -139,6 +141,9 @@ void Vibrations::registerCommands()
                        tr("Start the vibrational animation."));
   emit registerCommand("stopVibrationAnimation",
                        tr("Stop the vibrational animation."));
+  emit registerCommand(
+    "generateDisplacedCoordinates",
+    tr("Add coordinate sets displaced along one or more vibrational modes."));
 }
 
 bool Vibrations::handleCommand(const QString& command,
@@ -166,6 +171,29 @@ bool Vibrations::handleCommand(const QString& command,
   } else if (command == "stopVibrationAnimation") {
     stopVibrationAnimation();
     return true;
+  } else if (command == "generateDisplacedCoordinates") {
+    QList<int> modes;
+    if (options.contains("modes")) {
+      const QVariantList list = options["modes"].toList();
+      for (const QVariant& mode : list)
+        modes.append(mode.toInt());
+    } else if (options.contains("mode")) {
+      modes.append(options["mode"].toInt());
+    }
+    if (modes.isEmpty())
+      return false;
+
+    const double scale =
+      options.contains("scale") ? options["scale"].toDouble() : 1.0;
+    const int structures =
+      options.contains("structures") ? options["structures"].toInt() : 1;
+    // Report a scale that cannot displace anything as unhandled, rather than
+    // returning success for a call that does nothing.
+    if (std::fabs(scale) < 1e-9 || structures < 1)
+      return false;
+
+    generateDisplacedCoordinates(modes, scale, structures);
+    return true;
   }
   return false;
 }
@@ -183,20 +211,7 @@ void Vibrations::setMode(int mode)
 
   // Animate around the geometry the user is looking at. The displacements
   // belong to the active conformer, so do not switch conformers here.
-  //
-  // Take the rest geometry from the stored coordinate set, not from the
-  // displayed positions: while an animation is running those are a displaced
-  // frame, and building the next set of frames on them would make the
-  // molecule walk away from its equilibrium geometry on every amplitude
-  // change. Frame 0 is the rest geometry when there are no coordinate sets.
-  Core::Array<Vector3> atomPositions;
-  if (activeConformerIsStored()) {
-    atomPositions = m_molecule->coordinate3d(m_molecule->coordinate3d());
-  } else if (!m_animationFrames.empty()) {
-    atomPositions = m_animationFrames[0];
-  } else {
-    atomPositions = m_molecule->atomPositions3d();
-  }
+  Core::Array<Vector3> atomPositions = restGeometry();
 
   Core::Array<Vector3> atomDisplacements = m_molecule->vibrationLx(mode);
 
@@ -254,6 +269,20 @@ bool Vibrations::activeConformerIsStored() const
          active < static_cast<int>(m_molecule->coordinate3dCount());
 }
 
+Core::Array<Vector3> Vibrations::restGeometry() const
+{
+  // Take the rest geometry from the stored coordinate set, not from the
+  // displayed positions: while an animation is running those are a displaced
+  // frame, and building on them would make the molecule walk away from its
+  // equilibrium geometry. Frame 0 is the rest geometry when there are no
+  // coordinate sets.
+  if (activeConformerIsStored())
+    return m_molecule->coordinate3d(m_molecule->coordinate3d());
+  if (!m_animationFrames.empty())
+    return m_animationFrames[0];
+  return m_molecule->atomPositions3d();
+}
+
 void Vibrations::restoreRestGeometry()
 {
   m_currentFrame = 0;
@@ -281,6 +310,79 @@ void Vibrations::setAmplitude(int amplitude)
 {
   m_amplitude = amplitude;
   setMode(m_mode);
+}
+
+void Vibrations::generateDisplacedCoordinates(const QList<int>& modes,
+                                              double scale, int structures)
+{
+  // A zero scale factor would append copies of the geometry that is already
+  // there. The dialog refuses it, but this slot is also reachable as a
+  // command.
+  if (m_molecule == nullptr || modes.isEmpty() || structures < 1 ||
+      std::fabs(scale) < 1e-9)
+    return;
+
+  // Displace the geometry the modes belong to, which is not what is on screen
+  // while an animation is running. Read it before resetting the animation,
+  // which discards the frames it may have come from.
+  const Core::Array<Vector3> base = restGeometry();
+  if (base.empty())
+    return;
+
+  // Sum the selected modes into a single displacement. Read them before
+  // anything below changes which conformer is active, since the modes are
+  // stored per conformer.
+  Core::Array<Vector3> displacement(base.size(), Vector3::Zero());
+  for (int mode : modes) {
+    const Core::Array<Vector3> lx = m_molecule->vibrationLx(mode);
+    // A mode with the wrong number of displacements cannot be applied, and
+    // indexing it per atom would run off the end.
+    if (lx.size() != base.size())
+      return;
+    for (Index i = 0; i < base.size(); ++i)
+      displacement[i] += lx[i];
+  }
+
+  resetAnimation();
+
+  // A plain frequency calculation has no coordinate sets at all. Store the
+  // geometry the modes belong to as set 0, so it stays reachable once the
+  // displaced sets are added -- and so the vibrational data, which is keyed
+  // on the coordinate set index, stays attached to it.
+  if (m_molecule->coordinate3dCount() == 0)
+    m_molecule->setCoordinate3d(base, 0);
+
+  const size_t first = m_molecule->coordinate3dCount();
+  for (int step = 0; step < structures; ++step) {
+    // A single structure sits at the requested scale; several are spread
+    // evenly over [-scale, +scale], so an odd count includes the undisplaced
+    // geometry in the middle.
+    const double factor =
+      structures == 1
+        ? scale
+        : -scale + 2.0 * scale * step / static_cast<double>(structures - 1);
+
+    Core::Array<Vector3> positions;
+    positions.reserve(base.size());
+    for (Index i = 0; i < base.size(); ++i)
+      positions.push_back(base[i] + displacement[i] * factor);
+    m_molecule->setCoordinate3d(positions, first + step);
+  }
+
+  // The new sets deliberately carry no vibrational data: the modes belong to
+  // the geometry they were computed at, and a displaced structure is not that
+  // geometry. The mode table empties until the user steps back to the
+  // conformer the Hessian came from.
+  m_molecule->setCoordinate3d(static_cast<int>(first));
+
+  // The arrows were drawn for the mode being animated at the old geometry.
+  m_molecule->setForceVectors(Core::Array<Vector3>());
+
+  // Atoms moved and the active set changed, but pair this with Moved rather
+  // than Modified: Modified would have emitChanged() discard the vibrational
+  // data we just took care to keep. See Molecule::invalidatesDerivedData().
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Moved |
+                          QtGui::Molecule::Conformer);
 }
 
 void Vibrations::startVibrationAnimation()
@@ -323,6 +425,10 @@ void Vibrations::openDialog()
     connect(m_dialog, SIGNAL(startAnimation()),
             SLOT(startVibrationAnimation()));
     connect(m_dialog, SIGNAL(stopAnimation()), SLOT(stopVibrationAnimation()));
+    // Checked at compile time: the old-style macro form cannot verify a
+    // signature carrying a template argument.
+    connect(m_dialog, &VibrationDialog::generateDisplacedCoordinates, this,
+            &Vibrations::generateDisplacedCoordinates);
   }
   reloadDialog();
   m_dialog->show();
