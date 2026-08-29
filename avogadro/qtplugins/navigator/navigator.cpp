@@ -161,6 +161,40 @@ QUndoCommand* Navigator::mouseReleaseEvent(QMouseEvent* e)
 QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
 {
   switch (m_currentAction) {
+    case RotTrackball: {
+      QPoint delta = e->pos() - m_lastMousePosition;
+
+      int w = m_glWidget()->width();
+      int h = m_glWidget()->height();
+
+      // Calculate moplecule screen section center (pivot)
+      QPointF center(w / 2.0, h / 2.0);
+
+      // Compute squared distances from center to test the Trackball boundary
+      QPointF currentVec = QPointF(e->pos()) - center;
+      QPointF prevVec = QPointF(prevPos) - center;
+
+      double distSqCurrent = currentVec.x() * currentVec.x() + currentVec.y() * currentVec.y();
+      double trackballRadius = 0.45 * std::min(w, h);
+      double trackballSqRadius = trackballRadius * trackballRadius; // avoid sqrt() later
+
+      if (distSqCurrent <= trackballSqRadius || w <= 0 || h <= 0) { // for atan2 safety, test zero sizes
+        rotate(m_renderer->camera().focus(), delta.y(), delta.x(), 0); // like Rotation
+      } else {
+        // Calculate angle between current and previous ticks
+        double x1 = prevVec.x();
+        double y1 = prevVec.y();
+        double x2 = currentVec.x();
+        double y2 = currentVec.y();
+        double crossProduct = x1 * y2 - y1 * x2;
+        double dotProduct = x1 * x2 + y1 * y2;
+        double angleDelta = std::atan2(crossProduct, dotProduct);
+        double degreesDelta = angleDelta * (180.0 / M_PI); // to degrees
+        rotate(m_renderer->camera().focus(), 0, 0, angleDelta);
+      }
+      e->accept();
+      break;
+    }
     case Rotation: {
       QPoint delta = e->pos() - m_lastMousePosition;
       rotate(m_renderer->camera().focus(), delta.y(), delta.x(), 0);
