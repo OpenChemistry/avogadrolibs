@@ -132,8 +132,9 @@ QUndoCommand* Navigator::mousePressEvent(QMouseEvent* e)
   e->accept();
 
   // Figure out what type of navigation has been requested.
-  if ((e->buttons() & Qt::LeftButton && e->modifiers() == Qt::NoModifier) ||
-      (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::AltModifier)) {
+  if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::AltModifier)) {
+    m_currentAction = RotTrackball;
+  } else if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::NoModifier) {
     m_currentAction = Rotation;
   } else if (e->buttons() & Qt::MiddleButton ||
              (e->buttons() & Qt::LeftButton &&
