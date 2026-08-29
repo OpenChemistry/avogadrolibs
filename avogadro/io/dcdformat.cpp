@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "dcdformat.h"
+#include "binaryblock_p.h"
 #include "struct.h"
 
 #include <avogadro/core/elements.h>
@@ -12,10 +13,12 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <algorithm>
 #include <cmath>
 #include <istream>
 #include <ostream>
 #include <string>
+#include <vector>
 
 using std::map;
 using std::string;
@@ -57,21 +60,20 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   /** Endian type, Buffer and Format char containers for unpacking and storing
    * data using struct library */
   char endian = '>';
-  char buff[BUFSIZ];
+  std::vector<char> buff(BUFSIZ);
   char fmt[BUFSIZ];
 
   /** Variables to store various components from the binary data unpacked using
    * the struct library */
-  char raw[84];
-  char* remarks;
-  double DELTA;
-  int magic;
-  int charmm;
-  int NAMNF;
-  int NTITLE;
-  int lenRemarks;
-  int NATOMS;
-  int blockSize;
+  char raw[84] = {};
+  double DELTA = 0.0;
+  int magic = 0;
+  int charmm = 0;
+  int NAMNF = 0;
+  int NTITLE = 0;
+  int lenRemarks = 0;
+  int NATOMS = 0;
+  int blockSize = 0;
 
   // Determining size of file
   inStream.seekg(0, inStream.end);
@@ -80,8 +82,11 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Reading magic number
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &magic);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, &magic);
   if (magic != DCD_MAGIC) {
     magic = swap_integer(magic);
     endian = swap_endian(endian);
@@ -93,8 +98,11 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // CORD
   snprintf(fmt, sizeof(fmt), "%c%ds", endian, magic);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, raw);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, raw);
   if (raw[0] != 'C' || raw[1] != 'O' || raw[2] != 'R' || raw[3] != 'D') {
     appendError("Keyword CORD not found.");
     return false;
@@ -127,66 +135,103 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &magic);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, &magic);
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &blockSize);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, &blockSize);
 
   if (((blockSize - 4) % 80) == 0) {
     // Read NTITLE, the number of 80 character title strings
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &NTITLE);
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
+    struct_unpack(buff.data(), fmt, &NTITLE);
+    // NTITLE comes from the file, so check the product rather than trusting
+    // it: 80 * NTITLE overflows int for NTITLE > ~26.8M, and the result was
+    // handed straight to malloc.
+    if (NTITLE < 0 || NTITLE > fileLen / 80) {
+      appendError("DCD file declares an implausible title count.");
+      return false;
+    }
     lenRemarks = NTITLE * 80;
-    remarks = reinterpret_cast<char*>(malloc(lenRemarks));
+    std::vector<char> remarks(static_cast<size_t>(lenRemarks));
     snprintf(fmt, sizeof(fmt), "%c%ds", endian, lenRemarks);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, remarks);
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
+    struct_unpack(buff.data(), fmt, remarks.data());
 
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
     int endSize;
-    struct_unpack(buff, fmt, &endSize);
+    struct_unpack(buff.data(), fmt, &endSize);
   } else {
     appendError("Block size must be 4 plus a multiple of 80.");
     return false;
   }
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
   int fourInput;
-  struct_unpack(buff, fmt, &fourInput);
+  struct_unpack(buff.data(), fmt, &fourInput);
   if (fourInput != 4) {
     // Error
   }
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &NATOMS);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, &NATOMS);
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &fourInput);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, &fourInput);
   if (fourInput != 4) {
     appendError("Expected token 4. Read token " + to_string(fourInput));
     return false;
   }
 
   if (NAMNF != 0) {
-    int** FREEINDEXES =
-      reinterpret_cast<int**>(calloc((NATOMS - NAMNF), sizeof(int)));
-    if (*FREEINDEXES == nullptr) {
-      appendError("MALLOC failed.");
+    // This was calloc((NATOMS - NAMNF), sizeof(int)) cast to int**, with the
+    // null check written as *FREEINDEXES rather than FREEINDEXES -- so on the
+    // zeroed block it read back as a null pointer and this branch always
+    // failed, meaning a DCD with fixed atoms never loaded at all.
+    if (NAMNF < 0 || NAMNF > NATOMS) {
+      appendError("DCD file declares an implausible fixed atom count.");
       return false;
     }
+    std::vector<int> freeIndexes(static_cast<size_t>(NATOMS - NAMNF));
 
     /* Read in index array size */
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
-    int arrSize;
-    struct_unpack(buff, fmt, &arrSize);
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
+    int arrSize = 0;
+    struct_unpack(buff.data(), fmt, &arrSize);
 
     if (arrSize != (NATOMS - NAMNF) * 4) {
       appendError("DCD file contains bad format.");
@@ -194,12 +239,18 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     snprintf(fmt, sizeof(fmt), "%c%di", endian, (NATOMS - NAMNF));
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, *FREEINDEXES);
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
+    struct_unpack(buff.data(), fmt, freeIndexes.data());
 
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &arrSize);
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
+    struct_unpack(buff.data(), fmt, &arrSize);
 
     if (arrSize != (NATOMS - NAMNF) * 4) {
       appendError("DCD file contains bad format.");
@@ -211,16 +262,22 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   // information about the unit cell
   if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
     int leadingNum;
-    struct_unpack(buff, fmt, &leadingNum);
+    struct_unpack(buff.data(), fmt, &leadingNum);
 
     if (leadingNum == 48) {
       double unitcell[6];
       for (double& aa : unitcell) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, 1);
-        inStream.read(buff, struct_calcsize(fmt));
-        struct_unpack(buff, fmt, &aa);
+        if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+          appendError("Unexpected end of DCD file.");
+          return false;
+        }
+        struct_unpack(buff.data(), fmt, &aa);
       }
       if (unitcell[1] >= -1.0 && unitcell[1] <= 1.0 && unitcell[3] >= -1.0 &&
           unitcell[3] <= 1.0 && unitcell[4] >= -1.0 && unitcell[4] <= 1.0) {
@@ -241,55 +298,89 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
       }
       mol.setUnitCell(cell);
     } else {
-      inStream.read(buff, leadingNum);
+      if (!readBlock(inStream, buff, leadingNum, fileLen)) {
+        appendError("Unexpected end of DCD file.");
+        return false;
+      }
     }
-    inStream.read(buff, sizeof(int));
+    if (!readBlock(inStream, buff, sizeof(int), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
+  }
+
+  // NATOMS is file-derived and sizes three arrays below. Each atom needs at
+  // least a float per axis, so a count larger than the file cannot be real.
+  if (NATOMS < 0 || NATOMS > fileLen) {
+    appendError("DCD file declares an implausible atom count.");
+    return false;
   }
 
   // Reading the atom coordinates
-  int formatint[6];
+  int formatint[6] = {};
   Array<float> cx, cy, cz;
-  cx.reserve(NATOMS);
-  cy.reserve(NATOMS);
-  cz.reserve(NATOMS);
+  cx.resize(NATOMS);
+  cy.resize(NATOMS);
+  cz.resize(NATOMS);
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &formatint[0]);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, &formatint[0]);
 
   for (int i = 0; i < NATOMS; ++i) {
     // X coordinates
     snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &cx[i]);
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
+    struct_unpack(buff.data(), fmt, &cx[i]);
     /* code */
   }
 
   snprintf(fmt, sizeof(fmt), "%c2i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &formatint[1], &formatint[2]);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, &formatint[1], &formatint[2]);
 
   for (int i = 0; i < NATOMS; ++i) {
     // Y coordinates
     snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &cy[i]);
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
+    struct_unpack(buff.data(), fmt, &cy[i]);
   }
 
   snprintf(fmt, sizeof(fmt), "%c2i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &formatint[3], &formatint[4]);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, &formatint[3], &formatint[4]);
 
   for (int i = 0; i < NATOMS; ++i) {
     // Z coordinates
     snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &cz[i]);
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
+    struct_unpack(buff.data(), fmt, &cz[i]);
   }
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  inStream.read(buff, struct_calcsize(fmt));
-  struct_unpack(buff, fmt, &formatint[5]);
+  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  struct_unpack(buff.data(), fmt, &formatint[5]);
 
   typedef map<string, unsigned char> AtomTypeMap;
   AtomTypeMap atomTypes;
@@ -314,13 +405,22 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Skipping fourth dimension block
   if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
+    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
     int sizeToRead;
-    struct_unpack(buff, fmt, &sizeToRead);
+    struct_unpack(buff.data(), fmt, &sizeToRead);
 
-    inStream.read(buff, sizeToRead);
+    if (!readBlock(inStream, buff, sizeToRead, fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
 
-    inStream.read(buff, sizeof(int));
+    if (!readBlock(inStream, buff, sizeof(int), fileLen)) {
+      appendError("Unexpected end of DCD file.");
+      return false;
+    }
   }
 
   // Set the custom element map if needed
@@ -341,44 +441,44 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
          (static_cast<int>(inStream.tellg()) != DCD_EOF)) {
     // Reading the atom coordinates
     Array<Vector3> positions;
-    positions.reserve(NATOMS);
+    positions.resize(NATOMS);
 
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &formatint[0]);
+    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
+    struct_unpack(buff.data(), fmt, &formatint[0]);
 
     for (int i = 0; i < NATOMS; ++i) {
       // X coordinates
       snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-      inStream.read(buff, struct_calcsize(fmt));
-      struct_unpack(buff, fmt, &cx[i]);
+      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
+      struct_unpack(buff.data(), fmt, &cx[i]);
     }
 
     snprintf(fmt, sizeof(fmt), "%c2i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &formatint[1], &formatint[2]);
+    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
+    struct_unpack(buff.data(), fmt, &formatint[1], &formatint[2]);
 
     for (int i = 0; i < NATOMS; ++i) {
       // Y coordinates
       snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-      inStream.read(buff, struct_calcsize(fmt));
-      struct_unpack(buff, fmt, &cy[i]);
+      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
+      struct_unpack(buff.data(), fmt, &cy[i]);
     }
 
     snprintf(fmt, sizeof(fmt), "%c2i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &formatint[3], &formatint[4]);
+    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
+    struct_unpack(buff.data(), fmt, &formatint[3], &formatint[4]);
 
     for (int i = 0; i < NATOMS; ++i) {
       // Z coordinates
       snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-      inStream.read(buff, struct_calcsize(fmt));
-      struct_unpack(buff, fmt, &cz[i]);
+      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
+      struct_unpack(buff.data(), fmt, &cz[i]);
     }
 
     snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    inStream.read(buff, struct_calcsize(fmt));
-    struct_unpack(buff, fmt, &formatint[5]);
+    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
+    struct_unpack(buff.data(), fmt, &formatint[5]);
 
     for (int i = 0; i < NATOMS; ++i) {
       Vector3 pos(cx[i], cy[i], cz[i]);
@@ -390,13 +490,13 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     // Skipping fourth dimension block
     if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
       snprintf(fmt, sizeof(fmt), "%c1i", endian);
-      inStream.read(buff, struct_calcsize(fmt));
+      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
       int sizeToRead;
-      struct_unpack(buff, fmt, &sizeToRead);
+      struct_unpack(buff.data(), fmt, &sizeToRead);
 
-      inStream.read(buff, sizeToRead);
+      readBlock(inStream, buff, sizeToRead, fileLen);
 
-      inStream.read(buff, sizeof(int));
+      readBlock(inStream, buff, sizeof(int), fileLen);
     }
 
     mol.setCoordinate3d(positions, coordSet++);

@@ -81,12 +81,16 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
+  # File extensions, not format names -- fuzztest.cpp hands each straight to
+  # readString(), and an extension no registered format claims for reading
+  # builds a target that silently tests nothing. QCSchema's extension is
+  # "qcjson"; "qcschema" matched nothing and never reached a parser.
   set(fuzz
     cube
     fchk
     molden
     orca
-    qcschema
+    qcjson
   )
   foreach(fuzzName ${fuzz})
     add_executable(fuzz_${fuzzName} fuzztest.cpp)

@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-08-16 02:34+0000\n"
-"PO-Revision-Date: 2026-08-15 16:53+0000\n"
+"PO-Revision-Date: 2026-08-24 09:52+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -1103,7 +1103,7 @@ msgstr "Chyba při čtení reprezentace molekuly: nerozpoznaný formát souboru:
 #: qtgui/interfacescript.cpp:334
 #, qt-format
 msgid "Error reading molecule representation: %1"
-msgstr ""
+msgstr "Chyba při čtení reprezentace molekuly: %1"
 
 #: qtgui/interfacescript.cpp:392
 #, qt-format

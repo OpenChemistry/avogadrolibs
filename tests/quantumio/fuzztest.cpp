@@ -20,7 +20,12 @@
 #include <avogadro/quantumio/orca.h>
 #include <avogadro/quantumio/qcschema.h>
 
+#include <cstdio>
+#include <cstdlib>
+#include <memory>
+
 using Avogadro::Core::Molecule;
+using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 
 namespace {
@@ -39,8 +44,29 @@ bool registerFormats()
   FileFormatManager::registerFormat(new Avogadro::QuantumIO::NWChemJson);
   FileFormatManager::registerFormat(new Avogadro::QuantumIO::NWChemLog);
   FileFormatManager::registerFormat(new Avogadro::QuantumIO::ORCAOutput);
-  // Avogadro::Io::FileFormatManager::registerFormat(new
-  // Avogadro::QuantumIO::QCSchema);
+  FileFormatManager::registerFormat(new Avogadro::QuantumIO::QCSchema);
+  return true;
+}
+
+// FUZZ_INPUT_FORMAT is a file extension, and readString() simply returns false
+// when no registered format claims it for reading -- so a typo, or a format
+// that turns out to be write-only, produces a target that runs happily and
+// tests nothing. "qcschema" did exactly that for a while (the extension is
+// "qcjson"). Fail loudly instead.
+bool checkFormatIsReadable()
+{
+  // newFormatFromFileExtension() hands back an owned instance, and this job
+  // fuzzes with detect_leaks=1, so take ownership of it.
+  const std::unique_ptr<FileFormat> format(
+    FileFormatManager::instance().newFormatFromFileExtension(
+      FUZZ_INPUT_FORMAT, FileFormat::Read | FileFormat::String));
+  if (format == nullptr) {
+    std::fprintf(stderr,
+                 "no registered format reads strings with extension '%s' -- "
+                 "this fuzz target would test nothing\n",
+                 FUZZ_INPUT_FORMAT);
+    std::abort();
+  }
   return true;
 }
 
@@ -52,6 +78,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
 {
   static const bool registered = registerFormats();
   (void)registered;
+  static const bool readable = checkFormatIsReadable();
+  (void)readable;
 
   std::string input(reinterpret_cast<const char*>(Data), Size);
 

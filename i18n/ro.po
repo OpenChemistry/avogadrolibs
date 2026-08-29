@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-08-16 02:34+0000\n"
-"PO-Revision-Date: 2026-08-15 07:51+0000\n"
+"PO-Revision-Date: 2026-08-23 07:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -1096,6 +1096,8 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"Eroare standard de script:\n"
+"%1"
 
 #: qtgui/interfacescript.cpp:322
 #, qt-format
@@ -1106,7 +1108,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:334
 #, qt-format
 msgid "Error reading molecule representation: %1"
-msgstr ""
+msgstr "Eroare la citirea reprezentării moleculei: %1"
 
 #: qtgui/interfacescript.cpp:392
 #, qt-format
@@ -1352,6 +1354,8 @@ msgid ""
 "The package '%1' has no installed Python environment, so '%2' cannot be run. "
 "Try installing the package again."
 msgstr ""
+"Pachetul „%1” nu are un mediu Python instalat, așa că „%2” nu poate fi "
+"rulat. Încercați să instalați din nou pachetul."
 
 #: qtgui/pythonscript.cpp:272 qtgui/pythonscript.cpp:394
 #, qt-format

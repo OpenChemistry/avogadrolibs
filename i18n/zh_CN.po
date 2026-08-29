@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-08-16 02:34+0000\n"
-"PO-Revision-Date: 2026-08-03 17:16+0000\n"
+"PO-Revision-Date: 2026-08-26 15:51+0000\n"
 "Last-Translator: reducedradius "
 "<137701630+flytothehighest@users.noreply.github.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -34,7 +34,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1076,6 +1076,8 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"脚本标准错误：\n"
+"%1"
 
 #: qtgui/interfacescript.cpp:322
 #, qt-format
@@ -1085,7 +1087,7 @@ msgstr "读取分子表示时出错：未识别的文件格式：%1"
 #: qtgui/interfacescript.cpp:334
 #, qt-format
 msgid "Error reading molecule representation: %1"
-msgstr ""
+msgstr "在读取分子表示时出错：%1"
 
 #: qtgui/interfacescript.cpp:392
 #, qt-format
@@ -2502,11 +2504,11 @@ msgstr "取消"
 
 #: qtplugins/commandscripts/command.cpp:412
 msgid "The script could not be started."
-msgstr ""
+msgstr "脚本无法启动。"
 
 #: qtplugins/commandscripts/command.cpp:422
 msgid "Error Running Script"
-msgstr ""
+msgstr "运行脚本时出错"
 
 #: qtplugins/commandscripts/command.cpp:489
 msgid "Set path to Python interpreter:"
@@ -6304,7 +6306,7 @@ msgstr "插入配体"
 
 #: qtplugins/templatetool/templatetool.cpp:954
 msgid "Insert Metal Center"
-msgstr ""
+msgstr "插入金属中心"
 
 #: qtplugins/templatetool/templatetool.h:36
 #: qtplugins/templatetool/templatetool.h:37
