@@ -718,7 +718,9 @@ void OpenBabel::onGenerateConformersFinished(const QByteArray& output)
   // TODO: check if other properties are needed
   m_molecule->setData("energies", mol.data("energies"));
 
-  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
+  // the set of conformers changed, not just the active one
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified |
+                          QtGui::Molecule::Conformer);
   m_progress->reset();
 }
 

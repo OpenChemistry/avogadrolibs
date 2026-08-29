@@ -254,6 +254,18 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   }
 }
 
+void Surfaces::clearSurfaceData()
+{
+  if (m_molecule) {
+    m_molecule->clearCubes();
+    m_molecule->clearMeshes();
+  }
+  m_cubes.clear();
+  m_cube = nullptr;
+  m_mesh1 = nullptr;
+  m_mesh2 = nullptr;
+}
+
 void Surfaces::moleculeChanged(unsigned int changes)
 {
   auto currentCubes = m_cubes.size();
@@ -409,11 +421,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 
   // Reset state to avoid stale meshes/cubes from prior calculations
   // (e.g., switching from MO to VdW would leave m_mesh2 rendering)
-  m_molecule->clearCubes();
-  m_molecule->clearMeshes();
-  m_cube = nullptr;
-  m_mesh1 = nullptr;
-  m_mesh2 = nullptr;
+  clearSurfaceData();
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
 
   if (!m_cube)
@@ -580,11 +588,7 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
   // TODO: check if we already calculated the requested cube
 
   // Reset state a little more frequently, minimal cost, avoid bugs.
-  m_molecule->clearCubes();
-  m_molecule->clearMeshes();
-  m_cube = nullptr;
-  m_mesh1 = nullptr;
-  m_mesh2 = nullptr;
+  clearSurfaceData();
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
   bool connectSlots = false;
 
@@ -734,12 +738,12 @@ void Surfaces::stepChanged(int n)
   auto g = dynamic_cast<GaussianSet*>(m_basis);
   if (g) {
     g->setActiveSetStep(n - 1);
-    m_molecule->clearCubes();
-    m_molecule->clearMeshes();
-    m_cube = nullptr;
-    m_mesh1 = nullptr;
-    m_mesh2 = nullptr;
-    m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
+    clearSurfaceData();
+    // Switching the MO set step moves to that conformer's geometry. Emit a
+    // moved-only change: Added would delete the basis set we are stepping
+    // through (see Molecule::invalidatesDerivedData()).
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved |
+                            Molecule::Conformer);
   }
 }
 

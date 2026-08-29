@@ -644,6 +644,33 @@ public:
   unsigned short hallNumber() const { return m_hallNumber; }
   /** @} */
 
+  /**
+   * Vibrational data (frequencies, intensities and normal mode displacements)
+   * for one geometry. A calculation can produce a Hessian at every step of a
+   * trajectory or reaction path, so this is stored per conformer rather than
+   * once per molecule.
+   */
+  struct VibrationData
+  {
+    Array<double> frequencies;
+    Array<double> irIntensities;
+    Array<double> ramanIntensities;
+    /** Normal mode displacements, indexed [mode][atom]. */
+    Array<Array<Vector3>> lx;
+
+    bool isEmpty() const { return frequencies.empty(); }
+  };
+
+  /**
+   * Vibrational data for the active conformer (see coordinate3d()). Molecules
+   * with no coordinate sets store their single set of vibrations under the
+   * default active index, so these behave exactly as before for the common
+   * one-geometry-one-Hessian case.
+   *
+   * Each getter returns an empty Array when the active conformer has no
+   * vibrational data, or when @p mode is out of range.
+   * @{
+   */
   Array<double> vibrationFrequencies() const;
   void setVibrationFrequencies(const Array<double>& freq);
   Array<double> vibrationIRIntensities() const;
@@ -652,6 +679,68 @@ public:
   void setVibrationRamanIntensities(const Array<double>& intensities);
   Array<Vector3> vibrationLx(int mode) const;
   void setVibrationLx(const Array<Array<Vector3>>& lx);
+  /** @} */
+
+  /**
+   * Vibrational data for a specific conformer, for files that carry a Hessian
+   * at more than one geometry.
+   * @{
+   */
+  Array<double> vibrationFrequencies(size_t conformerIndex) const;
+  void setVibrationFrequencies(const Array<double>& freq,
+                               size_t conformerIndex);
+  Array<double> vibrationIRIntensities(size_t conformerIndex) const;
+  void setVibrationIRIntensities(const Array<double>& intensities,
+                                 size_t conformerIndex);
+  Array<double> vibrationRamanIntensities(size_t conformerIndex) const;
+  void setVibrationRamanIntensities(const Array<double>& intensities,
+                                    size_t conformerIndex);
+  Array<Vector3> vibrationLx(int mode, size_t conformerIndex) const;
+  void setVibrationLx(const Array<Array<Vector3>>& lx, size_t conformerIndex);
+  /** @} */
+
+  /**
+   * @return True if @p conformerIndex has vibrational data.
+   */
+  bool hasVibrations(size_t conformerIndex) const;
+
+  /**
+   * @return True if the active conformer has vibrational data.
+   */
+  bool hasVibrations() const;
+
+  /**
+   * @return The number of conformers carrying vibrational data. This is not
+   * the number of conformers: most trajectories have a Hessian at only one
+   * geometry, if any.
+   */
+  size_t vibrationConformerCount() const;
+
+  /**
+   * @return The indices of the conformers carrying vibrational data, in
+   * increasing order.
+   */
+  Array<size_t> vibrationConformers() const;
+
+  /**
+   * Remove all vibrational data from every conformer.
+   */
+  void clearVibrations();
+
+  /**
+   * @return The vibrational data for @p conformerIndex, or nullptr when that
+   * conformer has none. The per-field accessors above are thin wrappers over
+   * this; new code that wants several fields at once should prefer it.
+   */
+  const VibrationData* vibrationData(size_t conformerIndex) const;
+
+  /**
+   * Store a whole set of vibrational data against @p conformerIndex, replacing
+   * anything already there. Parsers that assemble a complete Hessian should
+   * prefer this to the per-field setters: it is one lookup, and a new field
+   * added to VibrationData needs no new call.
+   */
+  void setVibrationData(const VibrationData& data, size_t conformerIndex);
 
   /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
@@ -1026,11 +1115,11 @@ protected:
   Array<unsigned short> m_isotopes; //!< Store isotopes of the atoms
   Array<Vector3> m_forceVectors;
   Array<Vector3ub> m_colors;
-  // Vibration data if available.
-  Array<double> m_vibrationFrequencies;
-  Array<double> m_vibrationIRIntensities;
-  Array<double> m_vibrationRamanIntensities;
-  Array<Array<Vector3>> m_vibrationLx;
+  // Vibration data if available, keyed by conformer index. Sparse: a
+  // trajectory usually has a Hessian at one geometry, if any. A molecule with
+  // no coordinate sets keys its vibrations at 0, which is also the default
+  // active index, so the single-geometry case is unchanged.
+  std::map<size_t, VibrationData> m_vibrations;
 
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;

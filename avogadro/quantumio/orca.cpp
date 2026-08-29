@@ -114,6 +114,36 @@ std::string nthSpaceToken(const std::string& line, std::size_t index)
 }
 } // namespace
 
+void ORCAOutput::flushVibrationData()
+{
+  // A set is only usable if the displacements and IR intensities line up with
+  // the frequencies, and the normal modes were actually printed. A job that
+  // died part way through a Hessian leaves frequencies whose displacements
+  // are all zero - modes that would list in the dialog but not animate - so
+  // drop that set rather than hand it to the molecule.
+  if (!m_frequencies.empty() && m_haveNormalModes &&
+      m_frequencies.size() == m_vibDisplacements.size() &&
+      m_frequencies.size() == m_IRintensities.size()) {
+    VibrationSet set;
+    set.conformerIndex = m_vibrationConformer;
+    // Core::Array has no move constructor, so swap rather than assign: the
+    // accumulators are cleared below either way.
+    set.frequencies.swap(m_frequencies);
+    set.irIntensities.swap(m_IRintensities);
+    set.ramanIntensities.swap(m_RamanIntensities);
+    set.displacements.swap(m_vibDisplacements);
+    set.vcdIntensities.swap(m_vcdIntensities);
+    m_vibrationSets.push_back(std::move(set));
+  }
+
+  m_frequencies.clear();
+  m_IRintensities.clear();
+  m_RamanIntensities.clear();
+  m_vcdIntensities.clear();
+  m_vibDisplacements.clear();
+  m_haveNormalModes = false;
+}
+
 std::vector<std::string> ORCAOutput::fileExtensions() const
 {
   std::vector<std::string> extensions;
@@ -147,41 +177,57 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
-  // this should be the final coordinate set (e.g. the optimized geometry)
-  molecule.setCoordinate3d(molecule.atomPositions3d(), 0);
-  if (m_coordSets.size() > 1) {
-    for (unsigned int i = 0; i < m_coordSets.size(); i++) {
-      Array<Vector3> positions;
-      positions.reserve(molecule.atomCount());
-      for (size_t j = 0; j < molecule.atomCount(); ++j) {
-        positions.push_back(m_coordSets[i][j] * BOHR_TO_ANGSTROM);
-      }
-      molecule.setCoordinate3d(positions, i + 1);
+  // Store the conformers in trajectory order: m_coordSets holds every
+  // geometry except the last, which is still in m_atomPos (and is what the
+  // atoms were added with above). Keeping the file's own order is what lets
+  // a Hessian be matched to the geometry it was computed at.
+  for (unsigned int i = 0; i < m_coordSets.size(); i++) {
+    Array<Vector3> positions;
+    positions.reserve(molecule.atomCount());
+    for (size_t j = 0; j < molecule.atomCount(); ++j) {
+      positions.push_back(m_coordSets[i][j] * BOHR_TO_ANGSTROM);
     }
+    molecule.setCoordinate3d(positions, i);
   }
+  const size_t finalConformer = m_coordSets.size();
+  molecule.setCoordinate3d(molecule.atomPositions3d(), finalConformer);
+  // Open on the final geometry - the optimized structure is what the user
+  // expects to see - while the earlier steps stay available as a trajectory.
+  molecule.setCoordinate3d(static_cast<int>(finalConformer));
 
   // guess bonds and bond orders
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
 
-  if (m_frequencies.size() > 0 &&
-      m_frequencies.size() == m_vibDisplacements.size() &&
-      m_frequencies.size() == m_IRintensities.size()) {
-    molecule.setVibrationFrequencies(m_frequencies);
-    molecule.setVibrationIRIntensities(m_IRintensities);
-    molecule.setVibrationLx(m_vibDisplacements);
-    if (m_RamanIntensities.size())
-      molecule.setVibrationRamanIntensities(m_RamanIntensities);
-  }
+  // Bank the last Hessian, which has no following header to trigger a flush.
+  flushVibrationData();
 
-  if (m_vcdIntensities.size() > 0 &&
-      m_vcdIntensities.size() == m_frequencies.size()) {
-    MatrixX vcdData(m_frequencies.size(), 2);
-    for (size_t i = 0; i < m_frequencies.size(); ++i) {
-      vcdData(i, 0) = m_frequencies[i];
-      vcdData(i, 1) = m_vcdIntensities[i];
+  for (const auto& set : m_vibrationSets) {
+    // A geometry that was never stored cannot carry modes. This should not
+    // happen, but a malformed file must not create a phantom conformer.
+    if (set.conformerIndex > finalConformer)
+      continue;
+
+    Core::Molecule::VibrationData data;
+    data.frequencies = set.frequencies;
+    data.irIntensities = set.irIntensities;
+    data.ramanIntensities = set.ramanIntensities;
+    data.lx = set.displacements;
+    molecule.setVibrationData(data, set.conformerIndex);
+
+    // Spectra are not per-conformer, so the last set carrying VCD data wins.
+    // Building it here rather than in a second pass avoids allocating a
+    // matrix for every earlier set only to overwrite it.
+    const auto& frequencies = set.frequencies;
+    if (!set.vcdIntensities.empty() &&
+        set.vcdIntensities.size() == frequencies.size()) {
+      MatrixX vcdData(frequencies.size(), 2);
+      for (size_t i = 0; i < frequencies.size(); ++i) {
+        vcdData(i, 0) = frequencies[i];
+        vcdData(i, 1) = set.vcdIntensities[i];
+      }
+      molecule.setSpectra("VibrationalCD", vcdData);
     }
-    molecule.setSpectra("VibrationalCD", vcdData);
   }
 
   if (m_electronicTransitions.size() > 0 &&
@@ -427,6 +473,16 @@ void ORCAOutput::processLine(std::istream& in,
     Core::getLine(in, key); // skip ------------
   } else if (Core::contains(key, "VIBRATIONAL FREQUENCIES")) {
     m_currentMode = Frequencies;
+    // A new Hessian starts here. Bank the previous one against the geometry
+    // it was computed at, rather than appending to it: a transition state
+    // search recomputes the Hessian every few optimization cycles, and
+    // running the sets together produced one list of 3N x (number of
+    // Hessians) bogus modes.
+    flushVibrationData();
+    // The most recently parsed geometry is the one this Hessian describes.
+    // m_coordSets holds the geometries completed before it, so its size is
+    // that geometry's index.
+    m_vibrationConformer = m_coordSets.size();
     Core::getLine(in, key); // skip ------------
     Core::getLine(in, key); // skip blank line
     Core::getLine(in, key); // scaling factor
@@ -724,9 +780,12 @@ void ORCAOutput::processLine(std::istream& in,
         // we don't bother with Raman, because that's less common
         for (unsigned int i = 0; i < m_frequencies.size(); i++) {
           m_IRintensities[i] = 0.0;
-          m_vibDisplacements[i].resize(m_atomNums.size());
-          for (unsigned int j = 0; j < m_atomNums.size(); j++)
-            m_vibDisplacements[i].push_back(Eigen::Vector3d());
+          // One displacement per atom. resize() already creates them, so do
+          // not also push_back: that produced arrays of 2N entries, leaving
+          // the trailing N uninitialized. Zero them so a truncated NORMAL
+          // MODES block cannot leave garbage displacements behind either.
+          m_vibDisplacements[i].resize(m_atomNums.size(),
+                                       Eigen::Vector3d::Zero());
         }
 
         m_currentMode = NotParsing;
@@ -815,6 +874,7 @@ void ORCAOutput::processLine(std::istream& in,
               m_vibDisplacements[modeIndex[j]][atomIndex][coordIndex] =
                 Core::lexicalCast<double>(list[j + 1]).value_or(0.0);
             }
+            m_haveNormalModes = true;
 
             Core::getLine(in, key);
             key = Core::trimmed(key);

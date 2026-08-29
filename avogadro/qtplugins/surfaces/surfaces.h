@@ -108,6 +108,14 @@ private slots:
   void movieFrame();
 
 private:
+  /**
+   * Discard the cubes and meshes on the molecule together with the cached
+   * raw pointers into them. Molecule::clearCubes() deletes those objects, so
+   * anything holding one has to drop it in the same breath - moleculeChanged()
+   * only refreshes the cache for changes that invalidate derived data.
+   */
+  void clearSurfaceData();
+
   float resolution(float specified = 0.0);
   Core::Color3f chargeGradient(double value, double clamp,
                                tinycolormap::ColormapType colormap) const;

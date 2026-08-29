@@ -555,3 +555,151 @@ TEST(CjsonTest, residuePropertiesRoundTrip)
   ASSERT_TRUE(bf1.has_value());
   EXPECT_DOUBLE_EQ(*bf1, 22.7);
 }
+
+// A calculation can produce a Hessian at more than one geometry, so the
+// vibrations are written as a sparse map keyed by conformer index. Every set
+// has to come back against the geometry it was computed at, not merged into
+// one or collapsed onto the first conformer.
+TEST(CjsonTest, perConformerVibrationsRoundTrip)
+{
+  Molecule molecule;
+  Atom h1 = molecule.addAtom(1);
+  Atom h2 = molecule.addAtom(1);
+  h1.setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.0));
+  h2.setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.74));
+
+  // Four conformers, with a Hessian on only the first and last: the sparse
+  // case a dense array parallel to the coordinate sets would pad out.
+  for (size_t i = 0; i < 4; ++i) {
+    Avogadro::Core::Array<Avogadro::Vector3> frame;
+    frame.push_back(Avogadro::Vector3(0.0, 0.0, 0.0));
+    frame.push_back(Avogadro::Vector3(0.0, 0.0, 0.74 + 0.01 * i));
+    molecule.setCoordinate3d(frame, i);
+  }
+
+  Avogadro::Core::Array<double> first(1, 1600.0);
+  Avogadro::Core::Array<double> last(1, 1750.0);
+  molecule.setVibrationFrequencies(first, 0);
+  molecule.setVibrationIRIntensities(Avogadro::Core::Array<double>(1, 12.0), 0);
+  molecule.setVibrationFrequencies(last, 3);
+  molecule.setVibrationIRIntensities(Avogadro::Core::Array<double>(1, 30.0), 3);
+  molecule.setVibrationRamanIntensities(Avogadro::Core::Array<double>(1, 4.5),
+                                        3);
+
+  Avogadro::Core::Array<Avogadro::Core::Array<Avogadro::Vector3>> modes0(
+    1, Avogadro::Core::Array<Avogadro::Vector3>(2, Avogadro::Vector3(1, 0, 0)));
+  Avogadro::Core::Array<Avogadro::Core::Array<Avogadro::Vector3>> modes3(
+    1, Avogadro::Core::Array<Avogadro::Vector3>(2, Avogadro::Vector3(0, 0, 1)));
+  molecule.setVibrationLx(modes0, 0);
+  molecule.setVibrationLx(modes3, 3);
+
+  // Open on the last conformer, as an optimization would.
+  ASSERT_TRUE(molecule.setCoordinate3d(3));
+
+  CjsonFormat writer;
+  std::string json;
+  ASSERT_TRUE(writer.writeString(json, molecule));
+
+  Molecule readMol;
+  CjsonFormat reader;
+  ASSERT_TRUE(reader.readString(json, readMol));
+
+  EXPECT_EQ(readMol.coordinate3dCount(), 4u);
+  // The conformer that was on screen is restored, so the active vibration
+  // view still describes the same geometry.
+  EXPECT_EQ(readMol.coordinate3d(), 3);
+
+  ASSERT_EQ(readMol.vibrationConformerCount(), 2u);
+  ASSERT_EQ(readMol.vibrationConformers().size(), 2u);
+  EXPECT_EQ(readMol.vibrationConformers()[0], 0u);
+  EXPECT_EQ(readMol.vibrationConformers()[1], 3u);
+
+  ASSERT_EQ(readMol.vibrationFrequencies(0).size(), 1u);
+  EXPECT_DOUBLE_EQ(readMol.vibrationFrequencies(0)[0], 1600.0);
+  EXPECT_DOUBLE_EQ(readMol.vibrationIRIntensities(0)[0], 12.0);
+  EXPECT_EQ(readMol.vibrationLx(0, 0)[0], Avogadro::Vector3(1, 0, 0));
+
+  ASSERT_EQ(readMol.vibrationFrequencies(3).size(), 1u);
+  EXPECT_DOUBLE_EQ(readMol.vibrationFrequencies(3)[0], 1750.0);
+  EXPECT_DOUBLE_EQ(readMol.vibrationIRIntensities(3)[0], 30.0);
+  EXPECT_DOUBLE_EQ(readMol.vibrationRamanIntensities(3)[0], 4.5);
+  EXPECT_EQ(readMol.vibrationLx(0, 3)[0], Avogadro::Vector3(0, 0, 1));
+
+  // The conformers with no Hessian stay empty rather than being padded.
+  EXPECT_FALSE(readMol.hasVibrations(1));
+  EXPECT_FALSE(readMol.hasVibrations(2));
+}
+
+// A file with a single Hessian keeps the flat layout CJSON has always used,
+// so it stays readable by anything that predates the sparse map.
+TEST(CjsonTest, singleHessianKeepsTheFlatLayout)
+{
+  Molecule molecule;
+  Atom h1 = molecule.addAtom(1);
+  Atom h2 = molecule.addAtom(1);
+  h1.setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.0));
+  h2.setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.74));
+  molecule.setVibrationFrequencies(Avogadro::Core::Array<double>(1, 1600.0));
+
+  CjsonFormat writer;
+  std::string json;
+  ASSERT_TRUE(writer.writeString(json, molecule));
+
+  EXPECT_NE(json.find("\"frequencies\""), std::string::npos);
+  EXPECT_EQ(json.find("\"conformers\""), std::string::npos);
+
+  Molecule readMol;
+  CjsonFormat reader;
+  ASSERT_TRUE(reader.readString(json, readMol));
+  ASSERT_EQ(readMol.vibrationFrequencies().size(), 1u);
+  EXPECT_DOUBLE_EQ(readMol.vibrationFrequencies()[0], 1600.0);
+}
+
+// Back compatibility: a file written before the sparse map has its flat
+// vibration block loaded against the active conformer.
+TEST(CjsonTest, flatVibrationsWithoutConformerMapStillRead)
+{
+  CjsonFormat reader;
+  Molecule molecule;
+  ASSERT_TRUE(
+    reader.readFile(AVOGADRO_DATA "/data/cjson/raman.cjson", molecule));
+
+  EXPECT_EQ(molecule.vibrationFrequencies().size(), 12u);
+  EXPECT_EQ(molecule.vibrationConformerCount(), 1u);
+  EXPECT_TRUE(molecule.hasVibrations());
+}
+
+// The vibrations to write are decided by which conformers have a Hessian, not
+// by whether the one on screen does. Browsing to a conformer with no modes and
+// saving used to drop every Hessian in the file.
+TEST(CjsonTest, vibrationsSurviveSavingFromAConformerWithoutThem)
+{
+  Molecule molecule;
+  Atom h1 = molecule.addAtom(1);
+  Atom h2 = molecule.addAtom(1);
+  h1.setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.0));
+  h2.setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.74));
+  for (size_t i = 0; i < 4; ++i) {
+    Avogadro::Core::Array<Avogadro::Vector3> frame;
+    frame.push_back(Avogadro::Vector3(0.0, 0.0, 0.0));
+    frame.push_back(Avogadro::Vector3(0.0, 0.0, 0.74 + 0.01 * i));
+    molecule.setCoordinate3d(frame, i);
+  }
+  molecule.setVibrationFrequencies(Avogadro::Core::Array<double>(1, 1600.0), 3);
+
+  // Step to a conformer that carries no Hessian, as a user browsing would.
+  ASSERT_TRUE(molecule.setCoordinate3d(1));
+  ASSERT_FALSE(molecule.hasVibrations());
+
+  CjsonFormat writer;
+  std::string json;
+  ASSERT_TRUE(writer.writeString(json, molecule));
+
+  Molecule readMol;
+  CjsonFormat reader;
+  ASSERT_TRUE(reader.readString(json, readMol));
+
+  ASSERT_EQ(readMol.vibrationConformerCount(), 1u);
+  ASSERT_EQ(readMol.vibrationFrequencies(3).size(), 1u);
+  EXPECT_DOUBLE_EQ(readMol.vibrationFrequencies(3)[0], 1600.0);
+}

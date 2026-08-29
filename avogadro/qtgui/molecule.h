@@ -79,6 +79,14 @@ public:
     Residues = 128,
     /** Indicates a new crystal structure (triggers space group fill). */
     NewCrystal = 256,
+    /**
+     * Indicates the active conformer / coordinate set changed (e.g.,
+     * setCoordinate3d(int)) or the set of conformers was modified. Switching
+     * the active conformer is view-state: pair with Moved (not Modified) so
+     * derived data (vibrations, orbitals, meshes) survives; changing the
+     * number of coordinate sets should pair with Modified.
+     */
+    Conformer = 512,
     /** Operations that can affect the above types. */
     Added = 1024,
     Removed = 2048,

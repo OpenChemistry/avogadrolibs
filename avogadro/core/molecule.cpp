@@ -50,10 +50,7 @@ Molecule::Molecule(const Molecule& other)
     m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
-    m_vibrationFrequencies(other.m_vibrationFrequencies),
-    m_vibrationIRIntensities(other.m_vibrationIRIntensities),
-    m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
-    m_vibrationLx(other.m_vibrationLx), m_selectedAtoms(other.m_selectedAtoms),
+    m_vibrations(other.m_vibrations), m_selectedAtoms(other.m_selectedAtoms),
     m_meshes(), m_cubes(),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
@@ -123,12 +120,8 @@ void Molecule::readProperties(const Molecule& other)
   }
 
   // copy over spectra information
-  if (other.m_vibrationFrequencies.size() > 0) {
-    m_vibrationFrequencies = other.m_vibrationFrequencies;
-    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
-    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
-    m_vibrationLx = other.m_vibrationLx;
-  }
+  if (!other.m_vibrations.empty())
+    m_vibrations = other.m_vibrations;
 
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
@@ -160,10 +153,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
-    m_vibrationFrequencies(other.m_vibrationFrequencies),
-    m_vibrationIRIntensities(other.m_vibrationIRIntensities),
-    m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
-    m_vibrationLx(other.m_vibrationLx),
+    m_vibrations(std::move(other.m_vibrations)),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
     m_activeCubeIndex(std::exchange(other.m_activeCubeIndex, 0)),
@@ -211,10 +201,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_isotopes = other.m_isotopes;
     m_forceVectors = other.m_forceVectors;
     m_colors = other.m_colors;
-    m_vibrationFrequencies = other.m_vibrationFrequencies;
-    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
-    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
-    m_vibrationLx = other.m_vibrationLx;
+    m_vibrations = other.m_vibrations;
     m_selectedAtoms = other.m_selectedAtoms;
     m_residues = other.m_residues;
     m_graph = other.m_graph;
@@ -285,10 +272,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_isotopes = other.m_isotopes;
     m_forceVectors = other.m_forceVectors;
     m_colors = other.m_colors;
-    m_vibrationFrequencies = other.m_vibrationFrequencies;
-    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
-    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
-    m_vibrationLx = other.m_vibrationLx;
+    m_vibrations = std::move(other.m_vibrations);
     m_selectedAtoms = std::move(other.m_selectedAtoms);
     m_residues = other.m_residues;
     m_graph = other.m_graph;
@@ -781,6 +765,15 @@ void removeAtomMaskEntry(Eigen::VectorXd& values, Index index, Index atomCount)
   }
 }
 
+// Normal mode displacements, keyed by conformer. Each conformer holds one
+// Array<Vector3> per mode, and those inner arrays are indexed by atom.
+void swapAtomEntryVibrations(std::map<size_t, Molecule::VibrationData>& vibs,
+                             Index a, Index b, Index max)
+{
+  for (auto& entry : vibs)
+    swapAtomEntryFrames(entry.second.lx, a, b, max);
+}
+
 // std::map<std::string, MatrixX>: one per-atom charge column per model.
 // removeAtom() deliberately clears this map instead of reindexing it, since
 // removing an atom invalidates any cached partial charges anyway.
@@ -825,7 +818,7 @@ void Molecule::swapAtom(Index a, Index b)
   swapAtomEntry(m_selectedAtoms, a, b, max);
   swapAtomEntryFrames(m_coordinates3d, a, b, max);
   swapAtomEntryFrames(m_velocities, a, b, max);
-  swapAtomEntryFrames(m_vibrationLx, a, b, max);
+  swapAtomEntryVibrations(m_vibrations, a, b, max);
   swapAtomMaskEntry(m_frozenAtomMask, a, b, max);
   swapAtomEntry(m_partialCharges, a, b, max);
 
@@ -992,10 +985,7 @@ void Molecule::clearCalculatedResults()
   m_partialCharges.clear();
   m_forceVectors.clear();
   m_velocities.clear();
-  m_vibrationLx.clear();
-  m_vibrationFrequencies.clear();
-  m_vibrationIRIntensities.clear();
-  m_vibrationRamanIntensities.clear();
+  m_vibrations.clear();
   m_spectra.clear();
 }
 
@@ -1351,46 +1341,151 @@ std::pair<Vector3, Vector3> Molecule::bestFitPlane(const Array<Vector3>& pos)
   return std::make_pair(centroid, plane_normal);
 }
 
+namespace {
+
+// The active conformer index as a map key. m_coordinate3dIndex is only
+// negative if something has set it out of range; treat that as conformer 0
+// rather than wrapping to a huge key.
+size_t vibrationKey(int coordinateIndex)
+{
+  return coordinateIndex > 0 ? static_cast<size_t>(coordinateIndex) : 0;
+}
+
+} // namespace
+
 Array<double> Molecule::vibrationFrequencies() const
 {
-  return m_vibrationFrequencies;
+  return vibrationFrequencies(vibrationKey(m_coordinate3dIndex));
 }
 
 void Molecule::setVibrationFrequencies(const Array<double>& freq)
 {
-  m_vibrationFrequencies = freq;
+  setVibrationFrequencies(freq, vibrationKey(m_coordinate3dIndex));
 }
 
 Array<double> Molecule::vibrationIRIntensities() const
 {
-  return m_vibrationIRIntensities;
+  return vibrationIRIntensities(vibrationKey(m_coordinate3dIndex));
 }
 
 void Molecule::setVibrationIRIntensities(const Array<double>& intensities)
 {
-  m_vibrationIRIntensities = intensities;
+  setVibrationIRIntensities(intensities, vibrationKey(m_coordinate3dIndex));
 }
 
 Array<double> Molecule::vibrationRamanIntensities() const
 {
-  return m_vibrationRamanIntensities;
+  return vibrationRamanIntensities(vibrationKey(m_coordinate3dIndex));
 }
 
 void Molecule::setVibrationRamanIntensities(const Array<double>& intensities)
 {
-  m_vibrationRamanIntensities = intensities;
+  setVibrationRamanIntensities(intensities, vibrationKey(m_coordinate3dIndex));
 }
 
 Array<Vector3> Molecule::vibrationLx(int mode) const
 {
-  if (mode >= 0 && mode < static_cast<int>(m_vibrationLx.size()))
-    return m_vibrationLx[mode];
-  return Array<Vector3>();
+  return vibrationLx(mode, vibrationKey(m_coordinate3dIndex));
 }
 
 void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx)
 {
-  m_vibrationLx = lx;
+  setVibrationLx(lx, vibrationKey(m_coordinate3dIndex));
+}
+
+const Molecule::VibrationData* Molecule::vibrationData(
+  size_t conformerIndex) const
+{
+  auto match = m_vibrations.find(conformerIndex);
+  return match == m_vibrations.end() ? nullptr : &match->second;
+}
+
+void Molecule::setVibrationData(const VibrationData& data,
+                                size_t conformerIndex)
+{
+  m_vibrations[conformerIndex] = data;
+}
+
+Array<double> Molecule::vibrationFrequencies(size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  return data ? data->frequencies : Array<double>();
+}
+
+void Molecule::setVibrationFrequencies(const Array<double>& freq,
+                                       size_t conformerIndex)
+{
+  m_vibrations[conformerIndex].frequencies = freq;
+}
+
+Array<double> Molecule::vibrationIRIntensities(size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  return data ? data->irIntensities : Array<double>();
+}
+
+void Molecule::setVibrationIRIntensities(const Array<double>& intensities,
+                                         size_t conformerIndex)
+{
+  m_vibrations[conformerIndex].irIntensities = intensities;
+}
+
+Array<double> Molecule::vibrationRamanIntensities(size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  return data ? data->ramanIntensities : Array<double>();
+}
+
+void Molecule::setVibrationRamanIntensities(const Array<double>& intensities,
+                                            size_t conformerIndex)
+{
+  m_vibrations[conformerIndex].ramanIntensities = intensities;
+}
+
+Array<Vector3> Molecule::vibrationLx(int mode, size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  if (data == nullptr || mode < 0 || mode >= static_cast<int>(data->lx.size()))
+    return Array<Vector3>();
+  return data->lx[mode];
+}
+
+void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx,
+                              size_t conformerIndex)
+{
+  m_vibrations[conformerIndex].lx = lx;
+}
+
+bool Molecule::hasVibrations(size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  return data != nullptr && !data->isEmpty();
+}
+
+bool Molecule::hasVibrations() const
+{
+  return hasVibrations(vibrationKey(m_coordinate3dIndex));
+}
+
+size_t Molecule::vibrationConformerCount() const
+{
+  return vibrationConformers().size();
+}
+
+Array<size_t> Molecule::vibrationConformers() const
+{
+  Array<size_t> indices;
+  // std::map iterates in increasing key order.
+  for (const auto& entry : m_vibrations) {
+    if (!entry.second.isEmpty())
+      indices.push_back(entry.first);
+  }
+  return indices;
+}
+
+void Molecule::clearVibrations()
+{
+  m_vibrations.clear();
 }
 
 void Molecule::perceiveBondOrders()
@@ -1627,6 +1722,15 @@ int Molecule::coordinate3d() const
 
 void Molecule::clearCoordinate3d()
 {
+  // Flattening the trajectory keeps the geometry that is on screen, so keep
+  // the vibrations that go with it and drop the rest. The surviving set moves
+  // to key 0 to stay with the active index, which is reset below.
+  std::map<size_t, VibrationData> kept;
+  auto active = m_vibrations.find(vibrationKey(m_coordinate3dIndex));
+  if (active != m_vibrations.end())
+    kept[0] = std::move(active->second);
+  m_vibrations.swap(kept);
+
   m_coordinates3d.clear();
   m_conformerProperties.clear();
   m_coordinate3dIndex = 0;

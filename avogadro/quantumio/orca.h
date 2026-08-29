@@ -130,11 +130,50 @@ private:
   std::string m_chargeType;
   std::map<std::string, MatrixX> m_partialCharges;
 
+  // Vibrational data for the geometry currently being parsed. A transition
+  // state search recomputes the Hessian every few cycles, so a file can hold
+  // several of these; completed sets are moved into m_vibrationSets.
   Core::Array<double> m_frequencies;
   Core::Array<double> m_IRintensities;
   Core::Array<double> m_RamanIntensities;
   Core::Array<double> m_vcdIntensities;
   Core::Array<Core::Array<Vector3>> m_vibDisplacements;
+
+  /** One completed set of vibrational data, and the geometry it belongs to. */
+  struct VibrationSet
+  {
+    size_t conformerIndex = 0;
+    Core::Array<double> frequencies;
+    Core::Array<double> irIntensities;
+    Core::Array<double> ramanIntensities;
+    Core::Array<Core::Array<Vector3>> displacements;
+    // Not handed to the molecule as vibrational data: VCD is stored as a
+    // spectrum, and ORCA is the only format here that reads it.
+    Core::Array<double> vcdIntensities;
+  };
+  std::vector<VibrationSet> m_vibrationSets;
+
+  /**
+   * The conformer the set being accumulated belongs to: the number of
+   * geometries already pushed to m_coordSets when its header was seen, which
+   * is the index of the most recently parsed geometry.
+   */
+  size_t m_vibrationConformer = 0;
+
+  /**
+   * Whether any normal mode displacement has been read for the set being
+   * accumulated. The frequency block allocates the displacement array up
+   * front, so its size alone cannot tell a complete set from a job that died
+   * before printing NORMAL MODES.
+   */
+  bool m_haveNormalModes = false;
+
+  /**
+   * Move the vibrational data accumulated so far into m_vibrationSets, and
+   * reset the accumulators for the next Hessian. Does nothing when nothing
+   * has been accumulated.
+   */
+  void flushVibrationData();
 
   Core::Array<double> m_electronicTransitions; // in eV
   Core::Array<double> m_electronicIntensities;
