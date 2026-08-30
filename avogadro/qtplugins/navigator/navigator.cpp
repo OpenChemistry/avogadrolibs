@@ -30,9 +30,6 @@
 
 namespace Avogadro::QtPlugins {
 
-// Portable across C++ versions and compilers (unlike M_PI or std::numbers::pi)
-const double PI = std::acos(-1.0); 
-
 const float ZOOM_SPEED = 0.02f;
 const float ROTATION_SPEED = 0.005f;
 const float TRACKBALL_SPAN = 1.0f; // XY molecule rotations when trackball crossed
@@ -197,7 +194,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
         // like in Rotation but speed normalized
         // undo *ROTATION_SPEED which will happen in rotate()
         double speedCorrection = (1.0 / ROTATION_SPEED) * TRACKBALL_SPAN
-                                  * PI / trackballRadius;
+                                  * 3.14159265358979 / trackballRadius;
         rotate(m_renderer->camera().focus(),
                delta.y() * speedCorrection,
                delta.x() * speedCorrection,
