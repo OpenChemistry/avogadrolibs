@@ -215,6 +215,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
           double angleDelta = std::atan2(crossProduct, dotProduct);
           rotate(m_renderer->camera().focus(), 0, 0,
                  -angleDelta * (1.0 / ROTATION_SPEED));
+        }
       }
       e->accept();
       break;
