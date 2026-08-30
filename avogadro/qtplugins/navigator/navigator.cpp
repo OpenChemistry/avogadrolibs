@@ -176,7 +176,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
       QPointF prevVec = QPointF(m_lastMousePosition) - center;
 
       double distSqCurrent = currentVec.x() * currentVec.x() + currentVec.y() * currentVec.y();
-      double trackballRadius = 0.45 * std::min(w, h);
+      double trackballRadius = 0.4 * std::min(w, h);
       double trackballSqRadius = trackballRadius * trackballRadius; // avoid sqrt() later
 
       if (distSqCurrent <= trackballSqRadius || w <= 0 || h <= 0) { // for atan2 safety, test zero sizes
@@ -189,9 +189,8 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
         double y2 = currentVec.y();
         double crossProduct = x1 * y2 - y1 * x2;
         double dotProduct = x1 * x2 + y1 * y2;
-        double angleDelta = std::atan2(crossProduct, dotProduct);
-        double degreesDelta = angleDelta * (180.0 / M_PI); // to degrees
-        rotate(m_renderer->camera().focus(), 0, 0, degreesDelta);
+        double angleDelta = std::atan2(crossProduct, dotProduct); // counter-clockwise is positive here
+        rotate(m_renderer->camera().focus(), 0, 0, - angleDelta * (1.0 / ROTATION_SPEED)); // undo *ROTATION_SPEED
       }
       e->accept();
       break;
