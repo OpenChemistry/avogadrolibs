@@ -140,9 +140,24 @@ jobs:
             security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
             security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-            # import certificate to keychain
+            # import the certificate *and* its private key to the keychain
             security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+            # let codesign use the private key without an interactive prompt
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH > /dev/null
             security list-keychain -d user -s $KEYCHAIN_PATH
+
+            # Fail here, with a useful message, rather than deep inside the
+            # packaging step where the only clue is
+            # "The specified item could not be found in the keychain."
+            echo "Code signing identities in the build keychain:"
+            security find-identity -v -p codesigning $KEYCHAIN_PATH || true
+            if ! security find-identity -v -p codesigning $KEYCHAIN_PATH | grep -qF "${CODESIGN_IDENTITY}"; then
+              echo "::error::No valid codesigning identity matching CODESIGN_ID was found."
+              echo "BUILD_CERTIFICATE_BASE64 must be a .p12 exported from Keychain Access"
+              echo "under 'My Certificates' (i.e. the certificate *and* its private key),"
+              echo "and the certificate must not have expired."
+              exit 1
+            fi
           fi # certificate exists
         fi # password exists
 
