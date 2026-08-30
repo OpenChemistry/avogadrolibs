@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-08-16 02:34+0000\n"
-"PO-Revision-Date: 2026-08-09 04:51+0000\n"
+"PO-Revision-Date: 2026-08-31 04:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1073,9 +1073,9 @@ msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr "分子表現の読み込みでエラー: 認識できないファイルフォーマット: %1"
 
 #: qtgui/interfacescript.cpp:334
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error reading molecule representation: %1"
-msgstr ""
+msgstr "分子表現の読み込みでエラー: %1"
 
 #: qtgui/interfacescript.cpp:392
 #, qt-format
@@ -2516,12 +2516,14 @@ msgid "Cancel"
 msgstr "キャンセル"
 
 #: qtplugins/commandscripts/command.cpp:412
+#, fuzzy
 msgid "The script could not be started."
-msgstr ""
+msgstr "スクリプトの開始に失敗しました。"
 
 #: qtplugins/commandscripts/command.cpp:422
+#, fuzzy
 msgid "Error Running Script"
-msgstr ""
+msgstr "スクリプトの実行でエラー"
 
 #: qtplugins/commandscripts/command.cpp:489
 msgid "Set path to Python interpreter:"
@@ -3358,12 +3360,12 @@ msgstr "力"
 #: qtplugins/forcefield/forcefield.cpp:102
 #: qtplugins/forcefield/forcefield.cpp:822
 msgid "Energies (All Conformers)"
-msgstr ""
+msgstr "エネルギー（全配座異性体）"
 
 #: qtplugins/forcefield/forcefield.cpp:110
 #: qtplugins/forcefield/forcefield.cpp:821
 msgid "Forces (All Conformers)"
-msgstr ""
+msgstr "力（全配座異性体）"
 
 #: qtplugins/forcefield/forcefield.cpp:118
 msgid "Configure…"
@@ -3434,8 +3436,9 @@ msgid "%1 Force Norm = %L2"
 msgstr "%1 力の大きさ = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:804
+#, fuzzy
 msgid "This molecule has only one coordinate set."
-msgstr ""
+msgstr "この分子には座標が1つしかありません。"
 
 #: qtplugins/forcefield/forcefield.h:62
 msgid "Forcefield optimization"
@@ -3785,8 +3788,9 @@ msgid "Build polymers from monomer repeat units."
 msgstr "モノマー繰り返し単位からポリマーを構築"
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
+#, fuzzy
 msgid "Polymer monomer data directory not found."
-msgstr ""
+msgstr "ポリマーのモノマーディレクトリーが見つかりません。"
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:172
 msgid "Choose Monomer"
@@ -4274,7 +4278,7 @@ msgid "Chemical Name"
 msgstr "化学名"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:131
-#, fuzzy, qt-format
+#, qt-format
 msgid "Querying PubChem for %1"
 msgstr "PubChemに %1 を問い合わせ中"
 
@@ -5045,7 +5049,7 @@ msgstr "相対エネルギー (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:236
 msgid "RMS Gradient"
-msgstr ""
+msgstr "RMS勾配"
 
 #: qtplugins/plotconformer/plotconformer.cpp:238
 msgid "Velocities (m/s)"
@@ -5398,7 +5402,7 @@ msgstr "タイプ:"
 #: qtplugins/propertytables/propertyview.cpp:581
 #, fuzzy
 msgid "The property name cannot be empty."
-msgstr "プロパティ名は空ではいけません。"
+msgstr "プロパティ名を空にすることはできません。"
 
 #: qtplugins/propertytables/propertyview.cpp:591
 #, qt-format
@@ -6366,7 +6370,6 @@ msgid "Insert Ligand"
 msgstr "リガンドを挿入"
 
 #: qtplugins/templatetool/templatetool.cpp:954
-#, fuzzy
 msgid "Insert Metal Center"
 msgstr "金属中心を挿入"
 
@@ -7801,7 +7804,6 @@ msgstr "新規のペプチドの鎖数"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, aGroupBox)
-#, fuzzy
 msgid "Polymer Structure"
 msgstr "ポリマー構造"
 
@@ -7892,25 +7894,21 @@ msgstr "タクティシティ:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:292
 #. i18n: ectx: property (toolTip), widget (QComboBox, tacticityComboBox)
-#, fuzzy
 msgid "Control of the polymer stereochemistry / tacticity"
 msgstr "ポリマーの立体化学/タクティシティの制御"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:299
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
-#, fuzzy
 msgid "Atactic / Random"
 msgstr "アタクティック/ランダム"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:304
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
-#, fuzzy
 msgid "Isotactic"
 msgstr "アイソタクティック"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:309
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
-#, fuzzy
 msgid "Syndiotactic"
 msgstr "シンジオタクティック"
 
