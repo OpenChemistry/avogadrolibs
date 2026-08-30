@@ -25,6 +25,9 @@
 
 #include <Eigen/Geometry>
 
+#include <algorithm>
+#include <cmath>
+
 namespace Avogadro::QtPlugins {
 
 const float ZOOM_SPEED = 0.02f;
@@ -134,7 +137,8 @@ QUndoCommand* Navigator::mousePressEvent(QMouseEvent* e)
   // Figure out what type of navigation has been requested.
   if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::AltModifier) {
     m_currentAction = RotTrackball;
-  } else if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::NoModifier) {
+  } else if (e->buttons() & Qt::LeftButton &&
+             e->modifiers() == Qt::NoModifier) {
     m_currentAction = Rotation;
   } else if (e->buttons() & Qt::MiddleButton ||
              (e->buttons() & Qt::LeftButton &&
@@ -175,22 +179,28 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
       QPointF currentVec = QPointF(e->pos()) - center;
       QPointF prevVec = QPointF(m_lastMousePosition) - center;
 
-      double distSqCurrent = currentVec.x() * currentVec.x() + currentVec.y() * currentVec.y();
+      double x2 = currentVec.x();
+      double y2 = currentVec.y();
+      double distSqCurrent = x2 * x2 + y2 * y2;
       double trackballRadius = 0.4 * std::min(w, h);
-      double trackballSqRadius = trackballRadius * trackballRadius; // avoid sqrt() later
+      // avoid sqrt() later, compare squares
+      double trackballSqRadius = trackballRadius * trackballRadius;
 
-      if (distSqCurrent <= trackballSqRadius || w <= 0 || h <= 0) { // for atan2 safety, test zero sizes
-        rotate(m_renderer->camera().focus(), delta.y(), delta.x(), 0); // like Rotation
+      // for atan2 safety, test also zero sizes
+      if (distSqCurrent <= trackballSqRadius || w <= 0 || h <= 0) {
+        // like Rotation
+        rotate(m_renderer->camera().focus(), delta.y(), delta.x(), 0);
       } else {
         // Calculate angle between current and previous ticks
         double x1 = prevVec.x();
         double y1 = prevVec.y();
-        double x2 = currentVec.x();
-        double y2 = currentVec.y();
         double crossProduct = x1 * y2 - y1 * x2;
         double dotProduct = x1 * x2 + y1 * y2;
-        double angleDelta = std::atan2(crossProduct, dotProduct); // counter-clockwise is positive here
-        rotate(m_renderer->camera().focus(), 0, 0, - angleDelta * (1.0 / ROTATION_SPEED)); // undo *ROTATION_SPEED
+        // counter-clockwise is positive here
+        double angleDelta = std::atan2(crossProduct, dotProduct);
+        // undo *ROTATION_SPEED which will happen in rotate()
+        rotate(m_renderer->camera().focus(), 0, 0,
+               - angleDelta * (1.0 / ROTATION_SPEED));
       }
       e->accept();
       break;
