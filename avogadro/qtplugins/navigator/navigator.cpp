@@ -30,6 +30,9 @@
 
 namespace Avogadro::QtPlugins {
 
+// Portable across C++ versions and compilers (unlike M_PI or std::numbers::pi)
+const double PI = std::acos(-1.0); 
+
 const float ZOOM_SPEED = 0.02f;
 const float ROTATION_SPEED = 0.005f;
 const float TRACKBALL_SPAN = 1.0f; // XY molecule rotations when trackball crossed
@@ -170,8 +173,8 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
     case RotTrackball: {
       QPoint delta = e->pos() - m_lastMousePosition;
 
-      int w = m_glWidget->width();
-      int h = m_glWidget->height();
+      double w = m_glWidget->width(); // double for type consistency in max
+      double h = m_glWidget->height();
 
       // Calculate molecule screen section center (pivot)
       QPointF center(w / 2.0, h / 2.0);
@@ -194,7 +197,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
         // like in Rotation but speed normalized
         // undo *ROTATION_SPEED which will happen in rotate()
         double speedCorrection = (1.0 / ROTATION_SPEED) * TRACKBALL_SPAN
-                                  * M_PI / trackballRadius;
+                                  * PI / trackballRadius;
         rotate(m_renderer->camera().focus(),
                delta.y() * speedCorrection,
                delta.x() * speedCorrection,
@@ -207,11 +210,11 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
         double dotProduct = x1 * x2 + y1 * y2;
         // for atan2 safety, avoid both sizes near zero at once
         // (just in case the window has microscopic size)
-        if( std::abs(crossProduct) > 0.1 || std::abs(dotProduct) > 0.1) {
+        if (std::abs(crossProduct) > 0.1 || std::abs(dotProduct) > 0.1) {
           // counter-clockwise is positive here
           double angleDelta = std::atan2(crossProduct, dotProduct);
           rotate(m_renderer->camera().focus(), 0, 0,
-                 - angleDelta * (1.0 / ROTATION_SPEED));
+                 -angleDelta * (1.0 / ROTATION_SPEED));
       }
       e->accept();
       break;
