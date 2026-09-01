@@ -219,9 +219,36 @@ void Command::menuActivated()
     QString pkgDir = theSender->property("packageDir").toString();
     QString pkgCmd = theSender->property("packageCommand").toString();
     QString pkgId = theSender->property("packageIdentifier").toString();
+    // The pyproject.toml [avogadro.X] table may declare a separate
+    // user-options file (JSON or TOML), or the literal "dynamic" to run
+    // the script with --user-options.
+    QString userOptionsRel =
+      theSender->property("packageUserOptions").toString();
     key = QtGui::PackageManager::packageFeatureKey(pkgDir, pkgCmd, pkgId);
 
     widget = m_dialogs.value(key, nullptr);
+
+    // A script that builds its options dynamically expects to be asked again
+    // every time the user opens the command: a list of jobs on a server, the
+    // files in a directory, anything that changes between invocations.
+    // Handing back the cached widget would pin the first answer for the rest
+    // of the session, which makes the whole point of "dynamic" moot, so
+    // discard it and build a fresh one below. Rebuilding the same widget in
+    // place would not do: JsonWidget::buildOptionGui() deletes only the
+    // layout, so the widgets it managed would survive as unmanaged children
+    // and paint over the new form.
+    if (widget != nullptr && userOptionsRel == QLatin1String("dynamic")) {
+      m_dialogs.remove(key);
+      if (m_currentInterface == widget)
+        m_currentInterface = nullptr;
+      widget->hide();
+      // Drop it out of the previous dialog before scheduling the delete, so
+      // nothing can reach it while the deferred deletion is pending.
+      widget->setParent(nullptr);
+      widget->deleteLater();
+      widget = nullptr;
+    }
+
     if (!widget) {
       widget = new InterfaceWidget(QString(), theParent);
       widget->interfaceScript().interpreter().setPackageInfo(
@@ -236,13 +263,8 @@ void Command::menuActivated()
       if (!inputFormat.isEmpty())
         opts.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
 
-      // The pyproject.toml [avogadro.X] table may declare a separate
-      // user-options file (JSON or TOML), or the literal "dynamic" to run
-      // the script with --user-options.  Its keys are the user-facing
-      // option definitions and must be wrapped under "userOptions" so that
+      // The option definitions must be wrapped under "userOptions" so that
       // JsonWidget::buildOptionGui() recognises them and builds the dialog.
-      QString userOptionsRel =
-        theSender->property("packageUserOptions").toString();
       if (!userOptionsRel.isEmpty()) {
         QJsonObject userOpts = QtGui::PackageManager::resolveUserOptions(
           userOptionsRel, pkgDir, pkgCmd, pkgId);

@@ -12,6 +12,7 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
@@ -21,11 +22,14 @@
 #include <QtWidgets/QTextEdit>
 
 #include <QtCore/QDebug>
+#include <QtCore/QItemSelectionModel>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
+
+#include <utility>
 
 #include <QRegularExpression>
 
@@ -136,13 +140,31 @@ void JsonWidget::buildOptionGui()
 
   m_widgets.clear();
   delete m_centralWidget->layout();
+  m_currentLayout = nullptr;
 
+  // Deleting a layout does not delete the widgets it managed: they stay on as
+  // children of m_centralWidget, no longer positioned by anything, and paint
+  // over the form built below. Everything under m_centralWidget was put there
+  // by a previous run of this function, so it all goes. Unparent first, so the
+  // stale form leaves the screen right away, then defer the delete in case
+  // this rebuild was triggered from one of those widgets' own signals.
+  const QList<QWidget*> stale = m_centralWidget->findChildren<QWidget*>(
+    QString(), Qt::FindDirectChildrenOnly);
+  for (QWidget* staleWidget : stale) {
+    staleWidget->setParent(nullptr);
+    staleWidget->deleteLater();
+  }
+
+  // Nothing below builds a widget, so the form is empty either way. Say so, or
+  // isEmpty() would keep reporting whatever the previous option set produced.
   if (!m_options.contains(u"userOptions"_s)) {
+    m_empty = true;
     return;
   }
 
   // Always expect an object now, should never be an array
   if (m_options[u"userOptions"_s].isArray()) {
+    m_empty = true;
     return;
   }
   QJsonObject userOptions = m_options[u"userOptions"_s].toObject();
@@ -597,33 +619,64 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
     tableWidget->setProperty("delimiter", obj[u"delimiter"_s].toString());
   }
 
-  // data might be supplied as columns or rows
-  if (obj.contains(u"columns"_s) && obj[u"columns"_s].isArray()) {
-    QJsonArray columns = obj[u"columns"_s].toArray();
-    // get the row count from the first column
-    tableWidget->setRowCount(columns[0].toArray().size());
-    for (int i = 0; i < columns.size(); ++i) {
-      int j = 0;
-      for (QJsonArray::const_iterator it = columns[i].toArray().constBegin(),
-                                      itEnd = columns[i].toArray().constEnd();
-           it != itEnd; ++it) {
-        tableWidget->setItem(i, j++, new QTableWidgetItem(it->toString()));
-      }
+  // A "selectable" table is a picker rather than an editable grid: the user
+  // chooses one row and collectOptions() hands that row to the script.
+  const bool selectable = obj[u"selectable"_s].toBool();
+  if (selectable) {
+    tableWidget->setProperty("selectable", true);
+    tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    tableWidget->verticalHeader()->setVisible(false);
+    connect(tableWidget, SIGNAL(itemSelectionChanged()),
+            SLOT(updatePreviewText()));
+  }
+
+  // Data may be supplied either as columns or as rows.  Both are arrays of
+  // arrays of cell strings; only the nesting order differs.  Note that
+  // setItem() takes (row, column) in that order.
+  if (obj[u"columns"_s].isArray()) {
+    const QJsonArray columns = obj[u"columns"_s].toArray();
+    // Every column holds one cell per row, so the longest sets the row count.
+    // Ragged input is allowed: missing cells are simply left empty.
+    int rowCount = 0;
+    for (const QJsonValue& column : columns)
+      rowCount = qMax(rowCount, static_cast<int>(column.toArray().size()));
+    tableWidget->setRowCount(rowCount);
+    // Headers, if any, have already set the column count; only grow it.
+    if (columns.size() > tableWidget->columnCount())
+      tableWidget->setColumnCount(static_cast<int>(columns.size()));
+
+    for (int column = 0; column < columns.size(); ++column) {
+      const QJsonArray cells = columns[column].toArray();
+      for (int row = 0; row < cells.size(); ++row)
+        tableWidget->setItem(row, column,
+                             new QTableWidgetItem(cells[row].toString()));
     }
   }
-  if (obj.contains(u"rows"_s) && obj[u"rows"_s].isArray()) {
-    QJsonArray rows = obj[u"rows"_s].toArray();
-    // get the column count from the first row
-    tableWidget->setColumnCount(rows[0].toArray().size());
-    for (int j = 0; j < rows.size(); ++j) {
-      int i = 0;
-      for (QJsonArray::const_iterator it = rows[i].toArray().constBegin(),
-                                      itEnd = rows[i].toArray().constEnd();
-           it != itEnd; ++it) {
-        tableWidget->setItem(i++, j, new QTableWidgetItem(it->toString()));
-      }
+  if (obj[u"rows"_s].isArray()) {
+    const QJsonArray rows = obj[u"rows"_s].toArray();
+    // Every row holds one cell per column, so the widest sets the column count.
+    int columnCount = 0;
+    for (const QJsonValue& row : rows)
+      columnCount = qMax(columnCount, static_cast<int>(row.toArray().size()));
+    tableWidget->setRowCount(static_cast<int>(rows.size()));
+    if (columnCount > tableWidget->columnCount())
+      tableWidget->setColumnCount(columnCount);
+
+    for (int row = 0; row < rows.size(); ++row) {
+      const QJsonArray cells = rows[row].toArray();
+      for (int column = 0; column < cells.size(); ++column)
+        tableWidget->setItem(row, column,
+                             new QTableWidgetItem(cells[column].toString()));
     }
   }
+
+  // Sorting has to be switched on after the data is in place, or the rows are
+  // re-ordered underneath setItem() as they are inserted.
+  if (obj[u"sortable"_s].toBool())
+    tableWidget->setSortingEnabled(true);
+  tableWidget->resizeColumnsToContents();
 
   return tableWidget;
 }
@@ -781,13 +834,24 @@ void JsonWidget::setTableOption(const QString& name, const QJsonValue& value)
   // parse the table
   table->clearContents();
   QStringList tableLines = value.toString().split("\n");
-  table->setRowCount(tableLines.size());
+  table->setRowCount(static_cast<int>(tableLines.size()));
+  // Without headers the column count is still zero, and setItem() would drop
+  // every cell, so widen the table to the longest line first.
+  int columnCount = table->columnCount();
+  for (const QString& line : std::as_const(tableLines))
+    columnCount =
+      qMax(columnCount, static_cast<int>(line.split(delimiter).size()));
+  table->setColumnCount(columnCount);
+
   for (int i = 0; i < tableLines.size(); ++i) {
     QStringList entry = tableLines[i].split(delimiter);
     for (int j = 0; j < entry.size(); ++j) {
       table->setItem(i, j, new QTableWidgetItem(entry[j]));
     }
   }
+  // createTableWidget() sized the columns when the widget was built, which for
+  // a table filled from its default was before there was anything in it.
+  table->resizeColumnsToContents();
 }
 
 void JsonWidget::setFilePathOption(const QString& name, const QJsonValue& value)
@@ -903,6 +967,52 @@ bool JsonWidget::optionString(const QString& option, QString& value) const
   return retval;
 }
 
+namespace {
+
+/**
+ * Serialize a table the way setTableOption() parses one: cells joined by the
+ * widget's delimiter, rows joined by newlines, so an editable table round
+ * trips through its own default value.
+ *
+ * A table created with "selectable" is a picker rather than a grid, so only
+ * the row the user chose is returned.  An empty string means nothing is
+ * selected, which the script must handle.
+ */
+QString tableToString(const QTableWidget* table)
+{
+  QString delimiter = u"\t"_s;
+  if (table->property("delimiter").isValid())
+    delimiter = table->property("delimiter").toString();
+
+  auto rowText = [table, &delimiter](int row) {
+    QStringList cells;
+    cells.reserve(table->columnCount());
+    for (int column = 0; column < table->columnCount(); ++column) {
+      const QTableWidgetItem* cell = table->item(row, column);
+      cells << (cell != nullptr ? cell->text() : QString());
+    }
+    return cells.join(delimiter);
+  };
+
+  if (table->property("selectable").toBool()) {
+    const QItemSelectionModel* selection = table->selectionModel();
+    if (selection == nullptr)
+      return QString();
+    const QModelIndexList rows = selection->selectedRows();
+    if (rows.isEmpty())
+      return QString();
+    return rowText(rows.first().row());
+  }
+
+  QStringList lines;
+  lines.reserve(table->rowCount());
+  for (int row = 0; row < table->rowCount(); ++row)
+    lines << rowText(row);
+  return lines.join(u"\n"_s);
+}
+
+} // namespace
+
 QJsonObject JsonWidget::collectOptions() const
 {
   QJsonObject ret;
@@ -925,6 +1035,8 @@ QJsonObject JsonWidget::collectOptions() const
     } else if (auto* fileBrowse =
                  qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
       ret.insert(label, fileBrowse->fileName());
+    } else if (auto* table = qobject_cast<QTableWidget*>(widget)) {
+      ret.insert(label, tableToString(table));
     } else {
       qWarning()
         << tr("Unhandled widget in collectOptions for option '%1'.").arg(label);

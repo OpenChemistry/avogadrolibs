@@ -21,6 +21,7 @@ set(tests
   ElementTranslator
   GenericHighlighter
   HydrogenTools
+  JsonWidget
   MeshGenerator
   Molecule
   PackageManager
