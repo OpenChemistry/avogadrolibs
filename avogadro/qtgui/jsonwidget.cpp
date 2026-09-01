@@ -880,6 +880,13 @@ void JsonWidget::setTableOption(const QString& name, const QJsonValue& value)
     columnCount = qMax(columnCount, static_cast<int>(rows.last().size()));
   }
 
+  // A sortable table re-sorts on every setItem() into the column the sort
+  // indicator is on, moving rows out from under the insertion and scattering
+  // each row's cells across the others. Fill it with sorting off, then put the
+  // setting back and let the view sort the finished rows as a whole.
+  const bool sortingEnabled = table->isSortingEnabled();
+  table->setSortingEnabled(false);
+
   table->clearContents();
   table->setRowCount(static_cast<int>(rows.size()));
   table->setColumnCount(columnCount);
@@ -892,6 +899,7 @@ void JsonWidget::setTableOption(const QString& name, const QJsonValue& value)
   // createTableWidget() only sizes the columns when the JSON carried the data;
   // a table filled from its default gets its turn here.
   table->resizeColumnsToContents();
+  table->setSortingEnabled(sortingEnabled);
 }
 
 void JsonWidget::setFilePathOption(const QString& name, const QJsonValue& value)

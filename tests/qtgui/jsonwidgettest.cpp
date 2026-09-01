@@ -377,3 +377,64 @@ TEST_F(JsonWidgetTest, InterfaceWidgetReloadsOptionsInPlace)
     << "the previous option set must not survive the refresh";
   EXPECT_EQ(collected.size(), 1);
 }
+
+// A table that is both "sortable" and filled from a "default" has its cells
+// inserted while sorting is live, and QTableWidget re-sorts on every setItem(),
+// moving rows out from under the insertion. The default must survive intact.
+TEST_F(JsonWidgetTest, SortableTableKeepsItsDefaultIntact)
+{
+  const QString contents = QStringLiteral("3\tgamma\n1\talpha\n2\tbeta");
+
+  QJsonObject table;
+  table.insert(QStringLiteral("sortable"), true);
+  table.insert(QStringLiteral("default"), contents);
+
+  TestableJsonWidget widget;
+  QTableWidget* view = buildTable(widget, table);
+  ASSERT_NE(view, nullptr);
+  EXPECT_EQ(view->rowCount(), 3);
+  EXPECT_EQ(view->columnCount(), 2);
+
+  EXPECT_EQ(widget.collectOptions()
+              .value(QStringLiteral("Job"))
+              .toString()
+              .toStdString(),
+            contents.toStdString());
+}
+
+// Once the user clicks a header the sort indicator sits on a live column, and
+// a later applyOptions() (forcefielddialog, or InputGeneratorWidget reverting
+// to its cached options) refills the table. Sorting has to be suspended for
+// that, or QTableWidget shuffles rows between setItem() calls and each row
+// ends up holding cells that belong to its neighbours.
+TEST_F(JsonWidgetTest, SortedTableSurvivesANewDefault)
+{
+  QJsonObject table;
+  table.insert(QStringLiteral("sortable"), true);
+  table.insert(QStringLiteral("headers"), toArray({ "Num", "Word" }));
+  table.insert(QStringLiteral("default"), QStringLiteral("3\tgamma"));
+
+  TestableJsonWidget widget;
+  QTableWidget* view = buildTable(widget, table);
+  ASSERT_NE(view, nullptr);
+  view->sortByColumn(0, Qt::AscendingOrder);
+
+  QJsonObject opts;
+  opts.insert(QStringLiteral("Job"),
+              QStringLiteral("3\tgamma\n1\talpha\n2\tbeta"));
+  widget.applyOptions(opts);
+
+  ASSERT_EQ(view->rowCount(), 3);
+  ASSERT_EQ(view->columnCount(), 2);
+
+  // Every number must still be beside its own word. The view is sorted on
+  // column 0, so the rows read in numeric order.
+  const QStringList expected = { "1\talpha", "2\tbeta", "3\tgamma" };
+  for (int row = 0; row < 3; ++row) {
+    ASSERT_NE(view->item(row, 0), nullptr) << "row " << row << " column 0";
+    ASSERT_NE(view->item(row, 1), nullptr) << "row " << row << " column 1";
+    const QString actual =
+      view->item(row, 0)->text() + '\t' + view->item(row, 1)->text();
+    EXPECT_EQ(actual.toStdString(), expected.at(row).toStdString());
+  }
+}

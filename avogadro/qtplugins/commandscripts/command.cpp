@@ -261,10 +261,17 @@ void Command::menuActivated()
           opts.insert(QStringLiteral("userOptions"), userOpts);
       }
 
-      // Pre-populate the cached options so reloadOptions() does not invoke
-      // the script with --print-options.
-      widget->interfaceScript().setOptionsJson(opts);
-      widget->reloadOptions();
+      // A dynamic script that fails - no network, a timeout, malformed JSON -
+      // resolves to nothing. Pushing that empty result into a widget that
+      // already has a working form would blank it, and isEmpty() below would
+      // then run the command with no options at all rather than showing the
+      // dialog. Keep the last good form instead and let the user try again.
+      if (isNewWidget || opts.contains(QStringLiteral("userOptions"))) {
+        // Pre-populate the cached options so reloadOptions() does not invoke
+        // the script with --print-options.
+        widget->interfaceScript().setOptionsJson(opts);
+        widget->reloadOptions();
+      }
     }
   } else {
     key = theSender->data().toString();
