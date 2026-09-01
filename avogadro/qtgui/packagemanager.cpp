@@ -259,6 +259,11 @@ QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
   return doc.object();
 }
 
+bool PackageManager::isDynamicUserOptions(const QString& userOptionsValue)
+{
+  return userOptionsValue == QLatin1String("dynamic");
+}
+
 QJsonObject PackageManager::resolveUserOptions(const QString& userOptionsValue,
                                                const QString& packageDir,
                                                const QString& command,
@@ -268,7 +273,7 @@ QJsonObject PackageManager::resolveUserOptions(const QString& userOptionsValue,
     return {};
 
   QJsonObject result;
-  if (userOptionsValue == QLatin1String("dynamic"))
+  if (isDynamicUserOptions(userOptionsValue))
     result = loadOptionsFromScript(packageDir, command, identifier);
   else
     result = loadOptionsFromFile(packageDir + '/' + userOptionsValue);

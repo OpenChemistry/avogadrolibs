@@ -29,13 +29,64 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-#include <utility>
-
 #include <QRegularExpression>
+
+#include <utility>
 
 using namespace Qt::StringLiterals;
 
 namespace Avogadro::QtGui {
+
+namespace {
+
+/// The cell separator a table option was built with; a tab unless it said so.
+QString tableDelimiter(const QTableWidget* table)
+{
+  const QVariant delimiter = table->property("delimiter");
+  return delimiter.isValid() ? delimiter.toString() : u"\t"_s;
+}
+
+/**
+ * Serialize a table the way setTableOption() parses one: cells joined by the
+ * widget's delimiter, rows joined by newlines, so an editable table round
+ * trips through its own default value.
+ *
+ * A table created with "selectable" is a picker rather than a grid, so only
+ * the row the user chose is returned.  An empty string means nothing is
+ * selected, which the script must handle.
+ */
+QString tableToString(const QTableWidget* table)
+{
+  const QString delimiter = tableDelimiter(table);
+
+  auto rowText = [table, &delimiter](int row) {
+    QStringList cells;
+    cells.reserve(table->columnCount());
+    for (int column = 0; column < table->columnCount(); ++column) {
+      const QTableWidgetItem* cell = table->item(row, column);
+      cells << (cell != nullptr ? cell->text() : QString());
+    }
+    return cells.join(delimiter);
+  };
+
+  if (table->property("selectable").toBool()) {
+    const QItemSelectionModel* selection = table->selectionModel();
+    if (selection == nullptr)
+      return QString();
+    const QModelIndexList rows = selection->selectedRows();
+    if (rows.isEmpty())
+      return QString();
+    return rowText(rows.first().row());
+  }
+
+  QStringList lines;
+  lines.reserve(table->rowCount());
+  for (int row = 0; row < table->rowCount(); ++row)
+    lines << rowText(row);
+  return lines.join(u"\n"_s);
+}
+
+} // namespace
 
 JsonWidget::JsonWidget(QWidget* parent_)
   : QWidget(parent_), m_molecule(nullptr), m_empty(true), m_batchMode(false),
@@ -621,8 +672,7 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
 
   // A "selectable" table is a picker rather than an editable grid: the user
   // chooses one row and collectOptions() hands that row to the script.
-  const bool selectable = obj[u"selectable"_s].toBool();
-  if (selectable) {
+  if (obj[u"selectable"_s].toBool()) {
     tableWidget->setProperty("selectable", true);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -632,51 +682,42 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
             SLOT(updatePreviewText()));
   }
 
-  // Data may be supplied either as columns or as rows.  Both are arrays of
-  // arrays of cell strings; only the nesting order differs.  Note that
-  // setItem() takes (row, column) in that order.
-  if (obj[u"columns"_s].isArray()) {
-    const QJsonArray columns = obj[u"columns"_s].toArray();
-    // Every column holds one cell per row, so the longest sets the row count.
-    // Ragged input is allowed: missing cells are simply left empty.
-    int rowCount = 0;
-    for (const QJsonValue& column : columns)
-      rowCount = qMax(rowCount, static_cast<int>(column.toArray().size()));
-    tableWidget->setRowCount(rowCount);
-    // Headers, if any, have already set the column count; only grow it.
-    if (columns.size() > tableWidget->columnCount())
-      tableWidget->setColumnCount(static_cast<int>(columns.size()));
+  // Data may be supplied either as columns or as rows: both are arrays of
+  // arrays of cell strings, and only the nesting order differs.  Fill the
+  // table from one of them, mapping the outer index to whichever axis it
+  // names.  Note that setItem() takes (row, column) in that order.
+  auto populate = [tableWidget](const QJsonArray& outer, bool outerIsRows) {
+    // The longest inner array sets the size of the other axis. Ragged input
+    // is allowed: missing cells are simply left empty.
+    int innerCount = 0;
+    for (const QJsonValue& inner : outer)
+      innerCount = qMax(innerCount, static_cast<int>(inner.toArray().size()));
 
-    for (int column = 0; column < columns.size(); ++column) {
-      const QJsonArray cells = columns[column].toArray();
-      for (int row = 0; row < cells.size(); ++row)
-        tableWidget->setItem(row, column,
-                             new QTableWidgetItem(cells[row].toString()));
-    }
-  }
-  if (obj[u"rows"_s].isArray()) {
-    const QJsonArray rows = obj[u"rows"_s].toArray();
-    // Every row holds one cell per column, so the widest sets the column count.
-    int columnCount = 0;
-    for (const QJsonValue& row : rows)
-      columnCount = qMax(columnCount, static_cast<int>(row.toArray().size()));
-    tableWidget->setRowCount(static_cast<int>(rows.size()));
+    const auto outerCount = static_cast<int>(outer.size());
+    tableWidget->setRowCount(outerIsRows ? outerCount : innerCount);
+    // Headers, if any, have already set the column count; only grow it.
+    const int columnCount = outerIsRows ? innerCount : outerCount;
     if (columnCount > tableWidget->columnCount())
       tableWidget->setColumnCount(columnCount);
 
-    for (int row = 0; row < rows.size(); ++row) {
-      const QJsonArray cells = rows[row].toArray();
-      for (int column = 0; column < cells.size(); ++column)
-        tableWidget->setItem(row, column,
-                             new QTableWidgetItem(cells[column].toString()));
+    for (int i = 0; i < outerCount; ++i) {
+      const QJsonArray cells = outer[i].toArray();
+      for (int j = 0; j < cells.size(); ++j)
+        tableWidget->setItem(outerIsRows ? i : j, outerIsRows ? j : i,
+                             new QTableWidgetItem(cells[j].toString()));
     }
-  }
+    tableWidget->resizeColumnsToContents();
+  };
+
+  if (obj[u"columns"_s].isArray())
+    populate(obj[u"columns"_s].toArray(), false);
+  if (obj[u"rows"_s].isArray())
+    populate(obj[u"rows"_s].toArray(), true);
 
   // Sorting has to be switched on after the data is in place, or the rows are
   // re-ordered underneath setItem() as they are inserted.
   if (obj[u"sortable"_s].toBool())
     tableWidget->setSortingEnabled(true);
-  tableWidget->resizeColumnsToContents();
 
   return tableWidget;
 }
@@ -824,33 +865,32 @@ void JsonWidget::setTableOption(const QString& name, const QJsonValue& value)
     return;
   }
 
-  // parse the table (default delimiter is tab)
-  QString delimiter;
-  if (table->property("delimiter").isValid())
-    delimiter = table->property("delimiter").toString();
-  else
-    delimiter = "\t";
-
-  // parse the table
-  table->clearContents();
-  QStringList tableLines = value.toString().split("\n");
-  table->setRowCount(static_cast<int>(tableLines.size()));
+  // Parse the table up front: the rows are needed twice, to size it and to
+  // fill it, and splitting each line again for the second pass allocates a
+  // fresh QString per cell.
+  const QString delimiter = tableDelimiter(table);
+  const QStringList lines = value.toString().split(u"\n"_s);
+  QList<QStringList> rows;
+  rows.reserve(lines.size());
   // Without headers the column count is still zero, and setItem() would drop
   // every cell, so widen the table to the longest line first.
   int columnCount = table->columnCount();
-  for (const QString& line : std::as_const(tableLines))
-    columnCount =
-      qMax(columnCount, static_cast<int>(line.split(delimiter).size()));
-  table->setColumnCount(columnCount);
+  for (const QString& line : lines) {
+    rows.append(line.split(delimiter));
+    columnCount = qMax(columnCount, static_cast<int>(rows.last().size()));
+  }
 
-  for (int i = 0; i < tableLines.size(); ++i) {
-    QStringList entry = tableLines[i].split(delimiter);
+  table->clearContents();
+  table->setRowCount(static_cast<int>(rows.size()));
+  table->setColumnCount(columnCount);
+  for (int i = 0; i < rows.size(); ++i) {
+    const QStringList& entry = rows.at(i);
     for (int j = 0; j < entry.size(); ++j) {
-      table->setItem(i, j, new QTableWidgetItem(entry[j]));
+      table->setItem(i, j, new QTableWidgetItem(entry.at(j)));
     }
   }
-  // createTableWidget() sized the columns when the widget was built, which for
-  // a table filled from its default was before there was anything in it.
+  // createTableWidget() only sizes the columns when the JSON carried the data;
+  // a table filled from its default gets its turn here.
   table->resizeColumnsToContents();
 }
 
@@ -966,52 +1006,6 @@ bool JsonWidget::optionString(const QString& option, QString& value) const
 
   return retval;
 }
-
-namespace {
-
-/**
- * Serialize a table the way setTableOption() parses one: cells joined by the
- * widget's delimiter, rows joined by newlines, so an editable table round
- * trips through its own default value.
- *
- * A table created with "selectable" is a picker rather than a grid, so only
- * the row the user chose is returned.  An empty string means nothing is
- * selected, which the script must handle.
- */
-QString tableToString(const QTableWidget* table)
-{
-  QString delimiter = u"\t"_s;
-  if (table->property("delimiter").isValid())
-    delimiter = table->property("delimiter").toString();
-
-  auto rowText = [table, &delimiter](int row) {
-    QStringList cells;
-    cells.reserve(table->columnCount());
-    for (int column = 0; column < table->columnCount(); ++column) {
-      const QTableWidgetItem* cell = table->item(row, column);
-      cells << (cell != nullptr ? cell->text() : QString());
-    }
-    return cells.join(delimiter);
-  };
-
-  if (table->property("selectable").toBool()) {
-    const QItemSelectionModel* selection = table->selectionModel();
-    if (selection == nullptr)
-      return QString();
-    const QModelIndexList rows = selection->selectedRows();
-    if (rows.isEmpty())
-      return QString();
-    return rowText(rows.first().row());
-  }
-
-  QStringList lines;
-  lines.reserve(table->rowCount());
-  for (int row = 0; row < table->rowCount(); ++row)
-    lines << rowText(row);
-  return lines.join(u"\n"_s);
-}
-
-} // namespace
 
 QJsonObject JsonWidget::collectOptions() const
 {

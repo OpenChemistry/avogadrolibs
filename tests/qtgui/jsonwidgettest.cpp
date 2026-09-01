@@ -5,6 +5,8 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/qtgui/interfacescript.h>
+#include <avogadro/qtgui/interfacewidget.h>
 #include <avogadro/qtgui/jsonwidget.h>
 
 #include <QtCore/QCoreApplication>
@@ -15,9 +17,18 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QTableWidget>
 
+using Avogadro::QtGui::InterfaceWidget;
 using Avogadro::QtGui::JsonWidget;
 
 namespace {
+
+/// The full options object an InterfaceScript hands to the widget.
+QJsonObject wrapOptions(const QJsonObject& userOptions)
+{
+  QJsonObject options;
+  options.insert(QStringLiteral("userOptions"), userOptions);
+  return options;
+}
 
 /**
  * JsonWidget is a QWidget, so a plain QCoreApplication is not enough. Other
@@ -45,19 +56,16 @@ class TestableJsonWidget : public JsonWidget
 public:
   explicit TestableJsonWidget(QWidget* parent = nullptr) : JsonWidget(parent) {}
 
-  void setOptions(const QJsonObject& userOptions)
-  {
-    QJsonObject options;
-    options.insert(QStringLiteral("userOptions"), userOptions);
-    m_options = options;
-    updateOptions();
-  }
-
   /// Replace the options wholesale, without the "userOptions" wrapper.
   void setRawOptions(const QJsonObject& options)
   {
     m_options = options;
     updateOptions();
+  }
+
+  void setOptions(const QJsonObject& userOptions)
+  {
+    setRawOptions(wrapOptions(userOptions));
   }
 
   QWidget* widgetFor(const QString& name) const
@@ -96,19 +104,38 @@ QJsonObject jobTable(QJsonObject table)
   return userOptions;
 }
 
+/// Build the form for a lone "table" option named "Job" and hand back its view.
+QTableWidget* buildTable(TestableJsonWidget& widget, const QJsonObject& table)
+{
+  widget.setOptions(jobTable(table));
+  return widget.table(QStringLiteral("Job"));
+}
+
 const QStringList headers = { "Job", "Name", "Calculation" };
 const QStringList row0 = { "1963207", "H2N", "Molecular Energy" };
 const QStringList row1 = { "1963205", "CH3F", "NMR" };
 
 } // namespace
 
+/**
+ * Every case needs a QApplication before it can build a widget, and skips
+ * rather than fails if another test in this binary got in first with a plain
+ * QCoreApplication.
+ */
+class JsonWidgetTest : public ::testing::Test
+{
+protected:
+  void SetUp() override
+  {
+    if (ensureApp() == nullptr)
+      GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
+  }
+};
+
 // Rows are arrays of cells; setItem() takes (row, column) in that order, so a
 // table given by rows must come back with row 0 holding row0.
-TEST(JsonWidgetTest, RowsPopulateInOrder)
+TEST_F(JsonWidgetTest, RowsPopulateInOrder)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-
   QJsonObject table;
   table.insert(QStringLiteral("headers"), toArray(headers));
   QJsonArray rows;
@@ -117,9 +144,7 @@ TEST(JsonWidgetTest, RowsPopulateInOrder)
   table.insert(QStringLiteral("rows"), rows);
 
   TestableJsonWidget widget;
-  widget.setOptions(jobTable(table));
-
-  QTableWidget* view = widget.table(QStringLiteral("Job"));
+  QTableWidget* view = buildTable(widget, table);
   ASSERT_NE(view, nullptr);
   EXPECT_EQ(view->rowCount(), 2);
   EXPECT_EQ(view->columnCount(), 3);
@@ -133,11 +158,8 @@ TEST(JsonWidgetTest, RowsPopulateInOrder)
 }
 
 // The same data supplied column-wise has to produce the identical grid.
-TEST(JsonWidgetTest, ColumnsPopulateInOrder)
+TEST_F(JsonWidgetTest, ColumnsPopulateInOrder)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-
   QJsonObject table;
   table.insert(QStringLiteral("headers"), toArray(headers));
   QJsonArray columns;
@@ -146,9 +168,7 @@ TEST(JsonWidgetTest, ColumnsPopulateInOrder)
   table.insert(QStringLiteral("columns"), columns);
 
   TestableJsonWidget widget;
-  widget.setOptions(jobTable(table));
-
-  QTableWidget* view = widget.table(QStringLiteral("Job"));
+  QTableWidget* view = buildTable(widget, table);
   ASSERT_NE(view, nullptr);
   EXPECT_EQ(view->rowCount(), 2);
   EXPECT_EQ(view->columnCount(), 3);
@@ -161,11 +181,8 @@ TEST(JsonWidgetTest, ColumnsPopulateInOrder)
 
 // A short row leaves the trailing cells empty rather than shifting them, and
 // the header still fixes the column count.
-TEST(JsonWidgetTest, RaggedRowsLeaveMissingCellsEmpty)
+TEST_F(JsonWidgetTest, RaggedRowsLeaveMissingCellsEmpty)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-
   QJsonObject table;
   table.insert(QStringLiteral("headers"), toArray(headers));
   QJsonArray rows;
@@ -174,9 +191,7 @@ TEST(JsonWidgetTest, RaggedRowsLeaveMissingCellsEmpty)
   table.insert(QStringLiteral("rows"), rows);
 
   TestableJsonWidget widget;
-  widget.setOptions(jobTable(table));
-
-  QTableWidget* view = widget.table(QStringLiteral("Job"));
+  QTableWidget* view = buildTable(widget, table);
   ASSERT_NE(view, nullptr);
   EXPECT_EQ(view->columnCount(), 3);
   ASSERT_NE(view->item(1, 0), nullptr);
@@ -186,11 +201,8 @@ TEST(JsonWidgetTest, RaggedRowsLeaveMissingCellsEmpty)
 
 // A "selectable" table is a picker: the script gets the chosen row, and an
 // empty string while nothing is chosen.
-TEST(JsonWidgetTest, SelectableTableCollectsSelectedRow)
+TEST_F(JsonWidgetTest, SelectableTableCollectsSelectedRow)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-
   QJsonObject table;
   table.insert(QStringLiteral("selectable"), true);
   table.insert(QStringLiteral("headers"), toArray(headers));
@@ -200,9 +212,7 @@ TEST(JsonWidgetTest, SelectableTableCollectsSelectedRow)
   table.insert(QStringLiteral("rows"), rows);
 
   TestableJsonWidget widget;
-  widget.setOptions(jobTable(table));
-
-  QTableWidget* view = widget.table(QStringLiteral("Job"));
+  QTableWidget* view = buildTable(widget, table);
   ASSERT_NE(view, nullptr);
 
   QJsonObject collected = widget.collectOptions();
@@ -218,11 +228,8 @@ TEST(JsonWidgetTest, SelectableTableCollectsSelectedRow)
 
 // A selectable table honours a custom delimiter, so a script can pick one that
 // cannot occur in its own data.
-TEST(JsonWidgetTest, SelectableTableHonoursDelimiter)
+TEST_F(JsonWidgetTest, SelectableTableHonoursDelimiter)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-
   QJsonObject table;
   table.insert(QStringLiteral("selectable"), true);
   table.insert(QStringLiteral("delimiter"), QStringLiteral("|"));
@@ -232,9 +239,7 @@ TEST(JsonWidgetTest, SelectableTableHonoursDelimiter)
   table.insert(QStringLiteral("rows"), rows);
 
   TestableJsonWidget widget;
-  widget.setOptions(jobTable(table));
-
-  QTableWidget* view = widget.table(QStringLiteral("Job"));
+  QTableWidget* view = buildTable(widget, table);
   ASSERT_NE(view, nullptr);
   view->selectRow(0);
 
@@ -248,20 +253,15 @@ TEST(JsonWidgetTest, SelectableTableHonoursDelimiter)
 // An ordinary (non-selectable) table is an editable grid: its "default" string
 // is parsed by setTableOption() and collectOptions() must give it back
 // unchanged, with no headers to establish the column count.
-TEST(JsonWidgetTest, EditableTableRoundTripsItsDefault)
+TEST_F(JsonWidgetTest, EditableTableRoundTripsItsDefault)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-
   const QString contents = QStringLiteral("1.0\t2.0\t3.0\n4.0\t5.0\t6.0");
 
   QJsonObject table;
   table.insert(QStringLiteral("default"), contents);
 
   TestableJsonWidget widget;
-  widget.setOptions(jobTable(table));
-
-  QTableWidget* view = widget.table(QStringLiteral("Job"));
+  QTableWidget* view = buildTable(widget, table);
   ASSERT_NE(view, nullptr);
   EXPECT_EQ(view->rowCount(), 2);
   EXPECT_EQ(view->columnCount(), 3);
@@ -275,11 +275,8 @@ TEST(JsonWidgetTest, EditableTableRoundTripsItsDefault)
 
 // Sorting is applied after the rows are inserted, so the data must survive it,
 // and a selection made afterwards must report the row the user actually sees.
-TEST(JsonWidgetTest, SortableTableCollectsTheVisibleRow)
+TEST_F(JsonWidgetTest, SortableTableCollectsTheVisibleRow)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-
   QJsonObject table;
   table.insert(QStringLiteral("selectable"), true);
   table.insert(QStringLiteral("sortable"), true);
@@ -290,9 +287,7 @@ TEST(JsonWidgetTest, SortableTableCollectsTheVisibleRow)
   table.insert(QStringLiteral("rows"), rows);
 
   TestableJsonWidget widget;
-  widget.setOptions(jobTable(table));
-
-  QTableWidget* view = widget.table(QStringLiteral("Job"));
+  QTableWidget* view = buildTable(widget, table);
   ASSERT_NE(view, nullptr);
   EXPECT_TRUE(view->isSortingEnabled());
   EXPECT_EQ(view->rowCount(), 2);
@@ -308,11 +303,8 @@ TEST(JsonWidgetTest, SortableTableCollectsTheVisibleRow)
 
 // Rebuilding the form has to take the old widgets with it. Deleting the layout
 // leaves them behind as children, where they keep painting over the new form.
-TEST(JsonWidgetTest, RebuildDiscardsTheOldForm)
+TEST_F(JsonWidgetTest, RebuildDiscardsTheOldForm)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-
   TestableJsonWidget widget;
 
   QJsonObject first;
@@ -346,11 +338,8 @@ TEST(JsonWidgetTest, RebuildDiscardsTheOldForm)
 
 // An option set with nothing in it must report itself empty, so that Command
 // runs the script straight away instead of showing a blank dialog.
-TEST(JsonWidgetTest, RebuildWithoutOptionsReportsEmpty)
+TEST_F(JsonWidgetTest, RebuildWithoutOptionsReportsEmpty)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-
   TestableJsonWidget widget;
 
   QJsonObject first;
@@ -360,4 +349,31 @@ TEST(JsonWidgetTest, RebuildWithoutOptionsReportsEmpty)
 
   widget.setRawOptions(QJsonObject());
   EXPECT_TRUE(widget.isEmpty());
+}
+
+// Command::menuActivated() refreshes a cached dialog for a "dynamic" feature by
+// pushing a freshly generated option set through the same InterfaceWidget. The
+// new set has to replace the old one outright rather than accumulate on it.
+TEST_F(JsonWidgetTest, InterfaceWidgetReloadsOptionsInPlace)
+{
+  InterfaceWidget widget{ QString() };
+
+  QJsonObject alpha;
+  alpha.insert(QStringLiteral("Alpha"), stringOption());
+  widget.interfaceScript().setOptionsJson(wrapOptions(alpha));
+  widget.reloadOptions();
+
+  EXPECT_FALSE(widget.isEmpty());
+  EXPECT_TRUE(widget.collectOptions().contains(QStringLiteral("Alpha")));
+
+  QJsonObject gamma;
+  gamma.insert(QStringLiteral("Gamma"), stringOption());
+  widget.interfaceScript().setOptionsJson(wrapOptions(gamma));
+  widget.reloadOptions();
+
+  const QJsonObject collected = widget.collectOptions();
+  EXPECT_TRUE(collected.contains(QStringLiteral("Gamma")));
+  EXPECT_FALSE(collected.contains(QStringLiteral("Alpha")))
+    << "the previous option set must not survive the refresh";
+  EXPECT_EQ(collected.size(), 1);
 }

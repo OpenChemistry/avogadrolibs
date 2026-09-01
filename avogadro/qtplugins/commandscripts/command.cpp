@@ -227,34 +227,23 @@ void Command::menuActivated()
     key = QtGui::PackageManager::packageFeatureKey(pkgDir, pkgCmd, pkgId);
 
     widget = m_dialogs.value(key, nullptr);
-
-    // A script that builds its options dynamically expects to be asked again
-    // every time the user opens the command: a list of jobs on a server, the
-    // files in a directory, anything that changes between invocations.
-    // Handing back the cached widget would pin the first answer for the rest
-    // of the session, which makes the whole point of "dynamic" moot, so
-    // discard it and build a fresh one below. Rebuilding the same widget in
-    // place would not do: JsonWidget::buildOptionGui() deletes only the
-    // layout, so the widgets it managed would survive as unmanaged children
-    // and paint over the new form.
-    if (widget != nullptr && userOptionsRel == QLatin1String("dynamic")) {
-      m_dialogs.remove(key);
-      if (m_currentInterface == widget)
-        m_currentInterface = nullptr;
-      widget->hide();
-      // Drop it out of the previous dialog before scheduling the delete, so
-      // nothing can reach it while the deferred deletion is pending.
-      widget->setParent(nullptr);
-      widget->deleteLater();
-      widget = nullptr;
-    }
-
-    if (!widget) {
+    const bool isNewWidget = (widget == nullptr);
+    if (isNewWidget) {
       widget = new InterfaceWidget(QString(), theParent);
       widget->interfaceScript().interpreter().setPackageInfo(
         pkgDir, pkgCmd, pkgId,
         theSender->property("packageDisplayName").toString());
+      m_dialogs.insert(key, widget);
+    }
 
+    // A script that builds its options dynamically expects to be asked again
+    // every time the user opens the command: a list of jobs on a server, the
+    // files in a directory, anything that changes between invocations. Serving
+    // the cached form would pin the first answer for the rest of the session,
+    // which makes the whole point of "dynamic" moot, so ask again and rebuild
+    // the form in place.
+    if (isNewWidget ||
+        QtGui::PackageManager::isDynamicUserOptions(userOptionsRel)) {
       // Build options from pyproject.toml metadata; never call --print-options
       // for package-based commands (mirrors QuantumInput::menuActivated()).
       QJsonObject opts;
@@ -276,7 +265,6 @@ void Command::menuActivated()
       // the script with --print-options.
       widget->interfaceScript().setOptionsJson(opts);
       widget->reloadOptions();
-      m_dialogs.insert(key, widget);
     }
   } else {
     key = theSender->data().toString();
