@@ -8,6 +8,7 @@
 #include "editortoolwidget.h"
 
 #include <avogadro/core/atom.h>
+#include <avogadro/core/atomutilities.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
@@ -41,6 +42,7 @@
 
 #include <QDebug>
 
+#include <cmath>
 #include <limits>
 
 namespace {
@@ -396,15 +398,8 @@ void Editor::atomLeftClick(QMouseEvent* e)
       if (bond.isValid()) {
         RWAtom atom2 = bond.getOtherAtom(atom);
 
-        m_bondDistance = Elements::radiusCovalent(atomicNumber) +
-                         Elements::radiusCovalent(atom2.atomicNumber());
-
-        // tweak the bond distance if we have a double or triple bond
-        if (bond.order() == 2) {
-          m_bondDistance *= 0.87; // e.g. C=C vs C-C
-        } else if (bond.order() == 3) {
-          m_bondDistance *= 0.78; // e.g. C#C vs C-C
-        }
+        m_bondDistance = Core::AtomUtilities::idealBondLength(
+          atomicNumber, atom2.atomicNumber(), bond.order());
 
         Vector3 bondVector = atom.position3d() - atom2.position3d();
         bondVector.normalize();
@@ -438,15 +433,8 @@ void Editor::bondLeftClick(QMouseEvent* e)
   RWAtom atom2 = bond.atom2();
 
   // Estimate the adjusted bond length
-  Real distance = Elements::radiusCovalent(atom1.atomicNumber()) +
-                  Elements::radiusCovalent(atom2.atomicNumber());
-
-  // tweak the bond distance if we have a double or triple bond
-  if (bond.order() == 2) {
-    distance *= 0.87; // e.g. C=C vs C-C
-  } else if (bond.order() == 3) {
-    distance *= 0.78; // e.g. C#C vs C-C
-  }
+  Real distance = Core::AtomUtilities::idealBondLength(
+    atom1.atomicNumber(), atom2.atomicNumber(), bond.order());
 
   // check if at least one of the atoms either has only one bond
   // or all the other bonds are hydrogens
@@ -579,20 +567,22 @@ void Editor::bondRightClick(QMouseEvent* e)
 
 int expectedBondOrder(RWAtom atom1, RWAtom atom2)
 {
-  Vector3 bondVector = atom1.position3d() - atom2.position3d();
-  double bondDistance = bondVector.norm();
-  double radiiSum;
-  radiiSum = Elements::radiusCovalent(atom1.atomicNumber()) +
-             Elements::radiusCovalent(atom2.atomicNumber());
-  double ratio = bondDistance / radiiSum;
+  double bondDistance = (atom1.position3d() - atom2.position3d()).norm();
 
-  int bondOrder;
-  if (ratio > 1.0)
-    bondOrder = 1;
-  else if (ratio > 0.91 && ratio < 1.0)
-    bondOrder = 2;
-  else
-    bondOrder = 3;
+  // Pick the order whose ideal length is closest to the distance drawn, so the
+  // cutoffs sit midway between the single, double and triple lengths for this
+  // particular element pair.
+  int bondOrder = 1;
+  double closest = -1.0;
+  for (unsigned char order = 1; order <= 3; ++order) {
+    double difference = std::fabs(
+      bondDistance - Core::AtomUtilities::idealBondLength(
+                       atom1.atomicNumber(), atom2.atomicNumber(), order));
+    if (closest < 0.0 || difference < closest) {
+      closest = difference;
+      bondOrder = order;
+    }
+  }
 
   return bondOrder;
 }
