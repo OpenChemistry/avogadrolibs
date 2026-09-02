@@ -208,16 +208,19 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
   if ((command.compare("renderVanDerWaals", Qt::CaseInsensitive) == 0) ||
       (command.compare("renderVDW", Qt::CaseInsensitive) == 0)) {
     emit commandStarted();
+    m_commandPending = true;
     calculateEDT(VanDerWaals, cubeResolution);
     return true;
   } else if (command.compare("renderSolventAccessible", Qt::CaseInsensitive) ==
              0) {
     emit commandStarted();
+    m_commandPending = true;
     calculateEDT(SolventAccessible, cubeResolution);
     return true;
   } else if (command.compare("renderSolventExcluded", Qt::CaseInsensitive) ==
              0) {
     emit commandStarted();
+    m_commandPending = true;
     calculateEDT(SolventExcluded, cubeResolution);
     return true;
   } else if ((command.compare("renderOrbital", Qt::CaseInsensitive) == 0) ||
@@ -233,6 +236,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
       return true;
     }
     emit commandStarted();
+    m_commandPending = true;
     calculateQM(MolecularOrbital, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderElectronDensity", Qt::CaseInsensitive) ==
@@ -243,6 +247,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
       return true;
     }
     emit commandStarted();
+    m_commandPending = true;
     calculateQM(ElectronDensity, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderSpinDensity", Qt::CaseInsensitive) == 0) {
@@ -252,6 +257,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
       return true;
     }
     emit commandStarted();
+    m_commandPending = true;
     calculateQM(SpinDensity, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderCube", Qt::CaseInsensitive) == 0) {
@@ -276,6 +282,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
       return true;
     }
     emit commandStarted();
+    m_commandPending = true;
     calculateCube(cubeIndex, isoValue);
     return true;
   }
@@ -313,6 +320,11 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
 void Surfaces::clearSurfaceData()
 {
   if (m_molecule) {
+    // A calculation started elsewhere -- the Orbitals dialog, say -- may be
+    // writing into one of these cubes on a worker thread. Stop it before the
+    // cube it holds is deleted.
+    QtGui::GaussianSetConcurrent::cancelAllCalculations();
+    QtGui::SlaterSetConcurrent::cancelAllCalculations();
     m_molecule->clearCubes();
     m_molecule->clearMeshes();
   }
@@ -811,8 +823,17 @@ void Surfaces::stepChanged(int n)
 
 void Surfaces::displayMesh()
 {
-  if (!m_cube)
+  if (!m_cube) {
+    // The cubes were deleted while this calculation was running, so it was
+    // cancelled. Anyone waiting on the command has to be told, or they wait
+    // for a commandFinished() that is never coming.
+    if (m_commandPending) {
+      m_commandPending = false;
+      m_commandResolution = 0.0f;
+      emit commandFailed(tr("The calculation was interrupted."));
+    }
     return;
+  }
 
   if (m_dialog != nullptr)
     m_smoothingPasses = m_dialog->smoothingPassesValue();
@@ -974,6 +995,7 @@ void Surfaces::meshFinished()
 
       // Report what was actually rendered: resolution() picks a value from
       // the molecule when the caller does not supply one.
+      m_commandPending = false;
       QVariantMap result;
       result["cubeIndex"] = static_cast<int>(m_molecule->activeCubeIndex()) + 1;
       result["isovalue"] = m_isoValue;

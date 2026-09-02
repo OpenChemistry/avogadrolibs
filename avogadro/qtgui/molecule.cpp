@@ -4,6 +4,9 @@
 ******************************************************************************/
 
 #include "molecule.h"
+
+#include "gaussiansetconcurrent.h"
+#include "slatersetconcurrent.h"
 #include "rwmolecule.h"
 
 #include <iostream>
@@ -311,6 +314,10 @@ void Molecule::emitChanged(unsigned int change)
 {
   if (change != NoChange) {
     if (invalidatesDerivedData(change)) {
+      // Worker threads may still be reading the basis set and writing into
+      // the cubes that are about to be deleted.
+      GaussianSetConcurrent::cancelAllCalculations();
+      SlaterSetConcurrent::cancelAllCalculations();
       clearCubes();
       clearMeshes();
       delete m_basisSet;

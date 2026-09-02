@@ -13,6 +13,7 @@
 #include <avogadro/core/mutex.h>
 
 #include <QtConcurrent/QtConcurrentMap>
+#include <QtCore/QSet>
 
 namespace Avogadro::QtGui {
 
@@ -28,15 +29,28 @@ struct SlaterShell
   unsigned int state;    // The MO number to calculate
 };
 
+namespace {
+/// Every live calculator, so that cubes can be protected from deletion while
+/// any of them is still writing. Instances are only created and destroyed on
+/// the GUI thread, so this needs no locking of its own.
+QSet<SlaterSetConcurrent*>& liveCalculations()
+{
+  static QSet<SlaterSetConcurrent*> instances;
+  return instances;
+}
+} // namespace
+
 SlaterSetConcurrent::SlaterSetConcurrent(QObject* p)
   : QObject(p), m_shells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
+  liveCalculations().insert(this);
   // Watch for the future
   connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
 }
 
 SlaterSetConcurrent::~SlaterSetConcurrent()
 {
+  liveCalculations().remove(this);
   cancelAndWait();
   delete m_tools;
 }
@@ -82,6 +96,17 @@ void SlaterSetConcurrent::calculationComplete()
   delete m_shells;
   m_shells = nullptr;
   emit finished();
+}
+
+void SlaterSetConcurrent::cancelAllCalculations()
+{
+  // Copy, because cancelAndWait() spins the caller's thread and a calculator
+  // could be destroyed while we are working through the list.
+  const QSet<SlaterSetConcurrent*> instances = liveCalculations();
+  for (SlaterSetConcurrent* calculation : instances) {
+    if (liveCalculations().contains(calculation))
+      calculation->cancelAndWait();
+  }
 }
 
 void SlaterSetConcurrent::cancelAndWait()
