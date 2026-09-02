@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-08-30 06:44+0000\n"
-"PO-Revision-Date: 2026-08-24 09:52+0000\n"
+"PO-Revision-Date: 2026-09-03 14:59+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.9.dev0\n"
+"X-Generator: Weblate 2026.9\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1094,6 +1094,8 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"Standardní chybový výstup skriptu:\n"
+"%1"
 
 #: qtgui/interfacescript.cpp:322
 #, qt-format
@@ -1349,6 +1351,8 @@ msgid ""
 "The package '%1' has no installed Python environment, so '%2' cannot be run. "
 "Try installing the package again."
 msgstr ""
+"Balíček „%1“ nemá nainstalované prostředí Pythonu, takže „%2“ nelze spustit. "
+"Zkuste balíček nainstalovat znovu."
 
 #: qtgui/pythonscript.cpp:272 qtgui/pythonscript.cpp:394
 #, qt-format
@@ -3199,6 +3203,8 @@ msgid ""
 "This range would build roughly %L1 atoms, more than the %L2 atom limit. "
 "Narrow the range to continue."
 msgstr ""
+"Tento rozsah by vytvořil přibližně %L1 atomů, což překračuje limit %L2 "
+"atomů. Chcete-li pokračovat, rozsah zúžte."
 
 #: qtplugins/crystal/unitcelldialog.cpp:251
 #: qtplugins/crystal/unitcelldialog.cpp:264
@@ -3470,7 +3476,7 @@ msgstr "Energie: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:726
 msgid "No atoms provided for energy calculation"
-msgstr ""
+msgstr "Pro výpočet energie nebyly zadány žádné atomy"
 
 #: qtplugins/forcefield/forcefield.cpp:761
 #, qt-format
@@ -3479,7 +3485,7 @@ msgstr "%1: energie = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:778
 msgid "No atoms provided for force calculation"
-msgstr ""
+msgstr "`Pro výpočet sil nebyly zadány žádné atomy"
 
 #: qtplugins/forcefield/forcefield.cpp:831
 #, qt-format
@@ -6418,26 +6424,28 @@ msgstr "Jednoduché zobrazení van der Waalsových koulí."
 #: qtplugins/vibrations/displacementdialog.cpp:37
 #, qt-format
 msgid "Displace along: %1"
-msgstr ""
+msgstr "Posunout podél: %1"
 
 #: qtplugins/vibrations/displacementdialog.cpp:68
 msgid "A scale factor of zero would only duplicate the current geometry."
-msgstr ""
+msgstr "Nulový měřítkový faktor by pouze vytvořil kopii aktuální geometrie."
 
 #: qtplugins/vibrations/displacementdialog.cpp:74
 #, qt-format
 msgid "One new coordinate set, displaced by %1 × the normal mode."
-msgstr ""
+msgstr "Jedna nová souřadnicová sada, posunutá o %1 × normální mód."
 
 #: qtplugins/vibrations/displacementdialog.cpp:83
 #, qt-format
 msgid ""
 "%1 new coordinate sets, evenly spaced from -%2 to +%2 × the normal mode."
 msgstr ""
+"Nové souřadnicové sady v počtu %1 jsou rovnoměrně rozmístěny od -%2 do +%2 × "
+"normální mód."
 
 #: qtplugins/vibrations/displacementdialog.cpp:88
 msgid "The middle one is the undisplaced geometry."
-msgstr ""
+msgstr "Prostřední z nich je neposunutá geometrie."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
@@ -6452,17 +6460,17 @@ msgstr "Zastavit animaci"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:138
 msgid "Generate Displaced Coordinates…"
-msgstr ""
+msgstr "Vygenerovat posunuté souřadnice…"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:168
 #, qt-format
 msgid "Mode %1 (%2 cm⁻¹)"
-msgstr ""
+msgstr "Mód %1 (%2 cm⁻¹)"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:170
 #, qt-format
 msgid "Mode %1"
-msgstr ""
+msgstr "Mód %1"
 
 #: qtplugins/vibrations/vibrations.cpp:29
 msgid "Vibrational Modes…"
@@ -6491,6 +6499,7 @@ msgstr "Zastavit animaci vibrací."
 #: qtplugins/vibrations/vibrations.cpp:146
 msgid "Add coordinate sets displaced along one or more vibrational modes."
 msgstr ""
+"Přidat souřadnicové sady posunuté podél jednoho nebo více vibračních módů."
 
 #: qtplugins/vibrations/vibrations.h:37
 msgid "Vibrations"
@@ -7242,32 +7251,32 @@ msgstr "Volby superbuňky"
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, minLabel)
 msgid "Minimum"
-msgstr ""
+msgstr "Minimum"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, maxLabel)
 msgid "Maximum"
-msgstr ""
+msgstr "Maximum"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:48
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A range:"
-msgstr ""
+msgstr "Rozsah A:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:93
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B range:"
-msgstr ""
+msgstr "Rozsah B:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:138
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C range:"
-msgstr ""
+msgstr "Rozsah C:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:183
 #. i18n: ectx: property (text), widget (QCheckBox, periodicBondsCheckBox)
 msgid "Bond copies across cell boundaries"
-msgstr ""
+msgstr "Propojit kopie vazbami přes hranice základní buňky"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:186
 #. i18n: ectx: property (toolTip), widget (QCheckBox, periodicBondsCheckBox)
@@ -7276,6 +7285,9 @@ msgid ""
 "whole wherever both halves are present. Turn this off if it bonds atoms that "
 "should not be bonded."
 msgstr ""
+"Spojit molekuly rozdělené hranicí základní buňky tak, aby byly vykresleny "
+"celé všude, kde jsou přítomny obě poloviny. Tuto volbu vypněte, pokud "
+"vytváří vazby mezi atomy, které by spojeny být neměly."
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:196
 #. i18n: ectx: property (text), widget (QLabel, hintLabel)
@@ -7283,6 +7295,8 @@ msgid ""
 "Whole-number ranges build a supercell; fractional ranges keep the original "
 "cell and pack copies around it."
 msgstr ""
+"Rozsahy v celých číslech vytvoří superbuňku; rozsahy se zlomkovými hodnotami "
+"zachovají původní základní buňku a rozmístí kolem ní kopie."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -9791,33 +9805,35 @@ msgstr "sulfonát"
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DisplacementDialog)
 msgid "Generate Displaced Coordinates"
-msgstr ""
+msgstr "Vygenerovat posunuté souřadnice"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, modesLabel)
 msgid "Modes:"
-msgstr ""
+msgstr "Módy:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, scaleLabel)
 msgid "Scale factor:"
-msgstr ""
+msgstr "Měřítkový faktor:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:39
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, scaleSpinBox)
 msgid "Multiplier applied to the normal mode displacements."
-msgstr ""
+msgstr "Násobitel, kterým se násobí posuny normálního módu."
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:61
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
 msgid "Number of structures:"
-msgstr ""
+msgstr "Počet struktur:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QSpinBox, countSpinBox)
 msgid ""
 "One structure at the scale factor, or several spread evenly across the range."
 msgstr ""
+"Jedna struktura s daným měřítkovým faktorem nebo několik rovnoměrně "
+"rozmístěných v celém rozsahu."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
