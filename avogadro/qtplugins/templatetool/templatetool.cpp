@@ -9,6 +9,7 @@
 #include "templatetoolwidget.h"
 
 #include <avogadro/core/atom.h>
+#include <avogadro/core/atomutilities.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
@@ -792,10 +793,8 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
         unsigned char ligandAtomicNumber =
           templateMolecule.atomicNumber(templateLigandIndices[i]);
         ligandAtomicNumber = (ligandAtomicNumber == 0) ? 6 : ligandAtomicNumber;
-        // Estimate as the sum of covalent radii
-        double bondDistance = Elements::radiusCovalent(ligandAtomicNumber) +
-                              Elements::radiusCovalent(
-                                m_molecule->atomicNumber(moleculeCenterIndex));
+        double bondDistance = Core::AtomUtilities::idealBondLength(
+          ligandAtomicNumber, m_molecule->atomicNumber(moleculeCenterIndex));
         Vector3 inVector =
           templateMolecule.atomPosition3d(templateDummyIndex) -
           templateMolecule.atomPosition3d(templateLigandIndices[i]);
@@ -980,8 +979,8 @@ void TemplateTool::atomLeftClickCenter(QMouseEvent* e)
 
   // Place the new metal at a reasonable bond distance from the anchor,
   // keeping the original H direction so the geometry doesn't jump.
-  double bondDist = Elements::radiusCovalent(newAtomic) +
-                    Elements::radiusCovalent(anchorAtomic);
+  double bondDist =
+    Core::AtomUtilities::idealBondLength(newAtomic, anchorAtomic);
   Vector3 hDir = hPos - anchorPos;
   if (hDir.norm() < 1e-9)
     hDir = Vector3(1.0, 0.0, 0.0);

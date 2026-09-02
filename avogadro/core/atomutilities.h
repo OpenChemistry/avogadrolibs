@@ -33,6 +33,24 @@ public:
     const Atom& atom, const std::vector<Vector3>& currentVectors,
     AtomHybridization hybridization);
 
+  /**
+   * @return the ideal length in Angstroms of a bond of order @a bondOrder
+   * between elements @a atomicNumber1 and @a atomicNumber2.
+   *
+   * The default is the sum of the Pyykko covalent radii, scaled down for
+   * double and triple bonds. That estimate is within a few percent for most
+   * element pairs, but it is systematically wrong for strongly polar bonds
+   * (Si-F, B-F, P-O) and for bonds between lone-pair rich atoms (O-O, F-F),
+   * so a table of measured lengths overrides it for common bonds.
+   *
+   * Intended for building and editing geometries, not for structure
+   * validation: the returned value is a single representative length and
+   * ignores hybridization, formal charge, and neighboring substituents.
+   */
+  static Real idealBondLength(unsigned char atomicNumber1,
+                              unsigned char atomicNumber2,
+                              unsigned char bondOrder = 1);
+
 private:
   AtomUtilities();  // Not implemented
   ~AtomUtilities(); // Not implemented
