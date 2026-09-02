@@ -13,15 +13,42 @@ import tempfile
 
 DEFAULT_SERVER = "avogadro"
 
+#: Seconds Avogadro waits for a command before giving up on it.
+DEFAULT_COMMAND_TIMEOUT = 60
+
 
 class RPCError(RuntimeError):
     """Raised when Avogadro returns a JSON-RPC error response."""
+
+    #: A command that was started failed, or timed out.
+    COMMAND_FAILED = -2
+    #: The plugin is already running a command.
+    PLUGIN_BUSY = -3
+    #: No tool or extension claims this method.
+    METHOD_NOT_FOUND = -32601
 
     def __init__(self, code, message, data=None):
         super().__init__("Avogadro RPC error %s: %s" % (code, message))
         self.code = code
         self.message = message
         self.data = data
+
+
+def result_data(response):
+    """
+    Return the data a waited command handed back, or an empty dict.
+
+    Only commands sent with wait=True return data, and only some of them
+    have anything to say.
+
+    :param response: A response from send() or command().
+    """
+    if not isinstance(response, dict):
+        return {}
+    result = response.get("result")
+    if not isinstance(result, dict):
+        return {}
+    return result.get("data", {})
 
 
 class connect:
@@ -55,6 +82,7 @@ class connect:
         """
         self._windows = os.name == "nt"
         self._id = 0
+        self._timeout = timeout
         self.sock = None
 
         try:
@@ -112,33 +140,55 @@ class connect:
         (size,) = struct.unpack(">I", self._read_exactly(4))
         return json.loads(self._read_exactly(size).decode("utf-8"))
 
-    def send(self, method, params=None, wait=True):
+    def send(self, method, params=None, wait=False, timeout=None):
         """
-        Send a JSON-RPC request and (optionally) return the response.
+        Send a JSON-RPC request and return the response.
 
         This is the general entry point - every method understood by
         Avogadro can be reached through it, including the commands
         registered by tool and extension plugins.
 
+        Most commands finish before they reply. Some, such as rendering a
+        surface or an orbital, hand the work to a background thread and
+        would otherwise reply while the work is still running. Pass
+        wait=True for those: Avogadro then holds the reply until the
+        command has actually finished, and the response can carry results.
+
         :param method: The JSON-RPC method name, e.g. "openFile".
         :param params: Dict of parameters for the method.
-        :param wait: If True, block until the response arrives.
-        :returns: The decoded response object, or None if wait is False.
+        :param wait: If True, do not reply until the command has finished.
+        :param timeout: Seconds Avogadro should wait for the command before
+            giving up, when wait is True. Defaults to a minute.
+        :returns: The decoded response object.
         :raises RPCError: if Avogadro reports an error for the request.
         """
+        options = dict(params) if params else {}
+        if wait:
+            options["wait"] = True
+            if timeout is not None:
+                options["timeout"] = timeout
+
         self._id += 1
         message = {
             "jsonrpc": "2.0",
             "id": self._id,
             "method": method,
-            "params": params if params is not None else {},
+            "params": options,
         }
         self._write(json.dumps(message).encode("utf-8"))
 
-        if not wait:
-            return None
+        # Do not give up on the socket before Avogadro gives up on the plugin.
+        if wait:
+            command_timeout = (
+                DEFAULT_COMMAND_TIMEOUT if timeout is None else timeout
+            )
+            self._set_socket_timeout(command_timeout + 5)
+        try:
+            response = self._read()
+        finally:
+            if wait:
+                self._set_socket_timeout(self._timeout)
 
-        response = self._read()
         if "error" in response:
             error = response["error"]
             raise RPCError(
@@ -146,7 +196,7 @@ class connect:
             )
         return response
 
-    def command(self, name, **params):
+    def command(self, name, wait=False, timeout=None, **params):
         """
         Run a command registered by a tool or extension plugin.
 
@@ -154,9 +204,19 @@ class connect:
         ``avo.command("renderMO", orbital="homo", isovalue=0.02)``.
 
         :param name: The registered command name.
-        :returns: The decoded response object.
+        :param wait: If True, do not return until the command has finished.
+        :param timeout: Seconds to allow the command, when wait is True.
+        :returns: The decoded response object. Use result_data() to pull out
+            anything the command handed back.
         """
-        return self.send(name, params)
+        return self.send(name, params, wait=wait, timeout=timeout)
+
+    def _set_socket_timeout(self, seconds):
+        """Adjust the read timeout, where the platform has one."""
+        if self._windows:
+            return  # a named pipe opened as a file has no timeout to set
+        if self.sock is not None:
+            self.sock.settimeout(seconds)
 
     def open_file(self, filename):
         """

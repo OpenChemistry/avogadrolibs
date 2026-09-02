@@ -146,6 +146,10 @@ private:
   int m_smoothingPasses = 2;
   int m_meshesLeft = 0;
 
+  /// Resolution used by the command currently running, reported back to the
+  /// caller because resolution() picks one when the caller does not.
+  float m_commandResolution = 0.0f;
+
   bool m_recordingMovie = false;
   int m_currentFrame = 0;
   int m_frameCount = 1;
