@@ -77,7 +77,12 @@ class connect:
         Connect to the local named pipe.
 
         :param name: The name of the named pipe (server) to connect to.
-        :param timeout: Seconds to wait for a reply before giving up.
+        :param timeout: Seconds to wait for a reply before giving up. This is
+            enforced on Linux, macOS and BSD only. On Windows the named pipe
+            is read as an ordinary file, which has no read timeout, so a
+            server that stops answering blocks the caller indefinitely; the
+            backstop there is Avogadro's own command timeout, which makes it
+            answer with an error rather than go quiet.
         :raises ConnectionError: if Avogadro is not listening.
         """
         self._windows = os.name == "nt"
@@ -212,9 +217,15 @@ class connect:
         return self.send(name, params, wait=wait, timeout=timeout)
 
     def _set_socket_timeout(self, seconds):
-        """Adjust the read timeout, where the platform has one."""
+        """
+        Adjust the read timeout, where the platform has one.
+
+        Windows has none: the pipe is opened as a file object, and bounding
+        its reads needs the overlapped-IO win32 calls rather than anything
+        the socket module offers. Reads there are unbounded -- see __init__.
+        """
         if self._windows:
-            return  # a named pipe opened as a file has no timeout to set
+            return
         if self.sock is not None:
             self.sock.settimeout(seconds)
 
@@ -262,7 +273,10 @@ class connect:
         """
         try:
             return self.send("internalPing").get("result") == "pong"
-        except (RPCError, ConnectionError):
+        except (RPCError, ConnectionError, socket.timeout):
+            # socket.timeout is not a ConnectionError, so a server that has
+            # stopped answering would otherwise raise out of a check whose
+            # whole purpose is to report that as False.
             return False
 
     def kill(self):
