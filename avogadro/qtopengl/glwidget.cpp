@@ -20,7 +20,6 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtGui/QWindow>
 #include <QtWidgets/QApplication>
 
 namespace Avogadro::QtOpenGL {
@@ -234,13 +233,22 @@ void GLWidget::initializeGL()
 
 void GLWidget::resizeGL(int width_, int height_)
 {
-  float pixelRatio = window()->windowHandle()->devicePixelRatio();
-  m_renderer.setPixelRatio(pixelRatio);
+  // Qt hands us the widget size in logical pixels.
+  m_pixelRatio = static_cast<float>(devicePixelRatioF());
+  m_renderer.setPixelRatio(m_pixelRatio);
   m_renderer.resize(width_, height_);
 }
 
 void GLWidget::paintGL()
 {
+  // Moving the window to a screen with a different scale factor changes the
+  // device pixel ratio without changing the widget size in logical pixels, so
+  // resizeGL() is not necessarily called. Resize here to keep the offscreen
+  // buffers in step with the framebuffer Qt has recreated for the new screen.
+  auto pixelRatio = static_cast<float>(devicePixelRatioF());
+  if (pixelRatio != m_pixelRatio)
+    resizeGL(width(), height());
+
   m_renderer.render();
 }
 

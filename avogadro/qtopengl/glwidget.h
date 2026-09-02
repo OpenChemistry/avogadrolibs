@@ -201,6 +201,7 @@ private:
   QtGui::ToolPlugin* m_activeTool;
   QtGui::ToolPlugin* m_defaultTool;
   Rendering::GLRenderer m_renderer;
+  float m_pixelRatio = 0.0f;
   QtGui::ScenePluginModel m_scenePlugins;
 
   QTimer* m_renderTimer;
