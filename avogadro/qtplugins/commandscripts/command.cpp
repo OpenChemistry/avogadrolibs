@@ -233,6 +233,9 @@ void Command::menuActivated()
       widget->interfaceScript().interpreter().setPackageInfo(
         pkgDir, pkgCmd, pkgId,
         theSender->property("packageDisplayName").toString());
+      // Let the dialog come back the way the user last left it.
+      widget->setSettingsKey(
+        QtGui::PackageManager::featureSettingsKey(pkgDir, pkgCmd, pkgId));
       m_dialogs.insert(key, widget);
     }
 
@@ -278,6 +281,7 @@ void Command::menuActivated()
     widget = m_dialogs.value(key, nullptr);
     if (!widget) {
       widget = new InterfaceWidget(key, theParent);
+      widget->setSettingsKey(QFileInfo(key).fileName());
       m_dialogs.insert(key, widget);
     }
   }
@@ -324,6 +328,9 @@ void Command::run()
 
   if (m_currentInterface) {
     QJsonObject collected = m_currentInterface->collectOptions();
+    // Only on OK: a cancelled dialog must not change what comes back next
+    // time, and run() is reached only once the user has accepted.
+    m_currentInterface->saveOptionValues();
     const auto& iface = m_currentInterface->interfaceScript();
 
     // Create a new InterfaceScript with the same configuration

@@ -39,6 +39,29 @@ namespace Avogadro::QtGui {
 
 namespace {
 
+/// QSettings group holding every command's remembered option values.
+const auto settingsGroup = u"commandOptions"_s;
+
+/**
+ * Whether a widget's value may be written to disk.
+ *
+ * Any line edit not echoing normally is a password, however it got that way:
+ * createStringWidget() honours "password", and addOptionRow() also switches
+ * on a field labelled "Password". Asking the widget rather than re-reading
+ * the JSON means the two can never drift apart.
+ *
+ * Tables are excluded too. A picker's chosen row may not exist next time, and
+ * restoring one would overwrite the rows the script had just supplied.
+ */
+bool isSaveableWidget(const QWidget* widget)
+{
+  if (widget == nullptr)
+    return false;
+  if (const auto* edit = qobject_cast<const QLineEdit*>(widget))
+    return edit->echoMode() == QLineEdit::Normal;
+  return qobject_cast<const QTableWidget*>(widget) == nullptr;
+}
+
 /// The cell separator a table option was built with; a tab unless it said so.
 QString tableDelimiter(const QTableWidget* table)
 {
@@ -737,9 +760,68 @@ void JsonWidget::setOptionDefaults()
     QJsonObject obj = it.value().toObject();
 
     if (obj.contains(u"default"_s)) {
-      // TODO - check QSettings for a value too
       setOption(label, obj[u"default"_s]);
     }
+  }
+
+  // Anything the user chose last time wins over the script's default. Applied
+  // second, so a saved value that has gone stale - an entry dropped from a
+  // stringList, say - leaves the default in place rather than nothing.
+  restoreOptionValues();
+}
+
+bool JsonWidget::optionIsSaveable(const QString& name) const
+{
+  if (!isSaveableWidget(m_widgets.value(name, nullptr)))
+    return false;
+
+  // A script can opt out an option that would only confuse when it came back,
+  // such as a one-shot value or a deliberate per-run choice.
+  const QJsonValue option = m_options[u"userOptions"_s].toObject().value(name);
+  if (option.isObject()) {
+    const QJsonValue save = option.toObject().value(u"save"_s);
+    if (save.isBool())
+      return save.toBool();
+  }
+  return true;
+}
+
+void JsonWidget::saveOptionValues() const
+{
+  if (m_settingsKey.isEmpty())
+    return;
+
+  const QJsonObject collected = collectOptions();
+  QJsonObject saved;
+  for (auto it = collected.constBegin(); it != collected.constEnd(); ++it) {
+    if (optionIsSaveable(it.key()))
+      saved.insert(it.key(), it.value());
+  }
+
+  QSettings settings;
+  settings.setValue(
+    settingsGroup + '/' + m_settingsKey,
+    QString::fromUtf8(QJsonDocument(saved).toJson(QJsonDocument::Compact)));
+}
+
+void JsonWidget::restoreOptionValues()
+{
+  if (m_settingsKey.isEmpty())
+    return;
+
+  QSettings settings;
+  const QString stored =
+    settings.value(settingsGroup + '/' + m_settingsKey).toString();
+  if (stored.isEmpty())
+    return;
+
+  const QJsonObject saved = QJsonDocument::fromJson(stored.toUtf8()).object();
+  for (auto it = saved.constBegin(); it != saved.constEnd(); ++it) {
+    // The option may be gone, may have become a password, or may have been
+    // opted out since it was written; in every case the saved value is not
+    // ours to apply any more.
+    if (optionIsSaveable(it.key()))
+      setOption(it.key(), it.value());
   }
 }
 

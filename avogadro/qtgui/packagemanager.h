@@ -53,6 +53,15 @@ public:
    * Consumers can use this as a map key to track registrations and removals.
    * Components must not be empty.
    */
+  /**
+   * A short, readable, stable key naming one feature, for use as a QSettings
+   * group. Unlike packageFeatureKey() this embeds no absolute path, so it
+   * does not turn into a deep tree of settings groups.
+   */
+  static QString featureSettingsKey(const QString& packageDir,
+                                    const QString& command,
+                                    const QString& identifier);
+
   static QString packageFeatureKey(const QString& packageDir,
                                    const QString& command,
                                    const QString& identifier);

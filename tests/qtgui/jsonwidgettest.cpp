@@ -14,6 +14,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 #include <QtCore/QPointer>
+#include <QtCore/QSettings>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QTableWidget>
 
@@ -111,6 +112,33 @@ QTableWidget* buildTable(TestableJsonWidget& widget, const QJsonObject& table)
   return widget.table(QStringLiteral("Job"));
 }
 
+/// Settings written by these tests all live under here, and only here.
+const QString settingsKey = QStringLiteral("AvogadroTest_JsonWidget/case");
+const QString settingsRoot =
+  QStringLiteral("commandOptions/AvogadroTest_JsonWidget");
+
+/// An option set with one string, one integer and one combo.
+QJsonObject mixedOptions()
+{
+  QJsonObject mode;
+  mode.insert(QStringLiteral("type"), QStringLiteral("stringList"));
+  mode.insert(QStringLiteral("values"), toArray({ "fast", "slow" }));
+  mode.insert(QStringLiteral("default"), 0);
+
+  QJsonObject count;
+  count.insert(QStringLiteral("type"), QStringLiteral("integer"));
+  count.insert(QStringLiteral("default"), 5);
+
+  QJsonObject server = stringOption();
+  server.insert(QStringLiteral("default"), QStringLiteral("factory.example"));
+
+  QJsonObject options;
+  options.insert(QStringLiteral("Server"), server);
+  options.insert(QStringLiteral("Count"), count);
+  options.insert(QStringLiteral("Mode"), mode);
+  return options;
+}
+
 const QStringList headers = { "Job", "Name", "Calculation" };
 const QStringList row0 = { "1963207", "H2N", "Molecular Energy" };
 const QStringList row1 = { "1963205", "CH3F", "NMR" };
@@ -129,6 +157,27 @@ protected:
   {
     if (ensureApp() == nullptr)
       GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
+    // QSettings needs an organisation to file anything under; match the
+    // application so a stray key is at least in the expected place.
+    if (QCoreApplication::organizationName().isEmpty())
+      QCoreApplication::setOrganizationName(QStringLiteral("OpenChemistry"));
+    forgetSavedOptions();
+  }
+
+  void TearDown() override { forgetSavedOptions(); }
+
+  static void forgetSavedOptions()
+  {
+    QSettings settings;
+    settings.remove(settingsRoot);
+  }
+
+  /// A widget that remembers its options, built from `options`.
+  static void build(TestableJsonWidget& widget, const QJsonObject& options,
+                    const QString& key = settingsKey)
+  {
+    widget.setSettingsKey(key);
+    widget.setOptions(options);
   }
 };
 
@@ -437,4 +486,220 @@ TEST_F(JsonWidgetTest, SortedTableSurvivesANewDefault)
       view->item(row, 0)->text() + '\t' + view->item(row, 1)->text();
     EXPECT_EQ(actual.toStdString(), expected.at(row).toStdString());
   }
+}
+
+// The whole point: what the user chose last time comes back, in place of the
+// script's defaults.
+TEST_F(JsonWidgetTest, RemembersWhatTheUserChose)
+{
+  TestableJsonWidget first;
+  build(first, mixedOptions());
+
+  QJsonObject chosen;
+  chosen.insert(QStringLiteral("Server"), QStringLiteral("webmo.example"));
+  chosen.insert(QStringLiteral("Count"), 42);
+  chosen.insert(QStringLiteral("Mode"), QStringLiteral("slow"));
+  first.applyOptions(chosen);
+  first.saveOptionValues();
+
+  TestableJsonWidget second;
+  build(second, mixedOptions());
+
+  const QJsonObject collected = second.collectOptions();
+  EXPECT_EQ(collected.value(QStringLiteral("Server")).toString().toStdString(),
+            "webmo.example");
+  EXPECT_EQ(collected.value(QStringLiteral("Count")).toInt(), 42);
+  EXPECT_EQ(collected.value(QStringLiteral("Mode")).toString().toStdString(),
+            "slow");
+}
+
+// Without a key the mechanism is off, and a dialog opens at its defaults.
+TEST_F(JsonWidgetTest, WithoutASettingsKeyNothingIsRemembered)
+{
+  TestableJsonWidget first;
+  first.setOptions(mixedOptions());
+  QJsonObject chosen;
+  chosen.insert(QStringLiteral("Server"), QStringLiteral("webmo.example"));
+  first.applyOptions(chosen);
+  first.saveOptionValues();
+
+  TestableJsonWidget second;
+  second.setOptions(mixedOptions());
+  EXPECT_EQ(second.collectOptions()
+              .value(QStringLiteral("Server"))
+              .toString()
+              .toStdString(),
+            "factory.example");
+}
+
+// A password must never reach the disk, however the field was marked.
+TEST_F(JsonWidgetTest, PasswordsAreNeverSaved)
+{
+  QJsonObject secret = stringOption();
+  secret.insert(QStringLiteral("password"), true);
+
+  QJsonObject options = mixedOptions();
+  options.insert(QStringLiteral("Secret"), secret);
+  // ...and one relying only on the label, which addOptionRow() also hides.
+  options.insert(QStringLiteral("Password"), stringOption());
+
+  TestableJsonWidget first;
+  build(first, options);
+  QJsonObject typed;
+  typed.insert(QStringLiteral("Secret"), QStringLiteral("hunter2"));
+  typed.insert(QStringLiteral("Password"), QStringLiteral("hunter2"));
+  typed.insert(QStringLiteral("Server"), QStringLiteral("webmo.example"));
+  first.applyOptions(typed);
+  first.saveOptionValues();
+
+  QSettings settings;
+  const QString stored =
+    settings.value(QStringLiteral("commandOptions/") + settingsKey).toString();
+  EXPECT_EQ(stored.contains(QStringLiteral("hunter2")), false)
+    << "a password reached QSettings: " << stored.toStdString();
+
+  TestableJsonWidget second;
+  build(second, options);
+  const QJsonObject collected = second.collectOptions();
+  EXPECT_EQ(collected.value(QStringLiteral("Secret")).toString().toStdString(),
+            "");
+  EXPECT_EQ(
+    collected.value(QStringLiteral("Password")).toString().toStdString(), "");
+  // The rest of the form is still remembered.
+  EXPECT_EQ(collected.value(QStringLiteral("Server")).toString().toStdString(),
+            "webmo.example");
+}
+
+// A script can opt an option out of being remembered.
+TEST_F(JsonWidgetTest, SaveFalseOptsAnOptionOut)
+{
+  QJsonObject options = mixedOptions();
+  QJsonObject once = stringOption();
+  once.insert(QStringLiteral("save"), false);
+  options.insert(QStringLiteral("Once"), once);
+
+  TestableJsonWidget first;
+  build(first, options);
+  QJsonObject typed;
+  typed.insert(QStringLiteral("Once"), QStringLiteral("this time only"));
+  typed.insert(QStringLiteral("Server"), QStringLiteral("webmo.example"));
+  first.applyOptions(typed);
+  first.saveOptionValues();
+
+  TestableJsonWidget second;
+  build(second, options);
+  const QJsonObject collected = second.collectOptions();
+  EXPECT_EQ(collected.value(QStringLiteral("Once")).toString().toStdString(),
+            "");
+  EXPECT_EQ(collected.value(QStringLiteral("Server")).toString().toStdString(),
+            "webmo.example");
+}
+
+// A table is data the script supplied, not a preference. Restoring a saved
+// one would overwrite the rows that were just fetched.
+TEST_F(JsonWidgetTest, TablesAreNotRemembered)
+{
+  QJsonObject table;
+  table.insert(QStringLiteral("selectable"), true);
+  table.insert(QStringLiteral("headers"), toArray(headers));
+  QJsonArray firstRows;
+  firstRows.append(toArray(row0));
+  firstRows.append(toArray(row1));
+  table.insert(QStringLiteral("rows"), firstRows);
+
+  TestableJsonWidget first;
+  build(first, jobTable(table));
+  first.table(QStringLiteral("Job"))->selectRow(1);
+  first.saveOptionValues();
+
+  // Next time the server returns entirely different jobs.
+  QJsonObject fresh;
+  fresh.insert(QStringLiteral("selectable"), true);
+  fresh.insert(QStringLiteral("headers"), toArray(headers));
+  QJsonArray freshRows;
+  freshRows.append(toArray({ "42", "newjob", "NMR" }));
+  fresh.insert(QStringLiteral("rows"), freshRows);
+
+  TestableJsonWidget second;
+  build(second, jobTable(fresh));
+  QTableWidget* view = second.table(QStringLiteral("Job"));
+  ASSERT_NE(view, nullptr);
+  EXPECT_EQ(view->rowCount(), 1);
+  ASSERT_NE(view->item(0, 0), nullptr);
+  EXPECT_EQ(view->item(0, 0)->text().toStdString(), "42");
+  EXPECT_EQ(second.collectOptions()
+              .value(QStringLiteral("Job"))
+              .toString()
+              .toStdString(),
+            "")
+    << "a stale row came back selected";
+}
+
+// A remembered combo entry the script no longer offers leaves the default
+// showing, rather than an empty combo.
+TEST_F(JsonWidgetTest, AStaleComboValueFallsBackToTheDefault)
+{
+  QJsonObject options = mixedOptions();
+  TestableJsonWidget first;
+  build(first, options);
+  QJsonObject chosen;
+  chosen.insert(QStringLiteral("Mode"), QStringLiteral("slow"));
+  first.applyOptions(chosen);
+  first.saveOptionValues();
+
+  // "slow" is gone, and the default is now the second entry.
+  QJsonObject mode;
+  mode.insert(QStringLiteral("type"), QStringLiteral("stringList"));
+  mode.insert(QStringLiteral("values"), toArray({ "fast", "faster" }));
+  mode.insert(QStringLiteral("default"), 1);
+  options.insert(QStringLiteral("Mode"), mode);
+
+  TestableJsonWidget second;
+  build(second, options);
+  EXPECT_EQ(second.collectOptions()
+              .value(QStringLiteral("Mode"))
+              .toString()
+              .toStdString(),
+            "faster");
+}
+
+// An option that has since been removed from the script is simply skipped.
+TEST_F(JsonWidgetTest, AVanishedOptionIsIgnored)
+{
+  QJsonObject options = mixedOptions();
+  options.insert(QStringLiteral("Retired"), stringOption());
+
+  TestableJsonWidget first;
+  build(first, options);
+  QJsonObject typed;
+  typed.insert(QStringLiteral("Retired"), QStringLiteral("obsolete"));
+  typed.insert(QStringLiteral("Server"), QStringLiteral("webmo.example"));
+  first.applyOptions(typed);
+  first.saveOptionValues();
+
+  TestableJsonWidget second;
+  build(second, mixedOptions());
+  const QJsonObject collected = second.collectOptions();
+  EXPECT_FALSE(collected.contains(QStringLiteral("Retired")));
+  EXPECT_EQ(collected.value(QStringLiteral("Server")).toString().toStdString(),
+            "webmo.example");
+}
+
+// Two commands must not read each other's values.
+TEST_F(JsonWidgetTest, EachCommandKeepsItsOwnValues)
+{
+  TestableJsonWidget first;
+  build(first, mixedOptions(), QStringLiteral("AvogadroTest_JsonWidget/one"));
+  QJsonObject chosen;
+  chosen.insert(QStringLiteral("Server"), QStringLiteral("webmo.example"));
+  first.applyOptions(chosen);
+  first.saveOptionValues();
+
+  TestableJsonWidget second;
+  build(second, mixedOptions(), QStringLiteral("AvogadroTest_JsonWidget/two"));
+  EXPECT_EQ(second.collectOptions()
+              .value(QStringLiteral("Server"))
+              .toString()
+              .toStdString(),
+            "factory.example");
 }
