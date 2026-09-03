@@ -32,7 +32,8 @@ namespace Avogadro::QtPlugins {
 
 const float ZOOM_SPEED = 0.02f;
 const float ROTATION_SPEED = 0.005f;
-const float TRACKBALL_SPAN = 1.0f; // XY molecule rotations when trackball crossed
+const float TRACKBALL_SPAN =
+  1.0f; // XY molecule rotations when trackball crossed
 
 Navigator::Navigator(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
@@ -46,7 +47,9 @@ Navigator::Navigator(QObject* parent_)
     tr("Navigation Tool\t(%1)\n\n"
        "Left Mouse:\tClick and drag to rotate the view.\n"
        "Middle Mouse:\tClick and drag to zoom in or out.\n"
-       "Right Mouse:\tClick and drag to move the view.")
+       "Right Mouse:\tClick and drag to move the view.\n\n"
+       "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
+       "Alt(Option)+Left:\tUses the virtual trackball.")
       .arg(shortcut));
   setIcon();
   QSettings settings;
@@ -168,6 +171,9 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
 {
   switch (m_currentAction) {
     case RotTrackball: {
+      if (!m_glWidget)
+        break;
+
       QPoint delta = e->pos() - m_lastMousePosition;
 
       double w = m_glWidget->width(); // double for type consistency in max
@@ -193,12 +199,10 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
       if (distSquaredCurrent <= trackballSquaredRadius) {
         // like in Rotation but speed normalized
         // undo *ROTATION_SPEED which will happen in rotate()
-        double speedCorrection = (1.0 / ROTATION_SPEED) * TRACKBALL_SPAN
-                                  * 3.14159265358979 / trackballRadius;
-        rotate(m_renderer->camera().focus(),
-               delta.y() * speedCorrection,
-               delta.x() * speedCorrection,
-               0);
+        double speedCorrection = (1.0 / ROTATION_SPEED) * TRACKBALL_SPAN *
+                                 3.14159265358979 / trackballRadius;
+        rotate(m_renderer->camera().focus(), delta.y() * speedCorrection,
+               delta.x() * speedCorrection, 0);
       } else {
         // Calculate angle between current and previous ticks
         double x1 = prevVec.x();
