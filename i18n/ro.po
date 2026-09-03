@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-08-30 06:44+0000\n"
-"PO-Revision-Date: 2026-08-23 07:51+0000\n"
+"PO-Revision-Date: 2026-09-03 14:59+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.9.dev0\n"
+"X-Generator: Weblate 2026.9\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -3220,6 +3220,8 @@ msgid ""
 "This range would build roughly %L1 atoms, more than the %L2 atom limit. "
 "Narrow the range to continue."
 msgstr ""
+"Acest interval ar genera aproximativ %L1 atomi, depășind limita de %L2 "
+"atomi. Micșorați intervalul pentru a continua."
 
 #: qtplugins/crystal/unitcelldialog.cpp:251
 #: qtplugins/crystal/unitcelldialog.cpp:264
@@ -3494,7 +3496,7 @@ msgstr "Energie: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:726
 msgid "No atoms provided for energy calculation"
-msgstr ""
+msgstr "Nu au fost furnizați atomi pentru calcularea energiei"
 
 #: qtplugins/forcefield/forcefield.cpp:761
 #, qt-format
@@ -3503,7 +3505,7 @@ msgstr "%1 Energie = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:778
 msgid "No atoms provided for force calculation"
-msgstr ""
+msgstr "Nu au fost furnizați atomi pentru calcularea forței"
 
 #: qtplugins/forcefield/forcefield.cpp:831
 #, qt-format
@@ -6457,26 +6459,30 @@ msgstr "Afișare simplă a sferelor VdW."
 #: qtplugins/vibrations/displacementdialog.cpp:37
 #, qt-format
 msgid "Displace along: %1"
-msgstr ""
+msgstr "Deplasare de-a lungul: %1"
 
 #: qtplugins/vibrations/displacementdialog.cpp:68
 msgid "A scale factor of zero would only duplicate the current geometry."
 msgstr ""
+"Un factor de scalare egal cu zero ar duce doar la duplicarea geometriei "
+"actuale."
 
 #: qtplugins/vibrations/displacementdialog.cpp:74
 #, qt-format
 msgid "One new coordinate set, displaced by %1 × the normal mode."
-msgstr ""
+msgstr "Un nou set de coordonate, deplasat cu %1 × modul normal."
 
 #: qtplugins/vibrations/displacementdialog.cpp:83
 #, qt-format
 msgid ""
 "%1 new coordinate sets, evenly spaced from -%2 to +%2 × the normal mode."
 msgstr ""
+"%1 seturi noi de coordonate, distribuite uniform între -%2 și +%2 × modul "
+"normal."
 
 #: qtplugins/vibrations/displacementdialog.cpp:88
 msgid "The middle one is the undisplaced geometry."
-msgstr ""
+msgstr "Cea din mijloc este geometria nedeplasată."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
@@ -6491,17 +6497,17 @@ msgstr "Oprire animație"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:138
 msgid "Generate Displaced Coordinates…"
-msgstr ""
+msgstr "Generare coordonate deplasate…"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:168
 #, qt-format
 msgid "Mode %1 (%2 cm⁻¹)"
-msgstr ""
+msgstr "Modul %1 (%2 cm⁻¹)"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:170
 #, qt-format
 msgid "Mode %1"
-msgstr ""
+msgstr "Modul %1"
 
 #: qtplugins/vibrations/vibrations.cpp:29
 msgid "Vibrational Modes…"
@@ -6530,6 +6536,8 @@ msgstr "Oprește animația vibrațională."
 #: qtplugins/vibrations/vibrations.cpp:146
 msgid "Add coordinate sets displaced along one or more vibrational modes."
 msgstr ""
+"Adaugă seturi de coordonate deplasate de-a lungul unuia sau mai multor "
+"moduri vibraționale."
 
 #: qtplugins/vibrations/vibrations.h:37
 msgid "Vibrations"
@@ -7284,32 +7292,32 @@ msgstr "Opțiuni pentru super celulă"
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, minLabel)
 msgid "Minimum"
-msgstr ""
+msgstr "Minim"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, maxLabel)
 msgid "Maximum"
-msgstr ""
+msgstr "Maxim"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:48
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A range:"
-msgstr ""
+msgstr "Intervalul A:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:93
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B range:"
-msgstr ""
+msgstr "Intervalul B:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:138
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C range:"
-msgstr ""
+msgstr "Intervalul C:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:183
 #. i18n: ectx: property (text), widget (QCheckBox, periodicBondsCheckBox)
 msgid "Bond copies across cell boundaries"
-msgstr ""
+msgstr "Copii ale legăturilor peste limitele celulare"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:186
 #. i18n: ectx: property (toolTip), widget (QCheckBox, periodicBondsCheckBox)
@@ -7318,6 +7326,10 @@ msgid ""
 "whole wherever both halves are present. Turn this off if it bonds atoms that "
 "should not be bonded."
 msgstr ""
+"Unește moleculele despărțite de o limită celulară, astfel încât acestea să "
+"fie reprezentate în întregime oriunde sunt prezente ambele jumătăți. "
+"Dezactivează această opțiune dacă aceasta leagă atomi care nu ar trebui să "
+"fie legați."
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:196
 #. i18n: ectx: property (text), widget (QLabel, hintLabel)
@@ -7325,6 +7337,8 @@ msgid ""
 "Whole-number ranges build a supercell; fractional ranges keep the original "
 "cell and pack copies around it."
 msgstr ""
+"Intervalele de numere întregi formează o supercelulă; intervalele "
+"fracționare păstrează celula inițială și dispun copii în jurul acesteia."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -9839,33 +9853,35 @@ msgstr "sulfonat"
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DisplacementDialog)
 msgid "Generate Displaced Coordinates"
-msgstr ""
+msgstr "Generare coordonate deplasate"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, modesLabel)
 msgid "Modes:"
-msgstr ""
+msgstr "Moduri:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, scaleLabel)
 msgid "Scale factor:"
-msgstr ""
+msgstr "Factor de scalare:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:39
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, scaleSpinBox)
 msgid "Multiplier applied to the normal mode displacements."
-msgstr ""
+msgstr "Multiplicator aplicat deplasărilor din modul normal."
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:61
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
 msgid "Number of structures:"
-msgstr ""
+msgstr "Numărul de structuri:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QSpinBox, countSpinBox)
 msgid ""
 "One structure at the scale factor, or several spread evenly across the range."
 msgstr ""
+"O singură structură la factorul de scalare sau mai multe, distribuite "
+"uniform pe întregul interval."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
