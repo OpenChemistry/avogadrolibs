@@ -173,7 +173,16 @@ protected:
     forgetSavedOptions();
   }
 
-  void TearDown() override { forgetSavedOptions(); }
+  void TearDown() override
+  {
+    forgetSavedOptions();
+    // buildOptionGui() unparents the previous form and hands it to
+    // deleteLater(). No event loop runs in a test, so without this those
+    // widgets sit in the posted-event queue for the life of the process:
+    // still reachable, so LSan stays quiet, but never actually freed.
+    if (QCoreApplication::instance() != nullptr)
+      QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+  }
 
   static void forgetSavedOptions()
   {
