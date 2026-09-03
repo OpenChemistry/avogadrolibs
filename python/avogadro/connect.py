@@ -48,7 +48,8 @@ def result_data(response):
     result = response.get("result")
     if not isinstance(result, dict):
         return {}
-    return result.get("data", {})
+    data = result.get("data", {})
+    return data if isinstance(data, dict) else {}
 
 
 class connect:
@@ -118,7 +119,16 @@ class connect:
 
         packet = struct.pack(">I", len(data)) + data
         if self._windows:
-            self.sock.write(packet)
+            # The pipe is opened unbuffered (buffering=0), so write() is raw
+            # file I/O and may write fewer bytes than asked, unlike a
+            # socket's sendall(). Retry with the unsent suffix until the
+            # whole packet is out.
+            sent = 0
+            while sent < len(packet):
+                written = self.sock.write(packet[sent:])
+                if not written:
+                    raise ConnectionError("Connection closed by Avogadro.")
+                sent += written
         else:
             self.sock.sendall(packet)
 

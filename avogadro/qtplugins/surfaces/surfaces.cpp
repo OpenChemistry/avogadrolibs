@@ -325,6 +325,21 @@ void Surfaces::clearSurfaceData()
     // cube it holds is deleted.
     QtGui::GaussianSetConcurrent::cancelAllCalculations();
     QtGui::SlaterSetConcurrent::cancelAllCalculations();
+    QtGui::MeshGenerator::cancelAllCalculations();
+
+    // calculateEDT()/performEDTStep() are plain QtConcurrent::run() futures
+    // reading and writing m_cube directly, with no cancellation support of
+    // their own. Wait for them here too, with their finished() signal
+    // blocked so a stale performEDTStep()/displayMesh() callback doesn't run
+    // against the cube/meshes we are about to free.
+    m_performEDTStepWatcher.blockSignals(true);
+    m_performEDTStepWatcher.waitForFinished();
+    m_performEDTStepWatcher.blockSignals(false);
+
+    m_displayMeshWatcher.blockSignals(true);
+    m_displayMeshWatcher.waitForFinished();
+    m_displayMeshWatcher.blockSignals(false);
+
     m_molecule->clearCubes();
     m_molecule->clearMeshes();
   }
