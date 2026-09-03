@@ -47,6 +47,7 @@ public:
   }
 
   GLuint defaultFBO;
+  GLint defaultViewport[4] = { 0, 0, 0, 0 };
   GLuint renderFBO;
   GLuint renderTexture;
   GLuint depthTexture;
@@ -138,9 +139,17 @@ void SolidPipeline::initialize()
 void SolidPipeline::begin()
 {
   glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
+  glGetIntegerv(GL_VIEWPORT, d->defaultViewport);
   glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
   GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
   glDrawBuffers(1, drawBuffersList);
+
+  // The offscreen buffers are sized independently of the default framebuffer,
+  // so the viewport must be set to match them rather than inherited. They can
+  // disagree whenever the device pixel ratio changes without a resize, such as
+  // when the window is dragged to a monitor with a different scale factor.
+  glViewport(0, 0, static_cast<GLsizei>(m_width),
+             static_cast<GLsizei>(m_height));
 
   GLfloat tmp[5];
   glGetFloatv(GL_COLOR_CLEAR_VALUE, tmp);
@@ -165,6 +174,8 @@ void SolidPipeline::end()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawBuffer(GL_BACK);
   }
+  glViewport(d->defaultViewport[0], d->defaultViewport[1],
+             d->defaultViewport[2], d->defaultViewport[3]);
   d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture,
                  "inDepthTex", d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled",

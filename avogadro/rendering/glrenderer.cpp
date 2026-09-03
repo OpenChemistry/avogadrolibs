@@ -25,8 +25,8 @@ namespace Avogadro::Rendering {
 using Core::Array;
 
 GLRenderer::GLRenderer()
-  : m_valid(false), m_textRenderStrategy(nullptr), m_center(Vector3f::Zero()),
-    m_radius(20.0)
+  : m_valid(false), m_pixelRatio(1.0f), m_textRenderStrategy(nullptr),
+    m_center(Vector3f::Zero()), m_radius(20.0)
 #ifdef _3DCONNEXION
     ,
     m_drawIcon(false), m_iconData(nullptr), m_iconWidth(0u), m_iconHeight(0u),
@@ -76,7 +76,10 @@ void GLRenderer::resize(int width, int height)
     return;
 
   // m_volume.resize(width, height);
-  glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
+  // The viewport is in device pixels, while the cameras work in logical pixels
+  // as they are used to project and unproject Qt mouse coordinates.
+  glViewport(0, 0, static_cast<GLsizei>(width * m_pixelRatio),
+             static_cast<GLsizei>(height * m_pixelRatio));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
   m_solidPipeline.resize(width, height);
@@ -84,6 +87,7 @@ void GLRenderer::resize(int width, int height)
 
 void GLRenderer::setPixelRatio(float ratio)
 {
+  m_pixelRatio = ratio;
   m_solidPipeline.setPixelRatio(ratio);
 }
 
