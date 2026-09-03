@@ -16,6 +16,7 @@
 #include <avogadro/rendering/camera.h>
 
 #include <QAction>
+#include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
@@ -34,6 +35,12 @@ GLWidget::GLWidget(QWidget* p)
   connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginConfigChanged, this,
           &GLWidget::updateScene);
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
+
+  QSettings settings;
+  m_navigationModifier = static_cast<Qt::KeyboardModifiers>(
+    settings
+      .value("glwidget/navigationModifier", static_cast<int>(Qt::AltModifier))
+      .toInt());
 }
 
 GLWidget::~GLWidget() {}
@@ -252,6 +259,44 @@ void GLWidget::paintGL()
   m_renderer.render();
 }
 
+Qt::KeyboardModifiers GLWidget::navigationModifier() const
+{
+  return m_navigationModifier;
+}
+
+void GLWidget::setNavigationModifier(Qt::KeyboardModifiers modifier)
+{
+  m_navigationModifier = modifier;
+  QSettings settings;
+  settings.setValue("glwidget/navigationModifier", static_cast<int>(modifier));
+}
+
+bool GLWidget::isNavigationMouseGesture(const QMouseEvent* event) const
+{
+  return m_defaultTool != nullptr && m_navigationModifier != Qt::NoModifier &&
+         (event->modifiers() & m_navigationModifier);
+}
+
+bool GLWidget::isNavigationKeyGesture(const QKeyEvent* event) const
+{
+  if (m_defaultTool == nullptr)
+    return false;
+
+  Qt::KeyboardModifiers mods = event->modifiers();
+  if (!(mods & Qt::ControlModifier) || (mods & Qt::ShiftModifier))
+    return false;
+
+  switch (event->key()) {
+    case Qt::Key_Left:
+    case Qt::Key_Right:
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+      return true;
+    default:
+      return false;
+  }
+}
+
 void GLWidget::mouseDoubleClickEvent(QMouseEvent* e)
 {
   e->ignore();
@@ -270,7 +315,12 @@ void GLWidget::mousePressEvent(QMouseEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  // Latch the navigation gesture for the duration of the drag: once a press
+  // starts the camera navigating, keep it there through move and release
+  // even if the user releases the modifier key mid-drag.
+  m_navigationDrag = isNavigationMouseGesture(e);
+
+  if (m_activeTool && !m_navigationDrag)
     m_activeTool->mousePressEvent(e);
 
   if (m_defaultTool && !e->isAccepted())
@@ -284,7 +334,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  if (m_activeTool && !m_navigationDrag)
     m_activeTool->mouseMoveEvent(e);
 
   if (m_defaultTool && !e->isAccepted())
@@ -298,7 +348,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  if (m_activeTool && !m_navigationDrag)
     m_activeTool->mouseReleaseEvent(e);
 
   if (m_defaultTool && !e->isAccepted())
@@ -306,6 +356,10 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* e)
 
   if (!e->isAccepted())
     QOpenGLWidget::mouseReleaseEvent(e);
+
+  // Release the latch now that the drag sequence this press started has
+  // finished being dispatched.
+  m_navigationDrag = false;
 }
 
 void GLWidget::wheelEvent(QWheelEvent* e)
@@ -326,7 +380,7 @@ void GLWidget::keyPressEvent(QKeyEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  if (m_activeTool && !isNavigationKeyGesture(e))
     m_activeTool->keyPressEvent(e);
 
   if (m_defaultTool && !e->isAccepted())
@@ -340,7 +394,7 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  if (m_activeTool && !isNavigationKeyGesture(e))
     m_activeTool->keyReleaseEvent(e);
 
   if (m_defaultTool && !e->isAccepted())
