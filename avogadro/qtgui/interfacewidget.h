@@ -96,16 +96,6 @@ private slots:
   void showError(const QString& err);
 
 private:
-  /**
-   * Generate a QSettings key with the given identifier that is unique to this
-   * input generator's display name.
-   * @param identifier Setting key, e.g. "outputPath"
-   * @return Script-specific key, e.g. "quantumInput/GAMESS/outputPath"
-   * @todo Display names are not necessarily unique, but paths are too long.
-   * Maybe add a namespace qualifier to the script display names?
-   */
-  QString settingsKey(const QString& identifier) const;
-
   QtGui::Molecule* m_molecule;
   QtGui::InterfaceScript m_interfaceScript;
 };

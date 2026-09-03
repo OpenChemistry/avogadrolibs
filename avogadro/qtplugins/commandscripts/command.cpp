@@ -186,6 +186,37 @@ bool Command::readMolecule(QtGui::Molecule& mol)
 
 void Command::refreshScripts() {}
 
+namespace {
+
+/**
+ * Assemble a package feature's options from its pyproject.toml metadata.
+ *
+ * Package commands never call --print-options: everything is declared up
+ * front, either inline or in the user-options file the metadata names
+ * (mirrors QuantumInput::menuActivated()).
+ */
+QJsonObject packageOptions(const QAction* action, const QString& packageDir,
+                           const QString& command, const QString& identifier,
+                           const QString& userOptionsValue)
+{
+  QJsonObject options;
+  const QString inputFormat = action->property("packageInputFormat").toString();
+  if (!inputFormat.isEmpty())
+    options.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
+
+  // The definitions must be wrapped under "userOptions" so that
+  // JsonWidget::buildOptionGui() recognises them and builds the dialog.
+  if (!userOptionsValue.isEmpty()) {
+    const QJsonObject userOptions = QtGui::PackageManager::resolveUserOptions(
+      userOptionsValue, packageDir, command, identifier);
+    if (!userOptions.isEmpty())
+      options.insert(QStringLiteral("userOptions"), userOptions);
+  }
+  return options;
+}
+
+} // namespace
+
 void Command::menuActivated()
 {
   auto* theSender = qobject_cast<QAction*>(sender());
@@ -219,48 +250,55 @@ void Command::menuActivated()
     QString pkgDir = theSender->property("packageDir").toString();
     QString pkgCmd = theSender->property("packageCommand").toString();
     QString pkgId = theSender->property("packageIdentifier").toString();
+    // The pyproject.toml [avogadro.X] table may declare a separate
+    // user-options file (JSON or TOML), or the literal "dynamic" to run
+    // the script with --user-options.
+    QString userOptionsRel =
+      theSender->property("packageUserOptions").toString();
     key = QtGui::PackageManager::packageFeatureKey(pkgDir, pkgCmd, pkgId);
 
     widget = m_dialogs.value(key, nullptr);
-    if (!widget) {
+    const bool isNewWidget = (widget == nullptr);
+    if (isNewWidget) {
       widget = new InterfaceWidget(QString(), theParent);
       widget->interfaceScript().interpreter().setPackageInfo(
         pkgDir, pkgCmd, pkgId,
         theSender->property("packageDisplayName").toString());
-
-      // Build options from pyproject.toml metadata; never call --print-options
-      // for package-based commands (mirrors QuantumInput::menuActivated()).
-      QJsonObject opts;
-      QString inputFormat =
-        theSender->property("packageInputFormat").toString();
-      if (!inputFormat.isEmpty())
-        opts.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
-
-      // The pyproject.toml [avogadro.X] table may declare a separate
-      // user-options file (JSON or TOML), or the literal "dynamic" to run
-      // the script with --user-options.  Its keys are the user-facing
-      // option definitions and must be wrapped under "userOptions" so that
-      // JsonWidget::buildOptionGui() recognises them and builds the dialog.
-      QString userOptionsRel =
-        theSender->property("packageUserOptions").toString();
-      if (!userOptionsRel.isEmpty()) {
-        QJsonObject userOpts = QtGui::PackageManager::resolveUserOptions(
-          userOptionsRel, pkgDir, pkgCmd, pkgId);
-        if (!userOpts.isEmpty())
-          opts.insert(QStringLiteral("userOptions"), userOpts);
-      }
-
-      // Pre-populate the cached options so reloadOptions() does not invoke
-      // the script with --print-options.
-      widget->interfaceScript().setOptionsJson(opts);
-      widget->reloadOptions();
+      // Let the dialog come back the way the user last left it.
+      widget->setSettingsKey(
+        QtGui::PackageManager::featureSettingsKey(pkgDir, pkgCmd, pkgId));
       m_dialogs.insert(key, widget);
+    }
+
+    // A script that builds its options dynamically expects to be asked again
+    // every time the user opens the command: a list of jobs on a server, the
+    // files in a directory, anything that changes between invocations. Serving
+    // the cached form would pin the first answer for the rest of the session,
+    // which makes the whole point of "dynamic" moot, so ask again and rebuild
+    // the form in place.
+    if (isNewWidget ||
+        QtGui::PackageManager::isDynamicUserOptions(userOptionsRel)) {
+      const QJsonObject opts =
+        packageOptions(theSender, pkgDir, pkgCmd, pkgId, userOptionsRel);
+
+      // A dynamic script that fails - no network, a timeout, malformed JSON -
+      // resolves to nothing. Pushing that empty result into a widget that
+      // already has a working form would blank it, and isEmpty() below would
+      // then run the command with no options at all rather than showing the
+      // dialog. Keep the last good form instead and let the user try again.
+      if (isNewWidget || opts.contains(QStringLiteral("userOptions"))) {
+        // Pre-populate the cached options so reloadOptions() does not invoke
+        // the script with --print-options.
+        widget->interfaceScript().setOptionsJson(opts);
+        widget->reloadOptions();
+      }
     }
   } else {
     key = theSender->data().toString();
     widget = m_dialogs.value(key, nullptr);
     if (!widget) {
       widget = new InterfaceWidget(key, theParent);
+      widget->setSettingsKey(QFileInfo(key).fileName());
       m_dialogs.insert(key, widget);
     }
   }
@@ -307,6 +345,9 @@ void Command::run()
 
   if (m_currentInterface) {
     QJsonObject collected = m_currentInterface->collectOptions();
+    // Only on OK: a cancelled dialog must not change what comes back next
+    // time, and run() is reached only once the user has accepted.
+    m_currentInterface->saveOptionValues();
     const auto& iface = m_currentInterface->interfaceScript();
 
     // Create a new InterfaceScript with the same configuration

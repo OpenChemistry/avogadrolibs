@@ -66,6 +66,46 @@ TEST(QCSchemaTest, readWebMO)
   // coordinates are already in Angstroms, so they are used as-is
   EXPECT_NEAR(molecule.atomPositions3d()[0].x(), 0.661709, 1e-6);
   EXPECT_NEAR(molecule.atomPositions3d()[0].y(), -1.220277, 1e-6);
+
+  // WebMO names the energy after the method it ran, so this file has
+  // "rhf_energy" (matching its method_energy_name of "RHF") and no
+  // "total_energy" at all
+  ASSERT_TRUE(molecule.hasData("totalEnergy"));
+  EXPECT_NEAR(molecule.data("totalEnergy").toFloat(), -234.19029, 1e-3);
+}
+
+// Thermochemistry keys also end in "_energy" but are not the electronic
+// energy. This file carries free_energy and internal_energy beside
+// uhf_energy, and its method_energy_name of "HF" matches none of them, so the
+// fallback has to pick uhf_energy rather than one of the thermochemistry ones.
+TEST(QCSchemaTest, readWebMOEnergyIgnoresThermochemistry)
+{
+  QCSchema qcs;
+  Molecule molecule;
+  ASSERT_TRUE(qcs.readFile(
+    AVOGADRO_DATA "/data/qcschema/output_json_1734376.json", molecule));
+
+  ASSERT_TRUE(molecule.hasData("totalEnergy"));
+  EXPECT_NEAR(molecule.data("totalEnergy").toFloat(), -231.72097, 1e-3);
+}
+
+// A document following the specification is untouched by the WebMO fallback.
+TEST(QCSchemaTest, totalEnergyWinsOverAMethodNamedKey)
+{
+  const char* input = R"({
+    "schema_name": "QC_JSON",
+    "symbols": ["H", "H"],
+    "geometry": [0.0, 0.0, 0.0, 0.0, 0.0, 0.74],
+    "properties": {
+      "total_energy": { "units": "Hartree", "value": -1.5 },
+      "uhf_energy": { "units": "Hartree", "value": -9.9 }
+    }
+  })";
+
+  QCSchema qcs;
+  Molecule molecule;
+  ASSERT_TRUE(qcs.readString(input, molecule));
+  EXPECT_NEAR(molecule.data("totalEnergy").toFloat(), -1.5, 1e-6);
 }
 
 // the MolSSI variant is in bohr with zero-based connectivity indices

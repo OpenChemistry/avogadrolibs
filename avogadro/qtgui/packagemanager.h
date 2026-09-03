@@ -49,6 +49,15 @@ public:
   static QStringList featureTypes();
 
   /**
+   * A short, readable, stable key naming one feature, for use as a QSettings
+   * group. Unlike packageFeatureKey() this embeds no absolute path, so it
+   * does not turn into a deep tree of settings groups.
+   */
+  static QString featureSettingsKey(const QString& packageDir,
+                                    const QString& command,
+                                    const QString& identifier);
+
+  /**
    * Build a stable key for one package-provided feature.
    * Consumers can use this as a map key to track registrations and removals.
    * Components must not be empty.
@@ -128,10 +137,17 @@ public:
                                            const QString& identifier);
 
   /**
+   * Whether a feature's @c user-options value asks for options to be built
+   * fresh by the script rather than read from a file. Such options are
+   * generated per invocation, so callers must not cache the resulting GUI.
+   */
+  static bool isDynamicUserOptions(const QString& userOptionsValue);
+
+  /**
    * Resolve user-options for a package feature. If @p userOptionsValue is
-   * the literal string "dynamic", runs the script with @c --user-options
-   * via loadOptionsFromScript(). Otherwise treats it as a relative file
-   * path and loads via loadOptionsFromFile().
+   * dynamic (see isDynamicUserOptions()), runs the script with
+   * @c --user-options via loadOptionsFromScript(). Otherwise treats it as a
+   * relative file path and loads via loadOptionsFromFile().
    * Returns an empty object on error or if @p userOptionsValue is empty.
    */
   static QJsonObject resolveUserOptions(const QString& userOptionsValue,

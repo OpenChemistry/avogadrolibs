@@ -10,6 +10,7 @@
 
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/core/version.h>
@@ -73,6 +74,57 @@ std::vector<std::string> QCSchema::mimeTypes() const
 {
   return std::vector<std::string>();
 }
+
+namespace {
+
+/// Thermochemistry, not the electronic energy the molecule wants.
+bool isThermochemistry(const std::string& key)
+{
+  return key == "free_energy" || key == "internal_energy" ||
+         key == "zero_point_energy";
+}
+
+std::string toLower(std::string text)
+{
+  std::transform(text.begin(), text.end(), text.begin(),
+                 [](unsigned char c) { return std::tolower(c); });
+  return text;
+}
+
+/**
+ * WebMO writes the electronic energy under a key named for the method it ran
+ * -- "uhf_energy", "pm6_energy", "rb3lyp_energy" -- rather than the
+ * "total_energy" the specification uses, so every such file would otherwise
+ * come in with no energy at all. Prefer the key matching the reported method,
+ * and fall back to the first plausible one.
+ *
+ * Returns a null json when there is nothing to use.
+ */
+json findMethodEnergy(const json& properties)
+{
+  std::string method;
+  const auto name = properties.find("method_energy_name");
+  if (name != properties.end() && name->is_string())
+    method = toLower(name->get<std::string>()) + "_energy";
+
+  json fallback;
+  for (const auto& item : properties.items()) {
+    const std::string& key = item.key();
+    if (!Core::endsWith(key, "_energy") || isThermochemistry(key))
+      continue;
+    if (!item.value().is_object() ||
+        item.value().find("value") == item.value().end())
+      continue;
+
+    if (!method.empty() && toLower(key) == method)
+      return item.value();
+    if (fallback.is_null())
+      fallback = item.value();
+  }
+  return fallback;
+}
+
+} // namespace
 
 bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
 {
@@ -249,12 +301,16 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     // e.g. total_energy": {
     //         "units": "Hartree",
     //        "value": -26.173033542939
-    if (properties.find("total_energy") != properties.end() &&
-        properties["total_energy"].is_object()) {
-      json totalEnergy = properties["total_energy"];
-      if (totalEnergy.find("value") != totalEnergy.end() &&
-          totalEnergy["value"].is_number())
-        molecule.setData("totalEnergy", totalEnergy["value"].get<float>());
+    json totalEnergy = properties.value("total_energy", json());
+    // The MolSSI specification always uses total_energy, so only the older
+    // WebMO dialect gets the method-named fallback, alongside the coordinate
+    // and connectivity handling above.
+    if (!molssi && !totalEnergy.is_object())
+      totalEnergy = findMethodEnergy(properties);
+    if (totalEnergy.is_object()) {
+      const auto value = totalEnergy.find("value");
+      if (value != totalEnergy.end() && value->is_number())
+        molecule.setData("totalEnergy", value->get<float>());
     }
 
     // trajectory or geometry optimization

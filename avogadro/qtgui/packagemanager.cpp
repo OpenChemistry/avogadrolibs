@@ -13,6 +13,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QThread>
 #include <QtCore/QJsonArray>
@@ -47,6 +48,21 @@ QString PackageManager::packageFeatureKey(const QString& packageDir,
 {
   return packageDir + QLatin1Char('\n') + command + QLatin1Char('\n') +
          identifier;
+}
+
+QString PackageManager::featureSettingsKey(const QString& packageDir,
+                                           const QString& command,
+                                           const QString& identifier)
+{
+  // The directory name is enough to tell packages apart: they all live side
+  // by side in the plugin directory, so two cannot share one.
+  static const QRegularExpression unsafe(QStringLiteral("[^A-Za-z0-9._-]+"));
+  auto clean = [](const QString& part) {
+    return QString(part).replace(unsafe, QStringLiteral("_"));
+  };
+
+  return clean(QFileInfo(packageDir).fileName()) + QLatin1Char('/') +
+         clean(command) + QLatin1Char('/') + clean(identifier);
 }
 
 QJsonObject PackageManager::loadOptionsFromFile(const QString& userOptionsPath)
@@ -259,6 +275,11 @@ QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
   return doc.object();
 }
 
+bool PackageManager::isDynamicUserOptions(const QString& userOptionsValue)
+{
+  return userOptionsValue == QLatin1String("dynamic");
+}
+
 QJsonObject PackageManager::resolveUserOptions(const QString& userOptionsValue,
                                                const QString& packageDir,
                                                const QString& command,
@@ -268,7 +289,7 @@ QJsonObject PackageManager::resolveUserOptions(const QString& userOptionsValue,
     return {};
 
   QJsonObject result;
-  if (userOptionsValue == QLatin1String("dynamic"))
+  if (isDynamicUserOptions(userOptionsValue))
     result = loadOptionsFromScript(packageDir, command, identifier);
   else
     result = loadOptionsFromFile(packageDir + '/' + userOptionsValue);
