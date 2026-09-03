@@ -49,11 +49,6 @@ public:
   static QStringList featureTypes();
 
   /**
-   * Build a stable key for one package-provided feature.
-   * Consumers can use this as a map key to track registrations and removals.
-   * Components must not be empty.
-   */
-  /**
    * A short, readable, stable key naming one feature, for use as a QSettings
    * group. Unlike packageFeatureKey() this embeds no absolute path, so it
    * does not turn into a deep tree of settings groups.
@@ -62,6 +57,11 @@ public:
                                     const QString& command,
                                     const QString& identifier);
 
+  /**
+   * Build a stable key for one package-provided feature.
+   * Consumers can use this as a map key to track registrations and removals.
+   * Components must not be empty.
+   */
   static QString packageFeatureKey(const QString& packageDir,
                                    const QString& command,
                                    const QString& identifier);

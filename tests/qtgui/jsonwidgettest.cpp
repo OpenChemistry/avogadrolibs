@@ -112,6 +112,15 @@ QTableWidget* buildTable(TestableJsonWidget& widget, const QJsonObject& table)
   return widget.table(QStringLiteral("Job"));
 }
 
+/// The value the "Job" table hands back to the script.
+std::string collectedJob(const TestableJsonWidget& widget)
+{
+  return widget.collectOptions()
+    .value(QStringLiteral("Job"))
+    .toString()
+    .toStdString();
+}
+
 /// Settings written by these tests all live under here, and only here.
 const QString settingsKey = QStringLiteral("AvogadroTest_JsonWidget/case");
 const QString settingsRoot =
@@ -264,15 +273,12 @@ TEST_F(JsonWidgetTest, SelectableTableCollectsSelectedRow)
   QTableWidget* view = buildTable(widget, table);
   ASSERT_NE(view, nullptr);
 
-  QJsonObject collected = widget.collectOptions();
-  ASSERT_TRUE(collected.contains(QStringLiteral("Job")));
-  EXPECT_EQ(collected.value(QStringLiteral("Job")).toString().toStdString(), "")
+  ASSERT_TRUE(widget.collectOptions().contains(QStringLiteral("Job")));
+  EXPECT_EQ(collectedJob(widget), "")
     << "an unselected picker must not claim a row";
 
   view->selectRow(1);
-  collected = widget.collectOptions();
-  EXPECT_EQ(collected.value(QStringLiteral("Job")).toString().toStdString(),
-            "1963205\tCH3F\tNMR");
+  EXPECT_EQ(collectedJob(widget), "1963205\tCH3F\tNMR");
 }
 
 // A selectable table honours a custom delimiter, so a script can pick one that
@@ -292,11 +298,7 @@ TEST_F(JsonWidgetTest, SelectableTableHonoursDelimiter)
   ASSERT_NE(view, nullptr);
   view->selectRow(0);
 
-  EXPECT_EQ(widget.collectOptions()
-              .value(QStringLiteral("Job"))
-              .toString()
-              .toStdString(),
-            "1963207|H2N|Molecular Energy");
+  EXPECT_EQ(collectedJob(widget), "1963207|H2N|Molecular Energy");
 }
 
 // An ordinary (non-selectable) table is an editable grid: its "default" string
@@ -315,11 +317,7 @@ TEST_F(JsonWidgetTest, EditableTableRoundTripsItsDefault)
   EXPECT_EQ(view->rowCount(), 2);
   EXPECT_EQ(view->columnCount(), 3);
 
-  EXPECT_EQ(widget.collectOptions()
-              .value(QStringLiteral("Job"))
-              .toString()
-              .toStdString(),
-            contents.toStdString());
+  EXPECT_EQ(collectedJob(widget), contents.toStdString());
 }
 
 // Sorting is applied after the rows are inserted, so the data must survive it,
@@ -343,11 +341,7 @@ TEST_F(JsonWidgetTest, SortableTableCollectsTheVisibleRow)
 
   view->sortItems(0, Qt::AscendingOrder);
   view->selectRow(0);
-  EXPECT_EQ(widget.collectOptions()
-              .value(QStringLiteral("Job"))
-              .toString()
-              .toStdString(),
-            "1963205\tCH3F\tNMR");
+  EXPECT_EQ(collectedJob(widget), "1963205\tCH3F\tNMR");
 }
 
 // Rebuilding the form has to take the old widgets with it. Deleting the layout
@@ -444,11 +438,7 @@ TEST_F(JsonWidgetTest, SortableTableKeepsItsDefaultIntact)
   EXPECT_EQ(view->rowCount(), 3);
   EXPECT_EQ(view->columnCount(), 2);
 
-  EXPECT_EQ(widget.collectOptions()
-              .value(QStringLiteral("Job"))
-              .toString()
-              .toStdString(),
-            contents.toStdString());
+  EXPECT_EQ(collectedJob(widget), contents.toStdString());
 }
 
 // Once the user clicks a header the sort indicator sits on a live column, and
@@ -627,12 +617,7 @@ TEST_F(JsonWidgetTest, TablesAreNotRemembered)
   EXPECT_EQ(view->rowCount(), 1);
   ASSERT_NE(view->item(0, 0), nullptr);
   EXPECT_EQ(view->item(0, 0)->text().toStdString(), "42");
-  EXPECT_EQ(second.collectOptions()
-              .value(QStringLiteral("Job"))
-              .toString()
-              .toStdString(),
-            "")
-    << "a stale row came back selected";
+  EXPECT_EQ(collectedJob(second), "") << "a stale row came back selected";
 }
 
 // A remembered combo entry the script no longer offers leaves the default

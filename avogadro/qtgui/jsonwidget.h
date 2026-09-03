@@ -77,18 +77,12 @@ public:
    * key, which is the default, switches the whole mechanism off.
    */
   void setSettingsKey(const QString& key) { m_settingsKey = key; }
-  QString settingsKey() const { return m_settingsKey; }
 
   /**
    * Write every saveable option's current value to QSettings. Does nothing
    * unless a settings key has been set.
    */
   void saveOptionValues() const;
-
-  /**
-   * Whether @a name is an option whose value may be written to QSettings.
-   */
-  bool optionIsSaveable(const QString& name) const;
 
 public slots:
   /**
@@ -137,6 +131,10 @@ protected:
    * Overlay the values saved by saveOptionValues() on top of the defaults.
    */
   void restoreOptionValues();
+  /**
+   * Whether @a name is an option whose value may be written to QSettings.
+   */
+  bool optionIsSaveable(const QString& name) const;
   void setOption(const QString& name, const QJsonValue& defaultValue);
   void setStringListOption(const QString& name, const QJsonValue& value);
   void setStringOption(const QString& name, const QJsonValue& value);

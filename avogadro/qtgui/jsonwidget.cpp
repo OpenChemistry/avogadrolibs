@@ -62,6 +62,13 @@ bool isSaveableWidget(const QWidget* widget)
   return qobject_cast<const QTableWidget*>(widget) == nullptr;
 }
 
+/// Which axis the outer array of a table's data names.
+enum class TableAxis
+{
+  Columns,
+  Rows
+};
+
 /// The cell separator a table option was built with; a tab unless it said so.
 QString tableDelimiter(const QTableWidget* table)
 {
@@ -709,7 +716,8 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
   // arrays of cell strings, and only the nesting order differs.  Fill the
   // table from one of them, mapping the outer index to whichever axis it
   // names.  Note that setItem() takes (row, column) in that order.
-  auto populate = [tableWidget](const QJsonArray& outer, bool outerIsRows) {
+  auto populate = [tableWidget](const QJsonArray& outer, TableAxis axis) {
+    const bool outerIsRows = axis == TableAxis::Rows;
     // The longest inner array sets the size of the other axis. Ragged input
     // is allowed: missing cells are simply left empty.
     int innerCount = 0;
@@ -733,9 +741,9 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
   };
 
   if (obj[u"columns"_s].isArray())
-    populate(obj[u"columns"_s].toArray(), false);
+    populate(obj[u"columns"_s].toArray(), TableAxis::Columns);
   if (obj[u"rows"_s].isArray())
-    populate(obj[u"rows"_s].toArray(), true);
+    populate(obj[u"rows"_s].toArray(), TableAxis::Rows);
 
   // Sorting has to be switched on after the data is in place, or the rows are
   // re-ordered underneath setItem() as they are inserted.

@@ -186,6 +186,37 @@ bool Command::readMolecule(QtGui::Molecule& mol)
 
 void Command::refreshScripts() {}
 
+namespace {
+
+/**
+ * Assemble a package feature's options from its pyproject.toml metadata.
+ *
+ * Package commands never call --print-options: everything is declared up
+ * front, either inline or in the user-options file the metadata names
+ * (mirrors QuantumInput::menuActivated()).
+ */
+QJsonObject packageOptions(const QAction* action, const QString& packageDir,
+                           const QString& command, const QString& identifier,
+                           const QString& userOptionsValue)
+{
+  QJsonObject options;
+  const QString inputFormat = action->property("packageInputFormat").toString();
+  if (!inputFormat.isEmpty())
+    options.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
+
+  // The definitions must be wrapped under "userOptions" so that
+  // JsonWidget::buildOptionGui() recognises them and builds the dialog.
+  if (!userOptionsValue.isEmpty()) {
+    const QJsonObject userOptions = QtGui::PackageManager::resolveUserOptions(
+      userOptionsValue, packageDir, command, identifier);
+    if (!userOptions.isEmpty())
+      options.insert(QStringLiteral("userOptions"), userOptions);
+  }
+  return options;
+}
+
+} // namespace
+
 void Command::menuActivated()
 {
   auto* theSender = qobject_cast<QAction*>(sender());
@@ -247,22 +278,8 @@ void Command::menuActivated()
     // the form in place.
     if (isNewWidget ||
         QtGui::PackageManager::isDynamicUserOptions(userOptionsRel)) {
-      // Build options from pyproject.toml metadata; never call --print-options
-      // for package-based commands (mirrors QuantumInput::menuActivated()).
-      QJsonObject opts;
-      QString inputFormat =
-        theSender->property("packageInputFormat").toString();
-      if (!inputFormat.isEmpty())
-        opts.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
-
-      // The option definitions must be wrapped under "userOptions" so that
-      // JsonWidget::buildOptionGui() recognises them and builds the dialog.
-      if (!userOptionsRel.isEmpty()) {
-        QJsonObject userOpts = QtGui::PackageManager::resolveUserOptions(
-          userOptionsRel, pkgDir, pkgCmd, pkgId);
-        if (!userOpts.isEmpty())
-          opts.insert(QStringLiteral("userOptions"), userOpts);
-      }
+      const QJsonObject opts =
+        packageOptions(theSender, pkgDir, pkgCmd, pkgId, userOptionsRel);
 
       // A dynamic script that fails - no network, a timeout, malformed JSON -
       // resolves to nothing. Pushing that empty result into a widget that

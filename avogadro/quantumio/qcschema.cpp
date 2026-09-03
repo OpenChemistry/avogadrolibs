@@ -10,6 +10,7 @@
 
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/core/version.h>
@@ -109,11 +110,7 @@ json findMethodEnergy(const json& properties)
   json fallback;
   for (const auto& item : properties.items()) {
     const std::string& key = item.key();
-    const std::string suffix("_energy");
-    if (key.size() <= suffix.size() ||
-        key.compare(key.size() - suffix.size(), suffix.size(), suffix) != 0)
-      continue;
-    if (isThermochemistry(key))
+    if (!Core::endsWith(key, "_energy") || isThermochemistry(key))
       continue;
     if (!item.value().is_object() ||
         item.value().find("value") == item.value().end())
@@ -305,7 +302,10 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     //         "units": "Hartree",
     //        "value": -26.173033542939
     json totalEnergy = properties.value("total_energy", json());
-    if (!totalEnergy.is_object())
+    // The MolSSI specification always uses total_energy, so only the older
+    // WebMO dialect gets the method-named fallback, alongside the coordinate
+    // and connectivity handling above.
+    if (!molssi && !totalEnergy.is_object())
       totalEnergy = findMethodEnergy(properties);
     if (totalEnergy.is_object()) {
       const auto value = totalEnergy.find("value");
