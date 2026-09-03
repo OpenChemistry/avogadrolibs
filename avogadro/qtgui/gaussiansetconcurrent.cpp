@@ -13,6 +13,7 @@
 #include <avogadro/core/cube.h>
 
 #include <QtConcurrent/QtConcurrentMap>
+#include <QtCore/QSet>
 #include <QtCore/QThread>
 
 #include <algorithm>
@@ -35,15 +36,28 @@ struct GaussianShell
   unsigned int state; // MO index — only used by the orbital path
 };
 
+namespace {
+/// Every live calculator, so that cubes can be protected from deletion while
+/// any of them is still writing. Instances are only created and destroyed on
+/// the GUI thread, so this needs no locking of its own.
+QSet<GaussianSetConcurrent*>& liveCalculations()
+{
+  static QSet<GaussianSetConcurrent*> instances;
+  return instances;
+}
+} // namespace
+
 GaussianSetConcurrent::GaussianSetConcurrent(QObject* p)
   : QObject(p), m_gaussianShells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
+  liveCalculations().insert(this);
   // Watch for the future
   connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
 }
 
 GaussianSetConcurrent::~GaussianSetConcurrent()
 {
+  liveCalculations().remove(this);
   cancelAndWait();
   delete m_tools;
 }
@@ -116,6 +130,17 @@ void GaussianSetConcurrent::calculationComplete()
   delete m_gaussianShells;
   m_gaussianShells = nullptr;
   emit finished();
+}
+
+void GaussianSetConcurrent::cancelAllCalculations()
+{
+  // Copy, because cancelAndWait() spins the caller's thread and a calculator
+  // could be destroyed while we are working through the list.
+  const QSet<GaussianSetConcurrent*> instances = liveCalculations();
+  for (GaussianSetConcurrent* calculation : instances) {
+    if (liveCalculations().contains(calculation))
+      calculation->cancelAndWait();
+  }
 }
 
 void GaussianSetConcurrent::cancelAndWait()

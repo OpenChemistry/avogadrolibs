@@ -146,6 +146,14 @@ private:
   int m_smoothingPasses = 2;
   int m_meshesLeft = 0;
 
+  /// Resolution used by the command currently running, reported back to the
+  /// caller because resolution() picks one when the caller does not.
+  float m_commandResolution = 0.0f;
+  /// True while a script command is waiting on a calculation to finish, so
+  /// that an interrupted calculation can report failure rather than leave
+  /// the caller waiting for a commandFinished() that will never come.
+  bool m_commandPending = false;
+
   bool m_recordingMovie = false;
   int m_currentFrame = 0;
   int m_frameCount = 1;

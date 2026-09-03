@@ -101,7 +101,11 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
     return; // no electrons, no orbitals
 
   loadOrbitals();
-  precalculateOrbitals();
+  // Orbitals are calculated when one is selected, which is fast enough that
+  // precalculating a window of them on every load is not worth the work --
+  // renderOrbital() falls through to calculateOrbitalFromWidget() when there
+  // is nothing cached. The dialog's "calculate all" still calls
+  // precalculateOrbitals() when the user actually asks for it.
 }
 
 void Orbitals::loadBasis()

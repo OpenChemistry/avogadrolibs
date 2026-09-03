@@ -12,16 +12,30 @@
 #include <QDebug>
 #include <QReadWriteLock>
 
+#include <QtCore/QSet>
+
 namespace Avogadro::QtGui {
 
 using Core::Cube;
 using Core::Mesh;
+
+namespace {
+/// Every live generator, so that a cube/mesh can be protected from deletion
+/// while one is still writing. Instances are only created and destroyed on
+/// the GUI thread, so this needs no locking of its own.
+QSet<MeshGenerator*>& liveGenerators()
+{
+  static QSet<MeshGenerator*> instances;
+  return instances;
+}
+} // namespace
 
 MeshGenerator::MeshGenerator(QObject* p)
   : QThread(p), m_iso(0.0), m_passes(6), m_reverseWinding(false),
     m_cube(nullptr), m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0),
     m_min(0.0, 0.0, 0.0), m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
+  liveGenerators().insert(this);
 }
 
 MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
@@ -30,14 +44,30 @@ MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
     m_cube(nullptr), m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0),
     m_min(0.0, 0.0, 0.0), m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
+  liveGenerators().insert(this);
   initialize(cube_, mesh_, iso, passes);
 }
 
 MeshGenerator::~MeshGenerator()
 {
+  liveGenerators().remove(this);
   // QThread aborts if it is destroyed while still running, and run() reads
   // m_cube/m_mesh and the pass working buffers right to the end.
   wait();
+}
+
+void MeshGenerator::cancelAllCalculations()
+{
+  // Copy, because wait() spins the caller's thread and a generator could be
+  // destroyed while we are working through the list.
+  const QSet<MeshGenerator*> instances = liveGenerators();
+  for (MeshGenerator* generator : instances) {
+    if (!liveGenerators().contains(generator))
+      continue;
+    generator->blockSignals(true);
+    generator->wait();
+    generator->blockSignals(false);
+  }
 }
 
 bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,

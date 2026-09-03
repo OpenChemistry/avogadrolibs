@@ -57,6 +57,7 @@ namespace {
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QProcess>
+#include <QtCore/QVariantMap>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 
@@ -200,31 +201,93 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     beta = options["spin"].toString().contains("beta");
   }
 
+  // Everything below hands work to a background thread, so the caller's reply
+  // is held until meshFinished() reports back.
+  m_commandResolution = cubeResolution;
+
   if ((command.compare("renderVanDerWaals", Qt::CaseInsensitive) == 0) ||
       (command.compare("renderVDW", Qt::CaseInsensitive) == 0)) {
+    emit commandStarted();
+    m_commandPending = true;
     calculateEDT(VanDerWaals, cubeResolution);
     return true;
   } else if (command.compare("renderSolventAccessible", Qt::CaseInsensitive) ==
              0) {
+    emit commandStarted();
+    m_commandPending = true;
     calculateEDT(SolventAccessible, cubeResolution);
     return true;
   } else if (command.compare("renderSolventExcluded", Qt::CaseInsensitive) ==
              0) {
+    emit commandStarted();
+    m_commandPending = true;
     calculateEDT(SolventExcluded, cubeResolution);
     return true;
   } else if ((command.compare("renderOrbital", Qt::CaseInsensitive) == 0) ||
              (command.compare("renderMO", Qt::CaseInsensitive) == 0)) {
+    if (m_basis == nullptr) {
+      emit commandFailed(tr("This file does not contain a basis set, so no "
+                            "orbital can be calculated."));
+      return true;
+    }
+    if (index < 0 ||
+        index >= static_cast<int>(m_basis->molecularOrbitalCount())) {
+      emit commandFailed(tr("Orbital %1 is out of range.").arg(index + 1));
+      return true;
+    }
+    emit commandStarted();
+    m_commandPending = true;
     calculateQM(MolecularOrbital, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderElectronDensity", Qt::CaseInsensitive) ==
              0) {
+    if (m_basis == nullptr) {
+      emit commandFailed(tr("This file does not contain a basis set, so no "
+                            "electron density can be calculated."));
+      return true;
+    }
+    emit commandStarted();
+    m_commandPending = true;
     calculateQM(ElectronDensity, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderSpinDensity", Qt::CaseInsensitive) == 0) {
+    if (m_basis == nullptr) {
+      emit commandFailed(tr("This file does not contain a basis set, so no "
+                            "spin density can be calculated."));
+      return true;
+    }
+    emit commandStarted();
+    m_commandPending = true;
     calculateQM(SpinDensity, index, beta, isoValue, cubeResolution);
+    return true;
+  } else if (command.compare("renderCube", Qt::CaseInsensitive) == 0) {
+    if (m_cubes.empty()) {
+      emit commandFailed(tr("This file does not contain any cube data."));
+      return true;
+    }
+    // Cubes are numbered from one for the caller, as orbitals are.
+    int cubeIndex = 0;
+    if (options.contains("index"))
+      cubeIndex = options.value("index").toInt() - 1;
+    else if (options.contains("cube"))
+      cubeIndex = options.value("cube").toInt() - 1;
+    if (cubeIndex < 0 || cubeIndex >= static_cast<int>(m_cubes.size())) {
+      emit commandFailed(tr("Cube %1 is out of range, this file has %2.")
+                           .arg(cubeIndex + 1)
+                           .arg(m_cubes.size()));
+      return true;
+    }
+    if (m_cubes[cubeIndex] == nullptr) {
+      emit commandFailed(tr("Cube %1 could not be read.").arg(cubeIndex + 1));
+      return true;
+    }
+    emit commandStarted();
+    m_commandPending = true;
+    calculateCube(cubeIndex, isoValue);
     return true;
   }
 
+  m_commandResolution = 0.0f;
   return false;
 }
 
@@ -257,6 +320,26 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
 void Surfaces::clearSurfaceData()
 {
   if (m_molecule) {
+    // A calculation started elsewhere -- the Orbitals dialog, say -- may be
+    // writing into one of these cubes on a worker thread. Stop it before the
+    // cube it holds is deleted.
+    QtGui::GaussianSetConcurrent::cancelAllCalculations();
+    QtGui::SlaterSetConcurrent::cancelAllCalculations();
+    QtGui::MeshGenerator::cancelAllCalculations();
+
+    // calculateEDT()/performEDTStep() are plain QtConcurrent::run() futures
+    // reading and writing m_cube directly, with no cancellation support of
+    // their own. Wait for them here too, with their finished() signal
+    // blocked so a stale performEDTStep()/displayMesh() callback doesn't run
+    // against the cube/meshes we are about to free.
+    m_performEDTStepWatcher.blockSignals(true);
+    m_performEDTStepWatcher.waitForFinished();
+    m_performEDTStepWatcher.blockSignals(false);
+
+    m_displayMeshWatcher.blockSignals(true);
+    m_displayMeshWatcher.waitForFinished();
+    m_displayMeshWatcher.blockSignals(false);
+
     m_molecule->clearCubes();
     m_molecule->clearMeshes();
   }
@@ -422,7 +505,10 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
   // Reset state to avoid stale meshes/cubes from prior calculations
   // (e.g., switching from MO to VdW would leave m_mesh2 rendering)
   clearSurfaceData();
-  m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
+  // Report only that something was added. Including Atoms would make
+  // Molecule::invalidatesDerivedData() true, and emitChanged() would then
+  // delete the very basis set this calculation is about to read.
+  m_molecule->emitChanged(Molecule::Added);
 
   if (!m_cube)
     m_cube = m_molecule->addCube();
@@ -589,7 +675,10 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
 
   // Reset state a little more frequently, minimal cost, avoid bugs.
   clearSurfaceData();
-  m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
+  // Report only that something was added. Including Atoms would make
+  // Molecule::invalidatesDerivedData() true, and emitChanged() would then
+  // delete the very basis set this calculation is about to read.
+  m_molecule->emitChanged(Molecule::Added);
   bool connectSlots = false;
 
   // set up QtConcurrent calculators for Gaussian or Slater basis sets
@@ -749,8 +838,17 @@ void Surfaces::stepChanged(int n)
 
 void Surfaces::displayMesh()
 {
-  if (!m_cube)
+  if (!m_cube) {
+    // The cubes were deleted while this calculation was running, so it was
+    // cancelled. Anyone waiting on the command has to be told, or they wait
+    // for a commandFinished() that is never coming.
+    if (m_commandPending) {
+      m_commandPending = false;
+      m_commandResolution = 0.0f;
+      emit commandFailed(tr("The calculation was interrupted."));
+    }
     return;
+  }
 
   if (m_dialog != nullptr)
     m_smoothingPasses = m_dialog->smoothingPassesValue();
@@ -910,8 +1008,20 @@ void Surfaces::meshFinished()
 
       m_molecule->emitChanged(QtGui::Molecule::Added);
 
-      emit commandFinished(tr(
-        "Surface Finished", "finished rendering surface or molecular orbital"));
+      // Report what was actually rendered: resolution() picks a value from
+      // the molecule when the caller does not supply one.
+      m_commandPending = false;
+      QVariantMap result;
+      result["cubeIndex"] = static_cast<int>(m_molecule->activeCubeIndex()) + 1;
+      result["isovalue"] = m_isoValue;
+      if (m_commandResolution > 0.0f)
+        result["resolution"] = m_commandResolution;
+      m_commandResolution = 0.0f;
+
+      emit commandFinished(
+        tr("Surface Finished",
+           "finished rendering surface or molecular orbital"),
+        result);
     }
   }
 }
