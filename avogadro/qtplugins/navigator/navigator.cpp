@@ -25,10 +25,14 @@
 
 #include <Eigen/Geometry>
 
+#include <algorithm>
+#include <cmath>
+
 namespace Avogadro::QtPlugins {
 
 const float ZOOM_SPEED = 0.02f;
 const float ROTATION_SPEED = 0.005f;
+const float TRACKBALL_SPAN = 1.0f; // XY molecule rotations when trackball crossed
 
 Navigator::Navigator(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
@@ -132,8 +136,10 @@ QUndoCommand* Navigator::mousePressEvent(QMouseEvent* e)
   e->accept();
 
   // Figure out what type of navigation has been requested.
-  if ((e->buttons() & Qt::LeftButton && e->modifiers() == Qt::NoModifier) ||
-      (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::AltModifier)) {
+  if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::AltModifier) {
+    m_currentAction = RotTrackball;
+  } else if (e->buttons() & Qt::LeftButton &&
+             e->modifiers() == Qt::NoModifier) {
     m_currentAction = Rotation;
   } else if (e->buttons() & Qt::MiddleButton ||
              (e->buttons() & Qt::LeftButton &&
@@ -161,6 +167,56 @@ QUndoCommand* Navigator::mouseReleaseEvent(QMouseEvent* e)
 QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
 {
   switch (m_currentAction) {
+    case RotTrackball: {
+      QPoint delta = e->pos() - m_lastMousePosition;
+
+      double w = m_glWidget->width(); // double for type consistency in max
+      double h = m_glWidget->height();
+
+      // Calculate molecule screen section center (pivot)
+      QPointF center(w / 2.0, h / 2.0);
+
+      // Compute squared distances from center to test the Trackball boundary
+      QPointF currentVec = QPointF(e->pos()) - center;
+      QPointF prevVec = QPointF(m_lastMousePosition) - center;
+
+      // rename to make later formula readable
+      double x2 = currentVec.x();
+      double y2 = currentVec.y();
+      double distSquaredCurrent = x2 * x2 + y2 * y2;
+      // will divide by radius later, max makes sure we can
+      // 0.43 .. 0.50 is remaining space at closer window edge
+      double trackballRadius = 0.43 * std::max(std::min(w, h), 1.0);
+      // avoid sqrt() later, compare squared values
+      double trackballSquaredRadius = trackballRadius * trackballRadius;
+
+      if (distSquaredCurrent <= trackballSquaredRadius) {
+        // like in Rotation but speed normalized
+        // undo *ROTATION_SPEED which will happen in rotate()
+        double speedCorrection = (1.0 / ROTATION_SPEED) * TRACKBALL_SPAN
+                                  * 3.14159265358979 / trackballRadius;
+        rotate(m_renderer->camera().focus(),
+               delta.y() * speedCorrection,
+               delta.x() * speedCorrection,
+               0);
+      } else {
+        // Calculate angle between current and previous ticks
+        double x1 = prevVec.x();
+        double y1 = prevVec.y();
+        double crossProduct = x1 * y2 - y1 * x2;
+        double dotProduct = x1 * x2 + y1 * y2;
+        // for atan2 safety, avoid both sizes near zero at once
+        // (just in case the window has microscopic size)
+        if (std::abs(crossProduct) > 0.1 || std::abs(dotProduct) > 0.1) {
+          // counter-clockwise is positive here
+          double angleDelta = std::atan2(crossProduct, dotProduct);
+          rotate(m_renderer->camera().focus(), 0, 0,
+                 -angleDelta * (1.0 / ROTATION_SPEED));
+        }
+      }
+      e->accept();
+      break;
+    }
     case Rotation: {
       QPoint delta = e->pos() - m_lastMousePosition;
       rotate(m_renderer->camera().focus(), delta.y(), delta.x(), 0);
