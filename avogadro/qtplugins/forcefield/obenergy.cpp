@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QDir>
 
+#include <iostream>
 #include <memory>
 
 using namespace OpenBabel;
@@ -55,7 +56,17 @@ public:
       return false;
 
     m_forceField.reset(plugin->MakeNewInstance());
-    return m_forceField != nullptr;
+    if (m_forceField == nullptr)
+      return false;
+
+    // OBForceField leaves _loglvl and _logos uninitialized: no constructor
+    // sets them, and the plugin singleton only escaped that because static
+    // storage zeroed it. A heap clone gets whatever the allocator hands back,
+    // so a garbage _loglvl enables logging and a garbage _logos is then
+    // dereferenced (OBFFLog only checks it against null). Pin both.
+    m_forceField->SetLogLevel(OBFF_LOGLVL_NONE);
+    m_forceField->SetLogFile(&std::clog);
+    return true;
   }
 };
 
