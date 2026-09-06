@@ -7,12 +7,13 @@ name: Windows ARM Build
 # .. since SignPath requires only a Windows build in the action
 # .. to successfully sign
 
-on: [workflow_dispatch]
+on: [push, pull_request, workflow_dispatch]
 
 env:
+  # Not pinned to the 6.8.3 the x86_64 build uses: that pin exists because
+  # newer Qt broke deployment on some Win10 x86 systems, which does not apply
+  # to Windows on ARM.
   QT_VERSION: 6.10.1
-  # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
-  # we set MACOSX_DEPLOYMENT_TARGET later
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
 
 concurrency:
@@ -32,8 +33,25 @@ jobs:
             os: windows-11-arm,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
-            build_flags: "-j 2",
+            cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
+            build_flags: "--parallel",
+            package: "Avogadro2",
+            sentry: false,
+          }
+        # Diagnostic build with Sentry crash reporting compiled in. Ships as a
+        # separate installer that installs beside a release install; the
+        # release build above gets no crash reporting.
+        # RelWithDebInfo rather than Release: MSVC Release passes no /Zi, so it
+        # emits no PDBs and every frame would come back as a raw address.
+        - {
+            name: "Windows Qt6 ARM (Sentry)", artifact: "Win-ARM-diagnostic.exe",
+            os: windows-11-arm,
+            cc: "cl", cxx: "cl",
+            build_type: "RelWithDebInfo",
+            cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
+            build_flags: "--parallel",
+            package: "Avogadro2-Diagnostic",
+            sentry: true,
           }
 
     steps:
@@ -43,6 +61,9 @@ jobs:
     - name: Checkout Repositories
       uses: ./.github/actions/checkout-repositories
 
+    # host and arch are left to the action: on an arm64 runner it picks the
+    # windows_arm64 host and the native win64_msvc2022_arm64 build, rather
+    # than the cross-compiled one whose host tools are x86_64.
     - name: Install Qt
       uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4.3.1
       with:
@@ -70,17 +91,18 @@ jobs:
           C:\vcpkg\installed
           C:\vcpkg\packages
           C:\vcpkg\downloads
-          C:\vcpkg\buildtrees
         # We don't use a vcpkg manifest so we'll use the vcpkg git SHA as the cache key
         # Fallback to vcpkg git SHA so cache is somewhat stable across runs.
         key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
+        restore-keys: |
+          vcpkg-${{ runner.os }}-${{ runner.arch }}-
       env:
         VCPKG_ROOT: C:\vcpkg
 
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
-        choco install nsis
+        choco install nsis ninja
         vcpkg install libarchive eigen3 libxml2 zlib
       shell: bash
 
@@ -88,8 +110,25 @@ jobs:
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+        SENTRY_ARGS=""
+        if [ "${USE_SENTRY}" = "true" ]; then
+          # An unset SENTRY_DSN secret is fine: the build then reports itself
+          # as unavailable at runtime rather than failing to configure.
+          SENTRY_ARGS="-DUSE_SENTRY=ON -DSENTRY_DSN=${SENTRY_DSN} -DSENTRY_ENVIRONMENT=nightly"
+        fi
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}} $SENTRY_ARGS
       shell: bash
+      env:
+        USE_SENTRY: ${{ matrix.config.sentry }}
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
+    # Cache thirdparty builds (OpenBabel, etc.)
+    - name: Cache thirdparty
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: thirdparty-${{ runner.os }}-${{ runner.arch }}-${{ matrix.config.build_type }}-sentry${{ matrix.config.sentry }}-${{ hashFiles('openchemistry/cmake/External*.cmake', 'openchemistry/cmake/projects/*.cmake') }}
 
     - name: Build
       run: |
@@ -97,8 +136,61 @@ jobs:
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
+    # The crashpad binaries reach the prefix through crashpad's own install
+    # rules, which sentry-native does not drive directly when building shared.
+    # If they go missing the application still starts and simply never reports
+    # a crash, so fail here rather than shipping that.
+    - name: Verify crash handler binaries
+      if: matrix.config.sentry
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+      run: |
+        status=0
+        for binary in avogadro2.exe sentry.dll crashpad_handler.exe crashpad_wer.dll; do
+          if [ -f "prefix/bin/$binary" ]; then
+            echo "found    prefix/bin/$binary"
+          else
+            echo "MISSING  prefix/bin/$binary"
+            status=1
+          fi
+        done
+        echo "--- debug symbols found ---"
+        find . -name '*.pdb' -not -path './Downloads/*' | head -40
+        exit $status
+
+    # Runs before packaging, which moves prefix/ out from under us. Sentry
+    # matches minidumps to symbols by debug ID, so this does not have to agree
+    # with the release name the application reports. Both avogadrolibs and
+    # avogadroapp symbols are needed: crashes usually land in a plugin or in
+    # Avogadro::Rendering rather than in avogadro2.exe itself.
+    - name: Upload debug symbols
+      if: matrix.config.sentry
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        # Pinned rather than "latest", to match how this workflow pins every
+        # action to a SHA. The checksum is of the released aarch64 binary, so
+        # it differs from the one the x86_64 workflow checks.
+        SENTRY_CLI_VERSION: "3.6.2"
+        SENTRY_CLI_SHA256: "93ee7916c05c113a35daccf107c034af96f279561c103aa832668e4eecca3fb4"
+      run: |
+        if [ -z "${SENTRY_AUTH_TOKEN:-}" ]; then
+          echo "SENTRY_AUTH_TOKEN is not set - skipping debug symbol upload."
+          echo "The diagnostic build is still produced; crashes just will not"
+          echo "symbolicate until the secret is configured."
+          exit 0
+        fi
+        curl -sSfL -o sentry-cli.exe \
+          "https://downloads.sentry-cdn.com/sentry-cli/${SENTRY_CLI_VERSION}/sentry-cli-Windows-aarch64.exe"
+        echo "${SENTRY_CLI_SHA256}  sentry-cli.exe" | sha256sum --check --strict
+        ./sentry-cli.exe debug-files upload --include-sources \
+          avogadroapp avogadrolibs prefix/bin
+
     - name: Create Windows Packages
-      if: runner.os == 'Windows'
+      if: matrix.config.artifact != 0
       shell: bash
       run: |
         gh release download -R prefix-dev/pixi -p "pixi-aarch64-pc-windows-msvc.exe"
@@ -107,11 +199,15 @@ jobs:
         mv pixi-aarch64-pc-windows-msvc.exe prefix/bin/pixi.exe
         # run windeployqt
         windeployqt --release prefix/bin/avogadro2.exe
+        # Copy Qt DLLs that windeployqt misses (used by plugins and JKQTPlotter)
+        cp "${QT_ROOT_DIR}/bin/Qt6Concurrent.dll" prefix/bin/
+        cp "${QT_ROOT_DIR}/bin/Qt6PrintSupport.dll" prefix/bin/
+        cp "${QT_ROOT_DIR}/bin/Qt6Xml.dll" prefix/bin/
         mv prefix avogadro2
         # 7z a Avogadro2-windows.zip avogadro2
         cd avogadro2
         # create NSIS
-        /c/Program\ Files\ \(x86\)/NSIS/bin/makensis avogadro2.nsi
+        /c/Program\ Files\ \(x86\)/NSIS/makensis avogadro2.nsi
         if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
           # This is a tag - extract version
           VERSION="${GITHUB_REF#refs/tags/}"
@@ -121,7 +217,10 @@ jobs:
           VERSION="continuous"
         fi
 
-        mv Avogadro2-Setup.exe ../Avogadro2-${VERSION}-win-arm.exe
+        # NSIS OutFile is "<package>-Setup.exe", set from NSIS_OUTFILE in
+        # avogadroapp/avogadro/CMakeLists.txt, so these two names have to stay
+        # in step.
+        mv ${{matrix.config.package}}-Setup.exe ../${{matrix.config.package}}-${VERSION}-win-arm.exe
       working-directory: ${{ runner.workspace }}/build/
       env:
         GH_TOKEN: ${{ github.token }}
@@ -155,21 +254,25 @@ jobs:
         wait-for-completion: false
         output-artifact-directory: '../build/'
 
+    # MSIX is release-only: the diagnostic build installs beside a release
+    # install and has no Store identity of its own. Named for the architecture
+    # so it is not confused with the x86_64 workflow's Avogadro2.msix.
     - name: Create MSIX
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
+      if: ${{ !matrix.config.sentry && github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/') }}
       shell: powershell
       run:
         # create MSIX
-        makeappx pack /v /d . /p ../Avogadro2.msix
+        makeappx pack /v /d . /p ../Avogadro2-arm64.msix
       working-directory: ${{ runner.workspace }}/build/avogadro2
       env:
         GH_TOKEN: ${{ github.token }}
 
     - name: Upload MSIX
+      if: ${{ !matrix.config.sentry && github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/') }}
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
-        path: ${{ runner.workspace }}/build/Avogadro2.msix
-        name: Avogadro2.msix
+        path: ${{ runner.workspace }}/build/Avogadro2-arm64.msix
+        name: Avogadro2-arm64.msix
 
     - name: Setup tmate session
       if: failure()
