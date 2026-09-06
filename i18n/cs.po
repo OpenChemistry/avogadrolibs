@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-08-30 06:44+0000\n"
+"POT-Creation-Date: 2026-09-06 06:00+0000\n"
 "PO-Revision-Date: 2026-09-03 14:59+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
@@ -295,7 +295,7 @@ msgstr "Úloha selhala"
 msgid "The job did not complete successfully."
 msgstr "Úloha nebyla úspěšně dokončena."
 
-#: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:62
+#: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:50
 msgid "Script returns warnings:\n"
 msgstr "Skript vrací varování:\n"
 
@@ -307,7 +307,7 @@ msgstr "Skrýt &varování"
 msgid "Show &Warnings"
 msgstr "Zobrazit &varování"
 
-#: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:78
+#: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:66
 msgid "An error has occurred:"
 msgstr "Došlo k chybě:"
 
@@ -1135,99 +1135,99 @@ msgstr ""
 msgid "Error writing molecule representation to string: %1"
 msgstr "Chyba při zápisu reprezentace molekuly do řetězce: %1"
 
-#: qtgui/jsonwidget.cpp:101
+#: qtgui/jsonwidget.cpp:186
 msgid "'userOptions' missing."
 msgstr "Člen 'userOptions' chybí."
 
-#: qtgui/jsonwidget.cpp:108
+#: qtgui/jsonwidget.cpp:193
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr "Možnost '%1' se nepodařilo najít."
 
-#: qtgui/jsonwidget.cpp:115
+#: qtgui/jsonwidget.cpp:200
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "Člen 'type' u možnosti '%1' není řetězec."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:193:988
+#: qtgui/jsonwidget.cpp:296:988
 msgid "Title"
 msgstr "Název"
 
-#: qtgui/jsonwidget.cpp:197
+#: qtgui/jsonwidget.cpp:300
 msgid "Filename Base"
 msgstr "Základ názvu souboru"
 
-#: qtgui/jsonwidget.cpp:204 qtgui/jsonwidget.cpp:209
+#: qtgui/jsonwidget.cpp:307 qtgui/jsonwidget.cpp:312
 msgid "Processor Cores"
 msgstr "Procesorová jádra"
 
-#: qtgui/jsonwidget.cpp:204 qtgui/jsonwidget.cpp:212
+#: qtgui/jsonwidget.cpp:307 qtgui/jsonwidget.cpp:315
 msgid "Memory"
 msgstr "Paměť"
 
-#: qtgui/jsonwidget.cpp:217
+#: qtgui/jsonwidget.cpp:320
 msgid "Calculation Type"
 msgstr "Typ výpočtu"
 
-#: qtgui/jsonwidget.cpp:221
+#: qtgui/jsonwidget.cpp:324
 msgid "Theory"
 msgstr "Teorie"
 
-#: qtgui/jsonwidget.cpp:221
+#: qtgui/jsonwidget.cpp:324
 msgid "Basis"
 msgstr "Báze"
 
-#: qtgui/jsonwidget.cpp:226 qtgui/jsonwidget.cpp:230
+#: qtgui/jsonwidget.cpp:329 qtgui/jsonwidget.cpp:333
 msgid "Charge"
 msgstr "Náboj"
 
-#: qtgui/jsonwidget.cpp:227 qtgui/jsonwidget.cpp:232
+#: qtgui/jsonwidget.cpp:330 qtgui/jsonwidget.cpp:335
 msgid "Multiplicity"
 msgstr "Multiplicita"
 
-#: qtgui/jsonwidget.cpp:239
+#: qtgui/jsonwidget.cpp:342
 msgid "Solvent"
 msgstr "Rozpouštědlo"
 
-#: qtgui/jsonwidget.cpp:240
+#: qtgui/jsonwidget.cpp:343
 msgctxt "solvation method / model"
 msgid "Model"
 msgstr "Model"
 
-#: qtgui/jsonwidget.cpp:386
+#: qtgui/jsonwidget.cpp:489
 msgid "User Name"
 msgstr "Uživatelské jméno"
 
-#: qtgui/jsonwidget.cpp:388
+#: qtgui/jsonwidget.cpp:491
 msgid "Password"
 msgstr "Heslo"
 
-#: qtgui/jsonwidget.cpp:674
+#: qtgui/jsonwidget.cpp:858
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Nerozpoznaný typ '%1' u možnosti '%2'."
 
-#: qtgui/jsonwidget.cpp:683 qtgui/jsonwidget.cpp:718 qtgui/jsonwidget.cpp:739
-#: qtgui/jsonwidget.cpp:760 qtgui/jsonwidget.cpp:798 qtgui/jsonwidget.cpp:819
-#: qtgui/jsonwidget.cpp:841 qtgui/jsonwidget.cpp:862
+#: qtgui/jsonwidget.cpp:867 qtgui/jsonwidget.cpp:902 qtgui/jsonwidget.cpp:923
+#: qtgui/jsonwidget.cpp:944 qtgui/jsonwidget.cpp:1000 qtgui/jsonwidget.cpp:1021
+#: qtgui/jsonwidget.cpp:1043 qtgui/jsonwidget.cpp:1064
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "Chyba při nastavování výchozí hodnoty možnosti '%1'. Nesprávný typ "
 "ovládacího prvku."
 
-#: qtgui/jsonwidget.cpp:690 qtgui/jsonwidget.cpp:725 qtgui/jsonwidget.cpp:746
-#: qtgui/jsonwidget.cpp:767 qtgui/jsonwidget.cpp:805 qtgui/jsonwidget.cpp:826
-#: qtgui/jsonwidget.cpp:848 qtgui/jsonwidget.cpp:869
+#: qtgui/jsonwidget.cpp:874 qtgui/jsonwidget.cpp:909 qtgui/jsonwidget.cpp:930
+#: qtgui/jsonwidget.cpp:951 qtgui/jsonwidget.cpp:1007 qtgui/jsonwidget.cpp:1028
+#: qtgui/jsonwidget.cpp:1050 qtgui/jsonwidget.cpp:1071
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Chyba při nastavování výchozí hodnoty možnosti '%1'. Nesprávná výchozí "
 "hodnota:"
 
-#: qtgui/jsonwidget.cpp:704
+#: qtgui/jsonwidget.cpp:888
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1236,12 +1236,12 @@ msgstr ""
 "Chyba při nastavování výchozí hodnoty možnosti '%1'. Z hodnoty se nepodařilo "
 "určit platný index položky rozbalovacího seznamu:"
 
-#: qtgui/jsonwidget.cpp:930
+#: qtgui/jsonwidget.cpp:1134
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "Neošetřený ovládací prvek ve funkci collectOptions u možnosti '%1'."
 
-#: qtgui/jsonwidget.cpp:975 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1179 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr "[žádná molekula]"
@@ -1283,8 +1283,8 @@ msgid "Licorice"
 msgstr "Tyčinky"
 
 #: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
-#: qtplugins/surfaces/orbitals.cpp:502 qtplugins/surfaces/orbitals.cpp:594
-#: qtplugins/surfaces/surfaces.cpp:899 qtplugins/surfaces/surfaces.h:71
+#: qtplugins/surfaces/orbitals.cpp:506 qtplugins/surfaces/orbitals.cpp:598
+#: qtplugins/surfaces/surfaces.cpp:997 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "Povrchy"
 
@@ -1471,7 +1471,7 @@ msgid "Add Atom"
 msgstr "Přidat atom"
 
 #: qtgui/rwmolecule.cpp:74 qtgui/rwmolecule.cpp:89
-#: qtplugins/editor/editor.cpp:142
+#: qtplugins/editor/editor.cpp:144
 msgid "Remove Atom"
 msgstr "Odstranit atom"
 
@@ -1936,7 +1936,7 @@ msgstr "Vstupní soubor byl zapsán do „%1“"
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:437
 #: qtplugins/playertool/playertool.cpp:480
-#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1034
+#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1144
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Soubor %1 nelze uložit."
@@ -1981,25 +1981,25 @@ msgstr "Podle schématu Shapely"
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:312
-#: qtplugins/surfaces/surfaces.cpp:819
+#: qtplugins/surfaces/surfaces.cpp:917
 msgctxt "colormap"
 msgid "Parula"
 msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:821
+#: qtplugins/surfaces/surfaces.cpp:919
 msgctxt "colormap"
 msgid "Heat"
 msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:112
-#: qtplugins/surfaces/surfaces.cpp:823
+#: qtplugins/surfaces/surfaces.cpp:921
 msgctxt "colormap"
 msgid "Hot"
 msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:114
-#: qtplugins/surfaces/surfaces.cpp:825
+#: qtplugins/surfaces/surfaces.cpp:923
 msgctxt "colormap"
 msgid "Gray"
 msgstr "Gray"
@@ -2007,7 +2007,7 @@ msgstr "Gray"
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:312
-#: qtplugins/surfaces/surfaces.cpp:827
+#: qtplugins/surfaces/surfaces.cpp:925
 msgctxt "colormap"
 msgid "Magma"
 msgstr "Magma"
@@ -2015,7 +2015,7 @@ msgstr "Magma"
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:313
-#: qtplugins/surfaces/surfaces.cpp:829
+#: qtplugins/surfaces/surfaces.cpp:927
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "Inferno"
@@ -2023,7 +2023,7 @@ msgstr "Inferno"
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:313
-#: qtplugins/surfaces/surfaces.cpp:831
+#: qtplugins/surfaces/surfaces.cpp:929
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "Plasma"
@@ -2031,7 +2031,7 @@ msgstr "Plasma"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:314
-#: qtplugins/surfaces/surfaces.cpp:833
+#: qtplugins/surfaces/surfaces.cpp:931
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "Viridis"
@@ -2039,7 +2039,7 @@ msgstr "Viridis"
 #: qtplugins/applycolors/applycolors.cpp:124
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:314
-#: qtplugins/surfaces/surfaces.cpp:835
+#: qtplugins/surfaces/surfaces.cpp:933
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "Cividis"
@@ -2051,7 +2051,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:837:183 rc.cpp:2066
+#: qtplugins/surfaces/surfaces.cpp:935:183 rc.cpp:2066
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Spectral"
@@ -2061,7 +2061,7 @@ msgstr "Spectral"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:839:180 rc.cpp:2063
+#: qtplugins/surfaces/surfaces.cpp:937:180 rc.cpp:2063
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Coolwarm"
@@ -2071,7 +2071,7 @@ msgstr "Coolwarm"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:130
-#: qtplugins/surfaces/surfaces.cpp:841:174 rc.cpp:2057
+#: qtplugins/surfaces/surfaces.cpp:939:174 rc.cpp:2057
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Balance"
@@ -2081,7 +2081,7 @@ msgstr "Balance"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:132
-#: qtplugins/surfaces/surfaces.cpp:843:177 rc.cpp:2060
+#: qtplugins/surfaces/surfaces.cpp:941:177 rc.cpp:2060
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Blue-DarkRed"
@@ -2093,7 +2093,7 @@ msgstr "Blue-DarkRed"
 #: qtplugins/applycolors/applycolors.cpp:134
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:845:186 rc.cpp:2069
+#: qtplugins/surfaces/surfaces.cpp:943:186 rc.cpp:2069
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbo"
@@ -2496,7 +2496,7 @@ msgstr "Vykreslovat blízké kontakty mezi atomy."
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:573
+#: qtplugins/commandscripts/command.cpp:614
 #: qtplugins/configurepython/configurepython.cpp:117
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:260
@@ -2509,7 +2509,7 @@ msgstr "&Rozšíření"
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:574
+#: qtplugins/commandscripts/command.cpp:615
 msgid "Scripts"
 msgstr "Skripty"
 
@@ -2527,39 +2527,39 @@ msgstr ""
 "Chyba při čtení výstupního souboru „%1“:\n"
 "%2"
 
-#: qtplugins/commandscripts/command.cpp:202
+#: qtplugins/commandscripts/command.cpp:233
 msgid "Command In Progress"
 msgstr "Probíhá zpracování příkazu"
 
-#: qtplugins/commandscripts/command.cpp:203
+#: qtplugins/commandscripts/command.cpp:234
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
 msgstr ""
 "Již běží příkazový skript. Před spuštěním dalšího počkejte na jeho dokončení."
 
-#: qtplugins/commandscripts/command.cpp:335
+#: qtplugins/commandscripts/command.cpp:376
 #, qt-format
 msgid "Processing %1"
 msgstr "Zpracovává se %1"
 
-#: qtplugins/commandscripts/command.cpp:336
+#: qtplugins/commandscripts/command.cpp:377
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: qtplugins/commandscripts/command.cpp:412
+#: qtplugins/commandscripts/command.cpp:453
 msgid "The script could not be started."
 msgstr "Skript se nepodařilo spustit."
 
-#: qtplugins/commandscripts/command.cpp:422
+#: qtplugins/commandscripts/command.cpp:463
 msgid "Error Running Script"
 msgstr "Chyba při spouštění skriptu"
 
-#: qtplugins/commandscripts/command.cpp:489
+#: qtplugins/commandscripts/command.cpp:530
 msgid "Set path to Python interpreter:"
 msgstr "Nastavit cestu k interpretu Pythonu:"
 
-#: qtplugins/commandscripts/command.cpp:491
+#: qtplugins/commandscripts/command.cpp:532
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -3248,16 +3248,16 @@ msgstr "Dipólový moment"
 msgid "Render the dipole moment of the molecule."
 msgstr "Vykreslovat dipólový moment molekuly."
 
-#: qtplugins/editor/editor.cpp:73
+#: qtplugins/editor/editor.cpp:75
 msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr "Ctrl+2"
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
+#: qtplugins/editor/editor.cpp:76 qtplugins/editor/editor.cpp:131
 msgid "Draw"
 msgstr "Nakreslit"
 
-#: qtplugins/editor/editor.cpp:76
+#: qtplugins/editor/editor.cpp:78
 #, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
@@ -3270,19 +3270,19 @@ msgstr ""
 "Levé tlačítko myši:\tKliknutím a tažením vytvoříte atomy a vazbu\n"
 "Pravé tlačítko myši:\tOdstraníte atom"
 
-#: qtplugins/editor/editor.cpp:123
+#: qtplugins/editor/editor.cpp:125
 msgid "Draw Atom"
 msgstr "Nakreslit atom"
 
-#: qtplugins/editor/editor.cpp:133
+#: qtplugins/editor/editor.cpp:135
 msgid "Change Bond Type"
 msgstr "Změnit typ vazby"
 
-#: qtplugins/editor/editor.cpp:146
+#: qtplugins/editor/editor.cpp:148
 msgid "Remove Bond"
 msgstr "Odstranit vazbu"
 
-#: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
+#: qtplugins/editor/editor.cpp:254 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:223
 msgid "Distance:"
 msgstr "Vzdálenost:"
@@ -3458,8 +3458,8 @@ msgstr "Rozvázat vybrané atomy"
 #: qtplugins/forcefield/forcefield.cpp:833
 #: qtplugins/forcefield/forcefield.cpp:882
 #: qtplugins/playertool/playertool.cpp:447
-#: qtplugins/playertool/playertool.cpp:479 qtplugins/surfaces/surfaces.cpp:977
-#: qtplugins/surfaces/surfaces.cpp:1021 qtplugins/surfaces/surfaces.cpp:1033
+#: qtplugins/playertool/playertool.cpp:479 qtplugins/surfaces/surfaces.cpp:1087
+#: qtplugins/surfaces/surfaces.cpp:1131 qtplugins/surfaces/surfaces.cpp:1143
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
@@ -3528,15 +3528,15 @@ msgstr "Možnosti modelu %1"
 msgid "Autodetect (%1)"
 msgstr "Automatický výběr (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:99 qtplugins/forcefield/obmmenergy.cpp:36
+#: qtplugins/forcefield/obenergy.cpp:110 qtplugins/forcefield/obmmenergy.cpp:36
 msgid "Universal Force Field"
 msgstr "Univerzální silové pole"
 
-#: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:41
+#: qtplugins/forcefield/obenergy.cpp:115 qtplugins/forcefield/obmmenergy.cpp:41
 msgid "Generalized Amber Force Field"
 msgstr "Zobecněné silové pole Amber"
 
-#: qtplugins/forcefield/obenergy.cpp:118 qtplugins/forcefield/obmmenergy.cpp:55
+#: qtplugins/forcefield/obenergy.cpp:129 qtplugins/forcefield/obmmenergy.cpp:55
 msgid "Merck Molecular Force Field 94"
 msgstr "Molekulární silové pole Merck 94"
 
@@ -4230,7 +4230,7 @@ msgstr "Zobrazovat obecné vlastnosti molekuly."
 #: qtplugins/plotconformer/plotconformer.cpp:56
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:298
+#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:381
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:44
 msgid "&Analyze"
 msgstr "&Analýza"
@@ -4275,16 +4275,16 @@ msgstr "Chyba při zápisu do souboru."
 msgid "Export…"
 msgstr "Exportovat…"
 
-#: qtplugins/navigator/navigator.cpp:39
+#: qtplugins/navigator/navigator.cpp:43
 msgctxt "control-key 1"
 msgid "Ctrl+1"
 msgstr "Ctrl+1"
 
-#: qtplugins/navigator/navigator.cpp:40
+#: qtplugins/navigator/navigator.cpp:44
 msgid "Navigate"
 msgstr "Navigace"
 
-#: qtplugins/navigator/navigator.cpp:42
+#: qtplugins/navigator/navigator.cpp:46
 #, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
@@ -4300,23 +4300,23 @@ msgstr ""
 "oddálíte.\n"
 "Pravé tlačítko myši:\tKliknutím a tažením posunete pohled."
 
-#: qtplugins/navigator/navigator.cpp:63
+#: qtplugins/navigator/navigator.cpp:67
 msgid "Rotate the scene along the x, y, or z axes."
 msgstr "Otočit scénu kolem os x, y nebo z."
 
-#: qtplugins/navigator/navigator.cpp:64
+#: qtplugins/navigator/navigator.cpp:68
 msgid "Zoom the scene."
 msgstr "Přiblížit nebo oddálit scénu."
 
-#: qtplugins/navigator/navigator.cpp:65
+#: qtplugins/navigator/navigator.cpp:69
 msgid "Translate the scene."
 msgstr "Posunout scénu."
 
-#: qtplugins/navigator/navigator.cpp:106
+#: qtplugins/navigator/navigator.cpp:110
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Obrátit směr přiblížení při posouvání"
 
-#: qtplugins/navigator/navigator.cpp:108
+#: qtplugins/navigator/navigator.cpp:112
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
@@ -5025,7 +5025,7 @@ msgstr "Exportovat rastrovou grafiku"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Video (*.mp4);;Video (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:364 qtplugins/surfaces/surfaces.cpp:948
+#: qtplugins/playertool/playertool.cpp:364 qtplugins/surfaces/surfaces.cpp:1058
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -5041,7 +5041,7 @@ msgstr "Formát GIF nepodporuje snímkovou frekvenci vyšší než 100 FPS."
 msgid "Movie (*.avi)"
 msgstr "Video (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:448 qtplugins/surfaces/surfaces.cpp:1022
+#: qtplugins/playertool/playertool.cpp:448 qtplugins/surfaces/surfaces.cpp:1132
 msgid "Error: cannot add frame to video."
 msgstr "Chyba: snímek nelze přidat do videa."
 
@@ -6240,79 +6240,118 @@ msgstr "Ze souboru"
 msgid " of %0"
 msgstr " z %0"
 
-#: qtplugins/surfaces/surfaces.cpp:88
+#: qtplugins/surfaces/surfaces.cpp:89
 msgid "Create Surfaces…"
 msgstr "Vytvořit povrchy…"
 
-#: qtplugins/surfaces/surfaces.cpp:118
+#: qtplugins/surfaces/surfaces.cpp:119
 msgid "Render the van der Waals surface."
 msgstr "Vykreslit van der Waalsův povrch."
 
-#: qtplugins/surfaces/surfaces.cpp:120
+#: qtplugins/surfaces/surfaces.cpp:121
 msgid "Render the van der Waals molecular surface."
 msgstr "Vykreslit van der Waalsův molekulový povrch."
 
-#: qtplugins/surfaces/surfaces.cpp:122
+#: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the solvent-accessible molecular surface."
 msgstr "Vykreslit molekulový povrch přístupný rozpouštědlu."
 
-#: qtplugins/surfaces/surfaces.cpp:124
+#: qtplugins/surfaces/surfaces.cpp:125
 msgid "Render the solvent-excluded molecular surface."
 msgstr "Vykreslit molekulový povrch vyloučený rozpouštědlem."
 
-#: qtplugins/surfaces/surfaces.cpp:125 qtplugins/surfaces/surfaces.cpp:126
+#: qtplugins/surfaces/surfaces.cpp:126 qtplugins/surfaces/surfaces.cpp:127
 msgid "Render a molecular orbital."
 msgstr "Vykreslit molekulový orbital."
 
-#: qtplugins/surfaces/surfaces.cpp:128
+#: qtplugins/surfaces/surfaces.cpp:129
 msgid "Render the electron density."
 msgstr "Vykreslit elektronovou hustotu."
 
-#: qtplugins/surfaces/surfaces.cpp:129
+#: qtplugins/surfaces/surfaces.cpp:130
 msgid "Render the spin density."
 msgstr "Vykreslit spinovou hustotu."
 
-#: qtplugins/surfaces/surfaces.cpp:131
+#: qtplugins/surfaces/surfaces.cpp:132
 msgid "Render a cube supplied with the file."
 msgstr "Vykreslit datovou kostku dodanou se souborem."
 
-#: qtplugins/surfaces/surfaces.cpp:334
+#: qtplugins/surfaces/surfaces.cpp:229
+msgid ""
+"This file does not contain a basis set, so no orbital can be calculated."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:235
+#, qt-format
+msgid "Orbital %1 is out of range."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:245
+msgid ""
+"This file does not contain a basis set, so no electron density can be "
+"calculated."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:255
+msgid ""
+"This file does not contain a basis set, so no spin density can be calculated."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:265
+msgid "This file does not contain any cube data."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:275
+#, qt-format
+msgid "Cube %1 is out of range, this file has %2."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:281
+#, qt-format
+msgid "Cube %1 could not be read."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:417
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
 msgstr "Datová kostka %1"
 
-#: qtplugins/surfaces/surfaces.cpp:640
+#: qtplugins/surfaces/surfaces.cpp:729
 msgid "Calculating electron density"
 msgstr "Výpočet elektronové hustoty"
 
-#: qtplugins/surfaces/surfaces.cpp:649
+#: qtplugins/surfaces/surfaces.cpp:738
 msgid "Calculating spin density"
 msgstr "Výpočet spinové hustoty"
 
-#: qtplugins/surfaces/surfaces.cpp:658
+#: qtplugins/surfaces/surfaces.cpp:747
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Výpočet molekulového orbitalu %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:914
+#: qtplugins/surfaces/surfaces.cpp:848
+msgid "The calculation was interrupted."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:1022
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
 msgstr "Povrch dokončen"
 
-#: qtplugins/surfaces/surfaces.cpp:925 qtplugins/surfaces/surfaces.cpp:953
+#: qtplugins/surfaces/surfaces.cpp:1035 qtplugins/surfaces/surfaces.cpp:1063
 msgid "Movie AVI (*.avi)"
 msgstr "Video AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:927
+#: qtplugins/surfaces/surfaces.cpp:1037
 msgid "Export Movie"
 msgstr "Exportovat video"
 
-#: qtplugins/surfaces/surfaces.cpp:928
+#: qtplugins/surfaces/surfaces.cpp:1038
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Video MP4 (*.mp4);;Video AVI (*.avi);;GIF (*.gif)"
 
-#: qtplugins/surfaces/surfaces.cpp:978
+#: qtplugins/surfaces/surfaces.cpp:1088
 msgid "Couldn't find the active render widget, failing."
 msgstr "Nepodařilo se najít aktivní vykreslovací prvek, operace se nezdařila."
 
@@ -6362,16 +6401,16 @@ msgstr "Skupina %1"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: qtplugins/templatetool/templatetool.cpp:86
+#: qtplugins/templatetool/templatetool.cpp:87
 msgctxt "control-key 3"
 msgid "Ctrl+3"
 msgstr "Ctrl+3"
 
-#: qtplugins/templatetool/templatetool.cpp:87
+#: qtplugins/templatetool/templatetool.cpp:88
 msgid "Template"
 msgstr "Šablona"
 
-#: qtplugins/templatetool/templatetool.cpp:89
+#: qtplugins/templatetool/templatetool.cpp:90
 #, qt-format
 msgid ""
 "Template Tool\t(%1)\n"
@@ -6395,20 +6434,20 @@ msgstr ""
 "Vyberte ligand nebo funkční skupinu a klikněte na atom vodíku, ke kterému se "
 "má připojit."
 
-#: qtplugins/templatetool/templatetool.cpp:489
-#: qtplugins/templatetool/templatetool.cpp:682
+#: qtplugins/templatetool/templatetool.cpp:490
+#: qtplugins/templatetool/templatetool.cpp:683
 msgid "Clipboard"
 msgstr "Schránka"
 
-#: qtplugins/templatetool/templatetool.cpp:577
+#: qtplugins/templatetool/templatetool.cpp:578
 msgid "Insert Template"
 msgstr "Vložit šablonu"
 
-#: qtplugins/templatetool/templatetool.cpp:890
+#: qtplugins/templatetool/templatetool.cpp:889
 msgid "Insert Ligand"
 msgstr "Vložit ligand"
 
-#: qtplugins/templatetool/templatetool.cpp:1034
+#: qtplugins/templatetool/templatetool.cpp:1033
 msgid "Insert Metal Center"
 msgstr "Vložit kovové centrum"
 

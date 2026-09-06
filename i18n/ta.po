@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-08-30 06:44+0000\n"
+"POT-Creation-Date: 2026-09-06 06:00+0000\n"
 "PO-Revision-Date: 2026-06-16 04:01+0000\n"
 "Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -281,7 +281,7 @@ msgstr "வேலை தோல்வியடைந்தது"
 msgid "The job did not complete successfully."
 msgstr "வேலை வெற்றிகரமாக முடிக்கவில்லை."
 
-#: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:62
+#: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:50
 msgid "Script returns warnings:\n"
 msgstr "ச்கிரிப்ட் எச்சரிக்கைகளை வழங்குகிறது:\n"
 
@@ -293,7 +293,7 @@ msgstr "மறை & எச்சரிக்கைகள்"
 msgid "Show &Warnings"
 msgstr "காட்டு & எச்சரிக்கைகள்"
 
-#: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:78
+#: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:66
 msgid "An error has occurred:"
 msgstr "பிழை ஏற்பட்டது:"
 
@@ -1116,95 +1116,95 @@ msgstr ""
 msgid "Error writing molecule representation to string: %1"
 msgstr "சரம் மூலக்கூறு பிரதிநிதித்துவத்தை எழுதுவது பிழை: %1"
 
-#: qtgui/jsonwidget.cpp:101
+#: qtgui/jsonwidget.cpp:186
 msgid "'userOptions' missing."
 msgstr "'பயனர் ஆப்சன்' காணவில்லை."
 
-#: qtgui/jsonwidget.cpp:108
+#: qtgui/jsonwidget.cpp:193
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr "'%1' என்ற விருப்பத்தைக் கண்டுபிடிக்க முடியவில்லை."
 
-#: qtgui/jsonwidget.cpp:115
+#: qtgui/jsonwidget.cpp:200
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "'வகை' என்பது '%1' என்ற விருப்பத்திற்கான சரம் அல்ல."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:193:988
+#: qtgui/jsonwidget.cpp:296:988
 msgid "Title"
 msgstr "தலைப்பு"
 
-#: qtgui/jsonwidget.cpp:197
+#: qtgui/jsonwidget.cpp:300
 msgid "Filename Base"
 msgstr "கோப்பு பெயர் அடிப்படை"
 
-#: qtgui/jsonwidget.cpp:204 qtgui/jsonwidget.cpp:209
+#: qtgui/jsonwidget.cpp:307 qtgui/jsonwidget.cpp:312
 msgid "Processor Cores"
 msgstr "செயலி கோர்கள்"
 
-#: qtgui/jsonwidget.cpp:204 qtgui/jsonwidget.cpp:212
+#: qtgui/jsonwidget.cpp:307 qtgui/jsonwidget.cpp:315
 msgid "Memory"
 msgstr "நினைவகம்"
 
-#: qtgui/jsonwidget.cpp:217
+#: qtgui/jsonwidget.cpp:320
 msgid "Calculation Type"
 msgstr "கணக்கீட்டு வகை"
 
-#: qtgui/jsonwidget.cpp:221
+#: qtgui/jsonwidget.cpp:324
 msgid "Theory"
 msgstr "கோட்பாடு"
 
-#: qtgui/jsonwidget.cpp:221
+#: qtgui/jsonwidget.cpp:324
 msgid "Basis"
 msgstr "அடிப்படை"
 
-#: qtgui/jsonwidget.cpp:226 qtgui/jsonwidget.cpp:230
+#: qtgui/jsonwidget.cpp:329 qtgui/jsonwidget.cpp:333
 msgid "Charge"
 msgstr "மின்னூட்டு"
 
-#: qtgui/jsonwidget.cpp:227 qtgui/jsonwidget.cpp:232
+#: qtgui/jsonwidget.cpp:330 qtgui/jsonwidget.cpp:335
 msgid "Multiplicity"
 msgstr "பெருக்கல்"
 
-#: qtgui/jsonwidget.cpp:239
+#: qtgui/jsonwidget.cpp:342
 msgid "Solvent"
 msgstr "கரைப்பி"
 
-#: qtgui/jsonwidget.cpp:240
+#: qtgui/jsonwidget.cpp:343
 msgctxt "solvation method / model"
 msgid "Model"
 msgstr "மாதிரியுரு"
 
-#: qtgui/jsonwidget.cpp:386
+#: qtgui/jsonwidget.cpp:489
 msgid "User Name"
 msgstr "பயனர் பெயர்"
 
-#: qtgui/jsonwidget.cpp:388
+#: qtgui/jsonwidget.cpp:491
 msgid "Password"
 msgstr "கடவுச்சொல்"
 
-#: qtgui/jsonwidget.cpp:674
+#: qtgui/jsonwidget.cpp:858
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "அங்கீகரிக்கப்படாத விருப்பம் '%2' விருப்பத்திற்கு '%1' வகை."
 
-#: qtgui/jsonwidget.cpp:683 qtgui/jsonwidget.cpp:718 qtgui/jsonwidget.cpp:739
-#: qtgui/jsonwidget.cpp:760 qtgui/jsonwidget.cpp:798 qtgui/jsonwidget.cpp:819
-#: qtgui/jsonwidget.cpp:841 qtgui/jsonwidget.cpp:862
+#: qtgui/jsonwidget.cpp:867 qtgui/jsonwidget.cpp:902 qtgui/jsonwidget.cpp:923
+#: qtgui/jsonwidget.cpp:944 qtgui/jsonwidget.cpp:1000 qtgui/jsonwidget.cpp:1021
+#: qtgui/jsonwidget.cpp:1043 qtgui/jsonwidget.cpp:1064
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr "'%1' விருப்பத்திற்கு இயல்புநிலையை அமைத்தல். மோசமான விட்செட் வகை."
 
-#: qtgui/jsonwidget.cpp:690 qtgui/jsonwidget.cpp:725 qtgui/jsonwidget.cpp:746
-#: qtgui/jsonwidget.cpp:767 qtgui/jsonwidget.cpp:805 qtgui/jsonwidget.cpp:826
-#: qtgui/jsonwidget.cpp:848 qtgui/jsonwidget.cpp:869
+#: qtgui/jsonwidget.cpp:874 qtgui/jsonwidget.cpp:909 qtgui/jsonwidget.cpp:930
+#: qtgui/jsonwidget.cpp:951 qtgui/jsonwidget.cpp:1007 qtgui/jsonwidget.cpp:1028
+#: qtgui/jsonwidget.cpp:1050 qtgui/jsonwidget.cpp:1071
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr "'%1' விருப்பத்திற்கு இயல்புநிலையை அமைத்தல். மோசமான இயல்புநிலை மதிப்பு:"
 
-#: qtgui/jsonwidget.cpp:704
+#: qtgui/jsonwidget.cpp:888
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1213,12 +1213,12 @@ msgstr ""
 "'%1' விருப்பத்திற்கு இயல்புநிலையை அமைத்தல். மதிப்பிலிருந்து செல்லுபடியாகும் காம்போ "
 "நுழைவு குறியீட்டைக் கண்டுபிடிக்க முடியவில்லை:"
 
-#: qtgui/jsonwidget.cpp:930
+#: qtgui/jsonwidget.cpp:1134
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "'%1' என்ற விருப்பத்திற்கான சேகரிப்புகளில் சேர்க்கப்படாத விட்செட்."
 
-#: qtgui/jsonwidget.cpp:975 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1179 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr "[மூலக்கூறு இல்லை]"
@@ -1260,8 +1260,8 @@ msgid "Licorice"
 msgstr "லைகோரைச்"
 
 #: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
-#: qtplugins/surfaces/orbitals.cpp:502 qtplugins/surfaces/orbitals.cpp:594
-#: qtplugins/surfaces/surfaces.cpp:899 qtplugins/surfaces/surfaces.h:71
+#: qtplugins/surfaces/orbitals.cpp:506 qtplugins/surfaces/orbitals.cpp:598
+#: qtplugins/surfaces/surfaces.cpp:997 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "மேற்பரப்புகள்"
 
@@ -1440,7 +1440,7 @@ msgid "Add Atom"
 msgstr "அணுவைச் சேர்க்கவும்"
 
 #: qtgui/rwmolecule.cpp:74 qtgui/rwmolecule.cpp:89
-#: qtplugins/editor/editor.cpp:142
+#: qtplugins/editor/editor.cpp:144
 msgid "Remove Atom"
 msgstr "அணுவை அகற்று"
 
@@ -1901,7 +1901,7 @@ msgstr "உள்ளீட்டு கோப்பு '%1' க்கு எழ�
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:437
 #: qtplugins/playertool/playertool.cpp:480
-#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1034
+#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1144
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "கோப்பு %1 ஐ சேமிக்க முடியாது."
@@ -1946,25 +1946,25 @@ msgstr "செப்பிளி திட்டத்தால்"
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:312
-#: qtplugins/surfaces/surfaces.cpp:819
+#: qtplugins/surfaces/surfaces.cpp:917
 msgctxt "colormap"
 msgid "Parula"
 msgstr "பேசுங்கள்"
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:821
+#: qtplugins/surfaces/surfaces.cpp:919
 msgctxt "colormap"
 msgid "Heat"
 msgstr "வெப்பம்"
 
 #: qtplugins/applycolors/applycolors.cpp:112
-#: qtplugins/surfaces/surfaces.cpp:823
+#: qtplugins/surfaces/surfaces.cpp:921
 msgctxt "colormap"
 msgid "Hot"
 msgstr "சூடான"
 
 #: qtplugins/applycolors/applycolors.cpp:114
-#: qtplugins/surfaces/surfaces.cpp:825
+#: qtplugins/surfaces/surfaces.cpp:923
 msgctxt "colormap"
 msgid "Gray"
 msgstr "சாம்பல்"
@@ -1972,7 +1972,7 @@ msgstr "சாம்பல்"
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:312
-#: qtplugins/surfaces/surfaces.cpp:827
+#: qtplugins/surfaces/surfaces.cpp:925
 msgctxt "colormap"
 msgid "Magma"
 msgstr "கற்குழம்பு"
@@ -1980,7 +1980,7 @@ msgstr "கற்குழம்பு"
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:313
-#: qtplugins/surfaces/surfaces.cpp:829
+#: qtplugins/surfaces/surfaces.cpp:927
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "இன்ஃபெர்னோ"
@@ -1988,7 +1988,7 @@ msgstr "இன்ஃபெர்னோ"
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:313
-#: qtplugins/surfaces/surfaces.cpp:831
+#: qtplugins/surfaces/surfaces.cpp:929
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "மின்மம்"
@@ -1996,7 +1996,7 @@ msgstr "மின்மம்"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:314
-#: qtplugins/surfaces/surfaces.cpp:833
+#: qtplugins/surfaces/surfaces.cpp:931
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "விரிடிச்"
@@ -2004,7 +2004,7 @@ msgstr "விரிடிச்"
 #: qtplugins/applycolors/applycolors.cpp:124
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:314
-#: qtplugins/surfaces/surfaces.cpp:835
+#: qtplugins/surfaces/surfaces.cpp:933
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "சிடிச்"
@@ -2016,7 +2016,7 @@ msgstr "சிடிச்"
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:837:183 rc.cpp:2066
+#: qtplugins/surfaces/surfaces.cpp:935:183 rc.cpp:2066
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "நிறமாலை"
@@ -2026,7 +2026,7 @@ msgstr "நிறமாலை"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:839:180 rc.cpp:2063
+#: qtplugins/surfaces/surfaces.cpp:937:180 rc.cpp:2063
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "கூல்வார்ம்"
@@ -2036,7 +2036,7 @@ msgstr "கூல்வார்ம்"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:130
-#: qtplugins/surfaces/surfaces.cpp:841:174 rc.cpp:2057
+#: qtplugins/surfaces/surfaces.cpp:939:174 rc.cpp:2057
 msgctxt "colormap"
 msgid "Balance"
 msgstr "இருப்பு"
@@ -2046,7 +2046,7 @@ msgstr "இருப்பு"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:132
-#: qtplugins/surfaces/surfaces.cpp:843:177 rc.cpp:2060
+#: qtplugins/surfaces/surfaces.cpp:941:177 rc.cpp:2060
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "நீலம்-இருண்ட"
@@ -2058,7 +2058,7 @@ msgstr "நீலம்-இருண்ட"
 #: qtplugins/applycolors/applycolors.cpp:134
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:845:186 rc.cpp:2069
+#: qtplugins/surfaces/surfaces.cpp:943:186 rc.cpp:2069
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "டர்போ"
@@ -2462,7 +2462,7 @@ msgstr "அணுக்களுக்கு இடையில் நெரு�
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:573
+#: qtplugins/commandscripts/command.cpp:614
 #: qtplugins/configurepython/configurepython.cpp:117
 #: qtplugins/constraints/constraintsextension.cpp:40
 #: qtplugins/forcefield/forcefield.cpp:260
@@ -2475,7 +2475,7 @@ msgstr "நீட்டிப்புகள்"
 
 #: qtplugins/commandscripts/command.cpp:77
 #: qtplugins/commandscripts/command.cpp:96
-#: qtplugins/commandscripts/command.cpp:574
+#: qtplugins/commandscripts/command.cpp:615
 msgid "Scripts"
 msgstr "ச்கிரிப்ட்கள்"
 
@@ -2493,11 +2493,11 @@ msgstr ""
 "வெளியீட்டு கோப்பை '%1' வாசிப்பதில் பிழை:\n"
 " %2"
 
-#: qtplugins/commandscripts/command.cpp:202
+#: qtplugins/commandscripts/command.cpp:233
 msgid "Command In Progress"
 msgstr "கட்டளை செயல்பாட்டில் உள்ளது"
 
-#: qtplugins/commandscripts/command.cpp:203
+#: qtplugins/commandscripts/command.cpp:234
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
@@ -2505,28 +2505,28 @@ msgstr ""
 "ஒரு கட்டளை ச்கிரிப்ட் ஏற்கனவே இயங்குகிறது. இன்னொன்றைத் தொடங்கும் முன் அது முடிவடையும் வரை "
 "காத்திருக்கவும்."
 
-#: qtplugins/commandscripts/command.cpp:335
+#: qtplugins/commandscripts/command.cpp:376
 #, qt-format
 msgid "Processing %1"
 msgstr "செயலாக்கம் %1"
 
-#: qtplugins/commandscripts/command.cpp:336
+#: qtplugins/commandscripts/command.cpp:377
 msgid "Cancel"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:412
+#: qtplugins/commandscripts/command.cpp:453
 msgid "The script could not be started."
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:422
+#: qtplugins/commandscripts/command.cpp:463
 msgid "Error Running Script"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:489
+#: qtplugins/commandscripts/command.cpp:530
 msgid "Set path to Python interpreter:"
 msgstr "பைதான் மொழிபெயர்ப்பாளருக்கு பாதையை அமைக்கவும்:"
 
-#: qtplugins/commandscripts/command.cpp:491
+#: qtplugins/commandscripts/command.cpp:532
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -3213,16 +3213,16 @@ msgstr "இருமுனைத் திருப்பம்"
 msgid "Render the dipole moment of the molecule."
 msgstr "மூலக்கூறின் இருமுனை தருணத்தை வழங்கவும்."
 
-#: qtplugins/editor/editor.cpp:73
+#: qtplugins/editor/editor.cpp:75
 msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr "Ctrl+2"
 
-#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:129
+#: qtplugins/editor/editor.cpp:76 qtplugins/editor/editor.cpp:131
 msgid "Draw"
 msgstr "டிரா"
 
-#: qtplugins/editor/editor.cpp:76
+#: qtplugins/editor/editor.cpp:78
 #, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
@@ -3235,19 +3235,19 @@ msgstr ""
 "இடது சுட்டி: அணுக்கள் மற்றும் பிணைப்பை உருவாக்க சொடுக்கு செய்து இழுக்கவும் \n"
 "வலது சுட்டி: அணுவை நீக்கு"
 
-#: qtplugins/editor/editor.cpp:123
+#: qtplugins/editor/editor.cpp:125
 msgid "Draw Atom"
 msgstr "அணுவை வரைய"
 
-#: qtplugins/editor/editor.cpp:133
+#: qtplugins/editor/editor.cpp:135
 msgid "Change Bond Type"
 msgstr "பிணைப்பு வகையை மாற்றவும்"
 
-#: qtplugins/editor/editor.cpp:146
+#: qtplugins/editor/editor.cpp:148
 msgid "Remove Bond"
 msgstr "பிணைப்பை அகற்று"
 
-#: qtplugins/editor/editor.cpp:252 qtplugins/measuretool/measuretool.cpp:200
+#: qtplugins/editor/editor.cpp:254 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:223
 msgid "Distance:"
 msgstr "தூரம்:"
@@ -3423,8 +3423,8 @@ msgstr "தேர்ந்தெடுக்கப்பட்ட அணுக�
 #: qtplugins/forcefield/forcefield.cpp:833
 #: qtplugins/forcefield/forcefield.cpp:882
 #: qtplugins/playertool/playertool.cpp:447
-#: qtplugins/playertool/playertool.cpp:479 qtplugins/surfaces/surfaces.cpp:977
-#: qtplugins/surfaces/surfaces.cpp:1021 qtplugins/surfaces/surfaces.cpp:1033
+#: qtplugins/playertool/playertool.cpp:479 qtplugins/surfaces/surfaces.cpp:1087
+#: qtplugins/surfaces/surfaces.cpp:1131 qtplugins/surfaces/surfaces.cpp:1143
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "அவோகாட்ரோ"
@@ -3493,15 +3493,15 @@ msgstr "%1 விருப்பங்கள்"
 msgid "Autodetect (%1)"
 msgstr "தன்னியக்க (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:99 qtplugins/forcefield/obmmenergy.cpp:36
+#: qtplugins/forcefield/obenergy.cpp:110 qtplugins/forcefield/obmmenergy.cpp:36
 msgid "Universal Force Field"
 msgstr "யுனிவர்சல் ஃபோர்ச் புலம்"
 
-#: qtplugins/forcefield/obenergy.cpp:104 qtplugins/forcefield/obmmenergy.cpp:41
+#: qtplugins/forcefield/obenergy.cpp:115 qtplugins/forcefield/obmmenergy.cpp:41
 msgid "Generalized Amber Force Field"
 msgstr "பொதுவான அம்பர் படை புலம்"
 
-#: qtplugins/forcefield/obenergy.cpp:118 qtplugins/forcefield/obmmenergy.cpp:55
+#: qtplugins/forcefield/obenergy.cpp:129 qtplugins/forcefield/obmmenergy.cpp:55
 msgid "Merck Molecular Force Field 94"
 msgstr "மெர்க் மூலக்கூறு படை புலம் 94"
 
@@ -4193,7 +4193,7 @@ msgstr "ஒரு மூலக்கூறின் பொதுவான பண
 #: qtplugins/plotconformer/plotconformer.cpp:56
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:298
+#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:381
 #: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:44
 msgid "&Analyze"
 msgstr "&பாகுபடுத்து"
@@ -4238,16 +4238,16 @@ msgstr "கோப்பில் எழுதுவதில் பிழை."
 msgid "Export…"
 msgstr "ஏற்றுமதி…"
 
-#: qtplugins/navigator/navigator.cpp:39
+#: qtplugins/navigator/navigator.cpp:43
 msgctxt "control-key 1"
 msgid "Ctrl+1"
 msgstr "Ctrl+1"
 
-#: qtplugins/navigator/navigator.cpp:40
+#: qtplugins/navigator/navigator.cpp:44
 msgid "Navigate"
 msgstr "செல்லவும்"
 
-#: qtplugins/navigator/navigator.cpp:42
+#: qtplugins/navigator/navigator.cpp:46
 #, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
@@ -4262,23 +4262,23 @@ msgstr ""
 "நடு சுட்டி: பெரிதாக்க அல்லது பெரிதாக்க சொடுக்கு செய்து இழுக்கவும். \n"
 "வலது சுட்டி: காட்சியை நகர்த்த சொடுக்கு செய்து இழுக்கவும்."
 
-#: qtplugins/navigator/navigator.cpp:63
+#: qtplugins/navigator/navigator.cpp:67
 msgid "Rotate the scene along the x, y, or z axes."
 msgstr "ஃச், ஒய், அல்லது சட் அச்சுகளுடன் காட்சியை சுழற்றுங்கள்."
 
-#: qtplugins/navigator/navigator.cpp:64
+#: qtplugins/navigator/navigator.cpp:68
 msgid "Zoom the scene."
 msgstr "காட்சியை பெரிதாக்கவும்."
 
-#: qtplugins/navigator/navigator.cpp:65
+#: qtplugins/navigator/navigator.cpp:69
 msgid "Translate the scene."
 msgstr "காட்சியை மொழிபெயர்க்கவும்."
 
-#: qtplugins/navigator/navigator.cpp:106
+#: qtplugins/navigator/navigator.cpp:110
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr "சுருளில் பெரிதாக்கத்தின் தலைகீழ் திசை"
 
-#: qtplugins/navigator/navigator.cpp:108
+#: qtplugins/navigator/navigator.cpp:112
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
@@ -4984,7 +4984,7 @@ msgstr "பிட்மேப் கிராபிக்ச் ஏற்று�
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "திரைப்படம் (*.mp4) ;; திரைப்படம் (*.avi) ;; gif (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:364 qtplugins/surfaces/surfaces.cpp:948
+#: qtplugins/playertool/playertool.cpp:364 qtplugins/surfaces/surfaces.cpp:1058
 msgid "GIF (*.gif)"
 msgstr "Gif (*.gif)"
 
@@ -5000,7 +5000,7 @@ msgstr "GIF கோப்பு வடிவம் 100 FPS க்கு மேல
 msgid "Movie (*.avi)"
 msgstr "திரைப்படம் (*.வி)"
 
-#: qtplugins/playertool/playertool.cpp:448 qtplugins/surfaces/surfaces.cpp:1022
+#: qtplugins/playertool/playertool.cpp:448 qtplugins/surfaces/surfaces.cpp:1132
 msgid "Error: cannot add frame to video."
 msgstr "பிழை: வீடியோவில் சட்டத்தை சேர்க்க முடியாது."
 
@@ -6196,79 +6196,118 @@ msgstr "கோப்பிலிருந்து"
 msgid " of %0"
 msgstr " %0"
 
-#: qtplugins/surfaces/surfaces.cpp:88
+#: qtplugins/surfaces/surfaces.cpp:89
 msgid "Create Surfaces…"
 msgstr "மேற்பரப்புகளை உருவாக்கவும்…"
 
-#: qtplugins/surfaces/surfaces.cpp:118
+#: qtplugins/surfaces/surfaces.cpp:119
 msgid "Render the van der Waals surface."
 msgstr "வான் டெர் வால்ச் மேற்பரப்பை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:120
+#: qtplugins/surfaces/surfaces.cpp:121
 msgid "Render the van der Waals molecular surface."
 msgstr "வான் டெர் வால்ச் மூலக்கூறு மேற்பரப்பை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:122
+#: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the solvent-accessible molecular surface."
 msgstr "கரைப்பான்-அணுகக்கூடிய மூலக்கூறு மேற்பரப்பை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:124
+#: qtplugins/surfaces/surfaces.cpp:125
 msgid "Render the solvent-excluded molecular surface."
 msgstr "கரைப்பான்-விலக்கப்பட்ட மூலக்கூறு மேற்பரப்பை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:125 qtplugins/surfaces/surfaces.cpp:126
+#: qtplugins/surfaces/surfaces.cpp:126 qtplugins/surfaces/surfaces.cpp:127
 msgid "Render a molecular orbital."
 msgstr "ஒரு மூலக்கூறு சுற்றுப்பாதையை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:128
+#: qtplugins/surfaces/surfaces.cpp:129
 msgid "Render the electron density."
 msgstr "எலக்ட்ரான் அடர்த்தியை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:129
+#: qtplugins/surfaces/surfaces.cpp:130
 msgid "Render the spin density."
 msgstr "சுழல் அடர்த்தியை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:131
+#: qtplugins/surfaces/surfaces.cpp:132
 msgid "Render a cube supplied with the file."
 msgstr "கோப்புடன் வழங்கப்பட்ட ஒரு கனசதுரத்தை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:334
+#: qtplugins/surfaces/surfaces.cpp:229
+msgid ""
+"This file does not contain a basis set, so no orbital can be calculated."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:235
+#, qt-format
+msgid "Orbital %1 is out of range."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:245
+msgid ""
+"This file does not contain a basis set, so no electron density can be "
+"calculated."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:255
+msgid ""
+"This file does not contain a basis set, so no spin density can be calculated."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:265
+msgid "This file does not contain any cube data."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:275
+#, qt-format
+msgid "Cube %1 is out of range, this file has %2."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:281
+#, qt-format
+msgid "Cube %1 could not be read."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:417
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
 msgstr "கனசதுரம்%1"
 
-#: qtplugins/surfaces/surfaces.cpp:640
+#: qtplugins/surfaces/surfaces.cpp:729
 msgid "Calculating electron density"
 msgstr "எலக்ட்ரான் அடர்த்தியைக் கணக்கிடுகிறது"
 
-#: qtplugins/surfaces/surfaces.cpp:649
+#: qtplugins/surfaces/surfaces.cpp:738
 msgid "Calculating spin density"
 msgstr "சுழல் அடர்த்தியைக் கணக்கிடுகிறது"
 
-#: qtplugins/surfaces/surfaces.cpp:658
+#: qtplugins/surfaces/surfaces.cpp:747
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "மூலக்கூறு சுற்றுப்பாதை %L1 கணக்கிடுதல்"
 
-#: qtplugins/surfaces/surfaces.cpp:914
+#: qtplugins/surfaces/surfaces.cpp:848
+msgid "The calculation was interrupted."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:1022
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
 msgstr "மேற்பரப்பு முடிந்தது"
 
-#: qtplugins/surfaces/surfaces.cpp:925 qtplugins/surfaces/surfaces.cpp:953
+#: qtplugins/surfaces/surfaces.cpp:1035 qtplugins/surfaces/surfaces.cpp:1063
 msgid "Movie AVI (*.avi)"
 msgstr "மூவி அவி (*.வி)"
 
-#: qtplugins/surfaces/surfaces.cpp:927
+#: qtplugins/surfaces/surfaces.cpp:1037
 msgid "Export Movie"
 msgstr "ஏற்றுமதி திரைப்படம்"
 
-#: qtplugins/surfaces/surfaces.cpp:928
+#: qtplugins/surfaces/surfaces.cpp:1038
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "திரைப்பட MP4 (*.mp4) ;; திரைப்படங்கள் அவி (*.avi) ;; gif (*.gif)"
 
-#: qtplugins/surfaces/surfaces.cpp:978
+#: qtplugins/surfaces/surfaces.cpp:1088
 msgid "Couldn't find the active render widget, failing."
 msgstr "செயலில் உள்ள வழங்குதல் விட்செட்டைக் கண்டறிய முடியவில்லை, தோல்வியடைந்தது."
 
@@ -6318,16 +6357,16 @@ msgstr "குழு %1"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: qtplugins/templatetool/templatetool.cpp:86
+#: qtplugins/templatetool/templatetool.cpp:87
 msgctxt "control-key 3"
 msgid "Ctrl+3"
 msgstr "Ctrl+3"
 
-#: qtplugins/templatetool/templatetool.cpp:87
+#: qtplugins/templatetool/templatetool.cpp:88
 msgid "Template"
 msgstr "வார்ப்புரு"
 
-#: qtplugins/templatetool/templatetool.cpp:89
+#: qtplugins/templatetool/templatetool.cpp:90
 #, qt-format
 msgid ""
 "Template Tool\t(%1)\n"
@@ -6342,20 +6381,20 @@ msgid ""
 "it."
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:489
-#: qtplugins/templatetool/templatetool.cpp:682
+#: qtplugins/templatetool/templatetool.cpp:490
+#: qtplugins/templatetool/templatetool.cpp:683
 msgid "Clipboard"
 msgstr "இடைநிலைப் பலகை"
 
-#: qtplugins/templatetool/templatetool.cpp:577
+#: qtplugins/templatetool/templatetool.cpp:578
 msgid "Insert Template"
 msgstr "வார்ப்புருவைச் செருகவும்"
 
-#: qtplugins/templatetool/templatetool.cpp:890
+#: qtplugins/templatetool/templatetool.cpp:889
 msgid "Insert Ligand"
 msgstr "தசைநார் செருகவும்"
 
-#: qtplugins/templatetool/templatetool.cpp:1034
+#: qtplugins/templatetool/templatetool.cpp:1033
 msgid "Insert Metal Center"
 msgstr ""
 
