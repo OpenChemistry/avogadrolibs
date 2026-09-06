@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-06 06:00+0000\n"
-"PO-Revision-Date: 2026-08-31 04:51+0000\n"
+"PO-Revision-Date: 2026-09-07 01:55+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.9.dev0\n"
+"X-Generator: Weblate 2026.9.1.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -6262,29 +6262,33 @@ msgid "Render a cube supplied with the file."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:229
+#, fuzzy
 msgid ""
 "This file does not contain a basis set, so no orbital can be calculated."
-msgstr ""
+msgstr "ファイルに基底関数がないため軌道は計算できません。"
 
 #: qtplugins/surfaces/surfaces.cpp:235
-#, qt-format
+#, fuzzy, qt-format
 msgid "Orbital %1 is out of range."
-msgstr ""
+msgstr "軌道 %1 は範囲外です。"
 
 #: qtplugins/surfaces/surfaces.cpp:245
+#, fuzzy
 msgid ""
 "This file does not contain a basis set, so no electron density can be "
 "calculated."
-msgstr ""
+msgstr "ファイルに基底関数がないため電子密度は計算できません。"
 
 #: qtplugins/surfaces/surfaces.cpp:255
+#, fuzzy
 msgid ""
 "This file does not contain a basis set, so no spin density can be calculated."
-msgstr ""
+msgstr "ファイルに基底関数がないためスピン密度は計算できません。"
 
 #: qtplugins/surfaces/surfaces.cpp:265
+#, fuzzy
 msgid "This file does not contain any cube data."
-msgstr ""
+msgstr "ファイルにcubeデータがありません。"
 
 #: qtplugins/surfaces/surfaces.cpp:275
 #, qt-format
@@ -6316,8 +6320,9 @@ msgid "Calculating molecular orbital %L1"
 msgstr "第%L1分子軌道を計算中"
 
 #: qtplugins/surfaces/surfaces.cpp:848
+#, fuzzy
 msgid "The calculation was interrupted."
-msgstr ""
+msgstr "計算は中断されました。"
 
 #: qtplugins/surfaces/surfaces.cpp:1022
 #, fuzzy
@@ -6479,14 +6484,14 @@ msgid "Generate Displaced Coordinates…"
 msgstr ""
 
 #: qtplugins/vibrations/vibrationdialog.cpp:168
-#, qt-format
+#, fuzzy, qt-format
 msgid "Mode %1 (%2 cm⁻¹)"
-msgstr ""
+msgstr "モード %1 (%2 cm⁻¹)"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:170
-#, qt-format
+#, fuzzy, qt-format
 msgid "Mode %1"
-msgstr ""
+msgstr "モード %1"
 
 #: qtplugins/vibrations/vibrations.cpp:29
 msgid "Vibrational Modes…"
@@ -7235,13 +7240,15 @@ msgstr "スーパーセルのオプション"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, minLabel)
+#, fuzzy
 msgid "Minimum"
-msgstr ""
+msgstr "最小値"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, maxLabel)
+#, fuzzy
 msgid "Maximum"
-msgstr ""
+msgstr "最大値"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:48
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
@@ -9823,7 +9830,7 @@ msgstr ""
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:61
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
 msgid "Number of structures:"
-msgstr ""
+msgstr "構造の数："
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QSpinBox, countSpinBox)
