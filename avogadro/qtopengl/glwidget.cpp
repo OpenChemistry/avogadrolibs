@@ -273,8 +273,11 @@ void GLWidget::setNavigationModifier(Qt::KeyboardModifiers modifier)
 
 bool GLWidget::isNavigationMouseGesture(const QMouseEvent* event) const
 {
+  // Compare the whole mask: m_navigationModifier may hold a combination, and a
+  // bare bitwise and would match when only one of the configured modifiers is
+  // held.
   return m_defaultTool != nullptr && m_navigationModifier != Qt::NoModifier &&
-         (event->modifiers() & m_navigationModifier);
+         (event->modifiers() & m_navigationModifier) == m_navigationModifier;
 }
 
 bool GLWidget::isNavigationKeyGesture(const QKeyEvent* event) const
