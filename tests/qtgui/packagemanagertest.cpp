@@ -1086,7 +1086,10 @@ TEST_F(PackageManagerTest, scanDirectoryRescansPackageWithMissingEnvironment)
 TEST_F(PackageManagerTest, scanDirectoryRescansVenvPackageOncePixiIsAvailable)
 {
   const QString scanDir = m_packageDir + "/scan";
-  const QString pkgDir = createScannablePackage(scanDir, sampleToml());
+  // Only a package that brings its own pixi workspace can be migrated to one.
+  const QString pkgDir = createScannablePackage(
+    scanDir, sampleToml() + "\n[tool.pixi.workspace]\n"
+                            "channels = [\"conda-forge\"]\n");
   ASSERT_FALSE(pkgDir.isEmpty());
 
   auto* pm = PackageManager::instance();
@@ -1098,6 +1101,26 @@ TEST_F(PackageManagerTest, scanDirectoryRescansVenvPackageOncePixiIsAvailable)
   // order to migrate it to pixi — and only if pixi is actually here now.
   EXPECT_EQ(pm->scanDirectory(scanDir).contains(QDir(pkgDir).absolutePath()),
             pixiIsInstalled());
+}
+
+TEST_F(PackageManagerTest, scanDirectoryKeepsVenvPackageThatCannotUsePixi)
+{
+  const QString scanDir = m_packageDir + "/scan";
+  // sampleToml() declares no [tool.pixi] table, so pixi would install some
+  // ancestor's workspace rather than this package.
+  const QString pkgDir = createScannablePackage(scanDir, sampleToml());
+  ASSERT_FALSE(pkgDir.isEmpty());
+
+  auto* pm = PackageManager::instance();
+  ASSERT_TRUE(pm->registerPackage(pkgDir));
+  ASSERT_TRUE(
+    createConsoleScript(pkgDir + venvBinDir(), "avogadro-test-plugin"));
+
+  // The .venv is the only environment this package can ever have, so pixi
+  // turning up is no reason to reinstall it. Asking anyway would put the
+  // install prompt up on every single launch, for ever.
+  EXPECT_FALSE(
+    pm->scanDirectory(scanDir).contains(QDir(pkgDir).absolutePath()));
 }
 
 // ---------------------------------------------------------------------------
@@ -1213,4 +1236,133 @@ TEST_F(PackageManagerTest, resolveCommandLineEmptyWithoutAnyEnvironment)
 
   EXPECT_TRUE(commandLine.program.isEmpty());
   EXPECT_TRUE(commandLine.prefixArgs.isEmpty());
+}
+
+// ---------------------------------------------------------------------------
+// hasPixiManifest()
+//
+// pixi finds its manifest by walking up from the directory it is run in, so a
+// package declaring none is not merely unsupported: "pixi install" silently
+// installs some ancestor's workspace instead and reports success.
+// ---------------------------------------------------------------------------
+
+TEST_F(PackageManagerTest, hasPixiManifestFalseWithoutPixiTable)
+{
+  // sampleToml() has a [tool.avogadro] table but no [tool.pixi].
+  EXPECT_FALSE(PackageManager::hasPixiManifest(m_packageDir));
+}
+
+TEST_F(PackageManagerTest, hasPixiManifestTrueWithPixiWorkspaceTable)
+{
+  const QString pkgDir = m_packageDir + "/with-workspace";
+  ASSERT_TRUE(QDir().mkpath(pkgDir));
+  ASSERT_FALSE(writeTextFile(pkgDir + "/pyproject.toml",
+                             "[tool.pixi.workspace]\n"
+                             "channels = [\"conda-forge\"]\n")
+                 .isEmpty());
+
+  EXPECT_TRUE(PackageManager::hasPixiManifest(pkgDir));
+}
+
+TEST_F(PackageManagerTest, hasPixiManifestTrueWithBarePixiToml)
+{
+  const QString pkgDir = m_packageDir + "/with-pixi-toml";
+  ASSERT_TRUE(QDir().mkpath(pkgDir));
+  // The pyproject.toml alone declares no [tool.pixi] table; the standalone
+  // pixi.toml beside it is what makes this directory a workspace.
+  ASSERT_FALSE(
+    writeTextFile(pkgDir + "/pyproject.toml", sampleToml()).isEmpty());
+  ASSERT_FALSE(writeTextFile(pkgDir + "/pixi.toml", "[workspace]\n").isEmpty());
+
+  EXPECT_TRUE(PackageManager::hasPixiManifest(pkgDir));
+}
+
+TEST_F(PackageManagerTest, hasPixiManifestFalseWithoutAnyManifest)
+{
+  const QString pkgDir = m_packageDir + "/no-manifest";
+  ASSERT_TRUE(QDir().mkpath(pkgDir));
+
+  EXPECT_FALSE(PackageManager::hasPixiManifest(pkgDir));
+}
+
+// ---------------------------------------------------------------------------
+// scanDirectory() with a stale entry from a renamed package
+//
+// A package renamed upstream leaves its old cache entry behind, pointing at
+// the same directory but carrying the hash of a pyproject.toml that will
+// never be seen again. That stale entry must not shadow a healthy, current
+// one that also names the directory.
+// ---------------------------------------------------------------------------
+
+TEST_F(PackageManagerTest, scanDirectoryIgnoresStaleEntryForSameDirectory)
+{
+  const QString scanDir = m_packageDir + "/scan";
+  const QString pkgDir = createScannablePackage(scanDir, sampleToml());
+  ASSERT_FALSE(pkgDir.isEmpty());
+
+  auto* pm = PackageManager::instance();
+  ASSERT_TRUE(pm->registerPackage(pkgDir));
+  ASSERT_TRUE(
+    createConsoleScript(pkgDir + pixiBinDir(), "avogadro-test-plugin"));
+
+  // A stale entry left behind by the package's old name: same directory, but
+  // a hash the current pyproject.toml will never match again.
+  {
+    QSettings settings;
+    settings.setValue("plugins/old-test-plugin/directory",
+                      pm->packageInfo("test-plugin").directory);
+    settings.setValue("plugins/old-test-plugin/command", "avogadro-old-name");
+    settings.setValue("plugins/old-test-plugin/tomlHash",
+                      QByteArray("deadbeef"));
+    settings.sync();
+  }
+
+  // The healthy "test-plugin" entry (unchanged hash, command installed) is
+  // enough on its own to say nothing needs to happen here.
+  EXPECT_FALSE(
+    pm->scanDirectory(scanDir).contains(QDir(pkgDir).absolutePath()));
+
+  QSettings settings;
+  settings.beginGroup("plugins");
+  settings.remove("old-test-plugin");
+  settings.endGroup();
+  settings.sync();
+}
+
+// ---------------------------------------------------------------------------
+// loadFromCache() / loadRegisteredPackages() pruning a renamed package
+//
+// A package renamed upstream (avogenerators: avogadro-avogenerators ->
+// avogadro-generators) leaves its old cache entry behind. The directory and
+// its pyproject.toml still exist, but the file now describes a different
+// package, so replaying that entry would register features for a name that
+// no longer exists.
+// ---------------------------------------------------------------------------
+
+TEST_F(PackageManagerTest, loadRegisteredPackagesPrunesRenamedEntry)
+{
+  // m_packageDir's pyproject.toml (sampleToml()) declares
+  // [project.name] = "test-plugin", so a cache entry under any other name is
+  // stale.
+  {
+    QSettings settings;
+    settings.setValue("plugins/old-name/directory", m_packageDir);
+    settings.setValue("plugins/old-name/command", "avogadro-old-name");
+    settings.setValue("plugins/old-name/version", "0.0");
+    settings.sync();
+  }
+  ASSERT_TRUE(
+    PackageManager::instance()->registeredPackages().contains("old-name"));
+
+  PackageManager::instance()->loadRegisteredPackages();
+
+  EXPECT_FALSE(
+    PackageManager::instance()->registeredPackages().contains("old-name"));
+
+  // In case the assertion above failed and left the entry behind.
+  QSettings settings;
+  settings.beginGroup("plugins");
+  settings.remove("old-name");
+  settings.endGroup();
+  settings.sync();
 }

@@ -171,6 +171,33 @@ static QString findPixiExecutable()
   return pixiDir.isEmpty() ? QString() : pixiDir + '/' + pixiName;
 }
 
+bool PackageManager::hasPixiManifest(const QString& packageDir)
+{
+  if (packageDir.isEmpty())
+    return false;
+
+  // A standalone pixi.toml is a workspace in its own right.
+  if (QFileInfo::exists(packageDir + QStringLiteral("/pixi.toml")))
+    return true;
+
+  QFile tomlFile(packageDir + QStringLiteral("/pyproject.toml"));
+  if (!tomlFile.open(QIODevice::ReadOnly))
+    return false;
+  const QByteArray content = tomlFile.readAll();
+
+  bool ok = false;
+  const QVariantMap root =
+    parseTomlString(std::string_view(content.constData(), content.size()), &ok);
+  if (!ok)
+    return false;
+
+  return !root.value(QStringLiteral("tool"))
+            .toMap()
+            .value(QStringLiteral("pixi"))
+            .toMap()
+            .isEmpty();
+}
+
 QString PackageManager::pixiScriptPath(const QString& packageDir,
                                        const QString& command)
 {
@@ -439,6 +466,38 @@ static PackageCommands readScriptCommands(const QString& packageDir)
                               tomlPath);
 }
 
+// Compare two package names the way Python does (PEP 503): case-insensitively,
+// with any run of "-", "_" and "." equivalent. An exact comparison would be
+// wrong in both directions here — QSettings folds key case on Windows and
+// macOS, and a package is free to respell "avogadro_x" as "avogadro-x" without
+// becoming a different package.
+static QString normalizedPackageName(const QString& name)
+{
+  static const QRegularExpression separators(QStringLiteral("[-_.]+"));
+  return QString(name).replace(separators, QStringLiteral("-")).toLower();
+}
+
+// The [project.name] declared by the pyproject.toml in @p packageDir, or an
+// empty string if it cannot be read.
+static QString readPackageName(const QString& packageDir)
+{
+  QFile tomlFile(packageDir + QStringLiteral("/pyproject.toml"));
+  if (!tomlFile.open(QIODevice::ReadOnly))
+    return {};
+  const QByteArray content = tomlFile.readAll();
+
+  bool ok = false;
+  const QVariantMap root =
+    parseTomlString(std::string_view(content.constData(), content.size()), &ok);
+  if (!ok)
+    return {};
+
+  return root.value(QStringLiteral("project"))
+    .toMap()
+    .value(QStringLiteral("name"))
+    .toString();
+}
+
 bool PackageManager::removeSupersededVenv(const QString& packageDir,
                                           const QString& command)
 {
@@ -500,18 +559,130 @@ static void runSetupScript(const QString& packageDir, const QString& setupCmd,
   }
 }
 
+// Install @p packageDir with pixi. Returns true only if the package's command
+// can afterwards be run from its pixi environment.
+static bool installWithPixi(const QString& packageDir,
+                            const PackageCommands& commands,
+                            const QString& pixiExe, int timeoutMs)
+{
+  // Without a workspace of its own, pixi would install an ancestor's
+  // environment and report success, leaving this package unrunnable.
+  if (!PackageManager::hasPixiManifest(packageDir)) {
+    qWarning() << "PackageManager:" << packageDir
+               << "declares no pixi workspace, installing with pip instead";
+    return false;
+  }
+
+  // If a copied package includes a non-executable .pixi environment,
+  // pixi install fails querying its interpreter. Remove it and recreate.
+  const QString pixiDir = packageDir + QStringLiteral("/.pixi");
+  if (hasNonExecutablePixiPython(packageDir)) {
+    if (!QDir(pixiDir).removeRecursively()) {
+      qWarning() << "Could not remove invalid .pixi directory in" << packageDir;
+    }
+  }
+
+  QProcess installProc;
+  installProc.setWorkingDirectory(packageDir);
+  installProc.start(pixiExe, { QStringLiteral("install") });
+  if (!installProc.waitForFinished(timeoutMs)) {
+    qWarning() << "pixi install timed out for" << packageDir;
+    installProc.kill();
+    return false;
+  }
+  if (installProc.exitCode() != 0) {
+    qWarning() << "pixi install failed for" << packageDir << ":"
+               << QString::fromUtf8(installProc.readAllStandardError());
+    return false;
+  }
+
+  // Exit code 0 is not proof that this package was installed, so check that
+  // the command actually landed in the environment before relying on it.
+  if (!commands.command.isEmpty() &&
+      PackageManager::pixiScriptPath(packageDir, commands.command).isEmpty()) {
+    qWarning() << "pixi install reported success but did not provide"
+               << commands.command << "in" << packageDir;
+    return false;
+  }
+
+  // A package set up before pixi was available was pip-installed into .venv.
+  // Now that pixi has taken over, drop that tree.
+  PackageManager::removeSupersededVenv(packageDir, commands.command);
+
+  // Run the *-setup script if one is declared (e.g. to download ML model
+  // weights).
+  runSetupScript(packageDir, commands.setupCommand, pixiExe, true, timeoutMs);
+  return true;
+}
+
+// Install @p packageDir with pip into a fresh .venv. Returns true only if the
+// package's command can afterwards be run from that environment.
+static bool installWithPip(const QString& packageDir,
+                           const PackageCommands& commands,
+                           const QString& pythonExe, int timeoutMs)
+{
+  // Step 1: create a venv
+  QProcess venvProc;
+  venvProc.setWorkingDirectory(packageDir);
+  venvProc.start(pythonExe, { QStringLiteral("-m"), QStringLiteral("venv"),
+                              QStringLiteral(".venv") });
+  if (!venvProc.waitForFinished(timeoutMs)) {
+    qWarning() << "venv creation timed out for" << packageDir;
+    venvProc.kill();
+    return false;
+  }
+  if (venvProc.exitCode() != 0) {
+    qWarning() << "venv creation failed for" << packageDir << ":"
+               << venvProc.readAllStandardError();
+    return false;
+  }
+
+  // Step 2: pip install . using the venv's pip
+#ifdef Q_OS_WIN
+  QString venvPip = packageDir + QStringLiteral("/.venv/Scripts/pip.exe");
+#else
+  QString venvPip = packageDir + QStringLiteral("/.venv/bin/pip");
+#endif
+  QProcess installProc;
+  installProc.setWorkingDirectory(packageDir);
+  installProc.start(venvPip,
+                    { QStringLiteral("install"), QStringLiteral(".") });
+  if (!installProc.waitForFinished(timeoutMs)) {
+    qWarning() << "pip install timed out for" << packageDir;
+    installProc.kill();
+    return false;
+  }
+  if (installProc.exitCode() != 0) {
+    qWarning() << "pip install failed for" << packageDir << ":"
+               << installProc.readAllStandardError();
+    return false;
+  }
+
+  // Exit code 0 is not proof that this package was installed, so check that
+  // the command actually landed in the environment before relying on it.
+  if (!commands.command.isEmpty() &&
+      PackageManager::venvScriptPath(packageDir, commands.command).isEmpty()) {
+    qWarning() << "pip install reported success but did not provide"
+               << commands.command << "in" << packageDir;
+    return false;
+  }
+
+  // Run the *-setup script if one is declared.
+  runSetupScript(packageDir, commands.setupCommand, QString(), false,
+                 timeoutMs);
+  return true;
+}
+
 void PackageManager::installPackages(const QStringList& packageDirs)
 {
-  QString pixiExe = findPixiExecutable();
+  const QString pixiExe = findPixiExecutable();
   QString pythonExe;
-  if (pixiExe.isEmpty()) {
-    // Paths come back in the order the names were given, so the first hit is
-    // the most preferred interpreter.
-    const QStringList pythons =
-      Utilities::findExecutablePaths(pythonExecutableNames());
-    if (!pythons.isEmpty())
-      pythonExe = pythons.constFirst();
-  }
+  // Paths come back in the order the names were given, so the first hit is
+  // the most preferred interpreter.
+  const QStringList pythons =
+    Utilities::findExecutablePaths(pythonExecutableNames());
+  if (!pythons.isEmpty())
+    pythonExe = pythons.constFirst();
 
   // Pre-read entry-point names on the main thread so the install thread
   // doesn't need to re-parse pyproject.toml (parsePackage() reads it again
@@ -523,88 +694,24 @@ void PackageManager::installPackages(const QStringList& packageDirs)
     QThread::create([pixiExe, pythonExe, packageDirs, packageCommands]() {
       constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
       for (const QString& packageDir : packageDirs) {
-        if (pixiExe.isEmpty() && pythonExe.isEmpty())
-          continue; // TODO - give a warning to the user that they need pixi
+        const PackageCommands commands = packageCommands.value(packageDir);
+        bool installed = false;
 
         if (!pixiExe.isEmpty()) {
-          // If a copied package includes a non-executable .pixi environment,
-          // pixi install fails querying its interpreter. Remove it and
-          // recreate.
-          const QString pixiDir = packageDir + QStringLiteral("/.pixi");
-          if (hasNonExecutablePixiPython(packageDir)) {
-            if (!QDir(pixiDir).removeRecursively()) {
-              qWarning() << "Could not remove invalid .pixi directory in"
-                         << packageDir;
-            }
-          }
+          installed =
+            installWithPixi(packageDir, commands, pixiExe, installTimeoutMs);
+        }
 
-          // Pixi install
-          QProcess installProc;
-          installProc.setWorkingDirectory(packageDir);
-          installProc.start(pixiExe, { QStringLiteral("install") });
-          if (!installProc.waitForFinished(installTimeoutMs)) {
-            qWarning() << "pixi install timed out for" << packageDir;
-            installProc.kill();
-            continue;
-          }
-          if (installProc.exitCode() != 0) {
-            qWarning() << "pixi install failed for" << packageDir << ":"
-                       << QString::fromUtf8(installProc.readAllStandardError());
-          } else {
-            // A package set up before pixi was available was pip-installed
-            // into .venv. Now that pixi has taken over, drop that tree.
-            removeSupersededVenv(packageDir,
-                                 packageCommands.value(packageDir).command);
+        // pixi is preferred, but it cannot install a package that declares no
+        // workspace of its own, and an install that leaves the command
+        // missing is no install at all. Either way pip can still do it.
+        if (!installed && !pythonExe.isEmpty()) {
+          installed =
+            installWithPip(packageDir, commands, pythonExe, installTimeoutMs);
+        }
 
-            // Run the *-setup script if one is declared (e.g. to download ML
-            // model weights).
-            runSetupScript(packageDir,
-                           packageCommands.value(packageDir).setupCommand,
-                           pixiExe, true, installTimeoutMs);
-          }
-        } else {
-          // Step 1: create a venv
-          QProcess venvProc;
-          venvProc.setWorkingDirectory(packageDir);
-          venvProc.start(pythonExe,
-                         { QStringLiteral("-m"), QStringLiteral("venv"),
-                           QStringLiteral(".venv") });
-          if (!venvProc.waitForFinished(installTimeoutMs)) {
-            qWarning() << "venv creation timed out for" << packageDir;
-            venvProc.kill();
-            continue;
-          }
-          if (venvProc.exitCode() != 0) {
-            qWarning() << "venv creation failed for" << packageDir << ":"
-                       << venvProc.readAllStandardError();
-            continue;
-          }
-
-        // Step 2: pip install . using the venv's pip
-#ifdef Q_OS_WIN
-          QString venvPip =
-            packageDir + QStringLiteral("/.venv/Scripts/pip.exe");
-#else
-          QString venvPip = packageDir + QStringLiteral("/.venv/bin/pip");
-#endif
-          QProcess installProc;
-          installProc.setWorkingDirectory(packageDir);
-          installProc.start(venvPip,
-                            { QStringLiteral("install"), QStringLiteral(".") });
-          if (!installProc.waitForFinished(installTimeoutMs)) {
-            qWarning() << "pip install timed out for" << packageDir;
-            installProc.kill();
-            continue;
-          }
-          if (installProc.exitCode() != 0) {
-            qWarning() << "pip install failed for" << packageDir << ":"
-                       << installProc.readAllStandardError();
-          } else {
-            // Run the *-setup script if one is declared.
-            runSetupScript(packageDir,
-                           packageCommands.value(packageDir).setupCommand,
-                           QStringLiteral(), false, installTimeoutMs);
-          }
+        if (!installed) {
+          qWarning() << "PackageManager: could not install" << packageDir;
         }
       }
     });
@@ -669,9 +776,12 @@ bool PackageManager::unregisterPackage(const QString& packageName)
 // or may have been built with a backend we no longer prefer: a package
 // pip-installed into .venv predates pixi being available on this machine, and
 // "pixi run --as-is" will not create the pixi environment on demand. Both are
-// repaired by installing again.
+// repaired by installing again — except that a package declaring no pixi
+// workspace of its own can never be moved off .venv, so pixi being merely
+// present must not be treated as a reason to reinstall it: that would re-offer
+// the install on every launch, for ever.
 static bool environmentNeedsInstall(const QString& packageDir,
-                                    const QString& command, bool pixiAvailable,
+                                    const QString& command, bool pixiUsable,
                                     bool canInstall)
 {
   // Nothing to install with, or nothing to install — don't ask every launch.
@@ -684,8 +794,9 @@ static bool environmentNeedsInstall(const QString& packageDir,
   if (PackageManager::venvScriptPath(packageDir, command).isEmpty())
     return true; // no usable environment at all
 
-  // A working .venv, but pixi has been installed since it was created.
-  return pixiAvailable;
+  // A working .venv, but pixi has been installed since it was created and can
+  // install this package.
+  return pixiUsable;
 }
 
 QStringList PackageManager::scanDirectory(const QString& directoryPath)
@@ -703,8 +814,7 @@ QStringList PackageManager::scanDirectory(const QString& directoryPath)
 
   // Whether we could repair a package with a missing or outdated environment.
   const bool pixiAvailable = !findPixiExecutable().isEmpty();
-  const bool canInstall =
-    pixiAvailable ||
+  const bool pythonAvailable =
     !Utilities::findExecutablePaths(pythonExecutableNames()).isEmpty();
 
   const QStringList subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -725,22 +835,32 @@ QStringList PackageManager::scanDirectory(const QString& directoryPath)
         .toHex();
     tomlFile.close();
 
-    // Check if we already have this package with the same hash
-    // We need to find the package name — check all registered packages
+    // pixi can only install a package that brings its own workspace.
+    const bool pixiUsable = pixiAvailable && hasPixiManifest(packageDir);
+    const bool canInstall = pixiUsable || pythonAvailable;
+
+    // Several cache entries can name the same directory: a package renamed
+    // upstream leaves its old name behind, with the hash of a pyproject.toml
+    // that will never be seen again. Check them all rather than stopping at
+    // the first, or that stale entry alone would keep the package looking
+    // out of date on every launch.
     bool needsRegistration = true;
     const QStringList known = registeredPackages();
     for (const QString& name : known) {
-      PackageInfo info = packageInfo(name);
-      if (QDir(info.directory) == QDir(packageDir)) {
-        // Same directory — check the cached hash
-        QSettings settings;
-        QString prefix = QStringLiteral("plugins/") + name + '/';
-        QByteArray cachedHash =
-          settings.value(prefix + "tomlHash").toByteArray();
-        if (cachedHash == currentHash) {
-          needsRegistration = environmentNeedsInstall(
-            packageDir, info.command, pixiAvailable, canInstall);
-        }
+      const PackageInfo info = packageInfo(name);
+      if (QDir(info.directory) != QDir(packageDir))
+        continue;
+
+      QSettings settings;
+      const QString prefix = QStringLiteral("plugins/") + name + '/';
+      const QByteArray cachedHash =
+        settings.value(prefix + "tomlHash").toByteArray();
+      if (cachedHash != currentHash)
+        continue;
+
+      if (!environmentNeedsInstall(packageDir, info.command, pixiUsable,
+                                   canInstall)) {
+        needsRegistration = false;
         break;
       }
     }
@@ -1005,6 +1125,17 @@ bool PackageManager::loadFromCache(const QString& packageName,
   // Verify the package directory still exists and has a pyproject.toml
   QFileInfo pyproject(info.directory + QLatin1String("/pyproject.toml"));
   if (!pyproject.isFile()) {
+    removeFromCache(packageName);
+    return false;
+  }
+
+  // A package renamed upstream leaves its old entry behind: the directory and
+  // its pyproject.toml are still there, but they now describe a different
+  // package. Replaying it would register features that can never run.
+  const QString declaredName =
+    normalizedPackageName(readPackageName(info.directory));
+  if (!declaredName.isEmpty() &&
+      declaredName != normalizedPackageName(packageName)) {
     removeFromCache(packageName);
     return false;
   }
