@@ -57,7 +57,7 @@ Manipulator::Manipulator(QObject* parent_)
        "Right Mouse:\tClick and drag to rotate atoms\n\n"
        "Arrow Keys:\tTranslate atoms\n"
        "Shift+Arrows:\tRotate around X/Y axes\n"
-       "Ctrl+Left/Right:\tRotate around Z axis\n"
+       "Ctrl+Shift+Left/Right:\tRotate around Z axis\n"
        "Alt+<key>:\tLarger steps")
       .arg(shortcut));
   setIcon();
@@ -192,10 +192,10 @@ QUndoCommand* Manipulator::keyPressEvent(QKeyEvent* e)
     case Qt::Key_A:
       if (mods == Qt::NoModifier || mods == Qt::KeypadModifier)
         translate(Vector3(-transStep, 0.0, 0.0), moveSelected);
+      else if ((mods & Qt::ControlModifier) && (mods & Qt::ShiftModifier))
+        axisRotate(Vector3(0.0, 0.0, -rotStep), centroid, moveSelected);
       else if (mods & Qt::ShiftModifier)
         axisRotate(Vector3(0.0, -rotStep, 0.0), centroid, moveSelected);
-      else if (mods & Qt::ControlModifier)
-        axisRotate(Vector3(0.0, 0.0, -rotStep), centroid, moveSelected);
       e->accept();
       break;
 
@@ -204,10 +204,10 @@ QUndoCommand* Manipulator::keyPressEvent(QKeyEvent* e)
     case Qt::Key_D:
       if (mods == Qt::NoModifier || mods == Qt::KeypadModifier)
         translate(Vector3(+transStep, 0.0, 0.0), moveSelected);
+      else if ((mods & Qt::ControlModifier) && (mods & Qt::ShiftModifier))
+        axisRotate(Vector3(0.0, 0.0, +rotStep), centroid, moveSelected);
       else if (mods & Qt::ShiftModifier)
         axisRotate(Vector3(0.0, +rotStep, 0.0), centroid, moveSelected);
-      else if (mods & Qt::ControlModifier)
-        axisRotate(Vector3(0.0, 0.0, +rotStep), centroid, moveSelected);
       e->accept();
       break;
 

@@ -106,6 +106,16 @@ public:
    */
   QString error() const { return m_renderer.error().c_str(); }
 
+  /**
+   * @brief Modifier reserved for camera navigation.
+   *
+   * A mouse gesture carrying this modifier is routed to the default
+   * (navigation) tool regardless of which tool is currently active.
+   * Defaults to Qt::AltModifier and is persisted in QSettings.
+   */
+  Qt::KeyboardModifiers navigationModifier() const;
+  void setNavigationModifier(Qt::KeyboardModifiers modifier);
+
 signals:
   void rendererInvalid();
 
@@ -196,6 +206,9 @@ protected:
   /** @} */
 
 private:
+  bool isNavigationMouseGesture(const QMouseEvent* event) const;
+  bool isNavigationKeyGesture(const QKeyEvent* event) const;
+
   QPointer<QtGui::Molecule> m_molecule;
   QList<QtGui::ToolPlugin*> m_tools;
   QtGui::ToolPlugin* m_activeTool;
@@ -205,6 +218,9 @@ private:
   QtGui::ScenePluginModel m_scenePlugins;
 
   QTimer* m_renderTimer;
+
+  Qt::KeyboardModifiers m_navigationModifier;
+  bool m_navigationDrag = false;
 };
 
 } // namespace QtOpenGL

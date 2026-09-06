@@ -35,6 +35,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
 
@@ -137,20 +138,12 @@ QUndoCommand* Editor::mousePressEvent(QMouseEvent* e)
         return nullptr;
     }
   } else if (m_pressedButtons & Qt::RightButton) {
+    // Just record what was hit. The actual deletion is deferred to
+    // mouseReleaseEvent() so that a right-drag can be told apart from a
+    // right-click: a drag is reserved for camera navigation, so the event
+    // must stay ignored here to let the default Navigator tool see the
+    // press and start panning.
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
-
-    switch (m_clickedObject.type) {
-      case Rendering::AtomType:
-        m_molecule->beginMergeMode(tr("Remove Atom"));
-        atomRightClick(e);
-        return nullptr;
-      case Rendering::BondType:
-        m_molecule->beginMergeMode(tr("Remove Bond"));
-        bondRightClick(e);
-        return nullptr;
-      default:
-        break;
-    }
   }
 
   return nullptr;
@@ -171,7 +164,6 @@ QUndoCommand* Editor::mouseReleaseEvent(QMouseEvent* e)
 
   switch (e->button()) {
     case Qt::LeftButton:
-    case Qt::RightButton:
       reset();
       e->accept();
       m_molecule->endMergeMode();
@@ -181,6 +173,40 @@ QUndoCommand* Editor::mouseReleaseEvent(QMouseEvent* e)
                               Molecule::Added | Molecule::Removed |
                               Molecule::Modified);
       break;
+    case Qt::RightButton: {
+      // Only delete on release if this was a click, not a drag: a
+      // right-drag is reserved for camera navigation, so the deletion that
+      // used to happen unconditionally on press is deferred here.
+      bool isClick = (e->pos() - m_clickPosition).manhattanLength() <
+                     QApplication::startDragDistance();
+      if (isClick) {
+        switch (m_clickedObject.type) {
+          case Rendering::AtomType:
+            m_molecule->beginMergeMode(tr("Remove Atom"));
+            atomRightClick(e);
+            m_molecule->endMergeMode();
+            break;
+          case Rendering::BondType:
+            m_molecule->beginMergeMode(tr("Remove Bond"));
+            bondRightClick(e);
+            m_molecule->endMergeMode();
+            break;
+          default:
+            break;
+        }
+        // Let's cover all possible changes - the undo stack won't update
+        // without this
+        m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
+                                Molecule::Added | Molecule::Removed |
+                                Molecule::Modified);
+      }
+      reset();
+      // atomRightClick()/bondRightClick() accept the event internally;
+      // ignore it again so the release still reaches the default Navigator
+      // tool, which needs to reset its own internal action state machine.
+      e->ignore();
+      break;
+    }
     default:
       break;
   }
