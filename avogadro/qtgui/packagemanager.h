@@ -79,7 +79,26 @@ public:
   static void mergeOptionsFromFile(QJsonObject& opts,
                                    const QString& userOptionsPath);
 
+  /**
+   * The @c [project.version] declared by the pyproject.toml in @p packageDir,
+   * or an empty string if it cannot be read.
+   */
+  static QString packageVersion(const QString& packageDir);
+
   // --- Installed environments ---
+
+  /**
+   * Whether @p packageDir declares a pixi workspace of its own: a pixi.toml,
+   * or a pyproject.toml with a non-empty @c [tool.pixi] table.
+   *
+   * pixi finds its manifest by walking up from the directory it is run in, so
+   * a package that declares none is not merely unsupported — pixi silently
+   * operates on an ancestor's workspace instead. @c "pixi install" then
+   * reports success having installed something else entirely, and the
+   * package's own command is nowhere on PATH ("command not found", exit 127).
+   * Such a package has to be installed with pip into @c .venv.
+   */
+  static bool hasPixiManifest(const QString& packageDir);
 
   /**
    * Absolute path to @p command as installed in the pixi environment of
