@@ -28,6 +28,21 @@ namespace Avogadro::QtGui {
 using QtGui::GenericHighlighter;
 using QtGui::PythonScript;
 
+// Serialize a 4x4 matrix as nested rows, matching what CjsonFormat writes for
+// a Variant::Matrix, so a script sees one shape whether the CJSON came from a
+// file or from the live camera.
+static QJsonArray matrixToJson(const Matrix4f& matrix)
+{
+  QJsonArray rows;
+  for (int i = 0; i < 4; ++i) {
+    QJsonArray row;
+    for (int j = 0; j < 4; ++j)
+      row.append(static_cast<double>(matrix(i, j)));
+    rows.append(row);
+  }
+  return rows;
+}
+
 // Strip any leading non-JSON output (e.g. deprecation warnings printed to
 // stdout by third-party libraries). Find the first '{' or '['.
 static void stripLeadingNonJson(QByteArray& data)
@@ -177,6 +192,27 @@ void InterfaceScript::reset()
   m_files.clear();
   m_fileHighlighters.clear();
   m_highlightStyles.clear();
+}
+
+void InterfaceScript::setCamera(const Matrix4f& modelView,
+                                const Matrix4f& projection)
+{
+  m_modelView = modelView;
+  m_projection = projection;
+  m_hasCamera = true;
+}
+
+void InterfaceScript::insertCamera(QJsonObject& cjson) const
+{
+  if (!m_hasCamera)
+    return;
+
+  // Overwrite rather than merge: the molecule may carry matrices from the file
+  // it was read from, and the live camera is what the user is looking at.
+  QJsonObject properties = cjson.value(QStringLiteral("properties")).toObject();
+  properties.insert(QStringLiteral("modelView"), matrixToJson(m_modelView));
+  properties.insert(QStringLiteral("projection"), matrixToJson(m_projection));
+  cjson.insert(QStringLiteral("properties"), properties);
 }
 
 bool InterfaceScript::runCommand(const QJsonObject& options_,
@@ -689,7 +725,9 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
     return false;
   }
 
-  json.insert("cjson", doc.object());
+  QJsonObject cjson = doc.object();
+  insertCamera(cjson);
+  json.insert("cjson", cjson);
 
   return true;
 }

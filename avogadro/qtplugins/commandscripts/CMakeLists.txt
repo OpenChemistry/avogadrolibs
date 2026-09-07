@@ -11,7 +11,8 @@ avogadro_plugin(commands
   "${command_srcs}"
 )
 
-target_link_libraries(commands PRIVATE Avogadro::IO Avogadro::QtGui)
+target_link_libraries(commands PRIVATE Avogadro::IO Avogadro::QtGui
+  Avogadro::Rendering)
 
 # We no longer bundle scripts because they should be downloaded separately.
 # This also helps base translations.

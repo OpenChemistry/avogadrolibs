@@ -24,6 +24,10 @@ namespace Io {
 class FileFormat;
 }
 
+namespace Rendering {
+class Camera;
+}
+
 namespace QtGui {
 class InterfaceScript;
 class InterfaceWidget;
@@ -56,6 +60,8 @@ public:
   QStringList menuPath(QAction*) const override;
 
   void setMolecule(QtGui::Molecule* mol) override;
+
+  void setCamera(Rendering::Camera* camera) override;
 
 public slots:
   /**
@@ -116,6 +122,8 @@ private:
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
+  // The active view's camera, owned by the renderer; null until a view exists.
+  Rendering::Camera* m_camera = nullptr;
   // Launch-time molecule for the async script; QPointer detects deletion.
   QPointer<QtGui::Molecule> m_runningMolecule;
   // keyed on script file path or package feature key
