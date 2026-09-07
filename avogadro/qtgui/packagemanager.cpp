@@ -477,9 +477,9 @@ static QString normalizedPackageName(const QString& name)
   return QString(name).replace(separators, QStringLiteral("-")).toLower();
 }
 
-// The [project.name] declared by the pyproject.toml in @p packageDir, or an
-// empty string if it cannot be read.
-static QString readPackageName(const QString& packageDir)
+// The [project] table of the pyproject.toml in @p packageDir, empty if the
+// file cannot be read or parsed.
+static QVariantMap readProjectTable(const QString& packageDir)
 {
   QFile tomlFile(packageDir + QStringLiteral("/pyproject.toml"));
   if (!tomlFile.open(QIODevice::ReadOnly))
@@ -492,9 +492,22 @@ static QString readPackageName(const QString& packageDir)
   if (!ok)
     return {};
 
-  return root.value(QStringLiteral("project"))
-    .toMap()
-    .value(QStringLiteral("name"))
+  return root.value(QStringLiteral("project")).toMap();
+}
+
+// The [project.name] declared by the pyproject.toml in @p packageDir, or an
+// empty string if it cannot be read.
+static QString readPackageName(const QString& packageDir)
+{
+  return readProjectTable(packageDir).value(QStringLiteral("name")).toString();
+}
+
+QString PackageManager::packageVersion(const QString& packageDir)
+{
+  if (packageDir.isEmpty())
+    return {};
+  return readProjectTable(packageDir)
+    .value(QStringLiteral("version"))
     .toString();
 }
 

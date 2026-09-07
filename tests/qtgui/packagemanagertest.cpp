@@ -14,6 +14,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 #include <QtCore/QTemporaryDir>
+#include <QtCore/QVersionNumber>
 #include <QtCore/QVariantMap>
 
 #include <QSignalSpy>
@@ -1236,6 +1237,43 @@ TEST_F(PackageManagerTest, resolveCommandLineEmptyWithoutAnyEnvironment)
 
   EXPECT_TRUE(commandLine.program.isEmpty());
   EXPECT_TRUE(commandLine.prefixArgs.isEmpty());
+}
+
+// ---------------------------------------------------------------------------
+// packageVersion()
+//
+// MainWindow decides whether to refresh its bundled copy of a package by
+// comparing versions, never content: the plugin downloader installs over the
+// very same directory, so a package the user has updated themselves must not
+// be reverted to the bundled copy on the next launch.
+// ---------------------------------------------------------------------------
+
+TEST_F(PackageManagerTest, packageVersionReadsProjectVersion)
+{
+  EXPECT_EQ(PackageManager::packageVersion(m_packageDir), "1.2.3");
+}
+
+TEST_F(PackageManagerTest, packageVersionEmptyWithoutAPackage)
+{
+  const QString pkgDir = m_packageDir + "/no-manifest";
+  ASSERT_TRUE(QDir().mkpath(pkgDir));
+
+  EXPECT_TRUE(PackageManager::packageVersion(pkgDir).isEmpty());
+  EXPECT_TRUE(PackageManager::packageVersion(QString()).isEmpty());
+}
+
+TEST_F(PackageManagerTest, packageVersionOrdersAnAddedSegmentAsNewer)
+{
+  // The real case this was written for: avogenerators shipped "2.0" before it
+  // declared a pixi workspace and "2.0.0" after, so the repaired package has
+  // to compare as newer than the copy already sitting in the user's plugin
+  // directory.
+  EXPECT_GT(QVersionNumber::fromString(QStringLiteral("2.0.0")),
+            QVersionNumber::fromString(QStringLiteral("2.0")));
+
+  // ... while a package the user has updated past the bundled one does not.
+  EXPECT_GT(QVersionNumber::fromString(QStringLiteral("2.1.0")),
+            QVersionNumber::fromString(QStringLiteral("2.0.0")));
 }
 
 // ---------------------------------------------------------------------------

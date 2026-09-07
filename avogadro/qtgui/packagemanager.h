@@ -79,6 +79,12 @@ public:
   static void mergeOptionsFromFile(QJsonObject& opts,
                                    const QString& userOptionsPath);
 
+  /**
+   * The @c [project.version] declared by the pyproject.toml in @p packageDir,
+   * or an empty string if it cannot be read.
+   */
+  static QString packageVersion(const QString& packageDir);
+
   // --- Installed environments ---
 
   /**
