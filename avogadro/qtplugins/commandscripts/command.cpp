@@ -15,6 +15,8 @@
 #include <avogadro/qtgui/pythonscript.h>
 #include <avogadro/qtgui/utilities.h>
 
+#include <avogadro/rendering/camera.h>
+
 #include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
@@ -326,6 +328,13 @@ void Command::menuActivated()
   m_currentDialog->exec();
 }
 
+void Command::setCamera(Rendering::Camera* camera)
+{
+  // MainWindow hands out the renderer's own camera, so this pointer keeps
+  // tracking the view as the user rotates it.
+  m_camera = camera;
+}
+
 void Command::run()
 {
   if (m_currentDialog)
@@ -383,6 +392,14 @@ void Command::run()
     m_progress->setAutoReset(false);
     connect(m_progress, &QProgressDialog::canceled, this,
             &Command::cancelCommand);
+
+    // Give the script the view the user is actually looking at. The molecule
+    // only carries a camera if it was read from, or written to, a file, so
+    // without this a script would see a stale orientation or none at all.
+    if (m_camera != nullptr) {
+      m_currentScript->setCamera(m_camera->modelView().matrix(),
+                                 m_camera->projection().matrix());
+    }
 
     // Snapshot so processFinished() can detect if the molecule was closed
     // or swapped before the async script returned.

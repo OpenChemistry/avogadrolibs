@@ -11,6 +11,7 @@
 #include "avogadroqtguiexport.h"
 
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/matrix.h>
 
 #include <QRegularExpression>
 #include <QtCore/QJsonObject>
@@ -629,6 +630,22 @@ public:
   bool runCommand(const QJsonObject& options_, Core::Molecule* mol);
 
   /**
+   * Supply the current view camera, so that the CJSON handed to the script
+   * carries the orientation the user is actually looking at.
+   *
+   * The matrices are written to the CJSON as \c properties.modelView and
+   * \c properties.projection, the same keys CjsonFormat uses, and they
+   * override any stale matrices the molecule kept from the file it was read
+   * from. Without this, a script only ever sees the camera as of the last
+   * save.
+   *
+   * @param modelView The camera's world-to-eye transform.
+   * @param projection The camera's projection matrix. Its (3, 3) element is 0
+   * for a perspective camera and 1 for an orthographic one.
+   */
+  void setCamera(const Matrix4f& modelView, const Matrix4f& projection);
+
+  /**
    * Finish processing an aynchronous command script
    */
   bool processCommand(Core::Molecule* mol);
@@ -761,6 +778,7 @@ private:
                      const QByteArray& scriptStdin = QByteArray()) const;
   QString processErrorString(const QProcess& proc) const;
   bool insertMolecule(QJsonObject& json, const Core::Molecule& mol) const;
+  void insertCamera(QJsonObject& cjson) const;
 
   // File extension of requested molecule format
   mutable QString m_moleculeExtension;
@@ -776,6 +794,11 @@ private:
   QMap<QString, QtGui::GenericHighlighter*> m_fileHighlighters;
 
   mutable QMap<QString, QtGui::GenericHighlighter*> m_highlightStyles;
+
+  // The view camera, when the caller has one to offer.
+  bool m_hasCamera = false;
+  Matrix4f m_modelView;
+  Matrix4f m_projection;
 };
 
 inline bool InterfaceScript::isValid() const
