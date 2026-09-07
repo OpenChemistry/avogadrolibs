@@ -5,6 +5,7 @@
 ******************************************************************************/
 """
 
+import base64
 import json
 import os
 import socket
@@ -257,14 +258,90 @@ class connect:
         """
         return self.send("loadMolecule", {"content": content, "format": format})
 
-    def export_file(self, filename):
+    def version(self):
+        """
+        Report the versions Avogadro is running, for compatibility checks.
+
+        This is answered before the "no active window" check that every
+        other method requires, so it can be used to probe a starting
+        instance. A build old enough to have no ``version`` method raises
+        RPCError with code ``RPCError.METHOD_NOT_FOUND``; treat that as
+        ``rpcProtocol`` 1, the immediate-reply era before ``wait`` existed.
+
+        :returns: A dict with keys ``avogadroApp``, ``avogadroLibs``,
+            ``qt``, ``platform`` (one of "macos", "windows", "linux",
+            "bsd", "unknown"), and ``rpcProtocol`` (an int, 2 once a build
+            honours ``wait``).
+        """
+        response = self.send("version")
+        return response["result"]
+
+    def list_commands(self):
+        """
+        List every command Avogadro will answer, built-in and plugin alike.
+
+        :returns: A list of dicts, sorted by name, each with keys ``name``,
+            ``description``, ``kind`` ("builtin", "tool" or "extension"),
+            ``plugin`` (the owning plugin's name, empty for builtins),
+            ``async`` (currently always False), and ``schema`` (currently
+            always ``{}``).
+        """
+        response = self.send("listCommands")
+        return response["result"]
+
+    def molecule_info(self):
+        """
+        Summarize the active molecule: counts, formula, and what it has.
+
+        Every key is always present, even with no molecule open, in which
+        case the counts are 0 and the strings are empty.
+
+        :returns: A dict with keys ``atomCount``, ``bondCount``,
+            ``formula``, ``mass``, ``totalCharge``, ``spinMultiplicity``,
+            ``coordinateSetCount``, ``selectedAtomCount``, ``residueCount``,
+            ``hasResidues``, ``hasUnitCell``, ``hasCustomElements``,
+            ``hasBasisSet``, ``orbitalCount``, ``homoIndex`` (zero-based,
+            -1 with no basis set), ``cubeCount``, ``vibrationCount``, and
+            ``fileName`` (empty for a molecule loaded with load_molecule()).
+        """
+        response = self.send("moleculeInfo")
+        return response["result"]
+
+    def get_molecule(self, format="cjson"):
+        """
+        Read the active molecule back as text, without writing a file.
+
+        :param format: Any file format Avogadro can write, e.g. "xyz".
+            Defaults to "cjson".
+        :returns: The molecule's content as a string.
+        :raises RPCError: with code -1 for an unknown format, a write
+            failure, or no molecule open.
+        """
+        response = self.send("getMolecule", {"format": format})
+        return response["result"]["content"]
+
+    def export_file(self, filename, wait=True):
         """
         Write the active molecule to a file. The format is inferred from
         the file extension.
 
+        The write happens on a background thread, so without waiting this
+        call can return before the file exists on disk -- the bug the
+        completion protocol exists to fix. ``wait`` therefore defaults to
+        True here, unlike send() and command(), whose wait defaults stay
+        False.
+
         :param filename: Path to write.
+        :param wait: If True (the default), do not return until the write
+            has finished.
+        :returns: With wait=True, the dict of data the command reported
+            (currently just ``{"fileName": ...}``); with wait=False, the
+            raw response, as before.
         """
-        return self.send("exportFile", {"fileName": str(filename)})
+        response = self.send("exportFile", {"fileName": str(filename)}, wait=wait)
+        if wait:
+            return result_data(response)
+        return response
 
     def save_graphic(self, filename):
         """
@@ -274,6 +351,84 @@ class connect:
         :param filename: Path to write.
         """
         return self.send("saveGraphic", {"fileName": str(filename)})
+
+    def render_image(self, width=None, height=None, transparent=False, filename=None):
+        """
+        Render the current view, at any size, in or out of process memory.
+
+        Unlike save_graphic(), this can render larger or smaller than the
+        on-screen view, and can hand back the image bytes directly instead
+        of only writing a file.
+
+        :param width: Image width in pixels. Defaults to the current view
+            size. Clamped to the range [1, 8192].
+        :param height: Image height in pixels. Same default and clamping
+            as width.
+        :param transparent: If True, render with a transparent background.
+        :param filename: Path to write the PNG to. ".png" is appended if
+            the name has no extension, matching save_graphic(). If left
+            out, the image is returned inline instead of written to disk.
+        :returns: bytes of a PNG image when filename is not given;
+            True when it is (the file was written). No PIL dependency --
+            decode the bytes yourself if you want an image object, e.g.
+            with ``PIL.Image.open(io.BytesIO(data))``.
+        :raises RPCError: with code -1 for an unwritable path.
+        """
+        params = {}
+        if width is not None:
+            params["width"] = width
+        if height is not None:
+            params["height"] = height
+        if transparent:
+            params["transparentBackground"] = True
+        if filename is not None:
+            params["fileName"] = str(filename)
+
+        response = self.send("renderImage", params)
+        if filename is not None:
+            return True
+        return base64.b64decode(response["result"]["data"])
+
+    def list_display_types(self):
+        """
+        List the scene display types (ball-and-stick, wireframe, etc.)
+        and whether each is on, applicable, and configurable.
+
+        :returns: A list of dicts, each with keys ``name`` (the stable
+            identifier, e.g. "BallStick" -- pass this to
+            set_display_types(), not ``displayName``), ``displayName``
+            (translated for the interface language), ``enabled``,
+            ``applicable`` (false for e.g. a crystal-only type on a
+            molecule with no unit cell), and ``hasSettings``.
+        """
+        response = self.send("listDisplayTypes")
+        return response["result"]
+
+    def set_display_types(self, types):
+        """
+        Choose which scene display types are active.
+
+        :param types: Either a list of type names to turn on (e.g.
+            ``["BallStick", "VanDerWaals"]``), or a dict mapping names to
+            booleans, which can also turn types off (e.g.
+            ``{"BallStick": True, "Wireframe": False}``). A name matches
+            either a type's identifier or its translated display name;
+            prefer the identifier, since it does not change with the
+            interface language.
+        """
+        if isinstance(types, dict):
+            params = dict(types)
+        else:
+            params = {"types": list(types)}
+        return self.send("setRenderTypes", params)
+
+    def set_projection(self, kind):
+        """
+        Switch the camera projection.
+
+        :param kind: "perspective" or "orthographic".
+        """
+        return self.send("setProjection", {"type": kind})
 
     def ping(self):
         """
