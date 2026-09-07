@@ -175,7 +175,13 @@ struct LayerCartoon : Core::LayerData
     showTube = settings.value("cartoon/tube", false).toBool();
     showRibbon = settings.value("cartoon/ribbon", false).toBool();
     showRope = settings.value("cartoon/rope", false).toBool();
-    showSimpleCartoon = settings.value("cartoon/simplecartoon", false).toBool();
+    // Read the current key, falling back to the pre-2.0 spelling; the
+    // read/write spellings previously diverged so this setting never
+    // persisted. (fallback can be dropped after a release or two)
+    showSimpleCartoon = settings
+                          .value("cartoon/simpleCartoon",
+                                 settings.value("cartoon/simplecartoon", false))
+                          .toBool();
   }
 
   LayerCartoon(std::string settings)
