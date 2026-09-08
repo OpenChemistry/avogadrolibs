@@ -52,9 +52,12 @@ bool contains(const std::string& haystack, const std::string& needle)
 // A file nothing recognizes used to fail with one sentence that named neither
 // the file, the readers that were tried, nor the ones that were missing, which
 // left "cannot open Gaussian output" bug reports with nothing to go on.
+//
+// The fixture is deliberately ".LOG": the format map is keyed on lower case,
+// and Windows users routinely have upper-case extensions.
 TEST(GenericOutputTest, unrecognizedOutputSaysWhatWasTried)
 {
-  TemporaryFile fixture("genericoutput-unrecognized.log",
+  TemporaryFile fixture("genericoutput-unrecognized.LOG",
                         "Entering Link 1\nsome program we do not know\n");
 
   GenericOutput reader;
@@ -69,7 +72,8 @@ TEST(GenericOutputTest, unrecognizedOutputSaysWhatWasTried)
   // ...and the fallbacks that were not available.
   EXPECT_TRUE(contains(error, "cclib"));
   EXPECT_TRUE(contains(error, "Open Babel"));
-  // The delegate is looked up by the real extension, not a hard-coded "out".
+  // The delegate is looked up by the real extension, not a hard-coded "out",
+  // and the extension is folded to lower case before the lookup.
   EXPECT_TRUE(contains(error, "\".log\""));
 }
 

@@ -39,8 +39,16 @@ bool startsWith(const std::string& text, const std::string& prefix)
  */
 std::string lowerExtension(const std::string& fileName)
 {
+  // Only a dot in the last path component names an extension. Searching the
+  // whole path would read "C:\work.v1\gaussian-output" as the extension
+  // "v1\gaussian-output"; both separators are checked because a Windows path
+  // can use either.
+  const std::string::size_type separator = fileName.find_last_of("/\\");
+  const std::string::size_type start =
+    (separator == std::string::npos) ? 0 : separator + 1;
+
   const std::string::size_type dot = fileName.find_last_of('.');
-  if (dot == std::string::npos || dot + 1 >= fileName.size())
+  if (dot == std::string::npos || dot < start || dot + 1 >= fileName.size())
     return std::string();
 
   std::string extension = fileName.substr(dot + 1);
