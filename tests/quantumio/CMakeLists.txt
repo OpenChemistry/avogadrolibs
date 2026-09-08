@@ -3,6 +3,7 @@ set(tests
   cube
   fchk
   gaussiansettools
+  genericoutput
   molden
   mopacaux
   nwchemlog
@@ -53,6 +54,9 @@ foreach(TestName ${tests})
   elseif(TestName STREQUAL "gaussiansettools")
     add_test(NAME "QuantumIo-gaussiansettools"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianSetToolsTest.*")
+  elseif(TestName STREQUAL "genericoutput")
+    add_test(NAME "QuantumIo-genericoutput"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=GenericOutputTest.*")
   elseif(TestName STREQUAL "molden")
     add_test(NAME "QuantumIo-molden"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=MoldenTest.*")
