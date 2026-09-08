@@ -15,6 +15,7 @@ if(PROJECT_IS_TOP_LEVEL)
   option(USE_QT "Build the tests that require Qt 6" ON)
 
   find_package(AvogadroLibs REQUIRED)
+  include_directories("${AvogadroLibs_INCLUDE_DIRS}/..")
 endif()
 
 include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/core")
