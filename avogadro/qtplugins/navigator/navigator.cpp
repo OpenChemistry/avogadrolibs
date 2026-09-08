@@ -68,7 +68,11 @@ void Navigator::registerCommands()
 {
   emit registerCommand("rotateScene",
                        tr("Rotate the scene along the x, y, or z axes."));
-  emit registerCommand("zoomScene", tr("Zoom the scene."));
+  emit registerCommand(
+    "zoomScene",
+    tr("Zoom the scene. Positive delta moves toward the molecule, negative "
+       "away. One unit of delta is roughly a 2% change in the camera's "
+       "distance to the focal point."));
   emit registerCommand("translateScene", tr("Translate the scene."));
 }
 
@@ -87,7 +91,12 @@ bool Navigator::handleCommand(const QString& command,
     m_glWidget->requestUpdate();
   } else if (command == "zoomScene") {
     float d = options.value("delta").toFloat();
-    zoom(m_renderer->camera().focus(), d);
+    // zoom() itself treats positive d as moving away from the focus point
+    // (used as-is by the mouse wheel / keyboard handlers below, which must
+    // keep their existing feel). The zoomScene command is documented the
+    // other way around -- positive delta moves toward the molecule -- so
+    // negate here, at the command boundary only.
+    zoom(m_renderer->camera().focus(), -d);
     m_glWidget->requestUpdate();
   } else if (command == "translateScene") {
     float x = options.value("x").toFloat();
