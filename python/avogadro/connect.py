@@ -430,6 +430,48 @@ class connect:
         """
         return self.send("setProjection", {"type": kind})
 
+    def get_camera(self):
+        """
+        Report the active view's camera.
+
+        :returns: A dict with keys ``distance`` (to the camera's own focus
+            point -- the number that matters for framing a molecule),
+            ``focus`` (a 3-element list), ``projection`` ("perspective" or
+            "orthographic"), ``orthographicScale``, and ``modelView`` (the
+            4x4 model view matrix as 16 floats in row-major order: element
+            ``[row * 4 + col]`` is ``modelView[row][col]``). Save this and
+            pass it to set_camera() to restore this exact view later.
+        :raises RPCError: with code -1 if there is no active view.
+        """
+        response = self.send("getCamera")
+        return response["result"]
+
+    def set_camera(self, model_view=None, projection=None, orthographic_scale=None):
+        """
+        Apply a saved camera view.
+
+        Give any combination of the three; anything left out is unchanged.
+
+        :param model_view: The 16-float row-major model view matrix from a
+            previous get_camera() call. Must be exactly 16 numbers.
+        :param projection: "perspective" or "orthographic".
+        :param orthographic_scale: The orthographic zoom factor.
+        :returns: The resulting camera state, the same shape get_camera()
+            returns.
+        :raises RPCError: with code -1 for a model_view that is not exactly
+            16 numbers, or if there is no active view.
+        """
+        params = {}
+        if model_view is not None:
+            params["modelView"] = list(model_view)
+        if projection is not None:
+            params["projection"] = projection
+        if orthographic_scale is not None:
+            params["orthographicScale"] = orthographic_scale
+
+        response = self.send("setCamera", params)
+        return response["result"]
+
     def ping(self):
         """
         Check that the server is alive.
