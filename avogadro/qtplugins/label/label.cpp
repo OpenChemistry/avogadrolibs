@@ -46,7 +46,8 @@ typedef Array<Molecule::BondType> NeighborListType;
 
 namespace {
 TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
-                         float radius, const Vector3ub& color, float scale = 1.0f)
+                         float radius, const Vector3ub& color,
+                         float scale = 1.0f)
 {
   Rendering::TextProperties tprop;
   tprop.setAlign(Rendering::TextProperties::HCenter,
@@ -92,14 +93,31 @@ struct LayerLabel : Core::LayerData
   {
     widget = nullptr;
     QSettings settings;
+    // Read the current key, falling back to the pre-2.0 spelling.
+    // (fallback can be dropped after a release or two)
     atomOptions =
-      settings.value("label/atomoptions", LabelOptions::Name).toInt();
+      settings
+        .value("label/atomOptions",
+               settings.value("label/atomoptions", LabelOptions::Name))
+        .toInt();
     residueOptions =
-      settings.value("label/residueoptions", LabelOptions::None).toInt();
+      settings
+        .value("label/residueOptions",
+               settings.value("label/residueoptions", LabelOptions::None))
+        .toInt();
     bondOptions =
-      settings.value("label/bondoptions", LabelOptions::None).toInt();
-    radiusScalar = settings.value("label/radiusscalar", 0.5).toDouble();
-    labelScale = settings.value("label/labelscale", 1.0).toDouble();
+      settings
+        .value("label/bondOptions",
+               settings.value("label/bondoptions", LabelOptions::None))
+        .toInt();
+    radiusScalar =
+      settings
+        .value("label/radiusScalar", settings.value("label/radiusscalar", 0.5))
+        .toDouble();
+    labelScale =
+      settings
+        .value("label/labelScale", settings.value("label/labelscale", 1.0))
+        .toDouble();
 
     auto q_color =
       settings.value("label/color", QColor(Qt::white)).value<QColor>();
@@ -325,7 +343,8 @@ void Label::processResidue(const Core::Molecule& molecule,
     if (interface->residueOptions & LayerLabel::LabelOptions::Custom) {
       text += (text == "" ? "" : " / ") + customLabel;
     }
-    TextLabel3D* residueLabel = createLabel(text, pos, radius, color, interface->labelScale);
+    TextLabel3D* residueLabel =
+      createLabel(text, pos, radius, color, interface->labelScale);
     geometry->addDrawable(residueLabel);
   }
 }
@@ -425,8 +444,8 @@ void Label::processAtom(const Core::Molecule& molecule,
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *
                      interface->radiusScalar;
 
-      TextLabel3D* atomLabel =
-        createLabel(text, pos, radius, contrastColor(color), interface->labelScale);
+      TextLabel3D* atomLabel = createLabel(
+        text, pos, radius, contrastColor(color), interface->labelScale);
       geometry->addDrawable(atomLabel);
     }
   }
@@ -482,7 +501,8 @@ void Label::processBond(const Core::Molecule& molecule,
       (atom1.position3d().cast<float>() + atom2.position3d().cast<float>()) /
       2.0f;
 
-    TextLabel3D* bondLabel = createLabel(text.str(), pos, radius, color, interface1->labelScale);
+    TextLabel3D* bondLabel =
+      createLabel(text.str(), pos, radius, color, interface1->labelScale);
     geometry->addDrawable(bondLabel);
   }
 }
@@ -511,7 +531,7 @@ void Label::atomLabelType(int index)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/atomoptions", interface->atomOptions);
+  settings.setValue("label/atomOptions", interface->atomOptions);
 }
 
 void Label::bondLabelType(int index)
@@ -524,7 +544,7 @@ void Label::bondLabelType(int index)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/bondoptions", interface->bondOptions);
+  settings.setValue("label/bondOptions", interface->bondOptions);
 }
 
 void Label::residueLabelType(int index)
@@ -537,7 +557,7 @@ void Label::residueLabelType(int index)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/residueoptions", interface->residueOptions);
+  settings.setValue("label/residueOptions", interface->residueOptions);
 }
 
 void Label::setRadiusScalar(double radius)
@@ -547,7 +567,7 @@ void Label::setRadiusScalar(double radius)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/radiusscalar", interface->radiusScalar);
+  settings.setValue("label/radiusScalar", interface->radiusScalar);
 }
 
 void Label::setLabelScale(double scale)
@@ -557,7 +577,7 @@ void Label::setLabelScale(double scale)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/labelscale", interface->labelScale);
+  settings.setValue("label/labelScale", interface->labelScale);
 }
 
 QWidget* Label::setupWidget()
