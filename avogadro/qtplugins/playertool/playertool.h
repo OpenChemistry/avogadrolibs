@@ -50,6 +50,9 @@ public slots:
   void setActiveWidget(QWidget* widget) override;
 
 protected slots:
+  /** Pick up conformer changes made elsewhere (e.g. the conformer plot). */
+  void moleculeChanged(unsigned int changes);
+
   void back();
   void forward();
   void play();
@@ -64,10 +67,18 @@ protected slots:
   void updateLimits();
 
 private:
+  /** Display coordinate set @p frame and update the widgets to match. */
+  void setFrame(int frame);
+
+  /** Push m_currentFrame into the slider and spin box without recursing. */
+  void syncWidgets();
+
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;
   Rendering::GLRenderer* m_renderer;
   int m_currentFrame;
+  int m_frameCount;
+  bool m_updatingWidgets;
   mutable QWidget* m_toolWidget;
   QTimer m_timer;
   mutable QSpinBox* m_animationFPS;
@@ -79,15 +90,6 @@ private:
   mutable QSlider* m_slider;
   mutable QPushButton* playButton;
 };
-
-inline void PlayerTool::setMolecule(QtGui::Molecule* mol)
-{
-  if (m_molecule != mol) {
-    m_molecule = mol;
-    m_currentFrame = 0;
-    updateLimits();
-  }
-}
 
 inline void PlayerTool::setGLRenderer(Rendering::GLRenderer* renderer)
 {

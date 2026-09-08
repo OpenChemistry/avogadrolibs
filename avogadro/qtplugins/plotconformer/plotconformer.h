@@ -13,6 +13,8 @@
 
 #include <memory>
 
+class QLabel;
+
 namespace Avogadro {
 
 namespace QtGui {
@@ -38,6 +40,12 @@ public:
   QList<QAction*> actions() const override;
   QStringList menuPath(QAction*) const override;
 
+  /**
+   * Arrow keys, page up/down and home/end step through the conformers while
+   * the plot dialog is focused.
+   */
+  bool eventFilter(QObject* object, QEvent* event) override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
@@ -52,6 +60,17 @@ private slots:
   void clicked(float x, float y, Qt::KeyboardModifiers modifiers);
 
 private:
+  // Show conformer @p frame, clamped to the available coordinate sets, and
+  // tell the rest of the application about it.
+  void setFrame(int frame);
+
+  // Redraw the cached curve plus the marker for the current conformer. Cheap
+  // enough to call on every arrow key, unlike updatePlot().
+  void drawChart();
+
+  // Fill the plot type combo with whatever the current molecule offers.
+  void populatePropertyCombo();
+
   // Generate RMSD data from a coordinate set
   // Writes the results to @p x and @p y
   void generateRmsdCurve(DataSeries& x, DataSeries& y);
@@ -74,6 +93,10 @@ private:
   QComboBox* m_propertyCombo;
   QComboBox* m_unitsCombo;
   QComboBox* m_targetUnitsCombo;
+  QLabel* m_frameLabel;
+  DataSeries m_xData;
+  DataSeries m_yData;
+  QString m_yTitle;
   int m_currentFrame = 0;
 };
 
