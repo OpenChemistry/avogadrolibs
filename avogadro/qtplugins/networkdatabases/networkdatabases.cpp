@@ -60,21 +60,41 @@ bool NetworkDatabases::readMolecule(QtGui::Molecule& mol)
   return readOK;
 }
 
-void NetworkDatabases::showDialog()
+void NetworkDatabases::registerCommands()
+{
+  emit registerCommand(
+    "fetchByName", tr("Download a structure by name from an online database."));
+}
+
+bool NetworkDatabases::handleCommand(const QString& command,
+                                     const QVariantMap& options)
+{
+  if (command.compare("fetchByName", Qt::CaseInsensitive) != 0)
+    return false;
+
+  QString structureName = options.value("name").toString().trimmed();
+  if (structureName.isEmpty()) {
+    emit commandFailed(
+      tr("fetchByName requires a non-empty 'name' parameter."));
+    return true;
+  }
+
+  // Everything below hands the request to the network, so the caller's
+  // reply is held until replyFinished() reports back (possibly after a
+  // PubChem retry).
+  emit commandStarted();
+  m_commandPending = true;
+  requestStructure(structureName);
+  return true;
+}
+
+void NetworkDatabases::requestStructure(const QString& structureName)
 {
   if (!m_network) {
     m_network = new QNetworkAccessManager(this);
     connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
             SLOT(replyFinished(QNetworkReply*)));
   }
-  // Prompt for a chemical structure name
-  bool ok;
-  QString structureName = QInputDialog::getText(
-    qobject_cast<QWidget*>(parent()), tr("Chemical Name"),
-    tr("Chemical structure to download."), QLineEdit::Normal, "", &ok);
-
-  if (!ok || structureName.isEmpty())
-    return;
 
   // Hard coding the NIH resolver download URL - this could be used for other
   // services
@@ -84,6 +104,21 @@ void NetworkDatabases::showDialog()
 
   m_moleculeName = structureName;
   m_triedPubChem = false;
+}
+
+void NetworkDatabases::showDialog()
+{
+  // Prompt for a chemical structure name
+  bool ok;
+  QString structureName = QInputDialog::getText(
+    qobject_cast<QWidget*>(parent()), tr("Chemical Name"),
+    tr("Chemical structure to download."), QLineEdit::Normal, "", &ok);
+
+  if (!ok || structureName.isEmpty())
+    return;
+
+  requestStructure(structureName);
+
   if (!m_progressDialog) {
     m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
   }
@@ -94,13 +129,24 @@ void NetworkDatabases::showDialog()
 
 void NetworkDatabases::replyFinished(QNetworkReply* reply)
 {
-  m_progressDialog->hide();
+  // A fetchByName command never shows the progress dialog, so there may be
+  // none to hide -- or the last one shown was for an earlier interactive
+  // download and should not be touched here.
+  if (!m_commandPending && m_progressDialog)
+    m_progressDialog->hide();
+
   // Read in all the data
   if (!reply->isReadable()) {
-    QMessageBox::warning(qobject_cast<QWidget*>(parent()),
-                         tr("Network Download Failed"),
-                         tr("Network timeout or other error."));
     reply->deleteLater();
+    QString message = tr("Network timeout or other error.");
+    if (m_commandPending) {
+      m_commandPending = false;
+      m_triedPubChem = false;
+      emit commandFailed(message);
+    } else {
+      QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+                           tr("Network Download Failed"), message);
+    }
     return;
   }
 
@@ -116,7 +162,9 @@ void NetworkDatabases::replyFinished(QNetworkReply* reply)
   if (!m_triedPubChem) {
     if (!isError && sdfHasThreeDCoordinates(data)) {
       m_moleculeData = data;
+      QString name = m_moleculeName;
       emit moleculeReady(1);
+      reportCommandSuccess(name, QStringLiteral("cactus"));
       return;
     }
 
@@ -127,24 +175,55 @@ void NetworkDatabases::replyFinished(QNetworkReply* reply)
                      "name/") +
       QString::fromUtf8(encoded) + QStringLiteral("/SDF?record_type=3d"));
     m_network->get(QNetworkRequest(pubchemUrl));
-    m_progressDialog->setLabelText(
-      tr("Querying PubChem for %1").arg(m_moleculeName));
-    m_progressDialog->setRange(0, 0);
-    m_progressDialog->show();
+    if (!m_commandPending) {
+      m_progressDialog->setLabelText(
+        tr("Querying PubChem for %1").arg(m_moleculeName));
+      m_progressDialog->setRange(0, 0);
+      m_progressDialog->show();
+    }
     return;
   }
 
   // Second pass: response from PubChem.
   m_triedPubChem = false;
   if (isError || !sdfHasThreeDCoordinates(data)) {
-    QMessageBox::warning(
-      qobject_cast<QWidget*>(parent()), tr("Network Download Failed"),
-      tr("Specified molecule could not be found: %1").arg(m_moleculeName));
+    QString message =
+      tr("Specified molecule could not be found: %1").arg(m_moleculeName);
+    if (m_commandPending) {
+      m_commandPending = false;
+      emit commandFailed(message);
+    } else {
+      QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+                           tr("Network Download Failed"), message);
+    }
     return;
   }
 
   m_moleculeData = data;
+  QString name = m_moleculeName;
   emit moleculeReady(1);
+  reportCommandSuccess(name, QStringLiteral("pubchem"));
+}
+
+void NetworkDatabases::reportCommandSuccess(const QString& name,
+                                            const QString& source)
+{
+  if (!m_commandPending)
+    return;
+  m_commandPending = false;
+
+  // By the time moleculeReady() returns, MainWindow has synchronously called
+  // readMolecule() and setMolecule(), and the resulting moleculeChanged()
+  // signal has already updated m_molecule via setMolecule() above -- so it
+  // is safe to report atomCount/formula from it here.
+  QVariantMap result;
+  result["name"] = name;
+  result["source"] = source;
+  if (m_molecule != nullptr) {
+    result["atomCount"] = static_cast<int>(m_molecule->atomCount());
+    result["formula"] = QString::fromStdString(m_molecule->formula());
+  }
+  emit commandFinished(tr("Downloaded %1").arg(name), result);
 }
 
 bool NetworkDatabases::sdfHasThreeDCoordinates(const QByteArray& data)
