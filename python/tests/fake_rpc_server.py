@@ -293,9 +293,17 @@ class FakeRPCServer:
     # -- internals ---------------------------------------------------
 
     def _serve(self):
+        # Bind the listening socket to a local first: stop() runs on another
+        # thread and clears self._socket right after setting the stop flag,
+        # so reading the attribute inside the loop can come back None between
+        # the flag check and the accept() call. Once stop() closes it, the
+        # accept below raises OSError and the thread returns as before.
+        server = self._socket
+        if server is None:
+            return
         while not self._stop.is_set():
             try:
-                conn, _ = self._socket.accept()
+                conn, _ = server.accept()
             except socket.timeout:
                 continue
             except OSError:
