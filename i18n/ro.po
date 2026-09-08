@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-06 06:00+0000\n"
-"PO-Revision-Date: 2026-09-03 14:59+0000\n"
+"PO-Revision-Date: 2026-09-08 16:08+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.9\n"
+"X-Generator: Weblate 2026.9.1\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -6313,36 +6313,42 @@ msgstr "Afișează un cub furnizat cu fișierul."
 msgid ""
 "This file does not contain a basis set, so no orbital can be calculated."
 msgstr ""
+"Acest fișier nu conține un set de funcții, așa că nu se poate calcula nicio "
+"orbitală."
 
 #: qtplugins/surfaces/surfaces.cpp:235
 #, qt-format
 msgid "Orbital %1 is out of range."
-msgstr ""
+msgstr "Orbitala %1 se află în afara intervalului."
 
 #: qtplugins/surfaces/surfaces.cpp:245
 msgid ""
 "This file does not contain a basis set, so no electron density can be "
 "calculated."
 msgstr ""
+"Acest fișier nu conține un set de funcții, prin urmare nu se poate calcula "
+"densitatea electronică."
 
 #: qtplugins/surfaces/surfaces.cpp:255
 msgid ""
 "This file does not contain a basis set, so no spin density can be calculated."
 msgstr ""
+"Acest fișier nu conține un set de funcții, așa că nu se poate calcula "
+"densitatea de spin."
 
 #: qtplugins/surfaces/surfaces.cpp:265
 msgid "This file does not contain any cube data."
-msgstr ""
+msgstr "Acest fișier nu conține date de tip cub (grilă tridimensională)."
 
 #: qtplugins/surfaces/surfaces.cpp:275
 #, qt-format
 msgid "Cube %1 is out of range, this file has %2."
-msgstr ""
+msgstr "Cubul %1 se află în afara intervalului; acest fișier conține %2."
 
 #: qtplugins/surfaces/surfaces.cpp:281
 #, qt-format
 msgid "Cube %1 could not be read."
-msgstr ""
+msgstr "Cubul %1 nu a putut fi citit."
 
 #: qtplugins/surfaces/surfaces.cpp:417
 #, qt-format
@@ -6365,7 +6371,7 @@ msgstr "Se calculează orbitalul molecular %L1"
 
 #: qtplugins/surfaces/surfaces.cpp:848
 msgid "The calculation was interrupted."
-msgstr ""
+msgstr "Calcularea a fost întreruptă."
 
 #: qtplugins/surfaces/surfaces.cpp:1022
 msgctxt "finished rendering surface or molecular orbital"
