@@ -212,12 +212,17 @@ class connect:
             )
         return response
 
-    def command(self, name, wait=False, timeout=None, **params):
+    def command(self, name, /, wait=False, timeout=None, **params):
         """
         Run a command registered by a tool or extension plugin.
 
         Keyword arguments are passed through as the command options, e.g.
         ``avo.command("renderMO", orbital="homo", isovalue=0.02)``.
+
+        The command name is positional-only, so a command may have an
+        option of its own called ``name`` without colliding with it --
+        ``avo.command("fetchByName", name="caffeine")`` passes "caffeine"
+        through as the option. Only ``wait`` and ``timeout`` are reserved.
 
         :param name: The registered command name.
         :param wait: If True, do not return until the command has finished.
