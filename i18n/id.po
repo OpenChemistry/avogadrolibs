@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-06 06:00+0000\n"
-"PO-Revision-Date: 2026-06-06 11:01+0000\n"
+"PO-Revision-Date: 2026-09-08 16:08+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6\n"
+"X-Generator: Weblate 2026.9.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1088,6 +1088,8 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"Kesalahan standar skrip:\n"
+"%1"
 
 #: qtgui/interfacescript.cpp:322
 #, qt-format
@@ -1098,7 +1100,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:334
 #, qt-format
 msgid "Error reading molecule representation: %1"
-msgstr ""
+msgstr "Kesalahan saat membaca representasi molekul: %1"
 
 #: qtgui/interfacescript.cpp:392
 #, qt-format
@@ -1344,6 +1346,8 @@ msgid ""
 "The package '%1' has no installed Python environment, so '%2' cannot be run. "
 "Try installing the package again."
 msgstr ""
+"Paket '%1' tidak memiliki lingkungan Python yang terinstal, sehingga '%2' "
+"tidak dapat dijalankan. Cobalah memasang ulang paket tersebut."
 
 #: qtgui/pythonscript.cpp:272 qtgui/pythonscript.cpp:394
 #, qt-format
@@ -1393,6 +1397,8 @@ msgid ""
 "Error running script '%1': could not resolve a command to run it (no python "
 "interpreter or pixi environment)."
 msgstr ""
+"Kesalahan saat menjalankan skrip '%1': tidak dapat menentukan perintah untuk "
+"menjalankannya (tidak ada interpreter Python atau lingkungan pixi)."
 
 #: qtgui/pythonscript.cpp:548
 #, qt-format
@@ -2534,11 +2540,11 @@ msgstr "Batalkan"
 
 #: qtplugins/commandscripts/command.cpp:453
 msgid "The script could not be started."
-msgstr ""
+msgstr "Skrip tidak dapat dimulai."
 
 #: qtplugins/commandscripts/command.cpp:463
 msgid "Error Running Script"
-msgstr ""
+msgstr "Kesalahan Menjalankan Skrip"
 
 #: qtplugins/commandscripts/command.cpp:530
 msgid "Set path to Python interpreter:"
@@ -2870,7 +2876,7 @@ msgstr "Salin"
 
 #: qtplugins/copypaste/copypaste.cpp:34
 msgid "Atom Mapped SMILES"
-msgstr ""
+msgstr "SMILES dengan Pemetaan Atom"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
@@ -2918,6 +2924,8 @@ msgid ""
 "Writer error:\n"
 "%1"
 msgstr ""
+"Kesalahan penulis:\n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
@@ -3189,6 +3197,8 @@ msgid ""
 "This range would build roughly %L1 atoms, more than the %L2 atom limit. "
 "Narrow the range to continue."
 msgstr ""
+"Rentang ini akan membangun sekitar %L1 atom, melebihi batas %L2 atom. "
+"Persempit rentang untuk melanjutkan."
 
 #: qtplugins/crystal/unitcelldialog.cpp:251
 #: qtplugins/crystal/unitcelldialog.cpp:264
@@ -3391,12 +3401,12 @@ msgstr "Pasukan"
 #: qtplugins/forcefield/forcefield.cpp:102
 #: qtplugins/forcefield/forcefield.cpp:907
 msgid "Energies (All Conformers)"
-msgstr ""
+msgstr "Energi (Semua Konformer)"
 
 #: qtplugins/forcefield/forcefield.cpp:110
 #: qtplugins/forcefield/forcefield.cpp:906
 msgid "Forces (All Conformers)"
-msgstr ""
+msgstr "Gaya (Semua Konformer)"
 
 #: qtplugins/forcefield/forcefield.cpp:118
 msgid "Configure…"
@@ -3460,7 +3470,7 @@ msgstr "Energi: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:726
 msgid "No atoms provided for energy calculation"
-msgstr ""
+msgstr "Tidak ada atom yang diberikan untuk perhitungan energi"
 
 #: qtplugins/forcefield/forcefield.cpp:761
 #, qt-format
@@ -3469,7 +3479,7 @@ msgstr "%1 Energi = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:778
 msgid "No atoms provided for force calculation"
-msgstr ""
+msgstr "Tidak ada atom yang diberikan untuk perhitungan gaya"
 
 #: qtplugins/forcefield/forcefield.cpp:831
 #, qt-format
@@ -3478,7 +3488,7 @@ msgstr "%1 Norma Kekuatan = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:883
 msgid "This molecule has only one coordinate set."
-msgstr ""
+msgstr "Molekul ini hanya memiliki satu set koordinat."
 
 #: qtplugins/forcefield/forcefield.h:63
 msgid "Forcefield optimization"
@@ -5075,7 +5085,7 @@ msgstr "Energi Relatif (%1)"
 
 #: qtplugins/plotconformer/plotconformer.cpp:237
 msgid "RMS Gradient"
-msgstr ""
+msgstr "Gradien RMS"
 
 #: qtplugins/plotconformer/plotconformer.cpp:239
 msgid "Velocities (m/s)"
@@ -5382,11 +5392,11 @@ msgstr "Sifat Sisa"
 #: qtplugins/propertytables/propertyview.cpp:587
 #: qtplugins/propertytables/propertyview.cpp:597
 msgid "Add Property"
-msgstr ""
+msgstr "Tambahkan Properti"
 
 #: qtplugins/propertytables/propertyview.cpp:563
 msgid "Property name"
-msgstr ""
+msgstr "Nama properti"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5398,15 +5408,15 @@ msgstr "Nama:"
 
 #: qtplugins/propertytables/propertyview.cpp:569
 msgid "Number"
-msgstr ""
+msgstr "Angka"
 
 #: qtplugins/propertytables/propertyview.cpp:570
 msgid "Integer"
-msgstr ""
+msgstr "Bilangan bulat"
 
 #: qtplugins/propertytables/propertyview.cpp:573
 msgid "Text"
-msgstr ""
+msgstr "Teks"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5418,7 +5428,7 @@ msgstr "Jenis:"
 
 #: qtplugins/propertytables/propertyview.cpp:588
 msgid "The property name cannot be empty."
-msgstr ""
+msgstr "Nama properti tidak boleh kosong."
 
 #: qtplugins/propertytables/propertyview.cpp:598
 #, qt-format
@@ -5426,6 +5436,8 @@ msgid ""
 "Could not add a property named \"%1\". A column with that name may already "
 "exist."
 msgstr ""
+"Tidak dapat menambahkan properti bernama \"%1\". Kolom dengan nama tersebut "
+"mungkin sudah ada."
 
 #: qtplugins/propertytables/propertyview.cpp:631
 msgid "Partial Charge Type"
@@ -5437,7 +5449,7 @@ msgstr "Pilih jenis muatan parsial:"
 
 #: qtplugins/propertytables/propertyview.cpp:654
 msgid "Add Property…"
-msgstr ""
+msgstr "Tambahkan Properti…"
 
 #: qtplugins/propertytables/propertyview.cpp:661
 msgid "Change Charge Type…"
@@ -6258,37 +6270,41 @@ msgstr "Render kubus yang disertakan dalam file."
 #: qtplugins/surfaces/surfaces.cpp:229
 msgid ""
 "This file does not contain a basis set, so no orbital can be calculated."
-msgstr ""
+msgstr "File ini tidak memuat basis set, sehingga orbital tidak dapat dihitung."
 
 #: qtplugins/surfaces/surfaces.cpp:235
 #, qt-format
 msgid "Orbital %1 is out of range."
-msgstr ""
+msgstr "Orbital %1 berada di luar rentang."
 
 #: qtplugins/surfaces/surfaces.cpp:245
 msgid ""
 "This file does not contain a basis set, so no electron density can be "
 "calculated."
 msgstr ""
+"File ini tidak memuat basis set, sehingga kerapatan elektron tidak dapat "
+"dihitung."
 
 #: qtplugins/surfaces/surfaces.cpp:255
 msgid ""
 "This file does not contain a basis set, so no spin density can be calculated."
 msgstr ""
+"File ini tidak memuat basis set, sehingga kerapatan spin tidak dapat "
+"dihitung."
 
 #: qtplugins/surfaces/surfaces.cpp:265
 msgid "This file does not contain any cube data."
-msgstr ""
+msgstr "File ini tidak memuat data cube."
 
 #: qtplugins/surfaces/surfaces.cpp:275
 #, qt-format
 msgid "Cube %1 is out of range, this file has %2."
-msgstr ""
+msgstr "Cube %1 berada di luar rentang, file ini memiliki %2."
 
 #: qtplugins/surfaces/surfaces.cpp:281
 #, qt-format
 msgid "Cube %1 could not be read."
-msgstr ""
+msgstr "Cube %1 tidak dapat dibaca."
 
 #: qtplugins/surfaces/surfaces.cpp:417
 #, qt-format
@@ -6311,7 +6327,7 @@ msgstr "Perhitungan persentase orbital molekul %L1"
 
 #: qtplugins/surfaces/surfaces.cpp:848
 msgid "The calculation was interrupted."
-msgstr ""
+msgstr "Perhitungan dihentikan."
 
 #: qtplugins/surfaces/surfaces.cpp:1022
 msgctxt "finished rendering surface or molecular orbital"
@@ -6403,6 +6419,15 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"Alat Templat (%1)\n"
+"\n"
+"Sisipkan fragmen, termasuk pusat logam.\n"
+"Pilih unsur dan geometri koordinasi, lalu klik untuk menyisipkan fragmen.\n"
+"Klik atom hidrogen untuk menggantinya dengan pusat logam yang dipilih, atau "
+"klik atom lain untuk mengubah unsur dan muatan formalnya.\n"
+"\n"
+"Pilih ligan atau gugus fungsional, lalu klik atom hidrogen untuk "
+"memasangkannya."
 
 #: qtplugins/templatetool/templatetool.cpp:490
 #: qtplugins/templatetool/templatetool.cpp:683
@@ -6419,7 +6444,7 @@ msgstr "Masukkan Ligand"
 
 #: qtplugins/templatetool/templatetool.cpp:1033
 msgid "Insert Metal Center"
-msgstr ""
+msgstr "Sisipkan Pusat Logam"
 
 #: qtplugins/templatetool/templatetool.h:36
 #: qtplugins/templatetool/templatetool.h:37
@@ -6433,26 +6458,26 @@ msgstr "Tampilan sederhana bola VdW."
 #: qtplugins/vibrations/displacementdialog.cpp:37
 #, qt-format
 msgid "Displace along: %1"
-msgstr ""
+msgstr "Geser sepanjang: %1"
 
 #: qtplugins/vibrations/displacementdialog.cpp:68
 msgid "A scale factor of zero would only duplicate the current geometry."
-msgstr ""
+msgstr "Faktor skala nol hanya akan menduplikasi geometri saat ini."
 
 #: qtplugins/vibrations/displacementdialog.cpp:74
 #, qt-format
 msgid "One new coordinate set, displaced by %1 × the normal mode."
-msgstr ""
+msgstr "Satu set koordinat baru, digeser sebesar %1 × mode normal."
 
 #: qtplugins/vibrations/displacementdialog.cpp:83
 #, qt-format
 msgid ""
 "%1 new coordinate sets, evenly spaced from -%2 to +%2 × the normal mode."
-msgstr ""
+msgstr "%1 set koordinat baru, berjarak sama dari -%2 hingga +%2 × mode normal."
 
 #: qtplugins/vibrations/displacementdialog.cpp:88
 msgid "The middle one is the undisplaced geometry."
-msgstr ""
+msgstr "Set koordinat tengah merupakan geometri yang tidak digeser."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
@@ -6467,17 +6492,17 @@ msgstr "Menghentikan Animasi"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:138
 msgid "Generate Displaced Coordinates…"
-msgstr ""
+msgstr "Buat Koordinat Tergeser…"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:168
 #, qt-format
 msgid "Mode %1 (%2 cm⁻¹)"
-msgstr ""
+msgstr "Mode %1 (%2 cm⁻¹)"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:170
 #, qt-format
 msgid "Mode %1"
-msgstr ""
+msgstr "Mode %1"
 
 #: qtplugins/vibrations/vibrations.cpp:29
 msgid "Vibrational Modes…"
@@ -6506,6 +6531,8 @@ msgstr "Hentikan animasi getaran."
 #: qtplugins/vibrations/vibrations.cpp:146
 msgid "Add coordinate sets displaced along one or more vibrational modes."
 msgstr ""
+"Tambahkan set koordinat yang digeser sepanjang satu atau beberapa mode "
+"vibrasi."
 
 #: qtplugins/vibrations/vibrations.h:37
 msgid "Vibrations"
@@ -7256,32 +7283,32 @@ msgstr "Pilihan Super Sel"
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, minLabel)
 msgid "Minimum"
-msgstr ""
+msgstr "Minimum"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, maxLabel)
 msgid "Maximum"
-msgstr ""
+msgstr "Maksimum"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:48
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A range:"
-msgstr ""
+msgstr "Rentang A:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:93
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B range:"
-msgstr ""
+msgstr "Rentang B:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:138
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C range:"
-msgstr ""
+msgstr "Rentang C:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:183
 #. i18n: ectx: property (text), widget (QCheckBox, periodicBondsCheckBox)
 msgid "Bond copies across cell boundaries"
-msgstr ""
+msgstr "Salinan ikatan melintasi batas sel"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:186
 #. i18n: ectx: property (toolTip), widget (QCheckBox, periodicBondsCheckBox)
@@ -7290,6 +7317,9 @@ msgid ""
 "whole wherever both halves are present. Turn this off if it bonds atoms that "
 "should not be bonded."
 msgstr ""
+"Gabungkan molekul yang terpisah oleh batas sel agar digambar secara utuh "
+"apabila kedua bagiannya ada. Nonaktifkan opsi ini jika atom yang seharusnya "
+"tidak berikatan justru terikat."
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:196
 #. i18n: ectx: property (text), widget (QLabel, hintLabel)
@@ -7297,6 +7327,8 @@ msgid ""
 "Whole-number ranges build a supercell; fractional ranges keep the original "
 "cell and pack copies around it."
 msgstr ""
+"Rentang bilangan bulat membangun supercell, sedangkan rentang pecahan "
+"mempertahankan sel asal dan menempatkan salinan di sekelilingnya."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -9806,33 +9838,35 @@ msgstr "sulfonat"
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DisplacementDialog)
 msgid "Generate Displaced Coordinates"
-msgstr ""
+msgstr "Buat Koordinat Tergeser"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, modesLabel)
 msgid "Modes:"
-msgstr ""
+msgstr "Mode:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, scaleLabel)
 msgid "Scale factor:"
-msgstr ""
+msgstr "Faktor skala:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:39
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, scaleSpinBox)
 msgid "Multiplier applied to the normal mode displacements."
-msgstr ""
+msgstr "Pengali yang diterapkan pada perpindahan mode normal."
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:61
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
 msgid "Number of structures:"
-msgstr ""
+msgstr "Jumlah struktur:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QSpinBox, countSpinBox)
 msgid ""
 "One structure at the scale factor, or several spread evenly across the range."
 msgstr ""
+"Satu struktur pada faktor skala, atau beberapa struktur yang tersebar merata "
+"di seluruh rentang."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
