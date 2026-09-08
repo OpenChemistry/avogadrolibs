@@ -258,6 +258,35 @@ class connect:
         """
         return self.send("loadMolecule", {"content": content, "format": format})
 
+    def fetch_by_name(self, name, wait=True, timeout=None):
+        """
+        Download a structure by name and load it, replacing the active
+        molecule.
+
+        The lookup queries the NIH Cactus resolver first, then retries
+        against PubChem's 3D endpoint if Cactus errors or returns 2D-only
+        coordinates. Like export_file(), this hands the work to the network
+        and would otherwise reply before it finishes, so ``wait`` defaults
+        to True here, unlike send() and command().
+
+        :param name: A common or IUPAC chemical name, e.g. "caffeine".
+        :param wait: If True (the default), do not return until the
+            structure has been downloaded and loaded.
+        :param timeout: Seconds to allow the command, when wait is True.
+        :returns: With wait=True, the dict of data the command reported --
+            ``name`` and ``source`` ("cactus" or "pubchem") always,
+            ``atomCount`` and ``formula`` when available; with wait=False,
+            the raw response.
+        :raises RPCError: with code -2 if name is empty, or if no match was
+            found in either database.
+        """
+        response = self.send(
+            "fetchByName", {"name": name}, wait=wait, timeout=timeout
+        )
+        if wait:
+            return result_data(response)
+        return response
+
     def version(self):
         """
         Report the versions Avogadro is running, for compatibility checks.
