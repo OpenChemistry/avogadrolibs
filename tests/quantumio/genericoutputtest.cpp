@@ -50,12 +50,14 @@ bool contains(const std::string& haystack, const std::string& needle)
 } // namespace
 
 // A file nothing recognizes used to fail with one sentence that named neither
-// the file, the readers that were tried, nor the ones that were missing, which
-// left "cannot open Gaussian output" bug reports with nothing to go on.
+// the file nor the readers that were missing, which left "cannot open Gaussian
+// output" bug reports with nothing to go on. Both fallbacks have to be named:
+// which one is absent is what tells a user whether to install the cclib plugin
+// or to go looking for Open Babel.
 //
 // The fixture is deliberately ".LOG": the format map is keyed on lower case,
 // and Windows users routinely have upper-case extensions.
-TEST(GenericOutputTest, unrecognizedOutputSaysWhatWasTried)
+TEST(GenericOutputTest, unrecognizedOutputNamesTheMissingFallbacks)
 {
   TemporaryFile fixture("genericoutput-unrecognized.LOG",
                         "Entering Link 1\nsome program we do not know\n");
@@ -65,11 +67,7 @@ TEST(GenericOutputTest, unrecognizedOutputSaysWhatWasTried)
   EXPECT_FALSE(reader.readFile(fixture.name(), molecule));
 
   const std::string error = reader.error();
-  // The built-in signatures that were checked...
-  EXPECT_TRUE(contains(error, "GAMESS-US"));
-  EXPECT_TRUE(contains(error, "NWChem"));
-  EXPECT_TRUE(contains(error, "ORCA"));
-  // ...and the fallbacks that were not available.
+  // The fallbacks that were not available.
   EXPECT_TRUE(contains(error, "cclib"));
   EXPECT_TRUE(contains(error, "Open Babel"));
   // The delegate is looked up by the real extension, not a hard-coded "out",

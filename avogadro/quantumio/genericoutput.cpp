@@ -59,24 +59,6 @@ std::string lowerExtension(const std::string& fileName)
   return extension;
 }
 
-/**
- * A comma-separated list of the identifiers in @a formats, for the failure
- * message: knowing which readers were even registered is the difference
- * between "this file is unsupported" and "your plugins did not load".
- */
-std::string identifierList(const std::vector<const FileFormat*>& formats)
-{
-  std::string list;
-  for (const FileFormat* format : formats) {
-    if (format == nullptr)
-      continue;
-    if (!list.empty())
-      list += ", ";
-    list += format->identifier();
-  }
-  return list.empty() ? std::string("(none)") : list;
-}
-
 } // namespace
 
 GenericOutput::GenericOutput() {}
@@ -111,9 +93,7 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
   std::string detected;
 
   std::string line;
-  size_t lineCount = 0;
   while (std::getline(in, line)) {
-    ++lineCount;
     if (line.find("Northwest Computational Chemistry Package") !=
         std::string::npos) {
       // NWChem
