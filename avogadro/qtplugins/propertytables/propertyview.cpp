@@ -11,6 +11,7 @@
 
 #include <QAction>
 #include <QApplication>
+#include <QtCore/QAbstractProxyModel>
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QDir>
 #include <QtCore/QIODevice>
@@ -36,6 +37,8 @@
 #include <QtWidgets/QVBoxLayout>
 
 #include <QtCore/QDebug>
+
+#include <algorithm>
 
 namespace Avogadro {
 
@@ -91,13 +94,34 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
                                     const QItemSelection& deselected)
 {
   // Guard against re-entrancy: modifying molecule selection triggers
-  // model updates which can cause recursive calls to selectionChanged
-  if (m_updatingSelection)
+  // model updates which can cause recursive calls to selectionChanged. The
+  // base class still has to run so the rows repaint.
+  if (m_updatingSelection || m_molecule == nullptr) {
+    QTableView::selectionChanged(selected, deselected);
     return;
+  }
 
-  bool ok = false;
-  if (m_molecule == nullptr)
+  // The conformer table drives the active coordinate set, not the atom
+  // selection, so it skips the atom bookkeeping (and the undo commands that
+  // would come with it) entirely.
+  if (m_type == PropertyType::ConformerType) {
+    const QModelIndexList rows = selectionModel()->selectedRows();
+    if (!rows.isEmpty()) {
+      int row = sourceRow(rows.first());
+      if (row >= 0 && row < static_cast<int>(m_molecule->coordinate3dCount()) &&
+          row != m_molecule->coordinate3d()) {
+        m_updatingSelection = true;
+        m_molecule->setCoordinate3d(row);
+        // conformer switches move atoms - pair with Moved (not Modified) so
+        // derived data like vibrations and orbitals survives
+        m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved |
+                                Molecule::Conformer);
+        m_updatingSelection = false;
+      }
+    }
+    QTableView::selectionChanged(selected, deselected);
     return;
+  }
 
   m_updatingSelection = true;
 
@@ -111,16 +135,9 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
       return;
     }
 
-    // Since the user can sort
-    // we need to find the original index
-    int rowNum = model()
-                   ->headerData(index.row(), Qt::Vertical)
-                   .toString()
-                   .split(" ")
-                   .last()
-                   .toLong(&ok) -
-                 1;
-    if (!ok) {
+    // Since the user can sort, the view row is not the entity index.
+    int rowNum = sourceRow(index);
+    if (rowNum < 0) {
       m_updatingSelection = false;
       return;
     }
@@ -168,27 +185,82 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
           m_molecule->undoMolecule()->setAtomSelected(atom.index(), true);
         }
       }
-    } else if (m_type == PropertyType::ConformerType) {
-      // selecting a row means switching to that conformer
-      m_molecule->setCoordinate3d(rowNum);
     }
   } // end loop through selected
 
-  if (m_type == PropertyType::ConformerType) {
-    // conformer switches move atoms - pair with Moved (not Modified) so
-    // derived data like vibrations and orbitals survives
-    m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved |
-                            Molecule::Conformer);
-  } else {
-    m_molecule->emitChanged(Molecule::Selection);
-  }
+  m_molecule->emitChanged(Molecule::Selection);
   m_updatingSelection = false;
   QTableView::selectionChanged(selected, deselected);
 }
 
 void PropertyView::setMolecule(Molecule* molecule)
 {
+  if (m_molecule == molecule)
+    return;
+
+  if (m_molecule)
+    disconnect(m_molecule, nullptr, this, nullptr);
+
   m_molecule = molecule;
+
+  if (m_molecule) {
+    connect(m_molecule, &Molecule::changed, this,
+            &PropertyView::moleculeChanged);
+    // The dialog outlives a file being closed, so drop the pointer rather than
+    // acting on a destroyed molecule when a row is clicked.
+    connect(m_molecule, &QObject::destroyed, this,
+            [this]() { m_molecule = nullptr; });
+  }
+}
+
+void PropertyView::moleculeChanged(unsigned int changes)
+{
+  // The player tool, the conformer plot or a script moved to another
+  // coordinate set; follow it with the selection.
+  if (m_type == PropertyType::ConformerType && (changes & Molecule::Conformer))
+    syncConformerSelection();
+}
+
+void PropertyView::syncConformerSelection()
+{
+  if (m_type != PropertyType::ConformerType || m_molecule == nullptr ||
+      m_updatingSelection || model() == nullptr)
+    return;
+
+  int row = viewRowForSource(m_molecule->coordinate3d());
+  if (row < 0 || row >= model()->rowCount())
+    return;
+
+  if (selectionModel() != nullptr &&
+      selectionModel()->isRowSelected(row, QModelIndex()))
+    return;
+
+  m_updatingSelection = true;
+  selectRow(row);
+  scrollTo(model()->index(row, 0), QAbstractItemView::EnsureVisible);
+  m_updatingSelection = false;
+}
+
+int PropertyView::sourceRow(const QModelIndex& viewIndex) const
+{
+  if (!viewIndex.isValid())
+    return -1;
+
+  if (const auto* proxy = qobject_cast<const QAbstractProxyModel*>(model()))
+    return proxy->mapToSource(viewIndex).row();
+
+  return viewIndex.row();
+}
+
+int PropertyView::viewRowForSource(int row) const
+{
+  if (row < 0 || m_model == nullptr)
+    return -1;
+
+  if (const auto* proxy = qobject_cast<const QAbstractProxyModel*>(model()))
+    return proxy->mapFromSource(m_model->index(row, 0)).row();
+
+  return row;
 }
 
 void PropertyView::hideEvent(QHideEvent*)
@@ -200,8 +272,61 @@ void PropertyView::hideEvent(QHideEvent*)
   this->deleteLater();
 }
 
+bool PropertyView::conformerKeyPressed(QKeyEvent* event)
+{
+  if (m_type != PropertyType::ConformerType || model() == nullptr ||
+      event->matches(QKeySequence::Copy))
+    return false;
+
+  const int rows = model()->rowCount();
+  if (rows < 1)
+    return false;
+
+  // Shift takes bigger strides through long trajectories.
+  const int step = (event->modifiers() & Qt::ShiftModifier) ? 10 : 1;
+  int row = currentIndex().isValid() ? currentIndex().row() : 0;
+
+  switch (event->key()) {
+    // Left/right would only move between columns of the same conformer, so
+    // use them to step conformers instead. Tab still reaches the columns.
+    case Qt::Key_Left:
+      row -= step;
+      break;
+    case Qt::Key_Right:
+      row += step;
+      break;
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+      // The table already moves one row per press; only the shift-modified
+      // form needs handling here.
+      if (!(event->modifiers() & Qt::ShiftModifier))
+        return false;
+      row += (event->key() == Qt::Key_Down) ? step : -step;
+      break;
+    case Qt::Key_Home:
+      row = 0;
+      break;
+    case Qt::Key_End:
+      row = rows - 1;
+      break;
+    default:
+      return false;
+  }
+
+  row = std::clamp(row, 0, rows - 1);
+  // selectRow() lands in selectionChanged(), which switches the conformer and
+  // notifies the player tool and the conformer plot.
+  selectRow(row);
+  scrollTo(model()->index(row, 0), QAbstractItemView::EnsureVisible);
+  event->accept();
+  return true;
+}
+
 void PropertyView::keyPressEvent(QKeyEvent* event)
 {
+  if (conformerKeyPressed(event))
+    return;
+
   // handle copy event
   // thanks to https://www.walletfox.com/course/qtableviewcopypaste.php
   if (!event->matches(QKeySequence::Copy)) {

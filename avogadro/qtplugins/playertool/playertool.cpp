@@ -60,10 +60,10 @@ unsigned int frameChangeFlags(bool dynamicBonding)
 PlayerTool::PlayerTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_renderer(nullptr), m_currentFrame(0),
-    m_toolWidget(nullptr), m_frameIdx(nullptr), m_firstFrameIdx(nullptr),
-    m_lastFrameIdx(nullptr), m_slider(nullptr), m_dynamicBonding(nullptr),
-    m_glWidget(nullptr), m_timer(this), m_animationFPS(nullptr),
-    playButton(nullptr)
+    m_frameCount(0), m_updatingWidgets(false), m_toolWidget(nullptr),
+    m_frameIdx(nullptr), m_firstFrameIdx(nullptr), m_lastFrameIdx(nullptr),
+    m_slider(nullptr), m_dynamicBonding(nullptr), m_glWidget(nullptr),
+    m_timer(this), m_animationFPS(nullptr), playButton(nullptr)
 {
   connect(&m_timer, &QTimer::timeout, this, [this]() { animate(); });
 
@@ -95,16 +95,18 @@ QWidget* PlayerTool::toolWidget() const
     connect(leftButton, SIGNAL(clicked()), SLOT(back()));
     controls->addWidget(leftButton);
 
-    int maxFrame = m_molecule->coordinate3dCount();
+    int maxFrame =
+      m_molecule ? static_cast<int>(m_molecule->coordinate3dCount()) : 0;
     if (maxFrame < 1)
       maxFrame = 1;
+    const int frame = std::clamp(m_currentFrame, 0, maxFrame - 1);
 
     auto* frameLabel = new QLabel(tr("Frame:"));
     controls->addWidget(frameLabel);
     m_frameIdx = new QSpinBox;
     m_frameIdx->setMinimum(1);
     m_frameIdx->setMaximum(maxFrame);
-    m_frameIdx->setValue(1);
+    m_frameIdx->setValue(frame + 1);
     m_frameIdx->setSuffix("/" + QString::number(maxFrame));
     connect(m_frameIdx, SIGNAL(valueChanged(int)),
             SLOT(spinnerPositionChanged(int)));
@@ -119,13 +121,13 @@ QWidget* PlayerTool::toolWidget() const
     auto* sliderLayout = new QHBoxLayout;
     m_slider = new QSlider(Qt::Horizontal);
     m_slider->setMinimum(0);
+    m_slider->setMaximum(maxFrame - 1);
     m_slider->setTickInterval(1);
+    m_slider->setValue(frame);
     connect(m_slider, SIGNAL(valueChanged(int)),
             SLOT(sliderPositionChanged(int)));
     sliderLayout->addWidget(m_slider);
     layout->addLayout(sliderLayout);
-    if (maxFrame > 1)
-      m_slider->setMaximum(maxFrame - 1);
 
     // start / end frame limits
     auto* frameLayout = new QHBoxLayout;
@@ -251,6 +253,53 @@ QUndoCommand* PlayerTool::keyPressEvent(QKeyEvent* e)
   return nullptr;
 }
 
+void PlayerTool::setMolecule(QtGui::Molecule* mol)
+{
+  if (m_molecule == mol)
+    return;
+
+  if (m_molecule)
+    disconnect(m_molecule, &Molecule::changed, this,
+               &PlayerTool::moleculeChanged);
+
+  m_molecule = mol;
+
+  if (m_molecule)
+    connect(m_molecule, &Molecule::changed, this, &PlayerTool::moleculeChanged);
+
+  // Adopt whichever coordinate set the new molecule is already showing.
+  m_currentFrame = m_molecule ? m_molecule->coordinate3d() : 0;
+  m_frameCount =
+    m_molecule ? static_cast<int>(m_molecule->coordinate3dCount()) : 0;
+  stop();
+  updateLimits();
+}
+
+void PlayerTool::moleculeChanged(unsigned int changes)
+{
+  if (!m_molecule)
+    return;
+
+  // Reading or editing the molecule can add or drop coordinate sets.
+  auto count = static_cast<int>(m_molecule->coordinate3dCount());
+  if (count != m_frameCount) {
+    m_frameCount = count;
+    m_currentFrame = m_molecule->coordinate3d();
+    updateLimits();
+  }
+
+  if (!(changes & Molecule::Conformer))
+    return;
+
+  // Another plugin (the conformer plot, a script, ...) moved to a new frame.
+  int frame = m_molecule->coordinate3d();
+  if (frame == m_currentFrame)
+    return;
+
+  m_currentFrame = frame;
+  syncWidgets();
+}
+
 void PlayerTool::setActiveWidget(QWidget* widget)
 {
   m_glWidget = qobject_cast<QOpenGLWidget*>(widget);
@@ -271,13 +320,14 @@ void PlayerTool::play()
   if (m_timer.isActive()) {
     stop();
     return;
-  } else {
+  } else if (playButton) {
     // change the button to stop / pause
     playButton->setText(tr("Pause"));
     playButton->setIcon(QIcon::fromTheme("media-playback-pause"));
   }
 
-  auto fps = static_cast<double>(m_animationFPS->value());
+  auto fps =
+    m_animationFPS ? static_cast<double>(m_animationFPS->value()) : 5.0;
   if (fps < 0.00001)
     fps = 5;
   int timeOut = static_cast<int>(1000 / fps);
@@ -291,37 +341,67 @@ void PlayerTool::stop()
   m_timer.stop();
 
   // set the button for play
-  playButton->setText(tr("Play"));
-  playButton->setIcon(QIcon::fromTheme("media-playback-start"));
+  if (playButton) {
+    playButton->setText(tr("Play"));
+    playButton->setIcon(QIcon::fromTheme("media-playback-start"));
+  }
 }
 
 void PlayerTool::animate(int advance)
 {
-  // check the start and end boxes
-  int firstFrame = m_firstFrameIdx->value() - 1;
-  int lastFrame = m_lastFrameIdx->value() - 1;
+  if (!m_molecule)
+    return;
 
-  if (m_molecule) {
-    if (m_currentFrame < m_molecule->coordinate3dCount() - advance &&
-        m_currentFrame + advance >= firstFrame &&
-        m_currentFrame + advance <= lastFrame) {
-      m_currentFrame += advance;
-      m_molecule->setCoordinate3d(m_currentFrame);
-    } else {
-      int end = std::min(static_cast<int>(m_molecule->coordinate3dCount() - 1),
-                         lastFrame);
-      m_currentFrame = advance > 0 ? firstFrame : end;
-      m_molecule->setCoordinate3d(m_currentFrame);
-    }
-    const bool bonding = m_dynamicBonding->isChecked();
-    if (bonding) {
-      m_molecule->clearBonds();
-      m_molecule->perceiveBondsSimple();
-    }
-    m_molecule->emitChanged(frameChangeFlags(bonding));
-    m_slider->setValue(m_currentFrame);
-    m_frameIdx->setValue(m_currentFrame + 1);
+  auto count = static_cast<int>(m_molecule->coordinate3dCount());
+  if (count < 1)
+    return;
+
+  // Playback is restricted to the [start, end] range from the tool widget.
+  int firstFrame = m_firstFrameIdx ? m_firstFrameIdx->value() - 1 : 0;
+  int lastFrame = m_lastFrameIdx ? m_lastFrameIdx->value() - 1 : count - 1;
+  firstFrame = std::clamp(firstFrame, 0, count - 1);
+  lastFrame = std::clamp(lastFrame, firstFrame, count - 1);
+
+  // Wrap around the range so playback loops and multi-frame steps (shift +
+  // arrow) land on a real frame instead of snapping back to the start.
+  const int span = lastFrame - firstFrame + 1;
+  int frame = m_currentFrame + advance;
+  if (frame < firstFrame || frame > lastFrame)
+    frame = firstFrame + ((frame - firstFrame) % span + span) % span;
+
+  setFrame(frame);
+}
+
+void PlayerTool::setFrame(int frame)
+{
+  if (!m_molecule)
+    return;
+
+  auto count = static_cast<int>(m_molecule->coordinate3dCount());
+  if (count < 1)
+    return;
+
+  m_currentFrame = std::clamp(frame, 0, count - 1);
+  m_molecule->setCoordinate3d(m_currentFrame);
+
+  const bool bonding = m_dynamicBonding && m_dynamicBonding->isChecked();
+  if (bonding) {
+    m_molecule->clearBonds();
+    m_molecule->perceiveBondsSimple();
   }
+  syncWidgets();
+  m_molecule->emitChanged(frameChangeFlags(bonding));
+}
+
+void PlayerTool::syncWidgets()
+{
+  // The widgets drive animate(), so mute them while we write the new frame in.
+  m_updatingWidgets = true;
+  if (m_slider)
+    m_slider->setValue(m_currentFrame);
+  if (m_frameIdx)
+    m_frameIdx->setValue(m_currentFrame + 1);
+  m_updatingWidgets = false;
 }
 
 void PlayerTool::recordMovie()
@@ -498,17 +578,24 @@ void PlayerTool::recordMovie()
 
 void PlayerTool::sliderPositionChanged(int k)
 {
+  if (m_updatingWidgets)
+    return;
   animate(k - m_currentFrame);
 }
 
 void PlayerTool::spinnerPositionChanged(int k)
 {
+  if (m_updatingWidgets)
+    return;
   animate(k - m_currentFrame - 1);
 }
 
 void PlayerTool::firstFramePositionChanged(int k)
 {
-  if (k < 1 || k > m_molecule->coordinate3dCount()) {
+  if (!m_molecule || !m_firstFrameIdx || !m_lastFrameIdx || !m_frameIdx)
+    return;
+
+  if (k < 1 || k > static_cast<int>(m_molecule->coordinate3dCount())) {
     m_firstFrameIdx->setValue(1);
     return;
   }
@@ -523,8 +610,11 @@ void PlayerTool::firstFramePositionChanged(int k)
 
 void PlayerTool::lastFramePositionChanged(int k)
 {
-  if (k < 1 || k > m_molecule->coordinate3dCount()) {
-    m_lastFrameIdx->setValue(m_molecule->coordinate3dCount());
+  if (!m_molecule || !m_lastFrameIdx || !m_frameIdx)
+    return;
+
+  if (k < 1 || k > static_cast<int>(m_molecule->coordinate3dCount())) {
+    m_lastFrameIdx->setValue(static_cast<int>(m_molecule->coordinate3dCount()));
     return;
   }
   m_frameIdx->setMaximum(k);
@@ -534,23 +624,33 @@ void PlayerTool::lastFramePositionChanged(int k)
 
 void PlayerTool::updateLimits()
 {
-  int coordCount = m_molecule->coordinate3dCount();
+  int coordCount =
+    m_molecule ? static_cast<int>(m_molecule->coordinate3dCount()) : 0;
+  // A molecule with a single geometry still has one frame to sit on.
+  int maxFrame = std::max(coordCount, 1);
 
-  if (coordCount > 1 && m_slider)
-    m_slider->setMaximum(coordCount - 1);
-  if (coordCount > 1 && m_frameIdx) {
-    m_frameIdx->setMaximum(coordCount);
-    m_frameIdx->setSuffix("/" + QString::number(coordCount));
+  m_currentFrame = std::clamp(m_currentFrame, 0, maxFrame - 1);
+
+  m_updatingWidgets = true;
+  if (m_slider) {
+    m_slider->setMaximum(maxFrame - 1);
+    m_slider->setValue(m_currentFrame);
   }
-  if (coordCount > 1 && m_firstFrameIdx)
-    m_firstFrameIdx->setMaximum(coordCount);
-  if (coordCount > 1 && m_lastFrameIdx)
-    m_lastFrameIdx->setMaximum(coordCount);
-
-  if (m_firstFrameIdx)
+  if (m_frameIdx) {
+    m_frameIdx->setMinimum(1);
+    m_frameIdx->setMaximum(maxFrame);
+    m_frameIdx->setSuffix("/" + QString::number(maxFrame));
+    m_frameIdx->setValue(m_currentFrame + 1);
+  }
+  if (m_firstFrameIdx) {
+    m_firstFrameIdx->setMaximum(maxFrame);
     m_firstFrameIdx->setValue(1);
-  if (m_lastFrameIdx)
-    m_lastFrameIdx->setValue(coordCount);
+  }
+  if (m_lastFrameIdx) {
+    m_lastFrameIdx->setMaximum(maxFrame);
+    m_lastFrameIdx->setValue(maxFrame);
+  }
+  m_updatingWidgets = false;
 }
 
 } // namespace Avogadro::QtPlugins

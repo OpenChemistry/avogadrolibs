@@ -91,23 +91,26 @@ void PropertyTables::setMolecule(QtGui::Molecule* mol)
   if (mol == m_molecule)
     return;
 
+  if (m_molecule)
+    m_molecule->disconnect(this);
+
   m_molecule = mol;
 
   updateActions();
 
   // update if the molecule changes
-  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
+  if (m_molecule)
+    connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
 }
 
 void PropertyTables::updateActions()
 {
-  if (m_molecule == nullptr)
-    return;
-
   // check if we enable / disable the residue and conformer actions
-  bool haveResidues = (m_molecule->residueCount() > 0);
+  // without a molecule there is nothing to tabulate for either
+  bool haveResidues = (m_molecule != nullptr && m_molecule->residueCount() > 0);
   // technically coordinate sets
-  bool haveConformers = (m_molecule->coordinate3dCount() > 1);
+  bool haveConformers =
+    (m_molecule != nullptr && m_molecule->coordinate3dCount() > 1);
   for (const auto& action : m_actions) {
     if (action->data().toInt() == PropertyType::ResidueType)
       action->setEnabled(haveResidues);
@@ -154,6 +157,8 @@ void PropertyTables::showDialog()
   view->setMolecule(m_molecule);
   view->setModel(proxyModel);
   view->setSourceModel(model);
+  // Start on whichever conformer is currently displayed, not always the first.
+  view->syncConformerSelection();
 
   view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   view->horizontalHeader()->setStretchLastSection(true);
