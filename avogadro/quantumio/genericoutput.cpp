@@ -164,7 +164,7 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
     for (const FileFormat* candidate : candidates) {
       if (candidate->name() == "cclib") { // avogadro-cclib plugin
         reader = candidate->newInstance();
-        detected = "the cclib plugin";
+        detected = "cclib plugin";
         break;
       }
     }
@@ -219,14 +219,9 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
     std::ostringstream error;
     error << "Could not determine the program used to generate this output "
              "file.\n"
-          << "Scanned " << lineCount << " line" << (lineCount == 1 ? "" : "s")
-          << " for the built-in GAMESS-US, Molden, NWChem, ORCA and xtb "
-             "signatures without a match.\n"
           << "No fallback reader is registered for \"." << extension
           << "\" files: neither the cclib plugin nor an Open Babel format "
              "was found.\n"
-          << "Formats registered for \"." << extension
-          << "\": " << identifierList(candidates) << "\n"
           << "Install the cclib plugin, or check that Open Babel is available, "
              "then reopen the file.";
     appendError(error.str());
