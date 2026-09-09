@@ -105,13 +105,12 @@ void PropertyTables::setMolecule(QtGui::Molecule* mol)
 
 void PropertyTables::updateActions()
 {
-  if (m_molecule == nullptr)
-    return;
-
   // check if we enable / disable the residue and conformer actions
-  bool haveResidues = (m_molecule->residueCount() > 0);
+  // without a molecule there is nothing to tabulate for either
+  bool haveResidues = (m_molecule != nullptr && m_molecule->residueCount() > 0);
   // technically coordinate sets
-  bool haveConformers = (m_molecule->coordinate3dCount() > 1);
+  bool haveConformers =
+    (m_molecule != nullptr && m_molecule->coordinate3dCount() > 1);
   for (const auto& action : m_actions) {
     if (action->data().toInt() == PropertyType::ResidueType)
       action->setEnabled(haveResidues);
