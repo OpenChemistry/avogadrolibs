@@ -145,7 +145,11 @@ void OBProcess::queryReadFormatsPrepare()
   int pos = 0;
   while ((match = parser.match(output, pos)).hasMatch()) {
     QString extension = match.captured(1);
-    QString description = match.captured(2);
+    // obabel writes its format list in text mode, so on Windows every line
+    // ends "\r\n" and the description captures the carriage return. That CR
+    // then rides along into the format name and identifier, breaking both the
+    // display strings and any comparison against them.
+    QString description = match.captured(2).trimmed();
     result.insertMulti(description, extension);
     pos = match.capturedEnd(0);
   }
@@ -171,7 +175,11 @@ void OBProcess::queryWriteFormatsPrepare()
   int pos = 0;
   while ((match = parser.match(output, pos)).hasMatch()) {
     QString extension = match.captured(1);
-    QString description = match.captured(2);
+    // obabel writes its format list in text mode, so on Windows every line
+    // ends "\r\n" and the description captures the carriage return. That CR
+    // then rides along into the format name and identifier, breaking both the
+    // display strings and any comparison against them.
+    QString description = match.captured(2).trimmed();
 
     // skip some formats that we want to ignore
     if (extension == "png" || extension == "svg" || extension == "paint" ||
@@ -280,7 +288,9 @@ void OBProcess::queryForceFieldsPrepare()
   int pos = 0;
   while ((match = parser.match(output, pos)).hasMatch()) {
     QString key = match.captured(1);
-    QString desc = match.captured(2);
+    // Trimmed for the same reason as the format descriptions above: obabel's
+    // text-mode output leaves a carriage return on every line under Windows.
+    QString desc = match.captured(2).trimmed();
     result.insertMulti(key, desc);
     pos = match.capturedEnd(0);
   }
@@ -320,7 +330,9 @@ void OBProcess::queryChargesPrepare()
   int pos = 0;
   while ((match = parser.match(output, pos)).hasMatch()) {
     QString key = match.captured(1);
-    QString desc = match.captured(2);
+    // Trimmed for the same reason as the format descriptions above: obabel's
+    // text-mode output leaves a carriage return on every line under Windows.
+    QString desc = match.captured(2).trimmed();
     result.insertMulti(key, desc);
     pos = match.capturedEnd(0);
   }
