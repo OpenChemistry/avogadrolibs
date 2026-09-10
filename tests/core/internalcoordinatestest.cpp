@@ -654,3 +654,63 @@ TEST(InternalCoordinatesTest, coincidentAtoms)
     EXPECT_TRUE(std::isfinite(rebuilt[i].z())) << "atom " << i;
   }
 }
+
+// The three-atom case above never reaches the dihedral branch, so repeat it
+// with four atoms and the coincident pair in each position along the chain.
+//
+// This also pins the invariant that keeps the dihedral branch safe: 'c' is
+// only ever chosen by scoring candidates with sineAt(posA, posB, ...), which
+// is zero when A and B coincide, and both loops start from
+// collinearTolerance. So a row whose A and B coincide never acquires a 'c',
+// and the a-b axis a dihedral turns about is never degenerate at the point
+// calculateDihedral() is called.
+TEST(InternalCoordinatesTest, coincidentAtomsFourAtomChain)
+{
+  for (int coincidentWith = 0; coincidentWith < 3; ++coincidentWith) {
+    Molecule mol;
+    // A chain of four, where atom coincidentWith + 1 sits on top of its
+    // predecessor.
+    Vector3 positions[4] = { Vector3(0.0, 0.0, 0.0), Vector3(1.5, 0.0, 0.0),
+                             Vector3(2.0, 1.4, 0.0), Vector3(3.2, 1.8, 0.7) };
+    positions[coincidentWith + 1] = positions[coincidentWith];
+    for (const auto& position : positions)
+      mol.addAtom(6).setPosition3d(position);
+    for (int k = 0; k < 3; ++k)
+      mol.addBond(mol.atom(k), mol.atom(k + 1), 1);
+
+    Array<Index> rowToAtom;
+    Array<InternalCoordinate> ic = cartesianToInternal(mol, rowToAtom);
+    ASSERT_EQ(ic.size(), static_cast<size_t>(4)) << "pair " << coincidentWith;
+
+    for (size_t row = 0; row < ic.size(); ++row) {
+      EXPECT_TRUE(std::isfinite(ic[row].length))
+        << "pair " << coincidentWith << " row " << row;
+      EXPECT_TRUE(std::isfinite(ic[row].angle))
+        << "pair " << coincidentWith << " row " << row;
+      EXPECT_TRUE(std::isfinite(ic[row].dihedral))
+        << "pair " << coincidentWith << " row " << row;
+
+      if (ic[row].a == MaxIndex || ic[row].b == MaxIndex)
+        continue;
+      const bool abCoincide =
+        (mol.atom(ic[row].b).position3d() - mol.atom(ic[row].a).position3d())
+          .norm() < 1e-8;
+      if (abCoincide)
+        EXPECT_EQ(ic[row].c, MaxIndex)
+          << "pair " << coincidentWith << " row " << row
+          << " has a dihedral about a degenerate a-b axis";
+    }
+
+    const Array<Vector3> rebuilt =
+      internalToCartesian(mol, ic, rowToAtom, ZMatrixOrigin::Canonical);
+    ASSERT_EQ(rebuilt.size(), static_cast<size_t>(4));
+    for (Index i = 0; i < 4; ++i) {
+      EXPECT_TRUE(std::isfinite(rebuilt[i].x()))
+        << "pair " << coincidentWith << " atom " << i;
+      EXPECT_TRUE(std::isfinite(rebuilt[i].y()))
+        << "pair " << coincidentWith << " atom " << i;
+      EXPECT_TRUE(std::isfinite(rebuilt[i].z()))
+        << "pair " << coincidentWith << " atom " << i;
+    }
+  }
+}
