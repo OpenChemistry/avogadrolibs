@@ -150,6 +150,36 @@ public:
 } // namespace
 
 namespace {
+// Renumbering is stored as the sequence of transpositions that realises the
+// permutation rather than as the permutation itself. A transposition is its
+// own inverse, so undoing is the same sequence walked backwards, and there is
+// no second permutation to keep consistent with the first.
+class ReorderAtomsCommand : public RWMolecule::UndoCommand
+{
+  std::vector<std::pair<Index, Index>> m_swaps;
+
+public:
+  ReorderAtomsCommand(RWMolecule& m,
+                      const std::vector<std::pair<Index, Index>>& swaps)
+    : UndoCommand(m), m_swaps(swaps)
+  {
+  }
+
+  void redo() override
+  {
+    for (const auto& swap : m_swaps)
+      m_molecule.swapAtom(swap.first, swap.second);
+  }
+
+  void undo() override
+  {
+    for (auto it = m_swaps.rbegin(); it != m_swaps.rend(); ++it)
+      m_molecule.swapAtom(it->first, it->second);
+  }
+};
+} // namespace
+
+namespace {
 class SetAtomicNumbersCommand : public RWMolecule::UndoCommand
 {
   Core::Array<unsigned char> m_oldAtomicNumbers;

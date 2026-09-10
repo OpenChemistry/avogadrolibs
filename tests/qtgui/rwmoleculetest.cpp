@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -841,4 +842,258 @@ TEST(RWMoleculeTest, MoleculeToRWMolecule)
   EXPECT_EQ(rwmol.bondCount(), mol.bondCount());
   EXPECT_EQ(rwmol.atom(2).atomicNumber(), mol.atom(2).atomicNumber());
   EXPECT_EQ(rwmol.bond(0).order(), mol.bond(0).order());
+}
+
+namespace {
+
+// A small molecule whose atoms are each distinguishable by every atom-indexed
+// property the reorder has to carry along.
+void buildDistinctAtoms(RWMolecule& mol, Index count)
+{
+  for (Index i = 0; i < count; ++i) {
+    mol.addAtom(static_cast<unsigned char>(i + 1));
+    mol.setAtomPosition3d(i, Vector3(Real(i), Real(10 * i), Real(100 * i)));
+    mol.setAtomLabel(i, "atom" + std::to_string(i));
+    mol.setFormalCharge(i, static_cast<signed char>(i));
+  }
+}
+
+// Assert that atom @p at holds the properties originally given to atom
+// @p from by buildDistinctAtoms().
+void expectAtomIs(const RWMolecule& mol, Index at, Index from)
+{
+  EXPECT_EQ(static_cast<unsigned char>(from + 1), mol.atomicNumber(at))
+    << "atom " << at;
+  EXPECT_EQ(Vector3(Real(from), Real(10 * from), Real(100 * from)),
+            mol.atomPosition3d(at))
+    << "atom " << at;
+  EXPECT_EQ("atom" + std::to_string(from), mol.atomLabel(at)) << "atom " << at;
+  EXPECT_EQ(static_cast<signed char>(from), mol.formalCharge(at))
+    << "atom " << at;
+}
+
+} // namespace
+
+TEST(RWMoleculeTest, reorderAtomsIdentity)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 4);
+  const int before = mol.undoStack().count();
+
+  Array<Index> order(4);
+  for (Index i = 0; i < 4; ++i)
+    order[i] = i;
+
+  EXPECT_TRUE(mol.reorderAtoms(order));
+  for (Index i = 0; i < 4; ++i)
+    expectAtomIs(mol, i, i);
+
+  // Nothing moved, so nothing should be sitting on the undo stack waiting to
+  // be undone.
+  EXPECT_EQ(before, mol.undoStack().count());
+}
+
+TEST(RWMoleculeTest, reorderAtomsTransposition)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 4);
+
+  Array<Index> order(4);
+  order[0] = 0;
+  order[1] = 3;
+  order[2] = 2;
+  order[3] = 1;
+
+  ASSERT_TRUE(mol.reorderAtoms(order));
+  expectAtomIs(mol, 0, 0);
+  expectAtomIs(mol, 1, 3);
+  expectAtomIs(mol, 2, 2);
+  expectAtomIs(mol, 3, 1);
+}
+
+TEST(RWMoleculeTest, reorderAtomsMultiCycle)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 6);
+
+  // Two disjoint 3-cycles, so a single pass of transpositions is not enough
+  // unless the bookkeeping is right.
+  Array<Index> order(6);
+  order[0] = 2;
+  order[1] = 0;
+  order[2] = 1;
+  order[3] = 5;
+  order[4] = 3;
+  order[5] = 4;
+
+  ASSERT_TRUE(mol.reorderAtoms(order));
+  for (Index i = 0; i < 6; ++i)
+    expectAtomIs(mol, i, order[i]);
+}
+
+TEST(RWMoleculeTest, reorderAtomsCarriesBondsAndSelection)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 4);
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 2);
+  mol.addBond(2, 3, 3);
+  mol.setAtomSelected(1, true);
+
+  // Reverse the atoms.
+  Array<Index> order(4);
+  for (Index i = 0; i < 4; ++i)
+    order[i] = 3 - i;
+  ASSERT_TRUE(mol.reorderAtoms(order));
+
+  // The same three bonds, with the same orders, between the same atoms --
+  // which are now numbered the other way round.
+  ASSERT_EQ(static_cast<Index>(3), mol.bondCount());
+  EXPECT_TRUE(mol.bond(3, 2).isValid());
+  EXPECT_EQ(1, mol.bond(3, 2).order());
+  EXPECT_TRUE(mol.bond(2, 1).isValid());
+  EXPECT_EQ(2, mol.bond(2, 1).order());
+  EXPECT_TRUE(mol.bond(1, 0).isValid());
+  EXPECT_EQ(3, mol.bond(1, 0).order());
+
+  // The selected atom is still the one that was selected.
+  EXPECT_TRUE(mol.atomSelected(2));
+  EXPECT_FALSE(mol.atomSelected(0));
+  EXPECT_FALSE(mol.atomSelected(1));
+  EXPECT_FALSE(mol.atomSelected(3));
+}
+
+TEST(RWMoleculeTest, reorderAtomsKeepsUniqueIds)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 4);
+
+  Array<Index> uids(4);
+  for (Index i = 0; i < 4; ++i)
+    uids[i] = mol.atomUniqueId(i);
+
+  Array<Index> order(4);
+  order[0] = 2;
+  order[1] = 3;
+  order[2] = 0;
+  order[3] = 1;
+  ASSERT_TRUE(mol.reorderAtoms(order));
+
+  // A unique id is a handle held across edits, so it must still resolve to
+  // the same atom rather than to whatever now occupies that index.
+  for (Index i = 0; i < 4; ++i) {
+    RWMolecule::AtomType atom = mol.atomByUniqueId(uids[order[i]]);
+    ASSERT_TRUE(atom.isValid()) << "unique id for original atom " << order[i];
+    EXPECT_EQ(i, atom.index()) << "original atom " << order[i];
+  }
+}
+
+TEST(RWMoleculeTest, reorderAtomsUndoRedo)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 5);
+  mol.addBond(0, 4, 2);
+
+  Array<Index> order(5);
+  order[0] = 4;
+  order[1] = 2;
+  order[2] = 0;
+  order[3] = 3;
+  order[4] = 1;
+  ASSERT_TRUE(mol.reorderAtoms(order));
+
+  mol.undoStack().undo();
+  for (Index i = 0; i < 5; ++i)
+    expectAtomIs(mol, i, i);
+  EXPECT_TRUE(mol.bond(0, 4).isValid());
+  EXPECT_EQ(2, mol.bond(0, 4).order());
+
+  mol.undoStack().redo();
+  for (Index i = 0; i < 5; ++i)
+    expectAtomIs(mol, i, order[i]);
+  EXPECT_TRUE(mol.bond(0, 2).isValid());
+  EXPECT_EQ(2, mol.bond(0, 2).order());
+}
+
+TEST(RWMoleculeTest, reorderAtomsRejectsNonPermutations)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 3);
+  const int before = mol.undoStack().count();
+
+  Array<Index> tooShort(2);
+  tooShort[0] = 0;
+  tooShort[1] = 1;
+  EXPECT_FALSE(mol.reorderAtoms(tooShort));
+
+  Array<Index> outOfRange(3);
+  outOfRange[0] = 0;
+  outOfRange[1] = 1;
+  outOfRange[2] = 7;
+  EXPECT_FALSE(mol.reorderAtoms(outOfRange));
+
+  Array<Index> duplicated(3);
+  duplicated[0] = 2;
+  duplicated[1] = 2;
+  duplicated[2] = 0;
+  EXPECT_FALSE(mol.reorderAtoms(duplicated));
+
+  // A rejected order must leave the molecule and the undo stack untouched.
+  for (Index i = 0; i < 3; ++i)
+    expectAtomIs(mol, i, i);
+  EXPECT_EQ(before, mol.undoStack().count());
+}
+
+TEST(RWMoleculeTest, reorderAtomsEmptyMolecule)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  Array<Index> order(0);
+  EXPECT_TRUE(mol.reorderAtoms(order));
+  EXPECT_EQ(static_cast<Index>(0), mol.atomCount());
+}
+
+TEST(RWMoleculeTest, reorderAtomsCarriesResidues)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 4);
+
+  std::string resName = "ALA";
+  Index resNumber = 1;
+  char chain = 'A';
+  Avogadro::Core::Residue& residue = m.addResidue(resName, resNumber, chain);
+  residue.addResidueAtom("N", m.atom(0));
+  residue.addResidueAtom("CA", m.atom(1));
+  residue.addResidueAtom("C", m.atom(2));
+
+  // A 3-cycle over the residue's atoms, leaving the fourth atom outside it.
+  Array<Index> order(4);
+  order[0] = 2;
+  order[1] = 0;
+  order[2] = 1;
+  order[3] = 3;
+  ASSERT_TRUE(mol.reorderAtoms(order));
+
+  // Each name still names the atom it was given: buildDistinctAtoms() sets
+  // atomic number i + 1, so the original atom is identifiable after the move.
+  const Avogadro::Core::Residue& moved = m.residue(0);
+  EXPECT_EQ(1, moved.atomByName("N").atomicNumber());
+  EXPECT_EQ(2, moved.atomByName("CA").atomicNumber());
+  EXPECT_EQ(3, moved.atomByName("C").atomicNumber());
+  EXPECT_EQ(static_cast<size_t>(3), moved.residueAtoms().size());
+
+  // And undo puts the membership back where it started.
+  mol.undoStack().undo();
+  const Avogadro::Core::Residue& restored = m.residue(0);
+  EXPECT_EQ(static_cast<Index>(0), restored.atomByName("N").index());
+  EXPECT_EQ(static_cast<Index>(1), restored.atomByName("CA").index());
+  EXPECT_EQ(static_cast<Index>(2), restored.atomByName("C").index());
 }

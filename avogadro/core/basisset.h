@@ -123,6 +123,17 @@ public:
   virtual bool isValid() = 0;
 
   /**
+   * Exchange the atom indices @a a and @a b wherever this basis set records
+   * which atom a basis function is centred on.
+   *
+   * Called when a molecule renumbers its atoms. Only the recorded indices
+   * change: the basis functions keep their order, so molecular orbital
+   * coefficients stay valid. The default does nothing, for basis sets that
+   * do not refer to atoms by index.
+   */
+  virtual void swapAtomIndices(Index, Index) {}
+
+  /**
    * @return the orbital symmetry labels (if they exist) for the MOs
    */
   std::vector<std::string> symmetryLabels(ElectronType type = Paired) const
@@ -251,7 +262,7 @@ inline unsigned int BasisSet::lumo(ElectronType type) const
       }
     }
   }
-  // fall back to electron count 
+  // fall back to electron count
   // (supports odd number of electrons))
   if (type == Beta) {
     return m_electrons[0] / 2 + 1;

@@ -104,6 +104,57 @@ void RWMolecule::clearAtoms()
   m_undoStack.endMacro();
 }
 
+bool RWMolecule::reorderAtoms(const Core::Array<Index>& newOrder)
+{
+  const Index count = atomCount();
+  if (newOrder.size() != count)
+    return false;
+
+  // Check that this really is a permutation before touching the molecule. A
+  // repeated or out-of-range entry would copy one atom's data over another's
+  // and leave no way back.
+  std::vector<bool> seen(count, false);
+  for (Index i = 0; i < count; ++i) {
+    const Index from = newOrder[i];
+    if (from >= count || seen[from])
+      return false;
+    seen[from] = true;
+  }
+
+  // Decompose the permutation into transpositions. current[i] is the
+  // original index of the atom now sitting at i, and where[] is its inverse,
+  // so the atom wanted at each position is found without searching for it.
+  std::vector<Index> current(count);
+  std::vector<Index> where(count);
+  for (Index i = 0; i < count; ++i) {
+    current[i] = i;
+    where[i] = i;
+  }
+
+  std::vector<std::pair<Index, Index>> swaps;
+  for (Index i = 0; i < count; ++i) {
+    const Index wanted = newOrder[i];
+    const Index j = where[wanted];
+    if (j == i)
+      continue; // already in place
+    const Index displaced = current[i];
+    swaps.emplace_back(i, j);
+    std::swap(current[i], current[j]);
+    where[wanted] = i;
+    where[displaced] = j;
+  }
+
+  if (swaps.empty())
+    return true; // the molecule is already in this order
+
+  auto* comm = new ReorderAtomsCommand(*this, swaps);
+  comm->setText(tr("Reorder Atoms"));
+  m_undoStack.push(comm);
+
+  emitChanged(Molecule::Atoms | Molecule::Bonds | Molecule::Modified);
+  return true;
+}
+
 void RWMolecule::adjustHydrogens(Index atomId)
 {
   RWAtom atom = this->atom(atomId);

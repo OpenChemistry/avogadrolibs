@@ -296,6 +296,18 @@ bool GaussianSet::isValid()
   return true;
 }
 
+void GaussianSet::swapAtomIndices(Index a, Index b)
+{
+  const auto first = static_cast<unsigned int>(a);
+  const auto second = static_cast<unsigned int>(b);
+  for (auto& index : m_atomIndices) {
+    if (index == first)
+      index = second;
+    else if (index == second)
+      index = first;
+  }
+}
+
 void GaussianSet::initCalculation()
 {
   if (m_init)
