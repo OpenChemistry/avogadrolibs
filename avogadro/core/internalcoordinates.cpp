@@ -4,301 +4,442 @@
 ******************************************************************************/
 
 #include "internalcoordinates.h"
+
+#include "angletools.h"
+#include "graph.h"
 #include "matrix.h"
 
+#include <Eigen/Geometry>
+
 #include <cmath>
+#include <set>
+#include <vector>
 
 namespace Avogadro::Core {
 
-Array<Vector3> internalToCartesian(
-  const Molecule& molecule, const Array<InternalCoordinate>& internalCoords)
+namespace {
+
+// Two points closer than this are treated as coincident: the direction
+// between them carries no information.
+const Real coincidentTolerance = 1e-8;
+
+// |sin| of the angle below which three points are treated as collinear. The
+// normal to their plane is numerically meaningless below this, so a dihedral
+// measured against them cannot be reconstructed.
+const Real collinearTolerance = 1e-4;
+
+// |sin| above which a reference is good enough to stop looking for a better
+// one, about 5.7 degrees away from collinear.
+const Real goodReferenceTolerance = 0.1;
+
+// A reference is usable only if it names a real atom that has already been
+// given a position.
+bool isPlaced(Index index, const std::vector<bool>& placed)
 {
-  Array<Vector3> coords(molecule.atomCount());
-  Vector3 ab(0.0, 0.0, 0.0);
-  Vector3 bc(0.0, 0.0, 0.0);
+  return index != MaxIndex && index < placed.size() && placed[index];
+}
 
-  for (Index i = 0; i < molecule.atomCount(); ++i) {
-    Real sinTheta, cosTheta, sinPhi, cosPhi;
-    Real length = internalCoords[i].length;
-    Real angle = internalCoords[i].angle;
-    Real dihedral = internalCoords[i].dihedral;
-    // Index i represents the current atom
-    Index a = internalCoords[i].a; // i will be some distance to a
-    Index b = internalCoords[i].b; // i-a-b is an angle
-    Index c = internalCoords[i].c; // i-a-b-c is a dihedral
+// Any unit vector perpendicular to @p v. The axis is chosen away from v to
+// avoid cancellation in the cross product.
+Vector3 anyPerpendicular(const Vector3& v)
+{
+  const Vector3 axis =
+    (std::abs(v.x()) < 0.9) ? Vector3(1.0, 0.0, 0.0) : Vector3(0.0, 1.0, 0.0);
+  const Vector3 perpendicular = axis.cross(v);
+  const Real norm = perpendicular.norm();
+  if (norm < coincidentTolerance)
+    return Vector3(0.0, 0.0, 1.0);
+  return perpendicular / norm;
+}
 
-    switch (i) {
-      case 0:
-        coords[i] = Vector3(0.0, 0.0, 0.0);
-        break;
-      case 1:
-        coords[i] = Vector3(length, 0.0, 0.0);
-        break;
-      case 2: {
-        sinTheta = std::sin(angle * DEG_TO_RAD);
-        cosTheta = std::cos(angle * DEG_TO_RAD);
-        ab = (coords[b] - coords[a]).normalized();
+// |sin| of the angle at @p vertex between the directions to @p p and @p q.
+// Zero when the three points are collinear or two of them coincide.
+Real sineAt(const Vector3& p, const Vector3& vertex, const Vector3& q)
+{
+  const Vector3 u = p - vertex;
+  const Vector3 v = q - vertex;
+  const Real uNorm = u.norm();
+  const Real vNorm = v.norm();
+  if (uNorm < coincidentTolerance || vNorm < coincidentTolerance)
+    return 0.0;
+  return (u / uNorm).cross(v / vNorm).norm();
+}
 
-        // We want to place atom i at distance 'length' from atom a
-        // at angle 'angle' from the a-b direction
+// One row of a z-matrix: the atom it places, and the already-placed atoms it
+// is measured against.
+struct Reference
+{
+  Index atom = MaxIndex;
+  Index a = MaxIndex;
+  Index b = MaxIndex;
+  Index c = MaxIndex;
+};
 
-        // Perpendicular to ab in the xy-plane
-        Vector3 perpendicular(-ab.y(), ab.x(), 0.0);
-        if (perpendicular.norm() > 1e-6) {
-          perpendicular.normalize();
-        } else {
-          // ab is along z-axis, use x-axis as perpendicular
-          perpendicular = Vector3(1.0, 0.0, 0.0);
-        }
+/**
+ * Choose the atoms that row @p atom is measured against.
+ *
+ * References are drawn only from atoms that have already been placed, which
+ * is what makes the result a valid z-matrix: every reference is guaranteed
+ * to appear in an earlier row.
+ *
+ * Bonded references are preferred, so that a row's length, angle and
+ * dihedral are the chemically meaningful ones. Where no bonded candidate
+ * exists -- the opening rows of the matrix, and the first atom of each
+ * additional fragment -- the most recently placed atoms are used instead.
+ * Those still describe the geometry exactly; they are simply not bond
+ * lengths and bond angles.
+ */
+Reference chooseReferences(const Molecule& molecule, const Graph& graph,
+                           Index atom, const std::vector<Index>& placedOrder,
+                           const std::vector<bool>& placed)
+{
+  Reference reference;
+  reference.atom = atom;
+  if (placedOrder.empty())
+    return reference; // the first row has nothing to measure against
 
-        // Place atom i: start from a, extend in direction
-        // that makes angle with ab
-        coords[i] =
-          coords[a] + length * (cosTheta * ab + sinTheta * perpendicular);
-        break;
+  const Vector3 pos = molecule.atomPosition3d(atom);
+
+  // 'a' is a bonded, already-placed neighbour where one exists. The
+  // adjacency list is in bond order rather than index order, so take the
+  // lowest index explicitly to keep the result deterministic.
+  for (size_t neighbor : graph.neighbors(atom)) {
+    if (isPlaced(neighbor, placed) &&
+        (reference.a == MaxIndex || neighbor < reference.a))
+      reference.a = neighbor;
+  }
+  if (reference.a == MaxIndex)
+    reference.a = placedOrder.back(); // a new fragment: anchor to the last atom
+  if (placedOrder.size() < 2)
+    return reference; // the second row can only carry a distance
+
+  const Vector3 posA = molecule.atomPosition3d(reference.a);
+
+  // 'b' completes the angle at 'a'. Prefer an atom bonded to 'a', and among
+  // those one that does not leave atom-a-b collinear.
+  Real bestScore = -1.0;
+  for (size_t neighbor : graph.neighbors(reference.a)) {
+    if (neighbor == atom || !isPlaced(neighbor, placed))
+      continue;
+    const Real score = sineAt(pos, posA, molecule.atomPosition3d(neighbor));
+    if (score > bestScore) {
+      bestScore = score;
+      reference.b = neighbor;
+    }
+  }
+  if (reference.b == MaxIndex) {
+    // No bonded candidate, so walk back through the placement order.
+    for (auto it = placedOrder.rbegin(); it != placedOrder.rend(); ++it) {
+      if (*it == atom || *it == reference.a)
+        continue;
+      if ((molecule.atomPosition3d(*it) - posA).norm() < coincidentTolerance)
+        continue; // coincident with 'a': no angle can be measured
+      const Real score = sineAt(pos, posA, molecule.atomPosition3d(*it));
+      if (score > bestScore) {
+        bestScore = score;
+        reference.b = *it;
       }
-      default:
-        // NeRF formula
-        // see J. Comp. Chem. Vol. 26, No. 10, p. 1063-1068 (2005)
-        // https://doi.org/10.1002/jcc.20237
-        sinTheta = std::sin(angle * DEG_TO_RAD);
-        cosTheta = std::cos(angle * DEG_TO_RAD);
-        sinPhi = std::sin(dihedral * DEG_TO_RAD);
-        cosPhi = std::cos(dihedral * DEG_TO_RAD);
-
-        // Place atom i relative to atoms a, b, c
-        // - i bonds to a at distance 'length'
-        // - angle at a between i-a-b is 'angle'
-        // - dihedral i-a-b-c is 'dihedral'
-
-        // Vector from a to b (the bond direction for angle reference)
-        ab = (coords[b] - coords[a]).normalized();
-
-        // Vector from b to c (needed for dihedral plane)
-        bc = (coords[c] - coords[b]).normalized();
-
-        // Normal to the plane defined by a-b-c
-        Vector3 n = ab.cross(bc);
-        Real n_norm = n.norm();
-
-        if (n_norm > 1e-10) {
-          n.normalize();
-        } else {
-          // Atoms a, b, c are collinear - choose arbitrary perpendicular
-          // Find a vector perpendicular to ab
-          if (std::abs(ab.x()) < 0.9) {
-            n = Vector3(1.0, 0.0, 0.0).cross(ab).normalized();
-          } else {
-            n = Vector3(0.0, 1.0, 0.0).cross(ab).normalized();
-          }
-        }
-
-        // Vector perpendicular to both ab and n
-        // (in the plane perpendicular to ab)
-        Vector3 n_perp = n.cross(ab);
-
-        // Local coordinate system at atom a:
-        // - ab direction: along the a-b bond (reference for angle)
-        // - n_perp direction: perpendicular to ab, in plane for 0° dihedral
-        // - n direction: perpendicular to ab, for rotating out of plane
-
-        // Position in local frame using NeRF formula (page 1066, eq. 2)
-        // We place atom i relative to atom a
-        // The angle is measured from the ab direction
-        // The dihedral rotates around the ab axis
-        Vector3 localPos(length * cosTheta, length * sinTheta * cosPhi,
-                         length * sinTheta * sinPhi);
-
-        // Build rotation matrix with columns [ab, n_perp, n]
-        Matrix3 m;
-        m << ab, n_perp, n;
-
-        // Transform to global coordinates and translate to atom a
-        coords[i] = m * localPos + coords[a];
+      if (bestScore > goodReferenceTolerance)
         break;
     }
+  }
+  if (reference.b == MaxIndex || placedOrder.size() < 3)
+    return reference; // the third row can only carry a distance and an angle
+
+  const Vector3 posB = molecule.atomPosition3d(reference.b);
+
+  // 'c' completes the dihedral about the a-b axis. It is only reconstructible
+  // when a, b and c are not collinear, so candidates below the tolerance are
+  // rejected outright rather than merely scored down.
+  bestScore = collinearTolerance;
+  for (size_t neighbor : graph.neighbors(reference.b)) {
+    if (neighbor == atom || neighbor == reference.a ||
+        !isPlaced(neighbor, placed))
+      continue;
+    const Real score = sineAt(posA, posB, molecule.atomPosition3d(neighbor));
+    if (score > bestScore) {
+      bestScore = score;
+      reference.c = neighbor;
+    }
+  }
+  if (reference.c == MaxIndex) {
+    for (auto it = placedOrder.rbegin(); it != placedOrder.rend(); ++it) {
+      if (*it == atom || *it == reference.a || *it == reference.b)
+        continue;
+      const Real score = sineAt(posA, posB, molecule.atomPosition3d(*it));
+      if (score > bestScore) {
+        bestScore = score;
+        reference.c = *it;
+      }
+      if (bestScore > goodReferenceTolerance)
+        break;
+    }
+  }
+
+  // 'c' may still be unset, meaning every candidate is collinear with a and
+  // b. Then atom-a-b is collinear too, the dihedral has no bearing on where
+  // the atom sits, and a distance and an angle describe the row exactly.
+  return reference;
+}
+
+/**
+ * Order the atoms into a valid z-matrix and choose each row's references.
+ *
+ * Atoms are taken in bond order from the lowest-indexed atom outwards,
+ * always preferring the lowest-indexed atom reachable from those already
+ * placed. A molecule whose atom order is already a valid z-matrix order
+ * therefore keeps that order, and the caller's row-to-atom map is the
+ * identity. When the bonded frontier runs out, the lowest unplaced atom
+ * starts the next fragment.
+ */
+std::vector<Reference> buildZMatrix(const Molecule& molecule)
+{
+  const Index atomCount = molecule.atomCount();
+  std::vector<Reference> rows;
+  if (atomCount == 0)
+    return rows;
+  rows.reserve(atomCount);
+
+  const Graph& graph = molecule.graph();
+  std::vector<bool> placed(atomCount, false);
+  std::vector<Index> placedOrder;
+  placedOrder.reserve(atomCount);
+
+  // Unplaced atoms bonded to something already placed, kept in index order.
+  std::set<Index> frontier;
+  Index nextUnplaced = 0;
+
+  while (rows.size() < atomCount) {
+    Index atom = MaxIndex;
+    if (!frontier.empty()) {
+      atom = *frontier.begin();
+      frontier.erase(frontier.begin());
+    } else {
+      // Start the matrix, or a new fragment, at the lowest unplaced atom.
+      while (nextUnplaced < atomCount && placed[nextUnplaced])
+        ++nextUnplaced;
+      if (nextUnplaced >= atomCount)
+        break;
+      atom = nextUnplaced;
+    }
+
+    rows.push_back(
+      chooseReferences(molecule, graph, atom, placedOrder, placed));
+    placed[atom] = true;
+    placedOrder.push_back(atom);
+
+    for (size_t neighbor : graph.neighbors(atom)) {
+      if (neighbor < atomCount && !placed[neighbor])
+        frontier.insert(neighbor);
+    }
+  }
+
+  return rows;
+}
+
+/**
+ * The in-plane direction perpendicular to @p ab that a distance-and-angle
+ * row is placed along. The row is free to rotate about the a-b axis, so
+ * either the molecule's existing plane or the xy-plane is used.
+ */
+Vector3 referencePerpendicular(const Molecule& molecule, Index atom, Index a,
+                               Index b, const Vector3& ab, ZMatrixOrigin origin)
+{
+  if (origin == ZMatrixOrigin::Preserve) {
+    Vector3 oldAb = molecule.atomPosition3d(b) - molecule.atomPosition3d(a);
+    const Vector3 oldV =
+      molecule.atomPosition3d(atom) - molecule.atomPosition3d(a);
+    if (oldAb.norm() > coincidentTolerance) {
+      oldAb.normalize();
+      Vector3 oldPerpendicular = oldV - oldV.dot(oldAb) * oldAb;
+      if (oldPerpendicular.norm() > coincidentTolerance) {
+        oldPerpendicular.normalize();
+        // Carry the molecule's own plane onto the rebuilt a-b direction.
+        const Eigen::Quaternion<Real> rotation =
+          Eigen::Quaternion<Real>::FromTwoVectors(oldAb, ab);
+        return (rotation * oldPerpendicular).normalized();
+      }
+    }
+    // The molecule has no plane to preserve here, so fall through.
+  }
+
+  // Canonical: keep the third atom in the xy-plane where a-b allows it.
+  Vector3 perpendicular(-ab.y(), ab.x(), 0.0);
+  if (perpendicular.norm() > coincidentTolerance)
+    return perpendicular.normalized();
+  return anyPerpendicular(ab);
+}
+
+Array<Vector3> buildCartesian(const Molecule& molecule,
+                              const Array<InternalCoordinate>& internalCoords,
+                              const Array<Index>& rowToAtom,
+                              ZMatrixOrigin origin)
+{
+  const Index atomCount = molecule.atomCount();
+  Array<Vector3> coords(atomCount, Vector3(0.0, 0.0, 0.0));
+
+  // An atom that no row places keeps the position it already has rather than
+  // being dragged to the origin, so a short or malformed matrix disturbs
+  // only the atoms it actually names.
+  if (origin == ZMatrixOrigin::Preserve) {
+    for (Index i = 0; i < atomCount; ++i)
+      coords[i] = molecule.atomPosition3d(i);
+  }
+
+  if (internalCoords.size() != rowToAtom.size())
+    return coords;
+
+  std::vector<bool> placed(atomCount, false);
+
+  for (size_t row = 0; row < internalCoords.size(); ++row) {
+    const Index atom = rowToAtom[row];
+    if (atom >= atomCount)
+      continue; // the map does not name a real atom
+
+    const InternalCoordinate& internal = internalCoords[row];
+    const Index a = internal.a;
+    const Index b = internal.b;
+    const Index c = internal.c;
+
+    // Each branch uses as much of the row as is actually usable. A row whose
+    // references have not been placed is not an error: it is how the opening
+    // rows of every z-matrix are defined.
+    if (!isPlaced(a, placed)) {
+      // Nothing to measure from: this row anchors the matrix.
+      coords[atom] = (origin == ZMatrixOrigin::Preserve)
+                       ? molecule.atomPosition3d(atom)
+                       : Vector3(0.0, 0.0, 0.0);
+    } else if (!isPlaced(b, placed)) {
+      // A distance only, so any direction satisfies the row.
+      Vector3 direction(1.0, 0.0, 0.0);
+      if (origin == ZMatrixOrigin::Preserve) {
+        const Vector3 existing =
+          molecule.atomPosition3d(atom) - molecule.atomPosition3d(a);
+        if (existing.norm() > coincidentTolerance)
+          direction = existing.normalized();
+      }
+      coords[atom] = coords[a] + internal.length * direction;
+    } else {
+      Vector3 ab = coords[b] - coords[a];
+      const Real abNorm = ab.norm();
+      if (abNorm < coincidentTolerance) {
+        // 'a' and 'b' coincide, so there is no axis to measure the angle
+        // from. Keep the distance and place the atom along +x.
+        coords[atom] = coords[a] + internal.length * Vector3(1.0, 0.0, 0.0);
+        placed[atom] = true;
+        continue;
+      }
+      ab /= abNorm;
+
+      const Real theta = internal.angle * DEG_TO_RAD;
+      const Real sinTheta = std::sin(theta);
+      const Real cosTheta = std::cos(theta);
+
+      if (!isPlaced(c, placed)) {
+        // A distance and an angle: free to rotate about the a-b axis.
+        const Vector3 perpendicular =
+          referencePerpendicular(molecule, atom, a, b, ab, origin);
+        coords[atom] = coords[a] + internal.length *
+                                     (cosTheta * ab + sinTheta * perpendicular);
+      } else {
+        // Natural extension reference frame, see
+        // J. Comp. Chem. Vol. 26, No. 10, p. 1063-1068 (2005)
+        // https://doi.org/10.1002/jcc.20237
+        Vector3 bc = coords[c] - coords[b];
+        const Real bcNorm = bc.norm();
+        if (bcNorm > coincidentTolerance)
+          bc /= bcNorm;
+
+        Vector3 normal = ab.cross(bc);
+        const Real normalNorm = normal.norm();
+        if (normalNorm > collinearTolerance)
+          normal /= normalNorm;
+        else
+          normal = anyPerpendicular(ab); // a, b and c are collinear
+
+        const Vector3 inPlane = normal.cross(ab);
+        // A z-matrix dihedral is the IUPAC signed torsion atom-a-b-c, whose
+        // sense about the a-b axis is opposite to that of this frame, so the
+        // rotation is applied negated. Getting this wrong does not disturb
+        // any distance or angle -- it silently builds the mirror image.
+        const Real phi = -internal.dihedral * DEG_TO_RAD;
+
+        // Local frame at 'a': +ab is the angle reference, inPlane carries a
+        // zero dihedral, and normal rotates the atom out of the a-b-c plane.
+        const Vector3 local(internal.length * cosTheta,
+                            internal.length * sinTheta * std::cos(phi),
+                            internal.length * sinTheta * std::sin(phi));
+
+        Matrix3 frame;
+        frame << ab, inPlane, normal;
+        coords[atom] = frame * local + coords[a];
+      }
+    }
+
+    placed[atom] = true;
   }
 
   return coords;
 }
 
-// Helper structure to store the connectivity tree
-struct ConnectivityTree
+} // namespace
+
+Array<Vector3> internalToCartesian(
+  const Molecule& molecule, const Array<InternalCoordinate>& internalCoords)
 {
-  Array<Index> parent;      // parent[i] = atom that i bonds to (atom a)
-  Array<Index> grandparent; // grandparent[i] = parent's parent (atom b)
-  Array<Index>
-    greatgrandparent; // greatgrandparent[i] = grandparent's parent (atom c)
-};
+  // In this form the row index is the atom index.
+  Array<Index> rowToAtom(internalCoords.size());
+  for (size_t i = 0; i < rowToAtom.size(); ++i)
+    rowToAtom[i] = i;
 
-// Build a spanning tree of the molecule using BFS
-// Handles disconnected fragments by building a separate tree for each component
-ConnectivityTree buildConnectivityTree(const Molecule& molecule)
-{
-  Index atomCount = molecule.atomCount();
-  ConnectivityTree tree;
-  tree.parent.resize(atomCount);
-  tree.grandparent.resize(atomCount);
-  tree.greatgrandparent.resize(atomCount);
-
-  // Initialize all to -1 (invalid index)
-  for (Index i = 0; i < atomCount; ++i) {
-    tree.parent[i] = static_cast<Index>(-1);
-    tree.grandparent[i] = static_cast<Index>(-1);
-    tree.greatgrandparent[i] = static_cast<Index>(-1);
-  }
-
-  // Get connected components from the molecule's graph
-  const Graph& graph = molecule.graph();
-  std::vector<std::set<size_t>> components = graph.connectedComponents();
-
-  // Process each connected component separately
-  for (const auto& component : components) {
-    if (component.empty())
-      continue;
-
-    // Pick the first atom in this component as root
-    Index root = *component.begin();
-
-    // BFS from this root
-    std::vector<bool> visited(atomCount, false);
-    std::vector<Index> queue;
-    queue.push_back(root);
-    visited[root] = true;
-
-    while (!queue.empty()) {
-      Index current = queue.front();
-      queue.erase(queue.begin());
-
-      // Get neighbors from the graph
-      std::vector<size_t> neighborIndices = graph.neighbors(current);
-
-      for (Index neighbor : neighborIndices) {
-        if (!visited[neighbor]) {
-          visited[neighbor] = true;
-          tree.parent[neighbor] = current;
-
-          // Set grandparent if parent has a parent
-          if (tree.parent[current] != static_cast<Index>(-1)) {
-            tree.grandparent[neighbor] = tree.parent[current];
-
-            // Set great-grandparent if grandparent has a parent
-            Index grandparentIdx = tree.parent[current];
-            if (tree.parent[grandparentIdx] != static_cast<Index>(-1)) {
-              tree.greatgrandparent[neighbor] = tree.parent[grandparentIdx];
-            }
-          }
-
-          queue.push_back(neighbor);
-        }
-      }
-    }
-  }
-
-  return tree;
+  return buildCartesian(molecule, internalCoords, rowToAtom,
+                        ZMatrixOrigin::Canonical);
 }
 
-Array<InternalCoordinate> cartesianToInternal(const Molecule& molecule)
+Array<Vector3> internalToCartesian(
+  const Molecule& molecule, const Array<InternalCoordinate>& internalCoords,
+  const Array<Index>& rowToAtom, ZMatrixOrigin origin)
 {
-  Array<InternalCoordinate> internalCoords(molecule.atomCount());
+  return buildCartesian(molecule, internalCoords, rowToAtom, origin);
+}
 
-  if (molecule.atomCount() < 1)
-    return internalCoords;
+Array<InternalCoordinate> cartesianToInternal(const Molecule& molecule,
+                                              Array<Index>& rowToAtom)
+{
+  const std::vector<Reference> rows = buildZMatrix(molecule);
 
-  // Build connectivity tree using the molecule's graph
-  ConnectivityTree tree = buildConnectivityTree(molecule);
+  Array<InternalCoordinate> internalCoords(rows.size());
+  rowToAtom.resize(rows.size());
 
-  // Convert each atom to internal coordinates based on tree
-  for (Index i = 0; i < molecule.atomCount(); ++i) {
+  for (size_t row = 0; row < rows.size(); ++row) {
+    const Reference& reference = rows[row];
+    rowToAtom[row] = reference.atom;
+
     InternalCoordinate coord;
-    coord.a = tree.parent[i];
-    coord.b = tree.grandparent[i];
-    coord.c = tree.greatgrandparent[i];
+    coord.a = reference.a;
+    coord.b = reference.b;
+    coord.c = reference.c;
 
-    if (tree.parent[i] == static_cast<Index>(-1)) {
-      // Root of a fragment - place at origin
-      coord.length = 0.0;
-      coord.angle = 0.0;
-      coord.dihedral = 0.0;
-    } else {
-      // Calculate distance from i to parent (atom a)
-      Vector3 vec_i_to_a = molecule.atom(tree.parent[i]).position3d() -
-                           molecule.atom(i).position3d();
-      coord.length = vec_i_to_a.norm();
+    if (reference.a != MaxIndex) {
+      const Vector3 pos = molecule.atomPosition3d(reference.atom);
+      const Vector3 posA = molecule.atomPosition3d(reference.a);
+      coord.length = (pos - posA).norm();
 
-      if (tree.grandparent[i] == static_cast<Index>(-1)) {
-        // Second atom in fragment - has distance only
-        coord.angle = 0.0;
-        coord.dihedral = 0.0;
-      } else {
-        // Calculate angle i-a-b (at atom a, between i-a and a-b bonds)
-        Index a = tree.parent[i];
-        Index b = tree.grandparent[i];
+      if (reference.b != MaxIndex) {
+        const Vector3 posB = molecule.atomPosition3d(reference.b);
+        if (coord.length > coincidentTolerance &&
+            (posB - posA).norm() > coincidentTolerance)
+          coord.angle = calculateAngle(pos, posA, posB);
 
-        Vector3 vec_a_to_i = -vec_i_to_a; // from a to i
-        Vector3 vec_a_to_b =
-          molecule.atom(b).position3d() - molecule.atom(a).position3d();
-
-        Real dot = vec_a_to_i.dot(vec_a_to_b);
-        Real len_product = vec_a_to_i.norm() * vec_a_to_b.norm();
-
-        if (len_product > 1e-8) {
-          Real cosAngle = dot / len_product;
-          // Clamp to avoid numerical issues with acos
-          cosAngle = std::clamp(cosAngle, -1.0, 1.0);
-          coord.angle = std::acos(cosAngle) * RAD_TO_DEG;
-        } else {
-          coord.angle = 0.0;
-        }
-
-        if (tree.greatgrandparent[i] == static_cast<Index>(-1)) {
-          // Third atom in fragment - has distance and angle only
-          coord.dihedral = 0.0;
-        } else {
-          // Calculate dihedral i-a-b-c
-          Index c = tree.greatgrandparent[i];
-
-          Vector3 p_i = molecule.atom(i).position3d();
-          Vector3 p_a = molecule.atom(a).position3d();
-          Vector3 p_b = molecule.atom(b).position3d();
-          Vector3 p_c = molecule.atom(c).position3d();
-
-          // Vectors along bonds
-          Vector3 b1 = p_a - p_i; // i -> a
-          Vector3 b2 = p_b - p_a; // a -> b
-          Vector3 b3 = p_c - p_b; // b -> c
-
-          // Normals to planes
-          Vector3 n1 = b1.cross(b2); // plane containing i-a-b
-          Vector3 n2 = b2.cross(b3); // plane containing a-b-c
-
-          Real n1_norm = n1.norm();
-          Real n2_norm = n2.norm();
-
-          if (n1_norm > 1e-8 && n2_norm > 1e-8) {
-            n1 = n1 / n1_norm;
-            n2 = n2 / n2_norm;
-
-            Real cos_dihedral = n1.dot(n2);
-            // Clamp to avoid numerical issues
-            cos_dihedral = std::clamp(cos_dihedral, -1.0, 1.0);
-
-            // Determine sign using triple product
-            Real sign = (n1.cross(n2)).dot(b2);
-
-            coord.dihedral = std::acos(cos_dihedral) * RAD_TO_DEG;
-            if (sign < 0) {
-              coord.dihedral = -coord.dihedral;
-            }
-          } else {
-            // Atoms are collinear
-            coord.dihedral = 0.0;
-          }
+        if (reference.c != MaxIndex) {
+          const Vector3 posC = molecule.atomPosition3d(reference.c);
+          if ((posC - posB).norm() > coincidentTolerance)
+            coord.dihedral = calculateDihedral(pos, posA, posB, posC);
         }
       }
     }
 
-    internalCoords[i] = coord;
+    internalCoords[row] = coord;
   }
 
   return internalCoords;
