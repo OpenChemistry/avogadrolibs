@@ -165,6 +165,25 @@ public:
   void clearAtoms();
 
   /**
+   * Renumber the atoms in this molecule.
+   *
+   * Everything indexed by atom follows its atom: positions, labels, charges,
+   * colors, selection, layers, bonds, residues, coordinate sets and unique
+   * ids. No atom or bond is added or removed, so this is a relabelling of
+   * the same structure.
+   *
+   * @param newOrder A permutation of [0, atomCount()): newOrder[i] is the
+   * index the atom currently at that position will be moved *from*, so that
+   * after the call atom @a i is the atom that was at newOrder[i].
+   * @return True on success. False, changing nothing, if @a newOrder is not
+   * a permutation of exactly the molecule's atoms.
+   *
+   * @note Atom indices are how selections, scripts and other tables refer to
+   * atoms, so this invalidates any index held elsewhere.
+   */
+  bool reorderAtoms(const Core::Array<Index>& newOrder);
+
+  /**
    * Adjust hydrogens for an atom.
    * @param atomId The index of the atom.
    * @note Checks to make sure the atom is valid before adjusting the hydrogens.
