@@ -9,9 +9,13 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
+#include <cerrno>
+#include <cmath>
+#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <string>
 
 namespace Avogadro::QuantumIO {
 
@@ -37,6 +41,58 @@ bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
 
   const size_t remaining = static_cast<size_t>(end - pos);
   return remaining >= minBytes;
+}
+
+/**
+ * Read one grid value into the float a Core::Cube stores.
+ *
+ * Extracting straight into a float discards valid files: strtof reports an
+ * underflow to subnormal as ERANGE, and the extractor turns that into failbit
+ * even though the value parsed correctly. Codes such as Q-Chem write the
+ * decaying tail of a density with exponents past FLT_MIN ("1.505124610E-39"),
+ * which would abort the read a handful of values from the end.
+ *
+ * Parse the token with strtod instead, which lets a range error be told apart
+ * from a genuine parse failure. Core::lexicalCast<double> applies the same
+ * rule, but builds an istringstream per value -- far too costly for a loop
+ * that runs once per grid point -- so the range handling is repeated here.
+ * Keep the two consistent.
+ */
+bool readCubeValue(std::istream& in, std::string& token, float& value)
+{
+  if (!(in >> token))
+    return false;
+
+  const char* first = token.c_str();
+  char* last = nullptr;
+  errno = 0;
+  double parsed = std::strtod(first, &last);
+
+  // Reject anything that is not a number, or that stopped short of the end of
+  // the token ("1.5abc", the "*******" some codes emit on overflow).
+  if (last != first + token.size())
+    return false;
+
+  if (errno == ERANGE) {
+    // Underflow leaves a zero or subnormal result, which is what we want. Only
+    // an overflow needs clamping, so that later arithmetic cannot see it.
+    if (std::isinf(parsed))
+      parsed = (parsed > 0.0) ? std::numeric_limits<double>::max()
+                              : std::numeric_limits<double>::lowest();
+  } else if (!std::isfinite(parsed)) {
+    // The literals "nan" and "inf" parse cleanly but have no meaning on a grid.
+    return false;
+  }
+
+  constexpr double floatMax =
+    static_cast<double>(std::numeric_limits<float>::max());
+  if (parsed > floatMax)
+    parsed = floatMax;
+  else if (parsed < -floatMax)
+    parsed = -floatMax;
+
+  value = static_cast<float>(parsed);
+  return true;
 }
 } // namespace
 
@@ -233,8 +289,9 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     }
     if (values->size() != valueCount)
       values->resize(valueCount);
+    std::string token;
     for (size_t index = 0; index < valueCount; ++index) {
-      if (!(in >> (*values)[index])) {
+      if (!readCubeValue(in, token, (*values)[index])) {
         appendError("Invalid cube data.");
         return false;
       }
