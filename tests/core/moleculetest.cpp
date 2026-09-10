@@ -9,6 +9,8 @@
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/color3f.h>
+#include <avogadro/core/constraint.h>
+#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/propertymap.h>
@@ -1476,4 +1478,175 @@ TEST_F(MoleculeTest, ConformerProperties)
   // clearCoordinate3d should clear conformer properties
   m_testMolecule.clearCoordinate3d();
   EXPECT_TRUE(m_testMolecule.conformerProperties().empty());
+}
+
+// Residues are residue-indexed, not atom-indexed, but the Atom proxies in
+// their name maps carry atom indices. swapAtom() has to reindex those too, or
+// a residue keeps the names and silently adopts whichever atoms land on the
+// old indices.
+TEST_F(MoleculeTest, SwapAtomReindexesResidues)
+{
+  Avogadro::Core::Molecule molecule;
+  molecule.addAtom(7).setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.0)); // N
+  molecule.addAtom(6).setPosition3d(Avogadro::Vector3(1.5, 0.0, 0.0)); // CA
+  molecule.addAtom(8).setPosition3d(Avogadro::Vector3(2.5, 1.0, 0.0)); // O
+
+  std::string resName = "ALA";
+  Avogadro::Index resNumber = 1;
+  char chain = 'A';
+  Avogadro::Core::Residue& residue =
+    molecule.addResidue(resName, resNumber, chain);
+  residue.addResidueAtom("N", molecule.atom(0));
+  residue.addResidueAtom("CA", molecule.atom(1));
+  residue.addResidueAtom("O", molecule.atom(2));
+
+  molecule.swapAtom(0, 2);
+
+  // Each name must still resolve to the atom it was given, which is now at a
+  // different index and is identified here by its element.
+  const Avogadro::Core::Residue& swapped = molecule.residue(0);
+  EXPECT_EQ(static_cast<Avogadro::Index>(2), swapped.atomByName("N").index());
+  EXPECT_EQ(7, swapped.atomByName("N").atomicNumber());
+  EXPECT_EQ(static_cast<Avogadro::Index>(1), swapped.atomByName("CA").index());
+  EXPECT_EQ(6, swapped.atomByName("CA").atomicNumber());
+  EXPECT_EQ(static_cast<Avogadro::Index>(0), swapped.atomByName("O").index());
+  EXPECT_EQ(8, swapped.atomByName("O").atomicNumber());
+
+  // Swapping back restores the original numbering.
+  molecule.swapAtom(0, 2);
+  EXPECT_EQ(static_cast<Avogadro::Index>(0),
+            molecule.residue(0).atomByName("N").index());
+  EXPECT_EQ(static_cast<Avogadro::Index>(2),
+            molecule.residue(0).atomByName("O").index());
+}
+
+// An atom outside the residue must not be dragged into it by a swap.
+TEST_F(MoleculeTest, SwapAtomLeavesUnrelatedAtomsOutOfResidues)
+{
+  Avogadro::Core::Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(static_cast<unsigned char>(6 + i));
+
+  std::string resName = "LIG";
+  Avogadro::Index resNumber = 1;
+  char chain = 'A';
+  Avogadro::Core::Residue& residue =
+    molecule.addResidue(resName, resNumber, chain);
+  residue.addResidueAtom("C1", molecule.atom(0));
+
+  // Atom 3 belongs to no residue; swapping it with the residue's only atom
+  // must move the membership, not duplicate or drop it.
+  molecule.swapAtom(0, 3);
+
+  const Avogadro::Core::Residue& swapped = molecule.residue(0);
+  EXPECT_EQ(static_cast<size_t>(1), swapped.residueAtoms().size());
+  EXPECT_EQ(static_cast<Avogadro::Index>(3), swapped.atomByName("C1").index());
+  EXPECT_EQ(6, swapped.atomByName("C1").atomicNumber());
+}
+
+// Constraints name atoms by index without being atom-indexed themselves, so
+// swapAtom() has to reindex them or a constraint silently starts restraining
+// different atoms.
+TEST_F(MoleculeTest, SwapAtomReindexesConstraints)
+{
+  Avogadro::Core::Molecule molecule;
+  for (int i = 0; i < 5; ++i)
+    molecule.addAtom(static_cast<unsigned char>(6 + i));
+
+  // A distance constraint on atoms 0-1, and a torsion on 0-1-2-3.
+  molecule.addConstraint(1.5, 0, 1);
+  molecule.addConstraint(60.0, 0, 1, 2, 3);
+
+  molecule.swapAtom(0, 4);
+
+  const auto& distance = molecule.constraints()[0];
+  EXPECT_EQ(static_cast<Avogadro::Index>(4), distance.aIndex());
+  EXPECT_EQ(static_cast<Avogadro::Index>(1), distance.bIndex());
+  EXPECT_EQ(1.5, distance.value());
+  // An unused reference stays unused rather than being reindexed onto an atom.
+  EXPECT_EQ(Avogadro::MaxIndex, distance.cIndex());
+  EXPECT_EQ(Avogadro::MaxIndex, distance.dIndex());
+  EXPECT_EQ(Avogadro::Core::Constraint::DistanceConstraint, distance.type());
+
+  const auto& torsion = molecule.constraints()[1];
+  EXPECT_EQ(static_cast<Avogadro::Index>(4), torsion.aIndex());
+  EXPECT_EQ(static_cast<Avogadro::Index>(1), torsion.bIndex());
+  EXPECT_EQ(static_cast<Avogadro::Index>(2), torsion.cIndex());
+  EXPECT_EQ(static_cast<Avogadro::Index>(3), torsion.dIndex());
+  EXPECT_EQ(60.0, torsion.value());
+  EXPECT_EQ(Avogadro::Core::Constraint::TorsionConstraint, torsion.type());
+
+  // A swap between two atoms a constraint names must exchange them, not drop
+  // one of them.
+  molecule.swapAtom(1, 2);
+  const auto& swapped = molecule.constraints()[1];
+  EXPECT_EQ(static_cast<Avogadro::Index>(2), swapped.bIndex());
+  EXPECT_EQ(static_cast<Avogadro::Index>(1), swapped.cIndex());
+}
+
+// A basis set records which atom each basis function sits on. Renumbering
+// atoms under a wavefunction has to carry those references across, or the
+// orbitals are silently attributed to the wrong nuclei.
+TEST_F(MoleculeTest, SwapAtomReindexesGaussianBasis)
+{
+  Avogadro::Core::Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(static_cast<unsigned char>(6 + i));
+
+  auto* basis = new Avogadro::Core::GaussianSet;
+  basis->setMolecule(&molecule);
+  // One shell on atom 0, two on atom 2, one on atom 1.
+  basis->addBasis(0, Avogadro::Core::GaussianSet::S);
+  basis->addBasis(2, Avogadro::Core::GaussianSet::S);
+  basis->addBasis(2, Avogadro::Core::GaussianSet::P);
+  basis->addBasis(1, Avogadro::Core::GaussianSet::S);
+  molecule.setBasisSet(basis);
+
+  molecule.swapAtom(0, 2);
+
+  // Shell order is untouched -- only the atom each shell names moves, which
+  // is what keeps MO coefficients valid.
+  const std::vector<unsigned int> expected = { 2, 0, 0, 1 };
+  EXPECT_EQ(expected, basis->atomIndices());
+}
+
+// Normal mode displacements are stored per mode per atom, so they have to
+// follow their atom through a renumbering.
+TEST_F(MoleculeTest, SwapAtomCarriesVibrationalDisplacements)
+{
+  Avogadro::Core::Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(static_cast<unsigned char>(6 + i));
+
+  Avogadro::Core::Array<double> frequencies;
+  frequencies.push_back(1000.0);
+  frequencies.push_back(2000.0);
+  molecule.setVibrationFrequencies(frequencies);
+
+  // Two modes, each giving atom i the displacement (i, 0, 0) or (0, i, 0).
+  Avogadro::Core::Array<Avogadro::Core::Array<Avogadro::Vector3>> lx;
+  for (int mode = 0; mode < 2; ++mode) {
+    Avogadro::Core::Array<Avogadro::Vector3> displacements;
+    for (int i = 0; i < 3; ++i)
+      displacements.push_back(mode == 0 ? Avogadro::Vector3(i, 0.0, 0.0)
+                                        : Avogadro::Vector3(0.0, i, 0.0));
+    lx.push_back(displacements);
+  }
+  molecule.setVibrationLx(lx);
+
+  molecule.swapAtom(0, 2);
+
+  // Atom 0's displacement is now at index 2, and vice versa, in every mode.
+  const Avogadro::Core::Array<Avogadro::Vector3> mode0 =
+    molecule.vibrationLx(0);
+  const Avogadro::Core::Array<Avogadro::Vector3> mode1 =
+    molecule.vibrationLx(1);
+  ASSERT_EQ(static_cast<size_t>(3), mode0.size());
+  EXPECT_EQ(Avogadro::Vector3(2.0, 0.0, 0.0), mode0[0]);
+  EXPECT_EQ(Avogadro::Vector3(0.0, 0.0, 0.0), mode0[2]);
+  EXPECT_EQ(Avogadro::Vector3(0.0, 2.0, 0.0), mode1[0]);
+  EXPECT_EQ(Avogadro::Vector3(0.0, 0.0, 0.0), mode1[2]);
+  // The frequencies are mode-indexed and must not move.
+  ASSERT_EQ(static_cast<size_t>(2), molecule.vibrationFrequencies().size());
+  EXPECT_EQ(1000.0, molecule.vibrationFrequencies()[0]);
 }

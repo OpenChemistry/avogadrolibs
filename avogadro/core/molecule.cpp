@@ -689,6 +689,18 @@ namespace {
 // normal modes, partial charges -- is dropped there instead; see the comment
 // in removeAtom(). Deciding which of the two a new member is, is the part
 // that needs thought.
+//
+// A member does not have to be atom-indexed to hold an atom index, and those
+// are the ones this list is apt to miss. m_residues is residue-indexed but
+// the Atom proxies in its name maps store atom indices; m_constraints names
+// up to four atoms per constraint; and m_basisSet records the atom each basis
+// function is centred on. All three need reindexing all the same, and
+// swapAtom() handles them explicitly at its end.
+//
+// One is still unhandled, and needs a decision rather than a mechanical
+// remap: m_residues in removeAtom(). Dropping a hydrogen from a residue is
+// just an erase, but dropping a backbone atom arguably invalidates the
+// residue altogether, and that is a chemistry question.
 
 // Plain Array<T>, one entry per atom.
 template <typename T>
@@ -828,6 +840,46 @@ void Molecule::swapAtom(Index a, Index b)
   m_graph.swapVertexIndices(a, b);
   m_layers.swapLayer(a, b);
   m_atomProperties.swapEntries(a, b, atomCount());
+
+  // Residues are not an atom-indexed member and so are reached by none of the
+  // helpers above: the array is residue-indexed, and it is the Atom proxies
+  // inside each residue's name map that carry an atom index. Left alone, a
+  // residue's atom names go on pointing at indices that now hold different
+  // atoms -- the residue silently adopts its neighbours.
+  for (auto& residue : m_residues) {
+    for (auto& entry : residue.atomNameMap()) {
+      const Index index = entry.second.index();
+      if (index == a)
+        entry.second = AtomType(entry.second.molecule(), b);
+      else if (index == b)
+        entry.second = AtomType(entry.second.molecule(), a);
+    }
+  }
+
+  // Constraints are not atom-indexed either, but each names up to four atoms
+  // by index. Unused references are MaxIndex, which never matches a real
+  // atom, so they are left alone. Constraint::set() re-infers a cached type
+  // that was not set explicitly, and that inference only asks which indices
+  // are MaxIndex -- something a swap cannot change.
+  auto reindex = [a, b](Index index) {
+    if (index == a)
+      return b;
+    if (index == b)
+      return a;
+    return index;
+  };
+  for (auto& constraint : m_constraints) {
+    constraint.set(reindex(constraint.aIndex()), reindex(constraint.bIndex()),
+                   reindex(constraint.cIndex()), reindex(constraint.dIndex()),
+                   constraint.value());
+  }
+
+  // A basis set records which atom each basis function is centred on. Only
+  // those recorded indices move: the basis functions keep their order, so
+  // molecular orbital coefficients, which are indexed by basis function,
+  // remain valid.
+  if (m_basisSet != nullptr)
+    m_basisSet->swapAtomIndices(a, b);
 }
 
 bool Molecule::removeAtom(Index index)

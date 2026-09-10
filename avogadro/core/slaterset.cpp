@@ -12,6 +12,18 @@
 
 namespace Avogadro::Core {
 
+void SlaterSet::swapAtomIndices(Index a, Index b)
+{
+  const auto first = static_cast<int>(a);
+  const auto second = static_cast<int>(b);
+  for (auto& index : m_slaterIndices) {
+    if (index == first)
+      index = second;
+    else if (index == second)
+      index = first;
+  }
+}
+
 bool SlaterSet::addSlaterIndices(const std::vector<int>& i)
 {
   m_slaterIndices = i;

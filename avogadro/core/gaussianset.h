@@ -181,6 +181,12 @@ public:
   bool isValid() override;
 
   /**
+   * Exchange atom indices @a a and @a b in the per-shell atom map. The shells
+   * themselves keep their order, so MO coefficients are unaffected.
+   */
+  void swapAtomIndices(Index a, Index b) override;
+
+  /**
    * Set the SCF type for the object.
    */
   void setScfType(ScfType type) { m_scfType = type; }

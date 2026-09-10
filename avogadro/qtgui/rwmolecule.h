@@ -167,10 +167,12 @@ public:
   /**
    * Renumber the atoms in this molecule.
    *
-   * Everything indexed by atom follows its atom: positions, labels, charges,
-   * colors, selection, layers, bonds, residues, coordinate sets and unique
-   * ids. No atom or bond is added or removed, so this is a relabelling of
-   * the same structure.
+   * Everything holding an atom index follows its atom: positions, labels,
+   * charges, colors, selection, layers, bonds, residue membership,
+   * constraints, normal mode displacements, the atom each basis function is
+   * centred on, coordinate sets and unique ids. No atom or bond is added or
+   * removed, so this is a relabelling of the same structure, and results
+   * computed for it -- a wavefunction, a set of vibrations -- stay valid.
    *
    * @param newOrder A permutation of [0, atomCount()): newOrder[i] is the
    * index the atom currently at that position will be moved *from*, so that

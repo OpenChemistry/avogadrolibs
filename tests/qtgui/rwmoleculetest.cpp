@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -1057,4 +1058,42 @@ TEST(RWMoleculeTest, reorderAtomsEmptyMolecule)
   Array<Index> order(0);
   EXPECT_TRUE(mol.reorderAtoms(order));
   EXPECT_EQ(static_cast<Index>(0), mol.atomCount());
+}
+
+TEST(RWMoleculeTest, reorderAtomsCarriesResidues)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 4);
+
+  std::string resName = "ALA";
+  Index resNumber = 1;
+  char chain = 'A';
+  Avogadro::Core::Residue& residue = m.addResidue(resName, resNumber, chain);
+  residue.addResidueAtom("N", m.atom(0));
+  residue.addResidueAtom("CA", m.atom(1));
+  residue.addResidueAtom("C", m.atom(2));
+
+  // A 3-cycle over the residue's atoms, leaving the fourth atom outside it.
+  Array<Index> order(4);
+  order[0] = 2;
+  order[1] = 0;
+  order[2] = 1;
+  order[3] = 3;
+  ASSERT_TRUE(mol.reorderAtoms(order));
+
+  // Each name still names the atom it was given: buildDistinctAtoms() sets
+  // atomic number i + 1, so the original atom is identifiable after the move.
+  const Avogadro::Core::Residue& moved = m.residue(0);
+  EXPECT_EQ(1, moved.atomByName("N").atomicNumber());
+  EXPECT_EQ(2, moved.atomByName("CA").atomicNumber());
+  EXPECT_EQ(3, moved.atomByName("C").atomicNumber());
+  EXPECT_EQ(static_cast<size_t>(3), moved.residueAtoms().size());
+
+  // And undo puts the membership back where it started.
+  mol.undoStack().undo();
+  const Avogadro::Core::Residue& restored = m.residue(0);
+  EXPECT_EQ(static_cast<Index>(0), restored.atomByName("N").index());
+  EXPECT_EQ(static_cast<Index>(1), restored.atomByName("CA").index());
+  EXPECT_EQ(static_cast<Index>(2), restored.atomByName("C").index());
 }
