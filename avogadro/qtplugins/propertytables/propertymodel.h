@@ -55,6 +55,7 @@ public:
                int role = Qt::EditRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,
                       int role = Qt::DisplayRole) const override;
+  Qt::DropActions supportedDropActions() const override;
 
   void setMolecule(QtGui::Molecule* molecule);
 

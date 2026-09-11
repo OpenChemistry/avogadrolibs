@@ -154,6 +154,11 @@ namespace {
 // permutation rather than as the permutation itself. A transposition is its
 // own inverse, so undoing is the same sequence walked backwards, and there is
 // no second permutation to keep consistent with the first.
+//
+// Unlike the other commands in this file, this one notifies directly instead
+// of relying on the blanket Atoms | Added that MainWindow emits after an
+// undo/redo: a reorder changes no atom or bond counts, so that blanket flag
+// gives listeners (e.g. PropertyModel) nothing to detect the change by.
 class ReorderAtomsCommand : public RWMolecule::UndoCommand
 {
   std::vector<std::pair<Index, Index>> m_swaps;
@@ -169,12 +174,16 @@ public:
   {
     for (const auto& swap : m_swaps)
       m_molecule.swapAtom(swap.first, swap.second);
+    m_molecule.emitChanged(Molecule::Atoms | Molecule::Bonds |
+                           Molecule::Modified | Molecule::Reordered);
   }
 
   void undo() override
   {
     for (auto it = m_swaps.rbegin(); it != m_swaps.rend(); ++it)
       m_molecule.swapAtom(it->first, it->second);
+    m_molecule.emitChanged(Molecule::Atoms | Molecule::Bonds |
+                           Molecule::Modified | Molecule::Reordered);
   }
 };
 } // namespace

@@ -91,7 +91,14 @@ public:
     Added = 1024,
     Removed = 2048,
     Modified = 4096,
-    Moved = 8192
+    Moved = 8192,
+    /**
+     * Indicates atom indices were permuted (see RWMolecule::reorderAtoms).
+     * Same atoms, same bonds, same counts -- only the numbering changed, so
+     * listeners that detect structural change by comparing counts will miss
+     * it unless they check for this flag.
+     */
+    Reordered = 16384
   };
   Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
 
