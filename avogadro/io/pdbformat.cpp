@@ -74,17 +74,21 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         chains.insert(c);
     }
   };
-  auto parseBioMTRow = [&](const string& line, int row, BioMTMatrix& mat) -> bool {
+  auto parseBioMTRow = [&](const string& line, int row,
+                           BioMTMatrix& mat) -> bool {
     if (line.length() < 68)
       return false;
 
     bool parseOk = true;
     mat.rotation(row, 0) = lexicalCast<double>(line.substr(24, 9), parseOk);
-    if (!parseOk) return false;
+    if (!parseOk)
+      return false;
     mat.rotation(row, 1) = lexicalCast<double>(line.substr(33, 10), parseOk);
-    if (!parseOk) return false;
+    if (!parseOk)
+      return false;
     mat.rotation(row, 2) = lexicalCast<double>(line.substr(43, 10), parseOk);
-    if (!parseOk) return false;
+    if (!parseOk)
+      return false;
     mat.translation[row] = lexicalCast<double>(line.substr(53, 15), parseOk);
     return parseOk;
   };
@@ -271,9 +275,10 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         if (element.length() == 2)
           element[1] = std::tolower(element[1]);
 
+        // Not an error yet: older files put other things in these columns,
+        // and the atom name below still has two chances to identify the
+        // element. Only the final failure is worth reporting.
         atomicNum = Elements::atomicNumberFromSymbol(element);
-        if (atomicNum == 255)
-          appendError("Invalid element");
       }
 
       if (atomicNum == 255) {
@@ -287,15 +292,66 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           element = 'S';
 
         atomicNum = Elements::atomicNumberFromSymbol(element);
-        if (atomicNum == 255) {
-          appendError("Invalid element");
-          continue; // skip this invalid record
+      }
+
+      if (atomicNum == 255) {
+        // Fall back to the column convention for the atom name, which is what
+        // pre-2000 files need: columns 77-78 only became the element field
+        // later, and older files put other things there (1CRN.pdb keeps a
+        // line serial, so every record above lands here).
+        //
+        // Columns 13-16 hold the atom name with the element symbol right
+        // justified in 13-14. A one-character symbol therefore leaves column
+        // 13 blank -- " CA " is a carbon alpha, not calcium -- while a
+        // two-character symbol fills both columns, as in "FE  " or "ZN  ".
+        // Hydrogens may carry a number in column 13, as in "1HB ". Reading
+        // the two cases apart is the whole point of the convention, and it is
+        // why the naive "treat the trimmed name as a symbol" attempt above
+        // drops every CA, CB, SG and OG in a protein.
+        const std::string rawName = buffer.substr(12, 4);
+        const auto first = static_cast<unsigned char>(rawName[0]);
+        std::string symbol;
+        if (first == ' ' || std::isdigit(first) != 0) {
+          symbol = rawName.substr(1, 1);
+        } else {
+          // Column 13 is occupied, so try both characters as a symbol before
+          // falling back to the first alone.
+          std::string twoChar;
+          twoChar += static_cast<char>(std::toupper(first));
+          twoChar += static_cast<char>(
+            std::tolower(static_cast<unsigned char>(rawName[1])));
+          symbol = (Elements::atomicNumberFromSymbol(twoChar) != 255)
+                     ? twoChar
+                     : rawName.substr(0, 1);
         }
+        symbol = trimmed(symbol);
+        if (!symbol.empty()) {
+          symbol[0] = static_cast<char>(
+            std::toupper(static_cast<unsigned char>(symbol[0])));
+          atomicNum = Elements::atomicNumberFromSymbol(symbol);
+          // "Xx" is the dummy-atom symbol and would match a name such as
+          // "XX", quietly inventing a placeholder atom. A name this fallback
+          // cannot read should stay unread.
+          if (atomicNum == 0)
+            atomicNum = 255;
+        }
+      }
+
+      if (atomicNum == 255) {
+        appendError("Invalid element");
+        // Still claim this record's slot in the serial-number mapping.
+        // CONECT records index rawToAtomId by (serial - 1 - TER count), so a
+        // skipped record that pushes nothing shifts every later serial and
+        // silently bonds the wrong pair of atoms. Only coordSet 0 builds the
+        // mapping, matching the push sites below.
+        if (coordSet == 0)
+          rawToAtomId.push_back(MaxIndex);
+        continue; // skip this invalid record
       }
 
       if (altLoc.compare("") && altLoc.compare("A")) {
         if (coordSet == 0) {
-          rawToAtomId.push_back(-1);
+          rawToAtomId.push_back(MaxIndex);
           altAtomIds.push_back(mol.atomCount() - 1);
         } else {
           altAtomIds.push_back(positions.size() - 1);
@@ -345,7 +401,29 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
            ++terCount)
         ; // semicolon is intentional
       a = a - terCount;
-      a = rawToAtomId[a];
+
+      // Resolve a serial number, as adjusted above, to the atom it names.
+      // The value comes straight out of the file, so it has to be range
+      // checked before it is used as an index: PDB files routinely arrive
+      // over the network, and a serial past the end of the mapping (from a
+      // truncated, hand-edited or hostile file) would otherwise read out of
+      // bounds. MaxIndex marks a record that was read but produced no atom.
+      auto resolveSerial = [&rawToAtomId](int raw, Index& atomId) {
+        if (raw < 0 || static_cast<size_t>(raw) >= rawToAtomId.size())
+          return false;
+        const size_t mapped = rawToAtomId[static_cast<size_t>(raw)];
+        if (mapped == MaxIndex)
+          return false;
+        atomId = mapped;
+        return true;
+      };
+
+      Index aIndex = MaxIndex;
+      if (!resolveSerial(a, aIndex)) {
+        appendError("Ignoring CONECT record for unknown atom serial " +
+                    buffer.substr(6, 5));
+        continue;
+      }
 
       int bCoords[] = { 11, 16, 21, 26 };
       for (int i = 0; i < 4; i++) {
@@ -368,17 +446,19 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
                ++terCount)
             ; // semicolon is intentional
           b = b - terCount;
-          b = rawToAtomId[b];
 
-          if (a >= 0 && b >= 0) {
-            auto aIndex = static_cast<Avogadro::Index>(a);
-            auto bIndex = static_cast<Avogadro::Index>(b);
-            if (aIndex < mol.atomCount() && bIndex < mol.atomCount()) {
-              mol.addBond(aIndex, bIndex, 1);
-            } else {
-              appendError("Invalid bond connection: " + std::to_string(a) +
-                          " - " + std::to_string(b));
-            }
+          Index bIndex = MaxIndex;
+          if (!resolveSerial(b, bIndex)) {
+            appendError("Ignoring CONECT bond to unknown atom serial " +
+                        buffer.substr(bCoords[i], 5));
+            continue;
+          }
+
+          if (aIndex < mol.atomCount() && bIndex < mol.atomCount()) {
+            mol.addBond(aIndex, bIndex, 1);
+          } else {
+            appendError("Invalid bond connection: " + std::to_string(aIndex) +
+                        " - " + std::to_string(bIndex));
           }
         }
       }
