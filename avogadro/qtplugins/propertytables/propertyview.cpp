@@ -6,6 +6,7 @@
 #include "propertyview.h"
 #include "core/avogadrocore.h"
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 
@@ -20,6 +21,9 @@
 #include <QtCore/QTextStream>
 #include <QtGui/QClipboard>
 #include <QtGui/QContextMenuEvent>
+#include <QtGui/QDragEnterEvent>
+#include <QtGui/QDragMoveEvent>
+#include <QtGui/QDropEvent>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QMenu>
 
@@ -39,6 +43,7 @@
 #include <QtCore/QDebug>
 
 #include <algorithm>
+#include <numeric>
 
 namespace Avogadro {
 
@@ -88,6 +93,17 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
   setAlternatingRowColors(true);
   // Allow sorting the table
   setSortingEnabled(true);
+
+  // Drag-to-reorder rows, atom table only (see rowDragAllowed()).
+  if (m_type == PropertyType::AtomType) {
+    setDragEnabled(true);
+    setAcceptDrops(true);
+    // QTableView paints the drop indicator itself once the model's root
+    // index carries Qt::ItemIsDropEnabled (see PropertyModel::flags()).
+    setDropIndicatorShown(true);
+    setDragDropMode(QAbstractItemView::InternalMove);
+    setDragDropOverwriteMode(false);
+  }
 }
 
 void PropertyView::selectionChanged(const QItemSelection& selected,
@@ -261,6 +277,138 @@ int PropertyView::viewRowForSource(int row) const
     return proxy->mapFromSource(m_model->index(row, 0)).row();
 
   return row;
+}
+
+bool PropertyView::isNaturalOrder() const
+{
+  const auto* proxy = qobject_cast<const QSortFilterProxyModel*>(model());
+  if (proxy == nullptr || m_model == nullptr)
+    return true;
+
+  // sortColumn() is the proxy's own record of whether a sort is applied.
+  // Comparing the row mapping instead would accept a sort that merely
+  // happens to match index order at this moment, and the dynamic re-sort
+  // after the reorder would snap the dropped row straight back. An equal
+  // row count confirms no filter is narrowing the view either, since that
+  // would break the row-to-index identity just as a sort does.
+  return proxy->sortColumn() < 0 && proxy->rowCount() == m_model->rowCount();
+}
+
+bool PropertyView::rowDragAllowed() const
+{
+  // Under a sort, a dragged row would just jump back to wherever the sort
+  // puts it, so reordering is only offered when rows are shown in index
+  // order.
+  return m_type == PropertyType::AtomType && m_molecule != nullptr &&
+         m_model != nullptr && isNaturalOrder();
+}
+
+void PropertyView::startDrag(Qt::DropActions supportedActions)
+{
+  if (rowDragAllowed())
+    QTableView::startDrag(supportedActions);
+}
+
+bool PropertyView::dragIsOurs(QDropEvent* event)
+{
+  if (rowDragAllowed() && event->source() == this)
+    return true;
+
+  event->ignore();
+  return false;
+}
+
+void PropertyView::dragEnterEvent(QDragEnterEvent* event)
+{
+  if (!dragIsOurs(event))
+    return;
+
+  QTableView::dragEnterEvent(event);
+}
+
+void PropertyView::dragMoveEvent(QDragMoveEvent* event)
+{
+  if (!dragIsOurs(event))
+    return;
+
+  // The base implementation is what keeps dropIndicatorPosition() up to
+  // date and paints the indicator line between rows.
+  QTableView::dragMoveEvent(event);
+}
+
+int PropertyView::dropTargetRow(const QPoint& pos) const
+{
+  const QModelIndex index = indexAt(pos);
+  if (!index.isValid())
+    return static_cast<int>(
+      m_molecule->atomCount()); // dropped past the last row
+
+  int row = sourceRow(index);
+  if (dropIndicatorPosition() == QAbstractItemView::BelowItem)
+    ++row;
+  return row;
+}
+
+bool PropertyView::moveAtomRow(int from, int to)
+{
+  const int count = static_cast<int>(m_molecule->atomCount());
+  if (from < 0 || from >= count || to < 0 || to > count)
+    return false;
+
+  // `to` is an insertion point, so a downward move loses a row above it.
+  const int insertAt = (to > from) ? to - 1 : to;
+  if (insertAt == from)
+    return false; // dropped back where it started
+
+  Core::Array<Index> order(count);
+  std::iota(order.begin(), order.end(), 0);
+  order.erase(order.begin() + from);
+  order.insert(order.begin() + insertAt, static_cast<Index>(from));
+
+  if (!m_molecule->undoMolecule()->reorderAtoms(order))
+    return false;
+
+  // The reset inside refresh() clears the view selection, which would run
+  // selectionChanged() and deselect every atom -- one undo command each,
+  // landing on the stack just after the reorder, and throwing away the
+  // selection that reorderAtoms() carried along. Hold the guard across the
+  // reset and the reselect that follows it.
+  m_updatingSelection = true;
+  m_model->refresh();
+
+  // Reselect the moved atom at its new row.
+  int newRow = viewRowForSource(insertAt);
+  if (newRow >= 0) {
+    selectRow(newRow);
+    scrollTo(model()->index(newRow, 0), QAbstractItemView::EnsureVisible);
+  }
+  m_updatingSelection = false;
+  return true;
+}
+
+void PropertyView::dropEvent(QDropEvent* event)
+{
+  if (!dragIsOurs(event))
+    return;
+
+  const QModelIndexList rows = selectionModel()->selectedRows();
+  if (rows.isEmpty()) {
+    event->ignore();
+    return;
+  }
+
+  int from = sourceRow(rows.first());
+  int to = dropTargetRow(event->position().toPoint());
+  moveAtomRow(from, to);
+
+  // The atoms have already been renumbered in place above. Reporting
+  // anything other than Qt::IgnoreAction here would let
+  // QAbstractItemView::startDrag() follow up with removeRows() on the
+  // dragged row, deleting the atom out from under the reorder we just did.
+  // PropertyModel deliberately does not implement removeRows() as a second
+  // line of defence against that.
+  event->setDropAction(Qt::IgnoreAction);
+  event->accept();
 }
 
 void PropertyView::hideEvent(QHideEvent*)

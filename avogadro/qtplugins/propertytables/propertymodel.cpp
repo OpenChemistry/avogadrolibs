@@ -900,12 +900,25 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
 
 Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
+    // The root index carries the drop permission for the table as a whole:
+    // the view tests it before it will accept a row dropped between two
+    // others. flags() is overridden outright here, so QAbstractItemModel's
+    // default of Qt::ItemIsDropEnabled for the root never applies -- without
+    // this, no drop indicator appears and dropEvent() is never reached.
+    if (m_type == AtomType)
+      return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
     return Qt::ItemIsEnabled;
+  }
+
+  // Only the atom table supports drag-to-reorder rows.
+  const Qt::ItemFlags dragFlag =
+    (m_type == AtomType) ? Qt::ItemIsDragEnabled : Qt::ItemFlags();
 
   // return QAbstractItemModel::flags(index) | Qt::ItemIsEditable
   // for the types and columns that can be edited
-  auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+  auto editable =
+    Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | dragFlag;
 
   // Custom property columns: editable for double/int/string, read-only for
   // matrix
@@ -916,9 +929,9 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
     if (idx >= 0 && idx < static_cast<int>(m_customColumns.size())) {
       if (m_customColumns[idx].type != CustomColumn::Matrix)
         return editable;
-      return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+      return Qt::ItemIsEnabled | Qt::ItemIsSelectable | dragFlag;
     }
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | dragFlag;
   }
 
   if (m_type == AtomType) {
@@ -944,7 +957,22 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
       return editable;
   }
 
-  return QAbstractItemModel::flags(index);
+  return QAbstractItemModel::flags(index) | dragFlag;
+}
+
+Qt::DropActions PropertyModel::supportedDropActions() const
+{
+  // The view's internal drag-and-drop plumbing checks this before it will
+  // let a drop proceed, even though the actual reordering happens in
+  // PropertyView::dropEvent rather than through dropMimeData().
+  return m_type == AtomType ? Qt::MoveAction : Qt::DropActions();
+}
+
+void PropertyModel::refresh()
+{
+  updateCache();
+  beginResetModel();
+  endResetModel();
 }
 
 bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
@@ -1344,9 +1372,7 @@ void PropertyModel::updateTable(unsigned int flags)
 
   // For structural changes, do a full model reset
   // Use beginResetModel/endResetModel to ensure thread-safe updates
-  updateCache();
-  beginResetModel();
-  endResetModel();
+  refresh();
 }
 
 void PropertyModel::updateCache() const
