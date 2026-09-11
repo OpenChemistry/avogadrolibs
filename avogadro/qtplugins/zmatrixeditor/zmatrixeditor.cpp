@@ -35,6 +35,9 @@ void ZMatrixEditor::buildDock()
 {
   m_dock = new QDockWidget(tr("Z-Matrix Editor"));
   m_dock->setObjectName(QStringLiteral("zmatrixEditorDock"));
+  // Starts hidden rather than relying on the application to hide it, so the
+  // toggle action and the dock agree from the outset whichever host adds it.
+  m_dock->hide();
 
   auto* contents = new QWidget(m_dock);
   auto* layout = new QVBoxLayout(contents);

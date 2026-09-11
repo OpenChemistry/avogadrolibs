@@ -246,6 +246,7 @@ bool ZMatrixModel::setData(const QModelIndex& index_, const QVariant& value,
         return false;
       undoMolecule->setAtomicNumber(atom,
                                     static_cast<unsigned char>(atomicNumber));
+      m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
       return true;
     }
 
@@ -334,10 +335,20 @@ void ZMatrixModel::setMolecule(QtGui::Molecule* molecule)
             SLOT(updateTable(unsigned int)));
   }
 
-  if (m_active)
+  if (m_active) {
     rebuildStructure();
-  else
-    m_dirty = true;
+    return;
+  }
+
+  // Deferring the rebuild must not leave the previous molecule's rows behind,
+  // since they index atoms that belong to a different molecule. Empty the
+  // table now and fill it when the dock is next shown.
+  beginResetModel();
+  m_coordinates.clear();
+  m_rowToAtom.clear();
+  m_lastBondCount = 0;
+  m_dirty = true;
+  endResetModel();
 }
 
 void ZMatrixModel::updateTable(unsigned int changes)

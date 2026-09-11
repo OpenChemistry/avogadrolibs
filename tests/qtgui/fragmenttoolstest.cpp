@@ -11,6 +11,7 @@
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <cmath>
+#include <limits>
 
 using Avogadro::calculateAngle;
 using Avogadro::calculateDihedral;
@@ -247,6 +248,86 @@ TEST(FragmentToolsTest, degenerateInputIsRefused)
 
   // Nothing was moved by any of the refusals.
   for (Index i = 0; i < mol.atomCount(); ++i)
+    EXPECT_NEAR(0.0, distance(original[i], mol.atomPosition3d(i)), 1e-12)
+      << "atom " << i;
+}
+
+// A value that is not a number must never reach a transform: it would spread
+// from there into every atom the fragment carries.
+TEST(FragmentToolsTest, nonFiniteValuesAreRefused)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildEthane(mol);
+  const Array<Vector3> original = mol.atomPositions3d();
+
+  const Real notANumber = std::numeric_limits<Real>::quiet_NaN();
+  const Real infinite = std::numeric_limits<Real>::infinity();
+
+  EXPECT_FALSE(FragmentTools::setDistance(mol, 1, 0, notANumber));
+  EXPECT_FALSE(FragmentTools::setDistance(mol, 1, 0, infinite));
+  EXPECT_FALSE(FragmentTools::setAngle(mol, 5, 1, 0, notANumber));
+  EXPECT_FALSE(FragmentTools::setTorsion(mol, 5, 1, 0, 2, notANumber));
+
+  // A distance is never negative either.
+  EXPECT_FALSE(FragmentTools::setDistance(mol, 1, 0, -1.5));
+
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    EXPECT_NEAR(0.0, distance(original[i], mol.atomPosition3d(i)), 1e-12)
+      << "atom " << i;
+}
+
+// An atom held in place by a ring cannot be moved to satisfy a coordinate.
+// Reporting success while moving nothing would leave the caller, and the
+// table it is driving, believing the edit took.
+TEST(FragmentToolsTest, edgeHeldByARingIsRefusedRatherThanIgnored)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int k = 0; k < 6; ++k) {
+    const double angle = k * M_PI / 3.0;
+    mol.addAtom(6, Vector3(1.4 * std::cos(angle), 1.4 * std::sin(angle), 0.0));
+  }
+  for (int k = 0; k < 6; ++k)
+    mol.addBond(k, (k + 1) % 6, 1);
+  const Array<Vector3> original = mol.atomPositions3d();
+
+  // The fragment for a ring bond holds only the atom it starts from, so an
+  // edit naming any other ring atom cannot be carried out.
+  const Array<Index> fragment = FragmentTools::fragmentUniqueIds(
+    mol, mol.bond(mol.atom(0), mol.atom(1)), mol.atom(1));
+  EXPECT_FALSE(FragmentTools::setAngle(mol, 2, 1, 0, 100.0, fragment));
+  EXPECT_FALSE(FragmentTools::setTorsion(mol, 3, 2, 1, 0, 40.0, fragment));
+
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    EXPECT_NEAR(0.0, distance(original[i], mol.atomPosition3d(i)), 1e-12)
+      << "atom " << i;
+}
+
+// A torsion is measured between two planes. With c on the a-b axis the
+// second plane does not exist, so the measured value is meaningless and no
+// rotation could reach the requested one.
+TEST(FragmentToolsTest, torsionWithoutASecondPlaneIsRefused)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  // a, b and c collinear along x; the moving atom is off the axis.
+  mol.addAtom(6, Vector3(0.0, 1.0, 0.0)); // atom, off axis
+  mol.addAtom(6, Vector3(0.0, 0.0, 0.0)); // a
+  mol.addAtom(6, Vector3(1.2, 0.0, 0.0)); // b
+  mol.addAtom(6, Vector3(2.4, 0.0, 0.0)); // c, on the a-b axis
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 1);
+  mol.addBond(2, 3, 1);
+  const Array<Vector3> original = mol.atomPositions3d();
+
+  EXPECT_FALSE(FragmentTools::setTorsion(mol, 0, 1, 2, 3, 60.0));
+
+  // And with c sitting on top of b, which is the same failure.
+  mol.setAtomPosition3d(3, mol.atomPosition3d(2));
+  EXPECT_FALSE(FragmentTools::setTorsion(mol, 0, 1, 2, 3, 60.0));
+
+  for (Index i = 0; i < 3; ++i)
     EXPECT_NEAR(0.0, distance(original[i], mol.atomPosition3d(i)), 1e-12)
       << "atom " << i;
 }

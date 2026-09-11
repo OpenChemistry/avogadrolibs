@@ -1105,7 +1105,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         bool ok;
         double length = value.toDouble(&ok);
         if (ok) {
-          setBondLength(index.row(), value.toDouble());
+          if (!setBondLength(index.row(), length))
+            return false;
         }
         break;
       }
@@ -1148,7 +1149,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       double angle = value.toDouble(&ok);
       if (!ok)
         return false;
-      setAngle(index.row(), angle);
+      if (!setAngle(index.row(), angle))
+        return false;
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
@@ -1159,7 +1161,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       double angle = value.toDouble(&ok);
       if (!ok)
         return false;
-      setTorsion(index.row(), angle);
+      if (!setTorsion(index.row(), angle))
+        return false;
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
@@ -1182,25 +1185,27 @@ bool PropertyModel::isColorIndex(const QModelIndex& index) const
   return false;
 }
 
-void PropertyModel::setBondLength(unsigned int index, double length)
+bool PropertyModel::setBondLength(unsigned int index, double length)
 {
   if (m_molecule == nullptr)
-    return;
+    return false;
 
   if (index >= m_molecule->bondCount())
-    return;
+    return false;
 
   auto* undoMolecule = m_molecule->undoMolecule();
   auto bond = undoMolecule->bond(index);
 
   // The second atom and the fragment hanging off it move; the first anchors.
-  QtGui::FragmentTools::setDistance(*undoMolecule, bond.atom2().index(),
-                                    bond.atom1().index(), length);
+  if (!QtGui::FragmentTools::setDistance(*undoMolecule, bond.atom2().index(),
+                                         bond.atom1().index(), length))
+    return false;
 
   m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
+  return true;
 }
 
-void PropertyModel::setAngle(unsigned int index, double newValue)
+bool PropertyModel::setAngle(unsigned int index, double newValue)
 {
   // the index refers to the angle
   auto angle = m_angles[index];
@@ -1214,12 +1219,12 @@ void PropertyModel::setAngle(unsigned int index, double newValue)
   // That is not what a z-matrix row does, so the fragment is chosen here
   // rather than taken from the default.
   auto bond = undoMolecule->bond(atom1, atom2);
-  QtGui::FragmentTools::setAngle(
+  return QtGui::FragmentTools::setAngle(
     *undoMolecule, atom3.index(), atom2.index(), atom1.index(), newValue,
     QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom2));
 }
 
-void PropertyModel::setTorsion(unsigned int index, double newValue)
+bool PropertyModel::setTorsion(unsigned int index, double newValue)
 {
   auto torsion = m_torsions[index];
   auto* undoMolecule = m_molecule->undoMolecule();
@@ -1233,7 +1238,7 @@ void PropertyModel::setTorsion(unsigned int index, double newValue)
   // z-matrix row moves only the atom that row places, so again the fragment
   // is chosen here.
   auto bond = undoMolecule->bond(atom2, atom3);
-  QtGui::FragmentTools::setTorsion(
+  return QtGui::FragmentTools::setTorsion(
     *undoMolecule, atom4.index(), atom3.index(), atom2.index(), atom1.index(),
     newValue,
     QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom3));

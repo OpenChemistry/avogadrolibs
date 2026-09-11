@@ -12,6 +12,7 @@
 #include <QtCore/QObject>
 
 #include <algorithm>
+#include <cmath>
 #include <initializer_list>
 #include <vector>
 
@@ -142,6 +143,26 @@ const Real coincidentTolerance = 1e-8;
 // well-defined plane to rotate in or about.
 const Real collinearTolerance = 1e-6;
 
+// A NaN or an infinity reaching a transform would spread from there into
+// every atom it moves, so a value that cannot be meant is refused at the
+// door rather than stored.
+bool isUsableValue(Real value)
+{
+  return std::isfinite(value);
+}
+
+// The caller names the atom it wants moved, so a fragment that does not
+// contain that atom cannot carry the edit out. That happens when the atom is
+// held by a ring: the coordinate simply cannot be set without deforming the
+// ring, and saying so beats reporting a success that moved nothing.
+bool fragmentMoves(RWMolecule& molecule, const Core::Array<Index>& fragment,
+                   Index atom)
+{
+  const Index uniqueId = molecule.atomUniqueId(molecule.atom(atom));
+  return std::find(fragment.begin(), fragment.end(), uniqueId) !=
+         fragment.end();
+}
+
 // The named atoms must all exist and all be different, or the coordinate
 // does not describe anything.
 bool distinctAndValid(RWMolecule& molecule, std::initializer_list<Index> atoms)
@@ -163,6 +184,10 @@ bool FragmentTools::setDistance(RWMolecule& molecule, Index atom, Index a,
                                 Real length, const Core::Array<Index>& fragment)
 {
   if (!distinctAndValid(molecule, { atom, a }))
+    return false;
+  if (!isUsableValue(length) || length < 0.0)
+    return false; // a distance is never negative
+  if (!fragmentMoves(molecule, fragment, atom))
     return false;
 
   const Vector3 positionA = molecule.atomPosition3d(a);
@@ -192,6 +217,10 @@ bool FragmentTools::setAngle(RWMolecule& molecule, Index atom, Index a, Index b,
                              Real degrees, const Core::Array<Index>& fragment)
 {
   if (!distinctAndValid(molecule, { atom, a, b }))
+    return false;
+  if (!isUsableValue(degrees))
+    return false;
+  if (!fragmentMoves(molecule, fragment, atom))
     return false;
 
   const Vector3 position = molecule.atomPosition3d(atom);
@@ -237,6 +266,10 @@ bool FragmentTools::setTorsion(RWMolecule& molecule, Index atom, Index a,
 {
   if (!distinctAndValid(molecule, { atom, a, b, c }))
     return false;
+  if (!isUsableValue(degrees))
+    return false;
+  if (!fragmentMoves(molecule, fragment, atom))
+    return false;
 
   const Vector3 position = molecule.atomPosition3d(atom);
   const Vector3 positionA = molecule.atomPosition3d(a);
@@ -253,6 +286,15 @@ bool FragmentTools::setTorsion(RWMolecule& molecule, Index atom, Index a,
   // so there is nothing an edit could achieve.
   const Vector3 toAtom = position - positionA;
   if (toAtom.normalized().cross(axis).norm() < collinearTolerance)
+    return false;
+
+  // A torsion is measured between two planes, and a-b-c only defines the
+  // second one while c is off the a-b axis. With c on that axis, or sitting
+  // on top of b, the measured value is meaningless, so an edit against it
+  // could not reach what was asked for.
+  const Vector3 toC = positionC - positionB;
+  if (toC.norm() < coincidentTolerance ||
+      toC.normalized().cross(axis).norm() < collinearTolerance)
     return false;
 
   const Real change =

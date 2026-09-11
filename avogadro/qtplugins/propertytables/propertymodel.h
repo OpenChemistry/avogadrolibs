@@ -134,9 +134,12 @@ private:
 
   QString secStructure(unsigned int type) const;
 
-  void setBondLength(unsigned int index, double value);
-  void setAngle(unsigned int index, double newValue);
-  void setTorsion(unsigned int index, double newValue);
+  // Each returns false when the edit could not be carried out -- a value
+  // that is not a number, or a geometry that cannot reach it, such as an
+  // atom held in place by a ring.
+  bool setBondLength(unsigned int index, double value);
+  bool setAngle(unsigned int index, double newValue);
+  bool setTorsion(unsigned int index, double newValue);
 
   /*
    * For each category (atom, bond etc), an enum specifies which columns hold
