@@ -136,18 +136,9 @@ private:
 
   QString secStructure(unsigned int type) const;
 
-  std::vector<int> m_fragment;
-  Eigen::Affine3d m_transform;
-  bool fragmentHasAtom(int uid) const;
-  void buildFragment(const QtGui::RWBond& bond, const QtGui::RWAtom& startAtom);
-  bool fragmentRecurse(const QtGui::RWBond& bond,
-                       const QtGui::RWAtom& startAtom,
-                       const QtGui::RWAtom& currentAtom);
-
   void setBondLength(unsigned int index, double value);
   void setAngle(unsigned int index, double newValue);
   void setTorsion(unsigned int index, double newValue);
-  void transformFragment() const;
 
   QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
                                 const QtGui::RWAtom& atom) const
