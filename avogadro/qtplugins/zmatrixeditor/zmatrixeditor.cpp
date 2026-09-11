@@ -70,7 +70,7 @@ void ZMatrixEditor::buildDock()
   // cannot disagree about whether it is showing.
   m_action = m_dock->toggleViewAction();
   m_action->setText(tr("&Z-Matrix Editor…"));
-  m_action->setProperty("menu priority", 890);
+  m_action->setProperty("menu priority", 910);
 
   connect(m_dock.data(), &QDockWidget::visibilityChanged, m_model,
           &ZMatrixModel::setActive);
