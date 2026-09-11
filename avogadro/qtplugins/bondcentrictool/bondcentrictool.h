@@ -121,20 +121,11 @@ private:
   bool bondContainsAtom(const QtGui::RWBond& bond,
                         const QtGui::RWAtom& atom) const;
 
-  // The 'fragment' is the SkeletonTree of the 1.x implementation. It is a list
-  // of atoms created by buildFragment(bond, startAtom), which walks the bonds
-  // connected to startAtom (not including the passed-in bond), adding each
-  // atom it encounters to the list, and then walking that atom's bonds. If a
-  // cycle is detected, only startAtom is added to m_fragment.
+  // The fragment is the set of atoms that move together: everything on the
+  // clicked atom's side of the bond being manipulated. It is found once when
+  // a drag begins and reused for the rest of the gesture, so resetFragment()
+  // is called from each of the initXxx() handlers.
   void resetFragment() { m_fragment.clear(); }
-  bool fragmentHasAtom(int uid) const;
-  void buildFragment(const QtGui::RWBond& bond, const QtGui::RWAtom& startAtom);
-  bool buildFragmentRecurse(const QtGui::RWBond& bond,
-                            const QtGui::RWAtom& startAtom,
-                            const QtGui::RWAtom& currentAtom);
-  // Use transformFragment to transform the position of each atom in the
-  // fragment by m_transform.
-  void transformFragment() const;
 
   QAction* m_activateAction;
   QtGui::RWMolecule* m_molecule;
@@ -147,7 +138,7 @@ private:
   Vector3f m_planeNormal;
 
   // unique ids of atoms that will need to be moved:
-  std::vector<int> m_fragment;
+  Core::Array<Index> m_fragment; // unique ids, so they survive the edits
   Eigen::Affine3f m_transform;
 
   // Snap angles for RotatePlane. Angles are relative to m_planeSnapRef and

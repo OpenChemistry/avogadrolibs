@@ -1097,3 +1097,78 @@ TEST(RWMoleculeTest, reorderAtomsCarriesResidues)
   EXPECT_EQ(static_cast<Index>(1), restored.atomByName("CA").index());
   EXPECT_EQ(static_cast<Index>(2), restored.atomByName("C").index());
 }
+
+// An index from before an atom was removed used to be written straight into
+// a std::vector<bool> sized to the current atom count, corrupting the heap
+// and crashing somewhere unrelated later. It has to be ignored instead.
+TEST(RWMoleculeTest, setAtomSelectedIgnoresOutOfRangeIndices)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 5);
+  mol.setAtomSelected(2, true);
+  const int before = mol.undoStack().count();
+
+  // Past the end, and the sentinel an invalid lookup returns.
+  mol.setAtomSelected(5, true);
+  mol.setAtomSelected(7, true);
+  mol.setAtomSelected(Avogadro::MaxIndex, true);
+
+  // The molecule is untouched and no command was pushed for a write that
+  // could not land anywhere.
+  EXPECT_EQ(before, mol.undoStack().count());
+  EXPECT_EQ(static_cast<Index>(5), mol.atomCount());
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    EXPECT_EQ(i == 2, mol.atomSelected(i)) << "atom " << i;
+
+  // And the atoms themselves still hold what they were given.
+  for (Index i = 0; i < 5; ++i)
+    expectAtomIs(mol, i, i);
+}
+
+// Renumbering swaps atoms that are bonded to each other, which used to leave
+// Graph's adjacency list naming those vertices as their own neighbours. The
+// edge between them could then no longer be found, so removeEdge() returned
+// without removing anything while the caller dropped the matching bond
+// order -- and the molecule crashed later, in unrelated bond bookkeeping.
+TEST(RWMoleculeTest, reorderThenRemoveABondedAtom)
+{
+  Molecule m;
+  RWMolecule mol(m);
+
+  // A central atom whose index is not first, so the renumbering has to swap
+  // it with one of the atoms bonded to it.
+  mol.addAtom(1, Vector3(1.0, 0.0, 0.0));
+  mol.addAtom(1, Vector3(-0.333, 0.943, 0.0));
+  mol.addAtom(6, Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(1, Vector3(-0.333, -0.471, 0.816));
+  mol.addAtom(1, Vector3(-0.333, -0.471, -0.816));
+  mol.addBond(2, 0, 1);
+  mol.addBond(2, 1, 1);
+  mol.addBond(2, 3, 1);
+  mol.addBond(2, 4, 1);
+
+  // Swap the carbon with a hydrogen it is bonded to.
+  Array<Index> order(5);
+  order[0] = 0;
+  order[1] = 2;
+  order[2] = 1;
+  order[3] = 3;
+  order[4] = 4;
+  ASSERT_TRUE(mol.reorderAtoms(order));
+
+  // The carbon is at index 1 now, still with four bonds, and each of them is
+  // reachable from both ends.
+  ASSERT_EQ(static_cast<Index>(4), mol.bondCount());
+  EXPECT_EQ(static_cast<size_t>(4), mol.bonds(1).size());
+  for (Index b = 0; b < mol.bondCount(); ++b) {
+    const RWMolecule::BondType bond = mol.bond(b);
+    EXPECT_TRUE(mol.bond(bond.atom1(), bond.atom2()).isValid())
+      << "bond " << b << " cannot be found from its own atoms";
+  }
+
+  // Removing the multiply-bonded atom is what used to take it down.
+  EXPECT_TRUE(mol.removeAtom(1));
+  EXPECT_EQ(static_cast<Index>(4), mol.atomCount());
+  EXPECT_EQ(static_cast<Index>(0), mol.bondCount());
+}

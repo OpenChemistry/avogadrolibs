@@ -15,8 +15,6 @@
 #include <avogadro/core/dihedraliterator.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <Eigen/Geometry>
-
 namespace Avogadro {
 
 namespace Core {
@@ -139,12 +137,6 @@ private:
   void setBondLength(unsigned int index, double value);
   void setAngle(unsigned int index, double newValue);
   void setTorsion(unsigned int index, double newValue);
-
-  QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
-                                const QtGui::RWAtom& atom) const
-  {
-    return bond.atom1() == atom ? bond.atom2() : bond.atom1();
-  }
 
   /*
    * For each category (atom, bond etc), an enum specifies which columns hold

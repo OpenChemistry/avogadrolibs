@@ -269,6 +269,12 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
 void RWMolecule::setAtomSelected(Index atomId, bool selected,
                                  const QString& undoText)
 {
+  // A caller holding an index from before an atom was removed would other-
+  // wise write past the end of the selection bitfield, corrupting whatever
+  // follows it rather than failing where the mistake was made.
+  if (atomId >= atomCount())
+    return;
+
   auto* comm = new ModifySelectionCommand(*this, atomId, selected);
   comm->setText(undoText);
   comm->setCanMerge(true);

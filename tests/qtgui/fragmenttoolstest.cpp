@@ -165,6 +165,52 @@ TEST(FragmentToolsTest, ringBondMovesOnlyTheNamedAtom)
   EXPECT_NEAR(0.0, distance(other, mol.atomPosition3d(2)), 1e-12);
 }
 
+// A ring bond cannot split the molecule in two, but the substituents on the
+// moving atom are held by nothing except that atom, so they have to come
+// along -- otherwise stretching a ring bond leaves its hydrogens behind.
+TEST(FragmentToolsTest, ringBondCarriesTheMovingAtomsSubstituents)
+{
+  Molecule m;
+  RWMolecule mol(m);
+
+  // Cyclopentane: five ring carbons, each carrying two hydrogens.
+  for (int k = 0; k < 5; ++k) {
+    const double angle = k * 2.0 * M_PI / 5.0;
+    mol.addAtom(6, Vector3(1.5 * std::cos(angle), 1.5 * std::sin(angle), 0.0));
+  }
+  for (int k = 0; k < 5; ++k)
+    mol.addBond(k, (k + 1) % 5, 1);
+  for (int k = 0; k < 5; ++k) {
+    const double angle = k * 2.0 * M_PI / 5.0;
+    for (int h = 0; h < 2; ++h) {
+      const Index hydrogen = mol.atomCount();
+      mol.addAtom(1, Vector3(2.1 * std::cos(angle), 2.1 * std::sin(angle),
+                             h == 0 ? 0.9 : -0.9));
+      mol.addBond(k, hydrogen, 1);
+    }
+  }
+
+  // Hydrogens 5 and 6 sit on carbon 0, which is the atom that moves.
+  const double c0h5 = distance(mol.atomPosition3d(0), mol.atomPosition3d(5));
+  const double c0h6 = distance(mol.atomPosition3d(0), mol.atomPosition3d(6));
+  const Vector3 c2 = mol.atomPosition3d(2);
+  const Vector3 h7 = mol.atomPosition3d(7); // on carbon 1, must stay
+
+  ASSERT_TRUE(FragmentTools::setDistance(mol, 0, 1, 2.2));
+  EXPECT_NEAR(2.2, distance(mol.atomPosition3d(0), mol.atomPosition3d(1)),
+              1e-9);
+
+  // Carbon 0 took its own hydrogens with it, rigidly.
+  EXPECT_NEAR(c0h5, distance(mol.atomPosition3d(0), mol.atomPosition3d(5)),
+              1e-9);
+  EXPECT_NEAR(c0h6, distance(mol.atomPosition3d(0), mol.atomPosition3d(6)),
+              1e-9);
+
+  // The rest of the ring, and hydrogens belonging to it, did not move.
+  EXPECT_NEAR(0.0, distance(c2, mol.atomPosition3d(2)), 1e-12);
+  EXPECT_NEAR(0.0, distance(h7, mol.atomPosition3d(7)), 1e-12);
+}
+
 // An internal coordinate may name atoms that are not bonded, and then there
 // is no fragment to carry along.
 TEST(FragmentToolsTest, unbondedReferenceMovesOneAtom)

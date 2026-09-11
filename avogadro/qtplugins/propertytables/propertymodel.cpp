@@ -26,8 +26,6 @@
 
 #include <limits>
 
-#include <Eigen/Geometry>
-
 namespace Avogadro {
 
 using Avogadro::Core::Array;
@@ -1192,24 +1190,12 @@ void PropertyModel::setBondLength(unsigned int index, double length)
   if (index >= m_molecule->bondCount())
     return;
 
-  // figure out how much to move and the vector of displacement
   auto* undoMolecule = m_molecule->undoMolecule();
   auto bond = undoMolecule->bond(index);
-  Vector3 v1 = bond.atom1().position3d();
-  Vector3 v2 = bond.atom2().position3d();
-  Vector3 diff = v2 - v1;
-  double currentLength = diff.norm();
-  diff.normalize();
-  Vector3 delta = diff * (length - currentLength);
 
-  Eigen::Affine3d transform;
-  transform.setIdentity();
-  transform.translate(delta);
-
-  QtGui::FragmentTools::transformAtoms(
-    *undoMolecule,
-    QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, bond.atom2()),
-    transform, tr("Adjust Bond Length"));
+  // The second atom and the fragment hanging off it move; the first anchors.
+  QtGui::FragmentTools::setDistance(*undoMolecule, bond.atom2().index(),
+                                    bond.atom1().index(), length);
 
   m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
 }
@@ -1217,37 +1203,20 @@ void PropertyModel::setBondLength(unsigned int index, double length)
 void PropertyModel::setAngle(unsigned int index, double newValue)
 {
   // the index refers to the angle
-
   auto angle = m_angles[index];
   auto* undoMolecule = m_molecule->undoMolecule();
   auto atom1 = undoMolecule->atom(std::get<0>(angle));
   auto atom2 = undoMolecule->atom(std::get<1>(angle));
   auto atom3 = undoMolecule->atom(std::get<2>(angle));
 
+  // This table rotates everything on the vertex's side of the first bond,
+  // which carries the vertex's other substituents along with the far atom.
+  // That is not what a z-matrix row does, so the fragment is chosen here
+  // rather than taken from the default.
   auto bond = undoMolecule->bond(atom1, atom2);
-  Vector3 a = atom1.position3d();
-  Vector3 b = atom2.position3d();
-  Vector3 c = atom3.position3d();
-  const double currentValue = calculateAngle(a, b, c);
-  Vector3 ab = b - a;
-  Vector3 bc = c - b;
-
-  // Axis of rotation is the cross product of the vectors
-  const Vector3 axis((ab.cross(bc)).normalized());
-  // Angle of rotation
-  const double change = (newValue - currentValue) * M_PI / 180.0;
-
-  // Build transform
-  Eigen::Affine3d transform;
-  transform.setIdentity();
-  transform.translate(b);
-  transform.rotate(Eigen::AngleAxis(-change, axis));
-  transform.translate(-b);
-
-  QtGui::FragmentTools::transformAtoms(
-    *undoMolecule,
-    QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom2),
-    transform, tr("Adjust Angle"));
+  QtGui::FragmentTools::setAngle(
+    *undoMolecule, atom3.index(), atom2.index(), atom1.index(), newValue,
+    QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom2));
 }
 
 void PropertyModel::setTorsion(unsigned int index, double newValue)
@@ -1259,29 +1228,15 @@ void PropertyModel::setTorsion(unsigned int index, double newValue)
   auto atom3 = undoMolecule->atom(std::get<2>(torsion));
   auto atom4 = undoMolecule->atom(std::get<3>(torsion));
 
+  // A torsion twists the whole side of the central bond, so that the
+  // geometry around the two atoms on the axis stays rigid. Placing a
+  // z-matrix row moves only the atom that row places, so again the fragment
+  // is chosen here.
   auto bond = undoMolecule->bond(atom2, atom3);
-  Vector3 a = atom1.position3d();
-  Vector3 b = atom2.position3d();
-  Vector3 c = atom3.position3d();
-  Vector3 d = atom4.position3d();
-  const double currentValue = calculateDihedral(a, b, c, d);
-
-  // Axis of rotation
-  const Vector3 axis((c - b).normalized());
-  // Angle of rotation
-  const double change = (newValue - currentValue) * M_PI / 180.0;
-
-  // Build transform
-  Eigen::Affine3d transform;
-  transform.setIdentity();
-  transform.translate(c);
-  transform.rotate(Eigen::AngleAxis(change, axis));
-  transform.translate(-c);
-
-  QtGui::FragmentTools::transformAtoms(
-    *undoMolecule,
-    QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom3),
-    transform, tr("Adjust Torsion"));
+  QtGui::FragmentTools::setTorsion(
+    *undoMolecule, atom4.index(), atom3.index(), atom2.index(), atom1.index(),
+    newValue,
+    QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom3));
 }
 
 QStringList PropertyModel::availableChargeTypes() const

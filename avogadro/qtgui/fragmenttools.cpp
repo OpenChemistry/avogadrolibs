@@ -19,53 +19,39 @@ namespace Avogadro::QtGui {
 
 namespace {
 
-bool fragmentHasAtom(const Core::Array<Index>& fragment, Index uniqueId)
-{
-  return std::find(fragment.begin(), fragment.end(), uniqueId) !=
-         fragment.end();
-}
-
 /**
- * Walk outwards from @p currentAtom, adding everything reachable without
- * crossing @p bond.
+ * Mark every atom reachable from @p from without crossing @p bond and
+ * without passing through @p blocked.
  *
- * @p bond stays the bond being split all the way down, so that the far end
- * looked for is always the right atom. Handing the recursion the bond just
- * traversed instead would ask getOtherAtom() for an atom that is not in it,
- * which quietly answers with one of its own -- and then a ring is only
- * noticed when it closes within a single step.
- *
- * @return False as soon as the far end of @p bond is reached by another
- * route, which means the bond is in a ring.
+ * Iterative rather than recursive: a fragment can be most of the molecule,
+ * and a recursive walk would put one stack frame on it per atom.
  */
-bool fragmentRecurse(RWMolecule& molecule, const RWBond& bond,
-                     const RWAtom& startAtom, const RWAtom& currentAtom,
-                     Core::Array<Index>& fragment)
+void reachableFrom(RWMolecule& molecule, const RWBond& bond, const RWAtom& from,
+                   Index blocked, std::vector<bool>& reached)
 {
-  const RWAtom bondedAtom(bond.getOtherAtom(startAtom));
-  const Core::Array<RWBond> bonds = molecule.bonds(currentAtom);
+  if (from.index() >= reached.size())
+    return;
 
-  for (const auto& it : bonds) {
-    if (it == bond)
-      continue; // never cross the bond being split
+  std::vector<Index> pending;
+  reached[from.index()] = true;
+  pending.push_back(from.index());
 
-    const RWAtom nextAtom = it.getOtherAtom(currentAtom);
-    if (nextAtom == bondedAtom)
-      return false; // reached the far end another way, so this is a ring
+  while (!pending.empty()) {
+    const RWAtom current = molecule.atom(pending.back());
+    pending.pop_back();
 
-    if (nextAtom != startAtom) {
-      // Atoms already collected are skipped, which is what stops the
-      // recursion running away around a ring elsewhere in the fragment.
-      const Index uniqueId = molecule.atomUniqueId(nextAtom);
-      if (!fragmentHasAtom(fragment, uniqueId)) {
-        fragment.push_back(uniqueId);
-        if (!fragmentRecurse(molecule, bond, startAtom, nextAtom, fragment))
-          return false;
-      }
+    for (const auto& it : molecule.bonds(current)) {
+      if (it == bond)
+        continue; // never cross the bond being split
+
+      const Index next = it.getOtherAtom(current).index();
+      if (next == blocked || next >= reached.size() || reached[next])
+        continue;
+
+      reached[next] = true;
+      pending.push_back(next);
     }
   }
-
-  return true;
 }
 
 } // namespace
@@ -75,12 +61,30 @@ Core::Array<Index> FragmentTools::fragmentUniqueIds(RWMolecule& molecule,
                                                     const RWAtom& startAtom)
 {
   Core::Array<Index> fragment;
-  if (!fragmentRecurse(molecule, bond, startAtom, startAtom, fragment)) {
-    // The bond is in a ring, so there is no side of it that can move on its
-    // own. Move the single atom and leave the ring intact.
-    fragment.clear();
+  const Index atomCount = molecule.atomCount();
+  const Index start = startAtom.index();
+  if (start >= atomCount)
+    return fragment;
+
+  // What the far end holds on to: everything it can still reach once the
+  // bond is taken away and the moving atom is stepped around. For an
+  // ordinary bond that is simply the other side. For a bond in a ring it is
+  // the rest of the ring, which cannot move without deforming it.
+  std::vector<bool> held(atomCount, false);
+  reachableFrom(molecule, bond, bond.getOtherAtom(startAtom), start, held);
+
+  // What moves: everything the starting atom reaches without crossing the
+  // bond, less whatever the far end holds. Substituents hanging off the
+  // starting atom are reached here and are held by nothing else, so they
+  // come along even when the bond itself is in a ring -- which is the whole
+  // point of asking the question this way round.
+  std::vector<bool> moving(atomCount, false);
+  reachableFrom(molecule, bond, startAtom, MaxIndex, moving);
+
+  for (Index i = 0; i < atomCount; ++i) {
+    if (moving[i] && !held[i])
+      fragment.push_back(molecule.atomUniqueId(molecule.atom(i)));
   }
-  fragment.push_back(molecule.atomUniqueId(startAtom));
 
   return fragment;
 }
@@ -109,15 +113,22 @@ Core::Array<Index> FragmentTools::fragmentUniqueIds(RWMolecule& molecule,
 
 void FragmentTools::transformAtoms(RWMolecule& molecule,
                                    const Core::Array<Index>& uniqueIds,
-                                   const Eigen::Affine3d& transform,
-                                   const QString& undoText)
+                                   const Eigen::Affine3d& transform)
 {
-  molecule.beginMergeMode(undoText);
   for (const Index uniqueId : uniqueIds) {
     RWAtom atom = molecule.atomByUniqueId(uniqueId);
     if (atom.isValid())
       atom.setPosition3d(transform * atom.position3d());
   }
+}
+
+void FragmentTools::transformAtoms(RWMolecule& molecule,
+                                   const Core::Array<Index>& uniqueIds,
+                                   const Eigen::Affine3d& transform,
+                                   const QString& undoText)
+{
+  molecule.beginMergeMode(undoText);
+  transformAtoms(molecule, uniqueIds, transform);
   molecule.endMergeMode();
 }
 
@@ -135,12 +146,11 @@ const Real collinearTolerance = 1e-6;
 // does not describe anything.
 bool distinctAndValid(RWMolecule& molecule, std::initializer_list<Index> atoms)
 {
-  const std::vector<Index> named(atoms);
-  for (size_t i = 0; i < named.size(); ++i) {
-    if (!molecule.atom(named[i]).isValid())
+  for (const Index* i = atoms.begin(); i != atoms.end(); ++i) {
+    if (!molecule.atom(*i).isValid())
       return false;
-    for (size_t j = i + 1; j < named.size(); ++j) {
-      if (named[i] == named[j])
+    for (const Index* j = i + 1; j != atoms.end(); ++j) {
+      if (*i == *j)
         return false;
     }
   }
@@ -150,7 +160,7 @@ bool distinctAndValid(RWMolecule& molecule, std::initializer_list<Index> atoms)
 } // namespace
 
 bool FragmentTools::setDistance(RWMolecule& molecule, Index atom, Index a,
-                                Real length)
+                                Real length, const Core::Array<Index>& fragment)
 {
   if (!distinctAndValid(molecule, { atom, a }))
     return false;
@@ -167,13 +177,19 @@ bool FragmentTools::setDistance(RWMolecule& molecule, Index atom, Index a,
   transform.setIdentity();
   transform.translate(Vector3(direction * (length - current)));
 
-  transformAtoms(molecule, fragmentUniqueIds(molecule, a, atom), transform,
-                 QObject::tr("Adjust Distance"));
+  transformAtoms(molecule, fragment, transform, QObject::tr("Adjust Distance"));
   return true;
 }
 
+bool FragmentTools::setDistance(RWMolecule& molecule, Index atom, Index a,
+                                Real length)
+{
+  return setDistance(molecule, atom, a, length,
+                     fragmentUniqueIds(molecule, a, atom));
+}
+
 bool FragmentTools::setAngle(RWMolecule& molecule, Index atom, Index a, Index b,
-                             Real degrees)
+                             Real degrees, const Core::Array<Index>& fragment)
 {
   if (!distinctAndValid(molecule, { atom, a, b }))
     return false;
@@ -204,13 +220,20 @@ bool FragmentTools::setAngle(RWMolecule& molecule, Index atom, Index a, Index b,
   transform.rotate(Eigen::AngleAxis<Real>(-change, axis));
   transform.translate(-positionA);
 
-  transformAtoms(molecule, fragmentUniqueIds(molecule, a, atom), transform,
-                 QObject::tr("Adjust Angle"));
+  transformAtoms(molecule, fragment, transform, QObject::tr("Adjust Angle"));
   return true;
 }
 
+bool FragmentTools::setAngle(RWMolecule& molecule, Index atom, Index a, Index b,
+                             Real degrees)
+{
+  return setAngle(molecule, atom, a, b, degrees,
+                  fragmentUniqueIds(molecule, a, atom));
+}
+
 bool FragmentTools::setTorsion(RWMolecule& molecule, Index atom, Index a,
-                               Index b, Index c, Real degrees)
+                               Index b, Index c, Real degrees,
+                               const Core::Array<Index>& fragment)
 {
   if (!distinctAndValid(molecule, { atom, a, b, c }))
     return false;
@@ -242,9 +265,15 @@ bool FragmentTools::setTorsion(RWMolecule& molecule, Index atom, Index a,
   transform.rotate(Eigen::AngleAxis<Real>(-change, axis));
   transform.translate(-positionA);
 
-  transformAtoms(molecule, fragmentUniqueIds(molecule, a, atom), transform,
-                 QObject::tr("Adjust Torsion"));
+  transformAtoms(molecule, fragment, transform, QObject::tr("Adjust Torsion"));
   return true;
+}
+
+bool FragmentTools::setTorsion(RWMolecule& molecule, Index atom, Index a,
+                               Index b, Index c, Real degrees)
+{
+  return setTorsion(molecule, atom, a, b, c, degrees,
+                    fragmentUniqueIds(molecule, a, atom));
 }
 
 } // namespace Avogadro::QtGui

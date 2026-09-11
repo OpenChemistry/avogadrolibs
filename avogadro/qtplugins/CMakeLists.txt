@@ -184,6 +184,7 @@ add_subdirectory(surfacerender)
 add_subdirectory(noncovalent)
 add_subdirectory(vanderwaals)
 add_subdirectory(wireframe)
+add_subdirectory(zmatrixeditor)
 if (USE_OPENGL)
   # needs some raw OpenGL code
   add_subdirectory(overlayaxes)

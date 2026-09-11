@@ -101,7 +101,8 @@ public:
 
   /**
    * @return The dock area @p widget should be placed in when it is first
-   * added. Defaults to the left area, alongside the tool and display docks.
+   * added. Defaults to the right area, since the left already carries the
+   * tool, display, file and layer docks.
    */
   virtual Qt::DockWidgetArea preferredDockArea(QDockWidget* widget) const;
 

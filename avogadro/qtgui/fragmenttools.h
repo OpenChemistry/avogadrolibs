@@ -40,12 +40,15 @@ class AVOGADROQTGUI_EXPORT FragmentTools
 {
 public:
   /**
-   * The atoms on @p startAtom's side of @p bond, as unique ids, including
-   * @p startAtom itself.
+   * The atoms that move with @p startAtom when @p bond is manipulated, as
+   * unique ids, including @p startAtom itself.
    *
-   * When @p bond lies in a ring there is no such side -- every atom can be
-   * reached from both ends without crossing the bond -- so the result is
-   * @p startAtom alone. That keeps a ring rigid instead of tearing it open.
+   * For an ordinary bond that is everything on @p startAtom's side of it.
+   * When @p bond lies in a ring there is no such side, since every ring atom
+   * is reachable from both ends without crossing the bond; the ring itself
+   * then stays rigid, but whatever hangs off @p startAtom and is held by
+   * nothing else -- its hydrogens and other substituents -- still comes
+   * along.
    *
    * @param molecule The molecule to walk.
    * @param bond The bond whose two sides are being separated.
@@ -69,6 +72,18 @@ public:
   static Core::Array<Index> fragmentUniqueIds(RWMolecule& molecule,
                                               Index anchorAtom,
                                               Index movingAtom);
+
+  /**
+   * Apply @p transform to every atom named in @p uniqueIds.
+   *
+   * The moves are pushed individually, so a caller that wants them to undo
+   * as one step is responsible for the surrounding merge scope. Use this
+   * from a caller that already holds one -- an interactive drag, say, whose
+   * whole gesture should undo at once.
+   */
+  static void transformAtoms(RWMolecule& molecule,
+                             const Core::Array<Index>& uniqueIds,
+                             const Eigen::Affine3d& transform);
 
   /**
    * Apply @p transform to every atom named in @p uniqueIds, as a single
@@ -99,6 +114,29 @@ public:
                        Real degrees);
   static bool setTorsion(RWMolecule& molecule, Index atom, Index a, Index b,
                          Index c, Real degrees);
+  /** @} */
+
+  /**
+   * Set one internal coordinate, moving exactly @p fragment.
+   *
+   * The geometry these reach is the same as the overloads above -- the same
+   * distance, angle or torsion, measured the same way round -- but the
+   * caller says what moves to get there. Which part of the molecule *should*
+   * move is a question about the edit, not about the coordinate: placing a
+   * z-matrix row moves only the atom that row places, while twisting a
+   * torsion in a table rotates the whole side of the central bond so the
+   * geometry around it stays rigid.
+   *
+   * Pass a fragment from fragmentUniqueIds().
+   * @{
+   */
+  static bool setDistance(RWMolecule& molecule, Index atom, Index a,
+                          Real length, const Core::Array<Index>& fragment);
+  static bool setAngle(RWMolecule& molecule, Index atom, Index a, Index b,
+                       Real degrees, const Core::Array<Index>& fragment);
+  static bool setTorsion(RWMolecule& molecule, Index atom, Index a, Index b,
+                         Index c, Real degrees,
+                         const Core::Array<Index>& fragment);
   /** @} */
 };
 
