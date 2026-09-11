@@ -774,7 +774,12 @@ public:
       m_newSelectedAtoms[i] = m_molecule.atomSelected(i);
     }
 
-    m_newSelectedAtoms[atomId] = selected;
+    // Guarded here as well as at the call, since these vectors are sized to
+    // the atom count and operator[] on std::vector<bool> writes into a word
+    // computed from the index -- an out-of-range one lands somewhere else
+    // entirely.
+    if (atomId < atomCount)
+      m_newSelectedAtoms[atomId] = selected;
   }
 
   void redo() override

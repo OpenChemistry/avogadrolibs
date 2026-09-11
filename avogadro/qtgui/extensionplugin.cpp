@@ -18,6 +18,16 @@ QList<Io::FileFormat*> ExtensionPlugin::fileFormats() const
   return QList<Io::FileFormat*>();
 }
 
+QList<QDockWidget*> ExtensionPlugin::dockWidgets() const
+{
+  return QList<QDockWidget*>();
+}
+
+Qt::DockWidgetArea ExtensionPlugin::preferredDockArea(QDockWidget*) const
+{
+  return Qt::RightDockWidgetArea;
+}
+
 ExtensionPluginFactory::~ExtensionPluginFactory() {}
 
 bool ExtensionPlugin::readMolecule(Molecule&)

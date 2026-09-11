@@ -19,6 +19,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 set(tests
   CalcWorker
   ElementTranslator
+  FragmentTools
   GenericHighlighter
   HydrogenTools
   JsonWidget

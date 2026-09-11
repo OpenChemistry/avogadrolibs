@@ -15,8 +15,6 @@
 #include <avogadro/core/dihedraliterator.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <Eigen/Geometry>
-
 namespace Avogadro {
 
 namespace Core {
@@ -136,24 +134,12 @@ private:
 
   QString secStructure(unsigned int type) const;
 
-  std::vector<int> m_fragment;
-  Eigen::Affine3d m_transform;
-  bool fragmentHasAtom(int uid) const;
-  void buildFragment(const QtGui::RWBond& bond, const QtGui::RWAtom& startAtom);
-  bool fragmentRecurse(const QtGui::RWBond& bond,
-                       const QtGui::RWAtom& startAtom,
-                       const QtGui::RWAtom& currentAtom);
-
-  void setBondLength(unsigned int index, double value);
-  void setAngle(unsigned int index, double newValue);
-  void setTorsion(unsigned int index, double newValue);
-  void transformFragment() const;
-
-  QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
-                                const QtGui::RWAtom& atom) const
-  {
-    return bond.atom1() == atom ? bond.atom2() : bond.atom1();
-  }
+  // Each returns false when the edit could not be carried out -- a value
+  // that is not a number, or a geometry that cannot reach it, such as an
+  // atom held in place by a ring.
+  bool setBondLength(unsigned int index, double value);
+  bool setAngle(unsigned int index, double newValue);
+  bool setTorsion(unsigned int index, double newValue);
 
   /*
    * For each category (atom, bond etc), an enum specifies which columns hold

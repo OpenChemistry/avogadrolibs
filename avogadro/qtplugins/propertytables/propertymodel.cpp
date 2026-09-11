@@ -5,6 +5,8 @@
 
 #include "propertymodel.h"
 
+#include <avogadro/qtgui/fragmenttools.h>
+
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/array.h>
 #include <avogadro/core/atom.h>
@@ -23,8 +25,6 @@
 #include <QtWidgets/QColorDialog>
 
 #include <limits>
-
-#include <Eigen/Geometry>
 
 namespace Avogadro {
 
@@ -1105,7 +1105,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         bool ok;
         double length = value.toDouble(&ok);
         if (ok) {
-          setBondLength(index.row(), value.toDouble());
+          if (!setBondLength(index.row(), length))
+            return false;
         }
         break;
       }
@@ -1148,7 +1149,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       double angle = value.toDouble(&ok);
       if (!ok)
         return false;
-      setAngle(index.row(), angle);
+      if (!setAngle(index.row(), angle))
+        return false;
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
@@ -1159,7 +1161,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       double angle = value.toDouble(&ok);
       if (!ok)
         return false;
-      setTorsion(index.row(), angle);
+      if (!setTorsion(index.row(), angle))
+        return false;
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
@@ -1182,166 +1185,63 @@ bool PropertyModel::isColorIndex(const QModelIndex& index) const
   return false;
 }
 
-void PropertyModel::buildFragment(const QtGui::RWBond& bond,
-                                  const QtGui::RWAtom& startAtom)
+bool PropertyModel::setBondLength(unsigned int index, double length)
 {
-  m_fragment.clear();
-  if (!fragmentRecurse(bond, startAtom, startAtom)) {
-    // If this returns false, then a cycle has been found. Only move startAtom
-    // in this case.
-    m_fragment.clear();
-  }
-  m_fragment.push_back(m_molecule->undoMolecule()->atomUniqueId(startAtom));
-}
+  if (m_molecule == nullptr)
+    return false;
 
-bool PropertyModel::fragmentRecurse(const QtGui::RWBond& bond,
-                                    const QtGui::RWAtom& startAtom,
-                                    const QtGui::RWAtom& currentAtom)
-{
-  // does our cycle include both bonded atoms?
-  const RWAtom bondedAtom(bond.getOtherAtom(startAtom));
+  if (index >= m_molecule->bondCount())
+    return false;
+
   auto* undoMolecule = m_molecule->undoMolecule();
+  auto bond = undoMolecule->bond(index);
 
-  Core::Array<RWBond> bonds = undoMolecule->bonds(currentAtom);
+  // The second atom and the fragment hanging off it move; the first anchors.
+  if (!QtGui::FragmentTools::setDistance(*undoMolecule, bond.atom2().index(),
+                                         bond.atom1().index(), length))
+    return false;
 
-  for (auto& it : bonds) {
-    if (it != bond) { // Skip the current bond
-      const RWAtom nextAtom = it.getOtherAtom(currentAtom);
-      if (nextAtom != startAtom && nextAtom != bondedAtom) {
-        // Skip atoms that have already been added. This prevents infinite
-        // recursion on cycles in the fragments
-        int uid = undoMolecule->atomUniqueId(nextAtom);
-        if (!fragmentHasAtom(uid)) {
-          m_fragment.push_back(uid);
-          if (!fragmentRecurse(it, startAtom, nextAtom))
-            return false;
-        }
-      } else if (nextAtom == bondedAtom) {
-        // If we've found the bonded atom, the bond is in a cycle
-        return false;
-      }
-    } // *it != bond
-  }   // foreach bond
+  m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
   return true;
 }
 
-inline bool PropertyModel::fragmentHasAtom(int uid) const
-{
-  return std::find(m_fragment.begin(), m_fragment.end(), uid) !=
-         m_fragment.end();
-}
-
-void PropertyModel::transformFragment() const
-{
-  auto* undoMolecule = m_molecule->undoMolecule();
-  undoMolecule->beginMergeMode(tr("Adjust Fragment"));
-  for (int it : m_fragment) {
-    RWAtom atom = m_molecule->undoMolecule()->atomByUniqueId(it);
-    if (atom.isValid()) {
-      Vector3 pos = atom.position3d();
-      pos = m_transform * pos;
-      atom.setPosition3d(pos);
-    }
-  }
-  undoMolecule->endMergeMode();
-}
-
-void PropertyModel::setBondLength(unsigned int index, double length)
-{
-  if (m_molecule == nullptr)
-    return;
-
-  if (index >= m_molecule->bondCount())
-    return;
-
-  // figure out how much to move and the vector of displacement
-  auto bond = m_molecule->undoMolecule()->bond(index);
-  Vector3 v1 = bond.atom1().position3d();
-  Vector3 v2 = bond.atom2().position3d();
-  Vector3 diff = v2 - v1;
-  double currentLength = diff.norm();
-  diff.normalize();
-  Vector3 delta = diff * (length - currentLength);
-
-  buildFragment(bond, bond.atom2());
-
-  m_transform.setIdentity();
-  m_transform.translate(delta);
-
-  transformFragment();
-
-  m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
-}
-
-void PropertyModel::setAngle(unsigned int index, double newValue)
+bool PropertyModel::setAngle(unsigned int index, double newValue)
 {
   // the index refers to the angle
-
   auto angle = m_angles[index];
-  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(angle));
-  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(angle));
-  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(angle));
+  auto* undoMolecule = m_molecule->undoMolecule();
+  auto atom1 = undoMolecule->atom(std::get<0>(angle));
+  auto atom2 = undoMolecule->atom(std::get<1>(angle));
+  auto atom3 = undoMolecule->atom(std::get<2>(angle));
 
-  auto bond = m_molecule->undoMolecule()->bond(atom1, atom2);
-  Vector3 a = atom1.position3d();
-  Vector3 b = atom2.position3d();
-  Vector3 c = atom3.position3d();
-  const double currentValue = calculateAngle(a, b, c);
-  Vector3 ab = b - a;
-  Vector3 bc = c - b;
-
-  // Axis of rotation is the cross product of the vectors
-  const Vector3 axis((ab.cross(bc)).normalized());
-  // Angle of rotation
-  const double change = (newValue - currentValue) * M_PI / 180.0;
-
-  // Build transform
-  m_transform.setIdentity();
-  m_transform.translate(b);
-  m_transform.rotate(Eigen::AngleAxis(-change, axis));
-  m_transform.translate(-b);
-
-  // Build the fragment if needed:
-  if (m_fragment.empty())
-    buildFragment(bond, atom2);
-
-  // Perform transformation
-  transformFragment();
+  // This table rotates everything on the vertex's side of the first bond,
+  // which carries the vertex's other substituents along with the far atom.
+  // That is not what a z-matrix row does, so the fragment is chosen here
+  // rather than taken from the default.
+  auto bond = undoMolecule->bond(atom1, atom2);
+  return QtGui::FragmentTools::setAngle(
+    *undoMolecule, atom3.index(), atom2.index(), atom1.index(), newValue,
+    QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom2));
 }
 
-void PropertyModel::setTorsion(unsigned int index, double newValue)
+bool PropertyModel::setTorsion(unsigned int index, double newValue)
 {
-
   auto torsion = m_torsions[index];
-  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(torsion));
-  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(torsion));
-  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(torsion));
-  auto atom4 = m_molecule->undoMolecule()->atom(std::get<3>(torsion));
+  auto* undoMolecule = m_molecule->undoMolecule();
+  auto atom1 = undoMolecule->atom(std::get<0>(torsion));
+  auto atom2 = undoMolecule->atom(std::get<1>(torsion));
+  auto atom3 = undoMolecule->atom(std::get<2>(torsion));
+  auto atom4 = undoMolecule->atom(std::get<3>(torsion));
 
-  auto bond = m_molecule->undoMolecule()->bond(atom2, atom3);
-  Vector3 a = atom1.position3d();
-  Vector3 b = atom2.position3d();
-  Vector3 c = atom3.position3d();
-  Vector3 d = atom4.position3d();
-  const double currentValue = calculateDihedral(a, b, c, d);
-
-  // Axis of rotation
-  const Vector3 axis((c - b).normalized());
-  // Angle of rotation
-  const double change = (newValue - currentValue) * M_PI / 180.0;
-
-  // Build transform
-  m_transform.setIdentity();
-  m_transform.translate(c);
-  m_transform.rotate(Eigen::AngleAxis(change, axis));
-  m_transform.translate(-c);
-
-  // Build the fragment if needed:
-  if (m_fragment.empty())
-    buildFragment(bond, atom3);
-
-  // Perform transformation
-  transformFragment();
+  // A torsion twists the whole side of the central bond, so that the
+  // geometry around the two atoms on the axis stays rigid. Placing a
+  // z-matrix row moves only the atom that row places, so again the fragment
+  // is chosen here.
+  auto bond = undoMolecule->bond(atom2, atom3);
+  return QtGui::FragmentTools::setTorsion(
+    *undoMolecule, atom4.index(), atom3.index(), atom2.index(), atom1.index(),
+    newValue,
+    QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom3));
 }
 
 QStringList PropertyModel::availableChargeTypes() const
