@@ -93,6 +93,10 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
   setAlternatingRowColors(true);
   // Allow sorting the table
   setSortingEnabled(true);
+  // Let a third click on a header clear the sort again. Without it there is
+  // no way back to index order once the user has sorted, and row dragging
+  // stays disabled for the life of the dialog (see rowDragAllowed()).
+  horizontalHeader()->setSortIndicatorClearable(true);
 
   // Drag-to-reorder rows, atom table only (see rowDragAllowed()).
   if (m_type == PropertyType::AtomType) {
