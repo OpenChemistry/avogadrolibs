@@ -213,6 +213,25 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
   QTableView::selectionChanged(selected, deselected);
 }
 
+void PropertyView::setSourceModel(PropertyModel* model)
+{
+  if (m_model != nullptr)
+    disconnect(m_model, nullptr, this, nullptr);
+
+  m_model = model;
+  if (m_model == nullptr)
+    return;
+
+  // A reset clears the view's selection, and selectionChanged() would take
+  // that for a user action -- deselecting every atom one undo command at a
+  // time, onto the very stack being unwound when the reset came from an
+  // undo. Treat a reset as internal from start to finish.
+  connect(m_model, &QAbstractItemModel::modelAboutToBeReset, this,
+          [this]() { m_updatingSelection = true; });
+  connect(m_model, &QAbstractItemModel::modelReset, this,
+          [this]() { m_updatingSelection = false; });
+}
+
 void PropertyView::setMolecule(Molecule* molecule)
 {
   if (m_molecule == molecule)
@@ -372,21 +391,13 @@ bool PropertyView::moveAtomRow(int from, int to)
   if (!m_molecule->undoMolecule()->reorderAtoms(order))
     return false;
 
-  // The reset inside refresh() clears the view selection, which would run
-  // selectionChanged() and deselect every atom -- one undo command each,
-  // landing on the stack just after the reorder, and throwing away the
-  // selection that reorderAtoms() carried along. Hold the guard across the
-  // reset and the reselect that follows it.
-  m_updatingSelection = true;
-  m_model->refresh();
-
-  // Reselect the moved atom at its new row.
-  int newRow = viewRowForSource(insertAt);
+  // The reorder emits Molecule::Reordered, which rebuilds the table, so all
+  // that is left is to put the selection back on the atom that moved.
+  const int newRow = viewRowForSource(insertAt);
   if (newRow >= 0) {
     selectRow(newRow);
     scrollTo(model()->index(newRow, 0), QAbstractItemView::EnsureVisible);
   }
-  m_updatingSelection = false;
   return true;
 }
 

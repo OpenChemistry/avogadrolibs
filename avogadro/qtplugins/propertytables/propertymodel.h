@@ -59,12 +59,6 @@ public:
 
   void setMolecule(QtGui::Molecule* molecule);
 
-  // Force a full reset (cache + row/column layout). updateTable() treats an
-  // unchanged atom/bond count as a coordinate-only update and returns early,
-  // so a caller that reorders atoms in place (same count, new order) needs
-  // this instead to make the view re-pull row data.
-  void refresh();
-
   // Return what type of model this is
   PropertyType type() const { return m_type; };
   bool isColorIndex(const QModelIndex& index) const;

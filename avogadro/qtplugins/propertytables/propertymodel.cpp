@@ -968,13 +968,6 @@ Qt::DropActions PropertyModel::supportedDropActions() const
   return m_type == AtomType ? Qt::MoveAction : Qt::DropActions();
 }
 
-void PropertyModel::refresh()
-{
-  updateCache();
-  beginResetModel();
-  endResetModel();
-}
-
 bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
                             int role)
 {
@@ -1363,6 +1356,11 @@ void PropertyModel::updateTable(unsigned int flags)
     }
   }
 
+  // A reorder changes no counts, so the check above cannot see it; the flag
+  // is the only signal that the rows now mean different atoms.
+  if (flags & Molecule::Reordered)
+    structureChanged = true;
+
   if (!structureChanged) {
     // For coordinate-only changes, just invalidate the cache
     // This avoids race conditions during rapid animation updates
@@ -1372,7 +1370,9 @@ void PropertyModel::updateTable(unsigned int flags)
 
   // For structural changes, do a full model reset
   // Use beginResetModel/endResetModel to ensure thread-safe updates
-  refresh();
+  updateCache();
+  beginResetModel();
+  endResetModel();
 }
 
 void PropertyModel::updateCache() const

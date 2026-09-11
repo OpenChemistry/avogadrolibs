@@ -29,7 +29,7 @@ public:
   void selectionChanged(const QItemSelection& selected,
                         const QItemSelection& previous) override;
   void setMolecule(QtGui::Molecule* molecule);
-  void setSourceModel(PropertyModel* model) { m_model = model; }
+  void setSourceModel(PropertyModel* model);
   void hideEvent(QHideEvent* event) override;
   void contextMenuEvent(QContextMenuEvent* event) override;
 
