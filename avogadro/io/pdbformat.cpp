@@ -439,7 +439,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
       --a;
       size_t terCount;
-      for (terCount = 0; terCount < terList.size() && a > terList[terCount];
+      // A TER record consumes a serial number of its own, so every atom past
+      // it shifts down by one. The comparison has to be inclusive: for the
+      // first atom after a TER, (serial - 1) equals the TER's own serial, and
+      // a strict > left that atom unshifted, mapping it one slot too high.
+      for (terCount = 0; terCount < terList.size() && a >= terList[terCount];
            ++terCount)
         ; // semicolon is intentional
       a = a - terCount;
@@ -484,8 +488,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
             continue; // skip this invalid record
           }
 
-          for (terCount = 0; terCount < terList.size() && b > terList[terCount];
-               ++terCount)
+          // Inclusive for the same reason as the first serial above.
+          for (terCount = 0;
+               terCount < terList.size() && b >= terList[terCount]; ++terCount)
             ; // semicolon is intentional
           b = b - terCount;
 
@@ -697,6 +702,12 @@ std::vector<std::string> PdbFormat::mimeTypes() const
 void PdbFormat::perceiveSubstitutedCations(Core::Molecule& molecule)
 {
   for (Index i = 0; i < molecule.atomCount(); i++) {
+    // Columns 79-80 state the charge outright, so never let this heuristic
+    // overwrite one: a file saying "2+" on a four-bond nitrogen means 2+, and
+    // guessing +1 on top of it would silently contradict the file.
+    if (molecule.formalCharge(i) != 0)
+      continue;
+
     unsigned char requiredBondCount(0);
     switch (molecule.atomicNumber(i)) {
       case 7:

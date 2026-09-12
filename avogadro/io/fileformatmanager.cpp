@@ -35,6 +35,23 @@ using std::unique_ptr;
 
 namespace Avogadro::Io {
 
+namespace {
+
+// The last error, per thread. FileFormatManager is a singleton shared by
+// everything, and each public operation clears this before it starts, so a
+// single shared string would let two concurrent reads scribble over each
+// other's diagnostics -- and racing on a std::string is undefined behaviour,
+// not merely a confusing message. Keeping it thread local also means the
+// manager holds no mutable state of its own, so the const read and write
+// methods stay honestly const.
+std::string& threadError()
+{
+  static thread_local std::string error;
+  return error;
+}
+
+} // namespace
+
 FileFormatManager& FileFormatManager::instance()
 {
   static FileFormatManager instance;
@@ -47,7 +64,7 @@ bool FileFormatManager::readFile(Core::Molecule& molecule,
                                  const std::string& options) const
 {
   // error() reports the most recent operation, so start clean.
-  m_error.clear();
+  threadError().clear();
 
   FileFormat* format(nullptr);
   format = filteredFormatFromFormatMap(lookupExtension(fileName, fileExtension),
@@ -72,7 +89,7 @@ bool FileFormatManager::writeFile(const Core::Molecule& molecule,
                                   const std::string& options) const
 {
   // error() reports the most recent operation, so start clean.
-  m_error.clear();
+  threadError().clear();
 
   FileFormat* format(nullptr);
   format = filteredFormatFromFormatMap(lookupExtension(fileName, fileExtension),
@@ -97,7 +114,7 @@ bool FileFormatManager::readString(Core::Molecule& molecule,
                                    const std::string& options) const
 {
   // error() reports the most recent operation, so start clean.
-  m_error.clear();
+  threadError().clear();
 
   // The extension only selects the format here; the actual decoding is
   // content-driven inside FileFormat::readString().
@@ -124,7 +141,7 @@ bool FileFormatManager::writeString(const Core::Molecule& molecule,
                                     const std::string& options) const
 {
   // error() reports the most recent operation, so start clean.
-  m_error.clear();
+  threadError().clear();
 
   Compression type = Compression::None;
   std::string chemicalExtension = stripCompressionSuffix(fileExtension, &type);
@@ -341,7 +358,7 @@ std::vector<const FileFormat*> FileFormatManager::fileFormatsFromFileExtension(
 
 std::string FileFormatManager::error() const
 {
-  return m_error;
+  return threadError();
 }
 
 FileFormatManager::FileFormatManager()
@@ -461,7 +478,7 @@ std::string FileFormatManager::lookupExtension(const std::string& fileName,
 
 void FileFormatManager::appendError(const std::string& errorMessage) const
 {
-  m_error += errorMessage + "\n";
+  threadError() += errorMessage + "\n";
 }
 
 } // namespace Avogadro::Io

@@ -346,7 +346,11 @@ private:
                                              const FormatIdVector& fvec) const;
 
   /**
-   * @brief Append warnings/errors to the error message string.
+   * @brief Append warnings/errors to the calling thread's error message.
+   *
+   * The manager is a singleton every caller shares, and reads legitimately
+   * happen on worker threads, so the message is kept per thread rather than in
+   * one shared string that concurrent operations would race on and overwrite.
    * @param errorMessage The error message to append.
    */
   void appendError(const std::string& errorMessage) const;
@@ -367,8 +371,6 @@ private:
   FormatIdMap m_identifiers;
   FormatIdMap m_mimeTypes;
   FormatIdMap m_fileExtensions;
-
-  mutable std::string m_error;
 };
 
 } // namespace Io

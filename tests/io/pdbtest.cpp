@@ -503,3 +503,67 @@ TEST(PdbTest, nonChargeInChargeColumnsIgnored)
     ASSERT_EQ(crambin.atom(i).formalCharge(), 0)
       << "atom " << i << " picked up a line serial as a charge";
 }
+
+// A TER record consumes a serial number of its own, so CONECT serials past it
+// have to be shifted down. The first atom after a TER is the boundary case: a
+// strict comparison left it unshifted and the bond was mapped one slot too
+// high, which either silently bonded the wrong pair or ran off the end of the
+// mapping and was dropped.
+TEST(PdbTest, conectResolvesFirstAtomAfterTer)
+{
+  std::string contents;
+  contents += pdbAtomRecord(1, " N  ", "ALA", 1, 0.0);
+  contents += pdbAtomRecord(2, " C  ", "ALA", 1, 1.0);
+  contents += "TER       3      ALA A   1\n";
+  // Serial 4 is the first atom of the next chain, immediately after the TER.
+  contents += pdbAtomRecord(4, " O  ", "GLY", 2, 2.0);
+  contents += pdbAtomRecord(5, " S  ", "GLY", 2, 3.0);
+  contents += "CONECT    1    4\n"; // across the TER, to the first atom after
+  contents += "CONECT    4    5\n"; // both atoms after the TER
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule)) << pdb.error();
+  ASSERT_EQ(molecule.atomCount(), 4);
+
+  // Serial 4 is the oxygen, which is atom index 2 once the TER's serial is
+  // accounted for.
+  bool nitrogenToOxygen = false;
+  bool oxygenToSulfur = false;
+  for (Avogadro::Index i = 0; i < molecule.bondCount(); ++i) {
+    const auto z1 = molecule.bond(i).atom1().atomicNumber();
+    const auto z2 = molecule.bond(i).atom2().atomicNumber();
+    if ((z1 == 7 && z2 == 8) || (z1 == 8 && z2 == 7))
+      nitrogenToOxygen = true;
+    if ((z1 == 8 && z2 == 16) || (z1 == 16 && z2 == 8))
+      oxygenToSulfur = true;
+  }
+  EXPECT_TRUE(nitrogenToOxygen)
+    << "the bond across the TER should reach the first atom after it";
+  EXPECT_TRUE(oxygenToSulfur) << "both serials past the TER should resolve";
+}
+
+// A charge stated in columns 79-80 is what the file says. The four-single-bond
+// cation heuristic must not overwrite it.
+TEST(PdbTest, explicitChargeSurvivesCationHeuristic)
+{
+  // A nitrogen with four single bonds to carbon is exactly what the heuristic
+  // fires on; here the file declares 2+ instead.
+  std::string contents;
+  contents += pdbAtomRecordWithElement(1, " N  ", "UNK", 1, 0.0, "N", "2+");
+  contents += pdbAtomRecordWithElement(2, " C  ", "UNK", 1, 1.5, "C", "  ");
+  contents += pdbAtomRecordWithElement(3, " C  ", "UNK", 1, -1.5, "C", "  ");
+  contents += pdbAtomRecordWithElement(4, " C  ", "UNK", 1, 3.0, "C", "  ");
+  contents += pdbAtomRecordWithElement(5, " C  ", "UNK", 1, -3.0, "C", "  ");
+  contents += "CONECT    1    2    3    4    5\n";
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule)) << pdb.error();
+  ASSERT_EQ(molecule.atomCount(), 5);
+  ASSERT_EQ(molecule.atom(0).atomicNumber(), 7);
+  EXPECT_EQ(molecule.atom(0).formalCharge(), 2)
+    << "the charge from columns 79-80 must not be replaced by the heuristic";
+}

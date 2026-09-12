@@ -277,10 +277,14 @@ bool FileFormat::writeString(std::string& string,
 
 void FileFormat::clear()
 {
+  // Resetting means resetting: close whatever is still open first, so a
+  // compressed write is finalised and its trailer written rather than
+  // abandoned, and no alias pointer outlives the stream it points into.
+  // close() takes care of m_in, m_out, m_decompressor, m_compressor and the
+  // mode; everything below is this class's own bookkeeping.
+  close();
   m_fileName.clear();
   m_error.clear();
-  m_decompressor = nullptr;
-  m_compressor = nullptr;
   m_outputError = false;
 }
 
