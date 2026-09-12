@@ -1481,3 +1481,55 @@ TEST(CompressionTest, WritingUnsupportedCodecFailsAndCreatesNoFile)
     << path;
   std::remove(path.c_str());
 }
+
+// libarchive applies a registered filter for as long as its own output still
+// begins with that codec's magic number, so data whose decompressed contents
+// look like another stream of the same codec used to be decompressed twice and
+// handed back silently wrong. Measured before the fix: bzip2 inside bzip2
+// returned the innermost 14 bytes instead of the expected 54, with an empty
+// error. Only one layer is ever asked for, so the reader now refuses. Found by
+// the compress/decompress round-trip fuzz target.
+TEST(CompressionTest, NestedStreamRefusedRatherThanDecodedTwice)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  for (Compression type :
+       { Compression::Bzip2, Compression::Xz, Compression::Zstd }) {
+    if (!compressionSupported(type))
+      continue;
+    SCOPED_TRACE(compressionName(type));
+
+    // The payload is itself a valid stream of the same codec.
+    const std::string inner = compress("inner payload\n", type, 0);
+    ASSERT_FALSE(inner.empty());
+    const std::string outer = compress(inner, type, 0);
+    ASSERT_FALSE(outer.empty());
+
+    std::string error;
+    const std::string decoded = decode(outer, type, &error);
+    EXPECT_FALSE(error.empty())
+      << "a twice-strippable stream must be refused, not decoded twice";
+    EXPECT_NE(decoded, std::string("inner payload\n"))
+      << "the innermost payload must never be handed back";
+  }
+}
+
+// gzip is decoded with zlib, which never re-inflates its own output, so the
+// same nesting is read correctly rather than refused: one layer off leaves the
+// inner stream still compressed. This is the behaviour the libarchive codecs
+// cannot currently offer.
+TEST(CompressionTest, NestedGzipDecodesExactlyOneLayer)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  const std::string inner = compress("inner payload\n", Compression::Gzip, 0);
+  ASSERT_FALSE(inner.empty());
+  const std::string outer = compress(inner, Compression::Gzip, 0);
+
+  std::string error;
+  const std::string decoded = decode(outer, Compression::Gzip, &error);
+  EXPECT_TRUE(error.empty()) << error;
+  EXPECT_EQ(decoded, inner) << "exactly one gzip layer should come off";
+}

@@ -19,6 +19,7 @@ using Avogadro::Io::CompressingOStream;
 using Avogadro::Io::Compression;
 using Avogadro::Io::compressionSupported;
 using Avogadro::Io::DecompressingIStream;
+using Avogadro::Io::detectCompression;
 
 namespace {
 
@@ -62,6 +63,15 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
   // failure. That would be a false report about the cap rather than a real
   // bug, so leave those inputs alone.
   if (payload.size() >= kFuzzSizeLimit)
+    return 0;
+
+  // A payload that is itself a stream of the very codec being tested cannot
+  // round trip, and deliberately so: libarchive strips every layer of a codec
+  // it recognises, so the reader refuses such input rather than hand back
+  // bytes that were never in the file. Identity is not the contract there.
+  // This is exactly the case the fuzzer found (an xz payload beginning with
+  // the xz magic number), and the reader's refusal is the fix.
+  if (detectCompression(payload.data(), payload.size()) == type)
     return 0;
 
   std::string encoded;

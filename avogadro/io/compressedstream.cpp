@@ -324,6 +324,32 @@ public:
       return false;
     }
 
+    // Equally mandatory: libarchive keeps applying the registered filter for
+    // as long as its own output still starts with that codec's magic number,
+    // so a file whose decompressed contents happen to begin with those bytes
+    // is quietly decompressed twice and the caller receives something that was
+    // never in the file. Measured with libarchive 3.8: bzip2 inside bzip2
+    // yielded the innermost 14 bytes in place of the expected 54, with no
+    // error reported at all. Only one layer was asked for, so refuse instead
+    // of guessing. A single layer is two filters: the codec, then the "none"
+    // that terminates the chain.
+    //
+    // Chemistry files are overwhelmingly text and cannot begin with a codec
+    // magic number, so this is about the binary formats (DCD, TRR and the
+    // like) and about genuinely twice-compressed files. Reading one layer
+    // correctly would mean decoding with liblzma, libbz2 and libzstd directly
+    // rather than through libarchive; until then, an error beats wrong data.
+    if (archive_filter_count(archiveHandle) > 2) {
+      errorMsg = compressionName(type) +
+                 " data decodes to something that begins with another " +
+                 compressionName(type) +
+                 " stream, so it cannot be decompressed exactly once; "
+                 "decompress it manually and open the result";
+      archive_read_free(archiveHandle);
+      archiveHandle = nullptr;
+      return false;
+    }
+
     return true;
   }
 
