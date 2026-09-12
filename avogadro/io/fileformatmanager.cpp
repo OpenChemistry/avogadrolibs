@@ -5,6 +5,8 @@
 
 #include "fileformatmanager.h"
 
+#include "compressedstream.h"
+#include "compression.h"
 #include "fileformat.h"
 
 #include "cjsonformat.h"
@@ -27,10 +29,28 @@
 
 #include <algorithm>
 #include <memory>
+#include <sstream>
 
 using std::unique_ptr;
 
 namespace Avogadro::Io {
+
+namespace {
+
+// The last error, per thread. FileFormatManager is a singleton shared by
+// everything, and each public operation clears this before it starts, so a
+// single shared string would let two concurrent reads scribble over each
+// other's diagnostics -- and racing on a std::string is undefined behaviour,
+// not merely a confusing message. Keeping it thread local also means the
+// manager holds no mutable state of its own, so the const read and write
+// methods stay honestly const.
+std::string& threadError()
+{
+  static thread_local std::string error;
+  return error;
+}
+
+} // namespace
 
 FileFormatManager& FileFormatManager::instance()
 {
@@ -43,23 +63,24 @@ bool FileFormatManager::readFile(Core::Molecule& molecule,
                                  const std::string& fileExtension,
                                  const std::string& options) const
 {
+  // error() reports the most recent operation, so start clean.
+  threadError().clear();
+
   FileFormat* format(nullptr);
-  if (fileExtension.empty()) {
-    // We need to guess the file extension.
-    size_t pos = fileName.find_last_of('.');
-    format = filteredFormatFromFormatMap(fileName.substr(pos + 1),
-                                         FileFormat::Read | FileFormat::File,
-                                         m_fileExtensions);
-  } else {
-    format = filteredFormatFromFormatMap(
-      fileExtension, FileFormat::Read | FileFormat::File, m_fileExtensions);
-  }
-  if (!format)
+  format = filteredFormatFromFormatMap(lookupExtension(fileName, fileExtension),
+                                       FileFormat::Read | FileFormat::File,
+                                       m_fileExtensions);
+  if (!format) {
+    appendError("No file format available to read \"" + fileName + "\".");
     return false;
+  }
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
   formatInstance->setOptions(options);
-  return formatInstance->readFile(fileName, molecule);
+  if (formatInstance->readFile(fileName, molecule))
+    return true;
+  appendError(formatInstance->error());
+  return false;
 }
 
 bool FileFormatManager::writeFile(const Core::Molecule& molecule,
@@ -67,23 +88,24 @@ bool FileFormatManager::writeFile(const Core::Molecule& molecule,
                                   const std::string& fileExtension,
                                   const std::string& options) const
 {
+  // error() reports the most recent operation, so start clean.
+  threadError().clear();
+
   FileFormat* format(nullptr);
-  if (fileExtension.empty()) {
-    // We need to guess the file extension.
-    size_t pos = fileName.find_last_of('.');
-    format = filteredFormatFromFormatMap(fileName.substr(pos + 1),
-                                         FileFormat::Write | FileFormat::File,
-                                         m_fileExtensions);
-  } else {
-    format = filteredFormatFromFormatMap(
-      fileExtension, FileFormat::Write | FileFormat::File, m_fileExtensions);
-  }
-  if (!format)
+  format = filteredFormatFromFormatMap(lookupExtension(fileName, fileExtension),
+                                       FileFormat::Write | FileFormat::File,
+                                       m_fileExtensions);
+  if (!format) {
+    appendError("No file format available to write \"" + fileName + "\".");
     return false;
+  }
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
   formatInstance->setOptions(options);
-  return formatInstance->writeFile(fileName, molecule);
+  if (formatInstance->writeFile(fileName, molecule))
+    return true;
+  appendError(formatInstance->error());
+  return false;
 }
 
 bool FileFormatManager::readString(Core::Molecule& molecule,
@@ -91,14 +113,26 @@ bool FileFormatManager::readString(Core::Molecule& molecule,
                                    const std::string& fileExtension,
                                    const std::string& options) const
 {
+  // error() reports the most recent operation, so start clean.
+  threadError().clear();
+
+  // The extension only selects the format here; the actual decoding is
+  // content-driven inside FileFormat::readString().
   FileFormat* format(filteredFormatFromFormatMap(
-    fileExtension, FileFormat::Read | FileFormat::String, m_fileExtensions));
-  if (!format)
+    stripCompressionSuffix(fileExtension),
+    FileFormat::Read | FileFormat::String, m_fileExtensions));
+  if (!format) {
+    appendError("No file format available to read \"" + fileExtension +
+                "\" content.");
     return false;
+  }
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
   formatInstance->setOptions(options);
-  return formatInstance->readString(string, molecule);
+  if (formatInstance->readString(string, molecule))
+    return true;
+  appendError(formatInstance->error());
+  return false;
 }
 
 bool FileFormatManager::writeString(const Core::Molecule& molecule,
@@ -106,14 +140,60 @@ bool FileFormatManager::writeString(const Core::Molecule& molecule,
                                     const std::string& fileExtension,
                                     const std::string& options) const
 {
+  // error() reports the most recent operation, so start clean.
+  threadError().clear();
+
+  Compression type = Compression::None;
+  std::string chemicalExtension = stripCompressionSuffix(fileExtension, &type);
   FileFormat* format(filteredFormatFromFormatMap(
-    fileExtension, FileFormat::Write | FileFormat::String, m_fileExtensions));
-  if (!format)
+    chemicalExtension, FileFormat::Write | FileFormat::String,
+    m_fileExtensions));
+  if (!format) {
+    appendError("No file format available to write \"" + fileExtension +
+                "\" content.");
     return false;
+  }
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
   formatInstance->setOptions(options);
-  return formatInstance->writeString(string, molecule);
+
+  if (type == Compression::None) {
+    if (formatInstance->writeString(string, molecule))
+      return true;
+    appendError(formatInstance->error());
+    return false;
+  }
+
+  if (!compressionSupported(type)) {
+    appendError("Cannot write \"" + fileExtension +
+                "\": " + compressionName(type) +
+                " compression is not supported in this build.");
+    return false;
+  }
+
+  // writeString() only ever produces uncompressed text (it has no file name
+  // to derive a codec from), so compress the result here when the extension
+  // named one. CompressingOStream owns its sink, so the sink's contents must
+  // be read while the compressing stream is still alive, and only after
+  // finish() -- reading them after the compressing stream is destroyed would
+  // be a use-after-free of the string it moved out of the ostringstream.
+  std::string uncompressed;
+  if (!formatInstance->writeString(uncompressed, molecule)) {
+    appendError(formatInstance->error());
+    return false;
+  }
+
+  auto sink = std::make_unique<std::ostringstream>();
+  auto* rawSink = sink.get();
+  CompressingOStream compressor(std::move(sink), type);
+  compressor.write(uncompressed.data(),
+                   static_cast<std::streamsize>(uncompressed.size()));
+  if (!compressor.finish()) {
+    appendError(compressor.error());
+    return false;
+  }
+  string = rawSink->str();
+  return true;
 }
 
 bool FileFormatManager::registerFormat(FileFormat* format)
@@ -278,7 +358,7 @@ std::vector<const FileFormat*> FileFormatManager::fileFormatsFromFileExtension(
 
 std::string FileFormatManager::error() const
 {
-  return m_error;
+  return threadError();
 }
 
 FileFormatManager::FileFormatManager()
@@ -383,9 +463,22 @@ FileFormat* FileFormatManager::filteredFormatFromFormatVector(
   return nullptr;
 }
 
-void FileFormatManager::appendError(const std::string& errorMessage)
+std::string FileFormatManager::lookupExtension(const std::string& fileName,
+                                               const std::string& fileExtension)
 {
-  m_error += errorMessage + "\n";
+  if (!fileExtension.empty())
+    return stripCompressionSuffix(fileExtension);
+
+  // Note the long standing quirk kept here deliberately: a name with no dot
+  // at all yields the whole name, which is what lets "POSCAR" and "CONTCAR"
+  // resolve as formats in their own right.
+  const std::string stripped = stripCompressionSuffix(fileName);
+  return stripped.substr(stripped.find_last_of('.') + 1);
+}
+
+void FileFormatManager::appendError(const std::string& errorMessage) const
+{
+  threadError() += errorMessage + "\n";
 }
 
 } // namespace Avogadro::Io

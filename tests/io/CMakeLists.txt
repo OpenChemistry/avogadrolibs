@@ -2,6 +2,7 @@
 set(tests
   Cjson
   Cml
+  Compression
   Dcd
   FileFormatManager
   Lammps
@@ -97,4 +98,27 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
     target_link_options(fuzz_smiles PRIVATE -fsanitize=fuzzer)
     target_link_libraries(fuzz_smiles PRIVATE Avogadro::IO)
   endif()
+
+  # The compression harnesses take raw bytes rather than a chemical format, so
+  # they cannot use fuzztest.cpp either. Each name here is built from
+  # fuzz-<name>.cpp into target fuzz_<name>, matching tests/qtgui.
+  #   decompress         arbitrary bytes into the decoder, drained with
+  #                      several access patterns including seeks
+  #   compress-roundtrip our encoder feeding our decoder, asserting the data
+  #                      survives unchanged
+  set(compressionFuzz
+    decompress
+    compress-roundtrip
+  )
+  foreach(fuzzName ${compressionFuzz})
+    add_executable(fuzz_${fuzzName} fuzz-${fuzzName}.cpp)
+    if(DEFINED ENV{LIB_FUZZING_ENGINE})
+      target_link_libraries(fuzz_${fuzzName}
+        PRIVATE Avogadro::IO $ENV{LIB_FUZZING_ENGINE})
+    else()
+      target_compile_options(fuzz_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
+      target_link_options(fuzz_${fuzzName} PRIVATE -fsanitize=fuzzer)
+      target_link_libraries(fuzz_${fuzzName} PRIVATE Avogadro::IO)
+    endif()
+  endforeach()
 endif()

@@ -46,7 +46,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
         sudo apt-get -qq install libfuse2
 
     - name: Install Qt

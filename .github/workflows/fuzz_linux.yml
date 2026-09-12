@@ -40,7 +40,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install clang ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
+        sudo apt-get -qq install clang ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
 
     - name: Install Qt
       uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4.3.1
@@ -129,7 +129,7 @@ jobs:
         # To fuzz a new class, add its name here and to the matching list in
         # tests/<suite>/CMakeLists.txt.
         suites=(
-          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles"
+          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap"
           "qtgui|fuzz_qtgui_|qtgui|rwmolecule generichighlighter jsonwidget interfacescript-json"

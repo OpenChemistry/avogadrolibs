@@ -20,7 +20,7 @@ jobs:
             name: "Ubuntu Analysis",
             os: ubuntu-latest,
             cc: "clang", cxx: "clang++",
-            cmake_flags: "-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
 
