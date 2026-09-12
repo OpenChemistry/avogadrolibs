@@ -267,18 +267,58 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
       auto altLoc = lexicalCast<string>(buffer.substr(16, 1), ok);
 
+      // Columns 77-78 are the element symbol, right justified, and are
+      // authoritative whenever they hold one: the atom name only has to be
+      // guessed at when they do not.
       string element; // Element symbol, right justified
       unsigned char atomicNum = 255;
       if (buffer.size() >= 78) {
-        element = buffer.substr(76, 2);
-        element = trimmed(element);
-        if (element.length() == 2)
-          element[1] = std::tolower(element[1]);
+        element = trimmed(buffer.substr(76, 2));
+        if (!element.empty()) {
+          // The field is written upper case ("FE"), while the symbols are
+          // capitalised ("Fe"), so normalise rather than trusting the file.
+          element[0] = static_cast<char>(
+            std::toupper(static_cast<unsigned char>(element[0])));
+          if (element.length() == 2)
+            element[1] = static_cast<char>(
+              std::tolower(static_cast<unsigned char>(element[1])));
 
-        // Not an error yet: older files put other things in these columns,
-        // and the atom name below still has two chances to identify the
-        // element. Only the final failure is worth reporting.
-        atomicNum = Elements::atomicNumberFromSymbol(element);
+          // Not an error yet: older files put other things in these columns,
+          // and the atom name below still has two chances to identify the
+          // element. Only the final failure is worth reporting.
+          atomicNum = Elements::atomicNumberFromSymbol(element);
+        }
+      }
+
+      // Columns 79-80 carry the formal charge, written as the magnitude
+      // followed by its sign, e.g. "1+" or "2-"; some writers put the sign
+      // first. The match has to be strict, because a file that predates the
+      // element and charge fields may well be running something else through
+      // these columns: 1CRN.pdb continues a line serial there, so every one
+      // of its atoms would otherwise pick up a bogus charge.
+      signed char formalCharge = 0;
+      if (buffer.size() >= 80) {
+        const string chargeField = trimmed(buffer.substr(78, 2));
+        if (chargeField.size() == 2) {
+          const auto isDigit = [](char c) {
+            return std::isdigit(static_cast<unsigned char>(c)) != 0;
+          };
+          const auto isSign = [](char c) { return c == '+' || c == '-'; };
+          char magnitude = '\0';
+          char sign = '\0';
+          if (isDigit(chargeField[0]) && isSign(chargeField[1])) {
+            magnitude = chargeField[0];
+            sign = chargeField[1];
+          } else if (isSign(chargeField[0]) && isDigit(chargeField[1])) {
+            sign = chargeField[0];
+            magnitude = chargeField[1];
+          }
+          if (magnitude != '\0') {
+            formalCharge = static_cast<signed char>(magnitude - '0');
+            if (sign == '-')
+              formalCharge = static_cast<signed char>(-formalCharge);
+          }
+        }
       }
 
       if (atomicNum == 255) {
@@ -363,6 +403,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       } else if (coordSet == 0) {
         Atom newAtom = mol.addAtom(atomicNum);
         newAtom.setPosition3d(pos);
+        if (formalCharge != 0)
+          newAtom.setFormalCharge(formalCharge);
         if (r != nullptr) {
           r->addResidueAtom(atomName, newAtom);
         }

@@ -409,3 +409,97 @@ TEST(PdbTest, skippedRecordKeepsConectAligned)
   }
   EXPECT_TRUE(bondedCarbonToOxygen);
 }
+
+// Build a record that also fills the element (77-78) and charge (79-80)
+// fields, which pdbAtomRecord deliberately leaves off.
+static std::string pdbAtomRecordWithElement(int serial, const std::string& name,
+                                            const std::string& residue,
+                                            int residueId, double x,
+                                            const std::string& element,
+                                            const std::string& charge)
+{
+  std::string line = pdbAtomRecord(serial, name, residue, residueId, x);
+  if (!line.empty() && line.back() == '\n')
+    line.pop_back();
+  line.resize(76, ' ');
+  line += (element.size() == 2) ? element : (" " + element); // right justified
+  line.resize(78, ' ');
+  line += charge;
+  line.resize(80, ' ');
+  return line + "\n";
+}
+
+// Columns 77-78 are the element field and take precedence over any guess made
+// from the atom name.
+TEST(PdbTest, elementColumnWinsOverAtomName)
+{
+  std::string contents;
+  // An atom name that identifies nothing, with a perfectly good element field.
+  contents += pdbAtomRecordWithElement(1, "XX  ", "UNK", 1, 0.0, "C", "  ");
+  // A name that would read as carbon by the column convention, but the file
+  // says calcium, so calcium it is.
+  contents += pdbAtomRecordWithElement(2, " CA ", "UNK", 1, 1.0, "CA", "  ");
+  // Lower case in the file is still a valid symbol once normalised.
+  contents += pdbAtomRecordWithElement(3, "ZN  ", "UNK", 1, 2.0, "zn", "  ");
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule)) << pdb.error();
+  ASSERT_EQ(molecule.atomCount(), 3);
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 6);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 20);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 30);
+}
+
+// Columns 79-80 carry the formal charge, magnitude first then sign.
+TEST(PdbTest, formalChargeColumns)
+{
+  std::string contents;
+  contents += pdbAtomRecordWithElement(1, "NA  ", "UNK", 1, 0.0, "NA", "1+");
+  contents += pdbAtomRecordWithElement(2, "CL  ", "UNK", 1, 1.0, "CL", "1-");
+  contents += pdbAtomRecordWithElement(3, "MG  ", "UNK", 1, 2.0, "MG", "2+");
+  contents += pdbAtomRecordWithElement(4, " O  ", "UNK", 1, 3.0, "O", "  ");
+  // Some writers put the sign first.
+  contents += pdbAtomRecordWithElement(5, "FE  ", "UNK", 1, 4.0, "FE", "+3");
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule)) << pdb.error();
+  ASSERT_EQ(molecule.atomCount(), 5);
+  EXPECT_EQ(molecule.atom(0).formalCharge(), 1);
+  EXPECT_EQ(molecule.atom(1).formalCharge(), -1);
+  EXPECT_EQ(molecule.atom(2).formalCharge(), 2);
+  EXPECT_EQ(molecule.atom(3).formalCharge(), 0);
+  EXPECT_EQ(molecule.atom(4).formalCharge(), 3);
+}
+
+// Anything that is not a magnitude and a sign is not a charge. Files written
+// before those columns were defined put other things there, and 1CRN.pdb is
+// exactly that case: it runs "1CRN" plus a line serial through columns 73-80,
+// leaving digits in 79-80 for every one of its 327 atoms.
+TEST(PdbTest, nonChargeInChargeColumnsIgnored)
+{
+  std::string contents;
+  contents += pdbAtomRecordWithElement(1, " N  ", "UNK", 1, 0.0, "N", "70");
+  contents += pdbAtomRecordWithElement(2, " C  ", "UNK", 1, 1.0, "C", "-9");
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule)) << pdb.error();
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.atom(0).formalCharge(), 0)
+    << "two digits are not a charge";
+  EXPECT_EQ(molecule.atom(1).formalCharge(), -9) << "sign first is a charge";
+
+  PdbFormat crn;
+  Molecule crambin;
+  ASSERT_TRUE(
+    crn.readFile(std::string(AVOGADRO_DATA) + "/data/pdb/1CRN.pdb", crambin))
+    << crn.error();
+  for (Avogadro::Index i = 0; i < crambin.atomCount(); ++i)
+    ASSERT_EQ(crambin.atom(i).formalCharge(), 0)
+      << "atom " << i << " picked up a line serial as a charge";
+}
