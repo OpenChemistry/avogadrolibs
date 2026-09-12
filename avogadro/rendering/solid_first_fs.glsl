@@ -37,8 +37,6 @@ uniform sampler2D inDepthTex;
 uniform float inAoEnabled;
 // 0.0 if disabled
 uniform float inFogStrength;
-// Shadow strength for SSAO
-uniform float inAoStrength;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inEdStrength;
 // amount of offset when zoom-in or zoom-out.
@@ -51,6 +49,12 @@ uniform float inDofPosition;
 uniform float inFogPosition;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
+// Ambient occlusion term from the AO stage, still carrying its sampling
+// pattern; blurredAo() below is what removes it.
+uniform sampler2D inAoTex;
+// Projection matrix, used to turn window depth back into scene units and to
+// size the blur's surface test.
+uniform mat4 inProjection;
 
 vec3 getNormalAt(vec2 normalUV)
 {
@@ -64,21 +68,61 @@ vec3 getNormalAt(vec2 normalUV)
   return normalize(r);
 }
 
-vec3 getNormalNear(vec2 normalUV)
+// Window depth to distance from the camera, in scene units. Derived from the
+// projection so it holds for both the perspective and the orthographic camera,
+// rather than assuming fixed near and far planes.
+float linearDepth(float depth)
 {
-  float cent = texture(inDepthTex, normalUV).x;
-  float xpos = texture(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-  float xneg = texture(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-  float ypos = texture(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-  float yneg = texture(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
-  float xposdelta = xpos - cent;
-  float xnegdelta = cent - xneg;
-  float yposdelta = ypos - cent;
-  float ynegdelta = cent - yneg;
-  float xdelta = abs(xposdelta) > abs(xnegdelta) ? xnegdelta : xposdelta;
-  float ydelta = abs(yposdelta) > abs(ynegdelta) ? ynegdelta : yposdelta;
-  vec3 r = vec3(xdelta, ydelta, 0.5 / width + 0.5 / height);
-  return normalize(r);
+  float ndc = depth * 2.0 - 1.0;
+  float viewZ = (inProjection[3][2] - ndc * inProjection[3][3]) /
+                (ndc * inProjection[2][3] - inProjection[2][2]);
+  return -viewZ;
+}
+
+// Must match AO_TILE in solid_ao_fs.glsl. That stage uses a different kernel
+// rotation for each pixel of a tile this size, and averaging a block of the
+// same size is exactly what cancels the pattern.
+const int AO_BLUR_TILE = 4;
+
+// The steepest surface, in scene units of depth per pixel, still treated as one
+// surface by the blur. Anything steeper is taken to be a different surface.
+const float AO_BLUR_SLOPE_LIMIT = 16.0;
+
+// Average the ambient occlusion term over the block of pixels that the AO stage
+// rotates its kernel across. Every rotation appears exactly once in the block,
+// so the sampling pattern averages out instead of showing as a dither. Any
+// AO_BLUR_TILE consecutive offsets cover the tile, whatever the alignment.
+// Taps sitting on a different surface are dropped, so occlusion does not bleed
+// across a silhouette into whatever lies behind it.
+float blurredAo(vec2 texCoord)
+{
+  float centerZ = linearDepth(texture(inDepthTex, texCoord).x);
+
+  // Size the surface test by how much scene distance one pixel covers here,
+  // rather than by a fixed number of Angstroms. A fixed distance is only right
+  // at one zoom level: it rejects every tap on a steep surface when zoomed out,
+  // which brings the dither back in exactly the places the blur exists for.
+  // inProjection[2][3] and [3][3] give the perspective divide, which is the
+  // view distance for a perspective camera and 1 for an orthographic one.
+  float wClip = inProjection[2][3] * -centerZ + inProjection[3][3];
+  float pixelSize = 2.0 * wClip / (height * inProjection[1][1]);
+  float tolerance = AO_BLUR_SLOPE_LIMIT * pixelSize;
+
+  // The centre tap always belongs, so seed with it and skip it in the loop.
+  float total = texture(inAoTex, texCoord).x;
+  float weight = 1.0;
+  for (int y = -1; y <= AO_BLUR_TILE - 2; y++) {
+    for (int x = -1; x <= AO_BLUR_TILE - 2; x++) {
+      if (x == 0 && y == 0)
+        continue;
+      vec2 tapUV = texCoord + vec2(float(x) / width, float(y) / height);
+      if (abs(linearDepth(texture(inDepthTex, tapUV).x) - centerZ) < tolerance) {
+        total += texture(inAoTex, tapUV).x;
+        weight += 1.0;
+      }
+    }
+  }
+  return total / weight;
 }
 
 float lerp(float a, float b, float f)
@@ -90,6 +134,10 @@ float rand(vec2 co) {
     return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
+// Legacy depth linearization for the depth-of-field path only. Its near and far
+// are hardcoded and do not match the actual camera; calcBlur's focus distance
+// and SolidPipeline::adjustOffset are both curve-fitted against that error, so
+// the three only make sense together. Use linearDepth() for anything new.
 float depthToZ(float depth) {
     float eyeZ = ((height * 0.57735) / 2.0);
     float near = 2.0;
@@ -137,48 +185,6 @@ vec4 applyFog(vec2 texCoord) {
     return finalColor;
 }
 
-const vec2 SSAOkernel[16] = vec2[16](
-        vec2(0.072170, 0.081556),
-        vec2(-0.035126, 0.056701),
-        vec2(-0.034186, -0.083598),
-        vec2(-0.056102, -0.009235),
-        vec2(0.017487, -0.099822),
-        vec2(0.071065, 0.015921),
-        vec2(0.040950, 0.079834),
-        vec2(-0.087751, 0.065326),
-        vec2(0.061108, -0.025829),
-        vec2(0.081262, -0.025854),
-        vec2(-0.063816, 0.083857),
-        vec2(0.043747, -0.068586),
-        vec2(-0.089848, 0.049046),
-        vec2(-0.065370, 0.058761),
-        vec2(0.099581, -0.089322),
-        vec2(-0.032077, -0.042826)
-    );
-
-float computeSSAOLuminosity(vec3 normal)
-{
-  float totalOcclusion = 0.0;
-  float depth = texture(inDepthTex, UV).x;
-  float A = (width * UV.x + 10 * height * UV.y) * 2.0 * 3.14159265358979 * 5.0 / 16.0;
-  float S = sin(A);
-  float C = cos(A);
-  mat2 rotation = mat2(
-    C, -S,
-    S, C
-  );
-  for (int i = 0; i < 16; i++) {
-    vec2 samplePoint = rotation * SSAOkernel[i];
-    float occluderDepth = texture(inDepthTex, UV + samplePoint).x;
-    vec3 occluder = vec3(samplePoint.xy, depth - occluderDepth);
-    float d = length(occluder);
-    float occlusion = max(0.0, dot(normal, occluder)) * (1.0 / (1.0 + d));
-    totalOcclusion += occlusion;
-  }
-
-  return max(0.0, 1.2 - inAoStrength * totalOcclusion);
-}
-
 float computeEdgeLuminosity(vec3 normal)
 {
     return max(0.0, pow(normal.z - 0.1, 1.0 / 3.0));
@@ -191,7 +197,7 @@ void main() {
 
     // Compute luminosity based on Ambient Occlusion (AO) and Edge Detection
     if (inAoEnabled != 0.0) {
-        luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(getNormalNear(UV)));
+        luminosity *= max(1.2 * (1.0 - inAoEnabled), blurredAo(UV));
     }
     if (inEdStrength != 0.0) {
         luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
