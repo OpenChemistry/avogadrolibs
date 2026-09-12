@@ -10,6 +10,13 @@
 #include <avogadro/io/compressedstream.h>
 #include <avogadro/io/compression.h>
 
+#include <avogadro/core/molecule.h>
+#include <avogadro/io/fileformat.h>
+#include <avogadro/io/fileformatmanager.h>
+#include <avogadro/io/pdbformat.h>
+#include <avogadro/io/sdfformat.h>
+#include <avogadro/io/xyzformat.h>
+
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
@@ -21,6 +28,7 @@
 #include <string>
 #include <vector>
 
+using Avogadro::Core::Molecule;
 using Avogadro::Io::CompressingOStream;
 using Avogadro::Io::Compression;
 using Avogadro::Io::compressionAvailable;
@@ -33,8 +41,13 @@ using Avogadro::Io::compressionSupported;
 using Avogadro::Io::DecompressingIStream;
 using Avogadro::Io::defaultMaxDecompressedSize;
 using Avogadro::Io::detectCompression;
+using Avogadro::Io::FileFormat;
+using Avogadro::Io::FileFormatManager;
+using Avogadro::Io::PdbFormat;
+using Avogadro::Io::SdfFormat;
 using Avogadro::Io::stripCompressionSuffix;
 using Avogadro::Io::wrapIfCompressed;
+using Avogadro::Io::XyzFormat;
 
 namespace {
 
@@ -130,6 +143,34 @@ std::string decode(const std::string& compressed, Compression type,
   std::string out = slurpStream(in);
   *error = in.error();
   return out;
+}
+
+const std::string kPdbDir = std::string(AVOGADRO_DATA) + "/data/pdb/";
+const std::string kSdfDir = std::string(AVOGADRO_DATA) + "/data/sdf/";
+
+// Detects the codec from a file's leading bytes, for checking that a written
+// file really starts with the expected magic number.
+Compression fileMagic(const std::string& path)
+{
+  std::ifstream f(path, std::ios::binary);
+  char magic[compressionMagicSize] = {};
+  f.read(magic, sizeof(magic));
+  auto n = f.gcount();
+  return detectCompression(magic, static_cast<std::size_t>(n < 0 ? 0 : n));
+}
+
+// Atom-by-atom comparison used to prove a molecule read from compressed data
+// matches the same molecule read from its uncompressed reference file.
+void expectMoleculesMatch(const Molecule& a, const Molecule& b)
+{
+  ASSERT_EQ(a.atomCount(), b.atomCount());
+  for (Avogadro::Index i = 0; i < a.atomCount(); ++i) {
+    SCOPED_TRACE(i);
+    EXPECT_EQ(a.atom(i).atomicNumber(), b.atom(i).atomicNumber());
+    EXPECT_DOUBLE_EQ(a.atom(i).position3d().x(), b.atom(i).position3d().x());
+    EXPECT_DOUBLE_EQ(a.atom(i).position3d().y(), b.atom(i).position3d().y());
+    EXPECT_DOUBLE_EQ(a.atom(i).position3d().z(), b.atom(i).position3d().z());
+  }
 }
 
 } // namespace
@@ -1104,4 +1145,332 @@ TEST(CompressionTest, DecodesSdfZstdFixture)
   auto stream = openWrapped(kCompressedDir + "multi.sdf.zst", &error);
   ASSERT_NE(stream, nullptr) << error;
   EXPECT_EQ(slurpStream(*stream), expected);
+}
+
+// ============================================================================
+// 17. FileFormat / FileFormatManager integration -- the actual wiring this
+//     task adds. Everything above exercises compressedstream.h/compression.h
+//     directly; everything below goes through FileFormat::open()/readMolecule
+//     ()/readString()/writeString() and FileFormatManager, proving compressed
+//     files and strings are handled transparently by ordinary chemical
+//     formats that know nothing about compression.
+// ============================================================================
+
+TEST(CompressionTest, ManagerReadFileGzipNoExtension)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  Molecule reference;
+  ASSERT_TRUE(
+    FileFormatManager::instance().readFile(reference, kXyzDir + "methane.xyz"));
+  ASSERT_EQ(reference.atomCount(), 5);
+
+  Molecule fromGzip;
+  ASSERT_TRUE(FileFormatManager::instance().readFile(
+    fromGzip, kCompressedDir + "methane.xyz.gz"));
+  expectMoleculesMatch(fromGzip, reference);
+}
+
+TEST(CompressionTest, ManagerReadFileGzipExplicitExtension)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  Molecule reference;
+  ASSERT_TRUE(
+    FileFormatManager::instance().readFile(reference, kXyzDir + "methane.xyz"));
+
+  // An explicit chemical extension with no compression suffix must still
+  // work: the codec is detected from content, not from this string.
+  Molecule viaXyz;
+  ASSERT_TRUE(FileFormatManager::instance().readFile(
+    viaXyz, kCompressedDir + "methane.xyz.gz", "xyz"));
+  expectMoleculesMatch(viaXyz, reference);
+
+  // An explicit extension that includes the compression suffix must also
+  // resolve to the XYZ format.
+  Molecule viaXyzGz;
+  ASSERT_TRUE(FileFormatManager::instance().readFile(
+    viaXyzGz, kCompressedDir + "methane.xyz.gz", "xyz.gz"));
+  expectMoleculesMatch(viaXyzGz, reference);
+}
+
+TEST(CompressionTest, ManagerReadFilePdbGzipNoExtension)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  // NOTE: this cannot use data/pdb/1CRN.pdb / data/compressed/1crn.pdb.gz as
+  // originally planned. PdbFormat::read() has a pre-existing bug, unrelated
+  // to compression: an ATOM record whose element cannot be resolved is
+  // skipped with `continue` (pdbformat.cpp) without pushing a placeholder
+  // onto rawToAtomId, which desynchronizes the CONECT serial-to-array-index
+  // mapping for every CONECT record that follows. Compounding it, the two
+  // `rawToAtomId[a]` / `rawToAtomId[b]` lookups are never bounds checked
+  // against rawToAtomId.size() -- the only range test happens afterwards,
+  // against mol.atomCount() -- so the desync becomes an out-of-bounds read
+  // rather than a wrong bond. On 1CRN.pdb that crashes the process (verified
+  // with plain, uncompressed 1CRN.pdb too -- it is not a compression
+  // issue), and the indices come straight from the file, which for PDB data
+  // means straight from the network. Fixing it
+  // is out of scope here (pdbformat.cpp is chemistry-parsing code outside
+  // this task's fileformat.cpp/fileformatmanager.cpp remit) and is reported
+  // separately. data/pdb/cryst1.pdb has no CONECT records, is already read
+  // successfully elsewhere (PdbTest.cryst1), and a gzip copy is made on the
+  // fly here so this test still exercises exactly the thing it is meant to:
+  // the manager decompressing a gzipped PDB file transparently.
+  Molecule reference;
+  ASSERT_TRUE(
+    FileFormatManager::instance().readFile(reference, kPdbDir + "cryst1.pdb"));
+  ASSERT_GT(reference.atomCount(), 0);
+
+  std::string gzPath =
+    ::testing::TempDir() + "avogadro-compression-cryst1.pdb.gz";
+  std::remove(gzPath.c_str());
+  {
+    auto sink = std::make_unique<std::ofstream>(gzPath, std::ios::binary);
+    CompressingOStream cs(std::move(sink), Compression::Gzip);
+    std::string plain = slurpFile(kPdbDir + "cryst1.pdb");
+    cs.write(plain.data(), static_cast<std::streamsize>(plain.size()));
+    ASSERT_TRUE(cs.finish());
+  }
+
+  Molecule fromGzip;
+  ASSERT_TRUE(FileFormatManager::instance().readFile(fromGzip, gzPath));
+  std::remove(gzPath.c_str());
+  EXPECT_EQ(fromGzip.atomCount(), reference.atomCount());
+}
+
+TEST(CompressionTest, ReadStringDetectsGzipContentFromPlainExtension)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  Molecule reference;
+  ASSERT_TRUE(
+    FileFormatManager::instance().readFile(reference, kXyzDir + "methane.xyz"));
+
+  // The bytes are gzip, but the caller only ever names the chemical format:
+  // content sniffing inside FileFormat::readString() must still decode them.
+  std::string raw = slurpFile(kCompressedDir + "methane.xyz.gz");
+  Molecule fromString;
+  ASSERT_TRUE(FileFormatManager::instance().readString(fromString, raw, "xyz"));
+  expectMoleculesMatch(fromString, reference);
+}
+
+TEST(CompressionTest, MultiMoleculeSdfZstd)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+  if (!compressionSupported(Compression::Zstd))
+    GTEST_SKIP() << "zstd is not supported in this build";
+
+  auto countMolecules = [](const std::string& path) {
+    SdfFormat format;
+    EXPECT_TRUE(format.open(path, FileFormat::Read | FileFormat::MultiMolecule))
+      << format.error();
+    int count = 0;
+    Molecule molecule;
+    while (format.readMolecule(molecule)) {
+      ++count;
+      molecule = Molecule();
+    }
+    // The final, failing readMolecule() call that signals "no more molecules"
+    // leaves a generic "Error reading molecule name." in error() -- that is
+    // MdlFormat's normal end-of-multi-molecule-stream signal (see
+    // MdlTest.readMulti), not something specific to compressed input, so it
+    // is not asserted on here. What matters is that decompression did not cut
+    // the stream short: both the plain and compressed files must yield the
+    // same molecule count.
+    return count;
+  };
+
+  int expectedCount = countMolecules(kSdfDir + "multi.sdf");
+  ASSERT_GT(expectedCount, 0);
+  EXPECT_EQ(countMolecules(kCompressedDir + "multi.sdf.zst"), expectedCount);
+}
+
+namespace {
+
+// Writes molecule through the manager to a temp path with the given
+// compressed extension, checks the file's magic bytes, then reads it back
+// through the manager and confirms the molecule round trips.
+void expectManagerWriteRoundTrip(const std::string& extension,
+                                 Compression expectedCodec)
+{
+  if (!compressionSupported(expectedCodec)) {
+    GTEST_SKIP() << compressionName(expectedCodec)
+                 << " is not supported in this build";
+  }
+
+  Molecule original;
+  ASSERT_TRUE(FileFormatManager::instance().readFile(
+    original, std::string(AVOGADRO_DATA) + "/data/xyz/methane.xyz"));
+
+  std::string path = ::testing::TempDir() +
+                     "avogadro-compression-manager-roundtrip." + extension;
+  std::remove(path.c_str());
+
+  ASSERT_TRUE(FileFormatManager::instance().writeFile(original, path))
+    << "writeFile failed for " << path;
+  EXPECT_EQ(fileMagic(path), expectedCodec)
+    << path << " does not start with the " << compressionName(expectedCodec)
+    << " magic bytes";
+
+  Molecule roundTripped;
+  ASSERT_TRUE(FileFormatManager::instance().readFile(roundTripped, path))
+    << "readFile failed for " << path;
+  std::remove(path.c_str());
+
+  expectMoleculesMatch(roundTripped, original);
+}
+
+} // namespace
+
+TEST(CompressionTest, ManagerWriteFileRoundTripGzipCjson)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+  expectManagerWriteRoundTrip("cjson.gz", Compression::Gzip);
+}
+
+TEST(CompressionTest, ManagerWriteFileRoundTripBzip2Xyz)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+  expectManagerWriteRoundTrip("xyz.bz2", Compression::Bzip2);
+}
+
+TEST(CompressionTest, ManagerWriteFileRoundTripZstdXyz)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+  expectManagerWriteRoundTrip("xyz.zst", Compression::Zstd);
+}
+
+TEST(CompressionTest, WriteStringGzipRoundTrip)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  Molecule original;
+  ASSERT_TRUE(FileFormatManager::instance().readFile(
+    original, std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson"));
+
+  std::string compressed;
+  ASSERT_TRUE(
+    FileFormatManager::instance().writeString(original, compressed, "cjson.gz"))
+    << FileFormatManager::instance().error();
+  ASSERT_GE(compressed.size(), compressionMagicSize);
+  EXPECT_EQ(detectCompression(compressed.data(), compressionMagicSize),
+            Compression::Gzip);
+
+  Molecule roundTripped;
+  ASSERT_TRUE(FileFormatManager::instance().readString(roundTripped, compressed,
+                                                       "cjson"));
+  expectMoleculesMatch(roundTripped, original);
+}
+
+TEST(CompressionTest, ReadFileCorruptGzipFailsWithError)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  // A single flipped bit inside an otherwise well-formed gzip stream. If the
+  // FileFormat layer let this through, the CRC failure would surface as an
+  // ordinary short read and silently yield a truncated-but-"successful"
+  // molecule -- exactly the bug this wiring exists to prevent.
+  Molecule molecule;
+  EXPECT_FALSE(FileFormatManager::instance().readFile(
+    molecule, kCompressedDir + "corrupt.xyz.gz", "xyz"));
+
+  XyzFormat format;
+  Molecule direct;
+  EXPECT_FALSE(format.readFile(kCompressedDir + "corrupt.xyz.gz", direct));
+  EXPECT_FALSE(format.error().empty());
+}
+
+TEST(CompressionTest, ReadFileTruncatedGzipFailsWithError)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  XyzFormat format;
+  Molecule molecule;
+  EXPECT_FALSE(format.readFile(kCompressedDir + "truncated.xyz.gz", molecule));
+  EXPECT_FALSE(format.error().empty());
+}
+
+TEST(CompressionTest, MaxDecompressedSizeOptionEnforced)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  // zeros-4mib.gz decodes to 4 MiB of NUL bytes containing no newline at all.
+  // No chemical format parses that into a molecule, so this cannot assert on
+  // readFile()'s return value or on a resulting atom count. PdbFormat::read()
+  // is used because its `while (getline(in, buffer))` loop pulls the entire
+  // decompressed stream into a single buffer before giving up, which reliably
+  // drives the decoder past a small maxDecompressedSize -- unlike, say,
+  // XyzFormat, whose very first `>>` extraction fails on the first NUL byte
+  // without pulling enough data to ever approach the limit. So the assertion
+  // is on the specific error text FileFormat::readMolecule() appends from the
+  // decompressor, naming "maxDecompressedSize", exactly as the low-level
+  // SizeCapStopsAtLimit test above checks it at the compressedstream layer.
+  {
+    PdbFormat format;
+    format.setOptions(R"({"maxDecompressedSize": 65536})");
+    Molecule molecule;
+    format.readFile(kCompressedDir + "zeros-4mib.gz", molecule);
+    EXPECT_FALSE(format.error().empty());
+    EXPECT_NE(format.error().find("maxDecompressedSize"), std::string::npos)
+      << format.error();
+  }
+
+  // With the limit lifted (0 == unlimited) the same read must not fail for
+  // that reason, whatever else it may or may not make of 4 MiB of zeros.
+  {
+    PdbFormat format;
+    format.setOptions(R"({"maxDecompressedSize": 0})");
+    Molecule molecule;
+    format.readFile(kCompressedDir + "zeros-4mib.gz", molecule);
+    EXPECT_EQ(format.error().find("maxDecompressedSize"), std::string::npos)
+      << format.error();
+  }
+}
+
+TEST(CompressionTest, WritingUnsupportedCodecFailsAndCreatesNoFile)
+{
+  if (!compressionAvailable())
+    GTEST_SKIP() << "compression is not supported in this build";
+
+  Compression unsupported = Compression::None;
+  for (Compression type :
+       { Compression::Bzip2, Compression::Xz, Compression::Zstd }) {
+    if (!compressionSupported(type)) {
+      unsupported = type;
+      break;
+    }
+  }
+  if (unsupported == Compression::None)
+    GTEST_SKIP() << "every codec is supported in this build";
+
+  std::string path = ::testing::TempDir() +
+                     "avogadro-compression-unsupported-write.xyz." +
+                     compressionExtension(unsupported);
+  std::remove(path.c_str());
+
+  XyzFormat format;
+  EXPECT_FALSE(format.open(path, FileFormat::Write));
+  EXPECT_NE(format.error().find(compressionName(unsupported)),
+            std::string::npos)
+    << "error should name the unsupported codec ("
+    << compressionName(unsupported) << "): " << format.error();
+
+  std::ifstream probe(path);
+  EXPECT_FALSE(probe.is_open())
+    << "an unsupported codec must not leave a stray empty file behind: "
+    << path;
+  std::remove(path.c_str());
 }

@@ -5,6 +5,8 @@
 
 #include "fileformatmanager.h"
 
+#include "compressedstream.h"
+#include "compression.h"
 #include "fileformat.h"
 
 #include "cjsonformat.h"
@@ -27,6 +29,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <sstream>
 
 using std::unique_ptr;
 
@@ -43,23 +46,35 @@ bool FileFormatManager::readFile(Core::Molecule& molecule,
                                  const std::string& fileExtension,
                                  const std::string& options) const
 {
+  // error() reports the most recent operation, so start clean.
+  m_error.clear();
+
   FileFormat* format(nullptr);
   if (fileExtension.empty()) {
-    // We need to guess the file extension.
-    size_t pos = fileName.find_last_of('.');
-    format = filteredFormatFromFormatMap(fileName.substr(pos + 1),
+    // We need to guess the file extension. Strip a compression suffix first
+    // (".gz", ".bz2", ...) so that "molecule.xyz.gz" resolves by its
+    // chemical extension "xyz", not by the codec's own extension.
+    std::string stripped = stripCompressionSuffix(fileName);
+    size_t pos = stripped.find_last_of('.');
+    format = filteredFormatFromFormatMap(stripped.substr(pos + 1),
                                          FileFormat::Read | FileFormat::File,
                                          m_fileExtensions);
   } else {
-    format = filteredFormatFromFormatMap(
-      fileExtension, FileFormat::Read | FileFormat::File, m_fileExtensions);
+    format = filteredFormatFromFormatMap(stripCompressionSuffix(fileExtension),
+                                         FileFormat::Read | FileFormat::File,
+                                         m_fileExtensions);
   }
-  if (!format)
+  if (!format) {
+    appendError("No file format available to read \"" + fileName + "\".");
     return false;
+  }
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
   formatInstance->setOptions(options);
-  return formatInstance->readFile(fileName, molecule);
+  if (formatInstance->readFile(fileName, molecule))
+    return true;
+  appendError(formatInstance->error());
+  return false;
 }
 
 bool FileFormatManager::writeFile(const Core::Molecule& molecule,
@@ -67,23 +82,35 @@ bool FileFormatManager::writeFile(const Core::Molecule& molecule,
                                   const std::string& fileExtension,
                                   const std::string& options) const
 {
+  // error() reports the most recent operation, so start clean.
+  m_error.clear();
+
   FileFormat* format(nullptr);
   if (fileExtension.empty()) {
-    // We need to guess the file extension.
-    size_t pos = fileName.find_last_of('.');
-    format = filteredFormatFromFormatMap(fileName.substr(pos + 1),
+    // We need to guess the file extension. Strip a compression suffix first
+    // (".gz", ".bz2", ...) so that "molecule.xyz.gz" resolves by its
+    // chemical extension "xyz", not by the codec's own extension.
+    std::string stripped = stripCompressionSuffix(fileName);
+    size_t pos = stripped.find_last_of('.');
+    format = filteredFormatFromFormatMap(stripped.substr(pos + 1),
                                          FileFormat::Write | FileFormat::File,
                                          m_fileExtensions);
   } else {
-    format = filteredFormatFromFormatMap(
-      fileExtension, FileFormat::Write | FileFormat::File, m_fileExtensions);
+    format = filteredFormatFromFormatMap(stripCompressionSuffix(fileExtension),
+                                         FileFormat::Write | FileFormat::File,
+                                         m_fileExtensions);
   }
-  if (!format)
+  if (!format) {
+    appendError("No file format available to write \"" + fileName + "\".");
     return false;
+  }
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
   formatInstance->setOptions(options);
-  return formatInstance->writeFile(fileName, molecule);
+  if (formatInstance->writeFile(fileName, molecule))
+    return true;
+  appendError(formatInstance->error());
+  return false;
 }
 
 bool FileFormatManager::readString(Core::Molecule& molecule,
@@ -91,14 +118,26 @@ bool FileFormatManager::readString(Core::Molecule& molecule,
                                    const std::string& fileExtension,
                                    const std::string& options) const
 {
+  // error() reports the most recent operation, so start clean.
+  m_error.clear();
+
+  // The extension only selects the format here; the actual decoding is
+  // content-driven inside FileFormat::readString().
   FileFormat* format(filteredFormatFromFormatMap(
-    fileExtension, FileFormat::Read | FileFormat::String, m_fileExtensions));
-  if (!format)
+    stripCompressionSuffix(fileExtension),
+    FileFormat::Read | FileFormat::String, m_fileExtensions));
+  if (!format) {
+    appendError("No file format available to read \"" + fileExtension +
+                "\" content.");
     return false;
+  }
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
   formatInstance->setOptions(options);
-  return formatInstance->readString(string, molecule);
+  if (formatInstance->readString(string, molecule))
+    return true;
+  appendError(formatInstance->error());
+  return false;
 }
 
 bool FileFormatManager::writeString(const Core::Molecule& molecule,
@@ -106,14 +145,60 @@ bool FileFormatManager::writeString(const Core::Molecule& molecule,
                                     const std::string& fileExtension,
                                     const std::string& options) const
 {
+  // error() reports the most recent operation, so start clean.
+  m_error.clear();
+
+  Compression type = Compression::None;
+  std::string chemicalExtension = stripCompressionSuffix(fileExtension, &type);
   FileFormat* format(filteredFormatFromFormatMap(
-    fileExtension, FileFormat::Write | FileFormat::String, m_fileExtensions));
-  if (!format)
+    chemicalExtension, FileFormat::Write | FileFormat::String,
+    m_fileExtensions));
+  if (!format) {
+    appendError("No file format available to write \"" + fileExtension +
+                "\" content.");
     return false;
+  }
 
   unique_ptr<FileFormat> formatInstance(format->newInstance());
   formatInstance->setOptions(options);
-  return formatInstance->writeString(string, molecule);
+
+  if (type == Compression::None) {
+    if (formatInstance->writeString(string, molecule))
+      return true;
+    appendError(formatInstance->error());
+    return false;
+  }
+
+  if (!compressionSupported(type)) {
+    appendError("Cannot write \"" + fileExtension +
+                "\": " + compressionName(type) +
+                " compression is not supported in this build.");
+    return false;
+  }
+
+  // writeString() only ever produces uncompressed text (it has no file name
+  // to derive a codec from), so compress the result here when the extension
+  // named one. CompressingOStream owns its sink, so the sink's contents must
+  // be read while the compressing stream is still alive, and only after
+  // finish() -- reading them after the compressing stream is destroyed would
+  // be a use-after-free of the string it moved out of the ostringstream.
+  std::string uncompressed;
+  if (!formatInstance->writeString(uncompressed, molecule)) {
+    appendError(formatInstance->error());
+    return false;
+  }
+
+  auto sink = std::make_unique<std::ostringstream>();
+  auto* rawSink = sink.get();
+  CompressingOStream compressor(std::move(sink), type);
+  compressor.write(uncompressed.data(),
+                   static_cast<std::streamsize>(uncompressed.size()));
+  if (!compressor.finish()) {
+    appendError(compressor.error());
+    return false;
+  }
+  string = rawSink->str();
+  return true;
 }
 
 bool FileFormatManager::registerFormat(FileFormat* format)
@@ -383,7 +468,7 @@ FileFormat* FileFormatManager::filteredFormatFromFormatVector(
   return nullptr;
 }
 
-void FileFormatManager::appendError(const std::string& errorMessage)
+void FileFormatManager::appendError(const std::string& errorMessage) const
 {
   m_error += errorMessage + "\n";
 }

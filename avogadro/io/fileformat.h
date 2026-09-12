@@ -22,6 +22,9 @@ class Molecule;
 
 namespace Io {
 
+class DecompressingIStream;
+class CompressingOStream;
+
 /**
  * @class FileFormat fileformat.h <avogadro/io/fileformat.h>
  * @brief General API for file formats.
@@ -284,6 +287,16 @@ protected:
   bool stringArrayOption(const std::string& name,
                          std::vector<std::string>& values);
 
+  /**
+   * @brief Look up an integer value in the options() string.
+   * @param name The name of the option to look up.
+   * @param value Set to the stored value when the option is present and is an
+   * integer, otherwise left untouched, so seed it with the format default.
+   * @return False when the option is present but holds the wrong type, see
+   * boolOption() for how this is intended to be used.
+   */
+  bool integerOption(const std::string& name, long long& value);
+
 private:
   std::string m_error;
   std::string m_fileName;
@@ -293,6 +306,12 @@ private:
   Operation m_mode;
   std::istream* m_in;
   std::ostream* m_out;
+
+  // Non-owning aliases of m_in/m_out when those streams were wrapped for
+  // compression; never delete these separately from m_in/m_out.
+  DecompressingIStream* m_decompressor;
+  CompressingOStream* m_compressor;
+  bool m_outputError;
 };
 
 inline FileFormat::Operation operator|(FileFormat::Operation a,

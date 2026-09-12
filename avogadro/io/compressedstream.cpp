@@ -486,11 +486,14 @@ DecompressingStreamBuf::pos_type DecompressingStreamBuf::seekoff(
   // kept inline in the two overrides that the header actually declares
   // (rather than factored into extra private members) so the public headers
   // do not need to change.
+  // Refer to the chunk size through the class rather than the local constant:
+  // MSVC will not let a lambda use a local constexpr without an explicit
+  // capture (C3493), where clang and gcc treat it as not odr-used.
   auto currentAbsolutePos = [this]() -> std::uint64_t {
-    std::uint64_t base =
-      (d->currentChunkIndex == kInvalidChunk)
-        ? 0
-        : static_cast<std::uint64_t>(d->currentChunkIndex) * kChunk;
+    std::uint64_t base = (d->currentChunkIndex == kInvalidChunk)
+                           ? 0
+                           : static_cast<std::uint64_t>(d->currentChunkIndex) *
+                               DecompressingStreamBufPrivate::kChunkSize;
     std::ptrdiff_t offset = (gptr() != nullptr) ? (gptr() - eback()) : 0;
     return base + static_cast<std::uint64_t>(offset);
   };

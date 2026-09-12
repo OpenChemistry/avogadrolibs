@@ -73,6 +73,12 @@ public:
    * Load @p molecule with the @p fileName contents supplied, inferring the
    * @p fileExtension if it is empty. The @p options can be used to modify
    * the behavior of the file format.
+   *
+   * A compressed file (.gz, .bz2, .xz, .zst) is handled transparently: the
+   * codec is detected from the file's content, not its name, so even a
+   * misnamed compressed file is decoded correctly. The format to use is
+   * chosen from @p fileName (or @p fileExtension) with any compression
+   * suffix removed, e.g. "molecule.xyz.gz" is read as XYZ.
    * @return True on success, false on failure.
    */
   bool readFile(Core::Molecule& molecule, const std::string& fileName,
@@ -83,6 +89,11 @@ public:
    * Write @p molecule to the @p fileName supplied, inferring the
    * @p fileExtension if it is empty. The @p options can be used to modify
    * the behavior of the file format.
+   *
+   * A compressed file (.gz, .bz2, .xz, .zst) is handled transparently: the
+   * codec is chosen from @p fileName's extension (e.g. "molecule.xyz.gz"
+   * writes gzip-compressed XYZ), and the format to use is chosen from the
+   * name with that compression suffix removed.
    * @return True on success, false on failure.
    */
   bool writeFile(const Core::Molecule& molecule, const std::string& fileName,
@@ -93,6 +104,11 @@ public:
    * Load @p molecule with the contents of @p string, using the supplied
    * @p fileExtension to determine the format. The @p options can be used to
    * modify the behavior of the file format.
+   *
+   * Compressed content is handled transparently: the codec is detected from
+   * @p string's own content, not from @p fileExtension, so @p string may hold
+   * compressed bytes even though @p fileExtension names the chemical format
+   * only (e.g. "xyz").
    * @return True on success, false on failure.
    */
   bool readString(Core::Molecule& molecule, const std::string& string,
@@ -103,6 +119,10 @@ public:
    * Write @p molecule to the @p string, using the supplied @p fileExtension
    * to determine the format. The @p options can be used to modify the behavior
    * of the file format.
+   *
+   * A compression suffix on @p fileExtension (e.g. "cjson.gz") is honored:
+   * the format is chosen from the extension with that suffix removed, and
+   * @p string is filled with the compressed bytes.
    * @return True on success, false on failure.
    */
   bool writeString(const Core::Molecule& molecule, std::string& string,
@@ -329,7 +349,7 @@ private:
    * @brief Append warnings/errors to the error message string.
    * @param errorMessage The error message to append.
    */
-  void appendError(const std::string& errorMessage);
+  void appendError(const std::string& errorMessage) const;
 
   std::vector<FileFormat*> m_formats;
 
@@ -337,7 +357,7 @@ private:
   FormatIdMap m_mimeTypes;
   FormatIdMap m_fileExtensions;
 
-  std::string m_error;
+  mutable std::string m_error;
 };
 
 } // namespace Io
