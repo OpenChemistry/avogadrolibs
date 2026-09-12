@@ -14,34 +14,44 @@
 
 #include "solid_first_fs.h"
 
+#include "solid_ao_fs.h"
+
 #include <iostream>
 
 #include <cmath>
 
 namespace Avogadro::Rendering {
 
+// Texture units shared by the pipeline's stages. Kept together so that adding
+// a sampler cannot silently collide with one already in use.
+namespace {
+constexpr int TextureUnitRGB = 1;
+constexpr int TextureUnitDepth = 2;
+constexpr int TextureUnitAo = 3;
+} // namespace
+
 class SolidPipeline::Private
 {
 public:
   Private() {}
 
+  // Point a sampler uniform in the currently bound program at a texture.
+  void bindSampler(const GLchar* name, GLuint texture, int unit)
+  {
+    GLuint programID;
+    glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&programID);
+    GLuint location = glGetUniformLocation(programID, name);
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(location, unit);
+  }
+
   void attachStage(ShaderProgram& prog, const GLchar* nameRGB, GLuint texRGB,
                    const GLchar* nameDepth, GLuint texDepth, int w, int h)
   {
     prog.bind();
-    GLuint programID;
-    glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&programID);
-
-    GLuint attrRGB = glGetUniformLocation(programID, nameRGB);
-    glActiveTexture(GL_TEXTURE0 + 1);
-    glBindTexture(GL_TEXTURE_2D, texRGB);
-    glUniform1i(attrRGB, 1);
-
-    GLuint attrDepth = glGetUniformLocation(programID, nameDepth);
-    glActiveTexture(GL_TEXTURE0 + 2);
-    glBindTexture(GL_TEXTURE_2D, texDepth);
-    glUniform1i(attrDepth, 2);
-
+    bindSampler(nameRGB, texRGB, TextureUnitRGB);
+    bindSampler(nameDepth, texDepth, TextureUnitDepth);
     prog.setUniformValue("width", float(w));
     prog.setUniformValue("height", float(h));
   }
@@ -51,11 +61,15 @@ public:
   GLuint renderFBO;
   GLuint renderTexture;
   GLuint depthTexture;
+  GLuint aoFBO;
+  GLuint aoTexture;
   GLuint screenVAO;
   GLuint screenVBO;
   ShaderProgram firstStageShaders;
+  ShaderProgram aoStageShaders;
   Shader screenVertexShader;
   Shader firstFragmentShader;
+  Shader aoFragmentShader;
 };
 
 static const GLfloat s_fullscreenQuad[] = {
@@ -85,6 +99,25 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
                          *texDepth, 0);
 }
 
+// The ambient occlusion term is rendered on its own so the compositing stage
+// can filter it. It needs a float format: the term brightens as well as
+// darkens, and goes above 1.0.
+void initializeAoFramebuffer(GLuint* outFBO, GLuint* texAo)
+{
+  glGenFramebuffers(1, outFBO);
+  glBindFramebuffer(GL_FRAMEBUFFER, *outFBO);
+
+  glGenTextures(1, texAo);
+  glBindTexture(GL_TEXTURE_2D, *texAo);
+  // The blur reads exact texel centres, so no filtering is wanted here.
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                         *texAo, 0);
+}
+
 SolidPipeline::SolidPipeline()
   : m_pixelRatio(1.0f), m_aoEnabled(false), m_dofStrength(1.0f),
     m_dofPosition(1.0), m_dofEnabled(false), m_fogPosition(1.0),
@@ -102,6 +135,10 @@ SolidPipeline::~SolidPipeline()
 void SolidPipeline::initialize()
 {
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
+  initializeAoFramebuffer(&d->aoFBO, &d->aoTexture);
+  // Each helper leaves its own framebuffer bound; settle on the one the
+  // pipeline renders into.
+  glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
 
   // Create VAO for fullscreen quad (required for OpenGL Core Profile)
   glGenVertexArrays(1, &d->screenVAO);
@@ -133,6 +170,16 @@ void SolidPipeline::initialize()
   if (!d->firstStageShaders.link())
     std::cout << d->firstStageShaders.error() << std::endl;
 
+  d->aoFragmentShader.setType(Shader::Fragment);
+  d->aoFragmentShader.setSource(solid_ao_fs);
+  if (!d->aoFragmentShader.compile())
+    std::cout << d->aoFragmentShader.error() << std::endl;
+
+  d->aoStageShaders.attachShader(d->screenVertexShader);
+  d->aoStageShaders.attachShader(d->aoFragmentShader);
+  if (!d->aoStageShaders.link())
+    std::cout << d->aoStageShaders.error() << std::endl;
+
   // here is the end of the code that needs to be compared
 }
 
@@ -160,10 +207,33 @@ void SolidPipeline::begin()
   glClearDepth(tmp[4]);
 }
 
-void SolidPipeline::end()
+void SolidPipeline::end(const Camera& camera)
 {
   // Bind VAO for fullscreen quad (required for OpenGL Core Profile)
   glBindVertexArray(d->screenVAO);
+
+  // Render the ambient occlusion term into its own buffer first, so the
+  // compositing stage can blur away the kernel's sampling pattern. Skipped
+  // entirely when ambient occlusion is off, since nothing would read it.
+  if (m_aoEnabled) {
+    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
+    GLenum aoBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, aoBuffersList);
+    glViewport(0, 0, static_cast<GLsizei>(m_width),
+               static_cast<GLsizei>(m_height));
+    // This target has no depth attachment, and the pass covers every pixel.
+    glDisable(GL_DEPTH_TEST);
+
+    d->aoStageShaders.bind();
+    d->bindSampler("inDepthTex", d->depthTexture, TextureUnitDepth);
+    d->aoStageShaders.setUniformValue("width", float(m_width));
+    d->aoStageShaders.setUniformValue("height", float(m_height));
+    d->aoStageShaders.setUniformValue("inAoStrength", m_aoStrength);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // The passes that follow this one still depend on depth testing.
+    glEnable(GL_DEPTH_TEST);
+  }
 
   // Draw to screen
   if (glIsFramebuffer(d->defaultFBO)) {
@@ -186,7 +256,12 @@ void SolidPipeline::end()
     "inDofStrength", m_dofEnabled ? (m_dofStrength * 100.0f) : 0.0f);
   d->firstStageShaders.setUniformValue("inDofPosition",
                                        ((m_dofPosition) / 10.0f));
-  d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
+
+  // The AO term, plus the projection the blur uses to read window depth back
+  // as a distance in scene units.
+  d->bindSampler("inAoTex", d->aoTexture, TextureUnitAo);
+  d->firstStageShaders.setUniformValue("inProjection",
+                                       camera.projection().matrix());
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   d->firstStageShaders.setUniformValue("inFogEnabled",
                                        m_fogEnabled ? 1.0f : 0.0f);
@@ -232,6 +307,10 @@ void SolidPipeline::resize(int width, int height)
   glBindTexture(GL_TEXTURE_2D, d->depthTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
                GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+
+  glBindTexture(GL_TEXTURE_2D, d->aoTexture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_R16F, m_width, m_height, 0, GL_RED,
+               GL_FLOAT, nullptr);
 }
 
 void SolidPipeline::setPixelRatio(float ratio)

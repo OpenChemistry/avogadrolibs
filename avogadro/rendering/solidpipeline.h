@@ -34,10 +34,14 @@ public:
   void begin();
 
   void adjustOffset(const Camera& camera);
+
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
+   *
+   * The camera is needed by the ambient occlusion blur, which turns window
+   * depth back into scene units to tell surfaces apart.
    */
-  void end();
+  void end(const Camera& camera);
 
   /**
    * @brief Resize buffers for width x height viewport.
