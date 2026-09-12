@@ -104,13 +104,7 @@ bool FileFormat::open(const std::string& fileName_, Operation mode_)
       }
       file->imbue(cLocale);
 
-      long long maxDecoded = static_cast<long long>(defaultMaxDecompressedSize);
-      integerOption("maxDecompressedSize", maxDecoded);
-      if (maxDecoded < 0) {
-        appendError("The \"maxDecompressedSize\" option must not be "
-                    "negative.");
-        maxDecoded = static_cast<long long>(defaultMaxDecompressedSize);
-      }
+      const long long maxDecoded = maxDecompressedSizeOption();
 
       std::string wrapError;
       std::unique_ptr<std::istream> wrapped =
@@ -238,12 +232,7 @@ bool FileFormat::readString(const std::string& string, Core::Molecule& molecule)
   // data decoded transparently. wrapIfCompressed() passes plain data straight
   // through, so this costs one small read in the overwhelmingly common
   // uncompressed case.
-  long long maxDecoded = static_cast<long long>(defaultMaxDecompressedSize);
-  integerOption("maxDecompressedSize", maxDecoded);
-  if (maxDecoded < 0) {
-    appendError("The \"maxDecompressedSize\" option must not be negative.");
-    maxDecoded = static_cast<long long>(defaultMaxDecompressedSize);
-  }
+  const long long maxDecoded = maxDecompressedSizeOption();
 
   auto source =
     std::make_unique<std::istringstream>(string, std::istringstream::in);
@@ -358,6 +347,17 @@ bool FileFormat::stringArrayOption(const std::string& name,
   }
   values = std::move(parsed);
   return true;
+}
+
+long long FileFormat::maxDecompressedSizeOption()
+{
+  auto value = static_cast<long long>(defaultMaxDecompressedSize);
+  integerOption("maxDecompressedSize", value);
+  if (value < 0) {
+    appendError("The \"maxDecompressedSize\" option must not be negative.");
+    value = static_cast<long long>(defaultMaxDecompressedSize);
+  }
+  return value;
 }
 
 bool FileFormat::integerOption(const std::string& name, long long& value)

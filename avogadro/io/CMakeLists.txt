@@ -50,6 +50,13 @@ target_sources(IO PRIVATE
 # Transparent decompression of .gz/.bz2/.xz/.zst input, and the matching
 # compressed output. zlib handles gzip because libarchive does not verify gzip
 # checksums; libarchive handles the rest.
+#
+# Note that gzip alone needs only zlib, so a build with zlib but no libarchive
+# could in principle still read the commonest case (.pdb.gz, .cif.gz). Both are
+# deliberately gated together on the one existing USE_LIBARCHIVE option, which
+# the package installer plugin already uses, rather than introducing a second
+# switch; decoupling gzip would be a worthwhile follow-up for minimal builds
+# and the Python wheels, which set USE_LIBARCHIVE=OFF.
 if(USE_LIBARCHIVE)
   find_package(LibArchive)
   find_package(ZLIB)

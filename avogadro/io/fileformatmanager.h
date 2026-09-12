@@ -351,6 +351,17 @@ private:
    */
   void appendError(const std::string& errorMessage) const;
 
+  /**
+   * @brief The extension to look a format up by.
+   *
+   * Prefers @p fileExtension when the caller supplied one, otherwise takes it
+   * from @p fileName. Either way a compression suffix is removed first, so
+   * that "molecule.xyz.gz" and an explicit "xyz.gz" both resolve by the
+   * chemical extension "xyz" rather than by the codec's.
+   */
+  static std::string lookupExtension(const std::string& fileName,
+                                     const std::string& fileExtension);
+
   std::vector<FileFormat*> m_formats;
 
   FormatIdMap m_identifiers;

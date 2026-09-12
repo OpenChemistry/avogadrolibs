@@ -67,9 +67,6 @@ public:
   DecompressingStreamBuf(const DecompressingStreamBuf&) = delete;
   DecompressingStreamBuf& operator=(const DecompressingStreamBuf&) = delete;
 
-  /** @return The codec being decoded. */
-  Compression compression() const;
-
   /**
    * @brief The error encountered while decoding, if any.
    *
@@ -86,9 +83,6 @@ public:
 
   /** @return The number of bytes decoded so far. */
   std::uint64_t decodedSize() const;
-
-  /** @return True once the codec has reported the end of the data. */
-  bool atEnd() const;
 
 protected:
   int_type underflow() override;
@@ -124,8 +118,6 @@ public:
     std::uint64_t maxDecodedSize = defaultMaxDecompressedSize);
   ~DecompressingIStream() override;
 
-  /** @return The codec being decoded. */
-  Compression compression() const { return m_buf.compression(); }
   /** @copydoc DecompressingStreamBuf::error() */
   std::string error() const { return m_buf.error(); }
   /** @copydoc DecompressingStreamBuf::hitSizeLimit() */

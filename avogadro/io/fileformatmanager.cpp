@@ -50,20 +50,9 @@ bool FileFormatManager::readFile(Core::Molecule& molecule,
   m_error.clear();
 
   FileFormat* format(nullptr);
-  if (fileExtension.empty()) {
-    // We need to guess the file extension. Strip a compression suffix first
-    // (".gz", ".bz2", ...) so that "molecule.xyz.gz" resolves by its
-    // chemical extension "xyz", not by the codec's own extension.
-    std::string stripped = stripCompressionSuffix(fileName);
-    size_t pos = stripped.find_last_of('.');
-    format = filteredFormatFromFormatMap(stripped.substr(pos + 1),
-                                         FileFormat::Read | FileFormat::File,
-                                         m_fileExtensions);
-  } else {
-    format = filteredFormatFromFormatMap(stripCompressionSuffix(fileExtension),
-                                         FileFormat::Read | FileFormat::File,
-                                         m_fileExtensions);
-  }
+  format = filteredFormatFromFormatMap(lookupExtension(fileName, fileExtension),
+                                       FileFormat::Read | FileFormat::File,
+                                       m_fileExtensions);
   if (!format) {
     appendError("No file format available to read \"" + fileName + "\".");
     return false;
@@ -86,20 +75,9 @@ bool FileFormatManager::writeFile(const Core::Molecule& molecule,
   m_error.clear();
 
   FileFormat* format(nullptr);
-  if (fileExtension.empty()) {
-    // We need to guess the file extension. Strip a compression suffix first
-    // (".gz", ".bz2", ...) so that "molecule.xyz.gz" resolves by its
-    // chemical extension "xyz", not by the codec's own extension.
-    std::string stripped = stripCompressionSuffix(fileName);
-    size_t pos = stripped.find_last_of('.');
-    format = filteredFormatFromFormatMap(stripped.substr(pos + 1),
-                                         FileFormat::Write | FileFormat::File,
-                                         m_fileExtensions);
-  } else {
-    format = filteredFormatFromFormatMap(stripCompressionSuffix(fileExtension),
-                                         FileFormat::Write | FileFormat::File,
-                                         m_fileExtensions);
-  }
+  format = filteredFormatFromFormatMap(lookupExtension(fileName, fileExtension),
+                                       FileFormat::Write | FileFormat::File,
+                                       m_fileExtensions);
   if (!format) {
     appendError("No file format available to write \"" + fileName + "\".");
     return false;
@@ -466,6 +444,19 @@ FileFormat* FileFormatManager::filteredFormatFromFormatVector(
     }
   }
   return nullptr;
+}
+
+std::string FileFormatManager::lookupExtension(const std::string& fileName,
+                                               const std::string& fileExtension)
+{
+  if (!fileExtension.empty())
+    return stripCompressionSuffix(fileExtension);
+
+  // Note the long standing quirk kept here deliberately: a name with no dot
+  // at all yields the whole name, which is what lets "POSCAR" and "CONTCAR"
+  // resolve as formats in their own right.
+  const std::string stripped = stripCompressionSuffix(fileName);
+  return stripped.substr(stripped.find_last_of('.') + 1);
 }
 
 void FileFormatManager::appendError(const std::string& errorMessage) const

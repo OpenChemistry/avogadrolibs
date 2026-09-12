@@ -57,6 +57,13 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
   std::size_t slice = static_cast<std::size_t>(Data[1]) * 7 + 1;
   std::string payload(reinterpret_cast<const char*>(Data + 2), Size - 2);
 
+  // A payload at or above the decoder's ceiling would trip the size limit on
+  // the way back in, and this target treats any decode error as a round trip
+  // failure. That would be a false report about the cap rather than a real
+  // bug, so leave those inputs alone.
+  if (payload.size() >= kFuzzSizeLimit)
+    return 0;
+
   std::string encoded;
   {
     auto sink = std::unique_ptr<std::ostream>(new std::ostringstream());

@@ -16,6 +16,35 @@ namespace Avogadro::Io {
 
 namespace {
 
+#ifdef AVO_USE_LIBARCHIVE
+/**
+ * Ask libarchive whether it can both read and write one codec natively.
+ *
+ * Registering a filter libarchive was not built with is itself what installs
+ * its "spawn an external helper program" fallback, so this only ever touches
+ * throwaway handles, never one used for real work. ARCHIVE_WARN is that
+ * fallback announcing itself, and counts as unsupported: we will not let
+ * opening a file depend on what happens to be installed in PATH.
+ */
+bool probeCodec(int (*readFilter)(struct archive*),
+                int (*writeFilter)(struct archive*))
+{
+  struct archive* reader = archive_read_new();
+  if (reader == nullptr)
+    return false;
+  const int readResult = readFilter(reader);
+  archive_read_free(reader);
+
+  struct archive* writer = archive_write_new();
+  if (writer == nullptr)
+    return false;
+  const int writeResult = writeFilter(writer);
+  archive_write_free(writer);
+
+  return readResult == ARCHIVE_OK && writeResult == ARCHIVE_OK;
+}
+#endif
+
 std::string toLower(const std::string& value)
 {
   std::string result(value);
@@ -162,35 +191,12 @@ bool compressionSupported(Compression type)
   // pass both the read and the write probe: ARCHIVE_WARN ("will use an
   // external program") counts as unsupported for both directions, since we
   // refuse to depend on what happens to be installed in PATH.
-  static const bool bzip2Supported = [] {
-    struct archive* read = archive_read_new();
-    int readResult = archive_read_support_filter_bzip2(read);
-    archive_read_free(read);
-    struct archive* write = archive_write_new();
-    int writeResult = archive_write_add_filter_bzip2(write);
-    archive_write_free(write);
-    return readResult == ARCHIVE_OK && writeResult == ARCHIVE_OK;
-  }();
-
-  static const bool xzSupported = [] {
-    struct archive* read = archive_read_new();
-    int readResult = archive_read_support_filter_xz(read);
-    archive_read_free(read);
-    struct archive* write = archive_write_new();
-    int writeResult = archive_write_add_filter_xz(write);
-    archive_write_free(write);
-    return readResult == ARCHIVE_OK && writeResult == ARCHIVE_OK;
-  }();
-
-  static const bool zstdSupported = [] {
-    struct archive* read = archive_read_new();
-    int readResult = archive_read_support_filter_zstd(read);
-    archive_read_free(read);
-    struct archive* write = archive_write_new();
-    int writeResult = archive_write_add_filter_zstd(write);
-    archive_write_free(write);
-    return readResult == ARCHIVE_OK && writeResult == ARCHIVE_OK;
-  }();
+  static const bool bzip2Supported = probeCodec(
+    archive_read_support_filter_bzip2, archive_write_add_filter_bzip2);
+  static const bool xzSupported =
+    probeCodec(archive_read_support_filter_xz, archive_write_add_filter_xz);
+  static const bool zstdSupported =
+    probeCodec(archive_read_support_filter_zstd, archive_write_add_filter_zstd);
 
   switch (type) {
     case Compression::Bzip2:
@@ -205,17 +211,6 @@ bool compressionSupported(Compression type)
 #else
   return false;
 #endif
-}
-
-std::vector<Compression> supportedCompressions()
-{
-  std::vector<Compression> result;
-  for (Compression c : { Compression::Gzip, Compression::Bzip2, Compression::Xz,
-                         Compression::Zstd }) {
-    if (compressionSupported(c))
-      result.push_back(c);
-  }
-  return result;
 }
 
 } // namespace Avogadro::Io

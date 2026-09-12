@@ -288,6 +288,15 @@ protected:
                          std::vector<std::string>& values);
 
   /**
+   * @brief The ceiling on decompressed data for this read, in bytes.
+   *
+   * Reads the "maxDecompressedSize" option, falling back to the default when
+   * absent, and appending an error and using the default when negative. Zero
+   * means no ceiling.
+   */
+  long long maxDecompressedSizeOption();
+
+  /**
    * @brief Look up an integer value in the options() string.
    * @param name The name of the option to look up.
    * @param value Set to the stored value when the option is present and is an

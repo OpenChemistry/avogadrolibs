@@ -822,24 +822,31 @@ void expectWriteRoundTrip(Compression type)
     GTEST_SKIP() << compressionName(type) << " is not supported in this build";
   }
 
-  const std::size_t lengths[] = { 0, 7, 1u << 20 };
+  // Crossing a few of the decoder's 64 KiB chunk boundaries is all the sliced
+  // write cases need in order to exercise the buffer seams, so they use a
+  // 192 KiB payload rather than a megabyte. The megabyte runs as a single
+  // write only: it adds little beyond the smaller sizes, and it is what made
+  // bzip2, far the slowest codec here, dominate the whole suite's runtime.
+  constexpr std::size_t kSpansChunks = 192 * 1024;
+  constexpr std::size_t kLarge = 1u << 20;
+  const std::size_t lengths[] = { 0, 7, kSpansChunks, kLarge };
   const std::size_t slices[] = { 1, 13, 65537, 0 }; // 0 == single call
 
   for (std::size_t len : lengths) {
-    // Two different ~1 MiB payloads: pseudo-random and highly compressible.
+    // Compressible and incompressible data take different paths through every
+    // codec, so the sizes big enough to matter try both.
     std::vector<std::string> payloads;
-    if (len == (1u << 20)) {
-      payloads.push_back(pseudoRandomPayload(len));
+    payloads.push_back(pseudoRandomPayload(len));
+    if (len == kSpansChunks)
       payloads.push_back(compressiblePayload(len));
-    } else {
-      payloads.push_back(pseudoRandomPayload(len));
-    }
 
     for (const std::string& payload : payloads) {
       for (std::size_t slice : slices) {
-        // A slice size of 1 would mean a million-plus write() calls for the
-        // ~1 MiB payloads; only exercise it for the small ones.
+        // A slice size of 1 would mean a million-plus write() calls on the
+        // larger payloads; only exercise it for the small ones.
         if (slice == 1 && len > 4096)
+          continue;
+        if (len == kLarge && slice != 0)
           continue;
 
         SCOPED_TRACE(::testing::Message()

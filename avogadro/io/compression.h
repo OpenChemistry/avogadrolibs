@@ -127,11 +127,6 @@ AVOGADROIO_EXPORT bool compressionAvailable();
  */
 AVOGADROIO_EXPORT bool compressionSupported(Compression type);
 
-/**
- * @brief Every codec this build can actually decode and encode.
- */
-AVOGADROIO_EXPORT std::vector<Compression> supportedCompressions();
-
 } // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_COMPRESSION_H

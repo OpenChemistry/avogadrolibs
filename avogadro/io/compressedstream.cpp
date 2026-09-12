@@ -77,14 +77,11 @@ public:
     if (atEndFlag)
       return false;
 
-    if (!checkedSupport) {
-      checkedSupport = true;
-      if (!compressionSupported(type)) {
-        errorMsg = compressionName(type) +
-                   " decompression is not supported in this build";
-        atEndFlag = true;
-        return false;
-      }
+    if (!compressionSupported(type)) {
+      errorMsg =
+        compressionName(type) + " decompression is not supported in this build";
+      atEndFlag = true;
+      return false;
     }
 
     if (maxDecodedSize != 0 && decodedSize >= maxDecodedSize) {
@@ -153,7 +150,7 @@ public:
 
     while (zstream.avail_out > 0) {
       if (zstream.avail_in == 0) {
-        source->read(inBuf, sizeof(inBuf));
+        source->read(sourceBuf, sizeof(sourceBuf));
         std::streamsize n = source->gcount();
         if (n <= 0) {
           // Input exhausted. If we never completed a member, this is a
@@ -166,7 +163,7 @@ public:
           finishZlib();
           break;
         }
-        zstream.next_in = reinterpret_cast<Bytef*>(inBuf);
+        zstream.next_in = reinterpret_cast<Bytef*>(sourceBuf);
         zstream.avail_in = static_cast<uInt>(n);
       }
 
@@ -179,12 +176,12 @@ public:
         // follows or this is trailing garbage / the true end.
         if (zstream.avail_in < 3) {
           std::size_t have = zstream.avail_in;
-          std::memmove(inBuf, zstream.next_in, have);
-          source->read(inBuf + have, sizeof(inBuf) - have);
+          std::memmove(sourceBuf, zstream.next_in, have);
+          source->read(sourceBuf + have, sizeof(sourceBuf) - have);
           std::streamsize n = source->gcount();
           if (n > 0)
             have += static_cast<std::size_t>(n);
-          zstream.next_in = reinterpret_cast<Bytef*>(inBuf);
+          zstream.next_in = reinterpret_cast<Bytef*>(sourceBuf);
           zstream.avail_in = static_cast<uInt>(have);
         }
 
@@ -242,9 +239,9 @@ public:
                                         const void** buffer)
   {
     auto* self = static_cast<DecompressingStreamBufPrivate*>(clientData);
-    self->source->read(self->archiveReadBuf, sizeof(self->archiveReadBuf));
+    self->source->read(self->sourceBuf, sizeof(self->sourceBuf));
     std::streamsize n = self->source->gcount();
-    *buffer = self->archiveReadBuf;
+    *buffer = self->sourceBuf;
     return static_cast<la_ssize_t>(n);
   }
 
@@ -371,21 +368,23 @@ public:
   std::uint64_t decodedSize = 0;
   bool atEndFlag = false;
   bool hitLimitFlag = false;
-  bool checkedSupport = false;
   std::string errorMsg;
   std::size_t currentChunkIndex = kInvalidChunk;
 
 #ifdef AVO_USE_LIBARCHIVE
+  // Compressed bytes read from the source, refilled as the codec consumes
+  // them. One buffer serves both back ends: type is fixed at construction, so
+  // only one of them ever runs for a given stream.
+  char sourceBuf[kChunkSize];
+
   // gzip / zlib state.
   z_stream zstream{};
   bool zstreamOpen = false;
   bool sawStreamEnd = false;
-  char inBuf[kChunkSize];
 
   // bzip2 / xz / zstd / libarchive state.
   bool archiveInitialized = false;
   struct archive* archiveHandle = nullptr;
-  char archiveReadBuf[kChunkSize];
 #endif
 };
 
@@ -404,11 +403,6 @@ DecompressingStreamBuf::DecompressingStreamBuf(
 
 DecompressingStreamBuf::~DecompressingStreamBuf() = default;
 
-Compression DecompressingStreamBuf::compression() const
-{
-  return d->type;
-}
-
 std::string DecompressingStreamBuf::error() const
 {
   return d->errorMsg;
@@ -422,11 +416,6 @@ bool DecompressingStreamBuf::hitSizeLimit() const
 std::uint64_t DecompressingStreamBuf::decodedSize() const
 {
   return d->decodedSize;
-}
-
-bool DecompressingStreamBuf::atEnd() const
-{
-  return d->atEndFlag;
 }
 
 DecompressingStreamBuf::int_type DecompressingStreamBuf::underflow()
@@ -658,7 +647,6 @@ public:
     zstream.next_in = reinterpret_cast<Bytef*>(const_cast<char*>(data));
     zstream.avail_in = static_cast<uInt>(len);
 
-    char outBuf[kWriteChunkSize];
     do {
       zstream.next_out = reinterpret_cast<Bytef*>(outBuf);
       zstream.avail_out = static_cast<uInt>(sizeof(outBuf));
@@ -684,7 +672,6 @@ public:
     if (!zstreamOpen)
       return true;
 
-    char outBuf[kWriteChunkSize];
     int ret = Z_OK;
     bool ok = true;
     do {
@@ -845,6 +832,11 @@ public:
   static constexpr std::size_t kPutBufferSize = 65536;
   char putBuffer[kPutBufferSize];
 
+  // Compressed bytes on their way to the sink. A member rather than a local so
+  // that flushing does not put 64 KiB on the stack every time, which matters
+  // because files are written on a worker thread.
+  char outBuf[kWriteChunkSize];
+
 #ifdef AVO_USE_LIBARCHIVE
   z_stream zstream{};
   bool zstreamOpen = false;
@@ -866,7 +858,15 @@ CompressingStreamBuf::CompressingStreamBuf(std::unique_ptr<std::ostream> sink,
 
 CompressingStreamBuf::~CompressingStreamBuf()
 {
-  finish();
+  // Destructors are implicitly noexcept, so anything escaping finish() would
+  // terminate the process rather than fail the write. Recording an error
+  // allocates, and the sink is a caller-supplied stream that may have
+  // exceptions enabled, so neither is beyond doubt. Callers that need to know
+  // whether the trailer was written call finish() themselves and check.
+  try {
+    finish();
+  } catch (...) {
+  }
 }
 
 std::string CompressingStreamBuf::error() const
@@ -960,9 +960,17 @@ std::unique_ptr<std::istream> wrapIfCompressed(
   Compression type =
     detectCompression(magic, static_cast<std::size_t>(n < 0 ? 0 : n));
 
-  // Rewind: the source is a fresh ifstream/istringstream, hence seekable.
+  // Rewind. Every caller in the tree hands over a fresh ifstream or
+  // istringstream, so this succeeds, but the failure mode if it ever does not
+  // is silent data loss: the stream would be handed back positioned after the
+  // magic number, and the reader would parse a file missing its first bytes.
+  // Refuse instead.
   source->clear();
   source->seekg(0);
+  if (source->fail()) {
+    error = "cannot rewind the input stream after reading its magic number";
+    return nullptr;
+  }
 
   if (type == Compression::None) {
     source->imbue(std::locale::classic());
