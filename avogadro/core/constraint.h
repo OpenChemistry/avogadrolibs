@@ -8,7 +8,11 @@
 
 #include "avogadrocoreexport.h"
 
+#include <avogadro/core/angletools.h>
+#include <avogadro/core/array.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/vector.h>
+
 #include <tuple>
 
 namespace Avogadro {
@@ -154,6 +158,66 @@ public:
       m_type = UnknownConstraint;
 
     return m_type;
+  }
+
+  /**
+   * Check that every atom this constraint names still exists.
+   * @param atomCount The number of atoms available
+   * @return True if the constraint can be evaluated against that many atoms
+   *
+   * Constraints outlive the atoms they name, since deleting an atom leaves the
+   * stored indices behind.
+   */
+  bool isValid(Index atomCount) const
+  {
+    switch (type()) {
+      case TorsionConstraint:
+        if (m_dIndex >= atomCount)
+          return false;
+        [[fallthrough]];
+      case AngleConstraint:
+        if (m_cIndex >= atomCount)
+          return false;
+        [[fallthrough]];
+      case DistanceConstraint:
+        return m_aIndex < atomCount && m_bIndex < atomCount;
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Measure this constraint's coordinate in a set of atomic positions, which
+   * need not be the molecule's active one -- a trajectory or relaxed scan can
+   * be measured frame by frame.
+   * @param positions The atomic positions to measure
+   * @param value Receives the measurement: Angstrom for a distance, degrees
+   * for an angle or torsion, matching value()
+   * @return True if the constraint could be measured, false if it names an
+   * atom the positions do not have or has no single coordinate (out of plane)
+   */
+  bool evaluate(const Array<Vector3>& positions, Real& value) const
+  {
+    if (!isValid(positions.size()))
+      return false;
+
+    const Vector3& a = positions[m_aIndex];
+    const Vector3& b = positions[m_bIndex];
+
+    switch (type()) {
+      case DistanceConstraint:
+        value = (a - b).norm();
+        return true;
+      case AngleConstraint:
+        value = calculateAngle(a, b, positions[m_cIndex]);
+        return true;
+      case TorsionConstraint:
+        value =
+          calculateDihedral(a, b, positions[m_cIndex], positions[m_dIndex]);
+        return true;
+      default:
+        return false;
+    }
   }
 
   /**

@@ -27,7 +27,7 @@ namespace QtPlugins {
 using DataSeries = std::vector<float>;
 
 /**
- * @brief Generate and plot conformer data (RMSD or energy)
+ * @brief Generate and plot conformer data (RMSD, energy or scan coordinates)
  */
 class PlotConformer : public Avogadro::QtGui::ExtensionPlugin
 {
@@ -61,6 +61,22 @@ private slots:
   void clicked(float x, float y, Qt::KeyboardModifiers modifiers);
 
 private:
+  /**
+   * Quantities that can drive either axis. The negative values name a
+   * built-in series; zero and above index into the molecule's constraints, so
+   * a scanned distance, angle or torsion can go on the x axis (a relaxed
+   * torsion scan) or on the y axis (a bond length followed through a
+   * reaction path).
+   */
+  enum Quantity
+  {
+    FrameQuantity = -1,
+    RmsdQuantity = -2,
+    EnergyQuantity = -3,
+    ForcesQuantity = -4,
+    VelocitiesQuantity = -5
+  };
+
   // Show conformer @p frame, clamped to the available coordinate sets, and
   // tell the rest of the application about it.
   void setFrame(int frame);
@@ -69,28 +85,30 @@ private:
   // enough to call on every arrow key, unlike updatePlot().
   void drawChart();
 
-  // Fill the plot type combo with whatever the current molecule offers.
-  void populatePropertyCombo();
+  // Fill both axis combos with the quantities the current molecule offers,
+  // including one entry per usable constraint.
+  void populateQuantityCombos();
 
-  // Fill the X axis combo with "Frame" plus any distance / angle / torsion
-  // constraint whose atom indices are valid for the current molecule.
-  void updateXAxisOptions();
+  // The quantity selected on each axis, as a Quantity value or a constraint
+  // index. Both fall back to Frame when the dialog does not exist yet.
+  int xQuantity() const;
+  int yQuantity() const;
 
-  // -1 for "Frame"; otherwise the index into m_molecule->constraints().
-  int xAxisMode() const;
+  // True when @p quantity is a torsion coordinate, whose values wrap around.
+  bool isTorsionQuantity(int quantity) const;
 
-  // Generate RMSD data from a coordinate set
-  // Writes the results to @p x and @p y
-  void generateRmsdCurve(DataSeries& x, DataSeries& y);
+  // Evaluate @p quantity once per coordinate set, writing the axis label to
+  // @p title. Returns false when the molecule holds no data for it.
+  bool evaluateQuantity(int quantity, DataSeries& values, QString& title);
 
-  // Generate a relative energy data from a coordinate set
-  void generateEnergyCurve(DataSeries& x, DataSeries& y);
-
-  // Generate a forces data from a coordinate set
-  void generateForcesCurve(DataSeries& x, DataSeries& y);
-
-  // Generate a velocities data from a coordinate set
-  void generateVelocitiesCurve(DataSeries& x, DataSeries& y);
+  // Series generators, one value per coordinate set. Each returns false when
+  // the molecule cannot supply that quantity.
+  bool generateFrameSeries(DataSeries& values);
+  bool generateRmsdSeries(DataSeries& values);
+  bool generateEnergySeries(DataSeries& values);
+  bool generateForcesSeries(DataSeries& values);
+  bool generateVelocitiesSeries(DataSeries& values);
+  bool generateCoordinateSeries(int constraintIndex, DataSeries& values);
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
@@ -98,22 +116,23 @@ private:
   QAction* m_displayDialogAction;
   std::unique_ptr<QDialog> m_dialog;
   QtGui::ChartWidget* m_chartWidget;
-  QComboBox* m_propertyCombo;
+  QComboBox* m_yAxisCombo;
+  QComboBox* m_xAxisCombo;
   QComboBox* m_unitsCombo;
   QComboBox* m_targetUnitsCombo;
-  QComboBox* m_xAxisCombo;
   QCheckBox* m_unwrapDihedralsCheck;
   QLabel* m_frameLabel;
   DataSeries m_xData;
   DataSeries m_yData;
-  QString m_yTitle;
   QString m_xTitle;
+  QString m_yTitle;
   int m_currentFrame = 0;
 };
 
 inline QString PlotConformer::description() const
 {
-  return tr("Generate and plot conformer data (RMSD or energy).");
+  return tr("Generate and plot conformer data (RMSD, energy or scan "
+            "coordinates).");
 }
 
 } // namespace QtPlugins
