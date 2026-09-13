@@ -7,10 +7,12 @@
 
 #include <avogadro/core/vector.h>
 
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtopengl/glwidget.h>
 
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
+#include <avogadro/rendering/primitive.h>
 #include <avogadro/rendering/scene.h>
 
 #include <QAction>
@@ -39,6 +41,7 @@ Navigator::Navigator(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_glWidget(nullptr), m_toolWidget(nullptr),
     m_renderer(nullptr), m_pressedButtons(Qt::NoButton),
+    m_referencePoint(Vector3f::Zero()), m_hasReferencePoint(false),
     m_currentAction(Nothing)
 {
   QString shortcut = tr("Ctrl+1", "control-key 1");
@@ -46,6 +49,7 @@ Navigator::Navigator(QObject* parent_)
   m_activateAction->setToolTip(
     tr("Navigation Tool\t(%1)\n\n"
        "Left Mouse:\tClick and drag to rotate the view.\n"
+       "\tStarting the drag on an atom rotates around that atom.\n"
        "Middle Mouse:\tClick and drag to zoom in or out.\n"
        "Right Mouse:\tClick and drag to move the view.\n\n"
        "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
@@ -145,6 +149,7 @@ QUndoCommand* Navigator::mousePressEvent(QMouseEvent* e)
 {
   updatePressedButtons(e, false);
   m_lastMousePosition = e->pos();
+  updateReferencePoint(e->pos());
   e->accept();
 
   // Figure out what type of navigation has been requested.
@@ -171,6 +176,7 @@ QUndoCommand* Navigator::mouseReleaseEvent(QMouseEvent* e)
 {
   updatePressedButtons(e, true);
   m_lastMousePosition = QPoint();
+  m_hasReferencePoint = false;
   m_currentAction = Nothing;
   e->accept();
   return nullptr;
@@ -210,7 +216,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
         // undo *ROTATION_SPEED which will happen in rotate()
         double speedCorrection = (1.0 / ROTATION_SPEED) * TRACKBALL_SPAN *
                                  3.14159265358979 / trackballRadius;
-        rotate(m_renderer->camera().focus(), delta.y() * speedCorrection,
+        rotate(referencePoint(), delta.y() * speedCorrection,
                delta.x() * speedCorrection, 0);
       } else {
         // Calculate angle between current and previous ticks
@@ -223,8 +229,7 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
         if (std::abs(crossProduct) > 0.1 || std::abs(dotProduct) > 0.1) {
           // counter-clockwise is positive here
           double angleDelta = std::atan2(crossProduct, dotProduct);
-          rotate(m_renderer->camera().focus(), 0, 0,
-                 -angleDelta * (1.0 / ROTATION_SPEED));
+          rotate(referencePoint(), 0, 0, -angleDelta * (1.0 / ROTATION_SPEED));
         }
       }
       e->accept();
@@ -232,23 +237,23 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
     }
     case Rotation: {
       QPoint delta = e->pos() - m_lastMousePosition;
-      rotate(m_renderer->camera().focus(), delta.y(), delta.x(), 0);
+      rotate(referencePoint(), delta.y(), delta.x(), 0);
       e->accept();
       break;
     }
     case Translation: {
       Vector2f fromScreen(m_lastMousePosition.x(), m_lastMousePosition.y());
       Vector2f toScreen(e->localPos().x(), e->localPos().y());
-      translate(m_renderer->camera().focus(), fromScreen, toScreen);
+      translate(referencePoint(), fromScreen, toScreen);
       e->accept();
       break;
     }
     case ZoomTilt: {
       QPoint delta = e->pos() - m_lastMousePosition;
       // Tilt
-      rotate(m_renderer->camera().focus(), 0, 0, delta.x());
+      rotate(referencePoint(), 0, 0, delta.x());
       // Zoom
-      // zoom(m_renderer->camera().focus(), delta.y());
+      // zoom(referencePoint(), delta.y());
       e->accept();
       break;
     }
@@ -381,6 +386,31 @@ inline void Navigator::updatePressedButtons(QMouseEvent* e, bool release)
     m_pressedButtons &= e->buttons();
   else
     m_pressedButtons |= e->buttons();
+}
+
+void Navigator::updateReferencePoint(const QPoint& position)
+{
+  // Rotate, tilt and translate around the atom under the cursor when there is
+  // one, so that clicking an atom and dragging pivots the view about it, as in
+  // Avogadro 1. Everything else keeps navigating around the camera focus.
+  m_hasReferencePoint = false;
+
+  if (m_renderer == nullptr || m_molecule == nullptr)
+    return;
+
+  Rendering::Identifier hit = m_renderer->hit(position.x(), position.y());
+  if (hit.type != Rendering::AtomType ||
+      hit.molecule != static_cast<const void*>(m_molecule) ||
+      hit.index >= m_molecule->atomCount())
+    return;
+
+  m_referencePoint = m_molecule->atomPosition3d(hit.index).cast<float>();
+  m_hasReferencePoint = true;
+}
+
+inline Vector3f Navigator::referencePoint() const
+{
+  return m_hasReferencePoint ? m_referencePoint : m_renderer->camera().focus();
 }
 
 inline void Navigator::rotate(const Vector3f& ref, float x, float y, float z)

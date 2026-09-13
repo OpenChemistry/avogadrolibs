@@ -12,6 +12,7 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/primitive.h>
 
+#include <QtCore/QPoint>
 #include <QtCore/QVector>
 
 namespace Avogadro {
@@ -42,6 +43,7 @@ public:
   void setGLRenderer(Rendering::GLRenderer* renderer) override;
 
   QUndoCommand* mousePressEvent(QMouseEvent* e) override;
+  QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
   QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
   QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
 
@@ -58,6 +60,8 @@ private:
   QtGui::RWMolecule* m_rwMolecule;
   Rendering::GLRenderer* m_renderer;
   QVector<Rendering::Identifier> m_atoms;
+  QPoint m_pressPosition;
+  bool m_dragged;
 };
 
 inline void MeasureTool::setMolecule(QtGui::Molecule* mol)

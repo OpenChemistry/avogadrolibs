@@ -65,6 +65,19 @@ private:
    */
   void updatePressedButtons(QMouseEvent*, bool release);
 
+  /**
+   * Set the point that the current navigation gesture acts around. If an atom
+   * is under @a position, that atom is used, otherwise the camera focus (the
+   * center of the molecule) is used, as before.
+   */
+  void updateReferencePoint(const QPoint& position);
+
+  /**
+   * The point that the current navigation gesture acts around.
+   * @sa updateReferencePoint
+   */
+  Vector3f referencePoint() const;
+
   void rotate(const Vector3f& ref, float x, float y, float z);
   void zoom(const Vector3f& ref, float d);
   void translate(const Vector3f& ref, float x, float y);
@@ -78,6 +91,8 @@ private:
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
   int m_zoomDirection;
+  Vector3f m_referencePoint;
+  bool m_hasReferencePoint;
 
   enum ToolAction
   {
