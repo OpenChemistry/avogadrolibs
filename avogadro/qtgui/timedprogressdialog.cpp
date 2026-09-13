@@ -10,6 +10,11 @@ namespace Avogadro::QtGui {
 TimedProgressDialog::TimedProgressDialog(QWidget* parent)
   : QProgressDialog(parent)
 {
+  // Start counting immediately: a dialog left to appear on its own after
+  // minimumDuration() is shown through QProgressDialog::forceShow(), which
+  // does not go through our show(), so construction is the only reliable
+  // point to start the clock.
+  elapsedTimer.start();
 }
 
 TimedProgressDialog::TimedProgressDialog(const QString& labelText,
@@ -19,6 +24,7 @@ TimedProgressDialog::TimedProgressDialog(const QString& labelText,
   : QProgressDialog(labelText, cancelButtonText, minimum, maximum, parent),
     originalLabelText(labelText)
 {
+  elapsedTimer.start();
 }
 
 void TimedProgressDialog::show()
@@ -27,11 +33,21 @@ void TimedProgressDialog::show()
   QProgressDialog::show();
 }
 
+void TimedProgressDialog::restartTimer()
+{
+  elapsedTimer.start();
+}
+
 void TimedProgressDialog::setValue(int value)
 {
   QProgressDialog::setValue(value);
 
   if (!elapsedTimer.isValid()) {
+    return;
+  }
+
+  // An indeterminate (or otherwise empty) range has no percentage to report.
+  if (maximum() <= minimum()) {
     return;
   }
 

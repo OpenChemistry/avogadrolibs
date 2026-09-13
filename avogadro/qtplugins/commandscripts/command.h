@@ -17,7 +17,6 @@
 
 class QAction;
 class QDialog;
-class QProgressDialog;
 
 namespace Avogadro {
 namespace Io {
@@ -31,6 +30,7 @@ class Camera;
 namespace QtGui {
 class InterfaceScript;
 class InterfaceWidget;
+class TimedProgressDialog;
 } // namespace QtGui
 
 namespace QtPlugins {
@@ -131,7 +131,7 @@ private:
   QDialog* m_currentDialog;
   QtGui::InterfaceWidget* m_currentInterface;
   QtGui::InterfaceScript* m_currentScript;
-  QProgressDialog* m_progress;
+  QtGui::TimedProgressDialog* m_progress;
 
   QMultiHash<QString, QAction*> m_packageActions;
 

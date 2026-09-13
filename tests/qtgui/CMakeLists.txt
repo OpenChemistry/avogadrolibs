@@ -29,6 +29,7 @@ set(tests
   PackageManager
   RWMolecule
   ScriptProgress
+  TimedProgressDialog
   Utilities
 )
 
