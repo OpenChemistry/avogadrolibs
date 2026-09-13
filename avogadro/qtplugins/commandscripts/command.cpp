@@ -13,6 +13,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
+#include <avogadro/qtgui/timedprogressdialog.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <avogadro/rendering/camera.h>
@@ -22,7 +23,6 @@
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QVBoxLayout>
 
 #include <QtCore/QCoreApplication>
@@ -37,6 +37,7 @@ namespace Avogadro::QtPlugins {
 
 using Avogadro::QtGui::InterfaceScript;
 using Avogadro::QtGui::InterfaceWidget;
+using Avogadro::QtGui::TimedProgressDialog;
 
 Command::Command(QObject* parent_)
   : ExtensionPlugin(parent_), m_molecule(nullptr), m_currentDialog(nullptr),
@@ -381,10 +382,11 @@ void Command::run()
             &Command::updateProgress);
 
     // Starts indeterminate; a script that reports progress switches it to a
-    // determinate bar. See InterfaceScript for the script-side protocol.
+    // determinate bar, and the dialog then estimates the time remaining from
+    // the steps it has seen. See InterfaceScript for the script-side protocol.
     QString title = tr("Processing %1").arg(iface.displayName());
-    m_progress = new QProgressDialog(title, tr("Cancel"), 0, 0,
-                                     qobject_cast<QWidget*>(parent()));
+    m_progress = new TimedProgressDialog(title, tr("Cancel"), 0, 0,
+                                         qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
     // Don't let a script that reports its final step and then keeps working
     // (writing files, etc.) make the dialog vanish early.
@@ -418,15 +420,24 @@ void Command::updateProgress(const QString& message, int value, int maximum)
   if (m_progress == nullptr)
     return;
 
-  if (maximum > 0 && m_progress->maximum() != maximum)
+  if (maximum > 0 && m_progress->maximum() != maximum) {
+    // The first determinate range marks the end of the script's startup
+    // (interpreter launch, imports, loading a model). That time says nothing
+    // about how long the steps themselves take, so restart the clock here and
+    // estimate from the steps alone.
+    if (m_progress->maximum() == 0)
+      m_progress->restartTimer();
     m_progress->setRange(0, maximum);
+  }
+
+  // Set the label before the value: setValue() appends the estimated time
+  // remaining to whatever text the script last reported.
+  if (!message.isEmpty())
+    m_progress->setLabelText(message);
 
   // Only meaningful once a script has given the bar a determinate range.
   if (value >= 0 && m_progress->maximum() > 0)
     m_progress->setValue(value);
-
-  if (!message.isEmpty())
-    m_progress->setLabelText(message);
 }
 
 void Command::closeProgressDialog()
@@ -438,7 +449,7 @@ void Command::closeProgressDialog()
   // canceled() even for a dialog that was never shown, and cancelCommand()
   // would then delete the dialog (and the running script) out from under
   // whoever called us.
-  QProgressDialog* dialog = m_progress;
+  TimedProgressDialog* dialog = m_progress;
   m_progress = nullptr;
   disconnect(dialog, &QProgressDialog::canceled, this, &Command::cancelCommand);
   dialog->close();

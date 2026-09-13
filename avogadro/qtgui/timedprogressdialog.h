@@ -37,6 +37,15 @@ public:
   void show();
 
   /**
+   * @brief restart the elapsed timer, discarding any time measured so far
+   *
+   * Useful when a job spends an unknown amount of time setting up before it
+   * can report determinate progress: restarting once the real work begins
+   * keeps that setup time out of the estimate.
+   */
+  void restartTimer();
+
+  /**
    * @brief set the default label text
    */
   void setLabelText(const QString& labelText)
