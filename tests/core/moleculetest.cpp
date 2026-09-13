@@ -7,6 +7,8 @@
 
 #include <gtest/gtest.h>
 
+#include <limits>
+
 #include <avogadro/core/array.h>
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/constraint.h>
@@ -1649,4 +1651,115 @@ TEST_F(MoleculeTest, SwapAtomCarriesVibrationalDisplacements)
   // The frequencies are mode-indexed and must not move.
   ASSERT_EQ(static_cast<size_t>(2), molecule.vibrationFrequencies().size());
   EXPECT_EQ(1000.0, molecule.vibrationFrequencies()[0]);
+}
+
+TEST_F(MoleculeTest, scanCoordinatesFollowTheirAtoms)
+{
+  // Scan coordinates name atoms by index, like constraints, but are stored in
+  // the property map, so none of the per-atom bookkeeping reaches them. A
+  // stale index measures whatever atom lands in that slot and plots a
+  // believable curve for the wrong thing.
+  Molecule molecule;
+  for (int i = 0; i < 5; ++i)
+    molecule.addAtom(6);
+
+  molecule.addScanCoordinate(Avogadro::Core::Constraint(0, 4));
+  molecule.addScanCoordinate(Avogadro::Core::Constraint(1, 2, 3));
+
+  // A swap only relabels the structure, so both coordinates survive it.
+  molecule.swapAtom(0, 3);
+  std::vector<Avogadro::Core::Constraint> coordinates =
+    molecule.scanCoordinates();
+  ASSERT_EQ(coordinates.size(), 2u);
+  EXPECT_EQ(coordinates[0].aIndex(), 3u);
+  EXPECT_EQ(coordinates[0].bIndex(), 4u);
+  EXPECT_EQ(coordinates[1].aIndex(), 1u);
+  EXPECT_EQ(coordinates[1].bIndex(), 2u);
+  EXPECT_EQ(coordinates[1].cIndex(), 0u);
+  // Unused slots must stay unused, or the type changes.
+  EXPECT_EQ(coordinates[0].cIndex(), Avogadro::MaxIndex);
+  EXPECT_EQ(coordinates[0].type(),
+            Avogadro::Core::Constraint::DistanceConstraint);
+  EXPECT_EQ(coordinates[1].type(), Avogadro::Core::Constraint::AngleConstraint);
+}
+
+TEST_F(MoleculeTest, scanCoordinatesDropTheirRemovedAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 5; ++i)
+    molecule.addAtom(6);
+
+  molecule.addScanCoordinate(Avogadro::Core::Constraint(0, 1)); // untouched
+  molecule.addScanCoordinate(Avogadro::Core::Constraint(2, 4)); // names both
+  molecule.addScanCoordinate(Avogadro::Core::Constraint(0, 1, 2, 3));
+
+  // removeAtom() swaps the last atom into the hole, so a coordinate naming
+  // atom 4 has to follow it to index 2, and one naming atom 2 is gone.
+  ASSERT_TRUE(molecule.removeAtom(2));
+  EXPECT_EQ(molecule.atomCount(), 4);
+
+  std::vector<Avogadro::Core::Constraint> coordinates =
+    molecule.scanCoordinates();
+  ASSERT_EQ(coordinates.size(), 1u);
+  EXPECT_EQ(coordinates[0].aIndex(), 0u);
+  EXPECT_EQ(coordinates[0].bIndex(), 1u);
+
+  // Every surviving index still has to name a real atom.
+  for (const auto& coordinate : coordinates)
+    EXPECT_TRUE(coordinate.isValid(molecule.atomCount()));
+}
+
+TEST_F(MoleculeTest, scanCoordinatesFollowTheSwappedInAtom)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.addScanCoordinate(Avogadro::Core::Constraint(0, 3));
+
+  // Atom 3 lands at index 1, so the coordinate must now read 0-1.
+  ASSERT_TRUE(molecule.removeAtom(1));
+  std::vector<Avogadro::Core::Constraint> coordinates =
+    molecule.scanCoordinates();
+  ASSERT_EQ(coordinates.size(), 1u);
+  EXPECT_EQ(coordinates[0].aIndex(), 0u);
+  EXPECT_EQ(coordinates[0].bIndex(), 1u);
+}
+
+TEST_F(MoleculeTest, scanCoordinatesGoWithTheAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(6);
+  molecule.addScanCoordinate(Avogadro::Core::Constraint(0, 1, 2));
+
+  // Whatever atoms are added next are not the ones that were measured.
+  molecule.clearAtoms();
+  EXPECT_TRUE(molecule.scanCoordinates().empty());
+
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(8);
+  EXPECT_TRUE(molecule.scanCoordinates().empty());
+}
+
+TEST_F(MoleculeTest, scanCoordinatesRejectValuesThatAreNotAtomIndices)
+{
+  // The property map holds doubles, and the matrix can arrive from a file
+  // rather than from setScanCoordinates(). A fractional or absurd value must
+  // not be rounded or cast into some unrelated atom.
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+
+  MatrixX matrix(4, 4);
+  matrix << 0.0, 1.0, -1.0, -1.0, // usable
+    2.5, 1.0, -1.0, -1.0,         // fractional
+    0.0, 1.0e300, -1.0, -1.0,     // far outside Index
+    0.0, std::numeric_limits<double>::quiet_NaN(), -1.0, -1.0;
+  molecule.setData("scanCoordinates", matrix);
+
+  std::vector<Avogadro::Core::Constraint> coordinates =
+    molecule.scanCoordinates();
+  ASSERT_EQ(coordinates.size(), 1u);
+  EXPECT_EQ(coordinates[0].aIndex(), 0u);
+  EXPECT_EQ(coordinates[0].bIndex(), 1u);
 }

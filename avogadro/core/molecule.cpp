@@ -453,12 +453,22 @@ double indexToValue(Index index)
 
 Index valueToIndex(double value)
 {
-  // Written so that NaN, which compares false against everything, lands on
-  // MaxIndex rather than falling through to the cast.
-  if (!(value >= 0.0))
+  // -1 is the "no atom" sentinel; everything else has to be a whole number an
+  // Index can hold. Above 2^53 a double cannot represent consecutive integers
+  // at all, so nothing that large is a meaningful atom index.
+  constexpr double maxExactInteger = 9007199254740992.0; // 2^53
+  // Both comparisons are written so that NaN, which compares false against
+  // everything, and infinity fail them rather than reaching the cast below,
+  // where they would be undefined behaviour.
+  if (!(value >= 0.0) || !(value <= maxExactInteger))
     return MaxIndex;
 
-  return static_cast<Index>(value + 0.5);
+  // A fractional value did not come from setScanCoordinates(), so rounding it
+  // would silently measure some unrelated atom. Reject it instead.
+  if (value != std::floor(value))
+    return MaxIndex;
+
+  return static_cast<Index>(value);
 }
 
 bool sameAtoms(const Constraint& a, const Constraint& b)
@@ -894,6 +904,41 @@ void swapAtomEntry(std::map<std::string, MatrixX>& models, Index a, Index b,
   }
 }
 
+// Scan coordinates name up to four atoms each, exactly as constraints do, but
+// are stored in the property map. @p reindex maps an old atom index to its new
+// one, or to MaxIndex for an atom that is going away; a coordinate that loses
+// an atom is dropped rather than shortened, since turning a torsion into an
+// angle would quietly plot a different quantity.
+template <typename Reindex>
+void remapScanCoordinates(Molecule& molecule, Reindex reindex)
+{
+  const std::vector<Constraint> coordinates = molecule.scanCoordinates();
+  if (coordinates.empty())
+    return;
+
+  std::vector<Constraint> updated;
+  updated.reserve(coordinates.size());
+  for (const auto& coordinate : coordinates) {
+    const Index a = reindex(coordinate.aIndex());
+    const Index b = reindex(coordinate.bIndex());
+    const Index c = reindex(coordinate.cIndex());
+    const Index d = reindex(coordinate.dIndex());
+
+    // An unused slot is MaxIndex before and after, so comparing against the
+    // old value is what separates "was never set" from "just lost its atom".
+    if (a == MaxIndex || b == MaxIndex)
+      continue;
+    if (c == MaxIndex && coordinate.cIndex() != MaxIndex)
+      continue;
+    if (d == MaxIndex && coordinate.dIndex() != MaxIndex)
+      continue;
+
+    updated.emplace_back(a, b, c, d);
+  }
+
+  molecule.setScanCoordinates(updated);
+}
+
 } // namespace
 
 void Molecule::swapBond(Index a, Index b)
@@ -968,6 +1013,10 @@ void Molecule::swapAtom(Index a, Index b)
                    constraint.value());
   }
 
+  // The scan coordinates name atoms the same way, and a swap only relabels
+  // them: nothing is dropped here.
+  remapScanCoordinates(*this, reindex);
+
   // A basis set records which atom each basis function is centred on. Only
   // those recorded indices move: the basis functions keep their order, so
   // molecular orbital coefficients, which are indexed by basis function,
@@ -1002,6 +1051,21 @@ bool Molecule::removeAtom(Index index)
     }
     m_selectedAtoms.pop_back();
   }
+
+  // Scan coordinates name atoms by index and are not atom-indexed themselves,
+  // so neither the helpers above nor atomCount() changing below reaches them.
+  // A coordinate measuring the atom that is going away is dropped; one
+  // measuring the last atom follows it into the hole that swap-and-pop leaves,
+  // or it would silently measure whatever lands there. This has to run while
+  // atomCount() still describes the old molecule.
+  const Index lastAtom = atomCount() - 1;
+  remapScanCoordinates(*this, [index, lastAtom](Index atom) {
+    if (atom == index)
+      return MaxIndex;
+    if (atom == lastAtom)
+      return index;
+    return atom;
+  });
 
   // Losing an atom makes this a different molecule, so anything calculated
   // from the old one goes rather than being reindexed. Contrast the members
@@ -1060,8 +1124,10 @@ void Molecule::clearAtoms()
   m_coordinates3d.clear();
   m_frozenAtomMask.resize(0);
 
-  // With no atoms left there is nothing for any calculated result to be about.
+  // With no atoms left there is nothing for any calculated result to be about,
+  // nor for a scan coordinate to name.
   clearCalculatedResults();
+  setScanCoordinates({});
 
   m_atomicNumbers.clear();
   m_bondOrders.clear();
