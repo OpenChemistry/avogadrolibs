@@ -16,6 +16,7 @@ set(tests
   Eigen
   Element
   GaussianSet
+  GaussianSetTools
   Graph
   InternalCoordinates
   Kekulize
@@ -52,9 +53,22 @@ target_link_libraries(AvogadroTests Avogadro::Core
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
+# Tests written as gtest parameterized suites (TEST_P). Their full case
+# names are "Prefix/SuiteTest.case/index", which the plain "SuiteTest.*"
+# filter below would not match -- ctest would then run zero cases and still
+# report success.
+set(parameterizedTests
+  GaussianSetTools
+  )
+
 foreach(TestName ${tests})
+  if(${TestName} IN_LIST parameterizedTests)
+    set(testFilter "*${TestName}Test*")
+  else()
+    set(testFilter "${TestName}Test.*")
+  endif()
   add_test(NAME "Core-${TestName}"
-    COMMAND AvogadroTests "--gtest_filter=${TestName}Test.*")
+    COMMAND AvogadroTests "--gtest_filter=${testFilter}")
 endforeach()
 
 if (DEFINED ENV{LIB_FUZZING_ENGINE})

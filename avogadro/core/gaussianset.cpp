@@ -419,16 +419,24 @@ void GaussianSet::initCalculation()
           indexMO += 10;
           m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
           for (unsigned j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
+            // These must follow the component order that pointF() and
+            // gridF() evaluate, which is the Gaussian ordering
+            //   xxx, yyy, zzz, xyy, xxy, xxz, xzz, yzz, yyz, xyz
+            // and NOT the alphabetical ordering the comments here used to
+            // claim. They were previously emitted alphabetically, so e.g.
+            // slot 1 (yyy) received the xxy constant: five of the ten
+            // Cartesian f components came out with the wrong
+            // normalization. See GaussianSetToolsTest.shellsAreNormalized.
             m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm1); // xxx
+            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm1); // yyy
+            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm1); // zzz
+            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2); // xyy
             m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2); // xxy
             m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2); // xxz
-            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2); // xyy
-            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm3); // xyz
             m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2); // xzz
-            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm1); // yyy
-            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2); // yyz
             m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2); // yzz
-            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm1); // zzz
+            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm2); // yyz
+            m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm3); // xyz
           }
         }
         break;
@@ -451,11 +459,24 @@ void GaussianSet::initCalculation()
         }
       } break;
       case G: {
+        // A primitive Cartesian Gaussian x^a y^b z^c exp(-alpha r^2) is
+        // normalized by
+        //   (2 alpha/pi)^(3/4) (4 alpha)^(l/2)
+        //     / sqrt((2a-1)!! (2b-1)!! (2c-1)!!)
+        // The base below is (2 alpha/pi)^(3/4) (4 alpha)^2 with the
+        // alpha^2.75 factored out into the pow() at each use site; the
+        // divisors are the double-factorial products for each l=4 pattern:
+        //   (4,0,0) -> 7!! = 105     (3,1,0) -> 5!! 1!! = 15
+        //   (2,2,0) -> 3!! 3!! = 9   (2,1,1) -> 3!! = 3
+        // The D and F cases above already follow this rule; G did not, and
+        // used 1, sqrt(7), sqrt(35/3) and sqrt(35) instead. See
+        // GaussianSetToolsTest.shellsAreNormalized.
         // 16 * (2.0/pi)^0.75
         double norm = 11.403287525679843;
-        double norm1 = norm / sqrt(7.0);
-        double norm2 = norm / sqrt(35.0 / 3.0);
-        double norm3 = norm / sqrt(35.0);
+        double norm0 = norm / sqrt(105.0); // xxxx, yyyy, zzzz
+        double norm1 = norm / sqrt(15.0);  // xxxy and friends
+        double norm2 = norm / 3.0;         // xxyy and friends
+        double norm3 = norm / sqrt(3.0);   // xxyz and friends
         m_moIndices[i] = indexMO;
         indexMO += 15;
         m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
@@ -463,9 +484,9 @@ void GaussianSet::initCalculation()
           // molden order
           // xxxx yyyy zzzz xxxy xxxz yyyx yyyz zzzx zzzy,
           // xxyy xxzz yyzz xxyz yyxz zzxy
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm);  // xxxx
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm);  // yyyy
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm);  // zzzz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm0); // xxxx
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm0); // yyyy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm0); // zzzz
           m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // xxxy
           m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // xxxz
           m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // yyyx
@@ -481,21 +502,31 @@ void GaussianSet::initCalculation()
         }
       } break;
       case G9: {
+        // The nine real solid harmonics used by pointG9/gridG9 are not
+        // uniformly scaled relative to each other, so a single
+        // m-independent constant cannot normalize them all: m = 0, +-2 and
+        // +-4 need sqrt(105), m = +-1 needs sqrt(105/8) and m = +-3 needs
+        // sqrt(21/2). Using one constant for all nine (as this did) leaves
+        // the *relative* weights within a g shell wrong, not merely the
+        // overall scale. See GaussianSetToolsTest.shellsAreNormalized.
         // 16 * (2.0/pi)^0.75
         double norm = 11.403287525679843;
+        double normA = norm / sqrt(105.0);       // m = 0, +-2, +-4
+        double normB = norm / sqrt(105.0 / 8.0); // m = +-1
+        double normC = norm / sqrt(21.0 / 2.0);  // m = +-3
         m_moIndices[i] = indexMO;
         indexMO += 9;
         m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
         for (unsigned j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); // 0
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+1
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-1
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+2
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-2
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+3
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-3
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+4
-          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-4
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * normA); // 0
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * normB); //+1
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * normB); //-1
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * normA); //+2
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * normA); //-2
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * normC); //+3
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * normC); //-3
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * normA); //+4
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * normA); //-4
         }
       } break;
       case H:
