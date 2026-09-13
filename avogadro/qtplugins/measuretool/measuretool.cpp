@@ -28,6 +28,7 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QStyleHints>
 
 #include <QDebug>
 
@@ -46,7 +47,8 @@ namespace Avogadro::QtPlugins {
 
 MeasureTool::MeasureTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_rwMolecule(nullptr), m_renderer(nullptr)
+    m_molecule(nullptr), m_rwMolecule(nullptr), m_renderer(nullptr),
+    m_dragged(false)
 {
   QString shortcut = tr("Ctrl+8", "control-key 8");
   m_activateAction->setText(tr("Measure"));
@@ -78,16 +80,31 @@ QWidget* MeasureTool::toolWidget() const
 
 QUndoCommand* MeasureTool::mousePressEvent(QMouseEvent* e)
 {
+  m_dragged = false;
+
   if (e->button() != Qt::LeftButton || !m_renderer)
     return nullptr;
 
-  Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
+  m_pressPosition = e->pos();
 
-  // If an atom is clicked, accept the event, but don't add it to the atom list
-  // until the button is released (this way the user can cancel the click by
-  // moving off the atom, and the click won't get passed to the default tool).
-  if (hit.type == Rendering::AtomType)
-    e->accept();
+  // Deliberately leave the event unaccepted, even when an atom was hit, so
+  // that it reaches the navigate tool: dragging from an atom rotates the view
+  // around that atom. The atom is only added to the list on release, and only
+  // if the press turns out to be a click rather than a drag.
+  return nullptr;
+}
+
+QUndoCommand* MeasureTool::mouseMoveEvent(QMouseEvent* e)
+{
+  // Remember whether the mouse moved far enough for this to be a navigation
+  // drag instead of a click. Never accept the event -- the navigate tool needs
+  // it to move the camera.
+  if (!m_dragged && (e->buttons() & Qt::LeftButton)) {
+    QPoint delta = e->pos() - m_pressPosition;
+    if (delta.manhattanLength() >=
+        QGuiApplication::styleHints()->startDragDistance())
+      m_dragged = true;
+  }
 
   return nullptr;
 }
@@ -98,15 +115,22 @@ QUndoCommand* MeasureTool::mouseReleaseEvent(QMouseEvent* e)
   if (e->button() != Qt::LeftButton || !m_renderer)
     return nullptr;
 
+  // The drag rotated the view, it wasn't a selection.
+  if (m_dragged) {
+    m_dragged = false;
+    return nullptr;
+  }
+
   Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
 
   // Now add the atom on release.
   if (hit.type == Rendering::AtomType) {
     if (toggleAtom(hit))
       emit drawablesChanged();
-    e->accept();
   }
 
+  // The event is left unaccepted so that the navigate tool sees the release
+  // and clears the drag it started when the press was passed through.
   return nullptr;
 }
 
