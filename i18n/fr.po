@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-09-11 17:55+0000\n"
+"POT-Creation-Date: 2026-09-13 06:15+0000\n"
 "PO-Revision-Date: 2026-07-25 09:01+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
@@ -1033,13 +1033,13 @@ msgstr "Sélectionner un fichier :"
 msgid "Select executable:"
 msgstr "Sélectionner un fichier exécutable :"
 
-#: qtgui/fileformatdialog.cpp:52
+#: qtgui/fileformatdialog.cpp:53
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 "Impossible de trouver un lecteur de fichiers approprié pour le fichier "
 "sélectionné."
 
-#: qtgui/fileformatdialog.cpp:100
+#: qtgui/fileformatdialog.cpp:105
 msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
@@ -1047,53 +1047,57 @@ msgstr ""
 "L'extension de fichier est manquante, le format ne peut donc pas être "
 "déterminé. Voulez-vous l'ajouter ?"
 
-#: qtgui/fileformatdialog.cpp:114
+#: qtgui/fileformatdialog.cpp:119
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
 "Impossible de trouver un éditeur de fichiers approprié pour le format "
 "sélectionné."
 
-#: qtgui/fileformatdialog.cpp:163
+#: qtgui/fileformatdialog.cpp:172
 msgctxt "File handlers"
 msgid "handlers"
 msgstr "gestionnaires"
 
-#: qtgui/fileformatdialog.cpp:164
+#: qtgui/fileformatdialog.cpp:173
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr "gérer"
 
-#: qtgui/fileformatdialog.cpp:168
+#: qtgui/fileformatdialog.cpp:177
 msgctxt "File readers"
 msgid "readers"
 msgstr "lecteurs"
 
-#: qtgui/fileformatdialog.cpp:169
+#: qtgui/fileformatdialog.cpp:178
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr "lire"
 
-#: qtgui/fileformatdialog.cpp:173
+#: qtgui/fileformatdialog.cpp:182
 msgctxt "File writers"
 msgid "writers"
 msgstr "éditeur"
 
-#: qtgui/fileformatdialog.cpp:174
+#: qtgui/fileformatdialog.cpp:183
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr "écrire"
 
-#: qtgui/fileformatdialog.cpp:179
+#: qtgui/fileformatdialog.cpp:188
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 "Plusieurs %1 ont été trouvés qui peuvent %2 ce format. Lequel utiliser ?"
 
-#: qtgui/fileformatdialog.cpp:279
+#: qtgui/fileformatdialog.cpp:289
 msgid "All files"
 msgstr "Tous les fichiers"
 
-#: qtgui/fileformatdialog.cpp:282
+#: qtgui/fileformatdialog.cpp:299
+msgid "Compressed files"
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:306
 msgid "All supported formats"
 msgstr "Tous les formats supportés"
 
@@ -1908,8 +1912,8 @@ msgstr "Fichiers PQR (*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:436
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:637
-#: qtplugins/propertytables/propertyview.cpp:640
-#: qtplugins/propertytables/propertyview.cpp:673
+#: qtplugins/propertytables/propertyview.cpp:803
+#: qtplugins/propertytables/propertyview.cpp:836
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:162
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:450
 #: qtplugins/qtaim/qtaimwavefunction.h:48
@@ -2898,7 +2902,7 @@ msgstr "Format Turbomole"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:31
 #: qtplugins/molecularproperties/molecularview.cpp:191
-#: qtplugins/propertytables/propertyview.cpp:765:296
+#: qtplugins/propertytables/propertyview.cpp:928:296
 msgid "Copy"
 msgstr "Copier"
 
@@ -4260,32 +4264,32 @@ msgid "Molecular Properties"
 msgstr "Propriétés de la molécule"
 
 #: qtplugins/molecularproperties/molecularview.cpp:40
-#: qtplugins/propertytables/propertyview.cpp:71
+#: qtplugins/propertytables/propertyview.cpp:76
 msgid "Molecule Properties"
 msgstr "Propriétés de la molécule"
 
 #: qtplugins/molecularproperties/molecularview.cpp:138
-#: qtplugins/propertytables/propertyview.cpp:628
+#: qtplugins/propertytables/propertyview.cpp:791
 msgid "Export CSV"
 msgstr "Export en format CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:139
-#: qtplugins/propertytables/propertyview.cpp:629
+#: qtplugins/propertytables/propertyview.cpp:792
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Fichiers CSV (*.csv) ;; Tous les fichiers (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:151
-#: qtplugins/propertytables/propertyview.cpp:641
+#: qtplugins/propertytables/propertyview.cpp:804
 msgid "Could not open the file for writing."
 msgstr "Impossible d'ouvrir le fichier pour l'écriture."
 
 #: qtplugins/molecularproperties/molecularview.cpp:184
-#: qtplugins/propertytables/propertyview.cpp:673
+#: qtplugins/propertytables/propertyview.cpp:836
 msgid "Error writing to the file."
 msgstr "Erreur lors de l'écriture au fichier."
 
 #: qtplugins/molecularproperties/molecularview.cpp:196
-#: qtplugins/propertytables/propertyview.cpp:770
+#: qtplugins/propertytables/propertyview.cpp:933
 msgid "Export…"
 msgstr "Exporter…"
 
@@ -5333,42 +5337,42 @@ msgstr "RMSD (Å)"
 msgid "Energy (kcal/mol)"
 msgstr "Énergie (kcal/mol)"
 
-#: qtplugins/propertytables/propertymodel.cpp:1294
+#: qtplugins/propertytables/propertymodel.cpp:1315
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "Hélice π"
 
-#: qtplugins/propertytables/propertymodel.cpp:1296
+#: qtplugins/propertytables/propertymodel.cpp:1317
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "Plié"
 
-#: qtplugins/propertytables/propertymodel.cpp:1298
+#: qtplugins/propertytables/propertymodel.cpp:1319
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "Hélice α"
 
-#: qtplugins/propertytables/propertymodel.cpp:1300
+#: qtplugins/propertytables/propertymodel.cpp:1321
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "Feuillet β"
 
-#: qtplugins/propertytables/propertymodel.cpp:1302
+#: qtplugins/propertytables/propertymodel.cpp:1323
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "Hélice 3-10"
 
-#: qtplugins/propertytables/propertymodel.cpp:1304
+#: qtplugins/propertytables/propertymodel.cpp:1325
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "Pont β"
 
-#: qtplugins/propertytables/propertymodel.cpp:1306
+#: qtplugins/propertytables/propertymodel.cpp:1327
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "Tourne"
 
-#: qtplugins/propertytables/propertymodel.cpp:1308
+#: qtplugins/propertytables/propertymodel.cpp:1329
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "Ressort hélicoïdal"
@@ -5408,37 +5412,37 @@ msgstr ""
 msgid "PropertyTables"
 msgstr "Tableaux des Propriétés"
 
-#: qtplugins/propertytables/propertyview.cpp:53
+#: qtplugins/propertytables/propertyview.cpp:58
 msgid "Atom Properties"
 msgstr "Propriétés des atomes"
 
-#: qtplugins/propertytables/propertyview.cpp:56
+#: qtplugins/propertytables/propertyview.cpp:61
 msgid "Bond Properties"
 msgstr "Propriétés des liaisons"
 
-#: qtplugins/propertytables/propertyview.cpp:59
+#: qtplugins/propertytables/propertyview.cpp:64
 msgid "Angle Properties"
 msgstr "Propriétés des angles"
 
-#: qtplugins/propertytables/propertyview.cpp:62
+#: qtplugins/propertytables/propertyview.cpp:67
 msgid "Torsion Properties"
 msgstr "Propriétés des angles de torsion"
 
-#: qtplugins/propertytables/propertyview.cpp:65
+#: qtplugins/propertytables/propertyview.cpp:70
 msgid "Conformer Properties"
 msgstr "Propriétés des conformères"
 
-#: qtplugins/propertytables/propertyview.cpp:68
+#: qtplugins/propertytables/propertyview.cpp:73
 msgid "Residue Properties"
 msgstr "Propriétés des résidus"
 
-#: qtplugins/propertytables/propertyview.cpp:683
-#: qtplugins/propertytables/propertyview.cpp:712
-#: qtplugins/propertytables/propertyview.cpp:722
+#: qtplugins/propertytables/propertyview.cpp:846
+#: qtplugins/propertytables/propertyview.cpp:875
+#: qtplugins/propertytables/propertyview.cpp:885
 msgid "Add Property"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:688
+#: qtplugins/propertytables/propertyview.cpp:851
 msgid "Property name"
 msgstr ""
 
@@ -5446,19 +5450,19 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, nameLabel)
-#: qtplugins/propertytables/propertyview.cpp:689:629 rc.cpp:934
+#: qtplugins/propertytables/propertyview.cpp:852:629 rc.cpp:934
 msgid "Name:"
 msgstr "Nom :"
 
-#: qtplugins/propertytables/propertyview.cpp:694
+#: qtplugins/propertytables/propertyview.cpp:857
 msgid "Number"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:695
+#: qtplugins/propertytables/propertyview.cpp:858
 msgid "Integer"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:698
+#: qtplugins/propertytables/propertyview.cpp:861
 msgid "Text"
 msgstr ""
 
@@ -5466,70 +5470,70 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:287
 #. i18n: ectx: property (text), widget (QLabel, typeLabel)
-#: qtplugins/propertytables/propertyview.cpp:699:232 rc.cpp:2250
+#: qtplugins/propertytables/propertyview.cpp:862:232 rc.cpp:2250
 msgid "Type:"
 msgstr "Type :"
 
-#: qtplugins/propertytables/propertyview.cpp:713
+#: qtplugins/propertytables/propertyview.cpp:876
 msgid "The property name cannot be empty."
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:723
+#: qtplugins/propertytables/propertyview.cpp:886
 #, qt-format
 msgid ""
 "Could not add a property named \"%1\". A column with that name may already "
 "exist."
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:756
+#: qtplugins/propertytables/propertyview.cpp:919
 msgid "Partial Charge Type"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:756
+#: qtplugins/propertytables/propertyview.cpp:919
 msgid "Select the partial charge type:"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:779
+#: qtplugins/propertytables/propertyview.cpp:942
 msgid "Add Property…"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:786
+#: qtplugins/propertytables/propertyview.cpp:949
 msgid "Change Charge Type…"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:793
+#: qtplugins/propertytables/propertyview.cpp:956
 msgid "Freeze Atom"
 msgstr "Geler l'atome"
 
-#: qtplugins/propertytables/propertyview.cpp:797
+#: qtplugins/propertytables/propertyview.cpp:960
 msgid "Freeze X"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:800
+#: qtplugins/propertytables/propertyview.cpp:963
 msgid "Freeze Y"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:803
+#: qtplugins/propertytables/propertyview.cpp:966
 msgid "Freeze Z"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:806
+#: qtplugins/propertytables/propertyview.cpp:969
 msgid "Unfreeze Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertyview.cpp:814
+#: qtplugins/propertytables/propertyview.cpp:977
 msgid "Constrain Bond"
 msgstr "Contraindre l’obligation"
 
-#: qtplugins/propertytables/propertyview.cpp:816
+#: qtplugins/propertytables/propertyview.cpp:979
 msgid "Constrain Angle"
 msgstr "Angle de contrainte"
 
-#: qtplugins/propertytables/propertyview.cpp:818
+#: qtplugins/propertytables/propertyview.cpp:981
 msgid "Constrain Torsion"
 msgstr "Contrainte de torsion"
 
-#: qtplugins/propertytables/propertyview.cpp:825
+#: qtplugins/propertytables/propertyview.cpp:988
 msgid "Remove Constraint"
 msgstr ""
 
