@@ -10,7 +10,10 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QMultiHash>
+#include <QtCore/QPointer>
 #include <QtCore/QVariantMap>
+
+#include <avogadro/qtgui/molecule.h>
 
 class QAction;
 class QDialog;
@@ -19,6 +22,10 @@ class QProgressDialog;
 namespace Avogadro {
 namespace Io {
 class FileFormat;
+}
+
+namespace Rendering {
+class Camera;
 }
 
 namespace QtGui {
@@ -54,6 +61,8 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+  void setCamera(Rendering::Camera* camera) override;
+
 public slots:
   /**
    * Scan for new scripts in the command directories.
@@ -80,12 +89,43 @@ public slots:
                          const QString& command, const QString& identifier);
 
 private slots:
+  /**
+   * Show a progress report from the running script.
+   * @param message Status text, or empty to leave the label alone.
+   * @param value The current step, or -1 if the script did not supply one.
+   * @param maximum The total number of steps, or -1 if not supplied.
+   */
+  void updateProgress(const QString& message, int value, int maximum);
+
+  /**
+   * Kill the running script after the user hits Cancel.
+   */
+  void cancelCommand();
+
   void menuActivated();
   void configurePython();
+  void moleculeChanged(unsigned int change);
 
 private:
+  /**
+   * Tear down the progress dialog and running script after a command that
+   * never started, reporting @p errors to the terminal and the user.
+   */
+  void commandFailed(const QStringList& errors);
+
+  /**
+   * Close and destroy the progress dialog, if there is one. Disconnects it
+   * first: QProgressDialog::close() emits canceled(), which would otherwise
+   * re-enter cancelCommand() and tear down state the caller still holds.
+   */
+  void closeProgressDialog();
+
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
+  // The active view's camera, owned by the renderer; null until a view exists.
+  Rendering::Camera* m_camera = nullptr;
+  // Launch-time molecule for the async script; QPointer detects deletion.
+  QPointer<QtGui::Molecule> m_runningMolecule;
   // keyed on script file path or package feature key
   QMap<QString, QtGui::InterfaceWidget*> m_dialogs;
   QDialog* m_currentDialog;

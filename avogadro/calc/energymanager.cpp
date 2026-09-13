@@ -63,7 +63,13 @@ EnergyCalculator* EnergyManager::model(const std::string& identifier) const
 
 bool EnergyManager::removeModel(const std::string& identifier)
 {
-  auto ids = m_identifiers[identifier];
+  const auto it = m_identifiers.find(identifier);
+  if (it == m_identifiers.end()) {
+    appendError("Model " + identifier + " was not loaded.");
+    return false;
+  }
+
+  const auto ids = it->second;
   m_identifiers.erase(identifier);
   m_identifierToName.erase(identifier);
 

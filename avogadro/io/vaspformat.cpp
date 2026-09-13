@@ -400,12 +400,23 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
           getline(inStream, buffer);
           stringSplit = split(buffer, ' ');
 
+          // A lattice vector reads "A1 = ( x, y, z)", so six tokens with the
+          // components at 3, 4 and 5. A truncated file -- the keyword on the
+          // last line, or a short line -- leaves fewer, and indexing past the
+          // end here used to throw std::out_of_range out of a reader that has
+          // no handler above it, terminating the process. Check the count and
+          // fail the read like any other malformed input.
+          if (stringSplit.size() < 6) {
+            appendError("Error reading a lattice vector: expected six fields");
+            return false;
+          }
+
           auto x = lexicalCast<double>(
-            stringSplit.at(3).substr(0, stringSplit.at(3).size() - 1));
+            stringSplit[3].substr(0, stringSplit[3].size() - 1));
           auto y = lexicalCast<double>(
-            stringSplit.at(4).substr(0, stringSplit.at(4).size() - 1));
+            stringSplit[4].substr(0, stringSplit[4].size() - 1));
           auto z = lexicalCast<double>(
-            stringSplit.at(5).substr(0, stringSplit.at(5).size() - 1));
+            stringSplit[5].substr(0, stringSplit[5].size() - 1));
 
           if (!x || !y || !z) {
             appendError("Error reading a lattice vector");

@@ -12,15 +12,11 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
-#include <nlohmann/json.hpp>
-
 #include <iomanip>
 #include <istream>
 #include <optional>
 #include <ostream>
 #include <string>
-
-using json = nlohmann::json;
 
 using std::getline;
 using std::string;
@@ -41,12 +37,6 @@ using std::isalpha;
 
 bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
-  json opts;
-  if (!options().empty())
-    opts = json::parse(options(), nullptr, false);
-  else
-    opts = json::object();
-
   bool hasCell = false;
   bool hasLattice = false;
   bool fractionalCoords = false;
@@ -359,7 +349,9 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // This format has no connectivity information, so perceive basics at least.
-  if (opts.value("perceiveBonds", true)) {
+  bool perceiveBonds = true;
+  boolOption("perceiveBonds", perceiveBonds);
+  if (perceiveBonds) {
     mol.perceiveBondsSimple();
     mol.perceiveBondOrders();
   }

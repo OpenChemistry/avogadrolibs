@@ -45,6 +45,7 @@ avogadro_headers(QtGui
   fileformatdialog.h
   gaussiansetconcurrent.h
   generichighlighter.h
+  fragmenttools.h
   hydrogentools.h
   insertfragmentdialog.h
   interfacescript.h
@@ -89,6 +90,7 @@ target_sources(QtGui PRIVATE
   fileformatdialog.cpp
   gaussiansetconcurrent.cpp
   generichighlighter.cpp
+  fragmenttools.cpp
   hydrogentools.cpp
   insertfragmentdialog.cpp
   interfacescript.cpp

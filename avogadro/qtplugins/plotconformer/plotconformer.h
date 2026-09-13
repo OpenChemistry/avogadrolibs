@@ -9,10 +9,12 @@
 #include <avogadro/qtgui/extensionplugin.h>
 
 #include <QDialog>
-#include <QCheckBox>
 #include <QComboBox>
 
 #include <memory>
+
+class QLabel;
+class QCheckBox;
 
 namespace Avogadro {
 
@@ -39,6 +41,12 @@ public:
   QList<QAction*> actions() const override;
   QStringList menuPath(QAction*) const override;
 
+  /**
+   * Arrow keys, page up/down and home/end step through the conformers while
+   * the plot dialog is focused.
+   */
+  bool eventFilter(QObject* object, QEvent* event) override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
@@ -53,8 +61,23 @@ private slots:
   void clicked(float x, float y, Qt::KeyboardModifiers modifiers);
 
 private:
-  int currentConformerIndex() const;
+  // Show conformer @p frame, clamped to the available coordinate sets, and
+  // tell the rest of the application about it.
+  void setFrame(int frame);
+
+  // Redraw the cached curve plus the marker for the current conformer. Cheap
+  // enough to call on every arrow key, unlike updatePlot().
+  void drawChart();
+
+  // Fill the plot type combo with whatever the current molecule offers.
+  void populatePropertyCombo();
+
+  // Fill the X axis combo with "Frame" plus any distance / angle / torsion
+  // constraint whose atom indices are valid for the current molecule.
   void updateXAxisOptions();
+
+  // -1 for "Frame"; otherwise the index into m_molecule->constraints().
+  int xAxisMode() const;
 
   // Generate RMSD data from a coordinate set
   // Writes the results to @p x and @p y
@@ -79,8 +102,13 @@ private:
   QComboBox* m_unitsCombo;
   QComboBox* m_targetUnitsCombo;
   QComboBox* m_xAxisCombo;
-  QCheckBox* m_unwrapDihedralsCheck = nullptr;
-  DataSeries m_lastXData;
+  QCheckBox* m_unwrapDihedralsCheck;
+  QLabel* m_frameLabel;
+  DataSeries m_xData;
+  DataSeries m_yData;
+  QString m_yTitle;
+  QString m_xTitle;
+  int m_currentFrame = 0;
 };
 
 inline QString PlotConformer::description() const

@@ -6,26 +6,30 @@
 #include "plotconformer.h"
 
 #include <QAction>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QEvent>
+#include <QHBoxLayout>
+#include <QKeyEvent>
+#include <QLabel>
+#include <QLineEdit>
 #include <QMessageBox>
 #include <QProcess>
 #include <QString>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QCheckBox>
-#include <QComboBox>
-#include <QLineEdit>
 
-#include <avogadro/core/array.h>
+#include <algorithm>
+#include <cmath>
+#include <limits>
+
 #include <avogadro/core/angletools.h>
+#include <avogadro/core/array.h>
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/chartdialog.h>
 #include <avogadro/qtgui/chartwidget.h>
 #include <avogadro/qtgui/molecule.h>
-#include <cmath>
-#include <limits>
 
 using Avogadro::QtGui::Molecule;
 
@@ -37,6 +41,29 @@ constexpr double KcalToKJ = 4.184; // by definition
 
 using Core::Array;
 
+// Constraints outlive the atoms they name: deleting an atom leaves the indices
+// behind. Molecule::atomPosition3d() answers out-of-range indices with a zero
+// vector rather than failing, so check before evaluating anything.
+static bool constraintIsValid(const Core::Constraint& c, size_t atomCount)
+{
+  switch (c.type()) {
+    case Core::Constraint::TorsionConstraint:
+      if (c.dIndex() >= atomCount)
+        return false;
+      [[fallthrough]];
+    case Core::Constraint::AngleConstraint:
+      if (c.cIndex() >= atomCount)
+        return false;
+      [[fallthrough]];
+    case Core::Constraint::DistanceConstraint:
+      return c.aIndex() < atomCount && c.bIndex() < atomCount;
+    default:
+      return false;
+  }
+}
+
+// Atom numbers are 1-based here, matching the constraints dialog and the
+// property tables.
 static QString constraintLabel(const Core::Constraint& c)
 {
   const int a = static_cast<int>(c.aIndex()) + 1;
@@ -46,48 +73,65 @@ static QString constraintLabel(const Core::Constraint& c)
 
   switch (c.type()) {
     case Core::Constraint::DistanceConstraint:
-      return QObject::tr("Distance %1-%2").arg(a).arg(b);
+      return PlotConformer::tr("Distance %1-%2").arg(a).arg(b);
     case Core::Constraint::AngleConstraint:
-      return QObject::tr("Angle %1-%2-%3").arg(a).arg(b).arg(cc);
+      return PlotConformer::tr("Angle %1-%2-%3").arg(a).arg(b).arg(cc);
     case Core::Constraint::TorsionConstraint:
-      return QObject::tr("Dihedral %1-%2-%3-%4").arg(a).arg(b).arg(cc).arg(d);
+      return PlotConformer::tr("Dihedral %1-%2-%3-%4")
+        .arg(a)
+        .arg(b)
+        .arg(cc)
+        .arg(d);
     default:
-      return QObject::tr("Constraint");
+      return PlotConformer::tr("Constraint");
   }
 }
 
-static float constraintValue(QtGui::Molecule& mol, const Core::Constraint& c)
+// Evaluate the constraint geometry for one coordinate set. Distances come back
+// in Angstrom, angles and torsions in degrees.
+static bool constraintValue(const Array<Vector3>& positions,
+                            const Core::Constraint& c, float& value)
 {
-  const Vector3 a = mol.atomPosition3d(c.aIndex());
-  const Vector3 b = mol.atomPosition3d(c.bIndex());
+  if (!constraintIsValid(c, positions.size()))
+    return false;
+
+  const Vector3& a = positions[c.aIndex()];
+  const Vector3& b = positions[c.bIndex()];
 
   switch (c.type()) {
     case Core::Constraint::DistanceConstraint:
-      return static_cast<float>((a - b).norm());
+      value = static_cast<float>((a - b).norm());
+      return true;
     case Core::Constraint::AngleConstraint:
-      return static_cast<float>(calculateAngle(a, b, mol.atomPosition3d(c.cIndex())));
+      value = static_cast<float>(calculateAngle(a, b, positions[c.cIndex()]));
+      return true;
     case Core::Constraint::TorsionConstraint:
-      return static_cast<float>(calculateDihedral(
-        a, b, mol.atomPosition3d(c.cIndex()), mol.atomPosition3d(c.dIndex())));
+      value = static_cast<float>(
+        calculateDihedral(a, b, positions[c.cIndex()], positions[c.dIndex()]));
+      return true;
     default:
-      return 0.0f;
+      return false;
   }
 }
 
-static QString xAxisTitleForConstraint(const Core::Constraint& c)
+static QString axisTitleForConstraint(const Core::Constraint& c)
 {
   switch (c.type()) {
     case Core::Constraint::DistanceConstraint:
-      return QObject::tr("Bond length (Å)");
+      // Not necessarily a bond -- any pair of atoms can be constrained.
+      return PlotConformer::tr("Distance (Å)");
     case Core::Constraint::AngleConstraint:
-      return QObject::tr("Angle (°)");
+      return PlotConformer::tr("Angle (°)");
     case Core::Constraint::TorsionConstraint:
-      return QObject::tr("Dihedral (°)");
+      return PlotConformer::tr("Dihedral (°)");
     default:
-      return QObject::tr("Frame");
+      return PlotConformer::tr("Frame");
   }
 }
 
+// A scan that walks past +/-180 degrees comes back as a jump the width of the
+// whole axis. Follow the shortest step between neighbours instead, so the scan
+// reads as one continuous curve.
 static void unwrapPeriodicSeries(DataSeries& values, float period)
 {
   if (values.empty() || period <= 0.0f)
@@ -113,6 +157,9 @@ static void unwrapPeriodicSeries(DataSeries& values, float period)
   }
 }
 
+// Unwrapping can leave the curve anywhere on the real line, so slide it by
+// whole periods into the window that holds the most points -- the one a
+// chemist expects to read off the axis.
 static void shiftSeriesToPreferredWindow(DataSeries& values, float period,
                                          float minimum, float maximum)
 {
@@ -156,78 +203,13 @@ static void shiftSeriesToPreferredWindow(DataSeries& values, float period,
     value -= bestShift;
 }
 
-int PlotConformer::currentConformerIndex() const
-{
-  if (!m_molecule || m_molecule->coordinate3dCount() == 0)
-    return -1;
-
-  const Array<Vector3>& current = m_molecule->atomPositions3d();
-  if (current.empty())
-    return -1;
-
-  constexpr double tolerance = 1.0e-10;
-  int bestIndex = -1;
-  double bestDistance = std::numeric_limits<double>::max();
-
-  for (int i = 0; i < static_cast<int>(m_molecule->coordinate3dCount()); ++i) {
-    const Array<Vector3> coords = m_molecule->coordinate3d(i);
-    if (coords.size() != current.size())
-      continue;
-
-    double sum = 0.0;
-    bool exactMatch = true;
-    for (size_t j = 0; j < current.size(); ++j) {
-      const double distance = (coords[j] - current[j]).squaredNorm();
-      sum += distance;
-      if (distance > tolerance)
-        exactMatch = false;
-    }
-
-    if (exactMatch)
-      return i;
-
-    if (sum < bestDistance) {
-      bestDistance = sum;
-      bestIndex = i;
-    }
-  }
-
-  return bestIndex;
-}
-
-void PlotConformer::updateXAxisOptions()
-{
-  if (!m_xAxisCombo)
-    return;
-
-  const QVariant currentData = m_xAxisCombo->currentData();
-
-  m_xAxisCombo->blockSignals(true);
-  m_xAxisCombo->clear();
-  m_xAxisCombo->addItem(tr("Frame"), -1);
-
-  if (m_molecule) {
-    const auto& constraints = m_molecule->constraints();
-    for (int i = 0; i < static_cast<int>(constraints.size()); ++i) {
-      const auto& c = constraints[static_cast<size_t>(i)];
-      if (c.type() == Core::Constraint::DistanceConstraint ||
-          c.type() == Core::Constraint::AngleConstraint ||
-          c.type() == Core::Constraint::TorsionConstraint) {
-        m_xAxisCombo->addItem(constraintLabel(c), i);
-      }
-    }
-  }
-
-  int index = m_xAxisCombo->findData(currentData);
-  if (index < 0)
-    index = 0;
-  m_xAxisCombo->setCurrentIndex(index);
-  m_xAxisCombo->blockSignals(false);
-}
-
 PlotConformer::PlotConformer(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
-    m_molecule(nullptr), m_displayDialogAction(new QAction(this))
+    m_molecule(nullptr), m_displayDialogAction(new QAction(this)),
+    m_chartWidget(nullptr), m_propertyCombo(nullptr), m_unitsCombo(nullptr),
+    m_targetUnitsCombo(nullptr), m_xAxisCombo(nullptr),
+    m_unwrapDihedralsCheck(nullptr), m_frameLabel(nullptr),
+    m_xTitle(tr("Frame"))
 {
   m_displayDialogAction->setText(tr("Plot Conformer Data…"));
   connect(m_displayDialogAction, &QAction::triggered, this,
@@ -263,6 +245,19 @@ void PlotConformer::setMolecule(QtGui::Molecule* mol)
   if (m_molecule)
     connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
 
+  // Follow whichever conformer the new molecule is already showing.
+  m_currentFrame = m_molecule ? m_molecule->coordinate3d() : 0;
+
+  if (m_dialog && m_dialog->isVisible()) {
+    if (m_molecule && m_molecule->coordinate3dCount() > 1) {
+      populatePropertyCombo();
+      updateXAxisOptions();
+      updatePlot();
+    } else {
+      m_dialog->hide();
+    }
+  }
+
   updateActions();
 }
 
@@ -272,15 +267,37 @@ void PlotConformer::moleculeChanged(unsigned int c)
 
   auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
-  if (changes & Molecule::Added || changes & Molecule::Removed ||
-      changes & Molecule::Modified)
+  const bool conformerChange = (changes & Molecule::Conformer) != 0;
+  const bool constraintChange = (changes & Molecule::Constraints) != 0;
+  const bool structural = (changes & Molecule::Added) ||
+                          (changes & Molecule::Removed) ||
+                          (changes & Molecule::Modified);
+  if (structural)
     updateActions();
 
-  if (m_dialog &&
-      (changes & Molecule::Atoms || changes & Molecule::Constraints ||
-       changes & Molecule::Properties)) {
-    if (changes & Molecule::Constraints)
-      updateXAxisOptions();
+  if (!m_molecule || !m_dialog || !m_dialog->isVisible())
+    return;
+
+  if (conformerChange) {
+    // Someone else - typically the player tool - moved to a different
+    // conformer, so move the marker to match. Playback with dynamic bonding
+    // also flags added/removed atoms, but the curve itself is unchanged, so
+    // check this before the structural case and skip the expensive replot.
+    int frame = m_molecule->coordinate3d();
+    if (frame != m_currentFrame) {
+      m_currentFrame = frame;
+      drawChart();
+    }
+    return;
+  }
+
+  if (structural || constraintChange) {
+    // Atoms, coordinate sets or energies may all have changed under us.
+    m_currentFrame = m_molecule->coordinate3d();
+    populatePropertyCombo();
+    // Constraints can be added or removed, and deleting atoms can invalidate
+    // the one currently driving the x axis.
+    updateXAxisOptions();
     updatePlot();
   }
 }
@@ -304,53 +321,167 @@ void PlotConformer::updateActions()
   }
 }
 
-void PlotConformer::clicked(float x, float y, Qt::KeyboardModifiers modifiers)
+void PlotConformer::clicked(float x, float, Qt::KeyboardModifiers)
 {
-//  // switch to the closest conformer to x
-//  int conformer = static_cast<int>(x);
-//  if (conformer < 0)
-//    conformer = 0;
-//  if (conformer >= m_molecule->coordinate3dCount())
-//    conformer = m_molecule->coordinate3dCount() - 1;
-//  m_molecule->setCoordinate3d(conformer);
-//  m_molecule->emitChanged(Molecule::Atoms);
-  if (!m_molecule)
+  // switch to the closest conformer to x
+  if (xAxisMode() < 0) {
+    setFrame(static_cast<int>(std::lround(x)));
     return;
-  
-  const int xMode = (m_xAxisCombo ? m_xAxisCombo->currentData().toInt() : -1);
-  
-  int conformer = 0;
-  if (xMode < 0) {
-    conformer = static_cast<int>(x);
-  } else if (!m_lastXData.empty()) {
-    float best = std::numeric_limits<float>::max();
-    for (int i = 0; i < static_cast<int>(m_lastXData.size()); ++i) {
-      const float d = std::fabs(m_lastXData[static_cast<size_t>(i)] - x);
-      if (d < best) {
-        best = d;
-        conformer = i;
-      }
+  }
+
+  // A geometric coordinate is not evenly spaced and need not even be
+  // monotonic, so look for the frame plotted nearest the click.
+  int frame = -1;
+  float best = std::numeric_limits<float>::max();
+  for (size_t i = 0; i < m_xData.size(); ++i) {
+    const float distance = std::fabs(m_xData[i] - x);
+    if (distance < best) {
+      best = distance;
+      frame = static_cast<int>(i);
     }
   }
-  
-  if (conformer < 0)
-    conformer = 0;
-  const int maxIdx = static_cast<int>(m_molecule->coordinate3dCount()) - 1;
-  if (conformer > maxIdx)
-    conformer = maxIdx;
-  
-  m_molecule->setCoordinate3d(conformer);
-  m_molecule->emitChanged(Molecule::Atoms);
-  updatePlot();
+
+  if (frame >= 0)
+    setFrame(frame);
+}
+
+void PlotConformer::setFrame(int frame)
+{
+  if (!m_molecule)
+    return;
+
+  auto count = static_cast<int>(m_molecule->coordinate3dCount());
+  if (count < 1)
+    return;
+
+  frame = std::clamp(frame, 0, count - 1);
+  if (frame == m_currentFrame && frame == m_molecule->coordinate3d())
+    return;
+
+  m_currentFrame = frame;
+  m_molecule->setCoordinate3d(frame);
+  drawChart();
+  // Moved (rather than Modified) keeps derived data alive, and Conformer lets
+  // the player tool pick the new frame up.
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved |
+                          Molecule::Conformer);
+}
+
+bool PlotConformer::eventFilter(QObject* object, QEvent* event)
+{
+  if (!m_dialog || object != m_dialog.get() ||
+      event->type() != QEvent::KeyPress)
+    return QtGui::ExtensionPlugin::eventFilter(object, event);
+
+  auto count =
+    m_molecule ? static_cast<int>(m_molecule->coordinate3dCount()) : 0;
+  if (count < 2)
+    return QtGui::ExtensionPlugin::eventFilter(object, event);
+
+  auto* keyEvent = static_cast<QKeyEvent*>(event);
+  // Shift takes bigger strides through long trajectories.
+  const int step = (keyEvent->modifiers() & Qt::ShiftModifier) ? 10 : 1;
+
+  switch (keyEvent->key()) {
+    case Qt::Key_Left:
+    case Qt::Key_Down:
+      setFrame(m_currentFrame - step);
+      return true;
+    case Qt::Key_Right:
+    case Qt::Key_Up:
+      setFrame(m_currentFrame + step);
+      return true;
+    case Qt::Key_PageDown:
+      setFrame(m_currentFrame - 10);
+      return true;
+    case Qt::Key_PageUp:
+      setFrame(m_currentFrame + 10);
+      return true;
+    case Qt::Key_Home:
+      setFrame(0);
+      return true;
+    case Qt::Key_End:
+      setFrame(count - 1);
+      return true;
+    default:
+      break;
+  }
+
+  return QtGui::ExtensionPlugin::eventFilter(object, event);
+}
+
+void PlotConformer::populatePropertyCombo()
+{
+  if (!m_molecule || !m_propertyCombo)
+    return;
+
+  const bool hasEnergies = m_molecule->hasData("energies");
+  const bool hasForces = m_molecule->hasData("forces");
+  const bool hasVelocities = m_molecule->hasData("velocities");
+
+  // Keep the current selection if the new molecule still offers it.
+  const QString current = m_propertyCombo->currentData().toString();
+
+  QSignalBlocker blocker(m_propertyCombo);
+  m_propertyCombo->clear();
+  m_propertyCombo->addItem(tr("RMSD"), "rmsd");
+  if (hasEnergies)
+    m_propertyCombo->addItem(tr("Energy"), "energy");
+  if (hasForces)
+    m_propertyCombo->addItem(tr("Forces"), "forces");
+  if (hasVelocities)
+    m_propertyCombo->addItem(tr("Velocities"), "velocities");
+
+  int index = m_propertyCombo->findData(current);
+  m_propertyCombo->setCurrentIndex(index < 0 ? 0 : index);
+
+  if (m_unitsCombo)
+    m_unitsCombo->setEnabled(hasEnergies);
+  if (m_targetUnitsCombo)
+    m_targetUnitsCombo->setEnabled(hasEnergies);
+}
+
+void PlotConformer::updateXAxisOptions()
+{
+  if (!m_xAxisCombo)
+    return;
+
+  // Keep the current coordinate selected if the molecule still has it.
+  const QVariant current = m_xAxisCombo->currentData();
+
+  QSignalBlocker blocker(m_xAxisCombo);
+  m_xAxisCombo->clear();
+  m_xAxisCombo->addItem(tr("Frame"), -1);
+
+  if (m_molecule) {
+    const auto& constraints = m_molecule->constraints();
+    for (int i = 0; i < static_cast<int>(constraints.size()); ++i) {
+      const auto& c = constraints[static_cast<size_t>(i)];
+      // Out-of-plane constraints have no single value to scan, and a
+      // constraint left over from deleted atoms would plot zeros.
+      if (constraintIsValid(c, m_molecule->atomCount()))
+        m_xAxisCombo->addItem(constraintLabel(c), i);
+    }
+  }
+
+  int index = m_xAxisCombo->findData(current);
+  m_xAxisCombo->setCurrentIndex(index < 0 ? 0 : index);
+}
+
+int PlotConformer::xAxisMode() const
+{
+  if (!m_xAxisCombo)
+    return -1;
+
+  bool ok = false;
+  const int mode = m_xAxisCombo->currentData().toInt(&ok);
+  return ok ? mode : -1;
 }
 
 void PlotConformer::displayDialog()
 {
-  bool hasEnergies = (m_molecule->hasData("energies"));
-  // RMSD forces for each coordinate set
-  bool hasForces = (m_molecule->hasData("forces"));
-  // and velocities for MD
-  bool hasVelocities = (m_molecule->hasData("velocities"));
+  if (!m_molecule)
+    return;
 
   if (!m_dialog) {
     // Create the dialog
@@ -363,28 +494,30 @@ void PlotConformer::displayDialog()
 
     // Create chart widget
     m_chartWidget = new QtGui::ChartWidget(m_dialog.get());
+    // Take the focus so the arrow keys reach the dialog's event filter rather
+    // than the combo boxes below.
+    m_chartWidget->setFocusPolicy(Qt::StrongFocus);
     connect(m_chartWidget, &QtGui::ChartWidget::clicked, this,
             &PlotConformer::clicked);
     mainLayout->addWidget(m_chartWidget);
+
+    // Current conformer, plus a reminder of the keyboard navigation
+    m_frameLabel = new QLabel(m_dialog.get());
+    m_frameLabel->setTextFormat(Qt::PlainText);
+    mainLayout->addWidget(m_frameLabel);
 
     // Create property selection layout
     QHBoxLayout* propertyLayout = new QHBoxLayout();
     QLabel* propertyLabel = new QLabel(tr("Plot Type:"), m_dialog.get());
     m_propertyCombo = new QComboBox(m_dialog.get());
-    m_propertyCombo->addItem(tr("RMSD"), "rmsd");
-    if (hasEnergies)
-      m_propertyCombo->addItem(tr("Energy"), "energy");
-    if (hasForces)
-      m_propertyCombo->addItem(tr("Forces"), "forces");
-    if (hasVelocities)
-      m_propertyCombo->addItem(tr("Velocities"), "velocities");
 
     propertyLayout->addWidget(propertyLabel);
     propertyLayout->addWidget(m_propertyCombo);
     propertyLayout->addStretch();
     mainLayout->addLayout(propertyLayout);
 
-    // X axis selection (Frame or constraint coordinate)
+    // X axis selection (frame number, or a constrained coordinate so that a
+    // relaxed scan plots against what was actually scanned)
     QHBoxLayout* xAxisLayout = new QHBoxLayout();
     QLabel* xAxisLabel = new QLabel(tr("X Axis:"), m_dialog.get());
     m_xAxisCombo = new QComboBox(m_dialog.get());
@@ -407,8 +540,6 @@ void PlotConformer::displayDialog()
     m_unitsCombo->addItem(QStringLiteral("eV"), EvToKcal);
     m_unitsCombo->addItem(QStringLiteral("kcal/mol"), 1.0);
     m_unitsCombo->addItem(QStringLiteral("kJ/mol"), KcalToKJ);
-    if (!hasEnergies)
-      m_unitsCombo->setEnabled(false);
 
     QLabel* targetLabel = new QLabel(tr("to"), m_dialog.get());
     m_targetUnitsCombo = new QComboBox(m_dialog.get());
@@ -416,8 +547,6 @@ void PlotConformer::displayDialog()
     m_targetUnitsCombo->addItem(QStringLiteral("kJ/mol"), KcalToKJ);
     m_targetUnitsCombo->addItem(QStringLiteral("eV"), 1.0 / EvToKcal);
     m_targetUnitsCombo->addItem(QStringLiteral("Hartree"), 1.0 / HartreeToKcal);
-    if (!hasEnergies)
-      m_targetUnitsCombo->setEnabled(false);
 
     conversionLayout->addWidget(conversionLabel);
     conversionLayout->addWidget(m_unitsCombo);
@@ -439,110 +568,151 @@ void PlotConformer::displayDialog()
             this, &PlotConformer::updatePlot);
     connect(m_unwrapDihedralsCheck, &QCheckBox::toggled, this,
             &PlotConformer::updatePlot);
+
+    // Key presses that the chart and buttons ignore bubble up to the dialog,
+    // where the filter turns them into conformer navigation. Filtering here
+    // rather than with shortcuts leaves the combo boxes' own arrow handling
+    // intact.
+    m_dialog->installEventFilter(this);
   }
 
+  populatePropertyCombo();
   updateXAxisOptions();
+  m_currentFrame = m_molecule->coordinate3d();
   updatePlot();
   m_dialog->show();
   m_dialog->raise();
   m_dialog->activateWindow();
+  m_chartWidget->setFocus();
 }
 
 void PlotConformer::updatePlot()
 {
-  if (!m_molecule || !m_chartWidget)
+  if (!m_molecule || !m_chartWidget || !m_propertyCombo)
     return;
 
-  DataSeries xData, yData;
-  const Array<Vector3> originalPositions = m_molecule->atomPositions3d();
-  const int currentIndex = currentConformerIndex();
-  const int xMode = (m_xAxisCombo ? m_xAxisCombo->currentData().toInt() : -1);
+  m_xData.clear();
+  m_yData.clear();
 
   QString plotType = m_propertyCombo->currentData().toString();
 
   if (plotType == "rmsd") {
-    generateRmsdCurve(xData, yData);
+    generateRmsdCurve(m_xData, m_yData);
+    m_yTitle = tr("RMSD (Å)");
   } else if (plotType == "energy" && m_molecule->hasData("energies")) {
-    generateEnergyCurve(xData, yData);
+    generateEnergyCurve(m_xData, m_yData);
+    QString targetUnit = m_targetUnitsCombo->currentText();
+    m_yTitle = tr("Relative Energy (%1)").arg(targetUnit);
   } else if (plotType == "forces" && m_molecule->hasData("forces")) {
-    generateForcesCurve(xData, yData);
+    generateForcesCurve(m_xData, m_yData);
+    // TODO: Add units - data("forces") holds the RMS gradient per set
+    m_yTitle = tr("RMS Gradient");
   } else if (plotType == "velocities" && m_molecule->hasData("velocities")) {
-    generateVelocitiesCurve(xData, yData);
+    generateVelocitiesCurve(m_xData, m_yData);
+    m_yTitle = tr("Velocities (m/s)");
   }
 
-  if (xData.empty() || yData.empty())
-    return;
-
-  bool isDihedralConstraint = false;
-  if (xMode >= 0) {
+  // The generators all count frames along x. Swapping in the geometric
+  // coordinate here, once, keeps every plot type in step with the axis title.
+  const Core::Constraint* coordinate = nullptr;
+  const int mode = xAxisMode();
+  if (mode >= 0) {
     const auto& constraints = m_molecule->constraints();
-    if (xMode < static_cast<int>(constraints.size()) &&
-        constraints[static_cast<size_t>(xMode)].type() ==
-          Core::Constraint::TorsionConstraint) {
-      isDihedralConstraint = true;
-      if (m_unwrapDihedralsCheck && m_unwrapDihedralsCheck->isChecked()) {
-        unwrapPeriodicSeries(xData, 360.0f);
-        shiftSeriesToPreferredWindow(xData, 360.0f, -180.0f, 180.0f);
-      }
+    if (mode < static_cast<int>(constraints.size()))
+      coordinate = &constraints[static_cast<size_t>(mode)];
+  }
+
+  const bool isTorsion =
+    coordinate != nullptr &&
+    coordinate->type() == Core::Constraint::TorsionConstraint;
+  // Nothing else wraps, so the option only means something for a torsion.
+  if (m_unwrapDihedralsCheck)
+    m_unwrapDihedralsCheck->setEnabled(isTorsion);
+
+  m_xTitle = coordinate ? axisTitleForConstraint(*coordinate) : tr("Frame");
+
+  if (coordinate != nullptr && !m_yData.empty()) {
+    // A file can carry fewer energies or gradients than it has geometries, so
+    // plot only the pairs that exist rather than handing the chart two
+    // series of different lengths.
+    const size_t frames =
+      std::min(m_yData.size(), m_molecule->coordinate3dCount());
+
+    m_xData.clear();
+    m_xData.reserve(frames);
+    for (size_t i = 0; i < frames; ++i) {
+      float value = 0.0f;
+      // Invalid constraints never reach the combo, so this should not fail.
+      constraintValue(m_molecule->coordinate3d(i), *coordinate, value);
+      m_xData.push_back(value);
+    }
+    m_yData.resize(frames);
+
+    if (isTorsion && m_unwrapDihedralsCheck &&
+        m_unwrapDihedralsCheck->isChecked()) {
+      unwrapPeriodicSeries(m_xData, 360.0f);
+      shiftSeriesToPreferredWindow(m_xData, 360.0f, -180.0f, 180.0f);
     }
   }
 
-  if (m_unwrapDihedralsCheck)
-    m_unwrapDihedralsCheck->setEnabled(isDihedralConstraint);
+  drawChart();
+}
 
-  m_molecule->setAtomPositions3d(originalPositions);
-  m_lastXData = xData;
-
-  // Now generate a plot with the data
-  float min = *std::min_element(yData.begin(), yData.end());
-  float max = *std::max_element(yData.begin(), yData.end());
-
-  QString xTitle = tr("Frame");
-  if (xMode >= 0) {
-    const auto& constraints = m_molecule->constraints();
-    if (xMode < static_cast<int>(constraints.size()))
-      xTitle = xAxisTitleForConstraint(constraints[static_cast<size_t>(xMode)]);
-  }
-  QString yTitle;
-
-  if (plotType == "rmsd") {
-    yTitle = tr("RMSD (Å)");
-  } else if (plotType == "energy" && m_molecule->hasData("energies")) {
-    QString targetUnit = m_targetUnitsCombo->currentText();
-    yTitle = tr("Relative Energy (%1)").arg(targetUnit);
-  } else if (plotType == "forces" && m_molecule->hasData("forces")) {
-    // TODO: Add units
-    yTitle = tr("Forces (N)");
-  } else if (plotType == "velocities" && m_molecule->hasData("velocities")) {
-    yTitle = tr("Velocities (m/s)");
-  }
+void PlotConformer::drawChart()
+{
+  if (!m_chartWidget)
+    return;
 
   m_chartWidget->clearPlots();
+
+  auto count =
+    m_molecule ? static_cast<int>(m_molecule->coordinate3dCount()) : 0;
+  if (m_frameLabel) {
+    if (count > 0)
+      m_frameLabel->setText(
+        tr("Conformer %1 of %2 — use ← and → to step through them")
+          .arg(m_currentFrame + 1)
+          .arg(count));
+    else
+      m_frameLabel->clear();
+  }
+
+  if (m_xData.empty() || m_yData.empty())
+    return;
+
+  float min = *std::min_element(m_yData.begin(), m_yData.end());
+  float max = *std::max_element(m_yData.begin(), m_yData.end());
+  // Pad the y axis so the extreme points are not clipped by the frame. A flat
+  // curve has no range to scale, so fall back to a fixed margin.
+  float pad = (max > min) ? 0.05f * (max - min) : 1.0f;
+
   m_chartWidget->setShowPoints(true);
   m_chartWidget->setLegendLocation(QtGui::ChartWidget::LegendLocation::None);
-  m_chartWidget->addPlot(xData, yData, QtGui::color4ub{ 255, 0, 0, 255 });
-  if (currentIndex >= 0 && currentIndex < static_cast<int>(xData.size()) &&
-      currentIndex < static_cast<int>(yData.size())) {
-    DataSeries highlightX{ xData[static_cast<size_t>(currentIndex)] };
-    DataSeries highlightY{ yData[static_cast<size_t>(currentIndex)] };
-    m_chartWidget->addPlot(highlightX, highlightY,
-                           QtGui::color4ub{ 0, 102, 204, 255 });
+  m_chartWidget->addPlot(m_xData, m_yData, QtGui::color4ub{ 255, 0, 0, 255 });
+
+  // Add a marker for the current frame
+  if (m_currentFrame >= 0 &&
+      m_currentFrame < static_cast<int>(m_xData.size())) {
+    DataSeries markerX = { m_xData[m_currentFrame] };
+    DataSeries markerY = { m_yData[m_currentFrame] };
+    m_chartWidget->addPlot(markerX, markerY,
+                           QtGui::color4ub{ 255, 165, 0, 255 });
   }
+
   // make sure to pad the axes slightly
-  m_chartWidget->setXAxisLimits(
-    -0.1, static_cast<float>(m_molecule->coordinate3dCount()) - 0.9);
-  m_chartWidget->setYAxisLimits(min, max * 1.1f);
-  if (xMode < 0) {
-    m_chartWidget->setXAxisLimits(
-      -0.1f, static_cast<float>(m_molecule->coordinate3dCount()) - 0.9f);
+  if (xAxisMode() < 0) {
+    m_chartWidget->setXAxisLimits(-0.1f, static_cast<float>(count) - 0.9f);
   } else {
-    const float xmin = *std::min_element(xData.begin(), xData.end());
-    const float xmax = *std::max_element(xData.begin(), xData.end());
-    const float pad = std::max(1e-3f, (xmax - xmin) * 0.02f);
-    m_chartWidget->setXAxisLimits(xmin - pad, xmax + pad);
+    // Scan coordinates have no fixed range, and a scan that barely moves
+    // still needs an axis wide enough to draw.
+    const float xMin = *std::min_element(m_xData.begin(), m_xData.end());
+    const float xMax = *std::max_element(m_xData.begin(), m_xData.end());
+    const float xPad = std::max(1e-3f, (xMax - xMin) * 0.02f);
+    m_chartWidget->setXAxisLimits(xMin - xPad, xMax + xPad);
   }
-  m_chartWidget->setXAxisTitle(xTitle);
-  m_chartWidget->setYAxisTitle(yTitle);
+  m_chartWidget->setYAxisLimits(min - pad, max + pad);
+  m_chartWidget->setXAxisTitle(m_xTitle);
+  m_chartWidget->setYAxisTitle(m_yTitle);
 }
 
 void PlotConformer::generateRmsdCurve(DataSeries& x, DataSeries& y)
@@ -550,32 +720,32 @@ void PlotConformer::generateRmsdCurve(DataSeries& x, DataSeries& y)
   if (!m_molecule)
     return;
 
-  const Array<Vector3> ref = m_molecule->coordinate3d(0);
-  const Array<Vector3> originalPositions = m_molecule->atomPositions3d();
-  const int xMode = (m_xAxisCombo ? m_xAxisCombo->currentData().toInt() : -1);
-  const auto& constraints = m_molecule->constraints();
+  if (m_molecule->coordinate3dCount() == 0)
+    return;
 
-  for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
-    const Array<Vector3> positions = m_molecule->coordinate3d(i);
-    double sum = 0;
-    for (size_t j = 0; j < positions.size(); ++j) {
-      sum += (positions[j][0] - ref[j][0]) * (positions[j][0] - ref[j][0]) +
-             (positions[j][1] - ref[j][1]) * (positions[j][1] - ref[j][1]) +
-             (positions[j][2] - ref[j][2]) * (positions[j][2] - ref[j][2]);
-    }
-    sum = sqrt(sum / m_molecule->coordinate3dCount());
+  // coordinate3d(i) returns a copy and does not change the displayed set, so
+  // this reads the whole trajectory without disturbing the active conformer.
+  Array<Vector3> ref = m_molecule->coordinate3d(0);
+  if (ref.empty())
+    return;
 
-    float xVal = static_cast<float>(i);
-    if (xMode >= 0 && xMode < static_cast<int>(constraints.size())) {
-      m_molecule->setCoordinate3d(i);
-      xVal = constraintValue(*m_molecule, constraints[static_cast<size_t>(xMode)]);
-    }
+  for (size_t i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+    Array<Vector3> positions = m_molecule->coordinate3d(i);
+    // Coordinate sets should all describe the same atoms, but compare only as
+    // far as both of them go rather than reading off the end of the reference.
+    size_t count = std::min(positions.size(), ref.size());
+    if (count == 0)
+      continue;
 
-    x.push_back(xVal);
-    y.push_back(sum);
+    double sum = 0.0;
+    for (size_t j = 0; j < count; ++j)
+      sum += (positions[j] - ref[j]).squaredNorm();
+
+    // RMSD is the root *mean* square deviation over the atoms, so normalize by
+    // the number of atoms compared -- not by the number of coordinate sets.
+    x.push_back(static_cast<float>(i));
+    y.push_back(static_cast<float>(std::sqrt(sum / count)));
   }
-
-  m_molecule->setAtomPositions3d(originalPositions);
 }
 
 void PlotConformer::generateEnergyCurve(DataSeries& x, DataSeries& y)
@@ -602,17 +772,7 @@ void PlotConformer::generateEnergyCurve(DataSeries& x, DataSeries& y)
     // Convert: first to kcal/mol, then to target units
     relativeE = relativeE * fromFactor * toFactor;
 
-    float xVal = static_cast<float>(entry); // default: frame
-    const int xMode = (m_xAxisCombo ? m_xAxisCombo->currentData().toInt() : -1);
-    const auto& constraints = m_molecule->constraints();
-    if (xMode >= 0 && xMode < static_cast<int>(constraints.size())) {
-      const Array<Vector3> originalPositions = m_molecule->atomPositions3d();
-      m_molecule->setCoordinate3d(entry);
-      xVal = constraintValue(*m_molecule, constraints[static_cast<size_t>(xMode)]);
-      m_molecule->setAtomPositions3d(originalPositions);
-    }
-
-    x.push_back(xVal);
+    x.push_back(static_cast<double>(entry));
     y.push_back(relativeE);
   }
 }

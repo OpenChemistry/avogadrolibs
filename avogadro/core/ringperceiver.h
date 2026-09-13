@@ -27,6 +27,13 @@ public:
   const Molecule* molecule() const;
 
   // ring perception
+
+  /**
+   * The smallest set of smallest rings, each as a list of atom indices in the
+   * order they are traversed. A ring is not defined below three atoms, so
+   * every entry holds at least three and the bond closing it joins the last
+   * atom back to the first.
+   */
   std::vector<std::vector<size_t>>& rings();
 
 private:

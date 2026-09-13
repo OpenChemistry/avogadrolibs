@@ -46,6 +46,7 @@ constexpr quint16 BINARY_VERSION = 1;
 
 constexpr quint16 FLAG_RESPONSE_ERROR = 0x8000;
 constexpr quint16 FLAG_REQUEST_GRADIENT = 0x0001;
+constexpr quint16 FLAG_BATCH_MODE = 0x0002;
 constexpr quint16 FLAG_REQUEST_ENERGY_AND_GRADIENT = 0x0004;
 constexpr quint16 FLAG_REQUEST_HESSIAN = 0x0008;
 
@@ -94,8 +95,8 @@ bool readFloatText(const char*& pos, const char* end, double& value)
 ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)),
     m_inputFormat(NotUsed), m_protocol(Protocol::TextV1), m_molecule(nullptr),
-    m_valid(true), m_gradients(false), m_hessians(false), m_ions(false),
-    m_radicals(false), m_unitCells(false)
+    m_valid(true), m_gradients(false), m_hessians(false), m_batch(false),
+    m_ions(false), m_radicals(false), m_unitCells(false)
 {
   m_elements.reset();
 }
@@ -130,6 +131,7 @@ void ScriptEnergy::readMetaData(const QVariantMap& metadata)
   QVariantMap support = metadata.value("support").toMap();
   m_gradients = support.value("gradients", false).toBool();
   m_hessians = support.value("hessians", false).toBool();
+  m_batch = support.value("batch", false).toBool();
   m_unitCells = support.value("unit-cell", false).toBool();
   m_ions = support.value("ions", false).toBool();
   m_radicals = support.value("radicals", false).toBool();
@@ -210,6 +212,7 @@ void ScriptEnergy::copyMetaDataFrom(const ScriptEnergy& other)
   m_protocol = other.m_protocol;
   m_gradients = other.m_gradients;
   m_hessians = other.m_hessians;
+  m_batch = other.m_batch;
   m_unitCells = other.m_unitCells;
   m_ions = other.m_ions;
   m_radicals = other.m_radicals;
@@ -427,12 +430,12 @@ bool ScriptEnergy::parseResponseBinary(const QByteArray& response,
   return readDoubles(payload, payloadEnd, energy, 1);
 }
 
-bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame)
+bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame,
+                                   int timeoutMs)
 {
   if (m_interpreter == nullptr)
     return false;
 
-  constexpr int timeoutMs = 5000;
   QElapsedTimer timer;
   timer.start();
 
@@ -509,6 +512,218 @@ bool ScriptEnergy::evaluateBinary(const Eigen::VectorXd& x,
     return false;
 
   return parseResponseBinary(response, requestFlags, energy, grad, hess);
+}
+
+QByteArray ScriptEnergy::writeBatchCoordinatesBinary(
+  const std::vector<Eigen::VectorXd>& coords, quint16 requestFlags) const
+{
+  if (coords.empty())
+    return QByteArray();
+
+  // All frames must share the same atom count and be non-empty multiples of 3.
+  const Eigen::Index size = coords.front().size();
+  if (size == 0 || (size % 3) != 0)
+    return QByteArray();
+  for (const auto& x : coords) {
+    if (x.size() != size)
+      return QByteArray();
+  }
+
+  const quint16 flags = requestFlags | FLAG_BATCH_MODE;
+  const quint32 atomCount = static_cast<quint32>(size / 3);
+  const quint32 batchSize = static_cast<quint32>(coords.size());
+  // payload = uint32 batchSize + batchSize * 3N doubles
+  const quint32 coordBytes = static_cast<quint32>(batchSize) *
+                             static_cast<quint32>(size) *
+                             static_cast<quint32>(sizeof(double));
+  const quint32 payloadBytes =
+    static_cast<quint32>(sizeof(quint32)) + coordBytes;
+
+  QByteArray input;
+  input.reserve(BINARY_HEADER_SIZE + static_cast<int>(payloadBytes));
+  input.append(BINARY_MAGIC, static_cast<int>(sizeof(BINARY_MAGIC)));
+
+  quint16 versionLE = qToLittleEndian(BINARY_VERSION);
+  quint16 flagsLE = qToLittleEndian(flags);
+  quint32 atomCountLE = qToLittleEndian(atomCount);
+  quint32 payloadBytesLE = qToLittleEndian(payloadBytes);
+
+  input.append(reinterpret_cast<const char*>(&versionLE), sizeof(versionLE));
+  input.append(reinterpret_cast<const char*>(&flagsLE), sizeof(flagsLE));
+  input.append(reinterpret_cast<const char*>(&atomCountLE),
+               sizeof(atomCountLE));
+  input.append(reinterpret_cast<const char*>(&payloadBytesLE),
+               sizeof(payloadBytesLE));
+
+  quint32 batchSizeLE = qToLittleEndian(batchSize);
+  input.append(reinterpret_cast<const char*>(&batchSizeLE),
+               sizeof(batchSizeLE));
+
+  for (const auto& x : coords) {
+    if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
+      input.append(reinterpret_cast<const char*>(x.data()),
+                   static_cast<int>(x.size() * sizeof(double)));
+    } else {
+      for (Eigen::Index i = 0; i < x.size(); ++i)
+        appendFloat64LE(input, x[i]);
+    }
+  }
+
+  return input;
+}
+
+bool ScriptEnergy::parseBatchResponseBinary(
+  const QByteArray& response, quint16 requestFlags, std::size_t expectedBatch,
+  std::vector<double>* energies, std::vector<Eigen::VectorXd>* grads) const
+{
+  if (response.size() < BINARY_HEADER_SIZE)
+    return false;
+
+  const char* raw = response.constData();
+  if (std::memcmp(raw, BINARY_MAGIC, sizeof(BINARY_MAGIC)) != 0)
+    return false;
+
+  const auto* header = reinterpret_cast<const uchar*>(raw);
+  const quint16 version = qFromLittleEndian<quint16>(header + 4);
+  const quint16 flags = qFromLittleEndian<quint16>(header + 6);
+  const quint32 atomCount = qFromLittleEndian<quint32>(header + 8);
+  const quint32 payloadBytes = qFromLittleEndian<quint32>(header + 12);
+  if (version != BINARY_VERSION)
+    return false;
+
+  if (response.size() < BINARY_HEADER_SIZE + static_cast<int>(payloadBytes))
+    return false;
+
+  const char* payload = raw + BINARY_HEADER_SIZE;
+  const char* payloadEnd = payload + payloadBytes;
+
+  if ((flags & FLAG_RESPONSE_ERROR) != 0) {
+    appendError(std::string(payload, payloadEnd), false);
+    return false;
+  }
+
+  if ((flags & FLAG_BATCH_MODE) == 0)
+    return false;
+
+  if (m_molecule != nullptr &&
+      atomCount != static_cast<quint32>(m_molecule->atomCount()))
+    return false;
+
+  // payload starts with uint32 batchSize
+  if (payloadBytes < sizeof(quint32))
+    return false;
+  const quint32 batchSize =
+    qFromLittleEndian<quint32>(reinterpret_cast<const uchar*>(payload));
+  if (batchSize != static_cast<quint32>(expectedBatch))
+    return false;
+
+  const char* data = payload + sizeof(quint32);
+  const Eigen::Index dataDoubles =
+    static_cast<Eigen::Index>(payloadEnd - data) /
+    static_cast<Eigen::Index>(sizeof(double));
+
+  const auto readDoubles = [](const char* src, const char* srcEnd, double* dest,
+                              Eigen::Index count) -> bool {
+    const auto byteCount = count * static_cast<Eigen::Index>(sizeof(double));
+    if (srcEnd - src < byteCount)
+      return false;
+    if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
+      std::memcpy(dest, src, byteCount);
+    } else {
+      for (Eigen::Index i = 0; i < count; ++i) {
+        if (!readFloat64LE(src + i * sizeof(double), srcEnd, dest[i]))
+          return false;
+      }
+    }
+    return true;
+  };
+
+  if ((requestFlags & FLAG_REQUEST_GRADIENT) != 0) {
+    if (grads == nullptr)
+      return false;
+    const Eigen::Index frameSize = static_cast<Eigen::Index>(atomCount) * 3;
+    if (dataDoubles != frameSize * static_cast<Eigen::Index>(batchSize))
+      return false;
+    grads->assign(batchSize, Eigen::VectorXd::Zero(frameSize));
+    const char* cursor = data;
+    for (quint32 b = 0; b < batchSize; ++b) {
+      if (!readDoubles(cursor, payloadEnd, (*grads)[b].data(), frameSize))
+        return false;
+      cursor += frameSize * sizeof(double);
+    }
+    return true;
+  }
+
+  // energy-only batch response
+  if (energies == nullptr)
+    return false;
+  if (dataDoubles != static_cast<Eigen::Index>(batchSize))
+    return false;
+  energies->assign(batchSize, 0.0);
+  return readDoubles(data, payloadEnd, energies->data(),
+                     static_cast<Eigen::Index>(batchSize));
+}
+
+bool ScriptEnergy::evaluateBatchBinary(
+  const std::vector<Eigen::VectorXd>& coords, quint16 requestFlags,
+  std::vector<double>* energies, std::vector<Eigen::VectorXd>* grads)
+{
+  const QByteArray input = writeBatchCoordinatesBinary(coords, requestFlags);
+  if (input.isEmpty()) {
+    appendError("Invalid coordinates for binary batch request.");
+    return false;
+  }
+
+  // Scale the timeout with batch size: a base budget plus per-frame allowance
+  // so a large ML batch doesn't trip the default single-frame timeout.
+  const int timeoutMs = 5000 + static_cast<int>(coords.size()) * 250;
+
+  QByteArray response;
+  if (!readBinaryFrame(input, response, timeoutMs))
+    return false;
+
+  return parseBatchResponseBinary(response, requestFlags, coords.size(),
+                                  energies, grads);
+}
+
+std::vector<Real> ScriptEnergy::valueBatch(
+  const std::vector<Eigen::VectorXd>& coords)
+{
+  if (!supportsBatch() || m_molecule == nullptr || m_interpreter == nullptr)
+    return EnergyCalculator::valueBatch(coords);
+
+  std::vector<double> energies;
+  if (!evaluateBatchBinary(coords, 0, &energies, nullptr)) {
+    // fall back to the per-frame loop on any protocol failure
+    return EnergyCalculator::valueBatch(coords);
+  }
+
+  // add constraint energies per frame
+  for (std::size_t i = 0; i < energies.size() && i < coords.size(); ++i)
+    energies[i] += constraintEnergies(coords[i]);
+
+  return energies;
+}
+
+void ScriptEnergy::gradientBatch(const std::vector<Eigen::VectorXd>& coords,
+                                 std::vector<Eigen::VectorXd>& grads)
+{
+  if (!supportsBatch() || !m_gradients || m_molecule == nullptr ||
+      m_interpreter == nullptr) {
+    EnergyCalculator::gradientBatch(coords, grads);
+    return;
+  }
+
+  if (!evaluateBatchBinary(coords, FLAG_REQUEST_GRADIENT, nullptr, &grads)) {
+    EnergyCalculator::gradientBatch(coords, grads);
+    return;
+  }
+
+  // clean and apply constraints per frame, matching the single-shot path
+  for (std::size_t i = 0; i < grads.size() && i < coords.size(); ++i) {
+    cleanGradients(grads[i]);
+    constraintGradients(coords[i], grads[i]);
+  }
 }
 
 bool ScriptEnergy::buildBootstrapInput(QByteArray& input) const
@@ -788,6 +1003,7 @@ void ScriptEnergy::resetMetaData()
   m_valid = false;
   m_gradients = false;
   m_hessians = false;
+  m_batch = false;
   m_ions = false;
   m_radicals = false;
   m_unitCells = false;

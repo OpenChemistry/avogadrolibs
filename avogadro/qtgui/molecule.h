@@ -79,13 +79,36 @@ public:
     Residues = 128,
     /** Indicates a new crystal structure (triggers space group fill). */
     NewCrystal = 256,
+    /**
+     * Indicates the active conformer / coordinate set changed (e.g.,
+     * setCoordinate3d(int)) or the set of conformers was modified. Switching
+     * the active conformer is view-state: pair with Moved (not Modified) so
+     * derived data (vibrations, orbitals, meshes) survives; changing the
+     * number of coordinate sets should pair with Modified.
+     */
+    Conformer = 512,
     /** Operations that can affect the above types. */
     Added = 1024,
     Removed = 2048,
     Modified = 4096,
-    Moved = 8192
+    Moved = 8192,
+    /**
+     * Indicates atom indices were permuted (see RWMolecule::reorderAtoms).
+     * Same atoms, same bonds, same counts -- only the numbering changed, so
+     * listeners that detect structural change by comparing counts will miss
+     * it unless they check for this flag.
+     */
+    Reordered = 16384
   };
   Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
+
+  /**
+   * @return True if @p changes causes emitChanged() to discard the cubes,
+   * meshes, basis set and vibration data derived from this molecule.
+   * Consumers that cache raw pointers to any of that must refresh them in
+   * step with this, rather than re-deriving the rule from the flags.
+   */
+  static bool invalidatesDerivedData(unsigned int changes);
 
   /**
    * Add an atom with @p atomicNumber to the molecule.

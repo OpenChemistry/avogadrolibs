@@ -64,10 +64,8 @@ inline unsigned int lookupValency(const RWAtom& atom,
 
 inline float hydrogenBondDistance(unsigned char otherAtomicNumber)
 {
-  static double hCovRadius(Avogadro::Core::Elements::radiusCovalent(1));
-  double covRadius =
-    Avogadro::Core::Elements::radiusCovalent(otherAtomicNumber);
-  return static_cast<float>(hCovRadius + covRadius);
+  return static_cast<float>(Avogadro::Core::AtomUtilities::idealBondLength(
+    Avogadro::Core::Hydrogen, otherAtomicNumber));
 }
 
 } // namespace

@@ -28,6 +28,21 @@ namespace Avogadro::QtGui {
 using QtGui::GenericHighlighter;
 using QtGui::PythonScript;
 
+// Serialize a 4x4 matrix as nested rows, matching what CjsonFormat writes for
+// a Variant::Matrix, so a script sees one shape whether the CJSON came from a
+// file or from the live camera.
+static QJsonArray matrixToJson(const Matrix4f& matrix)
+{
+  QJsonArray rows;
+  for (int i = 0; i < 4; ++i) {
+    QJsonArray row;
+    for (int j = 0; j < 4; ++j)
+      row.append(static_cast<double>(matrix(i, j)));
+    rows.append(row);
+  }
+  return rows;
+}
+
 // Strip any leading non-JSON output (e.g. deprecation warnings printed to
 // stdout by third-party libraries). Find the first '{' or '['.
 static void stripLeadingNonJson(QByteArray& data)
@@ -179,6 +194,27 @@ void InterfaceScript::reset()
   m_highlightStyles.clear();
 }
 
+void InterfaceScript::setCamera(const Matrix4f& modelView,
+                                const Matrix4f& projection)
+{
+  m_modelView = modelView;
+  m_projection = projection;
+  m_hasCamera = true;
+}
+
+void InterfaceScript::insertCamera(QJsonObject& cjson) const
+{
+  if (!m_hasCamera)
+    return;
+
+  // Overwrite rather than merge: the molecule may carry matrices from the file
+  // it was read from, and the live camera is what the user is looking at.
+  QJsonObject properties = cjson.value(QStringLiteral("properties")).toObject();
+  properties.insert(QStringLiteral("modelView"), matrixToJson(m_modelView));
+  properties.insert(QStringLiteral("projection"), matrixToJson(m_projection));
+  cjson.insert(QStringLiteral("properties"), properties);
+}
+
 bool InterfaceScript::runCommand(const QJsonObject& options_,
                                  Core::Molecule* mol)
 {
@@ -192,19 +228,54 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
 
   // Add the molecule file to the options
   QJsonObject allOptions(options_);
-  if (!insertMolecule(allOptions, *mol))
+  if (!insertMolecule(allOptions, *mol)) {
+    // No process will be started, so commandFinished() will never run to drain
+    // m_errors. Report here or the failure is invisible.
+    qWarning() << "InterfaceScript::runCommand: could not supply the molecule "
+                  "to the script:"
+               << m_errors.join("\n");
     return false;
+  }
 
+  // UniqueConnection: the connections are only torn down on the failure path
+  // below, so running the same instance again would otherwise stack duplicates
+  // and deliver every signal once per previous run.
   connect(m_interpreter, &PythonScript::finished, this,
-          &::Avogadro::QtGui::InterfaceScript::commandFinished);
+          &::Avogadro::QtGui::InterfaceScript::commandFinished,
+          Qt::UniqueConnection);
+  connect(m_interpreter, &PythonScript::asyncProgress, this,
+          &::Avogadro::QtGui::InterfaceScript::handleProgress,
+          Qt::UniqueConnection);
   // Package-mode scripts take no command-line flag; the identifier is already
   // the positional argument and JSON arrives on stdin (mirrors
   // InputGenerator::generateInput() which passes QStringList()).
   QStringList runArgs;
   if (!m_interpreter->isPackageMode())
     runArgs << QStringLiteral("--run-command");
-  m_interpreter->asyncExecute(runArgs, QJsonDocument(allOptions).toJson());
+  // Scan stdout for progress envelopes, and keep stderr on its own channel so
+  // library chatter (pixi, warnings, progress bars) cannot corrupt the result.
+  m_interpreter->setProgressScanning(true);
+  if (!m_interpreter->asyncExecute(runArgs, QJsonDocument(allOptions).toJson(),
+                                   /* mergedChannels = */ false)) {
+    disconnect(m_interpreter, &PythonScript::finished, this,
+               &::Avogadro::QtGui::InterfaceScript::commandFinished);
+    disconnect(m_interpreter, &PythonScript::asyncProgress, this,
+               &::Avogadro::QtGui::InterfaceScript::handleProgress);
+    m_errors << m_interpreter->errorList();
+    return false;
+  }
   return true;
+}
+
+void InterfaceScript::handleProgress(const QJsonObject& payload)
+{
+  const QString message =
+    payload.value(QStringLiteral("message")).toString(QString());
+  // -1 marks "not supplied" - the bar keeps whatever state it had.
+  const int value = payload.value(QStringLiteral("value")).toInt(-1);
+  const int maximum = payload.value(QStringLiteral("maximum")).toInt(-1);
+
+  emit progress(message, value, maximum);
 }
 
 void InterfaceScript::commandFinished()
@@ -228,11 +299,16 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
 
   QJsonDocument doc;
   if (!parseJson(json, doc)) {
+    // The script ran with separate channels, so a python traceback never
+    // reached stdout. Surface it here or the failure has no explanation.
+    const QByteArray stderrOutput = m_interpreter->asyncStandardError();
+    if (!stderrOutput.isEmpty())
+      m_errors << tr("Script standard error:\n%1")
+                    .arg(QString::fromUtf8(stderrOutput));
     return false;
   }
 
   // Update cache
-  bool result = true;
   if (doc.isObject()) {
     QJsonObject obj = doc.object();
 
@@ -255,49 +331,65 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       m_moleculeExtension = obj["moleculeFormat"].toString();
     }
 
-    Io::FileFormatManager& formats = Io::FileFormatManager::instance();
-    QScopedPointer<Io::FileFormat> format(
-      formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
-
-    if (format.isNull()) {
-      m_errors << tr("Error reading molecule representation: "
-                     "Unrecognized file format: %1")
-                    .arg(m_moleculeExtension);
-      return false;
-    }
-
-    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
-    QtGui::Molecule newMol(guiMol->parent());
+    // Pull out the molecule the script returned, if it returned one at all.
+    // Commands that only report a message (e.g. exporting an image) must leave
+    // the current molecule untouched rather than replacing it with an empty
+    // one.
+    QString moleculeString;
     if (m_moleculeExtension == "cjson") {
-      // convert the "cjson" field to a string
       QJsonObject cjsonObj = obj["cjson"].toObject();
-      QJsonDocument doc2(cjsonObj);
-      QString strCJSON(doc2.toJson(QJsonDocument::Compact));
-      if (!strCJSON.isEmpty()) {
-        result = format->readString(strCJSON.toStdString(), newMol);
+      if (!cjsonObj.isEmpty()) {
+        QJsonDocument doc2(cjsonObj);
+        moleculeString = QString(doc2.toJson(QJsonDocument::Compact));
       }
     } else if (obj.contains(m_moleculeExtension) &&
                obj[m_moleculeExtension].isString()) {
-      QString strFile = obj[m_moleculeExtension].toString();
-      result = format->readString(strFile.toStdString(), newMol);
+      moleculeString = obj[m_moleculeExtension].toString();
     }
 
-    // check if the script wants us to perceive bonds first
-    if (obj["bond"].toBool()) {
-      newMol.perceiveBondsSimple();
-      newMol.perceiveBondOrders();
-    }
+    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
 
-    // how do we handle this result?
-    if (obj["readProperties"].toBool()) {
-      guiMol->readProperties(newMol);
-      guiMol->emitChanged(Molecule::Properties | Molecule::Added);
-    } else if (obj["append"].toBool()) {
-      guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
-    } else { // replace the whole molecule
-      Molecule::MoleculeChanges changes = (Molecule::Atoms | Molecule::Bonds |
-                                           Molecule::Added | Molecule::Removed);
-      guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+    if (!moleculeString.isEmpty()) {
+      Io::FileFormatManager& formats = Io::FileFormatManager::instance();
+      QScopedPointer<Io::FileFormat> format(
+        formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
+
+      if (format.isNull()) {
+        m_errors << tr("Error reading molecule representation: "
+                       "Unrecognized file format: %1")
+                      .arg(m_moleculeExtension);
+        return false;
+      }
+
+      QtGui::Molecule newMol(guiMol->parent());
+      if (!format->readString(moleculeString.toStdString(), newMol)) {
+        // A failed parse can still leave atoms behind (a truncated xyz file
+        // reads several before it gives up), so this has to stop before
+        // anything touches guiMol: replacing the user's molecule with a
+        // fragment of what the script meant to return loses their structure.
+        m_errors << tr("Error reading molecule representation: %1")
+                      .arg(QString::fromStdString(format->error()));
+        return false;
+      }
+
+      // check if the script wants us to perceive bonds first
+      if (obj["bond"].toBool()) {
+        newMol.perceiveBondsSimple();
+        newMol.perceiveBondOrders();
+      }
+
+      // how do we handle this result?
+      if (obj["readProperties"].toBool()) {
+        guiMol->readProperties(newMol);
+        guiMol->emitChanged(Molecule::Properties | Molecule::Added);
+      } else if (obj["append"].toBool()) {
+        guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
+      } else { // replace the whole molecule
+        Molecule::MoleculeChanges changes =
+          (Molecule::Atoms | Molecule::Bonds | Molecule::Added |
+           Molecule::Removed);
+        guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+      }
     }
 
     // select some atoms
@@ -351,7 +443,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       }
     }
   }
-  return result;
+  return true;
 }
 
 bool InterfaceScript::generateInput(const QJsonObject& options_,
@@ -611,9 +703,12 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   // We will *always* write the CJSON representation
   // Embed CJSON as actual JSON, rather than a string,
   // .. so we'll have to re-parse it
-  cjsonFormat->writeString(str, mol);
+  // Use a separate string: reusing the one above would leave a tail of the
+  // other format behind whenever it is the longer of the two.
+  std::string cjsonStr;
+  cjsonFormat->writeString(cjsonStr, mol);
   QJsonParseError error;
-  QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
+  QJsonDocument doc = QJsonDocument::fromJson(cjsonStr.c_str(), &error);
   if (error.error != QJsonParseError::NoError) {
     m_errors << tr("Error generating cjson object: Parse error at offset %1: "
                    "%2\nRaw JSON:\n\n%3")
@@ -630,7 +725,9 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
     return false;
   }
 
-  json.insert("cjson", doc.object());
+  QJsonObject cjson = doc.object();
+  insertCamera(cjson);
+  json.insert("cjson", cjson);
 
   return true;
 }

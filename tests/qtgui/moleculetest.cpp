@@ -13,7 +13,7 @@
 #include <avogadro/qtgui/persistentatom.h>
 #include <avogadro/qtgui/persistentbond.h>
 
-#include "utils.h"
+#include "../core/utils.h"
 
 using Avogadro::Index;
 using Avogadro::Core::Array;

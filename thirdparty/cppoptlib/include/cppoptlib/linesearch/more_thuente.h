@@ -29,6 +29,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <utility>
+
+#include "../function_base.h"
 
 namespace cppoptlib::solver::linesearch {
 
@@ -48,38 +51,115 @@ class MoreThuente {
    * @return step-width
    */
 
-  static ScalarType Search(const VectorType &x,
-                           const VectorType &search_direction,
-                           const FunctionType &function,
-                           const ScalarType alpha_init = 1.0) {
+  /**
+   * @brief Run the More-Thuente search and return only the step width.
+   *
+   * Convenience overload that evaluates `function(x, &g)` internally.  Prefer
+   * the overload below when the caller already knows `(f, g)` at `x` and
+   * wants to recover `(x_out, f_out, g_out)` at the accepted step, because
+   * that path avoids a total of two redundant full function evaluations per
+   * outer iteration.
+   */
+  // Avogadro patch: stpmax_arg lets callers cap |step| (trust radius), gtol_arg
+  // lets callers tune the strong Wolfe curvature tolerance. Defaults preserve
+  // upstream cppoptlib behavior. See avogadro/calc/energyoptimizer.h for the
+  // public knobs (LbfgsParameters::maxStep, LbfgsParameters::wolfeGtol).
+  static ScalarType Search(const VectorType& x,
+                           const VectorType& search_direction,
+                           const FunctionType& function,
+                           const ScalarType alpha_init = ScalarType(1),
+                           const ScalarType stpmax_arg = ScalarType(1e15),
+                           const ScalarType gtol_arg = ScalarType(0.9)) {
     ScalarType alpha = alpha_init;
     VectorType g;
-    const ScalarType v = function(x, &g);
+    ScalarType f = function(x, &g);
 
     VectorType s = search_direction.eval();
     VectorType xx = x;
 
-    cvsrch(function, &xx, v, &g, &alpha, s);
+    cvsrch(function, &xx, &f, &g, &alpha, s, stpmax_arg, gtol_arg);
 
     return alpha;
   }
 
-  static int cvsrch(const FunctionType &function, VectorType *x, ScalarType f,
-                    VectorType *g, ScalarType *stp, const VectorType &s) {
+  /**
+   * @brief Run the More-Thuente search given a cached `(f0, g0)` at `x`.
+   *
+   * The caller supplies the objective value `f0` and gradient `g0` it has
+   * already computed at `x`; the line search reuses them to avoid one
+   * redundant evaluation at the starting point.  On return `x_out`, `f_out`
+   * and `g_out` carry the state at the accepted step -- all three values are
+   * captured from the final internal line-search evaluation, so no extra
+   * call to `function` is issued.
+   */
+  static ScalarType Search(const VectorType& x, ScalarType f0,
+                           const VectorType& g0,
+                           const VectorType& search_direction,
+                           const FunctionType& function, ScalarType alpha_init,
+                           VectorType* x_out, ScalarType* f_out,
+                           VectorType* g_out,
+                           const ScalarType stpmax_arg = ScalarType(1e15),
+                           const ScalarType gtol_arg = ScalarType(0.9)) {
+    ScalarType alpha = alpha_init;
+    ScalarType f = f0;
+    VectorType g = g0;
+    VectorType s = search_direction.eval();
+    VectorType xx = x;
+
+    cvsrch(function, &xx, &f, &g, &alpha, s, stpmax_arg, gtol_arg);
+
+    if (x_out) *x_out = std::move(xx);
+    if (f_out) *f_out = f;
+    if (g_out) *g_out = std::move(g);
+    return alpha;
+  }
+
+  /**
+   * @brief Run the More-Thuente search from a fully-evaluated starting state
+   * and return a fully-evaluated accepted state.
+   *
+   * This is the preferred overload for solvers that keep `FunctionState`
+   * populated along the trajectory.  The input state provides `x`, `value`,
+   * and `gradient` (no starting-point re-evaluation); the returned state
+   * carries the final `(x, value, gradient)` captured from the line
+   * search's last internal evaluation (no post-search re-evaluation).
+   * `alpha_out`, if non-null, receives the accepted step width.
+   */
+  template <class State>
+  static State Search(const State& start, const VectorType& search_direction,
+                      const FunctionType& function,
+                      const ScalarType alpha_init = ScalarType(1),
+                      ScalarType* alpha_out = nullptr,
+                      const ScalarType stpmax_arg = ScalarType(1e15),
+                      const ScalarType gtol_arg = ScalarType(0.9)) {
+    ScalarType alpha = alpha_init;
+    ScalarType f = start.value;
+    VectorType g = start.gradient;
+    VectorType s = search_direction.eval();
+    VectorType xx = start.x;
+
+    cvsrch(function, &xx, &f, &g, &alpha, s, stpmax_arg, gtol_arg);
+
+    if (alpha_out) *alpha_out = alpha;
+    return State(std::move(xx), f, std::move(g));
+  }
+
+  static int cvsrch(const FunctionType& function, VectorType* x, ScalarType* f,
+                    VectorType* g, ScalarType* stp, const VectorType& s,
+                    const ScalarType stpmax = ScalarType(1e15),
+                    const ScalarType gtol = ScalarType(0.9)) {
     // we rewrite this from MIN-LAPACK and some MATLAB code
     int info = 0;
     int infoc = 1;
-    constexpr ScalarType xtol = 1e-15;
-    constexpr ScalarType ftol = 1e-4;
-    constexpr ScalarType gtol = 1e-2;
-    constexpr ScalarType stpmin = 1e-15;
-    constexpr ScalarType stpmax = 1e15;
-    constexpr ScalarType xtrapf = 4;
+    constexpr ScalarType xtol = ScalarType(1e-15);
+    constexpr ScalarType ftol = ScalarType(1e-4);
+    constexpr ScalarType stpmin = ScalarType(1e-15);
+    constexpr ScalarType xtrapf = ScalarType(4);
     constexpr int maxfev = 20;
     int nfev = 0;
 
     ScalarType dginit = g->dot(s);
-    if (dginit >= 0.0) {
+    if (dginit >= ScalarType(0)) {
       // There is no descent direction.
       // TODO(patwie): Handle this case.
       return -1;
@@ -88,16 +168,16 @@ class MoreThuente {
     bool brackt = false;
     bool stage1 = true;
 
-    ScalarType finit = f;
+    ScalarType finit = *f;
     ScalarType dgtest = ftol * dginit;
     ScalarType width = stpmax - stpmin;
-    ScalarType width1 = 2 * width;
+    ScalarType width1 = ScalarType(2) * width;
     VectorType wa = x->eval();
 
-    ScalarType stx = 0.0;
+    ScalarType stx = ScalarType(0);
     ScalarType fx = finit;
     ScalarType dgx = dginit;
-    ScalarType sty = 0.0;
+    ScalarType sty = ScalarType(0);
     ScalarType fy = finit;
     ScalarType dgy = dginit;
 
@@ -126,7 +206,7 @@ class MoreThuente {
 
       // Test new point.
       *x = wa + *stp * s;
-      f = function(*x, g);
+      *f = function(*x, g);
       nfev++;
       ScalarType dg = g->dot(s);
       ScalarType ftest1 = finit + *stp * dgtest;
@@ -135,25 +215,25 @@ class MoreThuente {
       if ((brackt & ((*stp <= stmin) | (*stp >= stmax))) | (infoc == 0))
         info = 6;
 
-      if ((*stp == stpmax) & (f <= ftest1) & (dg <= dgtest)) info = 5;
+      if ((*stp == stpmax) & (*f <= ftest1) & (dg <= dgtest)) info = 5;
 
-      if ((*stp == stpmin) & ((f > ftest1) | (dg >= dgtest))) info = 4;
+      if ((*stp == stpmin) & ((*f > ftest1) | (dg >= dgtest))) info = 4;
 
       if (nfev >= maxfev) info = 3;
 
       if (brackt & (stmax - stmin <= xtol * stmax)) info = 2;
 
-      if ((f <= ftest1) & (fabs(dg) <= gtol * (-dginit))) info = 1;
+      if ((*f <= ftest1) & (std::abs(dg) <= gtol * (-dginit))) info = 1;
 
       // Terminate when convergence reached.
       if (info != 0) return -1;
 
-      if (stage1 & (f <= ftest1) &
+      if (stage1 & (*f <= ftest1) &
           (dg >= std::min<ScalarType>(ftol, gtol) * dginit))
         stage1 = false;
 
-      if (stage1 & (f <= fx) & (f > ftest1)) {
-        ScalarType fm = f - *stp * dgtest;
+      if (stage1 & (*f <= fx) & (*f > ftest1)) {
+        ScalarType fm = *f - *stp * dgtest;
         ScalarType fxm = fx - stx * dgtest;
         ScalarType fym = fy - sty * dgtest;
         ScalarType dgm = dg - dgtest;
@@ -169,16 +249,16 @@ class MoreThuente {
         dgy = dgym + dgtest;
       } else {
         // This is ugly and some variables should be moved to the class scope.
-        cstep(stx, fx, dgx, sty, fy, dgy, *stp, f, dg, brackt, stmin, stmax,
+        cstep(stx, fx, dgx, sty, fy, dgy, *stp, *f, dg, brackt, stmin, stmax,
               infoc);
       }
 
       if (brackt) {
-        if (fabs(sty - stx) >= 0.66 * width1) {
-          *stp = stx + 0.5 * (sty - stx);
+        if (std::abs(sty - stx) >= ScalarType(0.66) * width1) {
+          *stp = stx + ScalarType(0.5) * (sty - stx);
         }
         width1 = width;
-        width = fabs(sty - stx);
+        width = std::abs(sty - stx);
       }
     }
 
@@ -188,23 +268,23 @@ class MoreThuente {
   // TODO(patwie): cpplint prefers pointers here, but this would make the code
   // unreadable. As these are all changing values a configuration structure
   // would be helpful.
-  static int cstep(ScalarType &stx, ScalarType &fx, ScalarType &dx,   // NOLINT
-                   ScalarType &sty,                                   // NOLINT
-                   ScalarType &fy, ScalarType &dy, ScalarType &stp,   // NOLINT
-                   ScalarType &fp,                                    // NOLINT
-                   ScalarType &dp, bool &brackt, ScalarType &stpmin,  // NOLINT
-                   ScalarType &stpmax, int &info) {                   // NOLINT
+  static int cstep(ScalarType& stx, ScalarType& fx, ScalarType& dx,   // NOLINT
+                   ScalarType& sty,                                   // NOLINT
+                   ScalarType& fy, ScalarType& dy, ScalarType& stp,   // NOLINT
+                   ScalarType& fp,                                    // NOLINT
+                   ScalarType& dp, bool& brackt, ScalarType& stpmin,  // NOLINT
+                   ScalarType& stpmax, int& info) {                   // NOLINT
     info = 0;
     bool bound = false;
 
     // Check the input parameters for errors.
     if ((brackt && ((stp <= std::min<ScalarType>(stx, sty)) ||
                     (stp >= std::max<ScalarType>(stx, sty)))) ||
-        (dx * (stp - stx) >= 0.0) || (stpmax < stpmin)) {
+        (dx * (stp - stx) >= ScalarType(0)) || (stpmax < stpmin)) {
       return -1;
     }
 
-    ScalarType sgnd = dp * (dx / fabs(dx));
+    ScalarType sgnd = dp * (dx / std::abs(dx));
 
     ScalarType stpf = 0;
     ScalarType stpc = 0;
@@ -213,28 +293,29 @@ class MoreThuente {
     if (fp > fx) {
       info = 1;
       bound = true;
-      ScalarType theta = 3. * (fx - fp) / (stp - stx) + dx + dp;
+      ScalarType theta = ScalarType(3) * (fx - fp) / (stp - stx) + dx + dp;
       ScalarType s = max_abs(theta, dx, dp);
       ScalarType gamma =
-          s * sqrt((theta / s) * (theta / s) - (dx / s) * (dp / s));
+          s * std::sqrt((theta / s) * (theta / s) - (dx / s) * (dp / s));
       if (stp < stx) gamma = -gamma;
       ScalarType p = (gamma - dx) + theta;
       ScalarType q = ((gamma - dx) + gamma) + dp;
       ScalarType r = p / q;
       stpc = stx + r * (stp - stx);
-      stpq = stx + ((dx / ((fx - fp) / (stp - stx) + dx)) / 2.) * (stp - stx);
-      if (fabs(stpc - stx) < fabs(stpq - stx))
+      stpq = stx + ((dx / ((fx - fp) / (stp - stx) + dx)) / ScalarType(2)) *
+                       (stp - stx);
+      if (std::abs(stpc - stx) < std::abs(stpq - stx))
         stpf = stpc;
       else
         stpf = stpc + (stpq - stpc) / 2;
       brackt = true;
-    } else if (sgnd < 0.0) {
+    } else if (sgnd < ScalarType(0)) {
       info = 2;
       bound = false;
       ScalarType theta = 3 * (fx - fp) / (stp - stx) + dx + dp;
       ScalarType s = max_abs(theta, dx, dp);
       ScalarType gamma =
-          s * sqrt((theta / s) * (theta / s) - (dx / s) * (dp / s));
+          s * std::sqrt((theta / s) * (theta / s) - (dx / s) * (dp / s));
       if (stp > stx) gamma = -gamma;
 
       ScalarType p = (gamma - dp) + theta;
@@ -242,25 +323,25 @@ class MoreThuente {
       ScalarType r = p / q;
       stpc = stp + r * (stx - stp);
       stpq = stp + (dp / (dp - dx)) * (stx - stp);
-      if (fabs(stpc - stp) > fabs(stpq - stp))
+      if (std::abs(stpc - stp) > std::abs(stpq - stp))
         stpf = stpc;
       else
         stpf = stpq;
       brackt = true;
-    } else if (fabs(dp) < fabs(dx)) {
+    } else if (std::abs(dp) < std::abs(dx)) {
       info = 3;
       bound = true;
       ScalarType theta = 3 * (fx - fp) / (stp - stx) + dx + dp;
       ScalarType s = max_abs(theta, dx, dp);
       ScalarType gamma =
-          s * sqrt(std::max<ScalarType>(
+          s * std::sqrt(std::max<ScalarType>(
                   static_cast<ScalarType>(0.),
                   (theta / s) * (theta / s) - (dx / s) * (dp / s)));
       if (stp > stx) gamma = -gamma;
       ScalarType p = (gamma - dp) + theta;
       ScalarType q = (gamma + (dx - dp)) + gamma;
       ScalarType r = p / q;
-      if ((r < 0.0) & (gamma != 0.0)) {
+      if ((r < ScalarType(0)) & (gamma != ScalarType(0))) {
         stpc = stp + r * (stx - stp);
       } else if (stp > stx) {
         stpc = stpmax;
@@ -269,13 +350,13 @@ class MoreThuente {
       }
       stpq = stp + (dp / (dp - dx)) * (stx - stp);
       if (brackt) {
-        if (fabs(stp - stpc) < fabs(stp - stpq)) {
+        if (std::abs(stp - stpc) < std::abs(stp - stpq)) {
           stpf = stpc;
         } else {
           stpf = stpq;
         }
       } else {
-        if (fabs(stp - stpc) > fabs(stp - stpq)) {
+        if (std::abs(stp - stpc) > std::abs(stp - stpq)) {
           stpf = stpc;
         } else {
           stpf = stpq;
@@ -288,7 +369,7 @@ class MoreThuente {
         ScalarType theta = 3 * (fp - fy) / (sty - stp) + dy + dp;
         ScalarType s = max_abs(theta, dy, dp);
         ScalarType gamma =
-            s * sqrt((theta / s) * (theta / s) - (dy / s) * (dp / s));
+            s * std::sqrt((theta / s) * (theta / s) - (dy / s) * (dp / s));
         if (stp > sty) gamma = -gamma;
 
         ScalarType p = (gamma - dp) + theta;
@@ -308,7 +389,7 @@ class MoreThuente {
       fy = fp;
       dy = dp;
     } else {
-      if (sgnd < 0.0) {
+      if (sgnd < ScalarType(0)) {
         sty = stx;
         fy = fx;
         dy = dx;

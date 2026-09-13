@@ -8,6 +8,7 @@
 
 #include "avogadrocalcexport.h"
 
+#include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/variantmap.h>
@@ -20,7 +21,8 @@ class Molecule;
 
 namespace Calc {
 
-constexpr Real KCAL_TO_KJ = 4.184;
+// Alias the shared constant in avogadrocore.h so the value lives in one place.
+constexpr Real KCAL_TO_KJ = Avogadro::KCAL_TO_KJ;
 
 class AVOGADROCALC_EXPORT EnergyCalculator
 {
@@ -116,6 +118,41 @@ public:
    */
   virtual Real evaluate(const Eigen::VectorXd& x,
                         Eigen::VectorXd* grad = nullptr);
+
+  /**
+   * @brief Indicate if this method can evaluate many coordinate sets in a
+   * single call (e.g. an external script that batches frames).
+   *
+   * When false (the default), valueBatch()/gradientBatch() simply loop over
+   * the supplied coordinate sets, calling value()/gradient() once each.
+   */
+  virtual bool supportsBatch() const { return false; }
+
+  /**
+   * Evaluate the energy for several coordinate sets (e.g. conformers or
+   * trajectory frames).
+   *
+   * The default implementation loops over @p coords calling value(). Derived
+   * classes with a true batch transport should override this.
+   *
+   * @param coords A vector of coordinate vectors, each of length 3 * atomCount.
+   * @return One energy per coordinate set, in the same order as @p coords.
+   */
+  virtual std::vector<Real> valueBatch(
+    const std::vector<Eigen::VectorXd>& coords);
+
+  /**
+   * Evaluate the gradients for several coordinate sets.
+   *
+   * The default implementation loops over @p coords calling gradient().
+   * Derived classes with a true batch transport should override this.
+   *
+   * @param coords A vector of coordinate vectors, each of length 3 * atomCount.
+   * @param grads Filled with one gradient vector per coordinate set, in the
+   * same order as @p coords (resized as needed).
+   */
+  virtual void gradientBatch(const std::vector<Eigen::VectorXd>& coords,
+                             std::vector<Eigen::VectorXd>& grads);
 
   /**
    * Calculate the Hessian matrix for this method, defaulting to numerical

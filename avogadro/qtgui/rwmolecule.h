@@ -77,6 +77,25 @@ public:
   const Molecule& molecule() const { return m_molecule; }
 
   /**
+   * Forwarders so the Core::AtomTemplate/BondTemplate proxies can reach the
+   * underlying property maps when parameterised on RWMolecule. MSVC checks
+   * template-member-function bodies eagerly, so these must exist even if no
+   * caller currently sets matrix/dense properties via an RWAtom/RWBond.
+   * @{
+   */
+  Core::PropertyMap& atomProperties() { return m_molecule.atomProperties(); }
+  const Core::PropertyMap& atomProperties() const
+  {
+    return m_molecule.atomProperties();
+  }
+  Core::PropertyMap& bondProperties() { return m_molecule.bondProperties(); }
+  const Core::PropertyMap& bondProperties() const
+  {
+    return m_molecule.bondProperties();
+  }
+  /** @} */
+
+  /**
    * Add a new atom to the molecule.
    * @param atomicNumber The atomic number of the new atom.
    * @param usingPositions Whether or not to use positions for this atom.
@@ -144,6 +163,27 @@ public:
    * @note This also removes all bonds.
    */
   void clearAtoms();
+
+  /**
+   * Renumber the atoms in this molecule.
+   *
+   * Everything holding an atom index follows its atom: positions, labels,
+   * charges, colors, selection, layers, bonds, residue membership,
+   * constraints, normal mode displacements, the atom each basis function is
+   * centred on, coordinate sets and unique ids. No atom or bond is added or
+   * removed, so this is a relabelling of the same structure, and results
+   * computed for it -- a wavefunction, a set of vibrations -- stay valid.
+   *
+   * @param newOrder A permutation of [0, atomCount()): newOrder[i] is the
+   * index the atom currently at that position will be moved *from*, so that
+   * after the call atom @a i is the atom that was at newOrder[i].
+   * @return True on success. False, changing nothing, if @a newOrder is not
+   * a permutation of exactly the molecule's atoms.
+   *
+   * @note Atom indices are how selections, scripts and other tables refer to
+   * atoms, so this invalidates any index held elsewhere.
+   */
+  bool reorderAtoms(const Core::Array<Index>& newOrder);
 
   /**
    * Adjust hydrogens for an atom.
@@ -591,6 +631,19 @@ public:
    * @param c The final number of units along the C vector (at least 1).
    */
   void buildSupercell(unsigned int a, unsigned int b, unsigned int c);
+
+  /**
+   * Build a supercell spanning a fractional range along each lattice vector,
+   * e.g. -0.5 to 0.5, or 0.0 to 1.5. Changes are emitted.
+   * @param rangeMin The lower fractional limit along a, b and c.
+   * @param rangeMax The upper fractional limit along a, b and c.
+   * @param options If CrystalTools::PerceivePeriodicBonds is set, the copies
+   *                are bonded to each other across their shared boundaries.
+   * @sa Core::CrystalTools::buildSupercell
+   */
+  void buildSupercell(
+    const Vector3& rangeMin, const Vector3& rangeMax,
+    Core::CrystalTools::Options options = Core::CrystalTools::None);
 
   /**
    * Perform a Niggli reduction on the cell. Changes are emitted.

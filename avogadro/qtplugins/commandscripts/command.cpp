@@ -15,6 +15,8 @@
 #include <avogadro/qtgui/pythonscript.h>
 #include <avogadro/qtgui/utilities.h>
 
+#include <avogadro/rendering/camera.h>
+
 #include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
@@ -138,10 +140,33 @@ void Command::setMolecule(QtGui::Molecule* mol)
   if (m_molecule == mol)
     return;
 
+  if (m_molecule)
+    disconnect(m_molecule, &QtGui::Molecule::changed, this,
+               &Command::moleculeChanged);
+
   m_molecule = mol;
+
+  if (m_molecule)
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &Command::moleculeChanged);
 
   foreach (InterfaceWidget* dlg, m_dialogs.values())
     dlg->setMolecule(mol);
+}
+
+void Command::moleculeChanged(unsigned int change)
+{
+  // While a script is in flight, any structural mutation of the launch-time
+  // molecule invalidates the impending write-back: atom indices, bond ordering
+  // and the unit cell could all differ from what the script started with.
+  // Selection and Layer toggles are pure UI state and safe to ignore.
+  if (m_currentScript == nullptr || m_runningMolecule.isNull())
+    return;
+
+  const unsigned int kIgnore =
+    QtGui::Molecule::Selection | QtGui::Molecule::Layers;
+  if ((change & ~kIgnore) != 0)
+    m_runningMolecule.clear();
 }
 
 bool Command::readMolecule(QtGui::Molecule& mol)
@@ -163,6 +188,37 @@ bool Command::readMolecule(QtGui::Molecule& mol)
 
 void Command::refreshScripts() {}
 
+namespace {
+
+/**
+ * Assemble a package feature's options from its pyproject.toml metadata.
+ *
+ * Package commands never call --print-options: everything is declared up
+ * front, either inline or in the user-options file the metadata names
+ * (mirrors QuantumInput::menuActivated()).
+ */
+QJsonObject packageOptions(const QAction* action, const QString& packageDir,
+                           const QString& command, const QString& identifier,
+                           const QString& userOptionsValue)
+{
+  QJsonObject options;
+  const QString inputFormat = action->property("packageInputFormat").toString();
+  if (!inputFormat.isEmpty())
+    options.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
+
+  // The definitions must be wrapped under "userOptions" so that
+  // JsonWidget::buildOptionGui() recognises them and builds the dialog.
+  if (!userOptionsValue.isEmpty()) {
+    const QJsonObject userOptions = QtGui::PackageManager::resolveUserOptions(
+      userOptionsValue, packageDir, command, identifier);
+    if (!userOptions.isEmpty())
+      options.insert(QStringLiteral("userOptions"), userOptions);
+  }
+  return options;
+}
+
+} // namespace
+
 void Command::menuActivated()
 {
   auto* theSender = qobject_cast<QAction*>(sender());
@@ -170,6 +226,17 @@ void Command::menuActivated()
     return;
 
   QWidget* theParent = qobject_cast<QWidget*>(parent());
+
+  // Refuse to launch a new run while a previous script is still in flight,
+  // otherwise its results would land on whichever molecule is current when
+  // it eventually finishes.
+  if (m_currentScript) {
+    QMessageBox::information(
+      theParent, tr("Command In Progress"),
+      tr("A command script is already running. Please wait for it to finish "
+         "before starting another."));
+    return;
+  }
 
   if (m_currentDialog) {
     delete m_currentDialog->layout();
@@ -185,48 +252,55 @@ void Command::menuActivated()
     QString pkgDir = theSender->property("packageDir").toString();
     QString pkgCmd = theSender->property("packageCommand").toString();
     QString pkgId = theSender->property("packageIdentifier").toString();
+    // The pyproject.toml [avogadro.X] table may declare a separate
+    // user-options file (JSON or TOML), or the literal "dynamic" to run
+    // the script with --user-options.
+    QString userOptionsRel =
+      theSender->property("packageUserOptions").toString();
     key = QtGui::PackageManager::packageFeatureKey(pkgDir, pkgCmd, pkgId);
 
     widget = m_dialogs.value(key, nullptr);
-    if (!widget) {
+    const bool isNewWidget = (widget == nullptr);
+    if (isNewWidget) {
       widget = new InterfaceWidget(QString(), theParent);
       widget->interfaceScript().interpreter().setPackageInfo(
         pkgDir, pkgCmd, pkgId,
         theSender->property("packageDisplayName").toString());
-
-      // Build options from pyproject.toml metadata; never call --print-options
-      // for package-based commands (mirrors QuantumInput::menuActivated()).
-      QJsonObject opts;
-      QString inputFormat =
-        theSender->property("packageInputFormat").toString();
-      if (!inputFormat.isEmpty())
-        opts.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
-
-      // The pyproject.toml [avogadro.X] table may declare a separate
-      // user-options file (JSON or TOML), or the literal "dynamic" to run
-      // the script with --user-options.  Its keys are the user-facing
-      // option definitions and must be wrapped under "userOptions" so that
-      // JsonWidget::buildOptionGui() recognises them and builds the dialog.
-      QString userOptionsRel =
-        theSender->property("packageUserOptions").toString();
-      if (!userOptionsRel.isEmpty()) {
-        QJsonObject userOpts = QtGui::PackageManager::resolveUserOptions(
-          userOptionsRel, pkgDir, pkgCmd, pkgId);
-        if (!userOpts.isEmpty())
-          opts.insert(QStringLiteral("userOptions"), userOpts);
-      }
-
-      // Pre-populate the cached options so reloadOptions() does not invoke
-      // the script with --print-options.
-      widget->interfaceScript().setOptionsJson(opts);
-      widget->reloadOptions();
+      // Let the dialog come back the way the user last left it.
+      widget->setSettingsKey(
+        QtGui::PackageManager::featureSettingsKey(pkgDir, pkgCmd, pkgId));
       m_dialogs.insert(key, widget);
+    }
+
+    // A script that builds its options dynamically expects to be asked again
+    // every time the user opens the command: a list of jobs on a server, the
+    // files in a directory, anything that changes between invocations. Serving
+    // the cached form would pin the first answer for the rest of the session,
+    // which makes the whole point of "dynamic" moot, so ask again and rebuild
+    // the form in place.
+    if (isNewWidget ||
+        QtGui::PackageManager::isDynamicUserOptions(userOptionsRel)) {
+      const QJsonObject opts =
+        packageOptions(theSender, pkgDir, pkgCmd, pkgId, userOptionsRel);
+
+      // A dynamic script that fails - no network, a timeout, malformed JSON -
+      // resolves to nothing. Pushing that empty result into a widget that
+      // already has a working form would blank it, and isEmpty() below would
+      // then run the command with no options at all rather than showing the
+      // dialog. Keep the last good form instead and let the user try again.
+      if (isNewWidget || opts.contains(QStringLiteral("userOptions"))) {
+        // Pre-populate the cached options so reloadOptions() does not invoke
+        // the script with --print-options.
+        widget->interfaceScript().setOptionsJson(opts);
+        widget->reloadOptions();
+      }
     }
   } else {
     key = theSender->data().toString();
     widget = m_dialogs.value(key, nullptr);
     if (!widget) {
       widget = new InterfaceWidget(key, theParent);
+      widget->setSettingsKey(QFileInfo(key).fileName());
       m_dialogs.insert(key, widget);
     }
   }
@@ -254,22 +328,35 @@ void Command::menuActivated()
   m_currentDialog->exec();
 }
 
+void Command::setCamera(Rendering::Camera* camera)
+{
+  // MainWindow hands out the renderer's own camera, so this pointer keeps
+  // tracking the view as the user rotates it.
+  m_camera = camera;
+}
+
 void Command::run()
 {
   if (m_currentDialog)
     m_currentDialog->accept();
 
-  if (m_progress)
-    m_progress->deleteLater();
+  closeProgressDialog();
 
   if (m_currentScript) {
     disconnect(m_currentScript, SIGNAL(finished()), this,
                SLOT(processFinished()));
+    // Kill the child process so an abandoned xtb run does not keep going.
+    m_currentScript->interpreter().asyncTerminate();
     m_currentScript->deleteLater();
+    m_currentScript = nullptr;
+    m_runningMolecule.clear();
   }
 
   if (m_currentInterface) {
     QJsonObject collected = m_currentInterface->collectOptions();
+    // Only on OK: a cancelled dialog must not change what comes back next
+    // time, and run() is reached only once the user has accepted.
+    m_currentInterface->saveOptionValues();
     const auto& iface = m_currentInterface->interfaceScript();
 
     // Create a new InterfaceScript with the same configuration
@@ -290,15 +377,107 @@ void Command::run()
       options = collected;
     }
     connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
+    connect(m_currentScript, &QtGui::InterfaceScript::progress, this,
+            &Command::updateProgress);
 
-    // no cancel button - just an indication we're waiting...
+    // Starts indeterminate; a script that reports progress switches it to a
+    // determinate bar. See InterfaceScript for the script-side protocol.
     QString title = tr("Processing %1").arg(iface.displayName());
-    m_progress = new QProgressDialog(title, QString(), 0, 0,
+    m_progress = new QProgressDialog(title, tr("Cancel"), 0, 0,
                                      qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
+    // Don't let a script that reports its final step and then keeps working
+    // (writing files, etc.) make the dialog vanish early.
+    m_progress->setAutoClose(false);
+    m_progress->setAutoReset(false);
+    connect(m_progress, &QProgressDialog::canceled, this,
+            &Command::cancelCommand);
 
-    m_currentScript->runCommand(options, m_molecule);
+    // Give the script the view the user is actually looking at. The molecule
+    // only carries a camera if it was read from, or written to, a file, so
+    // without this a script would see a stale orientation or none at all.
+    if (m_camera != nullptr) {
+      m_currentScript->setCamera(m_camera->modelView().matrix(),
+                                 m_camera->projection().matrix());
+    }
+
+    // Snapshot so processFinished() can detect if the molecule was closed
+    // or swapped before the async script returned.
+    m_runningMolecule = m_molecule;
+    if (!m_currentScript->runCommand(options, m_molecule)) {
+      // The script never started, so finished() will never arrive and
+      // processFinished() would never tear down the progress dialog. Clean up
+      // here and show why, rather than leaving a dialog that cannot be closed.
+      commandFailed(m_currentScript->errorList());
+    }
   }
+}
+
+void Command::updateProgress(const QString& message, int value, int maximum)
+{
+  if (m_progress == nullptr)
+    return;
+
+  if (maximum > 0 && m_progress->maximum() != maximum)
+    m_progress->setRange(0, maximum);
+
+  // Only meaningful once a script has given the bar a determinate range.
+  if (value >= 0 && m_progress->maximum() > 0)
+    m_progress->setValue(value);
+
+  if (!message.isEmpty())
+    m_progress->setLabelText(message);
+}
+
+void Command::closeProgressDialog()
+{
+  if (m_progress == nullptr)
+    return;
+
+  // Clear the member and drop the connection before closing: close() emits
+  // canceled() even for a dialog that was never shown, and cancelCommand()
+  // would then delete the dialog (and the running script) out from under
+  // whoever called us.
+  QProgressDialog* dialog = m_progress;
+  m_progress = nullptr;
+  disconnect(dialog, &QProgressDialog::canceled, this, &Command::cancelCommand);
+  dialog->close();
+  dialog->deleteLater();
+}
+
+void Command::cancelCommand()
+{
+  closeProgressDialog();
+
+  if (m_currentScript == nullptr)
+    return;
+
+  // Kill the child process and drop whatever partial output it produced.
+  disconnect(m_currentScript, SIGNAL(finished()), this,
+             SLOT(processFinished()));
+  m_currentScript->interpreter().asyncTerminate();
+  m_currentScript->deleteLater();
+  m_currentScript = nullptr;
+  m_runningMolecule.clear();
+}
+
+void Command::commandFailed(const QStringList& errors)
+{
+  closeProgressDialog();
+
+  QString details = errors.join(QStringLiteral("\n"));
+  if (details.isEmpty())
+    details = tr("The script could not be started.");
+  qWarning() << "Command: script failed to start:" << details;
+
+  if (m_currentScript) {
+    m_currentScript->deleteLater();
+    m_currentScript = nullptr;
+  }
+  m_runningMolecule.clear();
+
+  QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+                       tr("Error Running Script"), details);
 }
 
 void Command::processFinished()
@@ -306,18 +485,36 @@ void Command::processFinished()
   if (m_currentScript == nullptr)
     return;
 
-  if (m_progress) {
-    m_progress->close();
-    m_progress->deleteLater();
-    m_progress = nullptr;
+  // Take the script and its molecule locally before doing anything that can
+  // run the event loop (closing the dialog, writing results back): a
+  // re-entrant call must see this command as already finished rather than act
+  // on a script that is being torn down here.
+  QtGui::InterfaceScript* script = m_currentScript;
+  m_currentScript = nullptr;
+  QtGui::Molecule* target = m_runningMolecule.data();
+  m_runningMolecule.clear();
+
+  closeProgressDialog();
+
+  // Drop results if the launch-time molecule was destroyed, or if the user
+  // has since swapped to a different molecule (its atom count/ordering may
+  // no longer match what the script is about to write back).
+  if (target != nullptr && target == m_molecule) {
+    script->processCommand(target);
+
+    // collect errors
+    if (script->hasErrors()) {
+      qWarning() << script->errorList();
+    }
+  } else if (target == nullptr) {
+    qWarning() << "Command: discarding script results; molecule was closed "
+                  "or edited while the command was running.";
+  } else {
+    qWarning() << "Command: discarding script results; active molecule "
+                  "changed while the command was running.";
   }
 
-  m_currentScript->processCommand(m_molecule);
-
-  // collect errors
-  if (m_currentScript->hasErrors()) {
-    qWarning() << m_currentScript->errorList();
-  }
+  script->deleteLater();
 }
 
 void Command::configurePython()

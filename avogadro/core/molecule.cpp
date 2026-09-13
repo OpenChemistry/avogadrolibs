@@ -36,18 +36,21 @@ Molecule::Molecule()
 
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_partialCharges(other.m_partialCharges),
-    m_spectra(other.m_spectra), m_customElementMap(other.m_customElementMap),
-    m_elements(other.m_elements), m_positions2d(other.m_positions2d),
-    m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
-    m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
-    m_coordinates3d(other.m_coordinates3d), m_velocities(other.m_velocities),
-    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
+    m_spectra(other.m_spectra), m_atomProperties(other.m_atomProperties),
+    m_bondProperties(other.m_bondProperties),
+    m_residueProperties(other.m_residueProperties),
+    m_conformerProperties(other.m_conformerProperties),
+    m_customElementMap(other.m_customElementMap), m_elements(other.m_elements),
+    m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
+    m_atomLabels(other.m_atomLabels), m_bondLabels(other.m_bondLabels),
+    m_residueLabels(other.m_residueLabels),
+    m_coordinates3d(other.m_coordinates3d),
+    m_coordinate3dIndex(other.m_coordinate3dIndex),
+    m_velocities(other.m_velocities), m_timesteps(other.m_timesteps),
+    m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
-    m_vibrationFrequencies(other.m_vibrationFrequencies),
-    m_vibrationIRIntensities(other.m_vibrationIRIntensities),
-    m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
-    m_vibrationLx(other.m_vibrationLx), m_selectedAtoms(other.m_selectedAtoms),
+    m_vibrations(other.m_vibrations), m_selectedAtoms(other.m_selectedAtoms),
     m_meshes(), m_cubes(),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
@@ -98,6 +101,12 @@ void Molecule::readProperties(const Molecule& other)
   // copy spectra
   m_spectra = other.m_spectra;
 
+  // merge custom property maps
+  m_atomProperties = other.m_atomProperties;
+  m_bondProperties = other.m_bondProperties;
+  m_residueProperties = other.m_residueProperties;
+  m_conformerProperties = other.m_conformerProperties;
+
   // copy orbital information
   SlaterSet* slaterSet = dynamic_cast<SlaterSet*>(other.m_basisSet);
   if (slaterSet != nullptr) {
@@ -111,12 +120,8 @@ void Molecule::readProperties(const Molecule& other)
   }
 
   // copy over spectra information
-  if (other.m_vibrationFrequencies.size() > 0) {
-    m_vibrationFrequencies = other.m_vibrationFrequencies;
-    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
-    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
-    m_vibrationLx = other.m_vibrationLx;
-  }
+  if (!other.m_vibrations.empty())
+    m_vibrations = other.m_vibrations;
 
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
@@ -134,20 +139,24 @@ void Molecule::readProperties(const Molecule& other)
 Molecule::Molecule(Molecule&& other) noexcept
   : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
     m_spectra(other.m_spectra),
+    m_atomProperties(std::move(other.m_atomProperties)),
+    m_bondProperties(std::move(other.m_bondProperties)),
+    m_residueProperties(std::move(other.m_residueProperties)),
+    m_conformerProperties(std::move(other.m_conformerProperties)),
     m_customElementMap(std::move(other.m_customElementMap)),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
     m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
-    m_coordinates3d(other.m_coordinates3d), m_velocities(other.m_velocities),
-    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
+    m_coordinates3d(other.m_coordinates3d),
+    m_coordinate3dIndex(std::exchange(other.m_coordinate3dIndex, 0)),
+    m_velocities(other.m_velocities), m_timesteps(other.m_timesteps),
+    m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
-    m_colors(other.m_colors),
-    m_vibrationFrequencies(other.m_vibrationFrequencies),
-    m_vibrationIRIntensities(other.m_vibrationIRIntensities),
-    m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
-    m_vibrationLx(other.m_vibrationLx),
+    m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
+    m_vibrations(std::move(other.m_vibrations)),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
+    m_activeCubeIndex(std::exchange(other.m_activeCubeIndex, 0)),
     m_basisSet(std::exchange(other.m_basisSet, nullptr)),
     m_unitCell(std::exchange(other.m_unitCell, nullptr)),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
@@ -172,6 +181,10 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_data = other.m_data;
     m_partialCharges = other.m_partialCharges;
     m_spectra = other.m_spectra;
+    m_atomProperties = other.m_atomProperties;
+    m_bondProperties = other.m_bondProperties;
+    m_residueProperties = other.m_residueProperties;
+    m_conformerProperties = other.m_conformerProperties;
     m_customElementMap = other.m_customElementMap;
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
@@ -180,16 +193,15 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondLabels = other.m_bondLabels;
     m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
+    m_coordinate3dIndex = other.m_coordinate3dIndex;
     m_velocities = other.m_velocities;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
     m_isotopes = other.m_isotopes;
-    m_colors = other.m_colors,
-    m_vibrationFrequencies = other.m_vibrationFrequencies;
-    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
-    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
-    m_vibrationLx = other.m_vibrationLx;
+    m_forceVectors = other.m_forceVectors;
+    m_colors = other.m_colors;
+    m_vibrations = other.m_vibrations;
     m_selectedAtoms = other.m_selectedAtoms;
     m_residues = other.m_residues;
     m_graph = other.m_graph;
@@ -240,6 +252,10 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_data = other.m_data;
     m_partialCharges = std::move(other.m_partialCharges);
     m_spectra = other.m_spectra;
+    m_atomProperties = std::move(other.m_atomProperties);
+    m_bondProperties = std::move(other.m_bondProperties);
+    m_residueProperties = std::move(other.m_residueProperties);
+    m_conformerProperties = std::move(other.m_conformerProperties);
     m_customElementMap = std::move(other.m_customElementMap);
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
@@ -248,16 +264,15 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondLabels = other.m_bondLabels;
     m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
+    m_coordinate3dIndex = other.m_coordinate3dIndex;
     m_velocities = other.m_velocities;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
     m_formalCharges = other.m_formalCharges;
     m_isotopes = other.m_isotopes;
+    m_forceVectors = other.m_forceVectors;
     m_colors = other.m_colors;
-    m_vibrationFrequencies = other.m_vibrationFrequencies;
-    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
-    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
-    m_vibrationLx = other.m_vibrationLx;
+    m_vibrations = std::move(other.m_vibrations);
     m_selectedAtoms = std::move(other.m_selectedAtoms);
     m_residues = other.m_residues;
     m_graph = other.m_graph;
@@ -337,6 +352,46 @@ std::set<std::string> Molecule::partialChargeTypes() const
   for (auto& it : m_partialCharges)
     types.insert(it.first);
   return types;
+}
+
+PropertyMap& Molecule::atomProperties()
+{
+  return m_atomProperties;
+}
+
+const PropertyMap& Molecule::atomProperties() const
+{
+  return m_atomProperties;
+}
+
+PropertyMap& Molecule::bondProperties()
+{
+  return m_bondProperties;
+}
+
+const PropertyMap& Molecule::bondProperties() const
+{
+  return m_bondProperties;
+}
+
+PropertyMap& Molecule::residueProperties()
+{
+  return m_residueProperties;
+}
+
+const PropertyMap& Molecule::residueProperties() const
+{
+  return m_residueProperties;
+}
+
+PropertyMap& Molecule::conformerProperties()
+{
+  return m_conformerProperties;
+}
+
+const PropertyMap& Molecule::conformerProperties() const
+{
+  return m_conformerProperties;
 }
 
 std::set<std::string> Molecule::spectraTypes() const
@@ -601,7 +656,10 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
     m_elements.set(element_count - 1); // custom element
 
   m_layers.addAtomToActiveLayer(atomCount() - 1);
-  m_partialCharges.clear();
+  // The calculated results are per-atom, so a new atom invalidates them just
+  // as a removed atom does (see removeAtom()).
+  clearCalculatedResults();
+  m_atomProperties.addEntry();
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
 
@@ -613,6 +671,137 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
   return addAtom(number); // Use virtual dispatch
 }
 
+namespace {
+
+// Every member touched below is indexed by atom, kept in step with
+// m_atomicNumbers and m_graph. Molecule::swapAtom(), Molecule::removeAtom(),
+// and Molecule::clearAtoms() must each handle every atom-indexed member: a
+// member that is added to the class but missed in one of the three is a
+// real bug (e.g. a label silently ending up on the wrong atom after a
+// removal). The helpers below let each member cost one line per function,
+// so the three function bodies can be written as parallel lists and a
+// member missing from one of them is visible by inspection. When a new
+// atom-indexed member is added to Molecule, add it to all three.
+//
+// "Handle" is not always "reindex". swapAtom() reindexes everything, since
+// swapping two indices relabels the same structure. removeAtom() changes the
+// structure, so anything computed *from* the structure -- forces, velocities,
+// normal modes, partial charges -- is dropped there instead; see the comment
+// in removeAtom(). Deciding which of the two a new member is, is the part
+// that needs thought.
+//
+// A member does not have to be atom-indexed to hold an atom index, and those
+// are the ones this list is apt to miss. m_residues is residue-indexed but
+// the Atom proxies in its name maps store atom indices; m_constraints names
+// up to four atoms per constraint; and m_basisSet records the atom each basis
+// function is centred on. All three need reindexing all the same, and
+// swapAtom() handles them explicitly at its end.
+//
+// One is still unhandled, and needs a decision rather than a mechanical
+// remap: m_residues in removeAtom(). Dropping a hydrogen from a residue is
+// just an erase, but dropping a backbone atom arguably invalidates the
+// residue altogether, and that is a chemistry question.
+
+// Plain Array<T>, one entry per atom.
+template <typename T>
+void swapAtomEntry(Array<T>& values, Index a, Index b, Index max)
+{
+  using std::swap;
+  if (values.size() > max)
+    swap(values[a], values[b]);
+}
+
+template <typename T>
+void removeAtomEntry(Array<T>& values, Index index, Index atomCount)
+{
+  if (values.size() == atomCount)
+    values.swapAndPop(index);
+}
+
+// Nested Array<Array<T>>: the outer index is a conformer/trajectory frame
+// or a normal mode, the inner index is one entry per atom. Frames may
+// legitimately be empty or a different length than atomCount() (e.g. not
+// yet populated), so each frame is guarded individually rather than
+// assuming they all match.
+template <typename T>
+void swapAtomEntryFrames(Array<Array<T>>& frames, Index a, Index b, Index max)
+{
+  using std::swap;
+  for (auto& frame : frames) {
+    if (frame.size() > max)
+      swap(frame[a], frame[b]);
+  }
+}
+
+template <typename T>
+void removeAtomEntryFrames(Array<Array<T>>& frames, Index index,
+                           Index atomCount)
+{
+  for (auto& frame : frames) {
+    if (frame.size() == atomCount)
+      frame.swapAndPop(index);
+  }
+}
+
+// std::vector<bool>, one entry per atom. std::swap() on the vector<bool>
+// proxy reference is a well-known trap, so swap the two values explicitly.
+void swapAtomEntry(std::vector<bool>& values, Index a, Index b, Index max)
+{
+  if (values.size() > max) {
+    bool temp = values[a];
+    values[a] = values[b];
+    values[b] = temp;
+  }
+}
+
+// Eigen::VectorXd storing 3 entries (x, y, z) per atom, as used by
+// m_frozenAtomMask.
+void swapAtomMaskEntry(Eigen::VectorXd& values, Index a, Index b, Index max)
+{
+  auto ea = static_cast<Eigen::Index>(a);
+  auto eb = static_cast<Eigen::Index>(b);
+  if (values.rows() >= static_cast<Eigen::Index>(3 * (max + 1))) {
+    for (Eigen::Index i = 0; i < 3; ++i)
+      std::swap(values[3 * ea + i], values[3 * eb + i]);
+  }
+}
+
+void removeAtomMaskEntry(Eigen::VectorXd& values, Index index, Index atomCount)
+{
+  if (values.rows() == static_cast<Eigen::Index>(3 * atomCount)) {
+    auto eIndex = static_cast<Eigen::Index>(index);
+    Eigen::Index last = values.rows() - 3;
+    for (Eigen::Index i = 0; i < 3; ++i)
+      values[3 * eIndex + i] = values[last + i];
+    values.conservativeResize(values.rows() - 3);
+  }
+}
+
+// Normal mode displacements, keyed by conformer. Each conformer holds one
+// Array<Vector3> per mode, and those inner arrays are indexed by atom.
+void swapAtomEntryVibrations(std::map<size_t, Molecule::VibrationData>& vibs,
+                             Index a, Index b, Index max)
+{
+  for (auto& entry : vibs)
+    swapAtomEntryFrames(entry.second.lx, a, b, max);
+}
+
+// std::map<std::string, MatrixX>: one per-atom charge column per model.
+// removeAtom() deliberately clears this map instead of reindexing it, since
+// removing an atom invalidates any cached partial charges anyway.
+void swapAtomEntry(std::map<std::string, MatrixX>& models, Index a, Index b,
+                   Index max)
+{
+  using std::swap;
+  for (auto& model : models) {
+    if (static_cast<Index>(model.second.size()) > max)
+      swap(model.second(static_cast<Eigen::Index>(a), 0),
+           model.second(static_cast<Eigen::Index>(b), 0));
+  }
+}
+
+} // namespace
+
 void Molecule::swapBond(Index a, Index b)
 {
   // Allow Argument Dependent Lookup for swap
@@ -620,43 +809,97 @@ void Molecule::swapBond(Index a, Index b)
 
   m_graph.swapEdgeIndices(a, b);
   swap(m_bondOrders[a], m_bondOrders[b]);
+  m_bondProperties.swapEntries(a, b, bondCount());
 }
+
 void Molecule::swapAtom(Index a, Index b)
 {
+  Index max = a > b ? a : b;
+
+  // Atom-indexed members -- see the comment above the helpers in the
+  // anonymous namespace at the top of this file. Keep this list parallel
+  // with removeAtom() and clearAtoms().
+  swapAtomEntry(m_positions2d, a, b, max);
+  swapAtomEntry(m_positions3d, a, b, max);
+  swapAtomEntry(m_atomLabels, a, b, max);
+  swapAtomEntry(m_hybridizations, a, b, max);
+  swapAtomEntry(m_formalCharges, a, b, max);
+  swapAtomEntry(m_isotopes, a, b, max);
+  swapAtomEntry(m_forceVectors, a, b, max);
+  swapAtomEntry(m_colors, a, b, max);
+  swapAtomEntry(m_selectedAtoms, a, b, max);
+  swapAtomEntryFrames(m_coordinates3d, a, b, max);
+  swapAtomEntryFrames(m_velocities, a, b, max);
+  swapAtomEntryVibrations(m_vibrations, a, b, max);
+  swapAtomMaskEntry(m_frozenAtomMask, a, b, max);
+  swapAtomEntry(m_partialCharges, a, b, max);
+
   // Allow Argument Dependent Lookup for swap
   using std::swap;
-
-  Index max = a > b ? a : b;
-  if (m_positions2d.size() > max)
-    swap(m_positions2d[a], m_positions2d[b]);
-  if (m_positions3d.size() > max)
-    swap(m_positions3d[a], m_positions3d[b]);
-  if (m_hybridizations.size() > max)
-    swap(m_hybridizations[a], m_hybridizations[b]);
-  if (m_formalCharges.size() > max)
-    swap(m_formalCharges[a], m_formalCharges[b]);
-  if (m_colors.size() > max)
-    swap(m_colors[a], m_colors[b]);
-
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
   m_graph.swapVertexIndices(a, b);
   m_layers.swapLayer(a, b);
+  m_atomProperties.swapEntries(a, b, atomCount());
+
+  // Residues are not an atom-indexed member and so are reached by none of the
+  // helpers above: the array is residue-indexed, and it is the Atom proxies
+  // inside each residue's name map that carry an atom index. Left alone, a
+  // residue's atom names go on pointing at indices that now hold different
+  // atoms -- the residue silently adopts its neighbours.
+  for (auto& residue : m_residues) {
+    for (auto& entry : residue.atomNameMap()) {
+      const Index index = entry.second.index();
+      if (index == a)
+        entry.second = AtomType(entry.second.molecule(), b);
+      else if (index == b)
+        entry.second = AtomType(entry.second.molecule(), a);
+    }
+  }
+
+  // Constraints are not atom-indexed either, but each names up to four atoms
+  // by index. Unused references are MaxIndex, which never matches a real
+  // atom, so they are left alone. Constraint::set() re-infers a cached type
+  // that was not set explicitly, and that inference only asks which indices
+  // are MaxIndex -- something a swap cannot change.
+  auto reindex = [a, b](Index index) {
+    if (index == a)
+      return b;
+    if (index == b)
+      return a;
+    return index;
+  };
+  for (auto& constraint : m_constraints) {
+    constraint.set(reindex(constraint.aIndex()), reindex(constraint.bIndex()),
+                   reindex(constraint.cIndex()), reindex(constraint.dIndex()),
+                   constraint.value());
+  }
+
+  // A basis set records which atom each basis function is centred on. Only
+  // those recorded indices move: the basis functions keep their order, so
+  // molecular orbital coefficients, which are indexed by basis function,
+  // remain valid.
+  if (m_basisSet != nullptr)
+    m_basisSet->swapAtomIndices(a, b);
 }
 
 bool Molecule::removeAtom(Index index)
 {
   if (index >= atomCount())
     return false;
-  if (m_positions2d.size() == atomCount())
-    m_positions2d.swapAndPop(index);
-  if (m_positions3d.size() == atomCount())
-    m_positions3d.swapAndPop(index);
-  if (m_hybridizations.size() == atomCount())
-    m_hybridizations.swapAndPop(index);
-  if (m_formalCharges.size() == atomCount())
-    m_formalCharges.swapAndPop(index);
-  if (m_colors.size() == atomCount())
-    m_colors.swapAndPop(index);
+
+  // Atom-indexed members -- see the comment above the helpers in the
+  // anonymous namespace at the top of this file. Keep this list parallel
+  // with swapAtom() and clearAtoms(). These must all run before
+  // m_atomicNumbers (and therefore atomCount()) is updated below.
+  removeAtomEntry(m_positions2d, index, atomCount());
+  removeAtomEntry(m_positions3d, index, atomCount());
+  removeAtomEntry(m_atomLabels, index, atomCount());
+  removeAtomEntry(m_hybridizations, index, atomCount());
+  removeAtomEntry(m_formalCharges, index, atomCount());
+  removeAtomEntry(m_isotopes, index, atomCount());
+  removeAtomEntry(m_colors, index, atomCount());
+  removeAtomEntryFrames(m_coordinates3d, index, atomCount());
+  removeAtomMaskEntry(m_frozenAtomMask, index, atomCount());
 
   if (m_selectedAtoms.size() == atomCount()) {
     // swap and pop on std::vector<bool>
@@ -666,7 +909,15 @@ bool Molecule::removeAtom(Index index)
     m_selectedAtoms.pop_back();
   }
 
-  m_partialCharges.clear();
+  // Losing an atom makes this a different molecule, so anything calculated
+  // from the old one goes rather than being reindexed. Contrast the members
+  // above, which are either the structure itself or user state about it
+  // (labels, colours, selection, frozen atoms) and do follow their atoms.
+  //
+  // swapAtom() reindexes instead, and is right to: swapping two indices
+  // relabels the same structure rather than changing it.
+  clearCalculatedResults();
+  m_atomProperties.removeEntry(index, atomCount());
   removeBonds(index);
 
   // before we remove, check if there's any other atom of this element
@@ -700,18 +951,36 @@ bool Molecule::removeAtom(const AtomType& atom_)
 
 void Molecule::clearAtoms()
 {
+  // Atom-indexed members -- see the comment above the helpers in the
+  // anonymous namespace at the top of this file. Keep this list parallel
+  // with swapAtom() and removeAtom().
   m_positions2d.clear();
   m_positions3d.clear();
   m_atomLabels.clear();
   m_hybridizations.clear();
   m_formalCharges.clear();
+  m_isotopes.clear();
+  m_forceVectors.clear();
   m_colors.clear();
+  m_selectedAtoms.clear();
+  m_coordinates3d.clear();
+  m_frozenAtomMask.resize(0);
+
+  // With no atoms left there is nothing for any calculated result to be about.
+  clearCalculatedResults();
+
   m_atomicNumbers.clear();
   m_bondOrders.clear();
   m_bondLabels.clear();
   m_residueLabels.clear();
   m_graph.clear();
-  m_partialCharges.clear();
+  m_atomProperties.clear();
+  m_bondProperties.clear();
+  m_residues.clear();
+  m_residueProperties.clear();
+  m_conformerProperties.clear();
+  m_timesteps.clear();
+  m_layers.clear();
   m_elements.reset();
 }
 
@@ -730,11 +999,15 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   if (index >= bondCount()) {
     m_graph.addEdge(atom1, atom2);
     m_bondOrders.push_back(order);
+    m_bondProperties.addEntry();
     index = static_cast<Index>(m_graph.edgeCount() - 1);
   } else {
     m_bondOrders[index] = order;
   }
-  // any existing charges are invalidated
+  // Any existing charges are invalidated, but deliberately *not*
+  // clearCalculatedResults(): perceiveBondsSimple() adds bonds one at a time,
+  // and the player tool re-perceives connectivity on every animation frame
+  // when dynamic bonding is on (see clearBonds()).
   m_partialCharges.clear();
   return BondType(this, index);
 }
@@ -759,13 +1032,25 @@ size_t calcNlogN(size_t n)
   return n * aproxLog;
 }
 
+void Molecule::clearCalculatedResults()
+{
+  m_partialCharges.clear();
+  m_forceVectors.clear();
+  m_velocities.clear();
+  m_vibrations.clear();
+  m_spectra.clear();
+}
+
 bool Molecule::removeBond(Index index)
 {
   if (index >= bondCount())
     return false;
+  m_bondProperties.removeEntry(index, bondCount());
   m_graph.removeEdge(index);
   m_bondOrders.swapAndPop(index);
-  m_partialCharges.clear();
+  // Connectivity is part of what was calculated from, so a bond going away
+  // invalidates the results just as an atom going away does.
+  clearCalculatedResults();
   return true;
 }
 
@@ -787,8 +1072,16 @@ bool Molecule::removeBond(const AtomType& a, const AtomType& b)
 void Molecule::clearBonds()
 {
   m_bondOrders.clear();
+  m_bondProperties.clear();
   m_graph.removeEdges();
   m_graph.setSize(atomCount());
+
+  // Deliberately *not* clearCalculatedResults(), unlike removeBond(). This is
+  // used as "re-perceive connectivity" rather than as a structural edit: the
+  // player tool calls it with perceiveBondsSimple() on every animation frame
+  // when dynamic bonding is on, so dropping the vibrations here would destroy
+  // the normal modes being animated. Partial charges are cleared because they
+  // depend directly on bond orders and are cheap to recompute.
   m_partialCharges.clear();
 }
 
@@ -1100,46 +1393,151 @@ std::pair<Vector3, Vector3> Molecule::bestFitPlane(const Array<Vector3>& pos)
   return std::make_pair(centroid, plane_normal);
 }
 
+namespace {
+
+// The active conformer index as a map key. m_coordinate3dIndex is only
+// negative if something has set it out of range; treat that as conformer 0
+// rather than wrapping to a huge key.
+size_t vibrationKey(int coordinateIndex)
+{
+  return coordinateIndex > 0 ? static_cast<size_t>(coordinateIndex) : 0;
+}
+
+} // namespace
+
 Array<double> Molecule::vibrationFrequencies() const
 {
-  return m_vibrationFrequencies;
+  return vibrationFrequencies(vibrationKey(m_coordinate3dIndex));
 }
 
 void Molecule::setVibrationFrequencies(const Array<double>& freq)
 {
-  m_vibrationFrequencies = freq;
+  setVibrationFrequencies(freq, vibrationKey(m_coordinate3dIndex));
 }
 
 Array<double> Molecule::vibrationIRIntensities() const
 {
-  return m_vibrationIRIntensities;
+  return vibrationIRIntensities(vibrationKey(m_coordinate3dIndex));
 }
 
 void Molecule::setVibrationIRIntensities(const Array<double>& intensities)
 {
-  m_vibrationIRIntensities = intensities;
+  setVibrationIRIntensities(intensities, vibrationKey(m_coordinate3dIndex));
 }
 
 Array<double> Molecule::vibrationRamanIntensities() const
 {
-  return m_vibrationRamanIntensities;
+  return vibrationRamanIntensities(vibrationKey(m_coordinate3dIndex));
 }
 
 void Molecule::setVibrationRamanIntensities(const Array<double>& intensities)
 {
-  m_vibrationRamanIntensities = intensities;
+  setVibrationRamanIntensities(intensities, vibrationKey(m_coordinate3dIndex));
 }
 
 Array<Vector3> Molecule::vibrationLx(int mode) const
 {
-  if (mode >= 0 && mode < static_cast<int>(m_vibrationLx.size()))
-    return m_vibrationLx[mode];
-  return Array<Vector3>();
+  return vibrationLx(mode, vibrationKey(m_coordinate3dIndex));
 }
 
 void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx)
 {
-  m_vibrationLx = lx;
+  setVibrationLx(lx, vibrationKey(m_coordinate3dIndex));
+}
+
+const Molecule::VibrationData* Molecule::vibrationData(
+  size_t conformerIndex) const
+{
+  auto match = m_vibrations.find(conformerIndex);
+  return match == m_vibrations.end() ? nullptr : &match->second;
+}
+
+void Molecule::setVibrationData(const VibrationData& data,
+                                size_t conformerIndex)
+{
+  m_vibrations[conformerIndex] = data;
+}
+
+Array<double> Molecule::vibrationFrequencies(size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  return data ? data->frequencies : Array<double>();
+}
+
+void Molecule::setVibrationFrequencies(const Array<double>& freq,
+                                       size_t conformerIndex)
+{
+  m_vibrations[conformerIndex].frequencies = freq;
+}
+
+Array<double> Molecule::vibrationIRIntensities(size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  return data ? data->irIntensities : Array<double>();
+}
+
+void Molecule::setVibrationIRIntensities(const Array<double>& intensities,
+                                         size_t conformerIndex)
+{
+  m_vibrations[conformerIndex].irIntensities = intensities;
+}
+
+Array<double> Molecule::vibrationRamanIntensities(size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  return data ? data->ramanIntensities : Array<double>();
+}
+
+void Molecule::setVibrationRamanIntensities(const Array<double>& intensities,
+                                            size_t conformerIndex)
+{
+  m_vibrations[conformerIndex].ramanIntensities = intensities;
+}
+
+Array<Vector3> Molecule::vibrationLx(int mode, size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  if (data == nullptr || mode < 0 || mode >= static_cast<int>(data->lx.size()))
+    return Array<Vector3>();
+  return data->lx[mode];
+}
+
+void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx,
+                              size_t conformerIndex)
+{
+  m_vibrations[conformerIndex].lx = lx;
+}
+
+bool Molecule::hasVibrations(size_t conformerIndex) const
+{
+  const VibrationData* data = vibrationData(conformerIndex);
+  return data != nullptr && !data->isEmpty();
+}
+
+bool Molecule::hasVibrations() const
+{
+  return hasVibrations(vibrationKey(m_coordinate3dIndex));
+}
+
+size_t Molecule::vibrationConformerCount() const
+{
+  return vibrationConformers().size();
+}
+
+Array<size_t> Molecule::vibrationConformers() const
+{
+  Array<size_t> indices;
+  // std::map iterates in increasing key order.
+  for (const auto& entry : m_vibrations) {
+    if (!entry.second.isEmpty())
+      indices.push_back(entry.first);
+  }
+  return indices;
+}
+
+void Molecule::clearVibrations()
+{
+  m_vibrations.clear();
 }
 
 void Molecule::perceiveBondOrders()
@@ -1363,14 +1761,31 @@ bool Molecule::setCoordinate3d(int coord)
 {
   if (coord >= 0 && coord < static_cast<int>(m_coordinates3d.size())) {
     m_positions3d = m_coordinates3d[coord];
+    m_coordinate3dIndex = coord;
     return true;
   }
   return false;
 }
 
+int Molecule::coordinate3d() const
+{
+  return m_coordinate3dIndex;
+}
+
 void Molecule::clearCoordinate3d()
 {
+  // Flattening the trajectory keeps the geometry that is on screen, so keep
+  // the vibrations that go with it and drop the rest. The surviving set moves
+  // to key 0 to stay with the active index, which is reset below.
+  std::map<size_t, VibrationData> kept;
+  auto active = m_vibrations.find(vibrationKey(m_coordinate3dIndex));
+  if (active != m_vibrations.end())
+    kept[0] = std::move(active->second);
+  m_vibrations.swap(kept);
+
   m_coordinates3d.clear();
+  m_conformerProperties.clear();
+  m_coordinate3dIndex = 0;
 }
 
 Array<Vector3> Molecule::coordinate3d(size_t index) const

@@ -182,7 +182,11 @@ unsigned int GaussianSet::molecularOrbitalCount(ElectronType type) const
   size_t index(0);
   if (type == Beta)
     index = 1;
-  return static_cast<unsigned int>(m_moMatrix[index].rows());
+  // The number of MOs is the number of columns in the coefficient matrix.
+  // The rows are the number of atomic basis functions, which is only equal
+  // to the number of MOs for a full canonical set. Reduced/localized sets
+  // (IAO/IBO, NBO, Pipek-Mezey, ...) have fewer MOs than basis functions.
+  return static_cast<unsigned int>(m_moMatrix[index].cols());
 }
 
 void GaussianSet::outputAll(ElectronType type)
@@ -290,6 +294,18 @@ bool GaussianSet::isValid()
 {
   // TODO: Something useful here again - check the basis set makes sense...
   return true;
+}
+
+void GaussianSet::swapAtomIndices(Index a, Index b)
+{
+  const auto first = static_cast<unsigned int>(a);
+  const auto second = static_cast<unsigned int>(b);
+  for (auto& index : m_atomIndices) {
+    if (index == first)
+      index = second;
+    else if (index == second)
+      index = first;
+  }
 }
 
 void GaussianSet::initCalculation()

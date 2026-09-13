@@ -12,6 +12,8 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/primitive.h>
 
+#include <QtCore/QElapsedTimer>
+#include <QtCore/QList>
 #include <QtCore/QPoint>
 #include <QtCore/QTimer>
 #include <QtWidgets/QAbstractButton>
@@ -122,6 +124,13 @@ private:
   Eigen::ArrayXd m_masses;
   CSVRThermostat* m_thermostat = nullptr;
 
+  // Pre-relaxation phase before dynamics: if initial gradients would kick
+  // the kinetic temperature far above target, run optimization chunks first.
+  bool m_preRelaxing = false;
+  int m_preRelaxIters = 0;
+  static constexpr int s_maxPreRelaxIters = 5;
+  static constexpr double s_preRelaxTempMargin = 250.0; // K above target
+
   mutable QWidget* m_toolWidget;
 
   bool m_running = false;
@@ -144,6 +153,18 @@ private:
   QThread* m_workerThread = nullptr;
   QtGui::CalcWorker* m_worker = nullptr;
   bool m_computePending = false;
+  // Bumped for every worker we create. Results carry the generation they were
+  // produced for, so a result queued before an edit retired its worker can be
+  // told apart from a live one - disconnecting the worker does not withdraw
+  // metacalls that are already sitting in our event queue.
+  quint64 m_workerGeneration = 0;
+  // Worker threads that outlived their shutdown timeout. They are still
+  // running, so they can neither be deleted nor left for ~QObject to destroy.
+  QList<QThread*> m_retiredThreads;
+  // Persistent across optimizeStep calls so adaptive chunk sizing carries
+  // over between timer ticks.
+  Calc::OptimizationOptions m_optOptions;
+  QElapsedTimer m_chunkTimer;
   void startWorker();
   void cleanupWorker();
 };

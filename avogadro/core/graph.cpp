@@ -152,6 +152,23 @@ void Graph::swapVertexIndices(size_t a, size_t b)
 
   std::swap(m_adjacencyList[a], m_adjacencyList[b]);
 
+  // The two loops above skip the reference a and b hold to each other, since
+  // rewriting it there would immediately be undone by the other loop. The
+  // swap has just carried those entries to the opposite vertex, where each
+  // now names its own vertex, so they are corrected here. Left alone, both
+  // vertices list themselves as neighbours and the edge between them can no
+  // longer be found in the adjacency list -- which makes removeEdge() return
+  // without removing anything while its caller goes on to drop the matching
+  // bond order.
+  for (auto& neighbor : m_adjacencyList[a]) {
+    if (neighbor == a)
+      neighbor = b;
+  }
+  for (auto& neighbor : m_adjacencyList[b]) {
+    if (neighbor == b)
+      neighbor = a;
+  }
+
   // Update m_edgePairs using info from m_edgeMap
   for (size_t i = 0; i < m_edgeMap[a].size(); i++) {
     size_t edgeIndex = m_edgeMap[a][i];

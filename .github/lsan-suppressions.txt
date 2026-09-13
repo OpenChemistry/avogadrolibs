@@ -1,0 +1,31 @@
+# Qt's font machinery allocates process-lifetime caches it never frees: the
+# fontconfig/FreeType face cache, QFontCache's engine and engine-data entries,
+# the HarfBuzz face hung off each engine, and the QCollator/QLocale that
+# QFontDatabase uses to sort family names. None of it is reachable at exit, so
+# LSan reports it, but none of it is ours -- every frame in the report sits
+# inside libQt6Gui or libQt6Core.
+#
+# This only began appearing when tests/qtgui/jsonwidgettest.cpp arrived. It is
+# the first *enabled* test in AvogadroQtGuiTests to construct a QApplication
+# rather than a QCoreApplication -- the qtopengl tests are off in this job via
+# TEST_QTGL=OFF, and the filebrowse/inputgenerator widget tests are commented
+# out of tests/qtgui/CMakeLists.txt -- so it is the first to initialize the
+# font database at all. The allocations are Qt's, not the test's.
+
+# Most of the font-stack frames carry no symbol at all in CI (the report shows
+# bare "libQt6Gui.so.6+0x6a9ae1" addresses), because the Qt installed by
+# install-qt-action ships no debug info. A library-level match is the only
+# handle available for those. This mirrors the stance .github/tsan-
+# suppressions.txt already takes with called_from_lib:libQt6Core.so.
+#
+# The trade-off: a genuine leak of ours whose allocation stack passes through
+# libQt6Gui would be hidden too. Our own widget code allocates QtWidgets
+# objects from our own frames, so that is unlikely -- but if you are hunting a
+# leak that LSan refuses to show you, comment this line out first.
+leak:libQt6Gui.so
+
+# The QtCore side does symbolize, so match it precisely. Suppressing all of
+# libQt6Core would be far too broad: every QString and QObject we allocate
+# passes through it, so a blanket rule would hide most real leaks.
+leak:QCollator
+leak:QLocale::QLocale

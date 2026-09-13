@@ -14,6 +14,8 @@
 
 #include <Eigen/Core>
 
+#include <QtCore/QElapsedTimer>
+#include <QtCore/QList>
 #include <QtCore/QMultiHash>
 #include <QtCore/QMultiMap>
 #include <QtCore/QStringList>
@@ -100,6 +102,8 @@ public slots:
 private slots:
   void energy();
   void forces();
+  void batchEnergy();
+  void batchForces();
   void optimize();
   void freezeSelected();
   void unfreezeSelected();
@@ -120,12 +124,18 @@ private slots:
                            double energy, bool converged);
   void onEnergyDone(Eigen::VectorXd gradient, double energy);
   void onForcesDone(Eigen::VectorXd gradient, double energy);
+  void onBatchDone(std::vector<double> energies,
+                   std::vector<Eigen::VectorXd> gradients);
   void onWorkerReady();
 
 private:
   void cleanupWorker();
   void startWorker();
   void sendInitCalculator();
+  // Gather every coordinate set as a flat 3N vector (non-destructive).
+  std::vector<Eigen::VectorXd> gatherCoordinateSets() const;
+  // Shared entry point for the two batch actions.
+  void runBatch(bool computeGradient);
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
   Calc::EnergyCalculator* m_method = nullptr;
@@ -146,12 +156,26 @@ private:
   // worker thread state
   QThread* m_workerThread = nullptr;
   QtGui::CalcWorker* m_worker = nullptr;
+  // Threads that did not stop within cleanupWorker()'s bounded wait. They
+  // must remain alive until their work finishes; deleting a running QThread
+  // aborts the process.
+  QList<QThread*> m_retiredThreads;
   QProgressDialog* m_progressDialog = nullptr;
   bool m_optimizing = false;
-  int m_currentStep = 0;
+  // True while a batch energy/forces run is in flight.
+  bool m_batchRunning = false;
+  // Whether the in-flight batch run requested gradients.
+  bool m_batchGradient = false;
+  // Iterations completed (sum of chunk sizes already executed). Used to
+  // bound total work and drive the progress dialog now that the chunk
+  // size adapts per chunk.
+  unsigned int m_iterationsDone = 0;
   Eigen::VectorXd m_lastPositions;
   double m_lastEnergy = 0.0;
   Calc::OptimizationOptions m_optOptions;
+  // Timer for chunk wall-clock measurement (round-trip from dispatch to
+  // optimizeFinished, so dispatch overhead counts toward the frame budget).
+  QElapsedTimer m_chunkTimer;
 
   // Pending initCalculator args (set by startWorker, sent by
   // sendInitCalculator)

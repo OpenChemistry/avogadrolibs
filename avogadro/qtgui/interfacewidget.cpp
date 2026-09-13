@@ -5,27 +5,15 @@
 
 #include "interfacewidget.h"
 
-#include <avogadro/qtgui/filebrowsewidget.h>
-#include <avogadro/qtgui/molecule.h>
-
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QDoubleSpinBox>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QTextBrowser>
-#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QVBoxLayout>
+
+#include <QtGui/QFontMetrics>
 
 #include <QtCore/QDebug>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QPointer>
-#include <QtCore/QSettings>
-#include <QtCore/QTimer>
+#include <QtCore/QSize>
 
 namespace Avogadro::QtGui {
 
@@ -92,12 +80,6 @@ void InterfaceWidget::showError(const QString& err)
   dlg.setLayout(vbox);
 
   dlg.exec();
-}
-
-QString InterfaceWidget::settingsKey(const QString& identifier) const
-{
-  return QStringLiteral("scriptPlugin/%1/%2")
-    .arg(m_interfaceScript.displayName(), identifier);
 }
 
 } // namespace Avogadro::QtGui

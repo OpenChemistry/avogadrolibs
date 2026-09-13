@@ -4,12 +4,19 @@
 ******************************************************************************/
 
 #include "molecule.h"
+
+#include "gaussiansetconcurrent.h"
+#include "meshgenerator.h"
+#include "slatersetconcurrent.h"
 #include "rwmolecule.h"
 
 #include <iostream>
 
+#include <avogadro/core/basisset.h>
+
 // for HTML-formatted formulas
 #include <QtCore/QRegularExpression>
+#include <QtCore/QString>
 
 namespace Avogadro::QtGui {
 
@@ -293,10 +300,35 @@ Index Molecule::bondUniqueId(Index b) const
   return findBondUniqueId(b);
 }
 
+bool Molecule::invalidatesDerivedData(unsigned int changes)
+{
+  // Structural changes invalidate derived computational data. Moving atoms is
+  // not structural: vibration animation, trajectory playback and interactive
+  // optimization all move atoms on every frame, and the vibration modes and
+  // orbitals being displayed have to survive that.
+  const bool movedOnly =
+    (changes & Moved) && !(changes & (Added | Removed | Modified));
+  return (changes & (Atoms | Bonds)) && !movedOnly;
+}
+
 void Molecule::emitChanged(unsigned int change)
 {
-  if (change != NoChange)
+  if (change != NoChange) {
+    if (invalidatesDerivedData(change)) {
+      // Worker threads may still be reading the basis set and writing into
+      // the cubes and meshes that are about to be deleted.
+      GaussianSetConcurrent::cancelAllCalculations();
+      SlaterSetConcurrent::cancelAllCalculations();
+      MeshGenerator::cancelAllCalculations();
+      clearCubes();
+      clearMeshes();
+      delete m_basisSet;
+      m_basisSet = nullptr;
+      m_spectra.clear();
+      clearVibrations();
+    }
     emit changed(change);
+  }
 }
 
 void Molecule::emitUpdate() const
@@ -382,9 +414,9 @@ QString Molecule::formattedFormula() const
       }
       formula += QString("<sup>%1</sup>").arg(digits);
       // take the substring from the digit to the end
-      formula += iter->first.substr(digits.length());
+      formula += QString::fromStdString(iter->first.substr(digits.length()));
     } else
-      formula += iter->first;
+      formula += QString::fromStdString(iter->first);
 
     if (iter->second > 1)
       formula += QString("<sub>%1</sub>").arg(iter->second);

@@ -10,6 +10,7 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/calc/energycalculator.h>
 #include <avogadro/calc/energyoptimizer.h>
+#include <avogadro/core/angletools.h>
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/molecule.h>
 
@@ -350,6 +351,74 @@ TEST(EnergyCalculatorFusedTest, EvaluateOverrideIsUsed)
   EXPECT_DOUBLE_EQ(grad(1), -6.0);
 }
 
+TEST(EnergyCalculatorBatchTest, SupportsBatchDefaultsFalse)
+{
+  FusedEnergyCalculator calculator;
+  EXPECT_FALSE(calculator.supportsBatch());
+}
+
+TEST(EnergyCalculatorBatchTest, ValueBatchLoopsValue)
+{
+  FusedEnergyCalculator calculator;
+
+  std::vector<Eigen::VectorXd> coords;
+  Eigen::VectorXd a(2);
+  a << 1.0, 2.0; // |a|^2 = 5
+  Eigen::VectorXd b(2);
+  b << 3.0, 4.0; // |b|^2 = 25
+  Eigen::VectorXd c(2);
+  c << 0.0, 0.0; // 0
+  coords.push_back(a);
+  coords.push_back(b);
+  coords.push_back(c);
+
+  std::vector<Real> energies = calculator.valueBatch(coords);
+
+  ASSERT_EQ(energies.size(), 3u);
+  EXPECT_DOUBLE_EQ(energies[0], 5.0);
+  EXPECT_DOUBLE_EQ(energies[1], 25.0);
+  EXPECT_DOUBLE_EQ(energies[2], 0.0);
+  // Default fallback evaluates one set at a time.
+  EXPECT_EQ(calculator.valueCalls(), 3);
+}
+
+TEST(EnergyCalculatorBatchTest, GradientBatchLoopsGradient)
+{
+  FusedEnergyCalculator calculator;
+
+  std::vector<Eigen::VectorXd> coords;
+  Eigen::VectorXd a(2);
+  a << 1.0, 2.0;
+  Eigen::VectorXd b(3);
+  b << 3.0, -4.0, 5.0; // differently-sized set is fine
+  coords.push_back(a);
+  coords.push_back(b);
+
+  std::vector<Eigen::VectorXd> grads;
+  calculator.gradientBatch(coords, grads);
+
+  ASSERT_EQ(grads.size(), 2u);
+  ASSERT_EQ(grads[0].size(), 2);
+  ASSERT_EQ(grads[1].size(), 3);
+  // grad = 2x for the quadratic test calculator.
+  EXPECT_TRUE(grads[0].isApprox(2.0 * a));
+  EXPECT_TRUE(grads[1].isApprox(2.0 * b));
+  EXPECT_EQ(calculator.gradientCalls(), 2);
+}
+
+TEST(EnergyCalculatorBatchTest, EmptyBatchReturnsEmpty)
+{
+  FusedEnergyCalculator calculator;
+  std::vector<Eigen::VectorXd> coords;
+
+  std::vector<Real> energies = calculator.valueBatch(coords);
+  EXPECT_TRUE(energies.empty());
+
+  std::vector<Eigen::VectorXd> grads;
+  calculator.gradientBatch(coords, grads);
+  EXPECT_TRUE(grads.empty());
+}
+
 TEST(EnergyCalculatorEvaluateTest, DefaultEvaluatePreSizesGradient)
 {
   SizedGradientCalculator calculator;
@@ -394,6 +463,248 @@ TEST(EnergyOptimizerTest, OptimizeStepsRejectsZeroIterations)
 
   EXPECT_FALSE(optimizeSteps(calculator, x, options));
   EXPECT_TRUE(x.isApprox(original));
+}
+
+TEST(EnergyOptimizerTest, OptimizeStepsFire2ReducesEnergy)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(3);
+  x << 3.0, -2.0, 1.0;
+
+  const Real initial = calculator.value(x);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Fire2;
+  options.chunkIterations = 20;
+
+  EXPECT_TRUE(optimizeSteps(calculator, x, options));
+
+  const Real final = calculator.value(x);
+  EXPECT_LT(final, initial);
+}
+
+TEST(EnergyOptimizerTest, OptimizeStepsAbcFireReducesEnergy)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(3);
+  x << 3.0, -2.0, 1.0;
+
+  const Real initial = calculator.value(x);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::AbcFire;
+  options.chunkIterations = 20;
+
+  EXPECT_TRUE(optimizeSteps(calculator, x, options));
+
+  const Real final = calculator.value(x);
+  EXPECT_LT(final, initial);
+}
+
+TEST(EnergyOptimizerTest, OptimizeStepsFireAtMinimumStaysPut)
+{
+  // Gradient is zero at x = 0; FIRE should leave the position alone instead
+  // of dividing by zero in the bias-correction term or the force normaliser.
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x = Eigen::VectorXd::Zero(3);
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::AbcFire;
+  options.chunkIterations = 5;
+
+  EXPECT_TRUE(optimizeSteps(calculator, x, options));
+  EXPECT_TRUE(x.isZero());
+}
+
+TEST(EnergyOptimizerTest, OptimizerStatePersistsAcrossChunks)
+{
+  // With chunkIterations < nDelay (default 5), the adaptive timestep can
+  // never ramp up inside a single chunk. Persistent state across calls
+  // accumulates the positive-power counter and lets dt grow past the
+  // nDelay threshold; verify by driving multiple short chunks on a
+  // quadratic where every step has positive power.
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(6);
+  x << 3.0, -2.0, 1.0, 0.5, -1.5, 2.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Fire2;
+  options.chunkIterations = 3;
+
+  OptimizerState state;
+  // First chunk: bootstraps state, dt stays at dt0.
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  EXPECT_TRUE(state.initialized);
+  EXPECT_EQ(state.gradient.size(), x.size());
+  EXPECT_NEAR(state.dt, options.fire.dt0, 1e-12);
+
+  // Drive enough additional chunks to push nPos past nDelay (5).
+  for (int i = 0; i < 4; ++i)
+    EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+
+  // dt must have grown above dt0 -- proof the adaptive timestep is alive
+  // across chunks.
+  EXPECT_GT(state.dt, options.fire.dt0);
+  // state.gradient must remain consistent with x; |grad| = 2*|x| for the
+  // quadratic. As a coarse sanity check, just verify it tracks.
+  EXPECT_TRUE(state.gradient.isApprox(2.0 * x, 1e-10));
+}
+
+TEST(EnergyOptimizerTest, OptimizerStateRestartOnSizeMismatch)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x6(6);
+  x6 << 3.0, -2.0, 1.0, 0.5, -1.5, 2.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Fire2;
+  options.chunkIterations = 5;
+
+  OptimizerState state;
+  EXPECT_TRUE(optimizeSteps(calculator, x6, options, &state));
+  ASSERT_TRUE(state.initialized);
+  ASSERT_EQ(state.velocity.size(), 6);
+
+  // Switch to a different-sized problem; state must be silently rebuilt.
+  Eigen::VectorXd x3(3);
+  x3 << 1.0, 1.0, 1.0;
+  EXPECT_TRUE(optimizeSteps(calculator, x3, options, &state));
+  EXPECT_EQ(state.velocity.size(), 3);
+  EXPECT_EQ(state.gradient.size(), 3);
+}
+
+TEST(EnergyOptimizerTest, OptimizeStepsPopulatesStateForLbfgs)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(3);
+  x << 3.0, -2.0, 1.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 5;
+
+  OptimizerState state;
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+
+  // L-BFGS does not populate FIRE integrator state -- only (energy, grad).
+  EXPECT_EQ(state.gradient.size(), x.size());
+  EXPECT_TRUE(std::isfinite(state.energy));
+  EXPECT_TRUE(state.gradient.isApprox(2.0 * x, 1e-8));
+}
+
+TEST(EnergyOptimizerTest, HybridSwitchesFireToLbfgsBelowThreshold)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(6);
+  x << 3.0, -2.0, 1.0, 0.5, -1.5, 2.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Hybrid;
+  options.chunkIterations = 5;
+  // For the quadratic, |grad| = 2*|x|; pick a threshold well above the
+  // initial |g|_inf so the first chunk's bootstrap already trips the
+  // switch on the *second* call (state.gradient is then < threshold).
+  options.hybrid.switchGradient = 100.0;
+
+  OptimizerState state;
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  // First chunk: state.hybridSwitched starts false, no cached gradient,
+  // so dispatch picks ABC-FIRE. ABC-FIRE populates state.gradient.
+  EXPECT_FALSE(state.hybridSwitched);
+
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  // Second chunk: state.gradient is below threshold -> switch.
+  EXPECT_TRUE(state.hybridSwitched);
+
+  // Further calls remain L-BFGS even if gradient grew (it won't for this
+  // toy problem, but the flag is sticky).
+  EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  EXPECT_TRUE(state.hybridSwitched);
+}
+
+TEST(EnergyOptimizerTest, HybridStaysInFireAboveThreshold)
+{
+  SizedGradientCalculator calculator;
+  Eigen::VectorXd x(6);
+  x << 30.0, -20.0, 10.0, 5.0, -15.0, 20.0;
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Hybrid;
+  options.chunkIterations = 3;
+  // Tight threshold: initial |grad|_inf = 60, ABC-FIRE will not get below
+  // this in just a few chunks.
+  options.hybrid.switchGradient = 1.0e-3;
+
+  OptimizerState state;
+  for (int i = 0; i < 3; ++i)
+    EXPECT_TRUE(optimizeSteps(calculator, x, options, &state));
+  EXPECT_FALSE(state.hybridSwitched);
+}
+
+TEST(AdaptChunkIterationsTest, ScalesUpWhenChunkUnderBudget)
+{
+  // Chunk ran in 5ms vs 33ms budget -> propose larger chunk.
+  size_t next = adaptChunkIterations(5, /*measuredMs=*/5.0, /*targetMs=*/33.0,
+                                     /*smoothing=*/1.0, 1, 200);
+  EXPECT_GT(next, 5u);
+  // smoothing=1.0 is fully reactive: 5 * 33/5 = 33.
+  EXPECT_EQ(next, 33u);
+}
+
+TEST(AdaptChunkIterationsTest, ScalesDownWhenChunkOverBudget)
+{
+  // Chunk took 100ms vs 33ms budget -> shrink.
+  size_t next = adaptChunkIterations(10, /*measuredMs=*/100.0,
+                                     /*targetMs=*/33.0,
+                                     /*smoothing=*/1.0, 1, 200);
+  EXPECT_LT(next, 10u);
+}
+
+TEST(AdaptChunkIterationsTest, SmoothingDampensJumps)
+{
+  // Same ratio as ScalesUp test but with smoothing=0.5: chunk should
+  // increase, but less than the fully-reactive proposal.
+  size_t reactive = adaptChunkIterations(5, 5.0, 33.0, 1.0, 1, 200);
+  size_t smoothed = adaptChunkIterations(5, 5.0, 33.0, 0.5, 1, 200);
+  EXPECT_LT(smoothed, reactive);
+  EXPECT_GT(smoothed, 5u);
+}
+
+TEST(AdaptChunkIterationsTest, ClampsToBounds)
+{
+  // Huge speedup proposal -> capped at maxChunk.
+  EXPECT_EQ(adaptChunkIterations(5, 1.0, 1000.0, 1.0, 1, 50), 50u);
+  // Heavy slowdown -> bottoms out at minChunk.
+  EXPECT_EQ(adaptChunkIterations(5, 1000.0, 1.0, 1.0, 1, 200), 1u);
+}
+
+TEST(AdaptChunkIterationsTest, SubMillisecondMeasurementsStillScale)
+{
+  // 0.05ms chunk vs 33ms budget -> proposal hits maxChunk.
+  EXPECT_EQ(adaptChunkIterations(5, 0.05, 33.0, 1.0, 1, 200), 200u);
+}
+
+TEST(AdaptChunkIterationsTest, NonPositiveMeasurementIsNoop)
+{
+  // Bogus measurement leaves the chunk size unchanged (clamped only).
+  EXPECT_EQ(adaptChunkIterations(7, 0.0, 33.0, 0.7, 1, 200), 7u);
+  EXPECT_EQ(adaptChunkIterations(7, -1.0, 33.0, 0.7, 1, 200), 7u);
+  EXPECT_EQ(adaptChunkIterations(0, 5.0, 33.0, 0.7, 1, 200), 1u);
+}
+
+TEST(AdaptChunkIterationsTest, ConvergesToTargetAcrossSteps)
+{
+  // Simulate a method whose per-iteration cost is ~1ms. Adaptation
+  // should home in on chunk_size ~= targetMs within a few iterations.
+  constexpr double kCostPerIter = 1.0; // ms
+  constexpr double kTarget = 33.0;
+  constexpr double kSmoothing = 0.7;
+  size_t chunk = 5;
+  for (int i = 0; i < 6; ++i) {
+    double measured = chunk * kCostPerIter;
+    chunk = adaptChunkIterations(chunk, measured, kTarget, kSmoothing, 1, 200);
+  }
+  // Should be within ±15% of the target after a handful of steps.
+  EXPECT_GE(chunk, 28u);
+  EXPECT_LE(chunk, 38u);
 }
 
 // Constraint Tests
@@ -484,6 +795,322 @@ TEST_F(EnergyCalculatorTest, ConstraintGradients)
   calculator->setConstraints(constraints);
 
   EXPECT_NO_THROW(calculator->constraintGradients(x, grad));
+}
+
+// Restraint unit / periodicity regression tests
+//
+// constraintEnergies() and constraintGradients() must agree: the restraint
+// values are stored in degrees but the analytic gradient helpers work in
+// radians, so a missing conversion silently made the gradient ~57x too large
+// and pointed it at the wrong target, which sent constrained torsions
+// wind-milling with energies in the millions of kJ/mol.
+
+// Reports only the restraint terms, so finite differences of value() can be
+// compared directly against constraintGradients().
+class RestraintOnlyCalculator : public EnergyCalculator
+{
+public:
+  EnergyCalculator* newInstance() const override
+  {
+    return new RestraintOnlyCalculator();
+  }
+  std::string identifier() const override { return "restraint_test"; }
+  std::string name() const override { return "Restraint Test"; }
+  std::string description() const override { return "Restraint terms only"; }
+  Molecule::ElementMask elements() const override
+  {
+    Molecule::ElementMask mask;
+    mask.set();
+    return mask;
+  }
+  void setMolecule(Molecule* /*mol*/) override {}
+
+  Real value(const Eigen::VectorXd& x) override
+  {
+    return constraintEnergies(x);
+  }
+};
+
+// Mirrors the convention every shipping calculator follows: value() reports a
+// real energy term *plus* constraintEnergies(). The base-class gradient()
+// finite-differences value(), so the restraint contribution must appear in the
+// gradient exactly once. Set includeRestraints(false) to model a value()
+// override that forgets constraintEnergies().
+class RestrainedQuadraticCalculator : public EnergyCalculator
+{
+public:
+  EnergyCalculator* newInstance() const override
+  {
+    return new RestrainedQuadraticCalculator();
+  }
+  std::string identifier() const override { return "restrained_quadratic"; }
+  std::string name() const override { return "Restrained Quadratic"; }
+  std::string description() const override
+  {
+    return "Quadratic energy plus restraint terms";
+  }
+  Molecule::ElementMask elements() const override
+  {
+    Molecule::ElementMask mask;
+    mask.set();
+    return mask;
+  }
+  void setMolecule(Molecule* /*mol*/) override {}
+
+  Real value(const Eigen::VectorXd& x) override
+  {
+    Real energy = x.squaredNorm();
+    if (m_includeRestraints)
+      energy += constraintEnergies(x);
+    return energy;
+  }
+
+  void includeRestraints(bool include) { m_includeRestraints = include; }
+
+private:
+  bool m_includeRestraints = true;
+};
+
+namespace {
+
+// A gauche-ish butane skeleton, C1 C2 C3 C4.
+Eigen::VectorXd butaneSkeleton()
+{
+  Eigen::VectorXd x(12);
+  x << 1.430, -0.510, -0.240, 0.760, 0.180, 0.940, -0.760, 0.180, 0.560, -1.430,
+    -0.510, -0.640;
+  return x;
+}
+
+// Largest disagreement between the analytic restraint gradient and a central
+// difference of the restraint energy.
+Real maxGradientError(RestraintOnlyCalculator& calc, const Eigen::VectorXd& x)
+{
+  Eigen::VectorXd analytic = Eigen::VectorXd::Zero(x.size());
+  calc.constraintGradients(x, analytic);
+
+  const Real h = 1.0e-6;
+  Real worst = 0.0;
+  for (Eigen::Index i = 0; i < x.size(); ++i) {
+    Eigen::VectorXd xp = x, xm = x;
+    xp[i] += h;
+    xm[i] -= h;
+    const Real numeric = (calc.value(xp) - calc.value(xm)) / (2.0 * h);
+    worst = std::max(worst, std::abs(numeric - analytic[i]));
+  }
+  return worst;
+}
+
+} // namespace
+
+TEST(RestraintTest, TorsionEnergyUsesDegreesAndRadianForceConstant)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  const Real current = Avogadro::calculateDihedral(
+    x.segment<3>(0), x.segment<3>(3), x.segment<3>(6), x.segment<3>(9));
+
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) });
+
+  const Real delta = (current - 45.0) * Avogadro::DEG_TO_RAD;
+  EXPECT_NEAR(calc.value(x), Constraint::DefaultAngularK * delta * delta, 1e-6);
+}
+
+TEST(RestraintTest, TorsionGradientMatchesFiniteDifference)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) });
+
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, AngleGradientMatchesFiniteDifference)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, MaxIndex, 105.0) });
+
+  const Real current =
+    Avogadro::calculateAngle(x.segment<3>(0), x.segment<3>(3), x.segment<3>(6));
+  const Real delta = (current - 105.0) * Avogadro::DEG_TO_RAD;
+  EXPECT_NEAR(calc.value(x), Constraint::DefaultAngularK * delta * delta, 1e-6);
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, DistanceGradientMatchesFiniteDifference)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, MaxIndex, MaxIndex, 1.60) });
+
+  const Real current = (x.segment<3>(0) - x.segment<3>(3)).norm();
+  const Real delta = current - 1.60;
+  EXPECT_NEAR(calc.value(x), Constraint::DefaultDistanceK * delta * delta,
+              1e-6);
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, OutOfPlaneGradientMatchesFiniteDifference)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  Constraint oop(1, 0, 2, 3, 10.0);
+  oop.setType(Constraint::OutOfPlaneConstraint);
+  calc.setConstraints({ oop });
+
+  const Real current = Avogadro::outOfPlaneAngle(
+    x.segment<3>(3), x.segment<3>(0), x.segment<3>(6), x.segment<3>(9));
+  const Real delta = (current - 10.0) * Avogadro::DEG_TO_RAD;
+  EXPECT_NEAR(calc.value(x), Constraint::DefaultAngularK * delta * delta, 1e-6);
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, SatisfiedRestraintIsAMinimum)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  const Real current = Avogadro::calculateDihedral(
+    x.segment<3>(0), x.segment<3>(3), x.segment<3>(6), x.segment<3>(9));
+
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, current) });
+
+  EXPECT_NEAR(calc.value(x), 0.0, 1e-9);
+
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(12);
+  calc.constraintGradients(x, grad);
+  EXPECT_NEAR(grad.norm(), 0.0, 1e-9);
+}
+
+TEST(RestraintTest, TorsionTakesTheShortWayAroundThePeriodicSeam)
+{
+  // Build a -175 degree torsion by rotating the last atom about the b-c axis,
+  // which lies along x here, then restrain it to +175 degrees. The shortest
+  // path is 10 degrees, not 350.
+  const Real t = -175.0 * Avogadro::DEG_TO_RAD;
+  Eigen::VectorXd x(12);
+  x << -0.5, 1.0, 0.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 2.0, std::cos(t),
+    std::sin(t);
+
+  ASSERT_NEAR(Avogadro::calculateDihedral(x.segment<3>(0), x.segment<3>(3),
+                                          x.segment<3>(6), x.segment<3>(9)),
+              -175.0, 1e-6);
+
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 175.0) });
+
+  const Real tenDegrees = 10.0 * Avogadro::DEG_TO_RAD;
+  EXPECT_NEAR(calc.value(x),
+              Constraint::DefaultAngularK * tenDegrees * tenDegrees, 1e-6);
+  EXPECT_LT(maxGradientError(calc, x), 1e-3);
+}
+
+TEST(RestraintTest, FrozenAtomsAreNotDraggedByARestraint)
+{
+  const Eigen::VectorXd x = butaneSkeleton();
+  RestraintOnlyCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) });
+
+  Eigen::VectorXd mask = Eigen::VectorXd::Ones(12);
+  mask.segment<3>(0).setZero(); // freeze the first carbon
+  calc.setMask(mask);
+
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(12);
+  calc.constraintGradients(x, grad);
+
+  EXPECT_NEAR(grad.segment<3>(0).norm(), 0.0, 1e-12);
+  // the remaining atoms must still feel the restraint
+  EXPECT_GT(grad.segment<9>(3).norm(), 1e-6);
+}
+
+TEST(RestraintTest, DefaultForceConstantDependsOnType)
+{
+  Constraint distance(0, 1, MaxIndex, MaxIndex, 1.5);
+  Constraint angle(0, 1, 2, MaxIndex, 109.5);
+  Constraint torsion(0, 1, 2, 3, 180.0);
+
+  EXPECT_DOUBLE_EQ(distance.k(), Constraint::DefaultDistanceK);
+  EXPECT_DOUBLE_EQ(angle.k(), Constraint::DefaultAngularK);
+  EXPECT_DOUBLE_EQ(torsion.k(), Constraint::DefaultAngularK);
+
+  // an explicit force constant always wins
+  torsion.setK(250.0);
+  EXPECT_DOUBLE_EQ(torsion.k(), 250.0);
+}
+
+TEST(RestraintTest, SetReclassifiesTheConstraintType)
+{
+  Constraint c(0, 1);
+  // resolve and cache the inferred type
+  ASSERT_EQ(c.type(), Constraint::DistanceConstraint);
+  ASSERT_DOUBLE_EQ(c.k(), Constraint::DefaultDistanceK);
+
+  // the same object is now a torsion -- a stale cached type would keep the
+  // distance force constant (wrong units) and file it in the wrong bucket
+  c.set(0, 1, 2, 3, 45.0);
+  EXPECT_EQ(c.type(), Constraint::TorsionConstraint);
+  EXPECT_DOUBLE_EQ(c.k(), Constraint::DefaultAngularK);
+}
+
+TEST(RestraintTest, ExplicitTypeSurvivesSet)
+{
+  // Out-of-plane cannot be inferred -- it has the same four indices as a
+  // torsion -- so an explicitly assigned type must not be reset by set().
+  Constraint c(1, 0, 2, 3, 10.0);
+  c.setType(Constraint::OutOfPlaneConstraint);
+  ASSERT_EQ(c.type(), Constraint::OutOfPlaneConstraint);
+
+  c.set(2, 0, 1, 3, 15.0);
+  EXPECT_EQ(c.type(), Constraint::OutOfPlaneConstraint);
+
+  // passing None goes back to inferring from the indices
+  c.setType(Constraint::None);
+  EXPECT_EQ(c.type(), Constraint::TorsionConstraint);
+}
+
+TEST(RestraintTest, BaseGradientIncludesRestraintsExactlyOnce)
+{
+  // EnergyCalculator::gradient() finite-differences value(), which by
+  // convention already contains constraintEnergies(). Adding
+  // constraintGradients() on top of that would double the restraint force.
+  const Eigen::VectorXd x = butaneSkeleton();
+
+  RestrainedQuadraticCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) }); // violated restraint
+
+  Eigen::VectorXd restraint = Eigen::VectorXd::Zero(x.size());
+  calc.constraintGradients(x, restraint);
+  ASSERT_GT(restraint.norm(), 1.0); // the restraint really is violated
+
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(x.size());
+  calc.gradient(x, grad);
+
+  const Eigen::VectorXd quadratic = 2.0 * x;
+  const Real scale = restraint.norm();
+
+  // counted once
+  EXPECT_LT((grad - (quadratic + restraint)).norm() / scale, 1e-4);
+  // not missing
+  EXPECT_GT((grad - quadratic).norm() / scale, 0.5);
+  // not doubled
+  EXPECT_GT((grad - (quadratic + 2.0 * restraint)).norm() / scale, 0.5);
+}
+
+TEST(RestraintTest, BaseGradientDependsOnValueReportingRestraints)
+{
+  // Documents the contract the test above relies on: the base gradient() has
+  // no restraint term of its own, so a value() override that omits
+  // constraintEnergies() silently drops the restraint from the gradient.
+  const Eigen::VectorXd x = butaneSkeleton();
+
+  RestrainedQuadraticCalculator calc;
+  calc.setConstraints({ Constraint(0, 1, 2, 3, 45.0) });
+  calc.includeRestraints(false);
+
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(x.size());
+  calc.gradient(x, grad);
+
+  EXPECT_TRUE(grad.isApprox(2.0 * x, 1e-5));
 }
 
 // Mask Tests

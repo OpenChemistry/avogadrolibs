@@ -5,11 +5,15 @@
 
 #include "obprocess.h"
 
+#include <avogadro/qtgui/utilities.h>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
+#include <QtCore/QTemporaryFile>
 
 #include <QRegularExpression>
 
@@ -17,7 +21,7 @@ namespace Avogadro::QtPlugins {
 
 OBProcess::OBProcess(QObject* parent_)
   : QObject(parent_), m_processLocked(false), m_aborted(false),
-    m_process(new QProcess(this)),
+    m_process(new QProcess(this)), m_conformerOutputFile(nullptr),
 #if defined(_WIN32)
     m_obabelExecutable("obabel.exe")
 #else
@@ -36,33 +40,22 @@ OBProcess::OBProcess(QObject* parent_)
         QFileInfo(baseDir.absolutePath() + '/' + m_obabelExecutable).exists()) {
       m_obabelExecutable = baseDir.absolutePath() + '/' + m_obabelExecutable;
       QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-#if defined(_WIN32)
-      env.insert("BABEL_DATADIR",
-                 QCoreApplication::applicationDirPath() + "/data");
-#else
-      QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
-      QStringList filters;
-      filters << "3.*"
-              << "2.*";
-      QStringList dirs = dir.entryList(filters);
-      if (dirs.size() == 1) {
-        env.insert("BABEL_DATADIR", QCoreApplication::applicationDirPath() +
-                                      "/../share/openbabel/" + dirs[0]);
-      } else {
-        qDebug() << "Error, Open Babel data directory not found.";
+
+      // Leave any setting from the environment alone.
+      if (env.value("BABEL_DATADIR").isEmpty()) {
+        const QString dataDir = QtGui::Utilities::openBabelDataDirectory();
+        if (!dataDir.isEmpty())
+          env.insert("BABEL_DATADIR", dataDir);
+        else
+          qDebug() << "Error, Open Babel data directory not found.";
       }
-      dir.setPath(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
-      dirs = dir.entryList(filters);
-      if (dirs.size() == 0) {
-        env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
-                                     "/../lib/openbabel/");
-      } else if (dirs.size() == 1) {
-        env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
-                                     "/../lib/openbabel/" + dirs[0]);
-      } else {
-        qDebug() << "Error, Open Babel plugins directory not found.";
+
+      if (env.value("BABEL_LIBDIR").isEmpty()) {
+        const QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
+        if (!pluginDir.isEmpty())
+          env.insert("BABEL_LIBDIR", pluginDir);
       }
-#endif
+
       m_process->setProcessEnvironment(env);
     }
   }
@@ -152,7 +145,11 @@ void OBProcess::queryReadFormatsPrepare()
   int pos = 0;
   while ((match = parser.match(output, pos)).hasMatch()) {
     QString extension = match.captured(1);
-    QString description = match.captured(2);
+    // obabel writes its format list in text mode, so on Windows every line
+    // ends "\r\n" and the description captures the carriage return. That CR
+    // then rides along into the format name and identifier, breaking both the
+    // display strings and any comparison against them.
+    QString description = match.captured(2).trimmed();
     result.insertMulti(description, extension);
     pos = match.capturedEnd(0);
   }
@@ -178,7 +175,11 @@ void OBProcess::queryWriteFormatsPrepare()
   int pos = 0;
   while ((match = parser.match(output, pos)).hasMatch()) {
     QString extension = match.captured(1);
-    QString description = match.captured(2);
+    // obabel writes its format list in text mode, so on Windows every line
+    // ends "\r\n" and the description captures the carriage return. That CR
+    // then rides along into the format name and identifier, breaking both the
+    // display strings and any comparison against them.
+    QString description = match.captured(2).trimmed();
 
     // skip some formats that we want to ignore
     if (extension == "png" || extension == "svg" || extension == "paint" ||
@@ -287,7 +288,9 @@ void OBProcess::queryForceFieldsPrepare()
   int pos = 0;
   while ((match = parser.match(output, pos)).hasMatch()) {
     QString key = match.captured(1);
-    QString desc = match.captured(2);
+    // Trimmed for the same reason as the format descriptions above: obabel's
+    // text-mode output leaves a carriage return on every line under Windows.
+    QString desc = match.captured(2).trimmed();
     result.insertMulti(key, desc);
     pos = match.capturedEnd(0);
   }
@@ -327,7 +330,9 @@ void OBProcess::queryChargesPrepare()
   int pos = 0;
   while ((match = parser.match(output, pos)).hasMatch()) {
     QString key = match.captured(1);
-    QString desc = match.captured(2);
+    // Trimmed for the same reason as the format descriptions above: obabel's
+    // text-mode output leaves a carriage return on every line under Windows.
+    QString desc = match.captured(2).trimmed();
     result.insertMulti(key, desc);
     pos = match.capturedEnd(0);
   }
@@ -446,12 +451,41 @@ bool OBProcess::generateConformers(const QByteArray& mol,
 
   QStringList realOptions;
   if (format == "cjson") {
+    // The cjson writer stores every conformer in one document, as 3dSets.
     realOptions << "-icjson"
                 << "-ocjson";
   } else {
+    // The CML writer has no conformer support, so it would only give us the
+    // lowest-energy geometry. --writeconformers writes each conformer as its
+    // own <molecule> instead, which the CML reader turns into coordinate sets.
+    // Open Babel gained cjson after 3.1.1, so this is the path most users take.
     realOptions << "-icml"
-                << "-ocml";
+                << "-ocml"
+                << "--writeconformers";
   }
+  // Open Babel's genetic algorithm search logs to stdout rather than stderr
+  // (OBConformerSearch defaults m_logstream to std::cout and the --conformer
+  // operation never redirects it), so anything written to stdout arrives
+  // interleaved with the molecule. Collect the molecule in a file instead --
+  // that keeps the two apart on every Open Babel release.
+  clearConformerOutputFile();
+  m_conformerOutputFile =
+    new QTemporaryFile(QDir::tempPath() + "/avogadro_conformers_XXXXXX." +
+                         QString::fromStdString(format),
+                       this);
+  if (!m_conformerOutputFile->open()) {
+    qWarning() << "OBProcess::generateConformers(): could not create a "
+                  "temporary file for the conformer search output.";
+    clearConformerOutputFile();
+    releaseProcess();
+    return false;
+  }
+  // Close it so obabel can write to it, but keep the object alive: it owns the
+  // file name, and removes the file when it is destroyed.
+  m_conformerOutputFile->close();
+
+  realOptions << "-O" << m_conformerOutputFile->fileName();
+
   realOptions << "--conformer"
               << "--noh" // new in OB 3.0.1
               << "--log" << options;
@@ -485,14 +519,33 @@ void OBProcess::optimizeGeometryPrepare()
 void OBProcess::conformerPrepare()
 {
   if (m_aborted) {
+    clearConformerOutputFile();
     releaseProcess();
     return;
   }
 
-  QByteArray result = m_process->readAllStandardOutput();
+  // The molecules were written to a file rather than stdout, so that the
+  // genetic algorithm's log could not corrupt them.
+  QByteArray result;
+  if (m_conformerOutputFile) {
+    QFile output(m_conformerOutputFile->fileName());
+    if (output.open(QIODevice::ReadOnly))
+      result = output.readAll();
+    else
+      qWarning() << "OBProcess::conformerPrepare(): could not read the "
+                    "conformer search output from"
+                 << m_conformerOutputFile->fileName();
+  }
+  clearConformerOutputFile();
 
   releaseProcess();
   emit generateConformersFinished(result);
+}
+
+void OBProcess::clearConformerOutputFile()
+{
+  delete m_conformerOutputFile;
+  m_conformerOutputFile = nullptr;
 }
 
 void OBProcess::optimizeGeometryReadLog()

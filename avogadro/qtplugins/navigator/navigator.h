@@ -82,6 +82,7 @@ private:
   enum ToolAction
   {
     Nothing = 0,
+    RotTrackball,
     Rotation,
     Translation,
     ZoomTilt,

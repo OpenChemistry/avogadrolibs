@@ -35,6 +35,8 @@
 #include <avogadro/calc/energyoptimizer.h>
 #include <avogadro/calc/lennardjones.h>
 
+#include <cmath>
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -51,6 +53,8 @@ const int constraintAction = 5;
 const int forcesAction = 6;
 const int fuseAction = 7;
 const int unfuseAction = 8;
+const int batchEnergyAction = 9;
+const int batchForcesAction = 10;
 
 Forcefield::Forcefield(QObject* parent_)
   : ExtensionPlugin(parent_), m_method(nullptr)
@@ -89,6 +93,24 @@ Forcefield::Forcefield(QObject* parent_)
   action->setData(forcesAction);
   action->setProperty("menu priority", 910);
   connect(action, SIGNAL(triggered()), SLOT(forces()));
+  m_actions.push_back(action);
+
+  // Batch actions over every coordinate set (conformers / trajectory frames).
+  // Enabled only when more than one coordinate set is present.
+  action = new QAction(this);
+  action->setEnabled(false);
+  action->setText(tr("Energies (All Conformers)"));
+  action->setData(batchEnergyAction);
+  action->setProperty("menu priority", 906);
+  connect(action, SIGNAL(triggered()), SLOT(batchEnergy()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(false);
+  action->setText(tr("Forces (All Conformers)"));
+  action->setData(batchForcesAction);
+  action->setProperty("menu priority", 905);
+  connect(action, SIGNAL(triggered()), SLOT(batchForces()));
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -217,6 +239,13 @@ Forcefield::Forcefield(QObject* parent_)
 Forcefield::~Forcefield()
 {
   cleanupWorker();
+
+  const QList<QThread*> stillRunning = m_retiredThreads;
+  for (QThread* thread : stillRunning) {
+    thread->quit();
+    thread->wait();
+  }
+  m_retiredThreads.clear();
 }
 
 QList<QAction*> Forcefield::actions() const
@@ -237,6 +266,9 @@ QStringList Forcefield::menuPath(QAction* action) const
 
 void Forcefield::showDialog()
 {
+  if (m_molecule == nullptr)
+    return;
+
   QStringList forceFields;
   QVariantMap modelUserOptionSchemas;
   auto list =
@@ -295,10 +327,27 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
   if (mol == nullptr || m_molecule == mol)
     return;
 
+  // Any running calculation belongs to the outgoing molecule. Cancel it and
+  // close its undo merge before switching, so queued results can't be applied
+  // to the new molecule (cleanupWorker() disconnects the worker, so the
+  // sender() checks in the result handlers reject anything still in flight).
+  if (m_worker != nullptr || m_optimizing || m_batchRunning) {
+    if (m_optimizing && m_molecule != nullptr)
+      m_molecule->undoMolecule()->setInteractive(false);
+    cleanupWorker();
+  }
+
+  // Disconnect from the old molecule so it no longer drives our actions.
+  if (m_molecule != nullptr)
+    disconnect(m_molecule, SIGNAL(changed(unsigned int)), this,
+               SLOT(updateActions()));
+
   m_molecule = mol;
 
-  // TODO: connect to molecule changes, e.g. selection
-  // connect(m_molecule, SIGNAL(changed(uint)), SLOT(updateActions()));
+  // Refresh action enable-state (e.g. batch actions) when the molecule
+  // changes - conformers may be added or removed.
+  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
+  updateActions();
 }
 
 void Forcefield::updateActions()
@@ -307,6 +356,7 @@ void Forcefield::updateActions()
     return;
 
   bool noSelection = m_molecule->isSelectionEmpty();
+  bool hasConformers = m_molecule->coordinate3dCount() > 1;
   foreach (QAction* action, m_actions) {
     switch (action->data().toInt()) {
       case freezeAction:
@@ -314,6 +364,10 @@ void Forcefield::updateActions()
       case fuseAction:
       case unfuseAction:
         action->setEnabled(!noSelection);
+        break;
+      case batchEnergyAction:
+      case batchForcesAction:
+        action->setEnabled(hasConformers);
         break;
       default:
         break;
@@ -384,10 +438,27 @@ void Forcefield::setupConstraints()
 
 void Forcefield::cleanupWorker()
 {
+  delete m_pendingCalc;
+  m_pendingCalc = nullptr;
+
   if (m_workerThread) {
+    if (m_worker) {
+      m_worker->cancel();
+      // A queued result can be delivered after a timeout. Disconnect it so
+      // an obsolete operation cannot update or tear down a newer worker.
+      disconnect(m_worker, nullptr, this, nullptr);
+    }
     m_workerThread->quit();
-    m_workerThread->wait(5000);
-    // deleteLater handles the worker and thread via finished() connections
+    if (m_workerThread->wait(5000)) {
+      m_workerThread->deleteLater();
+    } else {
+      QThread* stalled = m_workerThread;
+      m_retiredThreads.append(stalled);
+      connect(stalled, &QThread::finished, this, [this, stalled]() {
+        m_retiredThreads.removeAll(stalled);
+        stalled->deleteLater();
+      });
+    }
     m_workerThread = nullptr;
     m_worker = nullptr;
   }
@@ -397,6 +468,7 @@ void Forcefield::cleanupWorker()
     m_progressDialog = nullptr;
   }
   m_optimizing = false;
+  m_batchRunning = false;
 }
 
 void Forcefield::startWorker()
@@ -472,13 +544,16 @@ void Forcefield::optimize()
     return;
   }
 
-  m_currentStep = 0;
+  m_iterationsDone = 0;
 
   // merge all coordinate updates into one undo step
   m_molecule->undoMolecule()->setInteractive(true);
 
-  // Set up optimization options
-  m_optOptions.algorithm = Calc::OptimizationAlgorithm::Lbfgs;
+  // Set up optimization options. Hybrid drives ABC-FIRE until |g|_inf
+  // drops below ~5 kJ/(mol*A), then hands off to L-BFGS for the tail.
+  // Start with a small chunk so the first frame lands quickly; the size
+  // adapts per chunk in onOptimizeChunkDone to target ~30 fps.
+  m_optOptions.algorithm = Calc::OptimizationAlgorithm::Hybrid;
   m_optOptions.chunkIterations = 5;
 
   // Snapshot current positions
@@ -491,16 +566,21 @@ void Forcefield::optimize()
   // Start the worker first (calls cleanupWorker() which resets m_optimizing)
   startWorker();
 
+  if (!m_worker) {
+    m_molecule->undoMolecule()->setInteractive(false);
+    return;
+  }
+
   // Set m_optimizing AFTER startWorker, since cleanupWorker resets it
   m_optimizing = true;
 
-  // Create progress dialog
-  int totalChunks = static_cast<int>(m_maxSteps / m_optOptions.chunkIterations);
+  // Create progress dialog. Range is in iterations (not chunks) since the
+  // chunk size now varies across the run.
   m_progressDialog =
     new QProgressDialog(qobject_cast<QWidget*>(this->parent()));
   m_progressDialog->setWindowTitle(tr("Optimize Geometry"));
   // cancel button text is set automatically
-  m_progressDialog->setRange(0, totalChunks);
+  m_progressDialog->setRange(0, static_cast<int>(m_maxSteps));
   m_progressDialog->setWindowModality(Qt::WindowModal);
   m_progressDialog->setMinimumDuration(0);
   m_progressDialog->show();
@@ -523,10 +603,12 @@ void Forcefield::optimize()
 
 void Forcefield::onWorkerReady()
 {
-  if (!m_optimizing || !m_worker)
+  if (sender() != m_worker || !m_optimizing || !m_worker)
     return;
 
-  // Send the first optimization chunk
+  // Send the first optimization chunk. Time round-trip (dispatch + work +
+  // signal back) so adaptive chunk sizing reflects the actual UI cadence.
+  m_chunkTimer.start();
   QMetaObject::invokeMethod(
     m_worker, "runOptimizeChunk", Qt::QueuedConnection,
     Q_ARG(Eigen::VectorXd, m_lastPositions),
@@ -537,21 +619,34 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
                                      Eigen::VectorXd gradient, double energy,
                                      bool converged)
 {
-  if (!m_optimizing || m_molecule == nullptr)
+  if (sender() != m_worker || !m_optimizing || m_molecule == nullptr)
     return;
 
+  // Measure chunk wall time (round-trip) before launching the next chunk.
+  // nsecsElapsed gives us sub-ms resolution so adaptation still works when
+  // small molecules finish a chunk in well under 1 ms.
+  const double elapsedMs =
+    m_chunkTimer.isValid() ? m_chunkTimer.nsecsElapsed() / 1.0e6 : 0.0;
+
   auto n = m_molecule->atomCount();
-  m_currentStep++;
+  if (n == 0 || positions.size() != 3 * static_cast<Eigen::Index>(n)) {
+    m_molecule->undoMolecule()->setInteractive(false);
+    cleanupWorker();
+    return;
+  }
+  const unsigned int chunkRan = m_optOptions.chunkIterations;
+  m_iterationsDone += chunkRan;
 
   if (m_progressDialog) {
-    m_progressDialog->setValue(m_currentStep);
+    m_progressDialog->setValue(static_cast<int>(m_iterationsDone));
     m_progressDialog->setLabelText(
       tr("Energy: %L1", "force field energy").arg(energy, 0, 'f', 3));
   }
 
 #ifndef NDEBUG
-  qDebug() << " optimize " << m_currentStep << energy
-           << " gradNorm: " << gradient.norm();
+  qDebug() << " optimize " << m_iterationsDone << energy
+           << " gradNorm: " << gradient.norm() << " chunk=" << chunkRan
+           << " ms=" << elapsedMs;
 #endif
 
   // Update coordinates if valid
@@ -584,8 +679,7 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
       done = true;
   }
 
-  int totalChunks = static_cast<int>(m_maxSteps / m_optOptions.chunkIterations);
-  if (m_currentStep >= totalChunks)
+  if (m_iterationsDone >= m_maxSteps)
     done = true;
 
   m_lastEnergy = energy;
@@ -595,7 +689,21 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
     m_molecule->undoMolecule()->setInteractive(false);
     cleanupWorker();
   } else {
+    // Adapt chunk size toward ~30 fps using the measured round-trip. Cap
+    // at the remaining iteration budget so we don't overshoot m_maxSteps.
+    constexpr double kTargetMs = 33.0; // 30 fps
+    constexpr double kSmoothing = 0.7; // ~2-chunk convergence to target
+    constexpr size_t kMinChunk = 1;
+    constexpr size_t kMaxChunk = 200;
+    size_t next = Calc::adaptChunkIterations(chunkRan, elapsedMs, kTargetMs,
+                                             kSmoothing, kMinChunk, kMaxChunk);
+    const unsigned int remaining = m_maxSteps - m_iterationsDone;
+    if (next > remaining)
+      next = remaining;
+    m_optOptions.chunkIterations = next;
+
     // Request next chunk
+    m_chunkTimer.start();
     QMetaObject::invokeMethod(
       m_worker, "runOptimizeChunk", Qt::QueuedConnection,
       Q_ARG(Eigen::VectorXd, m_lastPositions),
@@ -613,6 +721,12 @@ void Forcefield::energy()
   if (m_method == nullptr)
     return;
 
+  if (m_molecule->atomCount() == 0) {
+    QMessageBox::information(nullptr, tr("Avogadro"),
+                             tr("No atoms provided for energy calculation"));
+    return;
+  }
+
   auto n = m_molecule->atomCount();
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
@@ -620,13 +734,20 @@ void Forcefield::energy()
 
   startWorker();
 
-  connect(
-    m_worker, &QtGui::CalcWorker::calculatorReady, this, [this, positions]() {
-      QMetaObject::invokeMethod(m_worker, "runEvaluate", Qt::QueuedConnection,
-                                Q_ARG(Eigen::VectorXd, positions),
-                                Q_ARG(bool, false));
-    });
-  connect(m_worker, &QtGui::CalcWorker::evaluateFinished, this,
+  if (!m_worker)
+    return;
+
+  auto* worker = m_worker;
+
+  connect(worker, &QtGui::CalcWorker::calculatorReady, this,
+          [this, worker, positions]() {
+            if (worker != m_worker)
+              return;
+            QMetaObject::invokeMethod(
+              worker, "runEvaluate", Qt::QueuedConnection,
+              Q_ARG(Eigen::VectorXd, positions), Q_ARG(bool, false));
+          });
+  connect(worker, &QtGui::CalcWorker::evaluateFinished, this,
           &Forcefield::onEnergyDone);
 
   sendInitCalculator();
@@ -635,6 +756,8 @@ void Forcefield::energy()
 void Forcefield::onEnergyDone(Eigen::VectorXd gradient, double energy)
 {
   Q_UNUSED(gradient);
+  if (sender() != m_worker)
+    return;
   QString msg(tr("%1 Energy = %L2").arg(m_methodName.c_str()).arg(energy));
   cleanupWorker();
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
@@ -650,6 +773,12 @@ void Forcefield::forces()
   if (m_method == nullptr)
     return;
 
+  if (m_molecule->atomCount() == 0) {
+    QMessageBox::information(nullptr, tr("Avogadro"),
+                             tr("No atoms provided for force calculation"));
+    return;
+  }
+
   auto n = m_molecule->atomCount();
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
@@ -657,12 +786,20 @@ void Forcefield::forces()
 
   startWorker();
 
-  connect(
-    m_worker, &QtGui::CalcWorker::calculatorReady, this, [this, positions]() {
-      QMetaObject::invokeMethod(m_worker, "runGradient", Qt::QueuedConnection,
-                                Q_ARG(Eigen::VectorXd, positions));
-    });
-  connect(m_worker, &QtGui::CalcWorker::evaluateFinished, this,
+  if (!m_worker)
+    return;
+
+  auto* worker = m_worker;
+
+  connect(worker, &QtGui::CalcWorker::calculatorReady, this,
+          [this, worker, positions]() {
+            if (worker != m_worker)
+              return;
+            QMetaObject::invokeMethod(worker, "runGradient",
+                                      Qt::QueuedConnection,
+                                      Q_ARG(Eigen::VectorXd, positions));
+          });
+  connect(worker, &QtGui::CalcWorker::evaluateFinished, this,
           &Forcefield::onForcesDone);
 
   sendInitCalculator();
@@ -672,6 +809,9 @@ void Forcefield::onForcesDone(Eigen::VectorXd gradient, double energy)
 {
   Q_UNUSED(energy);
 
+  if (sender() != m_worker)
+    return;
+
   if (m_molecule == nullptr) {
     cleanupWorker();
     return;
@@ -680,7 +820,7 @@ void Forcefield::onForcesDone(Eigen::VectorXd gradient, double energy)
   auto n = m_molecule->atomCount();
 
   Core::Array<Vector3> forces(n);
-  if (gradient.size() == 3 * static_cast<Eigen::Index>(n))
+  if (n > 0 && gradient.size() == 3 * static_cast<Eigen::Index>(n))
     Eigen::Map<Eigen::VectorXd>(forces[0].data(), 3 * n) = -gradient;
 
   m_molecule->setForceVectors(forces);
@@ -691,6 +831,189 @@ void Forcefield::onForcesDone(Eigen::VectorXd gradient, double energy)
     tr("%1 Force Norm = %L2").arg(m_methodName.c_str()).arg(gradient.norm()));
   cleanupWorker();
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
+}
+
+std::vector<Eigen::VectorXd> Forcefield::gatherCoordinateSets() const
+{
+  std::vector<Eigen::VectorXd> coords;
+  if (m_molecule == nullptr)
+    return coords;
+
+  const auto count = m_molecule->coordinate3dCount();
+  const auto n = m_molecule->atomCount();
+  coords.reserve(count);
+  for (size_t c = 0; c < count; ++c) {
+    // coordinate3d() returns a copy and does not change the displayed set.
+    Core::Array<Vector3> set = m_molecule->coordinate3d(c);
+    // Zero first - a short coordinate set would otherwise leave the tail
+    // uninitialized and send garbage to the calculator.
+    Eigen::VectorXd x = Eigen::VectorXd::Zero(3 * n);
+    for (size_t i = 0; i < n && i < set.size(); ++i) {
+      x[3 * i] = set[i].x();
+      x[3 * i + 1] = set[i].y();
+      x[3 * i + 2] = set[i].z();
+    }
+    coords.push_back(x);
+  }
+  return coords;
+}
+
+void Forcefield::batchEnergy()
+{
+  runBatch(false);
+}
+
+void Forcefield::batchForces()
+{
+  runBatch(true);
+}
+
+void Forcefield::runBatch(bool computeGradient)
+{
+  if (m_molecule == nullptr || m_optimizing || m_batchRunning)
+    return;
+
+  if (m_method == nullptr)
+    setupMethod();
+  if (m_method == nullptr)
+    return;
+
+  if (m_molecule->coordinate3dCount() < 2) {
+    QMessageBox::information(nullptr, tr("Avogadro"),
+                             tr("This molecule has only one coordinate set."));
+    return;
+  }
+
+  std::vector<Eigen::VectorXd> coords = gatherCoordinateSets();
+  if (coords.empty())
+    return;
+
+  m_batchGradient = computeGradient;
+
+  startWorker();
+
+  if (!m_worker)
+    return;
+
+  m_batchRunning = true;
+
+  auto* worker = m_worker;
+
+  const int total = static_cast<int>(coords.size());
+  m_progressDialog =
+    new QProgressDialog(qobject_cast<QWidget*>(this->parent()));
+  m_progressDialog->setWindowTitle(computeGradient
+                                     ? tr("Forces (All Conformers)")
+                                     : tr("Energies (All Conformers)"));
+  m_progressDialog->setRange(0, total);
+  m_progressDialog->setWindowModality(Qt::WindowModal);
+  m_progressDialog->setMinimumDuration(0);
+  m_progressDialog->show();
+
+  connect(m_progressDialog, &QProgressDialog::canceled, this, [this]() {
+    if (m_worker)
+      m_worker->cancel();
+    cleanupWorker();
+    m_batchRunning = false;
+  });
+
+  connect(worker, &QtGui::CalcWorker::batchProgress, this,
+          [this, worker](int done, int totalSets) {
+            if (worker != m_worker)
+              return;
+            if (m_progressDialog) {
+              m_progressDialog->setRange(0, totalSets);
+              m_progressDialog->setValue(done);
+            }
+          });
+
+  connect(worker, &QtGui::CalcWorker::calculatorReady, this,
+          [this, worker, coords, computeGradient]() {
+            if (worker != m_worker)
+              return;
+            QMetaObject::invokeMethod(
+              worker, "runEvaluateBatch", Qt::QueuedConnection,
+              Q_ARG(std::vector<Eigen::VectorXd>, coords),
+              Q_ARG(bool, computeGradient), Q_ARG(int, 0));
+          });
+  connect(worker, &QtGui::CalcWorker::evaluateBatchFinished, this,
+          &Forcefield::onBatchDone);
+
+  sendInitCalculator();
+}
+
+void Forcefield::onBatchDone(std::vector<double> energies,
+                             std::vector<Eigen::VectorXd> gradients)
+{
+  if (sender() != m_worker)
+    return;
+
+  m_batchRunning = false;
+
+  if (m_molecule == nullptr) {
+    cleanupWorker();
+    return;
+  }
+
+  const auto n = m_molecule->atomCount();
+  const auto coordCount = m_molecule->coordinate3dCount();
+
+  // A cancelled batch finishes with only the chunks completed so far. Storing
+  // those would leave "energies"/"forces" out of step with the coordinate
+  // sets, so only persist a result that covers every conformer.
+  const bool energiesComplete = (energies.size() == coordCount);
+  const bool gradientsComplete = (gradients.size() == coordCount);
+
+  // Store one energy per coordinate set (read by the conformer plot).
+  if (energiesComplete)
+    m_molecule->setData("energies", Core::Variant(energies));
+
+  // Store forces two ways:
+  //   * data("forces") - the RMS gradient (|g| / sqrt(3N)) per coordinate
+  //     set, the scalar convention shared with the readers and read by the
+  //     conformer plot (parallels data("energies")).
+  //   * conformerProperties("forces") - the full (N x 3) force matrix per
+  //     coordinate set, for richer per-atom use.
+  if (gradientsComplete) {
+    std::vector<double> rmsGradients;
+    rmsGradients.reserve(gradients.size());
+    for (size_t c = 0; c < gradients.size(); ++c) {
+      const Eigen::VectorXd& g = gradients[c];
+      rmsGradients.push_back(
+        g.size() > 0 ? g.norm() / std::sqrt(static_cast<double>(g.size()))
+                     : 0.0);
+
+      MatrixX forceMat(static_cast<Eigen::Index>(n), 3);
+      forceMat.setZero();
+      for (size_t i = 0; i < n && 3 * i + 2 < static_cast<size_t>(g.size());
+           ++i) {
+        forceMat(static_cast<Eigen::Index>(i), 0) = -g[3 * i];
+        forceMat(static_cast<Eigen::Index>(i), 1) = -g[3 * i + 1];
+        forceMat(static_cast<Eigen::Index>(i), 2) = -g[3 * i + 2];
+      }
+      m_molecule->conformerProperties().setMatrix(
+        "forces", static_cast<Index>(c), forceMat);
+    }
+    m_molecule->setData("forces", Core::Variant(rmsGradients));
+  }
+
+  // Update the displayed force vectors for the currently shown conformer. This
+  // is ephemeral display state, so it is worth showing even for a partial run,
+  // as long as the active conformer itself was evaluated.
+  const size_t activeIndex = static_cast<size_t>(m_molecule->coordinate3d());
+  if (activeIndex < gradients.size() &&
+      static_cast<size_t>(gradients[activeIndex].size()) >= 3 * n) {
+    Core::Array<Vector3> forceVecs(n, Vector3::Zero());
+    const Eigen::VectorXd& g = gradients[activeIndex];
+    for (size_t i = 0; i < n; ++i)
+      forceVecs[i] = Vector3(-g[3 * i], -g[3 * i + 1], -g[3 * i + 2]);
+    m_molecule->setForceVectors(forceVecs);
+  }
+
+  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+  m_molecule->emitChanged(changes);
+
+  cleanupWorker();
 }
 
 std::string Forcefield::recommendedForceField() const

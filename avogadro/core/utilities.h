@@ -7,12 +7,38 @@
 #define AVOGADRO_CORE_UTILITIES_H
 
 #include <algorithm>
+#include <cerrno>
+#include <cmath>
+#include <cstdlib>
+#include <istream>
+#include <limits>
 #include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
 
 namespace Avogadro::Core {
+
+/**
+ * @brief Read one line from @p in, clearing @p line if the read fails.
+ * @param in The stream to read from.
+ * @param line Receives the line read, or an empty string on failure.
+ * @return True if a line was read, false at end of file or on error.
+ *
+ * std::getline only clears its target string after the sentry check succeeds,
+ * so on a stream that has already failed it leaves the previous line in place.
+ * File parsers that loop until they see a blank line therefore never terminate
+ * at end of file, and keep re-parsing the last line read. Use this in place of
+ * std::getline in those loops.
+ */
+inline bool getLine(std::istream& in, std::string& line)
+{
+  if (!std::getline(in, line)) {
+    line.clear();
+    return false;
+  }
+  return true;
+}
 
 /**
  * @brief Split the supplied @p string by the @p delimiter.
@@ -117,6 +143,72 @@ std::optional<T> lexicalCast(const std::string& inputString)
   if (stream.fail())
     return std::nullopt;
   return value;
+}
+
+/**
+ * @brief Cast the inputString to a double, tolerating out of range exponents.
+ *
+ * Some programs write coordinates (or other values) with exponents a double
+ * cannot represent, e.g. "2.61793E-500" or "-7.5467E-6000". The stream
+ * extractor reports these as errors, which would otherwise abort reading an
+ * entire file over a value that is effectively zero. Fall back to strtod for
+ * the range error alone: underflow becomes zero and overflow is clamped to the
+ * largest representable magnitude so that later arithmetic cannot see an
+ * infinity. Anything the extractor rejects for another reason (including the
+ * literals "nan" and "inf") is still an error.
+ */
+template <>
+inline std::optional<double> lexicalCast(const std::string& inputString)
+{
+  double value;
+  std::istringstream stream(inputString);
+  stream >> value;
+  // Whether the extractor accepts the literals "nan" and "inf" varies between
+  // standard library implementations and versions -- libstdc++ rejects them,
+  // and libc++ accepted them until recently -- so a non-finite result from it
+  // cannot be trusted. Fall through to strtod, which tells a genuine
+  // out-of-range exponent (ERANGE, clamped below) apart from a literal.
+  if (!stream.fail() && std::isfinite(value))
+    return value;
+
+  const char* first = inputString.c_str();
+  char* last = nullptr;
+  errno = 0;
+  value = std::strtod(first, &last);
+  if (last == first || errno != ERANGE)
+    return std::nullopt;
+
+  if (std::isinf(value))
+    value = (value > 0.0) ? std::numeric_limits<double>::max()
+                          : std::numeric_limits<double>::lowest();
+  return value;
+}
+
+/**
+ * @brief Cast the inputString to a float, tolerating out of range exponents.
+ *
+ * The stream extractor for float rejects a merely subnormal result, because
+ * strtof reports underflow as ERANGE. Quantum chemistry codes routinely write
+ * the decaying tail of a density or an orbital with exponents past FLT_MIN
+ * (e.g. "1.505124610E-39"), so the generic template above would discard a
+ * value that is effectively zero. Delegate to the double overload, which
+ * already separates a range error from a genuine parse failure, then narrow --
+ * clamping so that a magnitude beyond float cannot become an infinity.
+ */
+template <>
+inline std::optional<float> lexicalCast(const std::string& inputString)
+{
+  const std::optional<double> value = lexicalCast<double>(inputString);
+  if (!value)
+    return std::nullopt;
+
+  constexpr double floatMax =
+    static_cast<double>(std::numeric_limits<float>::max());
+  if (*value > floatMax)
+    return std::numeric_limits<float>::max();
+  if (*value < -floatMax)
+    return std::numeric_limits<float>::lowest();
+  return static_cast<float>(*value);
 }
 
 /**

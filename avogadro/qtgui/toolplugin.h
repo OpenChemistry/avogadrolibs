@@ -9,6 +9,7 @@
 #include "avogadroqtguiexport.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QVariantMap>
 
 class QAction;
 class QKeyEvent;
@@ -145,11 +146,35 @@ signals:
   void requestActiveDisplayTypes(QStringList displayTypes);
 
   /**
+   * Indicate that a command has been started, but is not yet finished --
+   * for example, work that handleCommand() handed to a background thread.
+   *
+   * The application holds the caller's reply until the command completes.
+   * Once this is emitted, every code path must end in commandFinished() or
+   * commandFailed(), or the caller waits until the command times out.
+   *
+   * @sa commandFinished, commandFailed
+   */
+  void commandStarted();
+
+  /**
    * Indicate that a particular script command is finished.
    * (e.g., from handleCommand)
    * @param message An optional message to the script or user
+   * @param result Optional results for the caller, e.g. an energy or a
+   * gradient. Only types with a JSON equivalent survive the trip to a
+   * script, so convert Eigen and Core::Array values to lists of numbers
+   * before adding them.
    */
-  void commandFinished(const QString& message = QString());
+  void commandFinished(const QString& message = QString(),
+                       const QVariantMap& result = QVariantMap());
+
+  /**
+   * Indicate that a command that was started cannot be completed.
+   * @param message A message to the script or user explaining the failure
+   * @sa commandStarted
+   */
+  void commandFailed(const QString& message = QString());
 
 public slots:
   /**

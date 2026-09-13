@@ -11,14 +11,12 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
-#include <nlohmann/json.hpp>
-
+#include <cctype>
 #include <iomanip>
-#include <iostream>
+#include <istream>
+#include <ostream>
 #include <sstream>
 #include <string>
-
-using json = nlohmann::json;
 
 using std::endl;
 using std::getline;
@@ -76,12 +74,6 @@ std::optional<double> findEnergy(const std::string& buffer)
 
 bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
-  json opts;
-  if (!options().empty())
-    opts = json::parse(options(), nullptr, false);
-  else
-    opts = json::object();
-
   size_t numAtoms = 0;
   if (!(inStream >> numAtoms)) {
     appendError("Error parsing number of atoms.");
@@ -121,9 +113,6 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     std::vector<string> tokens(split(lattice, ' '));
 
-    // check for size
-    std::cout << "Lattice size: " << tokens.size() << std::endl;
-
     if (tokens.size() >= 9) {
       if (auto tmp = lexicalCast<double>(tokens.begin(), tokens.begin() + 9)) {
         Vector3 v1(tmp->at(0), tmp->at(1), tmp->at(2));
@@ -131,8 +120,6 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         Vector3 v3(tmp->at(6), tmp->at(7), tmp->at(8));
 
         auto* cell = new Core::UnitCell(v1, v2, v3);
-        std::cout << " Lattice: " << cell->aVector() << " " << cell->bVector()
-                  << " " << cell->cVector() << std::endl;
         if (!cell->isRegular()) {
           appendError("Lattice vectors are not linear independent");
           delete cell;
@@ -207,6 +194,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     unsigned char atomicNum(0);
     if (isalpha(tokens[0][0])) {
       atomicNum = Elements::atomicNumberFromSymbol(tokens[0]);
+      // Crystallography tools (e.g. Mercury) often write atom labels rather
+      // than plain symbols, i.e. "N1" instead of "N". Fall back to trimming
+      // the label down to the longest leading symbol we recognize.
+      if (atomicNum == InvalidElement)
+        atomicNum = Elements::guessAtomicNumber(tokens[0]);
       if (tokens[0] == "D")
         atomicNum = 1;
       else if (tokens[0] == "T")
@@ -342,7 +334,9 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // This format has no connectivity information, so perceive basics at least.
-  if (opts.value("perceiveBonds", true)) {
+  bool perceiveBonds = true;
+  boolOption("perceiveBonds", perceiveBonds);
+  if (perceiveBonds) {
     mol.perceiveBondsSimple();
     mol.perceiveBondOrders();
   }

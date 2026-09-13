@@ -47,6 +47,7 @@ private slots:
     Io::FileFormat* format); // returns bool so cut can reuse implementation.
   bool copyCJSON();
   void copySMILES();
+  void copyMappedSMILES();
   void copyInChI();
   void copyXYZ();
   void cut();
@@ -62,6 +63,7 @@ private:
 
   QAction* m_copyAction;
   QAction* m_copySMILES;
+  QAction* m_copyMappedSMILES;
   QAction* m_copyInChI;
   QAction* m_copyXYZ;
   QAction* m_cutAction;

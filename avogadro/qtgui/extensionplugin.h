@@ -11,8 +11,10 @@
 #include <avogadro/qtplugins/pluginfactory.h>
 
 #include <QtCore/QObject>
+#include <QtCore/QVariantMap>
 
 class QAction;
+class QDockWidget;
 
 namespace Avogadro {
 
@@ -79,6 +81,30 @@ public:
    * should be implemented to emit the registerCommand signals.
    */
   virtual void registerCommands() {}
+
+  /**
+   * @return The dock widgets this extension contributes to the main window.
+   *
+   * Most extensions contribute none and need not implement this. The
+   * application adds what is returned to its window; the plugin keeps
+   * ownership and decides what the dock contains.
+   *
+   * A contributed dock starts hidden, since the window already carries
+   * several of its own. Showing it is the plugin's business: give it a
+   * checkable QAction through actions() and menuPath() like any other menu
+   * entry, and QDockWidget::toggleViewAction() is usually the action you
+   * want. Set a windowTitle() on each dock, since that is what its title bar
+   * shows, and a unique objectName() so window state can be saved and
+   * restored. This is consulted once, when the application starts.
+   */
+  virtual QList<QDockWidget*> dockWidgets() const;
+
+  /**
+   * @return The dock area @p widget should be placed in when it is first
+   * added. Defaults to the right area, since the left already carries the
+   * tool, display, file and layer docks.
+   */
+  virtual Qt::DockWidgetArea preferredDockArea(QDockWidget* widget) const;
 
 public slots:
   /**
@@ -162,11 +188,35 @@ signals:
   void registerCommand(QString command, QString description);
 
   /**
+   * Indicate that a command has been started, but is not yet finished --
+   * for example, work that handleCommand() handed to a background thread.
+   *
+   * The application holds the caller's reply until the command completes.
+   * Once this is emitted, every code path must end in commandFinished() or
+   * commandFailed(), or the caller waits until the command times out.
+   *
+   * @sa commandFinished, commandFailed
+   */
+  void commandStarted();
+
+  /**
    * Indicate that a particular script command is finished.
    * (e.g., from handleCommand)
    * @param message An optional message to the script or user
+   * @param result Optional results for the caller, e.g. an energy or a
+   * gradient. Only types with a JSON equivalent survive the trip to a
+   * script, so convert Eigen and Core::Array values to lists of numbers
+   * before adding them.
    */
-  void commandFinished(const QString& message = QString());
+  void commandFinished(const QString& message = QString(),
+                       const QVariantMap& result = QVariantMap());
+
+  /**
+   * Indicate that a command that was started cannot be completed.
+   * @param message A message to the script or user explaining the failure
+   * @sa commandStarted
+   */
+  void commandFailed(const QString& message = QString());
 
   /**
    * Indicate that the list of actions for this extension has changed.

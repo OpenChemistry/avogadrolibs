@@ -19,13 +19,25 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 set(tests
   CalcWorker
   ElementTranslator
+  FileFormatDialog
+  FragmentTools
   GenericHighlighter
   HydrogenTools
+  JsonWidget
   MeshGenerator
   Molecule
   PackageManager
   RWMolecule
+  ScriptProgress
+  Utilities
 )
+
+if(Python3_EXECUTABLE)
+  list(APPEND tests
+    InterfaceScript
+    PythonScript
+  )
+endif()
 
 if (BUILD_MOLEQUEUE)
   # Pull in MoleQueue

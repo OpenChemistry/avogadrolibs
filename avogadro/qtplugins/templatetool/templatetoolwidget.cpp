@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "templatetoolwidget.h"
+#include "templateattachment.h"
 #include "ui_templatetoolwidget.h"
 
 #include <avogadro/core/elements.h>
@@ -45,9 +46,50 @@ enum LigandType
   Clipboard = 6
 };
 
+namespace {
+// The denticity a ligand type implies. Custom ("Other...") ligands are
+// measured from their template instead, since the file decides.
+int denticityForType(int ligandType)
+{
+  switch (ligandType) {
+    case LigandType::Bidentate:
+      return 2;
+    case LigandType::Tridentate:
+      return 3;
+    case LigandType::Tetradentate:
+      return 4;
+    case LigandType::Hexadentate:
+      return 6;
+    default:
+      // monodentate, haptic (one dummy atom) and clipboard
+      return 1;
+  }
+}
+
+// The ligand type matching a measured denticity, or -1 when no type applies.
+// Monodentate and haptic templates both have a single attachment point, so
+// leave whichever of those the user picked alone.
+int typeForDenticity(int denticity)
+{
+  switch (denticity) {
+    case 2:
+      return LigandType::Bidentate;
+    case 3:
+      return LigandType::Tridentate;
+    case 4:
+      return LigandType::Tetradentate;
+    case 6:
+      return LigandType::Hexadentate;
+    default:
+      return -1;
+  }
+}
+} // namespace
+
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   : QWidget(parent_), m_ui(new Ui::TemplateToolWidget),
-    m_fragmentDialog(nullptr), m_elementSelector(nullptr), m_currentElement(26)
+    m_fragmentDialog(nullptr), m_elementSelector(nullptr), m_currentElement(26),
+    m_denticity(1)
 {
   m_ui->setupUi(this);
 
@@ -82,6 +124,9 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
            << "phenyl"
            << "phosphate"
            << "sulfonate" << tr("Other…");
+
+  connect(m_ui->tabWidget, SIGNAL(currentChanged(int)), this,
+          SLOT(tabChanged(int)));
 
   connect(m_ui->elementComboBox, SIGNAL(currentIndexChanged(int)), this,
           SLOT(elementChanged(int)));
@@ -190,6 +235,46 @@ void TemplateToolWidget::setCurrentTab(int index)
   m_ui->tabWidget->setCurrentIndex(index);
 }
 
+void TemplateToolWidget::clearSelection()
+{
+  if (m_selectedUIDs.empty())
+    return;
+
+  m_selectedUIDs.clear();
+  emit selectionCleared();
+}
+
+void TemplateToolWidget::useCustomLigand(const QString& fileName)
+{
+  m_ligandPath = fileName;
+
+  // The file decides how many placeholders have to be picked, whichever type
+  // it was inserted under.
+  int denticity = templateDenticity(fileName);
+  if (denticity < 1)
+    denticity = 1;
+
+  // Show the type the template actually is. This repopulates the ligand list,
+  // so "Other..." has to be re-selected afterwards.
+  int ligandType = typeForDenticity(denticity);
+  if (ligandType >= 0 && ligandType != m_ui->typeComboBox->currentIndex())
+    m_ui->typeComboBox->setCurrentIndex(ligandType);
+
+  m_ui->ligandComboBox->blockSignals(true);
+  m_ui->ligandComboBox->setCurrentIndex(m_ui->ligandComboBox->count() - 1);
+  m_ui->ligandComboBox->blockSignals(false);
+
+  m_denticity = denticity;
+  clearSelection();
+}
+
+void TemplateToolWidget::tabChanged(int)
+{
+  // A half-finished ligand can't carry over to another tab - the new tab has
+  // its own denticity, so any pending attachment points are meaningless here.
+  clearSelection();
+}
+
 void TemplateToolWidget::setGroup(const QString& groupName)
 {
   // Check if it's in the groups list (excluding "Other" at the end)
@@ -211,7 +296,6 @@ void TemplateToolWidget::setGroup(const QString& groupName)
     m_ui->groupComboBox->blockSignals(true);
     m_ui->groupComboBox->setCurrentIndex(m_ui->groupComboBox->count() - 1);
     m_ui->groupComboBox->blockSignals(false);
-    m_denticity = 1;
     // Update the preview icon
     m_ui->groupPreview->setIcon(QIcon(":/icons/ligands/" + groupName + ".svg"));
   }
@@ -243,12 +327,8 @@ void TemplateToolWidget::setLigand(const QString& ligandName)
   if (index >= 0 && index < m_ligands.size() - 1) {
     m_ui->ligandComboBox->setCurrentIndex(index);
   } else {
-    // Not in list, set as custom ligand path
-    m_ligandPath = ":/templates/ligands/" + ligandName + ".cjson";
-    // Set to "Other" without triggering the dialog
-    m_ui->ligandComboBox->blockSignals(true);
-    m_ui->ligandComboBox->setCurrentIndex(m_ui->ligandComboBox->count() - 1);
-    m_ui->ligandComboBox->blockSignals(false);
+    // Not in list, so use it as a custom ligand ("Other...")
+    useCustomLigand(":/templates/ligands/" + ligandName + ".cjson");
     // Update the preview icon
     m_ui->ligandPreview->setIcon(
       QIcon(":/icons/ligands/" + ligandName + ".svg"));
@@ -303,7 +383,6 @@ void TemplateToolWidget::groupChanged(int index)
   int i = m_ui->groupComboBox->currentIndex();
   const QString& groupName = m_groups[i];
   const QString& iconName = groupName;
-  m_denticity = 1;
 
   // check if it's "other"
   if (index == m_ui->groupComboBox->count() - 1) {
@@ -374,6 +453,10 @@ void TemplateToolWidget::ligandChanged(int index)
     return;
   }
 
+  // A built-in ligand always matches the denticity of its type; a custom one
+  // may have left a measured value behind.
+  m_denticity = denticityForType(m_ui->typeComboBox->currentIndex());
+
   m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".svg"));
 }
 
@@ -385,7 +468,7 @@ void TemplateToolWidget::otherLigandInsert(const QString& fileName,
 
   // get the ligand name
   QString ligandName = m_fragmentDialog->fileName();
-  m_ligandPath = ligandName;
+  useCustomLigand(ligandName);
 
   m_fragmentDialog->hide();
   // it will be deleted later
@@ -407,7 +490,8 @@ void TemplateToolWidget::typeChanged(int index)
   settings.beginGroup("templatetool");
   settings.setValue("ligandType", index);
 
-  m_selectedUIDs.clear();
+  clearSelection();
+  m_denticity = denticityForType(index);
   m_ui->ligandComboBox->clear();
   m_ligands = QStringList();
   QStringList ligandNames;
@@ -426,7 +510,6 @@ void TemplateToolWidget::typeChanged(int index)
                 << "1-phosphine"
                 << "1-thiol"
                 << "1-other";
-      m_denticity = 1;
       break;
     case LigandType::Bidentate: // Bidentate
       ligandNames << "acetylacetonate"
@@ -436,13 +519,11 @@ void TemplateToolWidget::typeChanged(int index)
                 << "2-bipyridine"
                 << "2-ethylenediamine"
                 << "2-other";
-      m_denticity = 2;
       break;
     case LigandType::Tridentate: // Tridentate
       ligandNames << "terpyridine" << tr("Other…");
       m_ligands << "3-terpyridine"
                 << "3-other";
-      m_denticity = 3;
       break;
     case LigandType::Tetradentate: // Tetradentate
       ligandNames << "phthalocyanine"
@@ -452,13 +533,11 @@ void TemplateToolWidget::typeChanged(int index)
                 << "4-porphin"
                 << "4-salen"
                 << "4-other";
-      m_denticity = 4;
       break;
     case LigandType::Hexadentate: // Hexadentate
       ligandNames << "edta" << tr("Other…");
       m_ligands << "6-edta"
                 << "6-other";
-      m_denticity = 6;
       break;
     case LigandType::Haptic: // Haptic
       ligandNames << "η2-ethylene"
@@ -468,13 +547,11 @@ void TemplateToolWidget::typeChanged(int index)
                 << "eta5-cyclopentyl"
                 << "eta6-benzene"
                 << "eta-other";
-      m_denticity = 1;
       break;
     case LigandType::Clipboard: // Clipboard
       ligandNames << "clipboard";
       m_ligands = ligandNames;
       // technically, we should check the clipboard
-      m_denticity = 1;
       break;
   }
   m_ui->ligandComboBox->addItems(ligandNames);
@@ -616,6 +693,11 @@ void TemplateToolWidget::saveElements()
 
 int TemplateToolWidget::denticity() const
 {
+  // Functional groups always attach through a single placeholder - m_denticity
+  // belongs to the ligand tab, so don't let it leak across.
+  if (currentTab() == TabType::FunctionalGroups)
+    return 1;
+
   return m_denticity;
 }
 

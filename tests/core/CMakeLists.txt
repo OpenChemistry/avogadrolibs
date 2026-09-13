@@ -1,13 +1,16 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   AngleIterator
+  Aromaticity
   Array
   Atom
   AtomTyper
+  AtomUtilities
   BasisSet
   Bond
   CoordinateBlockGenerator
   CoordinateSet
+  CrystalTools
   Cube
   DihedralIterator
   Eigen
@@ -15,10 +18,12 @@ set(tests
   GaussianSet
   Graph
   InternalCoordinates
+  Kekulize
   Mesh
   Molecule
   Mutex
   NeighborPerceiver
+  PropertyMap
   Residue
   RingPerceiver
   SecondaryStructure
@@ -59,7 +64,7 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
-  set(core_fuzz array bond crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap)
+  set(core_fuzz array bond coordinateblockgenerator crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap)
   foreach(fuzzName ${core_fuzz})
     add_executable(fuzz_core_${fuzzName} fuzz-${fuzzName}.cpp)
     if(DEFINED ENV{LIB_FUZZING_ENGINE})

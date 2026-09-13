@@ -2,10 +2,15 @@
 set(tests
   Cjson
   Cml
+  Compression
+  Dcd
   FileFormatManager
   Lammps
   Mdl
   Pdb
+  Smiles
+  SmilesParser
+  Trr
   Turbomole
   Vasp
   Xyz
@@ -56,19 +61,60 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
-  # todo - make this into a loop for multiple formats
+  # Each name here is a *file extension* that FileFormatManager maps to a
+  # format supporting Read | String -- fuzztest.cpp passes it straight to
+  # readString(). Adding an extension no format claims for reading silently
+  # produces a target that does nothing, so check supportedOperations() first.
+  # The lookup is case-sensitive, hence POSCAR and OUTCAR.
   set(fuzz
     cjson
     cml
     sdf
     pdb
     xyz
+    tmol
+    POSCAR
+    OUTCAR
   )
   foreach(fuzzName ${fuzz})
     add_executable(fuzz_${fuzzName} fuzztest.cpp)
     target_compile_definitions(fuzz_${fuzzName} PRIVATE -DFUZZ_INPUT_FORMAT="${fuzzName}")
     if(DEFINED ENV{LIB_FUZZING_ENGINE})
       target_link_libraries(fuzz_${fuzzName} PRIVATE Avogadro::IO $ENV{LIB_FUZZING_ENGINE})
+    else()
+      target_compile_options(fuzz_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
+      target_link_options(fuzz_${fuzzName} PRIVATE -fsanitize=fuzzer)
+      target_link_libraries(fuzz_${fuzzName} PRIVATE Avogadro::IO)
+    endif()
+  endforeach()
+
+  # SmilesFormat is write-only, so the SMILES parser needs its own harness
+  # rather than an entry in the list above.
+  add_executable(fuzz_smiles fuzz-smilesparser.cpp)
+  if(DEFINED ENV{LIB_FUZZING_ENGINE})
+    target_link_libraries(fuzz_smiles PRIVATE Avogadro::IO $ENV{LIB_FUZZING_ENGINE})
+  else()
+    target_compile_options(fuzz_smiles PRIVATE -g -fsanitize=fuzzer)
+    target_link_options(fuzz_smiles PRIVATE -fsanitize=fuzzer)
+    target_link_libraries(fuzz_smiles PRIVATE Avogadro::IO)
+  endif()
+
+  # The compression harnesses take raw bytes rather than a chemical format, so
+  # they cannot use fuzztest.cpp either. Each name here is built from
+  # fuzz-<name>.cpp into target fuzz_<name>, matching tests/qtgui.
+  #   decompress         arbitrary bytes into the decoder, drained with
+  #                      several access patterns including seeks
+  #   compress-roundtrip our encoder feeding our decoder, asserting the data
+  #                      survives unchanged
+  set(compressionFuzz
+    decompress
+    compress-roundtrip
+  )
+  foreach(fuzzName ${compressionFuzz})
+    add_executable(fuzz_${fuzzName} fuzz-${fuzzName}.cpp)
+    if(DEFINED ENV{LIB_FUZZING_ENGINE})
+      target_link_libraries(fuzz_${fuzzName}
+        PRIVATE Avogadro::IO $ENV{LIB_FUZZING_ENGINE})
     else()
       target_compile_options(fuzz_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
       target_link_options(fuzz_${fuzzName} PRIVATE -fsanitize=fuzzer)

@@ -1,7 +1,13 @@
 set(plugin_srcs
+  displacementdialog.cpp
   vibrationdialog.cpp
   vibrationmodel.cpp
   vibrations.cpp
+)
+
+set(plugin_uis
+  displacementdialog.ui
+  vibrationdialog.ui
 )
 
 avogadro_plugin(Vibrations
@@ -10,5 +16,5 @@ avogadro_plugin(Vibrations
   vibrations.h
   Vibrations
   "${plugin_srcs}"
-  "vibrationdialog.ui"
+  "${plugin_uis}"
 )

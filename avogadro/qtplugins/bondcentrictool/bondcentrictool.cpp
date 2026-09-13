@@ -31,6 +31,7 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
+#include <avogadro/qtgui/fragmenttools.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -532,10 +533,12 @@ QUndoCommand* BondCentricTool::rotateBondedAtom(QMouseEvent* e)
 
   // Build the fragment if needed:
   if (m_fragment.empty())
-    buildFragment(bond, clickedAtom);
+    m_fragment =
+      QtGui::FragmentTools::fragmentUniqueIds(*m_molecule, bond, clickedAtom);
 
   // Perform transformation
-  transformFragment();
+  QtGui::FragmentTools::transformAtoms(*m_molecule, m_fragment,
+                                       m_transform.cast<Real>());
   updateBondVector();
   m_molecule->emitChanged(Molecule::Modified | Molecule::Atoms);
   emit drawablesChanged();
@@ -578,10 +581,12 @@ QUndoCommand* BondCentricTool::adjustBondLength(QMouseEvent* e)
 
   // Build the fragment if needed:
   if (m_fragment.empty())
-    buildFragment(selectedBond, clickedAtom);
+    m_fragment = QtGui::FragmentTools::fragmentUniqueIds(
+      *m_molecule, selectedBond, clickedAtom);
 
   // Perform transformation
-  transformFragment();
+  QtGui::FragmentTools::transformAtoms(*m_molecule, m_fragment,
+                                       m_transform.cast<Real>());
   m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
   emit drawablesChanged();
 
@@ -643,10 +648,12 @@ QUndoCommand* BondCentricTool::rotateNeighborAtom(QMouseEvent* e)
 
   // Build the fragment if needed:
   if (m_fragment.empty())
-    buildFragment(selectedBond, anchorAtom);
+    m_fragment = QtGui::FragmentTools::fragmentUniqueIds(
+      *m_molecule, selectedBond, anchorAtom);
 
   // Perform transformation
-  transformFragment();
+  QtGui::FragmentTools::transformAtoms(*m_molecule, m_fragment,
+                                       m_transform.cast<Real>());
   updateBondVector();
   m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
   emit drawablesChanged();
@@ -887,21 +894,6 @@ inline bool BondCentricTool::bondContainsAtom(const QtGui::RWBond& bond,
   return atom == bond.atom1() || atom == bond.atom2();
 }
 
-inline void BondCentricTool::transformFragment() const
-{
-  // Convert the internal float matrix to use the same precision as the atomic
-  // coordinates.
-  Eigen::Transform<Real, 3, Eigen::Affine> transform(m_transform.cast<Real>());
-  for (int it : m_fragment) {
-    RWAtom atom = m_molecule->atomByUniqueId(it);
-    if (atom.isValid()) {
-      Vector3 pos = atom.position3d();
-      pos = transform * pos;
-      atom.setPosition3d(pos);
-    }
-  }
-}
-
 void BondCentricTool::updatePlaneSnapAngles()
 {
   m_planeSnapRef = m_bondVector.unitOrthogonal();
@@ -987,54 +979,6 @@ void BondCentricTool::updateSnappedPlaneNormal()
       m_planeSnapRef;
     m_planeNormal = planeVector.cross(m_bondVector);
   }
-}
-
-inline bool BondCentricTool::fragmentHasAtom(int uid) const
-{
-  return std::find(m_fragment.begin(), m_fragment.end(), uid) !=
-         m_fragment.end();
-}
-
-void BondCentricTool::buildFragment(const QtGui::RWBond& bond,
-                                    const QtGui::RWAtom& startAtom)
-{
-  m_fragment.clear();
-  if (!buildFragmentRecurse(bond, startAtom, startAtom)) {
-    // If this returns false, then a cycle has been found. Only move startAtom
-    // in this case.
-    m_fragment.clear();
-  }
-  m_fragment.push_back(m_molecule->atomUniqueId(startAtom));
-}
-
-bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
-                                           const QtGui::RWAtom& startAtom,
-                                           const QtGui::RWAtom& currentAtom)
-{
-  // does our cycle include both bonded atoms?
-  const RWAtom bondedAtom(bond.getOtherAtom(startAtom));
-
-  Array<RWBond> bonds = m_molecule->bonds(currentAtom);
-
-  for (auto& it : bonds) {
-    if (it != bond) { // Skip the current bond
-      const RWAtom nextAtom = it.getOtherAtom(currentAtom);
-      if (nextAtom != startAtom && nextAtom != bondedAtom) {
-        // Skip atoms that have already been added. This prevents infinite
-        // recursion on cycles in the fragments
-        int uid = m_molecule->atomUniqueId(nextAtom);
-        if (!fragmentHasAtom(uid)) {
-          m_fragment.push_back(uid);
-          if (!buildFragmentRecurse(it, startAtom, nextAtom))
-            return false;
-        }
-      } else if (nextAtom == bondedAtom) {
-        // If we've found the bonded atom, the bond is in a cycle
-        return false;
-      }
-    } // *it != bond
-  }   // foreach bond
-  return true;
 }
 
 } // namespace Avogadro::QtPlugins

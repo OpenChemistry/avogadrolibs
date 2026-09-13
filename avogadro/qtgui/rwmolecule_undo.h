@@ -150,6 +150,45 @@ public:
 } // namespace
 
 namespace {
+// Renumbering is stored as the sequence of transpositions that realises the
+// permutation rather than as the permutation itself. A transposition is its
+// own inverse, so undoing is the same sequence walked backwards, and there is
+// no second permutation to keep consistent with the first.
+//
+// Unlike the other commands in this file, this one notifies directly instead
+// of relying on the blanket Atoms | Added that MainWindow emits after an
+// undo/redo: a reorder changes no atom or bond counts, so that blanket flag
+// gives listeners (e.g. PropertyModel) nothing to detect the change by.
+class ReorderAtomsCommand : public RWMolecule::UndoCommand
+{
+  std::vector<std::pair<Index, Index>> m_swaps;
+
+public:
+  ReorderAtomsCommand(RWMolecule& m,
+                      const std::vector<std::pair<Index, Index>>& swaps)
+    : UndoCommand(m), m_swaps(swaps)
+  {
+  }
+
+  void redo() override
+  {
+    for (const auto& swap : m_swaps)
+      m_molecule.swapAtom(swap.first, swap.second);
+    m_molecule.emitChanged(Molecule::Atoms | Molecule::Bonds |
+                           Molecule::Modified | Molecule::Reordered);
+  }
+
+  void undo() override
+  {
+    for (auto it = m_swaps.rbegin(); it != m_swaps.rend(); ++it)
+      m_molecule.swapAtom(it->first, it->second);
+    m_molecule.emitChanged(Molecule::Atoms | Molecule::Bonds |
+                           Molecule::Modified | Molecule::Reordered);
+  }
+};
+} // namespace
+
+namespace {
 class SetAtomicNumbersCommand : public RWMolecule::UndoCommand
 {
   Core::Array<unsigned char> m_oldAtomicNumbers;
@@ -744,7 +783,12 @@ public:
       m_newSelectedAtoms[i] = m_molecule.atomSelected(i);
     }
 
-    m_newSelectedAtoms[atomId] = selected;
+    // Guarded here as well as at the call, since these vectors are sized to
+    // the atom count and operator[] on std::vector<bool> writes into a word
+    // computed from the index -- an out-of-range one lands somewhere else
+    // entirely.
+    if (atomId < atomCount)
+      m_newSelectedAtoms[atomId] = selected;
   }
 
   void redo() override

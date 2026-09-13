@@ -44,7 +44,10 @@ bool GenericJson::read(std::istream& in, Core::Molecule& molecule)
   json root;
   try {
     in >> root;
-  } catch (json::parse_error& e) {
+  } catch (const json::exception& e) {
+    // Every nlohmann error type, not just parse_error: a number the parser
+    // cannot represent throws out_of_range, which would otherwise escape and
+    // terminate.
     appendError("Error parsing JSON: " + string(e.what()));
     return false;
   }
@@ -56,8 +59,11 @@ bool GenericJson::read(std::istream& in, Core::Molecule& molecule)
 
   // Okay, look for particular keys
   if (root.find("schema_name") != root.end()) {
-    if (root["schema_name"].get<std::string>() == "QC_JSON")
-      reader = new QCSchema();
+    if (root["schema_name"].is_string()) {
+      const std::string schemaName = root["schema_name"].get<std::string>();
+      if (schemaName == "QC_JSON" || schemaName == "qcschema_molecule")
+        reader = new QCSchema();
+    }
   } else if (root.find("simulation") != root.end()) {
     reader = new NWChemJson();
   }

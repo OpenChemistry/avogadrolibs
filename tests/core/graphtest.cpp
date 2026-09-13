@@ -7,6 +7,8 @@
 
 #include <avogadro/core/graph.h>
 
+#include <algorithm>
+
 using Avogadro::Core::Graph;
 
 TEST(GraphTest, size)
@@ -180,4 +182,83 @@ TEST(GraphTest, connectedComponents)
 
   graph.removeEdges(4);
   EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(4));
+}
+
+namespace {
+
+// Every edge must be findable from both of its endpoints, and no vertex may
+// list itself. A graph that fails this looks fine by edge count while
+// removeEdge() quietly does nothing.
+void expectConsistent(const Graph& graph)
+{
+  for (size_t v = 0; v < graph.size(); ++v) {
+    for (size_t n : graph.neighbors(v))
+      EXPECT_NE(v, n) << "vertex " << v << " lists itself as a neighbour";
+  }
+
+  for (size_t e = 0; e < graph.edgeCount(); ++e) {
+    const std::pair<size_t, size_t> ends = graph.endpoints(e);
+    const std::vector<size_t>& first = graph.neighbors(ends.first);
+    const std::vector<size_t>& second = graph.neighbors(ends.second);
+    EXPECT_NE(std::find(first.begin(), first.end(), ends.second), first.end())
+      << "edge (" << ends.first << "," << ends.second << ") missing from "
+      << ends.first << "'s neighbours";
+    EXPECT_NE(std::find(second.begin(), second.end(), ends.first), second.end())
+      << "edge (" << ends.first << "," << ends.second << ") missing from "
+      << ends.second << "'s neighbours";
+  }
+}
+
+} // namespace
+
+TEST(GraphTest, swapVertexIndicesUnconnectedPair)
+{
+  Graph graph(4);
+  graph.addEdge(0, 1);
+  graph.addEdge(2, 3);
+
+  graph.swapVertexIndices(0, 2);
+  expectConsistent(graph);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(2));
+}
+
+// The two vertices being bonded to each other is the case that used to
+// break: both loops skip the reference they hold to one another, and the
+// swap then leaves each naming itself. A z-matrix renumbering swaps bonded
+// atoms constantly, so this is not an exotic input.
+TEST(GraphTest, swapVertexIndicesBondedPair)
+{
+  Graph graph(3);
+  graph.addEdge(0, 1);
+  graph.addEdge(1, 2);
+
+  graph.swapVertexIndices(0, 1);
+
+  expectConsistent(graph);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(2));
+
+  // The vertex that was 1, carrying two edges, is now 0.
+  EXPECT_EQ(graph.neighbors(0).size(), static_cast<size_t>(2));
+  EXPECT_EQ(graph.neighbors(1).size(), static_cast<size_t>(1));
+  EXPECT_EQ(graph.neighbors(2).size(), static_cast<size_t>(1));
+
+  // And the edge between them can still be removed, which is what the
+  // corruption prevented.
+  graph.removeEdge(0, 1);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(1));
+  expectConsistent(graph);
+}
+
+TEST(GraphTest, swapVertexIndicesBondedPairInARing)
+{
+  Graph graph(4);
+  for (size_t k = 0; k < 4; ++k)
+    graph.addEdge(k, (k + 1) % 4);
+
+  graph.swapVertexIndices(1, 2);
+  expectConsistent(graph);
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(4));
+  for (size_t v = 0; v < 4; ++v)
+    EXPECT_EQ(graph.neighbors(v).size(), static_cast<size_t>(2))
+      << "vertex " << v;
 }

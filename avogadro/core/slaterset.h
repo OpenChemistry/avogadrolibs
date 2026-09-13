@@ -125,6 +125,12 @@ public:
   bool isValid() override { return true; }
 
   /**
+   * Exchange atom indices @a a and @a b in the per-basis-function atom map.
+   * The basis functions keep their order, so MO coefficients are unaffected.
+   */
+  void swapAtomIndices(Index a, Index b) override;
+
+  /**
    * Initialize the calculation, this must normally be done before anything.
    */
   void initCalculation();

@@ -43,9 +43,13 @@ public:
 
   QStringList menuPath(QAction*) const override;
 
+  void registerCommands() override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
   bool readMolecule(QtGui::Molecule& mol) override;
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
 
 private slots:
   void showDialog();
@@ -54,6 +58,15 @@ private slots:
 private:
   static bool sdfHasThreeDCoordinates(const QByteArray& data);
 
+  /// Starts (or restarts, for the PubChem retry) the network request for
+  /// @p structureName. Shared by showDialog() and the fetchByName command.
+  void requestStructure(const QString& structureName);
+
+  /// If a fetchByName command is pending, clears m_commandPending and emits
+  /// commandFinished() with the resolved @p name and the @p source that
+  /// answered ("cactus" or "pubchem"). No-op when not command-driven.
+  void reportCommandSuccess(const QString& name, const QString& source);
+
   QAction* m_action;
   QtGui::Molecule* m_molecule;
   QNetworkAccessManager* m_network;
@@ -61,6 +74,10 @@ private:
   QByteArray m_moleculeData;
   QProgressDialog* m_progressDialog;
   bool m_triedPubChem = false;
+  /// True while a fetchByName command is waiting on a download, so that
+  /// replyFinished() reports through commandFinished()/commandFailed()
+  /// instead of the interactive dialogs. Mirrors Surfaces::m_commandPending.
+  bool m_commandPending = false;
 };
 } // namespace QtPlugins
 } // namespace Avogadro
