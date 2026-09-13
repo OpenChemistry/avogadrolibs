@@ -143,24 +143,53 @@ static bool orderSelection(const QtGui::Molecule& molecule,
   return false;
 }
 
+// One entry a combo can offer: what to call it, the quantity value the rest of
+// the code works with, and a name for the thing itself.
+struct PlotQuantity
+{
+  QString label;
+  int quantity;
+  QString identity;
+};
+
+// A combo item's identity, held in its own data role. The quantity value is
+// only a position in m_coordinates, which moves when a constraint is added or
+// an atom is deleted, so it cannot be what a selection is restored by.
+constexpr int IdentityRole = Qt::UserRole + 1;
+
+// Names a coordinate by the atoms it measures. Built-in quantities have no
+// atoms, so they are named by their own value; the two cannot collide, since
+// only these carry a separator.
+static QString coordinateIdentity(const Core::Constraint& c)
+{
+  return QStringLiteral("%1:%2:%3:%4")
+    .arg(c.aIndex())
+    .arg(c.bIndex())
+    .arg(c.cIndex())
+    .arg(c.dIndex());
+}
+
 // Both axes offer the same quantities, so fill them from one list. Keeping the
 // current selection matters here: the combos are rebuilt whenever a constraint
-// is added, which should not throw away what the user was looking at.
-static void fillQuantityCombo(
-  QComboBox* combo, const std::vector<std::pair<QString, int>>& quantities,
-  int fallback)
+// is added, which should not throw away what the user was looking at, nor
+// quietly move the axis to whatever coordinate inherited its old number.
+static void fillQuantityCombo(QComboBox* combo,
+                              const std::vector<PlotQuantity>& quantities,
+                              int fallback)
 {
   if (combo == nullptr)
     return;
 
-  const QVariant current = combo->currentData();
+  const QString previous = combo->currentData(IdentityRole).toString();
 
   QSignalBlocker blocker(combo);
   combo->clear();
-  for (const auto& quantity : quantities)
-    combo->addItem(quantity.first, quantity.second);
+  for (const auto& quantity : quantities) {
+    combo->addItem(quantity.label, quantity.quantity);
+    combo->setItemData(combo->count() - 1, quantity.identity, IdentityRole);
+  }
 
-  int index = combo->findData(current);
+  int index = previous.isEmpty() ? -1 : combo->findData(previous, IdentityRole);
   if (index < 0)
     index = combo->findData(fallback);
   combo->setCurrentIndex(index < 0 ? 0 : index);
@@ -423,20 +452,25 @@ void PlotConformer::populateQuantityCombos()
   const bool hasForces = m_molecule->hasData("forces");
   const bool hasVelocities = m_molecule->hasData("velocities");
 
-  std::vector<std::pair<QString, int>> quantities;
-  quantities.emplace_back(tr("Frame"), FrameQuantity);
-  quantities.emplace_back(tr("RMSD"), RmsdQuantity);
+  std::vector<PlotQuantity> quantities;
+  const auto builtIn = [](const QString& label, int quantity) {
+    return PlotQuantity{ label, quantity, QString::number(quantity) };
+  };
+  quantities.push_back(builtIn(tr("Frame"), FrameQuantity));
+  quantities.push_back(builtIn(tr("RMSD"), RmsdQuantity));
   if (hasEnergies)
-    quantities.emplace_back(tr("Energy"), EnergyQuantity);
+    quantities.push_back(builtIn(tr("Energy"), EnergyQuantity));
   if (hasForces)
-    quantities.emplace_back(tr("Forces"), ForcesQuantity);
+    quantities.push_back(builtIn(tr("Forces"), ForcesQuantity));
   if (hasVelocities)
-    quantities.emplace_back(tr("Velocities"), VelocitiesQuantity);
+    quantities.push_back(builtIn(tr("Velocities"), VelocitiesQuantity));
 
   // One entry per coordinate, so a scanned coordinate can go on either axis.
-  for (int i = 0; i < static_cast<int>(m_coordinates.size()); ++i)
-    quantities.emplace_back(
-      constraintLabel(m_coordinates[static_cast<size_t>(i)]), i);
+  for (int i = 0; i < static_cast<int>(m_coordinates.size()); ++i) {
+    const Core::Constraint& coordinate = m_coordinates[static_cast<size_t>(i)];
+    quantities.push_back(PlotQuantity{ constraintLabel(coordinate), i,
+                                       coordinateIdentity(coordinate) });
+  }
 
   fillQuantityCombo(m_xAxisCombo, quantities, FrameQuantity);
   fillQuantityCombo(m_yAxisCombo, quantities,
@@ -707,9 +741,12 @@ void PlotConformer::updatePlot()
     return;
   }
 
-  // A file can carry fewer energies or gradients than it has geometries, so
-  // plot only the pairs that exist rather than handing the chart two series
-  // of different lengths.
+  // Every series is one value per coordinate set, in order from the first, so
+  // a point's position in the array is its frame number -- which is what lets
+  // the marker and the click handling below map between the two. A file can
+  // still carry fewer energies or gradients than it has geometries, so keep
+  // the leading frames both series have rather than handing the chart two
+  // series of different lengths.
   const size_t points = std::min(x.size(), y.size());
   x.resize(points);
   y.resize(points);
@@ -841,16 +878,18 @@ bool PlotConformer::generateRmsdSeries(DataSeries& values)
     // Coordinate sets should all describe the same atoms, but compare only as
     // far as both of them go rather than reading off the end of the reference.
     size_t count = std::min(positions.size(), ref.size());
-    if (count == 0)
-      continue;
 
     double sum = 0.0;
     for (size_t j = 0; j < count; ++j)
       sum += (positions[j] - ref[j]).squaredNorm();
 
     // RMSD is the root *mean* square deviation over the atoms, so normalize by
-    // the number of atoms compared -- not by the number of coordinate sets.
-    values.push_back(static_cast<float>(std::sqrt(sum / count)));
+    // the number of atoms compared -- not by the number of coordinate sets. An
+    // empty set has no atoms to compare and so no deviation to report, but it
+    // still gets a point: every series here is indexed by frame, and skipping
+    // one would move each later point onto the wrong conformer.
+    values.push_back(count > 0 ? static_cast<float>(std::sqrt(sum / count))
+                               : 0.0f);
   }
 
   return !values.empty();
