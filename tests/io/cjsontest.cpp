@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/constraint.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
@@ -20,6 +21,7 @@ using Avogadro::PI_F;
 using Avogadro::Real;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
+using Avogadro::Core::Constraint;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
 using Avogadro::Core::UnitCell;
@@ -702,4 +704,37 @@ TEST(CjsonTest, vibrationsSurviveSavingFromAConformerWithoutThem)
   ASSERT_EQ(readMol.vibrationConformerCount(), 1u);
   ASSERT_EQ(readMol.vibrationFrequencies(3).size(), 1u);
   EXPECT_DOUBLE_EQ(readMol.vibrationFrequencies(3)[0], 1600.0);
+}
+
+// Any property holding an array of unequal-length rows used to be read into a
+// matrix that was grown row by row, leaving the earlier rows' extra columns
+// uninitialized.
+TEST(CjsonTest, raggedPropertyArraysReadWithoutGarbage)
+{
+  const std::string input = R"({
+    "chemicalJson": 1,
+    "atoms": {
+      "elements": { "number": [6, 6] },
+      "coords": { "3d": [0.0, 0.0, 0.0, 1.5, 0.0, 0.0] }
+    },
+    "properties": { "ragged": [[1, 2], [3, 4, 5, 6]] }
+  })";
+
+  Molecule molecule;
+  CjsonFormat cjson;
+  ASSERT_TRUE(cjson.readString(input, molecule));
+
+  ASSERT_TRUE(molecule.hasData("ragged"));
+  const MatrixX matrix = molecule.data("ragged").toMatrix();
+  ASSERT_EQ(matrix.rows(), 2);
+  ASSERT_EQ(matrix.cols(), 4);
+
+  EXPECT_DOUBLE_EQ(matrix(0, 0), 1.0);
+  EXPECT_DOUBLE_EQ(matrix(0, 1), 2.0);
+  // The short row is padded with zeros, not with whatever was on the heap.
+  EXPECT_DOUBLE_EQ(matrix(0, 2), 0.0);
+  EXPECT_DOUBLE_EQ(matrix(0, 3), 0.0);
+
+  EXPECT_DOUBLE_EQ(matrix(1, 0), 3.0);
+  EXPECT_DOUBLE_EQ(matrix(1, 3), 6.0);
 }
