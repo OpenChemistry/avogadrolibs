@@ -12,9 +12,6 @@
 #include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QLabel>
-#include <QLineEdit>
-#include <QMessageBox>
-#include <QProcess>
 #include <QPushButton>
 #include <QString>
 #include <QVBoxLayout>
@@ -29,8 +26,6 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/vector.h>
-#include <avogadro/io/fileformatmanager.h>
-#include <avogadro/qtgui/chartdialog.h>
 #include <avogadro/qtgui/chartwidget.h>
 #include <avogadro/qtgui/molecule.h>
 
@@ -143,6 +138,21 @@ static bool orderSelection(const QtGui::Molecule& molecule,
   return false;
 }
 
+// Axis limits for a series: pad by a fraction of its range so the extreme
+// points are not drawn on the frame, and fall back to a fixed pad when the
+// series is flat and has no range to take a fraction of. The two axes pad
+// differently because their units are not comparable -- an Angstrom on a
+// distance axis is a wide margin, a kcal/mol on an energy axis is not.
+static std::pair<float, float> paddedRange(const DataSeries& values,
+                                           float fraction, float flatPad)
+{
+  const auto bounds = std::minmax_element(values.begin(), values.end());
+  const float low = *bounds.first;
+  const float high = *bounds.second;
+  const float pad = (high > low) ? fraction * (high - low) : flatPad;
+  return { low - pad, high + pad };
+}
+
 // One entry a combo can offer: what to call it, the quantity value the rest of
 // the code works with, and a name for the thing itself.
 struct PlotQuantity
@@ -201,7 +211,7 @@ PlotConformer::PlotConformer(QObject* parent_)
     m_chartWidget(nullptr), m_yAxisCombo(nullptr), m_xAxisCombo(nullptr),
     m_unitsCombo(nullptr), m_targetUnitsCombo(nullptr),
     m_unwrapDihedralsCheck(nullptr), m_addSelectionButton(nullptr),
-    m_frameLabel(nullptr), m_xTitle(tr("Frame"))
+    m_frameLabel(nullptr)
 {
   m_displayDialogAction->setText(tr("Plot Conformer Data…"));
   connect(m_displayDialogAction, &QAction::triggered, this,
@@ -514,26 +524,24 @@ void PlotConformer::addCoordinateFromSelection()
                               atoms.size() > 2 ? atoms[2] : MaxIndex,
                               atoms.size() > 3 ? atoms[3] : MaxIndex);
   m_molecule->addScanCoordinate(coordinate);
-  // Stored in the property map, so this is a property change.
-  m_molecule->emitChanged(Molecule::Properties);
 
-  // Show what was just added rather than making the user find it. It is not
-  // necessarily the last entry: a coordinate matching an existing constraint
-  // is listed once, under the constraint.
+  // Show what was just added rather than making the user find it, looking it
+  // up by the atoms it measures: it is not necessarily the last entry, since a
+  // coordinate matching an existing constraint is listed once, under the
+  // constraint. Select it before announcing the change, with the combo's own
+  // signal blocked, so that the replot below is the only one: generating the
+  // series walks the whole trajectory.
   populateQuantityCombos();
-  int quantity = -1;
-  for (size_t i = 0; i < m_coordinates.size(); ++i) {
-    if (m_coordinates[i].atoms() == coordinate.atoms()) {
-      quantity = static_cast<int>(i);
-      break;
-    }
+  const int index =
+    m_xAxisCombo->findData(coordinateIdentity(coordinate), IdentityRole);
+  if (index >= 0) {
+    QSignalBlocker blocker(m_xAxisCombo);
+    m_xAxisCombo->setCurrentIndex(index);
   }
 
-  const int index = (quantity >= 0) ? m_xAxisCombo->findData(quantity) : -1;
-  if (index >= 0)
-    m_xAxisCombo->setCurrentIndex(index); // triggers updatePlot
-  else
-    updatePlot();
+  // Stored in the property map, so this is a property change. Handling it
+  // repopulates the combos and replots.
+  m_molecule->emitChanged(Molecule::Properties);
 }
 
 int PlotConformer::xQuantity() const
@@ -670,44 +678,55 @@ void PlotConformer::displayDialog()
   m_chartWidget->setFocus();
 }
 
-bool PlotConformer::evaluateQuantity(int quantity, DataSeries& values,
-                                     QString& title)
+std::optional<PlotConformer::QuantitySeries> PlotConformer::evaluateQuantity(
+  int quantity)
 {
   if (!m_molecule)
-    return false;
+    return std::nullopt;
 
-  values.clear();
+  QString title;
+  std::optional<DataSeries> values;
 
   if (quantity >= 0) {
     if (quantity >= static_cast<int>(m_coordinates.size()))
-      return false;
+      return std::nullopt;
     title =
       axisTitleForConstraint(m_coordinates[static_cast<size_t>(quantity)]);
-    return generateCoordinateSeries(quantity, values);
+    values = generateCoordinateSeries(quantity);
+  } else {
+    switch (quantity) {
+      case FrameQuantity:
+        title = tr("Frame");
+        values = generateFrameSeries();
+        break;
+      case RmsdQuantity:
+        title = tr("RMSD (Å)");
+        values = generateRmsdSeries();
+        break;
+      case EnergyQuantity:
+        title = tr("Relative Energy (%1)")
+                  .arg(m_targetUnitsCombo ? m_targetUnitsCombo->currentText()
+                                          : QString());
+        values = generateEnergySeries();
+        break;
+      case ForcesQuantity:
+        // TODO: Add units - data("forces") holds the RMS gradient per set
+        title = tr("RMS Gradient");
+        values = generateStoredSeries("forces");
+        break;
+      case VelocitiesQuantity:
+        title = tr("Velocities (m/s)");
+        values = generateStoredSeries("velocities");
+        break;
+      default:
+        return std::nullopt;
+    }
   }
 
-  switch (quantity) {
-    case FrameQuantity:
-      title = tr("Frame");
-      return generateFrameSeries(values);
-    case RmsdQuantity:
-      title = tr("RMSD (Å)");
-      return generateRmsdSeries(values);
-    case EnergyQuantity:
-      title = tr("Relative Energy (%1)")
-                .arg(m_targetUnitsCombo ? m_targetUnitsCombo->currentText()
-                                        : QString());
-      return generateEnergySeries(values);
-    case ForcesQuantity:
-      // TODO: Add units - data("forces") holds the RMS gradient per set
-      title = tr("RMS Gradient");
-      return generateForcesSeries(values);
-    case VelocitiesQuantity:
-      title = tr("Velocities (m/s)");
-      return generateVelocitiesSeries(values);
-    default:
-      return false;
-  }
+  if (!values)
+    return std::nullopt;
+
+  return QuantitySeries{ std::move(*values), title };
 }
 
 void PlotConformer::updatePlot()
@@ -734,12 +753,15 @@ void PlotConformer::updatePlot()
   if (m_unwrapDihedralsCheck)
     m_unwrapDihedralsCheck->setEnabled(xIsTorsion || yIsTorsion);
 
-  DataSeries x, y;
-  QString xTitle, yTitle;
-  if (!evaluateQuantity(xq, x, xTitle) || !evaluateQuantity(yq, y, yTitle)) {
+  std::optional<QuantitySeries> xSeries = evaluateQuantity(xq);
+  std::optional<QuantitySeries> ySeries = evaluateQuantity(yq);
+  if (!xSeries || !ySeries) {
     drawChart();
     return;
   }
+
+  DataSeries x = std::move(xSeries->values);
+  DataSeries y = std::move(ySeries->values);
 
   // Every series is one value per coordinate set, in order from the first, so
   // a point's position in the array is its frame number -- which is what lets
@@ -753,19 +775,30 @@ void PlotConformer::updatePlot()
 
   const bool unwrap =
     m_unwrapDihedralsCheck && m_unwrapDihedralsCheck->isChecked();
-  if (unwrap && xIsTorsion) {
-    unwrapPeriodicValues(x, 360.0f);
-    shiftValuesToWindow(x, 360.0f, -180.0f, 180.0f);
-  }
-  if (unwrap && yIsTorsion) {
-    unwrapPeriodicValues(y, 360.0f);
-    shiftValuesToWindow(y, 360.0f, -180.0f, 180.0f);
-  }
+  const auto unwrapTorsion = [unwrap](DataSeries& values, bool isTorsion) {
+    if (!unwrap || !isTorsion)
+      return;
+    unwrapPeriodicValues(values, 360.0f);
+    shiftValuesToWindow(values, 360.0f, -180.0f, 180.0f);
+  };
+  unwrapTorsion(x, xIsTorsion);
+  unwrapTorsion(y, yIsTorsion);
 
   m_xData = std::move(x);
   m_yData = std::move(y);
-  m_xTitle = xTitle;
-  m_yTitle = yTitle;
+  m_xTitle = xSeries->title;
+  m_yTitle = ySeries->title;
+
+  if (!m_xData.empty() && !m_yData.empty()) {
+    // Frames are counted rather than measured, so that axis spans the whole
+    // trajectory whatever the data does.
+    m_xLimits =
+      (xq == FrameQuantity)
+        ? std::make_pair(
+            -0.1f, static_cast<float>(m_molecule->coordinate3dCount()) - 0.9f)
+        : paddedRange(m_xData, 0.02f, 1.0e-3f);
+    m_yLimits = paddedRange(m_yData, 0.05f, 1.0f);
+  }
 
   drawChart();
 }
@@ -792,12 +825,6 @@ void PlotConformer::drawChart()
   if (m_xData.empty() || m_yData.empty())
     return;
 
-  float min = *std::min_element(m_yData.begin(), m_yData.end());
-  float max = *std::max_element(m_yData.begin(), m_yData.end());
-  // Pad the y axis so the extreme points are not clipped by the frame. A flat
-  // curve has no range to scale, so fall back to a fixed margin.
-  float pad = (max > min) ? 0.05f * (max - min) : 1.0f;
-
   m_chartWidget->setShowPoints(true);
   m_chartWidget->setLegendLocation(QtGui::ChartWidget::LegendLocation::None);
   m_chartWidget->addPlot(m_xData, m_yData, QtGui::color4ub{ 255, 0, 0, 255 });
@@ -811,73 +838,77 @@ void PlotConformer::drawChart()
                            QtGui::color4ub{ 255, 165, 0, 255 });
   }
 
-  // make sure to pad the axes slightly
-  if (xQuantity() == FrameQuantity) {
-    m_chartWidget->setXAxisLimits(-0.1f, static_cast<float>(count) - 0.9f);
-  } else {
-    // Everything else has no fixed range, and a scan that barely moves still
-    // needs an axis wide enough to draw.
-    const float xMin = *std::min_element(m_xData.begin(), m_xData.end());
-    const float xMax = *std::max_element(m_xData.begin(), m_xData.end());
-    const float xPad = std::max(1e-3f, (xMax - xMin) * 0.02f);
-    m_chartWidget->setXAxisLimits(xMin - xPad, xMax + xPad);
-  }
-  m_chartWidget->setYAxisLimits(min - pad, max + pad);
+  // The limits arrived with the data: this runs on every arrow key, and
+  // rescanning a long trajectory for its extremes each time is wasted work.
+  m_chartWidget->setXAxisLimits(m_xLimits.first, m_xLimits.second);
+  m_chartWidget->setYAxisLimits(m_yLimits.first, m_yLimits.second);
   m_chartWidget->setXAxisTitle(m_xTitle);
   m_chartWidget->setYAxisTitle(m_yTitle);
 }
 
-bool PlotConformer::generateFrameSeries(DataSeries& values)
+std::optional<DataSeries> PlotConformer::generateFrameSeries() const
 {
   if (!m_molecule)
-    return false;
+    return std::nullopt;
 
   const size_t count = m_molecule->coordinate3dCount();
+  if (count == 0)
+    return std::nullopt;
+
+  DataSeries values;
   values.reserve(count);
   for (size_t i = 0; i < count; ++i)
     values.push_back(static_cast<float>(i));
 
-  return !values.empty();
+  return values;
 }
 
-bool PlotConformer::generateCoordinateSeries(int coordinateIndex,
-                                             DataSeries& values)
+std::optional<DataSeries> PlotConformer::generateCoordinateSeries(
+  int coordinateIndex) const
 {
   if (!m_molecule || coordinateIndex < 0 ||
       coordinateIndex >= static_cast<int>(m_coordinates.size()))
-    return false;
+    return std::nullopt;
 
   const Core::Constraint& constraint =
     m_coordinates[static_cast<size_t>(coordinateIndex)];
 
-  // coordinate3d(i) returns a copy and does not change the displayed set, so
-  // this reads the whole trajectory without disturbing the active conformer.
+  // coordinate3dRef() hands back the stored set rather than a copy of it, so
+  // reading four atoms out of every frame does not copy the whole molecule
+  // once per frame. It does not change the displayed set either, so this reads
+  // the trajectory without disturbing the active conformer.
   const size_t count = m_molecule->coordinate3dCount();
+  DataSeries values;
   values.reserve(count);
   for (size_t i = 0; i < count; ++i) {
     Real value = 0.0;
-    if (!constraint.evaluate(m_molecule->coordinate3d(i), value))
-      return false;
+    if (!constraint.evaluate(m_molecule->coordinate3dRef(i), value))
+      return std::nullopt;
     values.push_back(static_cast<float>(value));
   }
 
-  return !values.empty();
+  if (values.empty())
+    return std::nullopt;
+
+  return values;
 }
 
-bool PlotConformer::generateRmsdSeries(DataSeries& values)
+std::optional<DataSeries> PlotConformer::generateRmsdSeries() const
 {
   if (!m_molecule || m_molecule->coordinate3dCount() == 0)
-    return false;
+    return std::nullopt;
 
-  Array<Vector3> ref = m_molecule->coordinate3d(0);
+  const Array<Vector3>& ref = m_molecule->coordinate3dRef(0);
   if (ref.empty())
-    return false;
+    return std::nullopt;
 
+  DataSeries values;
+  values.reserve(m_molecule->coordinate3dCount());
   for (size_t i = 0; i < m_molecule->coordinate3dCount(); ++i) {
-    Array<Vector3> positions = m_molecule->coordinate3d(i);
+    const Array<Vector3>& positions = m_molecule->coordinate3dRef(i);
     // Coordinate sets should all describe the same atoms, but compare only as
     // far as both of them go rather than reading off the end of the reference.
-    size_t count = std::min(positions.size(), ref.size());
+    const size_t count = std::min(positions.size(), ref.size());
 
     double sum = 0.0;
     for (size_t j = 0; j < count; ++j)
@@ -892,66 +923,57 @@ bool PlotConformer::generateRmsdSeries(DataSeries& values)
                                : 0.0f);
   }
 
-  return !values.empty();
+  if (values.empty())
+    return std::nullopt;
+
+  return values;
 }
 
-bool PlotConformer::generateEnergySeries(DataSeries& values)
+std::optional<DataSeries> PlotConformer::generateEnergySeries() const
 {
   // plot relative energies so get the minimum first
   if (m_molecule == nullptr || !m_molecule->hasData("energies"))
-    return false;
+    return std::nullopt;
 
-  std::vector<double> energies = m_molecule->data("energies").toList();
+  const std::vector<double> energies = m_molecule->data("energies").toList();
   if (energies.empty())
-    return false;
+    return std::nullopt;
 
-  // calculate the minimum
-  double minEnergy = std::numeric_limits<double>::max();
-  for (double e : energies)
-    minEnergy = std::min(minEnergy, e);
+  const double minEnergy = *std::min_element(energies.begin(), energies.end());
 
   // Get conversion factors
-  double fromFactor =
+  const double fromFactor =
     m_unitsCombo ? m_unitsCombo->currentData().toDouble() : 1.0;
-  double toFactor =
+  const double toFactor =
     m_targetUnitsCombo ? m_targetUnitsCombo->currentData().toDouble() : 1.0;
 
-  // okay, now loop through to generate the curve
+  DataSeries values;
   values.reserve(energies.size());
   for (double energy : energies) {
-    double relativeE = energy - minEnergy;
     // Convert: first to kcal/mol, then to target units
-    relativeE = relativeE * fromFactor * toFactor;
-    values.push_back(static_cast<float>(relativeE));
+    values.push_back(
+      static_cast<float>((energy - minEnergy) * fromFactor * toFactor));
   }
 
-  return true;
+  return values;
 }
 
-bool PlotConformer::generateForcesSeries(DataSeries& values)
+std::optional<DataSeries> PlotConformer::generateStoredSeries(
+  const char* key) const
 {
-  if (m_molecule == nullptr || !m_molecule->hasData("forces"))
-    return false;
+  if (m_molecule == nullptr || !m_molecule->hasData(key))
+    return std::nullopt;
 
-  std::vector<double> forces = m_molecule->data("forces").toList();
-  values.reserve(forces.size());
-  for (double force : forces)
-    values.push_back(static_cast<float>(force));
+  const std::vector<double> stored = m_molecule->data(key).toList();
+  if (stored.empty())
+    return std::nullopt;
 
-  return !values.empty();
-}
+  DataSeries values;
+  values.reserve(stored.size());
+  for (double value : stored)
+    values.push_back(static_cast<float>(value));
 
-bool PlotConformer::generateVelocitiesSeries(DataSeries& values)
-{
-  if (m_molecule == nullptr || !m_molecule->hasData("velocities"))
-    return false;
-
-  std::vector<double> velocities = m_molecule->data("velocities").toList();
-  values.reserve(velocities.size());
-  for (double velocity : velocities)
-    values.push_back(static_cast<float>(velocity));
-
-  return !values.empty();
+  return values;
 }
 
 } // namespace Avogadro::QtPlugins

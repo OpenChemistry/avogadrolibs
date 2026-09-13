@@ -774,6 +774,14 @@ public:
   /** @return the index of the currently active coordinate set. */
   int coordinate3d() const;
   Array<Vector3> coordinate3d(size_t index) const;
+  /**
+   * @return the coordinate set at @p index without copying it, or an empty
+   * array if there is no such set.
+   *
+   * coordinate3d() hands back a copy of every atom position in the set, which
+   * is what reading a whole trajectory one set at a time should not pay for.
+   */
+  const Array<Vector3>& coordinate3dRef(size_t index) const;
   bool setCoordinate3d(const Array<Vector3>& coords, size_t index);
 
   /**

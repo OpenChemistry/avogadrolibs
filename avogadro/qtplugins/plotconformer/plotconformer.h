@@ -14,6 +14,8 @@
 #include <QComboBox>
 
 #include <memory>
+#include <optional>
+#include <utility>
 #include <vector>
 
 class QLabel;
@@ -111,18 +113,26 @@ private:
   // True when @p quantity is a torsion coordinate, whose values wrap around.
   bool isTorsionQuantity(int quantity) const;
 
-  // Evaluate @p quantity once per coordinate set, writing the axis label to
-  // @p title. Returns false when the molecule holds no data for it.
-  bool evaluateQuantity(int quantity, DataSeries& values, QString& title);
+  // One plotted series: a value per coordinate set, and the axis label for it.
+  struct QuantitySeries
+  {
+    DataSeries values;
+    QString title;
+  };
 
-  // Series generators, one value per coordinate set. Each returns false when
-  // the molecule cannot supply that quantity.
-  bool generateFrameSeries(DataSeries& values);
-  bool generateRmsdSeries(DataSeries& values);
-  bool generateEnergySeries(DataSeries& values);
-  bool generateForcesSeries(DataSeries& values);
-  bool generateVelocitiesSeries(DataSeries& values);
-  bool generateCoordinateSeries(int coordinateIndex, DataSeries& values);
+  // Evaluate @p quantity once per coordinate set. Empty when the molecule
+  // holds no data for it.
+  std::optional<QuantitySeries> evaluateQuantity(int quantity);
+
+  // Series generators, one value per coordinate set. Each is empty when the
+  // molecule cannot supply that quantity.
+  std::optional<DataSeries> generateFrameSeries() const;
+  std::optional<DataSeries> generateRmsdSeries() const;
+  std::optional<DataSeries> generateEnergySeries() const;
+  std::optional<DataSeries> generateCoordinateSeries(int coordinateIndex) const;
+  // Forces and velocities are both stored as one value per coordinate set
+  // under their own key, so they differ only by which key to read.
+  std::optional<DataSeries> generateStoredSeries(const char* key) const;
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
@@ -143,6 +153,10 @@ private:
   DataSeries m_yData;
   QString m_xTitle;
   QString m_yTitle;
+  // Axis limits belong to the data, so they are worked out once when it is
+  // rebuilt rather than on every redraw -- drawChart() runs on each arrow key.
+  std::pair<float, float> m_xLimits{ 0.0f, 1.0f };
+  std::pair<float, float> m_yLimits{ 0.0f, 1.0f };
   int m_currentFrame = 0;
 };
 

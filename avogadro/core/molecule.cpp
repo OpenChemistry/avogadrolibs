@@ -908,39 +908,51 @@ void swapAtomEntry(std::map<std::string, MatrixX>& models, Index a, Index b,
   }
 }
 
-// Scan coordinates name up to four atoms each, exactly as constraints do, but
-// are stored in the property map. @p reindex maps an old atom index to its new
-// one, or to MaxIndex for an atom that is going away; a coordinate that loses
-// an atom is dropped rather than shortened, since turning a torsion into an
-// angle would quietly plot a different quantity.
+// Constraints and scan coordinates both name up to four atoms by index, so
+// both follow the same rule when those atoms move. @p reindex maps an old atom
+// index to its new one, or to MaxIndex for an atom that is going away; an
+// entry that loses an atom is dropped rather than shortened, since a torsion
+// becoming an angle is a different thing than the one that was asked for.
+// swapAtom() only relabels, so nothing is dropped there; removeAtom() does
+// both.
+template <typename Reindex>
+void remapAtomReferences(std::vector<Constraint>& entries, Reindex reindex)
+{
+  for (auto it = entries.begin(); it != entries.end();) {
+    const Index a = reindex(it->aIndex());
+    const Index b = reindex(it->bIndex());
+    const Index c = reindex(it->cIndex());
+    const Index d = reindex(it->dIndex());
+
+    // An unused reference is MaxIndex before and after, so comparing against
+    // the old value is what separates "was never set" from "just lost its
+    // atom".
+    if (a == MaxIndex || b == MaxIndex ||
+        (c == MaxIndex && it->cIndex() != MaxIndex) ||
+        (d == MaxIndex && it->dIndex() != MaxIndex)) {
+      it = entries.erase(it);
+      continue;
+    }
+
+    // set() keeps the force constant and re-infers only a type that was not
+    // set explicitly, and that inference asks which references are MaxIndex --
+    // which this cannot have changed.
+    it->set(a, b, c, d, it->value());
+    ++it;
+  }
+}
+
+// The scan coordinates live in the property map rather than in a member, so
+// they are read out, remapped by the same rule, and written back.
 template <typename Reindex>
 void remapScanCoordinates(Molecule& molecule, Reindex reindex)
 {
-  const std::vector<Constraint> coordinates = molecule.scanCoordinates();
+  std::vector<Constraint> coordinates = molecule.scanCoordinates();
   if (coordinates.empty())
     return;
 
-  std::vector<Constraint> updated;
-  updated.reserve(coordinates.size());
-  for (const auto& coordinate : coordinates) {
-    const Index a = reindex(coordinate.aIndex());
-    const Index b = reindex(coordinate.bIndex());
-    const Index c = reindex(coordinate.cIndex());
-    const Index d = reindex(coordinate.dIndex());
-
-    // An unused slot is MaxIndex before and after, so comparing against the
-    // old value is what separates "was never set" from "just lost its atom".
-    if (a == MaxIndex || b == MaxIndex)
-      continue;
-    if (c == MaxIndex && coordinate.cIndex() != MaxIndex)
-      continue;
-    if (d == MaxIndex && coordinate.dIndex() != MaxIndex)
-      continue;
-
-    updated.emplace_back(a, b, c, d);
-  }
-
-  molecule.setScanCoordinates(updated);
+  remapAtomReferences(coordinates, reindex);
+  molecule.setScanCoordinates(coordinates);
 }
 
 } // namespace
@@ -1011,14 +1023,7 @@ void Molecule::swapAtom(Index a, Index b)
       return a;
     return index;
   };
-  for (auto& constraint : m_constraints) {
-    constraint.set(reindex(constraint.aIndex()), reindex(constraint.bIndex()),
-                   reindex(constraint.cIndex()), reindex(constraint.dIndex()),
-                   constraint.value());
-  }
-
-  // The scan coordinates name atoms the same way, and a swap only relabels
-  // them: nothing is dropped here.
+  remapAtomReferences(m_constraints, reindex);
   remapScanCoordinates(*this, reindex);
 
   // A basis set records which atom each basis function is centred on. Only
@@ -1071,32 +1076,7 @@ bool Molecule::removeAtom(Index index)
     return atom;
   };
 
-  // Anything that loses one of its atoms goes, rather than being shortened to
-  // the atoms that are left: a torsion restraint quietly becoming an angle
-  // restraint would hold a different coordinate than the one that was asked
-  // for, and hold it just as stiffly.
-  for (auto it = m_constraints.begin(); it != m_constraints.end();) {
-    const Index a = follow(it->aIndex());
-    const Index b = follow(it->bIndex());
-    const Index c = follow(it->cIndex());
-    const Index d = follow(it->dIndex());
-
-    // An unused reference is MaxIndex before and after, so comparing with the
-    // old value is what separates "never set" from "just lost its atom".
-    if (a == MaxIndex || b == MaxIndex ||
-        (c == MaxIndex && it->cIndex() != MaxIndex) ||
-        (d == MaxIndex && it->dIndex() != MaxIndex)) {
-      it = m_constraints.erase(it);
-      continue;
-    }
-
-    // set() keeps the force constant and re-infers only a type that was not
-    // set explicitly, and that inference asks which references are MaxIndex --
-    // which this cannot have changed.
-    it->set(a, b, c, d, it->value());
-    ++it;
-  }
-
+  remapAtomReferences(m_constraints, follow);
   remapScanCoordinates(*this, follow);
 
   // Losing an atom makes this a different molecule, so anything calculated
@@ -1983,6 +1963,15 @@ void Molecule::clearCoordinate3d()
 
 Array<Vector3> Molecule::coordinate3d(size_t index) const
 {
+  return m_coordinates3d[index];
+}
+
+const Array<Vector3>& Molecule::coordinate3dRef(size_t index) const
+{
+  static const Array<Vector3> empty;
+  if (index >= m_coordinates3d.size())
+    return empty;
+
   return m_coordinates3d[index];
 }
 
