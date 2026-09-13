@@ -799,7 +799,11 @@ namespace {
 // the Atom proxies in its name maps store atom indices; m_constraints names
 // up to four atoms per constraint; and m_basisSet records the atom each basis
 // function is centred on. All three need reindexing all the same, and
-// swapAtom() handles them explicitly at its end.
+// swapAtom() handles them explicitly at its end. So do the scan coordinates,
+// which name atoms as constraints do but live in the property map rather than
+// in a member of their own. removeAtom() handles the constraints and the scan
+// coordinates too, dropping an entry that loses an atom rather than reindexing
+// it, and clearAtoms() clears both.
 //
 // One is still unhandled, and needs a decision rather than a mechanical
 // remap: m_residues in removeAtom(). Dropping a hydrogen from a residue is
@@ -1052,20 +1056,48 @@ bool Molecule::removeAtom(Index index)
     m_selectedAtoms.pop_back();
   }
 
-  // Scan coordinates name atoms by index and are not atom-indexed themselves,
-  // so neither the helpers above nor atomCount() changing below reaches them.
-  // A coordinate measuring the atom that is going away is dropped; one
-  // measuring the last atom follows it into the hole that swap-and-pop leaves,
-  // or it would silently measure whatever lands there. This has to run while
-  // atomCount() still describes the old molecule.
+  // Constraints and scan coordinates name atoms by index without being
+  // atom-indexed themselves, so neither the helpers above nor atomCount()
+  // changing below reaches them, and both have to be handled while atomCount()
+  // still describes the old molecule. The atom being removed is gone; the last
+  // atom follows it into the hole that swap-and-pop leaves below, or whatever
+  // named it would silently name the atom that lands there instead.
   const Index lastAtom = atomCount() - 1;
-  remapScanCoordinates(*this, [index, lastAtom](Index atom) {
+  auto follow = [index, lastAtom](Index atom) {
     if (atom == index)
       return MaxIndex;
     if (atom == lastAtom)
       return index;
     return atom;
-  });
+  };
+
+  // Anything that loses one of its atoms goes, rather than being shortened to
+  // the atoms that are left: a torsion restraint quietly becoming an angle
+  // restraint would hold a different coordinate than the one that was asked
+  // for, and hold it just as stiffly.
+  for (auto it = m_constraints.begin(); it != m_constraints.end();) {
+    const Index a = follow(it->aIndex());
+    const Index b = follow(it->bIndex());
+    const Index c = follow(it->cIndex());
+    const Index d = follow(it->dIndex());
+
+    // An unused reference is MaxIndex before and after, so comparing with the
+    // old value is what separates "never set" from "just lost its atom".
+    if (a == MaxIndex || b == MaxIndex ||
+        (c == MaxIndex && it->cIndex() != MaxIndex) ||
+        (d == MaxIndex && it->dIndex() != MaxIndex)) {
+      it = m_constraints.erase(it);
+      continue;
+    }
+
+    // set() keeps the force constant and re-infers only a type that was not
+    // set explicitly, and that inference asks which references are MaxIndex --
+    // which this cannot have changed.
+    it->set(a, b, c, d, it->value());
+    ++it;
+  }
+
+  remapScanCoordinates(*this, follow);
 
   // Losing an atom makes this a different molecule, so anything calculated
   // from the old one goes rather than being reindexed. Contrast the members
@@ -1127,6 +1159,7 @@ void Molecule::clearAtoms()
   // With no atoms left there is nothing for any calculated result to be about,
   // nor for a scan coordinate to name.
   clearCalculatedResults();
+  m_constraints.clear();
   setScanCoordinates({});
 
   m_atomicNumbers.clear();

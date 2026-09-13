@@ -1763,3 +1763,90 @@ TEST_F(MoleculeTest, scanCoordinatesRejectValuesThatAreNotAtomIndices)
   EXPECT_EQ(coordinates[0].aIndex(), 0u);
   EXPECT_EQ(coordinates[0].bIndex(), 1u);
 }
+
+TEST_F(MoleculeTest, RemoveAtomDropsConstraintsThatLoseAnAtom)
+{
+  Avogadro::Core::Molecule molecule;
+  for (int i = 0; i < 5; ++i)
+    molecule.addAtom(6);
+
+  molecule.addConstraint(1.5, 0, 1);        // untouched by the removal
+  molecule.addConstraint(1.4, 2, 3);        // names the atom being removed
+  molecule.addConstraint(60.0, 0, 1, 2, 3); // also names it
+
+  // Removing atom 2 leaves only the constraint that never mentioned it. A
+  // constraint that lost an atom must go rather than be shortened onto the
+  // atoms that remain: an optimizer would hold that different coordinate just
+  // as stiffly as the one actually asked for.
+  ASSERT_TRUE(molecule.removeAtom(2));
+  ASSERT_EQ(molecule.constraints().size(), 1u);
+
+  const auto& kept = molecule.constraints()[0];
+  EXPECT_EQ(kept.aIndex(), static_cast<Avogadro::Index>(0));
+  EXPECT_EQ(kept.bIndex(), static_cast<Avogadro::Index>(1));
+  EXPECT_EQ(kept.value(), 1.5);
+  EXPECT_EQ(kept.type(), Avogadro::Core::Constraint::DistanceConstraint);
+}
+
+TEST_F(MoleculeTest, RemoveAtomFollowsTheSwappedInConstraintAtom)
+{
+  Avogadro::Core::Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+
+  molecule.addConstraint(1.5, 0, 3);
+  molecule.constraints()[0].setK(500.0);
+
+  // removeAtom() swaps the last atom into the hole, so the constraint on atom
+  // 3 now holds atom 1. Left alone it would hold whatever landed there.
+  ASSERT_TRUE(molecule.removeAtom(1));
+  ASSERT_EQ(molecule.constraints().size(), 1u);
+
+  const auto& moved = molecule.constraints()[0];
+  EXPECT_EQ(moved.aIndex(), static_cast<Avogadro::Index>(0));
+  EXPECT_EQ(moved.bIndex(), static_cast<Avogadro::Index>(1));
+  // The restraint itself is unchanged: same target, same force constant.
+  EXPECT_EQ(moved.value(), 1.5);
+  EXPECT_EQ(moved.k(), 500.0);
+  EXPECT_EQ(moved.type(), Avogadro::Core::Constraint::DistanceConstraint);
+
+  // And every surviving reference still names a real atom.
+  EXPECT_TRUE(moved.isValid(molecule.atomCount()));
+}
+
+TEST_F(MoleculeTest, RemoveAtomKeepsAnExplicitConstraintType)
+{
+  // An out-of-plane constraint has the same four references as a torsion, so
+  // its type cannot be inferred and must survive the reindexing.
+  Avogadro::Core::Molecule molecule;
+  for (int i = 0; i < 5; ++i)
+    molecule.addAtom(6);
+
+  molecule.addConstraint(10.0, 0, 1, 2, 4);
+  molecule.constraints()[0].setType(
+    Avogadro::Core::Constraint::OutOfPlaneConstraint);
+
+  ASSERT_TRUE(molecule.removeAtom(3));
+  ASSERT_EQ(molecule.constraints().size(), 1u);
+  EXPECT_EQ(molecule.constraints()[0].dIndex(),
+            static_cast<Avogadro::Index>(3));
+  EXPECT_EQ(molecule.constraints()[0].type(),
+            Avogadro::Core::Constraint::OutOfPlaneConstraint);
+}
+
+TEST_F(MoleculeTest, ClearAtomsClearsConstraints)
+{
+  Avogadro::Core::Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.addConstraint(1.5, 0, 1);
+  molecule.addConstraint(60.0, 0, 1, 2, 3);
+
+  // Whatever atoms are added next are not the ones that were constrained.
+  molecule.clearAtoms();
+  EXPECT_TRUE(molecule.constraints().empty());
+
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(8);
+  EXPECT_TRUE(molecule.constraints().empty());
+}
