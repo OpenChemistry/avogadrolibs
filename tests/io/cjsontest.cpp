@@ -706,6 +706,42 @@ TEST(CjsonTest, vibrationsSurviveSavingFromAConformerWithoutThem)
   EXPECT_DOUBLE_EQ(readMol.vibrationFrequencies(3)[0], 1600.0);
 }
 
+// Scan coordinates ride in the property map, so saving and reloading a scan
+// must keep the coordinate that was scanned -- otherwise the plot falls back
+// to frame numbers the next time the file is opened.
+TEST(CjsonTest, scanCoordinatesRoundTrip)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+
+  molecule.addScanCoordinate(Constraint(0, 1));       // distance
+  molecule.addScanCoordinate(Constraint(0, 1, 2));    // angle
+  molecule.addScanCoordinate(Constraint(0, 1, 2, 3)); // torsion
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+
+  const std::vector<Constraint> coordinates = readMol.scanCoordinates();
+  ASSERT_EQ(coordinates.size(), 3u);
+
+  // The type is inferred from which atoms are set, so an unused slot coming
+  // back as 0 rather than MaxIndex would turn a distance into a torsion.
+  EXPECT_EQ(coordinates[0].type(), Constraint::DistanceConstraint);
+  EXPECT_EQ(coordinates[0].aIndex(), 0u);
+  EXPECT_EQ(coordinates[0].bIndex(), 1u);
+
+  EXPECT_EQ(coordinates[1].type(), Constraint::AngleConstraint);
+  EXPECT_EQ(coordinates[1].cIndex(), 2u);
+
+  EXPECT_EQ(coordinates[2].type(), Constraint::TorsionConstraint);
+  EXPECT_EQ(coordinates[2].dIndex(), 3u);
+}
+
 // Any property holding an array of unequal-length rows used to be read into a
 // matrix that was grown row by row, leaving the earlier rows' extra columns
 // uninitialized.

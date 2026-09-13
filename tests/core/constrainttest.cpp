@@ -7,6 +7,7 @@
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/constraint.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
 using Avogadro::MaxIndex;
@@ -143,4 +144,78 @@ TEST(ConstraintTest, evaluateRejectsOutOfPlane)
 
   Real value = -1.0;
   EXPECT_FALSE(c.evaluate(stagger90(), value));
+}
+
+TEST(ConstraintTest, scanCoordinatesRoundTripThroughProperties)
+{
+  Avogadro::Core::Molecule molecule;
+
+  std::vector<Constraint> coordinates;
+  coordinates.emplace_back(0, 1);       // distance
+  coordinates.emplace_back(0, 1, 2);    // angle
+  coordinates.emplace_back(0, 1, 2, 3); // torsion
+  molecule.setScanCoordinates(coordinates);
+
+  const std::vector<Constraint> read = molecule.scanCoordinates();
+  ASSERT_EQ(read.size(), 3u);
+
+  EXPECT_EQ(read[0].type(), Constraint::DistanceConstraint);
+  EXPECT_EQ(read[0].aIndex(), 0u);
+  EXPECT_EQ(read[0].bIndex(), 1u);
+  // The unused atoms must come back as MaxIndex, or the type is wrong.
+  EXPECT_EQ(read[0].cIndex(), MaxIndex);
+  EXPECT_EQ(read[0].dIndex(), MaxIndex);
+
+  EXPECT_EQ(read[1].type(), Constraint::AngleConstraint);
+  EXPECT_EQ(read[1].cIndex(), 2u);
+  EXPECT_EQ(read[1].dIndex(), MaxIndex);
+
+  EXPECT_EQ(read[2].type(), Constraint::TorsionConstraint);
+  EXPECT_EQ(read[2].dIndex(), 3u);
+}
+
+TEST(ConstraintTest, scanCoordinatesAreAbsentUntilSet)
+{
+  Avogadro::Core::Molecule molecule;
+  EXPECT_TRUE(molecule.scanCoordinates().empty());
+
+  // A property of the wrong type must be ignored rather than misread.
+  molecule.setData("scanCoordinates", 7);
+  EXPECT_TRUE(molecule.scanCoordinates().empty());
+}
+
+TEST(ConstraintTest, addScanCoordinateIgnoresDuplicates)
+{
+  Avogadro::Core::Molecule molecule;
+
+  molecule.addScanCoordinate(Constraint(0, 1, 2, 3));
+  molecule.addScanCoordinate(Constraint(0, 1, 2, 3));
+  EXPECT_EQ(molecule.scanCoordinates().size(), 1u);
+
+  // The same atoms in a different order describe a different coordinate.
+  molecule.addScanCoordinate(Constraint(3, 2, 1, 0));
+  EXPECT_EQ(molecule.scanCoordinates().size(), 2u);
+}
+
+TEST(ConstraintTest, scanCoordinatesMeasureATrajectory)
+{
+  // The point of storing them: measure the same coordinate in every set.
+  Avogadro::Core::Molecule molecule;
+  molecule.addScanCoordinate(Constraint(0, 1));
+
+  Array<Vector3> first;
+  first.push_back(Vector3(0.0, 0.0, 0.0));
+  first.push_back(Vector3(1.0, 0.0, 0.0));
+  Array<Vector3> second;
+  second.push_back(Vector3(0.0, 0.0, 0.0));
+  second.push_back(Vector3(2.5, 0.0, 0.0));
+
+  const std::vector<Constraint> coordinates = molecule.scanCoordinates();
+  ASSERT_EQ(coordinates.size(), 1u);
+
+  Real value = 0.0;
+  ASSERT_TRUE(coordinates[0].evaluate(first, value));
+  EXPECT_NEAR(value, 1.0, tol);
+  ASSERT_TRUE(coordinates[0].evaluate(second, value));
+  EXPECT_NEAR(value, 2.5, tol);
 }

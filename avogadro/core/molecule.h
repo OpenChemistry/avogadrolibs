@@ -1027,6 +1027,34 @@ public:
   Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }
   ///@} end of constraint methods
 
+  /** @name Scan coordinates
+   * Distances, angles and torsions worth following across the coordinate
+   * sets, such as the coordinate a relaxed scan stepped through. Unlike
+   * constraints these are only ever measured, never enforced, so an optimizer
+   * ignores them. They live in the property map, which already travels
+   * through CJSON, rather than in a member of their own.
+   */
+  ///@{
+  /**
+   * @return the scan coordinates, skipping any malformed entry
+   */
+  std::vector<Constraint> scanCoordinates() const;
+
+  /**
+   * Replace the scan coordinates.
+   * @param coordinates The coordinates to store. Only the atom indices are
+   * kept: a scan coordinate has no target value or force constant.
+   */
+  void setScanCoordinates(const std::vector<Constraint>& coordinates);
+
+  /**
+   * Add one scan coordinate, ignoring it if an equivalent one is already
+   * stored.
+   * @param coordinate The coordinate to add
+   */
+  void addScanCoordinate(const Constraint& coordinate);
+  ///@}
+
   /**
    * @return a map of components and count.
    */

@@ -438,6 +438,100 @@ void Molecule::removeConstraint(Index a, Index b, Index c, Index d)
   }
 }
 
+namespace {
+
+// The key the scan coordinates travel under, both in the property map and in
+// CJSON's "properties" object.
+const char* scanCoordinateKey = "scanCoordinates";
+
+// Atom indices travel as doubles here, and MaxIndex has no exact double
+// representation, so "no atom" is written as -1 instead.
+double indexToValue(Index index)
+{
+  return (index == MaxIndex) ? -1.0 : static_cast<double>(index);
+}
+
+Index valueToIndex(double value)
+{
+  // Written so that NaN, which compares false against everything, lands on
+  // MaxIndex rather than falling through to the cast.
+  if (!(value >= 0.0))
+    return MaxIndex;
+
+  return static_cast<Index>(value + 0.5);
+}
+
+bool sameAtoms(const Constraint& a, const Constraint& b)
+{
+  return a.aIndex() == b.aIndex() && a.bIndex() == b.bIndex() &&
+         a.cIndex() == b.cIndex() && a.dIndex() == b.dIndex();
+}
+
+} // namespace
+
+std::vector<Constraint> Molecule::scanCoordinates() const
+{
+  std::vector<Constraint> coordinates;
+  if (!hasData(scanCoordinateKey))
+    return coordinates;
+
+  const Variant stored = data(scanCoordinateKey);
+  if (stored.type() != Variant::Matrix)
+    return coordinates;
+
+  const MatrixX& matrix = stored.toMatrixRef();
+  if (matrix.cols() < 2)
+    return coordinates;
+
+  for (Eigen::Index row = 0; row < matrix.rows(); ++row) {
+    const Index a = valueToIndex(matrix(row, 0));
+    const Index b = valueToIndex(matrix(row, 1));
+    // Anything shorter than a distance is not a coordinate at all.
+    if (a == MaxIndex || b == MaxIndex)
+      continue;
+
+    const Index c =
+      (matrix.cols() > 2) ? valueToIndex(matrix(row, 2)) : MaxIndex;
+    const Index d =
+      (matrix.cols() > 3) ? valueToIndex(matrix(row, 3)) : MaxIndex;
+    // A torsion cannot be missing its third atom.
+    if (c == MaxIndex && d != MaxIndex)
+      continue;
+
+    coordinates.emplace_back(a, b, c, d);
+  }
+
+  return coordinates;
+}
+
+void Molecule::setScanCoordinates(const std::vector<Constraint>& coordinates)
+{
+  // One row per coordinate, always four columns: the reader cannot handle
+  // rows of different lengths, and padding is cheaper than a second key.
+  MatrixX matrix(static_cast<Eigen::Index>(coordinates.size()), 4);
+  for (size_t i = 0; i < coordinates.size(); ++i) {
+    const auto row = static_cast<Eigen::Index>(i);
+    matrix(row, 0) = indexToValue(coordinates[i].aIndex());
+    matrix(row, 1) = indexToValue(coordinates[i].bIndex());
+    matrix(row, 2) = indexToValue(coordinates[i].cIndex());
+    matrix(row, 3) = indexToValue(coordinates[i].dIndex());
+  }
+
+  setData(scanCoordinateKey, matrix);
+}
+
+void Molecule::addScanCoordinate(const Constraint& coordinate)
+{
+  std::vector<Constraint> coordinates = scanCoordinates();
+  for (const auto& existing : coordinates) {
+    if (sameAtoms(existing, coordinate))
+      return;
+  }
+
+  coordinates.push_back(coordinate);
+  setScanCoordinates(coordinates);
+}
+
 void Molecule::setFrozenAtom(Index atomId, bool frozen)
 {
   if (atomId >= m_atomicNumbers.size())

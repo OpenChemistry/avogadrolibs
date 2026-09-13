@@ -15,6 +15,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QProcess>
+#include <QPushButton>
 #include <QString>
 #include <QVBoxLayout>
 
@@ -83,6 +84,65 @@ static QString axisTitleForConstraint(const Core::Constraint& c)
   }
 }
 
+// The selected atoms, in ascending index order. Molecule stores selection as a
+// flag per atom, so the order the user clicked them in is not available.
+static std::vector<Index> selectedAtoms(const QtGui::Molecule& molecule)
+{
+  std::vector<Index> selection;
+  for (Index i = 0; i < molecule.atomCount(); ++i) {
+    if (molecule.atomSelected(i))
+      selection.push_back(i);
+  }
+  return selection;
+}
+
+static bool bonded(const QtGui::Molecule& molecule, Index a, Index b)
+{
+  return molecule.bond(a, b).isValid();
+}
+
+// Put the selection in the order that names a chemically meaningful
+// coordinate: the angle vertex in the middle, the torsion along its path.
+// Ascending index order is the fallback when the atoms are not connected,
+// which is legitimate for a distance between two ends of a molecule.
+static bool orderSelection(const QtGui::Molecule& molecule,
+                           std::vector<Index>& atoms)
+{
+  if (atoms.size() == 2)
+    return true;
+
+  if (atoms.size() == 3) {
+    // Whichever atom is bonded to both others is the vertex.
+    for (size_t i = 0; i < 3; ++i) {
+      const Index vertex = atoms[i];
+      const Index first = atoms[(i + 1) % 3];
+      const Index second = atoms[(i + 2) % 3];
+      if (bonded(molecule, vertex, first) && bonded(molecule, vertex, second)) {
+        atoms = { first, vertex, second };
+        return true;
+      }
+    }
+    return false;
+  }
+
+  if (atoms.size() == 4) {
+    // Look for the path a-b-c-d. Four atoms is 24 orderings, so just try them.
+    std::vector<Index> candidate = atoms;
+    std::sort(candidate.begin(), candidate.end());
+    do {
+      if (bonded(molecule, candidate[0], candidate[1]) &&
+          bonded(molecule, candidate[1], candidate[2]) &&
+          bonded(molecule, candidate[2], candidate[3])) {
+        atoms = candidate;
+        return true;
+      }
+    } while (std::next_permutation(candidate.begin(), candidate.end()));
+    return false;
+  }
+
+  return false;
+}
+
 // Both axes offer the same quantities, so fill them from one list. Keeping the
 // current selection matters here: the combos are rebuilt whenever a constraint
 // is added, which should not throw away what the user was looking at.
@@ -111,8 +171,8 @@ PlotConformer::PlotConformer(QObject* parent_)
     m_molecule(nullptr), m_displayDialogAction(new QAction(this)),
     m_chartWidget(nullptr), m_yAxisCombo(nullptr), m_xAxisCombo(nullptr),
     m_unitsCombo(nullptr), m_targetUnitsCombo(nullptr),
-    m_unwrapDihedralsCheck(nullptr), m_frameLabel(nullptr),
-    m_xTitle(tr("Frame"))
+    m_unwrapDihedralsCheck(nullptr), m_addSelectionButton(nullptr),
+    m_frameLabel(nullptr), m_xTitle(tr("Frame"))
 {
   m_displayDialogAction->setText(tr("Plot Conformer Data…"));
   connect(m_displayDialogAction, &QAction::triggered, this,
@@ -171,6 +231,8 @@ void PlotConformer::moleculeChanged(unsigned int c)
 
   const bool conformerChange = (changes & Molecule::Conformer) != 0;
   const bool constraintChange = (changes & Molecule::Constraints) != 0;
+  const bool propertyChange = (changes & Molecule::Properties) != 0;
+  const bool selectionChange = (changes & Molecule::Selection) != 0;
   const bool structural = (changes & Molecule::Added) ||
                           (changes & Molecule::Removed) ||
                           (changes & Molecule::Modified);
@@ -193,10 +255,17 @@ void PlotConformer::moleculeChanged(unsigned int c)
     return;
   }
 
-  if (structural || constraintChange) {
-    // Atoms, coordinate sets, energies or constraints may all have changed
-    // under us, and deleting atoms can invalidate the coordinate currently
-    // driving an axis.
+  if (selectionChange && !structural && !constraintChange && !propertyChange) {
+    // Selecting atoms changes nothing that is plotted, only whether a new
+    // coordinate can be made from them.
+    updateSelectionButton();
+    return;
+  }
+
+  if (structural || constraintChange || propertyChange) {
+    // Atoms, coordinate sets, energies, constraints or scan coordinates may
+    // all have changed under us, and deleting atoms can invalidate the
+    // coordinate currently driving an axis.
     m_currentFrame = m_molecule->coordinate3d();
     populateQuantityCombos();
     updatePlot();
@@ -311,10 +380,44 @@ bool PlotConformer::eventFilter(QObject* object, QEvent* event)
   return QtGui::ExtensionPlugin::eventFilter(object, event);
 }
 
+void PlotConformer::collectCoordinates()
+{
+  m_coordinates.clear();
+  if (!m_molecule)
+    return;
+
+  const Index atoms = m_molecule->atomCount();
+
+  // Constraints first: they are what an optimizer was told to hold, so they
+  // are the likeliest thing a relaxed scan stepped through.
+  for (const auto& constraint : m_molecule->constraints()) {
+    // An out-of-plane constraint has no single value, and one left over from
+    // deleted atoms would measure to the origin.
+    if (constraint.isValid(atoms))
+      m_coordinates.push_back(constraint);
+  }
+
+  // Then coordinates the user asked to follow, which a file may also carry.
+  for (const auto& coordinate : m_molecule->scanCoordinates()) {
+    if (!coordinate.isValid(atoms))
+      continue;
+
+    const bool duplicate =
+      std::any_of(m_coordinates.begin(), m_coordinates.end(),
+                  [&coordinate](const Core::Constraint& existing) {
+                    return existing.atoms() == coordinate.atoms();
+                  });
+    if (!duplicate)
+      m_coordinates.push_back(coordinate);
+  }
+}
+
 void PlotConformer::populateQuantityCombos()
 {
   if (!m_molecule || !m_xAxisCombo || !m_yAxisCombo)
     return;
+
+  collectCoordinates();
 
   const bool hasEnergies = m_molecule->hasData("energies");
   const bool hasForces = m_molecule->hasData("forces");
@@ -330,21 +433,73 @@ void PlotConformer::populateQuantityCombos()
   if (hasVelocities)
     quantities.emplace_back(tr("Velocities"), VelocitiesQuantity);
 
-  // One entry per constraint, so a scanned coordinate can go on either axis.
-  const auto& constraints = m_molecule->constraints();
-  for (int i = 0; i < static_cast<int>(constraints.size()); ++i) {
-    const auto& c = constraints[static_cast<size_t>(i)];
-    // Out-of-plane constraints have no single value to scan, and one left
-    // over from deleted atoms would plot zeros.
-    if (c.isValid(m_molecule->atomCount()))
-      quantities.emplace_back(constraintLabel(c), i);
-  }
+  // One entry per coordinate, so a scanned coordinate can go on either axis.
+  for (int i = 0; i < static_cast<int>(m_coordinates.size()); ++i)
+    quantities.emplace_back(
+      constraintLabel(m_coordinates[static_cast<size_t>(i)]), i);
 
   fillQuantityCombo(m_xAxisCombo, quantities, FrameQuantity);
   fillQuantityCombo(m_yAxisCombo, quantities,
                     hasEnergies ? EnergyQuantity : RmsdQuantity);
 
+  updateSelectionButton();
   // updatePlot() runs after every call to this, and owns the unit combos.
+}
+
+void PlotConformer::updateSelectionButton()
+{
+  if (!m_addSelectionButton)
+    return;
+
+  if (!m_molecule) {
+    m_addSelectionButton->setEnabled(false);
+    return;
+  }
+
+  const size_t count = selectedAtoms(*m_molecule).size();
+  m_addSelectionButton->setEnabled(count >= 2 && count <= 4);
+  m_addSelectionButton->setToolTip(
+    tr("Select 2, 3 or 4 atoms to follow a distance, angle or dihedral "
+       "across the conformers."));
+}
+
+void PlotConformer::addCoordinateFromSelection()
+{
+  if (!m_molecule)
+    return;
+
+  std::vector<Index> atoms = selectedAtoms(*m_molecule);
+  if (atoms.size() < 2 || atoms.size() > 4)
+    return;
+
+  // Connectivity decides the order where it can; otherwise the atoms are
+  // taken as they are numbered, which is still a usable distance.
+  orderSelection(*m_molecule, atoms);
+
+  Core::Constraint coordinate(atoms[0], atoms[1],
+                              atoms.size() > 2 ? atoms[2] : MaxIndex,
+                              atoms.size() > 3 ? atoms[3] : MaxIndex);
+  m_molecule->addScanCoordinate(coordinate);
+  // Stored in the property map, so this is a property change.
+  m_molecule->emitChanged(Molecule::Properties);
+
+  // Show what was just added rather than making the user find it. It is not
+  // necessarily the last entry: a coordinate matching an existing constraint
+  // is listed once, under the constraint.
+  populateQuantityCombos();
+  int quantity = -1;
+  for (size_t i = 0; i < m_coordinates.size(); ++i) {
+    if (m_coordinates[i].atoms() == coordinate.atoms()) {
+      quantity = static_cast<int>(i);
+      break;
+    }
+  }
+
+  const int index = (quantity >= 0) ? m_xAxisCombo->findData(quantity) : -1;
+  if (index >= 0)
+    m_xAxisCombo->setCurrentIndex(index); // triggers updatePlot
+  else
+    updatePlot();
 }
 
 int PlotConformer::xQuantity() const
@@ -369,14 +524,10 @@ int PlotConformer::yQuantity() const
 
 bool PlotConformer::isTorsionQuantity(int quantity) const
 {
-  if (!m_molecule || quantity < 0)
+  if (quantity < 0 || quantity >= static_cast<int>(m_coordinates.size()))
     return false;
 
-  const auto& constraints = m_molecule->constraints();
-  if (quantity >= static_cast<int>(constraints.size()))
-    return false;
-
-  return constraints[static_cast<size_t>(quantity)].type() ==
+  return m_coordinates[static_cast<size_t>(quantity)].type() ==
          Core::Constraint::TorsionConstraint;
 }
 
@@ -422,6 +573,10 @@ void PlotConformer::displayDialog()
     axisLayout->addStretch();
     mainLayout->addLayout(axisLayout);
 
+    m_addSelectionButton =
+      new QPushButton(tr("Add from Selection"), m_dialog.get());
+    axisLayout->addWidget(m_addSelectionButton);
+
     m_unwrapDihedralsCheck =
       new QCheckBox(tr("Unwrap dihedral scans"), m_dialog.get());
     m_unwrapDihedralsCheck->setChecked(true);
@@ -462,6 +617,8 @@ void PlotConformer::displayDialog()
             &PlotConformer::updatePlot);
     connect(m_unwrapDihedralsCheck, &QCheckBox::toggled, this,
             &PlotConformer::updatePlot);
+    connect(m_addSelectionButton, &QPushButton::clicked, this,
+            &PlotConformer::addCoordinateFromSelection);
 
     // Key presses that the chart and buttons ignore bubble up to the dialog,
     // where the filter turns them into conformer navigation. Filtering here
@@ -488,10 +645,10 @@ bool PlotConformer::evaluateQuantity(int quantity, DataSeries& values,
   values.clear();
 
   if (quantity >= 0) {
-    const auto& constraints = m_molecule->constraints();
-    if (quantity >= static_cast<int>(constraints.size()))
+    if (quantity >= static_cast<int>(m_coordinates.size()))
       return false;
-    title = axisTitleForConstraint(constraints[static_cast<size_t>(quantity)]);
+    title =
+      axisTitleForConstraint(m_coordinates[static_cast<size_t>(quantity)]);
     return generateCoordinateSeries(quantity, values);
   }
 
@@ -646,18 +803,15 @@ bool PlotConformer::generateFrameSeries(DataSeries& values)
   return !values.empty();
 }
 
-bool PlotConformer::generateCoordinateSeries(int constraintIndex,
+bool PlotConformer::generateCoordinateSeries(int coordinateIndex,
                                              DataSeries& values)
 {
-  if (!m_molecule || constraintIndex < 0)
-    return false;
-
-  const auto& constraints = m_molecule->constraints();
-  if (constraintIndex >= static_cast<int>(constraints.size()))
+  if (!m_molecule || coordinateIndex < 0 ||
+      coordinateIndex >= static_cast<int>(m_coordinates.size()))
     return false;
 
   const Core::Constraint& constraint =
-    constraints[static_cast<size_t>(constraintIndex)];
+    m_coordinates[static_cast<size_t>(coordinateIndex)];
 
   // coordinate3d(i) returns a copy and does not change the displayed set, so
   // this reads the whole trajectory without disturbing the active conformer.
