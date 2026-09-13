@@ -1,6 +1,7 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   AngleIterator
+  AngleTools
   Aromaticity
   Array
   Atom
@@ -8,6 +9,7 @@ set(tests
   AtomUtilities
   BasisSet
   Bond
+  Constraint
   CoordinateBlockGenerator
   CoordinateSet
   CrystalTools

@@ -1165,15 +1165,21 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
           // check if it is a numeric array to go into Eigen::MatrixXd
           json j = element.value(); // convenience
           std::size_t rows = j.size();
-          MatrixX matrix;
-          matrix.resize(rows, 1); // default to 1 columns
+          // Rows are not required to be the same length, so size the matrix to
+          // the longest of them up front. Growing it row by row instead would
+          // leave the columns added later uninitialized in every earlier row.
+          std::size_t cols = 1;
+          for (const auto& jrow : j) {
+            if (jrow.type() == json::value_t::array)
+              cols = std::max(cols, jrow.size());
+          }
+          MatrixX matrix = MatrixX::Zero(rows, cols);
           bool isNumeric = true;
 
           for (std::size_t row = 0; row < j.size(); ++row) {
             const auto& jrow = j.at(row);
             // check to see if we have a simple vector or a matrix
             if (jrow.type() == json::value_t::array) {
-              matrix.conservativeResize(rows, jrow.size());
               for (std::size_t col = 0; col < jrow.size(); ++col) {
                 const auto& value = jrow.at(col);
                 if (value.type() == json::value_t::number_float ||
