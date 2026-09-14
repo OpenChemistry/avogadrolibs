@@ -16,7 +16,7 @@ set(tests
   Eigen
   Element
   GaussianSet
-  GaussianSetTools
+  GaussianShellNormalization
   Graph
   InternalCoordinates
   Kekulize
@@ -58,7 +58,7 @@ target_link_libraries(AvogadroTests Avogadro::Core
 # filter below would not match -- ctest would then run zero cases and still
 # report success.
 set(parameterizedTests
-  GaussianSetTools
+  GaussianShellNormalization
   )
 
 foreach(TestName ${tests})

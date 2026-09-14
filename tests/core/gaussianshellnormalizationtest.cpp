@@ -119,7 +119,8 @@ std::ostream& operator<<(std::ostream& out, const ShellCase& shell)
 
 } // namespace
 
-class GaussianSetToolsTest : public ::testing::TestWithParam<ShellCase>
+class GaussianShellNormalizationTest
+  : public ::testing::TestWithParam<ShellCase>
 {
 protected:
   // Builds a single-atom molecule whose basis is the four probe shells
@@ -191,7 +192,7 @@ protected:
 // Guards the quadrature itself. If the shell cutoff ever tightens enough to
 // clip a node, or the node table is mistranscribed, this fails first and
 // every other failure in this file should be read in that light.
-TEST_P(GaussianSetToolsTest, quadratureIntegratesTheSShellExactly)
+TEST_P(GaussianShellNormalizationTest, quadratureIntegratesTheSShellExactly)
 {
   EXPECT_NEAR(overlap(0, 0), 1.0, 1e-6);
 }
@@ -200,7 +201,7 @@ TEST_P(GaussianSetToolsTest, quadratureIntegratesTheSShellExactly)
 // the spherical g shell used one m-independent constant where three are
 // needed (norms of 105, 105/8 and 21/2 instead of 1), the Cartesian g shell
 // used the wrong double-factorial divisors, and d0 came out at 8/3.
-TEST_P(GaussianSetToolsTest, shellsAreNormalized)
+TEST_P(GaussianShellNormalizationTest, shellsAreNormalized)
 {
   const ShellCase& shell = GetParam();
   for (int c = 0; c < shell.components; ++c) {
@@ -215,7 +216,7 @@ TEST_P(GaussianSetToolsTest, shellsAreNormalized)
 // and to (xx - yy) by x<->y antisymmetry, so the whole off-diagonal block
 // was clean while d0 was not a d function at all. It is still worth
 // asserting -- it pins the relative phases and shapes of the components.
-TEST_P(GaussianSetToolsTest, sphericalShellComponentsAreOrthogonal)
+TEST_P(GaussianShellNormalizationTest, sphericalShellComponentsAreOrthogonal)
 {
   const ShellCase& shell = GetParam();
   if (!shell.pure)
@@ -236,7 +237,8 @@ TEST_P(GaussianSetToolsTest, sphericalShellComponentsAreOrthogonal)
 // the only one of these three tests that would reject the tempting wrong
 // fix of simply rescaling the broken d0 to unit norm -- that variant has
 // norm 1 and a clean off-diagonal block, but is still 70% s.
-TEST_P(GaussianSetToolsTest, pureShellsAreOrthogonalToLowerAngularMomenta)
+TEST_P(GaussianShellNormalizationTest,
+       pureShellsAreOrthogonalToLowerAngularMomenta)
 {
   const ShellCase& shell = GetParam();
   if (!shell.pure)
@@ -267,7 +269,7 @@ TEST_P(GaussianSetToolsTest, pureShellsAreOrthogonalToLowerAngularMomenta)
 // leaves the two silently disagreeing -- exactly the failure mode that
 // hid the d0 bug in gridD5. Evaluate both on the same coordinates and
 // require them to agree.
-TEST_P(GaussianSetToolsTest, gridAndPointPathsAgree)
+TEST_P(GaussianShellNormalizationTest, gridAndPointPathsAgree)
 {
   const ShellCase& shell = GetParam();
 
@@ -304,7 +306,7 @@ TEST_P(GaussianSetToolsTest, gridAndPointPathsAgree)
 }
 
 INSTANTIATE_TEST_SUITE_P(
-  Shells, GaussianSetToolsTest,
+  Shells, GaussianShellNormalizationTest,
   ::testing::Values(ShellCase{ GaussianSet::S, "S", 1, 0, true },
                     ShellCase{ GaussianSet::P, "P", 3, 1, true },
                     ShellCase{ GaussianSet::D, "D_cartesian", 6, 2, false },

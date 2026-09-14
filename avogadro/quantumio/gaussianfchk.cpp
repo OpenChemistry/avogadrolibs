@@ -337,6 +337,101 @@ void GaussianFchk::processLine(std::istream& in)
   }
 }
 
+namespace {
+// Gaussian orders Cartesian shells one way through f and a different way
+// from g upward, and only the g case disagrees with what GaussianSet
+// evaluates. Through f the two agree:
+//   d: xx, yy, zz, xy, xz, yz
+//   f: xxx, yyy, zzz, xyy, xxy, xxz, xzz, yzz, yyz, xyz
+// but a Cartesian g shell is written in an fchk in reverse-lexicographic
+// order,
+//   zzzz, yzzz, yyzz, yyyz, yyyy, xzzz, xyzz, xyyz, xyyy,
+//   xxzz, xxyz, xxyy, xxxz, xxxy, xxxx
+// whereas GaussianSet::G expects the Molden ordering used by
+// gaussiansettools.cpp's componentsG[15],
+//   xxxx, yyyy, zzzz, xxxy, xxxz, yyyx, yyyz, zzzx, zzzy,
+//   xxyy, xxzz, yyzz, xxyz, yyxz, zzxy
+// Entry j below names the fchk component that belongs in Avogadro's slot j.
+// Spherical g (shell type -4) is ordered 0, +1, -1, ... in both and needs
+// no reordering. Without this the Cartesian g coefficients land in the
+// wrong basis functions, which shows up as a ~1% electron-density error in
+// the bonding region -- big enough to matter, small enough to be mistaken
+// for noise. See tests/quantumio/densitycubetest.cpp.
+const int cartesianGFromFchk[15] = { 14, 4,  0, 13, 12, 8, 3, 5,
+                                     1,  11, 9, 2,  10, 7, 6 };
+
+// Basis functions contributed by one shell, from its fchk shell type:
+// negative is spherical, -1 is the SP special case, positive is Cartesian.
+int shellComponentCount(int shellType)
+{
+  if (shellType == -1)
+    return 4;
+  if (shellType < 0)
+    return -2 * shellType + 1;
+  return (shellType + 1) * (shellType + 2) / 2;
+}
+
+// Permutation taking Avogadro's atomic-orbital index to the fchk's, over
+// the whole basis. Empty when nothing needs reordering, which is the usual
+// case -- only a Cartesian g shell perturbs it.
+std::vector<int> fchkToAvogadroAoOrder(const std::vector<int>& shellTypes)
+{
+  std::vector<int> order;
+  bool reorderNeeded = false;
+  int offset = 0;
+  for (int shellType : shellTypes) {
+    const int count = shellComponentCount(shellType);
+    if (shellType == 4) {
+      reorderNeeded = true;
+      for (int i = 0; i < count; ++i)
+        order.push_back(offset + cartesianGFromFchk[i]);
+    } else {
+      for (int i = 0; i < count; ++i)
+        order.push_back(offset + i);
+    }
+    offset += count;
+  }
+  if (!reorderNeeded)
+    return std::vector<int>();
+  return order;
+}
+
+// Reorder an atomic-orbital-indexed coefficient vector in place. The vector
+// holds one contiguous block of atomic-orbital coefficients per molecular
+// orbital (see GaussianSet::setMolecularOrbitals), so each block is
+// permuted the same way.
+void reorderAoCoefficients(const std::vector<int>& order,
+                           std::vector<double>& coefficients)
+{
+  const size_t aoCount = order.size();
+  if (aoCount == 0 || coefficients.empty() || coefficients.size() % aoCount)
+    return;
+
+  std::vector<double> reordered(coefficients.size());
+  for (size_t block = 0; block < coefficients.size() / aoCount; ++block) {
+    const size_t base = block * aoCount;
+    for (size_t i = 0; i < aoCount; ++i)
+      reordered[base + i] = coefficients[base + order[i]];
+  }
+  coefficients.swap(reordered);
+}
+
+// The density matrices are indexed by atomic orbital on both axes, so they
+// need the same permutation applied symmetrically.
+void reorderDensityMatrix(const std::vector<int>& order, MatrixX& matrix)
+{
+  const auto aoCount = static_cast<Eigen::Index>(order.size());
+  if (aoCount == 0 || matrix.rows() != aoCount || matrix.cols() != aoCount)
+    return;
+
+  MatrixX reordered(aoCount, aoCount);
+  for (Eigen::Index i = 0; i < aoCount; ++i)
+    for (Eigen::Index j = 0; j < aoCount; ++j)
+      reordered(i, j) = matrix(order[i], order[j]);
+  matrix = reordered;
+}
+} // namespace
+
 void GaussianFchk::load(GaussianSet* basis)
 {
   // Now load up our basis set
@@ -486,6 +581,18 @@ void GaussianFchk::load(GaussianSet* basis)
       }
     }
   }
+  // Gaussian writes Cartesian g shells in a different component order than
+  // GaussianSet evaluates them, so the atomic-orbital axis of everything
+  // read above has to be permuted before it is handed over.
+  const std::vector<int> aoOrder = fchkToAvogadroAoOrder(m_shellTypes);
+  if (!aoOrder.empty()) {
+    reorderAoCoefficients(aoOrder, m_MOcoeffs);
+    reorderAoCoefficients(aoOrder, m_alphaMOcoeffs);
+    reorderAoCoefficients(aoOrder, m_betaMOcoeffs);
+    reorderDensityMatrix(aoOrder, m_density);
+    reorderDensityMatrix(aoOrder, m_spinDensity);
+  }
+
   // Now to load in the MO coefficients
   if (basis->isValid()) {
     if (m_scftype == Rhf) {
