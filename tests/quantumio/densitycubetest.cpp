@@ -13,6 +13,8 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
+#include <avogadro/io/compression.h>
+
 #include <avogadro/quantumio/gaussiancube.h>
 #include <avogadro/quantumio/gaussianfchk.h>
 
@@ -82,6 +84,17 @@ class DensityCubeTest : public ::testing::TestWithParam<DensityCase>
 TEST_P(DensityCubeTest, densityMatchesGaussian)
 {
   const DensityCase& testCase = GetParam();
+
+  // The fixtures are stored gzip compressed to keep avogadrodata small: a
+  // 31^3 cube is about 800 kB of ASCII and there are six of them. A build
+  // configured with USE_LIBARCHIVE=OFF -- the sanitizer builds and the
+  // Python wheels do this -- has no gzip back end at all, so there is
+  // nothing here to read and nothing to compare. That is a documented build
+  // limitation rather than a failure, so skip, the same way
+  // tests/io/compressiontest.cpp passes over codecs the build lacks.
+  if (!Avogadro::Io::compressionSupported(Avogadro::Io::Compression::Gzip))
+    GTEST_SKIP() << "this build has no gzip support (USE_LIBARCHIVE=OFF), "
+                    "and the reference fixtures are gzip compressed";
 
   // Both files are gzip compressed; FileFormat::open() sniffs the content
   // and decompresses transparently, so nothing special is needed here.
