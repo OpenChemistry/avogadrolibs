@@ -182,7 +182,11 @@ void gridD5(const Avogadro::Core::ShellInfo& shell, int mo,
             int kmax, int ny, int nz, int iStart, double* output)
 {
   // 5 spherical D components: d0, d+1, d-1, d+2, d-2
-  // Angular: -(xx+yy), xz, yz, xx-yy, xy
+  // Angular: zz - (xx+yy)/2, xz, yz, xx-yy, xy
+  // d0 is the real solid harmonic (3z^2 - r^2)/2 == zz - (xx + yy)/2, which
+  // splits into a k-independent -(xx + yy)/2 part and a zz part that has to
+  // be evaluated inside the k loop. It was previously -(xx + yy) with no z
+  // term, which is not a d function at all (see pointD5).
   double mo_c[5];
   bool allZero = true;
   for (int c = 0; c < 5; ++c) {
@@ -218,15 +222,18 @@ void gridD5(const Avogadro::Core::ShellInfo& shell, int mo,
         double exy = exi * ey[j - jmin];
         double dyj = dy[j], dyj2 = dyj * dyj;
         // k-independent angular parts
-        // d0: zz - r2 = -(xx + yy), d+2: xx - yy, d-2: xy
-        double ij_sum =
-          c[0] * (-(dxi2 + dyj2)) + c[3] * (dxi2 - dyj2) + c[4] * (dxi * dyj);
+        // d0: -(xx + yy)/2 (its zz term is k-dependent, added below),
+        // d+2: xx - yy, d-2: xy
+        double ij_sum = c[0] * (-(dxi2 + dyj2) / 2.0) + c[3] * (dxi2 - dyj2) +
+                        c[4] * (dxi * dyj);
         // d+1: xz, d-1: yz — these multiply dz[k]
         double dz_coeff = c[1] * dxi + c[2] * dyj;
         int base = (i - iStart) * ny * nz + j * nz;
         for (int k = kmin; k <= kmax; ++k) {
+          double dzk = dz[k];
           double g = exy * ez[k - kmin];
-          output[base + k] += g * (ij_sum + dz_coeff * dz[k]);
+          // c[0] * dzk * dzk completes d0 = zz - (xx + yy)/2.
+          output[base + k] += g * (ij_sum + dz_coeff * dzk + c[0] * dzk * dzk);
         }
       }
     }
@@ -1112,11 +1119,16 @@ inline void GaussianSetTools::pointD5(const ShellInfo& shell,
   double xz = delta.x() * delta.z();
   double yz = delta.y() * delta.z();
 
-  double componentsD[5] = { zz - dr2, // 0
-                            xz,       // 1p
-                            yz,       // 1n
-                            xx - yy,  // 2p
-                            xy };     // 2n
+  // d0 is the real solid harmonic (3z^2 - r^2)/2. It was previously written
+  // as (zz - dr2), which is -(xx + yy): no z dependence at all, so it was
+  // not a d function -- it had a non-zero overlap with an s function on the
+  // same centre and a norm of sqrt(8/3) rather than 1. The other four
+  // components were and remain correct.
+  double componentsD[5] = { (3.0 * zz - dr2) / 2.0, // 0
+                            xz,                     // 1p
+                            yz,                     // 1n
+                            xx - yy,                // 2p
+                            xy };                   // 2n
 
   for (int i = 0; i < 5; ++i)
     values[shell.moIndex + i] += componentsD[i] * components[i];

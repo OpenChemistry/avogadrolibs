@@ -1,6 +1,7 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   cube
+  densitycube
   fchk
   gaussiansettools
   genericoutput
@@ -48,6 +49,12 @@ foreach(TestName ${tests})
   if(TestName STREQUAL "cube")
     add_test(NAME "QuantumIo-cube"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianCubeTest.*")
+  elseif(TestName STREQUAL "densitycube")
+    # Parameterized (TEST_P): gtest names these cases
+    # "Prefix/DensityCubeTest.case/index", which a "DensityCubeTest.*"
+    # filter would not match -- ctest would run nothing and report success.
+    add_test(NAME "QuantumIo-densitycube"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=*DensityCubeTest*")
   elseif(TestName STREQUAL "fchk")
     add_test(NAME "QuantumIo-fchk"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianFchkTest.*")
