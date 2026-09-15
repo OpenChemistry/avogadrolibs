@@ -15,7 +15,7 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <property name="fieldGrowthPolicy">
-    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+    <enum>QFormLayout::FieldGrowthPolicy::ExpandingFieldsGrow</enum>
    </property>
    <item row="0" column="0">
     <widget class="QLabel" name="label">
@@ -41,6 +41,19 @@
     <widget class="QCheckBox" name="adjustHydrogens">
      <property name="text">
       <string>Adjust Hydrogens</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="adjustBondLengths">
+     <property name="toolTip">
+      <string>When possible, adjust bond lengths when changing atoms or bond orders</string>
+     </property>
+     <property name="text">
+      <string>Adjust Bond Lengths</string>
      </property>
      <property name="checked">
       <bool>true</bool>
