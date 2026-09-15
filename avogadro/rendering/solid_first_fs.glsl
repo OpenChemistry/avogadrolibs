@@ -49,11 +49,11 @@ uniform float inDofPosition;
 uniform float inFogPosition;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
-// Ambient occlusion term from the AO stage, still carrying its sampling
-// pattern; blurredAo() below is what removes it.
+// Output of the AO stage: the ambient occlusion term in x, still carrying its
+// sampling pattern, and the distance to the surface in scene units in y.
+// blurredAo() below removes the pattern.
 uniform sampler2D inAoTex;
-// Projection matrix, used to turn window depth back into scene units and to
-// size the blur's surface test.
+// Projection matrix, used to size the blur's surface test.
 uniform mat4 inProjection;
 
 vec3 getNormalAt(vec2 normalUV)
@@ -66,17 +66,6 @@ vec3 getNormalAt(vec2 normalUV)
   float ydelta = ypos - yneg;
   vec3 r = vec3(xdelta, ydelta, 1.0 / width + 1.0 / height);
   return normalize(r);
-}
-
-// Window depth to distance from the camera, in scene units. Derived from the
-// projection so it holds for both the perspective and the orthographic camera,
-// rather than assuming fixed near and far planes.
-float linearDepth(float depth)
-{
-  float ndc = depth * 2.0 - 1.0;
-  float viewZ = (inProjection[3][2] - ndc * inProjection[3][3]) /
-                (ndc * inProjection[2][3] - inProjection[2][2]);
-  return -viewZ;
 }
 
 // Must match AO_TILE in solid_ao_fs.glsl. That stage uses a different kernel
@@ -94,9 +83,13 @@ const float AO_BLUR_SLOPE_LIMIT = 16.0;
 // AO_BLUR_TILE consecutive offsets cover the tile, whatever the alignment.
 // Taps sitting on a different surface are dropped, so occlusion does not bleed
 // across a silhouette into whatever lies behind it.
+//
+// Both the term and the distance the surface test needs come from the same
+// texel, so each tap is a single fetch.
 float blurredAo(vec2 texCoord)
 {
-  float centerZ = linearDepth(texture(inDepthTex, texCoord).x);
+  vec2 center = texture(inAoTex, texCoord).xy;
+  float centerZ = center.y;
 
   // Size the surface test by how much scene distance one pixel covers here,
   // rather than by a fixed number of Angstroms. A fixed distance is only right
@@ -109,15 +102,16 @@ float blurredAo(vec2 texCoord)
   float tolerance = AO_BLUR_SLOPE_LIMIT * pixelSize;
 
   // The centre tap always belongs, so seed with it and skip it in the loop.
-  float total = texture(inAoTex, texCoord).x;
+  float total = center.x;
   float weight = 1.0;
   for (int y = -1; y <= AO_BLUR_TILE - 2; y++) {
     for (int x = -1; x <= AO_BLUR_TILE - 2; x++) {
       if (x == 0 && y == 0)
         continue;
       vec2 tapUV = texCoord + vec2(float(x) / width, float(y) / height);
-      if (abs(linearDepth(texture(inDepthTex, tapUV).x) - centerZ) < tolerance) {
-        total += texture(inAoTex, tapUV).x;
+      vec2 tap = texture(inAoTex, tapUV).xy;
+      if (abs(tap.y - centerZ) < tolerance) {
+        total += tap.x;
         weight += 1.0;
       }
     }
