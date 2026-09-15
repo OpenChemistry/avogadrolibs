@@ -46,6 +46,7 @@ public slots:
 
 private slots:
   void reorderAtoms();
+  void addDummyAtoms();
   void rebuildGeometry();
   void showMessage(const QString& message);
   void updateButtons();
@@ -60,6 +61,7 @@ private:
   ZMatrixView* m_view = nullptr;
   ZMatrixModel* m_model = nullptr;
   QPushButton* m_reorderButton = nullptr;
+  QPushButton* m_dummyButton = nullptr;
   QPushButton* m_rebuildButton = nullptr;
   QLabel* m_message = nullptr;
   QAction* m_action = nullptr;

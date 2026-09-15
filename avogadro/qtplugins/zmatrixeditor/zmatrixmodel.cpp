@@ -13,6 +13,8 @@
 
 #include <QtCore/QCoreApplication>
 
+#include <cmath>
+
 namespace Avogadro::QtPlugins {
 
 using QtGui::FragmentTools;
@@ -29,6 +31,12 @@ const int angleDecimals = 3;
 // Below this two atoms are on top of each other and no direction, angle or
 // torsion between them means anything.
 const Real coincidentTolerance = 1e-8;
+
+// |sin| below which a row's angle counts as straight, mirroring the
+// reference tolerance in internalcoordinates.cpp. About one degree. A row
+// this close to straight describes nothing that can be edited, and is what
+// a dummy atom is offered to fix.
+const Real straightTolerance = 0.0175;
 
 } // namespace
 
@@ -348,6 +356,7 @@ void ZMatrixModel::setMolecule(QtGui::Molecule* molecule)
   m_rowToAtom.clear();
   m_lastBondCount = 0;
   m_dirty = true;
+  m_degenerate = false;
   endResetModel();
 }
 
@@ -404,6 +413,7 @@ void ZMatrixModel::rebuildStructure()
     m_lastBondCount = 0;
   }
   m_dirty = false;
+  updateDegenerateRows();
 
   endResetModel();
 }
@@ -447,6 +457,8 @@ void ZMatrixModel::refreshValues()
         calculateDihedral(position, positionA, positionB, positionC);
   }
 
+  updateDegenerateRows();
+
   emit dataChanged(
     index(0, 0),
     index(static_cast<int>(m_coordinates.size()) - 1, ColumnCount - 1));
@@ -478,6 +490,68 @@ bool ZMatrixModel::reorderAtoms()
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
                           Molecule::Modified);
   rebuildStructure();
+  return true;
+}
+
+void ZMatrixModel::updateDegenerateRows()
+{
+  m_degenerate = false;
+
+  for (size_t row = 0; row < m_coordinates.size(); ++row) {
+    const Core::InternalCoordinate& coordinate = m_coordinates[row];
+    // The opening rows are short of references because there are not yet
+    // atoms to measure against, which no dummy atom would change.
+    if (coordinate.a == MaxIndex || coordinate.b == MaxIndex)
+      continue;
+
+    // A straight row carries no plane of its own, so neither its angle nor
+    // any dihedral taken from it can be edited. A row with three atoms
+    // before it and no 'c' found none of them off the axis.
+    if (std::abs(std::sin(coordinate.angle * DEG_TO_RAD)) <=
+          straightTolerance ||
+        (row >= 3 && coordinate.c == MaxIndex)) {
+      m_degenerate = true;
+      return;
+    }
+  }
+}
+
+bool ZMatrixModel::needsDummyAtoms() const
+{
+  return m_degenerate;
+}
+
+bool ZMatrixModel::addDummyAtoms()
+{
+  if (m_molecule == nullptr)
+    return false;
+
+  const Core::Array<Core::DummyAtomSite> sites =
+    Core::linearDummySites(*m_molecule);
+  if (sites.empty())
+    return false;
+
+  auto* undoMolecule = m_molecule->undoMolecule();
+  if (undoMolecule == nullptr)
+    return false;
+
+  // One undo step for the lot: they are one answer to one question, and
+  // taking them back one at a time would leave the matrix half propped up.
+  undoMolecule->beginMergeMode(tr("Add Dummy Atoms"));
+  for (const auto& site : sites) {
+    if (site.anchor >= undoMolecule->atomCount())
+      continue;
+    const auto dummy = undoMolecule->addAtom(0, site.position);
+    // Bonding each dummy to its anchor is what keeps it where it is useful:
+    // an unbonded one would be a fragment of its own, and every edit
+    // elsewhere in the molecule would walk off and leave it behind.
+    undoMolecule->addBond(site.anchor, dummy.index(), 1);
+  }
+  undoMolecule->endMergeMode();
+
+  // Emitting the change rebuilds the table through updateTable(), since the
+  // atom and bond counts have both moved.
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds | Molecule::Added);
   return true;
 }
 

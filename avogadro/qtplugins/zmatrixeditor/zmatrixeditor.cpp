@@ -56,6 +56,9 @@ void ZMatrixEditor::buildDock()
   m_reorderButton = new QPushButton(tr("Reorder Atoms"), contents);
   buttons->addWidget(m_reorderButton);
 
+  m_dummyButton = new QPushButton(tr("Add Dummy Atoms"), contents);
+  buttons->addWidget(m_dummyButton);
+
   m_rebuildButton = new QPushButton(tr("Rebuild Geometry"), contents);
   m_rebuildButton->setToolTip(
     tr("Rebuild every atom position from the table. The molecule is not "
@@ -76,6 +79,8 @@ void ZMatrixEditor::buildDock()
           &ZMatrixModel::setActive);
   connect(m_reorderButton, &QPushButton::clicked, this,
           &ZMatrixEditor::reorderAtoms);
+  connect(m_dummyButton, &QPushButton::clicked, this,
+          &ZMatrixEditor::addDummyAtoms);
   connect(m_rebuildButton, &QPushButton::clicked, this,
           &ZMatrixEditor::rebuildGeometry);
   connect(m_model, &ZMatrixModel::referenceRejected, this,
@@ -129,6 +134,21 @@ void ZMatrixEditor::reorderAtoms()
   updateButtons();
 }
 
+void ZMatrixEditor::addDummyAtoms()
+{
+  if (m_model == nullptr)
+    return;
+
+  if (m_model->addDummyAtoms())
+    showMessage(tr("Dummy atoms added beside the linear fragments. They are "
+                   "ordinary atoms of element Xx: delete them, or undo, when "
+                   "you are done with the matrix."));
+  else
+    showMessage(tr("Nothing here needs a dummy atom."));
+
+  updateButtons();
+}
+
 void ZMatrixEditor::rebuildGeometry()
 {
   if (m_model == nullptr)
@@ -170,6 +190,23 @@ void ZMatrixEditor::updateButtons()
         tr("Renumber the atoms so that each one follows the atoms it is "
            "measured against. This changes the atom numbers the rest of the "
            "application uses."));
+    }
+  }
+
+  if (m_dummyButton != nullptr) {
+    const bool wanted = haveRows && m_model->needsDummyAtoms();
+    m_dummyButton->setEnabled(wanted);
+
+    if (!wanted) {
+      m_dummyButton->setToolTip(
+        tr("Nothing here is straight enough to need one: every row already "
+           "has real atoms off the axis to be measured against."));
+    } else {
+      m_dummyButton->setToolTip(
+        tr("Add an atom of element Xx beside each linear fragment, off the "
+           "axis, so that its angles and dihedrals can be measured and "
+           "edited. Dummy atoms are real atoms of the molecule: they are "
+           "saved and exported with it until you delete them."));
     }
   }
 

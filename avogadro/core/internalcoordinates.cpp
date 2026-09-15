@@ -32,6 +32,14 @@ const Real collinearTolerance = 1e-4;
 // one, about 5.7 degrees away from collinear.
 const Real goodReferenceTolerance = 0.1;
 
+// |sin| below which a reference is too nearly collinear to be worth choosing,
+// about one degree. This is deliberately far looser than the numerical
+// tolerance above: a dihedral measured against a reference a tenth of a
+// degree off the axis swings by tens of degrees when the geometry moves by a
+// thousandth of an angstrom, so such a value is noise wearing a coordinate's
+// clothes rather than something anyone can read or edit.
+const Real referenceTolerance = 0.0175;
+
 // A reference is usable only if it names a real atom that has already been
 // given a position.
 bool isPlaced(Index index, const std::vector<bool>& placed)
@@ -64,6 +72,38 @@ Real sineAt(const Vector3& p, const Vector3& vertex, const Vector3& q)
     return 0.0;
   return (u / uNorm).cross(v / vNorm).norm();
 }
+
+/**
+ * The best reference seen so far, and separately the best that would do if
+ * nothing better turns up.
+ *
+ * A reference that leaves the three points collinear still states a true
+ * angle of 180 degrees, so for the angle reference it beats having none at
+ * all; it simply cannot carry a dihedral. For the dihedral reference there
+ * is no such consolation -- a collinear 'c' measures a meaningless number --
+ * so that caller takes the good candidate only.
+ */
+struct Candidate
+{
+  Index good = MaxIndex;
+  Real goodScore = referenceTolerance;
+  Index fallback = MaxIndex;
+
+  void offer(Index index, Real score)
+  {
+    if (score > goodScore) {
+      goodScore = score;
+      good = index;
+    } else if (fallback == MaxIndex) {
+      fallback = index;
+    }
+  }
+
+  /** True once a candidate is far enough from collinear to stop looking. */
+  bool settled() const { return goodScore > goodReferenceTolerance; }
+
+  Index result() const { return good != MaxIndex ? good : fallback; }
+};
 
 // One row of a z-matrix: the atom it places, and the already-placed atoms it
 // is measured against.
@@ -117,32 +157,35 @@ Reference chooseReferences(const Molecule& molecule, const Graph& graph,
 
   // 'b' completes the angle at 'a'. Prefer an atom bonded to 'a', and among
   // those one that does not leave atom-a-b collinear.
-  Real bestScore = -1.0;
+  Candidate candidateB;
   for (size_t neighbor : graph.neighbors(reference.a)) {
     if (neighbor == atom || !isPlaced(neighbor, placed))
       continue;
-    const Real score = sineAt(pos, posA, molecule.atomPosition3d(neighbor));
-    if (score > bestScore) {
-      bestScore = score;
-      reference.b = neighbor;
-    }
+    if ((molecule.atomPosition3d(neighbor) - posA).norm() < coincidentTolerance)
+      continue; // coincident with 'a': no angle can be measured
+    candidateB.offer(neighbor,
+                     sineAt(pos, posA, molecule.atomPosition3d(neighbor)));
   }
-  if (reference.b == MaxIndex) {
-    // No bonded candidate, so walk back through the placement order.
+  // A bonded neighbour that leaves atom-a-b in a line is no better than no
+  // neighbour at all: the angle it states is 180 degrees, which pins nothing
+  // down and leaves every dihedral from this row unreconstructible. So the
+  // walk back through the placement order runs whenever no bonded candidate
+  // was out of line, not merely when there was no bonded candidate.
+  if (candidateB.good == MaxIndex) {
     for (auto it = placedOrder.rbegin(); it != placedOrder.rend(); ++it) {
       if (*it == atom || *it == reference.a)
         continue;
       if ((molecule.atomPosition3d(*it) - posA).norm() < coincidentTolerance)
         continue; // coincident with 'a': no angle can be measured
-      const Real score = sineAt(pos, posA, molecule.atomPosition3d(*it));
-      if (score > bestScore) {
-        bestScore = score;
-        reference.b = *it;
-      }
-      if (bestScore > goodReferenceTolerance)
+      candidateB.offer(*it, sineAt(pos, posA, molecule.atomPosition3d(*it)));
+      if (candidateB.settled())
         break;
     }
   }
+  // Nothing out of line anywhere, so fall back on a collinear reference: the
+  // molecule really is straight here, and a 180 degree angle describes it.
+  reference.b = candidateB.result();
+
   if (reference.b == MaxIndex || placedOrder.size() < 3)
     return reference; // the third row can only carry a distance and an angle
 
@@ -151,30 +194,26 @@ Reference chooseReferences(const Molecule& molecule, const Graph& graph,
   // 'c' completes the dihedral about the a-b axis. It is only reconstructible
   // when a, b and c are not collinear, so candidates below the tolerance are
   // rejected outright rather than merely scored down.
-  bestScore = collinearTolerance;
+  Candidate candidateC;
   for (size_t neighbor : graph.neighbors(reference.b)) {
     if (neighbor == atom || neighbor == reference.a ||
         !isPlaced(neighbor, placed))
       continue;
-    const Real score = sineAt(posA, posB, molecule.atomPosition3d(neighbor));
-    if (score > bestScore) {
-      bestScore = score;
-      reference.c = neighbor;
-    }
+    candidateC.offer(neighbor,
+                     sineAt(posA, posB, molecule.atomPosition3d(neighbor)));
   }
-  if (reference.c == MaxIndex) {
+  if (candidateC.good == MaxIndex) {
     for (auto it = placedOrder.rbegin(); it != placedOrder.rend(); ++it) {
       if (*it == atom || *it == reference.a || *it == reference.b)
         continue;
-      const Real score = sineAt(posA, posB, molecule.atomPosition3d(*it));
-      if (score > bestScore) {
-        bestScore = score;
-        reference.c = *it;
-      }
-      if (bestScore > goodReferenceTolerance)
+      candidateC.offer(*it, sineAt(posA, posB, molecule.atomPosition3d(*it)));
+      if (candidateC.settled())
         break;
     }
   }
+  // Unlike 'b', a collinear candidate is refused outright rather than kept
+  // as a fallback: the dihedral it would measure is a meaningless number.
+  reference.c = candidateC.good;
 
   // 'c' may still be unset, meaning every candidate is collinear with a and
   // b. Then atom-a-b is collinear too, the dihedral has no bearing on where
@@ -213,7 +252,17 @@ std::vector<Reference> buildZMatrix(const Molecule& molecule)
     Index atom = MaxIndex;
     if (!frontier.empty()) {
       atom = *frontier.begin();
-      frontier.erase(frontier.begin());
+      // A dummy atom exists only to be something else's reference, so it goes
+      // in as soon as its anchor is placed. One placed after the atoms that
+      // need it would be no use to them, which is the whole point of adding
+      // it to a linear fragment.
+      for (Index candidate : frontier) {
+        if (molecule.atomicNumber(candidate) == 0) {
+          atom = candidate;
+          break;
+        }
+      }
+      frontier.erase(atom);
     } else {
       // Start the matrix, or a new fragment, at the lowest unplaced atom.
       while (nextUnplaced < atomCount && placed[nextUnplaced])
@@ -401,6 +450,66 @@ Array<Vector3> internalToCartesian(
   const Array<Index>& rowToAtom, ZMatrixOrigin origin)
 {
   return buildCartesian(molecule, internalCoords, rowToAtom, origin);
+}
+
+Array<DummyAtomSite> linearDummySites(const Molecule& molecule, Real distance)
+{
+  Array<DummyAtomSite> sites;
+  if (distance < coincidentTolerance)
+    return sites;
+
+  const std::vector<Reference> rows = buildZMatrix(molecule);
+
+  // One dummy per anchor, however many rows are stranded on it, and a shared
+  // direction between them so that the dihedrals they produce come out at
+  // clean multiples of 180 degrees rather than at arbitrary angles.
+  std::set<Index> anchored;
+  Vector3 shared = Vector3::Zero();
+
+  for (size_t row = 0; row < rows.size(); ++row) {
+    const Reference& reference = rows[row];
+    // The opening rows are short of references by definition rather than by
+    // fault, and no dummy would change that.
+    if (reference.a == MaxIndex || reference.b == MaxIndex)
+      continue;
+
+    const Vector3 pos = molecule.atomPosition3d(reference.atom);
+    const Vector3 posA = molecule.atomPosition3d(reference.a);
+    const Vector3 posB = molecule.atomPosition3d(reference.b);
+
+    // Two ways a row is stranded: its own angle is straight, so it carries no
+    // plane of its own; or three atoms were there to measure a dihedral
+    // against and not one of them was off the a-b axis.
+    const bool straight = sineAt(pos, posA, posB) <= referenceTolerance;
+    const bool noDihedral = row >= 3 && reference.c == MaxIndex;
+    if (!straight && !noDihedral)
+      continue;
+
+    if (!anchored.insert(reference.a).second)
+      continue; // this anchor already has one
+
+    Vector3 axis = pos - posA;
+    if (axis.norm() < coincidentTolerance)
+      continue;
+    axis.normalize();
+
+    // Carry the first dummy's direction to the rest, squared up against each
+    // anchor's own axis. Parallel axes -- the usual case, these atoms all
+    // being in one line -- keep it exactly.
+    Vector3 perpendicular = shared - shared.dot(axis) * axis;
+    if (perpendicular.norm() < collinearTolerance)
+      perpendicular = anyPerpendicular(axis);
+    perpendicular.normalize();
+    if (shared.isZero())
+      shared = perpendicular;
+
+    DummyAtomSite site;
+    site.anchor = reference.a;
+    site.position = posA + distance * perpendicular;
+    sites.push_back(site);
+  }
+
+  return sites;
 }
 
 Array<InternalCoordinate> cartesianToInternal(const Molecule& molecule,

@@ -21,8 +21,10 @@ using Avogadro::Real;
 using Avogadro::Vector3;
 using Avogadro::Core::Array;
 using Avogadro::Core::cartesianToInternal;
+using Avogadro::Core::DummyAtomSite;
 using Avogadro::Core::InternalCoordinate;
 using Avogadro::Core::internalToCartesian;
+using Avogadro::Core::linearDummySites;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::ZMatrixOrigin;
 
@@ -107,6 +109,60 @@ Molecule gaucheButane()
   mol.addBond(mol.atom(1), mol.atom(2), 1);
   mol.addBond(mol.atom(2), mol.atom(3), 1);
   return mol;
+}
+
+// |sin| below which the reference chooser treats three points as being in a
+// line, mirroring internalcoordinates.cpp. About one degree.
+const double straightTolerance = 0.0175;
+
+// Diacetylene, HC#C-C#CH: every atom on one axis, so no real atom can serve
+// as an off-axis reference for any row.
+Molecule diacetylene()
+{
+  const double x[] = { 0.0, 1.06, 2.26, 3.64, 4.84, 5.90 };
+  const unsigned char z[] = { 1, 6, 6, 6, 6, 1 };
+  Molecule mol;
+  for (int k = 0; k < 6; ++k)
+    mol.addAtom(z[k]).setPosition3d(Vector3(x[k], 0.0, 0.0));
+  for (int k = 0; k < 5; ++k)
+    mol.addBond(mol.atom(k), mol.atom(k + 1), 1);
+  return mol;
+}
+
+// A tolan in miniature: two bent ends joined by a linear four-atom spacer,
+// twisted 60 degrees against each other. The twist is a real degree of
+// freedom, but every atom of the spacer is in a line, so it can only be
+// expressed by reaching past the spacer to the far end.
+Molecule linearSpacer()
+{
+  const double twist = 60.0 * M_PI / 180.0;
+  Molecule mol;
+  mol.addAtom(1).setPosition3d(Vector3(-2.5, 1.0, 0.0));
+  mol.addAtom(6).setPosition3d(Vector3(-1.5, 0.0, 0.0));
+  mol.addAtom(6).setPosition3d(Vector3(-0.6, 0.0, 0.0));
+  mol.addAtom(6).setPosition3d(Vector3(0.6, 0.0, 0.0));
+  mol.addAtom(6).setPosition3d(Vector3(1.5, 0.0, 0.0));
+  mol.addAtom(1).setPosition3d(Vector3(2.5, std::cos(twist), std::sin(twist)));
+  for (int k = 0; k < 5; ++k)
+    mol.addBond(mol.atom(k), mol.atom(k + 1), 1);
+  return mol;
+}
+
+// Every row that has an angle reference at all should have found one that
+// leaves a real angle behind. A row measuring 180 degrees pins nothing down
+// and no dihedral taken from it can be reconstructed, so settling for one
+// while an off-axis atom was available is the bug this guards.
+void expectNoStraightAngles(const Array<InternalCoordinate>& ic,
+                            const Array<Index>& rowToAtom)
+{
+  for (size_t row = 0; row < ic.size(); ++row) {
+    if (ic[row].b == MaxIndex)
+      continue;
+    EXPECT_GT(std::abs(std::sin(ic[row].angle * M_PI / 180.0)),
+              straightTolerance)
+      << "row " << row << " (atom " << rowToAtom[row]
+      << ") settled for a straight angle";
+  }
 }
 
 } // namespace
@@ -570,6 +626,101 @@ TEST(InternalCoordinatesTest, linearFourAtoms)
     mol.addAtom(6).setPosition3d(Vector3(1.2 * k, 0.0, 0.0));
   for (int k = 0; k < 3; ++k)
     mol.addBond(mol.atom(k), mol.atom(k + 1), 1);
+
+  expectSameGeometry(mol, roundTrip(mol));
+}
+
+// A linear fragment in the middle of a molecule does not make the ends
+// inexpressible: the reference chooser has to reach past the spacer to the
+// far end rather than settling for a collinear neighbour.
+TEST(InternalCoordinatesTest, linearSpacerReachesPastTheLine)
+{
+  Molecule mol = linearSpacer();
+  Array<Index> rowToAtom;
+  Array<InternalCoordinate> ic = cartesianToInternal(mol, rowToAtom);
+
+  expectNoStraightAngles(ic, rowToAtom);
+
+  // The twist across the spacer is the whole point of the molecule, so it
+  // has to survive a round trip that carries nothing but the z-matrix.
+  expectSameGeometry(mol, roundTrip(mol));
+
+  // Nothing here needs a dummy atom: the bent ends serve as references.
+  EXPECT_TRUE(linearDummySites(mol).empty());
+}
+
+// A reference a whisker off the axis is refused rather than kept. The
+// dihedral it would measure swings through tens of degrees as the geometry
+// moves by a thousandth of an angstrom, so it is noise rather than a
+// coordinate anyone can read or edit.
+TEST(InternalCoordinatesTest, nearlyCollinearReferenceIsRefused)
+{
+  Molecule mol;
+  for (int k = 0; k < 4; ++k)
+    mol.addAtom(6).setPosition3d(Vector3(1.2 * k, 0.0, 0.0));
+  // About a twentieth of a degree away from straight.
+  mol.atom(0).setPosition3d(Vector3(0.0, 1e-3, 0.0));
+  for (int k = 0; k < 3; ++k)
+    mol.addBond(mol.atom(k), mol.atom(k + 1), 1);
+
+  Array<Index> rowToAtom;
+  Array<InternalCoordinate> ic = cartesianToInternal(mol, rowToAtom);
+
+  ASSERT_EQ(ic.size(), static_cast<size_t>(4));
+  EXPECT_EQ(ic[3].c, MaxIndex);
+
+  // Refusing it costs nothing: the row is still placed exactly, since a
+  // dihedral about an axis the atom sits on cannot move it anyway.
+  expectSameGeometry(mol, roundTrip(mol));
+}
+
+// A wholly linear molecule has no off-axis atom to reach for, so it is the
+// case that genuinely needs dummy atoms.
+TEST(InternalCoordinatesTest, linearMoleculeAsksForDummies)
+{
+  Molecule mol = diacetylene();
+  const Array<DummyAtomSite> sites = linearDummySites(mol);
+
+  // One per atom that a straight row hangs from: the four carbons, and not
+  // the terminal hydrogens, which no row is measured against.
+  ASSERT_EQ(sites.size(), static_cast<size_t>(4));
+  for (const auto& site : sites) {
+    EXPECT_GE(site.anchor, static_cast<Index>(1));
+    EXPECT_LE(site.anchor, static_cast<Index>(4));
+    const Vector3 offset = site.position - mol.atom(site.anchor).position3d();
+    EXPECT_NEAR(offset.norm(), 1.0, 1e-9);
+    EXPECT_NEAR(offset.x(), 0.0, 1e-9) << "a dummy on the axis is no help";
+  }
+}
+
+// With those dummies in place the matrix is complete: every row that could
+// carry a dihedral does, every angle is a real one, and the geometry is
+// still described exactly.
+TEST(InternalCoordinatesTest, dummyAtomsCompleteALinearMatrix)
+{
+  Molecule mol = diacetylene();
+  const Index realAtoms = mol.atomCount();
+
+  const Array<DummyAtomSite> sites = linearDummySites(mol);
+  ASSERT_FALSE(sites.empty());
+  for (const auto& site : sites) {
+    ASSERT_LT(site.anchor, realAtoms);
+    mol.addAtom(0).setPosition3d(site.position);
+    mol.addBond(mol.atom(site.anchor), mol.atom(mol.atomCount() - 1), 1);
+  }
+
+  Array<Index> rowToAtom;
+  Array<InternalCoordinate> ic = cartesianToInternal(mol, rowToAtom);
+
+  expectNoStraightAngles(ic, rowToAtom);
+  for (size_t row = 3; row < ic.size(); ++row) {
+    EXPECT_NE(ic[row].c, MaxIndex)
+      << "row " << row << " (atom " << rowToAtom[row] << ") has no dihedral";
+  }
+
+  // Asking again finds nothing left to fix, so the button that offers this
+  // switches itself off rather than piling dummies on dummies.
+  EXPECT_TRUE(linearDummySites(mol).empty());
 
   expectSameGeometry(mol, roundTrip(mol));
 }
