@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-06-11 21:01+0000\n"
+"PO-Revision-Date: 2026-09-15 19:03+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1082,15 +1082,15 @@ msgstr "All supported formats"
 
 #: qtgui/fragmenttools.cpp:205
 msgid "Adjust Distance"
-msgstr ""
+msgstr "Adjust Distance"
 
 #: qtgui/fragmenttools.cpp:252
 msgid "Adjust Angle"
-msgstr ""
+msgstr "Adjust Angle"
 
 #: qtgui/fragmenttools.cpp:310
 msgid "Adjust Torsion"
-msgstr ""
+msgstr "Adjust Torsion"
 
 #: qtgui/interfacescript.cpp:306
 #, qt-format
@@ -1098,6 +1098,8 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"Script standard error:\n"
+"%1"
 
 #: qtgui/interfacescript.cpp:358
 #, qt-format
@@ -1348,6 +1350,8 @@ msgid ""
 "The package '%1' has no installed Python environment, so '%2' cannot be run. "
 "Try installing the package again."
 msgstr ""
+"The package '%1' has no installed Python environment, so '%2' cannot be run. "
+"Try installing the package again."
 
 #: qtgui/pythonscript.cpp:272 qtgui/pythonscript.cpp:394
 #, qt-format
@@ -1392,6 +1396,8 @@ msgid ""
 "Error running script '%1': could not resolve a command to run it (no python "
 "interpreter or pixi environment)."
 msgstr ""
+"Error running script '%1': could not resolve a command to run it (no Python "
+"interpreter or Pixi environment)."
 
 #: qtgui/pythonscript.cpp:548
 #, qt-format
@@ -1470,7 +1476,7 @@ msgstr "Clear Atoms"
 
 #: qtgui/rwmolecule.cpp:151 qtplugins/zmatrixeditor/zmatrixeditor.cpp:56
 msgid "Reorder Atoms"
-msgstr ""
+msgstr "Reorder Atoms"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -2540,7 +2546,7 @@ msgstr "Cancel"
 
 #: qtplugins/commandscripts/command.cpp:470
 msgid "The script could not be started."
-msgstr ""
+msgstr "The script could not be started."
 
 #: qtplugins/commandscripts/command.cpp:480
 msgid "Error Running Script"
