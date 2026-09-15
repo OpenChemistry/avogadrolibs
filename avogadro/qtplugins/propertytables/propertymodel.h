@@ -12,6 +12,7 @@
 #include <QtCore/QString>
 
 #include <avogadro/core/angleiterator.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/dihedraliterator.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -44,6 +45,15 @@ class PropertyModel : public QAbstractTableModel
 public slots:
   void updateTable(unsigned int flags);
 
+private slots:
+  // Redraw when the application-wide energy unit changes under an open table.
+  void energyUnitsChanged();
+
+  // Let go of a molecule that has been destroyed. The table can outlive it,
+  // and is woken by things the molecule knows nothing about.
+  void moleculeDestroyed();
+
+public:
 public:
   explicit PropertyModel(PropertyType type, QObject* parent = nullptr);
 
@@ -116,6 +126,15 @@ private:
   };
 
   mutable bool m_validCache;
+  // The conformer table's columns are not fixed: they are whatever Core says
+  // this molecule can be measured for, so the table and the conformer plot
+  // offer the same list. Frame is left out -- the row headers already number
+  // the conformers.
+  mutable std::vector<Core::ConformerQuantity> m_conformerQuantities;
+  // One value per coordinate set for each of those columns, evaluated when the
+  // cache is rebuilt: data() is called once per cell, and re-walking the whole
+  // trajectory for each of them would be quadratic.
+  mutable std::vector<std::vector<double>> m_conformerValues;
   mutable std::vector<Core::Angle> m_angles;
   mutable std::vector<Core::Dihedral> m_torsions;
   mutable std::vector<CustomColumn> m_customColumns;
@@ -192,13 +211,6 @@ private:
     TorsionDataAtom3,
     TorsionDataAtom4,
     TorsionDataValue
-  };
-
-  // Conformer Data
-  enum ConformerColumn
-  {
-    ConformerDataRMSD = 0,
-    ConformerDataEnergy
   };
 
   // Residue Data

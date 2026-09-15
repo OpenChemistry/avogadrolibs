@@ -10,10 +10,13 @@
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/array.h>
 #include <avogadro/core/atom.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/propertymap.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/qtgui/conformerquantitytranslator.h>
+#include <avogadro/qtgui/energyunits.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <avogadro/core/angleiterator.h>
@@ -50,23 +53,8 @@ const int AngleColumns = 5;
 const int TorsionColumns = 6;
 // name, number, chain, secondary structure, label, heterogen, color
 const int ResidueColumns = 7;
-// number, rmsd, energy or more depending on available properties
-const int ConformerColumns = 1;
-
-// compute the RMSD between the two sets of coordinates
-inline double calculateRMSD(const Array<Vector3>& v1, const Array<Vector3>& v2)
-{
-  // if they're not the same length, it's an error
-  if (v1.size() != v2.size())
-    return numeric_limits<double>::quiet_NaN();
-
-  double sum = 0.0;
-  for (size_t i = 0; i < v1.size(); ++i) {
-    Vector3 diff = v1[i] - v2[i];
-    sum += diff.squaredNorm();
-  }
-  return sqrt(sum / v1.size());
-}
+// The conformer table has no fixed columns: Core decides what this molecule
+// can be measured for, and the conformer plot offers the same list.
 
 inline double distance(Vector3 v1, Vector3 v2)
 {
@@ -96,6 +84,28 @@ inline QString torsionTypeString(unsigned char a, unsigned char b,
 PropertyModel::PropertyModel(PropertyType type, QObject* parent)
   : QAbstractTableModel(parent), m_type(type), m_molecule(nullptr)
 {
+  // The energy unit is application-wide, so it can change while this table is
+  // open -- from this table's own context menu, or from the conformer plot's
+  // combos in another window.
+  if (m_type == ConformerType) {
+    connect(QtGui::EnergyUnits::instance(), &QtGui::EnergyUnits::unitsChanged,
+            this, &PropertyModel::energyUnitsChanged);
+  }
+}
+
+void PropertyModel::energyUnitsChanged()
+{
+  // The cached values stay as they are -- they are in the file's units, and
+  // the conversion happens on the way out in data(). Only what is drawn needs
+  // redoing, headings included: the unit is named there.
+  const int columns = columnCount();
+  const int rows = rowCount();
+  if (columns == 0 || rows == 0)
+    return;
+
+  emit headerDataChanged(Qt::Horizontal, 0, columns - 1);
+  emit dataChanged(index(0, 0), index(rows - 1, columns - 1),
+                   { Qt::DisplayRole, Qt::UserRole });
 }
 
 Core::PropertyMap* PropertyModel::propertyMap()
@@ -213,9 +223,9 @@ int PropertyModel::baseColumnCount() const
     case ResidueType:
       return ResidueColumns;
     case ConformerType:
-      if (m_molecule && m_molecule->hasData("energies"))
-        return ConformerColumns + 1;
-      return ConformerColumns;
+      if (!m_validCache)
+        updateCache();
+      return static_cast<int>(m_conformerQuantities.size());
     default:
       return 0;
   }
@@ -332,7 +342,7 @@ QString partialCharge(Molecule* molecule, int atom, const QString& overrideType)
 //   we also combine multiple types into this class, so lots of special cases
 QVariant PropertyModel::data(const QModelIndex& index, int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid() || m_molecule == nullptr)
     return QVariant();
 
   int row = index.row();
@@ -699,44 +709,38 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
   } else if (m_type == ConformerType) {
-    auto column = static_cast<ConformerColumn>(index.column());
-    if (row >= static_cast<int>(m_molecule->coordinate3dCount()) ||
-        column > ConformerColumns) {
+    if (col < 0 || col >= static_cast<int>(m_conformerValues.size()))
       return QVariant(); // invalid index
-    }
 
-    switch (column) {
-      case ConformerDataRMSD: { // rmsd
-        double rmsd = 0.0;
-        if (row > 0) {
-          rmsd = calculateRMSD(m_molecule->coordinate3d(row),
-                               m_molecule->coordinate3d(0));
-        }
-        if (role == Qt::UserRole)
-          // Return the RMSD as a double for sorting
-          return rmsd;
-        else // format fixed to 3 decimals
-          return QString("%L1 Å").arg(rmsd, 0, 'f', 3);
-      }
-      case ConformerDataEnergy: {
-        double energy = 0.0;
-        if (m_molecule->hasData("energies")) {
-          std::vector<double> energies = m_molecule->data("energies").toList();
-          // calculate the minimum
-          double minEnergy = std::numeric_limits<double>::max();
-          for (double e : energies) {
-            minEnergy = std::min(minEnergy, e);
-          }
-          if (row < static_cast<int>(energies.size()))
-            energy = energies[row] - minEnergy;
-        }
-        if (role == Qt::UserRole)
-          // Return the energy as a double for sorting
-          return energy;
-        else // format fixed to 4 decimals
-          return QString("%L1").arg(energy, 0, 'f', 4);
-      }
-    }
+    const std::vector<double>& values = m_conformerValues[col];
+    // A file can carry fewer energies or gradients than it has geometries, so
+    // the last rows of such a column simply have nothing in them.
+    if (row < 0 || row >= static_cast<int>(values.size()))
+      return QVariant();
+
+    const Core::ConformerQuantity& quantity = m_conformerQuantities[col];
+    const bool isEnergy =
+      quantity.type() == Core::ConformerQuantity::Type::Energy;
+
+    // Energies arrive in the unit the file used, which nothing but the user
+    // knows; the conversion is shared with the conformer plot, so both show
+    // the same number.
+    double value = values[row];
+    if (isEnergy)
+      value = QtGui::EnergyUnits::instance()->convert(value, *m_molecule);
+
+    if (role == Qt::UserRole)
+      // The number itself, for sorting: the formatted string below would sort
+      // as text, putting 10 before 9.
+      return value;
+
+    // Energies are the small differences between large numbers, so they get
+    // more decimals than a distance or a temperature needs.
+    const int decimals = isEnergy ? 4 : 3;
+    const QString unit = QString::fromStdString(quantity.unit());
+    if (unit.isEmpty())
+      return QString("%L1").arg(value, 0, 'f', decimals);
+    return QString("%L1 %2").arg(value, 0, 'f', decimals).arg(unit);
   }
 
   return QVariant();
@@ -880,17 +884,20 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
     } else // row headers
       return QString("%L1").arg(section + 1);
   } else if (m_type == ConformerType) {
-    // check if we have energies
-    bool hasEnergies = (m_molecule->hasData("energies"));
     if (orientation == Qt::Horizontal) {
-      unsigned int column = static_cast<ConformerColumn>(section);
-      switch (column) {
-        case ConformerDataRMSD:
-          return tr("RMSD (Å)", "root mean squared displacement in Angstrom");
-        case ConformerDataEnergy:
-          // should only hit this if we have energies anyway
-          return hasEnergies ? tr("Energy (kcal/mol)") : tr("Property");
-      }
+      if (section < 0 ||
+          section >= static_cast<int>(m_conformerQuantities.size()))
+        return QVariant();
+      const Core::ConformerQuantity& quantity = m_conformerQuantities[section];
+      // Only an energy needs telling: every other unit here comes from
+      // Avogadro rather than from whatever wrote the file.
+      const QString unit =
+        (quantity.type() == Core::ConformerQuantity::Type::Energy)
+          ? QtGui::EnergyUnits::instance()->displaySymbol()
+          : QString();
+      // The same translator the conformer plot labels its axes with, so a
+      // column and an axis showing the same thing are named the same thing.
+      return QtGui::ConformerQuantityTranslator::label(quantity, unit);
     } else // row headers
       return QString("%L1").arg(section + 1);
   }
@@ -1295,6 +1302,11 @@ void PropertyModel::setChargeType(const QString& type)
 void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 {
   if (molecule && molecule != m_molecule) {
+    // Stop listening to the molecule being replaced -- its destroyed signal
+    // would otherwise arrive later and clear the pointer to this one.
+    if (m_molecule)
+      m_molecule->disconnect(this);
+
     m_molecule = molecule;
 
     // Initialize structure tracking for change detection
@@ -1305,7 +1317,23 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 
     connect(m_molecule, SIGNAL(changed(unsigned int)), this,
             SLOT(updateTable(unsigned int)));
+    // The molecule's own signals stop arriving when it is destroyed, but this
+    // model is also woken by the application-wide energy unit, which knows
+    // nothing about either. Without this the next such change would walk a
+    // pointer to a molecule that is gone.
+    connect(m_molecule, &QObject::destroyed, this,
+            &PropertyModel::moleculeDestroyed);
   }
+}
+
+void PropertyModel::moleculeDestroyed()
+{
+  beginResetModel();
+  m_molecule = nullptr;
+  // Everything cached describes a molecule that no longer exists;
+  // updateCache() empties all of it when there is none.
+  updateCache();
+  endResetModel();
 }
 
 QString PropertyModel::secStructure(unsigned int type) const
@@ -1381,6 +1409,8 @@ void PropertyModel::updateCache() const
   m_angles.clear();
   m_torsions.clear();
   m_customColumns.clear();
+  m_conformerQuantities.clear();
+  m_conformerValues.clear();
 
   if (m_molecule == nullptr)
     return;
@@ -1398,6 +1428,28 @@ void PropertyModel::updateCache() const
     while (torsion != dIter.end()) {
       m_torsions.push_back(torsion);
       torsion = ++dIter;
+    }
+  } else if (m_type == ConformerType) {
+    // Speed and temperature are read back out of properties worked out from
+    // the trajectory, so they have to exist before anything is evaluated.
+    // Core skips the work when nothing has changed since last time.
+    Core::ensureConformerVelocities(*m_molecule);
+
+    for (const auto& quantity : Core::conformerQuantities(*m_molecule)) {
+      // The row headers already number the conformers, so a column doing the
+      // same would say nothing.
+      if (quantity.type() == Core::ConformerQuantity::Type::Frame)
+        continue;
+
+      std::vector<double> values =
+        Core::evaluateConformerQuantity(*m_molecule, quantity);
+      // A quantity the molecule turns out to hold nothing for earns no column
+      // rather than an empty one.
+      if (values.empty())
+        continue;
+
+      m_conformerQuantities.push_back(quantity);
+      m_conformerValues.push_back(std::move(values));
     }
   }
 

@@ -101,6 +101,50 @@ bool ChartWidget::addPlot(const std::vector<float>& x,
   return true;
 }
 
+bool ChartWidget::addPlot(const std::vector<float>& x,
+                          const std::vector<float>& y,
+                          const std::vector<float>& yError,
+                          const std::array<unsigned char, 4>& color,
+                          const QString& xName, const QString& yName)
+{
+  if (x.size() != y.size() || yError.size() != y.size())
+    return false;
+
+  auto* plot = m_impl->plot;
+  if (plot == nullptr)
+    return false;
+
+  auto* ds = plot->getDatastore();
+  size_t columnX = ds->addCopiedColumn(x, xName);
+  size_t columnY = ds->addCopiedColumn(y, yName);
+  size_t columnError =
+    ds->addCopiedColumn(yError, yName + QStringLiteral(" error"));
+
+  JKQTPXYLineErrorGraph* graph = new JKQTPXYLineErrorGraph(plot);
+  graph->setXColumn(columnX);
+  graph->setYColumn(columnY);
+  graph->setYErrorColumn(static_cast<int>(columnError));
+  graph->setYErrorStyle(JKQTPErrorBars);
+  graph->setXErrorStyle(JKQTPNoError);
+  if (!m_showPoints)
+    graph->setSymbolType(JKQTPNoSymbol);
+  else
+    graph->setSymbolType(JKQTPFilledCircle);
+
+  graph->setLineWidth(m_lineWidth);
+
+  QColor c(color[0], color[1], color[2], color[3]);
+  graph->setLineColor(c, color[3] / 255.0);
+  // The bars are a lighter wash of the line, so a dense series does not turn
+  // into a solid block of color.
+  graph->setErrorColorFromGraphColor(c);
+  graph->setErrorLineWidth(m_lineWidth);
+  graph->setTitle(yName);
+
+  plot->addGraph(graph);
+  return true;
+}
+
 bool ChartWidget::addSeries(const std::vector<float>& newSeries,
                             const std::array<unsigned char, 4>& color,
                             const QString& name)

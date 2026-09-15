@@ -35,6 +35,8 @@
 #include <avogadro/calc/energyoptimizer.h>
 #include <avogadro/calc/lennardjones.h>
 
+#include <avogadro/core/conformerquantity.h>
+
 #include <cmath>
 
 namespace Avogadro {
@@ -965,8 +967,16 @@ void Forcefield::onBatchDone(std::vector<double> energies,
   const bool gradientsComplete = (gradients.size() == coordCount);
 
   // Store one energy per coordinate set (read by the conformer plot).
-  if (energiesComplete)
+  if (energiesComplete) {
     m_molecule->setData("energies", Core::Variant(energies));
+    // These replace whatever the file supplied, so the recorded unit has to
+    // be replaced along with them -- energies read from ORCA are Hartree, and
+    // leaving that behind would show these 627 times too large. Every energy
+    // model reaching here reports kJ/mol: UFF and the Open Babel methods
+    // convert to it, and the scripted models are held to it by the plugin
+    // contract.
+    Core::setEnergyUnit(*m_molecule, "kJ/mol");
+  }
 
   // Store forces two ways:
   //   * data("forces") - the RMS gradient (|g| / sqrt(3N)) per coordinate

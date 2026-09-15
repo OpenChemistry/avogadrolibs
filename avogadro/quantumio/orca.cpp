@@ -6,6 +6,7 @@
 #include "orca.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
@@ -306,6 +307,9 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   molecule.setData("totalEnergy", m_totalEnergy);
   if (m_energies.size() > 1)
     molecule.setData("energies", m_energies);
+  // ORCA prints FINAL SINGLE POINT ENERGY in Hartree, and these are stored as
+  // printed, so nothing downstream has to ask the user what they are.
+  Core::setEnergyUnit(molecule, "Hartree");
 
   return true;
 }

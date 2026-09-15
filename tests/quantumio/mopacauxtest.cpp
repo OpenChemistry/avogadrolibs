@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
@@ -191,4 +192,19 @@ TEST(MopacAuxTest, separateHessiansDoNotAccumulate)
   EXPECT_EQ(molecule.vibrationFrequencies(1).size(), 6u);
   EXPECT_EQ(molecule.vibrationFrequencies(0)[0], 100.0);
   EXPECT_EQ(molecule.vibrationFrequencies(1)[0], 110.0);
+}
+
+// The reader takes MOPAC's kcal/mol energies into kJ/mol on the way in, so
+// kJ/mol is what it has to record -- recording what MOPAC printed would have
+// everything downstream convert them a second time.
+TEST(MopacAuxTest, energyUnitIsWhatWasStoredNotWhatWasPrinted)
+{
+  MopacAux reader;
+  Molecule molecule;
+  ASSERT_TRUE(
+    reader.readFile(AVOGADRO_DATA "/data/mopac/diborane.aux", molecule))
+    << reader.error();
+
+  ASSERT_TRUE(molecule.hasData("energies"));
+  EXPECT_EQ(Avogadro::Core::energyUnit(molecule), "kJ/mol");
 }

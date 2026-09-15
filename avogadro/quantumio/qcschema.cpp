@@ -9,6 +9,7 @@
 #include <avogadro/io/fileformatmanager.h>
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/unitcell.h>
@@ -307,11 +308,21 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
     // and connectivity handling above.
     if (!molssi && !totalEnergy.is_object())
       totalEnergy = findMethodEnergy(properties);
+    // QCSchema is one of the few formats that says what unit it used, so it
+    // is believed where it does. Where it does not, the specification puts
+    // everything in atomic units.
+    std::string energyUnits = "Hartree";
     if (totalEnergy.is_object()) {
       const auto value = totalEnergy.find("value");
       if (value != totalEnergy.end() && value->is_number())
         molecule.setData("totalEnergy", value->get<float>());
+
+      const auto units = totalEnergy.find("units");
+      if (units != totalEnergy.end() && units->is_string() &&
+          !units->get<std::string>().empty())
+        energyUnits = units->get<std::string>();
     }
+    Core::setEnergyUnit(molecule, energyUnits);
 
     // trajectory or geometry optimization
     if (properties.find("geometry_sequence") != properties.end() &&

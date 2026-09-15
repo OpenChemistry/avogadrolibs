@@ -71,6 +71,25 @@ public:
                const QString& xName = "x", const QString& yName = "y");
 
   /**
+   * @brief Add a plot with a symmetric error bar on each point
+   * @param x The x values
+   * @param y The y values
+   * @param yError The half-height of the error bar at each point, in the
+   * same units as @p y. Must be the same length as @p y.
+   * @param color The color of the line
+   * @param xName The name of the x axis
+   * @param yName The name of the y axis
+   * @return True if successful
+   *
+   * For a quantity that is an average over something -- atoms, replicas,
+   * a time window -- where the spread matters as much as the mean.
+   */
+  bool addPlot(const std::vector<float>& x, const std::vector<float>& y,
+               const std::vector<float>& yError,
+               const color4ub& color = color4ub{ 0, 0, 0, 255 },
+               const QString& xName = "x", const QString& yName = "y");
+
+  /**
    * @brief Add a series to an existing chart
    * @param y The y values
    * @param color The color of the line

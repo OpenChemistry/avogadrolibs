@@ -8,6 +8,7 @@
 #include <QAction>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QDoubleSpinBox>
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QKeyEvent>
@@ -24,60 +25,50 @@
 
 #include <avogadro/core/angletools.h>
 #include <avogadro/core/array.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/chartwidget.h>
+#include <avogadro/qtgui/conformerquantitytranslator.h>
+#include <avogadro/qtgui/energyunits.h>
 #include <avogadro/qtgui/molecule.h>
 
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
-constexpr double HartreeToKcal = 627.5094740631;
-constexpr double EvToKcal = 23.06054;
-constexpr double KcalToKJ = 4.184; // by definition
+using QtGui::EnergyUnits;
+
+// Fill @p combo with every energy unit, selecting @p current. The unit itself
+// rides along in the item data, so the combo's order need not match the
+// enum's.
+static void fillUnitCombo(QComboBox* combo, EnergyUnits::Unit current)
+{
+  QSignalBlocker blocker(combo);
+  combo->clear();
+  for (EnergyUnits::Unit unit : EnergyUnits::units()) {
+    combo->addItem(EnergyUnits::symbol(unit), static_cast<int>(unit));
+    if (unit == current)
+      combo->setCurrentIndex(combo->count() - 1);
+  }
+}
+
+static EnergyUnits::Unit unitFromCombo(const QComboBox* combo,
+                                       EnergyUnits::Unit fallback)
+{
+  bool ok = false;
+  const int value = combo->currentData().toInt(&ok);
+  if (!ok)
+    return fallback;
+
+  for (EnergyUnits::Unit unit : EnergyUnits::units()) {
+    if (static_cast<int>(unit) == value)
+      return unit;
+  }
+  return fallback;
+}
 
 using Core::Array;
-
-// Atom numbers are 1-based here, matching the constraints dialog and the
-// property tables.
-static QString constraintLabel(const Core::Constraint& c)
-{
-  const int a = static_cast<int>(c.aIndex()) + 1;
-  const int b = static_cast<int>(c.bIndex()) + 1;
-  const int cc = static_cast<int>(c.cIndex()) + 1;
-  const int d = static_cast<int>(c.dIndex()) + 1;
-
-  switch (c.type()) {
-    case Core::Constraint::DistanceConstraint:
-      return PlotConformer::tr("Distance %1-%2").arg(a).arg(b);
-    case Core::Constraint::AngleConstraint:
-      return PlotConformer::tr("Angle %1-%2-%3").arg(a).arg(b).arg(cc);
-    case Core::Constraint::TorsionConstraint:
-      return PlotConformer::tr("Dihedral %1-%2-%3-%4")
-        .arg(a)
-        .arg(b)
-        .arg(cc)
-        .arg(d);
-    default:
-      return PlotConformer::tr("Constraint");
-  }
-}
-
-static QString axisTitleForConstraint(const Core::Constraint& c)
-{
-  switch (c.type()) {
-    case Core::Constraint::DistanceConstraint:
-      // Not necessarily a bond -- any pair of atoms can be constrained.
-      return PlotConformer::tr("Distance (Å)");
-    case Core::Constraint::AngleConstraint:
-      return PlotConformer::tr("Angle (°)");
-    case Core::Constraint::TorsionConstraint:
-      return PlotConformer::tr("Dihedral (°)");
-    default:
-      return PlotConformer::tr("Frame");
-  }
-}
 
 // The selected atoms, in ascending index order. Molecule stores selection as a
 // flag per atom, so the order the user clicked them in is not available.
@@ -153,39 +144,24 @@ static std::pair<float, float> paddedRange(const DataSeries& values,
   return { low - pad, high + pad };
 }
 
-// One entry a combo can offer: what to call it, the quantity value the rest of
-// the code works with, and a name for the thing itself.
-struct PlotQuantity
-{
-  QString label;
-  int quantity;
-  QString identity;
-};
-
-// A combo item's identity, held in its own data role. The quantity value is
-// only a position in m_coordinates, which moves when a constraint is added or
-// an atom is deleted, so it cannot be what a selection is restored by.
+// A combo item's identity, held in its own data role. The item's value is only
+// a position in m_quantities, which moves when a constraint is added or an
+// atom is deleted, so it cannot be what a selection is restored by -- the
+// quantity's own identifier can.
 constexpr int IdentityRole = Qt::UserRole + 1;
 
-// Names a coordinate by the atoms it measures. Built-in quantities have no
-// atoms, so they are named by their own value; the two cannot collide, since
-// only these carry a separator.
-static QString coordinateIdentity(const Core::Constraint& c)
+static QString quantityIdentity(const Core::ConformerQuantity& quantity)
 {
-  return QStringLiteral("%1:%2:%3:%4")
-    .arg(c.aIndex())
-    .arg(c.bIndex())
-    .arg(c.cIndex())
-    .arg(c.dIndex());
+  return QString::fromStdString(quantity.identifier());
 }
 
 // Both axes offer the same quantities, so fill them from one list. Keeping the
 // current selection matters here: the combos are rebuilt whenever a constraint
 // is added, which should not throw away what the user was looking at, nor
 // quietly move the axis to whatever coordinate inherited its old number.
-static void fillQuantityCombo(QComboBox* combo,
-                              const std::vector<PlotQuantity>& quantities,
-                              int fallback)
+static void fillQuantityCombo(
+  QComboBox* combo, const std::vector<Core::ConformerQuantity>& quantities,
+  Core::ConformerQuantity::Type fallback)
 {
   if (combo == nullptr)
     return;
@@ -194,14 +170,19 @@ static void fillQuantityCombo(QComboBox* combo,
 
   QSignalBlocker blocker(combo);
   combo->clear();
-  for (const auto& quantity : quantities) {
-    combo->addItem(quantity.label, quantity.quantity);
-    combo->setItemData(combo->count() - 1, quantity.identity, IdentityRole);
+  int fallbackIndex = -1;
+  for (size_t i = 0; i < quantities.size(); ++i) {
+    combo->addItem(QtGui::ConformerQuantityTranslator::name(quantities[i]),
+                   static_cast<int>(i));
+    combo->setItemData(combo->count() - 1, quantityIdentity(quantities[i]),
+                       IdentityRole);
+    if (fallbackIndex < 0 && quantities[i].type() == fallback)
+      fallbackIndex = static_cast<int>(i);
   }
 
   int index = previous.isEmpty() ? -1 : combo->findData(previous, IdentityRole);
   if (index < 0)
-    index = combo->findData(fallback);
+    index = fallbackIndex;
   combo->setCurrentIndex(index < 0 ? 0 : index);
 }
 
@@ -209,9 +190,9 @@ PlotConformer::PlotConformer(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
     m_molecule(nullptr), m_displayDialogAction(new QAction(this)),
     m_chartWidget(nullptr), m_yAxisCombo(nullptr), m_xAxisCombo(nullptr),
-    m_unitsCombo(nullptr), m_targetUnitsCombo(nullptr),
-    m_unwrapDihedralsCheck(nullptr), m_addSelectionButton(nullptr),
-    m_frameLabel(nullptr)
+    m_unitsCombo(nullptr), m_timeStepSpin(nullptr), m_targetUnitsCombo(nullptr),
+    m_unwrapDihedralsCheck(nullptr), m_timeStepLabel(nullptr),
+    m_addSelectionButton(nullptr), m_frameLabel(nullptr)
 {
   m_displayDialogAction->setText(tr("Plot Conformer Data…"));
   connect(m_displayDialogAction, &QAction::triggered, this,
@@ -250,6 +231,12 @@ void PlotConformer::setMolecule(QtGui::Molecule* mol)
   // Follow whichever conformer the new molecule is already showing.
   m_currentFrame = m_molecule ? m_molecule->coordinate3d() : 0;
 
+  // A different molecule brings its own trajectory, and may bring its own
+  // idea of how far apart the frames are.
+  m_staleVelocities = true;
+  m_timeStepSeeded = false;
+  seedTimeStepFromMolecule();
+
   if (m_dialog && m_dialog->isVisible()) {
     if (m_molecule && m_molecule->coordinate3dCount() > 1) {
       populateQuantityCombos();
@@ -277,6 +264,13 @@ void PlotConformer::moleculeChanged(unsigned int c)
                           (changes & Molecule::Modified);
   if (structural)
     updateActions();
+
+  // Velocities differenced from the trajectory go stale as soon as the atoms
+  // move, change in number, or are renumbered. Selecting an atom or stepping
+  // to another conformer does none of those, and those are the common cases.
+  if (structural || (changes & Molecule::Moved) ||
+      (changes & Molecule::Reordered))
+    m_staleVelocities = true;
 
   if (!m_molecule || !m_dialog || !m_dialog->isVisible())
     return;
@@ -333,7 +327,9 @@ void PlotConformer::updateActions()
 void PlotConformer::clicked(float x, float, Qt::KeyboardModifiers)
 {
   // switch to the closest conformer to x
-  if (xQuantity() == FrameQuantity) {
+  const Core::ConformerQuantity* xInfo = quantityAt(xQuantity());
+  if (xInfo != nullptr &&
+      xInfo->type() == Core::ConformerQuantity::Type::Frame) {
     setFrame(static_cast<int>(std::lround(x)));
     return;
   }
@@ -419,72 +415,20 @@ bool PlotConformer::eventFilter(QObject* object, QEvent* event)
   return QtGui::ExtensionPlugin::eventFilter(object, event);
 }
 
-void PlotConformer::collectCoordinates()
-{
-  m_coordinates.clear();
-  if (!m_molecule)
-    return;
-
-  const Index atoms = m_molecule->atomCount();
-
-  // Constraints first: they are what an optimizer was told to hold, so they
-  // are the likeliest thing a relaxed scan stepped through.
-  for (const auto& constraint : m_molecule->constraints()) {
-    // An out-of-plane constraint has no single value, and one left over from
-    // deleted atoms would measure to the origin.
-    if (constraint.isValid(atoms))
-      m_coordinates.push_back(constraint);
-  }
-
-  // Then coordinates the user asked to follow, which a file may also carry.
-  for (const auto& coordinate : m_molecule->scanCoordinates()) {
-    if (!coordinate.isValid(atoms))
-      continue;
-
-    const bool duplicate =
-      std::any_of(m_coordinates.begin(), m_coordinates.end(),
-                  [&coordinate](const Core::Constraint& existing) {
-                    return existing.atoms() == coordinate.atoms();
-                  });
-    if (!duplicate)
-      m_coordinates.push_back(coordinate);
-  }
-}
-
 void PlotConformer::populateQuantityCombos()
 {
   if (!m_molecule || !m_xAxisCombo || !m_yAxisCombo)
     return;
 
-  collectCoordinates();
+  // Core decides what this molecule can be measured for, so the conformer
+  // property table offers exactly the same list.
+  m_quantities = Core::conformerQuantities(*m_molecule);
 
   const bool hasEnergies = m_molecule->hasData("energies");
-  const bool hasForces = m_molecule->hasData("forces");
-  const bool hasVelocities = m_molecule->hasData("velocities");
-
-  std::vector<PlotQuantity> quantities;
-  const auto builtIn = [](const QString& label, int quantity) {
-    return PlotQuantity{ label, quantity, QString::number(quantity) };
-  };
-  quantities.push_back(builtIn(tr("Frame"), FrameQuantity));
-  quantities.push_back(builtIn(tr("RMSD"), RmsdQuantity));
-  if (hasEnergies)
-    quantities.push_back(builtIn(tr("Energy"), EnergyQuantity));
-  if (hasForces)
-    quantities.push_back(builtIn(tr("Forces"), ForcesQuantity));
-  if (hasVelocities)
-    quantities.push_back(builtIn(tr("Velocities"), VelocitiesQuantity));
-
-  // One entry per coordinate, so a scanned coordinate can go on either axis.
-  for (int i = 0; i < static_cast<int>(m_coordinates.size()); ++i) {
-    const Core::Constraint& coordinate = m_coordinates[static_cast<size_t>(i)];
-    quantities.push_back(PlotQuantity{ constraintLabel(coordinate), i,
-                                       coordinateIdentity(coordinate) });
-  }
-
-  fillQuantityCombo(m_xAxisCombo, quantities, FrameQuantity);
-  fillQuantityCombo(m_yAxisCombo, quantities,
-                    hasEnergies ? EnergyQuantity : RmsdQuantity);
+  using Type = Core::ConformerQuantity::Type;
+  fillQuantityCombo(m_xAxisCombo, m_quantities, Type::Frame);
+  fillQuantityCombo(m_yAxisCombo, m_quantities,
+                    hasEnergies ? Type::Energy : Type::Rmsd);
 
   updateSelectionButton();
   // updatePlot() runs after every call to this, and owns the unit combos.
@@ -532,8 +476,8 @@ void PlotConformer::addCoordinateFromSelection()
   // signal blocked, so that the replot below is the only one: generating the
   // series walks the whole trajectory.
   populateQuantityCombos();
-  const int index =
-    m_xAxisCombo->findData(coordinateIdentity(coordinate), IdentityRole);
+  const int index = m_xAxisCombo->findData(
+    quantityIdentity(Core::ConformerQuantity(coordinate)), IdentityRole);
   if (index >= 0) {
     QSignalBlocker blocker(m_xAxisCombo);
     m_xAxisCombo->setCurrentIndex(index);
@@ -547,30 +491,51 @@ void PlotConformer::addCoordinateFromSelection()
 int PlotConformer::xQuantity() const
 {
   if (!m_xAxisCombo)
-    return FrameQuantity;
+    return -1;
 
   bool ok = false;
-  const int quantity = m_xAxisCombo->currentData().toInt(&ok);
-  return ok ? quantity : FrameQuantity;
+  const int index = m_xAxisCombo->currentData().toInt(&ok);
+  return ok ? index : -1;
 }
 
 int PlotConformer::yQuantity() const
 {
   if (!m_yAxisCombo)
-    return FrameQuantity;
+    return -1;
 
   bool ok = false;
-  const int quantity = m_yAxisCombo->currentData().toInt(&ok);
-  return ok ? quantity : FrameQuantity;
+  const int index = m_yAxisCombo->currentData().toInt(&ok);
+  return ok ? index : -1;
 }
 
-bool PlotConformer::isTorsionQuantity(int quantity) const
+const Core::ConformerQuantity* PlotConformer::quantityAt(int index) const
 {
-  if (quantity < 0 || quantity >= static_cast<int>(m_coordinates.size()))
+  if (index < 0 || index >= static_cast<int>(m_quantities.size()))
+    return nullptr;
+  return &m_quantities[static_cast<size_t>(index)];
+}
+
+bool PlotConformer::isTorsionQuantity(int index) const
+{
+  const Core::ConformerQuantity* quantity = quantityAt(index);
+  if (!quantity ||
+      quantity->type() != Core::ConformerQuantity::Type::Coordinate)
     return false;
 
-  return m_coordinates[static_cast<size_t>(quantity)].type() ==
-         Core::Constraint::TorsionConstraint;
+  return quantity->coordinate().type() == Core::Constraint::TorsionConstraint;
+}
+
+bool PlotConformer::isDynamicsQuantity(const Core::ConformerQuantity& quantity)
+{
+  using Type = Core::ConformerQuantity::Type;
+  switch (quantity.type()) {
+    case Type::Time:
+    case Type::MeanSpeed:
+    case Type::Temperature:
+      return true;
+    default:
+      return false;
+  }
 }
 
 void PlotConformer::displayDialog()
@@ -624,21 +589,15 @@ void PlotConformer::displayDialog()
     m_unwrapDihedralsCheck->setChecked(true);
     mainLayout->addWidget(m_unwrapDihedralsCheck);
 
-    // Create energy conversion layout
+    // Energy conversion, reading as a sentence: "Energy Units: Hartree to
+    // kcal/mol". The pair is application-wide, so this is the same setting
+    // the conformer property table's "Convert Energy Units…" edits.
     QHBoxLayout* conversionLayout = new QHBoxLayout();
     QLabel* conversionLabel = new QLabel(tr("Energy Units:"), m_dialog.get());
     m_unitsCombo = new QComboBox(m_dialog.get());
-    m_unitsCombo->addItem(QStringLiteral("Hartree"), HartreeToKcal);
-    m_unitsCombo->addItem(QStringLiteral("eV"), EvToKcal);
-    m_unitsCombo->addItem(QStringLiteral("kcal/mol"), 1.0);
-    m_unitsCombo->addItem(QStringLiteral("kJ/mol"), KcalToKJ);
-
     QLabel* targetLabel = new QLabel(tr("to"), m_dialog.get());
     m_targetUnitsCombo = new QComboBox(m_dialog.get());
-    m_targetUnitsCombo->addItem(QStringLiteral("kcal/mol"), 1.0);
-    m_targetUnitsCombo->addItem(QStringLiteral("kJ/mol"), KcalToKJ);
-    m_targetUnitsCombo->addItem(QStringLiteral("eV"), 1.0 / EvToKcal);
-    m_targetUnitsCombo->addItem(QStringLiteral("Hartree"), 1.0 / HartreeToKcal);
+    syncUnitCombos();
 
     conversionLayout->addWidget(conversionLabel);
     conversionLayout->addWidget(m_unitsCombo);
@@ -647,18 +606,78 @@ void PlotConformer::displayDialog()
     conversionLayout->addStretch();
     mainLayout->addLayout(conversionLayout);
 
+    // How far apart the saved frames are. Velocities are differenced across
+    // the trajectory, so nothing derived from them -- speed, temperature, the
+    // time axis -- means anything without it, and few trajectory formats
+    // record it: an XYZ or SDF trajectory carries no time at all, and a LAMMPS
+    // dump carries the step number rather than a time. DCD is the one that
+    // does, and seeds this below.
+    QHBoxLayout* timeStepLayout = new QHBoxLayout();
+    m_timeStepLabel = new QLabel(tr("Time between frames:"), m_dialog.get());
+    m_timeStepSpin = new QDoubleSpinBox(m_dialog.get());
+    m_timeStepSpin->setDecimals(4);
+    m_timeStepSpin->setRange(0.0001, 1.0e6);
+    m_timeStepSpin->setValue(1.0);
+    m_timeStepSpin->setSingleStep(0.1);
+    m_timeStepSpin->setSuffix(tr(" ps"));
+    m_timeStepSpin->setToolTip(
+      tr("The interval between saved frames, used to turn the trajectory into "
+         "velocities and a temperature. Most trajectory files do not record "
+         "it, so it starts at the value from the file where there is one and "
+         "at 1 ps otherwise."));
+    m_timeStepLabel->setBuddy(m_timeStepSpin);
+
+    timeStepLayout->addWidget(m_timeStepLabel);
+    timeStepLayout->addWidget(m_timeStepSpin);
+    timeStepLayout->addStretch();
+    mainLayout->addLayout(timeStepLayout);
+
     // Connect signals for updates
     connect(m_yAxisCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &PlotConformer::updatePlot);
     connect(m_xAxisCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &PlotConformer::updatePlot);
+    // The combos write the shared setting rather than keeping one of their
+    // own; the signal below is what brings the plot back round, and it
+    // reaches the property table at the same time.
+    const auto unitsEdited = [this]() {
+      auto* units = EnergyUnits::instance();
+      // Where the file said what its units are, the source combo is only
+      // reporting that -- it must not write it back as the user's answer for
+      // every other file.
+      const bool declared =
+        m_molecule && EnergyUnits::declaresUnit(*m_molecule);
+      units->setUnits(declared
+                        ? units->sourceUnit()
+                        : unitFromCombo(m_unitsCombo, units->sourceUnit()),
+                      unitFromCombo(m_targetUnitsCombo, units->displayUnit()));
+    };
     connect(m_unitsCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &PlotConformer::updatePlot);
+            this, unitsEdited);
     connect(m_targetUnitsCombo,
             QOverload<int>::of(&QComboBox::currentIndexChanged), this,
-            &PlotConformer::updatePlot);
+            unitsEdited);
+
+    // Changed here, or from the property table, or in another window: either
+    // way the combos follow it and the plot is redrawn.
+    connect(EnergyUnits::instance(), &EnergyUnits::unitsChanged, this,
+            [this]() {
+              syncUnitCombos();
+              updatePlot();
+            });
     connect(m_unwrapDihedralsCheck, &QCheckBox::toggled, this,
             &PlotConformer::updatePlot);
+    connect(m_timeStepSpin,
+            QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,
+            [this](double interval) {
+              if (!m_molecule)
+                return;
+              // Onto the molecule, so that the conformer property table reads
+              // the same interval rather than its own default, and is told to
+              // go and read it. Handling that change replots this too.
+              Core::setFrameInterval(*m_molecule, interval);
+              m_molecule->emitChanged(Molecule::Properties);
+            });
     connect(m_addSelectionButton, &QPushButton::clicked, this,
             &PlotConformer::addCoordinateFromSelection);
 
@@ -669,6 +688,8 @@ void PlotConformer::displayDialog()
     m_dialog->installEventFilter(this);
   }
 
+  seedTimeStepFromMolecule();
+  syncUnitCombos();
   populateQuantityCombos();
   m_currentFrame = m_molecule->coordinate3d();
   updatePlot();
@@ -679,54 +700,54 @@ void PlotConformer::displayDialog()
 }
 
 std::optional<PlotConformer::QuantitySeries> PlotConformer::evaluateQuantity(
-  int quantity)
+  int index)
 {
-  if (!m_molecule)
+  using Type = Core::ConformerQuantity::Type;
+
+  const Core::ConformerQuantity* quantity = quantityAt(index);
+  if (!m_molecule || !quantity)
     return std::nullopt;
 
-  QString title;
-  std::optional<DataSeries> values;
-
-  if (quantity >= 0) {
-    if (quantity >= static_cast<int>(m_coordinates.size()))
+  // Speed and temperature are read back out of the molecule's properties, so
+  // they have to have been worked out first.
+  if (quantity->type() == Type::MeanSpeed ||
+      quantity->type() == Type::Temperature) {
+    if (!ensureVelocities())
       return std::nullopt;
-    title =
-      axisTitleForConstraint(m_coordinates[static_cast<size_t>(quantity)]);
-    values = generateCoordinateSeries(quantity);
-  } else {
-    switch (quantity) {
-      case FrameQuantity:
-        title = tr("Frame");
-        values = generateFrameSeries();
-        break;
-      case RmsdQuantity:
-        title = tr("RMSD (Å)");
-        values = generateRmsdSeries();
-        break;
-      case EnergyQuantity:
-        title = tr("Relative Energy (%1)")
-                  .arg(m_targetUnitsCombo ? m_targetUnitsCombo->currentText()
-                                          : QString());
-        values = generateEnergySeries();
-        break;
-      case ForcesQuantity:
-        // TODO: Add units - data("forces") holds the RMS gradient per set
-        title = tr("RMS Gradient");
-        values = generateStoredSeries("forces");
-        break;
-      case VelocitiesQuantity:
-        title = tr("Velocities (m/s)");
-        values = generateStoredSeries("velocities");
-        break;
-      default:
-        return std::nullopt;
-    }
   }
 
-  if (!values)
+  std::vector<double> values =
+    Core::evaluateConformerQuantity(*m_molecule, *quantity);
+  if (values.empty())
     return std::nullopt;
 
-  return QuantitySeries{ std::move(*values), title };
+  // Energies arrive relative to the lowest set but in the file's own unit,
+  // which is the one thing here only the user can name.
+  QString unit;
+  if (quantity->type() == Type::Energy) {
+    auto* units = EnergyUnits::instance();
+    for (double& value : values)
+      value = units->convert(value, *m_molecule);
+    unit = units->displaySymbol();
+  }
+
+  DataSeries series;
+  series.reserve(values.size());
+  for (double value : values)
+    series.push_back(static_cast<float>(value));
+
+  DataSeries errors;
+  for (double deviation : Core::conformerQuantitySpread(*m_molecule, *quantity))
+    errors.push_back(static_cast<float>(deviation));
+
+  // An error bar per point or none at all -- a partial set would put bars on
+  // the wrong frames.
+  if (errors.size() != series.size())
+    errors.clear();
+
+  return QuantitySeries{ std::move(series), std::move(errors),
+                         QtGui::ConformerQuantityTranslator::label(*quantity,
+                                                                   unit) };
 }
 
 void PlotConformer::updatePlot()
@@ -736,16 +757,34 @@ void PlotConformer::updatePlot()
 
   m_xData.clear();
   m_yData.clear();
+  m_yErrors.clear();
 
   const int xq = xQuantity();
   const int yq = yQuantity();
+  const Core::ConformerQuantity* xInfo = quantityAt(xq);
+  const Core::ConformerQuantity* yInfo = quantityAt(yq);
+
+  using Type = Core::ConformerQuantity::Type;
+  const auto isType = [](const Core::ConformerQuantity* info, Type type) {
+    return info != nullptr && info->type() == type;
+  };
 
   // The units only apply while one of the axes is showing energies.
-  const bool plottingEnergy = (xq == EnergyQuantity || yq == EnergyQuantity);
+  const bool plottingEnergy =
+    isType(xInfo, Type::Energy) || isType(yInfo, Type::Energy);
   if (m_unitsCombo)
     m_unitsCombo->setEnabled(plottingEnergy);
   if (m_targetUnitsCombo)
     m_targetUnitsCombo->setEnabled(plottingEnergy);
+
+  // The time step only matters while something on the plot is measured
+  // against time.
+  const bool plottingTime = (xInfo != nullptr && isDynamicsQuantity(*xInfo)) ||
+                            (yInfo != nullptr && isDynamicsQuantity(*yInfo));
+  if (m_timeStepSpin)
+    m_timeStepSpin->setEnabled(plottingTime);
+  if (m_timeStepLabel)
+    m_timeStepLabel->setEnabled(plottingTime);
 
   // Nothing but a torsion wraps, so the option is meaningless otherwise.
   const bool xIsTorsion = isTorsionQuantity(xq);
@@ -762,6 +801,7 @@ void PlotConformer::updatePlot()
 
   DataSeries x = std::move(xSeries->values);
   DataSeries y = std::move(ySeries->values);
+  DataSeries yErrors = std::move(ySeries->errors);
 
   // Every series is one value per coordinate set, in order from the first, so
   // a point's position in the array is its frame number -- which is what lets
@@ -772,6 +812,8 @@ void PlotConformer::updatePlot()
   const size_t points = std::min(x.size(), y.size());
   x.resize(points);
   y.resize(points);
+  if (!yErrors.empty())
+    yErrors.resize(points);
 
   const bool unwrap =
     m_unwrapDihedralsCheck && m_unwrapDihedralsCheck->isChecked();
@@ -786,6 +828,7 @@ void PlotConformer::updatePlot()
 
   m_xData = std::move(x);
   m_yData = std::move(y);
+  m_yErrors = std::move(yErrors);
   m_xTitle = xSeries->title;
   m_yTitle = ySeries->title;
 
@@ -793,11 +836,23 @@ void PlotConformer::updatePlot()
     // Frames are counted rather than measured, so that axis spans the whole
     // trajectory whatever the data does.
     m_xLimits =
-      (xq == FrameQuantity)
+      isType(xInfo, Type::Frame)
         ? std::make_pair(
             -0.1f, static_cast<float>(m_molecule->coordinate3dCount()) - 0.9f)
         : paddedRange(m_xData, 0.02f, 1.0e-3f);
-    m_yLimits = paddedRange(m_yData, 0.05f, 1.0f);
+    // Error bars reach past the points they hang off, so the axis has to be
+    // scaled to their ends rather than to the means.
+    if (m_yErrors.empty()) {
+      m_yLimits = paddedRange(m_yData, 0.05f, 1.0f);
+    } else {
+      DataSeries extremes;
+      extremes.reserve(m_yData.size() * 2);
+      for (size_t i = 0; i < m_yData.size(); ++i) {
+        extremes.push_back(m_yData[i] - m_yErrors[i]);
+        extremes.push_back(m_yData[i] + m_yErrors[i]);
+      }
+      m_yLimits = paddedRange(extremes, 0.05f, 1.0f);
+    }
   }
 
   drawChart();
@@ -827,7 +882,11 @@ void PlotConformer::drawChart()
 
   m_chartWidget->setShowPoints(true);
   m_chartWidget->setLegendLocation(QtGui::ChartWidget::LegendLocation::None);
-  m_chartWidget->addPlot(m_xData, m_yData, QtGui::color4ub{ 255, 0, 0, 255 });
+  if (m_yErrors.size() == m_yData.size())
+    m_chartWidget->addPlot(m_xData, m_yData, m_yErrors,
+                           QtGui::color4ub{ 255, 0, 0, 255 });
+  else
+    m_chartWidget->addPlot(m_xData, m_yData, QtGui::color4ub{ 255, 0, 0, 255 });
 
   // Add a marker for the current frame
   if (m_currentFrame >= 0 &&
@@ -846,134 +905,67 @@ void PlotConformer::drawChart()
   m_chartWidget->setYAxisTitle(m_yTitle);
 }
 
-std::optional<DataSeries> PlotConformer::generateFrameSeries() const
+void PlotConformer::syncUnitCombos()
+{
+  if (!m_unitsCombo || !m_targetUnitsCombo)
+    return;
+
+  auto* units = EnergyUnits::instance();
+
+  // A reader that knew what its program writes has already said so, and that
+  // beats anything the user last picked for some other file -- so show what
+  // the file said and take the choice away rather than letting a stale
+  // setting look as though it were in force.
+  const bool declared = m_molecule && EnergyUnits::declaresUnit(*m_molecule);
+  fillUnitCombo(m_unitsCombo, m_molecule ? units->sourceUnit(*m_molecule)
+                                         : units->sourceUnit());
+  m_unitsCombo->setEnabled(!declared);
+  m_unitsCombo->setToolTip(
+    declared ? tr("This file records the units its energies are in.")
+             : tr("The units the energies in this file are in, which the file "
+                  "itself does not record."));
+
+  fillUnitCombo(m_targetUnitsCombo, units->displayUnit());
+}
+
+double PlotConformer::timeStep() const
+{
+  if (m_timeStepSpin)
+    return m_timeStepSpin->value();
+  return m_molecule ? Core::frameInterval(*m_molecule) : 1.0;
+}
+
+void PlotConformer::seedTimeStepFromMolecule()
+{
+  if (!m_molecule || !m_timeStepSpin || m_timeStepSeeded)
+    return;
+
+  m_timeStepSeeded = true;
+
+  // Whatever the molecule already goes by -- what the user set last time, or
+  // the spacing the file recorded, or one picosecond. Nothing is written back
+  // here: the molecule only takes a value the user actually chose.
+  const double interval = Core::frameInterval(*m_molecule);
+  if (interval >= m_timeStepSpin->minimum() &&
+      interval <= m_timeStepSpin->maximum()) {
+    QSignalBlocker blocker(m_timeStepSpin);
+    m_timeStepSpin->setValue(interval);
+  }
+}
+
+bool PlotConformer::ensureVelocities()
 {
   if (!m_molecule)
-    return std::nullopt;
+    return false;
 
-  const size_t count = m_molecule->coordinate3dCount();
-  if (count == 0)
-    return std::nullopt;
-
-  DataSeries values;
-  values.reserve(count);
-  for (size_t i = 0; i < count; ++i)
-    values.push_back(static_cast<float>(i));
-
-  return values;
-}
-
-std::optional<DataSeries> PlotConformer::generateCoordinateSeries(
-  int coordinateIndex) const
-{
-  if (!m_molecule || coordinateIndex < 0 ||
-      coordinateIndex >= static_cast<int>(m_coordinates.size()))
-    return std::nullopt;
-
-  const Core::Constraint& constraint =
-    m_coordinates[static_cast<size_t>(coordinateIndex)];
-
-  // coordinate3dRef() hands back the stored set rather than a copy of it, so
-  // reading four atoms out of every frame does not copy the whole molecule
-  // once per frame. It does not change the displayed set either, so this reads
-  // the trajectory without disturbing the active conformer.
-  const size_t count = m_molecule->coordinate3dCount();
-  DataSeries values;
-  values.reserve(count);
-  for (size_t i = 0; i < count; ++i) {
-    Real value = 0.0;
-    if (!constraint.evaluate(m_molecule->coordinate3dRef(i), value))
-      return std::nullopt;
-    values.push_back(static_cast<float>(value));
-  }
-
-  if (values.empty())
-    return std::nullopt;
-
-  return values;
-}
-
-std::optional<DataSeries> PlotConformer::generateRmsdSeries() const
-{
-  if (!m_molecule || m_molecule->coordinate3dCount() == 0)
-    return std::nullopt;
-
-  const Array<Vector3>& ref = m_molecule->coordinate3dRef(0);
-  if (ref.empty())
-    return std::nullopt;
-
-  DataSeries values;
-  values.reserve(m_molecule->coordinate3dCount());
-  for (size_t i = 0; i < m_molecule->coordinate3dCount(); ++i) {
-    const Array<Vector3>& positions = m_molecule->coordinate3dRef(i);
-    // Coordinate sets should all describe the same atoms, but compare only as
-    // far as both of them go rather than reading off the end of the reference.
-    const size_t count = std::min(positions.size(), ref.size());
-
-    double sum = 0.0;
-    for (size_t j = 0; j < count; ++j)
-      sum += (positions[j] - ref[j]).squaredNorm();
-
-    // RMSD is the root *mean* square deviation over the atoms, so normalize by
-    // the number of atoms compared -- not by the number of coordinate sets. An
-    // empty set has no atoms to compare and so no deviation to report, but it
-    // still gets a point: every series here is indexed by frame, and skipping
-    // one would move each later point onto the wrong conformer.
-    values.push_back(count > 0 ? static_cast<float>(std::sqrt(sum / count))
-                               : 0.0f);
-  }
-
-  if (values.empty())
-    return std::nullopt;
-
-  return values;
-}
-
-std::optional<DataSeries> PlotConformer::generateEnergySeries() const
-{
-  // plot relative energies so get the minimum first
-  if (m_molecule == nullptr || !m_molecule->hasData("energies"))
-    return std::nullopt;
-
-  const std::vector<double> energies = m_molecule->data("energies").toList();
-  if (energies.empty())
-    return std::nullopt;
-
-  const double minEnergy = *std::min_element(energies.begin(), energies.end());
-
-  // Get conversion factors
-  const double fromFactor =
-    m_unitsCombo ? m_unitsCombo->currentData().toDouble() : 1.0;
-  const double toFactor =
-    m_targetUnitsCombo ? m_targetUnitsCombo->currentData().toDouble() : 1.0;
-
-  DataSeries values;
-  values.reserve(energies.size());
-  for (double energy : energies) {
-    // Convert: first to kcal/mol, then to target units
-    values.push_back(
-      static_cast<float>((energy - minEnergy) * fromFactor * toFactor));
-  }
-
-  return values;
-}
-
-std::optional<DataSeries> PlotConformer::generateStoredSeries(
-  const char* key) const
-{
-  if (m_molecule == nullptr || !m_molecule->hasData(key))
-    return std::nullopt;
-
-  const std::vector<double> stored = m_molecule->data(key).toList();
-  if (stored.empty())
-    return std::nullopt;
-
-  DataSeries values;
-  values.reserve(stored.size());
-  for (double value : stored)
-    values.push_back(static_cast<float>(value));
-
-  return values;
+  // Core decides whether anything actually needs redoing -- the conformer
+  // property table asks the same question, and the two must not answer it
+  // differently. m_staleVelocities carries the one thing Core cannot see:
+  // that the atoms moved without the trajectory changing length.
+  const bool refreshed =
+    Core::ensureConformerVelocities(*m_molecule, m_staleVelocities);
+  m_staleVelocities = false;
+  return refreshed;
 }
 
 } // namespace Avogadro::QtPlugins

@@ -12,6 +12,8 @@
 #include "obprocess.h"
 
 #include <avogadro/calc/chargemanager.h>
+
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/io/fileformatmanager.h>
 
 #include <avogadro/qtgui/molecule.h>
@@ -717,6 +719,12 @@ void OpenBabel::onGenerateConformersFinished(const QByteArray& output)
   // energy data too
   // TODO: check if other properties are needed
   m_molecule->setData("energies", mol.data("energies"));
+  // The unit travels with them. These are the conformer search's energies,
+  // not the ones the file arrived with, so a unit left over from that file
+  // would be applied to numbers it has nothing to do with; where Open Babel
+  // did not say either, this records that nobody knows, which is what leaves
+  // the question with the user.
+  Core::setEnergyUnit(*m_molecule, Core::energyUnit(mol));
 
   // the set of conformers changed, not just the active one
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified |

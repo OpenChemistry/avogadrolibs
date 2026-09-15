@@ -39,7 +39,10 @@ avogadro_headers(QtGui
   colorbutton.h
   containerwidget.h
   customelementdialog.h
+  conformerquantitytranslator.h
   elementtranslator.h
+  energyunits.h
+  energyunitsdialog.h
   extensionplugin.h
   filebrowsewidget.h
   fileformatdialog.h
@@ -84,7 +87,10 @@ target_sources(QtGui PRIVATE
   customelementdialog.cpp
   elementdetail_p.cpp
   elementitem_p.cpp
+  conformerquantitytranslator.cpp
   elementtranslator.cpp
+  energyunits.cpp
+  energyunitsdialog.cpp
   extensionplugin.cpp
   filebrowsewidget.cpp
   fileformatdialog.cpp

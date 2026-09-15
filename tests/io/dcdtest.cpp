@@ -80,6 +80,27 @@ TEST(DcdTest, readTrajectory)
   EXPECT_NEAR(first.z(), 20.0539, 1e-3);
 }
 
+TEST(DcdTest, timeStepsInPicoseconds)
+{
+  DcdFormat dcd;
+  Molecule molecule;
+  ASSERT_TRUE(dcd.readFile(
+    std::string(AVOGADRO_DATA) + "/data/dcd/villin_N68H.dcd", molecule))
+    << dcd.error();
+
+  // This file is the CHARMM flavour, so its header DELTA is in AKMA time
+  // units: 0.04090966 AKMA is the 2 fs integration step it was run with. Every
+  // thousandth step was written (NSAVC = 1000), which puts the frames 2 ps
+  // apart, and it starts at step zero.
+  ASSERT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(10));
+  for (int i = 0; i < 10; ++i) {
+    bool status = false;
+    const double time = molecule.timeStep(i, status);
+    EXPECT_TRUE(status) << "frame " << i << " has no timestep";
+    EXPECT_NEAR(time, 2.0 * i, 1e-5) << "frame " << i;
+  }
+}
+
 TEST(DcdTest, readEmpty)
 {
   DcdFormat dcd;

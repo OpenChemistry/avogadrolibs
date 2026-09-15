@@ -9,6 +9,7 @@
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
@@ -234,4 +235,19 @@ TEST(QCSchemaTest, roundTrip)
     EXPECT_EQ(result.bond(i).atom2().index(), original.bond(i).atom2().index());
     EXPECT_EQ(result.bond(i).order(), original.bond(i).order());
   }
+}
+
+// QCSchema is one of the few formats that says what unit it used, so the file
+// is believed where it speaks up, and the specification's atomic units stand
+// in where it does not.
+TEST(QCSchemaTest, energyUnitComesFromTheFile)
+{
+  QCSchema qcs;
+  Molecule molecule;
+  ASSERT_TRUE(qcs.readFile(webmoFile, molecule));
+
+  const std::string unit = Avogadro::Core::energyUnit(molecule);
+  ASSERT_FALSE(unit.empty());
+  // Whatever it says, it has to name a unit rather than something arbitrary.
+  EXPECT_EQ(unit, "Hartree");
 }
