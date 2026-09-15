@@ -38,6 +38,11 @@ using Core::UnitCell;
 #define DCD_EOF (-1)
 constexpr int DCD_MAGIC = 84;
 constexpr int DCD_IS_CHARMM = 0x01;
+// CHARMM -- and NAMD, which writes the CHARMM flavour -- records DELTA in AKMA
+// time units, where one unit is 48.88821 fs (CHARMM's TIMFAC). X-PLOR records
+// it in picoseconds already, which is why the two are read at different
+// widths below.
+constexpr double AkmaToPicoseconds = 0.04888821;
 constexpr int DCD_HAS_4DIMS = 0x02;
 constexpr int DCD_HAS_EXTRA_BLOCK = 0x04;
 
@@ -71,6 +76,8 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   int charmm = 0;
   int NAMNF = 0;
   int NTITLE = 0;
+  int ISTART = 0;
+  int NSAVC = 0;
   int lenRemarks = 0;
   int NATOMS = 0;
   int blockSize = 0;
@@ -120,19 +127,30 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     charmm = 0;
   }
 
+  // First integration step written, and how many steps apart the frames are.
+  ISTART = *(reinterpret_cast<int*>(raw + 8));
+  NSAVC = *(reinterpret_cast<int*>(raw + 12));
+
   // number of fixed atoms
   NAMNF = *(reinterpret_cast<int*>(raw + 36));
 
-  // DELTA (timestep) is stored as a double with X-PLOR but as a float with
-  // CHARMM
+  // DELTA (timestep) is stored as a double, in picoseconds, with X-PLOR, but
+  // as a float in AKMA time units with CHARMM. Both end up in picoseconds.
   if (charmm & DCD_IS_CHARMM) {
     float ftmp;
     ftmp = *(reinterpret_cast<float*>(raw + 40));
 
-    DELTA = static_cast<double>(ftmp);
+    DELTA = static_cast<double>(ftmp) * AkmaToPicoseconds;
   } else {
     (DELTA) = *(reinterpret_cast<double*>(raw + 40));
   }
+
+  // DELTA is the integration timestep, but only every NSAVC-th step was
+  // written, so that -- not DELTA -- is how far apart the frames in this file
+  // are. A file that claims no saving frequency gets one step, which at least
+  // keeps successive frames at distinct times.
+  const double frameInterval = DELTA * (NSAVC > 0 ? NSAVC : 1);
+  const double startTime = DELTA * (ISTART > 0 ? ISTART : 0);
 
   snprintf(fmt, sizeof(fmt), "%c1i", endian);
   if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
@@ -400,7 +418,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     newAtom.setPosition3d(pos);
   }
 
-  mol.setTimeStep(0, 0);
+  mol.setTimeStep(startTime, 0);
 
   // Skipping fourth dimension block
   if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
@@ -485,7 +503,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
       positions.push_back(pos);
     }
 
-    mol.setTimeStep(DELTA * coordSet, coordSet);
+    mol.setTimeStep(startTime + frameInterval * coordSet, coordSet);
 
     // Skipping fourth dimension block
     if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {

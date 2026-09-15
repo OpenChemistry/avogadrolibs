@@ -20,6 +20,7 @@
 
 class QLabel;
 class QCheckBox;
+class QDoubleSpinBox;
 class QPushButton;
 
 namespace Avogadro {
@@ -83,8 +84,15 @@ private:
     RmsdQuantity = -2,
     EnergyQuantity = -3,
     ForcesQuantity = -4,
-    VelocitiesQuantity = -5
+    VelocitiesQuantity = -5,
+    TemperatureQuantity = -6,
+    TimeQuantity = -7
   };
+
+  // True for the quantities that only mean anything once the frames are
+  // spaced in time: they all come from the velocities, which are differenced
+  // across the trajectory.
+  static bool isDynamicsQuantity(int quantity);
 
   // Show conformer @p frame, clamped to the available coordinate sets, and
   // tell the rest of the application about it.
@@ -114,9 +122,12 @@ private:
   bool isTorsionQuantity(int quantity) const;
 
   // One plotted series: a value per coordinate set, and the axis label for it.
+  // A quantity that averages over the atoms also carries the spread of what it
+  // averaged, which the chart draws as error bars when it is on the y axis.
   struct QuantitySeries
   {
     DataSeries values;
+    DataSeries errors;
     QString title;
   };
 
@@ -127,12 +138,25 @@ private:
   // Series generators, one value per coordinate set. Each is empty when the
   // molecule cannot supply that quantity.
   std::optional<DataSeries> generateFrameSeries() const;
+  std::optional<DataSeries> generateTimeSeries() const;
   std::optional<DataSeries> generateRmsdSeries() const;
   std::optional<DataSeries> generateEnergySeries() const;
   std::optional<DataSeries> generateCoordinateSeries(int coordinateIndex) const;
   // Forces and velocities are both stored as one value per coordinate set
   // under their own key, so they differ only by which key to read.
   std::optional<DataSeries> generateStoredSeries(const char* key) const;
+
+  // Make sure the molecule carries velocities for the quantities that need
+  // them, estimating them from the trajectory and the time step below when it
+  // does not. @return true when velocities are available afterwards.
+  bool ensureVelocities();
+
+  // The interval between saved frames, in picoseconds, as the spin box has it.
+  double timeStep() const;
+
+  // Start the time step off at whatever the file recorded, where it recorded
+  // anything, so the user is correcting a number rather than inventing one.
+  void seedTimeStepFromMolecule();
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
@@ -143,14 +167,19 @@ private:
   QComboBox* m_yAxisCombo;
   QComboBox* m_xAxisCombo;
   QComboBox* m_unitsCombo;
+  QDoubleSpinBox* m_timeStepSpin;
   QComboBox* m_targetUnitsCombo;
   QCheckBox* m_unwrapDihedralsCheck;
+  QLabel* m_timeStepLabel;
   QPushButton* m_addSelectionButton;
   QLabel* m_frameLabel;
   // Everything measurable on the molecule, in the order the combos list it.
   std::vector<Core::Constraint> m_coordinates;
   DataSeries m_xData;
   DataSeries m_yData;
+  // Half-height of the error bar on each y point, empty when the quantity has
+  // no spread to show.
+  DataSeries m_yErrors;
   QString m_xTitle;
   QString m_yTitle;
   // Axis limits belong to the data, so they are worked out once when it is
@@ -158,6 +187,13 @@ private:
   std::pair<float, float> m_xLimits{ 0.0f, 1.0f };
   std::pair<float, float> m_yLimits{ 0.0f, 1.0f };
   int m_currentFrame = 0;
+  // The velocities on the molecule are ours, differenced from the trajectory,
+  // so they go stale whenever the trajectory or the time step does and have to
+  // be redone. Velocities that came from the file are left alone.
+  bool m_estimatedVelocities = false;
+  // Whether the time step has been seeded from this molecule yet. Re-seeding
+  // would throw away a value the user typed.
+  bool m_timeStepSeeded = false;
 };
 
 inline QString PlotConformer::description() const

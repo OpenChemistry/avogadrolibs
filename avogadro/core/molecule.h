@@ -791,8 +791,33 @@ public:
 
   /**
    * Estimate velocities from the coordinate sets and timesteps.
+   *
+   * Does nothing unless there is one timestep per coordinate set. The
+   * timesteps are taken as they are stored, so a conventional dynamics
+   * trajectory -- coordinates in Angstrom, timesteps in picoseconds -- gives
+   * velocities in Angstrom per picosecond, which is what the derived
+   * properties below assume.
+   *
+   * Alongside the per-atom velocities this fills three per-coordinate-set
+   * properties, next to "energies" and "forces" in the data map:
+   * - "velocities": the mean atomic speed, in Angstrom / picosecond
+   * - "velocityDeviations": the standard deviation of those speeds
+   * - "temperatures": the instantaneous temperature, in Kelvin
    */
   void estimateVelocities();
+
+  /**
+   * Estimate velocities taking the coordinate sets to be @p timeStep apart,
+   * rather than reading the stored timesteps.
+   *
+   * Most trajectory files do not record when each frame was written, so the
+   * spacing has to come from the caller instead. The stored timesteps are
+   * left untouched; everything else behaves as the overload above.
+   *
+   * @param timeStep the interval between consecutive coordinate sets, in
+   * picoseconds.
+   */
+  void estimateVelocities(double timeStep);
 
   /**
    * Get the velocities for the specified index.
@@ -801,8 +826,22 @@ public:
 
   /**
    * Set the velocities for the specified index.
+   *
+   * Call updateVelocityProperties() once the last set is in to bring the
+   * derived per-coordinate-set properties up to date with them.
    */
   bool setVelocities(const Array<Vector3>& velocities, int index);
+
+  /**
+   * Fill the per-coordinate-set properties derived from the velocities --
+   * "velocities", "velocityDeviations" and "temperatures", described under
+   * estimateVelocities() above.
+   *
+   * estimateVelocities() does this for the velocities it works out itself.
+   * Anything that supplies velocities of its own, through setVelocities(),
+   * should call this afterwards.
+   */
+  void updateVelocityProperties();
 
   /**
    * Clear all velocity sets.
@@ -1175,6 +1214,22 @@ protected:
   Eigen::VectorXd m_frozenAtomMask;
 
 private:
+  /**
+   * Fill m_velocities and the derived per-coordinate-set properties, taking
+   * coordinate set @c i to be @c intervals[i] after the one before it.
+   */
+  void estimateVelocities(const std::vector<double>& intervals);
+
+  /**
+   * @return the instantaneous temperature, in Kelvin, of a molecule whose
+   * atoms have @p velocities in Angstrom / picosecond.
+   *
+   * From equipartition, T = 2 KE / (N_df k_B), with the kinetic energy taken
+   * in the center-of-mass frame and N_df = 3N - 3 -- the three removed being
+   * the center-of-mass translation that was subtracted out.
+   */
+  double temperature(const Array<Vector3>& velocities) const;
+
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   // edge information
   Array<unsigned char> m_bondOrders;

@@ -8,6 +8,7 @@
 #include <QAction>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QDoubleSpinBox>
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QKeyEvent>
@@ -209,9 +210,9 @@ PlotConformer::PlotConformer(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
     m_molecule(nullptr), m_displayDialogAction(new QAction(this)),
     m_chartWidget(nullptr), m_yAxisCombo(nullptr), m_xAxisCombo(nullptr),
-    m_unitsCombo(nullptr), m_targetUnitsCombo(nullptr),
-    m_unwrapDihedralsCheck(nullptr), m_addSelectionButton(nullptr),
-    m_frameLabel(nullptr)
+    m_unitsCombo(nullptr), m_timeStepSpin(nullptr), m_targetUnitsCombo(nullptr),
+    m_unwrapDihedralsCheck(nullptr), m_timeStepLabel(nullptr),
+    m_addSelectionButton(nullptr), m_frameLabel(nullptr)
 {
   m_displayDialogAction->setText(tr("Plot Conformer Data…"));
   connect(m_displayDialogAction, &QAction::triggered, this,
@@ -250,6 +251,12 @@ void PlotConformer::setMolecule(QtGui::Molecule* mol)
   // Follow whichever conformer the new molecule is already showing.
   m_currentFrame = m_molecule ? m_molecule->coordinate3d() : 0;
 
+  // A different molecule brings its own trajectory, and may bring its own
+  // idea of how far apart the frames are.
+  m_estimatedVelocities = false;
+  m_timeStepSeeded = false;
+  seedTimeStepFromMolecule();
+
   if (m_dialog && m_dialog->isVisible()) {
     if (m_molecule && m_molecule->coordinate3dCount() > 1) {
       populateQuantityCombos();
@@ -277,6 +284,13 @@ void PlotConformer::moleculeChanged(unsigned int c)
                           (changes & Molecule::Modified);
   if (structural)
     updateActions();
+
+  // Velocities differenced from the trajectory go stale as soon as the atoms
+  // move, change in number, or are renumbered. Selecting an atom or stepping
+  // to another conformer does none of those, and those are the common cases.
+  if (structural || (changes & Molecule::Moved) ||
+      (changes & Molecule::Reordered))
+    m_estimatedVelocities = false;
 
   if (!m_molecule || !m_dialog || !m_dialog->isVisible())
     return;
@@ -460,20 +474,31 @@ void PlotConformer::populateQuantityCombos()
 
   const bool hasEnergies = m_molecule->hasData("energies");
   const bool hasForces = m_molecule->hasData("forces");
-  const bool hasVelocities = m_molecule->hasData("velocities");
+  // Velocities are differenced between neighbouring frames, so one geometry
+  // has none, and the time step supplies what the file leaves out -- which
+  // means these are on offer for any trajectory, not only one that stored
+  // velocities.
+  const bool isTrajectory = m_molecule->coordinate3dCount() > 1;
+  // Temperature comes out of the kinetic energy once the drift of the whole
+  // molecule is removed, and a single atom has nothing left after that.
+  const bool hasTemperature = isTrajectory && m_molecule->atomCount() > 1;
 
   std::vector<PlotQuantity> quantities;
   const auto builtIn = [](const QString& label, int quantity) {
     return PlotQuantity{ label, quantity, QString::number(quantity) };
   };
   quantities.push_back(builtIn(tr("Frame"), FrameQuantity));
+  if (isTrajectory)
+    quantities.push_back(builtIn(tr("Time"), TimeQuantity));
   quantities.push_back(builtIn(tr("RMSD"), RmsdQuantity));
   if (hasEnergies)
     quantities.push_back(builtIn(tr("Energy"), EnergyQuantity));
   if (hasForces)
     quantities.push_back(builtIn(tr("Forces"), ForcesQuantity));
-  if (hasVelocities)
-    quantities.push_back(builtIn(tr("Velocities"), VelocitiesQuantity));
+  if (isTrajectory)
+    quantities.push_back(builtIn(tr("Mean Speed"), VelocitiesQuantity));
+  if (hasTemperature)
+    quantities.push_back(builtIn(tr("Temperature"), TemperatureQuantity));
 
   // One entry per coordinate, so a scanned coordinate can go on either axis.
   for (int i = 0; i < static_cast<int>(m_coordinates.size()); ++i) {
@@ -573,6 +598,11 @@ bool PlotConformer::isTorsionQuantity(int quantity) const
          Core::Constraint::TorsionConstraint;
 }
 
+bool PlotConformer::isDynamicsQuantity(int quantity)
+{
+  return quantity == VelocitiesQuantity || quantity == TemperatureQuantity;
+}
+
 void PlotConformer::displayDialog()
 {
   if (!m_molecule)
@@ -647,6 +677,32 @@ void PlotConformer::displayDialog()
     conversionLayout->addStretch();
     mainLayout->addLayout(conversionLayout);
 
+    // How far apart the saved frames are. Velocities are differenced across
+    // the trajectory, so nothing derived from them -- speed, temperature, the
+    // time axis -- means anything without it, and few trajectory formats
+    // record it: an XYZ or SDF trajectory carries no time at all, and a LAMMPS
+    // dump carries the step number rather than a time. DCD is the one that
+    // does, and seeds this below.
+    QHBoxLayout* timeStepLayout = new QHBoxLayout();
+    m_timeStepLabel = new QLabel(tr("Time between frames:"), m_dialog.get());
+    m_timeStepSpin = new QDoubleSpinBox(m_dialog.get());
+    m_timeStepSpin->setDecimals(4);
+    m_timeStepSpin->setRange(0.0001, 1.0e6);
+    m_timeStepSpin->setValue(1.0);
+    m_timeStepSpin->setSingleStep(0.1);
+    m_timeStepSpin->setSuffix(tr(" ps"));
+    m_timeStepSpin->setToolTip(
+      tr("The interval between saved frames, used to turn the trajectory into "
+         "velocities and a temperature. Most trajectory files do not record "
+         "it, so it starts at the value from the file where there is one and "
+         "at 1 ps otherwise."));
+    m_timeStepLabel->setBuddy(m_timeStepSpin);
+
+    timeStepLayout->addWidget(m_timeStepLabel);
+    timeStepLayout->addWidget(m_timeStepSpin);
+    timeStepLayout->addStretch();
+    mainLayout->addLayout(timeStepLayout);
+
     // Connect signals for updates
     connect(m_yAxisCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &PlotConformer::updatePlot);
@@ -659,6 +715,14 @@ void PlotConformer::displayDialog()
             &PlotConformer::updatePlot);
     connect(m_unwrapDihedralsCheck, &QCheckBox::toggled, this,
             &PlotConformer::updatePlot);
+    connect(m_timeStepSpin,
+            QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,
+            [this](double) {
+              // A new time step invalidates whatever we differenced with the
+              // old one.
+              m_estimatedVelocities = false;
+              updatePlot();
+            });
     connect(m_addSelectionButton, &QPushButton::clicked, this,
             &PlotConformer::addCoordinateFromSelection);
 
@@ -669,6 +733,7 @@ void PlotConformer::displayDialog()
     m_dialog->installEventFilter(this);
   }
 
+  seedTimeStepFromMolecule();
   populateQuantityCombos();
   m_currentFrame = m_molecule->coordinate3d();
   updatePlot();
@@ -686,6 +751,7 @@ std::optional<PlotConformer::QuantitySeries> PlotConformer::evaluateQuantity(
 
   QString title;
   std::optional<DataSeries> values;
+  DataSeries errors;
 
   if (quantity >= 0) {
     if (quantity >= static_cast<int>(m_coordinates.size()))
@@ -698,6 +764,10 @@ std::optional<PlotConformer::QuantitySeries> PlotConformer::evaluateQuantity(
       case FrameQuantity:
         title = tr("Frame");
         values = generateFrameSeries();
+        break;
+      case TimeQuantity:
+        title = tr("Time (ps)");
+        values = generateTimeSeries();
         break;
       case RmsdQuantity:
         title = tr("RMSD (Å)");
@@ -715,8 +785,21 @@ std::optional<PlotConformer::QuantitySeries> PlotConformer::evaluateQuantity(
         values = generateStoredSeries("forces");
         break;
       case VelocitiesQuantity:
-        title = tr("Velocities (m/s)");
-        values = generateStoredSeries("velocities");
+        // The mean over the atoms of how fast each one is moving. The spread
+        // of that distribution rides along as error bars, since a mean speed
+        // says very little on its own -- a cold molecule with one hot atom
+        // and a uniformly warm one can share it.
+        title = tr("Mean Speed (Å/ps)");
+        if (ensureVelocities()) {
+          values = generateStoredSeries("velocities");
+          if (auto spread = generateStoredSeries("velocityDeviations"))
+            errors = std::move(*spread);
+        }
+        break;
+      case TemperatureQuantity:
+        title = tr("Temperature (K)");
+        if (ensureVelocities())
+          values = generateStoredSeries("temperatures");
         break;
       default:
         return std::nullopt;
@@ -726,7 +809,12 @@ std::optional<PlotConformer::QuantitySeries> PlotConformer::evaluateQuantity(
   if (!values)
     return std::nullopt;
 
-  return QuantitySeries{ std::move(*values), title };
+  // An error bar per point or none at all -- a partial set would put bars on
+  // the wrong frames.
+  if (errors.size() != values->size())
+    errors.clear();
+
+  return QuantitySeries{ std::move(*values), std::move(errors), title };
 }
 
 void PlotConformer::updatePlot()
@@ -736,6 +824,7 @@ void PlotConformer::updatePlot()
 
   m_xData.clear();
   m_yData.clear();
+  m_yErrors.clear();
 
   const int xq = xQuantity();
   const int yq = yQuantity();
@@ -746,6 +835,15 @@ void PlotConformer::updatePlot()
     m_unitsCombo->setEnabled(plottingEnergy);
   if (m_targetUnitsCombo)
     m_targetUnitsCombo->setEnabled(plottingEnergy);
+
+  // The time step only matters while something on the plot is measured
+  // against time.
+  const bool plottingTime = xq == TimeQuantity || yq == TimeQuantity ||
+                            isDynamicsQuantity(xq) || isDynamicsQuantity(yq);
+  if (m_timeStepSpin)
+    m_timeStepSpin->setEnabled(plottingTime);
+  if (m_timeStepLabel)
+    m_timeStepLabel->setEnabled(plottingTime);
 
   // Nothing but a torsion wraps, so the option is meaningless otherwise.
   const bool xIsTorsion = isTorsionQuantity(xq);
@@ -762,6 +860,7 @@ void PlotConformer::updatePlot()
 
   DataSeries x = std::move(xSeries->values);
   DataSeries y = std::move(ySeries->values);
+  DataSeries yErrors = std::move(ySeries->errors);
 
   // Every series is one value per coordinate set, in order from the first, so
   // a point's position in the array is its frame number -- which is what lets
@@ -772,6 +871,8 @@ void PlotConformer::updatePlot()
   const size_t points = std::min(x.size(), y.size());
   x.resize(points);
   y.resize(points);
+  if (!yErrors.empty())
+    yErrors.resize(points);
 
   const bool unwrap =
     m_unwrapDihedralsCheck && m_unwrapDihedralsCheck->isChecked();
@@ -786,6 +887,7 @@ void PlotConformer::updatePlot()
 
   m_xData = std::move(x);
   m_yData = std::move(y);
+  m_yErrors = std::move(yErrors);
   m_xTitle = xSeries->title;
   m_yTitle = ySeries->title;
 
@@ -797,7 +899,19 @@ void PlotConformer::updatePlot()
         ? std::make_pair(
             -0.1f, static_cast<float>(m_molecule->coordinate3dCount()) - 0.9f)
         : paddedRange(m_xData, 0.02f, 1.0e-3f);
-    m_yLimits = paddedRange(m_yData, 0.05f, 1.0f);
+    // Error bars reach past the points they hang off, so the axis has to be
+    // scaled to their ends rather than to the means.
+    if (m_yErrors.empty()) {
+      m_yLimits = paddedRange(m_yData, 0.05f, 1.0f);
+    } else {
+      DataSeries extremes;
+      extremes.reserve(m_yData.size() * 2);
+      for (size_t i = 0; i < m_yData.size(); ++i) {
+        extremes.push_back(m_yData[i] - m_yErrors[i]);
+        extremes.push_back(m_yData[i] + m_yErrors[i]);
+      }
+      m_yLimits = paddedRange(extremes, 0.05f, 1.0f);
+    }
   }
 
   drawChart();
@@ -827,7 +941,11 @@ void PlotConformer::drawChart()
 
   m_chartWidget->setShowPoints(true);
   m_chartWidget->setLegendLocation(QtGui::ChartWidget::LegendLocation::None);
-  m_chartWidget->addPlot(m_xData, m_yData, QtGui::color4ub{ 255, 0, 0, 255 });
+  if (m_yErrors.size() == m_yData.size())
+    m_chartWidget->addPlot(m_xData, m_yData, m_yErrors,
+                           QtGui::color4ub{ 255, 0, 0, 255 });
+  else
+    m_chartWidget->addPlot(m_xData, m_yData, QtGui::color4ub{ 255, 0, 0, 255 });
 
   // Add a marker for the current frame
   if (m_currentFrame >= 0 &&
@@ -861,6 +979,92 @@ std::optional<DataSeries> PlotConformer::generateFrameSeries() const
     values.push_back(static_cast<float>(i));
 
   return values;
+}
+
+std::optional<DataSeries> PlotConformer::generateTimeSeries() const
+{
+  if (!m_molecule)
+    return std::nullopt;
+
+  const size_t count = m_molecule->coordinate3dCount();
+  if (count < 2)
+    return std::nullopt;
+
+  // Evenly spaced by construction: the same step that the velocities were
+  // differenced with, so the two axes agree about when each frame happened.
+  const double step = timeStep();
+  DataSeries values;
+  values.reserve(count);
+  for (size_t i = 0; i < count; ++i)
+    values.push_back(static_cast<float>(i * step));
+
+  return values;
+}
+
+double PlotConformer::timeStep() const
+{
+  return m_timeStepSpin ? m_timeStepSpin->value() : 1.0;
+}
+
+void PlotConformer::seedTimeStepFromMolecule()
+{
+  if (!m_molecule || !m_timeStepSpin || m_timeStepSeeded)
+    return;
+
+  m_timeStepSeeded = true;
+
+  const size_t count = m_molecule->coordinate3dCount();
+  if (count < 2)
+    return;
+
+  // A file that recorded when its frames were written is worth believing over
+  // a default of 1 ps. DCD gives a real interval in picoseconds; a LAMMPS dump
+  // records the step number instead, and has no dt anywhere in it to turn that
+  // into a time, so what lands here is a step count for the user to correct.
+  // Either way it is a number from their own file rather than a guess.
+  bool haveFirst = false;
+  bool haveLast = false;
+  const double first = m_molecule->timeStep(0, haveFirst);
+  const double last =
+    m_molecule->timeStep(static_cast<int>(count) - 1, haveLast);
+  if (!haveFirst || !haveLast)
+    return;
+
+  const double spacing = (last - first) / static_cast<double>(count - 1);
+  if (spacing >= m_timeStepSpin->minimum() &&
+      spacing <= m_timeStepSpin->maximum()) {
+    QSignalBlocker blocker(m_timeStepSpin);
+    m_timeStepSpin->setValue(spacing);
+  }
+}
+
+bool PlotConformer::ensureVelocities()
+{
+  if (!m_molecule || m_molecule->coordinate3dCount() < 2)
+    return false;
+
+  // Already differenced, with nothing having moved since: setMolecule(), a
+  // structural change and a new time step each clear the flag. Both axes ask
+  // for this, so re-differencing the whole trajectory here would be done
+  // twice over for nothing.
+  if (m_estimatedVelocities)
+    return !m_molecule->data("velocities").toList().empty();
+
+  if (!m_molecule->velocities(0).empty()) {
+    // Velocities that arrived with the file are the real thing, and must not
+    // be differenced over. They may have come in without the derived scalars,
+    // though, if whoever set them did not ask for them.
+    if (m_molecule->data("velocities").toList().empty())
+      m_molecule->updateVelocityProperties();
+    return true;
+  }
+
+  // Ours, then: redo them, since the trajectory or the time step may have
+  // moved under us since the last time.
+  m_molecule->estimateVelocities(timeStep());
+  m_estimatedVelocities = true;
+
+  return !m_molecule->data("velocities").toList().empty();
 }
 
 std::optional<DataSeries> PlotConformer::generateCoordinateSeries(

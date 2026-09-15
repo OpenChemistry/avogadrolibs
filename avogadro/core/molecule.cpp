@@ -1983,46 +1983,154 @@ bool Molecule::setCoordinate3d(const Array<Vector3>& coords, size_t index)
   return true;
 }
 
+namespace {
+
+// Boltzmann's constant in the units the velocities here are expressed in:
+// 1.380649e-23 J/K over 1 amu A^2/ps^2, which is 1.66053906660e-23 J. It is
+// the gas constant in kJ/(mol K) under another name, since one amu A^2/ps^2
+// is exactly 0.01 kJ/mol.
+constexpr double BoltzmannAmuAngstrom2PerPs2PerKelvin = 0.831446261815324;
+
+// Mean and population standard deviation of the atomic speeds in @p velocities.
+std::pair<double, double> speedStatistics(const Array<Vector3>& velocities)
+{
+  if (velocities.empty())
+    return { 0.0, 0.0 };
+
+  double sum = 0.0;
+  for (const auto& velocity : velocities)
+    sum += velocity.norm();
+  const double mean = sum / velocities.size();
+
+  double variance = 0.0;
+  for (const auto& velocity : velocities) {
+    const double deviation = velocity.norm() - mean;
+    variance += deviation * deviation;
+  }
+
+  return { mean, std::sqrt(variance / velocities.size()) };
+}
+
+} // namespace
+
 void Molecule::estimateVelocities()
 {
-  if (m_coordinates3d.size() < 2 ||
-      m_timesteps.size() != m_coordinates3d.size())
+  if (m_timesteps.size() != m_coordinates3d.size())
     return;
 
-  m_velocities.resize(m_coordinates3d.size());
+  // Timesteps need not be evenly spaced -- a trajectory written every n steps
+  // of a variable-timestep integrator is not -- so each set gets its own
+  // interval. The first has nothing before it, and borrows the second's.
+  std::vector<double> intervals(m_coordinates3d.size(), 0.0);
+  for (size_t i = 1; i < intervals.size(); ++i)
+    intervals[i] = m_timesteps[i] - m_timesteps[i - 1];
+  if (intervals.size() > 1)
+    intervals[0] = intervals[1];
 
-  for (size_t i = 0; i < m_coordinates3d.size(); ++i) {
-    double dt = 0.0;
-    if (i > 0) {
-      dt = m_timesteps[i] - m_timesteps[i - 1];
-    } else if (m_timesteps.size() > 1) {
-      dt = m_timesteps[1] - m_timesteps[0];
-    }
+  estimateVelocities(intervals);
+}
 
-    if (std::abs(dt) < 1e-6)
-      continue;
+void Molecule::estimateVelocities(double timeStep)
+{
+  estimateVelocities(std::vector<double>(m_coordinates3d.size(), timeStep));
+}
 
-    m_velocities[i].resize(atomCount());
+void Molecule::estimateVelocities(const std::vector<double>& intervals)
+{
+  m_velocities.clear();
 
-    const Array<Vector3>& currentCoords = m_coordinates3d[i];
-    const Array<Vector3>& prevCoords =
-      (i > 0) ? m_coordinates3d[i - 1] : m_coordinates3d[0];
-    const Array<Vector3>& nextCoords = (i < m_coordinates3d.size() - 1)
-                                         ? m_coordinates3d[i + 1]
-                                         : m_coordinates3d[i];
+  // One coordinate set is a geometry, not a trajectory: there is nothing to
+  // difference, and the derived properties below end up cleared rather than
+  // left stale.
+  const size_t sets = std::min(m_coordinates3d.size(), intervals.size());
+  if (sets >= 2) {
+    m_velocities.resize(sets);
 
-    if (i > 0) {
-      // Backward difference for i > 0
-      for (Index j = 0; j < atomCount(); ++j) {
-        m_velocities[i][j] = (currentCoords[j] - prevCoords[j]) / dt;
-      }
-    } else {
-      // Forward difference for i == 0
-      for (Index j = 0; j < atomCount(); ++j) {
-        m_velocities[i][j] = (nextCoords[j] - currentCoords[j]) / dt;
-      }
+    for (size_t i = 0; i < sets; ++i) {
+      const double dt = intervals[i];
+      // A repeated timestep says nothing about how fast the atoms moved, so
+      // that set keeps its zero velocities rather than a division by zero.
+      if (std::abs(dt) < 1e-12)
+        continue;
+
+      // Backward difference everywhere but the first set, which has nothing
+      // before it and so takes a forward difference instead.
+      const Array<Vector3>& later =
+        (i > 0) ? m_coordinates3d[i] : m_coordinates3d[1];
+      const Array<Vector3>& earlier =
+        (i > 0) ? m_coordinates3d[i - 1] : m_coordinates3d[0];
+
+      // The sets should all describe the same atoms, but a malformed
+      // trajectory can hold a short one -- go only as far as both of them do.
+      const size_t count =
+        std::min(atomCount(), std::min(later.size(), earlier.size()));
+
+      m_velocities[i].resize(count);
+      for (size_t j = 0; j < count; ++j)
+        m_velocities[i][j] = (later[j] - earlier[j]) / dt;
     }
   }
+
+  updateVelocityProperties();
+}
+
+void Molecule::updateVelocityProperties()
+{
+  std::vector<double> speeds(m_velocities.size(), 0.0);
+  std::vector<double> deviations(m_velocities.size(), 0.0);
+  std::vector<double> temperatures(m_velocities.size(), 0.0);
+
+  for (size_t i = 0; i < m_velocities.size(); ++i) {
+    const auto [mean, deviation] = speedStatistics(m_velocities[i]);
+    speeds[i] = mean;
+    deviations[i] = deviation;
+    temperatures[i] = temperature(m_velocities[i]);
+  }
+
+  // One scalar per coordinate set belongs with the other trajectory
+  // properties -- "energies", "forces" -- so that anything able to plot one
+  // of those can plot these without knowing about velocities at all.
+  setData("velocities", speeds);
+  setData("velocityDeviations", deviations);
+  setData("temperatures", temperatures);
+}
+
+double Molecule::temperature(const Array<Vector3>& velocities) const
+{
+  // Three degrees of freedom go to the center-of-mass translation removed
+  // below, so two atoms are the fewest that leave any motion to measure.
+  const size_t count = std::min(atomCount(), velocities.size());
+  if (count < 2)
+    return 0.0;
+
+  Vector3 momentum = Vector3::Zero();
+  double totalMass = 0.0;
+  for (size_t j = 0; j < count; ++j) {
+    const double mass = Elements::mass(m_atomicNumbers[j]);
+    momentum += mass * velocities[j];
+    totalMass += mass;
+  }
+  if (totalMass <= 0.0)
+    return 0.0;
+  const Vector3 centerOfMassVelocity = momentum / totalMass;
+
+  // Kinetic energy in the center-of-mass frame, in amu A^2/ps^2. Drift of the
+  // molecule as a whole is not thermal motion, and velocities differenced
+  // from a trajectory pick it up readily, so it comes out rather than being
+  // counted as heat.
+  double kineticEnergy = 0.0;
+  for (size_t j = 0; j < count; ++j) {
+    const Vector3 thermal = velocities[j] - centerOfMassVelocity;
+    kineticEnergy += Elements::mass(m_atomicNumbers[j]) * thermal.squaredNorm();
+  }
+  kineticEnergy *= 0.5;
+
+  // Equipartition: T = 2 KE / (N_df k_B). Bond constraints (SHAKE and the
+  // like) take away further degrees of freedom, but nothing in a trajectory
+  // records them, so a constrained run reads low here.
+  const double degreesOfFreedom = 3.0 * count - 3.0;
+  return 2.0 * kineticEnergy /
+         (degreesOfFreedom * BoltzmannAmuAngstrom2PerPs2PerKelvin);
 }
 
 Array<Vector3> Molecule::velocities(int index) const
@@ -2046,6 +2154,7 @@ bool Molecule::setVelocities(const Array<Vector3>& velocities, int index)
 void Molecule::clearVelocities()
 {
   m_velocities.clear();
+  updateVelocityProperties();
 }
 
 double Molecule::timeStep(int index, bool& status)

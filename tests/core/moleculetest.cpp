@@ -12,6 +12,7 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/constraint.h>
+#include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/molecule.h>
@@ -1849,4 +1850,151 @@ TEST_F(MoleculeTest, ClearAtomsClearsConstraints)
   for (int i = 0; i < 4; ++i)
     molecule.addAtom(8);
   EXPECT_TRUE(molecule.constraints().empty());
+}
+
+// Three geometries a fixed distance apart, with the timing supplied by the
+// caller rather than stored on the molecule -- which is the usual case, since
+// hardly any trajectory format records when each frame was written.
+TEST_F(MoleculeTest, estimateVelocitiesUniformTimeStep)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+
+  for (int i = 0; i < 3; ++i) {
+    Array<Vector3> coords;
+    coords.push_back(Vector3(i, 0.0, 0.0));
+    coords.push_back(Vector3(i + 1.0, 0.0, 0.0));
+    molecule.setCoordinate3d(coords, i);
+  }
+
+  // No timesteps stored, so the no-argument overload has nothing to work with.
+  molecule.estimateVelocities();
+  EXPECT_TRUE(molecule.velocities(0).empty());
+
+  // 1 Angstrom every 0.5 ps is 2 Angstrom/ps.
+  molecule.estimateVelocities(0.5);
+
+  for (int i = 0; i < 3; ++i) {
+    Array<Vector3> v = molecule.velocities(i);
+    ASSERT_EQ(v.size(), static_cast<size_t>(2));
+    EXPECT_NEAR(v[0].x(), 2.0, 1e-9);
+    EXPECT_NEAR(v[1].x(), 2.0, 1e-9);
+  }
+
+  // The per-coordinate-set scalars land in the property map next to
+  // "energies" and "forces".
+  ASSERT_TRUE(molecule.hasData("velocities"));
+  std::vector<double> speeds = molecule.data("velocities").toList();
+  ASSERT_EQ(speeds.size(), static_cast<size_t>(3));
+  for (double speed : speeds)
+    EXPECT_NEAR(speed, 2.0, 1e-9);
+
+  // Both atoms move alike, so there is no spread in their speeds.
+  std::vector<double> deviations = molecule.data("velocityDeviations").toList();
+  ASSERT_EQ(deviations.size(), static_cast<size_t>(3));
+  for (double deviation : deviations)
+    EXPECT_NEAR(deviation, 0.0, 1e-9);
+
+  // ... and the motion is pure translation of the whole molecule, which is
+  // drift rather than heat, so the temperature is zero.
+  std::vector<double> temperatures = molecule.data("temperatures").toList();
+  ASSERT_EQ(temperatures.size(), static_cast<size_t>(3));
+  for (double temperature : temperatures)
+    EXPECT_NEAR(temperature, 0.0, 1e-9);
+}
+
+// Two hydrogens flying apart along x at the same speed: the center of mass
+// stays put, so all of the kinetic energy is thermal.
+TEST_F(MoleculeTest, estimateVelocitiesTemperature)
+{
+  const double speed = 19.0; // Angstrom/ps
+  const double dt = 0.25;    // ps
+
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+
+  Array<Vector3> coords0;
+  coords0.push_back(Vector3(0.0, 0.0, 0.0));
+  coords0.push_back(Vector3(2.0, 0.0, 0.0));
+  molecule.setCoordinate3d(coords0, 0);
+
+  Array<Vector3> coords1;
+  coords1.push_back(Vector3(-speed * dt, 0.0, 0.0));
+  coords1.push_back(Vector3(2.0 + speed * dt, 0.0, 0.0));
+  molecule.setCoordinate3d(coords1, 1);
+
+  molecule.estimateVelocities(dt);
+
+  Array<Vector3> v = molecule.velocities(1);
+  ASSERT_EQ(v.size(), static_cast<size_t>(2));
+  EXPECT_NEAR(v[0].x(), -speed, 1e-9);
+  EXPECT_NEAR(v[1].x(), speed, 1e-9);
+
+  // T = 2 KE / (N_df k_B), with KE = 1/2 sum m v^2 = m * speed^2 here, three
+  // degrees of freedom left after the center-of-mass translation is removed,
+  // and k_B = 0.831446261815324 amu A^2 / (ps^2 K).
+  const double mass = Avogadro::Core::Elements::mass(1);
+  const double expected =
+    2.0 * (mass * speed * speed) / (3.0 * 0.831446261815324);
+
+  std::vector<double> temperatures = molecule.data("temperatures").toList();
+  ASSERT_EQ(temperatures.size(), static_cast<size_t>(2));
+  EXPECT_NEAR(temperatures[1], expected, 1e-6);
+  // The first set takes a forward difference over the same pair of geometries.
+  EXPECT_NEAR(temperatures[0], expected, 1e-6);
+
+  std::vector<double> speeds = molecule.data("velocities").toList();
+  ASSERT_EQ(speeds.size(), static_cast<size_t>(2));
+  EXPECT_NEAR(speeds[1], speed, 1e-9);
+}
+
+// The spread of the atomic speeds is what the plot's error bars show, so it
+// has to follow the distribution rather than the average.
+TEST_F(MoleculeTest, estimateVelocitiesSpeedSpread)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+
+  Array<Vector3> coords0;
+  coords0.push_back(Vector3(0.0, 0.0, 0.0));
+  coords0.push_back(Vector3(5.0, 0.0, 0.0));
+  molecule.setCoordinate3d(coords0, 0);
+
+  Array<Vector3> coords1;
+  coords1.push_back(Vector3(-1.0, 0.0, 0.0)); // 1 Angstrom/ps
+  coords1.push_back(Vector3(8.0, 0.0, 0.0));  // 3 Angstrom/ps
+  molecule.setCoordinate3d(coords1, 1);
+
+  molecule.estimateVelocities(1.0);
+
+  // Speeds of 1 and 3: mean 2, population standard deviation 1.
+  std::vector<double> speeds = molecule.data("velocities").toList();
+  std::vector<double> deviations = molecule.data("velocityDeviations").toList();
+  ASSERT_EQ(speeds.size(), static_cast<size_t>(2));
+  ASSERT_EQ(deviations.size(), static_cast<size_t>(2));
+  EXPECT_NEAR(speeds[1], 2.0, 1e-9);
+  EXPECT_NEAR(deviations[1], 1.0, 1e-9);
+}
+
+// A single geometry is not a trajectory, and must not leave stale scalars
+// behind for something else to plot.
+TEST_F(MoleculeTest, estimateVelocitiesSingleGeometry)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+
+  Array<Vector3> coords;
+  coords.push_back(Vector3(0.0, 0.0, 0.0));
+  coords.push_back(Vector3(1.0, 0.0, 0.0));
+  molecule.setCoordinate3d(coords, 0);
+
+  molecule.estimateVelocities(1.0);
+
+  EXPECT_TRUE(molecule.velocities(0).empty());
+  EXPECT_TRUE(molecule.data("velocities").toList().empty());
+  EXPECT_TRUE(molecule.data("temperatures").toList().empty());
 }
