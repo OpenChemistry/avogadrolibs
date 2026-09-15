@@ -6,13 +6,14 @@
 # Dillon Schultz <dillonschultz93@gmail.com>, 2021.
 # Nathan <bonnemainsnathan@gmail.com>, 2021.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Jusef <afrikaansmanne@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2024-08-31 05:09+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-09-15 16:43+0000\n"
+"Last-Translator: Jusef <afrikaansmanne@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Afrikaans <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/af/>\n"
 "Language: af\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7.1-dev\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -453,7 +454,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Geen molekule in BackgroundFileFormat nie!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -461,7 +462,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Geen lêernaam in Agtergrondlêerformaat ingestel nie!"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1014,7 +1015,7 @@ msgstr ""
 
 #: qtgui/fileformatdialog.cpp:289
 msgid "All files"
-msgstr ""
+msgstr "Alle lêers"
 
 #: qtgui/fileformatdialog.cpp:299
 msgid "Compressed files"
@@ -1265,7 +1266,7 @@ msgstr ""
 
 #: qtgui/moleculemodel.cpp:121
 msgid "Untitled"
-msgstr ""
+msgstr "Ongetiteld"
 
 #: qtgui/moleculemodel.cpp:136
 msgid "Edit molecule"
@@ -1603,13 +1604,13 @@ msgstr ""
 #: qtplugins/povray/povray.cpp:44 qtplugins/svg/svg.cpp:46
 #: qtplugins/vrml/vrml.cpp:44
 msgid "&File"
-msgstr ""
+msgstr "&Lêer"
 
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:44
 #: qtplugins/povray/povray.cpp:44 qtplugins/svg/svg.cpp:46
 #: qtplugins/vrml/vrml.cpp:44
 msgid "&Export"
-msgstr ""
+msgstr "&Uitvoer"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1630,7 +1631,7 @@ msgstr ""
 #: qtplugins/lineformatinput/lineformatinput.cpp:62
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:98
 msgid "&Build"
-msgstr ""
+msgstr "&Bou"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:23
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1855,7 +1856,7 @@ msgstr ""
 #: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1144
 #, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "Kan nie lêer %1 stoor nie."
 
 #: qtplugins/applycolors/applycolors.cpp:47
 #: qtplugins/applycolors/applycolors.cpp:68
@@ -2022,7 +2023,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:155 qtplugins/focus/focus.cpp:40
 #: qtplugins/resetview/resetview.cpp:77
 msgid "&View"
-msgstr ""
+msgstr "&Aansig"
 
 #: qtplugins/applycolors/applycolors.cpp:153
 msgid "Color Atoms"
@@ -2399,7 +2400,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Extensions"
-msgstr ""
+msgstr "&Uitbreidings"
 
 #: qtplugins/commandscripts/command.cpp:79
 #: qtplugins/commandscripts/command.cpp:98
@@ -2787,7 +2788,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:100 qtplugins/copypaste/copypaste.cpp:102
 msgid "&Edit"
-msgstr ""
+msgstr "&Wysig"
 
 #: qtplugins/copypaste/copypaste.cpp:194
 msgid "Error Clipping Molecule"
@@ -3224,12 +3225,12 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:148
 #: qtplugins/networkdatabases/networkdatabases.cpp:197
 msgid "Network Download Failed"
-msgstr ""
+msgstr "Netwerkaflaai het misluk"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:141
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "Netwerk-tyduitloop of ander fout."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:134
 #: qtplugins/networkdatabases/networkdatabases.cpp:191
@@ -4650,7 +4651,7 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
-msgstr ""
+msgstr "Hou lêers"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
@@ -4843,7 +4844,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:429
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Voer bitmap-grafika uit"
 
 #: qtplugins/playertool/playertool.cpp:430
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -5468,7 +5469,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:127
 msgid "&Select"
-msgstr ""
+msgstr "& Kies"
 
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
@@ -9224,7 +9225,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:491
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 msgid "&Close"
-msgstr ""
+msgstr "&Sluit"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:504
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
