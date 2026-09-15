@@ -34,6 +34,7 @@ public:
   unsigned char bondOrder() const;
 
   bool adjustHydrogens() const;
+  bool adjustBondLengths() const;
 
 private slots:
   void elementChanged(int index);

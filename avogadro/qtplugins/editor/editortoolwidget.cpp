@@ -84,6 +84,11 @@ bool EditorToolWidget::adjustHydrogens() const
   return m_ui->adjustHydrogens->isChecked();
 }
 
+bool EditorToolWidget::adjustBondLengths() const
+{
+  return m_ui->adjustBondLengths->isChecked();
+}
+
 void EditorToolWidget::elementChanged(int index)
 {
   QVariant itemData = m_ui->element->itemData(index);
