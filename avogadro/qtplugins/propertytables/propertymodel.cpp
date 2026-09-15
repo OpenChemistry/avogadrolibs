@@ -342,7 +342,7 @@ QString partialCharge(Molecule* molecule, int atom, const QString& overrideType)
 //   we also combine multiple types into this class, so lots of special cases
 QVariant PropertyModel::data(const QModelIndex& index, int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid() || m_molecule == nullptr)
     return QVariant();
 
   int row = index.row();
@@ -1302,6 +1302,11 @@ void PropertyModel::setChargeType(const QString& type)
 void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 {
   if (molecule && molecule != m_molecule) {
+    // Stop listening to the molecule being replaced -- its destroyed signal
+    // would otherwise arrive later and clear the pointer to this one.
+    if (m_molecule)
+      m_molecule->disconnect(this);
+
     m_molecule = molecule;
 
     // Initialize structure tracking for change detection
@@ -1312,7 +1317,23 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 
     connect(m_molecule, SIGNAL(changed(unsigned int)), this,
             SLOT(updateTable(unsigned int)));
+    // The molecule's own signals stop arriving when it is destroyed, but this
+    // model is also woken by the application-wide energy unit, which knows
+    // nothing about either. Without this the next such change would walk a
+    // pointer to a molecule that is gone.
+    connect(m_molecule, &QObject::destroyed, this,
+            &PropertyModel::moleculeDestroyed);
   }
+}
+
+void PropertyModel::moleculeDestroyed()
+{
+  beginResetModel();
+  m_molecule = nullptr;
+  // Everything cached describes a molecule that no longer exists;
+  // updateCache() empties all of it when there is none.
+  updateCache();
+  endResetModel();
 }
 
 QString PropertyModel::secStructure(unsigned int type) const

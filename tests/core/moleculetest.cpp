@@ -1998,3 +1998,44 @@ TEST_F(MoleculeTest, estimateVelocitiesSingleGeometry)
   EXPECT_TRUE(molecule.data("velocities").toList().empty());
   EXPECT_TRUE(molecule.data("temperatures").toList().empty());
 }
+
+// A labelled atom weighs what its isotope weighs, which is the difference
+// between the right temperature and one several percent out.
+TEST_F(MoleculeTest, estimateVelocitiesTemperatureUsesIsotopeMasses)
+{
+  const double speed = 19.0; // Angstrom/ps
+  const double dt = 0.25;    // ps
+
+  const auto build = [speed, dt](unsigned short isotope) {
+    Molecule molecule;
+    molecule.addAtom(1);
+    molecule.addAtom(1);
+    if (isotope > 0) {
+      molecule.setIsotope(0, isotope);
+      molecule.setIsotope(1, isotope);
+    }
+
+    Array<Vector3> coords0;
+    coords0.push_back(Vector3(0.0, 0.0, 0.0));
+    coords0.push_back(Vector3(2.0, 0.0, 0.0));
+    molecule.setCoordinate3d(coords0, 0);
+
+    Array<Vector3> coords1;
+    coords1.push_back(Vector3(-speed * dt, 0.0, 0.0));
+    coords1.push_back(Vector3(2.0 + speed * dt, 0.0, 0.0));
+    molecule.setCoordinate3d(coords1, 1);
+
+    molecule.estimateVelocities(dt);
+    return molecule.data("temperatures").toList()[1];
+  };
+
+  const double hydrogen = build(0);
+  const double deuterium = build(2);
+
+  // The kinetic energy is linear in the mass, so deuterium at the same speed
+  // is hotter by exactly the mass ratio.
+  const double ratio = Avogadro::Core::Elements::isotopeMass(1, 2) /
+                       Avogadro::Core::Elements::mass(1);
+  EXPECT_GT(ratio, 1.9);
+  EXPECT_NEAR(deuterium, hydrogen * ratio, 1e-6);
+}

@@ -1230,6 +1230,13 @@ private:
    */
   double temperature(const Array<Vector3>& velocities) const;
 
+  /**
+   * @return the mass of the atom at @p atomId in amu, the mass of its isotope
+   * where one is set. The rule mass() uses, for anything that has to weigh
+   * the atoms one at a time.
+   */
+  double atomMass(Index atomId) const;
+
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   // edge information
   Array<unsigned char> m_bondOrders;

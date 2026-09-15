@@ -24,6 +24,10 @@ const char* const EnergyUnitKey = "energyUnit";
 // frame interval is noticed without re-deriving the whole trajectory to find
 // out that nothing moved.
 const char* const VelocityIntervalKey = "velocityInterval";
+// Stamped instead of an interval when the velocities were differenced across
+// the times the file recorded rather than at one fixed spacing. No real
+// interval is ever zero, so the two cannot be confused.
+constexpr double RecordedTimesUsed = 0.0;
 
 // Read a per-coordinate-set list out of the property map. Empty when the
 // molecule does not carry that key, which is how an unavailable quantity is
@@ -43,8 +47,45 @@ std::vector<double> frameSeries(const Molecule& molecule)
   return values;
 }
 
+// True when the user has named the interval themselves. That answer is about
+// this trajectory and overrides whatever the file recorded -- which is the
+// whole point for a LAMMPS dump, whose "times" are step numbers.
+bool hasFrameIntervalOverride(const Molecule& molecule)
+{
+  return molecule.hasData(FrameIntervalKey) &&
+         molecule.data(FrameIntervalKey).toDouble() > 0.0;
+}
+
+// The time recorded for each coordinate set, when the file recorded one for
+// every one of them; empty otherwise. These need not be evenly spaced: a
+// trajectory written every n steps of a variable-timestep integrator is not.
+std::vector<double> recordedTimes(const Molecule& molecule)
+{
+  const size_t count = molecule.coordinate3dCount();
+  std::vector<double> times;
+  times.reserve(count);
+  for (size_t i = 0; i < count; ++i) {
+    bool recorded = false;
+    const double time = molecule.timeStep(static_cast<int>(i), recorded);
+    if (!recorded)
+      return {};
+    times.push_back(time);
+  }
+  return times;
+}
+
 std::vector<double> timeSeries(const Molecule& molecule)
 {
+  // What the file recorded beats a spacing worked out from its ends: those
+  // are the times the frames were actually written at, and flattening them to
+  // an average would put every point in the middle of a gap on the wrong side
+  // of it.
+  if (!hasFrameIntervalOverride(molecule)) {
+    std::vector<double> recorded = recordedTimes(molecule);
+    if (!recorded.empty())
+      return recorded;
+  }
+
   const size_t count = molecule.coordinate3dCount();
   const double interval = frameInterval(molecule);
 
@@ -328,27 +369,43 @@ bool ensureConformerVelocities(Molecule& molecule, bool force)
     return false;
 
   const std::vector<double> speeds = storedList(molecule, "velocities");
-  const double interval = frameInterval(molecule);
 
   // Velocities that arrived with the file are the real thing, and must not be
-  // differenced over. They may have come in without the derived properties,
-  // though, if whoever called setVelocities() did not ask for them.
-  if (!molecule.velocities(0).empty() && speeds.size() != count) {
-    molecule.updateVelocityProperties();
+  // differenced over. The stamp is what tells them apart: it is written only
+  // where these velocities were worked out here, so velocities of our own
+  // that have gone stale are not mistaken for a reader's and patched up from
+  // where the atoms used to be.
+  const bool ours = molecule.hasData(VelocityIntervalKey);
+  if (!ours && !molecule.velocities(0).empty()) {
+    // They may have come in without the derived properties, if whoever called
+    // setVelocities() did not ask for them.
+    if (speeds.size() != count)
+      molecule.updateVelocityProperties();
     return !storedList(molecule, "velocities").empty();
   }
 
-  // Still current: one value per coordinate set, worked out at the interval
+  // Difference across the times the file recorded where it recorded them, and
+  // at one fixed spacing otherwise -- the same rule the time axis follows, so
+  // a speed read off the plot matches its own x coordinate.
+  const bool useRecordedTimes =
+    !hasFrameIntervalOverride(molecule) && !recordedTimes(molecule).empty();
+  const double interval = frameInterval(molecule);
+  const double stamp = useRecordedTimes ? RecordedTimesUsed : interval;
+
+  // Still current: one value per coordinate set, worked out on the time base
   // still in force. Re-differencing a long trajectory for nothing is the
   // thing worth avoiding here -- both axes of a plot ask for this.
-  const bool sameInterval =
-    molecule.hasData(VelocityIntervalKey) &&
-    std::abs(molecule.data(VelocityIntervalKey).toDouble() - interval) < 1e-12;
-  if (!force && speeds.size() == count && sameInterval)
+  const bool sameTimeBase =
+    ours &&
+    std::abs(molecule.data(VelocityIntervalKey).toDouble() - stamp) < 1e-12;
+  if (!force && speeds.size() == count && sameTimeBase)
     return true;
 
-  molecule.estimateVelocities(interval);
-  molecule.setData(VelocityIntervalKey, interval);
+  if (useRecordedTimes)
+    molecule.estimateVelocities();
+  else
+    molecule.estimateVelocities(interval);
+  molecule.setData(VelocityIntervalKey, stamp);
 
   return !storedList(molecule, "velocities").empty();
 }

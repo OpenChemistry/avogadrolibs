@@ -49,6 +49,10 @@ private slots:
   // Redraw when the application-wide energy unit changes under an open table.
   void energyUnitsChanged();
 
+  // Let go of a molecule that has been destroyed. The table can outlive it,
+  // and is woken by things the molecule knows nothing about.
+  void moleculeDestroyed();
+
 public:
 public:
   explicit PropertyModel(PropertyType type, QObject* parent = nullptr);

@@ -1209,7 +1209,9 @@ void Molecule::clearCalculatedResults()
 {
   m_partialCharges.clear();
   m_forceVectors.clear();
-  m_velocities.clear();
+  // Not m_velocities.clear(): the mean speeds and temperatures derived from
+  // them are properties of their own, and have to go at the same time.
+  clearVelocities();
   m_vibrations.clear();
   m_spectra.clear();
 }
@@ -2015,7 +2017,10 @@ std::pair<double, double> speedStatistics(const Array<Vector3>& velocities)
 
 void Molecule::estimateVelocities()
 {
-  if (m_timesteps.size() != m_coordinates3d.size())
+  // A timestep for every coordinate set is all this needs; a file that
+  // recorded more of them than it has geometries still says when each
+  // geometry was written.
+  if (m_timesteps.size() < m_coordinates3d.size())
     return;
 
   // Timesteps need not be evenly spaced -- a trajectory written every n steps
@@ -2095,6 +2100,16 @@ void Molecule::updateVelocityProperties()
   setData("temperatures", temperatures);
 }
 
+double Molecule::atomMass(Index atomId) const
+{
+  // A labelled atom weighs what its isotope weighs, which is the difference
+  // between a C-H and a C-D stretch -- and, here, between the right
+  // temperature and one several percent out. Same rule as mass().
+  if (isotope(atomId) > 0)
+    return Elements::isotopeMass(m_atomicNumbers[atomId], isotope(atomId));
+  return Elements::mass(m_atomicNumbers[atomId]);
+}
+
 double Molecule::temperature(const Array<Vector3>& velocities) const
 {
   // Three degrees of freedom go to the center-of-mass translation removed
@@ -2106,7 +2121,7 @@ double Molecule::temperature(const Array<Vector3>& velocities) const
   Vector3 momentum = Vector3::Zero();
   double totalMass = 0.0;
   for (size_t j = 0; j < count; ++j) {
-    const double mass = Elements::mass(m_atomicNumbers[j]);
+    const double mass = atomMass(j);
     momentum += mass * velocities[j];
     totalMass += mass;
   }
@@ -2121,7 +2136,7 @@ double Molecule::temperature(const Array<Vector3>& velocities) const
   double kineticEnergy = 0.0;
   for (size_t j = 0; j < count; ++j) {
     const Vector3 thermal = velocities[j] - centerOfMassVelocity;
-    kineticEnergy += Elements::mass(m_atomicNumbers[j]) * thermal.squaredNorm();
+    kineticEnergy += atomMass(j) * thermal.squaredNorm();
   }
   kineticEnergy *= 0.5;
 

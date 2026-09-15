@@ -128,8 +128,11 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // First integration step written, and how many steps apart the frames are.
-  ISTART = *(reinterpret_cast<int*>(raw + 8));
-  NSAVC = *(reinterpret_cast<int*>(raw + 12));
+  // The header block came back as raw bytes, so its integers still carry the
+  // file's byte order -- unpack them through the same endian-aware path the
+  // rest of the file uses rather than reading them in the host's.
+  snprintf(fmt, sizeof(fmt), "%c2i", endian);
+  struct_unpack(raw + 8, fmt, &ISTART, &NSAVC);
 
   // number of fixed atoms
   NAMNF = *(reinterpret_cast<int*>(raw + 36));
