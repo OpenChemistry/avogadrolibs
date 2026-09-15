@@ -8,7 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-#include <avogadro/core/constraint.h>
+#include <avogadro/core/conformerquantity.h>
 
 #include <QDialog>
 #include <QComboBox>
@@ -71,28 +71,10 @@ private slots:
   void addCoordinateFromSelection();
 
 private:
-  /**
-   * Quantities that can drive either axis. The negative values name a
-   * built-in series; zero and above index into the molecule's constraints, so
-   * a scanned distance, angle or torsion can go on the x axis (a relaxed
-   * torsion scan) or on the y axis (a bond length followed through a
-   * reaction path). The index is into m_coordinates, not into the molecule.
-   */
-  enum Quantity
-  {
-    FrameQuantity = -1,
-    RmsdQuantity = -2,
-    EnergyQuantity = -3,
-    ForcesQuantity = -4,
-    VelocitiesQuantity = -5,
-    TemperatureQuantity = -6,
-    TimeQuantity = -7
-  };
-
   // True for the quantities that only mean anything once the frames are
-  // spaced in time: they all come from the velocities, which are differenced
-  // across the trajectory.
-  static bool isDynamicsQuantity(int quantity);
+  // spaced in time: the time axis itself, and everything that comes from the
+  // velocities, which are differenced across the trajectory.
+  static bool isDynamicsQuantity(const Core::ConformerQuantity& quantity);
 
   // Show conformer @p frame, clamped to the available coordinate sets, and
   // tell the rest of the application about it.
@@ -102,24 +84,24 @@ private:
   // enough to call on every arrow key, unlike updatePlot().
   void drawChart();
 
-  // Collect what can be measured on this molecule: its constraints, plus the
-  // scan coordinates stored in its properties, minus anything unusable.
-  void collectCoordinates();
-
-  // Fill both axis combos with the quantities the current molecule offers,
-  // including one entry per collected coordinate.
+  // Fill both axis combos from the quantities the current molecule offers.
+  // The list itself comes from Core, so the conformer property table shows
+  // the same one.
   void populateQuantityCombos();
 
   // Enable the selection button only for a selection that names a coordinate.
   void updateSelectionButton();
 
-  // The quantity selected on each axis, as a Quantity value or a constraint
-  // index. Both fall back to Frame when the dialog does not exist yet.
+  // Index into m_quantities of the quantity selected on each axis, or -1 when
+  // the dialog does not exist yet or the selection has gone stale.
   int xQuantity() const;
   int yQuantity() const;
 
-  // True when @p quantity is a torsion coordinate, whose values wrap around.
-  bool isTorsionQuantity(int quantity) const;
+  // The quantity at @p index, or nullptr when there is no such entry.
+  const Core::ConformerQuantity* quantityAt(int index) const;
+
+  // True when @p index names a torsion coordinate, whose values wrap around.
+  bool isTorsionQuantity(int index) const;
 
   // One plotted series: a value per coordinate set, and the axis label for it.
   // A quantity that averages over the atoms also carries the spread of what it
@@ -131,25 +113,18 @@ private:
     QString title;
   };
 
-  // Evaluate @p quantity once per coordinate set. Empty when the molecule
-  // holds no data for it.
-  std::optional<QuantitySeries> evaluateQuantity(int quantity);
-
-  // Series generators, one value per coordinate set. Each is empty when the
-  // molecule cannot supply that quantity.
-  std::optional<DataSeries> generateFrameSeries() const;
-  std::optional<DataSeries> generateTimeSeries() const;
-  std::optional<DataSeries> generateRmsdSeries() const;
-  std::optional<DataSeries> generateEnergySeries() const;
-  std::optional<DataSeries> generateCoordinateSeries(int coordinateIndex) const;
-  // Forces and velocities are both stored as one value per coordinate set
-  // under their own key, so they differ only by which key to read.
-  std::optional<DataSeries> generateStoredSeries(const char* key) const;
+  // Evaluate the quantity at @p index once per coordinate set. Empty when the
+  // molecule holds no data for it.
+  std::optional<QuantitySeries> evaluateQuantity(int index);
 
   // Make sure the molecule carries velocities for the quantities that need
   // them, estimating them from the trajectory and the time step below when it
   // does not. @return true when velocities are available afterwards.
   bool ensureVelocities();
+
+  // Put the unit combos back in step with the application-wide setting, which
+  // this dialog is only one of the places to change.
+  void syncUnitCombos();
 
   // The interval between saved frames, in picoseconds, as the spin box has it.
   double timeStep() const;
@@ -174,7 +149,7 @@ private:
   QPushButton* m_addSelectionButton;
   QLabel* m_frameLabel;
   // Everything measurable on the molecule, in the order the combos list it.
-  std::vector<Core::Constraint> m_coordinates;
+  std::vector<Core::ConformerQuantity> m_quantities;
   DataSeries m_xData;
   DataSeries m_yData;
   // Half-height of the error bar on each y point, empty when the quantity has
@@ -187,10 +162,10 @@ private:
   std::pair<float, float> m_xLimits{ 0.0f, 1.0f };
   std::pair<float, float> m_yLimits{ 0.0f, 1.0f };
   int m_currentFrame = 0;
-  // The velocities on the molecule are ours, differenced from the trajectory,
-  // so they go stale whenever the trajectory or the time step does and have to
-  // be redone. Velocities that came from the file are left alone.
-  bool m_estimatedVelocities = false;
+  // Set when the atoms have moved under velocities differenced from where
+  // they used to be. Core notices a trajectory that changed length or a frame
+  // interval that changed value on its own; this is the case it cannot see.
+  bool m_staleVelocities = true;
   // Whether the time step has been seeded from this molecule yet. Re-seeding
   // would throw away a value the user typed.
   bool m_timeStepSeeded = false;

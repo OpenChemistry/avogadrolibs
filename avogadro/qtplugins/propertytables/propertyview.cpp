@@ -8,6 +8,7 @@
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/qtgui/energyunitsdialog.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
@@ -922,6 +923,13 @@ void PropertyView::changeChargeType()
     m_model->setChargeType(selected);
 }
 
+void PropertyView::changeEnergyUnits()
+{
+  QtGui::EnergyUnitsDialog::getUnits(this);
+  // Nothing to do on the way back: the model is listening to EnergyUnits and
+  // redraws itself, as does every other window showing an energy.
+}
+
 void PropertyView::contextMenuEvent(QContextMenuEvent* event)
 {
   QMenu menu(this);
@@ -942,6 +950,15 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
     QAction* addPropertyAction = menu.addAction(tr("Add Property…"));
     connect(addPropertyAction, &QAction::triggered, this,
             &PropertyView::addProperty);
+  }
+
+  // Energies come out of a file in a unit the file does not record, so the
+  // one place they are shown is also the place to say which it was.
+  if (m_type == PropertyType::ConformerType && m_molecule != nullptr &&
+      m_molecule->hasData("energies")) {
+    QAction* energyUnitsAction = menu.addAction(tr("Convert Energy Units…"));
+    connect(energyUnitsAction, &QAction::triggered, this,
+            &PropertyView::changeEnergyUnits);
   }
 
   if (m_type == PropertyType::AtomType) {

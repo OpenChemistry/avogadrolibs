@@ -2157,7 +2157,7 @@ void Molecule::clearVelocities()
   updateVelocityProperties();
 }
 
-double Molecule::timeStep(int index, bool& status)
+double Molecule::timeStep(int index, bool& status) const
 {
   if (static_cast<int>(m_timesteps.size()) <= index) {
     status = false;

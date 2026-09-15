@@ -103,6 +103,9 @@ private:
   void freezeZ();
   void freezeAxis(int axis);
   void changeChargeType();
+  // Ask which units energies are in and which to show them in. The setting
+  // is application-wide, so the conformer plot follows too.
+  void changeEnergyUnits();
 };
 
 } // end namespace Avogadro

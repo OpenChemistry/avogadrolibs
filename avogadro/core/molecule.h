@@ -852,7 +852,7 @@ public:
    * Timestep property is used when molecular dynamics trajectories are read
    */
   bool setTimeStep(double timestep, int index);
-  double timeStep(int index, bool& status);
+  double timeStep(int index, bool& status) const;
 
   /** @return a vector of forces for the atoms in the molecule. */
   const Array<Vector3>& forceVectors() const;
