@@ -29,7 +29,6 @@ uniform sampler2D inRGBTex;
 uniform float fogR;
 uniform float fogG;
 uniform float fogB;
-uniform float offset;
 
 // Depth rendered texture
 uniform sampler2D inDepthTex;
@@ -119,11 +118,6 @@ float blurredAo(vec2 texCoord)
   return total / weight;
 }
 
-float lerp(float a, float b, float f)
-{
-    return a + f * (b - a);
-}
-
 float rand(vec2 co) {
     return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
 }
@@ -133,7 +127,6 @@ float rand(vec2 co) {
 // and SolidPipeline::adjustOffset are both curve-fitted against that error, so
 // the three only make sense together. Use linearDepth() for anything new.
 float depthToZ(float depth) {
-    float eyeZ = ((height * 0.57735) / 2.0);
     float near = 2.0;
     float far = 8000.0;
     float depthNormalized = 2.0 * depth - 1.0;
@@ -161,7 +154,6 @@ vec4 applyBlur(vec2 texCoord) {
         angle += 1.0 * rand(gl_FragCoord.xy);
         vec2 offset = (vec2(cos(angle), sin(angle)) * radius * 0.05 * inDofStrength) / pixelScale;
         float z = depthToZ(texture(inDepthTex, texCoord + offset).x);
-        float sampleBlur = calcBlur(z, pixelScale);
         float weight = 1.0 - smoothstep(0.0, 1.0, abs(z - origZ) / blurAmt);
         vec4 texSample = texture(inRGBTex, texCoord+offset);
         color += weight * texSample;

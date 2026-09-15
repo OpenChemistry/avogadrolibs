@@ -131,7 +131,6 @@ private:
   bool m_dofEnabled;
   float m_fogPosition;
   Vector4ub m_backgroundColor;
-  Eigen::Affine3f modelView;
   bool m_fogEnabled;
   float m_aoStrength;
   float m_fogStrength;
