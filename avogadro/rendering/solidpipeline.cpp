@@ -17,6 +17,7 @@
 #include "solid_ao_fs.h"
 
 #include <iostream>
+#include <string>
 
 #include <cmath>
 
@@ -35,23 +36,25 @@ class SolidPipeline::Private
 public:
   Private() {}
 
-  // Point a sampler uniform in the currently bound program at a texture.
-  void bindSampler(const GLchar* name, GLuint texture, int unit)
+  // Point a sampler uniform at a texture. The program is taken rather than
+  // read back from the GL state: asking the driver which program is bound
+  // stalls, and the program's own uniform lookup is cached where
+  // glGetUniformLocation is not.
+  static void bindSampler(ShaderProgram& prog, const std::string& name,
+                          GLuint texture, int unit)
   {
-    GLuint programID;
-    glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&programID);
-    GLuint location = glGetUniformLocation(programID, name);
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(location, unit);
+    prog.setUniformValue(name, unit);
   }
 
-  void attachStage(ShaderProgram& prog, const GLchar* nameRGB, GLuint texRGB,
-                   const GLchar* nameDepth, GLuint texDepth, int w, int h)
+  void attachStage(ShaderProgram& prog, const std::string& nameRGB,
+                   GLuint texRGB, const std::string& nameDepth, GLuint texDepth,
+                   int w, int h)
   {
     prog.bind();
-    bindSampler(nameRGB, texRGB, TextureUnitRGB);
-    bindSampler(nameDepth, texDepth, TextureUnitDepth);
+    bindSampler(prog, nameRGB, texRGB, TextureUnitRGB);
+    bindSampler(prog, nameDepth, texDepth, TextureUnitDepth);
     prog.setUniformValue("width", float(w));
     prog.setUniformValue("height", float(h));
   }
@@ -225,7 +228,8 @@ void SolidPipeline::end(const Camera& camera)
     glDisable(GL_DEPTH_TEST);
 
     d->aoStageShaders.bind();
-    d->bindSampler("inDepthTex", d->depthTexture, TextureUnitDepth);
+    d->bindSampler(d->aoStageShaders, "inDepthTex", d->depthTexture,
+                   TextureUnitDepth);
     d->aoStageShaders.setUniformValue("width", float(m_width));
     d->aoStageShaders.setUniformValue("height", float(m_height));
     d->aoStageShaders.setUniformValue("inAoStrength", m_aoStrength);
@@ -259,7 +263,7 @@ void SolidPipeline::end(const Camera& camera)
 
   // The AO term, plus the projection the blur uses to read window depth back
   // as a distance in scene units.
-  d->bindSampler("inAoTex", d->aoTexture, TextureUnitAo);
+  d->bindSampler(d->firstStageShaders, "inAoTex", d->aoTexture, TextureUnitAo);
   d->firstStageShaders.setUniformValue("inProjection",
                                        camera.projection().matrix());
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
