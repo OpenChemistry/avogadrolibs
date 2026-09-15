@@ -6,6 +6,7 @@
 #include "mopacaux.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
@@ -101,6 +102,9 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
       e *= KCAL_TO_KJ;
     molecule.setData("energies", m_energies);
   }
+  // What the values are, not what MOPAC printed: the loop above has already
+  // taken them out of kcal/mol.
+  Core::setEnergyUnit(molecule, "kJ/mol");
   if (m_forces.size() > 0) {
     // MOPAC reports the gradient norm (GRADIENT_NORM); convert to an RMS
     // gradient (norm / sqrt(3N)) so it is comparable across molecule sizes

@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/atom.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
@@ -234,4 +235,18 @@ TEST(OrcaTest, bondOrdersMalformedLineDoesNotCrash)
 
   EXPECT_FALSE(qcs.readString(input, molecule));
   EXPECT_NE(qcs.error(), std::string());
+}
+
+// ORCA prints FINAL SINGLE POINT ENERGY in Hartree and this reader stores it
+// as printed, so nothing downstream has to ask the user what the numbers are.
+TEST(OrcaTest, energiesAreRecordedAsHartree)
+{
+  ORCAOutput reader;
+  Molecule molecule;
+  ASSERT_TRUE(
+    reader.readFile(AVOGADRO_DATA "/data/orca/formaldehyde.out", molecule))
+    << reader.error();
+
+  ASSERT_TRUE(molecule.hasData("totalEnergy"));
+  EXPECT_EQ(Avogadro::Core::energyUnit(molecule), "Hartree");
 }

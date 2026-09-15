@@ -208,3 +208,45 @@ TEST(EnergyUnitsTest, unrecognisedMoleculeUnitFallsBackToTheSetting)
   EXPECT_FALSE(EnergyUnits::declaresUnit(molecule));
   EXPECT_EQ(units->sourceUnit(molecule), Unit::ElectronVolt);
 }
+
+// Energies that replace a file's own must replace its recorded unit too. The
+// force-field plugin stamps kJ/mol when it writes them; this is the arithmetic
+// that makes that matter, and the failure it prevents.
+TEST(EnergyUnitsTest, replacedEnergiesMustNotKeepTheOldUnit)
+{
+  ensureApp();
+
+  auto* units = EnergyUnits::instance();
+  units->setUnits(Unit::Hartree, Unit::KcalPerMol);
+
+  // Read from ORCA: Hartree, and recorded as such.
+  Avogadro::Core::Molecule molecule;
+  Avogadro::Core::setEnergyUnit(molecule, "Hartree");
+
+  // A force-field run replaces the energies with its own, in kJ/mol. One
+  // kJ/mol is 0.239 kcal/mol; read as Hartree it would come out at 150.
+  const double kjPerMolEnergy = 1.0;
+  EXPECT_NEAR(units->convert(kjPerMolEnergy, molecule), 627.5094740631, 1e-6);
+
+  Avogadro::Core::setEnergyUnit(molecule, "kJ/mol");
+  EXPECT_NEAR(units->convert(kjPerMolEnergy, molecule), 1.0 / 4.184, 1e-9);
+}
+
+// Open Babel's conformer search hands back energies without saying what they
+// are in. Recording that nobody knows is what puts the question back to the
+// user, rather than leaving the previous file's answer standing.
+TEST(EnergyUnitsTest, clearingTheUnitReturnsToTheSetting)
+{
+  ensureApp();
+
+  auto* units = EnergyUnits::instance();
+  units->setUnits(Unit::KcalPerMol, Unit::KjPerMol);
+
+  Avogadro::Core::Molecule molecule;
+  Avogadro::Core::setEnergyUnit(molecule, "Hartree");
+  ASSERT_TRUE(EnergyUnits::declaresUnit(molecule));
+
+  Avogadro::Core::setEnergyUnit(molecule, std::string());
+  EXPECT_FALSE(EnergyUnits::declaresUnit(molecule));
+  EXPECT_EQ(units->sourceUnit(molecule), Unit::KcalPerMol);
+}
