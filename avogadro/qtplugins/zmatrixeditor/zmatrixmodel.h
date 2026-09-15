@@ -82,6 +82,20 @@ public:
   bool reorderAtoms();
 
   /**
+   * True when some row of the matrix is stranded on a linear fragment, so
+   * that adding dummy atoms would tell the person something new.
+   */
+  bool needsDummyAtoms() const;
+
+  /**
+   * Add a dummy atom beside each atom that a straight row hangs from, as one
+   * undoable step, so that a linear fragment gains the off-axis reference a
+   * z-matrix needs to describe it.
+   * @return False if there was nothing to prop up.
+   */
+  bool addDummyAtoms();
+
+  /**
    * Rebuild every atom position from the matrix as it now stands, as one
    * undoable step. The molecule is not moved or reoriented: the placement
    * the first rows would otherwise be free to choose is taken from where the
@@ -113,6 +127,13 @@ private:
   void refreshValues();
 
   /**
+   * Re-derive needsDummyAtoms() from the rows as they now stand. Cheap
+   * enough to run on every geometry change, which is why the answer is kept
+   * rather than asked of Core each time the buttons are updated.
+   */
+  void updateDegenerateRows();
+
+  /**
    * Why @p reference may not be used by @p row, or an empty string if it
    * may. A reference has to be a real atom, different from the row's own
    * atom and from the row's other references, and placed by an earlier row.
@@ -141,6 +162,10 @@ private:
   // until the dock is shown.
   bool m_active = false;
   bool m_dirty = true;
+
+  // Whether any row is stranded on a linear fragment. See
+  // updateDegenerateRows().
+  bool m_degenerate = false;
 };
 
 } // namespace QtPlugins

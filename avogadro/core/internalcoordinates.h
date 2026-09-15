@@ -37,6 +37,44 @@ struct InternalCoordinate
 };
 
 /**
+ * Where a z-matrix over a molecule would need a dummy atom.
+ *
+ * A z-matrix cannot describe a linear fragment. With a row's atom, its
+ * distance reference and its angle reference in a line, the 180 degree angle
+ * pins nothing down, no dihedral measured from that row can be
+ * reconstructed, and neither value can be edited: there is no plane to open
+ * the angle in and no axis the torsion would turn the atom about. The remedy
+ * chemists have always used is a dummy atom set off the axis, which gives
+ * those rows a right angle and a plane to be measured against.
+ */
+struct DummyAtomSite
+{
+  /** The atom the dummy belongs beside, and should be bonded to. */
+  Index anchor = MaxIndex;
+  /** Where the dummy goes: off the linear axis, beside @a anchor. */
+  Vector3 position = Vector3::Zero();
+};
+
+/**
+ * The dummy atoms @p molecule needs before its z-matrix is complete.
+ *
+ * Only fragments where no real atom lies off the axis need one. A linear
+ * unit with something bent hanging off it -- the alkyne of a tolan, the
+ * methyl of a propyne -- is already describable against its own atoms and
+ * yields nothing here. A wholly linear molecule such as diacetylene yields
+ * one site per atom the straight rows hang from.
+ *
+ * Nothing is added to the molecule: the caller places the atoms, so that the
+ * change is one the person asked for and can undo.
+ *
+ * @param molecule The molecule to inspect.
+ * @param distance How far from its anchor each dummy is placed, in Angstroms.
+ * @return One site per atom needing a dummy, in z-matrix row order.
+ */
+AVOGADROCORE_EXPORT Array<DummyAtomSite> linearDummySites(
+  const Molecule& molecule, Real distance = 1.0);
+
+/**
  * How the opening rows of a z-matrix are anchored in Cartesian space.
  *
  * A z-matrix fixes a molecule's internal geometry but not where it sits or
