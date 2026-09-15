@@ -183,8 +183,6 @@ void SolidPipeline::initialize()
   d->aoStageShaders.attachShader(d->aoFragmentShader);
   if (!d->aoStageShaders.link())
     std::cout << d->aoStageShaders.error() << std::endl;
-
-  // here is the end of the code that needs to be compared
 }
 
 void SolidPipeline::begin()
@@ -299,6 +297,9 @@ void SolidPipeline::adjustOffset(const Camera& cam)
   } else if (project >= 21595.588) {
     offSet = 9.952 * project - 212865;
   }
+  // Uniforms land on whichever program is bound, so bind the one this is
+  // meant for rather than depending on what the last pass left behind.
+  d->firstStageShaders.bind();
   d->firstStageShaders.setUniformValue("uoffset", offSet);
 }
 

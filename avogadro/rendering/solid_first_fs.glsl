@@ -201,32 +201,16 @@ void main() {
         blurredColor = applyBlur(UV);
     }
 
-    // Determine finalColor based on enabled effects
-    if (inAoEnabled != 0.0 || inEdStrength != 0.0 || inDofStrength != 0.0) {
-        if (inFogStrength != 0.0 && inDofStrength != 0.0) {
-            // Both Fog and DOF are enabled
-            vec4 mixedColor = mix(foggedColor, blurredColor, 0.5);
-            finalColor = vec4(mixedColor.rgb * luminosity, mixedColor.a);
-        } else if (inFogStrength != 0.0) {
-            // Only Fog is enabled with ao/edge-detection
-            finalColor = vec4(foggedColor.rgb * luminosity, foggedColor.a);
-        } else if (inDofStrength != 0.0) {
-            // Only DOF is enabled with/without ao/edge
-            finalColor = vec4(blurredColor.rgb * luminosity, blurredColor.a);
-        } else {
-            // Only AO and/or Edge Detection are enabled
-            finalColor = vec4(color.rgb * luminosity, color.a);
-        }
-    } else {
-        // Neither AO, DOF, nor Edge Detection is enabled
-        if (inFogStrength != 0.0) {
-            // Only Fog is enabled
-            finalColor = foggedColor;
-        } else {
-            // No effects are enabled
-            finalColor = color;
-        }
+    // Pick what the colour comes from, then shade it. Luminosity is already
+    // 1.0 when neither AO nor edge detection ran, so it applies unconditionally.
+    if (inFogStrength != 0.0 && inDofStrength != 0.0) {
+        finalColor = mix(foggedColor, blurredColor, 0.5);
+    } else if (inFogStrength != 0.0) {
+        finalColor = foggedColor;
+    } else if (inDofStrength != 0.0) {
+        finalColor = blurredColor;
     }
+    finalColor = vec4(finalColor.rgb * luminosity, finalColor.a);
 
     // Set the final fragment color
     outColor = finalColor;

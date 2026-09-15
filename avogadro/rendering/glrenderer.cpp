@@ -109,8 +109,10 @@ void GLRenderer::render()
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
   m_scene.rootNode().accept(visitor);
-  m_solidPipeline.end(m_camera);
+  // Before end(), so the offset the fog and depth-of-field are sized by
+  // belongs to the camera this frame is drawn with rather than the last one.
   m_solidPipeline.adjustOffset(m_camera);
+  m_solidPipeline.end(m_camera);
 
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);
@@ -193,7 +195,6 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
       void visit(GeometryNode&) override { return; }
       void visit(Drawable&) override { return; }
       void visit(SphereGeometry&) override { return; }
-      void visit(AmbientOcclusionSphereGeometry&) override { return; }
       void visit(CurveGeometry&) override { return; }
       void visit(CylinderGeometry&) override { return; }
       void visit(MeshGeometry&) override { return; }

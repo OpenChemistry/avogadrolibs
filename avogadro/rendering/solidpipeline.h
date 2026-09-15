@@ -120,7 +120,7 @@ public:
   /**
    * @brief Get or set the strength of the edge effect
    */
-  bool getEdStrength() { return m_edStrength; }
+  float getEdStrength() { return m_edStrength; }
   void setEdStrength(float strength) { m_edStrength = strength; }
 
 private:

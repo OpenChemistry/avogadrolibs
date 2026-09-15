@@ -11,7 +11,6 @@
 #include "avogadrorendering.h"
 #include "spheregeometry.h"
 #include "cylindergeometry.h"
-#include "ambientocclusionspheregeometry.h"
 #include "linestripgeometry.h"
 #include "meshgeometry.h"
 #include "camera.h"
@@ -48,7 +47,6 @@ public:
   void visit(GeometryNode&) override { return; }
   void visit(Drawable&) override;
   void visit(SphereGeometry&) override;
-  void visit(AmbientOcclusionSphereGeometry&) override;
   void visit(CurveGeometry&) override { return; }
   void visit(CylinderGeometry&) override;
   void visit(MeshGeometry&) override;

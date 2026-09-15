@@ -96,7 +96,6 @@ target_sources(Rendering PRIVATE
   volumegeometry.cpp
   vrmlvisitor.cpp
   widelinegeometry.cpp
-  ambientocclusionspheregeometry.cpp
 )
 
 set(shader_files
@@ -120,12 +119,6 @@ set(shader_files
   "wideline_vs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
-  "sphere_ao_depth_vs.glsl"
-  "sphere_ao_depth_fs.glsl"
-  "sphere_ao_bake_vs.glsl"
-  "sphere_ao_bake_fs.glsl"
-  "sphere_ao_render_vs.glsl"
-  "sphere_ao_render_fs.glsl"
   "textlabelbase_fs.glsl"
   "textlabelbase_vs.glsl"
 )

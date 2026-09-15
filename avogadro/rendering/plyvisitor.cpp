@@ -206,8 +206,6 @@ void PLYVisitor::visitSphereIcosphereRecursionMethod(const SphereColor& sphere,
   m_sceneFaces += faceStr.str();
 }
 
-void PLYVisitor::visit(AmbientOcclusionSphereGeometry&) {}
-
 void PLYVisitor::visit(CylinderGeometry& geometry)
 {
   for (const auto& c : geometry.cylinders()) {
