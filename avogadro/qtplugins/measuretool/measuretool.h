@@ -50,7 +50,21 @@ public:
   void draw(Rendering::GroupNode& node) override;
 
 private:
-  bool toggleAtom(const Rendering::Identifier& atom);
+  bool toggleAtom(Index uniqueId);
+
+  /**
+   * Resolve the picked atom to the persistent unique id the molecule keeps
+   * for it, or MaxIndex if it cannot be resolved.
+   */
+  Index uniqueIdForHit(const Rendering::Identifier& hit) const;
+
+  /**
+   * Drop measured atoms that have since been deleted from the molecule.
+   * Returns true if anything was removed.
+   */
+  template <typename T>
+  bool pruneDeletedAtoms(T* mol);
+
   template <typename T>
   void createLabels(T* mol, Rendering::GeometryNode* geo,
                     QVector<Vector3>& positions);
@@ -59,7 +73,10 @@ private:
   QtGui::Molecule* m_molecule;
   QtGui::RWMolecule* m_rwMolecule;
   Rendering::GLRenderer* m_renderer;
-  QVector<Rendering::Identifier> m_atoms;
+  /// Persistent unique ids of the measured atoms, not atom indices: indices
+  /// are invalidated whenever an atom is added to or removed from the
+  /// molecule.
+  QVector<Index> m_atomIds;
   QPoint m_pressPosition;
   bool m_dragged;
 };
@@ -67,7 +84,7 @@ private:
 inline void MeasureTool::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule != mol) {
-    m_atoms.clear();
+    m_atomIds.clear();
     m_molecule = mol;
     m_rwMolecule = nullptr;
   }
@@ -76,7 +93,7 @@ inline void MeasureTool::setMolecule(QtGui::Molecule* mol)
 inline void MeasureTool::setEditMolecule(QtGui::RWMolecule* mol)
 {
   if (m_rwMolecule != mol) {
-    m_atoms.clear();
+    m_atomIds.clear();
     m_rwMolecule = mol;
     m_molecule = nullptr;
   }

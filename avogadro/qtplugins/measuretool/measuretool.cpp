@@ -125,7 +125,8 @@ QUndoCommand* MeasureTool::mouseReleaseEvent(QMouseEvent* e)
 
   // Now add the atom on release.
   if (hit.type == Rendering::AtomType) {
-    if (toggleAtom(hit))
+    Index uniqueId = uniqueIdForHit(hit);
+    if (uniqueId != MaxIndex && toggleAtom(uniqueId))
       emit drawablesChanged();
   }
 
@@ -137,8 +138,8 @@ QUndoCommand* MeasureTool::mouseReleaseEvent(QMouseEvent* e)
 QUndoCommand* MeasureTool::mouseDoubleClickEvent(QMouseEvent* e)
 {
   // Reset the atom list
-  if (e->button() == Qt::LeftButton && !m_atoms.isEmpty()) {
-    m_atoms.clear();
+  if (e->button() == Qt::LeftButton && !m_atomIds.isEmpty()) {
+    m_atomIds.clear();
     emit drawablesChanged();
     e->accept();
   }
@@ -153,13 +154,10 @@ void MeasureTool::createLabels(T* mol, GeometryNode* geo,
   atomLabelProp.setFontFamily(TextProperties::SansSerif);
   atomLabelProp.setAlign(TextProperties::HCenter, TextProperties::VCenter);
 
-  for (int i = 0; i < m_atoms.size(); ++i) {
-    Identifier& ident = m_atoms[i];
-    Q_ASSERT(ident.type == Rendering::AtomType);
-    Q_ASSERT(ident.molecule != nullptr);
-
-    typename T::AtomType atom = mol->atom(ident.index);
-    Q_ASSERT(atom.isValid());
+  for (int i = 0; i < m_atomIds.size(); ++i) {
+    // pruneDeletedAtoms() has already dropped anything that no longer
+    // resolves, so every unique id here refers to a live atom.
+    typename T::AtomType atom = mol->atomByUniqueId(m_atomIds[i]);
     unsigned char atomicNumber(atom.atomicNumber());
     positions[i] = atom.position3d();
 
@@ -176,16 +174,38 @@ void MeasureTool::createLabels(T* mol, GeometryNode* geo,
   }
 }
 
+template <typename T>
+bool MeasureTool::pruneDeletedAtoms(T* mol)
+{
+  bool pruned = false;
+  for (int i = m_atomIds.size() - 1; i >= 0; --i) {
+    if (!mol->atomByUniqueId(m_atomIds[i]).isValid()) {
+      m_atomIds.remove(i);
+      pruned = true;
+    }
+  }
+  return pruned;
+}
+
 void MeasureTool::draw(Rendering::GroupNode& node)
 {
-  if (m_atoms.size() == 0)
+  // Atoms picked earlier may have been deleted since. Their unique ids no
+  // longer resolve, so drop them before measuring anything -- atom indices
+  // are reused when an atom is removed, so a stale entry would otherwise
+  // measure the wrong atom or read past the end of the molecule.
+  if (m_molecule)
+    pruneDeletedAtoms(m_molecule);
+  else if (m_rwMolecule)
+    pruneDeletedAtoms(m_rwMolecule);
+
+  if (m_atomIds.isEmpty())
     return;
 
   auto* geo = new GeometryNode;
   node.addChild(geo);
 
   // Add labels, extract positions
-  QVector<Vector3> positions(m_atoms.size(), Vector3());
+  QVector<Vector3> positions(m_atomIds.size(), Vector3());
   if (m_molecule)
     createLabels(m_molecule, geo, positions);
   else if (m_rwMolecule)
@@ -199,7 +219,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   Real v2Norm = -1.f;
   Real v3Norm = -1.f;
 
-  switch (m_atoms.size()) {
+  switch (m_atomIds.size()) {
     case 4:
       v3 = positions[3] - positions[2];
       v3Norm = v3.norm();
@@ -226,7 +246,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   // indicate left-alignment.
   int labelWidth = -std::max(
     { dihedralLabel.size(), angleLabel.size(), distanceLabel.size() });
-  switch (m_atoms.size()) {
+  switch (m_atomIds.size()) {
     case 4:
       overlayText += QString("%1 %L2°\n")
                        .arg(tr("Dihedral:"), labelWidth)
@@ -280,18 +300,36 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   geo->addDrawable(label);
 }
 
-bool MeasureTool::toggleAtom(const Rendering::Identifier& atom)
+Index MeasureTool::uniqueIdForHit(const Rendering::Identifier& hit) const
 {
-  int ind = m_atoms.indexOf(atom);
+  if (hit.type != Rendering::AtomType)
+    return MaxIndex;
+
+  if (m_molecule) {
+    if (hit.index >= m_molecule->atomCount())
+      return MaxIndex;
+    return m_molecule->atomUniqueId(hit.index);
+  }
+  if (m_rwMolecule) {
+    if (hit.index >= m_rwMolecule->atomCount())
+      return MaxIndex;
+    return m_rwMolecule->atomUniqueId(hit.index);
+  }
+  return MaxIndex;
+}
+
+bool MeasureTool::toggleAtom(Index uniqueId)
+{
+  int ind = m_atomIds.indexOf(uniqueId);
   if (ind >= 0) {
-    m_atoms.remove(ind);
+    m_atomIds.remove(ind);
     return true;
   }
 
-  if (m_atoms.size() >= 4)
+  if (m_atomIds.size() >= 4)
     return false;
 
-  m_atoms.push_back(atom);
+  m_atomIds.push_back(uniqueId);
   return true;
 }
 
