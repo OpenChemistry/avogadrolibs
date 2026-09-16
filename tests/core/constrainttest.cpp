@@ -219,3 +219,41 @@ TEST(ConstraintTest, scanCoordinatesMeasureATrajectory)
   ASSERT_TRUE(coordinates[0].evaluate(second, value));
   EXPECT_NEAR(value, 2.5, tol);
 }
+
+TEST(ConstraintTest, matchesEitherDirection)
+{
+  // A coordinate read backwards is the same coordinate, so a table that
+  // lists it in its own order still finds the constraint on it. The z-matrix
+  // reads a bond from the later atom to the earlier one, which is the
+  // reverse of how the bond table stores it.
+  const Constraint distance(2, 5);
+  EXPECT_TRUE(distance.matches(2, 5));
+  EXPECT_TRUE(distance.matches(5, 2));
+  EXPECT_FALSE(distance.matches(2, 6));
+  // The trailing indices stay at the end when the coordinate is reversed.
+  EXPECT_FALSE(distance.matches(MaxIndex, MaxIndex, 5, 2));
+
+  const Constraint angle(0, 1, 2);
+  EXPECT_TRUE(angle.matches(0, 1, 2));
+  EXPECT_TRUE(angle.matches(2, 1, 0));
+  // The vertex has to stay the vertex.
+  EXPECT_FALSE(angle.matches(1, 0, 2));
+  EXPECT_FALSE(angle.matches(0, 1));
+
+  const Constraint torsion(0, 1, 2, 3);
+  EXPECT_TRUE(torsion.matches(0, 1, 2, 3));
+  EXPECT_TRUE(torsion.matches(3, 2, 1, 0));
+  EXPECT_FALSE(torsion.matches(0, 2, 1, 3));
+  EXPECT_FALSE(torsion.matches(0, 1, 2));
+}
+
+TEST(ConstraintTest, matchesOutOfPlaneExactlyOnly)
+{
+  // An out of plane constraint names the same four atoms as a torsion but
+  // has none of its symmetry: reversing it names a different coordinate.
+  Constraint outOfPlane(0, 1, 2, 3);
+  outOfPlane.setType(Constraint::OutOfPlaneConstraint);
+
+  EXPECT_TRUE(outOfPlane.matches(0, 1, 2, 3));
+  EXPECT_FALSE(outOfPlane.matches(3, 2, 1, 0));
+}

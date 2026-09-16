@@ -161,6 +161,44 @@ public:
   }
 
   /**
+   * Whether this constraint is on the coordinate the given atoms name.
+   * A coordinate read backwards is the same coordinate -- the distance a-b
+   * is the distance b-a, and the torsion a-b-c-d is the torsion d-c-b-a --
+   * so both directions match. A table that lists a coordinate in its own
+   * order can then find the constraint on it however it happens to be
+   * stored. Out of plane constraints have no such symmetry and are matched
+   * exactly.
+   * @param a Atom index of the first atom of the coordinate
+   * @param b Atom index of the second atom of the coordinate
+   * @param c Atom index of the third atom (for angles or torsions) or MaxIndex
+   * @param d Atom index of the fourth atom (for torsions) or MaxIndex
+   */
+  bool matches(Index a, Index b, Index c = MaxIndex, Index d = MaxIndex) const
+  {
+    // A coordinate with a gap in it names nothing, and reading one backwards
+    // would turn the gap into the short end of a shorter coordinate.
+    if (a == MaxIndex || b == MaxIndex || (c == MaxIndex && d != MaxIndex))
+      return false;
+
+    if (m_aIndex == a && m_bIndex == b && m_cIndex == c && m_dIndex == d)
+      return true;
+
+    if (type() == OutOfPlaneConstraint)
+      return false;
+
+    // The unused trailing indices stay at the end rather than leading the
+    // reversal: the distance b-a is (b, a, MaxIndex, MaxIndex), not
+    // (MaxIndex, MaxIndex, a, b).
+    if (d != MaxIndex)
+      return m_aIndex == d && m_bIndex == c && m_cIndex == b && m_dIndex == a;
+    if (c != MaxIndex)
+      return m_aIndex == c && m_bIndex == b && m_cIndex == a &&
+             m_dIndex == MaxIndex;
+    return m_aIndex == b && m_bIndex == a && m_cIndex == MaxIndex &&
+           m_dIndex == MaxIndex;
+  }
+
+  /**
    * Check that every atom this constraint names still exists.
    * @param atomCount The number of atoms available
    * @return True if the constraint can be evaluated against that many atoms

@@ -8,6 +8,8 @@
 
 #include <QtWidgets/QTableView>
 
+class QContextMenuEvent;
+
 namespace Avogadro {
 
 namespace QtGui {
@@ -31,6 +33,10 @@ public:
   void setMolecule(QtGui::Molecule* molecule);
   void setZMatrixModel(ZMatrixModel* model);
 
+protected:
+  /** Offer to constrain or release the coordinate under the cursor. */
+  void contextMenuEvent(QContextMenuEvent* event) override;
+
 protected slots:
   void selectionChanged(const QItemSelection& selected,
                         const QItemSelection& deselected) override;
@@ -45,6 +51,10 @@ private:
   // Selecting rows sets the molecule's selection, which signals back here.
   // Without this the two would chase each other.
   bool m_updatingSelection = false;
+
+  // The rows a context menu on @p index should act on: the selection when
+  // the click landed inside it, and the clicked row alone otherwise.
+  QList<int> contextRows(const QModelIndex& index) const;
 };
 
 } // namespace QtPlugins

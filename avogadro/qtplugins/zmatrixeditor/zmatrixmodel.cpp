@@ -6,6 +6,7 @@
 #include "zmatrixmodel.h"
 
 #include <avogadro/core/angletools.h>
+#include <avogadro/core/constraint.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/fragmenttools.h>
 #include <avogadro/qtgui/molecule.h>
@@ -13,6 +14,7 @@
 
 #include <QtCore/QCoreApplication>
 
+#include <algorithm>
 #include <cmath>
 
 namespace Avogadro::QtPlugins {
@@ -37,6 +39,10 @@ const Real coincidentTolerance = 1e-8;
 // this close to straight describes nothing that can be edited, and is what
 // a dummy atom is offered to fix.
 const Real straightTolerance = 0.0175;
+
+// The marker a constrained value carries, the same one the property tables
+// put on a frozen coordinate.
+const char* constrainedMarker = "🔒";
 
 } // namespace
 
@@ -144,6 +150,19 @@ QVariant ZMatrixModel::data(const QModelIndex& index_, int role) const
              : QVariant(Qt::AlignRight | Qt::AlignVCenter);
   }
 
+  // The lock a constrained value carries says nothing about what it is
+  // constrained to, which is not always where the coordinate currently sits.
+  if (role == Qt::ToolTipRole) {
+    const Core::Constraint* constraint = constraintFor(row, index_.column());
+    if (constraint == nullptr)
+      return QVariant();
+    return index_.column() == DistanceColumn
+             ? tr("Constrained to %1 Å")
+                 .arg(constraint->value(), 0, 'f', distanceDecimals)
+             : tr("Constrained to %1°")
+                 .arg(constraint->value(), 0, 'f', angleDecimals);
+  }
+
   if (role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
 
@@ -156,6 +175,9 @@ QVariant ZMatrixModel::data(const QModelIndex& index_, int role) const
   if (gatingReference(coordinate, index_.column()) == MaxIndex)
     return QString();
 
+  Real value = 0.0;
+  int decimals = angleDecimals;
+
   switch (index_.column()) {
     case AColumn:
       return QString::number(coordinate.a + 1);
@@ -164,14 +186,137 @@ QVariant ZMatrixModel::data(const QModelIndex& index_, int role) const
     case CColumn:
       return QString::number(coordinate.c + 1);
     case DistanceColumn:
-      return QString::number(coordinate.length, 'f', distanceDecimals);
+      value = coordinate.length;
+      decimals = distanceDecimals;
+      break;
     case AngleColumn:
-      return QString::number(coordinate.angle, 'f', angleDecimals);
+      value = coordinate.angle;
+      break;
     case DihedralColumn:
-      return QString::number(coordinate.dihedral, 'f', angleDecimals);
+      value = coordinate.dihedral;
+      break;
     default:
       return QVariant();
   }
+
+  QString text = QString::number(value, 'f', decimals);
+
+  // The marker is on the display only. An edit has to start from the number
+  // by itself, or committing a cell the person never touched would fail to
+  // parse and quietly throw the value away.
+  if (role == Qt::DisplayRole && constraintFor(row, index_.column()) != nullptr)
+    text += constrainedMarker;
+
+  return text;
+}
+
+bool ZMatrixModel::coordinateAtoms(int row, int column,
+                                   std::array<Index, 4>& atoms) const
+{
+  if (row < 0 || row >= static_cast<int>(m_coordinates.size()))
+    return false;
+
+  const Core::InternalCoordinate& coordinate = m_coordinates[row];
+  const Index atom = m_rowToAtom[row];
+
+  // A row near the top of the matrix has fewer than three references, so the
+  // coordinate the column would show does not exist there. The references
+  // are filled in order, so the last one a column needs is the only one to
+  // check.
+  switch (column) {
+    case DistanceColumn:
+      if (coordinate.a == MaxIndex)
+        return false;
+      atoms = { atom, coordinate.a, MaxIndex, MaxIndex };
+      return true;
+    case AngleColumn:
+      if (coordinate.b == MaxIndex)
+        return false;
+      atoms = { atom, coordinate.a, coordinate.b, MaxIndex };
+      return true;
+    case DihedralColumn:
+      if (coordinate.c == MaxIndex)
+        return false;
+      atoms = { atom, coordinate.a, coordinate.b, coordinate.c };
+      return true;
+    default:
+      return false; // the element and reference columns are not coordinates
+  }
+}
+
+bool ZMatrixModel::hasCoordinate(int row, int column) const
+{
+  std::array<Index, 4> atoms{};
+  return coordinateAtoms(row, column, atoms);
+}
+
+const Core::Constraint* ZMatrixModel::constraintFor(int row, int column) const
+{
+  std::array<Index, 4> atoms{};
+  if (m_molecule == nullptr || !coordinateAtoms(row, column, atoms))
+    return nullptr;
+
+  for (const Core::Constraint& constraint : m_molecule->constraints()) {
+    if (constraint.matches(atoms[0], atoms[1], atoms[2], atoms[3]))
+      return &constraint;
+  }
+
+  return nullptr;
+}
+
+bool ZMatrixModel::applyConstraint(int row, int column, bool constrained)
+{
+  std::array<Index, 4> atoms{};
+  if (!coordinateAtoms(row, column, atoms))
+    return false;
+
+  // A coordinate carries at most one constraint, so setting one replaces
+  // whatever was on it rather than stacking a second restraint alongside.
+  auto& constraints = m_molecule->constraints();
+  const size_t before = constraints.size();
+  constraints.erase(
+    std::remove_if(constraints.begin(), constraints.end(),
+                   [&atoms](const Core::Constraint& constraint) {
+                     return constraint.matches(atoms[0], atoms[1], atoms[2],
+                                               atoms[3]);
+                   }),
+    constraints.end());
+
+  if (!constrained)
+    return constraints.size() != before;
+
+  // The value is the one the table is showing, which refreshValues() keeps
+  // level with the geometry, so constraining holds the coordinate where the
+  // person can see it is.
+  const Core::InternalCoordinate& coordinate = m_coordinates[row];
+  Real value = coordinate.length;
+  if (column == AngleColumn)
+    value = coordinate.angle;
+  else if (column == DihedralColumn)
+    value = coordinate.dihedral;
+
+  Core::Constraint constraint(atoms[0], atoms[1], atoms[2], atoms[3], value);
+  m_molecule->addConstraint(constraint);
+  return true;
+}
+
+bool ZMatrixModel::setConstrained(const QList<int>& rows, int column,
+                                  bool constrained)
+{
+  if (m_molecule == nullptr)
+    return false;
+
+  bool changed = false;
+  for (int row : rows)
+    changed = applyConstraint(row, column, constrained) || changed;
+
+  if (!changed)
+    return false;
+
+  // Coming back round through updateTable() is what repaints the locks, and
+  // it also brings the constraint dialog and the property tables along.
+  m_molecule->emitChanged(Molecule::Constraints);
+  return true;
 }
 
 Qt::ItemFlags ZMatrixModel::flags(const QModelIndex& index_) const

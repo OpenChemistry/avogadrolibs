@@ -630,6 +630,10 @@ void PropertyView::constrainSelectedRows()
       }
     }
   }
+
+  // Without this the lock on the value does not appear until something
+  // unrelated redraws the table.
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void PropertyView::unconstrainSelectedRows()
@@ -688,6 +692,8 @@ void PropertyView::unconstrainSelectedRows()
       }
     }
   }
+
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void PropertyView::freezeAtom()
