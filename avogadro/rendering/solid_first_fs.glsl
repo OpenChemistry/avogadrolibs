@@ -36,7 +36,8 @@ uniform sampler2D inDepthTex;
 uniform float inAoEnabled;
 // 0.0 if disabled
 uniform float inFogStrength;
-// 1.0 if enabled, 0.0 if disabled
+// Edge outline: 0.0 when off. Up to 1.0 it fades the outline in; above 1.0 it
+// is the outline's half-width in pixels.
 uniform float inEdStrength;
 // amount of offset when zoom-in or zoom-out.
 uniform float uoffset;
@@ -55,15 +56,25 @@ uniform sampler2D inAoTex;
 // Projection matrix, used to size the blur's surface test.
 uniform mat4 inProjection;
 
-vec3 getNormalAt(vec2 normalUV)
+// Screen-space normal from the depth gradient, sampled `radius` pixels either
+// side of the fragment. The radius is what sets the outline's width: a pixel
+// registers as an edge when its two taps straddle a depth jump, so the band
+// that does is about 2 * radius wide.
+//
+// The z term scales with the radius as well. Across a smoothly curved surface
+// the depth difference grows with the radius too, so the two scale together and
+// the normal comes out the same: widening thickens the silhouette without also
+// darkening the interiors. Drop that factor and a wide radius shades the whole
+// molecule instead of outlining it.
+vec3 getNormalAt(vec2 normalUV, float radius)
 {
-  float xpos = texture(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-  float xneg = texture(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-  float ypos = texture(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-  float yneg = texture(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
+  float xpos = texture(inDepthTex, normalUV + vec2(radius / width, 0.0)).x;
+  float xneg = texture(inDepthTex, normalUV - vec2(radius / width, 0.0)).x;
+  float ypos = texture(inDepthTex, normalUV + vec2(0.0, radius / height)).x;
+  float yneg = texture(inDepthTex, normalUV - vec2(0.0, radius / height)).x;
   float xdelta = xpos - xneg;
   float ydelta = ypos - yneg;
-  vec3 r = vec3(xdelta, ydelta, 1.0 / width + 1.0 / height);
+  vec3 r = vec3(xdelta, ydelta, radius * (1.0 / width + 1.0 / height));
   return normalize(r);
 }
 
@@ -186,7 +197,14 @@ void main() {
         luminosity *= max(1.2 * (1.0 - inAoEnabled), blurredAo(UV));
     }
     if (inEdStrength != 0.0) {
-        luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
+        // Below 1.0 the outline fades in at its original one-pixel width, which
+        // is what the checkbox used to switch between. From 1.0 up it is fully
+        // dark and the value becomes its half-width in pixels, so 2.5 draws a
+        // markedly bolder line than 1.0 without changing its colour.
+        float edgeFade = min(inEdStrength, 1.0);
+        float edgeRadius = max(inEdStrength, 1.0);
+        luminosity *= max(1.0 - edgeFade,
+                          computeEdgeLuminosity(getNormalAt(UV, edgeRadius)));
     }
 
     // Compute foggedColor if Fog is enabled

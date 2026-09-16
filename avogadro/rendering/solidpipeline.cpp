@@ -267,7 +267,8 @@ void SolidPipeline::end(const Camera& camera)
   d->bindSampler(d->firstStageShaders, "inAoTex", d->aoTexture, TextureUnitAo);
   d->firstStageShaders.setUniformValue("inProjection",
                                        camera.projection().matrix());
-  d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
+  d->firstStageShaders.setUniformValue("inEdStrength",
+                                       m_edEnabled ? m_edStrength : 0.0f);
   d->firstStageShaders.setUniformValue("inFogEnabled",
                                        m_fogEnabled ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue("inFogStrength",

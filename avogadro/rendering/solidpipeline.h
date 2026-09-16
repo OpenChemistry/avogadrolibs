@@ -97,13 +97,12 @@ public:
 
   /**
    * @brief Get or set whether Edge Detection is enabled.
+   *
+   * Enabling leaves the strength alone, so a configured strength survives
+   * being switched off and back on.
    */
   bool getEdEnabled() { return m_edEnabled; }
-  void setEdEnabled(bool enabled)
-  {
-    m_edEnabled = enabled;
-    m_edStrength = (m_edEnabled) ? 1.0 : 0.0;
-  }
+  void setEdEnabled(bool enabled) { m_edEnabled = enabled; }
 
   /**
    * @brief Get or set dof strength.
@@ -118,7 +117,11 @@ public:
   void setDofPosition(float position) { m_dofPosition = position; }
 
   /**
-   * @brief Get or set the strength of the edge effect
+   * @brief Get or set the strength of the edge effect.
+   *
+   * Up to 1.0 this fades the outline in at the one-pixel width the effect has
+   * always had. Above 1.0 the outline is fully dark and the value is its
+   * half-width in pixels, so 2.5 gives a distinctly bolder outline than 1.0.
    */
   float getEdStrength() { return m_edStrength; }
   void setEdStrength(float strength) { m_edStrength = strength; }
