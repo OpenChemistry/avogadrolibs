@@ -415,9 +415,16 @@ void PackageModel::loadDownloadStats(const QByteArray& jsonBytes)
   if (root.is_discarded() || !root.is_object())
     return;
 
+  // A count is only meaningful alongside the window it covers, so both are
+  // parsed into locals and committed together below. A partial response must
+  // leave the model alone rather than label one response's counts with
+  // another response's window.
   auto windowIt = root.find("window_days");
-  if (windowIt != root.end() && windowIt->is_number_integer())
-    m_downloadWindowDays = windowIt->get<int>();
+  if (windowIt == root.end() || !windowIt->is_number_integer())
+    return;
+  const int windowDays = windowIt->get<int>();
+  if (windowDays <= 0)
+    return;
 
   auto pluginsIt = root.find("plugins");
   if (pluginsIt == root.end() || !pluginsIt->is_object())
@@ -435,6 +442,7 @@ void PackageModel::loadDownloadStats(const QByteArray& jsonBytes)
                     recentIt->get<int>());
   }
 
+  m_downloadWindowDays = windowDays;
   for (int row = 0; row < m_entries.size(); ++row) {
     PackageEntry& e = m_entries[row];
     // -1 (unknown) rather than 0 for a plugin the counter has never seen:
