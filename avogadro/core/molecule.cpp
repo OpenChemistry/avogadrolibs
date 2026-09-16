@@ -427,15 +427,13 @@ void Molecule::addConstraint(Real value, Index a, Index b, Index c, Index d)
 
 void Molecule::removeConstraint(Index a, Index b, Index c, Index d)
 {
-  // loop through and remove if the constraint matches all atom indexes
-  for (auto it = m_constraints.begin(); it != m_constraints.end();) {
-    if (it->aIndex() == a && it->bIndex() == b && it->cIndex() == c &&
-        it->dIndex() == d) {
-      it = m_constraints.erase(it);
-      return;
-    } else
-      ++it;
-  }
+  // Remove all constraints matching the atoms, regardless of ordering
+  m_constraints.erase(
+    std::remove_if(m_constraints.begin(), m_constraints.end(),
+                   [a, b, c, d](const Constraint& constraint) {
+                     return constraint.matches(a, b, c, d);
+                   }),
+    m_constraints.end());
 }
 
 namespace {

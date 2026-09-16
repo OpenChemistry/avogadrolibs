@@ -58,14 +58,19 @@ void ZMatrixEditor::buildDock()
 
   m_dummyButton = new QPushButton(tr("Add Dummy Atoms"), contents);
   buttons->addWidget(m_dummyButton);
+  buttons->addStretch();
+  layout->addLayout(buttons);
 
+  // new line
+  auto* buttons2 = new QHBoxLayout;
+  buttons2->addStretch();
   m_rebuildButton = new QPushButton(tr("Rebuild Geometry"), contents);
   m_rebuildButton->setToolTip(
     tr("Rebuild every atom position from the table. The molecule is not "
        "moved or reoriented."));
-  buttons->addWidget(m_rebuildButton);
-  buttons->addStretch();
-  layout->addLayout(buttons);
+  buttons2->addWidget(m_rebuildButton);
+  buttons2->addStretch();
+  layout->addLayout(buttons2);
 
   m_dock->setWidget(contents);
 

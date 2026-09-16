@@ -11,7 +11,13 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/internalcoordinates.h>
 
+#include <array>
+
 namespace Avogadro {
+
+namespace Core {
+class Constraint;
+}
 
 namespace QtGui {
 class Molecule;
@@ -70,6 +76,28 @@ public:
   int rowForAtom(Index atom) const;
 
   /**
+   * True when @p column of @p row shows a coordinate that could be
+   * constrained. The distance, angle and dihedral columns do, but only from
+   * the row on which the reference they are measured against first exists.
+   */
+  bool hasCoordinate(int row, int column) const;
+
+  /**
+   * The molecule's constraint on the coordinate @p column of @p row shows,
+   * or nullptr if there is none. The pointer is into the molecule's own
+   * list, so it lasts only until the constraints are next changed.
+   */
+  const Core::Constraint* constraintFor(int row, int column) const;
+
+  /**
+   * Constrain, or release, the coordinate @p column shows for each of
+   * @p rows, at the value it currently has. Rows without that coordinate are
+   * skipped. The molecule is signalled once for the lot.
+   * @return False if nothing changed.
+   */
+  bool setConstrained(const QList<int>& rows, int column, bool constrained);
+
+  /**
    * True when the molecule's atom order is not already a valid z-matrix
    * order, so that renumbering it would change something.
    */
@@ -122,6 +150,18 @@ public slots:
 private:
   /** Re-derive the row order and every row's references from the molecule. */
   void rebuildStructure();
+
+  /**
+   * The atoms a constraint on the coordinate @p column of @p row shows would
+   * name, in the order the row reads them: the atom the row places, then the
+   * references it is measured against, padded with MaxIndex. @p atoms is
+   * left alone when the row has no such coordinate.
+   * @return False when there is no such coordinate.
+   */
+  bool coordinateAtoms(int row, int column, std::array<Index, 4>& atoms) const;
+
+  /** One row's half of setConstrained(), without the signal. */
+  bool applyConstraint(int row, int column, bool constrained);
 
   /** Recompute the values only, against the references already in place. */
   void refreshValues();

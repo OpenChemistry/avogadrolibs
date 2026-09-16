@@ -540,8 +540,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     // check constraints for this bond
     for (auto& constraint : m_molecule->constraints()) {
-      if (constraint.aIndex() == atom1.index() &&
-          constraint.bIndex() == atom2.index()) {
+      if (constraint.type() == Core::Constraint::DistanceConstraint &&
+          constraint.matches(atom1.index(), atom2.index())) {
         isConstrained = true;
         break;
       }
@@ -619,9 +619,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     // check constraints for this angle
     for (auto& constraint : m_molecule->constraints()) {
-      if (constraint.aIndex() == std::get<0>(angle) &&
-          constraint.bIndex() == std::get<1>(angle) &&
-          constraint.cIndex() == std::get<2>(angle)) {
+      if (constraint.type() == Core::Constraint::AngleConstraint &&
+          constraint.matches(std::get<0>(angle), std::get<1>(angle),
+                             std::get<2>(angle))) {
         isConstrained = true;
         break;
       }
@@ -672,10 +672,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     // check constraints for this torsion
     for (auto& constraint : m_molecule->constraints()) {
-      if (constraint.aIndex() == std::get<0>(torsion) &&
-          constraint.bIndex() == std::get<1>(torsion) &&
-          constraint.cIndex() == std::get<2>(torsion) &&
-          constraint.dIndex() == std::get<3>(torsion)) {
+      if (constraint.type() == Core::Constraint::TorsionConstraint &&
+          constraint.matches(std::get<0>(torsion), std::get<1>(torsion),
+                             std::get<2>(torsion), std::get<3>(torsion))) {
         isConstrained = true;
         break;
       }
@@ -1393,6 +1392,16 @@ void PropertyModel::updateTable(unsigned int flags)
     // For coordinate-only changes, just invalidate the cache
     // This avoids race conditions during rapid animation updates
     m_validCache = false;
+
+    // A constraint change adds no rows and moves no atoms, so a reset would
+    // be wasted -- but the lock a constrained value carries is part of what
+    // the cell says, so the cells still have to be repainted.
+    if (flags & Molecule::Constraints) {
+      const int rows = rowCount(QModelIndex());
+      const int columns = columnCount(QModelIndex());
+      if (rows > 0 && columns > 0)
+        emit dataChanged(index(0, 0), index(rows - 1, columns - 1));
+    }
     return;
   }
 
