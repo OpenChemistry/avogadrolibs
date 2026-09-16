@@ -44,6 +44,20 @@ const Real straightTolerance = 0.0175;
 // put on a frozen coordinate.
 const char* constrainedMarker = "🔒";
 
+// The kind of constraint a coordinate of this shape carries. An out of plane
+// constraint names the same four atoms as a torsion does, so matching on the
+// atoms alone would let one stand in for the other -- a dihedral row would
+// wear the lock belonging to an out of plane restraint, and the context menu
+// would delete it.
+Core::Constraint::Type coordinateType(const std::array<Index, 4>& atoms)
+{
+  if (atoms[2] == MaxIndex)
+    return Core::Constraint::DistanceConstraint;
+  if (atoms[3] == MaxIndex)
+    return Core::Constraint::AngleConstraint;
+  return Core::Constraint::TorsionConstraint;
+}
+
 } // namespace
 
 ZMatrixModel::ZMatrixModel(QObject* parent_) : QAbstractTableModel(parent_) {}
@@ -256,8 +270,10 @@ const Core::Constraint* ZMatrixModel::constraintFor(int row, int column) const
   if (m_molecule == nullptr || !coordinateAtoms(row, column, atoms))
     return nullptr;
 
+  const Core::Constraint::Type wanted = coordinateType(atoms);
   for (const Core::Constraint& constraint : m_molecule->constraints()) {
-    if (constraint.matches(atoms[0], atoms[1], atoms[2], atoms[3]))
+    if (constraint.type() == wanted &&
+        constraint.matches(atoms[0], atoms[1], atoms[2], atoms[3]))
       return &constraint;
   }
 
@@ -273,11 +289,13 @@ bool ZMatrixModel::applyConstraint(int row, int column, bool constrained)
   // A coordinate carries at most one constraint, so setting one replaces
   // whatever was on it rather than stacking a second restraint alongside.
   auto& constraints = m_molecule->constraints();
+  const Core::Constraint::Type wanted = coordinateType(atoms);
   const size_t before = constraints.size();
   constraints.erase(
     std::remove_if(constraints.begin(), constraints.end(),
-                   [&atoms](const Core::Constraint& constraint) {
-                     return constraint.matches(atoms[0], atoms[1], atoms[2],
+                   [&atoms, wanted](const Core::Constraint& constraint) {
+                     return constraint.type() == wanted &&
+                            constraint.matches(atoms[0], atoms[1], atoms[2],
                                                atoms[3]);
                    }),
     constraints.end());

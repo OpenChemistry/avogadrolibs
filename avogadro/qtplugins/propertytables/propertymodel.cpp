@@ -540,7 +540,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     // check constraints for this bond
     for (auto& constraint : m_molecule->constraints()) {
-      if (constraint.matches(atom1.index(), atom2.index())) {
+      if (constraint.type() == Core::Constraint::DistanceConstraint &&
+          constraint.matches(atom1.index(), atom2.index())) {
         isConstrained = true;
         break;
       }
@@ -618,7 +619,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     // check constraints for this angle
     for (auto& constraint : m_molecule->constraints()) {
-      if (constraint.matches(std::get<0>(angle), std::get<1>(angle),
+      if (constraint.type() == Core::Constraint::AngleConstraint &&
+          constraint.matches(std::get<0>(angle), std::get<1>(angle),
                              std::get<2>(angle))) {
         isConstrained = true;
         break;
@@ -670,7 +672,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     // check constraints for this torsion
     for (auto& constraint : m_molecule->constraints()) {
-      if (constraint.matches(std::get<0>(torsion), std::get<1>(torsion),
+      if (constraint.type() == Core::Constraint::TorsionConstraint &&
+          constraint.matches(std::get<0>(torsion), std::get<1>(torsion),
                              std::get<2>(torsion), std::get<3>(torsion))) {
         isConstrained = true;
         break;

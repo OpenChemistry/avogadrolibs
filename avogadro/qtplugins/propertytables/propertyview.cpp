@@ -606,6 +606,11 @@ void PropertyView::constrainSelectedRows()
       auto atom1 = bond.atom1();
       auto atom2 = bond.atom2();
       Real distance = bond.length();
+      // A coordinate carries one constraint. Without clearing the old one
+      // first, constraining twice -- or constraining here what the z-matrix
+      // already holds, which names the same bond the other way round --
+      // stacks a second restraint the person cannot see or remove.
+      m_molecule->removeConstraint(atom1.index(), atom2.index());
       m_molecule->addConstraint(distance, atom1.index(), atom2.index());
     } else if (m_type == PropertyType::AngleType) {
       if (m_model != nullptr) {
@@ -614,6 +619,8 @@ void PropertyView::constrainSelectedRows()
         auto atom2 = m_molecule->atom(std::get<1>(angle));
         auto atom3 = m_molecule->atom(std::get<2>(angle));
         Real angleValue = m_model->getAngleValue(rowNum);
+        m_molecule->removeConstraint(atom1.index(), atom2.index(),
+                                     atom3.index());
         m_molecule->addConstraint(angleValue, atom1.index(), atom2.index(),
                                   atom3.index());
       }
@@ -625,6 +632,8 @@ void PropertyView::constrainSelectedRows()
         auto atom3 = m_molecule->atom(std::get<2>(torsion));
         auto atom4 = m_molecule->atom(std::get<3>(torsion));
         Real torsionValue = m_model->getTorsionValue(rowNum);
+        m_molecule->removeConstraint(atom1.index(), atom2.index(),
+                                     atom3.index(), atom4.index());
         m_molecule->addConstraint(torsionValue, atom1.index(), atom2.index(),
                                   atom3.index(), atom4.index());
       }

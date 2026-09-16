@@ -257,3 +257,51 @@ TEST(ConstraintTest, matchesOutOfPlaneExactlyOnly)
   EXPECT_TRUE(outOfPlane.matches(0, 1, 2, 3));
   EXPECT_FALSE(outOfPlane.matches(3, 2, 1, 0));
 }
+
+TEST(ConstraintTest, removeConstraintTakesEitherDirection)
+{
+  // The bond table names a bond low index first; the z-matrix names it from
+  // the later atom to the earlier one. Releasing the coordinate has to work
+  // whichever table the person is looking at.
+  Avogadro::Core::Molecule molecule;
+  molecule.addConstraint(1.4, 2, 5);
+  molecule.removeConstraint(5, 2);
+  EXPECT_TRUE(molecule.constraints().empty());
+
+  molecule.addConstraint(109.5, 0, 1, 2);
+  molecule.removeConstraint(2, 1, 0);
+  EXPECT_TRUE(molecule.constraints().empty());
+
+  molecule.addConstraint(60.0, 0, 1, 2, 3);
+  molecule.removeConstraint(3, 2, 1, 0);
+  EXPECT_TRUE(molecule.constraints().empty());
+}
+
+TEST(ConstraintTest, removeConstraintClearsDuplicates)
+{
+  // A coordinate is meant to carry one constraint, but nothing has enforced
+  // that. Leaving a duplicate behind would keep the coordinate restrained
+  // after the person asked for it to be freed.
+  Avogadro::Core::Molecule molecule;
+  molecule.addConstraint(1.4, 2, 5);
+  molecule.addConstraint(1.5, 5, 2);
+  ASSERT_EQ(molecule.constraints().size(), 2u);
+
+  molecule.removeConstraint(2, 5);
+  EXPECT_TRUE(molecule.constraints().empty());
+}
+
+TEST(ConstraintTest, removeConstraintLeavesOtherCoordinates)
+{
+  Avogadro::Core::Molecule molecule;
+  molecule.addConstraint(1.4, 2, 5);
+  molecule.addConstraint(1.4, 2, 6);
+  molecule.addConstraint(109.5, 2, 5, 6);
+
+  molecule.removeConstraint(5, 2);
+  ASSERT_EQ(molecule.constraints().size(), 2u);
+  // The angle shares both atoms with the distance that went; only a whole
+  // coordinate match counts.
+  EXPECT_EQ(molecule.constraints()[0].type(), Constraint::DistanceConstraint);
+  EXPECT_EQ(molecule.constraints()[1].type(), Constraint::AngleConstraint);
+}
