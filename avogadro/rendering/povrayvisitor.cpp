@@ -5,7 +5,6 @@
 
 #include "povrayvisitor.h"
 
-#include "ambientocclusionspheregeometry.h"
 #include "cylindergeometry.h"
 #include "linestripgeometry.h"
 #include "meshgeometry.h"
@@ -118,8 +117,6 @@ void POVRayVisitor::visit(SphereGeometry& geometry)
   }
   m_sceneData += str.str();
 }
-
-void POVRayVisitor::visit(AmbientOcclusionSphereGeometry&) {}
 
 void POVRayVisitor::visit(CylinderGeometry& geometry)
 {

@@ -48,7 +48,6 @@ public:
   void visit(GeometryNode&) override { return; }
   void visit(Drawable&) override;
   void visit(SphereGeometry&) override;
-  void visit(AmbientOcclusionSphereGeometry&) override;
   void visit(CurveGeometry&) override;
   void visit(CylinderGeometry&) override;
   void visit(MeshGeometry&) override;

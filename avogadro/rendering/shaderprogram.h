@@ -164,7 +164,14 @@ protected:
 
   std::string m_error;
 
+  /**
+   * Locations of the attributes and uniforms of the linked program, filled in
+   * as they are first asked for. Both are fixed for the life of a link, and
+   * looking them up means a driver round trip, so they are only queried once.
+   * link() empties both, which is the only point at which they can change.
+   */
   std::map<std::string, int> m_attributes;
+  std::map<std::string, int> m_uniforms;
 
   std::map<const Texture2D*, int> m_textureUnitBindings;
   std::vector<bool> m_boundTextureUnits;

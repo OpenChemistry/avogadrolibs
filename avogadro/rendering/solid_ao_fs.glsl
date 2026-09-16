@@ -9,6 +9,11 @@
 // each of the 16 angles exactly once. Averaging over any 4x4 block of pixels
 // then cancels the pattern, which is what the next stage does.
 //
+// The distance to the surface, in scene units, is written alongside the term.
+// The blur needs it to tell surfaces apart, and this pass has already read the
+// depth it comes from, so carrying it here saves the blur a second depth
+// texture and a per-tap linearization.
+//
 //////////////////////////////////////////////////////////////////////
 
 #version 400
@@ -21,7 +26,8 @@ precision highp float;
 // texture coordinates
 in vec2 UV;
 
-out float outAo;
+// x: the ambient occlusion term. y: distance from the camera, in scene units.
+out vec2 outAo;
 
 //
 // Uniforms
@@ -33,6 +39,19 @@ uniform sampler2D inDepthTex;
 uniform float inAoStrength;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
+// Projection matrix, used to turn window depth into a distance in scene units
+uniform mat4 inProjection;
+
+// Window depth to distance from the camera, in scene units. Derived from the
+// projection so it holds for both the perspective and the orthographic camera,
+// rather than assuming fixed near and far planes.
+float linearDepth(float depth)
+{
+  float ndc = depth * 2.0 - 1.0;
+  float viewZ = (inProjection[3][2] - ndc * inProjection[3][3]) /
+                (ndc * inProjection[2][3] - inProjection[2][2]);
+  return -viewZ;
+}
 
 vec3 getNormalNear(vec2 normalUV, float cent)
 {
@@ -106,7 +125,8 @@ float computeSSAOLuminosity(vec3 normal, float depth)
 
 void main() {
   float depth = texture(inDepthTex, UV).x;
-  // Can exceed 1.0: the term brightens as well as darkens, so the buffer this
-  // is written to has to be a float format rather than a normalized one.
-  outAo = computeSSAOLuminosity(getNormalNear(UV, depth), depth);
+  // The term can exceed 1.0: it brightens as well as darkens, so the buffer
+  // this is written to has to be a float format rather than a normalized one.
+  outAo = vec2(computeSSAOLuminosity(getNormalNear(UV, depth), depth),
+               linearDepth(depth));
 }

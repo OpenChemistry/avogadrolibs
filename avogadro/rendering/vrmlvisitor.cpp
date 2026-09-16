@@ -5,7 +5,6 @@
 
 #include "vrmlvisitor.h"
 
-#include "ambientocclusionspheregeometry.h"
 #include "cylindergeometry.h"
 #include "linestripgeometry.h"
 #include "meshgeometry.h"
@@ -91,8 +90,6 @@ void VRMLVisitor::visit(SphereGeometry& geometry)
   }
   m_sceneData += str.str();
 }
-
-void VRMLVisitor::visit(AmbientOcclusionSphereGeometry&) {}
 
 void VRMLVisitor::visit(CylinderGeometry& geometry)
 {

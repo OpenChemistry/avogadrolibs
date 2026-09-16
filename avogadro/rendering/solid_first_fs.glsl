@@ -29,7 +29,6 @@ uniform sampler2D inRGBTex;
 uniform float fogR;
 uniform float fogG;
 uniform float fogB;
-uniform float offset;
 
 // Depth rendered texture
 uniform sampler2D inDepthTex;
@@ -37,7 +36,8 @@ uniform sampler2D inDepthTex;
 uniform float inAoEnabled;
 // 0.0 if disabled
 uniform float inFogStrength;
-// 1.0 if enabled, 0.0 if disabled
+// Edge outline: 0.0 when off. Up to 1.0 it fades the outline in; above 1.0 it
+// is the outline's half-width in pixels.
 uniform float inEdStrength;
 // amount of offset when zoom-in or zoom-out.
 uniform float uoffset;
@@ -49,34 +49,33 @@ uniform float inDofPosition;
 uniform float inFogPosition;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
-// Ambient occlusion term from the AO stage, still carrying its sampling
-// pattern; blurredAo() below is what removes it.
+// Output of the AO stage: the ambient occlusion term in x, still carrying its
+// sampling pattern, and the distance to the surface in scene units in y.
+// blurredAo() below removes the pattern.
 uniform sampler2D inAoTex;
-// Projection matrix, used to turn window depth back into scene units and to
-// size the blur's surface test.
+// Projection matrix, used to size the blur's surface test.
 uniform mat4 inProjection;
 
-vec3 getNormalAt(vec2 normalUV)
+// Screen-space normal from the depth gradient, sampled `radius` pixels either
+// side of the fragment. The radius is what sets the outline's width: a pixel
+// registers as an edge when its two taps straddle a depth jump, so the band
+// that does is about 2 * radius wide.
+//
+// The z term scales with the radius as well. Across a smoothly curved surface
+// the depth difference grows with the radius too, so the two scale together and
+// the normal comes out the same: widening thickens the silhouette without also
+// darkening the interiors. Drop that factor and a wide radius shades the whole
+// molecule instead of outlining it.
+vec3 getNormalAt(vec2 normalUV, float radius)
 {
-  float xpos = texture(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-  float xneg = texture(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-  float ypos = texture(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-  float yneg = texture(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
+  float xpos = texture(inDepthTex, normalUV + vec2(radius / width, 0.0)).x;
+  float xneg = texture(inDepthTex, normalUV - vec2(radius / width, 0.0)).x;
+  float ypos = texture(inDepthTex, normalUV + vec2(0.0, radius / height)).x;
+  float yneg = texture(inDepthTex, normalUV - vec2(0.0, radius / height)).x;
   float xdelta = xpos - xneg;
   float ydelta = ypos - yneg;
-  vec3 r = vec3(xdelta, ydelta, 1.0 / width + 1.0 / height);
+  vec3 r = vec3(xdelta, ydelta, radius * (1.0 / width + 1.0 / height));
   return normalize(r);
-}
-
-// Window depth to distance from the camera, in scene units. Derived from the
-// projection so it holds for both the perspective and the orthographic camera,
-// rather than assuming fixed near and far planes.
-float linearDepth(float depth)
-{
-  float ndc = depth * 2.0 - 1.0;
-  float viewZ = (inProjection[3][2] - ndc * inProjection[3][3]) /
-                (ndc * inProjection[2][3] - inProjection[2][2]);
-  return -viewZ;
 }
 
 // Must match AO_TILE in solid_ao_fs.glsl. That stage uses a different kernel
@@ -94,9 +93,13 @@ const float AO_BLUR_SLOPE_LIMIT = 16.0;
 // AO_BLUR_TILE consecutive offsets cover the tile, whatever the alignment.
 // Taps sitting on a different surface are dropped, so occlusion does not bleed
 // across a silhouette into whatever lies behind it.
+//
+// Both the term and the distance the surface test needs come from the same
+// texel, so each tap is a single fetch.
 float blurredAo(vec2 texCoord)
 {
-  float centerZ = linearDepth(texture(inDepthTex, texCoord).x);
+  vec2 center = texture(inAoTex, texCoord).xy;
+  float centerZ = center.y;
 
   // Size the surface test by how much scene distance one pixel covers here,
   // rather than by a fixed number of Angstroms. A fixed distance is only right
@@ -109,25 +112,21 @@ float blurredAo(vec2 texCoord)
   float tolerance = AO_BLUR_SLOPE_LIMIT * pixelSize;
 
   // The centre tap always belongs, so seed with it and skip it in the loop.
-  float total = texture(inAoTex, texCoord).x;
+  float total = center.x;
   float weight = 1.0;
   for (int y = -1; y <= AO_BLUR_TILE - 2; y++) {
     for (int x = -1; x <= AO_BLUR_TILE - 2; x++) {
       if (x == 0 && y == 0)
         continue;
       vec2 tapUV = texCoord + vec2(float(x) / width, float(y) / height);
-      if (abs(linearDepth(texture(inDepthTex, tapUV).x) - centerZ) < tolerance) {
-        total += texture(inAoTex, tapUV).x;
+      vec2 tap = texture(inAoTex, tapUV).xy;
+      if (abs(tap.y - centerZ) < tolerance) {
+        total += tap.x;
         weight += 1.0;
       }
     }
   }
   return total / weight;
-}
-
-float lerp(float a, float b, float f)
-{
-    return a + f * (b - a);
 }
 
 float rand(vec2 co) {
@@ -139,7 +138,6 @@ float rand(vec2 co) {
 // and SolidPipeline::adjustOffset are both curve-fitted against that error, so
 // the three only make sense together. Use linearDepth() for anything new.
 float depthToZ(float depth) {
-    float eyeZ = ((height * 0.57735) / 2.0);
     float near = 2.0;
     float far = 8000.0;
     float depthNormalized = 2.0 * depth - 1.0;
@@ -167,7 +165,6 @@ vec4 applyBlur(vec2 texCoord) {
         angle += 1.0 * rand(gl_FragCoord.xy);
         vec2 offset = (vec2(cos(angle), sin(angle)) * radius * 0.05 * inDofStrength) / pixelScale;
         float z = depthToZ(texture(inDepthTex, texCoord + offset).x);
-        float sampleBlur = calcBlur(z, pixelScale);
         float weight = 1.0 - smoothstep(0.0, 1.0, abs(z - origZ) / blurAmt);
         vec4 texSample = texture(inRGBTex, texCoord+offset);
         color += weight * texSample;
@@ -200,7 +197,14 @@ void main() {
         luminosity *= max(1.2 * (1.0 - inAoEnabled), blurredAo(UV));
     }
     if (inEdStrength != 0.0) {
-        luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
+        // Below 1.0 the outline fades in at its original one-pixel width, which
+        // is what the checkbox used to switch between. From 1.0 up it is fully
+        // dark and the value becomes its half-width in pixels, so 2.5 draws a
+        // markedly bolder line than 1.0 without changing its colour.
+        float edgeFade = min(inEdStrength, 1.0);
+        float edgeRadius = max(inEdStrength, 1.0);
+        luminosity *= max(1.0 - edgeFade,
+                          computeEdgeLuminosity(getNormalAt(UV, edgeRadius)));
     }
 
     // Compute foggedColor if Fog is enabled
@@ -215,32 +219,16 @@ void main() {
         blurredColor = applyBlur(UV);
     }
 
-    // Determine finalColor based on enabled effects
-    if (inAoEnabled != 0.0 || inEdStrength != 0.0 || inDofStrength != 0.0) {
-        if (inFogStrength != 0.0 && inDofStrength != 0.0) {
-            // Both Fog and DOF are enabled
-            vec4 mixedColor = mix(foggedColor, blurredColor, 0.5);
-            finalColor = vec4(mixedColor.rgb * luminosity, mixedColor.a);
-        } else if (inFogStrength != 0.0) {
-            // Only Fog is enabled with ao/edge-detection
-            finalColor = vec4(foggedColor.rgb * luminosity, foggedColor.a);
-        } else if (inDofStrength != 0.0) {
-            // Only DOF is enabled with/without ao/edge
-            finalColor = vec4(blurredColor.rgb * luminosity, blurredColor.a);
-        } else {
-            // Only AO and/or Edge Detection are enabled
-            finalColor = vec4(color.rgb * luminosity, color.a);
-        }
-    } else {
-        // Neither AO, DOF, nor Edge Detection is enabled
-        if (inFogStrength != 0.0) {
-            // Only Fog is enabled
-            finalColor = foggedColor;
-        } else {
-            // No effects are enabled
-            finalColor = color;
-        }
+    // Pick what the colour comes from, then shade it. Luminosity is already
+    // 1.0 when neither AO nor edge detection ran, so it applies unconditionally.
+    if (inFogStrength != 0.0 && inDofStrength != 0.0) {
+        finalColor = mix(foggedColor, blurredColor, 0.5);
+    } else if (inFogStrength != 0.0) {
+        finalColor = foggedColor;
+    } else if (inDofStrength != 0.0) {
+        finalColor = blurredColor;
     }
+    finalColor = vec4(finalColor.rgb * luminosity, finalColor.a);
 
     // Set the final fragment color
     outColor = finalColor;
