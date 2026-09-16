@@ -10,6 +10,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QList>
 #include <QtCore/QString>
+#include <QtCore/QVariantMap>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -31,7 +32,12 @@ public:
     AvailableColumn = 2,
     FeaturesColumn = 3,
     DescriptionColumn = 4,
-    ColumnCount = 5
+    /**
+     * Keywords and authors, hidden in the view but still matched by the
+     * search filter, which scans every column of the source model.
+     */
+    KeywordsColumn = 5,
+    ColumnCount = 6
   };
 
   /** Installation / update status for a package. */
@@ -60,6 +66,10 @@ public:
     QString
       minimumAvogadroVersion; ///< from "minimum-avogadro-version", "" if none
     QStringList featureTypes; ///< from "feature-types" array
+    QStringList keywords;     ///< from "keywords" ([project.keywords])
+    QStringList authors;      ///< from "authors" ([project.authors] names)
+    QString bugTrackerUrl;    ///< issue tracker, "" if none could be resolved
+    int recentDownloads = -1; ///< downloads in the stats window, -1 = unknown
 
     // Installed state (populated from PackageManager)
     QString installedVersion; ///< from pyproject.toml [project.version]
@@ -97,6 +107,19 @@ public:
    * in the online catalog.
    */
   void mergeInstalledPackages();
+
+  /**
+   * Overlay per-plugin download counts from the download counter's @c /stats
+   * response onto the existing entries. Entries the counter knows nothing
+   * about keep a count of -1 (unknown) rather than being reported as zero.
+   */
+  void loadDownloadStats(const QByteArray& jsonBytes);
+
+  /**
+   * Length in days of the window the loaded download counts cover, or 0 if no
+   * statistics have been loaded.
+   */
+  int downloadWindowDays() const { return m_downloadWindowDays; }
 
   // Accessors
   int entryCount() const { return static_cast<int>(m_entries.size()); }
@@ -138,7 +161,23 @@ private:
   /** Unicode glyph for the given feature type string. */
   static QString featureGlyph(const QString& featureType);
 
+  /**
+   * Pick the issue tracker out of a [project.urls] table, falling back to the
+   * GitHub issue form derived from @p repoUrl. Returns "" when neither is
+   * available.
+   */
+  static QString issueTrackerUrl(const QVariantMap& urls,
+                                 const QString& repoUrl);
+
+  /**
+   * Fill the authors, keywords and bug-tracker fields of @p entry from the
+   * pyproject.toml of an installed package. Only fields still empty are
+   * touched, so online catalog data always wins.
+   */
+  static void readLocalProjectMetadata(PackageEntry& entry);
+
   QList<PackageEntry> m_entries;
+  int m_downloadWindowDays = 0;
 };
 
 } // namespace QtPlugins

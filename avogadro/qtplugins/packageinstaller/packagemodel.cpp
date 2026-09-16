@@ -7,8 +7,10 @@
 
 #include <avogadro/core/version.h>
 #include <avogadro/qtgui/packagemanager.h>
+#include <avogadro/qtgui/tomlparse.h>
 
 #include <QtCore/QDateTime>
+#include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QHash>
 #include <QtCore/QLocale>
@@ -19,6 +21,7 @@
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
+#include <string_view>
 
 using json = nlohmann::json;
 
@@ -117,6 +120,10 @@ QVariant PackageModel::data(const QModelIndex& index, int role) const
       }
       case DescriptionColumn:
         return e.description;
+      case KeywordsColumn:
+        // Hidden, but searched: keep authors here too so that typing a name
+        // finds their plugins.
+        return (e.keywords + e.authors).join(QStringLiteral(", "));
       default:
         return {};
     }
@@ -172,6 +179,8 @@ QVariant PackageModel::headerData(int section, Qt::Orientation orientation,
       return tr("Features");
     case DescriptionColumn:
       return tr("Description");
+    case KeywordsColumn:
+      return tr("Keywords");
     default:
       return {};
   }
@@ -257,11 +266,36 @@ void PackageModel::loadOnlineCatalog(const QByteArray& jsonBytes)
       e.readmeUrl.replace(QStringLiteral("/blob/"), QStringLiteral("/"));
     }
 
-    auto featIt = item.find("feature-types");
-    if (featIt != item.end() && featIt->is_array()) {
-      for (const auto& f : *featIt) {
-        if (f.is_string())
-          e.featureTypes.append(QString::fromStdString(f.get<std::string>()));
+    const auto getStringArray = [&](const char* key, QStringList& out) {
+      auto it = item.find(key);
+      if (it == item.end() || !it->is_array())
+        return;
+      for (const auto& v : *it) {
+        if (v.is_string())
+          out.append(QString::fromStdString(v.get<std::string>()));
+      }
+    };
+
+    getStringArray("feature-types", e.featureTypes);
+    getStringArray("keywords", e.keywords);
+    getStringArray("authors", e.authors);
+
+    // The index resolves the bug tracker for us, but older copies of it (and
+    // any hand-written entry) may carry only [project.urls], so fall back to
+    // the same lookup here.
+    get("bug-tracker", e.bugTrackerUrl);
+    if (e.bugTrackerUrl.isEmpty()) {
+      auto urlsIt = item.find("urls");
+      if (urlsIt != item.end() && urlsIt->is_object()) {
+        QVariantMap urls;
+        for (const auto& [label, url] : urlsIt->items()) {
+          if (url.is_string())
+            urls.insert(QString::fromStdString(label),
+                        QString::fromStdString(url.get<std::string>()));
+        }
+        e.bugTrackerUrl = issueTrackerUrl(urls, e.baseUrl);
+      } else {
+        e.bugTrackerUrl = issueTrackerUrl({}, e.baseUrl);
       }
     }
 
@@ -347,6 +381,9 @@ void PackageModel::mergeInstalledPackages()
       e.installedDir = info.directory;
       e.isSymlink = symlink;
       e.status = computeStatus(e);
+      // A catalog entry generated before these fields existed still has the
+      // installed copy on disk to fall back to.
+      readLocalProjectMetadata(e);
     } else {
       // LocalOnly — installed but not in the online catalog
       PackageEntry e;
@@ -358,6 +395,7 @@ void PackageModel::mergeInstalledPackages()
       e.isSymlink = symlink;
       e.featureTypes = pm->packageFeatureTypes(pkgName);
       e.status = PackageStatus::LocalOnly;
+      readLocalProjectMetadata(e);
       m_entries.append(e);
     }
   }
@@ -368,6 +406,45 @@ void PackageModel::mergeInstalledPackages()
             });
 
   endResetModel();
+}
+
+void PackageModel::loadDownloadStats(const QByteArray& jsonBytes)
+{
+  json root =
+    json::parse(jsonBytes.data(), nullptr, /*allow_exceptions=*/false);
+  if (root.is_discarded() || !root.is_object())
+    return;
+
+  auto windowIt = root.find("window_days");
+  if (windowIt != root.end() && windowIt->is_number_integer())
+    m_downloadWindowDays = windowIt->get<int>();
+
+  auto pluginsIt = root.find("plugins");
+  if (pluginsIt == root.end() || !pluginsIt->is_object())
+    return;
+
+  // The counter keys on the short plugin name ("ani-energy"), which
+  // normalizes to the same key as the catalog name ("avogadro-ani-energy").
+  QHash<QString, int> counts;
+  for (const auto& [name, stats] : pluginsIt->items()) {
+    if (!stats.is_object())
+      continue;
+    auto recentIt = stats.find("recent");
+    if (recentIt != stats.end() && recentIt->is_number_integer())
+      counts.insert(normalizePackageName(QString::fromStdString(name)),
+                    recentIt->get<int>());
+  }
+
+  for (int row = 0; row < m_entries.size(); ++row) {
+    PackageEntry& e = m_entries[row];
+    // -1 (unknown) rather than 0 for a plugin the counter has never seen:
+    // "no data" and "nobody installed it" are different claims.
+    e.recentDownloads = counts.value(normalizePackageName(e.name), -1);
+  }
+
+  if (!m_entries.isEmpty()) {
+    emit dataChanged(index(0, 0), index(m_entries.size() - 1, ColumnCount - 1));
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -552,6 +629,89 @@ QString PackageModel::featureGlyph(const QString& featureType)
   if (featureType == QLatin1String("menu-commands"))
     return QStringLiteral("\u2630"); // ☰ TRIGRAM / HAMBURGER MENU
   return {};
+}
+
+// [project.urls] labels that name an issue tracker, in order of preference.
+// PyPI matches these case- and punctuation-insensitively, and plugins use
+// every spelling of them, so compare on a normalised form.
+static const char* s_issueUrlKeys[] = { "issues",     "issuetracker",
+                                        "bugtracker", "bugreports",
+                                        "bugs",       "tracker" };
+
+QString PackageModel::issueTrackerUrl(const QVariantMap& urls,
+                                      const QString& repoUrl)
+{
+  QHash<QString, QString> normalized;
+  for (auto it = urls.constBegin(); it != urls.constEnd(); ++it) {
+    QString label = it.key().toLower();
+    label.remove(QRegularExpression(QStringLiteral("[-_. ]+")));
+    const QString url = it.value().toString();
+    if (!url.isEmpty())
+      normalized.insert(label, url);
+  }
+
+  for (const char* key : s_issueUrlKeys) {
+    const QString url = normalized.value(QLatin1String(key));
+    if (!url.isEmpty())
+      return url;
+  }
+
+  // Almost no plugin declares a tracker of its own yet, so the GitHub issue
+  // form is the common path rather than the exception.
+  if (repoUrl.startsWith(QLatin1String("https://github.com/")))
+    return repoUrl + QStringLiteral("/issues/new");
+
+  return {};
+}
+
+void PackageModel::readLocalProjectMetadata(PackageEntry& entry)
+{
+  if (entry.installedDir.isEmpty())
+    return;
+  if (!entry.authors.isEmpty() && !entry.keywords.isEmpty() &&
+      !entry.bugTrackerUrl.isEmpty())
+    return;
+
+  QFile tomlFile(entry.installedDir + QStringLiteral("/pyproject.toml"));
+  if (!tomlFile.open(QIODevice::ReadOnly))
+    return;
+  const QByteArray content = tomlFile.readAll();
+
+  bool ok = false;
+  const QVariantMap project =
+    QtGui::parseTomlString(
+      std::string_view(content.constData(), content.size()), &ok)
+      .value(QStringLiteral("project"))
+      .toMap();
+  if (!ok || project.isEmpty())
+    return;
+
+  if (entry.authors.isEmpty()) {
+    // [[project.authors]] entries are tables; only the names are shown.
+    const QVariantList authors =
+      project.value(QStringLiteral("authors")).toList();
+    for (const QVariant& author : authors) {
+      const QString name =
+        author.toMap().value(QStringLiteral("name")).toString();
+      if (!name.isEmpty())
+        entry.authors.append(name);
+    }
+  }
+
+  if (entry.keywords.isEmpty()) {
+    const QVariantList keywords =
+      project.value(QStringLiteral("keywords")).toList();
+    for (const QVariant& keyword : keywords) {
+      const QString text = keyword.toString();
+      if (!text.isEmpty())
+        entry.keywords.append(text);
+    }
+  }
+
+  if (entry.bugTrackerUrl.isEmpty()) {
+    entry.bugTrackerUrl = issueTrackerUrl(
+      project.value(QStringLiteral("urls")).toMap(), entry.baseUrl);
+  }
 }
 
 bool PackageModel::versionCompatible(const PackageEntry& e)

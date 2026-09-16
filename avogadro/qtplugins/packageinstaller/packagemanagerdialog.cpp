@@ -19,6 +19,7 @@
 #include <QtCore/QStringView>
 
 #include <QtGui/QCursor>
+#include <QtGui/QDesktopServices>
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
@@ -26,7 +27,9 @@
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
@@ -75,6 +78,14 @@ PackageManagerDialog::PackageManagerDialog(QWidget* parent)
   m_ui->packageTable->horizontalHeader()->setSectionResizeMode(
     QHeaderView::ResizeToContents);
   m_ui->packageTable->verticalHeader()->hide();
+  // Keywords and authors are searchable but not worth a column of their own.
+  m_ui->packageTable->setColumnHidden(PackageModel::KeywordsColumn, true);
+
+  // Prefix the beetle here rather than in the .ui file, so the sources stay
+  // ASCII and translators only ever see the words.
+  m_ui->bugTrackerButton->setText(QStringLiteral("\U0001F41E  ") +
+                                  m_ui->bugTrackerButton->text());
+  m_ui->infoBox->hide();
 
   connect(m_ui->searchEdit, &QLineEdit::textChanged, m_proxyModel,
           &QSortFilterProxyModel::setFilterFixedString);
@@ -91,6 +102,8 @@ PackageManagerDialog::PackageManagerDialog(QWidget* parent)
           &PackageManagerDialog::removeSelected);
   connect(m_ui->installLocalButton, &QPushButton::clicked, this,
           &PackageManagerDialog::installFromDirectory);
+  connect(m_ui->bugTrackerButton, &QPushButton::clicked, this,
+          &PackageManagerDialog::openBugTracker);
   connect(QtGui::PackageManager::instance(),
           &QtGui::PackageManager::packagesInstalled, this,
           &PackageManagerDialog::onPackagesInstalled);
@@ -118,6 +131,17 @@ void PackageManagerDialog::getRepoData(const QString& url)
   QNetworkReply* reply = m_network->get(request);
   connect(reply, &QNetworkReply::finished, this,
           &PackageManagerDialog::onCatalogReply);
+}
+
+void PackageManagerDialog::getDownloadStats()
+{
+  QNetworkRequest request;
+  setRawHeaders(&request);
+  request.setUrl(
+    QUrl(QStringLiteral("https://plugins.avogadro.cc/stats?days=30")));
+  QNetworkReply* reply = m_network->get(request);
+  connect(reply, &QNetworkReply::finished, this,
+          &PackageManagerDialog::onStatsReply);
 }
 
 void PackageManagerDialog::refreshOnlineCatalog()
@@ -149,6 +173,26 @@ void PackageManagerDialog::onCatalogReply()
 
   m_model->loadOnlineCatalog(bytes);
   m_model->mergeInstalledPackages();
+  // Only worth asking for counts once there are rows to attach them to.
+  getDownloadStats();
+}
+
+void PackageManagerDialog::onStatsReply()
+{
+  auto* reply = qobject_cast<QNetworkReply*>(sender());
+  if (reply == nullptr)
+    return;
+
+  // Download counts are a nice-to-have: a failure here leaves the counts
+  // unknown and is not worth reporting over the README.
+  const bool ok = reply->error() == QNetworkReply::NoError;
+  const QByteArray bytes = ok ? reply->readAll() : QByteArray();
+  reply->deleteLater();
+  if (bytes.isEmpty())
+    return;
+
+  m_model->loadDownloadStats(bytes);
+  updateDetails(m_ui->packageTable->selectionModel()->currentIndex());
 }
 
 // ---------------------------------------------------------------------------
@@ -186,6 +230,7 @@ void PackageManagerDialog::onCurrentRowChanged(const QModelIndex& current,
                                                const QModelIndex& previous)
 {
   Q_UNUSED(previous)
+  updateDetails(current);
   if (!current.isValid())
     return;
 
@@ -216,6 +261,57 @@ void PackageManagerDialog::onCurrentRowChanged(const QModelIndex& current,
   reply->setProperty("readmeUrl", url);
   connect(reply, &QNetworkReply::finished, this,
           &PackageManagerDialog::onReadmeReply);
+}
+
+void PackageManagerDialog::updateDetails(const QModelIndex& proxyIndex)
+{
+  if (!proxyIndex.isValid()) {
+    m_ui->infoBox->hide();
+    return;
+  }
+
+  const int row = m_proxyModel->mapToSource(proxyIndex).row();
+  if (row < 0 || row >= m_model->entryCount()) {
+    m_ui->infoBox->hide();
+    return;
+  }
+  const PackageModel::PackageEntry& e = m_model->entry(row);
+
+  const bool hasAuthors = !e.authors.isEmpty();
+  if (hasAuthors)
+    m_ui->authorsLabel->setText(
+      tr("Authors: %1").arg(e.authors.join(tr(", "))));
+  m_ui->authorsLabel->setVisible(hasAuthors);
+
+  const int days = m_model->downloadWindowDays();
+  const bool hasDownloads = e.recentDownloads >= 0 && days > 0;
+  if (hasDownloads)
+    m_ui->downloadsLabel->setText(
+      tr("%n download(s) in the last %1 days", "", e.recentDownloads)
+        .arg(days));
+  m_ui->downloadsLabel->setVisible(hasDownloads);
+
+  const bool hasTracker = !e.bugTrackerUrl.isEmpty();
+  m_ui->bugTrackerButton->setVisible(hasTracker);
+
+  // Nothing to say about this plugin — don't leave an empty box behind.
+  m_ui->infoBox->setVisible(hasAuthors || hasDownloads || hasTracker);
+}
+
+void PackageManagerDialog::openBugTracker()
+{
+  const QModelIndex current =
+    m_ui->packageTable->selectionModel()->currentIndex();
+  if (!current.isValid())
+    return;
+
+  const int row = m_proxyModel->mapToSource(current).row();
+  if (row < 0 || row >= m_model->entryCount())
+    return;
+
+  const QString url = m_model->entry(row).bugTrackerUrl;
+  if (!url.isEmpty())
+    QDesktopServices::openUrl(QUrl(url));
 }
 
 void PackageManagerDialog::onReadmeReply()
