@@ -10,6 +10,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/io/fileformat.h>
 
+#include <cstdio>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -149,6 +150,23 @@ TEST(FileFormatGuardTest, writeStringCatchesAStandardException)
   EXPECT_NE(format.error().find("index out of range"), std::string::npos);
   // A half-written document must not be handed back as though it were one.
   EXPECT_TRUE(output.empty());
+}
+
+TEST(FileFormatGuardTest, writeFileCatchesAStandardException)
+{
+  // writeFile() reaches the guard by a different route than writeString():
+  // through open(), writeMolecule() and close(), and its result is combined
+  // with the output-error flag before it is returned. Tests run with the
+  // build directory as the working directory, which is writable.
+  const std::string fileName("fileformatguardtest-output.tmp");
+  ThrowingFormat format(Behavior::ThrowStandard);
+  Molecule molecule;
+  molecule.addAtom(6);
+  EXPECT_FALSE(format.writeFile(fileName, molecule));
+  EXPECT_NE(format.error().find("index out of range"), std::string::npos);
+  // open() creates the file before write() is ever reached, so it exists even
+  // though nothing usable was ever put in it.
+  std::remove(fileName.c_str());
 }
 
 #else // FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION

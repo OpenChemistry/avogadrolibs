@@ -52,6 +52,11 @@ bool guardedParse([[maybe_unused]] std::string& errorMessage, Callable&& parse)
     return parse();
   } catch (const std::exception& e) {
     errorMessage = e.what();
+    // what() may return an empty string, and every caller reports the message
+    // only when it is non-empty -- so without this the read would fail with
+    // nothing said at all.
+    if (errorMessage.empty())
+      errorMessage = "an unknown error occurred";
     return false;
   } catch (...) {
     // Nothing in the standard library throws a non-std::exception, but a

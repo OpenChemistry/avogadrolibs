@@ -56,8 +56,12 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get -qq update
+        # libclang-rt-*-dev provides both the MSan runtime and the builtins
+        # that -rtlib=compiler-rt needs below. clang-* pulls it in today, but
+        # the link flags depend on it directly, so name it.
         sudo apt-get -qq install ninja-build libeigen3-dev \
-          clang-${LLVM_VERSION} llvm-${LLVM_VERSION}
+          clang-${LLVM_VERSION} llvm-${LLVM_VERSION} \
+          libclang-rt-${LLVM_VERSION}-dev
 
     - name: Set up MSan flags
       shell: bash
@@ -84,6 +88,15 @@ jobs:
         cxx_only="-stdlib=libc++ -nostdinc++ -isystem ${prefix}/include/c++/v1"
         link="-fsanitize=memory -stdlib=libc++ -L${prefix}/lib"
         link="${link} -Wl,-rpath,${prefix}/lib -lc++abi"
+
+        # Use the libunwind built with MSan just above. Without this the link
+        # resolves _Unwind_* to the system libgcc_s, which is uninstrumented:
+        # MSan then has no shadow for what the unwinder does to the stack, and
+        # the first C++ exception thrown anywhere in the suite dies as a bogus
+        # "stack-overflow" instead of unwinding. -rtlib=compiler-rt because
+        # clang refuses --unwindlib=libunwind alongside the default
+        # -rtlib=libgcc.
+        link="${link} -rtlib=compiler-rt --unwindlib=libunwind"
 
         {
           echo "MSAN_CFLAGS=${san} ${eigen}"
@@ -191,12 +204,13 @@ jobs:
         # stack-exhaustion bugs will not surface in this job -- hunt those in
         # the ASan fuzz job, where frame sizes are realistic.
         #
-        # If a test dies with "stack-overflow" at the first point it throws a
-        # C++ exception, suspect the unwinder rather than the code: this job
-        # links the libc++abi and libunwind it built above, and if the link
-        # still resolves _Unwind_* to the system, uninstrumented libgcc_s, the
-        # two disagree. Try adding -rtlib=compiler-rt --unwindlib=libunwind to
-        # MSAN_LDFLAGS before going looking for a bug in avogadrolibs.
+        # A test dying with "stack-overflow" at the first point it throws a C++
+        # exception means the unwinder, not the code. That happened once, when
+        # tests/io/fileformatguardtest.cpp became the first test in the suite
+        # to throw: the link was still resolving _Unwind_* to the system,
+        # uninstrumented libgcc_s. MSAN_LDFLAGS now carries
+        # -rtlib=compiler-rt --unwindlib=libunwind to pin the instrumented
+        # libunwind; check that first if the symptom returns.
         ulimit -s 65536
 
         ctest -j "$(nproc)"
