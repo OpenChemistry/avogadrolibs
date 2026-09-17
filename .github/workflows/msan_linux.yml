@@ -204,13 +204,18 @@ jobs:
         # stack-exhaustion bugs will not surface in this job -- hunt those in
         # the ASan fuzz job, where frame sizes are realistic.
         #
-        # A test dying with "stack-overflow" at the first point it throws a C++
-        # exception means the unwinder, not the code. That happened once, when
-        # tests/io/fileformatguardtest.cpp became the first test in the suite
-        # to throw: the link was still resolving _Unwind_* to the system,
-        # uninstrumented libgcc_s. MSAN_LDFLAGS now carries
-        # -rtlib=compiler-rt --unwindlib=libunwind to pin the instrumented
-        # libunwind; check that first if the symptom returns.
+        # This job cannot run a test that throws. tests/io/fileformatguardtest.cpp
+        # was the first in the suite to throw, and it died as
+        # "MemorySanitizer: stack-overflow" inside the unwinder before any
+        # handler ran, on the very first throw. Pinning the instrumented
+        # unwinder with -rtlib=compiler-rt --unwindlib=libunwind (kept above,
+        # because building libunwind with MSan and then linking the system one
+        # is wrong regardless) did NOT fix it. The same cases pass under the
+        # Address, UndefinedBehavior, Leak and Thread sanitizer jobs, so the
+        # code is fine and the limitation is this toolchain. Those cases are
+        # therefore compiled out under __has_feature(memory_sanitizer); see the
+        # comment at the top of that test file. Do not spend another CI round
+        # on it -- MSan is here for uninitialized reads, not for exceptions.
         ulimit -s 65536
 
         ctest -j "$(nproc)"

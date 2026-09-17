@@ -28,6 +28,24 @@ using Avogadro::Io::FileFormat;
 // an escaping exception as a crash. Both halves are checked below: the catch
 // cases build only when the guard is present, and a matching escape case
 // builds only when it is absent, so the gating itself is under test.
+//
+// Neither half is built under MemorySanitizer. Throwing at all dies there --
+// the first throw in the whole suite aborts as "stack-overflow" inside the
+// unwinder before any handler runs, which is a limitation of that job's
+// hand-built instrumented runtimes and not a defect in this code. The same
+// cases pass under the Address, UndefinedBehavior, Leak and Thread sanitizer
+// builds, so nothing here goes unchecked; MSan simply looks for uninitialized
+// reads, which is not what these cases exercise. The non-throwing case below
+// still builds there, so the ordinary readString() path keeps its MSan
+// coverage. See the note in .github/workflows/msan_linux.yml.
+#if defined(__has_feature)
+#if __has_feature(memory_sanitizer)
+#define AVOGADRO_MSAN_BUILD 1
+#endif
+#endif
+#ifndef AVOGADRO_MSAN_BUILD
+#define AVOGADRO_MSAN_BUILD 0
+#endif
 
 namespace {
 
@@ -110,6 +128,7 @@ TEST(FileFormatGuardTest, readStringSucceedsWhenTheFormatBehaves)
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
 }
 
+#if !AVOGADRO_MSAN_BUILD
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 
 TEST(FileFormatGuardTest, readStringCatchesAStandardException)
@@ -182,3 +201,4 @@ TEST(FileFormatGuardTest, fuzzBuildsLetTheExceptionEscape)
 }
 
 #endif // FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+#endif // !AVOGADRO_MSAN_BUILD
