@@ -336,6 +336,14 @@ void JsonWidget::buildOptionGui()
                      options.take(u"Multiplicity"_s));
     }
 
+    // How the geometry is written: Cartesian or a z-matrix. The values are
+    // the script's own strings; only the label shown beside them is
+    // translated, so the script and replaceKeywords() still agree on what
+    // was chosen.
+    if (options.contains(u"Coordinates"_s))
+      addOptionRow(u"Coordinates"_s, tr("Coordinates"),
+                   options.take(u"Coordinates"_s));
+
     // Solvation / model
     if (options.contains(u"Solvent"_s) &&
         options.contains(u"Solvation Model"_s)) {
@@ -561,10 +569,15 @@ QWidget* JsonWidget::createStringListWidget(const QJsonObject& obj)
        vit != vitEnd; ++vit) {
     if ((*vit).isString()) {
       QString value = (*vit).toString();
-      if (value == '-')
+      if (value == '-') {
         combo->insertSeparator(combo->count());
-      else
-        combo->addItem((*vit).toString());
+      } else {
+        // The script's own spelling is carried in the item data, and that is
+        // what is sent back to it. The displayed text is free to be
+        // translated without breaking a generator that compares the value it
+        // gets against the strings it declared.
+        combo->addItem(value, value);
+      }
     } else
       qDebug() << "Cannot convert value to string for stringList:" << *vit;
   }
@@ -879,10 +892,16 @@ void JsonWidget::setStringListOption(const QString& name,
   }
 
   int index = -1;
-  if (value.isDouble())
+  if (value.isDouble()) {
     index = static_cast<int>(value.toDouble() + 0.5);
-  else if (value.isString())
-    index = combo->findText(value.toString());
+  } else if (value.isString()) {
+    // Settings and defaults hold the script's own spelling, so match on the
+    // item data and fall back to the displayed text for a combo built
+    // without any.
+    index = combo->findData(value.toString());
+    if (index < 0)
+      index = combo->findText(value.toString());
+  }
 
   if (index < 0 || index > combo->count()) {
     qWarning() << tr("Error setting default for option '%1'. "
@@ -1078,6 +1097,25 @@ void JsonWidget::setBooleanOption(const QString& name, const QJsonValue& value)
   checkBox->setChecked(value.toBool());
 }
 
+namespace {
+
+/**
+ * The value a combo box stands for, as the script that declared it spelled
+ * it.
+ *
+ * Item data holds the script's own string, so that a translated display text
+ * never reaches the script. A combo built elsewhere, without that data, still
+ * answers with what it shows.
+ */
+QString comboValue(const QComboBox* combo)
+{
+  const QVariant data = combo->currentData();
+  return data.isValid() && data.canConvert<QString>() ? data.toString()
+                                                      : combo->currentText();
+}
+
+} // namespace
+
 bool JsonWidget::optionString(const QString& option, QString& value) const
 {
   QWidget* widget = m_widgets.value(option, nullptr);
@@ -1089,7 +1127,7 @@ bool JsonWidget::optionString(const QString& option, QString& value) const
     value = edit->text();
   } else if (auto* combo = qobject_cast<QComboBox*>(widget)) {
     retval = true;
-    value = combo->currentText();
+    value = comboValue(combo);
   } else if (auto* spinbox = qobject_cast<QSpinBox*>(widget)) {
     retval = true;
     value = QString::number(spinbox->value());
@@ -1112,7 +1150,7 @@ QJsonObject JsonWidget::collectOptions() const
   foreach (QString label, m_widgets.keys()) {
     QWidget* widget = m_widgets.value(label, nullptr);
     if (auto* combo = qobject_cast<QComboBox*>(widget)) {
-      ret.insert(label, combo->currentText());
+      ret.insert(label, comboValue(combo));
     } else if (auto* lineEdit = qobject_cast<QLineEdit*>(widget)) {
       QString value(lineEdit->text());
       if (value.isEmpty() && label == u"Title"_s)

@@ -25,7 +25,9 @@ using Avogadro::Core::DummyAtomSite;
 using Avogadro::Core::InternalCoordinate;
 using Avogadro::Core::internalToCartesian;
 using Avogadro::Core::linearDummySites;
+using Avogadro::Core::linearReferenceRows;
 using Avogadro::Core::Molecule;
+using Avogadro::Core::ZMatrixOrder;
 using Avogadro::Core::ZMatrixOrigin;
 
 namespace {
@@ -864,4 +866,110 @@ TEST(InternalCoordinatesTest, coincidentAtomsFourAtomChain)
         << "pair " << coincidentWith << " atom " << i;
     }
   }
+}
+
+// A molecule whose own atom order already describes a z-matrix keeps it, so
+// that the numbering of a generated input file is the numbering on screen.
+TEST(InternalCoordinatesTest, preferAtomOrderKeepsAValidOrder)
+{
+  Molecule mol = methane();
+
+  Array<Index> rowToAtom;
+  const Array<InternalCoordinate> ic =
+    cartesianToInternal(mol, rowToAtom, ZMatrixOrder::PreferAtomOrder);
+  ASSERT_EQ(rowToAtom.size(), static_cast<size_t>(5));
+  for (size_t row = 0; row < rowToAtom.size(); ++row)
+    EXPECT_EQ(rowToAtom[row], Index(row)) << "row " << row;
+
+  // Keeping the order must not cost the geometry.
+  expectSameGeometry(
+    mol, internalToCartesian(mol, ic, rowToAtom, ZMatrixOrigin::Canonical));
+}
+
+// An order that would leave an atom with no earlier atom it is bonded to is
+// given up: a z-matrix of non-bonded references describes the geometry but
+// none of its rows is a bond length or a bond angle.
+TEST(InternalCoordinatesTest, preferAtomOrderGivesUpOnABadOrder)
+{
+  // Hydrogen peroxide with both hydrogens numbered before both oxygens, so
+  // that atom 1 is bonded only to atom 3.
+  Molecule mol;
+  mol.addAtom(1).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(1).setPosition3d(Vector3(2.4, 0.9, 0.5));
+  mol.addAtom(8).setPosition3d(Vector3(0.97, 0.0, 0.0));
+  mol.addAtom(8).setPosition3d(Vector3(1.7, 0.4, 0.5));
+  mol.addBond(mol.atom(0), mol.atom(2), 1);
+  mol.addBond(mol.atom(2), mol.atom(3), 1);
+  mol.addBond(mol.atom(3), mol.atom(1), 1);
+
+  Array<Index> rowToAtom;
+  const Array<InternalCoordinate> ic =
+    cartesianToInternal(mol, rowToAtom, ZMatrixOrder::PreferAtomOrder);
+  ASSERT_EQ(rowToAtom.size(), static_cast<size_t>(4));
+
+  bool reordered = false;
+  for (size_t row = 0; row < rowToAtom.size(); ++row)
+    reordered = reordered || rowToAtom[row] != Index(row);
+  EXPECT_TRUE(reordered) << "kept an order with an unbonded row";
+
+  expectSameGeometry(
+    mol, internalToCartesian(mol, ic, rowToAtom, ZMatrixOrigin::Canonical));
+}
+
+// Carbon dioxide: the third row's angle is the straight O-C-O, which states
+// the geometry correctly but cannot be varied.
+TEST(InternalCoordinatesTest, linearRowsAreReported)
+{
+  Molecule mol;
+  mol.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(8).setPosition3d(Vector3(1.16, 0.0, 0.0));
+  mol.addAtom(8).setPosition3d(Vector3(-1.16, 0.0, 0.0));
+  mol.addBond(mol.atom(0), mol.atom(1), 2);
+  mol.addBond(mol.atom(0), mol.atom(2), 2);
+
+  Array<Index> rowToAtom;
+  const Array<InternalCoordinate> ic = cartesianToInternal(mol, rowToAtom);
+  const Array<Index> linear = linearReferenceRows(mol, ic);
+  ASSERT_EQ(linear.size(), static_cast<size_t>(1));
+  EXPECT_EQ(linear[0], Index(2));
+}
+
+// Water is bent, and its opening rows are short rather than ill-conditioned.
+TEST(InternalCoordinatesTest, bentMoleculeHasNoLinearRows)
+{
+  Molecule mol;
+  mol.addAtom(8).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(1).setPosition3d(Vector3(0.9572, 0.0, 0.0));
+  mol.addAtom(1).setPosition3d(Vector3(-0.2400, 0.9266, 0.0));
+  mol.addBond(mol.atom(0), mol.atom(1), 1);
+  mol.addBond(mol.atom(0), mol.atom(2), 1);
+
+  Array<Index> rowToAtom;
+  const Array<InternalCoordinate> ic = cartesianToInternal(mol, rowToAtom);
+  EXPECT_TRUE(linearReferenceRows(mol, ic).empty());
+}
+
+// Collinear has two ends. Where a row's angle folds back to nearly zero its
+// atom sits on the reference axis just as surely as it does at 180 degrees,
+// and the torsion that would place it means nothing either way.
+TEST(InternalCoordinatesTest, foldedRowsCountAsLinear)
+{
+  // Both neighbours of the central atom lie along the same ray from it, so
+  // the angle between them at that atom is zero rather than straight.
+  Molecule mol;
+  mol.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(1).setPosition3d(Vector3(1.0, 0.0, 0.0));
+  mol.addAtom(1).setPosition3d(Vector3(2.0, 0.0, 0.0));
+  mol.addBond(mol.atom(0), mol.atom(1), 1);
+  mol.addBond(mol.atom(0), mol.atom(2), 1);
+
+  Array<Index> rowToAtom;
+  const Array<InternalCoordinate> ic = cartesianToInternal(mol, rowToAtom);
+  ASSERT_EQ(ic.size(), static_cast<size_t>(3));
+  ASSERT_NE(ic[2].b, MaxIndex);
+  EXPECT_NEAR(ic[2].angle, 0.0, 1e-6) << "expected a folded row to test";
+
+  const Array<Index> linear = linearReferenceRows(mol, ic);
+  ASSERT_EQ(linear.size(), static_cast<size_t>(1));
+  EXPECT_EQ(linear[0], Index(2));
 }

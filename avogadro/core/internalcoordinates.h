@@ -127,6 +127,51 @@ AVOGADROCORE_EXPORT Array<Vector3> internalToCartesian(
   ZMatrixOrigin origin = ZMatrixOrigin::Preserve);
 
 /**
+ * The order the rows of a generated z-matrix are taken in.
+ */
+enum class ZMatrixOrder
+{
+  /**
+   * Order the rows for the best-conditioned z-matrix, walking outwards in
+   * bond order from the lowest-indexed atom. Rows are then not necessarily
+   * in the molecule's atom order.
+   */
+  Optimal,
+  /**
+   * Keep the molecule's own atom order where it makes a z-matrix no worse
+   * than Optimal would, so that the numbering of a generated input file
+   * matches the numbering the user sees. The molecule's order is kept only
+   * when every atom is bonded to an earlier one (or opens its fragment) and
+   * it leaves no more rows near-linear than Optimal would; otherwise the
+   * Optimal order is used, and the caller sees that in @a rowToAtom.
+   */
+  PreferAtomOrder
+};
+
+/**
+ * The rows of @p internalCoords whose references are too close to linear for
+ * the row to be read or edited as an internal coordinate.
+ *
+ * A row is reported when its own angle, or the angle its dihedral is
+ * measured about, is collinear to within @p toleranceDegrees -- at either
+ * end of the range, since an angle near zero folds the two arms onto the
+ * same ray and leaves the plane between them just as undefined as a straight
+ * one does. The geometry such a row describes is still correct to within
+ * rounding, but the value is ill-conditioned: a thousandth of an angstrom of
+ * movement swings it by tens of degrees. A caller writing a z-matrix for
+ * another program should say so.
+ *
+ * @param molecule The molecule the rows describe.
+ * @param internalCoords Rows as returned by cartesianToInternal().
+ * @param toleranceDegrees How close to 180 degrees counts as too linear;
+ * the same distance from 0 degrees counts equally.
+ * @return The offending row indices, ascending.
+ */
+AVOGADROCORE_EXPORT Array<Index> linearReferenceRows(
+  const Molecule& molecule, const Array<InternalCoordinate>& internalCoords,
+  Real toleranceDegrees = 175.0);
+
+/**
  * Derive a z-matrix from a molecule's Cartesian coordinates.
  *
  * Rows are returned in z-matrix order, which is not necessarily the
@@ -148,6 +193,20 @@ AVOGADROCORE_EXPORT Array<Vector3> internalToCartesian(
  */
 AVOGADROCORE_EXPORT Array<InternalCoordinate> cartesianToInternal(
   const Molecule& molecule, Array<Index>& rowToAtom);
+
+/**
+ * Derive a z-matrix from a molecule's Cartesian coordinates, choosing how
+ * the rows are ordered.
+ *
+ * @param molecule The molecule to describe.
+ * @param rowToAtom Filled with the atom index each row places. It is the
+ * identity whenever the molecule's own atom order was kept.
+ * @param order Whether to order the rows for the best-conditioned z-matrix
+ * or to keep the molecule's atom order where that is no worse.
+ * @return One row per atom, in z-matrix order.
+ */
+AVOGADROCORE_EXPORT Array<InternalCoordinate> cartesianToInternal(
+  const Molecule& molecule, Array<Index>& rowToAtom, ZMatrixOrder order);
 
 } // namespace Core
 } // namespace Avogadro

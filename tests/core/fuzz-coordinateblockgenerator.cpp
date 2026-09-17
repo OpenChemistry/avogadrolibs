@@ -19,12 +19,14 @@ using namespace Avogadro::Core;
 
 namespace {
 
-// Every character the specification understands. Random bytes almost never
-// land on these, so bias the generated specs towards them.
-const std::string kSpecChars = "#ZLGSNxyzabc01_";
+// Every character the specification understands, the z-matrix reference and
+// value fields included. Random bytes almost never land on these, so bias the
+// generated specs towards them.
+const std::string kSpecChars = "#ZLGSNxyzabc01_,IJKRAT";
 
 constexpr size_t kMaxSpecLen = 64;
 constexpr size_t kMaxAtoms = 64;
+constexpr size_t kMaxBonds = 128;
 
 // Build a specification string. Most of the time it is made of valid spec
 // characters, but sometimes it is raw fuzz data so unhandled characters and
@@ -42,6 +44,19 @@ std::string consumeSpecification(FuzzedDataProvider& fdp)
       kSpecChars[fdp.ConsumeIntegralInRange<size_t>(0, kSpecChars.size() - 1)]);
   }
   return spec;
+}
+
+// Pick one of the block kinds: Cartesian, or a ragged or padded z-matrix.
+CoordinateBlockGenerator::Mode consumeMode(FuzzedDataProvider& fdp)
+{
+  switch (fdp.ConsumeIntegralInRange<int>(0, 2)) {
+    case 1:
+      return CoordinateBlockGenerator::Mode::ZMatrix;
+    case 2:
+      return CoordinateBlockGenerator::Mode::ZMatrixPadded;
+    default:
+      return CoordinateBlockGenerator::Mode::Cartesian;
+  }
 }
 
 // Unlike FuzzHelpers::buildMolecule, atomic numbers span the whole unsigned
@@ -65,6 +80,20 @@ Molecule buildMolecule(FuzzedDataProvider& fdp)
     } else {
       mol.setAtomPosition3d(i, FuzzHelpers::consumeVector3(fdp));
     }
+  }
+
+  // Bonds, so that the z-matrix modes exercise the reference walk over the
+  // bond graph rather than only the fallback that anchors an unbonded atom to
+  // whatever was written down last.
+  const size_t numBonds =
+    numAtoms > 1 ? fdp.ConsumeIntegralInRange<size_t>(0, kMaxBonds) : 0;
+  for (size_t i = 0; i < numBonds; ++i) {
+    const size_t a = fdp.ConsumeIntegralInRange<size_t>(0, numAtoms - 1);
+    const size_t b = fdp.ConsumeIntegralInRange<size_t>(0, numAtoms - 1);
+    if (a == b)
+      continue;
+    mol.addBond(
+      a, b, static_cast<unsigned char>(fdp.ConsumeIntegralInRange<int>(1, 3)));
   }
 
   // Half the time attach a unit cell so the fractional ('a', 'b', 'c') paths
@@ -101,12 +130,26 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
   generator.setDistanceUnit(fdp.ConsumeBool()
                               ? CoordinateBlockGenerator::Bohr
                               : CoordinateBlockGenerator::Angstrom);
+  generator.setMode(consumeMode(fdp));
   generator.generateCoordinateBlock();
+  generator.atomsReordered();
+  generator.linearRows();
 
   // Re-run with a second specification to exercise the stream reset, and with
   // no molecule at all to cover the early return.
   generator.setSpecification(consumeSpecification(fdp));
+  generator.setMode(consumeMode(fdp));
   generator.generateCoordinateBlock();
+
+  // Every mode over the same molecule and specification: a z-matrix row drops
+  // fields the opening rows cannot carry, so the ragged and padded paths walk
+  // the specification differently from each other and from the Cartesian one.
+  for (const auto mode : { CoordinateBlockGenerator::Mode::Cartesian,
+                           CoordinateBlockGenerator::Mode::ZMatrix,
+                           CoordinateBlockGenerator::Mode::ZMatrixPadded }) {
+    generator.setMode(mode);
+    generator.generateCoordinateBlock();
+  }
 
   generator.setMolecule(nullptr);
   generator.generateCoordinateBlock();
