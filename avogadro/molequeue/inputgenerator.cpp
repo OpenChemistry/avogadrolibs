@@ -170,6 +170,11 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
   m_mainFileName.clear();
   m_files.clear();
 
+  // The user options as the script declared them, used below to choose
+  // between the geometry keywords it may have left in the file.
+  const QJsonObject scriptOptions(
+    options_.value(QStringLiteral("options")).toObject());
+
   // Add the molecule file to the options
   QJsonObject allOptions(options_);
   if (!insertMolecule(allOptions, mol))
@@ -235,7 +240,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
                 contents = m_errors.back();
                 result = false;
               }
-              replaceKeywords(contents, mol);
+              replaceKeywords(contents, mol, scriptOptions);
               m_filenames << fileName;
               m_files.insert(fileObj["filename"].toString(), contents);
 
@@ -436,16 +441,139 @@ QString InputGenerator::generateCoordinateBlock(const QString& spec,
   return QString::fromStdString(tmp);
 }
 
-void InputGenerator::replaceKeywords(QString& str,
-                                     const Core::Molecule& mol) const
+QString InputGenerator::generateZMatrixBlock(const QString& spec,
+                                             const Core::Molecule& mol,
+                                             bool padded) const
+{
+  Core::CoordinateBlockGenerator gen;
+  gen.setMolecule(&mol);
+  gen.setMode(padded ? Core::CoordinateBlockGenerator::Mode::ZMatrixPadded
+                     : Core::CoordinateBlockGenerator::Mode::ZMatrix);
+  gen.setSpecification(spec.toStdString());
+  std::string tmp(gen.generateCoordinateBlock());
+  if (!tmp.empty())
+    tmp.resize(tmp.size() - 1); // Pop off the trailing newline
+
+  // A z-matrix describes each atom against atoms already written down, which
+  // the molecule's own atom order does not always allow. The geometry is
+  // right either way, but the numbering in the file is then not the
+  // numbering on screen, and anything the user counts off the structure --
+  // frozen atoms, a scan coordinate -- would be counted wrong.
+  if (gen.atomsReordered()) {
+    const QString warning(
+      tr("The z-matrix lists the atoms in a different order from the "
+         "molecule, so atom numbers in this file do not match the ones shown "
+         "in Avogadro."));
+    if (!m_warnings.contains(warning))
+      m_warnings << warning;
+  }
+
+  const Core::Array<Index> linearRows = gen.linearRows();
+  if (!linearRows.empty()) {
+    QStringList rowNumbers;
+    for (Index row : linearRows)
+      rowNumbers << QString::number(row + 1);
+    const QString warning(
+      tr("A linear fragment leaves the angle or torsion on z-matrix row(s) %1 "
+         "undetermined. The geometry is written correctly, but these "
+         "coordinates cannot be varied, and a program that rebuilds Cartesian "
+         "coordinates from them may not reproduce this structure exactly. "
+         "Adding a dummy atom off the axis avoids this.")
+        .arg(rowNumbers.join(QLatin1String(", "))));
+    if (!m_warnings.contains(warning))
+      m_warnings << warning;
+  }
+
+  return QString::fromStdString(tmp);
+}
+
+namespace {
+
+/**
+ * Whether @p value names the z-matrix entry of a "Coordinates" option.
+ *
+ * The value is the script's own string rather than anything shown on screen,
+ * so this is not matching translated text. It stays generous about spelling
+ * because the option is a convention that third-party scripts follow by
+ * hand.
+ */
+bool isZMatrixValue(const QString& value)
+{
+  const QString lower = value.toLower();
+  return lower.contains(QLatin1String("z-matrix")) ||
+         lower.contains(QLatin1String("zmatrix")) ||
+         lower.contains(QLatin1String("zmat")) ||
+         lower.contains(QLatin1String("internal"));
+}
+
+/**
+ * Remove @p keyword from @p str, taking the line with it when the keyword is
+ * all that line holds.
+ *
+ * The unused one of a pair of geometry keywords sits on a line of its own, so
+ * deleting just the keyword would leave a blank line behind -- which Gaussian,
+ * for one, reads as the end of the molecule specification.
+ */
+void removeKeywordLine(QString& str, const QString& keyword)
+{
+  qsizetype index = str.indexOf(keyword);
+  while (index >= 0) {
+    qsizetype start = index;
+    qsizetype end = index + keyword.size();
+
+    // Take the whole line only when nothing else shares it.
+    const qsizetype lineStart = str.lastIndexOf(QLatin1Char('\n'), index) + 1;
+    qsizetype lineEnd = str.indexOf(QLatin1Char('\n'), end);
+    if (lineEnd < 0)
+      lineEnd = str.size();
+    const QStringView before =
+      QStringView(str).mid(lineStart, start - lineStart);
+    const QStringView after = QStringView(str).mid(end, lineEnd - end);
+    if (before.trimmed().isEmpty() && after.trimmed().isEmpty()) {
+      start = lineStart;
+      end = (lineEnd < str.size()) ? lineEnd + 1 : lineEnd;
+    }
+
+    str.remove(start, end - start);
+    index = str.indexOf(keyword, start);
+  }
+}
+
+} // namespace
+
+void InputGenerator::replaceKeywords(QString& str, const Core::Molecule& mol,
+                                     const QJsonObject& options) const
 {
   // Simple keywords:
-  str.replace("$$atomCount$$", QString::number(mol.atomCount()));
-  str.replace("$$bondCount$$", QString::number(mol.bondCount()));
+  str.replace(QLatin1String("$$atomCount$$"), QString::number(mol.atomCount()));
+  str.replace(QLatin1String("$$bondCount$$"), QString::number(mol.bondCount()));
+
+  // A script that can write either kind of geometry block puts both keywords
+  // in the file and declares a "Coordinates" option to choose between them.
+  // With no such option the Cartesian block is written, as it always was.
+  const QJsonValue coordinates = options.value(QStringLiteral("Coordinates"));
+  const bool wantZMatrix =
+    coordinates.isString() && isZMatrixValue(coordinates.toString());
 
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
-  QRegularExpression coordParser(R"(\$\$coords:([^\$]*)\$\$)");
+  QRegularExpression coordParser(R"(\$\$(coords|zmat|zmatpad):([^\$]*)\$\$)");
+
+  // Only a file offering both forms has anything to choose between. One that
+  // offers a single form gets it whatever the option says: a file whose only
+  // geometry keyword was dropped would go to the program with no molecule in
+  // it at all, which is worse than the wrong kind of coordinates.
+  bool haveCartesian = false;
+  bool haveZMatrix = false;
+  QRegularExpressionMatchIterator surveyor = coordParser.globalMatch(str);
+  while (surveyor.hasNext()) {
+    if (surveyor.next().captured(1) == QLatin1String("coords"))
+      haveCartesian = true;
+    else
+      haveZMatrix = true;
+  }
+  const bool choosing = haveCartesian && haveZMatrix;
+
   QRegularExpressionMatch match;
   int ind = 0;
   // Not sure while this needs to be a while statement since we replace all in
@@ -453,10 +581,19 @@ void InputGenerator::replaceKeywords(QString& str,
   while ((match = coordParser.match(str, ind)).hasMatch()) {
     // Extract spec and prepare the replacement
     const QString keyword = match.captured(0);
-    const QString spec = match.captured(1);
+    const QString name = match.captured(1);
+    const QString spec = match.captured(2);
+    const bool isZMatrix = (name != QLatin1String("coords"));
 
     // Replace all blocks with this signature
-    str.replace(keyword, generateCoordinateBlock(spec, mol));
+    if (choosing && isZMatrix != wantZMatrix) {
+      removeKeywordLine(str, keyword);
+    } else if (isZMatrix) {
+      str.replace(keyword, generateZMatrixBlock(
+                             spec, mol, name == QLatin1String("zmatpad")));
+    } else {
+      str.replace(keyword, generateCoordinateBlock(spec, mol));
+    }
 
   } // end for coordinate block
 }

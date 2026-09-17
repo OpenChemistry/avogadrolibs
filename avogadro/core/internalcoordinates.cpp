@@ -287,6 +287,77 @@ std::vector<Reference> buildZMatrix(const Molecule& molecule)
 }
 
 /**
+ * Build the z-matrix rows in the molecule's own atom order, so that row @a i
+ * places atom @a i.
+ *
+ * Unlike buildZMatrix() this cannot fail: chooseReferences() always finds
+ * references among the atoms before it, falling back on non-bonded ones. The
+ * question is whether those references are worth having, which
+ * atomOrderIsUsable() answers.
+ */
+std::vector<Reference> buildZMatrixInAtomOrder(const Molecule& molecule)
+{
+  const Index atomCount = molecule.atomCount();
+  std::vector<Reference> rows;
+  rows.reserve(atomCount);
+
+  const Graph& graph = molecule.graph();
+  std::vector<bool> placed(atomCount, false);
+  std::vector<Index> placedOrder;
+  placedOrder.reserve(atomCount);
+
+  for (Index atom = 0; atom < atomCount; ++atom) {
+    rows.push_back(
+      chooseReferences(molecule, graph, atom, placedOrder, placed));
+    placed[atom] = true;
+    placedOrder.push_back(atom);
+  }
+
+  return rows;
+}
+
+/**
+ * Whether the molecule's atom order gives every atom a bonded reference.
+ *
+ * True when each atom is bonded to an atom of lower index, or is the lowest
+ * indexed atom of its fragment and so opens it. That is exactly the
+ * guarantee buildZMatrix() provides, so where it holds the atom order costs
+ * nothing in reference quality and keeps the file's numbering the one the
+ * user sees.
+ */
+bool atomOrderHasBondedReferences(const Molecule& molecule)
+{
+  const Index atomCount = molecule.atomCount();
+  const Graph& graph = molecule.graph();
+
+  // The lowest-indexed atom seen so far in each fragment. An atom that is
+  // not bonded to anything earlier is acceptable only if it is opening its
+  // own fragment rather than rejoining one already under way.
+  std::vector<bool> fragmentOpened(graph.subgraphsCount(), false);
+
+  for (Index atom = 0; atom < atomCount; ++atom) {
+    bool bondedToEarlier = false;
+    for (size_t neighbor : graph.neighbors(atom)) {
+      if (neighbor < atom) {
+        bondedToEarlier = true;
+        break;
+      }
+    }
+
+    const size_t fragment = graph.subgraph(atom);
+    if (fragment >= fragmentOpened.size())
+      return false; // a fragment id we cannot reason about: take the safe path
+    const bool opensFragment = !fragmentOpened[fragment];
+    fragmentOpened[fragment] = true;
+
+    if (!bondedToEarlier && !opensFragment)
+      return false;
+  }
+
+  return true;
+}
+
+/**
  * The in-plane direction perpendicular to @p ab that a distance-and-angle
  * row is placed along. The row is free to rotate about the a-b axis, so
  * either the molecule's existing plane or the xy-plane is used.
@@ -512,11 +583,13 @@ Array<DummyAtomSite> linearDummySites(const Molecule& molecule, Real distance)
   return sites;
 }
 
-Array<InternalCoordinate> cartesianToInternal(const Molecule& molecule,
-                                              Array<Index>& rowToAtom)
-{
-  const std::vector<Reference> rows = buildZMatrix(molecule);
+namespace {
 
+/** Measure the rows @p rows describe, and record the atom each one places. */
+Array<InternalCoordinate> measureRows(const Molecule& molecule,
+                                      const std::vector<Reference>& rows,
+                                      Array<Index>& rowToAtom)
+{
   Array<InternalCoordinate> internalCoords(rows.size());
   rowToAtom.resize(rows.size());
 
@@ -552,6 +625,76 @@ Array<InternalCoordinate> cartesianToInternal(const Molecule& molecule,
   }
 
   return internalCoords;
+}
+
+} // namespace
+
+Array<Index> linearReferenceRows(
+  const Molecule& molecule, const Array<InternalCoordinate>& internalCoords,
+  Real toleranceDegrees)
+{
+  Array<Index> rows;
+
+  for (size_t row = 0; row < internalCoords.size(); ++row) {
+    const InternalCoordinate& coord = internalCoords[row];
+    // A row with no angle reference states no angle, and one with no
+    // dihedral reference states no dihedral: the opening rows of every
+    // z-matrix are like this and there is nothing ill-conditioned about
+    // them.
+    if (coord.b == MaxIndex)
+      continue;
+
+    if (coord.angle >= toleranceDegrees) {
+      rows.push_back(row);
+      continue;
+    }
+
+    if (coord.c == MaxIndex)
+      continue;
+
+    // The dihedral turns about the a-b axis, so it is just as badly
+    // conditioned when a, b and c are the atoms in a line.
+    const Real referenceAngle = calculateAngle(
+      molecule.atomPosition3d(coord.a), molecule.atomPosition3d(coord.b),
+      molecule.atomPosition3d(coord.c));
+    if (referenceAngle >= toleranceDegrees)
+      rows.push_back(row);
+  }
+
+  return rows;
+}
+
+Array<InternalCoordinate> cartesianToInternal(const Molecule& molecule,
+                                              Array<Index>& rowToAtom)
+{
+  return measureRows(molecule, buildZMatrix(molecule), rowToAtom);
+}
+
+Array<InternalCoordinate> cartesianToInternal(const Molecule& molecule,
+                                              Array<Index>& rowToAtom,
+                                              ZMatrixOrder order)
+{
+  Array<InternalCoordinate> optimal =
+    measureRows(molecule, buildZMatrix(molecule), rowToAtom);
+  if (order == ZMatrixOrder::Optimal)
+    return optimal;
+
+  // The molecule's own order is only worth keeping if it costs nothing: it
+  // has to give every atom a bonded reference, and it must not leave more
+  // rows hanging off a straight line than the bond-order walk would.
+  if (!atomOrderHasBondedReferences(molecule))
+    return optimal;
+
+  Array<Index> atomOrderRowToAtom;
+  Array<InternalCoordinate> atomOrder = measureRows(
+    molecule, buildZMatrixInAtomOrder(molecule), atomOrderRowToAtom);
+
+  if (linearReferenceRows(molecule, atomOrder).size() >
+      linearReferenceRows(molecule, optimal).size())
+    return optimal;
+
+  rowToAtom = atomOrderRowToAtom;
+  return atomOrder;
 }
 
 } // end namespace Avogadro::Core

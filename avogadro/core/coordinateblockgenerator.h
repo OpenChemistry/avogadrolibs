@@ -8,6 +8,9 @@
 
 #include "avogadrocoreexport.h"
 
+#include "array.h"
+#include "avogadrocore.h"
+
 #include <sstream>
 #include <string>
 
@@ -59,6 +62,22 @@ public:
    * - @c 0: A literal "0". Useful for optimization flags.
    * - @c 1: A literal "1". Useful for optimization flags.
    * - @c _: A space character. Useful for alignment.
+   * - @c ,: A literal comma, with no space added on either side of it.
+   *   Useful for comma-delimited formats such as Molpro.
+   *
+   * In the z-matrix modes (see setMode()) a row describes one atom in terms
+   * of three earlier ones, and six further characters are recognized:
+   * - @c I: Index of the distance reference atom's row
+   * - @c J: Index of the angle reference atom's row
+   * - @c K: Index of the dihedral reference atom's row
+   * - @c R: Distance to the @c I atom
+   * - @c A: Angle at the @c I atom to the @c J atom, in degrees
+   * - @c T: Dihedral about the @c I - @c J axis to the @c K atom, in degrees
+   *
+   * All of these are one-based, and they number z-matrix @em rows rather
+   * than molecule atoms. The two agree unless the z-matrix had to be
+   * reordered, which atomsReordered() reports. @c # likewise gives the row
+   * number in these modes, so that it lines up with @c I, @c J and @c K.
    *
    * For example, the specification string
 ~~~
@@ -93,14 +112,66 @@ __SZxyz110
   /** @} */
 
   /**
+   * The kind of block produced.
+   */
+  enum class Mode
+  {
+    /** One line of Cartesian or lattice coordinates per atom. */
+    Cartesian,
+    /**
+     * A z-matrix, with the missing fields of the opening rows left out
+     * entirely along with the space that would have preceded them. This is
+     * the form Gaussian, NWChem, Q-Chem, Psi4, Molpro and CFOUR read.
+     */
+    ZMatrix,
+    /**
+     * A z-matrix whose opening rows are padded out with zeros, so that every
+     * row carries every field. This is the form ORCA's @c int, MOPAC and
+     * SIESTA read.
+     */
+    ZMatrixPadded
+  };
+  void setMode(Mode mode) { m_mode = mode; }
+  Mode mode() const { return m_mode; }
+  /** @} */
+
+  /**
    * Generate and return the coordinate block.
    */
   std::string generateCoordinateBlock();
 
+  /**
+   * Whether the last z-matrix generated put the atoms in an order other than
+   * the molecule's own, so that the row numbers in the block do not match
+   * the atom numbering the user sees.
+   *
+   * A z-matrix has to describe each atom against atoms already placed, which
+   * a molecule's atom order does not always allow. Always false after a
+   * Cartesian block, whose atoms are always in molecule order.
+   */
+  bool atomsReordered() const { return m_atomsReordered; }
+
+  /**
+   * The rows of the last z-matrix generated whose angle or dihedral is
+   * measured against three atoms too close to a straight line for the value
+   * to be meaningful.
+   *
+   * The geometry is still described correctly, but such a coordinate cannot
+   * be read or edited sensibly, and a program rebuilding Cartesians from it
+   * may not reproduce the molecule exactly. Row numbers are zero-based, as
+   * indices into the block's lines; add one to match the @c # field.
+   */
+  Array<Index> linearRows() const { return m_linearRows; }
+
 private:
+  std::string generateZMatrixBlock();
+
   const Molecule* m_molecule = nullptr;
   std::string m_specification;
   DistanceUnit m_distanceUnit = Angstrom;
+  Mode m_mode = Mode::Cartesian;
+  bool m_atomsReordered = false;
+  Array<Index> m_linearRows;
   std::stringstream m_stream;
 };
 

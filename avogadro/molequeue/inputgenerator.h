@@ -424,6 +424,35 @@ $$coords:[coordSpec]$$
  * See the CoordinateBlockGenerator documentation for a list of recognized
  * characters.
  *
+ * The geometry may also be written as a z-matrix, with one of
+~~~
+$$zmat:[coordSpec]$$
+$$zmatpad:[coordSpec]$$
+~~~
+ * `$$zmat$$` leaves out the fields the opening rows cannot carry, which is
+ * what Gaussian, NWChem, Q-Chem, Psi4, Molpro and CFOUR expect;
+ * `$$zmatpad$$` pads them with zeros instead, which is what ORCA's `int`
+ * format, MOPAC and SIESTA expect. Both take the same `[coordSpec]`
+ * alphabet, extended with `I`, `J` and `K` for the three reference rows and
+ * `R`, `A` and `T` for the distance, angle and torsion.
+ *
+ * A script that can write either form declares a `Coordinates` string list
+ * option whose values are `Cartesian` and `Z-Matrix / Internal`, and puts
+ * *both* keywords in its generated file, each on its own line. Whichever
+ * form the user did not choose is removed along with its line, so the script
+ * itself needs no branch. A file containing a `$$zmat$$` keyword but no
+ * `Coordinates` option always gets the Cartesian block.
+ *
+ * Only a file offering both forms has anything to choose between: where the
+ * surrounding syntax differs too much to write both -- ORCA's `* gzmt` block
+ * header, say -- the script can branch itself and emit just the one keyword,
+ * which is then always used.
+ *
+ * Writing a z-matrix may require the atoms to be reordered, since every row
+ * has to be measured against atoms already placed. When that happens, or
+ * when a linear fragment leaves a row's angle or torsion meaningless, a
+ * warning is added to the generated input's warning list.
+ *
  * Other keywords that can be used in the input files are:
  * - `$$atomCount$$`: Number of atoms in the molecule.
  * - `$$bondCount$$`: Number of bonds in the molecule.
@@ -618,7 +647,10 @@ private:
   bool insertMolecule(QJsonObject& json, const Core::Molecule& mol) const;
   QString generateCoordinateBlock(const QString& spec,
                                   const Core::Molecule& mol) const;
-  void replaceKeywords(QString& str, const Core::Molecule& mol) const;
+  void replaceKeywords(QString& str, const Core::Molecule& mol,
+                       const QJsonObject& options) const;
+  QString generateZMatrixBlock(const QString& spec, const Core::Molecule& mol,
+                               bool padded) const;
   bool parseHighlightStyles(const QJsonArray& json) const;
   bool parseRules(const QJsonArray& json,
                   QtGui::GenericHighlighter& highligher) const;
