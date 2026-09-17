@@ -42,7 +42,9 @@ public:
 private slots:
   void refreshOnlineCatalog();
   void onCatalogReply();
+  void onStatsReply();
   void onReadmeReply();
+  void openBugTracker();
   void showCellTooltip(const QModelIndex& index);
   void onCurrentRowChanged(const QModelIndex& current,
                            const QModelIndex& previous);
@@ -55,6 +57,17 @@ private slots:
 private:
   void getRepoData(
     const QString& url = QStringLiteral("https://avogadro.cc/plugins2.json"));
+
+  /**
+   * Fetch the 30-day per-plugin download counts from the download counter.
+   * The index carries counts of its own, but over a much longer window and
+   * only as fresh as the last time it was generated.
+   */
+  void getDownloadStats();
+
+  /** Refresh the details panel from the currently selected row. */
+  void updateDetails(const QModelIndex& proxyIndex);
+
   void downloadNext();
   void unzipPlugin(QNetworkReply* reply);
   static bool copyDir(const QString& src, const QString& dst);
