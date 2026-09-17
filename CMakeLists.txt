@@ -96,21 +96,23 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
   # and a corpus frozen at 3 files after 24 million executions, because no
   # input ever reached instrumented code and so none ever looked new.
   #
-  # -no-link because these are libraries: it adds the coverage callbacks
-  # without pulling in libFuzzer's main(). OSS-Fuzz already puts this in
-  # CFLAGS/CXXFLAGS for the whole build, so only our own builds need it.
+  # -no-link because this is compiled into everything: it adds the coverage
+  # callbacks without pulling in libFuzzer's main(), which only the fuzz
+  # executables want. OSS-Fuzz already puts this in CFLAGS/CXXFLAGS for the
+  # whole build, so only our own builds need it.
+  #
+  # The same flag has to go on the link line as well. add_compile_options()
+  # instruments every target in the tree, host utilities and unit-test
+  # binaries included, and the callbacks it inserts live in a sanitizer
+  # runtime -- so anything that does not link one fails with undefined
+  # references to __sanitizer_cov_*. utilities/encodefile is the one that
+  # finds this first. Passing the flag at link time pulls in that runtime
+  # without libFuzzer's main(), and it composes with the -fsanitize=fuzzer
+  # the fuzz targets add for themselves in tests/*/CMakeLists.txt.
   if(NOT DEFINED ENV{LIB_FUZZING_ENGINE})
     if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
       add_compile_options(-fsanitize=fuzzer-no-link)
-      # The coverage callbacks the flag inserts are defined by libFuzzer's
-      # runtime, which only the fuzz executables link. ELF shared libraries
-      # leave such symbols undefined and bind them at load time; Mach-O
-      # resolves everything at link time and would fail, so ask for the ELF
-      # behaviour. Only needed for local fuzzing on macOS -- CI fuzzes on
-      # Linux -- but without it the build simply does not link there.
-      if(APPLE AND BUILD_SHARED_LIBS)
-        add_link_options(-Wl,-undefined,dynamic_lookup)
-      endif()
+      add_link_options(-fsanitize=fuzzer-no-link)
     else()
       message(FATAL_ERROR
         "ENABLE_FUZZ requires Clang; ${CMAKE_CXX_COMPILER_ID} has no libFuzzer.")
