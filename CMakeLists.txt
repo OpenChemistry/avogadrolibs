@@ -87,6 +87,35 @@ endif()
 # our own ENABLE_FUZZ builds. Must precede add_subdirectory(avogadro).
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
   add_compile_definitions(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+
+  # The libraries themselves need SanitizerCoverage, or the fuzz targets run
+  # blind: tests/*/CMakeLists.txt puts -fsanitize=fuzzer on the fuzz
+  # executable only, which instruments the harness translation unit and
+  # nothing else. Every file-format target in the 2026-09-17 nightly showed
+  # the symptom -- "Loaded 1 modules (34 inline 8-bit counters)", cov: 10,
+  # and a corpus frozen at 3 files after 24 million executions, because no
+  # input ever reached instrumented code and so none ever looked new.
+  #
+  # -no-link because these are libraries: it adds the coverage callbacks
+  # without pulling in libFuzzer's main(). OSS-Fuzz already puts this in
+  # CFLAGS/CXXFLAGS for the whole build, so only our own builds need it.
+  if(NOT DEFINED ENV{LIB_FUZZING_ENGINE})
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      add_compile_options(-fsanitize=fuzzer-no-link)
+      # The coverage callbacks the flag inserts are defined by libFuzzer's
+      # runtime, which only the fuzz executables link. ELF shared libraries
+      # leave such symbols undefined and bind them at load time; Mach-O
+      # resolves everything at link time and would fail, so ask for the ELF
+      # behaviour. Only needed for local fuzzing on macOS -- CI fuzzes on
+      # Linux -- but without it the build simply does not link there.
+      if(APPLE AND BUILD_SHARED_LIBS)
+        add_link_options(-Wl,-undefined,dynamic_lookup)
+      endif()
+    else()
+      message(FATAL_ERROR
+        "ENABLE_FUZZ requires Clang; ${CMAKE_CXX_COMPILER_ID} has no libFuzzer.")
+    endif()
+  endif()
 endif()
 
 set(QT_VERSION "6" CACHE STRING "What major version of Qt")

@@ -184,7 +184,13 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   std::vector<Vector3> atoms;
   for (unsigned int atomCount : atomCounts) {
     for (size_t j = 0; j < atomCount; ++j) {
-      getline(inStream, line);
+      // Core::getLine for the reason given in xyzformat.cpp: std::getline
+      // leaves the previous line in place once the input is exhausted, so a
+      // declared count larger than the file would re-parse it for ever.
+      if (!Core::getLine(inStream, line)) {
+        appendError("Error reading atomic coordinates in POSCAR");
+        return false;
+      }
       stringSplit = split(line, ' ');
       // This may be greater than 3 with selective dynamics
       if (stringSplit.size() < 3) {

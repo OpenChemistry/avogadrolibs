@@ -1164,8 +1164,10 @@ Molecule::AtomType Molecule::atom(Index index) const
 Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
                                      unsigned char order)
 {
-  assert(atom1 < m_atomicNumbers.size());
-  assert(atom2 < m_atomicNumbers.size());
+  // See bond(): a released build has no assert, so refuse the bond rather
+  // than corrupting the graph.
+  if (atom1 >= m_atomicNumbers.size() || atom2 >= m_atomicNumbers.size())
+    return BondType();
   Index index = bond(atom1, atom2).index();
   if (index >= bondCount()) {
     m_graph.addEdge(atom1, atom2);
@@ -1275,8 +1277,10 @@ Molecule::BondType Molecule::bond(const AtomType& a, const AtomType& b) const
 
 Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
 {
-  assert(atomId1 < atomCount());
-  assert(atomId2 < atomCount());
+  // Not assert(): NDEBUG removes it, and an out-of-range index from a file
+  // reader then indexes the graph's edge map out of bounds instead.
+  if (atomId1 >= atomCount() || atomId2 >= atomCount())
+    return BondType();
 
   const std::vector<Index>& edgeIndices = m_graph.edges(atomId1);
   for (unsigned long index : edgeIndices) {
@@ -2332,8 +2336,14 @@ bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
 
     // recalculate the element mask
     m_elements.reset();
-    for (unsigned char m_atomicNumber : m_atomicNumbers) {
-      m_elements.set(m_atomicNumber);
+    for (unsigned char atomicNumber : m_atomicNumbers) {
+      // The same clamp addAtom() applies. Custom elements are numbered at or
+      // above element_count, and std::bitset::set() throws for those, so
+      // without this a molecule holding one cannot be edited at all.
+      if (atomicNumber < element_count)
+        m_elements.set(atomicNumber);
+      else
+        m_elements.set(element_count - 1);
     }
 
     // update colors too

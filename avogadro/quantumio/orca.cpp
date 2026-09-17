@@ -875,6 +875,14 @@ void ORCAOutput::processLine(std::istream& in,
             unsigned int atomIndex = i / 3;
             unsigned int coordIndex = i % 3;
             for (unsigned int j = 0; j < modeIndex.size(); j++) {
+              // modeIndex was checked against m_frequencies, but the arrays
+              // written here are sized in the frequency block above, which a
+              // file need not contain -- and m_atomNums can have grown since.
+              // Both indices therefore have to be checked against the arrays
+              // themselves, or a crafted file writes outside them.
+              if (modeIndex[j] >= m_vibDisplacements.size() ||
+                  atomIndex >= m_vibDisplacements[modeIndex[j]].size())
+                break;
               m_vibDisplacements[modeIndex[j]][atomIndex][coordIndex] =
                 Core::lexicalCast<double>(list[j + 1]).value_or(0.0);
             }

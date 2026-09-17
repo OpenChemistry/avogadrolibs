@@ -173,7 +173,13 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
-    getline(inStream, buffer);
+    // Core::getLine, not std::getline: std::getline erases its target only
+    // after its sentry succeeds, so at end of input it leaves the previous
+    // line in place and the emptiness test below never fires. A file whose
+    // declared count exceeds its contents -- a truncated trajectory frame, a
+    // corrupt header -- then re-parses its last line until the count runs
+    // out. The helper clears the buffer; see core/utilities.h.
+    Core::getLine(inStream, buffer);
     if (buffer.empty()) {
       appendError("Error reading atom at index " + std::to_string(i) + ".");
       return false;

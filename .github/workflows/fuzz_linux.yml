@@ -138,9 +138,7 @@ jobs:
         # Targets with known, pre-existing failures. They still run and still
         # upload artifacts, but they do not fail the job. Delete entries here as
         # the underlying bugs are fixed.
-        known_issues=(
-          "io/xyz"
-        )
+        known_issues=()
 
         is_known_issue() {
           local entry
@@ -201,7 +199,12 @@ jobs:
             # directory only, so the restored corpus grows and the seed
             # directory stays untouched.
             echo "::group::Fuzzing ${name}"
-            if "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=10 \
+            # -timeout=30, not 10: the libraries carry SanitizerCoverage now
+            # (see the ENABLE_FUZZ block in the top-level CMakeLists), and an
+            # instrumented ASan build spends several seconds on work a release
+            # build does in milliseconds -- perceiveBondOrders() on a 244-atom
+            # nanotube, for one. A real hang still trips this comfortably.
+            if "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=30 \
                  -artifact_prefix="${artifact_dir}/" \
                  "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
                  | tee "${artifact_dir}/run.log"; then
