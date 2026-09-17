@@ -170,7 +170,14 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
-    getline(inStream, buffer);
+    // Core::getLine for the reason given in xyzformat.cpp: std::getline
+    // leaves the previous line in the buffer at end of input, so a declared
+    // atom count larger than the file would re-parse it until the count ran
+    // out.
+    if (!Core::getLine(inStream, buffer)) {
+      appendError("Error reading atom at index " + std::to_string(i) + ".");
+      return false;
+    }
     std::vector<string> tokens(split(buffer, ' '));
 
     if (tokens.size() < labels.size() - 2) {
@@ -373,7 +380,11 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     positions.reserve(numAtoms);
 
     for (size_t i = 0; i < numAtoms; ++i) {
-      getline(inStream, buffer);
+      // Same as above: a short file must end the loop, not repeat a line.
+      if (!Core::getLine(inStream, buffer)) {
+        appendError("Error reading atom at index " + std::to_string(i) + ".");
+        return false;
+      }
       std::vector<string> tokens(split(buffer, ' '));
       if (tokens.size() < 5) {
         appendError("Not enough tokens in this line: " + buffer);

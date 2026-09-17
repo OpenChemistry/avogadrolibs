@@ -11,6 +11,7 @@
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
+#include <exception>
 #include <fstream>
 #include <locale>
 #include <memory>
@@ -25,6 +26,46 @@ using std::ofstream;
 using json = nlohmann::json;
 
 namespace {
+
+/**
+ * Run a format's read() or write() and convert any exceptions into a
+ * false return plus a message, rather than letting it crash.
+ *
+ * Avogadro's own code does not throw, but the code the parsers call does:
+ * std::vector::at(), std::stoi() and nlohmann's json accessors are all
+ * reachable from inside a reader, and std::bad_alloc is reachable from any
+ * of them given a large enough size field.
+ *
+ * Fuzz builds deliberately skip the guard. libFuzzer reports an escaping
+ * exception as a crash, and that is the signal we want there: the unchecked
+ * index behind it is a real bug, and catching it would only hide it. The
+ * macro is the OSS-Fuzz convention, which OSS-Fuzz sets itself; our own fuzz
+ * builds get it from ENABLE_FUZZ in the top-level CMakeLists.
+ */
+template <typename Callable>
+bool guardedParse([[maybe_unused]] std::string& errorMessage, Callable&& parse)
+{
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  return parse();
+#else
+  try {
+    return parse();
+  } catch (const std::exception& e) {
+    errorMessage = e.what();
+    // what() may return an empty string, and every caller reports the message
+    // only when it is non-empty -- so without this the read would fail with
+    // nothing said at all.
+    if (errorMessage.empty())
+      errorMessage = "an unknown error occurred";
+    return false;
+  } catch (...) {
+    // Nothing in the standard library throws a non-std::exception, but a
+    // format could be supplied by a plugin we did not compile.
+    errorMessage = "an unknown error occurred";
+    return false;
+  }
+#endif
+}
 
 // Options are supplied as a JSON object. Parsing with exceptions disabled
 // yields a discarded value for anything malformed, and the lookups below must
@@ -180,7 +221,12 @@ bool FileFormat::readMolecule(Core::Molecule& molecule)
 {
   if (!m_in)
     return false;
-  bool result = read(*m_in, molecule);
+  std::string parseError;
+  bool result = guardedParse(parseError, [&] { return read(*m_in, molecule); });
+  if (!parseError.empty())
+    appendError("Error reading file: it appears to be malformed or\n"
+                "truncated (" +
+                parseError + ").");
   // A decode failure (truncation, a bad checksum, the size limit) surfaces to
   // the reader as an ordinary end of stream, which most parsers treat as a
   // short but otherwise valid file -- so a truncated "molecule.xyz.gz" would
@@ -198,7 +244,14 @@ bool FileFormat::writeMolecule(const Core::Molecule& molecule)
 {
   if (!m_out)
     return false;
-  return write(*m_out, molecule);
+  std::string parseError;
+  bool result =
+    guardedParse(parseError, [&] { return write(*m_out, molecule); });
+  if (!parseError.empty())
+    appendError("Error writing file: the molecule could not be\n"
+                "converted to this format (" +
+                parseError + ").");
+  return result;
 }
 
 bool FileFormat::readFile(const std::string& fileName_,
@@ -250,7 +303,15 @@ bool FileFormat::readString(const std::string& string, Core::Molecule& molecule)
   wrapped->imbue(cLocale);
 
   auto* decompressor = dynamic_cast<DecompressingIStream*>(wrapped.get());
-  bool result = read(*wrapped, molecule);
+  // Guarded for the same reason as readMolecule(); this path does not go
+  // through it, so it needs its own guard.
+  std::string parseError;
+  bool result =
+    guardedParse(parseError, [&] { return read(*wrapped, molecule); });
+  if (!parseError.empty())
+    appendError("Error reading file: it appears to be malformed or\n"
+                "truncated (" +
+                parseError + ").");
   // See the comment in readMolecule(): a decode failure surfaces as an
   // ordinary end of stream, so it must be checked explicitly.
   if (decompressor && !decompressor->error().empty()) {
@@ -270,7 +331,21 @@ bool FileFormat::writeString(std::string& string,
   // Imbue the standard C locale.
   locale cLocale("C");
   stream.imbue(cLocale);
-  bool result = write(stream, molecule);
+  // Guarded for the same reason as writeMolecule(); this path does not go
+  // through it, so it needs its own guard.
+  std::string parseError;
+  bool result =
+    guardedParse(parseError, [&] { return write(stream, molecule); });
+  if (!parseError.empty()) {
+    appendError("Error writing file: the molecule could not be\n"
+                "converted to this format (" +
+                parseError + ").");
+    // Whatever the format managed to emit before it threw is not a document.
+    // Hand back an empty string rather than a truncated one, so a caller that
+    // ignores the return value cannot mistake it for output.
+    string.clear();
+    return false;
+  }
   string = stream.str();
   return result;
 }

@@ -180,6 +180,12 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     appendError("Error parsing number of bonds.");
     return false;
   }
+  // Both counts reach reserve() below, and a negative one converts to a huge
+  // size_t there, which throws std::length_error rather than failing the read.
+  if (numAtoms < 0 || numBonds < 0) {
+    appendError("Negative atom or bond count in the counts line.");
+    return false;
+  }
   string mdlVersion(trimmed(buffer.substr(33)));
   if (mdlVersion == "V3000")
     return readV3000(in, mol);
@@ -730,6 +736,13 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     appendError("Error parsing number of bonds.");
     return false;
   }
+  // Unlike V2000 these come from free-form fields rather than three-character
+  // columns, so they can be negative or arbitrarily large. Both are used to
+  // reserve() below, where a negative value becomes a huge size_t and throws.
+  if (numAtoms < 0 || numBonds < 0) {
+    appendError("Negative atom or bond count in the V3000 counts line.");
+    return false;
+  }
 
   // Parse the atom block.
   // 'M  V30 BEGIN ATOM'
@@ -858,9 +871,18 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
   aromaticBonds.reserve(numBonds);
   bool anyAromaticBond = false;
   for (int i = 0; i < numBonds; ++i) {
-    getline(in, buffer);
+    // in.good() as well as the size check below: getline() leaves the previous
+    // line in the buffer at end of input, so a bond count larger than the file
+    // would otherwise re-add that bond until the count ran out.
+    if (!getline(in, buffer) || !in.good()) {
+      appendError("Error reading V3000 bond block.");
+      return false;
+    }
     std::vector<string> bondData = split(trimmed(buffer), ' ');
-    if (bondData.size() < 5) {
+    // Six fields, because bondData[5] is read below: "M  V30 <i> <order>
+    // <atom1> <atom2>". The old bound of 5 let a five-field line index one
+    // past the end of the vector.
+    if (bondData.size() < 6) {
       appendError("Error parsing V3000 bond line.");
       return false;
     }
@@ -877,6 +899,13 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     int atom2 = lexicalCast<int>(bondData[5], ok) - 1;
     if (!ok) {
       appendError("Failed to parse bond atom2: " + bondData[5]);
+      return false;
+    }
+    // Same bounds check the V2000 branch already makes. Without it a bad
+    // index reaches Graph::edges(), whose only guard is an assert() and so
+    // reads out of bounds in any release build.
+    if (atom1 < 0 || atom1 >= numAtoms || atom2 < 0 || atom2 >= numAtoms) {
+      appendError("Bond read in with out of bounds index.");
       return false;
     }
     // Order 4 is aromatic here exactly as it is in V2000: add a single bond

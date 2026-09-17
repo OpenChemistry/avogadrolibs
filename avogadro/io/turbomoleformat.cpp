@@ -99,7 +99,13 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
                   << '\n';
       }
 
-      getline(inStream, buffer);
+      // Core::getLine for both reads in this block. The loop below ends on
+      // the tokens rather than on the stream, and std::getline leaves the
+      // previous line in place at end of input, so a $coord block running to
+      // the end of the file would repeat its last line for ever, adding an
+      // atom each time. The helper clears the buffer, which empties the token
+      // list and ends the block; see core/utilities.h.
+      Core::getLine(inStream, buffer);
       tokens = split(rstrip(buffer, '#'), ' ');
       while (!tokens.empty() && tokens[0][0] != '$') {
         // parse atoms until we see another '$' section
@@ -131,7 +137,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
         newAtom.setPosition3d(pos * coordConversion);
 
         // next line
-        getline(inStream, buffer);
+        Core::getLine(inStream, buffer);
         tokens = split(rstrip(buffer, '#'), ' ');
       }
     } else if (tokens[0] == "$cell") {
@@ -343,6 +349,13 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
   // if we have fractional coordinates, we need to convert them to cartesian
   if (fractionalCoords) {
     auto* cell = mol.unitCell();
+    // "$coord frac" promises a cell, but the file need not deliver one: the
+    // $periodic / $cell block can be missing, malformed, or rejected above as
+    // linearly dependent. There is nothing to convert against then.
+    if (cell == nullptr) {
+      appendError("Fractional coordinates given without a valid unit cell.");
+      return false;
+    }
     for (Index i = 0; i < mol.atomCount(); ++i) {
       mol.setAtomPosition3d(i, cell->toCartesian(mol.atomPosition3d(i)));
     }

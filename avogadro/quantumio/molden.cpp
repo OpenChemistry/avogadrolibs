@@ -210,7 +210,10 @@ void MoldenFile::processLine(std::istream& in)
 
           // Now read all the exponents and contraction coefficients.
           for (int gto = 0; gto < numGTOs; ++gto) {
-            Core::getLine(in, line);
+            // numGTOs comes from the file and can be enormous; end at the end
+            // of input rather than spinning the count out on a cleared line.
+            if (!Core::getLine(in, line))
+              break;
             line = Core::trimmed(line);
             list = Core::split(line, ' ');
             if (list.size() > 1) {
