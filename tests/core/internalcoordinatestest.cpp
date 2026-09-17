@@ -948,3 +948,28 @@ TEST(InternalCoordinatesTest, bentMoleculeHasNoLinearRows)
   const Array<InternalCoordinate> ic = cartesianToInternal(mol, rowToAtom);
   EXPECT_TRUE(linearReferenceRows(mol, ic).empty());
 }
+
+// Collinear has two ends. Where a row's angle folds back to nearly zero its
+// atom sits on the reference axis just as surely as it does at 180 degrees,
+// and the torsion that would place it means nothing either way.
+TEST(InternalCoordinatesTest, foldedRowsCountAsLinear)
+{
+  // Both neighbours of the central atom lie along the same ray from it, so
+  // the angle between them at that atom is zero rather than straight.
+  Molecule mol;
+  mol.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(1).setPosition3d(Vector3(1.0, 0.0, 0.0));
+  mol.addAtom(1).setPosition3d(Vector3(2.0, 0.0, 0.0));
+  mol.addBond(mol.atom(0), mol.atom(1), 1);
+  mol.addBond(mol.atom(0), mol.atom(2), 1);
+
+  Array<Index> rowToAtom;
+  const Array<InternalCoordinate> ic = cartesianToInternal(mol, rowToAtom);
+  ASSERT_EQ(ic.size(), static_cast<size_t>(3));
+  ASSERT_NE(ic[2].b, MaxIndex);
+  EXPECT_NEAR(ic[2].angle, 0.0, 1e-6) << "expected a folded row to test";
+
+  const Array<Index> linear = linearReferenceRows(mol, ic);
+  ASSERT_EQ(linear.size(), static_cast<size_t>(1));
+  EXPECT_EQ(linear[0], Index(2));
+}

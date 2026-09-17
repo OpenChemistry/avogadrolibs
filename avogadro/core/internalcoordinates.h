@@ -153,14 +153,18 @@ enum class ZMatrixOrder
  * the row to be read or edited as an internal coordinate.
  *
  * A row is reported when its own angle, or the angle its dihedral is
- * measured about, is within @p toleranceDegrees of straight. The geometry
- * such a row describes is still correct to within rounding, but the value is
- * ill-conditioned: a thousandth of an angstrom of movement swings it by tens
- * of degrees. A caller writing a z-matrix for another program should say so.
+ * measured about, is collinear to within @p toleranceDegrees -- at either
+ * end of the range, since an angle near zero folds the two arms onto the
+ * same ray and leaves the plane between them just as undefined as a straight
+ * one does. The geometry such a row describes is still correct to within
+ * rounding, but the value is ill-conditioned: a thousandth of an angstrom of
+ * movement swings it by tens of degrees. A caller writing a z-matrix for
+ * another program should say so.
  *
  * @param molecule The molecule the rows describe.
  * @param internalCoords Rows as returned by cartesianToInternal().
- * @param toleranceDegrees How close to 180 degrees counts as too linear.
+ * @param toleranceDegrees How close to 180 degrees counts as too linear;
+ * the same distance from 0 degrees counts equally.
  * @return The offending row indices, ascending.
  */
 AVOGADROCORE_EXPORT Array<Index> linearReferenceRows(

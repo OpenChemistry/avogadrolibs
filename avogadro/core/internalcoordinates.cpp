@@ -635,6 +635,12 @@ Array<Index> linearReferenceRows(
 {
   Array<Index> rows;
 
+  // Three points are collinear at either end of the range, not just at 180
+  // degrees: an angle near zero puts the two arms along the same ray rather
+  // than opposite ones, and the plane they would span is just as undefined.
+  // This is the same thing sineAt() measures when references are chosen.
+  const Real foldedDegrees = 180.0 - toleranceDegrees;
+
   for (size_t row = 0; row < internalCoords.size(); ++row) {
     const InternalCoordinate& coord = internalCoords[row];
     // A row with no angle reference states no angle, and one with no
@@ -644,7 +650,7 @@ Array<Index> linearReferenceRows(
     if (coord.b == MaxIndex)
       continue;
 
-    if (coord.angle >= toleranceDegrees) {
+    if (coord.angle >= toleranceDegrees || coord.angle <= foldedDegrees) {
       rows.push_back(row);
       continue;
     }
@@ -657,7 +663,7 @@ Array<Index> linearReferenceRows(
     const Real referenceAngle = calculateAngle(
       molecule.atomPosition3d(coord.a), molecule.atomPosition3d(coord.b),
       molecule.atomPosition3d(coord.c));
-    if (referenceAngle >= toleranceDegrees)
+    if (referenceAngle >= toleranceDegrees || referenceAngle <= foldedDegrees)
       rows.push_back(row);
   }
 

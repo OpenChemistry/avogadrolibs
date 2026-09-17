@@ -72,9 +72,10 @@ public:
     return parsePattern(json, pattern);
   }
 
-  void fuzzReplaceKeywords(QString& str, const Core::Molecule& mol) const
+  void fuzzReplaceKeywords(QString& str, const Core::Molecule& mol,
+                           const QJsonObject& options) const
   {
-    replaceKeywords(str, mol);
+    replaceKeywords(str, mol, options);
   }
 };
 
@@ -136,9 +137,33 @@ keywords:
   // 4. Fuzz replaceKeywords with a random string and a fuzzed molecule
   if (fdp.remaining_bytes() > 0) {
     Core::Molecule mol = FuzzHelpers::buildMolecule(fdp);
+
+    // The "Coordinates" option decides between the $$coords$$ and $$zmat$$
+    // keywords, so drive every branch of that: the option missing entirely,
+    // each of the two values a generator declares, and a value no generator
+    // ever declares.
+    QJsonObject options;
+    switch (fdp.ConsumeIntegralInRange<int>(0, 3)) {
+      case 1:
+        options.insert(QStringLiteral("Coordinates"),
+                       QStringLiteral("Cartesian"));
+        break;
+      case 2:
+        options.insert(QStringLiteral("Coordinates"),
+                       QStringLiteral("Z-Matrix / Internal"));
+        break;
+      case 3:
+        options.insert(
+          QStringLiteral("Coordinates"),
+          QString::fromStdString(fdp.ConsumeRandomLengthString(64)));
+        break;
+      default:
+        break; // no option at all, as an older generator would send
+    }
+
     std::string kwStr = fdp.ConsumeRandomLengthString(kMaxStringLen);
     QString text = QString::fromStdString(kwStr);
-    script.fuzzReplaceKeywords(text, mol);
+    script.fuzzReplaceKeywords(text, mol, options);
   }
 
   return 0;

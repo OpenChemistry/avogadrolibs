@@ -440,13 +440,15 @@ $$zmatpad:[coordSpec]$$
  * option whose values are `Cartesian` and `Z-Matrix / Internal`, and puts
  * *both* keywords in its generated file, each on its own line. Whichever
  * form the user did not choose is removed along with its line, so the script
- * itself needs no branch. A file containing a `$$zmat$$` keyword but no
- * `Coordinates` option always gets the Cartesian block.
+ * itself needs no branch. A file that offers both forms but comes with no
+ * `Coordinates` option gets the Cartesian block, as it always did.
  *
  * Only a file offering both forms has anything to choose between: where the
  * surrounding syntax differs too much to write both -- ORCA's `* gzmt` block
  * header, say -- the script can branch itself and emit just the one keyword,
- * which is then always used.
+ * which is then always used. A file whose only geometry keyword is
+ * `$$zmat$$` therefore gets a z-matrix whatever the option says, rather than
+ * losing its geometry altogether.
  *
  * Writing a z-matrix may require the atoms to be reordered, since every row
  * has to be measured against atoms already placed. When that happens, or
