@@ -4,6 +4,7 @@ set(tests
   Cml
   Compression
   Dcd
+  FileFormatGuard
   FileFormatManager
   Lammps
   Mdl

@@ -70,6 +70,25 @@ option(USE_EXTERNAL_PUGIXML "Use an externally-provided version of pugixml" OFF)
 option(USE_EXTERNAL_STRUCT "Use an externally-provided version of the struct binary data formatting library" OFF)
 option(USE_EXTERNAL_TOMLPLUSPLUS "Use an externally-provided version of tomlplusplus" OFF)
 option(ENABLE_CALC_BENCHMARKS "Build optional calc benchmark executables" OFF)
+
+# Declared here, not only in tests/, because the libraries are configured
+# before tests/ is and they need the definition below. The tests/*/CMakeLists
+# files repeat the option() for standalone test builds; whichever runs first
+# wins and the value is the same either way.
+if(DEFINED ENV{LIB_FUZZING_ENGINE})
+  option(ENABLE_FUZZ "Enable fuzz testing." ON)
+else()
+  option(ENABLE_FUZZ "Enable fuzz testing." OFF)
+endif()
+
+# Fuzz builds compile out the exception guard in Io::FileFormat so that an
+# exception escaping a parser still reaches libFuzzer as a crash. The name is
+# the OSS-Fuzz convention, which OSS-Fuzz itself adds to CXXFLAGS; this is for
+# our own ENABLE_FUZZ builds. Must precede add_subdirectory(avogadro).
+if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
+  add_compile_definitions(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+endif()
+
 set(QT_VERSION "6" CACHE STRING "What major version of Qt")
 set(QT_VERSIONS_SUPPORTED 6)
 set_property(CACHE QT_VERSION PROPERTY STRINGS 6)
