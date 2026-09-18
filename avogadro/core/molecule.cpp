@@ -23,13 +23,14 @@
 #include <cstddef>
 #include <cmath>
 #include <iostream>
+#include <memory>
 #include <utility>
 
 namespace Avogadro::Core {
 
 Molecule::Molecule()
   : m_basisSet(nullptr), m_unitCell(nullptr),
-    m_layers(LayerManager::getMoleculeLayer(this))
+    m_layerInfo(std::make_shared<MoleculeInfo>())
 {
   m_elements.reset();
 }
@@ -58,7 +59,7 @@ Molecule::Molecule(const Molecule& other)
     m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_layers(LayerManager::getMoleculeLayer(&other, this))
+    m_layerInfo(std::make_shared<MoleculeInfo>(*other.m_layerInfo))
 {
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
@@ -74,9 +75,9 @@ Molecule::Molecule(const Molecule& other)
   m_activeCubeIndex = other.m_activeCubeIndex;
 
   // Make sure all the atoms are in the active layer
-  if (other.m_layers.maxLayer() == 0) {
+  if (other.m_layerInfo->layer.maxLayer() == 0) {
     for (Index i = 0; i < atomCount(); ++i)
-      m_layers.addAtomToActiveLayer(i);
+      m_layerInfo->layer.addAtomToActiveLayer(i);
   }
 }
 
@@ -136,28 +137,6 @@ void Molecule::readProperties(const Molecule& other)
   }
 }
 
-void Molecule::copyLayerStateFrom(const Molecule& other)
-{
-  // Layers belong to the molecule, so copy other's layer state into this
-  // molecule's own MoleculeInfo. The obvious alternative -- pointing this
-  // molecule at other's registry entry with getMoleculeLayer(&other, this) --
-  // cannot work: m_layers is a reference and cannot be rebound, and
-  // reassigning m_molToInfo[this] drops the last reference to the
-  // MoleculeInfo that m_layers refers to, freeing it while we still use it.
-  auto otherInfo = LayerManager::getMoleculeInfo(&other);
-  auto thisInfo = LayerManager::getMoleculeInfo(this);
-  if (otherInfo == nullptr || thisInfo == nullptr || otherInfo == thisInfo)
-    return;
-
-  thisInfo->layer = otherInfo->layer;
-  thisInfo->visible = otherInfo->visible;
-  thisInfo->locked = otherInfo->locked;
-  thisInfo->enable = otherInfo->enable;
-  // MoleculeInfo::settings holds raw LayerData pointers whose ownership is
-  // still unresolved, so it is deliberately left alone here. Copying it needs
-  // the LayerData lifetime fixed first.
-}
-
 Molecule::Molecule(Molecule&& other) noexcept
   : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
     m_spectra(other.m_spectra),
@@ -185,9 +164,13 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_layers(LayerManager::getMoleculeLayer(this))
+    m_layerInfo(std::move(other.m_layerInfo))
 {
-  copyLayerStateFrom(other);
+  // Leave the moved-from molecule sharing this state rather than allocating
+  // fresh state for it: this constructor is noexcept and make_shared can
+  // throw, which is the dishonesty this change exists to remove. A moved-from
+  // molecule only has to be usable, not independent.
+  other.m_layerInfo = m_layerInfo;
 }
 
 Molecule& Molecule::operator=(const Molecule& other)
@@ -248,7 +231,9 @@ Molecule& Molecule::operator=(const Molecule& other)
     delete m_unitCell;
     m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
 
-    copyLayerStateFrom(other);
+    // Assign into the existing MoleculeInfo rather than replacing the handle,
+    // so anything already sharing it (an undo command, say) sees the update.
+    *m_layerInfo = *other.m_layerInfo;
   }
 
   return *this;
@@ -303,7 +288,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     delete m_unitCell;
     m_unitCell = std::exchange(other.m_unitCell, nullptr);
 
-    copyLayerStateFrom(other);
+    *m_layerInfo = std::move(*other.m_layerInfo);
   }
 
   return *this;
@@ -320,11 +305,11 @@ Molecule::~Molecule()
 
 Layer& Molecule::layer()
 {
-  return m_layers;
+  return m_layerInfo->layer;
 }
 const Layer& Molecule::layer() const
 {
-  return m_layers;
+  return m_layerInfo->layer;
 }
 
 void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
@@ -758,7 +743,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   else
     m_elements.set(element_count - 1); // custom element
 
-  m_layers.addAtomToActiveLayer(atomCount() - 1);
+  m_layerInfo->layer.addAtomToActiveLayer(atomCount() - 1);
   // The calculated results are per-atom, so a new atom invalidates them just
   // as a removed atom does (see removeAtom()).
   clearCalculatedResults();
@@ -992,7 +977,7 @@ void Molecule::swapAtom(Index a, Index b)
   using std::swap;
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
   m_graph.swapVertexIndices(a, b);
-  m_layers.swapLayer(a, b);
+  m_layerInfo->layer.swapLayer(a, b);
   m_atomProperties.swapEntries(a, b, atomCount());
 
   // Residues are not an atom-indexed member and so are reached by none of the
@@ -1108,7 +1093,7 @@ bool Molecule::removeAtom(Index index)
   m_atomicNumbers.swapAndPop(index);
   m_graph.removeVertex(index);
 
-  m_layers.removeAtom(index);
+  m_layerInfo->layer.removeAtom(index);
 
   return true;
 }
@@ -1152,7 +1137,7 @@ void Molecule::clearAtoms()
   m_residueProperties.clear();
   m_conformerProperties.clear();
   m_timesteps.clear();
-  m_layers.clear();
+  m_layerInfo->layer.clear();
   m_elements.reset();
 }
 
@@ -2550,7 +2535,7 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
   std::list<Index> result;
   // get the index in decreasing order so deleting won't corrupt data
   for (Index i = atomCount(); i > 0; --i) {
-    if (m_layers.getLayerID(i - 1) == layer) {
+    if (m_layerInfo->layer.getLayerID(i - 1) == layer) {
       result.push_back(i - 1);
     }
   }

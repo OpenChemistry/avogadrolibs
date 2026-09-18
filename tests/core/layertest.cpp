@@ -5,6 +5,9 @@
 
 #include <gtest/gtest.h>
 
+#include <memory>
+#include <type_traits>
+
 #include <avogadro/core/layer.h>
 #include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
@@ -48,16 +51,12 @@ void expectSameLayers(const Molecule& actual, const Molecule& expected)
       << "atom " << i;
 }
 
-// LayerManager keeps a process-global map keyed by raw Molecule*, and nothing
-// ever removes entries from it (deleteMolecule has no callers). A molecule
-// allocated at an address a previous test's molecule used therefore inherits
-// that dead molecule's layer state, which makes these cases order-dependent.
-// Clear the registry between cases. Safe here because every molecule in these
-// tests is a local that has already been destroyed by the time SetUp runs.
+// Layer state is owned by each Molecule, so there is no registry to isolate
+// between cases -- only the active-molecule cursor, which is process-global.
 class LayerTest : public ::testing::Test, protected LayerManager
 {
 protected:
-  void SetUp() override { m_molToInfo.clear(); }
+  void SetUp() override { m_activeMolecule = nullptr; }
 };
 
 } // namespace
@@ -162,20 +161,77 @@ TEST_F(LayerTest, SelfAssignmentKeepsLayers)
   EXPECT_EQ(molecule.atomCount(), atoms);
 }
 
-// Phase 1: a lookup must never insert. std::map::operator[] default-constructs
-// a null entry for a missing key, so the old guards grew the map they were
-// guarding. findMoleculeInfo is the non-inserting form.
-TEST_F(LayerTest, LookupDoesNotGrowTheRegistry)
+// Layer state belongs to the molecule, so a lookup is just a handle to it.
+TEST_F(LayerTest, LookupReturnsTheMoleculesOwnState)
 {
-  // A pointer value that is never dereferenced, only used as a key.
-  const auto* ghost = reinterpret_cast<const Molecule*>(0x1000);
-  const size_t before = m_molToInfo.size();
+  Molecule molecule;
+  buildMultiLayer(molecule);
 
-  EXPECT_EQ(findMoleculeInfo(ghost), nullptr);
+  EXPECT_EQ(LayerManager::getMoleculeInfo(&molecule), molecule.layerInfo());
   EXPECT_EQ(findMoleculeInfo(nullptr), nullptr);
   EXPECT_EQ(activeMoleculeInfo(), nullptr);
+}
 
-  EXPECT_EQ(m_molToInfo.size(), before) << "a lookup inserted an entry";
+// Phase 2: the state dies with the molecule. Previously every molecule ever
+// constructed left a permanent entry in a global registry.
+TEST_F(LayerTest, LayerStateIsReleasedWithTheMolecule)
+{
+  std::weak_ptr<Avogadro::Core::MoleculeInfo> watch;
+  {
+    Molecule molecule;
+    buildMultiLayer(molecule);
+    watch = molecule.layerInfo();
+    EXPECT_FALSE(watch.expired());
+  }
+  EXPECT_TRUE(watch.expired()) << "layer state outlived its molecule";
+}
+
+// An undo command holding the state keeps it alive past the molecule, which is
+// why the handle is shared rather than owned outright.
+TEST_F(LayerTest, SharedHandleOutlivesTheMolecule)
+{
+  std::shared_ptr<Avogadro::Core::MoleculeInfo> held;
+  {
+    Molecule molecule;
+    buildMultiLayer(molecule);
+    held = molecule.layerInfo();
+  }
+  ASSERT_TRUE(held != nullptr);
+  EXPECT_EQ(held->layer.maxLayer(), numLayers - 1);
+}
+
+// A moved-from molecule has to stay usable -- accessing its layers must not
+// dereference null. It shares the moved-to molecule's state rather than
+// getting fresh state, because allocating here would make the noexcept move
+// able to throw.
+TEST_F(LayerTest, MovedFromMoleculeStillHasLayerState)
+{
+  Molecule original;
+  buildMultiLayer(original);
+  Molecule moved(std::move(original));
+
+  EXPECT_TRUE(original.layerInfo() != nullptr);
+  EXPECT_EQ(moved.layer().maxLayer(), numLayers - 1);
+  EXPECT_NO_FATAL_FAILURE(original.layer().maxLayer());
+}
+
+// The point of the ownership change: moving a molecule must not allocate, so
+// the noexcept on the move operations is honest.
+TEST_F(LayerTest, MovingAMoleculeDoesNotAllocateLayerState)
+{
+  static_assert(std::is_nothrow_move_constructible<Molecule>::value,
+                "Molecule's move constructor must stay noexcept");
+  static_assert(std::is_nothrow_move_assignable<Molecule>::value,
+                "Molecule's move assignment must stay noexcept");
+
+  Molecule original;
+  buildMultiLayer(original);
+  auto* before = original.layerInfo().get();
+
+  Molecule moved(std::move(original));
+
+  // The handle was transferred, not rebuilt.
+  EXPECT_EQ(moved.layerInfo().get(), before);
 }
 
 // layerCount() used to assert and then dereference m_molToInfo[nullptr]; the
@@ -184,7 +240,6 @@ TEST_F(LayerTest, LayerCountWithNoActiveMoleculeIsSafe)
 {
   EXPECT_EQ(m_activeMolecule, nullptr);
   EXPECT_EQ(LayerManager::layerCount(), 0u);
-  EXPECT_EQ(m_molToInfo.count(nullptr), 0u) << "a null key was inserted";
 }
 
 TEST_F(LayerTest, ActiveLayerWithNoActiveMoleculeIsSafe)
@@ -193,13 +248,10 @@ TEST_F(LayerTest, ActiveLayerWithNoActiveMoleculeIsSafe)
   // Must not dereference null; an empty layer is the safe answer.
   EXPECT_EQ(LayerManager::getMoleculeLayer().maxLayer(), 0u);
   EXPECT_EQ(LayerManager::getMoleculeInfo(), nullptr);
-  EXPECT_EQ(m_molToInfo.count(nullptr), 0u) << "a null key was inserted";
 }
 
-TEST_F(LayerTest, NullMoleculeDoesNotPoisonTheRegistry)
+TEST_F(LayerTest, NullMoleculeYieldsNoState)
 {
-  auto info = LayerManager::getMoleculeInfo(nullptr);
-  EXPECT_TRUE(info != nullptr);
-  EXPECT_EQ(m_molToInfo.count(nullptr), 0u)
-    << "null must never become a registry key";
+  EXPECT_EQ(LayerManager::getMoleculeInfo(nullptr), nullptr);
+  EXPECT_EQ(LayerManager::getMoleculeLayer(nullptr).maxLayer(), 0u);
 }

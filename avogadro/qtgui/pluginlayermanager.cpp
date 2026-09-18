@@ -19,20 +19,7 @@ using std::vector;
 
 PluginLayerManager::PluginLayerManager(const string& name) : m_name(name) {}
 
-PluginLayerManager::~PluginLayerManager()
-{
-  for (auto& info : m_molToInfo) {
-    auto itEnable = info.second->enable.find(m_name);
-    if (itEnable != info.second->enable.end()) {
-      info.second->enable.erase(itEnable);
-    }
-
-    auto itSettings = info.second->settings.find(m_name);
-    if (itSettings != info.second->settings.end()) {
-      info.second->settings.erase(itSettings);
-    }
-  }
-}
+PluginLayerManager::~PluginLayerManager() = default;
 
 bool PluginLayerManager::isEnabled() const
 {

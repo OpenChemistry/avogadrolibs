@@ -16,6 +16,7 @@
 #include "elements.h"
 #include "graph.h"
 #include "layer.h"
+#include "moleculeinfo.h"
 #include "propertymap.h"
 #include "variantmap.h"
 #include "vector.h"
@@ -25,6 +26,7 @@
 #include <cstddef>
 #include <list>
 #include <map>
+#include <memory>
 #include <string>
 
 namespace Avogadro::Core {
@@ -1154,6 +1156,12 @@ public:
   const Layer& layer() const;
 
   /**
+   * @return this molecule's layer state, shared with anything that needs it to
+   * outlive a single operation. Never null.
+   */
+  std::shared_ptr<MoleculeInfo> layerInfo() const { return m_layerInfo; }
+
+  /**
    * Calculte and return bounding box of the whole molecule or selected atoms
    * only.
    * @param boxMin [out] the minimum corner (first end of the box diagonal)
@@ -1215,15 +1223,6 @@ protected:
 
 private:
   /**
-   * Copy @p other's layer state into this molecule's own layer storage.
-   *
-   * Layers are per molecule: the copy gets the same layers as @p other and
-   * then diverges from it. Per-plugin settings are not copied yet, pending the
-   * LayerData ownership fix.
-   */
-  void copyLayerStateFrom(const Molecule& other);
-
-  /**
    * Fill m_velocities and the derived per-coordinate-set properties, taking
    * coordinate set @c i to be @c intervals[i] after the one before it.
    */
@@ -1251,7 +1250,12 @@ private:
   Array<unsigned char> m_bondOrders;
   // vertex information
   Array<unsigned char> m_atomicNumbers;
-  Layer& m_layers;
+  /**
+   * This molecule's layer state. Owned here rather than in a registry, so it
+   * lives exactly as long as the molecule and anything (an undo command, say)
+   * still holding on to it.
+   */
+  std::shared_ptr<MoleculeInfo> m_layerInfo;
 };
 
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
@@ -1389,13 +1393,13 @@ inline bool Molecule::setColor(Index atomId, Vector3ub color)
 
 inline size_t Molecule::layer(Index atomId) const
 {
-  return m_layers.getLayerID(atomId);
+  return m_layerInfo->layer.getLayerID(atomId);
 }
 
 inline bool Molecule::setLayer(Index atomId, size_t layer)
 {
   if (atomId < atomCount()) {
-    m_layers.addAtom(layer, atomId);
+    m_layerInfo->layer.addAtom(layer, atomId);
     return true;
   }
   return false;
