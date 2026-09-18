@@ -29,7 +29,7 @@ public:
 class RWLayerManagerTest : public ::testing::Test, protected LayerManager
 {
 protected:
-  void SetUp() override { m_activeMolecule = nullptr; }
+  void SetUp() override { m_activeInfo.reset(); }
 };
 
 } // namespace

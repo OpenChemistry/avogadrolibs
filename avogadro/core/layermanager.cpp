@@ -11,7 +11,7 @@ namespace Avogadro::Core {
 
 using std::shared_ptr;
 
-const Molecule* LayerManager::m_activeMolecule = nullptr;
+std::weak_ptr<MoleculeInfo> LayerManager::m_activeInfo;
 
 shared_ptr<MoleculeInfo> LayerManager::findMoleculeInfo(const Molecule* mol)
 {
@@ -20,9 +20,18 @@ shared_ptr<MoleculeInfo> LayerManager::findMoleculeInfo(const Molecule* mol)
   return mol->layerInfo();
 }
 
+void LayerManager::setActiveMolecule(const Molecule* mol)
+{
+  if (mol == nullptr)
+    m_activeInfo.reset();
+  else
+    m_activeInfo = mol->layerInfo();
+}
+
 shared_ptr<MoleculeInfo> LayerManager::activeMoleculeInfo()
 {
-  return findMoleculeInfo(m_activeMolecule);
+  // Resolves to nullptr once the molecule that owned this state is gone.
+  return m_activeInfo.lock();
 }
 
 Layer& LayerManager::getMoleculeLayer()

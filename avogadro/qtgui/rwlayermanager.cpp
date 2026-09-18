@@ -202,7 +202,6 @@ protected:
 
 void RWLayerManager::removeLayer(size_t layer, RWMolecule* rwmolecule)
 {
-  assert(m_activeMolecule != nullptr);
   assert(rwmolecule != nullptr);
   rwmolecule->undoStack().beginMacro(QObject::tr("Remove Layer"));
   auto atoms = rwmolecule->molecule().getAtomsAtLayer(layer);
@@ -222,7 +221,6 @@ void RWLayerManager::removeLayer(size_t layer, RWMolecule* rwmolecule)
 
 void RWLayerManager::addLayer(RWMolecule* rwmolecule)
 {
-  assert(m_activeMolecule != nullptr);
   assert(rwmolecule != nullptr);
   rwmolecule->undoStack().beginMacro(QObject::tr("Add Layer"));
   auto molecule = activeMoleculeInfo();
@@ -284,10 +282,7 @@ void RWLayerManager::flipLocked(size_t layer)
 
 void RWLayerManager::addMolecule(const Core::Molecule* mol)
 {
-  if (mol == nullptr)
-    return;
-  m_activeMolecule = mol;
-  getMoleculeInfo(mol); // creates the entry if this molecule has none yet
+  setActiveMolecule(mol);
 }
 
 Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const

@@ -51,13 +51,19 @@ protected:
   /** @return the layer state of @p mol, or nullptr when @p mol is null. */
   static std::shared_ptr<MoleculeInfo> findMoleculeInfo(const Molecule* mol);
 
+  /** Point the layer GUI and the render plugins at @p mol. */
+  static void setActiveMolecule(const Molecule* mol);
+
   /**
-   * The molecule the layer GUI and the render plugins currently act on.
+   * The layer state of the molecule the GUI is acting on, held weakly.
    *
-   * Layer state itself is owned by each Molecule, so this is only a cursor,
-   * not a registry: nothing here keeps a molecule or its layers alive.
+   * Deliberately not a `const Molecule*`. Layer state is owned by each
+   * Molecule, so nothing here keeps one alive, and a raw pointer would dangle
+   * the moment the active molecule was destroyed -- reading it would then
+   * either fault or silently report whatever object had taken over that
+   * address. A weak_ptr simply stops resolving instead.
    */
-  static const Molecule* m_activeMolecule;
+  static std::weak_ptr<MoleculeInfo> m_activeInfo;
 };
 
 } // namespace Avogadro::Core

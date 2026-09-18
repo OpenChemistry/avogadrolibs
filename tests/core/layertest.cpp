@@ -56,7 +56,7 @@ void expectSameLayers(const Molecule& actual, const Molecule& expected)
 class LayerTest : public ::testing::Test, protected LayerManager
 {
 protected:
-  void SetUp() override { m_activeMolecule = nullptr; }
+  void SetUp() override { m_activeInfo.reset(); }
 };
 
 } // namespace
@@ -238,13 +238,13 @@ TEST_F(LayerTest, MovingAMoleculeDoesNotAllocateLayerState)
 // assert compiles out under NDEBUG, leaving a null dereference in release.
 TEST_F(LayerTest, LayerCountWithNoActiveMoleculeIsSafe)
 {
-  EXPECT_EQ(m_activeMolecule, nullptr);
+  EXPECT_EQ(activeMoleculeInfo(), nullptr);
   EXPECT_EQ(LayerManager::layerCount(), 0u);
 }
 
 TEST_F(LayerTest, ActiveLayerWithNoActiveMoleculeIsSafe)
 {
-  EXPECT_EQ(m_activeMolecule, nullptr);
+  EXPECT_EQ(activeMoleculeInfo(), nullptr);
   // Must not dereference null; an empty layer is the safe answer.
   EXPECT_EQ(LayerManager::getMoleculeLayer().maxLayer(), 0u);
   EXPECT_EQ(LayerManager::getMoleculeInfo(), nullptr);
@@ -342,4 +342,60 @@ TEST_F(LayerTest, CopiedSettingsAreReleasedIndependently)
     EXPECT_EQ(g_liveSettings, before + 1) << "the copy's clone leaked";
   }
   EXPECT_EQ(g_liveSettings, before);
+}
+
+// Phase 4: the active molecule is held weakly. It used to be a raw
+// `const Molecule*`, which dangled the moment that molecule was destroyed --
+// and since Phase 2 made the lookup dereference it rather than compare
+// addresses, reading it afterwards either faulted or silently reported
+// whatever object had taken over the address.
+TEST_F(LayerTest, ActiveMoleculeDoesNotOutliveItsMolecule)
+{
+  {
+    Molecule molecule;
+    buildMultiLayer(molecule);
+    LayerManager::setActiveMolecule(&molecule);
+    ASSERT_TRUE(activeMoleculeInfo() != nullptr);
+    EXPECT_EQ(LayerManager::layerCount(), numLayers);
+  }
+
+  EXPECT_EQ(activeMoleculeInfo(), nullptr)
+    << "the active molecule outlived the molecule that owned it";
+  EXPECT_EQ(LayerManager::layerCount(), 0u);
+  EXPECT_EQ(LayerManager::getMoleculeInfo(), nullptr);
+}
+
+// The realistic sequence: close one molecule, open another that the allocator
+// places at the same address. The stale pointer used to resolve to the new
+// molecule's state while the manager still believed the old one was active.
+TEST_F(LayerTest, ReusedAddressDoesNotResurrectTheOldActiveMolecule)
+{
+  std::unique_ptr<Molecule> first(new Molecule);
+  buildMultiLayer(*first);
+  LayerManager::setActiveMolecule(first.get());
+  EXPECT_EQ(LayerManager::layerCount(), numLayers);
+
+  first.reset();
+
+  std::unique_ptr<Molecule> second(new Molecule);
+  second->addAtom(8);
+
+  // Whether or not `second` landed on `first`'s address, nothing is active.
+  EXPECT_EQ(activeMoleculeInfo(), nullptr);
+  EXPECT_EQ(LayerManager::layerCount(), 0u);
+}
+
+// An undo command holding the state keeps it resolvable, which is intended:
+// the command still needs to apply against it.
+TEST_F(LayerTest, ActiveInfoStaysResolvableWhileAnUndoCommandHoldsIt)
+{
+  std::shared_ptr<Avogadro::Core::MoleculeInfo> heldByUndo;
+  {
+    Molecule molecule;
+    buildMultiLayer(molecule);
+    LayerManager::setActiveMolecule(&molecule);
+    heldByUndo = molecule.layerInfo();
+  }
+  EXPECT_TRUE(activeMoleculeInfo() != nullptr);
+  EXPECT_EQ(activeMoleculeInfo(), heldByUndo);
 }
