@@ -143,6 +143,7 @@ public:
 
   void redo() override
   {
+    m_applied = false;
     if (m_layer >= m_moleculeInfo->visible.size() ||
         m_layer >= m_moleculeInfo->locked.size())
       return;
@@ -169,10 +170,16 @@ public:
       }
     }
     m_moleculeInfo->layer.removeLayer(m_layer);
+    m_applied = true;
   }
 
   void undo() override
   {
+    // redo() declined to remove anything, so there is nothing to put back and
+    // m_visible / m_locked were never recorded.
+    if (!m_applied)
+      return;
+
     auto itVisible = m_moleculeInfo->visible.begin() + m_layer;
     m_moleculeInfo->visible.insert(itVisible, m_visible);
     auto itLocked = m_moleculeInfo->locked.begin() + m_layer;
@@ -193,8 +200,9 @@ protected:
   shared_ptr<MoleculeInfo> m_moleculeInfo;
   size_t m_layer;
 
-  bool m_visible;
-  bool m_locked;
+  bool m_visible = true;
+  bool m_locked = false;
+  bool m_applied = false;
   map<string, Core::LayerDataPtr> m_settings;
   map<string, bool> m_enable;
 };
@@ -204,14 +212,16 @@ void RWLayerManager::removeLayer(size_t layer, RWMolecule* rwmolecule)
 {
   assert(rwmolecule != nullptr);
   rwmolecule->undoStack().beginMacro(QObject::tr("Remove Layer"));
-  auto atoms = rwmolecule->molecule().getAtomsAtLayer(layer);
-  for (const Index& atom : atoms) {
-    rwmolecule->removeAtom(atom);
-  }
+  // Check before touching the molecule: removing the atoms and then bailing
+  // out would leave the layer half removed.
   auto molecule = activeMoleculeInfo();
   if (molecule == nullptr) {
     rwmolecule->undoStack().endMacro();
     return;
+  }
+  auto atoms = rwmolecule->molecule().getAtomsAtLayer(layer);
+  for (const Index& atom : atoms) {
+    rwmolecule->removeAtom(atom);
   }
   auto* comm = new RemoveLayerCommand(molecule, layer);
   comm->setText(QObject::tr("Remove Layer Info"));

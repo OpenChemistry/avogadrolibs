@@ -399,3 +399,54 @@ TEST_F(LayerTest, ActiveInfoStaysResolvableWhileAnUndoCommandHoldsIt)
   EXPECT_TRUE(activeMoleculeInfo() != nullptr);
   EXPECT_EQ(activeMoleculeInfo(), heldByUndo);
 }
+
+// A moved-from molecule must not share layer state with the moved-to one.
+// It used to keep the same handle, so a write through the moved-from object
+// reached the molecule that had just been moved into.
+TEST_F(LayerTest, MovedFromMoleculeDoesNotShareLayerState)
+{
+  Molecule original;
+  buildMultiLayer(original);
+  Molecule moved(std::move(original));
+
+  ASSERT_EQ(moved.layer().maxLayer(), numLayers - 1);
+  EXPECT_NE(original.layerInfo(), moved.layerInfo())
+    << "the moved-from molecule still shares the moved-to molecule's state";
+
+  // Mutating the moved-from molecule must leave the moved-to one alone.
+  original.layer().addLayer();
+  original.layer().addAtom(0, 0);
+  original.layerInfo()->visible.assign(1, false);
+
+  EXPECT_EQ(moved.layer().maxLayer(), numLayers - 1);
+  for (Index i = 0; i < atomsPerLayer * numLayers; ++i)
+    EXPECT_EQ(moved.layer().getLayerID(i), i / atomsPerLayer) << "atom " << i;
+}
+
+// The same, through assignment into the moved-from molecule.
+TEST_F(LayerTest, AssigningToAMovedFromMoleculeLeavesTheTargetAlone)
+{
+  Molecule original;
+  buildMultiLayer(original);
+  Molecule moved(std::move(original));
+
+  Molecule other;
+  other.addAtom(8);
+  other.layer().addLayer();
+  original = other; // copy-assign into the moved-from molecule
+
+  EXPECT_EQ(moved.layer().maxLayer(), numLayers - 1)
+    << "assigning to the moved-from molecule changed the moved-to one";
+}
+
+// A moved-from molecule stays usable: its layer state is recreated on demand.
+TEST_F(LayerTest, MovedFromMoleculeRecreatesItsLayerState)
+{
+  Molecule original;
+  buildMultiLayer(original);
+  Molecule moved(std::move(original));
+
+  EXPECT_TRUE(original.layerInfo() != nullptr);
+  EXPECT_EQ(original.layer().maxLayer(), 0u);
+  EXPECT_EQ(original.layerInfo()->visible.size(), 1u);
+}

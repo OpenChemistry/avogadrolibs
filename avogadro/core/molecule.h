@@ -1167,7 +1167,11 @@ public:
    * @return this molecule's layer state, shared with anything that needs it to
    * outlive a single operation. Never null.
    */
-  std::shared_ptr<MoleculeInfo> layerInfo() const { return m_layerInfo; }
+  std::shared_ptr<MoleculeInfo> layerInfo() const
+  {
+    ensureLayerInfo();
+    return m_layerInfo;
+  }
 
   /**
    * Calculte and return bounding box of the whole molecule or selected atoms
@@ -1263,7 +1267,23 @@ private:
    * lives exactly as long as the molecule and anything (an undo command, say)
    * still holding on to it.
    */
-  std::shared_ptr<MoleculeInfo> m_layerInfo;
+  mutable std::shared_ptr<MoleculeInfo> m_layerInfo;
+
+  /**
+   * @return this molecule's layer state, creating it if this molecule has been
+   * moved from.
+   *
+   * A moved-from molecule is left with no layer state rather than sharing the
+   * moved-to molecule's: sharing would let a write through the moved-from
+   * object corrupt the moved-to one. Creating it here rather than in the move
+   * keeps the move allocation-free, and so honestly noexcept.
+   */
+  MoleculeInfo& ensureLayerInfo() const
+  {
+    if (!m_layerInfo)
+      m_layerInfo = std::make_shared<MoleculeInfo>();
+    return *m_layerInfo;
+  }
 };
 
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
@@ -1401,13 +1421,13 @@ inline bool Molecule::setColor(Index atomId, Vector3ub color)
 
 inline size_t Molecule::layer(Index atomId) const
 {
-  return m_layerInfo->layer.getLayerID(atomId);
+  return ensureLayerInfo().layer.getLayerID(atomId);
 }
 
 inline bool Molecule::setLayer(Index atomId, size_t layer)
 {
   if (atomId < atomCount()) {
-    m_layerInfo->layer.addAtom(layer, atomId);
+    ensureLayerInfo().layer.addAtom(layer, atomId);
     return true;
   }
   return false;

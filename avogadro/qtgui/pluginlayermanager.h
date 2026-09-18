@@ -42,15 +42,16 @@ public:
     if (info != nullptr) {
       if (info->loaded.find(m_name) == info->loaded.end()) {
         for (size_t i = 0; i < info->settings[m_name].size(); ++i) {
+          // A null slot means this layer has no settings for this plugin;
+          // leave it null. Every other slot has to be rebuilt as a T, empty
+          // getSave() included: reading came from CjsonFormat, which can only
+          // construct the LayerData base, and getSetting() below static_casts
+          // whatever is here to T*.
           if (info->settings[m_name][i] == nullptr)
             continue;
-          auto serial = info->settings[m_name][i]->getSave();
-          if (serial != "") {
-            auto aux = std::make_shared<T>();
-            aux->deserialize(serial);
-            // Replacing the handle releases the old object; nothing to delete.
-            info->settings[m_name][i] = aux;
-          }
+          auto aux = std::make_shared<T>();
+          aux->deserialize(info->settings[m_name][i]->getSave());
+          info->settings[m_name][i] = aux;
         }
         info->loaded.insert(m_name);
       }
@@ -101,6 +102,11 @@ public:
     while (info->settings[m_name].size() < layer + 1) {
       info->settings[m_name].push_back(std::make_shared<T>());
     }
+    // An existing slot can still be null -- a layer that had no settings for
+    // this plugin, from a file or from AddLayerCommand -- and callers
+    // dereference what they get back.
+    if (info->settings[m_name][layer] == nullptr)
+      info->settings[m_name][layer] = std::make_shared<T>();
     // Borrowed: the Array keeps ownership, callers only read through this.
     return static_cast<T*>(info->settings[m_name][layer].get());
   }

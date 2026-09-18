@@ -59,7 +59,7 @@ Molecule::Molecule(const Molecule& other)
     m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_layerInfo(std::make_shared<MoleculeInfo>(*other.m_layerInfo))
+    m_layerInfo(std::make_shared<MoleculeInfo>(other.ensureLayerInfo()))
 {
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
@@ -75,9 +75,9 @@ Molecule::Molecule(const Molecule& other)
   m_activeCubeIndex = other.m_activeCubeIndex;
 
   // Make sure all the atoms are in the active layer
-  if (other.m_layerInfo->layer.maxLayer() == 0) {
+  if (other.ensureLayerInfo().layer.maxLayer() == 0) {
     for (Index i = 0; i < atomCount(); ++i)
-      m_layerInfo->layer.addAtomToActiveLayer(i);
+      ensureLayerInfo().layer.addAtomToActiveLayer(i);
   }
 }
 
@@ -168,11 +168,11 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_atomicNumbers(other.m_atomicNumbers),
     m_layerInfo(std::move(other.m_layerInfo))
 {
-  // Leave the moved-from molecule sharing this state rather than allocating
-  // fresh state for it: this constructor is noexcept and make_shared can
-  // throw, which is the dishonesty this change exists to remove. A moved-from
-  // molecule only has to be usable, not independent.
-  other.m_layerInfo = m_layerInfo;
+  // Leave the moved-from molecule with no layer state rather than sharing
+  // ours: sharing would let a write through the moved-from object reach this
+  // one. It recreates its own on first use, which keeps this constructor
+  // allocation-free and so honestly noexcept.
+  other.m_layerInfo.reset();
 }
 
 Molecule& Molecule::operator=(const Molecule& other)
@@ -235,7 +235,7 @@ Molecule& Molecule::operator=(const Molecule& other)
 
     // Assign into the existing MoleculeInfo rather than replacing the handle,
     // so anything already sharing it (an undo command, say) sees the update.
-    *m_layerInfo = *other.m_layerInfo;
+    ensureLayerInfo() = other.ensureLayerInfo();
   }
 
   return *this;
@@ -290,7 +290,13 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     delete m_unitCell;
     m_unitCell = std::exchange(other.m_unitCell, nullptr);
 
-    *m_layerInfo = std::move(*other.m_layerInfo);
+    // Assign into the existing MoleculeInfo where there is one, so anything
+    // already sharing it (an undo command, say) sees the update. Taking the
+    // handle is the fallback, and neither path allocates.
+    if (m_layerInfo && other.m_layerInfo)
+      *m_layerInfo = std::move(*other.m_layerInfo);
+    else
+      m_layerInfo = std::move(other.m_layerInfo);
   }
 
   return *this;
@@ -307,11 +313,11 @@ Molecule::~Molecule()
 
 Layer& Molecule::layer()
 {
-  return m_layerInfo->layer;
+  return ensureLayerInfo().layer;
 }
 const Layer& Molecule::layer() const
 {
-  return m_layerInfo->layer;
+  return ensureLayerInfo().layer;
 }
 
 void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
@@ -745,7 +751,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   else
     m_elements.set(element_count - 1); // custom element
 
-  m_layerInfo->layer.addAtomToActiveLayer(atomCount() - 1);
+  ensureLayerInfo().layer.addAtomToActiveLayer(atomCount() - 1);
   // The calculated results are per-atom, so a new atom invalidates them just
   // as a removed atom does (see removeAtom()).
   clearCalculatedResults();
@@ -979,7 +985,7 @@ void Molecule::swapAtom(Index a, Index b)
   using std::swap;
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
   m_graph.swapVertexIndices(a, b);
-  m_layerInfo->layer.swapLayer(a, b);
+  ensureLayerInfo().layer.swapLayer(a, b);
   m_atomProperties.swapEntries(a, b, atomCount());
 
   // Residues are not an atom-indexed member and so are reached by none of the
@@ -1095,7 +1101,7 @@ bool Molecule::removeAtom(Index index)
   m_atomicNumbers.swapAndPop(index);
   m_graph.removeVertex(index);
 
-  m_layerInfo->layer.removeAtom(index);
+  ensureLayerInfo().layer.removeAtom(index);
 
   return true;
 }
@@ -1139,7 +1145,7 @@ void Molecule::clearAtoms()
   m_residueProperties.clear();
   m_conformerProperties.clear();
   m_timesteps.clear();
-  m_layerInfo->layer.clear();
+  ensureLayerInfo().layer.clear();
   m_elements.reset();
 }
 
@@ -2537,7 +2543,7 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
   std::list<Index> result;
   // get the index in decreasing order so deleting won't corrupt data
   for (Index i = atomCount(); i > 0; --i) {
-    if (m_layerInfo->layer.getLayerID(i - 1) == layer) {
+    if (ensureLayerInfo().layer.getLayerID(i - 1) == layer) {
       result.push_back(i - 1);
     }
   }

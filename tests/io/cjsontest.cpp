@@ -822,6 +822,18 @@ TEST(CjsonTest, layerRoundTrip)
 
   auto restoredInfo = restored.layerInfo();
   ASSERT_TRUE(restoredInfo != nullptr);
+
+  // MoleculeInfo starts with one default entry in each of these; the reader
+  // used to append the file's on top, leaving an extra entry and shifting
+  // every layer's flags by one.
+  EXPECT_EQ(restoredInfo->visible.size(), 2u);
+  EXPECT_EQ(restoredInfo->locked.size(), 2u);
+
+  // A null slot means "no settings for this layer" and has to stay distinct
+  // from settings that serialize to an empty string.
+  ASSERT_EQ(restoredInfo->settings["TestPlugin"].size(), 2u);
+  EXPECT_TRUE(restoredInfo->settings["TestPlugin"][1] == nullptr)
+    << "a null settings slot came back as an empty object";
   EXPECT_EQ(restoredInfo->enable["TestPlugin"].size(), 2u);
   EXPECT_TRUE(restoredInfo->enable["TestPlugin"][0]);
   EXPECT_FALSE(restoredInfo->enable["TestPlugin"][1]);
