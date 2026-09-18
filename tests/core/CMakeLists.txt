@@ -23,6 +23,7 @@ set(tests
   Graph
   InternalCoordinates
   Kekulize
+  Layer
   Mesh
   Molecule
   Mutex

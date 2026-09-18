@@ -1215,6 +1215,15 @@ protected:
 
 private:
   /**
+   * Copy @p other's layer state into this molecule's own layer storage.
+   *
+   * Layers are per molecule: the copy gets the same layers as @p other and
+   * then diverges from it. Per-plugin settings are not copied yet, pending the
+   * LayerData ownership fix.
+   */
+  void copyLayerStateFrom(const Molecule& other);
+
+  /**
    * Fill m_velocities and the derived per-coordinate-set properties, taking
    * coordinate set @c i to be @c intervals[i] after the one before it.
    */

@@ -136,6 +136,28 @@ void Molecule::readProperties(const Molecule& other)
   }
 }
 
+void Molecule::copyLayerStateFrom(const Molecule& other)
+{
+  // Layers belong to the molecule, so copy other's layer state into this
+  // molecule's own MoleculeInfo. The obvious alternative -- pointing this
+  // molecule at other's registry entry with getMoleculeLayer(&other, this) --
+  // cannot work: m_layers is a reference and cannot be rebound, and
+  // reassigning m_molToInfo[this] drops the last reference to the
+  // MoleculeInfo that m_layers refers to, freeing it while we still use it.
+  auto otherInfo = LayerManager::getMoleculeInfo(&other);
+  auto thisInfo = LayerManager::getMoleculeInfo(this);
+  if (otherInfo == nullptr || thisInfo == nullptr || otherInfo == thisInfo)
+    return;
+
+  thisInfo->layer = otherInfo->layer;
+  thisInfo->visible = otherInfo->visible;
+  thisInfo->locked = otherInfo->locked;
+  thisInfo->enable = otherInfo->enable;
+  // MoleculeInfo::settings holds raw LayerData pointers whose ownership is
+  // still unresolved, so it is deliberately left alone here. Copying it needs
+  // the LayerData lifetime fixed first.
+}
+
 Molecule::Molecule(Molecule&& other) noexcept
   : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
     m_spectra(other.m_spectra),
@@ -165,14 +187,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
-  // Copy the layers, only if they exist
-  if (other.m_layers.maxLayer() > 0)
-    m_layers = LayerManager::getMoleculeLayer(&other, this);
-  else {
-    // make sure all the atoms are in the active layer
-    for (Index i = 0; i < atomCount(); ++i)
-      m_layers.addAtomToActiveLayer(i);
-  }
+  copyLayerStateFrom(other);
 }
 
 Molecule& Molecule::operator=(const Molecule& other)
@@ -233,14 +248,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     delete m_unitCell;
     m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
 
-    // Copy the layers, only if they exist
-    if (other.m_layers.maxLayer() > 0)
-      m_layers = LayerManager::getMoleculeLayer(&other, this);
-    else {
-      // make sure all the atoms are in the active layer
-      for (Index i = 0; i < atomCount(); ++i)
-        m_layers.addAtomToActiveLayer(i);
-    }
+    copyLayerStateFrom(other);
   }
 
   return *this;
@@ -295,14 +303,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     delete m_unitCell;
     m_unitCell = std::exchange(other.m_unitCell, nullptr);
 
-    // Copy the layers, if they exist
-    if (other.m_layers.maxLayer() > 0)
-      m_layers = LayerManager::getMoleculeLayer(&other, this);
-    else {
-      // make sure all the atoms are in the active layer
-      for (Index i = 0; i < atomCount(); ++i)
-        m_layers.addAtomToActiveLayer(i);
-    }
+    copyLayerStateFrom(other);
   }
 
   return *this;
