@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:28+0000\n"
+"PO-Revision-Date: 2026-09-18 10:30+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -28,7 +28,7 @@ msgstr "Batchjobb nr %L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
-msgstr ""
+msgstr "Inget meddelande angavs."
 
 #: molequeue/inputgenerator.cpp:71 qtgui/interfacescript.cpp:105
 #, qt-format
@@ -1131,12 +1131,12 @@ msgstr "Fel vid skrivning av molekylrepresentation till sträng: %1"
 
 #: qtgui/jsonwidget.cpp:186
 msgid "'userOptions' missing."
-msgstr ""
+msgstr "”userOptions” saknas."
 
 #: qtgui/jsonwidget.cpp:193
 #, qt-format
 msgid "Could not find option '%1'."
-msgstr ""
+msgstr "Kunde inte hitta alternativet ”%1”."
 
 #: qtgui/jsonwidget.cpp:200
 #, qt-format
@@ -1429,15 +1429,15 @@ msgstr "Okänt fel."
 #: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:106
 #: qtgui/rwlayermanager.cpp:132
 msgid "Modify Layers"
-msgstr ""
+msgstr "Ändra lager"
 
 #: qtgui/rwlayermanager.cpp:196
 msgid "Remove Layer"
-msgstr ""
+msgstr "Ta bort lager"
 
 #: qtgui/rwlayermanager.cpp:203
 msgid "Remove Layer Info"
-msgstr ""
+msgstr "Ta bort lagerinformation"
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
@@ -1776,7 +1776,7 @@ msgstr ""
 #: qtplugins/quantuminput/quantuminput.cpp:80
 #: qtplugins/quantuminput/quantuminput.cpp:322
 msgid "&Input"
-msgstr ""
+msgstr "&Indata"
 
 #: qtplugins/apbs/apbs.cpp:50
 msgid "&APBS"
@@ -1941,7 +1941,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:62
 msgid "By Element"
-msgstr ""
+msgstr "Efter grundämne"
 
 #: qtplugins/applycolors/applycolors.cpp:73
 msgid "By Chain"
@@ -2087,7 +2087,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:142
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "Använd färgscheman för atomer och rester."
 
 #: qtplugins/applycolors/applycolors.cpp:153
 #: qtplugins/applycolors/applycolors.cpp:155 qtplugins/focus/focus.cpp:40
@@ -2097,7 +2097,7 @@ msgstr "&Vy"
 
 #: qtplugins/applycolors/applycolors.cpp:153
 msgid "Color Atoms"
-msgstr ""
+msgstr "Färgsätt atomer"
 
 #: qtplugins/applycolors/applycolors.cpp:155
 msgid "Color Residues"
@@ -2159,7 +2159,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
-msgstr ""
+msgstr "ApplyColors"
 
 #: qtplugins/autoopt/autoopt.cpp:67
 msgctxt "control-key 7"
@@ -2209,13 +2209,13 @@ msgstr "Metod:"
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
 #: qtplugins/autoopt/autoopt.cpp:310:1696
 msgid "Temperature:"
-msgstr ""
+msgstr "Temperatur:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
 #: qtplugins/autoopt/autoopt.cpp:322:1682
 msgid "Timestep:"
-msgstr ""
+msgstr "Tidssteg:"
 
 #: qtplugins/autoopt/autoopt.cpp:329 qtplugins/autoopt/autoopt.cpp:473
 msgid "Start"
@@ -2510,7 +2510,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:385
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "Bearbetar %1"
 
 #: qtplugins/commandscripts/command.cpp:386
 msgid "Cancel"
@@ -3290,7 +3290,7 @@ msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
-msgstr ""
+msgstr "PDB-kod"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:115
@@ -3334,11 +3334,11 @@ msgstr "Den angivna molekylen kunde inte hittas: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
 msgid "Fetch from PDB"
-msgstr ""
+msgstr "Hämta från PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
-msgstr ""
+msgstr "Hämta PDB-modeller från Protein Data Bank"
 
 #: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
@@ -3726,7 +3726,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:112
 #, qt-format
 msgid "Error reading file (%1)."
-msgstr ""
+msgstr "Fel vid läsning av filen (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
@@ -3888,7 +3888,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemodel.cpp:168
 #: qtplugins/propertytables/propertymodel.cpp:829
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 #: qtplugins/label/label.cpp:263
 msgid "Name & ID"
@@ -4184,7 +4184,7 @@ msgstr ""
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/symmetry/symmetry.cpp:80
 msgid "&Properties"
-msgstr ""
+msgstr "&Egenskaper"
 
 #: qtplugins/molecularproperties/molecularproperties.h:36
 msgid "Molecular Properties"
@@ -4714,7 +4714,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:432
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "Hämtar %1 till %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:446
 #, qt-format
@@ -4842,7 +4842,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:170
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:172
 msgid "Features"
@@ -4850,7 +4850,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemodel.cpp:174
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:525
 msgid "Electrostatics"
@@ -5605,11 +5605,11 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "Markera atomer efter index"
 
 #: qtplugins/select/select.cpp:441
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Atomer att markera:"
 
 #: qtplugins/select/select.cpp:446
 msgid "Select Atom"
@@ -5617,11 +5617,11 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
-msgstr ""
+msgstr "Markera atomer efter rest"
 
 #: qtplugins/select/select.cpp:486
 msgid "Residues to Select:"
-msgstr ""
+msgstr "Rester att markera:"
 
 #: qtplugins/select/select.cpp:491
 msgid "Select Residue"
@@ -6027,7 +6027,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
 #: qtplugins/spectra/spectradialog.cpp:879:1779
 msgid "Density"
-msgstr ""
+msgstr "Densitet"
 
 #: qtplugins/spectra/spectradialog.cpp:1001
 msgid "Smoothed"
@@ -6057,7 +6057,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
 #: qtplugins/surfacerender/surfacerender.cpp:274:1776
 msgid "Volume"
-msgstr ""
+msgstr "Volym"
 
 #: qtplugins/surfacerender/surfacerender.cpp:277
 msgid "Style:"
@@ -6284,7 +6284,7 @@ msgstr ""
 
 #: qtplugins/svg/svg.cpp:258
 msgid "SVG (*.svg)"
-msgstr ""
+msgstr "SVG (*.svg)"
 
 #: qtplugins/svg/svg.h:27
 msgid "SVG"
@@ -6292,7 +6292,7 @@ msgstr "SVG"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
-msgstr ""
+msgstr "Återge scenen i en SVG-fil."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Class"
@@ -6481,11 +6481,11 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
-msgstr ""
+msgstr "&Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.cpp:209 qtplugins/yaehmop/yaehmop.cpp:434
 msgid "Cannot calculate band structure: no unit cell!"
-msgstr ""
+msgstr "Kan inte beräkna bandstruktur: ingen enhetscell!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:299
 #, qt-format
@@ -6496,13 +6496,13 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
-msgstr ""
+msgstr "Kunde inte läsa bandstrukturens utdata från Yaehmop!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:321
 msgid ""
 "Only one special k point was found in Yaehmop output! Two or more are "
 "required!"
-msgstr ""
+msgstr "Endast en särskild k-punkt hittades i Yaehmop-utdata! Minst två krävs!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:357
 msgid "k-space"
@@ -6528,15 +6528,15 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:596
 msgid "Yaehmop Input"
-msgstr ""
+msgstr "Yaehmop-indata"
 
 #: qtplugins/yaehmop/yaehmop.h:35
 msgid "Yaehmop"
-msgstr ""
+msgstr "Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.h:84
 msgid "Perform extended Hückel calculations with yaehmop."
-msgstr ""
+msgstr "Utför utökade Hückel-beräkningar med Yaehmop."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:36
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:34
@@ -8910,22 +8910,22 @@ msgstr "HBonds"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:355
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "AllBonds"
-msgstr ""
+msgstr "AllBonds"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:360
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
 msgid "HAngles"
-msgstr ""
+msgstr "HAngles"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:368
 #. i18n: ectx: property (text), widget (QLabel, label_constraintTolerance)
 msgid "Constraint Tolerance:"
-msgstr ""
+msgstr "Restriktionstolerans:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:394
 #. i18n: ectx: property (text), widget (QLabel, label_rigidWater)
 msgid "Rigid water?"
-msgstr ""
+msgstr "Stelt vatten?"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:407
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -8934,107 +8934,107 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:813
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 msgid "False"
-msgstr ""
+msgstr "Falskt"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:415
 #. i18n: ectx: property (text), widget (QLabel, label_nonBondedCutoff)
 msgid "Nonbonded cutoff:"
-msgstr ""
+msgstr "Avskärning för icke-bindande växelverkningar:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:444
 #. i18n: ectx: property (text), widget (QLabel, label_randomInitVel)
 msgid "Random initial velocity:"
-msgstr ""
+msgstr "Slumpmässig initial hastighet:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
 msgid "Generation Temp:"
-msgstr ""
+msgstr "Genereringstemperatur:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
 msgid "Integrator:"
-msgstr ""
+msgstr "Integrator:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Langevin"
-msgstr ""
+msgstr "Langevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:511
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Verlet"
-msgstr ""
+msgstr "Verlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "Brownian"
-msgstr ""
+msgstr "Brownsk"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:521
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableLangevin"
-msgstr ""
+msgstr "Variabel Langevin"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:526
 #. i18n: ectx: property (text), item, widget (QComboBox, integratorCombo)
 msgid "VariableVerlet"
-msgstr ""
+msgstr "Variabel Verlet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
 msgid "Error tolerance:"
-msgstr ""
+msgstr "Feltolerans:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:586
 #. i18n: ectx: property (text), widget (QLabel, label_collisionRate)
 msgid "Collision rate:"
-msgstr ""
+msgstr "Kollisionsfrekvens:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
 #. i18n: ectx: property (text), widget (QLabel, label_barostat)
 msgid "Barostat:"
-msgstr ""
+msgstr "Barostat:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:645
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
 msgid "Monte Carlo"
-msgstr ""
+msgstr "Monte Carlo"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:653
 #. i18n: ectx: property (text), widget (QLabel, label_pressure)
 msgid "Pressure:"
-msgstr ""
+msgstr "Tryck:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:676
 #. i18n: ectx: property (text), widget (QLabel, label_barostatInterval)
 msgid "Barostat Interval"
-msgstr ""
+msgstr "Barostatintervall"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:703
 #. i18n: ectx: property (text), widget (QLabel, label_reporters)
 msgid "Reporters:"
-msgstr ""
+msgstr "Rapportörer:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:710
 #. i18n: ectx: property (text), widget (QCheckBox, stateDataCheck)
 msgid "StateData"
-msgstr ""
+msgstr "StateData"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:720
 #. i18n: ectx: property (text), widget (QCheckBox, dcdCheck)
 msgid "DCD"
-msgstr ""
+msgstr "DCD"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:730
 #. i18n: ectx: property (text), widget (QCheckBox, pdbCheck)
 msgid "PDB"
-msgstr ""
+msgstr "PDB"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
 #. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
 msgid "Report Interval:"
-msgstr ""
+msgstr "Rapporteringsintervall:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
@@ -9044,57 +9044,57 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
 #. i18n: ectx: property (text), widget (QLabel, label_productionSteps)
 msgid "Production Steps:"
-msgstr ""
+msgstr "Produktionssteg:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:800
 #. i18n: ectx: property (text), widget (QLabel, label_minimize)
 msgid "Minimize?"
-msgstr ""
+msgstr "Minimera?"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
 msgid "Max. Minimize Steps:"
-msgstr ""
+msgstr "Högsta antal minimeringssteg:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
 msgid "StateData options:"
-msgstr ""
+msgstr "Alternativ för StateData:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
 msgid "Step Index"
-msgstr ""
+msgstr "Stegindex"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
 msgid "Time"
-msgstr ""
+msgstr "Tid"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:868
 #. i18n: ectx: property (text), widget (QCheckBox, speedCheck)
 msgid "Speed"
-msgstr ""
+msgstr "Hastighet"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:878
 #. i18n: ectx: property (text), widget (QCheckBox, progressCheck)
 msgid "Progress"
-msgstr ""
+msgstr "Förlopp"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:888
 #. i18n: ectx: property (text), widget (QCheckBox, potentialEnergyCheck)
 msgid "Potential Energy"
-msgstr ""
+msgstr "Potentiell energi"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:898
 #. i18n: ectx: property (text), widget (QCheckBox, kineticEnergyCheck)
 msgid "Kinetic Energy"
-msgstr ""
+msgstr "Kinetisk energi"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:908
 #. i18n: ectx: property (text), widget (QCheckBox, totalEnergyCheck)
 msgid "Total Energy"
-msgstr ""
+msgstr "Total energi"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
@@ -9119,17 +9119,17 @@ msgstr ""
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
-msgstr ""
+msgstr "Alternativ för PDF-diagram"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Maximum Radius:"
-msgstr ""
+msgstr "Maximal radie:"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label2)
 msgid "Step (dr):"
-msgstr ""
+msgstr "Steg (dr):"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
@@ -9224,7 +9224,7 @@ msgstr "Konstant storlek"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:21
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Apply Color"
-msgstr ""
+msgstr "Använd färg"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
@@ -9467,7 +9467,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
 msgid "Create Surfaces"
-msgstr ""
+msgstr "Skapa ytor"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -9477,17 +9477,17 @@ msgstr "Yta:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
 msgid "alpha"
-msgstr ""
+msgstr "alfa"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, spinCombo)
 msgid "beta"
-msgstr ""
+msgstr "beta"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Color by:"
-msgstr ""
+msgstr "Färgsätt efter:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
@@ -9502,7 +9502,7 @@ msgstr "Upplösning:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:299
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Isosurface Value:"
-msgstr ""
+msgstr "Isovärde för yta:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -9594,7 +9594,7 @@ msgstr "Generös"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Very Loose"
-msgstr ""
+msgstr "Mycket generös"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:248
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
@@ -9817,12 +9817,12 @@ msgstr "Amplitud:"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
-msgstr ""
+msgstr "Yaehmop-band"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
 msgid "Min y: "
-msgstr ""
+msgstr "Min. y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
@@ -9840,7 +9840,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
 msgid "Plot Fermi?"
-msgstr ""
+msgstr "Rita Fermi?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_zeroFermi)
@@ -9853,7 +9853,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
 msgid "Zero Fermi?"
-msgstr ""
+msgstr "Nollställ Fermi?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -9863,12 +9863,12 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Special k-points"
-msgstr ""
+msgstr "Särskilda k-punkter"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:98
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_maxY)
 msgid "Max y: "
-msgstr ""
+msgstr "Max. y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_fermi)
@@ -9924,7 +9924,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
 msgid "Limit y-range?"
-msgstr ""
+msgstr "Begränsa y-intervallet?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:188
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -9947,7 +9947,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
 msgid "Display Yaehmop Input?"
-msgstr ""
+msgstr "Visa Yaehmop-indata?"
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
