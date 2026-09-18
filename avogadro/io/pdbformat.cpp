@@ -390,12 +390,25 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
 
       if (altLoc.compare("") && altLoc.compare("A")) {
+        // An alternate location is a second conformation of the atom that was
+        // read just before it, so it overwrites that atom's coordinate in a
+        // separate coordinate set rather than adding an atom of its own. With
+        // no preceding atom there is nothing to be an alternate of: the "A"
+        // conformer is missing from the file. Dropping the record is the only
+        // safe reading -- taking index 0 - 1 here wrapped around to MaxIndex
+        // and later wrote 24 bytes just below the coordinate array.
+        const size_t target =
+          (coordSet == 0) ? mol.atomCount() : positions.size();
         if (coordSet == 0) {
+          // Claim the serial-number slot either way, so CONECT records that
+          // count this line still resolve to the right atoms.
           rawToAtomId.push_back(MaxIndex);
-          altAtomIds.push_back(mol.atomCount() - 1);
-        } else {
-          altAtomIds.push_back(positions.size() - 1);
         }
+        if (target == 0) {
+          appendError("Alternate location record with no preceding atom");
+          continue;
+        }
+        altAtomIds.push_back(target - 1);
         altAtomCoordSets.push_back(coordSet);
         altAtomLocs.push_back(altLoc[0]);
         altLocs.insert(altLoc[0]);
@@ -531,6 +544,10 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       bool found = false;
       for (size_t i = 0; i < altAtomCoordSets.size(); ++i) {
         if (altAtomCoordSets[i] == c && altAtomLocs[i] == l) {
+          // The coordinate set for this model can be shorter than the atom
+          // index recorded while reading it, so check before writing.
+          if (altAtomIds[i] >= coordinateSet.size())
+            continue;
           found = true;
           coordinateSet[altAtomIds[i]] = altAtomPositions[i];
         }

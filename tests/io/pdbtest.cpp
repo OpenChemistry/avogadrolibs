@@ -567,3 +567,36 @@ TEST(PdbTest, explicitChargeSurvivesCationHeuristic)
   EXPECT_EQ(molecule.atom(0).formalCharge(), 2)
     << "the charge from columns 79-80 must not be replaced by the heuristic";
 }
+
+// A file whose first atom record carries an alternate location has no atom for
+// that record to be an alternate of. The index arithmetic used to wrap around
+// to MaxIndex and corrupt the heap a moment later (fuzz crash
+// crash-02a0fb474455ed232336979c06093f4af4565b71, a truncated 1FDT).
+TEST(PdbTest, altLocWithoutPrecedingAtom)
+{
+  std::string contents;
+  contents +=
+    "ATOM      1  C  BVAL A 196      45.365  -7.308  44.414  0.50 45.48"
+    "           C  \n";
+  contents +=
+    "ATOM      2  O  AVAL A 196      47.153  -6.764  43.720  0.50 40.27"
+    "           O  \n";
+  contents +=
+    "ATOM      3  O  BVAL A 196      46.434  -7.294  43.785  0.50 45.05"
+    "           O  \n";
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule)) << pdb.error();
+
+  // Only the "A" record becomes an atom; the orphaned "B" record is dropped
+  // and the second "B" record is an alternate location of that atom.
+  ASSERT_EQ(molecule.atomCount(), 1);
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 8);
+  EXPECT_TRUE(hasAtomAt(molecule, 47.153, -6.764, 43.720))
+    << "the A conformer is the position stored on the atom";
+  ASSERT_GE(molecule.coordinate3dCount(), 2);
+  EXPECT_FLOAT_EQ(molecule.coordinate3d(1)[0].x(), 46.434)
+    << "the B conformer belongs in its own coordinate set";
+}
