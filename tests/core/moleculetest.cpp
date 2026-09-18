@@ -7,6 +7,8 @@
 
 #include <gtest/gtest.h>
 
+#include <map>
+#include <string>
 #include <type_traits>
 
 #include <limits>
@@ -387,14 +389,27 @@ TEST_F(MoleculeTest, propertyMapCopyAssign)
 // declares a defaulted destructor, which suppresses its implicit move
 // constructor unless the moves are declared too -- and if that regresses,
 // std::move(m_data) silently becomes a copy again with nothing to flag it.
-// A real move of the underlying std::map is noexcept, so the nothrow traits
-// are the available compile-time proxy for "this still moves, not copies".
-static_assert(std::is_nothrow_move_constructible<VariantMap>::value,
-              "VariantMap lost its move constructor, so Molecule's move "
-              "constructor is silently copying m_data.");
-static_assert(std::is_nothrow_move_assignable<VariantMap>::value,
-              "VariantMap lost its move assignment, so Molecule's move "
-              "assignment is silently copying m_data.");
+//
+// Compare VariantMap against the map it wraps rather than asserting noexcept
+// outright. Whether std::map's move is noexcept is an implementation choice --
+// libc++ and libstdc++ say yes, MSVC does not -- so an absolute assertion here
+// would be testing the standard library rather than this class. If VariantMap
+// loses its move constructor it falls back to copying the map, which allocates
+// and so is never noexcept, and the two sides stop matching.
+namespace {
+using VariantMapStorage = std::map<std::string, Variant>;
+} // namespace
+
+static_assert(std::is_nothrow_move_constructible<VariantMap>::value ==
+                std::is_nothrow_move_constructible<VariantMapStorage>::value,
+              "VariantMap no longer moves as well as the map it wraps: a "
+              "user-declared destructor has suppressed its move constructor, "
+              "so Molecule's move constructor is silently copying m_data.");
+static_assert(std::is_nothrow_move_assignable<VariantMap>::value ==
+                std::is_nothrow_move_assignable<VariantMapStorage>::value,
+              "VariantMap no longer moves as well as the map it wraps: a "
+              "user-declared destructor has suppressed its move assignment, "
+              "so Molecule's move assignment is silently copying m_data.");
 
 TEST_F(MoleculeTest, moveTransfersDataAndSpectra)
 {
