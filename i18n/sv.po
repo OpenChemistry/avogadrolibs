@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:30+0000\n"
+"PO-Revision-Date: 2026-09-18 10:32+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -130,12 +130,13 @@ msgstr ""
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Fel vid sparande av molekylrepresentation till sträng: okänt filformat: %1"
 
 #: molequeue/inputgenerator.cpp:393
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr ""
+msgstr "Fel vid sparande av molekylrepresentation till sträng: %1"
 
 #: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:713
 #, qt-format
@@ -436,7 +437,7 @@ msgstr "Konfigurera jobb"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Skickar jobb till MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
@@ -450,7 +451,7 @@ msgstr "Avogadro fick tidsgräns medan det väntade på svar från MoleQueue."
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Väntar på att jobb %1 ”%2” ska slutföras…"
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
@@ -458,7 +459,7 @@ msgstr "Sluta vänta"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Hämtar information om slutfört jobb…"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
@@ -478,7 +479,7 @@ msgstr "Fel vid inskickning av jobb"
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "Jobbet har avvisats av MoleQueue: %1"
 
 #: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
@@ -1266,9 +1267,8 @@ msgid "Force"
 msgstr "Kraft"
 
 #: qtgui/layermodel.cpp:182 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
-msgstr "Etikett"
+msgstr "Etiketter"
 
 #: qtgui/layermodel.cpp:184 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
@@ -1318,7 +1318,7 @@ msgstr ""
 
 #: qtgui/layermodel.cpp:202 qtplugins/overlayaxes/overlayaxes.h:28
 msgid "Reference Axes"
-msgstr ""
+msgstr "Referensaxlar"
 
 #: qtgui/moleculemodel.cpp:121
 msgid "Untitled"
@@ -1441,11 +1441,11 @@ msgstr "Ta bort lagerinformation"
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
-msgstr ""
+msgstr "Lägg till lager"
 
 #: qtgui/rwlayermanager.cpp:215
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Lägg till lagerinformation"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1453,7 +1453,7 @@ msgstr ""
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:264:1876
 msgid "Change Layer"
-msgstr ""
+msgstr "Ändra lager"
 
 #: qtgui/rwmolecule.cpp:43 qtgui/rwmolecule.cpp:52
 msgid "Add Atom"
@@ -1504,7 +1504,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:355
 msgid "Change Atom Layer"
-msgstr ""
+msgstr "Ändra atomlager"
 
 #: qtgui/rwmolecule.cpp:371
 msgid "Add Bond"
@@ -1662,7 +1662,7 @@ msgstr[1] ""
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
-msgstr ""
+msgstr "3DMol HTML-block."
 
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:59
@@ -1763,11 +1763,11 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:32
 msgid "Run APBS…"
-msgstr ""
+msgstr "Kör APBS…"
 
 #: qtplugins/apbs/apbs.cpp:37
 msgid "Open Output File…"
-msgstr ""
+msgstr "Öppna utdatafil…"
 
 #: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:50
@@ -1927,9 +1927,8 @@ msgstr "Kan inte spara filen %1."
 
 #: qtplugins/applycolors/applycolors.cpp:47
 #: qtplugins/applycolors/applycolors.cpp:68
-#, fuzzy
 msgid "By Custom Color…"
-msgstr "Av anpassad färg…"
+msgstr "Med anpassad färg…"
 
 #: qtplugins/applycolors/applycolors.cpp:52
 msgid "By Atomic Index…"
@@ -1945,7 +1944,7 @@ msgstr "Efter grundämne"
 
 #: qtplugins/applycolors/applycolors.cpp:73
 msgid "By Chain"
-msgstr ""
+msgstr "Efter kedja"
 
 #: qtplugins/applycolors/applycolors.cpp:78
 #, fuzzy
@@ -1953,17 +1952,16 @@ msgid "By Partial Charge…"
 msgstr "Efter partiell laddning…"
 
 #: qtplugins/applycolors/applycolors.cpp:83
-#, fuzzy
 msgid "By Secondary Structure"
-msgstr "sekundära struktur"
+msgstr "Efter sekundärstruktur"
 
 #: qtplugins/applycolors/applycolors.cpp:88
 msgid "By Amino Acid"
-msgstr ""
+msgstr "Efter aminosyra"
 
 #: qtplugins/applycolors/applycolors.cpp:93
 msgid "By Shapely Scheme"
-msgstr ""
+msgstr "Efter Shapely-schema"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -2101,7 +2099,7 @@ msgstr "Färgsätt atomer"
 
 #: qtplugins/applycolors/applycolors.cpp:155
 msgid "Color Residues"
-msgstr ""
+msgstr "Färgsätt rester"
 
 #: qtplugins/applycolors/applycolors.cpp:217
 #: qtplugins/applycolors/applycolors.cpp:318
@@ -2269,11 +2267,11 @@ msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
-msgstr ""
+msgstr "Atomskala"
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
 msgid "Bond scale"
-msgstr ""
+msgstr "Bindningsskala"
 
 #: qtplugins/ballandstick/ballandstick.cpp:125
 msgid "Opacity"
@@ -2282,12 +2280,12 @@ msgstr "Opacitet"
 #: qtplugins/ballandstick/ballandstick.cpp:129
 #: qtplugins/wireframe/wireframe.cpp:100
 msgid "Show multiple bonds"
-msgstr ""
+msgstr "Visa multipla bindningar"
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
 msgid "Show hydrogens"
-msgstr ""
+msgstr "Visa väteatomer"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
@@ -2300,7 +2298,7 @@ msgstr ""
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:119
 msgid "Bond-Centric Manipulation"
-msgstr ""
+msgstr "Bindningscentrerad manipulering"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:121
 #, qt-format
@@ -2376,38 +2374,37 @@ msgstr "Utför bindningsåtgärder."
 #: qtplugins/cartoons/cartoons.cpp:139
 msgctxt "protein rendering style"
 msgid "Backbone"
-msgstr ""
+msgstr "Ryggrad"
 
 #: qtplugins/cartoons/cartoons.cpp:140
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr ""
+msgstr "Spår"
 
 #: qtplugins/cartoons/cartoons.cpp:141
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr ""
+msgstr "Rör"
 
 #: qtplugins/cartoons/cartoons.cpp:142
 msgctxt "protein rendering style"
 msgid "Ribbon"
-msgstr ""
+msgstr "Band"
 
 #: qtplugins/cartoons/cartoons.cpp:143
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr ""
+msgstr "Enkel tecknad modell"
 
 #: qtplugins/cartoons/cartoons.cpp:144
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Cartoon"
-msgstr "Avbild"
+msgstr "Tecknad modell"
 
 #: qtplugins/cartoons/cartoons.cpp:145
 msgctxt "protein rendering style"
 msgid "Rope"
-msgstr ""
+msgstr "Rep"
 
 #: qtplugins/cartoons/cartoons.h:36
 msgid "Display of biomolecule ribbons / cartoons."
@@ -2446,7 +2443,7 @@ msgstr "Maximalt avstånd:"
 #: qtplugins/surfacerender/surfacerender.cpp:297
 #: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
-msgstr ""
+msgstr "Linjetjocklek:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:260
 msgid "Contact"
@@ -2583,7 +2580,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:545
 #: qtplugins/templatetool/templatetoolwidget.cpp:608:2310
 msgid "Other…"
-msgstr ""
+msgstr "Annat…"
 
 #: qtplugins/constraints/constraintsextension.cpp:22
 msgid "Constraints…"
@@ -2658,27 +2655,27 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:853
 #: qtplugins/propertytables/propertymodel.cpp:870
 msgid "Atom 1"
-msgstr ""
+msgstr "Atom 1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
 #: qtplugins/propertytables/propertymodel.cpp:872
 msgid "Atom 2"
-msgstr ""
+msgstr "Atom 2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
 #: qtplugins/propertytables/propertymodel.cpp:857
 #: qtplugins/propertytables/propertymodel.cpp:874
 msgid "Atom 3"
-msgstr ""
+msgstr "Atom 3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
 #: qtplugins/propertytables/propertymodel.cpp:876
 msgid "Atom 4"
-msgstr ""
+msgstr "Atom 4"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
-msgstr ""
+msgstr "Redigerare för atom&koordinater…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 msgid "Coordinate editor"
@@ -2941,7 +2938,7 @@ msgstr "Arbeta med urklippet."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:33
 msgid "&CP2K…"
-msgstr ""
+msgstr "&CP2K…"
 
 #: qtplugins/cp2kinput/cp2kinput.h:34
 msgid "CP2K input"
@@ -3072,7 +3069,7 @@ msgstr "Skicka CP2K-beräkning"
 
 #: qtplugins/crystal/crystal.cpp:40
 msgid "Import Crystal from Clipboard…"
-msgstr ""
+msgstr "Importera kristall från urklipp…"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
@@ -3080,7 +3077,7 @@ msgstr "Visa/dölj enhetscell"
 
 #: qtplugins/crystal/crystal.cpp:52
 msgid "Edit Unit Cell…"
-msgstr ""
+msgstr "Redigera enhetscell…"
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
@@ -3092,11 +3089,11 @@ msgstr "Rotera till standard&orientering"
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
-msgstr ""
+msgstr "Skala cell&volym…"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
-msgstr ""
+msgstr "Bygg &supercell…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -3150,7 +3147,7 @@ msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:157
 msgid "Line color:"
-msgstr ""
+msgstr "Linjefärg:"
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
@@ -3195,7 +3192,7 @@ msgstr ""
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
-msgstr ""
+msgstr "Tilldela &anpassade grundämnen på nytt…"
 
 #: qtplugins/customelements/customelements.cpp:30
 msgid "Manipulate custom element types in the current molecule."
@@ -3503,7 +3500,6 @@ msgid "Merck Molecular Force Field 94"
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
-#, fuzzy
 msgid "&GAMESS…"
 msgstr "&GAMESS…"
 
@@ -3647,7 +3643,7 @@ msgstr "Väteatomer"
 
 #: qtplugins/importpqr/importpqr.cpp:25
 msgid "&Search PQR…"
-msgstr ""
+msgstr "Sök &PQR…"
 
 #: qtplugins/importpqr/importpqr.h:35
 msgid "Import From PQR"
@@ -3699,12 +3695,12 @@ msgstr ""
 #: qtplugins/lineformatinput/lineformatinput.cpp:110
 #: qtplugins/lineformatinput/lineformatinput.cpp:125:1309
 msgid "Insert Molecule…"
-msgstr ""
+msgstr "Infoga molekyl…"
 
 #: qtplugins/insertdna/insertdna.cpp:203
 #: qtplugins/lineformatinput/lineformatinput.cpp:126
 msgid "Generating 3D molecule…"
-msgstr ""
+msgstr "Skapar 3D-molekyl…"
 
 #: qtplugins/insertdna/insertdna.h:33
 msgid "InsertDNA"
@@ -3721,7 +3717,7 @@ msgstr "Molekyl…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
-msgstr ""
+msgstr "Kristall…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:112
 #, qt-format
@@ -3830,10 +3826,9 @@ msgstr ""
 #: qtplugins/label/label.cpp:187 qtplugins/surfacerender/surfacerender.cpp:313
 #: qtplugins/surfacerender/surfacerender.cpp:319
 msgid "Color:"
-msgstr ""
+msgstr "Färg:"
 
 #: qtplugins/label/label.cpp:197
-#, fuzzy
 msgid "Distance from center:"
 msgstr "Avstånd från centrum:"
 
@@ -3843,7 +3838,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:218 qtplugins/label/label.cpp:249
 msgid "Index"
-msgstr ""
+msgstr "Index"
 
 #: qtplugins/label/label.cpp:219
 msgid "Unique ID"
@@ -3870,7 +3865,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:240
 msgid "Atom Label:"
-msgstr ""
+msgstr "Atometikett:"
 
 #: qtplugins/label/label.cpp:248
 msgid "Length"
@@ -3882,7 +3877,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:261 qtplugins/propertytables/propertymodel.cpp:831
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: qtplugins/label/label.cpp:262
 #: qtplugins/packageinstaller/packagemodel.cpp:168
@@ -3896,15 +3891,15 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:270
 msgid "Residue Label:"
-msgstr ""
+msgstr "Restetikett:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
-msgstr ""
+msgstr "Visa etiketter i kul- och pinnstil."
 
 #: qtplugins/label/labeleditor.cpp:31
 msgid "Edit Labels"
-msgstr ""
+msgstr "Redigera etiketter"
 
 #: qtplugins/label/labeleditor.cpp:33
 msgid ""
@@ -3915,15 +3910,15 @@ msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:79
 msgid "Create Label"
-msgstr ""
+msgstr "Skapa etikett"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr ""
+msgstr "Verktyg för etikettredigering"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
-msgstr ""
+msgstr "&LAMMPS…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
@@ -3951,16 +3946,15 @@ msgstr "Opacitet:"
 
 #: qtplugins/licorice/licorice.h:36
 msgid "Render atoms as licorice / sticks."
-msgstr ""
+msgstr "Återge atomer som lakrits/pinnar."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:32
-#, fuzzy
 msgid "SMILES…"
 msgstr "SMILES…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:38
 msgid "InChI…"
-msgstr ""
+msgstr "InChI…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "InChI"
@@ -4192,7 +4186,6 @@ msgstr "Molekylegenskaper"
 
 #: qtplugins/molecularproperties/molecularview.cpp:40
 #: qtplugins/propertytables/propertyview.cpp:76
-#, fuzzy
 msgid "Molecule Properties"
 msgstr "Molekylegenskaper"
 
@@ -4262,7 +4255,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:122
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr ""
+msgstr "Vänd zoomriktningen vid rullning"
 
 #: qtplugins/navigator/navigator.cpp:124
 msgid ""
@@ -4322,7 +4315,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:54
 msgid "Configure Force Field…"
-msgstr ""
+msgstr "Konfigurera kraftfält…"
 
 #: qtplugins/openbabel/openbabel.cpp:60
 msgid "Conformer Search…"
@@ -4333,9 +4326,8 @@ msgid "Perceive Bonds"
 msgstr "Fastställ bindningar"
 
 #: qtplugins/openbabel/openbabel.cpp:78
-#, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "Visa väte för pH…"
+msgstr "Lägg till väteatomer för pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:84
 msgid "Remove Hydrogens"
@@ -5155,7 +5147,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:776
 msgid "Valence"
-msgstr ""
+msgstr "Valens"
 
 #: qtplugins/propertytables/propertymodel.cpp:778
 msgid "Formal Charge"
@@ -5169,11 +5161,11 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:788
 msgid "X (Å)"
-msgstr ""
+msgstr "X (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:790
 msgid "Y (Å)"
-msgstr ""
+msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:792
 msgid "Z (Å)"
@@ -5192,54 +5184,50 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:798
 #: qtplugins/propertytables/propertymodel.cpp:841
 msgid "Color"
-msgstr ""
+msgstr "Färg"
 
 #: qtplugins/propertytables/propertymodel.cpp:801
 msgid "Atom"
-msgstr ""
+msgstr "Atom"
 
 #: qtplugins/propertytables/propertymodel.cpp:810
 msgid "Start Atom"
-msgstr ""
+msgstr "Startatom"
 
 #: qtplugins/propertytables/propertymodel.cpp:812
 msgid "End Atom"
-msgstr ""
+msgstr "Slutatom"
 
 #: qtplugins/propertytables/propertymodel.cpp:814
-#, fuzzy
 msgid "Bond Order"
 msgstr "Bindningsordning"
 
 #: qtplugins/propertytables/propertymodel.cpp:818
-#, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "Längdenhet (Å)"
+msgstr "Längd (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:833
 msgid "Chain"
-msgstr ""
+msgstr "Kedja"
 
 #: qtplugins/propertytables/propertymodel.cpp:835
-#, fuzzy
 msgid "Secondary Structure"
-msgstr "Sekundära Struktur"
+msgstr "Sekundärstruktur"
 
 #: qtplugins/propertytables/propertymodel.cpp:837
 msgid "Heterogen"
-msgstr ""
+msgstr "Heterogen"
 
 #: qtplugins/propertytables/propertymodel.cpp:855
 msgid "Vertex"
-msgstr ""
+msgstr "Hörn"
 
 #: qtplugins/propertytables/propertymodel.cpp:859
 #: qtplugins/propertytables/propertymodel.cpp:878
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:101
-#, fuzzy
 msgid "Angle (°)"
-msgstr "Vinklar (°)"
+msgstr "Vinkel (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:889
 msgctxt "root mean squared displacement in Angstrom"
@@ -5253,42 +5241,42 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:1315
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr ""
+msgstr "π-helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:1317
 msgctxt "protein bend secondary structure"
 msgid "Bend"
-msgstr ""
+msgstr "Böj"
 
 #: qtplugins/propertytables/propertymodel.cpp:1319
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr ""
+msgstr "α-helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:1321
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr ""
+msgstr "β-flak"
 
 #: qtplugins/propertytables/propertymodel.cpp:1323
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr ""
+msgstr "3–10-helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:1325
 msgctxt "beta bridge"
 msgid "β Bridge"
-msgstr ""
+msgstr "β-brygga"
 
 #: qtplugins/propertytables/propertymodel.cpp:1327
 msgctxt "protein turn secondary structure"
 msgid "Turn"
-msgstr ""
+msgstr "Sväng"
 
 #: qtplugins/propertytables/propertymodel.cpp:1329
 msgctxt "protein coil secondary structure"
 msgid "Coil"
-msgstr ""
+msgstr "Slumpmässig struktur"
 
 #: qtplugins/propertytables/propertytables.cpp:27
 msgid "Atom Properties…"
@@ -5321,31 +5309,31 @@ msgstr ""
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
-msgstr ""
+msgstr "Egenskapstabeller"
 
 #: qtplugins/propertytables/propertyview.cpp:58
 msgid "Atom Properties"
-msgstr ""
+msgstr "Atomegenskaper"
 
 #: qtplugins/propertytables/propertyview.cpp:61
 msgid "Bond Properties"
-msgstr ""
+msgstr "Bindningsegenskaper"
 
 #: qtplugins/propertytables/propertyview.cpp:64
 msgid "Angle Properties"
-msgstr ""
+msgstr "Vinkelegenskaper"
 
 #: qtplugins/propertytables/propertyview.cpp:67
 msgid "Torsion Properties"
-msgstr ""
+msgstr "Torsionsegenskaper"
 
 #: qtplugins/propertytables/propertyview.cpp:70
 msgid "Conformer Properties"
-msgstr ""
+msgstr "Konformeregenskaper"
 
 #: qtplugins/propertytables/propertyview.cpp:73
 msgid "Residue Properties"
-msgstr ""
+msgstr "Restegenskaper"
 
 #: qtplugins/propertytables/propertyview.cpp:846
 #: qtplugins/propertytables/propertyview.cpp:875
@@ -5656,7 +5644,7 @@ msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
-msgstr ""
+msgstr "Måla atomer"
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
