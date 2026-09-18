@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:12+0000\n"
+"PO-Revision-Date: 2026-09-18 10:15+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -302,7 +302,7 @@ msgstr "Välj filnamn för utdata"
 #: molequeue/inputgeneratorwidget.cpp:470
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
-msgstr ""
+msgstr "Internt fel: kunde inte hitta textwidgeten för filnamnet ”%1”"
 
 #: molequeue/inputgeneratorwidget.cpp:486
 #: molequeue/inputgeneratorwidget.cpp:597
@@ -1002,19 +1002,19 @@ msgstr "Oganesson"
 
 #: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
-msgstr ""
+msgstr "Bläddra"
 
 #: qtgui/filebrowsewidget.cpp:97
 msgid "Select file:"
-msgstr ""
+msgstr "Välj fil:"
 
 #: qtgui/filebrowsewidget.cpp:100
 msgid "Select executable:"
-msgstr ""
+msgstr "Välj körbar fil:"
 
 #: qtgui/fileformatdialog.cpp:53
 msgid "Unable to find a suitable file reader for the selected file."
-msgstr ""
+msgstr "Kunde inte hitta en lämplig filläsare för den valda filen."
 
 #: qtgui/fileformatdialog.cpp:105
 msgid ""
@@ -1024,42 +1024,42 @@ msgstr ""
 
 #: qtgui/fileformatdialog.cpp:119
 msgid "Unable to find a suitable file writer for the selected format."
-msgstr ""
+msgstr "Kunde inte hitta en lämplig filskrivare för det valda formatet."
 
 #: qtgui/fileformatdialog.cpp:172
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "hanterare"
 
 #: qtgui/fileformatdialog.cpp:173
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "hantera"
 
 #: qtgui/fileformatdialog.cpp:177
 msgctxt "File readers"
 msgid "readers"
-msgstr ""
+msgstr "läsare"
 
 #: qtgui/fileformatdialog.cpp:178
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
-msgstr ""
+msgstr "läsa"
 
 #: qtgui/fileformatdialog.cpp:182
 msgctxt "File writers"
 msgid "writers"
-msgstr ""
+msgstr "skrivare"
 
 #: qtgui/fileformatdialog.cpp:183
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
-msgstr ""
+msgstr "skriva"
 
 #: qtgui/fileformatdialog.cpp:188
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
-msgstr ""
+msgstr "Flera %1 hittades som kan %2 detta format. Vilken ska användas?"
 
 #: qtgui/fileformatdialog.cpp:289
 msgid "All files"
@@ -1141,7 +1141,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:200
 #, qt-format
 msgid "'type' is not a string for option '%1'."
-msgstr ""
+msgstr "”type” är inte en sträng för alternativet ”%1”."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
@@ -1201,14 +1201,14 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:858
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
+msgstr "Okänd alternativtyp ”%1” för alternativet ”%2”."
 
 #: qtgui/jsonwidget.cpp:867 qtgui/jsonwidget.cpp:902 qtgui/jsonwidget.cpp:923
 #: qtgui/jsonwidget.cpp:944 qtgui/jsonwidget.cpp:1000 qtgui/jsonwidget.cpp:1021
 #: qtgui/jsonwidget.cpp:1043 qtgui/jsonwidget.cpp:1064
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
-msgstr ""
+msgstr "Fel vid inställning av standard för alternativet ”%1”. Fel widgettyp."
 
 #: qtgui/jsonwidget.cpp:874 qtgui/jsonwidget.cpp:909 qtgui/jsonwidget.cpp:930
 #: qtgui/jsonwidget.cpp:951 qtgui/jsonwidget.cpp:1007 qtgui/jsonwidget.cpp:1028
@@ -1216,6 +1216,7 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
+"Fel vid inställning av standard för alternativet ”%1”. Fel standardvärde:"
 
 #: qtgui/jsonwidget.cpp:888
 #, qt-format
@@ -1223,11 +1224,13 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
+"Fel vid inställning av standard för alternativet ”%1”. Kunde inte hitta "
+"giltigt index för kombinationspost från värdet:"
 
 #: qtgui/jsonwidget.cpp:1134
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
+msgstr "Ohanterad widget i collectOptions för alternativet ”%1”."
 
 #: qtgui/jsonwidget.cpp:1179 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
@@ -1331,11 +1334,11 @@ msgstr ""
 
 #: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
-msgstr ""
+msgstr "Skapa en ny vy"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
-msgstr ""
+msgstr "Periodiska systemet"
 
 #: qtgui/pythonscript.cpp:177
 #, qt-format
@@ -1348,6 +1351,8 @@ msgstr ""
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Fel vid körning av skriptet ”%1 %2”: tidsgränsen överskreds vid väntan på "
+"start (%3)."
 
 #: qtgui/pythonscript.cpp:281 qtgui/pythonscript.cpp:404
 #, qt-format
@@ -1355,11 +1360,15 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Fel vid körning av skriptet ”%1 %2”: kunde inte skriva till stdin (längd=%3, "
+"skrev %4 byte, QProcess-fel: %5)."
 
 #: qtgui/pythonscript.cpp:295
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Fel vid körning av skriptet ”%1 %2”: tidsgränsen överskreds vid väntan på "
+"avslut (%3)."
 
 #: qtgui/pythonscript.cpp:305
 #, qt-format
@@ -1369,6 +1378,10 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Fel vid körning av skriptet ”%1 %2”: onormal slutstatus %3 (%4: %5)\n"
+"\n"
+"Utdata:\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:315
 #, qt-format
@@ -1391,27 +1404,27 @@ msgstr ""
 
 #: qtgui/pythonscript.cpp:592
 msgid "Script failed to start."
-msgstr ""
+msgstr "Skriptet kunde inte startas."
 
 #: qtgui/pythonscript.cpp:595
 msgid "Script crashed."
-msgstr ""
+msgstr "Skriptet kraschade."
 
 #: qtgui/pythonscript.cpp:598
 msgid "Script timed out."
-msgstr ""
+msgstr "Tidsgränsen för skriptet överskreds."
 
 #: qtgui/pythonscript.cpp:601
 msgid "Read error."
-msgstr ""
+msgstr "Läsfel."
 
 #: qtgui/pythonscript.cpp:604
 msgid "Write error."
-msgstr ""
+msgstr "Skrivfel."
 
 #: qtgui/pythonscript.cpp:608
 msgid "Unknown error."
-msgstr ""
+msgstr "Okänt fel."
 
 #: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:106
 #: qtgui/rwlayermanager.cpp:132
@@ -1444,16 +1457,16 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:43 qtgui/rwmolecule.cpp:52
 msgid "Add Atom"
-msgstr ""
+msgstr "Lägg till atom"
 
 #: qtgui/rwmolecule.cpp:74 qtgui/rwmolecule.cpp:89
 #: qtplugins/editor/editor.cpp:185
 msgid "Remove Atom"
-msgstr ""
+msgstr "Ta bort atom"
 
 #: qtgui/rwmolecule.cpp:99
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Rensa atomer"
 
 #: qtgui/rwmolecule.cpp:151 qtplugins/zmatrixeditor/zmatrixeditor.cpp:56
 msgid "Reorder Atoms"
@@ -1463,23 +1476,23 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
 #: qtgui/rwmolecule.cpp:162 qtgui/rwmolecule.cpp:170:506
 msgid "Adjust Hydrogens"
-msgstr ""
+msgstr "Justera väteatomer"
 
 #: qtgui/rwmolecule.cpp:198 qtplugins/alchemy/alchemy.cpp:74
 msgid "Change Elements"
-msgstr ""
+msgstr "Ändra grundämnen"
 
 #: qtgui/rwmolecule.cpp:210
 msgid "Change Element"
-msgstr ""
+msgstr "Ändra grundämne"
 
 #: qtgui/rwmolecule.cpp:297
 msgid "Change Atom Hybridization"
-msgstr ""
+msgstr "Ändra atomhybridisering"
 
 #: qtgui/rwmolecule.cpp:309
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "Ändra atomens formella laddning"
 
 #: qtgui/rwmolecule.cpp:331
 msgid "Change Atom Color"
@@ -1495,15 +1508,15 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:371
 msgid "Add Bond"
-msgstr ""
+msgstr "Lägg till bindning"
 
 #: qtgui/rwmolecule.cpp:397
 msgid "Removed Bond"
-msgstr ""
+msgstr "Borttagen bindning"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Clear Bonds"
-msgstr ""
+msgstr "Rensa bindningar"
 
 #: qtgui/rwmolecule.cpp:418
 #, fuzzy
@@ -1512,15 +1525,15 @@ msgstr "Bindningsordning"
 
 #: qtgui/rwmolecule.cpp:430
 msgid "Change Bond Order"
-msgstr ""
+msgstr "Ändra bindningsordning"
 
 #: qtgui/rwmolecule.cpp:452
 msgid "Update Bonds"
-msgstr ""
+msgstr "Uppdatera bindningar"
 
 #: qtgui/rwmolecule.cpp:471
 msgid "Update Bond"
-msgstr ""
+msgstr "Uppdatera bindning"
 
 #: qtgui/rwmolecule.cpp:490
 msgid "Add Unit Cell…"
@@ -1528,48 +1541,48 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:502
 msgid "Remove Unit Cell"
-msgstr ""
+msgstr "Ta bort enhetscell"
 
 #: qtgui/rwmolecule.cpp:598
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Redigera enhetscell"
 
 #: qtgui/rwmolecule.cpp:614
 msgid "Wrap Atoms to Cell"
-msgstr ""
+msgstr "Vik in atomer i cellen"
 
 #: qtgui/rwmolecule.cpp:637
 msgid "Scale Cell Volume"
-msgstr ""
+msgstr "Skala cellvolym"
 
 #: qtgui/rwmolecule.cpp:657 qtgui/rwmolecule.cpp:681
 msgid "Build Super Cell"
-msgstr ""
+msgstr "Bygg supercell"
 
 #: qtgui/rwmolecule.cpp:705
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "Niggli-reduktion"
 
 #: qtgui/rwmolecule.cpp:727
 msgid "Rotate to Standard Orientation"
-msgstr ""
+msgstr "Rotera till standardorientering"
 
 #: qtgui/rwmolecule.cpp:756 qtplugins/spacegroup/spacegroup.cpp:66
 msgid "Reduce to Primitive"
-msgstr ""
+msgstr "Reducera till primitiv"
 
 #: qtgui/rwmolecule.cpp:790 qtplugins/spacegroup/spacegroup.cpp:72
 #: qtplugins/spacegroup/spacegroup.cpp:472
 msgid "Conventionalize Cell"
-msgstr ""
+msgstr "Konventionalisera cell"
 
 #: qtgui/rwmolecule.cpp:824 qtplugins/spacegroup/spacegroup.cpp:500
 msgid "Symmetrize Cell"
-msgstr ""
+msgstr "Symmetrisera cell"
 
 #: qtgui/rwmolecule.cpp:851
 msgid "Fill Unit Cell"
-msgstr ""
+msgstr "Fyll enhetscell"
 
 #: qtgui/rwmolecule.cpp:867
 msgid "Fill Translational Copies"
@@ -1577,7 +1590,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:887
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr ""
+msgstr "Reducera cell till asymmetrisk enhet"
 
 #: qtgui/rwmolecule.h:255
 msgid "Change Atom Positions"
@@ -1601,7 +1614,7 @@ msgstr ""
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
-msgstr ""
+msgstr "Ändra molekyl"
 
 #: qtgui/scenepluginmodel.cpp:101
 msgid "Settings"
