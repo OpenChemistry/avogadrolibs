@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:46+0000\n"
+"PO-Revision-Date: 2026-09-18 10:48+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -1525,9 +1525,8 @@ msgid "Clear Bonds"
 msgstr "Rensa bindningar"
 
 #: qtgui/rwmolecule.cpp:418
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Bindningsordning"
+msgstr "Ange bindningsordningar"
 
 #: qtgui/rwmolecule.cpp:430
 msgid "Change Bond Order"
@@ -3283,7 +3282,6 @@ msgstr "Ta bort bindning"
 
 #: qtplugins/editor/editor.cpp:280 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:223
-#, fuzzy
 msgid "Distance:"
 msgstr "Avstånd:"
 
@@ -7196,6 +7194,26 @@ msgid ""
 "for optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Formatspecifikation. Varje tecken anger ett värde som "
+"ska skrivas per atom:</p><p><span style=\" font-weight:600;\">#</span> – "
+"Atomindex (1, 2, …, numAtoms)<br/><span style=\" font-weight:600;\">Z</span> "
+"– Atomnummer (t.ex. ”6” för kol)<br/><span style=\" font-weight:600;\">G</"
+"span> – Atomnummer i GAMESS-stil (t.ex. ”6.0” för kol)<br/><span style=\" "
+"font-weight:600;\">N</span> – Grundämnesnamn (t.ex. ”Carbon”)<br/><span "
+"style=\" font-weight:600;\">S</span> – Grundämnessymbol (t.ex. ”C” för kol)"
+"<br/><span style=\" font-weight:700;\">L</span> – Atometikett (t.ex. ”C2” "
+"för den andra kolatomen, ”H1” för den första väteatomen) <br/><span style=\" "
+"font-weight:600;\">x</span> – X-koordinat<br/><span style=\" font-"
+"weight:600;\">y</span> – Y-koordinat<br/><span style=\" font-weight:600;\">"
+"z</span> – Z-koordinat<br/><span style=\" font-weight:600;\">a</span> – "
+"gitterkoordinat ”a” (endast kristaller)<br/><span style=\" font-"
+"weight:600;\">b</span> – gitterkoordinat ”b” (endast kristaller)<br/><span "
+"style=\" font-weight:600;\">c</span> – gitterkoordinat ”c” (endast "
+"kristaller)<br/><span style=\" font-weight:600;\">_</span> – Ett bokstavligt "
+"blanksteg (” ”), användbart för justering<br/><span style=\" font-"
+"weight:600;\">0</span> – En bokstavlig 0 (”0”), användbart för "
+"optimeringsflaggor<br/><span style=\" font-weight:600;\">1</span> – En "
+"bokstavlig 1 (”1”), användbart för optimeringsflaggor<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -8225,6 +8243,18 @@ msgid ""
 "underline; color:#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></"
 "a></p></body></html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://"
+"lammps.sandia.gov/doc/units.html\"><span style=\" text-decoration: "
+"underline; color:#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></"
+"a></p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -8305,6 +8335,18 @@ msgid ""
 "underline; color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</"
 "span></a></p></body></html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://"
+"lammps.sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: "
+"underline; color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</"
+"span></a></p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -9987,6 +10029,13 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
+"<html><head/><body><p>Ferminivån bör vara känd innan denna ruta markeras. Du "
+"kan fastställa Ferminivån genom att utföra en beräkning av tillståndstäthet "
+"och visa data (den visas högst upp i data). Om en beräkning av "
+"tillståndstäthet utförs ställs Ferminivån här dessutom automatiskt in på det "
+"värde som upptäcktes under beräkningen av tillståndstätheten.</p><p>Om denna "
+"ruta är markerad ska du kontrollera att rätt Ferminivå är inställd i "
+"snurrfältet till höger.</p><p>Standard: av</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -10000,6 +10049,9 @@ msgid ""
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Justera energierna så att nollpunkten är Ferminivån? "
+"Endast tillgängligt om vi ritar upp Ferminivån.</p><p><br/></p><p>Standard: "
+"av</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -10024,7 +10076,7 @@ msgstr "Max. y: "
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_fermi)
 msgid "<html><head/><body><p>The Fermi Level</p></body></html>"
-msgstr ""
+msgstr "<html><head/><body><p>Ferminivån</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:142
 #. i18n: ectx: property (toolTip), widget (QTextEdit, edit_specialKPoints)
@@ -10041,6 +10093,17 @@ msgid ""
 "different high symmetry points depending on the lattice (such as if a &gt; b "
 "or a &lt; b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Ange särskilda k-punkter så här:</p><p>L 0.5 0.5 0.5</"
+"p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>Alltså &lt;symbol&gt; &lt;x&gt; "
+"&lt;y&gt; &lt;z&gt;, där x, y och z är fraktionella koordinater i det "
+"reciproka rummet. Linjer ritas mellan dessa k-punkter i diagrammet i den "
+"ordning du anger dem. Observera att cellens orientering kan påverka "
+"positionerna för dessa reciproka rums-punkter.</p><p>Om kristallens "
+"rymdgrupp har fastställts eller angetts fylls de särskilda k-punkterna "
+"automatiskt med den primitiva cellens högsymmetripunkter för den "
+"rymdgruppen. Några rymdgrupper har olika högsymmetripunkter beroende på "
+"gittret (till exempel om a &gt; b eller a &lt; b) – detta tas automatiskt "
+"med i beräkningen.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -10056,6 +10119,16 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
+"size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
@@ -10064,6 +10137,9 @@ msgid ""
 "the special k-points. More of these k-points will smooth out the graph, but "
 "the calculation may take longer.</p><p>Default: 40</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Ange antalet k-punkter som ska förbinda de särskilda k-"
+"punkterna. Fler sådana k-punkter gör diagrammet jämnare, men beräkningen kan "
+"ta längre tid.</p><p>Standard: 40</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -10071,6 +10147,8 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>Begränsa y-intervallet i diagrammet?</p><p>Standard: "
+"av</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
@@ -10089,6 +10167,12 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Antalet periodiska dimensioner.</p><p><br/></p><p>Om "
+"detta är inställt på 1 är materialet endast periodiskt längs kristallens A-"
+"vektor.</p><p><br/></p><p>Om detta är inställt på 2 är materialet periodiskt "
+"längs både kristallens A- och B-vektorer.</p><p><br/></p><p>Om detta är "
+"inställt på 3 är materialet periodiskt längs kristallens A-, B- och C-"
+"vektorer.</p><p><br/></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
