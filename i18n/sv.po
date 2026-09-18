@@ -4315,9 +4315,6 @@ msgid ""
 "unit of delta is roughly a 2% change in the camera's distance to the focal "
 "point."
 msgstr ""
-"Zooma scenen. Positivt delta flyttar mot molekylen, negativt bort från den. "
-"En deltaenhet motsvarar ungefär en förändring på 2 % av kamerans avstånd "
-"till fokuspunkten."
 
 #: qtplugins/navigator/navigator.cpp:76
 msgid "Translate the scene."
