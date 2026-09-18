@@ -64,14 +64,19 @@ public:
   /** Copy constructor  */
   Molecule(const Molecule& other);
 
-  /** Move constructor */
-  Molecule(Molecule&& other) noexcept;
+  /**
+   * Move constructor.
+   *
+   * Not noexcept: registering the new molecule with the LayerManager
+   * allocates, so the move can throw std::bad_alloc.
+   */
+  Molecule(Molecule&& other);
 
   /** Assignment operator */
   Molecule& operator=(const Molecule& other);
 
-  /** Move assignment operator */
-  Molecule& operator=(Molecule&& other) noexcept;
+  /** Move assignment operator. Not noexcept, see the move constructor. */
+  Molecule& operator=(Molecule&& other);
 
   /** Destroys the molecule object. */
   virtual ~Molecule();

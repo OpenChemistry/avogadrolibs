@@ -7,6 +7,8 @@
 
 #include <gtest/gtest.h>
 
+#include <type_traits>
+
 #include <limits>
 
 #include <avogadro/core/array.h>
@@ -379,6 +381,55 @@ TEST_F(MoleculeTest, propertyMapCopyAssign)
   // Deep copy.
   assigned.atomProperties().setDouble("charge", 0, 42.0);
   EXPECT_DOUBLE_EQ(*original.atomProperties().getDouble("charge", 0), -0.5);
+}
+
+// Molecule's move operations move m_data rather than copying it. VariantMap
+// declares a defaulted destructor, which suppresses its implicit move
+// constructor unless the moves are declared too -- and if that regresses,
+// std::move(m_data) silently becomes a copy again with nothing to flag it.
+// A real move of the underlying std::map is noexcept, so the nothrow traits
+// are the available compile-time proxy for "this still moves, not copies".
+static_assert(std::is_nothrow_move_constructible<VariantMap>::value,
+              "VariantMap lost its move constructor, so Molecule's move "
+              "constructor is silently copying m_data.");
+static_assert(std::is_nothrow_move_assignable<VariantMap>::value,
+              "VariantMap lost its move assignment, so Molecule's move "
+              "assignment is silently copying m_data.");
+
+TEST_F(MoleculeTest, moveTransfersDataAndSpectra)
+{
+  Molecule original;
+  original.addAtom(6);
+  original.setData("name", Variant(std::string("ethane")));
+  MatrixX ir(2, 2);
+  ir << 1.0, 2.0, 3.0, 4.0;
+  original.setSpectra("IR", ir);
+  original.addConstraint(1.5, 0, 0);
+
+  Molecule moved(std::move(original));
+
+  EXPECT_EQ(moved.data("name").toString(), "ethane");
+  EXPECT_TRUE(moved.spectra("IR").isApprox(ir));
+  EXPECT_EQ(moved.constraints().size(), 1u);
+}
+
+TEST_F(MoleculeTest, moveAssignTransfersDataAndSpectra)
+{
+  Molecule original;
+  original.addAtom(6);
+  original.setData("name", Variant(std::string("ethane")));
+  MatrixX ir(2, 2);
+  ir << 1.0, 2.0, 3.0, 4.0;
+  original.setSpectra("IR", ir);
+
+  Molecule target;
+  target.addAtom(8);
+  target.setData("name", Variant(std::string("water")));
+
+  target = std::move(original);
+
+  EXPECT_EQ(target.data("name").toString(), "ethane");
+  EXPECT_TRUE(target.spectra("IR").isApprox(ir));
 }
 
 TEST_F(MoleculeTest, propertyMapMoveConstruct)
