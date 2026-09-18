@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:17+0000\n"
+"PO-Revision-Date: 2026-09-18 10:18+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -1259,7 +1259,7 @@ msgstr ""
 
 #: qtgui/layermodel.cpp:178 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
-msgstr ""
+msgstr "Kristallgitter"
 
 #: qtgui/layermodel.cpp:180 qtplugins/force/force.h:28
 msgid "Force"
@@ -2483,7 +2483,7 @@ msgstr "&Tillägg"
 #: qtplugins/commandscripts/command.cpp:98
 #: qtplugins/commandscripts/command.cpp:632
 msgid "Scripts"
-msgstr ""
+msgstr "Skript"
 
 #: qtplugins/commandscripts/command.cpp:178
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
@@ -2496,6 +2496,8 @@ msgid ""
 "Error reading output file '%1':\n"
 "%2"
 msgstr ""
+"Fel vid läsning av utdatafilen ”%1”:\n"
+"%2"
 
 #: qtplugins/commandscripts/command.cpp:235
 msgid "Command In Progress"
@@ -2526,13 +2528,15 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.cpp:547
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Ange sökväg till Python-tolken:"
 
 #: qtplugins/commandscripts/command.cpp:549
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Välj Python-tolken som ska köra externa skript.\n"
+"Avogadro måste startas om innan ändringarna börjar gälla."
 
 #: qtplugins/commandscripts/command.h:51
 msgid "Command scripts"
@@ -2763,11 +2767,11 @@ msgstr "Z-koordinat."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:478
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "Gitterkoordinat ”a”."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:489
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "Gitterkoordinat ”b”."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
 msgid "'c' lattice coordinate."
@@ -2775,7 +2779,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
-msgstr ""
+msgstr "Fel vid tillämpning av geometri"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:585
 msgid ""
@@ -2784,10 +2788,14 @@ msgid ""
 "\n"
 "(Hint: Hold the mouse over red text for a description of the error.)"
 msgstr ""
+"Kunde inte tolka geometrispecifikationen. Rätta de markerade felen och "
+"försök igen.\n"
+"\n"
+"(Tips: håll muspekaren över röd text för en beskrivning av felet.)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:620
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "Redigera atomkoordinater"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:254
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -2797,43 +2805,43 @@ msgstr ""
 #: qtplugins/label/label.cpp:227 qtplugins/label/label.cpp:250
 #: qtplugins/label/label.cpp:265:2096 rc.cpp:2121
 msgid "Custom"
-msgstr ""
+msgstr "Anpassad"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
 msgid "XYZ format (symbols)"
-msgstr ""
+msgstr "XYZ-format (symboler)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:640
 msgid "XYZ format (names)"
-msgstr ""
+msgstr "XYZ-format (namn)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:641
 msgid "XYZ format (atomic numbers)"
-msgstr ""
+msgstr "XYZ-format (atomnummer)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:642
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Gitterkoordinater (symboler)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:643
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Gitterkoordinater (namn)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:644
 msgid "Lattice coordinates (atomic numbers)"
-msgstr ""
+msgstr "Gitterkoordinater (atomnummer)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:646
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "GAMESS-format (symboler)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:647
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "GAMESS-format (namn)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:648
 msgid "Turbomole format"
-msgstr ""
+msgstr "Turbomole-format"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
@@ -2841,7 +2849,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:928:296
 msgid "Copy"
-msgstr ""
+msgstr "Kopiera"
 
 #: qtplugins/copypaste/copypaste.cpp:34
 msgid "Atom Mapped SMILES"
@@ -2851,7 +2859,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:37:293
 msgid "Cut"
-msgstr ""
+msgstr "Klipp ut"
 
 #: qtplugins/copypaste/copypaste.cpp:38
 msgid "Delete"
@@ -2867,15 +2875,15 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:100 qtplugins/copypaste/copypaste.cpp:102
 msgid "&Edit"
-msgstr ""
+msgstr "&Redigera"
 
 #: qtplugins/copypaste/copypaste.cpp:194
 msgid "Error Clipping Molecule"
-msgstr ""
+msgstr "Fel när molekylen skulle klippas ut"
 
 #: qtplugins/copypaste/copypaste.cpp:195
 msgid "Error generating clipboard data."
-msgstr ""
+msgstr "Kunde inte skapa urklippsdata."
 
 #: qtplugins/copypaste/copypaste.cpp:196
 #, qt-format
@@ -2884,6 +2892,8 @@ msgid ""
 "Output format: %1\n"
 "%2"
 msgstr ""
+"Utdataformat: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.cpp:200
 #, qt-format
@@ -2894,15 +2904,15 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
-msgstr ""
+msgstr "Fel vid inklistring av molekyl"
 
 #: qtplugins/copypaste/copypaste.cpp:282
 msgid "Cannot paste molecule: Clipboard empty!"
-msgstr ""
+msgstr "Kan inte klistra in molekyl: urklippet är tomt!"
 
 #: qtplugins/copypaste/copypaste.cpp:315
 msgid "Error reading clipboard data."
-msgstr ""
+msgstr "Fel vid läsning av urklippsdata."
 
 #: qtplugins/copypaste/copypaste.cpp:316
 #, qt-format
@@ -2911,6 +2921,8 @@ msgid ""
 "Detected format: %1\n"
 "%2"
 msgstr ""
+"Identifierat format: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.cpp:320
 #, qt-format
@@ -2918,14 +2930,16 @@ msgid ""
 "Reader error:\n"
 "%1"
 msgstr ""
+"Läsarfel:\n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.h:31
 msgid "Copy and paste"
-msgstr ""
+msgstr "Kopiera och klistra in"
 
 #: qtplugins/copypaste/copypaste.h:35
 msgid "Interact with the clipboard."
-msgstr ""
+msgstr "Arbeta med urklippet."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:33
 msgid "&CP2K…"
@@ -3063,7 +3077,7 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Visa/dölj enhetscell"
 
 #: qtplugins/crystal/crystal.cpp:52
 msgid "Edit Unit Cell…"
@@ -3071,11 +3085,11 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
-msgstr ""
+msgstr "&Vik in atomer i enhetscellen"
 
 #: qtplugins/crystal/crystal.cpp:63
 msgid "Rotate to Standard &Orientation"
-msgstr ""
+msgstr "Rotera till standard&orientering"
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
@@ -3087,25 +3101,25 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
-msgstr ""
+msgstr "Reducera cell (&Niggli)"
 
 #: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:54
 #: qtplugins/plotxrd/plotxrd.cpp:54 qtplugins/spacegroup/spacegroup.cpp:124
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "&Crystal"
-msgstr ""
+msgstr "&Kristall"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
-msgstr ""
+msgstr "Ta bort &enhetscell"
 
 #: qtplugins/crystal/crystal.cpp:156
 msgid "Add &Unit Cell"
-msgstr ""
+msgstr "Lägg till &enhetscell"
 
 #: qtplugins/crystal/crystal.cpp:169
 msgid "Import Crystal from Clipboard"
-msgstr ""
+msgstr "Importera kristall från urklipp"
 
 #: qtplugins/crystal/crystal.cpp:176
 msgid "Wrap atoms into the unit cell."
@@ -3117,19 +3131,19 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:219
 msgid "Niggli Reduce Crystal"
-msgstr ""
+msgstr "Niggli-reducera kristall"
 
 #: qtplugins/crystal/crystal.cpp:220
 msgid "The unit cell is already reduced."
-msgstr ""
+msgstr "Enhetscellen är redan reducerad."
 
 #: qtplugins/crystal/crystal.h:25
 msgid "Crystal"
-msgstr ""
+msgstr "Kristall"
 
 #: qtplugins/crystal/crystal.h:69
 msgid "Tools for crystal-specific editing/analysis."
-msgstr ""
+msgstr "Verktyg för kristallspecifik redigering och analys."
 
 #: qtplugins/crystal/crystalscene.cpp:151
 msgid "Color axes:"
@@ -3141,15 +3155,15 @@ msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Återge enhetscellens gränser."
 
 #: qtplugins/crystal/importcrystaldialog.cpp:68
 msgid "Cannot Parse Text"
-msgstr ""
+msgstr "Kan inte tolka text"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:69
 msgid "Failed to read the data with the supplied format."
-msgstr ""
+msgstr "Kunde inte läsa data med det angivna formatet."
 
 #: qtplugins/crystal/supercelldialog.cpp:82
 #, qt-format
@@ -3161,7 +3175,7 @@ msgstr ""
 #: qtplugins/crystal/unitcelldialog.cpp:251
 #: qtplugins/crystal/unitcelldialog.cpp:264
 msgid "No unit cell present."
-msgstr ""
+msgstr "Det finns ingen enhetscell."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
@@ -3186,11 +3200,11 @@ msgstr ""
 
 #: qtplugins/customelements/customelements.cpp:30
 msgid "Manipulate custom element types in the current molecule."
-msgstr ""
+msgstr "Hantera anpassade grundämnestyper i den aktuella molekylen."
 
 #: qtplugins/customelements/customelements.h:24
 msgid "Custom Elements"
-msgstr ""
+msgstr "Anpassade grundämnen"
 
 #: qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
@@ -3224,11 +3238,11 @@ msgstr "Rita atom"
 
 #: qtplugins/editor/editor.cpp:136
 msgid "Change Bond Type"
-msgstr ""
+msgstr "Ändra bindningstyp"
 
 #: qtplugins/editor/editor.cpp:190
 msgid "Remove Bond"
-msgstr ""
+msgstr "Ta bort bindning"
 
 #: qtplugins/editor/editor.cpp:280 qtplugins/measuretool/measuretool.cpp:200
 #: qtplugins/measuretool/measuretool.cpp:223
@@ -3238,7 +3252,7 @@ msgstr "Avstånd:"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
-msgstr ""
+msgstr "Redigeringsverktyg"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:217
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
@@ -3246,7 +3260,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/editor/editortoolwidget.cpp:209:2075 rc.cpp:2093
 msgid "Automatic"
-msgstr ""
+msgstr "Automatisk"
 
 #: qtplugins/editor/editortoolwidget.cpp:210
 msgid "Single"
@@ -7031,7 +7045,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 msgid "Paste"
-msgstr ""
+msgstr "Klistra in"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:135
 #. i18n: ectx: property (text), widget (QPushButton, revert)
@@ -7041,7 +7055,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 msgid "Clear"
-msgstr ""
+msgstr "Töm"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:149
 #. i18n: ectx: property (text), widget (QPushButton, apply)
