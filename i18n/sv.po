@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:32+0000\n"
+"PO-Revision-Date: 2026-09-18 10:34+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -1241,22 +1241,21 @@ msgstr "[ingen molekyl]"
 #: qtgui/layermodel.cpp:118
 #, qt-format
 msgid "Layer %1"
-msgstr ""
+msgstr "Lager %1"
 
 #: qtgui/layermodel.cpp:172 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr "Kul- och pinnmodell"
 
 #: qtgui/layermodel.cpp:174 qtplugins/cartoons/cartoons.h:31
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Avbild"
+msgstr "Tecknade modeller"
 
 #: qtgui/layermodel.cpp:176 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "Nära kontakter"
 
 #: qtgui/layermodel.cpp:178 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
@@ -1273,7 +1272,7 @@ msgstr "Etiketter"
 #: qtgui/layermodel.cpp:184 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "Lakritsmodell"
 
 #: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
 #: qtplugins/surfaces/orbitals.cpp:506 qtplugins/surfaces/orbitals.cpp:598
@@ -1283,7 +1282,7 @@ msgstr "Ytor"
 
 #: qtgui/layermodel.cpp:188 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr ""
+msgstr "Icke-kovalent"
 
 #: qtgui/layermodel.cpp:190
 msgctxt "quantum theory of atoms in molecules"
@@ -1296,9 +1295,8 @@ msgstr "Symmetrielement"
 
 #: qtgui/layermodel.cpp:194 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
-#, fuzzy
 msgid "Van der Waals"
-msgstr "Van der Waals-sfärer"
+msgstr "van der Waals-yta"
 
 #: qtgui/layermodel.cpp:196
 #, fuzzy
@@ -1314,7 +1312,7 @@ msgstr ""
 #: qtgui/layermodel.cpp:200 qtplugins/surfacerender/surfacerender.cpp:273
 #: qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
-msgstr ""
+msgstr "Trådmodell"
 
 #: qtgui/layermodel.cpp:202 qtplugins/overlayaxes/overlayaxes.h:28
 msgid "Reference Axes"
@@ -2408,7 +2406,7 @@ msgstr "Rep"
 
 #: qtplugins/cartoons/cartoons.h:36
 msgid "Display of biomolecule ribbons / cartoons."
-msgstr ""
+msgstr "Visning av biomolekylära band/tecknade modeller."
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Centroid"
@@ -2433,7 +2431,6 @@ msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:252
 #: qtplugins/noncovalent/noncovalent.cpp:400
-#, fuzzy
 msgid "Maximum distance:"
 msgstr "Maximalt avstånd:"
 
@@ -2459,7 +2456,7 @@ msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
-msgstr ""
+msgstr "Återge nära kontakter mellan atomer."
 
 #: qtplugins/commandscripts/command.cpp:79
 #: qtplugins/commandscripts/command.cpp:98
@@ -3339,19 +3336,19 @@ msgstr "Hämta PDB-modeller från Protein Data Bank"
 
 #: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
-msgstr ""
+msgstr "Fokusera på markering"
 
 #: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
-msgstr ""
+msgstr "Ta bort fokus"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "Fokusera"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "Fokusera vyn på specifika funktioner."
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
@@ -3672,22 +3669,22 @@ msgstr ""
 #: qtplugins/insertdna/insertdna.cpp:161
 msgctxt "uracil"
 msgid "U"
-msgstr ""
+msgstr "U"
 
 #: qtplugins/insertdna/insertdna.cpp:162
 msgid "Uracil"
-msgstr ""
+msgstr "Uracil"
 
 #: qtplugins/insertdna/insertdna.cpp:168
 msgctxt "thymine"
 msgid "T"
-msgstr ""
+msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
 #: qtplugins/insertdna/insertdna.cpp:169:665
 msgid "Thymine"
-msgstr ""
+msgstr "Tymin"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
@@ -3704,11 +3701,11 @@ msgstr "Skapar 3D-molekyl…"
 
 #: qtplugins/insertdna/insertdna.h:33
 msgid "InsertDNA"
-msgstr ""
+msgstr "InsertDNA"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
-msgstr ""
+msgstr "Infoga DNA-/RNA-fragment via en dialogruta."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
 #, fuzzy
@@ -4157,7 +4154,6 @@ msgid "Point Group"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:38
-#, fuzzy
 msgid "&Molecular…"
 msgstr "&Molekyl…"
 
@@ -4299,19 +4295,19 @@ msgstr "Arbeta med nätbaserade databaser och sök strukturer med mera."
 
 #: qtplugins/noncovalent/noncovalent.cpp:399
 msgid "Angle tolerance:"
-msgstr ""
+msgstr "Vinkeltolerans:"
 
 #: qtplugins/noncovalent/noncovalent.cpp:411
 msgid "Halogen"
-msgstr ""
+msgstr "Halogen"
 
 #: qtplugins/noncovalent/noncovalent.cpp:414
 msgid "Chalcogen"
-msgstr ""
+msgstr "Kalkogen"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
-msgstr ""
+msgstr "Återge några icke-kovalenta växelverkningar."
 
 #: qtplugins/openbabel/openbabel.cpp:54
 msgid "Configure Force Field…"
@@ -4348,7 +4344,7 @@ msgstr "Open Babel-filformaten är inte redo att läggas till."
 
 #: qtplugins/openbabel/openbabel.cpp:206
 msgid "Loading molecule from Open Babel…"
-msgstr ""
+msgstr "Läser in molekyl från Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:212
 msgid ""
@@ -4396,12 +4392,14 @@ msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
+"Ett internt fel uppstod vid skapandet av en Open Babel-representation av den "
+"aktuella molekylen."
 
 #: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
-msgstr ""
+msgstr "Startar %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
 #: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
@@ -4417,7 +4415,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
 msgid "Updating molecule…"
-msgstr ""
+msgstr "Uppdaterar molekyl…"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:780 qtplugins/openbabel/openbabel.cpp:962
@@ -4464,7 +4462,7 @@ msgstr "Fastställer bindningar (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:744
 msgid "Generating XYZ representation…"
-msgstr ""
+msgstr "Skapar XYZ-representation…"
 
 #: qtplugins/openbabel/openbabel.cpp:751
 msgid "Error generating XYZ string."
@@ -4473,11 +4471,11 @@ msgstr "Kunde inte skapa XYZ-sträng."
 #: qtplugins/openbabel/openbabel.cpp:762
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr ""
+msgstr "Konverterar XYZ till Open Babel med %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:772
 msgid "Updating molecule from Open Babel…"
-msgstr ""
+msgstr "Uppdaterar molekyl från Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:824 qtplugins/openbabel/openbabel.cpp:866
 msgid "Cannot add hydrogens with Open Babel."
@@ -4489,7 +4487,7 @@ msgstr "Lägger till väteatomer (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:830
 msgid "Generating Open Babel input…"
-msgstr ""
+msgstr "Skapar Open Babel-indata…"
 
 #: qtplugins/openbabel/openbabel.cpp:838 qtplugins/openbabel/openbabel.cpp:888
 msgid "Error generating Open Babel input."
@@ -4499,7 +4497,7 @@ msgstr "Fel vid skapande av Open Babel-indata."
 #: qtplugins/openbabel/openbabel.cpp:943
 #, qt-format
 msgid "Running %1…"
-msgstr ""
+msgstr "Kör %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:873
 msgid "Add hydrogens for pH"
@@ -4511,7 +4509,7 @@ msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:880 qtplugins/openbabel/openbabel.cpp:922
 msgid "Generating obabel input…"
-msgstr ""
+msgstr "Skapar obabel-indata…"
 
 #: qtplugins/openbabel/openbabel.cpp:916
 msgid "Cannot remove hydrogens with Open Babel."
@@ -4523,11 +4521,11 @@ msgstr "Tar bort väteatomer (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:930
 msgid "Error generating Open Babel data."
-msgstr ""
+msgstr "Fel vid skapande av Open Babel-data."
 
 #: qtplugins/openbabel/openbabel.cpp:953
 msgid "Reading obabel output…"
-msgstr ""
+msgstr "Läser obabel-utdata…"
 
 #: qtplugins/openbabel/openbabel.cpp:1016
 msgid ""
@@ -4547,7 +4545,7 @@ msgstr "Arbeta med Open Babel-verktyg."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
-msgstr ""
+msgstr "&OpenMM-skript…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
@@ -5051,7 +5049,7 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
-msgstr ""
+msgstr "Rita upp parfördelningsfunktion…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:120
 msgid "Failed to generate PDF pattern"
@@ -5071,7 +5069,7 @@ msgstr "Skapa och rita upp en kurva för parfördelningsfunktionen."
 
 #: qtplugins/plotxrd/plotxrd.cpp:36
 msgid "Plot Theoretical XRD Pattern…"
-msgstr ""
+msgstr "Rita upp teoretiskt röntgendiffraktionsmönster…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:149
 msgid "Failed to generate XRD pattern"
@@ -5127,7 +5125,7 @@ msgstr ""
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
-msgstr ""
+msgstr "POV-Ray-rendering…"
 
 #: qtplugins/povray/povray.cpp:69
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -5151,7 +5149,7 @@ msgstr "Valens"
 
 #: qtplugins/propertytables/propertymodel.cpp:778
 msgid "Formal Charge"
-msgstr ""
+msgstr "Formell laddning"
 
 #: qtplugins/propertytables/propertymodel.cpp:781
 #, qt-format
@@ -5280,23 +5278,23 @@ msgstr "Slumpmässig struktur"
 
 #: qtplugins/propertytables/propertytables.cpp:27
 msgid "Atom Properties…"
-msgstr ""
+msgstr "Atomegenskaper…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
 msgid "Bond Properties…"
-msgstr ""
+msgstr "Bindningsegenskaper…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 msgid "Angle Properties…"
-msgstr ""
+msgstr "Vinkelegenskaper…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
 msgid "Torsion Properties…"
-msgstr ""
+msgstr "Torsionsegenskaper…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
-msgstr ""
+msgstr "Restegenskaper…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
@@ -5457,15 +5455,15 @@ msgstr "Återger primitiver med QTAIM-egenskaper"
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
 msgid "Molecular Graph…"
-msgstr ""
+msgstr "Molekylgraf…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
-msgstr ""
+msgstr "Molekylgraf med fria elektronpar…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
 msgid "Atomic Charge…"
-msgstr ""
+msgstr "Atomladdning…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "Open WFN File"
@@ -5537,15 +5535,15 @@ msgstr "Invertera markering"
 
 #: qtplugins/select/select.cpp:53
 msgid "Select by Element…"
-msgstr ""
+msgstr "Markera efter grundämne…"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
-msgstr ""
+msgstr "Markera efter atomindex…"
 
 #: qtplugins/select/select.cpp:63
 msgid "Select by Residue…"
-msgstr ""
+msgstr "Markera efter rest…"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
@@ -5569,7 +5567,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "Skapa nytt lager från markering"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
@@ -5653,11 +5651,11 @@ msgstr "Markeringsverktyg"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
-msgstr ""
+msgstr "Nytt lager"
 
 #: qtplugins/spacegroup/spacegroup.cpp:60
 msgid "Perceive Space Group…"
-msgstr ""
+msgstr "Fastställ rymdgrupp…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
@@ -5672,11 +5670,11 @@ msgstr "Reducera till asymmetrisk enhet"
 
 #: qtplugins/spacegroup/spacegroup.cpp:89
 msgid "Set Tolerance…"
-msgstr ""
+msgstr "Ange tolerans…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:95
 msgid "Fill Unit Cell…"
-msgstr ""
+msgstr "Fyll enhetscell…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:101
 msgctxt "fill the translationally unique repeat unit"
@@ -6104,11 +6102,11 @@ msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
-msgstr ""
+msgstr "Lösningsmedelsåtkomlig"
 
 #: qtplugins/surfaces/surfacedialog.cpp:28
 msgid "Solvent Excluded"
-msgstr ""
+msgstr "Lösningsmedelsexkluderad"
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
 msgid "Molecular Orbital"
@@ -6149,7 +6147,7 @@ msgstr " av %0"
 
 #: qtplugins/surfaces/surfaces.cpp:89
 msgid "Create Surfaces…"
-msgstr ""
+msgstr "Skapa ytor…"
 
 #: qtplugins/surfaces/surfaces.cpp:119
 msgid "Render the van der Waals surface."
@@ -6268,7 +6266,7 @@ msgstr "Läs in och återge ytor."
 
 #: qtplugins/svg/svg.cpp:31
 msgid "&SVG…"
-msgstr ""
+msgstr "&SVG…"
 
 #: qtplugins/svg/svg.cpp:258
 msgid "SVG (*.svg)"
@@ -6288,7 +6286,7 @@ msgstr "Klass"
 
 #: qtplugins/symmetry/symmetry.cpp:39
 msgid "Symmetry…"
-msgstr ""
+msgstr "Symmetri…"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
@@ -6409,7 +6407,7 @@ msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:29
 msgid "Vibrational Modes…"
-msgstr ""
+msgstr "Vibrationsmoder…"
 
 #: qtplugins/vibrations/vibrations.cpp:136
 msgid "Show the vibrational modes dialog."
@@ -6445,7 +6443,7 @@ msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
-msgstr ""
+msgstr "VRML-rendering…"
 
 #: qtplugins/vrml/vrml.cpp:69
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -6465,7 +6463,7 @@ msgstr "Återge molekylen som en trådmodell."
 
 #: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
-msgstr ""
+msgstr "Beräkna bandstruktur…"
 
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
@@ -6481,6 +6479,8 @@ msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
 msgstr ""
+"Yaehmop-körningen misslyckades med följande fel:\n"
+"%1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
@@ -6503,7 +6503,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:387
 msgid "Fermi Level"
-msgstr ""
+msgstr "Ferminivå"
 
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Cannot find Yaehmop"
@@ -6648,7 +6648,7 @@ msgstr "Beräkningsinställningar"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
 msgid "Placeholder text…"
-msgstr ""
+msgstr "Platshållartext…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
@@ -6662,7 +6662,7 @@ msgstr "Återställ"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:93
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
 msgid "Debug Script…"
-msgstr ""
+msgstr "Felsökningsskript…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -6671,12 +6671,12 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:366
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
-msgstr ""
+msgstr "Skicka beräkning…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save Input…"
-msgstr ""
+msgstr "Spara indata…"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -6760,7 +6760,6 @@ msgstr "Byt namn på grundämnen"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
-#, fuzzy
 msgid "Insert Fragment…"
 msgstr "Infoga fragment…"
 
@@ -7492,7 +7491,7 @@ msgstr "Laddning:"
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
 msgid "Import From PQR…"
-msgstr ""
+msgstr "Importera från PQR…"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
@@ -7542,126 +7541,124 @@ msgstr "Hämta"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertDNADialog)
 msgid "Insert Nucleic Acids"
-msgstr ""
+msgstr "Infoga nukleinsyror"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "DNA/RNA Builder"
-msgstr ""
+msgstr "DNA/RNA-byggare"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "DNA"
-msgstr ""
+msgstr "DNA"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "RNA"
-msgstr ""
+msgstr "RNA"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Nucleic Acids:"
-msgstr ""
+msgstr "Nukleinsyror:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
 msgid "Adenine"
-msgstr ""
+msgstr "Adenin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
 msgctxt "adenine (A)"
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
 msgid "Cytosine"
-msgstr ""
+msgstr "Cytosin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
 msgctxt "cytosine (C)"
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:69
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_G)
 msgid "Guanine"
-msgstr ""
+msgstr "Guanin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
 msgctxt "guanine (G)"
 msgid "G"
-msgstr ""
+msgstr "G"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:82
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_TU)
 msgctxt "thymine (T)"
 msgid "T"
-msgstr ""
+msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Sequence:"
-msgstr ""
+msgstr "Sekvens:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:150
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, bpTurnsSpin)
 msgid "the number of base pairs per helix turn"
-msgstr ""
+msgstr "antal baspar per helixvarv"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 msgid "B"
-msgstr ""
+msgstr "B"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:137
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:93
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:142
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:393
 #. i18n: ectx: property (text), item, widget (QComboBox, structureCombo)
 msgid "Other"
-msgstr ""
+msgstr "Annat"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Bases Per Turn:"
-msgstr ""
+msgstr "Baser per varv:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Strands:"
-msgstr ""
+msgstr "Strängar:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
-#, fuzzy
 msgctxt "single-strand DNA"
 msgid "Single"
-msgstr "Enkel"
+msgstr "Enkelsträngad"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
-#, fuzzy
 msgctxt "double-strand DNA"
 msgid "Double"
-msgstr "Dubbel"
+msgstr "Dubbelsträngad"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
@@ -9517,7 +9514,7 @@ msgstr "Beräkna"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:525
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
 msgid "Record Movie…"
-msgstr ""
+msgstr "Spela in film…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -9846,7 +9843,7 @@ msgstr "Nollställ Fermi?"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "# of k-points connecting special k-points:"
-msgstr ""
+msgstr "Antal k-punkter som förbinder särskilda k-punkter:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -9930,7 +9927,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Number of Dimensions:"
-msgstr ""
+msgstr "Antal dimensioner:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
