@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:18+0000\n"
+"PO-Revision-Date: 2026-09-18 10:20+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -1923,7 +1923,7 @@ msgstr "Indatafilen skrevs till ”%1”"
 #: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1144
 #, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "Kan inte spara filen %1."
 
 #: qtplugins/applycolors/applycolors.cpp:47
 #: qtplugins/applycolors/applycolors.cpp:68
@@ -2223,7 +2223,7 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:391
 msgid "Stop"
-msgstr ""
+msgstr "Stoppa"
 
 #: qtplugins/autoopt/autoopt.cpp:571
 msgid "Relax for Dynamics"
@@ -2233,7 +2233,6 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:581
 #: qtplugins/forcefield/forcefield.cpp:662 qtplugins/openbabel/openbabel.cpp:48
 #: qtplugins/openbabel/openbabel.cpp:559
-#, fuzzy
 msgid "Optimize Geometry"
 msgstr "Optimera geometri"
 
@@ -3057,11 +3056,13 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
+"Indatafilen har ändrats. Vill du skriva över dina ändringar så att de "
+"speglar den nya geometrin eller jobbinställningarna?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:543
 #: qtplugins/gamessinput/gamessinputdialog.cpp:551
 msgid "Overwrite modified input file?"
-msgstr ""
+msgstr "Skriv över den ändrade indatafilen?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:952
 msgid "Save CP2K input file"
@@ -3296,7 +3297,7 @@ msgstr ""
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:115
 msgid "Chemical structure to download."
-msgstr ""
+msgstr "Kemisk struktur att hämta."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
@@ -3314,24 +3315,24 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "Söker efter %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
 #: qtplugins/networkdatabases/networkdatabases.cpp:148
 #: qtplugins/networkdatabases/networkdatabases.cpp:197
 msgid "Network Download Failed"
-msgstr "Nätverksnedladdning misslyckades"
+msgstr "Nätverkshämtning misslyckades"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:141
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "Tidsgränsen för nätverket överskreds eller ett annat fel uppstod."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:134
 #: qtplugins/networkdatabases/networkdatabases.cpp:191
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr ""
+msgstr "Den angivna molekylen kunde inte hittas: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
 msgid "Fetch from PDB"
@@ -3425,7 +3426,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:1131 qtplugins/surfaces/surfaces.cpp:1143
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
-msgstr ""
+msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.cpp:543
 msgid "No atoms provided for optimization"
@@ -3489,7 +3490,7 @@ msgstr ""
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
 msgid "Autodetect (%1)"
-msgstr ""
+msgstr "Identifiera automatiskt (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:110 qtplugins/forcefield/obmmenergy.cpp:36
 msgid "Universal Force Field"
@@ -3510,28 +3511,27 @@ msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 msgid "GAMESS input"
-msgstr ""
+msgstr "GAMESS-indata"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
-msgstr ""
+msgstr "Skapa indata för GAMESS."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:263
-#, fuzzy
 msgid "Single Point"
-msgstr "Enkel"
+msgstr "Enpunktsberäkning"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:266
 msgid "Equilibrium Geometry"
-msgstr ""
+msgstr "Jämviktsgeometri"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:272
 msgid "Transition State"
-msgstr ""
+msgstr "Övergångstillstånd"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:275
 msgid "Frequencies"
-msgstr ""
+msgstr "Frekvenser"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:278
 msgid "Make EFP"
@@ -3539,7 +3539,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:404
 msgid "Core Potential"
-msgstr ""
+msgstr "Kärnpotential"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3573,81 +3573,79 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:446
 msgid "Gas"
-msgstr ""
+msgstr "Gas"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:449
 msgid "Water"
-msgstr ""
+msgstr "Vatten"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:464
 msgid "Singlet"
-msgstr ""
+msgstr "Singulett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:467
 msgid "Doublet"
-msgstr ""
+msgstr "Dublett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:470
 msgid "Triplet"
-msgstr ""
+msgstr "Triplett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:485
 msgid "Dication"
-msgstr ""
+msgstr "Dikation"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:488
 msgid "Cation"
-msgstr ""
+msgstr "Katjon"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:491
 msgid "Neutral"
-msgstr ""
+msgstr "Neutral"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:494
 msgid "Anion"
-msgstr ""
+msgstr "Anjon"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:497
 msgid "Dianion"
-msgstr ""
+msgstr "Dianjon"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:888
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "Spara GAMESS-indatafil"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:938
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "Skicka GAMESS-beräkning"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 msgid "&Adjust Hydrogens"
-msgstr ""
+msgstr "&Justera väteatomer"
 
 #: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:72
 msgid "Add Hydrogens"
-msgstr "Visa väte"
+msgstr "Lägg till väteatomer"
 
 #: qtplugins/hydrogens/hydrogens.cpp:32
-#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr "Dölj väte"
+msgstr "Ta bort ö&verflödiga väteatomer"
 
 #: qtplugins/hydrogens/hydrogens.cpp:37
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "Ta bort &alla väteatomer"
 
 #: qtplugins/hydrogens/hydrogens.cpp:47
 msgid "Add/remove hydrogens from the current molecule."
-msgstr ""
+msgstr "Lägg till eller ta bort väteatomer från den aktuella molekylen."
 
 #: qtplugins/hydrogens/hydrogens.cpp:57
-#, fuzzy
 msgid "&Hydrogens"
-msgstr "Väte"
+msgstr "&Väteatomer"
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
-msgstr "Väte"
+msgstr "Väteatomer"
 
 #: qtplugins/importpqr/importpqr.cpp:25
 msgid "&Search PQR…"
@@ -3655,11 +3653,11 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.h:35
 msgid "Import From PQR"
-msgstr ""
+msgstr "Importera från PQR"
 
 #: qtplugins/importpqr/importpqr.h:39
 msgid "Download a molecule from PQR."
-msgstr ""
+msgstr "Hämta en molekyl från PQR."
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
@@ -3968,25 +3966,24 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "InChI"
-msgstr ""
+msgstr "InChI"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:47
-#, fuzzy
 msgid "SMILES"
 msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 #: qtplugins/lineformatinput/lineformatinput.cpp:114
 msgid "No descriptors found!"
-msgstr ""
+msgstr "Inga deskriptorer hittades!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:90
 msgid "No line format readers found!"
-msgstr ""
+msgstr "Inga läsare för radformat hittades!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:115
 msgid "Unable to load requested format reader."
-msgstr ""
+msgstr "Kunde inte läsa in den begärda formatläsaren."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:145
 msgid "No coordinates found!"
@@ -3998,11 +3995,11 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
-msgstr ""
+msgstr "LineFormatInput"
 
 #: qtplugins/lineformatinput/lineformatinput.h:54
 msgid "Load single-line molecule descriptors through an input dialog."
-msgstr ""
+msgstr "Läs in molekyldeskriptorer på en rad via en inmatningsdialog."
 
 #: qtplugins/manipulator/manipulator.cpp:52
 msgctxt "control-key 5"
@@ -4011,7 +4008,7 @@ msgstr ""
 
 #: qtplugins/manipulator/manipulator.cpp:53
 msgid "Manipulate"
-msgstr ""
+msgstr "Manipulera"
 
 #: qtplugins/manipulator/manipulator.cpp:55
 #, qt-format
@@ -4030,7 +4027,7 @@ msgstr ""
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
 msgid "Manipulate tool"
-msgstr ""
+msgstr "Manipuleringsverktyg"
 
 #: qtplugins/measuretool/measuretool.cpp:51
 msgctxt "control-key 8"
@@ -4056,17 +4053,17 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:208
 msgid "Dihedral:"
-msgstr ""
+msgstr "Dihedral vinkel:"
 
 #: qtplugins/measuretool/measuretool.cpp:199
 #: qtplugins/measuretool/measuretool.cpp:215
 msgid "Angle:"
-msgstr ""
+msgstr "Vinkel:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
 msgid "Measure tool"
-msgstr ""
+msgstr "Mätverktyg"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
@@ -4174,7 +4171,7 @@ msgstr "&Molekyl…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:50
 msgid "View general properties of a molecule."
-msgstr ""
+msgstr "Visa en molekyls allmänna egenskaper."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:60
 #: qtplugins/plotconformer/plotconformer.cpp:63
@@ -4193,7 +4190,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.h:36
 msgid "Molecular Properties"
-msgstr ""
+msgstr "Molekylegenskaper"
 
 #: qtplugins/molecularproperties/molecularview.cpp:40
 #: qtplugins/propertytables/propertyview.cpp:76
@@ -4234,7 +4231,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:45
 msgid "Navigate"
-msgstr ""
+msgstr "Navigera"
 
 #: qtplugins/navigator/navigator.cpp:47
 #, qt-format
@@ -4277,7 +4274,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
-msgstr ""
+msgstr "Navigeringsverktyg"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
@@ -4289,7 +4286,7 @@ msgstr ""
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Chemical Name"
-msgstr ""
+msgstr "Kemiskt namn"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:180
 #, qt-format
@@ -4303,11 +4300,11 @@ msgstr ""
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
-msgstr ""
+msgstr "Nätverksdatabaser"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
-msgstr ""
+msgstr "Arbeta med nätbaserade databaser och sök strukturer med mera."
 
 #: qtplugins/noncovalent/noncovalent.cpp:399
 msgid "Angle tolerance:"
@@ -4354,7 +4351,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
-msgstr ""
+msgstr "&Open Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:120
 msgid "The Open Babel file formats are not ready to be added."
@@ -4369,6 +4366,8 @@ msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
+"Ett internt fel uppstod: OpenBabel::readMolecule anropades, men det finns "
+"inga obabel-utdata att tolka!"
 
 #: qtplugins/openbabel/openbabel.cpp:221
 #, qt-format
@@ -4377,7 +4376,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:231
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "Fel vid tolkning av Open Babel-utdata."
 
 #: qtplugins/openbabel/openbabel.cpp:368 qtplugins/openbabel/openbabel.cpp:396
 #: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
@@ -4385,11 +4384,11 @@ msgstr ""
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
-msgstr ""
+msgstr "Ett fel uppstod när listan över stödda kraftfält hämtades (med ”%1”)."
 
 #: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
-msgstr ""
+msgstr "Molekylen är ogiltig. Kan inte optimera geometrin."
 
 #: qtplugins/openbabel/openbabel.cpp:441
 msgid "Cannot optimize geometry with Open Babel."
@@ -4424,6 +4423,9 @@ msgid ""
 "Current energy: %3\n"
 "dE: %4"
 msgstr ""
+"Steg %1 av %2\n"
+"Aktuell energi: %3\n"
+"dE: %4"
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
 msgid "Updating molecule…"
@@ -4441,6 +4443,8 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
+"Antalet atomer i obabel-utdata (%1) motsvarar inte antalet atomer i den "
+"ursprungliga molekylen (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
@@ -4464,7 +4468,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:737
 msgid "Invalid molecule: Cannot perceive bonds."
-msgstr ""
+msgstr "Ogiltig molekyl: kan inte fastställa bindningar."
 
 #: qtplugins/openbabel/openbabel.cpp:743
 msgid "Perceiving Bonds (Open Babel)"
@@ -4476,7 +4480,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:751
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Kunde inte skapa XYZ-sträng."
 
 #: qtplugins/openbabel/openbabel.cpp:762
 #, qt-format
@@ -4489,7 +4493,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:824 qtplugins/openbabel/openbabel.cpp:866
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Kan inte lägga till väteatomer med Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:829 qtplugins/openbabel/openbabel.cpp:879
 msgid "Adding Hydrogens (Open Babel)"
@@ -4510,12 +4514,10 @@ msgid "Running %1…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:873
-#, fuzzy
 msgid "Add hydrogens for pH"
-msgstr "Visa väte för pH"
+msgstr "Lägg till väteatomer för pH"
 
 #: qtplugins/openbabel/openbabel.cpp:873
-#, fuzzy
 msgid "pH:"
 msgstr "pH:"
 
@@ -4525,7 +4527,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:916
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Kan inte ta bort väteatomer med Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:921
 #, fuzzy
@@ -4548,11 +4550,11 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.h:38
 msgid "OpenBabel"
-msgstr ""
+msgstr "Open Babel"
 
 #: qtplugins/openbabel/openbabel.h:42
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Arbeta med Open Babel-verktyg."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
@@ -4626,7 +4628,7 @@ msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.h:31
 msgid "Render reference axes in the corner of the display."
-msgstr ""
+msgstr "Återge referensaxlar i visningsytans hörn."
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
@@ -4902,7 +4904,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:71
 msgid "Player"
-msgstr ""
+msgstr "Spelare"
 
 #: qtplugins/playertool/playertool.cpp:72
 #, qt-format
@@ -4927,21 +4929,21 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:159
 msgid "Dynamic bonding?"
-msgstr ""
+msgstr "Dynamiska bindningar?"
 
 #: qtplugins/playertool/playertool.cpp:167
 msgid "Frame rate:"
-msgstr ""
+msgstr "Bildfrekvens:"
 
 #: qtplugins/playertool/playertool.cpp:173
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " FPS"
 
 #: qtplugins/playertool/playertool.cpp:181
 #: qtplugins/playertool/playertool.cpp:345
 msgid "Play"
-msgstr ""
+msgstr "Spela"
 
 #: qtplugins/playertool/playertool.cpp:186
 msgid "Record…"
@@ -4958,7 +4960,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:429
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Exportera bitmappsgrafik"
 
 #: qtplugins/playertool/playertool.cpp:430
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -4986,11 +4988,11 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
-msgstr ""
+msgstr "Spelarverktyg"
 
 #: qtplugins/playertool/playertool.h:36
 msgid "Play back trajectories"
-msgstr ""
+msgstr "Spela upp banor"
 
 #: qtplugins/plotconformer/plotconformer.cpp:45
 msgid "Plot Conformer Data…"
