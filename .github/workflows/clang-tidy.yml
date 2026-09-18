@@ -1,12 +1,17 @@
 name: Clang-Tidy Static Analysis
 
-on:
-  workflow_dispatch:
+on: [workflow_dispatch]
 
 env:
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_YAEHMOP=ON
-  BUILD_TYPE: RelWithDebInfo
   QT_VERSION: 6.8.3
+  # Read from the environment by CMake (3.17+), so it reaches the
+  # avogadrolibs ExternalProject, which does not forward the cache variable.
+  CMAKE_EXPORT_COMPILE_COMMANDS: ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_YAEHMOP=ON
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -20,31 +25,31 @@ jobs:
             name: "Ubuntu Analysis",
             os: ubuntu-latest,
             cc: "clang", cxx: "clang++",
-            cmake_flags: "-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
-            cpack: "",
+            build_type: "RelWithDebInfo",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
           }
 
     steps:
-
-    - name: Install Dependencies (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
-        sudo apt-get -qq install clang-tidy
-
-    - name: Install Qt
-      uses: jurplel/install-qt-action@bcb88e3bed2e992f5f9e24c0f9e364a231d278eb # v3
-      with:
-        cache: true
-        version: ${{ env.QT_VERSION }}
+    - name: Checkout workflow repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Checkout Repositories
       uses: ./.github/actions/checkout-repositories
 
+    - name: Install Dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
+        sudo apt-get -qq install clang clang-tidy
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@bcb88e3bed2e992f5f9e24c0f9e364a231d278eb # v4.4.0
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
     - name: Grab cache files
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      if: runner.os != 'Windows'
       with:
         path: |
           ${{ runner.workspace }}/build/thirdparty
@@ -55,33 +60,41 @@ jobs:
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
+      # A build is required so the generated sources exist (AUTOMOC output,
+      # ui_*.h, the generate_export_header headers) and the thirdparty
+      # headers are installed -- clang-tidy cannot parse the sources without
+      # them. CMake writes avogadrolibs/compile_commands.json as it goes.
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} ninja
-        # only re-compile avogadrolibs
-        (cd avogadrolibs; ninja clean)
-        bear -- ninja
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}}
+        test -f avogadrolibs/compile_commands.json || {
+          echo "::error::compile_commands.json was not generated"; exit 1; }
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
     - name: Create results directory
-      run: |
-        mkdir ${{ runner.workspace }}/clang-tidy-result
+      run: mkdir -p ${{ runner.workspace }}/clang-tidy-result
 
     - name: Analyze
       run: |
         # generate the fixes and we'll make a diff
-        run-clang-tidy -p ../build -fix
-        cd avogadrolibs
-        pwd
+        # run-clang-tidy exits non-zero whenever any check fires, which is the
+        # normal case here -- ignore it so the patch still gets generated.
+        run-clang-tidy \
+          -p ${{ runner.workspace }}/build/avogadrolibs \
+          -header-filter '.*/openchemistry/avogadrolibs/avogadro/.*' \
+          -fix \
+          '/openchemistry/avogadrolibs/avogadro/.*\.(cpp|h)$' || true
         echo "Generating diff"
-        git diff >${{ runner.workspace }}/clang-tidy-result/tidy.patch
-      working-directory: ${{ runner.workspace }}/avogadrolibs
+        git diff > ${{ runner.workspace }}/clang-tidy-result/tidy.patch
+      shell: bash
+      working-directory: ${{ github.workspace }}/openchemistry/avogadrolibs
 
     - name: Save PR metadata
+      if: github.event_name == 'pull_request'
       run: |
         echo ${{ github.event.number }} > ${{ runner.workspace }}/clang-tidy-result/pr-id.txt
         echo ${{ github.event.pull_request.head.repo.full_name }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-repo.txt
@@ -95,3 +108,4 @@ jobs:
     - name: Setup tmate session
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113 # v3.24
+      timeout-minutes: 30
