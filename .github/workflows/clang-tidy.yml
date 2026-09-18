@@ -1,8 +1,6 @@
 name: Clang-Tidy Static Analysis
 
-# TODO: revert to [workflow_dispatch] before merging -- push/pull_request
-# are here only to validate the workflow itself.
-on: [push, pull_request, workflow_dispatch]
+on: [workflow_dispatch]
 
 env:
   QT_VERSION: 6.8.3
