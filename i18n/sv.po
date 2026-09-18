@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:20+0000\n"
+"PO-Revision-Date: 2026-09-18 10:23+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -1292,7 +1292,7 @@ msgstr ""
 
 #: qtgui/layermodel.cpp:192 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Symmetrielement"
 
 #: qtgui/layermodel.cpp:194 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
@@ -1706,7 +1706,7 @@ msgstr "&Bygg"
 #. i18n: ectx: property (text), widget (QLabel, elementLabel)
 #: qtplugins/alchemy/alchemy.cpp:74:500 rc.cpp:2190
 msgid "Element:"
-msgstr "Gundämne:"
+msgstr "Grundämne:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
@@ -2649,7 +2649,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:868
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: qtplugins/constraints/constraintsmodel.cpp:129
 msgid "Value"
@@ -3184,7 +3184,7 @@ msgstr "Det finns ingen enhetscell."
 #: qtplugins/crystal/unitcelldialog.cpp:292
 #: qtplugins/crystal/unitcelldialog.cpp:303:434
 msgid "Unit Cell Editor"
-msgstr ""
+msgstr "Redigerare för enhetscell"
 
 #: qtplugins/crystal/unitcelldialog.cpp:282
 #: qtplugins/crystal/unitcelldialog.cpp:293
@@ -3734,7 +3734,7 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
 #: qtplugins/insertfragment/insertfragment.cpp:124:398
 msgid "Import Crystal"
-msgstr ""
+msgstr "Importera kristall"
 
 #: qtplugins/insertfragment/insertfragment.cpp:137
 msgid "Insert Fragment"
@@ -3857,7 +3857,7 @@ msgstr ""
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:91
 msgid "Element"
-msgstr ""
+msgstr "Grundämne"
 
 #: qtplugins/label/label.cpp:221
 msgid "Element & Number"
@@ -5068,7 +5068,7 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:150
 msgid "Error message: "
-msgstr ""
+msgstr "Felmeddelande: "
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
@@ -5084,33 +5084,34 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:149
 msgid "Failed to generate XRD pattern"
-msgstr ""
+msgstr "Kunde inte skapa röntgendiffraktionsmönster"
 
 #: qtplugins/plotxrd/plotxrd.cpp:187
 msgid "Failed to convert molecule to CIF format."
-msgstr ""
+msgstr "Kunde inte konvertera molekylen till CIF-format."
 
 #: qtplugins/plotxrd/plotxrd.cpp:222
 msgid "Data read from genXrdPattern appears to be corrupt!"
-msgstr ""
+msgstr "Data som lästes från genXrdPattern verkar vara skadade!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:257
 msgid "Error: could not find genXrdPattern executable!"
-msgstr ""
+msgstr "Fel: kunde inte hitta det körbara programmet genXrdPattern!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:269 qtplugins/plotxrd/plotxrd.cpp:281
 #: qtplugins/plotxrd/plotxrd.cpp:292 qtplugins/plotxrd/plotxrd.cpp:299
 #: qtplugins/yaehmop/yaehmop.cpp:556
 msgid "Error: "
-msgstr ""
+msgstr "Fel: "
 
 #: qtplugins/plotxrd/plotxrd.h:39
 msgid "PlotXrd"
-msgstr ""
+msgstr "PlotXrd"
 
 #: qtplugins/plotxrd/plotxrd.h:87
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr ""
+"Skapa och rita upp ett teoretiskt röntgendiffraktionsmönster med ObjCryst++."
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"
@@ -5119,7 +5120,7 @@ msgstr ""
 #: qtplugins/ply/ply.cpp:68 qtplugins/povray/povray.cpp:68
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:68
 msgid "Save File"
-msgstr ""
+msgstr "Spara fil"
 
 #: qtplugins/ply/ply.cpp:69
 msgid "PLY (*.ply);;Text file (*.txt)"
@@ -5139,15 +5140,15 @@ msgstr ""
 
 #: qtplugins/povray/povray.cpp:69
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
-msgstr ""
+msgstr "POV-Ray (*.pov);;Textfil (*.txt)"
 
 #: qtplugins/povray/povray.h:25
 msgid "POVRay"
-msgstr ""
+msgstr "POV-Ray"
 
 #: qtplugins/povray/povray.h:29
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "Återge scenen med POV-Ray."
 
 #: qtplugins/propertytables/propertymodel.cpp:396
 msgid "Click to change color"
@@ -5461,11 +5462,11 @@ msgstr ""
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
 msgid "QTAIM"
-msgstr ""
+msgstr "QTAIM"
 
 #: qtplugins/qtaim/qtaimengine.h:29
 msgid "Renders primitives using QTAIM properties"
-msgstr ""
+msgstr "Återger primitiver med QTAIM-egenskaper"
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
 msgid "Molecular Graph…"
@@ -5481,31 +5482,31 @@ msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "Open WFN File"
-msgstr ""
+msgstr "Öppna WFN-fil"
 
 #: qtplugins/qtaim/qtaimextension.cpp:91
 msgid "WFN files (*.wfn);;All files (*.*)"
-msgstr ""
+msgstr "WFN-filer (*.wfn);;Alla filer (*.*)"
 
 #: qtplugins/qtaim/qtaimextension.h:23
 msgid "QTAIM extension"
-msgstr ""
+msgstr "QTAIM-tillägg"
 
 #: qtplugins/quantuminput/quantuminput.h:43
 msgid "Quantum input"
-msgstr ""
+msgstr "Kvantindata"
 
 #: qtplugins/quantuminput/quantuminput.h:47
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Skapa indata för kvantkemiska program."
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Center"
-msgstr ""
+msgstr "Centrera"
 
 #: qtplugins/resetview/resetview.cpp:40
 msgid "Align View to Axes"
-msgstr ""
+msgstr "Justera vyn efter axlarna"
 
 #: qtplugins/resetview/resetview.cpp:53
 msgid "Align view to axes."
@@ -5529,23 +5530,23 @@ msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:30
 msgid "Script File Formats"
-msgstr ""
+msgstr "Skriptfilformat"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:34
 msgid "Load file reader/writers from external scripts."
-msgstr ""
+msgstr "Läs in filläsare och filskrivare från externa skript."
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
-msgstr ""
+msgstr "Markera alla"
 
 #: qtplugins/select/select.cpp:37
 msgid "Select None"
-msgstr ""
+msgstr "Avmarkera alla"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
-msgstr ""
+msgstr "Invertera markering"
 
 #: qtplugins/select/select.cpp:53
 msgid "Select by Element…"
@@ -5585,11 +5586,11 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
-msgstr ""
+msgstr "Ändra markeringar"
 
 #: qtplugins/select/select.cpp:127
 msgid "&Select"
-msgstr ""
+msgstr "&Markera"
 
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
@@ -5631,7 +5632,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:30:2163
 msgid "Select"
-msgstr ""
+msgstr "Markera"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 4"
@@ -5640,7 +5641,7 @@ msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
-msgstr ""
+msgstr "Markering"
 
 #: qtplugins/selectiontool/selectiontool.cpp:53
 #, qt-format
@@ -5661,7 +5662,7 @@ msgstr ""
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
 msgid "Selection tool"
-msgstr ""
+msgstr "Markeringsverktyg"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
@@ -5675,12 +5676,12 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:78:2148
 msgid "Symmetrize"
-msgstr ""
+msgstr "Symmetrisera"
 
 #: qtplugins/spacegroup/spacegroup.cpp:83
 #: qtplugins/spacegroup/spacegroup.cpp:580
 msgid "Reduce to Asymmetric Unit"
-msgstr ""
+msgstr "Reducera till asymmetrisk enhet"
 
 #: qtplugins/spacegroup/spacegroup.cpp:89
 msgid "Set Tolerance…"
@@ -5697,7 +5698,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:126
 msgid "Space Group"
-msgstr ""
+msgstr "Rymdgrupp"
 
 #: qtplugins/spacegroup/spacegroup.cpp:133
 msgid "Fill symmetric atoms based on the crystal space group."
@@ -5731,17 +5732,19 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:428
 msgid "Failure"
-msgstr ""
+msgstr "Misslyckades"
 
 #: qtplugins/spacegroup/spacegroup.cpp:429
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
+"Kunde inte fastställa rymdgruppen.\n"
+"Vill du försöka igen med en annan tolerans?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:444
 msgid "Primitive Reduction"
-msgstr ""
+msgstr "Primitiv reduktion"
 
 #: qtplugins/spacegroup/spacegroup.cpp:445
 #: qtplugins/spacegroup/spacegroup.cpp:473
@@ -5751,24 +5754,32 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"Toleransen är för närvarande inställd på: %1.\n"
+"Vill du fortsätta med denna tolerans?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:461
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Primitiv reduktion misslyckades.\n"
+"Kontrollera kristallen och försök igen med en annan tolerans."
 
 #: qtplugins/spacegroup/spacegroup.cpp:489
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Kunde inte konventionalisera cellen.\n"
+"Kontrollera kristallen och försök igen med en annan tolerans."
 
 #: qtplugins/spacegroup/spacegroup.cpp:515
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Symmetrisering misslyckades.\n"
+"Kontrollera kristallen och försök igen med en annan tolerans."
 
 #: qtplugins/spacegroup/spacegroup.cpp:569
 #, qt-format
@@ -5786,11 +5797,11 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
-msgstr ""
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:601
 msgid "Select tolerance in Å:"
-msgstr ""
+msgstr "Välj tolerans i Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:618
 msgid "Triclinic"
@@ -5851,15 +5862,15 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "International"
-msgstr ""
+msgstr "Internationell"
 
 #: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "Hall"
-msgstr ""
+msgstr "Hall"
 
 #: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "Hermann-Mauguin"
-msgstr ""
+msgstr "Hermann–Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:697
 msgid "Crystal System"
@@ -5867,15 +5878,15 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:729
 msgid "Select Space Group"
-msgstr ""
+msgstr "Välj rymdgrupp"
 
 #: qtplugins/spacegroup/spacegroup.h:24
 msgid "SpaceGroup"
-msgstr ""
+msgstr "Rymdgrupp"
 
 #: qtplugins/spacegroup/spacegroup.h:87
 msgid "Space group features for crystals."
-msgstr ""
+msgstr "Rymdgruppsfunktioner för kristaller."
 
 #: qtplugins/spectra/spectra.cpp:29
 msgid "Plot Spectra…"
@@ -6078,7 +6089,7 @@ msgstr ""
 #: qtplugins/surfaces/orbitaltablemodel.cpp:137
 #: qtplugins/symmetry/symmetry.h:34:2133
 msgid "Symmetry"
-msgstr ""
+msgstr "Symmetri"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:139
 msgid "Occupation"
@@ -6128,17 +6139,17 @@ msgstr ""
 #, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
-msgstr ""
+msgstr "MO %L1"
 
 #: qtplugins/surfaces/surfacedialog.cpp:187
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
-msgstr ""
+msgstr "(HOMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:189
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
-msgstr ""
+msgstr "(LUMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:204
 msgid "From File"
@@ -6228,7 +6239,7 @@ msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:729
 msgid "Calculating electron density"
-msgstr ""
+msgstr "Beräknar elektrondensitet"
 
 #: qtplugins/surfaces/surfaces.cpp:738
 msgid "Calculating spin density"
@@ -6237,7 +6248,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:747
 #, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr ""
+msgstr "Beräknar molekylorbital %L1"
 
 #: qtplugins/surfaces/surfaces.cpp:848
 msgid "The calculation was interrupted."
@@ -6286,7 +6297,7 @@ msgstr ""
 
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Class"
-msgstr ""
+msgstr "Klass"
 
 #: qtplugins/symmetry/symmetry.cpp:39
 msgid "Symmetry…"
@@ -6294,11 +6305,11 @@ msgstr ""
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
-msgstr ""
+msgstr "Tillhandahåll symmetrifunktioner."
 
 #: qtplugins/symmetry/symmetryscene.h:37
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Återge symmetrielement."
 
 #: qtplugins/symmetry/symmetrywidget.cpp:335
 #, qt-format
@@ -6358,7 +6369,7 @@ msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
-msgstr ""
+msgstr "Enkel visning av van der Waals-sfärer."
 
 #: qtplugins/vibrations/displacementdialog.cpp:37
 #, qt-format
@@ -6451,19 +6462,19 @@ msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:69
 msgid "VRML (*.wrl);;Text file (*.txt)"
-msgstr ""
+msgstr "VRML (*.wrl);;Textfil (*.txt)"
 
 #: qtplugins/vrml/vrml.h:25
 msgid "VRML"
-msgstr ""
+msgstr "VRML"
 
 #: qtplugins/vrml/vrml.h:29
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "Återge scenen med VRML."
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
-msgstr ""
+msgstr "Återge molekylen som en trådmodell."
 
 #: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
@@ -6621,7 +6632,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::MoleQueueDialog)
 msgid "Dialog"
-msgstr ""
+msgstr "Dialogruta"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::MoleQueue::InputGeneratorWidget)
@@ -6640,12 +6651,12 @@ msgstr ""
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::TemplateToolWidget)
 msgid "Form"
-msgstr ""
+msgstr "Formulär"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 msgid "Calculation Settings"
-msgstr ""
+msgstr "Beräkningsinställningar"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -6683,14 +6694,14 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Queue and Program:"
-msgstr ""
+msgstr "Kö och program:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:33
 #. i18n: ectx: property (text), widget (QPushButton, refreshButton)
 msgid "Refresh"
-msgstr ""
+msgstr "Uppdatera"
 
 #. i18n: file: molequeue/molequeuewidget.ui:85
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
@@ -6698,11 +6709,13 @@ msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
 msgstr ""
+"<html><head/><body><p>Antal processorkärnor att reservera för detta jobb.</p>"
+"</body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Processor cores:"
-msgstr ""
+msgstr "Processorkärnor:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:125
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -6711,11 +6724,14 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>Ta bort fjärrarbetsfiler när jobbet har slutförts. "
+"Resultaten kopieras fortfarande först till den lokala MoleQueue-jobbcachen.</"
+"p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Delete remote files when finished:"
-msgstr ""
+msgstr "Ta bort fjärrfiler när jobbet är klart:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:145
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -6723,11 +6739,13 @@ msgid ""
 "<html><head/><body><p>Check to prevent this job from showing up in the "
 "MoleQueue GUI by default.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Markera för att förhindra att detta jobb visas i "
+"MoleQueues grafiska gränssnitt som standard.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Hide job in MoleQueue:"
-msgstr ""
+msgstr "Dölj jobb i MoleQueue:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:158
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -6735,21 +6753,23 @@ msgid ""
 "<html><head/><body><p>Show a system popup notification when the job's status "
 "changes.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Visa en systemnotis när jobbets status ändras.</p></"
+"body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Show progress notifications:"
-msgstr ""
+msgstr "Visa förloppsnotiser:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, openOutputLabel)
 msgid "Open output when finished:"
-msgstr ""
+msgstr "Öppna utdata när jobbet är klart:"
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
 msgid "Rename Elements"
-msgstr ""
+msgstr "Byt namn på grundämnen"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
@@ -6772,32 +6792,32 @@ msgstr ""
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
 msgid "3DMol HTML Snippet"
-msgstr ""
+msgstr "3DMol HTML-kodsnutt"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, copyButton)
 msgid "&Copy to Clipboard"
-msgstr ""
+msgstr "&Kopiera till urklipp"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
 msgid "Ctrl+C"
-msgstr ""
+msgstr "Ctrl+C"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Structure Input File"
-msgstr ""
+msgstr "Strukturindatafil"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
 msgid "Generate Input From PDB"
-msgstr ""
+msgstr "Skapa indata från PDB"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
 msgid "PDB File:"
-msgstr ""
+msgstr "PDB-fil:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:50
 #. i18n: ectx: property (text), widget (QPushButton, openPdbFileButton)
@@ -6814,57 +6834,57 @@ msgstr "Kraftfält:"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "AMBER"
-msgstr ""
+msgstr "AMBER"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:80
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "CHARMM"
-msgstr ""
+msgstr "CHARMM"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:85
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "PARSE"
-msgstr ""
+msgstr "PARSE"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:90
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "TYL06"
-msgstr ""
+msgstr "TYL06"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:95
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "PEOEPB"
-msgstr ""
+msgstr "PEOEPB"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:100
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "SWANSON"
-msgstr ""
+msgstr "SWANSON"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:114
 #. i18n: ectx: property (text), widget (QPushButton, runPdb2PqrButton)
 msgid "Run PDB2PQR"
-msgstr ""
+msgstr "Kör PDB2PQR"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:123
 #. i18n: ectx: property (text), widget (QRadioButton, loadFromPqrButton)
 msgid "Load Existing PQR File"
-msgstr ""
+msgstr "Läs in befintlig PQR-fil"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, pqrFileLabel)
 msgid "PQR File:"
-msgstr ""
+msgstr "PQR-fil:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:156
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "APBS Input File"
-msgstr ""
+msgstr "APBS-indatafil"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
 msgid "Save Input File"
-msgstr ""
+msgstr "Spara indatafil"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
@@ -6874,17 +6894,17 @@ msgstr "Kör APBS"
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Success!"
-msgstr ""
+msgstr "Slutförd!"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
 msgid "Load Structure File"
-msgstr ""
+msgstr "Läs in strukturfil"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
 msgid "Load Cube File"
-msgstr ""
+msgstr "Läs in kubfil"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
@@ -6985,34 +7005,34 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
 msgid "Coordinate Editor"
-msgstr ""
+msgstr "Koordinatredigerare"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Preset:"
-msgstr ""
+msgstr "Förinställning:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Distance Unit:"
-msgstr ""
+msgstr "Avståndsenhet:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
 msgid "Angstrom"
-msgstr ""
+msgstr "Ångström"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
 msgid "Bohr"
-msgstr ""
+msgstr "Bohr"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:31
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Format:"
-msgstr ""
+msgstr "Format:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
@@ -7052,7 +7072,7 @@ msgstr "Klistra in"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:135
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "Revert"
-msgstr ""
+msgstr "Återställ"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
@@ -7062,7 +7082,7 @@ msgstr "Töm"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:149
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "Apply"
-msgstr ""
+msgstr "Verkställ"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Cp2kInputDialog)
@@ -7074,14 +7094,14 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:336
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 msgid "Reset All"
-msgstr ""
+msgstr "Återställ allt"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:29
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:343
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
-msgstr ""
+msgstr "Standardvärden"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -7095,7 +7115,7 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
 msgid "&Basic Setup"
-msgstr ""
+msgstr "&Grundinställningar"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:101
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -7104,7 +7124,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Title:"
-msgstr ""
+msgstr "Titel:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -7113,7 +7133,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Filename Base:"
-msgstr ""
+msgstr "Filnamnsbas:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -7122,14 +7142,14 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:70
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
 msgid "job"
-msgstr ""
+msgstr "jobb"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:287
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
-msgstr ""
+msgstr "Beräkna:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7221,17 +7241,17 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
-msgstr ""
+msgstr "Filändelse för Open Babel-konvertering (standard – Avogadro::POSCAR):"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
 msgid "Supercell Parameters"
-msgstr ""
+msgstr "Supercellsparametrar"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Super Cell Options"
-msgstr ""
+msgstr "Alternativ för supercell"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, minLabel)
@@ -7281,89 +7301,89 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A:"
-msgstr ""
+msgstr "A:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:62
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "B:"
-msgstr ""
+msgstr "B:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:94
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "C:"
-msgstr ""
+msgstr "C:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:133
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "α:"
-msgstr ""
+msgstr "α:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "β:"
-msgstr ""
+msgstr "β:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:153
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "γ:"
-msgstr ""
+msgstr "γ:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Cell Matrix:"
-msgstr ""
+msgstr "Cellmatris:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:248
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Fractional Matrix:"
-msgstr ""
+msgstr "Fraktionell matris:"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:278
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:114
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
 msgid "&Transform Atoms"
-msgstr ""
+msgstr "&Transformera atomer"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:300
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "&Apply"
-msgstr ""
+msgstr "&Verkställ"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:307
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "&Revert"
-msgstr ""
+msgstr "&Återställ"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:314
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 msgid "&Hide"
-msgstr ""
+msgstr "&Dölj"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::VolumeScalingDialog)
 msgid "Scale Unit Cell Volume"
-msgstr ""
+msgstr "Skala enhetscellens volym"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "New &Volume:"
-msgstr ""
+msgstr "Ny &volym:"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "&Scaling Factor:"
-msgstr ""
+msgstr "&Skalningsfaktor:"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Current Volume:"
-msgstr ""
+msgstr "Aktuell volym:"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:58
 #. i18n: ectx: property (text), widget (QLabel, currentVolume)
 msgid "TextLabel"
-msgstr ""
+msgstr "Textetikett"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7454,12 +7474,12 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
 msgid "GAMESS Input"
-msgstr ""
+msgstr "GAMESS-indata"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "In:"
-msgstr ""
+msgstr "I:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:107
 #. i18n: ectx: property (text), widget (QLabel, label_13)
@@ -7469,17 +7489,17 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Multiplicity:"
-msgstr ""
+msgstr "Multiplicitet:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
-msgstr ""
+msgstr "Med:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:254
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
-msgstr ""
+msgstr "Laddning:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
@@ -7489,22 +7509,22 @@ msgstr ""
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
 msgid "Search"
-msgstr ""
+msgstr "Sök"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "name"
-msgstr ""
+msgstr "namn"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "tag"
-msgstr ""
+msgstr "etikett"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "synonym"
-msgstr ""
+msgstr "synonym"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
