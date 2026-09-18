@@ -31,6 +31,17 @@ public:
   /** Creates a new variant map object. */
   VariantMap() = default;
 
+  VariantMap(const VariantMap& other) = default;
+  VariantMap& operator=(const VariantMap& other) = default;
+
+  /**
+   * Move operations are declared explicitly: the defaulted destructor below
+   * would otherwise suppress them, and moving a molecule would silently fall
+   * back to copying the whole map.
+   */
+  VariantMap(VariantMap&& other) = default;
+  VariantMap& operator=(VariantMap&& other) = default;
+
   /** Destroys the variant map. */
   ~VariantMap() = default;
 

@@ -66,13 +66,21 @@ public:
   /** Copy constructor  */
   Molecule(const Molecule& other);
 
-  /** Move constructor */
+  /**
+   * Move constructor.
+   *
+   * noexcept, and honestly so: every member is moved rather than copied, and
+   * the layer state is a shared_ptr this molecule owns, so nothing here
+   * allocates. Both halves of that are load bearing -- this used to copy the
+   * property maps, the graph and the frozen-atom mask, and to register the new
+   * molecule with the LayerManager, either of which could throw.
+   */
   Molecule(Molecule&& other) noexcept;
 
   /** Assignment operator */
   Molecule& operator=(const Molecule& other);
 
-  /** Move assignment operator */
+  /** Move assignment operator. noexcept, see the move constructor. */
   Molecule& operator=(Molecule&& other) noexcept;
 
   /** Destroys the molecule object. */

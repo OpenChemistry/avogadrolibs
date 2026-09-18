@@ -138,8 +138,9 @@ void Molecule::readProperties(const Molecule& other)
 }
 
 Molecule::Molecule(Molecule&& other) noexcept
-  : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
-    m_spectra(other.m_spectra),
+  : m_data(std::move(other.m_data)),
+    m_partialCharges(std::move(other.m_partialCharges)),
+    m_spectra(std::move(other.m_spectra)),
     m_atomProperties(std::move(other.m_atomProperties)),
     m_bondProperties(std::move(other.m_bondProperties)),
     m_residueProperties(std::move(other.m_residueProperties)),
@@ -161,9 +162,10 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_basisSet(std::exchange(other.m_basisSet, nullptr)),
     m_unitCell(std::exchange(other.m_unitCell, nullptr)),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_constraints(other.m_constraints),
-    m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
+    m_constraints(std::move(other.m_constraints)),
+    m_frozenAtomMask(std::move(other.m_frozenAtomMask)),
+    m_graph(std::move(other.m_graph)), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
     m_layerInfo(std::move(other.m_layerInfo))
 {
   // Leave the moved-from molecule sharing this state rather than allocating
@@ -242,9 +244,9 @@ Molecule& Molecule::operator=(const Molecule& other)
 Molecule& Molecule::operator=(Molecule&& other) noexcept
 {
   if (this != &other) {
-    m_data = other.m_data;
+    m_data = std::move(other.m_data);
     m_partialCharges = std::move(other.m_partialCharges);
-    m_spectra = other.m_spectra;
+    m_spectra = std::move(other.m_spectra);
     m_atomProperties = std::move(other.m_atomProperties);
     m_bondProperties = std::move(other.m_bondProperties);
     m_residueProperties = std::move(other.m_residueProperties);
@@ -268,12 +270,12 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_vibrations = std::move(other.m_vibrations);
     m_selectedAtoms = std::move(other.m_selectedAtoms);
     m_residues = other.m_residues;
-    m_graph = other.m_graph;
+    m_graph = std::move(other.m_graph);
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
-    m_constraints = other.m_constraints;
-    m_frozenAtomMask = other.m_frozenAtomMask;
+    m_constraints = std::move(other.m_constraints);
+    m_frozenAtomMask = std::move(other.m_frozenAtomMask);
 
     clearMeshes();
     m_meshes = std::move(other.m_meshes);
