@@ -1734,8 +1734,14 @@ void Molecule::perceiveBondOrders()
     for (auto bond : bonds(i)) {
       boSum += bond.order();
     }
+    const unsigned int target =
+      atomValence(atomicNumber(i), formalCharge(i), bonds(i).size());
+
+    // check to see if the atom needs valence
+    //  if boSum is too large, then the atom already has too many bonds
+    //  so return zero instead of an underflow
     unsaturatedValence[i] =
-      atomValence(atomicNumber(i), formalCharge(i), bonds(i).size()) - boSum;
+      target > boSum ? static_cast<unsigned char>(target - boSum) : 0;
 
     if (unsaturatedValence[i] > 0)
       anyUnsaturated = true;
