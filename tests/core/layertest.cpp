@@ -255,3 +255,91 @@ TEST_F(LayerTest, NullMoleculeYieldsNoState)
   EXPECT_EQ(LayerManager::getMoleculeInfo(nullptr), nullptr);
   EXPECT_EQ(LayerManager::getMoleculeLayer(nullptr).maxLayer(), 0u);
 }
+
+namespace {
+
+// A LayerData that reports its own lifetime, so the tests can show that layer
+// settings are actually released rather than leaked.
+int g_liveSettings = 0;
+
+struct CountedLayerData : Avogadro::Core::LayerData
+{
+  std::string tag;
+
+  explicit CountedLayerData(std::string t = "") : tag(std::move(t))
+  {
+    ++g_liveSettings;
+  }
+  CountedLayerData(const CountedLayerData& other)
+    : LayerData(other), tag(other.tag)
+  {
+    ++g_liveSettings;
+  }
+  ~CountedLayerData() override { --g_liveSettings; }
+
+  std::string serialize() override { return tag; }
+  void deserialize(std::string save) override { tag = save; }
+  LayerData* clone() override { return new CountedLayerData(*this); }
+};
+
+Avogadro::Core::LayerDataPtr makeSetting(const std::string& tag)
+{
+  return std::make_shared<CountedLayerData>(tag);
+}
+
+} // namespace
+
+// Phase 3: settings used to be raw LayerData pointers that nothing ever freed.
+TEST_F(LayerTest, LayerSettingsAreReleasedWithTheMolecule)
+{
+  const int before = g_liveSettings;
+  {
+    Molecule molecule;
+    buildMultiLayer(molecule);
+    molecule.layerInfo()->settings["TestPlugin"].push_back(makeSetting("a"));
+    molecule.layerInfo()->settings["TestPlugin"].push_back(makeSetting("b"));
+    EXPECT_EQ(g_liveSettings, before + 2);
+  }
+  EXPECT_EQ(g_liveSettings, before) << "layer settings leaked";
+}
+
+// Copies get their own settings objects, so editing one cannot reach the other.
+TEST_F(LayerTest, CopyClonesLayerSettings)
+{
+  Molecule original;
+  buildMultiLayer(original);
+  original.layerInfo()->settings["TestPlugin"].push_back(
+    makeSetting("original"));
+
+  Molecule copy(original);
+
+  ASSERT_EQ(copy.layerInfo()->settings["TestPlugin"].size(), 1u);
+  auto* originalData = static_cast<CountedLayerData*>(
+    original.layerInfo()->settings["TestPlugin"][0].get());
+  auto* copyData = static_cast<CountedLayerData*>(
+    copy.layerInfo()->settings["TestPlugin"][0].get());
+
+  EXPECT_NE(originalData, copyData)
+    << "the copy shares the original's settings";
+  EXPECT_EQ(copyData->tag, "original") << "the copy lost its settings";
+
+  copyData->tag = "edited";
+  EXPECT_EQ(originalData->tag, "original")
+    << "editing the copy's settings reached the original";
+}
+
+TEST_F(LayerTest, CopiedSettingsAreReleasedIndependently)
+{
+  const int before = g_liveSettings;
+  {
+    Molecule original;
+    buildMultiLayer(original);
+    original.layerInfo()->settings["TestPlugin"].push_back(makeSetting("x"));
+    {
+      Molecule copy(original);
+      EXPECT_EQ(g_liveSettings, before + 2) << "the copy did not clone";
+    }
+    EXPECT_EQ(g_liveSettings, before + 1) << "the copy's clone leaked";
+  }
+  EXPECT_EQ(g_liveSettings, before);
+}

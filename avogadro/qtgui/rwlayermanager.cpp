@@ -63,9 +63,9 @@ public:
     for (const auto& settings : m_settings) {
       if (settings.second == nullptr)
         continue;
-      // create newSettings pointer with the same type as settings.second
-      auto* newSettings = settings.second->clone();
-      m_moleculeInfo->settings[settings.first].push_back(newSettings);
+      // A new layer gets its own copy of the active layer's settings.
+      m_moleculeInfo->settings[settings.first].push_back(
+        Core::LayerDataPtr(settings.second->clone()));
     }
 
     m_moleculeInfo->layer.addLayer();
@@ -101,7 +101,7 @@ public:
 protected:
   shared_ptr<MoleculeInfo> m_moleculeInfo;
   map<string, bool> m_enable;
-  map<string, LayerData*> m_settings;
+  map<string, Core::LayerDataPtr> m_settings;
   bool m_visible;
   bool m_locked;
 };
@@ -195,7 +195,7 @@ protected:
 
   bool m_visible;
   bool m_locked;
-  map<string, LayerData*> m_settings;
+  map<string, Core::LayerDataPtr> m_settings;
   map<string, bool> m_enable;
 };
 } // namespace

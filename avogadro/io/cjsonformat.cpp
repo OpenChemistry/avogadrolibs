@@ -1337,11 +1337,16 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     json settings = jsonRoot["layer"]["settings"];
     if (settings.is_object()) {
       for (const auto& setting : settings.items()) {
-        if (isBooleanArray(setting.value())) {
-          names->settings[setting.key()] = Core::Array<LayerData*>();
-          for (const auto& s : setting.value()) {
-            names->settings[setting.key()].push_back(new LayerData(s));
-          }
+        // The writer emits one LayerData::serialize() string per layer. This
+        // used to test isBooleanArray, copied from the enable block above, so
+        // per-plugin layer settings were written out and then silently dropped
+        // on every read.
+        if (!setting.value().is_array())
+          continue;
+        names->settings[setting.key()] = Core::Array<Core::LayerDataPtr>();
+        for (const auto& s : setting.value()) {
+          names->settings[setting.key()].push_back(std::make_shared<LayerData>(
+            s.is_string() ? s.get<std::string>() : std::string()));
         }
       }
     }
@@ -2052,7 +2057,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   for (const auto& settings : names->settings) {
     json setting;
     for (const auto& e : settings.second) {
-      setting.push_back(e->serialize());
+      setting.push_back(e ? e->serialize() : std::string());
     }
     layer["settings"][settings.first] = setting;
   }

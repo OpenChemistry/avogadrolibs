@@ -12,6 +12,7 @@
 #include "layer.h"
 
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
@@ -46,6 +47,9 @@ protected:
   std::string m_save;
 };
 
+/** Owning handle to a layer's per-plugin data. */
+using LayerDataPtr = std::shared_ptr<LayerData>;
+
 /**
  * @class MoleculeInfo moleculeinfo.h <avogadro/core/moleculeinfo.h>
  * @brief All layer dependent data for one molecule: which layers are hidden
@@ -60,7 +64,7 @@ struct MoleculeInfo
   std::vector<bool> visible;
   std::vector<bool> locked;
   std::map<std::string, std::vector<bool>> enable;
-  std::map<std::string, Core::Array<LayerData*>> settings;
+  std::map<std::string, Core::Array<LayerDataPtr>> settings;
   Layer layer;
   std::set<std::string> loaded;
 
@@ -71,17 +75,16 @@ struct MoleculeInfo
   }
 
   /**
-   * Copy every layer property except @p settings and @p loaded.
+   * Copy every layer property, cloning the per-plugin settings.
    *
-   * settings holds raw LayerData pointers whose ownership is not yet resolved,
-   * so copying them would alias one allocation between two molecules. Plugins
-   * recreate their settings on demand through
-   * PluginLayerManager::getSetting(), and @p loaded only records which plugins
-   * have deserialized theirs, so it goes with them.
+   * Each molecule owns its own settings objects rather than sharing them:
+   * layers are per molecule, so editing a copy's settings must not reach back
+   * into the molecule it was copied from.
    */
   MoleculeInfo(const MoleculeInfo& other)
     : visible(other.visible), locked(other.locked), enable(other.enable),
-      layer(other.layer)
+      settings(cloneSettings(other.settings)), layer(other.layer),
+      loaded(other.loaded)
   {
   }
 
@@ -91,7 +94,9 @@ struct MoleculeInfo
       visible = other.visible;
       locked = other.locked;
       enable = other.enable;
+      settings = cloneSettings(other.settings);
       layer = other.layer;
+      loaded = other.loaded;
     }
     return *this;
   }
@@ -105,7 +110,24 @@ struct MoleculeInfo
     visible.clear();
     locked.clear();
     enable.clear();
+    settings.clear();
     layer.clear();
+    loaded.clear();
+  }
+
+private:
+  static std::map<std::string, Core::Array<LayerDataPtr>> cloneSettings(
+    const std::map<std::string, Core::Array<LayerDataPtr>>& source)
+  {
+    std::map<std::string, Core::Array<LayerDataPtr>> copy;
+    for (const auto& entry : source) {
+      Core::Array<LayerDataPtr> cloned;
+      cloned.reserve(entry.second.size());
+      for (const auto& data : entry.second)
+        cloned.push_back(data ? LayerDataPtr(data->clone()) : nullptr);
+      copy[entry.first] = cloned;
+    }
+    return copy;
   }
 };
 

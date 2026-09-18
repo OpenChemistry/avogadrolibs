@@ -10,6 +10,7 @@
 
 #include <avogadro/core/layermanager.h>
 #include <cassert>
+#include <memory>
 #include <iostream>
 
 namespace Avogadro {
@@ -45,9 +46,9 @@ public:
             continue;
           auto serial = info->settings[m_name][i]->getSave();
           if (serial != "") {
-            T* aux = new T;
+            auto aux = std::make_shared<T>();
             aux->deserialize(serial);
-            delete info->settings[m_name][i];
+            // Replacing the handle releases the old object; nothing to delete.
             info->settings[m_name][i] = aux;
           }
         }
@@ -93,15 +94,15 @@ public:
     }
 
     if (info->settings.find(m_name) == info->settings.end()) {
-      info->settings[m_name] = Core::Array<Core::LayerData*>();
+      info->settings[m_name] = Core::Array<Core::LayerDataPtr>();
     }
 
     // do we need to create new layers in the array?
     while (info->settings[m_name].size() < layer + 1) {
-      info->settings[m_name].push_back(new T());
+      info->settings[m_name].push_back(std::make_shared<T>());
     }
-    auto* result = static_cast<T*>(info->settings[m_name][layer]);
-    return result;
+    // Borrowed: the Array keeps ownership, callers only read through this.
+    return static_cast<T*>(info->settings[m_name][layer].get());
   }
 
 private:
