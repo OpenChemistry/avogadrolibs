@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
+# Daniel Nylander <yeagersthlm@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-03-07 11:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-09-18 10:12+0000\n"
+"Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
 "Language: sv\n"
@@ -17,13 +18,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Batchjobb nr %L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
@@ -36,32 +37,37 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"script --print-options-utdata måste vara ett JSON-objekt på toppnivå. "
+"Mottog:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:322
 #: qtgui/interfacescript.cpp:490
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Icke-strängvarning returnerades."
 
 #: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:325
 #: qtgui/interfacescript.cpp:493
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "Medlemmen ”warnings” är inte en matris."
 
 #: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:513
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Referensfilen ”%1” finns inte."
 
 #: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:515
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Fel vid ifyllning av filen %1: %2"
 
 #: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:519
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"Filen ”%1” är felaktigt utformad. Medlemmarna ”contents” eller ”filePath” "
+"saknas."
 
 #: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:552
 #, qt-format
@@ -69,31 +75,33 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Felaktig filpost: filnamn/innehåll saknas eller är inte strängar:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:558
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Felaktig filpost vid index %1: inte ett objekt."
 
 #: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:564
 msgid "'files' member not an array."
-msgstr ""
+msgstr "Medlemmen ”files” är inte en matris."
 
 #: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:568
 msgid "'files' member missing."
-msgstr ""
+msgstr "Medlemmen ”files” saknas."
 
 #: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:579
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "Medlemmen ”mainFile” hänvisar inte till en post i ”files”."
 
 #: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:584
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "Medlemmen ”mainFile” måste vara en sträng."
 
 #: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:595
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Svaret måste vara ett JSON-objekt på toppnivå."
 
 #: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:599
 #, qt-format
@@ -101,6 +109,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Skriptutdata:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:643
 #, qt-format
@@ -110,6 +120,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Tolkningsfel vid position %L1: ”%2”\n"
+"Rå JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:385
 #, qt-format
@@ -131,6 +145,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Fel vid skapande av cjson-objekt: tolkningsfel vid position %1: %2\n"
+"Rå JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:722
 #, qt-format
@@ -138,20 +156,22 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Fel vid skapande av cjson-objekt: den tolkade JSON:en är inte ett objekt:\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Indatagenerator (fel)"
 
 #: molequeue/inputgeneratordialog.cpp:49
 #: qtplugins/quantuminput/quantuminput.cpp:279
 #, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "Indatagenerator för %1"
 
 #: molequeue/inputgeneratorwidget.cpp:123
 msgid "Continue"
-msgstr ""
+msgstr "Fortsätt"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:130
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -168,7 +188,6 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:123 qtgui/containerwidget.cpp:35
-#, fuzzy
 msgid "Close"
 msgstr "Stäng"
 
@@ -197,13 +216,25 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Följande fil har ändrats:\n"
+"\n"
+"%1\n"
+"\n"
+"Vill du skriva över ändringarna så att de speglar den nya geometrin eller "
+"jobbinställningarna?"
 msgstr[1] ""
+"Följande filer har ändrats:\n"
+"\n"
+"%1\n"
+"\n"
+"Vill du skriva över ändringarna så att de speglar den nya geometrin eller "
+"jobbinställningarna?"
 
 #: molequeue/inputgeneratorwidget.cpp:178
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Skriva över ändrade indatafiler?"
 
 #: molequeue/inputgeneratorwidget.cpp:204
 msgid "Problems occurred during input generation:"
@@ -211,14 +242,14 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:293
 msgid "No input files to save!"
-msgstr ""
+msgstr "Inga indatafiler att spara!"
 
 #: molequeue/inputgeneratorwidget.cpp:301
 #: molequeue/inputgeneratorwidget.cpp:609 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:980
 #: qtplugins/gamessinput/gamessinputdialog.cpp:917
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Kan inte ansluta till MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:302
 #: molequeue/inputgeneratorwidget.cpp:610 molequeue/molequeuewidget.cpp:70
@@ -228,43 +259,45 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Kan inte ansluta till MoleQueue-servern. Kontrollera att den körs och försök "
+"igen."
 
 #: molequeue/inputgeneratorwidget.cpp:333
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Skicka in beräkning för %1"
 
 #: molequeue/inputgeneratorwidget.cpp:349
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1017
 #: qtplugins/gamessinput/gamessinputdialog.cpp:954
 msgid "Job Failed"
-msgstr ""
+msgstr "Jobbet misslyckades"
 
 #: molequeue/inputgeneratorwidget.cpp:350
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1018
 #: qtplugins/gamessinput/gamessinputdialog.cpp:955
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Jobbet slutfördes inte korrekt."
 
 #: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:50
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Skriptet returnerar varningar:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:384
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Dölj &varningar"
 
 #: molequeue/inputgeneratorwidget.cpp:390
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Visa &varningar"
 
 #: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:66
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Ett fel har inträffat:"
 
 #: molequeue/inputgeneratorwidget.cpp:458
 msgid "Select output filename"
-msgstr ""
+msgstr "Välj filnamn för utdata"
 
 #: molequeue/inputgeneratorwidget.cpp:470
 #, qt-format
@@ -282,7 +315,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:452
 #: qtplugins/openmminput/openmminputdialog.cpp:466
 msgid "Output Error"
-msgstr ""
+msgstr "Utdatafel"
 
 #: molequeue/inputgeneratorwidget.cpp:487
 #: molequeue/inputgeneratorwidget.cpp:598
@@ -294,27 +327,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Kunde inte skriva till filen %1."
 
 #: molequeue/inputgeneratorwidget.cpp:498
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
-msgstr ""
+msgstr "Välj utdatakatalog"
 
 #: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: katalogen finns inte!"
 
 #: molequeue/inputgeneratorwidget.cpp:521
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: katalogen kan inte läsas!"
 
 #: molequeue/inputgeneratorwidget.cpp:531
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -323,7 +356,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: filen skrivs över."
 
 #: molequeue/inputgeneratorwidget.cpp:536
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -332,13 +365,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: filen är inte skrivbar."
 
 #: molequeue/inputgeneratorwidget.cpp:549
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "Indatafilerna kan inte skrivas på grund av ett okänt fel."
 
 #: molequeue/inputgeneratorwidget.cpp:553
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -349,6 +382,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Indatafilerna kan inte skrivas:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:562
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -363,6 +399,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Indatafilerna kan inte skrivas:\n"
+"\n"
+"%1\n"
+"\n"
+"Varningar:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:573
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -375,16 +418,21 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Varning:\n"
+"\n"
+"%1\n"
+"\n"
+"Vill du fortsätta?"
 
 #: molequeue/inputgeneratorwidget.cpp:577
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Skriv indatafiler"
 
 #: molequeue/inputgeneratorwidget.cpp:624
 msgid "Configure Job"
-msgstr ""
+msgstr "Konfigurera jobb"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
@@ -392,11 +440,11 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Tidsgräns vid inskickning av jobb"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Avogadro fick tidsgräns medan det väntade på svar från MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
@@ -406,7 +454,7 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
-msgstr ""
+msgstr "Sluta vänta"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information…"
@@ -414,15 +462,17 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Tidsgräns vid hämtning av jobb"
 
 #: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Avogadro fick tidsgräns medan det väntade på detaljer om det färdiga jobbet "
+"från MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:129
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Fel vid inskickning av jobb"
 
 #: molequeue/molequeuedialog.cpp:130
 #, qt-format
@@ -432,27 +482,27 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
-msgstr ""
+msgstr "Inget program valt."
 
 #: molequeue/molequeuedialog.cpp:198 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
-msgstr ""
+msgstr "Välj målprogrammet i listan ”Kö och program”."
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Klienten kunde inte skicka in jobbet till MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "Internt fel."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "Kunde inte lösa programvalet. Detta är ett fel i programmet."
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Ingen molekyl angavs i BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -460,15 +510,15 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Inget filnamn angavs i BackgroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Dela horisontellt"
 
 #: qtgui/containerwidget.cpp:31
 msgid "Split Vertical"
-msgstr ""
+msgstr "Dela vertikalt"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
@@ -1072,11 +1122,12 @@ msgstr ""
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Fel vid skrivning av molekylrepresentation till sträng: okänt filformat: %1"
 
 #: qtgui/interfacescript.cpp:693
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr ""
+msgstr "Fel vid skrivning av molekylrepresentation till sträng: %1"
 
 #: qtgui/jsonwidget.cpp:186
 msgid "'userOptions' missing."
@@ -1096,15 +1147,15 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
 #: qtgui/jsonwidget.cpp:296:988
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: qtgui/jsonwidget.cpp:300
 msgid "Filename Base"
-msgstr ""
+msgstr "Filnamnsbas"
 
 #: qtgui/jsonwidget.cpp:307 qtgui/jsonwidget.cpp:312
 msgid "Processor Cores"
-msgstr ""
+msgstr "Processor kärnor"
 
 #: qtgui/jsonwidget.cpp:307 qtgui/jsonwidget.cpp:315
 msgid "Memory"
@@ -1112,23 +1163,23 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:320
 msgid "Calculation Type"
-msgstr ""
+msgstr "Beräkningstyp"
 
 #: qtgui/jsonwidget.cpp:324
 msgid "Theory"
-msgstr ""
+msgstr "Teori"
 
 #: qtgui/jsonwidget.cpp:324
 msgid "Basis"
-msgstr ""
+msgstr "Bas"
 
 #: qtgui/jsonwidget.cpp:329 qtgui/jsonwidget.cpp:333
 msgid "Charge"
-msgstr ""
+msgstr "Laddning"
 
 #: qtgui/jsonwidget.cpp:330 qtgui/jsonwidget.cpp:335
 msgid "Multiplicity"
-msgstr ""
+msgstr "Multiplicitet"
 
 #: qtgui/jsonwidget.cpp:342
 msgid "Solvent"
@@ -1181,7 +1232,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:1179 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
-msgstr ""
+msgstr "[ingen molekyl]"
 
 #: qtgui/layermodel.cpp:118
 #, qt-format
@@ -1268,7 +1319,7 @@ msgstr ""
 
 #: qtgui/moleculemodel.cpp:121
 msgid "Untitled"
-msgstr ""
+msgstr "Namnlös"
 
 #: qtgui/moleculemodel.cpp:136
 msgid "Edit molecule"
@@ -1612,7 +1663,6 @@ msgstr "&Arkiv"
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:44
 #: qtplugins/povray/povray.cpp:44 qtplugins/svg/svg.cpp:46
 #: qtplugins/vrml/vrml.cpp:44
-#, fuzzy
 msgid "&Export"
 msgstr "&Exportera"
 
@@ -2412,7 +2462,7 @@ msgstr ""
 #: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Extensions"
-msgstr ""
+msgstr "&Tillägg"
 
 #: qtplugins/commandscripts/command.cpp:79
 #: qtplugins/commandscripts/command.cpp:98
@@ -3196,7 +3246,6 @@ msgstr "Trippel"
 #: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:42
-#, fuzzy
 msgid "&Import"
 msgstr "&Importera"
 
@@ -3240,7 +3289,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:148
 #: qtplugins/networkdatabases/networkdatabases.cpp:197
 msgid "Network Download Failed"
-msgstr ""
+msgstr "Nätverksnedladdning misslyckades"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:141
@@ -4685,7 +4734,7 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
-msgstr ""
+msgstr "Behåll filer"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
