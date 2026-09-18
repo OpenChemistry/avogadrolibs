@@ -36,4 +36,30 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS_LSAN "-fsanitize=leak -fno-omit-frame-pointer -g -O1")
   set(CMAKE_CXX_FLAGS_MSAN "-fsanitize=memory -fno-optimize-sibling-calls -fsanitize-memory-track-origins=2 -fno-omit-frame-pointer -g -O2")
   set(CMAKE_CXX_FLAGS_UBSAN "-fsanitize=undefined")
+
+elseif(MSVC)
+
+  # AddressSanitizer, Visual Studio 2019 16.9 and newer. Windows produces more
+  # crash reports than the other platforms and this is the only sanitizer the
+  # toolchain offers: there is no ThreadSanitizer, MemorySanitizer or
+  # LeakSanitizer for MSVC, so those stay on the Linux jobs.
+  #
+  # /O1 rather than a Debug-style /Od, because CMake's Debug configuration also
+  # passes /RTC1 and ASan refuses to build alongside it. /Zi keeps the PDBs a
+  # report needs to symbolicate.
+  #
+  # The container annotations are switched off deliberately. Qt, Open Babel and
+  # everything else in the superbuild are not instrumented, and an annotated
+  # std::vector or std::string crossing into uninstrumented code is reported as
+  # a container overflow that is not one. Turn them back on if those ever get
+  # instrumented too.
+  set(CMAKE_CXX_FLAGS_ASAN
+    "/fsanitize=address /Zi /O1 /D_DISABLE_VECTOR_ANNOTATION /D_DISABLE_STRING_ANNOTATION")
+  set(CMAKE_C_FLAGS_ASAN "${CMAKE_CXX_FLAGS_ASAN}")
+
+  # Incremental linking cannot be combined with ASan, and /DEBUG emits the PDB.
+  set(CMAKE_EXE_LINKER_FLAGS_ASAN "/INCREMENTAL:NO /DEBUG")
+  set(CMAKE_SHARED_LINKER_FLAGS_ASAN "/INCREMENTAL:NO /DEBUG")
+  set(CMAKE_MODULE_LINKER_FLAGS_ASAN "/INCREMENTAL:NO /DEBUG")
+
 endif()

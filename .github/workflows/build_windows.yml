@@ -46,6 +46,25 @@ jobs:
             package: "Avogadro2",
             sentry: false,
           }
+        # The same tests under MSVC's AddressSanitizer. Windows is where the
+        # crash reports come from, and ASan is the only sanitizer this
+        # toolchain has -- TSan, MSan and LSan are Linux-only, so this finds
+        # the heap-layout and uninitialized-stack differences that make the
+        # same undefined behaviour crash here and not there. The flags live in
+        # cmake/CompilerFlags.cmake under the MSVC branch; only avogadrolibs is
+        # instrumented, because the rest of the superbuild is not built with it.
+        - {
+            name: "Windows Address Sanitizer", artifact: "",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            build_type: "asan",
+            test: true,
+            asan: true,
+            cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
+            build_flags: "--parallel",
+            package: "Avogadro2",
+            sentry: false,
+          }
         # Diagnostic build with Sentry crash reporting compiled in. Ships as a
         # separate installer that installs beside a release install; the
         # release build above gets no crash reporting.
@@ -151,6 +170,19 @@ jobs:
         cmake --build .
         # Add DLL directories to PATH so tests can find dependencies
         export PATH="${QT_ROOT_DIR}/bin:/c/vcpkg/installed/x64-windows/bin:${{ runner.workspace }}/build/prefix/bin:$PATH"
+
+        if [ "${{ matrix.config.asan }}" = "true" ]; then
+          # windows_hook_rtl_allocators catches buffers that came from the
+          # Win32 heap APIs rather than from the CRT, which is most of what Qt
+          # hands us. There is no detect_leaks here: LeakSanitizer does not
+          # exist on Windows, so leaks stay the Linux job's business.
+          export ASAN_OPTIONS="windows_hook_rtl_allocators=true:print_stats=1"
+          # The ASan runtime DLL sits in the MSVC toolset's bin directory,
+          # which msvc-dev-cmd has already put on PATH. Say so in the log,
+          # because a missing one shows up as every test failing to start.
+          echo "ASan runtime: $(command -v clang_rt.asan_dynamic-x86_64.dll || echo 'not on PATH')"
+        fi
+
         ctest --output-on-failure
 
     # The crashpad binaries reach the prefix through crashpad's own install
@@ -289,7 +321,11 @@ jobs:
         path: ${{ runner.workspace }}/build/Avogadro2.msix
         name: Avogadro2.msix
 
+    # Only on a run someone started by hand to debug. On an ordinary push this
+    # held a runner for the full hour every time a job went red -- it did so on
+    # master run 35219140241, where the failure was a one-line upload problem.
+    # Start the workflow from the Actions tab when you actually want a shell.
     - name: Setup tmate session
-      if: failure()
+      if: failure() && github.event_name == 'workflow_dispatch'
       uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113 # v3.24
-      timeout-minutes: 60
+      timeout-minutes: 30
