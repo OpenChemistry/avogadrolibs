@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:37+0000\n"
+"PO-Revision-Date: 2026-09-18 10:39+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -1022,6 +1022,7 @@ msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr ""
+"Filändelsen saknas, så formatet kan inte avgöras. Vill du lägga till den?"
 
 #: qtgui/fileformatdialog.cpp:119
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1535,7 +1536,7 @@ msgstr "Uppdatera bindning"
 
 #: qtgui/rwmolecule.cpp:490
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Lägg till enhetscell…"
 
 #: qtgui/rwmolecule.cpp:502
 msgid "Remove Unit Cell"
@@ -1616,7 +1617,7 @@ msgstr "Ändra molekyl"
 
 #: qtgui/scenepluginmodel.cpp:101
 msgid "Settings"
-msgstr ""
+msgstr "Inställningar"
 
 #: qtgui/timedprogressdialog.cpp:75
 msgid "Calculating…"
@@ -1908,7 +1909,7 @@ msgstr "Spara APBS-indatafil"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
-msgstr ""
+msgstr "APBS-indata (*.in)"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
@@ -1930,7 +1931,7 @@ msgstr "Med anpassad färg…"
 
 #: qtplugins/applycolors/applycolors.cpp:52
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "Efter atomindex…"
 
 #: qtplugins/applycolors/applycolors.cpp:57
 msgid "By Distance…"
@@ -2543,24 +2544,24 @@ msgstr "Kör externa skriptkommandon"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:34:201 rc.cpp:216
 msgid "Python Settings…"
-msgstr ""
+msgstr "Python-inställningar…"
 
 #: qtplugins/configurepython/configurepython.cpp:58
 msgid "Install Python"
-msgstr ""
+msgstr "Installera Python"
 
 #: qtplugins/configurepython/configurepython.cpp:59
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
-msgstr ""
+msgstr "Python används av många Avogadro-funktioner. Vill du hämta Python?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "ConfigurePython"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Konfigurera Python-miljöer."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:482
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -3139,7 +3140,7 @@ msgstr "Verktyg för kristallspecifik redigering och analys."
 
 #: qtplugins/crystal/crystalscene.cpp:151
 msgid "Color axes:"
-msgstr ""
+msgstr "Färga axlar:"
 
 #: qtplugins/crystal/crystalscene.cpp:157
 msgid "Line color:"
@@ -3292,15 +3293,15 @@ msgstr "Kemisk struktur att hämta."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "Ogiltig PDB-kod"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "PDB-koden måste vara exakt fyra tecken lång."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "PDB-kodens första tecken måste vara 1–9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
@@ -3357,7 +3358,7 @@ msgstr "Återge kraftfältsvisualiseringar för molekylens atomer."
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
 #: qtplugins/plotconformer/plotconformer.cpp:239
 msgid "Forces"
-msgstr ""
+msgstr "Krafter"
 
 #: qtplugins/forcefield/forcefield.cpp:102
 #: qtplugins/forcefield/forcefield.cpp:907
@@ -3421,7 +3422,7 @@ msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.cpp:543
 msgid "No atoms provided for optimization"
-msgstr ""
+msgstr "Inga atomer angavs för optimering"
 
 #: qtplugins/forcefield/forcefield.cpp:643
 #, qt-format
@@ -3445,7 +3446,7 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:831
 #, qt-format
 msgid "%1 Force Norm = %L2"
-msgstr ""
+msgstr "%1 kraftnorm = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:883
 msgid "This molecule has only one coordinate set."
@@ -3837,7 +3838,7 @@ msgstr "Index"
 
 #: qtplugins/label/label.cpp:219
 msgid "Unique ID"
-msgstr ""
+msgstr "Unikt ID"
 
 #: qtplugins/label/label.cpp:220 qtplugins/propertytables/propertymodel.cpp:774
 #: qtplugins/symmetry/operationstablemodel.cpp:61
@@ -3851,12 +3852,12 @@ msgstr "Grundämne och nummer"
 
 #: qtplugins/label/label.cpp:223
 msgid "Element & ID"
-msgstr ""
+msgstr "Grundämne och ID"
 
 #: qtplugins/label/label.cpp:225
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "Partiell laddning"
 
 #: qtplugins/label/label.cpp:240
 msgid "Atom Label:"
@@ -4059,15 +4060,15 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
 #: qtplugins/propertytables/propertymodel.cpp:892
 msgid "Property"
-msgstr ""
+msgstr "Egenskap"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:178
 msgid "Molecule Name"
-msgstr ""
+msgstr "Molekylnamn"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:180
 msgid "Molecular Mass (g/mol)"
-msgstr ""
+msgstr "Molekylmassa (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:182
 msgid "Monoisotopic Mass (g/mol)"
@@ -4075,35 +4076,35 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:184
 msgid "Chemical Formula"
-msgstr ""
+msgstr "Kemisk formel"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:186
 msgid "Number of Atoms"
-msgstr ""
+msgstr "Antal atomer"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:188
 msgid "Number of Bonds"
-msgstr ""
+msgstr "Antal bindningar"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:190
 msgid "Coordinate Sets"
-msgstr ""
+msgstr "Koordinatuppsättningar"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:192
 msgid "Number of Residues"
-msgstr ""
+msgstr "Antal rester"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:194
 msgid "Number of Chains"
-msgstr ""
+msgstr "Antal kedjor"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:196
 msgid "Net Charge"
-msgstr ""
+msgstr "Nettoladdning"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:198
 msgid "Net Spin Multiplicity"
-msgstr ""
+msgstr "Netto-spinnmultiplicitet"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:200
 msgid "Dipole Moment (Debye)"
@@ -4112,39 +4113,39 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularmodel.cpp:202
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "HOMO-energi (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:204
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "LUMO-energi (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:206
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "SOMO-energi (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:208
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
-msgstr ""
+msgstr "Total energi (Hartree)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:211
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
-msgstr ""
+msgstr "Nollpunktsenergi (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:214
 msgid "Enthalpy (kcal/mol)"
-msgstr ""
+msgstr "Entalpi (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:216
 msgid "Entropy (kcal/mol•K)"
-msgstr ""
+msgstr "Entropi (kcal/mol•K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:218
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "Gibbs fria energi (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:220
 msgctxt "point group symmetry"
@@ -5693,7 +5694,7 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:394
 #: qtplugins/spacegroup/spacegroup.cpp:422
 msgid "Perceive Space Group"
-msgstr ""
+msgstr "Fastställ rymdgrupp"
 
 #: qtplugins/spacegroup/spacegroup.cpp:395
 #, qt-format
@@ -5701,6 +5702,8 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"Rymdgruppen är redan inställd på: %1.\n"
+"Vill du skriva över den?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:411
 #, qt-format
@@ -5878,19 +5881,19 @@ msgstr "Rita upp spektra…"
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:32:1882
 msgid "Spectra"
-msgstr ""
+msgstr "Spektra"
 
 #: qtplugins/spectra/spectra.h:34
 msgid "Display spectra plots."
-msgstr ""
+msgstr "Visa spektradiagram."
 
 #: qtplugins/spectra/spectradialog.cpp:597
 msgid "Infrared"
-msgstr ""
+msgstr "Infraröd"
 
 #: qtplugins/spectra/spectradialog.cpp:601
 msgid "Raman"
-msgstr ""
+msgstr "Raman"
 
 #: qtplugins/spectra/spectradialog.cpp:604
 msgctxt "vibrational circular dichroism"
@@ -5904,32 +5907,32 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:612
 msgid "NMR"
-msgstr ""
+msgstr "NMR"
 
 #: qtplugins/spectra/spectradialog.cpp:615
 msgid "Electronic"
-msgstr ""
+msgstr "Elektronisk"
 
 #: qtplugins/spectra/spectradialog.cpp:619
 msgid "Circular Dichroism"
-msgstr ""
+msgstr "Cirkulär dikroism"
 
 #: qtplugins/spectra/spectradialog.cpp:623
 #: qtplugins/spectra/spectradialog.cpp:877
 msgid "Density of States"
-msgstr ""
+msgstr "Tillståndstäthet"
 
 #: qtplugins/spectra/spectradialog.cpp:667
 msgid "Select Background Color"
-msgstr ""
+msgstr "Välj bakgrundsfärg"
 
 #: qtplugins/spectra/spectradialog.cpp:692
 msgid "Select Foreground Color"
-msgstr ""
+msgstr "Välj förgrundsfärg"
 
 #: qtplugins/spectra/spectradialog.cpp:706
 msgid "Select Calculated Spectra Color"
-msgstr ""
+msgstr "Välj färg för beräknade spektra"
 
 #: qtplugins/spectra/spectradialog.cpp:718
 msgid "Select Raw Spectra Color"
@@ -5937,7 +5940,7 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:731
 msgid "Select Imported Spectra Color"
-msgstr ""
+msgstr "Välj färg för importerade spektra"
 
 #: qtplugins/spectra/spectradialog.cpp:777
 msgid "Wavelength (nm)"
@@ -5949,22 +5952,22 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:784
 msgid "Vibrational Spectra"
-msgstr ""
+msgstr "Vibrationsspektra"
 
 #: qtplugins/spectra/spectradialog.cpp:785
 #: qtplugins/spectra/spectradialog.cpp:799
 #: qtplugins/spectra/spectradialog.cpp:812
 #: qtplugins/spectra/spectradialog.cpp:825
 msgid "Wavenumbers (cm⁻¹)"
-msgstr ""
+msgstr "Vågtal (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:786
 msgid "Transmission"
-msgstr ""
+msgstr "Transmittans"
 
 #: qtplugins/spectra/spectradialog.cpp:798
 msgid "Raman Spectra"
-msgstr ""
+msgstr "Raman-spektra"
 
 #: qtplugins/spectra/spectradialog.cpp:800
 #: qtplugins/spectra/spectradialog.cpp:813
@@ -5973,7 +5976,7 @@ msgstr ""
 #: qtplugins/spectra/spectradialog.cpp:853
 #: qtplugins/spectra/spectradialog.cpp:866
 msgid "Intensity"
-msgstr ""
+msgstr "Intensitet"
 
 #: qtplugins/spectra/spectradialog.cpp:811
 msgid "Vibrational Circular Dichroism"
@@ -5985,15 +5988,15 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:837
 msgid "NMR Spectra"
-msgstr ""
+msgstr "NMR-spektra"
 
 #: qtplugins/spectra/spectradialog.cpp:838
 msgid "Chemical Shift (ppm)"
-msgstr ""
+msgstr "Kemiskt skift (ppm)"
 
 #: qtplugins/spectra/spectradialog.cpp:851
 msgid "Electronic Spectra"
-msgstr ""
+msgstr "Elektroniska spektra"
 
 #: qtplugins/spectra/spectradialog.cpp:852
 #: qtplugins/spectra/spectradialog.cpp:865
@@ -6004,7 +6007,7 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:864
 msgid "Circular Dichroism Spectra"
-msgstr ""
+msgstr "Spektra för cirkulär dikroism"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
@@ -6432,11 +6435,11 @@ msgstr ""
 
 #: qtplugins/vibrations/vibrations.h:37
 msgid "Vibrations"
-msgstr ""
+msgstr "Vibrationer"
 
 #: qtplugins/vibrations/vibrations.h:41
 msgid "Display vibrational modes."
-msgstr ""
+msgstr "Visa vibrationsmoder."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -6917,16 +6920,19 @@ msgid ""
 "Would you like to create a new environment for Avogadro?\n"
 "This will make a copy of your base environment.\n"
 msgstr ""
+"Endast conda-miljön ”base” finns.\n"
+"Vill du skapa en ny miljö för Avogadro?\n"
+"Detta skapar en kopia av din base-miljö.\n"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment name:"
-msgstr ""
+msgstr "Miljönamn:"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:45
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, environmentName)
 msgid "avogadro"
-msgstr ""
+msgstr "avogadro"
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -6934,11 +6940,13 @@ msgid ""
 "Select the Python version used to run scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Välj den Python-version som används för att köra skript.\n"
+"Avogadro måste startas om innan ändringarna börjar gälla."
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment:"
-msgstr ""
+msgstr "Miljö:"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:33
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
@@ -9212,47 +9220,47 @@ msgstr "Använd färg"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
 msgid "Spectra Visualization"
-msgstr ""
+msgstr "Spektravisualisering"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Scale Factor:"
-msgstr ""
+msgstr "Skalningsfaktor:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "X-Axis Minimum:"
-msgstr ""
+msgstr "X-axelns minimum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "X-Axis Maximum:"
-msgstr ""
+msgstr "X-axelns maximum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:99
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Offset:"
-msgstr ""
+msgstr "Förskjutning:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "Y-Axis Maximum:"
-msgstr ""
+msgstr "Y-axelns maximum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Y-Axis Minimum:"
-msgstr ""
+msgstr "Y-axelns minimum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "Peak Width:"
-msgstr ""
+msgstr "Toppbredd:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)
 msgid "Peak Threshold:"
-msgstr ""
+msgstr "Topptröskel:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
@@ -9262,7 +9270,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
 msgid "&Appearance"
-msgstr ""
+msgstr "&Utseende"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:217
 #. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
@@ -9280,55 +9288,57 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:237
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Imported Spectra:"
-msgstr ""
+msgstr "Importerade spektra:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:248
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "10"
-msgstr ""
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:253
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "12"
-msgstr ""
+msgstr "12"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:258
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "14"
-msgstr ""
+msgstr "14"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:263
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "16"
-msgstr ""
+msgstr "16"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:268
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "18"
-msgstr ""
+msgstr "18"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Font Size:"
-msgstr ""
+msgstr "Teckenstorlek:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:286
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgctxt "Size in pixels of the line drawing the spectra"
 msgid "Line Width:"
-msgstr ""
+msgstr "Linjetjocklek:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:296
 #. i18n: ectx: property (text), widget (QCheckBox, cb_import)
 #. i18n: file: qtplugins/spectra/spectradialog.ui:438
 #. i18n: ectx: property (text), widget (QCheckBox, cb_raw)
 msgid "Show"
-msgstr ""
+msgstr "Visa"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:312
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
 msgstr ""
+"Importerar en TSV-fil med experimentella spektra som överlagras på "
+"diagrammet."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:315
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -9338,12 +9348,12 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:328
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Background:"
-msgstr ""
+msgstr "Bakgrund:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:341
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Calculated Spectra:"
-msgstr ""
+msgstr "Beräknade spektra:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
@@ -9358,27 +9368,27 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:478
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
 msgid "Export Data"
-msgstr ""
+msgstr "Exportera data"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:491
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 msgid "&Close"
-msgstr ""
+msgstr "&Stäng"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:504
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
-msgstr ""
+msgstr "&Alternativ…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:554
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:559
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
-msgstr ""
+msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:592
 #. i18n: ectx: property (toolTip), widget (Avogadro::QtGui::ChartWidget, plot)
@@ -9389,6 +9399,11 @@ msgid ""
 "Middle click + drag: Zoom to region\n"
 "Scroll wheel: Zoom to cursor"
 msgstr ""
+"Reglage:\n"
+"Dubbelklick med vänster knapp: återställ standardgränser för axlar\n"
+"Högerklick och dra: flytta diagrammet\n"
+"Mittenklick och dra: zooma till område\n"
+"Rullhjul: zooma till markören"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:608
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
@@ -9729,12 +9744,12 @@ msgstr "ester"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:452
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethylene"
-msgstr ""
+msgstr "eten"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:457
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
-msgstr ""
+msgstr "etyn"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:462
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -9749,7 +9764,7 @@ msgstr "fenyl"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:472
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phosphate"
-msgstr ""
+msgstr "fosfat"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:477
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
