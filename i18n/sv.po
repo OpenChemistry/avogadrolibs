@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:15+0000\n"
+"PO-Revision-Date: 2026-09-18 10:17+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -1244,7 +1244,7 @@ msgstr ""
 
 #: qtgui/layermodel.cpp:172 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
-msgstr ""
+msgstr "Kul- och pinnmodell"
 
 #: qtgui/layermodel.cpp:174 qtplugins/cartoons/cartoons.h:31
 #, fuzzy
@@ -1681,7 +1681,7 @@ msgstr "&Exportera"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
@@ -1698,7 +1698,7 @@ msgstr ""
 #: qtplugins/lineformatinput/lineformatinput.cpp:62
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:98
 msgid "&Build"
-msgstr ""
+msgstr "&Bygg"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:23
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1780,65 +1780,65 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:50
 msgid "&APBS"
-msgstr ""
+msgstr "&APBS"
 
 #: qtplugins/apbs/apbs.cpp:62 qtplugins/cp2kinput/cp2kinput.cpp:69
 #: qtplugins/gamessinput/gamessinput.cpp:75
 #: qtplugins/quantuminput/quantuminput.cpp:136
 msgid "Open Output File"
-msgstr ""
+msgstr "Öppna utdatafil"
 
 #: qtplugins/apbs/apbs.cpp:63
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "OpenDX-fil (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:115
 msgid "IO Error"
-msgstr ""
+msgstr "I/O-fel"
 
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "Fel vid läsning av strukturfilen (%1)."
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenDX-fel"
 
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Fel vid läsning av OpenDX-filen: %1"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "Fel vid läsning av OpenDX-filen: ingen kub hittades"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:30:96
 msgid "APBS"
-msgstr ""
+msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:33
 msgid "Interact with APBS utilities."
-msgstr ""
+msgstr "Använd APBS-verktygen."
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
-msgstr ""
+msgstr "Öppna PDB-fil"
 
 #: qtplugins/apbs/apbsdialog.cpp:80
 msgid "PDB Files (*.pdb)"
-msgstr ""
+msgstr "PDB-filer (*.pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:90
 msgid "Open PQR File"
-msgstr ""
+msgstr "Öppna PQR-fil"
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "PQR Files (*.pqr)"
-msgstr ""
+msgstr "PQR-filer (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
 #: qtplugins/apbs/apbsdialog.cpp:166 qtplugins/apbs/apbsdialog.cpp:189
@@ -1878,22 +1878,22 @@ msgstr ""
 #: qtplugins/quantuminput/quantuminput.cpp:152
 #: qtplugins/spacegroup/spacegroup.cpp:679
 msgid "Error"
-msgstr ""
+msgstr "Fel"
 
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr ""
+msgstr "Fel vid körning av APBS: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
-msgstr ""
+msgstr "Ange en PDB-fil"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:161 qtplugins/apbs/apbsdialog.cpp:178
 msgid "Success"
-msgstr ""
+msgstr "Slutförd"
 
 #: qtplugins/apbs/apbsdialog.cpp:162
 #, qt-format
@@ -1906,7 +1906,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
-msgstr ""
+msgstr "Spara APBS-indatafil"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
@@ -1915,7 +1915,7 @@ msgstr ""
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "Indatafilen skrevs till ”%1”"
 
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:437
@@ -2293,7 +2293,7 @@ msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "Återge atomer som sfärer och bindningar som cylindrar."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgctxt "control-key 6"
@@ -2321,16 +2321,18 @@ msgstr ""
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:160
 msgid "Bond centric manipulation tool."
-msgstr ""
+msgstr "Bindningscentrerat manipuleringsverktyg."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:165
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
+"Verktyg för att redigera molekylgeometri genom att ändra bindningslängder "
+"och vinklar."
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Skapa bindningar mellan atomer"
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Perceive Bond Orders"
@@ -2338,7 +2340,7 @@ msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
-msgstr ""
+msgstr "Ta bort bindningar"
 
 #: qtplugins/bonding/bonding.cpp:31
 msgid "Configure Bonding…"
@@ -2367,11 +2369,11 @@ msgstr ""
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
-msgstr ""
+msgstr "Bindningar"
 
 #: qtplugins/bonding/bonding.h:34
 msgid "Perform bonding operations."
-msgstr ""
+msgstr "Utför bindningsåtgärder."
 
 #: qtplugins/cartoons/cartoons.cpp:139
 msgctxt "protein rendering style"
@@ -2678,43 +2680,45 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 msgid "Coordinate editor"
-msgstr ""
+msgstr "Koordinatredigerare"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
-msgstr ""
+msgstr "Redigera atomkoordinater som text."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:228
 msgid "Overwrite changes?"
-msgstr ""
+msgstr "Skriv över ändringar?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:229
 msgid ""
 "The text document has been modified. Would you like to discard your changes "
 "and revert to the current molecule?"
 msgstr ""
+"Textdokumentet har ändrats. Vill du förkasta dina ändringar och återgå till "
+"den aktuella molekylen?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:356
 msgid "Too few entries on line."
-msgstr ""
+msgstr "För få poster på raden."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:372
 msgid "Invalid element name."
-msgstr ""
+msgstr "Ogiltigt grundämnesnamn."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:374
 msgid "Element name."
-msgstr ""
+msgstr "Grundämnesnamn."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
 msgid "Invalid element symbol."
-msgstr ""
+msgstr "Ogiltig grundämnessymbol."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
 msgid "Element symbol."
-msgstr ""
+msgstr "Grundämnessymbol."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
@@ -2730,11 +2734,11 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
-msgstr ""
+msgstr "Ogiltigt atomnummer."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:434
 msgid "Atomic number."
-msgstr ""
+msgstr "Atomnummer."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:443
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:454
@@ -2743,19 +2747,19 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:487
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:498
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "Ogiltig koordinat."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:445
 msgid "X coordinate."
-msgstr ""
+msgstr "X-koordinat."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:456
 msgid "Y coordinate."
-msgstr ""
+msgstr "Y-koordinat."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:467
 msgid "Z coordinate."
-msgstr ""
+msgstr "Z-koordinat."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:478
 msgid "'a' lattice coordinate."
@@ -6849,7 +6853,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
 msgid "Run APBS"
-msgstr ""
+msgstr "Kör APBS"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
