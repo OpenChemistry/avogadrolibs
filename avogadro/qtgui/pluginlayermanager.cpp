@@ -36,12 +36,13 @@ PluginLayerManager::~PluginLayerManager()
 
 bool PluginLayerManager::isEnabled() const
 {
-  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr ||
-      m_molToInfo[m_activeMolecule]->enable.find(m_name) ==
-        m_molToInfo[m_activeMolecule]->enable.end()) {
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr)
     return false;
-  }
-  for (const auto& b : m_molToInfo[m_activeMolecule]->enable[m_name]) {
+  auto it = molecule->enable.find(m_name);
+  if (it == molecule->enable.end())
+    return false;
+  for (const auto& b : it->second) {
     if (b) {
       return true;
     }
@@ -51,25 +52,24 @@ bool PluginLayerManager::isEnabled() const
 
 bool PluginLayerManager::isActiveLayerEnabled() const
 {
-  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr ||
-      m_molToInfo[m_activeMolecule]->enable.find(m_name) ==
-        m_molToInfo[m_activeMolecule]->enable.end()) {
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr)
     return false;
-  }
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto it = molecule->enable.find(m_name);
+  if (it == molecule->enable.end())
+    return false;
   size_t active = molecule->layer.activeLayer();
-  if (active < molecule->enable[m_name].size()) {
-    return molecule->enable[m_name][active];
+  if (active < it->second.size()) {
+    return it->second[active];
   }
   return false;
 }
 
 void PluginLayerManager::setEnabled(bool enable)
 {
-  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr) {
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr)
     return;
-  }
-  auto& molecule = m_molToInfo[m_activeMolecule];
   auto it = molecule->enable.find(m_name);
   if (it == molecule->enable.end()) {
     molecule->enable[m_name] = vector<bool>();
@@ -84,25 +84,27 @@ void PluginLayerManager::setEnabled(bool enable)
 
 bool PluginLayerManager::atomEnabled(Index atom) const
 {
-  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr ||
-      m_molToInfo[m_activeMolecule]->enable.find(m_name) ==
-        m_molToInfo[m_activeMolecule]->enable.end()) {
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr)
     return false;
-  }
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto it = molecule->enable.find(m_name);
+  if (it == molecule->enable.end())
+    return false;
   size_t layer = molecule->layer.getLayerID(atom);
   if (layer == MaxIndex) {
     return false;
   }
-  return layer < molecule->enable[m_name].size() &&
-         molecule->enable[m_name][layer] && molecule->visible[layer];
+  // visible is sized per layer independently of Layer itself, so bounds check
+  // it separately rather than assuming the two agree.
+  return layer < it->second.size() && it->second[layer] &&
+         layer < molecule->visible.size() && molecule->visible[layer];
 }
 
 size_t PluginLayerManager::getLayerID(Index atom) const
 {
-  assert(m_activeMolecule != nullptr);
-  auto& molecule = m_molToInfo[m_activeMolecule];
-  assert(atom < molecule->layer.atomCount());
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr || atom >= molecule->layer.atomCount())
+    return MaxIndex;
   return molecule->layer.getLayerID(atom);
 }
 
@@ -112,7 +114,9 @@ bool PluginLayerManager::atomEnabled(size_t layerFilter, Index atom) const
   if (!enabled) {
     return false;
   }
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr)
+    return false;
   size_t layer = molecule->layer.getLayerID(atom);
   return layer == layerFilter;
 }
@@ -124,18 +128,22 @@ bool PluginLayerManager::bondEnabled(Index atom1, Index atom2) const
 
 bool PluginLayerManager::activeLayerLocked() const
 {
-  assert(m_activeMolecule != nullptr);
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr)
+    return false;
   size_t active = molecule->layer.activeLayer();
-  return molecule->locked[active];
+  return active < molecule->locked.size() && molecule->locked[active];
 }
 
 bool PluginLayerManager::atomLocked(size_t atom) const
 {
-  assert(m_activeMolecule != nullptr);
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr)
+    return false;
+  // getLayerID returns MaxIndex for an atom that is in no layer, which would
+  // index locked far out of bounds.
   size_t layer = molecule->layer.getLayerID(atom);
-  return molecule->locked[layer];
+  return layer < molecule->locked.size() && molecule->locked[layer];
 }
 
 size_t PluginLayerManager::layerCount() const

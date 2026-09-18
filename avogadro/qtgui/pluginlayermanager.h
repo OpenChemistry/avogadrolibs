@@ -37,10 +37,12 @@ public:
   template <typename T>
   void load()
   {
-    if (m_activeMolecule != nullptr) {
-      auto& info = m_molToInfo[m_activeMolecule];
+    auto info = activeMoleculeInfo();
+    if (info != nullptr) {
       if (info->loaded.find(m_name) == info->loaded.end()) {
         for (size_t i = 0; i < info->settings[m_name].size(); ++i) {
+          if (info->settings[m_name][i] == nullptr)
+            continue;
           auto serial = info->settings[m_name][i]->getSave();
           if (serial != "") {
             T* aux = new T;
@@ -82,13 +84,14 @@ public:
   template <typename T>
   T* getSetting(size_t layer = MaxIndex)
   {
-    auto info = m_molToInfo[m_activeMolecule];
+    auto info = activeMoleculeInfo();
+    if (info == nullptr)
+      return nullptr;
 
     if (layer == MaxIndex) {
       layer = info->layer.activeLayer();
     }
 
-    assert(layer <= info->layer.maxLayer());
     if (info->settings.find(m_name) == info->settings.end()) {
       info->settings[m_name] = Core::Array<Core::LayerData*>();
     }

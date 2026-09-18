@@ -161,3 +161,45 @@ TEST_F(LayerTest, SelfAssignmentKeepsLayers)
   EXPECT_EQ(molecule.layer().maxLayer(), maxLayer);
   EXPECT_EQ(molecule.atomCount(), atoms);
 }
+
+// Phase 1: a lookup must never insert. std::map::operator[] default-constructs
+// a null entry for a missing key, so the old guards grew the map they were
+// guarding. findMoleculeInfo is the non-inserting form.
+TEST_F(LayerTest, LookupDoesNotGrowTheRegistry)
+{
+  // A pointer value that is never dereferenced, only used as a key.
+  const auto* ghost = reinterpret_cast<const Molecule*>(0x1000);
+  const size_t before = m_molToInfo.size();
+
+  EXPECT_EQ(findMoleculeInfo(ghost), nullptr);
+  EXPECT_EQ(findMoleculeInfo(nullptr), nullptr);
+  EXPECT_EQ(activeMoleculeInfo(), nullptr);
+
+  EXPECT_EQ(m_molToInfo.size(), before) << "a lookup inserted an entry";
+}
+
+// layerCount() used to assert and then dereference m_molToInfo[nullptr]; the
+// assert compiles out under NDEBUG, leaving a null dereference in release.
+TEST_F(LayerTest, LayerCountWithNoActiveMoleculeIsSafe)
+{
+  EXPECT_EQ(m_activeMolecule, nullptr);
+  EXPECT_EQ(LayerManager::layerCount(), 0u);
+  EXPECT_EQ(m_molToInfo.count(nullptr), 0u) << "a null key was inserted";
+}
+
+TEST_F(LayerTest, ActiveLayerWithNoActiveMoleculeIsSafe)
+{
+  EXPECT_EQ(m_activeMolecule, nullptr);
+  // Must not dereference null; an empty layer is the safe answer.
+  EXPECT_EQ(LayerManager::getMoleculeLayer().maxLayer(), 0u);
+  EXPECT_EQ(LayerManager::getMoleculeInfo(), nullptr);
+  EXPECT_EQ(m_molToInfo.count(nullptr), 0u) << "a null key was inserted";
+}
+
+TEST_F(LayerTest, NullMoleculeDoesNotPoisonTheRegistry)
+{
+  auto info = LayerManager::getMoleculeInfo(nullptr);
+  EXPECT_TRUE(info != nullptr);
+  EXPECT_EQ(m_molToInfo.count(nullptr), 0u)
+    << "null must never become a registry key";
+}

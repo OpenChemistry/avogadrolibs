@@ -35,15 +35,18 @@ public:
     m_locked = false;
 
     const auto activeLayer = m_moleculeInfo->layer.activeLayer();
-    // we loop through the layers to find enabled settings for the active layer
+    // A new layer inherits the active layer's state. The per-plugin vectors
+    // are grown independently of Core::Layer -- a plugin that has never been
+    // asked about this layer has a shorter vector -- so skip those rather than
+    // indexing past the end. RemoveLayerCommand::redo() already does this.
     for (const auto& names : m_moleculeInfo->enable) {
-      bool value = names.second[activeLayer];
-      m_enable[names.first] = value;
+      if (activeLayer < names.second.size())
+        m_enable[names.first] = names.second[activeLayer];
     }
-    // now we do the same thing for settings
     for (const auto& names : m_moleculeInfo->settings) {
-      auto value = names.second[activeLayer];
-      m_settings[names.first] = value;
+      if (activeLayer < names.second.size() &&
+          names.second[activeLayer] != nullptr)
+        m_settings[names.first] = names.second[activeLayer];
     }
   }
 
@@ -58,6 +61,8 @@ public:
       m_moleculeInfo->enable[enable.first].push_back(enable.second);
     }
     for (const auto& settings : m_settings) {
+      if (settings.second == nullptr)
+        continue;
       // create newSettings pointer with the same type as settings.second
       auto* newSettings = settings.second->clone();
       m_moleculeInfo->settings[settings.first].push_back(newSettings);
@@ -68,6 +73,8 @@ public:
 
   void undo() override
   {
+    if (m_moleculeInfo->visible.empty() || m_moleculeInfo->locked.empty())
+      return;
     m_visible = m_moleculeInfo->visible.back();
     m_locked = m_moleculeInfo->locked.back();
 
@@ -136,6 +143,10 @@ public:
 
   void redo() override
   {
+    if (m_layer >= m_moleculeInfo->visible.size() ||
+        m_layer >= m_moleculeInfo->locked.size())
+      return;
+
     m_visible = m_moleculeInfo->visible[m_layer];
     m_moleculeInfo->visible.erase(
       std::next(m_moleculeInfo->visible.begin(), m_layer));
@@ -198,7 +209,11 @@ void RWLayerManager::removeLayer(size_t layer, RWMolecule* rwmolecule)
   for (const Index& atom : atoms) {
     rwmolecule->removeAtom(atom);
   }
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr) {
+    rwmolecule->undoStack().endMacro();
+    return;
+  }
   auto* comm = new RemoveLayerCommand(molecule, layer);
   comm->setText(QObject::tr("Remove Layer Info"));
   rwmolecule->undoStack().push(comm);
@@ -210,7 +225,11 @@ void RWLayerManager::addLayer(RWMolecule* rwmolecule)
   assert(m_activeMolecule != nullptr);
   assert(rwmolecule != nullptr);
   rwmolecule->undoStack().beginMacro(QObject::tr("Add Layer"));
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr) {
+    rwmolecule->undoStack().endMacro();
+    return;
+  }
   auto* comm = new AddLayerCommand(molecule);
   comm->setText(QObject::tr("Add Layer Info"));
   rwmolecule->undoStack().push(comm);
@@ -220,7 +239,11 @@ void RWLayerManager::addLayer(RWMolecule* rwmolecule)
 void RWLayerManager::setActiveLayer(size_t layer, RWMolecule* rwmolecule)
 {
   rwmolecule->undoStack().beginMacro(QObject::tr("Change Layer"));
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr) {
+    rwmolecule->undoStack().endMacro();
+    return;
+  }
   auto* comm = new ActiveLayerCommand(molecule, layer);
   comm->setText(QObject::tr("Change Layer"));
   rwmolecule->undoStack().push(comm);
@@ -229,42 +252,51 @@ void RWLayerManager::setActiveLayer(size_t layer, RWMolecule* rwmolecule)
 
 bool RWLayerManager::visible(size_t layer) const
 {
-  return m_molToInfo[m_activeMolecule]->visible[layer];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr || layer >= molecule->visible.size())
+    return true; // the default a fresh MoleculeInfo starts with
+  return molecule->visible[layer];
 }
 
 bool RWLayerManager::locked(size_t layer) const
 {
-  return m_molToInfo[m_activeMolecule]->locked[layer];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr || layer >= molecule->locked.size())
+    return false; // the default a fresh MoleculeInfo starts with
+  return molecule->locked[layer];
 }
 
 void RWLayerManager::flipVisible(size_t layer)
 {
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr || layer >= molecule->visible.size())
+    return;
   molecule->visible[layer] = !molecule->visible[layer];
 }
 
 void RWLayerManager::flipLocked(size_t layer)
 {
-  auto& molecule = m_molToInfo[m_activeMolecule];
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr || layer >= molecule->locked.size())
+    return;
   molecule->locked[layer] = !molecule->locked[layer];
 }
 
 void RWLayerManager::addMolecule(const Core::Molecule* mol)
 {
+  if (mol == nullptr)
+    return;
   m_activeMolecule = mol;
-  auto it = m_molToInfo.find(mol);
-  if (it == m_molToInfo.end()) {
-    m_molToInfo[mol] = std::make_shared<MoleculeInfo>(mol);
-  }
+  getMoleculeInfo(mol); // creates the entry if this molecule has none yet
 }
 
 Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
 {
-  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr) {
+  auto molecule = activeMoleculeInfo();
+  if (molecule == nullptr) {
     return Array<std::pair<size_t, string>>();
   }
 
-  auto& molecule = m_molToInfo[m_activeMolecule];
   size_t qttyLayer = molecule->layer.layerCount();
   vector<set<string>> active(qttyLayer, set<string>());
   for (const auto& names : molecule->enable) {

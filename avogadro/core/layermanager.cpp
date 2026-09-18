@@ -15,38 +15,57 @@ using std::shared_ptr;
 const Molecule* LayerManager::m_activeMolecule = nullptr;
 map<const Molecule*, shared_ptr<MoleculeInfo>> LayerManager::m_molToInfo;
 
+std::shared_ptr<MoleculeInfo> LayerManager::findMoleculeInfo(
+  const Molecule* mol)
+{
+  if (mol == nullptr)
+    return nullptr;
+  auto it = m_molToInfo.find(mol);
+  if (it == m_molToInfo.end())
+    return nullptr;
+  return it->second;
+}
+
+std::shared_ptr<MoleculeInfo> LayerManager::activeMoleculeInfo()
+{
+  return findMoleculeInfo(m_activeMolecule);
+}
+
 Layer& LayerManager::getMoleculeLayer()
 {
-  assert(m_activeMolecule != nullptr);
-  auto it = m_molToInfo.find(m_activeMolecule);
-  assert(it != m_molToInfo.end());
-  return it->second->layer;
+  auto info = activeMoleculeInfo();
+  if (info == nullptr) {
+    // There is no active molecule to answer for. Returning a reference to a
+    // shared empty layer keeps callers from dereferencing null; the previous
+    // code relied on an assert, which compiles out of release builds.
+    static Layer emptyLayer;
+    return emptyLayer;
+  }
+  return info->layer;
 }
 
 Layer& LayerManager::getMoleculeLayer(const Molecule* mol)
 {
-  assert(mol != nullptr);
-  auto it = m_molToInfo.find(mol);
-  if (it == m_molToInfo.end()) {
-    m_molToInfo[mol] = make_shared<MoleculeInfo>(mol);
-  }
-  return m_molToInfo[mol]->layer;
+  return getMoleculeInfo(mol)->layer;
 }
 
 shared_ptr<MoleculeInfo> LayerManager::getMoleculeInfo()
 {
-  assert(m_activeMolecule != nullptr);
-  return m_molToInfo[m_activeMolecule];
+  return activeMoleculeInfo();
 }
 
 shared_ptr<MoleculeInfo> LayerManager::getMoleculeInfo(const Molecule* mol)
 {
-  assert(mol != nullptr);
-  auto it = m_molToInfo.find(mol);
-  if (it == m_molToInfo.end()) {
-    m_molToInfo[mol] = make_shared<MoleculeInfo>(mol);
+  if (mol == nullptr) {
+    // Never key the registry on null: that entry could never be found again
+    // and every later null lookup would share it.
+    static shared_ptr<MoleculeInfo> orphan = make_shared<MoleculeInfo>(nullptr);
+    return orphan;
   }
-  return m_molToInfo[mol];
+  auto it = m_molToInfo.find(mol);
+  if (it == m_molToInfo.end())
+    it = m_molToInfo.emplace(mol, make_shared<MoleculeInfo>(mol)).first;
+  return it->second;
 }
 
 Layer& LayerManager::getMoleculeLayer(const Molecule* original,
@@ -94,8 +113,10 @@ void LayerManager::deleteMolecule(const Molecule* mol)
 
 size_t LayerManager::layerCount()
 {
-  assert(m_activeMolecule != nullptr);
-  return m_molToInfo[m_activeMolecule]->layer.maxLayer() + 1;
+  auto info = activeMoleculeInfo();
+  if (info == nullptr)
+    return 0;
+  return info->layer.maxLayer() + 1;
 }
 
 } // namespace Avogadro::Core

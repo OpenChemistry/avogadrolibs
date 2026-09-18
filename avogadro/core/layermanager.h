@@ -111,6 +111,19 @@ public:
   static size_t layerCount();
 
 protected:
+  /**
+   * @return the MoleculeInfo of the active molecule, or nullptr when there is
+   * no active molecule or it has no entry.
+   *
+   * Unlike indexing m_molToInfo directly, this never inserts: std::map's
+   * operator[] default-constructs a null entry for a missing key, so using it
+   * in a guard silently grows the map it is guarding.
+   */
+  static std::shared_ptr<MoleculeInfo> activeMoleculeInfo();
+
+  /** @return the MoleculeInfo for @p mol, or nullptr. Never inserts. */
+  static std::shared_ptr<MoleculeInfo> findMoleculeInfo(const Molecule* mol);
+
   static const Molecule* m_activeMolecule;
   static std::map<const Molecule*, std::shared_ptr<MoleculeInfo>> m_molToInfo;
 };
