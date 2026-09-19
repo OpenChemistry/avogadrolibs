@@ -57,6 +57,7 @@ avogadro_headers(Core
   kekulize.h
   layer.h
   layermanager.h
+  moleculeinfo.h
   mesh.h
   molecule.h
   mutex.h

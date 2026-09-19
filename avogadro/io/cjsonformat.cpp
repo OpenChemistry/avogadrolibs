@@ -1309,14 +1309,19 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
 
   if (jsonRoot.find("layer") != jsonRoot.end()) {
     auto names = LayerManager::getMoleculeInfo(&molecule);
+    // MoleculeInfo starts with one default entry in each of these, so drop it
+    // before appending the file's -- otherwise every layer's flags come back
+    // shifted by one, with a spurious extra entry on the end.
     json visible = jsonRoot["layer"]["visible"];
     if (isBooleanArray(visible)) {
+      names->visible.clear();
       for (const auto& v : visible) {
         names->visible.push_back(v);
       }
     }
     json locked = jsonRoot["layer"]["locked"];
     if (isBooleanArray(locked)) {
+      names->locked.clear();
       for (const auto& l : locked) {
         names->locked.push_back(l);
       }
@@ -1337,11 +1342,22 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     json settings = jsonRoot["layer"]["settings"];
     if (settings.is_object()) {
       for (const auto& setting : settings.items()) {
-        if (isBooleanArray(setting.value())) {
-          names->settings[setting.key()] = Core::Array<LayerData*>();
-          for (const auto& s : setting.value()) {
-            names->settings[setting.key()].push_back(new LayerData(s));
+        // The writer emits one LayerData::serialize() string per layer. This
+        // used to test isBooleanArray, copied from the enable block above, so
+        // per-plugin layer settings were written out and then silently dropped
+        // on every read.
+        if (!setting.value().is_array())
+          continue;
+        names->settings[setting.key()] = Core::Array<Core::LayerDataPtr>();
+        for (const auto& s : setting.value()) {
+          // null means this layer has no settings for that plugin, which is
+          // not the same as settings that serialize to an empty string.
+          if (s.is_null()) {
+            names->settings[setting.key()].push_back(nullptr);
+            continue;
           }
+          names->settings[setting.key()].push_back(std::make_shared<LayerData>(
+            s.is_string() ? s.get<std::string>() : std::string()));
         }
       }
     }
@@ -2052,7 +2068,10 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   for (const auto& settings : names->settings) {
     json setting;
     for (const auto& e : settings.second) {
-      setting.push_back(e->serialize());
+      if (e)
+        setting.push_back(e->serialize());
+      else
+        setting.push_back(nullptr); // no settings for this layer
     }
     layer["settings"][settings.first] = setting;
   }

@@ -28,6 +28,7 @@ set(tests
   MeshGenerator
   Molecule
   PackageManager
+  RWLayerManager
   RWMolecule
   ScriptProgress
   TimedProgressDialog

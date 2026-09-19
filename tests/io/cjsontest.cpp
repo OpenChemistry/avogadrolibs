@@ -9,6 +9,7 @@
 
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/matrix.h>
+#include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/unitcell.h>
@@ -773,4 +774,74 @@ TEST(CjsonTest, raggedPropertyArraysReadWithoutGarbage)
 
   EXPECT_DOUBLE_EQ(matrix(1, 0), 3.0);
   EXPECT_DOUBLE_EQ(matrix(1, 3), 6.0);
+}
+
+namespace {
+// LayerData's own serialize() returns "" by design -- only subclasses emit
+// real content -- so the round trip needs a subclass to carry anything.
+struct TestLayerData : Avogadro::Core::LayerData
+{
+  explicit TestLayerData(std::string save = "") { deserialize(save); }
+  std::string serialize() override { return m_save; }
+  LayerData* clone() override { return new TestLayerData(m_save); }
+};
+} // namespace
+
+// Layers and their per-plugin settings round-trip through CJSON. Nothing
+// covered this before, and the settings are now owned handles rather than raw
+// pointers, so the write path has to cope with an empty slot too.
+TEST(CjsonTest, layerRoundTrip)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.layer().addLayer();
+  molecule.layer().addAtom(1, 2);
+  molecule.layer().addAtom(1, 3);
+
+  auto info = molecule.layerInfo();
+  info->visible.assign(2, true);
+  info->locked.assign(2, false);
+  info->enable["TestPlugin"] = std::vector<bool>{ true, false };
+  info->settings["TestPlugin"] =
+    Avogadro::Core::Array<Avogadro::Core::LayerDataPtr>();
+  info->settings["TestPlugin"].push_back(
+    std::make_shared<TestLayerData>("first"));
+  info->settings["TestPlugin"].push_back(nullptr); // must not crash on write
+
+  CjsonFormat cjson;
+  std::string serialized;
+  ASSERT_TRUE(cjson.writeString(serialized, molecule)) << cjson.error();
+
+  Molecule restored;
+  ASSERT_TRUE(cjson.readString(serialized, restored)) << cjson.error();
+
+  EXPECT_EQ(restored.layer().maxLayer(), molecule.layer().maxLayer());
+  EXPECT_EQ(restored.layer().getLayerID(2), 1u);
+  EXPECT_EQ(restored.layer().getLayerID(0), 0u);
+
+  auto restoredInfo = restored.layerInfo();
+  ASSERT_TRUE(restoredInfo != nullptr);
+
+  // MoleculeInfo starts with one default entry in each of these; the reader
+  // used to append the file's on top, leaving an extra entry and shifting
+  // every layer's flags by one.
+  EXPECT_EQ(restoredInfo->visible.size(), 2u);
+  EXPECT_EQ(restoredInfo->locked.size(), 2u);
+
+  // A null slot means "no settings for this layer" and has to stay distinct
+  // from settings that serialize to an empty string.
+  ASSERT_EQ(restoredInfo->settings["TestPlugin"].size(), 2u);
+  EXPECT_TRUE(restoredInfo->settings["TestPlugin"][1] == nullptr)
+    << "a null settings slot came back as an empty object";
+  EXPECT_EQ(restoredInfo->enable["TestPlugin"].size(), 2u);
+  EXPECT_TRUE(restoredInfo->enable["TestPlugin"][0]);
+  EXPECT_FALSE(restoredInfo->enable["TestPlugin"][1]);
+
+  // The write path emits one serialized string per layer, so the settings have
+  // to come back as well.
+  ASSERT_EQ(restoredInfo->settings["TestPlugin"].size(), 2u)
+    << "per-plugin layer settings were dropped by the round trip";
+  ASSERT_TRUE(restoredInfo->settings["TestPlugin"][0] != nullptr);
+  EXPECT_EQ(restoredInfo->settings["TestPlugin"][0]->getSave(), "first");
 }

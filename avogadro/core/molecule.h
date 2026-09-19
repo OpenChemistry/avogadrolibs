@@ -16,6 +16,7 @@
 #include "elements.h"
 #include "graph.h"
 #include "layer.h"
+#include "moleculeinfo.h"
 #include "propertymap.h"
 #include "variantmap.h"
 #include "vector.h"
@@ -25,6 +26,7 @@
 #include <cstddef>
 #include <list>
 #include <map>
+#include <memory>
 #include <string>
 
 namespace Avogadro::Core {
@@ -64,13 +66,21 @@ public:
   /** Copy constructor  */
   Molecule(const Molecule& other);
 
-  /** Move constructor */
+  /**
+   * Move constructor.
+   *
+   * noexcept, and honestly so: every member is moved rather than copied, and
+   * the layer state is a shared_ptr this molecule owns, so nothing here
+   * allocates. Both halves of that are load bearing -- this used to copy the
+   * property maps, the graph and the frozen-atom mask, and to register the new
+   * molecule with the LayerManager, either of which could throw.
+   */
   Molecule(Molecule&& other) noexcept;
 
   /** Assignment operator */
   Molecule& operator=(const Molecule& other);
 
-  /** Move assignment operator */
+  /** Move assignment operator. noexcept, see the move constructor. */
   Molecule& operator=(Molecule&& other) noexcept;
 
   /** Destroys the molecule object. */
@@ -1154,6 +1164,16 @@ public:
   const Layer& layer() const;
 
   /**
+   * @return this molecule's layer state, shared with anything that needs it to
+   * outlive a single operation. Never null.
+   */
+  std::shared_ptr<MoleculeInfo> layerInfo() const
+  {
+    ensureLayerInfo();
+    return m_layerInfo;
+  }
+
+  /**
    * Calculte and return bounding box of the whole molecule or selected atoms
    * only.
    * @param boxMin [out] the minimum corner (first end of the box diagonal)
@@ -1242,7 +1262,28 @@ private:
   Array<unsigned char> m_bondOrders;
   // vertex information
   Array<unsigned char> m_atomicNumbers;
-  Layer& m_layers;
+  /**
+   * This molecule's layer state. Owned here rather than in a registry, so it
+   * lives exactly as long as the molecule and anything (an undo command, say)
+   * still holding on to it.
+   */
+  mutable std::shared_ptr<MoleculeInfo> m_layerInfo;
+
+  /**
+   * @return this molecule's layer state, creating it if this molecule has been
+   * moved from.
+   *
+   * A moved-from molecule is left with no layer state rather than sharing the
+   * moved-to molecule's: sharing would let a write through the moved-from
+   * object corrupt the moved-to one. Creating it here rather than in the move
+   * keeps the move allocation-free, and so honestly noexcept.
+   */
+  MoleculeInfo& ensureLayerInfo() const
+  {
+    if (!m_layerInfo)
+      m_layerInfo = std::make_shared<MoleculeInfo>();
+    return *m_layerInfo;
+  }
 };
 
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
@@ -1380,13 +1421,13 @@ inline bool Molecule::setColor(Index atomId, Vector3ub color)
 
 inline size_t Molecule::layer(Index atomId) const
 {
-  return m_layers.getLayerID(atomId);
+  return ensureLayerInfo().layer.getLayerID(atomId);
 }
 
 inline bool Molecule::setLayer(Index atomId, size_t layer)
 {
   if (atomId < atomCount()) {
-    m_layers.addAtom(layer, atomId);
+    ensureLayerInfo().layer.addAtom(layer, atomId);
     return true;
   }
   return false;
