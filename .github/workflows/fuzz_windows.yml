@@ -138,23 +138,32 @@ jobs:
         ls "${rt_dir}"
         echo "---"
 
-        # Static ASan to match static libFuzzer. The dynamic runtime reaches
-        # the link as an import library, which carries no objects and so no
-        # CRT directive -- it would link happily against either CRT and then
-        # disagree with libFuzzer at runtime. Prefer the static pair, and say
-        # so loudly if this LLVM only ships the dynamic one.
+        # AddressSanitizer on Windows is dynamic-runtime-only in current
+        # clang: there is no clang_rt.asan-x86_64.lib to link, and run
+        # 35454437974 confirmed it for LLVM 20 by listing this directory.
+        # What the CRT choice selects is the *thunk*, which is a real static
+        # library and therefore does carry a CRT directive:
+        #   asan_dynamic_runtime_thunk  built /MD, for a dynamic-CRT link
+        #   asan_static_runtime_thunk   built /MT, for a static-CRT link
+        # This job links the static CRT to match libFuzzer, so it wants the
+        # static thunk. The runtime itself arrives as an import library, which
+        # carries no objects and so no directive, and pairs with either.
         asan_libs=""
+        asan_dll=""
         if [ "${USE_ASAN}" = "true" ]; then
-          if [ -f "${rt_dir}/clang_rt.asan-x86_64.lib" ]; then
-            asan_libs="clang_rt.asan-x86_64.lib"
-            if [ -f "${rt_dir}/clang_rt.asan_cxx-x86_64.lib" ]; then
-              asan_libs="${asan_libs} clang_rt.asan_cxx-x86_64.lib"
+          asan_dll="${rt_dir}/clang_rt.asan_dynamic-x86_64.dll"
+          for lib in clang_rt.asan_dynamic-x86_64.lib \
+                     clang_rt.asan_static_runtime_thunk-x86_64.lib; do
+            if [ ! -f "${rt_dir}/${lib}" ]; then
+              echo "::error::${lib} is missing from ${rt_dir}."
+              echo "::error::Re-run with use_asan=false to fuzz without it."
+              exit 1
             fi
-          else
-            echo "::error::No static AddressSanitizer runtime in ${rt_dir}."
-            echo "::error::Only the dynamic runtime is shipped, which cannot be"
-            echo "::error::combined with the static CRT that libFuzzer needs."
-            echo "::error::Re-run with use_asan=false to fuzz without it."
+            asan_libs="${asan_libs}${asan_libs:+ }${lib}"
+          done
+          if [ ! -f "${asan_dll}" ]; then
+            echo "::error::The AddressSanitizer runtime DLL is missing from ${rt_dir}."
+            echo "::error::The runtime is dynamic on Windows, so the targets need it at run time."
             exit 1
           fi
         fi
@@ -163,6 +172,7 @@ jobs:
         echo "libFuzzer (no main):  ${fuzzer_nomain}"
         echo "FuzzedDataProvider.h: ${fdp}"
         echo "asan libraries:       ${asan_libs:-(none, ASan off)}"
+        echo "asan runtime DLL:     ${asan_dll:-(none, ASan off)}"
 
         # POSIX form for both: a PATH entry like "C:/Program Files/LLVM/bin"
         # carries a drive colon, and the colon is also the PATH separator, so
@@ -170,6 +180,8 @@ jobs:
         # spawns a native process, so the loader still finds the DLL.
         echo "llvm_bin=$(cygpath -u "${llvm_root}/bin")" >> "${GITHUB_OUTPUT}"
         echo "asan_libs=${asan_libs}" >> "${GITHUB_OUTPUT}"
+        # The ASan runtime is a DLL, so the fuzz targets need it on PATH.
+        echo "asan_bin=$(cygpath -u "${rt_dir}")" >> "${GITHUB_OUTPUT}"
         # Windows form for this one: it goes on LIB, which the linker reads as
         # a native semicolon-separated path list.
         echo "rt_lib_dir=$(cygpath -w "${rt_dir}")" >> "${GITHUB_OUTPUT}"
@@ -388,6 +400,12 @@ jobs:
         # -incremental:no because ASan and incremental linking do not mix;
         # clang's own driver passes both whenever ASan is on.
         LINKFLAGS="-debug -incremental:no"
+        if [ "${USE_ASAN}" = "true" ]; then
+          # Keeps the thunk's SEH interceptor from being dropped, so an access
+          # violation reaches ASan as a report instead of killing the process
+          # with no output. Also what clang's driver does.
+          LINKFLAGS="${LINKFLAGS} -include:__asan_seh_interceptor"
+        fi
 
         # -Z7 rather than -Zi: with Ninja there is no PDB server, and debug
         # info in the object files is what turns a libFuzzer stack into file
@@ -444,12 +462,14 @@ jobs:
         workspace="$(cygpath -m "${{ runner.workspace }}")"
         cd "${workspace}/build/avogadrolibs"
 
-        # llvm-symbolizer, the vcpkg DLLs, and the superbuild's own spglib and
-        # libmsym, which the targets still import. The ASan runtime needs no
-        # entry: it is linked statically, which is what the static CRT forced.
-        # Everything appended to PATH is in POSIX form, for the drive-colon
-        # reason noted in the toolchain step.
-        export PATH="${{ steps.llvm.outputs.llvm_bin }}:/c/vcpkg/installed/x64-windows/bin:$(cygpath -u "${workspace}")/build/prefix/bin:${PATH}"
+        # The ASan runtime is a DLL on Windows and does not sit next to the
+        # binaries, so a missing entry here presents as every target failing
+        # to start. Then llvm-symbolizer, the vcpkg DLLs, and the superbuild's
+        # own spglib and libmsym, which the targets import. Everything
+        # appended to PATH is in POSIX form, for the drive-colon reason noted
+        # in the toolchain step.
+        export PATH="${{ steps.llvm.outputs.asan_bin }}:${{ steps.llvm.outputs.llvm_bin }}:/c/vcpkg/installed/x64-windows/bin:$(cygpath -u "${workspace}")/build/prefix/bin:${PATH}"
+        ls "${{ steps.llvm.outputs.asan_bin }}"/clang_rt.asan*.dll || echo "no ASan runtime DLL on PATH"
 
         export ASAN_OPTIONS="symbolize=1:abort_on_error=1:windows_hook_rtl_allocators=true"
         # No detect_leaks: LeakSanitizer does not exist on Windows.
