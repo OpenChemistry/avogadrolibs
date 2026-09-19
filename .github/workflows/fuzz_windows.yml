@@ -198,15 +198,29 @@ jobs:
         # it, and the extension table at glew.c:7388 takes the address of one
         # -- "initializer element is not a compile-time constant" under clang.
         # MSVC accepts it, so the shipped build has never noticed. No fuzz
-        # target needs GLEW (QtGui links IO, Calc, Qt and JKQTPlotter, not
-        # Rendering), so take the prebuilt one rather than carry a patch for
-        # another repository here.
+        # target needs GLEW (QtGui links IO, Calc and Qt, not Rendering), so
+        # take the prebuilt one rather than carry a patch for another
+        # repository here.
+        #
+        # USE_PLOTTER=OFF, as msan_linux.yml already does, because JKQTPlotter
+        # cannot be built by clang-cl through AUTOMOC. It omits Q_GADGET from
+        # its multiple-inheritance mixins when Q_CC_CLANG is defined, to dodge
+        # QTBUG-104874. moc has to agree with the compiler about that, and it
+        # learns the compiler's predefined macros from the moc_predefs.h that
+        # AUTOMOC generates -- which CMake only knows how to generate for a
+        # GNU-style frontend. Compiler/Clang.cmake makes __compiler_clang an
+        # empty macro when CMAKE_CXX_SIMULATE_ID is MSVC, so
+        # CMAKE_CXX_COMPILER_PREDEFINES_COMMAND is never set, moc never sees
+        # __clang__, and it emits staticMetaObject definitions for classes the
+        # compiler built without Q_GADGET. Linux clang has no such problem,
+        # which is why fuzz_linux.yml builds the plotter happily. No fuzz
+        # target charts anything.
         CC=clang-cl CXX=clang-cl cmake -G Ninja "${source}" ${{ env.FEATURES }} \
           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON \
           -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON \
-          -DUSE_SYSTEM_GLEW=ON \
+          -DUSE_SYSTEM_GLEW=ON -DUSE_PLOTTER=OFF \
           -DENABLE_TESTING=ON -DTEST_QTGL=OFF
 
     - name: Cache thirdparty
