@@ -38,8 +38,6 @@ on:
 env:
   QT_VERSION: 6.8.3
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF
-  # Some QtGui fuzz targets construct widgets, so they need a windowless platform.
-  QT_QPA_PLATFORM: offscreen
   # A workflow-file PR gets a quick smoke run; the nightly run fuzzes for
   # longer. 30s rather than the Linux job's 60s: Windows runners bill at 2x,
   # process startup is slower, and there are 34 targets.
@@ -122,48 +120,59 @@ jobs:
 
         # .../lib/clang/<major>/lib/windows/. The version directory moves with
         # every LLVM release, so find it rather than hard-coding it.
-        asan_dll="$(find "${llvm_root}/lib/clang" -name 'clang_rt.asan_dynamic-x86_64.dll' | head -1)"
-        asan_lib="$(find "${llvm_root}/lib/clang" -name 'clang_rt.asan_dynamic-x86_64.lib' | head -1)"
-        asan_thunk="$(find "${llvm_root}/lib/clang" -name 'clang_rt.asan_dynamic_runtime_thunk-x86_64.lib' | head -1)"
         fuzzer_lib="$(find "${llvm_root}/lib/clang" -name 'clang_rt.fuzzer-x86_64.lib' | head -1)"
         fuzzer_nomain="$(find "${llvm_root}/lib/clang" -name 'clang_rt.fuzzer_no_main-x86_64.lib' | head -1)"
         fdp="$(find "${llvm_root}/lib/clang" -path '*/fuzzer/FuzzedDataProvider.h' | head -1)"
 
-        echo "asan runtime DLL:     ${asan_dll:-MISSING}"
-        echo "asan import library:  ${asan_lib:-MISSING}"
-        echo "asan thunk:           ${asan_thunk:-MISSING}"
-        echo "libFuzzer:            ${fuzzer_lib:-MISSING}"
-        echo "libFuzzer (no main):  ${fuzzer_nomain:-MISSING}"
-        echo "FuzzedDataProvider.h: ${fdp:-MISSING}"
-
-        if [ -z "${fuzzer_nomain}" ]; then
-          echo "::error::clang_rt.fuzzer_no_main-x86_64.lib is missing; the non-fuzz"
-          echo "::error::executables in the tree cannot resolve __sanitizer_cov_* without it."
-          exit 1
-        fi
-        if [ -z "${fuzzer_lib}" ] || [ -z "${fdp}" ]; then
+        if [ -z "${fuzzer_lib}" ] || [ -z "${fuzzer_nomain}" ] || [ -z "${fdp}" ]; then
           echo "::error::This LLVM install has no libFuzzer; the fuzz targets cannot be built."
           exit 1
         fi
+        rt_dir="$(dirname "${fuzzer_lib}")"
+
+        # The whole compiler-rt inventory, once, in the log. LLVM ships these
+        # built against the *static* CRT, which is what forces the runtime
+        # library choice in the build step -- and which of the ASan variants
+        # exist moves between releases, so record it rather than assume it.
+        echo "--- ${rt_dir} ---"
+        ls "${rt_dir}"
+        echo "---"
+
+        # Static ASan to match static libFuzzer. The dynamic runtime reaches
+        # the link as an import library, which carries no objects and so no
+        # CRT directive -- it would link happily against either CRT and then
+        # disagree with libFuzzer at runtime. Prefer the static pair, and say
+        # so loudly if this LLVM only ships the dynamic one.
+        asan_libs=""
         if [ "${USE_ASAN}" = "true" ]; then
-          # The import library and the thunk are named on the link line by
-          # hand (see the build step), so a missing one is a hard stop rather
-          # than something to discover as a wall of undefined symbols.
-          if [ -z "${asan_dll}" ] || [ -z "${asan_lib}" ] || [ -z "${asan_thunk}" ]; then
-            echo "::error::AddressSanitizer was requested but part of its runtime is missing."
+          if [ -f "${rt_dir}/clang_rt.asan-x86_64.lib" ]; then
+            asan_libs="clang_rt.asan-x86_64.lib"
+            if [ -f "${rt_dir}/clang_rt.asan_cxx-x86_64.lib" ]; then
+              asan_libs="${asan_libs} clang_rt.asan_cxx-x86_64.lib"
+            fi
+          else
+            echo "::error::No static AddressSanitizer runtime in ${rt_dir}."
+            echo "::error::Only the dynamic runtime is shipped, which cannot be"
+            echo "::error::combined with the static CRT that libFuzzer needs."
+            echo "::error::Re-run with use_asan=false to fuzz without it."
             exit 1
           fi
         fi
+
+        echo "libFuzzer:            ${fuzzer_lib}"
+        echo "libFuzzer (no main):  ${fuzzer_nomain}"
+        echo "FuzzedDataProvider.h: ${fdp}"
+        echo "asan libraries:       ${asan_libs:-(none, ASan off)}"
 
         # POSIX form for both: a PATH entry like "C:/Program Files/LLVM/bin"
         # carries a drive colon, and the colon is also the PATH separator, so
         # MSYS can mis-split it. It converts PATH back to Windows form when it
         # spawns a native process, so the loader still finds the DLL.
         echo "llvm_bin=$(cygpath -u "${llvm_root}/bin")" >> "${GITHUB_OUTPUT}"
-        echo "asan_bin=$(cygpath -u "$(dirname "${asan_dll:-${llvm_root}/bin}")")" >> "${GITHUB_OUTPUT}"
+        echo "asan_libs=${asan_libs}" >> "${GITHUB_OUTPUT}"
         # Windows form for this one: it goes on LIB, which the linker reads as
         # a native semicolon-separated path list.
-        echo "rt_lib_dir=$(cygpath -w "$(dirname "${fuzzer_lib}")")" >> "${GITHUB_OUTPUT}"
+        echo "rt_lib_dir=$(cygpath -w "${rt_dir}")" >> "${GITHUB_OUTPUT}"
 
     # Coverage-guided fuzzing is cumulative: units the fuzzer discovers are
     # only useful if they survive to the next run. Restore last night's
@@ -240,42 +249,35 @@ jobs:
         # which is why fuzz_linux.yml builds the plotter happily. No fuzz
         # target charts anything.
         #
-        # BUILD_SHARED_LIBS=OFF, and this one is not a convenience -- libFuzzer
-        # cannot work with instrumented DLLs on Windows. Coverage-instrumented
-        # code calls __sanitizer_cov_*, and those come only from libFuzzer:
-        # measured, not assumed, in run 35420288454, where linking the ASan
-        # runtime and its thunk resolved every __asan_* symbol and left every
-        # __sanitizer_cov_* undefined. An ELF shared object may leave them
-        # undefined and have the executable satisfy them at load time; a DLL
-        # must resolve everything at link time. Linking libFuzzer into each
-        # DLL instead would link, but libFuzzer is a static library, so every
-        # DLL would get its own counter tables and register them with its own
-        # instance -- the fuzzer in the executable would see none of them, and
-        # the job would go green while fuzzing blind.
+        # This pass deliberately leaves the superbuild SHARED and testing OFF.
+        # It exists only to build avogadrolibs' dependencies; the "Build fuzz
+        # targets" step below reconfigures avogadrolibs itself as a static,
+        # static-CRT, instrumented build and builds only the fuzz executables.
         #
-        # Static libraries put all the instrumented code in the one module
-        # that also has libFuzzer, which is how libFuzzer is meant to be used
-        # on Windows. The caveat is that the shipped Windows build is shared,
-        # so this fuzzes marginally different codegen -- no import thunks --
-        # than users run. That is the price of fuzzing here at all.
+        # Shared matters. Everything the fuzz targets link that we do not
+        # compile -- spglib, libmsym, and the vcpkg libraries -- reaches the
+        # link as an import library, and an import library carries no objects
+        # and therefore no CRT directive. That is what lets a static-CRT
+        # avogadrolibs link against them at all. A DLL boundary is also a
+        # clean boundary for two CRTs: spglib and zlib take plain buffers and
+        # return values, so nothing allocated by one CRT is freed by the other.
         #
-        # USE_SYSTEM_GTEST=ON, and it is BUILD_SHARED_LIBS=OFF that forces it.
-        # cmake/External_gtest.cmake is the one external that never receives
-        # OpenChemistry_DEFAULT_ARGS, so gtest is configured with no
+        # ENABLE_TESTING=OFF so this pass links no executables whatsoever.
+        # Every executable in the tree has to agree with libFuzzer about the
+        # CRT, and none of them can here.
+        #
+        # USE_SYSTEM_GTEST=ON is kept for the reconfigure, which turns testing
+        # back on: cmake/External_gtest.cmake is the one external that never
+        # receives OpenChemistry_DEFAULT_ARGS, so gtest builds with no
         # CMAKE_BUILD_TYPE and installs a GTestTargets-debug.cmake -- a debug
-        # CRT, _ITERATOR_DEBUG_LEVEL 2. As a DLL its import library carries no
-        # objects and nothing notices; as a static library every test
-        # executable fails with /failifmismatch against our own
-        # _ITERATOR_DEBUG_LEVEL 0. vcpkg's gtest is built properly, so take
-        # that one instead of patching another repository.
+        # CRT, _ITERATOR_DEBUG_LEVEL 2 against our 0.
         CC=clang-cl CXX=clang-cl cmake -G Ninja "${source}" ${{ env.FEATURES }} \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON \
           -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON \
           -DUSE_SYSTEM_GLEW=ON -DUSE_PLOTTER=OFF \
-          -DBUILD_SHARED_LIBS=OFF -DUSE_SYSTEM_GTEST=ON \
-          -DENABLE_TESTING=ON -DTEST_QTGL=OFF
+          -DUSE_SYSTEM_GTEST=ON -DENABLE_TESTING=OFF
 
     - name: Cache thirdparty
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -331,57 +333,84 @@ jobs:
         # string, which is worse.
         export LIB="${{ steps.llvm.outputs.rt_lib_dir }};${LIB}"
 
+        # The static CRT, which is the constraint everything else here bends
+        # around. LLVM ships compiler-rt for Windows built against it, so
+        # clang_rt.fuzzer says MT_StaticRelease; our /MD code says
+        # MD_DynamicRelease; and the CRT headers' own #pragma detect_mismatch
+        # turns that into a hard /failifmismatch at link. There is no flag to
+        # suppress it and no /MD libFuzzer to link instead, so the fuzz
+        # executables have to be the ones that move.
+        #
+        # What that costs, and why each piece is safe:
+        #   - Qt is /MD and cannot follow, so USE_QT=OFF and the four qtgui
+        #     targets do not build on Windows. Keeping them would mean Qt
+        #     allocating on one CRT heap and our code freeing on the other,
+        #     which is heap corruption reported as an ASan finding -- noise
+        #     indistinguishable from the bugs being hunted. The 29 core, io
+        #     and quantumio targets are the ones that matter here anyway.
+        #   - spglib, libmsym and the vcpkg libraries stay /MD, reached
+        #     through import libraries, which carry no CRT directive. Their
+        #     APIs pass plain buffers, so no allocation crosses the boundary.
+        #   - BUILD_SHARED_LIBS=OFF for avogadrolibs alone, so all the
+        #     instrumented code lands in the one module that has libFuzzer.
+        cmake_args=(
+          -DENABLE_FUZZ=ON
+          -DENABLE_TESTING=ON
+          -DBUILD_SHARED_LIBS=OFF
+          -DUSE_QT=OFF
+          -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
+        )
+
         # CMAKE_*_STANDARD_LIBRARIES, not the linker flags, and the reason is
         # link order. CMake emits the standard libraries last, after a
         # target's own link libraries; the linker flags come before them.
         # Each fuzz executable links clang_rt.fuzzer through
         # AvogadroLibs_FUZZ_LINK_LIBS (see the ENABLE_FUZZ block in
-        # CMakeLists.txt), so putting the ASan libraries last lets libFuzzer
-        # resolve main() and its own __sanitizer_cov_* hooks first -- which is
-        # what makes coverage feedback work. The Avogadro DLLs never link
-        # libFuzzer, so their __sanitizer_cov_* calls fall through to the ASan
-        # runtime and its thunk, which is what the thunk exists for.
+        # CMakeLists.txt), so putting the rest last lets libFuzzer resolve
+        # main() and its own __sanitizer_cov_* hooks first -- which is what
+        # makes coverage feedback work.
         #
         # Setting this replaces CMake's default list rather than adding to it,
         # so the default Win32 libraries are restated here.
         STDLIBS="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib"
         STDLIBS="${STDLIBS} ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib"
 
-        # The tree also builds executables that are not fuzz targets -- the
-        # gtest binaries and utilities/encodefile -- and they link the same
-        # instrumented static libraries without linking libFuzzer, so their
+        # utilities/encodefile is an executable too, and it links the same
+        # instrumented static libraries without linking libFuzzer, so its
         # __sanitizer_cov_* calls have nowhere to go. clang_rt.fuzzer_no_main
         # answers them without bringing a second main() along. A fuzz target
         # never reaches it: clang_rt.fuzzer comes earlier, as one of the
         # target's own link libraries, and satisfies everything first.
         STDLIBS="${STDLIBS} clang_rt.fuzzer_no_main-x86_64.lib"
+        STDLIBS="${STDLIBS} ${{ steps.llvm.outputs.asan_libs }}"
 
-        # Dash spellings again, so MSYS does not turn -debug into a path.
+        # Dash spellings, so MSYS does not turn -debug into a path.
         # -incremental:no because ASan and incremental linking do not mix;
-        # clang's own driver passes both of these whenever ASan is on.
+        # clang's own driver passes both whenever ASan is on.
         LINKFLAGS="-debug -incremental:no"
 
+        # -Z7 rather than -Zi: with Ninja there is no PDB server, and debug
+        # info in the object files is what turns a libFuzzer stack into file
+        # and line. -O1 is what ASan wants. -DNDEBUG because release builds
+        # have it, and asserts are not the behaviour being fuzzed.
+        SAN="-O1 -Z7 -DNDEBUG"
         if [ "${USE_ASAN}" = "true" ]; then
-          STDLIBS="${STDLIBS} clang_rt.asan_dynamic-x86_64.lib"
-          STDLIBS="${STDLIBS} clang_rt.asan_dynamic_runtime_thunk-x86_64.lib"
-          # Keeps the thunk's SEH interceptor from being dropped, so an access
-          # violation reaches ASan as a report instead of killing the process
-          # with no output. Also what clang's driver does.
-          LINKFLAGS="${LINKFLAGS} -include:__asan_seh_interceptor"
+          # Qt is gone, but the vcpkg libraries and spglib are still
+          # uninstrumented, and an annotated MSVC-STL container crossing into
+          # them reports a container overflow that is not one.
+          SAN="${SAN} -fsanitize=address -D_DISABLE_VECTOR_ANNOTATION -D_DISABLE_STRING_ANNOTATION"
         fi
 
         # Setting the per-configuration flags rather than CMAKE_CXX_FLAGS:
         # the latter already holds /DWIN32 /D_WINDOWS /GR /EHsc, and dropping
-        # /EHsc and /GR would take exceptions and RTTI out from under Qt and
-        # the parsers.
+        # /EHsc and /GR would take exceptions and RTTI out from under the
+        # parsers.
         #
         # ENABLE_FUZZ is not forwarded through the superbuild, so it goes on
-        # here too. It is what puts -fsanitize=fuzzer-no-link on the Avogadro
-        # libraries; without it the fuzz targets run blind. Turning it on
-        # relinks everything anyway, so adding the sanitizer flags in the same
-        # reconfigure costs no extra build.
+        # here. It is what puts -fsanitize=fuzzer-no-link on the Avogadro
+        # libraries; without it the fuzz targets run blind.
         MSYS2_ARG_CONV_EXCL='*' MSYS2_ENV_CONV_EXCL='*' \
-        cmake -DENABLE_FUZZ=ON \
+        cmake "${cmake_args[@]}" \
           -DCMAKE_C_FLAGS_RELEASE="${SAN}" \
           -DCMAKE_CXX_FLAGS_RELEASE="${SAN}" \
           -DCMAKE_C_STANDARD_LIBRARIES="${STDLIBS}" \
@@ -389,7 +418,21 @@ jobs:
           -DCMAKE_EXE_LINKER_FLAGS_RELEASE="${LINKFLAGS}" \
           -DCMAKE_SHARED_LINKER_FLAGS_RELEASE="${LINKFLAGS}" \
           -DCMAKE_MODULE_LINKER_FLAGS_RELEASE="${LINKFLAGS}" .
-        cmake --build .
+
+        # Build the fuzz executables and nothing else. The gtest binaries
+        # would drag in a vcpkg gtest that is not ours to re-link, and none of
+        # them is run here. Asking ninja for the target list keeps this in
+        # step with tests/*/CMakeLists.txt automatically.
+        mapfile -t fuzz_targets < <(
+          ninja -t targets all \
+            | sed -n 's|^.*[/\\]\(fuzz_[A-Za-z0-9_.-]*\)\.exe:.*|\1|p' \
+            | sort -u)
+        if [ "${#fuzz_targets[@]}" -eq 0 ]; then
+          echo "::error::No fuzz_* targets were generated; ENABLE_FUZZ did not take."
+          exit 1
+        fi
+        echo "Building ${#fuzz_targets[@]} fuzz targets: ${fuzz_targets[*]}"
+        cmake --build . --target "${fuzz_targets[@]}"
 
     - name: Run fuzz tests
       shell: bash
@@ -401,14 +444,12 @@ jobs:
         workspace="$(cygpath -m "${{ runner.workspace }}")"
         cd "${workspace}/build/avogadrolibs"
 
-        # The ASan runtime is a DLL and is not next to the binaries, so a
-        # missing entry here presents as every target failing to start.
+        # llvm-symbolizer, the vcpkg DLLs, and the superbuild's own spglib and
+        # libmsym, which the targets still import. The ASan runtime needs no
+        # entry: it is linked statically, which is what the static CRT forced.
         # Everything appended to PATH is in POSIX form, for the drive-colon
         # reason noted in the toolchain step.
-        export PATH="${{ steps.llvm.outputs.asan_bin }}:${{ steps.llvm.outputs.llvm_bin }}:$(cygpath -u "${QT_ROOT_DIR}")/bin:/c/vcpkg/installed/x64-windows/bin:$(cygpath -u "${workspace}")/build/prefix/bin:${PATH}"
-        echo "PATH entries added for the run:"
-        echo "  ${{ steps.llvm.outputs.asan_bin }}"
-        ls "${{ steps.llvm.outputs.asan_bin }}"/clang_rt.asan*.dll 2>/dev/null || echo "  (no ASan runtime DLL here)"
+        export PATH="${{ steps.llvm.outputs.llvm_bin }}:/c/vcpkg/installed/x64-windows/bin:$(cygpath -u "${workspace}")/build/prefix/bin:${PATH}"
 
         export ASAN_OPTIONS="symbolize=1:abort_on_error=1:windows_hook_rtl_allocators=true"
         # No detect_leaks: LeakSanitizer does not exist on Windows.
@@ -417,13 +458,14 @@ jobs:
         #   suite | binary prefix | seed dir under $AVOGADRO_DATA_ROOT/data | targets
         # A target is either "name" -- seeds come from <seed dir>/name -- or
         # "name=subdir", when the target name and the data directory differ.
-        # Kept deliberately identical to fuzz_linux.yml; when a target is added
-        # there, add it here too.
+        # The same table as fuzz_linux.yml minus its qtgui line: this job
+        # builds with USE_QT=OFF, because Qt is /MD and cannot join a static
+        # CRT build (see the reconfigure step). When a target is added there,
+        # add it here too.
         suites=(
           "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap"
-          "qtgui|fuzz_qtgui_|qtgui|rwmolecule generichighlighter jsonwidget interfacescript-json"
         )
 
         # Targets with known, pre-existing failures. They still run and still
