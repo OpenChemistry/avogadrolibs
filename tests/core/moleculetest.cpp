@@ -2105,3 +2105,49 @@ TEST_F(MoleculeTest, estimateVelocitiesTemperatureUsesIsotopeMasses)
   EXPECT_GT(ratio, 1.9);
   EXPECT_NEAR(deuterium, hydrogen * ratio, 1e-6);
 }
+
+// An atom added after the position arrays were filled has an index past the
+// end of them while they are still non-empty. position3d() used to guard only
+// on the arrays being non-empty, so it indexed straight past the end -- an
+// out-of-bounds read reached from centerOfGeometry(), centerOfMass(),
+// radius() and anything else that walks atomCount().
+//
+// Found by the Windows fuzz job, core/molecule, on a one-byte input: ten
+// atoms with positions, then one more atom appended without one.
+//
+// The force array is not exposed the same way -- addAtom() runs
+// clearCalculatedResults(), which empties it -- but forceVector() carried the
+// identical guard, so it is checked here too.
+TEST_F(MoleculeTest, atomWithoutPosition)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.setAtomPosition3d(0, Vector3(1.0, 2.0, 3.0));
+  molecule.setAtomPosition2d(0, Vector2(1.0, 2.0));
+
+  Array<Vector3> forces;
+  forces.push_back(Vector3(0.5, 0.5, 0.5));
+  ASSERT_TRUE(molecule.setForceVectors(forces));
+  EXPECT_EQ(molecule.atom(0).forceVector(), Vector3(0.5, 0.5, 0.5));
+
+  // Every array is now exactly as long as the molecule. Appending an atom
+  // leaves the position arrays one short, which is the state that used to
+  // read off the end.
+  molecule.addAtom(6);
+
+  ASSERT_EQ(molecule.atomCount(), static_cast<Index>(2));
+  ASSERT_EQ(molecule.atomPositions3d().size(), static_cast<size_t>(1));
+  ASSERT_EQ(molecule.atomPositions2d().size(), static_cast<size_t>(1));
+
+  EXPECT_EQ(molecule.atom(0).position3d(), Vector3(1.0, 2.0, 3.0));
+  EXPECT_EQ(molecule.atom(0).position2d(), Vector2(1.0, 2.0));
+
+  // The atom with no position reads as the origin rather than off the end.
+  EXPECT_EQ(molecule.atom(1).position3d(), Vector3::Zero());
+  EXPECT_EQ(molecule.atom(1).position2d(), Vector2::Zero());
+
+  // These walk atomCount() through the accessors above, so they are the paths
+  // the fuzzer actually crashed in.
+  EXPECT_EQ(molecule.centerOfGeometry(), Vector3(0.5, 1.0, 1.5));
+  EXPECT_TRUE(std::isfinite(molecule.radius()));
+}

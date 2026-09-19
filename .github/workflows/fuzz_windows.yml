@@ -405,6 +405,16 @@ jobs:
           # violation reaches ASan as a report instead of killing the process
           # with no output. Also what clang's driver does.
           LINKFLAGS="${LINKFLAGS} -include:__asan_seh_interceptor"
+          # And the whole thunk, not only the objects something references.
+          # clang's driver does this for the static thunk specifically -- its
+          # comment reads "we need to include even undefined symbols from
+          # static runtime thunk" -- because the pieces that instrument
+          # exception unwinding are not referenced by anything the linker can
+          # see, so without it they are dropped and unwinding is only half
+          # instrumented. That is the leading suspect for the qcschema
+          # access-violation in run 35464185623, which faulted inside a catch
+          # block on empty input that every other platform handles cleanly.
+          LINKFLAGS="${LINKFLAGS} -wholearchive:clang_rt.asan_static_runtime_thunk-x86_64.lib"
         fi
 
         # -Z7 rather than -Zi: with Ninja there is no PDB server, and debug
@@ -633,7 +643,13 @@ jobs:
             counters=$(grep -m1 -oE '\([0-9]+ inline 8-bit counters' "${artifact_dir}/run.log" \
                        | grep -oE '[0-9]+' | head -1 || true)
             counters="${counters:-0}"
-            if [ "${counters}" -lt 1000 ]; then
+            # 100, not 1000: the blind-fuzzer symptom in the Linux nightly was
+            # 34 counters, while a legitimately small target is in the
+            # hundreds -- core/array reported 346 in run 35464185623, because
+            # Core::Array is a header-only template and only what the harness
+            # instantiates is counted. A thousand flagged that as suspect and
+            # it was not.
+            if [ "${counters}" -lt 100 ]; then
               blind=1
             fi
 

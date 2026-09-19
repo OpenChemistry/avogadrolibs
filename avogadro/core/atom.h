@@ -327,7 +327,11 @@ void AtomTemplate<Molecule_T>::setPosition2d(const Vector2& pos)
 template <class Molecule_T>
 Vector2 AtomTemplate<Molecule_T>::position2d() const
 {
-  return m_molecule->atomPositions2d().size() > 0
+  // m_index against the size, not merely a non-empty test: these arrays
+  // are grown by setAtomPosition3d() and friends, so an atom added after
+  // them -- or never given a position -- has an index past the end while
+  // the array is still non-empty. Reading it is an out-of-bounds access.
+  return m_index < m_molecule->atomPositions2d().size()
            ? m_molecule->atomPositions2d()[m_index]
            : Vector2::Zero();
 }
@@ -341,7 +345,11 @@ void AtomTemplate<Molecule_T>::setPosition3d(const Vector3& pos)
 template <class Molecule_T>
 Vector3 AtomTemplate<Molecule_T>::position3d() const
 {
-  return m_molecule->atomPositions3d().size() > 0
+  // m_index against the size, not merely a non-empty test: these arrays
+  // are grown by setAtomPosition3d() and friends, so an atom added after
+  // them -- or never given a position -- has an index past the end while
+  // the array is still non-empty. Reading it is an out-of-bounds access.
+  return m_index < m_molecule->atomPositions3d().size()
            ? m_molecule->atomPositions3d()[m_index]
            : Vector3::Zero();
 }
@@ -427,7 +435,11 @@ void AtomTemplate<Molecule_T>::setForceVector(const Vector3& force)
 template <class Molecule_T>
 Vector3 AtomTemplate<Molecule_T>::forceVector() const
 {
-  return m_molecule->forceVectors().size() > 0
+  // m_index against the size, not merely a non-empty test: these arrays
+  // are grown by setAtomPosition3d() and friends, so an atom added after
+  // them -- or never given a position -- has an index past the end while
+  // the array is still non-empty. Reading it is an out-of-bounds access.
+  return m_index < m_molecule->forceVectors().size()
            ? m_molecule->forceVectors()[m_index]
            : Vector3::Zero();
 }
