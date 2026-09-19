@@ -169,37 +169,31 @@ jobs:
         mkdir -p "${build}"
         cd "${build}"
 
-        # /Z7 rather than /Zi: with Ninja there is no per-target PDB server,
-        # and debug info in the object files is what the symbolizer needs to
-        # turn a libFuzzer stack into file and line.
-        SAN="/Z7 /O1"
-
-        if [ "${USE_ASAN}" = "true" ]; then
-          # Qt, the vcpkg libraries and the superbuild's C dependencies are
-          # not all instrumented, and an annotated MSVC-STL container crossing
-          # into uninstrumented code reports a container overflow that is not
-          # one. Same reasoning as the Windows ASan job in build_windows.yml.
-          SAN="${SAN} -fsanitize=address -D_DISABLE_VECTOR_ANNOTATION -D_DISABLE_STRING_ANNOTATION"
-        fi
-
-        # RelWithDebInfo, not a made-up configuration name. A configuration
-        # MSVC does not recognise leaves CMAKE_CXX_FLAGS_<CONFIG> empty for
-        # every subproject on CMP0091 OLD, which is where /MD comes from, and
-        # the static CRT then collides at link time. This cost a full debug
-        # cycle on the Windows ASan job; see section 4.3 of the bug-hunt plan.
+        # No sanitizer flags here. They go on in the "Build fuzz targets" step
+        # below, for avogadrolibs alone, for two reasons.
         #
-        # -fsanitize=fuzzer-no-link for the libraries themselves is added by
-        # the ENABLE_FUZZ block in avogadrolibs/CMakeLists.txt, not here. It
-        # has to be there rather than in CXXFLAGS so it lands on avogadrolibs
-        # and not on the superbuild's C dependencies.
-        CFLAGS="${SAN}" \
-        CXXFLAGS="${SAN}" \
+        # CMake's compiler test and every check_include_file/check_symbol_exists
+        # runs its try_compile in the *Debug* configuration regardless of
+        # CMAKE_BUILD_TYPE, and clang-cl rejects "-MDd with -fsanitize=address"
+        # outright: "AddressSanitizer doesn't support linking with debug
+        # runtime libraries yet". Sanitizer flags in CXXFLAGS therefore break
+        # project() itself. Confining them to
+        # CMAKE_CXX_FLAGS_RELWITHDEBINFO leaves the Debug try-compiles clean.
+        #
+        # It also keeps the instrumentation on our own code rather than on
+        # spglib, glew, libmsym and JKQTPlotter, which is what the Windows
+        # ASan job in build_windows.yml settled on for the same reason.
+        #
+        # RelWithDebInfo, not a made-up configuration name: one MSVC does not
+        # recognise leaves CMAKE_CXX_FLAGS_<CONFIG> empty for every subproject
+        # on CMP0091 OLD, which is where /MD comes from, and the static CRT
+        # then collides at link. See section 4.3 of the bug-hunt plan.
         CC=clang-cl CXX=clang-cl cmake -G Ninja "${source}" ${{ env.FEATURES }} \
           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON \
           -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON \
-          -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DENABLE_FUZZ=ON
+          -DENABLE_TESTING=ON -DTEST_QTGL=OFF
 
     - name: Cache thirdparty
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -225,9 +219,40 @@ jobs:
         set -euo pipefail
         export PATH="/usr/bin:${PATH}"
         cd "$(cygpath -m "${{ runner.workspace }}")/build/avogadrolibs"
-        # ENABLE_FUZZ is not forwarded through the superbuild, so turn it on in
-        # the avogadrolibs build itself.
-        cmake -DENABLE_FUZZ=ON .
+
+        # Dash spellings, not /Z7 and /O1. MSYS rewrites an argument or
+        # environment value that begins with a slash into a Windows path, so
+        # CXXFLAGS="/Z7 /O1" reached clang-cl as
+        # "C:/Program Files/Git/Z7 /O1". MSYS2_*_CONV_EXCL below disables that
+        # for this one command as well; clang-cl accepts either prefix for a
+        # CL option, so -Z7 and -O1 mean what /Z7 and /O1 mean.
+        #
+        # -Z7 rather than -Zi: with Ninja there is no PDB server, and debug
+        # info in the object files is what turns a libFuzzer stack into file
+        # and line. -O1 is what ASan wants. -DNDEBUG because release builds
+        # have it, and asserts are not the behaviour being fuzzed.
+        SAN="-O1 -Z7 -DNDEBUG"
+        if [ "${USE_ASAN}" = "true" ]; then
+          # Qt, the vcpkg libraries and the superbuild's C dependencies are
+          # uninstrumented, and an annotated MSVC-STL container crossing into
+          # them reports a container overflow that is not one.
+          SAN="${SAN} -fsanitize=address -D_DISABLE_VECTOR_ANNOTATION -D_DISABLE_STRING_ANNOTATION"
+        fi
+
+        # Setting the per-configuration flags rather than CMAKE_CXX_FLAGS:
+        # the latter already holds /DWIN32 /D_WINDOWS /GR /EHsc, and dropping
+        # /EHsc and /GR would take exceptions and RTTI out from under Qt and
+        # the parsers.
+        #
+        # ENABLE_FUZZ is not forwarded through the superbuild, so it goes on
+        # here too. It is what puts -fsanitize=fuzzer-no-link on the Avogadro
+        # libraries; without it the fuzz targets run blind. Turning it on
+        # relinks everything anyway, so adding the sanitizer flags in the same
+        # reconfigure costs no extra build.
+        MSYS2_ARG_CONV_EXCL='*' MSYS2_ENV_CONV_EXCL='*' \
+        cmake -DENABLE_FUZZ=ON \
+          -DCMAKE_C_FLAGS_RELWITHDEBINFO="${SAN}" \
+          -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="${SAN}" .
         cmake --build .
 
     - name: Run fuzz tests
