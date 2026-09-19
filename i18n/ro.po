@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-08 16:08+0000\n"
+"PO-Revision-Date: 2026-09-18 10:12+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.9.1\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1088,7 +1088,7 @@ msgstr "Toate fișierele"
 
 #: qtgui/fileformatdialog.cpp:299
 msgid "Compressed files"
-msgstr ""
+msgstr "Fișiere comprimate"
 
 #: qtgui/fileformatdialog.cpp:306
 msgid "All supported formats"
@@ -1096,15 +1096,15 @@ msgstr "Toate formatele acceptate"
 
 #: qtgui/fragmenttools.cpp:205
 msgid "Adjust Distance"
-msgstr ""
+msgstr "Ajustează distanța"
 
 #: qtgui/fragmenttools.cpp:252
 msgid "Adjust Angle"
-msgstr ""
+msgstr "Ajustează unghiul"
 
 #: qtgui/fragmenttools.cpp:310
 msgid "Adjust Torsion"
-msgstr ""
+msgstr "Ajustează torsiunea"
 
 #: qtgui/interfacescript.cpp:306
 #, qt-format
@@ -1500,7 +1500,7 @@ msgstr "Curățare atomi"
 
 #: qtgui/rwmolecule.cpp:151 qtplugins/zmatrixeditor/zmatrixeditor.cpp:56
 msgid "Reorder Atoms"
-msgstr ""
+msgstr "Reordonare atomi"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -4107,6 +4107,15 @@ msgid ""
 "Ctrl+Shift+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"Instrument de manipulare\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului: \tFaceți clic și trageți pentru a muta atomii\n"
+"Butonul drept al mouse-ului:\tFaceți clic și trageți pentru a roti atomii\n"
+"\n"
+"Tastele săgeată:\tDeplasează atomii\n"
+"Shift+tastele săgeată:\tRotește în jurul axelor X/Y\n"
+"Ctrl+Shift+stânga/dreapta:\tRotește în jurul axei Z\n"
+"Alt + <tastă>:\tPași mai mari"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -4333,6 +4342,19 @@ msgid ""
 "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
 "Alt(Option)+Left:\tUses the virtual trackball."
 msgstr ""
+"Instrument de navigare\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tFaceți clic și trageți pentru a roti "
+"vizualizarea.\n"
+"Butonul din mijloc al mouse-ului:\tFaceți clic și trageți pentru a mări sau "
+"micșora vizualizarea.\n"
+"Butonul drept al mouse-ului:\tFaceți clic și trageți pentru a deplasa "
+"vizualizarea.\n"
+"\n"
+"Alt(Opțiune)+Glisare:\tRotire/mărire sau micșorare/deplasare în timp ce "
+"utilizați orice instrument.\n"
+"Alt(Opțiune)+Butonul stâng al mouse-ului:\tUtilizează bila de control "
+"virtuală."
 
 #: qtplugins/navigator/navigator.cpp:70
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4345,10 +4367,14 @@ msgid ""
 "unit of delta is roughly a 2% change in the camera's distance to the focal "
 "point."
 msgstr ""
+"Ajustează mărirea/micșorare scenei. O valoare delta pozitivă apropie "
+"perspectiva de moleculă, iar una negativă o îndepărtează. O unitate delta "
+"corespunde unei modificări de aproximativ 2% a distanței dintre cameră și "
+"punctul focal."
 
 #: qtplugins/navigator/navigator.cpp:76
 msgid "Translate the scene."
-msgstr "Convertește scena."
+msgstr "Deplasează scena."
 
 #: qtplugins/navigator/navigator.cpp:122
 msgid "Reverse Direction of Zoom on Scroll"
@@ -4369,10 +4395,11 @@ msgstr "Instrument de navigare"
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
 msgstr ""
+"Descarcă o structură după nume dintr-o bază de date disponibilă în Internet."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:78
 msgid "fetchByName requires a non-empty 'name' parameter."
-msgstr ""
+msgstr "fetchByName necesită un parametru „nume” care să nu fie gol."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Chemical Name"
@@ -4386,7 +4413,7 @@ msgstr "Se consultă baza de date PubChem pentru %1"
 #: qtplugins/networkdatabases/networkdatabases.cpp:226
 #, qt-format
 msgid "Downloaded %1"
-msgstr ""
+msgstr "Descărcat %1"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
@@ -5157,10 +5184,11 @@ msgstr "Viteze (m/s)"
 #, qt-format
 msgid "Conformer %1 of %2 — use ← and → to step through them"
 msgstr ""
+"Conformerul %1 din %2 — utilizați ← și → pentru a naviga printre aceștia"
 
 #: qtplugins/plotconformer/plotconformer.cpp:412
 msgid "Frame"
-msgstr ""
+msgstr "Cadrul"
 
 #: qtplugins/plotconformer/plotconformer.h:38
 msgid "PlotConformer"
@@ -6713,79 +6741,87 @@ msgstr "Efectuează calcule Hückel extinse cu yaehmop."
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:36
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:34
 msgid "Z-Matrix Editor"
-msgstr ""
+msgstr "Editor de matrice Z"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:59
 msgid "Rebuild Geometry"
-msgstr ""
+msgstr "Reconstruiește geometria"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:61
 msgid ""
 "Rebuild every atom position from the table. The molecule is not moved or "
 "reoriented."
 msgstr ""
+"Reconstruiește poziția fiecărui atom pe baza tabelului. Molecula nu este "
+"deplasată și nici reorientată."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:72
 msgid "&Z-Matrix Editor…"
-msgstr ""
+msgstr "Editor de matrice &Z…"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:125
 msgid "Atoms renumbered into z-matrix order."
-msgstr ""
+msgstr "Atomii au fost renumerotați în ordinea matricei Z."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:127
 msgid "The atoms are already in z-matrix order."
-msgstr ""
+msgstr "Atomii sunt deja în ordinea matricei Z."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:138
 msgid "Geometry rebuilt from the table."
-msgstr ""
+msgstr "Geometria a fost reconstruită pe baza tabelului."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:140
 msgid "There is nothing to rebuild."
-msgstr ""
+msgstr "Nu există nimic de reconstruit."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:162
 msgid "There is nothing to renumber."
-msgstr ""
+msgstr "Nu există nimic de renumerotat."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:165
 msgid ""
 "The atoms are already in z-matrix order: every atom already follows the "
 "atoms it is measured against, so renumbering them would change nothing."
 msgstr ""
+"Atomii sunt deja în ordinea matricei Z: fiecare atom urmează deja atomii în "
+"raport cu care este măsurat, așa că renumerotarea lor nu ar schimba nimic."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:170
 msgid ""
 "Renumber the atoms so that each one follows the atoms it is measured "
 "against. This changes the atom numbers the rest of the application uses."
 msgstr ""
+"Renumerotează atomii astfel încât fiecare să urmeze atomii în raport cu care "
+"este măsurat. Această acțiune modifică numerele atomilor utilizate de restul "
+"aplicației."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:37
 msgid "Edit bond lengths, angles and torsions in a table."
 msgstr ""
+"Editează lungimile legăturilor, unghiurile și torsiunile dintr-un tabel."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:99
 msgid "Distance (Å)"
-msgstr ""
+msgstr "Distanță (Å)"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:103
 msgid "Dihedral (°)"
-msgstr ""
+msgstr "Diedru (°)"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:193
 #, qt-format
 msgid "There is no atom %1."
-msgstr ""
+msgstr "Nu există atomul %1."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:196
 msgid "An atom cannot be measured against itself."
-msgstr ""
+msgstr "Un atom nu poate fi măsurat în raport cu el însuși."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:202
 #, qt-format
 msgid "Atom %1 is already used by this row."
-msgstr ""
+msgstr "Atomul %1 este deja utilizat de acest rând."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:209
 #, qt-format
@@ -6793,10 +6829,12 @@ msgid ""
 "Atom %1 is placed after this one, so it cannot be measured against. Reorder "
 "the atoms first."
 msgstr ""
+"Atomul %1 este plasat după acesta, așadar nu poate fi utilizat ca referință "
+"pentru măsurare. Reordonați mai întâi atomii."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:498
 msgid "Rebuild from Z-matrix"
-msgstr ""
+msgstr "Reconstruiește pe baza matricei Z"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
