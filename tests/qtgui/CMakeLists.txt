@@ -100,11 +100,11 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
         Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test
         $ENV{LIB_FUZZING_ENGINE})
     else()
-      target_compile_options(fuzz_qtgui_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
-      target_link_options(fuzz_qtgui_${fuzzName} PRIVATE -fsanitize=fuzzer)
+      target_compile_options(fuzz_qtgui_${fuzzName} PRIVATE ${AvogadroLibs_FUZZ_COMPILE_OPTIONS})
+      target_link_options(fuzz_qtgui_${fuzzName} PRIVATE ${AvogadroLibs_FUZZ_LINK_OPTIONS})
       target_link_libraries(fuzz_qtgui_${fuzzName}
         PRIVATE Avogadro::QtGui
-        Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
+        Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test ${AvogadroLibs_FUZZ_LINK_LIBS})
     endif()
   endforeach()
 endif()
