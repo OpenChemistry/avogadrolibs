@@ -471,8 +471,44 @@ jobs:
         export PATH="${{ steps.llvm.outputs.asan_bin }}:${{ steps.llvm.outputs.llvm_bin }}:/c/vcpkg/installed/x64-windows/bin:$(cygpath -u "${workspace}")/build/prefix/bin:${PATH}"
         ls "${{ steps.llvm.outputs.asan_bin }}"/clang_rt.asan*.dll || echo "no ASan runtime DLL on PATH"
 
-        export ASAN_OPTIONS="symbolize=1:abort_on_error=1:windows_hook_rtl_allocators=true"
-        # No detect_leaks: LeakSanitizer does not exist on Windows.
+        # No detect_leaks: LeakSanitizer does not exist on Windows. No
+        # windows_hook_rtl_allocators either, unlike the MSVC ASan job in
+        # build_windows.yml: that one builds against the dynamic CRT, and
+        # hooking the Win32 heap from a static-CRT process is a combination
+        # worth adding deliberately once this job is green, not while it is
+        # still being brought up.
+        export ASAN_OPTIONS="symbolize=1:abort_on_error=1"
+
+        # The commonest way a Windows CI job fails is a process that cannot
+        # start: the loader reports an unresolved DLL by exiting before
+        # main() with no output whatsoever, which in a log is indistinguishable
+        # from a silent crash. List what the targets import and whether each
+        # one is reachable, once, before fuzzing anything.
+        preflight="$(ls ./bin/fuzz_*.exe 2>/dev/null | head -1 || true)"
+        if [ -n "${preflight}" ]; then
+          echo "::group::DLL imports of ${preflight}"
+          imports="$(llvm-readobj --coff-imports "${preflight}" \
+                      | sed -n 's/^ *Name: \(.*\.[Dd][Ll][Ll]\) *$/\1/p' | sort -u || true)"
+          for dll in ${imports}; do
+            found=""
+            saved_ifs="${IFS}"
+            IFS=:
+            for dir in ${PATH}; do
+              if [ -f "${dir}/${dll}" ]; then
+                found="${dir}/${dll}"
+                break
+              fi
+            done
+            IFS="${saved_ifs}"
+            if [ -n "${found}" ]; then
+              echo "  ok       ${dll} -> ${found}"
+            else
+              echo "  NOT ON PATH  ${dll}"
+              echo "::warning::${dll} is imported by the fuzz targets but is not on PATH."
+            fi
+          done
+          echo "::endgroup::"
+        fi
 
         # One line per suite:
         #   suite | binary prefix | seed dir under $AVOGADRO_DATA_ROOT/data | targets
@@ -565,8 +601,18 @@ jobs:
               result="known failure"
               echo "::warning::${name} failed (known issue, not failing the job)"
             else
+              status="${PIPESTATUS[0]}"
               result="**FAIL**"
-              echo "::error::${name} failed - see the fuzz-crashes-windows artifact"
+              if [ ! -s "${artifact_dir}/run.log" ]; then
+                # libFuzzer always announces itself before running anything, so
+                # an empty log means the process never reached main(): on
+                # Windows that is the loader failing to resolve a DLL, not a
+                # crash in the code under test.
+                result="**did not start**"
+                echo "::error::${name} exited ${status} without printing anything - it never started. See the DLL imports listed above."
+              else
+                echo "::error::${name} failed (exit ${status}) - see the fuzz-crashes-windows artifact"
+              fi
               failures=1
             fi
             echo "::endgroup::"
@@ -579,8 +625,13 @@ jobs:
             # thousands. Cross-module coverage is the part of this job least
             # likely to work first time, because sanitizer coverage in a DLL
             # resolves differently on Windows than it does on ELF.
+            # || true matters: this shell runs with errexit, and grep exits
+            # non-zero when the pattern is absent -- which is exactly what
+            # happens when a target produced no output at all. Without it one
+            # silent target ends the whole loop and the other 28 never run,
+            # which is precisely what run 35461347405 did.
             counters=$(grep -m1 -oE '\([0-9]+ inline 8-bit counters' "${artifact_dir}/run.log" \
-                       | grep -oE '[0-9]+' | head -1)
+                       | grep -oE '[0-9]+' | head -1 || true)
             counters="${counters:-0}"
             if [ "${counters}" -lt 1000 ]; then
               blind=1
