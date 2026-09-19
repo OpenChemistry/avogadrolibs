@@ -126,14 +126,21 @@ jobs:
         asan_lib="$(find "${llvm_root}/lib/clang" -name 'clang_rt.asan_dynamic-x86_64.lib' | head -1)"
         asan_thunk="$(find "${llvm_root}/lib/clang" -name 'clang_rt.asan_dynamic_runtime_thunk-x86_64.lib' | head -1)"
         fuzzer_lib="$(find "${llvm_root}/lib/clang" -name 'clang_rt.fuzzer-x86_64.lib' | head -1)"
+        fuzzer_nomain="$(find "${llvm_root}/lib/clang" -name 'clang_rt.fuzzer_no_main-x86_64.lib' | head -1)"
         fdp="$(find "${llvm_root}/lib/clang" -path '*/fuzzer/FuzzedDataProvider.h' | head -1)"
 
         echo "asan runtime DLL:     ${asan_dll:-MISSING}"
         echo "asan import library:  ${asan_lib:-MISSING}"
         echo "asan thunk:           ${asan_thunk:-MISSING}"
         echo "libFuzzer:            ${fuzzer_lib:-MISSING}"
+        echo "libFuzzer (no main):  ${fuzzer_nomain:-MISSING}"
         echo "FuzzedDataProvider.h: ${fdp:-MISSING}"
 
+        if [ -z "${fuzzer_nomain}" ]; then
+          echo "::error::clang_rt.fuzzer_no_main-x86_64.lib is missing; the non-fuzz"
+          echo "::error::executables in the tree cannot resolve __sanitizer_cov_* without it."
+          exit 1
+        fi
         if [ -z "${fuzzer_lib}" ] || [ -z "${fdp}" ]; then
           echo "::error::This LLVM install has no libFuzzer; the fuzz targets cannot be built."
           exit 1
@@ -227,12 +234,32 @@ jobs:
         # compiler built without Q_GADGET. Linux clang has no such problem,
         # which is why fuzz_linux.yml builds the plotter happily. No fuzz
         # target charts anything.
+        #
+        # BUILD_SHARED_LIBS=OFF, and this one is not a convenience -- libFuzzer
+        # cannot work with instrumented DLLs on Windows. Coverage-instrumented
+        # code calls __sanitizer_cov_*, and those come only from libFuzzer:
+        # measured, not assumed, in run 35420288454, where linking the ASan
+        # runtime and its thunk resolved every __asan_* symbol and left every
+        # __sanitizer_cov_* undefined. An ELF shared object may leave them
+        # undefined and have the executable satisfy them at load time; a DLL
+        # must resolve everything at link time. Linking libFuzzer into each
+        # DLL instead would link, but libFuzzer is a static library, so every
+        # DLL would get its own counter tables and register them with its own
+        # instance -- the fuzzer in the executable would see none of them, and
+        # the job would go green while fuzzing blind.
+        #
+        # Static libraries put all the instrumented code in the one module
+        # that also has libFuzzer, which is how libFuzzer is meant to be used
+        # on Windows. The caveat is that the shipped Windows build is shared,
+        # so this fuzzes marginally different codegen -- no import thunks --
+        # than users run. That is the price of fuzzing here at all.
         CC=clang-cl CXX=clang-cl cmake -G Ninja "${source}" ${{ env.FEATURES }} \
           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON \
           -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON \
           -DUSE_SYSTEM_GLEW=ON -DUSE_PLOTTER=OFF \
+          -DBUILD_SHARED_LIBS=OFF \
           -DENABLE_TESTING=ON -DTEST_QTGL=OFF
 
     - name: Cache thirdparty
@@ -304,6 +331,15 @@ jobs:
         # so the default Win32 libraries are restated here.
         STDLIBS="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib"
         STDLIBS="${STDLIBS} ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib"
+
+        # The tree also builds executables that are not fuzz targets -- the
+        # gtest binaries and utilities/encodefile -- and they link the same
+        # instrumented static libraries without linking libFuzzer, so their
+        # __sanitizer_cov_* calls have nowhere to go. clang_rt.fuzzer_no_main
+        # answers them without bringing a second main() along. A fuzz target
+        # never reaches it: clang_rt.fuzzer comes earlier, as one of the
+        # target's own link libraries, and satisfies everything first.
+        STDLIBS="${STDLIBS} clang_rt.fuzzer_no_main-x86_64.lib"
 
         # Dash spellings again, so MSYS does not turn -debug into a path.
         # -incremental:no because ASan and incremental linking do not mix;
