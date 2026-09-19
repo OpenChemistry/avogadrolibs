@@ -1,0 +1,434 @@
+name: Windows Fuzz Tests
+
+# Section 4.4 of the 2.1 bug-hunt plan. The Linux fuzz job (fuzz_linux.yml)
+# is the one that finds bugs; this one exists because the same undefined
+# behaviour can present differently under MSVC codegen and the Windows heap,
+# and Windows is where most of the crash reports come from.
+#
+# Marginal value per run is therefore low, so it is scheduled and never a PR
+# gate. The one exception is a change to this file, which gets a short smoke
+# run so the job can be iterated on in a pull request instead of on master.
+
+on:
+  schedule:
+  # 05:00 UTC, two hours after the Linux fuzz job, so the two do not compete
+  # for the cache or for concurrency slots.
+  - cron: '0 5 * * *'
+  pull_request:
+    paths:
+    - '.github/workflows/fuzz_windows.yml'
+  workflow_dispatch:
+    inputs:
+      fuzz_seconds:
+        description: 'Seconds to spend on each fuzz target'
+        required: false
+        default: '30'
+      use_asan:
+        # Escape hatch for isolating an ASan-specific build failure, not a
+        # mode to fuzz in. On Windows the sanitizer-coverage callbacks that
+        # -fsanitize=fuzzer-no-link inserts into the Avogadro DLLs are
+        # resolved by the ASan runtime, so turning ASan off is expected to
+        # fail at link with undefined __sanitizer_cov_* -- which is itself
+        # useful information when the ASan build is what broke.
+        description: 'Build with AddressSanitizer as well as libFuzzer'
+        type: boolean
+        required: false
+        default: true
+
+env:
+  QT_VERSION: 6.8.3
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF
+  # Some QtGui fuzz targets construct widgets, so they need a windowless platform.
+  QT_QPA_PLATFORM: offscreen
+  # A workflow-file PR gets a quick smoke run; the nightly run fuzzes for
+  # longer. 30s rather than the Linux job's 60s: Windows runners bill at 2x,
+  # process startup is slower, and there are 34 targets.
+  FUZZ_SECONDS: ${{ github.event_name == 'pull_request' && '10' || github.event.inputs.fuzz_seconds || '30' }}
+  # Unset (scheduled runs) means on.
+  USE_ASAN: ${{ github.event.inputs.use_asan != 'false' }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fuzz:
+    name: Windows Fuzz Tests
+    runs-on: windows-latest
+    timeout-minutes: 240
+
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@bcb88e3bed2e992f5f9e24c0f9e364a231d278eb # v4.4.0
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
+    # clang-cl needs the MSVC headers and import libraries; this sets INCLUDE,
+    # LIB and the rest of the environment it reads them from.
+    - name: Configure MSVC Command Prompt
+      uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+      with:
+        arch: x64
+
+    - name: Ensure vcpkg is up to date
+      id: vcpkg_version
+      uses: ./.github/actions/update-vcpkg
+
+    - name: Restore vcpkg cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          C:\vcpkg\installed
+          C:\vcpkg\packages
+          C:\vcpkg\downloads
+        key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
+        restore-keys: |
+          vcpkg-${{ runner.os }}-${{ runner.arch }}-
+      env:
+        VCPKG_ROOT: C:\vcpkg
+
+    - name: Install Dependencies
+      run: |
+        choco install ninja
+        vcpkg install libarchive eigen3 libxml2 zlib gtest
+      shell: bash
+
+    # Everything the fuzz targets need from LLVM: clang-cl itself, libFuzzer
+    # and the ASan runtime (a DLL, which has to be on PATH when the targets
+    # run), llvm-symbolizer, and FuzzedDataProvider.h. Fail here rather than
+    # 40 minutes into a build if any of it is missing.
+    - name: Locate the LLVM toolchain
+      id: llvm
+      shell: bash
+      run: |
+        set -euo pipefail
+        export PATH="/usr/bin:${PATH}"
+
+        llvm_root="$(cygpath -m 'C:/Program Files/LLVM')"
+        if [ ! -x "${llvm_root}/bin/clang-cl.exe" ]; then
+          echo "::error::clang-cl was not found at ${llvm_root}/bin"
+          exit 1
+        fi
+        "${llvm_root}/bin/clang-cl.exe" --version
+
+        # .../lib/clang/<major>/lib/windows/. The version directory moves with
+        # every LLVM release, so find it rather than hard-coding it.
+        asan_dll="$(find "${llvm_root}/lib/clang" -name 'clang_rt.asan_dynamic-x86_64.dll' | head -1)"
+        fuzzer_lib="$(find "${llvm_root}/lib/clang" -name 'clang_rt.fuzzer-x86_64.lib' | head -1)"
+        fdp="$(find "${llvm_root}/lib/clang" -path '*/fuzzer/FuzzedDataProvider.h' | head -1)"
+
+        echo "asan runtime:         ${asan_dll:-MISSING}"
+        echo "libFuzzer:            ${fuzzer_lib:-MISSING}"
+        echo "FuzzedDataProvider.h: ${fdp:-MISSING}"
+
+        if [ -z "${fuzzer_lib}" ] || [ -z "${fdp}" ]; then
+          echo "::error::This LLVM install has no libFuzzer; the fuzz targets cannot be built."
+          exit 1
+        fi
+        if [ "${USE_ASAN}" = "true" ] && [ -z "${asan_dll}" ]; then
+          echo "::error::AddressSanitizer was requested but its runtime DLL is missing."
+          exit 1
+        fi
+
+        # POSIX form for both: a PATH entry like "C:/Program Files/LLVM/bin"
+        # carries a drive colon, and the colon is also the PATH separator, so
+        # MSYS can mis-split it. It converts PATH back to Windows form when it
+        # spawns a native process, so the loader still finds the DLL.
+        echo "llvm_bin=$(cygpath -u "${llvm_root}/bin")" >> "${GITHUB_OUTPUT}"
+        echo "asan_bin=$(cygpath -u "$(dirname "${asan_dll:-${llvm_root}/bin}")")" >> "${GITHUB_OUTPUT}"
+
+    # Coverage-guided fuzzing is cumulative: units the fuzzer discovers are
+    # only useful if they survive to the next run. Restore last night's
+    # corpus, fuzz on top of it, then save the merged result below. Keyed
+    # separately from the Linux corpus -- the two could be shared, but a unit
+    # that wedges one platform would then wedge both.
+    - name: Restore fuzz corpus
+      id: corpus-restore
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.workspace }}/fuzz-corpus
+        key: fuzz-corpus-windows-${{ github.run_id }}
+        restore-keys: |
+          fuzz-corpus-windows-
+
+    - name: Configure
+      shell: bash
+      run: |
+        set -euo pipefail
+        export PATH="/usr/bin:${PATH}"
+
+        build="$(cygpath -m "${{ runner.workspace }}")/build"
+        source="$(cygpath -m "${GITHUB_WORKSPACE}")/openchemistry"
+        mkdir -p "${build}"
+        cd "${build}"
+
+        # /Z7 rather than /Zi: with Ninja there is no per-target PDB server,
+        # and debug info in the object files is what the symbolizer needs to
+        # turn a libFuzzer stack into file and line.
+        SAN="/Z7 /O1"
+
+        if [ "${USE_ASAN}" = "true" ]; then
+          # Qt, the vcpkg libraries and the superbuild's C dependencies are
+          # not all instrumented, and an annotated MSVC-STL container crossing
+          # into uninstrumented code reports a container overflow that is not
+          # one. Same reasoning as the Windows ASan job in build_windows.yml.
+          SAN="${SAN} -fsanitize=address -D_DISABLE_VECTOR_ANNOTATION -D_DISABLE_STRING_ANNOTATION"
+        fi
+
+        # RelWithDebInfo, not a made-up configuration name. A configuration
+        # MSVC does not recognise leaves CMAKE_CXX_FLAGS_<CONFIG> empty for
+        # every subproject on CMP0091 OLD, which is where /MD comes from, and
+        # the static CRT then collides at link time. This cost a full debug
+        # cycle on the Windows ASan job; see section 4.3 of the bug-hunt plan.
+        #
+        # -fsanitize=fuzzer-no-link for the libraries themselves is added by
+        # the ENABLE_FUZZ block in avogadrolibs/CMakeLists.txt, not here. It
+        # has to be there rather than in CXXFLAGS so it lands on avogadrolibs
+        # and not on the superbuild's C dependencies.
+        CFLAGS="${SAN}" \
+        CXXFLAGS="${SAN}" \
+        CC=clang-cl CXX=clang-cl cmake -G Ninja "${source}" ${{ env.FEATURES }} \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON \
+          -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON \
+          -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DENABLE_FUZZ=ON
+
+    - name: Cache thirdparty
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: thirdparty-fuzz-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('openchemistry/cmake/External*.cmake') }}
+
+    - name: Build
+      shell: bash
+      run: |
+        set -euo pipefail
+        export PATH="/usr/bin:${PATH}"
+        cd "$(cygpath -m "${{ runner.workspace }}")/build"
+        # Only avogadrolibs (and its dependencies) are needed for fuzzing, so
+        # skip avogadroapp. Note that avogadrolibs does not depend on Open
+        # Babel in the superbuild, so clang-cl never has to build it.
+        CC=clang-cl CXX=clang-cl cmake --build . --target avogadrolibs
+
+    - name: Build fuzz targets
+      shell: bash
+      run: |
+        set -euo pipefail
+        export PATH="/usr/bin:${PATH}"
+        cd "$(cygpath -m "${{ runner.workspace }}")/build/avogadrolibs"
+        # ENABLE_FUZZ is not forwarded through the superbuild, so turn it on in
+        # the avogadrolibs build itself.
+        cmake -DENABLE_FUZZ=ON .
+        cmake --build .
+
+    - name: Run fuzz tests
+      shell: bash
+      run: |
+        set -uo pipefail
+        # Git's find/sort/sha1sum, not the ones in System32.
+        export PATH="/usr/bin:${PATH}"
+
+        workspace="$(cygpath -m "${{ runner.workspace }}")"
+        cd "${workspace}/build/avogadrolibs"
+
+        # The ASan runtime is a DLL and is not next to the binaries, so a
+        # missing entry here presents as every target failing to start.
+        # Everything appended to PATH is in POSIX form, for the drive-colon
+        # reason noted in the toolchain step.
+        export PATH="${{ steps.llvm.outputs.asan_bin }}:${{ steps.llvm.outputs.llvm_bin }}:$(cygpath -u "${QT_ROOT_DIR}")/bin:/c/vcpkg/installed/x64-windows/bin:$(cygpath -u "${workspace}")/build/prefix/bin:${PATH}"
+        echo "PATH entries added for the run:"
+        echo "  ${{ steps.llvm.outputs.asan_bin }}"
+        ls "${{ steps.llvm.outputs.asan_bin }}"/clang_rt.asan*.dll 2>/dev/null || echo "  (no ASan runtime DLL here)"
+
+        export ASAN_OPTIONS="symbolize=1:abort_on_error=1:windows_hook_rtl_allocators=true"
+        # No detect_leaks: LeakSanitizer does not exist on Windows.
+
+        # One line per suite:
+        #   suite | binary prefix | seed dir under $AVOGADRO_DATA_ROOT/data | targets
+        # A target is either "name" -- seeds come from <seed dir>/name -- or
+        # "name=subdir", when the target name and the data directory differ.
+        # Kept deliberately identical to fuzz_linux.yml; when a target is added
+        # there, add it here too.
+        suites=(
+          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles decompress=compressed compress-roundtrip=compressed"
+          "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
+          "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap"
+          "qtgui|fuzz_qtgui_|qtgui|rwmolecule generichighlighter jsonwidget interfacescript-json"
+        )
+
+        # Targets with known, pre-existing failures. They still run and still
+        # upload artifacts, but they do not fail the job. Delete entries here as
+        # the underlying bugs are fixed.
+        known_issues=()
+
+        is_known_issue() {
+          local entry
+          for entry in "${known_issues[@]}"; do
+            if [ "${entry}" = "$1" ]; then
+              return 0
+            fi
+          done
+          return 1
+        }
+
+        data_root="$(cygpath -m "${GITHUB_WORKSPACE}")/openchemistry/avogadrodata"
+        runner_temp="$(cygpath -m "${RUNNER_TEMP}")"
+        artifact_root="${workspace}/build/avogadrolibs/fuzz-artifacts"
+        corpus_root="${workspace}/fuzz-corpus"
+        failures=0
+        blind=0
+
+        {
+          echo "## Windows fuzz results (${FUZZ_SECONDS}s per target, ASan=${USE_ASAN})"
+          echo
+          echo "| Target | Seeds | Corpus | Counters | Result |"
+          echo "| --- | --- | --- | --- | --- |"
+        } >> "${GITHUB_STEP_SUMMARY}"
+
+        for spec in "${suites[@]}"; do
+          IFS='|' read -r suite prefix corpus_sub targets <<< "${spec}"
+
+          for entry in ${targets}; do
+            target="${entry%%=*}"
+            seed_name="${entry##*=}"
+            name="${suite}/${target}"
+            binary="./bin/${prefix}${target}.exe"
+            artifact_dir="${artifact_root}/${suite}/${target}"
+            corpus_dir="${corpus_root}/${suite}/${target}"
+            mkdir -p "${artifact_dir}" "${corpus_dir}"
+
+            if [ ! -x "${binary}" ]; then
+              echo "::error::Fuzz binary ${binary} for ${name} was not built"
+              echo "| ${name} | - | - | - | not built |" >> "${GITHUB_STEP_SUMMARY}"
+              failures=1
+              continue
+            fi
+
+            # Seeds live in the avogadrodata checkout. libFuzzer does not
+            # recurse into subdirectories, so flatten the tree into one dir.
+            seed_root="${data_root}/data${corpus_sub:+/${corpus_sub}}/${seed_name}"
+            seed_dir="${runner_temp}/fuzz-seeds/${suite}/${target}"
+            seed_args=()
+            seed_count=0
+            if [ -d "${seed_root}" ]; then
+              rm -rf "${seed_dir}" && mkdir -p "${seed_dir}"
+              while IFS= read -r -d '' f; do
+                cp "${f}" "${seed_dir}/$(sha1sum "${f}" | cut -c1-40)"
+              done < <(find "${seed_root}" -type f ! -name 'README*' -print0)
+              seed_count=$(find "${seed_dir}" -type f | wc -l)
+              [ "${seed_count}" -gt 0 ] && seed_args=("${seed_dir}")
+            fi
+
+            # libFuzzer writes newly discovered units to the *first* corpus
+            # directory only, so the restored corpus grows and the seed
+            # directory stays untouched. -timeout=30 matches the Linux job:
+            # instrumented code is slow enough that 10s produces false hangs.
+            echo "::group::Fuzzing ${name}"
+            if "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=30 \
+                 -artifact_prefix="${artifact_dir}/" \
+                 "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
+                 | tee "${artifact_dir}/run.log"; then
+              result="pass"
+            elif is_known_issue "${name}"; then
+              result="known failure"
+              echo "::warning::${name} failed (known issue, not failing the job)"
+            else
+              result="**FAIL**"
+              echo "::error::${name} failed - see the fuzz-crashes-windows artifact"
+              failures=1
+            fi
+            echo "::endgroup::"
+
+            # How many coverage counters libFuzzer actually found. This is the
+            # first thing to read when the job is green but finds nothing: on
+            # Linux every target reported 34 counters for months because the
+            # libraries carried no instrumentation, and a blind fuzzer passes
+            # every run. An instrumented io target should report tens of
+            # thousands. Cross-module coverage is the part of this job least
+            # likely to work first time, because sanitizer coverage in a DLL
+            # resolves differently on Windows than it does on ELF.
+            counters=$(grep -m1 -oE '\([0-9]+ inline 8-bit counters' "${artifact_dir}/run.log" \
+                       | grep -oE '[0-9]+' | head -1)
+            counters="${counters:-0}"
+            if [ "${counters}" -lt 1000 ]; then
+              blind=1
+            fi
+
+            # Minimize on the way out: rebuild the corpus as the smallest set
+            # of units covering everything the corpus and seeds reach. Without
+            # this the cached corpus grows without bound. The timeout is above
+            # the fuzzing one so a unit that was fast enough to keep is not
+            # dropped here.
+            #
+            # A merge only fails if replaying a stored unit crashes, times out
+            # or runs out of memory, which means the cached corpus itself has
+            # become poison: keeping it would wedge this target on every future
+            # run, since libFuzzer replays the whole corpus at startup. The
+            # corpus is a cache and the seeds are the source of truth, so throw
+            # it away and rebuild from the seeds next time.
+            merged_dir="${runner_temp}/fuzz-merge/${suite}/${target}"
+            rm -rf "${merged_dir}" && mkdir -p "${merged_dir}"
+            if "${binary}" -merge=1 -timeout=25 \
+                 "${merged_dir}" "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} \
+                 > "${artifact_dir}/merge.log" 2>&1 \
+               && [ -n "$(ls -A "${merged_dir}")" ]; then
+              rm -rf "${corpus_dir}"
+              mv "${merged_dir}" "${corpus_dir}"
+            else
+              echo "::warning::${name} corpus merge failed, resetting the corpus"
+              rm -rf "${merged_dir}" "${corpus_dir}"
+              mkdir -p "${corpus_dir}"
+            fi
+            corpus_count=$(find "${corpus_dir}" -type f | wc -l)
+
+            echo "| ${name} | ${seed_count} | ${corpus_count} | ${counters} | ${result} |" >> "${GITHUB_STEP_SUMMARY}"
+          done
+        done
+
+        if [ "${blind}" -eq 1 ]; then
+          echo "::warning::At least one target reported fewer than 1000 coverage counters - the libraries may not be instrumented (see the Counters column)."
+          echo >> "${GITHUB_STEP_SUMMARY}"
+          echo "> A target with almost no counters is fuzzing blind: the harness is instrumented but the Avogadro DLLs are not, so no input ever looks new." >> "${GITHUB_STEP_SUMMARY}"
+        fi
+
+        du -sh "${corpus_root}" || true
+
+        exit "${failures}"
+
+    # Saved even when a target crashed: the corpus built up to that point is
+    # still worth keeping, and a rolling key means the next run restores the
+    # most recent entry.
+    - name: Save fuzz corpus
+      if: ${{ always() && github.event_name != 'pull_request' }}
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.workspace }}/fuzz-corpus
+        key: fuzz-corpus-windows-${{ github.run_id }}
+
+    - name: Upload fuzz crash artifacts
+      if: ${{ always() }}
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: fuzz-crashes-windows
+        path: |
+          ${{ runner.workspace }}/build/avogadrolibs/crash*
+          ${{ runner.workspace }}/build/avogadrolibs/timeout*
+          ${{ runner.workspace }}/build/avogadrolibs/oom*
+          ${{ runner.workspace }}/build/avogadrolibs/fuzz-artifacts
+        if-no-files-found: ignore
+
+    # Deliberately gated to manual runs: an unattended nightly must never park
+    # a runner for an hour waiting for a session nobody is going to open.
+    - name: Setup tmate session
+      if: ${{ failure() && github.event_name == 'workflow_dispatch' }}
+      uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113 # v3.24
+      timeout-minutes: 30
