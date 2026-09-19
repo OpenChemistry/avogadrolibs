@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-09-18 10:48+0000\n"
+"PO-Revision-Date: 2026-09-19 17:37+0000\n"
 "Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -2802,7 +2802,7 @@ msgstr "Gitterkoordinat ”b”."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
 msgid "'c' lattice coordinate."
-msgstr "Gitterkoordinat ”c”"
+msgstr "Gitterkoordinat ”c”."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -3339,7 +3339,7 @@ msgstr "Ogiltig PDB-kod"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr "PDB-koden måste vara exakt fyra tecken lång."
+msgstr "PDB-koden måste vara exakt 4 tecken lång."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
@@ -4066,7 +4066,7 @@ msgstr ""
 "Piltangenter:\tFörflytta atomer\n"
 "Skift+piltangenter:\tRotera kring X-/Y-axlarna\n"
 "Ctrl+Skift+vänster/höger:\tRotera kring Z-axeln\n"
-"Alt+<tangent>:\tStörre steg"
+"Alt+<key>:\tStörre steg"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -4313,6 +4313,9 @@ msgid ""
 "unit of delta is roughly a 2% change in the camera's distance to the focal "
 "point."
 msgstr ""
+"Zooma i scenen. Ett positivt delta flyttar kameran mot molekylen, ett "
+"negativt bort från den. En deltaenhet motsvarar ungefär en ändring på 2 % av "
+"kamerans avstånd till fokuspunkten."
 
 #: qtplugins/navigator/navigator.cpp:76
 msgid "Translate the scene."
@@ -7513,7 +7516,7 @@ msgstr "&Verkställ"
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:307
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "&Revert"
-msgstr "&Återställ"
+msgstr "Åter&ställ"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:314
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
@@ -10187,24 +10190,12 @@ msgstr "Visa Yaehmop-indata?"
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-",Launchpad Contributions:,Dostojevskji, ,Launchpad "
-"Contributions:,Dostojevskji, ,Launchpad "
-"Contributions:,Dostojevskji, ,Launchpad "
-"Contributions:,Dostojevskji, ,Launchpad "
-"Contributions:,Dostojevskji, ,Launchpad "
-"Contributions:,Dostojevskji, ,Launchpad "
-"Contributions:,Dostojevskji, ,Launchpad "
-"Contributions:,Dostojevskji, ,Launchpad "
-"Contributions:,Dostojevskji, ,Launchpad "
-"Contributions:,Dostojevskji, ,Launchpad Contributions:,Alexander "
-"Andjelkovic,Arve Eriksson,Daniel Nylander,Dostojevskji,Peter "
-"Sahlin, ,Launchpad Contributions:,Alexander Andjelkovic,Arve Eriksson,Daniel "
-"Nylander,Dostojevskji,Peter Sahlin, ,Launchpad Contributions:,Alexander "
-"Andjelkovic,Arve Eriksson,Daniel Nylander,Dostojevskji,Peter Sahlin"
+"Alexander Nordin, Anders Jonsson, Arve Eriksson, Daniel Nylander, "
+"Dostojevskij, Peter Sahlin"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ",,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,darkangel_nr1@hotmail.com,,,,,yeager@ubuntu.com,darkangel_nr1@hotmail.com,,,,,,yeager@ubuntu.com,darkangel_nr1@hotmail.com,,,,,,yeager@ubuntu.com,darkangel_nr1@hotmail.com,"
+msgstr "nordinalex@gmail.com, yeager@ubuntu.com"
 
 #, fuzzy
 #~ msgid "Angles:"

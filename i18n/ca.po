@@ -7,13 +7,14 @@
 # Toni Hermoso Pulido <toniher@softcatala.cat>, 2009.
 # victor dargallo <victordargallo@disroot.org>, 2023.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
+# Àngel Oliveras Rovira <aoliverasrovira@somnuvol.coop>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-13 06:15+0000\n"
-"PO-Revision-Date: 2026-03-11 10:10+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-09-19 13:40+0000\n"
+"Last-Translator: Àngel Oliveras Rovira <aoliverasrovira@somnuvol.coop>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca/>\n"
 "Language: ca\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -456,7 +457,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "No hi ha molècula establerta en «BackgroundFileFormat»!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -464,7 +465,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "No s'ha establert cap nom d'arxiu en «BackgroundFileFormat»!"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1276,9 +1277,8 @@ msgid "Reference Axes"
 msgstr "Referència Axes"
 
 #: qtgui/moleculemodel.cpp:121
-#, fuzzy
 msgid "Untitled"
-msgstr "sense nom"
+msgstr "Sense títol"
 
 #: qtgui/moleculemodel.cpp:136
 msgid "Edit molecule"
@@ -4772,7 +4772,7 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
 msgid "Keep Files"
-msgstr ""
+msgstr "Conservar arxius"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
 msgid "Delete Files"
