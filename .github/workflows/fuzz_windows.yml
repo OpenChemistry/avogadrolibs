@@ -123,10 +123,14 @@ jobs:
         # .../lib/clang/<major>/lib/windows/. The version directory moves with
         # every LLVM release, so find it rather than hard-coding it.
         asan_dll="$(find "${llvm_root}/lib/clang" -name 'clang_rt.asan_dynamic-x86_64.dll' | head -1)"
+        asan_lib="$(find "${llvm_root}/lib/clang" -name 'clang_rt.asan_dynamic-x86_64.lib' | head -1)"
+        asan_thunk="$(find "${llvm_root}/lib/clang" -name 'clang_rt.asan_dynamic_runtime_thunk-x86_64.lib' | head -1)"
         fuzzer_lib="$(find "${llvm_root}/lib/clang" -name 'clang_rt.fuzzer-x86_64.lib' | head -1)"
         fdp="$(find "${llvm_root}/lib/clang" -path '*/fuzzer/FuzzedDataProvider.h' | head -1)"
 
-        echo "asan runtime:         ${asan_dll:-MISSING}"
+        echo "asan runtime DLL:     ${asan_dll:-MISSING}"
+        echo "asan import library:  ${asan_lib:-MISSING}"
+        echo "asan thunk:           ${asan_thunk:-MISSING}"
         echo "libFuzzer:            ${fuzzer_lib:-MISSING}"
         echo "FuzzedDataProvider.h: ${fdp:-MISSING}"
 
@@ -134,9 +138,14 @@ jobs:
           echo "::error::This LLVM install has no libFuzzer; the fuzz targets cannot be built."
           exit 1
         fi
-        if [ "${USE_ASAN}" = "true" ] && [ -z "${asan_dll}" ]; then
-          echo "::error::AddressSanitizer was requested but its runtime DLL is missing."
-          exit 1
+        if [ "${USE_ASAN}" = "true" ]; then
+          # The import library and the thunk are named on the link line by
+          # hand (see the build step), so a missing one is a hard stop rather
+          # than something to discover as a wall of undefined symbols.
+          if [ -z "${asan_dll}" ] || [ -z "${asan_lib}" ] || [ -z "${asan_thunk}" ]; then
+            echo "::error::AddressSanitizer was requested but part of its runtime is missing."
+            exit 1
+          fi
         fi
 
         # POSIX form for both: a PATH entry like "C:/Program Files/LLVM/bin"
@@ -145,6 +154,9 @@ jobs:
         # spawns a native process, so the loader still finds the DLL.
         echo "llvm_bin=$(cygpath -u "${llvm_root}/bin")" >> "${GITHUB_OUTPUT}"
         echo "asan_bin=$(cygpath -u "$(dirname "${asan_dll:-${llvm_root}/bin}")")" >> "${GITHUB_OUTPUT}"
+        # Windows form for this one: it goes on LIB, which the linker reads as
+        # a native semicolon-separated path list.
+        echo "rt_lib_dir=$(cygpath -w "$(dirname "${fuzzer_lib}")")" >> "${GITHUB_OUTPUT}"
 
     # Coverage-guided fuzzing is cumulative: units the fuzzer discovers are
     # only useful if they survive to the next run. Restore last night's
@@ -267,6 +279,46 @@ jobs:
           SAN="${SAN} -fsanitize=address -D_DISABLE_VECTOR_ANNOTATION -D_DISABLE_STRING_ANNOTATION"
         fi
 
+        # CMake drives an MSVC-style link with the linker itself, never with
+        # the compiler driver, so every -fsanitize= flag on the link line is
+        # dropped ("lld-link: warning: ignoring unknown argument") and no
+        # sanitizer runtime is pulled in. The libraries have to be named.
+        #
+        # LIB is how the linker finds them by bare name; spelling out full
+        # paths would mean quoting "C:/Program Files/..." inside a cache
+        # string, which is worse.
+        export LIB="${{ steps.llvm.outputs.rt_lib_dir }};${LIB}"
+
+        # CMAKE_*_STANDARD_LIBRARIES, not the linker flags, and the reason is
+        # link order. CMake emits the standard libraries last, after a
+        # target's own link libraries; the linker flags come before them.
+        # Each fuzz executable links clang_rt.fuzzer through
+        # AvogadroLibs_FUZZ_LINK_LIBS (see the ENABLE_FUZZ block in
+        # CMakeLists.txt), so putting the ASan libraries last lets libFuzzer
+        # resolve main() and its own __sanitizer_cov_* hooks first -- which is
+        # what makes coverage feedback work. The Avogadro DLLs never link
+        # libFuzzer, so their __sanitizer_cov_* calls fall through to the ASan
+        # runtime and its thunk, which is what the thunk exists for.
+        #
+        # Setting this replaces CMake's default list rather than adding to it,
+        # so the default Win32 libraries are restated here.
+        STDLIBS="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib"
+        STDLIBS="${STDLIBS} ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib"
+
+        # Dash spellings again, so MSYS does not turn -debug into a path.
+        # -incremental:no because ASan and incremental linking do not mix;
+        # clang's own driver passes both of these whenever ASan is on.
+        LINKFLAGS="-debug -incremental:no"
+
+        if [ "${USE_ASAN}" = "true" ]; then
+          STDLIBS="${STDLIBS} clang_rt.asan_dynamic-x86_64.lib"
+          STDLIBS="${STDLIBS} clang_rt.asan_dynamic_runtime_thunk-x86_64.lib"
+          # Keeps the thunk's SEH interceptor from being dropped, so an access
+          # violation reaches ASan as a report instead of killing the process
+          # with no output. Also what clang's driver does.
+          LINKFLAGS="${LINKFLAGS} -include:__asan_seh_interceptor"
+        fi
+
         # Setting the per-configuration flags rather than CMAKE_CXX_FLAGS:
         # the latter already holds /DWIN32 /D_WINDOWS /GR /EHsc, and dropping
         # /EHsc and /GR would take exceptions and RTTI out from under Qt and
@@ -280,7 +332,12 @@ jobs:
         MSYS2_ARG_CONV_EXCL='*' MSYS2_ENV_CONV_EXCL='*' \
         cmake -DENABLE_FUZZ=ON \
           -DCMAKE_C_FLAGS_RELWITHDEBINFO="${SAN}" \
-          -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="${SAN}" .
+          -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="${SAN}" \
+          -DCMAKE_C_STANDARD_LIBRARIES="${STDLIBS}" \
+          -DCMAKE_CXX_STANDARD_LIBRARIES="${STDLIBS}" \
+          -DCMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO="${LINKFLAGS}" \
+          -DCMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO="${LINKFLAGS}" \
+          -DCMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO="${LINKFLAGS}" .
         cmake --build .
 
     - name: Run fuzz tests
