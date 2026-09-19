@@ -97,7 +97,9 @@ jobs:
     - name: Install Dependencies
       run: |
         choco install ninja
-        vcpkg install libarchive eigen3 libxml2 zlib gtest
+        # glew is here but not in build_windows.yml, and USE_SYSTEM_GLEW below
+        # says why.
+        vcpkg install libarchive eigen3 libxml2 zlib gtest glew
       shell: bash
 
     # Everything the fuzz targets need from LLVM: clang-cl itself, libFuzzer
@@ -188,11 +190,23 @@ jobs:
         # recognise leaves CMAKE_CXX_FLAGS_<CONFIG> empty for every subproject
         # on CMP0091 OLD, which is where /MD comes from, and the static CRT
         # then collides at link. See section 4.3 of the bug-hunt plan.
+        #
+        # USE_SYSTEM_GLEW, which no other Windows job needs: the superbuild
+        # compiles glew.c with GLEW_EXPORTS defined, but glew.h keys its
+        # dllexport/dllimport choice off GLEW_BUILD. Every GLEW variable is
+        # therefore declared __declspec(dllimport) and then defined without
+        # it, and the extension table at glew.c:7388 takes the address of one
+        # -- "initializer element is not a compile-time constant" under clang.
+        # MSVC accepts it, so the shipped build has never noticed. No fuzz
+        # target needs GLEW (QtGui links IO, Calc, Qt and JKQTPlotter, not
+        # Rendering), so take the prebuilt one rather than carry a patch for
+        # another repository here.
         CC=clang-cl CXX=clang-cl cmake -G Ninja "${source}" ${{ env.FEATURES }} \
           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON \
           -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON \
+          -DUSE_SYSTEM_GLEW=ON \
           -DENABLE_TESTING=ON -DTEST_QTGL=OFF
 
     - name: Cache thirdparty
