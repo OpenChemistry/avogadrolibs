@@ -198,17 +198,22 @@ jobs:
         # CMAKE_BUILD_TYPE, and clang-cl rejects "-MDd with -fsanitize=address"
         # outright: "AddressSanitizer doesn't support linking with debug
         # runtime libraries yet". Sanitizer flags in CXXFLAGS therefore break
-        # project() itself. Confining them to
-        # CMAKE_CXX_FLAGS_RELWITHDEBINFO leaves the Debug try-compiles clean.
+        # project() itself. Confining them to CMAKE_CXX_FLAGS_RELEASE leaves
+        # the Debug try-compiles clean.
         #
         # It also keeps the instrumentation on our own code rather than on
         # spglib, glew, libmsym and JKQTPlotter, which is what the Windows
         # ASan job in build_windows.yml settled on for the same reason.
         #
-        # RelWithDebInfo, not a made-up configuration name: one MSVC does not
+        # Release, not a made-up configuration name: one MSVC does not
         # recognise leaves CMAKE_CXX_FLAGS_<CONFIG> empty for every subproject
         # on CMP0091 OLD, which is where /MD comes from, and the static CRT
         # then collides at link. See section 4.3 of the bug-hunt plan.
+        # Release rather than RelWithDebInfo so that an imported target
+        # carrying only Release and Debug variants -- every vcpkg package --
+        # resolves to Release exactly, instead of CMake falling back to
+        # whichever configuration it finds first. Debug info for the fuzz
+        # build comes from the -Z7 added below, not from the configuration.
         #
         # USE_SYSTEM_GLEW, which no other Windows job needs: the superbuild
         # compiles glew.c with GLEW_EXPORTS defined, but glew.h keys its
@@ -253,13 +258,23 @@ jobs:
         # on Windows. The caveat is that the shipped Windows build is shared,
         # so this fuzzes marginally different codegen -- no import thunks --
         # than users run. That is the price of fuzzing here at all.
+        #
+        # USE_SYSTEM_GTEST=ON, and it is BUILD_SHARED_LIBS=OFF that forces it.
+        # cmake/External_gtest.cmake is the one external that never receives
+        # OpenChemistry_DEFAULT_ARGS, so gtest is configured with no
+        # CMAKE_BUILD_TYPE and installs a GTestTargets-debug.cmake -- a debug
+        # CRT, _ITERATOR_DEBUG_LEVEL 2. As a DLL its import library carries no
+        # objects and nothing notices; as a static library every test
+        # executable fails with /failifmismatch against our own
+        # _ITERATOR_DEBUG_LEVEL 0. vcpkg's gtest is built properly, so take
+        # that one instead of patching another repository.
         CC=clang-cl CXX=clang-cl cmake -G Ninja "${source}" ${{ env.FEATURES }} \
-          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON \
           -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON \
           -DUSE_SYSTEM_GLEW=ON -DUSE_PLOTTER=OFF \
-          -DBUILD_SHARED_LIBS=OFF \
+          -DBUILD_SHARED_LIBS=OFF -DUSE_SYSTEM_GTEST=ON \
           -DENABLE_TESTING=ON -DTEST_QTGL=OFF
 
     - name: Cache thirdparty
@@ -367,13 +382,13 @@ jobs:
         # reconfigure costs no extra build.
         MSYS2_ARG_CONV_EXCL='*' MSYS2_ENV_CONV_EXCL='*' \
         cmake -DENABLE_FUZZ=ON \
-          -DCMAKE_C_FLAGS_RELWITHDEBINFO="${SAN}" \
-          -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="${SAN}" \
+          -DCMAKE_C_FLAGS_RELEASE="${SAN}" \
+          -DCMAKE_CXX_FLAGS_RELEASE="${SAN}" \
           -DCMAKE_C_STANDARD_LIBRARIES="${STDLIBS}" \
           -DCMAKE_CXX_STANDARD_LIBRARIES="${STDLIBS}" \
-          -DCMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO="${LINKFLAGS}" \
-          -DCMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO="${LINKFLAGS}" \
-          -DCMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO="${LINKFLAGS}" .
+          -DCMAKE_EXE_LINKER_FLAGS_RELEASE="${LINKFLAGS}" \
+          -DCMAKE_SHARED_LINKER_FLAGS_RELEASE="${LINKFLAGS}" \
+          -DCMAKE_MODULE_LINKER_FLAGS_RELEASE="${LINKFLAGS}" .
         cmake --build .
 
     - name: Run fuzz tests
