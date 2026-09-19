@@ -30,6 +30,7 @@ avogadro_headers(Rendering
   linestripgeometry.h
   meshgeometry.h
   node.h
+  packedvertex.h
   plyvisitor.h
   povrayvisitor.h
   primitive.h
