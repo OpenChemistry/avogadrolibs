@@ -537,7 +537,30 @@ jobs:
         # Targets with known, pre-existing failures. They still run and still
         # upload artifacts, but they do not fail the job. Delete entries here as
         # the underlying bugs are fixed.
-        known_issues=()
+        #
+        # quantumio/qcjson: an access-violation at qcschema.cpp:142 on **empty
+        # input**, parked because the evidence says it is this toolchain and
+        # not the parser:
+        #   - the fault is inside the catch block during unwinding, with
+        #     _CallSettingFrame and __FrameHandler3::CxxCallCatchBlock on the
+        #     stack, not in any parsing code;
+        #   - the line is appendError("..." + string(e.what())), and an empty
+        #     stream throwing parse_error.101 is the expected, handled path;
+        #   - the Linux nightly runs empty input through this target every
+        #     night and is green, and replaying the artifact locally exits 0.
+        # Whole-archiving the ASan static runtime thunk was tried and did not
+        # fix it (run 35471589964). The next diagnostic is a workflow_dispatch
+        # with use_asan=false, which separates an ASan problem from a
+        # clang-cl/static-CRT exception-handling one; that needs the workflow
+        # on the default branch first.
+        #
+        # The cost of this entry is real: a genuine qcjson bug would now be
+        # missed on Windows. It is here so that the other 28 targets can fail
+        # the job when they should, rather than the whole run being red for
+        # one known artifact.
+        known_issues=(
+          "quantumio/qcjson"
+        )
 
         is_known_issue() {
           local entry
@@ -554,7 +577,7 @@ jobs:
         artifact_root="${workspace}/build/avogadrolibs/fuzz-artifacts"
         corpus_root="${workspace}/fuzz-corpus"
         failures=0
-        blind=0
+        blind=""
 
         {
           echo "## Windows fuzz results (${FUZZ_SECONDS}s per target, ASan=${USE_ASAN})"
@@ -650,7 +673,7 @@ jobs:
             # instantiates is counted. A thousand flagged that as suspect and
             # it was not.
             if [ "${counters}" -lt 100 ]; then
-              blind=1
+              blind="${blind}${blind:+, }${name} (${counters})"
             fi
 
             # Minimize on the way out: rebuild the corpus as the smallest set
@@ -684,10 +707,13 @@ jobs:
           done
         done
 
-        if [ "${blind}" -eq 1 ]; then
-          echo "::warning::At least one target reported fewer than 1000 coverage counters - the libraries may not be instrumented (see the Counters column)."
+        # Naming the targets, not just raising a flag: run 35471589964 warned
+        # while every target reported at least 346 counters, and with no names
+        # in the message there was no way to tell which one tripped it.
+        if [ -n "${blind}" ]; then
+          echo "::warning::Fewer than 100 coverage counters: ${blind}. The instrumentation may not have been applied."
           echo >> "${GITHUB_STEP_SUMMARY}"
-          echo "> A target with almost no counters is fuzzing blind: the harness is instrumented but the Avogadro DLLs are not, so no input ever looks new." >> "${GITHUB_STEP_SUMMARY}"
+          echo "> Fewer than 100 counters: ${blind}. A target with almost none is fuzzing blind -- the harness is instrumented but the library code is not, so no input ever looks new. For scale, the blind Linux nightly in the 2.1 plan reported 34, and a healthy io target here reports tens of thousands." >> "${GITHUB_STEP_SUMMARY}"
         fi
 
         du -sh "${corpus_root}" || true
