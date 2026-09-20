@@ -314,9 +314,15 @@ void Graph::removeEdge(size_t a, size_t b)
 
   std::swap(*iter, neighborsA.back());
   neighborsA.pop_back();
-  std::swap(*std::find(neighborsB.begin(), neighborsB.end(), a),
-            neighborsB.back());
-  neighborsB.pop_back();
+  // std::find() returns end() when the element is absent, and dereferencing
+  // that writes past the end of the vector. a is only guaranteed to be in
+  // neighborsB if the adjacency lists agree with each other, which is exactly
+  // what is not true once anything has corrupted them.
+  auto iterB = std::find(neighborsB.begin(), neighborsB.end(), a);
+  if (iterB != neighborsB.end()) {
+    std::swap(*iterB, neighborsB.back());
+    neighborsB.pop_back();
+  }
 
   size_t edgeIndex = 0;
   for (size_t i = 0; i < m_edgeMap[a].size(); i++) {
@@ -342,10 +348,20 @@ void Graph::removeEdge(size_t a, size_t b)
 
   size_t affectedIndex = m_edgePairs.size();
   if (affectedIndex != edgeIndex) {
+    // The edge that was at the back now lives at edgeIndex, so both of its
+    // endpoints have to be told. Same trap as above: std::find() returns
+    // end() if the endpoint's list does not mention the old index, and
+    // assigning through that end() iterator is an out-of-bounds write -- one
+    // that silently corrupts whatever follows the vector, including the
+    // bookkeeping this function depends on next time round.
     std::vector<size_t>& edgeList1 = m_edgeMap[m_edgePairs[edgeIndex].first];
-    *std::find(edgeList1.begin(), edgeList1.end(), affectedIndex) = edgeIndex;
+    auto found1 = std::find(edgeList1.begin(), edgeList1.end(), affectedIndex);
+    if (found1 != edgeList1.end())
+      *found1 = edgeIndex;
     std::vector<size_t>& edgeList2 = m_edgeMap[m_edgePairs[edgeIndex].second];
-    *std::find(edgeList2.begin(), edgeList2.end(), affectedIndex) = edgeIndex;
+    auto found2 = std::find(edgeList2.begin(), edgeList2.end(), affectedIndex);
+    if (found2 != edgeList2.end())
+      *found2 = edgeIndex;
   }
 
   // Mark the subgraph as dirty, leave the work for later
@@ -390,9 +406,20 @@ void Graph::removeEdges(size_t index)
   m_vertexToSubgraph[index] = -1;
   m_loneVertices.insert(index);
 
-  // Removing edges mutates m_edgeMap[index], so consume until empty.
-  while (!m_edgeMap[index].empty())
+  // Removing edges mutates m_edgeMap[index], so consume until empty -- but
+  // removeEdge() has three paths that return having removed nothing (an index
+  // past edgeCount(), and either endpoint check failing), and this loop's only
+  // exit is the list becoming empty. Ignoring that spins here forever, which
+  // is how a 921-byte fuzz input took 41 seconds. Drop an entry that
+  // removeEdge() would not, so the loop always makes progress: the entry
+  // refers to an edge the edge list no longer agrees exists, and this vertex
+  // is losing its edges either way.
+  while (!m_edgeMap[index].empty()) {
+    const size_t before = m_edgeMap[index].size();
     removeEdge(m_edgeMap[index].back());
+    if (m_edgeMap[index].size() >= before)
+      m_edgeMap[index].pop_back();
+  }
 }
 
 void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
