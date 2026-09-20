@@ -34,6 +34,15 @@ else()
   set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE ON)
   target_include_directories(pugixml PUBLIC $<BUILD_INTERFACE:${_PUGIXML_ROOT}>)
   add_library(pugixml::pugixml ALIAS pugixml)
+  # A static Avogadro::IO carries its PRIVATE dependencies into its link
+  # interface as $<LINK_ONLY:...> -- consumers of a static library have to
+  # link them too -- and install(EXPORT) refuses to generate at all if one of
+  # them is in no export set. A shared build absorbs them and needs none of
+  # this, which is why BUILD_SHARED_LIBS=OFF did not configure before.
+  if(NOT BUILD_SHARED_LIBS)
+    install(TARGETS pugixml EXPORT "AvogadroLibsTargets"
+      ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
+  endif()
   unset(_PUGIXML_ROOT)
 endif(USE_EXTERNAL_PUGIXML)
 
@@ -47,6 +56,11 @@ else()
   )
   set_target_properties(struct PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
   target_include_directories(struct PUBLIC $<BUILD_INTERFACE:${_STRUCT_ROOT}>)
+  # See the pugixml block above.
+  if(NOT BUILD_SHARED_LIBS)
+    install(TARGETS struct EXPORT "AvogadroLibsTargets"
+      ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
+  endif()
   unset(_STRUCT_ROOT)
 endif(USE_EXTERNAL_STRUCT)
 

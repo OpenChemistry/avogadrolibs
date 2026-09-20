@@ -2503,7 +2503,13 @@ bool Molecule::removeBonds(Index atom)
     if (!bondList.size())
       break;
     size_t bond = bondList[0];
-    removeBond(bond);
+    // removeBond() returns false without removing anything when the index is
+    // past bondCount(), which means the graph's edge list and the bond arrays
+    // disagree. Ignoring that spun here forever: the edge list never shrinks,
+    // so the loop never reaches its only exit. Stop instead, and say that not
+    // every bond could be removed.
+    if (!removeBond(bond))
+      return false;
   }
   return true;
 }

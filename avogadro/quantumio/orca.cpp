@@ -165,11 +165,15 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   while (!in.eof())
     processLine(in, basis.get());
 
-  // Set up the molecule
-  int nAtom = 0;
-  for (unsigned int i = 0; i < m_atomNums.size(); i++) {
+  // Set up the molecule. m_atomNums and m_atomPos are filled by different
+  // blocks, so a truncated or malformed file can leave fewer positions than
+  // atomic numbers; take only the atoms that have both. If that is none, the
+  // "no atomic coordinates" error below fires as it always did.
+  const size_t atomsWithPositions =
+    std::min(m_atomNums.size(), m_atomPos.size());
+  for (size_t i = 0; i < atomsWithPositions; i++) {
     Vector3 pos = m_atomPos[i] * BOHR_TO_ANGSTROM;
-    molecule.addAtom(static_cast<unsigned char>(m_atomNums[nAtom++]), pos);
+    molecule.addAtom(static_cast<unsigned char>(m_atomNums[i]), pos);
   }
 
   if (0 == molecule.atomCount()) {
@@ -183,6 +187,14 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   // atoms were added with above). Keeping the file's own order is what lets
   // a Hessian be matched to the geometry it was computed at.
   for (unsigned int i = 0; i < m_coordSets.size(); i++) {
+    // Each entry holds exactly what its geometry block listed, which in a
+    // malformed file need not be every atom. A frame with no position for
+    // every atom is not a usable conformer, so skip it rather than read off
+    // the end of it. The index is still consumed: conformer numbers are
+    // m_coordSets indices, which is the relationship m_vibrationConformer
+    // relies on to match a Hessian to the geometry it was computed at.
+    if (m_coordSets[i].size() < molecule.atomCount())
+      continue;
     Array<Vector3> positions;
     positions.reserve(molecule.atomCount());
     for (size_t j = 0; j < molecule.atomCount(); ++j) {

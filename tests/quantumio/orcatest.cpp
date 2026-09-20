@@ -250,3 +250,49 @@ TEST(OrcaTest, energiesAreRecordedAsHartree)
   ASSERT_TRUE(molecule.hasData("totalEnergy"));
   EXPECT_EQ(Avogadro::Core::energyUnit(molecule), "Hartree");
 }
+
+// Two geometry blocks with different atom counts. The first is pushed into
+// m_coordSets before the second is parsed, so the stored conformer is shorter
+// than the molecule the file finally describes. Building the conformer array
+// walked molecule.atomCount() over that shorter set and read off the end of
+// it -- a heap-buffer-overflow found by the Windows fuzz job, quantumio/orca.
+//
+// A frame with no position for every atom is not a usable conformer, so the
+// reader now skips it. Its index is still consumed, because conformer numbers
+// are m_coordSets indices and m_vibrationConformer depends on that.
+TEST(OrcaTest, shortCoordinateSetIsSkipped)
+{
+  const std::string output = "CARTESIAN COORDINATES (A.U.)\n"
+                             "----------------------------\n"
+                             "  NO LB ZA FRAG MASS X Y Z\n"
+                             "   0 O 8.0000 0 15.999 0.0 0.0 0.0\n"
+                             "   1 H 1.0000 0 1.008 0.0 0.0 1.8\n"
+                             "\n"
+                             "CARTESIAN COORDINATES (A.U.)\n"
+                             "----------------------------\n"
+                             "  NO LB ZA FRAG MASS X Y Z\n"
+                             "   0 O 8.0000 0 15.999 0.0 0.0 0.0\n"
+                             "   1 H 1.0000 0 1.008 0.0 0.0 1.8\n"
+                             "   2 H 1.0000 0 1.008 1.8 0.0 0.0\n"
+                             "\n";
+
+  ORCAOutput orca;
+  Molecule molecule;
+  EXPECT_TRUE(orca.readString(output, molecule));
+
+  // The final geometry is the three-atom one.
+  EXPECT_EQ(molecule.atomCount(), static_cast<Avogadro::Index>(3));
+
+  // The invariant that matters: no conformer is a partial geometry. A frame
+  // that was skipped is left empty -- its index is still consumed -- and an
+  // empty frame is distinguishable from real data. What must never exist is
+  // a frame with some but not all of the atoms, because everything that
+  // walks a conformer indexes it by atomCount().
+  for (int i = 0; i < static_cast<int>(molecule.coordinate3dCount()); ++i) {
+    ASSERT_TRUE(molecule.setCoordinate3d(i));
+    const size_t stored = molecule.atomPositions3d().size();
+    EXPECT_TRUE(stored == 0 || stored == molecule.atomCount())
+      << "conformer " << i << " has " << stored << " of "
+      << molecule.atomCount() << " atoms";
+  }
+}
