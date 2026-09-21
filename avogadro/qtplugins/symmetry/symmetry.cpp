@@ -232,6 +232,11 @@ bool Symmetry::runSymmetryDetection(msym_thresholds_t* thresholds,
   // "length < 2" early return, so it could never run: a single atom left
   // whatever the previous molecule had detected on screen instead.
   if (length == 1) {
+    // Clear first: libmsym is never consulted on this path, so the panel
+    // would otherwise keep the previous molecule's equivalence sets,
+    // operations and subgroups next to a Kh label. Order matters -- clearing
+    // resets the point group to C1, so the label is written afterwards.
+    clearSymmetryResults();
     if (m_symmetryWidget != nullptr)
       m_symmetryWidget->setPointGroupSymbol(QStringLiteral("K<sub>h</sub>"));
     if (pointGroup != nullptr)
