@@ -262,3 +262,26 @@ TEST(GraphTest, swapVertexIndicesBondedPairInARing)
     EXPECT_EQ(graph.neighbors(v).size(), static_cast<size_t>(2))
       << "vertex " << v;
 }
+
+TEST(GraphTest, swapEdgeIndicesIgnoresIndicesThatAreNotEdges)
+{
+  // Undo commands reach swapEdgeIndices() with an edge index recorded before
+  // the edit they reverse, so it can name an edge that no longer exists.
+  // Indexing m_edgePairs with one of those reads past the end of the array and
+  // then uses whatever it finds as a vertex index -- caught by the qtgui
+  // rwmolecule fuzz target, and visible here only under a sanitizer.
+  Graph graph(3);
+  graph.addEdge(0, 1);
+
+  graph.swapEdgeIndices(0, 5);
+  graph.swapEdgeIndices(7, 0);
+  graph.swapEdgeIndices(3, 4);
+  // bondCount() - 1 on an empty bond list underflows, which is how the
+  // fuzzer got here.
+  graph.swapEdgeIndices(0, static_cast<size_t>(-1));
+
+  EXPECT_EQ(graph.edgeCount(), static_cast<size_t>(1));
+  expectConsistent(graph);
+  EXPECT_EQ(graph.neighbors(0).size(), static_cast<size_t>(1));
+  EXPECT_EQ(graph.neighbors(1).size(), static_cast<size_t>(1));
+}

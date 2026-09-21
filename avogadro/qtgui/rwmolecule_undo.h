@@ -79,6 +79,7 @@ class AddAtomCommand : public RWMolecule::UndoCommand
   Index m_atomId;
   Index m_atomUid;
   size_t m_layer;
+  bool m_added = false;
 
 public:
   AddAtomCommand(RWMolecule& m, unsigned char aN, bool usingPositions,
@@ -92,15 +93,25 @@ public:
   void redo() override
   {
     assert(m_molecule.atomCount() == m_atomId);
-    if (m_usingPositions)
-      m_molecule.addAtom(m_atomicNumber, Vector3::Zero(), m_atomUid);
-    else
-      m_molecule.addAtom(m_atomicNumber, m_atomUid);
+    auto atom =
+      m_usingPositions
+        ? m_molecule.addAtom(m_atomicNumber, Vector3::Zero(), m_atomUid)
+        : m_molecule.addAtom(m_atomicNumber, m_atomUid);
+    // An add that was refused leaves the molecule as it was, and undoing it
+    // must do the same -- removing m_atomId then takes whichever atom has
+    // since come to sit at that index.
+    m_added = atom.isValid();
+    if (!m_added)
+      return;
+
     m_molecule.layer().addAtom(m_layer, m_atomId);
   }
 
   void undo() override
   {
+    if (!m_added)
+      return;
+
     assert(m_molecule.atomCount() == m_atomId + 1);
     m_layer = m_molecule.layer().getLayerID(m_atomId);
     m_molecule.removeAtom(m_atomId);
@@ -138,7 +149,12 @@ public:
 
   void undo() override
   {
-    m_molecule.addAtom(m_atomicNumber, m_position3d, m_atomUid);
+    // As in RemoveBondCommand::undo(): a refused add leaves atomCount()
+    // unchanged, and everything below indexes with atomCount() - 1.
+    auto atom = m_molecule.addAtom(m_atomicNumber, m_position3d, m_atomUid);
+    if (!atom.isValid())
+      return;
+
     // Swap the moved and unremoved atom data if needed
     Index movedId = m_mol.atomCount() - 1;
     m_molecule.layer().addAtom(m_layer, movedId);
@@ -449,6 +465,7 @@ class AddBondCommand : public RWMolecule::UndoCommand
   std::pair<Index, Index> m_bondPair;
   Index m_bondId;
   Index m_bondUid;
+  bool m_added = false;
 
 public:
   AddBondCommand(RWMolecule& m, unsigned char order,
@@ -462,11 +479,30 @@ public:
   void redo() override
   {
     assert(m_molecule.bondCount() == m_bondId);
-    m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder);
+    const Index before = m_molecule.bondCount();
+
+    // The bond has to come back under the unique id it had. On the first run
+    // that id does not exist yet and the plain overload appends exactly it;
+    // on a redo after an undo the slot is still there, tombstoned, and the
+    // unique-id overload reclaims it. Appending a fresh id instead left every
+    // PersistentBond pointing at the old one dangling and grew
+    // m_bondUniqueIds by one on every undo/redo cycle.
+    auto bond =
+      (m_bondUid == static_cast<Index>(bondUniqueIds().size()))
+        ? m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder)
+        : m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder,
+                             m_bondUid);
+
+    // As in AddAtomCommand: undoing an add that never happened would remove
+    // a bond this command does not own.
+    m_added = bond.isValid() && m_molecule.bondCount() > before;
   }
 
   void undo() override
   {
+    if (!m_added)
+      return;
+
     // we know this is the top so just a simple remove
     m_molecule.removeBond(m_bondId);
   }
@@ -494,8 +530,15 @@ public:
 
   void undo() override
   {
-    m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder,
-                       m_bondUid);
+    // The bond may not come back: addBond() refuses a unique id that is no
+    // longer free and atom indices that no longer exist. bondCount() has not
+    // grown then, so the swap below would name a bond that is not there --
+    // and on an empty molecule bondCount() - 1 underflows to MaxIndex.
+    auto bond = m_molecule.addBond(m_bondPair.first, m_bondPair.second,
+                                   m_bondOrder, m_bondUid);
+    if (!bond.isValid())
+      return;
+
     Index movedId = m_molecule.bondCount() - 1;
     m_molecule.swapBond(m_bondId, movedId);
   }
