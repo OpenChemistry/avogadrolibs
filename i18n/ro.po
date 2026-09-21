@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-09-13 06:15+0000\n"
+"POT-Creation-Date: 2026-09-20 06:21+0000\n"
 "PO-Revision-Date: 2026-09-18 10:12+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -42,27 +42,27 @@ msgstr ""
 "superior. Recepționat:\n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:203 qtgui/interfacescript.cpp:322
-#: qtgui/interfacescript.cpp:490
+#: molequeue/inputgenerator.cpp:208 qtgui/interfacescript.cpp:322
+#: qtgui/interfacescript.cpp:495
 msgid "Non-string warning returned."
 msgstr "A fost returnat un avertisment ce nu este un șir de caractere."
 
-#: molequeue/inputgenerator.cpp:206 qtgui/interfacescript.cpp:325
-#: qtgui/interfacescript.cpp:493
+#: molequeue/inputgenerator.cpp:211 qtgui/interfacescript.cpp:325
+#: qtgui/interfacescript.cpp:498
 msgid "'warnings' member is not an array."
 msgstr "Membrul „warnings” nu este o matrice."
 
-#: molequeue/inputgenerator.cpp:226 qtgui/interfacescript.cpp:513
+#: molequeue/inputgenerator.cpp:231 qtgui/interfacescript.cpp:518
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr "Fișierul de referință „%1” nu există."
 
-#: molequeue/inputgenerator.cpp:228 qtgui/interfacescript.cpp:515
+#: molequeue/inputgenerator.cpp:233 qtgui/interfacescript.cpp:520
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr "Eroare la popularea fișierului %1: %2"
 
-#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:519
+#: molequeue/inputgenerator.cpp:237 qtgui/interfacescript.cpp:524
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
@@ -70,7 +70,7 @@ msgstr ""
 "Fișierul „%1” nu este bine format. Lipsesc membrii șirului „contents” sau "
 "„filePath”."
 
-#: molequeue/inputgenerator.cpp:271 qtgui/interfacescript.cpp:552
+#: molequeue/inputgenerator.cpp:276 qtgui/interfacescript.cpp:557
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
@@ -80,32 +80,32 @@ msgstr ""
 "nu conține șiruri de caractere:\n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:558
+#: molequeue/inputgenerator.cpp:282 qtgui/interfacescript.cpp:563
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr "Intrare de fișier formată greșit la pozițial %1: Nu este un obiect."
 
-#: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:564
+#: molequeue/inputgenerator.cpp:288 qtgui/interfacescript.cpp:569
 msgid "'files' member not an array."
 msgstr "Membrul „files” nu este o matrice."
 
-#: molequeue/inputgenerator.cpp:287 qtgui/interfacescript.cpp:568
+#: molequeue/inputgenerator.cpp:292 qtgui/interfacescript.cpp:573
 msgid "'files' member missing."
 msgstr "Lipsește membrul „files”."
 
-#: molequeue/inputgenerator.cpp:298 qtgui/interfacescript.cpp:579
+#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:584
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr "Membrul „mainFile” nu se referă la o intrare din „files”."
 
-#: molequeue/inputgenerator.cpp:303 qtgui/interfacescript.cpp:584
+#: molequeue/inputgenerator.cpp:308 qtgui/interfacescript.cpp:589
 msgid "'mainFile' member must be a string."
 msgstr "Membrul „mainFile” trebuie să fie un șir de caractere."
 
-#: molequeue/inputgenerator.cpp:314 qtgui/interfacescript.cpp:595
+#: molequeue/inputgenerator.cpp:319 qtgui/interfacescript.cpp:600
 msgid "Response must be a JSON object at top-level."
 msgstr "Răspunsul trebuie să fie un obiect JSON la nivel superior."
 
-#: molequeue/inputgenerator.cpp:318 qtgui/interfacescript.cpp:599
+#: molequeue/inputgenerator.cpp:323 qtgui/interfacescript.cpp:604
 #, qt-format
 msgid ""
 "Script output:\n"
@@ -114,7 +114,7 @@ msgstr ""
 "Ieșirea scriptului:\n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:361 qtgui/interfacescript.cpp:643
+#: molequeue/inputgenerator.cpp:366 qtgui/interfacescript.cpp:648
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -127,7 +127,7 @@ msgstr ""
 "\n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:385
+#: molequeue/inputgenerator.cpp:390
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
@@ -135,13 +135,13 @@ msgstr ""
 "Eroare la salvarea reprezentării moleculei în șir de caractere: Format de "
 "fișier nerecunoscut: %1"
 
-#: molequeue/inputgenerator.cpp:393
+#: molequeue/inputgenerator.cpp:398
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr "Eroare la salvarea reprezentării moleculei în șir de caractere: %1"
 
-#: molequeue/inputgenerator.cpp:406 qtgui/interfacescript.cpp:713
+#: molequeue/inputgenerator.cpp:411 qtgui/interfacescript.cpp:718
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -154,7 +154,7 @@ msgstr ""
 "\n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:415 qtgui/interfacescript.cpp:722
+#: molequeue/inputgenerator.cpp:420 qtgui/interfacescript.cpp:727
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -162,6 +162,22 @@ msgid ""
 msgstr ""
 "Eroare a generatorului de obiecte cjson: JSON analizat nu este un obiect:\n"
 "%1"
+
+#: molequeue/inputgenerator.cpp:464 qtgui/interfacescript.cpp:772
+msgid ""
+"The z-matrix lists the atoms in a different order from the molecule, so atom "
+"numbers in this file do not match the ones shown in Avogadro."
+msgstr ""
+
+#: molequeue/inputgenerator.cpp:477 qtgui/interfacescript.cpp:785
+#, qt-format
+msgid ""
+"A linear fragment leaves the angle or torsion on z-matrix row(s) %1 "
+"undetermined. The geometry is written correctly, but these coordinates "
+"cannot be varied, and a program that rebuilds Cartesian coordinates from "
+"them may not reproduce this structure exactly. Adding a dummy atom off the "
+"axis avoids this."
+msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
@@ -173,7 +189,7 @@ msgstr "Generator de intrare (eroare)"
 msgid "%1 Input Generator"
 msgstr "Generator de intrare %1"
 
-#: molequeue/inputgeneratorwidget.cpp:123
+#: molequeue/inputgeneratorwidget.cpp:165
 msgid "Continue"
 msgstr "Continuă"
 
@@ -191,18 +207,18 @@ msgstr "Continuă"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#: molequeue/inputgeneratorwidget.cpp:123 qtgui/containerwidget.cpp:35
+#: molequeue/inputgeneratorwidget.cpp:165 qtgui/containerwidget.cpp:35
 msgid "Close"
 msgstr "Închide"
 
-#: molequeue/inputgeneratorwidget.cpp:171 qtgui/elementtranslator.cpp:372
+#: molequeue/inputgeneratorwidget.cpp:220 qtgui/elementtranslator.cpp:372
 #: qtplugins/configurepython/configurepythondialog.cpp:188
 #: qtplugins/configurepython/configurepythondialog.cpp:191
 #: qtplugins/spacegroup/spacegroup.cpp:634
 msgid "Unknown"
 msgstr "Necunoscut"
 
-#: molequeue/inputgeneratorwidget.cpp:172
+#: molequeue/inputgeneratorwidget.cpp:221
 #, qt-format, qt-plural-format
 msgctxt ""
 msgid ""
@@ -241,29 +257,29 @@ msgstr[2] ""
 "Doriți să suprascrieți modificările dvs. pentru a reflecta noua geometrie "
 "sau noile opțiuni de lucru?"
 
-#: molequeue/inputgeneratorwidget.cpp:178
+#: molequeue/inputgeneratorwidget.cpp:227
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
 msgstr "Suprascrieți fișierele de intrare modificate?"
 
-#: molequeue/inputgeneratorwidget.cpp:204
+#: molequeue/inputgeneratorwidget.cpp:253
 msgid "Problems occurred during input generation:"
 msgstr "Au apărut probleme în timpul generării datelor de intrare:"
 
-#: molequeue/inputgeneratorwidget.cpp:293
+#: molequeue/inputgeneratorwidget.cpp:342
 msgid "No input files to save!"
 msgstr "Nu există fișiere de intrare de salvat!"
 
-#: molequeue/inputgeneratorwidget.cpp:301
-#: molequeue/inputgeneratorwidget.cpp:609 molequeue/molequeuewidget.cpp:69
+#: molequeue/inputgeneratorwidget.cpp:350
+#: molequeue/inputgeneratorwidget.cpp:658 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:980
 #: qtplugins/gamessinput/gamessinputdialog.cpp:917
 msgid "Cannot connect to MoleQueue"
 msgstr "Nu se poate conecta la «MoleQueue»"
 
-#: molequeue/inputgeneratorwidget.cpp:302
-#: molequeue/inputgeneratorwidget.cpp:610 molequeue/molequeuewidget.cpp:70
+#: molequeue/inputgeneratorwidget.cpp:351
+#: molequeue/inputgeneratorwidget.cpp:659 molequeue/molequeuewidget.cpp:70
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:981
 #: qtplugins/gamessinput/gamessinputdialog.cpp:918
 msgid ""
@@ -273,52 +289,52 @@ msgstr ""
 "Nu vă puteți conecta la serverul MoleQueue. Vă rugăm să vă asigurați că "
 "acesta rulează și să încercați din nou."
 
-#: molequeue/inputgeneratorwidget.cpp:333
+#: molequeue/inputgeneratorwidget.cpp:382
 #, qt-format
 msgid "Submit %1 Calculation"
 msgstr "Trimiteți calculul %1"
 
-#: molequeue/inputgeneratorwidget.cpp:349
+#: molequeue/inputgeneratorwidget.cpp:398
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1017
 #: qtplugins/gamessinput/gamessinputdialog.cpp:954
 msgid "Job Failed"
 msgstr "Lucrare eșuată"
 
-#: molequeue/inputgeneratorwidget.cpp:350
+#: molequeue/inputgeneratorwidget.cpp:399
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1018
 #: qtplugins/gamessinput/gamessinputdialog.cpp:955
 msgid "The job did not complete successfully."
 msgstr "Lucrarea nu a fost finalizată cu succes."
 
-#: molequeue/inputgeneratorwidget.cpp:367 qtgui/interfacewidget.cpp:50
+#: molequeue/inputgeneratorwidget.cpp:416 qtgui/interfacewidget.cpp:50
 msgid "Script returns warnings:\n"
 msgstr "Scriptul returnează avertismente:\n"
 
-#: molequeue/inputgeneratorwidget.cpp:384
+#: molequeue/inputgeneratorwidget.cpp:433
 msgid "Hide &Warnings"
 msgstr "Ascunde a&vertismentele"
 
-#: molequeue/inputgeneratorwidget.cpp:390
+#: molequeue/inputgeneratorwidget.cpp:439
 msgid "Show &Warnings"
 msgstr "Afișează a&vertismentele"
 
-#: molequeue/inputgeneratorwidget.cpp:407 qtgui/interfacewidget.cpp:66
+#: molequeue/inputgeneratorwidget.cpp:456 qtgui/interfacewidget.cpp:66
 msgid "An error has occurred:"
 msgstr "A apărut o eroare:"
 
-#: molequeue/inputgeneratorwidget.cpp:458
+#: molequeue/inputgeneratorwidget.cpp:507
 msgid "Select output filename"
 msgstr "Selectați numele fișierului de ieșire"
 
-#: molequeue/inputgeneratorwidget.cpp:470
+#: molequeue/inputgeneratorwidget.cpp:519
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
 "Eroare internă: nu s-a putut găsi o aplicație de text cu numele de fișier "
 "„%1”"
 
-#: molequeue/inputgeneratorwidget.cpp:486
-#: molequeue/inputgeneratorwidget.cpp:597
+#: molequeue/inputgeneratorwidget.cpp:535
+#: molequeue/inputgeneratorwidget.cpp:646
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:970
 #: qtplugins/gamessinput/gamessinputdialog.cpp:907
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:324
@@ -330,8 +346,8 @@ msgstr ""
 msgid "Output Error"
 msgstr "Eroare de ieșire"
 
-#: molequeue/inputgeneratorwidget.cpp:487
-#: molequeue/inputgeneratorwidget.cpp:598
+#: molequeue/inputgeneratorwidget.cpp:536
+#: molequeue/inputgeneratorwidget.cpp:647
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:971
 #: qtplugins/gamessinput/gamessinputdialog.cpp:908
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:355
@@ -342,27 +358,27 @@ msgstr "Eroare de ieșire"
 msgid "Failed to write to file %1."
 msgstr "Nu s-a putut scrie fișierul „%1”."
 
-#: molequeue/inputgeneratorwidget.cpp:498
+#: molequeue/inputgeneratorwidget.cpp:547
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
 msgstr "Selectați directorul de ieșire"
 
-#: molequeue/inputgeneratorwidget.cpp:515
+#: molequeue/inputgeneratorwidget.cpp:564
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
 msgstr "%1: Directorul nu există!"
 
-#: molequeue/inputgeneratorwidget.cpp:521
+#: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
 msgstr "%1: Directorul nu poate fi citit!"
 
-#: molequeue/inputgeneratorwidget.cpp:531
+#: molequeue/inputgeneratorwidget.cpp:580
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:287
 #: qtplugins/openmminput/openmminputdialog.cpp:370
@@ -371,7 +387,7 @@ msgstr "%1: Directorul nu poate fi citit!"
 msgid "%1: File will be overwritten."
 msgstr "%1: Fișierul va fi suprascris."
 
-#: molequeue/inputgeneratorwidget.cpp:536
+#: molequeue/inputgeneratorwidget.cpp:585
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:294
 #: qtplugins/openmminput/openmminputdialog.cpp:377
@@ -380,14 +396,14 @@ msgstr "%1: Fișierul va fi suprascris."
 msgid "%1: File is not writable."
 msgstr "%1: Fișierul nu este inscriptibil."
 
-#: molequeue/inputgeneratorwidget.cpp:549
+#: molequeue/inputgeneratorwidget.cpp:598
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
 "Fișierele de intrare nu pot fi scrise din cauza unei erori necunoscute."
 
-#: molequeue/inputgeneratorwidget.cpp:553
+#: molequeue/inputgeneratorwidget.cpp:602
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
 #: qtplugins/openmminput/openmminputdialog.cpp:408
 #, qt-format
@@ -400,7 +416,7 @@ msgstr ""
 "\n"
 "%1"
 
-#: molequeue/inputgeneratorwidget.cpp:562
+#: molequeue/inputgeneratorwidget.cpp:611
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
 #: qtplugins/openmminput/openmminputdialog.cpp:417
 #, qt-format
@@ -421,7 +437,7 @@ msgstr ""
 "\n"
 "%2"
 
-#: molequeue/inputgeneratorwidget.cpp:573
+#: molequeue/inputgeneratorwidget.cpp:622
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
 #: qtplugins/openmminput/openmminputdialog.cpp:428
 #, qt-format
@@ -438,13 +454,13 @@ msgstr ""
 "\n"
 "Doriți să continuați?"
 
-#: molequeue/inputgeneratorwidget.cpp:577
+#: molequeue/inputgeneratorwidget.cpp:626
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
 msgstr "Scrieți fișierele de intrare"
 
-#: molequeue/inputgeneratorwidget.cpp:624
+#: molequeue/inputgeneratorwidget.cpp:673
 msgid "Configure Job"
 msgstr "Configurați lucrarea"
 
@@ -528,6 +544,70 @@ msgstr "Niciun «Io::FileFormat» definit în „BackgroundFileFormat”!"
 msgid "No file name set in BackgroundFileFormat!"
 msgstr "Niciun nume de fișier definit în „BackgroundFileFormat”!"
 
+#: qtgui/conformerquantitytranslator.cpp:30
+#, qt-format
+msgid "Distance %1-%2"
+msgstr ""
+
+#: qtgui/conformerquantitytranslator.cpp:32
+#, qt-format
+msgid "Angle %1-%2-%3"
+msgstr ""
+
+#: qtgui/conformerquantitytranslator.cpp:35
+#, qt-format
+msgid "Dihedral %1-%2-%3-%4"
+msgstr ""
+
+#: qtgui/conformerquantitytranslator.cpp:39
+msgid "Constraint"
+msgstr ""
+
+#: qtgui/conformerquantitytranslator.cpp:45
+msgctxt "position in a trajectory, counting from one"
+msgid "Frame"
+msgstr ""
+
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
+#. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
+#: qtgui/conformerquantitytranslator.cpp:47:1761
+msgid "Time"
+msgstr "Timp"
+
+#: qtgui/conformerquantitytranslator.cpp:49
+msgctxt "root mean square displacement"
+msgid "RMSD"
+msgstr ""
+
+#: qtgui/conformerquantitytranslator.cpp:51
+msgid "Relative Energy"
+msgstr ""
+
+#: qtgui/conformerquantitytranslator.cpp:53
+msgid "RMS Gradient"
+msgstr "Gradient RMS"
+
+#: qtgui/conformerquantitytranslator.cpp:55
+msgctxt "average over the atoms of how fast each moves"
+msgid "Mean Speed"
+msgstr ""
+
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
+#. i18n: ectx: property (text), widget (QLabel, label_temp)
+#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:748
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:918
+#. i18n: ectx: property (text), widget (QCheckBox, temperatureCheck)
+#: qtgui/conformerquantitytranslator.cpp:57:1142 rc.cpp:1257 rc.cpp:1779
+msgid "Temperature"
+msgstr "Temperatura"
+
+#: qtgui/conformerquantitytranslator.cpp:78
+#, qt-format
+msgctxt "quantity name, then its unit"
+msgid "%1 (%2)"
+msgstr ""
+
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
 msgstr "Despărțire pe orizontală"
@@ -560,7 +640,7 @@ msgstr "Bor"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:32:2196
+#: qtgui/elementtranslator.cpp:32:2211
 msgid "Carbon"
 msgstr "Carbon"
 
@@ -642,13 +722,13 @@ msgstr "Mangan"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:92:2199
+#: qtgui/elementtranslator.cpp:92:2214
 msgid "Iron"
 msgstr "Fier"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:95:2202
+#: qtgui/elementtranslator.cpp:95:2217
 msgid "Cobalt"
 msgstr "Cobalt"
 
@@ -1016,6 +1096,27 @@ msgstr "Tennessin"
 msgid "Oganesson"
 msgstr "Oganesson"
 
+#: qtgui/energyunitsdialog.cpp:55
+msgid "Convert Energy Units"
+msgstr ""
+
+#: qtgui/energyunitsdialog.cpp:70 qtplugins/plotconformer/plotconformer.cpp:924
+msgid "This file records the units its energies are in."
+msgstr ""
+
+#: qtgui/energyunitsdialog.cpp:71
+msgid ""
+"Energies are read in the units the file used, which may not be recorded."
+msgstr ""
+
+#: qtgui/energyunitsdialog.cpp:79
+msgid "Convert energies from:"
+msgstr ""
+
+#: qtgui/energyunitsdialog.cpp:81 qtplugins/plotconformer/plotconformer.cpp:598
+msgid "to"
+msgstr "la"
+
 #: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
 msgstr "Răsfoire"
@@ -1141,7 +1242,7 @@ msgstr "Avertisment %1"
 msgid "%1 Error"
 msgstr "Eroare %1"
 
-#: qtgui/interfacescript.cpp:685
+#: qtgui/interfacescript.cpp:690
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
@@ -1149,7 +1250,7 @@ msgstr ""
 "Eroare la scrierea reprezentării moleculei în șir de caractere: Format de "
 "fișier nerecunoscut: %1"
 
-#: qtgui/interfacescript.cpp:693
+#: qtgui/interfacescript.cpp:698
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr "Eroare la scrierea reprezentării moleculei în șir de caractere: %1"
@@ -1170,7 +1271,7 @@ msgstr "„type” nu este un șir pentru opțiunea „%1”."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:296:988
+#: qtgui/jsonwidget.cpp:296:994
 msgid "Title"
 msgstr "Titlu"
 
@@ -1206,47 +1307,51 @@ msgstr "Încărcare"
 msgid "Multiplicity"
 msgstr "Multiplicitate"
 
-#: qtgui/jsonwidget.cpp:342
+#: qtgui/jsonwidget.cpp:344
+msgid "Coordinates"
+msgstr ""
+
+#: qtgui/jsonwidget.cpp:350
 msgid "Solvent"
 msgstr "Solvent"
 
-#: qtgui/jsonwidget.cpp:343
+#: qtgui/jsonwidget.cpp:351
 msgctxt "solvation method / model"
 msgid "Model"
 msgstr "Model"
 
-#: qtgui/jsonwidget.cpp:489
+#: qtgui/jsonwidget.cpp:497
 msgid "User Name"
 msgstr "Numele utilizatorului"
 
-#: qtgui/jsonwidget.cpp:491
+#: qtgui/jsonwidget.cpp:499
 msgid "Password"
 msgstr "Parola"
 
-#: qtgui/jsonwidget.cpp:858
+#: qtgui/jsonwidget.cpp:871
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Tip de opțiune nerecunoscut „%1” pentru opțiunea „%2”."
 
-#: qtgui/jsonwidget.cpp:867 qtgui/jsonwidget.cpp:902 qtgui/jsonwidget.cpp:923
-#: qtgui/jsonwidget.cpp:944 qtgui/jsonwidget.cpp:1000 qtgui/jsonwidget.cpp:1021
-#: qtgui/jsonwidget.cpp:1043 qtgui/jsonwidget.cpp:1064
+#: qtgui/jsonwidget.cpp:880 qtgui/jsonwidget.cpp:921 qtgui/jsonwidget.cpp:942
+#: qtgui/jsonwidget.cpp:963 qtgui/jsonwidget.cpp:1019 qtgui/jsonwidget.cpp:1040
+#: qtgui/jsonwidget.cpp:1062 qtgui/jsonwidget.cpp:1083
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "Eroare la stabilirea valorii implicite pentru opțiunea „%1”. Tip de "
 "aplicație greșit."
 
-#: qtgui/jsonwidget.cpp:874 qtgui/jsonwidget.cpp:909 qtgui/jsonwidget.cpp:930
-#: qtgui/jsonwidget.cpp:951 qtgui/jsonwidget.cpp:1007 qtgui/jsonwidget.cpp:1028
-#: qtgui/jsonwidget.cpp:1050 qtgui/jsonwidget.cpp:1071
+#: qtgui/jsonwidget.cpp:887 qtgui/jsonwidget.cpp:928 qtgui/jsonwidget.cpp:949
+#: qtgui/jsonwidget.cpp:970 qtgui/jsonwidget.cpp:1026 qtgui/jsonwidget.cpp:1047
+#: qtgui/jsonwidget.cpp:1069 qtgui/jsonwidget.cpp:1090
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Eroare la stabilirea valorii implicite pentru opțiunea „%1”. Valoare "
 "implicită incorectă:"
 
-#: qtgui/jsonwidget.cpp:888
+#: qtgui/jsonwidget.cpp:907
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1255,12 +1360,12 @@ msgstr ""
 "Eroare la stabilirea valorii implicite pentru opțiunea „%1”. Nu s-a putut "
 "găsi un index de intrare combinat valid pentru valoarea:"
 
-#: qtgui/jsonwidget.cpp:1134
+#: qtgui/jsonwidget.cpp:1172
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "Aplicație negestionată în collectOptions pentru opțiunea „%1”."
 
-#: qtgui/jsonwidget.cpp:1179 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtgui/jsonwidget.cpp:1217 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr "[fără molecule]"
@@ -1456,32 +1561,32 @@ msgstr "Eroare la scriere."
 msgid "Unknown error."
 msgstr "Eroare necunoscută."
 
-#: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:106
-#: qtgui/rwlayermanager.cpp:132
+#: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:113
+#: qtgui/rwlayermanager.cpp:139
 msgid "Modify Layers"
 msgstr "Modificare straturi"
 
-#: qtgui/rwlayermanager.cpp:196
+#: qtgui/rwlayermanager.cpp:214
 msgid "Remove Layer"
 msgstr "Eliminare strat"
 
-#: qtgui/rwlayermanager.cpp:203
+#: qtgui/rwlayermanager.cpp:227
 msgid "Remove Layer Info"
 msgstr "Eliminare informații despre strat"
 
-#: qtgui/rwlayermanager.cpp:212
+#: qtgui/rwlayermanager.cpp:235
 msgid "Add Layer"
 msgstr "Adăugare strat"
 
-#: qtgui/rwlayermanager.cpp:215
+#: qtgui/rwlayermanager.cpp:242
 msgid "Add Layer Info"
 msgstr "Adăugare informații despre strat"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
+#: qtgui/rwlayermanager.cpp:249 qtgui/rwlayermanager.cpp:256
 #: qtplugins/select/select.cpp:564
-#: qtplugins/selectiontool/selectiontool.cpp:264:1876
+#: qtplugins/selectiontool/selectiontool.cpp:264:1891
 msgid "Change Layer"
 msgstr "Schimbare strat"
 
@@ -1649,15 +1754,15 @@ msgstr "Modifică molecula"
 msgid "Settings"
 msgstr "Configurări"
 
-#: qtgui/timedprogressdialog.cpp:75
+#: qtgui/timedprogressdialog.cpp:91
 msgid "Calculating…"
 msgstr "Se calculează…"
 
-#: qtgui/timedprogressdialog.cpp:79
+#: qtgui/timedprogressdialog.cpp:95
 msgid "Less than a second remaining"
 msgstr "A rămas mai puțin de o secundă"
 
-#: qtgui/timedprogressdialog.cpp:82
+#: qtgui/timedprogressdialog.cpp:98
 #, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
@@ -1666,7 +1771,7 @@ msgstr[0] "o secundă rămasă"
 msgstr[1] "%n secunde rămase"
 msgstr[2] "%n de secunde rămase"
 
-#: qtgui/timedprogressdialog.cpp:85
+#: qtgui/timedprogressdialog.cpp:101
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
@@ -1675,7 +1780,7 @@ msgstr[0] "un minut rămas"
 msgstr[1] "%n minute rămase"
 msgstr[2] "%n de minute rămase"
 
-#: qtgui/timedprogressdialog.cpp:93
+#: qtgui/timedprogressdialog.cpp:109
 #, qt-plural-format
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
@@ -1684,7 +1789,7 @@ msgstr[0] "1 oră și un minut rămase"
 msgstr[1] "1 oră și %n minute rămase"
 msgstr[2] "1 oră și %n de minute rămase"
 
-#: qtgui/timedprogressdialog.cpp:96
+#: qtgui/timedprogressdialog.cpp:112
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
@@ -1729,7 +1834,7 @@ msgstr "Schimbă elementele…"
 #: qtplugins/insertpeptide/insertpeptide.cpp:71
 #: qtplugins/insertpolymer/insertpolymer.cpp:44
 #: qtplugins/lineformatinput/lineformatinput.cpp:62
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:98
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:108
 msgid "&Build"
 msgstr "&Construire"
 
@@ -1737,7 +1842,7 @@ msgstr "&Construire"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, elementLabel)
-#: qtplugins/alchemy/alchemy.cpp:74:500 rc.cpp:2190
+#: qtplugins/alchemy/alchemy.cpp:74:500 rc.cpp:2205
 msgid "Element:"
 msgstr "Element:"
 
@@ -1773,7 +1878,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:81:1918
+#: qtplugins/aligntool/aligntool.cpp:81:1933
 msgid "Axis:"
 msgstr "Axa:"
 
@@ -1882,7 +1987,7 @@ msgstr "Fișiere PQR (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
 #: qtplugins/apbs/apbsdialog.cpp:166 qtplugins/apbs/apbsdialog.cpp:189
-#: qtplugins/commandscripts/command.cpp:177
+#: qtplugins/commandscripts/command.cpp:178
 #: qtplugins/cp2kinput/cp2kinput.cpp:85 qtplugins/fetchpdb/fetchpdb.cpp:143
 #: qtplugins/gamessinput/gamessinput.cpp:91
 #: qtplugins/insertfragment/insertfragment.cpp:111
@@ -1894,23 +1999,23 @@ msgstr "Fișiere PQR (*.pqr)"
 #: qtplugins/lammpsinput/lammpsinput.cpp:62
 #: qtplugins/molecularproperties/molecularview.cpp:150
 #: qtplugins/molecularproperties/molecularview.cpp:184
-#: qtplugins/openbabel/openbabel.cpp:211 qtplugins/openbabel/openbabel.cpp:220
-#: qtplugins/openbabel/openbabel.cpp:230 qtplugins/openbabel/openbabel.cpp:367
-#: qtplugins/openbabel/openbabel.cpp:395 qtplugins/openbabel/openbabel.cpp:422
-#: qtplugins/openbabel/openbabel.cpp:431 qtplugins/openbabel/openbabel.cpp:485
-#: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
-#: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
-#: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
-#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:736
-#: qtplugins/openbabel/openbabel.cpp:750 qtplugins/openbabel/openbabel.cpp:779
-#: qtplugins/openbabel/openbabel.cpp:791 qtplugins/openbabel/openbabel.cpp:837
-#: qtplugins/openbabel/openbabel.cpp:887 qtplugins/openbabel/openbabel.cpp:929
-#: qtplugins/openbabel/openbabel.cpp:961
+#: qtplugins/openbabel/openbabel.cpp:213 qtplugins/openbabel/openbabel.cpp:222
+#: qtplugins/openbabel/openbabel.cpp:232 qtplugins/openbabel/openbabel.cpp:369
+#: qtplugins/openbabel/openbabel.cpp:397 qtplugins/openbabel/openbabel.cpp:424
+#: qtplugins/openbabel/openbabel.cpp:433 qtplugins/openbabel/openbabel.cpp:487
+#: qtplugins/openbabel/openbabel.cpp:537 qtplugins/openbabel/openbabel.cpp:550
+#: qtplugins/openbabel/openbabel.cpp:569 qtplugins/openbabel/openbabel.cpp:578
+#: qtplugins/openbabel/openbabel.cpp:638 qtplugins/openbabel/openbabel.cpp:688
+#: qtplugins/openbabel/openbabel.cpp:701 qtplugins/openbabel/openbabel.cpp:744
+#: qtplugins/openbabel/openbabel.cpp:758 qtplugins/openbabel/openbabel.cpp:787
+#: qtplugins/openbabel/openbabel.cpp:799 qtplugins/openbabel/openbabel.cpp:845
+#: qtplugins/openbabel/openbabel.cpp:895 qtplugins/openbabel/openbabel.cpp:937
+#: qtplugins/openbabel/openbabel.cpp:969
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:436
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:637
-#: qtplugins/propertytables/propertyview.cpp:803
-#: qtplugins/propertytables/propertyview.cpp:836
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:553
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:754
+#: qtplugins/propertytables/propertyview.cpp:819
+#: qtplugins/propertytables/propertyview.cpp:852
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:162
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:450
 #: qtplugins/qtaim/qtaimwavefunction.h:48
@@ -1958,7 +2063,7 @@ msgid "Input file written to '%1'"
 msgstr "Fișier de intrare scris la „%1”"
 
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:437
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:554
 #: qtplugins/playertool/playertool.cpp:560
 #: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1144
 #, qt-format
@@ -2075,7 +2180,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:935:183 rc.cpp:2066
+#: qtplugins/surfaces/surfaces.cpp:935:183 rc.cpp:2081
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Spectral"
@@ -2085,7 +2190,7 @@ msgstr "Spectral"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:937:180 rc.cpp:2063
+#: qtplugins/surfaces/surfaces.cpp:937:180 rc.cpp:2078
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Coolwarm"
@@ -2095,7 +2200,7 @@ msgstr "Coolwarm"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:130
-#: qtplugins/surfaces/surfaces.cpp:939:174 rc.cpp:2057
+#: qtplugins/surfaces/surfaces.cpp:939:174 rc.cpp:2072
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Balance"
@@ -2105,7 +2210,7 @@ msgstr "Balance"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:132
-#: qtplugins/surfaces/surfaces.cpp:941:177 rc.cpp:2060
+#: qtplugins/surfaces/surfaces.cpp:941:177 rc.cpp:2075
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Blue-DarkRed"
@@ -2117,7 +2222,7 @@ msgstr "Blue-DarkRed"
 #: qtplugins/applycolors/applycolors.cpp:134
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:943:186 rc.cpp:2069
+#: qtplugins/surfaces/surfaces.cpp:943:186 rc.cpp:2084
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbo"
@@ -2150,7 +2255,7 @@ msgstr "Selectați schema de culori"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:217
-#: qtplugins/applycolors/applycolors.cpp:318:171 rc.cpp:2054
+#: qtplugins/applycolors/applycolors.cpp:318:171 rc.cpp:2069
 msgid "Colormap:"
 msgstr "Schema de culori:"
 
@@ -2256,13 +2361,13 @@ msgstr "Metoda:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
-#: qtplugins/autoopt/autoopt.cpp:310:1696
+#: qtplugins/autoopt/autoopt.cpp:310:1702
 msgid "Temperature:"
 msgstr "Temperatura:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
-#: qtplugins/autoopt/autoopt.cpp:322:1682
+#: qtplugins/autoopt/autoopt.cpp:322:1688
 msgid "Timestep:"
 msgstr "Interval de timp:"
 
@@ -2278,10 +2383,10 @@ msgstr "Stop"
 msgid "Relax for Dynamics"
 msgstr "Relaxare pentru studiul dinamicii"
 
-#: qtplugins/autoopt/autoopt.cpp:571 qtplugins/forcefield/forcefield.cpp:75
-#: qtplugins/forcefield/forcefield.cpp:581
-#: qtplugins/forcefield/forcefield.cpp:662 qtplugins/openbabel/openbabel.cpp:48
-#: qtplugins/openbabel/openbabel.cpp:559
+#: qtplugins/autoopt/autoopt.cpp:571 qtplugins/forcefield/forcefield.cpp:77
+#: qtplugins/forcefield/forcefield.cpp:583
+#: qtplugins/forcefield/forcefield.cpp:664 qtplugins/openbabel/openbabel.cpp:50
+#: qtplugins/openbabel/openbabel.cpp:561
 msgid "Optimize Geometry"
 msgstr "Optimizează geometria"
 
@@ -2414,7 +2519,7 @@ msgid "Bond Selected Atoms"
 msgstr "Legarea atomilor selectați"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:822
+#: qtplugins/propertytables/propertymodel.cpp:825
 msgid "Bond"
 msgstr "Legătură"
 
@@ -2527,26 +2632,26 @@ msgstr "Repulsiv"
 msgid "Render close contacts between atoms."
 msgstr "Reprezintă contactele strânse dintre atomi."
 
-#: qtplugins/commandscripts/command.cpp:79
-#: qtplugins/commandscripts/command.cpp:98
-#: qtplugins/commandscripts/command.cpp:631
+#: qtplugins/commandscripts/command.cpp:80
+#: qtplugins/commandscripts/command.cpp:99
+#: qtplugins/commandscripts/command.cpp:642
 #: qtplugins/configurepython/configurepython.cpp:117
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:260
 #: qtplugins/forcefield/forcefield.cpp:262
-#: qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/forcefield/forcefield.cpp:264
+#: qtplugins/openbabel/openbabel.cpp:115
 #: qtplugins/packageinstaller/packageinstaller.cpp:35
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Extensions"
 msgstr "&Extensii"
 
-#: qtplugins/commandscripts/command.cpp:79
-#: qtplugins/commandscripts/command.cpp:98
-#: qtplugins/commandscripts/command.cpp:632
+#: qtplugins/commandscripts/command.cpp:80
+#: qtplugins/commandscripts/command.cpp:99
+#: qtplugins/commandscripts/command.cpp:643
 msgid "Scripts"
 msgstr "Scripturi"
 
-#: qtplugins/commandscripts/command.cpp:178
+#: qtplugins/commandscripts/command.cpp:179
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
 #: qtplugins/gamessinput/gamessinput.cpp:92
 #: qtplugins/lammpsinput/lammpsinput.cpp:63
@@ -2560,11 +2665,11 @@ msgstr ""
 "Eroare la citirea fișierului de ieșire „%1”:\n"
 "%2"
 
-#: qtplugins/commandscripts/command.cpp:235
+#: qtplugins/commandscripts/command.cpp:236
 msgid "Command In Progress"
 msgstr "Comandă în curs de execuție"
 
-#: qtplugins/commandscripts/command.cpp:236
+#: qtplugins/commandscripts/command.cpp:237
 msgid ""
 "A command script is already running. Please wait for it to finish before "
 "starting another."
@@ -2572,28 +2677,28 @@ msgstr ""
 "Un script de comandă este deja în execuție. Vă rugăm să așteptați "
 "finalizarea acestuia înainte de a porni altul."
 
-#: qtplugins/commandscripts/command.cpp:385
+#: qtplugins/commandscripts/command.cpp:387
 #, qt-format
 msgid "Processing %1"
 msgstr "Se procesează %1"
 
-#: qtplugins/commandscripts/command.cpp:386
+#: qtplugins/commandscripts/command.cpp:388
 msgid "Cancel"
 msgstr "Anulează"
 
-#: qtplugins/commandscripts/command.cpp:470
+#: qtplugins/commandscripts/command.cpp:481
 msgid "The script could not be started."
 msgstr "Scriptul nu a putut fi inițiat."
 
-#: qtplugins/commandscripts/command.cpp:480
+#: qtplugins/commandscripts/command.cpp:491
 msgid "Error Running Script"
 msgstr "Eroare la executarea scriptului"
 
-#: qtplugins/commandscripts/command.cpp:547
+#: qtplugins/commandscripts/command.cpp:558
 msgid "Set path to Python interpreter:"
 msgstr "Stabilește ruta către interpretul python:"
 
-#: qtplugins/commandscripts/command.cpp:549
+#: qtplugins/commandscripts/command.cpp:560
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2641,7 +2746,7 @@ msgstr "Configurează mediile Python."
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 #: qtplugins/configurepython/configurepythondialog.cpp:203
 #: qtplugins/configurepython/configurepythondialog.cpp:215
-#: qtplugins/editor/editortoolwidget.cpp:130
+#: qtplugins/editor/editortoolwidget.cpp:135
 #: qtplugins/templatetool/templatetoolwidget.cpp:126
 #: qtplugins/templatetool/templatetoolwidget.cpp:505
 #: qtplugins/templatetool/templatetoolwidget.cpp:517
@@ -2649,7 +2754,7 @@ msgstr "Configurează mediile Python."
 #: qtplugins/templatetool/templatetoolwidget.cpp:531
 #: qtplugins/templatetool/templatetoolwidget.cpp:538
 #: qtplugins/templatetool/templatetoolwidget.cpp:545
-#: qtplugins/templatetool/templatetoolwidget.cpp:608:2310
+#: qtplugins/templatetool/templatetoolwidget.cpp:608:2325
 msgid "Other…"
 msgstr "Altul…"
 
@@ -2658,7 +2763,7 @@ msgid "Constraints…"
 msgstr "Constrângeri…"
 
 #: qtplugins/constraints/constraintsextension.cpp:40
-#: qtplugins/forcefield/forcefield.cpp:262
+#: qtplugins/forcefield/forcefield.cpp:264
 msgid "&Calculate"
 msgstr "&Calculează"
 
@@ -2711,9 +2816,9 @@ msgid "Freeze Z Axis"
 msgstr "Înghețare axă Z"
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
-#: qtplugins/propertytables/propertymodel.cpp:808
-#: qtplugins/propertytables/propertymodel.cpp:851
-#: qtplugins/propertytables/propertymodel.cpp:868
+#: qtplugins/propertytables/propertymodel.cpp:811
+#: qtplugins/propertytables/propertymodel.cpp:854
+#: qtplugins/propertytables/propertymodel.cpp:871
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "Tip"
@@ -2723,24 +2828,24 @@ msgid "Value"
 msgstr "Valoare"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
-#: qtplugins/propertytables/propertymodel.cpp:853
-#: qtplugins/propertytables/propertymodel.cpp:870
+#: qtplugins/propertytables/propertymodel.cpp:856
+#: qtplugins/propertytables/propertymodel.cpp:873
 msgid "Atom 1"
 msgstr "Atom 1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
-#: qtplugins/propertytables/propertymodel.cpp:872
+#: qtplugins/propertytables/propertymodel.cpp:875
 msgid "Atom 2"
 msgstr "Atom 2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
-#: qtplugins/propertytables/propertymodel.cpp:857
-#: qtplugins/propertytables/propertymodel.cpp:874
+#: qtplugins/propertytables/propertymodel.cpp:860
+#: qtplugins/propertytables/propertymodel.cpp:877
 msgid "Atom 3"
 msgstr "Atom 3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
-#: qtplugins/propertytables/propertymodel.cpp:876
+#: qtplugins/propertytables/propertymodel.cpp:879
 msgid "Atom 4"
 msgstr "Atom 4"
 
@@ -2870,7 +2975,7 @@ msgstr "Editarea coordonatelor atomice"
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
 #: qtplugins/label/label.cpp:227 qtplugins/label/label.cpp:250
-#: qtplugins/label/label.cpp:265:2096 rc.cpp:2121
+#: qtplugins/label/label.cpp:265:2111 rc.cpp:2136
 msgid "Custom"
 msgstr "Personalizat"
 
@@ -2914,7 +3019,7 @@ msgstr "Formatul Turbomole"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:31
 #: qtplugins/molecularproperties/molecularview.cpp:191
-#: qtplugins/propertytables/propertyview.cpp:928:296
+#: qtplugins/propertytables/propertyview.cpp:951:296
 msgid "Copy"
 msgstr "Copiază"
 
@@ -3025,8 +3130,7 @@ msgstr "Generează date de intrare pentru CP2K."
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
-#: qtplugins/forcefield/forcefield.cpp:84
-#: qtplugins/plotconformer/plotconformer.cpp:237:1435
+#: qtplugins/forcefield/forcefield.cpp:86:1441
 msgid "Energy"
 msgstr "Energie"
 
@@ -3057,13 +3161,13 @@ msgstr "EWALD"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:357
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:1041
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:1047
 msgid "NONE"
 msgstr "NICIUNUL"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:360:1611
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:360:1617
 msgid "PME"
 msgstr "PME"
 
@@ -3321,8 +3425,8 @@ msgstr "Schimbă tipul legăturii"
 msgid "Remove Bond"
 msgstr "Elimină legătura"
 
-#: qtplugins/editor/editor.cpp:280 qtplugins/measuretool/measuretool.cpp:200
-#: qtplugins/measuretool/measuretool.cpp:223
+#: qtplugins/editor/editor.cpp:280 qtplugins/measuretool/measuretool.cpp:244
+#: qtplugins/measuretool/measuretool.cpp:267
 msgid "Distance:"
 msgstr "Distanța:"
 
@@ -3334,19 +3438,19 @@ msgstr "Instrument de editare"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:209:2075 rc.cpp:2093
+#: qtplugins/editor/editortoolwidget.cpp:214:2090 rc.cpp:2108
 msgid "Automatic"
 msgstr "Automat"
 
-#: qtplugins/editor/editortoolwidget.cpp:210
+#: qtplugins/editor/editortoolwidget.cpp:215
 msgid "Single"
 msgstr "Simplu"
 
-#: qtplugins/editor/editortoolwidget.cpp:211
+#: qtplugins/editor/editortoolwidget.cpp:216
 msgid "Double"
 msgstr "Dublu"
 
-#: qtplugins/editor/editortoolwidget.cpp:212
+#: qtplugins/editor/editortoolwidget.cpp:217
 msgid "Triple"
 msgstr "Triplu"
 
@@ -3439,65 +3543,64 @@ msgstr "Focalizează vizualizarea pe anumite caracteristici."
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Realizează vizualizările câmpului de forțe pentru atomii moleculei."
 
-#: qtplugins/forcefield/forcefield.cpp:92
+#: qtplugins/forcefield/forcefield.cpp:94
 #: qtplugins/gamessinput/gamessinputdialog.cpp:269
-#: qtplugins/plotconformer/plotconformer.cpp:239
 msgid "Forces"
 msgstr "Forțe"
 
-#: qtplugins/forcefield/forcefield.cpp:102
-#: qtplugins/forcefield/forcefield.cpp:907
+#: qtplugins/forcefield/forcefield.cpp:104
+#: qtplugins/forcefield/forcefield.cpp:909
 msgid "Energies (All Conformers)"
 msgstr "Energii (Toți conformerii)"
 
-#: qtplugins/forcefield/forcefield.cpp:110
-#: qtplugins/forcefield/forcefield.cpp:906
+#: qtplugins/forcefield/forcefield.cpp:112
+#: qtplugins/forcefield/forcefield.cpp:908
 msgid "Forces (All Conformers)"
 msgstr "Forțe (Toți conformerii)"
 
-#: qtplugins/forcefield/forcefield.cpp:118
+#: qtplugins/forcefield/forcefield.cpp:120
 msgid "Configure…"
 msgstr "Configurează…"
 
-#: qtplugins/forcefield/forcefield.cpp:130
+#: qtplugins/forcefield/forcefield.cpp:132
 msgid "Freeze Selected Atoms"
 msgstr "Îngheață atomii selectați"
 
-#: qtplugins/forcefield/forcefield.cpp:138
+#: qtplugins/forcefield/forcefield.cpp:140
 msgctxt "freeze x-axis of selected atoms"
 msgid "Freeze X"
 msgstr "Înghețare axe X"
 
-#: qtplugins/forcefield/forcefield.cpp:146
+#: qtplugins/forcefield/forcefield.cpp:148
 msgctxt "freeze y-axis of selected atoms"
 msgid "Freeze Y"
 msgstr "Înghețare axe Y"
 
-#: qtplugins/forcefield/forcefield.cpp:154
+#: qtplugins/forcefield/forcefield.cpp:156
 msgctxt "freeze z-axis of selected atoms"
 msgid "Freeze Z"
 msgstr "Înghețare axe Z"
 
-#: qtplugins/forcefield/forcefield.cpp:162
+#: qtplugins/forcefield/forcefield.cpp:164
 msgid "Unfreeze Selected Atoms"
 msgstr "Dezgheață atomii selectați"
 
-#: qtplugins/forcefield/forcefield.cpp:171
+#: qtplugins/forcefield/forcefield.cpp:173
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Fuse Selected Atoms"
 msgstr "Fuzionează atomii selectați"
 
-#: qtplugins/forcefield/forcefield.cpp:179
+#: qtplugins/forcefield/forcefield.cpp:181
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
 msgstr "Separă atomii selectați"
 
-#: qtplugins/forcefield/forcefield.cpp:542
-#: qtplugins/forcefield/forcefield.cpp:725
-#: qtplugins/forcefield/forcefield.cpp:763
-#: qtplugins/forcefield/forcefield.cpp:777
-#: qtplugins/forcefield/forcefield.cpp:833
-#: qtplugins/forcefield/forcefield.cpp:882
+#: qtplugins/forcefield/forcefield.cpp:544
+#: qtplugins/forcefield/forcefield.cpp:727
+#: qtplugins/forcefield/forcefield.cpp:765
+#: qtplugins/forcefield/forcefield.cpp:779
+#: qtplugins/forcefield/forcefield.cpp:835
+#: qtplugins/forcefield/forcefield.cpp:884
 #: qtplugins/playertool/playertool.cpp:527
 #: qtplugins/playertool/playertool.cpp:559 qtplugins/surfaces/surfaces.cpp:1087
 #: qtplugins/surfaces/surfaces.cpp:1131 qtplugins/surfaces/surfaces.cpp:1143
@@ -3505,35 +3608,35 @@ msgstr "Separă atomii selectați"
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:543
+#: qtplugins/forcefield/forcefield.cpp:545
 msgid "No atoms provided for optimization"
 msgstr "Nu au fost furnizați atomi pentru optimizare"
 
-#: qtplugins/forcefield/forcefield.cpp:643
+#: qtplugins/forcefield/forcefield.cpp:645
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "Energie: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:726
+#: qtplugins/forcefield/forcefield.cpp:728
 msgid "No atoms provided for energy calculation"
 msgstr "Nu au fost furnizați atomi pentru calcularea energiei"
 
-#: qtplugins/forcefield/forcefield.cpp:761
+#: qtplugins/forcefield/forcefield.cpp:763
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Energie = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:778
+#: qtplugins/forcefield/forcefield.cpp:780
 msgid "No atoms provided for force calculation"
 msgstr "Nu au fost furnizați atomi pentru calcularea forței"
 
-#: qtplugins/forcefield/forcefield.cpp:831
+#: qtplugins/forcefield/forcefield.cpp:833
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Normă de forță = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:883
+#: qtplugins/forcefield/forcefield.cpp:885
 msgid "This molecule has only one coordinate set."
 msgstr "Această moleculă are un singur set de coordonate."
 
@@ -3627,7 +3730,7 @@ msgstr "Potențialul nucleului"
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/gamessinput/gamessinputdialog.cpp:419
 #: qtplugins/label/label.cpp:217 qtplugins/label/label.cpp:247
-#: qtplugins/label/label.cpp:260:1620 rc.cpp:1703 rc.cpp:2048
+#: qtplugins/label/label.cpp:260:1626 rc.cpp:1709 rc.cpp:2063
 msgid "None"
 msgstr "Nimic"
 
@@ -3699,7 +3802,7 @@ msgstr "Trimite calculul GAMESS"
 msgid "&Adjust Hydrogens"
 msgstr "&Ajustează hidrogenii"
 
-#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:72
+#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:74
 msgid "Add Hydrogens"
 msgstr "Adaugă hidrogeni"
 
@@ -3767,7 +3870,7 @@ msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
-#: qtplugins/insertdna/insertdna.cpp:169:665
+#: qtplugins/insertdna/insertdna.cpp:169:671
 msgid "Thymine"
 msgstr "Timină"
 
@@ -3775,7 +3878,7 @@ msgstr "Timină"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:202
 #: qtplugins/lineformatinput/lineformatinput.cpp:110
-#: qtplugins/lineformatinput/lineformatinput.cpp:125:1309
+#: qtplugins/lineformatinput/lineformatinput.cpp:125:1315
 msgid "Insert Molecule…"
 msgstr "Inserare moleculă…"
 
@@ -3831,7 +3934,7 @@ msgstr "Peptidă…"
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertPeptideDialog)
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:536
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#: qtplugins/insertpeptide/insertpeptide.cpp:536:707 rc.cpp:895
+#: qtplugins/insertpeptide/insertpeptide.cpp:536:713 rc.cpp:901
 msgid "Insert Peptide"
 msgstr "Inserare peptidă"
 
@@ -3860,7 +3963,7 @@ msgstr ""
 #: qtplugins/insertpolymer/insertpolymer.cpp:89
 #: qtplugins/insertpolymer/insertpolymer.cpp:108
 #: qtplugins/insertpolymer/insertpolymer.h:23
-#: qtplugins/insertpolymer/insertpolymerdialog.cpp:637:898 rc.cpp:973
+#: qtplugins/insertpolymer/insertpolymerdialog.cpp:637:904 rc.cpp:979
 msgid "Insert Polymer"
 msgstr "Inserare polimer"
 
@@ -3930,9 +4033,9 @@ msgstr "Index"
 msgid "Unique ID"
 msgstr "ID unic"
 
-#: qtplugins/label/label.cpp:220 qtplugins/propertytables/propertymodel.cpp:774
+#: qtplugins/label/label.cpp:220 qtplugins/propertytables/propertymodel.cpp:777
 #: qtplugins/symmetry/operationstablemodel.cpp:61
-#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:91
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:119
 msgid "Element"
 msgstr "Element"
 
@@ -3961,13 +4064,13 @@ msgstr "Lungime"
 msgid "Bond Label:"
 msgstr "Etichetă legătură:"
 
-#: qtplugins/label/label.cpp:261 qtplugins/propertytables/propertymodel.cpp:831
+#: qtplugins/label/label.cpp:261 qtplugins/propertytables/propertymodel.cpp:834
 msgid "ID"
 msgstr "ID"
 
 #: qtplugins/label/label.cpp:262
-#: qtplugins/packageinstaller/packagemodel.cpp:168
-#: qtplugins/propertytables/propertymodel.cpp:829
+#: qtplugins/packageinstaller/packagemodel.cpp:175
+#: qtplugins/propertytables/propertymodel.cpp:832
 msgid "Name"
 msgstr "Nume"
 
@@ -4030,7 +4133,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/licorice/licorice.cpp:78
 #: qtplugins/surfacerender/surfacerender.cpp:286
-#: qtplugins/vanderwaals/vanderwaals.cpp:75:1867
+#: qtplugins/vanderwaals/vanderwaals.cpp:75:1882
 msgid "Opacity:"
 msgstr "Opacitate:"
 
@@ -4122,16 +4225,16 @@ msgstr ""
 msgid "Manipulate tool"
 msgstr "Instrument de manipulare"
 
-#: qtplugins/measuretool/measuretool.cpp:51
+#: qtplugins/measuretool/measuretool.cpp:53
 msgctxt "control-key 8"
 msgid "Ctrl+8"
 msgstr "Ctrl+8"
 
-#: qtplugins/measuretool/measuretool.cpp:52
+#: qtplugins/measuretool/measuretool.cpp:54
 msgid "Measure"
 msgstr "Măsurare"
 
-#: qtplugins/measuretool/measuretool.cpp:54
+#: qtplugins/measuretool/measuretool.cpp:56
 #, qt-format
 msgid ""
 "Measure Tool\t(%1)\n"
@@ -4150,18 +4253,18 @@ msgstr ""
 "\tDiedrul este măsurat între 1-2-3-4\n"
 "Butonul drept al mouse-ului:\tReinițializează măsurătorile."
 
-#: qtplugins/measuretool/measuretool.cpp:198
-#: qtplugins/measuretool/measuretool.cpp:208
+#: qtplugins/measuretool/measuretool.cpp:242
+#: qtplugins/measuretool/measuretool.cpp:252
 msgid "Dihedral:"
 msgstr "Diedru:"
 
-#: qtplugins/measuretool/measuretool.cpp:199
-#: qtplugins/measuretool/measuretool.cpp:215
+#: qtplugins/measuretool/measuretool.cpp:243
+#: qtplugins/measuretool/measuretool.cpp:259
 msgid "Angle:"
 msgstr "Unghi:"
 
-#: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
+#: qtplugins/measuretool/measuretool.h:35
 msgid "Measure tool"
 msgstr "Instrument de măsurare"
 
@@ -4170,7 +4273,6 @@ msgid "(pending)"
 msgstr "(în așteptare)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:171
-#: qtplugins/propertytables/propertymodel.cpp:892
 msgid "Property"
 msgstr "Proprietate"
 
@@ -4273,7 +4375,7 @@ msgid "View general properties of a molecule."
 msgstr "Vizualizați proprietățile generale ale unei molecule."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:60
-#: qtplugins/plotconformer/plotconformer.cpp:63
+#: qtplugins/plotconformer/plotconformer.cpp:215
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
 #: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:381
@@ -4292,75 +4394,63 @@ msgid "Molecular Properties"
 msgstr "Proprietăți moleculă"
 
 #: qtplugins/molecularproperties/molecularview.cpp:40
-#: qtplugins/propertytables/propertyview.cpp:76
+#: qtplugins/propertytables/propertyview.cpp:77
 msgid "Molecule Properties"
 msgstr "Proprietățile moleculei"
 
 #: qtplugins/molecularproperties/molecularview.cpp:138
-#: qtplugins/propertytables/propertyview.cpp:791
+#: qtplugins/propertytables/propertyview.cpp:807
 msgid "Export CSV"
 msgstr "Export în format CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:139
-#: qtplugins/propertytables/propertyview.cpp:792
+#: qtplugins/propertytables/propertyview.cpp:808
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Fișiere CSV (*.csv);;Toate fișierele (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:151
-#: qtplugins/propertytables/propertyview.cpp:804
+#: qtplugins/propertytables/propertyview.cpp:820
 msgid "Could not open the file for writing."
 msgstr "Nu s-a putut deschide fișierul pentru scriere."
 
 #: qtplugins/molecularproperties/molecularview.cpp:184
-#: qtplugins/propertytables/propertyview.cpp:836
+#: qtplugins/propertytables/propertyview.cpp:852
 msgid "Error writing to the file."
 msgstr "Eroare la scrierea în fișier."
 
 #: qtplugins/molecularproperties/molecularview.cpp:196
-#: qtplugins/propertytables/propertyview.cpp:933
+#: qtplugins/propertytables/propertyview.cpp:956
 msgid "Export…"
 msgstr "Exportare…"
 
-#: qtplugins/navigator/navigator.cpp:44
+#: qtplugins/navigator/navigator.cpp:47
 msgctxt "control-key 1"
 msgid "Ctrl+1"
 msgstr "Ctrl+1"
 
-#: qtplugins/navigator/navigator.cpp:45
+#: qtplugins/navigator/navigator.cpp:48
 msgid "Navigate"
 msgstr "Navigare"
 
-#: qtplugins/navigator/navigator.cpp:47
+#: qtplugins/navigator/navigator.cpp:50
 #, qt-format
 msgid ""
 "Navigation Tool\t(%1)\n"
 "\n"
 "Left Mouse:\tClick and drag to rotate the view.\n"
+"\tStarting the drag on an atom rotates around that atom.\n"
 "Middle Mouse:\tClick and drag to zoom in or out.\n"
 "Right Mouse:\tClick and drag to move the view.\n"
 "\n"
 "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
 "Alt(Option)+Left:\tUses the virtual trackball."
 msgstr ""
-"Instrument de navigare\t(%1)\n"
-"\n"
-"Butonul stâng al mouse-ului:\tFaceți clic și trageți pentru a roti "
-"vizualizarea.\n"
-"Butonul din mijloc al mouse-ului:\tFaceți clic și trageți pentru a mări sau "
-"micșora vizualizarea.\n"
-"Butonul drept al mouse-ului:\tFaceți clic și trageți pentru a deplasa "
-"vizualizarea.\n"
-"\n"
-"Alt(Opțiune)+Glisare:\tRotire/mărire sau micșorare/deplasare în timp ce "
-"utilizați orice instrument.\n"
-"Alt(Opțiune)+Butonul stâng al mouse-ului:\tUtilizează bila de control "
-"virtuală."
 
-#: qtplugins/navigator/navigator.cpp:70
+#: qtplugins/navigator/navigator.cpp:74
 msgid "Rotate the scene along the x, y, or z axes."
 msgstr "Rotește scena de-a lungul axelor x, y sau z."
 
-#: qtplugins/navigator/navigator.cpp:73
+#: qtplugins/navigator/navigator.cpp:77
 #, c-format
 msgid ""
 "Zoom the scene. Positive delta moves toward the molecule, negative away. One "
@@ -4372,15 +4462,15 @@ msgstr ""
 "corespunde unei modificări de aproximativ 2% a distanței dintre cameră și "
 "punctul focal."
 
-#: qtplugins/navigator/navigator.cpp:76
+#: qtplugins/navigator/navigator.cpp:80
 msgid "Translate the scene."
 msgstr "Deplasează scena."
 
-#: qtplugins/navigator/navigator.cpp:122
+#: qtplugins/navigator/navigator.cpp:126
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Inversează direcția de mărire/micșorare la derulare"
 
-#: qtplugins/navigator/navigator.cpp:124
+#: qtplugins/navigator/navigator.cpp:128
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
@@ -4440,44 +4530,44 @@ msgstr "Calcogen"
 msgid "Render a few non-covalent interactions."
 msgstr "Afișează câteva interacțiuni non-covalente."
 
-#: qtplugins/openbabel/openbabel.cpp:54
+#: qtplugins/openbabel/openbabel.cpp:56
 msgid "Configure Force Field…"
 msgstr "Configurarea câmpului de forță…"
 
-#: qtplugins/openbabel/openbabel.cpp:60
+#: qtplugins/openbabel/openbabel.cpp:62
 msgid "Conformer Search…"
 msgstr "Căutare conformer…"
 
-#: qtplugins/openbabel/openbabel.cpp:66
+#: qtplugins/openbabel/openbabel.cpp:68
 msgid "Perceive Bonds"
 msgstr "Percepe legăturile"
 
-#: qtplugins/openbabel/openbabel.cpp:78
+#: qtplugins/openbabel/openbabel.cpp:80
 msgid "Add Hydrogens for pH…"
 msgstr "Adaugă hidrogeni pentru pH…"
 
-#: qtplugins/openbabel/openbabel.cpp:84
+#: qtplugins/openbabel/openbabel.cpp:86
 msgid "Remove Hydrogens"
 msgstr "Elimină hidrogeni"
 
-#: qtplugins/openbabel/openbabel.cpp:95
+#: qtplugins/openbabel/openbabel.cpp:97
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
 msgstr "%1 nu a fost găsit! Se dezactivează acțiunile modulului Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/openbabel/openbabel.cpp:115
 msgid "&Open Babel"
 msgstr "&Open Babel"
 
-#: qtplugins/openbabel/openbabel.cpp:120
+#: qtplugins/openbabel/openbabel.cpp:122
 msgid "The Open Babel file formats are not ready to be added."
 msgstr "Formatele de fișiere Open Babel nu sunt gata pentru a fi adăugate."
 
-#: qtplugins/openbabel/openbabel.cpp:206
+#: qtplugins/openbabel/openbabel.cpp:208
 msgid "Loading molecule from Open Babel…"
 msgstr "Se încarcă molecula de la Open Babel…"
 
-#: qtplugins/openbabel/openbabel.cpp:212
+#: qtplugins/openbabel/openbabel.cpp:214
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
@@ -4485,17 +4575,17 @@ msgstr ""
 "A apărut o eroare internă: OpenBabel::readMolecule a fost apelată, dar nu "
 "este disponibilă nicio ieșire obabel pentru analizare!"
 
-#: qtplugins/openbabel/openbabel.cpp:221
+#: qtplugins/openbabel/openbabel.cpp:223
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr "A apărut o eroare în timpul rulării Open Babel (%1)."
 
-#: qtplugins/openbabel/openbabel.cpp:231
+#: qtplugins/openbabel/openbabel.cpp:233
 msgid "Error parsing openbabel output."
 msgstr "Eroare la analizarea ieșirii openbabel."
 
-#: qtplugins/openbabel/openbabel.cpp:368 qtplugins/openbabel/openbabel.cpp:396
-#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
+#: qtplugins/openbabel/openbabel.cpp:370 qtplugins/openbabel/openbabel.cpp:398
+#: qtplugins/openbabel/openbabel.cpp:434 qtplugins/openbabel/openbabel.cpp:579
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
@@ -4504,23 +4594,23 @@ msgstr ""
 "A apărut o eroare în timpul recuperării listei câmpurilor de forță "
 "acceptate. (folosind „%1”)."
 
-#: qtplugins/openbabel/openbabel.cpp:423
+#: qtplugins/openbabel/openbabel.cpp:425
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr "Moleculă nevalidă. Nu se poate optimiza geometria."
 
-#: qtplugins/openbabel/openbabel.cpp:441
+#: qtplugins/openbabel/openbabel.cpp:443
 msgid "Cannot optimize geometry with Open Babel."
 msgstr "Nu se poate optimiza geometria cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:466
+#: qtplugins/openbabel/openbabel.cpp:468
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "Se optimizează geometria (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
+#: qtplugins/openbabel/openbabel.cpp:469 qtplugins/openbabel/openbabel.cpp:622
 msgid "Generating…"
 msgstr "Se generează…"
 
-#: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
+#: qtplugins/openbabel/openbabel.cpp:488 qtplugins/openbabel/openbabel.cpp:639
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
@@ -4528,14 +4618,14 @@ msgstr ""
 "A apărut o eroare internă în timpul generării unei reprezentări Open Babel a "
 "moleculei curente."
 
-#: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
+#: qtplugins/openbabel/openbabel.cpp:494 qtplugins/openbabel/openbabel.cpp:645
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr "Se lansează %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
-#: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
+#: qtplugins/openbabel/openbabel.cpp:508 qtplugins/openbabel/openbabel.cpp:516
+#: qtplugins/openbabel/openbabel.cpp:659 qtplugins/openbabel/openbabel.cpp:667
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -4546,17 +4636,17 @@ msgstr ""
 "Energia curentă: %3\n"
 "dE: %4"
 
-#: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
+#: qtplugins/openbabel/openbabel.cpp:530 qtplugins/openbabel/openbabel.cpp:681
 msgid "Updating molecule…"
 msgstr "Se actualizează molecula…"
 
-#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
-#: qtplugins/openbabel/openbabel.cpp:780 qtplugins/openbabel/openbabel.cpp:962
+#: qtplugins/openbabel/openbabel.cpp:538 qtplugins/openbabel/openbabel.cpp:689
+#: qtplugins/openbabel/openbabel.cpp:788 qtplugins/openbabel/openbabel.cpp:970
 msgid "Error interpreting Open Babel output."
 msgstr "Eroare la interpretarea ieșirii Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
-#: qtplugins/openbabel/openbabel.cpp:792
+#: qtplugins/openbabel/openbabel.cpp:551 qtplugins/openbabel/openbabel.cpp:702
+#: qtplugins/openbabel/openbabel.cpp:800
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -4565,102 +4655,102 @@ msgstr ""
 "Numărul de atomi din rezultatul obabel (%1) nu corespunde numărului de atomi "
 "din molecula originală (%2)."
 
-#: qtplugins/openbabel/openbabel.cpp:568
+#: qtplugins/openbabel/openbabel.cpp:570
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr "Moleculă nevalidă. Nu se pot genera conformeri."
 
-#: qtplugins/openbabel/openbabel.cpp:586
+#: qtplugins/openbabel/openbabel.cpp:588
 msgid "Cannot generate conformers with Open Babel."
 msgstr "Nu se pot genera conformeri cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:619
+#: qtplugins/openbabel/openbabel.cpp:621
 msgid "Generating Conformers (Open Babel)"
 msgstr "Se generează conformeri (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:710
+#: qtplugins/openbabel/openbabel.cpp:712
 msgid "Generate Conformers"
 msgstr "Generează conformeri"
 
-#: qtplugins/openbabel/openbabel.cpp:731
+#: qtplugins/openbabel/openbabel.cpp:739
 msgid "Cannot open file with Open Babel."
 msgstr "Nu se poate deschide fișierul cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:737
+#: qtplugins/openbabel/openbabel.cpp:745
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr "Moleculă nevalidă: Nu se pot percepe legăturile."
 
-#: qtplugins/openbabel/openbabel.cpp:743
+#: qtplugins/openbabel/openbabel.cpp:751
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "Perceperea legăturilor (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:744
+#: qtplugins/openbabel/openbabel.cpp:752
 msgid "Generating XYZ representation…"
 msgstr "Se generează reprezentarea XYZ…"
 
-#: qtplugins/openbabel/openbabel.cpp:751
+#: qtplugins/openbabel/openbabel.cpp:759
 msgid "Error generating XYZ string."
 msgstr "Eroare la generarea șirului XYZ."
 
-#: qtplugins/openbabel/openbabel.cpp:762
+#: qtplugins/openbabel/openbabel.cpp:770
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr "Se convertește XYZ la Open Babel cu %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:772
+#: qtplugins/openbabel/openbabel.cpp:780
 msgid "Updating molecule from Open Babel…"
 msgstr "Se actualizează molecula din Open Babel…"
 
-#: qtplugins/openbabel/openbabel.cpp:824 qtplugins/openbabel/openbabel.cpp:866
+#: qtplugins/openbabel/openbabel.cpp:832 qtplugins/openbabel/openbabel.cpp:874
 msgid "Cannot add hydrogens with Open Babel."
 msgstr "Nu se pot adăuga hidrogeni cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:829 qtplugins/openbabel/openbabel.cpp:879
+#: qtplugins/openbabel/openbabel.cpp:837 qtplugins/openbabel/openbabel.cpp:887
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "Se adaugă hidrogeni (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:830
+#: qtplugins/openbabel/openbabel.cpp:838
 msgid "Generating Open Babel input…"
 msgstr "Se generează intrarea Open Babel…"
 
-#: qtplugins/openbabel/openbabel.cpp:838 qtplugins/openbabel/openbabel.cpp:888
+#: qtplugins/openbabel/openbabel.cpp:846 qtplugins/openbabel/openbabel.cpp:896
 msgid "Error generating Open Babel input."
 msgstr "Eroare la generarea intrării Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:851 qtplugins/openbabel/openbabel.cpp:901
-#: qtplugins/openbabel/openbabel.cpp:943
+#: qtplugins/openbabel/openbabel.cpp:859 qtplugins/openbabel/openbabel.cpp:909
+#: qtplugins/openbabel/openbabel.cpp:951
 #, qt-format
 msgid "Running %1…"
 msgstr "Se execută %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:873
+#: qtplugins/openbabel/openbabel.cpp:881
 msgid "Add hydrogens for pH"
 msgstr "Adaugă hidrogeni pentru pH"
 
-#: qtplugins/openbabel/openbabel.cpp:873
+#: qtplugins/openbabel/openbabel.cpp:881
 msgid "pH:"
 msgstr "pH:"
 
-#: qtplugins/openbabel/openbabel.cpp:880 qtplugins/openbabel/openbabel.cpp:922
+#: qtplugins/openbabel/openbabel.cpp:888 qtplugins/openbabel/openbabel.cpp:930
 msgid "Generating obabel input…"
 msgstr "Se generează intrarea obabel…"
 
-#: qtplugins/openbabel/openbabel.cpp:916
+#: qtplugins/openbabel/openbabel.cpp:924
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr "Nu se pot elimina hidrogeni cu Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:921
+#: qtplugins/openbabel/openbabel.cpp:929
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "Se elimină hidrogenii (Open Babel)"
 
-#: qtplugins/openbabel/openbabel.cpp:930
+#: qtplugins/openbabel/openbabel.cpp:938
 msgid "Error generating Open Babel data."
 msgstr "Eroare la generarea datelor Open Babel."
 
-#: qtplugins/openbabel/openbabel.cpp:953
+#: qtplugins/openbabel/openbabel.cpp:961
 msgid "Reading obabel output…"
 msgstr "Se citește ieșirea obabel…"
 
-#: qtplugins/openbabel/openbabel.cpp:1016
+#: qtplugins/openbabel/openbabel.cpp:1024
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -4714,7 +4804,7 @@ msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:84
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:497:1521
+#: qtplugins/openmminput/openmminputdialog.cpp:497:1527
 msgid "input.prmtop"
 msgstr "input.prmtop"
 
@@ -4744,7 +4834,7 @@ msgstr "top"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1061
-#: qtplugins/openmminput/openmminputdialog.cpp:1070:1638 rc.cpp:1651
+#: qtplugins/openmminput/openmminputdialog.cpp:1070:1644 rc.cpp:1657
 msgid "True"
 msgstr "Adevărat"
 
@@ -4754,7 +4844,7 @@ msgstr "Afișează axele de referință în colțul ecranului."
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, PackageManagerDialog)
-#: qtplugins/packageinstaller/packageinstaller.cpp:17:1794
+#: qtplugins/packageinstaller/packageinstaller.cpp:17:1800
 msgid "Manage Plugins…"
 msgstr "Gestionare module…"
 
@@ -4766,38 +4856,56 @@ msgstr "Program de instalare a pachetelor"
 msgid "Install, update, and remove Avogadro packages."
 msgstr "Instalează, actualizează și dezinstalează pachetele Avogadro."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:137
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:180
 #, qt-format
 msgid "Error downloading plugin list: %1"
 msgstr "Eroare la descărcarea listei de module: %1"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:146
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:189
 msgid "Error: empty response from server."
 msgstr "Eroare: răspuns gol de la server."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:241
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
+#, qt-format
+msgid "Authors: %1"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
+msgid ", "
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:309
+#, qt-format, qt-plural-format
+msgctxt ""
+msgid "%n download(s) in the last %1 days"
+msgid_plural "%n download(s) in the last %1 days"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:358
 #, qt-format
 msgid "Error fetching README: %1"
 msgstr "Eroare la preluarea fișierului README: %1"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:280
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:397
 msgid "Nothing Selected"
 msgstr "Nu este selectat nimic"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:281
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:398
 msgid "Select a plugin to install or update."
 msgstr "Selectați un modul pentru a-l instala sau actualiza."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:291
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:408
 #, qt-format
 msgid "%1 (requires %2)"
 msgstr "%1 (necesită %2)"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:295
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:412
 msgid "Version Incompatibility"
 msgstr "Incompatibilitate între versiuni"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:296
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:413
 #, qt-format
 msgid ""
 "The following plugins require a newer version of Avogadro:\n"
@@ -4812,11 +4920,11 @@ msgstr ""
 "\n"
 "Instalați oricum?"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:323
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:440
 msgid "No Download Available"
 msgstr "Nu este disponibilă nicio descărcare"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:324
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:441
 #, qt-format
 msgid ""
 "The selected plugin(s) do not provide a downloadable source URL:\n"
@@ -4828,67 +4936,67 @@ msgstr ""
 "\n"
 "%1"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:371
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:488
 #, qt-format
 msgid "Failed to follow redirect while downloading %1.\n"
 msgstr "Nu s-a reușit redirecționarea în timpul descărcării %1.\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:388
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:505
 #, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
 msgstr "Descărcarea de la %1 a eșuat: stare %2, %3\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:397
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:514
 #, qt-format
 msgid "Failed to download from %1: %2\n"
 msgstr "Descărcarea de la %1 a eșuat: %2\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:432
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:549
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Se descarcă %1 în %2\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:446
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:563
 #, qt-format
 msgid "Extracting %1…\n"
 msgstr "Se extrage %1…\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:454
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:571
 #, qt-format
 msgid "Extraction complete (%1 files)\n"
 msgstr "Extragere finalizată (%1 fișiere)\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:489
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:606
 #, qt-format
 msgid "Error: could not move extracted package %1 to %2\n"
 msgstr "Eroare: nu s-a putut muta pachetul extras %1 în %2\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:502
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:619
 #, qt-format
 msgid "Extraction error: %1"
 msgstr "Eroare de extragere: %1"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:504
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:621
 msgid "Extraction yielded no files.\n"
 msgstr "Extragerea nu a generat niciun fișier.\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:514
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:631
 msgid "Installation complete.\n"
 msgstr "Instalare finalizată.\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:550
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:667
 msgid "Nothing to Remove"
 msgstr "Nu este nimic de eliminat"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:551
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:668
 msgid "Select an installed plugin to remove it."
 msgstr "Selectați un modul instalat pentru a-l elimina."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:557
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:674
 msgid "Remove Plugins"
 msgstr "Elimină module"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:558
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:675
 #, qt-plural-format
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
@@ -4897,72 +5005,72 @@ msgstr[0] "Eliminați %n modul selectat?"
 msgstr[1] "Eliminați %n module selectate?"
 msgstr[2] "Eliminați %n de module selectate?"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:562
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:679
 msgid "Keep Files"
 msgstr "Păstrează fișierele"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:564
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:681
 msgid "Delete Files"
 msgstr "Șterge fișiere"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:596
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:713
 msgid "Select Plugin Directory"
 msgstr "Selectați directorul modulelor"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:602
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:719
 msgid "Invalid Directory"
 msgstr "Director nevalid"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:603
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:720
 msgid "The selected directory does not contain a pyproject.toml file."
 msgstr "Directorul selectat nu conține un fișier pyproject.toml."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:617
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:734
 #, qt-format
 msgid "Plugin already installed as symlink: %1\n"
 msgstr "Modulul este deja instalat ca legătură simbolică: %1\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:632
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:749
 #, qt-format
 msgid "Created symlink: %1 → %2\n"
 msgstr "S-a creat legătură simbolică: %1 → %2\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:635
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:752
 msgid "Symlink creation failed; copying files instead…\n"
 msgstr "Crearea legăturii simbolice a eșuat; se copiază fișierele în schimb…\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:638
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:755
 #, qt-format
 msgid "Failed to copy package to %1."
 msgstr "Nu s-a reușit copierea pachetului în %1."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:643
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:760
 #, qt-format
 msgid "Installing plugin from %1…\n"
 msgstr "Se instalează modulul din %1…\n"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:59
+#: qtplugins/packageinstaller/packagemodel.cpp:62
 msgid "Not installed"
 msgstr "Neinstalat"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:61
+#: qtplugins/packageinstaller/packagemodel.cpp:64
 msgid "Installed (up to date)"
 msgstr "Instalat (actualizat)"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:63
+#: qtplugins/packageinstaller/packagemodel.cpp:66
 msgid "Update available"
 msgstr "Actualizare disponibilă"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:65
+#: qtplugins/packageinstaller/packagemodel.cpp:68
 msgid "Installed locally (not in online catalog)"
 msgstr "Instalat local (nu în catalogul disponibil în Internet)"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:71
+#: qtplugins/packageinstaller/packagemodel.cpp:74
 #, qt-format
 msgid "Requires Avogadro %1 or later (running %2)"
 msgstr "Necesită Avogadro %1 sau o versiune ulterioară (rulează %2)"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:158
+#: qtplugins/packageinstaller/packagemodel.cpp:165
 #, qt-format
 msgid ""
 "Feature icons:\n"
@@ -4971,39 +5079,43 @@ msgstr ""
 "Pictograme caracteristice:\n"
 "%1"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:166
+#: qtplugins/packageinstaller/packagemodel.cpp:173
 msgid "Status"
 msgstr "Stare"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:170
+#: qtplugins/packageinstaller/packagemodel.cpp:177
 msgid "Version"
 msgstr "Versiunea"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:172
+#: qtplugins/packageinstaller/packagemodel.cpp:179
 msgid "Features"
 msgstr "Caracteristici"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:174
+#: qtplugins/packageinstaller/packagemodel.cpp:181
 msgid "Description"
 msgstr "Descriere"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:525
+#: qtplugins/packageinstaller/packagemodel.cpp:183
+msgid "Keywords"
+msgstr ""
+
+#: qtplugins/packageinstaller/packagemodel.cpp:610
 msgid "Electrostatics"
 msgstr "Electrostatică"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:527
+#: qtplugins/packageinstaller/packagemodel.cpp:612
 msgid "Energy Models"
 msgstr "Modele de energie"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:529
+#: qtplugins/packageinstaller/packagemodel.cpp:614
 msgid "File Formats"
 msgstr "Formate de fișiere"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:531
+#: qtplugins/packageinstaller/packagemodel.cpp:616
 msgid "Input Generators"
 msgstr "Generatoare de date de intrare"
 
-#: qtplugins/packageinstaller/packagemodel.cpp:533
+#: qtplugins/packageinstaller/packagemodel.cpp:618
 msgid "Commands"
 msgstr "Comenzi"
 
@@ -5051,7 +5163,7 @@ msgstr "Instrument de animație\t(%1)"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:104:2124
+#: qtplugins/playertool/playertool.cpp:104:2139
 msgid "Frame:"
 msgstr "Cadrul:"
 
@@ -5133,70 +5245,74 @@ msgstr "Instrument de redare"
 msgid "Play back trajectories"
 msgstr "Redare traiectorii"
 
-#: qtplugins/plotconformer/plotconformer.cpp:45
+#: qtplugins/plotconformer/plotconformer.cpp:197
 msgid "Plot Conformer Data…"
 msgstr "Trasează datele conformerului…"
 
-#. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
-#. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
-#: qtplugins/plotconformer/plotconformer.cpp:235:1432
-msgid "RMSD"
-msgstr "RMSD"
+#: qtplugins/plotconformer/plotconformer.cpp:450
+msgid ""
+"Select 2, 3 or 4 atoms to follow a distance, angle or dihedral across the "
+"conformers."
+msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:241
-msgid "Velocities"
-msgstr "Viteze"
-
-#: qtplugins/plotconformer/plotconformer.cpp:260
+#: qtplugins/plotconformer/plotconformer.cpp:549
 msgid "Conformer Analysis"
 msgstr "Analizarea conformerului"
 
-#: qtplugins/plotconformer/plotconformer.cpp:282
-msgid "Plot Type:"
-msgstr "Tipul graficului:"
+#: qtplugins/plotconformer/plotconformer.cpp:571
+msgid "Plot:"
+msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:292
+#: qtplugins/plotconformer/plotconformer.cpp:573
+msgid "vs"
+msgstr ""
+
+#: qtplugins/plotconformer/plotconformer.cpp:584
+msgid "Add from Selection"
+msgstr ""
+
+#: qtplugins/plotconformer/plotconformer.cpp:588
+msgid "Unwrap dihedral scans"
+msgstr ""
+
+#: qtplugins/plotconformer/plotconformer.cpp:596
 msgid "Energy Units:"
 msgstr "Unități de energie:"
 
-#: qtplugins/plotconformer/plotconformer.cpp:299
-msgid "to"
-msgstr "la"
+#: qtplugins/plotconformer/plotconformer.cpp:616
+msgid "Time between frames:"
+msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:351
-msgid "RMSD (Å)"
-msgstr "RMSD (Å)"
+#: qtplugins/plotconformer/plotconformer.cpp:622
+msgid " ps"
+msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:355
-#, qt-format
-msgid "Relative Energy (%1)"
-msgstr "Energie relativă (%1)"
+#: qtplugins/plotconformer/plotconformer.cpp:624
+msgid ""
+"The interval between saved frames, used to turn the trajectory into "
+"velocities and a temperature. Most trajectory files do not record it, so it "
+"starts at the value from the file where there is one and at 1 ps otherwise."
+msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.cpp:359
-msgid "RMS Gradient"
-msgstr "Gradient RMS"
-
-#: qtplugins/plotconformer/plotconformer.cpp:362
-msgid "Velocities (m/s)"
-msgstr "Viteze (m/s)"
-
-#: qtplugins/plotconformer/plotconformer.cpp:380
+#: qtplugins/plotconformer/plotconformer.cpp:873
 #, qt-format
 msgid "Conformer %1 of %2 — use ← and → to step through them"
 msgstr ""
 "Conformerul %1 din %2 — utilizați ← și → pentru a naviga printre aceștia"
 
-#: qtplugins/plotconformer/plotconformer.cpp:412
-msgid "Frame"
-msgstr "Cadrul"
+#: qtplugins/plotconformer/plotconformer.cpp:925
+msgid ""
+"The units the energies in this file are in, which the file itself does not "
+"record."
+msgstr ""
 
-#: qtplugins/plotconformer/plotconformer.h:38
+#: qtplugins/plotconformer/plotconformer.h:46
 msgid "PlotConformer"
 msgstr "ConformerGrafic"
 
-#: qtplugins/plotconformer/plotconformer.h:105
-msgid "Generate and plot conformer data (RMSD or energy)."
-msgstr "Generează și trasează datele conformerului (RMSD sau energie)."
+#: qtplugins/plotconformer/plotconformer.h:176
+msgid "Generate and plot conformer data (RMSD, energy or scan coordinates)."
+msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -5289,139 +5405,130 @@ msgstr "POVRay"
 msgid "Render the scene using POV-Ray."
 msgstr "Prelucrează scena folosind POV-Ray."
 
-#: qtplugins/propertytables/propertymodel.cpp:396
+#: qtplugins/propertytables/propertymodel.cpp:406
 msgid "Click to change color"
 msgstr "Faceți clic pentru a schimba culoarea"
 
-#: qtplugins/propertytables/propertymodel.cpp:776
+#: qtplugins/propertytables/propertymodel.cpp:779
 msgid "Valence"
 msgstr "Valență"
 
-#: qtplugins/propertytables/propertymodel.cpp:778
+#: qtplugins/propertytables/propertymodel.cpp:781
 msgid "Formal Charge"
 msgstr "Sarcina formală"
 
-#: qtplugins/propertytables/propertymodel.cpp:781
+#: qtplugins/propertytables/propertymodel.cpp:784
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "Sarcina parțială %1"
 
-#: qtplugins/propertytables/propertymodel.cpp:788
+#: qtplugins/propertytables/propertymodel.cpp:791
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:790
+#: qtplugins/propertytables/propertymodel.cpp:793
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:792
+#: qtplugins/propertytables/propertymodel.cpp:795
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:794
-#: qtplugins/propertytables/propertymodel.cpp:816
-#: qtplugins/propertytables/propertymodel.cpp:839
+#: qtplugins/propertytables/propertymodel.cpp:797
+#: qtplugins/propertytables/propertymodel.cpp:819
+#: qtplugins/propertytables/propertymodel.cpp:842
 msgid "Label"
 msgstr "Etichetă"
 
-#: qtplugins/propertytables/propertymodel.cpp:796
+#: qtplugins/propertytables/propertymodel.cpp:799
 msgid "Isotope"
 msgstr "Izotop"
 
-#: qtplugins/propertytables/propertymodel.cpp:798
-#: qtplugins/propertytables/propertymodel.cpp:841
+#: qtplugins/propertytables/propertymodel.cpp:801
+#: qtplugins/propertytables/propertymodel.cpp:844
 msgid "Color"
 msgstr "Culoare"
 
-#: qtplugins/propertytables/propertymodel.cpp:801
+#: qtplugins/propertytables/propertymodel.cpp:804
 msgid "Atom"
 msgstr "Atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:810
+#: qtplugins/propertytables/propertymodel.cpp:813
 msgid "Start Atom"
 msgstr "Atom inițial"
 
-#: qtplugins/propertytables/propertymodel.cpp:812
+#: qtplugins/propertytables/propertymodel.cpp:815
 msgid "End Atom"
 msgstr "Atom final"
 
-#: qtplugins/propertytables/propertymodel.cpp:814
+#: qtplugins/propertytables/propertymodel.cpp:817
 msgid "Bond Order"
 msgstr "Ordinea legăturilor"
 
-#: qtplugins/propertytables/propertymodel.cpp:818
+#: qtplugins/propertytables/propertymodel.cpp:821
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Lungime (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:833
+#: qtplugins/propertytables/propertymodel.cpp:836
 msgid "Chain"
 msgstr "Lanț"
 
-#: qtplugins/propertytables/propertymodel.cpp:835
+#: qtplugins/propertytables/propertymodel.cpp:838
 msgid "Secondary Structure"
 msgstr "Structura secundară"
 
-#: qtplugins/propertytables/propertymodel.cpp:837
+#: qtplugins/propertytables/propertymodel.cpp:840
 msgid "Heterogen"
 msgstr "Eterogen"
 
-#: qtplugins/propertytables/propertymodel.cpp:855
+#: qtplugins/propertytables/propertymodel.cpp:858
 msgid "Vertex"
 msgstr "Vertex"
 
-#: qtplugins/propertytables/propertymodel.cpp:859
-#: qtplugins/propertytables/propertymodel.cpp:878
-#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:101
+#: qtplugins/propertytables/propertymodel.cpp:862
+#: qtplugins/propertytables/propertymodel.cpp:881
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:129
 msgid "Angle (°)"
 msgstr "Unghi (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:889
-msgctxt "root mean squared displacement in Angstrom"
-msgid "RMSD (Å)"
-msgstr "RMSD (Å)"
-
-#: qtplugins/propertytables/propertymodel.cpp:892
-msgid "Energy (kcal/mol)"
-msgstr "Energie (kcal/mol)"
-
-#: qtplugins/propertytables/propertymodel.cpp:1315
+#: qtplugins/propertytables/propertymodel.cpp:1342
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "Elice π"
 
-#: qtplugins/propertytables/propertymodel.cpp:1317
+#: qtplugins/propertytables/propertymodel.cpp:1344
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "Îndoire"
 
-#: qtplugins/propertytables/propertymodel.cpp:1319
+#: qtplugins/propertytables/propertymodel.cpp:1346
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "Elice α"
 
-#: qtplugins/propertytables/propertymodel.cpp:1321
+#: qtplugins/propertytables/propertymodel.cpp:1348
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "Foaie β"
 
-#: qtplugins/propertytables/propertymodel.cpp:1323
+#: qtplugins/propertytables/propertymodel.cpp:1350
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "Elice 3-10"
 
-#: qtplugins/propertytables/propertymodel.cpp:1325
+#: qtplugins/propertytables/propertymodel.cpp:1352
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "Punte β"
 
-#: qtplugins/propertytables/propertymodel.cpp:1327
+#: qtplugins/propertytables/propertymodel.cpp:1354
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "Întoarcere"
 
-#: qtplugins/propertytables/propertymodel.cpp:1329
+#: qtplugins/propertytables/propertymodel.cpp:1356
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "Spirală"
@@ -5461,37 +5568,37 @@ msgstr ""
 msgid "PropertyTables"
 msgstr "Tabele de proprietăți"
 
-#: qtplugins/propertytables/propertyview.cpp:58
+#: qtplugins/propertytables/propertyview.cpp:59
 msgid "Atom Properties"
 msgstr "Proprietățile atomului"
 
-#: qtplugins/propertytables/propertyview.cpp:61
+#: qtplugins/propertytables/propertyview.cpp:62
 msgid "Bond Properties"
 msgstr "Proprietățile legăturii"
 
-#: qtplugins/propertytables/propertyview.cpp:64
+#: qtplugins/propertytables/propertyview.cpp:65
 msgid "Angle Properties"
 msgstr "Proprietățile unghiului"
 
-#: qtplugins/propertytables/propertyview.cpp:67
+#: qtplugins/propertytables/propertyview.cpp:68
 msgid "Torsion Properties"
 msgstr "Proprietățile de torsiune"
 
-#: qtplugins/propertytables/propertyview.cpp:70
+#: qtplugins/propertytables/propertyview.cpp:71
 msgid "Conformer Properties"
 msgstr "Proprietăți conformer"
 
-#: qtplugins/propertytables/propertyview.cpp:73
+#: qtplugins/propertytables/propertyview.cpp:74
 msgid "Residue Properties"
 msgstr "Proprietățile reziduului"
 
-#: qtplugins/propertytables/propertyview.cpp:846
-#: qtplugins/propertytables/propertyview.cpp:875
-#: qtplugins/propertytables/propertyview.cpp:885
+#: qtplugins/propertytables/propertyview.cpp:862
+#: qtplugins/propertytables/propertyview.cpp:891
+#: qtplugins/propertytables/propertyview.cpp:901
 msgid "Add Property"
 msgstr "Adăugare proprietate"
 
-#: qtplugins/propertytables/propertyview.cpp:851
+#: qtplugins/propertytables/propertyview.cpp:867
 msgid "Property name"
 msgstr "Numele proprietății"
 
@@ -5499,19 +5606,19 @@ msgstr "Numele proprietății"
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, nameLabel)
-#: qtplugins/propertytables/propertyview.cpp:852:629 rc.cpp:934
+#: qtplugins/propertytables/propertyview.cpp:868:635 rc.cpp:940
 msgid "Name:"
 msgstr "Nume:"
 
-#: qtplugins/propertytables/propertyview.cpp:857
+#: qtplugins/propertytables/propertyview.cpp:873
 msgid "Number"
 msgstr "Număr"
 
-#: qtplugins/propertytables/propertyview.cpp:858
+#: qtplugins/propertytables/propertyview.cpp:874
 msgid "Integer"
 msgstr "Număr întreg"
 
-#: qtplugins/propertytables/propertyview.cpp:861
+#: qtplugins/propertytables/propertyview.cpp:877
 msgid "Text"
 msgstr "Text"
 
@@ -5519,15 +5626,15 @@ msgstr "Text"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:287
 #. i18n: ectx: property (text), widget (QLabel, typeLabel)
-#: qtplugins/propertytables/propertyview.cpp:862:232 rc.cpp:2250
+#: qtplugins/propertytables/propertyview.cpp:878:232 rc.cpp:2265
 msgid "Type:"
 msgstr "Tip:"
 
-#: qtplugins/propertytables/propertyview.cpp:876
+#: qtplugins/propertytables/propertyview.cpp:892
 msgid "The property name cannot be empty."
 msgstr "Numele proprietății nu poate să fie gol."
 
-#: qtplugins/propertytables/propertyview.cpp:886
+#: qtplugins/propertytables/propertyview.cpp:902
 #, qt-format
 msgid ""
 "Could not add a property named \"%1\". A column with that name may already "
@@ -5536,55 +5643,61 @@ msgstr ""
 "Nu s-a putut adăuga o proprietate cu numele „%1”. Este posibil ca o coloană "
 "cu acest nume să existe deja."
 
-#: qtplugins/propertytables/propertyview.cpp:919
+#: qtplugins/propertytables/propertyview.cpp:935
 msgid "Partial Charge Type"
 msgstr "Tipul de sarcină parțială"
 
-#: qtplugins/propertytables/propertyview.cpp:919
+#: qtplugins/propertytables/propertyview.cpp:935
 msgid "Select the partial charge type:"
 msgstr "Selectați tipul de sarcină parțială:"
 
-#: qtplugins/propertytables/propertyview.cpp:942
+#: qtplugins/propertytables/propertyview.cpp:965
 msgid "Add Property…"
 msgstr "Adăugare proprietate…"
 
-#: qtplugins/propertytables/propertyview.cpp:949
+#: qtplugins/propertytables/propertyview.cpp:974
+msgid "Convert Energy Units…"
+msgstr ""
+
+#: qtplugins/propertytables/propertyview.cpp:981
 msgid "Change Charge Type…"
 msgstr "Schimbarea tipului de sarcină…"
 
-#: qtplugins/propertytables/propertyview.cpp:956
+#: qtplugins/propertytables/propertyview.cpp:988
 msgid "Freeze Atom"
 msgstr "Înghețați atomul"
 
-#: qtplugins/propertytables/propertyview.cpp:960
+#: qtplugins/propertytables/propertyview.cpp:992
 msgid "Freeze X"
 msgstr "Înghețare pe axa X"
 
-#: qtplugins/propertytables/propertyview.cpp:963
+#: qtplugins/propertytables/propertyview.cpp:995
 msgid "Freeze Y"
 msgstr "Înghețare pe axa Y"
 
-#: qtplugins/propertytables/propertyview.cpp:966
+#: qtplugins/propertytables/propertyview.cpp:998
 msgid "Freeze Z"
 msgstr "Înghețare pe axa Z"
 
-#: qtplugins/propertytables/propertyview.cpp:969
+#: qtplugins/propertytables/propertyview.cpp:1001
 msgid "Unfreeze Atom"
 msgstr "Dezgheață atomul"
 
-#: qtplugins/propertytables/propertyview.cpp:977
+#: qtplugins/propertytables/propertyview.cpp:1009
 msgid "Constrain Bond"
 msgstr "Constrângere(limitare) legătură"
 
-#: qtplugins/propertytables/propertyview.cpp:979
+#: qtplugins/propertytables/propertyview.cpp:1011
+#: qtplugins/zmatrixeditor/zmatrixview.cpp:120
 msgid "Constrain Angle"
 msgstr "Constrângere(limitare) unghi"
 
-#: qtplugins/propertytables/propertyview.cpp:981
+#: qtplugins/propertytables/propertyview.cpp:1013
 msgid "Constrain Torsion"
 msgstr "Constrângere(limitare) torsiune"
 
-#: qtplugins/propertytables/propertyview.cpp:988
+#: qtplugins/propertytables/propertyview.cpp:1020
+#: qtplugins/zmatrixeditor/zmatrixview.cpp:152
 msgid "Remove Constraint"
 msgstr "Elimină constrângerea"
 
@@ -5769,7 +5882,7 @@ msgstr "Selectare reziduu"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:2163
+#: qtplugins/select/select.h:30:2178
 msgid "Select"
 msgstr "Selectează"
 
@@ -5823,7 +5936,7 @@ msgstr "Detectează grupul spațial…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:78:2148
+#: qtplugins/spacegroup/spacegroup.cpp:78:2163
 msgid "Symmetrize"
 msgstr "Simetrizare"
 
@@ -6066,7 +6179,7 @@ msgstr "Trasează spectre…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:32:1882
+#: qtplugins/spectra/spectra.h:32:1897
 msgid "Spectra"
 msgstr "Spectru"
 
@@ -6198,7 +6311,7 @@ msgstr "Spectre de dicroism circular"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-#: qtplugins/spectra/spectradialog.cpp:879:1779
+#: qtplugins/spectra/spectradialog.cpp:879:1785
 msgid "Density"
 msgstr "Densitate"
 
@@ -6228,7 +6341,7 @@ msgstr "Suprafață"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
-#: qtplugins/surfacerender/surfacerender.cpp:274:1776
+#: qtplugins/surfacerender/surfacerender.cpp:274:1782
 msgid "Volume"
 msgstr "Volum"
 
@@ -6259,7 +6372,7 @@ msgstr "Orbital"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/surfaces/orbitaltablemodel.cpp:137
-#: qtplugins/symmetry/symmetry.h:34:2133
+#: qtplugins/symmetry/symmetry.h:34:2148
 msgid "Symmetry"
 msgstr "Simetrie"
 
@@ -6591,7 +6704,7 @@ msgstr "Cea din mijloc este geometria nedeplasată."
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: qtplugins/vibrations/vibrationdialog.cpp:49
-#: qtplugins/vibrations/vibrationdialog.cpp:64:2337
+#: qtplugins/vibrations/vibrationdialog.cpp:64:2352
 msgid "Start Animation"
 msgstr "Pornire animație"
 
@@ -6744,10 +6857,15 @@ msgid "Z-Matrix Editor"
 msgstr "Editor de matrice Z"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:59
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:703
+msgid "Add Dummy Atoms"
+msgstr ""
+
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:67
 msgid "Rebuild Geometry"
 msgstr "Reconstruiește geometria"
 
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:61
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:69
 msgid ""
 "Rebuild every atom position from the table. The molecule is not moved or "
 "reoriented."
@@ -6755,31 +6873,41 @@ msgstr ""
 "Reconstruiește poziția fiecărui atom pe baza tabelului. Molecula nu este "
 "deplasată și nici reorientată."
 
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:72
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:80
 msgid "&Z-Matrix Editor…"
 msgstr "Editor de matrice &Z…"
 
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:125
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:135
 msgid "Atoms renumbered into z-matrix order."
 msgstr "Atomii au fost renumerotați în ordinea matricei Z."
 
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:127
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:137
 msgid "The atoms are already in z-matrix order."
 msgstr "Atomii sunt deja în ordinea matricei Z."
 
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:138
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:148
+msgid ""
+"Dummy atoms added beside the linear fragments. They are ordinary atoms of "
+"element Xx: delete them, or undo, when you are done with the matrix."
+msgstr ""
+
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:152
+msgid "Nothing here needs a dummy atom."
+msgstr ""
+
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:163
 msgid "Geometry rebuilt from the table."
 msgstr "Geometria a fost reconstruită pe baza tabelului."
 
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:140
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:165
 msgid "There is nothing to rebuild."
 msgstr "Nu există nimic de reconstruit."
 
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:162
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:187
 msgid "There is nothing to renumber."
 msgstr "Nu există nimic de renumerotat."
 
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:165
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:190
 msgid ""
 "The atoms are already in z-matrix order: every atom already follows the "
 "atoms it is measured against, so renumbering them would change nothing."
@@ -6787,7 +6915,7 @@ msgstr ""
 "Atomii sunt deja în ordinea matricei Z: fiecare atom urmează deja atomii în "
 "raport cu care este măsurat, așa că renumerotarea lor nu ar schimba nimic."
 
-#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:170
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:195
 msgid ""
 "Renumber the atoms so that each one follows the atoms it is measured "
 "against. This changes the atom numbers the rest of the application uses."
@@ -6796,34 +6924,58 @@ msgstr ""
 "este măsurat. Această acțiune modifică numerele atomilor utilizate de restul "
 "aplicației."
 
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:207
+msgid ""
+"Nothing here is straight enough to need one: every row already has real "
+"atoms off the axis to be measured against."
+msgstr ""
+
+#: qtplugins/zmatrixeditor/zmatrixeditor.cpp:211
+msgid ""
+"Add an atom of element Xx beside each linear fragment, off the axis, so that "
+"its angles and dihedrals can be measured and edited. Dummy atoms are real "
+"atoms of the molecule: they are saved and exported with it until you delete "
+"them."
+msgstr ""
+
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:37
 msgid "Edit bond lengths, angles and torsions in a table."
 msgstr ""
 "Editează lungimile legăturilor, unghiurile și torsiunile dintr-un tabel."
 
-#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:99
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:127
 msgid "Distance (Å)"
 msgstr "Distanță (Å)"
 
-#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:103
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:131
 msgid "Dihedral (°)"
 msgstr "Diedru (°)"
 
-#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:193
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:174
+#, qt-format
+msgid "Constrained to %1 Å"
+msgstr ""
+
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:176
+#, qt-format
+msgid "Constrained to %1°"
+msgstr ""
+
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:364
 #, qt-format
 msgid "There is no atom %1."
 msgstr "Nu există atomul %1."
 
-#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:196
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:367
 msgid "An atom cannot be measured against itself."
 msgstr "Un atom nu poate fi măsurat în raport cu el însuși."
 
-#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:202
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:373
 #, qt-format
 msgid "Atom %1 is already used by this row."
 msgstr "Atomul %1 este deja utilizat de acest rând."
 
-#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:209
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:380
 #, qt-format
 msgid ""
 "Atom %1 is placed after this one, so it cannot be measured against. Reorder "
@@ -6832,9 +6984,17 @@ msgstr ""
 "Atomul %1 este plasat după acesta, așadar nu poate fi utilizat ca referință "
 "pentru măsurare. Reordonați mai întâi atomii."
 
-#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:498
+#: qtplugins/zmatrixeditor/zmatrixmodel.cpp:735
 msgid "Rebuild from Z-matrix"
 msgstr "Reconstruiește pe baza matricei Z"
+
+#: qtplugins/zmatrixeditor/zmatrixview.cpp:117
+msgid "Constrain Distance"
+msgstr ""
+
+#: qtplugins/zmatrixeditor/zmatrixview.cpp:123
+msgid "Constrain Dihedral"
+msgstr ""
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -7633,6 +7793,16 @@ msgstr "Text etichetă"
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
 msgstr "Ordinea legăturilor:"
+
+#. i18n: file: qtplugins/editor/editortoolwidget.ui:53
+#. i18n: ectx: property (toolTip), widget (QCheckBox, adjustBondLengths)
+msgid "When possible, adjust bond lengths when changing atoms or bond orders"
+msgstr ""
+
+#. i18n: file: qtplugins/editor/editortoolwidget.ui:56
+#. i18n: ectx: property (text), widget (QCheckBox, adjustBondLengths)
+msgid "Adjust Bond Lengths"
+msgstr ""
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -8537,15 +8707,6 @@ msgstr "NVT"
 msgid "NVE"
 msgstr "NVE"
 
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
-#. i18n: ectx: property (text), widget (QLabel, label_temp)
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:748
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:918
-#. i18n: ectx: property (text), widget (QCheckBox, temperatureCheck)
-msgid "Temperature"
-msgstr "Temperatura"
-
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:360
@@ -8940,6 +9101,11 @@ msgid ""
 msgstr ""
 "metoda de evaluare pentru algoritmul genetic (RMSD = distanța geometrică, "
 "energie = cele mai mici energii)"
+
+#. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
+#. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
+msgid "RMSD"
+msgstr "RMSD"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -9340,11 +9506,6 @@ msgstr "Opțiuni de date de stare:"
 msgid "Step Index"
 msgstr "Index de etape/intervale"
 
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
-#. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
-msgid "Time"
-msgstr "Timp"
-
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:868
 #. i18n: ectx: property (text), widget (QCheckBox, speedCheck)
 msgid "Speed"
@@ -9375,17 +9536,32 @@ msgstr "Energia totală"
 msgid "Search plugins…"
 msgstr "Căutare module…"
 
-#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:69
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:81
+#. i18n: ectx: property (title), widget (QGroupBox, infoBox)
+msgid "Plugin Information"
+msgstr ""
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:122
+#. i18n: ectx: property (text), widget (QPushButton, bugTrackerButton)
+msgid "Report an Issue"
+msgstr ""
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:125
+#. i18n: ectx: property (toolTip), widget (QPushButton, bugTrackerButton)
+msgid "Open this plugin's bug tracker in your browser"
+msgstr ""
+
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:144
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
 msgid "Install from Directory…"
 msgstr "Instalare din director…"
 
-#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:89
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:164
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 msgid "Remove Selected"
 msgstr "Elimină elementele selectate"
 
-#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:96
+#. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:171
 #. i18n: ectx: property (text), widget (QPushButton, installButton)
 msgid "Install / Update Selected"
 msgstr "Instalare / Actualizare elemente selectate"
@@ -10283,6 +10459,60 @@ msgstr "Remus-Gabriel Chelu"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "remusgabriel.chelu@disroot.org, 2023, 2024, 2025, 2026"
+
+#, qt-format
+#~ msgid ""
+#~ "Navigation Tool\t(%1)\n"
+#~ "\n"
+#~ "Left Mouse:\tClick and drag to rotate the view.\n"
+#~ "Middle Mouse:\tClick and drag to zoom in or out.\n"
+#~ "Right Mouse:\tClick and drag to move the view.\n"
+#~ "\n"
+#~ "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
+#~ "Alt(Option)+Left:\tUses the virtual trackball."
+#~ msgstr ""
+#~ "Instrument de navigare\t(%1)\n"
+#~ "\n"
+#~ "Butonul stâng al mouse-ului:\tFaceți clic și trageți pentru a roti "
+#~ "vizualizarea.\n"
+#~ "Butonul din mijloc al mouse-ului:\tFaceți clic și trageți pentru a mări "
+#~ "sau micșora vizualizarea.\n"
+#~ "Butonul drept al mouse-ului:\tFaceți clic și trageți pentru a deplasa "
+#~ "vizualizarea.\n"
+#~ "\n"
+#~ "Alt(Opțiune)+Glisare:\tRotire/mărire sau micșorare/deplasare în timp ce "
+#~ "utilizați orice instrument.\n"
+#~ "Alt(Opțiune)+Butonul stâng al mouse-ului:\tUtilizează bila de control "
+#~ "virtuală."
+
+#~ msgid "Velocities"
+#~ msgstr "Viteze"
+
+#~ msgid "Plot Type:"
+#~ msgstr "Tipul graficului:"
+
+#~ msgid "RMSD (Å)"
+#~ msgstr "RMSD (Å)"
+
+#, qt-format
+#~ msgid "Relative Energy (%1)"
+#~ msgstr "Energie relativă (%1)"
+
+#~ msgid "Velocities (m/s)"
+#~ msgstr "Viteze (m/s)"
+
+#~ msgid "Frame"
+#~ msgstr "Cadrul"
+
+#~ msgid "Generate and plot conformer data (RMSD or energy)."
+#~ msgstr "Generează și trasează datele conformerului (RMSD sau energie)."
+
+#~ msgctxt "root mean squared displacement in Angstrom"
+#~ msgid "RMSD (Å)"
+#~ msgstr "RMSD (Å)"
+
+#~ msgid "Energy (kcal/mol)"
+#~ msgstr "Energie (kcal/mol)"
 
 #, qt-format
 #~ msgid ""
