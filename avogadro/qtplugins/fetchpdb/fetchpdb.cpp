@@ -22,6 +22,16 @@
 
 namespace Avogadro::QtPlugins {
 
+namespace {
+// Stamped on each QNetworkReply so that replyFinished() works from the
+// request that actually landed. The progress dialog is modeless and
+// showDialog() has no in-flight guard, so a second download can be started
+// before the first one finishes.
+constexpr char pdbCodeProperty[] = "avogadroPdbCode";
+constexpr char downloadSuffixProperty[] = "avogadroDownloadSuffix";
+constexpr char commandDrivenProperty[] = "avogadroCommandDriven";
+} // namespace
+
 FetchPDB::FetchPDB(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
     m_network(nullptr), m_progressDialog(nullptr)
@@ -92,8 +102,7 @@ bool FetchPDB::handleCommand(const QString& command, const QVariantMap& options)
   // The request goes to the network, so the caller's reply is held until
   // replyFinished() reports back.
   emit commandStarted();
-  m_commandPending = true;
-  requestStructure(pdbCode);
+  requestStructure(pdbCode, /* commandDriven = */ true);
   return true;
 }
 
@@ -130,7 +139,7 @@ bool FetchPDB::isValidPdbCode(const QString& pdbCode, QString* error)
   return false;
 }
 
-void FetchPDB::requestStructure(const QString& pdbCode)
+void FetchPDB::requestStructure(const QString& pdbCode, bool commandDriven)
 {
   if (!m_network) {
     m_network = new QNetworkAccessManager(this);
@@ -142,15 +151,26 @@ void FetchPDB::requestStructure(const QString& pdbCode)
   // and Io reads it back transparently. Builds without the compression back
   // ends (USE_LIBARCHIVE=OFF, as the Python wheels are configured) cannot
   // decode it, so ask those for the plain file instead.
-  m_downloadSuffix = Io::compressionSupported(Io::Compression::Gzip)
-                       ? QStringLiteral(".pdb.gz")
-                       : QStringLiteral(".pdb");
+  const QString suffix = Io::compressionSupported(Io::Compression::Gzip)
+                           ? QStringLiteral(".pdb.gz")
+                           : QStringLiteral(".pdb");
 
   // Hard coding the PDB download URL
-  m_network->get(QNetworkRequest(
-    QUrl("https://files.rcsb.org/download/" + pdbCode + m_downloadSuffix)));
+  QNetworkReply* reply = m_network->get(QNetworkRequest(
+    QUrl("https://files.rcsb.org/download/" + pdbCode + suffix)));
+
+  // Everything replyFinished() needs to know about this particular request
+  // travels with its reply, so two overlapping downloads cannot be confused
+  // for one another.
+  if (reply != nullptr) {
+    reply->setProperty(pdbCodeProperty, pdbCode);
+    reply->setProperty(downloadSuffixProperty, suffix);
+    reply->setProperty(commandDrivenProperty, commandDriven);
+  }
 
   m_moleculeName = pdbCode;
+  m_downloadSuffix = suffix;
+  m_commandPending = commandDriven;
 }
 
 void FetchPDB::reportFailure(const QString& title, const QString& message)
@@ -204,7 +224,7 @@ void FetchPDB::showDialog()
     return;
   }
 
-  requestStructure(pdbCode);
+  requestStructure(pdbCode, /* commandDriven = */ false);
 
   if (!m_progressDialog) {
     m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
@@ -217,10 +237,25 @@ void FetchPDB::showDialog()
 
 void FetchPDB::replyFinished(QNetworkReply* reply)
 {
+  // Work from the request this reply belongs to, not from whatever the most
+  // recent requestStructure() left in the members: a download started from
+  // the menu while another is still in flight would otherwise be saved under
+  // the wrong name and reported against the wrong caller.
+  const QString pdbCode = reply->property(pdbCodeProperty).toString();
+  const QString downloadSuffix =
+    reply->property(downloadSuffixProperty).toString();
+  const bool commandDriven = reply->property(commandDrivenProperty).toBool();
+
+  // readMolecule() is called by MainWindow from inside moleculeReady() and
+  // can only see the members, so point them at this reply before going on.
+  m_moleculeName = pdbCode;
+  m_downloadSuffix = downloadSuffix;
+  m_commandPending = commandDriven;
+
   // A fetchPDB command never shows the progress dialog, so there may be none
   // to hide -- and one left over from an earlier interactive download should
   // not be touched here.
-  if (!m_commandPending && m_progressDialog)
+  if (!commandDriven && m_progressDialog)
     m_progressDialog->hide();
 
   // Read in all the data
@@ -252,14 +287,13 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
       (m_moleculeData.isEmpty() || m_moleculeData.contains("Not Found") ||
        m_moleculeData.contains("Error report") ||
        m_moleculeData.contains("Page not found (404)"))) {
-    reportFailure(
-      tr("Network Download Failed"),
-      tr("Specified molecule could not be found: %1").arg(m_moleculeName));
+    reportFailure(tr("Network Download Failed"),
+                  tr("Specified molecule could not be found: %1").arg(pdbCode));
     return;
   }
 
   m_tempFileName =
-    QDir::tempPath() + QDir::separator() + m_moleculeName + m_downloadSuffix;
+    QDir::tempPath() + QDir::separator() + pdbCode + downloadSuffix;
   QFile out(m_tempFileName);
   if (!out.open(QIODevice::WriteOnly)) {
     reportFailure(tr("Error"), tr("Cannot save file %1.").arg(m_tempFileName));
@@ -268,15 +302,20 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   out.write(m_moleculeData);
   out.close();
 
-  const QString pdbCode = m_moleculeName;
   emit moleculeReady(1);
 
   // MainWindow calls readMolecule() synchronously from moleculeReady() but
   // does not pass its result back, so m_lastReadOk carries it. Only the
   // command path needs it: readMolecule() has already warned the user
   // itself when there is no command waiting.
-  if (m_commandPending) {
-    if (m_lastReadOk)
+  const bool readOk = m_lastReadOk;
+
+  // readMolecule() can open a warning box, and a modal box spins the event
+  // loop, which can deliver another reply here before this call returns --
+  // so re-assert this reply's view of things before reporting on it.
+  m_commandPending = commandDriven;
+  if (commandDriven) {
+    if (readOk)
       reportCommandSuccess(pdbCode);
     else
       reportFailure(tr("Fetch PDB"),

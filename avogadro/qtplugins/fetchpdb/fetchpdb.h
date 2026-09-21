@@ -63,9 +63,11 @@ private:
   /// same codes for the same reasons.
   static bool isValidPdbCode(const QString& pdbCode, QString* error);
 
-  /// Starts the download of @p pdbCode from RCSB. Shared by showDialog()
-  /// and the fetchPDB command.
-  void requestStructure(const QString& pdbCode);
+  /// Starts the download of @p pdbCode from RCSB, stamping the reply with
+  /// the code, the suffix used and @p commandDriven so that replyFinished()
+  /// can tell which request landed. Shared by showDialog() (false) and the
+  /// fetchPDB command (true).
+  void requestStructure(const QString& pdbCode, bool commandDriven);
 
   /// Reports @p message through commandFailed() when a fetchPDB command is
   /// waiting on the download, and through a warning box titled @p title
@@ -84,14 +86,16 @@ private:
   QByteArray m_moleculeData;
   QProgressDialog* m_progressDialog;
   QString m_tempFileName;
-  /// The suffix this build downloads: ".pdb.gz" where gzip can be decoded,
-  /// ".pdb" otherwise. Set by requestStructure() and used for both the URL
-  /// and the temporary file name, so the two cannot drift apart.
+  /// The suffix of the download being handled: ".pdb.gz" where gzip can be
+  /// decoded, ".pdb" otherwise. Set on the request and read back off the
+  /// reply, so the URL and the temporary file name cannot drift apart even
+  /// when two downloads overlap.
   QString m_downloadSuffix{ QStringLiteral(".pdb") };
-  /// True while a fetchPDB command is waiting on a download, so that
-  /// replyFinished() reports through commandFinished()/commandFailed()
-  /// instead of the interactive dialogs. Mirrors the same flag in
-  /// NetworkDatabases.
+  /// True while the download being handled belongs to a fetchPDB command, so
+  /// that replyFinished() reports through commandFinished()/commandFailed()
+  /// instead of the interactive dialogs. Re-established from the reply at the
+  /// top of replyFinished() rather than trusted from the last request, since
+  /// readMolecule() is called out of band and can only see the members.
   bool m_commandPending = false;
   /// Set by readMolecule(), which MainWindow calls synchronously from
   /// moleculeReady() without passing its result back to us.
