@@ -41,6 +41,19 @@ class SymmetryWidget;
 }
 
 /**
+ * @name Tolerance presets
+ * The thresholds behind the panel's tolerance combo, in the same order.
+ * Declared here because the Symmetry extension needs them when a command
+ * runs with no panel to ask, and when a command names a tolerance itself.
+ * @{
+ */
+extern msym::msym_thresholds_t tight_thresholds;
+extern msym::msym_thresholds_t medium_thresholds;
+extern msym::msym_thresholds_t loose_thresholds;
+extern msym::msym_thresholds_t sloppy_thresholds;
+/** @} */
+
+/**
  * @brief The SymmetryWidget class provides a widget for handling symmetry
  * unit cell.
  */
