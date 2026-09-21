@@ -107,7 +107,27 @@ jobs:
       run: |
         # ENABLE_FUZZ is not forwarded through the superbuild, so turn it on in
         # the avogadrolibs build itself.
-        cmake -DENABLE_FUZZ=ON .
+        #
+        # Asserts are kept alive here, which is the point of overriding the
+        # per-config flags. CMake appends CMAKE_CXX_FLAGS_<CONFIG> after
+        # CXXFLAGS, and RelWithDebInfo's end in -DNDEBUG -- so every assert()
+        # in the tree disappears, including the ones that are the *only* guard
+        # on an index. Two bugs found on 2026-09-20 (an undo command removing
+        # an atom it never added, and Layer::addAtom writing a layer id no
+        # layer had) sat behind asserts this job could not see. Dropping just
+        # the NDEBUG keeps -O2, so fuzzing throughput is unchanged.
+        #
+        # Scoped to this directory deliberately: the third-party subprojects
+        # the superbuild already built keep their own flags, so an assert in
+        # Open Babel or spglib cannot fail a job about our parsers.
+        #
+        # Measured before turning this on: every target's seed corpus, and a
+        # mutation soak over all 13 core, 8 io and 5 quantumio targets, run
+        # clean with asserts enabled. Only qtgui/rwmolecule tripped one, and
+        # that is fixed.
+        cmake -DENABLE_FUZZ=ON \
+          -DCMAKE_C_FLAGS_RELWITHDEBINFO="-O2 -g" \
+          -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-O2 -g" .
         cmake --build .
       shell: bash
       working-directory: ${{ runner.workspace }}/build/avogadrolibs
