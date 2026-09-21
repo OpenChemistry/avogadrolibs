@@ -5,8 +5,11 @@
 
 #include "fetchpdb.h"
 
+#include <avogadro/io/compression.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
+
+#include <cstddef>
 
 #include <QAction>
 #include <QtCore/QDir>
@@ -135,9 +138,17 @@ void FetchPDB::requestStructure(const QString& pdbCode)
             SLOT(replyFinished(QNetworkReply*)));
   }
 
+  // RCSB serves every entry gzipped as well, at roughly a fifth the size,
+  // and Io reads it back transparently. Builds without the compression back
+  // ends (USE_LIBARCHIVE=OFF, as the Python wheels are configured) cannot
+  // decode it, so ask those for the plain file instead.
+  m_downloadSuffix = Io::compressionSupported(Io::Compression::Gzip)
+                       ? QStringLiteral(".pdb.gz")
+                       : QStringLiteral(".pdb");
+
   // Hard coding the PDB download URL
   m_network->get(QNetworkRequest(
-    QUrl("https://files.rcsb.org/download/" + pdbCode + ".pdb")));
+    QUrl("https://files.rcsb.org/download/" + pdbCode + m_downloadSuffix)));
 
   m_moleculeName = pdbCode;
 }
@@ -223,10 +234,24 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   m_moleculeData = reply->readAll();
   reply->deleteLater();
 
+  // RCSB answers an unknown code with an HTML error page, so the payload is
+  // what says whether the download worked. Gzip magic is a positive answer:
+  // no error page carries it, and the string matches below would be
+  // unreliable against compressed bytes, which can hold any sequence at all.
+  // Checking the content rather than the requested suffix also keeps this
+  // right if the body arrives decoded (a proxy, or a future Content-Encoding
+  // from RCSB) -- a plain PDB body simply falls through to the same checks
+  // the uncompressed download has always used.
+  const bool gzipped =
+    Io::detectCompression(m_moleculeData.constData(),
+                          static_cast<std::size_t>(m_moleculeData.size())) ==
+    Io::Compression::Gzip;
+
   // Check if the file was successfully downloaded
-  if (m_moleculeData.contains("Not Found") ||
-      m_moleculeData.contains("Error report") ||
-      m_moleculeData.contains("Page not found (404)")) {
+  if (!gzipped &&
+      (m_moleculeData.isEmpty() || m_moleculeData.contains("Not Found") ||
+       m_moleculeData.contains("Error report") ||
+       m_moleculeData.contains("Page not found (404)"))) {
     reportFailure(
       tr("Network Download Failed"),
       tr("Specified molecule could not be found: %1").arg(m_moleculeName));
@@ -234,7 +259,7 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   }
 
   m_tempFileName =
-    QDir::tempPath() + QDir::separator() + m_moleculeName + ".pdb";
+    QDir::tempPath() + QDir::separator() + m_moleculeName + m_downloadSuffix;
   QFile out(m_tempFileName);
   if (!out.open(QIODevice::WriteOnly)) {
     reportFailure(tr("Error"), tr("Cannot save file %1.").arg(m_tempFileName));

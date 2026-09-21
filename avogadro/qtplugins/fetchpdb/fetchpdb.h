@@ -84,6 +84,10 @@ private:
   QByteArray m_moleculeData;
   QProgressDialog* m_progressDialog;
   QString m_tempFileName;
+  /// The suffix this build downloads: ".pdb.gz" where gzip can be decoded,
+  /// ".pdb" otherwise. Set by requestStructure() and used for both the URL
+  /// and the temporary file name, so the two cannot drift apart.
+  QString m_downloadSuffix{ QStringLiteral(".pdb") };
   /// True while a fetchPDB command is waiting on a download, so that
   /// replyFinished() reports through commandFinished()/commandFailed()
   /// instead of the interactive dialogs. Mirrors the same flag in
