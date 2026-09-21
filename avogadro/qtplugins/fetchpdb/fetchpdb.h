@@ -43,15 +43,40 @@ public:
 
   QStringList menuPath(QAction*) const override;
 
+  void registerCommands() override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
   bool readMolecule(QtGui::Molecule& mol) override;
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
 
 private slots:
   void showDialog();
   void replyFinished(QNetworkReply*);
 
 private:
+  /// Checks @p pdbCode against the Protein Data Bank identifier format: four
+  /// characters, the first a digit 1-9, the rest ASCII letters or digits.
+  /// Writes the reason for a rejection to @p error when it is not null.
+  /// Shared by showDialog() and the fetchPDB command so both reject the
+  /// same codes for the same reasons.
+  static bool isValidPdbCode(const QString& pdbCode, QString* error);
+
+  /// Starts the download of @p pdbCode from RCSB. Shared by showDialog()
+  /// and the fetchPDB command.
+  void requestStructure(const QString& pdbCode);
+
+  /// Reports @p message through commandFailed() when a fetchPDB command is
+  /// waiting on the download, and through a warning box titled @p title
+  /// otherwise. Clears m_commandPending in the command case.
+  void reportFailure(const QString& title, const QString& message);
+
+  /// If a fetchPDB command is pending, clears m_commandPending and emits
+  /// commandFinished() with the @p pdbCode that was downloaded. No-op when
+  /// not command-driven.
+  void reportCommandSuccess(const QString& pdbCode);
+
   QAction* m_action;
   QtGui::Molecule* m_molecule;
   QNetworkAccessManager* m_network;
@@ -59,6 +84,14 @@ private:
   QByteArray m_moleculeData;
   QProgressDialog* m_progressDialog;
   QString m_tempFileName;
+  /// True while a fetchPDB command is waiting on a download, so that
+  /// replyFinished() reports through commandFinished()/commandFailed()
+  /// instead of the interactive dialogs. Mirrors the same flag in
+  /// NetworkDatabases.
+  bool m_commandPending = false;
+  /// Set by readMolecule(), which MainWindow calls synchronously from
+  /// moleculeReady() without passing its result back to us.
+  bool m_lastReadOk = false;
 };
 } // namespace QtPlugins
 } // namespace Avogadro
