@@ -1314,3 +1314,35 @@ TEST(RWMoleculeTest, setLayerToALayerThatDoesNotExistYet)
   mol.undoStack().redo();
   EXPECT_EQ(static_cast<size_t>(2), m.layer().getLayerID(1));
 }
+
+TEST(RWMoleculeTest, undoRedoKeepsTheBondUniqueId)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  ASSERT_TRUE(mol.addBond(0, 1, 1).isValid());
+
+  const Index uid = m.bondUniqueId(m.bond(0, 1));
+  ASSERT_NE(Avogadro::MaxIndex, uid);
+  ASSERT_EQ(static_cast<size_t>(1), m.bondUniqueIds().size());
+
+  // A bond that comes back from an undo has to come back as the same bond.
+  // PersistentBond and everything else holding onto one resolves through
+  // bondByUniqueId(), so the tombstoned slot has to be reclaimed rather than
+  // a fresh id appended -- which also kept m_bondUniqueIds growing by one on
+  // every undo/redo cycle.
+  for (int cycle = 0; cycle < 3; ++cycle) {
+    mol.undoStack().undo();
+    ASSERT_EQ(static_cast<Index>(0), mol.bondCount());
+    EXPECT_FALSE(m.bondByUniqueId(uid).isValid());
+
+    mol.undoStack().redo();
+    ASSERT_EQ(static_cast<Index>(1), mol.bondCount());
+    EXPECT_TRUE(m.bondByUniqueId(uid).isValid()) << "cycle " << cycle;
+    EXPECT_EQ(uid, m.bondUniqueId(m.bond(0, 1))) << "cycle " << cycle;
+    EXPECT_EQ(static_cast<size_t>(1), m.bondUniqueIds().size())
+      << "cycle " << cycle;
+    expectUniqueIdsMatchBonds(m);
+  }
+}

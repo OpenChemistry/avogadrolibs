@@ -480,8 +480,19 @@ public:
   {
     assert(m_molecule.bondCount() == m_bondId);
     const Index before = m_molecule.bondCount();
+
+    // The bond has to come back under the unique id it had. On the first run
+    // that id does not exist yet and the plain overload appends exactly it;
+    // on a redo after an undo the slot is still there, tombstoned, and the
+    // unique-id overload reclaims it. Appending a fresh id instead left every
+    // PersistentBond pointing at the old one dangling and grew
+    // m_bondUniqueIds by one on every undo/redo cycle.
     auto bond =
-      m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder);
+      (m_bondUid == static_cast<Index>(bondUniqueIds().size()))
+        ? m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder)
+        : m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder,
+                             m_bondUid);
+
     // As in AddAtomCommand: undoing an add that never happened would remove
     // a bond this command does not own.
     m_added = bond.isValid() && m_molecule.bondCount() > before;
