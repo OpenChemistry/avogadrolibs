@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <utility>
+#include <vector>
 
 using Avogadro::Index;
 using Avogadro::Real;
@@ -1171,4 +1172,145 @@ TEST(RWMoleculeTest, reorderThenRemoveABondedAtom)
   EXPECT_TRUE(mol.removeAtom(1));
   EXPECT_EQ(static_cast<Index>(4), mol.atomCount());
   EXPECT_EQ(static_cast<Index>(0), mol.bondCount());
+}
+
+namespace {
+// A removed bond's unique id is tombstoned with MaxIndex and never recycled,
+// so m_bondUniqueIds is allowed to be longer than the bond list. What must
+// hold is that the live slots name the bonds, each exactly once: a unique id
+// pointing at a bond index that does not exist is what let an undo command
+// swap past the end of the bond list.
+void expectUniqueIdsMatchBonds(Molecule& molecule)
+{
+  const Index bondCount = molecule.bondCount();
+  std::vector<int> seen(bondCount, 0);
+  Index live = 0;
+  const Array<Index>& uids = molecule.bondUniqueIds();
+  for (Index uid = 0; uid < static_cast<Index>(uids.size()); ++uid) {
+    const Index index = uids[uid];
+    if (index == Avogadro::MaxIndex)
+      continue;
+    ++live;
+    ASSERT_LT(index, bondCount)
+      << "unique id " << uid << " names bond " << index << ", which is not one";
+    EXPECT_EQ(0, seen[index]++) << "bond " << index << " has two unique ids";
+  }
+  EXPECT_EQ(bondCount, live);
+}
+} // namespace
+
+TEST(RWMoleculeTest, addBondOnAnAlreadyBondedPair)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+
+  const RWMolecule::BondType first = mol.addBond(0, 1, 1);
+  ASSERT_TRUE(first.isValid());
+
+  // Core::Molecule::addBond() never gives a bonded pair a second bond: it
+  // updates the order and returns the bond that is already there. The unique
+  // id bookkeeping has to agree, or m_bondUniqueIds grows past the bond list
+  // and findBondUniqueId() starts answering with an id whose bond does not
+  // exist -- which is how an undo command came to swap a bond index that was
+  // one past the end.
+  const RWMolecule::BondType again = mol.addBond(0, 1, 2);
+  EXPECT_TRUE(again.isValid());
+  EXPECT_EQ(first.index(), again.index());
+  EXPECT_EQ(static_cast<Index>(1), mol.bondCount());
+  EXPECT_EQ(2, mol.bondOrder(first.index()));
+  expectUniqueIdsMatchBonds(m);
+
+  // The order change is undoable like any other, and undoing it does not
+  // take the bond with it.
+  mol.undoStack().undo();
+  EXPECT_EQ(static_cast<Index>(1), mol.bondCount());
+  EXPECT_EQ(1, mol.bondOrder(first.index()));
+
+  // Undoing the original add does remove it, and redo brings it back once.
+  mol.undoStack().undo();
+  EXPECT_EQ(static_cast<Index>(0), mol.bondCount());
+  mol.undoStack().redo();
+  EXPECT_EQ(static_cast<Index>(1), mol.bondCount());
+  expectUniqueIdsMatchBonds(m);
+}
+
+TEST(RWMoleculeTest, removeBondUndoAfterADuplicateAdd)
+{
+  // The sequence the fuzz target found: a duplicate bond used to leave a
+  // unique id pointing at a bond index that did not exist, and the next
+  // bond removal recorded that id. Undoing it then found the id taken,
+  // skipped the re-add, and swapped bondCount() - 1 anyway.
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6);
+
+  mol.addBond(0, 1, 1);
+  mol.addBond(0, 1, 1); // already bonded
+  mol.addBond(2, 3, 1);
+  ASSERT_EQ(static_cast<Index>(2), mol.bondCount());
+
+  ASSERT_TRUE(mol.removeBond(1));
+  EXPECT_EQ(static_cast<Index>(1), mol.bondCount());
+
+  mol.undoStack().undo();
+  ASSERT_EQ(static_cast<Index>(2), mol.bondCount());
+
+  // Both bonds are back where they were, and reachable from their atoms.
+  EXPECT_TRUE(mol.bond(0, 1).isValid());
+  EXPECT_TRUE(mol.bond(2, 3).isValid());
+  expectUniqueIdsMatchBonds(m);
+}
+
+TEST(RWMoleculeTest, addAtomWithoutPositions)
+{
+  // RWMolecule::addAtom(num, false) routes to the unique-id overload with an
+  // id one past the end, which used to be refused outright: no atom was added
+  // while an AtomType was handed back saying one had been, and the undo that
+  // followed removed whatever atom later took that index.
+  Molecule m;
+  RWMolecule mol(m);
+
+  const RWMolecule::AtomType first = mol.addAtom(6, false);
+  EXPECT_TRUE(first.isValid());
+  ASSERT_EQ(static_cast<Index>(1), mol.atomCount());
+  EXPECT_EQ(6, mol.atomicNumber(0));
+
+  const RWMolecule::AtomType second = mol.addAtom(8, false);
+  EXPECT_TRUE(second.isValid());
+  ASSERT_EQ(static_cast<Index>(2), mol.atomCount());
+  EXPECT_EQ(8, mol.atomicNumber(1));
+
+  // Undo takes the atoms it added, and only those.
+  mol.undoStack().undo();
+  ASSERT_EQ(static_cast<Index>(1), mol.atomCount());
+  EXPECT_EQ(6, mol.atomicNumber(0));
+  mol.undoStack().redo();
+  ASSERT_EQ(static_cast<Index>(2), mol.atomCount());
+  EXPECT_EQ(8, mol.atomicNumber(1));
+}
+
+TEST(RWMoleculeTest, setLayerToALayerThatDoesNotExistYet)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(8);
+  ASSERT_EQ(static_cast<size_t>(1), m.layer().layerCount());
+
+  // Moving an atom to a layer that has not been created yet creates it.
+  EXPECT_TRUE(mol.setLayer(1, 2));
+  EXPECT_EQ(static_cast<size_t>(2), m.layer().getLayerID(1));
+  EXPECT_EQ(static_cast<size_t>(3), m.layer().layerCount());
+  EXPECT_EQ(static_cast<size_t>(0), m.layer().getLayerID(0));
+
+  // Undo puts the atom back in its old layer. The layers it grew stay --
+  // nothing else keyed to them was created either, and an empty layer is
+  // what Add Layer leaves behind too.
+  mol.undoStack().undo();
+  EXPECT_EQ(static_cast<size_t>(0), m.layer().getLayerID(1));
+  mol.undoStack().redo();
+  EXPECT_EQ(static_cast<size_t>(2), m.layer().getLayerID(1));
 }

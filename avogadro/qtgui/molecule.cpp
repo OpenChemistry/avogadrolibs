@@ -92,7 +92,16 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
 
 Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
 {
-  if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size()) ||
+  // A unique id one past the end is the fresh id AddAtomCommand carries on its
+  // first run, and addAtom() appends exactly that id. The overload taking a
+  // position has always handled it this way; without it here,
+  // RWMolecule::addAtom(number, /* usingPositions = */ false) added no atom at
+  // all while reporting one, and the undo that followed removed whichever atom
+  // had taken the index it recorded.
+  if (uniqueId == static_cast<Index>(m_atomUniqueIds.size()))
+    return addAtom(number);
+
+  if (uniqueId > static_cast<Index>(m_atomUniqueIds.size()) ||
       m_atomUniqueIds[uniqueId] != MaxIndex) {
     return AtomType();
   }
@@ -173,21 +182,31 @@ Index Molecule::atomUniqueId(Index a) const
 Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
                                      unsigned char order)
 {
-  m_bondUniqueIds.push_back(bondCount());
-
   assert(a.isValid() && a.molecule() == this);
   assert(b.isValid() && b.molecule() == this);
 
-  BondType bond_ = Core::Molecule::addBond(a.index(), b.index(), order);
-  return bond_;
+  return addBond(a.index(), b.index(), order);
 }
 
 Molecule::BondType Molecule::addBond(Avogadro::Index atomId1,
                                      Avogadro::Index atomId2,
                                      unsigned char order)
 {
-  m_bondUniqueIds.push_back(bondCount());
-  return Core::Molecule::addBond(atomId1, atomId2, order);
+  const Index before = bondCount();
+  BondType bond_ = Core::Molecule::addBond(atomId1, atomId2, order);
+
+  // Only a bond that was actually created gets a unique id. Core::addBond()
+  // refuses out-of-range atom indices, and for a pair that is already bonded
+  // it updates the order and hands back the existing bond -- in both cases
+  // bondCount() does not grow. A unique id pushed anyway would point at a bond
+  // index that does not exist, and m_bondUniqueIds would stay one longer than
+  // the bond list for the rest of the molecule's life: findBondUniqueId()
+  // then answers with the stale id, and the undo command that stored it
+  // swaps a bond index that is no longer a bond.
+  if (bond_.isValid() && bondCount() > before)
+    m_bondUniqueIds.push_back(bond_.index());
+
+  return bond_;
 }
 
 void Molecule::addBonds(const Core::Array<std::pair<Index, Index>>& bonds,
@@ -202,7 +221,12 @@ void Molecule::swapBond(Index a, Index b)
 {
   Index uniqueA = findBondUniqueId(a);
   Index uniqueB = findBondUniqueId(b);
-  assert(uniqueA != MaxIndex && uniqueB != MaxIndex);
+  // A released build has no assert. An undo command can hold a bond index
+  // that is no longer a bond, and findBondUniqueId() answers MaxIndex for it
+  // -- indexing m_bondUniqueIds with that writes far outside the array, which
+  // corrupts the heap rather than failing here.
+  if (uniqueA == MaxIndex || uniqueB == MaxIndex)
+    return;
   swap(m_bondUniqueIds[uniqueA], m_bondUniqueIds[uniqueB]);
   Core::Molecule::swapBond(a, b);
 }
@@ -214,7 +238,10 @@ void Molecule::swapAtom(Index a, Index b)
   }
   Index uniqueA = findAtomUniqueId(a);
   Index uniqueB = findAtomUniqueId(b);
-  assert(uniqueA != MaxIndex && uniqueB != MaxIndex);
+  // See swapBond(): the assert is gone in a released build, and MaxIndex here
+  // would be an out-of-bounds write into m_atomUniqueIds.
+  if (uniqueA == MaxIndex || uniqueB == MaxIndex)
+    return;
   swap(m_atomUniqueIds[uniqueA], m_atomUniqueIds[uniqueB]);
   Core::Molecule::swapAtom(a, b);
 }
@@ -227,20 +254,23 @@ Molecule::BondType Molecule::addBond(Index a, Index b, unsigned char order,
     return BondType();
   }
 
-  m_bondUniqueIds[uniqueId] = bondCount();
-  return Core::Molecule::addBond(a, b, order);
+  // As in the overload above: claim the unique id only once the bond exists,
+  // or a refused add leaves the id pointing at a bond index that is not one.
+  const Index before = bondCount();
+  BondType bond_ = Core::Molecule::addBond(a, b, order);
+  if (bond_.isValid() && bondCount() > before)
+    m_bondUniqueIds[uniqueId] = bond_.index();
+
+  return bond_;
 }
 
 Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
                                      unsigned char order, Index uniqueId)
 {
-  if (uniqueId >= static_cast<Index>(m_bondUniqueIds.size()) ||
-      m_bondUniqueIds[uniqueId] != MaxIndex) {
-    return BondType();
-  }
+  assert(a.isValid() && a.molecule() == this);
+  assert(b.isValid() && b.molecule() == this);
 
-  m_bondUniqueIds[uniqueId] = bondCount();
-  return Core::Molecule::addBond(a, b, order);
+  return addBond(a.index(), b.index(), order, uniqueId);
 }
 
 bool Molecule::removeBond(Index index)

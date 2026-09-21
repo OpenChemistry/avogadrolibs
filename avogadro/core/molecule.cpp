@@ -951,6 +951,12 @@ void remapScanCoordinates(Molecule& molecule, Reindex reindex)
 
 void Molecule::swapBond(Index a, Index b)
 {
+  // See swapEdgeIndices(): the callers are undo commands holding indices from
+  // before the edit they reverse, so an index can name a bond that no longer
+  // exists. m_bondOrders would be indexed out of bounds below.
+  if (a >= bondCount() || b >= bondCount())
+    return;
+
   // Allow Argument Dependent Lookup for swap
   using std::swap;
 
@@ -961,6 +967,11 @@ void Molecule::swapBond(Index a, Index b)
 
 void Molecule::swapAtom(Index a, Index b)
 {
+  // As in swapBond(): a stale index from an undo command must not reach the
+  // atom-indexed arrays below.
+  if (a >= atomCount() || b >= atomCount())
+    return;
+
   Index max = a > b ? a : b;
 
   // Atom-indexed members -- see the comment above the helpers in the

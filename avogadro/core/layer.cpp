@@ -15,11 +15,27 @@ void Layer::addAtom(size_t layer)
 
 void Layer::addAtom(size_t layer, Index atom)
 {
-  assert(layer <= m_maxLayer);
+  // Layer ids are consecutive, so asking for a layer past the last one grows
+  // the range rather than being an error: the atom lands in the layer it
+  // asked for instead of carrying an id that no layer has. Per-layer state
+  // kept alongside this class -- MoleculeInfo's visible, locked, enable and
+  // settings -- is grown lazily and every reader falls back to the default
+  // for a layer it has not been told about, so nothing else needs telling.
+  //
+  // MaxIndex is getLayerID()'s "this atom is in no layer" answer and the fill
+  // value for the gap below, not a layer id. It must never become m_maxLayer,
+  // which would wrap layerCount() to zero.
+  if (layer != MaxIndex && layer > m_maxLayer)
+    m_maxLayer = layer;
+
   if (atom == m_atomAndLayers.size()) {
     m_atomAndLayers.push_back(layer);
   } else if (atom > m_atomAndLayers.size()) {
-    m_atomAndLayers.resize(layer + 1, MaxIndex);
+    // m_atomAndLayers is indexed by atom, so it has to grow to hold this
+    // atom. Resizing to layer + 1 left the write below past the end of the
+    // array whenever the layer id was smaller than the atom index -- which
+    // it is for every atom beyond the first in the default single layer.
+    m_atomAndLayers.resize(atom + 1, MaxIndex);
     m_atomAndLayers[atom] = layer;
   } else {
     m_atomAndLayers[atom] = layer;

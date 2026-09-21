@@ -450,3 +450,48 @@ TEST_F(LayerTest, MovedFromMoleculeRecreatesItsLayerState)
   EXPECT_EQ(original.layer().maxLayer(), 0u);
   EXPECT_EQ(original.layerInfo()->visible.size(), 1u);
 }
+
+TEST_F(LayerTest, addAtomBeyondTheEndGrowsByAtomNotLayer)
+{
+  // m_atomAndLayers is indexed by atom, and the branch that grows it resized
+  // to layer + 1 instead: adding atom 5 to layer 0 sized the array to 1 and
+  // then wrote to element 5. RemoveAtomCommand::undo() reaches this with the
+  // index of the atom swap-and-pop moved.
+  Avogadro::Core::Layer layer;
+  layer.addAtom(0, 5);
+
+  EXPECT_EQ(static_cast<size_t>(0), layer.getLayerID(5));
+  // Atoms the gap skipped are not in any layer yet.
+  EXPECT_EQ(Avogadro::MaxIndex, layer.getLayerID(3));
+  EXPECT_EQ(Avogadro::MaxIndex, layer.getLayerID(6));
+
+  layer.addAtom(0, 40);
+  EXPECT_EQ(static_cast<size_t>(0), layer.getLayerID(40));
+}
+
+TEST_F(LayerTest, addAtomToALayerThatDoesNotExistYetCreatesIt)
+{
+  // A layer id past the last one grows the range rather than being refused:
+  // layers are consecutive ids, so the atom lands in the layer it asked for
+  // and layerCount() agrees with what the atoms hold.
+  Avogadro::Core::Layer layer;
+  EXPECT_EQ(static_cast<size_t>(0), layer.maxLayer());
+  EXPECT_EQ(static_cast<size_t>(1), layer.layerCount());
+
+  layer.addAtom(3, 0);
+  EXPECT_EQ(static_cast<size_t>(3), layer.getLayerID(0));
+  EXPECT_EQ(static_cast<size_t>(3), layer.maxLayer());
+  EXPECT_EQ(static_cast<size_t>(4), layer.layerCount());
+
+  // A layer that already exists leaves the range alone.
+  layer.addAtom(1, 1);
+  EXPECT_EQ(static_cast<size_t>(1), layer.getLayerID(1));
+  EXPECT_EQ(static_cast<size_t>(3), layer.maxLayer());
+
+  // MaxIndex is the "no layer" sentinel, not a layer id: taking it as one
+  // would wrap layerCount() to zero.
+  layer.addAtom(Avogadro::MaxIndex, 2);
+  EXPECT_EQ(Avogadro::MaxIndex, layer.getLayerID(2));
+  EXPECT_EQ(static_cast<size_t>(3), layer.maxLayer());
+  EXPECT_EQ(static_cast<size_t>(4), layer.layerCount());
+}

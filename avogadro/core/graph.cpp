@@ -445,8 +445,18 @@ void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
 
 void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
 {
+  // Undo commands hold edge indices recorded before the edit they reverse, so
+  // an index can arrive here that is no longer an edge -- see removeEdge(),
+  // which carries real checks for the same reason. Indexing m_edgePairs with
+  // one of those reads past the end and then uses whatever it found as a
+  // vertex index into m_edgeMap.
+  if (edgeIndex1 >= m_edgePairs.size() || edgeIndex2 >= m_edgePairs.size())
+    return;
+
   // Find the 4 endpoints of both edges.
   const std::pair<size_t, size_t>& pair1 = m_edgePairs[edgeIndex1];
+  if (pair1.first >= m_edgeMap.size() || pair1.second >= m_edgeMap.size())
+    return;
   std::array<size_t*, 2> changeTo2 = { nullptr, nullptr };
   // NOLINTBEGIN(*)
   for (size_t i = 0; i < m_edgeMap[pair1.first].size(); i++) {
@@ -460,6 +470,8 @@ void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
     }
   }
   const std::pair<size_t, size_t>& pair2 = m_edgePairs[edgeIndex2];
+  if (pair2.first >= m_edgeMap.size() || pair2.second >= m_edgeMap.size())
+    return;
   std::array<size_t*, 2> changeTo1 = { nullptr, nullptr };
   for (size_t i = 0; i < m_edgeMap[pair2.first].size(); i++) {
     if (m_edgeMap[pair2.first][i] == edgeIndex2) {

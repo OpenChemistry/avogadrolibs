@@ -2151,3 +2151,23 @@ TEST_F(MoleculeTest, atomWithoutPosition)
   EXPECT_EQ(molecule.centerOfGeometry(), Vector3(0.5, 1.0, 1.5));
   EXPECT_TRUE(std::isfinite(molecule.radius()));
 }
+
+TEST_F(MoleculeTest, swapBondIgnoresOutOfRangeIndices)
+{
+  // See Graph::swapEdgeIndices(): an undo command can hold a bond index that
+  // is no longer a bond. m_bondOrders was indexed with it unchecked.
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(1);
+  molecule.addBond(0, 1, 1);
+
+  molecule.swapBond(0, 3);
+  molecule.swapBond(2, 0);
+  molecule.swapAtom(0, 5);
+  molecule.swapAtom(8, 1);
+
+  EXPECT_EQ(static_cast<Index>(2), molecule.atomCount());
+  EXPECT_EQ(static_cast<Index>(1), molecule.bondCount());
+  EXPECT_EQ(1, molecule.bondOrder(0));
+  EXPECT_EQ(6, molecule.atom(0).atomicNumber());
+}

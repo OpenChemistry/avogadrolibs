@@ -743,3 +743,28 @@ TEST_F(MoleculeTest, baseAssignment)
             b[1].atom2().atomicNumber());
   EXPECT_FALSE(qtMolecule.bondByUniqueId(2).isValid());
 }
+
+TEST_F(MoleculeTest, swapIgnoresIndicesThatAreNotThere)
+{
+  // findAtomUniqueId() / findBondUniqueId() answer MaxIndex for an index that
+  // is not an atom or a bond, and the only thing standing between that and a
+  // write far outside m_atomUniqueIds / m_bondUniqueIds used to be an assert,
+  // which a released build removes. The damage shows up later, as a bad free
+  // when the molecule is destroyed, so this test is meaningful under a
+  // sanitizer build.
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(1);
+  molecule.addBond(molecule.atom(0), molecule.atom(1), 1);
+
+  molecule.swapAtom(0, 7);
+  molecule.swapAtom(9, 1);
+  molecule.swapBond(0, 4);
+  molecule.swapBond(6, 0);
+
+  EXPECT_EQ(static_cast<Index>(2), molecule.atomCount());
+  EXPECT_EQ(static_cast<Index>(1), molecule.bondCount());
+  EXPECT_EQ(6, molecule.atom(0).atomicNumber());
+  EXPECT_EQ(1, molecule.atom(1).atomicNumber());
+  EXPECT_TRUE(molecule.bond(0, 1).isValid());
+}
