@@ -52,6 +52,15 @@ namespace QtPlugins {
 
 namespace SymmetryUtil {
 QString pointGroupSymbol(const char* point_group);
+/**
+ * @brief The point group as plain text, for scripts rather than labels.
+ *
+ * Same symbol pointGroupSymbol() renders, without the HTML subscripts:
+ * "C2v", "D∞h", "C1" for an empty or null @p point_group. libmsym spells
+ * the infinite order of a linear group as '0', which is expanded to ∞ here
+ * exactly as the displayed version does.
+ */
+QString pointGroupPlainText(const char* point_group);
 QString operationSymbol(const msym::msym_symmetry_operation_t* operation);
 } // namespace SymmetryUtil
 } // namespace QtPlugins
