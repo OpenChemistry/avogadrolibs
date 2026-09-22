@@ -171,6 +171,41 @@ jobs:
           return 1
         }
 
+        # -rss_limit_mb counts the whole process, not just what the target
+        # allocates: the corpus libFuzzer holds in memory and every seed it
+        # reads at startup are inside the number. quantumio/fchk is over the
+        # 2048Mb default before it mutates anything -- its seeds total 143Mb
+        # (c240.fchk alone is 35Mb) and the cached corpus another 63Mb, and an
+        # ASan build peaks near 500Mb just reading c240 legitimately. That is
+        # what the 2026-09-21 out-of-memory was: rss sat at 2228Mb from the
+        # INITED line onward and never moved, and the artifact it named
+        # replays on its own in 74Mb.
+        #
+        # So give that target headroom -- but pin -malloc_limit_mb, which
+        # otherwise follows -rss_limit_mb and would quietly rise with it. A
+        # single oversized allocation is the parser blowup this job exists to
+        # catch, and it stays a failure.
+        #
+        # 128Mb, measured rather than guessed. The largest single allocation
+        # any real seed makes is 35Mb -- libFuzzer's own buffer for c240.fchk,
+        # the biggest of them; the parser itself stays under 32Mb on that
+        # file. The bug this number has to catch is a density matrix sized
+        # from a declared basis count, which reached 268Mb from a 376 byte
+        # file before that was fixed. Anything much above 128Mb fails to see
+        # it: a 512Mb cap was tried first and let it straight through.
+        set_memory_limits() {
+          case "$1" in
+            quantumio/fchk)
+              memory_limits=(-rss_limit_mb=4096 -malloc_limit_mb=128)
+              ;;
+            *)
+              # libFuzzer's own defaults, spelled out so raising one of them
+              # for a target cannot silently raise the other.
+              memory_limits=(-rss_limit_mb=2048 -malloc_limit_mb=2048)
+              ;;
+          esac
+        }
+
         artifact_root="${PWD}/fuzz-artifacts"
         corpus_root="${{ runner.workspace }}/fuzz-corpus"
         failures=0
@@ -225,7 +260,9 @@ jobs:
             # instrumented ASan build spends several seconds on work a release
             # build does in milliseconds -- perceiveBondOrders() on a 244-atom
             # nanotube, for one. A real hang still trips this comfortably.
+            set_memory_limits "${name}"
             if "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=30 \
+                 "${memory_limits[@]}" \
                  -artifact_prefix="${artifact_dir}/" \
                  "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
                  | tee "${artifact_dir}/run.log"; then
@@ -254,7 +291,7 @@ jobs:
             # it away and rebuild from the seeds next time.
             merged_dir="${RUNNER_TEMP}/fuzz-merge/${suite}/${target}"
             rm -rf "${merged_dir}" && mkdir -p "${merged_dir}"
-            if "${binary}" -merge=1 -timeout=25 \
+            if "${binary}" -merge=1 -timeout=25 "${memory_limits[@]}" \
                  "${merged_dir}" "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} \
                  > "${artifact_dir}/merge.log" 2>&1 \
                && [ -n "$(ls -A "${merged_dir}")" ]; then
