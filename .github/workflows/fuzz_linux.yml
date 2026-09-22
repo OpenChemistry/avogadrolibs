@@ -159,29 +159,6 @@ jobs:
         # upload artifacts, but they do not fail the job. Delete entries here as
         # the underlying bugs are fixed.
         known_issues=(
-          # quantumio/fchk: libFuzzer out-of-memory, 2229Mb against the default
-          # 2048Mb rss_limit. Parked until someone can measure it, because it
-          # is genuinely ambiguous which of two things it is:
-          #
-          #   - a real allocation blowup in the fchk parser. The failing input
-          #     is 309KB and the process reached 2.2GB, which is a 7000x
-          #     amplification and exactly the shape of a declared count being
-          #     trusted and reserved.
-          #   - libFuzzer's own accounting. This target's corpus has grown to
-          #     63Mb and its max_len to 1MB, and rss_limit counts the whole
-          #     process, corpus included.
-          #
-          # To settle it, replay the artifact on its own and watch the peak:
-          #   bin/fuzz_fchk -rss_limit_mb=4096 -runs=1 <artifact>
-          # If a single 309KB input alone approaches 2GB it is the parser; if
-          # it does not, raise -rss_limit_mb for this target and delete this
-          # entry.
-          #
-          # This is the only target failing every run. qtgui/rwmolecule,
-          # io/cjson and io/pdb have each failed intermittently since the
-          # instrumentation fix landed on 2026-09-17 and are not parked -- see
-          # section 1.3b of the 2.1 bug-hunt plan for their triage.
-          "quantumio/fchk"
         )
 
         is_known_issue() {
