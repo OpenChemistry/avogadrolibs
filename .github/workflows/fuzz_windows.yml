@@ -79,6 +79,12 @@ jobs:
       id: vcpkg_version
       uses: ./.github/actions/update-vcpkg
 
+    # This job installs glew, which no other Windows job wants. A cache key
+    # shared with build_windows.yml let that job restore this cache and pick
+    # up vcpkg's GLEW, which its CMake config-mode lookup then preferred over
+    # the superbuild's own GLEW. Keep this job's key/restore-keys on their
+    # own "vcpkg-fuzz-" prefix so build_windows.yml's restore-keys can never
+    # match a cache saved here again.
     - name: Restore vcpkg cache
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
@@ -86,9 +92,9 @@ jobs:
           C:\vcpkg\installed
           C:\vcpkg\packages
           C:\vcpkg\downloads
-        key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
+        key: vcpkg-fuzz-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
         restore-keys: |
-          vcpkg-${{ runner.os }}-${{ runner.arch }}-
+          vcpkg-fuzz-${{ runner.os }}-${{ runner.arch }}-
       env:
         VCPKG_ROOT: C:\vcpkg
 
