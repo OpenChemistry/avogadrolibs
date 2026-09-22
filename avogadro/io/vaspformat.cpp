@@ -500,7 +500,14 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
         // natoms is not known, so the loop proceeds till the bottom dashed line
         // is encountered
         while (true) {
-          getline(inStream, buffer);
+          // Core::getLine, not std::getline, for the reason given at the
+          // POSCAR coordinates above: std::getline leaves the previous line in
+          // place once the input is exhausted, so a block without its closing
+          // dashed line would re-parse that line for ever.
+          if (!Core::getLine(inStream, buffer)) {
+            appendError("Unterminated POSITION block in OUTCAR");
+            return false;
+          }
           // Condition for encountering dashed line
           if (buffer.substr(0, dashedStr.size()) == dashedStr) {
             if (coordSet == 0) {
@@ -514,6 +521,13 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
           }
           // Parsing the coordinates
           stringSplit = split(buffer, ' ');
+          // A position line is "x y z" followed by the forces, so at least
+          // three tokens. Without this check the range cast below would walk
+          // past the end of a shorter line's token list.
+          if (stringSplit.size() < 3) {
+            appendError("Error reading atom position");
+            return false;
+          }
           Vector3 tmpAtom;
           if (auto tmp = lexicalCast<double>(stringSplit.begin(),
                                              stringSplit.begin() + 3)) {

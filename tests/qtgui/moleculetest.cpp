@@ -8,10 +8,12 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/persistentatom.h>
 #include <avogadro/qtgui/persistentbond.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include "../core/utils.h"
 
@@ -652,6 +654,29 @@ TEST_F(MoleculeTest, copy)
   EXPECT_EQ(copy.bondByUniqueId(1).atom1().atomicNumber(), 8);
   EXPECT_EQ(copy.bondByUniqueId(1).atom2().atomicNumber(), 1);
   EXPECT_FALSE(copy.bondByUniqueId(2).isValid());
+}
+
+TEST_F(MoleculeTest, undoMoleculeFromCoreMolecule)
+{
+  // Constructing from a Core::Molecule used to skip m_undoMolecule entirely,
+  // so undoMolecule() returned an uninitialized pointer -- almost every call
+  // site dereferences it without a null check -- and isInteractive() tested a
+  // pointer that had never been set.
+  Avogadro::Core::Molecule core;
+  core.addAtom(6);
+  core.addAtom(1);
+  core.addBond(0, 1, 1);
+
+  Molecule mol(core);
+  ASSERT_NE(mol.undoMolecule(), nullptr);
+  EXPECT_EQ(&mol.undoMolecule()->molecule(), &mol);
+  EXPECT_FALSE(mol.isInteractive());
+
+  // The undo molecule has to actually drive this molecule.
+  mol.undoMolecule()->addAtom(8, Avogadro::Vector3(1.0, 0.0, 0.0));
+  EXPECT_EQ(mol.atomCount(), static_cast<Index>(3));
+  mol.undoMolecule()->undoStack().undo();
+  EXPECT_EQ(mol.atomCount(), static_cast<Index>(2));
 }
 
 TEST_F(MoleculeTest, assignment)
