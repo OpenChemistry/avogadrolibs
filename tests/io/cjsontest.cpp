@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/constraint.h>
+#include <avogadro/core/cube.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
@@ -844,4 +845,203 @@ TEST(CjsonTest, layerRoundTrip)
     << "per-plugin layer settings were dropped by the round trip";
   ASSERT_TRUE(restoredInfo->settings["TestPlugin"][0] != nullptr);
   EXPECT_EQ(restoredInfo->settings["TestPlugin"][0]->getSave(), "first");
+}
+
+// A fuzzer found that "cube": "caffeine" (a string where the reader expects
+// an object) made cubeObj["origin"] throw type_error.305. The rest of the
+// file is otherwise valid and must still load, just without the cube.
+TEST(CjsonTest, cubeThatIsNotAnObjectIsSkipped)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  const std::string input = R"({
+    "chemicalJson": 1,
+    "atoms": {
+      "elements": { "number": [6] },
+      "coords": { "3d": [0.0, 0.0, 0.0] }
+    },
+    "cube": "caffeine"
+  })";
+  ASSERT_TRUE(cjson.readString(input, molecule)) << cjson.error();
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.cubeCount(), static_cast<size_t>(0));
+}
+
+// A mutation sweep over CJSON found the same class of bug throughout the
+// reader: a wrong-typed optional section must be skipped, not fail the whole
+// file (via a throw the guardedParse wrapper turns into "file failed to
+// load").
+TEST(CjsonTest, wrongTypedSectionsAreSkipped)
+{
+  const std::string input = R"({
+    "chemicalJson": 1,
+    "atoms": {
+      "elements": { "number": [6] },
+      "coords": { "3d": [0.0, 0.0, 0.0] }
+    },
+    "layer": 5,
+    "bonds": { "connections": "x" },
+    "basisSet": {
+      "shellTypes": [0],
+      "primitivesPerShell": [1],
+      "shellToAtomMap": [0],
+      "exponents": [1.0],
+      "coefficients": [1.0]
+    },
+    "orbitals": { "moCoefficients": [1.0] },
+    "properties": { "totalCharge": "0" }
+  })";
+  CjsonFormat cjson;
+  Molecule molecule;
+  ASSERT_TRUE(cjson.readString(input, molecule)) << cjson.error();
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
+  // orbitals had no electronCount, so the reader must not have thrown trying
+  // to read one -- the basis set (valid on its own) still attaches.
+  ASSERT_NE(molecule.basisSet(), nullptr);
+  // A string where an int was expected is skipped, not stored as 0.
+  EXPECT_FALSE(molecule.hasData("totalCharge"));
+}
+
+// atoms.layer used to drive `while (layerJson[i] > layer.maxLayer())
+// layer.addLayer();`, which spins effectively forever given a huge id --
+// including the MaxIndex sentinel the writer itself emits for an atom in no
+// layer.
+TEST(CjsonTest, hugeLayerIdDoesNotHang)
+{
+  for (const auto* layerLiteral :
+       { "[1e300]", "[1000000]", "[18446744073709551615]" }) {
+    const std::string input = std::string(R"({
+      "chemicalJson": 1,
+      "atoms": {
+        "elements": { "number": [6] },
+        "coords": { "3d": [0.0, 0.0, 0.0] },
+        "layer": )") + layerLiteral +
+                              "}}";
+    CjsonFormat cjson;
+    Molecule molecule;
+    ASSERT_TRUE(cjson.readString(input, molecule)) << layerLiteral;
+    EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
+    auto info = Avogadro::Core::LayerManager::getMoleculeInfo(&molecule);
+    EXPECT_LT(info->layer.maxLayer(), static_cast<size_t>(255)) << layerLiteral;
+  }
+}
+
+// The allocation Cube::setLimits() performs is sized from "dimensions" alone;
+// it must be tied to the scalar data actually present before it runs, so a
+// small file cannot claim a huge cube and force a multi-gigabyte allocation.
+TEST(CjsonTest, cubeDimensionsMustMatchScalars)
+{
+  {
+    const std::string input = R"({
+      "chemicalJson": 1,
+      "atoms": {
+        "elements": { "number": [6] },
+        "coords": { "3d": [0.0, 0.0, 0.0] }
+      },
+      "cube": {
+        "origin": [0.0, 0.0, 0.0],
+        "spacing": [1.0, 1.0, 1.0],
+        "dimensions": [800, 800, 800]
+      }
+    })";
+    CjsonFormat cjson;
+    Molecule molecule;
+    ASSERT_TRUE(cjson.readString(input, molecule)) << cjson.error();
+    EXPECT_EQ(molecule.cubeCount(), static_cast<size_t>(0));
+  }
+  {
+    // A small cube whose scalars do match still loads, with the right data.
+    const std::string input = R"({
+      "chemicalJson": 1,
+      "atoms": {
+        "elements": { "number": [6] },
+        "coords": { "3d": [0.0, 0.0, 0.0] }
+      },
+      "cube": {
+        "origin": [0.0, 0.0, 0.0],
+        "spacing": [1.0, 1.0, 1.0],
+        "dimensions": [2, 2, 2],
+        "scalars": [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+      }
+    })";
+    CjsonFormat cjson;
+    Molecule molecule;
+    ASSERT_TRUE(cjson.readString(input, molecule)) << cjson.error();
+    ASSERT_EQ(molecule.cubeCount(), static_cast<size_t>(1));
+    const auto* cube = molecule.cube(0);
+    ASSERT_NE(cube, nullptr);
+    ASSERT_EQ(cube->data()->size(), static_cast<size_t>(8));
+    EXPECT_FLOAT_EQ((*cube->data())[0], 0.0f);
+    EXPECT_FLOAT_EQ((*cube->data())[7], 7.0f);
+  }
+  {
+    // 5 * 1718039348 * 2147418113 is exactly 2^64 + 4: every dimension fits
+    // in an int, but a 64-bit product wraps to 4, which four scalars would
+    // match. Cube then multiplies the dimensions again as an int, which
+    // overflows. The point count has to be bounded, not just compared.
+    const std::string input = R"({
+      "chemicalJson": 1,
+      "atoms": {
+        "elements": { "number": [6] },
+        "coords": { "3d": [0.0, 0.0, 0.0] }
+      },
+      "cube": {
+        "origin": [0.0, 0.0, 0.0],
+        "spacing": [1.0, 1.0, 1.0],
+        "dimensions": [5, 1718039348, 2147418113],
+        "scalars": [0.0, 1.0, 2.0, 3.0]
+      }
+    })";
+    CjsonFormat cjson;
+    Molecule molecule;
+    ASSERT_TRUE(cjson.readString(input, molecule)) << cjson.error();
+    EXPECT_EQ(molecule.cubeCount(), static_cast<size_t>(0));
+  }
+}
+
+// nlohmann's numeric conversion is a bare static_cast, so a double outside
+// the target integer's range is undefined behaviour rather than an error --
+// UBSan (which CI runs this suite under) would catch it if toInteger() let
+// one through.
+TEST(CjsonTest, outOfRangeNumbersAreSkipped)
+{
+  const std::string input = R"({
+    "chemicalJson": 1,
+    "atoms": {
+      "elements": { "number": [6, 1] },
+      "coords": { "3d": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0] },
+      "formalCharges": [1e300, 0],
+      "isotopes": [-1, 2]
+    },
+    "bonds": {
+      "connections": { "index": [0, 1] },
+      "order": [1e300]
+    }
+  })";
+  CjsonFormat cjson;
+  Molecule molecule;
+  // The bond order fails to convert, which -- like an out-of-range order --
+  // is an invalid file, not a crash.
+  EXPECT_FALSE(cjson.readString(input, molecule));
+  EXPECT_EQ(cjson.error(), "Error: bond order is invalid.\n");
+
+  const std::string input2 = R"({
+    "chemicalJson": 1,
+    "atoms": {
+      "elements": { "number": [6, 1] },
+      "coords": { "3d": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0] },
+      "formalCharges": [1e300, 3],
+      "isotopes": [-1, 2]
+    }
+  })";
+  Molecule molecule2;
+  ASSERT_TRUE(cjson.readString(input2, molecule2)) << cjson.error();
+  EXPECT_EQ(molecule2.atomCount(), static_cast<size_t>(2));
+  // formalCharges[0] failed to convert and is skipped (default 0); [1] loads.
+  EXPECT_EQ(molecule2.formalCharge(0), 0);
+  EXPECT_EQ(molecule2.formalCharge(1), 3);
+  // isotopes[0] (-1) does not fit unsigned short and is skipped; [1] loads.
+  EXPECT_EQ(molecule2.isotope(0), 0);
+  EXPECT_EQ(molecule2.isotope(1), 2);
 }

@@ -19,10 +19,15 @@
 
 #include <nlohmann/json.hpp>
 
+#include <cmath>
+#include <cstdint>
 #include <cstdio>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
+#include <limits>
+#include <memory>
+#include <optional>
 
 using json = nlohmann::json;
 using ordered_json = nlohmann::ordered_json;
@@ -67,7 +72,7 @@ bool isNumericArray(const json& j)
   return false;
 }
 
-bool isBooleanArray(json& j)
+bool isBooleanArray(const json& j)
 {
   if (j.is_array() && j.size() > 0) {
     for (const auto& v : j) {
@@ -78,6 +83,116 @@ bool isBooleanArray(json& j)
     return true;
   }
   return false;
+}
+
+// A member of a JSON object, looked up without the two side effects of
+// operator[]: it throws when the parent is not an object at all, and it
+// inserts a null member when the key is missing. CJSON is hand-editable, so a
+// section the reader expects to be an object can be anything -- and a
+// wrong-typed optional section should be skipped, not fail the whole file.
+const json& member(const json& parent, const char* key)
+{
+  static const json missing;
+  if (!parent.is_object())
+    return missing;
+  auto it = parent.find(key);
+  return it == parent.end() ? missing : *it;
+}
+
+// Layer ids index per-layer state, and the label and cartoon plugins loop
+// `for (layer < layerCount())` when rendering, so an unbounded id read from a
+// file would just move the hang out of the reader and into the GUI. 255 is
+// far beyond any real use.
+constexpr size_t kMaxLayers = 255;
+
+// A checked json-to-integer conversion. nlohmann's own numeric conversion is
+// a bare static_cast: a double outside the target type's range is undefined
+// behaviour, and reading the wrong json type throws rather than returning
+// something a caller can skip. CJSON is hand-editable, so both are routine
+// here, and a malformed field must be skipped rather than crash the reader.
+template <typename T>
+std::optional<T> toInteger(const json& j)
+{
+  if (!j.is_number())
+    return std::nullopt;
+
+  if (j.is_number_unsigned()) {
+    const auto value = j.get<std::uint64_t>();
+    if (value > static_cast<std::uint64_t>(std::numeric_limits<T>::max()))
+      return std::nullopt;
+    return static_cast<T>(value);
+  }
+
+  if (j.is_number_integer()) {
+    const auto value = j.get<std::int64_t>();
+    if constexpr (std::is_unsigned_v<T>) {
+      if (value < 0 ||
+          static_cast<std::uint64_t>(value) >
+            static_cast<std::uint64_t>(std::numeric_limits<T>::max()))
+        return std::nullopt;
+    } else {
+      if (value < static_cast<std::int64_t>(std::numeric_limits<T>::min()) ||
+          value > static_cast<std::int64_t>(std::numeric_limits<T>::max()))
+        return std::nullopt;
+    }
+    return static_cast<T>(value);
+  }
+
+  // is_number_float(): truncate toward zero, matching the existing
+  // static_cast<int>(1.5) == 1 behaviour for values already in range -- this
+  // is not the place to start rejecting non-integral input. The range test
+  // has to be exact for a 64-bit T, so compare against ldexp(1, digits)
+  // rather than numeric_limits<T>::max() widened to double, which would round
+  // up past the true bound for a 64-bit integer type.
+  const double d = j.get<double>();
+  const double upper = std::ldexp(1.0, std::numeric_limits<T>::digits);
+  // Written so that NaN, which compares false against everything, is
+  // rejected rather than falling through to the cast below. Unsigned uses an
+  // exclusive -1.0 rather than -upper (== 0) so that a small negative value
+  // whose truncated (toward zero) integral part is representable, e.g. -0.5,
+  // still converts the way static_cast<unsigned>(-0.5) == 0 already does.
+  const bool inRange = std::is_unsigned_v<T> ? (d > -1.0 && d < upper)
+                                             : (d >= -upper && d < upper);
+  if (!inRange)
+    return std::nullopt;
+  return static_cast<T>(d);
+}
+
+// Convert every element of a numeric array with toInteger<T>(), all or
+// nothing: a partially converted array (e.g. one bad occupation out of a
+// thousand) would silently misalign with whatever it is indexed against, so
+// one failure discards the whole array rather than a single element of it.
+template <typename T>
+std::optional<std::vector<T>> toIntegerArray(const json& arr)
+{
+  if (!isNumericArray(arr))
+    return std::nullopt;
+  std::vector<T> result;
+  result.reserve(arr.size());
+  for (const auto& v : arr) {
+    auto value = toInteger<T>(v);
+    if (!value)
+      return std::nullopt;
+    result.push_back(*value);
+  }
+  return result;
+}
+
+// The std::vector<float> that Cube::setData() takes, built explicitly and
+// clamped the way lexicalCast<float> (avogadro/core/utilities.h) is: nlohmann
+// converts a double to float with a bare static_cast, which is undefined
+// behaviour once the magnitude exceeds what float can hold, so a value beyond
+// the representable range is saturated instead of passed through.
+float toClampedFloat(const json& value)
+{
+  const double d = value.get<double>();
+  constexpr double floatMax =
+    static_cast<double>(std::numeric_limits<float>::max());
+  if (d > floatMax)
+    return std::numeric_limits<float>::max();
+  if (d < -floatMax)
+    return std::numeric_limits<float>::lowest();
+  return static_cast<float>(d);
 }
 
 json eigenColToJson(const MatrixX& matrix, int column)
@@ -116,16 +231,8 @@ void deserializeVibrations(const json& vibrations, Core::Molecule& molecule,
   if (!vibrations.is_object())
     return;
 
-  // Look keys up rather than indexing: on a const object, operator[] with a
-  // key that is not there is undefined behaviour.
-  auto member = [&vibrations](const char* name) -> const json& {
-    static const json missing;
-    auto it = vibrations.find(name);
-    return it == vibrations.end() ? missing : *it;
-  };
-
   Array<double> freqs;
-  const json& frequencies = member("frequencies");
+  const json& frequencies = member(vibrations, "frequencies");
   if (isNumericArray(frequencies)) {
     freqs.reserve(frequencies.size());
     for (const auto& frequency : frequencies)
@@ -138,7 +245,7 @@ void deserializeVibrations(const json& vibrations, Core::Molecule& molecule,
   // hand-editable and may carry intensities without frequencies at all.
   const size_t modes = freqs.size();
 
-  const json& intensities = member("intensities");
+  const json& intensities = member(vibrations, "intensities");
   if (isNumericArray(intensities) && intensities.size() == modes) {
     Array<double> intens;
     intens.reserve(modes);
@@ -147,7 +254,7 @@ void deserializeVibrations(const json& vibrations, Core::Molecule& molecule,
     molecule.setVibrationIRIntensities(intens, conformerIndex);
   }
 
-  const json& raman = member("ramanIntensities");
+  const json& raman = member(vibrations, "ramanIntensities");
   if (isNumericArray(raman) && raman.size() == modes) {
     Array<double> intens;
     intens.reserve(modes);
@@ -156,7 +263,7 @@ void deserializeVibrations(const json& vibrations, Core::Molecule& molecule,
     molecule.setVibrationRamanIntensities(intens, conformerIndex);
   }
 
-  const json& displacements = member("eigenVectors");
+  const json& displacements = member(vibrations, "eigenVectors");
   if (displacements.is_array()) {
     Array<Array<Vector3>> disps;
     disps.reserve(displacements.size());
@@ -190,23 +297,37 @@ void deserializeProperties(const json& obj, PropertyMap& props,
     const auto& key = property.key();
 
     // Sparse matrix column: object of {"_type":"matrix","entries":{...}}
-    if (value.is_object() && value.value("_type", "") == "matrix" &&
+    // member()==literal never throws, unlike value.value("_type", ""), which
+    // throws if "_type" is present but not a string.
+    if (value.is_object() && member(value, "_type") == "matrix" &&
         value.contains("entries") && value["entries"].is_object()) {
       for (auto& entry : value["entries"].items()) {
         const auto& m = entry.value();
-        if (!m.is_object() || !m.contains("rows") || !m.contains("cols") ||
-            !m.contains("data") || !m["data"].is_array())
+        if (!m.is_object())
           continue;
-        Eigen::Index rows = m["rows"].get<Eigen::Index>();
-        Eigen::Index cols = m["cols"].get<Eigen::Index>();
-        const auto& data = m["data"];
-        if (rows <= 0 || cols <= 0 ||
-            static_cast<Eigen::Index>(data.size()) != rows * cols)
+        const auto rows = toInteger<Eigen::Index>(member(m, "rows"));
+        const auto cols = toInteger<Eigen::Index>(member(m, "cols"));
+        const json& data = member(m, "data");
+        if (!rows || !cols || *rows <= 0 || *cols <= 0 || !data.is_array())
           continue;
-        MatrixX matrix(rows, cols);
-        for (Eigen::Index r = 0; r < rows; ++r)
-          for (Eigen::Index c = 0; c < cols; ++c)
-            matrix(r, c) = data[r * cols + c].get<double>();
+        // Guard the rows*cols product against overflow before computing it,
+        // rather than after.
+        const auto dataSize = static_cast<Eigen::Index>(data.size());
+        if (*cols > dataSize / *rows || dataSize != *rows * *cols)
+          continue;
+        bool allNumeric = true;
+        for (const auto& v : data) {
+          if (!v.is_number()) {
+            allNumeric = false;
+            break;
+          }
+        }
+        if (!allNumeric)
+          continue;
+        MatrixX matrix(*rows, *cols);
+        for (Eigen::Index r = 0; r < *rows; ++r)
+          for (Eigen::Index c = 0; c < *cols; ++c)
+            matrix(r, c) = data[r * *cols + c].get<double>();
         Index idx = 0;
         if (parseIndexKey(entry.key(), idx))
           props.setMatrix(key, idx, matrix);
@@ -546,8 +667,8 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         int activeSet = 0;
         if (atoms["coords"].contains("3dSetsActive")) {
           const json& active = atoms["coords"]["3dSetsActive"];
-          if (active.is_number_unsigned())
-            activeSet = active.get<int>();
+          if (auto value = toInteger<int>(active))
+            activeSet = *value;
         }
         if (!molecule.setCoordinate3d(activeSet))
           molecule.setCoordinate3d(0);
@@ -572,7 +693,10 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     json labels = atoms["labels"];
     if (labels.is_array() && labels.size() == atomCount) {
       for (size_t i = 0; i < atomCount; ++i) {
-        molecule.setAtomLabel(i, labels[i]);
+        // Skip a non-string label rather than let the implicit conversion
+        // below throw over one bad entry.
+        if (labels[i].is_string())
+          molecule.setAtomLabel(i, labels[i].get<std::string>());
       }
     }
   }
@@ -582,7 +706,8 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     json formalCharges = atoms["formalCharges"];
     if (formalCharges.is_array() && formalCharges.size() == atomCount) {
       for (size_t i = 0; i < atomCount; ++i) {
-        molecule.atom(i).setFormalCharge(formalCharges[i]);
+        if (auto charge = toInteger<signed char>(formalCharges[i]))
+          molecule.atom(i).setFormalCharge(*charge);
       }
     }
   }
@@ -592,8 +717,13 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     json colors = atoms["colors"];
     if (colors.is_array() && colors.size() == 3 * atomCount) {
       for (Index i = 0; i < atomCount; ++i) {
-        Vector3ub color(colors[3 * i], colors[3 * i + 1], colors[3 * i + 2]);
-        molecule.setColor(i, color);
+        // Only set the colour when all three channels convert; a partial
+        // colour is worse than the default one the atom already has.
+        auto r = toInteger<unsigned char>(colors[3 * i]);
+        auto g = toInteger<unsigned char>(colors[3 * i + 1]);
+        auto b = toInteger<unsigned char>(colors[3 * i + 2]);
+        if (r && g && b)
+          molecule.setColor(i, Vector3ub(*r, *g, *b));
       }
     }
   }
@@ -651,13 +781,30 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
 
   if (atoms.find("layer") != atoms.end()) {
     json layerJson = atoms["layer"];
-    if (isNumericArray(layerJson)) {
+    if (layerJson.is_array()) {
       auto& layer = LayerManager::getMoleculeInfo(&molecule)->layer;
       for (Index i = 0; i < atomCount && i < layerJson.size(); ++i) {
-        while (layerJson[i] > layer.maxLayer()) {
-          layer.addLayer();
+        auto id = toInteger<size_t>(layerJson[i]);
+        if (!id) {
+          // Malformed id: leave this atom in the default layer instead of
+          // failing the whole array.
+          continue;
         }
-        layer.addAtom(layerJson[i], i);
+        if (*id == MaxIndex) {
+          // The writer emits Layer::getLayerID(i), which returns MaxIndex
+          // for an atom in no layer, and Layer::addAtom already treats
+          // MaxIndex as "no layer" without touching m_maxLayer. Passing it
+          // through preserves the round trip -- a file Avogadro itself wrote
+          // could previously hang here, in the while() loop this replaced.
+          layer.addAtom(MaxIndex, i);
+        } else if (*id >= kMaxLayers) {
+          continue; // absurd id from a hand-edited file; skip it
+        } else {
+          // Layer::addAtom() grows the layer range itself, so no
+          // while (id > layer.maxLayer()) layer.addLayer() loop is needed --
+          // that loop is also what hung given a huge id.
+          layer.addAtom(*id, i);
+        }
       }
     }
   }
@@ -665,23 +812,29 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
   // look for isotopes if present
   if (atoms.contains("isotopes")) {
     json isotopes = atoms["isotopes"];
-    if (isNumericArray(isotopes) && isotopes.size() == atomCount) {
-      for (Index i = 0; i < atomCount; ++i)
-        molecule.setIsotope(i, isotopes[i]);
+    if (isotopes.is_array() && isotopes.size() == atomCount) {
+      for (Index i = 0; i < atomCount; ++i) {
+        if (auto isotope = toInteger<unsigned short>(isotopes[i]))
+          molecule.setIsotope(i, *isotope);
+      }
     }
   }
 
   // Bonds are optional, but if present should be loaded.
   if (jsonRoot.contains("bonds")) {
     json bonds = jsonRoot["bonds"];
-    if (bonds.is_object() && isNumericArray(bonds["connections"]["index"])) {
-      json connections = bonds["connections"]["index"];
+    // "connections" (and "index" within it) may be anything in a
+    // hand-edited file, so look them up with member() rather than indexing
+    // bonds["connections"]["index"] directly -- that throws whenever
+    // "connections" is not itself an object.
+    const json& connections = member(member(bonds, "connections"), "index");
+    if (bonds.is_object() && isNumericArray(connections)) {
       for (unsigned int i = 0; i < connections.size() / 2; ++i) {
-        Index atom1 = static_cast<Index>(connections[2 * i]);
-        Index atom2 = static_cast<Index>(connections[2 * i + 1]);
-        if (atom1 < atomCount && atom2 < atomCount &&
-            atom1 != atom2) { // avoid self-bonds
-          molecule.addBond(atom1, atom2, 1);
+        auto atom1 = toInteger<Index>(connections[2 * i]);
+        auto atom2 = toInteger<Index>(connections[2 * i + 1]);
+        if (atom1 && atom2 && *atom1 < atomCount && *atom2 < atomCount &&
+            *atom1 != *atom2) { // avoid self-bonds
+          molecule.addBond(*atom1, *atom2, 1);
         }
       }
       if (bonds.contains("order")) {
@@ -689,13 +842,15 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         if (isNumericArray(order)) {
           for (unsigned int i = 0; i < molecule.bondCount() && i < order.size();
                ++i) {
-            int bondOrder = static_cast<int>(order[i]);
-            if (bondOrder < 1 || bondOrder > 6) {
+            // A conversion failure is treated the same as an out-of-range
+            // order below: both are an invalid file.
+            auto bondOrder = toInteger<int>(order[i]);
+            if (!bondOrder || *bondOrder < 1 || *bondOrder > 6) {
               appendError("Error: bond order is invalid.");
               return false;
             }
 
-            molecule.bond(i).setOrder(bondOrder);
+            molecule.bond(i).setOrder(*bondOrder);
           }
         }
       }
@@ -706,7 +861,8 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         if (bondLabels.is_array()) {
           for (unsigned int i = 0;
                i < molecule.bondCount() && i < bondLabels.size(); ++i) {
-            molecule.setBondLabel(i, bondLabels[i]);
+            if (bondLabels[i].is_string())
+              molecule.setBondLabel(i, bondLabels[i].get<std::string>());
           }
         }
       }
@@ -742,11 +898,31 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         if (residue.contains("hetero") && residue["hetero"] == true)
           newResidue.setHeterogen(true);
 
-        int secStruct = residue.value("secStruct", -1);
-        if (secStruct != -1)
-          newResidue.setSecondaryStructure(
-            static_cast<Avogadro::Core::Residue::SecondaryStructure>(
-              secStruct));
+        // residue.value("secStruct", -1) throws if "secStruct" is present
+        // but not a number; toInteger() never does.
+        int secStruct =
+          toInteger<int>(member(residue, "secStruct")).value_or(-1);
+        // Residue::SecondaryStructure has no fixed underlying type, so
+        // casting an arbitrary int to it (an out-of-range value from a
+        // hand-edited file) is undefined behaviour. Only actual enumerators
+        // may be cast; -1 ("undefined") is the default and is left alone, as
+        // before.
+        switch (secStruct) {
+          case Residue::piHelix:
+          case Residue::bend:
+          case Residue::alphaHelix:
+          case Residue::betaSheet:
+          case Residue::helix310:
+          case Residue::betaBridge:
+          case Residue::turn:
+          case Residue::coil:
+          case Residue::maybeBeta:
+            newResidue.setSecondaryStructure(
+              static_cast<Residue::SecondaryStructure>(secStruct));
+            break;
+          default:
+            break;
+        }
 
         if (residue.contains("atoms") && residue["atoms"].is_object()) {
           json atomsResidue = residue["atoms"];
@@ -760,10 +936,14 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
           }
         }
         if (residue.contains("color") && residue["color"].is_array() &&
-            residue["color"].size() == 3 && isNumericArray(residue["color"])) {
-          json color = residue["color"];
-          Vector3ub col = Vector3ub(color[0], color[1], color[2]);
-          newResidue.setColor(col);
+            residue["color"].size() == 3) {
+          const json& color = residue["color"];
+          // Only set the colour when all three channels convert.
+          auto r = toInteger<unsigned char>(color[0]);
+          auto g = toInteger<unsigned char>(color[1]);
+          auto b = toInteger<unsigned char>(color[2]);
+          if (r && g && b)
+            newResidue.setColor(Vector3ub(*r, *g, *b));
         }
 
         molecule.addResidue(newResidue);
@@ -832,9 +1012,14 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
 
         // check for Hall number if present
         if (unitCell["hallNumber"].is_number()) {
-          auto hallNumber = static_cast<int>(unitCell["hallNumber"]);
-          if (hallNumber > 0 && hallNumber < 531)
-            molecule.setHallNumber(hallNumber);
+          // A value present but out of int's range would otherwise be a bare,
+          // undefined-behaviour static_cast; toInteger() rejects it instead,
+          // and it simply fails the range check right below like it always
+          // did for any other out-of-range hallNumber.
+          if (auto hallNumber = toInteger<int>(unitCell["hallNumber"])) {
+            if (*hallNumber > 0 && *hallNumber < 531)
+              molecule.setHallNumber(*hallNumber);
+          }
         } else if (unitCell["spaceGroup"].is_string()) {
           auto hallNumber =
             Core::SpaceGroups::hallNumber(unitCell["spaceGroup"]);
@@ -863,179 +1048,234 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     }
   }
 
-  // Basis set is optional, if present read it in.
+  // Basis set is optional, if present read it in. Validate the whole shell
+  // description before constructing anything: an invalid shell used to leak
+  // the GaussianSet below (or attach a half-built one), because
+  // molecule.setBasisSet() was called unconditionally at the end of this
+  // block regardless of what the loop above it had actually managed to do.
   if (jsonRoot.contains("basisSet")) {
     json basisSet = jsonRoot["basisSet"];
     if (basisSet.is_object()) {
-      auto* basis = new GaussianSet;
-      basis->setMolecule(&molecule);
-      // Gather the relevant pieces together so that they can be read in.
-      json shellTypes = basisSet["shellTypes"];
-      json primitivesPerShell = basisSet["primitivesPerShell"];
-      json shellToAtomMap = basisSet["shellToAtomMap"];
-      json exponents = basisSet["exponents"];
-      json coefficients = basisSet["coefficients"];
+      const json& shellTypes = member(basisSet, "shellTypes");
+      const json& primitivesPerShell = member(basisSet, "primitivesPerShell");
+      const json& shellToAtomMap = member(basisSet, "shellToAtomMap");
+      const json& exponents = member(basisSet, "exponents");
+      const json& coefficients = member(basisSet, "coefficients");
 
-      int nGTO = 0;
-      for (unsigned int i = 0; i < shellTypes.size(); ++i) {
-        GaussianSet::orbital type;
-        switch (static_cast<int>(shellTypes[i])) {
-          case 0:
-            type = GaussianSet::S;
+      // The shell loop below is bounded by shellTypes.size() alone (as the
+      // original reader's was), so primitivesPerShell/shellToAtomMap need
+      // only be at least that long, not exactly that long -- some real files
+      // (e.g. avogadrodata's formaldehyde.cjson) carry a trailing extra
+      // element in primitivesPerShell that every reader so far has ignored.
+      bool valid = isNumericArray(shellTypes) &&
+                   isNumericArray(primitivesPerShell) &&
+                   isNumericArray(shellToAtomMap) &&
+                   primitivesPerShell.size() >= shellTypes.size() &&
+                   shellToAtomMap.size() >= shellTypes.size() &&
+                   isNumericArray(exponents) && isNumericArray(coefficients) &&
+                   exponents.size() == coefficients.size();
+
+      std::vector<int> shellType;
+      std::vector<int> shellAtom;
+      std::vector<int> shellPrimitiveCount;
+      if (valid) {
+        shellType.reserve(shellTypes.size());
+        shellAtom.reserve(shellTypes.size());
+        shellPrimitiveCount.reserve(shellTypes.size());
+        size_t nGTO = 0;
+        for (size_t i = 0; valid && i < shellTypes.size(); ++i) {
+          auto type = toInteger<int>(shellTypes[i]);
+          auto atomIdx = toInteger<int>(shellToAtomMap[i]);
+          auto nPrim = toInteger<int>(primitivesPerShell[i]);
+          // Each shell's atom must be a real atom and its primitive count
+          // must not run the nGTO cursor past the exponents/coefficients
+          // arrays it indexes into below.
+          if (!type || !atomIdx || !nPrim || *atomIdx < 0 ||
+              static_cast<Index>(*atomIdx) >= atomCount || *nPrim < 0 ||
+              nGTO + static_cast<size_t>(*nPrim) > exponents.size()) {
+            valid = false;
             break;
-          case 1:
-            type = GaussianSet::P;
-            break;
-          case 2:
-            type = GaussianSet::D;
-            break;
-          case -2:
-            type = GaussianSet::D5;
-            break;
-          case 3:
-            type = GaussianSet::F;
-            break;
-          case -3:
-            type = GaussianSet::F7;
-            break;
-          case 4:
-            type = GaussianSet::G;
-            break;
-          case -4:
-            type = GaussianSet::G9;
-            break;
-          default:
-            // If we encounter GTOs we do not understand, the basis is likely
-            // invalid
-            type = GaussianSet::UU;
-        }
-        if (type != GaussianSet::UU) {
-          int b = basis->addBasis(static_cast<int>(shellToAtomMap[i]), type);
-          for (int j = 0; j < static_cast<int>(primitivesPerShell[i]); ++j) {
-            basis->addGto(b, coefficients[nGTO], exponents[nGTO]);
-            ++nGTO;
           }
+          shellType.push_back(*type);
+          shellAtom.push_back(*atomIdx);
+          shellPrimitiveCount.push_back(*nPrim);
+          nGTO += static_cast<size_t>(*nPrim);
         }
       }
 
-      json orbitals = jsonRoot["orbitals"];
-      if (orbitals.is_object() && basis->isValid()) {
-        basis->setElectronCount(orbitals["electronCount"]);
-        json occupations = orbitals["occupations"];
-        if (isNumericArray(occupations)) {
-          std::vector<unsigned char> occs;
-          for (auto& occupation : occupations)
-            occs.push_back(static_cast<unsigned char>(occupation));
-          basis->setMolecularOrbitalOccupancy(occupations);
-        }
-        json energies = orbitals["energies"];
-        if (isNumericArray(energies)) {
-          std::vector<double> energyArray;
-          for (auto& energie : energies)
-            energyArray.push_back(static_cast<double>(energie));
-          basis->setMolecularOrbitalEnergy(energyArray);
-        }
-        json numbers = orbitals["numbers"];
-        if (isNumericArray(numbers)) {
-          std::vector<unsigned int> numArray;
-          for (auto& number : numbers)
-            numArray.push_back(static_cast<unsigned int>(number));
-          basis->setMolecularOrbitalNumber(numArray);
-        }
-        json symmetryLabels = orbitals["symmetries"];
-        if (symmetryLabels.is_array()) {
-          std::vector<std::string> symArray;
-          for (auto& sym : symmetryLabels)
-            symArray.push_back(sym);
-          basis->setSymmetryLabels(symArray);
-        }
-        json moCoefficients = orbitals["moCoefficients"];
-        json moCoefficientsA = orbitals["alphaCoefficients"];
-        json moCoefficientsB = orbitals["betaCoefficients"];
-        bool openShell = false;
-        if (isNumericArray(moCoefficients)) {
-          std::vector<double> coeffs;
-          for (auto& moCoefficient : moCoefficients)
-            coeffs.push_back(static_cast<double>(moCoefficient));
-          basis->setMolecularOrbitals(coeffs);
-        } else if (isNumericArray(moCoefficientsA) &&
-                   isNumericArray(moCoefficientsB)) {
-          std::vector<double> coeffsA;
-          for (auto& i : moCoefficientsA)
-            coeffsA.push_back(static_cast<double>(i));
-          std::vector<double> coeffsB;
-          for (auto& i : moCoefficientsB)
-            coeffsB.push_back(static_cast<double>(i));
-          basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha);
-          basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
-          openShell = true;
-        } else {
-          std::cout << "No orbital cofficients found!" << std::endl;
-        }
-        // Check for orbital coefficient sets, these are paired with coordinates
-        // when they exist, but have constant basis set, atom types, etc.
-        if (orbitals["sets"].is_array() && orbitals["sets"].size()) {
-          json orbSets = orbitals["sets"];
-          for (unsigned int idx = 0; idx < orbSets.size(); ++idx) {
-            moCoefficients = orbSets[idx]["moCoefficients"];
-            moCoefficientsA = orbSets[idx]["alphaCoefficients"];
-            moCoefficientsB = orbSets[idx]["betaCoefficients"];
-            if (isNumericArray(moCoefficients)) {
-              std::vector<double> coeffs;
-              for (auto& moCoefficient : moCoefficients)
-                coeffs.push_back(static_cast<double>(moCoefficient));
-              basis->setMolecularOrbitals(coeffs, BasisSet::Paired, idx);
-            } else if (isNumericArray(moCoefficientsA) &&
-                       isNumericArray(moCoefficientsB)) {
-              std::vector<double> coeffsA;
-              for (auto& i : moCoefficientsA)
-                coeffsA.push_back(static_cast<double>(i));
-              std::vector<double> coeffsB;
-              for (auto& i : moCoefficientsB)
-                coeffsB.push_back(static_cast<double>(i));
-              basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha, idx);
-              basis->setMolecularOrbitals(coeffsB, BasisSet::Beta, idx);
-              openShell = true;
+      if (valid) {
+        auto basis = std::make_unique<GaussianSet>();
+        basis->setMolecule(&molecule);
+
+        int nGTO = 0;
+        for (size_t i = 0; i < shellType.size(); ++i) {
+          GaussianSet::orbital type;
+          switch (shellType[i]) {
+            case 0:
+              type = GaussianSet::S;
+              break;
+            case 1:
+              type = GaussianSet::P;
+              break;
+            case 2:
+              type = GaussianSet::D;
+              break;
+            case -2:
+              type = GaussianSet::D5;
+              break;
+            case 3:
+              type = GaussianSet::F;
+              break;
+            case -3:
+              type = GaussianSet::F7;
+              break;
+            case 4:
+              type = GaussianSet::G;
+              break;
+            case -4:
+              type = GaussianSet::G9;
+              break;
+            default:
+              // If we encounter GTOs we do not understand, the basis is
+              // likely invalid
+              type = GaussianSet::UU;
+          }
+          if (type != GaussianSet::UU) {
+            int b =
+              basis->addBasis(static_cast<unsigned int>(shellAtom[i]), type);
+            for (int j = 0; j < shellPrimitiveCount[i]; ++j) {
+              basis->addGto(b, coefficients[nGTO], exponents[nGTO]);
+              ++nGTO;
             }
           }
-          // Set the first step as active.
-          basis->setActiveSetStep(0);
         }
-        if (openShell) {
-          // look for alpha and beta orbital energies
-          json energiesA = orbitals["alphaEnergies"];
-          json energiesB = orbitals["betaEnergies"];
-          // check if they are numeric arrays
-          if (isNumericArray(energiesA) && isNumericArray(energiesB)) {
-            std::vector<double> moEnergiesA;
-            for (auto& i : energiesA)
-              moEnergiesA.push_back(static_cast<double>(i));
-            std::vector<double> moEnergiesB;
-            for (auto& i : energiesB)
-              moEnergiesB.push_back(static_cast<double>(i));
-            basis->setMolecularOrbitalEnergy(moEnergiesA, BasisSet::Alpha);
-            basis->setMolecularOrbitalEnergy(moEnergiesB, BasisSet::Beta);
 
-            // look for alpha and beta orbital occupations
-            json occupationsA = orbitals["alphaOccupations"];
-            json occupationsB = orbitals["betaOccupations"];
+        const json& orbitals = member(jsonRoot, "orbitals");
+        if (orbitals.is_object() && basis->isValid()) {
+          // A missing or wrong-typed electronCount used to throw via the
+          // implicit conversion below and fail the whole file; now the
+          // basis set still loads, just without an electron count.
+          if (auto electronCount =
+                toInteger<unsigned int>(member(orbitals, "electronCount")))
+            basis->setElectronCount(*electronCount);
+
+          if (auto occs =
+                toIntegerArray<unsigned char>(member(orbitals, "occupations")))
+            basis->setMolecularOrbitalOccupancy(*occs);
+          const json& energies = member(orbitals, "energies");
+          if (isNumericArray(energies)) {
+            std::vector<double> energyArray;
+            energyArray.reserve(energies.size());
+            for (const auto& energie : energies)
+              energyArray.push_back(static_cast<double>(energie));
+            basis->setMolecularOrbitalEnergy(energyArray);
+          }
+          if (auto numArray =
+                toIntegerArray<unsigned int>(member(orbitals, "numbers")))
+            basis->setMolecularOrbitalNumber(*numArray);
+          const json& symmetryLabels = member(orbitals, "symmetries");
+          if (symmetryLabels.is_array()) {
+            std::vector<std::string> symArray;
+            symArray.reserve(symmetryLabels.size());
+            bool allStrings = true;
+            for (const auto& sym : symmetryLabels) {
+              if (!sym.is_string()) {
+                allStrings = false;
+                break;
+              }
+              symArray.push_back(sym.get<std::string>());
+            }
+            if (allStrings)
+              basis->setSymmetryLabels(symArray);
+          }
+          json moCoefficients = member(orbitals, "moCoefficients");
+          json moCoefficientsA = member(orbitals, "alphaCoefficients");
+          json moCoefficientsB = member(orbitals, "betaCoefficients");
+          bool openShell = false;
+          if (isNumericArray(moCoefficients)) {
+            std::vector<double> coeffs;
+            for (auto& moCoefficient : moCoefficients)
+              coeffs.push_back(static_cast<double>(moCoefficient));
+            basis->setMolecularOrbitals(coeffs);
+          } else if (isNumericArray(moCoefficientsA) &&
+                     isNumericArray(moCoefficientsB)) {
+            std::vector<double> coeffsA;
+            for (auto& i : moCoefficientsA)
+              coeffsA.push_back(static_cast<double>(i));
+            std::vector<double> coeffsB;
+            for (auto& i : moCoefficientsB)
+              coeffsB.push_back(static_cast<double>(i));
+            basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha);
+            basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
+            openShell = true;
+          } else {
+            std::cout << "No orbital cofficients found!" << std::endl;
+          }
+          // Check for orbital coefficient sets, these are paired with
+          // coordinates when they exist, but have constant basis set, atom
+          // types, etc.
+          const json& orbSets = member(orbitals, "sets");
+          if (orbSets.is_array() && orbSets.size()) {
+            for (unsigned int idx = 0; idx < orbSets.size(); ++idx) {
+              // orbSets[idx] may not itself be an object in a hand-edited
+              // file, so look its keys up with member() rather than
+              // indexing it directly.
+              moCoefficients = member(orbSets[idx], "moCoefficients");
+              moCoefficientsA = member(orbSets[idx], "alphaCoefficients");
+              moCoefficientsB = member(orbSets[idx], "betaCoefficients");
+              if (isNumericArray(moCoefficients)) {
+                std::vector<double> coeffs;
+                for (auto& moCoefficient : moCoefficients)
+                  coeffs.push_back(static_cast<double>(moCoefficient));
+                basis->setMolecularOrbitals(coeffs, BasisSet::Paired, idx);
+              } else if (isNumericArray(moCoefficientsA) &&
+                         isNumericArray(moCoefficientsB)) {
+                std::vector<double> coeffsA;
+                for (auto& i : moCoefficientsA)
+                  coeffsA.push_back(static_cast<double>(i));
+                std::vector<double> coeffsB;
+                for (auto& i : moCoefficientsB)
+                  coeffsB.push_back(static_cast<double>(i));
+                basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha, idx);
+                basis->setMolecularOrbitals(coeffsB, BasisSet::Beta, idx);
+                openShell = true;
+              }
+            }
+            // Set the first step as active.
+            basis->setActiveSetStep(0);
+          }
+          if (openShell) {
+            // look for alpha and beta orbital energies
+            const json& energiesA = member(orbitals, "alphaEnergies");
+            const json& energiesB = member(orbitals, "betaEnergies");
             // check if they are numeric arrays
-            if (isNumericArray(occupationsA) && isNumericArray(occupationsB)) {
-              std::vector<unsigned char> moOccupationsA;
-              for (auto& i : occupationsA)
-                moOccupationsA.push_back(static_cast<unsigned char>(i));
-              std::vector<unsigned char> moOccupationsB;
-              for (auto& i : occupationsB)
-                moOccupationsB.push_back(static_cast<unsigned char>(i));
-              basis->setMolecularOrbitalOccupancy(moOccupationsA,
-                                                  BasisSet::Alpha);
-              basis->setMolecularOrbitalOccupancy(moOccupationsB,
-                                                  BasisSet::Beta);
+            if (isNumericArray(energiesA) && isNumericArray(energiesB)) {
+              std::vector<double> moEnergiesA;
+              for (auto& i : energiesA)
+                moEnergiesA.push_back(static_cast<double>(i));
+              std::vector<double> moEnergiesB;
+              for (auto& i : energiesB)
+                moEnergiesB.push_back(static_cast<double>(i));
+              basis->setMolecularOrbitalEnergy(moEnergiesA, BasisSet::Alpha);
+              basis->setMolecularOrbitalEnergy(moEnergiesB, BasisSet::Beta);
+
+              // look for alpha and beta orbital occupations, all-or-nothing
+              // per array
+              auto moOccupationsA = toIntegerArray<unsigned char>(
+                member(orbitals, "alphaOccupations"));
+              auto moOccupationsB = toIntegerArray<unsigned char>(
+                member(orbitals, "betaOccupations"));
+              if (moOccupationsA && moOccupationsB) {
+                basis->setMolecularOrbitalOccupancy(*moOccupationsA,
+                                                    BasisSet::Alpha);
+                basis->setMolecularOrbitalOccupancy(*moOccupationsB,
+                                                    BasisSet::Beta);
+              }
             }
           }
         }
+        molecule.setBasisSet(basis.release());
       }
-      molecule.setBasisSet(basis);
     }
   }
 
@@ -1087,7 +1327,11 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
       }
       // check if there's CD data for "rotation"
       json rotation = electronic["rotation"];
-      if (isNumericArray(rotation) && rotation.size() == energies.size()) {
+      // energies is also indexed below, so it must be checked here too --
+      // otherwise a rotation array present without a valid energies array
+      // would index into whatever energies happens to be.
+      if (isNumericArray(rotation) && isNumericArray(energies) &&
+          rotation.size() == energies.size()) {
         MatrixX rotationData(rotation.size(), 2);
         for (std::size_t i = 0; i < rotation.size(); ++i) {
           rotationData(i, 0) = energies[i];
@@ -1118,17 +1362,30 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     json constraints = jsonRoot["constraints"];
     if (constraints.is_array()) {
       for (auto& constraint : constraints) {
-        if (isNumericArray(constraint)) {
-          // value, atom1, atom2, atom3, atom4
-          if (constraint.size() == 3) { // bond
-            molecule.addConstraint(constraint[0], constraint[1], constraint[2]);
-          } else if (constraint.size() == 4) { // angle
-            molecule.addConstraint(constraint[0], constraint[1], constraint[2],
-                                   constraint[3]);
-          } else if (constraint.size() == 5) { // torsion
-            molecule.addConstraint(constraint[0], constraint[1], constraint[2],
-                                   constraint[3], constraint[4]);
+        if (!isNumericArray(constraint))
+          continue;
+        // value, atom1, atom2, atom3, atom4 -- element 0 is the constrained
+        // value (a Real) and needs no range check; the rest are atom indices
+        // that must fit the molecule.
+        std::vector<Index> idx;
+        bool indicesOk = true;
+        for (size_t i = 1; i < constraint.size(); ++i) {
+          auto id = toInteger<Index>(constraint[i]);
+          if (!id || *id >= atomCount) {
+            indicesOk = false;
+            break;
           }
+          idx.push_back(*id);
+        }
+        if (!indicesOk)
+          continue;
+        Real value = static_cast<Real>(constraint[0]);
+        if (constraint.size() == 3) { // bond
+          molecule.addConstraint(value, idx[0], idx[1]);
+        } else if (constraint.size() == 4) { // angle
+          molecule.addConstraint(value, idx[0], idx[1], idx[2]);
+        } else if (constraint.size() == 5) { // torsion
+          molecule.addConstraint(value, idx[0], idx[1], idx[2], idx[3]);
         }
       }
     }
@@ -1138,14 +1395,11 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
   if (jsonRoot.find("properties") != jsonRoot.end()) {
     json properties = jsonRoot["properties"];
     if (properties.is_object()) {
-      if (properties.find("totalCharge") != properties.end()) {
-        molecule.setData("totalCharge",
-                         static_cast<int>(properties["totalCharge"]));
-      }
-      if (properties.find("totalSpinMultiplicity") != properties.end()) {
-        molecule.setData("totalSpinMultiplicity",
-                         static_cast<int>(properties["totalSpinMultiplicity"]));
-      }
+      if (auto totalCharge = toInteger<int>(member(properties, "totalCharge")))
+        molecule.setData("totalCharge", *totalCharge);
+      if (auto totalSpin =
+            toInteger<int>(member(properties, "totalSpinMultiplicity")))
+        molecule.setData("totalSpinMultiplicity", *totalSpin);
       if (properties.find("dipoleMoment") != properties.end()) {
         // read the numeric array
         json dipole = properties["dipoleMoment"];
@@ -1255,18 +1509,53 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
 
   // look for possible cube data
   if (jsonRoot.find("cube") != jsonRoot.end()) {
-    json cubeObj = jsonRoot["cube"];
-    // get the limits
-    Vector3 min, max, delta;
+    // "cube" itself may be anything in a hand-edited file (a fuzzer found
+    // "cube": "caffeine"), so every lookup below goes through member()
+    // rather than operator[], which throws once the parent turns out not to
+    // be an object.
+    const json& cubeObj = jsonRoot["cube"];
+    const json& origin = member(cubeObj, "origin");
+    const json& spacing = member(cubeObj, "spacing");
+    const json& dimensions = member(cubeObj, "dimensions");
+    const json& type = member(cubeObj, "type");
+    const json& scalars = member(cubeObj, "scalars");
+
     Vector3i points;
-    json origin = cubeObj["origin"];
-    json spacing = cubeObj["spacing"];
-    json dimensions = cubeObj["dimensions"];
-    json type = cubeObj["type"];
+    bool dimsOk = dimensions.is_array() && dimensions.size() == 3;
+    for (int k = 0; dimsOk && k < 3; ++k) {
+      auto d = toInteger<int>(dimensions[k]);
+      if (!d || *d < 1)
+        dimsOk = false;
+      else
+        points[k] = *d;
+    }
+
+    // The allocation cube->setLimits() performs below is sized from these
+    // dimensions, so it must be tied to the scalar data actually present
+    // before it runs -- the same lesson as the Gaussian fchk density-matrix
+    // OOM fixed in commit 41345ac1d. Otherwise a 158-byte file that claims
+    // "dimensions":[800,800,800] allocates ~2 GB before ever checking
+    // whether "scalars" agrees, or even exists.
+    //
+    // The point count has to stay within int: Cube computes x * y * z as an
+    // int itself, in setLimits() and setData(). Testing x * y against
+    // maxPoints / z before multiplying also keeps the product from wrapping
+    // (x * y alone cannot, each factor being below 2^31): three dimensions of
+    // up to INT_MAX multiply to ~2^93, and a product taken modulo 2^64 could
+    // land on a small number that a short scalars array happens to match.
+    constexpr std::uint64_t maxPoints =
+      static_cast<std::uint64_t>(std::numeric_limits<int>::max());
+    bool scalarsOk = dimsOk;
+    if (dimsOk) {
+      const std::uint64_t xy = static_cast<std::uint64_t>(points[0]) *
+                               static_cast<std::uint64_t>(points[1]);
+      const auto z = static_cast<std::uint64_t>(points[2]);
+      scalarsOk = xy <= maxPoints / z && isNumericArray(scalars) &&
+                  scalars.size() == xy * z;
+    }
 
     if (isNumericArray(origin) && origin.size() == 3 &&
-        isNumericArray(spacing) && spacing.size() == 3 &&
-        isNumericArray(dimensions) && dimensions.size() == 3) {
+        isNumericArray(spacing) && spacing.size() == 3 && scalarsOk) {
       Cube* cube = molecule.addCube();
 
       // types
@@ -1287,39 +1576,47 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
       else
         cube->setCubeType(Cube::FromFile);
 
-      if (cubeObj.find("name") != cubeObj.end())
-        cube->setName(cubeObj["name"]);
+      const json& name = member(cubeObj, "name");
+      if (name.is_string())
+        cube->setName(name.get<std::string>());
 
-      min = Vector3(origin[0], origin[1], origin[2]);
-      points = Vector3i(dimensions[0], dimensions[1], dimensions[2]);
-      delta = Vector3(spacing[0], spacing[1], spacing[2]);
-      max = Vector3(min[0] + (points[0] - 1) * delta[0],
-                    min[1] + (points[1] - 1) * delta[1],
-                    min[2] + (points[2] - 1) * delta[2]);
+      Vector3 min(origin[0], origin[1], origin[2]);
+      Vector3 delta(spacing[0], spacing[1], spacing[2]);
+      Vector3 max(min[0] + (points[0] - 1) * delta[0],
+                  min[1] + (points[1] - 1) * delta[1],
+                  min[2] + (points[2] - 1) * delta[2]);
 
       cube->setLimits(min, max, points);
-      // check the length of the scalar array
-      unsigned int expectedSize = points[0] * points[1] * points[2];
-      if (isNumericArray(cubeObj["scalars"]) &&
-          cubeObj["scalars"].size() == expectedSize) {
-        cube->setData(cubeObj["scalars"]);
-      }
+      // The scalars are converted explicitly rather than handed to
+      // Cube::setData() as json, clamping the way lexicalCast<float> does:
+      // scalarsOk above only proved these are numeric, not that they fit in
+      // a float, and nlohmann's implicit double-to-float narrowing is
+      // undefined behaviour once a value's magnitude does not.
+      std::vector<float> data;
+      data.reserve(scalars.size());
+      for (const auto& v : scalars)
+        data.push_back(toClampedFloat(v));
+      cube->setData(data);
     }
   }
 
   if (jsonRoot.find("layer") != jsonRoot.end()) {
     auto names = LayerManager::getMoleculeInfo(&molecule);
+    // "layer" itself may not be an object at all (e.g. "layer": 5), so look
+    // its children up with member() rather than jsonRoot["layer"]["visible"],
+    // which throws in that case.
+    const json& layerRoot = member(jsonRoot, "layer");
     // MoleculeInfo starts with one default entry in each of these, so drop it
     // before appending the file's -- otherwise every layer's flags come back
     // shifted by one, with a spurious extra entry on the end.
-    json visible = jsonRoot["layer"]["visible"];
+    const json& visible = member(layerRoot, "visible");
     if (isBooleanArray(visible)) {
       names->visible.clear();
       for (const auto& v : visible) {
         names->visible.push_back(v);
       }
     }
-    json locked = jsonRoot["layer"]["locked"];
+    const json& locked = member(layerRoot, "locked");
     if (isBooleanArray(locked)) {
       names->locked.clear();
       for (const auto& l : locked) {
@@ -1327,7 +1624,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
       }
     }
 
-    json enables = jsonRoot["layer"]["enable"];
+    const json& enables = member(layerRoot, "enable");
     if (enables.is_object()) {
       for (const auto& enable : enables.items()) {
         if (isBooleanArray(enable.value())) {
@@ -1339,7 +1636,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
       }
     }
 
-    json settings = jsonRoot["layer"]["settings"];
+    const json& settings = member(layerRoot, "settings");
     if (settings.is_object()) {
       for (const auto& setting : settings.items()) {
         // The writer emits one LayerData::serialize() string per layer. This
