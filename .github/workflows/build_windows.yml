@@ -181,7 +181,20 @@ jobs:
           # Instrumenting only our own code is what we wanted in any case: Qt
           # and Open Babel stay uninstrumented, which is why the container
           # annotations are disabled in cmake/CompilerFlags.cmake.
-          cmake -DENABLE_TESTING=ON -DCMAKE_BUILD_TYPE=asan .
+          #
+          # Imported targets (e.g. vcpkg's find_package(GLEW CONFIG) result)
+          # know nothing of an "asan" configuration, so without a mapping
+          # CMake falls back to whichever configuration the target lists
+          # first -- the Debug build for vcpkg packages, whose DLLs are not
+          # on the PATH set up below. The test process then never starts and
+          # ctest just waits out its timeout with no output.
+          # CMAKE_MAP_IMPORTED_CONFIG_ASAN maps our "asan" configuration onto
+          # the release variants first; the empty entry is the
+          # configuration-less IMPORTED_LOCATION, and Debug stays in the list,
+          # last, because a mapped target that provides none of the listed
+          # configurations is treated as not found.
+          cmake -DENABLE_TESTING=ON -DCMAKE_BUILD_TYPE=asan \
+            -DCMAKE_MAP_IMPORTED_CONFIG_ASAN="RelWithDebInfo;Release;MinSizeRel;;Debug" .
         else
           # just turn on tests for
           cmake -DENABLE_TESTING=ON .
