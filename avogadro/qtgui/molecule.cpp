@@ -42,8 +42,14 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(const Core::Molecule& other)
-  : QObject(), Core::Molecule(other)
+  : QObject(), Core::Molecule(other),
+    m_undoMolecule(new RWMolecule(*this, this))
 {
+  // As in the two constructors above: without this the undo molecule was
+  // left uninitialized, so undoMolecule() handed back a wild pointer and the
+  // null check in isInteractive() never fired.
+  m_undoMolecule->setInteractive(false);
+
   // Now assign the unique ids
   for (Index i = 0; i < atomCount(); i++)
     m_atomUniqueIds.push_back(i);

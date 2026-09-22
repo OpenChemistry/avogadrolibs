@@ -311,7 +311,10 @@ private:
 
   friend class RWMolecule;
 
-  RWMolecule* m_undoMolecule;
+  // Every constructor sets this; the initializer is a backstop so that one
+  // that forgets leaves a pointer isInteractive() can test rather than a
+  // wild one it would dereference.
+  RWMolecule* m_undoMolecule = nullptr;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)
