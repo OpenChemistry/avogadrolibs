@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-20 06:21+0000\n"
-"PO-Revision-Date: 2026-09-18 10:12+0000\n"
+"PO-Revision-Date: 2026-09-24 18:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -168,6 +168,9 @@ msgid ""
 "The z-matrix lists the atoms in a different order from the molecule, so atom "
 "numbers in this file do not match the ones shown in Avogadro."
 msgstr ""
+"Matricea Z listează atomii într-o ordine diferită față de moleculă, astfel "
+"încât numerele atomilor din acest fișier nu corespund celor afișate în "
+"Avogadro."
 
 #: molequeue/inputgenerator.cpp:477 qtgui/interfacescript.cpp:785
 #, qt-format
@@ -178,6 +181,12 @@ msgid ""
 "them may not reproduce this structure exactly. Adding a dummy atom off the "
 "axis avoids this."
 msgstr ""
+"Un fragment liniar lasă nedeterminat unghiul sau torsiunea pe rândul "
+"(rândurile) %1 al (ale) matricei z. Geometria este scrisă corect, dar aceste "
+"coordonate nu pot fi modificate, iar un program care reconstruiește "
+"coordonatele carteziene pe baza acestora s-ar putea să nu reproducă exact "
+"această structură. Adăugarea unui atom fictiv în afara axei permite evitarea "
+"acestei situații."
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
@@ -547,26 +556,26 @@ msgstr "Niciun nume de fișier definit în „BackgroundFileFormat”!"
 #: qtgui/conformerquantitytranslator.cpp:30
 #, qt-format
 msgid "Distance %1-%2"
-msgstr ""
+msgstr "Distanță %1-%2"
 
 #: qtgui/conformerquantitytranslator.cpp:32
 #, qt-format
 msgid "Angle %1-%2-%3"
-msgstr ""
+msgstr "Unghi %1-%2-%3"
 
 #: qtgui/conformerquantitytranslator.cpp:35
 #, qt-format
 msgid "Dihedral %1-%2-%3-%4"
-msgstr ""
+msgstr "Diedru %1-%2-%3-%4"
 
 #: qtgui/conformerquantitytranslator.cpp:39
 msgid "Constraint"
-msgstr ""
+msgstr "Constrângere"
 
 #: qtgui/conformerquantitytranslator.cpp:45
 msgctxt "position in a trajectory, counting from one"
 msgid "Frame"
-msgstr ""
+msgstr "Cadrul"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -577,11 +586,11 @@ msgstr "Timp"
 #: qtgui/conformerquantitytranslator.cpp:49
 msgctxt "root mean square displacement"
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
-msgstr ""
+msgstr "Energie relativă"
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
@@ -590,7 +599,7 @@ msgstr "Gradient RMS"
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
 msgid "Mean Speed"
-msgstr ""
+msgstr "Viteza medie"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
 #. i18n: ectx: property (text), widget (QLabel, label_temp)
@@ -606,7 +615,7 @@ msgstr "Temperatura"
 #, qt-format
 msgctxt "quantity name, then its unit"
 msgid "%1 (%2)"
-msgstr ""
+msgstr "%1 (%2)"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1098,20 +1107,24 @@ msgstr "Oganesson"
 
 #: qtgui/energyunitsdialog.cpp:55
 msgid "Convert Energy Units"
-msgstr ""
+msgstr "Conversia unităților de măsură a energiei"
 
 #: qtgui/energyunitsdialog.cpp:70 qtplugins/plotconformer/plotconformer.cpp:924
 msgid "This file records the units its energies are in."
 msgstr ""
+"Acest fișier înregistrează unitățile de măsură în care sunt exprimate "
+"energiile."
 
 #: qtgui/energyunitsdialog.cpp:71
 msgid ""
 "Energies are read in the units the file used, which may not be recorded."
 msgstr ""
+"Valorile energiei sunt citite în unitățile utilizate în fișier, care s-ar "
+"putea să nu fie înregistrate."
 
 #: qtgui/energyunitsdialog.cpp:79
 msgid "Convert energies from:"
-msgstr ""
+msgstr "Convertiți energiile din:"
 
 #: qtgui/energyunitsdialog.cpp:81 qtplugins/plotconformer/plotconformer.cpp:598
 msgid "to"
@@ -1309,7 +1322,7 @@ msgstr "Multiplicitate"
 
 #: qtgui/jsonwidget.cpp:344
 msgid "Coordinates"
-msgstr ""
+msgstr "Coordonate"
 
 #: qtgui/jsonwidget.cpp:350
 msgid "Solvent"
@@ -4445,6 +4458,20 @@ msgid ""
 "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
 "Alt(Option)+Left:\tUses the virtual trackball."
 msgstr ""
+"Instrument de navigare\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tFaceți clic și trageți pentru a roti "
+"vizualizarea.\n"
+"\tDacă începeți să trageți de pe un atom, vizualizarea se rotește în jurul "
+"acelui atom.\n"
+"Butonul din mijloc al mouse-ului:\tFaceți clic și trageți pentru a mări sau "
+"micșora imaginea.\n"
+"Butonul drept al mouse-ului:\tFaceți clic și trageți pentru a deplasa "
+"vizualizarea.\n"
+"\n"
+"Alt(Opțiune) + Tragere:\tRotiți/măriți/micșorați/deplasați din orice "
+"instrument.\n"
+"Alt(Opțiune) + Stânga:\tFolosește bila de urmărire virtuală."
 
 #: qtplugins/navigator/navigator.cpp:74
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4868,20 +4895,20 @@ msgstr "Eroare: răspuns gol de la server."
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 #, qt-format
 msgid "Authors: %1"
-msgstr ""
+msgstr "Autori: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:309
 #, qt-format, qt-plural-format
 msgctxt ""
 msgid "%n download(s) in the last %1 days"
 msgid_plural "%n download(s) in the last %1 days"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%n descărcare în ultimele %1 zile"
+msgstr[1] "%n descărcări în ultimele %1 zile"
+msgstr[2] "%n de descărcări în ultimele %1 de zile"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:358
 #, qt-format
@@ -5097,7 +5124,7 @@ msgstr "Descriere"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:183
 msgid "Keywords"
-msgstr ""
+msgstr "Cuvinte-cheie"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:610
 msgid "Electrostatics"
@@ -5254,6 +5281,8 @@ msgid ""
 "Select 2, 3 or 4 atoms to follow a distance, angle or dihedral across the "
 "conformers."
 msgstr ""
+"Selectați 2, 3 sau 4 atomi pentru a urmări o distanță, un unghi sau un unghi "
+"diedru între conformeri."
 
 #: qtplugins/plotconformer/plotconformer.cpp:549
 msgid "Conformer Analysis"
@@ -5261,19 +5290,19 @@ msgstr "Analizarea conformerului"
 
 #: qtplugins/plotconformer/plotconformer.cpp:571
 msgid "Plot:"
-msgstr ""
+msgstr "Grafic:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:573
 msgid "vs"
-msgstr ""
+msgstr "vs"
 
 #: qtplugins/plotconformer/plotconformer.cpp:584
 msgid "Add from Selection"
-msgstr ""
+msgstr "Adăugare din selecție"
 
 #: qtplugins/plotconformer/plotconformer.cpp:588
 msgid "Unwrap dihedral scans"
-msgstr ""
+msgstr "Desfășoară scanările diedrale"
 
 #: qtplugins/plotconformer/plotconformer.cpp:596
 msgid "Energy Units:"
@@ -5281,11 +5310,11 @@ msgstr "Unități de energie:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:616
 msgid "Time between frames:"
-msgstr ""
+msgstr "Timpul dintre cadre:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:622
 msgid " ps"
-msgstr ""
+msgstr " ps"
 
 #: qtplugins/plotconformer/plotconformer.cpp:624
 msgid ""
@@ -5293,6 +5322,10 @@ msgid ""
 "velocities and a temperature. Most trajectory files do not record it, so it "
 "starts at the value from the file where there is one and at 1 ps otherwise."
 msgstr ""
+"Intervalul dintre cadrele salvate, utilizat pentru a transforma traiectoria "
+"în viteze și o temperatură. Majoritatea fișierelor de traiectorie nu "
+"înregistrează acest interval, așa că acesta pornește de la valoarea din "
+"fișier, dacă există una, și de la 1 ps în caz contrar."
 
 #: qtplugins/plotconformer/plotconformer.cpp:873
 #, qt-format
@@ -5305,6 +5338,8 @@ msgid ""
 "The units the energies in this file are in, which the file itself does not "
 "record."
 msgstr ""
+"Unitățile în care sunt exprimate energiile din acest fișier, pe care "
+"fișierul în sine nu le menționează."
 
 #: qtplugins/plotconformer/plotconformer.h:46
 msgid "PlotConformer"
@@ -5313,6 +5348,8 @@ msgstr "ConformerGrafic"
 #: qtplugins/plotconformer/plotconformer.h:176
 msgid "Generate and plot conformer data (RMSD, energy or scan coordinates)."
 msgstr ""
+"Generează și trasează grafic datele privind conformerii (RMSD, energie sau "
+"coordonate de scanare)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -5657,7 +5694,7 @@ msgstr "Adăugare proprietate…"
 
 #: qtplugins/propertytables/propertyview.cpp:974
 msgid "Convert Energy Units…"
-msgstr ""
+msgstr "Convertește unitățile de măsură a energiei…"
 
 #: qtplugins/propertytables/propertyview.cpp:981
 msgid "Change Charge Type…"
@@ -6859,7 +6896,7 @@ msgstr "Editor de matrice Z"
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:59
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:703
 msgid "Add Dummy Atoms"
-msgstr ""
+msgstr "Adaugă atomi fictivi"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:67
 msgid "Rebuild Geometry"
@@ -6890,10 +6927,13 @@ msgid ""
 "Dummy atoms added beside the linear fragments. They are ordinary atoms of "
 "element Xx: delete them, or undo, when you are done with the matrix."
 msgstr ""
+"Atomi fictivi adăugați lângă fragmentele liniare. Aceștia sunt atomi "
+"obișnuiți ai elementului Xx: ștergeți-i sau anulați operația când ați "
+"terminat cu matricea."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:152
 msgid "Nothing here needs a dummy atom."
-msgstr ""
+msgstr "Nimic de aici nu are nevoie de un atom fictiv."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:163
 msgid "Geometry rebuilt from the table."
@@ -6929,6 +6969,9 @@ msgid ""
 "Nothing here is straight enough to need one: every row already has real "
 "atoms off the axis to be measured against."
 msgstr ""
+"Nimic de aici nu este suficient de drept încât să fie nevoie de unul: "
+"fiecare rând are deja atomi reali, în afara axei, față de care se poate "
+"măsura."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:211
 msgid ""
@@ -6937,6 +6980,10 @@ msgid ""
 "atoms of the molecule: they are saved and exported with it until you delete "
 "them."
 msgstr ""
+"Adaugă un atom al elementului Xx lângă fiecare fragment liniar, în afara "
+"axei, astfel încât unghiurile și diedrele sale să poată fi măsurate și "
+"editate. Atomii fictivi sunt atomi reali ai moleculei: aceștia sunt salvați "
+"și exportați împreună cu molecula până când îi ștergeți."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:37
 msgid "Edit bond lengths, angles and torsions in a table."
@@ -6954,12 +7001,12 @@ msgstr "Diedru (°)"
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:174
 #, qt-format
 msgid "Constrained to %1 Å"
-msgstr ""
+msgstr "Constrâns(limitat) la %1 Å"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:176
 #, qt-format
 msgid "Constrained to %1°"
-msgstr ""
+msgstr "Constrâns(limitat) la %1°"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:364
 #, qt-format
@@ -6990,11 +7037,11 @@ msgstr "Reconstruiește pe baza matricei Z"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:117
 msgid "Constrain Distance"
-msgstr ""
+msgstr "Constrânge(limitează) distanța"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:123
 msgid "Constrain Dihedral"
-msgstr ""
+msgstr "Constrânge(limitează) unghiul diedru"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -7798,11 +7845,13 @@ msgstr "Ordinea legăturilor:"
 #. i18n: ectx: property (toolTip), widget (QCheckBox, adjustBondLengths)
 msgid "When possible, adjust bond lengths when changing atoms or bond orders"
 msgstr ""
+"Când este posibil, ajustează lungimile legăturilor atunci când schimbați "
+"atomii sau ordinele de legătură."
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:56
 #. i18n: ectx: property (text), widget (QCheckBox, adjustBondLengths)
 msgid "Adjust Bond Lengths"
-msgstr ""
+msgstr "Ajustează lungimile legăturilor"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -9539,17 +9588,18 @@ msgstr "Căutare module…"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:81
 #. i18n: ectx: property (title), widget (QGroupBox, infoBox)
 msgid "Plugin Information"
-msgstr ""
+msgstr "Informații despre modul"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:122
 #. i18n: ectx: property (text), widget (QPushButton, bugTrackerButton)
 msgid "Report an Issue"
-msgstr ""
+msgstr "Raportează o problemă"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:125
 #. i18n: ectx: property (toolTip), widget (QPushButton, bugTrackerButton)
 msgid "Open this plugin's bug tracker in your browser"
 msgstr ""
+"Deschide sistemul de urmărire a erorilor al acestui modul în navigatorul web"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:144
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
