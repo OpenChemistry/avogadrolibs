@@ -12,6 +12,7 @@
 #include <QEventLoop>
 #include <QFont>
 #include <QModelIndex>
+#include <QPointer>
 #include <QSignalSpy>
 #include <QTimer>
 
@@ -118,6 +119,30 @@ TEST_F(MoleculeModelTest, Clear_EmptiesMolecules)
 
   EXPECT_TRUE(model.molecules().isEmpty());
   EXPECT_EQ(model.rowCount(QModelIndex()), 1); // just the trailing row
+}
+
+// clear() must tell attached views (a model reset) and, like removeItem(),
+// delete the molecules it owns rather than orphan them.
+TEST_F(MoleculeModelTest, Clear_ResetsViewsAndDeletesMolecules)
+{
+  MoleculeModel model;
+  QPointer<Molecule> m1 = new Molecule;
+  QPointer<Molecule> m2 = new Molecule;
+  model.addItem(m1);
+  model.addItem(m2);
+  model.setActiveMolecule(m1);
+  QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
+
+  model.clear();
+  EXPECT_EQ(resetSpy.count(), 1);
+
+  QEventLoop loop;
+  QTimer::singleShot(0, &loop, &QEventLoop::quit);
+  loop.exec();
+
+  EXPECT_TRUE(m1.isNull());
+  EXPECT_TRUE(m2.isNull());
+  EXPECT_EQ(model.activeMolecule(), nullptr);
 }
 
 TEST_F(MoleculeModelTest, ActiveMolecules_CurrentlyReturnsAllMolecules)

@@ -125,6 +125,45 @@ TEST_F(LayerModelTest, SetActiveLayerUsesLayerIdNotRowIndex)
   EXPECT_EQ(LayerManager::getMoleculeLayer(&molecule).activeLayer(), 2u);
 }
 
+// Row 4 is the synthetic "+" row, which has no layer behind it.
+TEST_F(LayerModelTest, SetActiveLayerRowOutOfRangeIsIgnored)
+{
+  Molecule molecule;
+  LayerModel model;
+  buildThreeLayerMoleculeWithPluginRow(model, molecule);
+  auto* rwmol = molecule.undoMolecule();
+  const size_t before = LayerManager::getMoleculeLayer(&molecule).activeLayer();
+
+  for (int row : { -1, 4, 5, 1000 }) {
+    model.setActiveLayer(row, rwmol);
+    EXPECT_EQ(LayerManager::getMoleculeLayer(&molecule).activeLayer(), before)
+      << "row " << row;
+  }
+}
+
+namespace {
+struct ReceiverCountingMolecule : public Molecule
+{
+  using QObject::receivers;
+};
+} // namespace
+
+// The GUI calls addMolecule() every time the user switches back to a
+// molecule; each call must not add another updateRows() connection.
+TEST_F(LayerModelTest, AddMoleculeAgainDoesNotDuplicateConnection)
+{
+  ReceiverCountingMolecule molecule;
+  molecule.addAtom(6);
+  LayerModel model;
+  const char* changed = SIGNAL(changed(unsigned int));
+
+  model.addMolecule(&molecule);
+  const int once = molecule.receivers(changed);
+  model.addMolecule(&molecule);
+  model.addMolecule(&molecule);
+  EXPECT_EQ(molecule.receivers(changed), once);
+}
+
 TEST_F(LayerModelTest, RemoveItemUsesLayerIdNotRowIndex)
 {
   Molecule molecule;

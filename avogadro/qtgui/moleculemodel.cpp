@@ -66,7 +66,7 @@ Qt::ItemFlags MoleculeModel::flags(const QModelIndex& idx) const
 bool MoleculeModel::setData(const QModelIndex& idx, const QVariant& value,
                             int role)
 {
-  if (!idx.isValid() || idx.column() > 2)
+  if (!idx.isValid() || idx.column() >= 2)
     return false;
 
   auto* object = static_cast<QObject*>(idx.internalPointer());
@@ -99,7 +99,7 @@ bool MoleculeModel::setData(const QModelIndex& idx, const QVariant& value,
 
 QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
 {
-  if (!idx.isValid() || idx.column() > 2)
+  if (!idx.isValid() || idx.column() >= 2)
     return QVariant();
 
   auto* object = static_cast<QObject*>(idx.internalPointer());
@@ -175,7 +175,14 @@ QModelIndex MoleculeModel::index(int row, int column,
 
 void MoleculeModel::clear()
 {
+  // Same ownership as removeItem(): addItem() made this model each
+  // molecule's parent. Views must hear about the reset, or they keep rows
+  // for molecules that are gone.
+  beginResetModel();
+  for (auto* mol : m_molecules)
+    mol->deleteLater();
   m_molecules.clear();
+  endResetModel();
 }
 
 QList<Molecule*> MoleculeModel::molecules() const

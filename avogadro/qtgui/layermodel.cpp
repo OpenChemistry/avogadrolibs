@@ -252,13 +252,16 @@ void LayerModel::addMolecule(const Molecule* mol)
   m_item = 0;
   updateRows();
 
-  connect(mol, &Molecule::changed, this, &LayerModel::updateRows);
+  // addMolecule() runs again each time the user switches back to a molecule.
+  connect(mol, &Molecule::changed, this, &LayerModel::updateRows,
+          Qt::UniqueConnection);
 }
 
 void LayerModel::setActiveLayer(int index, RWMolecule* rwmolecule)
 {
   auto names = activeMoleculeNames();
-  assert(index < static_cast<int>(names.size()));
+  if (index < 0 || index >= static_cast<int>(names.size()))
+    return;
   RWLayerManager::setActiveLayer(names[index].first, rwmolecule);
   updateRows();
 }
