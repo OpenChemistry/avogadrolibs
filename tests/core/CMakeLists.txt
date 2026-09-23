@@ -24,6 +24,7 @@ set(tests
   InternalCoordinates
   Kekulize
   Layer
+  LayerManager
   Mesh
   Molecule
   Mutex
