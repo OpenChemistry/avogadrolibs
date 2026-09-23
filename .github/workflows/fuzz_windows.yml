@@ -537,7 +537,7 @@ jobs:
         suites=(
           "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
-          "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap"
+          "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
         )
 
         # Targets with known, pre-existing failures. They still run and still
