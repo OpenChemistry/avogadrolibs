@@ -16,6 +16,12 @@ race:QtPrivate::QMetaTypeForType
 # state to race on -- only the object-lifetime sync that TSan cannot observe.
 race:Avogadro::QtGui::CalcWorker::~CalcWorker
 
+# BackgroundFileFormatTest tears its worker down the same way. The main
+# thread's quit() is what triggers the deferred delete, but that ordering
+# passes through the same uninstrumented Qt event queue. The destructor only
+# deletes m_format, which was used on the worker thread alone.
+race:Avogadro::QtGui::BackgroundFileFormat::~BackgroundFileFormat
+
 # Qt6 on Linux uses glib's main loop by default, which wakes worker threads
 # via an eventfd. Synchronization happens through the kernel fd, which TSan
 # doesn't model; glib itself isn't instrumented either.
