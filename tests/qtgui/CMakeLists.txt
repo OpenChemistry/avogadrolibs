@@ -17,6 +17,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  BackgroundFileFormat
   CalcWorker
   ElementTranslator
   EnergyUnits
@@ -25,13 +26,17 @@ set(tests
   GenericHighlighter
   HydrogenTools
   JsonWidget
+  LayerModel
   MeshGenerator
   Molecule
+  MoleculeModel
   PackageManager
+  PluginLayerManager
   RWLayerManager
   RWMolecule
   ScriptProgress
   TimedProgressDialog
+  TomlParse
   Utilities
 )
 
