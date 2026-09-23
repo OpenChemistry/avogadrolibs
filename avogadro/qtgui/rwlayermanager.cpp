@@ -169,6 +169,10 @@ public:
         setting.second.erase(std::next(setting.second.begin(), m_layer));
       }
     }
+    // removeLayer() can move the active layer (e.g. removing the active
+    // layer drops it to the layer below), so undo() needs the pre-removal
+    // active layer to restore it later.
+    m_oldActiveLayer = m_moleculeInfo->layer.activeLayer();
     m_moleculeInfo->layer.removeLayer(m_layer);
     m_applied = true;
   }
@@ -194,6 +198,8 @@ public:
       m_moleculeInfo->settings[setting.first].insert(itSetting, setting.second);
     }
     m_moleculeInfo->layer.addLayer(m_layer);
+    // Restore the active layer redo() displaced.
+    m_moleculeInfo->layer.setActiveLayer(m_oldActiveLayer);
   }
 
 protected:
@@ -203,6 +209,7 @@ protected:
   bool m_visible = true;
   bool m_locked = false;
   bool m_applied = false;
+  size_t m_oldActiveLayer = 0;
   map<string, Core::LayerDataPtr> m_settings;
   map<string, bool> m_enable;
 };
