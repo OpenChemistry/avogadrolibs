@@ -12,6 +12,7 @@
 #include <type_traits>
 
 #include <limits>
+#include <random>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/color3f.h>
@@ -2170,4 +2171,768 @@ TEST_F(MoleculeTest, swapBondIgnoresOutOfRangeIndices)
   EXPECT_EQ(static_cast<Index>(1), molecule.bondCount());
   EXPECT_EQ(1, molecule.bondOrder(0));
   EXPECT_EQ(6, molecule.atom(0).atomicNumber());
+}
+
+namespace {
+
+// Every array Molecule keeps that is indexed by atom or by bond, checked
+// against atomCount()/bondCount() and against each other. An array that
+// setXxx() grows lazily (positions, labels, colors, ...) is allowed to be
+// shorter than the count it is keyed by -- see atomWithoutPosition above --
+// but never longer, and every stored atom/bond index has to name a real
+// atom or bond. SCOPED_TRACE names the mutation under test, so a failure
+// says which step broke it.
+//
+// This checks structure, not content: a ragged (partially populated) array
+// can pass every check here while still holding a removed atom's data at
+// the index a different atom now occupies, because its size never leaves
+// the allowed range either way. See
+// RemoveAtomInRaggedOptionalArrayClearsStaleEntry, which needs known content
+// to catch that instead. The bond-label bound below is a real guarantee now
+// that removeBond()/swapBond() keep m_bondLabels in step (see
+// RemoveBondLabelFollowsSwappedInBond) -- makeDecoratedMolecule() exercises
+// it on every call below rather than leaving it untested.
+//
+// The element mask is included here too, now that removeAtom() updates it
+// correctly (see RemoveAtomElementMaskDropsExtinctElement); it used to be
+// checked separately to avoid tripping that bug on every test that used more
+// than one element.
+void expectConsistent(const Molecule& mol, const std::string& step)
+{
+  SCOPED_TRACE(step);
+  const Index n = mol.atomCount();
+  const Index m = mol.bondCount(); // asserts m_graph/m_bondOrders agree
+
+  EXPECT_EQ(mol.graph().vertexCount(), static_cast<size_t>(n));
+  EXPECT_EQ(mol.bondOrders().size(), static_cast<size_t>(m));
+  EXPECT_EQ(mol.bondPairs().size(), static_cast<size_t>(m));
+  EXPECT_LE(mol.bondLabels().size(), static_cast<size_t>(m));
+  EXPECT_EQ(mol.layer().atomCount(), static_cast<size_t>(n));
+
+  Molecule::ElementMask expectedElements;
+  for (Index i = 0; i < n; ++i) {
+    const unsigned char z = mol.atomicNumber(i);
+    expectedElements.set(z < Avogadro::Core::element_count
+                           ? z
+                           : Avogadro::Core::element_count - 1);
+  }
+  EXPECT_EQ(expectedElements, mol.elements());
+
+  for (Index i = 0; i < m; ++i) {
+    const auto& pair = mol.bondPairs()[i];
+    EXPECT_LT(pair.first, n) << "bond " << i << " endpoint a";
+    EXPECT_LT(pair.second, n) << "bond " << i << " endpoint b";
+  }
+
+  EXPECT_LE(mol.atomPositions2d().size(), static_cast<size_t>(n));
+  EXPECT_LE(mol.atomPositions3d().size(), static_cast<size_t>(n));
+  EXPECT_LE(mol.atomLabels().size(), static_cast<size_t>(n));
+  EXPECT_LE(mol.hybridizations().size(), static_cast<size_t>(n));
+  EXPECT_LE(mol.formalCharges().size(), static_cast<size_t>(n));
+  EXPECT_LE(mol.isotopes().size(), static_cast<size_t>(n));
+  EXPECT_LE(mol.colors().size(), static_cast<size_t>(n));
+  EXPECT_LE(mol.forceVectors().size(), static_cast<size_t>(n));
+
+  // Stored as 3 rows per atom; see setFrozenAtom().
+  const Eigen::Index maskRows = mol.frozenAtomMask().rows();
+  EXPECT_EQ(maskRows % 3, 0);
+  EXPECT_LE(maskRows / 3, static_cast<Eigen::Index>(n));
+
+  // Residue-indexed, but the Atom proxies in each name map carry atom
+  // indices. swapAtom() reindexes them (SwapAtomReindexesResidues);
+  // removeAtom() deliberately does not -- see the comment above
+  // swapAtom() in molecule.cpp -- so a reference can silently name the
+  // wrong atom after a removal without ever going out of bounds. Bounds
+  // is all this checks.
+  for (const auto& residue : mol.residues()) {
+    for (const auto& atom : residue.residueAtoms())
+      EXPECT_LT(atom.index(), n) << "residue atom";
+  }
+
+  auto expectAtomReference = [n](Index index, const char* what) {
+    if (index != Avogadro::MaxIndex)
+      EXPECT_LT(index, n) << what;
+  };
+  for (const auto& constraint : mol.constraints()) {
+    expectAtomReference(constraint.aIndex(), "constraint a");
+    expectAtomReference(constraint.bIndex(), "constraint b");
+    expectAtomReference(constraint.cIndex(), "constraint c");
+    expectAtomReference(constraint.dIndex(), "constraint d");
+  }
+  for (const auto& coordinate : mol.scanCoordinates()) {
+    expectAtomReference(coordinate.aIndex(), "scan a");
+    expectAtomReference(coordinate.bIndex(), "scan b");
+    expectAtomReference(coordinate.cIndex(), "scan c");
+    expectAtomReference(coordinate.dIndex(), "scan d");
+  }
+}
+
+// A molecule with every optional per-atom array populated, a multi-order
+// bond, a residue, a constraint, a selection, a frozen atom, partial
+// charges, two coordinate sets and a mesh -- the shape most likely to
+// expose an array removeAtom()/swapAtom() forgot. Bond labels are populated
+// too, now that removeBond()/swapBond() keep m_bondLabels in step (see
+// RemoveBondLabelFollowsSwappedInBond); expectConsistent() checks its bound
+// on every use of this fixture rather than the fixture dodging the array.
+Molecule makeDecoratedMolecule()
+{
+  Molecule mol;
+  mol.addAtom(6); // 0: C
+  mol.addAtom(7); // 1: N
+  mol.addAtom(8); // 2: O
+  mol.addAtom(1); // 3: H
+  mol.addAtom(1); // 4: H
+
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    const auto fi = static_cast<double>(i);
+    mol.setAtomPosition3d(i, Vector3(fi, fi * 0.1, 0.0));
+    mol.setAtomPosition2d(i, Vector2(fi, 0.0));
+    mol.setAtomLabel(i, "atom" + std::to_string(i));
+    mol.setFormalCharge(i, static_cast<signed char>(i == 2 ? -1 : 0));
+    mol.setIsotope(i, i == 3 ? 2 : 0);
+    mol.setHybridization(i, Avogadro::Core::SP3);
+    mol.setColor(i,
+                 Avogadro::Vector3ub(static_cast<unsigned char>(10 * i), 0, 0));
+  }
+  mol.setAtomSelected(1, true);
+  mol.setAtomSelected(3, true);
+  mol.setFrozenAtom(4, true);
+
+  mol.addBond(0, 1, 1);
+  mol.addBond(0, 2, 2);
+  mol.addBond(1, 3, 1);
+  mol.addBond(1, 4, 1);
+  for (Index i = 0; i < mol.bondCount(); ++i)
+    mol.setBondLabel(i, "bond" + std::to_string(i));
+
+  std::string resName = "LIG";
+  Index resNumber = 1;
+  char chain = 'A';
+  Avogadro::Core::Residue& residue = mol.addResidue(resName, resNumber, chain);
+  residue.addResidueAtom("C1", mol.atom(0));
+
+  mol.addConstraint(1.4, 0, 1);
+
+  Array<Vector3> secondSet;
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    secondSet.push_back(Vector3(static_cast<double>(i) * 2.0, 0.0, 0.0));
+  mol.setCoordinate3d(mol.atomPositions3d(), 0);
+  mol.setCoordinate3d(secondSet, 1);
+
+  MatrixX charges(static_cast<Eigen::Index>(mol.atomCount()), 1);
+  for (Eigen::Index i = 0; i < charges.rows(); ++i)
+    charges(i, 0) = 0.1 * static_cast<double>(i);
+  mol.setPartialCharges("gasteiger", charges);
+
+  Mesh* mesh = mol.addMesh();
+  Array<Vector3f> vertices;
+  vertices.push_back(Vector3f(1.0f, 2.0f, 3.0f));
+  mesh->setVertices(vertices);
+
+  return mol;
+}
+
+} // namespace
+
+TEST_F(MoleculeTest, RemoveAtomFirstFromDecoratedMoleculeStaysConsistent)
+{
+  Molecule molecule = makeDecoratedMolecule();
+  expectConsistent(molecule, "before removeAtom(first)");
+
+  // removeAtom() swaps the last atom (4: H, frozen) into the hole, so slot 0
+  // must end up with atom 4's own data, not atom 0's leftovers.
+  ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(0)));
+  expectConsistent(molecule, "after removeAtom(first)");
+
+  ASSERT_EQ(molecule.atomCount(), static_cast<Index>(4));
+  EXPECT_EQ(1, molecule.atom(0).atomicNumber());
+  EXPECT_EQ(molecule.atomLabel(0), "atom4");
+  EXPECT_EQ(molecule.atomPosition3d(0), Vector3(4.0, 0.4, 0.0));
+  EXPECT_EQ(molecule.color(0), Avogadro::Vector3ub(40, 0, 0));
+  EXPECT_EQ(molecule.formalCharge(0), 0);
+  EXPECT_TRUE(molecule.frozenAtom(0));
+  EXPECT_FALSE(molecule.atomSelected(0));
+
+  // Atoms untouched by the swap-and-pop keep their own data.
+  EXPECT_EQ(molecule.atomLabel(1), "atom1");
+  EXPECT_TRUE(molecule.atomSelected(1));
+}
+
+TEST_F(MoleculeTest, RemoveAtomMiddleFromDecoratedMoleculeStaysConsistent)
+{
+  Molecule molecule = makeDecoratedMolecule();
+  expectConsistent(molecule, "before removeAtom(middle)");
+
+  // Removing atom 2 (O) swaps atom 4 (H, frozen) into slot 2.
+  ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(2)));
+  expectConsistent(molecule, "after removeAtom(middle)");
+
+  ASSERT_EQ(molecule.atomCount(), static_cast<Index>(4));
+  EXPECT_EQ(1, molecule.atom(2).atomicNumber());
+  EXPECT_EQ(molecule.atomLabel(2), "atom4");
+  EXPECT_EQ(molecule.atomPosition3d(2), Vector3(4.0, 0.4, 0.0));
+  EXPECT_TRUE(molecule.frozenAtom(2));
+  EXPECT_FALSE(molecule.atomSelected(2));
+
+  EXPECT_EQ(molecule.atomLabel(0), "atom0");
+  EXPECT_EQ(molecule.atomLabel(1), "atom1");
+  EXPECT_TRUE(molecule.atomSelected(1));
+}
+
+TEST_F(MoleculeTest, RemoveAtomLastFromDecoratedMoleculeStaysConsistent)
+{
+  Molecule molecule = makeDecoratedMolecule();
+  expectConsistent(molecule, "before removeAtom(last)");
+
+  // Atom 4 is already last, so removeAtom() is a plain pop: nothing is
+  // swapped in, and every surviving atom keeps its own index and data.
+  ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(4)));
+  expectConsistent(molecule, "after removeAtom(last)");
+
+  ASSERT_EQ(molecule.atomCount(), static_cast<Index>(4));
+  for (Index i = 0; i < molecule.atomCount(); ++i) {
+    EXPECT_EQ(molecule.atomLabel(i), "atom" + std::to_string(i))
+      << "atom " << i;
+  }
+  EXPECT_TRUE(molecule.atomSelected(1));
+  EXPECT_TRUE(molecule.atomSelected(3));
+}
+
+TEST_F(MoleculeTest, RemoveOnlyAtomStaysConsistent)
+{
+  Molecule molecule;
+  molecule.addAtom(8);
+  molecule.setAtomLabel(0, "lone");
+  molecule.setAtomSelected(0, true);
+  molecule.setFrozenAtom(0, true);
+  ASSERT_TRUE(molecule.elements().test(8));
+
+  ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(0)));
+  expectConsistent(molecule, "after removing the only atom");
+
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(0));
+  // With no other atom to loop over, removeAtom()'s element-mask update
+  // takes this path trivially -- see RemoveAtomElementMaskKeepsSurvivingElement
+  // and RemoveAtomElementMaskDropsExtinctElement for the cases that
+  // distinguish "another atom of the same element" from "any other atom".
+  EXPECT_FALSE(molecule.elements().test(8));
+}
+
+TEST_F(MoleculeTest, SwapAtomOnDecoratedMoleculeCarriesEveryArray)
+{
+  Molecule molecule = makeDecoratedMolecule();
+  expectConsistent(molecule, "before swapAtom");
+
+  molecule.swapAtom(0, 4);
+  expectConsistent(molecule, "after swapAtom");
+
+  // Atom 0's data (C, unselected, unfrozen) is now at index 4.
+  EXPECT_EQ(6, molecule.atom(4).atomicNumber());
+  EXPECT_EQ(molecule.atomLabel(4), "atom0");
+  EXPECT_EQ(molecule.atomPosition3d(4), Vector3(0.0, 0.0, 0.0));
+  EXPECT_EQ(molecule.atomPosition2d(4), Vector2(0.0, 0.0));
+  EXPECT_EQ(molecule.color(4), Avogadro::Vector3ub(0, 0, 0));
+  EXPECT_FALSE(molecule.atomSelected(4));
+  EXPECT_FALSE(molecule.frozenAtom(4));
+
+  // Atom 4's data (H, frozen) is now at index 0.
+  EXPECT_EQ(1, molecule.atom(0).atomicNumber());
+  EXPECT_EQ(molecule.atomLabel(0), "atom4");
+  EXPECT_EQ(molecule.atomPosition3d(0), Vector3(4.0, 0.4, 0.0));
+  EXPECT_TRUE(molecule.frozenAtom(0));
+  EXPECT_FALSE(molecule.atomSelected(0));
+
+  // Atom count and bond count are unchanged by a relabelling.
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(5));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(4));
+}
+
+TEST_F(MoleculeTest, SwapAtomSameIndexIsANoOp)
+{
+  Molecule before = makeDecoratedMolecule();
+  Molecule after = before;
+
+  after.swapAtom(2, 2);
+  expectConsistent(after, "after swapAtom(i, i)");
+
+  ASSERT_EQ(before.atomCount(), after.atomCount());
+  for (Index i = 0; i < before.atomCount(); ++i) {
+    EXPECT_EQ(before.atomLabel(i), after.atomLabel(i)) << "atom " << i;
+    EXPECT_EQ(before.atomPosition3d(i), after.atomPosition3d(i))
+      << "atom " << i;
+    EXPECT_EQ(before.frozenAtom(i), after.frozenAtom(i)) << "atom " << i;
+    EXPECT_EQ(before.atomSelected(i), after.atomSelected(i)) << "atom " << i;
+  }
+}
+
+TEST_F(MoleculeTest, RemoveBondFromDecoratedMoleculeStaysConsistent)
+{
+  Molecule molecule = makeDecoratedMolecule();
+  expectConsistent(molecule, "before removeBond");
+  ASSERT_EQ(molecule.bondCount(), static_cast<Index>(4));
+
+  ASSERT_TRUE(molecule.removeBond(static_cast<Index>(0)));
+  expectConsistent(molecule, "after removeBond");
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(3));
+
+  // A structural edit invalidates calculated results.
+  EXPECT_TRUE(molecule.partialCharges("gasteiger").isZero());
+
+  // Atom-level decoration is untouched by removing a bond.
+  EXPECT_EQ(molecule.atomLabel(0), "atom0");
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(5));
+}
+
+TEST_F(MoleculeTest, ClearBondsOnDecoratedMoleculeStaysConsistent)
+{
+  Molecule molecule = makeDecoratedMolecule();
+
+  molecule.clearBonds();
+  expectConsistent(molecule, "after clearBonds");
+
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(0));
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(5));
+  // clearBonds() is "re-perceive connectivity", not a structural edit to the
+  // atoms -- see the comment on it in molecule.cpp -- so atom decoration
+  // survives it.
+  EXPECT_EQ(molecule.atomLabel(0), "atom0");
+  EXPECT_TRUE(molecule.atomSelected(1));
+}
+
+TEST_F(MoleculeTest, ClearAtomsOnDecoratedMoleculeStaysConsistent)
+{
+  Molecule molecule = makeDecoratedMolecule();
+
+  molecule.clearAtoms();
+  expectConsistent(molecule, "after clearAtoms");
+
+  EXPECT_EQ(molecule.atomCount(), static_cast<Index>(0));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(0));
+  EXPECT_EQ(molecule.residueCount(), static_cast<Index>(0));
+  EXPECT_TRUE(molecule.constraints().empty());
+  EXPECT_TRUE(molecule.scanCoordinates().empty());
+}
+
+TEST_F(MoleculeTest, AddAtomAfterRemovalGetsDefaultsNotStaleData)
+{
+  Molecule molecule = makeDecoratedMolecule();
+  ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(2)));
+  ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(0)));
+
+  Atom fresh = molecule.addAtom(6);
+  expectConsistent(molecule, "after addAtom following removals");
+
+  // The new atom's optional-array entries read as defaults, not whatever a
+  // removed atom happened to leave in that slot. Position and force are
+  // covered separately, by AtomPositionAndForceDefaultToZero: their default
+  // is Vector::Zero(), not whatever an uninitialized Eigen vector holds.
+  EXPECT_EQ(molecule.atomLabel(fresh.index()), "");
+  EXPECT_EQ(molecule.formalCharge(fresh.index()), 0);
+  EXPECT_EQ(molecule.isotope(fresh.index()), static_cast<unsigned short>(0));
+  EXPECT_FALSE(molecule.atomSelected(fresh.index()));
+  EXPECT_FALSE(molecule.frozenAtom(fresh.index()));
+  EXPECT_EQ(molecule.color(fresh.index()),
+            Avogadro::Vector3ub(Avogadro::Core::Elements::color(6)));
+}
+
+TEST_F(MoleculeTest, RemoveAtomElementMaskKeepsSurvivingElement)
+{
+  // The counterpart to RemoveAtomElementMaskDropsExtinctElement: with a
+  // second oxygen still present, the mask is right either way, so this one
+  // was never disabled.
+  Molecule molecule;
+  Atom o1 = molecule.addAtom(8);
+  molecule.addAtom(8);
+  expectConsistent(molecule, "before removing one of two oxygens");
+
+  ASSERT_TRUE(molecule.removeAtom(o1));
+  expectConsistent(molecule, "after removing one of two oxygens");
+  EXPECT_TRUE(molecule.elements().test(8));
+}
+
+TEST_F(MoleculeTest, RandomMixedMutationsStayConsistent)
+{
+  // ~500 mixed structural and per-atom-state mutations, checked after every
+  // one. This is the pattern the 2.1 bug hunt is aimed at: a parallel array
+  // drifting out of step with atomCount()/bondCount() after some mutation,
+  // then getting indexed later. Op 8 (setBondLabel) also exercises the
+  // ragged case: labelling a bond and then adding atoms/bonds afterwards
+  // (ops 0/1, already in the mix) leaves m_bondLabels short of bondCount(),
+  // the state RemoveBondLabelFollowsSwappedInBond covers with known
+  // content. Fixed seed for reproducibility.
+  Molecule molecule;
+  std::mt19937 rng(20260922u);
+  std::uniform_int_distribution<int> opPicker(0, 8);
+  std::uniform_int_distribution<int> elementPicker(1, 10);
+  std::uniform_int_distribution<int> boolPicker(0, 1);
+
+  for (int step = 0; step < 500; ++step) {
+    const Index n = molecule.atomCount();
+    const int op = (n == 0) ? 0 : opPicker(rng);
+    std::uniform_int_distribution<Index> pickAtom(0, n == 0 ? 0 : n - 1);
+
+    switch (op) {
+      case 0:
+        molecule.addAtom(static_cast<unsigned char>(elementPicker(rng)));
+        break;
+      case 1: {
+        if (n >= 2) {
+          const Index a = pickAtom(rng);
+          const Index b = pickAtom(rng);
+          if (a != b)
+            molecule.addBond(a, b, 1);
+        }
+        break;
+      }
+      case 2:
+        molecule.removeAtom(pickAtom(rng));
+        break;
+      case 3: {
+        const Index bc = molecule.bondCount();
+        if (bc > 0) {
+          std::uniform_int_distribution<Index> pickBond(0, bc - 1);
+          molecule.removeBond(pickBond(rng));
+        }
+        break;
+      }
+      case 4:
+        molecule.swapAtom(pickAtom(rng), pickAtom(rng));
+        break;
+      case 5:
+        molecule.setAtomSelected(pickAtom(rng), boolPicker(rng) != 0);
+        break;
+      case 6:
+        molecule.setFrozenAtom(pickAtom(rng), boolPicker(rng) != 0);
+        break;
+      case 7:
+        molecule.setAtomLabel(pickAtom(rng), "step" + std::to_string(step));
+        break;
+      case 8: {
+        const Index bc = molecule.bondCount();
+        if (bc > 0) {
+          std::uniform_int_distribution<Index> pickBond(0, bc - 1);
+          molecule.setBondLabel(pickBond(rng), "step" + std::to_string(step));
+        }
+        break;
+      }
+      default:
+        break;
+    }
+
+    expectConsistent(molecule, "random step " + std::to_string(step) + " (op " +
+                                 std::to_string(op) + ")");
+  }
+}
+
+// Invariant: the "is there another atom of this element" scan in
+// removeAtom() must compare each remaining atom's element against the one
+// being removed, not the removed element against itself -- so the mask
+// drops an element once its last atom is gone, even with other atoms (of
+// other elements) still present.
+TEST_F(MoleculeTest, RemoveAtomElementMaskDropsExtinctElement)
+{
+  Molecule molecule;
+  molecule.addAtom(6);               // C, stays
+  Atom oxygen = molecule.addAtom(8); // the molecule's only O
+  ASSERT_TRUE(molecule.elements().test(8));
+
+  ASSERT_TRUE(molecule.removeAtom(oxygen));
+
+  EXPECT_FALSE(molecule.elements().test(8));
+}
+
+// Invariant: a custom element's atomic number (CustomElementMin..Max, well
+// above element_count) is folded onto bit element_count - 1 -- the same
+// clamp addAtom()/setAtomicNumber() apply, see the comment in addAtom() --
+// so removeAtom()'s element-mask scan has to compare and reset that folded
+// bit, not the raw atomic number. Comparing/resetting the raw number would
+// call std::bitset::reset() with an out-of-range bit and throw.
+TEST_F(MoleculeTest, RemoveAtomElementMaskClampsCustomElement)
+{
+  Molecule molecule;
+  molecule.addAtom(6); // C, stays
+  Atom custom = molecule.addAtom(Avogadro::CustomElementMin);
+  ASSERT_TRUE(molecule.elements().test(6));
+  ASSERT_TRUE(molecule.elements().test(Avogadro::Core::element_count - 1));
+
+  ASSERT_TRUE(molecule.removeAtom(custom)); // must not throw
+
+  EXPECT_TRUE(molecule.elements().test(6));
+  EXPECT_FALSE(molecule.elements().test(Avogadro::Core::element_count - 1));
+}
+
+// Invariant: the counterpart to the extinct-element case above, for custom
+// elements. Two different custom atomic numbers fold onto the same bit, so
+// removing the atom that holds one of them must not clear that bit while a
+// different custom element is still present -- which raw-number comparison
+// would get wrong, since the two numbers are never equal.
+TEST_F(MoleculeTest, RemoveAtomElementMaskKeepsSharedBitForOtherCustomElement)
+{
+  Molecule molecule;
+  Atom first = molecule.addAtom(Avogadro::CustomElementMin);
+  molecule.addAtom(static_cast<unsigned char>(Avogadro::CustomElementMin + 1));
+  ASSERT_TRUE(molecule.elements().test(Avogadro::Core::element_count - 1));
+
+  ASSERT_TRUE(molecule.removeAtom(first));
+
+  EXPECT_TRUE(molecule.elements().test(Avogadro::Core::element_count - 1));
+}
+
+// Invariant: setAtomicNumbers() rebuilds the element mask whether or not
+// per-atom colours are set (it used to rebuild it only alongside the
+// colours, leaving it empty otherwise), and folds custom elements onto bit
+// element_count - 1 like addAtom() -- the raw number would throw.
+TEST_F(MoleculeTest, SetAtomicNumbersRebuildsElementMask)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+  ASSERT_TRUE(molecule.colors().empty());
+
+  Array<unsigned char> numbers;
+  numbers.push_back(6);
+  numbers.push_back(Avogadro::CustomElementMin);
+  ASSERT_TRUE(molecule.setAtomicNumbers(numbers)); // must not throw
+
+  EXPECT_FALSE(molecule.elements().test(1));
+  EXPECT_TRUE(molecule.elements().test(6));
+  EXPECT_TRUE(molecule.elements().test(Avogadro::Core::element_count - 1));
+}
+
+// Invariant: removeBond()'s swap-and-pop must carry m_bondLabels along with
+// every other per-bond array (m_bondOrders, m_bondProperties, the graph
+// edges), so a label follows the bond it was set on rather than staying
+// behind at the bond's old index.
+TEST_F(MoleculeTest, RemoveBondLabelFollowsSwappedInBond)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+  molecule.addBond(0, 1, 1); // bond 0
+  molecule.addBond(1, 2, 1); // bond 1
+  molecule.setBondLabel(1, "target");
+
+  // removeBond(0) swaps bond 1 into slot 0 (swap-and-pop), so the label
+  // should follow it there.
+  ASSERT_TRUE(molecule.removeBond(static_cast<Index>(0)));
+  ASSERT_EQ(molecule.bondCount(), static_cast<Index>(1));
+
+  EXPECT_EQ(molecule.bondLabel(0), "target");
+}
+
+// Invariant: an optional per-atom array shorter than atomCount() (because an
+// atom was added after the array was last set) must still behave correctly
+// under swap-and-pop removal -- the atom that moves into the removed slot
+// has no entry of its own, so that slot has to read back as the default,
+// never as the removed atom's stale value.
+TEST_F(MoleculeTest, RemoveAtomInRaggedOptionalArrayClearsStaleEntry)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+  molecule.setAtomLabel(0, "zero");
+  molecule.setAtomLabel(1, "one");
+  molecule.setAtomLabel(2, "two"); // m_atomLabels is now exactly atomCount().
+
+  // Added after the labels were set, so it has none: m_atomLabels stays at
+  // 3 while atomCount() becomes 4.
+  molecule.addAtom(6);
+
+  ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(1)));
+  ASSERT_EQ(molecule.atomCount(), static_cast<Index>(3));
+
+  // Atom 3 (never labelled) swapped into slot 1; the stale "one" must be
+  // gone, not left behind from the atom that used to be there.
+  EXPECT_EQ(molecule.atomLabel(1), "");
+}
+
+// Invariant: the "reset a stale entry" and "grow to cover a new atom" cases
+// above must fill with a real value, not a default-constructed T(). For an
+// Eigen fixed-size type like Vector3, T() is left uninitialized rather than
+// zeroed, so m_positions3d and friends used to pick up garbage instead of
+// Vector3::Zero(). m_colors has no zero-like default at all -- it has to
+// fall back to the atom's own element colour, the same fallback
+// Molecule::color() uses for an atom past the end of m_colors (see color()
+// in molecule.h).
+TEST_F(MoleculeTest, RemoveAtomInRaggedOptionalArrayResetsWithRealValues)
+{
+  Molecule molecule;
+  molecule.addAtom(6); // 0: C, stays
+  molecule.addAtom(7); // 1: N, removed
+  molecule.addAtom(8); // 2: O, positioned/coloured
+  molecule.addAtom(1); // 3: H, the last atom -- never positioned/coloured
+
+  molecule.setAtomPosition3d(0, Vector3(1.0, 1.0, 1.0));
+  molecule.setAtomPosition3d(1, Vector3(2.0, 2.0, 2.0));
+  molecule.setAtomPosition3d(2, Vector3(3.0, 3.0, 3.0));
+  molecule.setColor(0, Avogadro::Vector3ub(10, 10, 10));
+  molecule.setColor(1, Avogadro::Vector3ub(20, 20, 20));
+  molecule.setColor(2, Avogadro::Vector3ub(30, 30, 30));
+  // m_positions3d/m_colors now cover atoms 0-2 (3 entries); atom 3 (H) has
+  // none, so atomCount() (4) is one ahead of them.
+
+  // removeAtom(1) swaps the last atom (3, H, uncovered) into slot 1.
+  ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(1)));
+  ASSERT_EQ(molecule.atomCount(), static_cast<Index>(3));
+
+  EXPECT_EQ(molecule.atomPositions3d()[1], Vector3::Zero());
+  EXPECT_EQ(molecule.colors()[1],
+            Avogadro::Vector3ub(Avogadro::Core::Elements::color(1))); // H
+}
+
+// Invariant: the counterpart to the removal case above, for swapAtom(). One
+// side of the swap has a label and the other (added afterwards) does not, so
+// the short array has to grow enough for the label to travel to its atom's
+// new index instead of being silently dropped because the array never
+// reached that far.
+TEST_F(MoleculeTest, SwapAtomInRaggedOptionalArrayMovesLabelToNewIndex)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+  molecule.setAtomLabel(0, "zero");
+  molecule.setAtomLabel(1, "one"); // m_atomLabels is now exactly atomCount().
+
+  // Added after the labels were set: m_atomLabels stays at 2 while
+  // atomCount() becomes 3.
+  molecule.addAtom(6);
+
+  molecule.swapAtom(1, 2);
+
+  // Atom 1's label travels to index 2 ...
+  EXPECT_EQ(molecule.atomLabel(2), "one");
+  // ... and the atom swapped into index 1 (never labelled) reads back
+  // unlabelled, not still showing "one".
+  EXPECT_EQ(molecule.atomLabel(1), "");
+}
+
+// Invariant: the counterpart to
+// RemoveAtomInRaggedOptionalArrayResetsWithRealValues, for the growth case in
+// swapAtom(): every newly-covered index -- not just the one the swap lands
+// on -- has to be filled with a real value rather than an uninitialized
+// Eigen vector or a meaningless "no colour".
+TEST_F(MoleculeTest, SwapAtomInRaggedOptionalArrayFillsGrowthWithRealValues)
+{
+  Molecule molecule;
+  molecule.addAtom(6); // 0: C, positioned/coloured below
+  molecule.addAtom(7); // 1: N, positioned/coloured below
+  molecule.addAtom(8); // 2: O, never positioned/coloured
+  molecule.addAtom(1); // 3: H, never positioned/coloured
+
+  molecule.setAtomPosition3d(0, Vector3(1.0, 2.0, 3.0));
+  molecule.setAtomPosition3d(1, Vector3(4.0, 5.0, 6.0));
+  molecule.setColor(0, Avogadro::Vector3ub(10, 20, 30));
+  molecule.setColor(1, Avogadro::Vector3ub(40, 50, 60));
+  // m_positions3d/m_colors are now exactly 2 long; atoms 2 and 3 have none.
+
+  // Swap atom 1 (covered) with atom 3 (not covered): grows the arrays to
+  // cover index 3, filling the newly-covered index 2 along the way -- a tail
+  // atom that is not itself part of the swap.
+  molecule.swapAtom(1, 3);
+
+  // Index 2 (O, untouched by the swap) reads back as the real defaults.
+  EXPECT_EQ(molecule.atomPositions3d()[2], Vector3::Zero());
+  EXPECT_EQ(molecule.colors()[2],
+            Avogadro::Vector3ub(Avogadro::Core::Elements::color(8))); // O
+
+  // Atom 3 (H, also never covered) swapped into index 1, and reads back the
+  // same way.
+  EXPECT_EQ(molecule.atomPositions3d()[1], Vector3::Zero());
+  EXPECT_EQ(molecule.colors()[1],
+            Avogadro::Vector3ub(Avogadro::Core::Elements::color(1))); // H
+
+  // Atom 1's own data (N) travelled to index 3.
+  EXPECT_EQ(molecule.atomPositions3d()[3], Vector3(4.0, 5.0, 6.0));
+  EXPECT_EQ(molecule.colors()[3], Avogadro::Vector3ub(40, 50, 60));
+}
+
+// Invariant: the same growth rule applies to m_frozenAtomMask, which is
+// stored as 3 doubles per atom rather than as an Array<T>.
+TEST_F(MoleculeTest, SwapAtomInRaggedFrozenMaskMovesFrozenStateToNewIndex)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+  molecule.setFrozenAtom(0, true);
+  molecule.setFrozenAtom(1, true); // m_frozenAtomMask now covers both atoms.
+
+  // Added after the mask was set: it stays sized for 2 atoms while
+  // atomCount() becomes 3.
+  molecule.addAtom(6);
+  ASSERT_FALSE(molecule.frozenAtom(2));
+
+  molecule.swapAtom(1, 2);
+
+  // Atom 1's frozen state travels to index 2 ...
+  EXPECT_TRUE(molecule.frozenAtom(2));
+  // ... and the atom swapped into index 1 (never frozen) reads back
+  // unfrozen.
+  EXPECT_FALSE(molecule.frozenAtom(1));
+}
+
+// Invariant: selection follows the same ragged-array rules. An atom added
+// after the last setAtomSelected() has no entry, so it reads unselected
+// wherever a swap or removal moves it.
+TEST_F(MoleculeTest, SwapAndRemoveAtomInRaggedSelection)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+  molecule.setAtomSelected(1, true); // m_selectedAtoms is now 2 long.
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+
+  molecule.swapAtom(1, 3);
+  EXPECT_FALSE(molecule.atomSelected(1));
+  EXPECT_TRUE(molecule.atomSelected(3));
+
+  molecule.swapAtom(1, 3); // Back to atom 1, with the array now full length.
+  molecule.addAtom(6);     // Short again: 4 entries, 5 atoms.
+  molecule.removeAtom(1);  // Unselected atom 4 moves into slot 1.
+  EXPECT_FALSE(molecule.atomSelected(1));
+  EXPECT_TRUE(molecule.isSelectionEmpty());
+}
+
+// boundingBox() used to index the selection for every atom, reading past the
+// end for atoms added after the last selection change.
+TEST_F(MoleculeTest, BoundingBoxWithRaggedSelectionUsesOnlySelectedAtoms)
+{
+  Molecule molecule;
+  molecule.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(6).setPosition3d(Vector3(1.0, 0.0, 0.0));
+  molecule.setAtomSelected(0, true);
+  molecule.addAtom(6).setPosition3d(Vector3(10.0, 0.0, 0.0));
+
+  Vector3 boxMin, boxMax;
+  molecule.boundingBox(boxMin, boxMax, 0.5);
+  EXPECT_DOUBLE_EQ(boxMin.x(), -0.5);
+  EXPECT_DOUBLE_EQ(boxMax.x(), 0.5);
+}
+
+// Invariant: Molecule::atomPosition2d(), Molecule::atomPosition3d() and
+// Molecule::forceVector() must return Vector2::Zero() / Vector3::Zero() for
+// an atom with no position or force set, as their doc comments in molecule.h
+// promise -- not a default-constructed Vector2()/Vector3(), whose fixed-size
+// Eigen coefficients are left uninitialized rather than zeroed.
+TEST_F(MoleculeTest, AtomPositionAndForceDefaultToZero)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.setAtomPosition3d(0, Vector3(1.0, 2.0, 3.0));
+  molecule.setAtomPosition2d(0, Vector2(1.0, 2.0));
+  Array<Vector3> forces;
+  forces.push_back(Vector3(0.5, 0.5, 0.5));
+  ASSERT_TRUE(molecule.setForceVectors(forces));
+
+  // Every optional array is now exactly as long as the molecule; appending
+  // an atom leaves them one short, the same ragged state atomWithoutPosition
+  // exercises above -- but read here through Molecule's own getters rather
+  // than the Atom proxy, which does not have this bug.
+  molecule.addAtom(1);
+
+  EXPECT_EQ(molecule.atomPosition3d(1), Vector3::Zero());
+  EXPECT_EQ(molecule.atomPosition2d(1), Vector2::Zero());
+  EXPECT_EQ(molecule.forceVector(1), Vector3::Zero());
 }

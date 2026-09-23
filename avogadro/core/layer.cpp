@@ -4,7 +4,6 @@
 ******************************************************************************/
 
 #include "layer.h"
-#include <cassert>
 
 namespace Avogadro::Core {
 
@@ -49,7 +48,13 @@ void Layer::addAtomToActiveLayer(Index atom)
 
 void Layer::setActiveLayer(size_t layer)
 {
-  assert(layer <= m_maxLayer + 1);
+  // A layer one past the last one is allowed: it lets a caller point the
+  // active layer at a not-yet-existing layer that will be created lazily
+  // the moment an atom is actually added to it (see addAtom()'s comment).
+  // Anything further out names a layer that could never be reached that
+  // way, so it is refused rather than stored.
+  if (layer > m_maxLayer + 1)
+    return;
   m_activeLayer = layer;
 }
 
@@ -65,12 +70,20 @@ void Layer::addLayer()
 
 void Layer::addLayer(size_t layer)
 {
-  assert(layer <= m_maxLayer + 1);
+  if (layer > m_maxLayer + 1)
+    return;
+  // MaxIndex marks an atom in no layer; it is not a layer id to renumber,
+  // and incrementing it would wrap to layer 0.
   for (auto& atomLayer : m_atomAndLayers) {
-    if (atomLayer >= layer) {
+    if (atomLayer != MaxIndex && atomLayer >= layer) {
       ++atomLayer;
     }
   }
+  // The active layer keeps pointing at the same layer it did before the
+  // insertion, so it has to shift up too when the insertion point is at or
+  // below it.
+  if (m_activeLayer >= layer)
+    ++m_activeLayer;
   ++m_maxLayer;
 }
 
@@ -118,24 +131,51 @@ size_t Layer::atomCount() const
 
 void Layer::removeLayer(size_t layer)
 {
-  assert(layer <= m_maxLayer);
-  if (m_maxLayer >= 1) {
-    for (auto it = m_atomAndLayers.begin(); it != m_atomAndLayers.end();) {
-      if (*it == layer) {
-        it = m_atomAndLayers.erase(it);
-      } else {
-        if (*it > layer) {
-          --(*it);
-        }
-        ++it;
-      }
-    }
-    --m_maxLayer;
+  // A layer id that was never created, or the only layer there is, leaves
+  // everything alone rather than removing whatever the top layer happens to
+  // be.
+  if (layer > m_maxLayer || m_maxLayer == 0)
+    return;
+
+  // Work out the new active layer first, using ids as they stand before the
+  // renumbering below. Layers above the removed one keep the same meaning
+  // once shifted down, so an active layer above it simply moves down with
+  // it; an active layer at the removed one falls to the layer below (layer 0
+  // if there is no layer below).
+  if (m_activeLayer > layer) {
+    --m_activeLayer;
+  } else if (m_activeLayer == layer) {
+    m_activeLayer = (layer == 0) ? 0 : layer - 1;
   }
+
+  // Atoms are never erased here: an atom that was in the removed layer moves
+  // into the (now current) active layer instead, so the per-atom array
+  // length never changes. Atoms above the removed layer shift down by one.
+  // m_activeLayer already holds the post-renumbering id, so atoms landing on
+  // it must not be decremented again.
+  bool orphaned = false;
+  for (auto& atomLayer : m_atomAndLayers) {
+    if (atomLayer == layer) {
+      atomLayer = m_activeLayer;
+      orphaned = true;
+    } else if (atomLayer > layer && atomLayer != MaxIndex) {
+      --atomLayer;
+    }
+  }
+
+  --m_maxLayer;
+  // The active layer may be one past the last layer, waiting to be created
+  // by the first atom added to it. Atoms moved into it here create it, just
+  // as addAtom() would.
+  if (orphaned && m_activeLayer > m_maxLayer)
+    m_maxLayer = m_activeLayer;
 }
 
 void Layer::swapLayer(Index a, Index b)
 {
+  if (a >= m_atomAndLayers.size() || b >= m_atomAndLayers.size())
+    return;
+
   // Allow Argument Dependent Lookup for swap
   using std::swap;
 

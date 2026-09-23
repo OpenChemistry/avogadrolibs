@@ -135,9 +135,10 @@ protected:
 class RemoveLayerCommand : public QUndoCommand
 {
 public:
-  RemoveLayerCommand(shared_ptr<MoleculeInfo> mol, size_t layer)
+  RemoveLayerCommand(shared_ptr<MoleculeInfo> mol, size_t layer,
+                     RWMolecule* rwmolecule)
     : QUndoCommand(QObject::tr("Modify Layers")), m_moleculeInfo(mol),
-      m_layer(layer)
+      m_layer(layer), m_rwmolecule(rwmolecule)
   {
   }
 
@@ -146,6 +147,13 @@ public:
     m_applied = false;
     if (m_layer >= m_moleculeInfo->visible.size() ||
         m_layer >= m_moleculeInfo->locked.size())
+      return;
+    // Core::Layer::removeLayer() is a no-op for a layer id that was never
+    // created, or when it is the only layer there is (see its comment in
+    // layer.cpp). Erasing the visible/locked/enable/settings metadata below
+    // regardless would desync them from the core layer, so decline here too.
+    if (m_layer > m_moleculeInfo->layer.maxLayer() ||
+        m_moleculeInfo->layer.maxLayer() == 0)
       return;
 
     m_visible = m_moleculeInfo->visible[m_layer];
@@ -169,8 +177,22 @@ public:
         setting.second.erase(std::next(setting.second.begin(), m_layer));
       }
     }
+    // removeLayer() can move the active layer (e.g. removing the active
+    // layer drops it to the layer below), so undo() needs the pre-removal
+    // active layer to restore it later.
+    m_oldActiveLayer = m_moleculeInfo->layer.activeLayer();
+    // The layer's atoms are kept: removeLayer() moves them into the active
+    // layer, so undo() has to know which ones to move back.
+    m_atoms.clear();
+    const auto& layer = m_moleculeInfo->layer;
+    for (Index i = 0; i < layer.atomCount(); ++i) {
+      if (layer.getLayerID(i) == m_layer)
+        m_atoms.push_back(i);
+    }
     m_moleculeInfo->layer.removeLayer(m_layer);
     m_applied = true;
+    m_rwmolecule->emitChanged(Molecule::Atoms | Molecule::Layers |
+                              Molecule::Modified);
   }
 
   void undo() override
@@ -194,6 +216,12 @@ public:
       m_moleculeInfo->settings[setting.first].insert(itSetting, setting.second);
     }
     m_moleculeInfo->layer.addLayer(m_layer);
+    for (Index atom : m_atoms)
+      m_moleculeInfo->layer.addAtom(m_layer, atom);
+    // Restore the active layer redo() displaced.
+    m_moleculeInfo->layer.setActiveLayer(m_oldActiveLayer);
+    m_rwmolecule->emitChanged(Molecule::Atoms | Molecule::Layers |
+                              Molecule::Modified);
   }
 
 protected:
@@ -203,6 +231,9 @@ protected:
   bool m_visible = true;
   bool m_locked = false;
   bool m_applied = false;
+  size_t m_oldActiveLayer = 0;
+  RWMolecule* m_rwmolecule;
+  vector<Index> m_atoms;
   map<string, Core::LayerDataPtr> m_settings;
   map<string, bool> m_enable;
 };
@@ -212,21 +243,21 @@ void RWLayerManager::removeLayer(size_t layer, RWMolecule* rwmolecule)
 {
   assert(rwmolecule != nullptr);
   rwmolecule->undoStack().beginMacro(QObject::tr("Remove Layer"));
-  // Check before touching the molecule: removing the atoms and then bailing
-  // out would leave the layer half removed.
   auto molecule = activeMoleculeInfo();
   if (molecule == nullptr) {
     rwmolecule->undoStack().endMacro();
     return;
   }
-  auto atoms = rwmolecule->molecule().getAtomsAtLayer(layer);
-  for (const Index& atom : atoms) {
-    rwmolecule->removeAtom(atom);
-  }
-  auto* comm = new RemoveLayerCommand(molecule, layer);
+  // The layer's atoms are not deleted; Layer::removeLayer() moves them into
+  // the active layer.
+  auto* comm = new RemoveLayerCommand(molecule, layer, rwmolecule);
   comm->setText(QObject::tr("Remove Layer Info"));
   rwmolecule->undoStack().push(comm);
   rwmolecule->undoStack().endMacro();
+  // The command's own change notice fires inside the open macro, when
+  // QUndoStack::canUndo() is still false, so listeners that update an Undo
+  // action from it need another one now that the macro is on the stack.
+  rwmolecule->emitChanged(Molecule::Layers | Molecule::Modified);
 }
 
 void RWLayerManager::addLayer(RWMolecule* rwmolecule)

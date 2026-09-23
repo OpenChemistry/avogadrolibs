@@ -78,3 +78,36 @@ TEST_F(RWLayerManagerTest, AddLayerWithShortEnableVector)
 
   SUCCEED() << "did not crash";
 }
+
+// RemoveLayerCommand::redo() used to erase the visible/locked/enable/settings
+// metadata for a layer and only then call Core::Layer::removeLayer(), which
+// is a no-op when maxLayer() is 0 (the only layer there is -- see the
+// comment on it in layer.cpp). A fresh MoleculeInfo already has one
+// visible/locked entry for its default layer (see MoleculeInfo's
+// constructor), so removeLayer(0, ...) on an otherwise untouched molecule
+// used to pass the existing size check, erase that entry, and then find the
+// core layer declining to remove anything -- leaving the metadata one layer
+// short of what the core layer still had.
+TEST_F(RWLayerManagerTest, RemoveLayerLeavesMetadataInSyncWhenCoreLayerDeclines)
+{
+  Molecule molecule;
+  for (Index i = 0; i < 4; ++i)
+    molecule.addAtom(1);
+
+  TestLayerManager manager;
+  manager.addMolecule(&molecule);
+
+  auto info = LayerManager::getMoleculeInfo(&molecule);
+  ASSERT_EQ(info->visible.size(), 1u);
+  ASSERT_EQ(info->locked.size(), 1u);
+  ASSERT_EQ(info->layer.maxLayer(), 0u);
+
+  auto* rwmol = molecule.undoMolecule();
+  ASSERT_TRUE(rwmol != nullptr);
+
+  manager.removeLayer(0, rwmol);
+
+  EXPECT_EQ(info->visible.size(), 1u);
+  EXPECT_EQ(info->locked.size(), 1u);
+  EXPECT_EQ(info->layer.maxLayer(), 0u);
+}

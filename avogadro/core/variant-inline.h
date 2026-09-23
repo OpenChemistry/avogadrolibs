@@ -429,7 +429,11 @@ inline Vector3 Variant::value() const
   if (m_type == Vector)
     return *m_value.vector;
 
-  return Vector3();
+  // Matches every other value<T>() specialization above, which return a
+  // zero-equivalent default (0, false, nullptr, ...) on a type mismatch, and
+  // the const Vector3& overload just below, which already does this via
+  // nullVector.
+  return Vector3::Zero();
 }
 
 template <>

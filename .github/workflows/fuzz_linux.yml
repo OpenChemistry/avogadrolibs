@@ -122,7 +122,7 @@ jobs:
         # Open Babel or spglib cannot fail a job about our parsers.
         #
         # Measured before turning this on: every target's seed corpus, and a
-        # mutation soak over all 13 core, 8 io and 5 quantumio targets, run
+        # mutation soak over all 14 core, 8 io and 5 quantumio targets, run
         # clean with asserts enabled. Only qtgui/rwmolecule tripped one, and
         # that is fixed.
         cmake -DENABLE_FUZZ=ON \
@@ -151,7 +151,7 @@ jobs:
         suites=(
           "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
-          "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap"
+          "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
           "qtgui|fuzz_qtgui_|qtgui|rwmolecule generichighlighter jsonwidget interfacescript-json"
         )
 

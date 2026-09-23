@@ -1435,7 +1435,8 @@ inline bool Molecule::setLayer(Index atomId, size_t layer)
 
 inline Vector2 Molecule::atomPosition2d(Index atomId) const
 {
-  return atomId < m_positions2d.size() ? m_positions2d[atomId] : Vector2();
+  return atomId < m_positions2d.size() ? m_positions2d[atomId]
+                                       : Vector2::Zero();
 }
 
 inline bool Molecule::setAtomPositions2d(const Core::Array<Vector2>& pos)
@@ -1460,7 +1461,8 @@ inline bool Molecule::setAtomPosition2d(Index atomId, const Vector2& pos)
 
 inline Vector3 Molecule::atomPosition3d(Index atomId) const
 {
-  return atomId < m_positions3d.size() ? m_positions3d[atomId] : Vector3();
+  return atomId < m_positions3d.size() ? m_positions3d[atomId]
+                                       : Vector3::Zero();
 }
 
 inline bool Molecule::setAtomPositions3d(const Core::Array<Vector3>& pos)
@@ -1533,7 +1535,8 @@ inline bool Molecule::isSelectionEmpty() const
 
 inline Vector3 Molecule::forceVector(Index atomId) const
 {
-  return atomId < m_forceVectors.size() ? m_forceVectors[atomId] : Vector3();
+  return atomId < m_forceVectors.size() ? m_forceVectors[atomId]
+                                        : Vector3::Zero();
 }
 
 inline bool Molecule::setForceVectors(const Core::Array<Vector3>& forces)
