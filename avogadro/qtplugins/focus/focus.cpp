@@ -133,4 +133,29 @@ void Focus::unfocus()
   emit updateRequested();
 }
 
+void Focus::registerCommands()
+{
+  emit registerCommand("focusSelection", tr("Focus a selection"));
+  emit registerCommand("unfocus", tr("Unfocus a focused selection"));
+}
+
+bool Focus::handleCommand(const QString& command,
+                          [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // no molecule to handle the command
+
+  if (command == "focusSelection") {
+    focusSelection();
+    return true;
+  }
+
+  if (command == "unfocus") {
+    unfocus();
+    return true;
+  }
+
+  return false;
+}
+
 } // namespace Avogadro::QtPlugins
