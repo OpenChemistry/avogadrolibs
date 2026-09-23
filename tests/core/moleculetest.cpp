@@ -2641,6 +2641,64 @@ TEST_F(MoleculeTest, RemoveAtomElementMaskDropsExtinctElement)
   EXPECT_FALSE(molecule.elements().test(8));
 }
 
+// Invariant: a custom element's atomic number (CustomElementMin..Max, well
+// above element_count) is folded onto bit element_count - 1 -- the same
+// clamp addAtom()/setAtomicNumber() apply, see the comment in addAtom() --
+// so removeAtom()'s element-mask scan has to compare and reset that folded
+// bit, not the raw atomic number. Comparing/resetting the raw number would
+// call std::bitset::reset() with an out-of-range bit and throw.
+TEST_F(MoleculeTest, RemoveAtomElementMaskClampsCustomElement)
+{
+  Molecule molecule;
+  molecule.addAtom(6); // C, stays
+  Atom custom = molecule.addAtom(Avogadro::CustomElementMin);
+  ASSERT_TRUE(molecule.elements().test(6));
+  ASSERT_TRUE(molecule.elements().test(Avogadro::Core::element_count - 1));
+
+  ASSERT_TRUE(molecule.removeAtom(custom)); // must not throw
+
+  EXPECT_TRUE(molecule.elements().test(6));
+  EXPECT_FALSE(molecule.elements().test(Avogadro::Core::element_count - 1));
+}
+
+// Invariant: the counterpart to the extinct-element case above, for custom
+// elements. Two different custom atomic numbers fold onto the same bit, so
+// removing the atom that holds one of them must not clear that bit while a
+// different custom element is still present -- which raw-number comparison
+// would get wrong, since the two numbers are never equal.
+TEST_F(MoleculeTest, RemoveAtomElementMaskKeepsSharedBitForOtherCustomElement)
+{
+  Molecule molecule;
+  Atom first = molecule.addAtom(Avogadro::CustomElementMin);
+  molecule.addAtom(static_cast<unsigned char>(Avogadro::CustomElementMin + 1));
+  ASSERT_TRUE(molecule.elements().test(Avogadro::Core::element_count - 1));
+
+  ASSERT_TRUE(molecule.removeAtom(first));
+
+  EXPECT_TRUE(molecule.elements().test(Avogadro::Core::element_count - 1));
+}
+
+// Invariant: setAtomicNumbers() rebuilds the element mask whether or not
+// per-atom colours are set (it used to rebuild it only alongside the
+// colours, leaving it empty otherwise), and folds custom elements onto bit
+// element_count - 1 like addAtom() -- the raw number would throw.
+TEST_F(MoleculeTest, SetAtomicNumbersRebuildsElementMask)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.addAtom(1);
+  ASSERT_TRUE(molecule.colors().empty());
+
+  Array<unsigned char> numbers;
+  numbers.push_back(6);
+  numbers.push_back(Avogadro::CustomElementMin);
+  ASSERT_TRUE(molecule.setAtomicNumbers(numbers)); // must not throw
+
+  EXPECT_FALSE(molecule.elements().test(1));
+  EXPECT_TRUE(molecule.elements().test(6));
+  EXPECT_TRUE(molecule.elements().test(Avogadro::Core::element_count - 1));
+}
+
 // Invariant: removeBond()'s swap-and-pop must carry m_bondLabels along with
 // every other per-bond array (m_bondOrders, m_bondProperties, the graph
 // edges), so a label follows the bond it was set on rather than staying
@@ -2690,6 +2748,40 @@ TEST_F(MoleculeTest, RemoveAtomInRaggedOptionalArrayClearsStaleEntry)
   EXPECT_EQ(molecule.atomLabel(1), "");
 }
 
+// Invariant: the "reset a stale entry" and "grow to cover a new atom" cases
+// above must fill with a real value, not a default-constructed T(). For an
+// Eigen fixed-size type like Vector3, T() is left uninitialized rather than
+// zeroed, so m_positions3d and friends used to pick up garbage instead of
+// Vector3::Zero(). m_colors has no zero-like default at all -- it has to
+// fall back to the atom's own element colour, the same fallback
+// Molecule::color() uses for an atom past the end of m_colors (see color()
+// in molecule.h).
+TEST_F(MoleculeTest, RemoveAtomInRaggedOptionalArrayResetsWithRealValues)
+{
+  Molecule molecule;
+  molecule.addAtom(6); // 0: C, stays
+  molecule.addAtom(7); // 1: N, removed
+  molecule.addAtom(8); // 2: O, positioned/coloured
+  molecule.addAtom(1); // 3: H, the last atom -- never positioned/coloured
+
+  molecule.setAtomPosition3d(0, Vector3(1.0, 1.0, 1.0));
+  molecule.setAtomPosition3d(1, Vector3(2.0, 2.0, 2.0));
+  molecule.setAtomPosition3d(2, Vector3(3.0, 3.0, 3.0));
+  molecule.setColor(0, Avogadro::Vector3ub(10, 10, 10));
+  molecule.setColor(1, Avogadro::Vector3ub(20, 20, 20));
+  molecule.setColor(2, Avogadro::Vector3ub(30, 30, 30));
+  // m_positions3d/m_colors now cover atoms 0-2 (3 entries); atom 3 (H) has
+  // none, so atomCount() (4) is one ahead of them.
+
+  // removeAtom(1) swaps the last atom (3, H, uncovered) into slot 1.
+  ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(1)));
+  ASSERT_EQ(molecule.atomCount(), static_cast<Index>(3));
+
+  EXPECT_EQ(molecule.atomPositions3d()[1], Vector3::Zero());
+  EXPECT_EQ(molecule.colors()[1],
+            Avogadro::Vector3ub(Avogadro::Core::Elements::color(1))); // H
+}
+
 // Invariant: the counterpart to the removal case above, for swapAtom(). One
 // side of the swap has a label and the other (added afterwards) does not, so
 // the short array has to grow enough for the label to travel to its atom's
@@ -2714,6 +2806,46 @@ TEST_F(MoleculeTest, SwapAtomInRaggedOptionalArrayMovesLabelToNewIndex)
   // ... and the atom swapped into index 1 (never labelled) reads back
   // unlabelled, not still showing "one".
   EXPECT_EQ(molecule.atomLabel(1), "");
+}
+
+// Invariant: the counterpart to
+// RemoveAtomInRaggedOptionalArrayResetsWithRealValues, for the growth case in
+// swapAtom(): every newly-covered index -- not just the one the swap lands
+// on -- has to be filled with a real value rather than an uninitialized
+// Eigen vector or a meaningless "no colour".
+TEST_F(MoleculeTest, SwapAtomInRaggedOptionalArrayFillsGrowthWithRealValues)
+{
+  Molecule molecule;
+  molecule.addAtom(6); // 0: C, positioned/coloured below
+  molecule.addAtom(7); // 1: N, positioned/coloured below
+  molecule.addAtom(8); // 2: O, never positioned/coloured
+  molecule.addAtom(1); // 3: H, never positioned/coloured
+
+  molecule.setAtomPosition3d(0, Vector3(1.0, 2.0, 3.0));
+  molecule.setAtomPosition3d(1, Vector3(4.0, 5.0, 6.0));
+  molecule.setColor(0, Avogadro::Vector3ub(10, 20, 30));
+  molecule.setColor(1, Avogadro::Vector3ub(40, 50, 60));
+  // m_positions3d/m_colors are now exactly 2 long; atoms 2 and 3 have none.
+
+  // Swap atom 1 (covered) with atom 3 (not covered): grows the arrays to
+  // cover index 3, filling the newly-covered index 2 along the way -- a tail
+  // atom that is not itself part of the swap.
+  molecule.swapAtom(1, 3);
+
+  // Index 2 (O, untouched by the swap) reads back as the real defaults.
+  EXPECT_EQ(molecule.atomPositions3d()[2], Vector3::Zero());
+  EXPECT_EQ(molecule.colors()[2],
+            Avogadro::Vector3ub(Avogadro::Core::Elements::color(8))); // O
+
+  // Atom 3 (H, also never covered) swapped into index 1, and reads back the
+  // same way.
+  EXPECT_EQ(molecule.atomPositions3d()[1], Vector3::Zero());
+  EXPECT_EQ(molecule.colors()[1],
+            Avogadro::Vector3ub(Avogadro::Core::Elements::color(1))); // H
+
+  // Atom 1's own data (N) travelled to index 3.
+  EXPECT_EQ(molecule.atomPositions3d()[3], Vector3(4.0, 5.0, 6.0));
+  EXPECT_EQ(molecule.colors()[3], Avogadro::Vector3ub(40, 50, 60));
 }
 
 // Invariant: the same growth rule applies to m_frozenAtomMask, which is

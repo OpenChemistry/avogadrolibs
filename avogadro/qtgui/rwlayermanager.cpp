@@ -148,6 +148,13 @@ public:
     if (m_layer >= m_moleculeInfo->visible.size() ||
         m_layer >= m_moleculeInfo->locked.size())
       return;
+    // Core::Layer::removeLayer() is a no-op for a layer id that was never
+    // created, or when it is the only layer there is (see its comment in
+    // layer.cpp). Erasing the visible/locked/enable/settings metadata below
+    // regardless would desync them from the core layer, so decline here too.
+    if (m_layer > m_moleculeInfo->layer.maxLayer() ||
+        m_moleculeInfo->layer.maxLayer() == 0)
+      return;
 
     m_visible = m_moleculeInfo->visible[m_layer];
     m_moleculeInfo->visible.erase(
