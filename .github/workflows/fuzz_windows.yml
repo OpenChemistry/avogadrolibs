@@ -360,11 +360,11 @@ jobs:
         # executables have to be the ones that move.
         #
         # What that costs, and why each piece is safe:
-        #   - Qt is /MD and cannot follow, so USE_QT=OFF and the four qtgui
+        #   - Qt is /MD and cannot follow, so USE_QT=OFF and the five qtgui
         #     targets do not build on Windows. Keeping them would mean Qt
         #     allocating on one CRT heap and our code freeing on the other,
         #     which is heap corruption reported as an ASan finding -- noise
-        #     indistinguishable from the bugs being hunted. The 29 core, io
+        #     indistinguishable from the bugs being hunted. The 30 core, io
         #     and quantumio targets are the ones that matter here anyway.
         #   - spglib, libmsym and the vcpkg libraries stay /MD, reached
         #     through import libraries, which carry no CRT directive. Their

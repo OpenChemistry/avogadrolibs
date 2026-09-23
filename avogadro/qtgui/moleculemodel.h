@@ -11,6 +11,7 @@
 #include <QIcon>
 #include <Eigen/Geometry>
 #include <QtCore/QAbstractItemModel>
+#include <QtCore/QPointer>
 
 namespace Avogadro {
 namespace QtGui {
@@ -72,7 +73,10 @@ public slots:
 
 private:
   QList<Molecule*> m_molecules;
-  QObject* m_activeMolecule;
+  // removeItem() only schedules the removed molecule's deletion
+  // (deleteLater()); a QPointer clears itself once that deferred delete
+  // actually runs, instead of leaving activeMolecule() dangling.
+  QPointer<QObject> m_activeMolecule;
   QIcon m_plusIcon;
   QIcon m_closeIcon;
 };
