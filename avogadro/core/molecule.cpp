@@ -802,34 +802,59 @@ namespace {
 // just an erase, but dropping a backbone atom arguably invalidates the
 // residue altogether, and that is a chemistry question.
 
-// Plain Array<T>, one entry per atom.
+// Plain Array<T>, one entry per atom. An optional array can be shorter than
+// atomCount() -- an atom added after the array was last set has no entry --
+// so a swap has three cases: both atoms have an entry (plain swap); only the
+// lower index does (grow to cover the higher index, filling the new tail
+// with T(), so the data travels with its atom instead of being stranded);
+// or neither does (nothing to do).
 template <typename T>
 void swapAtomEntry(Array<T>& values, Index a, Index b, Index max)
 {
   using std::swap;
-  if (values.size() > max)
+  const Index lo = a < b ? a : b;
+  if (values.size() > max) {
     swap(values[a], values[b]);
+  } else if (values.size() > lo) {
+    values.resize(max + 1, T());
+    swap(values[a], values[b]);
+  }
 }
 
+// Same three cases as swapAtomEntry(), but for a swap-and-pop removal: if the
+// array covers every atom it reindexes exactly like the required members
+// do; if it is short but still reaches index, the atom swapped into index
+// (the former last atom) has no entry of its own, so the stale value at
+// index is reset to T() rather than left behind; otherwise index was never
+// covered and there is nothing to do.
 template <typename T>
 void removeAtomEntry(Array<T>& values, Index index, Index atomCount)
 {
-  if (values.size() == atomCount)
+  if (values.size() == atomCount) {
     values.swapAndPop(index);
+  } else if (index < values.size()) {
+    values[index] = T();
+  }
 }
 
 // Nested Array<Array<T>>: the outer index is a conformer/trajectory frame
 // or a normal mode, the inner index is one entry per atom. Frames may
 // legitimately be empty or a different length than atomCount() (e.g. not
 // yet populated), so each frame is guarded individually rather than
-// assuming they all match.
+// assuming they all match, using the same rule as swapAtomEntry()/
+// removeAtomEntry() above.
 template <typename T>
 void swapAtomEntryFrames(Array<Array<T>>& frames, Index a, Index b, Index max)
 {
   using std::swap;
+  const Index lo = a < b ? a : b;
   for (auto& frame : frames) {
-    if (frame.size() > max)
+    if (frame.size() > max) {
       swap(frame[a], frame[b]);
+    } else if (frame.size() > lo) {
+      frame.resize(max + 1, T());
+      swap(frame[a], frame[b]);
+    }
   }
 }
 
@@ -838,8 +863,11 @@ void removeAtomEntryFrames(Array<Array<T>>& frames, Index index,
                            Index atomCount)
 {
   for (auto& frame : frames) {
-    if (frame.size() == atomCount)
+    if (frame.size() == atomCount) {
       frame.swapAndPop(index);
+    } else if (index < frame.size()) {
+      frame[index] = T();
+    }
   }
 }
 
@@ -847,20 +875,37 @@ void removeAtomEntryFrames(Array<Array<T>>& frames, Index index,
 // proxy reference is a well-known trap, so swap the two values explicitly.
 void swapAtomEntry(std::vector<bool>& values, Index a, Index b, Index max)
 {
-  if (values.size() > max) {
-    bool temp = values[a];
-    values[a] = values[b];
-    values[b] = temp;
-  }
+  // Same three cases as the Array<T> overload above.
+  const Index lo = a < b ? a : b;
+  if (values.size() <= lo)
+    return;
+  if (values.size() <= max)
+    values.resize(max + 1, false);
+  bool temp = values[a];
+  values[a] = values[b];
+  values[b] = temp;
 }
 
 // Eigen::VectorXd storing 3 entries (x, y, z) per atom, as used by
-// m_frozenAtomMask.
+// m_frozenAtomMask. Same three-way split as swapAtomEntry(): rows() is
+// tracked in atom units (rows()/3) since each atom occupies 3 rows.
 void swapAtomMaskEntry(Eigen::VectorXd& values, Index a, Index b, Index max)
 {
   auto ea = static_cast<Eigen::Index>(a);
   auto eb = static_cast<Eigen::Index>(b);
+  auto lo = static_cast<Eigen::Index>(a < b ? a : b);
   if (values.rows() >= static_cast<Eigen::Index>(3 * (max + 1))) {
+    for (Eigen::Index i = 0; i < 3; ++i)
+      std::swap(values[3 * ea + i], values[3 * eb + i]);
+  } else if (values.rows() > 3 * lo) {
+    // The atom at lo has a mask entry; the one at hi does not yet. Grow so
+    // the mask travels with its atom, filling the new rows with "not
+    // frozen" -- the same default setFrozenAtom() gives a newly-covered
+    // atom -- then swap.
+    const Eigen::Index oldRows = values.rows();
+    values.conservativeResize(static_cast<Eigen::Index>(3 * (max + 1)));
+    for (Eigen::Index i = oldRows; i < values.rows(); ++i)
+      values[i] = 1.0;
     for (Eigen::Index i = 0; i < 3; ++i)
       std::swap(values[3 * ea + i], values[3 * eb + i]);
   }
@@ -868,12 +913,17 @@ void swapAtomMaskEntry(Eigen::VectorXd& values, Index a, Index b, Index max)
 
 void removeAtomMaskEntry(Eigen::VectorXd& values, Index index, Index atomCount)
 {
+  auto eIndex = static_cast<Eigen::Index>(index);
   if (values.rows() == static_cast<Eigen::Index>(3 * atomCount)) {
-    auto eIndex = static_cast<Eigen::Index>(index);
     Eigen::Index last = values.rows() - 3;
     for (Eigen::Index i = 0; i < 3; ++i)
       values[3 * eIndex + i] = values[last + i];
     values.conservativeResize(values.rows() - 3);
+  } else if (values.rows() > 3 * eIndex) {
+    // The atom swapped into index (the former last atom) has no mask entry
+    // of its own, i.e. it is not frozen -- see the growth case above.
+    for (Eigen::Index i = 0; i < 3; ++i)
+      values[3 * eIndex + i] = 1.0;
   }
 }
 
@@ -897,6 +947,34 @@ void swapAtomEntry(std::map<std::string, MatrixX>& models, Index a, Index b,
     if (static_cast<Index>(model.second.size()) > max)
       swap(model.second(static_cast<Eigen::Index>(a), 0),
            model.second(static_cast<Eigen::Index>(b), 0));
+  }
+}
+
+// Bond-indexed counterpart of swapAtomEntry()/removeAtomEntry() above, same
+// ragged-array rule, used for m_bondLabels: it may be shorter than
+// bondCount() (a bond added after labels were last set has no entry), so
+// removeBond()'s swap-and-pop and swapBond() have to treat a short entry as
+// "no label" rather than silently attaching it to the wrong bond.
+template <typename T>
+void swapBondEntry(Array<T>& values, Index a, Index b, Index max)
+{
+  using std::swap;
+  const Index lo = a < b ? a : b;
+  if (values.size() > max) {
+    swap(values[a], values[b]);
+  } else if (values.size() > lo) {
+    values.resize(max + 1, T());
+    swap(values[a], values[b]);
+  }
+}
+
+template <typename T>
+void removeBondEntry(Array<T>& values, Index index, Index bondCount)
+{
+  if (values.size() == bondCount) {
+    values.swapAndPop(index);
+  } else if (index < values.size()) {
+    values[index] = T();
   }
 }
 
@@ -963,6 +1041,7 @@ void Molecule::swapBond(Index a, Index b)
   m_graph.swapEdgeIndices(a, b);
   swap(m_bondOrders[a], m_bondOrders[b]);
   m_bondProperties.swapEntries(a, b, bondCount());
+  swapBondEntry(m_bondLabels, a, b, a > b ? a : b);
 }
 
 void Molecule::swapAtom(Index a, Index b)
@@ -1062,6 +1141,9 @@ bool Molecule::removeAtom(Index index)
       m_selectedAtoms[index] = m_selectedAtoms.back();
     }
     m_selectedAtoms.pop_back();
+  } else if (index < m_selectedAtoms.size()) {
+    // The former last atom has no entry, so it is not selected.
+    m_selectedAtoms[index] = false;
   }
 
   // Constraints and scan coordinates name atoms by index without being
@@ -1101,7 +1183,7 @@ bool Molecule::removeAtom(Index index)
     if (i == index)
       continue;
 
-    if (m_atomicNumbers[index] == elementToRemove) {
+    if (m_atomicNumbers[i] == elementToRemove) {
       foundAnother = true;
       break; // we're done
     }
@@ -1226,6 +1308,9 @@ bool Molecule::removeBond(Index index)
   if (index >= bondCount())
     return false;
   m_bondProperties.removeEntry(index, bondCount());
+  // Bond-indexed like m_bondOrders below, so it has to run before
+  // m_graph.removeEdge() changes bondCount().
+  removeBondEntry(m_bondLabels, index, bondCount());
   m_graph.removeEdge(index);
   m_bondOrders.swapAndPop(index);
   // Connectivity is part of what was calculated from, so a bond going away
@@ -1253,6 +1338,7 @@ void Molecule::clearBonds()
 {
   m_bondOrders.clear();
   m_bondProperties.clear();
+  m_bondLabels.clear();
   m_graph.removeEdges();
   m_graph.setSize(atomCount());
 
@@ -2576,7 +2662,7 @@ void Molecule::boundingBox(Vector3& boxMin, Vector3& boxMax,
   const bool noSelection = isSelectionEmpty();
 
   for (uint32_t i = 0; i < atomCount(); i++) {
-    if (noSelection || m_selectedAtoms[i]) {
+    if (noSelection || atomSelected(i)) {
 
       const Vector3 boxMinBuffer = atom(i).position3d().array() - radius;
       const Vector3 boxMaxBuffer = atom(i).position3d().array() + radius;
