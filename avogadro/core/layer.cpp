@@ -72,8 +72,10 @@ void Layer::addLayer(size_t layer)
 {
   if (layer > m_maxLayer + 1)
     return;
+  // MaxIndex marks an atom in no layer; it is not a layer id to renumber,
+  // and incrementing it would wrap to layer 0.
   for (auto& atomLayer : m_atomAndLayers) {
-    if (atomLayer >= layer) {
+    if (atomLayer != MaxIndex && atomLayer >= layer) {
       ++atomLayer;
     }
   }
@@ -154,7 +156,7 @@ void Layer::removeLayer(size_t layer)
   for (auto& atomLayer : m_atomAndLayers) {
     if (atomLayer == layer) {
       atomLayer = m_activeLayer;
-    } else if (atomLayer > layer) {
+    } else if (atomLayer > layer && atomLayer != MaxIndex) {
       --atomLayer;
     }
   }

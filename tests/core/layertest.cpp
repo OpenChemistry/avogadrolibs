@@ -950,3 +950,23 @@ TEST_F(LayerTest, SwapAtomAfterRemoveLayerStaysInLockstep)
   molecule.swapAtom(0, 2);
   EXPECT_EQ(molecule.layer().atomCount(), molecule.atomCount());
 }
+
+// An atom in no layer (MaxIndex, as cjsonformat.cpp assigns) must stay in no
+// layer when other layers are renumbered: decrementing the sentinel invents a
+// layer id, and incrementing it wraps to layer 0.
+TEST_F(LayerTest, RenumberingLayersKeepsTheNoLayerSentinel)
+{
+  Avogadro::Core::Layer layer;
+  layer.addAtom(0);
+  layer.addAtom(Avogadro::MaxIndex);
+  layer.addAtom(1);
+  ASSERT_EQ(static_cast<size_t>(1), layer.maxLayer());
+
+  layer.addLayer(0);
+  EXPECT_EQ(Avogadro::MaxIndex, layer.getLayerID(1));
+  EXPECT_EQ(static_cast<size_t>(2), layer.getLayerID(2));
+
+  layer.removeLayer(0);
+  EXPECT_EQ(Avogadro::MaxIndex, layer.getLayerID(1));
+  EXPECT_EQ(static_cast<size_t>(1), layer.getLayerID(2));
+}
