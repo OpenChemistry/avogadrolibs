@@ -970,3 +970,21 @@ TEST_F(LayerTest, RenumberingLayersKeepsTheNoLayerSentinel)
   EXPECT_EQ(Avogadro::MaxIndex, layer.getLayerID(1));
   EXPECT_EQ(static_cast<size_t>(1), layer.getLayerID(2));
 }
+
+// An active layer one past the last one does not exist until an atom lands in
+// it. Atoms orphaned by removeLayer() landing there must create it, or they
+// carry a layer id greater than maxLayer().
+TEST_F(LayerTest, RemoveLayerIntoAnUncreatedActiveLayerCreatesIt)
+{
+  Avogadro::Core::Layer layer;
+  layer.addAtom(2); // atom 0; creates layers 0-2
+  layer.addAtom(0); // atom 1
+  layer.setActiveLayer(layer.maxLayer() + 1);
+
+  layer.removeLayer(0); // orphans atom 1 into the uncreated active layer
+
+  EXPECT_EQ(static_cast<size_t>(1), layer.getLayerID(0));
+  EXPECT_EQ(layer.activeLayer(), layer.getLayerID(1));
+  EXPECT_LE(layer.getLayerID(1), layer.maxLayer());
+  EXPECT_EQ(static_cast<size_t>(2), layer.maxLayer());
+}

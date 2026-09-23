@@ -153,15 +153,22 @@ void Layer::removeLayer(size_t layer)
   // length never changes. Atoms above the removed layer shift down by one.
   // m_activeLayer already holds the post-renumbering id, so atoms landing on
   // it must not be decremented again.
+  bool orphaned = false;
   for (auto& atomLayer : m_atomAndLayers) {
     if (atomLayer == layer) {
       atomLayer = m_activeLayer;
+      orphaned = true;
     } else if (atomLayer > layer && atomLayer != MaxIndex) {
       --atomLayer;
     }
   }
 
   --m_maxLayer;
+  // The active layer may be one past the last layer, waiting to be created
+  // by the first atom added to it. Atoms moved into it here create it, just
+  // as addAtom() would.
+  if (orphaned && m_activeLayer > m_maxLayer)
+    m_maxLayer = m_activeLayer;
 }
 
 void Layer::swapLayer(Index a, Index b)
