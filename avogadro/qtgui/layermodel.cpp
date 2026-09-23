@@ -285,12 +285,16 @@ size_t LayerModel::items() const
 void LayerModel::flipVisible(size_t row)
 {
   auto names = activeMoleculeNames();
+  if (row >= names.size())
+    return;
   auto layer = names[row].first;
   RWLayerManager::flipVisible(layer);
 }
 void LayerModel::flipLocked(size_t row)
 {
   auto names = activeMoleculeNames();
+  if (row >= names.size())
+    return;
   auto layer = names[row].first;
   RWLayerManager::flipLocked(layer);
 }

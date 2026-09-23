@@ -216,6 +216,25 @@ TEST_F(LayerModelTest, FlipVisibleTogglesCorrectLayer)
   EXPECT_FALSE(model.visible(1));
 }
 
+// Rows past the last layer (row 4 is the synthetic "+" row) must be ignored,
+// not read past the end of the layer names.
+TEST_F(LayerModelTest, FlipRowOutOfRangeIsIgnored)
+{
+  Molecule molecule;
+  LayerModel model;
+  buildThreeLayerMoleculeWithPluginRow(model, molecule);
+  auto info = LayerManager::getMoleculeInfo(&molecule);
+  const auto visible = info->visible;
+  const auto locked = info->locked;
+
+  for (size_t row : { size_t(4), size_t(5), size_t(1000) }) {
+    model.flipVisible(row);
+    model.flipLocked(row);
+  }
+  EXPECT_EQ(info->visible, visible);
+  EXPECT_EQ(info->locked, locked);
+}
+
 TEST_F(LayerModelTest, FlipLockedTogglesCorrectLayer)
 {
   Molecule molecule;
