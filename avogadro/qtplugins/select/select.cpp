@@ -6,6 +6,7 @@
 #include "select.h"
 
 #include <avogadro/core/residue.h>
+#include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/periodictableview.h>
 #include <avogadro/qtgui/rwlayermanager.h>
@@ -19,6 +20,7 @@
 #include <QtWidgets/QInputDialog>
 
 #include <QtCore/QStringList>
+#include <qcontainerfwd.h>
 
 using Avogadro::QtGui::Molecule;
 
@@ -525,7 +527,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // check if name matches specified (e.g. HIS57 is really a HIS)
-      }   // index makes sense
+      } // index makes sense
     } else {
       // standard residue name
       for (const auto& residue : m_molecule->residues()) {
@@ -537,7 +539,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // residue matches label
-      }   // for(residues)
+      } // for(residues)
       continue;
     } // 3-character labels
   }
@@ -578,6 +580,122 @@ void Select::createLayerFromSelection()
   }
   rwmol->endMergeMode();
   rwmol->emitChanged(changes);
+}
+
+void Select::registerCommands()
+{
+  emit registerCommand("selectAll", tr("Select all atoms."));
+
+  emit registerCommand("selectNone", tr("Deselect all atoms"));
+
+  emit registerCommand("invertSelection",
+                       tr("Select all atoms which are not currently selected, "
+                          "and deselect all currently selected atoms."));
+
+  emit registerCommand("selectElement",
+                       tr("Select all atoms of a certain element type."));
+
+  emit registerCommand(
+    "selectBackbone",
+    tr("Select all atoms that belong to amino acid backbones"));
+
+  emit registerCommand(
+    "selectSidechains",
+    tr("Select all atoms that belong to amino acid sidechains"));
+
+  emit registerCommand("selectWater", tr("Select all water molecules"));
+
+  emit registerCommand(
+    "enlargeSelection",
+    tr("Select all atoms within 2 atoms of a selected atom. In other words, "
+       "select all atoms next to a selected atom, and additionally all atoms "
+       "that are next to those atoms."));
+
+  emit registerCommand(
+    "shrinkSelection",
+    tr("Shrink selection. Note: One shrink is equivalent to two enlarges!"));
+
+  emit registerCommand("createLayerFromSelection",
+                       tr("Separate the selected atoms into a new layer."));
+}
+
+bool Select::handleCommand(const QString& command,
+                           [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command
+
+  if (command == "selectAll") {
+    selectAll();
+    return true;
+  }
+
+  if (command == "selectNone") {
+    selectNone();
+    return true;
+  }
+
+  if (command == "invertSelection") {
+    invertSelection();
+    return true;
+  }
+
+  if (command == "selectElement") {
+    if (options.contains("element")) {
+      QVariant elementData = options["element"];
+      int atomicNum = InvalidElement;
+
+      if (elementData.type() == QVariant::String) {
+        atomicNum = Core::Elements::atomicNumberFromSymbol(
+          elementData.toString().toStdString());
+      }
+
+      if (atomicNum == InvalidElement) {
+        bool ok = false;
+        atomicNum = elementData.toInt(&ok);
+        if (!ok || atomicNum <= 0) {
+          return false;
+        }
+      }
+
+      selectElement(atomicNum);
+      return true;
+    }
+
+    return false;
+  }
+
+  if (command == "selectBackbone") {
+    selectBackboneAtoms();
+    return true;
+  }
+
+  if (command == "selectSidechains") {
+    selectSidechainAtoms();
+    return true;
+  }
+
+  if (command == "selectWater") {
+    selectWater();
+    return true;
+  }
+
+  if (command == "enlargeSelection") {
+    enlargeSelection();
+    return true;
+  }
+
+  if (command == "shrinkSelection") {
+    shrinkSelection();
+    return true;
+  }
+
+  if (command == "createLayerFromSelection") {
+    createLayerFromSelection();
+    return true;
+  }
+
+  return false;
 }
 
 } // namespace Avogadro::QtPlugins
