@@ -132,10 +132,10 @@ Vector3 AtomUtilities::generateNewBondVector(
 
       v2 = Vector3::Random().normalized();
 
-      double angle = fabs(acos(bond1.dot(v2)));
+      double angle = fabs(acos(std::clamp(bond1.dot(v2), -1.0, 1.0)));
       while (angle < 45.0 * DEG_TO_RAD || angle > 135.0 * DEG_TO_RAD) {
         v2 = Vector3::Random().normalized();
-        angle = fabs(acos(bond1.dot(v2)));
+        angle = fabs(acos(std::clamp(bond1.dot(v2), -1.0, 1.0)));
         //          std::cout << "angle = " << angle*RAD_TO_DEG << std::endl;
       }
       v1 = bond1.cross(v2); // so find a perpendicular, given the random vector
