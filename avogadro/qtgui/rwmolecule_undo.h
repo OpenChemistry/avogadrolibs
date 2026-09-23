@@ -36,6 +36,14 @@ protected:
   Array<Vector3>& positions3d() { return m_molecule.atomPositions3d(); }
   Array<Index>& atomUniqueIds() { return m_mol.m_molecule.atomUniqueIds(); }
   Array<Index>& bondUniqueIds() { return m_mol.m_molecule.bondUniqueIds(); }
+  // Selection has no public size accessor on Core::Molecule (unlike labels,
+  // colors, etc., which expose their backing Array<T> directly): m_molecule
+  // is protected, reached here only because UndoCommand is a nested class of
+  // RWMolecule, which QtGui::Molecule befriends.
+  bool hasSelectionEntry(Index atomId)
+  {
+    return atomId < m_molecule.m_selectedAtoms.size();
+  }
 
   RWMolecule& m_mol;
   QtGui::Molecule& m_molecule;
@@ -130,6 +138,38 @@ class RemoveAtomCommand : public RWMolecule::UndoCommand
   Array<unsigned char> m_orders;
   size_t m_layer;
 
+  // Per-atom state captured just before removeAtom() in redo(), restored in
+  // undo() once the atom is back at m_atomId. Each of these lives in an
+  // Array that may be shorter than atomCount() -- an atom that was never
+  // given one has no entry, and the accessor falls back to a default rather
+  // than indexing out of bounds. The matching setter grows the array to
+  // atomCount() on first write, though, so calling it unconditionally would
+  // manufacture an entry (and, for color specifically, freeze what the
+  // accessor otherwise computes fresh from the atomic number) for every atom
+  // the growth covers, not just this one. So each field is only restored
+  // when the removed atom actually had it.
+  //
+  // Calculated results (partial charges, force vectors, vibration data, ...)
+  // are not restored: removeAtom() clears them for every atom, since they
+  // describe a molecule that no longer exists once an atom is gone. Restoring
+  // just this atom's would leave one real value among defaults.
+  bool m_hasLabel = false;
+  std::string m_label;
+  bool m_hasSelection = false;
+  bool m_selected = false;
+  bool m_hasFormalCharge = false;
+  signed char m_formalCharge = 0;
+  bool m_hasColor = false;
+  Vector3ub m_color = Vector3ub(0, 0, 0);
+  bool m_hasIsotope = false;
+  unsigned short m_isotope = 0;
+  bool m_hasHybridization = false;
+  AtomHybridization m_hybridization = Core::HybridizationUnknown;
+  bool m_hasPosition2d = false;
+  Vector2 m_position2d = Vector2::Zero();
+  bool m_hasFrozen = false;
+  bool m_frozenAxis[3] = { false, false, false };
+
 public:
   RemoveAtomCommand(RWMolecule& m, Index atomId, Index uid, unsigned char aN,
                     const Vector3& pos)
@@ -144,6 +184,44 @@ public:
     m_layer = m_molecule.layer().getLayerID(m_atomId);
     m_bonds = m_molecule.getAtomBonds(m_atomId);
     m_orders = m_molecule.getAtomOrders(m_atomId);
+
+    m_hasLabel = m_molecule.atomLabels().size() > m_atomId;
+    if (m_hasLabel)
+      m_label = m_molecule.atomLabel(m_atomId);
+
+    m_hasSelection = hasSelectionEntry(m_atomId);
+    if (m_hasSelection)
+      m_selected = m_molecule.atomSelected(m_atomId);
+
+    m_hasFormalCharge = m_molecule.formalCharges().size() > m_atomId;
+    if (m_hasFormalCharge)
+      m_formalCharge = m_molecule.formalCharge(m_atomId);
+
+    m_hasColor = m_molecule.colors().size() > m_atomId;
+    if (m_hasColor)
+      m_color = m_molecule.color(m_atomId);
+
+    m_hasIsotope = m_molecule.isotopes().size() > m_atomId;
+    if (m_hasIsotope)
+      m_isotope = m_molecule.isotope(m_atomId);
+
+    m_hasHybridization = m_molecule.hybridizations().size() > m_atomId;
+    if (m_hasHybridization)
+      m_hybridization = m_molecule.hybridization(m_atomId);
+
+    m_hasPosition2d = m_molecule.atomPositions2d().size() > m_atomId;
+    if (m_hasPosition2d)
+      m_position2d = m_molecule.atomPosition2d(m_atomId);
+
+    // The frozen-atom mask grows in whole-atom (3-row) units, so an atom
+    // either has all three axis entries or none.
+    m_hasFrozen = m_molecule.frozenAtomMask().rows() >=
+                  static_cast<Eigen::Index>(3 * (m_atomId + 1));
+    if (m_hasFrozen) {
+      for (int axis = 0; axis < 3; ++axis)
+        m_frozenAxis[axis] = m_molecule.frozenAtomAxis(m_atomId, axis);
+    }
+
     m_molecule.removeAtom(m_atomId);
   }
 
@@ -161,6 +239,27 @@ public:
     m_molecule.swapAtom(m_atomId, movedId);
     m_molecule.addBonds(m_bonds, m_orders);
     m_bonds.clear();
+
+    // The atom is back at m_atomId now: restore whatever it had, and leave
+    // everything else alone.
+    if (m_hasLabel)
+      m_molecule.setAtomLabel(m_atomId, m_label);
+    if (m_hasSelection)
+      m_molecule.setAtomSelected(m_atomId, m_selected);
+    if (m_hasFormalCharge)
+      m_molecule.setFormalCharge(m_atomId, m_formalCharge);
+    if (m_hasColor)
+      m_molecule.setColor(m_atomId, m_color);
+    if (m_hasIsotope)
+      m_molecule.setIsotope(m_atomId, m_isotope);
+    if (m_hasHybridization)
+      m_molecule.setHybridization(m_atomId, m_hybridization);
+    if (m_hasPosition2d)
+      m_molecule.setAtomPosition2d(m_atomId, m_position2d);
+    if (m_hasFrozen) {
+      for (int axis = 0; axis < 3; ++axis)
+        m_molecule.setFrozenAtomAxis(m_atomId, axis, m_frozenAxis[axis]);
+    }
   }
 };
 } // namespace

@@ -172,15 +172,31 @@ TEST_F(MoleculeModelTest, SetActiveMolecule_SameValueTwice_EmitsDataChangedOnce)
   EXPECT_EQ(spy.count(), 1);
 }
 
-TEST_F(MoleculeModelTest, RemoveActiveMolecule_LeavesStaleActivePointer)
+TEST_F(MoleculeModelTest, SetActiveMolecule_EmptyModel_EmitsNoSignal)
 {
-  // removeItem() does not clear m_activeMolecule when the molecule being
-  // removed is the active one (moleculemodel.cpp:196-202 vs. 215-224); there
-  // is no destroyed() connection either. This documents the symptom without
-  // touching freed memory: we do not spin the event loop here, so the
-  // deferred delete from removeItem() never runs in this test -- mol is
-  // merely leaked, not dereferenced. See the DISABLED use-after-free test
-  // below for what happens once the deferred delete actually executes.
+  // With no molecules, createIndex(0, 0) would build an index into a row
+  // that does not exist; setActiveMolecule() must skip the emit entirely
+  // rather than hand out a bogus index.
+  MoleculeModel model;
+  auto* mol = new Molecule; // never added to the model
+
+  QSignalSpy spy(&model, &QAbstractItemModel::dataChanged);
+  model.setActiveMolecule(mol);
+
+  EXPECT_EQ(model.activeMolecule(), static_cast<QObject*>(mol));
+  EXPECT_EQ(spy.count(), 0);
+  delete mol;
+}
+
+TEST_F(MoleculeModelTest,
+       RemoveActiveMolecule_PointerSurvivesUntilDeferredDeleteRuns)
+{
+  // removeItem() only schedules the removed molecule's deletion
+  // (deleteLater()); the object itself is still alive until the event loop
+  // actually runs the deferred delete. We do not spin the event loop here,
+  // so m_activeMolecule (now a QPointer) still legitimately points at the
+  // not-yet-destroyed molecule. See the test below for what happens once
+  // the deferred delete actually executes.
   MoleculeModel model;
   auto* mol = new Molecule;
   model.addItem(mol);
@@ -192,25 +208,19 @@ TEST_F(MoleculeModelTest, RemoveActiveMolecule_LeavesStaleActivePointer)
   EXPECT_EQ(model.activeMolecule(), static_cast<QObject*>(mol));
 }
 
-// BUG: MoleculeModel::setActiveMolecule() (moleculemodel.cpp:196-202) stores
-// a raw QObject* with no destroyed() connection, and
-// MoleculeModel::removeItem() (moleculemodel.cpp:215-224) calls
-// item->deleteLater() without clearing m_activeMolecule if the removed item
-// is the active one. Once the deferred delete actually runs (a real app
-// event loop will do this -- a flat processEvents()/sendPostedEvents() is
-// NOT enough; see the comment below), activeMolecule() returns a dangling
-// pointer, and qobject_cast<>() on it dereferences the freed object's
-// vtable/metaobject chain -- a use-after-free. Confirmed with
-// --gtest_also_run_disabled_tests
-// --gtest_filter=MoleculeModelTest.DISABLED_RemoveActiveMolecule_UseAfterFree
-// under BOTH builds: the normal build dies with SIGSEGV (exit 139, no
-// output) at the qobject_cast<> line below; the -fsanitize=address,undefined
-// build reports "AddressSanitizer: SEGV on unknown address 0x...233c ...
-// READ memory access" in QMetaObject::cast(), called from
-// qobject_cast<Molecule*>() at this file's TestBody(). Relevant to
-// avogadroapp#634 (removing the empty startup molecule): a remove-then-query
-// of the active molecule is not safe today.
-TEST_F(MoleculeModelTest, DISABLED_RemoveActiveMolecule_UseAfterFree)
+// MoleculeModel::removeItem() (moleculemodel.cpp) calls item->deleteLater()
+// without ever clearing m_activeMolecule if the removed item is the active
+// one. m_activeMolecule is now a QPointer<QObject> (moleculemodel.h), which
+// self-clears when the object it points to is actually destroyed, however
+// that happens -- so once the deferred delete really runs (a real app event
+// loop will do this; a flat processEvents()/sendPostedEvents() outside any
+// running loop is NOT enough -- Qt only honors deleteLater() at a loop level
+// matching where it was posted; a nested QEventLoop::exec() is), a stale
+// query of activeMolecule() safely returns nullptr instead of a dangling
+// pointer. Relevant to avogadroapp#634 (removing the empty startup
+// molecule): a remove-then-query of the active molecule is now safe.
+TEST_F(MoleculeModelTest,
+       RemoveActiveMolecule_ActiveMoleculeClearsAfterDeferredDelete)
 {
   MoleculeModel model;
   auto* mol = new Molecule;
@@ -218,19 +228,12 @@ TEST_F(MoleculeModelTest, DISABLED_RemoveActiveMolecule_UseAfterFree)
   model.setActiveMolecule(mol);
 
   model.removeItem(mol);
-  // Actually run the deferred delete. A flat processEvents()/
-  // sendPostedEvents() outside any running loop does NOT do this (Qt only
-  // honors deleteLater() at a loop level matching where it was posted);
-  // verified with an isolated QPointer probe. A nested QEventLoop::exec()
-  // does.
+  // Actually run the deferred delete.
   QEventLoop loop;
   QTimer::singleShot(0, &loop, &QEventLoop::quit);
   loop.exec();
 
-  QObject* dangling = model.activeMolecule();
-  // qobject_cast dereferences the (freed) object's vtable.
-  auto* asMolecule = qobject_cast<Molecule*>(dangling);
-  EXPECT_EQ(asMolecule, dangling);
+  EXPECT_EQ(model.activeMolecule(), nullptr);
 }
 
 TEST_F(MoleculeModelTest, ItemChanged_EmitsDataChangedForSenderRow)

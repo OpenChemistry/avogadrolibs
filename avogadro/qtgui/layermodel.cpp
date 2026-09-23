@@ -97,6 +97,10 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
   if (!idx.isValid() || idx.column() > QTTY_COLUMNS)
     return QVariant();
   auto names = activeMoleculeNames();
+  // Valid rows are 0..names.size(): the synthetic "+" row is the special
+  // case just below, and anything past it would index names[] out of bounds.
+  if (idx.row() < 0 || idx.row() > static_cast<int>(names.size()))
+    return QVariant();
   if (idx.row() == static_cast<int>(names.size())) {
     if (idx.column() == 0) {
       switch (role) {
@@ -208,8 +212,10 @@ QString LayerModel::getTranslatedName(const std::string& name) const
 
 QModelIndex LayerModel::index(int row, int column, const QModelIndex& p) const
 {
+  // m_item counts one row per layer entry plus the trailing "+" row, so the
+  // valid rows are 0..m_item-1 -- row == m_item is one past the "+" row.
   if (!p.isValid())
-    if (row >= 0 && row <= static_cast<int>(m_item))
+    if (row >= 0 && row < static_cast<int>(m_item))
       return createIndex(row, column);
   return QModelIndex();
 }
@@ -258,8 +264,11 @@ void LayerModel::setActiveLayer(int index, RWMolecule* rwmolecule)
 }
 void LayerModel::removeItem(int row, RWMolecule* rwmolecule)
 {
-  if (row <= static_cast<int>(m_item)) {
-    auto names = activeMoleculeNames();
+  auto names = activeMoleculeNames();
+  // Valid indices into names are 0..names.size()-1: row == names.size() is
+  // the synthetic "+" row (see data()'s special case below), and anything
+  // beyond that is simply out of range.
+  if (row >= 0 && row < static_cast<int>(names.size())) {
     removeLayer(static_cast<size_t>(names[row].first), rwmolecule);
     updateRows();
   }

@@ -138,18 +138,10 @@ TEST_F(LayerModelTest, RemoveItemUsesLayerIdNotRowIndex)
   EXPECT_EQ(model.items(), 4u);
 }
 
-// BUG: LayerModel::removeItem() (layermodel.cpp:261) guards with
-// `row <= static_cast<int>(m_item)`, but the valid indices into the local
-// `names` array (size m_item - 1; see the row-mapping comment above) are
-// 0..m_item-2. Both row == m_item-1 (the "+" row) and row == m_item (one
-// further) pass that guard and then index `names[row]` past its end.
-// Confirmed with lldb on this exact scenario (2 layers, m_item == 3,
-// removeItem(3, rwmol)): libc++ hardening traps inside
-// Core::Array<...>::operator[] at array.h:300, called from
-// LayerModel::removeItem() at layermodel.cpp:263, with the vector's actual
-// size() == 2 and __n == 3 -- i.e. it does index past the end, exactly as
-// suspected, and aborts the whole process (SIGTRAP), not just this test.
-TEST_F(LayerModelTest, DISABLED_RemoveItemRowEqualToItemsIndexesPastEnd)
+// removeItem()'s row bound must reject both the "+" row (row == names.size(),
+// i.e. row == m_item - 1) and anything past it: only 0..names.size()-1 index
+// real layers.
+TEST_F(LayerModelTest, RemoveItemRowAtOrPastItemsIsIgnored)
 {
   Molecule molecule;
   molecule.addAtom(1);
@@ -159,8 +151,13 @@ TEST_F(LayerModelTest, DISABLED_RemoveItemRowEqualToItemsIndexesPastEnd)
   model.addLayer(rwmol); // 2 layers; m_item == 3 (2 header rows + "+")
   ASSERT_EQ(model.items(), 3u);
 
-  model.removeItem(static_cast<int>(model.items()), rwmol); // aborts here
-  SUCCEED() << "did not crash (unexpected)";
+  model.removeItem(static_cast<int>(model.items()), rwmol); // one past "+"
+  EXPECT_EQ(model.layerCount(), 2u);
+  EXPECT_EQ(model.items(), 3u);
+
+  model.removeItem(static_cast<int>(model.items()) - 1, rwmol); // the "+" row
+  EXPECT_EQ(model.layerCount(), 2u);
+  EXPECT_EQ(model.items(), 3u);
 }
 
 TEST_F(LayerModelTest, FlipVisibleTogglesCorrectLayer)
@@ -265,6 +262,52 @@ TEST_F(LayerModelTest, DataInvalidIndexReturnsInvalidVariant)
 {
   LayerModel model;
   EXPECT_FALSE(model.data(QModelIndex(), Qt::DisplayRole).isValid());
+}
+
+// index()'s valid rows are 0..m_item-1 (one "Layer" row per layer, plus the
+// trailing "+" row at row == m_item - 1); row == m_item and beyond must come
+// back invalid rather than a usable index into rows that do not exist.
+TEST_F(LayerModelTest, IndexAtItemsAndBeyondReturnsInvalid)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  LayerModel model;
+  model.addMolecule(&molecule);
+  auto* rwmol = molecule.undoMolecule();
+  model.addLayer(rwmol); // 2 layers; m_item == 3 (2 header rows + "+")
+  ASSERT_EQ(model.items(), 3u);
+
+  const int plusRow = static_cast<int>(model.items()) - 1;
+  EXPECT_TRUE(model.index(plusRow, LayerModel::Name).isValid());
+  EXPECT_FALSE(
+    model.index(static_cast<int>(model.items()), LayerModel::Name).isValid());
+  EXPECT_FALSE(
+    model.index(static_cast<int>(model.items()) + 1, LayerModel::Name)
+      .isValid());
+}
+
+// data()'s row bound must independently reject the same out-of-range rows
+// index() does, since a hand-built QModelIndex does not have to come from
+// index(). Only row == names.size() (the "+" row) is special-cased; anything
+// beyond it must not index the local `names` array out of bounds.
+TEST_F(LayerModelTest, DataAtItemsAndBeyondReturnsInvalidVariant)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  LayerModel model;
+  model.addMolecule(&molecule);
+  auto* rwmol = molecule.undoMolecule();
+  model.addLayer(rwmol); // 2 layers; m_item == 3 (2 header rows + "+")
+  ASSERT_EQ(model.items(), 3u);
+
+  const int plusRow = static_cast<int>(model.items()) - 1;
+  QModelIndex plusIdx = model.index(plusRow, LayerModel::Name);
+  // The "+" row only ever has a decoration icon on column 0.
+  EXPECT_FALSE(model.data(plusIdx, Qt::DisplayRole).isValid());
+
+  QModelIndex pastEnd = model.index(plusRow + 1, LayerModel::Name);
+  ASSERT_FALSE(pastEnd.isValid());
+  EXPECT_FALSE(model.data(pastEnd, Qt::DisplayRole).isValid());
 }
 
 TEST_F(LayerModelTest, FlagsAreAlwaysItemIsEnabled)

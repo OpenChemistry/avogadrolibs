@@ -412,21 +412,13 @@ TEST_F(RWLayerManagerTest, RemoveLayerNoActiveMoleculeIsNoop)
   EXPECT_EQ(molecule.atomCount(), 1u);
 }
 
-// BUG: RemoveLayerCommand::redo() (rwlayermanager.cpp:145) has no way to
-// learn that Layer::removeLayer() (layer.cpp:132) is refusing the removal --
-// removeLayer() is void, and Layer::removeLayer() silently no-ops when
-// m_maxLayer == 0 (rwlayermanager only guards m_layer against
-// visible/locked.size(), which is satisfied by the one and only layer, id
-// 0). redo() has therefore already erased the layer's visible/locked entries
-// before making that call, leaving visible.size()/locked.size() == 0 while
-// layerCount() stays 1. undo() then compounds it: it unconditionally calls
-// layer.addLayer(m_layer), which for a still-single-layer molecule inserts a
-// second layer and increments activeLayer, so layerCount() goes from 1 to 2
-// (verified by running this scenario: after removeLayer(0), visible/locked
-// sizes drop from 1 to 0 while layerCount stays 1; after undo(), layerCount
-// becomes 2 while visible/locked sizes are back to 1 -- both moves are
-// wrong).
-TEST_F(RWLayerManagerTest, DISABLED_RemoveOnlyLayerIsNoop)
+// Layer::removeLayer() never leaves a molecule with zero layers -- removing
+// the one and only layer is a no-op. RemoveLayerCommand::redo() must check
+// for that itself before erasing any bookkeeping (visible/locked/enable/
+// settings), since the underlying void call gives it no other way to learn
+// the removal was refused; undo() must likewise leave m_applied false so it
+// does nothing either.
+TEST_F(RWLayerManagerTest, RemoveOnlyLayerIsNoop)
 {
   Molecule molecule;
   molecule.addAtom(1);

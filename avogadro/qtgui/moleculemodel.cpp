@@ -198,7 +198,12 @@ void MoleculeModel::setActiveMolecule(QObject* active)
   if (m_activeMolecule == active)
     return;
   m_activeMolecule = active;
-  emit dataChanged(createIndex(0, 0), createIndex(m_molecules.size(), 0));
+  // An empty model has no rows to report a change for; createIndex(0, 0)
+  // would otherwise build a bogus index into a model with no row 0. A
+  // non-empty model's last row is one less than the row count, since
+  // rowCount() includes the trailing "add molecule" row.
+  if (!m_molecules.isEmpty())
+    emit dataChanged(createIndex(0, 0), createIndex(m_molecules.size() - 1, 0));
 }
 
 void MoleculeModel::addItem(Molecule* item)

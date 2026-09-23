@@ -1575,36 +1575,105 @@ TEST(RWMoleculeTest, removeAtomWithBondsSelectionAndLabelUndoRedo)
   EXPECT_EQ(beforeIndex, mol.undoStack().index());
   EXPECT_EQ(static_cast<Index>(4), mol.atomCount());
   EXPECT_EQ(static_cast<Index>(3), mol.bondCount());
-  // Position and connectivity always came back correctly; see the
-  // DISABLED_ test just below for what does not.
+  // Position and connectivity always came back correctly; see
+  // removeAtomUndoRestoresEveryOptionalPerAtomField below for the rest of
+  // the per-atom fields.
 
   mol.undoStack().redo();
   EXPECT_SAME_STATE(after, snapshot(mol));
 }
 
-// BUG: rwmolecule_undo.h, RemoveAtomCommand -- its constructor captures only
-// m_atomicNumber, m_position3d and the atom's bonds, and undo() re-adds the
-// atom from just those (m_molecule.addAtom(m_atomicNumber, m_position3d,
-// m_atomUid)). The label, selection and formal charge set before the remove
-// are silently dropped: the re-added atom gets the class defaults (empty
-// label, unselected, charge 0) instead. Confirmed with
-// --gtest_also_run_disabled_tests
-// --gtest_filter=RWMoleculeTest.DISABLED_removeAtomUndoRestoresLabelSelectionAndCharge
-TEST(RWMoleculeTest, DISABLED_removeAtomUndoRestoresLabelSelectionAndCharge)
+// RemoveAtomCommand (rwmolecule_undo.h) must capture every per-atom optional
+// value molecule.h exposes -- not just what the snapshot helper above already
+// covers (label, selection, formal charge) -- and restore each once the atom
+// is back at its index: color, isotope, hybridization, 2D position and
+// frozen-atom state too. Calculated results (partial charges, force vectors)
+// are not restored: removeAtom() clears them for every atom on purpose, since
+// they describe a molecule that no longer exists once an atom is gone.
+TEST(RWMoleculeTest, removeAtomUndoRestoresEveryOptionalPerAtomField)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6); // atom 0: kept, never given any of these values
+  mol.addAtom(7); // atom 1: removed and restored
+
+  mol.setAtomSelected(1, true);
+  mol.setAtomLabel(1, "central");
+  mol.setFormalCharge(1, -1);
+  m.setColor(1, Avogadro::Vector3ub(10, 20, 30));
+  m.setIsotope(1, 15);
+  m.setHybridization(1, Avogadro::Core::SP3);
+  m.setAtomPosition2d(1, Avogadro::Vector2(Real(4), Real(5)));
+  m.setForceVector(1, Vector3(Real(1), Real(2), Real(3)));
+  m.setFrozenAtomAxis(1, 0, true);
+  m.setFrozenAtomAxis(1, 2, true);
+  // Axis 1 is deliberately left unfrozen, so a restore that just copied
+  // "frozen" for the whole atom rather than per axis would be caught too.
+
+  ASSERT_TRUE(mol.removeAtom(1));
+  mol.undoStack().undo();
+
+  ASSERT_EQ(static_cast<Index>(2), mol.atomCount());
+  EXPECT_TRUE(m.atomSelected(1));
+  EXPECT_EQ("central", m.atomLabel(1));
+  EXPECT_EQ(static_cast<signed char>(-1), m.formalCharge(1));
+  EXPECT_EQ(Avogadro::Vector3ub(10, 20, 30), m.color(1));
+  EXPECT_EQ(static_cast<unsigned short>(15), m.isotope(1));
+  EXPECT_EQ(Avogadro::Core::SP3, m.hybridization(1));
+  EXPECT_EQ(Avogadro::Vector2(Real(4), Real(5)), m.atomPosition2d(1));
+  // Cleared for every atom by the removal, and not partially restored.
+  EXPECT_TRUE(m.forceVectors().empty());
+  EXPECT_TRUE(m.frozenAtomAxis(1, 0));
+  EXPECT_FALSE(m.frozenAtomAxis(1, 1));
+  EXPECT_TRUE(m.frozenAtomAxis(1, 2));
+
+  // Atom 0 never had any of these set either, and restoring atom 1's values
+  // must not have manufactured entries for it.
+  EXPECT_EQ("", m.atomLabel(0));
+  EXPECT_FALSE(m.atomSelected(0));
+  EXPECT_EQ(static_cast<signed char>(0), m.formalCharge(0));
+  EXPECT_EQ(static_cast<unsigned short>(0), m.isotope(0));
+  EXPECT_EQ(Avogadro::Core::HybridizationUnknown, m.hybridization(0));
+  EXPECT_EQ(Avogadro::Vector2::Zero(), m.atomPosition2d(0));
+  EXPECT_FALSE(m.frozenAtomAxis(0, 0));
+
+  // redo() re-applies the removal (redo() re-captures from the just-restored
+  // atom before removing it again), and a second undo() must restore
+  // everything again from that fresh capture -- not just the first time.
+  mol.undoStack().redo();
+  ASSERT_EQ(static_cast<Index>(1), mol.atomCount());
+  mol.undoStack().undo();
+
+  ASSERT_EQ(static_cast<Index>(2), mol.atomCount());
+  EXPECT_TRUE(m.atomSelected(1));
+  EXPECT_EQ("central", m.atomLabel(1));
+  EXPECT_EQ(Avogadro::Vector3ub(10, 20, 30), m.color(1));
+}
+
+// An atom that never had any of these optional values set must not gain any
+// after a remove/undo round trip -- the arrays stay exactly as short (empty,
+// here) as they started. RemoveAtomCommand::undo() guards each restore on
+// whether the atom actually had the value, since the setters below would
+// otherwise grow the whole array to atomCount() on first write, handing
+// every other atom an explicit default entry it never had either.
+TEST(RWMoleculeTest, removeAtomUndoWithNoOptionalValuesDoesNotGrowArrays)
 {
   Molecule m;
   RWMolecule mol(m);
   mol.addAtom(6);
-  mol.addAtom(7);
-  mol.setAtomSelected(1, true);
-  mol.setAtomLabel(1, "central");
-  mol.setFormalCharge(1, -1);
 
-  const MoleculeSnapshot before = snapshot(mol);
-  ASSERT_TRUE(mol.removeAtom(1));
+  ASSERT_TRUE(mol.removeAtom(0));
   mol.undoStack().undo();
 
-  EXPECT_SAME_STATE(before, snapshot(mol));
+  ASSERT_EQ(static_cast<Index>(1), mol.atomCount());
+  EXPECT_TRUE(m.atomLabels().empty());
+  EXPECT_TRUE(m.formalCharges().empty());
+  EXPECT_TRUE(m.colors().empty());
+  EXPECT_TRUE(m.isotopes().empty());
+  EXPECT_TRUE(m.hybridizations().empty());
+  EXPECT_TRUE(m.atomPositions2d().empty());
+  EXPECT_TRUE(m.forceVectors().empty());
+  EXPECT_EQ(static_cast<Eigen::Index>(0), m.frozenAtomMask().rows());
 }
 
 TEST(RWMoleculeTest, removeLastAtomUndoRedo)
@@ -1900,20 +1969,11 @@ TEST(RWMoleculeTest, changedSignalReorderAtomsUndoRedoEmitOnceWithReorderedFlag)
   EXPECT_EQ(expected, changes[0]);
 }
 
-// BUG: rwmolecule.cpp, RWMolecule::reorderAtoms() (~line 150-155). It pushes
-// a ReorderAtomsCommand, whose redo() itself calls m_molecule.emitChanged()
-// with Atoms|Bonds|Modified|Reordered -- and QUndoStack::push() runs that
-// redo() immediately, before reorderAtoms() returns. reorderAtoms() then
-// calls emitChanged(Atoms|Bonds|Modified) again right after push(), a second
-// time and missing the Reordered flag. Contrast with every other
-// whole-molecule operation in this file (addUnitCell, modifyMolecule,
-// appendMolecule, wrapAtomsToCell, ...): their commands' redo()/undo() never
-// call emitChanged() themselves, so the one explicit call after push() is
-// the only emission. Confirmed with --gtest_also_run_disabled_tests
-// --gtest_filter=RWMoleculeTest.DISABLED_changedSignalReorderAtomsInitialCallEmitsOnce:
-// two emissions are observed, (Atoms|Bonds|Modified|Reordered) then
-// (Atoms|Bonds|Modified).
-TEST(RWMoleculeTest, DISABLED_changedSignalReorderAtomsInitialCallEmitsOnce)
+// reorderAtoms() must not double up on its own command's notification:
+// ReorderAtomsCommand::redo() (run synchronously by push()) already emits
+// Atoms|Bonds|Modified|Reordered once, so reorderAtoms() itself must not
+// emit again afterward.
+TEST(RWMoleculeTest, changedSignalReorderAtomsInitialCallEmitsOnce)
 {
   Molecule m;
   RWMolecule mol(m);
