@@ -348,11 +348,20 @@ TEST_F(LayerModelTest, IndexAtItemsAndBeyondReturnsInvalid)
 // index() does, since a hand-built QModelIndex does not have to come from
 // index(). Only row == names.size() (the "+" row) is special-cased; anything
 // beyond it must not index the local `names` array out of bounds.
+namespace {
+// index() refuses rows past the end, so forging one is the only way to reach
+// data()'s own row check.
+struct IndexForgingLayerModel : public LayerModel
+{
+  using LayerModel::createIndex;
+};
+} // namespace
+
 TEST_F(LayerModelTest, DataAtItemsAndBeyondReturnsInvalidVariant)
 {
   Molecule molecule;
   molecule.addAtom(1);
-  LayerModel model;
+  IndexForgingLayerModel model;
   model.addMolecule(&molecule);
   auto* rwmol = molecule.undoMolecule();
   model.addLayer(rwmol); // 2 layers; m_item == 3 (2 header rows + "+")
@@ -363,8 +372,10 @@ TEST_F(LayerModelTest, DataAtItemsAndBeyondReturnsInvalidVariant)
   // The "+" row only ever has a decoration icon on column 0.
   EXPECT_FALSE(model.data(plusIdx, Qt::DisplayRole).isValid());
 
-  QModelIndex pastEnd = model.index(plusRow + 1, LayerModel::Name);
-  ASSERT_FALSE(pastEnd.isValid());
+  EXPECT_FALSE(model.index(plusRow + 1, LayerModel::Name).isValid());
+
+  QModelIndex pastEnd = model.createIndex(plusRow + 1, LayerModel::Name);
+  ASSERT_TRUE(pastEnd.isValid());
   EXPECT_FALSE(model.data(pastEnd, Qt::DisplayRole).isValid());
 }
 

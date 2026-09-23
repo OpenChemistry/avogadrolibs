@@ -211,7 +211,6 @@ TEST_F(BackgroundFileFormatTest, Read_OnWorkerThread_ViaQueuedInvoke)
   bff->setFileName(path);
   bff->moveToThread(thread);
   QObject::connect(thread, &QThread::finished, bff, &QObject::deleteLater);
-  QObject::connect(thread, &QThread::finished, thread, &QObject::deleteLater);
   thread->start();
 
   QSignalSpy finishedSpy(bff, &BackgroundFileFormat::finished);
@@ -226,5 +225,6 @@ TEST_F(BackgroundFileFormatTest, Read_OnWorkerThread_ViaQueuedInvoke)
   EXPECT_EQ(mol.atomCount(), 2u);
 
   thread->quit();
-  thread->wait(2000);
+  ASSERT_TRUE(thread->wait(2000));
+  delete thread;
 }

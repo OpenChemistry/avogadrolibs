@@ -1575,9 +1575,11 @@ TEST(RWMoleculeTest, removeAtomWithBondsSelectionAndLabelUndoRedo)
   EXPECT_EQ(beforeIndex, mol.undoStack().index());
   EXPECT_EQ(static_cast<Index>(4), mol.atomCount());
   EXPECT_EQ(static_cast<Index>(3), mol.bondCount());
-  // Position and connectivity always came back correctly; see
-  // removeAtomUndoRestoresEveryOptionalPerAtomField below for the rest of
-  // the per-atom fields.
+  // RemoveAtomCommand restores the atom's captured state, so undo must
+  // reproduce the snapshot exactly: label, selection and formal charge
+  // included. removeAtomUndoRestoresEveryOptionalPerAtomField below covers
+  // the fields the snapshot doesn't.
+  EXPECT_SAME_STATE(before, snapshot(mol));
 
   mol.undoStack().redo();
   EXPECT_SAME_STATE(after, snapshot(mol));
@@ -1759,6 +1761,9 @@ TEST(RWMoleculeTest, randomSequenceUndoRedoRoundTrip)
   std::vector<int> checkpointIndex;
   std::vector<MoleculeSnapshot> checkpointSnapshot;
   auto checkpoint = [&]() {
+    // QUndoStack never merges into the command at the clean index, so the
+    // next mergeable edit can't change the state recorded here.
+    mol.undoStack().setClean();
     checkpointIndex.push_back(mol.undoStack().index());
     checkpointSnapshot.push_back(snapshot(mol));
   };
