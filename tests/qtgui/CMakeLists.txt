@@ -17,6 +17,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  BackgroundFileFormat
   CalcWorker
   ElementTranslator
   EnergyUnits
@@ -25,13 +26,17 @@ set(tests
   GenericHighlighter
   HydrogenTools
   JsonWidget
+  LayerModel
   MeshGenerator
   Molecule
+  MoleculeModel
   PackageManager
+  PluginLayerManager
   RWLayerManager
   RWMolecule
   ScriptProgress
   TimedProgressDialog
+  TomlParse
   Utilities
 )
 
@@ -91,7 +96,7 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
-  set(qtgui_fuzz rwmolecule generichighlighter jsonwidget interfacescript-json)
+  set(qtgui_fuzz rwmolecule generichighlighter jsonwidget interfacescript-json layermanager)
   foreach(fuzzName ${qtgui_fuzz})
     add_executable(fuzz_qtgui_${fuzzName} fuzz-${fuzzName}.cpp)
     if(DEFINED ENV{LIB_FUZZING_ENGINE})

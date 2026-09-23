@@ -149,9 +149,12 @@ bool RWMolecule::reorderAtoms(const Core::Array<Index>& newOrder)
 
   auto* comm = new ReorderAtomsCommand(*this, swaps);
   comm->setText(tr("Reorder Atoms"));
+  // ReorderAtomsCommand::redo() -- run synchronously by push() -- already
+  // emits Atoms|Bonds|Modified|Reordered itself (see the class comment in
+  // rwmolecule_undo.h), so no further emit is needed here; one would both
+  // duplicate the notification and drop the Reordered flag from it.
   m_undoStack.push(comm);
 
-  emitChanged(Molecule::Atoms | Molecule::Bonds | Molecule::Modified);
   return true;
 }
 
