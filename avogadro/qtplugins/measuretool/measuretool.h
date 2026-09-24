@@ -54,6 +54,13 @@ public:
 
   void draw(Rendering::GroupNode& node) override;
 
+  /// Registers measureDistance/measureAngle/measureDihedral (read the
+  /// current geometry) and editDistance/editAngle/editDihedral (change it),
+  /// the scripting/RPC equivalents of the panel.
+  void registerCommands() override;
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
 private Q_SLOTS:
   /// A row's spin box was given a new value, by typing or by the arrows or
   /// wheel. Applies it via QtGui::FragmentTools.
@@ -115,6 +122,44 @@ private:
   QString refusalMessage(
     MeasureField field,
     QtGui::FragmentTools::CoordinateEditResult result) const;
+
+  /**
+   * Parse the "atoms" option shared by all six measure/edit commands: a
+   * JSON array of exactly @p requiredCount zero-based atom indices. On
+   * success, fills @p indices (in the given, chain, order) and returns
+   * true; otherwise fills @p error with a message identifying what was
+   * wrong and returns false.
+   */
+  bool parseAtomIndices(const QVariantMap& options, int requiredCount,
+                        QVector<Index>& indices, QString& error) const;
+
+  /// Parse the "value" option the three edit commands take: a plain number,
+  /// in Å for a distance (@p requiredCount 2) or degrees otherwise.
+  bool parseValue(const QVariantMap& options, int requiredCount, double& value,
+                  QString& error) const;
+
+  /// The persistent unique ids for a chain of atom indices, in the same
+  /// order, via the same undo-molecule the panel edits through.
+  QVector<Index> uniqueIdsForIndices(const QVector<Index>& atomIndices) const;
+
+  /// Measure the current geometry of a chain of atom indices and package it
+  /// the way measureDistance/measureAngle/measureDihedral (and a successful
+  /// edit) return it: the value under @p resultKey, plus the atoms echoed
+  /// back under "atoms". Reads live positions, so an edit's result reflects
+  /// what actually happened rather than the value that was requested.
+  QVariantMap measuredResult(const QVector<Index>& atomIndices,
+                             const QString& resultKey) const;
+
+  /**
+   * A short, translated explanation of why an RPC edit was refused, naming
+   * the atoms involved by molecule index. This mirrors refusalMessage()'s
+   * choice of which atoms to name for each CoordinateEditResult, but in
+   * terms of the molecule indices the caller passed in rather than the
+   * panel's click-order positions (#1, #2, ...).
+   */
+  QString rpcRefusalMessage(int requiredCount,
+                            QtGui::FragmentTools::CoordinateEditResult result,
+                            const QVector<Index>& atomIndices) const;
 
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;
