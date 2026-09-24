@@ -27,6 +27,7 @@
 #include <QtGui/QColor>
 #include <QtWidgets/QColorDialog>
 
+#include <array>
 #include <limits>
 
 namespace Avogadro {
@@ -1224,8 +1225,11 @@ bool PropertyModel::setBondLength(unsigned int index, double length)
   auto bond = undoMolecule->bond(index);
 
   // The second atom and the fragment hanging off it move; the first anchors.
-  if (!QtGui::FragmentTools::setDistance(*undoMolecule, bond.atom2().index(),
-                                         bond.atom1().index(), length))
+  const std::array<Index, 2> chain = { undoMolecule->atomUniqueId(bond.atom1()),
+                                       undoMolecule->atomUniqueId(
+                                         bond.atom2()) };
+  if (QtGui::FragmentTools::setChainDistance(*undoMolecule, chain, length) !=
+      QtGui::FragmentTools::CoordinateEditResult::Ok)
     return false;
 
   m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
@@ -1243,12 +1247,13 @@ bool PropertyModel::setAngle(unsigned int index, double newValue)
 
   // This table rotates everything on the vertex's side of the first bond,
   // which carries the vertex's other substituents along with the far atom.
-  // That is not what a z-matrix row does, so the fragment is chosen here
-  // rather than taken from the default.
-  auto bond = undoMolecule->bond(atom1, atom2);
-  return QtGui::FragmentTools::setAngle(
-    *undoMolecule, atom3.index(), atom2.index(), atom1.index(), newValue,
-    QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom2));
+  // The chain API picks that fragment on its own, since the row is always
+  // bonded atom1-atom2-atom3.
+  const std::array<Index, 3> chain = { undoMolecule->atomUniqueId(atom1),
+                                       undoMolecule->atomUniqueId(atom2),
+                                       undoMolecule->atomUniqueId(atom3) };
+  return QtGui::FragmentTools::setChainAngle(*undoMolecule, chain, newValue) ==
+         QtGui::FragmentTools::CoordinateEditResult::Ok;
 }
 
 bool PropertyModel::setTorsion(unsigned int index, double newValue)
@@ -1261,14 +1266,15 @@ bool PropertyModel::setTorsion(unsigned int index, double newValue)
   auto atom4 = undoMolecule->atom(std::get<3>(torsion));
 
   // A torsion twists the whole side of the central bond, so that the
-  // geometry around the two atoms on the axis stays rigid. Placing a
-  // z-matrix row moves only the atom that row places, so again the fragment
-  // is chosen here.
-  auto bond = undoMolecule->bond(atom2, atom3);
-  return QtGui::FragmentTools::setTorsion(
-    *undoMolecule, atom4.index(), atom3.index(), atom2.index(), atom1.index(),
-    newValue,
-    QtGui::FragmentTools::fragmentUniqueIds(*undoMolecule, bond, atom3));
+  // geometry around the two atoms on the axis stays rigid. The chain API
+  // picks that side on its own, since the row is always bonded.
+  const std::array<Index, 4> chain = { undoMolecule->atomUniqueId(atom1),
+                                       undoMolecule->atomUniqueId(atom2),
+                                       undoMolecule->atomUniqueId(atom3),
+                                       undoMolecule->atomUniqueId(atom4) };
+  return QtGui::FragmentTools::setChainTorsion(*undoMolecule, chain,
+                                               newValue) ==
+         QtGui::FragmentTools::CoordinateEditResult::Ok;
 }
 
 QStringList PropertyModel::availableChargeTypes() const

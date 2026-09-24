@@ -75,6 +75,7 @@ avogadro_headers(QtGui
   sortfiltertreeproxymodel.h
   timedprogressdialog.h
   toolplugin.h
+  undomergetracker.h
   utilities.h
   viewfactory.h
 )
@@ -122,6 +123,7 @@ target_sources(QtGui PRIVATE
   sortfiltertreeproxymodel.cpp
   timedprogressdialog.cpp
   toolplugin.cpp
+  undomergetracker.cpp
   utilities.cpp
   viewfactory.cpp
 )

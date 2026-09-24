@@ -37,6 +37,7 @@ set(tests
   ScriptProgress
   TimedProgressDialog
   TomlParse
+  UndoMergeTracker
   Utilities
 )
 
