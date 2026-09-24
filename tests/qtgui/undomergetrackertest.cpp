@@ -237,3 +237,36 @@ TEST(UndoMergeTrackerTest, CancelEditRedoesTheUndoneStepAndEndsTheRun)
   // merging with the cancelled one.
   EXPECT_FALSE(tracker.beginEdit(1));
 }
+
+// A molecule, and so its undo stack, can be destroyed while the Measure tool
+// still holds the tracker. The tracker must then see no stack at all rather
+// than a dangling one, and a replacement stack -- even one the allocator
+// places at the old address -- must be connected afresh.
+TEST(UndoMergeTrackerTest, DestroyedStackReadsAsNullAndANewStackIsTracked)
+{
+  int value = 0;
+  UndoMergeTracker tracker;
+  {
+    QUndoStack doomed;
+    tracker.setUndoStack(&doomed);
+    tracker.beginEdit(1);
+    doomed.push(new SetValueCommand(&value, 0, 1));
+    tracker.recordEdit(1);
+  }
+  EXPECT_EQ(tracker.undoStack(), nullptr);
+  EXPECT_FALSE(tracker.beginEdit(1));
+  tracker.cancelEdit();
+
+  QUndoStack replacement;
+  tracker.setUndoStack(&replacement);
+  EXPECT_EQ(tracker.undoStack(), &replacement);
+
+  EXPECT_FALSE(tracker.beginEdit(2));
+  replacement.push(new SetValueCommand(&value, 1, 2));
+  tracker.recordEdit(2);
+  // An outside push must still end the run, which needs the indexChanged
+  // connection to the replacement stack to be live.
+  replacement.push(new SetValueCommand(&value, 2, 3));
+  EXPECT_FALSE(tracker.beginEdit(2));
+  EXPECT_EQ(value, 3);
+}

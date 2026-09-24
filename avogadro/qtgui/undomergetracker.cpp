@@ -29,6 +29,11 @@ void UndoMergeTracker::disconnectFromStack()
   m_connection = QMetaObject::Connection();
 }
 
+QUndoStack* UndoMergeTracker::undoStack() const
+{
+  return m_stack.data();
+}
+
 void UndoMergeTracker::setUndoStack(QUndoStack* stack)
 {
   if (m_stack == stack)
@@ -38,7 +43,7 @@ void UndoMergeTracker::setUndoStack(QUndoStack* stack)
   disconnectFromStack();
 
   m_stack = stack;
-  if (m_stack != nullptr) {
+  if (!m_stack.isNull()) {
     // The context object (m_stack itself) ties the connection's lifetime to
     // the stack, so a stack destroyed without setUndoStack(nullptr) being
     // called first can't leave a dangling callback. It is also explicitly
@@ -66,7 +71,7 @@ bool UndoMergeTracker::beginEdit(int fieldId)
   m_editing = true;
   m_undone = false;
 
-  if (m_stack == nullptr || fieldId != m_fieldId || m_command == nullptr) {
+  if (m_stack.isNull() || fieldId != m_fieldId || m_command == nullptr) {
     m_fieldId = fieldId;
     m_command = nullptr;
     m_index = -1;
@@ -91,7 +96,7 @@ bool UndoMergeTracker::beginEdit(int fieldId)
 void UndoMergeTracker::recordEdit(int fieldId)
 {
   m_fieldId = fieldId;
-  if (m_stack != nullptr && m_stack->index() == m_stack->count() &&
+  if (!m_stack.isNull() && m_stack->index() == m_stack->count() &&
       m_stack->index() > 0) {
     m_index = m_stack->index();
     m_command = m_stack->command(m_index - 1);
@@ -114,7 +119,7 @@ void UndoMergeTracker::endRun()
 
 void UndoMergeTracker::cancelEdit()
 {
-  if (m_undone && m_stack != nullptr)
+  if (m_undone && !m_stack.isNull())
     m_stack->redo();
   endRun();
 }

@@ -9,6 +9,7 @@
 #include "avogadroqtguiexport.h"
 
 #include <QtCore/QMetaObject> // for QMetaObject::Connection
+#include <QtCore/QPointer>
 
 class QUndoCommand;
 class QUndoStack;
@@ -69,7 +70,7 @@ public:
 
   /// The stack this tracker undoes into. Changing it ends the current run.
   void setUndoStack(QUndoStack* stack);
-  QUndoStack* undoStack() const { return m_stack; }
+  QUndoStack* undoStack() const;
 
   /**
    * Undo the previous step and return true if @p fieldId continues the run
@@ -117,7 +118,10 @@ public:
 private:
   void disconnectFromStack();
 
-  QUndoStack* m_stack;
+  // Guarded, so a stack destroyed out from under the tracker reads as null
+  // rather than dangling -- and a new stack that happens to reuse its
+  // address is still seen as a different stack by setUndoStack().
+  QPointer<QUndoStack> m_stack;
   QMetaObject::Connection m_connection;
   int m_fieldId;
   const QUndoCommand* m_command;
