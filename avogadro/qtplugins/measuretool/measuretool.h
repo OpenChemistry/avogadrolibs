@@ -6,9 +6,14 @@
 #ifndef AVOGADRO_QTPLUGINS_MEASURETOOL_H
 #define AVOGADRO_QTPLUGINS_MEASURETOOL_H
 
+#include "measurewidget.h"
+
+#include <avogadro/qtgui/fragmenttools.h>
 #include <avogadro/qtgui/toolplugin.h>
+#include <avogadro/qtgui/undomergetracker.h>
 
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/vector.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/primitive.h>
 
@@ -49,6 +54,22 @@ public:
 
   void draw(Rendering::GroupNode& node) override;
 
+private Q_SLOTS:
+  /// A row's spin box was given a new value, by typing or by the arrows or
+  /// wheel. Applies it via QtGui::FragmentTools.
+  void applyEdit(MeasureField field, double value);
+
+  /// A row's spin box lost focus: end the undo-merge run so the next
+  /// arrow/wheel step starts a fresh undo step rather than folding into an
+  /// old one.
+  void endEditingRun(MeasureField field);
+
+  /// The measured molecule changed for some other reason (another tool, a
+  /// file load, undo/redo): refresh the panel to match.
+  void moleculeChanged(unsigned int change);
+
+  void widgetDestroyed();
+
 private:
   bool toggleAtom(Index uniqueId);
 
@@ -65,9 +86,35 @@ private:
   template <typename T>
   bool pruneDeletedAtoms(T* mol);
 
+  /**
+   * Drop measured atoms that have since been deleted, whichever of
+   * m_molecule/m_rwMolecule is current. Called before reading positions in
+   * both draw() and refreshWidget() -- an atom can be deleted by some other
+   * tool between one panel refresh and the next, and reading a stale unique
+   * id's position is unsafe (AtomTemplate requires isValid() first).
+   */
+  bool pruneStaleAtoms();
+
   template <typename T>
   void createLabels(T* mol, Rendering::GeometryNode* geo,
                     QVector<Vector3>& positions);
+
+  /// The current positions of the measured atoms, in click order.
+  template <typename T>
+  QVector<Vector3> atomPositions(T* mol) const;
+
+  /// Create the panel widget and wire it up, the first time it is needed.
+  void ensureWidget();
+
+  /// Push the current atoms and measured values into the panel. Safe to
+  /// call before the panel exists (it then does nothing).
+  void refreshWidget();
+
+  /// A short, translated explanation of why an edit was refused, naming the
+  /// atoms involved by click order (#1, #2, ...).
+  QString refusalMessage(
+    MeasureField field,
+    QtGui::FragmentTools::CoordinateEditResult result) const;
 
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;
@@ -79,25 +126,13 @@ private:
   QVector<Index> m_atomIds;
   QPoint m_pressPosition;
   bool m_dragged;
+
+  MeasureWidget* m_widget;
+  /// Collapses consecutive arrow/wheel steps on the same field into a
+  /// single undo step. Its stack is whichever molecule's undo stack is
+  /// currently being edited; see setMolecule().
+  QtGui::UndoMergeTracker m_undoMerge;
 };
-
-inline void MeasureTool::setMolecule(QtGui::Molecule* mol)
-{
-  if (m_molecule != mol) {
-    m_atomIds.clear();
-    m_molecule = mol;
-    m_rwMolecule = nullptr;
-  }
-}
-
-inline void MeasureTool::setEditMolecule(QtGui::RWMolecule* mol)
-{
-  if (m_rwMolecule != mol) {
-    m_atomIds.clear();
-    m_rwMolecule = mol;
-    m_molecule = nullptr;
-  }
-}
 
 inline void MeasureTool::setGLRenderer(Rendering::GLRenderer* renderer)
 {

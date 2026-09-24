@@ -505,21 +505,30 @@ FragmentTools::CoordinateEditResult FragmentTools::setChainAngle(
   // valence angle always has and what the property table has always used.
   // Only look to the second bond when the first is absent.
   Core::Array<Index> fragment;
+  CoordinateEditResult failureResult;
   const RWBond bondIJ = molecule.bond(atomI, atomJ);
   const RWBond bondJK = molecule.bond(atomJ, atomK);
-  if (bondIJ.isValid())
+  if (bondIJ.isValid()) {
     fragment = fragmentUniqueIds(molecule, bondIJ, atomJ);
-  else if (bondJK.isValid())
+    // This side may not reach k at all: k is only reachable from the vertex
+    // by going the other way around a ring, so there is no side of this
+    // bond that can move on its own.
+    failureResult = CoordinateEditResult::Ring;
+  } else if (bondJK.isValid()) {
     fragment = fragmentUniqueIds(molecule, bondJK, atomK);
-  else
+    // This fragment always contains k -- fragmentUniqueIds() always
+    // includes the start atom it was asked for -- so the only way setAngle()
+    // below can refuse it is the fixed-reference guard: i sits inside k's
+    // side too, so no rigid fragment can move without dragging the fixed
+    // atom along. That is a rigidity problem, not a ring.
+    failureResult = CoordinateEditResult::NotRigid;
+  } else {
     return CoordinateEditResult::NotRigid;
+  }
 
-  // A bond was found but its side does not reach k: k is only reachable
-  // from the vertex by going the other way around a ring, so there is no
-  // side of this bond that can move on its own.
   return setAngle(molecule, k, j, i, degrees, fragment)
            ? CoordinateEditResult::Ok
-           : CoordinateEditResult::Ring;
+           : failureResult;
 }
 
 FragmentTools::CoordinateEditResult FragmentTools::setChainTorsion(

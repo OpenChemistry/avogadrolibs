@@ -899,6 +899,46 @@ TEST(FragmentToolsTest, chainAngleAcrossARingIsRefused)
       << "atom " << i;
 }
 
+// i-j unbonded, j-k bonded: the fragment (k's side of the j-k bond) always
+// contains k itself, so the only way setAngle() can refuse it is the
+// fixed-reference guard -- here because k's side also reaches all the way
+// back to i by another route. That is a rigidity problem, not a ring, and
+// must be reported as NotRigid rather than Ring.
+TEST(FragmentToolsTest,
+     chainAngleWithNoFirstBondAndAFixedReferenceOnTheSecondIsNotRigid)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  // The same bent, three-atom shape as the propane distance test below
+  // (bonds 0-1 and 1-2, no 0-2 bond), but read as an angle with the chain
+  // reordered so the vertex (j) is atom 0 and the moving end (k) is atom 1:
+  // i-j (atom2-atom0) is unbonded, j-k (atom0-atom1) is bonded, and k's side
+  // of that bond -- atoms 1 and 2, since 1-2 is also bonded -- reaches all
+  // the way to i (atom2).
+  const Real cc = 1.54;
+  const Real theta = 109.5 * M_PI / 180.0;
+  mol.addAtom(6, Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(6, Vector3(cc, 0.0, 0.0));
+  const Vector3 u = Vector3(-1.0, 0.0, 0.0);
+  const Vector3 v = rotateAboutZ(u, theta);
+  mol.addAtom(6, Vector3(cc, 0.0, 0.0) + cc * v);
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 1);
+  const Array<Vector3> original = mol.atomPositions3d();
+
+  const Index a0 = mol.atomUniqueId(0);
+  const Index a1 = mol.atomUniqueId(1);
+  const Index a2 = mol.atomUniqueId(2);
+
+  EXPECT_EQ(FragmentTools::CoordinateEditResult::NotRigid,
+            FragmentTools::setChainAngle(
+              mol, std::array<Index, 3>{ a2, a0, a1 }, 100.0));
+
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    EXPECT_NEAR(0.0, distance(original[i], mol.atomPosition3d(i)), 1e-12)
+      << "atom " << i;
+}
+
 // A ring bond length is not refused the way a ring angle is: the chain API
 // stretches it the same way the bond table always has, moving the named atom
 // and leaving the rest of the ring where it was.
