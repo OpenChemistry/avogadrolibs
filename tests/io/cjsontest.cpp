@@ -1045,3 +1045,31 @@ TEST(CjsonTest, outOfRangeNumbersAreSkipped)
   EXPECT_EQ(molecule2.isotope(0), 0);
   EXPECT_EQ(molecule2.isotope(1), 2);
 }
+
+// On Windows avogadroapp stored "fileName" in the local 8-bit code page, so a
+// path such as ...\Moléculas\... held a bare Latin-1 0xE9. nlohmann's dump()
+// threw type_error 316 on it and the whole write failed, breaking every
+// input generator for that molecule.
+TEST(CjsonTest, invalidUtf8StringsAreReplacedOnWrite)
+{
+  Molecule molecule;
+  molecule.addAtom(6).setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.0));
+  molecule.setData("name", "Mol\xE9"
+                           "cula"s);
+  molecule.setData("fileName", "C:\\Users\\Usuario\\Mol\xE9"
+                               "culas\\agua.xyz"s);
+
+  CjsonFormat cjson;
+  std::string serialized;
+  ASSERT_TRUE(cjson.writeString(serialized, molecule)) << cjson.error();
+
+  // The bad byte becomes U+FFFD; everything around it survives.
+  Molecule readBack;
+  ASSERT_TRUE(cjson.readString(serialized, readBack)) << cjson.error();
+  EXPECT_EQ(readBack.atomCount(), static_cast<size_t>(1));
+  EXPECT_EQ(readBack.data("name").toString(), "Mol\xEF\xBF\xBD"
+                                              "cula");
+  EXPECT_EQ(readBack.data("fileName").toString(),
+            "C:\\Users\\Usuario\\Mol\xEF\xBF\xBD"
+            "culas\\agua.xyz");
+}
