@@ -14,11 +14,14 @@
 
 #ifdef __EMSCRIPTEN__
 #include <GLES3/gl3.h>
-#elif defined(__APPLE__)
-#include <OpenGL/gl.h>
 #else
 #include <GL/glew.h>
+
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 #endif
 
 #endif // AVOGADRO_RENDERING_AVOGADROGL_H
