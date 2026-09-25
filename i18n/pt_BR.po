@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-20 06:21+0000\n"
-"PO-Revision-Date: 2026-06-02 16:57+0000\n"
+"PO-Revision-Date: 2026-09-25 12:12+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.6\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -178,6 +178,9 @@ msgid ""
 "The z-matrix lists the atoms in a different order from the molecule, so atom "
 "numbers in this file do not match the ones shown in Avogadro."
 msgstr ""
+"A matriz Z lista os átomos em uma ordem diferente da apresentada na "
+"molécula; portanto, as numerações dos átomos neste arquivo não correspondem "
+"às exibidas no Avogadro."
 
 #: molequeue/inputgenerator.cpp:477 qtgui/interfacescript.cpp:785
 #, qt-format
@@ -188,6 +191,11 @@ msgid ""
 "them may not reproduce this structure exactly. Adding a dummy atom off the "
 "axis avoids this."
 msgstr ""
+"Um fragmento linear deixa o ângulo ou a torção na(s) linha(s) %1 da matriz Z "
+"indeterminados. A geometria está escrita corretamente, mas essas coordenadas "
+"não podem ser variadas, e um programa que reconstrói coordenadas cartesianas "
+"a partir delas pode não reproduzir essa estrutura exatamente. Adicionar um "
+"átomo fictício fora do eixo evita isso."
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
@@ -548,26 +556,26 @@ msgstr "Nenhum nome de arquivo definido em BackgroundFileFormat!"
 #: qtgui/conformerquantitytranslator.cpp:30
 #, qt-format
 msgid "Distance %1-%2"
-msgstr ""
+msgstr "Distância %1-%2"
 
 #: qtgui/conformerquantitytranslator.cpp:32
 #, qt-format
 msgid "Angle %1-%2-%3"
-msgstr ""
+msgstr "Ângulo %1-%2-%3"
 
 #: qtgui/conformerquantitytranslator.cpp:35
 #, qt-format
 msgid "Dihedral %1-%2-%3-%4"
-msgstr ""
+msgstr "Diedro %1-%2-%3-%4"
 
 #: qtgui/conformerquantitytranslator.cpp:39
 msgid "Constraint"
-msgstr ""
+msgstr "Restrição"
 
 #: qtgui/conformerquantitytranslator.cpp:45
 msgctxt "position in a trajectory, counting from one"
 msgid "Frame"
-msgstr ""
+msgstr "Quadro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -582,16 +590,16 @@ msgstr ""
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
-msgstr ""
+msgstr "Energia Relativa"
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
-msgstr ""
+msgstr "Gradiente Quadrático Médio"
 
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
 msgid "Mean Speed"
-msgstr ""
+msgstr "Rapidez Média"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
 #. i18n: ectx: property (text), widget (QLabel, label_temp)
@@ -607,7 +615,7 @@ msgstr "Temperatura"
 #, qt-format
 msgctxt "quantity name, then its unit"
 msgid "%1 (%2)"
-msgstr ""
+msgstr "%1 (%2)"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1099,24 +1107,26 @@ msgstr "Oganessônio"
 
 #: qtgui/energyunitsdialog.cpp:55
 msgid "Convert Energy Units"
-msgstr ""
+msgstr "Converter Unidades de Energia"
 
 #: qtgui/energyunitsdialog.cpp:70 qtplugins/plotconformer/plotconformer.cpp:924
 msgid "This file records the units its energies are in."
-msgstr ""
+msgstr "Este arquivo registra as unidades em que suas energias estão expressas."
 
 #: qtgui/energyunitsdialog.cpp:71
 msgid ""
 "Energies are read in the units the file used, which may not be recorded."
 msgstr ""
+"As energias são lidas nas unidades usadas pelo arquivo, as quais podem não "
+"estar registradas."
 
 #: qtgui/energyunitsdialog.cpp:79
 msgid "Convert energies from:"
-msgstr ""
+msgstr "Converter energias de:"
 
 #: qtgui/energyunitsdialog.cpp:81 qtplugins/plotconformer/plotconformer.cpp:598
 msgid "to"
-msgstr ""
+msgstr "para"
 
 #: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
@@ -1191,7 +1201,7 @@ msgstr "Todos os arquivos"
 
 #: qtgui/fileformatdialog.cpp:299
 msgid "Compressed files"
-msgstr ""
+msgstr "Arquivos comprimidos"
 
 #: qtgui/fileformatdialog.cpp:306
 msgid "All supported formats"
@@ -1199,15 +1209,15 @@ msgstr "Todos os formatos suportados"
 
 #: qtgui/fragmenttools.cpp:205
 msgid "Adjust Distance"
-msgstr ""
+msgstr "Ajustar Distância"
 
 #: qtgui/fragmenttools.cpp:252
 msgid "Adjust Angle"
-msgstr ""
+msgstr "Ajustar Ângulo"
 
 #: qtgui/fragmenttools.cpp:310
 msgid "Adjust Torsion"
-msgstr ""
+msgstr "Ajustar Torsão"
 
 #: qtgui/interfacescript.cpp:306
 #, qt-format
@@ -1215,6 +1225,8 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"Erro padrão do script:\n"
+"%1"
 
 #: qtgui/interfacescript.cpp:358
 #, qt-format
@@ -1226,7 +1238,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:370
 #, qt-format
 msgid "Error reading molecule representation: %1"
-msgstr ""
+msgstr "Erro ao ler a representação da molécula: %1"
 
 #: qtgui/interfacescript.cpp:428
 #, qt-format
@@ -1310,7 +1322,7 @@ msgstr "Multiplicidade"
 
 #: qtgui/jsonwidget.cpp:344
 msgid "Coordinates"
-msgstr ""
+msgstr "Coordenadas"
 
 #: qtgui/jsonwidget.cpp:350
 msgid "Solvent"
@@ -1473,6 +1485,8 @@ msgid ""
 "The package '%1' has no installed Python environment, so '%2' cannot be run. "
 "Try installing the package again."
 msgstr ""
+"O pacote '%1' não possui um ambiente Python instalado, portanto, '%2' não "
+"pode ser executado. Tente instalar o pacote novamente."
 
 #: qtgui/pythonscript.cpp:272 qtgui/pythonscript.cpp:394
 #, qt-format
@@ -1521,6 +1535,8 @@ msgid ""
 "Error running script '%1': could not resolve a command to run it (no python "
 "interpreter or pixi environment)."
 msgstr ""
+"Erro ao executar o script '%1': não foi possível determinar um comando para "
+"executá-lo (nenhum interpretador Python ou ambiente pixi)."
 
 #: qtgui/pythonscript.cpp:548
 #, qt-format
@@ -1599,7 +1615,7 @@ msgstr "Limpar Átomos"
 
 #: qtgui/rwmolecule.cpp:151 qtplugins/zmatrixeditor/zmatrixeditor.cpp:56
 msgid "Reorder Atoms"
-msgstr ""
+msgstr "Reordenar Átomos"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1714,7 +1730,7 @@ msgstr "Completar Célula Unitária"
 
 #: qtgui/rwmolecule.cpp:867
 msgid "Fill Translational Copies"
-msgstr ""
+msgstr "Preencher Cópias de Tradução"
 
 #: qtgui/rwmolecule.cpp:887
 msgid "Reduce Cell to Asymmetric Unit"
@@ -2373,7 +2389,7 @@ msgstr "Parar"
 
 #: qtplugins/autoopt/autoopt.cpp:571
 msgid "Relax for Dynamics"
-msgstr ""
+msgstr "Relaxar para a Dinâmica"
 
 #: qtplugins/autoopt/autoopt.cpp:571 qtplugins/forcefield/forcefield.cpp:77
 #: qtplugins/forcefield/forcefield.cpp:583
@@ -2391,7 +2407,7 @@ msgstr "Dinâmica Molecular"
 #, qt-format
 msgctxt "pre-relax before dynamics"
 msgid "Relaxing… %1 ΔE = %L2"
-msgstr ""
+msgstr "Relaxando… %1 ΔE = %L2"
 
 #: qtplugins/autoopt/autoopt.cpp:779
 #, qt-format
@@ -2680,11 +2696,11 @@ msgstr "Cancelar"
 
 #: qtplugins/commandscripts/command.cpp:481
 msgid "The script could not be started."
-msgstr ""
+msgstr "Não foi possível iniciar o script."
 
 #: qtplugins/commandscripts/command.cpp:491
 msgid "Error Running Script"
-msgstr ""
+msgstr "Erro ao Executar o Script"
 
 #: qtplugins/commandscripts/command.cpp:558
 msgid "Set path to Python interpreter:"
@@ -3016,7 +3032,7 @@ msgstr "Copiar"
 
 #: qtplugins/copypaste/copypaste.cpp:34
 msgid "Atom Mapped SMILES"
-msgstr ""
+msgstr "SMILES com Mapeamento de Átomos"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
@@ -3064,6 +3080,8 @@ msgid ""
 "Writer error:\n"
 "%1"
 msgstr ""
+"Erro de gravação:\n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
@@ -3335,6 +3353,8 @@ msgid ""
 "This range would build roughly %L1 atoms, more than the %L2 atom limit. "
 "Narrow the range to continue."
 msgstr ""
+"Essa faixa geraria cerca de %L1 átomos, o que excede o limite de %L2 átomos. "
+"Restrinja a faixa para continuar."
 
 #: qtplugins/crystal/unitcelldialog.cpp:251
 #: qtplugins/crystal/unitcelldialog.cpp:264
@@ -3538,12 +3558,12 @@ msgstr "Forças"
 #: qtplugins/forcefield/forcefield.cpp:104
 #: qtplugins/forcefield/forcefield.cpp:909
 msgid "Energies (All Conformers)"
-msgstr ""
+msgstr "Energias (Todos os Confôrmeros)"
 
 #: qtplugins/forcefield/forcefield.cpp:112
 #: qtplugins/forcefield/forcefield.cpp:908
 msgid "Forces (All Conformers)"
-msgstr ""
+msgstr "Forças (Todos os Confôrmeros)"
 
 #: qtplugins/forcefield/forcefield.cpp:120
 #, fuzzy
@@ -3582,7 +3602,7 @@ msgstr "Fundir Átomos Selecionados"
 #: qtplugins/forcefield/forcefield.cpp:181
 msgctxt "freeze atomic distances / glue atoms together"
 msgid "Unfuse Selected Atoms"
-msgstr ""
+msgstr "Desgrudar Átomos Selecionados"
 
 #: qtplugins/forcefield/forcefield.cpp:544
 #: qtplugins/forcefield/forcefield.cpp:727
