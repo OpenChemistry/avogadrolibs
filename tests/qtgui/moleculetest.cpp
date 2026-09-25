@@ -8,10 +8,12 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/persistentatom.h>
 #include <avogadro/qtgui/persistentbond.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include "../core/utils.h"
 
@@ -654,6 +656,29 @@ TEST_F(MoleculeTest, copy)
   EXPECT_FALSE(copy.bondByUniqueId(2).isValid());
 }
 
+TEST_F(MoleculeTest, undoMoleculeFromCoreMolecule)
+{
+  // Constructing from a Core::Molecule used to skip m_undoMolecule entirely,
+  // so undoMolecule() returned an uninitialized pointer -- almost every call
+  // site dereferences it without a null check -- and isInteractive() tested a
+  // pointer that had never been set.
+  Avogadro::Core::Molecule core;
+  core.addAtom(6);
+  core.addAtom(1);
+  core.addBond(0, 1, 1);
+
+  Molecule mol(core);
+  ASSERT_NE(mol.undoMolecule(), nullptr);
+  EXPECT_EQ(&mol.undoMolecule()->molecule(), &mol);
+  EXPECT_FALSE(mol.isInteractive());
+
+  // The undo molecule has to actually drive this molecule.
+  mol.undoMolecule()->addAtom(8, Avogadro::Vector3(1.0, 0.0, 0.0));
+  EXPECT_EQ(mol.atomCount(), static_cast<Index>(3));
+  mol.undoMolecule()->undoStack().undo();
+  EXPECT_EQ(mol.atomCount(), static_cast<Index>(2));
+}
+
 TEST_F(MoleculeTest, assignment)
 {
   Molecule assign;
@@ -742,4 +767,29 @@ TEST_F(MoleculeTest, baseAssignment)
   EXPECT_EQ(qtMolecule.bondByUniqueId(1).atom2().atomicNumber(),
             b[1].atom2().atomicNumber());
   EXPECT_FALSE(qtMolecule.bondByUniqueId(2).isValid());
+}
+
+TEST_F(MoleculeTest, swapIgnoresIndicesThatAreNotThere)
+{
+  // findAtomUniqueId() / findBondUniqueId() answer MaxIndex for an index that
+  // is not an atom or a bond, and the only thing standing between that and a
+  // write far outside m_atomUniqueIds / m_bondUniqueIds used to be an assert,
+  // which a released build removes. The damage shows up later, as a bad free
+  // when the molecule is destroyed, so this test is meaningful under a
+  // sanitizer build.
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(1);
+  molecule.addBond(molecule.atom(0), molecule.atom(1), 1);
+
+  molecule.swapAtom(0, 7);
+  molecule.swapAtom(9, 1);
+  molecule.swapBond(0, 4);
+  molecule.swapBond(6, 0);
+
+  EXPECT_EQ(static_cast<Index>(2), molecule.atomCount());
+  EXPECT_EQ(static_cast<Index>(1), molecule.bondCount());
+  EXPECT_EQ(6, molecule.atom(0).atomicNumber());
+  EXPECT_EQ(1, molecule.atom(1).atomicNumber());
+  EXPECT_TRUE(molecule.bond(0, 1).isValid());
 }

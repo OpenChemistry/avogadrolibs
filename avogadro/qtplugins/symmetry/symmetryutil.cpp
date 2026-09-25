@@ -25,6 +25,19 @@
 
 namespace Avogadro::QtPlugins::SymmetryUtil {
 
+QString pointGroupPlainText(const char* point_group)
+{
+  QString pointGroup(point_group);
+  if (pointGroup.isEmpty())
+    pointGroup = "C1"; // default
+
+  // libmsym writes the infinite order of a linear group as '0'
+  if (pointGroup.size() > 1 && pointGroup[1] == '0')
+    pointGroup = pointGroup.replace(1, 1, "\u221e");
+
+  return pointGroup;
+}
+
 QString pointGroupSymbol(const char* point_group)
 {
   QString pointGroup(point_group);

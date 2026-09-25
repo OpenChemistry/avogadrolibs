@@ -773,8 +773,14 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
     appendError("Density matrix exceeds supported size.");
     return false;
   }
+  // The matrix allocated below is basis x basis no matter how few elements
+  // the block declares, so the size check has to run in both directions.
+  // Gaussian always writes the complete lower triangle, so anything else is
+  // a malformed file rather than a reason to allocate: "Number of basis
+  // functions = 5792" followed by a one-element density block let a 376 byte
+  // file reserve a 268 MB matrix, and a second one for the spin density.
   const size_t expectedLower = basis * (basis + 1) / 2;
-  if (static_cast<size_t>(n) > expectedLower) {
+  if (static_cast<size_t>(n) != expectedLower) {
     appendError("Invalid density matrix size.");
     return false;
   }
@@ -892,8 +898,10 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
     appendError("Spin density matrix exceeds supported size.");
     return false;
   }
+  // See readDensityMatrix(): the allocation is basis x basis regardless of n,
+  // so a block that cannot fill the lower triangle is a malformed file.
   const size_t expectedLower = basis * (basis + 1) / 2;
-  if (static_cast<size_t>(n) > expectedLower) {
+  if (static_cast<size_t>(n) != expectedLower) {
     appendError("Invalid spin density matrix size.");
     return false;
   }

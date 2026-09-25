@@ -118,6 +118,47 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
         "ENABLE_FUZZ requires Clang; ${CMAKE_CXX_COMPILER_ID} has no libFuzzer.")
     endif()
   endif()
+
+  # How tests/*/CMakeLists.txt asks for libFuzzer on each fuzz executable.
+  #
+  # With a GNU-style driver, -fsanitize=fuzzer at link time is enough: the
+  # compiler driver does the linking and turns the flag into the right
+  # runtime libraries. An MSVC-style link line never reaches the driver --
+  # CMake invokes the linker itself -- so the flag is dropped with
+  # "lld-link: warning: ignoring unknown argument '-fsanitize=fuzzer'" and
+  # libFuzzer's main() and coverage hooks are silently absent. Name the
+  # compiler-rt library instead. The same is true of the
+  # -fsanitize=fuzzer-no-link above, which is why an MSVC-style build also
+  # has to put the sanitizer runtimes on the link line by hand; the Windows
+  # fuzz workflow does that with CMAKE_CXX_STANDARD_LIBRARIES.
+  #
+  # Debug info comes from the build configuration there as well, so -g is
+  # only for the GNU-style driver.
+  set(AvogadroLibs_FUZZ_COMPILE_OPTIONS -g -fsanitize=fuzzer)
+  set(AvogadroLibs_FUZZ_LINK_OPTIONS -fsanitize=fuzzer)
+  set(AvogadroLibs_FUZZ_LINK_LIBS "")
+  if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+    set(AvogadroLibs_FUZZ_COMPILE_OPTIONS -fsanitize=fuzzer)
+    set(AvogadroLibs_FUZZ_LINK_OPTIONS "")
+    set(_fuzz_rt_lib "clang_rt.fuzzer-x86_64.lib")
+    # Ask the compiler where its runtime libraries live rather than guessing
+    # at a version directory. A bare library name still resolves through the
+    # LIB path if this fails.
+    execute_process(COMMAND "${CMAKE_CXX_COMPILER}" -print-runtime-dir
+      OUTPUT_VARIABLE _fuzz_rt_dir
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      ERROR_QUIET)
+    if(_fuzz_rt_dir AND EXISTS "${_fuzz_rt_dir}/${_fuzz_rt_lib}")
+      set(_fuzz_rt_lib "${_fuzz_rt_dir}/${_fuzz_rt_lib}")
+    else()
+      message(STATUS
+        "Could not locate ${_fuzz_rt_lib}; relying on the LIB path for it.")
+    endif()
+    message(STATUS "Fuzz targets will link ${_fuzz_rt_lib}")
+    set(AvogadroLibs_FUZZ_LINK_LIBS "${_fuzz_rt_lib}")
+    unset(_fuzz_rt_lib)
+    unset(_fuzz_rt_dir)
+  endif()
 endif()
 
 set(QT_VERSION "6" CACHE STRING "What major version of Qt")

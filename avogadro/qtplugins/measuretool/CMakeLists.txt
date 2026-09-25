@@ -1,5 +1,6 @@
 set(measuretool_srcs
   measuretool.cpp
+  measurewidget.cpp
 )
 
 set(measuretool_uis

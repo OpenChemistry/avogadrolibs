@@ -197,6 +197,31 @@ TEST(VaspTest, readOutcar)
   EXPECT_EQ(molecule.atom(4).position3d().z(), 1.17499);
 }
 
+TEST(VaspTest, readTruncatedOutcar)
+{
+  // A POSITION block whose coordinate lines are shorter than three tokens used
+  // to run the range cast past the end of the token list, and a block that
+  // simply ends -- no closing dashed line -- used to re-parse the last line
+  // for ever, because std::getline leaves its target alone at end of input.
+  const std::string header = "   VRHFIN =Ti: d3 s1\n"
+                             "   ions per type =   2\n"
+                             " POSITION                   TOTAL-FORCE\n"
+                             " -----------------------------------\n";
+
+  for (const auto& body : {
+         "  0.00\n"s,                     // one token
+         "  0.00  1.00\n"s,               // two tokens
+         "\n"s,                           // no tokens at all
+         "  0.00  1.00  2.00\n  0.50\n"s, // short line after a good one
+         "  0.00  1.00  2.00\n"s,         // never closed, ends at EOF
+       }) {
+    Molecule molecule;
+    OutcarFormat outcar;
+    EXPECT_FALSE(outcar.readString(header + body, molecule)) << body;
+    EXPECT_NE(outcar.error(), std::string()) << body;
+  }
+}
+
 TEST(VaspTest, OutcarModes)
 {
   // This tests some of the mode setting/checking code

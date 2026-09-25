@@ -24,6 +24,7 @@ set(tests
   InternalCoordinates
   Kekulize
   Layer
+  LayerManager
   Mesh
   Molecule
   Mutex
@@ -82,15 +83,15 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
-  set(core_fuzz array bond coordinateblockgenerator crystal graph molecule neighbor residue ring secondarystructure utilities variant variantmap)
+  set(core_fuzz array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap)
   foreach(fuzzName ${core_fuzz})
     add_executable(fuzz_core_${fuzzName} fuzz-${fuzzName}.cpp)
     if(DEFINED ENV{LIB_FUZZING_ENGINE})
       target_link_libraries(fuzz_core_${fuzzName} PRIVATE Avogadro::Core $ENV{LIB_FUZZING_ENGINE})
     else()
-      target_compile_options(fuzz_core_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
-      target_link_options(fuzz_core_${fuzzName} PRIVATE -fsanitize=fuzzer)
-      target_link_libraries(fuzz_core_${fuzzName} PRIVATE Avogadro::Core)
+      target_compile_options(fuzz_core_${fuzzName} PRIVATE ${AvogadroLibs_FUZZ_COMPILE_OPTIONS})
+      target_link_options(fuzz_core_${fuzzName} PRIVATE ${AvogadroLibs_FUZZ_LINK_OPTIONS})
+      target_link_libraries(fuzz_core_${fuzzName} PRIVATE Avogadro::Core ${AvogadroLibs_FUZZ_LINK_LIBS})
     endif()
   endforeach()
 endif()

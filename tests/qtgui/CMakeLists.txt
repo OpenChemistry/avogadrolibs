@@ -17,6 +17,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  BackgroundFileFormat
   CalcWorker
   ElementTranslator
   EnergyUnits
@@ -25,13 +26,18 @@ set(tests
   GenericHighlighter
   HydrogenTools
   JsonWidget
+  LayerModel
   MeshGenerator
   Molecule
+  MoleculeModel
   PackageManager
+  PluginLayerManager
   RWLayerManager
   RWMolecule
   ScriptProgress
   TimedProgressDialog
+  TomlParse
+  UndoMergeTracker
   Utilities
 )
 
@@ -91,7 +97,7 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
-  set(qtgui_fuzz rwmolecule generichighlighter jsonwidget interfacescript-json)
+  set(qtgui_fuzz rwmolecule generichighlighter jsonwidget interfacescript-json layermanager)
   foreach(fuzzName ${qtgui_fuzz})
     add_executable(fuzz_qtgui_${fuzzName} fuzz-${fuzzName}.cpp)
     if(DEFINED ENV{LIB_FUZZING_ENGINE})
@@ -100,11 +106,11 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
         Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test
         $ENV{LIB_FUZZING_ENGINE})
     else()
-      target_compile_options(fuzz_qtgui_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
-      target_link_options(fuzz_qtgui_${fuzzName} PRIVATE -fsanitize=fuzzer)
+      target_compile_options(fuzz_qtgui_${fuzzName} PRIVATE ${AvogadroLibs_FUZZ_COMPILE_OPTIONS})
+      target_link_options(fuzz_qtgui_${fuzzName} PRIVATE ${AvogadroLibs_FUZZ_LINK_OPTIONS})
       target_link_libraries(fuzz_qtgui_${fuzzName}
         PRIVATE Avogadro::QtGui
-        Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
+        Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test ${AvogadroLibs_FUZZ_LINK_LIBS})
     endif()
   endforeach()
 endif()

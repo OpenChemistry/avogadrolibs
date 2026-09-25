@@ -25,12 +25,14 @@ inline Real bondAngle(const Vector3& b0, const Vector3& b1)
 {
   // standard formula, e.g.
   // https://scicomp.stackexchange.com/q/27689/14517
-  // Since we're using bonds, v. small angles are okay
-  // only problem is if bond lengths are v. v. small
-  //   but that's unlikely in practice
   const Real dot = -1.0 * b0.dot(b1);
   const Real norms = b0.norm() * b1.norm();
-  return std::acos(dot / norms) * RAD_TO_DEG_D;
+  // a zero-length bond has no angle; return 0 rather than NaN
+  if (!(norms > 0.0))
+    return 0.0;
+  // rounding can push the cosine just outside [-1, 1]
+  return std::acos(std::clamp(dot / norms, Real(-1.0), Real(1.0))) *
+         RAD_TO_DEG_D;
 }
 
 /**

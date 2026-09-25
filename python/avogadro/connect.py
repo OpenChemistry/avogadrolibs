@@ -292,6 +292,35 @@ class connect:
             return result_data(response)
         return response
 
+    def fetch_pdb(self, code, wait=True, timeout=None):
+        """
+        Download a structure from the Protein Data Bank by its four-character
+        identifier and load it, replacing the active molecule.
+
+        Like fetch_by_name(), this hands the work to the network and would
+        otherwise reply before it finishes, so ``wait`` defaults to True
+        here, unlike send() and command().
+
+        :param code: A PDB identifier, e.g. "1crn". Four characters, the
+            first a digit 1-9 and the rest letters or digits.
+        :param wait: If True (the default), do not return until the
+            structure has been downloaded and loaded.
+        :param timeout: Seconds to allow the command, when wait is True.
+        :returns: With wait=True, the dict of data the command reported --
+            ``name`` and ``source`` ("rcsb") always, plus ``atomCount``,
+            ``residueCount`` and ``formula`` when available; with
+            wait=False, the raw response.
+        :raises RPCError: with code -2 if code is not a well-formed PDB
+            identifier, if the download failed, or if the entry could not
+            be read.
+        """
+        response = self.send(
+            "fetchPDB", {"code": code}, wait=wait, timeout=timeout
+        )
+        if wait:
+            return result_data(response)
+        return response
+
     def version(self):
         """
         Report the versions Avogadro is running, for compatibility checks.

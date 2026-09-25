@@ -44,3 +44,41 @@ TEST(LennardJonesTest, EvaluateMatchesValueAndGradient)
                 std::max(1e-10, 1e-9 * std::fabs(expectedGradient[i])));
   }
 }
+
+TEST(LennardJonesTest, SetMoleculeUsesFrozenAtomMask)
+{
+  Molecule molecule;
+  molecule.addAtom(18).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(18).setPosition3d(Vector3(3.0, 0.0, 0.0));
+  molecule.setFrozenAtom(0, true);
+
+  LennardJones lj;
+  lj.setMolecule(&molecule);
+
+  const Eigen::VectorXd mask = lj.mask();
+  ASSERT_EQ(mask.rows(), 6);
+  EXPECT_TRUE(mask.head<3>().isZero());
+  EXPECT_TRUE(mask.tail<3>().isOnes());
+
+  // the frozen atom feels no force
+  Eigen::VectorXd x(6);
+  x << 0.0, 0.0, 0.0, 3.0, 0.0, 0.0;
+  Eigen::VectorXd grad;
+  lj.gradient(x, grad);
+  EXPECT_TRUE(grad.head<3>().isZero());
+  EXPECT_FALSE(grad.tail<3>().isZero());
+}
+
+TEST(LennardJonesTest, SetMoleculeWithoutFrozenAtomsFreesEveryAtom)
+{
+  Molecule molecule;
+  molecule.addAtom(18).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(18).setPosition3d(Vector3(3.0, 0.0, 0.0));
+
+  LennardJones lj;
+  lj.setMolecule(&molecule);
+
+  const Eigen::VectorXd mask = lj.mask();
+  ASSERT_EQ(mask.rows(), 6);
+  EXPECT_TRUE(mask.isOnes());
+}

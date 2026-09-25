@@ -7,8 +7,11 @@
 
 #include <avogadro/core/angletools.h>
 
+#include <cmath>
 #include <vector>
 
+using Avogadro::bondAngle;
+using Avogadro::calculateAngle;
 using Avogadro::shiftValuesToWindow;
 using Avogadro::unwrapPeriodicValues;
 
@@ -159,4 +162,26 @@ TEST(AngleToolsTest, helpersWorkOnFloatSeries)
   shiftValuesToWindow(values, 360.0f, -180.0f, 180.0f);
 
   EXPECT_NEAR(values[1] - values[0], 30.0f, 1.0e-4f);
+}
+
+TEST(AngleToolsTest, bondAngleOfCollinearBondsIsFinite)
+{
+  // For these vectors the cosine rounds to one ulp past -1, and an unclamped
+  // acos returned NaN instead of 180 degrees.
+  const Avogadro::Vector3 b(0.1, 1.0, -0.09);
+  EXPECT_NEAR(bondAngle(b, b), 180.0, 1.0e-6);
+  EXPECT_NEAR(bondAngle(b, -b), 0.0, 1.0e-6);
+
+  // the same bonds through calculateAngle(): a-b-c in a straight line
+  const Avogadro::Vector3 origin(0.0, 0.0, 0.0);
+  EXPECT_NEAR(calculateAngle(origin - b, origin, origin + b), 180.0, 1.0e-6);
+}
+
+TEST(AngleToolsTest, bondAngleOfZeroLengthBondIsZero)
+{
+  const Avogadro::Vector3 zero(0.0, 0.0, 0.0);
+  const Avogadro::Vector3 b(1.0, 0.0, 0.0);
+  EXPECT_EQ(bondAngle(zero, b), 0.0);
+  EXPECT_EQ(bondAngle(b, zero), 0.0);
+  EXPECT_EQ(bondAngle(zero, zero), 0.0);
 }

@@ -149,9 +149,12 @@ bool RWMolecule::reorderAtoms(const Core::Array<Index>& newOrder)
 
   auto* comm = new ReorderAtomsCommand(*this, swaps);
   comm->setText(tr("Reorder Atoms"));
+  // ReorderAtomsCommand::redo() -- run synchronously by push() -- already
+  // emits Atoms|Bonds|Modified|Reordered itself (see the class comment in
+  // rwmolecule_undo.h), so no further emit is needed here; one would both
+  // duplicate the notification and drop the Reordered flag from it.
   m_undoStack.push(comm);
 
-  emitChanged(Molecule::Atoms | Molecule::Bonds | Molecule::Modified);
   return true;
 }
 
@@ -362,6 +365,18 @@ RWMolecule::BondType RWMolecule::addBond(Index atom1, Index atom2,
 {
   if (atom1 == atom2 || std::max(atom1, atom2) >= atomCount())
     return BondType();
+
+  // Two atoms that are already bonded do not get a second bond:
+  // Core::Molecule::addBond() updates the order and returns the existing bond,
+  // so an AddBondCommand here would record a bond id one past the end and a
+  // unique id for a bond that is never created. Change the order instead,
+  // which is what the core call would have done, and keep it undoable.
+  BondType existing = bond(atom1, atom2);
+  if (existing.isValid()) {
+    if (bondOrder(existing.index()) != order)
+      setBondOrder(existing.index(), order);
+    return existing;
+  }
 
   Index bondId = bondCount();
   auto bondUid = static_cast<Index>(m_molecule.m_bondUniqueIds.size());
