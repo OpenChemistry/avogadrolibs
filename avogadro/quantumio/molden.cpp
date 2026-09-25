@@ -10,6 +10,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -242,7 +243,8 @@ void MoldenFile::processLine(std::istream& in)
         // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
         while (!line.empty() && Core::contains(line, "=")) {
           if (Core::contains(line, "Occup"))
-            m_electrons += Core::lexicalCast<int>(list.back()).value_or(0);
+            m_electrons +=
+              std::lround(Core::lexicalCast<double>(list.back()).value_or(0.0));
           else if (Core::contains(line, "Ene")) {
             pendingEnergy =
               Core::lexicalCast<double>(list.back()).value_or(0.0) *
