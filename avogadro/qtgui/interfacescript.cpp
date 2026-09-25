@@ -28,6 +28,21 @@ namespace Avogadro::QtGui {
 using QtGui::GenericHighlighter;
 using QtGui::PythonScript;
 
+// Serialize a 4x4 matrix as nested rows, matching what CjsonFormat writes for
+// a Variant::Matrix, so a script sees one shape whether the CJSON came from a
+// file or from the live camera.
+static QJsonArray matrixToJson(const Matrix4f& matrix)
+{
+  QJsonArray rows;
+  for (int i = 0; i < 4; ++i) {
+    QJsonArray row;
+    for (int j = 0; j < 4; ++j)
+      row.append(static_cast<double>(matrix(i, j)));
+    rows.append(row);
+  }
+  return rows;
+}
+
 // Strip any leading non-JSON output (e.g. deprecation warnings printed to
 // stdout by third-party libraries). Find the first '{' or '['.
 static void stripLeadingNonJson(QByteArray& data)
@@ -179,6 +194,27 @@ void InterfaceScript::reset()
   m_highlightStyles.clear();
 }
 
+void InterfaceScript::setCamera(const Matrix4f& modelView,
+                                const Matrix4f& projection)
+{
+  m_modelView = modelView;
+  m_projection = projection;
+  m_hasCamera = true;
+}
+
+void InterfaceScript::insertCamera(QJsonObject& cjson) const
+{
+  if (!m_hasCamera)
+    return;
+
+  // Overwrite rather than merge: the molecule may carry matrices from the file
+  // it was read from, and the live camera is what the user is looking at.
+  QJsonObject properties = cjson.value(QStringLiteral("properties")).toObject();
+  properties.insert(QStringLiteral("modelView"), matrixToJson(m_modelView));
+  properties.insert(QStringLiteral("projection"), matrixToJson(m_projection));
+  cjson.insert(QStringLiteral("properties"), properties);
+}
+
 bool InterfaceScript::runCommand(const QJsonObject& options_,
                                  Core::Molecule* mol)
 {
@@ -192,19 +228,54 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
 
   // Add the molecule file to the options
   QJsonObject allOptions(options_);
-  if (!insertMolecule(allOptions, *mol))
+  if (!insertMolecule(allOptions, *mol)) {
+    // No process will be started, so commandFinished() will never run to drain
+    // m_errors. Report here or the failure is invisible.
+    qWarning() << "InterfaceScript::runCommand: could not supply the molecule "
+                  "to the script:"
+               << m_errors.join("\n");
     return false;
+  }
 
+  // UniqueConnection: the connections are only torn down on the failure path
+  // below, so running the same instance again would otherwise stack duplicates
+  // and deliver every signal once per previous run.
   connect(m_interpreter, &PythonScript::finished, this,
-          &::Avogadro::QtGui::InterfaceScript::commandFinished);
+          &::Avogadro::QtGui::InterfaceScript::commandFinished,
+          Qt::UniqueConnection);
+  connect(m_interpreter, &PythonScript::asyncProgress, this,
+          &::Avogadro::QtGui::InterfaceScript::handleProgress,
+          Qt::UniqueConnection);
   // Package-mode scripts take no command-line flag; the identifier is already
   // the positional argument and JSON arrives on stdin (mirrors
   // InputGenerator::generateInput() which passes QStringList()).
   QStringList runArgs;
   if (!m_interpreter->isPackageMode())
     runArgs << QStringLiteral("--run-command");
-  m_interpreter->asyncExecute(runArgs, QJsonDocument(allOptions).toJson());
+  // Scan stdout for progress envelopes, and keep stderr on its own channel so
+  // library chatter (pixi, warnings, progress bars) cannot corrupt the result.
+  m_interpreter->setProgressScanning(true);
+  if (!m_interpreter->asyncExecute(runArgs, QJsonDocument(allOptions).toJson(),
+                                   /* mergedChannels = */ false)) {
+    disconnect(m_interpreter, &PythonScript::finished, this,
+               &::Avogadro::QtGui::InterfaceScript::commandFinished);
+    disconnect(m_interpreter, &PythonScript::asyncProgress, this,
+               &::Avogadro::QtGui::InterfaceScript::handleProgress);
+    m_errors << m_interpreter->errorList();
+    return false;
+  }
   return true;
+}
+
+void InterfaceScript::handleProgress(const QJsonObject& payload)
+{
+  const QString message =
+    payload.value(QStringLiteral("message")).toString(QString());
+  // -1 marks "not supplied" - the bar keeps whatever state it had.
+  const int value = payload.value(QStringLiteral("value")).toInt(-1);
+  const int maximum = payload.value(QStringLiteral("maximum")).toInt(-1);
+
+  emit progress(message, value, maximum);
 }
 
 void InterfaceScript::commandFinished()
@@ -228,11 +299,16 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
 
   QJsonDocument doc;
   if (!parseJson(json, doc)) {
+    // The script ran with separate channels, so a python traceback never
+    // reached stdout. Surface it here or the failure has no explanation.
+    const QByteArray stderrOutput = m_interpreter->asyncStandardError();
+    if (!stderrOutput.isEmpty())
+      m_errors << tr("Script standard error:\n%1")
+                    .arg(QString::fromUtf8(stderrOutput));
     return false;
   }
 
   // Update cache
-  bool result = true;
   if (doc.isObject()) {
     QJsonObject obj = doc.object();
 
@@ -255,49 +331,65 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       m_moleculeExtension = obj["moleculeFormat"].toString();
     }
 
-    Io::FileFormatManager& formats = Io::FileFormatManager::instance();
-    QScopedPointer<Io::FileFormat> format(
-      formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
-
-    if (format.isNull()) {
-      m_errors << tr("Error reading molecule representation: "
-                     "Unrecognized file format: %1")
-                    .arg(m_moleculeExtension);
-      return false;
-    }
-
-    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
-    QtGui::Molecule newMol(guiMol->parent());
+    // Pull out the molecule the script returned, if it returned one at all.
+    // Commands that only report a message (e.g. exporting an image) must leave
+    // the current molecule untouched rather than replacing it with an empty
+    // one.
+    QString moleculeString;
     if (m_moleculeExtension == "cjson") {
-      // convert the "cjson" field to a string
       QJsonObject cjsonObj = obj["cjson"].toObject();
-      QJsonDocument doc2(cjsonObj);
-      QString strCJSON(doc2.toJson(QJsonDocument::Compact));
-      if (!strCJSON.isEmpty()) {
-        result = format->readString(strCJSON.toStdString(), newMol);
+      if (!cjsonObj.isEmpty()) {
+        QJsonDocument doc2(cjsonObj);
+        moleculeString = QString(doc2.toJson(QJsonDocument::Compact));
       }
     } else if (obj.contains(m_moleculeExtension) &&
                obj[m_moleculeExtension].isString()) {
-      QString strFile = obj[m_moleculeExtension].toString();
-      result = format->readString(strFile.toStdString(), newMol);
+      moleculeString = obj[m_moleculeExtension].toString();
     }
 
-    // check if the script wants us to perceive bonds first
-    if (obj["bond"].toBool()) {
-      newMol.perceiveBondsSimple();
-      newMol.perceiveBondOrders();
-    }
+    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
 
-    // how do we handle this result?
-    if (obj["readProperties"].toBool()) {
-      guiMol->readProperties(newMol);
-      guiMol->emitChanged(Molecule::Properties | Molecule::Added);
-    } else if (obj["append"].toBool()) {
-      guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
-    } else { // replace the whole molecule
-      Molecule::MoleculeChanges changes = (Molecule::Atoms | Molecule::Bonds |
-                                           Molecule::Added | Molecule::Removed);
-      guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+    if (!moleculeString.isEmpty()) {
+      Io::FileFormatManager& formats = Io::FileFormatManager::instance();
+      QScopedPointer<Io::FileFormat> format(
+        formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
+
+      if (format.isNull()) {
+        m_errors << tr("Error reading molecule representation: "
+                       "Unrecognized file format: %1")
+                      .arg(m_moleculeExtension);
+        return false;
+      }
+
+      QtGui::Molecule newMol(guiMol->parent());
+      if (!format->readString(moleculeString.toStdString(), newMol)) {
+        // A failed parse can still leave atoms behind (a truncated xyz file
+        // reads several before it gives up), so this has to stop before
+        // anything touches guiMol: replacing the user's molecule with a
+        // fragment of what the script meant to return loses their structure.
+        m_errors << tr("Error reading molecule representation: %1")
+                      .arg(QString::fromStdString(format->error()));
+        return false;
+      }
+
+      // check if the script wants us to perceive bonds first
+      if (obj["bond"].toBool()) {
+        newMol.perceiveBondsSimple();
+        newMol.perceiveBondOrders();
+      }
+
+      // how do we handle this result?
+      if (obj["readProperties"].toBool()) {
+        guiMol->readProperties(newMol);
+        guiMol->emitChanged(Molecule::Properties | Molecule::Added);
+      } else if (obj["append"].toBool()) {
+        guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
+      } else { // replace the whole molecule
+        Molecule::MoleculeChanges changes =
+          (Molecule::Atoms | Molecule::Bonds | Molecule::Added |
+           Molecule::Removed);
+        guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+      }
     }
 
     // select some atoms
@@ -351,7 +443,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       }
     }
   }
-  return result;
+  return true;
 }
 
 bool InterfaceScript::generateInput(const QJsonObject& options_,
@@ -364,6 +456,11 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
   m_fileHighlighters.clear();
   m_mainFileName.clear();
   m_files.clear();
+
+  // The user options as the script declared them, used below to choose
+  // between the geometry keywords it may have left in the file.
+  const QJsonObject scriptOptions(
+    options_.value(QStringLiteral("options")).toObject());
 
   // Add the molecule file to the options
   QJsonObject allOptions(options_);
@@ -430,7 +527,7 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
                 contents = m_errors.back();
                 result = false;
               }
-              replaceKeywords(contents, mol);
+              replaceKeywords(contents, mol, scriptOptions);
               m_filenames << fileName;
               m_files.insert(fileObj[QStringLiteral("filename")].toString(),
                              contents);
@@ -611,9 +708,12 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   // We will *always* write the CJSON representation
   // Embed CJSON as actual JSON, rather than a string,
   // .. so we'll have to re-parse it
-  cjsonFormat->writeString(str, mol);
+  // Use a separate string: reusing the one above would leave a tail of the
+  // other format behind whenever it is the longer of the two.
+  std::string cjsonStr;
+  cjsonFormat->writeString(cjsonStr, mol);
   QJsonParseError error;
-  QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
+  QJsonDocument doc = QJsonDocument::fromJson(cjsonStr.c_str(), &error);
   if (error.error != QJsonParseError::NoError) {
     m_errors << tr("Error generating cjson object: Parse error at offset %1: "
                    "%2\nRaw JSON:\n\n%3")
@@ -630,7 +730,9 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
     return false;
   }
 
-  json.insert("cjson", doc.object());
+  QJsonObject cjson = doc.object();
+  insertCamera(cjson);
+  json.insert("cjson", cjson);
 
   return true;
 }
@@ -647,16 +749,139 @@ QString InterfaceScript::generateCoordinateBlock(
   return QString::fromStdString(tmp);
 }
 
-void InterfaceScript::replaceKeywords(QString& str,
-                                      const Core::Molecule& mol) const
+QString InterfaceScript::generateZMatrixBlock(const QString& spec,
+                                              const Core::Molecule& mol,
+                                              bool padded) const
+{
+  Core::CoordinateBlockGenerator gen;
+  gen.setMolecule(&mol);
+  gen.setMode(padded ? Core::CoordinateBlockGenerator::Mode::ZMatrixPadded
+                     : Core::CoordinateBlockGenerator::Mode::ZMatrix);
+  gen.setSpecification(spec.toStdString());
+  std::string tmp(gen.generateCoordinateBlock());
+  if (!tmp.empty())
+    tmp.resize(tmp.size() - 1); // Pop off the trailing newline
+
+  // A z-matrix describes each atom against atoms already written down, which
+  // the molecule's own atom order does not always allow. The geometry is
+  // right either way, but the numbering in the file is then not the
+  // numbering on screen, and anything the user counts off the structure --
+  // frozen atoms, a scan coordinate -- would be counted wrong.
+  if (gen.atomsReordered()) {
+    const QString warning(
+      tr("The z-matrix lists the atoms in a different order from the "
+         "molecule, so atom numbers in this file do not match the ones shown "
+         "in Avogadro."));
+    if (!m_warnings.contains(warning))
+      m_warnings << warning;
+  }
+
+  const Core::Array<Index> linearRows = gen.linearRows();
+  if (!linearRows.empty()) {
+    QStringList rowNumbers;
+    for (Index row : linearRows)
+      rowNumbers << QString::number(row + 1);
+    const QString warning(
+      tr("A linear fragment leaves the angle or torsion on z-matrix row(s) %1 "
+         "undetermined. The geometry is written correctly, but these "
+         "coordinates cannot be varied, and a program that rebuilds Cartesian "
+         "coordinates from them may not reproduce this structure exactly. "
+         "Adding a dummy atom off the axis avoids this.")
+        .arg(rowNumbers.join(QLatin1String(", "))));
+    if (!m_warnings.contains(warning))
+      m_warnings << warning;
+  }
+
+  return QString::fromStdString(tmp);
+}
+
+namespace {
+
+/**
+ * Whether @p value names the z-matrix entry of a "Coordinates" option.
+ *
+ * The value is the script's own string rather than anything shown on screen,
+ * so this is not matching translated text. It stays generous about spelling
+ * because the option is a convention that third-party scripts follow by
+ * hand.
+ */
+bool isZMatrixValue(const QString& value)
+{
+  const QString lower = value.toLower();
+  return lower.contains(QLatin1String("z-matrix")) ||
+         lower.contains(QLatin1String("zmatrix")) ||
+         lower.contains(QLatin1String("zmat")) ||
+         lower.contains(QLatin1String("internal"));
+}
+
+/**
+ * Remove @p keyword from @p str, taking the line with it when the keyword is
+ * all that line holds.
+ *
+ * The unused one of a pair of geometry keywords sits on a line of its own, so
+ * deleting just the keyword would leave a blank line behind -- which Gaussian,
+ * for one, reads as the end of the molecule specification.
+ */
+void removeKeywordLine(QString& str, const QString& keyword)
+{
+  qsizetype index = str.indexOf(keyword);
+  while (index >= 0) {
+    qsizetype start = index;
+    qsizetype end = index + keyword.size();
+
+    // Take the whole line only when nothing else shares it.
+    const qsizetype lineStart = str.lastIndexOf(QLatin1Char('\n'), index) + 1;
+    qsizetype lineEnd = str.indexOf(QLatin1Char('\n'), end);
+    if (lineEnd < 0)
+      lineEnd = str.size();
+    const QStringView before =
+      QStringView(str).mid(lineStart, start - lineStart);
+    const QStringView after = QStringView(str).mid(end, lineEnd - end);
+    if (before.trimmed().isEmpty() && after.trimmed().isEmpty()) {
+      start = lineStart;
+      end = (lineEnd < str.size()) ? lineEnd + 1 : lineEnd;
+    }
+
+    str.remove(start, end - start);
+    index = str.indexOf(keyword, start);
+  }
+}
+
+} // namespace
+
+void InterfaceScript::replaceKeywords(QString& str, const Core::Molecule& mol,
+                                      const QJsonObject& options) const
 {
   // Simple keywords:
   str.replace(QLatin1String("$$atomCount$$"), QString::number(mol.atomCount()));
   str.replace(QLatin1String("$$bondCount$$"), QString::number(mol.bondCount()));
 
+  // A script that can write either kind of geometry block puts both keywords
+  // in the file and declares a "Coordinates" option to choose between them.
+  // With no such option the Cartesian block is written, as it always was.
+  const QJsonValue coordinates = options.value(QStringLiteral("Coordinates"));
+  const bool wantZMatrix =
+    coordinates.isString() && isZMatrixValue(coordinates.toString());
+
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
-  QRegularExpression coordParser(R"(\$\$coords:([^\$]*)\$\$)");
+  QRegularExpression coordParser(R"(\$\$(coords|zmat|zmatpad):([^\$]*)\$\$)");
+
+  // Only a file offering both forms has anything to choose between. One that
+  // offers a single form gets it whatever the option says: a file whose only
+  // geometry keyword was dropped would go to the program with no molecule in
+  // it at all, which is worse than the wrong kind of coordinates.
+  bool haveCartesian = false;
+  bool haveZMatrix = false;
+  QRegularExpressionMatchIterator surveyor = coordParser.globalMatch(str);
+  while (surveyor.hasNext()) {
+    if (surveyor.next().captured(1) == QLatin1String("coords"))
+      haveCartesian = true;
+    else
+      haveZMatrix = true;
+  }
+  const bool choosing = haveCartesian && haveZMatrix;
+
   QRegularExpressionMatch match;
   int ind = 0;
   // Not sure while this needs to be a while statement since we replace all in
@@ -664,10 +889,19 @@ void InterfaceScript::replaceKeywords(QString& str,
   while ((match = coordParser.match(str, ind)).hasMatch()) {
     // Extract spec and prepare the replacement
     const QString keyword = match.captured(0);
-    const QString spec = match.captured(1);
+    const QString name = match.captured(1);
+    const QString spec = match.captured(2);
+    const bool isZMatrix = (name != QLatin1String("coords"));
 
     // Replace all blocks with this signature
-    str.replace(keyword, generateCoordinateBlock(spec, mol));
+    if (choosing && isZMatrix != wantZMatrix) {
+      removeKeywordLine(str, keyword);
+    } else if (isZMatrix) {
+      str.replace(keyword, generateZMatrixBlock(
+                             spec, mol, name == QLatin1String("zmatpad")));
+    } else {
+      str.replace(keyword, generateCoordinateBlock(spec, mol));
+    }
 
   } // end for coordinate block
 }

@@ -65,7 +65,13 @@ bool ChargeManager::removeModel(const std::string& identifier)
 {
   std::string lowerId = toLower(identifier);
 
-  auto ids = m_identifiers[lowerId];
+  const auto it = m_identifiers.find(lowerId);
+  if (it == m_identifiers.end()) {
+    appendError("Model " + identifier + " was not loaded.");
+    return false;
+  }
+
+  const auto ids = it->second;
   m_identifiers.erase(lowerId);
   m_identifierToName.erase(lowerId);
 

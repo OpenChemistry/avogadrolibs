@@ -16,6 +16,7 @@
 #include "elements.h"
 #include "graph.h"
 #include "layer.h"
+#include "moleculeinfo.h"
 #include "propertymap.h"
 #include "variantmap.h"
 #include "vector.h"
@@ -25,6 +26,7 @@
 #include <cstddef>
 #include <list>
 #include <map>
+#include <memory>
 #include <string>
 
 namespace Avogadro::Core {
@@ -64,13 +66,24 @@ public:
   /** Copy constructor  */
   Molecule(const Molecule& other);
 
-  /** Move constructor */
+  /**
+   * Move constructor.
+   *
+   * Takes every member from @p other and leaves it equivalent to a
+   * default-constructed Molecule. The layer state is a shared_ptr whose handle
+   * is transferred, not rebuilt. noexcept, but not allocation-free: leaving the
+   * source empty allocates small empty containers, and the graph's edge list
+   * may be copied. An allocation failure here terminates the program.
+   */
   Molecule(Molecule&& other) noexcept;
 
   /** Assignment operator */
   Molecule& operator=(const Molecule& other);
 
-  /** Move assignment operator */
+  /**
+   * Move assignment operator. noexcept but may allocate, as the move
+   * constructor does; an allocation failure terminates the program.
+   */
   Molecule& operator=(Molecule&& other) noexcept;
 
   /** Destroys the molecule object. */
@@ -644,6 +657,33 @@ public:
   unsigned short hallNumber() const { return m_hallNumber; }
   /** @} */
 
+  /**
+   * Vibrational data (frequencies, intensities and normal mode displacements)
+   * for one geometry. A calculation can produce a Hessian at every step of a
+   * trajectory or reaction path, so this is stored per conformer rather than
+   * once per molecule.
+   */
+  struct VibrationData
+  {
+    Array<double> frequencies;
+    Array<double> irIntensities;
+    Array<double> ramanIntensities;
+    /** Normal mode displacements, indexed [mode][atom]. */
+    Array<Array<Vector3>> lx;
+
+    bool isEmpty() const { return frequencies.empty(); }
+  };
+
+  /**
+   * Vibrational data for the active conformer (see coordinate3d()). Molecules
+   * with no coordinate sets store their single set of vibrations under the
+   * default active index, so these behave exactly as before for the common
+   * one-geometry-one-Hessian case.
+   *
+   * Each getter returns an empty Array when the active conformer has no
+   * vibrational data, or when @p mode is out of range.
+   * @{
+   */
   Array<double> vibrationFrequencies() const;
   void setVibrationFrequencies(const Array<double>& freq);
   Array<double> vibrationIRIntensities() const;
@@ -652,6 +692,68 @@ public:
   void setVibrationRamanIntensities(const Array<double>& intensities);
   Array<Vector3> vibrationLx(int mode) const;
   void setVibrationLx(const Array<Array<Vector3>>& lx);
+  /** @} */
+
+  /**
+   * Vibrational data for a specific conformer, for files that carry a Hessian
+   * at more than one geometry.
+   * @{
+   */
+  Array<double> vibrationFrequencies(size_t conformerIndex) const;
+  void setVibrationFrequencies(const Array<double>& freq,
+                               size_t conformerIndex);
+  Array<double> vibrationIRIntensities(size_t conformerIndex) const;
+  void setVibrationIRIntensities(const Array<double>& intensities,
+                                 size_t conformerIndex);
+  Array<double> vibrationRamanIntensities(size_t conformerIndex) const;
+  void setVibrationRamanIntensities(const Array<double>& intensities,
+                                    size_t conformerIndex);
+  Array<Vector3> vibrationLx(int mode, size_t conformerIndex) const;
+  void setVibrationLx(const Array<Array<Vector3>>& lx, size_t conformerIndex);
+  /** @} */
+
+  /**
+   * @return True if @p conformerIndex has vibrational data.
+   */
+  bool hasVibrations(size_t conformerIndex) const;
+
+  /**
+   * @return True if the active conformer has vibrational data.
+   */
+  bool hasVibrations() const;
+
+  /**
+   * @return The number of conformers carrying vibrational data. This is not
+   * the number of conformers: most trajectories have a Hessian at only one
+   * geometry, if any.
+   */
+  size_t vibrationConformerCount() const;
+
+  /**
+   * @return The indices of the conformers carrying vibrational data, in
+   * increasing order.
+   */
+  Array<size_t> vibrationConformers() const;
+
+  /**
+   * Remove all vibrational data from every conformer.
+   */
+  void clearVibrations();
+
+  /**
+   * @return The vibrational data for @p conformerIndex, or nullptr when that
+   * conformer has none. The per-field accessors above are thin wrappers over
+   * this; new code that wants several fields at once should prefer it.
+   */
+  const VibrationData* vibrationData(size_t conformerIndex) const;
+
+  /**
+   * Store a whole set of vibrational data against @p conformerIndex, replacing
+   * anything already there. Parsers that assemble a complete Hessian should
+   * prefer this to the per-field setters: it is one lookup, and a new field
+   * added to VibrationData needs no new call.
+   */
+  void setVibrationData(const VibrationData& data, size_t conformerIndex);
 
   /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
@@ -682,7 +784,17 @@ public:
 
   size_t coordinate3dCount() const;
   bool setCoordinate3d(int coord);
+  /** @return the index of the currently active coordinate set. */
+  int coordinate3d() const;
   Array<Vector3> coordinate3d(size_t index) const;
+  /**
+   * @return the coordinate set at @p index without copying it, or an empty
+   * array if there is no such set.
+   *
+   * coordinate3d() hands back a copy of every atom position in the set, which
+   * is what reading a whole trajectory one set at a time should not pay for.
+   */
+  const Array<Vector3>& coordinate3dRef(size_t index) const;
   bool setCoordinate3d(const Array<Vector3>& coords, size_t index);
 
   /**
@@ -692,8 +804,33 @@ public:
 
   /**
    * Estimate velocities from the coordinate sets and timesteps.
+   *
+   * Does nothing unless there is one timestep per coordinate set. The
+   * timesteps are taken as they are stored, so a conventional dynamics
+   * trajectory -- coordinates in Angstrom, timesteps in picoseconds -- gives
+   * velocities in Angstrom per picosecond, which is what the derived
+   * properties below assume.
+   *
+   * Alongside the per-atom velocities this fills three per-coordinate-set
+   * properties, next to "energies" and "forces" in the data map:
+   * - "velocities": the mean atomic speed, in Angstrom / picosecond
+   * - "velocityDeviations": the standard deviation of those speeds
+   * - "temperatures": the instantaneous temperature, in Kelvin
    */
   void estimateVelocities();
+
+  /**
+   * Estimate velocities taking the coordinate sets to be @p timeStep apart,
+   * rather than reading the stored timesteps.
+   *
+   * Most trajectory files do not record when each frame was written, so the
+   * spacing has to come from the caller instead. The stored timesteps are
+   * left untouched; everything else behaves as the overload above.
+   *
+   * @param timeStep the interval between consecutive coordinate sets, in
+   * picoseconds.
+   */
+  void estimateVelocities(double timeStep);
 
   /**
    * Get the velocities for the specified index.
@@ -702,8 +839,22 @@ public:
 
   /**
    * Set the velocities for the specified index.
+   *
+   * Call updateVelocityProperties() once the last set is in to bring the
+   * derived per-coordinate-set properties up to date with them.
    */
   bool setVelocities(const Array<Vector3>& velocities, int index);
+
+  /**
+   * Fill the per-coordinate-set properties derived from the velocities --
+   * "velocities", "velocityDeviations" and "temperatures", described under
+   * estimateVelocities() above.
+   *
+   * estimateVelocities() does this for the velocities it works out itself.
+   * Anything that supplies velocities of its own, through setVelocities(),
+   * should call this afterwards.
+   */
+  void updateVelocityProperties();
 
   /**
    * Clear all velocity sets.
@@ -714,7 +865,7 @@ public:
    * Timestep property is used when molecular dynamics trajectories are read
    */
   bool setTimeStep(double timestep, int index);
-  double timeStep(int index, bool& status);
+  double timeStep(int index, bool& status) const;
 
   /** @return a vector of forces for the atoms in the molecule. */
   const Array<Vector3>& forceVectors() const;
@@ -936,6 +1087,34 @@ public:
   Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }
   ///@} end of constraint methods
 
+  /** @name Scan coordinates
+   * Distances, angles and torsions worth following across the coordinate
+   * sets, such as the coordinate a relaxed scan stepped through. Unlike
+   * constraints these are only ever measured, never enforced, so an optimizer
+   * ignores them. They live in the property map, which already travels
+   * through CJSON, rather than in a member of their own.
+   */
+  ///@{
+  /**
+   * @return the scan coordinates, skipping any malformed entry
+   */
+  std::vector<Constraint> scanCoordinates() const;
+
+  /**
+   * Replace the scan coordinates.
+   * @param coordinates The coordinates to store. Only the atom indices are
+   * kept: a scan coordinate has no target value or force constant.
+   */
+  void setScanCoordinates(const std::vector<Constraint>& coordinates);
+
+  /**
+   * Add one scan coordinate, ignoring it if an equivalent one is already
+   * stored.
+   * @param coordinate The coordinate to add
+   */
+  void addScanCoordinate(const Constraint& coordinate);
+  ///@}
+
   /**
    * @return a map of components and count.
    */
@@ -970,10 +1149,32 @@ public:
   // channge the Atom index position
   void swapAtom(Index a, Index b);
 
+  /**
+   * Drop everything that was calculated from the structure -- partial
+   * charges, forces, velocities, normal modes and spectra. Call this from
+   * any edit that changes which atoms or bonds exist: those results describe
+   * the molecule as it was, and after such an edit it is not that molecule.
+   *
+   * Reindexing them instead would keep the arrays the right length while the
+   * numbers went on describing something that no longer exists, which is the
+   * worse failure because nothing looks wrong.
+   */
+  void clearCalculatedResults();
+
   std::list<Index> getAtomsAtLayer(size_t layer);
 
   Layer& layer();
   const Layer& layer() const;
+
+  /**
+   * @return this molecule's layer state, shared with anything that needs it to
+   * outlive a single operation. Never null.
+   */
+  std::shared_ptr<MoleculeInfo> layerInfo() const
+  {
+    ensureLayerInfo();
+    return m_layerInfo;
+  }
 
   /**
    * Calculte and return bounding box of the whole molecule or selected atoms
@@ -1004,6 +1205,7 @@ protected:
   Array<std::string> m_bondLabels;
   Array<std::string> m_residueLabels;
   Array<Array<Vector3>> m_coordinates3d; //!< Store conformers/trajectories.
+  int m_coordinate3dIndex = 0;           //!< Active coordinate set index.
   Array<Array<Vector3>> m_velocities;    //!< Store velocities.
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
@@ -1011,11 +1213,11 @@ protected:
   Array<unsigned short> m_isotopes; //!< Store isotopes of the atoms
   Array<Vector3> m_forceVectors;
   Array<Vector3ub> m_colors;
-  // Vibration data if available.
-  Array<double> m_vibrationFrequencies;
-  Array<double> m_vibrationIRIntensities;
-  Array<double> m_vibrationRamanIntensities;
-  Array<Array<Vector3>> m_vibrationLx;
+  // Vibration data if available, keyed by conformer index. Sparse: a
+  // trajectory usually has a Hessian at one geometry, if any. A molecule with
+  // no coordinate sets keys its vibrations at 0, which is also the default
+  // active index, so the single-geometry case is unchanged.
+  std::map<size_t, VibrationData> m_vibrations;
 
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;
@@ -1035,12 +1237,72 @@ protected:
   Eigen::VectorXd m_frozenAtomMask;
 
 private:
+  /**
+   * Fill m_velocities and the derived per-coordinate-set properties, taking
+   * coordinate set @c i to be @c intervals[i] after the one before it.
+   */
+  void estimateVelocities(const std::vector<double>& intervals);
+
+  /**
+   * @return the instantaneous temperature, in Kelvin, of a molecule whose
+   * atoms have @p velocities in Angstrom / picosecond.
+   *
+   * From equipartition, T = 2 KE / (N_df k_B), with the kinetic energy taken
+   * in the center-of-mass frame and N_df = 3N - 3 -- the three removed being
+   * the center-of-mass translation that was subtracted out.
+   */
+  double temperature(const Array<Vector3>& velocities) const;
+
+  /**
+   * @return the mass of the atom at @p atomId in amu, the mass of its isotope
+   * where one is set. The rule mass() uses, for anything that has to weigh
+   * the atoms one at a time.
+   */
+  double atomMass(Index atomId) const;
+
+  /**
+   * Take every data member except the layer state from @p other, leaving it
+   * equivalent to a default-constructed Molecule. Shared by the move
+   * constructor and move assignment; the caller must already have released
+   * this molecule's meshes, cubes, basis set and unit cell. noexcept but may
+   * allocate small empty containers; an allocation failure terminates.
+   */
+  void takeContentsFrom(Molecule& other) noexcept;
+
+  /**
+   * Residues name their atoms through Atom proxies that carry a molecule
+   * pointer. After m_residues has been copied or taken from @p source, point
+   * the proxies that referred to it at this molecule, keeping their indices.
+   */
+  void repointResidueAtoms(const Molecule& source);
+
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   // edge information
   Array<unsigned char> m_bondOrders;
   // vertex information
   Array<unsigned char> m_atomicNumbers;
-  Layer& m_layers;
+  /**
+   * This molecule's layer state. Owned here rather than in a registry, so it
+   * lives exactly as long as the molecule and anything (an undo command, say)
+   * still holding on to it.
+   */
+  mutable std::shared_ptr<MoleculeInfo> m_layerInfo;
+
+  /**
+   * @return this molecule's layer state, creating it if this molecule has been
+   * moved from.
+   *
+   * A moved-from molecule is left with no layer state rather than sharing the
+   * moved-to molecule's: sharing would let a write through the moved-from
+   * object corrupt the moved-to one. Creating it here rather than in the move
+   * keeps layer state out of the move.
+   */
+  MoleculeInfo& ensureLayerInfo() const
+  {
+    if (!m_layerInfo)
+      m_layerInfo = std::make_shared<MoleculeInfo>();
+    return *m_layerInfo;
+  }
 };
 
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
@@ -1178,13 +1440,13 @@ inline bool Molecule::setColor(Index atomId, Vector3ub color)
 
 inline size_t Molecule::layer(Index atomId) const
 {
-  return m_layers.getLayerID(atomId);
+  return ensureLayerInfo().layer.getLayerID(atomId);
 }
 
 inline bool Molecule::setLayer(Index atomId, size_t layer)
 {
   if (atomId < atomCount()) {
-    m_layers.addAtom(layer, atomId);
+    ensureLayerInfo().layer.addAtom(layer, atomId);
     return true;
   }
   return false;
@@ -1192,7 +1454,8 @@ inline bool Molecule::setLayer(Index atomId, size_t layer)
 
 inline Vector2 Molecule::atomPosition2d(Index atomId) const
 {
-  return atomId < m_positions2d.size() ? m_positions2d[atomId] : Vector2();
+  return atomId < m_positions2d.size() ? m_positions2d[atomId]
+                                       : Vector2::Zero();
 }
 
 inline bool Molecule::setAtomPositions2d(const Core::Array<Vector2>& pos)
@@ -1217,7 +1480,8 @@ inline bool Molecule::setAtomPosition2d(Index atomId, const Vector2& pos)
 
 inline Vector3 Molecule::atomPosition3d(Index atomId) const
 {
-  return atomId < m_positions3d.size() ? m_positions3d[atomId] : Vector3();
+  return atomId < m_positions3d.size() ? m_positions3d[atomId]
+                                       : Vector3::Zero();
 }
 
 inline bool Molecule::setAtomPositions3d(const Core::Array<Vector3>& pos)
@@ -1290,7 +1554,8 @@ inline bool Molecule::isSelectionEmpty() const
 
 inline Vector3 Molecule::forceVector(Index atomId) const
 {
-  return atomId < m_forceVectors.size() ? m_forceVectors[atomId] : Vector3();
+  return atomId < m_forceVectors.size() ? m_forceVectors[atomId]
+                                        : Vector3::Zero();
 }
 
 inline bool Molecule::setForceVectors(const Core::Array<Vector3>& forces)

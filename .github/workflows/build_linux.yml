@@ -40,33 +40,33 @@ jobs:
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "asan",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DUSE_SYSTEM_ZLIB=ON",
           }
         - {
             name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DUSE_SYSTEM_ZLIB=ON",
           }
         - {
             name: "Ubuntu Leak Sanitizer", artifact: "",
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "lsan",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DUSE_SYSTEM_ZLIB=ON",
           }
         - {
             name: "Ubuntu Thread Sanitizer", artifact: "",
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "tsan",
-            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DUSE_SYSTEM_ZLIB=ON",
           }
 
     steps:
     - name: Checkout workflow repository
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Checkout Repositories
       uses: ./.github/actions/checkout-repositories
@@ -74,11 +74,11 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
         sudo apt-get -qq install libfuse2
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4.3.1
+      uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
       with:
         cache: true
         version: ${{ env.QT_VERSION }}
@@ -105,6 +105,8 @@ jobs:
         set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
         set(ENV{ASAN_OPTIONS} "new_delete_type_mismatch=0")
         set(ENV{TSAN_OPTIONS} "suppressions=$ENV{GITHUB_WORKSPACE}/openchemistry/avogadrolibs/.github/tsan-suppressions.txt halt_on_error=0 second_deadlock_stack=1")
+        # ASan runs LSan at exit too, so this covers both sanitizer jobs.
+        set(ENV{LSAN_OPTIONS} "suppressions=$ENV{GITHUB_WORKSPACE}/openchemistry/avogadrolibs/.github/lsan-suppressions.txt print_suppressions=0")
         execute_process(
           COMMAND ctest -j ${N}
           WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs
@@ -163,5 +165,5 @@ jobs:
 
     - name: Setup tmate session
       if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
+      uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113 # v3.24
       timeout-minutes: 60

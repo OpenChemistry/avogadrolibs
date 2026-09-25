@@ -13,6 +13,7 @@
 #include <avogadro/core/mutex.h>
 
 #include <QtConcurrent/QtConcurrentMap>
+#include <QtCore/QSet>
 
 namespace Avogadro::QtGui {
 
@@ -28,22 +29,40 @@ struct SlaterShell
   unsigned int state;    // The MO number to calculate
 };
 
+namespace {
+/// Every live calculator, so that cubes can be protected from deletion while
+/// any of them is still writing. Instances are only created and destroyed on
+/// the GUI thread, so this needs no locking of its own.
+QSet<SlaterSetConcurrent*>& liveCalculations()
+{
+  static QSet<SlaterSetConcurrent*> instances;
+  return instances;
+}
+} // namespace
+
 SlaterSetConcurrent::SlaterSetConcurrent(QObject* p)
   : QObject(p), m_shells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
+  liveCalculations().insert(this);
   // Watch for the future
   connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
 }
 
 SlaterSetConcurrent::~SlaterSetConcurrent()
 {
-  delete m_shells;
+  liveCalculations().remove(this);
+  cancelAndWait();
+  delete m_tools;
 }
 
 void SlaterSetConcurrent::setMolecule(Core::Molecule* mol)
 {
   if (!mol)
     return;
+  // The worker items hold a raw pointer to m_tools, so nothing may replace it
+  // while a calculation is still in flight.
+  cancelAndWait();
+
   m_set = dynamic_cast<SlaterSet*>(mol->basisSet());
 
   delete m_tools;
@@ -68,10 +87,36 @@ bool SlaterSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 
 void SlaterSetConcurrent::calculationComplete()
 {
+  // A queued finished() from a cancelled run can arrive after the next
+  // calculation has already been set up. Never free that one's work items.
+  if (m_future.isRunning())
+    return;
+
   // (*m_shells)[0].tCube->lock()->unlock();
   delete m_shells;
   m_shells = nullptr;
   emit finished();
+}
+
+void SlaterSetConcurrent::cancelAllCalculations()
+{
+  // Copy, because cancelAndWait() spins the caller's thread and a calculator
+  // could be destroyed while we are working through the list.
+  const QSet<SlaterSetConcurrent*> instances = liveCalculations();
+  for (SlaterSetConcurrent* calculation : instances) {
+    if (liveCalculations().contains(calculation))
+      calculation->cancelAndWait();
+  }
+}
+
+void SlaterSetConcurrent::cancelAndWait()
+{
+  if (m_future.isStarted() && !m_future.isFinished()) {
+    m_future.cancel();
+    m_future.waitForFinished();
+  }
+  delete m_shells;
+  m_shells = nullptr;
 }
 
 bool SlaterSetConcurrent::setUpCalculation(Core::Cube* cube, unsigned int state,
@@ -79,6 +124,8 @@ bool SlaterSetConcurrent::setUpCalculation(Core::Cube* cube, unsigned int state,
 {
   if (!m_set || !m_tools)
     return false;
+
+  cancelAndWait();
 
   m_set->initCalculation();
 

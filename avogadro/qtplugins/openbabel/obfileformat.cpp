@@ -7,8 +7,6 @@
 
 #include "obprocess.h"
 
-#include <nlohmann/json.hpp>
-
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
@@ -16,7 +14,6 @@
 #include <QtCore/QTimer>
 
 using namespace std::string_literals;
-using json = nlohmann::json;
 
 namespace Avogadro::QtPlugins {
 
@@ -82,12 +79,6 @@ OBFileFormat::~OBFileFormat() {}
 
 bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 {
-  json opts;
-  if (!options().empty())
-    opts = json::parse(options(), nullptr, false);
-  else
-    opts = json::object();
-
   // Allow blocking until the read is completed.
   OBProcess proc;
   ProcessListener listener;
@@ -113,18 +104,16 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
     options << "--gen3d";
 
   // Check if we have extra arguments for open babel
-  json extraArgs = opts.value("arguments", json::object());
-  if (extraArgs.is_array()) {
-    for (const auto& arg : extraArgs) {
-      if (arg.is_string())
-        options << arg.get<std::string>().c_str();
-    }
-  }
+  std::vector<std::string> extraArgs;
+  stringArrayOption("arguments", extraArgs);
+  for (const std::string& arg : extraArgs)
+    options << QString::fromStdString(arg);
 
   // check if we're going to read to a different format
   // default is CML or CJSON
-  QString format =
-    QString::fromStdString(opts.value("format", m_defaultFormat));
+  std::string formatOption = m_defaultFormat;
+  stringOption("format", formatOption);
+  QString format = QString::fromStdString(formatOption);
 
   if (!m_fileOnly) {
     // Determine length of data
@@ -227,21 +216,12 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 
 bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
 {
-  json opts;
-  if (!options().empty())
-    opts = json::parse(options(), nullptr, false);
-  else
-    opts = json::object();
-
   // Check if we have extra arguments for open babel
   QStringList options;
-  json extraArgs = opts.value("arguments", json::object());
-  if (extraArgs.is_array()) {
-    for (const auto& arg : extraArgs) {
-      if (arg.is_string())
-        options << arg.get<std::string>().c_str();
-    }
-  }
+  std::vector<std::string> extraArgs;
+  stringArrayOption("arguments", extraArgs);
+  for (const std::string& arg : extraArgs)
+    options << QString::fromStdString(arg);
 
 #ifndef NDEBUG
   qDebug() << " writing to " << m_defaultFormat.c_str();

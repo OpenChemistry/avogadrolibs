@@ -49,6 +49,15 @@ public:
   static QStringList featureTypes();
 
   /**
+   * A short, readable, stable key naming one feature, for use as a QSettings
+   * group. Unlike packageFeatureKey() this embeds no absolute path, so it
+   * does not turn into a deep tree of settings groups.
+   */
+  static QString featureSettingsKey(const QString& packageDir,
+                                    const QString& command,
+                                    const QString& identifier);
+
+  /**
    * Build a stable key for one package-provided feature.
    * Consumers can use this as a map key to track registrations and removals.
    * Components must not be empty.
@@ -71,6 +80,73 @@ public:
                                    const QString& userOptionsPath);
 
   /**
+   * The @c [project.version] declared by the pyproject.toml in @p packageDir,
+   * or an empty string if it cannot be read.
+   */
+  static QString packageVersion(const QString& packageDir);
+
+  // --- Installed environments ---
+
+  /**
+   * Whether @p packageDir declares a pixi workspace of its own: a pixi.toml,
+   * or a pyproject.toml with a non-empty @c [tool.pixi] table.
+   *
+   * pixi finds its manifest by walking up from the directory it is run in, so
+   * a package that declares none is not merely unsupported — pixi silently
+   * operates on an ancestor's workspace instead. @c "pixi install" then
+   * reports success having installed something else entirely, and the
+   * package's own command is nowhere on PATH ("command not found", exit 127).
+   * Such a package has to be installed with pip into @c .venv.
+   */
+  static bool hasPixiManifest(const QString& packageDir);
+
+  /**
+   * Absolute path to @p command as installed in the pixi environment of
+   * @p packageDir (@c .pixi/envs/default), or an empty string if the package
+   * has no pixi environment with that command in it.
+   *
+   * Package commands are run with @c "pixi run --as-is", which is shorthand
+   * for @c --no-install @c --frozen and so will never create a missing
+   * environment. Callers must therefore check this rather than merely
+   * checking that the pixi executable exists.
+   */
+  static QString pixiScriptPath(const QString& packageDir,
+                                const QString& command);
+
+  /**
+   * Absolute path to @p command as installed in the virtual environment of
+   * @p packageDir (@c .venv), or an empty string if there is none. This is
+   * the fallback for packages that were pip-installed because pixi was not
+   * available when they were set up.
+   */
+  static QString venvScriptPath(const QString& packageDir,
+                                const QString& command);
+
+  /** How to launch a package command. */
+  struct CommandLine
+  {
+    QString program;        ///< empty if no environment can run the command
+    QStringList prefixArgs; ///< arguments preceding the command's own
+  };
+
+  /**
+   * Resolve how to run @p command from @p packageDir, so that every caller
+   * applies the same backend policy.
+   *
+   * Prefers the package's pixi environment and falls back to the console
+   * script pip installed into @c .venv. Having the pixi executable is not on
+   * its own enough to choose pixi, because @c "pixi run --as-is" is shorthand
+   * for @c --no-install @c --frozen and will not create a missing
+   * environment: a package installed before pixi was available has to keep
+   * running from @c .venv until it is installed again.
+   *
+   * @return a CommandLine whose @c program is empty when neither environment
+   *         provides @p command.
+   */
+  static CommandLine resolveCommandLine(const QString& packageDir,
+                                        const QString& command);
+
+  /**
    * Run the package script with @c --user-options and parse the JSON output.
    * Uses pixi (preferred) or the venv-installed script as fallback.
    * Returns an empty object on error.
@@ -80,10 +156,17 @@ public:
                                            const QString& identifier);
 
   /**
+   * Whether a feature's @c user-options value asks for options to be built
+   * fresh by the script rather than read from a file. Such options are
+   * generated per invocation, so callers must not cache the resulting GUI.
+   */
+  static bool isDynamicUserOptions(const QString& userOptionsValue);
+
+  /**
    * Resolve user-options for a package feature. If @p userOptionsValue is
-   * the literal string "dynamic", runs the script with @c --user-options
-   * via loadOptionsFromScript(). Otherwise treats it as a relative file
-   * path and loads via loadOptionsFromFile().
+   * dynamic (see isDynamicUserOptions()), runs the script with
+   * @c --user-options via loadOptionsFromScript(). Otherwise treats it as a
+   * relative file path and loads via loadOptionsFromFile().
    * Returns an empty object on error or if @p userOptionsValue is empty.
    */
   static QJsonObject resolveUserOptions(const QString& userOptionsValue,
@@ -100,6 +183,22 @@ public:
    * Safe to call from the main thread.
    */
   void installPackages(const QStringList& packageDirs);
+
+  /**
+   * Delete the @c .venv directory of @p packageDir once its pixi environment
+   * can run @p command, so that a package migrated to pixi does not keep a
+   * stale pip-installed tree around. Nothing will ever update that tree, and
+   * it would silently serve outdated code if the pixi environment were later
+   * removed.
+   *
+   * Does nothing if there is no @c .venv, or if the pixi environment does not
+   * provide @p command — a half-finished install must never leave the package
+   * with no way to run at all.
+   *
+   * @return true if a @c .venv directory was removed.
+   */
+  static bool removeSupersededVenv(const QString& packageDir,
+                                   const QString& command);
 
   // --- Registration ---
 

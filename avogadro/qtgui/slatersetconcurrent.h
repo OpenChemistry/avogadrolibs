@@ -47,6 +47,17 @@ public:
 
   QFutureWatcher<void>& watcher() { return m_watcher; }
 
+  /**
+   * Cancel every running calculation and wait for the worker threads to stop.
+   *
+   * A running calculation reads the molecule's basis set and writes into the
+   * cube it was handed, so anything about to delete either has to stop the
+   * work first. The calculation may belong to a different part of the
+   * application than the code doing the deleting, which is why this reaches
+   * every instance rather than just one.
+   */
+  static void cancelAllCalculations();
+
 signals:
   /**
    * Emitted when the calculation is complete.
@@ -62,7 +73,6 @@ private slots:
 private:
   QFuture<void> m_future;
   QFutureWatcher<void> m_watcher;
-  Core::Cube* m_cube;
   QVector<SlaterShell>* m_shells;
 
   Core::SlaterSet* m_set;
@@ -70,6 +80,12 @@ private:
 
   bool setUpCalculation(Core::Cube* cube, unsigned int state,
                         void (*func)(SlaterShell&));
+
+  /**
+   * Cancel any in-flight calculation and block until the worker threads have
+   * stopped. Must be called before anything they reference is freed.
+   */
+  void cancelAndWait();
 
   static void processOrbital(SlaterShell& shell);
   static void processDensity(SlaterShell& shell);

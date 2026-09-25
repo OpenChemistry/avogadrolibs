@@ -14,47 +14,65 @@
 
 #include "solid_first_fs.h"
 
+#include "solid_ao_fs.h"
+
 #include <iostream>
+#include <string>
 
 #include <cmath>
 
 namespace Avogadro::Rendering {
+
+// Texture units shared by the pipeline's stages. Kept together so that adding
+// a sampler cannot silently collide with one already in use.
+namespace {
+constexpr int TextureUnitRGB = 1;
+constexpr int TextureUnitDepth = 2;
+constexpr int TextureUnitAo = 3;
+} // namespace
 
 class SolidPipeline::Private
 {
 public:
   Private() {}
 
-  void attachStage(ShaderProgram& prog, const GLchar* nameRGB, GLuint texRGB,
-                   const GLchar* nameDepth, GLuint texDepth, int w, int h)
+  // Point a sampler uniform at a texture. The program is taken rather than
+  // read back from the GL state: asking the driver which program is bound
+  // stalls, and the program's own uniform lookup is cached where
+  // glGetUniformLocation is not.
+  static void bindSampler(ShaderProgram& prog, const std::string& name,
+                          GLuint texture, int unit)
+  {
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    prog.setUniformValue(name, unit);
+  }
+
+  void attachStage(ShaderProgram& prog, const std::string& nameRGB,
+                   GLuint texRGB, const std::string& nameDepth, GLuint texDepth,
+                   int w, int h)
   {
     prog.bind();
-    GLuint programID;
-    glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&programID);
-
-    GLuint attrRGB = glGetUniformLocation(programID, nameRGB);
-    glActiveTexture(GL_TEXTURE0 + 1);
-    glBindTexture(GL_TEXTURE_2D, texRGB);
-    glUniform1i(attrRGB, 1);
-
-    GLuint attrDepth = glGetUniformLocation(programID, nameDepth);
-    glActiveTexture(GL_TEXTURE0 + 2);
-    glBindTexture(GL_TEXTURE_2D, texDepth);
-    glUniform1i(attrDepth, 2);
-
+    bindSampler(prog, nameRGB, texRGB, TextureUnitRGB);
+    bindSampler(prog, nameDepth, texDepth, TextureUnitDepth);
     prog.setUniformValue("width", float(w));
     prog.setUniformValue("height", float(h));
   }
 
   GLuint defaultFBO;
+  GLint defaultViewport[4] = { 0, 0, 0, 0 };
   GLuint renderFBO;
   GLuint renderTexture;
   GLuint depthTexture;
+  GLuint aoFBO;
+  GLuint aoTexture;
   GLuint screenVAO;
   GLuint screenVBO;
   ShaderProgram firstStageShaders;
+  ShaderProgram aoStageShaders;
   Shader screenVertexShader;
   Shader firstFragmentShader;
+  Shader aoFragmentShader;
 };
 
 static const GLfloat s_fullscreenQuad[] = {
@@ -84,6 +102,26 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
                          *texDepth, 0);
 }
 
+// The ambient occlusion term is rendered on its own so the compositing stage
+// can filter it, with the distance to the surface in the second channel so
+// that the filter's surface test costs no extra fetch. It needs a float
+// format: the term brightens as well as darkens, and goes above 1.0.
+void initializeAoFramebuffer(GLuint* outFBO, GLuint* texAo)
+{
+  glGenFramebuffers(1, outFBO);
+  glBindFramebuffer(GL_FRAMEBUFFER, *outFBO);
+
+  glGenTextures(1, texAo);
+  glBindTexture(GL_TEXTURE_2D, *texAo);
+  // The blur reads exact texel centres, so no filtering is wanted here.
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                         *texAo, 0);
+}
+
 SolidPipeline::SolidPipeline()
   : m_pixelRatio(1.0f), m_aoEnabled(false), m_dofStrength(1.0f),
     m_dofPosition(1.0), m_dofEnabled(false), m_fogPosition(1.0),
@@ -101,6 +139,10 @@ SolidPipeline::~SolidPipeline()
 void SolidPipeline::initialize()
 {
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
+  initializeAoFramebuffer(&d->aoFBO, &d->aoTexture);
+  // Each helper leaves its own framebuffer bound; settle on the one the
+  // pipeline renders into.
+  glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
 
   // Create VAO for fullscreen quad (required for OpenGL Core Profile)
   glGenVertexArrays(1, &d->screenVAO);
@@ -132,15 +174,31 @@ void SolidPipeline::initialize()
   if (!d->firstStageShaders.link())
     std::cout << d->firstStageShaders.error() << std::endl;
 
-  // here is the end of the code that needs to be compared
+  d->aoFragmentShader.setType(Shader::Fragment);
+  d->aoFragmentShader.setSource(solid_ao_fs);
+  if (!d->aoFragmentShader.compile())
+    std::cout << d->aoFragmentShader.error() << std::endl;
+
+  d->aoStageShaders.attachShader(d->screenVertexShader);
+  d->aoStageShaders.attachShader(d->aoFragmentShader);
+  if (!d->aoStageShaders.link())
+    std::cout << d->aoStageShaders.error() << std::endl;
 }
 
 void SolidPipeline::begin()
 {
   glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
+  glGetIntegerv(GL_VIEWPORT, d->defaultViewport);
   glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
   GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
   glDrawBuffers(1, drawBuffersList);
+
+  // The offscreen buffers are sized independently of the default framebuffer,
+  // so the viewport must be set to match them rather than inherited. They can
+  // disagree whenever the device pixel ratio changes without a resize, such as
+  // when the window is dragged to a monitor with a different scale factor.
+  glViewport(0, 0, static_cast<GLsizei>(m_width),
+             static_cast<GLsizei>(m_height));
 
   GLfloat tmp[5];
   glGetFloatv(GL_COLOR_CLEAR_VALUE, tmp);
@@ -155,10 +213,37 @@ void SolidPipeline::begin()
 #endif
 }
 
-void SolidPipeline::end()
+void SolidPipeline::end(const Camera& camera)
 {
   // Bind VAO for fullscreen quad (required for OpenGL Core Profile)
   glBindVertexArray(d->screenVAO);
+
+  // Render the ambient occlusion term into its own buffer first, so the
+  // compositing stage can blur away the kernel's sampling pattern. Skipped
+  // entirely when ambient occlusion is off, since nothing would read it.
+  if (m_aoEnabled) {
+    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
+    GLenum aoBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, aoBuffersList);
+    glViewport(0, 0, static_cast<GLsizei>(m_width),
+               static_cast<GLsizei>(m_height));
+    // This target has no depth attachment, and the pass covers every pixel.
+    glDisable(GL_DEPTH_TEST);
+
+    d->aoStageShaders.bind();
+    d->bindSampler(d->aoStageShaders, "inDepthTex", d->depthTexture,
+                   TextureUnitDepth);
+    d->aoStageShaders.setUniformValue("width", float(m_width));
+    d->aoStageShaders.setUniformValue("height", float(m_height));
+    d->aoStageShaders.setUniformValue("inAoStrength", m_aoStrength);
+    // Used to write the distance to the surface alongside the term.
+    d->aoStageShaders.setUniformValue("inProjection",
+                                      camera.projection().matrix());
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // The passes that follow this one still depend on depth testing.
+    glEnable(GL_DEPTH_TEST);
+  }
 
   // Draw to screen
   if (glIsFramebuffer(d->defaultFBO)) {
@@ -171,6 +256,8 @@ void SolidPipeline::end()
     glDrawBuffer(GL_BACK);
 #endif
   }
+  glViewport(d->defaultViewport[0], d->defaultViewport[1],
+             d->defaultViewport[2], d->defaultViewport[3]);
   d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture,
                  "inDepthTex", d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled",
@@ -181,8 +268,13 @@ void SolidPipeline::end()
     "inDofStrength", m_dofEnabled ? (m_dofStrength * 100.0f) : 0.0f);
   d->firstStageShaders.setUniformValue("inDofPosition",
                                        ((m_dofPosition) / 10.0f));
-  d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
-  d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
+
+  // The AO term, plus the projection the blur uses to size its surface test.
+  d->bindSampler(d->firstStageShaders, "inAoTex", d->aoTexture, TextureUnitAo);
+  d->firstStageShaders.setUniformValue("inProjection",
+                                       camera.projection().matrix());
+  d->firstStageShaders.setUniformValue("inEdStrength",
+                                       m_edEnabled ? m_edStrength : 0.0f);
   d->firstStageShaders.setUniformValue("inFogEnabled",
                                        m_fogEnabled ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue("inFogStrength",
@@ -212,6 +304,9 @@ void SolidPipeline::adjustOffset(const Camera& cam)
   } else if (project >= 21595.588) {
     offSet = 9.952 * project - 212865;
   }
+  // Uniforms land on whichever program is bound, so bind the one this is
+  // meant for rather than depending on what the last pass left behind.
+  d->firstStageShaders.bind();
   d->firstStageShaders.setUniformValue("uoffset", offSet);
 }
 
@@ -237,6 +332,23 @@ void SolidPipeline::resize(int width, int height)
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
                GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 #endif
+
+  // Two channels: the occlusion term and the distance to the surface.
+  //
+  // Half floats hold that distance to one part in 2048. Both the distance and
+  // the blur's surface tolerance scale with the view, so what matters is their
+  // ratio, which holds regardless of molecule size or projection: simulated
+  // against a full-precision blur, the quantization is 0.8% of the tolerance
+  // at 800 px tall and 2.5% at 2400 px, moving the blurred term by 2e-4 RMS.
+  // That is two orders of magnitude below the dither this blur exists to
+  // remove, so the extra channel is worth far more than the precision costs.
+  //
+  // The format tops out at 65504, so a camera further than that many scene
+  // units from the geometry would lose the surface test. Nothing chemical
+  // comes near it.
+  glBindTexture(GL_TEXTURE_2D, d->aoTexture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, m_width, m_height, 0, GL_RG,
+               GL_FLOAT, nullptr);
 }
 
 void SolidPipeline::setPixelRatio(float ratio)

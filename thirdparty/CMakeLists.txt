@@ -7,6 +7,14 @@ endif(NOT TARGET gif-h)
 # Only used by Qt plugin
 if (USE_QT)
   add_subdirectory(libgwavi)
+  if(USE_EXTERNAL_TOMLPLUSPLUS)
+    find_package(tomlplusplus 3.4.0 REQUIRED GLOBAL)
+  else()
+    add_library(tomlplusplus INTERFACE IMPORTED GLOBAL)
+    target_include_directories(tomlplusplus
+      INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+    add_library(tomlplusplus::tomlplusplus ALIAS tomlplusplus)
+  endif(USE_EXTERNAL_TOMLPLUSPLUS)
 endif()
 
 if(USE_EXTERNAL_NLOHMANN)
@@ -26,9 +34,13 @@ else()
   set_target_properties(pugixml PROPERTIES POSITION_INDEPENDENT_CODE ON)
   target_include_directories(pugixml PUBLIC $<BUILD_INTERFACE:${_PUGIXML_ROOT}>)
   add_library(pugixml::pugixml ALIAS pugixml)
-  if(NOT SKBUILD)
-    install(TARGETS pugixml
-      EXPORT "AvogadroLibsTargets"
+  # A static Avogadro::IO carries its PRIVATE dependencies into its link
+  # interface as $<LINK_ONLY:...> -- consumers of a static library have to
+  # link them too -- and install(EXPORT) refuses to generate at all if one of
+  # them is in no export set. A shared build absorbs them and needs none of
+  # this, which is why BUILD_SHARED_LIBS=OFF did not configure before.
+  if(NOT BUILD_SHARED_LIBS AND NOT SKBUILD)
+    install(TARGETS pugixml EXPORT "AvogadroLibsTargets"
       ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
   endif()
   unset(_PUGIXML_ROOT)
@@ -44,9 +56,9 @@ else()
   )
   set_target_properties(struct PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
   target_include_directories(struct PUBLIC $<BUILD_INTERFACE:${_STRUCT_ROOT}>)
-  if(NOT SKBUILD)
-    install(TARGETS struct
-      EXPORT "AvogadroLibsTargets"
+  # See the pugixml block above.
+  if(NOT BUILD_SHARED_LIBS AND NOT SKBUILD)
+    install(TARGETS struct EXPORT "AvogadroLibsTargets"
       ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
   endif()
   unset(_STRUCT_ROOT)
@@ -57,15 +69,6 @@ if(NOT TARGET cppoptlib)
   target_include_directories(cppoptlib INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cppoptlib/include>)
 endif(NOT TARGET cppoptlib)
-
-if(USE_EXTERNAL_TOMLPLUSPLUS)
-  find_package(tomlplusplus 3.4.0 REQUIRED GLOBAL)
-else()
-  add_library(tomlplusplus INTERFACE IMPORTED GLOBAL)
-  target_include_directories(tomlplusplus
-    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-  add_library(tomlplusplus::tomlplusplus ALIAS tomlplusplus)
-endif(USE_EXTERNAL_TOMLPLUSPLUS)
 
 if(NOT TARGET tinycolormap)
   add_library(tinycolormap INTERFACE IMPORTED GLOBAL)

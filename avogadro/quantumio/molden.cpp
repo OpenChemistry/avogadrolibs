@@ -10,6 +10,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -108,7 +109,7 @@ void MoldenFile::processLine(std::istream& in)
 {
   // First truncate the line, remove trailing white space and check for blanks.
   string line;
-  if (!getline(in, line) || Core::trimmed(line).empty())
+  if (!Core::getLine(in, line) || Core::trimmed(line).empty())
     return;
 
   vector<string> list = Core::split(line, ' ');
@@ -161,13 +162,16 @@ void MoldenFile::processLine(std::istream& in)
         break;
       case GTO: {
         // TODO: detect dead files and make bullet-proof
+        if (list.empty())
+          break;
         int atom = Core::lexicalCast<int>(list[0]).value_or(0);
 
-        getline(in, line);
+        Core::getLine(in, line);
         line = Core::trimmed(line);
         while (!line.empty()) { // Read the shell types in this GTO.
           list = Core::split(line, ' ');
-          if (list.size() < 1)
+          // a shell line is "<type> <numGTOs> ...", so both are required
+          if (list.size() < 2)
             break;
           shell = list[0];
           std::transform(shell.begin(), shell.end(), shell.begin(), tolower);
@@ -207,7 +211,10 @@ void MoldenFile::processLine(std::istream& in)
 
           // Now read all the exponents and contraction coefficients.
           for (int gto = 0; gto < numGTOs; ++gto) {
-            getline(in, line);
+            // numGTOs comes from the file and can be enormous; end at the end
+            // of input rather than spinning the count out on a cleared line.
+            if (!Core::getLine(in, line))
+              break;
             line = Core::trimmed(line);
             list = Core::split(line, ' ');
             if (list.size() > 1) {
@@ -218,7 +225,7 @@ void MoldenFile::processLine(std::istream& in)
               m_csp.push_back(Core::lexicalCast<double>(list[2]).value_or(0.0));
           }
           // Start reading the next shell.
-          getline(in, line);
+          Core::getLine(in, line);
           line = Core::trimmed(line);
         }
       } break;
@@ -236,7 +243,8 @@ void MoldenFile::processLine(std::istream& in)
         // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
         while (!line.empty() && Core::contains(line, "=")) {
           if (Core::contains(line, "Occup"))
-            m_electrons += Core::lexicalCast<int>(list.back()).value_or(0);
+            m_electrons +=
+              std::lround(Core::lexicalCast<double>(list.back()).value_or(0.0));
           else if (Core::contains(line, "Ene")) {
             pendingEnergy =
               Core::lexicalCast<double>(list.back()).value_or(0.0) *
@@ -254,24 +262,33 @@ void MoldenFile::processLine(std::istream& in)
             pendingSymmetry = list.back();
             havePendingSymmetry = true;
           }
-          getline(in, line);
+          Core::getLine(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
         }
 
-        // Now commit the buffered values with the correct spin
+        // Set the correct spin before reading coefficients; the legacy
+        // (no basis count) path below routes coefficients based on it.
         m_currentSpinBeta = pendingSpinBeta;
-        if (havePendingEnergy) {
-          if (m_currentSpinBeta)
-            m_betaOrbitalEnergy.push_back(pendingEnergy);
-          else
-            m_orbitalEnergy.push_back(pendingEnergy);
-        }
-        if (havePendingSymmetry) {
-          if (m_currentSpinBeta)
-            m_betaSymmetryLabels.push_back(pendingSymmetry);
-          else
-            m_symmetryLabels.push_back(pendingSymmetry);
+
+        // For the legacy path (no basis count) commit the header fields now,
+        // since coefficients are streamed directly and cannot be buffered.
+        // For the normal path we defer the commit until after the
+        // coefficients are read, so all-zero "padding" orbitals can be
+        // dropped as a unit (see below).
+        if (numBasisFunctions == 0) {
+          if (havePendingEnergy) {
+            if (m_currentSpinBeta)
+              m_betaOrbitalEnergy.push_back(pendingEnergy);
+            else
+              m_orbitalEnergy.push_back(pendingEnergy);
+          }
+          if (havePendingSymmetry) {
+            if (m_currentSpinBeta)
+              m_betaSymmetryLabels.push_back(pendingSymmetry);
+            else
+              m_symmetryLabels.push_back(pendingSymmetry);
+          }
         }
 
         // Parse the molecular orbital coefficients.
@@ -304,18 +321,47 @@ void MoldenFile::processLine(std::istream& in)
 
           // we might go too far ahead
           currentPos = in.tellg();
-          getline(in, line);
+          Core::getLine(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
         }
         if (numBasisFunctions > 0) {
-          if (m_currentSpinBeta)
-            m_betaMOcoeffs.insert(m_betaMOcoeffs.end(),
-                                  orbitalCoefficients.begin(),
-                                  orbitalCoefficients.end());
-          else
-            m_MOcoeffs.insert(m_MOcoeffs.end(), orbitalCoefficients.begin(),
-                              orbitalCoefficients.end());
+          // Some codes pad the [MO] section out to the full basis dimension
+          // with all-zero, zero-energy "orbitals" (common for localized
+          // orbital sets such as IAO/IBO, NBO, Pipek-Mezey, which represent
+          // a reduced subspace). A normalized MO can never have all-zero
+          // coefficients, so drop such padding entries entirely - together
+          // with their buffered energy and symmetry - to keep the orbital
+          // list limited to the meaningful orbitals.
+          bool allZero = true;
+          for (double c : orbitalCoefficients) {
+            if (c != 0.0) {
+              allZero = false;
+              break;
+            }
+          }
+
+          if (!allZero) {
+            if (havePendingEnergy) {
+              if (m_currentSpinBeta)
+                m_betaOrbitalEnergy.push_back(pendingEnergy);
+              else
+                m_orbitalEnergy.push_back(pendingEnergy);
+            }
+            if (havePendingSymmetry) {
+              if (m_currentSpinBeta)
+                m_betaSymmetryLabels.push_back(pendingSymmetry);
+              else
+                m_symmetryLabels.push_back(pendingSymmetry);
+            }
+            if (m_currentSpinBeta)
+              m_betaMOcoeffs.insert(m_betaMOcoeffs.end(),
+                                    orbitalCoefficients.begin(),
+                                    orbitalCoefficients.end());
+            else
+              m_MOcoeffs.insert(m_MOcoeffs.end(), orbitalCoefficients.begin(),
+                                orbitalCoefficients.end());
+          }
         }
         // go back one line
         in.seekg(currentPos);
@@ -329,7 +375,7 @@ void MoldenFile::processLine(std::istream& in)
           m_frequencies.push_back(
             Core::lexicalCast<double>(line).value_or(0.0));
           currentPos = in.tellg();
-          getline(in, line);
+          Core::getLine(in, line);
         }
         // go back to previous line
         in.seekg(currentPos);
@@ -344,7 +390,7 @@ void MoldenFile::processLine(std::istream& in)
         while (!line.empty() && !Core::contains(line, "[")) {
           if (Core::contains(line, "vibration")) {
             m_vibDisplacements.push_back(Core::Array<Vector3>());
-            getline(in, line);
+            Core::getLine(in, line);
             line = Core::trimmed(line);
             while (!line.empty() && !Core::contains(line, "[") &&
                    !Core::contains(line, "vibration")) {
@@ -361,7 +407,7 @@ void MoldenFile::processLine(std::istream& in)
                           BOHR_TO_ANGSTROM_D));
 
               currentPos = in.tellg();
-              getline(in, line);
+              Core::getLine(in, line);
               line = Core::trimmed(line);
             }
           } else {
@@ -384,6 +430,8 @@ void MoldenFile::processLine(std::istream& in)
         // could be just IR or two pieces including Raman
         while (!line.empty() && !Core::contains(line, "[")) {
           list = Core::split(line, ' ');
+          if (list.empty())
+            break;
           m_IRintensities.push_back(
             Core::lexicalCast<double>(list[0]).value_or(0.0));
           if (list.size() == 2)
@@ -396,7 +444,7 @@ void MoldenFile::processLine(std::istream& in)
           }
 
           currentPos = in.tellg();
-          getline(in, line);
+          Core::getLine(in, line);
           line = Core::trimmed(line);
         }
         break;

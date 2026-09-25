@@ -68,14 +68,16 @@ private:
    * Use either m_electrons, or m_electronsAlpha and m_electronsBeta.
    * This then carries through to the energy, coefficients etc.
    */
-  int m_electrons;
-  int m_electronsAlpha;
-  int m_electronsBeta;
-  int m_normalModes;
-  int m_numAtoms;
-  int m_spin;
-  int m_charge;
-  unsigned int m_numBasisFunctions;
+  int m_electrons = 0;
+  int m_electronsAlpha = 0;
+  int m_electronsBeta = 0;
+  int m_normalModes = 0;
+  /** Vib-LE2Fix: the number of per-mode blocks Gaussian wrote in Vib-E2. */
+  int m_vibBlocks = 0;
+  int m_numAtoms = 0;
+  int m_spin = 1;
+  int m_charge = 0;
+  unsigned int m_numBasisFunctions = 0;
   std::vector<int> m_aNums;
   std::vector<double> m_aPos;
   std::vector<double> m_mullikenCharges;

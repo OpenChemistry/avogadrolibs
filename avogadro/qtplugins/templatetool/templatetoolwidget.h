@@ -50,7 +50,13 @@ public:
   void setGroup(const QString& groupName);
   void setLigand(const QString& ligandName);
 
+signals:
+  /** Emitted when pending ligand attachment points are discarded. */
+  void selectionCleared();
+
 private slots:
+  void tabChanged(int index);
+
   void elementChanged(int index);
   void updateElementCombo();
   void addUserElement(unsigned char element);
@@ -66,6 +72,18 @@ private slots:
   void otherLigandInsert(const QString& fileName, bool crystal);
 
 private:
+  /**
+   * Discard any pending attachment points and let the tool know, so the
+   * markers for them are removed from the display.
+   */
+  void clearSelection();
+
+  /**
+   * Point the ligand tab at a custom template, matching the type combo to the
+   * denticity measured from the file.
+   */
+  void useCustomLigand(const QString& fileName);
+
   void buildElements();
   void buildBondOrders();
   void saveElements();

@@ -11,6 +11,7 @@
 #include "avogadroqtguiexport.h"
 
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/matrix.h>
 
 #include <QRegularExpression>
 #include <QtCore/QJsonObject>
@@ -422,9 +423,114 @@ $$coords:[coordSpec]$$
  * See the CoordinateBlockGenerator documentation for a list of recognized
  * characters.
  *
+ * The geometry may also be written as a z-matrix, with one of
+~~~
+$$zmat:[coordSpec]$$
+$$zmatpad:[coordSpec]$$
+~~~
+ * `$$zmat$$` leaves out the fields the opening rows cannot carry, which is
+ * what Gaussian, NWChem, Q-Chem, Psi4, Molpro and CFOUR expect;
+ * `$$zmatpad$$` pads them with zeros instead, which is what ORCA's `int`
+ * format, MOPAC and SIESTA expect. Both take the same `[coordSpec]`
+ * alphabet, extended with `I`, `J` and `K` for the three reference rows and
+ * `R`, `A` and `T` for the distance, angle and torsion.
+ *
+ * A script that can write either form declares a `Coordinates` string list
+ * option whose values are `Cartesian` and `Z-Matrix / Internal`, and puts
+ * *both* keywords in its generated file, each on its own line. Whichever
+ * form the user did not choose is removed along with its line, so the script
+ * itself needs no branch. A file that offers both forms but comes with no
+ * `Coordinates` option gets the Cartesian block, as it always did.
+ *
+ * Only a file offering both forms has anything to choose between: where the
+ * surrounding syntax differs too much to write both -- ORCA's `* gzmt` block
+ * header, say -- the script can branch itself and emit just the one keyword,
+ * which is then always used. A file whose only geometry keyword is
+ * `$$zmat$$` therefore gets a z-matrix whatever the option says, rather than
+ * losing its geometry altogether.
+ *
+ * Writing a z-matrix may require the atoms to be reordered, since every row
+ * has to be measured against atoms already placed. When that happens, or
+ * when a linear fragment leaves a row's angle or torsion meaningless, a
+ * warning is added to the generated input's warning list.
+ *
  * Other keywords that can be used in the input files are:
  * - `$$atomCount$$`: Number of atoms in the molecule.
  * - `$$bondCount$$`: Number of bonds in the molecule.
+ *
+ * Progress and Status Updates
+ * ===========================
+ *
+ * A long-running command script can report its progress while it works, so the
+ * user sees a determinate progress bar and/or a status message instead of an
+ * anonymous spinner. To do so, print a single line of JSON to standard output
+ * of the form:
+~~~{.js}
+{"avogadro": {"message": "Optimizing conformer 3 of 25", "value": 3, "maximum":
+25}}
+~~~
+ * All three members are optional:
+ * - `message`: status text to display, e.g. "Current energy: -135.2 eV".
+ * - `value`: the current step of a determinate progress bar.
+ * - `maximum`: the total number of steps. Supply `value` and `maximum`
+ *   together; a `message` on its own just updates the text and leaves the bar
+ *   as it was.
+ *
+ * These lines are consumed by Avogadro and removed from the script's output,
+ * so they do not interfere with the final result. A line is only treated as a
+ * progress update if it is a complete JSON object on one line with exactly one
+ * member, named `avogadro`, whose value is an object — a pretty-printed result
+ * block is never mistaken for one, and any other output the script prints is
+ * passed through untouched.
+ *
+ * **Check `AVO_PROGRESS_PROTOCOL` before printing an envelope.** Avogadro
+ * 2.0.0 and earlier read the whole of a script's standard output as a single
+ * JSON document, so an extra line makes that parse fail and the command
+ * reports an error instead of its result. Avogadro sets this environment
+ * variable only when it is reading progress updates, so a script that guards
+ * on it keeps working on older releases — it just shows the old indeterminate
+ * spinner. The value is the protocol revision, currently `1`.
+ *
+ * **`flush=True` is required.** Python block-buffers standard output when it is
+ * connected to a pipe rather than a terminal, so without an explicit flush the
+ * updates sit in the buffer and only reach Avogadro when the script exits — by
+ * which point the progress bar is gone.
+ *
+ * The `avogadro.command` module (shipped with Avogadro) handles both of these,
+ * and is a no-op when progress is unsupported, so it is always safe to call:
+~~~{.py}
+from avogadro.command import report_progress
+
+for i, conformer in enumerate(conformers, start=1):
+    report_progress(f"Conformer {i} of {len(conformers)}", i, len(conformers))
+    optimize(conformer)
+
+report_progress("Writing results")
+~~~
+ * That module is not importable in every environment a script may run in (for
+ * example a package plugin with its own pixi environment), so scripts are free
+ * to copy this self-contained equivalent instead. Do not drop the environment
+ * check — without it the script breaks on Avogadro 2.0.0:
+~~~{.py}
+import json, os
+
+def report_progress(message=None, value=None, maximum=None):
+    # Older Avogadro cannot parse these lines; stay silent there.
+    if not os.environ.get("AVO_PROGRESS_PROTOCOL"):
+        return
+    payload = {}
+    if message is not None: payload["message"] = message
+    if value is not None:   payload["value"] = value
+    if maximum is not None: payload["maximum"] = maximum
+    # flush=True is required - stdout is block-buffered when piped
+    print(json.dumps({"avogadro": payload}), flush=True)
+~~~
+ * Reporting progress is entirely optional; a script that prints nothing until
+ * it is finished behaves exactly as it always has.
+ *
+ * The progress dialog shown while a command runs has a Cancel button, which
+ * kills the script's process. Scripts that write files or otherwise touch state
+ * outside Avogadro should be prepared to be terminated partway through.
  *
  * Error Handling
  * ==============
@@ -434,6 +540,12 @@ $$coords:[coordSpec]$$
  * occurs that must be reported to the user, simply write the error message to
  * standard output as plain text (i.e. not JSON), and it will be shown to the
  * user.
+ *
+ * While a command script runs (`--run-command`), its standard output and
+ * standard error are kept separate: the result and any plain-text error belong
+ * on standard output, while standard error is captured for diagnostics and
+ * reported if the output cannot be parsed. This means library chatter and
+ * warnings on standard error cannot corrupt the result.
  *
  * Debugging
  * =========
@@ -549,6 +661,22 @@ public:
   bool runCommand(const QJsonObject& options_, Core::Molecule* mol);
 
   /**
+   * Supply the current view camera, so that the CJSON handed to the script
+   * carries the orientation the user is actually looking at.
+   *
+   * The matrices are written to the CJSON as \c properties.modelView and
+   * \c properties.projection, the same keys CjsonFormat uses, and they
+   * override any stale matrices the molecule kept from the file it was read
+   * from. Without this, a script only ever sees the camera as of the last
+   * save.
+   *
+   * @param modelView The camera's world-to-eye transform.
+   * @param projection The camera's projection matrix. Its (3, 3) element is 0
+   * for a perspective camera and 1 for an orthographic one.
+   */
+  void setCamera(const Matrix4f& modelView, const Matrix4f& projection);
+
+  /**
    * Finish processing an aynchronous command script
    */
   bool processCommand(Core::Molecule* mol);
@@ -633,6 +761,17 @@ public:
 signals:
   void finished();
 
+  /**
+   * A running command script reported its progress. See the "Progress and
+   * Status Updates" section above for the script-side protocol.
+   * @param message Status text to show, or an empty string if the script did
+   * not supply one.
+   * @param value The current step, or -1 if the script did not supply one.
+   * @param maximum The total number of steps, or -1 if the script did not
+   * supply one.
+   */
+  void progress(const QString& message, int value, int maximum);
+
 public slots:
   /**
    * Enable/disable debugging.
@@ -644,11 +783,21 @@ public slots:
    */
   void commandFinished();
 
+private slots:
+  /**
+   * Translate a progress envelope from a running command script into the
+   * progress() signal.
+   */
+  void handleProgress(const QJsonObject& payload);
+
 protected:
   bool parseJson(const QByteArray& json, QJsonDocument& doc) const;
   QString generateCoordinateBlock(const QString& spec,
                                   const Core::Molecule& mol) const;
-  void replaceKeywords(QString& str, const Core::Molecule& mol) const;
+  void replaceKeywords(QString& str, const Core::Molecule& mol,
+                       const QJsonObject& options) const;
+  QString generateZMatrixBlock(const QString& spec, const Core::Molecule& mol,
+                               bool padded) const;
   bool parseHighlightStyles(const QJsonArray& json) const;
   bool parseRules(const QJsonArray& json,
                   QtGui::GenericHighlighter& highligher) const;
@@ -663,6 +812,7 @@ private:
                      const QByteArray& scriptStdin = QByteArray()) const;
   QString processErrorString(const QProcess& proc) const;
   bool insertMolecule(QJsonObject& json, const Core::Molecule& mol) const;
+  void insertCamera(QJsonObject& cjson) const;
 
   // File extension of requested molecule format
   mutable QString m_moleculeExtension;
@@ -678,6 +828,11 @@ private:
   QMap<QString, QtGui::GenericHighlighter*> m_fileHighlighters;
 
   mutable QMap<QString, QtGui::GenericHighlighter*> m_highlightStyles;
+
+  // The view camera, when the caller has one to offer.
+  bool m_hasCamera = false;
+  Matrix4f m_modelView;
+  Matrix4f m_projection;
 };
 
 inline bool InterfaceScript::isValid() const

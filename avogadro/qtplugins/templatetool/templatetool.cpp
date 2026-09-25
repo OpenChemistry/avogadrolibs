@@ -4,10 +4,12 @@
 ******************************************************************************/
 
 #include "templatetool.h"
+#include "templateattachment.h"
 #include "templatetoolkeymap.h"
 #include "templatetoolwidget.h"
 
 #include <avogadro/core/atom.h>
+#include <avogadro/core/atomutilities.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
@@ -27,6 +29,7 @@
 #include <avogadro/rendering/glrenderer.h>
 
 #include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/spheregeometry.h>
 #include <avogadro/rendering/textlabel2d.h>
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
@@ -46,6 +49,7 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
 
+#include <algorithm>
 #include <limits>
 
 namespace {
@@ -67,6 +71,7 @@ using Avogadro::Io::CjsonFormat;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
+using Avogadro::Rendering::SphereGeometry;
 using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
@@ -85,12 +90,19 @@ TemplateTool::TemplateTool(QObject* parent_)
     tr("Template Tool\t(%1)\n\n"
        "Insert fragments, including metal centers.\n"
        "Select an element and coordination geometry, "
-       "then click to insert a fragment.\n\n"
+       "then click to insert a fragment.\n"
+       "Click a hydrogen to replace it with the chosen "
+       "metal center, or click any other atom to change "
+       "its element and formal charge.\n\n"
        "Select a ligand or functional group and click "
        "on a hydrogen atom to attach it.")
       .arg(shortcut));
   setIcon();
   reset();
+
+  // Discard the markers when the widget drops a pending ligand selection.
+  connect(m_toolWidget, &TemplateToolWidget::selectionCleared, this,
+          &TemplateTool::drawablesChanged);
 }
 
 TemplateTool::~TemplateTool() {}
@@ -138,21 +150,21 @@ QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
         emptyLeftClick(e);
         return nullptr;
       case Rendering::AtomType:
-        atomLeftClick(e);
+        if (m_toolWidget->currentTab() == 0)
+          atomLeftClickCenter(e);
+        else
+          atomLeftClick(e);
         return nullptr;
       default:
         break;
     }
   } else if (m_pressedButtons & Qt::RightButton) {
+    // Just record what was hit. The actual deletion is deferred to
+    // mouseReleaseEvent() so that a right-drag can be told apart from a
+    // right-click: a drag is reserved for camera navigation, so the event
+    // must stay ignored here to let the default Navigator tool see the
+    // press and start panning.
     m_clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
-
-    switch (m_clickedObject.type) {
-      case Rendering::AtomType:
-        atomRightClick(e);
-        return nullptr;
-      default:
-        break;
-    }
   }
 
   return nullptr;
@@ -174,10 +186,24 @@ QUndoCommand* TemplateTool::mouseReleaseEvent(QMouseEvent* e)
 
   switch (e->button()) {
     case Qt::LeftButton:
-    case Qt::RightButton:
       reset();
       e->accept();
       break;
+    case Qt::RightButton: {
+      // Only delete on release if this was a click, not a drag: a
+      // right-drag is reserved for camera navigation, so the deletion that
+      // used to happen unconditionally on press is deferred here.
+      bool isClick = (e->pos() - m_clickPosition).manhattanLength() <
+                     QApplication::startDragDistance();
+      if (isClick && m_clickedObject.type == Rendering::AtomType)
+        atomRightClick(e);
+      reset();
+      // atomRightClick() accepts the event internally; ignore it again so
+      // the release still reaches the default Navigator tool, which needs
+      // to reset its own internal action state machine.
+      e->ignore();
+      break;
+    }
     default:
       break;
   }
@@ -317,7 +343,55 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
   return nullptr;
 }
 
-void TemplateTool::draw(Rendering::GroupNode&) {}
+void TemplateTool::draw(Rendering::GroupNode& node)
+{
+  if (m_molecule == nullptr || m_toolWidget == nullptr)
+    return;
+
+  // Mark the placeholder atoms picked so far for a polydentate ligand.
+  const std::vector<size_t>& selectedUIDs = m_toolWidget->selectedUIDs();
+  if (selectedUIDs.empty())
+    return;
+
+  auto* geo = new GeometryNode;
+  node.addChild(geo);
+
+  // Translucent red, to keep these distinct from the blue selection color.
+  // The identifier is left unset so these never intercept atom picking.
+  auto* spheres = new SphereGeometry;
+  spheres->setOpacity(0.55f);
+  spheres->setRenderPass(Rendering::TranslucentPass);
+  geo->addDrawable(spheres);
+
+  TextProperties labelProp;
+  labelProp.setFontFamily(TextProperties::SansSerif);
+  labelProp.setAlign(TextProperties::HCenter, TextProperties::VCenter);
+  labelProp.setColorRgb(255, 255, 255);
+
+  unsigned int count = 0;
+  for (size_t UID : selectedUIDs) {
+    RWAtom atom = m_molecule->atomByUniqueId(UID);
+    if (!atom.isValid())
+      continue;
+
+    Vector3f position = atom.position3d().cast<float>();
+    // Big enough to show around a ball-and-stick hydrogen or a dummy atom.
+    float radius = std::max(
+      static_cast<float>(Elements::radiusVDW(atom.atomicNumber())) * 0.4f,
+      0.35f);
+    spheres->addSphere(position, Vector3ub(255, 0, 0), radius, count);
+
+    // Number the attachment points in the order they were clicked.
+    auto* label = new TextLabel3D;
+    label->setText(QString("#%1").arg(count + 1).toStdString());
+    label->setTextProperties(labelProp);
+    label->setAnchor(position);
+    label->setRadius(radius);
+    geo->addDrawable(label);
+
+    ++count;
+  }
+}
 
 void TemplateTool::updatePressedButtons(QMouseEvent* e, bool release)
 {
@@ -371,13 +445,22 @@ void TemplateTool::reset()
   emit drawablesChanged();
 }
 
+void TemplateTool::clearLigandSelection()
+{
+  if (m_toolWidget == nullptr || m_toolWidget->selectedUIDs().empty())
+    return;
+
+  m_toolWidget->selectedUIDs().clear();
+  emit drawablesChanged();
+}
+
 void TemplateTool::emptyLeftClick(QMouseEvent* e)
 {
   // Get the coordinates of the clicked position
   if (m_renderer == nullptr)
     return;
 
-  m_toolWidget->selectedUIDs().clear();
+  clearLigandSelection();
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
   // center of inserted template
@@ -545,13 +628,19 @@ Vector3 rotateLigandCoords(Vector3 in, Vector3 centerVector, Vector3 outVector)
   return rot * in;
 }
 
-Matrix3 applyKabsch(std::vector<Vector3> templatePoints,
-                    std::vector<Vector3> moleculePoints)
+Matrix3 applyKabsch(const std::vector<Vector3>& templatePoints,
+                    const std::vector<Vector3>& moleculePoints)
 {
-  assert(templatePoints.size() == moleculePoints.size());
-  MatrixX TP(templatePoints.size(), 3);
-  MatrixX MP(templatePoints.size(), 3);
-  for (size_t i = 0; i < templatePoints.size(); i++) {
+  // Callers must pair every template point with a molecule point. Anything
+  // else is a bad attachment mapping, so refuse to rotate rather than read
+  // past the end of the shorter set.
+  size_t count = templatePoints.size();
+  if (count == 0 || count != moleculePoints.size())
+    return Matrix3::Identity();
+
+  MatrixX TP(count, 3);
+  MatrixX MP(count, 3);
+  for (size_t i = 0; i < count; i++) {
     TP.row(i) = templatePoints[i];
     MP.row(i) = moleculePoints[i];
   }
@@ -572,11 +661,30 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
   if (m_molecule->atom(selectedIndex).isValid() &&
       (m_molecule->atomicNumber(selectedIndex) == 1 ||
        m_molecule->atomicNumber(selectedIndex) == 0)) {
-    m_toolWidget->selectedUIDs().push_back(
-      m_molecule->atomUniqueId(selectedIndex));
-    if (static_cast<int>(m_toolWidget->selectedUIDs().size()) !=
-        m_toolWidget->denticity())
+    std::vector<size_t>& selectedUIDs = m_toolWidget->selectedUIDs();
+
+    // Drop any stale selections (e.g. atoms removed by an undo) so we never
+    // try to attach a ligand to an atom that no longer exists.
+    selectedUIDs.erase(
+      std::remove_if(selectedUIDs.begin(), selectedUIDs.end(),
+                     [this](size_t uid) {
+                       return !m_molecule->atomByUniqueId(uid).isValid();
+                     }),
+      selectedUIDs.end());
+
+    // Every attachment point of a polydentate ligand has to be a distinct
+    // atom, so ignore repeat clicks on an atom that is already selected.
+    size_t selectedUID = m_molecule->atomUniqueId(selectedIndex);
+    if (std::find(selectedUIDs.begin(), selectedUIDs.end(), selectedUID) !=
+        selectedUIDs.end())
       return;
+
+    selectedUIDs.push_back(selectedUID);
+    if (static_cast<int>(selectedUIDs.size()) != m_toolWidget->denticity()) {
+      // Show the marker for this attachment point and wait for the rest.
+      emit drawablesChanged();
+      return;
+    }
 
     // Get the ligand template
     // - check if we should use the clipboard
@@ -587,6 +695,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
       const QMimeData* mimeData(QApplication::clipboard()->mimeData());
 
       if (!mimeData) {
+        clearLigandSelection();
         return;
       }
 
@@ -611,16 +720,20 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
         pastedData = mimeData->text().toLatin1();
       }
 
-      if (pastedFormat == nullptr)
+      if (pastedFormat == nullptr) {
+        clearLigandSelection();
         return;
+      }
 
       // we have a format, so try to insert the new bits into the molecule
       bool success = pastedFormat->readString(
         std::string(pastedData.constData(), pastedData.size()),
         templateMolecule);
 
-      if (!success)
+      if (!success) {
+        clearLigandSelection();
         return;
+      }
 
     } else {
       QString path;
@@ -632,53 +745,38 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
       }
 
       QFile templ(path);
-      if (!templ.open(QFile::ReadOnly | QFile::Text))
+      if (!templ.open(QFile::ReadOnly | QFile::Text)) {
+        clearLigandSelection();
         return;
+      }
       QTextStream templateStream(&templ);
 
       CjsonFormat ff;
 
       if (!ff.readString(templateStream.readAll().toStdString(),
-                         templateMolecule))
+                         templateMolecule)) {
+        clearLigandSelection();
         return;
-    }
-
-    // Find dummy atom in template and get all necessary info
-    // for haptic ligands, we pick the dummy atom that's
-    // furthest from the centroid of the carbon atoms
-    Vector3 centroid(0.0, 0.0, 0.0);
-    unsigned carbonCount = 0;
-    for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
-      if (templateMolecule.atomicNumber(i) == 6) {
-        carbonCount++;
-        centroid += templateMolecule.atomPosition3d(i);
       }
     }
-    if (carbonCount > 1)
-      centroid = centroid / carbonCount;
 
-    size_t templateDummyIndex = 0;
-    std::vector<size_t> templateLigandIndices;
-    std::vector<size_t> templateLigandUIDs;
-    float maxDistance = 0.0;
-    for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
-      // in some ligands (e.g., haptic) we might have two dummy atoms
-      // so we only select the one furthest from the ligand centroid
-      if (templateMolecule.atomicNumber(i) == 0) {
-        Vector3 delta = templateMolecule.atomPosition3d(i) - centroid;
-        if (delta.squaredNorm() < maxDistance)
-          continue; // too close to the centroid
+    // Find the dummy atom in the template and get all necessary info
+    Index templateDummyIndex = templateAttachmentDummy(templateMolecule);
+    std::vector<Index> templateLigandIndices =
+      templateAttachmentPoints(templateMolecule, templateDummyIndex);
+    std::vector<Index> templateLigandUIDs;
+    templateLigandUIDs.reserve(templateLigandIndices.size());
+    for (Index index : templateLigandIndices)
+      templateLigandUIDs.push_back(templateMolecule.atomUniqueId(index));
 
-        maxDistance = delta.squaredNorm();
-        templateDummyIndex = i;
-        templateLigandIndices.clear();
-        templateLigandUIDs.clear();
-        for (const auto& bond : templateMolecule.bonds(i)) {
-          size_t newIndex = bond.getOtherAtom(i).index();
-          templateLigandIndices.push_back(newIndex);
-          templateLigandUIDs.push_back(templateMolecule.atomUniqueId(newIndex));
-        }
-      }
+    // The template has to offer exactly one attachment point per placeholder
+    // picked, or we would bond the wrong number of sites to the center (and
+    // have no way to align the two sets). Bail out before touching the
+    // molecule - this only happens for a custom ligand whose denticity does
+    // not match the type it was inserted under.
+    if (templateLigandIndices.size() != selectedUIDs.size()) {
+      clearLigandSelection();
+      return;
     }
 
     // Find center atom in our current molecule and get all necessary info
@@ -694,7 +792,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
       moleculeCenterIndex =
         m_molecule->bonds(selectedIndex)[0].getOtherAtom(selectedIndex).index();
       moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
-      for (size_t UID : m_toolWidget->selectedUIDs()) {
+      for (size_t UID : selectedUIDs) {
         size_t index = m_molecule->atomByUniqueId(UID).index();
         Vector3 newPos = m_molecule->atomPosition3d(index);
         moleculeLigandOutVector +=
@@ -706,10 +804,8 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
         unsigned char ligandAtomicNumber =
           templateMolecule.atomicNumber(templateLigandIndices[i]);
         ligandAtomicNumber = (ligandAtomicNumber == 0) ? 6 : ligandAtomicNumber;
-        // Estimate as the sum of covalent radii
-        double bondDistance = Elements::radiusCovalent(ligandAtomicNumber) +
-                              Elements::radiusCovalent(
-                                m_molecule->atomicNumber(moleculeCenterIndex));
+        double bondDistance = Core::AtomUtilities::idealBondLength(
+          ligandAtomicNumber, m_molecule->atomicNumber(moleculeCenterIndex));
         Vector3 inVector =
           templateMolecule.atomPosition3d(templateDummyIndex) -
           templateMolecule.atomPosition3d(templateLigandIndices[i]);
@@ -745,7 +841,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
           templateMolecule.atomPosition3d(index) -
           m_molecule->atomPosition3d(moleculeCenterIndex));
       std::vector<Vector3> moleculeLigandPositions;
-      for (size_t UID : m_toolWidget->selectedUIDs())
+      for (size_t UID : selectedUIDs)
         moleculeLigandPositions.push_back(
           m_molecule->atomPosition3d(m_molecule->atomByUniqueId(UID).index()) -
           m_molecule->atomPosition3d(moleculeCenterIndex));
@@ -797,7 +893,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     // Remove selected atoms and insert ligand
     // (unless there wasn't a bond to begin with)
     if (m_molecule->bonds(selectedIndex).size() != 0) {
-      for (size_t UID : m_toolWidget->selectedUIDs())
+      for (size_t UID : selectedUIDs)
         m_molecule->removeAtom(m_molecule->atomByUniqueId(UID).index());
     }
     size_t moleculeBaseIndex = m_molecule->atomCount();
@@ -809,8 +905,150 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     for (size_t index : templateNewLigandIndices)
       m_molecule->addBond(index + moleculeBaseIndex, moleculeCenterNewIndex);
 
-    m_toolWidget->selectedUIDs().clear();
+    clearLigandSelection();
   }
+}
+
+void TemplateTool::atomLeftClickCenter(QMouseEvent* e)
+{
+  // Clear any in-progress ligand selection from the other tab.
+  m_toolWidget->selectedUIDs().clear();
+
+  size_t selectedIndex = m_clickedObject.index;
+  if (!m_molecule->atom(selectedIndex).isValid())
+    return;
+
+  unsigned char newAtomic = m_toolWidget->atomicNumber();
+  signed char newCharge =
+    static_cast<signed char>(m_toolWidget->formalCharge());
+  unsigned char selectedAtomic = m_molecule->atomicNumber(selectedIndex);
+
+  // Non-hydrogen: swap element and formal charge in place, keep bonds.
+  if (selectedAtomic != 1) {
+    m_molecule->setAtomicNumber(selectedIndex, newAtomic);
+    m_molecule->setFormalCharge(selectedIndex, newCharge);
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+    e->accept();
+    return;
+  }
+
+  // Orphan hydrogen: nothing to anchor a coordination shell to.
+  auto hBonds = m_molecule->bonds(selectedIndex);
+  if (hBonds.empty()) {
+    m_molecule->setAtomicNumber(selectedIndex, newAtomic);
+    m_molecule->setFormalCharge(selectedIndex, newCharge);
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+    e->accept();
+    return;
+  }
+
+  // Hydrogen with a neighbor: insert the full coordinated metal center
+  // template, oriented so the H's neighbor occupies one coordination slot.
+  size_t anchorIndex = hBonds[0].getOtherAtom(selectedIndex).index();
+  Index anchorUID = m_molecule->atomUniqueId(anchorIndex);
+  Vector3 anchorPos = m_molecule->atomPosition3d(anchorIndex);
+  Vector3 hPos = m_molecule->atomPosition3d(selectedIndex);
+  unsigned char anchorAtomic = m_molecule->atomicNumber(anchorIndex);
+
+  CjsonFormat ff;
+  Molecule templateMolecule;
+  QFile templ(":/templates/centers/" + m_toolWidget->coordinationString() +
+              ".cjson");
+  if (!templ.open(QFile::ReadOnly | QFile::Text))
+    return;
+  QTextStream templateStream(&templ);
+  if (!ff.readString(templateStream.readAll().toStdString(), templateMolecule))
+    return;
+
+  // Apply the chosen element and formal charge to the template center.
+  size_t centerIdx = templateMolecule.atomCount();
+  for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+    if (templateMolecule.atomicNumber(i) != 1) {
+      centerIdx = i;
+      templateMolecule.setAtomicNumber(i, newAtomic);
+      templateMolecule.setFormalCharge(i, newCharge);
+      break;
+    }
+  }
+  if (centerIdx >= templateMolecule.atomCount())
+    return;
+
+  // Pick the first coordination-shell H as the one the anchor will replace.
+  size_t templateHIdx = templateMolecule.atomCount();
+  for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+    if (templateMolecule.atomicNumber(i) == 1) {
+      templateHIdx = i;
+      break;
+    }
+  }
+  if (templateHIdx >= templateMolecule.atomCount())
+    return;
+
+  Vector3 centerPos = templateMolecule.atomPosition3d(centerIdx);
+  Vector3 templateDir =
+    (templateMolecule.atomPosition3d(templateHIdx) - centerPos).normalized();
+
+  // Place the new metal at a reasonable bond distance from the anchor,
+  // keeping the original H direction so the geometry doesn't jump.
+  double bondDist =
+    Core::AtomUtilities::idealBondLength(newAtomic, anchorAtomic);
+  Vector3 hDir = hPos - anchorPos;
+  if (hDir.norm() < 1e-9)
+    hDir = Vector3(1.0, 0.0, 0.0);
+  hDir.normalize();
+  Vector3 newCenterPos = anchorPos + hDir * bondDist;
+  Vector3 targetDir = (anchorPos - newCenterPos).normalized();
+
+  // Rotate the template so the chosen coordination slot points at the anchor.
+  Matrix3 rotation = Matrix3::Identity();
+  Vector3 axis = templateDir.cross(targetDir);
+  double cosine = templateDir.dot(targetDir);
+  if (axis.norm() < 1e-9) {
+    if (cosine < 0.0) {
+      Vector3 perp = (std::abs(templateDir.x()) < 0.9) ? Vector3(1.0, 0.0, 0.0)
+                                                       : Vector3(0.0, 1.0, 0.0);
+      axis = templateDir.cross(perp);
+      axis.normalize();
+      rotation = Eigen::AngleAxisd(M_PI, axis).toRotationMatrix();
+    }
+  } else {
+    axis.normalize();
+    if (cosine > 1.0)
+      cosine = 1.0;
+    else if (cosine < -1.0)
+      cosine = -1.0;
+    rotation = Eigen::AngleAxisd(std::acos(cosine), axis).toRotationMatrix();
+  }
+  for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+    Vector3 rel = templateMolecule.atomPosition3d(i) - centerPos;
+    templateMolecule.setAtomPosition3d(i, rotation * rel + newCenterPos);
+  }
+
+  // Drop the slot that the anchor will occupy. swap-and-pop may move the
+  // center atom, so re-locate it as the only remaining non-H atom.
+  templateMolecule.removeAtom(templateHIdx);
+  size_t newCenterIdx = templateMolecule.atomCount();
+  for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+    if (templateMolecule.atomicNumber(i) != 1) {
+      newCenterIdx = i;
+      break;
+    }
+  }
+  if (newCenterIdx >= templateMolecule.atomCount())
+    return;
+
+  // Replace the clicked H with the coordinated template and bond the anchor
+  // to the new center. UIDs survive swap-and-pop; raw indices do not.
+  m_molecule->removeAtom(selectedIndex);
+  size_t base = m_molecule->atomCount();
+  m_molecule->appendMolecule(templateMolecule, tr("Insert Metal Center"));
+  size_t newAnchorIdx = m_molecule->atomByUniqueId(anchorUID).index();
+  m_molecule->addBond(newAnchorIdx, base + newCenterIdx);
+
+  Molecule::MoleculeChanges changes =
+    Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed;
+  m_molecule->emitChanged(changes);
+  e->accept();
 }
 
 void TemplateTool::atomRightClick(QMouseEvent* e)

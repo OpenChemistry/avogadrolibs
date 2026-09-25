@@ -221,3 +221,213 @@ TEST(CmlTest, readString)
   EXPECT_EQ(moleculeFromString.atomCount(), static_cast<size_t>(8));
   EXPECT_EQ(moleculeFromString.bondCount(), static_cast<size_t>(7));
 }
+
+namespace {
+
+/** Benzene with its six ring bonds written using @a order, e.g. "A". */
+std::string benzeneCml(const std::string& order)
+{
+  std::string cml("<?xml version=\"1.0\"?>"
+                  "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
+                  "<atomArray>");
+  for (int i = 1; i <= 6; ++i)
+    cml += "<atom id=\"a" + std::to_string(i) + "\" elementType=\"C\"/>";
+  for (int i = 7; i <= 12; ++i)
+    cml += "<atom id=\"a" + std::to_string(i) + "\" elementType=\"H\"/>";
+  cml += "</atomArray><bondArray>";
+  // The ring, then one C-H per ring carbon.
+  for (int i = 1; i <= 6; ++i) {
+    const int next = (i == 6) ? 1 : i + 1;
+    cml += "<bond atomRefs2=\"a" + std::to_string(i) + " a" +
+           std::to_string(next) + "\" order=\"" + order + "\"/>";
+  }
+  for (int i = 1; i <= 6; ++i)
+    cml += "<bond atomRefs2=\"a" + std::to_string(i) + " a" +
+           std::to_string(i + 6) + "\" order=\"1\"/>";
+  cml += "</bondArray></molecule>";
+  return cml;
+}
+
+/**
+ * Assert that @a molecule is benzene whose aromatic ring came back kekulized:
+ * no bond left at the aromatic order, and the ring alternating three double
+ * with three single bonds.
+ *
+ * Ring bonds are looked up by their endpoints rather than by bond index, so
+ * this does not quietly depend on the order the reader added them in. The
+ * first six atoms are the ring, in order around it.
+ */
+void expectKekulizedBenzene(const Molecule& molecule)
+{
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(12));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(12));
+
+  int doubleCount = 0;
+  int singleCount = 0;
+  for (size_t i = 0; i < molecule.bondCount(); ++i) {
+    const unsigned char order = molecule.bond(i).order();
+    EXPECT_LE(order, static_cast<unsigned char>(2))
+      << "bond " << i << " should be single or double after kekulization,"
+      << " rather than still carrying the aromatic order";
+    if (order == 2)
+      ++doubleCount;
+    else if (order == 1)
+      ++singleCount;
+  }
+  EXPECT_EQ(doubleCount, 3);
+  EXPECT_EQ(singleCount, 9); // Three ring single bonds, plus six C-H.
+
+  int ringDouble = 0;
+  for (Avogadro::Index i = 0; i < 6; ++i) {
+    const Bond ring = molecule.bond(i, (i + 1) % 6);
+    ASSERT_TRUE(ring.isValid()) << "ring bond " << i << " is missing";
+    if (ring.order() == 2)
+      ++ringDouble;
+  }
+  EXPECT_EQ(ringDouble, 3); // The ring bonds specifically must alternate.
+}
+
+/**
+ * One standalone CML document holding a two-atom molecule, exactly as Open
+ * Babel writes each conformer under --writeconformers: its own XML prolog and
+ * its own root <molecule>, with no enclosing <cml>. Concatenating several of
+ * these is the legacy multi-conformer format.
+ *
+ * @a firstElement is the first atom's element, so a document can be made to
+ * describe a different molecule, and @a xOffset shifts the geometry so the
+ * coordinate sets are distinguishable.
+ */
+std::string conformerDocument(const std::string& firstElement, double xOffset)
+{
+  std::string cml("<?xml version=\"1.0\"?>\n"
+                  "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
+                  "<atomArray>");
+  cml += "<atom id=\"a1\" elementType=\"" + firstElement + "\" x3=\"" +
+         std::to_string(xOffset) + "\" y3=\"0.0\" z3=\"0.0\"/>";
+  cml += "<atom id=\"a2\" elementType=\"O\" x3=\"" +
+         std::to_string(xOffset + 1.2) + "\" y3=\"0.0\" z3=\"0.0\"/>";
+  cml += "</atomArray><bondArray>"
+         "<bond atomRefs2=\"a1 a2\" order=\"1\"/>"
+         "</bondArray></molecule>\n";
+  return cml;
+}
+
+/**
+ * The same idea for a crystal: a standalone document with a unit cell whose
+ * single atom is placed with fractional coordinates. @a xFract goes in
+ * verbatim so a malformed value can be exercised.
+ */
+std::string fractionalDocument(const std::string& xFract)
+{
+  return "<?xml version=\"1.0\"?>\n"
+         "<molecule xmlns=\"http://www.xml-cml.org/schema\"><crystal>"
+         "<scalar title=\"a\" units=\"units:angstrom\">5.0</scalar>"
+         "<scalar title=\"b\" units=\"units:angstrom\">5.0</scalar>"
+         "<scalar title=\"c\" units=\"units:angstrom\">5.0</scalar>"
+         "<scalar title=\"alpha\" units=\"units:degree\">90.0</scalar>"
+         "<scalar title=\"beta\" units=\"units:degree\">90.0</scalar>"
+         "<scalar title=\"gamma\" units=\"units:degree\">90.0</scalar>"
+         "</crystal><atomArray>"
+         "<atom id=\"a1\" elementType=\"Na\" xFract=\"" +
+         xFract +
+         "\" yFract=\"0.25\" zFract=\"0.25\"/>"
+         "</atomArray></molecule>\n";
+}
+
+} // namespace
+
+TEST(CmlTest, aromaticBondOrderAIsKekulized)
+{
+  // Benzene, its six ring bonds written with the CML aromatic order "A".
+  // Before kekulize() was wired in, "A" fell through to the single-bond
+  // default; now it should come back as alternating single and double
+  // bonds, not all single.
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(benzeneCml("A"), molecule)) << cml.error();
+  expectKekulizedBenzene(molecule);
+}
+
+TEST(CmlTest, aromaticBondOrderAromaticSpellingIsKekulized)
+{
+  // The same molecule, but with the multi-character spelling order
+  // ="aromatic", which the single-character comparison used to miss. It has
+  // to reach exactly the same result as "A", so it gets the same assertions.
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(benzeneCml("aromatic"), molecule)) << cml.error();
+  expectKekulizedBenzene(molecule);
+}
+
+TEST(CmlTest, legacyConcatenatedConformersBecomeCoordinateSets)
+{
+  // Open Babel's CML writer has no conformer support, so Avogadro passes
+  // --writeconformers and gets each conformer back as its own top-level
+  // document rather than as siblings inside <cml>. All but the first used to
+  // be discarded, which is why a conformer search appeared to return nothing.
+  const std::string file = conformerDocument("C", 0.0) +
+                           conformerDocument("C", 1.0) +
+                           conformerDocument("C", 2.0);
+
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(file, molecule)) << cml.error();
+
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(2));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(1));
+  ASSERT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(3));
+
+  // Set 0 is the geometry already loaded onto the atoms, then one set per
+  // sibling, in document order.
+  EXPECT_DOUBLE_EQ(molecule.coordinate3d(0)[0].x(), 0.0);
+  EXPECT_DOUBLE_EQ(molecule.coordinate3d(1)[0].x(), 1.0);
+  EXPECT_DOUBLE_EQ(molecule.coordinate3d(2)[0].x(), 2.0);
+}
+
+TEST(CmlTest, concatenatedDifferentMoleculesAreNotConformers)
+{
+  // Same atom count, but the first atom is a different element, so these are
+  // two molecules rather than two geometries of one. Only the first is read,
+  // and no coordinate sets are invented for it.
+  const std::string file =
+    conformerDocument("C", 0.0) + conformerDocument("N", 1.0);
+
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(file, molecule)) << cml.error();
+
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(2));
+  EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(0));
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 6);
+}
+
+TEST(CmlTest, fractionalConformersAreConvertedToCartesian)
+{
+  const std::string file =
+    fractionalDocument("0.25") + fractionalDocument("0.75");
+
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(file, molecule)) << cml.error();
+
+  ASSERT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(2));
+  // A 5 A cubic cell, so the fractional x values land at 1.25 and 3.75 A.
+  EXPECT_NEAR(molecule.coordinate3d(0)[0].x(), 1.25, 1e-5);
+  EXPECT_NEAR(molecule.coordinate3d(1)[0].x(), 3.75, 1e-5);
+}
+
+TEST(CmlTest, malformedFractionalConformerIsRejected)
+{
+  // A sibling whose fractional coordinate will not parse is not a usable
+  // geometry. It must be rejected rather than silently read as zero, which is
+  // what pugixml's as_float() would hand back.
+  const std::string file =
+    fractionalDocument("0.25") + fractionalDocument("not-a-number");
+
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(file, molecule)) << cml.error();
+
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
+  EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(0));
+}

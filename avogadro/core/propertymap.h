@@ -77,6 +77,19 @@ public:
 
   // --- Bulk setters/getters ---
 
+  /**
+   * Create an empty dense double column named @p name with @p count entries,
+   * all unset (getDouble() returns nullopt until a value is assigned). An
+   * existing column of the same name is left unchanged.
+   */
+  void createDoubles(const std::string& name, Index count);
+
+  /** \overload Create an empty dense int column. */
+  void createInts(const std::string& name, Index count);
+
+  /** \overload Create an empty dense string column. */
+  void createStrings(const std::string& name, Index count);
+
   /** Set an entire column of double values. */
   void setDoubles(const std::string& name, const Array<double>& values);
 

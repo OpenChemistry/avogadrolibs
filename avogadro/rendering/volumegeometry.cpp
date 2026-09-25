@@ -114,21 +114,29 @@ static const GLuint boxIndices[] = {
   0,
 };
 
-void initializeFramebuffers(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth,
-                            int width, int height)
+// Create a colour + depth framebuffer sized to the viewport. The callers
+// differ only in what the colour attachment holds: the render target takes
+// 8-bit RGB, while the entry and exit point targets hold world positions and
+// need floats to be of any use.
+void initializeFramebuffer(GLuint* outFBO, GLuint* texColor, GLuint* texDepth,
+                           int width, int height, GLint colorInternalFormat,
+                           GLenum colorFormat, GLenum colorType,
+                           const char* label)
 {
   glGenFramebuffers(1, outFBO);
   glBindFramebuffer(GL_FRAMEBUFFER, *outFBO);
 
-  // Color attachment.
-  glGenTextures(1, texRGB);
-  glBindTexture(GL_TEXTURE_2D, *texRGB);
+  // Colour attachment.
+  glGenTextures(1, texColor);
+  glBindTexture(GL_TEXTURE_2D, *texColor);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-               GL_UNSIGNED_BYTE, nullptr);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexImage2D(GL_TEXTURE_2D, 0, colorInternalFormat, width, height, 0,
+               colorFormat, colorType, nullptr);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                         *texRGB, 0);
+                         *texColor, 0);
 
   // Depth attachment.
   glGenTextures(1, texDepth);
@@ -145,53 +153,7 @@ void initializeFramebuffers(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth,
   // Check for completeness.
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   if (status != GL_FRAMEBUFFER_COMPLETE) {
-    std::cerr << "Error: Framebuffer incomplete: 0x" << std::hex << status
-              << std::endl;
-  } else {
-#ifndef NDEBUG
-    std::cout << "Framebuffer complete.\n";
-#endif
-  }
-
-  // Unbind the FBO:
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-// Floating-point framebuffer for storing world positions
-void initializePositionFramebuffer(GLuint* outFBO, GLuint* texRGB,
-                                   GLuint* texDepth, int width, int height)
-{
-  glGenFramebuffers(1, outFBO);
-  glBindFramebuffer(GL_FRAMEBUFFER, *outFBO);
-
-  // Color attachment - use floating point for world positions
-  glGenTextures(1, texRGB);
-  glBindTexture(GL_TEXTURE_2D, *texRGB);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT,
-               nullptr);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                         *texRGB, 0);
-
-  // Depth attachment.
-  glGenTextures(1, texDepth);
-  glBindTexture(GL_TEXTURE_2D, *texDepth);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0,
-               GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-                         *texDepth, 0);
-
-  // Check for completeness.
-  GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-  if (status != GL_FRAMEBUFFER_COMPLETE) {
-    std::cerr << "Error: Position framebuffer incomplete: 0x" << std::hex
+    std::cerr << "Error: " << label << " framebuffer incomplete: 0x" << std::hex
               << status << std::endl;
   }
 
@@ -346,15 +308,19 @@ void VolumeGeometry::resizeFBO(int newWidth, int newHeight)
     d->backDepthTexture = 0;
   }
 
-  initializeFramebuffers(&d->renderFBO, &d->renderTexture, &d->depthTexture,
-                         m_width, m_height);
+  initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture,
+                        m_width, m_height, GL_RGB, GL_RGB, GL_UNSIGNED_BYTE,
+                        "Render");
 
-  // Use floating-point framebuffers for position storage
-  initializePositionFramebuffer(&d->backFBO, &d->backColorTexture,
-                                &d->backDepthTexture, m_width, m_height);
+  // The ray's entry and exit points are world positions, so these two need to
+  // hold floats rather than colours.
+  initializeFramebuffer(&d->backFBO, &d->backColorTexture, &d->backDepthTexture,
+                        m_width, m_height, GL_RGB32F, GL_RGB, GL_FLOAT,
+                        "Back position");
 
-  initializePositionFramebuffer(&d->frontFBO, &d->frontColorTexture,
-                                &d->frontDepthTexture, m_width, m_height);
+  initializeFramebuffer(&d->frontFBO, &d->frontColorTexture,
+                        &d->frontDepthTexture, m_width, m_height, GL_RGB32F,
+                        GL_RGB, GL_FLOAT, "Front position");
 }
 
 void VolumeGeometry::initialize()

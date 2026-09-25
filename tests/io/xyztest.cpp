@@ -77,6 +77,28 @@ TEST(XyzTest, readTotalEnergy)
   }
 }
 
+// Some programs write coordinates with an exponent a double cannot hold, e.g.
+// "2.61793E-500". Those are effectively zero and must not abort the read.
+TEST(XyzTest, readUnderflowedCoordinates)
+{
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string str = "2\nframe 1\n"
+                    "Ar 0.0 0.0 0.0\n"
+                    "Ar 0.0 0.0 4.0\n"
+                    "2\nframe 2\n"
+                    "Ar 2.61793E-500 0.0 0.0\n"
+                    "Ar 0.0 -7.5467E-6000 4.0\n";
+  ASSERT_TRUE(xyz.readString(str, molecule));
+  EXPECT_EQ(xyz.error(), std::string());
+
+  EXPECT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.coordinate3dCount(), 2);
+  EXPECT_EQ(molecule.coordinate3d(1)[0].x(), 0.0);
+  EXPECT_EQ(molecule.coordinate3d(1)[1].y(), 0.0);
+  EXPECT_EQ(molecule.coordinate3d(1)[1].z(), 4.0);
+}
+
 TEST(XyzTest, readZeroAtomsNoHang)
 {
   XyzFormat xyz;
@@ -112,6 +134,24 @@ TEST(XyzTest, readAtomicSymbolsNoBonds)
   EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
 }
 
+// An options string this format cannot use falls back to the default rather
+// than throwing out of the JSON lookup.
+TEST(XyzTest, unusableOptionsFallBackToDefaults)
+{
+  for (const char* options : { "", "{ this is not json ", "[1, 2, 3]",
+                               "{ \"perceiveBonds\": \"false\" }" }) {
+    XyzFormat xyz;
+    xyz.setOptions(options);
+    Molecule molecule;
+    ASSERT_TRUE(xyz.readFile(AVOGADRO_DATA "/data/xyz/methane.xyz", molecule))
+      << options;
+
+    // perceiveBonds defaults to on, so methane comes back with its four bonds.
+    EXPECT_EQ(molecule.atomCount(), 5) << options;
+    EXPECT_EQ(molecule.bondCount(), 4) << options;
+  }
+}
+
 // methane-num.xyz uses atomic numbers to identify atoms
 TEST(XyzTest, readAtomicNumbers)
 {
@@ -133,6 +173,54 @@ TEST(XyzTest, readAtomicNumbers)
   EXPECT_EQ(molecule.atom(4).position3d().x(), -0.51336);
   EXPECT_EQ(molecule.atom(4).position3d().y(), 0.88916);
   EXPECT_EQ(molecule.atom(4).position3d().z(), -0.36300);
+}
+
+// Crystallography tools (e.g. Mercury) export atom labels rather than plain
+// symbols. Those used to read back as InvalidElement, which poisoned the
+// electron count and the formula.
+TEST(XyzTest, readAtomLabels)
+{
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string str = "6\nWERPOY\n"
+                    "N1   0.0 0.0 0.0\n"
+                    "C12  1.5 0.0 0.0\n"
+                    "S1   3.0 0.0 0.0\n"
+                    "CL1  4.5 0.0 0.0\n"
+                    "Cl2  6.0 0.0 0.0\n"
+                    "Nb1  7.5 0.0 0.0\n";
+  ASSERT_TRUE(xyz.readString(str, molecule));
+  ASSERT_EQ(molecule.atomCount(), 6);
+
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 7);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 6);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 16);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), 17);
+  EXPECT_EQ(molecule.atom(4).atomicNumber(), 17);
+  // The two-letter symbol must win over the one-letter one.
+  EXPECT_EQ(molecule.atom(5).atomicNumber(), 41);
+
+  EXPECT_EQ(molecule.formula(), "CCl2NNbS");
+}
+
+// Plain symbols and custom elements must not be re-interpreted by the label
+// fallback, and a label with no recognizable element must not be guessed at.
+TEST(XyzTest, readAtomLabelsDoesNotOverreach)
+{
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string str = "4\ncomment\n"
+                    "Nb  0.0 0.0 0.0\n"
+                    "Xx  1.5 0.0 0.0\n"
+                    "Xaa 3.0 0.0 0.0\n"
+                    "Q1  4.5 0.0 0.0\n";
+  ASSERT_TRUE(xyz.readString(str, molecule));
+  ASSERT_EQ(molecule.atomCount(), 4);
+
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 41);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 0);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), Avogadro::CustomElementMin);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), Avogadro::InvalidElement);
 }
 
 TEST(XyzTest, write)

@@ -22,7 +22,6 @@ class Node;
 class SphereGeometry;
 class TextLabel2D;
 class TextLabel3D;
-class AmbientOcclusionSphereGeometry;
 class CurveGeometry;
 class WideLineGeometry;
 
@@ -49,7 +48,6 @@ public:
   virtual void visit(GeometryNode&) { return; }
   virtual void visit(Drawable&) { return; }
   virtual void visit(SphereGeometry&) { return; }
-  virtual void visit(AmbientOcclusionSphereGeometry&) { return; }
   virtual void visit(CurveGeometry&) { return; }
   virtual void visit(CylinderGeometry&) { return; }
   virtual void visit(MeshGeometry&) { return; }

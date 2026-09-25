@@ -5,12 +5,18 @@
 
 #include "propertymodel.h"
 
+#include <avogadro/qtgui/fragmenttools.h>
+
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/array.h>
 #include <avogadro/core/atom.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/propertymap.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/qtgui/conformerquantitytranslator.h>
+#include <avogadro/qtgui/energyunits.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <avogadro/core/angleiterator.h>
@@ -21,9 +27,8 @@
 #include <QtGui/QColor>
 #include <QtWidgets/QColorDialog>
 
+#include <array>
 #include <limits>
-
-#include <Eigen/Geometry>
 
 namespace Avogadro {
 
@@ -49,23 +54,8 @@ const int AngleColumns = 5;
 const int TorsionColumns = 6;
 // name, number, chain, secondary structure, label, heterogen, color
 const int ResidueColumns = 7;
-// number, rmsd, energy or more depending on available properties
-const int ConformerColumns = 1;
-
-// compute the RMSD between the two sets of coordinates
-inline double calculateRMSD(const Array<Vector3>& v1, const Array<Vector3>& v2)
-{
-  // if they're not the same length, it's an error
-  if (v1.size() != v2.size())
-    return numeric_limits<double>::quiet_NaN();
-
-  double sum = 0.0;
-  for (size_t i = 0; i < v1.size(); ++i) {
-    Vector3 diff = v1[i] - v2[i];
-    sum += diff.squaredNorm();
-  }
-  return sqrt(sum / v1.size());
-}
+// The conformer table has no fixed columns: Core decides what this molecule
+// can be measured for, and the conformer plot offers the same list.
 
 inline double distance(Vector3 v1, Vector3 v2)
 {
@@ -95,6 +85,151 @@ inline QString torsionTypeString(unsigned char a, unsigned char b,
 PropertyModel::PropertyModel(PropertyType type, QObject* parent)
   : QAbstractTableModel(parent), m_type(type), m_molecule(nullptr)
 {
+  // The energy unit is application-wide, so it can change while this table is
+  // open -- from this table's own context menu, or from the conformer plot's
+  // combos in another window.
+  if (m_type == ConformerType) {
+    connect(QtGui::EnergyUnits::instance(), &QtGui::EnergyUnits::unitsChanged,
+            this, &PropertyModel::energyUnitsChanged);
+  }
+}
+
+void PropertyModel::energyUnitsChanged()
+{
+  // The cached values stay as they are -- they are in the file's units, and
+  // the conversion happens on the way out in data(). Only what is drawn needs
+  // redoing, headings included: the unit is named there.
+  const int columns = columnCount();
+  const int rows = rowCount();
+  if (columns == 0 || rows == 0)
+    return;
+
+  emit headerDataChanged(Qt::Horizontal, 0, columns - 1);
+  emit dataChanged(index(0, 0), index(rows - 1, columns - 1),
+                   { Qt::DisplayRole, Qt::UserRole });
+}
+
+Core::PropertyMap* PropertyModel::propertyMap()
+{
+  if (m_molecule == nullptr)
+    return nullptr;
+  switch (m_type) {
+    case AtomType:
+      return &m_molecule->atomProperties();
+    case BondType:
+      return &m_molecule->bondProperties();
+    case ResidueType:
+      return &m_molecule->residueProperties();
+    case ConformerType:
+      return &m_molecule->conformerProperties();
+    default:
+      return nullptr;
+  }
+}
+
+const Core::PropertyMap* PropertyModel::propertyMap() const
+{
+  return const_cast<PropertyModel*>(this)->propertyMap();
+}
+
+Index PropertyModel::entityCount() const
+{
+  if (m_molecule == nullptr)
+    return 0;
+  switch (m_type) {
+    case AtomType:
+      return m_molecule->atomCount();
+    case BondType:
+      return m_molecule->bondCount();
+    case ResidueType:
+      return m_molecule->residueCount();
+    case ConformerType:
+      return m_molecule->coordinate3dCount();
+    case AngleType:
+      return m_angles.size();
+    case TorsionType:
+      return m_torsions.size();
+    default:
+      return 0;
+  }
+}
+
+bool PropertyModel::supportsCustomProperties() const
+{
+  return propertyMap() != nullptr;
+}
+
+bool PropertyModel::addCustomProperty(const QString& name,
+                                      CustomPropertyType type)
+{
+  if (m_molecule == nullptr)
+    return false;
+
+  const QString trimmed = name.trimmed();
+  if (trimmed.isEmpty())
+    return false;
+
+  Core::PropertyMap* pm = propertyMap();
+  if (pm == nullptr)
+    return false;
+
+  const std::string key = trimmed.toStdString();
+
+  // Reject a name that collides with an existing column (custom or built-in).
+  if (pm->hasDoubles(key) || pm->hasInts(key) || pm->hasStrings(key) ||
+      pm->hasMatrices(key))
+    return false;
+  for (int col = 0; col < baseColumnCount(); ++col) {
+    if (headerData(col, Qt::Horizontal, Qt::DisplayRole).toString() == trimmed)
+      return false;
+  }
+
+  const Index count = entityCount();
+  switch (type) {
+    case CustomPropertyType::Double:
+      pm->createDoubles(key, count);
+      break;
+    case CustomPropertyType::Int:
+      pm->createInts(key, count);
+      break;
+    case CustomPropertyType::String:
+      pm->createStrings(key, count);
+      break;
+    default:
+      // Unknown/invalid type: nothing was created, report failure.
+      return false;
+  }
+
+  // The new column changes the column set; invalidate so the view rebuilds it
+  // lazily on the next query.
+  m_validCache = false;
+  beginResetModel();
+  endResetModel();
+
+  m_molecule->emitChanged(Molecule::Properties | Molecule::Modified);
+  return true;
+}
+
+int PropertyModel::baseColumnCount() const
+{
+  switch (m_type) {
+    case AtomType:
+      return AtomColumns;
+    case BondType:
+      return BondColumns;
+    case AngleType:
+      return AngleColumns;
+    case TorsionType:
+      return TorsionColumns;
+    case ResidueType:
+      return ResidueColumns;
+    case ConformerType:
+      if (!m_validCache)
+        updateCache();
+      return static_cast<int>(m_conformerQuantities.size());
+    default:
+      return 0;
+  }
 }
 
 int PropertyModel::rowCount(const QModelIndex& parent) const
@@ -104,50 +239,15 @@ int PropertyModel::rowCount(const QModelIndex& parent) const
   if (!m_validCache)
     updateCache();
 
-  switch (m_type) {
-    case AtomType:
-      return m_molecule->atomCount();
-    case BondType:
-      return m_molecule->bondCount();
-    case ResidueType:
-      return m_molecule->residueCount();
-    case AngleType:
-      return m_angles.size();
-    case TorsionType:
-      return m_torsions.size();
-    case ConformerType:
-      return m_molecule->coordinate3dCount();
-    default:
-      return 0;
-  }
-
-  return 0;
+  return static_cast<int>(entityCount());
 }
 
 int PropertyModel::columnCount(const QModelIndex& parent) const
 {
   Q_UNUSED(parent);
-  switch (m_type) {
-    case AtomType:
-      return AtomColumns; // see above
-    case BondType:
-      return BondColumns; // see above
-    case AngleType:
-      return AngleColumns; // see above
-    case TorsionType:
-      return TorsionColumns;
-    case ResidueType:
-      return ResidueColumns;
-    case ConformerType: {
-      if (m_molecule->hasData("energies"))
-        return ConformerColumns + 1;
-      else
-        return ConformerColumns;
-    }
-    default:
-      return 0;
-  }
-  return 0;
+  if (!m_validCache)
+    updateCache();
+  return baseColumnCount() + static_cast<int>(m_customColumns.size());
 }
 
 QString partialChargeType(Molecule* molecule)
@@ -243,7 +343,7 @@ QString partialCharge(Molecule* molecule, int atom, const QString& overrideType)
 //   we also combine multiple types into this class, so lots of special cases
 QVariant PropertyModel::data(const QModelIndex& index, int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid() || m_molecule == nullptr)
     return QVariant();
 
   int row = index.row();
@@ -308,6 +408,51 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
+
+  // Custom property columns (per-entity)
+  if (col >= baseColumnCount()) {
+    if (!m_validCache)
+      updateCache();
+    int idx = col - baseColumnCount();
+    if (idx < 0 || idx >= static_cast<int>(m_customColumns.size()))
+      return QVariant();
+    const CustomColumn& cc = m_customColumns[idx];
+    const Core::PropertyMap* pm = propertyMap();
+    if (pm == nullptr)
+      return QVariant();
+
+    switch (cc.type) {
+      case CustomColumn::Double: {
+        auto v = pm->getDouble(cc.name, row);
+        if (!v.has_value())
+          return QVariant();
+        if (role == Qt::UserRole || role == Qt::EditRole)
+          return *v;
+        return QString("%L1").arg(*v, 0, 'g', 6);
+      }
+      case CustomColumn::Int: {
+        auto v = pm->getInt(cc.name, row);
+        if (!v.has_value())
+          return QVariant();
+        return *v;
+      }
+      case CustomColumn::String: {
+        auto v = pm->getString(cc.name, row);
+        if (!v.has_value())
+          return QVariant();
+        return QString::fromStdString(*v);
+      }
+      case CustomColumn::Matrix: {
+        if (!pm->hasMatrix(cc.name, row))
+          return QVariant();
+        MatrixX m = pm->getMatrix(cc.name, row).value_or(MatrixX());
+        return QString("[%1×%2 matrix]")
+          .arg(static_cast<int>(m.rows()))
+          .arg(static_cast<int>(m.cols()));
+      }
+    }
+    return QVariant();
+  }
 
   if (m_type == AtomType) {
     auto column = static_cast<AtomColumn>(index.column());
@@ -396,8 +541,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     // check constraints for this bond
     for (auto& constraint : m_molecule->constraints()) {
-      if (constraint.aIndex() == atom1.index() &&
-          constraint.bIndex() == atom2.index()) {
+      if (constraint.type() == Core::Constraint::DistanceConstraint &&
+          constraint.matches(atom1.index(), atom2.index())) {
         isConstrained = true;
         break;
       }
@@ -475,9 +620,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     // check constraints for this angle
     for (auto& constraint : m_molecule->constraints()) {
-      if (constraint.aIndex() == std::get<0>(angle) &&
-          constraint.bIndex() == std::get<1>(angle) &&
-          constraint.cIndex() == std::get<2>(angle)) {
+      if (constraint.type() == Core::Constraint::AngleConstraint &&
+          constraint.matches(std::get<0>(angle), std::get<1>(angle),
+                             std::get<2>(angle))) {
         isConstrained = true;
         break;
       }
@@ -528,10 +673,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     // check constraints for this torsion
     for (auto& constraint : m_molecule->constraints()) {
-      if (constraint.aIndex() == std::get<0>(torsion) &&
-          constraint.bIndex() == std::get<1>(torsion) &&
-          constraint.cIndex() == std::get<2>(torsion) &&
-          constraint.dIndex() == std::get<3>(torsion)) {
+      if (constraint.type() == Core::Constraint::TorsionConstraint &&
+          constraint.matches(std::get<0>(torsion), std::get<1>(torsion),
+                             std::get<2>(torsion), std::get<3>(torsion))) {
         isConstrained = true;
         break;
       }
@@ -565,44 +709,38 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
   } else if (m_type == ConformerType) {
-    auto column = static_cast<ConformerColumn>(index.column());
-    if (row >= static_cast<int>(m_molecule->coordinate3dCount()) ||
-        column > ConformerColumns) {
+    if (col < 0 || col >= static_cast<int>(m_conformerValues.size()))
       return QVariant(); // invalid index
-    }
 
-    switch (column) {
-      case ConformerDataRMSD: { // rmsd
-        double rmsd = 0.0;
-        if (row > 0) {
-          rmsd = calculateRMSD(m_molecule->coordinate3d(row),
-                               m_molecule->coordinate3d(0));
-        }
-        if (role == Qt::UserRole)
-          // Return the RMSD as a double for sorting
-          return rmsd;
-        else // format fixed to 3 decimals
-          return QString("%L1 Å").arg(rmsd, 0, 'f', 3);
-      }
-      case ConformerDataEnergy: {
-        double energy = 0.0;
-        if (m_molecule->hasData("energies")) {
-          std::vector<double> energies = m_molecule->data("energies").toList();
-          // calculate the minimum
-          double minEnergy = std::numeric_limits<double>::max();
-          for (double e : energies) {
-            minEnergy = std::min(minEnergy, e);
-          }
-          if (row < static_cast<int>(energies.size()))
-            energy = energies[row] - minEnergy;
-        }
-        if (role == Qt::UserRole)
-          // Return the energy as a double for sorting
-          return energy;
-        else // format fixed to 4 decimals
-          return QString("%L1").arg(energy, 0, 'f', 4);
-      }
-    }
+    const std::vector<double>& values = m_conformerValues[col];
+    // A file can carry fewer energies or gradients than it has geometries, so
+    // the last rows of such a column simply have nothing in them.
+    if (row < 0 || row >= static_cast<int>(values.size()))
+      return QVariant();
+
+    const Core::ConformerQuantity& quantity = m_conformerQuantities[col];
+    const bool isEnergy =
+      quantity.type() == Core::ConformerQuantity::Type::Energy;
+
+    // Energies arrive in the unit the file used, which nothing but the user
+    // knows; the conversion is shared with the conformer plot, so both show
+    // the same number.
+    double value = values[row];
+    if (isEnergy)
+      value = QtGui::EnergyUnits::instance()->convert(value, *m_molecule);
+
+    if (role == Qt::UserRole)
+      // The number itself, for sorting: the formatted string below would sort
+      // as text, putting 10 before 9.
+      return value;
+
+    // Energies are the small differences between large numbers, so they get
+    // more decimals than a distance or a temperature needs.
+    const int decimals = isEnergy ? 4 : 3;
+    const QString unit = QString::fromStdString(quantity.unit());
+    if (unit.isEmpty())
+      return QString("%L1").arg(value, 0, 'f', decimals);
+    return QString("%L1 %2").arg(value, 0, 'f', decimals).arg(unit);
   }
 
   return QVariant();
@@ -620,6 +758,16 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
 
   if (role != Qt::DisplayRole)
     return QVariant();
+
+  // Custom property column headers (per-entity types only)
+  if (orientation == Qt::Horizontal && !m_validCache)
+    updateCache();
+  if (orientation == Qt::Horizontal && section >= baseColumnCount()) {
+    int idx = section - baseColumnCount();
+    if (idx >= 0 && idx < static_cast<int>(m_customColumns.size()))
+      return QString::fromStdString(m_customColumns[idx].name);
+    return QVariant();
+  }
 
   if (m_type == AtomType) {
     if (orientation == Qt::Horizontal) {
@@ -736,17 +884,20 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
     } else // row headers
       return QString("%L1").arg(section + 1);
   } else if (m_type == ConformerType) {
-    // check if we have energies
-    bool hasEnergies = (m_molecule->hasData("energies"));
     if (orientation == Qt::Horizontal) {
-      unsigned int column = static_cast<ConformerColumn>(section);
-      switch (column) {
-        case ConformerDataRMSD:
-          return tr("RMSD (Å)", "root mean squared displacement in Angstrom");
-        case ConformerDataEnergy:
-          // should only hit this if we have energies anyway
-          return hasEnergies ? tr("Energy (kcal/mol)") : tr("Property");
-      }
+      if (section < 0 ||
+          section >= static_cast<int>(m_conformerQuantities.size()))
+        return QVariant();
+      const Core::ConformerQuantity& quantity = m_conformerQuantities[section];
+      // Only an energy needs telling: every other unit here comes from
+      // Avogadro rather than from whatever wrote the file.
+      const QString unit =
+        (quantity.type() == Core::ConformerQuantity::Type::Energy)
+          ? QtGui::EnergyUnits::instance()->displaySymbol()
+          : QString();
+      // The same translator the conformer plot labels its axes with, so a
+      // column and an axis showing the same thing are named the same thing.
+      return QtGui::ConformerQuantityTranslator::label(quantity, unit);
     } else // row headers
       return QString("%L1").arg(section + 1);
   }
@@ -756,12 +907,40 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
 
 Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
+    // The root index carries the drop permission for the table as a whole:
+    // the view tests it before it will accept a row dropped between two
+    // others. flags() is overridden outright here, so QAbstractItemModel's
+    // default of Qt::ItemIsDropEnabled for the root never applies -- without
+    // this, no drop indicator appears and dropEvent() is never reached.
+    if (m_type == AtomType)
+      return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
     return Qt::ItemIsEnabled;
+  }
+
+  // Only the atom table supports drag-to-reorder rows.
+  const Qt::ItemFlags dragFlag =
+    (m_type == AtomType) ? Qt::ItemIsDragEnabled : Qt::ItemFlags();
 
   // return QAbstractItemModel::flags(index) | Qt::ItemIsEditable
   // for the types and columns that can be edited
-  auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+  auto editable =
+    Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | dragFlag;
+
+  // Custom property columns: editable for double/int/string, read-only for
+  // matrix
+  if (index.column() >= baseColumnCount()) {
+    if (!m_validCache)
+      updateCache();
+    int idx = index.column() - baseColumnCount();
+    if (idx >= 0 && idx < static_cast<int>(m_customColumns.size())) {
+      if (m_customColumns[idx].type != CustomColumn::Matrix)
+        return editable;
+      return Qt::ItemIsEnabled | Qt::ItemIsSelectable | dragFlag;
+    }
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | dragFlag;
+  }
+
   if (m_type == AtomType) {
     if (index.column() == AtomDataElement ||
         index.column() == AtomDataFormalCharge || index.column() == AtomDataX ||
@@ -785,7 +964,15 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
       return editable;
   }
 
-  return QAbstractItemModel::flags(index);
+  return QAbstractItemModel::flags(index) | dragFlag;
+}
+
+Qt::DropActions PropertyModel::supportedDropActions() const
+{
+  // The view's internal drag-and-drop plumbing checks this before it will
+  // let a drop proceed, even though the actual reordering happens in
+  // PropertyView::dropEvent rather than through dropMimeData().
+  return m_type == AtomType ? Qt::MoveAction : Qt::DropActions();
 }
 
 bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
@@ -802,6 +989,46 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   // So that we can call "return" and have the cache invalid when we leave
   m_validCache = false;
   auto* undoMolecule = m_molecule->undoMolecule();
+
+  // Custom property columns
+  if (index.column() >= baseColumnCount()) {
+    updateCache();
+    int idx = index.column() - baseColumnCount();
+    if (idx < 0 || idx >= static_cast<int>(m_customColumns.size()))
+      return false;
+    const CustomColumn& cc = m_customColumns[idx];
+    Core::PropertyMap* pm = propertyMap();
+    if (pm == nullptr)
+      return false;
+
+    bool ok = false;
+    switch (cc.type) {
+      case CustomColumn::Double: {
+        double d = value.toDouble(&ok);
+        if (!ok)
+          return false;
+        pm->setDouble(cc.name, index.row(), d);
+        break;
+      }
+      case CustomColumn::Int: {
+        int i = value.toInt(&ok);
+        if (!ok)
+          return false;
+        pm->setInt(cc.name, index.row(), i);
+        break;
+      }
+      case CustomColumn::String:
+        pm->setString(cc.name, index.row(), value.toString().toStdString());
+        break;
+      case CustomColumn::Matrix:
+      default:
+        return false;
+    }
+
+    emit dataChanged(index, index);
+    m_molecule->emitChanged(Molecule::Properties | Molecule::Modified);
+    return true;
+  }
 
   if (m_type == AtomType) {
     Vector3 v = m_molecule->atomPosition3d(index.row());
@@ -906,7 +1133,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         bool ok;
         double length = value.toDouble(&ok);
         if (ok) {
-          setBondLength(index.row(), value.toDouble());
+          if (!setBondLength(index.row(), length))
+            return false;
         }
         break;
       }
@@ -949,7 +1177,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       double angle = value.toDouble(&ok);
       if (!ok)
         return false;
-      setAngle(index.row(), angle);
+      if (!setAngle(index.row(), angle))
+        return false;
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
@@ -960,7 +1189,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       double angle = value.toDouble(&ok);
       if (!ok)
         return false;
-      setTorsion(index.row(), angle);
+      if (!setTorsion(index.row(), angle))
+        return false;
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
       return true;
@@ -983,166 +1213,68 @@ bool PropertyModel::isColorIndex(const QModelIndex& index) const
   return false;
 }
 
-void PropertyModel::buildFragment(const QtGui::RWBond& bond,
-                                  const QtGui::RWAtom& startAtom)
+bool PropertyModel::setBondLength(unsigned int index, double length)
 {
-  m_fragment.clear();
-  if (!fragmentRecurse(bond, startAtom, startAtom)) {
-    // If this returns false, then a cycle has been found. Only move startAtom
-    // in this case.
-    m_fragment.clear();
-  }
-  m_fragment.push_back(m_molecule->undoMolecule()->atomUniqueId(startAtom));
-}
+  if (m_molecule == nullptr)
+    return false;
 
-bool PropertyModel::fragmentRecurse(const QtGui::RWBond& bond,
-                                    const QtGui::RWAtom& startAtom,
-                                    const QtGui::RWAtom& currentAtom)
-{
-  // does our cycle include both bonded atoms?
-  const RWAtom bondedAtom(bond.getOtherAtom(startAtom));
+  if (index >= m_molecule->bondCount())
+    return false;
+
   auto* undoMolecule = m_molecule->undoMolecule();
+  auto bond = undoMolecule->bond(index);
 
-  Core::Array<RWBond> bonds = undoMolecule->bonds(currentAtom);
+  // The second atom and the fragment hanging off it move; the first anchors.
+  const std::array<Index, 2> chain = { undoMolecule->atomUniqueId(bond.atom1()),
+                                       undoMolecule->atomUniqueId(
+                                         bond.atom2()) };
+  if (QtGui::FragmentTools::setChainDistance(*undoMolecule, chain, length) !=
+      QtGui::FragmentTools::CoordinateEditResult::Ok)
+    return false;
 
-  for (auto& it : bonds) {
-    if (it != bond) { // Skip the current bond
-      const RWAtom nextAtom = it.getOtherAtom(currentAtom);
-      if (nextAtom != startAtom && nextAtom != bondedAtom) {
-        // Skip atoms that have already been added. This prevents infinite
-        // recursion on cycles in the fragments
-        int uid = undoMolecule->atomUniqueId(nextAtom);
-        if (!fragmentHasAtom(uid)) {
-          m_fragment.push_back(uid);
-          if (!fragmentRecurse(it, startAtom, nextAtom))
-            return false;
-        }
-      } else if (nextAtom == bondedAtom) {
-        // If we've found the bonded atom, the bond is in a cycle
-        return false;
-      }
-    } // *it != bond
-  }   // foreach bond
+  m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
   return true;
 }
 
-inline bool PropertyModel::fragmentHasAtom(int uid) const
-{
-  return std::find(m_fragment.begin(), m_fragment.end(), uid) !=
-         m_fragment.end();
-}
-
-void PropertyModel::transformFragment() const
-{
-  auto* undoMolecule = m_molecule->undoMolecule();
-  undoMolecule->beginMergeMode(tr("Adjust Fragment"));
-  for (int it : m_fragment) {
-    RWAtom atom = m_molecule->undoMolecule()->atomByUniqueId(it);
-    if (atom.isValid()) {
-      Vector3 pos = atom.position3d();
-      pos = m_transform * pos;
-      atom.setPosition3d(pos);
-    }
-  }
-  undoMolecule->endMergeMode();
-}
-
-void PropertyModel::setBondLength(unsigned int index, double length)
-{
-  if (m_molecule == nullptr)
-    return;
-
-  if (index >= m_molecule->bondCount())
-    return;
-
-  // figure out how much to move and the vector of displacement
-  auto bond = m_molecule->undoMolecule()->bond(index);
-  Vector3 v1 = bond.atom1().position3d();
-  Vector3 v2 = bond.atom2().position3d();
-  Vector3 diff = v2 - v1;
-  double currentLength = diff.norm();
-  diff.normalize();
-  Vector3 delta = diff * (length - currentLength);
-
-  buildFragment(bond, bond.atom2());
-
-  m_transform.setIdentity();
-  m_transform.translate(delta);
-
-  transformFragment();
-
-  m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
-}
-
-void PropertyModel::setAngle(unsigned int index, double newValue)
+bool PropertyModel::setAngle(unsigned int index, double newValue)
 {
   // the index refers to the angle
-
   auto angle = m_angles[index];
-  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(angle));
-  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(angle));
-  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(angle));
+  auto* undoMolecule = m_molecule->undoMolecule();
+  auto atom1 = undoMolecule->atom(std::get<0>(angle));
+  auto atom2 = undoMolecule->atom(std::get<1>(angle));
+  auto atom3 = undoMolecule->atom(std::get<2>(angle));
 
-  auto bond = m_molecule->undoMolecule()->bond(atom1, atom2);
-  Vector3 a = atom1.position3d();
-  Vector3 b = atom2.position3d();
-  Vector3 c = atom3.position3d();
-  const double currentValue = calculateAngle(a, b, c);
-  Vector3 ab = b - a;
-  Vector3 bc = c - b;
-
-  // Axis of rotation is the cross product of the vectors
-  const Vector3 axis((ab.cross(bc)).normalized());
-  // Angle of rotation
-  const double change = (newValue - currentValue) * M_PI / 180.0;
-
-  // Build transform
-  m_transform.setIdentity();
-  m_transform.translate(b);
-  m_transform.rotate(Eigen::AngleAxis(-change, axis));
-  m_transform.translate(-b);
-
-  // Build the fragment if needed:
-  if (m_fragment.empty())
-    buildFragment(bond, atom2);
-
-  // Perform transformation
-  transformFragment();
+  // This table rotates everything on the vertex's side of the first bond,
+  // which carries the vertex's other substituents along with the far atom.
+  // The chain API picks that fragment on its own, since the row is always
+  // bonded atom1-atom2-atom3.
+  const std::array<Index, 3> chain = { undoMolecule->atomUniqueId(atom1),
+                                       undoMolecule->atomUniqueId(atom2),
+                                       undoMolecule->atomUniqueId(atom3) };
+  return QtGui::FragmentTools::setChainAngle(*undoMolecule, chain, newValue) ==
+         QtGui::FragmentTools::CoordinateEditResult::Ok;
 }
 
-void PropertyModel::setTorsion(unsigned int index, double newValue)
+bool PropertyModel::setTorsion(unsigned int index, double newValue)
 {
-
   auto torsion = m_torsions[index];
-  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(torsion));
-  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(torsion));
-  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(torsion));
-  auto atom4 = m_molecule->undoMolecule()->atom(std::get<3>(torsion));
+  auto* undoMolecule = m_molecule->undoMolecule();
+  auto atom1 = undoMolecule->atom(std::get<0>(torsion));
+  auto atom2 = undoMolecule->atom(std::get<1>(torsion));
+  auto atom3 = undoMolecule->atom(std::get<2>(torsion));
+  auto atom4 = undoMolecule->atom(std::get<3>(torsion));
 
-  auto bond = m_molecule->undoMolecule()->bond(atom2, atom3);
-  Vector3 a = atom1.position3d();
-  Vector3 b = atom2.position3d();
-  Vector3 c = atom3.position3d();
-  Vector3 d = atom4.position3d();
-  const double currentValue = calculateDihedral(a, b, c, d);
-
-  // Axis of rotation
-  const Vector3 axis((c - b).normalized());
-  // Angle of rotation
-  const double change = (newValue - currentValue) * M_PI / 180.0;
-
-  // Build transform
-  m_transform.setIdentity();
-  m_transform.translate(c);
-  m_transform.rotate(Eigen::AngleAxis(change, axis));
-  m_transform.translate(-c);
-
-  // Build the fragment if needed:
-  if (m_fragment.empty())
-    buildFragment(bond, atom3);
-
-  // Perform transformation
-  transformFragment();
+  // A torsion twists the whole side of the central bond, so that the
+  // geometry around the two atoms on the axis stays rigid. The chain API
+  // picks that side on its own, since the row is always bonded.
+  const std::array<Index, 4> chain = { undoMolecule->atomUniqueId(atom1),
+                                       undoMolecule->atomUniqueId(atom2),
+                                       undoMolecule->atomUniqueId(atom3),
+                                       undoMolecule->atomUniqueId(atom4) };
+  return QtGui::FragmentTools::setChainTorsion(*undoMolecule, chain,
+                                               newValue) ==
+         QtGui::FragmentTools::CoordinateEditResult::Ok;
 }
 
 QStringList PropertyModel::availableChargeTypes() const
@@ -1175,6 +1307,11 @@ void PropertyModel::setChargeType(const QString& type)
 void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 {
   if (molecule && molecule != m_molecule) {
+    // Stop listening to the molecule being replaced -- its destroyed signal
+    // would otherwise arrive later and clear the pointer to this one.
+    if (m_molecule)
+      m_molecule->disconnect(this);
+
     m_molecule = molecule;
 
     // Initialize structure tracking for change detection
@@ -1185,7 +1322,23 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 
     connect(m_molecule, SIGNAL(changed(unsigned int)), this,
             SLOT(updateTable(unsigned int)));
+    // The molecule's own signals stop arriving when it is destroyed, but this
+    // model is also woken by the application-wide energy unit, which knows
+    // nothing about either. Without this the next such change would walk a
+    // pointer to a molecule that is gone.
+    connect(m_molecule, &QObject::destroyed, this,
+            &PropertyModel::moleculeDestroyed);
   }
+}
+
+void PropertyModel::moleculeDestroyed()
+{
+  beginResetModel();
+  m_molecule = nullptr;
+  // Everything cached describes a molecule that no longer exists;
+  // updateCache() empties all of it when there is none.
+  updateCache();
+  endResetModel();
 }
 
 QString PropertyModel::secStructure(unsigned int type) const
@@ -1236,10 +1389,25 @@ void PropertyModel::updateTable(unsigned int flags)
     }
   }
 
+  // A reorder changes no counts, so the check above cannot see it; the flag
+  // is the only signal that the rows now mean different atoms.
+  if (flags & Molecule::Reordered)
+    structureChanged = true;
+
   if (!structureChanged) {
     // For coordinate-only changes, just invalidate the cache
     // This avoids race conditions during rapid animation updates
     m_validCache = false;
+
+    // A constraint change adds no rows and moves no atoms, so a reset would
+    // be wasted -- but the lock a constrained value carries is part of what
+    // the cell says, so the cells still have to be repainted.
+    if (flags & Molecule::Constraints) {
+      const int rows = rowCount(QModelIndex());
+      const int columns = columnCount(QModelIndex());
+      if (rows > 0 && columns > 0)
+        emit dataChanged(index(0, 0), index(rows - 1, columns - 1));
+    }
     return;
   }
 
@@ -1255,6 +1423,9 @@ void PropertyModel::updateCache() const
   m_validCache = true;
   m_angles.clear();
   m_torsions.clear();
+  m_customColumns.clear();
+  m_conformerQuantities.clear();
+  m_conformerValues.clear();
 
   if (m_molecule == nullptr)
     return;
@@ -1273,6 +1444,41 @@ void PropertyModel::updateCache() const
       m_torsions.push_back(torsion);
       torsion = ++dIter;
     }
+  } else if (m_type == ConformerType) {
+    // Speed and temperature are read back out of properties worked out from
+    // the trajectory, so they have to exist before anything is evaluated.
+    // Core skips the work when nothing has changed since last time.
+    Core::ensureConformerVelocities(*m_molecule);
+
+    for (const auto& quantity : Core::conformerQuantities(*m_molecule)) {
+      // The row headers already number the conformers, so a column doing the
+      // same would say nothing.
+      if (quantity.type() == Core::ConformerQuantity::Type::Frame)
+        continue;
+
+      std::vector<double> values =
+        Core::evaluateConformerQuantity(*m_molecule, quantity);
+      // A quantity the molecule turns out to hold nothing for earns no column
+      // rather than an empty one.
+      if (values.empty())
+        continue;
+
+      m_conformerQuantities.push_back(quantity);
+      m_conformerValues.push_back(std::move(values));
+    }
+  }
+
+  // Gather custom property columns (per-entity) for entity-based types
+  const Core::PropertyMap* pm = propertyMap();
+  if (pm != nullptr) {
+    for (const auto& name : pm->doubleNames())
+      m_customColumns.push_back({ name, CustomColumn::Double });
+    for (const auto& name : pm->intNames())
+      m_customColumns.push_back({ name, CustomColumn::Int });
+    for (const auto& name : pm->stringNames())
+      m_customColumns.push_back({ name, CustomColumn::String });
+    for (const auto& name : pm->matrixNames())
+      m_customColumns.push_back({ name, CustomColumn::Matrix });
   }
 }
 

@@ -7,6 +7,7 @@
 #include "obenergy.h"
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <openbabel/babelconfig.h>
 
@@ -22,6 +23,9 @@
 #include <QDebug>
 #include <QDir>
 
+#include <iostream>
+#include <memory>
+
 using namespace OpenBabel;
 
 namespace Avogadro::QtPlugins {
@@ -30,14 +34,39 @@ class OBEnergy::Private
 {
 public:
   // OBMol and OBForceField are owned by this class
-  OBMol* m_obmol = nullptr;
-  OBForceField* m_forceField = nullptr;
+  std::unique_ptr<OBMol> m_obmol;
+  // A private clone, never the plugin singleton (see setupForceField).
+  std::unique_ptr<OBForceField> m_forceField;
   bool setup = false;
 
-  ~Private()
+  // Open Babel hands out one global instance per force field plugin.
+  // Setup() reassigns that instance's molecule and reallocates its gradient
+  // array, so sharing it across the energy readout, the optimizer worker and
+  // the AutoOpt worker thread means one caller frees the atoms and gradients
+  // another is still reading. MakeNewInstance() is Open Babel's documented
+  // way to get a private copy for exactly this reason.
+  bool setupForceField(const std::string& method)
   {
-    if (m_obmol != nullptr)
-      delete m_obmol;
+    if (m_forceField != nullptr)
+      return true;
+
+    auto* plugin = static_cast<OBForceField*>(
+      OBPlugin::GetPlugin("forcefields", method.c_str()));
+    if (plugin == nullptr)
+      return false;
+
+    m_forceField.reset(plugin->MakeNewInstance());
+    if (m_forceField == nullptr)
+      return false;
+
+    // OBForceField leaves _loglvl and _logos uninitialized: no constructor
+    // sets them, and the plugin singleton only escaped that because static
+    // storage zeroed it. A heap clone gets whatever the allocator hands back,
+    // so a garbage _loglvl enables logging and a garbage _logos is then
+    // dereferenced (OBFFLog only checks it against null). Pin both.
+    m_forceField->SetLogLevel(OBFF_LOGLVL_NONE);
+    m_forceField->SetLogFile(&std::clog);
+    return true;
   }
 };
 
@@ -46,55 +75,32 @@ OBEnergy::OBEnergy(const std::string& method)
 {
   d = new Private;
 
-  // make sure we set the Open Babel variables for data files
-#ifdef _WIN32
-  QByteArray dataDir =
-    QString(QCoreApplication::applicationDirPath() + "/data").toLocal8Bit();
-  qputenv("BABEL_DATADIR", dataDir);
-#else
-  // check if BABEL_DATADIR is set in the environment
-  QStringList filters;
-  filters << "3.*"
-          << "2.*";
+  // make sure we set the Open Babel variables for data files, leaving any
+  // setting from the environment alone
   if (qgetenv("BABEL_DATADIR").isEmpty()) {
-    QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
-    QStringList dirs = dir.entryList(filters);
-    if (dirs.size() == 1) {
-      // versioned data directory
-      QString dataDir = QCoreApplication::applicationDirPath() +
-                        "/../share/openbabel/" + dirs[0];
+    const QString dataDir = QtGui::Utilities::openBabelDataDirectory();
+    if (!dataDir.isEmpty())
       qputenv("BABEL_DATADIR", dataDir.toLocal8Bit());
-    } else {
+    else
       qDebug() << "Error, Open Babel data directory not found.";
-    }
   }
 
-  // Check if BABEL_LIBDIR is set
   if (qgetenv("BABEL_LIBDIR").isEmpty()) {
-    QDir dir(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
-    QStringList dirs = dir.entryList(filters);
-    if (dirs.size() == 0) {
-      QString libDir =
-        QCoreApplication::applicationDirPath() + "/../lib/openbabel/";
-      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
-    } else if (dirs.size() == 1) {
-      QString libDir =
-        QCoreApplication::applicationDirPath() + "/../lib/openbabel/" + dirs[0];
-      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
-    } else {
-      qDebug() << "Error, Open Babel plugins directory not found.";
-    }
+    const QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
+    if (!pluginDir.isEmpty())
+      qputenv("BABEL_LIBDIR", pluginDir.toLocal8Bit());
   }
-#endif
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
 
-  d->m_forceField = static_cast<OBForceField*>(
-    OBPlugin::GetPlugin("forcefields", method.c_str()));
+  // The private force field instance is created lazily in setMolecule():
+  // MakeNewInstance() allocates it and the first Setup() then calls
+  // ParseParamFile() to load the parameters. Neither is worth doing for an
+  // instance that is only ever queried for its identifier or element mask.
 
 #ifndef NDEBUG
   qDebug() << "OBEnergy: method: " << method.c_str();
-  if (d->m_forceField == nullptr) {
+  if (OBPlugin::GetPlugin("forcefields", method.c_str()) == nullptr) {
     qDebug() << "OBEnergy: method not found: " << method.c_str();
     qDebug() << OBPlugin::ListAsString("forcefields").c_str();
   }
@@ -148,7 +154,10 @@ OBEnergy::OBEnergy(const std::string& method)
   }
 }
 
-OBEnergy::~OBEnergy() {}
+OBEnergy::~OBEnergy()
+{
+  delete d;
+}
 
 bool OBEnergy::acceptsRadicals() const
 {
@@ -171,8 +180,9 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
     return; // nothing to do
   }
 
-  // set up our internal OBMol
-  d->m_obmol = new OBMol;
+  // set up our internal OBMol, discarding any molecule from a previous call
+  d->setup = false;
+  d->m_obmol = std::make_unique<OBMol>();
   // copy the atoms, bonds, and coordinates
   d->m_obmol->BeginModify();
   for (size_t i = 0; i < mol->atomCount(); ++i) {
@@ -190,15 +200,8 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
   d->m_obmol->EndModify();
 
   // make sure we can set up the force field
-  if (d->m_forceField != nullptr) {
+  if (d->setupForceField(m_identifier))
     d->setup = d->m_forceField->Setup(*d->m_obmol);
-  } else {
-    d->m_forceField = static_cast<OBForceField*>(
-      OBPlugin::GetPlugin("forcefields", m_identifier.c_str()));
-    if (d->m_forceField != nullptr) {
-      d->setup = d->m_forceField->Setup(*d->m_obmol);
-    }
-  }
 }
 
 Real OBEnergy::value(const Eigen::VectorXd& x)
@@ -206,6 +209,12 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
   if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
       d->m_obmol == nullptr || !d->setup)
     return 0.0; // nothing to do
+
+  // OBMol::SetCoordinates() blindly copies 3 * NumAtoms() doubles out of the
+  // supplied array, so a stale coordinate vector would read off the end.
+  const auto n = d->m_obmol->NumAtoms();
+  if (x.size() != static_cast<Eigen::Index>(3 * n))
+    return 0.0;
 
   // update all coordinates at once (SetCoordinates copies the array)
   d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
@@ -233,6 +242,18 @@ Real OBEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
 
   if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
       d->m_obmol == nullptr || !d->setup) {
+    grad->setZero();
+    return 0.0;
+  }
+
+  // The gradient array is sized for the molecule the force field was set up
+  // with, which is not necessarily the molecule we were handed since - bail
+  // out rather than read past either buffer. Zero the caller's gradient so a
+  // reused buffer can't feed a previous iteration's forces back to the
+  // optimizer alongside our zero energy.
+  const auto n = d->m_obmol->NumAtoms();
+  if (x.size() != static_cast<Eigen::Index>(3 * n)) {
+    grad->setZero();
     return 0.0;
   }
 
@@ -244,7 +265,6 @@ Real OBEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
     energy = d->m_forceField->Energy(true);
 
     // GetGradientPtr returns forces (not gradients), so negate
-    const auto n = m_molecule->atomCount();
     Eigen::Map<const Eigen::VectorXd> obForces(
       d->m_forceField->GetGradientPtr(), 3 * n);
     *grad = -obForces;

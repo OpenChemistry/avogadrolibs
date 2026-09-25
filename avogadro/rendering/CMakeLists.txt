@@ -1,16 +1,28 @@
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
-if(WIN32 AND NOT BUILD_SHARED_LIBS)
-  add_definitions(-DGLEW_STATIC)
+# GLEW_STATIC switches glew.h from __declspec(dllimport) to plain externs, so
+# it has to describe how the GLEW we found was built. BUILD_SHARED_LIBS says
+# how *we* build our own libraries and nothing at all about GLEW: a static
+# avogadrolibs against a system GLEW DLL -- which is what the Windows fuzz job
+# builds -- defined it wrongly and left every __glew* symbol undefined.
+get_target_property(_glew_type GLEW::GLEW TYPE)
+if(WIN32)
+  if(_glew_type STREQUAL "STATIC_LIBRARY")
+    add_definitions(-DGLEW_STATIC)
+  elseif(_glew_type STREQUAL "UNKNOWN_LIBRARY" AND NOT BUILD_SHARED_LIBS)
+    # FindGLEW in module mode records no type. The superbuild builds its own
+    # GLEW to follow BUILD_SHARED_LIBS, so fall back to that inference there.
+    add_definitions(-DGLEW_STATIC)
+  endif()
 endif()
+unset(_glew_type)
 
 add_library(Rendering)
 
 avogadro_headers(Rendering
   arcsector.h
   arcstrip.h
-  ambientocclusionspheregeometry.h
   arrowgeometry.h
   avogadrogl.h
   avogadrorendering.h
@@ -98,7 +110,6 @@ target_sources(Rendering PRIVATE
   volumegeometry.cpp
   vrmlvisitor.cpp
   widelinegeometry.cpp
-  ambientocclusionspheregeometry.cpp
 )
 
 set(shader_files
@@ -113,6 +124,7 @@ set(shader_files
   "mesh_vs.glsl"
   "solid_vs.glsl"
   "solid_first_fs.glsl"
+  "solid_ao_fs.glsl"
   "volume_box_fs.glsl"
   "volume_box_vs.glsl"
   "volume_fs.glsl"
@@ -121,12 +133,6 @@ set(shader_files
   "wideline_vs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
-  "sphere_ao_depth_vs.glsl"
-  "sphere_ao_depth_fs.glsl"
-  "sphere_ao_bake_vs.glsl"
-  "sphere_ao_bake_fs.glsl"
-  "sphere_ao_render_vs.glsl"
-  "sphere_ao_render_fs.glsl"
   "textlabelbase_fs.glsl"
   "textlabelbase_vs.glsl"
 )

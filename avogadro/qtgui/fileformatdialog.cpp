@@ -6,6 +6,7 @@
 #include "fileformatdialog.h"
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/io/compression.h>
 #include <avogadro/io/fileformatmanager.h>
 
 #include <QtWidgets/QApplication>
@@ -91,7 +92,11 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
 
     // If none found, give user the option to retry.
     if (!format) {
-      QString extension = QFileInfo(fileName).suffix().toLower();
+      QString extension =
+        QFileInfo(QString::fromStdString(
+                    Io::stripCompressionSuffix(fileName.toStdString())))
+          .suffix()
+          .toLower();
 
       if (extension.isEmpty()) {
         QMessageBox::StandardButton reply = QMessageBox::question(
@@ -138,8 +143,12 @@ const Io::FileFormat* FileFormatDialog::findFileFormat(
   if (fileName.isEmpty())
     return nullptr;
 
-  // Extract extension from filename.
-  QFileInfo fileInfo(fileName);
+  // Extract extension from filename. A compression suffix is not a format:
+  // "1crn.pdb.gz" is a PDB file, so strip ".gz" before asking what reads it.
+  // Decompression itself is handled transparently down in Io::FileFormat, and
+  // is driven by the file's content rather than its name.
+  QFileInfo fileInfo(
+    QString::fromStdString(Io::stripCompressionSuffix(fileName.toStdString())));
   QString extension = fileInfo.suffix();
   if (extension.isEmpty())
     extension = fileInfo.fileName();
@@ -193,7 +202,8 @@ QString FileFormatDialog::readFileFilter()
       FileFormatManager::instance().fileFormats(FileFormat::Read |
                                                 FileFormat::File);
 
-    readFilter = generateFilterString(formats, AllFiles | AllFormats);
+    readFilter =
+      generateFilterString(formats, AllFiles | AllFormats | CompressedFiles);
   }
 
   return readFilter;
@@ -277,6 +287,20 @@ QString FileFormatDialog::generateFilterString(
 
   if (options & AllFiles)
     filterString.prepend(tr("All files") + " (*);;");
+
+  if (options & CompressedFiles) {
+    // One entry for every codec rather than a compressed variant of each of
+    // the forty-odd chemical formats: the cross product would be an unusable
+    // filter string, and the reader does not need the name to be exact.
+    QStringList compressedExtensions;
+    for (const std::string& ext : Io::compressionExtensions())
+      compressedExtensions << ("*." + QString::fromStdString(ext));
+    filterString += QStringLiteral("%1 (%2);;")
+                      .arg(tr("Compressed files"),
+                           compressedExtensions.join(QStringLiteral(" ")));
+    if (options & AllFormats)
+      allExtensions << compressedExtensions;
+  }
 
   if (options & AllFormats) {
     filterString.prepend((tr("All supported formats") + " (%1);;")

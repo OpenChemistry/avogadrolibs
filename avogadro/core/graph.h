@@ -32,6 +32,17 @@ public:
   /** Creates a new graph containing size @p n vertices. */
   explicit Graph(size_t n);
 
+  Graph(const Graph& other) = default;
+  Graph& operator=(const Graph& other) = default;
+
+  /**
+   * Move operations are declared explicitly: the defaulted destructor below
+   * would otherwise suppress them, and moving a molecule would silently fall
+   * back to copying every adjacency list.
+   */
+  Graph(Graph&& other) = default;
+  Graph& operator=(Graph&& other) = default;
+
   /** Destroys the graph. */
   ~Graph() = default;
 

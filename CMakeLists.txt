@@ -95,6 +95,97 @@ option(USE_EXTERNAL_PUGIXML "Use an externally-provided version of pugixml" OFF)
 option(USE_EXTERNAL_STRUCT "Use an externally-provided version of the struct binary data formatting library" OFF)
 option(USE_EXTERNAL_TOMLPLUSPLUS "Use an externally-provided version of tomlplusplus" OFF)
 option(ENABLE_CALC_BENCHMARKS "Build optional calc benchmark executables" OFF)
+
+# Declared here, not only in tests/, because the libraries are configured
+# before tests/ is and they need the definition below. The tests/*/CMakeLists
+# files repeat the option() for standalone test builds; whichever runs first
+# wins and the value is the same either way.
+if(DEFINED ENV{LIB_FUZZING_ENGINE})
+  option(ENABLE_FUZZ "Enable fuzz testing." ON)
+else()
+  option(ENABLE_FUZZ "Enable fuzz testing." OFF)
+endif()
+
+# Fuzz builds compile out the exception guard in Io::FileFormat so that an
+# exception escaping a parser still reaches libFuzzer as a crash. The name is
+# the OSS-Fuzz convention, which OSS-Fuzz itself adds to CXXFLAGS; this is for
+# our own ENABLE_FUZZ builds. Must precede add_subdirectory(avogadro).
+if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
+  add_compile_definitions(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+
+  # The libraries themselves need SanitizerCoverage, or the fuzz targets run
+  # blind: tests/*/CMakeLists.txt puts -fsanitize=fuzzer on the fuzz
+  # executable only, which instruments the harness translation unit and
+  # nothing else. Every file-format target in the 2026-09-17 nightly showed
+  # the symptom -- "Loaded 1 modules (34 inline 8-bit counters)", cov: 10,
+  # and a corpus frozen at 3 files after 24 million executions, because no
+  # input ever reached instrumented code and so none ever looked new.
+  #
+  # -no-link because this is compiled into everything: it adds the coverage
+  # callbacks without pulling in libFuzzer's main(), which only the fuzz
+  # executables want. OSS-Fuzz already puts this in CFLAGS/CXXFLAGS for the
+  # whole build, so only our own builds need it.
+  #
+  # The same flag has to go on the link line as well. add_compile_options()
+  # instruments every target in the tree, host utilities and unit-test
+  # binaries included, and the callbacks it inserts live in a sanitizer
+  # runtime -- so anything that does not link one fails with undefined
+  # references to __sanitizer_cov_*. utilities/encodefile is the one that
+  # finds this first. Passing the flag at link time pulls in that runtime
+  # without libFuzzer's main(), and it composes with the -fsanitize=fuzzer
+  # the fuzz targets add for themselves in tests/*/CMakeLists.txt.
+  if(NOT DEFINED ENV{LIB_FUZZING_ENGINE})
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      add_compile_options(-fsanitize=fuzzer-no-link)
+      add_link_options(-fsanitize=fuzzer-no-link)
+    else()
+      message(FATAL_ERROR
+        "ENABLE_FUZZ requires Clang; ${CMAKE_CXX_COMPILER_ID} has no libFuzzer.")
+    endif()
+  endif()
+
+  # How tests/*/CMakeLists.txt asks for libFuzzer on each fuzz executable.
+  #
+  # With a GNU-style driver, -fsanitize=fuzzer at link time is enough: the
+  # compiler driver does the linking and turns the flag into the right
+  # runtime libraries. An MSVC-style link line never reaches the driver --
+  # CMake invokes the linker itself -- so the flag is dropped with
+  # "lld-link: warning: ignoring unknown argument '-fsanitize=fuzzer'" and
+  # libFuzzer's main() and coverage hooks are silently absent. Name the
+  # compiler-rt library instead. The same is true of the
+  # -fsanitize=fuzzer-no-link above, which is why an MSVC-style build also
+  # has to put the sanitizer runtimes on the link line by hand; the Windows
+  # fuzz workflow does that with CMAKE_CXX_STANDARD_LIBRARIES.
+  #
+  # Debug info comes from the build configuration there as well, so -g is
+  # only for the GNU-style driver.
+  set(AvogadroLibs_FUZZ_COMPILE_OPTIONS -g -fsanitize=fuzzer)
+  set(AvogadroLibs_FUZZ_LINK_OPTIONS -fsanitize=fuzzer)
+  set(AvogadroLibs_FUZZ_LINK_LIBS "")
+  if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+    set(AvogadroLibs_FUZZ_COMPILE_OPTIONS -fsanitize=fuzzer)
+    set(AvogadroLibs_FUZZ_LINK_OPTIONS "")
+    set(_fuzz_rt_lib "clang_rt.fuzzer-x86_64.lib")
+    # Ask the compiler where its runtime libraries live rather than guessing
+    # at a version directory. A bare library name still resolves through the
+    # LIB path if this fails.
+    execute_process(COMMAND "${CMAKE_CXX_COMPILER}" -print-runtime-dir
+      OUTPUT_VARIABLE _fuzz_rt_dir
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      ERROR_QUIET)
+    if(_fuzz_rt_dir AND EXISTS "${_fuzz_rt_dir}/${_fuzz_rt_lib}")
+      set(_fuzz_rt_lib "${_fuzz_rt_dir}/${_fuzz_rt_lib}")
+    else()
+      message(STATUS
+        "Could not locate ${_fuzz_rt_lib}; relying on the LIB path for it.")
+    endif()
+    message(STATUS "Fuzz targets will link ${_fuzz_rt_lib}")
+    set(AvogadroLibs_FUZZ_LINK_LIBS "${_fuzz_rt_lib}")
+    unset(_fuzz_rt_lib)
+    unset(_fuzz_rt_dir)
+  endif()
+endif()
+
 set(QT_VERSION "6" CACHE STRING "What major version of Qt")
 set(QT_VERSIONS_SUPPORTED 6)
 set_property(CACHE QT_VERSION PROPERTY STRINGS 6)

@@ -6,6 +6,7 @@
 #include "ballandstick.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
@@ -21,7 +22,11 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
+#include <algorithm>
+#include <cmath>
 #include <iostream>
+#include <locale>
+#include <sstream>
 
 namespace Avogadro::QtPlugins {
 
@@ -31,14 +36,25 @@ using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::SphereGeometry;
 
+namespace {
+// See the comment in label.cpp: tokens are always written with a
+// classic-locale stream, but older settings saved under a comma-decimal
+// locale (Qt calls setlocale(LC_ALL, "") on Unix) may still use ','.
+std::string commaToDot(std::string token)
+{
+  std::replace(token.begin(), token.end(), ',', '.');
+  return token;
+}
+} // namespace
+
 struct LayerBallAndStick : Core::LayerData
 {
   QWidget* widget;
-  bool multiBonds;
-  bool showHydrogens;
-  float atomScale;
-  float bondRadius;
-  float opacity;
+  bool multiBonds = true;
+  bool showHydrogens = true;
+  float atomScale = 0.3f;
+  float bondRadius = 0.1f;
+  float opacity = 1.0f;
 
   LayerBallAndStick()
   {
@@ -66,26 +82,36 @@ struct LayerBallAndStick : Core::LayerData
 
   std::string serialize() final
   {
-    return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
-           std::to_string(atomScale) + " " + std::to_string(bondRadius) + " " +
-           std::to_string(opacity);
+    std::ostringstream output;
+    output.imbue(std::locale::classic());
+    output << boolToString(multiBonds) << " " << boolToString(showHydrogens)
+           << " " << atomScale << " " << bondRadius << " " << opacity;
+    return output.str();
   }
 
   void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
-    ss >> aux;
-    multiBonds = stringToBool(aux);
-    ss >> aux;
-    showHydrogens = stringToBool(aux);
-    ss >> aux;
-    atomScale = std::stof(aux);
-    ss >> aux;
-    bondRadius = std::stof(aux);
-    ss >> aux;
-    if (!aux.empty())
-      opacity = std::stof(aux); // backwards compatibility
+    if (ss >> aux)
+      multiBonds = stringToBool(aux);
+    if (ss >> aux)
+      showHydrogens = stringToBool(aux);
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<float>(commaToDot(aux));
+          v && std::isfinite(*v) && *v > 0.0f)
+        // slider range in setupWidget(), which converts value * 10 to int
+        atomScale = std::clamp(*v, 0.1f, 0.9f);
+    }
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<float>(commaToDot(aux));
+          v && std::isfinite(*v) && *v > 0.0f)
+        bondRadius = std::clamp(*v, 0.1f, 0.8f);
+    }
+    if (ss >> aux) { // backwards compatibility
+      if (auto v = Core::lexicalCast<float>(commaToDot(aux)))
+        opacity = std::clamp(*v, 0.0f, 1.0f);
+    }
   }
 
   LayerData* clone() final { return new LayerBallAndStick(serialize()); }

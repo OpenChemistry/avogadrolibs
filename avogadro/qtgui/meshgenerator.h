@@ -187,6 +187,18 @@ public:
    */
   int progressMaximum() { return m_progmax; }
 
+  /**
+   * Wait for every running MeshGenerator to finish.
+   *
+   * A running generator reads the cube and writes into the mesh it was
+   * handed, so anything about to delete either has to join the calculation
+   * first. There is no way to interrupt a generator once started, so this
+   * blocks until each one completes; each instance's finished() signal is
+   * blocked while waiting so a caller elsewhere does not react to a
+   * completion that belongs to data already being torn down.
+   */
+  static void cancelAllCalculations();
+
 signals:
 
   /**

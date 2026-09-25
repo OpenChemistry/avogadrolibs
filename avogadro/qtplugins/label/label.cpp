@@ -5,8 +5,11 @@
 
 #include "label.h"
 
+#include <algorithm>
+#include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <locale>
 #include <sstream>
 
 // for partial charges
@@ -15,6 +18,7 @@
 #include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/qtgui/colorbutton.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
@@ -45,8 +49,20 @@ using std::map;
 typedef Array<Molecule::BondType> NeighborListType;
 
 namespace {
+// Tokens are written with a classic-locale ostringstream (see serialize()
+// below), but old settings saved under a non-"C" LC_NUMERIC (e.g. de_DE, via
+// Qt's setlocale(LC_ALL, "")) may still use ',' as the decimal separator.
+// Tokens are space-separated and never contain thousands separators, so this
+// substitution is safe.
+std::string commaToDot(std::string token)
+{
+  std::replace(token.begin(), token.end(), ',', '.');
+  return token;
+}
+
 TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
-                         float radius, const Vector3ub& color, float scale = 1.0f)
+                         float radius, const Vector3ub& color,
+                         float scale = 1.0f)
 {
   Rendering::TextProperties tprop;
   tprop.setAlign(Rendering::TextProperties::HCenter,
@@ -79,27 +95,44 @@ struct LayerLabel : Core::LayerData
     PartialCharge = 32,
     Length = 64 // for bonds obviously
   };
-  unsigned short atomOptions;
-  unsigned short residueOptions;
-  unsigned short bondOptions;
+  unsigned short atomOptions = LabelOptions::Name;
+  unsigned short residueOptions = LabelOptions::None;
+  unsigned short bondOptions = LabelOptions::None;
 
   QWidget* widget;
-  float radiusScalar;
-  float labelScale;
-  Vector3ub color;
+  float radiusScalar = 0.5f;
+  float labelScale = 1.0f;
+  Vector3ub color = Vector3ub(255, 255, 255);
 
   LayerLabel()
   {
     widget = nullptr;
     QSettings settings;
+    // Read the current key, falling back to the pre-2.0 spelling.
+    // (fallback can be dropped after a release or two)
     atomOptions =
-      settings.value("label/atomoptions", LabelOptions::Name).toInt();
+      settings
+        .value("label/atomOptions",
+               settings.value("label/atomoptions", LabelOptions::Name))
+        .toInt();
     residueOptions =
-      settings.value("label/residueoptions", LabelOptions::None).toInt();
+      settings
+        .value("label/residueOptions",
+               settings.value("label/residueoptions", LabelOptions::None))
+        .toInt();
     bondOptions =
-      settings.value("label/bondoptions", LabelOptions::None).toInt();
-    radiusScalar = settings.value("label/radiusscalar", 0.5).toDouble();
-    labelScale = settings.value("label/labelscale", 1.0).toDouble();
+      settings
+        .value("label/bondOptions",
+               settings.value("label/bondoptions", LabelOptions::None))
+        .toInt();
+    radiusScalar =
+      settings
+        .value("label/radiusScalar", settings.value("label/radiusscalar", 0.5))
+        .toDouble();
+    labelScale =
+      settings
+        .value("label/labelScale", settings.value("label/labelscale", 1.0))
+        .toDouble();
 
     auto q_color =
       settings.value("label/color", QColor(Qt::white)).value<QColor>();
@@ -125,34 +158,57 @@ struct LayerLabel : Core::LayerData
   std::string serialize() final
   {
     std::stringstream output;
+    output.imbue(std::locale::classic());
     output << atomOptions << " " << residueOptions << " " << radiusScalar << " "
            << (int)color[0] << " " << (int)color[1] << " " << (int)color[2]
            << " " << bondOptions << " " << labelScale;
     return output.str();
   }
 
+  // Bitmask fields (atomOptions/residueOptions/bondOptions) reject a negative
+  // parse and keep the previous (default) value; a malformed or missing token
+  // leaves the member untouched rather than throwing.
   void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
-    ss >> aux;
-    atomOptions = std::stoi(aux);
-    ss >> aux;
-    residueOptions = std::stoi(aux);
-    ss >> aux;
-    radiusScalar = std::stof(aux);
-    ss >> aux;
-    color[0] = std::stoi(aux);
-    ss >> aux;
-    color[1] = std::stoi(aux);
-    ss >> aux;
-    color[2] = std::stoi(aux);
-    ss >> aux;
-    if (!aux.empty())
-      bondOptions = std::stoi(aux); // backwards compatibility
-    ss >> aux;
-    if (!aux.empty())
-      labelScale = std::stof(aux); // backwards compatibility
+
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<int>(aux); v && *v >= 0)
+        atomOptions = static_cast<unsigned short>(*v);
+    }
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<int>(aux); v && *v >= 0)
+        residueOptions = static_cast<unsigned short>(*v);
+    }
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<float>(commaToDot(aux));
+          v && std::isfinite(*v) && *v > 0.0f)
+        radiusScalar = *v;
+    }
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<int>(aux))
+        color[0] = static_cast<unsigned char>(std::clamp(*v, 0, 255));
+    }
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<int>(aux))
+        color[1] = static_cast<unsigned char>(std::clamp(*v, 0, 255));
+    }
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<int>(aux))
+        color[2] = static_cast<unsigned char>(std::clamp(*v, 0, 255));
+    }
+    if (ss >> aux) { // backwards compatibility
+      if (auto v = Core::lexicalCast<int>(aux); v && *v >= 0)
+        bondOptions = static_cast<unsigned short>(*v);
+    }
+    if (ss >> aux) { // backwards compatibility
+      if (auto v = Core::lexicalCast<float>(commaToDot(aux));
+          v && std::isfinite(*v) && *v > 0.0f)
+        // the "Label scale" spin box range; keeps createLabel's pixel height
+        // well inside size_t
+        labelScale = std::clamp(*v, 0.25f, 3.0f);
+    }
   }
 
   void setupWidget(Label* slot)
@@ -325,7 +381,8 @@ void Label::processResidue(const Core::Molecule& molecule,
     if (interface->residueOptions & LayerLabel::LabelOptions::Custom) {
       text += (text == "" ? "" : " / ") + customLabel;
     }
-    TextLabel3D* residueLabel = createLabel(text, pos, radius, color, interface->labelScale);
+    TextLabel3D* residueLabel =
+      createLabel(text, pos, radius, color, interface->labelScale);
     geometry->addDrawable(residueLabel);
   }
 }
@@ -425,8 +482,8 @@ void Label::processAtom(const Core::Molecule& molecule,
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *
                      interface->radiusScalar;
 
-      TextLabel3D* atomLabel =
-        createLabel(text, pos, radius, contrastColor(color), interface->labelScale);
+      TextLabel3D* atomLabel = createLabel(
+        text, pos, radius, contrastColor(color), interface->labelScale);
       geometry->addDrawable(atomLabel);
     }
   }
@@ -482,7 +539,8 @@ void Label::processBond(const Core::Molecule& molecule,
       (atom1.position3d().cast<float>() + atom2.position3d().cast<float>()) /
       2.0f;
 
-    TextLabel3D* bondLabel = createLabel(text.str(), pos, radius, color, interface1->labelScale);
+    TextLabel3D* bondLabel =
+      createLabel(text.str(), pos, radius, color, interface1->labelScale);
     geometry->addDrawable(bondLabel);
   }
 }
@@ -511,7 +569,7 @@ void Label::atomLabelType(int index)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/atomoptions", interface->atomOptions);
+  settings.setValue("label/atomOptions", interface->atomOptions);
 }
 
 void Label::bondLabelType(int index)
@@ -524,7 +582,7 @@ void Label::bondLabelType(int index)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/bondoptions", interface->bondOptions);
+  settings.setValue("label/bondOptions", interface->bondOptions);
 }
 
 void Label::residueLabelType(int index)
@@ -537,7 +595,7 @@ void Label::residueLabelType(int index)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/residueoptions", interface->residueOptions);
+  settings.setValue("label/residueOptions", interface->residueOptions);
 }
 
 void Label::setRadiusScalar(double radius)
@@ -547,7 +605,7 @@ void Label::setRadiusScalar(double radius)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/radiusscalar", interface->radiusScalar);
+  settings.setValue("label/radiusScalar", interface->radiusScalar);
 }
 
 void Label::setLabelScale(double scale)
@@ -557,7 +615,7 @@ void Label::setLabelScale(double scale)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/labelscale", interface->labelScale);
+  settings.setValue("label/labelScale", interface->labelScale);
 }
 
 QWidget* Label::setupWidget()

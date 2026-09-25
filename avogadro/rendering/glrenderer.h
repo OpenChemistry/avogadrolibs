@@ -101,7 +101,6 @@ public:
   const SolidPipeline& solidPipeline() const { return m_solidPipeline; }
   SolidPipeline& solidPipeline() { return m_solidPipeline; }
 
-
   const VolumeGeometry& volume() const { return m_volume; }
   VolumeGeometry& volume() { return m_volume; }
   /**
@@ -149,6 +148,7 @@ private:
                                const Frustrum& frustrum) const;
 
   bool m_valid;
+  float m_pixelRatio;
   std::string m_error;
   Camera m_camera;
   Camera m_overlayCamera;

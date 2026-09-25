@@ -25,8 +25,8 @@ namespace Avogadro::Rendering {
 using Core::Array;
 
 GLRenderer::GLRenderer()
-  : m_valid(false), m_textRenderStrategy(nullptr), m_center(Vector3f::Zero()),
-    m_radius(20.0)
+  : m_valid(false), m_pixelRatio(1.0f), m_textRenderStrategy(nullptr),
+    m_center(Vector3f::Zero()), m_radius(20.0)
 #ifdef _3DCONNEXION
     ,
     m_drawIcon(false), m_iconData(nullptr), m_iconWidth(0u), m_iconHeight(0u),
@@ -82,7 +82,10 @@ void GLRenderer::resize(int width, int height)
     return;
 
   // m_volume.resize(width, height);
-  glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
+  // The viewport is in device pixels, while the cameras work in logical pixels
+  // as they are used to project and unproject Qt mouse coordinates.
+  glViewport(0, 0, static_cast<GLsizei>(width * m_pixelRatio),
+             static_cast<GLsizei>(height * m_pixelRatio));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
 #ifndef __EMSCRIPTEN__
@@ -92,10 +95,9 @@ void GLRenderer::resize(int width, int height)
 
 void GLRenderer::setPixelRatio(float ratio)
 {
+  m_pixelRatio = ratio;
 #ifndef __EMSCRIPTEN__
   m_solidPipeline.setPixelRatio(ratio);
-#else
-  (void)ratio;
 #endif
 }
 
@@ -118,8 +120,10 @@ void GLRenderer::render()
 #ifndef __EMSCRIPTEN__
   m_solidPipeline.begin();
   m_scene.rootNode().accept(visitor);
-  m_solidPipeline.end();
+  // Before end(), so the offset the fog and depth-of-field are sized by
+  // belongs to the camera this frame is drawn with rather than the last one.
   m_solidPipeline.adjustOffset(m_camera);
+  m_solidPipeline.end(m_camera);
 #else
   m_scene.rootNode().accept(visitor);
 #endif
@@ -205,7 +209,6 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
       void visit(GeometryNode&) override { return; }
       void visit(Drawable&) override { return; }
       void visit(SphereGeometry&) override { return; }
-      void visit(AmbientOcclusionSphereGeometry&) override { return; }
       void visit(CurveGeometry&) override { return; }
       void visit(CylinderGeometry&) override { return; }
       void visit(MeshGeometry&) override { return; }

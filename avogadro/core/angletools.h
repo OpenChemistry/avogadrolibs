@@ -10,6 +10,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
+#include <vector>
 
 namespace Avogadro {
 
@@ -23,12 +25,14 @@ inline Real bondAngle(const Vector3& b0, const Vector3& b1)
 {
   // standard formula, e.g.
   // https://scicomp.stackexchange.com/q/27689/14517
-  // Since we're using bonds, v. small angles are okay
-  // only problem is if bond lengths are v. v. small
-  //   but that's unlikely in practice
   const Real dot = -1.0 * b0.dot(b1);
   const Real norms = b0.norm() * b1.norm();
-  return std::acos(dot / norms) * RAD_TO_DEG_D;
+  // a zero-length bond has no angle; return 0 rather than NaN
+  if (!(norms > 0.0))
+    return 0.0;
+  // rounding can push the cosine just outside [-1, 1]
+  return std::acos(std::clamp(dot / norms, Real(-1.0), Real(1.0))) *
+         RAD_TO_DEG_D;
 }
 
 /**
@@ -126,6 +130,93 @@ inline Real outOfPlaneAngle(const Vector3& point, const Vector3& b,
 
   Real sinChi = std::clamp(n.dot(u3) / sinTheta, -1.0, 1.0);
   return std::asin(sinChi) * RAD_TO_DEG_D;
+}
+
+/**
+ * Remove the jumps a periodic coordinate makes when it crosses the end of its
+ * range, by taking the shortest step between each pair of neighbours.
+ * @param values The series to unwrap, in place, in the order it was measured
+ * @param period The period of the coordinate, e.g. 360 for degrees
+ *
+ * A torsion scan that walks through +/-180 degrees otherwise reads as a jump
+ * the width of the whole axis. The result can lie outside the original range;
+ * shiftValuesToWindow() puts it back.
+ */
+template <typename T>
+inline void unwrapPeriodicValues(std::vector<T>& values, T period)
+{
+  if (values.empty() || period <= T(0))
+    return;
+
+  const T halfPeriod = period / T(2);
+  T offset = T(0);
+  T previous = values[0];
+
+  for (size_t i = 1; i < values.size(); ++i) {
+    T current = values[i] + offset;
+    const T delta = current - previous;
+    if (delta > halfPeriod) {
+      offset -= period;
+      current -= period;
+    } else if (delta < -halfPeriod) {
+      offset += period;
+      current += period;
+    }
+
+    values[i] = current;
+    previous = current;
+  }
+}
+
+/**
+ * Slide a periodic series by whole periods into the window that holds the most
+ * of its values, breaking ties towards the centre of that window.
+ * @param values The series to shift, in place
+ * @param period The period of the coordinate, e.g. 360 for degrees
+ * @param minimum The lower edge of the preferred window, e.g. -180
+ * @param maximum The upper edge of the preferred window, e.g. 180
+ *
+ * Unwrapping leaves a series anywhere on the real line. This puts it back
+ * where it is expected to be read, without reintroducing the jumps.
+ */
+template <typename T>
+inline void shiftValuesToWindow(std::vector<T>& values, T period, T minimum,
+                                T maximum)
+{
+  if (values.empty() || period <= T(0) || minimum >= maximum)
+    return;
+
+  const T lowest = *std::min_element(values.begin(), values.end());
+  const T highest = *std::max_element(values.begin(), values.end());
+  const T minShift = std::floor((lowest - maximum) / period) * period;
+  const T maxShift = std::ceil((highest - minimum) / period) * period;
+
+  int bestCount = -1;
+  T bestShift = T(0);
+  T bestCenterDistance = std::numeric_limits<T>::max();
+  const T preferredCenter = (minimum + maximum) / T(2);
+
+  for (T shift = minShift; shift <= maxShift; shift += period) {
+    int count = 0;
+    T centerDistance = T(0);
+    for (T value : values) {
+      const T shifted = value - shift;
+      if (shifted >= minimum && shifted <= maximum) {
+        ++count;
+        centerDistance += std::fabs(shifted - preferredCenter);
+      }
+    }
+
+    if (count > bestCount ||
+        (count == bestCount && centerDistance < bestCenterDistance)) {
+      bestCount = count;
+      bestShift = shift;
+      bestCenterDistance = centerDistance;
+    }
+  }
+
+  for (T& value : values)
+    value -= bestShift;
 }
 
 } // namespace Avogadro

@@ -184,7 +184,13 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   std::vector<Vector3> atoms;
   for (unsigned int atomCount : atomCounts) {
     for (size_t j = 0; j < atomCount; ++j) {
-      getline(inStream, line);
+      // Core::getLine for the reason given in xyzformat.cpp: std::getline
+      // leaves the previous line in place once the input is exhausted, so a
+      // declared count larger than the file would re-parse it for ever.
+      if (!Core::getLine(inStream, line)) {
+        appendError("Error reading atomic coordinates in POSCAR");
+        return false;
+      }
       stringSplit = split(line, ' ');
       // This may be greater than 3 with selective dynamics
       if (stringSplit.size() < 3) {
@@ -400,12 +406,23 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
           getline(inStream, buffer);
           stringSplit = split(buffer, ' ');
 
+          // A lattice vector reads "A1 = ( x, y, z)", so six tokens with the
+          // components at 3, 4 and 5. A truncated file -- the keyword on the
+          // last line, or a short line -- leaves fewer, and indexing past the
+          // end here used to throw std::out_of_range out of a reader that has
+          // no handler above it, terminating the process. Check the count and
+          // fail the read like any other malformed input.
+          if (stringSplit.size() < 6) {
+            appendError("Error reading a lattice vector: expected six fields");
+            return false;
+          }
+
           auto x = lexicalCast<double>(
-            stringSplit.at(3).substr(0, stringSplit.at(3).size() - 1));
+            stringSplit[3].substr(0, stringSplit[3].size() - 1));
           auto y = lexicalCast<double>(
-            stringSplit.at(4).substr(0, stringSplit.at(4).size() - 1));
+            stringSplit[4].substr(0, stringSplit[4].size() - 1));
           auto z = lexicalCast<double>(
-            stringSplit.at(5).substr(0, stringSplit.at(5).size() - 1));
+            stringSplit[5].substr(0, stringSplit[5].size() - 1));
 
           if (!x || !y || !z) {
             appendError("Error reading a lattice vector");
@@ -483,7 +500,14 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
         // natoms is not known, so the loop proceeds till the bottom dashed line
         // is encountered
         while (true) {
-          getline(inStream, buffer);
+          // Core::getLine, not std::getline, for the reason given at the
+          // POSCAR coordinates above: std::getline leaves the previous line in
+          // place once the input is exhausted, so a block without its closing
+          // dashed line would re-parse that line for ever.
+          if (!Core::getLine(inStream, buffer)) {
+            appendError("Unterminated POSITION block in OUTCAR");
+            return false;
+          }
           // Condition for encountering dashed line
           if (buffer.substr(0, dashedStr.size()) == dashedStr) {
             if (coordSet == 0) {
@@ -497,6 +521,13 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
           }
           // Parsing the coordinates
           stringSplit = split(buffer, ' ');
+          // A position line is "x y z" followed by the forces, so at least
+          // three tokens. Without this check the range cast below would walk
+          // past the end of a shorter line's token list.
+          if (stringSplit.size() < 3) {
+            appendError("Error reading atom position");
+            return false;
+          }
           Vector3 tmpAtom;
           if (auto tmp = lexicalCast<double>(stringSplit.begin(),
                                              stringSplit.begin() + 3)) {

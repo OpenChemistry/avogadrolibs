@@ -1,0 +1,56 @@
+name: 'Update vcpkg'
+description: 'Updates (or clones) vcpkg, re-bootstraps it, and emits its git SHA'
+inputs:
+  vcpkg-root:
+    description: 'Location of the vcpkg checkout'
+    required: false
+    default: 'C:\vcpkg'
+  ref:
+    description: 'Branch of microsoft/vcpkg to track'
+    required: false
+    default: 'master'
+outputs:
+  sha:
+    description: 'Short git SHA of the vcpkg checkout (or "no-vcpkg-git")'
+    value: ${{ steps.update.outputs.sha }}
+
+runs:
+  using: "composite"
+  steps:
+  # pwsh (PowerShell 7), not powershell (5.1) -- we rely on "||" and on
+  # $LASTEXITCODE, since native command failures do not stop a PowerShell step
+  - name: Update vcpkg
+    id: update
+    shell: pwsh
+    env:
+      VCPKG_ROOT: ${{ inputs.vcpkg-root }}
+      VCPKG_REF: ${{ inputs.ref }}
+    run: |
+      $root = $env:VCPKG_ROOT
+      $ref = $env:VCPKG_REF
+      if (Test-Path (Join-Path $root '.git')) {
+        Write-Host "Updating existing $root"
+        git -C $root fetch --depth=1 origin $ref
+        if ($LASTEXITCODE -ne 0) {
+          Write-Host "Shallow fetch failed, retrying with a full fetch"
+          git -C $root fetch origin $ref
+          if ($LASTEXITCODE -ne 0) { throw "git fetch of vcpkg failed" }
+        }
+        git -C $root reset --hard FETCH_HEAD
+        if ($LASTEXITCODE -ne 0) { throw "git reset of vcpkg failed" }
+      } else {
+        Write-Host "Cloning vcpkg ($ref) to $root"
+        if (Test-Path $root) { Remove-Item -Recurse -Force $root }
+        git clone --depth 1 --branch $ref https://github.com/microsoft/vcpkg.git $root
+        if ($LASTEXITCODE -ne 0) { throw "git clone of vcpkg failed" }
+      }
+
+      # vcpkg.exe must be rebuilt to match the updated ports and scripts
+      & (Join-Path $root 'bootstrap-vcpkg.bat')
+      if ($LASTEXITCODE -ne 0) { throw "bootstrap-vcpkg failed" }
+
+      $sha = git -C $root rev-parse --short HEAD
+      if ($LASTEXITCODE -ne 0 -or -not $sha) { $sha = 'no-vcpkg-git' }
+      Write-Host "vcpkg is at $sha"
+      "sha=$sha" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+      "$root" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append

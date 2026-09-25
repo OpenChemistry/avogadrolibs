@@ -16,12 +16,12 @@
 #include <avogadro/rendering/camera.h>
 
 #include <QAction>
+#include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QImage>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtGui/QWindow>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QVBoxLayout>
 
@@ -116,6 +116,12 @@ GLWidget::GLWidget(QWidget* p)
   connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginConfigChanged, this,
           &GLWidget::updateScene);
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
+
+  QSettings settings;
+  m_navigationModifier = static_cast<Qt::KeyboardModifiers>(
+    settings
+      .value("glwidget/navigationModifier", static_cast<int>(Qt::AltModifier))
+      .toInt());
 }
 
 GLWidget::~GLWidget() {}
@@ -335,18 +341,64 @@ void GLWidget::initializeGL()
 
 void GLWidget::resizeGL(int width_, int height_)
 {
-#ifdef Q_OS_WASM
-  float pixelRatio = m_glWindow ? m_glWindow->devicePixelRatio() : 1.0f;
-#else
-  float pixelRatio = window()->windowHandle()->devicePixelRatio();
-#endif
-  m_renderer.setPixelRatio(pixelRatio);
+  // Qt hands us the widget size in logical pixels.
+  m_pixelRatio = static_cast<float>(devicePixelRatioF());
+  m_renderer.setPixelRatio(m_pixelRatio);
   m_renderer.resize(width_, height_);
 }
 
 void GLWidget::paintGL()
 {
+  // Moving the window to a screen with a different scale factor changes the
+  // device pixel ratio without changing the widget size in logical pixels, so
+  // resizeGL() is not necessarily called. Resize here to keep the offscreen
+  // buffers in step with the framebuffer Qt has recreated for the new screen.
+  auto pixelRatio = static_cast<float>(devicePixelRatioF());
+  if (pixelRatio != m_pixelRatio)
+    resizeGL(width(), height());
+
   m_renderer.render();
+}
+
+Qt::KeyboardModifiers GLWidget::navigationModifier() const
+{
+  return m_navigationModifier;
+}
+
+void GLWidget::setNavigationModifier(Qt::KeyboardModifiers modifier)
+{
+  m_navigationModifier = modifier;
+  QSettings settings;
+  settings.setValue("glwidget/navigationModifier", static_cast<int>(modifier));
+}
+
+bool GLWidget::isNavigationMouseGesture(const QMouseEvent* event) const
+{
+  // Compare the whole mask: m_navigationModifier may hold a combination, and a
+  // bare bitwise and would match when only one of the configured modifiers is
+  // held.
+  return m_defaultTool != nullptr && m_navigationModifier != Qt::NoModifier &&
+         (event->modifiers() & m_navigationModifier) == m_navigationModifier;
+}
+
+bool GLWidget::isNavigationKeyGesture(const QKeyEvent* event) const
+{
+  if (m_defaultTool == nullptr)
+    return false;
+
+  Qt::KeyboardModifiers mods = event->modifiers();
+  if (!(mods & Qt::ControlModifier) || (mods & Qt::ShiftModifier))
+    return false;
+
+  switch (event->key()) {
+    case Qt::Key_Left:
+    case Qt::Key_Right:
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+      return true;
+    default:
+      return false;
+  }
 }
 
 void GLWidget::mouseDoubleClickEvent(QMouseEvent* e)
@@ -372,7 +424,12 @@ void GLWidget::mousePressEvent(QMouseEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  // Latch the navigation gesture for the duration of the drag: once a press
+  // starts the camera navigating, keep it there through move and release
+  // even if the user releases the modifier key mid-drag.
+  m_navigationDrag = isNavigationMouseGesture(e);
+
+  if (m_activeTool && !m_navigationDrag)
     m_activeTool->mousePressEvent(e);
 
   if (m_defaultTool && !e->isAccepted())
@@ -391,7 +448,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  if (m_activeTool && !m_navigationDrag)
     m_activeTool->mouseMoveEvent(e);
 
   if (m_defaultTool && !e->isAccepted())
@@ -410,7 +467,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  if (m_activeTool && !m_navigationDrag)
     m_activeTool->mouseReleaseEvent(e);
 
   if (m_defaultTool && !e->isAccepted())
@@ -423,6 +480,9 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* e)
     QOpenGLWidget::mouseReleaseEvent(e);
 #endif
   }
+
+  // Release the latch after dispatching the completed drag sequence.
+  m_navigationDrag = false;
 }
 
 void GLWidget::wheelEvent(QWheelEvent* e)
@@ -448,7 +508,7 @@ void GLWidget::keyPressEvent(QKeyEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  if (m_activeTool && !isNavigationKeyGesture(e))
     m_activeTool->keyPressEvent(e);
 
   if (m_defaultTool && !e->isAccepted())
@@ -467,7 +527,7 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
 {
   e->ignore();
 
-  if (m_activeTool)
+  if (m_activeTool && !isNavigationKeyGesture(e))
     m_activeTool->keyReleaseEvent(e);
 
   if (m_defaultTool && !e->isAccepted())

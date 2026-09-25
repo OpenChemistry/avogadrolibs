@@ -9,6 +9,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 
+#include <algorithm>
 #include <string>
 
 using Avogadro::Vector3;
@@ -272,4 +273,219 @@ TEST(CoordinateBlockGeneratorTest, generateCoordinateBlock)
   gen.setSpecification("#ZGSNxyz01__01");
 
   EXPECT_EQ(refCoordBlock, gen.generateCoordinateBlock());
+}
+
+// Files can contain symbols that are not real elements: unrecognized symbols
+// become InvalidElement (255) and custom elements occupy 128-254. Neither is
+// a valid index into the per-element counters, so both used to write past the
+// end of that array while generating an input file.
+TEST(CoordinateBlockGeneratorTest, nonElementAtomicNumbers)
+{
+  Molecule molecule;
+  molecule.addAtom(Avogadro::InvalidElement)
+    .setPosition3d(Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(Avogadro::CustomElementMin)
+    .setPosition3d(Vector3(1.0, 0.0, 0.0));
+  molecule.addAtom(Avogadro::CustomElementMax)
+    .setPosition3d(Vector3(0.0, 1.0, 0.0));
+  molecule.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 1.0));
+
+  CoordinateBlockGenerator gen;
+  gen.setMolecule(&molecule);
+  // The spec used by the ORCA input generator.
+  gen.setSpecification("____Sxyz");
+  const std::string block(gen.generateCoordinateBlock());
+  EXPECT_EQ(4, std::count(block.begin(), block.end(), '\n'));
+
+  // "L" is the specifier that actually reads the per-element counters back.
+  gen.setSpecification("Lxyz");
+  EXPECT_FALSE(gen.generateCoordinateBlock().empty());
+}
+
+TEST(CoordinateBlockGeneratorTest, emptyMolecule)
+{
+  Molecule molecule;
+  CoordinateBlockGenerator gen;
+  gen.setMolecule(&molecule);
+  gen.setSpecification("#Sxyz");
+  EXPECT_EQ(std::string(), gen.generateCoordinateBlock());
+}
+
+namespace {
+
+// Water, bent, with both O-H bonds.
+Molecule water()
+{
+  Molecule molecule;
+  molecule.addAtom(8).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(1).setPosition3d(Vector3(0.957, 0.0, 0.0));
+  molecule.addAtom(1).setPosition3d(Vector3(-0.2399, 0.9270, 0.0));
+  molecule.addBond(0, 1, 1);
+  molecule.addBond(0, 2, 1);
+  return molecule;
+}
+
+std::string zmatrixBlock(const Molecule& molecule, const std::string& spec,
+                         CoordinateBlockGenerator::Mode mode)
+{
+  CoordinateBlockGenerator gen;
+  gen.setMolecule(&molecule);
+  gen.setMode(mode);
+  gen.setSpecification(spec);
+  return gen.generateCoordinateBlock();
+}
+
+} // namespace
+
+// The Gaussian family leaves out the fields the opening rows cannot carry,
+// along with the space that would have preceded each of them.
+TEST(CoordinateBlockGeneratorTest, raggedZMatrix)
+{
+  const std::string ref(" O  \n"
+                        " H    1     0.957000\n"
+                        " H    1     0.957539  2   104.509356\n");
+  EXPECT_EQ(ref, zmatrixBlock(water(), "_S_I_R_J_A_K_T",
+                              CoordinateBlockGenerator::Mode::ZMatrix));
+}
+
+// ORCA's "int" format wants every row padded out to the full width, with a
+// zero standing in for each reference the row does not have.
+TEST(CoordinateBlockGeneratorTest, paddedZMatrix)
+{
+  const std::string ref(
+    " O    0  0  0     0.000000     0.000000     0.000000\n"
+    " H    1  0  0     0.957000     0.000000     0.000000\n"
+    " H    1  2  0     0.957539   104.509356     0.000000\n");
+  EXPECT_EQ(ref, zmatrixBlock(water(), "_S_I_J_K_R_A_T",
+                              CoordinateBlockGenerator::Mode::ZMatrixPadded));
+}
+
+// MOPAC interleaves an optimization flag after each value, which the literal
+// characters that were already in the specification alphabet supply.
+TEST(CoordinateBlockGeneratorTest, mopacZMatrix)
+{
+  const std::string ref(
+    " O       0.000000  1     0.000000  1     0.000000  1  0  0  0\n"
+    " H       0.957000  1     0.000000  1     0.000000  1  1  0  0\n"
+    " H       0.957539  1   104.509356  1     0.000000  1  1  2  0\n");
+  EXPECT_EQ(ref, zmatrixBlock(water(), "_S_R_1_A_1_T_1_I_J_K",
+                              CoordinateBlockGenerator::Mode::ZMatrixPadded));
+}
+
+// A comma delimits a field on its own, so no space is written on either side
+// of one, and a comma before a field the row does not have goes with it
+// rather than leaving a tail of empty fields behind.
+TEST(CoordinateBlockGeneratorTest, commaDelimitedZMatrix)
+{
+  const std::string ref("O  \n"
+                        "H  ,1,   0.957000\n"
+                        "H  ,1,   0.957539,2, 104.509356\n");
+  EXPECT_EQ(ref, zmatrixBlock(water(), "S,I,R,J,A,K,T",
+                              CoordinateBlockGenerator::Mode::ZMatrix));
+}
+
+// The comma is a literal in a Cartesian block too.
+TEST(CoordinateBlockGeneratorTest, commaDelimitedCartesian)
+{
+  Molecule molecule = water();
+  CoordinateBlockGenerator gen;
+  gen.setMolecule(&molecule);
+  gen.setSpecification("S,x,y,z");
+  const std::string ref("O  ,   0.000000,   0.000000,   0.000000\n"
+                        "H  ,   0.957000,   0.000000,   0.000000\n"
+                        "H  ,  -0.239900,   0.927000,   0.000000\n");
+  EXPECT_EQ(ref, gen.generateCoordinateBlock());
+}
+
+// The reference fields number the rows of the z-matrix, which are the atoms
+// in a different order whenever the molecule's own order will not do.
+TEST(CoordinateBlockGeneratorTest, zMatrixReordersWhenItMust)
+{
+  // Hydrogen peroxide with the hydrogens numbered first, so that atom 1 is
+  // bonded only to atom 3 and cannot be written second.
+  Molecule molecule;
+  molecule.addAtom(1).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(1).setPosition3d(Vector3(3.0, 0.9, 0.0));
+  molecule.addAtom(8).setPosition3d(Vector3(1.0, 0.0, 0.0));
+  molecule.addAtom(8).setPosition3d(Vector3(2.4, 0.4, 0.0));
+  molecule.addBond(0, 2, 1);
+  molecule.addBond(2, 3, 1);
+  molecule.addBond(3, 1, 1);
+
+  CoordinateBlockGenerator gen;
+  gen.setMolecule(&molecule);
+  gen.setMode(CoordinateBlockGenerator::Mode::ZMatrix);
+  gen.setSpecification("_#_S_I_R_J_A_K_T");
+  const std::string block(gen.generateCoordinateBlock());
+
+  EXPECT_TRUE(gen.atomsReordered());
+  EXPECT_EQ(4, std::count(block.begin(), block.end(), '\n'));
+  // Every row is numbered in sequence, and every reference names an earlier
+  // row rather than an atom index.
+  const std::string ref(" 1  H  \n"
+                        " 2  O    1     1.000000\n"
+                        " 3  O    2     1.456022  1   164.054604\n"
+                        " 4  H    3     0.781025  2   156.139825  1"
+                        "     0.000000\n");
+  EXPECT_EQ(ref, block);
+}
+
+// A bent molecule needs no such warning; a linear one does.
+TEST(CoordinateBlockGeneratorTest, zMatrixReportsLinearRows)
+{
+  Molecule molecule = water();
+  CoordinateBlockGenerator gen;
+  gen.setMolecule(&molecule);
+  gen.setMode(CoordinateBlockGenerator::Mode::ZMatrix);
+  gen.setSpecification("_S_I_R_J_A_K_T");
+  gen.generateCoordinateBlock();
+  EXPECT_FALSE(gen.atomsReordered());
+  EXPECT_TRUE(gen.linearRows().empty());
+
+  Molecule co2;
+  co2.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  co2.addAtom(8).setPosition3d(Vector3(1.16, 0.0, 0.0));
+  co2.addAtom(8).setPosition3d(Vector3(-1.16, 0.0, 0.0));
+  co2.addBond(0, 1, 2);
+  co2.addBond(0, 2, 2);
+
+  gen.setMolecule(&co2);
+  const std::string block(gen.generateCoordinateBlock());
+  ASSERT_EQ(1, gen.linearRows().size());
+  EXPECT_EQ(2, gen.linearRows()[0]);
+  // The row still describes the molecule: the angle is the straight O-C-O.
+  EXPECT_NE(std::string::npos, block.find("180.000000"));
+}
+
+// A Cartesian block never reorders and never reports a linear row, whatever
+// the last z-matrix said.
+TEST(CoordinateBlockGeneratorTest, cartesianClearsZMatrixDiagnostics)
+{
+  Molecule co2;
+  co2.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  co2.addAtom(8).setPosition3d(Vector3(1.16, 0.0, 0.0));
+  co2.addAtom(8).setPosition3d(Vector3(-1.16, 0.0, 0.0));
+  co2.addBond(0, 1, 2);
+  co2.addBond(0, 2, 2);
+
+  CoordinateBlockGenerator gen;
+  gen.setMolecule(&co2);
+  gen.setMode(CoordinateBlockGenerator::Mode::ZMatrix);
+  gen.setSpecification("_S_I_R_J_A_K_T");
+  gen.generateCoordinateBlock();
+  ASSERT_FALSE(gen.linearRows().empty());
+
+  gen.setMode(CoordinateBlockGenerator::Mode::Cartesian);
+  gen.setSpecification("Sxyz");
+  gen.generateCoordinateBlock();
+  EXPECT_FALSE(gen.atomsReordered());
+  EXPECT_TRUE(gen.linearRows().empty());
+}
+
+TEST(CoordinateBlockGeneratorTest, emptyMoleculeZMatrix)
+{
+  Molecule molecule;
+  EXPECT_EQ(std::string(),
+            zmatrixBlock(molecule, "_S_I_R_J_A_K_T",
+                         CoordinateBlockGenerator::Mode::ZMatrix));
 }

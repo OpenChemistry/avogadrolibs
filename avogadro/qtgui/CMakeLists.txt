@@ -41,12 +41,16 @@ avogadro_headers(QtGui
   colorbutton.h
   containerwidget.h
   customelementdialog.h
+  conformerquantitytranslator.h
   elementtranslator.h
+  energyunits.h
+  energyunitsdialog.h
   extensionplugin.h
   filebrowsewidget.h
   fileformatdialog.h
   gaussiansetconcurrent.h
   generichighlighter.h
+  fragmenttools.h
   hydrogentools.h
   insertfragmentdialog.h
   jsonwidget.h
@@ -69,6 +73,7 @@ avogadro_headers(QtGui
   sortfiltertreeproxymodel.h
   timedprogressdialog.h
   toolplugin.h
+  undomergetracker.h
   utilities.h
   viewfactory.h
 )
@@ -81,12 +86,16 @@ target_sources(QtGui PRIVATE
   customelementdialog.cpp
   elementdetail_p.cpp
   elementitem_p.cpp
+  conformerquantitytranslator.cpp
   elementtranslator.cpp
+  energyunits.cpp
+  energyunitsdialog.cpp
   extensionplugin.cpp
   filebrowsewidget.cpp
   fileformatdialog.cpp
   gaussiansetconcurrent.cpp
   generichighlighter.cpp
+  fragmenttools.cpp
   hydrogentools.cpp
   insertfragmentdialog.cpp
   jsonwidget.cpp
@@ -108,6 +117,7 @@ target_sources(QtGui PRIVATE
   sortfiltertreeproxymodel.cpp
   timedprogressdialog.cpp
   toolplugin.cpp
+  undomergetracker.cpp
   utilities.cpp
   viewfactory.cpp
 )

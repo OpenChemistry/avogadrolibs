@@ -135,16 +135,27 @@ public:
     m_cell = mol->unitCell(); // could be nullptr
 
     setAtomTypes();
+    // An element with no UFF type (> 102) leaves -1 in m_atomTypes, which
+    // would index uffparams[-1] below. Leave the molecule with no terms.
+    for (int type : m_atomTypes) {
+      if (type < 0) {
+        m_atomTypes.clear();
+        return;
+      }
+    }
     setBonds();
     setAngles();
     setOOPs();
     setTorsions();
     buildExclusionSet();
 
-    // Extract initial positions for VdW cutoff
+    // Extract initial positions for VdW cutoff. Positions may be missing or
+    // short; rebuildVdWsIfNeeded() builds the list on the first evaluate().
     Core::Array<Vector3> pos = mol->atomPositions3d();
-    Eigen::Map<Eigen::VectorXd> posMap(pos[0].data(), 3 * mol->atomCount());
-    setVdWs(posMap);
+    if (pos.size() == static_cast<size_t>(mol->atomCount())) {
+      Eigen::Map<Eigen::VectorXd> posMap(pos[0].data(), 3 * mol->atomCount());
+      setVdWs(posMap);
+    }
   }
 
   void setAtomTypes()
@@ -262,6 +273,9 @@ public:
 
         bool resonant = false;
         for (Index j : neighbors) {
+          // untyped neighbor (unsupported element)
+          if (m_atomTypes[j] < 0)
+            continue;
           auto symbolLabel = uffparams[m_atomTypes[j]].label;
           if (symbolLabel.size() < 3)
             continue; // not a resonant type
@@ -298,6 +312,9 @@ public:
     // bond order correction
     Bond bond = m_molecule->bond(atom1, atom2);
     Real order = static_cast<Real>(bond.order());
+    // order 0 would give log(0) = -inf in the bond-order correction
+    if (order < 1.0)
+      order = 1.0;
     // check if it's a resonant / aromatic bond
     auto symbol1 = uffparams[m_atomTypes[atom1]].label;
     auto symbol2 = uffparams[m_atomTypes[atom2]].label;
@@ -655,6 +672,10 @@ public:
     m_vdws.clear();
     m_lastVdWPositions = x;
 
+    // m_atomTypes is empty for a molecule with unsupported elements
+    if (m_atomTypes.empty())
+      return;
+
     const Index n = m_molecule->atomCount();
     for (Index i = 0; i < n; ++i) {
       for (Index j = i + 1; j < n; ++j) {
@@ -772,8 +793,11 @@ public:
         const Vector3d kj = vk - vj;
         const Real r1 = ij.norm();
         const Real r2 = kj.norm();
+        // coincident atoms give 0/0, and std::clamp passes NaN through
         const Real thetaEnergy =
-          acos(std::clamp(ij.dot(kj) / (r1 * r2), -1.0, 1.0));
+          (r1 > 1e-6 && r2 > 1e-6)
+            ? acos(std::clamp(ij.dot(kj) / (r1 * r2), -1.0, 1.0))
+            : 0.0;
         switch (angle.coordination) {
           case Linear:
             // fixed typo in UFF paper (it's 1+cos(theta), not 1-cos(theta))
@@ -925,9 +949,15 @@ public:
       const Real cosPhi0 = torsion._cos_phi0;
       const Real kijkl = torsion._ijkl;
       if (energy != nullptr) {
-        // Match the legacy value() path.
-        const Real phiEnergy = calculateDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
-        *energy += kijkl * (1.0 - cosPhi0 * cos(torsion._n * phiEnergy));
+        // Match the legacy value() path. Skip zero-length bonds, which make
+        // calculateDihedral() return NaN (the gradient skips them too).
+        const Vector3d ijv = vj - vi;
+        const Vector3d jkv = vk - vj;
+        const Vector3d klv = vl - vk;
+        if (ijv.norm() > 1e-6 && jkv.norm() > 1e-6 && klv.norm() > 1e-6) {
+          const Real phiEnergy = calculateDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
+          *energy += kijkl * (1.0 - cosPhi0 * cos(torsion._n * phiEnergy));
+        }
       }
 
       if (!needsGradient)
@@ -976,8 +1006,12 @@ public:
 
       const Real r6 = r2 * r2 * r2;
       if (energy != nullptr) {
-        const Real r12 = r6 * r6;
-        *energy += vdw._depth * (vdw._x12 / r12 - 2 * vdw._x6 / r6);
+        // Overlapping atoms make x12/r12 and x6/r6 both +inf, and
+        // inf - inf == NaN. Floor the energy at r = 0.1 A, as LennardJones
+        // does; the gradient below has its own r < 1e-3 guard.
+        const Real r6e = std::max(r6, 1e-6);
+        const Real r12e = r6e * r6e;
+        *energy += vdw._depth * (vdw._x12 / r12e - 2 * vdw._x6 / r6e);
       }
 
       if (!needsGradient)

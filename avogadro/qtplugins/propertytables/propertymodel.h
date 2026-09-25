@@ -12,12 +12,15 @@
 #include <QtCore/QString>
 
 #include <avogadro/core/angleiterator.h>
+#include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/dihedraliterator.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <Eigen/Geometry>
-
 namespace Avogadro {
+
+namespace Core {
+class PropertyMap;
+}
 
 namespace QtGui {
 class Molecule;
@@ -42,6 +45,15 @@ class PropertyModel : public QAbstractTableModel
 public slots:
   void updateTable(unsigned int flags);
 
+private slots:
+  // Redraw when the application-wide energy unit changes under an open table.
+  void energyUnitsChanged();
+
+  // Let go of a molecule that has been destroyed. The table can outlive it,
+  // and is woken by things the molecule knows nothing about.
+  void moleculeDestroyed();
+
+public:
 public:
   explicit PropertyModel(PropertyType type, QObject* parent = nullptr);
 
@@ -53,12 +65,30 @@ public:
                int role = Qt::EditRole) override;
   QVariant headerData(int section, Qt::Orientation orientation,
                       int role = Qt::DisplayRole) const override;
+  Qt::DropActions supportedDropActions() const override;
 
   void setMolecule(QtGui::Molecule* molecule);
 
   // Return what type of model this is
   PropertyType type() const { return m_type; };
   bool isColorIndex(const QModelIndex& index) const;
+
+  // Value type for a new user-created custom property column.
+  enum class CustomPropertyType
+  {
+    Double,
+    Int,
+    String
+  };
+
+  // Returns true if this model holds per-entity properties that the user can
+  // extend with custom columns (atom, bond, residue, conformer tables).
+  bool supportsCustomProperties() const;
+
+  // Create a new (empty) custom property column with the given @p name and
+  // value @p type, then refresh the table. Returns false if the name is empty,
+  // already in use, or the model does not support custom properties.
+  bool addCustomProperty(const QString& name, CustomPropertyType type);
 
   // Partial charge type selection
   QStringList availableChargeTypes() const;
@@ -81,9 +111,41 @@ private:
   QtGui::Molecule* m_molecule;
   QString m_chargeType; // user-selected charge type override (empty = auto)
 
+  // Custom (per-entity) property columns from Molecule::*Properties()
+  struct CustomColumn
+  {
+    enum Type
+    {
+      Double,
+      Int,
+      String,
+      Matrix
+    };
+    std::string name;
+    Type type;
+  };
+
   mutable bool m_validCache;
+  // The conformer table's columns are not fixed: they are whatever Core says
+  // this molecule can be measured for, so the table and the conformer plot
+  // offer the same list. Frame is left out -- the row headers already number
+  // the conformers.
+  mutable std::vector<Core::ConformerQuantity> m_conformerQuantities;
+  // One value per coordinate set for each of those columns, evaluated when the
+  // cache is rebuilt: data() is called once per cell, and re-walking the whole
+  // trajectory for each of them would be quadratic.
+  mutable std::vector<std::vector<double>> m_conformerValues;
   mutable std::vector<Core::Angle> m_angles;
   mutable std::vector<Core::Dihedral> m_torsions;
+  mutable std::vector<CustomColumn> m_customColumns;
+
+  // The per-entity property map backing this table (atom, bond, residue, or
+  // conformer), or nullptr for computed tables (angle, torsion).
+  Core::PropertyMap* propertyMap();
+  const Core::PropertyMap* propertyMap() const;
+  // Number of rows (entities) in this table for the current molecule.
+  Index entityCount() const;
+  int baseColumnCount() const;
 
   // Track structure counts to detect actual structural changes vs
   // coordinate-only
@@ -92,24 +154,12 @@ private:
 
   QString secStructure(unsigned int type) const;
 
-  std::vector<int> m_fragment;
-  Eigen::Affine3d m_transform;
-  bool fragmentHasAtom(int uid) const;
-  void buildFragment(const QtGui::RWBond& bond, const QtGui::RWAtom& startAtom);
-  bool fragmentRecurse(const QtGui::RWBond& bond,
-                       const QtGui::RWAtom& startAtom,
-                       const QtGui::RWAtom& currentAtom);
-
-  void setBondLength(unsigned int index, double value);
-  void setAngle(unsigned int index, double newValue);
-  void setTorsion(unsigned int index, double newValue);
-  void transformFragment() const;
-
-  QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
-                                const QtGui::RWAtom& atom) const
-  {
-    return bond.atom1() == atom ? bond.atom2() : bond.atom1();
-  }
+  // Each returns false when the edit could not be carried out -- a value
+  // that is not a number, or a geometry that cannot reach it, such as an
+  // atom held in place by a ring.
+  bool setBondLength(unsigned int index, double value);
+  bool setAngle(unsigned int index, double newValue);
+  bool setTorsion(unsigned int index, double newValue);
 
   /*
    * For each category (atom, bond etc), an enum specifies which columns hold
@@ -129,7 +179,6 @@ private:
     AtomDataLabel,
     AtomDataIsotope,
     AtomDataColor,
-    AtomDataCustom,
   };
 
   // Bond Data
@@ -162,13 +211,6 @@ private:
     TorsionDataAtom3,
     TorsionDataAtom4,
     TorsionDataValue
-  };
-
-  // Conformer Data
-  enum ConformerColumn
-  {
-    ConformerDataRMSD = 0,
-    ConformerDataEnergy
   };
 
   // Residue Data

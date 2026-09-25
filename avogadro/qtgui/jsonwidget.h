@@ -67,6 +67,23 @@ public:
 
   bool isEmpty() const { return m_empty; }
 
+  /**
+   * Remember the user's choices between sessions, filed under @a key.
+   *
+   * saveOptionValues() writes the current values, and setOptionDefaults()
+   * restores them over the top of each option's "default", so a dialog comes
+   * back the way it was last left. Password fields are never written, nor are
+   * tables, and a script can opt an option out with "save": false. An empty
+   * key, which is the default, switches the whole mechanism off.
+   */
+  void setSettingsKey(const QString& key) { m_settingsKey = key; }
+
+  /**
+   * Write every saveable option's current value to QSettings. Does nothing
+   * unless a settings key has been set.
+   */
+  void saveOptionValues() const;
+
 public slots:
   /**
    * Update the preview text in the GUI. The base implementation does nothing;
@@ -110,6 +127,14 @@ protected:
    * @{
    */
   void setOptionDefaults();
+  /**
+   * Overlay the values saved by saveOptionValues() on top of the defaults.
+   */
+  void restoreOptionValues();
+  /**
+   * Whether @a name is an option whose value may be written to QSettings.
+   */
+  bool optionIsSaveable(const QString& name) const;
   void setOption(const QString& name, const QJsonValue& defaultValue);
   void setStringListOption(const QString& name, const QJsonValue& value);
   void setStringOption(const QString& name, const QJsonValue& value);
@@ -146,6 +171,7 @@ protected:
   bool m_batchMode;
   QFormLayout* m_currentLayout;
   QWidget* m_centralWidget;
+  QString m_settingsKey;
   QMap<QString, QWidget*> m_widgets;
   QMap<QString, QTextEdit*> m_textEdits;
 };

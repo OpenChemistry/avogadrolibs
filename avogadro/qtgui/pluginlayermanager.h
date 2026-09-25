@@ -10,6 +10,7 @@
 
 #include <avogadro/core/layermanager.h>
 #include <cassert>
+#include <memory>
 #include <iostream>
 
 namespace Avogadro {
@@ -37,17 +38,20 @@ public:
   template <typename T>
   void load()
   {
-    if (m_activeMolecule != nullptr) {
-      auto& info = m_molToInfo[m_activeMolecule];
+    auto info = activeMoleculeInfo();
+    if (info != nullptr) {
       if (info->loaded.find(m_name) == info->loaded.end()) {
         for (size_t i = 0; i < info->settings[m_name].size(); ++i) {
-          auto serial = info->settings[m_name][i]->getSave();
-          if (serial != "") {
-            T* aux = new T;
-            aux->deserialize(serial);
-            delete info->settings[m_name][i];
-            info->settings[m_name][i] = aux;
-          }
+          // A null slot means this layer has no settings for this plugin;
+          // leave it null. Every other slot has to be rebuilt as a T, empty
+          // getSave() included: reading came from CjsonFormat, which can only
+          // construct the LayerData base, and getSetting() below static_casts
+          // whatever is here to T*.
+          if (info->settings[m_name][i] == nullptr)
+            continue;
+          auto aux = std::make_shared<T>();
+          aux->deserialize(info->settings[m_name][i]->getSave());
+          info->settings[m_name][i] = aux;
         }
         info->loaded.insert(m_name);
       }
@@ -82,23 +86,29 @@ public:
   template <typename T>
   T* getSetting(size_t layer = MaxIndex)
   {
-    auto info = m_molToInfo[m_activeMolecule];
+    auto info = activeMoleculeInfo();
+    if (info == nullptr)
+      return nullptr;
 
     if (layer == MaxIndex) {
       layer = info->layer.activeLayer();
     }
 
-    assert(layer <= info->layer.maxLayer());
     if (info->settings.find(m_name) == info->settings.end()) {
-      info->settings[m_name] = Core::Array<Core::LayerData*>();
+      info->settings[m_name] = Core::Array<Core::LayerDataPtr>();
     }
 
     // do we need to create new layers in the array?
     while (info->settings[m_name].size() < layer + 1) {
-      info->settings[m_name].push_back(new T());
+      info->settings[m_name].push_back(std::make_shared<T>());
     }
-    auto* result = static_cast<T*>(info->settings[m_name][layer]);
-    return result;
+    // An existing slot can still be null -- a layer that had no settings for
+    // this plugin, from a file or from AddLayerCommand -- and callers
+    // dereference what they get back.
+    if (info->settings[m_name][layer] == nullptr)
+      info->settings[m_name][layer] = std::make_shared<T>();
+    // Borrowed: the Array keeps ownership, callers only read through this.
+    return static_cast<T*>(info->settings[m_name][layer].get());
   }
 
 private:

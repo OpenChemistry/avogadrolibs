@@ -214,6 +214,7 @@ bool ShaderProgram::link()
   m_linked = true;
   initializeTextureUnits();
   m_attributes.clear();
+  m_uniforms.clear();
   return true;
 }
 
@@ -457,9 +458,20 @@ inline int ShaderProgram::findAttributeArray(const std::string& name)
 {
   if (name.empty() || !m_linked)
     return -1;
-  const auto* namePtr = static_cast<const GLchar*>(name.c_str());
-  auto location = static_cast<int>(
-    glGetAttribLocation(static_cast<GLuint>(m_handle), namePtr));
+
+  auto cached = m_attributes.find(name);
+  int location;
+  if (cached != m_attributes.end()) {
+    location = cached->second;
+  } else {
+    const auto* namePtr = static_cast<const GLchar*>(name.c_str());
+    location = static_cast<int>(
+      glGetAttribLocation(static_cast<GLuint>(m_handle), namePtr));
+    m_attributes[name] = location;
+  }
+
+  // Reported on every call, not only on the one that did the lookup, so that
+  // caching does not change what a caller sees after a failed lookup.
   if (location == -1) {
     m_error = "Specified attribute not found in current shader program: ";
     m_error += name;
@@ -472,9 +484,18 @@ inline int ShaderProgram::findUniform(const std::string& name)
 {
   if (name.empty() || !m_linked)
     return -1;
-  const auto* namePtr = static_cast<const GLchar*>(name.c_str());
-  auto location = static_cast<int>(
-    glGetUniformLocation(static_cast<GLuint>(m_handle), namePtr));
+
+  auto cached = m_uniforms.find(name);
+  int location;
+  if (cached != m_uniforms.end()) {
+    location = cached->second;
+  } else {
+    const auto* namePtr = static_cast<const GLchar*>(name.c_str());
+    location = static_cast<int>(
+      glGetUniformLocation(static_cast<GLuint>(m_handle), namePtr));
+    m_uniforms[name] = location;
+  }
+
   if (location == -1)
     m_error = "Uniform " + name + " not found in current shader program.";
 

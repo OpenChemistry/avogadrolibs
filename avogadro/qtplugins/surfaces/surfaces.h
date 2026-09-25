@@ -108,6 +108,14 @@ private slots:
   void movieFrame();
 
 private:
+  /**
+   * Discard the cubes and meshes on the molecule together with the cached
+   * raw pointers into them. Molecule::clearCubes() deletes those objects, so
+   * anything holding one has to drop it in the same breath - moleculeChanged()
+   * only refreshes the cache for changes that invalidate derived data.
+   */
+  void clearSurfaceData();
+
   float resolution(float specified = 0.0);
   Core::Color3f chargeGradient(double value, double clamp,
                                tinycolormap::ColormapType colormap) const;
@@ -137,6 +145,14 @@ private:
   float m_isoValue = 0.025;
   int m_smoothingPasses = 2;
   int m_meshesLeft = 0;
+
+  /// Resolution used by the command currently running, reported back to the
+  /// caller because resolution() picks one when the caller does not.
+  float m_commandResolution = 0.0f;
+  /// True while a script command is waiting on a calculation to finish, so
+  /// that an interrupted calculation can report failure rather than leave
+  /// the caller waiting for a commandFinished() that will never come.
+  bool m_commandPending = false;
 
   bool m_recordingMovie = false;
   int m_currentFrame = 0;

@@ -6,11 +6,14 @@
 #include "propertyview.h"
 #include "core/avogadrocore.h"
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/qtgui/energyunitsdialog.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
 #include <QApplication>
+#include <QtCore/QAbstractProxyModel>
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QDir>
 #include <QtCore/QIODevice>
@@ -19,19 +22,29 @@
 #include <QtCore/QTextStream>
 #include <QtGui/QClipboard>
 #include <QtGui/QContextMenuEvent>
+#include <QtGui/QDragEnterEvent>
+#include <QtGui/QDragMoveEvent>
+#include <QtGui/QDropEvent>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QMenu>
 
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QInputDialog>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QSizePolicy>
 #include <QtWidgets/QVBoxLayout>
 
 #include <QtCore/QDebug>
+
+#include <algorithm>
+#include <numeric>
 
 namespace Avogadro {
 
@@ -81,19 +94,55 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
   setAlternatingRowColors(true);
   // Allow sorting the table
   setSortingEnabled(true);
+  // Let a third click on a header clear the sort again. Without it there is
+  // no way back to index order once the user has sorted, and row dragging
+  // stays disabled for the life of the dialog (see rowDragAllowed()).
+  horizontalHeader()->setSortIndicatorClearable(true);
+
+  // Drag-to-reorder rows, atom table only (see rowDragAllowed()).
+  if (m_type == PropertyType::AtomType) {
+    setDragEnabled(true);
+    setAcceptDrops(true);
+    // QTableView paints the drop indicator itself once the model's root
+    // index carries Qt::ItemIsDropEnabled (see PropertyModel::flags()).
+    setDropIndicatorShown(true);
+    setDragDropMode(QAbstractItemView::InternalMove);
+    setDragDropOverwriteMode(false);
+  }
 }
 
 void PropertyView::selectionChanged(const QItemSelection& selected,
                                     const QItemSelection& deselected)
 {
   // Guard against re-entrancy: modifying molecule selection triggers
-  // model updates which can cause recursive calls to selectionChanged
-  if (m_updatingSelection)
+  // model updates which can cause recursive calls to selectionChanged. The
+  // base class still has to run so the rows repaint.
+  if (m_updatingSelection || m_molecule == nullptr) {
+    QTableView::selectionChanged(selected, deselected);
     return;
+  }
 
-  bool ok = false;
-  if (m_molecule == nullptr)
+  // The conformer table drives the active coordinate set, not the atom
+  // selection, so it skips the atom bookkeeping (and the undo commands that
+  // would come with it) entirely.
+  if (m_type == PropertyType::ConformerType) {
+    const QModelIndexList rows = selectionModel()->selectedRows();
+    if (!rows.isEmpty()) {
+      int row = sourceRow(rows.first());
+      if (row >= 0 && row < static_cast<int>(m_molecule->coordinate3dCount()) &&
+          row != m_molecule->coordinate3d()) {
+        m_updatingSelection = true;
+        m_molecule->setCoordinate3d(row);
+        // conformer switches move atoms - pair with Moved (not Modified) so
+        // derived data like vibrations and orbitals survives
+        m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved |
+                                Molecule::Conformer);
+        m_updatingSelection = false;
+      }
+    }
+    QTableView::selectionChanged(selected, deselected);
     return;
+  }
 
   m_updatingSelection = true;
 
@@ -107,16 +156,9 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
       return;
     }
 
-    // Since the user can sort
-    // we need to find the original index
-    int rowNum = model()
-                   ->headerData(index.row(), Qt::Vertical)
-                   .toString()
-                   .split(" ")
-                   .last()
-                   .toLong(&ok) -
-                 1;
-    if (!ok) {
+    // Since the user can sort, the view row is not the entity index.
+    int rowNum = sourceRow(index);
+    if (rowNum < 0) {
       m_updatingSelection = false;
       return;
     }
@@ -164,20 +206,225 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
           m_molecule->undoMolecule()->setAtomSelected(atom.index(), true);
         }
       }
-    } else if (m_type == PropertyType::ConformerType) {
-      // selecting a row means switching to that conformer
-      m_molecule->setCoordinate3d(rowNum);
     }
   } // end loop through selected
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Selection);
   m_updatingSelection = false;
   QTableView::selectionChanged(selected, deselected);
 }
 
+void PropertyView::setSourceModel(PropertyModel* model)
+{
+  if (m_model != nullptr)
+    disconnect(m_model, nullptr, this, nullptr);
+
+  m_model = model;
+  if (m_model == nullptr)
+    return;
+
+  // A reset clears the view's selection, and selectionChanged() would take
+  // that for a user action -- deselecting every atom one undo command at a
+  // time, onto the very stack being unwound when the reset came from an
+  // undo. Treat a reset as internal from start to finish.
+  connect(m_model, &QAbstractItemModel::modelAboutToBeReset, this,
+          [this]() { m_updatingSelection = true; });
+  connect(m_model, &QAbstractItemModel::modelReset, this,
+          [this]() { m_updatingSelection = false; });
+}
+
 void PropertyView::setMolecule(Molecule* molecule)
 {
+  if (m_molecule == molecule)
+    return;
+
+  if (m_molecule)
+    disconnect(m_molecule, nullptr, this, nullptr);
+
   m_molecule = molecule;
+
+  if (m_molecule) {
+    connect(m_molecule, &Molecule::changed, this,
+            &PropertyView::moleculeChanged);
+    // The dialog outlives a file being closed, so drop the pointer rather than
+    // acting on a destroyed molecule when a row is clicked.
+    connect(m_molecule, &QObject::destroyed, this,
+            [this]() { m_molecule = nullptr; });
+  }
+}
+
+void PropertyView::moleculeChanged(unsigned int changes)
+{
+  // The player tool, the conformer plot or a script moved to another
+  // coordinate set; follow it with the selection.
+  if (m_type == PropertyType::ConformerType && (changes & Molecule::Conformer))
+    syncConformerSelection();
+}
+
+void PropertyView::syncConformerSelection()
+{
+  if (m_type != PropertyType::ConformerType || m_molecule == nullptr ||
+      m_updatingSelection || model() == nullptr)
+    return;
+
+  int row = viewRowForSource(m_molecule->coordinate3d());
+  if (row < 0 || row >= model()->rowCount())
+    return;
+
+  if (selectionModel() != nullptr &&
+      selectionModel()->isRowSelected(row, QModelIndex()))
+    return;
+
+  m_updatingSelection = true;
+  selectRow(row);
+  scrollTo(model()->index(row, 0), QAbstractItemView::EnsureVisible);
+  m_updatingSelection = false;
+}
+
+int PropertyView::sourceRow(const QModelIndex& viewIndex) const
+{
+  if (!viewIndex.isValid())
+    return -1;
+
+  if (const auto* proxy = qobject_cast<const QAbstractProxyModel*>(model()))
+    return proxy->mapToSource(viewIndex).row();
+
+  return viewIndex.row();
+}
+
+int PropertyView::viewRowForSource(int row) const
+{
+  if (row < 0 || m_model == nullptr)
+    return -1;
+
+  if (const auto* proxy = qobject_cast<const QAbstractProxyModel*>(model()))
+    return proxy->mapFromSource(m_model->index(row, 0)).row();
+
+  return row;
+}
+
+bool PropertyView::isNaturalOrder() const
+{
+  const auto* proxy = qobject_cast<const QSortFilterProxyModel*>(model());
+  if (proxy == nullptr || m_model == nullptr)
+    return true;
+
+  // sortColumn() is the proxy's own record of whether a sort is applied.
+  // Comparing the row mapping instead would accept a sort that merely
+  // happens to match index order at this moment, and the dynamic re-sort
+  // after the reorder would snap the dropped row straight back. An equal
+  // row count confirms no filter is narrowing the view either, since that
+  // would break the row-to-index identity just as a sort does.
+  return proxy->sortColumn() < 0 && proxy->rowCount() == m_model->rowCount();
+}
+
+bool PropertyView::rowDragAllowed() const
+{
+  // Under a sort, a dragged row would just jump back to wherever the sort
+  // puts it, so reordering is only offered when rows are shown in index
+  // order.
+  return m_type == PropertyType::AtomType && m_molecule != nullptr &&
+         m_model != nullptr && isNaturalOrder();
+}
+
+void PropertyView::startDrag(Qt::DropActions supportedActions)
+{
+  if (rowDragAllowed())
+    QTableView::startDrag(supportedActions);
+}
+
+bool PropertyView::dragIsOurs(QDropEvent* event)
+{
+  if (rowDragAllowed() && event->source() == this)
+    return true;
+
+  event->ignore();
+  return false;
+}
+
+void PropertyView::dragEnterEvent(QDragEnterEvent* event)
+{
+  if (!dragIsOurs(event))
+    return;
+
+  QTableView::dragEnterEvent(event);
+}
+
+void PropertyView::dragMoveEvent(QDragMoveEvent* event)
+{
+  if (!dragIsOurs(event))
+    return;
+
+  // The base implementation is what keeps dropIndicatorPosition() up to
+  // date and paints the indicator line between rows.
+  QTableView::dragMoveEvent(event);
+}
+
+int PropertyView::dropTargetRow(const QPoint& pos) const
+{
+  const QModelIndex index = indexAt(pos);
+  if (!index.isValid())
+    return static_cast<int>(
+      m_molecule->atomCount()); // dropped past the last row
+
+  int row = sourceRow(index);
+  if (dropIndicatorPosition() == QAbstractItemView::BelowItem)
+    ++row;
+  return row;
+}
+
+bool PropertyView::moveAtomRow(int from, int to)
+{
+  const int count = static_cast<int>(m_molecule->atomCount());
+  if (from < 0 || from >= count || to < 0 || to > count)
+    return false;
+
+  // `to` is an insertion point, so a downward move loses a row above it.
+  const int insertAt = (to > from) ? to - 1 : to;
+  if (insertAt == from)
+    return false; // dropped back where it started
+
+  Core::Array<Index> order(count);
+  std::iota(order.begin(), order.end(), 0);
+  order.erase(order.begin() + from);
+  order.insert(order.begin() + insertAt, static_cast<Index>(from));
+
+  if (!m_molecule->undoMolecule()->reorderAtoms(order))
+    return false;
+
+  // The reorder emits Molecule::Reordered, which rebuilds the table, so all
+  // that is left is to put the selection back on the atom that moved.
+  const int newRow = viewRowForSource(insertAt);
+  if (newRow >= 0) {
+    selectRow(newRow);
+    scrollTo(model()->index(newRow, 0), QAbstractItemView::EnsureVisible);
+  }
+  return true;
+}
+
+void PropertyView::dropEvent(QDropEvent* event)
+{
+  if (!dragIsOurs(event))
+    return;
+
+  const QModelIndexList rows = selectionModel()->selectedRows();
+  if (rows.isEmpty()) {
+    event->ignore();
+    return;
+  }
+
+  int from = sourceRow(rows.first());
+  int to = dropTargetRow(event->position().toPoint());
+  moveAtomRow(from, to);
+
+  // The atoms have already been renumbered in place above. Reporting
+  // anything other than Qt::IgnoreAction here would let
+  // QAbstractItemView::startDrag() follow up with removeRows() on the
+  // dragged row, deleting the atom out from under the reorder we just did.
+  // PropertyModel deliberately does not implement removeRows() as a second
+  // line of defence against that.
+  event->setDropAction(Qt::IgnoreAction);
+  event->accept();
 }
 
 void PropertyView::hideEvent(QHideEvent*)
@@ -189,8 +436,61 @@ void PropertyView::hideEvent(QHideEvent*)
   this->deleteLater();
 }
 
+bool PropertyView::conformerKeyPressed(QKeyEvent* event)
+{
+  if (m_type != PropertyType::ConformerType || model() == nullptr ||
+      event->matches(QKeySequence::Copy))
+    return false;
+
+  const int rows = model()->rowCount();
+  if (rows < 1)
+    return false;
+
+  // Shift takes bigger strides through long trajectories.
+  const int step = (event->modifiers() & Qt::ShiftModifier) ? 10 : 1;
+  int row = currentIndex().isValid() ? currentIndex().row() : 0;
+
+  switch (event->key()) {
+    // Left/right would only move between columns of the same conformer, so
+    // use them to step conformers instead. Tab still reaches the columns.
+    case Qt::Key_Left:
+      row -= step;
+      break;
+    case Qt::Key_Right:
+      row += step;
+      break;
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+      // The table already moves one row per press; only the shift-modified
+      // form needs handling here.
+      if (!(event->modifiers() & Qt::ShiftModifier))
+        return false;
+      row += (event->key() == Qt::Key_Down) ? step : -step;
+      break;
+    case Qt::Key_Home:
+      row = 0;
+      break;
+    case Qt::Key_End:
+      row = rows - 1;
+      break;
+    default:
+      return false;
+  }
+
+  row = std::clamp(row, 0, rows - 1);
+  // selectRow() lands in selectionChanged(), which switches the conformer and
+  // notifies the player tool and the conformer plot.
+  selectRow(row);
+  scrollTo(model()->index(row, 0), QAbstractItemView::EnsureVisible);
+  event->accept();
+  return true;
+}
+
 void PropertyView::keyPressEvent(QKeyEvent* event)
 {
+  if (conformerKeyPressed(event))
+    return;
+
   // handle copy event
   // thanks to https://www.walletfox.com/course/qtableviewcopypaste.php
   if (!event->matches(QKeySequence::Copy)) {
@@ -306,6 +606,11 @@ void PropertyView::constrainSelectedRows()
       auto atom1 = bond.atom1();
       auto atom2 = bond.atom2();
       Real distance = bond.length();
+      // A coordinate carries one constraint. Without clearing the old one
+      // first, constraining twice -- or constraining here what the z-matrix
+      // already holds, which names the same bond the other way round --
+      // stacks a second restraint the person cannot see or remove.
+      m_molecule->removeConstraint(atom1.index(), atom2.index());
       m_molecule->addConstraint(distance, atom1.index(), atom2.index());
     } else if (m_type == PropertyType::AngleType) {
       if (m_model != nullptr) {
@@ -314,6 +619,8 @@ void PropertyView::constrainSelectedRows()
         auto atom2 = m_molecule->atom(std::get<1>(angle));
         auto atom3 = m_molecule->atom(std::get<2>(angle));
         Real angleValue = m_model->getAngleValue(rowNum);
+        m_molecule->removeConstraint(atom1.index(), atom2.index(),
+                                     atom3.index());
         m_molecule->addConstraint(angleValue, atom1.index(), atom2.index(),
                                   atom3.index());
       }
@@ -325,11 +632,17 @@ void PropertyView::constrainSelectedRows()
         auto atom3 = m_molecule->atom(std::get<2>(torsion));
         auto atom4 = m_molecule->atom(std::get<3>(torsion));
         Real torsionValue = m_model->getTorsionValue(rowNum);
+        m_molecule->removeConstraint(atom1.index(), atom2.index(),
+                                     atom3.index(), atom4.index());
         m_molecule->addConstraint(torsionValue, atom1.index(), atom2.index(),
                                   atom3.index(), atom4.index());
       }
     }
   }
+
+  // Without this the lock on the value does not appear until something
+  // unrelated redraws the table.
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void PropertyView::unconstrainSelectedRows()
@@ -388,6 +701,8 @@ void PropertyView::unconstrainSelectedRows()
       }
     }
   }
+
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void PropertyView::freezeAtom()
@@ -432,7 +747,7 @@ void PropertyView::setFrozen(bool freeze)
     m_molecule->setFrozenAtom(rowNum, freeze);
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void PropertyView::freezeX()
@@ -482,7 +797,7 @@ void PropertyView::freezeAxis(int axis)
     m_molecule->setFrozenAtomAxis(rowNum, axis, true);
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Constraints);
 }
 
 void PropertyView::openExportDialogBox()
@@ -538,6 +853,61 @@ void PropertyView::openExportDialogBox()
   }
 }
 
+void PropertyView::addProperty()
+{
+  if (m_model == nullptr || !m_model->supportsCustomProperties())
+    return;
+
+  QDialog dialog(this);
+  dialog.setWindowTitle(tr("Add Property"));
+
+  auto* layout = new QFormLayout(&dialog);
+
+  auto* nameEdit = new QLineEdit(&dialog);
+  nameEdit->setPlaceholderText(tr("Property name"));
+  layout->addRow(tr("Name:"), nameEdit);
+
+  auto* typeCombo = new QComboBox(&dialog);
+  // Keep the data in sync with PropertyModel::CustomPropertyType.
+  typeCombo->addItem(
+    tr("Number"), static_cast<int>(PropertyModel::CustomPropertyType::Double));
+  typeCombo->addItem(tr("Integer"),
+                     static_cast<int>(PropertyModel::CustomPropertyType::Int));
+  typeCombo->addItem(
+    tr("Text"), static_cast<int>(PropertyModel::CustomPropertyType::String));
+  layout->addRow(tr("Type:"), typeCombo);
+
+  auto* buttons = new QDialogButtonBox(
+    QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+  layout->addRow(buttons);
+  connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+  connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+  if (dialog.exec() != QDialog::Accepted)
+    return;
+
+  QString name = nameEdit->text().trimmed();
+  if (name.isEmpty()) {
+    QMessageBox::warning(this, tr("Add Property"),
+                         tr("The property name cannot be empty."));
+    return;
+  }
+
+  auto type = static_cast<PropertyModel::CustomPropertyType>(
+    typeCombo->currentData().toInt());
+
+  if (!m_model->addCustomProperty(name, type)) {
+    QMessageBox::warning(
+      this, tr("Add Property"),
+      tr("Could not add a property named \"%1\". A column with that name may "
+         "already exist.")
+        .arg(name));
+    return;
+  }
+
+  resizeColumnsToContents();
+}
+
 void PropertyView::changeChargeType()
 {
   if (m_model == nullptr || m_molecule == nullptr)
@@ -568,6 +938,13 @@ void PropertyView::changeChargeType()
     m_model->setChargeType(selected);
 }
 
+void PropertyView::changeEnergyUnits()
+{
+  QtGui::EnergyUnitsDialog::getUnits(this);
+  // Nothing to do on the way back: the model is listening to EnergyUnits and
+  // redraws itself, as does every other window showing an energy.
+}
+
 void PropertyView::contextMenuEvent(QContextMenuEvent* event)
 {
   QMenu menu(this);
@@ -580,6 +957,24 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
   menu.addAction(exportAction);
   connect(exportAction, &QAction::triggered, this,
           &PropertyView::openExportDialogBox);
+
+  // Custom properties can be added to per-entity tables (atom, bond, residue,
+  // conformer).
+  if (m_model != nullptr && m_model->supportsCustomProperties()) {
+    menu.addSeparator();
+    QAction* addPropertyAction = menu.addAction(tr("Add Property…"));
+    connect(addPropertyAction, &QAction::triggered, this,
+            &PropertyView::addProperty);
+  }
+
+  // Energies come out of a file in a unit the file does not record, so the
+  // one place they are shown is also the place to say which it was.
+  if (m_type == PropertyType::ConformerType && m_molecule != nullptr &&
+      m_molecule->hasData("energies")) {
+    QAction* energyUnitsAction = menu.addAction(tr("Convert Energy Units…"));
+    connect(energyUnitsAction, &QAction::triggered, this,
+            &PropertyView::changeEnergyUnits);
+  }
 
   if (m_type == PropertyType::AtomType) {
     // change partial charge type

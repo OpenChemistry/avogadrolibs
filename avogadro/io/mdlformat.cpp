@@ -8,10 +8,13 @@
 #include "fileformatmanager.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/kekulize.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/stereo.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <cctype>
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -177,6 +180,12 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     appendError("Error parsing number of bonds.");
     return false;
   }
+  // Both counts reach reserve() below, and a negative one converts to a huge
+  // size_t there, which throws std::length_error rather than failing the read.
+  if (numAtoms < 0 || numBonds < 0) {
+    appendError("Negative atom or bond count in the counts line.");
+    return false;
+  }
   string mdlVersion(trimmed(buffer.substr(33)));
   if (mdlVersion == "V3000")
     return readV3000(in, mol);
@@ -265,6 +274,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Parse the bond block.
+  std::vector<bool> aromaticBonds;
+  aromaticBonds.reserve(numBonds);
+  bool anyAromaticBond = false;
   for (int i = 0; i < numBonds; ++i) {
     // Bond atom indices start at 1, -1 for C++.
     getline(in, buffer);
@@ -293,8 +305,34 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       appendError("Bond read in with out of bounds index.");
       return false;
     }
-    mol.addBond(mol.atom(begin), mol.atom(end),
-                static_cast<unsigned char>(order));
+    // Bond type 4 is aromatic. It used to be passed straight through to
+    // addBond(), which made it a quadruple bond; add it as a single-bond
+    // placeholder instead and let kekulize() assign its real order below.
+    // Query types 5-8 are left exactly as they were: out of scope here.
+    unsigned char bondOrder = static_cast<unsigned char>(order);
+    bool aromatic = false;
+    if (order == 4) {
+      aromatic = true;
+      anyAromaticBond = true;
+      bondOrder = 1;
+    }
+    Bond newBond = mol.addBond(mol.atom(begin), mol.atom(end), bondOrder);
+    aromaticBonds.push_back(aromatic);
+
+    // The stereo column is optional, and a file that omits it is simply
+    // saying nothing about configuration.
+    if (buffer.size() >= 12) {
+      const int stereo(lexicalCast<int>(buffer.substr(9, 3), ok));
+      if (ok) {
+        // 3 on a double bond is "cis or trans, either", and 4 on a single bond
+        // is a wedge drawn as "either". Both mean the author declined to state
+        // a configuration, so the coordinates must not be read as one.
+        if (order == 2 && stereo == 3)
+          setBondStereoUnspecified(mol, newBond.index());
+        else if (order == 1 && stereo == 4)
+          setAtomStereoUnspecified(mol, static_cast<Index>(begin));
+      }
+    }
   }
 
   // Parse the properties block until the end of the file.
@@ -408,6 +446,18 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     mol.setFormalCharge(index, charge);
   }
 
+  // Aromatic (type 4) bonds were added above as single-bond placeholders;
+  // replace them with a real alternation now. This has to wait until here,
+  // after charges are applied, since a charged aromatic atom (a pyridinium
+  // nitrogen, for instance) classifies differently than a neutral one.
+  if (anyAromaticBond) {
+    Index failedAtom = MaxIndex;
+    if (!Core::kekulize(mol, aromaticBonds, &failedAtom)) {
+      appendError(Core::kekulizeFailureMessage(failedAtom));
+      return false;
+    }
+  }
+
   // Set the total spin multiplicity
   if (spinMultiplicity > 1)
     mol.setData("totalSpinMultiplicity", spinMultiplicity);
@@ -422,6 +472,16 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     appendError(errorStream.str());
     return false;
   }
+
+  // Per-conformer energies, collected in parallel with the coordinate sets so
+  // that data("energies") can drive the conformer energy plot. The first entry
+  // corresponds to coordinate set 0 (this initial block).
+  std::vector<double> energies;
+  auto isEnergyTag = [](std::string name) {
+    for (auto& c : name)
+      c = static_cast<char>(::tolower(static_cast<unsigned char>(c)));
+    return name == "energy";
+  };
 
   // Now parse the data block.
   bool inValue(false);
@@ -440,8 +500,13 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                  endsWith(dataName, "CHARGES"))
           // remove the "CHARGES" from the end of the string
           handlePartialCharges(mol, dataValue, dataName);
-        else
+        else {
+          if (isEnergyTag(dataName)) {
+            if (auto e = lexicalCast<double>(trimmed(dataValue)))
+              energies.push_back(*e);
+          }
           mol.setData(dataName, dataValue);
+        }
 
         dataName.clear();
         dataValue.clear();
@@ -609,17 +674,34 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         break;
     }
 
-    // Skip data block until $$$$
-    // TODO: Consider reading data from conformers in the future
-    // e.g. energies, etc.
+    // Read the data block until $$$$, capturing an energy field if present so
+    // it stays parallel with the coordinate sets.
+    // TODO: Consider reading other per-conformer data in the future.
+    bool inEnergyValue = false;
     while (getline(in, buffer)) {
       if (trimmed(buffer) == "$$$$")
         break;
+      if (inEnergyValue) {
+        if (auto e = lexicalCast<double>(trimmed(buffer)))
+          energies.push_back(*e);
+        inEnergyValue = false;
+      } else if (startsWith(buffer, "> ")) {
+        size_t start = buffer.find('<');
+        size_t end = buffer.find('>', start);
+        if (start != string::npos && end != string::npos &&
+            isEnergyTag(buffer.substr(start + 1, end - start - 1)))
+          inEnergyValue = true;
+      }
     }
 
     // Add the conformer coordinates
     mol.setCoordinate3d(positions, coordSet++);
   }
+
+  // Only expose energies if every coordinate set contributed one, keeping the
+  // array aligned with the conformers for the energy plot / property table.
+  if (energies.size() > 1 && energies.size() == static_cast<size_t>(coordSet))
+    mol.setData("energies", energies);
 
   return true;
 }
@@ -652,6 +734,13 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
   int numBonds(lexicalCast<int>(counts[4], ok));
   if (!ok) {
     appendError("Error parsing number of bonds.");
+    return false;
+  }
+  // Unlike V2000 these come from free-form fields rather than three-character
+  // columns, so they can be negative or arbitrarily large. Both are used to
+  // reserve() below, where a negative value becomes a huge size_t and throws.
+  if (numAtoms < 0 || numBonds < 0) {
+    appendError("Negative atom or bond count in the V3000 counts line.");
     return false;
   }
 
@@ -778,10 +867,22 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     appendError("Error parsing V3000 bond block.");
     return false;
   }
+  std::vector<bool> aromaticBonds;
+  aromaticBonds.reserve(numBonds);
+  bool anyAromaticBond = false;
   for (int i = 0; i < numBonds; ++i) {
-    getline(in, buffer);
+    // in.good() as well as the size check below: getline() leaves the previous
+    // line in the buffer at end of input, so a bond count larger than the file
+    // would otherwise re-add that bond until the count ran out.
+    if (!getline(in, buffer) || !in.good()) {
+      appendError("Error reading V3000 bond block.");
+      return false;
+    }
     std::vector<string> bondData = split(trimmed(buffer), ' ');
-    if (bondData.size() < 5) {
+    // Six fields, because bondData[5] is read below: "M  V30 <i> <order>
+    // <atom1> <atom2>". The old bound of 5 let a five-field line index one
+    // past the end of the vector.
+    if (bondData.size() < 6) {
       appendError("Error parsing V3000 bond line.");
       return false;
     }
@@ -800,9 +901,35 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
       appendError("Failed to parse bond atom2: " + bondData[5]);
       return false;
     }
-    mol.addBond(mol.atom(atom1), mol.atom(atom2),
-                static_cast<unsigned char>(order));
+    // Same bounds check the V2000 branch already makes. Without it a bad
+    // index reaches Graph::edges(), whose only guard is an assert() and so
+    // reads out of bounds in any release build.
+    if (atom1 < 0 || atom1 >= numAtoms || atom2 < 0 || atom2 >= numAtoms) {
+      appendError("Bond read in with out of bounds index.");
+      return false;
+    }
+    // Order 4 is aromatic here exactly as it is in V2000: add a single bond
+    // as a placeholder and let kekulize() below assign the real order.
+    unsigned char bondOrder = static_cast<unsigned char>(order);
+    bool aromatic = false;
+    if (order == 4) {
+      aromatic = true;
+      anyAromaticBond = true;
+      bondOrder = 1;
+    }
+    mol.addBond(mol.atom(atom1), mol.atom(atom2), bondOrder);
+    aromaticBonds.push_back(aromatic);
   } // end of bond block
+
+  // Unlike V2000, charges arrive with the atoms (CHG= in the atom block), so
+  // by here everything kekulize() classifies from is already in place.
+  if (anyAromaticBond) {
+    Index failedAtom = MaxIndex;
+    if (!Core::kekulize(mol, aromaticBonds, &failedAtom)) {
+      appendError(Core::kekulizeFailureMessage(failedAtom));
+      return false;
+    }
+  }
 
   // look for M  END
   while (getline(in, buffer)) {
@@ -930,10 +1057,21 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   // Bond block.
   for (size_t i = 0; i < mol.bondCount(); ++i) {
     Bond bond = mol.bond(i);
+
+    // Carry an undefined configuration back out. Writing 0 here would assert
+    // that the coordinates mean something, which is the claim reading the flag
+    // was meant to avoid making.
+    int stereo = 0;
+    if (bond.order() == 2 && bondStereoUnspecified(mol, i))
+      stereo = 3; // cis or trans, either
+    else if (bond.order() == 1 &&
+             atomStereoUnspecified(mol, bond.atom1().index()))
+      stereo = 4; // a wedge drawn as either
+
     out.unsetf(std::ios::floatfield);
     out << setw(3) << std::right << bond.atom1().index() + 1 << setw(3)
         << bond.atom2().index() + 1 << setw(3) << static_cast<int>(bond.order())
-        << "  0  0  0  0\n";
+        << setw(3) << stereo << "  0  0  0\n";
   }
   // Properties block.
   for (auto& i : chargeList) {

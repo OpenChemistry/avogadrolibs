@@ -174,6 +174,120 @@ Occup=  0.0000
   EXPECT_NEAR(moMatrix(2, 4), 1.0, 1e-6);
 }
 
+// Localized orbital sets (IAO/IBO, NBO, Pipek-Mezey) represent a reduced
+// subspace, and some codes pad the [MO] section out to the full basis
+// dimension with all-zero, zero-energy "orbitals". These are not real
+// orbitals and must be dropped so the orbital list shows only the
+// meaningful entries.
+TEST(MoldenTest, dropsZeroPaddingOrbitals)
+{
+  static const char paddedMolden[] = R"([Molden Format]
+[GTO]
+    1 0
+ s   6 1.00
+     130.7093200    0.1543289700
+      23.8088610    0.5353281400
+       6.4436083    0.4446345400
+       5.0331513    0.0000000000
+       1.1695961    0.0000000000
+       0.3803890    0.0000000000
+ s   6 1.00
+     130.7093200    0.0000000000
+      23.8088610    0.0000000000
+       6.4436083    0.0000000000
+       5.0331513   -0.0999672300
+       1.1695961    0.3995128300
+       0.3803890    0.7001154700
+ p   3 1.00
+       5.0331513    0.1559162700
+       1.1695961    0.6076837200
+       0.3803890    0.3919573900
+
+    2 0
+ s   3 1.00
+       3.4252509    0.1543289700
+       0.6239137    0.5353281400
+       0.1688554    0.4446345400
+
+    3 0
+ s   3 1.00
+       3.4252509    0.1543289700
+       0.6239137    0.5353281400
+       0.1688554    0.4446345400
+
+[Atoms] AU
+O          1     8         0.0000000000         0.0000000000         0.226016913
+H          2     1         0.0000000000         1.4396179285        -0.904063875
+H          3     1         0.0000000000        -1.4396179285        -0.904063875
+[5D7F]
+[9G]
+[MO]
+Sym= A
+Ene=  -20.2442
+Spin= Alpha
+Occup=  2.0000
+    1       -0.994158
+    2       -0.026315
+    5        0.004261
+    6        0.005841
+    7        0.005841
+Sym= A
+Ene=   -1.2636
+Spin= Alpha
+Occup=  2.0000
+    1        0.233172
+    2       -0.837489
+    5        0.126492
+    6       -0.157787
+    7       -0.157787
+Sym= A
+Ene=    0.0000
+Spin= Alpha
+Occup=  0.0000
+    1        0.0000000000
+    2        0.0000000000
+    3        0.0000000000
+    4        0.0000000000
+    5        0.0000000000
+    6        0.0000000000
+    7        0.0000000000
+Sym= A
+Ene=    0.0000
+Spin= Alpha
+Occup=  0.0000
+    1        0.0000000000
+    2        0.0000000000
+    3        0.0000000000
+    4        0.0000000000
+    5        0.0000000000
+    6        0.0000000000
+    7        0.0000000000
+[End of Molden output]
+)";
+
+  MoldenFile format;
+  Molecule molecule;
+  EXPECT_TRUE(format.readString(paddedMolden, molecule));
+  ASSERT_EQ(format.error(), std::string());
+
+  const auto* basis = dynamic_cast<const GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+
+  const auto moMatrix = basis->moMatrix();
+  // 7 basis functions, but only 2 real orbitals (2 zero-padding dropped).
+  EXPECT_EQ(moMatrix.rows(), 7);
+  EXPECT_EQ(moMatrix.cols(), 2);
+  EXPECT_EQ(basis->molecularOrbitalCount(), 2u);
+
+  // Energies and symmetry labels must be dropped alongside the coefficients.
+  EXPECT_EQ(basis->moEnergy().size(), 2u);
+  EXPECT_EQ(basis->symmetryLabels().size(), 2u);
+
+  // The two surviving orbitals are the meaningful ones.
+  EXPECT_NEAR(moMatrix(0, 0), -0.994158, 1e-6);
+  EXPECT_NEAR(moMatrix(0, 1), 0.233172, 1e-6);
+}
+
 // Test that supportedOperations includes Write
 TEST(MoldenTest, supportedOperations)
 {

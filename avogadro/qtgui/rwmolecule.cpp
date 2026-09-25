@@ -104,6 +104,60 @@ void RWMolecule::clearAtoms()
   m_undoStack.endMacro();
 }
 
+bool RWMolecule::reorderAtoms(const Core::Array<Index>& newOrder)
+{
+  const Index count = atomCount();
+  if (newOrder.size() != count)
+    return false;
+
+  // Check that this really is a permutation before touching the molecule. A
+  // repeated or out-of-range entry would copy one atom's data over another's
+  // and leave no way back.
+  std::vector<bool> seen(count, false);
+  for (Index i = 0; i < count; ++i) {
+    const Index from = newOrder[i];
+    if (from >= count || seen[from])
+      return false;
+    seen[from] = true;
+  }
+
+  // Decompose the permutation into transpositions. current[i] is the
+  // original index of the atom now sitting at i, and where[] is its inverse,
+  // so the atom wanted at each position is found without searching for it.
+  std::vector<Index> current(count);
+  std::vector<Index> where(count);
+  for (Index i = 0; i < count; ++i) {
+    current[i] = i;
+    where[i] = i;
+  }
+
+  std::vector<std::pair<Index, Index>> swaps;
+  for (Index i = 0; i < count; ++i) {
+    const Index wanted = newOrder[i];
+    const Index j = where[wanted];
+    if (j == i)
+      continue; // already in place
+    const Index displaced = current[i];
+    swaps.emplace_back(i, j);
+    std::swap(current[i], current[j]);
+    where[wanted] = i;
+    where[displaced] = j;
+  }
+
+  if (swaps.empty())
+    return true; // the molecule is already in this order
+
+  auto* comm = new ReorderAtomsCommand(*this, swaps);
+  comm->setText(tr("Reorder Atoms"));
+  // ReorderAtomsCommand::redo() -- run synchronously by push() -- already
+  // emits Atoms|Bonds|Modified|Reordered itself (see the class comment in
+  // rwmolecule_undo.h), so no further emit is needed here; one would both
+  // duplicate the notification and drop the Reordered flag from it.
+  m_undoStack.push(comm);
+
+  return true;
+}
+
 void RWMolecule::adjustHydrogens(Index atomId)
 {
   RWAtom atom = this->atom(atomId);
@@ -218,6 +272,12 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
 void RWMolecule::setAtomSelected(Index atomId, bool selected,
                                  const QString& undoText)
 {
+  // A caller holding an index from before an atom was removed would other-
+  // wise write past the end of the selection bitfield, corrupting whatever
+  // follows it rather than failing where the mistake was made.
+  if (atomId >= atomCount())
+    return;
+
   auto* comm = new ModifySelectionCommand(*this, atomId, selected);
   comm->setText(undoText);
   comm->setCanMerge(true);
@@ -305,6 +365,18 @@ RWMolecule::BondType RWMolecule::addBond(Index atom1, Index atom2,
 {
   if (atom1 == atom2 || std::max(atom1, atom2) >= atomCount())
     return BondType();
+
+  // Two atoms that are already bonded do not get a second bond:
+  // Core::Molecule::addBond() updates the order and returns the existing bond,
+  // so an AddBondCommand here would record a bond id one past the end and a
+  // unique id for a bond that is never created. Change the order instead,
+  // which is what the core call would have done, and keep it undoable.
+  BondType existing = bond(atom1, atom2);
+  if (existing.isValid()) {
+    if (bondOrder(existing.index()) != order)
+      setBondOrder(existing.index(), order);
+    return existing;
+  }
 
   Index bondId = bondCount();
   auto bondUid = static_cast<Index>(m_molecule.m_bondUniqueIds.size());
@@ -597,6 +669,30 @@ void RWMolecule::buildSupercell(unsigned int a, unsigned int b, unsigned int c)
   // We will just modify the whole molecule since there may be many changes
   Molecule::MoleculeChanges changes =
     Molecule::UnitCell | Molecule::Modified | Molecule::Atoms | Molecule::Added;
+  QString undoText = tr("Build Super Cell");
+
+  modifyMolecule(newMolecule, changes, undoText);
+}
+
+void RWMolecule::buildSupercell(const Vector3& rangeMin,
+                                const Vector3& rangeMax,
+                                CrystalTools::Options options)
+{
+  // If there is no unit cell, there is nothing to do
+  if (!m_molecule.unitCell())
+    return;
+
+  // Make a copy of the molecule to edit so we can store the old one
+  // The unit cell and atom positions may change
+  Molecule newMolecule = m_molecule;
+
+  if (!CrystalTools::buildSupercell(newMolecule, rangeMin, rangeMax, options))
+    return;
+
+  // We will just modify the whole molecule since there may be many changes
+  Molecule::MoleculeChanges changes = Molecule::UnitCell | Molecule::Modified |
+                                      Molecule::Atoms | Molecule::Bonds |
+                                      Molecule::Added;
   QString undoText = tr("Build Super Cell");
 
   modifyMolecule(newMolecule, changes, undoText);

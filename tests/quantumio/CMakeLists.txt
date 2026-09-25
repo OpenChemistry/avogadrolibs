@@ -1,17 +1,19 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   cube
+  densitycube
   fchk
   gaussiansettools
+  genericoutput
   molden
+  mopacaux
+  nwchemlog
   orca
+  qcschema
   # TODO
-  # qcschema
   # GAMESS US
   # GAMESS UK
-  # NWChem log
   # NWChem JSON
-  # MOPAC aux
 )
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
@@ -39,7 +41,7 @@ message(STATUS "Test source files: ${testSrcs}")
 # Add a single executable for all of our tests.
 add_executable(AvogadroQuantumIOTests ${testSrcs})
 target_link_libraries(AvogadroQuantumIOTests Avogadro::IO Avogadro::QuantumIO
-  ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+  nlohmann_json::nlohmann_json ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
@@ -47,15 +49,30 @@ foreach(TestName ${tests})
   if(TestName STREQUAL "cube")
     add_test(NAME "QuantumIo-cube"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianCubeTest.*")
+  elseif(TestName STREQUAL "densitycube")
+    # Parameterized (TEST_P): gtest names these cases
+    # "Prefix/DensityCubeTest.case/index", which a "DensityCubeTest.*"
+    # filter would not match -- ctest would run nothing and report success.
+    add_test(NAME "QuantumIo-densitycube"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=*DensityCubeTest*")
   elseif(TestName STREQUAL "fchk")
     add_test(NAME "QuantumIo-fchk"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianFchkTest.*")
   elseif(TestName STREQUAL "gaussiansettools")
     add_test(NAME "QuantumIo-gaussiansettools"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianSetToolsTest.*")
+  elseif(TestName STREQUAL "genericoutput")
+    add_test(NAME "QuantumIo-genericoutput"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=GenericOutputTest.*")
   elseif(TestName STREQUAL "molden")
     add_test(NAME "QuantumIo-molden"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=MoldenTest.*")
+  elseif(TestName STREQUAL "mopacaux")
+    add_test(NAME "QuantumIo-mopacaux"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=MopacAuxTest.*")
+  elseif(TestName STREQUAL "nwchemlog")
+    add_test(NAME "QuantumIo-nwchemlog"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=NWChemLogTest.*")
   elseif(TestName STREQUAL "orca")
     add_test(NAME "QuantumIo-orca"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=OrcaTest.*")
@@ -75,12 +92,16 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
+  # File extensions, not format names -- fuzztest.cpp hands each straight to
+  # readString(), and an extension no registered format claims for reading
+  # builds a target that silently tests nothing. QCSchema's extension is
+  # "qcjson"; "qcschema" matched nothing and never reached a parser.
   set(fuzz
     cube
     fchk
     molden
     orca
-    qcschema
+    qcjson
   )
   foreach(fuzzName ${fuzz})
     add_executable(fuzz_${fuzzName} fuzztest.cpp)
@@ -88,9 +109,9 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
     if(DEFINED ENV{LIB_FUZZING_ENGINE})
       target_link_libraries(fuzz_${fuzzName} PRIVATE Avogadro::IO Avogadro::QuantumIO $ENV{LIB_FUZZING_ENGINE})
     else()
-      target_compile_options(fuzz_${fuzzName} PRIVATE -g -fsanitize=fuzzer)
-      target_link_options(fuzz_${fuzzName} PRIVATE -fsanitize=fuzzer)
-      target_link_libraries(fuzz_${fuzzName} PRIVATE Avogadro::IO Avogadro::QuantumIO)
+      target_compile_options(fuzz_${fuzzName} PRIVATE ${AvogadroLibs_FUZZ_COMPILE_OPTIONS})
+      target_link_options(fuzz_${fuzzName} PRIVATE ${AvogadroLibs_FUZZ_LINK_OPTIONS})
+      target_link_libraries(fuzz_${fuzzName} PRIVATE Avogadro::IO Avogadro::QuantumIO ${AvogadroLibs_FUZZ_LINK_LIBS})
     endif()
   endforeach()
 endif()

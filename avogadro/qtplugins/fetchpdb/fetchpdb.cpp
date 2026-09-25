@@ -5,8 +5,11 @@
 
 #include "fetchpdb.h"
 
+#include <avogadro/io/compression.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
+
+#include <cstddef>
 
 #include <QAction>
 #include <QtCore/QDir>
@@ -18,6 +21,16 @@
 #include <QtWidgets/QProgressDialog>
 
 namespace Avogadro::QtPlugins {
+
+namespace {
+// Stamped on each QNetworkReply so that replyFinished() works from the
+// request that actually landed. The progress dialog is modeless and
+// showDialog() has no in-flight guard, so a second download can be started
+// before the first one finishes.
+constexpr char pdbCodeProperty[] = "avogadroPdbCode";
+constexpr char downloadSuffixProperty[] = "avogadroDownloadSuffix";
+constexpr char commandDrivenProperty[] = "avogadroCommandDriven";
+} // namespace
 
 FetchPDB::FetchPDB(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
@@ -48,6 +61,8 @@ void FetchPDB::setMolecule(QtGui::Molecule* mol)
 
 bool FetchPDB::readMolecule(QtGui::Molecule& mol)
 {
+  m_lastReadOk = false;
+
   if (m_moleculeData.isEmpty() || m_moleculeName.isEmpty())
     return false;
 
@@ -55,13 +70,138 @@ bool FetchPDB::readMolecule(QtGui::Molecule& mol)
     mol, m_tempFileName.toStdString(), "pdb");
   if (readOK) // worked, so set the filename
     mol.setData("name", m_moleculeName.toStdString());
-  else
-    // if it didn't read, show a dialog
+  else if (!m_commandPending)
+    // if it didn't read, show a dialog -- unless a command is waiting, in
+    // which case replyFinished() reports the failure through commandFailed()
     QMessageBox::warning(
       qobject_cast<QWidget*>(parent()), tr("Fetch PDB"),
       tr("Could not read the PDB molecule: %1").arg(m_moleculeName));
 
+  m_lastReadOk = readOK;
   return readOK;
+}
+
+void FetchPDB::registerCommands()
+{
+  emit registerCommand("fetchPDB",
+                       tr("Download a structure from the Protein Data Bank."));
+}
+
+bool FetchPDB::handleCommand(const QString& command, const QVariantMap& options)
+{
+  if (command.compare("fetchPDB", Qt::CaseInsensitive) != 0)
+    return false;
+
+  QString pdbCode = options.value("code").toString().trimmed();
+  QString error;
+  if (!isValidPdbCode(pdbCode, &error)) {
+    emit commandFailed(error);
+    return true;
+  }
+
+  // The request goes to the network, so the caller's reply is held until
+  // replyFinished() reports back.
+  emit commandStarted();
+  requestStructure(pdbCode, /* commandDriven = */ true);
+  return true;
+}
+
+bool FetchPDB::isValidPdbCode(const QString& pdbCode, QString* error)
+{
+  QString message;
+
+  if (pdbCode.isEmpty())
+    message = tr("fetchPDB requires a non-empty 'code' parameter.");
+  else if (pdbCode.length() != 4)
+    message = tr("The PDB code must be exactly 4 characters long.");
+  else if (!pdbCode.at(0).isDigit() || pdbCode.at(0) == QLatin1Char('0'))
+    message = tr("The first character of the PDB code must be 1-9.");
+  else {
+    // The code is pasted into a URL and used as a temporary file name, so
+    // only accept the ASCII letters and digits the format actually allows.
+    for (const QChar& character : pdbCode) {
+      const char latin1 = character.toLatin1();
+      const bool alphanumeric = (latin1 >= '0' && latin1 <= '9') ||
+                                (latin1 >= 'a' && latin1 <= 'z') ||
+                                (latin1 >= 'A' && latin1 <= 'Z');
+      if (!alphanumeric) {
+        message = tr("The PDB code must contain only letters and digits.");
+        break;
+      }
+    }
+  }
+
+  if (message.isEmpty())
+    return true;
+
+  if (error != nullptr)
+    *error = message;
+  return false;
+}
+
+void FetchPDB::requestStructure(const QString& pdbCode, bool commandDriven)
+{
+  if (!m_network) {
+    m_network = new QNetworkAccessManager(this);
+    connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
+            SLOT(replyFinished(QNetworkReply*)));
+  }
+
+  // RCSB serves every entry gzipped as well, at roughly a fifth the size,
+  // and Io reads it back transparently. Builds without the compression back
+  // ends (USE_LIBARCHIVE=OFF, as the Python wheels are configured) cannot
+  // decode it, so ask those for the plain file instead.
+  const QString suffix = Io::compressionSupported(Io::Compression::Gzip)
+                           ? QStringLiteral(".pdb.gz")
+                           : QStringLiteral(".pdb");
+
+  // Hard coding the PDB download URL
+  QNetworkReply* reply = m_network->get(QNetworkRequest(
+    QUrl("https://files.rcsb.org/download/" + pdbCode + suffix)));
+
+  // Everything replyFinished() needs to know about this particular request
+  // travels with its reply, so two overlapping downloads cannot be confused
+  // for one another.
+  if (reply != nullptr) {
+    reply->setProperty(pdbCodeProperty, pdbCode);
+    reply->setProperty(downloadSuffixProperty, suffix);
+    reply->setProperty(commandDrivenProperty, commandDriven);
+  }
+
+  m_moleculeName = pdbCode;
+  m_downloadSuffix = suffix;
+  m_commandPending = commandDriven;
+}
+
+void FetchPDB::reportFailure(const QString& title, const QString& message)
+{
+  if (m_commandPending) {
+    m_commandPending = false;
+    emit commandFailed(message);
+  } else {
+    QMessageBox::warning(qobject_cast<QWidget*>(parent()), title, message);
+  }
+}
+
+void FetchPDB::reportCommandSuccess(const QString& pdbCode)
+{
+  if (!m_commandPending)
+    return;
+  m_commandPending = false;
+
+  // By the time moleculeReady() returns, MainWindow has synchronously called
+  // readMolecule() and setMolecule(), and the resulting moleculeChanged()
+  // signal has already updated m_molecule -- so it is safe to report
+  // atomCount and friends from it here.
+  QVariantMap result;
+  result["name"] = pdbCode;
+  result["source"] = QStringLiteral("rcsb");
+  if (m_molecule != nullptr) {
+    result["atomCount"] = static_cast<int>(m_molecule->atomCount());
+    result["residueCount"] = static_cast<int>(m_molecule->residueCount());
+    result["formula"] = QString::fromStdString(m_molecule->formula());
+  }
+  emit commandFinished(tr("Downloaded %1").arg(pdbCode), result);
 }
 
 void FetchPDB::showDialog()
@@ -72,40 +212,24 @@ void FetchPDB::showDialog()
     qobject_cast<QWidget*>(parent()), tr("PDB Code"),
     tr("Chemical structure to download."), QLineEdit::Normal, "", &ok);
 
+  pdbCode = pdbCode.trimmed();
   if (!ok || pdbCode.isEmpty())
     return;
 
   // check if the PDB code matches the expected format
-  if (pdbCode.length() != 4) {
+  QString error;
+  if (!isValidPdbCode(pdbCode, &error)) {
     QMessageBox::warning(qobject_cast<QWidget*>(parent()),
-                         tr("Invalid PDB Code"),
-                         tr("The PDB code must be exactly 4 characters long."));
+                         tr("Invalid PDB Code"), error);
     return;
   }
 
-  // first character should be 1-9
-  if (!pdbCode.at(0).isDigit() || pdbCode.at(0).toLatin1() == '0') {
-    QMessageBox::warning(
-      qobject_cast<QWidget*>(parent()), tr("Invalid PDB Code"),
-      tr("The first character of the PDB code must be 1-9."));
-    return;
-  }
-
-  if (!m_network) {
-    m_network = new QNetworkAccessManager(this);
-    connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
-            SLOT(replyFinished(QNetworkReply*)));
-  }
-
-  // Hard coding the PDB download URL
-  m_network->get(QNetworkRequest(
-    QUrl("https://files.rcsb.org/download/" + pdbCode + ".pdb")));
+  requestStructure(pdbCode, /* commandDriven = */ false);
 
   if (!m_progressDialog) {
     m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
   }
 
-  m_moleculeName = pdbCode;
   m_progressDialog->setLabelText(tr("Querying for %1").arg(pdbCode));
   m_progressDialog->setRange(0, 0);
   m_progressDialog->show();
@@ -113,42 +237,90 @@ void FetchPDB::showDialog()
 
 void FetchPDB::replyFinished(QNetworkReply* reply)
 {
-  m_progressDialog->hide();
+  // Work from the request this reply belongs to, not from whatever the most
+  // recent requestStructure() left in the members: a download started from
+  // the menu while another is still in flight would otherwise be saved under
+  // the wrong name and reported against the wrong caller.
+  const QString pdbCode = reply->property(pdbCodeProperty).toString();
+  const QString downloadSuffix =
+    reply->property(downloadSuffixProperty).toString();
+  const bool commandDriven = reply->property(commandDrivenProperty).toBool();
+
+  // readMolecule() is called by MainWindow from inside moleculeReady() and
+  // can only see the members, so point them at this reply before going on.
+  m_moleculeName = pdbCode;
+  m_downloadSuffix = downloadSuffix;
+  m_commandPending = commandDriven;
+
+  // A fetchPDB command never shows the progress dialog, so there may be none
+  // to hide -- and one left over from an earlier interactive download should
+  // not be touched here.
+  if (!commandDriven && m_progressDialog)
+    m_progressDialog->hide();
+
   // Read in all the data
   if (!reply->isReadable()) {
-    QMessageBox::warning(qobject_cast<QWidget*>(parent()),
-                         tr("Network Download Failed"),
-                         tr("Network timeout or other error."));
     reply->deleteLater();
+    reportFailure(tr("Network Download Failed"),
+                  tr("Network timeout or other error."));
     return;
   }
 
   m_moleculeData = reply->readAll();
+  reply->deleteLater();
+
+  // RCSB answers an unknown code with an HTML error page, so the payload is
+  // what says whether the download worked. Gzip magic is a positive answer:
+  // no error page carries it, and the string matches below would be
+  // unreliable against compressed bytes, which can hold any sequence at all.
+  // Checking the content rather than the requested suffix also keeps this
+  // right if the body arrives decoded (a proxy, or a future Content-Encoding
+  // from RCSB) -- a plain PDB body simply falls through to the same checks
+  // the uncompressed download has always used.
+  const bool gzipped =
+    Io::detectCompression(m_moleculeData.constData(),
+                          static_cast<std::size_t>(m_moleculeData.size())) ==
+    Io::Compression::Gzip;
 
   // Check if the file was successfully downloaded
-  if (m_moleculeData.contains("Not Found") ||
-      m_moleculeData.contains("Error report") ||
-      m_moleculeData.contains("Page not found (404)")) {
-    QMessageBox::warning(
-      qobject_cast<QWidget*>(parent()), tr("Network Download Failed"),
-      tr("Specified molecule could not be found: %1").arg(m_moleculeName));
-    reply->deleteLater();
+  if (!gzipped &&
+      (m_moleculeData.isEmpty() || m_moleculeData.contains("Not Found") ||
+       m_moleculeData.contains("Error report") ||
+       m_moleculeData.contains("Page not found (404)"))) {
+    reportFailure(tr("Network Download Failed"),
+                  tr("Specified molecule could not be found: %1").arg(pdbCode));
     return;
   }
 
   m_tempFileName =
-    QDir::tempPath() + QDir::separator() + m_moleculeName + ".pdb";
+    QDir::tempPath() + QDir::separator() + pdbCode + downloadSuffix;
   QFile out(m_tempFileName);
   if (!out.open(QIODevice::WriteOnly)) {
-    QMessageBox::warning(qobject_cast<QWidget*>(parent()), tr("Error"),
-                         tr("Cannot save file %1.").arg(m_tempFileName));
+    reportFailure(tr("Error"), tr("Cannot save file %1.").arg(m_tempFileName));
     return;
   }
   out.write(m_moleculeData);
   out.close();
 
   emit moleculeReady(1);
-  reply->deleteLater();
+
+  // MainWindow calls readMolecule() synchronously from moleculeReady() but
+  // does not pass its result back, so m_lastReadOk carries it. Only the
+  // command path needs it: readMolecule() has already warned the user
+  // itself when there is no command waiting.
+  const bool readOk = m_lastReadOk;
+
+  // readMolecule() can open a warning box, and a modal box spins the event
+  // loop, which can deliver another reply here before this call returns --
+  // so re-assert this reply's view of things before reporting on it.
+  m_commandPending = commandDriven;
+  if (commandDriven) {
+    if (readOk)
+      reportCommandSuccess(pdbCode);
+    else
+      reportFailure(tr("Fetch PDB"),
+                    tr("Could not read the PDB molecule: %1").arg(pdbCode));
+  }
 }
 
 } // namespace Avogadro::QtPlugins

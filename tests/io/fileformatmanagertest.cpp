@@ -91,8 +91,8 @@ TEST(FileFormatManagerTest, readFileGuessCml)
 TEST(FileFormatManagerTest, readFileGuessCjson)
 {
   Molecule molecule;
-  FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
-                                                     "/data/cjson/ethane.cjson");
+  FileFormatManager::instance().readFile(
+    molecule, std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson");
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
@@ -125,8 +125,8 @@ TEST(FileFormatManagerTest, writeFileGuessCml)
 TEST(FileFormatManagerTest, writeStringCjson)
 {
   Molecule molecule;
-  FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
-                                                     "/data/cjson/ethane.cjson");
+  FileFormatManager::instance().readFile(
+    molecule, std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson");
   std::string cjson;
   FileFormatManager::instance().writeString(molecule, cjson, "cjson");
   std::string cml;
@@ -151,12 +151,34 @@ TEST(FileFormatManagerTest, writeStringCjson)
   EXPECT_EQ(cmlMol.data("inchi").toString(), "1/C2H6/c1-2/h1-2H3");
 }
 
+TEST(FileFormatManagerTest, writeStringOverwritesTarget)
+{
+  // Regression test: writeString() used to seed its stream with the existing
+  // contents of the target string, which overwrote from position 0 without
+  // truncating. Reusing one string for two formats then left a tail of the
+  // longer output behind, silently corrupting the shorter one.
+  Molecule molecule;
+  FileFormatManager::instance().readFile(
+    molecule, std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson");
+
+  std::string reference;
+  FileFormatManager::instance().writeString(molecule, reference, "cjson");
+  ASSERT_FALSE(reference.empty());
+
+  // Prime the target with a value longer than the output it is about to
+  // receive. Nothing of it may survive the write.
+  std::string reused(reference.size() + 512, 'X');
+  FileFormatManager::instance().writeString(molecule, reused, "cjson");
+  EXPECT_EQ(reused, reference);
+  EXPECT_EQ(reused.size(), reference.size());
+}
+
 TEST(FileFormatManagerTest, writeStringCjsonOptions)
 {
   Molecule molecule;
   std::string options = "{ \"properties\": false }";
-  FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
-                                                     "/data/cjson/ethane.cjson");
+  FileFormatManager::instance().readFile(
+    molecule, std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson");
   std::string cjson;
   FileFormatManager::instance().writeString(molecule, cjson, "cjson", options);
 

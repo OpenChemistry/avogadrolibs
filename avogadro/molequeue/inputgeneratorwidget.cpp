@@ -25,12 +25,54 @@
 #include <QtWidgets/QTextEdit>
 
 #include <QtCore/QDebug>
+#include <QtCore/QFileInfo>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QPointer>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
 namespace Avogadro::MoleQueue {
+
+namespace {
+
+/**
+ * Derive a "Filename Base" from the molecule, preferring the file it was read
+ * from and falling back to its name (set by the molecular properties view and
+ * by some readers). Returns an empty string if neither is available.
+ */
+QString moleculeFilenameBase(const QtGui::Molecule* molecule)
+{
+  if (molecule == nullptr)
+    return QString();
+
+  if (molecule->hasData("fileName")) {
+    // baseName() stops at the first '.', so "benzene.out.gz" yields "benzene".
+    // A legitimate dotted name is truncated, but this is only a default that
+    // the user can edit.
+    const QString base(
+      QFileInfo(QString::fromStdString(molecule->data("fileName").toString()))
+        .baseName());
+    if (!base.isEmpty())
+      return base;
+  }
+
+  if (molecule->hasData("name")) {
+    // Unlike a file name, this is free-form text, so replace anything that
+    // does not belong in a file name.
+    QString name(QString::fromStdString(molecule->data("name").toString()));
+    name.replace(QRegularExpression("[^A-Za-z0-9._-]+"), "_");
+    // Avoid a leading '.' or '-', which some tools treat specially.
+    while (!name.isEmpty() && (name.startsWith('.') || name.startsWith('-')))
+      name.remove(0, 1);
+    if (!name.isEmpty())
+      return name;
+  }
+
+  return QString();
+}
+
+} // namespace
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
   : QtGui::JsonWidget(parent_), m_ui(new Ui::InputGeneratorWidget),
@@ -134,6 +176,13 @@ void InputGeneratorWidget::showEvent(QShowEvent* e)
     int multiplicity = static_cast<int>(m_molecule->totalSpinMultiplicity());
     setOption("Charge", charge);
     setOption("Multiplicity", multiplicity);
+
+    // Scripts default this to "job", which is rarely what the user wants. Like
+    // the charge and multiplicity above, the molecule wins over both the
+    // script default and any value saved from a previous session.
+    const QString filenameBase(moleculeFilenameBase(m_molecule));
+    if (!filenameBase.isEmpty())
+      setOption("Filename Base", filenameBase);
   }
 
   // Update the preview text if an update was requested while hidden. Use a

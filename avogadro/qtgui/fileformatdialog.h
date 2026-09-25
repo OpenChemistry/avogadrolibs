@@ -132,6 +132,8 @@ public: // Must be public for operator declarations
     AllFormats = 0x1,
     AllFiles = 0x2,
     WriteFormats = 0x4,
+    /// Offer compressed files, and include them in "All supported formats".
+    CompressedFiles = 0x8,
   };
   Q_DECLARE_FLAGS(FilterStringOptions, FilterStringOption)
 

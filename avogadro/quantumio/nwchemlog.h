@@ -63,9 +63,32 @@ private:
 
   Real m_coordinateScale = 1.0;
 
+  // Vibrational data for the geometry being parsed. NWChem prints the modes
+  // of one Hessian in column blocks, so these accumulate across several
+  // P.Frequency sections; a new geometry means a new Hessian, at which point
+  // the set is banked in m_vibrationSets.
   Core::Array<double> m_frequencies;
   Core::Array<double> m_intensities;
   Core::Array<Core::Array<Vector3>> m_Lx;
+
+  /** One completed set of vibrational data, and the geometry it belongs to. */
+  struct VibrationSet
+  {
+    size_t conformerIndex = 0;
+    Core::Array<double> frequencies;
+    Core::Array<double> intensities;
+    Core::Array<Core::Array<Vector3>> Lx;
+  };
+  std::vector<VibrationSet> m_vibrationSets;
+
+  /** Every geometry in the file, in order. */
+  std::vector<Core::Array<Vector3>> m_coordSets;
+
+  /**
+   * Bank the vibrational data accumulated so far against the geometry it was
+   * computed at - the most recent one - and reset for the next Hessian.
+   */
+  void flushVibrationData();
 };
 
 } // End namespace QuantumIO

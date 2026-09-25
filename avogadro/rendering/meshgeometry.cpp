@@ -176,11 +176,33 @@ void MeshGeometry::render(const Camera& camera)
   if (!program->setUniformValue("normalMatrix", normalMatrix))
     std::cout << program->error() << std::endl;
 
-  // Render the mesh using the shader and VAO.
-  glDrawRangeElements(GL_TRIANGLES, 0,
-                      static_cast<GLuint>(d->numberOfVertices - 1),
-                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid*>(0));
+  auto drawMesh = [&]() {
+    glDrawRangeElements(GL_TRIANGLES, 0,
+                        static_cast<GLuint>(d->numberOfVertices - 1),
+                        static_cast<GLsizei>(d->numberOfIndices),
+                        GL_UNSIGNED_INT, reinterpret_cast<const GLvoid*>(0));
+  };
+
+  const bool translucent = renderPass() == TranslucentPass;
+  if (translucent) {
+    // The blend state is set up by the renderer's translucent pass. Disable
+    // depth writes so the surface doesn't z-reject its own fragments (depth
+    // testing stays on, so opaque atoms/bonds still occlude the surface).
+    glDepthMask(GL_FALSE);
+    // "Over" blending is order-dependent. An isosurface lobe is mostly convex,
+    // so drawing its back faces before its front faces yields a consistent
+    // back-to-front order per lobe and removes the remaining draw-order color
+    // artifacts. (VolumeGeometry uses the same two-pass front/back split.)
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT); // cull front faces -> draw back faces first
+    drawMesh();
+    glCullFace(GL_BACK); // cull back faces -> draw front faces second
+    drawMesh();
+    glDisable(GL_CULL_FACE);
+    glDepthMask(GL_TRUE);
+  } else {
+    drawMesh();
+  }
 
   d->vao.release();
   program->release();

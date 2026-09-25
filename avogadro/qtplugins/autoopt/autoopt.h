@@ -13,6 +13,7 @@
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QElapsedTimer>
+#include <QtCore/QList>
 #include <QtCore/QPoint>
 #include <QtCore/QTimer>
 #include <QtWidgets/QAbstractButton>
@@ -152,6 +153,14 @@ private:
   QThread* m_workerThread = nullptr;
   QtGui::CalcWorker* m_worker = nullptr;
   bool m_computePending = false;
+  // Bumped for every worker we create. Results carry the generation they were
+  // produced for, so a result queued before an edit retired its worker can be
+  // told apart from a live one - disconnecting the worker does not withdraw
+  // metacalls that are already sitting in our event queue.
+  quint64 m_workerGeneration = 0;
+  // Worker threads that outlived their shutdown timeout. They are still
+  // running, so they can neither be deleted nor left for ~QObject to destroy.
+  QList<QThread*> m_retiredThreads;
   // Persistent across optimizeStep calls so adaptive chunk sizing carries
   // over between timer ticks.
   Calc::OptimizationOptions m_optOptions;

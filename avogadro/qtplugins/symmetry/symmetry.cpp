@@ -13,6 +13,7 @@
 // #include <avogadro/core/crystaltools.h>
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QAction>
 #include <QtWidgets/QMessageBox>
@@ -165,18 +166,83 @@ void Symmetry::viewSymmetry()
   m_symmetryWidget->activateWindow();
 }
 
+void Symmetry::clearSymmetryResults()
+{
+  if (m_symmetryWidget == nullptr)
+    return;
+
+  m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
+  m_symmetryWidget->setEquivalenceSets(0, nullptr);
+  m_symmetryWidget->setSymmetryOperations(0, nullptr);
+  m_symmetryWidget->setSubgroups(0, nullptr);
+}
+
+msym_thresholds_t* Symmetry::thresholdsForName(const QString& name)
+{
+  const QString wanted = name.trimmed().toLower();
+
+  if (wanted == QLatin1String("tight"))
+    return &tight_thresholds;
+  if (wanted == QLatin1String("normal") || wanted == QLatin1String("medium"))
+    return &medium_thresholds;
+  if (wanted == QLatin1String("loose"))
+    return &loose_thresholds;
+  if (wanted == QLatin1String("veryloose") ||
+      wanted == QLatin1String("very loose") ||
+      wanted == QLatin1String("sloppy"))
+    return &sloppy_thresholds;
+
+  return nullptr;
+}
+
 void Symmetry::detectSymmetry()
 {
+  runSymmetryDetection(nullptr, nullptr, nullptr);
+}
 
-  unsigned int length = m_molecule->atomCount();
+bool Symmetry::runSymmetryDetection(msym_thresholds_t* thresholds,
+                                    QString* pointGroup, QString* error)
+{
+  auto fail = [error](const QString& message) {
+    if (error != nullptr)
+      *error = message;
+    return false;
+  };
 
-  if (m_molecule == nullptr || m_molecule->atomPositions3d().size() != length ||
-      length < 2)
-    return; // if one atom = Kh
+  // Note the order: this used to call atomCount() and only then test the
+  // pointer, so a command arriving with no molecule would have crashed.
+  if (m_molecule == nullptr) {
+    clearSymmetryResults();
+    return fail(tr("There is no molecule to analyze."));
+  }
 
+  const unsigned int length = m_molecule->atomCount();
+
+  if (m_molecule->atomPositions3d().size() != length) {
+    clearSymmetryResults();
+    return fail(tr("The molecule has no 3D coordinates."));
+  }
+
+  if (length == 0) {
+    clearSymmetryResults();
+    return fail(tr("The molecule has no atoms."));
+  }
+
+  // A lone atom is spherically symmetric. This test used to sit below a
+  // "length < 2" early return, so it could never run: a single atom left
+  // whatever the previous molecule had detected on screen instead.
   if (length == 1) {
-    m_symmetryWidget->setPointGroupSymbol(QString("K<sub>h</sub>"));
-    return;
+    // Clear first: libmsym is never consulted on this path, so the panel
+    // would otherwise keep the previous molecule's equivalence sets,
+    // operations and subgroups next to a Kh label. Order matters -- clearing
+    // resets the point group to C1, so the label is written afterwards.
+    clearSymmetryResults();
+    if (m_symmetryWidget != nullptr)
+      m_symmetryWidget->setPointGroupSymbol(QStringLiteral("K<sub>h</sub>"));
+    if (pointGroup != nullptr)
+      *pointGroup = QStringLiteral("Kh");
+    m_dirty = false;
+    return true;
   }
 
   // interface with libmsym
@@ -190,6 +256,19 @@ void Symmetry::detectSymmetry()
   const msym_subgroup_t* msg = nullptr;
   const msym_equivalence_set_t* mes = nullptr;
   int mesl = 0, msgl = 0, msopsl = 0;
+
+  // Every libmsym step below fails the same way. Collapsing the seven
+  // copies of it is also what makes a run without the panel safe: each of
+  // them used to set four fields on m_symmetryWidget with no null check,
+  // and the widget only exists once the panel has been opened.
+  auto libmsymFailed = [&](msym_error_t code) {
+    clearSymmetryResults();
+    const QString message =
+      QStringLiteral("%1 %2").arg(QString::fromLatin1(msymErrorString(code)),
+                                  QString::fromLatin1(msymGetErrorDetails()));
+    qDebug() << "Symmetry error:" << message;
+    return fail(message);
+  };
 
   // initialize the c-style array of atom names and coordinates
   msym_element_t* a;
@@ -214,156 +293,202 @@ void Symmetry::detectSymmetry()
     m_ctx = msymCreateContext();
   }
 
-  // Set the thresholds
-  // switch (m_dock->toleranceCombo->currentIndex()) {
-  msym_thresholds_t* thresholds = m_symmetryWidget->getThresholds();
-  msymSetThresholds(m_ctx, thresholds);
+  // Set the thresholds: the caller's preset, else the panel's combo, else
+  // the value that combo starts on.
+  msym_thresholds_t* activeThresholds = thresholds;
+  if (activeThresholds == nullptr) {
+    activeThresholds = m_symmetryWidget != nullptr
+                         ? m_symmetryWidget->getThresholds()
+                         : &tight_thresholds;
+  }
+  msymSetThresholds(m_ctx, activeThresholds);
 
   // At any point, we'll set the text to NULL which will use C1 instead
 
   if (MSYM_SUCCESS != (ret = msymSetElements(m_ctx, length, elements))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
-    m_symmetryWidget->setEquivalenceSets(0, nullptr);
-    m_symmetryWidget->setSymmetryOperations(0, nullptr);
-    m_symmetryWidget->setSubgroups(0, nullptr);
-    qDebug() << "Error:" << msymErrorString(ret) << " "
-             << msymGetErrorDetails();
-    return;
+    return libmsymFailed(ret);
   }
 
   if (MSYM_SUCCESS != (ret = msymFindSymmetry(m_ctx))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
-    m_symmetryWidget->setEquivalenceSets(0, nullptr);
-    m_symmetryWidget->setSymmetryOperations(0, nullptr);
-    m_symmetryWidget->setSubgroups(0, nullptr);
-    qDebug() << "Error:" << msymErrorString(ret) << " "
-             << msymGetErrorDetails();
-    return;
+    return libmsymFailed(ret);
   }
 
   /* Get the point group name */
   if (MSYM_SUCCESS !=
       (ret = msymGetPointGroupName(m_ctx, sizeof(char[6]), point_group))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
-    m_symmetryWidget->setEquivalenceSets(0, nullptr);
-    m_symmetryWidget->setSymmetryOperations(0, nullptr);
-    m_symmetryWidget->setSubgroups(0, nullptr);
-    qDebug() << "Error:" << msymErrorString(ret) << " "
-             << msymGetErrorDetails();
-    return;
+    return libmsymFailed(ret);
   }
 
   if (MSYM_SUCCESS !=
       (ret = msymGetSymmetryOperations(m_ctx, &msopsl, &msops))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
-    m_symmetryWidget->setEquivalenceSets(0, nullptr);
-    m_symmetryWidget->setSymmetryOperations(0, nullptr);
-    m_symmetryWidget->setSubgroups(0, nullptr);
-    qDebug() << "Error:" << msymErrorString(ret) << " "
-             << msymGetErrorDetails();
-    return;
+    return libmsymFailed(ret);
   }
 
   if (MSYM_SUCCESS != (ret = msymGetEquivalenceSets(m_ctx, &mesl, &mes))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
-    m_symmetryWidget->setEquivalenceSets(0, nullptr);
-    m_symmetryWidget->setSymmetryOperations(0, nullptr);
-    m_symmetryWidget->setSubgroups(0, nullptr);
-    qDebug() << "Error:" << msymErrorString(ret) << " "
-             << msymGetErrorDetails();
-    return;
+    return libmsymFailed(ret);
   }
 
   if (MSYM_SUCCESS != (ret = msymGetCenterOfMass(m_ctx, cm))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
-    m_symmetryWidget->setEquivalenceSets(0, nullptr);
-    m_symmetryWidget->setSymmetryOperations(0, nullptr);
-    m_symmetryWidget->setSubgroups(0, nullptr);
-    qDebug() << "Error:" << msymErrorString(ret) << " "
-             << msymGetErrorDetails();
-    return;
+    return libmsymFailed(ret);
   }
 
   if (MSYM_SUCCESS != (ret = msymGetRadius(m_ctx, &radius))) {
     free(elements);
-    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
-    m_symmetryWidget->setEquivalenceSets(0, nullptr);
-    m_symmetryWidget->setSymmetryOperations(0, nullptr);
-    m_symmetryWidget->setSubgroups(0, nullptr);
-    qDebug() << "Error:" << msymErrorString(ret) << " "
-             << msymGetErrorDetails();
-    return;
+    return libmsymFailed(ret);
   }
 
   if (point_group[1] != '0') {
     if (MSYM_SUCCESS != (ret = msymGetSubgroups(m_ctx, &msgl, &msg))) {
       free(elements);
-      m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(nullptr));
-      m_symmetryWidget->setEquivalenceSets(0, nullptr);
-      m_symmetryWidget->setSymmetryOperations(0, nullptr);
-      m_symmetryWidget->setSubgroups(0, nullptr);
-      qDebug() << "Error:" << msymErrorString(ret) << " "
-               << msymGetErrorDetails();
-      return;
+      return libmsymFailed(ret);
     }
-  } else {
-    m_symmetryWidget->setSubgroups(0, nullptr);
   }
 
-  // TODO: Subgroups
-  // if(MSYM_SUCCESS != (ret = msymGetSubgroups(ctx, &msgl, &msg))) goto err;
-  //    printf("Found point group [0] %s select subgroup\n",point_group);
-  // for(int i = 0; i < msgl;i++) printf("\t [%d] %s\n",i+1,msg[i].name);
+  if (m_symmetryWidget != nullptr) {
+    m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(point_group));
+    m_symmetryWidget->setEquivalenceSets(mesl, mes);
+    m_symmetryWidget->setSymmetryOperations(msopsl, msops);
+    m_symmetryWidget->setSubgroups(msgl, msg);
+    m_symmetryWidget->setCenterOfMass(cm);
+    m_symmetryWidget->setRadius(radius);
+  }
 
-  m_symmetryWidget->setPointGroupSymbol(pointGroupSymbol(point_group));
-  m_symmetryWidget->setEquivalenceSets(mesl, mes);
-  m_symmetryWidget->setSymmetryOperations(msopsl, msops);
-  m_symmetryWidget->setSubgroups(msgl, msg);
-  m_symmetryWidget->setCenterOfMass(cm);
-  m_symmetryWidget->setRadius(radius);
-  // m_symmetryWidget->m_ui->pointGroupLabel->setText(pgSymbol(point_group));
+  if (pointGroup != nullptr)
+    *pointGroup = pointGroupPlainText(point_group);
 
   qDebug() << "detected symmetry" << point_group;
 
   free(elements);
   m_dirty = false;
+  return true;
 }
 
 void Symmetry::symmetrizeMolecule()
 {
-  qDebug() << "symmetrize";
-  unsigned int length = m_molecule->atomCount();
+  runSymmetrize(nullptr, nullptr);
+}
 
-  if (m_molecule == nullptr || m_molecule->atomPositions3d().size() != length ||
-      length < 2)
-    return; // if one atom = Kh
+bool Symmetry::runSymmetrize(double* symmetryError, QString* error)
+{
+  auto fail = [error](const QString& message) {
+    if (error != nullptr)
+      *error = message;
+    return false;
+  };
+
+  if (m_molecule == nullptr)
+    return fail(tr("There is no molecule to symmetrize."));
+
+  const unsigned int length = m_molecule->atomCount();
+
+  if (m_molecule->atomPositions3d().size() != length)
+    return fail(tr("The molecule has no 3D coordinates."));
+
+  if (length < 2)
+    return fail(tr("A single atom is already symmetric."));
+
+  // The libmsym context carries the point group the atoms are snapped onto,
+  // and only detection fills it in. The panel detects when it opens, but the
+  // geometry can have changed since -- and a command may not have detected
+  // at all, in which case the context is empty and libmsym would fail.
+  if (m_dirty && !runSymmetryDetection(nullptr, nullptr, error))
+    return false;
 
   msym_element_t* melements = nullptr;
   int mlength = 0;
   double symerr = 0.0;
   msym_error_t ret = MSYM_SUCCESS;
 
-  // detectSymmetry();
   if (MSYM_SUCCESS != (ret = msymSymmetrizeElements(m_ctx, &symerr)))
-    return;
+    return fail(QString::fromLatin1(msymErrorString(ret)));
 
   if (MSYM_SUCCESS != (ret = msymGetElements(m_ctx, &mlength, &melements)))
-    return;
+    return fail(QString::fromLatin1(msymErrorString(ret)));
 
   if (mlength != static_cast<int>(length))
-    return;
+    return fail(tr("libmsym returned %1 atoms for a molecule of %2.")
+                  .arg(mlength)
+                  .arg(length));
 
-  for (Index i = 0; i < length; ++i) {
-    m_molecule->atomPositions3d()[i] = Vector3(melements[i].v);
+  Core::Array<Vector3> positions(length);
+  for (Index i = 0; i < length; ++i)
+    positions[i] = Vector3(melements[i].v);
+
+  // Route the change through RWMolecule so it is one undo step, as the
+  // ground rules for commands require. This used to assign the positions
+  // directly, which left the user no way back.
+  m_molecule->undoMolecule()->setAtomPositions3d(positions, tr("Symmetrize"));
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
+
+  if (symmetryError != nullptr)
+    *symmetryError = symerr;
+
+  return true;
+}
+
+void Symmetry::registerCommands()
+{
+  emit registerCommand("detectSymmetry",
+                       tr("Detect the point group of the molecule."));
+  emit registerCommand("symmetrize",
+                       tr("Snap the molecule onto its detected point group."));
+}
+
+bool Symmetry::handleCommand(const QString& command, const QVariantMap& options)
+{
+  const bool symmetrizeRequested = (command == "symmetrize");
+  if (!symmetrizeRequested && command != "detectSymmetry")
+    return false;
+
+  // The panel offers four named tolerances rather than a number, and
+  // libmsym wants a whole struct of seven thresholds, so the command names
+  // a preset instead of inventing a scalar the GUI has no equivalent for.
+  msym_thresholds_t* thresholds = nullptr;
+  if (options.contains("tolerance")) {
+    const QString name = options.value("tolerance").toString();
+    thresholds = thresholdsForName(name);
+    if (thresholds == nullptr) {
+      emit commandFailed(tr("Unknown tolerance \"%1\": expected tight, "
+                            "normal, loose or veryloose.")
+                           .arg(name));
+      return true;
+    }
   }
 
-  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
+  emit commandStarted();
+
+  // Detection is the first half of both commands: it is what fills the
+  // libmsym context that symmetrize then works from.
+  QString pointGroup;
+  QString error;
+  if (!runSymmetryDetection(thresholds, &pointGroup, &error)) {
+    emit commandFailed(error);
+    return true;
+  }
+
+  QVariantMap result;
+  result["pointGroup"] = pointGroup;
+
+  if (!symmetrizeRequested) {
+    emit commandFinished(tr("Detected %1").arg(pointGroup), result);
+    return true;
+  }
+
+  double symmetryError = 0.0;
+  if (!runSymmetrize(&symmetryError, &error)) {
+    emit commandFailed(error);
+    return true;
+  }
+
+  result["symmetryError"] = symmetryError;
+  emit commandFinished(tr("Symmetrized to %1").arg(pointGroup), result);
+  return true;
 }
 
 /*

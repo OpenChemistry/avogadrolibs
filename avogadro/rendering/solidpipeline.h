@@ -34,10 +34,14 @@ public:
   void begin();
 
   void adjustOffset(const Camera& camera);
+
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
+   *
+   * The camera is needed by the ambient occlusion blur, which turns window
+   * depth back into scene units to tell surfaces apart.
    */
-  void end();
+  void end(const Camera& camera);
 
   /**
    * @brief Resize buffers for width x height viewport.
@@ -93,13 +97,12 @@ public:
 
   /**
    * @brief Get or set whether Edge Detection is enabled.
+   *
+   * Enabling leaves the strength alone, so a configured strength survives
+   * being switched off and back on.
    */
   bool getEdEnabled() { return m_edEnabled; }
-  void setEdEnabled(bool enabled)
-  {
-    m_edEnabled = enabled;
-    m_edStrength = (m_edEnabled) ? 1.0 : 0.0;
-  }
+  void setEdEnabled(bool enabled) { m_edEnabled = enabled; }
 
   /**
    * @brief Get or set dof strength.
@@ -114,9 +117,13 @@ public:
   void setDofPosition(float position) { m_dofPosition = position; }
 
   /**
-   * @brief Get or set the strength of the edge effect
+   * @brief Get or set the strength of the edge effect.
+   *
+   * Up to 1.0 this fades the outline in at the one-pixel width the effect has
+   * always had. Above 1.0 the outline is fully dark and the value is its
+   * half-width in pixels, so 2.5 gives a distinctly bolder outline than 1.0.
    */
-  bool getEdStrength() { return m_edStrength; }
+  float getEdStrength() { return m_edStrength; }
   void setEdStrength(float strength) { m_edStrength = strength; }
 
 private:
@@ -127,7 +134,6 @@ private:
   bool m_dofEnabled;
   float m_fogPosition;
   Vector4ub m_backgroundColor;
-  Eigen::Affine3f modelView;
   bool m_fogEnabled;
   float m_aoStrength;
   float m_fogStrength;
