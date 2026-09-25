@@ -205,7 +205,9 @@ struct LayerLabel : Core::LayerData
     if (ss >> aux) { // backwards compatibility
       if (auto v = Core::lexicalCast<float>(commaToDot(aux));
           v && std::isfinite(*v) && *v > 0.0f)
-        labelScale = *v;
+        // the "Label scale" spin box range; keeps createLabel's pixel height
+        // well inside size_t
+        labelScale = std::clamp(*v, 0.25f, 3.0f);
     }
   }
 

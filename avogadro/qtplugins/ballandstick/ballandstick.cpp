@@ -100,12 +100,13 @@ struct LayerBallAndStick : Core::LayerData
     if (ss >> aux) {
       if (auto v = Core::lexicalCast<float>(commaToDot(aux));
           v && std::isfinite(*v) && *v > 0.0f)
-        atomScale = *v;
+        // slider range in setupWidget(), which converts value * 10 to int
+        atomScale = std::clamp(*v, 0.1f, 0.9f);
     }
     if (ss >> aux) {
       if (auto v = Core::lexicalCast<float>(commaToDot(aux));
           v && std::isfinite(*v) && *v > 0.0f)
-        bondRadius = *v;
+        bondRadius = std::clamp(*v, 0.1f, 0.8f);
     }
     if (ss >> aux) { // backwards compatibility
       if (auto v = Core::lexicalCast<float>(commaToDot(aux)))
