@@ -74,6 +74,11 @@ Molecule::Molecule(const Molecule& other)
   }
   m_activeCubeIndex = other.m_activeCubeIndex;
 
+  // The clone copied the basis set's back-pointer to the original.
+  if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
+    m_basisSet->setMolecule(this);
+  repointResidueAtoms(other);
+
   // Make sure all the atoms are in the active layer
   if (other.ensureLayerInfo().layer.maxLayer() == 0) {
     for (Index i = 0; i < atomCount(); ++i)
@@ -178,6 +183,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_vibrations = other.m_vibrations;
     m_selectedAtoms = other.m_selectedAtoms;
     m_residues = other.m_residues;
+    repointResidueAtoms(other);
     m_graph = other.m_graph;
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
@@ -204,6 +210,8 @@ Molecule& Molecule::operator=(const Molecule& other)
 
     delete m_basisSet;
     m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : nullptr;
+    if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
+      m_basisSet->setMolecule(this);
     delete m_unitCell;
     m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
 
@@ -258,6 +266,18 @@ void takeArray(Array<T>& to, Array<T>& from)
 }
 
 } // namespace
+
+void Molecule::repointResidueAtoms(const Molecule& source)
+{
+  // Residues sharing their container with the source detach on this first
+  // write, so the source's own proxies are left alone.
+  for (auto& residue : m_residues) {
+    for (auto& entry : residue.atomNameMap()) {
+      if (entry.second.molecule() == &source)
+        entry.second = AtomType(this, entry.second.index());
+    }
+  }
+}
 
 void Molecule::takeContentsFrom(Molecule& other) noexcept
 {
@@ -319,6 +339,7 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   m_unitCell = std::exchange(other.m_unitCell, nullptr);
 
   takeArray(m_residues, other.m_residues);
+  repointResidueAtoms(other);
   m_hallNumber = std::exchange(other.m_hallNumber, 0);
   m_constraints = std::move(other.m_constraints);
   other.m_constraints.clear();

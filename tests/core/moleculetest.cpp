@@ -544,6 +544,79 @@ TEST_F(MoleculeTest, moveAssignLeavesSourceReusable)
   EXPECT_EQ(target.atomicNumber(1), 8);
 }
 
+// A residue's atom names are Atom proxies carrying a molecule pointer. After
+// either move they must refer to the destination, at the same indices, not to
+// the now-empty source.
+TEST_F(MoleculeTest, moveRepointsResidueAtoms)
+{
+  auto build = [](Molecule& m) {
+    buildBonded(m);
+    std::string resName = "ALA";
+    Avogadro::Index resNumber = 1;
+    char chain = 'A';
+    Avogadro::Core::Residue& residue = m.addResidue(resName, resNumber, chain);
+    residue.addResidueAtom("N", m.atom(0));
+    residue.addResidueAtom("CA", m.atom(2));
+  };
+  auto expectRepointed = [](const Molecule& m) {
+    const Avogadro::Core::Residue& residue = m.residue(0);
+    const auto n = residue.atomByName("N");
+    const auto ca = residue.atomByName("CA");
+    EXPECT_EQ(n.molecule(), &m);
+    EXPECT_EQ(ca.molecule(), &m);
+    EXPECT_EQ(n.index(), 0u);
+    EXPECT_EQ(ca.index(), 2u);
+    EXPECT_EQ(residue.atomName(m.atom(2)), "CA");
+  };
+
+  Molecule original;
+  build(original);
+  Molecule moved(std::move(original));
+  expectRepointed(moved);
+
+  Molecule source;
+  build(source);
+  Molecule target;
+  target = std::move(source);
+  expectRepointed(target);
+}
+
+// Copies must not point back at the original either: residue atoms and the
+// basis set both carry a molecule pointer.
+TEST_F(MoleculeTest, copyRepointsResidueAtomsAndBasisSet)
+{
+  Molecule original;
+  buildBonded(original);
+  std::string resName = "ALA";
+  Avogadro::Index resNumber = 1;
+  char chain = 'A';
+  Avogadro::Core::Residue& residue =
+    original.addResidue(resName, resNumber, chain);
+  residue.addResidueAtom("CA", original.atom(2));
+  auto* basis = new Avogadro::Core::GaussianSet;
+  basis->setMolecule(&original);
+  basis->addBasis(0, Avogadro::Core::GaussianSet::S);
+  original.setBasisSet(basis);
+
+  auto expectOwnPointers = [](const Molecule& m) {
+    const auto ca = m.residue(0).atomByName("CA");
+    EXPECT_EQ(ca.molecule(), &m);
+    EXPECT_EQ(ca.index(), 2u);
+    ASSERT_NE(m.basisSet(), nullptr);
+    EXPECT_EQ(m.basisSet()->molecule(), &m);
+  };
+
+  Molecule copied(original);
+  expectOwnPointers(copied);
+
+  Molecule assigned;
+  assigned = original;
+  expectOwnPointers(assigned);
+
+  // The original's own residue atoms still refer to it.
+  expectOwnPointers(original);
+}
+
 // Fill as many members as practical, so a member the moves forget shows up.
 static void populateEverything(Molecule& m)
 {
