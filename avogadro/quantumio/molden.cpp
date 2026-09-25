@@ -243,8 +243,8 @@ void MoldenFile::processLine(std::istream& in)
         // Parse the occupation, spin, energy, etc (Occup, Spin, Ene).
         while (!line.empty() && Core::contains(line, "=")) {
           if (Core::contains(line, "Occup"))
-            m_electrons += std::lround(
-              Core::lexicalCast<double>(list.back()).value_or(0.0));
+            m_electrons +=
+              std::lround(Core::lexicalCast<double>(list.back()).value_or(0.0));
           else if (Core::contains(line, "Ene")) {
             pendingEnergy =
               Core::lexicalCast<double>(list.back()).value_or(0.0) *
