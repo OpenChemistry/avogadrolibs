@@ -131,4 +131,43 @@ void Centroid::normal()
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 }
 
+void Centroid::registerCommands()
+{
+  emit registerCommand("addCentroid",
+                       tr("Add a dummy atom at the geometric center of the "
+                          "molecule or the selected atoms."));
+
+  emit registerCommand("addCenterOfMass",
+                       tr("Add a dummy atom at the center of mass of the "
+                          "molecule or the selected atoms."));
+
+  emit registerCommand("addPerpendicular",
+                       tr("Add a dummy atom perpendicular to the plane of the "
+                          "molecule or the selected atoms."));
+}
+
+bool Centroid::handleCommand(const QString& command,
+                             [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command
+
+  if (command == "addCentroid") {
+    addCentroid();
+    return true;
+  }
+
+  if (command == "addCenterOfMass") {
+    addCenterOfMass();
+    return true;
+  }
+
+  if (command == "addPerpendicular") {
+    normal();
+    return true;
+  }
+
+  return false;
+}
+
 } // namespace Avogadro::QtPlugins
