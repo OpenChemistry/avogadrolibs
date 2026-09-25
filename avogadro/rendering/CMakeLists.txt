@@ -138,7 +138,7 @@ foreach(file ${shader_files})
   add_custom_command(
     OUTPUT ${resh}
     DEPENDS ${src} encodefile
-    COMMAND encodefile
+    COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:encodefile>
     ARGS ${src} ${resh} ${file_we}
     COMMENT "Encoding ${src}"
     )

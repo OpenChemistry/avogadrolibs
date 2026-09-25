@@ -56,9 +56,7 @@ namespace {
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-#ifndef Q_OS_WASM
 #include <QtCore/QProcess>
-#endif
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 
@@ -1051,7 +1049,6 @@ void Surfaces::movieFrame()
     } else if (d->gwaviWriter) {
       gwavi_close(d->gwaviWriter);
       d->gwaviWriter = nullptr;
-#ifndef Q_OS_WASM
     } else {
       QProcess proc;
       QStringList args;
@@ -1065,7 +1062,6 @@ void Surfaces::movieFrame()
            << "-pix_fmt"
            << "yuv420p" << m_baseFileName + ".mp4";
       proc.execute("avconv", args);
-#endif
     }
     /*
     args.clear();

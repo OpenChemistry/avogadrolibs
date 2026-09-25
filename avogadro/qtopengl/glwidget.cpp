@@ -139,9 +139,8 @@ void GLWidget::setMolecule(QtGui::Molecule* mol)
   if (m_molecule != nullptr) {
     // update properties like dipole rendering
     QTimer::singleShot(500, m_molecule, &QtGui::Molecule::update);
+    connect(m_molecule, &QtGui::Molecule::changed, this, &GLWidget::updateScene);
   }
-
-  connect(m_molecule, &QtGui::Molecule::changed, this, &GLWidget::updateScene);
 }
 
 QtGui::Molecule* GLWidget::molecule()

@@ -40,8 +40,7 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override
   {
-    if (mol)
-      m_molecule = mol->undoMolecule();
+    m_molecule = mol ? mol->undoMolecule() : nullptr;
   }
 
   void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
@@ -59,6 +58,21 @@ public:
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
   void draw(Rendering::GroupNode& node) override;
+
+  unsigned char atomicNumber() const { return m_atomicNumber; }
+  unsigned char bondOrder() const { return m_bondOrder; }
+  bool adjustHydrogens() const { return m_adjustHydrogens; }
+  QVariantMap drawOptions() const;
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+public slots:
+  void setAtomicNumber(unsigned char number);
+  void setBondOrder(unsigned char order);
+  void setAdjustHydrogens(bool adjust);
+
+signals:
+  void drawOptionsChanged();
 
 private slots:
   void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
@@ -88,7 +102,10 @@ private:
   QtGui::RWMolecule* m_molecule;
   QtOpenGL::GLWidget* m_glWidget;
   Rendering::GLRenderer* m_renderer;
-  EditorToolWidget* m_toolWidget;
+  mutable EditorToolWidget* m_toolWidget;
+  unsigned char m_atomicNumber = 6;
+  unsigned char m_bondOrder = 0;
+  bool m_adjustHydrogens = true;
   Rendering::Identifier m_clickedObject;
   Rendering::Identifier m_newObject;
   Rendering::Identifier m_bondedAtom;

@@ -6,7 +6,9 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}"
 find_package(Qt${QT_VERSION} COMPONENTS Widgets Network Test REQUIRED)
 
 # Find python interpreter for input generator
-find_package(Python3 COMPONENTS Interpreter)
+if(ENABLE_SUBPROCESS)
+  find_package(Python3 COMPONENTS Interpreter)
+endif()
 
 # Setup config file with data location
 if(AVOGADRO_DATA_ROOT)
@@ -23,11 +25,14 @@ set(tests
   HydrogenTools
   MeshGenerator
   Molecule
-  PackageManager
   RWMolecule
 )
 
-if (BUILD_MOLEQUEUE)
+if(ENABLE_SUBPROCESS)
+  list(APPEND tests PackageManager)
+endif()
+
+if (BUILD_MOLEQUEUE AND ENABLE_SUBPROCESS)
   # Pull in MoleQueue
   find_package(MoleQueue REQUIRED NO_MODULE)
   include_directories(${MoleQueue_INCLUDE_DIRS})
@@ -37,7 +42,7 @@ if (BUILD_MOLEQUEUE)
   set(MoleQueueLink Avogadro::MoleQueue MoleQueueClient)
 endif()
 
-if(Python3_EXECUTABLE AND AVOGADRO_DATA)
+if(ENABLE_SUBPROCESS AND Python3_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
     # these are still somewhat broken
     # but it's not crucial
@@ -76,7 +81,10 @@ else()
 endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
-  set(qtgui_fuzz rwmolecule generichighlighter jsonwidget interfacescript-json)
+  set(qtgui_fuzz rwmolecule generichighlighter jsonwidget)
+  if(ENABLE_SUBPROCESS)
+    list(APPEND qtgui_fuzz interfacescript-json)
+  endif()
   foreach(fuzzName ${qtgui_fuzz})
     add_executable(fuzz_qtgui_${fuzzName} fuzz-${fuzzName}.cpp)
     if(DEFINED ENV{LIB_FUZZING_ENGINE})

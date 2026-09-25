@@ -12,6 +12,7 @@
 #include <avogadro/core/types.h>
 
 #include <algorithm>
+#include <cstdint>
 
 namespace Avogadro::Rendering {
 
@@ -90,7 +91,8 @@ inline GLenum lookupTextureUnit(GLint index)
 ShaderProgram::ShaderProgram()
   : m_handle(0), m_vertexShader(0), m_fragmentShader(0), m_linked(false)
 {
-  initializeTextureUnits();
+  // Scene objects may be constructed before a viewport has a GL context.
+  // Query capabilities when linking, when a context must be current.
 }
 
 ShaderProgram::~ShaderProgram()
@@ -210,6 +212,7 @@ bool ShaderProgram::link()
     return false;
   }
   m_linked = true;
+  initializeTextureUnits();
   m_attributes.clear();
   return true;
 }
@@ -251,8 +254,6 @@ bool ShaderProgram::disableAttributeArray(const std::string& name)
   return true;
 }
 
-#define BUFFER_OFFSET(i) ((char*)nullptr + (i))
-
 bool ShaderProgram::useAttributeArray(const std::string& name, int offset,
                                       size_t stride, Type elementType,
                                       int elementTupleSize,
@@ -263,9 +264,10 @@ bool ShaderProgram::useAttributeArray(const std::string& name, int offset,
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  glVertexAttribPointer(location, elementTupleSize, convertType(elementType),
-                        normalize == Normalize ? GL_TRUE : GL_FALSE,
-                        static_cast<GLsizei>(stride), BUFFER_OFFSET(offset));
+  glVertexAttribPointer(
+    location, elementTupleSize, convertType(elementType),
+    normalize == Normalize ? GL_TRUE : GL_FALSE, static_cast<GLsizei>(stride),
+    reinterpret_cast<const void*>(static_cast<std::uintptr_t>(offset)));
   return true;
 }
 

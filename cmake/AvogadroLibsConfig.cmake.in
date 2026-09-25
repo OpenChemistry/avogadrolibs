@@ -20,6 +20,8 @@ set(AvogadroLibs_PLUGINS         "@AvogadroLibs_PLUGINS@")
 set(AvogadroLibs_STATIC_PLUGINS  "@AvogadroLibs_STATIC_PLUGINS@")
 
 # Optional feature flags
+set(AvogadroLibs_ENABLE_SUBPROCESS "@ENABLE_SUBPROCESS@")
+set(AvogadroLibs_WEB_EDITOR "@AVOGADRO_WEB_EDITOR@")
 set(AvogadroLibs_USE_PLOTTER     "@USE_PLOTTER@")
 set(AvogadroLibs_USE_OPENGL      "@USE_OPENGL@")
 set(AvogadroLibs_USE_SPGLIB      "@USE_SPGLIB@")

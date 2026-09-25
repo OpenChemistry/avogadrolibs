@@ -13,6 +13,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QSettings>
+#include <QSignalBlocker>
 
 #include <algorithm>
 
@@ -37,6 +38,10 @@ EditorToolWidget::EditorToolWidget(QWidget* parent_)
 
   // Show carbon at startup.
   selectElement(6);
+  connect(m_ui->bondOrder, &QComboBox::currentIndexChanged, this,
+          &EditorToolWidget::optionsChanged);
+  connect(m_ui->adjustHydrogens, &QCheckBox::toggled, this,
+          &EditorToolWidget::optionsChanged);
 }
 
 EditorToolWidget::~EditorToolWidget()
@@ -46,6 +51,7 @@ EditorToolWidget::~EditorToolWidget()
 
 void EditorToolWidget::setAtomicNumber(unsigned char atomicNum)
 {
+  const QSignalBlocker blocker(this);
   selectElement(atomicNum);
 
   if (m_elementSelector)
@@ -70,6 +76,7 @@ unsigned char EditorToolWidget::atomicNumber() const
 
 void EditorToolWidget::setBondOrder(unsigned char order)
 {
+  const QSignalBlocker blocker(this);
   if (order < m_ui->bondOrder->count())
     m_ui->bondOrder->setCurrentIndex(static_cast<int>(order));
 }
@@ -82,6 +89,12 @@ unsigned char EditorToolWidget::bondOrder() const
 bool EditorToolWidget::adjustHydrogens() const
 {
   return m_ui->adjustHydrogens->isChecked();
+}
+
+void EditorToolWidget::setAdjustHydrogens(bool adjust)
+{
+  const QSignalBlocker blocker(this);
+  m_ui->adjustHydrogens->setChecked(adjust);
 }
 
 void EditorToolWidget::elementChanged(int index)
@@ -100,6 +113,7 @@ void EditorToolWidget::elementChanged(int index)
       if (m_elementSelector)
         m_elementSelector->setElement(itemData.toInt());
       m_currentElement = static_cast<unsigned char>(itemData.toInt());
+      emit optionsChanged();
     }
   }
 }
