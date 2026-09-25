@@ -2374,12 +2374,16 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   }
   root["layer"] = layer;
 
+  // Strings reach the molecule from many places (file names, titles, user
+  // edits) and are not guaranteed to be UTF-8. Replace invalid bytes with
+  // U+FFFD rather than letting dump() throw and lose the whole document.
 #ifndef NDEBUG
   // if debugging, pretty print
-  file << std::setw(2) << root;
+  const int indent = 2;
 #else
-  file << root;
+  const int indent = -1;
 #endif
+  file << root.dump(indent, ' ', false, json::error_handler_t::replace);
 
   return true;
 }
