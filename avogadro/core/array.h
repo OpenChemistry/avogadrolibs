@@ -9,6 +9,7 @@
 #include "avogadrocore.h"
 
 #include <algorithm>
+#include <atomic>
 #include <vector>
 
 namespace Avogadro::Core {
@@ -56,22 +57,37 @@ public:
   {
   }
 
-  // Increment the reference count.
-  void reref() { ++m_ref; }
+  // The reference count is atomic, and the container is never copied or
+  // assigned as a whole (the copy constructor starts a new count at 1).
+  ArrayRefContainer& operator=(const ArrayRefContainer&) = delete;
+
+  // Increment the reference count. Only called by a holder of an existing
+  // reference, so no ordering is needed.
+  void reref() noexcept { m_ref.fetch_add(1, std::memory_order_relaxed); }
 
   // Decrement the reference count, return true unless the reference count has
   // dropped to zero. When it returns false, this object should be deleted.
-  bool deref()
+  // The count never goes below zero: decrementing zero returns false.
+  bool deref() noexcept
   {
-    if (m_ref)
-      --m_ref;
-    return m_ref > 0;
+    unsigned int current = m_ref.load(std::memory_order_relaxed);
+    while (current != 0) {
+      if (m_ref.compare_exchange_weak(current, current - 1,
+                                      std::memory_order_acq_rel,
+                                      std::memory_order_relaxed)) {
+        return current != 1;
+      }
+    }
+    return false;
   }
 
-  unsigned int ref() const { return m_ref; }
+  unsigned int ref() const noexcept
+  {
+    return m_ref.load(std::memory_order_acquire);
+  }
 
   // Reference count
-  unsigned int m_ref;
+  std::atomic<unsigned int> m_ref;
   // Container for our data
   std::vector<T> data;
 };
@@ -90,6 +106,12 @@ public:
  * non-const function will trigger a detach call. This is a no-op when the
  * reference count is 1, and will perform a deep copy when the reference count
  * is greater than 1.
+ *
+ * Thread safety: the shared reference count is atomic, so distinct Array
+ * objects that share data may be copied, modified (detaching) and destroyed
+ * concurrently from different threads, as with Qt's implicit sharing. A single
+ * Array object must not be accessed concurrently from several threads without
+ * external synchronization if any of those accesses is non-const.
  */
 template <typename T>
 class Array
@@ -366,7 +388,10 @@ inline void Array<T>::detachWithCopy()
 {
   if (d && d->ref() != 1) {
     auto* o = new Container(*d);
-    d->deref();
+    // Another holder may have released its reference since ref() was read, so
+    // this may have been the last one.
+    if (!d->deref())
+      delete d;
     d = o;
   }
 }
@@ -375,8 +400,10 @@ template <typename T>
 inline void Array<T>::detach()
 {
   if (d && d->ref() != 1) {
-    d->deref();
-    d = new Container;
+    auto* o = new Container;
+    if (!d->deref())
+      delete d;
+    d = o;
   }
 }
 
