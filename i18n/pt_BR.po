@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-20 06:21+0000\n"
-"PO-Revision-Date: 2026-09-25 12:12+0000\n"
+"PO-Revision-Date: 2026-09-25 15:04+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -3629,7 +3629,7 @@ msgstr "Energia: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:728
 msgid "No atoms provided for energy calculation"
-msgstr ""
+msgstr "Sem átomos fornecidos para o cálculo de energia"
 
 #: qtplugins/forcefield/forcefield.cpp:763
 #, qt-format
@@ -3638,7 +3638,7 @@ msgstr "%1 Energia = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:780
 msgid "No atoms provided for force calculation"
-msgstr ""
+msgstr "Sem átomos fornecidos para o cálculo de força"
 
 #: qtplugins/forcefield/forcefield.cpp:833
 #, qt-format
@@ -3647,7 +3647,7 @@ msgstr "%1 Norma da Força = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:885
 msgid "This molecule has only one coordinate set."
-msgstr ""
+msgstr "Esta molécula possui apenas um conjunto de coordenadas."
 
 #: qtplugins/forcefield/forcefield.h:63
 #, fuzzy
@@ -3986,7 +3986,7 @@ msgstr ""
 #: qtplugins/insertpolymer/insertpolymer.h:23
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:637:904 rc.cpp:979
 msgid "Insert Polymer"
-msgstr ""
+msgstr "Inserir Polímero"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:90
 msgid "Generating 3D structure…"
@@ -4047,7 +4047,7 @@ msgstr "Distância do centro:"
 
 #: qtplugins/label/label.cpp:207
 msgid "Label scale:"
-msgstr ""
+msgstr "Escala do rótulo:"
 
 #: qtplugins/label/label.cpp:218 qtplugins/label/label.cpp:249
 msgid "Index"
@@ -4240,6 +4240,15 @@ msgid ""
 "Ctrl+Shift+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"Ferramenta de Manipulação\t(%1)\n"
+"\n"
+"Botão Esquerdo:\tClique e arraste para mover átomos\n"
+"Botão Direito:\tClique e arraste para rotacionar átomos\n"
+"\n"
+"Setas:\tTransladar átomos\n"
+"Shift + Setas:\tRotacionar em torno dos eixos X/Y\n"
+"Ctrl + Shift + Esquerda/Direita:\tRotacionar em torno do eixo Z\n"
+"Alt + <tecla>:\tPassos maiores"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -4473,6 +4482,17 @@ msgid ""
 "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
 "Alt(Option)+Left:\tUses the virtual trackball."
 msgstr ""
+"Ferramenta de Navegação\t(%1)\n"
+"\n"
+"Botão esquerdo:\tClique e arraste para rotacionar a visualização. \n"
+"Iniciar o arraste sobre um átomo rotaciona a visualização em torno desse "
+"átomo.\n"
+"Botão do meio:\tClique e arraste para aplicar zoom (aproximar ou afastar).\n"
+"Botão direito:\tClique e arraste para mover a visualização.\n"
+"\n"
+"Alt (Option) + Arrastar:\tRotacionar/zoom/mover (pan) a partir de qualquer "
+"ferramenta.\n"
+"Alt (Option) + Botão esquerdo:\tUsa a trackball virtual."
 
 #: qtplugins/navigator/navigator.cpp:74
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4485,6 +4505,9 @@ msgid ""
 "unit of delta is roughly a 2% change in the camera's distance to the focal "
 "point."
 msgstr ""
+"Aplicar zoom na cena. Um delta positivo aproxima a câmera da molécula, "
+"enquanto um delta negativo a afasta. Uma unidade de delta corresponde a uma "
+"alteração de cerca de 2% na distância da câmera em relação ao ponto focal."
 
 #: qtplugins/navigator/navigator.cpp:80
 msgid "Translate the scene."
@@ -4508,7 +4531,7 @@ msgstr "Ferramenta de navegação"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
-msgstr ""
+msgstr "Baixar uma estrutura pelo nome a partir de um banco de dados online."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:78
 msgid "fetchByName requires a non-empty 'name' parameter."
@@ -4907,19 +4930,19 @@ msgstr "Erro: resposta vazia do servidor."
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 #, qt-format
 msgid "Authors: %1"
-msgstr ""
+msgstr "Autores: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:309
-#, qt-format, qt-plural-format
+#, fuzzy, qt-format, qt-plural-format
 msgctxt ""
 msgid "%n download(s) in the last %1 days"
 msgid_plural "%n download(s) in the last %1 days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n download nos últimos %1 dias"
+msgstr[1] "%n download(s) nos últimos %1 dias"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:358
 #, qt-format
@@ -5135,7 +5158,7 @@ msgstr "Descrição"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:183
 msgid "Keywords"
-msgstr ""
+msgstr "Palavras-Chave"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:610
 msgid "Electrostatics"
@@ -5288,13 +5311,15 @@ msgstr "Reproduzir trajetórias"
 
 #: qtplugins/plotconformer/plotconformer.cpp:197
 msgid "Plot Conformer Data…"
-msgstr ""
+msgstr "Plotar Dados do Conformador…"
 
 #: qtplugins/plotconformer/plotconformer.cpp:450
 msgid ""
 "Select 2, 3 or 4 atoms to follow a distance, angle or dihedral across the "
 "conformers."
 msgstr ""
+"Selecionar 2, 3 ou 4 átomos para acompanhar uma distância, um ângulo ou um "
+"diedro ao longo dos confôrmeros."
 
 #: qtplugins/plotconformer/plotconformer.cpp:549
 msgid "Conformer Analysis"
@@ -5310,11 +5335,11 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:584
 msgid "Add from Selection"
-msgstr ""
+msgstr "Adicionar da Seleção"
 
 #: qtplugins/plotconformer/plotconformer.cpp:588
 msgid "Unwrap dihedral scans"
-msgstr ""
+msgstr "Desdobrar varreduras diedrais"
 
 #: qtplugins/plotconformer/plotconformer.cpp:596
 msgid "Energy Units:"
@@ -5322,7 +5347,7 @@ msgstr "Unidades de Energia:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:616
 msgid "Time between frames:"
-msgstr ""
+msgstr "Tempo entre quadros:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:622
 msgid " ps"
@@ -5334,11 +5359,15 @@ msgid ""
 "velocities and a temperature. Most trajectory files do not record it, so it "
 "starts at the value from the file where there is one and at 1 ps otherwise."
 msgstr ""
+"O intervalo entre quadros salvos, usado para converter a trajetória em "
+"velocidades e temperatura. A maioria dos arquivos de trajetória não registra "
+"essa informação; portanto, o valor inicial é aquele presente no arquivo "
+"(quando disponível) ou 1 ps, caso contrário."
 
 #: qtplugins/plotconformer/plotconformer.cpp:873
-#, qt-format
+#, fuzzy, qt-format
 msgid "Conformer %1 of %2 — use ← and → to step through them"
-msgstr ""
+msgstr "Conformador %1 de %2 — use ← e → para navegar entre eles"
 
 #: qtplugins/plotconformer/plotconformer.cpp:925
 msgid ""
@@ -5655,11 +5684,11 @@ msgstr "Propriedades do Resíduo"
 #: qtplugins/propertytables/propertyview.cpp:891
 #: qtplugins/propertytables/propertyview.cpp:901
 msgid "Add Property"
-msgstr ""
+msgstr "Adicionar Propriedade"
 
 #: qtplugins/propertytables/propertyview.cpp:867
 msgid "Property name"
-msgstr ""
+msgstr "Nome da propriedade"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5671,15 +5700,15 @@ msgstr "Nome:"
 
 #: qtplugins/propertytables/propertyview.cpp:873
 msgid "Number"
-msgstr ""
+msgstr "Número"
 
 #: qtplugins/propertytables/propertyview.cpp:874
 msgid "Integer"
-msgstr ""
+msgstr "Inteiro"
 
 #: qtplugins/propertytables/propertyview.cpp:877
 msgid "Text"
-msgstr ""
+msgstr "Texto"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5692,7 +5721,7 @@ msgstr "Tipo:"
 
 #: qtplugins/propertytables/propertyview.cpp:892
 msgid "The property name cannot be empty."
-msgstr ""
+msgstr "É necessário informar o nome da propriedade."
 
 #: qtplugins/propertytables/propertyview.cpp:902
 #, qt-format
@@ -5700,6 +5729,8 @@ msgid ""
 "Could not add a property named \"%1\". A column with that name may already "
 "exist."
 msgstr ""
+"Não foi possível dar o nome \"%1\" à propriedade. Talvez já tenha uma coluna "
+"com este nome."
 
 #: qtplugins/propertytables/propertyview.cpp:935
 msgid "Partial Charge Type"
@@ -5711,11 +5742,11 @@ msgstr "Selecionar o tipo de carga parcial:"
 
 #: qtplugins/propertytables/propertyview.cpp:965
 msgid "Add Property…"
-msgstr ""
+msgstr "Adicionar Propriedade…"
 
 #: qtplugins/propertytables/propertyview.cpp:974
 msgid "Convert Energy Units…"
-msgstr ""
+msgstr "Converter Unidades de Energia…"
 
 #: qtplugins/propertytables/propertyview.cpp:981
 msgid "Change Charge Type…"
@@ -6294,11 +6325,11 @@ msgstr "Densidade dos Estados"
 
 #: qtplugins/spectra/spectradialog.cpp:667
 msgid "Select Background Color"
-msgstr ""
+msgstr "Selecionar Cor de Fundo"
 
 #: qtplugins/spectra/spectradialog.cpp:692
 msgid "Select Foreground Color"
-msgstr ""
+msgstr "Selecionar Cor do Primeiro Plano"
 
 #: qtplugins/spectra/spectradialog.cpp:706
 msgid "Select Calculated Spectra Color"
@@ -6314,15 +6345,15 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:777
 msgid "Wavelength (nm)"
-msgstr ""
+msgstr "Comprimento de Onda (nm)"
 
 #: qtplugins/spectra/spectradialog.cpp:778
 msgid "Frequency (Hz)"
-msgstr ""
+msgstr "Frequência (Hz)"
 
 #: qtplugins/spectra/spectradialog.cpp:784
 msgid "Vibrational Spectra"
-msgstr ""
+msgstr "Espectros Vibracionais"
 
 #: qtplugins/spectra/spectradialog.cpp:785
 #: qtplugins/spectra/spectradialog.cpp:799
@@ -6338,7 +6369,7 @@ msgstr "Transmissão"
 
 #: qtplugins/spectra/spectradialog.cpp:798
 msgid "Raman Spectra"
-msgstr ""
+msgstr "Espectros Raman"
 
 #: qtplugins/spectra/spectradialog.cpp:800
 #: qtplugins/spectra/spectradialog.cpp:813
@@ -6351,15 +6382,15 @@ msgstr "Intensidade"
 
 #: qtplugins/spectra/spectradialog.cpp:811
 msgid "Vibrational Circular Dichroism"
-msgstr ""
+msgstr "Dicroísmo Circular Vibracional"
 
 #: qtplugins/spectra/spectradialog.cpp:824
 msgid "Magnetic Circular Dichroism"
-msgstr ""
+msgstr "Dicroísmo Circular Magnético"
 
 #: qtplugins/spectra/spectradialog.cpp:837
 msgid "NMR Spectra"
-msgstr ""
+msgstr "Espectros RMN"
 
 #: qtplugins/spectra/spectradialog.cpp:838
 #, fuzzy
@@ -6368,7 +6399,7 @@ msgstr "Shift (ppm)"
 
 #: qtplugins/spectra/spectradialog.cpp:851
 msgid "Electronic Spectra"
-msgstr ""
+msgstr "Espectros Eletrônicos"
 
 #: qtplugins/spectra/spectradialog.cpp:852
 #: qtplugins/spectra/spectradialog.cpp:865
@@ -6379,7 +6410,7 @@ msgstr "Energia (eV)"
 
 #: qtplugins/spectra/spectradialog.cpp:864
 msgid "Circular Dichroism Spectra"
-msgstr ""
+msgstr "Espectros de Dicroísmo Circular"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
@@ -6401,11 +6432,11 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:1057
 msgid "Import Data"
-msgstr ""
+msgstr "Importar Dados"
 
 #: qtplugins/spectra/spectradialog.cpp:1057
 msgid "CSV Files (*.csv);;TSV Files (*.tsv)"
-msgstr ""
+msgstr "Arquivos CSV (*.csv);;Arquivos TSV (*.tsv)"
 
 #: qtplugins/surfacerender/surfacerender.cpp:272
 msgid "Surface"
@@ -6423,19 +6454,20 @@ msgstr "Estilo:"
 
 #: qtplugins/surfacerender/surfacerender.h:33
 msgid "Render molecular surfaces."
-msgstr ""
+msgstr "Renderizar superfícies moleculares."
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
-msgstr ""
+msgstr "Orbitais Moleculares…"
 
 #: qtplugins/surfaces/orbitals.h:49
+#, fuzzy
 msgid "Orbital Window"
-msgstr ""
+msgstr "Janela Orbital"
 
 #: qtplugins/surfaces/orbitals.h:50
 msgid "Display orbital lists."
-msgstr ""
+msgstr "Exibir listas de orbitais."
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:133
 msgid "Orbital"
@@ -6470,7 +6502,7 @@ msgstr ""
 
 #: qtplugins/surfaces/orbitalwidget.cpp:26
 msgid "Molecular Orbitals"
-msgstr ""
+msgstr "Orbitais Moleculares"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -6478,7 +6510,7 @@ msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:28
 msgid "Solvent Excluded"
-msgstr ""
+msgstr "Solvente Excluído"
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
 msgid "Molecular Orbital"
@@ -6490,7 +6522,7 @@ msgstr "Densidade Eletrônica"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
 msgid "Spin Density"
-msgstr ""
+msgstr "Densidade de Spin"
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, qt-format
@@ -6558,36 +6590,42 @@ msgstr "Renderizar um cubo fornecido com o arquivo."
 msgid ""
 "This file does not contain a basis set, so no orbital can be calculated."
 msgstr ""
+"Este arquivo não contém um conjunto de base; portanto, nenhum orbital pode "
+"ser calculado."
 
 #: qtplugins/surfaces/surfaces.cpp:235
 #, qt-format
 msgid "Orbital %1 is out of range."
-msgstr ""
+msgstr "O orbital %1 está fora do intervalo."
 
 #: qtplugins/surfaces/surfaces.cpp:245
 msgid ""
 "This file does not contain a basis set, so no electron density can be "
 "calculated."
 msgstr ""
+"Este arquivo não contém um conjunto de base; portanto, não é possível "
+"calcular a densidade eletrônica."
 
 #: qtplugins/surfaces/surfaces.cpp:255
 msgid ""
 "This file does not contain a basis set, so no spin density can be calculated."
 msgstr ""
+"Este arquivo não contém um conjunto de base; portanto, nenhuma densidade de "
+"spin pode ser calculada."
 
 #: qtplugins/surfaces/surfaces.cpp:265
 msgid "This file does not contain any cube data."
-msgstr ""
+msgstr "Este arquivo não contém dados de cubo."
 
 #: qtplugins/surfaces/surfaces.cpp:275
 #, qt-format
 msgid "Cube %1 is out of range, this file has %2."
-msgstr ""
+msgstr "O cubo %1 está fora do intervalo; este arquivo possui %2."
 
 #: qtplugins/surfaces/surfaces.cpp:281
 #, qt-format
 msgid "Cube %1 could not be read."
-msgstr ""
+msgstr "Não foi possível ler o cubo %1."
 
 #: qtplugins/surfaces/surfaces.cpp:417
 #, qt-format
@@ -6610,7 +6648,7 @@ msgstr "Calculando o orbital molecular %L1"
 
 #: qtplugins/surfaces/surfaces.cpp:848
 msgid "The calculation was interrupted."
-msgstr ""
+msgstr "O cálculo foi interrompido."
 
 #: qtplugins/surfaces/surfaces.cpp:1022
 msgctxt "finished rendering surface or molecular orbital"
@@ -6687,8 +6725,9 @@ msgid "Ctrl+3"
 msgstr "Ctrl+3"
 
 #: qtplugins/templatetool/templatetool.cpp:88
+#, fuzzy
 msgid "Template"
-msgstr ""
+msgstr "Modelo"
 
 #: qtplugins/templatetool/templatetool.cpp:90
 #, qt-format
@@ -6704,19 +6743,30 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"Ferramenta de Modelo (%1)\n"
+"\n"
+"Insira fragmentos, incluindo centros metálicos.\n"
+"Selecione um elemento e uma geometria de coordenação e, em seguida, clique "
+"para inserir um fragmento.\n"
+"Clique em um átomo de hidrogênio para substituí-lo pelo centro metálico "
+"escolhido, ou clique em qualquer outro átomo para alterar seu elemento e "
+"carga formal.\n"
+"\n"
+"Selecione um ligante ou grupo funcional e clique em um átomo de hidrogênio "
+"para anexá-lo."
 
 #: qtplugins/templatetool/templatetool.cpp:501
 #: qtplugins/templatetool/templatetool.cpp:694
 msgid "Clipboard"
-msgstr ""
+msgstr "Área de Transferência"
 
 #: qtplugins/templatetool/templatetool.cpp:589
 msgid "Insert Template"
-msgstr ""
+msgstr "Inserir Modelo"
 
 #: qtplugins/templatetool/templatetool.cpp:900
 msgid "Insert Ligand"
-msgstr ""
+msgstr "Inserir Ligante"
 
 #: qtplugins/templatetool/templatetool.cpp:1044
 msgid "Insert Metal Center"
@@ -6725,7 +6775,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetool.h:36
 #: qtplugins/templatetool/templatetool.h:37
 msgid "Template tool"
-msgstr ""
+msgstr "Ferramenta de modelo"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -6734,26 +6784,29 @@ msgstr "Exibição simples de esferas VdW."
 #: qtplugins/vibrations/displacementdialog.cpp:37
 #, qt-format
 msgid "Displace along: %1"
-msgstr ""
+msgstr "Deslocar ao longo de: %1"
 
 #: qtplugins/vibrations/displacementdialog.cpp:68
 msgid "A scale factor of zero would only duplicate the current geometry."
-msgstr ""
+msgstr "Um fator de escala zero apenas duplicaria a geometria atual."
 
 #: qtplugins/vibrations/displacementdialog.cpp:74
 #, qt-format
 msgid "One new coordinate set, displaced by %1 × the normal mode."
-msgstr ""
+msgstr "Um novo conjunto de coordenadas, deslocado em %1 × o modo normal."
 
 #: qtplugins/vibrations/displacementdialog.cpp:83
 #, qt-format
 msgid ""
 "%1 new coordinate sets, evenly spaced from -%2 to +%2 × the normal mode."
 msgstr ""
+"%1 novos conjuntos de coordenadas, uniformemente espaçados de -%2 a +%2 × o "
+"modo normal."
 
 #: qtplugins/vibrations/displacementdialog.cpp:88
+#, fuzzy
 msgid "The middle one is the undisplaced geometry."
-msgstr ""
+msgstr "O do meio é a geometria não deslocada."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
@@ -6768,17 +6821,17 @@ msgstr "Parar Animação"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:138
 msgid "Generate Displaced Coordinates…"
-msgstr ""
+msgstr "Gerar Coordenadas Deslocadas…"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:168
 #, qt-format
 msgid "Mode %1 (%2 cm⁻¹)"
-msgstr ""
+msgstr "Modo %1 (%2 cm⁻¹)"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:170
 #, qt-format
 msgid "Mode %1"
-msgstr ""
+msgstr "Modo %1"
 
 #: qtplugins/vibrations/vibrations.cpp:29
 #, fuzzy
@@ -6787,7 +6840,7 @@ msgstr "Modos Vibracionais…"
 
 #: qtplugins/vibrations/vibrations.cpp:136
 msgid "Show the vibrational modes dialog."
-msgstr ""
+msgstr "Exibir a caixa de diálogo dos modos vibracionais."
 
 #: qtplugins/vibrations/vibrations.cpp:137
 msgid "Set the vibrational mode."
@@ -6886,9 +6939,9 @@ msgid "Cannot find Yaehmop"
 msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:545
-#, fuzzy, qt-format
+#, qt-format
 msgid "Error: %1 failed to start"
-msgstr "%1 falhou ao iniciar"
+msgstr "Erro: %1 falhou ao iniciar"
 
 #: qtplugins/yaehmop/yaehmop.cpp:596
 msgid "Yaehmop Input"
