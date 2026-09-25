@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-09-20 06:21+0000\n"
+"POT-Creation-Date: 2026-09-25 15:21+0000\n"
 "PO-Revision-Date: 2026-08-26 15:51+0000\n"
 "Last-Translator: reducedradius "
 "<137701630+flytothehighest@users.noreply.github.com>\n"
@@ -1175,15 +1175,15 @@ msgstr ""
 msgid "All supported formats"
 msgstr "所有受支持的格式"
 
-#: qtgui/fragmenttools.cpp:205
+#: qtgui/fragmenttools.cpp:309
 msgid "Adjust Distance"
 msgstr ""
 
-#: qtgui/fragmenttools.cpp:252
+#: qtgui/fragmenttools.cpp:361
 msgid "Adjust Angle"
 msgstr ""
 
-#: qtgui/fragmenttools.cpp:310
+#: qtgui/fragmenttools.cpp:424
 msgid "Adjust Torsion"
 msgstr ""
 
@@ -1341,82 +1341,82 @@ msgstr "选项 '%1' 的 collectOption 中有小组件未处理。"
 msgid "[no molecule]"
 msgstr "[没有分子]"
 
-#: qtgui/layermodel.cpp:118
+#: qtgui/layermodel.cpp:122
 #, qt-format
 msgid "Layer %1"
 msgstr "图层 %1"
 
-#: qtgui/layermodel.cpp:172 qtplugins/ballandstick/ballandstick.h:28
+#: qtgui/layermodel.cpp:176 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr "球棍模型"
 
-#: qtgui/layermodel.cpp:174 qtplugins/cartoons/cartoons.h:31
+#: qtgui/layermodel.cpp:178 qtplugins/cartoons/cartoons.h:31
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "卡通渲染"
 
-#: qtgui/layermodel.cpp:176 qtplugins/closecontacts/closecontacts.h:31
+#: qtgui/layermodel.cpp:180 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr "近距接触"
 
-#: qtgui/layermodel.cpp:178 qtplugins/crystal/crystalscene.h:31
+#: qtgui/layermodel.cpp:182 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
 msgstr "晶格"
 
-#: qtgui/layermodel.cpp:180 qtplugins/force/force.h:28
+#: qtgui/layermodel.cpp:184 qtplugins/force/force.h:28
 msgid "Force"
 msgstr "力"
 
-#: qtgui/layermodel.cpp:182 qtplugins/label/label.h:25
+#: qtgui/layermodel.cpp:186 qtplugins/label/label.h:25
 msgid "Labels"
 msgstr "标签"
 
-#: qtgui/layermodel.cpp:184 qtplugins/licorice/licorice.h:31
+#: qtgui/layermodel.cpp:188 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
 msgstr "棒状渲染"
 
-#: qtgui/layermodel.cpp:186 qtplugins/surfacerender/surfacerender.h:29
+#: qtgui/layermodel.cpp:190 qtplugins/surfacerender/surfacerender.h:29
 #: qtplugins/surfaces/orbitals.cpp:506 qtplugins/surfaces/orbitals.cpp:598
 #: qtplugins/surfaces/surfaces.cpp:997 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "表面"
 
-#: qtgui/layermodel.cpp:188 qtplugins/noncovalent/noncovalent.h:30
+#: qtgui/layermodel.cpp:192 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
 msgstr "非共价的"
 
-#: qtgui/layermodel.cpp:190
+#: qtgui/layermodel.cpp:194
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM（分子中原子的量子理论）"
 
-#: qtgui/layermodel.cpp:192 qtplugins/symmetry/symmetryscene.h:33
+#: qtgui/layermodel.cpp:196 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
 msgstr "对称元素"
 
-#: qtgui/layermodel.cpp:194 qtplugins/surfaces/surfacedialog.cpp:25
+#: qtgui/layermodel.cpp:198 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
 msgstr "范德华渲染"
 
-#: qtgui/layermodel.cpp:196
+#: qtgui/layermodel.cpp:200
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr "范德华渲染（环境光遮蔽）"
 
-#: qtgui/layermodel.cpp:198
+#: qtgui/layermodel.cpp:202
 msgctxt "volumetric clouds"
 msgid "Volumes"
 msgstr "体积"
 
-#: qtgui/layermodel.cpp:200 qtplugins/surfacerender/surfacerender.cpp:273
+#: qtgui/layermodel.cpp:204 qtplugins/surfacerender/surfacerender.cpp:273
 #: qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "线框"
 
-#: qtgui/layermodel.cpp:202 qtplugins/overlayaxes/overlayaxes.h:28
+#: qtgui/layermodel.cpp:206 qtplugins/overlayaxes/overlayaxes.h:28
 msgid "Reference Axes"
 msgstr "参考轴"
 
@@ -1524,30 +1524,30 @@ msgid "Unknown error."
 msgstr "未知的错误。"
 
 #: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:113
-#: qtgui/rwlayermanager.cpp:139
+#: qtgui/rwlayermanager.cpp:140
 msgid "Modify Layers"
 msgstr "修改图层"
 
-#: qtgui/rwlayermanager.cpp:214
+#: qtgui/rwlayermanager.cpp:245
 msgid "Remove Layer"
 msgstr "删除图层"
 
-#: qtgui/rwlayermanager.cpp:227
+#: qtgui/rwlayermanager.cpp:254
 msgid "Remove Layer Info"
 msgstr "删除图层信息"
 
-#: qtgui/rwlayermanager.cpp:235
+#: qtgui/rwlayermanager.cpp:266
 msgid "Add Layer"
 msgstr "添加图层"
 
-#: qtgui/rwlayermanager.cpp:242
+#: qtgui/rwlayermanager.cpp:273
 msgid "Add Layer Info"
 msgstr "添加图层信息"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: qtgui/rwlayermanager.cpp:249 qtgui/rwlayermanager.cpp:256
-#: qtplugins/select/select.cpp:564
+#: qtgui/rwlayermanager.cpp:280 qtgui/rwlayermanager.cpp:287
+#: qtplugins/select/select.cpp:566
 #: qtplugins/selectiontool/selectiontool.cpp:264:1891
 msgid "Change Layer"
 msgstr "更改图层"
@@ -1571,120 +1571,120 @@ msgstr ""
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:162 qtgui/rwmolecule.cpp:170:506
+#: qtgui/rwmolecule.cpp:165 qtgui/rwmolecule.cpp:173:506
 msgid "Adjust Hydrogens"
 msgstr "调整氢原子数目"
 
-#: qtgui/rwmolecule.cpp:198 qtplugins/alchemy/alchemy.cpp:74
+#: qtgui/rwmolecule.cpp:201 qtplugins/alchemy/alchemy.cpp:74
 msgid "Change Elements"
 msgstr "更改元素"
 
-#: qtgui/rwmolecule.cpp:210
+#: qtgui/rwmolecule.cpp:213
 msgid "Change Element"
 msgstr "更改元素"
 
-#: qtgui/rwmolecule.cpp:297
+#: qtgui/rwmolecule.cpp:300
 msgid "Change Atom Hybridization"
 msgstr "更改原子杂化"
 
-#: qtgui/rwmolecule.cpp:309
+#: qtgui/rwmolecule.cpp:312
 msgid "Change Atom Formal Charge"
 msgstr "更改原子形式电荷"
 
-#: qtgui/rwmolecule.cpp:331
+#: qtgui/rwmolecule.cpp:334
 msgid "Change Atom Color"
 msgstr "更改原子颜色"
 
-#: qtgui/rwmolecule.cpp:343
+#: qtgui/rwmolecule.cpp:346
 msgid "Change Residue Color"
 msgstr "更改残基颜色"
 
-#: qtgui/rwmolecule.cpp:355
+#: qtgui/rwmolecule.cpp:358
 msgid "Change Atom Layer"
 msgstr "更改原子图层"
 
-#: qtgui/rwmolecule.cpp:371
+#: qtgui/rwmolecule.cpp:386
 msgid "Add Bond"
 msgstr "添加键"
 
-#: qtgui/rwmolecule.cpp:397
+#: qtgui/rwmolecule.cpp:412
 msgid "Removed Bond"
 msgstr "已移除键"
 
-#: qtgui/rwmolecule.cpp:404
+#: qtgui/rwmolecule.cpp:419
 msgid "Clear Bonds"
 msgstr "清除所有键"
 
-#: qtgui/rwmolecule.cpp:418
+#: qtgui/rwmolecule.cpp:433
 msgid "Set Bond Orders"
 msgstr "设置键级"
 
-#: qtgui/rwmolecule.cpp:430
+#: qtgui/rwmolecule.cpp:445
 msgid "Change Bond Order"
 msgstr "更改键级"
 
-#: qtgui/rwmolecule.cpp:452
+#: qtgui/rwmolecule.cpp:467
 msgid "Update Bonds"
 msgstr "更新键"
 
-#: qtgui/rwmolecule.cpp:471
+#: qtgui/rwmolecule.cpp:486
 msgid "Update Bond"
 msgstr "更新键"
 
-#: qtgui/rwmolecule.cpp:490
+#: qtgui/rwmolecule.cpp:505
 msgid "Add Unit Cell…"
 msgstr "添加晶胞…"
 
-#: qtgui/rwmolecule.cpp:502
+#: qtgui/rwmolecule.cpp:517
 msgid "Remove Unit Cell"
 msgstr "移除晶胞"
 
-#: qtgui/rwmolecule.cpp:598
+#: qtgui/rwmolecule.cpp:613
 msgid "Edit Unit Cell"
 msgstr "编辑晶胞"
 
-#: qtgui/rwmolecule.cpp:614
+#: qtgui/rwmolecule.cpp:629
 msgid "Wrap Atoms to Cell"
 msgstr "将原子包裹到晶胞内"
 
-#: qtgui/rwmolecule.cpp:637
+#: qtgui/rwmolecule.cpp:652
 msgid "Scale Cell Volume"
 msgstr "缩放晶胞体积"
 
-#: qtgui/rwmolecule.cpp:657 qtgui/rwmolecule.cpp:681
+#: qtgui/rwmolecule.cpp:672 qtgui/rwmolecule.cpp:696
 msgid "Build Super Cell"
 msgstr "构建超胞"
 
-#: qtgui/rwmolecule.cpp:705
+#: qtgui/rwmolecule.cpp:720
 msgid "Niggli Reduction"
 msgstr "Niggli 约化"
 
-#: qtgui/rwmolecule.cpp:727
+#: qtgui/rwmolecule.cpp:742
 msgid "Rotate to Standard Orientation"
 msgstr "旋转到标准取向"
 
-#: qtgui/rwmolecule.cpp:756 qtplugins/spacegroup/spacegroup.cpp:66
+#: qtgui/rwmolecule.cpp:771 qtplugins/spacegroup/spacegroup.cpp:66
 msgid "Reduce to Primitive"
 msgstr "约化为原胞"
 
-#: qtgui/rwmolecule.cpp:790 qtplugins/spacegroup/spacegroup.cpp:72
+#: qtgui/rwmolecule.cpp:805 qtplugins/spacegroup/spacegroup.cpp:72
 #: qtplugins/spacegroup/spacegroup.cpp:472
 msgid "Conventionalize Cell"
 msgstr "转换为惯用胞"
 
-#: qtgui/rwmolecule.cpp:824 qtplugins/spacegroup/spacegroup.cpp:500
+#: qtgui/rwmolecule.cpp:839 qtplugins/spacegroup/spacegroup.cpp:500
 msgid "Symmetrize Cell"
 msgstr "对称化晶胞"
 
-#: qtgui/rwmolecule.cpp:851
+#: qtgui/rwmolecule.cpp:866
 msgid "Fill Unit Cell"
 msgstr "填充晶胞"
 
-#: qtgui/rwmolecule.cpp:867
+#: qtgui/rwmolecule.cpp:882
 msgid "Fill Translational Copies"
 msgstr "填充平移副本"
 
-#: qtgui/rwmolecule.cpp:887
+#: qtgui/rwmolecule.cpp:902
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "约化为非对称单元"
 
@@ -1756,7 +1756,7 @@ msgstr[0] "剩余 %n 小时"
 msgid "3DMol HTML Block."
 msgstr "3DMol HTML 模块。"
 
-#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
+#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:54
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:42 qtplugins/ply/ply.cpp:44
@@ -1942,7 +1942,7 @@ msgstr "PQR 文件 (*.pqr)"
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
 #: qtplugins/apbs/apbsdialog.cpp:166 qtplugins/apbs/apbsdialog.cpp:189
 #: qtplugins/commandscripts/command.cpp:178
-#: qtplugins/cp2kinput/cp2kinput.cpp:85 qtplugins/fetchpdb/fetchpdb.cpp:143
+#: qtplugins/cp2kinput/cp2kinput.cpp:85 qtplugins/fetchpdb/fetchpdb.cpp:299
 #: qtplugins/gamessinput/gamessinput.cpp:91
 #: qtplugins/insertfragment/insertfragment.cpp:111
 #: qtplugins/insertpolymer/insertpolymer.cpp:81
@@ -2016,7 +2016,7 @@ msgstr "APBS 输入 (*.in)"
 msgid "Input file written to '%1'"
 msgstr "输入文件已写入 '%1'"
 
-#: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:144
+#: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:299
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:554
 #: qtplugins/playertool/playertool.cpp:560
 #: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1144
@@ -2463,7 +2463,7 @@ msgid "Bond Selected Atoms"
 msgstr "让选定的原子间成键"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:825
+#: qtplugins/propertytables/propertymodel.cpp:826
 msgid "Bond"
 msgstr "键"
 
@@ -2538,6 +2538,23 @@ msgstr "添加质心"
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
 msgstr "添加垂直方向"
+
+#: qtplugins/centroid/centroid.cpp:137
+msgid ""
+"Add a dummy atom at the geometric center of the molecule or the selected "
+"atoms."
+msgstr ""
+
+#: qtplugins/centroid/centroid.cpp:141
+msgid ""
+"Add a dummy atom at the center of mass of the molecule or the selected atoms."
+msgstr ""
+
+#: qtplugins/centroid/centroid.cpp:145
+msgid ""
+"Add a dummy atom perpendicular to the plane of the molecule or the selected "
+"atoms."
+msgstr ""
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
@@ -2755,9 +2772,9 @@ msgid "Freeze Z Axis"
 msgstr "冻结 Z 轴"
 
 #: qtplugins/constraints/constraintsmodel.cpp:126
-#: qtplugins/propertytables/propertymodel.cpp:811
-#: qtplugins/propertytables/propertymodel.cpp:854
-#: qtplugins/propertytables/propertymodel.cpp:871
+#: qtplugins/propertytables/propertymodel.cpp:812
+#: qtplugins/propertytables/propertymodel.cpp:855
+#: qtplugins/propertytables/propertymodel.cpp:872
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "类型"
@@ -2767,24 +2784,24 @@ msgid "Value"
 msgstr "值"
 
 #: qtplugins/constraints/constraintsmodel.cpp:132
-#: qtplugins/propertytables/propertymodel.cpp:856
-#: qtplugins/propertytables/propertymodel.cpp:873
+#: qtplugins/propertytables/propertymodel.cpp:857
+#: qtplugins/propertytables/propertymodel.cpp:874
 msgid "Atom 1"
 msgstr "原子 1"
 
 #: qtplugins/constraints/constraintsmodel.cpp:135
-#: qtplugins/propertytables/propertymodel.cpp:875
+#: qtplugins/propertytables/propertymodel.cpp:876
 msgid "Atom 2"
 msgstr "原子 2"
 
 #: qtplugins/constraints/constraintsmodel.cpp:138
-#: qtplugins/propertytables/propertymodel.cpp:860
-#: qtplugins/propertytables/propertymodel.cpp:877
+#: qtplugins/propertytables/propertymodel.cpp:861
+#: qtplugins/propertytables/propertymodel.cpp:878
 msgid "Atom 3"
 msgstr "原子 3"
 
 #: qtplugins/constraints/constraintsmodel.cpp:141
-#: qtplugins/propertytables/propertymodel.cpp:879
+#: qtplugins/propertytables/propertymodel.cpp:880
 msgid "Atom 4"
 msgstr "原子 4"
 
@@ -3353,8 +3370,8 @@ msgstr "更改化学键类型"
 msgid "Remove Bond"
 msgstr "移除化学键"
 
-#: qtplugins/editor/editor.cpp:280 qtplugins/measuretool/measuretool.cpp:244
-#: qtplugins/measuretool/measuretool.cpp:267
+#: qtplugins/editor/editor.cpp:280 qtplugins/measuretool/measuretool.cpp:428
+#: qtplugins/measuretool/measuretool.cpp:449
 msgid "Distance:"
 msgstr "距离："
 
@@ -3382,60 +3399,78 @@ msgstr "双键"
 msgid "Triple"
 msgstr "三键"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
+#: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:42
 msgid "&Import"
 msgstr "导入(&I)"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:61
+#: qtplugins/fetchpdb/fetchpdb.cpp:77 qtplugins/fetchpdb/fetchpdb.cpp:321
 msgid "Fetch PDB"
 msgstr "从 PDB 获取"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:62
+#: qtplugins/fetchpdb/fetchpdb.cpp:78 qtplugins/fetchpdb/fetchpdb.cpp:322
 #, qt-format
 msgid "Could not read the PDB molecule: %1"
 msgstr "无法读取 PDB 分子：%1"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:72
+#: qtplugins/fetchpdb/fetchpdb.cpp:87
+msgid "Download a structure from the Protein Data Bank."
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:114
+msgid "fetchPDB requires a non-empty 'code' parameter."
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:116
+msgid "The PDB code must be exactly 4 characters long."
+msgstr "PDB编号必须为四个字符。"
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:118
+msgid "The first character of the PDB code must be 1-9."
+msgstr "PDB 编码的第一个字符必须为1-9。"
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:128
+msgid "The PDB code must contain only letters and digits."
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:204
+#: qtplugins/networkdatabases/networkdatabases.cpp:226
+#, qt-format
+msgid "Downloaded %1"
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:212
 msgid "PDB Code"
 msgstr "PDB编号"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:73
+#: qtplugins/fetchpdb/fetchpdb.cpp:213
 #: qtplugins/networkdatabases/networkdatabases.cpp:115
 msgid "Chemical structure to download."
 msgstr "下载化学结构。"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
+#: qtplugins/fetchpdb/fetchpdb.cpp:223
 msgid "Invalid PDB Code"
 msgstr "无效的PDB编号"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:82
-msgid "The PDB code must be exactly 4 characters long."
-msgstr "PDB编号必须为四个字符。"
-
-#: qtplugins/fetchpdb/fetchpdb.cpp:90
-msgid "The first character of the PDB code must be 1-9."
-msgstr "PDB 编码的第一个字符必须为1-9。"
-
-#: qtplugins/fetchpdb/fetchpdb.cpp:109
+#: qtplugins/fetchpdb/fetchpdb.cpp:233
 #: qtplugins/networkdatabases/networkdatabases.cpp:125
 #, qt-format
 msgid "Querying for %1"
 msgstr "正在查询 %1"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
+#: qtplugins/fetchpdb/fetchpdb.cpp:264 qtplugins/fetchpdb/fetchpdb.cpp:290
 #: qtplugins/networkdatabases/networkdatabases.cpp:148
 #: qtplugins/networkdatabases/networkdatabases.cpp:197
 msgid "Network Download Failed"
 msgstr "网络下载失败"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:121
+#: qtplugins/fetchpdb/fetchpdb.cpp:265
 #: qtplugins/networkdatabases/networkdatabases.cpp:141
 msgid "Network timeout or other error."
 msgstr "网络超时或发生其它错误。"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:134
+#: qtplugins/fetchpdb/fetchpdb.cpp:291
 #: qtplugins/networkdatabases/networkdatabases.cpp:191
 #, qt-format
 msgid "Specified molecule could not be found: %1"
@@ -3456,6 +3491,14 @@ msgstr "聚焦到所选项"
 #: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
 msgstr "取消聚焦"
+
+#: qtplugins/focus/focus.cpp:138
+msgid "Focus a selection"
+msgstr ""
+
+#: qtplugins/focus/focus.cpp:139
+msgid "Unfocus a focused selection"
+msgstr ""
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
@@ -3956,7 +3999,7 @@ msgstr "原子编号"
 msgid "Unique ID"
 msgstr "唯一 ID"
 
-#: qtplugins/label/label.cpp:220 qtplugins/propertytables/propertymodel.cpp:777
+#: qtplugins/label/label.cpp:220 qtplugins/propertytables/propertymodel.cpp:778
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:119
 msgid "Element"
@@ -3987,13 +4030,13 @@ msgstr "长度"
 msgid "Bond Label:"
 msgstr "键标签："
 
-#: qtplugins/label/label.cpp:261 qtplugins/propertytables/propertymodel.cpp:834
+#: qtplugins/label/label.cpp:261 qtplugins/propertytables/propertymodel.cpp:835
 msgid "ID"
 msgstr "ID"
 
 #: qtplugins/label/label.cpp:262
 #: qtplugins/packageinstaller/packagemodel.cpp:175
-#: qtplugins/propertytables/propertymodel.cpp:832
+#: qtplugins/propertytables/propertymodel.cpp:833
 msgid "Name"
 msgstr "名称"
 
@@ -4135,16 +4178,16 @@ msgstr ""
 msgid "Manipulate tool"
 msgstr "操纵工具"
 
-#: qtplugins/measuretool/measuretool.cpp:53
+#: qtplugins/measuretool/measuretool.cpp:149
 msgctxt "control-key 8"
 msgid "Ctrl+8"
 msgstr "Ctrl+8"
 
-#: qtplugins/measuretool/measuretool.cpp:54
+#: qtplugins/measuretool/measuretool.cpp:150
 msgid "Measure"
 msgstr "测量"
 
-#: qtplugins/measuretool/measuretool.cpp:56
+#: qtplugins/measuretool/measuretool.cpp:152
 #, qt-format
 msgid ""
 "Measure Tool\t(%1)\n"
@@ -4153,30 +4196,258 @@ msgid ""
 "\tDistances are measured between 1-2 and 2-3\n"
 "\tAngle is measured between 1-3 using 2 as the common point\n"
 "\tDihedral is measured between 1-2-3-4\n"
-"Right Mouse:\tReset the measurements."
-msgstr ""
-"测量工具\t(%1)\n"
+"Right Mouse:\tReset the measurements.\n"
 "\n"
-"鼠标左键：选择至多四个原子。\n"
-"\t测量原子1-2和原子2-3之间的距离\n"
-"\t以2号原子为顶点，测量原子1-3的角度\n"
-"\t按1-2-3-4的顺序测定二面角\n"
-"鼠标右键：重置测量。"
+"Values can also be typed into the tool panel to move the atoms."
+msgstr ""
 
-#: qtplugins/measuretool/measuretool.cpp:242
-#: qtplugins/measuretool/measuretool.cpp:252
+#: qtplugins/measuretool/measuretool.cpp:426
+#: qtplugins/measuretool/measuretool.cpp:436
 msgid "Dihedral:"
 msgstr "二面角："
 
-#: qtplugins/measuretool/measuretool.cpp:243
-#: qtplugins/measuretool/measuretool.cpp:259
+#: qtplugins/measuretool/measuretool.cpp:427
+#: qtplugins/measuretool/measuretool.cpp:441
 msgid "Angle:"
 msgstr "角度："
 
-#: qtplugins/measuretool/measuretool.h:34
-#: qtplugins/measuretool/measuretool.h:35
+#: qtplugins/measuretool/measuretool.cpp:602
+#: qtplugins/measuretool/measuretool.cpp:992
+msgid "One of these atoms no longer exists."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:604
+msgid "That's not a value this can be set to."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:610
+#: qtplugins/measuretool/measuretool.cpp:1005
+msgid "These atoms are in the same place, so this distance isn't defined."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:613
+#: qtplugins/measuretool/measuretool.cpp:1010
+msgid ""
+"Three of these atoms are in a straight line, so this dihedral isn't defined."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:616
+#: qtplugins/measuretool/measuretool.cpp:1008
+msgid "These atoms are in a straight line, so this angle isn't defined."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:641
+#, qt-format
+msgid ""
+"The bond between #%1 and #%2 is in a ring, so this dihedral can't change "
+"without distorting the ring."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:645
+#, qt-format
+msgid ""
+"The bond between #%1 and #%2 is in a ring, so this angle can't change "
+"without distorting the ring."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:680
+#, qt-format
+msgid ""
+"#%1 and #%2 are connected through the molecule, so this can't change without "
+"distorting it. Try the Manipulate tool."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:694
+msgid ""
+"Measure the distance in Å between two atoms, given as zero-based indices: "
+"{\"atoms\": [i, j]}. Returns {\"distance\": ..., \"atoms\": [i, j]}."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:699
+msgid ""
+"Measure the angle in degrees at the middle of three atoms, given as zero-"
+"based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": ..., \"atoms\": "
+"[i, j, k]}."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:704
+msgid ""
+"Measure the dihedral angle in degrees (-180 to 180) of four atoms, given as "
+"zero-based indices: {\"atoms\": [i, j, k, l]}. Returns {\"dihedral\": ..., "
+"\"atoms\": [i, j, k, l]}."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:709
+msgid ""
+"Set the distance in Å between two atoms, given as zero-based indices: "
+"{\"atoms\": [i, j], \"value\": ...}; the second atom and everything bonded "
+"to it on that side move. Returns the new {\"distance\": ..., \"atoms\": [i, "
+"j]}."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:715
+msgid ""
+"Set the angle in degrees at the middle of three atoms, given as zero-based "
+"indices: {\"atoms\": [i, j, k], \"value\": ...}; the last atom and "
+"everything bonded to it on that side move. Returns the new {\"angle\": ..., "
+"\"atoms\": [i, j, k]}."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:721
+msgid ""
+"Set the dihedral angle in degrees of four atoms, given as zero-based "
+"indices: {\"atoms\": [i, j, k, l], \"value\": ...}; the last atom and "
+"everything bonded to it on that side move. Returns the new "
+"{\"dihedral\": ..., \"atoms\": [i, j, k, l]}."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:764
+msgid "There is no molecule to measure."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:791
+msgid "value must be a distance greater than 0 Å."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:795
+msgid "value must be an angle from 0 to 180 degrees."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:856
+msgid "atoms must list exactly 2 atom indices for a distance."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:859
+msgid "atoms must list exactly 3 atom indices for an angle."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:862
+msgid "atoms must list exactly 4 atom indices for a dihedral."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:885
+#: qtplugins/measuretool/measuretool.cpp:891
+#, qt-format
+msgid "atom index #%1 in atoms must be a whole number."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:895
+#, qt-format
+msgid ""
+"atom index #%1 in atoms is negative; atom indices must be zero or greater."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:913
+#, qt-format
+msgid "atom index %1 is repeated in atoms; each atom must be different."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:933
+msgid "value is required and must be a distance in Å."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:934
+msgid "value is required and must be an angle in degrees."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:996
+msgid "That's not a value this distance can be set to."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:998
+msgid "That's not a value this angle can be set to."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:1000
+msgid "That's not a value this dihedral can be set to."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:1021
+#, qt-format
+msgid ""
+"The bond between atoms %1 and %2 is in a ring, so this angle can't change "
+"without distorting it."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:1025
+#, qt-format
+msgid ""
+"The bond between atoms %1 and %2 is in a ring, so this dihedral can't change "
+"without distorting it."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:1039
+#, qt-format
+msgid ""
+"Atoms %1 and %2 are connected through the molecule, so this distance can't "
+"change without distorting it. Try the Manipulate tool."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:1045
+#, qt-format
+msgid ""
+"Atoms %1 and %2 are connected through the molecule, so this angle can't "
+"change without distorting it. Try the Manipulate tool."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:1051
+#, qt-format
+msgid ""
+"Atoms %1 and %2 are connected through the molecule, so this dihedral can't "
+"change without distorting it. Try the Manipulate tool."
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.h:39
+#: qtplugins/measuretool/measuretool.h:40
 msgid "Measure tool"
 msgstr "测量工具"
+
+#: qtplugins/measuretool/measurewidget.cpp:23
+msgid ""
+"Click up to four atoms to measure them.\n"
+"Type a new value to move the atoms."
+msgstr ""
+
+#: qtplugins/measuretool/measurewidget.cpp:34
+msgid "Distance 1–2"
+msgstr ""
+
+#: qtplugins/measuretool/measurewidget.cpp:34
+#: qtplugins/measuretool/measurewidget.cpp:36
+#: qtplugins/measuretool/measurewidget.cpp:38
+msgid " Å"
+msgstr " Å"
+
+#: qtplugins/measuretool/measurewidget.cpp:36
+msgid "Distance 2–3"
+msgstr ""
+
+#: qtplugins/measuretool/measurewidget.cpp:38
+msgid "Distance 3–4"
+msgstr ""
+
+#: qtplugins/measuretool/measurewidget.cpp:40
+msgid "Angle 1–2–3"
+msgstr ""
+
+#: qtplugins/measuretool/measurewidget.cpp:40
+#: qtplugins/measuretool/measurewidget.cpp:42
+#: qtplugins/measuretool/measurewidget.cpp:44
+msgid "°"
+msgstr "°"
+
+#: qtplugins/measuretool/measurewidget.cpp:42
+msgid "Angle 2–3–4"
+msgstr ""
+
+#: qtplugins/measuretool/measurewidget.cpp:44
+msgid "Dihedral 1–2–3–4"
+msgstr ""
+
+#: qtplugins/measuretool/measurewidget.cpp:145
+#, qt-format
+msgid "#1 stays fixed; edits move toward #%1."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
@@ -4289,13 +4560,13 @@ msgstr "查看分子的一般属性。"
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
 #: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:381
-#: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:44
+#: qtplugins/symmetry/symmetry.cpp:81 qtplugins/vibrations/vibrations.cpp:44
 msgid "&Analyze"
 msgstr "分析(&A)"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:60
 #: qtplugins/propertytables/propertytables.cpp:86
-#: qtplugins/symmetry/symmetry.cpp:80
+#: qtplugins/symmetry/symmetry.cpp:81
 msgid "&Properties"
 msgstr "属性(&P)"
 
@@ -4403,11 +4674,6 @@ msgstr "化学名称"
 #: qtplugins/networkdatabases/networkdatabases.cpp:180
 #, qt-format
 msgid "Querying PubChem for %1"
-msgstr ""
-
-#: qtplugins/networkdatabases/networkdatabases.cpp:226
-#, qt-format
-msgid "Downloaded %1"
 msgstr ""
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
@@ -5292,130 +5558,130 @@ msgstr "POVRay"
 msgid "Render the scene using POV-Ray."
 msgstr "使用 POV-Ray 渲染场景。"
 
-#: qtplugins/propertytables/propertymodel.cpp:406
+#: qtplugins/propertytables/propertymodel.cpp:407
 msgid "Click to change color"
 msgstr "点击以更改颜色"
 
-#: qtplugins/propertytables/propertymodel.cpp:779
+#: qtplugins/propertytables/propertymodel.cpp:780
 msgid "Valence"
 msgstr "化合价"
 
-#: qtplugins/propertytables/propertymodel.cpp:781
+#: qtplugins/propertytables/propertymodel.cpp:782
 msgid "Formal Charge"
 msgstr "形式电荷"
 
-#: qtplugins/propertytables/propertymodel.cpp:784
+#: qtplugins/propertytables/propertymodel.cpp:785
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1 部分电荷"
 
-#: qtplugins/propertytables/propertymodel.cpp:791
+#: qtplugins/propertytables/propertymodel.cpp:792
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:793
+#: qtplugins/propertytables/propertymodel.cpp:794
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:795
+#: qtplugins/propertytables/propertymodel.cpp:796
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:797
-#: qtplugins/propertytables/propertymodel.cpp:819
-#: qtplugins/propertytables/propertymodel.cpp:842
+#: qtplugins/propertytables/propertymodel.cpp:798
+#: qtplugins/propertytables/propertymodel.cpp:820
+#: qtplugins/propertytables/propertymodel.cpp:843
 msgid "Label"
 msgstr "标签"
 
-#: qtplugins/propertytables/propertymodel.cpp:799
+#: qtplugins/propertytables/propertymodel.cpp:800
 msgid "Isotope"
 msgstr "同位素"
 
-#: qtplugins/propertytables/propertymodel.cpp:801
-#: qtplugins/propertytables/propertymodel.cpp:844
+#: qtplugins/propertytables/propertymodel.cpp:802
+#: qtplugins/propertytables/propertymodel.cpp:845
 msgid "Color"
 msgstr "颜色"
 
-#: qtplugins/propertytables/propertymodel.cpp:804
+#: qtplugins/propertytables/propertymodel.cpp:805
 msgid "Atom"
 msgstr "原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:813
+#: qtplugins/propertytables/propertymodel.cpp:814
 msgid "Start Atom"
 msgstr "起始原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:815
+#: qtplugins/propertytables/propertymodel.cpp:816
 msgid "End Atom"
 msgstr "结束原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:817
+#: qtplugins/propertytables/propertymodel.cpp:818
 msgid "Bond Order"
 msgstr "键级"
 
-#: qtplugins/propertytables/propertymodel.cpp:821
+#: qtplugins/propertytables/propertymodel.cpp:822
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "长度 (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:836
+#: qtplugins/propertytables/propertymodel.cpp:837
 msgid "Chain"
 msgstr "链"
 
-#: qtplugins/propertytables/propertymodel.cpp:838
+#: qtplugins/propertytables/propertymodel.cpp:839
 msgid "Secondary Structure"
 msgstr "二级结构"
 
-#: qtplugins/propertytables/propertymodel.cpp:840
+#: qtplugins/propertytables/propertymodel.cpp:841
 msgid "Heterogen"
 msgstr "杂原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:858
+#: qtplugins/propertytables/propertymodel.cpp:859
 msgid "Vertex"
 msgstr "顶点"
 
-#: qtplugins/propertytables/propertymodel.cpp:862
-#: qtplugins/propertytables/propertymodel.cpp:881
+#: qtplugins/propertytables/propertymodel.cpp:863
+#: qtplugins/propertytables/propertymodel.cpp:882
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:129
 msgid "Angle (°)"
 msgstr "键角 (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:1342
+#: qtplugins/propertytables/propertymodel.cpp:1348
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π螺旋"
 
-#: qtplugins/propertytables/propertymodel.cpp:1344
+#: qtplugins/propertytables/propertymodel.cpp:1350
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "弯曲"
 
-#: qtplugins/propertytables/propertymodel.cpp:1346
+#: qtplugins/propertytables/propertymodel.cpp:1352
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α螺旋"
 
-#: qtplugins/propertytables/propertymodel.cpp:1348
+#: qtplugins/propertytables/propertymodel.cpp:1354
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β 折叠"
 
-#: qtplugins/propertytables/propertymodel.cpp:1350
+#: qtplugins/propertytables/propertymodel.cpp:1356
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "310 螺旋"
 
-#: qtplugins/propertytables/propertymodel.cpp:1352
+#: qtplugins/propertytables/propertymodel.cpp:1358
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "β 桥"
 
-#: qtplugins/propertytables/propertymodel.cpp:1354
+#: qtplugins/propertytables/propertymodel.cpp:1360
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "转角"
 
-#: qtplugins/propertytables/propertymodel.cpp:1356
+#: qtplugins/propertytables/propertymodel.cpp:1362
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "卷曲"
@@ -5671,97 +5937,142 @@ msgstr "脚本文件格式"
 msgid "Load file reader/writers from external scripts."
 msgstr "从外部脚本加载文本读取器/写入器。"
 
-#: qtplugins/select/select.cpp:31
+#: qtplugins/select/select.cpp:33
 msgid "Select All"
 msgstr "全选"
 
-#: qtplugins/select/select.cpp:37
+#: qtplugins/select/select.cpp:39
 msgid "Select None"
 msgstr "全不选"
 
-#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
+#: qtplugins/select/select.cpp:50 qtplugins/select/select.cpp:555
 msgid "Invert Selection"
 msgstr "反转选择"
 
-#: qtplugins/select/select.cpp:53
+#: qtplugins/select/select.cpp:55
 msgid "Select by Element…"
 msgstr "按元素选择…"
 
-#: qtplugins/select/select.cpp:58
+#: qtplugins/select/select.cpp:60
 msgid "Select by Atom Index…"
 msgstr "按原子编号选择…"
 
-#: qtplugins/select/select.cpp:63
+#: qtplugins/select/select.cpp:65
 msgid "Select by Residue…"
 msgstr "按残基选择…"
 
-#: qtplugins/select/select.cpp:68
+#: qtplugins/select/select.cpp:70
 msgid "Select Backbone Atoms…"
 msgstr "选择骨架原子…"
 
-#: qtplugins/select/select.cpp:73
+#: qtplugins/select/select.cpp:75
 msgid "Select Sidechain Atoms…"
 msgstr "选择侧链原子…"
 
-#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+#: qtplugins/select/select.cpp:80 qtplugins/select/select.cpp:219
 msgid "Select Water"
 msgstr "选择水"
 
-#: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
+#: qtplugins/select/select.cpp:90 qtplugins/select/select.cpp:379
 msgid "Enlarge Selection"
 msgstr "增大选区"
 
-#: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
+#: qtplugins/select/select.cpp:95 qtplugins/select/select.cpp:418
 msgid "Shrink Selection"
 msgstr "缩小选区"
 
-#: qtplugins/select/select.cpp:103
+#: qtplugins/select/select.cpp:105
 msgid "Create New Layer from Selection"
 msgstr "以选中内容创建新图层"
 
-#: qtplugins/select/select.cpp:117
+#: qtplugins/select/select.cpp:119
 msgid "Change selections"
 msgstr "更改选择"
 
-#: qtplugins/select/select.cpp:127
+#: qtplugins/select/select.cpp:129
 msgid "&Select"
 msgstr "选择(&S)"
 
-#: qtplugins/select/select.cpp:180
+#: qtplugins/select/select.cpp:182
 msgid "Select Element"
 msgstr "选择元素"
 
-#: qtplugins/select/select.cpp:269
+#: qtplugins/select/select.cpp:271
 msgid "Select Backbone"
 msgstr "选择骨架"
 
-#: qtplugins/select/select.cpp:308
+#: qtplugins/select/select.cpp:310
 msgid "Select Sidechain"
 msgstr "选择侧链"
 
-#: qtplugins/select/select.cpp:440
+#: qtplugins/select/select.cpp:442
 msgid "Select Atoms by Index"
 msgstr "按原子编号选择"
 
-#: qtplugins/select/select.cpp:441
+#: qtplugins/select/select.cpp:443
 msgid "Atoms to Select:"
 msgstr "要选择的原子："
 
-#: qtplugins/select/select.cpp:446
+#: qtplugins/select/select.cpp:448
 msgid "Select Atom"
 msgstr "选择原子"
 
-#: qtplugins/select/select.cpp:485
+#: qtplugins/select/select.cpp:487
 msgid "Select Atoms by Residue"
 msgstr "按残基选择原子"
 
-#: qtplugins/select/select.cpp:486
+#: qtplugins/select/select.cpp:488
 msgid "Residues to Select:"
 msgstr "要选择的残基："
 
-#: qtplugins/select/select.cpp:491
+#: qtplugins/select/select.cpp:493
 msgid "Select Residue"
 msgstr "选择残基"
+
+#: qtplugins/select/select.cpp:587
+msgid "Select all atoms."
+msgstr ""
+
+#: qtplugins/select/select.cpp:589
+msgid "Deselect all atoms"
+msgstr ""
+
+#: qtplugins/select/select.cpp:592
+msgid ""
+"Select all atoms which are not currently selected, and deselect all "
+"currently selected atoms."
+msgstr ""
+
+#: qtplugins/select/select.cpp:596
+msgid "Select all atoms of a certain element type."
+msgstr ""
+
+#: qtplugins/select/select.cpp:600
+msgid "Select all atoms that belong to amino acid backbones"
+msgstr ""
+
+#: qtplugins/select/select.cpp:604
+msgid "Select all atoms that belong to amino acid sidechains"
+msgstr ""
+
+#: qtplugins/select/select.cpp:606
+msgid "Select all water molecules"
+msgstr ""
+
+#: qtplugins/select/select.cpp:610
+msgid ""
+"Select all atoms within 2 atoms of a selected atom. In other words, select "
+"all atoms next to a selected atom, and additionally all atoms that are next "
+"to those atoms."
+msgstr ""
+
+#: qtplugins/select/select.cpp:616
+msgid "Shrink selection. Note: One shrink is equivalent to two enlarges!"
+msgstr ""
+
+#: qtplugins/select/select.cpp:619
+msgid "Separate the selected atoms into a new layer."
+msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -5816,7 +6127,7 @@ msgstr "推断空间群…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:78:2163
+#: qtplugins/spacegroup/spacegroup.cpp:78 qtplugins/symmetry/symmetry.cpp:426
 msgid "Symmetrize"
 msgstr "对称化"
 
@@ -6459,11 +6770,59 @@ msgstr "将场景渲染到 SVG 文件。"
 msgid "Class"
 msgstr "类"
 
-#: qtplugins/symmetry/symmetry.cpp:39
+#: qtplugins/symmetry/symmetry.cpp:40
 msgid "Symmetry…"
 msgstr "对称性…"
 
-#: qtplugins/symmetry/symmetry.h:67
+#: qtplugins/symmetry/symmetry.cpp:216
+msgid "There is no molecule to analyze."
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:223 qtplugins/symmetry/symmetry.cpp:391
+msgid "The molecule has no 3D coordinates."
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:228
+msgid "The molecule has no atoms."
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:386
+msgid "There is no molecule to symmetrize."
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:394
+msgid "A single atom is already symmetric."
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:415
+#, qt-format
+msgid "libmsym returned %1 atoms for a molecule of %2."
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:438
+msgid "Detect the point group of the molecule."
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:440
+msgid "Snap the molecule onto its detected point group."
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:457
+#, qt-format
+msgid "Unknown tolerance \"%1\": expected tight, normal, loose or veryloose."
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:479
+#, qt-format
+msgid "Detected %1"
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.cpp:490
+#, qt-format
+msgid "Symmetrized to %1"
+msgstr ""
+
+#: qtplugins/symmetry/symmetry.h:97
 msgid "Provide symmetry functionality."
 msgstr "提供对称功能。"
 
@@ -10257,6 +10616,24 @@ msgstr ""
 "cuiweicui1985@gmail.com,rainofchaos@gmail.com,yjjart@gmail.com,sihanzheng@gmail.com,weitao1979@gmail.com,wantinghard@gmail.com,avogadro-"
 "devel@lists.sourceforge.net,chensiqiong@126.com,frankensteinyang@gmail.com,chaofeng111@gmail.com,allen19920930@gmail.com,skyxxzc@gmail.com,sihanzheng@gmail.com,cyliang532@gmail.com,zhangtengshuo@gmail.com,feixiang512@outlook.com"
 
+#, qt-format
+#~ msgid ""
+#~ "Measure Tool\t(%1)\n"
+#~ "\n"
+#~ "Left Mouse:\tSelect up to four Atoms.\n"
+#~ "\tDistances are measured between 1-2 and 2-3\n"
+#~ "\tAngle is measured between 1-3 using 2 as the common point\n"
+#~ "\tDihedral is measured between 1-2-3-4\n"
+#~ "Right Mouse:\tReset the measurements."
+#~ msgstr ""
+#~ "测量工具\t(%1)\n"
+#~ "\n"
+#~ "鼠标左键：选择至多四个原子。\n"
+#~ "\t测量原子1-2和原子2-3之间的距离\n"
+#~ "\t以2号原子为顶点，测量原子1-3的角度\n"
+#~ "\t按1-2-3-4的顺序测定二面角\n"
+#~ "鼠标右键：重置测量。"
+
 #~ msgid "Velocities"
 #~ msgstr "速度"
 
@@ -10500,9 +10877,6 @@ msgstr ""
 #~ msgid "%L1 Å"
 #~ msgstr "%L1 Å"
 
-#~ msgid " Å"
-#~ msgstr " Å"
-
 #, qt-format
 #~ msgid "%1 %L2"
 #~ msgstr "%1 %L2"
@@ -10519,9 +10893,6 @@ msgstr ""
 
 #~ msgid "Å"
 #~ msgstr "Å"
-
-#~ msgid "°"
-#~ msgstr "°"
 
 #~ msgid " "
 #~ msgstr " "
