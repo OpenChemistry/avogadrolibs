@@ -1257,6 +1257,14 @@ private:
    */
   double atomMass(Index atomId) const;
 
+  /**
+   * Take every data member except the layer state from @p other, leaving it
+   * equivalent to a default-constructed Molecule. Shared by the move
+   * constructor and move assignment; the caller must already have released
+   * this molecule's meshes, cubes, basis set and unit cell.
+   */
+  void takeContentsFrom(Molecule& other) noexcept;
+
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   // edge information
   Array<unsigned char> m_bondOrders;
@@ -1276,7 +1284,7 @@ private:
    * A moved-from molecule is left with no layer state rather than sharing the
    * moved-to molecule's: sharing would let a write through the moved-from
    * object corrupt the moved-to one. Creating it here rather than in the move
-   * keeps the move allocation-free, and so honestly noexcept.
+   * keeps layer state out of the move.
    */
   MoleculeInfo& ensureLayerInfo() const
   {

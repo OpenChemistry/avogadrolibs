@@ -138,41 +138,15 @@ void Molecule::readProperties(const Molecule& other)
 }
 
 Molecule::Molecule(Molecule&& other) noexcept
-  : m_data(std::move(other.m_data)),
-    m_partialCharges(std::move(other.m_partialCharges)),
-    m_spectra(std::move(other.m_spectra)),
-    m_atomProperties(std::move(other.m_atomProperties)),
-    m_bondProperties(std::move(other.m_bondProperties)),
-    m_residueProperties(std::move(other.m_residueProperties)),
-    m_conformerProperties(std::move(other.m_conformerProperties)),
-    m_customElementMap(std::move(other.m_customElementMap)),
-    m_elements(other.m_elements), m_positions2d(other.m_positions2d),
-    m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
-    m_bondLabels(other.m_bondLabels), m_residueLabels(other.m_residueLabels),
-    m_coordinates3d(other.m_coordinates3d),
-    m_coordinate3dIndex(std::exchange(other.m_coordinate3dIndex, 0)),
-    m_velocities(other.m_velocities), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
-    m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
-    m_vibrations(std::move(other.m_vibrations)),
-    m_selectedAtoms(std::move(other.m_selectedAtoms)),
-    m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
-    m_activeCubeIndex(std::exchange(other.m_activeCubeIndex, 0)),
-    m_basisSet(std::exchange(other.m_basisSet, nullptr)),
-    m_unitCell(std::exchange(other.m_unitCell, nullptr)),
-    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_constraints(std::move(other.m_constraints)),
-    m_frozenAtomMask(std::move(other.m_frozenAtomMask)),
-    m_graph(std::move(other.m_graph)), m_bondOrders(other.m_bondOrders),
-    m_atomicNumbers(other.m_atomicNumbers),
+  : m_basisSet(nullptr), m_unitCell(nullptr),
     m_layerInfo(std::move(other.m_layerInfo))
 {
   // Leave the moved-from molecule with no layer state rather than sharing
   // ours: sharing would let a write through the moved-from object reach this
-  // one. It recreates its own on first use, which keeps this constructor
-  // allocation-free and so honestly noexcept.
+  // one. It recreates its own on first use.
   other.m_layerInfo.reset();
+
+  takeContentsFrom(other);
 }
 
 Molecule& Molecule::operator=(const Molecule& other)
@@ -244,62 +218,120 @@ Molecule& Molecule::operator=(const Molecule& other)
 Molecule& Molecule::operator=(Molecule&& other) noexcept
 {
   if (this != &other) {
-    m_data = std::move(other.m_data);
-    m_partialCharges = std::move(other.m_partialCharges);
-    m_spectra = std::move(other.m_spectra);
-    m_atomProperties = std::move(other.m_atomProperties);
-    m_bondProperties = std::move(other.m_bondProperties);
-    m_residueProperties = std::move(other.m_residueProperties);
-    m_conformerProperties = std::move(other.m_conformerProperties);
-    m_customElementMap = std::move(other.m_customElementMap);
-    m_elements = other.m_elements;
-    m_positions2d = other.m_positions2d;
-    m_positions3d = other.m_positions3d;
-    m_atomLabels = other.m_atomLabels;
-    m_bondLabels = other.m_bondLabels;
-    m_residueLabels = other.m_residueLabels;
-    m_coordinates3d = other.m_coordinates3d;
-    m_coordinate3dIndex = other.m_coordinate3dIndex;
-    m_velocities = other.m_velocities;
-    m_timesteps = other.m_timesteps;
-    m_hybridizations = other.m_hybridizations;
-    m_formalCharges = other.m_formalCharges;
-    m_isotopes = other.m_isotopes;
-    m_forceVectors = other.m_forceVectors;
-    m_colors = other.m_colors;
-    m_vibrations = std::move(other.m_vibrations);
-    m_selectedAtoms = std::move(other.m_selectedAtoms);
-    m_residues = other.m_residues;
-    m_graph = std::move(other.m_graph);
-    m_bondOrders = other.m_bondOrders;
-    m_atomicNumbers = other.m_atomicNumbers;
-    m_hallNumber = other.m_hallNumber;
-    m_constraints = std::move(other.m_constraints);
-    m_frozenAtomMask = std::move(other.m_frozenAtomMask);
-
+    // Free what this molecule owns; none of it goes to the source.
     clearMeshes();
-    m_meshes = std::move(other.m_meshes);
-
     clearCubes();
-    m_cubes = std::move(other.m_cubes);
-    m_activeCubeIndex = other.m_activeCubeIndex;
-
     delete m_basisSet;
-    m_basisSet = std::exchange(other.m_basisSet, nullptr);
-
+    m_basisSet = nullptr;
     delete m_unitCell;
-    m_unitCell = std::exchange(other.m_unitCell, nullptr);
+    m_unitCell = nullptr;
+
+    takeContentsFrom(other);
 
     // Assign into the existing MoleculeInfo where there is one, so anything
     // already sharing it (an undo command, say) sees the update. Taking the
-    // handle is the fallback, and neither path allocates.
+    // handle is the fallback. Either way the source is left with no layer
+    // state, and recreates default state on first use.
     if (m_layerInfo && other.m_layerInfo)
       *m_layerInfo = std::move(*other.m_layerInfo);
     else
       m_layerInfo = std::move(other.m_layerInfo);
+    other.m_layerInfo.reset();
   }
 
   return *this;
+}
+
+namespace {
+
+// Give @p to the contents of @p from and leave @p from empty and unshared.
+// Core::Array has no move operations, and copying one would either share its
+// container with the source (copy construction) or deep-copy it (assignment).
+template <typename T>
+void takeArray(Array<T>& to, Array<T>& from)
+{
+  Array<T> empty;
+  to.swap(from);
+  // The source takes the fresh container; this one's old data is released
+  // when empty goes out of scope.
+  from.swap(empty);
+}
+
+} // namespace
+
+void Molecule::takeContentsFrom(Molecule& other) noexcept
+{
+  // Every data member except m_layerInfo, which the move constructor and move
+  // assignment handle differently. Afterwards the source must be observably
+  // equivalent to a default-constructed Molecule: a member left behind here
+  // would describe atoms the source's graph no longer has.
+  // Pointer-owning members (meshes, cubes, basis set, unit cell) must already
+  // be released by the caller.
+  m_data = std::move(other.m_data);
+  other.m_data.clear();
+  m_partialCharges = std::move(other.m_partialCharges);
+  other.m_partialCharges.clear();
+  m_spectra = std::move(other.m_spectra);
+  other.m_spectra.clear();
+  m_atomProperties = std::move(other.m_atomProperties);
+  other.m_atomProperties.clear();
+  m_bondProperties = std::move(other.m_bondProperties);
+  other.m_bondProperties.clear();
+  m_residueProperties = std::move(other.m_residueProperties);
+  other.m_residueProperties.clear();
+  m_conformerProperties = std::move(other.m_conformerProperties);
+  other.m_conformerProperties.clear();
+  m_customElementMap = std::move(other.m_customElementMap);
+  other.m_customElementMap.clear();
+  m_elements = other.m_elements;
+  other.m_elements.reset();
+
+  takeArray(m_positions2d, other.m_positions2d);
+  takeArray(m_positions3d, other.m_positions3d);
+  takeArray(m_atomLabels, other.m_atomLabels);
+  takeArray(m_bondLabels, other.m_bondLabels);
+  takeArray(m_residueLabels, other.m_residueLabels);
+  takeArray(m_coordinates3d, other.m_coordinates3d);
+  m_coordinate3dIndex = std::exchange(other.m_coordinate3dIndex, 0);
+  takeArray(m_velocities, other.m_velocities);
+  takeArray(m_timesteps, other.m_timesteps);
+  takeArray(m_hybridizations, other.m_hybridizations);
+  takeArray(m_formalCharges, other.m_formalCharges);
+  takeArray(m_isotopes, other.m_isotopes);
+  takeArray(m_forceVectors, other.m_forceVectors);
+  takeArray(m_colors, other.m_colors);
+
+  m_vibrations = std::move(other.m_vibrations);
+  other.m_vibrations.clear();
+  m_selectedAtoms = std::move(other.m_selectedAtoms);
+  other.m_selectedAtoms.clear();
+
+  m_meshes = std::move(other.m_meshes);
+  other.m_meshes.clear();
+  m_cubes = std::move(other.m_cubes);
+  other.m_cubes.clear();
+  m_activeCubeIndex = std::exchange(other.m_activeCubeIndex, 0);
+
+  m_basisSet = std::exchange(other.m_basisSet, nullptr);
+  // The basis set points back at its molecule, which is now this one.
+  if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
+    m_basisSet->setMolecule(this);
+  m_unitCell = std::exchange(other.m_unitCell, nullptr);
+
+  takeArray(m_residues, other.m_residues);
+  m_hallNumber = std::exchange(other.m_hallNumber, 0);
+  m_constraints = std::move(other.m_constraints);
+  other.m_constraints.clear();
+  // Eigen's move assignment swaps, so empty the source explicitly.
+  m_frozenAtomMask = std::move(other.m_frozenAtomMask);
+  other.m_frozenAtomMask.resize(0);
+
+  // Graph has no swap, and its defaulted moves copy its edge Array; resetting
+  // the source afterwards leaves it empty and unshared.
+  m_graph = std::move(other.m_graph);
+  other.m_graph = Graph();
+  takeArray(m_bondOrders, other.m_bondOrders);
+  takeArray(m_atomicNumbers, other.m_atomicNumbers);
 }
 
 Molecule::~Molecule()

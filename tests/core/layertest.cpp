@@ -215,8 +215,9 @@ TEST_F(LayerTest, MovedFromMoleculeStillHasLayerState)
   EXPECT_NO_FATAL_FAILURE(original.layer().maxLayer());
 }
 
-// The point of the ownership change: moving a molecule must not allocate, so
-// the noexcept on the move operations is honest.
+// The point of the ownership change: moving a molecule must not allocate
+// layer state -- the handle is transferred, not rebuilt. (Other members may
+// allocate small empty containers to leave the source empty.)
 TEST_F(LayerTest, MovingAMoleculeDoesNotAllocateLayerState)
 {
   static_assert(std::is_nothrow_move_constructible<Molecule>::value,

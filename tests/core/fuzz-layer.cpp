@@ -103,6 +103,21 @@ void checkMolecule(const Molecule& mol, const char* where)
   }
 }
 
+// A moved-from Molecule must be left empty, not holding atoms or bonds its
+// graph no longer describes. Only the cheap counts are checked here; the
+// member-by-member comparison lives in moleculetest.cpp.
+void checkMovedFromIsEmpty(const Molecule& mol, const char* where)
+{
+  if (mol.atomCount() != 0 || mol.bondCount() != 0) {
+    std::fprintf(stderr,
+                 "oracle violation (%s): moved-from molecule has %zu atoms "
+                 "and %zu bonds, expected none\n",
+                 where, static_cast<size_t>(mol.atomCount()),
+                 static_cast<size_t>(mol.bondCount()));
+    std::abort();
+  }
+}
+
 } // namespace
 
 // Fuzz Core::Layer / Core::LayerManager / Core::MoleculeInfo, mixed with the
@@ -135,15 +150,15 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
   // never checked by the oracle.
   //
   // This is deliberately not the same thing as the atomCount()/layer
-  // desync a moved-from Molecule can be caught in today: the move
-  // constructor and move-assignment operator move m_graph (a real
-  // std::move) but only copy-share m_atomicNumbers/m_bondOrders, because
-  // Core::Array has no move constructor -- so a moved-from molecule can be
-  // internally inconsistent rather than simply empty. That is a known,
-  // separately tracked bug (see the fuzz_core_layer soak report); it is
-  // not what this flag is guarding against, and fixing that bug does not
-  // make this flag unnecessary -- do not remove this tracking on the
-  // assumption that bug is the only reason for it.
+  // desync a moved-from Molecule used to be caught in: the move
+  // constructor and move-assignment operator moved m_graph (a real
+  // std::move) but only copy-shared m_atomicNumbers/m_bondOrders, because
+  // Core::Array has no move constructor -- so a moved-from molecule could
+  // be internally inconsistent rather than simply empty. That bug is now
+  // fixed (a moved-from Molecule is equivalent to a default-constructed
+  // one; cases 18 and 19 check the cheap part of that below), but fixing
+  // it does not make this flag unnecessary -- do not remove this tracking
+  // on the assumption that bug was the only reason for it.
   std::array<bool, kPoolSize> movedFrom{};
 
   const size_t steps = fdp.ConsumeIntegralInRange<size_t>(1, 128);
@@ -329,8 +344,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
           const bool selfReplace = (a == b);
           pool[b] = std::make_unique<Molecule>(std::move(*pool[a]));
           movedFrom[b] = false;
-          if (!selfReplace)
+          if (!selfReplace) {
+            checkMovedFromIsEmpty(*pool[a], "move-construct");
             movedFrom[a] = true;
+          }
         }
         break;
       }
@@ -341,6 +358,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
           // exactly as live as it already was.
           *pool[a] = std::move(*pool[b]);
           if (a != b) {
+            checkMovedFromIsEmpty(*pool[b], "move-assign");
             movedFrom[a] = false;
             movedFrom[b] = true;
           }
