@@ -6,6 +6,7 @@
 #include "wireframe.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
@@ -21,6 +22,11 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
+#include <algorithm>
+#include <cmath>
+#include <locale>
+#include <sstream>
+
 namespace Avogadro::QtPlugins {
 
 using Core::Array;
@@ -31,12 +37,23 @@ using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 using Rendering::WideLineGeometry;
 
+namespace {
+// See the comment in label.cpp: tokens are always written with a
+// classic-locale stream, but older settings saved under a comma-decimal
+// locale (Qt calls setlocale(LC_ALL, "") on Unix) may still use ','.
+std::string commaToDot(std::string token)
+{
+  std::replace(token.begin(), token.end(), ',', '.');
+  return token;
+}
+} // namespace
+
 struct LayerWireframe : Core::LayerData
 {
   QWidget* widget;
-  bool multiBonds;
-  bool showHydrogens;
-  float lineWidth;
+  bool multiBonds = true;
+  bool showHydrogens = true;
+  float lineWidth = 1.0f;
 
   LayerWireframe()
   {
@@ -63,19 +80,25 @@ struct LayerWireframe : Core::LayerData
 
   std::string serialize() final
   {
-    return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
-           std::to_string(lineWidth);
+    std::ostringstream output;
+    output.imbue(std::locale::classic());
+    output << boolToString(multiBonds) << " " << boolToString(showHydrogens)
+           << " " << lineWidth;
+    return output.str();
   }
   void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
-    ss >> aux;
-    multiBonds = stringToBool(aux);
-    ss >> aux;
-    showHydrogens = stringToBool(aux);
-    ss >> aux;
-    lineWidth = std::stof(aux);
+    if (ss >> aux)
+      multiBonds = stringToBool(aux);
+    if (ss >> aux)
+      showHydrogens = stringToBool(aux);
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<float>(commaToDot(aux));
+          v && std::isfinite(*v) && *v > 0.0f)
+        lineWidth = *v;
+    }
   }
 
   void setupWidget(Wireframe* slot)

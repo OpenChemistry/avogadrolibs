@@ -6,6 +6,7 @@
 #include "vanderwaals.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
@@ -15,6 +16,10 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QSlider>
 
+#include <algorithm>
+#include <locale>
+#include <sstream>
+
 namespace Avogadro::QtPlugins {
 
 using Core::Elements;
@@ -23,10 +28,21 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 
+namespace {
+// See the comment in label.cpp: tokens are always written with a
+// classic-locale stream, but older settings saved under a comma-decimal
+// locale (Qt calls setlocale(LC_ALL, "") on Unix) may still use ','.
+std::string commaToDot(std::string token)
+{
+  std::replace(token.begin(), token.end(), ',', '.');
+  return token;
+}
+} // namespace
+
 struct LayerVdW : Core::LayerData
 {
   QWidget* widget;
-  float opacity;
+  float opacity = 1.0f;
 
   LayerVdW()
   {
@@ -49,13 +65,21 @@ struct LayerVdW : Core::LayerData
       widget->deleteLater();
   }
 
-  std::string serialize() final { return std::to_string(opacity); }
+  std::string serialize() final
+  {
+    std::ostringstream output;
+    output.imbue(std::locale::classic());
+    output << opacity;
+    return output.str();
+  }
   void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
-    ss >> aux;
-    opacity = std::stof(aux);
+    if (ss >> aux) {
+      if (auto v = Core::lexicalCast<float>(commaToDot(aux)))
+        opacity = std::clamp(*v, 0.0f, 1.0f);
+    }
   }
 
   void setupWidget(VanDerWaals* slot)
