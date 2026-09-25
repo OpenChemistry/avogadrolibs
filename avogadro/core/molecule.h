@@ -69,18 +69,21 @@ public:
   /**
    * Move constructor.
    *
-   * noexcept, and honestly so: every member is moved rather than copied, and
-   * the layer state is a shared_ptr this molecule owns, so nothing here
-   * allocates. Both halves of that are load bearing -- this used to copy the
-   * property maps, the graph and the frozen-atom mask, and to register the new
-   * molecule with the LayerManager, either of which could throw.
+   * Takes every member from @p other and leaves it equivalent to a
+   * default-constructed Molecule. The layer state is a shared_ptr whose handle
+   * is transferred, not rebuilt. noexcept, but not allocation-free: leaving the
+   * source empty allocates small empty containers, and the graph's edge list
+   * may be copied. An allocation failure here terminates the program.
    */
   Molecule(Molecule&& other) noexcept;
 
   /** Assignment operator */
   Molecule& operator=(const Molecule& other);
 
-  /** Move assignment operator. noexcept, see the move constructor. */
+  /**
+   * Move assignment operator. noexcept but may allocate, as the move
+   * constructor does; an allocation failure terminates the program.
+   */
   Molecule& operator=(Molecule&& other) noexcept;
 
   /** Destroys the molecule object. */
@@ -1257,6 +1260,22 @@ private:
    */
   double atomMass(Index atomId) const;
 
+  /**
+   * Take every data member except the layer state from @p other, leaving it
+   * equivalent to a default-constructed Molecule. Shared by the move
+   * constructor and move assignment; the caller must already have released
+   * this molecule's meshes, cubes, basis set and unit cell. noexcept but may
+   * allocate small empty containers; an allocation failure terminates.
+   */
+  void takeContentsFrom(Molecule& other) noexcept;
+
+  /**
+   * Residues name their atoms through Atom proxies that carry a molecule
+   * pointer. After m_residues has been copied or taken from @p source, point
+   * the proxies that referred to it at this molecule, keeping their indices.
+   */
+  void repointResidueAtoms(const Molecule& source);
+
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   // edge information
   Array<unsigned char> m_bondOrders;
@@ -1276,7 +1295,7 @@ private:
    * A moved-from molecule is left with no layer state rather than sharing the
    * moved-to molecule's: sharing would let a write through the moved-from
    * object corrupt the moved-to one. Creating it here rather than in the move
-   * keeps the move allocation-free, and so honestly noexcept.
+   * keeps layer state out of the move.
    */
   MoleculeInfo& ensureLayerInfo() const
   {

@@ -481,6 +481,362 @@ TEST_F(MoleculeTest, propertyMapMoveAssign)
   ASSERT_TRUE(target.atomProperties().getMatrix("tensor", 0).has_value());
 }
 
+// Core::Array has no move operations, so the Molecule moves used to copy-
+// construct every Array member (the source kept its atoms) while really moving
+// the graph (the source lost its vertices). Removing an atom from the
+// moved-from molecule then walked a graph that no longer had it.
+static void buildBonded(Molecule& m)
+{
+  m.addAtom(6);
+  m.addAtom(8);
+  m.addAtom(1);
+  m.addBond(0, 1, 2);
+  m.addBond(0, 2, 1);
+}
+
+static void expectReusable(Molecule& m)
+{
+  EXPECT_NO_FATAL_FAILURE(m.removeAtom(0));
+  EXPECT_EQ(m.atomCount(), 0u);
+  EXPECT_EQ(m.bondCount(), 0u);
+
+  Atom a = m.addAtom(6);
+  Atom b = m.addAtom(1);
+  Bond bond = m.addBond(a, b, 1);
+  EXPECT_TRUE(bond.isValid());
+  EXPECT_EQ(m.atomCount(), 2u);
+  EXPECT_EQ(m.bondCount(), 1u);
+  EXPECT_EQ(m.atomicNumber(0), 6);
+  EXPECT_EQ(m.graph().size(), 2u);
+  EXPECT_EQ(m.bondPairs().size(), 1u);
+}
+
+TEST_F(MoleculeTest, moveConstructLeavesSourceReusable)
+{
+  Molecule original;
+  buildBonded(original);
+
+  Molecule moved(std::move(original));
+
+  EXPECT_EQ(moved.atomCount(), 3u);
+  EXPECT_EQ(moved.bondCount(), 2u);
+  expectReusable(original);
+  // Reusing the source must not reach the molecule it was moved into.
+  EXPECT_EQ(moved.atomCount(), 3u);
+  EXPECT_EQ(moved.bondCount(), 2u);
+  EXPECT_EQ(moved.atomicNumber(1), 8);
+}
+
+TEST_F(MoleculeTest, moveAssignLeavesSourceReusable)
+{
+  Molecule original;
+  buildBonded(original);
+  Molecule target;
+  target.addAtom(7);
+
+  target = std::move(original);
+
+  EXPECT_EQ(target.atomCount(), 3u);
+  EXPECT_EQ(target.bondCount(), 2u);
+  expectReusable(original);
+  EXPECT_EQ(target.atomCount(), 3u);
+  EXPECT_EQ(target.bondCount(), 2u);
+  EXPECT_EQ(target.atomicNumber(1), 8);
+}
+
+// A residue's atom names are Atom proxies carrying a molecule pointer. After
+// either move they must refer to the destination, at the same indices, not to
+// the now-empty source.
+TEST_F(MoleculeTest, moveRepointsResidueAtoms)
+{
+  auto build = [](Molecule& m) {
+    buildBonded(m);
+    std::string resName = "ALA";
+    Avogadro::Index resNumber = 1;
+    char chain = 'A';
+    Avogadro::Core::Residue& residue = m.addResidue(resName, resNumber, chain);
+    residue.addResidueAtom("N", m.atom(0));
+    residue.addResidueAtom("CA", m.atom(2));
+  };
+  auto expectRepointed = [](const Molecule& m) {
+    const Avogadro::Core::Residue& residue = m.residue(0);
+    const auto n = residue.atomByName("N");
+    const auto ca = residue.atomByName("CA");
+    EXPECT_EQ(n.molecule(), &m);
+    EXPECT_EQ(ca.molecule(), &m);
+    EXPECT_EQ(n.index(), 0u);
+    EXPECT_EQ(ca.index(), 2u);
+    EXPECT_EQ(residue.atomName(m.atom(2)), "CA");
+  };
+
+  Molecule original;
+  build(original);
+  Molecule moved(std::move(original));
+  expectRepointed(moved);
+
+  Molecule source;
+  build(source);
+  Molecule target;
+  target = std::move(source);
+  expectRepointed(target);
+}
+
+// Copies must not point back at the original either: residue atoms and the
+// basis set both carry a molecule pointer.
+TEST_F(MoleculeTest, copyRepointsResidueAtomsAndBasisSet)
+{
+  Molecule original;
+  buildBonded(original);
+  std::string resName = "ALA";
+  Avogadro::Index resNumber = 1;
+  char chain = 'A';
+  Avogadro::Core::Residue& residue =
+    original.addResidue(resName, resNumber, chain);
+  residue.addResidueAtom("CA", original.atom(2));
+  auto* basis = new Avogadro::Core::GaussianSet;
+  basis->setMolecule(&original);
+  basis->addBasis(0, Avogadro::Core::GaussianSet::S);
+  original.setBasisSet(basis);
+
+  auto expectOwnPointers = [](const Molecule& m) {
+    const auto ca = m.residue(0).atomByName("CA");
+    EXPECT_EQ(ca.molecule(), &m);
+    EXPECT_EQ(ca.index(), 2u);
+    ASSERT_NE(m.basisSet(), nullptr);
+    EXPECT_EQ(m.basisSet()->molecule(), &m);
+  };
+
+  Molecule copied(original);
+  expectOwnPointers(copied);
+
+  Molecule assigned;
+  assigned = original;
+  expectOwnPointers(assigned);
+
+  // The original's own residue atoms still refer to it.
+  expectOwnPointers(original);
+}
+
+// Fill as many members as practical, so a member the moves forget shows up.
+static void populateEverything(Molecule& m)
+{
+  buildBonded(m);
+  m.setAtomPosition2d(0, Vector2(1.0, 2.0));
+  m.setAtomPosition3d(0, Vector3(1.0, 2.0, 3.0));
+  m.setAtomLabel(0, "C1");
+  m.setBondLabel(0, "double");
+  m.setHybridization(0, Avogadro::Core::SP2);
+  m.setFormalCharge(1, -1);
+  m.setIsotope(2, 2);
+  m.setColor(0, Avogadro::Vector3ub(10, 20, 30));
+  m.setForceVector(0, Vector3(0.5, 0.0, 0.0));
+  m.setAtomSelected(1, true);
+  m.setFrozenAtom(2, true);
+  m.addConstraint(1.2, 0, 1);
+
+  Array<Vector3> coords(3, Vector3(0.0, 0.0, 0.0));
+  m.setCoordinate3d(coords, 0);
+  m.setCoordinate3d(coords, 1);
+  m.setCoordinate3d(1);
+  m.setVelocities(coords, 0);
+  m.setTimeStep(0.5, 0);
+
+  std::string resName("MOL");
+  Avogadro::Index resNumber = 1;
+  char chain = 'A';
+  m.addResidue(resName, resNumber, chain);
+  m.setResidueLabel(0, "ligand");
+
+  MatrixX charges(3, 1);
+  charges << -0.4, 0.3, 0.1;
+  m.setPartialCharges("test", charges);
+  MatrixX ir(2, 2);
+  ir << 1.0, 2.0, 3.0, 4.0;
+  m.setSpectra("IR", ir);
+  m.setData("name", Variant(std::string("formyl")));
+  m.atomProperties().setDouble("charge", 0, -0.5);
+  m.bondProperties().setInt("kind", 0, 3);
+  m.residueProperties().setString("kind", 0, "ligand");
+  m.conformerProperties().setDouble("energy", 0, -1.0);
+  m.setCustomElementMap({ { 200, "Xx" } });
+
+  Array<double> freqs;
+  freqs.push_back(1000.0);
+  m.setVibrationFrequencies(freqs);
+
+  m.addMesh();
+  m.addCube();
+  m.addCube();
+  m.setActiveCubeIndex(1);
+  auto* basis = new Avogadro::Core::GaussianSet;
+  basis->setMolecule(&m);
+  basis->addBasis(0, Avogadro::Core::GaussianSet::S);
+  m.setBasisSet(basis);
+  m.setUnitCell(new UnitCell(10.0, 10.0, 10.0, M_PI / 2, M_PI / 2, M_PI / 2));
+  m.setHallNumber(5);
+}
+
+static void expectPopulated(const Molecule& m)
+{
+  EXPECT_EQ(m.atomCount(), 3u);
+  EXPECT_EQ(m.bondCount(), 2u);
+  EXPECT_EQ(m.graph().size(), 3u);
+  EXPECT_EQ(m.atomicNumber(1), 8);
+  EXPECT_EQ(m.bondOrder(0), 2);
+  EXPECT_EQ(m.atomPosition2d(0), Vector2(1.0, 2.0));
+  EXPECT_EQ(m.atomPositions3d().size(), 3u);
+  EXPECT_EQ(m.atomLabel(0), "C1");
+  EXPECT_EQ(m.bondLabel(0), "double");
+  EXPECT_EQ(m.hybridization(0), Avogadro::Core::SP2);
+  EXPECT_EQ(m.formalCharge(1), -1);
+  EXPECT_EQ(m.isotope(2), 2);
+  EXPECT_EQ(m.color(0), Avogadro::Vector3ub(10, 20, 30));
+  EXPECT_EQ(m.forceVector(0), Vector3(0.5, 0.0, 0.0));
+  EXPECT_TRUE(m.atomSelected(1));
+  EXPECT_EQ(m.frozenAtomMask().size(), 9);
+  EXPECT_EQ(m.constraints().size(), 1u);
+  EXPECT_EQ(m.coordinate3dCount(), 2u);
+  EXPECT_EQ(m.coordinate3d(), 1);
+  EXPECT_EQ(m.velocities(0).size(), 3u);
+  bool status = false;
+  EXPECT_DOUBLE_EQ(m.timeStep(0, status), 0.5);
+  EXPECT_EQ(m.residueCount(), 1u);
+  EXPECT_EQ(m.residueLabel(0), "ligand");
+  EXPECT_EQ(m.partialChargeTypes().size(), 1u);
+  EXPECT_EQ(m.spectraTypes().size(), 1u);
+  EXPECT_EQ(m.data("name").toString(), "formyl");
+  EXPECT_FALSE(m.atomProperties().empty());
+  EXPECT_FALSE(m.bondProperties().empty());
+  EXPECT_FALSE(m.residueProperties().empty());
+  EXPECT_FALSE(m.conformerProperties().empty());
+  EXPECT_EQ(m.customElementMap().size(), 1u);
+  EXPECT_TRUE(m.elements().any());
+  EXPECT_EQ(m.vibrationConformerCount(), 1u);
+  EXPECT_EQ(m.meshCount(), 1u);
+  EXPECT_EQ(m.cubeCount(), 2u);
+  EXPECT_EQ(m.activeCubeIndex(), 1u);
+  ASSERT_NE(m.basisSet(), nullptr);
+  // The basis set follows its molecule.
+  EXPECT_EQ(m.basisSet()->molecule(), &m);
+  EXPECT_NE(m.unitCell(), nullptr);
+  EXPECT_EQ(m.hallNumber(), 5);
+}
+
+// A moved-from molecule must be indistinguishable from a default one.
+static void expectLikeDefault(const Molecule& m)
+{
+  const Molecule d;
+  EXPECT_EQ(m.atomCount(), d.atomCount());
+  EXPECT_EQ(m.bondCount(), d.bondCount());
+  EXPECT_EQ(m.graph().size(), d.graph().size());
+  EXPECT_EQ(m.graph().edgeCount(), d.graph().edgeCount());
+  EXPECT_EQ(m.atomicNumbers().size(), d.atomicNumbers().size());
+  EXPECT_EQ(m.bondOrders().size(), d.bondOrders().size());
+  EXPECT_EQ(m.bondPairs().size(), d.bondPairs().size());
+  EXPECT_EQ(m.atomPositions2d().size(), d.atomPositions2d().size());
+  EXPECT_EQ(m.atomPositions3d().size(), d.atomPositions3d().size());
+  EXPECT_EQ(m.atomLabels().size(), d.atomLabels().size());
+  EXPECT_EQ(m.bondLabels().size(), d.bondLabels().size());
+  EXPECT_EQ(m.residueLabels().size(), d.residueLabels().size());
+  EXPECT_EQ(m.hybridizations().size(), d.hybridizations().size());
+  EXPECT_EQ(m.formalCharges().size(), d.formalCharges().size());
+  EXPECT_EQ(m.isotopes().size(), d.isotopes().size());
+  EXPECT_EQ(m.colors().size(), d.colors().size());
+  EXPECT_EQ(m.forceVectors().size(), d.forceVectors().size());
+  EXPECT_EQ(m.isSelectionEmpty(), d.isSelectionEmpty());
+  EXPECT_EQ(m.frozenAtomMask().size(), d.frozenAtomMask().size());
+  EXPECT_EQ(m.constraints().size(), d.constraints().size());
+  EXPECT_EQ(m.coordinate3dCount(), d.coordinate3dCount());
+  EXPECT_EQ(m.coordinate3d(), d.coordinate3d());
+  EXPECT_EQ(m.velocities(0).size(), d.velocities(0).size());
+  bool status = true;
+  bool defaultStatus = true;
+  m.timeStep(0, status);
+  d.timeStep(0, defaultStatus);
+  EXPECT_EQ(status, defaultStatus);
+  EXPECT_EQ(m.residueCount(), d.residueCount());
+  EXPECT_EQ(m.partialChargeTypes(), d.partialChargeTypes());
+  EXPECT_EQ(m.spectraTypes(), d.spectraTypes());
+  EXPECT_EQ(m.dataMap().size(), d.dataMap().size());
+  EXPECT_EQ(m.atomProperties().empty(), d.atomProperties().empty());
+  EXPECT_EQ(m.bondProperties().empty(), d.bondProperties().empty());
+  EXPECT_EQ(m.residueProperties().empty(), d.residueProperties().empty());
+  EXPECT_EQ(m.conformerProperties().empty(), d.conformerProperties().empty());
+  EXPECT_EQ(m.customElementMap(), d.customElementMap());
+  EXPECT_EQ(m.elements(), d.elements());
+  EXPECT_EQ(m.vibrationConformerCount(), d.vibrationConformerCount());
+  EXPECT_EQ(m.vibrationFrequencies().size(), d.vibrationFrequencies().size());
+  EXPECT_EQ(m.meshCount(), d.meshCount());
+  EXPECT_EQ(m.cubeCount(), d.cubeCount());
+  EXPECT_EQ(m.activeCubeIndex(), d.activeCubeIndex());
+  EXPECT_EQ(m.basisSet(), nullptr);
+  EXPECT_EQ(m.unitCell(), nullptr);
+  EXPECT_EQ(m.hallNumber(), d.hallNumber());
+  EXPECT_EQ(m.layer().maxLayer(), d.layer().maxLayer());
+}
+
+TEST_F(MoleculeTest, moveConstructedFromEqualsDefault)
+{
+  Molecule original;
+  populateEverything(original);
+  expectPopulated(original);
+
+  Molecule moved(std::move(original));
+
+  expectPopulated(moved);
+  expectLikeDefault(original);
+}
+
+TEST_F(MoleculeTest, moveAssignedFromEqualsDefault)
+{
+  Molecule original;
+  populateEverything(original);
+  Molecule target;
+
+  target = std::move(original);
+
+  expectPopulated(target);
+  expectLikeDefault(original);
+}
+
+// The target's own meshes, cubes, basis set and unit cell must be freed, not
+// leaked and not handed to the source; ASan checks the leak/double free.
+TEST_F(MoleculeTest, moveAssignIntoPopulatedTarget)
+{
+  Molecule original;
+  populateEverything(original);
+  Molecule target;
+  target.addAtom(7);
+  target.addMesh();
+  target.addMesh();
+  target.addCube();
+  target.setUnitCell(new UnitCell(5.0, 5.0, 5.0, M_PI / 2, M_PI / 2, M_PI / 2));
+  auto* oldBasis = new Avogadro::Core::GaussianSet;
+  oldBasis->setMolecule(&target);
+  target.setBasisSet(oldBasis);
+
+  target = std::move(original);
+
+  expectPopulated(target);
+  expectLikeDefault(original);
+
+  // And moving back the other way.
+  original = std::move(target);
+  expectPopulated(original);
+  expectLikeDefault(target);
+}
+
+TEST_F(MoleculeTest, selfMoveAssignIsANoOp)
+{
+  Molecule molecule;
+  populateEverything(molecule);
+  Molecule& alias = molecule;
+
+  molecule = std::move(alias);
+
+  expectPopulated(molecule);
+}
+
 TEST_F(MoleculeTest, estimateVelocities)
 {
   Molecule molecule;

@@ -201,9 +201,8 @@ TEST_F(LayerTest, SharedHandleOutlivesTheMolecule)
 }
 
 // A moved-from molecule has to stay usable -- accessing its layers must not
-// dereference null. It shares the moved-to molecule's state rather than
-// getting fresh state, because allocating here would make the noexcept move
-// able to throw.
+// dereference null. The move leaves it with no layer state, and it recreates
+// fresh default state on first use rather than sharing the moved-to one's.
 TEST_F(LayerTest, MovedFromMoleculeStillHasLayerState)
 {
   Molecule original;
@@ -211,12 +210,14 @@ TEST_F(LayerTest, MovedFromMoleculeStillHasLayerState)
   Molecule moved(std::move(original));
 
   EXPECT_TRUE(original.layerInfo() != nullptr);
+  EXPECT_NE(original.layerInfo(), moved.layerInfo());
   EXPECT_EQ(moved.layer().maxLayer(), numLayers - 1);
-  EXPECT_NO_FATAL_FAILURE(original.layer().maxLayer());
+  EXPECT_EQ(original.layer().maxLayer(), 0u);
 }
 
-// The point of the ownership change: moving a molecule must not allocate, so
-// the noexcept on the move operations is honest.
+// The point of the ownership change: moving a molecule must not allocate
+// layer state -- the handle is transferred, not rebuilt. (Other members may
+// allocate small empty containers to leave the source empty.)
 TEST_F(LayerTest, MovingAMoleculeDoesNotAllocateLayerState)
 {
   static_assert(std::is_nothrow_move_constructible<Molecule>::value,

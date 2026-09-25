@@ -37,7 +37,11 @@ void CalcWorker::initCalculator(Calc::EnergyCalculator* calculator,
 {
   m_cancelled = false;
   m_calc.reset(calculator);
-  m_molSnapshot = std::move(molSnapshot);
+  // Copy, not move: molSnapshot arrived over a queued connection still
+  // sharing containers with a molecule on the sending thread. A move would
+  // hand those shared containers to this long-lived snapshot; copy assignment
+  // deep-copies the data, giving it its own containers.
+  m_molSnapshot = molSnapshot;
   m_optState = Calc::OptimizerState{};
 
   // setMolecule on this thread so QProcess gets correct affinity
