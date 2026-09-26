@@ -81,37 +81,7 @@ jobs:
 
     - name: Fix Mac plugins
       if: runner.os == 'macOS'
-      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
-      run: |
-        for plugin in *.so; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
-            export lib=`echo $libpath | cut -d '/' -f 9`;
-            echo "Fixing $plugin $lib $libpath"
-            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
-          done
-        done
-        cd .. # build/prefix/lib
-        for plugin in libinchi.*.dylib libopenbabel.*.dylib; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
-            export lib=`echo $libpath | cut -d '/' -f 9`;
-            echo "Fixing $plugin $lib $libpath"
-            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
-          done
-        done
-        otool -L libinchi.*.dylib
-        otool -L libopenbabel.*.dylib
-        # cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
-        # cp -p libopenbabel* ../Avogadro2.app/Contents/Frameworks/
-        # finally, fixup the binaries
-        cd ../bin
-        for exe in obabel obmm eht_bind genXrdPattern; do
-          for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do
-            export lib=`echo $libpath | cut -d '/' -f 9`;
-            echo "Fixing $exe $lib $libpath"
-            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
-          done
-        done
-        ls .. # build/prefix
+      run: bash "$GITHUB_WORKSPACE/.github/scripts/fix-macos-plugins.sh" "${{ runner.workspace }}/build/prefix"
 
     - name: Install the Apple certificate
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
