@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-25 15:21+0000\n"
-"PO-Revision-Date: 2026-09-24 18:51+0000\n"
+"PO-Revision-Date: 2026-09-27 22:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -2613,17 +2613,23 @@ msgid ""
 "Add a dummy atom at the geometric center of the molecule or the selected "
 "atoms."
 msgstr ""
+"Adaugă un atom fictiv în centrul geometric al moleculei sau al atomilor "
+"selectați."
 
 #: qtplugins/centroid/centroid.cpp:141
 msgid ""
 "Add a dummy atom at the center of mass of the molecule or the selected atoms."
 msgstr ""
+"Adaugă un atom fictiv în centrul de masă al moleculei sau al atomilor "
+"selectați."
 
 #: qtplugins/centroid/centroid.cpp:145
 msgid ""
 "Add a dummy atom perpendicular to the plane of the molecule or the selected "
 "atoms."
 msgstr ""
+"Adaugă un atom fictiv perpendicular pe planul moleculei sau al atomilor "
+"selectați."
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
@@ -3502,10 +3508,12 @@ msgstr "Nu se poate citi molecula PDB: %1"
 #: qtplugins/fetchpdb/fetchpdb.cpp:87
 msgid "Download a structure from the Protein Data Bank."
 msgstr ""
+"Descarcă o structură din banca de date de proteine („Protein Data Bank”: PDB)"
+"."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:114
 msgid "fetchPDB requires a non-empty 'code' parameter."
-msgstr ""
+msgstr "fetchPDB necesită un parametru „cod” care să nu fie gol."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:116
 msgid "The PDB code must be exactly 4 characters long."
@@ -3517,7 +3525,7 @@ msgstr "Primul caracter al codului PDB trebuie să fie 1-9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:128
 msgid "The PDB code must contain only letters and digits."
-msgstr ""
+msgstr "Codul PDB trebuie să conțină numai litere și cifre."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:204
 #: qtplugins/networkdatabases/networkdatabases.cpp:226
@@ -3581,11 +3589,11 @@ msgstr "Eliminare focalizare"
 
 #: qtplugins/focus/focus.cpp:138
 msgid "Focus a selection"
-msgstr ""
+msgstr "Focalizează o selecție"
 
 #: qtplugins/focus/focus.cpp:139
 msgid "Unfocus a focused selection"
-msgstr ""
+msgstr "Anulează focalizarea selecției"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
@@ -4303,6 +4311,16 @@ msgid ""
 "\n"
 "Values can also be typed into the tool panel to move the atoms."
 msgstr ""
+"Instrument de măsurare\t(%1)\n"
+"\n"
+"Butonul stâng al mouse-ului:\tSelectează până la patru atomi.\n"
+"\tDistanțele se măsoară între 1-2 și 2-3\n"
+"\tUnghiul se măsoară între 1-3, folosind 2 ca punct comun\n"
+"\tUnghiul diedru se măsoară între 1-2-3-4\n"
+"Butonul drept al mouse-ului:\tReinițializează măsurătorile.\n"
+"\n"
+"Valorile pot fi introduse și direct în panoul instrumentului pentru a muta "
+"atomii."
 
 #: qtplugins/measuretool/measuretool.cpp:426
 #: qtplugins/measuretool/measuretool.cpp:436
@@ -4317,27 +4335,32 @@ msgstr "Unghi:"
 #: qtplugins/measuretool/measuretool.cpp:602
 #: qtplugins/measuretool/measuretool.cpp:992
 msgid "One of these atoms no longer exists."
-msgstr ""
+msgstr "Unul dintre acești atomi nu mai există."
 
 #: qtplugins/measuretool/measuretool.cpp:604
 msgid "That's not a value this can be set to."
-msgstr ""
+msgstr "Aceasta nu este o valoare care poate fi definită."
 
 #: qtplugins/measuretool/measuretool.cpp:610
 #: qtplugins/measuretool/measuretool.cpp:1005
 msgid "These atoms are in the same place, so this distance isn't defined."
 msgstr ""
+"Acești atomi se află în același loc, așa că această distanță nu este "
+"definită."
 
 #: qtplugins/measuretool/measuretool.cpp:613
 #: qtplugins/measuretool/measuretool.cpp:1010
 msgid ""
 "Three of these atoms are in a straight line, so this dihedral isn't defined."
 msgstr ""
+"Trei dintre acești atomi sunt aliniați, așa că acest diedru nu este definit."
 
 #: qtplugins/measuretool/measuretool.cpp:616
 #: qtplugins/measuretool/measuretool.cpp:1008
 msgid "These atoms are in a straight line, so this angle isn't defined."
 msgstr ""
+"Acești atomi sunt aliniați în linie dreaptă, așa că acest unghi nu este "
+"definit."
 
 #: qtplugins/measuretool/measuretool.cpp:641
 #, qt-format
@@ -4345,6 +4368,8 @@ msgid ""
 "The bond between #%1 and #%2 is in a ring, so this dihedral can't change "
 "without distorting the ring."
 msgstr ""
+"Legătura dintre nr.%1 și nr.%2 se află într-un inel, astfel că acest diedru "
+"nu poate fi modificat fără a deforma inelul."
 
 #: qtplugins/measuretool/measuretool.cpp:645
 #, qt-format
@@ -4352,6 +4377,8 @@ msgid ""
 "The bond between #%1 and #%2 is in a ring, so this angle can't change "
 "without distorting the ring."
 msgstr ""
+"Legătura dintre nr.%1 și nr.%2 se află într-un inel, astfel că acest unghi "
+"nu poate fi modificat fără a deforma inelul."
 
 #: qtplugins/measuretool/measuretool.cpp:680
 #, qt-format
@@ -4359,12 +4386,17 @@ msgid ""
 "#%1 and #%2 are connected through the molecule, so this can't change without "
 "distorting it. Try the Manipulate tool."
 msgstr ""
+"nr.%1 și nr.%2 sunt conectați prin moleculă, astfel că acest diedru nu poate "
+"fi modificat fără a o deforma. Încercați instrumentul Manipulare."
 
 #: qtplugins/measuretool/measuretool.cpp:694
 msgid ""
 "Measure the distance in Å between two atoms, given as zero-based indices: "
 "{\"atoms\": [i, j]}. Returns {\"distance\": ..., \"atoms\": [i, j]}."
 msgstr ""
+"Măsoară distanța în Å dintre doi atomi, indicați prin indici de la zero: {\\"
+"\"atoms\\\": [i, j]}. Returnează {\\\"distance\\\": ..., \\\"atoms\\\": [i, "
+"j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:699
 msgid ""
@@ -4372,6 +4404,9 @@ msgid ""
 "based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": ..., \"atoms\": "
 "[i, j, k]}."
 msgstr ""
+"Măsoară unghiul, în grade, la atomul din mijloc al trei atomi, indicați prin "
+"indici de la zero: {\\\"atoms\\\": [i, j, k]}. Returnează {\\\"angle\\\": "
+"..., \\\"atoms\\\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:704
 msgid ""
@@ -4379,6 +4414,9 @@ msgid ""
 "zero-based indices: {\"atoms\": [i, j, k, l]}. Returns {\"dihedral\": ..., "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Măsoară unghiul diedru, în grade (-180 până la 180), al celor patru atomi, "
+"indicați prin indici de la zero: {\\\"atoms\\\": [i, j, k, l]}. Returnează "
+"{\\\"dihedral\\\": ..., \\\"atoms\\\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:709
 msgid ""
@@ -4387,6 +4425,10 @@ msgid ""
 "to it on that side move. Returns the new {\"distance\": ..., \"atoms\": [i, "
 "j]}."
 msgstr ""
+"Stabilește distanța, în Å, dintre doi atomi indicați prin indici de la zero: "
+"{\\\"atoms\\\": [i, j], \\\"value\\\": ...}; al doilea atom și tot ce este "
+"legat de el pe acea parte se deplasează. Returnează noua structură {\\"
+"\"distance\\\": ..., \\\"atoms\\\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:715
 msgid ""
@@ -4395,6 +4437,10 @@ msgid ""
 "everything bonded to it on that side move. Returns the new {\"angle\": ..., "
 "\"atoms\": [i, j, k]}."
 msgstr ""
+"Stabilește unghiul, în grade, la atomul din mijloc acelor trei atomi "
+"indicați prin indici de la zero: {\\\"atoms\\\": [i, j, k], \\\"value\\\": "
+"...}; ultimul atom și tot ce este legat de el pe acea parte se deplasează. "
+"Returnează noua structură {\\\"angle\\\": ..., \\\"atoms\\\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:721
 msgid ""
@@ -4403,67 +4449,75 @@ msgid ""
 "everything bonded to it on that side move. Returns the new "
 "{\"dihedral\": ..., \"atoms\": [i, j, k, l]}."
 msgstr ""
+"Stabilește unghiul diedru, în grade, al celor patru atomi indicați prin "
+"indici de la zero: {\\\"atoms\\\": [i, j, k, l], \\\"value\\\": ...}; "
+"ultimul atom și tot ce este legat de el pe acea parte se deplasează. "
+"Returnează noua structură {\\\"dihedral\\\": ..., \\\"atoms\\\": [i, j, k, "
+"l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:764
 msgid "There is no molecule to measure."
-msgstr ""
+msgstr "Nu există nicio moleculă de măsurat."
 
 #: qtplugins/measuretool/measuretool.cpp:791
 msgid "value must be a distance greater than 0 Å."
-msgstr ""
+msgstr "valoarea trebuie să fie o distanță mai mare de 0Å."
 
 #: qtplugins/measuretool/measuretool.cpp:795
 msgid "value must be an angle from 0 to 180 degrees."
-msgstr ""
+msgstr "valoarea trebuie să fie un unghi cuprins între 0 și 180 de grade."
 
 #: qtplugins/measuretool/measuretool.cpp:856
 msgid "atoms must list exactly 2 atom indices for a distance."
-msgstr ""
+msgstr "atomii trebuie să listeze exact 2 indici de atom pentru o distanță."
 
 #: qtplugins/measuretool/measuretool.cpp:859
 msgid "atoms must list exactly 3 atom indices for an angle."
-msgstr ""
+msgstr "atomii trebuie să listeze exact 3 indici de atom pentru un unghi."
 
 #: qtplugins/measuretool/measuretool.cpp:862
 msgid "atoms must list exactly 4 atom indices for a dihedral."
-msgstr ""
+msgstr "atomii trebuie să listeze exact 4 indici de atom pentru un diedru."
 
 #: qtplugins/measuretool/measuretool.cpp:885
 #: qtplugins/measuretool/measuretool.cpp:891
 #, qt-format
 msgid "atom index #%1 in atoms must be a whole number."
-msgstr ""
+msgstr "indicele atomului #%1 din atomi trebuie să fie un număr întreg."
 
 #: qtplugins/measuretool/measuretool.cpp:895
 #, qt-format
 msgid ""
 "atom index #%1 in atoms is negative; atom indices must be zero or greater."
 msgstr ""
+"indicele atomului #%1 din atomi este negativ; indicii atomilor trebuie să "
+"fie egali cu zero sau mai mari."
 
 #: qtplugins/measuretool/measuretool.cpp:913
 #, qt-format
 msgid "atom index %1 is repeated in atoms; each atom must be different."
 msgstr ""
+"indicele atomului %1 se repetă în atomi; fiecare atom trebuie să fie diferit."
 
 #: qtplugins/measuretool/measuretool.cpp:933
 msgid "value is required and must be a distance in Å."
-msgstr ""
+msgstr "valoarea este obligatorie și trebuie să fie o distanță exprimată în Å."
 
 #: qtplugins/measuretool/measuretool.cpp:934
 msgid "value is required and must be an angle in degrees."
-msgstr ""
+msgstr "valoarea este obligatorie și trebuie să fie un unghi exprimat în grade."
 
 #: qtplugins/measuretool/measuretool.cpp:996
 msgid "That's not a value this distance can be set to."
-msgstr ""
+msgstr "Aceasta nu este o valoare la care poate fi definită această distanță."
 
 #: qtplugins/measuretool/measuretool.cpp:998
 msgid "That's not a value this angle can be set to."
-msgstr ""
+msgstr "Aceasta nu este o valoare la care poate fi definit acest unghi."
 
 #: qtplugins/measuretool/measuretool.cpp:1000
 msgid "That's not a value this dihedral can be set to."
-msgstr ""
+msgstr "Aceasta nu este o valoare la care poate fi definit acest diedru."
 
 #: qtplugins/measuretool/measuretool.cpp:1021
 #, qt-format
@@ -4471,6 +4525,8 @@ msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this angle can't change "
 "without distorting it."
 msgstr ""
+"Legătura dintre atomii nr.%1 și nr.%2 formează un inel, astfel că acest "
+"unghi nu poate fi modificat fără a deforma inelul."
 
 #: qtplugins/measuretool/measuretool.cpp:1025
 #, qt-format
@@ -4478,6 +4534,8 @@ msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this dihedral can't change "
 "without distorting it."
 msgstr ""
+"Legătura dintre atomii %1 și %2 formează un inel, așa că acest unghi diedru "
+"nu se poate modifica fără a-l deforma."
 
 #: qtplugins/measuretool/measuretool.cpp:1039
 #, qt-format
@@ -4485,6 +4543,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this distance can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atomii %1 și %2 sunt conectați prin moleculă, astfel că această distanță nu "
+"poate fi modificată fără a o deforma. Încercați instrumentul Manipulare."
 
 #: qtplugins/measuretool/measuretool.cpp:1045
 #, qt-format
@@ -4492,6 +4552,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this angle can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atomii %1 și %2 sunt conectați prin moleculă, așa că acest unghi nu se poate "
+"modifica fără a deforma molecula. Încercați instrumentul „Manipulare”."
 
 #: qtplugins/measuretool/measuretool.cpp:1051
 #, qt-format
@@ -4499,6 +4561,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this dihedral can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atomii %1 și %2 sunt legați prin moleculă, așa că acest unghi diedru nu se "
+"poate modifica fără a deforma molecula. Încercați instrumentul „Manipulare”."
 
 #: qtplugins/measuretool/measuretool.h:39
 #: qtplugins/measuretool/measuretool.h:40
@@ -4510,10 +4574,12 @@ msgid ""
 "Click up to four atoms to measure them.\n"
 "Type a new value to move the atoms."
 msgstr ""
+"Faceți clic pe cel mult patru atomi pentru a-i măsura.\n"
+"Introduceți o nouă valoare pentru a muta atomii."
 
 #: qtplugins/measuretool/measurewidget.cpp:34
 msgid "Distance 1–2"
-msgstr ""
+msgstr "Distanță 1-2"
 
 #: qtplugins/measuretool/measurewidget.cpp:34
 #: qtplugins/measuretool/measurewidget.cpp:36
@@ -4523,15 +4589,15 @@ msgstr " Å"
 
 #: qtplugins/measuretool/measurewidget.cpp:36
 msgid "Distance 2–3"
-msgstr ""
+msgstr "Distanță 2–3"
 
 #: qtplugins/measuretool/measurewidget.cpp:38
 msgid "Distance 3–4"
-msgstr ""
+msgstr "Distanță 3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:40
 msgid "Angle 1–2–3"
-msgstr ""
+msgstr "Unghi 1-2-3"
 
 #: qtplugins/measuretool/measurewidget.cpp:40
 #: qtplugins/measuretool/measurewidget.cpp:42
@@ -4541,16 +4607,16 @@ msgstr "°"
 
 #: qtplugins/measuretool/measurewidget.cpp:42
 msgid "Angle 2–3–4"
-msgstr ""
+msgstr "Unghi 2-3-4"
 
 #: qtplugins/measuretool/measurewidget.cpp:44
 msgid "Dihedral 1–2–3–4"
-msgstr ""
+msgstr "Diedru 1-2-3-4"
 
 #: qtplugins/measuretool/measurewidget.cpp:145
 #, qt-format
 msgid "#1 stays fixed; edits move toward #%1."
-msgstr ""
+msgstr "nr.1 rămâne fix; modificările se deplasează spre nr.%1."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:64
 msgid "(pending)"
@@ -6185,33 +6251,36 @@ msgstr "Selectare reziduu"
 
 #: qtplugins/select/select.cpp:587
 msgid "Select all atoms."
-msgstr ""
+msgstr "Selectează toți atomii."
 
 #: qtplugins/select/select.cpp:589
 msgid "Deselect all atoms"
-msgstr ""
+msgstr "Deselectează toți atomii"
 
 #: qtplugins/select/select.cpp:592
 msgid ""
 "Select all atoms which are not currently selected, and deselect all "
 "currently selected atoms."
 msgstr ""
+"Selectează toți atomii care nu sunt selectați în acest moment și "
+"deselectează toți atomii selectați în acest moment."
 
 #: qtplugins/select/select.cpp:596
 msgid "Select all atoms of a certain element type."
-msgstr ""
+msgstr "Selectează toți atomii unui anumit tip de element."
 
 #: qtplugins/select/select.cpp:600
 msgid "Select all atoms that belong to amino acid backbones"
-msgstr ""
+msgstr "Selectează toți atomii care aparțin scheletelor aminoacizilor."
 
 #: qtplugins/select/select.cpp:604
 msgid "Select all atoms that belong to amino acid sidechains"
 msgstr ""
+"Selectează toți atomii care aparțin lanțurilor laterale ale aminoacizilor."
 
 #: qtplugins/select/select.cpp:606
 msgid "Select all water molecules"
-msgstr ""
+msgstr "Selectează toate moleculele de apă"
 
 #: qtplugins/select/select.cpp:610
 msgid ""
@@ -6219,14 +6288,18 @@ msgid ""
 "all atoms next to a selected atom, and additionally all atoms that are next "
 "to those atoms."
 msgstr ""
+"Selectează toți atomii aflați la o distanță de cel mult 2 atomi față de un "
+"atom selectat. Cu alte cuvinte, selectează toți atomii aflați lângă un atom "
+"selectat și, în plus, toți atomii aflați lângă acești atomi."
 
 #: qtplugins/select/select.cpp:616
 msgid "Shrink selection. Note: One shrink is equivalent to two enlarges!"
 msgstr ""
+"Micșorează selecția. Notă: O micșorare este echivalentă cu două extinderi!"
 
 #: qtplugins/select/select.cpp:619
 msgid "Separate the selected atoms into a new layer."
-msgstr ""
+msgstr "Separă atomii selectați într-un strat nou."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6944,51 +7017,53 @@ msgstr "Simetrie…"
 
 #: qtplugins/symmetry/symmetry.cpp:216
 msgid "There is no molecule to analyze."
-msgstr ""
+msgstr "Nu există nicio moleculă de analizat."
 
 #: qtplugins/symmetry/symmetry.cpp:223 qtplugins/symmetry/symmetry.cpp:391
 msgid "The molecule has no 3D coordinates."
-msgstr ""
+msgstr "Molecula nu are coordonate 3D."
 
 #: qtplugins/symmetry/symmetry.cpp:228
 msgid "The molecule has no atoms."
-msgstr ""
+msgstr "Molecula nu are atomi."
 
 #: qtplugins/symmetry/symmetry.cpp:386
 msgid "There is no molecule to symmetrize."
-msgstr ""
+msgstr "Nu există nicio moleculă de simetrizat."
 
 #: qtplugins/symmetry/symmetry.cpp:394
 msgid "A single atom is already symmetric."
-msgstr ""
+msgstr "Un singur atom este deja simetric."
 
 #: qtplugins/symmetry/symmetry.cpp:415
 #, qt-format
 msgid "libmsym returned %1 atoms for a molecule of %2."
-msgstr ""
+msgstr "libmsym a returnat %1 atomi pentru o moleculă de %2."
 
 #: qtplugins/symmetry/symmetry.cpp:438
 msgid "Detect the point group of the molecule."
-msgstr ""
+msgstr "Detectează grupul de puncte al moleculei."
 
 #: qtplugins/symmetry/symmetry.cpp:440
 msgid "Snap the molecule onto its detected point group."
-msgstr ""
+msgstr "Așază molecula pe grupul de puncte detectat."
 
 #: qtplugins/symmetry/symmetry.cpp:457
 #, qt-format
 msgid "Unknown tolerance \"%1\": expected tight, normal, loose or veryloose."
 msgstr ""
+"Toleranță necunoscută „%1”: se aștepta „strânsă”, „normală”, „slabă” sau „"
+"foarte slabă”."
 
 #: qtplugins/symmetry/symmetry.cpp:479
 #, qt-format
 msgid "Detected %1"
-msgstr ""
+msgstr "Detectat(ă) %1"
 
 #: qtplugins/symmetry/symmetry.cpp:490
 #, qt-format
 msgid "Symmetrized to %1"
-msgstr ""
+msgstr "Simetrizat la %1"
 
 #: qtplugins/symmetry/symmetry.h:97
 msgid "Provide symmetry functionality."
