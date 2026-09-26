@@ -336,7 +336,11 @@ Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
   size_t qttyLayer = molecule->layer.layerCount();
   vector<set<string>> active(qttyLayer, set<string>());
   for (const auto& names : molecule->enable) {
-    for (size_t i = 0; i < names.second.size(); ++i) {
+    // A plugin's per-layer vector can be longer than the current layer
+    // count (e.g. after layers were removed without trimming every
+    // plugin's vector to match), so bound i by qttyLayer as well -- indexing
+    // active[i] past qttyLayer would otherwise be out of bounds.
+    for (size_t i = 0; i < names.second.size() && i < qttyLayer; ++i) {
       if (names.second[i]) {
         active[i].insert(names.first);
       }
