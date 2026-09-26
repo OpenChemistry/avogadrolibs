@@ -16,16 +16,18 @@ if(USE_SPGLIB)
   add_definitions(-DUSE_SPGLIB)
 endif()
 
-# Find python for input generator scripts:
-find_package(Python3 COMPONENTS Interpreter)
+if(USE_SUBPROCESS)
+  # Find python for input generator scripts:
+  find_package(Python3 COMPONENTS Interpreter)
 
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
+  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 "namespace Avogadro {
 static const char *pythonInterpreterPath = \"${Python3_EXECUTABLE}\";
 }
 ")
-configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h")
+  configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h")
+endif()
 
 add_library(QtGui)
 
@@ -51,8 +53,7 @@ avogadro_headers(QtGui
   fragmenttools.h
   hydrogentools.h
   insertfragmentdialog.h
-  interfacescript.h
-  interfacewidget.h
+  # JsonWidget also supports the native force-field options without subprocesses.
   jsonwidget.h
   layermodel.h
   rwlayermanager.h
@@ -60,13 +61,11 @@ avogadro_headers(QtGui
   molecule.h
   moleculemodel.h
   multiviewwidget.h
-  packagemanager.h
   periodictableview.h
   tomlparse.h
   persistentatom.h
   persistentbond.h
   pluginlayermanager.h
-  pythonscript.h
   richtextdelegate.h
   rwmolecule.h
   sceneplugin.h
@@ -100,8 +99,6 @@ target_sources(QtGui PRIVATE
   fragmenttools.cpp
   hydrogentools.cpp
   insertfragmentdialog.cpp
-  interfacescript.cpp
-  interfacewidget.cpp
   jsonwidget.cpp
   layermodel.cpp
   richtextdelegate.cpp
@@ -110,12 +107,10 @@ target_sources(QtGui PRIVATE
   molecule.cpp
   moleculemodel.cpp
   multiviewwidget.cpp
-  packagemanager.cpp
   periodictablescene_p.cpp
   tomlparse.cpp
   periodictableview.cpp
   pluginlayermanager.cpp
-  pythonscript.cpp
   rwmolecule.cpp
   sceneplugin.cpp
   scenepluginmodel.cpp
@@ -158,4 +153,20 @@ target_link_libraries(QtGui PUBLIC Avogadro::IO Avogadro::Calc Qt::Widgets Qt::C
 if(USE_PLOTTER)
   target_link_libraries(QtGui PUBLIC JKQTPlotter${QT_VERSION}::JKQTPlotter${QT_VERSION})
   target_compile_definitions(QtGui PUBLIC USE_PLOTTER)
+endif()
+
+if(USE_SUBPROCESS)
+  target_compile_definitions(QtGui PUBLIC AVOGADRO_USE_SUBPROCESS)
+  avogadro_headers(QtGui
+    pythonscript.h
+    packagemanager.h
+    interfacescript.h
+    interfacewidget.h
+  )
+  target_sources(QtGui PRIVATE
+    pythonscript.cpp
+    packagemanager.cpp
+    interfacescript.cpp
+    interfacewidget.cpp
+  )
 endif()

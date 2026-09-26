@@ -9,6 +9,26 @@
 
 namespace Avogadro::Rendering {
 
+#ifdef __EMSCRIPTEN__
+namespace {
+std::string webGLShaderSource(const std::string& input)
+{
+  std::string source = input;
+  size_t versionPos = source.find("#version");
+  if (versionPos != std::string::npos) {
+    size_t versionEnd = source.find('\n', versionPos);
+    if (versionEnd == std::string::npos)
+      source.erase(versionPos);
+    else
+      source.erase(versionPos, versionEnd - versionPos + 1);
+  }
+  source.insert(
+    0, "#version 300 es\nprecision highp float;\nprecision highp int;\n");
+  return source;
+}
+} // namespace
+#endif
+
 Shader::Shader(Type type_, const std::string& source_)
   : m_type(type_), m_handle(0), m_dirty(true), m_source(source_)
 {
@@ -41,7 +61,13 @@ bool Shader::compile()
 
   GLenum type_ = m_type == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
   GLuint handle_ = glCreateShader(type_);
+
+#ifdef __EMSCRIPTEN__
+  const std::string sourceForCompile = webGLShaderSource(m_source);
+  const auto* source_ = static_cast<const GLchar*>(sourceForCompile.c_str());
+#else
   const auto* source_ = static_cast<const GLchar*>(m_source.c_str());
+#endif
   glShaderSource(handle_, 1, &source_, nullptr);
   glCompileShader(handle_);
   GLint isCompiled;

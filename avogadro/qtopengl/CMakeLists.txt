@@ -16,6 +16,10 @@ target_sources(QtOpenGL PRIVATE
   qttextrenderstrategy.cpp
 )
 
+if(EMSCRIPTEN)
+  target_sources(QtOpenGL PRIVATE wasmopenglwindow.cpp wasmopenglwindow_p.h)
+endif()
+
 avogadro_add_library(QtOpenGL)
 target_link_libraries(QtOpenGL PUBLIC Avogadro::Rendering Avogadro::QtGui Qt::Widgets)
 if(QT_VERSION EQUAL 6)

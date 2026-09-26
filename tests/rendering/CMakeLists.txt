@@ -31,3 +31,16 @@ foreach(TestName ${tests})
   add_test(NAME "Rendering-${TestName}"
     COMMAND AvogadroRenderingTests "--gtest_filter=${TestName}Test.*")
 endforeach()
+
+# Exercise the actual offscreen pipeline on Linux without requiring a display.
+# EGL remains an optional test dependency; other platforms keep the pure tests.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  find_package(OpenGL QUIET COMPONENTS EGL)
+  if(TARGET OpenGL::EGL)
+    find_package(GLEW REQUIRED)
+    add_executable(AvogadroGLRendererTests glrenderertest.cpp)
+    target_link_libraries(AvogadroGLRendererTests PRIVATE Avogadro::Rendering
+      OpenGL::EGL GLEW::GLEW ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+    add_test(NAME Rendering-GLRenderer COMMAND AvogadroGLRendererTests)
+  endif()
+endif()
