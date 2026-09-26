@@ -7,6 +7,8 @@
 #include "molecule.h"
 #include "rwmolecule.h"
 
+#include <avogadro/core/avogadrocore.h>
+
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
@@ -259,22 +261,12 @@ void LayerModel::addMolecule(const Molecule* mol)
 
 void LayerModel::setActiveLayer(int index, RWMolecule* rwmolecule)
 {
-  auto names = activeMoleculeNames();
-  if (index < 0 || index >= static_cast<int>(names.size()))
-    return;
-  RWLayerManager::setActiveLayer(names[index].first, rwmolecule);
-  updateRows();
+  setActiveLayerId(layerForRow(index), rwmolecule);
 }
+
 void LayerModel::removeItem(int row, RWMolecule* rwmolecule)
 {
-  auto names = activeMoleculeNames();
-  // Valid indices into names are 0..names.size()-1: row == names.size() is
-  // the synthetic "+" row (see data()'s special case below), and anything
-  // beyond that is simply out of range.
-  if (row >= 0 && row < static_cast<int>(names.size())) {
-    removeLayer(static_cast<size_t>(names[row].first), rwmolecule);
-    updateRows();
-  }
+  removeLayerId(layerForRow(row), rwmolecule);
 }
 
 size_t LayerModel::items() const
@@ -284,24 +276,76 @@ size_t LayerModel::items() const
 
 void LayerModel::flipVisible(size_t row)
 {
-  auto names = activeMoleculeNames();
-  if (row >= names.size())
+  const size_t layer = layerForRow(static_cast<int>(row));
+  if (layer == MaxIndex)
     return;
-  auto layer = names[row].first;
-  RWLayerManager::flipVisible(layer);
+  setLayerVisible(layer, !layerVisible(layer));
 }
+
 void LayerModel::flipLocked(size_t row)
 {
-  auto names = activeMoleculeNames();
-  if (row >= names.size())
+  const size_t layer = layerForRow(static_cast<int>(row));
+  if (layer == MaxIndex)
     return;
-  auto layer = names[row].first;
-  RWLayerManager::flipLocked(layer);
+  setLayerLocked(layer, !layerLocked(layer));
 }
 
 size_t LayerModel::layerCount() const
 {
   return LayerManager::layerCount();
+}
+
+size_t LayerModel::layerForRow(int row) const
+{
+  if (row < 0)
+    return MaxIndex;
+  auto names = activeMoleculeNames();
+  // Valid indices into names are 0..names.size()-1: row == names.size() is
+  // the synthetic "+" row (see data()'s special case below), and anything
+  // beyond that is simply out of range.
+  if (static_cast<size_t>(row) >= names.size())
+    return MaxIndex;
+  return names[static_cast<size_t>(row)].first;
+}
+
+bool LayerModel::layerVisible(size_t layer) const
+{
+  return RWLayerManager::visible(layer);
+}
+
+bool LayerModel::layerLocked(size_t layer) const
+{
+  return RWLayerManager::locked(layer);
+}
+
+void LayerModel::setLayerVisible(size_t layer, bool visible)
+{
+  if (layerVisible(layer) == visible)
+    return;
+  RWLayerManager::flipVisible(layer);
+}
+
+void LayerModel::setLayerLocked(size_t layer, bool locked)
+{
+  if (layerLocked(layer) == locked)
+    return;
+  RWLayerManager::flipLocked(layer);
+}
+
+void LayerModel::setActiveLayerId(size_t layer, RWMolecule* rwmolecule)
+{
+  if (layer == MaxIndex)
+    return;
+  RWLayerManager::setActiveLayer(layer, rwmolecule);
+  updateRows();
+}
+
+void LayerModel::removeLayerId(size_t layer, RWMolecule* rwmolecule)
+{
+  if (layer == MaxIndex)
+    return;
+  RWLayerManager::removeLayer(layer, rwmolecule);
+  updateRows();
 }
 
 } // namespace Avogadro::QtGui

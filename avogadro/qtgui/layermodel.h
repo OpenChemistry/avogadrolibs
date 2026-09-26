@@ -66,6 +66,36 @@ public:
   void flipLocked(size_t row);
   size_t layerCount() const;
 
+  /**
+   * Translate a Layers dock row -- as this model lays them out: one header
+   * row per layer, followed by a row for each scene plugin enabled only in
+   * that layer, so a row and its layer id can diverge -- to the layer id it
+   * belongs to.
+   *
+   * @return the layer id, or @a MaxIndex if @p row does not name a layer
+   * (negative, the synthetic "+" row, or past it).
+   */
+  size_t layerForRow(int row) const;
+
+  /** @return whether @p layer is visible. Out-of-range is harmless: it
+   *  reads back the same default a fresh layer starts with. */
+  bool layerVisible(size_t layer) const;
+  /** @return whether @p layer is locked. Out-of-range is harmless: it
+   *  reads back the same default a fresh layer starts with. */
+  bool layerLocked(size_t layer) const;
+
+  /** Show or hide @p layer. A no-op if it already matches @p visible, or if
+   *  @p layer is out of range. */
+  void setLayerVisible(size_t layer, bool visible);
+  /** Lock or unlock @p layer against edits. A no-op if it already matches
+   *  @p locked, or if @p layer is out of range. */
+  void setLayerLocked(size_t layer, bool locked);
+
+  /** Make @p layer the active layer. A no-op if @p layer is out of range. */
+  void setActiveLayerId(size_t layer, RWMolecule* rwmolecule);
+  /** Remove @p layer. A no-op if @p layer is out of range. */
+  void removeLayerId(size_t layer, RWMolecule* rwmolecule);
+
 public slots:
   void updateRows();
 
