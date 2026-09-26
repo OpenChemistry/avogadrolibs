@@ -37,6 +37,12 @@ class Molecule;
 
 namespace QtOpenGL {
 
+#ifdef Q_OS_WASM
+using GLWidgetBase = QWidget;
+#else
+using GLWidgetBase = QOpenGLWidget;
+#endif
+
 /**
  * @class GLWidget glwidget.h <avogadro/qtopengl/glwidget.h>
  * @brief QOpenGLGLWidget derived object for displaying 3D molecular geometry.
@@ -53,12 +59,7 @@ namespace QtOpenGL {
  * tool also ignores the event, it will be passed to QOpenGLWidget's handlers.
  */
 
-class AVOGADROQTOPENGL_EXPORT GLWidget
-#ifdef Q_OS_WASM
-  : public QWidget
-#else
-  : public QOpenGLWidget
-#endif
+class AVOGADROQTOPENGL_EXPORT GLWidget : public GLWidgetBase
 {
   Q_OBJECT
 
