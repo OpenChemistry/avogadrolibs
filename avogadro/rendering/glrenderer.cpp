@@ -71,9 +71,7 @@ void GLRenderer::initialize()
   }
 #endif
 
-#ifndef __EMSCRIPTEN__
   m_solidPipeline.initialize();
-#endif
 }
 
 void GLRenderer::resize(int width, int height)
@@ -88,17 +86,13 @@ void GLRenderer::resize(int width, int height)
              static_cast<GLsizei>(height * m_pixelRatio));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
-#ifndef __EMSCRIPTEN__
   m_solidPipeline.resize(width, height);
-#endif
 }
 
 void GLRenderer::setPixelRatio(float ratio)
 {
   m_pixelRatio = ratio;
-#ifndef __EMSCRIPTEN__
   m_solidPipeline.setPixelRatio(ratio);
-#endif
 }
 
 void GLRenderer::render()
@@ -117,16 +111,13 @@ void GLRenderer::render()
   visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
-#ifndef __EMSCRIPTEN__
-  m_solidPipeline.begin();
+  const bool useSolidPipeline = m_solidPipeline.begin();
   m_scene.rootNode().accept(visitor);
-  // Before end(), so the offset the fog and depth-of-field are sized by
-  // belongs to the camera this frame is drawn with rather than the last one.
-  m_solidPipeline.adjustOffset(m_camera);
-  m_solidPipeline.end(m_camera);
-#else
-  m_scene.rootNode().accept(visitor);
-#endif
+  if (useSolidPipeline) {
+    // Use this frame's camera for the fog and depth-of-field offsets.
+    m_solidPipeline.adjustOffset(m_camera);
+    m_solidPipeline.end(m_camera);
+  }
 
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);
