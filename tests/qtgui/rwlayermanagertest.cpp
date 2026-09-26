@@ -33,6 +33,7 @@ namespace {
 class TestLayerManager : public RWLayerManager
 {
 public:
+  using RWLayerManager::activeMoleculeNames;
   using RWLayerManager::addLayer;
   using RWLayerManager::addMolecule;
 };
@@ -88,6 +89,35 @@ TEST_F(RWLayerManagerTest, AddLayerWithShortEnableVector)
   manager.addLayer(rwmol);
 
   SUCCEED() << "did not crash";
+}
+
+// activeMoleculeNames() used to index active[i] for every element of a
+// plugin's enable vector with no check against the (shorter) layer count --
+// out of bounds once i reaches layerCount(). A vector left oversized by a
+// layer removal that trimmed Core::Layer but not every plugin's vector
+// reproduces it.
+TEST_F(RWLayerManagerTest,
+       ActiveMoleculeNamesBoundsPluginVectorLongerThanLayerCount)
+{
+  Molecule molecule;
+  for (Index i = 0; i < 4; ++i)
+    molecule.addAtom(1);
+
+  TestLayerManager manager;
+  manager.addMolecule(&molecule);
+
+  auto info = LayerManager::getMoleculeInfo(&molecule);
+  info->enable["TestPlugin"] = { true, true, true };
+  ASSERT_EQ(info->layer.layerCount(), 1u);
+
+  const auto names = manager.activeMoleculeNames();
+  // Only layer 0 exists, so only its header + "TestPlugin" row should come
+  // back -- not one entry per element of the oversized vector.
+  ASSERT_EQ(names.size(), 2u);
+  EXPECT_EQ(names[0].first, 0u);
+  EXPECT_EQ(names[0].second, "Layer");
+  EXPECT_EQ(names[1].first, 0u);
+  EXPECT_EQ(names[1].second, "TestPlugin");
 }
 
 // RemoveLayerCommand::redo() used to erase the visible/locked/enable/settings
