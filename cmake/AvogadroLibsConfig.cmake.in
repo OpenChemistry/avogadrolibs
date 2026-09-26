@@ -20,13 +20,15 @@ set(AvogadroLibs_PLUGINS         "@AvogadroLibs_PLUGINS@")
 set(AvogadroLibs_STATIC_PLUGINS  "@AvogadroLibs_STATIC_PLUGINS@")
 
 # Optional feature flags
-set(AvogadroLibs_ENABLE_SUBPROCESS "@ENABLE_SUBPROCESS@")
-set(AvogadroLibs_WEB_EDITOR "@AVOGADRO_WEB_EDITOR@")
-set(AvogadroLibs_USE_PLOTTER     "@USE_PLOTTER@")
-set(AvogadroLibs_USE_OPENGL      "@USE_OPENGL@")
-set(AvogadroLibs_USE_SPGLIB      "@USE_SPGLIB@")
-set(AvogadroLibs_USE_LIBARCHIVE  "@USE_LIBARCHIVE@")
-set(AvogadroLibs_USE_LIBMSYM     "@USE_LIBMSYM@")
+set(AvogadroLibs_USE_SUBPROCESS       "@USE_SUBPROCESS@")
+set(AvogadroLibs_USE_EMSCRIPTEN       "@EMSCRIPTEN@")
+set(AvogadroLibs_BUILD_SHARED_LIBS    "@BUILD_SHARED_LIBS@")
+set(AvogadroLibs_BUILD_STATIC_PLUGINS "@BUILD_STATIC_PLUGINS@")
+set(AvogadroLibs_USE_PLOTTER          "@USE_PLOTTER@")
+set(AvogadroLibs_USE_OPENGL           "@USE_OPENGL@")
+set(AvogadroLibs_USE_SPGLIB           "@USE_SPGLIB@")
+set(AvogadroLibs_USE_LIBARCHIVE       "@USE_LIBARCHIVE@")
+set(AvogadroLibs_USE_LIBMSYM          "@USE_LIBMSYM@")
 
 include(CMakeFindDependencyMacro)
 
@@ -46,10 +48,7 @@ if(AvogadroLibs_USE_SPGLIB)
   find_dependency(Spglib REQUIRED)
 endif()
 
-if(AvogadroLibs_USE_OPENGL)
-  if(EMSCRIPTEN AND NOT TARGET OpenGL::GL)
-    add_library(OpenGL::GL INTERFACE IMPORTED)
-  endif()
+if(AvogadroLibs_USE_OPENGL AND NOT AvogadroLibs_USE_EMSCRIPTEN)
   find_dependency(GLEW REQUIRED)
 endif()
 
@@ -61,24 +60,16 @@ if(AvogadroLibs_USE_LIBMSYM)
   find_dependency(libmsym CONFIG REQUIRED)
 endif()
 
-if(NOT TARGET gif-h)
-  add_library(gif-h INTERFACE IMPORTED)
-endif()
-
-if(NOT TARGET tinycolormap)
-  add_library(tinycolormap INTERFACE IMPORTED)
-endif()
-
-if(NOT TARGET tomlplusplus)
-  add_library(tomlplusplus INTERFACE IMPORTED)
-endif()
-
-if(NOT TARGET nlohmann_json)
-  add_library(nlohmann_json INTERFACE IMPORTED)
-endif()
-
-if(NOT TARGET cppoptlib)
-  add_library(cppoptlib INTERFACE IMPORTED)
+# Static libraries and static plugins expose their header-only dependencies through
+# LINK_ONLY in the exported interface. They need target names at consumption
+# time, but no headers or link flags. Fully shared builds absorb these dependencies.
+if(NOT AvogadroLibs_BUILD_SHARED_LIBS OR AvogadroLibs_BUILD_STATIC_PLUGINS)
+  foreach(_dependency gif-h tinycolormap tomlplusplus nlohmann_json cppoptlib)
+    if(NOT TARGET ${_dependency})
+      add_library(${_dependency} INTERFACE IMPORTED)
+    endif()
+  endforeach()
+  unset(_dependency)
 endif()
 
 if(NOT TARGET AvogadroCore)

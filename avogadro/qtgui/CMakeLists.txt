@@ -16,7 +16,7 @@ if(USE_SPGLIB)
   add_definitions(-DUSE_SPGLIB)
 endif()
 
-if(ENABLE_SUBPROCESS)
+if(USE_SUBPROCESS)
   # Find python for input generator scripts:
   find_package(Python3 COMPONENTS Interpreter)
 
@@ -53,6 +53,7 @@ avogadro_headers(QtGui
   fragmenttools.h
   hydrogentools.h
   insertfragmentdialog.h
+  # JsonWidget also supports the native force-field options without subprocesses.
   jsonwidget.h
   layermodel.h
   rwlayermanager.h
@@ -154,8 +155,8 @@ if(USE_PLOTTER)
   target_compile_definitions(QtGui PUBLIC USE_PLOTTER)
 endif()
 
-if(ENABLE_SUBPROCESS)
-  target_compile_definitions(QtGui PUBLIC AVOGADRO_ENABLE_SUBPROCESS)
+if(USE_SUBPROCESS)
+  target_compile_definitions(QtGui PUBLIC AVOGADRO_USE_SUBPROCESS)
   avogadro_headers(QtGui
     pythonscript.h
     packagemanager.h

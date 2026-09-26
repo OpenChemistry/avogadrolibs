@@ -6,7 +6,7 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}"
 find_package(Qt${QT_VERSION} COMPONENTS Widgets Network Test REQUIRED)
 
 # Find python interpreter for input generator
-if(ENABLE_SUBPROCESS)
+if(USE_SUBPROCESS)
   find_package(Python3 COMPONENTS Interpreter)
 endif()
 
@@ -41,14 +41,14 @@ set(tests
   Utilities
 )
 
-if(ENABLE_SUBPROCESS)
+if(USE_SUBPROCESS)
   list(APPEND tests PackageManager ScriptProgress)
   if(Python3_EXECUTABLE)
     list(APPEND tests InterfaceScript PythonScript)
   endif()
 endif()
 
-if (BUILD_MOLEQUEUE AND ENABLE_SUBPROCESS)
+if (BUILD_MOLEQUEUE AND USE_SUBPROCESS)
   # Pull in MoleQueue
   find_package(MoleQueue REQUIRED NO_MODULE)
   include_directories(${MoleQueue_INCLUDE_DIRS})
@@ -58,7 +58,7 @@ if (BUILD_MOLEQUEUE AND ENABLE_SUBPROCESS)
   set(MoleQueueLink Avogadro::MoleQueue MoleQueueClient)
 endif()
 
-if(ENABLE_SUBPROCESS AND Python3_EXECUTABLE AND AVOGADRO_DATA)
+if(USE_SUBPROCESS AND Python3_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
     # these are still somewhat broken
     # but it's not crucial
@@ -98,7 +98,7 @@ endif()
 
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
   set(qtgui_fuzz rwmolecule generichighlighter jsonwidget layermanager)
-  if(ENABLE_SUBPROCESS)
+  if(USE_SUBPROCESS)
     list(APPEND qtgui_fuzz interfacescript-json)
   endif()
   foreach(fuzzName ${qtgui_fuzz})

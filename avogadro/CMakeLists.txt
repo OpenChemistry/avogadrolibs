@@ -73,7 +73,7 @@ if(USE_QT)
     add_subdirectory(qtopengl)
   endif()
   # Add unconditionally as this talks to MoleQueue, but doesn't depend on it.
-  if(ENABLE_SUBPROCESS)
+  if(USE_SUBPROCESS)
     add_subdirectory(molequeue)
   endif()
   add_subdirectory(qtplugins)

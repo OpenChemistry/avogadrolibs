@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 
-#ifdef AVOGADRO_ENABLE_SUBPROCESS
+#ifdef AVOGADRO_USE_SUBPROCESS
 #include <avogadro/qtgui/interfacescript.h>
 #include <avogadro/qtgui/interfacewidget.h>
 #endif
@@ -20,7 +20,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QTableWidget>
 
-#ifdef AVOGADRO_ENABLE_SUBPROCESS
+#ifdef AVOGADRO_USE_SUBPROCESS
 using Avogadro::QtGui::InterfaceWidget;
 #endif
 using Avogadro::QtGui::JsonWidget;
@@ -407,7 +407,7 @@ TEST_F(JsonWidgetTest, RebuildWithoutOptionsReportsEmpty)
   EXPECT_TRUE(widget.isEmpty());
 }
 
-#ifdef AVOGADRO_ENABLE_SUBPROCESS
+#ifdef AVOGADRO_USE_SUBPROCESS
 // Command::menuActivated() refreshes a cached dialog for a "dynamic" feature by
 // pushing a freshly generated option set through the same InterfaceWidget. The
 // new set has to replace the old one outright rather than accumulate on it.
